@@ -9,6 +9,9 @@ extern	UINT8			gubCheatLevel;
 
 
 
+
+
+
 // GLOBALS FOR CHEAT MODE......
 #ifdef GERMAN
 	#ifdef JA2TESTVERSION
