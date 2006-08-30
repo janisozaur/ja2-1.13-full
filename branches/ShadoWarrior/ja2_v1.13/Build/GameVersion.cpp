@@ -22,15 +22,14 @@ INT16		zVersionLabel[256]		= { L"Beta v. 0.98" };
 
 #else
 
-	//RELEASE BUILD VERSION 
-	INT16		zVersionLabel[256]		= { L"Release v1.13.493" };
-
+//RELEASE BUILD VERSION 
+INT16		zVersionLabel[256]		= { L"Release v1.13.493.001 (by ShadoWarrior)" };
 
 #endif
 
-INT8		czVersionNumber[16]	= { "Build 06.08.29" };
+INT8		czVersionNumber[16]	= { "Build 06.08.30" };
 INT16		zTrackingNumber[16]	= { L"Z" };
-	
+
 
 //
 //		Keeps track of the saved game version.  Increment the saved game version whenever 
