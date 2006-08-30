@@ -21,10 +21,14 @@ void DrawMouseTooltip(void);
 
 void SoldierTooltip( SOLDIERTYPE* pSoldier )
 {			
-	SGPRect aRect;
+	SGPRect		aRect;
 	extern void GetSoldierScreenRect(SOLDIERTYPE*,SGPRect*);
 	GetSoldierScreenRect( pSoldier,  &aRect );
-	INT16 a1,a2;
+	INT16		a1,a2;
+	BOOLEAN		fDisplayBigSlotItem	= FALSE;
+	const int	RocketF	= 976;
+	const int	RocketH	= 977;
+	const int	RocketT	= 978;
 
 	if ( gfKeyState[ALT] && pSoldier &&
 		IsPointInScreenRectWithRelative( gusMouseXPos, gusMouseYPos, &aRect, &a1, &a2 ) )
@@ -196,9 +200,32 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					 (	Weapon[pSoldier->inv[ BigSlot ].usItem].ubWeaponClass != SMGCLASS ) )
 				{
 					// it's a long gun or heavy weapon
-					wcscat( pStrInfo, L"\n(In Backpack) " );
-					DisplayWeaponInfo( pSoldier, pStrInfo, BigSlot );
+					fDisplayBigSlotItem = TRUE;
 				}
+			}
+			else
+			{
+				// check for rocket ammo
+				switch ( pSoldier->inv[ BigSlot ].usItem )
+				{
+					case RocketF:
+						fDisplayBigSlotItem = TRUE; // frag
+						break;
+					case RocketH:
+						fDisplayBigSlotItem = TRUE; // HEAT
+						break;
+					case RocketT:
+						fDisplayBigSlotItem = TRUE; // Thermobaric
+						break;
+					default:
+						break;
+				}
+			}
+			if ( fDisplayBigSlotItem )
+			{
+				wcscat( pStrInfo, L"\n(In Backpack) " );
+				DisplayWeaponInfo( pSoldier, pStrInfo, BigSlot );
+				fDisplayBigSlotItem = FALSE;
 			}
 		}
 		// large objects in big inventory slots info code block end
@@ -222,7 +249,12 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 
 void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot )
 {
-	INT32	iNumAttachments = 0;
+	const int	TriggerGroup		= 1026;
+	const int	GunBarrelExtender	= 310;
+	const int	CMagAdapter556mm	= 1001;
+	const int	CMagAdapter9mm		= 1002;
+	INT32		iNumAttachments		= 0;
+	BOOLEAN		fDisplayAttachment	= FALSE;
 
 	if ( gGameExternalOptions.ubSoldierTooltipDetailLevel >= DL_Full )
 	{
@@ -278,27 +310,47 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot )
 				if ( gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Basic )
 				{
 					// display only externally-visible weapon attachments
-					// don't display inseparable attachments
+					// don't display inseparable attachments such as the integral GLs on OICW & AICW
 					if ( !Item[pSoldier->inv[ubSlot].usAttachItem[ cnt ]].inseparable )
 					{
-						iNumAttachments++;
-							if ( iNumAttachments == 1 )
-								wcscat( pStrInfo, L"\n[" );
-							else
-								wcscat( pStrInfo, L", " );
-							wcscat( pStrInfo, ItemNames[ pSoldier->inv[ubSlot].usAttachItem[ cnt ] ] );
-
+						if ( pSoldier->inv[ubSlot].usAttachItem[ cnt ] != TriggerGroup )
+						{
+							fDisplayAttachment = TRUE;
+						}
+					}
+					else
+					{
+						// display C-mags and barrel extensions
+						switch( pSoldier->inv[ubSlot].usAttachItem[ cnt ] )
+						{
+							case GunBarrelExtender:
+								fDisplayAttachment = TRUE;
+								break;
+							case CMagAdapter556mm:
+								fDisplayAttachment = TRUE;
+								break;
+							case CMagAdapter9mm:
+								fDisplayAttachment = TRUE;
+								break;
+							default:
+								break;
+						}
 					}
 				}
 				else
 				{
 					// display all weapon attachments
+					fDisplayAttachment = TRUE;
+				}
+				if ( fDisplayAttachment )
+				{
 					iNumAttachments++;
 					if ( iNumAttachments == 1 )
 						wcscat( pStrInfo, L"\n[" );
 					else
 						wcscat( pStrInfo, L", " );
 					wcscat( pStrInfo, ItemNames[ pSoldier->inv[ubSlot].usAttachItem[ cnt ] ] );
+					fDisplayAttachment = FALSE; // clear flag for next loop iteration
 				}
 			} // pSoldier->inv[HANDPOS].usAttachItem[ cnt ] != NOTHING
 		} // for
