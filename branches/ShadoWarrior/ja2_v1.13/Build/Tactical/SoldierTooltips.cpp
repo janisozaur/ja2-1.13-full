@@ -25,10 +25,6 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 	extern void GetSoldierScreenRect(SOLDIERTYPE*,SGPRect*);
 	GetSoldierScreenRect( pSoldier,  &aRect );
 	INT16		a1,a2;
-	BOOLEAN		fDisplayBigSlotItem	= FALSE;
-	const int	RocketF	= 976;
-	const int	RocketH	= 977;
-	const int	RocketT	= 978;
 
 	if ( gfKeyState[ALT] && pSoldier &&
 		IsPointInScreenRectWithRelative( gusMouseXPos, gusMouseYPos, &aRect, &a1, &a2 ) )
@@ -36,8 +32,9 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		MOUSETT		*pRegion = &mouseTT;
 		CHAR16		pStrInfo[ sizeof( pRegion->FastHelpText ) ];
 		int			iNVG = 0;
-
 		INT16		sSoldierGridNo;
+		BOOLEAN		fDisplayBigSlotItem	= FALSE;
+		UINT16		iCarriedRL = 0;
 
 		//Get the gridno the cursor is at
 		GetMouseMapPos( &sSoldierGridNo );
@@ -192,6 +189,9 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					break;
 			}
 
+			if ( Item[ pSoldier->inv[ BigSlot ].usItem ].rocketlauncher )
+				iCarriedRL = pSoldier->inv[ BigSlot ].usItem; // remember that enemy is carrying a rocket launcher when check for rocket ammo is made later on
+
 			if ( (  Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_LAUNCHER ) ||
 				 (	Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_GUN ) )
 			{
@@ -206,19 +206,10 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			else
 			{
 				// check for rocket ammo
-				switch ( pSoldier->inv[ BigSlot ].usItem )
+				if ( ( iCarriedRL != 0 ) &&												// soldier is carrying a RL ...
+					 ValidLaunchable( pSoldier->inv[ BigSlot ].usItem, iCarriedRL ) )	// this item is launchable by the RL
 				{
-					case RocketF:
-						fDisplayBigSlotItem = TRUE; // frag
-						break;
-					case RocketH:
-						fDisplayBigSlotItem = TRUE; // HEAT
-						break;
-					case RocketT:
-						fDisplayBigSlotItem = TRUE; // Thermobaric
-						break;
-					default:
-						break;
+					fDisplayBigSlotItem = TRUE;
 				}
 			}
 			if ( fDisplayBigSlotItem )
