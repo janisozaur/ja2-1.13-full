@@ -3998,21 +3998,34 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 	return( iReduction );
 }
 
-INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType )
+INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType, BOOLEAN *plateHit )
 {
-	INT32		iProtection, iAppliedProtection, iFailure;
+	INT32		iProtection, iAppliedProtection, iFailure, iCoverage;
 
 	iProtection = Armour[ ubArmourType ].ubProtection;
+	iCoverage = Armour [ ubArmourType ].ubCoverage;
+	if ( *plateHit ) iCoverage = 100;
 
 	if ( !AM_A_ROBOT( pTarget ) )
 	{
+		// check for the bullet missing armor due to coverage
+		iFailure = PreRandom( 100 ) + 1 - iCoverage;
+		if (iFailure > 0 )
+		{
+			if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_VEST )
+			{
+			 	return ( iImpact/2 );
+			}
+			else return ( 0 );
+		}
 		// check for the bullet hitting a weak spot in the armour
 		iFailure = PreRandom( 100 ) + 1 - *pbStatus;
-		if (iFailure > 0)
+		if (iFailure > 0 )
 		{
 			iProtection -= iFailure;
 			if (iProtection < 0)
 			{
+				if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_PLATE ) *plateHit=true;
 				return( 0 );
 			}
 		}
@@ -4074,6 +4087,7 @@ INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbSta
 	}
 
 	// return armour protection
+	if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_PLATE ) *plateHit=true;
 	return( iProtection );
 }
 
@@ -4083,14 +4097,16 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 	INT32					iTotalProtection = 0, iSlot;
 	OBJECTTYPE *	pArmour;
 	INT8					bPlatePos = -1;
+	BOOLEAN					plateHit = false;
 
 	if (pTarget->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		INT8 bDummyStatus = 100;
+		BOOLEAN dummyCoverage = true;
 
 		//bDummyStatus = (INT8) pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ];
 
-		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType );
+		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType, &dummyCoverage );
 
 		//pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ] = bDummyStatus; 
 
@@ -4126,7 +4142,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 				if (bPlatePos != -1)
 				{
 					// bullet got through jacket; apply ceramic plate armour
-					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType );
+					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType, &plateHit );
 					if ( pArmour->bAttachStatus[bPlatePos] < USABLE )
 					{
 						// destroy plates!
@@ -4148,7 +4164,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType );
+				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType, &plateHit );
 				if ( pArmour->bStatus[ 0 ] < USABLE )
 				{
 					//Madd: put any attachments that someone might have added to the armour in the merc's inventory

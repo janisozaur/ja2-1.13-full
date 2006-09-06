@@ -86,6 +86,7 @@ armourStartElementHandle(void *userData, const char *name, const char **atts)
 				(strcmp(name, "uiIndex") == 0 ||
 				strcmp(name, "ubArmourClass") == 0 ||
 				strcmp(name, "ubProtection") == 0 ||
+				strcmp(name, "ubCoverage") == 0 ||
 				strcmp(name, "ubDegradePercent") == 0 ))
 		{
 			pData->curElement = ELEMENT_PROPERTY;
@@ -147,6 +148,11 @@ armourEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curArmour.ubProtection = (UINT8) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "ubCoverage") == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curArmour.ubCoverage = (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubDegradePercent") == 0)
 		{
@@ -248,6 +254,7 @@ BOOLEAN WriteArmourStats()
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
 			FilePrintf(hFile,"\t\t<ubArmourClass>%d</ubArmourClass>\r\n",								Armour[cnt].ubArmourClass  );
 			FilePrintf(hFile,"\t\t<ubProtection>%d</ubProtection>\r\n",								Armour[cnt].ubProtection   );
+			FilePrintf(hFile,"\t\t<ubCoverage>%d</ubCoverage>\r\n",								Armour[cnt].ubCoverage   );
 			FilePrintf(hFile,"\t\t<ubDegradePercent>%d</ubDegradePercent>\r\n",								Armour[cnt].ubDegradePercent   );
 
 			FilePrintf(hFile,"\t</ARMOUR>\r\n");
