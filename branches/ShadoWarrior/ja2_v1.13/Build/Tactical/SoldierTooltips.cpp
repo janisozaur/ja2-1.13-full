@@ -49,53 +49,56 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		if ( gusSelectedSoldier != NOBODY )
 			iRangeToTarget = GetRangeInCellCoordsFromGridNoDiff( MercPtrs[ gusSelectedSoldier ]->sGridNo, sSoldierGridNo ) / 10;
 
-		for ( INT32 cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+		if ( gGameExternalOptions.fEnableDynamicSoldierTooltips )
 		{
-			if ( Item[MercPtrs[gusSelectedSoldier]->inv[HANDPOS].usAttachItem[cnt]].visionrangebonus > 0 )
+			for ( INT32 cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
 			{
-				fMercIsUsingScope = TRUE;
-				break;
-			}
-		}
-
-		if ( fMercIsUsingScope )
-		{
-			// set detail level to (at least) Full
-			ubTooltipDetailLevel = MAX(DL_Full,ubTooltipDetailLevel);
-		}
-		else
-		{
-			// add 10% to max tooltip viewing distance per level of the merc
-			uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->bExpLevel / 10);
-
-			if ( gGameExternalOptions.gfAllowLimitedVision )
-				uiMaxTooltipDistance *= 1 - (gGameExternalOptions.ubVisDistDecreasePerRainIntensity / 100);
-
-			if ( !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD1POS].usItem].nightvisionrangebonus > 0) &&
-				 !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD2POS].usItem].nightvisionrangebonus > 0) &&
-				 !DayTime() )
-			{
-				// if night reduce max tooltip viewing distance by a factor of 4 if merc is not wearing NVG
-				uiMaxTooltipDistance >>= 2;
+				if ( Item[MercPtrs[gusSelectedSoldier]->inv[HANDPOS].usAttachItem[cnt]].visionrangebonus > 0 )
+				{
+					fMercIsUsingScope = TRUE;
+					break;
+				}
 			}
 
-			if ( iRangeToTarget <= (INT32)(uiMaxTooltipDistance / 2) )
+			if ( fMercIsUsingScope )
 			{
-				// at under half the maximum view distance set tooltip detail to (at least) Basic
-				ubTooltipDetailLevel = MAX(DL_Basic,ubTooltipDetailLevel);
-			}
-			else if ( iRangeToTarget <= (INT32)uiMaxTooltipDistance )
-			{
-				// at under the maximum view distance set tooltip detail to (at least) Limited
-				ubTooltipDetailLevel = MAX(DL_Limited,ubTooltipDetailLevel);
+				// set detail level to (at least) Full
+				ubTooltipDetailLevel = MAX(DL_Full,ubTooltipDetailLevel);
 			}
 			else
 			{
-				// beyond visual range, do not display tooltip if player has not chosen full or debug details
-				if ( ubTooltipDetailLevel < DL_Full )
-					return;
-			}
-		}
+				// add 10% to max tooltip viewing distance per level of the merc
+				uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->bExpLevel / 10);
+
+				if ( gGameExternalOptions.gfAllowLimitedVision )
+					uiMaxTooltipDistance *= 1 - (gGameExternalOptions.ubVisDistDecreasePerRainIntensity / 100);
+
+				if ( !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD1POS].usItem].nightvisionrangebonus > 0) &&
+					 !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD2POS].usItem].nightvisionrangebonus > 0) &&
+					 !DayTime() )
+				{
+					// if night reduce max tooltip viewing distance by a factor of 4 if merc is not wearing NVG
+					uiMaxTooltipDistance >>= 2;
+				}
+
+				if ( iRangeToTarget <= (INT32)(uiMaxTooltipDistance / 2) )
+				{
+					// at under half the maximum view distance set tooltip detail to (at least) Basic
+					ubTooltipDetailLevel = MAX(DL_Basic,ubTooltipDetailLevel);
+				}
+				else if ( iRangeToTarget <= (INT32)uiMaxTooltipDistance )
+				{
+					// at under the maximum view distance set tooltip detail to (at least) Limited
+					ubTooltipDetailLevel = MAX(DL_Limited,ubTooltipDetailLevel);
+				}
+				else
+				{
+					// beyond visual range, do not display tooltip if player has not chosen full or debug details
+					if ( ubTooltipDetailLevel < DL_Full )
+						return;
+				}
+			} // fMercIsUsingScope is false
+		} // gGameExternalOptions.fEnableDynamicSoldierTooltips
 
 		swprintf( pStrInfo, L"" );
 		if ( ubTooltipDetailLevel == DL_Debug )
@@ -185,7 +188,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					swprintf( pStrInfo, L"%s|N|V|G: %s\n", pStrInfo, iNVG ? L"worn" : L"no NVG" );
 				}
 				swprintf( pStrInfo, L"%s|Gas |Mask: %s\n", pStrInfo,
-					( FindGasMask(pSoldier) ) ? L"worn" : L"no mask" );
+					( FindGasMask(pSoldier) != NO_SLOT ) ? L"worn" : L"no mask" );
 			}
 		}
 		else // gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Debug

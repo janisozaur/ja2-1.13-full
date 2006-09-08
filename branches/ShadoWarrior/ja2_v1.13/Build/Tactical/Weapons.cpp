@@ -957,7 +957,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] / 100;
+	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 
 //	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
 	bPlate = FindFirstArmourAttachment( pObj );
@@ -966,7 +966,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 		INT32 iValue2;
 
 		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
+		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
 
 		iValue += iValue2;
 	}
@@ -981,7 +981,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection );
+		iVest = 6500 * iVest / ( ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubCoverage ) + ( Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection * Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubCoverage ) );
 	}
 	else
 	{
@@ -992,7 +992,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection;
+		iHelmet = 1500 * iHelmet / ( Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubCoverage );
 	}
 	else
 	{
@@ -1003,7 +1003,7 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection;
+		iLeg = 2500 * iLeg / ( Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubCoverage );
 	}
 	else
 	{
@@ -1022,7 +1022,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] / 100;
+	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 	if ( Item[pObj->usItem].flakjacket )
 	{
 		// increase value for flak jackets!
@@ -1035,7 +1035,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 		INT32 iValue2;
 
 		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
+		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
 
 		iValue += iValue2;
 	}
@@ -1051,7 +1051,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = __min( 65, 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection) );
+		iVest = __min( 65, 6500 * iVest / ( ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubCoverage ) + ( Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection * Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubCoverage ) ) );
 	}
 	else
 	{
@@ -1062,7 +1062,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = __min( 15, 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection );
+		iHelmet = __min( 15, 1500 * iHelmet / ( Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubCoverage ) );
 	}
 	else
 	{
@@ -1073,7 +1073,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = __min( 25, 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection );
+		iLeg = __min( 25, 2500 * iLeg / ( Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubCoverage ) );
 	}
 	else
 	{
@@ -4012,7 +4012,7 @@ INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbSta
 		iFailure = PreRandom( 100 ) + 1 - iCoverage;
 		if (iFailure > 0 )
 		{
-			if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_VEST )
+			if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_VEST && !AmmoTypes[ubAmmoType].ignoreArmour)
 			{
 			 	return ( iImpact/2 );
 			}
