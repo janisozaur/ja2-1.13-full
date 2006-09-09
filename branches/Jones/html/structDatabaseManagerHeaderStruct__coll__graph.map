@@ -1,0 +1,6 @@
+base referer
+rect $structLibraryHeaderStruct.html 96,188 235,212
+rect $structFileHeaderStruct.html 17,7 137,31
+rect $structFileOpenStruct.html 125,97 235,121
+rect $structRealFileHeaderStruct.html 259,188 405,212
+rect $structRealFileOpenStruct.html 264,97 400,121

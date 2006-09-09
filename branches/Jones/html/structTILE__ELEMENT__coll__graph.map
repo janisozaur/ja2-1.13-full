@@ -1,0 +1,11 @@
+base referer
+rect $structTAG__DB__STRUCTURE__REF.html 107,98 301,122
+rect $structTAG__DB__STRUCTURE.html 5,7 165,31
+rect $structTAG__STRUCTURE__TILE.html 189,7 360,31
+rect $structTILE__ANIMATION__DATA.html 325,98 496,122
+rect $structRelTileLoc.html 520,98 603,122
+rect $structTAG__HVOBJECT.html 627,98 752,122
+rect $structSixteenBPPObjectInfo.html 392,7 544,31
+rect $structtagETRLEObject.html 568,7 688,31
+rect $structZStripInfo.html 712,7 789,31
+rect $structtagSGPPaletteEntry.html 813,7 955,31

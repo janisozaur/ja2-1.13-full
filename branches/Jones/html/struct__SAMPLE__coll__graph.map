@@ -1,0 +1,6 @@
+base referer
+rect $structDPINFO.html 125,98 197,122
+rect $structASISTAGE.html 5,7 93,31
+rect $structMIXSTAGE.html 117,7 205,31
+rect $structFLTSTAGE.html 229,7 317,31
+rect $struct__ADPCMDATATAG.html 221,98 360,122

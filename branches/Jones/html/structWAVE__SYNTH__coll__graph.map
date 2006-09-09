@@ -1,0 +1,3 @@
+base referer
+rect $structCTRL__LOG.html 5,7 96,31
+rect $structWAVE__ENTRY.html 120,7 232,31

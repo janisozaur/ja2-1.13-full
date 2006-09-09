@@ -1,0 +1,4 @@
+base referer
+rect $structASISTAGE.html 6,7 94,31
+rect $structMIXSTAGE.html 118,7 206,31
+rect $structFLTSTAGE.html 230,7 318,31

@@ -1,0 +1,4 @@
+base referer
+rect $structSOLDIERTYPE.html 25,7 137,31
+rect $structSOLDIERCREATE__STRUCT.html 101,97 293,121
+rect $structBASIC__SOLDIERCREATE__STRUCT.html 317,97 555,121

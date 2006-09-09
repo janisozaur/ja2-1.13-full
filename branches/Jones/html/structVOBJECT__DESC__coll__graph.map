@@ -1,0 +1,4 @@
+base referer
+rect $structimage__type.html 97,98 188,122
+rect $structtagETRLEObject.html 5,7 125,31
+rect $structtagSGPPaletteEntry.html 149,7 291,31

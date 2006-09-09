@@ -1,0 +1,5 @@
+base referer
+rect $struct__WAVEIN.html 6,7 88,31
+rect $struct__WAVEHDR.html 112,7 208,31
+rect $struct__AILINPUTINFO.html 232,7 352,31
+rect $struct__AIL__INPUT__INFO.html 376,7 510,31

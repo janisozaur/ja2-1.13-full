@@ -1,0 +1,4 @@
+base referer
+rect $struct__DDCOLORKEY.html 6,7 128,31
+rect $struct__DDSCAPS.html 170,7 263,31
+rect $struct__DDPIXELFORMAT.html 287,7 428,31

@@ -1,0 +1,6 @@
+base referer
+rect $structTAG__HVOBJECT.html 240,97 366,121
+rect $structSixteenBPPObjectInfo.html 6,7 158,31
+rect $structtagETRLEObject.html 182,7 302,31
+rect $structZStripInfo.html 326,7 403,31
+rect $structtagSGPPaletteEntry.html 427,7 568,31

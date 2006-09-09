@@ -1,0 +1,4 @@
+base referer
+rect $structpopupstring.html 6,7 96,31
+rect $structSGPPoint.html 174,7 254,31
+rect $structSGPRect.html 278,7 355,31

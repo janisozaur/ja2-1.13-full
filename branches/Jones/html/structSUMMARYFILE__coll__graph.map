@@ -1,0 +1,4 @@
+base referer
+rect $structTEAMSUMMARY.html 5,7 128,31
+rect $structMAPCREATE__STRUCT.html 152,7 315,31
+rect $structEXITGRID.html 339,7 421,31

@@ -1,0 +1,4 @@
+base referer
+rect $structDbBucketTag.html 5,98 107,122
+rect $structDbInfoTag.html 131,98 213,122
+rect $structDbFileTag.html 131,7 213,31

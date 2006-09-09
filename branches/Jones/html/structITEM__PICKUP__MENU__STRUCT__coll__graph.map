@@ -1,0 +1,5 @@
+base referer
+rect $struct__MOUSE__REGION.html 5,112 141,136
+rect $structOBJECTTYPE.html 245,7 352,31
+rect $structSOLDIERTYPE.html 375,112 487,136
+rect $structTAG__ITEM__POOL.html 511,112 641,136

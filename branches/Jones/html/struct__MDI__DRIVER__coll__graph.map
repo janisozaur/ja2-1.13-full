@@ -1,0 +1,6 @@
+base referer
+rect $structAIL__DRIVER.html 5,188 104,212
+rect $structVDI__HDR.html 15,97 95,121
+rect $structIO__PARMS.html 11,7 99,31
+rect $structMDI__DST.html 128,188 208,212
+rect $structMDI__DDT.html 232,188 312,212

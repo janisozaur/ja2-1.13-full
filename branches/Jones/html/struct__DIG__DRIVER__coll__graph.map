@@ -1,0 +1,14 @@
+base referer
+rect $structAIL__DRIVER.html 6,188 104,212
+rect $structVDI__HDR.html 15,98 95,122
+rect $structIO__PARMS.html 11,7 99,31
+rect $structDIG__DDT.html 128,188 208,212
+rect $structDIG__MODE.html 123,98 214,122
+rect $struct__WAVEHDR.html 232,188 328,212
+rect $struct__SAMPLE.html 446,188 528,212
+rect $structDPINFO.html 340,98 412,122
+rect $structASISTAGE.html 220,7 308,31
+rect $structMIXSTAGE.html 332,7 420,31
+rect $structFLTSTAGE.html 444,7 532,31
+rect $struct__ADPCMDATATAG.html 436,98 575,122
+rect $structDIG__DST.html 552,188 630,212

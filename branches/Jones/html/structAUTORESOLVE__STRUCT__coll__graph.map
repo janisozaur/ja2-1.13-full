@@ -1,0 +1,5 @@
+base referer
+rect $struct__MOUSE__REGION.html 6,13 142,37
+rect $structSOLDIERCELL.html 215,105 324,129
+rect $structSOLDIERTYPE.html 216,13 328,37
+rect $structSGPRect.html 428,105 506,129

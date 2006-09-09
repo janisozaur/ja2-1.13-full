@@ -1,0 +1,5 @@
+base referer
+rect $structSOLDIERTYPE.html 6,195 118,219
+rect $structPLAYERGROUP.html 63,285 183,309
+rect $structENEMYGROUP.html 16,13 131,37
+rect $structWAYPOINT.html 155,13 248,37

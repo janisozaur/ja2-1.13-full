@@ -1,0 +1,3 @@
+base referer
+rect $structSGPPoint.html 5,7 85,31
+rect $structSGPRect.html 109,7 187,31

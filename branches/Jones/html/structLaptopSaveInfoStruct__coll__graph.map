@@ -1,0 +1,6 @@
+base referer
+rect $structLIFE__INSURANCE__PAYOUT.html 5,97 197,121
+rect $structLAST__HIRED__MERC__STRUCT.html 221,97 429,121
+rect $structSTORE__INVENTORY.html 453,97 603,121
+rect $structBobbyRayOrderStruct.html 627,97 776,121
+rect $structBobbyRayPurchaseStruct.html 616,7 787,31

@@ -1,0 +1,6 @@
+base referer
+rect $structTAG__ITEM__POOL.html 107,14 238,38
+rect $structTAG__level__node.html 210,107 330,131
+rect $structTAG__anitile.html 106,208 196,232
+rect $structSOLDIERTYPE.html 247,308 359,332
+rect $structTAG__STRUCTURE.html 320,14 456,38

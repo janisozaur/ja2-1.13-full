@@ -1,0 +1,5 @@
+base referer
+rect $structTAG__STRUCTURE__FILE__REF.html 112,99 315,123
+rect $structAuxObjectData.html 67,7 179,31
+rect $structRelTileLoc.html 260,7 343,31
+rect $structTAG__HVOBJECT.html 523,99 648,123

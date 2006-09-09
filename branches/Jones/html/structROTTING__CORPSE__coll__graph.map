@@ -1,0 +1,8 @@
+base referer
+rect $structTAG__anitile.html 419,13 509,37
+rect $structTAG__level__node.html 504,107 624,131
+rect $structSOLDIERTYPE.html 376,229 488,253
+rect $structTAG__ITEM__POOL.html 703,229 833,253
+rect $structtagSGPPaletteEntry.html 5,13 147,37
+rect $structTAG__STRUCTURE.html 592,13 728,37
+rect $structROTTING__CORPSE__DEFINITION.html 171,13 395,37

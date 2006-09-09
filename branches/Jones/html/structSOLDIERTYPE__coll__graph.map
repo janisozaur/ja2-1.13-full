@@ -1,0 +1,10 @@
+base referer
+rect $structTAG__level__node.html 656,180 776,204
+rect $structTAG__anitile.html 893,205 984,229
+rect $structAnimationSurfaceCacheType.html 5,8 200,32
+rect $structTHROW__PARAMS.html 36,56 169,80
+rect $structOBJECTTYPE.html 49,104 156,128
+rect $structpath.html 79,205 127,229
+rect $structGROUP.html 68,292 137,316
+rect $structtagSGPPaletteEntry.html 32,340 173,364
+rect $structKEY__ON__RING.html 45,388 160,412
