@@ -442,7 +442,7 @@ void MercDailyUpdate()
 						pProfile->ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
 
 						// TO DO: send E-mail to player telling him the merc has returned from an assignment
-						AddEmail( ( UINT8 )( iOffset + ( cnt * AIM_REPLY_LENGTH_BARRY ) ), AIM_REPLY_LENGTH_BARRY, ( UINT8 )( 6 + cnt ), GetWorldTotalMin() );
+						AddEmail( ( UINT8 )( iOffset + ( cnt * AIM_REPLY_LENGTH_BARRY ) ), AIM_REPLY_LENGTH_BARRY, ( UINT8 )( 6 + cnt ), GetWorldTotalMin(), -1 );
 					}
 				}
 			}
@@ -1105,6 +1105,7 @@ void HourlyCamouflageUpdate( void )
 
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+				camoWoreOff = FALSE;
 			}
 
 			// if the merc has non-zero monster smell, degrade it by 1

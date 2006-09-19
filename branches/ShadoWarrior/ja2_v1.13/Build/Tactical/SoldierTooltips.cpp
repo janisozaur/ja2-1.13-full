@@ -297,10 +297,6 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 
 void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
 {
-	const int	TriggerGroup		= 1026;
-	const int	GunBarrelExtender	= 310;
-	const int	CMagAdapter556mm	= 1001;
-	const int	CMagAdapter9mm		= 1002;
 	INT32		iNumAttachments		= 0;
 	BOOLEAN		fDisplayAttachment	= FALSE;
 
@@ -358,31 +354,9 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 				if ( ubTooltipDetailLevel == DL_Basic )
 				{
 					// display only externally-visible weapon attachments
-					// don't display inseparable attachments such as the integral GLs on OICW & AICW
-					if ( !Item[pSoldier->inv[ubSlot].usAttachItem[ cnt ]].inseparable )
+					if ( !Item[pSoldier->inv[ubSlot].usAttachItem[ cnt ]].hiddenattachment )
 					{
-						if ( pSoldier->inv[ubSlot].usAttachItem[ cnt ] != TriggerGroup )
-						{
-							fDisplayAttachment = TRUE;
-						}
-					}
-					else
-					{
-						// display C-mags and barrel extensions
-						switch( pSoldier->inv[ubSlot].usAttachItem[ cnt ] )
-						{
-							case GunBarrelExtender:
-								fDisplayAttachment = TRUE;
-								break;
-							case CMagAdapter556mm:
-								fDisplayAttachment = TRUE;
-								break;
-							case CMagAdapter9mm:
-								fDisplayAttachment = TRUE;
-								break;
-							default:
-								break;
-						}
+						fDisplayAttachment = TRUE;
 					}
 				}
 				else

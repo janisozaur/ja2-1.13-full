@@ -2061,9 +2061,14 @@ STR16 pImpPopUpStrings[] =
 	L"Vous allez établir un nouveau profil. Etes-vous sûr de vouloir recommencer ?",
 	L"Veuillez entrer votre nom et votre sexe.",
 	L"Vous n'avez pas les moyens de vous offrir une analyse de profil.",
-L"Option inaccessible pour le moment.",
+	L"Option inaccessible pour le moment.",
 	L"Pour que cette analyse soit efficace, il doit vous rester au moins une place dans votre escouade.",
 	L"Profil déjà établi.",
+	L"Cannot load I.M.P. character from disk.",
+	L"You have already reached the maximum number of I.M.P. characters.",
+	L"You have already three I.M.P characters with the same gender on your team.",
+	L"You cannot afford the I.M.P character.",
+	L"The new I.M.P character has joined your team.",
 };
 
 
@@ -2569,7 +2574,7 @@ STR16			MercAccountText[] =
 	L"Désirez-vous autoriser le versement de %s ?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE 3
+// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -3519,7 +3524,7 @@ STR16	zOptionsScreenHelpText[] =
 	L"When ON, weapon ranges will be shown in tiles.",
 	L"When ON, tracer effect will be shown for single shots.",
 	L"When ON, you will hear rain noises when it is raining.",
-
+	L"When ON, I.M.P characters will get random personality and attitude.",
 };
 
 

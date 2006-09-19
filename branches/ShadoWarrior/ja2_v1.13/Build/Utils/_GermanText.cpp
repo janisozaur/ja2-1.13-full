@@ -175,11 +175,11 @@ UINT16 WeaponType[][30] =
 	L"Andere",
 	L"Pistole",
 	L"Maschinenpistole",
-	L"Schwere Maschinenpistole",
+	L"Schwere MP",
 	L"Gewehr",
 	L"Scharfschützengewehr",
 	L"Sturmgewehr",
-	L"Leichtes Maschinengewehr",
+	L"Leichtes MP",
 	L"Schrotflinte",
 };
 
@@ -1992,6 +1992,11 @@ STR16 pImpPopUpStrings[] =
 	L"Option zur Zeit nicht gültig.",
 	L"Um eine genaue Evaluierung durchzuführen, müssen Sie mindestens noch ein Teammitglied aufnehmen können.",
 	L"Evaluierung bereits durchgeführt.",
+	L"Fehler beim Laden des B.S.E. Charakters.",
+	L"Sie haben bereits die maximale Anzahl an B.S.E. Charakteren.",
+	L"Sie haben bereits drei B.S.E. Charaktere mit dem gleichen Geschlecht.",
+	L"Sie können sich den I.M.P. Charakter nicht leisten.",
+	L"Der neue B.S.E. Charakter ist nun in ihrem Team.",
 };
 
 // button labels used on the IMP site
@@ -2469,7 +2474,7 @@ STR16 MercAccountText[] =
 	L"Zahlung von %s wirklich genehmigen?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE 3
+// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -2665,10 +2670,10 @@ STR16			BobbyRFilter[] =
 	// Guns
 	L"Schwere W.",
 	L"Pistole",
-	L"M. Pistole",
+	L"MP",
 	L"SMG",
 	L"Gewehr",
-	L"SS Gewehr",
+	L"SSG",
 	L"Sturmgew.",
 	L"MG",
 	L"Schrotfl.",
@@ -3340,6 +3345,7 @@ STR16 zOptionsScreenHelpText[] =
 	L"Wenn diese Funktion aktiviert ist, wird Tracereffekt auch für Einzelschüsse angezeigt.",
 	L"Wenn diese Funktion aktiviert ist, werden Regengeräusche hörbar falls es regnet.",
 	L"Wenn diese Funktion aktiviert ist, sind Krähen im Spiel vorhanden.",
+	L"Wenn diese Funktion aktiviert ist, erhalten B.S.E Charaktere zufällige Persönlichkeit und Einstellung.",
 };
 
 STR16 gzGIOScreenText[] =

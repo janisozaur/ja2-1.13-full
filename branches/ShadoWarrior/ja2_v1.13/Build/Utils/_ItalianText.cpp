@@ -2055,9 +2055,14 @@ STR16 pImpPopUpStrings[] =
 	L"State per riiniziare l'intero processo di profilo. Ne siete certi?",
 	L"Inserite nome e cognome corretti oltre che al sesso",
 	L"L'analisi preliminare del vostro stato finanziario mostra che non potete offrire un'analisi di profilo.",
-  L"Opzione non valida questa volta.",
+	L"Opzione non valida questa volta.",
 	L"Per completare un profilo accurato, dovete aver spazio per almeno uno dei membri della squadra.",
 	L"Profilo già completato.",
+	L"Cannot load I.M.P. character from disk.",
+	L"You have already reached the maximum number of I.M.P. characters.",
+	L"You have already three I.M.P characters with the same gender on your team.",
+	L"You cannot afford the I.M.P character.",
+	L"The new I.M.P character has joined your team.",
 };
 
 
@@ -2563,7 +2568,7 @@ STR16			MercAccountText[] =
 	L"Conferma il pagamento di %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE 3
+// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {

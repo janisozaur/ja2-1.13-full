@@ -2069,13 +2069,18 @@ STR16 pMercContractOverStrings[] =
 
 STR16 pImpPopUpStrings[] =
 {
-	L"Invalid Authorization Code",
-	L"You Are About To Restart The Entire Profiling Process. Are You Certain?",
-	L"Please Enter A Valid Full Name and Gender",
+	L"Invalid authorization code",
+	L"You are about to restart the entire profiling process. Are you certain?",
+	L"Please enter a valid full name and gender",
 	L"Preliminary analysis of your financial status shows that you cannot afford a profile analysis.",
-  L"Not A Valid Option At This Time.",
+	L"Not a valid option at this time.",
 	L"To complete an accurate profile, you must have room for at least one team member.",
-	L"Profile Already Completed.",
+	L"Profile already completed.",
+	L"Cannot load I.M.P. character from disk.",
+	L"You have already reached the maximum number of I.M.P. characters.",
+	L"You have already three I.M.P characters with the same gender on your team.",
+	L"You cannot afford the I.M.P character.",
+	L"The new I.M.P character has joined your team.",
 };
 
 
@@ -2581,7 +2586,7 @@ STR16			MercAccountText[] =
 	L"Are you sure you want to authorize the payment of %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE 3
+// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -3458,6 +3463,7 @@ STR16		zOptionsToggleText[] =
 	L"Tracer effect for single shot",
 	L"Rain noises",
 	L"Allow crows",
+	L"Random I.M.P personality",
 };
 
 //This is the help text associated with the above toggles.
@@ -3534,6 +3540,7 @@ STR16	zOptionsScreenHelpText[] =
 	L"When ON, tracer effect will be shown for single shots.",
 	L"When ON, you will hear rain noises when it is raining.",
 	L"When ON, the crows are present in game.",
+	L"When ON, I.M.P characters will get random personality and attitude.",
 };
 
 

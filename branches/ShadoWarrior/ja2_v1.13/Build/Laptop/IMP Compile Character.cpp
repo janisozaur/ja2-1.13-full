@@ -250,7 +250,7 @@ BOOLEAN DoesCharacterHaveAPersoanlity( void )
 void CreatePlayerAttitude( void )
 {
 
-	if(gGameExternalOptions.fPers_att)
+	if(gGameSettings.fOptions[TOPTION_USE_RANDOM_PERSONALITY] == TRUE)
 		{
 			AddAnAttitudeToAttitudeList( ATT_OPTIMIST );
 			AddAnAttitudeToAttitudeList(  ATT_LONER );
@@ -595,7 +595,7 @@ void CreatePlayerPersonality( void )
 
 	// Kaiden: Added for optional Mercenary personalities and attitudes
 
-	if(gGameExternalOptions.fPers_att)
+	if(gGameSettings.fOptions[TOPTION_USE_RANDOM_PERSONALITY] == TRUE)
 		{
 				// Kaiden: More chances for Psycho and Normal.
 			AddAPersonalityToPersonalityList( NO_PERSONALITYTRAIT );
@@ -627,7 +627,7 @@ void CreatePlayerPersonality( void )
 			// Kaiden: Roll dice 20 times just to be on the safe side 
 			// was getting too many repeats. Will end up scrapping
 			// rand() later anyway so will worry about fixing it then.
-			for (iCounter2 = 0; iCounter < 20; iCounter2++)
+			for (iCounter2 = 0; iCounter2 < 20; iCounter2++)
 			{
 				iDiceValue = Random( iLastElementInPersonalityList + 1 );
 			}
@@ -639,7 +639,7 @@ void CreatePlayerPersonality( void )
 
 					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("iDiceValue = %d",iDiceValue));
 
-					if( PersonalityList[ iDiceValue ] =  NO_PERSONALITYTRAIT )
+					if( PersonalityList[ iDiceValue ] ==  NO_PERSONALITYTRAIT )
 						{
 							//Kaiden: Roll one more time for good measure:
 							iDiceValue = Random( iLastElementInPersonalityList + 1 );
