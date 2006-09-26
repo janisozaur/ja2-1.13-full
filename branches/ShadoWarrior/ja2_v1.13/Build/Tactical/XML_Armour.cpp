@@ -152,7 +152,10 @@ armourEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "ubCoverage") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubCoverage = (UINT8) atol(pData->szCharData);
+			if ( gGameExternalOptions.fEnableArmorCoverage )
+				pData->curArmour.ubCoverage = (UINT8) atol(pData->szCharData);
+			else
+				pData->curArmour.ubCoverage = 100;
 		}
 		else if(strcmp(name, "ubDegradePercent") == 0)
 		{

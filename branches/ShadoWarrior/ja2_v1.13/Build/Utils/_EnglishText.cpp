@@ -181,12 +181,12 @@ UINT16 WeaponType[MAXITEMS][30] =
 {
 	L"Other",
 	L"Pistol",
-	L"Machine pistol",
-	L"Submachine gun",
+	L"MP",
+	L"SMG",
 	L"Rifle",
 	L"Sniper rifle",
 	L"Assault rifle",
-	L"Light machine gun",
+	L"LMG",
 	L"Shotgun",
 };
 
@@ -4111,10 +4111,11 @@ STR16 gzLateLocalizedString[] =
 	L"Escort John and Mary?",
 	
 	// 60
-  L"Switch Activated.",
+	L"Switch Activated.",
 
 	L"%s's armour attachment has been smashed!",
-	L"%s fires %d more rounds than intended!"
+	L"%s fires %d more rounds than intended!",
+	L"%s fires %d more round than intended!",
 };
 
 STR16 gzCWStrings[] = 

@@ -286,7 +286,7 @@ typedef struct
 {
 	UINT8	ubArmourClass;
 	UINT16	ubProtection;
-	UINT8	ubCoverage;
+	UINT8	ubCoverage;	// Captain J
 	UINT8	ubDegradePercent;
 	UINT32		uiIndex;
 } ARMOURTYPE;

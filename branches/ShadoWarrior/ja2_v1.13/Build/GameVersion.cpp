@@ -23,11 +23,11 @@ INT16		zVersionLabel[256]		= { L"Beta v. 0.98" };
 #else
 
 //RELEASE BUILD VERSION 
-INT16		zVersionLabel[256]		= { L"Release v1.13.541.002 (by ShadoWarrior)" };
+INT16		zVersionLabel[256]		= { L"Release v1.13.566.001 (by ShadoWarrior)" };
 
 #endif
 
-INT8		czVersionNumber[16]	= { "Build 06.09.20" };
+INT8		czVersionNumber[16]	= { "Build 06.09.26" };
 INT16		zTrackingNumber[16]	= { L"Z" };
 
 

@@ -958,7 +958,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
 	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
-
+	
 //	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
 	bPlate = FindFirstArmourAttachment( pObj );
 	if ( bPlate != ITEM_NOT_FOUND )
@@ -3573,7 +3573,9 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if (pSoldier->bShock)
 		iChance -= (pSoldier->bShock * AIM_PENALTY_PER_SHOCK);
 
-	if ( Item[ usInHand ].usItemClass == IC_GUN )
+	// WANNE NEW: Changed this, because RPGs are not in the calculation, only guns
+	//if ( Item[ usInHand ].usItemClass == IC_GUN )
+	if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_LAUNCHER)
 	{
 		iMaxRange = GunRange( pInHand );
 	}
