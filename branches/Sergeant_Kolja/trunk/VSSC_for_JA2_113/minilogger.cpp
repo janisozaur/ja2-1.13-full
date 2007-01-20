@@ -211,7 +211,7 @@ static BOOL _internal_VsscRefreshAddr( PTS_vssc_data pHnd, char const * const pD
 
 
 
-/* takes Facility and or Level and stores it into handle struct.
+/* takes Facility and/or Level and stores it into handle struct.
  * if -1 is given, the parameter is not used. if so, return is FALSE, else TRUE.
  */
 static BOOL _internal_VsscRefreshLevel( PTS_vssc_data pHnd, short Facility, short Level )
@@ -282,7 +282,11 @@ int VSSC_open( char const * const pDestination, short Facility, short Level, cha
 
   /*
   if( ERROR_ALREADY_EXISTS == GetLastError() )
-    { I am not the first user of this Mutex, but this is Okay }
+    {
+#   ifdef DEBUG
+    OutputDebugString( _T("I am not the first user of this Mutex, but this is Okay") );
+#   endif
+    }
   */
 
   iRet = WSAStartup( MAKEWORD(2,2), &pHnd->wsaData );
@@ -420,6 +424,7 @@ void VSSC_Log( int Handle, unsigned Level, char const * const Module, char const
 
   /* if a recursing call comes here again, 
    * I don't like to see him. Really. Because it would get INF
+   * \todo: am I to histeric? mutex should have blocked it? lets find out later...
    */
   if( ReentranceBlocker==0 )
     {

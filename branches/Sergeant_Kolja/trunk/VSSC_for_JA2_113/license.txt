@@ -14,30 +14,29 @@
  * (c) 2006, Sergeant_Kolja@yahoo.de (aka Modem-Man)
  * all rights reserved
  * 
- * This Copyright and License is for all Files in this
- * Package
+ * This Copyright and License is for all Files in this Package
  *
  * License Model:
  * If this material is sometimes released to the public,
- * (and while You read this it must have been released)
+ * (and while You read this, it must have been released)
  * it should be under LGPL (Lesser Gnu Puplic License)
  * (see http://www.gnu.org/licenses/lgpl.html).
  *
  * But it is licensed in a way that it can be distributed 
  * together with Jagged Alliance (R)(TM) 2 Source Code 
- * (see: "SFI-SCLA" and "JA2 Open source temporary source exchange"
- * in the File "JA2-source-license.txt" inside the JA2 
- * Source packet).
+ * (see: "SFI-SCLA" and "JA2 Open source temporary source 
+ * exchange" in the File "JA2-source-license.txt" inside 
+ * the JA2 Source packet).
  * 
  * If "SFI-SCLA" prohibits adding LGPL Source Code to the 
  * original or modified JA2 Source, this code is hereby and 
- * per definition only distributed alone (under LGPL) and only 
- * the resulting Library is linked against "SFI-SCLA" protected 
- * products.
+ * per definition only distributed alone (under LGPL) and 
+ * only the resulting Library is linked against "SFI-SCLA" 
+ * protected products.
  *
  * If "LGPL" prohibits adding this LGPL Code to "SFI-SCLA"
- * Code original or modified Code, or requires something 
- * from "SFI-SCLA" Code that collides with "SFI-SCLA", 
+ * (original or modified) Code, or requires something 
+ * from SFI Code that collides with "SFI-SCLA", 
  * this code is hereby and per definition only distributed 
  * alone (under LGPL) and only the resulting Library is 
  * linked against "SFI-SCLA" protected products.
