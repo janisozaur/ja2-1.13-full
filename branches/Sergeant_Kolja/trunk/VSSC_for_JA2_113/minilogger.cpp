@@ -7,7 +7,7 @@
  * all rights reserved
  * 
  * don't forget to include license.txt in every 
- * distribution of this files. Event, don'T forget to read 
+ * distribution of this files. Event, don't forget to read 
  * them.
  * _______________________________________________________
  */
@@ -20,6 +20,20 @@
 #include <tchar.h>
 #include <assert.h>
 #include <time.h>
+
+/* _______________________________________________________
+ *
+ * ToDo:
+ *   Doxygen calling conventions
+ *   Reading Registry  HKLM/Software/vssc/appname
+ *   writing + reading HKCU ...
+ *   optional send to UART
+ *   LogLevel from Registry
+ *   LogLevel for Syslog, Uart, DebugString different
+ *   Interface for JA2 Debug Macros
+ *
+ * _______________________________________________________
+ */
 
 
 #if !defined(DIM)
@@ -84,7 +98,7 @@
   extern "C" {
 #endif
 
-int  VSSC_open( char const * const pDestination, short Facility, short Level, char const * const AppName );
+int  VSSC_open( char const * pDestination, short Facility, short Level, char const * pAppName );
 void VSSC_Log(   int Handle, unsigned Level, char const * const Module, char const * const fmt, ... );
 int  VSSC_close( int Handle );
 
@@ -257,7 +271,11 @@ static BOOL _internal_VsscRefreshZone( PTS_vssc_data pHnd, unsigned ZoneMask )
 
 
 /* arg is optional */
-int VSSC_open( char const * const pDestination, short Facility, short Level, char const * const AppName )
+int VSSC_open( char const * pDestination,  /*! IP and Port for Syslogd. may be NULL or "" for don't care */
+               short Facility,             /*! Facility (program type) as declarewd in RFC. May be -1 for don't care */
+               short Level,                /*! Level. 0=Silent, 7=verbose. May be -1 for don't care */
+               char const * pAppName       /*! Show all logs as comming from.... may be NULL or "" for don't care */
+             )
 {{
   PTS_vssc_data pHnd;
   int iRet;
@@ -298,13 +316,39 @@ int VSSC_open( char const * const pDestination, short Facility, short Level, cha
     return 0;
     }
 
-  _internal_VsscRefreshAddr( pHnd, (pDestination) ? pDestination : "127.0.0.1:514" );
+  if( !pDestination || pDestination ) /* if no destination was given, default 'syslog @ this pc' */
+    {
+    pDestination = "localhost:514";
+    }
+  _internal_VsscRefreshAddr( pHnd, pDestination );
   _internal_VsscRefreshLevel(pHnd, (short)((Facility>=0) ? Facility : LOG_LOCAL7), 
                                    (short)((Level   >=0) ? Level    : LOG_INFO ));
   _internal_VsscRefreshZone( pHnd, LOGZONE_EVERYTHING );
+
+  *pHnd->AppName=0;
+  if( !pAppName || !*pAppName ) /* if no Name was given, take current exe name */
+    {
+    char acBuffer[ MAX_PATH ];
+    char *p;
+    GetModuleFileName( NULL, acBuffer, DIM(acBuffer) -1 );
+    p = strrchr(acBuffer, '.');     /* trow ".exe" part  */
+    if(p) *p=0;
+    p = strrchr(acBuffer, '\\');    /* throw path prefix */
+    if(p)
+      {
+      *p++;
+      strncpy( pHnd->AppName, p, DIM(pHnd->AppName) ); /**/
+      pHnd->AppName[DIM(pHnd->AppName)-1]=0;
+      }
+    }
+  else
+    {
+    strncpy( pHnd->AppName, pAppName, DIM(pHnd->AppName) );
+    pHnd->AppName[DIM(pHnd->AppName)-1]=0;
+    }
+  
+
   pHnd->MsgCount = 0;
-  strncpy( pHnd->AppName, AppName?AppName:"", 32 );
-  pHnd->AppName[32]=0;
 
 # ifdef _DEBUG
   pHnd->ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_RFC3164_SOURCEIP | LOGFLGS_COUNTER64;
@@ -325,7 +369,7 @@ int VSSC_open( char const * const pDestination, short Facility, short Level, cha
   pHnd->OwnAddr.sin_addr.s_addr = INADDR_ANY;
 
   iRet = setsockopt( pHnd->SndSocket, SOL_SOCKET, SO_REUSEADDR, (const char*) &Blocking, sizeof(Blocking) );
-  
+  /* usually, there is no need for binding UDP sockets, but later we will send simply with send() instead of sendto(), so this makes things more ease */
   iRet = bind( pHnd->SndSocket, (struct sockaddr *)&pHnd->OwnAddr, sizeof(pHnd->OwnAddr) );
   if( iRet == SOCKET_ERROR )
     {
@@ -334,6 +378,17 @@ int VSSC_open( char const * const pDestination, short Facility, short Level, cha
     return 0;
     }
 
+  /*local_block()*/
+    {
+    char OutTxt[512];
+    _snprintf( OutTxt, DIM(OutTxt), "Syslog for %s:%u open and ready. App='%s', Fac=%u, Lev=%u\r\n",
+              pHnd->SendTo_Addr, 
+              pHnd->SendTo_Port,
+              pHnd->AppName, 
+              pHnd->Facility, 
+              pHnd->Level );
+    OutputDebugString( OutTxt );
+    }
   return (int) pHnd;
 }}
 
@@ -347,6 +402,16 @@ int VSSC_close( int Handle )
     {
     OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
     return (int) FALSE;
+    }
+
+  /*local_block()*/
+    {
+    char OutTxt[512];
+    _snprintf( OutTxt, DIM(OutTxt), "Syslog for %s:%u closed. App='%s'\r\n",
+              pHnd->SendTo_Addr, 
+              pHnd->SendTo_Port,
+              pHnd->AppName );
+    OutputDebugString( OutTxt );
     }
 
   closesocket( pHnd->SndSocket );
@@ -528,8 +593,8 @@ int main(int argc, char* argv[])
   int Handle;
 
   printf("-----------------------------\r\n");
-  //Handle = VSSC_open( NULL, -1, -1, NULL );
-  Handle = VSSC_open( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+  Handle = VSSC_open( NULL, -1, -1, NULL );
+  //Handle = VSSC_open( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
   if(!Handle)
     return -1;
 
@@ -541,6 +606,8 @@ int main(int argc, char* argv[])
   VSSC_Log( Handle, LOG_NOTICE , mod, "Nachricht Typ: 'NOTICE' %u", LOG_NOTICE );
   VSSC_Log( Handle, LOG_INFO   , mod, "Nachricht Typ: 'INFO'   %u", LOG_INFO   );
   VSSC_Log( Handle, LOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u", LOG_DEBUG  );
+  VSSC_Log( Handle, LOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u, %020s, %03u, 0x%08x", LOG_DEBUG, 
+                                      "Test-Ausgabe eines Textes...", 77, 88 );
   
   VSSC_close( Handle );
   printf("-----------------------------\r\n");
