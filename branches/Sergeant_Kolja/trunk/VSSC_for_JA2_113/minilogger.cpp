@@ -50,20 +50,21 @@ int main(int argc, char* argv[])
   int Handle;
 
   printf("-----------------------------\r\n");
-  Handle = VSSC_open( NULL, -1, -1, NULL );
-  //Handle = VSSC_open( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+  Handle = VSSC_open();
+  //Handle = VSSC_open2( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
   if(!Handle)
     return -1;
 
-  VSSC_Log( Handle, LOG_EMERG  , mod, "Nachricht Typ: 'EMERG'  %u", LOG_EMERG  );
-  VSSC_Log( Handle, LOG_ALERT  , mod, "Nachricht Typ: 'ALERT'  %u", LOG_ALERT  );
-  VSSC_Log( Handle, LOG_CRIT   , mod, "Nachricht Typ: 'CRIT'   %u", LOG_CRIT   );
-  VSSC_Log( Handle, LOG_ERR    , mod, "Nachricht Typ: 'ERR'    %u", LOG_ERR    );
-  VSSC_Log( Handle, LOG_WARNING, mod, "Nachricht Typ: 'WARNING'%u", LOG_WARNING);
-  VSSC_Log( Handle, LOG_NOTICE , mod, "Nachricht Typ: 'NOTICE' %u", LOG_NOTICE );
-  VSSC_Log( Handle, LOG_INFO   , mod, "Nachricht Typ: 'INFO'   %u", LOG_INFO   );
-  VSSC_Log( Handle, LOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u", LOG_DEBUG  );
-  VSSC_Log( Handle, LOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u, %020s, %03u, 0x%08x", LOG_DEBUG, 
+  VSSC_Log( Handle, SLOG_SILENT , mod, "Nachricht Typ: 'SILENT' %u", SLOG_EMERG  );
+  VSSC_Log( Handle, SLOG_EMERG  , mod, "Nachricht Typ: 'EMERG'  %u", SLOG_EMERG  );
+  VSSC_Log( Handle, SLOG_ALERT  , mod, "Nachricht Typ: 'ALERT'  %u", SLOG_ALERT  );
+  VSSC_Log( Handle, SLOG_CRIT   , mod, "Nachricht Typ: 'CRIT'   %u", SLOG_CRIT   );
+  VSSC_Log( Handle, SLOG_ERR    , mod, "Nachricht Typ: 'ERR'    %u", SLOG_ERR    );
+  VSSC_Log( Handle, SLOG_WARNING, mod, "Nachricht Typ: 'WARNING'%u", SLOG_WARNING);
+  VSSC_Log( Handle, SLOG_NOTICE , mod, "Nachricht Typ: 'NOTICE' %u", SLOG_NOTICE );
+  VSSC_Log( Handle, SLOG_INFO   , mod, "Nachricht Typ: 'INFO'   %u", SLOG_INFO   );
+  VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u", SLOG_DEBUG  );
+  VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u, %020s, %03u, 0x%08x", SLOG_DEBUG, 
                                       "Test-Ausgabe eines Textes...", 77, 88 );
   
   VSSC_close( Handle );

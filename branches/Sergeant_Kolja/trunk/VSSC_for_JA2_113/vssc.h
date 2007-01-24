@@ -28,16 +28,14 @@
 #endif
 
 
-/*---- Severyties ---------*/
-#  define  LOG_EMERG   0  
-#  define  LOG_ALERT   1  
-#  define  LOG_CRIT    2  
-#  define  LOG_ERR     3  
-#  define  LOG_WARNING 4  
-#  define  LOG_NOTICE  5  
-#  define  LOG_INFO    6  
-#  define  LOG_DEBUG   7
-
+/*---- Facilities ---------*/
+/* Simply taken from BSD syslog. The values looks a litle complicated,
+ * but You don't have to understand them. I left them original to prevent 
+ * problems under MinGW or CygWin. 
+ * Facilities are a sort of 'grouping' Applications. Under normal circumstances
+ * You'll use one of the LOG_LOCALx entries.
+ */
+#if !defined( LOG_KERN )
 #  define  LOG_KERN      (0<<3) /*!< Facility : Kernel */
 #  define  LOG_USER      (1<<3) /*!< Facility : User Process*/
 #  define  LOG_MAIL      (2<<3) /*!< Facility : internal Mail & eMail */
@@ -59,12 +57,37 @@
 #  define LOG_LOCAL5     (21<<3) /*!< Facility : some Application #5*/
 #  define LOG_LOCAL6     (22<<3) /*!< Facility : some Application #6*/
 #  define LOG_LOCAL7     (23<<3) /*!< Facility : some Application #7*/
+#endif
+
+/*---- Severyties ---------*/
+/* today, we do NOT use the BSD LOG-Levels, because they use 0 as an active
+ * value, while we use 0 as 'dont log' and furthermore they stop at LOG_DEBUG
+ * while we prefer to have more than one Debug-Level.
+ *
+ * this will be no problem for campatibility, because we use the original
+ * syslog values later (internal), just AFTER our own filtering.
+ * f.i.: if You 
+ */
+#  define  SLOG_SILENT    0 /*!< SLOG_SILENT : if global set, nothing will be logged. If given as parameter, the Msg will NEVER appear */
+#  define  SLOG_EMERG     1 /*!< SLOG_EMERG : same as BSDs 'LOG_EMERG'. Use only on very problematic errors, i.e. before BSOD ;-) */
+#  define  SLOG_ALERT     2 /*!< SLOG_ALERT : same as BSDs 'LOG_ALERT'. All, a User or Admin must see, because more Problems following */
+#  define  SLOG_CRIT      3 /*!< SLOG_CRIT : same as BSDs 'LOG_CRIT'. Critical Situations which will bring the Applic to not work or to work only limited */
+#  define  SLOG_ERR       4 /*!< SLOG_ERR : same as BSDs 'LOG_ERR'. Every unexpected Error, like locked files, out of mem, etc. */
+#  define  SLOG_WARNING   5 /*!< SLOG_WARNING : same as BSDs 'LOG_WARNING'. Use it for situations which could lead to problems */
+#  define  SLOG_NOTICE    6 /*!< SLOG_NOTICE : same as BSDs 'LOG_NOTICE'. Use freely */
+#  define  SLOG_INFO      7 /*!< SLOG_INFO : same as BSDs 'LOG_INFO'. More Informations, but not as important as Notices */
+#  define  SLOG_DEBUG     8 /*!< SLOG_DEBUG : same as BSDs 'LOG_DEBUG'. Most times used for Messages needed while debugging */
+#  define  SLOG_DEBUG2    9 /*!< SLOG_DEBUG2 : mapped to BSDs 'LOG_DEBUG'. Debug info that is only important in some cases */
+#  define  SLOG_DEBUGMAX 10 /*!< SLOG_DEBUGMAX : also mapped to BSDs 'LOG_DEBUG'. Debug info that is only important in some very rare cases */
+#  define  SLOG_ERROR   SLOG_ERR /* only a double. prevent me for misstyping <vbg> */
+#  define  SLOG_WARN    SLOG_WARNING /* only a double. prevent me for misstyping <vbg> again */
 
 
 
-#  define LOGZONE_EVERYTHING (0xFFFFFF)
-#  define LOGZONE_STARTUP    (0x000001)
-#  define LOGZONE_CLEANUP    (0x800000)
+
+#  define LOGZONE_EVERYTHING (0xFFFFFF) /*!< LOGZONE_EVERYTHING : if global set, every module will be logged. If given as parameter, the Msg will EVER appear */
+#  define LOGZONE_STARTUP    (0x000001) /*!< LOGZONE_STARTUP : use this in, f.i. Init_xxx() functions */
+#  define LOGZONE_CLEANUP    (0x800000) /*!< LOGZONE_CLEANUP : use this in, f.i. Exit_xxx() functions, define more if needed */
 
 
 #  define LOGFLGS_RFC3164_TIMESTAMP 0x0001 /* if 0, no Timestamp is sent */
@@ -85,7 +108,8 @@
 /*========================================================*/
 /*==                                                    ==*/
 /*========================================================*/
-int  VSSC_open( char const * pDestination, short Facility, short Level, char const * pAppName );
+int  VSSC_open( void );
+int  VSSC_open2( char const * pDestination, short Facility, short Level, char const * pAppName ); /* pointers can be NULL, shorts can be -1 for default */
 int  VSSC_close( int Handle );
 void VSSC_Log(   int Handle, unsigned Level, char const * const Module, char const * const fmt, ... );
 /*========================================================*/

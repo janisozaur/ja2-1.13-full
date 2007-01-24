@@ -24,6 +24,7 @@
 /* _______________________________________________________
  *
  * ToDo:
+ *   exported foo for setting Level, Fac, Mask
  *   Doxygen calling conventions
  *   Reading Registry  HKLM/Software/vssc/appname
  *   writing + reading HKCU ...
@@ -72,8 +73,16 @@ typedef struct vssc_data_
 
 
 
-
-
+#if !defined( LOG_EMERG )
+#  define LOG_EMERG    0
+#  define LOG_ALERT    1
+#  define LOG_CRIT     2
+#  define LOG_ERR      3
+#  define LOG_WARNING  4
+#  define LOG_NOTICE   5
+#  define LOG_INFO     6
+#  define LOG_DEBUG    7
+#endif
 
 /*========================================================*/
 /*== internal helper functions                          ==*/
@@ -204,14 +213,44 @@ BOOL _internal_VsscRefreshZone( PTS_vssc_data pHnd, unsigned ZoneMask )
 
 
 
+static
+short _internal_Vssc2syslogLevel( short VsscLevel )
+{{
+  switch( VsscLevel )
+    {
+    case SLOG_SILENT   : return LOG_DEBUG; /* this will not be reached, but for shure... */
+    case SLOG_EMERG    : return LOG_EMERG;
+    case SLOG_ALERT    : return LOG_ALERT;
+    case SLOG_CRIT     : return LOG_CRIT;
+    case SLOG_ERR      : return LOG_ERR;
+    case SLOG_WARNING  : return LOG_WARNING;
+    case SLOG_NOTICE   : return LOG_NOTICE;
+    case SLOG_INFO     : return LOG_INFO;
+    case SLOG_DEBUG    : 
+    case SLOG_DEBUG2   : 
+    case SLOG_DEBUGMAX : 
+    default            : return LOG_DEBUG;
+    }
+}};
+
+
+
+
 
 
 /*========================================================*/
 /*== PUBLIC functions                                   ==*/
 /*========================================================*/
+int VSSC_open( void )
+{{
+  return VSSC_open2( NULL, -1, -1, NULL );
+}}
+
+
+
 
 /* arg is optional */
-int VSSC_open( char const * pDestination,  /*! IP and Port for Syslogd. may be NULL or "" for don't care */
+int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be NULL or "" for don't care */
                short Facility,             /*! Facility (program type) as declarewd in RFC. May be -1 for don't care */
                short Level,                /*! Level. 0=Silent, 7=verbose. May be -1 for don't care */
                char const * pAppName       /*! Show all logs as comming from.... may be NULL or "" for don't care */
@@ -403,13 +442,16 @@ void VSSC_Log( int Handle, unsigned Level, char const * const Module, char const
    * so we have a Offset of +1 between both Levels
    */
   Level &= 0xFF; /* Real Level is only lower 8 bit */
-  if( pHnd->Level < Level+1 )
+  if( Level==0 )
     {
     return;
     }
 
-  if( (Level & 0xFF) > LOG_DEBUG ) /* SYSLOG RFC3164 Level is only lower 3 bit */
-    Level = LOG_DEBUG;
+  Level = _internal_Vssc2syslogLevel( Level );
+  if( pHnd->Level < Level )
+    {
+    return;
+    }
 
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
    * If this trashes to many logs, set a higher value or connect a pipe to the final reader
