@@ -23,14 +23,30 @@
 /* _______________________________________________________
  *
  * ToDo:
- *   Doxygen calling conventions
- *   Reading Registry  HKLM/Software/vssc/appname
- *   writing + reading HKCU ...
- *   optional send to UART
- *   LogLevel from Registry
+ *   switch from bind()/send() to sendto(), so the Host can be changed on-the-fly
+ *   RFC 3164 header implementation check: is pid & host mandantory or required? correction if req'd
+ *   Interface for Set_LogLevel, Mask, Host. Proposal: one Setter method with string switch
  *   LogLevel for Syslog, Uart, DebugString different
+ *   Interface for WCHAR / TCHAR
+ *   Interface for VSSC_LogSysError() (log a printf text plus full text of GetLastError() result, if not 0)
+ *   convert OEM to Ascii, Convert national char to UTF/Mime
+ *   Doxygen Documentation for all PUBLIC Symbols
+ *   Doxygen Documentation for some PRIVATE things to increase understanding (?)
+ *   Doxygen Footer with JA2-Logo ;-) and Link to JA2.113
+ *   Reading Registry  HKCU/Software/vssc/<appname> if not found, copy from ...
+ *   Reading Registry  HKLM/Software/vssc/<appname> if not found fill with defaults, if Rights are appropriate
+ *   optional log to UART
+ *   optional log to File
+ *   optional log to SysEventLog
+ *   LogLevel from Registry
+ *   Interface for On_ConfigChangedEvent()
+ *   Internal On_ConfigChangedPolling() if Polling Time Delta is given (only for System without RegEvent)
+ *   Registry Changed Event
  *   Interface for JA2 Debug Macros
- *
+ *   Interface for SDK-Macros like RETAILMSG()
+ *   Implement Second Part of RFC 3164: sending XML-like Datagrams over TCP
+ *   Porting to WinCE3..6, (it is mostly Training and for possibly re-use this module at my employer)
+ *   Porting to ***nix, altough it is not required there, its a good training
  * _______________________________________________________
  */
 
