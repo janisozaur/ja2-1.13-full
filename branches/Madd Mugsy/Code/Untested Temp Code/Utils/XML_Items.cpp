@@ -803,7 +803,8 @@ itemEndElementHandle(void *userData, const char *name)
 			pData->curElement = ELEMENT;
 			pData->curItem.bloodieditem  = (UINT16) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "DefaultAttachment")	 == 0)
+		
+		if(strcmp(name, "DefaultAttachment")	 == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.defaultattachment[0]  = (UINT16) atol(pData->szCharData);
