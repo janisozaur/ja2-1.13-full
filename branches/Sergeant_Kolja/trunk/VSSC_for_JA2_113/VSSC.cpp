@@ -21,25 +21,24 @@
 #include <assert.h>
 #include <time.h>
 
-/*! file VSSC.cpp
+/*! \file VSSC.cpp
  *  \brief VSSC basic interface
  *
  *  Details following below:
+ * \author Sergeant Kolja (Initial Author)<br>
  */
 
 
 
-/* _______________________________________________________
- *
- * ToDo:
- *   exported foo for setting Level, Fac, Mask
- *   Doxygen calling conventions
- *   Reading Registry  HKLM/Software/vssc/appname
- *   writing + reading HKCU ...
- *   optional send to UART
- *   LogLevel from Registry
- *   LogLevel for Syslog, Uart, DebugString different
- *   Interface for JA2 Debug Macros
+/*! \todo here follows a list what I think what has to be done in this file:
+ *   - exported foo for setting Level, Fac, Mask
+ *   - Doxygen calling conventions
+ *   - Reading Registry  HKLM/Software/vssc/appname
+ *   - writing + reading HKCU ...
+ *   - optional send to UART
+ *   - LogLevel from Registry
+ *   - LogLevel for Syslog, Uart, DebugString different
+ *   - Interface for JA2 Debug Macros
  *
  * _______________________________________________________
  */
@@ -249,6 +248,10 @@ short _internal_Vssc2syslogLevel( short VsscLevel )
 /*========================================================*/
 /*== PUBLIC functions                                   ==*/
 /*========================================================*/
+
+/*! \addtogroup basic_functions Functions (basic)
+ *@{
+ */
 
 /*! \brief simple initialisation
  *
@@ -475,7 +478,7 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
                unsigned Level,            /*!< [in] Level under which the message shall be handled */
                char const * const Module, /*!< [in] module-name, a short string of, f.i. the file where it is located */
                char const * const fmt,    /*!< [in] THE message itself. can be a printf() compatible string expression */
-               ...                        /*!< [in] if fmt contains printf expressions, here have more parameters to follow */
+               ...                        /*!< \param [in] variable list: if fmt contains printf expressions, here have more parameters to follow */
              )
 {{
   va_list arg_list;                 /* variable args for printf-mask */
@@ -492,19 +495,19 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
 
   if( !pHnd || !Module || !fmt )
     {
-    return;
+    return; /*! \retval void */
     }
   
   if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
     {
     OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
-    return;
+    return; /*! \retval void */
     }
 
   BitMask = (Level & 0xFFFFFF00) >> 8;
   if( BitMask && !(pHnd->ZoneMask & BitMask) )
     {
-    return;
+    return; /*! \retval void */
     }
 
   /* pHnd->Level = 0 : show nothing
@@ -515,13 +518,13 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
   Level &= 0xFF; /* Real Level is only lower 8 bit */
   if( Level==0 )
     {
-    return;
+    return; /*! \retval void */
     }
 
   Level = _internal_Vssc2syslogLevel( Level );
   if( pHnd->Level < Level )
     {
-    return;
+    return; /*! \retval void */
     }
 
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
@@ -531,13 +534,15 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
   /* sorry, lasts too long. The other Thread won the race */
   /* or mutex killed inbetween? Shit ... at least do not log anything */
   if( (dwWaitResult == WAIT_TIMEOUT) || (dwWaitResult == WAIT_ABANDONED) )
-    {return;}
+    {
+    return; /*! \retval void */
+    }
 
   /* should never be seen...  */
   if( (dwWaitResult == WAIT_FAILED) || (dwWaitResult != WAIT_OBJECT_0) )
     {
     assert(0);
-    return;
+    return; /*! \retval void */
     }
 
   /* if a recursing call comes here again, 
@@ -623,8 +628,12 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
     }
 
   ReleaseMutex( pHnd->hMutex );
-  return;
+  return; /*! \retval void */
 }}
+
+
+
+/*! @} */
 
 
 #ifdef __cplusplus

@@ -20,15 +20,14 @@
 #include <tchar.h>
 #include <assert.h>
 
-/*! file minilogger.cpp
+/*! \file minilogger.cpp
  *  \brief Sample Code for the Very Simple Syslog Client
  *
- * This file shows the typical usage and may act as test workbench.
+ *  This file shows the typical usage and may act as test workbench.
+ *  \author Sergeant Kolja (Initial Author)<br>
  */
 
-/* _______________________________________________________
- *
- *! \todo
+/*! \todo here follows a list what I think what has to be done in the whole project:
  *  - switch from bind()/send() to sendto(), so the Host can be changed on-the-fly
  *  - RFC 3164 header implementation check: is pid & host mandantory or required? correction if req'd
  *  - Separate only lower 4 Bit for Level, 28 Bit Grouping. From that 28 bits, set  some of the MSB 
@@ -43,8 +42,8 @@
  *  - Doxygen Documentation for all PUBLIC Symbols
  *  - Doxygen Documentation for some PRIVATE things to increase understanding (?)
  *  - Doxygen Footer with JA2-Logo ;-) and Link to JA2.113
- *  - Reading Registry  HKCU/Software/vssc/<appname> if not found, copy from ...
- *  - Reading Registry  HKLM/Software/vssc/<appname> if not found fill with defaults, if Rights are appropriate
+ *  - Reading Registry  HKCU/Software/vssc/%appname% if not found, copy from ...
+ *  - Reading Registry  HKLM/Software/vssc/%appname% if not found fill with defaults, if Rights are appropriate
  *  - optional log to UART
  *  - optional log to File
  *  - optional log to SysEventLog
