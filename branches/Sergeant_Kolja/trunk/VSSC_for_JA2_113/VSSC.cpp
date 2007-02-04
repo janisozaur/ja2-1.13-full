@@ -2,7 +2,7 @@
  * VSSC.cpp : a very Simple Sylog Client
  *
  * Copyright :
- * (c) 2006, Sergeant_Kolja@yahoo.de (aka Modem-Man)
+ * (c) 2006, SergeantKolja(at)yahoo.de (aka Modem-Man)
  * all rights reserved
  * 
  * don't forget to include license.txt in every 
@@ -22,9 +22,10 @@
 #include <time.h>
 
 /*! \file VSSC.cpp
- *  \brief VSSC basic interface
+ *  \brief VSSC basic functions interface
  *
  *  Details following below:
+ *
  * \author Sergeant Kolja (Initial Author)<br>
  */
 
@@ -55,6 +56,8 @@
 /*========================================================*/
 /*== internal Handle structure                          ==*/
 /*========================================================*/
+
+/*! \cond NEVER_DOX */
 typedef struct vssc_data_
   {
   int            SecCookie1;
@@ -76,10 +79,12 @@ typedef struct vssc_data_
   /* -------------------- */
   int            SecCookie2;
   } TS_vssc_data, *PTS_vssc_data;
+/*! \endcond */
 
 
 
 
+/*! \cond NEVER_DOX */
 #if !defined( LOG_EMERG )
 #  define LOG_EMERG    0
 #  define LOG_ALERT    1
@@ -90,6 +95,8 @@ typedef struct vssc_data_
 #  define LOG_INFO     6
 #  define LOG_DEBUG    7
 #endif
+/*! \endcond */
+
 
 /*========================================================*/
 /*== internal helper functions                          ==*/
@@ -474,11 +481,29 @@ int VSSC_close( int Handle /*!< [in] Handle a valid Handle from succesful VSSC_o
 
 
 
-void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
+/*! \brief WRITING A LOG LINE
+ *
+ * This function is the hard of the Logging System
+ *
+ * sample call:
+ *  \code
+    char const * const mod = "MyModule";
+    int hLog;
+
+    hLog = VSSC_open2( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+    if( hLog )
+      {
+      VSSC_Log( hLog, SLOG_DEBUG, mod, "Message of typ: 'SILENT' %u", SLOG_EMERG  );
+      VSSC_close( hLog );
+      }
+ *  \endcode
+ *
+ */
+int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
                unsigned Level,            /*!< [in] Level under which the message shall be handled */
                char const * const Module, /*!< [in] module-name, a short string of, f.i. the file where it is located */
                char const * const fmt,    /*!< [in] THE message itself. can be a printf() compatible string expression */
-               ...                        /*!< \param [in] variable list: if fmt contains printf expressions, here have more parameters to follow */
+               ...                        /*!< [in] ... variable list: if fmt contains printf expressions, here have more parameters to follow */
              )
 {{
   va_list arg_list;                 /* variable args for printf-mask */
@@ -495,19 +520,19 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
 
   if( !pHnd || !Module || !fmt )
     {
-    return; /*! \retval void */
+    return -1; /*! \retval -1 : Error in Parameter, not allowed NULL param was given */
     }
   
   if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
     {
     OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
-    return; /*! \retval void */
+    return -2; /*! \retval -2 : Invalid or corrupt Handle. This Error can not be caught outside of GPF in every case. */
     }
 
-  BitMask = (Level & 0xFFFFFF00) >> 8;
+  BitMask = (Level & 0xFFFFFFF0) >> 4;
   if( BitMask && !(pHnd->ZoneMask & BitMask) )
     {
-    return; /*! \retval void */
+    return 0; /*! \retval 0 : no need to show the message because of Zonemask. */
     }
 
   /* pHnd->Level = 0 : show nothing
@@ -515,16 +540,16 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
    *               2 : show alert  (LOG_ALERT, 1)
    * so we have a Offset of +1 between both Levels
    */
-  Level &= 0xFF; /* Real Level is only lower 8 bit */
+  Level &= 0x0F; /* Real Level is only lower 4 bit */
   if( Level==0 )
     {
-    return; /*! \retval void */
+    return 0; /*! \retval 0 : no need to show the message because of too low own Level. */
     }
 
   Level = _internal_Vssc2syslogLevel( Level );
   if( pHnd->Level < Level )
     {
-    return; /*! \retval void */
+    return; /*! \retval 0 : no need to show the message because of Lower global Level. */
     }
 
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
@@ -535,14 +560,14 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
   /* or mutex killed inbetween? Shit ... at least do not log anything */
   if( (dwWaitResult == WAIT_TIMEOUT) || (dwWaitResult == WAIT_ABANDONED) )
     {
-    return; /*! \retval void */
+    return -3; /*! \retval -3 : cannot log, because reentrace protection blocked the call. */
     }
 
   /* should never be seen...  */
   if( (dwWaitResult == WAIT_FAILED) || (dwWaitResult != WAIT_OBJECT_0) )
     {
     assert(0);
-    return; /*! \retval void */
+    return -4; /*! \retval -3 : cannot log, because reentrace protection blocker faild to lock mutex. */
     }
 
   /* if a recursing call comes here again, 
@@ -620,6 +645,7 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
       if(iRet<1)
         {
         DWORD dwErr = GetLastError();
+        iRet = -dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
         }
       }
     _snprintf( logmsg, logmsg_size, "%08u: <%u> %s\r\n", GetTickCount(), FacLev, logtext );
@@ -628,7 +654,7 @@ void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from s
     }
 
   ReleaseMutex( pHnd->hMutex );
-  return; /*! \retval void */
+  return iRet; /*! \retval 0..1024 : count of characters successfully given to UDP Socket Stack */
 }}
 
 

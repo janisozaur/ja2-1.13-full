@@ -20,7 +20,7 @@
  * \note 
  * This documentation is currently not finished yet.<br>
  * <br>
- * Copyright: (c) 2006, Sergeant_Kolja@yahoo.de (aka Modem-Man). 
+ * Copyright: (c) 2006, SergeantKolja(at)yahoo.de (aka Modem-Man). 
  * The Copyright is hereby claimed for the whole Work.
  * The term 'Work' declares the sum of all files this package consist of, 
  * and means as well the source code, the documentation as well as the 
@@ -291,7 +291,7 @@
  *
  *
  * \section license_copyright License and Copyright
- * Author: Sergeant Kolja (Sergeant_Kolja@yahoo.de)<br>
+ * Author: Sergeant Kolja (SergeantKolja(at)yahoo.de)<br>
  * Date  : first created on 01. November 2006<br>
  * <br>
  * License Model:<br>

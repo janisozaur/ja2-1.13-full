@@ -3,7 +3,7 @@
  *                  for a (later to be sorted) logger
  *
  * Copyright :
- * (c) 2006, Sergeant_Kolja@yahoo.de (aka Modem-Man)
+ * (c) 2006, SergeantKolja(at)yahoo.de (aka Modem-Man)
  * all rights reserved
  * 
  * don't forget to include license.txt in every 
@@ -24,16 +24,16 @@
  *  \brief Sample Code for the Very Simple Syslog Client
  *
  *  This file shows the typical usage and may act as test workbench.
+ *
  *  \author Sergeant Kolja (Initial Author)<br>
- */
-
-/*! \todo here follows a list what I think what has to be done in the whole project:
+ *
+ *! \todo here follows a list what I think what has to be done in the whole project:
  *  - switch from bind()/send() to sendto(), so the Host can be changed on-the-fly
  *  - RFC 3164 header implementation check: is pid & host mandantory or required? correction if req'd
  *  - Separate only lower 4 Bit for Level, 28 Bit Grouping. From that 28 bits, set  some of the MSB 
- *      with some meaningful predefines, while keeping LSB free for cutomizing
- *      f.i. SLOG_ENTRY, SLOG_EXIT, SLOG_DATA, SLOG_SOCK, SLOG_COMM, SLOG_TACT, SLOG_STRAT, 
- *      SLOG_GDI, SLOG_UI, SLOG_RIGHTS, SLOG_FILEIO, SLOG_INVOKE
+ *    with some meaningful predefines, while keeping LSB free for cutomizing
+ *    f.i. SLOG_ENTRY, SLOG_EXIT, SLOG_DATA, SLOG_SOCK, SLOG_COMM, SLOG_TACT, SLOG_STRAT, 
+ *    SLOG_GDI, SLOG_UI, SLOG_RIGHTS, SLOG_FILEIO, SLOG_INVOKE
  *  - Interface for Set_LogLevel, Mask, Host. Proposal: one Setter method with string switch
  *  - LogLevel for Syslog, Uart, DebugString different
  *  - Interface for WCHAR / TCHAR
@@ -57,20 +57,22 @@
  *  - Porting to WinCE3..6, (it is mostly Training and for possibly re-use this module at my employer)
  *  - Porting to ***nix, altough it is not required there, its a good training
  *
- * _______________________________________________________
  */
 
 
 
 
 /***************************************************************************/
+/*! \cond NEVER_DOX */
 char const * const mod = "minilogger";
+/*! \endcond */
 
 
 
 /***************************************************************************/
 
 
+/*! \cond NEVER_DOX */
 int main(int argc, char* argv[])
 {{
   int Handle;
@@ -99,4 +101,7 @@ int main(int argc, char* argv[])
   
   return 0;
 }}
+/*! \endcond */
+
+
 

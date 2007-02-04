@@ -11,7 +11,7 @@
  * Very Simple Syslog Server (should be named 'VSSS')
  *
  * Copyright :
- * (c) 2006, Sergeant_Kolja@yahoo.de (aka Modem-Man)
+ * (c) 2006, SergeantKolja@yahoo.de (aka Modem-Man)
  * all rights reserved
  * 
  * This Copyright and License is valid for all files in 
