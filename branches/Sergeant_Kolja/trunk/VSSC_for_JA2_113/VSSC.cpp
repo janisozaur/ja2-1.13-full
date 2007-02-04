@@ -21,6 +21,14 @@
 #include <assert.h>
 #include <time.h>
 
+/*! file VSSC.cpp
+ *  \brief VSSC basic interface
+ *
+ *  Details following below:
+ */
+
+
+
 /* _______________________________________________________
  *
  * ToDo:
@@ -241,20 +249,60 @@ short _internal_Vssc2syslogLevel( short VsscLevel )
 /*========================================================*/
 /*== PUBLIC functions                                   ==*/
 /*========================================================*/
+
+/*! \brief simple initialisation
+ *
+ * This is the most simple init function. No params required.
+ *
+ * sample call:
+ *  \code
+    char const * const mod = "MyModule";
+    int hLog;
+
+    hLog = VSSC_open();
+    if( hLog )
+      {
+      VSSC_Log( hLog, SLOG_DEBUG, mod, "Message of typ: 'SILENT' %u", SLOG_EMERG  );
+      VSSC_close( hLog );
+      }
+ *  \endcode
+ *
+ * \note
+ * this function is a variant. there is another one which can be parameterized.
+ */
 int VSSC_open( void )
 {{
-  return VSSC_open2( NULL, -1, -1, NULL );
+  return VSSC_open2( NULL, -1, -1, NULL ); /*! \retval same as VSSC_open2() */
 }}
 
 
 
 
-/* arg is optional */
-int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be NULL or "" for don't care */
-               short Facility,             /*! Facility (program type) as declarewd in RFC. May be -1 for don't care */
-               short Level,                /*! Level. 0=Silent, 7=verbose. May be -1 for don't care */
-               char const * pAppName       /*! Show all logs as comming from.... may be NULL or "" for don't care */
-             )
+/*! \brief complex initialisation
+ *
+ * This is the more powerful init function. Params are usually required, but can be 0 or Zero
+ *
+ * sample call:
+ *  \code
+    char const * const mod = "MyModule";
+    int hLog;
+
+    hLog = VSSC_open2( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+    if( hLog )
+      {
+      VSSC_Log( hLog, SLOG_DEBUG, mod, "Message of typ: 'SILENT' %u", SLOG_EMERG  );
+      VSSC_close( hLog );
+      }
+ *  \endcode
+ *
+ * \note
+ * this function is a variant. there is another one which can be parameterized.
+ */
+int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. may be NULL or "" for don't care */
+                short Facility,            /*!< [in] Facility (program type) as declarewd in RFC. May be -1 for don't care */
+                short Level,               /*!< [in] Level. 0=Silent, 7=verbose. May be -1 for don't care */
+                char const * pAppName      /*!< [in] Show all logs as comming from.... may be NULL or "" for don't care */
+              )
 {{
   PTS_vssc_data pHnd;
   int iRet;
@@ -264,7 +312,7 @@ int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be 
   if( !pHnd )
     {
     OutputDebugString( _T("Simple Syslog Client: outofmem\r\n") );
-    return 0;
+    return 0; /*! \retval 0 not enough memory. open failed */
     }
   memset( pHnd, 0x00, sizeof( TS_vssc_data ) );
   pHnd->SecCookie1 = pHnd->SecCookie2 = 0xC001B001;
@@ -274,7 +322,7 @@ int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be 
     {
     OutputDebugString( _T("Simple Syslog Client: MUTEX Problem\r\n") );
     free( pHnd );
-    return 0;
+    return 0; /*! \retval 0 cannot create a needed kernel object. open failed */
     }
 
   /*
@@ -292,7 +340,7 @@ int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be 
     {
     OutputDebugString( _T("Simple Syslog Client: socket() FAILED\r\n") );
     free( pHnd );
-    return 0;
+    return 0; /*! \retval 0 cannot create a IP socket. open failed */
     }
 
   if( !pDestination || pDestination ) /* if no destination was given, default 'syslog @ this pc' */
@@ -354,7 +402,7 @@ int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be 
     {
     OutputDebugString( _T("Simple Syslog Client: bind() FAILED\r\n") );
     free( pHnd );
-    return 0;
+    return 0; /*! \retval 0 cannot bind the outgoing udp port. open failed */
     }
 
   /*local_block()*/
@@ -368,19 +416,37 @@ int VSSC_open2( char const * pDestination,  /*! IP and Port for Syslogd. may be 
               pHnd->Level );
     OutputDebugString( OutTxt );
     }
-  return (int) pHnd;
+  return (int) pHnd;  /*! \retval pHnd A value of nonzero is a valid handle for subsequent VSSC_Log() calls. */
 }}
 
 
 
 
-int VSSC_close( int Handle )
+/*! \brief closing the logging
+ *
+ * This function closes the Logging system and releases all the ressources (memory, mutex, sockets, etc.)
+ *
+ * sample call:
+ *  \code
+    char const * const mod = "MyModule";
+    int hLog;
+
+    hLog = VSSC_open2( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+    if( hLog )
+      {
+      VSSC_Log( hLog, SLOG_DEBUG, mod, "Message of typ: 'SILENT' %u", SLOG_EMERG  );
+      VSSC_close( hLog );
+      }
+ *  \endcode
+ *
+ */
+int VSSC_close( int Handle /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */)
 {{
   PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
   if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
     {
     OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
-    return (int) FALSE;
+    return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
   /*local_block()*/
@@ -399,13 +465,18 @@ int VSSC_close( int Handle )
   CloseHandle( pHnd->hMutex );
 
   free( pHnd );
-  return (int) TRUE;
+  return (int) TRUE;  /*! \retval TRUE if everything was closed successful. */
 }}
 
 
 
 
-void VSSC_Log( int Handle, unsigned Level, char const * const Module, char const * const fmt, ... )
+void VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
+               unsigned Level,            /*!< [in] Level under which the message shall be handled */
+               char const * const Module, /*!< [in] module-name, a short string of, f.i. the file where it is located */
+               char const * const fmt,    /*!< [in] THE message itself. can be a printf() compatible string expression */
+               ...                        /*!< [in] if fmt contains printf expressions, here have more parameters to follow */
+             )
 {{
   va_list arg_list;                 /* variable args for printf-mask */
   static int ReentranceBlocker = 0; /* prevent deadlocks when logging inside log system */

@@ -1,5 +1,6 @@
 #ifndef _VSSC_H_
 #define _VSSC_H_
+
 /* _______________________________________________________
  * VSSC.H: Interface for a very Simple Sylog Client
  *
@@ -12,6 +13,15 @@
  * Even, don't forget to read them.
  * _______________________________________________________
  */
+
+/*! file VSSC.h
+ *  \brief prototypes and macros for the Very Simple Syslog Client
+ *
+ * This file exports the low layer interface for the Very Simple Syslog Client (VSSC)
+ * and some predifined constats as well as some useful macros.
+ * Project special Macros like SDKs RETAILMSG etc. will appaer in an extra file
+ */
+
 
 #include "stdafx.h" /* we assume to have all global & common project settings in this file */
 
