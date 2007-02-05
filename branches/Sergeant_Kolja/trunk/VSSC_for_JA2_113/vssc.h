@@ -153,7 +153,7 @@
 int  VSSC_open( void );
 int  VSSC_open2( char const * pDestination, short Facility, short Level, char const * pAppName ); /* pointers can be NULL, shorts can be -1 for default */
 int  VSSC_close( int Handle );
-void VSSC_Log(   int Handle, unsigned Level, char const * const Module, char const * const fmt, ... );
+int  VSSC_Log(   int Handle, unsigned Level, char const * const Module, char const * const fmt, ... );
 /*========================================================*/
 /*==                                                    ==*/
 /*========================================================*/

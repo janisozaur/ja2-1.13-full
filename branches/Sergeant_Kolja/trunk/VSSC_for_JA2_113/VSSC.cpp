@@ -27,11 +27,8 @@
  *  Details following below:
  *
  * \author Sergeant Kolja (Initial Author)<br>
- */
-
-
-
-/*! \todo here follows a list what I think what has to be done in this file:
+ *
+ * \todo here follows a list what I think what has to be done in this file:
  *   - exported foo for setting Level, Fac, Mask
  *   - Doxygen calling conventions
  *   - Reading Registry  HKLM/Software/vssc/appname
@@ -41,7 +38,6 @@
  *   - LogLevel for Syslog, Uart, DebugString different
  *   - Interface for JA2 Debug Macros
  *
- * _______________________________________________________
  */
 
 
@@ -101,6 +97,20 @@ typedef struct vssc_data_
 /*========================================================*/
 /*== internal helper functions                          ==*/
 /*========================================================*/
+
+/*! \cond NEVER_DOX */
+__inline
+void OnDebug_ReportT( TCHAR const * const pMessage )
+{{
+  #if defined( DEBUG ) || defined( _DEBUG )
+  OutputDebugString( pMessage );
+  #endif
+  return;
+}}
+/*! \endcond */
+
+
+
 static
 char *_internal_IpFromName( PTS_vssc_data pHnd, const char * HostName, char * IPAddr, int MaxIPlen )
 {{
@@ -520,18 +530,20 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
 
   if( !pHnd || !Module || !fmt )
     {
+    OnDebug_ReportT( _T("Err: Null Arg\r\n") );
     return -1; /*! \retval -1 : Error in Parameter, not allowed NULL param was given */
     }
   
   if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
     {
-    OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
+    OnDebug_ReportT( _T("Simple Syslog Handle corrupt\r\n") );
     return -2; /*! \retval -2 : Invalid or corrupt Handle. This Error can not be caught outside of GPF in every case. */
     }
 
   BitMask = (Level & 0xFFFFFFF0) >> 4;
   if( BitMask && !(pHnd->ZoneMask & BitMask) )
     {
+    OnDebug_ReportT( _T("suppressed because of Bitmask\r\n") );
     return 0; /*! \retval 0 : no need to show the message because of Zonemask. */
     }
 
@@ -543,13 +555,15 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
   Level &= 0x0F; /* Real Level is only lower 4 bit */
   if( Level==0 )
     {
+    OnDebug_ReportT( _T("Suppressed because own Level 0\r\n") );
     return 0; /*! \retval 0 : no need to show the message because of too low own Level. */
     }
 
   Level = _internal_Vssc2syslogLevel( Level );
   if( pHnd->Level < Level )
     {
-    return; /*! \retval 0 : no need to show the message because of Lower global Level. */
+    OnDebug_ReportT( _T("Suppressed because low Level\r\n") );
+    return 0; /*! \retval 0 : no need to show the message because of Lower global Level. */
     }
 
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
@@ -560,14 +574,16 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
   /* or mutex killed inbetween? Shit ... at least do not log anything */
   if( (dwWaitResult == WAIT_TIMEOUT) || (dwWaitResult == WAIT_ABANDONED) )
     {
+    OnDebug_ReportT( _T("Suppressed because reentrace protection blocked the call\r\n") );
     return -3; /*! \retval -3 : cannot log, because reentrace protection blocked the call. */
     }
 
   /* should never be seen...  */
   if( (dwWaitResult == WAIT_FAILED) || (dwWaitResult != WAIT_OBJECT_0) )
     {
+    OnDebug_ReportT( _T("Suppressed because reentrace protection blocked failed to lock the MTX\r\n") );
     assert(0);
-    return -4; /*! \retval -3 : cannot log, because reentrace protection blocker faild to lock mutex. */
+    return -4; /*! \retval -4 : cannot log, because reentrace protection blocker faild to lock mutex. */
     }
 
   /* if a recursing call comes here again, 
@@ -645,12 +661,17 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
       if(iRet<1)
         {
         DWORD dwErr = GetLastError();
-        iRet = -dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
+        OnDebug_ReportT( _T("not sent, sendto() failed\r\n") );
+        iRet = - (int) dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
         }
       }
     _snprintf( logmsg, logmsg_size, "%08u: <%u> %s\r\n", GetTickCount(), FacLev, logtext );
     OutputDebugString( logmsg );
     ReentranceBlocker--;
+    }
+  else
+    {
+    OnDebug_ReportT( _T("Suppressed because reentrace protection blocker != 0\r\n") );
     }
 
   ReleaseMutex( pHnd->hMutex );

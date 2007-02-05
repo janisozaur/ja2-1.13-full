@@ -108,6 +108,14 @@ SOURCE=.\StdAfx.h
 
 SOURCE=.\vssc.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\VSSC_4_JA2.H
+# End Source File
+# Begin Source File
+
+SOURCE=.\VSSC_intro.h
+# End Source File
 # End Group
 # Begin Group "Ressourcendateien"
 

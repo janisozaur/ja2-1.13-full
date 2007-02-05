@@ -1,11 +1,7 @@
 /*! \file VSSC_intro.h
  *  \brief This is an overview of VSSC
  *
- *
- */
-
-
-/*! \mainpage VSSC, a Very Simple Syslog Client
+ * \mainpage VSSC, a Very Simple Syslog Client
  * <br>
  * Purpose:<br>
  * Writing debug, informational, warning and error information into screen, 
@@ -99,6 +95,67 @@
  * - watch the output at a collector/viewer
  * - call the close() function
  * 
+ * 
+ * \subsection widechar_printf Character Set for the Messages
+ * because syslog messages are related to TELNET Standard, all textual 
+ * messages have to be represented as 8 bit 'netascii'. 'Netascii' means the 7 
+ * least significant bits (characters 0x20 to 0x7F) of the Ascii charset, 
+ * transported in 8-bit-octets. Thats why, we have only <b>char*</b> arguments 
+ * and no <b>WCHAR*</b> functions at all.<br>
+ * <br>
+ * May be, we will extend this in the future for <b>WCHAR</B> and macros for 
+ * <b>TCHAR</b> messages, too. It is also <b>possible</b> that I will decide 
+ * to support MIME-quoted UTF-8 output for both char and WCHAR input in the 
+ * future. But until that time, umlauts, accents and special characters 
+ * outside of the 7 bit charset are  <b>prohibed</b>
+ *
+ *
+ * \section license_copyright License and Copyright
+ * Author: Sergeant Kolja (SergeantKolja(at)yahoo.de)<br>
+ * Date  : first created on 01. November 2006<br>
+ * <br>
+ * License Model:<br>
+ * This is not public domain but copyrighted work. Everybody can use and 
+ * distribute it at no costs if he accepts the license agreement. If this 
+ * Work is sometimes released to the public, (and while You read this text, 
+ * it must have been released), it is protected by LGPL (Lesser Gnu Public 
+ * License, see http://www.gnu.org/licenses/lgpl.html). If You want to use 
+ * this Work, You have to agree the license, otherwise You have no 
+ * permission to use this Work or parts of it.<br>
+ * <br>
+ * Only the Initial Author has the right to set any state of this project 
+ * (additional) under another license. All releases of this project will 
+ * (of course) keep staing under the license under which they were originally 
+ * published. Only the one that was added to the new license is under both
+ * licenses and its later improvements will be under the new license only.
+ * <br>
+ * <br>
+ * Since this work was intensionally created to be used inside JA2.113, this 
+ * work is licensed in a way that it can be distributed together with 
+ * "Jagged Alliance (R)(TM) 2" Source Code (see: "SFI-SCLA" and "JA2 Open 
+ * source temporary source exchange" in the File "JA2-source-license.txt" 
+ * inside the JA2 Source packet).
+ * Including this work, or parts of it, or derived material (source or binary) 
+ * in some JA2 code does not put this work under the "SFI-SCLA" license. 
+ * Both licenses will coexist and will protect their own code only.
+ * <br>
+ * <br>
+ * 
+ *
+ * \remarks
+ * Disclaimer:<br>
+ * This work has been done in my sparetime, outside of my company and without 
+ * any tools of my employer.<br>
+ * This work has no relation (but the know how) to my professional written 
+ * syslog routines. This Work also has no relation to my accidently also "VSSC" 
+ * called, employee written, Very Simple Syslog Server (which should better 
+ * be named 'VSSS')
+ *
+ *
+ *
+ *
+ * \defgroup install_grp How to Install
+ * @{
  *
  * \section install_sec Installation
  *
@@ -275,62 +332,7 @@
  * purposes ;-)
  * <br>
  *
- *
- * \subsection widechar_printf Character Set for the Messages
- * because syslog messages are related to TELNET Standard, all textual 
- * messages have to be represented as 8 bit 'netascii'. 'Netascii' means the 7 
- * least significant bits (characters 0x20 to 0x7F) of the Ascii charset, 
- * transported in 8-bit-octets. Thats why, we have only <b>char*</b> arguments 
- * and no <b>WCHAR*</b> functions at all.<br>
- * <br>
- * May be, we will extend this in the future for <b>WCHAR</B> and macros for 
- * <b>TCHAR</b> messages, too. It is also <b>possible</b> that I will decide 
- * to support MIME-quoted UTF-8 output for both char and WCHAR input in the 
- * future. But until that time, umlauts, accents and special characters 
- * outside of the 7 bit charset are  <b>prohibed</b>
- *
- *
- * \section license_copyright License and Copyright
- * Author: Sergeant Kolja (SergeantKolja(at)yahoo.de)<br>
- * Date  : first created on 01. November 2006<br>
- * <br>
- * License Model:<br>
- * This is not public domain but copyrighted work. Everybody can use and 
- * distribute it at no costs if he accepts the license agreement. If this 
- * Work is sometimes released to the public, (and while You read this text, 
- * it must have been released), it is protected by LGPL (Lesser Gnu Public 
- * License, see http://www.gnu.org/licenses/lgpl.html). If You want to use 
- * this Work, You have to agree the license, otherwise You have no 
- * permission to use this Work or parts of it.<br>
- * <br>
- * Only the Initial Author has the right to set any state of this project 
- * (additional) under another license. All releases of this project will 
- * (of course) keep staing under the license under which they were originally 
- * published. Only the one that was added to the new license is under both
- * licenses and its later improvements will be under the new license only.
- * <br>
- * <br>
- * Since this work was intensionally created to be used inside JA2.113, this 
- * work is licensed in a way that it can be distributed together with 
- * "Jagged Alliance (R)(TM) 2" Source Code (see: "SFI-SCLA" and "JA2 Open 
- * source temporary source exchange" in the File "JA2-source-license.txt" 
- * inside the JA2 Source packet).
- * Including this work, or parts of it, or derived material (source or binary) 
- * in some JA2 code does not put this work under the "SFI-SCLA" license. 
- * Both licenses will coexist and will protect their own code only.
- * <br>
- * <br>
- * 
- *
- * \remarks
- * Disclaimer:<br>
- * This work has been done in my sparetime, outside of my company and without 
- * any tools of my employer.<br>
- * This work has no relation (but the know how) to my professional written 
- * syslog routines. This Work also has no relation to my accidently also "VSSC" 
- * called, employee written, Very Simple Syslog Server (which should better 
- * be named 'VSSS')
- *
- *
- *
  */
+
+/* @} */
+
