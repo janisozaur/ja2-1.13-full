@@ -60,6 +60,18 @@
  *  - Implement Second Part of RFC 3164: sending XML-like Datagrams over TCP
  *  - Porting to WinCE3..6, (it is mostly Training and for possibly re-use this module at my employer)
  *  - Porting to ***nix, altough it is not required there, its a good training
+ *  - Registry Tree for Setup, like:
+ *  \code
+    Reg\Syslog\Url=UDP://localhost:514
+            \Level=5
+             \Mask=FFFFFF
+    Reg\Uart\Url=COM1://19200,8n1
+          \Level=3
+           \Mask=A00C100
+    Reg\File\Url=FILE://C:\Temp\Log.txt
+          \Level=1
+           \Mask=000002
+ *  \endcode
  *
  */
 

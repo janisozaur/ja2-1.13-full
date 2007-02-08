@@ -37,6 +37,17 @@
  *   - LogLevel from Registry
  *   - LogLevel for Syslog, Uart, DebugString different
  *   - Interface for JA2 Debug Macros
+ *   - Interface for SDK Debug Macros like "IFDBG(svslog_DebugOut(LOG_ERRORS, L"ERROR: buffer length.\n"));"
+ *     IFDBG is usually
+ *     \code
+       #if defined(DEBUG)
+       #define IFDBG(x)    x
+       #define IFNDBG(x)
+       #else
+       #define IFDBG(x)
+       #define IFNDBG(x)   x
+       #endif
+       \endcode
  *
  */
 
