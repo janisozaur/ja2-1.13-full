@@ -70,6 +70,8 @@ typedef struct
 // Video state variables
 //
 
+BOOLEAN		gfFullScreen = FALSE;
+
 static UINT16                 gusScreenWidth;
 static UINT16                 gusScreenHeight;
 static UINT8                  gubScreenPixelDepth;

@@ -21,7 +21,7 @@
 #define MAX_CURSOR_HEIGHT     64
 #define VIDEO_NO_CURSOR		  0xFFFF
 
-
+extern BOOLEAN				gfFullScreen;			// Full screen or windowed mode
 extern HWND					ghWindow;
 extern UINT32               guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 
@@ -58,10 +58,10 @@ extern PTR                  LockMouseBuffer(UINT32 *uiPitch);
 extern void                 UnlockMouseBuffer(void);
 extern BOOLEAN              GetRGBDistribution(void);
 extern BOOLEAN              GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BblueBitMask);
-extern BOOLEAN							SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usOffsetX, UINT16 usOffsetY );
+extern BOOLEAN				SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usOffsetX, UINT16 usOffsetY );
 extern BOOLEAN              HideMouseCursor(void);
 extern BOOLEAN              LoadCursorFile(PTR pFilename);
-extern BOOLEAN							SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY );
+extern BOOLEAN				SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY );
 extern void                 StartFrameBufferRender(void);
 extern void                 EndFrameBufferRender(void);
 extern void                 PrintScreen(void);

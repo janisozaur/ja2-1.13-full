@@ -19,15 +19,13 @@ int main(int argc, char *argv[])
 	// Copy commandline!
 	giCLArgumentsCount = argc;
 	gpCLArgument       = argv;
-
-	//Process the command line BEFORE initialization
 	ProcessJa2CommandLineBeforeInitialization();
 
-	// Mem Usage
 	giStartMem = MemGetFree(  ) / 1024;
 
-	if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	if ( SDL_Init( 0 ) < 0 )
 	{
+		fprintf(stderr,	"Couldn't initialize SDL: %s\n", SDL_GetError());
 		return FALSE;
 	}
 
@@ -38,10 +36,11 @@ int main(int argc, char *argv[])
 		return FALSE;
 	}
 
-	//if ( InitializeStandardGamingPlatform() )
-	//{
-	//	fprintf(stderr, "Couldn't init SGP: %s\n", SDL_GetError());
-	//}
+	if ( InitializeStandardGamingPlatform() )
+	{
+		fprintf(stderr, "Couldn't init SGP\n");
+		return FALSE;
+	}
 
 	gfApplicationActive = TRUE;
 	gfProgramIsRunning = TRUE;
@@ -127,7 +126,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	//ShutdownStandardGamingPlatform();
+	ShutdownStandardGamingPlatform();
 	SDL_Quit();
 
 	return(255);

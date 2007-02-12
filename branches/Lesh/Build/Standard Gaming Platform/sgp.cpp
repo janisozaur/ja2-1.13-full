@@ -77,8 +77,6 @@ BOOLEAN						gfCapturingVideo = FALSE;
 HINSTANCE					ghInstance;
 
 
-void ProcessJa2CommandLineBeforeInitialization(CHAR8 *pCommandLine);
-
 // Global Variable Declarations
 #ifdef WINDOWED_MODE
 RECT	rcWindow;
@@ -377,11 +375,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	GetRuntimeSettings( );
 
-	if ( SDL_Init( 0 ) < 0 )
-	{
-		return FALSE;
-	}
-
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();
 
@@ -586,8 +579,6 @@ void ShutdownStandardGamingPlatform(void)
 	UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
 
 	ShutdownDebugManager();
-
-	SDL_Quit();
 }
 
 //
@@ -757,6 +748,7 @@ void SGPExit(void)
 	gfProgramIsRunning = FALSE;
 
 	ShutdownStandardGamingPlatform();
+	SDL_Quit();
 	ShowCursor(TRUE);
 	if(strlen(gzErrorMsg))
 	{
@@ -833,30 +825,19 @@ void ShutdownWithErrorBox(CHAR8 *pcMessage)
 
 void ProcessJa2CommandLineBeforeInitialization(void)
 {
-	//CHAR8 cSeparators[]="\t =";
-	//CHAR8	*pCopy=NULL, *pToken;
+	INT32	cnt = 1;
 
-	//pCopy=(CHAR8 *)MemAlloc(strlen(pCommandLine) + 1);
-
-	//Assert(pCopy);
-	//if(!pCopy)
-	//	return;
-
-	//memcpy(pCopy, pCommandLine, strlen(pCommandLine)+1);
-
-	//pToken=strtok(pCopy, cSeparators);
-	//while(pToken)													
-	//{
-	//	//if its the NO SOUND option
-	//	if(!_strnicmp(pToken, "/NOSOUND", 8))
-	//	{
-	//		//disable the sound
-	//		SoundEnableSound(FALSE);
-	//	}
-
-	//	//get the next token
-	//	pToken=strtok(NULL, cSeparators);
-	//}
-
-	//MemFree(pCopy);
+	while( cnt < giCLArgumentsCount )													
+	{
+		//if its the NO SOUND option
+		if(!_strnicmp(gpCLArgument[cnt], "/NOSOUND", 8))
+		{
+			//disable the sound
+			SoundEnableSound(FALSE);
+		} else if(!_strnicmp(gpCLArgument[cnt], "/FULLSCREEN", 11))
+		{
+			gfFullScreen = TRUE;
+		}
+		cnt++;
+	}
 }
