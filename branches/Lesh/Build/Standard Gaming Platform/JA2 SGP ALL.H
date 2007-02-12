@@ -102,5 +102,6 @@
 // Lesh modifications
 #include "fmod.h"
 #include "fmod_errors.h"
+#include "SDL.h"
 
 #endif

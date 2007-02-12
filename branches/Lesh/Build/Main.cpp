@@ -2,6 +2,7 @@
 #include "sgp.h"
 #include "Timer Control.h"
 #include "Game Clock.h"
+#include "ExceptionHandling.h"
 
 //static BOOLEAN fRestore = FALSE;
 
@@ -13,8 +14,10 @@ static void GameQuit( void )
 
 int main(int argc, char *argv[])
 {
-	SDL_Surface *pScreen;
 	SDL_Event	event;
+	//SDL_Surface *screen;
+
+	printf("JA2 1.13 startup\n");
 
 	// Copy commandline!
 	giCLArgumentsCount = argc;
@@ -26,108 +29,124 @@ int main(int argc, char *argv[])
 	if ( SDL_Init( 0 ) < 0 )
 	{
 		fprintf(stderr,	"Couldn't initialize SDL: %s\n", SDL_GetError());
+		GameQuit();
 		return FALSE;
 	}
 
-	SDL_WM_SetCaption("JA2 1.13", NULL);
+	//screen = SDL_SetVideoMode(800, 600, 16, SDL_SWSURFACE);
+	SDL_EventState(SDL_QUIT, SDL_ENABLE);
+	printf("SDL initialized\n");
 
-	pScreen = SDL_SetVideoMode(800, 600, 32, SDL_SWSURFACE);
-	if ( !pScreen ) {
-		return FALSE;
-	}
-
-	if ( InitializeStandardGamingPlatform() )
+	__try
 	{
-		fprintf(stderr, "Couldn't init SGP\n");
-		return FALSE;
-	}
-
-	gfApplicationActive = TRUE;
-	gfProgramIsRunning = TRUE;
-
-	FastDebugMsg("Running Game");
-
-	// At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
-	// attend to the gaming mechanics themselves
-	while (gfProgramIsRunning)
-	{
-		if ( SDL_PollEvent( &event ) )
+		fflush(stdout);
+		fflush(stderr);
+		if ( !InitializeStandardGamingPlatform() )
 		{
-			switch( event.type )
+			fprintf(stderr, "Couldn't init SGP\n");
+			GameQuit();
+			return FALSE;
+		}
+
+		printf("SGP initialized\n");
+		gfApplicationActive = TRUE;
+		gfProgramIsRunning = TRUE;
+
+		FastDebugMsg("Running Game");
+
+		// At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
+		// attend to the gaming mechanics themselves
+		while (gfProgramIsRunning)
+		{
+			fflush(stdout);
+			fflush(stderr);
+
+			if ( SDL_PollEvent( &event ) )
 			{
-			case SDL_QUIT:
-				gfProgramIsRunning = FALSE;
-				//ShutdownStandardGamingPlatform();
-				break;
-
-			case SDL_VIDEORESIZE:
-				break;
-
-			case SDL_VIDEOEXPOSE:
-				// Redraw screen
-				break;
-
-			case SDL_ACTIVEEVENT:
-				switch(event.active.state)
+				switch( event.type )
 				{
-				case SDL_APPMOUSEFOCUS:
+				case SDL_QUIT:
+					gfProgramIsRunning = FALSE;
+					//ShutdownStandardGamingPlatform();
 					break;
 
-				case SDL_APPINPUTFOCUS:
+				case SDL_VIDEORESIZE:
 					break;
 
-				case SDL_APPACTIVE:
-					if (event.active.gain)
-					{
-						// the application was restored (deiconified)
-						//if (fRestore == TRUE)
-						//{
-							RestoreVideoManager();
-							RestoreVideoSurfaces();	// Restore any video surfaces
+				case SDL_VIDEOEXPOSE:
+					// Redraw screen
+					break;
 
-							// unpause the JA2 Global clock
-							if ( !gfPauseDueToPlayerGamePause )
-							{
-								PauseTime( FALSE );
-							}
-							gfApplicationActive = TRUE;
-						//}
-					}
-					else
+				case SDL_ACTIVEEVENT:
+					switch(event.active.state)
 					{
-						// application is iconified
-						// pause the JA2 Global clock
-						PauseTime( TRUE );
-						SuspendVideoManager();
-						gfApplicationActive = FALSE;
-						//fRestore = TRUE;
+					case SDL_APPMOUSEFOCUS:
+						printf("SDL_APPMOUSEFOCUS\n");
+						break;
+
+					case SDL_APPINPUTFOCUS:
+						printf("SDL_APPINPUTFOCUS\n");
+						break;
+
+					case SDL_APPACTIVE:
+						printf("SDL_APPACTIVE\n");
+						if (event.active.gain)
+						{
+							//// the application was restored (deiconified)
+							////if (fRestore == TRUE)
+							////{
+							//	RestoreVideoManager();
+							//	RestoreVideoSurfaces();	// Restore any video surfaces
+
+							//	// unpause the JA2 Global clock
+							//	if ( !gfPauseDueToPlayerGamePause )
+							//	{
+							//		PauseTime( FALSE );
+							//	}
+							//	gfApplicationActive = TRUE;
+							////}
+						}
+						else
+						{
+							//// application is iconified
+							//// pause the JA2 Global clock
+							//PauseTime( TRUE );
+							//SuspendVideoManager();
+							//gfApplicationActive = FALSE;
+							////fRestore = TRUE;
+						}
+						break;
 					}
+					break;
+
+				default:
 					break;
 				}
-				break;
-
-			default:
-				break;
 			}
-		}
-		else
-		{ // Windows hasn't processed any messages, therefore we handle the rest
-			if (gfApplicationActive == FALSE)
-			{ // Well we got nothing to do but to wait for a message to activate
-				SDL_WaitEvent(NULL);
-			} 
 			else
-			{ // Well, the game is active, so we handle the game stuff        
-				//GameLoop();        
+			{ // Windows hasn't processed any messages, therefore we handle the rest
+				if (gfApplicationActive == FALSE)
+				{ // Well we got nothing to do but to wait for a message to activate
+					SDL_WaitEvent(NULL);
+				} 
+				else
+				{ // Well, the game is active, so we handle the game stuff        
+					//GameLoop();        
 
-				// After this frame, reset input given flag
-				//gfSGPInputReceived  =  FALSE;			
+					// After this frame, reset input given flag
+					//gfSGPInputReceived  =  FALSE;			
+				}
 			}
 		}
-	}
 
-	ShutdownStandardGamingPlatform();
+		ShutdownStandardGamingPlatform();
+		printf("SGP closed\n");
+	}
+	__except( RecordExceptionInfo( GetExceptionInformation() ))
+	{
+	}
 	SDL_Quit();
+	printf("SDL closed\n");
 
 	return(255);
 }

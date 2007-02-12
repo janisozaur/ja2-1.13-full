@@ -1,3 +1,6 @@
+// resume: file is almost useless and pending of removal
+//         same about timer.h
+//-------------------------------------------------------
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
@@ -17,9 +20,10 @@
 	#define WIN32_LEAN_AND_MEAN
 #endif
 
-UINT32 guiStartupTime;
-UINT32 guiCurrentTime;
+UINT32 guiStartupTime;	// local use
+UINT32 guiCurrentTime;	// local use
 
+// used locally
 void CALLBACK Clock( HWND hWindow, UINT uMessage, UINT idEvent, DWORD dwTime )
 {
   guiCurrentTime = GetTickCount();
@@ -33,6 +37,7 @@ void CALLBACK Clock( HWND hWindow, UINT uMessage, UINT idEvent, DWORD dwTime )
   }
 }
 
+// called from sgp.cpp
 BOOLEAN InitializeClockManager(void)
 {
 
@@ -44,6 +49,7 @@ BOOLEAN InitializeClockManager(void)
   return TRUE;
 }
 
+// called from sgp.cpp
 void    ShutdownClockManager(void)
 {
 
@@ -52,16 +58,19 @@ void    ShutdownClockManager(void)
 
 }
 
+// called in mousesystem.cpp ONLY
 TIMER   GetClock(void)
 {
   return guiCurrentTime;
 }
 
+// not used at all
 TIMER   SetCountdownClock(UINT32 uiTimeToElapse)
 {
   return (guiCurrentTime + uiTimeToElapse);
 }
 
+// not used at all
 UINT32 ClockIsTicking(TIMER uiTimer)
 {
   if (uiTimer > guiCurrentTime)

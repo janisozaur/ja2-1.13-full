@@ -369,6 +369,7 @@ UINT8		gbPixelDepth = PIXEL_DEPTH;
 BOOLEAN InitializeStandardGamingPlatform(void)
 {
 	FontTranslationTable *pFontTable;
+	//SDL_Surface *screen = SDL_SetVideoMode(800, 600, 16, SDL_SWSURFACE);
 
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
@@ -386,6 +387,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Initialize the Memory Manager
 	if (InitializeMemoryManager() == FALSE)
 	{ // We were unable to initialize the memory manager
+		fprintf(stderr, "Couldn't init memory manager\n");
 		FastDebugMsg("FAILED : Initializing Memory Manager");
 		return FALSE;
 	}
@@ -394,6 +396,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Initialize the Dirty Rectangle Manager
 	if (InitializeMutexManager() == FALSE)
 	{ // We were unable to initialize the game
+		fprintf(stderr, "Couldn't init mutex manager\n");
 		FastDebugMsg("FAILED : Initializing Mutex Manager");
 		return FALSE;
 	}
@@ -402,6 +405,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Initialize the File Manager
 	if (InitializeFileManager(NULL) == FALSE)
 	{ // We were unable to initialize the file manager
+		fprintf(stderr, "Couldn't init file manager\n");
 		FastDebugMsg("FAILED : Initializing File Manager");
 		return FALSE;
 	}
@@ -409,21 +413,23 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	FastDebugMsg("Initializing Containers Manager");
 	InitializeContainers();
 
-	FastDebugMsg("Initializing Input Manager");
-	// Initialize the Input Manager
-	if (InitializeInputManager() == FALSE)
-	{ // We were unable to initialize the input manager
-		FastDebugMsg("FAILED : Initializing Input Manager");
-		return FALSE;
-	}
+	//FastDebugMsg("Initializing Input Manager");
+	//// Initialize the Input Manager
+	//if (InitializeInputManager() == FALSE)
+	//{ // We were unable to initialize the input manager
+	//	fprintf(stderr, "Couldn't init input manager\n");
+	//	FastDebugMsg("FAILED : Initializing Input Manager");
+	//	return FALSE;
+	//}
 
 	FastDebugMsg("Initializing Video Manager");
 	// Initialize DirectDraw (DirectX 2)
-	//if (InitializeVideoManager(hInstance, (UINT16) sCommandShow, (void *) WindowProcedure) == FALSE)
-	//{ // We were unable to initialize the video manager
-	//	FastDebugMsg("FAILED : Initializing Video Manager");
-	//	return FALSE;
-	//}
+	if (InitializeVideoManager( ) == FALSE)
+	{ // We were unable to initialize the video manager
+		fprintf(stderr, "Couldn't init video manager\n");
+		FastDebugMsg("FAILED : Initializing Video Manager");
+		return FALSE;
+	}
 
 	// Initialize Video Object Manager
 	FastDebugMsg("Initializing Video Object Manager");
@@ -433,13 +439,13 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	// Initialize Video Surface Manager
-	FastDebugMsg("Initializing Video Surface Manager");
-	if ( !InitializeVideoSurfaceManager( ) )
-	{ 
-		FastDebugMsg("FAILED : Initializing Video Surface Manager");
-		return FALSE;
-	}
+	//// Initialize Video Surface Manager
+	//FastDebugMsg("Initializing Video Surface Manager");
+	//if ( !InitializeVideoSurfaceManager( ) )
+	//{ 
+	//	FastDebugMsg("FAILED : Initializing Video Surface Manager");
+	//	return FALSE;
+	//}
 
 	// Snap: moved the following from InitJA2SplashScreen for clarity
 	STRING512			CurrentDir;
@@ -472,54 +478,54 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		gCustomDataCat.NewCat(std::string(CurrentDir) + '\\' + customDataPath);
 	}
 
-	InitJA2SplashScreen();
-
-  // Make sure we start up our local clock (in milliseconds)
-  // We don't need to check for a return value here since so far its always TRUE
-  InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
-
-	// Create font translation table (store in temp structure)
-	pFontTable = CreateEnglishTransTable( );
-	if ( pFontTable == NULL )
-	{
-		return( FALSE );
-	}
-
-	// Initialize Font Manager
-	FastDebugMsg("Initializing the Font Manager");
-	// Init the manager and copy the TransTable stuff into it.
-	if ( !InitializeFontManager( 8, pFontTable ) )
-	{ 
-		FastDebugMsg("FAILED : Initializing Font Manager");
-		return FALSE;
-	}
-	// Don't need this thing anymore, so get rid of it (but don't de-alloc the contents)
-	MemFree( pFontTable );
-
-	FastDebugMsg("Initializing Sound Manager");
-	// Initialize the Sound Manager (DirectSound)
-#ifndef UTIL
-	if (InitializeSoundManager() == FALSE)
-	{ // We were unable to initialize the sound manager
-		FastDebugMsg("FAILED : Initializing Sound Manager");
-		return FALSE;
-	}  
-#endif
-
-	FastDebugMsg("Initializing Random");
-  // Initialize random number generator
-  InitializeRandom(); // no Shutdown
-
-	FastDebugMsg("Initializing Game Manager");
-	// Initialize the Game
-	if (InitializeGame() == FALSE)
-	{ // We were unable to initialize the game
-		FastDebugMsg("FAILED : Initializing Game Manager");
-		return FALSE;
-	}
-
-	// Register mouse wheel message
-	guiMouseWheelMsg = RegisterWindowMessage( MSH_MOUSEWHEEL );
+//	InitJA2SplashScreen();
+//
+//	// Make sure we start up our local clock (in milliseconds)
+//	// We don't need to check for a return value here since so far its always TRUE
+	//InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
+//
+//	// Create font translation table (store in temp structure)
+//	pFontTable = CreateEnglishTransTable( );
+//	if ( pFontTable == NULL )
+//	{
+//		return( FALSE );
+//	}
+//
+//	// Initialize Font Manager
+//	FastDebugMsg("Initializing the Font Manager");
+//	// Init the manager and copy the TransTable stuff into it.
+//	if ( !InitializeFontManager( 8, pFontTable ) )
+//	{ 
+//		FastDebugMsg("FAILED : Initializing Font Manager");
+//		return FALSE;
+//	}
+//	// Don't need this thing anymore, so get rid of it (but don't de-alloc the contents)
+//	MemFree( pFontTable );
+//
+//	FastDebugMsg("Initializing Sound Manager");
+//	// Initialize the Sound Manager (DirectSound)
+//#ifndef UTIL
+//	if (InitializeSoundManager() == FALSE)
+//	{ // We were unable to initialize the sound manager
+//		FastDebugMsg("FAILED : Initializing Sound Manager");
+//		return FALSE;
+//	}  
+//#endif
+//
+//	FastDebugMsg("Initializing Random");
+//	// Initialize random number generator
+//	InitializeRandom(); // no Shutdown
+//
+//	FastDebugMsg("Initializing Game Manager");
+//	// Initialize the Game
+//	if (InitializeGame() == FALSE)
+//	{ // We were unable to initialize the game
+//		FastDebugMsg("FAILED : Initializing Game Manager");
+//		return FALSE;
+//	}
+//
+//	// Register mouse wheel message
+//	guiMouseWheelMsg = RegisterWindowMessage( MSH_MOUSEWHEEL );
 
 	gfGameInitialized = TRUE;
 	
@@ -534,35 +540,34 @@ void ShutdownStandardGamingPlatform(void)
 	//
 
 	// TEST
-	SoundServiceStreams();
+	//SoundServiceStreams();
 
-	if (gfGameInitialized)
-	{
-		ShutdownGame();  
-	}
+	//if (gfGameInitialized)
+	//{
+	//	ShutdownGame();  
+	//}
 
 
-	ShutdownButtonSystem();
-	MSYS_Shutdown();
+	//ShutdownButtonSystem();
+	//MSYS_Shutdown();
 
-#ifndef UTIL
-  ShutdownSoundManager();
-#endif
+//#ifndef UTIL
+//  ShutdownSoundManager();
+//#endif
 
-	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
-	ShutdownFontManager();
-
-	ShutdownClockManager();   // must shutdown before VideoManager, 'cause it uses ghWindow
+//	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
+//	ShutdownFontManager();
+//
+//	ShutdownClockManager();   // must shutdown before VideoManager, 'cause it uses ghWindow
 
 #ifdef SGP_VIDEO_DEBUGGING
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
 #endif
 
-		ShutdownVideoSurfaceManager();
+	//ShutdownVideoSurfaceManager();
 	ShutdownVideoObjectManager();
 	ShutdownVideoManager();
-
-	ShutdownInputManager();
+	//ShutdownInputManager();
 	ShutdownContainers();
 	ShutdownFileManager();
 	ShutdownMutexManager();
@@ -573,7 +578,7 @@ void ShutdownStandardGamingPlatform(void)
 
 	ShutdownMemoryManager();  // must go last (except for Debug), for MemDebugCounter to work right...
 
-		//
+	//
 	// Make sure we unregister the last remaining debug topic before shutting
 	// down the debugging layer
 	UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");

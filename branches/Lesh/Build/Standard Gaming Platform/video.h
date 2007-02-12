@@ -31,7 +31,7 @@ extern "C" {
 #endif
 */
 
-extern BOOLEAN              InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *WindowProc);
+extern BOOLEAN              InitializeVideoManager(void);
 extern void                 ShutdownVideoManager(void);
 extern void                 SuspendVideoManager(void);
 extern BOOLEAN              RestoreVideoManager(void);
