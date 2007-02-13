@@ -13,7 +13,6 @@
 	#include "wcheck.h"
 	#include "input.h"
 	#include "font.h"
-	#include "timer.h"
 	#include "mousesystem.h"
 	#include "screenids.h"
 	#include "screens.h"

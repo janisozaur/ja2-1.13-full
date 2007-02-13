@@ -10,7 +10,6 @@
 #include "Types.h"
 #include "DirectDraw Calls.h"
 #include "VSurface.h"
-#include "Mutex Manager.h"
 
 #define BUFFER_READY          0x00
 #define BUFFER_BUSY           0x01
@@ -65,7 +64,7 @@ extern BOOLEAN				SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffse
 extern void                 StartFrameBufferRender(void);
 extern void                 EndFrameBufferRender(void);
 extern void                 PrintScreen(void);
-
+extern void					DoTester(void);
 
 
 extern BOOLEAN				EraseMouseCursor( );

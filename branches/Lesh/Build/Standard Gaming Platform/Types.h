@@ -130,5 +130,6 @@ typedef VECTOR4   MATRIX4[4];       // 4x4 matrix
 //typedef VECTOR3	ANGLE;			// angle return array //lal removed
 typedef	VECTOR4	COLOR;			// rgba color array
 
+typedef UINT32 TIMER;			// timer definition
 
 #endif

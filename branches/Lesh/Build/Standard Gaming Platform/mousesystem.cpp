@@ -789,7 +789,7 @@ void MSYS_UpdateMouseRegion(void)
 						//This is where double clicks are checked and passed down.
 						if( ButtonReason == MSYS_CALLBACK_REASON_LBUTTON_DWN )
 						{
-							UINT32 uiCurrTime = GetClock();
+							UINT32 uiCurrTime = GetTickCount();
 							if( gpRegionLastLButtonDown == MSYS_CurrRegion &&
 									gpRegionLastLButtonUp == MSYS_CurrRegion &&
 									uiCurrTime <= guiRegionLastLButtonDownTime + MSYS_DOUBLECLICK_DELAY )
@@ -803,12 +803,12 @@ void MSYS_UpdateMouseRegion(void)
 							else 
 							{ //First click, record time and region pointer (to check if 2nd click detected later)
 								gpRegionLastLButtonDown = MSYS_CurrRegion;
-								guiRegionLastLButtonDownTime = GetClock();
+								guiRegionLastLButtonDownTime = GetTickCount();
 							}
 						}
 						else if( ButtonReason == MSYS_CALLBACK_REASON_LBUTTON_UP )
 						{
-							UINT32 uiCurrTime = GetClock();
+							UINT32 uiCurrTime = GetTickCount();
 							if( gpRegionLastLButtonDown == MSYS_CurrRegion &&
 									uiCurrTime <= guiRegionLastLButtonDownTime + MSYS_DOUBLECLICK_DELAY )
 							{ //Double click is Left down, then left up, then left down.  We have just detected the left up here (step 2).
@@ -1438,7 +1438,7 @@ void RenderFastHelp()
 	if( !gfRenderHilights )
 		return;
 
-	iCurrentClock = GetClock();
+	iCurrentClock = GetTickCount();
 	iTimeDifferential = iCurrentClock - iLastClock;
 	if (iTimeDifferential < 0)
 		iTimeDifferential += 0x7fffffff;
@@ -1582,7 +1582,7 @@ void RenderFastHelp()
 	if( !gfRenderHilights )
 		return;
 
-	iCurrentClock = GetClock();
+	iCurrentClock = GetTickCount();
 	iTimeDifferential = iCurrentClock - iLastClock;
 	if (iTimeDifferential < 0)
 		iTimeDifferential += 0x7fffffff;

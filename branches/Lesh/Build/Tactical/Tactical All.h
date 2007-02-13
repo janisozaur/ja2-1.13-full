@@ -203,7 +203,6 @@
 #include "strategic town reputation.h"
 #include "Tactical Turns.h"
 #include "lighteffects.h"
-#include "timer.h"
 #include "Soldier Profile Type.h"
 #include "AIList.h"
 #include "QuestDebug.h"

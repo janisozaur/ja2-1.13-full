@@ -13,7 +13,6 @@
 	#include "Timer Control.h"
 	#include "render dirty.h"
 	#include "renderworld.h"
-	#include "Mutex Manager.h"
 	#include "local.h"
 	#include "interface.h"
 	#include "Map Screen Interface Bottom.h"

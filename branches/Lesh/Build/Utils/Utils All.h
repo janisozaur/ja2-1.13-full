@@ -34,7 +34,6 @@
 #include "wcheck.h"
 #include "Event Manager.h"
 #include "Event Pump.h"
-#include "Timer.h"
 #include "Soldier Control.h"
 #include "Sound Control.h"
 #include "weapons.h"
@@ -63,7 +62,6 @@
 #include "Message.h"
 #include <memory.h>
 #include "mbstring.h"
-#include "Mutex Manager.h"
 #include "local.h"
 #include "Map Screen Interface Bottom.h"
 #include "Soundman.h"

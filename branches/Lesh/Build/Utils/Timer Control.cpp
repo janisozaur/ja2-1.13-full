@@ -21,9 +21,9 @@
 #endif
 
 INT32	giClockTimer = -1;
-INT32	giTimerDiag = 0;
+INT32	giTimerDiag  = 0;
 
-UINT32	guiBaseJA2Clock = 0;
+UINT32	guiBaseJA2Clock        = 0;
 UINT32	guiBaseJA2NoPauseClock = 0;
 
 BOOLEAN	gfPauseClock = FALSE;
@@ -41,7 +41,7 @@ INT32		giTimerIntervals[ NUMTIMERS ] =
 		300,				// LEFT
 		30,					// SLIDING TEXT
 		200,				// TARGET REFINE TIMER
-		150,					// CURSOR/AP FLASH
+		150,				// CURSOR/AP FLASH
 		60,					// FADE MERCS OUT
 		160,				// PANEL SLIDE
 		1000,				// CLOCK UPDATE DELAY
@@ -52,7 +52,7 @@ INT32		giTimerIntervals[ NUMTIMERS ] =
 		500,				// NON GUN TARGET REFINE TIMER
 		250,				// IMPROVED CURSOR FLASH
 		500,				// 2nd CURSOR FLASH
-		400,					// RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
+		400,				// RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
 		400,
 		10,					// Music Overhead
 		100,				// Rubber band start delay
@@ -62,7 +62,7 @@ INT32		giTimerIntervals[ NUMTIMERS ] =
 INT32		giTimerCounters[ NUMTIMERS ];
 
 INT32		giTimerAirRaidQuote				= 0;
-INT32		giTimerAirRaidDiveStarted = 0;
+INT32		giTimerAirRaidDiveStarted       = 0;
 INT32		giTimerAirRaidUpdate			= 0;
 INT32		giTimerCustomizable				= 0;
 INT32		giTimerTeamTurnUpdate			= 0;
@@ -70,30 +70,30 @@ INT32		giTimerTeamTurnUpdate			= 0;
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 
 // Clock Callback event ID
-MMRESULT	gTimerID;
+MMRESULT		gTimerID;
 
 // GLOBALS FOR CALLBACK
-UINT32				gCNT;
+UINT32			gCNT;
 SOLDIERTYPE		*gPSOLDIER;
 
 // GLobal for displaying time diff ( DIAG )
-UINT32		guiClockDiff = 0;
+UINT32		guiClockDiff  = 0;
 UINT32		guiClockStart = 0;
 
 
-extern UINT32 guiCompressionStringBaseTime;
-extern INT32 giFlashHighlightedItemBaseTime;
-extern INT32 giCompatibleItemBaseTime;
-extern INT32 giAnimateRouteBaseTime;
-extern INT32 giPotHeliPathBaseTime;
-extern INT32 giClickHeliIconBaseTime;
-extern INT32 giExitToTactBaseTime;
-extern UINT32 guiSectorLocatorBaseTime;
-extern INT32 giCommonGlowBaseTime;
-extern INT32 giFlashAssignBaseTime;
-extern INT32 giFlashContractBaseTime;
-extern UINT32 guiFlashCursorBaseTime;
-extern INT32 giPotCharPathBaseTime; 
+extern UINT32	guiCompressionStringBaseTime;
+extern INT32	giFlashHighlightedItemBaseTime;
+extern INT32	giCompatibleItemBaseTime;
+extern INT32	giAnimateRouteBaseTime;
+extern INT32	giPotHeliPathBaseTime;
+extern INT32	giClickHeliIconBaseTime;
+extern INT32	giExitToTactBaseTime;
+extern UINT32	guiSectorLocatorBaseTime;
+extern INT32	giCommonGlowBaseTime;
+extern INT32	giFlashAssignBaseTime;
+extern INT32	giFlashContractBaseTime;
+extern UINT32	guiFlashCursorBaseTime;
+extern INT32	giPotCharPathBaseTime; 
 
 
 UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UINT32 uiUser );
@@ -136,40 +136,40 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 
 #ifndef BOUNDS_CHECKER
 
-      // If mapscreen...
-      if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-      {
-        // IN Mapscreen, loop through player's team.....
-			  for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
-			  {
-				  gPSOLDIER = MercPtrs[ gCNT ];
+			// If mapscreen...
+			if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+			{
+				// IN Mapscreen, loop through player's team.....
+				for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
+				{
+					gPSOLDIER = MercPtrs[ gCNT ];
 					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
 					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
-        }
-      }
-      else
-      {
-			  // Set update flags for soldiers
-			  ////////////////////////////		
-			  for ( gCNT = 0; gCNT < guiNumMercSlots; gCNT++ )
-			  {
-				  gPSOLDIER = MercSlots[ gCNT ];
+				}
+			}
+			else
+			{
+				// Set update flags for soldiers
+				////////////////////////////		
+				for ( gCNT = 0; gCNT < guiNumMercSlots; gCNT++ )
+				{
+					gPSOLDIER = MercSlots[ gCNT ];
 
-				  if ( gPSOLDIER != NULL )
-				  {
-					  UPDATETIMECOUNTER( gPSOLDIER->UpdateCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->DamageCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->ReloadCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FlashSelCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->BlinkSelCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->AICounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FadeCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->NextTileCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
-				  }
-			  }
-      }
+					if ( gPSOLDIER != NULL )
+					{
+						UPDATETIMECOUNTER( gPSOLDIER->UpdateCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->DamageCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->ReloadCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->FlashSelCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->BlinkSelCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->AICounter );
+						UPDATETIMECOUNTER( gPSOLDIER->FadeCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->NextTileCounter );
+						UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
+					}
+				}
+			}
 #endif
 		}
 
@@ -337,7 +337,7 @@ void ResetJA2ClockGlobalTimers( void )
 	guiCompressionStringBaseTime = uiCurrentTime;
 	giFlashHighlightedItemBaseTime = uiCurrentTime;
 	giCompatibleItemBaseTime = uiCurrentTime;
-  giAnimateRouteBaseTime = uiCurrentTime;
+	giAnimateRouteBaseTime = uiCurrentTime;
 	giPotHeliPathBaseTime = uiCurrentTime; 
 	giClickHeliIconBaseTime = uiCurrentTime;
 	giExitToTactBaseTime = uiCurrentTime;

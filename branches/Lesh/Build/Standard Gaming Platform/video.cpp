@@ -263,12 +263,31 @@ BOOLEAN InitializeVideoManager(void)
 
 	printf("Video memory = %d\n", pVideoInfo->video_mem );
 
+	printf("\nCurrent video mode\n");
+	printf("Color depth = %d\n", pVideoInfo->vfmt->BitsPerPixel );
+	printf("alpha       = %d\n", pVideoInfo->vfmt->alpha );
+	printf("Rmask  = %08X\n", pVideoInfo->vfmt->Rmask );
+	printf("Gmask  = %08X\n", pVideoInfo->vfmt->Gmask );
+	printf("Bmask  = %08X\n", pVideoInfo->vfmt->Bmask );
+	printf("Amask  = %08X\n", pVideoInfo->vfmt->Amask );
+	printf("Rshift = %d\n",   pVideoInfo->vfmt->Rshift );
+	printf("Gshift = %d\n",   pVideoInfo->vfmt->Gshift );
+	printf("Bshift = %d\n",   pVideoInfo->vfmt->Bshift );
+	printf("Ashift = %d\n",   pVideoInfo->vfmt->Ashift );
+	printf("Rloss  = %d\n",   pVideoInfo->vfmt->Rloss );
+	printf("Gloss  = %d\n",   pVideoInfo->vfmt->Gloss );
+	printf("Bloss  = %d\n",   pVideoInfo->vfmt->Bloss );
+	printf("Aloss  = %d\n",   pVideoInfo->vfmt->Aloss );
+
 	SDL_WM_SetCaption(AppName, NULL);
 
 	// Apply SDL video flags
 	uiVideoFlags = SDL_SWSURFACE;
 
-	if ( gfFullScreen )
+	if ( pVideoInfo->hw_available )
+		uiVideoFlags |= SDL_HWSURFACE;
+
+	if ( gfFullScreen || !pVideoInfo->wm_available )
 		uiVideoFlags |= SDL_FULLSCREEN;
 
     
@@ -328,38 +347,6 @@ BOOLEAN InitializeVideoManager(void)
 		return FALSE;
 	}
 
-//  //
-//  // Initialize the frame buffer
-//  //
-//
-//  ZEROMEM(SurfaceDescription);
-//  SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-//  SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-//  SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-//  SurfaceDescription.dwWidth        = SCREEN_WIDTH;
-//  SurfaceDescription.dwHeight       = SCREEN_HEIGHT;
-//  ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &_gpFrameBuffer, NULL );
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//
-//  ReturnCode = IDirectDrawSurface_QueryInterface(_gpFrameBuffer, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&gpFrameBuffer); // (jonathanl)
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//
-//  //
-//  // Blank out the frame buffer
-//  //
-//
-//  pTmpPointer = LockFrameBuffer(&uiPitch);
-//  memset(pTmpPointer, 0, SCREEN_HEIGHT * uiPitch);
-//  UnlockFrameBuffer();
-//
 //  //
 //  // Initialize the main mouse surfaces
 //  //
@@ -557,9 +544,18 @@ void SuspendVideoManager(void)
 
 void DoTester( )
 {
-  //IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
-  //IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
-  //ShowCursor(TRUE);
+	SDL_Rect rect;
+
+	rect.h = 40;
+	rect.w = 40;
+	rect.x = 10;
+	rect.y = 10;
+
+	// try to draw something on screen
+	if ( SDL_FillRect( gpSDLFrameBuffer, &rect, SDL_MapRGB(gpSDLFrameBuffer->format, 127, 255, 127) ) )
+	{
+		fprintf(stderr, "Couldn't fill rect\n");
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -392,14 +392,15 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	FastDebugMsg("Initializing Mutex Manager");
-	// Initialize the Dirty Rectangle Manager
-	if (InitializeMutexManager() == FALSE)
-	{ // We were unable to initialize the game
-		fprintf(stderr, "Couldn't init mutex manager\n");
-		FastDebugMsg("FAILED : Initializing Mutex Manager");
-		return FALSE;
-	}
+	// removed cause of useless
+	//FastDebugMsg("Initializing Mutex Manager");
+	//// Initialize the Dirty Rectangle Manager
+	//if (InitializeMutexManager() == FALSE)
+	//{ // We were unable to initialize the game
+	//	fprintf(stderr, "Couldn't init mutex manager\n");
+	//	FastDebugMsg("FAILED : Initializing Mutex Manager");
+	//	return FALSE;
+	//}
 
 	FastDebugMsg("Initializing File Manager");
 	// Initialize the File Manager
@@ -430,6 +431,8 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		FastDebugMsg("FAILED : Initializing Video Manager");
 		return FALSE;
 	}
+
+	DoTester();
 
 	// Initialize Video Object Manager
 	FastDebugMsg("Initializing Video Object Manager");
@@ -479,11 +482,12 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 
 //	InitJA2SplashScreen();
-//
-//	// Make sure we start up our local clock (in milliseconds)
-//	// We don't need to check for a return value here since so far its always TRUE
+
+	// useless
+	// Make sure we start up our local clock (in milliseconds)
+	// We don't need to check for a return value here since so far its always TRUE
 	//InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
-//
+
 //	// Create font translation table (store in temp structure)
 //	pFontTable = CreateEnglishTransTable( );
 //	if ( pFontTable == NULL )
@@ -570,7 +574,7 @@ void ShutdownStandardGamingPlatform(void)
 	//ShutdownInputManager();
 	ShutdownContainers();
 	ShutdownFileManager();
-	ShutdownMutexManager();
+	//ShutdownMutexManager();  useless
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 	DumpMemoryInfoIntoFile( (UINT8*)"ExtremeMemoryDump.txt", FALSE );

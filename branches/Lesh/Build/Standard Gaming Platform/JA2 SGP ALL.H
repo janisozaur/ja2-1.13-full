@@ -83,14 +83,11 @@
 	#include <crtdbg.h>
 #endif
 #include "mousesystem.h"
-#include "Mutex Manager.h"
 #include "Random.h"
 #include <windowsx.h>
 #include "vobject_private.h"
 #include "shading.h"
-//#include "mss.h"
 #include "imgfmt.h"
-#include "timer.h"
 #include "renderworld.h"
 #include "Isometric utils.h"
 #include "fade screen.h"

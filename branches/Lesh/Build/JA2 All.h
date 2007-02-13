@@ -109,7 +109,6 @@
 #include "Summary Info.h" 
 #include <time.h>
 #include "font.h"
-#include "timer.h"
 #include "tiledef.h"
 #include "editscreen.h"
 #include "jascreens.h"

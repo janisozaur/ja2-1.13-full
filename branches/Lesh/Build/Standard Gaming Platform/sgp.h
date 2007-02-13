@@ -3,7 +3,7 @@
 
 #include "local.h"
 #include "types.h"
-#include "timer.h"
+//#include "timer.h" useless
 #include "debug.h"
 #include "video.h"
 #include "input.h"
