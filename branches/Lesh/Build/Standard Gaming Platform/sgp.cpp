@@ -392,16 +392,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	// removed cause of useless
-	//FastDebugMsg("Initializing Mutex Manager");
-	//// Initialize the Dirty Rectangle Manager
-	//if (InitializeMutexManager() == FALSE)
-	//{ // We were unable to initialize the game
-	//	fprintf(stderr, "Couldn't init mutex manager\n");
-	//	FastDebugMsg("FAILED : Initializing Mutex Manager");
-	//	return FALSE;
-	//}
-
 	FastDebugMsg("Initializing File Manager");
 	// Initialize the File Manager
 	if (InitializeFileManager(NULL) == FALSE)
@@ -438,17 +428,19 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	FastDebugMsg("Initializing Video Object Manager");
 	if ( !InitializeVideoObjectManager( ) )
 	{ 
+		fprintf(stderr, "Couldn't init video object manager\n");
 		FastDebugMsg("FAILED : Initializing Video Object Manager");
 		return FALSE;
 	}
 
-	//// Initialize Video Surface Manager
-	//FastDebugMsg("Initializing Video Surface Manager");
-	//if ( !InitializeVideoSurfaceManager( ) )
-	//{ 
-	//	FastDebugMsg("FAILED : Initializing Video Surface Manager");
-	//	return FALSE;
-	//}
+	// Initialize Video Surface Manager
+	FastDebugMsg("Initializing Video Surface Manager");
+	if ( !InitializeVideoSurfaceManager( ) )
+	{ 
+		fprintf(stderr, "Couldn't init video surface manager\n");
+		FastDebugMsg("FAILED : Initializing Video Surface Manager");
+		return FALSE;
+	}
 
 	// Snap: moved the following from InitJA2SplashScreen for clarity
 	STRING512			CurrentDir;
@@ -481,12 +473,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		gCustomDataCat.NewCat(std::string(CurrentDir) + '\\' + customDataPath);
 	}
 
-//	InitJA2SplashScreen();
-
-	// useless
-	// Make sure we start up our local clock (in milliseconds)
-	// We don't need to check for a return value here since so far its always TRUE
-	//InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
+	InitJA2SplashScreen();
 
 //	// Create font translation table (store in temp structure)
 //	pFontTable = CreateEnglishTransTable( );

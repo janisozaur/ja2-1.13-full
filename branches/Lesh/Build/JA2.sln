@@ -17,6 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Editor.vcp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tactical", "Tactical\Tactical.vcproj", "{DCDC4FE9-A37A-433D-80F1-3432ACBBF6B0}"
 	ProjectSection(ProjectDependencies) = postProject
+		{F44ECAE0-D34E-4DDA-BA42-3986B4D55CA1} = {F44ECAE0-D34E-4DDA-BA42-3986B4D55CA1}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TacticalAI", "TacticalAI\TacticalAI.vcproj", "{D0140468-B550-42BD-BBDE-03AF3F4288F3}"

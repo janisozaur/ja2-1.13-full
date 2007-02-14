@@ -8,7 +8,6 @@
 
 	#include <ddraw.h>
 	#include "debug.h"
-	#include "video_private.h"
 #endif
 
 // DirectDrawSurface2 Calls

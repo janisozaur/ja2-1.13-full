@@ -5,6 +5,7 @@
 #include "container.h"
 #include "himage.h"
 #include "vobject.h"
+#include "SDL.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16,25 +17,25 @@
 // Defines for special video object handles given to blit function
 //
 
-#define PRIMARY_SURFACE							            0xFFFFFFF0
-#define BACKBUFFER									            0xFFFFFFF1
-#define FRAME_BUFFER                            0xFFFFFFF2
-#define MOUSE_BUFFER                            0xFFFFFFF3
+#define PRIMARY_SURFACE				0xFFFFFFF0
+#define BACKBUFFER					0xFFFFFFF1
+#define FRAME_BUFFER                0xFFFFFFF2
+#define MOUSE_BUFFER                0xFFFFFFF3
 
 //
 // Defines for blitting
 //
 
-#define VS_BLT_COLORFILL												0x000000020
-#define VS_BLT_USECOLORKEY											0x000000002
-#define VS_BLT_USEDESTCOLORKEY									0x000000200
-#define VS_BLT_FAST															0x000000004
-#define VS_BLT_CLIPPED													0x000000008
-#define VS_BLT_SRCREGION												0x000000010
-#define VS_BLT_DESTREGION												0x000000080
-#define VS_BLT_SRCSUBRECT												0x000000040
-#define VS_BLT_COLORFILLRECT										0x000000100
-#define VS_BLT_MIRROR_Y													0x000001000
+#define VS_BLT_COLORFILL			0x000000020
+#define VS_BLT_USECOLORKEY			0x000000002
+#define VS_BLT_USEDESTCOLORKEY		0x000000200
+#define VS_BLT_FAST					0x000000004
+#define VS_BLT_CLIPPED				0x000000008
+#define VS_BLT_SRCREGION			0x000000010
+#define VS_BLT_DESTREGION			0x000000080
+#define VS_BLT_SRCSUBRECT			0x000000040
+#define VS_BLT_COLORFILLRECT		0x000000100
+#define VS_BLT_MIRROR_Y				0x000001000
 
 //
 // Effects structure for specialized blitting
@@ -43,9 +44,9 @@
 typedef struct 
 {
 	COLORVAL ColorFill;		// Used for fill effect
-	SGPRect	 SrcRect;			// Given SRC subrect instead of srcregion
+	SGPRect	 SrcRect;		// Given SRC subrect instead of srcregion
 	SGPRect	 FillRect;		// Given SRC subrect instead of srcregion
-	UINT16	 DestRegion;  // Given a DEST region for dest positions within the VO
+	UINT16	 DestRegion;	// Given a DEST region for dest positions within the VO
 
 } blt_vs_fx;
 
@@ -54,7 +55,7 @@ typedef struct
 // Used to describe the memory usage of a video Surface
 //
 
-#define	VSURFACE_DEFAULT_MEM_USAGE		0x00000001			// Default mem usage is same as DD, try video and then try system. Will usually work
+#define	VSURFACE_DEFAULT_MEM_USAGE			0x00000001			// Default mem usage is same as DD, try video and then try system. Will usually work
 #define	VSURFACE_VIDEO_MEM_USAGE			0x00000002			// Will force surface into video memory and will fail if it can't
 #define	VSURFACE_SYSTEM_MEM_USAGE			0x00000004			// Will force surface into system memory and will fail if it can't
 #define VSURFACE_RESERVED_SURFACE			0x00000100			// Reserved for special purposes, like a primary surface
@@ -64,8 +65,8 @@ typedef struct
 // Used in the VSurface_DESC structure to describe creation flags
 //
 
-#define VSURFACE_CREATE_DEFAULT			  0x00000020		// Creates and empty Surface of given width, height and BPP
-#define VSURFACE_CREATE_FROMFILE			 0x00000040		// Creates a video Surface from a file ( using HIMAGE )
+#define VSURFACE_CREATE_DEFAULT				0x00000020		// Creates and empty Surface of given width, height and BPP
+#define VSURFACE_CREATE_FROMFILE			0x00000040		// Creates a video Surface from a file ( using HIMAGE )
 
 //
 // The following structure is used to define a region of the video Surface
@@ -74,9 +75,9 @@ typedef struct
 
 typedef struct 
 {
-	SGPRect								RegionCoords;							// Rectangle describing coordinates of region
-	SGPPoint							Origin;										// Origin used for hot spots, etc
-	UINT8									ubHitMask;								// Byte flags for hit detection
+	SGPRect			RegionCoords;			// Rectangle describing coordinates of region
+	SGPPoint		Origin;					// Origin used for hot spots, etc
+	UINT8			ubHitMask;				// Byte flags for hit detection
 
 } VSURFACE_REGION;
 
@@ -86,21 +87,22 @@ typedef struct
 
 typedef struct
 {
-	UINT16					usHeight;							// Height of Video Surface
-	UINT16					usWidth;							// Width of Video Surface
-	UINT8						ubBitDepth;						// BPP ALWAYS 16!
-	PTR							pSurfaceData;					// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-	PTR							pSurfaceData1;				// Direct Draw One Interface
-	PTR							pSavedSurfaceData1;		// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-																				// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
-	PTR							pSavedSurfaceData;		// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-																				// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
-	UINT32					fFlags;								// Used to describe memory usage, etc
-	PTR							pPalette;						  // A void pointer, but for this implementation a DDPalette
-	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
-	COLORVAL				TransparentColor;			// Defaults to 0,0,0
-	PTR							pClipper;							// A void pointer encapsolated as a clipper Surface
-	HLIST						RegionList;						// A List of regions within the video Surface
+	SDL_Surface	*pSurface;					// A SDL surface
+	UINT16		usHeight;					// Height of Video Surface
+	UINT16		usWidth;					// Width of Video Surface
+	UINT8		ubBitDepth;					// BPP ALWAYS 16!
+	//PTR			pSurfaceData;				// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
+	//PTR			pSurfaceData1;				// Direct Draw One Interface
+	//PTR			pSavedSurfaceData1;			// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
+	//										// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
+	//PTR			pSavedSurfaceData;			// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
+	//										// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
+	UINT32		fFlags;						// Used to describe memory usage, etc
+	//PTR			pPalette;					// A void pointer, but for this implementation a DDPalette
+	UINT16		*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
+	COLORVAL	TransparentColor;			// Defaults to 0,0,0
+	//PTR			pClipper;					// A void pointer encapsolated as a clipper Surface
+	HLIST		RegionList;					// A List of regions within the video Surface
 		
 } SGPVSurface, *HVSURFACE;
 
@@ -110,11 +112,11 @@ typedef struct
 
 typedef struct
 {
-	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
-	SGPFILENAME		ImageFile;							// Filename of image data to use
-	UINT16				usWidth;								// Width, ignored if given from file
-	UINT16				usHeight;								// Height, ignored if given from file
-	UINT8					ubBitDepth;							// BPP, ignored if given from file
+	UINT32		fCreateFlags;				// Specifies creation flags like from file or not
+	SGPFILENAME	ImageFile;					// Filename of image data to use
+	UINT16		usWidth;					// Width, ignored if given from file
+	UINT16		usHeight;					// Height, ignored if given from file
+	UINT8		ubBitDepth;					// BPP, ignored if given from file
 
 } VSURFACE_DESC;
 

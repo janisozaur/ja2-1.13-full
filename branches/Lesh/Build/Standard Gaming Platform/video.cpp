@@ -80,7 +80,7 @@ static RECT    gScrollRegion;
 
 #define			MAX_NUM_FRAMES			25
 
-BOOLEAN			gfVideoCapture=FALSE;
+BOOLEAN			gfVideoCapture = FALSE;
 UINT32			guiFramePeriod = (1000 / 15 );
 UINT32			guiLastFrame;
 UINT16			*gpFrameData[ MAX_NUM_FRAMES ];
@@ -137,6 +137,10 @@ static LPDIRECTDRAWSURFACE    _gpMouseCursorOriginal = NULL;
 static LPDIRECTDRAWSURFACE2   gpMouseCursorOriginal = NULL;
 
 static MouseCursorBackground  gMouseCursorBackground[2];
+
+static SDL_Surface			*gpSDLMouseCursor            = NULL;
+static SDL_Surface			*gpSDLMouseCursorOriginal    = NULL;
+static SDL_Surface			*gpSDLMouseCursorBackground[2];
 
 static HVOBJECT               gpCursorStore;
 
@@ -484,7 +488,7 @@ BOOLEAN InitializeVideoManager(void)
   // This function must be called to setup RGB information
   //
 
-  //GetRGBDistribution();
+  GetRGBDistribution();
 
 
   return TRUE;
@@ -539,7 +543,6 @@ void ShutdownVideoManager(void)
 void SuspendVideoManager(void)
 {
   guiVideoManagerState = VIDEO_SUSPENDED;
-
 }
 
 void DoTester( )
@@ -613,10 +616,10 @@ BOOLEAN RestoreVideoManager(void)
     // Set the video state to VIDEO_ON
     //
     
-    guiFrameBufferState = BUFFER_DIRTY;
-    guiMouseBufferState = BUFFER_DIRTY;
-    gfForceFullScreenRefresh = TRUE;
-    guiVideoManagerState = VIDEO_ON;
+    guiFrameBufferState			= BUFFER_DIRTY;
+    guiMouseBufferState			= BUFFER_DIRTY;
+    gfForceFullScreenRefresh	= TRUE;
+    guiVideoManagerState		= VIDEO_ON;
     return TRUE;
 	}
   else
@@ -632,46 +635,6 @@ void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDep
 	*usWidth = (UINT16) gusScreenWidth;
 	*usHeight = (UINT16) gusScreenHeight;
 	*ubBitDepth = (UINT8) gubScreenPixelDepth;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN CanBlitToFrameBuffer(void)
-{
-  BOOLEAN fCanBlit;
-
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
-  fCanBlit = (guiFrameBufferState == BUFFER_READY);
-
-  //return fCanBlit;
-  return FALSE;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN CanBlitToMouseBuffer(void)
-{
-  BOOLEAN fCanBlit;
-
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // MOUSE_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
-  fCanBlit = (guiMouseBufferState == BUFFER_READY);
-
-  //return fCanBlit;
-  return FALSE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -850,32 +813,9 @@ void InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 uiRegionCount)
 
 void InvalidateScreen(void)
 {
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
   guiDirtyRegionCount = 0;
   guiDirtyRegionExCount = 0;
   gfForceFullScreenRefresh = TRUE;
-  guiFrameBufferState = BUFFER_DIRTY;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void InvalidateFrameBuffer(void)
-{
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
   guiFrameBufferState = BUFFER_DIRTY;
 }
 
@@ -1420,89 +1360,89 @@ BOOLEAN gfNextRefreshFullScreen = FALSE;
 
 void RefreshScreen(void *DummyVariable)
 {
-//  static UINT32  uiRefreshThreadState, uiIndex;
-//  UINT16  usScreenWidth, usScreenHeight;
-//  static BOOLEAN fShowMouse;
-//  HRESULT ReturnCode;
-//  static RECT    Region;  
-//  static POINT   MousePos;
-//	static BOOLEAN fFirstTime = TRUE;
-//	UINT32						uiTime;
-//
-//	usScreenWidth = usScreenHeight = 0;
-//
-//	if ( fFirstTime )
-//	{
-//		fShowMouse = FALSE;
-//	}
-//
-//	if( gfNextRefreshFullScreen )
-//	{
-//		if( guiCurrentScreen == GAME_SCREEN )
-//		{
-//			InvalidateScreen();
-//			gfRenderScroll = FALSE;
-//			//			gfForceFullScreenRefresh = TRUE;
-//			//			guiFrameBufferState == BUFFER_DIRTY;
-//		}
-//		gfNextRefreshFullScreen = FALSE;
-//	}
-//
-//  //DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Looping in refresh");
-//
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//  // 
-//  // REFRESH_THREAD_MUTEX 
-//  //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//
-//  switch (guiVideoManagerState)
-//  {
-//    case VIDEO_ON
-//    : //
-//      // Excellent, everything is cosher, we continue on
-//      //
-//      uiRefreshThreadState = guiRefreshThreadState = THREAD_ON;        
-//      usScreenWidth = gusScreenWidth;
-//      usScreenHeight = gusScreenHeight;
-//      break;
-//    case VIDEO_OFF
-//    : //
-//      // Hot damn, the video manager is suddenly off. We have to bugger out of here. Don't forget to
-//      // leave the critical section
-//      //
-//      guiRefreshThreadState = THREAD_OFF;
-//      return;
-//    case VIDEO_SUSPENDED
-//    : //
-//      // This are suspended. Make sure the refresh function does try to access any of the direct
-//      // draw surfaces
-//      //
-//      uiRefreshThreadState = guiRefreshThreadState = THREAD_SUSPENDED;
-//      break;
-//    case VIDEO_SHUTTING_DOWN
-//    : //
-//      // Well things are shutting down. So we need to bugger out of there. Don't forget to leave the
-//      // critical section before returning
-//      //
-//    guiRefreshThreadState = THREAD_OFF;
-//    return;
-//  }
-//
-//
-//  //
-//  // Get the current mouse position
-//  //
-//
-//  GetCursorPos(&MousePos);
-//
-//  /////////////////////////////////////////////////////////////////////////////////////////////
-//  // 
-//  // FRAME_BUFFER_MUTEX 
-//  //
-//  /////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
+	static UINT32	uiRefreshThreadState, uiIndex;
+	UINT16  usScreenWidth, usScreenHeight;
+	static BOOLEAN	fShowMouse;
+	//HRESULT ReturnCode;
+	static SDL_Rect	Rect, dstRect;
+	static POINT	MousePos;	// to be retyped
+	static BOOLEAN	fFirstTime = TRUE;
+	UINT32			uiTime;
+
+	usScreenWidth = usScreenHeight = 0;
+
+	if ( fFirstTime )
+	{
+		fShowMouse = FALSE;
+	}
+
+	if( gfNextRefreshFullScreen )
+	{
+		if( guiCurrentScreen == GAME_SCREEN )
+		{
+			InvalidateScreen();
+			gfRenderScroll = FALSE;
+			//			gfForceFullScreenRefresh = TRUE;
+			//			guiFrameBufferState == BUFFER_DIRTY;
+		}
+		gfNextRefreshFullScreen = FALSE;
+	}
+
+	//DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Looping in refresh");
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// REFRESH_THREAD_MUTEX 
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	switch (guiVideoManagerState)
+	{
+	case VIDEO_ON:
+		//
+		// Excellent, everything is cosher, we continue on
+		//
+		uiRefreshThreadState = guiRefreshThreadState = THREAD_ON;        
+		usScreenWidth = gusScreenWidth;
+		usScreenHeight = gusScreenHeight;
+		break;
+	case VIDEO_OFF:
+		//
+		// Hot damn, the video manager is suddenly off. We have to bugger out of here. Don't forget to
+		// leave the critical section
+		//
+		guiRefreshThreadState = THREAD_OFF;
+		return;
+	case VIDEO_SUSPENDED:
+		//
+		// This are suspended. Make sure the refresh function does try to access any of the direct
+		// draw surfaces
+		//
+		uiRefreshThreadState = guiRefreshThreadState = THREAD_SUSPENDED;
+		break;
+	case VIDEO_SHUTTING_DOWN:
+		//
+		// Well things are shutting down. So we need to bugger out of there. Don't forget to leave the
+		// critical section before returning
+		//
+		guiRefreshThreadState = THREAD_OFF;
+		return;
+	}
+
+
+	//
+	// Get the current mouse position
+	//
+
+	GetCursorPos(&MousePos);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// FRAME_BUFFER_MUTEX 
+	//
+	/////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //	// RESTORE OLD POSITION OF MOUSE
 //	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
 //	{
@@ -1529,147 +1469,104 @@ void RefreshScreen(void *DummyVariable)
 //		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
 //
 //	}
-//
-//
-//  //
-//  // Ok we were able to get a hold of the frame buffer stuff. Check to see if it needs updating
-//  // if not, release the frame buffer stuff right away
-//  //
-//	if (guiFrameBufferState == BUFFER_DIRTY)
-//	{
-//		
-//		// Well the frame buffer is dirty.
-//		//
-//
-//		if (gpFrameBufferRefreshOverride != NULL)
-//		{
-//			//
-//			// Method (3) - We are using a function override to refresh the frame buffer. First we
-//			// call the override function then we must set the override pointer to NULL
-//			//
-//    
-//			(*gpFrameBufferRefreshOverride)();
-//			gpFrameBufferRefreshOverride = NULL;
-//
-//		}
-//
-//
-//		if ( gfFadeInitialized && gfFadeInVideo )
-//		{
-//			gFadeFunction( );
-//		}
-//		else
-//		//
-//		// Either Method (1) or (2)
-//		//
-//		{
-//			if (gfForceFullScreenRefresh == TRUE)
-//			{
-//				//
-//				// Method (1) - We will be refreshing the entire screen
-//				//
-//
-//				Region.left = 0;
-//				Region.top = 0;
-//				Region.right = usScreenWidth;
-//				Region.bottom = usScreenHeight;
-//
-//				do
-//				{
-//					ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//					if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//					{
-//						DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//						if (ReturnCode == DDERR_SURFACELOST)
-//						{
-//							goto ENDOFLOOP;
-//						}
-//					}
-//				} while (ReturnCode != DD_OK);
-//
-//
-//			}
-//			else
-//			{
-//				for (uiIndex = 0; uiIndex < guiDirtyRegionCount; uiIndex++)
-//				{
-//					Region.left   = gListOfDirtyRegions[uiIndex].iLeft;
-//					Region.top    = gListOfDirtyRegions[uiIndex].iTop;
-//					Region.right  = gListOfDirtyRegions[uiIndex].iRight;
-//					Region.bottom = gListOfDirtyRegions[uiIndex].iBottom;
-//
-//					do
-//					{
-//						ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//						if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//						{
-//							DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//						}
-//
-//						if (ReturnCode == DDERR_SURFACELOST)
-//						{
-//							goto ENDOFLOOP;
-//						}
-//					} while (ReturnCode != DD_OK);
-//
-//				}
-//
-//				// Now do new, extended dirty regions
-//				for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
-//				{
-//					Region.left   = gDirtyRegionsEx[uiIndex].iLeft;
-//					Region.top    = gDirtyRegionsEx[uiIndex].iTop;
-//					Region.right  = gDirtyRegionsEx[uiIndex].iRight;
-//					Region.bottom = gDirtyRegionsEx[uiIndex].iBottom;
-//
-//					// Do some checks if we are in the process of scrolling!	
-//					if ( gfRenderScroll )
-//					{
-//
-//						// Check if we are completely out of bounds
-//						if ( Region.top <= gsVIEWPORT_WINDOW_END_Y  && Region.bottom <= gsVIEWPORT_WINDOW_END_Y )
-//						{
-//							continue;
-//						}
-//
-//					}
-//
-//					do
-//					{
-//						ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//						if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//						{
-//							DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//						}
-//
-//						if (ReturnCode == DDERR_SURFACELOST)
-//						{
-//							goto ENDOFLOOP;
-//						}
-//					} while (ReturnCode != DD_OK);
-//
-//				}
-//
-//			}
-//						
-//		}
-//		if ( gfRenderScroll )
-//		{
-//			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
-//		}
-//		gfIgnoreScrollDueToCenterAdjust = FALSE;
-//	
-// 
-//
-//
-//		//
-//		// Update the guiFrameBufferState variable to reflect that the frame buffer can now be handled
-//		//
-//
-//		guiFrameBufferState = BUFFER_READY;
-//	}
-//
+
+
+	//
+	// Ok we were able to get a hold of the frame buffer stuff. Check to see if it needs updating
+	// if not, release the frame buffer stuff right away
+	//
+	if (guiFrameBufferState == BUFFER_DIRTY)
+	{
+		
+		// Well the frame buffer is dirty.
+		//
+
+		if (gpFrameBufferRefreshOverride != NULL)
+		{
+			//
+			// Method (3) - We are using a function override to refresh the frame buffer. First we
+			// call the override function then we must set the override pointer to NULL
+			//
+    
+			(*gpFrameBufferRefreshOverride)();
+			gpFrameBufferRefreshOverride = NULL;
+
+		}
+
+
+		if ( gfFadeInitialized && gfFadeInVideo )
+		{
+			gFadeFunction( );
+		}
+		else
+		//
+		// Either Method (1) or (2)
+		//
+		{
+			if (gfForceFullScreenRefresh == TRUE)
+			{
+				//
+				// Method (1) - We will be refreshing the entire screen
+				//
+
+				SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLFrameBuffer, NULL);
+			}
+			else
+			{
+				for (uiIndex = 0; uiIndex < guiDirtyRegionCount; uiIndex++)
+				{
+					Rect.x = gListOfDirtyRegions[uiIndex].iLeft;
+					Rect.y = gListOfDirtyRegions[uiIndex].iTop;
+					Rect.w = gListOfDirtyRegions[uiIndex].iRight - gListOfDirtyRegions[uiIndex].iLeft;
+					Rect.h = gListOfDirtyRegions[uiIndex].iBottom - gListOfDirtyRegions[uiIndex].iTop;
+
+					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
+
+					SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+				}
+
+				// Now do new, extended dirty regions
+				for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
+				{
+					Rect.x = gDirtyRegionsEx[uiIndex].iLeft;
+					Rect.y = gDirtyRegionsEx[uiIndex].iTop;
+					Rect.w = gDirtyRegionsEx[uiIndex].iRight - gDirtyRegionsEx[uiIndex].iLeft;
+					Rect.h = gDirtyRegionsEx[uiIndex].iBottom - gDirtyRegionsEx[uiIndex].iTop;
+
+					// Do some checks if we are in the process of scrolling!	
+					if ( gfRenderScroll )
+					{
+						// Check if we are completely out of bounds
+						if ( gDirtyRegionsEx[uiIndex].iTop <= gsVIEWPORT_WINDOW_END_Y  && gDirtyRegionsEx[uiIndex].iBottom <= gsVIEWPORT_WINDOW_END_Y )
+						{
+							continue;
+						}
+					}
+
+					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
+
+					SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+				}
+
+			}
+						
+		}
+		if ( gfRenderScroll )
+		{
+			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
+		}
+		gfIgnoreScrollDueToCenterAdjust = FALSE;
+	
+ 
+
+
+		//
+		// Update the guiFrameBufferState variable to reflect that the frame buffer can now be handled
+		//
+
+		guiFrameBufferState = BUFFER_READY;
+	}
+
 //  //
 //  // Do we want to print the frame stuff ??
 //  //
@@ -2286,51 +2183,42 @@ void RefreshScreen(void *DummyVariable)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Direct X object access functions
+// Object access functions
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAW2 GetDirectDraw2Object(void)
+SDL_Surface* GetPrimarySurfaceObject(void)
 {
-	Assert( gpDirectDrawObject != NULL );
+	Assert( gpSDLPrimaryBuffer != NULL );
 
-	return gpDirectDrawObject;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
- 
-LPDIRECTDRAWSURFACE2 GetPrimarySurfaceObject(void)
-{
-	Assert( gpPrimarySurface != NULL );
-
-	return gpPrimarySurface;
+	return gpSDLPrimaryBuffer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetBackBufferObject(void)
+SDL_Surface* GetBackBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
+	Assert( gpSDLBackBuffer != NULL );
 
-	return gpBackBuffer;
+	return gpSDLBackBuffer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetFrameBufferObject(void)
+SDL_Surface* GetFrameBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
+	Assert( gpSDLFrameBuffer != NULL );
 
-	return gpFrameBuffer;
+	return gpSDLFrameBuffer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
+SDL_Surface* GetMouseBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
+	Assert( gpSDLMouseCursor != NULL );
 
-	return gpMouseCursor;
+	return gpSDLMouseCursor;
 }
 
 
@@ -2342,189 +2230,89 @@ LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
 
 PTR LockPrimarySurface(UINT32 *uiPitch)
 {
- // HRESULT       ReturnCode;
- // DDSURFACEDESC SurfaceDescription;
+	if ( SDL_LockSurface( gpSDLPrimaryBuffer ) < 0 )
+	{
+		fprintf(stderr, "Failed to lock primary buffer surface: %s\n", SDL_GetError());
+		return NULL;
+	}
 
+	*uiPitch = gpSDLPrimaryBuffer->pitch;
 
- // ZEROMEM(SurfaceDescription);
-	//SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
+	return gpSDLPrimaryBuffer->pixels;
 
- // do
- // {
-	//  ReturnCode = IDirectDrawSurface2_Lock(gpPrimarySurface, NULL, &SurfaceDescription, 0, NULL);
- //   if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- //   {
- //     DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to lock backbuffer");
- //     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
- //     return NULL;
- //   }
-
- // } while (ReturnCode != DD_OK);
-
- // *uiPitch = SurfaceDescription.lPitch;
- // return SurfaceDescription.lpSurface;
-	return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockPrimarySurface(void)
 {
- // DDSURFACEDESC SurfaceDescription;
- // HRESULT       ReturnCode;
-
- // ZEROMEM(SurfaceDescription);
- // SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
- // ReturnCode = IDirectDrawSurface2_Unlock(gpPrimarySurface, &SurfaceDescription);
-	//if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- // {
- //   DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
- // }
+	SDL_UnlockSurface( gpSDLPrimaryBuffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockBackBuffer(UINT32 *uiPitch)
 {
- // HRESULT       ReturnCode;
- // DDSURFACEDESC SurfaceDescription;
+	if ( SDL_LockSurface( gpSDLBackBuffer ) < 0 )
+	{
+		fprintf(stderr, "Failed to lock back buffer surface: %s\n", SDL_GetError());
+		return NULL;
+	}
 
- // //
- // // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
- // //
- // // This function is intended to be called by a thread which has already locked the
- // // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
- // // yack
- // //
+	*uiPitch = gpSDLBackBuffer->pitch;
 
- // ZEROMEM(SurfaceDescription);
-	//SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-
- // do
- // {
- //   ReturnCode = IDirectDrawSurface2_Lock(gpBackBuffer, NULL, &SurfaceDescription, 0, NULL);
- //   if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- //   {
- //     DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to lock backbuffer");
- //     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
- //     return NULL;
- //   }
-
- // } while (ReturnCode != DD_OK);
-
- // *uiPitch = SurfaceDescription.lPitch;
- // return SurfaceDescription.lpSurface;
-	return NULL;
+	return gpSDLBackBuffer->pixels;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockBackBuffer(void)
 {
- // DDSURFACEDESC SurfaceDescription;
- // HRESULT       ReturnCode;
-
- // //
- // // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
- // //
- // // This function is intended to be called by a thread which has already locked the
- // // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
- // // yack
- // //
-
- // ZEROMEM(SurfaceDescription);
- // SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
- // ReturnCode = IDirectDrawSurface2_Unlock(gpBackBuffer, &SurfaceDescription);
-	//if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- // {
- //   DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
- // }
+	SDL_UnlockSurface( gpSDLBackBuffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockFrameBuffer(UINT32 *uiPitch)
 {
- // HRESULT       ReturnCode;
- // DDSURFACEDESC SurfaceDescription;
+	if ( SDL_LockSurface( gpSDLFrameBuffer ) < 0 )
+	{
+		fprintf(stderr, "Failed to lock frame buffer surface\n", SDL_GetError());
+		return NULL;
+	}
 
+	*uiPitch = gpSDLFrameBuffer->pitch;
 
- // ZEROMEM(SurfaceDescription);
-	//SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-
- // do
- // {
-	//  ReturnCode = IDirectDrawSurface2_Lock(gpFrameBuffer, NULL, &SurfaceDescription, 0, NULL);
- //   if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- //   {
- //     DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to lock backbuffer");
- //     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
- //     return NULL;
- //   }
-
-
- // } while (ReturnCode != DD_OK);
-
- // *uiPitch = SurfaceDescription.lPitch;
-
- // return SurfaceDescription.lpSurface;
-	return NULL;
+	return gpSDLFrameBuffer->pixels;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockFrameBuffer(void)
 {
- // DDSURFACEDESC SurfaceDescription;
- // HRESULT       ReturnCode;
-
-
- // ZEROMEM(SurfaceDescription);
- // SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
- // ReturnCode = IDirectDrawSurface2_Unlock(gpFrameBuffer, &SurfaceDescription);
-	//if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- // {
- //   DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
- // }
+	SDL_UnlockSurface( gpSDLFrameBuffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockMouseBuffer(UINT32 *uiPitch)
 {
- // HRESULT       ReturnCode;
- // DDSURFACEDESC SurfaceDescription;
+	if ( SDL_LockSurface( gpSDLMouseCursorOriginal ) < 0 )
+	{
+		fprintf(stderr, "Failed to lock mouse cursor surface: %s\n", SDL_GetError());
+		return NULL;
+	}
 
+	*uiPitch = gpSDLMouseCursorOriginal->pitch;
 
- // ZEROMEM(SurfaceDescription);
-	//SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
- // ReturnCode = IDirectDrawSurface2_Lock(gpMouseCursorOriginal, NULL, &SurfaceDescription, 0, NULL);
-	//if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- // {
- //   DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
- //   return NULL;
- // }
-
- // *uiPitch = SurfaceDescription.lPitch;
- // 
- // return SurfaceDescription.lpSurface;
-	return NULL;
+	return gpSDLMouseCursorOriginal->pixels;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockMouseBuffer(void)
 {
- // DDSURFACEDESC SurfaceDescription;
- // HRESULT       ReturnCode;
-
- // ZEROMEM(SurfaceDescription);
- // SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
- // ReturnCode = IDirectDrawSurface2_Unlock(gpMouseCursorOriginal, &SurfaceDescription);
-	//if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
- // {
- //   DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
- // }
+	SDL_UnlockSurface( gpSDLMouseCursorOriginal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2535,11 +2323,7 @@ void UnlockMouseBuffer(void)
 
 BOOLEAN GetRGBDistribution(void)
 {
-//DDSURFACEDESC SurfaceDescription;
 //UINT16        usBit;
-//HRESULT       ReturnCode;
-//
-//  Assert ( gpPrimarySurface != NULL );
 //
 //	// ONLY DO IF WE ARE IN 16BIT MODE
 //	if ( gbPixelDepth == 8 )
@@ -2547,23 +2331,13 @@ BOOLEAN GetRGBDistribution(void)
 //		return( TRUE );
 //	}
 //
-//  ZEROMEM(SurfaceDescription);
-//  SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
-//  SurfaceDescription.dwFlags = DDSD_PIXELFORMAT;
-//  ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( gpPrimarySurface, &SurfaceDescription );
-//  if (ReturnCode != DD_OK)
-//  {
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//  
-//  //
-//  // Ok we now have the surface description, we now can get the information that we need
-//  //
-//
-//	gusRedMask   = (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
-//	gusGreenMask = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
-//	gusBlueMask  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
+	gusRedMask    = (UINT16) gpSDLFrameBuffer->format->Rmask;
+	gusGreenMask  = (UINT16) gpSDLFrameBuffer->format->Gmask;
+	gusBlueMask   = (UINT16) gpSDLFrameBuffer->format->Bmask;
+
+	gusRedShift   = (UINT16) gpSDLFrameBuffer->format->Rshift;
+	gusGreenShift = (UINT16) gpSDLFrameBuffer->format->Gshift;
+	gusBlueShift  = (UINT16) gpSDLFrameBuffer->format->Bshift;
 //
 //
 //	// RGB 5,5,5
@@ -2573,30 +2347,6 @@ BOOLEAN GetRGBDistribution(void)
 //	else// if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
 //		guiTranslucentMask=0x7bef;
 //
-//
-//  usBit = 0x8000;
-//  gusRedShift = 8;
-//	while(!(gusRedMask & usBit))
-//	{
-//		usBit >>= 1;
-//		gusRedShift--;
-//	}
-//
-//  usBit = 0x8000;
-//  gusGreenShift = 8;
-//	while(!(gusGreenMask & usBit))
-//	{
-//		usBit >>= 1;
-//		gusGreenShift--;
-//	}
-//
-//  usBit = 0x8000;
-//  gusBlueShift = 8;
-//	while(!(gusBlueMask & usBit))
-//	{
-//		usBit >>= 1;
-//		gusBlueShift--;
-//	}
 
   return TRUE;
 }
@@ -2616,59 +2366,61 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 
 BOOLEAN SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usOffsetX, UINT16 usOffsetY )
 {
-  //BOOLEAN      ReturnValue;
-  //PTR          pTmpPointer;
-  //UINT32       uiPitch;
-  //ETRLEObject  pETRLEPointer;
+	BOOLEAN      ReturnValue;
+	ETRLEObject  pETRLEPointer;
 
-  ////
-  //// Erase cursor background
-  ////
+	//
+	// Erase cursor background
+	//
 
-  //pTmpPointer = LockMouseBuffer(&uiPitch);
-  //memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  //UnlockMouseBuffer();
+	EraseMouseCursor( );
 
-  ////
-  //// Get new cursor data
-  ////
+	//
+	// Get new cursor data
+	//
 
-  //ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
-  //guiMouseBufferState = BUFFER_DIRTY;
+	ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
+	guiMouseBufferState = BUFFER_DIRTY;
 
-  //if (GetVideoObjectETRLEPropertiesFromIndex(uiVideoObjectHandle, &pETRLEPointer, usVideoObjectSubIndex))
-  //{
-  //  gsMouseCursorXOffset = usOffsetX;
-  //  gsMouseCursorYOffset = usOffsetY;
-  //  gusMouseCursorWidth = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
-  //  gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
+	if (GetVideoObjectETRLEPropertiesFromIndex(uiVideoObjectHandle, &pETRLEPointer, usVideoObjectSubIndex))
+	{
+		gsMouseCursorXOffset = usOffsetX;
+		gsMouseCursorYOffset = usOffsetY;
+		gusMouseCursorWidth  = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
+		gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
 
-  //  DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-  //  DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
-  //  DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
 
-  //}
-  //else
-  //{
-  //  DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
-  //}
+	}
+	else
+	{
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
+	}
 
-  //return ReturnValue;
+	return ReturnValue;
 	return FALSE;
 }
 
 BOOLEAN EraseMouseCursor( )
 {
-  //PTR          pTmpPointer;
-  //UINT32       uiPitch;
+	//PTR          pTmpPointer;
+	//UINT32       uiPitch;
+	SDL_Rect	rect;
 
-  ////
-  //// Erase cursor background
-  ////
+	//
+	// Erase cursor background
+	//
 
-  //pTmpPointer = LockMouseBuffer(&uiPitch);
-  //memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  //UnlockMouseBuffer();
+	rect.x = rect.y = 0;
+	rect.w = MAX_CURSOR_WIDTH;
+	rect.h = MAX_CURSOR_HEIGHT;
+	SDL_FillRect(gpSDLMouseCursorOriginal, &rect, 0);
+
+	//pTmpPointer = LockMouseBuffer(&uiPitch);
+	//memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
+	//UnlockMouseBuffer();
 
 	// Don't set dirty
 	return( TRUE );
@@ -2676,10 +2428,10 @@ BOOLEAN EraseMouseCursor( )
 
 BOOLEAN SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth )
 {
-  gsMouseCursorXOffset = sOffsetX;
-  gsMouseCursorYOffset = sOffsetY;
-  gusMouseCursorWidth	 = usCursorWidth;
-  gusMouseCursorHeight = usCursorHeight;
+	gsMouseCursorXOffset = sOffsetX;
+	gsMouseCursorYOffset = sOffsetY;
+	gusMouseCursorWidth  = usCursorWidth;
+	gusMouseCursorHeight = usCursorHeight;
 	return( TRUE );
 }
 
@@ -2722,36 +2474,36 @@ BOOLEAN HideMouseCursor(void)
 
 BOOLEAN LoadCursorFile(PTR pFilename)
 {
-  VOBJECT_DESC VideoObjectDescription;
+	VOBJECT_DESC VideoObjectDescription;
 
-  //
-  // Make sure the old cursor store is destroyed
-  //
+	//
+	// Make sure the old cursor store is destroyed
+	//
 
-  if (gpCursorStore != NULL)
-  {
-    DeleteVideoObject(gpCursorStore);
-    gpCursorStore = NULL;
-  }
+	if (gpCursorStore != NULL)
+	{
+		DeleteVideoObject(gpCursorStore);
+		gpCursorStore = NULL;
+	}
 
-  //
-  // Get the source file with all the cursors inside
-  //
+	//
+	// Get the source file with all the cursors inside
+	//
 
-  VideoObjectDescription.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+	VideoObjectDescription.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	strcpy(VideoObjectDescription.ImageFile, pFilename);
-  gpCursorStore = CreateVideoObject(&VideoObjectDescription);
+	gpCursorStore = CreateVideoObject(&VideoObjectDescription);
 
-  //
-  // Were we successful in creating the cursor store ? 
-  //
+	//
+	// Were we successful in creating the cursor store ? 
+	//
 
-  if (gpCursorStore == NULL)
-  {
-    return FALSE;
-  }
+	if (gpCursorStore == NULL)
+	{
+		return FALSE;
+	}
 
-  return TRUE;
+	return TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2759,8 +2511,6 @@ BOOLEAN LoadCursorFile(PTR pFilename)
 BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY )
 {
   BOOLEAN      ReturnValue;
-  PTR          pTmpPointer;
-  UINT32       uiPitch;
   ETRLEObject  pETRLEPointer;
 
   //
@@ -2780,9 +2530,7 @@ BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16
   // Erase cursor background
   //
 
-  pTmpPointer = LockMouseBuffer(&uiPitch);
-  memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  UnlockMouseBuffer();
+  EraseMouseCursor( );
 
   //
   // Get new cursor data
@@ -2821,11 +2569,7 @@ void StartFrameBufferRender(void)
 
 void EndFrameBufferRender(void)
 {
-
-  guiFrameBufferState = BUFFER_DIRTY;
-
-	return;
-
+	guiFrameBufferState = BUFFER_DIRTY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2836,45 +2580,6 @@ void PrintScreen(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-BOOLEAN Set8BPPPalette(SGPPaletteEntry *pPalette)
-{
-HRESULT       ReturnCode;
-
-  // If we are in 256 colors, then we have to initialize the palette system to 0 (faded out)
-  memcpy(gSgpPalette, pPalette, sizeof(SGPPaletteEntry)*256);
-
-  ReturnCode = IDirectDraw_CreatePalette(gpDirectDrawObject, (DDPCAPS_8BIT | DDPCAPS_ALLOW256), (LPPALETTEENTRY)(&gSgpPalette[0]), &gpDirectDrawPalette, NULL);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to create palette (Rc = %d)", ReturnCode)); 
-	  return(FALSE);
-  }
-  // Apply the palette to the surfaces
-  ReturnCode = IDirectDrawSurface_SetPalette(gpPrimarySurface, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to primary surface")); 
-	  return(FALSE);
-  }
-	
-	ReturnCode = IDirectDrawSurface_SetPalette(gpBackBuffer, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to back buffer")); 
-	  return(FALSE);
-  }
-  
-	ReturnCode = IDirectDrawSurface_SetPalette(gpFrameBuffer, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to frame buffer")); 
-	  return(FALSE);
-  }
-
-	return(TRUE);
-}
-
-
 //Kaiden - Added for VC6 Compatibility
 #if _MSC_VER <= 1200
 	template void FatalError<char const *>(char *, ...);
@@ -2895,11 +2600,11 @@ void FatalError( string1 pError, ...)
 
 	// Release DDraw
 	IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
-  IDirectDraw2_Release( gpDirectDrawObject );
+	IDirectDraw2_Release( gpDirectDrawObject );
 	ShowWindow( ghWindow, SW_HIDE );
 
-  // destroy the window
-  // DestroyWindow( ghWindow );
+	// destroy the window
+	// DestroyWindow( ghWindow );
 
 	gfProgramIsRunning = FALSE;
 

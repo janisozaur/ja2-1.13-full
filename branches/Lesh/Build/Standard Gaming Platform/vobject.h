@@ -44,10 +44,10 @@ typedef struct
 // Z-buffer info structure for properly assigning Z values
 typedef struct
 {
-	INT8			bInitialZChange;		// difference in Z value between the leftmost and base strips
-	UINT8			ubFirstZStripWidth;	// # of pixels in the leftmost strip
-	UINT8			ubNumberOfZChanges;	// number of strips (after the first)
-	INT8 *		pbZChange;			// change to the Z value in each strip (after the first)
+	INT8		bInitialZChange;		// difference in Z value between the leftmost and base strips
+	UINT8		ubFirstZStripWidth;		// # of pixels in the leftmost strip
+	UINT8		ubNumberOfZChanges;		// number of strips (after the first)
+	INT8 *		pbZChange;				// change to the Z value in each strip (after the first)
 } ZStripInfo;
 
 typedef struct
@@ -69,39 +69,39 @@ typedef struct
 // Video object creation flags
 // Used in the VOBJECT_DESC structure to describe creation flags
 
-#define VOBJECT_CREATE_DEFAULT			  0x00000020		// Creates and empty object of given width, height and BPP
-#define VOBJECT_CREATE_FROMFILE			  0x00000040		// Creates a video object from a file ( using HIMAGE )
-#define VOBJECT_CREATE_FROMHIMAGE		  0x00000080		// Creates a video object from a pre-loaded hImage
+#define VOBJECT_CREATE_DEFAULT			0x00000020		// Creates and empty object of given width, height and BPP
+#define VOBJECT_CREATE_FROMFILE			0x00000040		// Creates a video object from a file ( using HIMAGE )
+#define VOBJECT_CREATE_FROMHIMAGE		0x00000080		// Creates a video object from a pre-loaded hImage
 
 // VOBJECT FLAGS
-#define	VOBJECT_FLAG_SHADETABLE_SHARED 0x00000100
+#define	VOBJECT_FLAG_SHADETABLE_SHARED	0x00000100
 
 // This structure is a video object. 
 // The video object contains different data based on it's type, compressed or not
 typedef struct TAG_HVOBJECT
 {
-	UINT32							fFlags;								// Special flags
-	UINT32							uiSizePixData;			// ETRLE data size
-	SGPPaletteEntry			*pPaletteEntry;				// 8BPP Palette						  
-	COLORVAL						TransparentColor;			// Defaults to 0,0,0
-	UINT16							*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
+	UINT32					fFlags;								// Special flags
+	UINT32					uiSizePixData;						// ETRLE data size
+	SGPPaletteEntry			*pPaletteEntry;						// 8BPP Palette						  
+	COLORVAL				TransparentColor;					// Defaults to 0,0,0
+	UINT16					*p16BPPPalette;						// A 16BPP palette used for 8->16 blits
 	
-	PTR										pPixData;						// ETRLE pixel data
-	ETRLEObject						*pETRLEObject;				// Object offset data etc
+	PTR						pPixData;							// ETRLE pixel data
+	ETRLEObject				*pETRLEObject;						// Object offset data etc
 	SixteenBPPObjectInfo	*p16BPPObject;
-	UINT16								*pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
-	UINT16								*pShadeCurrent;
-	UINT16								*pGlow;								// glow highlight table
-	UINT8									*pShade8;							// 8-bit shading index table
-	UINT8									*pGlow8;							// 8-bit glow table
-	ZStripInfo						**ppZStripInfo;				// Z-value strip info arrays
+	UINT16					*pShades[HVOBJECT_SHADE_TABLES];	// Shading tables
+	UINT16					*pShadeCurrent;
+	UINT16					*pGlow;								// glow highlight table
+	UINT8					*pShade8;							// 8-bit shading index table
+	UINT8					*pGlow8;							// 8-bit glow table
+	ZStripInfo				**ppZStripInfo;						// Z-value strip info arrays
 
-	UINT16								usNumberOf16BPPObjects;
-	UINT16								usNumberOfObjects;	// Total number of objects
-	UINT8									ubBitDepth;						// BPP 
+	UINT16					usNumberOf16BPPObjects;
+	UINT16					usNumberOfObjects;					// Total number of objects
+	UINT8					ubBitDepth;							// BPP 
 
 	// Reserved for added room and 32-byte boundaries
-	BYTE													bReserved[ 1 ];
+	BYTE					bReserved[ 1 ];
 
 
 } SGPVObject, *HVOBJECT;
@@ -110,19 +110,19 @@ typedef struct TAG_HVOBJECT
 // This structure describes the creation parameters for a Video Object
 typedef struct
 {
-	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
+	UINT32					fCreateFlags;		// Specifies creation flags like from file or not
 	union
 	{
 		struct
 		{
-			SGPFILENAME		ImageFile;							// Filename of image data to use
+			SGPFILENAME		ImageFile;			// Filename of image data to use
 		};
 		struct
 		{
-			HIMAGE				hImage;
+			HIMAGE			hImage;
 		};
 	};
-	UINT8					ubBitDepth;							// BPP, ignored if given from file
+	UINT8					ubBitDepth;			// BPP, ignored if given from file
 } VOBJECT_DESC;
 
 // **********************************************************************************
@@ -166,21 +166,21 @@ UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hVSrcObject, 
-												 UINT16 usRegionIndex, 
-												 INT32	iDestX, 
-												 INT32  iDestY, 
-												 UINT32 fBltFlags, 
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObject(	UINT32		uiDestVSurface,
+						HVOBJECT	hVSrcObject, 
+						UINT16		usRegionIndex, 
+						INT32		iDestX, 
+						INT32		iDestY, 
+						UINT32		fBltFlags, 
+						blt_fx		*pBltFx );
 
-BOOLEAN BltVideoObjectFromIndex(  UINT32	uiDestVSurface,
-												 UINT32 uiSrcVObject, 
-												 UINT16 usRegionIndex, 
-												 INT32	iDestX, 
-												 INT32  iDestY, 
-												 UINT32 fBltFlags, 
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObjectFromIndex(UINT32	uiDestVSurface,
+								UINT32	uiSrcVObject, 
+								UINT16	usRegionIndex, 
+								INT32	iDestX, 
+								INT32	iDestY, 
+								UINT32	fBltFlags, 
+								blt_fx	*pBltFx );
 
 // Sets transparency
 BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );
@@ -247,9 +247,6 @@ extern BOOLEAN gfVideoObjectsInit;
 // Blitting, giving an API layer for portability. 
 
 BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_fx *pBltFx );
-
-HVOBJECT GetPrimaryVideoObject( );
-HVOBJECT GetBackBufferVideoObject( );
 
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex );
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex );

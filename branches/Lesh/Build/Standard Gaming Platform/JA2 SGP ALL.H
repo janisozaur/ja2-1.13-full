@@ -59,7 +59,6 @@
 #include "gameloop.h"
 #include "DirectX Common.h"
 #include "DirectDraw Calls.h"
-#include "video_private.h"
 #include <direct.h>
 #include "RegInst.h"
 #include "LibraryDataBase.h"

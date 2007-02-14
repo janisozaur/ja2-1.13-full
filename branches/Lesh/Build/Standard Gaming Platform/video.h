@@ -10,6 +10,7 @@
 #include "Types.h"
 #include "DirectDraw Calls.h"
 #include "VSurface.h"
+#include "SDL.h"
 
 #define BUFFER_READY          0x00
 #define BUFFER_BUSY           0x01
@@ -42,11 +43,10 @@ extern void                 InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 u
 extern void                 InvalidateScreen(void);
 extern void                 InvalidateFrameBuffer(void);
 extern void                 SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride);
-extern LPDIRECTDRAW2        GetDirectDraw2Object(void);
-extern LPDIRECTDRAWSURFACE2 GetPrimarySurfaceObject(void);
-extern LPDIRECTDRAWSURFACE2 GetBackBufferObject(void);
-extern LPDIRECTDRAWSURFACE2 GetFrameBufferObject(void);
-extern LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void);
+extern SDL_Surface *		GetPrimarySurfaceObject(void);
+extern SDL_Surface *		GetBackBufferObject(void);
+extern SDL_Surface *		GetFrameBufferObject(void);
+extern SDL_Surface *		GetMouseBufferObject(void);
 extern PTR                  LockPrimarySurface(UINT32 *uiPitch);
 extern void                 UnlockPrimarySurface(void);
 extern PTR                  LockBackBuffer(UINT32 *uiPitch);
@@ -73,9 +73,6 @@ extern BOOLEAN				BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObj
 void						DirtyCursor( );
 void						EnableCursor( BOOLEAN fEnable );
 
-BOOLEAN						Set8BPPPalette(SGPPaletteEntry *pPalette);
-// 8-bit palette globals
-
 void						VideoCaptureToggle( void );
 
 
@@ -86,10 +83,6 @@ void RefreshScreen(void *DummyVariable);
 
 template <typename string1>
 void FatalError( string1 pError, ...);
-
-
-extern SGPPaletteEntry		gSgpPalette[256];
-extern LPDIRECTDRAWPALETTE	gpDirectDrawPalette;
 
 /*
 #ifdef __cplusplus

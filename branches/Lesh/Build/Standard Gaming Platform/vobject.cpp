@@ -14,7 +14,6 @@
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
-	#include "video_private.h"
 	#include "wcheck.h"
 	#include "vobject_blitters.h"
 	#include "sgp.h"
@@ -43,8 +42,8 @@
 // the list gets larger
 #define DEFAULT_VIDEO_OBJECT_LIST_SIZE	10
 
-#define COMPRESS_TRANSPARENT				0x80
-#define COMPRESS_RUN_MASK						0x7F
+#define COMPRESS_TRANSPARENT			0x80
+#define COMPRESS_RUN_MASK				0x7F
 
 // *******************************************************************************
 // External Functions and variables
@@ -61,27 +60,27 @@
 
 
 
-HLIST		ghVideoObjects = NULL;
-BOOLEAN	gfVideoObjectsInit=FALSE;
+HLIST	ghVideoObjects     = NULL;
+BOOLEAN	gfVideoObjectsInit = FALSE;
 
 typedef struct VOBJECT_NODE
 {
-	HVOBJECT hVObject;
-	UINT32 uiIndex;
-  struct VOBJECT_NODE *next, *prev;
+	HVOBJECT	hVObject;
+	UINT32		uiIndex;
+	struct VOBJECT_NODE *next, *prev;
 
 	#ifdef SGP_VIDEO_DEBUGGING
-		UINT8									*pName;
-		UINT8									*pCode;
+		UINT8	*pName;
+		UINT8	*pCode;
 	#endif
 
 }VOBJECT_NODE;
 
-VOBJECT_NODE  *gpVObjectHead = NULL;
-VOBJECT_NODE  *gpVObjectTail = NULL;
-UINT32				guiVObjectIndex = 1;
-UINT32				guiVObjectSize = 0;
-UINT32				guiVObjectTotalAdded = 0;
+VOBJECT_NODE	*gpVObjectHead = NULL;
+VOBJECT_NODE	*gpVObjectTail = NULL;
+UINT32			guiVObjectIndex      = 1;
+UINT32			guiVObjectSize       = 0;
+UINT32			guiVObjectTotalAdded = 0;
 
 #ifdef _DEBUG
 enum
@@ -127,6 +126,7 @@ int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep)
    };
 }
 
+// **************************************************************
 BOOLEAN InitializeVideoObjectManager( )
 {
 	//Shouldn't be calling this if the video object manager already exists.
@@ -139,6 +139,7 @@ BOOLEAN InitializeVideoObjectManager( )
 	return TRUE ;
 }
 
+// **************************************************************
 BOOLEAN ShutdownVideoObjectManager( )
 {
 	VOBJECT_NODE *curr;
@@ -157,14 +158,15 @@ BOOLEAN ShutdownVideoObjectManager( )
 	}
 	gpVObjectHead = NULL;
 	gpVObjectTail = NULL;
-	guiVObjectIndex = 1;
-	guiVObjectSize = 0;
+	guiVObjectIndex      = 1;
+	guiVObjectSize       = 0;
 	guiVObjectTotalAdded = 0;
 	UnRegisterDebugTopic(TOPIC_VIDEOOBJECT, "Video Objects");
 	gfVideoObjectsInit=FALSE;
 	return TRUE;
 }
 
+// **************************************************************
 UINT32 CountVideoObjectNodes()
 {
 	VOBJECT_NODE *curr;
@@ -178,6 +180,7 @@ UINT32 CountVideoObjectNodes()
 	return i;
 }
 
+// **************************************************************
 BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 {
 
@@ -238,7 +241,7 @@ BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 	return TRUE ;
 }
 
-
+// **************************************************************
 BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor )
 {
 	HVOBJECT hVObject;
@@ -255,6 +258,7 @@ BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor )
 	return( TRUE );
 }
 
+// **************************************************************
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 {
 	VOBJECT_NODE *curr;
@@ -276,6 +280,7 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 	return FALSE;
 }
 
+// !! need convert to SDL
 BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, blt_fx *pBltFx )
 {
 	UINT16               *pBuffer;
@@ -312,7 +317,7 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 	return( TRUE );
 }
 
-
+// **************************************************************
 BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 {
 	VOBJECT_NODE *curr;
@@ -373,17 +378,19 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 
 
 
+// !! need convert to SDL
+
 // Given an index to the dest and src vobject contained in ghVideoObjects
 // Based on flags, blit accordingly
 // There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
 // clipping lists
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hSrcVObject,
-												 UINT16 usRegionIndex,
-												 INT32  iDestX,
-												 INT32  iDestY,
-												 UINT32 fBltFlags,
-												 blt_fx *pBltFx )
+BOOLEAN BltVideoObject(	UINT32		uiDestVSurface,
+						HVOBJECT	hSrcVObject,
+						UINT16		usRegionIndex,
+						INT32		iDestX,
+						INT32		iDestY,
+						UINT32		fBltFlags,
+						blt_fx		*pBltFx )
 {
 
 	UINT16								*pBuffer;
@@ -413,13 +420,13 @@ BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
 // Video Object Manipulation Functions
 // *******************************************************************************
 
-
+// **************************************************************
 HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 {
-	HVOBJECT						hVObject;
-	HIMAGE							hImage;
-	ETRLEData						TempETRLEData;
-//	UINT32							count;
+	HVOBJECT	hVObject;
+	HIMAGE		hImage;
+	ETRLEData	TempETRLEData;
+//	UINT32		count;
 
 	// Allocate memory for video object data and initialize
 	hVObject = (HVOBJECT) MemAlloc( sizeof( SGPVObject ) );
@@ -466,16 +473,16 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 			}
 
 			// Set values from himage
-			hVObject->ubBitDepth				= hImage->ubBitDepth;
+			hVObject->ubBitDepth		= hImage->ubBitDepth;
 
 			// Get TRLE data
 			CHECKF( GetETRLEImageData( hImage, &TempETRLEData ) );
 
 			// Set values
 			hVObject->usNumberOfObjects	= TempETRLEData.usNumberOfObjects;
-			hVObject->pETRLEObject			= TempETRLEData.pETRLEObject;
-			hVObject->pPixData					= TempETRLEData.pPixData;
-			hVObject->uiSizePixData			= TempETRLEData.uiSizePixData;
+			hVObject->pETRLEObject		= TempETRLEData.pETRLEObject;
+			hVObject->pPixData			= TempETRLEData.pPixData;
+			hVObject->uiSizePixData		= TempETRLEData.uiSizePixData;
 
 			// Set palette from himage
 			if ( hImage->ubBitDepth == 8 )
@@ -513,8 +520,8 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 	return( hVObject );
 }
 
-
 // Palette setting is expensive, need to set both DDPalette and create 16BPP palette
+// **************************************************************
 BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette )
 {
 
@@ -555,6 +562,7 @@ BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette )
 
 // Transparency needs to take RGB value and find best fit and place it into DD Surface
 // colorkey value.
+// **************************************************************
 BOOLEAN SetVideoObjectTransparencyColor( HVOBJECT hVObject, COLORVAL TransColor )
 {
 
@@ -569,6 +577,7 @@ BOOLEAN SetVideoObjectTransparencyColor( HVOBJECT hVObject, COLORVAL TransColor 
 
 
 // Deletes all palettes, surfaces and region data
+// **************************************************************
 BOOLEAN DeleteVideoObject( HVOBJECT hVObject )
 {
 	UINT16			usLoop;
@@ -637,7 +646,7 @@ BOOLEAN DeleteVideoObject( HVOBJECT hVObject )
 	adjust automagically.
 
 **********************************************************************************************/
-
+// **************************************************************
 UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType)
 {
 UINT32 count;
@@ -718,6 +727,7 @@ UINT32 count;
 // *******************************************************************
 
 // High level blit function encapsolates ALL effects and BPP
+// **************************************************************
 BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_fx *pBltFx )
 {
 	// Sometimes an exception is thrown in that method.
@@ -810,19 +820,20 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 	}
 }
 
+// !! need to convert to SDL
 BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
 {
 	UINT16 *pBuffer;
 	UINT32 uiPitch;
 	SGPRect   area;
-	UINT8 uiPattern[8][8]={	{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0}};
+	UINT8 uiPattern[8][8] =	{	{0,1,0,1,0,1,0,1},
+								{1,0,1,0,1,0,1,0},
+								{0,1,0,1,0,1,0,1},
+								{1,0,1,0,1,0,1,0},
+								{0,1,0,1,0,1,0,1},
+								{1,0,1,0,1,0,1,0},
+								{0,1,0,1,0,1,0,1},
+								{1,0,1,0,1,0,1,0}};
 
 	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
@@ -864,6 +875,7 @@ BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT
 	tables are calculated, or things WILL go boom.
 
 **********************************************************************************************/
+// **************************************************************
 BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject)
 {
 UINT32 x;
@@ -903,7 +915,7 @@ BOOLEAN f16BitPal;
 }
 
 
-
+// **************************************************************
 UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 {
 	Assert(pObj!=NULL);
@@ -920,6 +932,7 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 	return(TRUE);
 }
 
+// **************************************************************
 UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 {
 	HVOBJECT hObj;
@@ -968,6 +981,7 @@ UINT32	uiPitch;
 	Given a VOBJECT and ETRLE image index, retrieves the value of the pixel located at the
 	given image coordinates. The value returned is an 8-bit palette index
 ********************************************************************************************/
+// **************************************************************
 BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEIndex, UINT16 usX, UINT16 usY )
 {
 	UINT8 *					pCurrent;
@@ -1043,6 +1057,7 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 	return( FALSE );
 }
 
+// **************************************************************
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
 	CHECKF( usIndex >= 0 );
@@ -1054,6 +1069,7 @@ BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObj
 
 }
 
+// **************************************************************
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight )
 {
 	HVOBJECT							hVObject;
@@ -1073,7 +1089,7 @@ BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usI
 	return( TRUE );
 }
 
-
+// **************************************************************
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
 	HVOBJECT							hVObject;
@@ -1089,6 +1105,7 @@ BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObjec
 	return( TRUE );
 }
 
+// **************************************************************
 BOOLEAN SetVideoObjectPalette8BPP(INT32 uiVideoObject, SGPPaletteEntry *pPal8)
 {
 	HVOBJECT							hVObject;
@@ -1102,7 +1119,7 @@ BOOLEAN SetVideoObjectPalette8BPP(INT32 uiVideoObject, SGPPaletteEntry *pPal8)
 	return( SetVideoObjectPalette( hVObject, pPal8 ) );
 }
 
-
+// **************************************************************
 BOOLEAN GetVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 **ppPal16)
 {
 	HVOBJECT							hVObject;
@@ -1118,6 +1135,7 @@ BOOLEAN GetVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 **ppPal16)
 	return( TRUE );
 }
 
+// **************************************************************
 BOOLEAN CopyVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 *ppPal16)
 {
 	HVOBJECT							hVObject;
@@ -1133,6 +1151,7 @@ BOOLEAN CopyVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 *ppPal16)
 	return( TRUE );
 }
 
+// **************************************************************
 BOOLEAN CheckFor16BPPRegion( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel, UINT16 * pusIndex )
 {
 	UINT16					usLoop;
@@ -1156,6 +1175,7 @@ BOOLEAN CheckFor16BPPRegion( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubSh
 	return( FALSE );
 }
 
+// **************************************************************
 BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel )
 {
 	SixteenBPPObjectInfo *	p16BPPObject;
@@ -1294,7 +1314,7 @@ BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UI
 	return( TRUE );
 }
 
-
+// !! need to convert to SDL
 BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
 	UINT16               *pBuffer;
@@ -1330,6 +1350,7 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 	return( TRUE );
 }
 
+// !! need to convert to SDL
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
 	UINT16               *pBuffer;
@@ -1358,7 +1379,7 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 }
 
 
-
+// !! need convert to SDL
 BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
 	UINT16               *pBuffer;
@@ -1394,6 +1415,7 @@ BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrc
 	return( TRUE );
 }
 
+// !! need convert to SDL
 BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
 	UINT16               *pBuffer;
@@ -1422,6 +1444,7 @@ BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject,
 }
 
 #ifdef _DEBUG
+// **************************************************************
 void CheckValidVObjectIndex( UINT32 uiIndex )
 {
 	BOOLEAN fAssertError = FALSE;
@@ -1488,6 +1511,7 @@ typedef struct DUMPFILENAME
 	UINT8 str[256];
 }DUMPFILENAME;
 
+// **************************************************************
 void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 {
 	VOBJECT_NODE *curr;
@@ -1567,6 +1591,7 @@ void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 }
 
 //Debug wrapper for adding vObjects
+// **************************************************************
 template BOOLEAN _AddAndRecordVObject<char const *>(VOBJECT_DESC *, UINT32 *, UINT32, char const *);
 template BOOLEAN _AddAndRecordVObject<char *>(VOBJECT_DESC *, UINT32 *, UINT32, char *);
 template <typename type4>
@@ -1595,6 +1620,7 @@ BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32
 	return TRUE;
 }
 
+// **************************************************************
 template void PerformVideoInfoDumpIntoFile<char *>(char *, BOOLEAN);
 template void PerformVideoInfoDumpIntoFile<char const *>(char const *, BOOLEAN);
 template <typename string1>

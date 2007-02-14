@@ -177,7 +177,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\,..\TileEngine,..\Tactical,..\Utils,..\strategic,.\;..\SDL"
+				AdditionalIncludeDirectories="..\,..\TileEngine,..\Tactical,..\Utils,..\strategic,.\,..\SDL"
 				PreprocessorDefinitions="NO_ZLIB;JA2_PRECOMPILED_HEADERS;NO_ZLIB_COMPRESSION;NDEBUG;WIN32;_WINDOWS;JA2;XML_STATIC;CINTERFACE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -330,9 +330,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Build,..\TileEngine,..\Tactical,..\Utils,..\strategic,..\,.\"
+				AdditionalIncludeDirectories="..\Build,..\TileEngine,..\Tactical,..\Utils,..\strategic,..\,.\;..\SDL"
 				PreprocessorDefinitions="JA2_PRECOMPILED_HEADERS;NO_ZLIB_COMPRESSION;_DEBUG;WIN32;_WINDOWS;JA2;_VTUNE_PROFILING;XML_STATIC;CINTERFACE"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="JA2 SGP ALL.H"
 				PrecompiledHeaderFile=".\Debug/Standard Gaming Platform.pch"
@@ -2726,9 +2726,6 @@
 			</File>
 			<File
 				RelativePath="Video.h">
-			</File>
-			<File
-				RelativePath="video_private.h">
 			</File>
 			<File
 				RelativePath="vobject.h">

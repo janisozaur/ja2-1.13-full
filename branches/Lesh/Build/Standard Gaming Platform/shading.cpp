@@ -14,7 +14,6 @@
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
-	#include "video_private.h"
 	#include "wcheck.h"
 	#include "vobject_blitters.h"
 	#include "shading.h"
@@ -286,33 +285,3 @@ void SetShadeTablePercent( FLOAT uiShadePercent )
 	guiShadePercent = uiShadePercent;
 	BuildShadeTable( );
 }
-
-
-#ifdef JA2	// Jul. 23 '97 - ALEX - because Wizardry isn't using it & no longer has a version of Set8BPPPalette() available
-void Init8BitTables(void)
-{
-SGPPaletteEntry Pal[256];
-UINT32 uiCount;
-
-	// calculate a grey-scale table for the default palette
-	for(uiCount=0; uiCount < 256; uiCount++)
-	{
-		Pal[uiCount].peRed=(UINT8)(uiCount%128)+128;
-		Pal[uiCount].peGreen=(UINT8)(uiCount%128)+128;
-		Pal[uiCount].peBlue=(UINT8)(uiCount%128)+128;
-	}
-
-	Pal[0].peRed=0;
-	Pal[0].peGreen=0;
-	Pal[0].peBlue=0;
-
-	Set8BPPPalette(Shaded8BPPPalettes[4]);
-}
-
-BOOLEAN Set8BitModePalette(SGPPaletteEntry *pPal)
-{
-	ShadesCalculateTables(pPal);
-	Set8BPPPalette(pPal);
-	return(TRUE);
-}
-#endif

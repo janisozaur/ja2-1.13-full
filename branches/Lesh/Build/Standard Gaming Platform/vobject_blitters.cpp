@@ -6,15 +6,10 @@
 	#include "DirectDraw Calls.h"
 	#include <stdio.h>
 	#include "debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"													// JA2
-	#else
-		#include "video2.h"				// Wiz8
-	#endif
+	#include "video.h"													// JA2
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
-	#include "video_private.h"
 	#include "wcheck.h"
 	#include "vobject.h"
 	#include "vobject_blitters.h"
@@ -12186,8 +12181,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	CHECKF( iTempY   >= 0 );
 	CHECKF(	usWidth  >  0 );
 	CHECKF(	usHeight >  0 );
-	CHECKF( usHeight <= hSrcVSurface->usHeight);
-	CHECKF( usWidth <= hSrcVSurface->usWidth);
+	//CHECKF( usHeight <= hSrcVSurface->usHeight);
+	//CHECKF( usWidth <= hSrcVSurface->usWidth);
 
 	SrcPtr				= (UINT8 *)pSrcBuffer + (uiSrcPitch*pRect->iTop) + (pRect->iLeft);
 	DestPtr				= (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
