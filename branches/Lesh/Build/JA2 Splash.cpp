@@ -15,9 +15,12 @@ void InitJA2SplashScreen()
 	//ClearMainMenu();
 
 //#else
-	UINT32 uiLogoID = 0;
+	UINT32 uiLogoID = 0, uiPic = 0;
 	HVSURFACE hVSurface; // unused jonathanl  // lalien reenabled for international versions
 	VSURFACE_DESC VSurfaceDesc; //unused jonathanl // lalien reenabled for international versions
+	HVOBJECT hHandle;
+	VOBJECT_DESC    VObjectDesc; 
+
 // #ifdef JA2TESTVERSION
 //	INT32 i = 0;
 //
@@ -62,6 +65,16 @@ void InitJA2SplashScreen()
 			BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, iScreenWidthOffset, iScreenHeightOffset, 0, NULL );
 			DeleteVideoSurfaceFromIndex( uiLogoID );
 	//#endif
+			VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+			FilenameForBPP( "INTERFACE\\MBS.sti", VObjectDesc.ImageFile );
+			if ( !AddVideoObject( &VObjectDesc, &uiPic ) )
+			{
+				fprintf(stderr,	"Failed to load %s\n", VObjectDesc.ImageFile);
+				AssertMsg( 0, String( "Failed to load %s", VObjectDesc.ImageFile ) );
+				return;
+			}
+			GetVideoObject(&hHandle, uiPic ); 
+			BltVideoObject( FRAME_BUFFER , hHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL );
 
 	InvalidateScreen();
 	//RefreshScreen( NULL );

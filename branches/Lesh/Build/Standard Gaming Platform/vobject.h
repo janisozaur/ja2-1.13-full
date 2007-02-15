@@ -4,6 +4,7 @@
 #include "types.h"
 #include "container.h"
 #include "himage.h"
+#include "SDL.h"
 
 // ************************************************************************************
 //
@@ -13,6 +14,12 @@
 
 
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
+//typedef union
+//{
+//	UINT32		Color;
+//	SDL_Color	SDLColor;
+//} COLORVAL;
+
 typedef UINT32 COLORVAL;
 
 // Defines for blitting
@@ -64,6 +71,9 @@ typedef struct
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 // From RGB to COLORVAL
 #define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16))) 
+#define RED(c)    ((c) & 0xFF)
+#define GREEN(c)  (((c)>>8) & 0xFF)
+#define BLUE(c)   (((c)>>16) & 0xFF)
 
 
 // Video object creation flags

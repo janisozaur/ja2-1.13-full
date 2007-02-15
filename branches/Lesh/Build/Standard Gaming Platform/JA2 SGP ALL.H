@@ -52,7 +52,6 @@
 #include <ddeml.h>
 #include "TopicIDs.h"
 #include "TopicOps.h"
-#include "WizShare.h"
 #include "screenids.h"
 #include "Sys Globals.h"
 #include "jascreens.h"

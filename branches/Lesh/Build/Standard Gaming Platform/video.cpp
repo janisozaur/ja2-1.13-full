@@ -51,12 +51,11 @@
 
 typedef struct
 {
-  BOOLEAN                 fRestore;
-  UINT16                  usMouseXPos, usMouseYPos;
-  UINT16                  usLeft, usTop, usRight, usBottom;
-  RECT					  Region;
-  LPDIRECTDRAWSURFACE     _pSurface;
-  LPDIRECTDRAWSURFACE2    pSurface;
+  BOOLEAN           fRestore;
+  UINT16            usMouseXPos, usMouseYPos;
+  UINT16            usLeft, usTop, usRight, usBottom;
+  SDL_Rect			Region;
+  SDL_Surface		*pSurface;
 
 } MouseCursorBackground;
 
@@ -90,7 +89,6 @@ INT32			giNumFrames = 0;
 // Direct Draw objects for both the Primary and Backbuffer surfaces
 //
 
-static LPDIRECTDRAW           _gpDirectDrawObject = NULL;
 static LPDIRECTDRAW2          gpDirectDrawObject = NULL;
 
 static LPDIRECTDRAWSURFACE    _gpPrimarySurface = NULL;
@@ -107,8 +105,6 @@ static LPDIRECTDRAWSURFACE2   gpFrameBuffer = NULL;
 #ifdef WINDOWED_MODE
 
 static LPDIRECTDRAWSURFACE    _gpBackBuffer = NULL;
-
-extern RECT									rcWindow;
 
 
 #endif
@@ -130,7 +126,6 @@ static UINT16                 gusMouseCursorHeight;
 static INT16                  gsMouseCursorXOffset;
 static INT16                  gsMouseCursorYOffset;
 
-static LPDIRECTDRAWSURFACE    _gpMouseCursor = NULL;
 static LPDIRECTDRAWSURFACE2   gpMouseCursor = NULL;
 
 static LPDIRECTDRAWSURFACE    _gpMouseCursorOriginal = NULL;
@@ -222,21 +217,11 @@ void RefreshMovieCache( );
 
 BOOLEAN InitializeVideoManager(void)
 { 
-  //UINT32        uiIndex, uiPitch;
+  UINT32        uiIndex;
+  //UINT32		uiPitch;
   UINT32		uiVideoFlags;
   const SDL_VideoInfo	*pVideoInfo;
-  //HRESULT       ReturnCode;
-  //HWND          hWindow;
-  //WNDCLASS      WindowClass;
   char          AppName[] = APPLICATION_NAME;
-//  DDSURFACEDESC SurfaceDescription;
-//  DDCOLORKEY    ColorKey;
-//  PTR           pTmpPointer;
-//
-//#ifndef WINDOWED_MODE
-//  DDSCAPS       SurfaceCaps;
-//#endif
-
 
 	//
 	// Register debug topics
@@ -351,123 +336,88 @@ BOOLEAN InitializeVideoManager(void)
 		return FALSE;
 	}
 
-//  //
-//  // Initialize the main mouse surfaces
-//  //
-//
-//  ZEROMEM(SurfaceDescription);
-//  SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-//  SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-// // SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-//  SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-//  SurfaceDescription.dwWidth        = MAX_CURSOR_WIDTH;
-//  SurfaceDescription.dwHeight       = MAX_CURSOR_HEIGHT;
-//  ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &_gpMouseCursor, NULL );
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to create MouseCursor witd %ld", ReturnCode & 0x0f));
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }  
-//
-//  ReturnCode = IDirectDrawSurface_QueryInterface(_gpMouseCursor, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&gpMouseCursor); // (jonathanl)
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//
-//  ColorKey.dwColorSpaceLowValue = 0;
-//  ColorKey.dwColorSpaceHighValue = 0;
-//  ReturnCode = IDirectDrawSurface2_SetColorKey(gpMouseCursor, DDCKEY_SRCBLT, &ColorKey);
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//  
-//  //
-//  // Initialize the main mouse original surface
-//  //
-//
-//  ZEROMEM(SurfaceDescription);
-//  SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-//  SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-//  SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-//  SurfaceDescription.dwWidth        = MAX_CURSOR_WIDTH;
-//  SurfaceDescription.dwHeight       = MAX_CURSOR_HEIGHT;
-//  ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &_gpMouseCursorOriginal, NULL );
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to create MouseCursorOriginal");
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//  
-//  ReturnCode = IDirectDrawSurface_QueryInterface(_gpMouseCursorOriginal, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&gpMouseCursorOriginal); // (jonathanl)
-//  if (ReturnCode != DD_OK)
-//  { 
-//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    return FALSE;
-//  }
-//
-//  //
-//  // Initialize the main mouse background surfaces. There are two of them (one for each of the Primary
-//  // and Backbuffer surfaces
-//  //
-//
-//  for (uiIndex = 0; uiIndex < 1; uiIndex++)
-//  {
-//    //
-//    // Initialize various mouse background variables
-//    //
-//
-//    gMouseCursorBackground[uiIndex].fRestore = FALSE;
-//
-//    //
-//    // Initialize the direct draw surfaces for the mouse background
-//    //
-//
-//    ZEROMEM(SurfaceDescription);
-//    SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-//    SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-//    //SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-//		SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-//    SurfaceDescription.dwWidth        = MAX_CURSOR_WIDTH;
-//    SurfaceDescription.dwHeight       = MAX_CURSOR_HEIGHT;
-//    ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &(gMouseCursorBackground[uiIndex]._pSurface), NULL );
-//    if (ReturnCode != DD_OK)
-//    { 
-//      DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to create MouseCursorBackground");
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//      return FALSE;
-//    }
-//
-//    ReturnCode = IDirectDrawSurface_QueryInterface(gMouseCursorBackground[uiIndex]._pSurface, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&(gMouseCursorBackground[uiIndex].pSurface)); // (jonathanl)
-//    if (ReturnCode != DD_OK)
-//    { 
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//      return FALSE;
-//    }
-//  }
+	//
+	// Initialize the main mouse surfaces
+	//
 
-  //
-  // Initialize the mutex sections
-  //
+	gpSDLMouseCursor = SDL_CreateRGBSurface(SDL_SWSURFACE,
+		MAX_CURSOR_WIDTH,
+		MAX_CURSOR_HEIGHT,
+		gpSDLFrameBuffer->format->BitsPerPixel,
+		gpSDLFrameBuffer->format->Rmask,
+		gpSDLFrameBuffer->format->Gmask,
+		gpSDLFrameBuffer->format->Bmask,
+		gpSDLFrameBuffer->format->Amask);
 
-	// ATE: Keep these mutexes for now!
-  //if (InitializeMutex(REFRESH_THREAD_MUTEX, (UINT8 *)"RefreshThreadMutex") == FALSE)
-  //{
-  //  return FALSE;
-  //}
-  //if (InitializeMutex(FRAME_BUFFER_MUTEX, (UINT8 *)"FrameBufferMutex") == FALSE)
-  //{
-  //  return FALSE;
-  //}
-  //if (InitializeMutex(MOUSE_BUFFER_MUTEX, (UINT8 *)"MouseBufferMutex") == FALSE)
-  //{
-  //  return FALSE;
-  //}
+	if ( !gpSDLMouseCursor )
+	{
+		fprintf(stderr, "Couldn't create mouse cursor: %s\n", SDL_GetError());
+		return FALSE;
+	}
+
+	if ( SDL_SetColorKey(gpSDLMouseCursor, SDL_SRCCOLORKEY, 0) < 0 )
+	{
+		fprintf(stderr, "Couldn't set colorkey for mouse cursor: %s\n", SDL_GetError());
+		return FALSE;
+	}
+
+	//
+	// Initialize the main mouse original surface
+	//
+
+	gpSDLMouseCursorOriginal = SDL_CreateRGBSurface(SDL_SWSURFACE,
+		MAX_CURSOR_WIDTH,
+		MAX_CURSOR_HEIGHT,
+		gpSDLFrameBuffer->format->BitsPerPixel,
+		gpSDLFrameBuffer->format->Rmask,
+		gpSDLFrameBuffer->format->Gmask,
+		gpSDLFrameBuffer->format->Bmask,
+		gpSDLFrameBuffer->format->Amask);
+
+	if ( !gpSDLMouseCursorOriginal )
+	{
+		fprintf(stderr, "Couldn't create mouse cursor original: %s\n", SDL_GetError());
+		return FALSE;
+	}
+
+	//if ( SDL_SetColorKey(gpSDLMouseCursorOriginal, SDL_SRCCOLORKEY, 0) < 0 )
+	//{
+	//	fprintf(stderr, "Couldn't set colorkey for mouse cursor original: %s\n", SDL_GetError());
+	//	return FALSE;
+	//}
+
+	//
+	// Initialize the main mouse background surfaces. There are two of them (one for each of the Primary
+	// and Backbuffer surfaces
+	//
+
+	for (uiIndex = 0; uiIndex < 1; uiIndex++)
+	{
+		//
+		// Initialize various mouse background variables
+		//
+
+		gMouseCursorBackground[uiIndex].fRestore = FALSE;
+
+		//
+		// Initialize the direct draw surfaces for the mouse background
+		//
+
+		gMouseCursorBackground[uiIndex].pSurface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+			MAX_CURSOR_WIDTH,
+			MAX_CURSOR_HEIGHT,
+			gpSDLFrameBuffer->format->BitsPerPixel,
+			gpSDLFrameBuffer->format->Rmask,
+			gpSDLFrameBuffer->format->Gmask,
+			gpSDLFrameBuffer->format->Bmask,
+			gpSDLFrameBuffer->format->Amask);
+
+		if ( !gMouseCursorBackground[uiIndex].pSurface )
+		{
+			fprintf(stderr, "Couldn't create mouse background %d: %s\n", uiIndex, SDL_GetError());
+			return FALSE;
+		}
+	}
 
   //
   // Initialize state variables
@@ -490,14 +440,14 @@ BOOLEAN InitializeVideoManager(void)
 
   GetRGBDistribution();
 
-
   return TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void ShutdownVideoManager(void)
 { 
-	//UINT32  uiRefreshThreadState;
+	if ( guiVideoManagerState == VIDEO_OFF )
+		return;
 
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager"); 
 
@@ -508,34 +458,30 @@ void ShutdownVideoManager(void)
 
 	SDL_FreeSurface(gpSDLBackBuffer);
 	SDL_FreeSurface(gpSDLPrimaryBuffer);
+	SDL_FreeSurface(gpSDLMouseCursor);
+	SDL_FreeSurface(gpSDLMouseCursorOriginal);
+	SDL_FreeSurface(gMouseCursorBackground[0].pSurface);
 
-  //IDirectDrawSurface2_Release(gpMouseCursorOriginal);
-  //IDirectDrawSurface2_Release(gpMouseCursor);
-  //IDirectDrawSurface2_Release(gMouseCursorBackground[0].pSurface);
-  //IDirectDrawSurface2_Release(gpBackBuffer);
-  //IDirectDrawSurface2_Release(gpPrimarySurface);
+	gpSDLBackBuffer    = NULL;
+	gpSDLPrimaryBuffer = NULL;
+	gpSDLMouseCursor   = NULL;
+	gpSDLMouseCursorOriginal           = NULL;
+	gMouseCursorBackground[0].pSurface = NULL;
 
-  //IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
-  //IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
-  //IDirectDraw2_Release( gpDirectDrawObject );
+	guiVideoManagerState = VIDEO_OFF;
 
-  // destroy the window
-  // DestroyWindow( ghWindow );
+	if (gpCursorStore != NULL)
+	{
+	  DeleteVideoObject(gpCursorStore);
+	  gpCursorStore = NULL;
+	}
 
-  guiVideoManagerState = VIDEO_OFF;
+	// ATE: Release mouse cursor!
+	//FreeMouseCursor( );
 
-  //if (gpCursorStore != NULL)
-  //{
-  //  DeleteVideoObject(gpCursorStore);
-  //  gpCursorStore = NULL;
-  //}
+	SDL_QuitSubSystem( SDL_INIT_VIDEO );
 
-  // ATE: Release mouse cursor!
-  //FreeMouseCursor( );
-
-  SDL_QuitSubSystem( SDL_INIT_VIDEO );
-
-  UnRegisterDebugTopic(TOPIC_VIDEO, "Video"); 
+	UnRegisterDebugTopic(TOPIC_VIDEO, "Video"); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,65 +513,65 @@ BOOLEAN RestoreVideoManager(void)
 { 
 	HRESULT ReturnCode;
   
-  //
-  // Make sure the video manager is indeed suspended before moving on
-  //
+	//
+	// Make sure the video manager is indeed suspended before moving on
+	//
 
-  if (guiVideoManagerState == VIDEO_SUSPENDED)
-  {
-    //
-    // Restore the Primary and Backbuffer
-    //
+	if (guiVideoManagerState == VIDEO_SUSPENDED)
+	{
+		//
+		// Restore the Primary and Backbuffer
+		//
 
-    //ReturnCode = IDirectDrawSurface2_Restore( gpPrimarySurface );
-    //if (ReturnCode != DD_OK)
-    //{
-    //  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    //  return FALSE;
-    //}
+		//ReturnCode = IDirectDrawSurface2_Restore( gpPrimarySurface );
+		//if (ReturnCode != DD_OK)
+		//{
+		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		//  return FALSE;
+		//}
 
-    //ReturnCode = IDirectDrawSurface2_Restore( gpBackBuffer );
-    //if (ReturnCode != DD_OK)
-    //{
-    //  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    //  return FALSE;
-    //}
+		//ReturnCode = IDirectDrawSurface2_Restore( gpBackBuffer );
+		//if (ReturnCode != DD_OK)
+		//{
+		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		//  return FALSE;
+		//}
 
-    //
-	  // Restore the mouse surfaces and make sure to initialize the gpMouseCursor surface
-    //
+		//
+		// Restore the mouse surfaces and make sure to initialize the gpMouseCursor surface
+	    //
     
-    //ReturnCode = IDirectDrawSurface2_Restore( gMouseCursorBackground[0].pSurface );
-    //if (ReturnCode != DD_OK)
-    //{
-    //  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    //  return FALSE;
-    //}
+		//ReturnCode = IDirectDrawSurface2_Restore( gMouseCursorBackground[0].pSurface );
+		//if (ReturnCode != DD_OK)
+		//{
+		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		//  return FALSE;
+		//}
 
-    //ReturnCode = IDirectDrawSurface2_Restore( gpMouseCursor );
-    //if (ReturnCode != DD_OK)
-    //{
-    //  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    //  return FALSE;
-    //} else
-    {
-      guiMouseBufferState = BUFFER_DIRTY;
-    }
+		//ReturnCode = IDirectDrawSurface2_Restore( gpMouseCursor );
+		//if (ReturnCode != DD_OK)
+		//{
+		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		//  return FALSE;
+		//} else
+		{
+		guiMouseBufferState = BUFFER_DIRTY;
+		}
 
-    // 
-    // Set the video state to VIDEO_ON
-    //
+		// 
+		// Set the video state to VIDEO_ON
+		//
     
-    guiFrameBufferState			= BUFFER_DIRTY;
-    guiMouseBufferState			= BUFFER_DIRTY;
-    gfForceFullScreenRefresh	= TRUE;
-    guiVideoManagerState		= VIDEO_ON;
-    return TRUE;
+		guiFrameBufferState			= BUFFER_DIRTY;
+		guiMouseBufferState			= BUFFER_DIRTY;
+		gfForceFullScreenRefresh	= TRUE;
+		guiVideoManagerState		= VIDEO_ON;
+		return TRUE;
 	}
-  else
-  {
-    return FALSE;  
-  }  	
+	else
+	{
+		return FALSE;  
+	}  	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -641,20 +587,20 @@ void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDep
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
-  if (gfForceFullScreenRefresh == TRUE)
-  {
-    //
-    // There's no point in going on since we are forcing a full screen refresh
-    //
+	if (gfForceFullScreenRefresh == TRUE)
+	{
+		//
+		// There's no point in going on since we are forcing a full screen refresh
+		//
 
-    return;
-  }
+		return;
+	}
 
-  if (guiDirtyRegionCount < MAX_DIRTY_REGIONS)
-  {
-    //
-    // Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
-    //
+	if (guiDirtyRegionCount < MAX_DIRTY_REGIONS)
+	{
+		//
+		// Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
+		//
 
 		// DO SOME PREMIMARY CHECKS FOR VALID RECTS
 		if ( iLeft < 0 )
@@ -675,26 +621,26 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (  ( iBottom - iTop ) <= 0 )
 				return;
 
-    gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = iLeft;
-    gListOfDirtyRegions[guiDirtyRegionCount].iTop    = iTop;
-    gListOfDirtyRegions[guiDirtyRegionCount].iRight  = iRight;
-    gListOfDirtyRegions[guiDirtyRegionCount].iBottom = iBottom;
+		gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = iLeft;
+		gListOfDirtyRegions[guiDirtyRegionCount].iTop    = iTop;
+		gListOfDirtyRegions[guiDirtyRegionCount].iRight  = iRight;
+		gListOfDirtyRegions[guiDirtyRegionCount].iBottom = iBottom;
 
 //		gDirtyRegionFlags[ guiDirtyRegionCount ] = TRUE;
 
-    guiDirtyRegionCount++;
+		guiDirtyRegionCount++;
 
-  }
-  else
-  {
-    //
-    // The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
-    // screen and force a full screen refresh
-    //
-    guiDirtyRegionExCount = 0;
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;
-  }
+	}
+	else
+	{
+		//
+		// The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
+		// screen and force a full screen refresh
+		//
+		guiDirtyRegionExCount = 0;
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = TRUE;
+	}
 }
 
 
@@ -707,14 +653,14 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 	// Check if we are spanning the rectangle - if so slit it up!
 	if ( iTop <= gsVIEWPORT_WINDOW_END_Y && iBottom > gsVIEWPORT_WINDOW_END_Y )
 	{
-			// Add new top region
-			iBottom				= gsVIEWPORT_WINDOW_END_Y;
-			AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
-			
-			// Add new bottom region
-			iTop   = gsVIEWPORT_WINDOW_END_Y;
-			iBottom	= iOldBottom;
-			AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
+		// Add new top region
+		iBottom				= gsVIEWPORT_WINDOW_END_Y;
+		AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
+		
+		// Add new bottom region
+		iTop   = gsVIEWPORT_WINDOW_END_Y;
+		iBottom	= iOldBottom;
+		AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
 													
 	}
 	else
@@ -726,10 +672,8 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 
 void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags )
 {
-
-  if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
-  {
-
+	if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
+	{
 		// DO SOME PREMIMARY CHECKS FOR VALID RECTS
 		if ( iLeft < 0 )
 				iLeft = 0;
@@ -749,24 +693,20 @@ void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 ui
 		if (  ( iBottom - iTop ) <= 0 )
 				return;
 
-
-
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iLeft   = iLeft;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iTop    = iTop;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iRight  = iRight;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iBottom = iBottom;
+		gDirtyRegionsEx[ guiDirtyRegionExCount ].iLeft   = iLeft;
+		gDirtyRegionsEx[ guiDirtyRegionExCount ].iTop    = iTop;
+		gDirtyRegionsEx[ guiDirtyRegionExCount ].iRight  = iRight;
+		gDirtyRegionsEx[ guiDirtyRegionExCount ].iBottom = iBottom;
 
 		gDirtyRegionsFlagsEx[ guiDirtyRegionExCount ] = uiFlags;
 
-    guiDirtyRegionExCount++;
-
-  }
+		guiDirtyRegionExCount++;
+	}
 	else
 	{
-    guiDirtyRegionExCount = 0;
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;
-
+		guiDirtyRegionExCount = 0;
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = TRUE;
 	}
 }
 
@@ -775,56 +715,55 @@ void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 ui
 
 void InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 uiRegionCount)
 {
-  if (gfForceFullScreenRefresh == TRUE)
-  {
-    //
-    // There's no point in going on since we are forcing a full screen refresh
-    //
+	if (gfForceFullScreenRefresh == TRUE)
+	{
+		//
+		// There's no point in going on since we are forcing a full screen refresh
+		//
 
-    return;
-  }
+		return;
+	}
 
-  if ((guiDirtyRegionCount + uiRegionCount) < MAX_DIRTY_REGIONS)
-  {
-    UINT32 uiIndex;
+	if ((guiDirtyRegionCount + uiRegionCount) < MAX_DIRTY_REGIONS)
+	{
+		UINT32 uiIndex;
 
-    for (uiIndex = 0; uiIndex < uiRegionCount; uiIndex++)
-    {
-      //
-      // Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
-      //
+		for (uiIndex = 0; uiIndex < uiRegionCount; uiIndex++)
+		{
+			//
+			// Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
+			//
 
-      gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = pArrayOfRegions[uiIndex].iLeft;
-      gListOfDirtyRegions[guiDirtyRegionCount].iTop    = pArrayOfRegions[uiIndex].iTop;
-      gListOfDirtyRegions[guiDirtyRegionCount].iRight  = pArrayOfRegions[uiIndex].iRight;
-      gListOfDirtyRegions[guiDirtyRegionCount].iBottom = pArrayOfRegions[uiIndex].iBottom;
+			gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = pArrayOfRegions[uiIndex].iLeft;
+			gListOfDirtyRegions[guiDirtyRegionCount].iTop    = pArrayOfRegions[uiIndex].iTop;
+			gListOfDirtyRegions[guiDirtyRegionCount].iRight  = pArrayOfRegions[uiIndex].iRight;
+			gListOfDirtyRegions[guiDirtyRegionCount].iBottom = pArrayOfRegions[uiIndex].iBottom;
 
-      guiDirtyRegionCount++; 
-    }    
-  }
-  else
-  {
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;    
-  }
+			guiDirtyRegionCount++; 
+		}    
+	}
+	else
+	{
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = TRUE;    
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void InvalidateScreen(void)
 {
-  guiDirtyRegionCount = 0;
-  guiDirtyRegionExCount = 0;
-  gfForceFullScreenRefresh = TRUE;
-  guiFrameBufferState = BUFFER_DIRTY;
+	guiDirtyRegionCount = 0;
+	guiDirtyRegionExCount = 0;
+	gfForceFullScreenRefresh = TRUE;
+	guiFrameBufferState = BUFFER_DIRTY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride)
 {
-
-  gpFrameBufferRefreshOverride = (void (__cdecl *)(void))pFrameBufferRefreshOverride;
+	gpFrameBufferRefreshOverride = (void (__cdecl *)(void))pFrameBufferRefreshOverride;
 }
 
 //#define SCROLL_TEST
@@ -1367,7 +1306,7 @@ void RefreshScreen(void *DummyVariable)
 	static SDL_Rect	Rect, dstRect;
 	static POINT	MousePos;	// to be retyped
 	static BOOLEAN	fFirstTime = TRUE;
-	UINT32			uiTime;
+	//UINT32			uiTime;
 
 	usScreenWidth = usScreenHeight = 0;
 
@@ -1443,32 +1382,17 @@ void RefreshScreen(void *DummyVariable)
 	/////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//	// RESTORE OLD POSITION OF MOUSE
-//	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
-//	{
-//		Region.left = gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft;
-//		Region.top = gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop;
-//		Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
-//		Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
-//
-//		do
-//		{
-//			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//			{
-//				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//				if (ReturnCode == DDERR_SURFACELOST)
-//				{
-//					goto ENDOFLOOP;
-//				}
-//			}
-//		} while (ReturnCode != DD_OK);
-//
-//		// Save position into other background region
-//		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
-//
-//	}
+	// RESTORE OLD POSITION OF MOUSE
+	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
+	{
+		Rect.x = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos;
+		Rect.y = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos;
+
+		SDL_BlitSurface(gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, NULL, gpSDLBackBuffer, &Rect);
+
+		// Save position into other background region
+		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
+	}
 
 
 	//
@@ -2174,10 +2098,10 @@ void RefreshScreen(void *DummyVariable)
 //	guiDirtyRegionExCount = 0;
 //
 //
-//ENDOFLOOP:
-//      
-//
-//	fFirstTime = FALSE;
+ENDOFLOOP:
+      
+
+	fFirstTime = FALSE;
 
 }
 
@@ -2510,52 +2434,52 @@ BOOLEAN LoadCursorFile(PTR pFilename)
 
 BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY )
 {
-  BOOLEAN      ReturnValue;
-  ETRLEObject  pETRLEPointer;
+	BOOLEAN      ReturnValue;
+	ETRLEObject  pETRLEPointer;
 
-  //
-  // Make sure we have a cursor store
-  //
+	//
+	// Make sure we have a cursor store
+	//
 
-  if (gpCursorStore == NULL)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "ERROR : Cursor store is not loaded");
-    return FALSE;
-  }
+	if (gpCursorStore == NULL)
+	{
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "ERROR : Cursor store is not loaded");
+		return FALSE;
+	}
 
-  //
-  // Ok, then blit the mouse cursor to the MOUSE_BUFFER (which is really gpMouseBufferOriginal)
-  //
-  //
-  // Erase cursor background
-  //
+	//
+	// Ok, then blit the mouse cursor to the MOUSE_BUFFER (which is really gpMouseBufferOriginal)
+	//
+	//
+	// Erase cursor background
+	//
 
-  EraseMouseCursor( );
+	EraseMouseCursor( );
 
-  //
-  // Get new cursor data
-  //
+	//
+	// Get new cursor data
+	//
 
-  ReturnValue = BltVideoObject(MOUSE_BUFFER, gpCursorStore, usVideoObjectSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
-  guiMouseBufferState = BUFFER_DIRTY;
+	ReturnValue = BltVideoObject(MOUSE_BUFFER, gpCursorStore, usVideoObjectSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
+	guiMouseBufferState = BUFFER_DIRTY;
 
-  if (GetVideoObjectETRLEProperties(gpCursorStore, &pETRLEPointer, usVideoObjectSubIndex))
-  {
-    gsMouseCursorXOffset = usOffsetX;
-    gsMouseCursorYOffset = usOffsetY;
-    gusMouseCursorWidth = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
-    gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
+	if (GetVideoObjectETRLEProperties(gpCursorStore, &pETRLEPointer, usVideoObjectSubIndex))
+	{
+		gsMouseCursorXOffset = usOffsetX;
+		gsMouseCursorYOffset = usOffsetY;
+		gusMouseCursorWidth = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
+		gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
 
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-  }
-  else
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
-  }
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
+	}
+	else
+	{
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
+	}
 
-  return ReturnValue;
+	return ReturnValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2598,18 +2522,9 @@ void FatalError( string1 pError, ...)
 
 	gfFatalError = TRUE;
 
-	// Release DDraw
-	IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
-	IDirectDraw2_Release( gpDirectDrawObject );
-	ShowWindow( ghWindow, SW_HIDE );
-
-	// destroy the window
-	// DestroyWindow( ghWindow );
+	SDL_Quit();
 
 	gfProgramIsRunning = FALSE;
-
-	MessageBox( ghWindow, gFatalErrorString, "JA2 Fatal Error", MB_OK | MB_TASKMODAL );
-
 }
 
 

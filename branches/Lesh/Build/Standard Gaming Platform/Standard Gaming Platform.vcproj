@@ -2749,9 +2749,6 @@
 				RelativePath="WinFont.h">
 			</File>
 			<File
-				RelativePath="WizShare.h">
-			</File>
-			<File
 				RelativePath="ZCONF.H">
 			</File>
 		</Filter>
