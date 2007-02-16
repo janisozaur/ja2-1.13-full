@@ -1,9 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
-  #include "interface control.h"
+	#include "interface control.h"
+	#include "SDL.h"
 #else
-	#include <windows.h>
-	#include <mmsystem.h>
 	#include <string.h>
 	#include "wcheck.h"
 	#include "stdlib.h"
@@ -14,6 +13,7 @@
 	#include "handle items.h"
 	#include "worlddef.h"
 	#include "renderworld.h"
+	#include "SDL.h"
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -70,7 +70,8 @@ INT32		giTimerTeamTurnUpdate			= 0;
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 
 // Clock Callback event ID
-MMRESULT		gTimerID;
+//MMRESULT		gTimerID;
+SDL_TimerID		gTimerID = NULL;
 
 // GLOBALS FOR CALLBACK
 UINT32			gCNT;
@@ -101,8 +102,7 @@ UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UIN
 // CALLBACKS
 void CALLBACK FlashItem( UINT uiID, UINT uiMsg, DWORD uiUser, DWORD uiDw1, DWORD uiDw2 );
 
-
-void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	)
+static UINT32 TimeProc(UINT32 uiInterval, void *pParam)
 {
 	static BOOLEAN fInFunction = FALSE;
 	//SOLDIERTYPE		*pSoldier;
@@ -177,6 +177,7 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 		fInFunction = FALSE;
 	}
 
+	return TRUE;
 }
 
 
@@ -185,10 +186,6 @@ BOOLEAN InitializeJA2Clock(void)
 {
 
 #ifdef CALLBACKTIMER
-
-
-	MMRESULT	mmResult;
-	TIMECAPS	tc;
 	INT32			cnt;
 
 	// Init timer delays
@@ -197,18 +194,14 @@ BOOLEAN InitializeJA2Clock(void)
 		giTimerCounters[ cnt ] = giTimerIntervals[ cnt ];
 	}
 
-
-	// First get timer resolutions
-	mmResult = timeGetDevCaps( &tc, sizeof( tc ) );
-
-	if ( mmResult != TIMERR_NOERROR )
+	if ( SDL_InitSubSystem(SDL_INIT_TIMER) < 0 )
 	{
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not get timer properties");
+		fprintf(stderr,	"Couldn't initialize timer: %s\n", SDL_GetError());
+		return FALSE;
 	}
 
-	// Set timer at lowest resolution. Could use middle of lowest/highest, we'll see how this performs first
-	gTimerID = timeSetEvent( BASETIMESLICE, BASETIMESLICE, TimeProc, (DWORD)0, TIME_PERIODIC );
- 
+	gTimerID = SDL_AddTimer( BASETIMESLICE, TimeProc, NULL);
+
 	if ( !gTimerID )
 	{
 		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
@@ -224,62 +217,64 @@ void    ShutdownJA2Clock(void)
   // Make sure we kill the timer
 #ifdef CALLBACKTIMER
 
-  timeKillEvent( gTimerID );
+	SDL_RemoveTimer( gTimerID );
+	SDL_QuitSubSystem(SDL_INIT_TIMER);
 
 #endif
 
 }
 
-UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UINT32 uiUser )
-{
-	MMRESULT	mmResult;
-	TIMECAPS	tc;
-	MMRESULT	TimerID;
-
-
-	// First get timer resolutions
-	mmResult = timeGetDevCaps( &tc, sizeof( tc ) );
-
-	if ( mmResult != TIMERR_NOERROR )
-	{
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not get timer properties");
-	}
-
-	// Set timer at lowest resolution. Could use middle of lowest/highest, we'll see how this performs first
-	TimerID = timeSetEvent( (UINT)uiDelay, (UINT)uiDelay, TimerProc, (DWORD)uiUser, TIME_PERIODIC );
- 
-	if ( !TimerID )
-	{
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
-	}
-
-  return ( (UINT32)TimerID );
-}
-
-
-void RemoveJA2TimerCallback( UINT32 uiTimer )
-{
-	timeKillEvent( uiTimer );
-}
-
-
-UINT32 InitializeJA2TimerID( UINT32 uiDelay, UINT32 uiCallbackID, UINT32 uiUser )
-{
-	switch( uiCallbackID )
-	{
-		case ITEM_LOCATOR_CALLBACK:
-
-			return( InitializeJA2TimerCallback( uiDelay, FlashItem, uiUser ) );
-			break;
-		
-	}
-
-	// invalid callback id
-	Assert( FALSE );
-	return( 0 );
-}
-
-
+//UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UINT32 uiUser )
+//{
+//	MMRESULT	mmResult;
+//	TIMECAPS	tc;
+//	MMRESULT	TimerID;
+//
+//
+//	// First get timer resolutions
+//	mmResult = timeGetDevCaps( &tc, sizeof( tc ) );
+//
+//	if ( mmResult != TIMERR_NOERROR )
+//	{
+//		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not get timer properties");
+//	}
+//
+//	// Set timer at lowest resolution. Could use middle of lowest/highest, we'll see how this performs first
+//	TimerID = timeSetEvent( (UINT)uiDelay, (UINT)uiDelay, TimerProc, (DWORD)uiUser, TIME_PERIODIC );
+// 
+//	if ( !TimerID )
+//	{
+//		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
+//	}
+//
+//  return ( (UINT32)TimerID );
+//}
+//
+//
+//void RemoveJA2TimerCallback( UINT32 uiTimer )
+//{
+//	timeKillEvent( uiTimer );
+//	//SDL_RemoveTimer( gTimerID );
+//}
+//
+//
+//UINT32 InitializeJA2TimerID( UINT32 uiDelay, UINT32 uiCallbackID, UINT32 uiUser )
+//{
+//	switch( uiCallbackID )
+//	{
+//		case ITEM_LOCATOR_CALLBACK:
+//
+//			return( InitializeJA2TimerCallback( uiDelay, FlashItem, uiUser ) );
+//			break;
+//		
+//	}
+//
+//	// invalid callback id
+//	Assert( FALSE );
+//	return( 0 );
+//}
+//
+//
 //////////////////////////////////////////////////////////////////////////////////////////////
 // TIMER CALLBACK S
 //////////////////////////////////////////////////////////////////////////////////////////////
