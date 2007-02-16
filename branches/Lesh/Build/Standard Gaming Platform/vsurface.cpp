@@ -1408,7 +1408,7 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_vs_fx *pBltFx )
 {
 	//VSURFACE_REGION aRegion;
-	RECT					 SrcRect, DestRect;
+	RECT					 SrcRect/*, DestRect*/;
 	UINT8					*pSrcSurface8, *pDestSurface8;
 	//UINT16				*pDestSurface16, *pSrcSurface16;
 	UINT32				uiSrcPitch, uiDestPitch, uiWidth, uiHeight;
@@ -1506,7 +1506,7 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 		}
 
 		//Blt8BPPDataTo8BPPBuffer( UINT8 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex );
-		Blt8BPPTo8BPP(pDestSurface8, uiDestPitch, pSrcSurface8, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
+		//Blt8BPPTo8BPP(pDestSurface8, uiDestPitch, pSrcSurface8, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
 		UnLockVideoSurfaceBuffer(hSrcVSurface);
 		UnLockVideoSurfaceBuffer(hDestVSurface);
 		return(TRUE);

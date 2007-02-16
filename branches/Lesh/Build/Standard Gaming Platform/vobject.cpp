@@ -1,16 +1,10 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
 #else
 	#include "DirectDraw Calls.h"
 	#include <stdio.h>
 	#include "debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
-	#else
-		#include "video2.h"
-	#endif
+	#include "video.h"
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
@@ -384,6 +378,9 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 // Based on flags, blit accordingly
 // There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
 // clipping lists
+//
+// Lesh: main idea - make temp surface with dimensions like image, set palette
+//       then blit 8bpp there, then temp -> dest surface.
 BOOLEAN BltVideoObject(	UINT32		uiDestVSurface,
 						HVOBJECT	hSrcVObject,
 						UINT16		usRegionIndex,
@@ -393,12 +390,12 @@ BOOLEAN BltVideoObject(	UINT32		uiDestVSurface,
 						blt_fx		*pBltFx )
 {
 
-	UINT16								*pBuffer;
-	UINT32								uiPitch;
+	UINT16		*pBuffer;
+	UINT32		uiPitch;
 
-	// Lock video surface
+	//// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
-
+	
 	if ( pBuffer == NULL )
 	{
 		return( FALSE );
@@ -413,6 +410,7 @@ BOOLEAN BltVideoObject(	UINT32		uiDestVSurface,
 	}
 
 	UnLockVideoSurface( uiDestVSurface );
+
 	return( TRUE );
 }
 
@@ -487,8 +485,8 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 			// Set palette from himage
 			if ( hImage->ubBitDepth == 8 )
 			{
-				hVObject->pShade8=ubColorTables[DEFAULT_SHADE_LEVEL];
-				hVObject->pGlow8=ubColorTables[0];
+				hVObject->pShade8 = ubColorTables[DEFAULT_SHADE_LEVEL];
+				hVObject->pGlow8  = ubColorTables[0];
 
 				SetVideoObjectPalette( hVObject, hImage->pPalette );
 
@@ -751,22 +749,12 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 
 			case 8:
 
+				//Unpack8BPPDataTo8BPPBuffer( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
 				// Switch based on flags given
 				do
 				{
 					if(gbPixelDepth==16)
 					{
-#ifndef JA2
-						if ( fBltFlags & VO_BLT_MIRROR_Y)
-						{
-							if(!BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo16BPPBufferTransMirror( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-// CLipping version not done -- DB
-//								Blt8BPPDataTo16BPPBufferTransMirrorClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							break;
-						}
-						else
-#endif
 						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
@@ -1631,4 +1619,3 @@ void PerformVideoInfoDumpIntoFile( string1 filename, BOOLEAN fAppend )
 }
 
 #endif
-

@@ -7,6 +7,8 @@
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
 extern HVSURFACE ghFrameBuffer;
+extern BOOLEAN Unpack8BPPDataTo8BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex );
+extern SGPRect	ClippingRect;
 
 //Simply create videosurface, load image, and draw it to the screen.
 void InitJA2SplashScreen()
@@ -49,7 +51,11 @@ void InitJA2SplashScreen()
 //		i++;
 //	}
 //#endif
-	
+	ClippingRect.iLeft		= 0;
+	ClippingRect.iTop		= 0;
+	ClippingRect.iRight		= SCREEN_WIDTH;
+	ClippingRect.iBottom	= SCREEN_HEIGHT;
+
 			memset( &VSurfaceDesc, 0, sizeof( VSURFACE_DESC ) );
 			VSurfaceDesc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 			//GetMLGFilename( VSurfaceDesc.ImageFile, MLG_SPLASH );

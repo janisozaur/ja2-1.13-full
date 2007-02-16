@@ -43,12 +43,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib mss32.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
+				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
 				OutputFile="D:\games\JA2\ja2_debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=".\..\..\Standard Gaming Platform\"
-				IgnoreDefaultLibraryNames=""
+				IgnoreDefaultLibraryNames="libcmt.lib msvcrt.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/ja2_cvs.pdb"
 				GenerateMapFile="TRUE"
@@ -552,7 +552,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=".\..\..\Standard Gaming Platform\"
-				IgnoreDefaultLibraryNames=""
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateMapFile="TRUE"
 				MapFileName=".\Release/ja2_cvs.map"
 				SubSystem="2"
@@ -2317,6 +2317,9 @@
 			</File>
 			<File
 				RelativePath="GameInitOptionsScreen.h">
+			</File>
+			<File
+				RelativePath=".\Standard Gaming Platform\gameloop.h">
 			</File>
 			<File
 				RelativePath="gameloop.h">

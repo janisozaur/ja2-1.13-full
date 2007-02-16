@@ -548,8 +548,6 @@ void ShutdownStandardGamingPlatform(void)
 
 //	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
 //	ShutdownFontManager();
-//
-//	ShutdownClockManager();   // must shutdown before VideoManager, 'cause it uses ghWindow
 
 #ifdef SGP_VIDEO_DEBUGGING
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
@@ -561,7 +559,6 @@ void ShutdownStandardGamingPlatform(void)
 	//ShutdownInputManager();
 	ShutdownContainers();
 	ShutdownFileManager();
-	//ShutdownMutexManager();  useless
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 	DumpMemoryInfoIntoFile( (UINT8*)"ExtremeMemoryDump.txt", FALSE );

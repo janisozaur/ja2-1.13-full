@@ -2259,9 +2259,9 @@ BOOLEAN GetRGBDistribution(void)
 	gusGreenMask  = (UINT16) gpSDLFrameBuffer->format->Gmask;
 	gusBlueMask   = (UINT16) gpSDLFrameBuffer->format->Bmask;
 
-	gusRedShift   = (UINT16) gpSDLFrameBuffer->format->Rshift;
-	gusGreenShift = (UINT16) gpSDLFrameBuffer->format->Gshift;
-	gusBlueShift  = (UINT16) gpSDLFrameBuffer->format->Bshift;
+	gusRedShift   = (UINT16) (gpSDLFrameBuffer->format->Rshift - gpSDLFrameBuffer->format->Rloss);
+	gusGreenShift = (UINT16) (gpSDLFrameBuffer->format->Gshift - gpSDLFrameBuffer->format->Gloss);
+	gusBlueShift  = (UINT16) (gpSDLFrameBuffer->format->Bshift - gpSDLFrameBuffer->format->Bloss);
 //
 //
 //	// RGB 5,5,5
