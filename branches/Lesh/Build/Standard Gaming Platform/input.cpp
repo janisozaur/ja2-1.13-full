@@ -924,7 +924,7 @@ void KeyDown(SDL_keysym *KeySym)
 		{
 			// No special keys have been pressed
 			// Call KeyChange() and pass TRUE to indicate key has been PRESSED and not RELEASED
-			//KeyChange(KeySym->sym, 0, TRUE);
+			KeyChange(KeySym->sym, 0, TRUE);
 			KeyPrint(KeySym);
 		}
 	}
@@ -970,7 +970,7 @@ void KeyUp(SDL_keysym *KeySym)
 		{
 			// No special keys have been pressed
 			// Call KeyChange() and pass FALSE to indicate key has been PRESSED and not RELEASED
-			//KeyChange(KeySym->sym, 0, FALSE);
+			KeyChange(KeySym->sym, 0, FALSE);
 			KeyPrint(KeySym);
 		}
 	}

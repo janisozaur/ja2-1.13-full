@@ -1302,7 +1302,6 @@ void RefreshScreen(void *DummyVariable)
 	static UINT32	uiRefreshThreadState, uiIndex;
 	UINT16  usScreenWidth, usScreenHeight;
 	static BOOLEAN	fShowMouse;
-	//HRESULT ReturnCode;
 	static SDL_Rect	Rect, dstRect;
 	static SGPPos	MousePos;	// to be retyped
 	static BOOLEAN	fFirstTime = TRUE;
