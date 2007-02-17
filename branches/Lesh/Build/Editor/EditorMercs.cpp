@@ -2568,7 +2568,7 @@ void UpdateMercsInfo()
 				case SEEKENEMY:		mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"SEEK ENEMY" );			break;
 				case CLOSEPATROL:	mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"CLOSE PATROL" );		break;
 				case FARPATROL:		mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"FAR PATROL" );			break;
-				case POINTPATROL:	mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"POINT PATROL" );		break;
+				case POINTPATROL:	mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"SGPPos PATROL" );		break;
 				case RNDPTPATROL:	mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"RND PT PATROL" );	break;
 			}
 			SetFontForeground( FONT_YELLOW );

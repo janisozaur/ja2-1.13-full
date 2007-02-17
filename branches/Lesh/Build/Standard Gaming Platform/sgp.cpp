@@ -54,8 +54,7 @@ extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 
 // Prototype Declarations
 
-//INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam);
-BOOLEAN          InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow);
+BOOLEAN          InitializeStandardGamingPlatform(void);
 void             ShutdownStandardGamingPlatform(void);
 void			 GetRuntimeSettings( );
 
@@ -93,6 +92,7 @@ BOOLEAN gfProgramIsRunning;
 BOOLEAN gfGameInitialized = FALSE;
 //UINT32	giStartMem; // redefintion... look up a few lines (jonathanl)
 BOOLEAN	gfDontUseDDBlits	= FALSE;
+BOOLEAN fSGPClosed = FALSE;
 
 // There were TWO of them??!?! -- DB
 CHAR8		gzCommandLine[100];		// Command line given
@@ -105,271 +105,10 @@ BOOLEAN	gfIgnoreMessages=FALSE;
 // GLOBAL VARIBLE, SET TO DEFAULT BUT CAN BE CHANGED BY THE GAME IF INIT FILE READ
 UINT8		gbPixelDepth = PIXEL_DEPTH;
 
-//INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
-//{ 
-//	static BOOLEAN fRestore = FALSE;
-//
-//  if(gfIgnoreMessages)
-//		return(DefWindowProc(hWindow, Message, wParam, lParam));
-//
-//	// ATE: This is for older win95 or NT 3.51 to get MOUSE_WHEEL Messages
-//	if ( Message == guiMouseWheelMsg )
-//	{
-//      QueueEvent(MOUSE_WHEEL, wParam, lParam);
-//			return( 0L );
-//	}
-// 
-//	switch(Message)
-//  {
-//		case WM_MOUSEWHEEL:
-//			{
-//				QueueEvent(MOUSE_WHEEL, wParam, lParam);
-//				break;
-//			}
-//		
-//#ifdef JA2
-//#ifdef WINDOWED_MODE
-//    case WM_MOVE:
-//
-//        GetClientRect(hWindow, &rcWindow);
-//        ClientToScreen(hWindow, (LPPOINT)&rcWindow);
-//        ClientToScreen(hWindow, (LPPOINT)&rcWindow+1);
-//        break;
-//#endif
-//#else
-//		case WM_MOUSEMOVE:
-//			break;
-//
-//		case WM_SIZING:
-//		{
-//			LPRECT	lpWindow;
-//			INT32		iWidth, iHeight, iX, iY;
-//			BOOLEAN fWidthByHeight=FALSE, fHoldRight=FALSE;
-//
-//			lpWindow = (LPRECT) lParam;  
-//
-//			iWidth=lpWindow->right-lpWindow->left;
-//			iHeight=lpWindow->bottom-lpWindow->top;
-//			iX = (lpWindow->left + lpWindow->right)/2;
-//			iY = (lpWindow->top + lpWindow->bottom)/2;
-//
-//			switch(wParam)
-//			{
-//				case WMSZ_BOTTOMLEFT:
-//					fHoldRight=TRUE;
-//				case WMSZ_BOTTOM:
-//				case WMSZ_BOTTOMRIGHT:
-//					if(iHeight < SCREEN_HEIGHT)
-//					{
-//						lpWindow->bottom=lpWindow->top+SCREEN_HEIGHT;
-//						iHeight=SCREEN_HEIGHT;
-//					}
-//					fWidthByHeight=TRUE;
-//				break;
-//
-//				case WMSZ_TOPLEFT:
-//					fHoldRight=TRUE;
-//				case WMSZ_TOP:
-//				case WMSZ_TOPRIGHT:
-//					if(iHeight < SCREEN_HEIGHT)
-//					{
-//						lpWindow->top=lpWindow->bottom-SCREEN_HEIGHT;
-//						iHeight=SCREEN_HEIGHT;
-//					}
-//					fWidthByHeight=TRUE;
-//					break;
-//
-//				case WMSZ_LEFT:
-//					if(iWidth < SCREEN_WIDTH)
-//					{
-//						lpWindow->left=lpWindow->right-SCREEN_WIDTH;
-//						iWidth = SCREEN_WIDTH;
-//					}
-//					break;
-//
-//				case WMSZ_RIGHT:
-//					if(iWidth < SCREEN_WIDTH)
-//					{
-//						lpWindow->right=lpWindow->left+SCREEN_WIDTH;
-//						iWidth = SCREEN_WIDTH;
-//					}
-//			}
-//
-//			// Calculate width as a factor of height
-//			if(fWidthByHeight)
-//			{
-//				iWidth = iHeight * SCREEN_WIDTH / SCREEN_HEIGHT;
-////				lpWindow->left = iX - iWidth/2;
-////				lpWindow->right = iX + iWidth / 2;
-//				if(fHoldRight)
-//					lpWindow->left = lpWindow->right - iWidth;
-//				else
-//					lpWindow->right = lpWindow->left + iWidth;
-//			}
-//			else // Calculate height as a factor of width
-//			{
-//				iHeight = iWidth * SCREEN_HEIGHT / SCREEN_WIDTH;
-////				lpWindow->top = iY - iHeight/2;
-////				lpWindow->bottom = iY + iHeight/2;
-//				lpWindow->bottom = lpWindow->top + iHeight;
-//			}
-//	
-//
-///*
-//			switch(wParam)
-//			{
-//				case WMSZ_BOTTOM:
-//				case WMSZ_BOTTOMLEFT:
-//				case WMSZ_BOTTOMRIGHT:
-//					if(iHeight < SCREEN_HEIGHT)
-//						lpWindow->bottom=lpWindow->top+SCREEN_HEIGHT;
-//			}
-//
-//			switch(wParam)
-//			{
-//				case WMSZ_TOP:
-//				case WMSZ_TOPLEFT:
-//				case WMSZ_TOPRIGHT:
-//					if(iHeight < SCREEN_HEIGHT)
-//						lpWindow->top=lpWindow->bottom-SCREEN_HEIGHT;
-//			}
-//
-//			switch(wParam)
-//			{
-//				case WMSZ_BOTTOMLEFT:
-//				case WMSZ_LEFT:
-//				case WMSZ_TOPLEFT:
-//					if(iWidth < SCREEN_WIDTH)
-//						lpWindow->left=lpWindow->right-SCREEN_WIDTH;
-//			}
-//
-//			switch(wParam)
-//			{
-//				case WMSZ_BOTTOMRIGHT:
-//				case WMSZ_RIGHT:
-//				case WMSZ_TOPRIGHT:
-//					if(iWidth < SCREEN_WIDTH)
-//						lpWindow->right=lpWindow->left+SCREEN_WIDTH;
-//			}
-//*/
-//		}
-//		break;
-//
-//    case WM_SIZE:
-//		{
-//			UINT16 nWidth = LOWORD(lParam);  // width of client area 
-//			UINT16 nHeight = HIWORD(lParam); // height of client area 
-//
-//			if(nWidth && nHeight)
-//			{
-//				switch(wParam)
-//				{
-//					case SIZE_MAXIMIZED:
-//						VideoFullScreen(TRUE);
-//						break;
-//
-//					case SIZE_RESTORED:
-//						VideoResizeWindow();
-//						break;
-//				}
-//			}
-//		}
-//		break;
-//
-//    case WM_MOVE:
-//		{
-//			INT32 xPos = (INT32)LOWORD(lParam);    // horizontal position 
-//			INT32 yPos = (INT32)HIWORD(lParam);    // vertical position 		
-//		}
-//		break;
-//#endif
-//
-//	case WM_ACTIVATEAPP: 
-//		switch(wParam)
-//		{
-//			case TRUE: // We are restarting DirectDraw
-//				if (fRestore == TRUE)
-//				{
-//					RestoreVideoManager();
-//					RestoreVideoSurfaces();	// Restore any video surfaces
-//
-//					// unpause the JA2 Global clock
-//					if ( !gfPauseDueToPlayerGamePause )
-//					{
-//						PauseTime( FALSE );
-//					}
-//					gfApplicationActive = TRUE;
-//				}
-//				break;
-//			case FALSE: // We are suspending direct draw
-//#ifdef JA2
-//						// pause the JA2 Global clock
-//						PauseTime( TRUE );
-//						SuspendVideoManager();
-//#else
-//#ifndef UTIL 
-//						if(!VideoInspectorIsEnabled())
-//							SuspendVideoManager();
-//#endif
-//#endif
-//          // suspend movement timer, to prevent timer crash if delay becomes long
-//          // * it doesn't matter whether the 3-D engine is actually running or not, or if it's even been initialized
-//          // * restore is automatic, no need to do anything on reactivation
-//#if !defined( JA2 ) && !defined( UTIL )
-//          MoveTimer(TIMER_SUSPEND);
-//#endif
-//
-//          gfApplicationActive = FALSE;
-//          fRestore = TRUE;
-//          break;
-//      }
-//      break;
-//
-//    case WM_CREATE: 
-//			break;
-//
-//    case WM_DESTROY: 
-//			ShutdownStandardGamingPlatform();
-//      ShowCursor(TRUE);
-//      PostQuitMessage(0);
-//      break;
-//
-//		case WM_SETFOCUS:
-//#if !defined( JA2 ) && !defined( UTIL )
-//			if(!VideoInspectorIsEnabled())
-//				RestoreVideoManager();
-//			gfApplicationActive=TRUE;
-////			RestrictMouseToXYXY(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-//#else
-//      RestoreCursorClipRect( );
-//#endif
-//
-//			break;
-//
-//		case WM_KILLFOCUS:
-//#if !defined( JA2 ) && !defined( UTIL )
-//			if(!VideoInspectorIsEnabled())
-//				SuspendVideoManager();
-//
-//			gfApplicationActive=FALSE;
-//			FreeMouseCursor();
-//#endif
-//			// Set a flag to restore surfaces once a WM_ACTIVEATEAPP is received
-//			fRestore = TRUE;
-//			break;
-//
-//    default
-//    : return DefWindowProc(hWindow, Message, wParam, lParam);
-//  }
-//  return 0L;
-//}
-//
-//
 
 BOOLEAN InitializeStandardGamingPlatform(void)
 {
 	FontTranslationTable *pFontTable;
-	//SDL_Surface *screen = SDL_SetVideoMode(800, 600, 16, SDL_SWSURFACE);
 
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
@@ -404,15 +143,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	FastDebugMsg("Initializing Containers Manager");
 	InitializeContainers();
 
-	//FastDebugMsg("Initializing Input Manager");
-	//// Initialize the Input Manager
-	//if (InitializeInputManager() == FALSE)
-	//{ // We were unable to initialize the input manager
-	//	fprintf(stderr, "Couldn't init input manager\n");
-	//	FastDebugMsg("FAILED : Initializing Input Manager");
-	//	return FALSE;
-	//}
-
 	FastDebugMsg("Initializing Video Manager");
 	// Initialize DirectDraw (DirectX 2)
 	if (InitializeVideoManager( ) == FALSE)
@@ -422,16 +152,16 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	DoTester();
-
-	// Initialize Video Object Manager
-	FastDebugMsg("Initializing Video Object Manager");
-	if ( !InitializeVideoObjectManager( ) )
-	{ 
-		fprintf(stderr, "Couldn't init video object manager\n");
-		FastDebugMsg("FAILED : Initializing Video Object Manager");
+	FastDebugMsg("Initializing Input Manager");
+	// Initialize the Input Manager
+	if (InitializeInputManager() == FALSE)
+	{ // We were unable to initialize the input manager
+		fprintf(stderr, "Couldn't init input manager\n");
+		FastDebugMsg("FAILED : Initializing Input Manager");
 		return FALSE;
 	}
+
+	DoTester();
 
 	// Initialize Video Surface Manager
 	FastDebugMsg("Initializing Video Surface Manager");
@@ -439,6 +169,15 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	{ 
 		fprintf(stderr, "Couldn't init video surface manager\n");
 		FastDebugMsg("FAILED : Initializing Video Surface Manager");
+		return FALSE;
+	}
+
+	// Initialize Video Object Manager
+	FastDebugMsg("Initializing Video Object Manager");
+	if ( !InitializeVideoObjectManager( ) )
+	{ 
+		fprintf(stderr, "Couldn't init video object manager\n");
+		FastDebugMsg("FAILED : Initializing Video Object Manager");
 		return FALSE;
 	}
 
@@ -473,52 +212,57 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		gCustomDataCat.NewCat(std::string(CurrentDir) + '\\' + customDataPath);
 	}
 
-	InitJA2SplashScreen();
+	//InitJA2SplashScreen();
 
-//	// Create font translation table (store in temp structure)
-//	pFontTable = CreateEnglishTransTable( );
-//	if ( pFontTable == NULL )
-//	{
-//		return( FALSE );
-//	}
-//
-//	// Initialize Font Manager
-//	FastDebugMsg("Initializing the Font Manager");
-//	// Init the manager and copy the TransTable stuff into it.
-//	if ( !InitializeFontManager( 8, pFontTable ) )
-//	{ 
-//		FastDebugMsg("FAILED : Initializing Font Manager");
-//		return FALSE;
-//	}
-//	// Don't need this thing anymore, so get rid of it (but don't de-alloc the contents)
-//	MemFree( pFontTable );
-//
-//	FastDebugMsg("Initializing Sound Manager");
-//	// Initialize the Sound Manager (DirectSound)
-//#ifndef UTIL
-//	if (InitializeSoundManager() == FALSE)
-//	{ // We were unable to initialize the sound manager
-//		FastDebugMsg("FAILED : Initializing Sound Manager");
-//		return FALSE;
-//	}  
-//#endif
-//
-//	FastDebugMsg("Initializing Random");
-//	// Initialize random number generator
-//	InitializeRandom(); // no Shutdown
-//
-//	FastDebugMsg("Initializing Game Manager");
-//	// Initialize the Game
-//	if (InitializeGame() == FALSE)
-//	{ // We were unable to initialize the game
-//		FastDebugMsg("FAILED : Initializing Game Manager");
-//		return FALSE;
-//	}
+	// Create font translation table (store in temp structure)
+	pFontTable = CreateEnglishTransTable( );
+	if ( pFontTable == NULL )
+	{
+		fprintf(stderr, "Couldn't create font translation table\n");
+		return( FALSE );
+	}
+
+	// Initialize Font Manager
+	FastDebugMsg("Initializing the Font Manager");
+	// Init the manager and copy the TransTable stuff into it.
+	if ( !InitializeFontManager( 8, pFontTable ) )
+	{ 
+		fprintf(stderr, "Couldn't init font manager\n");
+		FastDebugMsg("FAILED : Initializing Font Manager");
+		return FALSE;
+	}
+	// Don't need this thing anymore, so get rid of it (but don't de-alloc the contents)
+	MemFree( pFontTable );
+
+	FastDebugMsg("Initializing Sound Manager");
+	// Initialize the Sound Manager (DirectSound)
+#ifndef UTIL
+	if (InitializeSoundManager() == FALSE)
+	{ // We were unable to initialize the sound manager
+		fprintf(stderr, "Couldn't init sound manager\n");
+		FastDebugMsg("FAILED : Initializing Sound Manager");
+		return FALSE;
+	}  
+#endif
+
+	FastDebugMsg("Initializing Random");
+	// Initialize random number generator
+	InitializeRandom(); // no Shutdown
+
+	FastDebugMsg("Initializing Game Manager");
+	// Initialize the Game
+	if (InitializeGame() == FALSE)
+	{ // We were unable to initialize the game
+		fprintf(stderr, "Couldn't init game manager\n");
+		FastDebugMsg("FAILED : Initializing Game Manager");
+		return FALSE;
+	}
 //
 //	// Register mouse wheel message
 //	guiMouseWheelMsg = RegisterWindowMessage( MSH_MOUSEWHEEL );
 
 	gfGameInitialized = TRUE;
+	fSGPClosed = FALSE;
 	
 	return TRUE;
 }
@@ -531,32 +275,29 @@ void ShutdownStandardGamingPlatform(void)
 	//
 
 	// TEST
-	//SoundServiceStreams();
+	SoundServiceStreams();
 
-	//if (gfGameInitialized)
-	//{
-	//	ShutdownGame();  
-	//}
+	if (gfGameInitialized)
+	{
+		ShutdownGame();  
+	}
 
 
-	//ShutdownButtonSystem();
-	//MSYS_Shutdown();
+#ifndef UTIL
+  ShutdownSoundManager();
+#endif
 
-//#ifndef UTIL
-//  ShutdownSoundManager();
-//#endif
-
-//	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
-//	ShutdownFontManager();
+	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
+	ShutdownFontManager();
 
 #ifdef SGP_VIDEO_DEBUGGING
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
 #endif
 
-	//ShutdownVideoSurfaceManager();
 	ShutdownVideoObjectManager();
+	ShutdownVideoSurfaceManager();
+	ShutdownInputManager();
 	ShutdownVideoManager();
-	//ShutdownInputManager();
 	ShutdownContainers();
 	ShutdownFileManager();
 
@@ -572,159 +313,9 @@ void ShutdownStandardGamingPlatform(void)
 	UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
 
 	ShutdownDebugManager();
+	fSGPClosed = TRUE;
 }
 
-//
-////int PASCAL WinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
-////{
-////
-//////If we are to use exception handling
-////#ifdef ENABLE_EXCEPTION_HANDLING
-////	int Result = -1;
-////
-////
-////	__try
-////	{
-////		Result = HandledWinMain(hInstance, hPrevInstance, pCommandLine, sCommandShow);
-////	}
-////	__except( RecordExceptionInfo( GetExceptionInformation() ))
-////	{
-////		// Do nothing here - RecordExceptionInfo() has already done
-////		// everything that is needed. Actually this code won't even
-////		// get called unless you return EXCEPTION_EXECUTE_HANDLER from
-////		// the __except clause.
-////
-////
-////	}
-////	return Result;
-////
-////}
-////
-//////Do not place code in between WinMain and Handled WinMain
-////
-////
-////
-////int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
-////{
-//////DO NOT REMOVE, used for exception handing list above in WinMain
-////#endif
-////	MSG			Message;
-////	HWND		hPrevInstanceWindow;
-////	SDL_Event	event;
-////
-////	// Make sure that only one instance of this application is running at once
-////	// // Look for prev instance by searching for the window
-////	hPrevInstanceWindow = FindWindowEx( NULL, NULL, APPLICATION_NAME, APPLICATION_NAME );
-////
-////	// One is found, bring it up!
-////	if ( hPrevInstanceWindow != NULL )
-////	{
-////		SetForegroundWindow( hPrevInstanceWindow );
-////		ShowWindow( hPrevInstanceWindow, SW_RESTORE );
-////		return( 0 );
-////	}
-////
-////	ghInstance = hInstance;
-////
-////	// Copy commandline!
-////	strncpy( gzCommandLine, pCommandLine, 100);
-////	gzCommandLine[99]='\0';
-////
-////	//Process the command line BEFORE initialization
-////	ProcessJa2CommandLineBeforeInitialization( pCommandLine );
-////
-////	// Mem Usage
-////	giStartMem = MemGetFree(  ) / 1024;
-////  
-////	ShowCursor(FALSE);
-////
-////	// Inititialize the SGP
-////	if (InitializeStandardGamingPlatform(hInstance, sCommandShow) == FALSE)
-////	{ // We failed to initialize the SGP
-////		return 0;
-////	}
-////
-////#ifdef JA2
-////	#ifdef ENGLISH
-////		SetIntroType( INTRO_SPLASH );
-////	#endif
-////#endif
-////
-////	gfApplicationActive = TRUE;
-////	gfProgramIsRunning = TRUE;
-////
-////	FastDebugMsg("Running Game");
-////
-////	// At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
-////	// attend to the gaming mechanics themselves
-////	while (gfProgramIsRunning)
-////	{
-////		if ( SDL_PollEvent( &event ) )
-////		{
-////			switch( event.type )
-////			{
-////			case SDL_QUIT:
-////				ShutdownStandardGamingPlatform();
-////				ShowCursor(TRUE);
-////				PostQuitMessage(0);
-////				break;
-////			default:
-////				break;
-////			}
-////		}
-////		else
-////		{ // Windows hasn't processed any messages, therefore we handle the rest
-////			if (gfApplicationActive == FALSE)
-////			{ // Well we got nothing to do but to wait for a message to activate
-////				SDL_WaitEvent(NULL);
-////			} 
-////			else
-////			{ // Well, the game is active, so we handle the game stuff        
-////				//GameLoop();        
-////
-////				// After this frame, reset input given flag
-////				gfSGPInputReceived  =  FALSE;			
-////			}
-////		}
-////		//if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
-////		//{ // We have a message on the WIN95 queue, let's get it
-////		//	if (!GetMessage(&Message, NULL, 0, 0))
-////		//	{ // It's quitting time
-////		//		return Message.wParam;
-////		//	}
-////		//	// Ok, now that we have the message, let's handle it
-////		//	TranslateMessage(&Message);
-////		//	DispatchMessage(&Message);      
-////		//}
-////		//else
-////		//{ // Windows hasn't processed any messages, therefore we handle the rest
-////		//	if (gfApplicationActive == FALSE)
-////		//	{ // Well we got nothing to do but to wait for a message to activate
-////		//		WaitMessage();
-////		//	} 
-////		//	else
-////		//	{ // Well, the game is active, so we handle the game stuff        
-////		//		GameLoop();        
-////
-////		//		// After this frame, reset input given flag
-////		//		gfSGPInputReceived  =  FALSE;			
-////		//	}
-////		//}
-////	}
-////
-////	// This is the normal exit point
-////	FastDebugMsg("Exiting Game");
-////	PostQuitMessage(0);
-////
-////	// SGPExit() will be called next through the atexit() mechanism...  This way we correctly process both normal exits and
-////	// emergency aborts (such as those caused by a failed assertion).
-////
-////	// return wParam of the last message received
-////	return Message.wParam;
-////}
-////
-////
-//
 void SGPExit(void)
 {
 	static BOOLEAN fAlreadyExiting = FALSE;
@@ -733,6 +324,11 @@ void SGPExit(void)
 
 	// helps prevent heap crashes when multiple assertions occur and call us
 	if ( fAlreadyExiting )
+	{
+		return;
+	}
+
+	if ( fSGPClosed )
 	{
 		return;
 	}

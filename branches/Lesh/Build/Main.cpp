@@ -3,6 +3,7 @@
 #include "Timer Control.h"
 #include "Game Clock.h"
 #include "ExceptionHandling.h"
+#include "gameloop.h"
 
 //static BOOLEAN fRestore = FALSE;
 
@@ -67,7 +68,17 @@ int main(int argc, char *argv[])
 				{
 				case SDL_QUIT:
 					gfProgramIsRunning = FALSE;
-					//ShutdownStandardGamingPlatform();
+					break;
+
+				case SDL_KEYDOWN:
+				case SDL_KEYUP:
+					KeyboardHandler(&event);
+					break;
+
+				case SDL_MOUSEMOTION:
+				case SDL_MOUSEBUTTONUP:
+				case SDL_MOUSEBUTTONDOWN:
+					MouseHandler(&event);
 					break;
 
 				case SDL_VIDEORESIZE:
@@ -75,21 +86,23 @@ int main(int argc, char *argv[])
 
 				case SDL_VIDEOEXPOSE:
 					// Redraw screen
+					//printf("SDL_VIDEOEXPOSE 0x%02X\n", SDL_GetAppState() );
+					if ( SDL_GetAppState() & SDL_APPINPUTFOCUS )
+						gfApplicationActive = TRUE;
 					break;
 
 				case SDL_ACTIVEEVENT:
-					switch(event.active.state)
+					//if ( event.active.state & SDL_APPMOUSEFOCUS )
+					//	printf("SDL_APPMOUSEFOCUS\n");
+
+					if ( event.active.state & SDL_APPINPUTFOCUS )
 					{
-					case SDL_APPMOUSEFOCUS:
-						printf("SDL_APPMOUSEFOCUS\n");
-						break;
+						gfApplicationActive = event.active.gain;
+						printf("SDL_APPINPUTFOCUS = %d\n", event.active.gain);
+					}
 
-					case SDL_APPINPUTFOCUS:
-						printf("SDL_APPINPUTFOCUS\n");
-						break;
-
-					case SDL_APPACTIVE:
-						printf("SDL_APPACTIVE\n");
+					if ( event.active.state & SDL_APPACTIVE )
+					{
 						if (event.active.gain)
 						{
 							//// the application was restored (deiconified)
@@ -103,7 +116,7 @@ int main(int argc, char *argv[])
 							//	{
 							//		PauseTime( FALSE );
 							//	}
-							//	gfApplicationActive = TRUE;
+								//gfApplicationActive = TRUE;
 							////}
 						}
 						else
@@ -115,7 +128,6 @@ int main(int argc, char *argv[])
 							//gfApplicationActive = FALSE;
 							////fRestore = TRUE;
 						}
-						break;
 					}
 					break;
 

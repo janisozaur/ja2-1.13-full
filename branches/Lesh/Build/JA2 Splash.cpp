@@ -83,7 +83,7 @@ void InitJA2SplashScreen()
 			BltVideoObject( FRAME_BUFFER , hHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL );
 
 	InvalidateScreen();
-	//RefreshScreen( NULL );
+	RefreshScreen( NULL );
 
 	guiSplashStartTime = GetJA2Clock();
 }

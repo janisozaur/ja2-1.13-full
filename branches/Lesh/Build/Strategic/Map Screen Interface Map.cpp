@@ -396,7 +396,7 @@ INT16 sBaseSectorList[ MAX_TOWNS - 1 ];/*={
 
 // position of town names on the map
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
-POINT pTownPoints[ MAX_TOWNS ];/*={
+SGPPos pTownPoints[ MAX_TOWNS ];/*={
 	{ 0 ,  0 },
 	{ 90, 10}, // Omerta
 	{125, 40}, // Drassen

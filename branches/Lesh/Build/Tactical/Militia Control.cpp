@@ -1014,7 +1014,7 @@ BOOLEAN CheckIfRadioIsEquipped( void )
 //	case SEEKENEMY:		swprintf( szOrders, L"SEEK ENEMY" );			break;
 //	case CLOSEPATROL:	swprintf( szOrders, L"CLOSE PATROL" );		break;
 //	case FARPATROL:		swprintf( szOrders, L"FAR PATROL" );			break;
-//	case POINTPATROL:	swprintf( szOrders, L"POINT PATROL" );		break;
+//	case POINTPATROL:	swprintf( szOrders, L"SGPPos PATROL" );		break;
 //	case RNDPTPATROL:	swprintf( szOrders, L"RND PT PATROL" );		break;
 //	default:					swprintf( szOrders, L"UNKNOWN" );					break;
 //}

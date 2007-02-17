@@ -2245,7 +2245,7 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 	}
 	if ( pSoldier->bOrders == POINTPATROL || pSoldier->bOrders == RNDPTPATROL )
 	{
-		// roam near NEXT PATROL POINT, not from where merc starts out
+		// roam near NEXT PATROL SGPPos, not from where merc starts out
 		*pusFromGridNo = pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt];
 	}
 	else

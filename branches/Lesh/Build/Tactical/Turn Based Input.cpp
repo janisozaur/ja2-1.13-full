@@ -1399,7 +1399,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
 	BOOLEAN						fKeyTaken = FALSE;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	//SOLDIERTYPE				*pSoldier;
 	static BOOLEAN	fShifted = FALSE;
 	static BOOLEAN	fShifted2 = FALSE;
@@ -1407,7 +1407,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 	UINT16						usMapPos;
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	GetMouseMapPos( (INT16 *)&usMapPos );
 

@@ -337,7 +337,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
  // passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
- sprintf((CHAR *)tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
+ sprintf((CHAR *)tempstr,"%s - SGPPos PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
  AIPopMessage(tempstr);
 #endif
 
@@ -427,7 +427,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 	// passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
-	sprintf((CHAR *)tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
+	sprintf((CHAR *)tempstr,"%s - SGPPos PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
 	AIPopMessage(tempstr);
 #endif
 

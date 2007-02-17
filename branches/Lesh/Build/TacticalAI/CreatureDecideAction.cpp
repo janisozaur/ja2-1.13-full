@@ -169,7 +169,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		}
 
 		////////////////////////////////////////////////////////////////////////////
-		// POINT PATROL: move towards next point unless getting a bit winded
+		// SGPPos PATROL: move towards next point unless getting a bit winded
 		////////////////////////////////////////////////////////////////////////////
 
 		// this takes priority over water/gas checks, so that point patrol WILL work

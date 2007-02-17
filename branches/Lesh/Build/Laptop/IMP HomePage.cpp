@@ -250,9 +250,9 @@ void DisplayActivationStringCursor( void )
 void GetPlayerKeyBoardInputForIMPHomePage( void )
 {
 	InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {

@@ -1016,7 +1016,7 @@ void DeleteMapScreenBottomMessageScrollRegion( void )
 
 void MapScreenMessageScrollBarCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	POINT MousePos;
+	SGPPos MousePos;
 	UINT8 ubMouseYOffset;
 	UINT8	ubDesiredSliderOffset;
 	UINT8 ubDesiredMessageIndex;
@@ -1038,7 +1038,7 @@ void MapScreenMessageScrollBarCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 		if ( ubNumMessages > MAX_MESSAGES_ON_MAP_BOTTOM )
 		{
 			// where is the mouse?
-			GetCursorPos( &MousePos );
+			GetMousePos( &MousePos );
 
 			ubMouseYOffset = (UINT8) MousePos.y - MESSAGE_SCROLL_AREA_START_Y;
 

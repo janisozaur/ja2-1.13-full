@@ -22,7 +22,7 @@
 #endif
 
 // Kaiden this line was commented before I screwed with it
-//extern struct POINT;
+//extern struct SGPPos;
 
 UINT32 giIMPPersonalityQuizButton[ 2 ];
 UINT32 giIMPPersonalityQuizButtonImage[ 2 ];
@@ -1609,10 +1609,10 @@ void CheckStateOfTheConfirmButton( void )
 void HandleIMPQuizKeyBoard( void )
 {
 	InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	BOOLEAN fSkipFrame = FALSE;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
   while( ( DequeueEvent(&InputEvent) == TRUE )  )
   {

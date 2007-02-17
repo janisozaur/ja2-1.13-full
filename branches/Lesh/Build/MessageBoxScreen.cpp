@@ -37,7 +37,7 @@
 typedef void (*MSGBOX_CALLBACK)( UINT8 bExitValue );	
 
 // old mouse x and y positions
-SGPPoint pOldMousePosition;
+SGPPos	pOldMousePosition;
 SGPRect MessageBoxRestrictedCursorRegion;
 
 // if the cursor was locked to a region
@@ -792,7 +792,7 @@ UINT32	ExitMsgBox( INT8 ubExitCode )
 {
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;
-	SGPPoint pPosition;
+	SGPPos	 pPosition;
 
 	// Delete popup!
 	RemoveMercPopupBoxFromIndex( gMsgBox.iBoxId );
@@ -914,9 +914,9 @@ UINT32	ExitMsgBox( INT8 ubExitCode )
 	{
 		GetMousePos( &pPosition );
 
-		if( ( pPosition.iX > MessageBoxRestrictedCursorRegion.iRight ) || ( pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft ) && ( pPosition.iY < MessageBoxRestrictedCursorRegion.iTop ) && ( pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom ) )
+		if( ( pPosition.x > MessageBoxRestrictedCursorRegion.iRight ) || ( pPosition.x > MessageBoxRestrictedCursorRegion.iLeft ) && ( pPosition.y < MessageBoxRestrictedCursorRegion.iTop ) && ( pPosition.y > MessageBoxRestrictedCursorRegion.iBottom ) )
 		{
-			SimulateMouseMovement( pOldMousePosition.iX , pOldMousePosition.iY );
+			SimulateMouseMovement( pOldMousePosition.x , pOldMousePosition.y );
 		}
 
 		fCursorLockedToArea = FALSE;

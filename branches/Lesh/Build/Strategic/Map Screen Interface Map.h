@@ -286,6 +286,6 @@ extern BOOLEAN fFoundTixa;
 extern UINT32 guiSubLevel1, guiSubLevel2, guiSubLevel3;
 
 extern INT16 sBaseSectorList[ MAX_TOWNS - 1 ];
-extern POINT pTownPoints[ MAX_TOWNS ];
+extern SGPPos pTownPoints[ MAX_TOWNS ];
 
 #endif

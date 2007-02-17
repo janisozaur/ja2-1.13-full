@@ -583,25 +583,65 @@ void DeletePrimaryVideoSurfaces( )
 
 	if ( ghPrimary != NULL )
 	{
-		DeleteVideoSurface( ghPrimary );
+		//If there is a 16bpp palette, free it
+		if( ghPrimary->p16BPPPalette != NULL )
+		{
+			MemFree( ghPrimary->p16BPPPalette );
+			ghPrimary->p16BPPPalette = NULL;
+		}
+
+		giMemUsedInSurfaces -= ( ghPrimary->usHeight * ghPrimary->usWidth * ( ghPrimary->ubBitDepth / 8 ) );
+
+		// Release object
+		MemFree( ghPrimary );
 		ghPrimary = NULL;
 	}
 
 	if ( ghBackBuffer != NULL )
 	{
-		DeleteVideoSurface( ghBackBuffer );
+		//If there is a 16bpp palette, free it
+		if( ghBackBuffer->p16BPPPalette != NULL )
+		{
+			MemFree( ghBackBuffer->p16BPPPalette );
+			ghBackBuffer->p16BPPPalette = NULL;
+		}
+
+		giMemUsedInSurfaces -= ( ghBackBuffer->usHeight * ghBackBuffer->usWidth * ( ghBackBuffer->ubBitDepth / 8 ) );
+
+		// Release object
+		MemFree( ghBackBuffer );
 		ghBackBuffer = NULL;
 	}
 
 	if ( ghFrameBuffer != NULL )
 	{
-		DeleteVideoSurface( ghFrameBuffer );
+		//If there is a 16bpp palette, free it
+		if( ghFrameBuffer->p16BPPPalette != NULL )
+		{
+			MemFree( ghFrameBuffer->p16BPPPalette );
+			ghFrameBuffer->p16BPPPalette = NULL;
+		}
+
+		giMemUsedInSurfaces -= ( ghFrameBuffer->usHeight * ghFrameBuffer->usWidth * ( ghFrameBuffer->ubBitDepth / 8 ) );
+
+		// Release object
+		MemFree( ghFrameBuffer );
 		ghFrameBuffer = NULL;
 	}
 
 	if ( ghMouseBuffer != NULL )
 	{
-		DeleteVideoSurface( ghMouseBuffer );
+		//If there is a 16bpp palette, free it
+		if( ghMouseBuffer->p16BPPPalette != NULL )
+		{
+			MemFree( ghMouseBuffer->p16BPPPalette );
+			ghMouseBuffer->p16BPPPalette = NULL;
+		}
+
+		giMemUsedInSurfaces -= ( ghMouseBuffer->usHeight * ghMouseBuffer->usWidth * ( ghMouseBuffer->ubBitDepth / 8 ) );
+
+		// Release object
+		MemFree( ghMouseBuffer );
 		ghMouseBuffer = NULL;
 	}
 
@@ -1591,16 +1631,10 @@ LPDIRECTDRAWPALETTE  GetVideoSurfaceDDPalette( HVSURFACE hVSurface )
 }
 
 // **************************************************************
-// !! need convert to SDL
 HVSURFACE CreateVideoSurfaceFromSDLSurface( SDL_Surface *pSurface )
 {
 	// Create Video Surface
-	//DDPIXELFORMAT		PixelFormat;
 	HVSURFACE			hVSurface = NULL;
-	//DDSURFACEDESC		DDSurfaceDesc;
-	//LPDIRECTDRAWPALETTE	pDDPalette;
-	//SGPPaletteEntry		SGPPalette[ 256 ];
-	//HRESULT				ReturnCode;
 
 
 	// Allocate Video Surface struct
@@ -1611,34 +1645,7 @@ HVSURFACE CreateVideoSurfaceFromSDLSurface( SDL_Surface *pSurface )
 	hVSurface->ubBitDepth			= pSurface->format->BitsPerPixel;
 	hVSurface->pSurface				= pSurface;
 	hVSurface->fFlags				= 0;
-
-	//// Get and Set palette, if attached, allow to fail
-	//ReturnCode = IDirectDrawSurface2_GetPalette( lpDDSurface, &pDDPalette );
-
-	//if ( ReturnCode == DD_OK )
-	//{
-	//	// Set 8-bit Palette and 16 BPP palette
-	//	hVSurface->pPalette = pDDPalette;
-
-	//	// Create 16-BPP Palette
-	//	DDGetPaletteEntries( pDDPalette, 0, 0, 256, ( LPPALETTEENTRY )SGPPalette );
-	//	hVSurface->p16BPPPalette = Create16BPPPalette( SGPPalette );
-	//}
-	//else
-	//{
-	//	hVSurface->pPalette = NULL;
-	//	hVSurface->p16BPPPalette = NULL;
-	//}
-	//// Set meory flags
-	//if ( DDSurfaceDesc.ddsCaps.dwCaps & DDSCAPS_SYSTEMMEMORY )
-	//{
-	//	hVSurface->fFlags |= VSURFACE_SYSTEM_MEM_USAGE;
-	//}
-
-	//if ( DDSurfaceDesc.ddsCaps.dwCaps & DDSCAPS_VIDEOMEMORY )
-	//{
-	//	hVSurface->fFlags |= VSURFACE_VIDEO_MEM_USAGE;
-	//}
+	hVSurface->p16BPPPalette		= NULL;
 
 	// All is well
 	DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_0, String("Success in Creating Video Surface from DD Surface" ) );

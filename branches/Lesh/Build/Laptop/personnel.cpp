@@ -34,7 +34,7 @@
 
 
 
-//extern struct POINT;
+//extern struct SGPPos;
 
 #define NUM_BACKGROUND_REPS					40
 #define BACKGROUND_HEIGHT						10
@@ -248,7 +248,7 @@ INT32 giPersonnelATMSideButtonImage[ NUMBER_ATM_BUTTONS ];
 INT32 iNumberPadButtons[ 10 ];
 INT32 iNumberPadButtonsImages[ 10 ];
 
-//POINT pAtmSideButtonPts[]={
+//SGPPos pAtmSideButtonPts[]={
 //	{ 533, 155 },
 //	{ 558, 110 },
 //	{ 558, 125 },
@@ -260,7 +260,7 @@ INT32 iNumberPadButtonsImages[ 10 ];
 #define Prsnl_DATA_OffSetX	(36)
 #define PrsnlOffSetY	10
 
-POINT pPersonnelScreenPoints[]=
+SGPPos pPersonnelScreenPoints[]=
 {
 	{422+PrsnlOffSetX, 205+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 215+PrsnlOffSetY},
@@ -5853,7 +5853,7 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
 	INT32 iValue = 0;
 	INT32 iNumberOfItems = 0;
-	POINT MousePos;
+	SGPPos MousePos;
 	INT16 sSizeOfEachSubRegion = 0;
 	INT16 sYPositionOnBar = 0;
 	INT16 iCurrentItemValue = 0;
@@ -5879,7 +5879,7 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		}
 
 		// find the x,y on the slider bar
-	  GetCursorPos(&MousePos);
+	  GetMousePos(&MousePos);
 
 		// get the subregion sizes
 		sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems  ) );
@@ -6730,9 +6730,9 @@ void HandlePersonnelKeyboard( void )
 	CHAR16 sZero[ 2 ] = L"0";
 	
 	InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {

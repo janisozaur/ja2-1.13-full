@@ -773,7 +773,7 @@ typedef struct
 	UINT32	uiIndex;
 	UINT8	ubBaseX;
 	UINT8	ubBaseY;
-	POINT	townPoint;
+	SGPPos	townPoint;
 	BOOLEAN townUsesLoyalty;
 	UINT8	townRebelSentiment;
 	BOOLEAN	townMilitiaAllowed;
@@ -1042,13 +1042,13 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_TOWNPOINT;
 
-			pData->curCityInfo.townPoint.x = atol(pData->szCharData);
+			pData->curCityInfo.townPoint.x = (UINT16)atol(pData->szCharData);
 		}
 		else if(strcmp(name, "y") == 0 && pData->curElement == CITYTABLE_ELEMENT_TOWNPOINT_Y)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_TOWNPOINT;
 
-			pData->curCityInfo.townPoint.y = atol(pData->szCharData);
+			pData->curCityInfo.townPoint.y = (UINT16)atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

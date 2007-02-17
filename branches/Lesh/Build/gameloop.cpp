@@ -151,6 +151,9 @@ void    ShutdownGame(void)
 
 	 ShutdownJA2( );
 
+	ShutdownButtonSystem();
+	MSYS_Shutdown();
+
 	//Save the general save game settings to disk
 	SaveGameSettings();
 
@@ -176,14 +179,14 @@ void GameLoop(void)
 //	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop");
 
 	InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	UINT32	uiOldScreen=guiCurrentScreen;
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse hook");
-	MouseSystemHook(MOUSE_POS, (UINT16)MousePos.x ,(UINT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
+	MouseSystemHook(MOUSE_POS, (INT16)MousePos.x, (INT16)MousePos.y, _LeftButtonDown, _RightButtonDown);
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get music");
 	MusicPoll( FALSE );
 

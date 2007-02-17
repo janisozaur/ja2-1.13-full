@@ -977,9 +977,9 @@ void CreateHelpScreenButtons()
 void	GetHelpScreenUserInput()
 {
 	InputAtom Event;
-	POINT  MousePos;
+	SGPPos  MousePos;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{

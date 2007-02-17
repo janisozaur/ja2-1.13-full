@@ -1304,7 +1304,7 @@ void RefreshScreen(void *DummyVariable)
 	static BOOLEAN	fShowMouse;
 	//HRESULT ReturnCode;
 	static SDL_Rect	Rect, dstRect;
-	static POINT	MousePos;	// to be retyped
+	static SGPPos	MousePos;	// to be retyped
 	static BOOLEAN	fFirstTime = TRUE;
 	//UINT32			uiTime;
 
@@ -1373,7 +1373,7 @@ void RefreshScreen(void *DummyVariable)
 	// Get the current mouse position
 	//
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// 
@@ -1433,7 +1433,8 @@ void RefreshScreen(void *DummyVariable)
 				// Method (1) - We will be refreshing the entire screen
 				//
 
-				SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLFrameBuffer, NULL);
+				//SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLFrameBuffer, NULL);
+				SDL_UpdateRect(gpSDLFrameBuffer, 0, 0, 0, 0);
 			}
 			else
 			{
@@ -1446,7 +1447,8 @@ void RefreshScreen(void *DummyVariable)
 
 					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
 
-					SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+					//SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+					SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
 				}
 
 				// Now do new, extended dirty regions
@@ -1469,7 +1471,8 @@ void RefreshScreen(void *DummyVariable)
 
 					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
 
-					SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+					SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
+					//SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
 				}
 
 			}

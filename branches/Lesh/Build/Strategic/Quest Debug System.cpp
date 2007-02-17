@@ -1261,11 +1261,11 @@ void DisplayCurrentGridNo()
 void		GetUserInput()
 {
 	InputAtom Event;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse( /*giSelectedMercCurrentQuote*/ ); // doesn't take parameters (jonathanl)
 
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{

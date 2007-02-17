@@ -745,9 +745,9 @@ BOOLEAN		RenderGIOScreen()
 void			GetGIOScreenUserInput()
 {
 	InputAtom Event;
-//	POINT  MousePos;
+//	SGPPos  MousePos;
 
-//	GetCursorPos(&MousePos);
+//	GetMousePos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{

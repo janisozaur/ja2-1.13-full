@@ -2319,9 +2319,6 @@
 				RelativePath="GameInitOptionsScreen.h">
 			</File>
 			<File
-				RelativePath=".\Standard Gaming Platform\gameloop.h">
-			</File>
-			<File
 				RelativePath="gameloop.h">
 			</File>
 			<File

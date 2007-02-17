@@ -828,7 +828,7 @@ BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP
 	
 	
 ////////////////////////////////////////////////////////////////////////////
- // POINT PATROL: move towards next point unless getting a bit winded
+ // SGPPos PATROL: move towards next point unless getting a bit winded
  ////////////////////////////////////////////////////////////////////////////
 
  // this takes priority over water/gas checks, so that point patrol WILL work

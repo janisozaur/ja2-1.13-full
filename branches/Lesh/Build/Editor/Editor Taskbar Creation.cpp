@@ -188,7 +188,7 @@ void InitEditorMercsToolbar()
 		iScreenWidthOffset + 270, 2 * iScreenHeightOffset + 380, 70, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, 
 		MercsSetOrdersCallback );
 	iEditorButton[ MERCS_ORDERS_POINTPATROL ] = 
-		CreateTextButton( L"POINT PATROL", (UINT16)SMALLCOMPFONT, FONT_GRAY2, FONT_BLACK, BUTTON_USE_DEFAULT, 
+		CreateTextButton( L"SGPPos PATROL", (UINT16)SMALLCOMPFONT, FONT_GRAY2, FONT_BLACK, BUTTON_USE_DEFAULT, 
 		iScreenWidthOffset + 270, 2 * iScreenHeightOffset + 392, 70, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, 
 		MercsSetOrdersCallback );
 	iEditorButton[ MERCS_ORDERS_RNDPTPATROL ] = 

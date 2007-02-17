@@ -237,7 +237,7 @@ CHAR8                   gzActionStr[][ 30 ] =
 	"TAKE COVER",
 	"GET CLOSER",
 
-	"POINT PATROL",
+	"SGPPos PATROL",
 	"LEAVE WATER GAS",
 	"SEEK NOISE",
 	"ESCORTED MOVE",

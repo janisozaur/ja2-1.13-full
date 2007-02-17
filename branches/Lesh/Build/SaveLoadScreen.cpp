@@ -839,11 +839,11 @@ void			HandleSaveLoadScreen()
 void		GetSaveLoadScreenUserInput()
 {
 	InputAtom Event;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	INT8		bActiveTextField;
 	static BOOLEAN	fWasCtrlHeldDownLastFrame = FALSE;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	//if we are going to be instantly leaving the screen, dont draw the numbers
 	if( gfLoadGameUponEntry )

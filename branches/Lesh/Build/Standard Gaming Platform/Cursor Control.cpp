@@ -77,7 +77,7 @@ BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVide
 }
 
 
-// THESE TWO PARAMETERS MUST POINT TO STATIC OR GLOBAL DATA, NOT AUTOMATIC VARIABLES
+// THESE TWO PARAMETERS MUST SGPPos TO STATIC OR GLOBAL DATA, NOT AUTOMATIC VARIABLES
 void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorData, UINT16 suNumDataFiles )
 {
 	// Set global values!

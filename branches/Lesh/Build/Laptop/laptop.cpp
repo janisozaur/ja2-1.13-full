@@ -682,9 +682,9 @@ void
 GetLaptopKeyboardInput()
 {
   InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	fTabHandled = FALSE;
 
@@ -3181,8 +3181,8 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 void
 CheckIfMouseLeaveScreen()
 {
- 	POINT  MousePos;
-  GetCursorPos(&MousePos);
+ 	SGPPos  MousePos;
+  GetMousePos(&MousePos);
   if((MousePos.x >LAPTOP_SCREEN_LR_X )||(MousePos.x<LAPTOP_UL_X)||(MousePos.y<LAPTOP_UL_Y )||(MousePos.y >LAPTOP_SCREEN_LR_Y))
   {
    guiCurrentLapTopCursor=LAPTOP_PANEL_CURSOR;

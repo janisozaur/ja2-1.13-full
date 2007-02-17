@@ -4592,7 +4592,7 @@ UINT32 HandleMapUI( )
 	UINT8 ubCount=0;
 	PathStPtr pNode=NULL;
 	BOOLEAN fVehicle=FALSE;
-	POINT MousePos;
+	SGPPos MousePos;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
 
@@ -4660,7 +4660,7 @@ UINT32 HandleMapUI( )
 							 {
 								 sX = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) % MAP_WORLD_X );
 								 sY = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) / MAP_WORLD_X );
-								 GetCursorPos(&MousePos);
+								 GetMousePos(&MousePos);
 								 RestoreBackgroundForMapGrid( sX, sY );
 								// fMapPanelDirty = TRUE;
 							 }
@@ -4949,7 +4949,7 @@ UINT32 HandleMapUI( )
 void GetMapKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
-	POINT  MousePos;
+	SGPPos  MousePos;
 	INT8 bSquadNumber;
 	UINT8 ubGroupId = 0;
 	BOOLEAN fCtrl, fAlt;
@@ -4962,7 +4962,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
   while( DequeueEvent( &InputEvent ) )
 //		while( DequeueSpecificEvent( &InputEvent, KEY_DOWN ) )		// doesn't work for some reason
   {
-		GetCursorPos(&MousePos);
+		GetMousePos(&MousePos);
 
 		// HOOK INTO MOUSE HOOKS
 		switch(InputEvent.usEvent)
@@ -6238,7 +6238,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 
 BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 {
-	POINT  MousePos;
+	SGPPos  MousePos;
 
 	if( IsMapScreenHelpTextUp( ) )
 	{
@@ -6247,7 +6247,7 @@ BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 	}
 
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
   if(fZoomFlag)
 	{
@@ -8487,10 +8487,10 @@ INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier )
 
 BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBottom )
 {
-	POINT MousePos;
+	SGPPos MousePos;
 
 	// get cursor position
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	// is it within region?
 

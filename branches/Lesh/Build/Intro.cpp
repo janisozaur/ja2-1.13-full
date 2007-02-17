@@ -152,6 +152,7 @@ UINT32	IntroScreenHandle( void )
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 
+	gfIntroScreenExit = TRUE;
 
 	if( gfIntroScreenExit )
 	{
@@ -166,7 +167,7 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
-	INT32 iFirstVideoID = -1;
+	//INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
 
@@ -176,41 +177,41 @@ BOOLEAN EnterIntroScreen()
 	// Don't play music....
 	SetMusicMode( MUSIC_NONE );
 
-#ifdef JA2BETAVERSION
-	if( FileExists( "..\\NoIntro.txt" ) )
-	{
-		PrepareToExitIntroScreen();
-		return( TRUE );
-	}
-#endif
-
-	//if the library doesnt exist, exit
-	if( !IsLibraryOpened( LIBRARY_INTRO ) )
-	{
-		PrepareToExitIntroScreen();
-		return( TRUE );
-	}
-
-	//initialize smacker
-	SmkInitialize( ghWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-
-	//get the index opf the first video to watch
-	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
-
-	if( iFirstVideoID != -1 )
-	{
-		StartPlayingIntroFlic( iFirstVideoID );
-
-		guiIntroExitScreen = INTRO_SCREEN;
-	}
-
-	//Got no intro video, exit
-	else
-	{
-		PrepareToExitIntroScreen();
-	}
-	
+//#ifdef JA2BETAVERSION
+//	if( FileExists( "..\\NoIntro.txt" ) )
+//	{
+//		PrepareToExitIntroScreen();
+//		return( TRUE );
+//	}
+//#endif
+//
+//	//if the library doesnt exist, exit
+//	if( !IsLibraryOpened( LIBRARY_INTRO ) )
+//	{
+//		PrepareToExitIntroScreen();
+//		return( TRUE );
+//	}
+//
+//	//initialize smacker
+//	SmkInitialize( ghWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
+//
+//
+//	//get the index opf the first video to watch
+//	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
+//
+//	if( iFirstVideoID != -1 )
+//	{
+//		StartPlayingIntroFlic( iFirstVideoID );
+//
+//		guiIntroExitScreen = INTRO_SCREEN;
+//	}
+//
+//	//Got no intro video, exit
+//	else
+//	{
+//		PrepareToExitIntroScreen();
+//	}
+//	
 
 	return( TRUE );
 }
@@ -223,7 +224,7 @@ void ExitIntroScreen()
 {
 
 	//shutdown smaker
-	SmkShutdown();
+	//SmkShutdown();
 }
 
 void HandleIntroScreen()
@@ -236,25 +237,25 @@ void HandleIntroScreen()
 
 
 	//handle smaker each frame
-	fFlicStillPlaying = SmkPollFlics();
+	//fFlicStillPlaying = SmkPollFlics();
 
-	//if the flic is not playing
-	if( !fFlicStillPlaying )
-	{
-		INT32 iNextVideoToPlay = -1;
+	////if the flic is not playing
+	//if( !fFlicStillPlaying )
+	//{
+	//	INT32 iNextVideoToPlay = -1;
 
-		iNextVideoToPlay = GetNextIntroVideo( giCurrentIntroBeingPlayed );
+	//	iNextVideoToPlay = GetNextIntroVideo( giCurrentIntroBeingPlayed );
 
-		if( iNextVideoToPlay != -1 )
-		{
-			StartPlayingIntroFlic( iNextVideoToPlay );
-		}
-		else
-		{
-			PrepareToExitIntroScreen();
-			giCurrentIntroBeingPlayed = -1;
-		}
-	}
+	//	if( iNextVideoToPlay != -1 )
+	//	{
+	//		StartPlayingIntroFlic( iNextVideoToPlay );
+	//	}
+	//	else
+	//	{
+	//		PrepareToExitIntroScreen();
+	//		giCurrentIntroBeingPlayed = -1;
+	//	}
+	//}
 
 	InvalidateScreen();
 }
@@ -264,10 +265,10 @@ void HandleIntroScreen()
 void		GetIntroScreenUserInput()
 {
 	InputAtom Event;
-	POINT  MousePos;
+	SGPPos  MousePos;
 
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -300,10 +301,11 @@ void		GetIntroScreenUserInput()
 			switch( Event.usParam )
 			{
 				case ESC:
+					gbIntroScreenMode = INTRO_SPLASH;
 					PrepareToExitIntroScreen();
 					break;
 				case SPACE:
-					SmkCloseFlic( gpSmackFlic );
+					//SmkCloseFlic( gpSmackFlic );
 					break;
 
 #ifdef JA2TESTVERSION
@@ -320,12 +322,12 @@ void		GetIntroScreenUserInput()
 		}
 	}
 
-	// if the user presses either mouse button
-	if( gfLeftButtonState || gfRightButtonState )
-	{
-		//advance to the next flic
-		SmkCloseFlic( gpSmackFlic );
-	}
+	//// if the user presses either mouse button
+	//if( gfLeftButtonState || gfRightButtonState )
+	//{
+	//	//advance to the next flic
+	//	SmkCloseFlic( gpSmackFlic );
+	//}
 }
 
 

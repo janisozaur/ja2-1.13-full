@@ -1510,9 +1510,9 @@ void RestoreTacticalBackGround()
 void		GetShopKeeperInterfaceUserInput()
 {
 	InputAtom Event;
-	POINT MousePos;
+	SGPPos MousePos;
 
-	GetCursorPos(&MousePos);
+	GetMousePos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{
