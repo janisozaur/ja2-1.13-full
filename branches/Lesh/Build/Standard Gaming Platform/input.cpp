@@ -33,7 +33,7 @@ extern BOOLEAN gfApplicationActive;
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
-BOOLEAN   gfKeyState[SDLK_LAST];				// TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN   gfKeyState[256];				// TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN   fCursorWasClipped = FALSE;
 RECT      gCursorClipRect;
 
@@ -525,7 +525,7 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 			if (gfCurrentStringInputState == FALSE)
 			{
 				// There is no string input going on right now, so we queue up the event
-				gfKeyState[ KeySym->sym ] = TRUE;
+				gfKeyState[ ubChar ] = TRUE;
 				QueueEvent(KEY_DOWN, ubChar, uiTmpLParam);
 			}
 			else
@@ -554,17 +554,17 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 	{ 
 		// Key has been RELEASED
 		// Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
-		if (gfKeyState[ KeySym->sym ] == TRUE)
+		if (gfKeyState[ ubChar ] == TRUE)
 		{ 
 			// Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
-			gfKeyState[ KeySym->sym ] = FALSE;
+			gfKeyState[ ubChar ] = FALSE;
 			QueueEvent(KEY_UP, ubChar, uiTmpLParam);
 		}
 		//else if the alt tab key was pressed
 		else if( ubChar == TAB && gfAltState )
 		{
 			// therefore minimize the application
-			ShowWindow( ghWindow, SW_MINIMIZE ); 
+			SDL_WM_IconifyWindow();
 			gfKeyState[ ALT ] = FALSE;
 			gfAltState = FALSE;
 		}
@@ -1128,9 +1128,9 @@ void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 
 void RestrictMouseCursor(SGPRect *pRectangle)
 {
-  // Make a copy of our rect....
-  memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
-  ClipCursor((RECT *)pRectangle);
+	// Make a copy of our rect....
+	memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
+	ClipCursor((RECT *)pRectangle);
 	fCursorWasClipped = TRUE;
 }
 

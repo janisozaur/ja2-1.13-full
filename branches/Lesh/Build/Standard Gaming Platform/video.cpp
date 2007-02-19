@@ -472,8 +472,8 @@ void ShutdownVideoManager(void)
 
 	if (gpCursorStore != NULL)
 	{
-	  DeleteVideoObject(gpCursorStore);
-	  gpCursorStore = NULL;
+		DeleteVideoObject(gpCursorStore);
+		gpCursorStore = NULL;
 	}
 
 	// ATE: Release mouse cursor!
@@ -769,492 +769,367 @@ void SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride)
 //#define SCROLL_TEST
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip, UINT32 uiCurrentMouseBackbuffer )
+void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, SDL_Surface *pSource, SDL_Surface *pDest, BOOLEAN fRenderStrip, UINT32 uiCurrentMouseBackbuffer )
 {
-//	UINT16 usWidth, usHeight;
-//	UINT8	 ubBitDepth;
-//  HRESULT ReturnCode;
-//  static RECT    Region;  
-//	static UINT16	 usMouseXPos, usMouseYPos;
-//	static RECT		 StripRegions[ 2 ], MouseRegion;
-//	UINT16				 usNumStrips = 0;
-//	INT32					 cnt;
-//	INT16					 sShiftX, sShiftY;
-//	INT32					 uiCountY;
-//
-//
-// 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-//	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
-//
-/////zmiany
-//	StripRegions[ 0 ].left   = gsVIEWPORT_START_X ;
-//	StripRegions[ 0 ].right  = gsVIEWPORT_END_X	;
-//	StripRegions[ 0 ].top    = gsVIEWPORT_WINDOW_START_Y ;
-//	StripRegions[ 0 ].bottom = gsVIEWPORT_WINDOW_END_Y ;
-//	StripRegions[ 1 ].left   = gsVIEWPORT_START_X ;
-//	StripRegions[ 1 ].right  = gsVIEWPORT_END_X;
-//	StripRegions[ 1 ].top    = gsVIEWPORT_WINDOW_START_Y;
-//	StripRegions[ 1 ].bottom = gsVIEWPORT_WINDOW_END_Y;
-//
-//	MouseRegion.left		= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usLeft;
-//	MouseRegion.top			= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usTop;
-//	MouseRegion.right		= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usRight;
-//	MouseRegion.bottom	= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usBottom;
-//
-//	usMouseXPos					= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseXPos;
-//	usMouseYPos					= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseYPos;
-//
-//	switch (uiDirection)
-//	{
-//		case SCROLL_LEFT:
-//
-//			Region.left = 0;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y;
-//			Region.right = usWidth-(sScrollXIncrement);
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY = gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								sScrollXIncrement*2); 
-//
-//			}	
-//
-//			StripRegions[ 0 ].right =(INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-//			usMouseXPos += sScrollXIncrement;
-//
-//			usNumStrips = 1;
-//			break;
-//
-//		case SCROLL_RIGHT:
-//
-//
-//			Region.left = sScrollXIncrement ;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y;
-//			Region.right = usWidth;
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY= gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
-//								sScrollXIncrement*2); 
-//			}	
-//
-//
-//			//for(uiCountY=0; uiCountY < usHeight; uiCountY++)
-//			//{
-//			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-//			//					pSrcBuf+(uiCountY*uiDestPitchBYTES)+sScrollXIncrement*uiBPP,
-//			//					uiDestPitchBYTES-sScrollXIncrement*uiBPP);
-//			//}
-//
-//			StripRegions[ 0 ].left =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-//			usMouseXPos -= sScrollXIncrement;
-//
-//			usNumStrips = 1;
-//			break;
-//
-//		case SCROLL_UP:
-//
-//			Region.left = 0;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y;
-//			Region.right = usWidth;
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//
-//			for(uiCountY=sScrollYIncrement-1+gsVIEWPORT_WINDOW_START_Y; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								2280);
-//			}	
-//
-//			//for(uiCountY=usHeight-1; uiCountY >= sScrollYIncrement; uiCountY--)
-//			//{
-//			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-//			//					pSrcBuf+((uiCountY-sScrollYIncrement)*uiDestPitchBYTES),
-//			//					uiDestPitchBYTES);
-//			//}
-//			StripRegions[ 0 ].bottom =(INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
-//			usNumStrips = 1;
-//
-//			usMouseYPos += sScrollYIncrement;
-//
-//			break;
-//
-//		case SCROLL_DOWN:
-//
-//			Region.left = 0;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-//			Region.right = usWidth;
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// Zero out z
-//			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement ); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0,
-//								2280);
-//			}
-//
-//			//for(uiCountY=0; uiCountY < (usHeight-sScrollYIncrement); uiCountY++)
-//			//{
-//			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-//			//					pSrcBuf+((uiCountY+sScrollYIncrement)*uiDestPitchBYTES),
-//			//					uiDestPitchBYTES);
-//			//}
-//
-//			StripRegions[ 0 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
-//			usNumStrips = 1;
-//
-//			usMouseYPos -= sScrollYIncrement;
-//
-//			break;
-//
-//		case SCROLL_UPLEFT:
-//
-//			Region.left = 0;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y;
-//			Region.right = usWidth-(sScrollXIncrement);
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								sScrollXIncrement*2); 
-//
-//			}	
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								2280);
-//			}	
-//
-//
-//			StripRegions[ 0 ].right =  (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-//			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
-//			StripRegions[ 1 ].left	 = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-//			usNumStrips = 2;
-//
-//			usMouseYPos += sScrollYIncrement;
-//			usMouseXPos += sScrollXIncrement;
-//
-//			break;
-//
-//		case SCROLL_UPRIGHT:
-//
-//			Region.left = sScrollXIncrement;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y;
-//			Region.right = usWidth;
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
-//								sScrollXIncrement*2); 
-//			}	
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								2280);
-//			}	
-//
-//
-//			StripRegions[ 0 ].left =   (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-//			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
-//			StripRegions[ 1 ].right  = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-//			usNumStrips = 2;
-//
-//			usMouseYPos += sScrollYIncrement;
-//			usMouseXPos -= sScrollXIncrement;
-//
-//			break;
-//
-//		case SCROLL_DOWNLEFT:
-//
-//			Region.left = 0;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-//			Region.right = usWidth-(sScrollXIncrement);
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 
-//								sScrollXIncrement*2); 
-//
-//			}	
-//			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0,
-//								2280);
-//			}
-//
-//
-//			StripRegions[ 0 ].right =(INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-//
-//
-//			StripRegions[ 1 ].top		= (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
-//			StripRegions[ 1 ].left  = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-//			usNumStrips = 2;
-//
-//			usMouseYPos -= sScrollYIncrement;
-//			usMouseXPos += sScrollXIncrement;
-//
-//			break;
-//
-//		case SCROLL_DOWNRIGHT:
-//
-//			Region.left = sScrollXIncrement;
-//			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-//			Region.right = usWidth;
-//			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						break;
-//					}
-//				} 
-//			} while (ReturnCode != DD_OK);
-//
-//			// memset z-buffer
-//			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
-//								sScrollXIncrement*2); 
-//			}	
-//			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-//			{
-//				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0,
-//								2280);
-//			}
-//
-//
-//			StripRegions[ 0 ].left =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-//			StripRegions[ 1 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
-//			StripRegions[ 1 ].right = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-//			usNumStrips = 2;
-//
-//			usMouseYPos -= sScrollYIncrement;
-//			usMouseXPos -= sScrollXIncrement;
-//
-//			break;
-//
-//	}
-//
-//	if ( fRenderStrip )
-//	{
-//
-//		// Memset to 0
-//#ifdef SCROLL_TEST
-//		{
-//			DDBLTFX				 BlitterFX;
-//		
-//			BlitterFX.dwSize = sizeof( DDBLTFX );
-//			BlitterFX.dwFillColor = 0;
-//
-//			DDBltSurface( (LPDIRECTDRAWSURFACE2)pDest, NULL, NULL, NULL, DDBLT_COLORFILL, &BlitterFX );
-//		}
-//#endif
-//
-//
-//		for ( cnt = 0; cnt < usNumStrips; cnt++ )
-//		{
-//			//RenderStaticWorld();
-//			//RenderDynamicWorld();
-//			RenderStaticWorldRect( (INT16)StripRegions[ cnt ].left , (INT16)StripRegions[ cnt ].top , (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom , TRUE );
-//			// Optimize Redundent tiles too!
-//			//ExamineZBufferRect( (INT16)StripRegions[ cnt ].left, (INT16)StripRegions[ cnt ].top, (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom );
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, StripRegions[ cnt ].left, StripRegions[ cnt ].top, gpFrameBuffer, (LPRECT)&( StripRegions[ cnt ] ), DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//				}
-//
-//				if (ReturnCode == DDERR_SURFACELOST)
-//				{
-//					break;
-//				}
-//			} while (ReturnCode != DD_OK);
-//
-//		}
-//
-//		sShiftX = 0;
-//		sShiftY = 0;
-//
-//		switch (uiDirection)
-//		{
-//			case SCROLL_LEFT:
-//
-//				sShiftX = sScrollXIncrement;
-//				sShiftY = 0;
-//				break;
-//
-//			case SCROLL_RIGHT:
-//
-//				sShiftX = -sScrollXIncrement;
-//				sShiftY = 0;
-//				break;
-//
-//			case SCROLL_UP:
-//
-//				sShiftX = 0;
-//				sShiftY = sScrollYIncrement;
-//				break;
-//
-//			case SCROLL_DOWN:
-//
-//				sShiftX = 0;
-//				sShiftY = -sScrollYIncrement;
-//				break;
-//
-//			case SCROLL_UPLEFT:
-//
-//				sShiftX = sScrollXIncrement;
-//				sShiftY = sScrollYIncrement;
-//				break;
-//
-//			case SCROLL_UPRIGHT:
-//
-//				sShiftX = -sScrollXIncrement;
-//				sShiftY = sScrollYIncrement;
-//				break;
-//
-//			case SCROLL_DOWNLEFT:
-//
-//				sShiftX = sScrollXIncrement;
-//				sShiftY = -sScrollYIncrement;
-//				break;
-//
-//			case SCROLL_DOWNRIGHT:
-//
-//				sShiftX = -sScrollXIncrement;
-//				sShiftY = -sScrollYIncrement;
-//				break;
-//
-//
-//		}
-//
-//		// RESTORE SHIFTED
-//		RestoreShiftedVideoOverlays( sShiftX, sShiftY );
-//
-//		// SAVE NEW
-//		SaveVideoOverlaysArea( BACKBUFFER );
-//
-//		// BLIT NEW
-//		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
-//
-//
+	UINT16			usWidth, usHeight;
+	UINT8			ubBitDepth;
+	static SDL_Rect	Region, dest;  
+	static UINT16	usMouseXPos, usMouseYPos;
+	static SDL_Rect	StripRegions[ 2 ], MouseRegion;
+	UINT16			usNumStrips = 0;
+	INT32			cnt;
+	INT16			sShiftX, sShiftY;
+	INT32			uiCountY;
+
+
+ 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
+	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
+
+///zmiany
+	StripRegions[ 0 ].x = gsVIEWPORT_START_X;
+	StripRegions[ 0 ].w = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
+	StripRegions[ 0 ].y = gsVIEWPORT_WINDOW_START_Y;
+	StripRegions[ 0 ].h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+	StripRegions[ 1 ].x = gsVIEWPORT_START_X;
+	StripRegions[ 1 ].w = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
+	StripRegions[ 1 ].y = gsVIEWPORT_WINDOW_START_Y;
+	StripRegions[ 1 ].h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+
+	MouseRegion.x = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usLeft;
+	MouseRegion.y = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usTop;
+	MouseRegion.w = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usRight - gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usLeft;
+	MouseRegion.h = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usBottom - gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usTop;
+
+	usMouseXPos	  = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseXPos;
+	usMouseYPos	  = gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseYPos;
+
+	switch (uiDirection)
+	{
+		case SCROLL_LEFT:
+
+			Region.x = 0;
+			Region.y = gsVIEWPORT_WINDOW_START_Y;
+			Region.w = usWidth-(sScrollXIncrement);
+			Region.h = usHeight;
+			dest.x   = sScrollXIncrement;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY = gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, sScrollXIncrement*2); 
+			}	
+
+			StripRegions[ 0 ].w =(INT16)(sScrollXIncrement);
+			usMouseXPos += sScrollXIncrement;
+
+			usNumStrips = 1;
+			break;
+
+		case SCROLL_RIGHT:
+
+			Region.x = sScrollXIncrement;
+			Region.y = gsVIEWPORT_WINDOW_START_Y;
+			Region.w = usWidth - sScrollXIncrement;
+			Region.h = usHeight;
+			dest.x   = 0;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY= gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
+								sScrollXIncrement*2); 
+			}	
+
+			StripRegions[ 0 ].x =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[ 0 ].w =(INT16)(sScrollXIncrement);
+			usMouseXPos -= sScrollXIncrement;
+
+			usNumStrips = 1;
+			break;
+
+		case SCROLL_UP:
+
+			Region.x = 0;
+			Region.y = gsVIEWPORT_WINDOW_START_Y;
+			Region.w = usWidth;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = 0;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			for(uiCountY=sScrollYIncrement-1+gsVIEWPORT_WINDOW_START_Y; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}	
+
+			StripRegions[ 0 ].h =(INT16)(sScrollYIncrement);
+			usNumStrips = 1;
+
+			usMouseYPos += sScrollYIncrement;
+
+			break;
+
+		case SCROLL_DOWN:
+
+			Region.x = 0;
+			Region.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			Region.w = usWidth;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = 0;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// Zero out z
+			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement ); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}
+
+			StripRegions[ 0 ].y = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
+			StripRegions[ 0 ].h = (INT16)(sScrollYIncrement);
+			usNumStrips = 1;
+
+			usMouseYPos -= sScrollYIncrement;
+
+			break;
+
+		case SCROLL_UPLEFT:
+
+			Region.x = 0;
+			Region.y = gsVIEWPORT_WINDOW_START_Y;
+			Region.w = usWidth - sScrollXIncrement;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = sScrollXIncrement;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, sScrollXIncrement*2); 
+
+			}	
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}	
+
+			StripRegions[ 0 ].w = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].x = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].h = (INT16)(sScrollYIncrement);
+			StripRegions[ 1 ].w = (INT16)(usWidth - sScrollXIncrement);
+			usNumStrips = 2;
+
+			usMouseYPos += sScrollYIncrement;
+			usMouseXPos += sScrollXIncrement;
+
+			break;
+
+		case SCROLL_UPRIGHT:
+
+			Region.x = sScrollXIncrement;
+			Region.y = gsVIEWPORT_WINDOW_START_Y;
+			Region.w = usWidth - sScrollXIncrement;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = 0;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
+								sScrollXIncrement*2); 
+			}	
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}	
+
+			StripRegions[ 0 ].x = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[ 0 ].w = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].h = (INT16)(sScrollYIncrement);
+			StripRegions[ 1 ].w = (INT16)(usWidth - sScrollXIncrement);
+			usNumStrips = 2;
+
+			usMouseYPos += sScrollYIncrement;
+			usMouseXPos -= sScrollXIncrement;
+
+			break;
+
+		case SCROLL_DOWNLEFT:
+
+			Region.x = 0;
+			Region.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			Region.w = usWidth - sScrollXIncrement;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = sScrollXIncrement;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, sScrollXIncrement*2); 
+
+			}	
+			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}
+
+
+			StripRegions[ 0 ].w = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].y	= (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
+			StripRegions[ 1 ].x = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].h = (INT16)(sScrollYIncrement);
+			usNumStrips = 2;
+
+			usMouseYPos -= sScrollYIncrement;
+			usMouseXPos += sScrollXIncrement;
+
+			break;
+
+		case SCROLL_DOWNRIGHT:
+
+			Region.x = sScrollXIncrement;
+			Region.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			Region.w = usWidth - sScrollXIncrement;
+			Region.h = usHeight - sScrollYIncrement;
+			dest.x   = 0;
+			dest.y   = gsVIEWPORT_WINDOW_START_Y;
+
+			SDL_BlitSurface(pSource, &Region, pDest, &dest);
+
+			// memset z-buffer
+			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280) + ( ( gsVIEWPORT_END_X - sScrollXIncrement ) * 2 ), 0, 
+								sScrollXIncrement*2); 
+			}	
+			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
+			{
+				memset((UINT8 *)gpZBuffer+(uiCountY*2280), 0, 2280);
+			}
+
+			StripRegions[ 0 ].x = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[ 0 ].w = (INT16)(sScrollXIncrement);
+			StripRegions[ 1 ].y = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
+			StripRegions[ 1 ].w = (INT16)(usWidth-sScrollXIncrement);
+			usNumStrips = 2;
+
+			usMouseYPos -= sScrollYIncrement;
+			usMouseXPos -= sScrollXIncrement;
+
+			break;
+
+	}
+
+	if ( fRenderStrip )
+	{
+
+		// Memset to 0
+#ifdef SCROLL_TEST
+		{
+			SDL_FillRect(pDest, NULL, 0);
+		}
+#endif
+
+
+		for ( cnt = 0; cnt < usNumStrips; cnt++ )
+		{
+			//RenderStaticWorld();
+			//RenderDynamicWorld();
+			RenderStaticWorldRect(
+				(INT16) ( StripRegions[ cnt ].x ),
+				(INT16) ( StripRegions[ cnt ].y ),
+				(INT16) ( StripRegions[ cnt ].x + StripRegions[ cnt ].w ),
+				(INT16) ( StripRegions[ cnt ].y + StripRegions[ cnt ].h ),
+				TRUE );
+			// Optimize Redundent tiles too!
+			//ExamineZBufferRect( (INT16)StripRegions[ cnt ].left, (INT16)StripRegions[ cnt ].top, (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom );
+
+			dest.x = StripRegions[ cnt ].x;
+			dest.y = StripRegions[ cnt ].y;
+
+			SDL_BlitSurface(gpSDLFrameBuffer, &( StripRegions[ cnt ] ), pDest, &dest);
+		}
+
+		sShiftX = 0;
+		sShiftY = 0;
+
+		switch (uiDirection)
+		{
+			case SCROLL_LEFT:
+
+				sShiftX = sScrollXIncrement;
+				sShiftY = 0;
+				break;
+
+			case SCROLL_RIGHT:
+
+				sShiftX = -sScrollXIncrement;
+				sShiftY = 0;
+				break;
+
+			case SCROLL_UP:
+
+				sShiftX = 0;
+				sShiftY = sScrollYIncrement;
+				break;
+
+			case SCROLL_DOWN:
+
+				sShiftX = 0;
+				sShiftY = -sScrollYIncrement;
+				break;
+
+			case SCROLL_UPLEFT:
+
+				sShiftX = sScrollXIncrement;
+				sShiftY = sScrollYIncrement;
+				break;
+
+			case SCROLL_UPRIGHT:
+
+				sShiftX = -sScrollXIncrement;
+				sShiftY = sScrollYIncrement;
+				break;
+
+			case SCROLL_DOWNLEFT:
+
+				sShiftX = sScrollXIncrement;
+				sShiftY = -sScrollYIncrement;
+				break;
+
+			case SCROLL_DOWNRIGHT:
+
+				sShiftX = -sScrollXIncrement;
+				sShiftY = -sScrollYIncrement;
+				break;
+		}
+
+		// RESTORE SHIFTED
+		RestoreShiftedVideoOverlays( sShiftX, sShiftY );
+
+		// SAVE NEW
+		SaveVideoOverlaysArea( BACKBUFFER );
+
+		// BLIT NEW
+		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
+
+
 //#if 0
 //
 //		// Erase mouse from old position
@@ -1278,13 +1153,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 //
 //#endif
 //
-//	}
-//
-//
-//	//InvalidateRegion( sLeftDraw, sTopDraw, sRightDraw, sBottomDraw );
-//
-//	//UpdateSaveBuffer();
-//	//SaveBackgroundRects();
+	}
+
+
+	//InvalidateRegion( sLeftDraw, sTopDraw, sRightDraw, sBottomDraw );
+
+	//UpdateSaveBuffer();
+	//SaveBackgroundRects();
 }		
 
 
@@ -1432,8 +1307,8 @@ void RefreshScreen(void *DummyVariable)
 				// Method (1) - We will be refreshing the entire screen
 				//
 
-				//SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLFrameBuffer, NULL);
-				SDL_UpdateRect(gpSDLFrameBuffer, 0, 0, 0, 0);
+				SDL_BlitSurface(gpSDLFrameBuffer, NULL, gpSDLBackBuffer, NULL);
+				//SDL_UpdateRect(gpSDLFrameBuffer, 0, 0, 0, 0);
 			}
 			else
 			{
@@ -1446,8 +1321,8 @@ void RefreshScreen(void *DummyVariable)
 
 					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
 
-					//SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
-					SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
+					SDL_BlitSurface(gpSDLFrameBuffer, &Rect, gpSDLBackBuffer, &dstRect);
+					//SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
 				}
 
 				// Now do new, extended dirty regions
@@ -1470,8 +1345,8 @@ void RefreshScreen(void *DummyVariable)
 
 					memcpy(&dstRect, &Rect, sizeof(SDL_Rect));
 
-					SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
-					//SDL_BlitSurface(gpSDLBackBuffer, &Rect, gpSDLFrameBuffer, &dstRect);
+					//SDL_UpdateRect(gpSDLFrameBuffer, Rect.x, Rect.y, Rect.w, Rect.h);
+					SDL_BlitSurface(gpSDLFrameBuffer, &Rect, gpSDLBackBuffer, &dstRect);
 				}
 
 			}
@@ -1479,7 +1354,7 @@ void RefreshScreen(void *DummyVariable)
 		}
 		if ( gfRenderScroll )
 		{
-			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
+			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpSDLPrimaryBuffer, gpSDLBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 	
@@ -1663,204 +1538,172 @@ void RefreshScreen(void *DummyVariable)
 //  // if not, release the frame buffer stuff right away
 //  //
 //
-//  if (guiMouseBufferState == BUFFER_DIRTY)
-//  {
-//    //
-//    // Well the mouse buffer is dirty. Upload the whole thing
-//    //
-//
-//    Region.left = 0;
-//    Region.top = 0;
-//    Region.right = gusMouseCursorWidth;
-//    Region.bottom = gusMouseCursorHeight;
-//
-//    do
-//    {
-//      ReturnCode = IDirectDrawSurface2_SGPBltFast(gpMouseCursor, 0, 0, gpMouseCursorOriginal, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//		  if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//      {
-//        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//      }
-//    } while (ReturnCode != DD_OK);
-//
-//    guiMouseBufferState = BUFFER_READY;
-//  }
-//  
-//  //
-//  // Check current state of the mouse cursor
-//  //
-//
-//  if (fShowMouse == FALSE)
-//  {
-//    if (guiMouseBufferState == BUFFER_READY)
-//    {
-//      fShowMouse = TRUE;             
-//    }
-//    else
-//    {
-//      fShowMouse = FALSE;
-//    }
-//  }
-//  else
-//  {
-//    if (guiMouseBufferState == BUFFER_DISABLED)
-//    {
-//      fShowMouse = FALSE;
-//    }
-//  }
-//
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//  // 
-//  // End of MOUSE_BUFFER_MUTEX
-//  //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//  // 
-//  // If fMouseState == TRUE
-//  //
-//  // (1) Save mouse background from gpBackBuffer to gpMouseCursorBackground
-//  // (2) If step (1) is successfull blit mouse cursor onto gpBackBuffer
-//  //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//
-//  if (fShowMouse == TRUE )
-//  {      
-//    //
-//    // Step (1) - Save mouse background
-//    //                      
-//
-//    Region.left   = MousePos.x - gsMouseCursorXOffset;
-//    Region.top    = MousePos.y - gsMouseCursorYOffset;
-//    Region.right  = Region.left + gusMouseCursorWidth;
-//    Region.bottom = Region.top + gusMouseCursorHeight;        
-//
-//    if (Region.right > usScreenWidth)
-//    {
-//      Region.right = usScreenWidth;          
-//    }
-//
-//    if (Region.bottom > usScreenHeight)
-//    {
-//      Region.bottom = usScreenHeight;
-//    }        
-//
-//    if ((Region.right > Region.left)&&(Region.bottom > Region.top))
-//    {
-//      //
-//      // Make sure the mouse background is marked for restore and coordinates are saved for the
-//      // future restore
-//      //
-//
-//      gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore    = TRUE;                    
-//      gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight     = (UINT16) Region.right - (UINT16) Region.left;
-//      gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom    = (UINT16) Region.bottom - (UINT16) Region.top;
-//      if (Region.left < 0)
-//      {
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = (UINT16) (0 - Region.left);
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = 0;
-//        Region.left = 0;
-//      }
-//      else
-//      {
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = (UINT16) MousePos.x - gsMouseCursorXOffset;
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = 0;
-//      }
-//      if (Region.top < 0)
-//      {
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = 0;
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = (UINT16) (0 - Region.top);
-//        Region.top = 0;
-//      }
-//      else
-//      {
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = (UINT16) MousePos.y - gsMouseCursorYOffset;
-//        gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = 0;
-//      }          
-//
-//			if ((Region.right > Region.left)&&(Region.bottom > Region.top))
-//			{
-//				// Save clipped region
-//				gMouseCursorBackground[CURRENT_MOUSE_DATA].Region = Region;
-//
-//				//
-//				// Ok, do the actual data save to the mouse background
-//				//
-//
-//				do
-//				{
-//					ReturnCode = IDirectDrawSurface2_SGPBltFast(gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft, gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop, gpBackBuffer, &Region, DDBLTFAST_NOCOLORKEY);
-//					if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//					{
-//						DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//					}
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						goto ENDOFLOOP;
-//					}
-//				} while (ReturnCode != DD_OK);
-//
-//				//
-//				// Step (2) - Blit mouse cursor to back buffer
-//				//
-//
-//				Region.left = gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft;
-//				Region.top = gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop;
-//				Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
-//				Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
-//
-//				do
-//				{            
-//					ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpMouseCursor, &Region, DDBLTFAST_SRCCOLORKEY);
-//					if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//					{
-//						DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//					}
-//        
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//						goto ENDOFLOOP;
-//					}
-//				} while (ReturnCode != DD_OK);
-//			}
-//			else
-//			{
-//	      //
-//				// Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
-//				//
-//
-//				gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
-//			}
-//
-//    }
-//    else
-//    {
-//      //
-//      // Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
-//      //
-//
-//      gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
-//
-//    }
-//  }
-//  else
-//  {
-//    //
-//    // Well since there was no mouse handling this round, we disable the mouse restore
-//    //        
-//
-//    gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
-//
-//  }
-//
-//
-//
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//  // Rain                                                                                      //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//
+	if (guiMouseBufferState == BUFFER_DIRTY)
+	{
+		//
+		// Well the mouse buffer is dirty. Upload the whole thing
+		//
+
+		SDL_BlitSurface(gpSDLMouseCursorOriginal, NULL, gpSDLMouseCursor, NULL);
+
+		guiMouseBufferState = BUFFER_READY;
+	}
+  
+	//
+	// Check current state of the mouse cursor
+	//
+
+	if (fShowMouse == FALSE)
+	{
+		if (guiMouseBufferState == BUFFER_READY)
+		{
+			fShowMouse = TRUE;             
+		}
+		else
+		{
+			fShowMouse = FALSE;
+		}
+	}
+	else
+	{
+		if (guiMouseBufferState == BUFFER_DISABLED)
+		{
+			fShowMouse = FALSE;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// End of MOUSE_BUFFER_MUTEX
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// If fMouseState == TRUE
+	//
+	// (1) Save mouse background from gpBackBuffer to gpMouseCursorBackground
+	// (2) If step (1) is successfull blit mouse cursor onto gpBackBuffer
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	if (fShowMouse == TRUE )
+	{      
+		//
+		// Step (1) - Save mouse background
+		//                      
+
+		Rect.x = MousePos.x - gsMouseCursorXOffset;
+		Rect.y = MousePos.y - gsMouseCursorYOffset;
+		Rect.w = gusMouseCursorWidth;
+		Rect.h = gusMouseCursorHeight;        
+
+		if (Rect.x + Rect.w > usScreenWidth)
+		{
+			Rect.w = usScreenWidth - Rect.x;          
+		}
+
+		if (Rect.y + Rect.h > usScreenHeight)
+		{
+			Rect.h = usScreenHeight - Rect.y;
+		}        
+
+		//if ((Region.right > Region.left)&&(Region.bottom > Region.top))
+		{
+			//
+			// Make sure the mouse background is marked for restore and coordinates are saved for the
+			// future restore
+			//
+
+			gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore    = TRUE;                    
+			gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight     = Rect.w;
+			gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom    = Rect.h;
+			if (Rect.x < 0)
+			{
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = (UINT16) (0 - Rect.x);
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = 0;
+				Rect.x = 0;
+			}
+			else
+			{
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = (UINT16) MousePos.x - gsMouseCursorXOffset;
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = 0;
+			}
+			if (Rect.y < 0)
+			{
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = 0;
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = (UINT16) (0 - Rect.y);
+				Rect.y = 0;
+			}
+			else
+			{
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = (UINT16) MousePos.y - gsMouseCursorYOffset;
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = 0;
+			}          
+
+			//if ((Region.right > Region.left)&&(Region.bottom > Region.top))
+			{
+				// Save clipped region
+				gMouseCursorBackground[CURRENT_MOUSE_DATA].Region = Rect;
+
+				//
+				// Ok, do the actual data save to the mouse background
+				//
+
+				SDL_BlitSurface(gpSDLBackBuffer, &Rect, gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, NULL);
+
+				//
+				// Step (2) - Blit mouse cursor to back buffer
+				//
+
+				//Region.left = gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft;
+				//Region.top = gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop;
+				//Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
+				//Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
+
+				Rect.x = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos;
+				Rect.y = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos;
+
+				SDL_BlitSurface(gpSDLMouseCursor, NULL, gpSDLBackBuffer, &Rect);
+
+				//IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpMouseCursor, &Region, DDBLTFAST_SRCCOLORKEY);
+			}
+			//else
+			//{
+			//	//
+			//	// Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
+			//	//
+
+			//	gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
+			//}
+
+		}
+		//else
+		//{
+		//	//
+		//	// Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
+		//	//
+
+		//	gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
+		//}
+	}
+	else
+	{
+		//
+		// Well since there was no mouse handling this round, we disable the mouse restore
+		//        
+
+		gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
+
+	}
+
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Rain                                                                                      //
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
 //  if( IsItAllowedToRenderRain() && gfProgramIsRunning )
 //  {
 //	  BltVideoSurface( BACKBUFFER, guiRainRenderSurface, 0, 0, 0, VS_BLT_FAST | VS_BLT_USECOLORKEY, NULL );
@@ -1869,45 +1712,24 @@ void RefreshScreen(void *DummyVariable)
 //
 //
 //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//  // 
-//  // (1) Flip Pages
-//  // (2) If the page flipping worked, then we copy the contents of the primary surface back
-//  //     to the backbuffer
-//  // (3) If step (2) was successfull we then restore the mouse background onto the backbuffer
-//  //     if fShowMouse is TRUE
-//  //
-//  ///////////////////////////////////////////////////////////////////////////////////////////////
-//
-//  //
-//  // Step (1) - Flip pages
-//  //
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// 
+	// (1) Flip Pages
+	// (2) If the page flipping worked, then we copy the contents of the primary surface back
+	//     to the backbuffer
+	// (3) If step (2) was successfull we then restore the mouse background onto the backbuffer
+	//     if fShowMouse is TRUE
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	//
+	// Step (1) - Flip pages
+	//
 //#ifdef WINDOWED_MODE
-//
-//  do
-//  {
-//
-//	  ReturnCode = IDirectDrawSurface_Blt(
-//                    gpPrimarySurface,          // dest surface
-//                    &rcWindow,              // dest rect
-//                    gpBackBuffer,           // src surface
-//                    NULL,                   // src rect (all of it)
-//                    DDBLT_WAIT,
-//                    NULL);
-//
-//		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//    {
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//      if (ReturnCode == DDERR_SURFACELOST)
-//      {
-//        goto ENDOFLOOP;
-//      }
-//    }
-//
-//  } while (ReturnCode != DD_OK);
-//
-//
+
+	SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLPrimaryBuffer, NULL);
+	//SDL_UpdateRect(gpSDLFrameBuffer, 0, 0, 0, 0);
+
 //#else
 //
 //  do
@@ -1927,89 +1749,53 @@ void RefreshScreen(void *DummyVariable)
 //  } while (ReturnCode != DD_OK);
 //
 //#endif
-//
-//  //
-//  // Step (2) - Copy Primary Surface to the Back Buffer
-//  //
-//	if ( gfRenderScroll )
-//	{
-//		Region.left = 0;
-//		Region.top = 0;
-//		Region.right = gsVIEWPORT_END_X; //ods1 640;
-//		Region.bottom = gsVIEWPORT_END_Y;
-//
-//
-//		do
-//		{
-//			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
-//			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//			{
-//				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//				if (ReturnCode == DDERR_SURFACELOST)
-//				{
-//					goto ENDOFLOOP;
-//				}
-//
-//			}
-//		} while (ReturnCode != DD_OK);
-//
-//		//Get new background for mouse
-//    //
-//    // Ok, do the actual data save to the mouse background
-//
-//    //
-//
-//
-//		gfRenderScroll = FALSE;
-//		gfScrollStart  = FALSE;
-//
-//	}
-//
-//
-//	// COPY MOUSE AREAS FROM PRIMARY BACK!
-//
-//	// FIRST OLD ERASED POSITION
-//	if (gMouseCursorBackground[PREVIOUS_MOUSE_DATA].fRestore == TRUE )
-//	{
-//		Region = 	gMouseCursorBackground[PREVIOUS_MOUSE_DATA].Region;
-//
-//		do
-//		{
-//			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//			if (ReturnCode != DD_OK && ReturnCode != DDERR_WASSTILLDRAWING )
-//			{
-//				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//				if (ReturnCode == DDERR_SURFACELOST)
-//				{
-//					goto ENDOFLOOP;
-//				}
-//			}
-//		} while (ReturnCode != DD_OK);
-//	}
-//
-//	// NOW NEW MOUSE AREA
-//	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
-//	{
-//		Region = 	gMouseCursorBackground[CURRENT_MOUSE_DATA].Region;
-//
-//		
-//		do
-//		{
-//			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-//			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//			{
-//				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//				if (ReturnCode == DDERR_SURFACELOST)
-//				{
-//					goto ENDOFLOOP;
-//				}
-//			}
-//		} while (ReturnCode != DD_OK);
-//	}
-//
+
+  //
+  // Step (2) - Copy Primary Surface to the Back Buffer
+  //
+	if ( gfRenderScroll )
+	{
+		Rect.x = 0;
+		Rect.y = 0;
+		Rect.w = gsVIEWPORT_END_X; //ods1 640;
+		Rect.h = gsVIEWPORT_END_Y;
+
+		SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, NULL);
+
+		//Get new background for mouse
+		//
+		// Ok, do the actual data save to the mouse background
+
+		gfRenderScroll = FALSE;
+		gfScrollStart  = FALSE;
+
+	}
+
+	// COPY MOUSE AREAS FROM PRIMARY BACK!
+
+	// FIRST OLD ERASED POSITION
+	if (gMouseCursorBackground[PREVIOUS_MOUSE_DATA].fRestore == TRUE )
+	{
+		Rect = gMouseCursorBackground[PREVIOUS_MOUSE_DATA].Region;
+		dstRect.x = gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseXPos;
+		dstRect.y = gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseYPos;
+
+		SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, &dstRect);
+	}
+
+	// NOW NEW MOUSE AREA
+	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
+	{
+		Rect = gMouseCursorBackground[CURRENT_MOUSE_DATA].Region;
+		dstRect.x = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos;
+		dstRect.y = gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos;
+
+		SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, &dstRect);
+	}
+
+	SDL_UpdateRect(gpSDLFrameBuffer, 0, 0, 0, 0);
+
+
 //	if (gfForceFullScreenRefresh == TRUE )
 //	{
 //			//
@@ -2264,15 +2050,15 @@ BOOLEAN GetRGBDistribution(void)
 	gusRedShift   = (UINT16) (gpSDLFrameBuffer->format->Rshift - gpSDLFrameBuffer->format->Rloss);
 	gusGreenShift = (UINT16) (gpSDLFrameBuffer->format->Gshift - gpSDLFrameBuffer->format->Gloss);
 	gusBlueShift  = (UINT16) (gpSDLFrameBuffer->format->Bshift - gpSDLFrameBuffer->format->Bloss);
-//
-//
-//	// RGB 5,5,5
-//	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
-//		guiTranslucentMask=0x3def;
-//	// RGB 5,6,5
-//	else// if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
-//		guiTranslucentMask=0x7bef;
-//
+
+
+	// RGB 5,5,5
+	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
+		guiTranslucentMask=0x3def;
+	// RGB 5,6,5
+	else if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
+		guiTranslucentMask=0x7bef;
+
 
   return TRUE;
 }
@@ -2326,7 +2112,6 @@ BOOLEAN SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjec
 	}
 
 	return ReturnValue;
-	return FALSE;
 }
 
 BOOLEAN EraseMouseCursor( )
@@ -2363,16 +2148,16 @@ BOOLEAN SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCurso
 
 BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
 {
-  BOOLEAN      ReturnValue;
+	BOOLEAN      ReturnValue;
 
-  ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos, VO_BLT_SRCTRANSPARENCY, NULL);
+	ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos, VO_BLT_SRCTRANSPARENCY, NULL);
 
-  return ReturnValue;
+	return ReturnValue;
 }
 
 void DirtyCursor( )
 {
-  guiMouseBufferState = BUFFER_DIRTY;
+	guiMouseBufferState = BUFFER_DIRTY;
 }
 
 void EnableCursor( BOOLEAN fEnable )

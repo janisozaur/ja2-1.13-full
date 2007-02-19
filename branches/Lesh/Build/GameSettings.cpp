@@ -676,7 +676,7 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 				case DRIVE_CDROM:
 					strcpy( pString, zDriveLetter );
 
-					if ( DoJA2FilesExistsOnDrive( pString ) )
+					//if ( DoJA2FilesExistsOnDrive( pString ) )
 					{
 						return( TRUE );
 					}
