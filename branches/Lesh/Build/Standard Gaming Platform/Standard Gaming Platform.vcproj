@@ -2653,9 +2653,6 @@
 				RelativePath="JA2 SGP ALL.H">
 			</File>
 			<File
-				RelativePath="..\jascreens.h">
-			</File>
-			<File
 				RelativePath="LibraryDataBase.h">
 			</File>
 			<File
@@ -2687,12 +2684,6 @@
 			</File>
 			<File
 				RelativePath="..\TileEngine\render dirty.h">
-			</File>
-			<File
-				RelativePath="..\screenids.h">
-			</File>
-			<File
-				RelativePath="..\SCREENS.H">
 			</File>
 			<File
 				RelativePath="sgp.h">

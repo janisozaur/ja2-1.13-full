@@ -1301,6 +1301,10 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 	hVSurface->TransparentColor = TransColor;
 
 	// Get surface pointer
+	if ( hVSurface->pSurface )
+	{
+		SDL_SetColorKey(hVSurface->pSurface, SDL_SRCCOLORKEY, TransColor);
+	}
 	//lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;
 	//CHECKF( lpDDSurface != NULL );
 
@@ -1407,7 +1411,6 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 
 // Deletes all palettes, surfaces and region data
 // **************************************************************
-// !! need convert to SDL
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 {
 	// Assertions
@@ -1546,7 +1549,7 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 		}
 
 		//Blt8BPPDataTo8BPPBuffer( UINT8 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex );
-		//Blt8BPPTo8BPP(pDestSurface8, uiDestPitch, pSrcSurface8, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
+		Blt8BPPTo8BPP(pDestSurface8, uiDestPitch, pSrcSurface8, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
 		UnLockVideoSurfaceBuffer(hSrcVSurface);
 		UnLockVideoSurfaceBuffer(hDestVSurface);
 		return(TRUE);
@@ -1772,25 +1775,17 @@ BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSr
 }
 
 // **************************************************************
-// !! need convert to SDL
 BOOLEAN FillSurface( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
 {
 	Assert( hDestVSurface != NULL );
 	CHECKF( pBltFx != NULL );
 
-	SDL_FillRect( hDestVSurface->pSurface, NULL,
-		SDL_MapRGB(hDestVSurface->pSurface->format, 63, 128, 255) );
-
-	//if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !(hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE) )
-	//{
-	//	UpdateBackupSurface( hDestVSurface );
-	//}
+	SDL_FillRect( hDestVSurface->pSurface, NULL, pBltFx->ColorFill);
 
 	return( TRUE );
 }
 
 // **************************************************************
-// !! need convert to SDL
 BOOLEAN FillSurfaceRect( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
 {
 	SDL_Rect	rect;
@@ -1803,8 +1798,7 @@ BOOLEAN FillSurfaceRect( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
 	rect.w = pBltFx->FillRect.iRight - pBltFx->FillRect.iLeft;
 	rect.h = pBltFx->FillRect.iBottom - pBltFx->FillRect.iTop;
 
-	SDL_FillRect( hDestVSurface->pSurface, &rect,
-		SDL_MapRGB(hDestVSurface->pSurface->format, 63, 128, 255) );
+	SDL_FillRect( hDestVSurface->pSurface, &rect, pBltFx->ColorFill);
 
 	//if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !(hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE) )
 	//{
@@ -2018,25 +2012,36 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 // !! need convert to SDL
 BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect, RECT *DestRect )
 {
-	UINT32		uiDDFlags;
-
-	// Default flags
-	uiDDFlags = DDBLT_WAIT;
+	SDL_Rect	srcRect, dstRect;
 
 	// Convert flags into DD flags, ( for transparency use, etc )
 	if ( fBltFlags & VS_BLT_USECOLORKEY )
 	{
-		uiDDFlags |= DDBLT_KEYSRC;
+		SDL_SetColorKey(hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor);
 	}
 
-	//DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData,
-	//					SrcRect, uiDDFlags, NULL );
+	srcRect.x = (UINT16) SrcRect->left;
+	srcRect.y = (UINT16) SrcRect->top;
+	srcRect.w = (UINT16) (SrcRect->right - SrcRect->left);
+	srcRect.h = (UINT16) (SrcRect->bottom - SrcRect->top);
+
+	dstRect.x = (UINT16) DestRect->left;
+	dstRect.y = (UINT16) DestRect->top;
+	dstRect.w = (UINT16) (DestRect->right - DestRect->left);
+	dstRect.h = (UINT16) (DestRect->bottom - DestRect->top);
+
+	SDL_SoftStretch(hSrcVSurface->pSurface, &srcRect, hDestVSurface->pSurface, &dstRect);
+
+	if ( fBltFlags & VS_BLT_USECOLORKEY )
+	{
+		SDL_SetColorKey(hSrcVSurface->pSurface, 0, 0);
+	}
 
 	// Update backup surface with new data
-	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !(hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE) )
-	{
-		UpdateBackupSurface( hDestVSurface );
-	}
+	//if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !(hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE) )
+	//{
+	//	UpdateBackupSurface( hDestVSurface );
+	//}
 
 	return( TRUE );
 }

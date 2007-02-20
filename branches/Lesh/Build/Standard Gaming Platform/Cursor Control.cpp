@@ -22,23 +22,23 @@
 
 BOOLEAN gfCursorDatabaseInit = FALSE;
 
-CursorFileData *gpCursorFileDatabase;
-CursorData		 *gpCursorDatabase;
-INT16					 gsGlobalCursorYOffset = 0;
-INT16					 gsCurMouseOffsetX = 0;
-INT16 				 gsCurMouseOffsetY = 0;
-UINT16				 gsCurMouseHeight = 0;
-UINT16				 gsCurMouseWidth = 0;
-UINT16				 gusNumDataFiles = 0;
-UINT32				 guiExternVo;
-UINT16				 gusExternVoSubIndex;
-UINT32				 guiExtern2Vo;
-UINT16				 gusExtern2VoSubIndex;
-UINT32				 guiOldSetCursor = 0;
-UINT32				 guiDelayTimer = 0;
+CursorFileData	*gpCursorFileDatabase;
+CursorData		*gpCursorDatabase;
+INT16			gsGlobalCursorYOffset = 0;
+INT16			gsCurMouseOffsetX = 0;
+INT16 			gsCurMouseOffsetY = 0;
+UINT16			gsCurMouseHeight = 0;
+UINT16			gsCurMouseWidth = 0;
+UINT16			gusNumDataFiles = 0;
+UINT32			guiExternVo;
+UINT16			gusExternVoSubIndex;
+UINT32			guiExtern2Vo;
+UINT16			gusExtern2VoSubIndex;
+UINT32			guiOldSetCursor = 0;
+UINT32			guiDelayTimer = 0;
 
 
-MOUSEBLT_HOOK				gMouseBltOverride = NULL;
+MOUSEBLT_HOOK	gMouseBltOverride = NULL;
 
 
 
@@ -53,8 +53,8 @@ BOOLEAN BltToMouseCursorFromVObject( HVOBJECT hVObject, UINT16 usVideoObjectSubI
 
 BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
 {
-  BOOLEAN      ReturnValue;
-  ETRLEObject	 *pTrav;
+	BOOLEAN      ReturnValue;
+	ETRLEObject	 *pTrav;
 	INT16 sXPos, sYPos;
 
 	// Adjust for offsets
@@ -71,9 +71,9 @@ BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVide
 	sXPos += ( ( gsCurMouseWidth - pTrav->usWidth ) / 2 );
 	sYPos += ( ( gsCurMouseHeight - pTrav->usHeight ) / 2 );
 
-  ReturnValue = BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor( FROMRGB( 0, 255, 0 ) ), TRUE );
+	ReturnValue = BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor( FROMRGB( 0, 255, 0 ) ), TRUE );
 
-  return ReturnValue;
+	return ReturnValue;
 }
 
 
@@ -82,10 +82,10 @@ void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorDat
 {
 	// Set global values!
 
-	gpCursorFileDatabase  = pCursorFileData;
-	gpCursorDatabase			=	pCursorData;
-	gusNumDataFiles				= suNumDataFiles;
-	gfCursorDatabaseInit = TRUE;
+	gpCursorFileDatabase	= pCursorFileData;
+	gpCursorDatabase		=	pCursorData;
+	gusNumDataFiles			= suNumDataFiles;
+	gfCursorDatabaseInit	= TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,10 +99,10 @@ BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 	// Load cursor data will load all data required for the cursor specified by this index
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
-	UINT32				cnt;
-	INT16					sMaxHeight = -1;
-	INT16					sMaxWidth = -1;
-  ETRLEObject *pTrav;
+	UINT32			cnt;
+	INT16			sMaxHeight = -1;
+	INT16			sMaxWidth  = -1;
+	ETRLEObject		*pTrav;
 
 	pCurData = &( gpCursorDatabase[ uiCursorIndex ] );
 
@@ -118,8 +118,8 @@ BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 			//
 			VOBJECT_DESC VideoObjectDescription;
 			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
-			HIMAGE				 hImage;
-			AuxObjectData *pAuxData;
+			HIMAGE			hImage;
+			AuxObjectData	*pAuxData;
 
 
 			// ATE: First check if we are using an extern vo cursor...
@@ -305,7 +305,7 @@ void   CursorDatabaseClear(void)
 	  {
 			if ( !( gpCursorFileDatabase[ uiIndex ].ubFlags & USE_EXTERN_VO_CURSOR ) )
 			{
-	      DeleteVideoObjectFromIndex( gpCursorFileDatabase[uiIndex].uiIndex);
+				DeleteVideoObjectFromIndex( gpCursorFileDatabase[uiIndex].uiIndex);
 				gpCursorFileDatabase[uiIndex].uiIndex = 0;
 			}
 
@@ -320,14 +320,14 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 {
 #ifdef JA2
 
-  BOOLEAN				ReturnValue = TRUE;
+	BOOLEAN				ReturnValue = TRUE;
 	UINT16				usSubIndex;
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
 	UINT32				cnt;
 	INT16					sCenterValX, sCenterValY;
 	HVOBJECT			hVObject;
-  ETRLEObject *pTrav;
+	ETRLEObject *pTrav;
 	UINT16				usEffHeight, usEffWidth;
 
 	if ( gfCursorDatabaseInit )

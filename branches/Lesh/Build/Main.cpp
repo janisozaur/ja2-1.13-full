@@ -86,9 +86,6 @@ int main(int argc, char *argv[])
 
 				case SDL_VIDEOEXPOSE:
 					// Redraw screen
-					//printf("SDL_VIDEOEXPOSE 0x%02X\n", SDL_GetAppState() );
-					if ( SDL_GetAppState() & SDL_APPINPUTFOCUS )
-						gfApplicationActive = TRUE;
 					break;
 
 				case SDL_ACTIVEEVENT:
@@ -128,6 +125,12 @@ int main(int argc, char *argv[])
 							//gfApplicationActive = FALSE;
 							////fRestore = TRUE;
 						}
+					}
+
+					if ( event.active.state & SDL_APPMOUSEFOCUS )
+					{
+						if ( gfApplicationActive )
+							SDL_ShowCursor( (event.active.gain) ? SDL_DISABLE : SDL_ENABLE );
 					}
 					break;
 

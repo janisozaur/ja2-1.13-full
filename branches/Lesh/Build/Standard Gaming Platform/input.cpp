@@ -13,7 +13,7 @@
 	#include "SDL.h"
 #endif
 
-#include "zmouse.h"
+//#include "zmouse.h"
 
 // Make sure to refer to the translation table which is within one of the following files (depending
 // on the language used). ENGLISH.C, JAPANESE.C, FRENCH.C, GERMAN.C, SPANISH.C, etc...
@@ -34,8 +34,10 @@ extern BOOLEAN gfApplicationActive;
 // the interface.
 
 BOOLEAN   gfKeyState[256];				// TRUE = Pressed, FALSE = Not Pressed
+
+// mouse clipping info
 BOOLEAN   fCursorWasClipped = FALSE;
-RECT      gCursorClipRect;
+SGPRect   gCursorClipRect;
 
 
 
@@ -91,6 +93,7 @@ void	KeyDown(SDL_keysym *KeySym);
 void	KeyUp(SDL_keysym *KeySym);
 void	MouseMove(SDL_MouseMotionEvent *MouseMove);
 void	MouseButton(SDL_MouseButtonEvent *MouseButton);
+BOOLEAN	ClipMouseCursor(UINT16 x, UINT16 y);
 
 // These are the hook functions for both keyboard and mouse
 
@@ -154,26 +157,26 @@ void MouseMove(SDL_MouseMotionEvent *MouseMovement)
 {
 	UINT32 uiParam;
 
-	gusMouseXPos = MouseMovement->x;
-	gusMouseYPos = MouseMovement->y;
+	// if clip rect is on and we're out of rect, do not remember cursor position
+	// there will be second event with (x,y) within rect
+	if ( !ClipMouseCursor(MouseMovement->x, MouseMovement->y) )
+	{
+		gusMouseXPos = MouseMovement->x;
+		gusMouseYPos = MouseMovement->y;
 
-	//SGPMouseGetPos.x = gusMouseXPos;
-	//SGPMouseGetPos.y = gusMouseYPos;
+		uiParam = gusMouseYPos;
+		uiParam = uiParam << 16;
+		uiParam = uiParam | gusMouseXPos;
 
-	printf("x=%d y=%d\n", gusMouseXPos, gusMouseYPos);
-
-    uiParam = gusMouseYPos;
-    uiParam = uiParam << 16;
-    uiParam = uiParam | gusMouseXPos;
-
-	// Trigger an input event
-    if (gfTrackMousePos == TRUE)
-    {
-		QueueEvent(MOUSE_POS, 0, uiParam);
-    }
-	
-	//Set that we have input
-    gfSGPInputReceived =  TRUE;
+		// Trigger an input event
+		if (gfTrackMousePos == TRUE)
+		{
+			QueueEvent(MOUSE_POS, 0, uiParam);
+		}
+		
+		//Set that we have input
+		gfSGPInputReceived =  TRUE;
+	}
 }
 
 // *************************************************************
@@ -290,8 +293,6 @@ void ShutdownInputManager(void)
 {	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
 	// mouse hooks will be destroyed
 	UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
-	//UnhookWindowsHookEx(ghKeyboardHook);
-	//UnhookWindowsHookEx(ghMouseHook);
 }
 
 // *************************************************************
@@ -1130,32 +1131,64 @@ void RestrictMouseCursor(SGPRect *pRectangle)
 {
 	// Make a copy of our rect....
 	memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
-	ClipCursor((RECT *)pRectangle);
 	fCursorWasClipped = TRUE;
 }
 
 void FreeMouseCursor(void)
 {
-	ClipCursor(NULL);
+	gCursorClipRect.iLeft   = 0;
+	gCursorClipRect.iTop    = 0;
+	gCursorClipRect.iRight  = SCREEN_WIDTH;
+	gCursorClipRect.iBottom = SCREEN_HEIGHT;
 	fCursorWasClipped = FALSE;
-}
-
-void RestoreCursorClipRect( void )
-{
-	if ( fCursorWasClipped )
-	{
-		ClipCursor( &gCursorClipRect );
-	}
 }
 
 void GetRestrictedClipCursor( SGPRect *pRectangle )
 {
-	GetClipCursor((RECT *) pRectangle );
+	*pRectangle = gCursorClipRect;
 }
 
 BOOLEAN IsCursorRestricted( void )
 {
 	return( fCursorWasClipped );
+}
+
+BOOLEAN ClipMouseCursor(UINT16 x, UINT16 y)
+{
+	BOOLEAN fClippingOccured = FALSE;
+	UINT16	usX, usY;
+
+	if ( fCursorWasClipped )
+	{
+		usX = x;
+		usY = y;
+
+		if ( usX < gCursorClipRect.iLeft )
+		{
+			usX = gCursorClipRect.iLeft;
+			fClippingOccured = TRUE;
+		}
+		if ( usX > gCursorClipRect.iRight )
+		{
+			usX = gCursorClipRect.iRight;
+			fClippingOccured = TRUE;
+		}
+		if ( usY < gCursorClipRect.iTop )
+		{
+			usY = gCursorClipRect.iTop;
+			fClippingOccured = TRUE;
+		}
+		if ( usY > gCursorClipRect.iBottom )
+		{
+			usY = gCursorClipRect.iBottom;
+			fClippingOccured = TRUE;
+		}
+
+		if ( fClippingOccured )
+			SDL_WarpMouse(usX, usY);
+	}
+
+	return fClippingOccured;
 }
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
@@ -1257,9 +1290,9 @@ void HandleSingleClicksAndButtonRepeats( void )
 }
 
 
-INT16 GetMouseWheelDeltaValue( UINT32 wParam )
-{
-	INT16 sDelta = HIWORD( wParam );
-
-	return( sDelta / WHEEL_DELTA );
-}
+//INT16 GetMouseWheelDeltaValue( UINT32 wParam )
+//{
+//	INT16 sDelta = HIWORD( wParam );
+//
+//	return( sDelta / WHEEL_DELTA );
+//}
