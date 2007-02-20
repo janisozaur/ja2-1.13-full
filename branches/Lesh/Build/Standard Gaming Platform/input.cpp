@@ -279,6 +279,11 @@ BOOLEAN InitializeInputManager(void)
 	gusMouseXPos = SCREEN_WIDTH / 2;
 	gusMouseYPos = SCREEN_HEIGHT / 2;
 
+	// Set the mouse clipping area - by default, all screen
+	gCursorClipRect.iLeft   = gCursorClipRect.iTop = 0;
+	gCursorClipRect.iRight  = SCREEN_WIDTH;
+	gCursorClipRect.iBottom = SCREEN_HEIGHT;
+
 	// Initialize the string input mechanism
 	gfCurrentStringInputState = FALSE;
 	gpCurrentStringDescriptor = NULL;
@@ -513,20 +518,25 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 			ubChar = gsStandardKeyTable[ KeySym->sym ];
 	}
 
+	printf("code=%d\n", ubChar);
+
 	GetMousePos(&MousePos);
 	uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
 
 	if (ufKeyState == TRUE)
 	{ 
 		// Key has been PRESSED
+		// !! ubChar holds code of pressed key.
+		// 8 low bits is the code, 3 next is a shift, ctrl or alt mod
+		// we will be using only 8 lowest bits
 		// Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
-		if (gfKeyState[ KeySym->sym ] == FALSE)
+		if (gfKeyState[ ubChar & 0xFF ] == FALSE)
 		{ 
 			// Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			if (gfCurrentStringInputState == FALSE)
 			{
 				// There is no string input going on right now, so we queue up the event
-				gfKeyState[ ubChar ] = TRUE;
+				gfKeyState[ ubChar & 0xFF ] = TRUE;
 				QueueEvent(KEY_DOWN, ubChar, uiTmpLParam);
 			}
 			else
@@ -554,11 +564,14 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 	else
 	{ 
 		// Key has been RELEASED
+		// !! ubChar holds code of pressed key.
+		// 8 low bits is the code, 3 next is a shift, ctrl or alt mod
+		// we will be using only 8 lowest bits
 		// Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
-		if (gfKeyState[ ubChar ] == TRUE)
+		if (gfKeyState[ ubChar & 0xFF ] == TRUE)
 		{ 
 			// Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
-			gfKeyState[ ubChar ] = FALSE;
+			gfKeyState[ ubChar & 0xFF ] = FALSE;
 			QueueEvent(KEY_UP, ubChar, uiTmpLParam);
 		}
 		//else if the alt tab key was pressed
