@@ -2809,8 +2809,8 @@ UINT32 cnt = 0;
 
 	if ( gfScrollInertia )
 	{ 
-  	EmptyBackgroundRects( );
-  }
+  		EmptyBackgroundRects( );
+	}
 	
 	if( gRenderFlags&RENDER_FLAG_ROOMIDS )
 	{

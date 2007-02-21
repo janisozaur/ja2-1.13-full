@@ -700,6 +700,14 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRe
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // **************************************************************
+// Fill surface by specified color
+//  [in]  uiDestVSurface - index of destination surface
+//  [in]  iDestX1 - left bound
+//  [in]  iDestY1 - top bound
+//  [in]  iDestX2 - right bound
+//  [in]  iDestY2 - bottom bound
+//  [in]  Color16BPP - color
+//  [ret] TRUE if successful, FALSE if not
 // **************************************************************
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP)
 {
@@ -765,6 +773,18 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// **************************************************************
+// Fill surface by specified image
+//  [in]  uiDestVSurface - index of destination surface
+//  [in]  iDestX1 - left bound
+//  [in]  iDestY1 - top bound
+//  [in]  iDestX2 - right bound
+//  [in]  iDestY2 - bottom bound
+//  [in]  BkgrndImg - image
+//  [in]  Index - 
+//  [in]  Ox - 
+//  [in]  Oy - 
+//  [ret] TRUE if successful, FALSE if not
 // **************************************************************
 BOOLEAN ImageFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, HVOBJECT BkgrndImg, UINT16 Index, INT16 Ox, INT16 Oy)
 {
@@ -875,7 +895,10 @@ BOOLEAN ImageFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // **************************************************************
-// !! need check - DD stuff detected
+// Create surface by specified surface description
+//  [in]  VSurfaceDesc - surface descriptor
+//  [ret] pointer to new surface
+// **************************************************************
 HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 {
 	HVSURFACE				hVSurface;
@@ -1247,9 +1270,13 @@ BOOLEAN SetVideoSurfaceDataFromHImage( HVSURFACE hVSurface, HIMAGE hImage, UINT1
 	return( TRUE );
 }
 
-// Palette setting is expensive, need to set both DDPalette and create 16BPP palette
 // **************************************************************
-// !! need convert to SDL
+// Set palettes for video surface
+// Palette setting is expensive, need to set both DDPalette and create 16BPP palette
+//  [in]  hVSurface - surface to set up a palette
+//  [in]  pSrcPalette - palette
+//  [ret] TRUE if successful, FALSE if not
+// **************************************************************
 BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalette )
 {
 	SDL_Color palette[256];
@@ -1301,10 +1328,10 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 	hVSurface->TransparentColor = TransColor;
 
 	// Get surface pointer
-	if ( hVSurface->pSurface )
-	{
-		SDL_SetColorKey(hVSurface->pSurface, SDL_SRCCOLORKEY, TransColor);
-	}
+	//if ( hVSurface->pSurface )
+	//{
+	//	SDL_SetColorKey(hVSurface->pSurface, SDL_SRCCOLORKEY, TransColor);
+	//}
 	//lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;
 	//CHECKF( lpDDSurface != NULL );
 
@@ -1409,7 +1436,10 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 }
 
 
-// Deletes all palettes, surfaces and region data
+// **************************************************************
+// Deletes all palettes and SDL surfaces, free memory
+//  [in]  hVSurface - surface to delete
+//  [ret] TRUE if successful, FALSE if not
 // **************************************************************
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 {
@@ -1634,6 +1664,10 @@ LPDIRECTDRAWPALETTE  GetVideoSurfaceDDPalette( HVSURFACE hVSurface )
 }
 
 // **************************************************************
+// **************************************************************
+// Create surface object from SDL surface
+//  [in]  pSurface - SDL surface
+//  [ret] pointer to new video surface
 HVSURFACE CreateVideoSurfaceFromSDLSurface( SDL_Surface *pSurface )
 {
 	// Create Video Surface
@@ -1814,7 +1848,14 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 {
 	UINT32		uiDDFlags;
 	RECT		DestRect;
-	SDL_Rect	rect;
+	SDL_Rect	srcRect, dstRect;
+
+	srcRect.x = (UINT16)(SrcRect->left);
+	srcRect.y = (UINT16)(SrcRect->top);
+	srcRect.w = (UINT16)(SrcRect->right - SrcRect->left);
+	srcRect.h = (UINT16)(SrcRect->bottom - SrcRect->top);
+	dstRect.x = iDestX;
+	dstRect.y = iDestY;
 
   // Blit using the correct blitter
 	if ( fBltFlags & VS_BLT_FAST )
@@ -1827,27 +1868,25 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		uiDDFlags = 0;
 
 		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USECOLORKEY )
-		{
-			SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
-		}
+		//if ( fBltFlags & VS_BLT_USECOLORKEY )
+		//{
+		//	SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
+		//}
 
 		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USEDESTCOLORKEY )
-		{
-			SDL_SetColorKey( hDestVSurface->pSurface, SDL_SRCCOLORKEY, hDestVSurface->TransparentColor );
-		}
+		//if ( fBltFlags & VS_BLT_USEDESTCOLORKEY )
+		//{
+		//	SDL_SetColorKey( hDestVSurface->pSurface, SDL_SRCCOLORKEY, hDestVSurface->TransparentColor );
+		//}
 
-		if ( uiDDFlags == 0 )
-		{
-			// Default here is no colorkey
-			SDL_SetColorKey( hSrcVSurface->pSurface, 0, 0 );
-			SDL_SetColorKey( hDestVSurface->pSurface, 0, 0 );
-		}
+		//if ( uiDDFlags == 0 )
+		//{
+		//	// Default here is no colorkey
+		//	SDL_SetColorKey( hSrcVSurface->pSurface, 0, 0 );
+		//	SDL_SetColorKey( hDestVSurface->pSurface, 0, 0 );
+		//}
 
-		rect.x = iDestX;
-		rect.y = iDestY;
-		SDL_BlitSurface(hSrcVSurface->pSurface, NULL, hDestVSurface->pSurface, &rect);
+		SDL_BlitSurface(hSrcVSurface->pSurface, &srcRect, hDestVSurface->pSurface, &dstRect);
 	}
 	else
 	{
@@ -1857,10 +1896,10 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		uiDDFlags = DDBLT_WAIT;
 
 		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USECOLORKEY )
-		{
-			SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
-		}
+		//if ( fBltFlags & VS_BLT_USECOLORKEY )
+		//{
+		//	SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
+		//}
 
 		// Setup dest rectangle
 		DestRect.top =  (int)iDestY;
@@ -1881,9 +1920,7 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 			return( TRUE );
 		}
 
-		rect.x = iDestX;
-		rect.y = iDestY;
-		SDL_BlitSurface(hSrcVSurface->pSurface, NULL, hDestVSurface->pSurface, &rect);
+		SDL_BlitSurface(hSrcVSurface->pSurface, &srcRect, hDestVSurface->pSurface, &dstRect);
 	}
 
 	// Update backup surface with new data
@@ -2015,10 +2052,10 @@ BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, 
 	SDL_Rect	srcRect, dstRect;
 
 	// Convert flags into DD flags, ( for transparency use, etc )
-	if ( fBltFlags & VS_BLT_USECOLORKEY )
-	{
-		SDL_SetColorKey(hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor);
-	}
+	//if ( fBltFlags & VS_BLT_USECOLORKEY )
+	//{
+	//	SDL_SetColorKey(hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor);
+	//}
 
 	srcRect.x = (UINT16) SrcRect->left;
 	srcRect.y = (UINT16) SrcRect->top;
@@ -2032,10 +2069,10 @@ BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, 
 
 	SDL_SoftStretch(hSrcVSurface->pSurface, &srcRect, hDestVSurface->pSurface, &dstRect);
 
-	if ( fBltFlags & VS_BLT_USECOLORKEY )
-	{
-		SDL_SetColorKey(hSrcVSurface->pSurface, 0, 0);
-	}
+	//if ( fBltFlags & VS_BLT_USECOLORKEY )
+	//{
+	//	SDL_SetColorKey(hSrcVSurface->pSurface, 0, 0);
+	//}
 
 	// Update backup surface with new data
 	//if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !(hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE) )
@@ -2130,6 +2167,21 @@ BOOLEAN MakeVSurfaceFromVObject(UINT32 uiVObject, UINT16 usSubIndex, UINT32 *pui
 	
 	return(FALSE);
 }
+
+
+// **************************************************************
+BOOLEAN SaveAsBMPVideoSurface(UINT32 uiVSurface, CHAR8 *name)
+{
+	HVSURFACE	hVSurface;
+
+	if( !GetVideoSurface( &hVSurface, uiVSurface ) )
+	{
+		return FALSE;
+	}
+
+	return ( !SDL_SaveBMP(hVSurface->pSurface, name) );
+}
+
 
 #ifdef _DEBUG
 // **************************************************************

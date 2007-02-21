@@ -518,7 +518,7 @@ void KeyChange(SDL_keysym *KeySym, UINT8 ufKeyState)
 			ubChar = gsStandardKeyTable[ KeySym->sym ];
 	}
 
-	printf("code=%d\n", ubChar);
+	//printf("code=%d\n", ubChar);
 
 	GetMousePos(&MousePos);
 	uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
@@ -629,7 +629,7 @@ void KeyDown(SDL_keysym *KeySym)
 			// No special keys have been pressed
 			// Call KeyChange() and pass TRUE to indicate key has been PRESSED and not RELEASED
 			KeyChange(KeySym, TRUE);
-			KeyPrint(KeySym);
+			//KeyPrint(KeySym);
 		}
 	}
 }
@@ -675,7 +675,7 @@ void KeyUp(SDL_keysym *KeySym)
 			// No special keys have been pressed
 			// Call KeyChange() and pass FALSE to indicate key has been PRESSED and not RELEASED
 			KeyChange(KeySym, FALSE);
-			KeyPrint(KeySym);
+			//KeyPrint(KeySym);
 		}
 	}
 }

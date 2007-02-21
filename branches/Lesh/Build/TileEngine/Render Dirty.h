@@ -3,18 +3,18 @@
 
 //DEFINES
 #define BGND_FLAG_PERMANENT		0x80000000
-#define BGND_FLAG_SINGLE			0x40000000
-#define BGND_FLAG_SAVE_Z			0x20000000
-#define BGND_FLAG_MERC				0x10000000
+#define BGND_FLAG_SINGLE		0x40000000
+#define BGND_FLAG_SAVE_Z		0x20000000
+#define BGND_FLAG_MERC			0x10000000
 #define BGND_FLAG_SAVERECT		0x08000000
-#define BGND_FLAG_TOPMOST			0x04000000
+#define BGND_FLAG_TOPMOST		0x04000000
 #define BGND_FLAG_ANIMATED		0x00000001
 
-#define VOVERLAY_DIRTYBYTEXT					0x00000001
-#define	VOVERLAY_STARTDISABLED				0x00000002
+#define VOVERLAY_DIRTYBYTEXT	0x00000001
+#define	VOVERLAY_STARTDISABLED	0x00000002
 
 
-#define VOVERLAY_DESC_TEXT			0x00001000
+#define VOVERLAY_DESC_TEXT		0x00001000
 #define VOVERLAY_DESC_DISABLED	0x00002000
 #define VOVERLAY_DESC_POSITION	0x00004000
 
@@ -31,14 +31,14 @@ typedef struct
 	BOOLEAN		fFreeMemory;
 	BOOLEAN		fZBuffer;
 	UINT32		uiFlags;
-	INT16			*pSaveArea;
-	INT16			*pZSaveArea;
-	INT16			sLeft;
-	INT16			sTop;
-	INT16			sRight;
-	INT16			sBottom;
-	INT16			sWidth;
-	INT16			sHeight;
+	INT16		*pSaveArea;
+	INT16		*pZSaveArea;
+	INT16		sLeft;
+	INT16		sTop;
+	INT16		sRight;
+	INT16		sBottom;
+	INT16		sWidth;
+	INT16		sHeight;
 	BOOLEAN		fPendingDelete;
 	BOOLEAN		fDisabled;
 
@@ -47,23 +47,23 @@ typedef struct
 // Struct for topmost blitters
 typedef struct _VIDEO_OVERLAY
 {
-		UINT32						uiFlags;
-		BOOLEAN						fAllocated;
-		BOOLEAN						fDisabled;
-		BOOLEAN						fActivelySaving;
-		BOOLEAN						fDeletionPending;
-		INT32						uiBackground;
+		UINT32				uiFlags;
+		BOOLEAN				fAllocated;
+		BOOLEAN				fDisabled;
+		BOOLEAN				fActivelySaving;
+		BOOLEAN				fDeletionPending;
+		INT32				uiBackground;
 		BACKGROUND_SAVE		*pBackground;
-		INT16							*pSaveArea;
-		UINT32						uiUserData[ 5 ];
-		UINT32						uiFontID;
-		INT16							sX;
-		INT16							sY;
-		UINT8							ubFontBack;
-		UINT8							ubFontFore;
-		INT16							zText[ 200 ];
-		UINT32						uiDestBuff;
-		OVERLAY_CALLBACK		BltCallback;
+		INT16				*pSaveArea;
+		UINT32				uiUserData[ 5 ];
+		UINT32				uiFontID;
+		INT16				sX;
+		INT16				sY;
+		UINT8				ubFontBack;
+		UINT8				ubFontFore;
+		INT16				zText[ 200 ];
+		UINT32				uiDestBuff;
+		OVERLAY_CALLBACK	BltCallback;
 
 
 } VIDEO_OVERLAY;
@@ -72,26 +72,25 @@ typedef struct _VIDEO_OVERLAY
 // Struct for init topmost blitter
 typedef struct
 {
-		UINT32			uiFlags;
-		BOOLEAN			fDisabled;
+		UINT32				uiFlags;
+		BOOLEAN				fDisabled;
 		INT16				sLeft;
 		INT16				sTop;
 		INT16				sRight;
 		INT16				sBottom;
-		UINT32			uiFontID;
+		UINT32				uiFontID;
 		INT16				sX;
 		INT16				sY;
 		UINT8				ubFontBack;
 		UINT8				ubFontFore;
 		INT16				pzText[ 200 ];
-		OVERLAY_CALLBACK		BltCallback;
+		OVERLAY_CALLBACK	BltCallback;
 
 }	VIDEO_OVERLAY_DESC;
 
 
 // GLOBAL VARIABLES
 extern SGPRect		gDirtyClipRect;
-
 
 
 // FUNCTIONS

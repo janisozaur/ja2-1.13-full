@@ -25,6 +25,7 @@ extern BOOLEAN				gfFullScreen;			// Full screen or windowed mode
 extern HWND					ghWindow;
 extern UINT32               guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 
+
 /*
 #ifdef __cplusplus
 extern "C" {

@@ -165,7 +165,6 @@ SGPRect                       gListOfDirtyRegions[MAX_DIRTY_REGIONS];
 UINT32                        guiDirtyRegionCount;
 BOOLEAN                       gfForceFullScreenRefresh;
 
-
 SGPRect                       gDirtyRegionsEx[MAX_DIRTY_REGIONS];
 UINT32                        guiDirtyRegionExCount;
 
@@ -459,7 +458,7 @@ void ShutdownVideoManager(void)
 	}
 
 	// ATE: Release mouse cursor!
-	//FreeMouseCursor( );
+	FreeMouseCursor( );
 
 	SDL_QuitSubSystem( SDL_INIT_VIDEO );
 
@@ -1185,6 +1184,7 @@ void RefreshScreen(void *DummyVariable)
 
 	//DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Looping in refresh");
 
+
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 
 	// REFRESH_THREAD_MUTEX 
@@ -1252,7 +1252,6 @@ void RefreshScreen(void *DummyVariable)
 		// Save position into other background region
 		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
 	}
-
 
 	//
 	// Ok we were able to get a hold of the frame buffer stuff. Check to see if it needs updating
@@ -1343,8 +1342,6 @@ void RefreshScreen(void *DummyVariable)
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 	
  
-
-
 		//
 		// Update the guiFrameBufferState variable to reflect that the frame buffer can now be handled
 		//
@@ -1805,33 +1802,32 @@ void RefreshScreen(void *DummyVariable)
 			SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, &dstRect);
 		}
 
+		for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
+		{
+			Rect.x = gDirtyRegionsEx[uiIndex].iLeft;
+			Rect.y = gDirtyRegionsEx[uiIndex].iTop;
+			Rect.w = gDirtyRegionsEx[uiIndex].iRight - gDirtyRegionsEx[uiIndex].iLeft;
+			Rect.h = gDirtyRegionsEx[uiIndex].iBottom - gDirtyRegionsEx[uiIndex].iTop;
+
+			if ( ( Rect.y < gsVIEWPORT_WINDOW_END_Y ) && gfRenderScroll )
+			{
+				continue;
+			}
+
+			dstRect.x = gDirtyRegionsEx[uiIndex].iLeft;
+			dstRect.y = gDirtyRegionsEx[uiIndex].iTop;
+
+			SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, &dstRect);
+		}
+
+		guiDirtyRegionExCount = 0;
 		guiDirtyRegionCount = 0;
 		gfForceFullScreenRefresh = FALSE;
 	}
 
 	// Do extended dirty regions!
-	for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
-	{
-		Rect.x = gDirtyRegionsEx[uiIndex].iLeft;
-		Rect.y = gDirtyRegionsEx[uiIndex].iTop;
-		Rect.w = gDirtyRegionsEx[uiIndex].iRight - gDirtyRegionsEx[uiIndex].iLeft;
-		Rect.h = gDirtyRegionsEx[uiIndex].iBottom - gDirtyRegionsEx[uiIndex].iTop;
-
-		if ( ( Rect.y < gsVIEWPORT_WINDOW_END_Y ) && gfRenderScroll )
-		{
-			continue;
-		}
-
-		dstRect.x = gDirtyRegionsEx[uiIndex].iLeft;
-		dstRect.y = gDirtyRegionsEx[uiIndex].iTop;
-
-		SDL_BlitSurface(gpSDLPrimaryBuffer, &Rect, gpSDLBackBuffer, &dstRect);
-	}
-
-	guiDirtyRegionExCount = 0;
 
 //ENDOFLOOP:
-      
 
 	fFirstTime = FALSE;
 

@@ -257,6 +257,9 @@ BOOLEAN MakeVSurfaceFromVObject(UINT32 uiVObject, UINT16 usSubIndex, UINT32 *pui
 
 BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
+// Save debug picture
+BOOLEAN SaveAsBMPVideoSurface(UINT32 uiVSurface, CHAR8 *name);
+
 /*
 #ifdef __cplusplus
 }
