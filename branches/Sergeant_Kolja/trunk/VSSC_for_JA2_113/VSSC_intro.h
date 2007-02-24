@@ -32,12 +32,11 @@
  * without my file license.txt
  *
  *
- * \todo This Document shall also be generated in the following formats:
- *  - PDF
- *  - CHM
- *
- * regarding the PDF, I have currently no knowledge how to do it from DoxyGen 
+ * \todo This Document shall also be generated in PDF and CHM.
+ * Regarding the PDF, I have currently no knowledge how to do it from DoxyGen 
  * under Windows OS. The CHM formatted document will comming soon.
+ * Currently, CHM compiler (hh.exe) does not work on my dell inspiron laptop.
+ * Hope, I can fix it.
  *
  *
  * \bug There are shurely a lot of bugs! If you found one, try to catch (fix) it. 

@@ -25,7 +25,7 @@
  */
 
 
-/*! \defgroup Logmacros Macros mapped to LogFunctions
+/*! \defgroup Logmacros Macros mapped to classic JA2 LogFunctions
  * @{
  */
 

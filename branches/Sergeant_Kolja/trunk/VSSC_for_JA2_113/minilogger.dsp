@@ -123,6 +123,14 @@ SOURCE=.\VSSC_intro.h
 # End Group
 # Begin Source File
 
+SOURCE=.\lgpl.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\license.txt
+# End Source File
+# Begin Source File
+
 SOURCE=.\ReadMe.txt
 # End Source File
 # End Target

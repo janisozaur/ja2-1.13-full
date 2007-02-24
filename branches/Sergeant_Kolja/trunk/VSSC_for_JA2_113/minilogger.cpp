@@ -22,36 +22,27 @@
 
 /*! \file minilogger.cpp
  *
- *  \brief Sample Code for the Very Simple Syslog Client
- *  This file shows the typical usage and may act as test workbench.
+ *  \brief Sample Code for the Very Simple Syslog Client.
+ *  This file shows the typical usage and may act as a test workbench.
  *
  *  \author Sergeant Kolja (Initial Author)<br>
  *
  *  \bug Bugs I found or got reported:
- *  - switch from bind()/sendto() to sendto(), so the Host can be changed on-the-fly
- *    bind() is superflous, it is a remainder of bind()/send() which I changed in the past
- *    to sendto() but forgot the removal of bind().
+ *  - currently none
  *
  *  \todo here follows a list what I think what has to be done in the whole project:
- *  - Doxygen Documentation for all PUBLIC Symbols
- *  - Doxygen Documentation for some PRIVATE things to increase understanding (?)
- *  - Doxygen Footer with JA2-Logo ;-) and Link to JA2.113
- *  - RFC 3164 header implementation check: is pid & host mandantory or required? correction if req'd
- *  - Masking: From that 28 bits, set  some of the MSB 
- *    with some meaningful predefines, while keeping LSB free for cutomizing
- *    f.i. SLOG_ENTRY, SLOG_EXIT, SLOG_DATA, SLOG_SOCK, SLOG_COMM, SLOG_TACT, SLOG_STRAT, 
- *    SLOG_GDI, SLOG_UI, SLOG_RIGHTS, SLOG_FILEIO, SLOG_INVOKE
- *  - Interface for Set_LogLevel, Mask, Host. Proposal: one Setter method with string switch
+ *  - Interface for VSSC_LogSysError() (log a printf text plus full text of GetLastError() result, if not 0)
  *  - Interface for JA2 Debug Macros
  *  - Interface for SDK-Macros like RETAILMSG()
+ *  - Interface for WCHAR / TCHAR
+ *  - convert OEM to Ascii, Convert national char to UTF/Mime
+ *  - Doxygen Documentation for remaining PUBLIC Symbols
+ *  - Doxygen Footer with JA2-Logo ;-) and Link to JA2.113
  *  - optional log to UART
  *  - optional log to File
  *  - optional log to SysEventLog
  *  - LogLevel from Registry
  *  - manage different LogLevels for Syslog, Uart, DebugString (Reg-Tree for Each one)
- *  - Interface for WCHAR / TCHAR
- *  - Interface for VSSC_LogSysError() (log a printf text plus full text of GetLastError() result, if not 0)
- *  - convert OEM to Ascii, Convert national char to UTF/Mime
  *  - Reading Registry  HKCU/Software/vssc/%appname% if not found, copy from ...
  *  - Reading Registry  HKLM/Software/vssc/%appname% if not found fill with defaults, if Rights are appropriate
  *  - Interface for On_ConfigChangedEvent()
@@ -91,7 +82,10 @@ char const * const mod = "minilogger";
 /*! \cond NEVER_DOX */
 int main(int argc, char* argv[])
 {{
-  int Handle;
+  int Handle, iRet;
+  char Buffer[1024];
+  long lVal;
+  char *p;
 
   printf("-----------------------------\r\n");
   Handle = VSSC_open();
@@ -99,19 +93,120 @@ int main(int argc, char* argv[])
   if(!Handle)
     return -1;
 
-  VSSC_Log( Handle, SLOG_SILENT , mod, "Nachricht Typ: 'SILENT' %u", SLOG_EMERG  );
-  VSSC_Log( Handle, SLOG_EMERG  , mod, "Nachricht Typ: 'EMERG'  %u", SLOG_EMERG  );
-  VSSC_Log( Handle, SLOG_ALERT  , mod, "Nachricht Typ: 'ALERT'  %u", SLOG_ALERT  );
-  VSSC_Log( Handle, SLOG_CRIT   , mod, "Nachricht Typ: 'CRIT'   %u", SLOG_CRIT   );
-  VSSC_Log( Handle, SLOG_ERR    , mod, "Nachricht Typ: 'ERR'    %u", SLOG_ERR    );
-  VSSC_Log( Handle, SLOG_WARNING, mod, "Nachricht Typ: 'WARNING'%u", SLOG_WARNING);
-  VSSC_Log( Handle, SLOG_NOTICE , mod, "Nachricht Typ: 'NOTICE' %u", SLOG_NOTICE );
-  VSSC_Log( Handle, SLOG_INFO   , mod, "Nachricht Typ: 'INFO'   %u", SLOG_INFO   );
-  VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u", SLOG_DEBUG  );
-  VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u, %020s, %03u, 0x%08x", SLOG_DEBUG, 
+  iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "Nachricht Typ: 'SILENT' %u", SLOG_EMERG  );
+  iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "Nachricht Typ: 'EMERG'  %u", SLOG_EMERG  );
+  iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "Nachricht Typ: 'ALERT'  %u", SLOG_ALERT  );
+  iRet = VSSC_Log( Handle, SLOG_CRIT   , mod, "Nachricht Typ: 'CRIT'   %u", SLOG_CRIT   );
+  iRet = VSSC_Log( Handle, SLOG_ERR    , mod, "Nachricht Typ: 'ERR'    %u", SLOG_ERR    );
+  iRet = VSSC_Log( Handle, SLOG_WARNING, mod, "Nachricht Typ: 'WARNING'%u", SLOG_WARNING);
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "Nachricht Typ: 'NOTICE' %u", SLOG_NOTICE );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "Nachricht Typ: 'INFO'   %u", SLOG_INFO   );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u", SLOG_DEBUG  );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "Nachricht Typ: 'DEBUG'  %u, %020s, %03u, 0x%08x", SLOG_DEBUG, 
                                       "Test-Ausgabe eines Textes...", 77, 88 );
   
-  VSSC_close( Handle );
+  printf("-----------------------------\r\n");
+  iRet = VSSC_GetValidKeyNames( Buffer, DIM(Buffer) );
+  printf("Valid Keys are:\r\n%s\r\n", Buffer);
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "Valid Keys are: %s", Buffer ); 
+
+  p = "Key";
+  iRet = VSSC_GetStr( Handle, p, Buffer, DIM(Buffer) );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s' is '%s'", p, Buffer ); 
+  p = "Version";
+  iRet = VSSC_GetStr( Handle, p, Buffer, DIM(Buffer) );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s' is '%s'", p, Buffer ); 
+  p = "AppName";
+  iRet = VSSC_GetStr( Handle, p, Buffer, DIM(Buffer) );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s' is '%s'", p, Buffer ); 
+  p = "SyslogHost";
+  iRet = VSSC_GetStr( Handle, p, Buffer, DIM(Buffer) );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s' is '%s'", p, Buffer ); 
+  p = "SyslogBindAddr";
+  iRet = VSSC_GetStr( Handle, p, Buffer, DIM(Buffer) );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s' is '%s'", p, Buffer ); 
+
+  p = "Key";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "Version";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "ZoneMask";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "SyslogPort";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "SyslogBindPort";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "SyslogFacility";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+  p = "SyslogLevel";
+  iRet = VSSC_GetInt( Handle, p, &lVal );
+  iRet = VSSC_Log( Handle, SLOG_INFO, mod, "'%s'=%ld (0x%08x)", p, lVal, lVal ); 
+
+
+  iRet = VSSC_SetStr( Handle, "AppName", "Demo-0815" );
+
+  
+  iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_INFO );
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' MUSS" );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO'   MUSS" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf NICHT" );
+
+  iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_EMERG );
+  iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht " );
+  iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  MUSS" );
+  iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_CRIT   , mod, "'CRIT'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_ERR    , mod, "'ERR'    darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_WARNING, mod, "'WARNING'darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
+  
+  iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_ALERT );
+  iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht " );
+  iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  MUSS" );
+  iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  MUSS" );
+  iRet = VSSC_Log( Handle, SLOG_CRIT   , mod, "'CRIT'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_ERR    , mod, "'ERR'    darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_WARNING, mod, "'WARNING'darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
+  
+  iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_SILENT );
+  iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht" );
+  iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_CRIT   , mod, "'CRIT'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_ERR    , mod, "'ERR'    darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_WARNING, mod, "'WARNING'darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO'   darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
+  
+  iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_DEBUGMAX );
+  iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' muss" );
+  iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO' muss"   );
+  iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG' muss" );
+
+
+  iRet = VSSC_SetStr( Handle, "AppName", "__XX__" );
+  iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP | LOGZONE_ENTRY | LOGZONE_EXIT | LOGZONE_DATA );
+
+  iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_EVERYTHING, mod, "** LOGZONES** 'EVERYTHING EMERG'  %u", SLOG_EMERG  );
+  iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_NOTHING   , mod, "** LOGZONES** 'NOTHING EMERG'  %u", SLOG_EMERG  );
+  iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP  , mod, "** LOGZONES** 'MAINLOOP EMERG'  %u", SLOG_EMERG  );
+  
+  iRet = VSSC_close( Handle );
   printf("-----------------------------\r\n");
 
   
