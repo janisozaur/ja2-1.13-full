@@ -21,7 +21,8 @@
 #include <stdlib.h>
 
 #define MIN(a,b) ((a<b)?(a):(b))
-#define MAN(a,b) ((a>b)?(a):(b))
+#define MAX(a,b) ((a>b)?(a):(b))
+#define DIM(a)   ( sizeof((a))/sizeof((a[0])) )
 
 
 // ZU ERLEDIGEN: Verweisen Sie hier auf zusätzliche Header-Dateien, die Ihr Programm benötigt
