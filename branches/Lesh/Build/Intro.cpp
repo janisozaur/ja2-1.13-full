@@ -257,6 +257,10 @@ void HandleIntroScreen()
 	//	}
 	//}
 
+	// Lesh: disable intro movies
+	gbIntroScreenMode = INTRO_SPLASH;
+	PrepareToExitIntroScreen();
+
 	InvalidateScreen();
 }
 

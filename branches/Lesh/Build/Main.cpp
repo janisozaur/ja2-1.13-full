@@ -5,7 +5,7 @@
 #include "ExceptionHandling.h"
 #include "gameloop.h"
 
-//static BOOLEAN fRestore = FALSE;
+static BOOLEAN fRestore = FALSE;
 
 static void GameQuit( void )
 {
@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 		printf("SGP initialized\n");
 		gfApplicationActive = TRUE;
 		gfProgramIsRunning = TRUE;
+		SDL_ShowCursor( SDL_DISABLE );
 
 		FastDebugMsg("Running Game");
 
@@ -89,48 +90,44 @@ int main(int argc, char *argv[])
 					break;
 
 				case SDL_ACTIVEEVENT:
-					//if ( event.active.state & SDL_APPMOUSEFOCUS )
-					//	printf("SDL_APPMOUSEFOCUS\n");
-
 					if ( event.active.state & SDL_APPINPUTFOCUS )
 					{
 						gfApplicationActive = event.active.gain;
-						printf("SDL_APPINPUTFOCUS = %d\n", event.active.gain);
 					}
 
 					if ( event.active.state & SDL_APPACTIVE )
 					{
 						if (event.active.gain)
 						{
-							//// the application was restored (deiconified)
-							////if (fRestore == TRUE)
-							////{
-							//	RestoreVideoManager();
-							//	RestoreVideoSurfaces();	// Restore any video surfaces
+							// the application was restored (deiconified)
+							if (fRestore == TRUE)
+							{
+								//RestoreVideoManager();
+								//RestoreVideoSurfaces();	// Restore any video surfaces
 
-							//	// unpause the JA2 Global clock
-							//	if ( !gfPauseDueToPlayerGamePause )
-							//	{
-							//		PauseTime( FALSE );
-							//	}
-								//gfApplicationActive = TRUE;
-							////}
+								// unpause the JA2 Global clock
+								if ( !gfPauseDueToPlayerGamePause )
+								{
+									PauseTime( FALSE );
+								}
+								gfApplicationActive = TRUE;
+							}
 						}
 						else
 						{
 							//// application is iconified
 							//// pause the JA2 Global clock
-							//PauseTime( TRUE );
+							PauseTime( TRUE );
 							//SuspendVideoManager();
-							//gfApplicationActive = FALSE;
-							////fRestore = TRUE;
+							gfApplicationActive = FALSE;
+							fRestore = TRUE;
 						}
 					}
 
 					if ( event.active.state & SDL_APPMOUSEFOCUS )
 					{
-						if ( gfApplicationActive )
-							SDL_ShowCursor( (event.active.gain) ? SDL_DISABLE : SDL_ENABLE );
+						//if ( gfApplicationActive )
+						//	SDL_ShowCursor( (event.active.gain) ? SDL_DISABLE : SDL_ENABLE );
 					}
 					break;
 

@@ -492,7 +492,7 @@ void DoTester( )
 
 BOOLEAN RestoreVideoManager(void)
 { 
-	HRESULT ReturnCode;
+	//HRESULT ReturnCode;
   
 	//
 	// Make sure the video manager is indeed suspended before moving on
@@ -1349,10 +1349,10 @@ void RefreshScreen(void *DummyVariable)
 		guiFrameBufferState = BUFFER_READY;
 	}
 
-//  //
-//  // Do we want to print the frame stuff ??
-//  //
-//
+	//
+	// Do we want to print the frame stuff ??
+	//
+
 //	if( gfVideoCapture )
 //	{
 //		uiTime=GetTickCount();
@@ -1363,162 +1363,45 @@ void RefreshScreen(void *DummyVariable)
 //		}
 //	}
 //
-//
-//  if (gfPrintFrameBuffer == TRUE)
-//  {
-//    LPDIRECTDRAWSURFACE    _pTmpBuffer;
-//    LPDIRECTDRAWSURFACE2   pTmpBuffer;
-//    DDSURFACEDESC          SurfaceDescription;
-//    FILE                  *OutputFile;
-//    UINT8                  FileName[64];
-//    INT32                  iIndex;
-//		STRING512			DataDir;
-//		STRING512			         ExecDir;
-//    UINT16                 *p16BPPData;
-//
-//		// Snap: save current directory
-//		GetFileManCurrentDirectory( DataDir );
-//		GetExecutableDirectory( ExecDir );
-//		SetFileManCurrentDirectory( ExecDir );
-//
-//    //
-//    // Create temporary system memory surface. This is used to correct problems with the backbuffer
-//    // surface which can be interlaced or have a funky pitch
-//    //
-//
-//    ZEROMEM(SurfaceDescription);
-//    SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-//    SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-//    SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-//    SurfaceDescription.dwWidth        = SCREEN_WIDTH;
-//    SurfaceDescription.dwHeight       = SCREEN_HEIGHT;
-//    ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &_pTmpBuffer, NULL );
-//		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//    { 
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    }
-//
-//    ReturnCode = IDirectDrawSurface_QueryInterface(_pTmpBuffer, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&pTmpBuffer); // (jonathanl)
-//		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//    { 
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//    }
-//    
-//    //
-//    // Copy the primary surface to the temporary surface
-//    //
-//
-//    Region.left = 0;
-//    Region.top = 0;
-//    Region.right = SCREEN_WIDTH;
-//    Region.bottom = SCREEN_HEIGHT;
-//
-//    do
-//    {            
-//      ReturnCode = IDirectDrawSurface2_SGPBltFast(pTmpBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
-//		  if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//      {
-//        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//      }
-//    } while (ReturnCode != DD_OK);
-//
-//    //
-//    // Ok now that temp surface has contents of backbuffer, copy temp surface to disk
-//    //
-//
-//	do
-//	{
-//		sprintf((char *) FileName, "SCREEN%03d.TGA", guiPrintFrameBufferIndex++);
-//	}
-//	while( (_access( (const char *)FileName, 0 )) != -1 );
-//
-//    if ((OutputFile = fopen((const char *) FileName, "wb")) != NULL)
-//    {
-//      fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, LOBYTE(SCREEN_WIDTH), HIBYTE(SCREEN_WIDTH), LOBYTE(SCREEN_HEIGHT), HIBYTE(SCREEN_HEIGHT), 0x10, 0);
-//
-//
-//      //
-//      // Lock temp surface
-//      //
-//
-//      ZEROMEM(SurfaceDescription);
-//	    SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-//      ReturnCode = IDirectDrawSurface2_Lock(pTmpBuffer, NULL, &SurfaceDescription, 0, NULL);
-//			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//      {
-//        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//      }
-//
-//      //
-//      // Copy 16 bit buffer to file
-//      //
-//
-//      // 5/6/5.. create buffer...
-//			if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-//      {
-//        p16BPPData = (UINT16 *)MemAlloc( SCREEN_WIDTH * 2 );
-//      }
-//
-//      for (iIndex = SCREEN_HEIGHT - 1; iIndex >= 0; iIndex--)
-//      { 
-//        // ATE: OK, fix this such that it converts pixel format to 5/5/5
-//        // if current settings are 5/6/5....
-//				if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-//        {
-//          // Read into a buffer...
-//          memcpy( p16BPPData, ( ((UINT8 *)SurfaceDescription.lpSurface) + (iIndex * SCREEN_WIDTH * 2) ), SCREEN_WIDTH * 2 ); 
-//
-//          // Convert....
-//          ConvertRGBDistribution565To555( p16BPPData, SCREEN_WIDTH );
-//
-//          // Write
-//          fwrite( p16BPPData, SCREEN_WIDTH * 2, 1, OutputFile);
-//        }
-//        else
-//        {
-//          fwrite((void *)(((UINT8 *)SurfaceDescription.lpSurface) + (iIndex * SCREEN_WIDTH * 2)), SCREEN_WIDTH * 2, 1, OutputFile);
-//        }
-//      }
-//
-//      // 5/6/5.. Delete buffer...
-//			if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-//      {
-//        MemFree( p16BPPData );
-//      }
-//      
-//      fclose(OutputFile);
-//
-//      //
-//      // Unlock temp surface
-//      //
-//
-//      ZEROMEM(SurfaceDescription);
-//      SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-//      ReturnCode = IDirectDrawSurface2_Unlock(pTmpBuffer, &SurfaceDescription);
-//			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//      {
-//        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
-//      }
-//    }
-//
-//    //
-//    // Release temp surface
-//    //
-//
-//    gfPrintFrameBuffer = FALSE;          
-//    IDirectDrawSurface2_Release(pTmpBuffer);  
-//
-//		// Snap: Restore the data directory once we are finished.
-//		SetFileManCurrentDirectory( DataDir );
-//		//strcat( ExecDir, "\\Data" );
-//		//SetFileManCurrentDirectory( ExecDir );
-//  }
-//
-//  //
-//  // Ok we were able to get a hold of the frame buffer stuff. Check to see if it needs updating
-//  // if not, release the frame buffer stuff right away
-//  //
-//
+
+	if (gfPrintFrameBuffer == TRUE)
+	{
+		UINT8					FileName[64];
+		STRING512				DataDir;
+		STRING512			    ExecDir;
+
+		// Snap: save current directory
+		GetFileManCurrentDirectory( DataDir );
+		GetExecutableDirectory( ExecDir );
+		SetFileManCurrentDirectory( ExecDir );
+
+
+		//
+		// Ok now that temp surface has contents of backbuffer, copy temp surface to disk
+		//
+
+		do
+		{
+			sprintf((char *) FileName, "SCREEN%03d.BMP", guiPrintFrameBufferIndex++);
+		}
+		while( (_access( (const char *)FileName, 0 )) != -1 );
+
+		SDL_SaveBMP(gpSDLPrimaryBuffer, (char *)FileName);
+
+		gfPrintFrameBuffer = FALSE;          
+
+		// Snap: Restore the data directory once we are finished.
+		SetFileManCurrentDirectory( DataDir );
+		//strcat( ExecDir, "\\Data" );
+		//SetFileManCurrentDirectory( ExecDir );
+
+	}
+	
+	//
+	// Ok we were able to get a hold of the frame buffer stuff. Check to see if it needs updating
+	// if not, release the frame buffer stuff right away
+	//
+
 	if (guiMouseBufferState == BUFFER_DIRTY)
 	{
 		//
@@ -1686,14 +1569,14 @@ void RefreshScreen(void *DummyVariable)
 	// Rain                                                                                      //
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
-//  if( IsItAllowedToRenderRain() && gfProgramIsRunning )
-//  {
-//	  BltVideoSurface( BACKBUFFER, guiRainRenderSurface, 0, 0, 0, VS_BLT_FAST | VS_BLT_USECOLORKEY, NULL );
-//	  gfNextRefreshFullScreen = TRUE;
-//  }
-//
-//
-//
+	if( IsItAllowedToRenderRain() && gfProgramIsRunning )
+	{
+		BltVideoSurface( BACKBUFFER, guiRainRenderSurface, 0, 0, 0, VS_BLT_FAST | VS_BLT_USECOLORKEY, NULL );
+		gfNextRefreshFullScreen = TRUE;
+	}
+
+
+
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 
 	// (1) Flip Pages
@@ -1737,11 +1620,6 @@ void RefreshScreen(void *DummyVariable)
   //
 	if ( gfRenderScroll )
 	{
-		//Rect.x = 0;
-		//Rect.y = 0;
-		//Rect.w = gsVIEWPORT_END_X; //ods1 640;
-		//Rect.h = gsVIEWPORT_END_Y;
-
 		SDL_BlitSurface(gpSDLPrimaryBuffer, NULL, gpSDLBackBuffer, NULL);
 
 		//Get new background for mouse
