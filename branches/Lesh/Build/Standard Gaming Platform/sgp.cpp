@@ -13,7 +13,6 @@
 	#include <stdarg.h>
 	#include <string.h>
 	#include "sgp.h"
-	#include "RegInst.h"
 	#include "vobject.h"
 	#include "font.h"
 	#include "local.h"

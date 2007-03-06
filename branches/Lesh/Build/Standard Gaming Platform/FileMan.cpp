@@ -40,7 +40,6 @@
 	#include "MemMan.h"
 	#include "DbMan.h"
 	#include "Debug.h"
-	#include "RegInst.h"
 	#include "Container.h"
 	#include "LibraryDataBase.h"
 	#include "io.h"

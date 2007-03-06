@@ -56,7 +56,6 @@
 #include "jascreens.h"
 #include "gameloop.h"
 #include <direct.h>
-#include "RegInst.h"
 #include "LibraryDataBase.h"
 #include "io.h"
 #include <wchar.h>
