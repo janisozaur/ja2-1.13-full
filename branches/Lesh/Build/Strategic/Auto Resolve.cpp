@@ -60,8 +60,6 @@
 
 #include "Reinforcement.h"
 
-//#include "vtuneapi.h"
-
 //#define INVULNERABILITY
 
 // default = 7 (%)

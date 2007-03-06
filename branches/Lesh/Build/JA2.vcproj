@@ -2297,9 +2297,6 @@
 			<File
 				RelativePath="Sys Globals.h">
 			</File>
-			<File
-				RelativePath="VtuneApi.h">
-			</File>
 		</Filter>
 		<File
 			RelativePath="Res\jagged3.ico">
