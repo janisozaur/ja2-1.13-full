@@ -100,7 +100,7 @@ typedef struct
 static BOOLEAN fFirstTime = TRUE;
 UINT32 guiRainRenderSurface = 0;
 UINT32 guiLastRainUpdate = 0;
-RECT gRainRegion;
+SGPRect gRainRegion;
 
 TRainDrop *pRainDrops = 0;
 UINT32 guiCurrMaxAmountOfRainDrops = 0;
@@ -178,10 +178,10 @@ void InitializeRainData()
 {
 	InitializeRainVideoObject();
 
-	gRainRegion.left = 0;
-	gRainRegion.top = 0;
-	gRainRegion.right = SCREEN_WIDTH;
-	gRainRegion.bottom = SCREEN_HEIGHT - 120;
+	gRainRegion.iLeft   = 0;
+	gRainRegion.iTop    = 0;
+	gRainRegion.iRight  = SCREEN_WIDTH;
+	gRainRegion.iBottom = SCREEN_HEIGHT - 120;
 }
 
 void ResetRain()
@@ -211,10 +211,10 @@ void KillOutOfRegionRainDrops()
 	{
 		TRainDrop *pCurr = &pRainDrops[ uiIndex ];
 
-		if( ( pCurr->fpX < gRainRegion.left || pCurr->fpX >= gRainRegion.right ||
-			pCurr->fpY < gRainRegion.top || pCurr->fpY >= gRainRegion.bottom ) && 
-			( pCurr->fpX + pCurr->fpEndRelX < gRainRegion.left || pCurr->fpX + pCurr->fpEndRelX >= gRainRegion.right ||
-			pCurr->fpY + pCurr->fpEndRelY < gRainRegion.top || pCurr->fpY + pCurr->fpEndRelY >= gRainRegion.bottom ) )
+		if( ( pCurr->fpX < gRainRegion.iLeft || pCurr->fpX >= gRainRegion.iRight ||
+			pCurr->fpY < gRainRegion.iTop || pCurr->fpY >= gRainRegion.iBottom ) && 
+			( pCurr->fpX + pCurr->fpEndRelX < gRainRegion.iLeft || pCurr->fpX + pCurr->fpEndRelX >= gRainRegion.iRight ||
+			pCurr->fpY + pCurr->fpEndRelY < gRainRegion.iTop || pCurr->fpY + pCurr->fpEndRelY >= gRainRegion.iBottom ) )
 		{
 				pCurr->fAlive = FALSE;
 				guiCurrAmountOfDeadRainDrops++;
@@ -287,20 +287,20 @@ void CreateRainDrops()
 
 			if( uiIndex >= fpNumDropsToXBorder )
 			{
-				pCurr->fpX = (FLOAT)(gRainRegion.left + Random( gRainRegion.right - gRainRegion.left ));
-				pCurr->fpY = (FLOAT)(gRainRegion.bottom - 1);
+				pCurr->fpX = (FLOAT)(gRainRegion.iLeft + Random( gRainRegion.iRight - gRainRegion.iLeft ));
+				pCurr->fpY = (FLOAT)(gRainRegion.iBottom - 1);
 			}
 			else if( fpCos > 0 )
 			{
-				pCurr->fpX = (FLOAT)(gRainRegion.right - 1);
-				pCurr->fpY = (FLOAT)(gRainRegion.top + Random( gRainRegion.bottom - gRainRegion.top ));
+				pCurr->fpX = (FLOAT)(gRainRegion.iRight - 1);
+				pCurr->fpY = (FLOAT)(gRainRegion.iTop + Random( gRainRegion.iBottom - gRainRegion.iTop ));
 			}else{
 				pCurr->fpX = 0;
-				pCurr->fpY = (FLOAT)(gRainRegion.top + Random( gRainRegion.bottom - gRainRegion.top ));
+				pCurr->fpY = (FLOAT)(gRainRegion.iTop + Random( gRainRegion.iBottom - gRainRegion.iTop ));
 			}
 		}else{
-			pCurr->fpX = (FLOAT)(gRainRegion.left + Random( gRainRegion.right - gRainRegion.left ));
-			pCurr->fpY = (FLOAT)(gRainRegion.top + Random( gRainRegion.bottom - gRainRegion.top ));
+			pCurr->fpX = (FLOAT)(gRainRegion.iLeft + Random( gRainRegion.iRight - gRainRegion.iLeft ));
+			pCurr->fpY = (FLOAT)(gRainRegion.iTop + Random( gRainRegion.iBottom - gRainRegion.iTop ));
 		}
 
 		pCurr->uiAmountOfTicksToLive = 0;
@@ -312,24 +312,24 @@ void CreateRainDrops()
 			pCurr->fpY -= pCurr->fpIncrY;
 			pCurr->uiAmountOfTicksToLive++;
 
-			if( pCurr->fpX >= gRainRegion.right - 1 )
+			if( pCurr->fpX >= gRainRegion.iRight - 1 )
 			{
-				pCurr->fpX = gRainRegion.right - 1 - uiIndRand * pCurr->fpIncrX / 20 ;
+				pCurr->fpX = gRainRegion.iRight - 1 - uiIndRand * pCurr->fpIncrX / 20 ;
 				fLoopIsDone = TRUE;
 			}
-			if( pCurr->fpX < gRainRegion.left )
+			if( pCurr->fpX < gRainRegion.iLeft )
 			{
-				pCurr->fpX = gRainRegion.left - uiIndRand * pCurr->fpIncrX / 20 ;
+				pCurr->fpX = gRainRegion.iLeft - uiIndRand * pCurr->fpIncrX / 20 ;
 				fLoopIsDone = TRUE;
 			}
-			if( pCurr->fpY >= gRainRegion.bottom - 1 )
+			if( pCurr->fpY >= gRainRegion.iBottom - 1 )
 			{
-				pCurr->fpY = gRainRegion.bottom - 1 - uiIndRand * pCurr->fpIncrX / 20 ;
+				pCurr->fpY = gRainRegion.iBottom - 1 - uiIndRand * pCurr->fpIncrX / 20 ;
 				fLoopIsDone = TRUE;
 			}
-			if( pCurr->fpY < gRainRegion.top )
+			if( pCurr->fpY < gRainRegion.iTop )
 			{
-				pCurr->fpY = gRainRegion.top - uiIndRand * pCurr->fpIncrX / 20 ;
+				pCurr->fpY = gRainRegion.iTop - uiIndRand * pCurr->fpIncrX / 20 ;
 				fLoopIsDone = TRUE;
 			}
 		}
@@ -375,7 +375,7 @@ void UpdateRainDrops()
 
 void BlankRainRenderSurface()
 {
-	ColorFillVideoSurfaceArea( guiRainRenderSurface, gRainRegion.left, gRainRegion.top, gRainRegion.right, gRainRegion.bottom, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea( guiRainRenderSurface, gRainRegion.iLeft, gRainRegion.iTop, gRainRegion.iRight, gRainRegion.iBottom, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 }
 
 UINT16 GetDropColor()
@@ -497,10 +497,10 @@ void RainClipVideoOverlay()
 	{
 		pCurr = gVideoOverlays[ uiIndex ].pBackground;
 
-		if( pCurr->sLeft < gRainRegion.right ||
-			 pCurr->sTop < gRainRegion.bottom ||
-			 pCurr->sRight >= gRainRegion.left ||
-			 pCurr->sBottom >= gRainRegion.top )
+		if( pCurr->sLeft < gRainRegion.iRight ||
+			 pCurr->sTop < gRainRegion.iBottom ||
+			 pCurr->sRight >= gRainRegion.iLeft ||
+			 pCurr->sBottom >= gRainRegion.iTop )
 				ColorFillVideoSurfaceArea( guiRainRenderSurface, pCurr->sLeft, pCurr->sTop, pCurr->sRight, pCurr->sBottom, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	}
 }

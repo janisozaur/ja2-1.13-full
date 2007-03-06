@@ -69,8 +69,6 @@ static UINT16                 gusScreenWidth;
 static UINT16                 gusScreenHeight;
 static UINT8                  gubScreenPixelDepth;
 
-static RECT    gScrollRegion;  
-
 #define			MAX_NUM_FRAMES			25
 
 BOOLEAN			gfVideoCapture = FALSE;
