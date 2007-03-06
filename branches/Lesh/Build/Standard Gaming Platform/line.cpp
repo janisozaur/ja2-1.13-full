@@ -421,7 +421,7 @@ void DrawVerticalRun(char **ScreenPtr, int XAdvance,
 /* Draws a rectangle between the specified endpoints in color Color. */
 template void RectangleDraw<unsigned char *>(BOOL, int, int, int, int, short, unsigned char *);
 template <typename string7>
-void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr)
+void RectangleDraw( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr)
 {
   LineDraw( fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
   LineDraw( fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);
@@ -440,7 +440,7 @@ void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, shor
 /* Draws a rectangle between the specified endpoints in color Color. */
 template void RectangleDraw8<unsigned char *>(BOOL, int, int ,int ,int, short, unsigned char *);
 template <typename string7>
-void RectangleDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr)
+void RectangleDraw8( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr)
 {
   LineDraw8( fClip, XStart, YStart, XEnd,   YStart, Color, (char *)ScreenPtr);
   LineDraw8( fClip, XStart, YEnd,   XEnd,   YEnd,   Color, (char *)ScreenPtr);

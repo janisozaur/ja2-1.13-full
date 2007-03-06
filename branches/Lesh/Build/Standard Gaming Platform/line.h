@@ -57,15 +57,15 @@ void SetClippingRegionAndImageWidth(
 //  that your line will be within the region you want it to be in, set
 //	fClip == FALSE.
 void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8 *pScreen );
-void LineDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr);
-void LineDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr);
-void LineDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr);
+void LineDraw( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr);
+void LineDraw( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8 *ScreenPtr);
+void LineDraw8( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr);
 
 template <typename string7>
-void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr);
+void RectangleDraw( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr);
 
 template <typename string7>
-void RectangleDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr);
+void RectangleDraw8( BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, string7 ScreenPtr);
 
 // *****************************************************************************
 
