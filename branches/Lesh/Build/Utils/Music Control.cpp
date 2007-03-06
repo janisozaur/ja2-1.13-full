@@ -99,9 +99,7 @@ void MusicStopCallback( void *pData );
 //********************************************************************************
 BOOLEAN MusicPlay(UINT32 uiNum)
 {
-#ifndef WINDOWED_MODE
-
-SOUNDPARMS spParms;	
+	SOUNDPARMS spParms;	
 
 	if(fMusicPlaying)
 		MusicStop();
@@ -129,9 +127,6 @@ SOUNDPARMS spParms;
 
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music PLay %d %d", uiMusicHandle, gubMusicMode  ) );
 
-
-#endif
-
 	return(FALSE);
 }
 
@@ -145,35 +140,31 @@ SOUNDPARMS spParms;
 //********************************************************************************
 BOOLEAN MusicSetVolume(UINT32 uiVolume)
 {
-  INT32 uiOldMusicVolume = uiMusicVolume;
-
-#ifndef WINDOWED_MODE
+	INT32 uiOldMusicVolume = uiMusicVolume;
 
 	uiMusicVolume=__min(uiVolume, 127);
 
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
-    // get volume and if 0 stop music!
-    if ( uiMusicVolume == 0 )
-    {
-      gfDontRestartSong = TRUE;
-      MusicStop( );
-      return( TRUE );
-    }
+		// get volume and if 0 stop music!
+		if ( uiMusicVolume == 0 )
+		{
+			gfDontRestartSong = TRUE;
+			MusicStop( );
+			return( TRUE );
+		}
 
 		SoundSetVolume(uiMusicHandle, uiMusicVolume);
 
 		return(TRUE);
 	}
   
-  // If here, check if we need to re-start music
-  // Have we re-started?
-  if ( uiMusicVolume > 0 && uiOldMusicVolume == 0 )
-  {
-    StartMusicBasedOnMode( );
-  }
-
-#endif
+	// If here, check if we need to re-start music
+	// Have we re-started?
+	if ( uiMusicVolume > 0 && uiOldMusicVolume == 0 )
+	{
+		StartMusicBasedOnMode( );
+	}
 
 	return(FALSE);
 }
@@ -201,10 +192,6 @@ UINT32 MusicGetVolume(void)
 //********************************************************************************
 BOOLEAN MusicStop(void)
 {
-
-#ifndef WINDOWED_MODE
-
-
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music Stop %d %d", uiMusicHandle, gubMusicMode ) );
@@ -216,8 +203,6 @@ BOOLEAN MusicStop(void)
 	}
 
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music Stop %d %d", uiMusicHandle, gubMusicMode ) );
-
-#endif
 
 	return(FALSE);
 }
@@ -271,7 +256,6 @@ BOOLEAN MusicPoll( BOOLEAN fForce )
 {
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"MusicPoll");
 
-#ifndef WINDOWED_MODE
 	INT32 iVol;
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"MusicPoll: SoundServiceStreams ");
@@ -356,7 +340,6 @@ BOOLEAN MusicPoll( BOOLEAN fForce )
       gfDontRestartSong = FALSE;
 		}
 	}
-#endif
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"MusicPoll done");
 	return(TRUE);

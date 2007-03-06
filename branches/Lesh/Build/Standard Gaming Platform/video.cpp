@@ -1560,12 +1560,10 @@ void RefreshScreen(void *DummyVariable)
 	//
 	// Step (1) - Flip pages
 	//
-//#ifdef WINDOWED_MODE
 
 	SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLPrimaryBuffer, NULL);
 	SDL_UpdateRect(gpSDLPrimaryBuffer, 0, 0, 0, 0);
 
-//#else
 //
 //  do
 //  {
@@ -1583,7 +1581,6 @@ void RefreshScreen(void *DummyVariable)
 //
 //  } while (ReturnCode != DD_OK);
 //
-//#endif
 
   //
   // Step (2) - Copy Primary Surface to the Back Buffer

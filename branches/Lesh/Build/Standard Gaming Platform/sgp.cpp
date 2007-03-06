@@ -8,7 +8,6 @@
 #else
 	#include "SDL.h"
 	#include "types.h"
-	#include <windows.h>
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <string.h>
@@ -56,9 +55,6 @@ BOOLEAN          InitializeStandardGamingPlatform(void);
 void             ShutdownStandardGamingPlatform(void);
 void			 GetRuntimeSettings( );
 
-//int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow);
-
-
 #if !defined(JA2) && !defined(UTILS)
 void	ProcessCommandLine(CHAR8 *pCommandLine);
 BOOLEAN	RunSetup(void);
@@ -75,9 +71,6 @@ HINSTANCE					ghInstance;
 
 
 // Global Variable Declarations
-#ifdef WINDOWED_MODE
-RECT	rcWindow;
-#endif
 
 // moved from header file: 24mar98:HJH
 UINT32		giStartMem;
