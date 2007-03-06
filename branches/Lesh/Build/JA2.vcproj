@@ -547,7 +547,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib mss32.lib fmodvc.lib sdl.lib sdlmain.lib"
+				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
 				OutputFile="D:\Games\JA2\ja2_sdl.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

@@ -2,13 +2,11 @@
 #define __VIDEO_
 
 #include <windows.h>
-#include <ddraw.h>
 #include <process.h> 
 
 #include "Local.h"
 #include "Debug.h"
 #include "Types.h"
-#include "DirectDraw Calls.h"
 #include "VSurface.h"
 #include "SDL.h"
 

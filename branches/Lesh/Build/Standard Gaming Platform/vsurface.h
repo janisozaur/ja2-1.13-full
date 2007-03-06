@@ -205,33 +205,6 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface );
 BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// 
-// Region manipulation functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Regions will allow creation of sections within the Surface to manipulate quickly and cleanly
-// An example would be a cursor tileset
-BOOLEAN AddVSurfaceRegion( HVSURFACE hVSurface, VSURFACE_REGION *pNewRegion );
-BOOLEAN AddVSurfaceRegionAtIndex( HVSURFACE hVSurface, UINT16 usIndex, VSURFACE_REGION *pNewRegion );
-BOOLEAN AddVSurfaceRegions( HVSURFACE hVSurface, VSURFACE_REGION **ppNewRegions, UINT16 uiNumRegions );
-BOOLEAN RemoveVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex );
-BOOLEAN ClearAllVSurfaceRegions( HVSURFACE hVSurface );
-BOOLEAN GetVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex,  VSURFACE_REGION *aRegion );
-BOOLEAN GetNumRegions( HVSURFACE hVSurface , UINT32 *puiNumRegions );
-BOOLEAN ReplaceVSurfaceRegion( HVSURFACE hVSurface , UINT16 usIndex, VSURFACE_REGION *aRegion );
-BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// 
-// Clipper manipulation functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN SetClipList( HVSURFACE hVSurface, SGPRect *RegionData, UINT16 usNumRegions );
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Blt Functions

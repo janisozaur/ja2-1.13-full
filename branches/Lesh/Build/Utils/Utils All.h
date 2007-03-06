@@ -101,8 +101,4 @@
 #include "vobject.h"
 #include "overhead types.h"
 #include "tactical save.h"
-//#include <windows.h>
-//#include <windowsx.h>
-//#include <mmsystem.h>
-//#include <dsound.h>
 #endif

@@ -408,35 +408,6 @@ BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 }
 
 // **************************************************************
-// Add a region for video surface
-//  [in]  uiIndex - index of surface
-//  [in]  pNewRegion - pointer to a new region
-//  [ret] TRUE always
-// **************************************************************
-////BOOLEAN AddVideoSurfaceRegion( UINT32 uiIndex, VSURFACE_REGION *pNewRegion )
-////{	// !! seems to be unused
-////	HVSURFACE hVSurface;
-////
-////	//
-////	// Get Video Surface
-////	//
-////
-////	#ifdef _DEBUG
-////		gubVSDebugCode = DEBUGSTR_ADDVIDEOSURFACEREGION;
-////	#endif
-////	CHECKF( GetVideoSurface( &hVSurface, uiIndex ) );
-////
-////	//
-////	// Add Region
-////	//
-////
-////	CHECKF( AddVSurfaceRegion( hVSurface, pNewRegion ) );
-////
-////	return( TRUE );
-////
-////}
-////
-// **************************************************************
 // Get video surface width, height and bit depth
 //  [in]  uiIndex - index of surface
 //  [out] usWidth - pointer to width var
@@ -1626,43 +1597,6 @@ BOOLEAN UpdateBackupSurface( HVSURFACE hVSurface )
 
 }
 
-
-// *****************************************************************************
-//
-// Private DirectDraw manipulation functions
-//
-// *****************************************************************************
-
-// **************************************************************
-// !! need convert to SDL
-LPDIRECTDRAWSURFACE2 GetVideoSurfaceDDSurface( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	//return( (LPDIRECTDRAWSURFACE2) hVSurface->pSurfaceData );
-	return NULL;
-}
-
-// **************************************************************
-// !! need convert to SDL
-LPDIRECTDRAWSURFACE GetVideoSurfaceDDSurfaceOne( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	//return( (LPDIRECTDRAWSURFACE) hVSurface->pSurfaceData1 );
-	return NULL;
-}
-
-// **************************************************************
-// !! need convert to SDL
-LPDIRECTDRAWPALETTE  GetVideoSurfaceDDPalette( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	//return( (LPDIRECTDRAWPALETTE) hVSurface->pPalette );
-	return NULL;
-}
-
 // **************************************************************
 // **************************************************************
 // Create surface object from SDL surface
@@ -1893,7 +1827,8 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		// Normal, specialized blit for clipping, etc
 
 		// Default flags
-		uiDDFlags = DDBLT_WAIT;
+		//uiDDFlags = DDBLT_WAIT;
+		uiDDFlags = 0;
 
 		// Convert flags into DD flags, ( for transparency use, etc )
 		//if ( fBltFlags & VS_BLT_USECOLORKEY )

@@ -56,8 +56,6 @@
 #include "Sys Globals.h"
 #include "jascreens.h"
 #include "gameloop.h"
-#include "DirectX Common.h"
-#include "DirectDraw Calls.h"
 #include <direct.h>
 #include "RegInst.h"
 #include "LibraryDataBase.h"

@@ -11,8 +11,8 @@ typedef struct {
 		Smack										*SmackHandle;
 		SmackBuf								*SmackBuffer;
 		UINT32									uiFlags;
-		LPDIRECTDRAWSURFACE2		lpDDS;
-		HWND										hWindow;
+		//LPDIRECTDRAWSURFACE2		lpDDS;
+		//HWND										hWindow;
 		UINT32									uiFrame;
 		UINT32									uiLeft, uiTop;
 //		LPDIRECTDRAW2						lpDD;

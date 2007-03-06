@@ -80,30 +80,6 @@ UINT16			*gpFrameData[ MAX_NUM_FRAMES ];
 INT32			giNumFrames = 0;
 
 //
-// Direct Draw objects for both the Primary and Backbuffer surfaces
-//
-
-static LPDIRECTDRAW2          gpDirectDrawObject = NULL;
-
-static LPDIRECTDRAWSURFACE    _gpPrimarySurface = NULL;
-static LPDIRECTDRAWSURFACE2   gpPrimarySurface = NULL;
-static LPDIRECTDRAWSURFACE2   gpBackBuffer = NULL;
-
-//
-// Direct Draw Objects for the frame buffer
-//
-
-static LPDIRECTDRAWSURFACE    _gpFrameBuffer = NULL;
-static LPDIRECTDRAWSURFACE2   gpFrameBuffer = NULL;
-
-#ifdef WINDOWED_MODE
-
-static LPDIRECTDRAWSURFACE    _gpBackBuffer = NULL;
-
-
-#endif
-
-//
 // SDL Surfaces
 //
 
@@ -120,11 +96,6 @@ static UINT16                 gusMouseCursorHeight;
 static INT16                  gsMouseCursorXOffset;
 static INT16                  gsMouseCursorYOffset;
 
-static LPDIRECTDRAWSURFACE2   gpMouseCursor = NULL;
-
-static LPDIRECTDRAWSURFACE    _gpMouseCursorOriginal = NULL;
-static LPDIRECTDRAWSURFACE2   gpMouseCursorOriginal = NULL;
-
 static MouseCursorBackground  gMouseCursorBackground[2];
 
 static SDL_Surface			*gpSDLMouseCursor            = NULL;
@@ -139,7 +110,6 @@ char				gFatalErrorString[ 512 ];
 // 8-bit palette stuff
 
 SGPPaletteEntry							gSgpPalette[256];
-LPDIRECTDRAWPALETTE						gpDirectDrawPalette;
 
 //
 // Make sure we record the value of the hWindow (main window frame for the application)
@@ -2099,7 +2069,7 @@ void EndFrameBufferRender(void)
 
 void PrintScreen(void)
 {
-  gfPrintFrameBuffer = TRUE;
+	gfPrintFrameBuffer = TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2137,200 +2107,200 @@ void FatalError( string1 pError, ...)
 *
 *********************************************************************************/
 
-#pragma pack (push, 1)
-
-typedef struct {
-
-		UINT8		ubIDLength;
-		UINT8		ubColorMapType;
-		UINT8		ubTargaType;
-		UINT16	usColorMapOrigin;
-		UINT16	usColorMapLength;
-		UINT8		ubColorMapEntrySize;
-		UINT16	usOriginX;
-		UINT16	usOriginY;
-		UINT16	usImageWidth;
-		UINT16	usImageHeight;
-		UINT8		ubBitsPerPixel;
-		UINT8		ubImageDescriptor;
-		
-} TARGA_HEADER;
-
-#pragma pack (pop)
-
-
-void SnapshotSmall(void)
-{
-	INT32 iCountX, iCountY;
-  DDSURFACEDESC SurfaceDescription;
-	UINT16 *pVideo, *pDest;
-
-  HRESULT       ReturnCode;
+//#pragma pack (push, 1)
+//
+//typedef struct {
+//
+//		UINT8		ubIDLength;
+//		UINT8		ubColorMapType;
+//		UINT8		ubTargaType;
+//		UINT16	usColorMapOrigin;
+//		UINT16	usColorMapLength;
+//		UINT8		ubColorMapEntrySize;
+//		UINT16	usOriginX;
+//		UINT16	usOriginY;
+//		UINT16	usImageWidth;
+//		UINT16	usImageHeight;
+//		UINT8		ubBitsPerPixel;
+//		UINT8		ubImageDescriptor;
+//		
+//} TARGA_HEADER;
+//
+//#pragma pack (pop)
 
 
-  ZEROMEM(SurfaceDescription);
-	SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_Lock( gpPrimarySurface, NULL, &SurfaceDescription, 0, NULL);
-	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-  {
-		return;
-  }
-
-//	sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
-	
-//	if( ( disk = fopen(cFilename, "wb"))==NULL )
+//void SnapshotSmall(void)
+//{
+//	INT32 iCountX, iCountY;
+//  DDSURFACEDESC SurfaceDescription;
+//	UINT16 *pVideo, *pDest;
+//
+//  HRESULT       ReturnCode;
+//
+//
+//  ZEROMEM(SurfaceDescription);
+//	SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
+//  ReturnCode = IDirectDrawSurface2_Lock( gpPrimarySurface, NULL, &SurfaceDescription, 0, NULL);
+//	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
+//  {
 //		return;
-
-//	memset(&Header, 0, sizeof(TARGA_HEADER));
-	
-//	Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
-//	Header.usImageWidth=320;
-//	Header.usImageHeight=240;
-//	Header.ubBitsPerPixel=16;
-
-//	fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
-
-		// Get the write pointer
-	pVideo = (UINT16*)SurfaceDescription.lpSurface;
-
-	pDest = gpFrameData[ giNumFrames ];
-
-	for(iCountY=SCREEN_HEIGHT-1; iCountY >=0 ; iCountY-=1)
-	{
-		for(iCountX=0; iCountX < SCREEN_WIDTH; iCountX+= 1)
-		{
-	//		uiData=(UINT16)*(pVideo+(iCountY*SCREEN_WIDTH*2)+ ( iCountX * 2 ) );
-
-//				1111 1111 1100 0000
-//				f		 f		c
-	//		usPixel555=	(UINT16)(uiData&0xffff);
-//			usPixel555= ((usPixel555 & 0xffc0) >> 1) | (usPixel555 & 0x1f);
-
-	//		usPixel555=	(UINT16)(uiData);
-			
-		//	fwrite( &usPixel555, sizeof(UINT16), 1, disk);
-	//		fwrite(	(void *)(((UINT8 *)SurfaceDescription.lpSurface) + ( iCountY * SCREEN_WIDTH * 2) + ( iCountX * 2 ) ), 2 * sizeof( BYTE ), 1, disk );
-
-		 *( pDest + ( iCountY * SCREEN_WIDTH ) + ( iCountX ) ) = *( pVideo + ( iCountY * SCREEN_WIDTH ) + ( iCountX ) );
-		}
-
-	}
-	
-	giNumFrames++;
-
-	if ( giNumFrames == MAX_NUM_FRAMES )
-	{
-		RefreshMovieCache( );
-	}
-
-
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_Unlock(gpPrimarySurface, &SurfaceDescription);
-	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
-  }
-
-//	fclose(disk);
-
-}
-
-
+//  }
+//
+////	sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
+//	
+////	if( ( disk = fopen(cFilename, "wb"))==NULL )
+////		return;
+//
+////	memset(&Header, 0, sizeof(TARGA_HEADER));
+//	
+////	Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
+////	Header.usImageWidth=320;
+////	Header.usImageHeight=240;
+////	Header.ubBitsPerPixel=16;
+//
+////	fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
+//
+//		// Get the write pointer
+//	pVideo = (UINT16*)SurfaceDescription.lpSurface;
+//
+//	pDest = gpFrameData[ giNumFrames ];
+//
+//	for(iCountY=SCREEN_HEIGHT-1; iCountY >=0 ; iCountY-=1)
+//	{
+//		for(iCountX=0; iCountX < SCREEN_WIDTH; iCountX+= 1)
+//		{
+//	//		uiData=(UINT16)*(pVideo+(iCountY*SCREEN_WIDTH*2)+ ( iCountX * 2 ) );
+//
+////				1111 1111 1100 0000
+////				f		 f		c
+//	//		usPixel555=	(UINT16)(uiData&0xffff);
+////			usPixel555= ((usPixel555 & 0xffc0) >> 1) | (usPixel555 & 0x1f);
+//
+//	//		usPixel555=	(UINT16)(uiData);
+//			
+//		//	fwrite( &usPixel555, sizeof(UINT16), 1, disk);
+//	//		fwrite(	(void *)(((UINT8 *)SurfaceDescription.lpSurface) + ( iCountY * SCREEN_WIDTH * 2) + ( iCountX * 2 ) ), 2 * sizeof( BYTE ), 1, disk );
+//
+//		 *( pDest + ( iCountY * SCREEN_WIDTH ) + ( iCountX ) ) = *( pVideo + ( iCountY * SCREEN_WIDTH ) + ( iCountX ) );
+//		}
+//
+//	}
+//	
+//	giNumFrames++;
+//
+//	if ( giNumFrames == MAX_NUM_FRAMES )
+//	{
+//		RefreshMovieCache( );
+//	}
+//
+//
+//  ZEROMEM(SurfaceDescription);
+//  SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
+//  ReturnCode = IDirectDrawSurface2_Unlock(gpPrimarySurface, &SurfaceDescription);
+//	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
+//  {
+//    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );    
+//  }
+//
+////	fclose(disk);
+//
+//}
+//
+//
 void VideoCaptureToggle(void)
 {
 #ifdef JA2TESTVERSION
-	VideoMovieCapture( (BOOLEAN)!gfVideoCapture);
+	//VideoMovieCapture( (BOOLEAN)!gfVideoCapture);
 #endif
 }
 
-void VideoMovieCapture( BOOLEAN fEnable )
-{
-	INT32 cnt;
-
-	gfVideoCapture=fEnable;
-	if(fEnable)
-	{
-		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
-		{
-			gpFrameData[ cnt ] = (UINT16 *)MemAlloc( SCREEN_WIDTH * SCREEN_HEIGHT * 2 );
-		}
-
-		giNumFrames = 0;
-
-		guiLastFrame=GetTickCount();
-	}
-	else
-	{
-		RefreshMovieCache( );
-
-		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
-		{
-			if ( gpFrameData[ cnt ] != NULL )
-			{
-				MemFree( gpFrameData[ cnt ] );
-			}
-		}
-		giNumFrames = 0;
-	}
-}
-
-void RefreshMovieCache( )
-{
-	TARGA_HEADER Header;
-	INT32 iCountX, iCountY;
-	FILE *disk;
-	CHAR8 cFilename[_MAX_PATH];
-	static UINT32 uiPicNum=0;
-	UINT16 *pDest;
-	INT32	cnt;
-	STRING512			DataDir;
-	STRING512			ExecDir;
-
-	PauseTime( TRUE );
-
-	// Snap: save current directory
-	GetFileManCurrentDirectory( DataDir );
-	
-	GetExecutableDirectory( ExecDir );
-	SetFileManCurrentDirectory( ExecDir );
-
-	for ( cnt = 0; cnt < giNumFrames; cnt++ )
-	{
-		sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
-
-		if( ( disk = fopen(cFilename, "wb"))==NULL )
-			return;
-
-		memset(&Header, 0, sizeof(TARGA_HEADER));
-
-		Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
-		Header.usImageWidth=SCREEN_WIDTH;
-		Header.usImageHeight=SCREEN_HEIGHT;
-		Header.ubBitsPerPixel=16;
-
-		fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
-
-		pDest = gpFrameData[ cnt ];
-
-		for(iCountY=SCREEN_HEIGHT-1; iCountY >=0 ; iCountY-=1)
-		{
-			for(iCountX=0; iCountX < SCREEN_WIDTH; iCountX ++ )
-			{
-				 fwrite( ( pDest + ( iCountY * SCREEN_WIDTH ) + iCountX ), sizeof(UINT16), 1, disk);
-			}
-
-		}
-
-		fclose(disk);
-	}
-
-	PauseTime( FALSE );
-
-	giNumFrames = 0;
-
-	// Snap: Restore the data directory once we are finished.
-	SetFileManCurrentDirectory( DataDir );
-	//strcat( ExecDir, "\\Data" );
-	//SetFileManCurrentDirectory( ExecDir );
-}
+//void VideoMovieCapture( BOOLEAN fEnable )
+//{
+//	INT32 cnt;
+//
+//	gfVideoCapture=fEnable;
+//	if(fEnable)
+//	{
+//		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
+//		{
+//			gpFrameData[ cnt ] = (UINT16 *)MemAlloc( SCREEN_WIDTH * SCREEN_HEIGHT * 2 );
+//		}
+//
+//		giNumFrames = 0;
+//
+//		guiLastFrame=GetTickCount();
+//	}
+//	else
+//	{
+//		RefreshMovieCache( );
+//
+//		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
+//		{
+//			if ( gpFrameData[ cnt ] != NULL )
+//			{
+//				MemFree( gpFrameData[ cnt ] );
+//			}
+//		}
+//		giNumFrames = 0;
+//	}
+//}
+//
+//void RefreshMovieCache( )
+//{
+//	TARGA_HEADER Header;
+//	INT32 iCountX, iCountY;
+//	FILE *disk;
+//	CHAR8 cFilename[_MAX_PATH];
+//	static UINT32 uiPicNum=0;
+//	UINT16 *pDest;
+//	INT32	cnt;
+//	STRING512			DataDir;
+//	STRING512			ExecDir;
+//
+//	PauseTime( TRUE );
+//
+//	// Snap: save current directory
+//	GetFileManCurrentDirectory( DataDir );
+//	
+//	GetExecutableDirectory( ExecDir );
+//	SetFileManCurrentDirectory( ExecDir );
+//
+//	for ( cnt = 0; cnt < giNumFrames; cnt++ )
+//	{
+//		sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
+//
+//		if( ( disk = fopen(cFilename, "wb"))==NULL )
+//			return;
+//
+//		memset(&Header, 0, sizeof(TARGA_HEADER));
+//
+//		Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
+//		Header.usImageWidth=SCREEN_WIDTH;
+//		Header.usImageHeight=SCREEN_HEIGHT;
+//		Header.ubBitsPerPixel=16;
+//
+//		fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
+//
+//		pDest = gpFrameData[ cnt ];
+//
+//		for(iCountY=SCREEN_HEIGHT-1; iCountY >=0 ; iCountY-=1)
+//		{
+//			for(iCountX=0; iCountX < SCREEN_WIDTH; iCountX ++ )
+//			{
+//				 fwrite( ( pDest + ( iCountY * SCREEN_WIDTH ) + iCountX ), sizeof(UINT16), 1, disk);
+//			}
+//
+//		}
+//
+//		fclose(disk);
+//	}
+//
+//	PauseTime( FALSE );
+//
+//	giNumFrames = 0;
+//
+//	// Snap: Restore the data directory once we are finished.
+//	SetFileManCurrentDirectory( DataDir );
+//	//strcat( ExecDir, "\\Data" );
+//	//SetFileManCurrentDirectory( ExecDir );
+//}

@@ -11,10 +11,6 @@
 //
 // ***********************************************************************
 
-LPDIRECTDRAWSURFACE2 GetVideoSurfaceDDSurface( HVSURFACE hVSurface );
-LPDIRECTDRAWSURFACE  GetVideoSurfaceDDSurfaceOne( HVSURFACE hVSurface );
-LPDIRECTDRAWPALETTE  GetVideoSurfaceDDPalette( HVSURFACE hVSurface );
-
 HVSURFACE CreateVideoSurfaceFromSDLSurface( SDL_Surface *pSurface );
 
 #endif
