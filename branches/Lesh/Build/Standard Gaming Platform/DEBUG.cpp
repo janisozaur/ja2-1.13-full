@@ -24,7 +24,6 @@
 #else
 	#include "types.h"
 	#include <windows.h>
-	#include <ddeml.h>
 	#include <stdio.h>
 	#include "debug.h"
 	#include "WCheck.h"

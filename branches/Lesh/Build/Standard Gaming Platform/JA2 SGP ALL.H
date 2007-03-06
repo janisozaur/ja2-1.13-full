@@ -49,7 +49,6 @@
 #include "FileMan.h"
 #include "DbMan.h"
 #include <windows.h>
-#include <ddeml.h>
 #include "TopicIDs.h"
 #include "TopicOps.h"
 #include "screenids.h"
@@ -73,7 +72,6 @@
 #include "local.h"
 #include <tchar.h>
 #include <assert.h>
-#include "Install.h"
 #include	"GameSettings.h"
 #ifdef _DEBUG
 	#include <crtdbg.h>
