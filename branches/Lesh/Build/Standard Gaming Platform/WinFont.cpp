@@ -5,7 +5,6 @@
 #include <stdarg.h>
 #include <malloc.h>
 #include <windows.h>
-#include <windowsx.h>
 #include <stdarg.h>
 #include <wchar.h>
 #include <string.h>

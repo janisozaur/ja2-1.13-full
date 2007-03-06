@@ -78,7 +78,6 @@
 #endif
 #include "mousesystem.h"
 #include "Random.h"
-#include <windowsx.h>
 #include "vobject_private.h"
 #include "shading.h"
 #include "imgfmt.h"

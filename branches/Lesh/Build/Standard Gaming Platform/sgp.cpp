@@ -9,7 +9,6 @@
 	#include "SDL.h"
 	#include "types.h"
 	#include <windows.h>
-	#include <windowsx.h>
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <string.h>
