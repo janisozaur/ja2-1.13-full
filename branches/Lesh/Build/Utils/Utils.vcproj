@@ -2248,79 +2248,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Quantize Wrap.cpp">
-				<FileConfiguration
-					Name="Demo Release with Debug Info|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Demo|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release with Debug Info|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Bounds Checker|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Demo Bounds Checker|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Demo|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath=".\Quantize Wrap.cpp">
 			</File>
 			<File
 				RelativePath="Quantize.cpp">
@@ -3017,10 +2945,16 @@
 				RelativePath="Animated ProgressBar.h">
 			</File>
 			<File
+				RelativePath=".\Cinematics.h">
+			</File>
+			<File
 				RelativePath="cursors.h">
 			</File>
 			<File
 				RelativePath="Debug Control.h">
+			</File>
+			<File
+				RelativePath=".\Encrypted File.h">
 			</File>
 			<File
 				RelativePath="Event Manager.h">
@@ -3035,6 +2969,12 @@
 				RelativePath=".\INIReader.h">
 			</File>
 			<File
+				RelativePath=".\maputility.h">
+			</File>
+			<File
+				RelativePath=".\MercTextBox.h">
+			</File>
+			<File
 				RelativePath="message.h">
 			</File>
 			<File
@@ -3047,7 +2987,22 @@
 				RelativePath="Music Control.h">
 			</File>
 			<File
+				RelativePath=".\PopUpBox.h">
+			</File>
+			<File
+				RelativePath=".\Quantize Wrap.h">
+			</File>
+			<File
+				RelativePath=".\Quantize.h">
+			</File>
+			<File
+				RelativePath=".\Slider.h">
+			</File>
+			<File
 				RelativePath="Sound Control.h">
+			</File>
+			<File
+				RelativePath=".\STIConvert.h">
 			</File>
 			<File
 				RelativePath="Text Input.h">
@@ -3063,6 +3018,9 @@
 			</File>
 			<File
 				RelativePath="Utils All.h">
+			</File>
+			<File
+				RelativePath=".\WordWrap.h">
 			</File>
 		</Filter>
 	</Files>

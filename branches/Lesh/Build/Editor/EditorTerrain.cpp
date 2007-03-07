@@ -8,7 +8,6 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <windows.h>
 	#include "tiledef.h"
 	#include "edit_sys.h"
 	#include "vsurface.h"

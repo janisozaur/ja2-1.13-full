@@ -193,7 +193,6 @@
 #include "ShopKeeper Quotes.h"
 #include "Personnel.h"
 #include "pits.h"
-#include "Win util.h"
 #include "smokeeffects.h"
 #include "SaveLoadGame.h"
 #include "Scheduling.h"

@@ -211,7 +211,6 @@
 #include "Structure Wrap.h"
 #include "SaveLoadMap.h"
 #include "aim.h"
-#include <windows.h>
 #include "Inventory Choosing.h"
 #include "LOS.h"
 #include "Tactical Turns.h"

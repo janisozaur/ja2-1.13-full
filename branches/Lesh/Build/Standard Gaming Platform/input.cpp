@@ -1244,7 +1244,7 @@ void DequeueAllKeyBoardEvents()
 	MSG			KeyMessage;
 
 	//dequeue all the events waiting in the windows queue
-	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
+	//while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
 
 	//Deque all the events waiting in the SGP queue
 	while (DequeueEvent(&InputEvent) == TRUE)

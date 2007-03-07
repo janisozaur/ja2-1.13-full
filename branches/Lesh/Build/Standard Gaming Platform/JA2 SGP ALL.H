@@ -48,7 +48,6 @@
 #include "wcheck.h"
 #include "FileMan.h"
 #include "DbMan.h"
-#include <windows.h>
 #include "TopicIDs.h"
 #include "TopicOps.h"
 #include "screenids.h"

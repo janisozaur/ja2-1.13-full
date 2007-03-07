@@ -24,7 +24,6 @@
 //	#include "WIZ8 SGP ALL.H"
 //#else
 	#include "types.h"
-	#include <windows.h>
 	#include <malloc.h>
 	#include <stdlib.h>
 	#include <string.h>
@@ -351,67 +350,67 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 #endif
 
 
-PTR MemAllocLocked( UINT32 uiSize )
-{
-	PTR	ptr;
-
-	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
-
-	
-	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
-
-	if ( ptr )
-	{
-    VirtualLock( ptr, uiSize );
-
-		guiMemTotal   += uiSize;
-		guiMemAlloced += uiSize;
-		MemDebugCounter++;
-  }
-  else
-	{
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
-	}
-
-#ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
-#endif
-
-	return( ptr );
-}
-
-
-void MemFreeLocked( PTR ptr, UINT32 uiSize )
-{
-	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
-
-
-  if (ptr != NULL)
-  {
-	  VirtualUnlock( ptr, uiSize );
-	  VirtualFree( ptr, uiSize, MEM_RELEASE );
-
-		guiMemTotal -= uiSize;
-		guiMemFreed += uiSize;
-  }
-  else
-  {
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
-  }
-
-  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
-  // is not noticed.
-  MemDebugCounter--;
-
-#ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
-#endif
-}
-
-
+//PTR MemAllocLocked( UINT32 uiSize )
+//{
+//	PTR	ptr;
+//
+//	if ( !fMemManagerInit )
+//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
+//
+//	
+//	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
+//
+//	if ( ptr )
+//	{
+//    VirtualLock( ptr, uiSize );
+//
+//		guiMemTotal   += uiSize;
+//		guiMemAlloced += uiSize;
+//		MemDebugCounter++;
+//  }
+//  else
+//	{
+//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
+//	}
+//
+//#ifdef DEBUG_MEM_LEAKS
+//  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
+//#endif
+//
+//	return( ptr );
+//}
+//
+//
+//void MemFreeLocked( PTR ptr, UINT32 uiSize )
+//{
+//	if ( !fMemManagerInit )
+//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
+//
+//
+//  if (ptr != NULL)
+//  {
+//	  VirtualUnlock( ptr, uiSize );
+//	  VirtualFree( ptr, uiSize, MEM_RELEASE );
+//
+//		guiMemTotal -= uiSize;
+//		guiMemFreed += uiSize;
+//  }
+//  else
+//  {
+//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
+//  }
+//
+//  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
+//  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
+//  // is not noticed.
+//  MemDebugCounter--;
+//
+//#ifdef DEBUG_MEM_LEAKS
+//  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
+//#endif
+//}
+//
+//
 //**************************************************************************
 //
 // MemGetFree
@@ -428,12 +427,13 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 
 UINT32 MemGetFree( void )
 {
-	MEMORYSTATUS ms;
+	//MEMORYSTATUS ms;
 
-	ms.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus( &ms );
+	//ms.dwLength = sizeof(MEMORYSTATUS);
+	//GlobalMemoryStatus( &ms );
 
-	return( ms.dwAvailPhys );
+	//return( ms.dwAvailPhys );
+	return 0;
 }
 
 
@@ -453,12 +453,13 @@ UINT32 MemGetFree( void )
 
 UINT32 MemGetTotalSystem( void )
 {
-	MEMORYSTATUS ms;
+	//MEMORYSTATUS ms;
 
-	ms.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus( &ms );
+	//ms.dwLength = sizeof(MEMORYSTATUS);
+	//GlobalMemoryStatus( &ms );
 
-	return( ms.dwTotalPhys );
+	//return( ms.dwTotalPhys );
+	return 0;
 }
 
 

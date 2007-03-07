@@ -43,7 +43,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
+				AdditionalDependencies="libexpat.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
 				OutputFile="D:\games\JA2\ja2_debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -396,7 +396,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib mss32.lib fmodvc.lib"
+				AdditionalDependencies="libexpat.lib winmm.lib smackw32.lib fmodvc.lib"
 				OutputFile="D:\Games\JA2\ja2_bc.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -547,7 +547,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
+				AdditionalDependencies="libexpat.lib winmm.lib smackw32.lib fmodvc.lib sdl.lib sdlmain.lib"
 				OutputFile="D:\Games\JA2\ja2_sdl.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

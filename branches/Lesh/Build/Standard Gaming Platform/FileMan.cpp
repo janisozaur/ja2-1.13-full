@@ -35,7 +35,6 @@
 	#include <stdio.h>
 	#include <direct.h>
 
-	#include "windows.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
 	#include "DbMan.h"

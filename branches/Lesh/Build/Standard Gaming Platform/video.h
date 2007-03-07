@@ -1,7 +1,6 @@
 #ifndef __VIDEO_
 #define __VIDEO_
 
-#include <windows.h>
 #include <process.h> 
 
 #include "Local.h"
@@ -20,7 +19,6 @@
 #define VIDEO_NO_CURSOR		  0xFFFF
 
 extern BOOLEAN				gfFullScreen;			// Full screen or windowed mode
-extern HWND					ghWindow;
 extern UINT32               guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 
 

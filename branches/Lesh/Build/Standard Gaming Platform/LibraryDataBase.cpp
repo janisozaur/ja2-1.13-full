@@ -4,7 +4,6 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include "windows.h"
 	#include "FileMan.h"
 	#include "LibraryDataBase.h"
 	#include "MemMan.h"

@@ -25,7 +25,6 @@
 	#include "sys globals.h"
 	#include "video.h"
 	#include "points.h"
-	#include "Win util.h"
 	#include "Sound Control.h" 
 	#include "weapons.h"
 	#include "vobject_blitters.h"

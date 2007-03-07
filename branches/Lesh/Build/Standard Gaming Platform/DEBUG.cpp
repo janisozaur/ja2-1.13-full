@@ -23,7 +23,6 @@
 	#include "JA2 SGP ALL.H"
 #else
 	#include "types.h"
-	#include <windows.h>
 	#include <stdio.h>
 	#include "debug.h"
 	#include "WCheck.h"
