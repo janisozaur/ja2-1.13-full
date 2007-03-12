@@ -22,9 +22,10 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "types.h"
-	#include <stdio.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "Timing.h"
+	#include "Types.h"
+	#include "DEBUG.H"
 	#include "WCheck.h"
 	#include "TopicIDs.h"
 	#include "TopicOps.h"
@@ -40,7 +41,7 @@
 
 	// CJC added
 	#ifndef _NO_DEBUG_TXT
-		#include "fileman.h"
+		#include "FileMan.h"
 	#endif
 #endif
 
@@ -294,7 +295,7 @@ void DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage )
 
 void RemoveDebugText( void )
 {
-	DeleteFile( gpcDebugLogFileName );
+	FileDelete( gpcDebugLogFileName );
 }
 
 
@@ -351,8 +352,10 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, type4
 	// Check for a registered topic ID
 	if ( uiTopicId < MAX_TOPICS_ALLOTED )//&& gfDebugTopics[uiTopicId] )
 	{
+#ifdef JA2_WIN
 		OutputDebugString ( (LPCSTR) strMessage );
 		OutputDebugString ( "\n" );
+#endif
 
 //add _NO_DEBUG_TXT to your SGP preprocessor definitions to avoid this f**king huge file from 
 //slowly growing behind the scenes!!!!
@@ -452,10 +455,12 @@ void			_DebugMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	// Output to debugger
 	//
 
+#ifdef JA2_WIN
 	if (gfRecordToDebugger)
 	{
 		OutputDebugString( (LPCSTR) ubOutputString );
 	}
+#endif
 
 	//
 	// Record to file if required
@@ -484,6 +489,8 @@ void _Null(void)
 extern HVOBJECT FontObjs[25];
 
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
+
+#ifdef JA2_WIN
 template void _FailMessage<char *, char const *>(char *, unsigned int, char const *);
 template void _FailMessage<char const *, char const *>(char const *, unsigned int, char const *);
 template void _FailMessage<int, char const *>(int, unsigned int, char const *);
@@ -491,16 +498,17 @@ template void _FailMessage<int, char *>(int, unsigned int, char *);
 template void _FailMessage<char *, char *>(char *, unsigned int, char *);
 #if _MSC_VER <= 1200
 	template void _FailMessage<char *, char *>(unsigned char *, unsigned int, char *);
-#endif
+#endif	// #if _MSC_VER <= 1200
 template void _FailMessage<unsigned char *, char const *>(unsigned char *, unsigned int, char const *);
+#endif	// #ifdef JA2_WIN
+
 template <typename type1, typename type2>
 void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
 { 
-	MSG Message;
 	UINT8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 	FILE *DebugFile;
-#endif
+#endif	// #ifndef _NO_DEBUG_TXT
 	BOOLEAN fDone = FALSE;
 	//Build the output strings
 	sprintf( (char *)ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
@@ -509,10 +517,12 @@ void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
 	else
 		sprintf( (char *)gubAssertString, "" );
 
+#ifdef JA2_WIN
 	//Output to debugger
 	if (gfRecordToDebugger)
 		OutputDebugString( (LPCSTR)ubOutputString );
-	
+#endif	// #ifdef JA2_WIN
+
 	//Record to file if required
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)
@@ -532,7 +542,6 @@ void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
 		gfProgramIsRunning = FALSE;
 		return;
 	}
-#endif
 
 	//Kris:
 	//NASTY HACK, THE GAME IS GOING TO DIE ANYWAY, SO WHO CARES WHAT WE DO.
@@ -560,6 +569,7 @@ void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
 		}
 	}
 #endif
+#endif	// #ifndef _NO_DEBUG_TXT
 	exit(0);
 }
 
@@ -579,6 +589,8 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	sprintf( ubOutputString, "{ %ld } Assertion Failure: %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
 	if( pString )
 		sprintf( gubAssertString, pString );
+
+#ifdef JA2_WIN
 	// Output to debugger
 	if (gfRecordToDebugger)
 	{
@@ -588,6 +600,8 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 			OutputDebugString( gubAssertString );
 		}
 	}
+#endif
+
 	// Record to file if required
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)

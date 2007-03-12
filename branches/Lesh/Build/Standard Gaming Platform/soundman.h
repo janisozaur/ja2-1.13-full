@@ -1,7 +1,7 @@
 #ifndef __SOUNDMAN_
 #define __SOUNDMAN_
 
-#include "types.h"
+#include "Types.h"
 #include "fmod.h"
 #include "fmod_errors.h"
 

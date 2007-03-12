@@ -1,14 +1,12 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "DirectDraw Calls.h"
-	#include <stdio.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "video.h"
 	#include "himage.h"
 	#include "vobject.h"
-	#include "vobject_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "vobject_blitters.h"
 	#include "sgp.h"
 #endif
@@ -104,6 +102,7 @@ void CheckValidVObjectIndex( UINT32 uiIndex );
 //
 // **************************************************************
 
+#ifdef JA2_WIN
 // WANNE
 int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep) 
 {
@@ -119,6 +118,7 @@ int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep)
       return EXCEPTION_CONTINUE_SEARCH;
    };
 }
+#endif
 
 // **************************************************************
 BOOLEAN InitializeVideoObjectManager( )
@@ -728,17 +728,14 @@ UINT32 count;
 // **************************************************************
 BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_fx *pBltFx )
 {
+#ifdef JA2_WIN
 	// Sometimes an exception is thrown in that method.
 	__try
 	{
+#endif
+
 	// Assertions
 	Assert( pBuffer != NULL );
-
-	if ( hSrcVObject == NULL )
-	{
-		int i=0;
-	}
-
 	Assert( hSrcVObject != NULL );
 
 	// Check For Flags and bit depths
@@ -801,11 +798,13 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 	}
 
 	return( TRUE );
+#ifdef JA2_WIN
 	}
 	__except(filter(GetExceptionCode(), GetExceptionInformation()))
 	{
 		return ( TRUE );
 	}
+#endif
 }
 
 // !! need to convert to SDL
@@ -1048,7 +1047,7 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 // **************************************************************
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
-	CHECKF( usIndex >= 0 );
+//	CHECKF( usIndex >= 0 );
 	CHECKF( usIndex < hVObject->usNumberOfObjects );
 
 	memcpy( pETRLEObject, &( hVObject->pETRLEObject[ usIndex ] ), sizeof( ETRLEObject ) );

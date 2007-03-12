@@ -1,20 +1,12 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
 #else
-	#include "DirectDraw Calls.h"
-	#include <stdio.h>
-	#include "debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
-	#else
-		#include "video2.h"
-	#endif
+	#include "Platform.h"
+	#include "DEBUG.H"
+	#include "video.h"
 	#include "himage.h"
 	#include "vobject.h"
-	#include "vobject_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "vobject_blitters.h"
 	#include "shading.h"
 #endif
@@ -118,6 +110,10 @@ void FindIndecies(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pMapPalette, UI
 UINT16 usCurIndex, usCurDelta, usCurCount;
 UINT32 *pSavedPtr;
 
+#ifdef JA2_LINUX
+#	error "Need to replace asm code!"
+#elif defined(JA2_WIN)
+
 __asm {
 
 // Assumes:
@@ -193,6 +189,7 @@ NotThisCol:
 		dec		usCurCount
 		jnz		DoNextIndex
 	}
+#endif
 }
 
 /**********************************************************************************************

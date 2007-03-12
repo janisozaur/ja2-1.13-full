@@ -2,9 +2,8 @@
 #define __SGP_
 
 #include "local.h"
-#include "types.h"
-//#include "timer.h" useless
-#include "debug.h"
+#include "Types.h"
+#include "DEBUG.H"
 #include "video.h"
 #include "input.h"
 

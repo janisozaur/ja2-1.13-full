@@ -19,14 +19,12 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "types.h"
-	#include <stdlib.h>
-	#include <malloc.h>
-	#include <stdio.h>
+	#include "Platform.h"
+	#include "Types.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
 	#include "DbMan.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 #endif
 
 //**************************************************************************
@@ -101,16 +99,16 @@
 
 typedef struct DbBucketTag
 {
-	CHAR		cFirstLetter;
+	CHAR8		cFirstLetter;
 
-	CHAR		*pstrFilenames;
-	CHAR		*pstrDatabasenames;
+	CHAR8		*pstrFilenames;
+	CHAR8		*pstrDatabasenames;
 	UINT32	uiNumNames;
 } DbBucket;
 
 typedef struct DbFileTag
 {
-	CHAR		strFilename[FILENAME_LENGTH];
+	CHAR8		strFilename[FILENAME_LENGTH];
 	INT32		iFileSize;				// if 0, this structure is not in use
 	INT32		iOffsetIntoFile;
 	INT32		iCurrentPosition;
@@ -118,7 +116,7 @@ typedef struct DbFileTag
 
 typedef struct DbInfoTag
 {
-	CHAR		strFilename[FILENAME_LENGTH];
+	CHAR8		strFilename[FILENAME_LENGTH];
 	HWFILE	hFile;					// if 0, this structure is not in use
 
 	DbFile	*pOpenFiles;
@@ -128,7 +126,7 @@ typedef struct DbInfoTag
 typedef struct DbSystemTag
 {
 	DbBucket	bucket;
-	CHAR		strIndexFilename[FILENAME_LENGTH];
+	CHAR8		strIndexFilename[FILENAME_LENGTH];
 
 	DbInfo	*pDBFiles;
 	UINT32	uiNumDBFiles;
@@ -139,7 +137,7 @@ typedef struct DbSystemTag
 // this is for reading the database file
 typedef struct DbHeaderTag 
 {
-	CHAR		strSignature[20];
+	CHAR8		strSignature[20];
 	INT32		iNumFiles;
 	INT32		iOffsetToIndex;
 } DbHeader;
@@ -147,7 +145,7 @@ typedef struct DbHeaderTag
 // this is for reading the database file
 typedef struct IndexMemberTag 
 {
-	CHAR		strFilename[IM_FILENAME_LENGTH];
+	CHAR8		strFilename[IM_FILENAME_LENGTH];
 	INT32		iFileSize;
 	INT32		iOffsetIntoFile;
 	INT32		time;
@@ -172,7 +170,7 @@ HDBFILE	CreateDBFileHandle( HFILEINDEX, HDBINDEX );
 BOOLEAN	InitDB( DbInfo *pDBInfo, STR strFilename );
 HDBINDEX OpenDatabaseContainingFile( STR strFilename );
 BOOLEAN	InitFile( HWFILE hDBFile, DbFile *pFileInfo, STR strFilename );
-BOOLEAN	LoadBucket( CHAR cFirstLetter );
+BOOLEAN	LoadBucket( CHAR8 cFirstLetter );
 BOOLEAN	GetShortFilename( STR strFilename, STR strPathname );
 
 //**************************************************************************
@@ -197,7 +195,7 @@ BOOLEAN	GetShortFilename( STR strFilename, STR strPathname );
 
 HDBFILE CreateDBFileHandle( HFILEINDEX high, HDBINDEX low )
 {
-	return( (((LONG)high)<<16)|low );
+	return( (((UINT32)high)<<16)|low );
 }
 
 //**************************************************************************
@@ -351,8 +349,8 @@ HDBINDEX DbOpen( STR strFilename )
 {
 	HDBINDEX		hDBIndex;
 	UINT16		i;
-	CHAR			cShortFilename[FILENAME_LENGTH];
-	CHAR			cShortDBName[FILENAME_LENGTH];
+	CHAR8			cShortFilename[FILENAME_LENGTH];
+	CHAR8			cShortDBName[FILENAME_LENGTH];
 	BOOLEAN		fFound;
 
 	fFound   = FALSE;
@@ -845,7 +843,7 @@ BOOLEAN InitDB( DbInfo *pDBInfo, STR strFilename )
 
 HDBINDEX OpenDatabaseContainingFile( STR strFilename )
 {
-	CHAR		cFirst, cFilename[FILENAME_LENGTH], cCheckname[FILENAME_LENGTH];
+	CHAR8		cFirst, cFilename[FILENAME_LENGTH], cCheckname[FILENAME_LENGTH];
 	UINT32	i;
 	HDBINDEX	hIndex;
 
@@ -895,7 +893,7 @@ BOOLEAN InitFile( HWFILE hDBFile, DbFile *pFileInfo, STR strFilename )
 	IndexMember	im;
 	UINT32	uiBytesRead;
 	INT32		i;
-	CHAR		cFilename[FILENAME_LENGTH], cShortFilename[FILENAME_LENGTH];
+	CHAR8		cFilename[FILENAME_LENGTH], cShortFilename[FILENAME_LENGTH];
 
 	CHECKF( pFileInfo );
 	CHECKF( strFilename );
@@ -939,11 +937,11 @@ BOOLEAN InitFile( HWFILE hDBFile, DbFile *pFileInfo, STR strFilename )
 //
 //**************************************************************************
 
-BOOLEAN LoadBucket( CHAR cFirstLetter )
+BOOLEAN LoadBucket( CHAR8 cFirstLetter )
 {
 	HWFILE	hFile;
 	UINT32	i, uiPosition, uiBytesRead, uiNumEntries, uiSize;
-	CHAR		cFilename[FILENAME_LENGTH], cDatabasename[FILENAME_LENGTH];
+	CHAR8		cFilename[FILENAME_LENGTH], cDatabasename[FILENAME_LENGTH];
 
 	uiNumEntries = 0;
 
@@ -972,10 +970,10 @@ BOOLEAN LoadBucket( CHAR cFirstLetter )
 
 	CHECKF(uiNumEntries);
 
-	gdb.bucket.pstrFilenames = (CHAR *)MemAlloc( uiNumEntries * FILENAME_LENGTH);
+	gdb.bucket.pstrFilenames = (CHAR8 *)MemAlloc( uiNumEntries * FILENAME_LENGTH);
 	CHECKF(gdb.bucket.pstrFilenames);
 
-	gdb.bucket.pstrDatabasenames = (CHAR *)MemAlloc( uiNumEntries * FILENAME_LENGTH);
+	gdb.bucket.pstrDatabasenames = (CHAR8 *)MemAlloc( uiNumEntries * FILENAME_LENGTH);
 	if ( !gdb.bucket.pstrDatabasenames )
 	{
 		MemFree(gdb.bucket.pstrFilenames);
@@ -1018,7 +1016,7 @@ BOOLEAN LoadBucket( CHAR cFirstLetter )
 
 BOOLEAN GetShortFilename( STR strFilename, STR strPathname )
 {
-	CHAR *pcLast;
+	CHAR8 *pcLast;
 
 	pcLast = strrchr( strPathname, '\\' );
 

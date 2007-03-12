@@ -3,8 +3,8 @@
 
 #include "Types.h"
 #include "FileMan.h"
-#include "VObject.h"
-#include "VSurface.h"
+#include "vobject.h"
+#include "vsurface.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,7 +12,7 @@ extern "C" {
 
 
 #if defined( JA2 ) || defined( UTIL )
-#include "Video.h"
+#include "video.h"
 #else
 #include "video2.h"
 #endif  

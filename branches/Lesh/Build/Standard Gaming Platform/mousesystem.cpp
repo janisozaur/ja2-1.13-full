@@ -14,19 +14,16 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <stdio.h>
 	#include <memory.h>
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "line.h"
 	#if (defined( JA2 ) || defined( UTIL ))
 		#include "video.h"
 		#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
-	#else
-		#include "video2.h"
-		#define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
 	#endif
 	#ifdef _JA2_RENDER_DIRTY
 		#include "render dirty.h"

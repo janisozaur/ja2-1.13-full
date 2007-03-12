@@ -1,19 +1,17 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "types.h"
-	#include <stdio.h>
-	#include <memory.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "Types.h"
+	#include "DEBUG.H"
 	#include "input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "english.h"
 	#include "video.h"
 	#include "local.h"
 	#include "SDL.h"
+	#include "Timing.h"
 #endif
-
-//#include "zmouse.h"
 
 // Make sure to refer to the translation table which is within one of the following files (depending
 // on the language used). ENGLISH.C, JAPANESE.C, FRENCH.C, GERMAN.C, SPANISH.C, etc...
@@ -311,7 +309,7 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
   UINT32 uiTimer;
   UINT16 usKeyState;
 
-  uiTimer = GetTickCount();
+  uiTimer = SDL_GetTicks();
   usKeyState = gfShiftState | gfCtrlState | gfAltState;
 
   // Can we queue up one more event, if not, the event is lost forever
@@ -1222,7 +1220,8 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	flNewXPos = ( (FLOAT)uiNewXPos / SCREEN_WIDTH ) * 65536;
 	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
 
-	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
+	SDL_WarpMouse( (UINT16)flNewXPos, (UINT16)flNewYPos );
+//	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
 }
 
 
@@ -1241,7 +1240,7 @@ BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2
 void DequeueAllKeyBoardEvents()
 {
 	InputAtom	InputEvent;
-	MSG			KeyMessage;
+//	MSG			KeyMessage;
 
 	//dequeue all the events waiting in the windows queue
 	//while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );

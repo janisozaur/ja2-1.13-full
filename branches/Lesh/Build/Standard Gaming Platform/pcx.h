@@ -1,7 +1,7 @@
 #ifndef __PCX_
 #define __PCX_
 
-#include "types.h"
+#include "Types.h"
 #include "himage.h"
 
 

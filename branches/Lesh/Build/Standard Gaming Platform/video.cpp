@@ -2,10 +2,10 @@
 	#include "JA2 SGP ALL.H"
 	#include "resource.h"
 #else
-	#include "types.h"
-	#include "Video.h"
+	#include "Types.h"
+	#include "video.h"
 	#include "vobject_blitters.h"
-	#include "sgp.h"
+//	#include "sgp.h"
 	#include <stdio.h>
 	#include "renderworld.h"
 	#include "Render Dirty.h"

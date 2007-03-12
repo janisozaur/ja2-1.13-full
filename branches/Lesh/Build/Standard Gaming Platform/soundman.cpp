@@ -8,18 +8,16 @@
 *********************************************************************************/
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
 #else
-	#include <stdio.h>
-	#include <string.h>
+	#include "Platform.h"
 	#include "soundman.h"
 	#include "FileMan.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "MemMan.h"
 	#include "random.h"
     #include "fmod.h"
     #include "fmod_errors.h"
+	#include "SDL.h"
 #endif
 
 // Uncomment this to disable the startup of sound hardware
@@ -106,11 +104,11 @@ UINT32		SoundGetFreeChannel(void);
 UINT32		SoundGetUniqueID(void);
 
 // Callbacks
-void * F_CALLBACKAPI    SoundFileOpen (const CHAR8 *pName);
-void F_CALLBACKAPI      SoundFileClose(void *uiHandle);
-INT F_CALLBACKAPI       SoundFileRead (void *pBuffer, INT iSize, void *uiHandle);
-INT F_CALLBACKAPI       SoundFileSeek (void *uiHandle, INT iPos, signed char cMode);
-INT F_CALLBACKAPI       SoundFileTell (void *uiHandle);
+static void * F_CALLBACKAPI    SoundFileOpen (const CHAR8 *pName);
+static void F_CALLBACKAPI      SoundFileClose(void *uiHandle);
+static int F_CALLBACKAPI       SoundFileRead (void *pBuffer, int iSize, void *uiHandle);
+static int F_CALLBACKAPI       SoundFileSeek (void *uiHandle, int iPos, signed char cMode);
+static int F_CALLBACKAPI       SoundFileTell (void *uiHandle);
 
 // Global variables
 UINT32		guiSoundDefaultVolume = 127;
@@ -263,7 +261,7 @@ void ShutdownSoundManager(void)
 
 	SoundStopAll();
 	SoundShutdownCache();
-	Sleep(1000);
+//	Sleep(1000);
 	SoundShutdownHardware();
 	fSoundSystemInit=FALSE;
     SoundLog("JA2 sound manager shutdown");
@@ -425,7 +423,7 @@ UINT32 SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms)
 			pSampleList[uiSample].uiInstances=0;
 
 			// Time stamp
-			pSampleList[uiSample].uiTimeNext=GetTickCount()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
+			pSampleList[uiSample].uiTimeNext= SDL_GetTicks()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
 			
 			return(uiSample);
 		}
@@ -1640,7 +1638,7 @@ static void F_CALLBACKAPI SoundFileClose(void *uiHandle)
     FileClose((UINT32)uiHandle);
 }
 
-static INT F_CALLBACKAPI SoundFileRead(void *pBuffer, INT iSize, void *uiHandle)
+static int F_CALLBACKAPI SoundFileRead(void *pBuffer, int iSize, void *uiHandle)
 {
     UINT32 uiActuallyRead;
 
@@ -1648,7 +1646,7 @@ static INT F_CALLBACKAPI SoundFileRead(void *pBuffer, INT iSize, void *uiHandle)
     return(uiActuallyRead);
 }
 
-static INT F_CALLBACKAPI SoundFileSeek(void *uiHandle, INT iPos, signed char cMode)
+static int F_CALLBACKAPI SoundFileSeek(void *uiHandle, int iPos, signed char cMode)
 {
     UINT8   uiHow;
 
@@ -1667,7 +1665,7 @@ static INT F_CALLBACKAPI SoundFileSeek(void *uiHandle, INT iPos, signed char cMo
     return(!FileSeek((UINT32)uiHandle, iPos, uiHow));
 }
 
-static INT F_CALLBACKAPI SoundFileTell(void *uiHandle)
+static int F_CALLBACKAPI SoundFileTell(void *uiHandle)
 {
     return(FileGetPos((UINT32)uiHandle));
 }

@@ -1,6 +1,14 @@
 #ifndef _BUILDDEFINES_H
 #define _BUILDDEFINES_H
 
+#ifdef __linux__
+	#define JA2_LINUX
+#elif __WIN32__
+	#define JA2_WIN
+#else
+	#error "Unsupported operating system!"
+#endif
+
 #include "Language Defines.h"
 
 // Remove comment to build Beta version & Editor

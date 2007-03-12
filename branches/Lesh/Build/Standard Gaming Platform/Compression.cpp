@@ -1,11 +1,9 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
 #else
 	#include "MemMan.h"
-	#include "debug.h"
-	#include "zlib.h"
+	#include "DEBUG.H"
+	#include "ZLIB.H"
 #endif
 
 
@@ -27,7 +25,7 @@ PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 	int					iZRetCode;
 	
 	// allocate memory for the z_stream struct
-	pZStream = MemAlloc( sizeof( z_stream ) );
+	pZStream = (z_stream *) MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
 	{ // out of memory!
 		return( NULL );
@@ -102,7 +100,7 @@ PTR CompressInit( BYTE * pUncompressedData, UINT32 uiDataSize )
 	int					iZRetCode;
 	
 	// allocate memory for the z_stream struct
-	pZStream = MemAlloc( sizeof( z_stream ) );
+	pZStream = (z_stream *) MemAlloc( sizeof( z_stream ) );
 	if( pZStream == NULL )
 	{ // out of memory!
 		return( NULL );

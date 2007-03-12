@@ -1,8 +1,8 @@
 #ifndef __VSURFACE_H
 #define __VSURFACE_H
 
-#include "types.h"
-#include "container.h"
+#include "Types.h"
+#include "Container.h"
 #include "himage.h"
 #include "vobject.h"
 #include "SDL.h"

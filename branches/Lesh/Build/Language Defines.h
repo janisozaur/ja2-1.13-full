@@ -1,7 +1,7 @@
 #ifndef __LANGUAGE_DEFINES_H
 #define __LANGUAGE_DEFINES_H
 
-#pragma once
+//#pragma once
 
 /* ============================================================================
  * ONLY ONE OF THESE LANGUAGES CAN BE DEFINED AT A TIME!

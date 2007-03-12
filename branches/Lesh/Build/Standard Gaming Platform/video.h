@@ -1,12 +1,12 @@
 #ifndef __VIDEO_
 #define __VIDEO_
 
-#include <process.h> 
+//#include <process.h> 
 
-#include "Local.h"
-#include "Debug.h"
+#include "local.h"
+#include "DEBUG.H"
 #include "Types.h"
-#include "VSurface.h"
+#include "vsurface.h"
 #include "SDL.h"
 
 #define BUFFER_READY          0x00

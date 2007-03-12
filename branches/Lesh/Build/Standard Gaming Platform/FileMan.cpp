@@ -26,23 +26,15 @@
 //**************************************************************************
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <stdlib.h>
-	#include <malloc.h>
-	#include <stdio.h>
-	#include <direct.h>
-
+	#include "Platform.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
 	#include "DbMan.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "Container.h"
 	#include "LibraryDataBase.h"
-	#include "io.h"
-
 #endif
 //**************************************************************************
 //
@@ -67,23 +59,23 @@
 
 typedef struct FMFileInfoTag
 {
-	CHAR		strFilename[FILENAME_LENGTH];
+	CHAR8		strFilename[FILENAME_LENGTH];
 	UINT8		uiFileAccess;
-	UINT32	uiFilePosition;
-	HANDLE	hFileHandle;
-	HDBFILE	hDBFile;
+	UINT32		uiFilePosition;
+	HANDLE		hFileHandle;
+	HDBFILE		hDBFile;
 
 } FMFileInfo;	// for 'File Manager File Information'
 
 typedef struct FileSystemTag
 {
 	FMFileInfo	*pFileInfo;
-	UINT32	uiNumHandles;
-	BOOLEAN	fDebug;
-	BOOLEAN	fDBInitialized;
+	UINT32		uiNumHandles;
+	BOOLEAN		fDebug;
+	BOOLEAN		fDBInitialized;
 
-	CHAR		*pcFileNames;
-	UINT32	uiNumFilesInDirectory;
+	CHAR8		*pcFileNames;
+	UINT32		uiNumFilesInDirectory;
 } FileSystem;
 
 //**************************************************************************
@@ -99,26 +91,47 @@ DatabaseManagerHeaderStruct gFileDataBase;
 
 //FileSystem gfs;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 WIN32_FIND_DATA Win32FindInfo[20];
+
+void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
+INT32	GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_DATA *pFind );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
-															FALSE,FALSE,FALSE,FALSE,FALSE,
-															FALSE,FALSE,FALSE,FALSE,FALSE,
-															FALSE,FALSE,FALSE,FALSE,FALSE };
+								FALSE,FALSE,FALSE,FALSE,FALSE,
+								FALSE,FALSE,FALSE,FALSE,FALSE,
+								FALSE,FALSE,FALSE,FALSE,FALSE };
 HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
+								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
 
 // Snap: At program launch we build two directory catalogues:
 // one for the default Data directory, the other for the custom Data directory.
 TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
 TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
+
+// Lesh: gzDataPath will represent path to dir, containing Data and Data-1.13 dirs
+// gzHomePath will represent a path to game home dir, where ja2.ini, savedgames, logs
+// and temps will be. Under windows it will not be used, under linux it is ~/ja2_113/
+STRING512	gzDataPath;
+STRING512	gzHomePath;
+
 
 //**************************************************************************
 //
@@ -126,14 +139,11 @@ TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
 //
 //**************************************************************************
 
-void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
-
-void		FileDebugPrint( void );
+void	FileDebugPrint( void );
 HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
 HWFILE	CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile );
-void		DestroyFileHandle( HWFILE hFile );
-void		BuildFileDirectory( void );
-INT32		GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_DATA *pFind );
+void	DestroyFileHandle( HWFILE hFile );
+void	BuildFileDirectory( void );
 
 //**************************************************************************
 //
@@ -156,6 +166,48 @@ INT32		GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_
 //**************************************************************************
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 {
+#ifdef JA2_LINUX
+// ----------------------- Linux-specific stuff ----------------------------
+
+	char DataPath[512];
+//	const char* Home;
+	
+
+//	Home = getenv("HOME");
+//	if (Home == NULL)
+//	{
+//		const struct passwd* passwd = getpwuid(getuid());
+//
+//		if (passwd == NULL || passwd->pw_dir == NULL)
+//		{
+//			fprintf(stderr, "Unable to locate home directory\n");
+//			return FALSE;
+//		}
+//
+//		Home = passwd->pw_dir;
+//		strncpy( gzHomePath, Home, 512 );
+//	}
+
+	// assign home dir for game
+	// data dir will be read from INI/CFG file, located in home dir
+	strncpy( gzHomePath, "~/ja2_113/", 512 );
+	if (mkdir(gzHomePath, 0700) != 0 && errno != EEXIST)
+	{
+		fprintf(stderr, "Unable to create directory \"%s\"\n", gzHomePath);
+		return FALSE;
+	}
+
+//	snprintf(DataPath, lengthof(DataPath), "%s/Data", LocalPath);
+//	if (mkdir(DataPath, 0700) != 0 && errno != EEXIST)
+//	{
+//		fprintf(stderr, "Unable to create directory \"%s\"\n", DataPath);
+//		return FALSE;
+//	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
+
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
 }
@@ -185,22 +237,34 @@ void ShutdownFileManager( void )
 
 //**************************************************************************
 //
-// FileDebug
+// 	PathBackslash
 //
-//		To set whether or not we should print debug info.
+//		Convert path to unix-style.
 //
-// Parameter List :
-// Return Value :
+// Parameter List :	path - input string and output.
+// Return Value :	always TRUE.
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		22mar07:Lesh		-> creation
 //
 //**************************************************************************
-
-void FileDebug( BOOLEAN f )
+BOOLEAN PathBackslash(STR path)
 {
-//	gfs.fDebug = f;
+	STR src = path;
+
+	while( (src = strchr(src, '\\')) )
+	{
+		*src = SLASH;
+	}
+
+	return TRUE;
 }
+
+#ifdef JA2_WIN
+#	define BACKSLASH(x)
+#elif defined(JA2_LINUX)
+#	define BACKSLASH(x)		PathBackslash(x)
+#endif
 
 //**************************************************************************
 //
@@ -228,21 +292,43 @@ void FileDebug( BOOLEAN f )
 //**************************************************************************
 BOOLEAN	FileExists( STR strFilename )
 {
+	BACKSLASH(strFilename);
+
 	// First check to see if it's in a library (most files should be there)
-	if ( gFileDataBase.fInitialized &&
-		   CheckIfFileExistInLibrary( (STR) strFilename ) ) return TRUE;
+	if ( gFileDataBase.fInitialized && CheckIfFileExistInLibrary( (STR) strFilename ) )
+		return TRUE;
 
 	// ... then check if it's in the custom Data directory
-	if ( gCustomDataCat.FindFile(strFilename) ) return TRUE;
+	if ( gCustomDataCat.FindFile(strFilename) )
+		return TRUE;
 
 	// ... then check if it's in the default Data directory
-	if ( gDefaultDataCat.FindFile(strFilename) ) return TRUE;
+	if ( gDefaultDataCat.FindFile(strFilename) )
+		return TRUE;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	// ... lastly, try to locate it in the file system
-	DWORD attribs = GetFileAttributes(strFilename);
+	UINT32 attribs = GetFileAttributes(strFilename);
 	if ( attribs != INVALID_FILE_ATTRIBUTES && !(attribs & FILE_ATTRIBUTE_DIRECTORY) )
 		return TRUE;
-	
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	// check, if it is a regular file
+	struct stat file_stat;
+
+	if ( stat( strFilename, &file_stat) == -1 )
+		return FALSE;
+
+	if ( S_ISREG(file_stat.st_mode) )
+		return TRUE;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	return FALSE;
 }
 
@@ -270,17 +356,41 @@ BOOLEAN	FileExists( STR strFilename )
 //**************************************************************************
 extern BOOLEAN	FileExistsNoDB( STR strFilename )
 {
+	BACKSLASH(strFilename);
+
 	// First check if it's in the custom Data directory
-	if ( gCustomDataCat.FindFile(strFilename) ) return TRUE;
+	if ( gCustomDataCat.FindFile(strFilename) )
+		return TRUE;
 
 	// ... then check if it's in the default Data directory
-	if ( gDefaultDataCat.FindFile(strFilename) ) return TRUE;
+	if ( gDefaultDataCat.FindFile(strFilename) )
+		return TRUE;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	// ... lastly, try to locate it in the file system
-	DWORD attribs = GetFileAttributes(strFilename);
+	UINT32 attribs = GetFileAttributes(strFilename);
 	if ( attribs != INVALID_FILE_ATTRIBUTES && !(attribs & FILE_ATTRIBUTE_DIRECTORY) )
 		return TRUE;
 	
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	// check, if it is a regular file
+	struct stat file_stat;
+
+	if ( stat( strFilename, &file_stat) == -1 )
+		return FALSE;
+
+	if ( S_ISREG(file_stat.st_mode) )
+		return TRUE;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif
+
 	return FALSE;
 }
 
@@ -306,12 +416,26 @@ extern BOOLEAN	FileExistsNoDB( STR strFilename )
 //**************************************************************************	
 BOOLEAN	FileDelete( STR strFilename )
 {
+	BACKSLASH(strFilename);
+
 	// Snap: delete the file from the default Data catalogue (if it is there)
 	// Since the path can be either relative or absolute, try both methods
 	gDefaultDataCat.RemoveFile(strFilename, true);
 	gDefaultDataCat.RemoveFile(strFilename, false);
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	return( DeleteFile( (LPCSTR) strFilename ) );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	return( unlink(strFilename) == 0 );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
 
 //**************************************************************************
@@ -343,18 +467,23 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
 	HWFILE	hFile;
 	HANDLE	hRealFile;
-	DWORD		dwAccess;
-	DWORD		dwFlagsAndAttributes;
 	BOOLEAN	fExists;
 	HDBFILE	hDBFile;
-	DWORD		dwCreationFlags;
 	HWFILE hLibFile;
+	UINT32	dwAccess;
+	UINT32	dwFlagsAndAttributes;
+	UINT32	dwCreationFlags;
 
 	hFile = 0;
 	hDBFile = 0;
 	dwCreationFlags = 0;
-
 	dwAccess = 0;
+	
+	BACKSLASH(strFilename);
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	if ( uiOptions & FILE_ACCESS_READ )
 		dwAccess |= GENERIC_READ;
 	if ( uiOptions & FILE_ACCESS_WRITE )
@@ -363,6 +492,20 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	dwFlagsAndAttributes = FILE_FLAG_RANDOM_ACCESS;
 	if ( fDeleteOnClose )
 		dwFlagsAndAttributes |= FILE_FLAG_DELETE_ON_CLOSE;
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
+		dwAccess = O_RDWR;
+	else if ( uiOptions & FILE_ACCESS_READ )
+		dwAccess = O_RDONLY;
+	else if ( uiOptions & FILE_ACCESS_WRITE )
+		dwAccess = O_WRONLY;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	// Snap: This seems like an unnecessary check, but I don't feel like
 	// rewriting the function to eliminate it...
@@ -374,7 +517,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	// Snap: First see if the file is in the custom Data catalogue:
 	std::string filePath;
 	if ( gCustomDataCat.FindFile(strFilename) ) {
-		filePath = gCustomDataCat.GetRootDir() + '\\';
+		filePath = gCustomDataCat.GetRootDir() + SLASH;
 	}
 	filePath += strFilename;
 	// Bad cast! strFilename should have been const.  Oh well...
@@ -382,6 +525,9 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	// Now strFilename points either to the original file name,
 	// or to the full file path in the custom Data directory.
 	// Except for this substitution, the rest of the function is unchanged.
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	//if the file is on the disk
 	if ( fExists )
@@ -397,7 +543,6 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		//create a file handle for the 'real file'
 		hFile = CreateRealFileHandle( hRealFile );
 	}
-
 	// if the file did not exist, try to open it from the database
 	else if ( gFileDataBase.fInitialized ) 
 	{
@@ -480,6 +625,87 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	if ( !hFile )
 		return(0);
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	//if the file is on the disk
+	if ( fExists )
+	{
+		hRealFile = open( strFilename, dwAccess );
+
+		if ( hRealFile == -1 )
+		{
+			fprintf(stderr, "Error opening file %s: errno=%d\n", strFilename, errno);
+			return(0);
+		}
+
+		//create a file handle for the 'real file'
+		hFile = CreateRealFileHandle( hRealFile );
+	}
+	// if the file did not exist, try to open it from the database
+	else if ( gFileDataBase.fInitialized ) 
+	{
+		//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
+		if( fDeleteOnClose )
+		{
+			return( 0 );
+		}
+
+		//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
+		if( uiOptions & FILE_ACCESS_WRITE )
+		{
+			//if the files is to be written to
+			if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
+			{
+				hFile = 0;
+			}
+		}
+		else
+		{
+			//If the file is in the library, get a handle to it.
+			hLibFile = OpenFileFromLibrary( (STR) strFilename );
+
+			//tried to open a file that wasnt in the database
+			if( !hLibFile )
+				return( 0 );
+			else			
+				return( hLibFile );		//return the file handle
+		}
+	}
+
+	if ( !hFile )
+	{
+		if ( uiOptions & FILE_CREATE_NEW )
+		{
+			dwAccess |= O_CREAT | O_EXCL;
+		}
+		else if ( uiOptions & FILE_CREATE_ALWAYS )
+		{
+			dwAccess |= O_CREAT;
+		}
+		else if ( uiOptions & FILE_TRUNCATE_EXISTING )
+		{
+			dwAccess |= O_CREAT | O_TRUNC;
+		}
+
+		hRealFile = open( strFilename, dwAccess );
+
+		if ( hRealFile == -1 )
+		{
+			fprintf(stderr, "Error opening/creating file %s: errno=%d\n", strFilename, errno);
+			return(0);
+		}
+
+		hFile = CreateRealFileHandle( hRealFile );
+	}
+
+	if ( !hFile )
+		return(0);
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return(hFile);
 }
 
@@ -516,7 +742,24 @@ void FileClose( HWFILE hFile )
 		//if its not already closed
 		if( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID != 0 )
 		{
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 			CloseHandle( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+			if ( close( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle ) == -1 )
+			{
+				fprintf(stderr, "Error closing file %d: errno=%d\n",
+					gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle, errno);
+			}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID = 0;
 			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle= 0;
 			gFileDataBase.RealFiles.iNumFilesOpen--;
@@ -572,7 +815,7 @@ void FileClose( HWFILE hFile )
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
 	HANDLE	hRealFile;
-	DWORD		dwNumBytesToRead, dwNumBytesRead;
+	UINT32		dwNumBytesToRead, dwNumBytesRead;
 	BOOLEAN	fRet = FALSE;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -586,7 +829,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
 
-	dwNumBytesToRead	= (DWORD)uiBytesToRead;
+	dwNumBytesToRead	= uiBytesToRead;
 
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
@@ -595,6 +838,9 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 		if( uiFileNum != 0 )
 		{
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 			fRet = ReadFile( hRealFile, pDest, dwNumBytesToRead, &dwNumBytesRead, NULL );
 			if ( dwNumBytesToRead != dwNumBytesRead )
@@ -606,8 +852,25 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 				fRet = FALSE;
 			}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+			dwNumBytesRead = read( hRealFile, pDest, dwNumBytesToRead);
+			if ( dwNumBytesToRead != dwNumBytesRead )
+			{
+				fprintf(stderr, "Error reading file %d: errno=%d\n",
+					hRealFile, errno);
+
+				fRet = FALSE;
+			}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 			if ( puiBytesRead )
 				*puiBytesRead = (UINT32)dwNumBytesRead;
+
 		}
 	}
 	else
@@ -670,7 +933,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
 {
 	HANDLE	hRealFile;
-	DWORD		dwNumBytesToWrite, dwNumBytesWritten;
+	UINT32		dwNumBytesToWrite, dwNumBytesWritten;
 	BOOLEAN	fRet;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -681,18 +944,37 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
-		dwNumBytesToWrite = (DWORD)uiBytesToWrite;
+		dwNumBytesToWrite = (UINT32)uiBytesToWrite;
 
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 		fRet = WriteFile( hRealFile, pDest, dwNumBytesToWrite, &dwNumBytesWritten, NULL );
 
 		if (dwNumBytesToWrite != dwNumBytesWritten)
 			fRet = FALSE;
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		if ( write( hRealFile, pDest, dwNumBytesToWrite ) == -1 )
+		{
+				fprintf(stderr, "Error reading file %d: errno=%d\n",
+					hRealFile, errno);
+			fRet = FALSE;
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif
+
 		if ( puiBytesWritten )
 			*puiBytesWritten = (UINT32)dwNumBytesWritten;
+
+	
 	}
 	else
 	{
@@ -726,11 +1008,15 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 //
 //**************************************************************************
 
+#if 0
 BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
 	BOOLEAN	fRet;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	hFile = FileOpen( strFilename, FILE_ACCESS_READ, FALSE );
 	if ( hFile )
@@ -749,8 +1035,16 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 	else
 		fRet = FALSE;
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return(fRet);
 }
+#endif
 
 //**************************************************************************
 //
@@ -775,9 +1069,9 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 //		9 Feb 98	DEF - modified to work with the library system
 //
 //**************************************************************************
-BOOLEAN _cdecl FilePrintf( HWFILE hFile, char * strFormatted, ... )
+BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 {
-	UINT8		strToSend[80];
+	CHAR8		strToSend[80];
 	va_list	argptr;
 	BOOLEAN fRetVal = FALSE;
 
@@ -792,8 +1086,25 @@ BOOLEAN _cdecl FilePrintf( HWFILE hFile, char * strFormatted, ... )
 		va_start(argptr, strFormatted);
 		vsprintf( (char *)strToSend, (char *)strFormatted, argptr );
 		va_end(argptr);
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 		
 		fRetVal = FileWrite( hFile, strToSend, strlen(strToSend), NULL );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		if ( write( hFile, strToSend, strlen(strToSend) ) == -1 )
+		{
+				fprintf(stderr, "Error reading file %d: errno=%d\n",
+					hFile, errno);
+			fRetVal = FALSE;
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	}
 	else
 	{
@@ -832,8 +1143,8 @@ BOOLEAN _cdecl FilePrintf( HWFILE hFile, char * strFormatted, ... )
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
 	HANDLE	hRealFile;
-	LONG		lDistanceToMove;
-	DWORD		dwMoveMethod;
+//	UINT32		lDistanceToMove;
+	UINT32		dwMoveMethod;
 	INT32		iDistance=0;
 
 	INT16 sLibraryID;
@@ -849,6 +1160,9 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 
 		iDistance = (INT32) uiDistance;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		if ( uiHow == FILE_SEEK_FROM_START )
 			dwMoveMethod = FILE_BEGIN;
 		else if ( uiHow == FILE_SEEK_FROM_END )
@@ -860,10 +1174,37 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 		else
 			dwMoveMethod = FILE_CURRENT;
 
-		lDistanceToMove = (LONG)uiDistance;
+//		lDistanceToMove = (UINT32)uiDistance;
 
 		if ( SetFilePointer( hRealFile, iDistance, NULL, dwMoveMethod ) == 0xFFFFFFFF )
 			return(FALSE);
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		if ( uiHow == FILE_SEEK_FROM_START )
+			dwMoveMethod = SEEK_SET;
+		else if ( uiHow == FILE_SEEK_FROM_END )
+		{
+			dwMoveMethod = SEEK_END;
+			if( iDistance > 0 )
+				iDistance = -(iDistance);
+		}
+		else
+			dwMoveMethod = SEEK_CUR;
+
+		if ( lseek( hRealFile, iDistance, dwMoveMethod ) == -1 )
+		{
+			fprintf(stderr, "Error seeking file %d: errno=%d\n",
+				hRealFile, errno);
+
+			return(FALSE);
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	}
 	else
 	{
@@ -914,12 +1255,32 @@ INT32 FileGetPos( HWFILE hFile )
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		uiPositionInFile = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT);
 		if( uiPositionInFile == 0xFFFFFFFF )
 		{
 			uiPositionInFile = 0;
 		}
 		return( uiPositionInFile );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		uiPositionInFile = lseek( hRealFile, 0, SEEK_CUR );
+		if( uiPositionInFile == -1 )
+		{
+			fprintf(stderr, "Error getting position in file %d: errno=%d\n",
+				hRealFile, errno);
+			uiPositionInFile = 0;
+		}
+		return( uiPositionInFile );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	}
 	else
 	{
@@ -977,7 +1338,28 @@ UINT32 FileGetSize( HWFILE hFile )
 		//Get the handle to a real file
 		hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		uiFileSize = GetFileSize( hRealHandle, NULL );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		struct stat file_stat;
+
+		if ( fstat( hRealHandle, &file_stat) == -1 )
+		{
+			fprintf(stderr, "Error getting size of file %d: errno=%d\n",
+				hRealHandle, errno);
+			return 0;
+		}
+
+		uiFileSize = file_stat.st_size;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	}
 	else
 	{
@@ -1256,6 +1638,7 @@ void BuildFileDirectory( void )
 //
 //**************************************************************************
 
+#if 0
 INT32 GetFilesInDirectory( HCONTAINER hStack, CHAR *pcDir, HANDLE hFile, WIN32_FIND_DATA *pFind )
 {
 	INT32					iNumFiles;
@@ -1298,19 +1681,40 @@ INT32 GetFilesInDirectory( HCONTAINER hStack, CHAR *pcDir, HANDLE hFile, WIN32_F
 
 	return(iNumFiles);
 }
+#endif
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	 return( SetCurrentDirectory( pcDirectory ) );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
 
 
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	if (GetCurrentDirectory( 512, pcDirectory ) == 0)
 	{
 		return( FALSE );
 	}
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	return( TRUE );
 }
 
@@ -1318,7 +1722,10 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 BOOLEAN DirectoryExists( STRING512 pcDirectory )
 {
 	UINT32	uiAttribs;
-	DWORD		uiLastError;
+	UINT32		uiLastError;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	uiAttribs = GetFileAttributes( pcDirectory );
 
@@ -1341,6 +1748,13 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 		}
 	}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	// this could also mean that the name given is that of a file, or that an error occurred
 	return FALSE;
 }
@@ -1348,7 +1762,17 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	return CreateDirectory( pcDirectory, NULL );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
 
 
@@ -1358,7 +1782,6 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 {
-	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
 	const CHAR8	*pFileSpec = "*.*";
 	BOOLEAN	fDone = FALSE;
@@ -1373,6 +1796,11 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 		FastDebugMsg(String("RemoveFileManDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
 		return( FALSE );		//Error going into directory
 	}
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
+	WIN32_FIND_DATA sFindData;
 
 	//If there are files in the directory, DELETE THEM
 	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
@@ -1433,6 +1861,13 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 		FastDebugMsg(String("RemoveFileManDirectory: ERROR - RemoveDirectory on %s failed, error %d", pcDirectory, GetLastError()));
 	}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return fRetval;
 }
 
@@ -1443,7 +1878,6 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory( STRING512 pcDirectory)
 {
-	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
 	const CHAR8	*pFileSpec = "*.*";
 	BOOLEAN	fDone = FALSE;
@@ -1456,6 +1890,11 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 		FastDebugMsg(String("EraseDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
 		return( FALSE );		//Error going into directory
 	}
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
+	WIN32_FIND_DATA sFindData;
 
 	//If there are files in the directory, DELETE THEM
 	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
@@ -1482,6 +1921,13 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 		FindClose( SearchHandle );
 	}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	// Snap: Delete the directory from the default Data catalogue (if it is there)
 	// Since the path can be either relative or absolute, try both methods
 	gDefaultDataCat.RemoveDir(pcDirectory, true);
@@ -1502,6 +1948,9 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 	SGPFILENAME	ModuleFilename;
 	UINT32 cnt;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	if ( GetModuleFileName( NULL, ModuleFilename, sizeof( ModuleFilename ) ) == 0 )
 	{
 		return( FALSE );
@@ -1519,11 +1968,22 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 		}
 	}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return( TRUE );
 }
 
+#if 0
 BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
 
@@ -1553,32 +2013,68 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 
 	W32toSGPFileFind( pGFStruct, &Win32FindInfo[iWhich] );
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return(TRUE);
 }
+#endif
 
+#if 0
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
 	CHECKF( pGFStruct != NULL );
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 	
 	if ( FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo[pGFStruct->iFindHandle]) )
 	{
 		W32toSGPFileFind( pGFStruct, &Win32FindInfo[pGFStruct->iFindHandle] );
 		return(TRUE);
 	}
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return(FALSE);
 }
+#endif
 
+#if 0
 void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
 	if ( pGFStruct == NULL )
 		return;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	FindClose( hFindInfoHandle[pGFStruct->iFindHandle] );
 	hFindInfoHandle[pGFStruct->iFindHandle] = INVALID_HANDLE_VALUE;
 	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	return;
 }
+#endif
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 {
@@ -1639,11 +2135,28 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 	}
 }
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 
+#if 0
 BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	return(CopyFile(strSrcFile, strDstFile, fFailIfExists));
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 // Not needed, use Windows CopyFile
 /*
@@ -1716,16 +2229,33 @@ BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
 	return(TRUE);
 */
 }
+#endif
 
+#if 0
 BOOLEAN FileMove(STR strOldName, STR strNewName)
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	// rename
 	return(MoveFile(strOldName, strNewName));
-}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+}
+#endif
+
+#if 0
 //Additions by Kris Morness
 BOOLEAN FileSetAttributes( STR strFilename, UINT32 uiNewAttribs )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	UINT32	uiFileAttrib = 0;
 
 	if( uiNewAttribs & FILE_ATTRIBUTES_ARCHIVE )
@@ -1750,11 +2280,22 @@ BOOLEAN FileSetAttributes( STR strFilename, UINT32 uiNewAttribs )
 		uiFileAttrib |= FILE_ATTRIBUTE_TEMPORARY;
 
 	return SetFileAttributes( strFilename, uiFileAttrib );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
+#endif
 
-
+#if 0
 UINT32 FileGetAttributes( STR strFilename )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	UINT32	uiAttribs = 0;
 	UINT32	uiFileAttrib = 0;
 
@@ -1787,17 +2328,35 @@ UINT32 FileGetAttributes( STR strFilename )
 	if( uiAttribs & FILE_ATTRIBUTE_DIRECTORY )
 		uiFileAttrib |= FILE_ATTRIBUTES_DIRECTORY;
 
-	
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	return( uiFileAttrib );
 }
+#endif
 
+#if 0
 BOOLEAN FileClearAttributes( STR strFilename )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	return SetFileAttributes( (LPCSTR) strFilename, FILE_ATTRIBUTE_NORMAL );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
+#endif
 
-
+#if 0
 //returns true if at end of file, else false
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 {
@@ -1818,6 +2377,9 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		//Get the current position of the file pointer
 		uiOldFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT );
 
@@ -1832,6 +2394,14 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 		{
 			return( 1 );
 		}
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	}
 
 	//else it is a library file
@@ -1867,9 +2437,9 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 	//we are not and the end of a file
 	return( 0 );
 }
+#endif
 
-
-
+#if 0
 BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime )
 {
 	HANDLE	hRealFile;
@@ -1928,23 +2498,46 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 
 	return( TRUE );
 }
+#endif
 
-
+#if 0
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime )
 {
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	return( CompareFileTime( pFirstFileTime, pSecondFileTime ) );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 }
+#endif
 
 UINT32 FileSize(STR strFilename)
 {
-HWFILE hFile;
 UINT32 uiSize;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
+HWFILE hFile;
 
 	if((hFile=FileOpen(strFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE))==0)
 		return(0);
 		
 	uiSize=FileGetSize(hFile);
 	FileClose(hFile);				
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	return(uiSize);
 }
@@ -1992,6 +2585,8 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 //		10June98:DB		-> creation
 //
 //**************************************************************************
+
+#if 0
 BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory)
 {
 CHAR8	*pSystemPath;
@@ -2083,8 +2678,8 @@ UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
 	UINT32			uiNumberOfFreeClusters=0;
 	UINT32			uiTotalNumberOfClusters=0;
 
-	if( !GetDiskFreeSpace( pzDriveLetter, (LPDWORD) &uiSectorsPerCluster, (LPDWORD) &uiBytesPerSector, 
-			(LPDWORD) &uiNumberOfFreeClusters, (LPDWORD) &uiTotalNumberOfClusters ) )
+	if( !GetDiskFreeSpace( pzDriveLetter, (LPUINT32) &uiSectorsPerCluster, (LPUINT32) &uiBytesPerSector, 
+			(LPUINT32) &uiNumberOfFreeClusters, (LPUINT32) &uiTotalNumberOfClusters ) )
 	{
 		UINT32 uiLastError = GetLastError();
 		char zString[1024];
@@ -2098,3 +2693,4 @@ UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
 	return( uiBytesFree );
 }
 
+#endif

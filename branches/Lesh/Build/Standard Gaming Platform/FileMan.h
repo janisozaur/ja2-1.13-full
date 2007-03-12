@@ -19,10 +19,7 @@
 //
 //**************************************************************************
 
-#include "types.h"
-
-#include "Windows.h"
-
+#include "Types.h"
 #include "FileCat.h"
 
 //**************************************************************************
@@ -33,30 +30,30 @@
 
 #define MAX_FILENAME_LEN        48
 
-#define FILE_ACCESS_READ	      0x01
-#define FILE_ACCESS_WRITE	      0x02
-#define FILE_ACCESS_READWRITE		0x03
+#define FILE_ACCESS_READ	    0x01
+#define FILE_ACCESS_WRITE	    0x02
+#define FILE_ACCESS_READWRITE	0x03
 
-#define FILE_CREATE_NEW				0x0010	// create new file. fail if exists
-#define FILE_CREATE_ALWAYS			0x0020	// create new file. overwrite existing
-#define FILE_OPEN_EXISTING			0x0040	// open a file. fail if doesn't exist
-#define FILE_OPEN_ALWAYS			0x0080	// open a file, create if doesn't exist
+#define FILE_CREATE_NEW			0x0010	// create new file. fail if exists
+#define FILE_CREATE_ALWAYS		0x0020	// create new file. overwrite existing
+#define FILE_OPEN_EXISTING		0x0040	// open a file. fail if doesn't exist
+#define FILE_OPEN_ALWAYS		0x0080	// open a file, create if doesn't exist
 #define FILE_TRUNCATE_EXISTING	0x0100	// open a file, truncate to size 0. fail if no exist
 
-#define FILE_SEEK_FROM_START		0x01	// keep in sync with dbman.h
-#define FILE_SEEK_FROM_END			0x02	// keep in sync with dbman.h
+#define FILE_SEEK_FROM_START	0x01	// keep in sync with dbman.h
+#define FILE_SEEK_FROM_END		0x02	// keep in sync with dbman.h
 #define FILE_SEEK_FROM_CURRENT	0x04	// keep in sync with dbman.h
 
 // GetFile file attributes
-#define FILE_IS_READONLY				1
-#define FILE_IS_DIRECTORY				2
-#define FILE_IS_HIDDEN					4
-#define FILE_IS_NORMAL					8
-#define FILE_IS_ARCHIVE					16
-#define FILE_IS_SYSTEM					32
-#define FILE_IS_TEMPORARY				64
-#define FILE_IS_COMPRESSED			128
-#define FILE_IS_OFFLINE					256
+#define FILE_IS_READONLY		1
+#define FILE_IS_DIRECTORY		2
+#define FILE_IS_HIDDEN			4
+#define FILE_IS_NORMAL			8
+#define FILE_IS_ARCHIVE			16
+#define FILE_IS_SYSTEM			32
+#define FILE_IS_TEMPORARY		64
+#define FILE_IS_COMPRESSED		128
+#define FILE_IS_OFFLINE			256
 
 
 
@@ -72,9 +69,11 @@
 
 // Snap, Kaiden: This define duplicates a standard MFC define
 // Added to resolve some intractable issue with MSVC6
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#define INVALID_FILE_ATTRIBUTES ((UINT32)-1)
 
-typedef	FILETIME				SGP_FILETIME;
+typedef	UINT32				SGP_FILETIME;
+typedef UINT32				HANDLE;
+//typedef UINT32				
 
 //**************************************************************************
 //
@@ -115,7 +114,7 @@ extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *
 extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
 extern BOOLEAN	FileLoad( STR filename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 
-extern BOOLEAN _cdecl FilePrintf( HWFILE hFile, char * strFormatted, ... );
+extern BOOLEAN  FilePrintf( HWFILE hFile, char * strFormatted, ... );
 
 extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );
 extern INT32	FileGetPos( HWFILE );

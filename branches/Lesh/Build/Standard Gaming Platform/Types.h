@@ -32,11 +32,11 @@
 // HEY WIZARDRY DUDES, JA2 ISN'T THE ONLY PROGRAM WE COMPILE! :-)
 
 #if defined( JA2 ) || defined( UTILS )
-typedef unsigned int   UINT32;
-typedef signed int     INT32;
+typedef unsigned int   	UINT32;
+typedef signed int     	INT32;
 #else
-typedef unsigned int   UINT32;
-typedef int				     INT32;
+typedef unsigned int   	UINT32;
+typedef int				INT32;
 #endif
 
 // integers
@@ -48,22 +48,22 @@ typedef signed short    INT16;
 typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
-typedef char			      CHAR8;
-typedef wchar_t					CHAR16;
-typedef char *			    STR;
-typedef char *					STR8;
-typedef wchar_t *				STR16;
+typedef char			CHAR8;
+typedef wchar_t			CHAR16;
+typedef char *			STR;
+typedef char *			STR8;
+typedef wchar_t *		STR16;
 // flags (individual bits used)
-typedef unsigned char		FLAGS8;
+typedef unsigned char	FLAGS8;
 typedef unsigned short	FLAGS16;
-typedef unsigned long		FLAGS32;
+typedef unsigned long	FLAGS32;
 // other
-typedef unsigned char		BOOLEAN;
-typedef void *					PTR;
+typedef unsigned char	BOOLEAN;
+typedef void *			PTR;
 typedef unsigned short	HNDL;
-typedef UINT8						BYTE;
-typedef CHAR8						STRING512[512];
-typedef UINT32					HWFILE;
+typedef UINT8			BYTE;
+typedef CHAR8			STRING512[512];
+typedef UINT32			HWFILE;
 
 #define SGPFILENAME_LEN 100
 typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];	
@@ -131,5 +131,10 @@ typedef VECTOR4   MATRIX4[4];       // 4x4 matrix
 typedef	VECTOR4	COLOR;			// rgba color array
 
 typedef UINT32 TIMER;			// timer definition
+
+#ifdef JA2_LINUX
+typedef UINT32		FILETIME;
+#define INVALID_HANDLE_VALUE 0xFFFFFFFF
+#endif
 
 #endif

@@ -1,15 +1,13 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "DirectDraw Calls.h"
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "video.h"
 	#include "himage.h"
 	#include "vsurface.h"
 	#include "vsurface_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "vobject_blitters.h"
 #endif
 

@@ -23,16 +23,13 @@
 //#elif defined( WIZ8_PRECOMPILED_HEADERS )
 //	#include "WIZ8 SGP ALL.H"
 //#else
-	#include "types.h"
-	#include <malloc.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include <stdio.h>
-	#ifdef _DEBUG
-		#include <crtdbg.h>
-	#endif
+#include "Platform.h"
+#include "Types.h"
+#include "MemMan.h"
+#include "DEBUG.H"
+//	#ifdef _DEBUG
+//		#include <crtdbg.h>
+//	#endif
 //#endif
 
 #ifdef _DEBUG

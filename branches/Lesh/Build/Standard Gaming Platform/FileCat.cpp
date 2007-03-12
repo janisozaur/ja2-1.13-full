@@ -1,6 +1,8 @@
 //
 // Snap: Implementation of the TFileCat class
 //
+
+#include "Platform.h"
 #include "FileCat.h"
 #include "readdir.h"
 
@@ -8,9 +10,11 @@
 // Remove a slash or backslash (if any) from the end of a string
 void ChompSlash(std::string& s)
 {
-	if ( s.empty() ) return;
+	if ( s.empty() )
+		return;
 
-	if ( *s.rbegin() == '\\' || *s.rbegin() == '/' ) {
+	if ( *s.rbegin() == '\\' || *s.rbegin() == '/' )
+	{
 		s.erase( s.length() - 1 );
 	}
 }
@@ -32,8 +36,10 @@ void TFileCat::NewCat(std::string root)
 // Unless pathIncludesRoot == true, will prepend the root directory to path
 bool TFileCat::FindFile(std::string path, bool pathIncludesRoot) const
 {
-	if (pathIncludesRoot) return fFileCat.find(path) != fFileCat.end();
-	else return fFileCat.find(fRootDir + '\\' + path) != fFileCat.end();
+	if (pathIncludesRoot)
+		return fFileCat.find(path) != fFileCat.end();
+	else
+		return fFileCat.find(fRootDir + SLASH + path) != fFileCat.end();
 }
 
 
@@ -41,8 +47,10 @@ bool TFileCat::FindFile(std::string path, bool pathIncludesRoot) const
 // Unless pathIncludesRoot == true, will prepend the root directory to path
 size_t TFileCat::RemoveFile(std::string path, bool pathIncludesRoot)
 {
-	if (pathIncludesRoot) return fFileCat.erase(path);
-	else return fFileCat.erase(fRootDir + '\\' + path);
+	if (pathIncludesRoot)
+		return fFileCat.erase(path);
+	else
+		return fFileCat.erase(fRootDir + SLASH + path);
 }
 
 
@@ -50,17 +58,20 @@ size_t TFileCat::RemoveFile(std::string path, bool pathIncludesRoot)
 // Unless pathIncludesRoot == true, will prepend the root directory to path
 size_t TFileCat::RemoveDir(std::string dir, bool pathIncludesRoot)
 {
-	if ( !pathIncludesRoot ) dir = fRootDir + '\\' + dir;
+	if ( !pathIncludesRoot )
+		dir = fRootDir + SLASH + dir;
+
 	ChompSlash(dir);
-	std::string dirlower = dir + '\\';
-	std::string dirupper = dir + char('\\'+1);
+	std::string dirlower = dir + SLASH;
+	std::string dirupper = dir + char(SLASH+1);
 
 	TCatalogue::iterator upper = fFileCat.upper_bound(dirupper);
 	TCatalogue::iterator lower;
 
 	int deleted = 0;
 
-	while ( ( lower = fFileCat.lower_bound(dirlower) ) != upper) {
+	while ( ( lower = fFileCat.lower_bound(dirlower) ) != upper)
+	{
 		fFileCat.erase(lower);
 		deleted++;
 	}
@@ -73,25 +84,42 @@ size_t TFileCat::RemoveDir(std::string dir, bool pathIncludesRoot)
 void TFileCat::TraverseDir(std::string dir, int depth)
 {
 	using std::string;
+	SGPFILENAME fileName;
+	bool isDir;
 
-	if (!dir.empty()) dir += '\\';
+	if (!dir.empty())
+		dir += SLASH;
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	TReadDir readDir((dir + "*").c_str());
 
-	char const* fileName;
-	unsigned attrib;
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
 
-	while ( readDir.NextFile(fileName, attrib) ) {
-		if (string(".") == fileName || string("..") == fileName) continue;
+	TReadDir readDir( dir.c_str() );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif
+
+	while ( readDir.NextFile(fileName, isDir) ) {
+		if (string(".") == fileName || string("..") == fileName)
+			continue;
 
 		string fullPath = dir + fileName;
 
-		if (attrib & FILE_ATTRIBUTE_DIRECTORY) {
+		if ( isDir )
+		{
 			if (depth < 0) TraverseDir(fullPath);
-			else if (depth > 0) TraverseDir(fullPath, depth-1);
+			else
+				if (depth > 0) TraverseDir(fullPath, depth-1);
 		}
-		else {
+		else
+		{
 			fFileCat.insert(fullPath);
 		}
 	}
+
 }

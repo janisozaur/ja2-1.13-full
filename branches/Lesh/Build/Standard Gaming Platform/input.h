@@ -1,7 +1,7 @@
 #ifndef __INPUT_
 #define __INPUT_
 
-#include "types.h"
+#include "Types.h"
 #include "SDL.h"
 
 #define SCAN_CODE_MASK				0xff0000

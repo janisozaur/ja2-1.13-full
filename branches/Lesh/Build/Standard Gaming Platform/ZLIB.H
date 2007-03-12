@@ -35,7 +35,7 @@
 extern "C" {
 #endif
 
-#include "zconf.h"
+#include "ZCONF.H"
 
 #define ZLIB_VERSION "1.0.4"
 
