@@ -491,6 +491,43 @@ enum SAIMOVECODE
 };
 void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention );
 
+
+
+
+/* This is only a dirty fix to prevent CTD: 
+ * when loading a game, sometimes I found that
+ * 'gGarrisonGroup' was not allocated.
+ * so I did:
+ * - added NULL check,
+ * - added some AssertMsg, 
+ * - added new allocation on different places
+ * - condensed this paces to the following function
+ * ---------------------------
+ * 2007-03-03, Sgt. Kolja 
+ */
+ 
+/* PUBLIC */
+void Enshure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize )
+{{
+  GARRISON_GROUP *pG;
+
+  pG = *ppGarrison;
+
+  if( !pG )
+    {
+    //AssertMsg( 0, "invalid global Array in" __FILE__ );
+    //return;
+  	 pG = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
+    Assert( pG );
+    memcpy( pG, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
+    *pGarraySize = sizeof( gOrigGarrisonGroup ) / sizeof(GARRISON_GROUP);
+    *ppGarrison = pG;
+    }
+  return;  
+}}
+
+
+
 //returns the number of reinforcements permitted to be sent.  Will increased if the denied counter is non-zero.
 INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements )
 {
@@ -499,9 +536,11 @@ INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinfor
 	//INT32 iOppositeForces;
 	SECTORINFO *pSector;
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic1");
+ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic1");
 
-	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iExistingForces = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 	iReinforcementsRequested = gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation - iExistingForces;
 
@@ -563,7 +602,9 @@ INT32 ReinforcementsAvailable( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	INT32 iReinforcementsAvailable;
 
-	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iReinforcementsAvailable = pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
 	iReinforcementsAvailable -= gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation;
 
@@ -608,7 +649,10 @@ BOOLEAN PlayerForceTooStrong( UINT8 ubSectorID, UINT16 usOffensePoints, UINT16 *
 void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 {
 	INT32 i;
-	for( i = 0; i < giGarrisonArraySize; i++ )
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID && !gGarrisonGroup[ i ].ubPendingGroupID )
 		{
@@ -656,6 +700,9 @@ void ValidatePendingGroups()
 		GROUP *pGroup;
 		INT32 i, iErrorsForInvalidPendingGroup = 0;
 		UINT8 ubGroupID;
+
+   Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 		for( i = 0; i < giPatrolArraySize; i++ )
 		{
 			ubGroupID = gPatrolGroup[ i ].ubPendingGroupID;
@@ -672,15 +719,15 @@ void ValidatePendingGroups()
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
 			ubGroupID = gGarrisonGroup[ i ].ubPendingGroupID;
-			if( ubGroupID )
-			{
-				pGroup = GetGroup( ubGroupID );
-				if( !pGroup || pGroup->fPlayer )
+  		if( ubGroupID )
+	  	{
+		  	pGroup = GetGroup( ubGroupID );
+			  if( !pGroup || pGroup->fPlayer )
 				{
-					iErrorsForInvalidPendingGroup++;
-					gGarrisonGroup[ i ].ubPendingGroupID = 0;
-				}
-			}
+  				iErrorsForInvalidPendingGroup++;
+	  			gGarrisonGroup[ i ].ubPendingGroupID = 0;
+		  	}
+		  }
 		}
 		if( iErrorsForInvalidPendingGroup )
 		{
@@ -698,21 +745,25 @@ void ValidateWeights( INT32 iID )
 		INT32 i;
 		INT32 iSumRequestPoints = 0;
 		INT32 iSumReinforcementPoints = 0;
-		for( i = 0; i < giPatrolArraySize; i++ )
-		{
-			iSumRequestPoints += gPatrolGroup[ i ].bWeight;
-		}
-		for( i = 0; i < giGarrisonArraySize; i++ )
-		{
-			if( gGarrisonGroup[ i ].bWeight > 0 )
-			{
-				iSumRequestPoints += gGarrisonGroup[ i ].bWeight;
-			}
-			else if( gGarrisonGroup[ i ].bWeight < 0 )
-			{
-				iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
-			}
-		}
+
+   Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ 
+   for( i = 0; i < giPatrolArraySize; i++ )
+ 	{
+ 		iSumRequestPoints += gPatrolGroup[ i ].bWeight;
+ 	}
+ 	for( i = 0; i < giGarrisonArraySize; i++ )
+ 	{
+ 		if( gGarrisonGroup[ i ].bWeight > 0 )
+ 		{
+ 			iSumRequestPoints += gGarrisonGroup[ i ].bWeight;
+ 		}
+ 		else if( gGarrisonGroup[ i ].bWeight < 0 )
+ 		{
+ 			iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
+ 		}
+ 	}
+   
 		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
 		{
 			UINT16 str[256];
@@ -1544,6 +1595,8 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 	SECTORINFO *pSector;
 	BOOLEAN fPermittedToAttack = TRUE;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ 
 	pSector = &SectorInfo[ ubSectorID ];
 	fPermittedToAttack = OkayForEnemyToMoveThroughSector( ubSectorID );
 	if( pGroup && *pGroup && pSector->ubGarrisonID != NO_GARRISON )
@@ -1665,7 +1718,7 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 	UINT8 ubEnemies;
 	pSector = &SectorInfo[ ubSectorID ];
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
+ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
 
 	//First check to see if the player is at his final destination.
 	if( !GroupAtFinalDestination( pPlayerGroup ) )
@@ -1680,6 +1733,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
 		RequestAttackOnSector( ubSectorID, usDefencePoints );
 		return;
 	}
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -1820,6 +1875,8 @@ BOOLEAN HandleEmptySectorNoticedByPatrolGroup( GROUP *pGroup, UINT8 ubEmptySecto
 	UINT8 ubSectorX = (UINT8)(ubEmptySectorID % 16) + 1;
 	UINT8 ubSectorY = (UINT8)(ubEmptySectorID / 16) + 1;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	ubGarrisonID = SectorInfo[ ubEmptySectorID ].ubGarrisonID;
 	if( ubGarrisonID != NO_GARRISON )
 	{
@@ -1866,6 +1923,8 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 		return;
 	}
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( gGarrisonGroup[ ubDstGarrisonID ].ubPendingGroupID )
 	{ //A group is already on-route, so don't send anybody from here.
 		return;
@@ -1890,6 +1949,8 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 	SECTORINFO *pSector;
 	UINT16 usOffensePoints;
 	UINT8 ubSectorX, ubSectorY;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	ubSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
@@ -1957,7 +2018,9 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 		return TRUE;
 	}
 	else if( pGroup->pEnemyGroup->ubIntention == REINFORCEMENTS )
-	{ //The group has arrived at the location where he is supposed to reinforce.
+	{ 
+   Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+   //The group has arrived at the location where he is supposed to reinforce.
 		//Step 1 -- Check for matching garrison location
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
@@ -2343,7 +2406,10 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 	{
 		return;
 	}
-	//First, determine if the sector is still owned by the enemy.  
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+  
+  //First, determine if the sector is still owned by the enemy.  
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -2465,6 +2531,9 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 {
 	INT32 i;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == ubGroupID )
@@ -2531,6 +2600,7 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 	INT32 iWeight, iPrevWeight;
 	INT32 iDesiredPop, iCurrentPop, iPriority;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 6 );
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
@@ -2573,6 +2643,8 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 void RecalculateSectorWeight( UINT8 ubSectorID )
 {
 	INT32 i;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID )
@@ -2609,6 +2681,8 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 	INT32 i, iRandom, iWeight;
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Check to see if we could send reinforcements from Alma.  Only Drassen/Cambria get preferred
 	//service from Alma, due to it's proximity and Alma's purpose as a forward military base.
@@ -2719,6 +2793,7 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 	UINT8 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 8 );
 
 	if( gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_B13 ||
@@ -3012,6 +3087,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 21 );
 
 	//Determine how many units the patrol group needs.
@@ -3191,6 +3267,8 @@ void EvaluateQueenSituation()
 
 	iOrigRequestPoints = giRequestPoints;	// debug only!
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	//go through garrisons first
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
@@ -3348,13 +3426,26 @@ BOOLEAN SaveStrategicAI( HWFILE hFile )
 			return FALSE;
 	}
 	//Save the garrison information!
+  /* Step 1: fill an EMPTY GARRISON for later padding */
 	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
-	FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
+  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+    {
+    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+    }
+
+  /* Step 2: write current Garrison Block of <giGarrisonArraySize> Elements */
+  FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 	if( uiNumBytesWritten != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 		return FALSE;
+
+  /* Step 3: after doing well, calculate how many Garrisons kept empty (and therefore are not saved) 
+   * in <strategic AI.h> it is defined as MAX_GARRISON_GROUPS 100. To have the same offset for the next field
+   * every time, we have to pad the unused garrisons until we have stored 100
+   */
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
-	while( i-- )
+	while( i-- > 0 )
 	{
+    /* write an empty garison as a padding filling block */
 		FileWrite( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 		if( uiNumBytesWritten != sizeof( GARRISON_GROUP ) )
 			return FALSE;
@@ -3510,14 +3601,29 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	{
 		MemFree( gGarrisonGroup );
 	}
-	gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+
+  /* giGarrisonArraySize has been zero here. Found it several times when loading
+   * a differnet build of JA2.1.13. Now fixed a little bit, I hope.
+   */
+  if( giGarrisonArraySize<iOrigGarrisonArraySize || giGarrisonArraySize<1 )
+    {
+    giGarrisonArraySize = iOrigGarrisonArraySize;
+    }
+  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+    {
+    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+    }
+
+  gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+  Assert( gGarrisonGroup );
 	FileRead( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 	if( uiNumBytesRead != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 	{
 		return FALSE;
 	}
-	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
-	while( i-- )
+  /* if the Savegame File contains more Garrisons then our Array, toss the remaining ones into the saucer */
+  i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
+	while( i-- > 0 ) /* prevent underrun, 2007-03-03, Sgt. Kolja  */
 	{
 		FileRead( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 		if( uiNumBytesRead != sizeof( GARRISON_GROUP ) )
@@ -3555,6 +3661,8 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	#ifdef JA2BETAVERSION
 		InitStrategicMovementCosts();
 	#endif
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.
@@ -3946,6 +4054,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 		return;
 	}
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( gubQueenPriorityPhase > ubNewPhase )
 	{
 		#ifdef JA2BETAVERSION
@@ -4144,6 +4254,8 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 		case STRATEGIC_AI_ACTION_KINGPIN_DEAD:
 			//Immediate send a small garrison to C5 (to discourage access to Tony the dealer)
 			/*
+     Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 * added NULL fix, 2007-03-03, Sgt. Kolja *
+
 			for( i = 0; i < giGarrisonArraySize; i++ )
 			{
 				if( gGarrisonGroup[ i ].ubComposition == SANMONA_SMALL )
@@ -4574,6 +4686,8 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 		return;
 	}
 	
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
 	{ //If the sector doesn't belong to the player, then we shouldn't be calling this function!
 		SAIReportError( L"StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled." );
@@ -4744,6 +4858,9 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 	//AssertMsg( giPatrolArraySize == PATROL_GROUPS && giGarrisonArraySize == GARRISON_GROUPS, "Strategic AI -- Patrol and/or garrison group definition mismatch." );
 	ubBestDist = 255;
 	iBestIndex = -1;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID )
@@ -4870,6 +4987,9 @@ void MassFortifyTowns()
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubNumTroops, ubDesiredTroops;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		pSector = &SectorInfo[ gGarrisonGroup[ i ].ubSectorID ];
@@ -4902,6 +5022,8 @@ void MassFortifyTowns()
 
 void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 {
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
 		INT32 iDesired, iSurplus;
@@ -4937,6 +5059,8 @@ void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 {
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	switch( ubSectorID )
 	{
 		case SEC_B2:
@@ -4971,6 +5095,8 @@ BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 
 	iAvailable = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
@@ -4996,6 +5122,8 @@ BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID )
 	INT32 iAvailable;
 	INT32 iDesired;
 	SECTORINFO *pSector;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gGarrisonGroup[ iGarrisonID ].ubPendingGroupID )
 	{
@@ -5146,7 +5274,7 @@ void UpgradeAdminsToTroops()
 	GROUP *pGroup;
 	INT16 sPatrolIndex;
 
-
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	// on normal, AI evaluates approximately every 10 hrs.  There are about 130 administrators seeded on the map.
 	// Some of these will be killed by the player.
 
@@ -5286,6 +5414,7 @@ INT16 FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID )
 INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 {
 	INT16 sGarrisonIndex;
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( sGarrisonIndex = 0; sGarrisonIndex < giGarrisonArraySize; sGarrisonIndex++ )
 	{
@@ -5336,6 +5465,7 @@ void ReassignAIGroup( GROUP **pGroup )
 
 	(*pGroup)->ubSectorIDOfLastReassignment = ubSectorID;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ClearPreviousAIGroupAssignment( *pGroup );
 
 	//First thing to do, is teleport the group to be AT the sector he is currently moving from.  Otherwise, the 
@@ -5495,6 +5625,8 @@ void RepollSAIGroup( GROUP *pGroup )
 {
 	INT32 i;
 	Assert( !pGroup->fPlayer );
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	if( GroupAtFinalDestination( pGroup ) )
 	{
 		EvaluateGroupSituation( pGroup );
@@ -5526,6 +5658,8 @@ void RepollSAIGroup( GROUP *pGroup )
 void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 {
 	INT32 i;
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
@@ -5595,6 +5729,7 @@ void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSi
 	UINT8 ubOrigNumTroops;
 	UINT8 ubOrigSize;
 
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	iCompositionID = gGarrisonGroup[ iGarrisonID ].ubComposition;
 
 	CalcNumTroopsBasedOnComposition( &ubNumTroops, &ubNumElites, ubSize, iCompositionID );
@@ -5759,6 +5894,7 @@ void ReinitializeUnvisitedGarrisons()
 	//Recreate the compositions
 	memcpy( gArmyComp, gOrigArmyComp, NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) );
 	EvolveQueenPriorityPhase( TRUE );
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Go through each unvisited sector and recreate the garrison forces based on 
 	//the desired population.
@@ -5825,6 +5961,9 @@ GROUP* FindPendingGroupForGarrisonSector( UINT8 ubSectorID )
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
+
+ Enshure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
 		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
