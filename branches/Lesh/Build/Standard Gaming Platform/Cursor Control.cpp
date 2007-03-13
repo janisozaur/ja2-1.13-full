@@ -2,11 +2,8 @@
 	#include "JA2 SGP ALL.H"
 #else
 	#include "Cursor Control.h"
-
-	#if defined( JA2 ) || defined( UTIL )
+	#include "Timing.h"
 	#include "video.h"
-	#endif
-
 	#include "WCheck.h"
 #endif
 

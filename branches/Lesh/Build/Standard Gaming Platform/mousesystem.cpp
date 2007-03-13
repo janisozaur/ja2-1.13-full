@@ -14,19 +14,16 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
+	#include "Platform.h"
 	#include "Types.h"
-	#include <stdio.h>
-	#include <memory.h>
 	#include "DEBUG.H"
 	#include "input.h"
 	#include "MemMan.h"
 	#include "line.h"
-	#if (defined( JA2 ) || defined( UTIL ))
-		#include "video.h"
-		#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
-	#endif
+	#include "video.h"
+	#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
 	#ifdef _JA2_RENDER_DIRTY
-		#include "render dirty.h"
+		#include "Render Dirty.h"
 		#include "Font Control.h"
 	#endif
 	#include "english.h"
@@ -34,6 +31,7 @@
 	#include "mousesystem.h"
 	#include "Cursor Control.h"
 	#include "Button System.h"
+	#include "Timing.h"
 #endif
 
 #ifdef JA2_PRECOMPILED_HEADERS
@@ -1251,10 +1249,10 @@ void SetRegionFastHelpText( MOUSE_REGION *region, type2 szText )
 		return; //blank (or clear)
 
 	// Allocate memory for the button's FastHelp text string...
-	region->FastHelpText = (UINT16*)MemAlloc( (wcslen( (wchar_t *)szText ) + 1) * sizeof(UINT16) );
+	region->FastHelpText = (STR16) MemAlloc( (wcslen( (wchar_t *)szText ) + 1) * sizeof(CHAR16) );
 	Assert( region->FastHelpText );
 
-	wcscpy( region->FastHelpText, szText );
+	wcscpy( region->FastHelpText, (wchar_t *) szText );
 
   // ATE: We could be replacing already existing, active text
   // so let's remove the region so it be rebuilt...
@@ -1282,18 +1280,27 @@ void SetRegionFastHelpText( MOUSE_REGION *region, type2 szText )
 INT16 GetNumberOfLinesInHeight( STR16 pStringA )
 {
 	STR16 pToken;
+	STR16 pState;
 	INT16 sCounter = 0;
 	CHAR16 pString[ 512 ];
 
 	wcscpy( pString, pStringA );
 
 	// tokenize
+#ifdef JA2_WIN
 	pToken = wcstok( pString, L"\n" );
+#elif defined( JA2_LINUX )
+	pToken = wcstok( pString, L"\n", &pState );
+#endif
 
 	while( pToken != NULL )
-  {
-		 pToken = wcstok( NULL, L"\n" );
-		 sCounter++;
+  	{
+#ifdef JA2_WIN
+		pToken = wcstok( NULL, L"\n" );
+#elif defined( JA2_LINUX )
+		pToken = wcstok( NULL, L"\n", &pState );
+#endif
+		sCounter++;
 	}
 
 	return( sCounter );
@@ -1366,20 +1373,29 @@ INT16 GetWidthOfString( STR16 pStringA )
 {
 	CHAR16 pString[ 512 ];
 	STR16 pToken;
+	STR16 pState;
 	INT16 sWidth = 0;
 	wcscpy( pString, pStringA );
 
 	// tokenize
+#ifdef JA2_WIN
 	pToken = wcstok( pString, L"\n" );
+#elif defined( JA2_LINUX )
+	pToken = wcstok( pString, L"\n", &pState );
+#endif
 
 	while( pToken != NULL )
-  {
+  	{
 		if( sWidth < StringPixLength( pToken, FONT10ARIAL ) )
 		{
 			sWidth = StringPixLength( pToken, FONT10ARIAL );
 		}
 
+#ifdef JA2_WIN
 		pToken = wcstok( NULL, L"\n" );
+#elif defined( JA2_LINUX )
+		pToken = wcstok( NULL, L"\n", &pState );
+#endif
 	}
 
 	return( sWidth );
@@ -1389,6 +1405,7 @@ INT16 GetWidthOfString( STR16 pStringA )
 void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 {
 	STR16 pToken;
+	STR16 pState;
 	INT32 iCounter = 0, i;
 	UINT32 uiCursorXPos;
 	CHAR16 pString[ 512 ];
@@ -1397,10 +1414,14 @@ void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 	wcscpy( pString, pStringA );
 
 	// tokenize
+#ifdef JA2_WIN
 	pToken = wcstok( pString, L"\n" );
+#elif defined( JA2_LINUX )
+	pToken = wcstok( pString, L"\n", &pState );
+#endif
 
 	while( pToken != NULL )
-  {
+  	{
 		iLength = (INT32)wcslen( pToken );
 		for( i = 0; i < iLength; i++ )
 		{
@@ -1418,7 +1439,11 @@ void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 			}
 			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(FONT10ARIAL)+1), L"%c", pToken[ i ] );
 		}
+#ifdef JA2_WIN
 		pToken = wcstok( NULL, L"\n" );
+#elif defined( JA2_LINUX )
+		pToken = wcstok( NULL, L"\n", &pState );
+#endif
 		iCounter++;
 	}
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
@@ -1462,7 +1487,7 @@ void RenderFastHelp()
 				if ( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA &&
 						!MSYS_CurrRegion->ButtonState)// & (MSYS_LEFT_BUTTON|MSYS_RIGHT_BUTTON)) )
 				{
-					MSYS_CurrRegion->FastHelpTimer -= (INT16)max( iTimeDifferential, 0 );
+					MSYS_CurrRegion->FastHelpTimer -= (INT16) __max( iTimeDifferential, 0 );
 
 					if( MSYS_CurrRegion->FastHelpTimer < 0 )
 					{

@@ -155,7 +155,7 @@ extern FontTranslationTable *CreateEnglishTransTable(  );
 extern INT16 GetIndex(UINT16 siChar);
 extern UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex);
 
-extern INT16 StringPixLengthArgFastHelp( INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, UINT16 *pFontString );
+extern INT16 StringPixLengthArgFastHelp( INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, STR16 pFontString );
 extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, UINT16 *pFontString, ...);
 template <typename type1>
 extern INT16 StringPixLength(type1 string,INT32 UseFont);

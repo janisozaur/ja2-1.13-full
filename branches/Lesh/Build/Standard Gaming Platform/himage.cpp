@@ -309,9 +309,9 @@ BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT
 	Assert( hImage->pCompressedImageData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+//	CHECKF( usX >= 0 );
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+//	CHECKF( usY >= 0 );
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -337,11 +337,11 @@ BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT
 	// to blit has been done).
 
 	// initialize the decompression routines
-	pDecompPtr = DecompressInit( hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
+	pDecompPtr = DecompressInit( (BYTE*) hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
 	CHECKF( pDecompPtr );
 
 	// Allocate memory for one scanline
-	pScanLine = MemAlloc( hImage->usWidth );
+	pScanLine = (UINT8 *) MemAlloc( hImage->usWidth );
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
@@ -394,9 +394,9 @@ BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UIN
 	Assert( hImage->pCompressedImageData != NULL );
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Start check" );
 	// Validations
-	CHECKF( usX >= 0 );
+//	CHECKF( usX >= 0 );
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+//	CHECKF( usY >= 0 );
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -425,11 +425,11 @@ BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UIN
 	// to blit has been done).
 
 	// initialize the decompression routines
-	pDecompPtr = DecompressInit( hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
+	pDecompPtr = DecompressInit( (BYTE*) hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
 	CHECKF( pDecompPtr );
 
 	// Allocate memory for one scanline
-	pScanLine = MemAlloc( hImage->usWidth );
+	pScanLine = (UINT8*) MemAlloc( hImage->usWidth );
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
@@ -486,9 +486,9 @@ BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestW
 	Assert( hImage->p16BPPData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+//	CHECKF( usX >= 0 );
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+//	CHECKF( usY >= 0 );
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -529,9 +529,9 @@ BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDes
 	Assert( hImage->p16BPPData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+//	CHECKF( usX >= 0 );
 	CHECKF( usX < hImage->usWidth );
-	CHECKF( usY >= 0 );
+//	CHECKF( usY >= 0 );
 	CHECKF( usY < hImage->usHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -592,9 +592,9 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 
 	// Validations
 	CHECKF( hImage->p16BPPData != NULL );
-	CHECKF( usX >= 0 );
+//	CHECKF( usX >= 0 );
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+//	CHECKF( usY >= 0 );
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );

@@ -10,6 +10,7 @@
 	#include "JA2 SGP ALL.H"
 #else
 	#include "Platform.h"
+	#include "Timing.h"
 	#include "soundman.h"
 	#include "FileMan.h"
 	#include "DEBUG.H"
@@ -768,7 +769,7 @@ BOOLEAN fRandomSoundWasCreated=FALSE;
 BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 {
 	if(pSampleList[uiSample].uiFlags&SAMPLE_RANDOM)
-		if(pSampleList[uiSample].uiTimeNext <= GetTickCount())
+		if(pSampleList[uiSample].uiTimeNext <= SDL_GetTicks())
 			if(pSampleList[uiSample].uiInstances < pSampleList[uiSample].uiMaxInstances)
             {
 				return(TRUE);
@@ -801,7 +802,7 @@ SOUNDPARMS spParms;
 
 		if((uiSoundID=SoundStartSample(uiSample, uiChannel, &spParms))!=SOUND_ERROR)
 		{
-			pSampleList[uiSample].uiTimeNext=GetTickCount()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
+			pSampleList[uiSample].uiTimeNext=SDL_GetTicks()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
 			pSampleList[uiSample].uiInstances++;
 			//SoundLog((CHAR8 *)String("  SoundPlayRandom():  Sample #%d = '%s'", uiSample, pFilename ) );
 			return(TRUE);
@@ -1205,7 +1206,7 @@ BOOLEAN fRemoved;
 		FileClose(hFile);
 
 		strcpy(pSampleList[uiSample].pName, pFilename);
-		_strupr(pSampleList[uiSample].pName);
+//		_strupr(pSampleList[uiSample].pName);
 		pSampleList[uiSample].uiSize=uiSize;
 		pSampleList[uiSample].uiFlags|=SAMPLE_ALLOCATED;
 		return(uiSample);
@@ -1620,7 +1621,7 @@ UINT32 uiSoundID;
     // Other stuff
 	pSoundList[uiChannel].uiTimeStamp=GetTickCount();
 	pSoundList[uiChannel].uiFadeVolume = SoundGetVolumeIndex(uiChannel);
-    pSoundList[uiChannel].uiSample = -1;    // it's streaming directly from file !!!!
+    pSoundList[uiChannel].uiSample = NO_SAMPLE;    // it's streaming directly from file !!!!
 
     return(uiSoundID);
 }

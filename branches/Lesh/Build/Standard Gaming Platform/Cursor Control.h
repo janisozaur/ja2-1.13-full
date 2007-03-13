@@ -5,17 +5,12 @@
 #include "FileMan.h"
 #include "vobject.h"
 #include "vsurface.h"
+#include "video.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-#if defined( JA2 ) || defined( UTIL )
-#include "video.h"
-#else
-#include "video2.h"
-#endif  
 
 
 extern UINT32		GetCursorHandle(UINT32 uiCursorIndex);

@@ -141,9 +141,6 @@ STRING512	gzHomePath;
 
 void	FileDebugPrint( void );
 HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
-HWFILE	CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile );
-void	DestroyFileHandle( HWFILE hFile );
-void	BuildFileDirectory( void );
 
 //**************************************************************************
 //
@@ -1434,255 +1431,6 @@ HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
 	return(hRealFile);
 }
 
-//**************************************************************************
-//
-// CreateFileHandle
-//
-//		
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-/*
-
-	not needed anymore
-
-HWFILE CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile )
-{
-	UINT32		i, uiOldNumHandles;
-	FMFileInfo		*pNewFileInfo;
-
-	Assert( !fDatabaseFile || (fDatabaseFile && gfs.fDBInitialized) );
-
-	// don't use 1st position - it'll confuse the users
-	for ( i=1 ; i<gfs.uiNumHandles ; i++ )
-	{
-		if ( gfs.pFileInfo[i].hFileHandle == 0 && gfs.pFileInfo[i].hDBFile == 0 )
-		{
-			if ( fDatabaseFile )
-				gfs.pFileInfo[i].hDBFile = (HDBFILE)hRealFile;
-			else
-				gfs.pFileInfo[i].hFileHandle = hRealFile;
-			return( i );
-		}
-	}
-
-	uiOldNumHandles = gfs.uiNumHandles;
-
-	pNewFileInfo = (FMFileInfo *)MemRealloc( gfs.pFileInfo, gfs.uiNumHandles + NUM_FILES_TO_ADD_AT_A_TIME );
-	if ( !pNewFileInfo )
-	{
-		// TBD: error error error
-		return(0);
-	}
-	gfs.pFileInfo = (FMFileInfo *)pNewFileInfo;
-	gfs.uiNumHandles = gfs.uiNumHandles + NUM_FILES_TO_ADD_AT_A_TIME;
-
-	for ( i=uiOldNumHandles ; i<gfs.uiNumHandles ; i++ )
-	{
-		gfs.pFileInfo[i].hFileHandle = 0;
-		gfs.pFileInfo[i].hDBFile = 0;
-	}
-
-	if ( fDatabaseFile )
-		gfs.pFileInfo[uiOldNumHandles].hDBFile = (HDBFILE)hRealFile;
-	else
-		gfs.pFileInfo[uiOldNumHandles].hFileHandle = hRealFile;
-
-	return(uiOldNumHandles);
-}
-*/
-
-//**************************************************************************
-//
-// DestroyFileHandle
-//
-//		
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-/*
-void DestroyFileHandle( HWFILE hFile )
-{
-	if ( hFile < gfs.uiNumHandles && hFile )
-	{
-		gfs.pFileInfo[hFile].hFileHandle = 0;
-		gfs.pFileInfo[hFile].hDBFile = 0;
-	}
-}
-*/
-
-
-
-//**************************************************************************
-//
-// BuildFileDirectory
-//
-//		
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		??nov96:HJH		-> creation
-//
-//**************************************************************************
-
-void BuildFileDirectory( void )
-{
-
-	return;	// temporary until container stuff is fixed
-/*
-	INT32					i, iNumFiles = 0;
-	HANDLE				hFile, hFileIn;
-	WIN32_FIND_DATA	find, inFind;
-	BOOLEAN				fMore = TRUE;
-	CHAR					cName[FILENAME_LENGTH], cDir[FILENAME_LENGTH], cSubDir[FILENAME_LENGTH];
-	HCONTAINER			hStack;
-
-
-
-	//
-	//	First, push all the file names in the directory (and subdirectories)
-	//	onto the stack.
-	//
-
-	GetProfileChar( "Startup", "InstPath", "", cDir );
-
-	if ( strlen( cDir ) == 0 )
-		return;
-
-	hStack = CreateStack( 100, FILENAME_LENGTH );
-	if (hStack == NULL)
-	{
-		FastDebugMsg(String("BuildFileDirectory: CreateStack Failed for the filename stack"));
-		return;
-	}
-
-	find.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-
-	strcpy( &(cDir[strlen(cDir)]), "\\*.*\0" );
-	hFile = FindFirstFile( cDir, &find );
-	while ( fMore )
-	{
-		if ( find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-		{
-			if ( strcmp( find.cFileName, "." ) != 0 && strcmp( find.cFileName, ".." ) != 0 )
-			{
-				// a valid directory
-				inFind.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-				strcpy( cSubDir, cDir );
-				strcpy( &(cSubDir[strlen(cDir)-3]), find.cFileName );
-				strcpy( &(cSubDir[strlen(cSubDir)]), "\\*.*\0" );
-				hFileIn = FindFirstFile( cSubDir, &inFind );
-				iNumFiles += GetFilesInDirectory( hStack, cSubDir, hFileIn, &inFind );
-				FindClose( hFileIn );
-			}
-		}
-		else
-		{
-			iNumFiles++;
-			strcpy( cName, cDir );
-			strcpy( &(cName[strlen(cName)-3]), find.cFileName );
-			CharLower( cName );
-			hStack = Push( hStack, cName );
-		}
-		find.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-		fMore = FindNextFile( hFile, &find );
-	}
-	FindClose( hFile );
-
-	//
-	//	Okay, we have all the files in the stack, now put them in place.
-	//
-	gfs.uiNumFilesInDirectory = iNumFiles;
-
-	gfs.pcFileNames = (CHAR *)MemAlloc( iNumFiles * FILENAME_LENGTH );
-
-	if ( gfs.pcFileNames )
-	{
-		for ( i=0 ; i<iNumFiles ; i++ )
-		{
-			Pop( hStack, (void *)(&gfs.pcFileNames[i*FILENAME_LENGTH]) );
-		}
-	}
-
-	//
-	//	Clean up.
-	//
-
-	DeleteStack( hStack );
-*/
-}
-
-//**************************************************************************
-//
-// GetFilesInDirectory
-//
-//		Gets the files in a directory and the subdirectories.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		??nov96:HJH		-> creation
-//
-//**************************************************************************
-
-#if 0
-INT32 GetFilesInDirectory( HCONTAINER hStack, CHAR *pcDir, HANDLE hFile, WIN32_FIND_DATA *pFind )
-{
-	INT32					iNumFiles;
-	WIN32_FIND_DATA	inFind;
-	BOOLEAN				fMore;
-	CHAR					cName[FILENAME_LENGTH], cDir[FILENAME_LENGTH];
-	HANDLE				hFileIn;
-
-	fMore = TRUE;
-	iNumFiles = 0;
-
-	while ( fMore )
-	{
-		if ( pFind->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-		{
-			if ( strcmp( pFind->cFileName, "." ) != 0 && strcmp( pFind->cFileName, ".." ) != 0 )
-			{
-				// a valid directory - recurse and find the files in that directory
-
-				inFind.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-				strcpy( cDir, pcDir );
-				strcpy( &(cDir[strlen(cDir)-3]), pFind->cFileName );
-				strcpy( &(cDir[strlen(cDir)]), "\\*.*\0" );
-				hFileIn = FindFirstFile( cDir, &inFind );
-				iNumFiles += GetFilesInDirectory( hStack, cDir, hFileIn, &inFind );
-				FindClose( hFileIn );
-			}
-		}
-		else
-		{
-			iNumFiles++;
-			strcpy( cName, pcDir );
-			strcpy( &(cName[strlen(cName)-3]), pFind->cFileName );
-			CharLower( cName );
-			hStack = Push( hStack, cName );
-		}
-		pFind->dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-		fMore = FindNextFile( hFile, pFind );
-	}
-
-	return(iNumFiles);
-}
-#endif
-
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
 #ifdef JA2_WIN
@@ -1724,6 +1472,8 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 	UINT32	uiAttribs;
 	UINT32		uiLastError;
 
+	BACKSLASH(strFilename);
+
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1752,6 +1502,16 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	// check, if it is a regular file
+	struct stat file_stat;
+
+	if ( stat( pcDirectory, &file_stat) == -1 )
+		return FALSE;
+
+	if ( S_ISDIR(file_stat.st_mode) )
+		return TRUE;
+
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
@@ -1762,6 +1522,8 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
+	BACKSLASH(strFilename);
+
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1770,6 +1532,14 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
+
+	if ( mkdir(pcDirectory, 0755) == -1 )
+	{
+		fprintf(stderr, "Error creating dir %s: errno=%d\n",
+			pcDirectory, errno);
+		return FALSE;
+	}
+	return TRUE;
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
@@ -1788,6 +1558,8 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	BOOLEAN fRetval=FALSE;
 	CHAR8		zOldDir[512];
 	CHAR8		zSubdirectory[512];
+
+	BACKSLASH(strFilename);
 
 	GetFileManCurrentDirectory( zOldDir );
 
@@ -1864,7 +1636,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
-
+	fprintf(stderr, "RemoveFileManDirectory(): %s, %d\n", pcDirectory, fRecursive);
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
@@ -1882,6 +1654,8 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	const CHAR8	*pFileSpec = "*.*";
 	BOOLEAN	fDone = FALSE;
 	CHAR8		zOldDir[512];
+
+	BACKSLASH(strFilename);
 
 	GetFileManCurrentDirectory( zOldDir );
 
@@ -1924,7 +1698,7 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
-
+	fprintf(stderr, "EraseDirectory(): %s\n", pcDirectory);
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
@@ -1971,7 +1745,7 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
-
+	fprintf(stderr, "GetExecutableDirectory()\n");
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
