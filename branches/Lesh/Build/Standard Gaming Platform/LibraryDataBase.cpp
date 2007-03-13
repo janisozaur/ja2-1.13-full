@@ -17,9 +17,6 @@
 	#include	"GameSettings.h"
 #elif defined(UTIL)
 	LibraryInitHeader gGameLibaries[ ] = { 0 };
-#else
-// We link it as an .obj file
-//	#include "WizLibs.c"
 #endif
 
 
@@ -33,11 +30,11 @@ INT16	gsCurrentLibrary = -1;
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
-INT			CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader );
+INT32		CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
+BOOLEAN		GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader );
 void		AddSlashToPath( STR pName );
-HWFILE	CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
-BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID );
+HWFILE		CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
+BOOLEAN 	CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID );
 
 INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 
@@ -170,7 +167,23 @@ BOOLEAN ShutDownFileDatabase( )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg( String("ShutDownFileDatabase( ):  ERROR:  real file id still exists, wasnt closed") );
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		CloseHandle( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		if ( close( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle ) == -1 )
+		{
+			fprintf(stderr, "Error closing file %d (LibDB): errno=%d\n",
+				gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle, errno);
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	}
 
 	//Free up the memory used for the real files array for the opened files
@@ -191,6 +204,11 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 	BOOLEAN fRetVal = FALSE;
 	HANDLE	hFile;
 
+	BACKSLASH(pLibraryName);
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//try to opent the file, if we canm the library exists
 	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
 
@@ -206,6 +224,21 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 		CloseHandle( hFile );
 		fRetVal = TRUE;
 	}
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	// check, if it is a regular file
+	struct stat file_stat;
+
+	if ( stat( pLibraryName, &file_stat) == -1 )
+		fRetVal = FALSE;
+	else if ( S_ISREG(file_stat.st_mode) )
+		fRetVal = TRUE;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	return( fRetVal );
 }

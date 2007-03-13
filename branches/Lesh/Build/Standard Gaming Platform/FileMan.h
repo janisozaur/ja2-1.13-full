@@ -101,7 +101,7 @@ extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
 
 extern void		ShutdownFileManager( void );
 extern void		FileDebug( BOOLEAN f );
-
+extern BOOLEAN 	PathBackslash(STR path);
 
 BOOLEAN	FileExists( STR strFilename );
 extern BOOLEAN	FileExistsNoDB( STR strFilename );
@@ -121,6 +121,12 @@ extern INT32	FileGetPos( HWFILE );
 
 extern UINT32	FileGetSize( HWFILE );
 extern UINT32 FileSize(STR strFilename);
+
+#ifdef JA2_WIN
+#	define BACKSLASH(x)
+#elif defined(JA2_LINUX)
+#	define BACKSLASH(x)		PathBackslash(x)
+#endif
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory );
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );

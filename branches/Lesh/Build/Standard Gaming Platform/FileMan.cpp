@@ -257,12 +257,6 @@ BOOLEAN PathBackslash(STR path)
 	return TRUE;
 }
 
-#ifdef JA2_WIN
-#	define BACKSLASH(x)
-#elif defined(JA2_LINUX)
-#	define BACKSLASH(x)		PathBackslash(x)
-#endif
-
 //**************************************************************************
 //
 // FileExists
@@ -1472,7 +1466,7 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 	UINT32	uiAttribs;
 	UINT32		uiLastError;
 
-	BACKSLASH(strFilename);
+	BACKSLASH(pcDirectory);
 
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
@@ -1522,7 +1516,7 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 {
-	BACKSLASH(strFilename);
+	BACKSLASH(pcDirectory);
 
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
@@ -1559,7 +1553,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	CHAR8		zOldDir[512];
 	CHAR8		zSubdirectory[512];
 
-	BACKSLASH(strFilename);
+	BACKSLASH(pcDirectory);
 
 	GetFileManCurrentDirectory( zOldDir );
 
@@ -1655,7 +1649,7 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	BOOLEAN	fDone = FALSE;
 	CHAR8		zOldDir[512];
 
-	BACKSLASH(strFilename);
+	BACKSLASH(pcDirectory);
 
 	GetFileManCurrentDirectory( zOldDir );
 

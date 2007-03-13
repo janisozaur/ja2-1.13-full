@@ -35,9 +35,9 @@ SOURCES  = \
 	Random.cpp \
 	English.cpp
 
+#	LibraryDataBase.cpp \
 #	ExceptionHandling.cpp \
 #	video.cpp \
-#	LibraryDataBase.cpp \
 #	Flic.cpp \
 #	sgp.cpp \
 #	vobject_blitters.cpp \
