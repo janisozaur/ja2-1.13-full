@@ -71,9 +71,9 @@
 // Added to resolve some intractable issue with MSVC6
 #define INVALID_FILE_ATTRIBUTES ((UINT32)-1)
 
-typedef	UINT32				SGP_FILETIME;
+typedef	FILETIME			SGP_FILETIME;
+
 typedef UINT32				HANDLE;
-//typedef UINT32				
 
 //**************************************************************************
 //

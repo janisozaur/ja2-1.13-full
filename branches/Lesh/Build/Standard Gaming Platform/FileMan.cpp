@@ -2207,16 +2207,25 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 }
 #endif
 
-#if 0
+
+//**************************************************************************
+//
+// GetFileManFileTime()
+//		Obtain file creation time, last access time and last write time.
+// Parameter List :
+//		hFile - file handler
+//		pCreationTime - pointer to creation time
+//		pLastAccessedTime - pointer to last access time
+//		pLastWriteTime - pointer to last write time
+// Return Value :
+//		BOOLEAN - TRUE if success, FALSE if not
+//
+//**************************************************************************
 BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime )
 {
 	HANDLE	hRealFile;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
-
-	FILETIME	sCreationUtcFileTime;
-	FILETIME	sLastAccessedUtcFileTime;
-	FILETIME	sLastWriteUtcFileTime;
 
 	//Initialize the passed in variables
 	memset( pCreationTime, 0, sizeof( SGP_FILETIME ) );
@@ -2232,6 +2241,13 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
+		FILETIME	sCreationUtcFileTime;
+		FILETIME	sLastAccessedUtcFileTime;
+		FILETIME	sLastWriteUtcFileTime;
+
 		//Gets the UTC file time for the 'real' file				
 		GetFileTime( hRealFile, &sCreationUtcFileTime, &sLastAccessedUtcFileTime, &sLastWriteUtcFileTime );
 
@@ -2243,6 +2259,26 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 
 		//converts the write UTC file time to the current time used for the file
 		FileTimeToLocalFileTime( &sLastWriteUtcFileTime, pLastWriteTime );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		struct stat file_stat;
+
+		if ( fstat( hFile, &file_stat) == -1 )
+		{
+			fprintf(stderr, "Error getting time of file %d: errno=%d\n",
+				hFile, errno);
+			return 0;
+		}
+
+		*pCreationTime     = file_stat.st_ctime;
+		*pLastAccessedTime = file_stat.st_atime;
+		*pLastWriteTime    = file_stat.st_mtime;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 	}
 	else
 	{
@@ -2266,9 +2302,20 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 
 	return( TRUE );
 }
-#endif
 
-#if 0
+
+//**************************************************************************
+//
+// CompareSGPFileTimes()
+//		Compares two times. If time1 > time2, return positive number.
+//		If time1 < time2, return negative, if equal, return zero.
+// Parameter List :
+//		pFirstFileTime - pointer to time1
+//		pSecondFileTime - pointer to time2
+// Return Value :
+//		INT32 - difference in times
+//
+//**************************************************************************
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime )
 {
 #ifdef JA2_WIN
@@ -2280,19 +2327,32 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	return( *pFirstFileTime - *pSecondFileTime );
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 }
-#endif
 
+//**************************************************************************
+//
+// FileSize()
+//		Get a filesize by filename.
+// Parameter List :
+//		strFilename - filename
+// Return Value :
+//		UINT32 - file size in bytes
+//
+//**************************************************************************
 UINT32 FileSize(STR strFilename)
 {
-UINT32 uiSize;
+	UINT32 uiSize;
+
+	BACKSLASH(strFilename);
 
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
-HWFILE hFile;
+	HWFILE hFile;
 
 	if((hFile=FileOpen(strFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE))==0)
 		return(0);
@@ -2303,6 +2363,16 @@ HWFILE hFile;
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
+
+	struct stat file_stat;
+
+	if ( stat( strFilename, &file_stat) == -1 )
+	{
+		fprintf(stderr, "Error getting size of file %s: errno=%d\n",
+			strFilename, errno);
+		return 0;
+	}
+	uiSize = file_stat.st_size;
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
@@ -2339,78 +2409,7 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 	return( 0 );
 }
 
-//**************************************************************************
-//
-// AddSubdirectoryToPath
-//
-//		Puts a subdirectory of the current working directory into the current 
-// task's system path. 
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		10June98:DB		-> creation
-//
-//**************************************************************************
-
 #if 0
-BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory)
-{
-CHAR8	*pSystemPath;
-CHAR8 *pPath;
-UINT32 uiPathLen;
-
-	// Check for NULL
-	if(!pDirectory)
-		return(FALSE);
-
-	// Check for zero length string
-	if(!strlen(pDirectory))
-		return(FALSE);
-
-	if((pSystemPath=(CHAR8 *)MemAlloc(_MAX_PATH))==NULL)
-		return(FALSE);
-
-	memset(pSystemPath, 0, _MAX_PATH);
-
-	if((pPath=(CHAR8 *)MemAlloc(_MAX_PATH))==NULL)
-	{
-		MemFree(pSystemPath);
-		return(FALSE);
-	}
-
-	memset(pPath, 0, _MAX_PATH);
-
-	// Builds a path to the directory with the SR DLL files.
-	_getcwd(pPath, _MAX_PATH);
-	uiPathLen=strlen(pPath);
-	if(uiPathLen)
-		uiPathLen--;
-	if(pPath[uiPathLen]!='\\')
-		strcat(pPath, "\\");
-	
-	strcat(pPath, pDirectory);
-
-	// Appends it to the path for the current task
-	if(GetEnvironmentVariable("PATH", pSystemPath, _MAX_PATH))
-	{
-		strcat(pSystemPath, ";");
-		strcat(pSystemPath, pPath);
-		SetEnvironmentVariable("PATH", pSystemPath);
-		MemFree(pSystemPath);
-		MemFree(pPath);
-		return(TRUE);
-	}
-	else
-	{
-		MemFree(pSystemPath);
-		MemFree(pPath);
-		return(FALSE);
-	}
-	
-}
-
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
