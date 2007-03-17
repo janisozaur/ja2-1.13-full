@@ -22,12 +22,16 @@
 #	include <sys/stat.h>
 #	include <pwd.h>
 #	include <fcntl.h>
+#	include <glob.h>
 #	define SLASH '/'
 #	define __min(a, b)	( ((a) < (b)) ? (a) : (b) )
 #	define __max(a, b)	( ((a) > (b)) ? (a) : (b) )
 #	define min(a, b)	( ((a) < (b)) ? (a) : (b) )
 #	define max(a, b)	( ((a) > (b)) ? (a) : (b) )
 #	define _stricmp	strcasecmp
+#	define _strnicmp strncasecmp
+#	define _access access
+#	define MAX_PATH 512
 #endif
 
 // Include windows-specific headers

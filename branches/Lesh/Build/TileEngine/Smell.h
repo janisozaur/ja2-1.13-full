@@ -1,3 +1,6 @@
+#ifndef _SMELL_H_
+#define _SMELL_H_
+
 #include "soldier control.h"
 
 #define HUMAN							 0
@@ -22,3 +25,5 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible );
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel );
 void RemoveBlood( INT16 sGridNo, INT8 bLevel );
 void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStrength, INT8 bVisible );
+
+#endif

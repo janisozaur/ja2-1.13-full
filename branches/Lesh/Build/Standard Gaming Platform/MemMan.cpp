@@ -43,8 +43,8 @@
 //**************************************************************************
 
 #ifdef JA2
-#include "mousesystem.h"
-#include "MessageBoxScreen.h"
+//#include "mousesystem.h"
+//#include "MessageBoxScreen.h"
 STR16 gzJA2ScreenNames[] = 
 {
 	L"EDIT_SCREEN",
@@ -218,7 +218,7 @@ void ShutdownMemoryManager( void )
 					fprintf( fp, "_______________________________________________\n" );
 					fprintf( fp, "%d bytes memory total STILL allocated\n", guiMemTotal );
 					fprintf( fp, "%d memory blocks still allocated\n", MemDebugCounter );
-					fprintf( fp, "guiScreenExitedFrom = %S\n", gzJA2ScreenNames[ gMsgBox.uiExitScreen ] );
+//					fprintf( fp, "guiScreenExitedFrom = %S\n", gzJA2ScreenNames[ gMsgBox.uiExitScreen ] );
 					fprintf( fp, "\n\n" );
 				}
 				fclose( fp );

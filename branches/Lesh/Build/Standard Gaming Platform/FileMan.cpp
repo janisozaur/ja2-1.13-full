@@ -97,19 +97,8 @@ DatabaseManagerHeaderStruct gFileDataBase;
 WIN32_FIND_DATA Win32FindInfo[20];
 
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
-INT32	GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_DATA *pFind );
+//INT32	GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_DATA *pFind );
 
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
-BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE,
-								FALSE,FALSE,FALSE,FALSE,FALSE };
 HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
@@ -120,6 +109,30 @@ HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 								INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+struct FileList
+{
+	glob_t	Info;
+	UINT32	uiIndex;
+};
+
+typedef struct FileList	FILELIST;
+
+FILELIST FileInfo[20];
+
+void TransferToSGPFileFind( GETFILESTRUCT *pGFStruct, FILELIST *pFindEntry );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
+BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
+								FALSE,FALSE,FALSE,FALSE,FALSE,
+								FALSE,FALSE,FALSE,FALSE,FALSE,
+								FALSE,FALSE,FALSE,FALSE,FALSE };
 
 // Snap: At program launch we build two directory catalogues:
 // one for the default Data directory, the other for the custom Data directory.
@@ -1427,6 +1440,8 @@ HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
+	BACKSLASH(pcDirectory);
+
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1435,6 +1450,15 @@ BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
+
+	if ( !chdir( pcDirectory ) )
+	{
+		fprintf(stderr, "Error setting dir %s: errno=%d\n",
+			pcDirectory, errno);
+		return FALSE;
+	}
+
+	return TRUE;
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
@@ -1455,8 +1479,16 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	if ( !getcwd( pcDirectory, 512 ) )
+	{
+		fprintf(stderr, "Error getting dir %s: errno=%d\n",
+			pcDirectory, errno);
+		return FALSE;
+	}
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+
 	return( TRUE );
 }
 
@@ -1740,20 +1772,31 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 	fprintf(stderr, "GetExecutableDirectory()\n");
+	strncpy( pcDirectory, gzDataPath, 512);
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
 	return( TRUE );
 }
 
-#if 0
+
+//**************************************************************************
+//
+// GetFileFirst()
+//		Start file search, that suits to our pattern (e.g. *.jsd, *.*)
+// Parameter List :
+//		pSpec - path and/or mask
+//		pGFStruct - SGP file find info (and handler)
+// Return Value :
+//		BOOLEAN - TRUE if end of file, FALSE if not
+//
+//**************************************************************************
 BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 {
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
+
+	BACKSLASH(pSpec);
 
 	CHECKF( pSpec != NULL );
 	CHECKF( pGFStruct != NULL );
@@ -1773,11 +1816,13 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 
 	pGFStruct->iFindHandle = iWhich;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	hFindInfoHandle[iWhich] = FindFirstFile( pSpec, &Win32FindInfo[iWhich] );
 	
 	if ( hFindInfoHandle[iWhich] == INVALID_HANDLE_VALUE )
 		return(FALSE);
-	fFindInfoInUse[iWhich] = TRUE;
 
 	W32toSGPFileFind( pGFStruct, &Win32FindInfo[iWhich] );
 
@@ -1785,14 +1830,34 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	if ( glob( pSpec, 0, NULL, &FileInfo[iWhich].Info ) )
+	{
+		fprintf(stderr, "Error while trying to GetFileFirst() using mask: %s, errno=%d\n", pSpec, errno);
+		globfree( &FileInfo[iWhich].Info );
+		return FALSE;
+	}
+
+	FileInfo[iWhich].uiIndex = 0;
+	TransferToSGPFileFind( pGFStruct, &FileInfo[iWhich] );
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
+	fFindInfoInUse[iWhich] = TRUE;
+
 	return(TRUE);
 }
-#endif
 
-#if 0
+//**************************************************************************
+//
+// GetFileNext()
+//		Get next file, that suits to our pattern.
+// Parameter List :
+//		pGFStruct - SGP file find info (and handler)
+// Return Value :
+//		BOOLEAN - TRUE if end of file, FALSE if not
+//
+//**************************************************************************
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
 	CHECKF( pGFStruct != NULL );
@@ -1810,14 +1875,28 @@ BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	if ( FileInfo[ pGFStruct->iFindHandle ].uiIndex < FileInfo[ pGFStruct->iFindHandle ].Info.gl_pathc )
+	{
+		TransferToSGPFileFind( pGFStruct, &FileInfo[ pGFStruct->iFindHandle ] );
+		FileInfo[ pGFStruct->iFindHandle ].uiIndex++;
+		return TRUE;
+	}
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
 	return(FALSE);
 }
-#endif
 
-#if 0
+
+//**************************************************************************
+//
+// GetFileClose()
+//		Shut up file pattern searching. Release searching resources.
+// Parameter List :
+//		pGFStruct - SGP file find info (and handler)
+//
+//**************************************************************************
 void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
 	if ( pGFStruct == NULL )
@@ -1828,22 +1907,33 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 
 	FindClose( hFindInfoHandle[pGFStruct->iFindHandle] );
 	hFindInfoHandle[pGFStruct->iFindHandle] = INVALID_HANDLE_VALUE;
-	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	globfree( &FileInfo[ pGFStruct->iFindHandle ].Info );
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
+	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
+
 	return;
 }
-#endif
 
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
+//**************************************************************************
+//
+// W32toSGPFileFind()
+//		Windows version! Convert results of file searching to SGP format
+// Parameter List :
+//		pGFStruct - SGP find file info
+//		pW32Struct - info about one found file
+//
+//**************************************************************************
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 {
 	UINT32 uiAttribMask;
@@ -1907,118 +1997,38 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
-
-#if 0
-BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
+//**************************************************************************
+//
+// TransferToSGPFileFind()
+//		Linux version! Convert results of file searching to SGP format
+// Parameter List :
+//		pGFStruct - SGP find file info
+//		pFindEntry - info about one found file
+//
+//**************************************************************************
+void TransferToSGPFileFind( GETFILESTRUCT *pGFStruct, FILELIST *pFindEntry )
 {
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
+	// Copy the filename
+	strncpy(pGFStruct->zFileName, pFindEntry->Info.gl_pathv[ pFindEntry->uiIndex ], 260);
 
-	return(CopyFile(strSrcFile, strDstFile, fFailIfExists));
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
+	pGFStruct->uiFileAttribs |= FILE_IS_NORMAL;
+}
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
-// Not needed, use Windows CopyFile
-/*
-	HWFILE hFile;
-	UINT32 uiSize;
-	CHAR *pBuffer;
-	UINT32 uiBytesRead, uiBytesWritten;
 
-
-	// open source file
-  hFile = FileOpen(strSrcFile, FILE_ACCESS_READ, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Src file %s", strSrcFile));
-    return(FALSE);
-  }
-
-	// get its size
-	uiSize = FileGetSize(hFile);
-	if (uiSize == 0)
-	{
-   	FastDebugMsg(String("FileCopy: size is 0, Src file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
-	}
-
-	// allocate a buffer big enough to hold the entire file
-	pBuffer = MemAlloc(uiSize);
-	if (pBuffer == NULL)
-	{
-		FastDebugMsg(String("FileCopy: ERROR - MemAlloc pBuffer failed, size %d", uiSize));
-    FileClose(hFile);
-		return(FALSE);
-	}
-
-	// read the file into memory
-  if (!FileRead(hFile, pBuffer, uiSize, &uiBytesRead))
-  {
-   	FastDebugMsg(String("FileCopy: FileRead failed, file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
-
-	// close source file
-  FileClose(hFile);
-
-
-	// open destination file
-  hFile = FileOpen(strDstFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Dst file %s", strDstFile));
-    return(FALSE);
-  }
-
-	// write buffer to the destination file
-  if (!FileWrite(hFile, pBuffer, uiSize, &uiBytesWritten))
-  {
-   	FastDebugMsg(String("FileCopy: FileWrite failed, file %s", strDstFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
-
-	// close destination file
-  FileClose(hFile);
-
-
-  MemFree(pBuffer);
-  pBuffer = NULL;
-	return(TRUE);
-*/
-}
-#endif
-
-#if 0
-BOOLEAN FileMove(STR strOldName, STR strNewName)
-{
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	// rename
-	return(MoveFile(strOldName, strNewName));
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-}
-#endif
-
-#if 0
-//Additions by Kris Morness
+//**************************************************************************
+//
+// FileSetAttributes()
+//		Set file attributes. Actually, not used.
+// Parameter List :
+//		strFilename - file name
+//		uiNewAttribs - new attributes
+// Return Value :
+//		UINT32 - file attributes as a combination of bits
+//
+//**************************************************************************
 BOOLEAN FileSetAttributes( STR strFilename, UINT32 uiNewAttribs )
 {
 #ifdef JA2_WIN
@@ -2053,19 +2063,32 @@ BOOLEAN FileSetAttributes( STR strFilename, UINT32 uiNewAttribs )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	// Lesh: not implemented, because function isn't in use
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 }
-#endif
 
-#if 0
+//**************************************************************************
+//
+// FileGetAttributes()
+//		Get file attributes.
+// Parameter List :
+//		strFilename - file name
+// Return Value :
+//		UINT32 - file attributes as a combination of bits
+//
+//**************************************************************************
 UINT32 FileGetAttributes( STR strFilename )
 {
+	UINT32	uiFileAttrib = 0;
+
+	BACKSLASH(strFilename);
+
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
 	UINT32	uiAttribs = 0;
-	UINT32	uiFileAttrib = 0;
 
 	uiAttribs = GetFileAttributes( strFilename );
 
@@ -2100,16 +2123,35 @@ UINT32 FileGetAttributes( STR strFilename )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	struct stat file_stat;
+
+	if ( stat( strFilename, &file_stat) == -1 )
+		return 0xFFFFFFFF;
+
+	if ( S_ISDIR(file_stat.st_mode) )
+		uiFileAttrib |= FILE_ATTRIBUTES_DIRECTORY;
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 
 	return( uiFileAttrib );
 }
-#endif
 
-#if 0
+
+//**************************************************************************
+//
+// FileClearAttributes()
+//		Clear file attributes.
+// Parameter List :
+//		strFilename - file name
+// Return Value :
+//		BOOLEAN - TRUE if end of file, FALSE if not
+//
+//**************************************************************************
 BOOLEAN FileClearAttributes( STR strFilename )
 {
+	BACKSLASH(strFilename);
+
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -2119,23 +2161,27 @@ BOOLEAN FileClearAttributes( STR strFilename )
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
 
+	return TRUE;
+
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 }
-#endif
 
-#if 0
-//returns true if at end of file, else false
+//**************************************************************************
+//
+// FileCheckEndOfFile()
+//		Returns true if file pointer is at end of file, else false
+// Parameter List :
+//		hFile - file handler
+// Return Value :
+//		BOOLEAN - TRUE if end of file, FALSE if not
+//
+//**************************************************************************
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 {
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 	HANDLE	hRealFile;
-//	UINT8		Data;
-	UINT32	uiNumberOfBytesRead=0;
-	UINT32	uiOldFilePtrLoc=0;
-	UINT32	uiEndOfFilePtrLoc=0;
-	UINT32	temp=0;
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
 
@@ -2147,6 +2193,10 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
+
+		UINT32	uiOldFilePtrLoc=0;
+		UINT32	uiEndOfFilePtrLoc=0;
+		UINT32	temp=0;
 
 		//Get the current position of the file pointer
 		uiOldFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT );
@@ -2166,6 +2216,11 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 // ------------------- End of Windows-specific stuff -----------------------
 #elif defined(JA2_LINUX)
 // ----------------------- Linux-specific stuff ----------------------------
+
+		UINT32 uiFileSize = FileGetSize( hRealFile );
+		UINT32 uiFilePtr  = FileGetPos( hRealFile );
+
+		return ( uiFilePtr >= uiFileSize );
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
@@ -2205,7 +2260,6 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 	//we are not and the end of a file
 	return( 0 );
 }
-#endif
 
 
 //**************************************************************************

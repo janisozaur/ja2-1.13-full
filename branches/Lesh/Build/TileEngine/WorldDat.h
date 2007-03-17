@@ -1,7 +1,7 @@
 #ifndef WORLD_DAT_H
 #define WORLD_DAT_H
 
-#include "types.h"
+#include "Types.h"
 #include "tiledat.h"
 #include "World Tileset Enums.h"
 

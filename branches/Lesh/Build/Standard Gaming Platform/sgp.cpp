@@ -6,37 +6,31 @@
 	#include "utilities.h"
 	#include "SDL.h"
 #else
+	#include "Platform.h"
 	#include "SDL.h"
-	#include "types.h"
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <string.h>
+	#include "Types.h"
 	#include "sgp.h"
 	#include "vobject.h"
-	#include "font.h"
+	#include "Font.h"
 	#include "local.h"
-	#include "Fileman.h"
+	#include "FileMan.h"
 	#include "input.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "gameloop.h"
 	#include "soundman.h"
 	#include "JA2 Splash.h"
 	#include "Timer Control.h"
-	#if !defined( JA2 ) && !defined( UTIL )
-		#include "GameData.h"               // for MoveTimer() [Wizardry specific]
-	#endif
+	#include "input.h"
+	#include "builddefines.h"
+	#include "Intro.h"
+	#include "LibraryDataBase.h"
+	#include ""
 #endif
 
-	#include "input.h"
-	#include "zmouse.h"
 
+//#include "ExceptionHandling.h"
 
-#include "ExceptionHandling.h"
-
-#include "dbt.h"
-#include "INIReader.h"
-#include "BuildDefines.h"
-#include "Intro.h"
+//#include "INIReader.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 	#define WIN32_LEAN_AND_MEAN
@@ -66,8 +60,6 @@ CHAR8						*gzStringDataOverride=NULL;
 BOOLEAN						gfCapturingVideo = FALSE;
 
 #endif
-
-HINSTANCE					ghInstance;
 
 
 // Global Variable Declarations
@@ -329,11 +321,11 @@ void SGPExit(void)
 
 	ShutdownStandardGamingPlatform();
 	SDL_Quit();
-	ShowCursor(TRUE);
-	if(strlen(gzErrorMsg))
-	{
-		MessageBox(NULL, gzErrorMsg, "Error", MB_OK | MB_ICONERROR  );
-	}
+//	ShowCursor(TRUE);
+//	if(strlen(gzErrorMsg))
+//	{
+//		MessageBox(NULL, gzErrorMsg, "Error", MB_OK | MB_ICONERROR  );
+//	}
 }
 
 void GetRuntimeSettings( )

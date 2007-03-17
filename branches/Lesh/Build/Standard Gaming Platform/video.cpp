@@ -2,18 +2,17 @@
 	#include "JA2 SGP ALL.H"
 	#include "resource.h"
 #else
+	#include "Platform.h"
 	#include "Types.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
-//	#include "sgp.h"
-	#include <stdio.h>
 	#include "renderworld.h"
 	#include "Render Dirty.h"
-	#include "Isometric utils.h"
-	#include "fade screen.h"
+	#include "Isometric Utils.h"
+	#include "Fade Screen.h"
 	#include "impTGA.h"
-	#include "timer control.h"
-	#include "Fileman.h"
+	#include "Timer Control.h"
+	#include "FileMan.h"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,12 +107,6 @@ char				gFatalErrorString[ 512 ];
 // 8-bit palette stuff
 
 SGPPaletteEntry							gSgpPalette[256];
-
-//
-// Make sure we record the value of the hWindow (main window frame for the application)
-//
-
-HWND                          ghWindow;
 
 //
 // Refresh thread based variables
@@ -1960,7 +1953,7 @@ BOOLEAN HideMouseCursor(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN LoadCursorFile(PTR pFilename)
+BOOLEAN LoadCursorFile(STR pFilename)
 {
 	VOBJECT_DESC VideoObjectDescription;
 
@@ -2069,8 +2062,10 @@ void PrintScreen(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //Kaiden - Added for VC6 Compatibility
+#ifdef JA2_WIN
 #if _MSC_VER <= 1200
 	template void FatalError<char const *>(char *, ...);
+#endif
 #endif
  
 template void FatalError<char const *>(char const *, ...);

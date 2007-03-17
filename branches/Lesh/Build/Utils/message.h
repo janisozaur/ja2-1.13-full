@@ -4,8 +4,8 @@
 //#include "sgp.h"
 #include "font.h"
 #include "Font Control.h"
-#include "types.h"
-#include "Fileman.h"
+#include "Types.h"
+#include "FileMan.h"
 
 
 struct stringstruct{

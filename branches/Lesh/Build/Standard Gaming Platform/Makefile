@@ -5,10 +5,16 @@ RANLIB	= ranlib
 
 TARGET = SGP.a
 DEFINES = -DJA2 -DENGLISH
-INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Utils
+INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Utils -I../Laptop -I../Tactical
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \
+	sgp.cpp \
+	video.cpp \
+	Button\ System.cpp \
+	Button\ Sound\ Control.cpp \
+	Flic.cpp \
+	LibraryDataBase.cpp \
 	Cursor\ Control.cpp \
 	Ja2\ Libs.cpp\
 	mousesystem.cpp \
@@ -35,15 +41,9 @@ SOURCES  = \
 	Random.cpp \
 	English.cpp
 
-#	LibraryDataBase.cpp \
 #	ExceptionHandling.cpp \
-#	video.cpp \
-#	Flic.cpp \
-#	sgp.cpp \
 #	vobject_blitters.cpp \
 #	WinFont.cpp
-#	Button_Sound_Control.cpp \
-#	Button_System.cpp \
 
 #OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
 OBJECTS = $(SOURCES:.cpp=.o)

@@ -25,6 +25,8 @@
 //
 //**************************************************************************
 
+#ifdef JA2_WIN
+
 //**************************************************************************
 //
 //				Includes
@@ -1696,4 +1698,4 @@ void FlicClearBitmap( HBITMAP hBitmap, INT iColourIndex )
 		((CHAR *)dibSection.dsBm.bmBits)[i] = iColourIndex;
 	}
 }
-
+#endif

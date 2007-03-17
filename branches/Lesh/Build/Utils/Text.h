@@ -2,7 +2,7 @@
 #define __TEXT_H
 
 #include "items.h"
-#include "types.h"
+#include "Types.h"
 #include "mapscreen.h"
 
 #define STRING_LENGTH 255

@@ -7,30 +7,24 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "types.h"
-	#include <stdio.h>
-	#include <memory.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "Types.h"
+	#include "DEBUG.H"
 	#include "input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "english.h"
 	#include "vobject.h"
 	#include "vobject_blitters.h"
 	#include "soundman.h"
 	#include "Button System.h"
 	#include "line.h"
-	#include <stdarg.h>
-	#if defined( JA2 ) || defined( UTIL )
-		#include "WordWrap.h"
-		#include "video.h"
-		#include "Button Sound Control.h"
-		#ifdef _JA2_RENDER_DIRTY
-			#include "Font Control.h"
-			#include "Render Dirty.h"
-			#include "utilities.h"
-		#endif
-	#else
-		#include "video2.h"
+	#include "WordWrap.h"
+	#include "video.h"
+	#include "Button Sound Control.h"
+	#ifdef _JA2_RENDER_DIRTY
+		#include "Font Control.h"
+		#include "Render Dirty.h"
+		#include "Utilities.h"
 	#endif
 #endif
 
@@ -206,9 +200,9 @@ template <typename type1>
 INT32 LoadButtonImage(type1 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	VOBJECT_DESC	vo_desc;
-	UINT32				UseSlot;
+	UINT32			UseSlot;
 	ETRLEObject		*pTrav;
-	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
+	UINT32			MaxHeight,MaxWidth,ThisHeight,ThisWidth;
 	UINT32 MemBefore,MemAfter,MemUsed;
 
 	AssertMsg(filename!=BUTTON_NO_FILENAME, "Attempting to LoadButtonImage() with null filename." );
@@ -231,7 +225,7 @@ INT32 LoadButtonImage(type1 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHi
 
 	// Load the image
 	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, filename);
+	strcpy(vo_desc.ImageFile, (STR)filename);
 
 	MemBefore = MemGetFree();
 	if((ButtonPictures[UseSlot].vobj = CreateVideoObject(&vo_desc)) == NULL)
@@ -1013,7 +1007,7 @@ BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 //
 //	Loads the image files required for displaying a generic button.
 //
-INT16 LoadGenericButtonImages(UINT8 *GrayName,UINT8 *OffNormName,UINT8 *OffHiliteName,UINT8 *OnNormName,UINT8 *OnHiliteName,UINT8 *BkGrndName,INT16 Index,INT16 OffsetX, INT16 OffsetY)
+INT16 LoadGenericButtonImages(CHAR8 *GrayName, CHAR8 *OffNormName, CHAR8 *OffHiliteName, CHAR8 *OnNormName, CHAR8 *OnHiliteName, CHAR8 *BkGrndName, INT16 Index, INT16 OffsetX, INT16 OffsetY)
 {
 	INT16 ImgSlot;
 	VOBJECT_DESC	vo_desc;
@@ -2077,7 +2071,7 @@ INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, string3 filename, GUI_CALLBAC
 }
 
 template INT32 CreateEasyNewToggleButton<char const *>(INT32, INT32, char const *, GUI_CALLBACK);
-template INT32 CreateEasyNewToggleButton<short *>(INT32, INT32, short *, GUI_CALLBACK);
+//template INT32 CreateEasyNewToggleButton<short *>(INT32, INT32, short *, GUI_CALLBACK);
 template <typename string3>
 INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback )
 {
@@ -2085,7 +2079,7 @@ INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, string3 filename, GUI_CALLBAC
 }
 
 //Same as above, but accepts specify toggle type
-template INT32 CreateEasyButton<short *>(INT32, INT32, short *, INT32, GUI_CALLBACK);
+template INT32 CreateEasyButton<const char *>(INT32, INT32, const char *, INT32, GUI_CALLBACK);
 template <typename string3>
 INT32 CreateEasyButton( INT32 x, INT32 y, string3 filename, INT32 Type, GUI_CALLBACK ClickCallback)
 {
@@ -2191,7 +2185,7 @@ INT32 CreateIconAndTextButton( INT32 Image, string2 string, UINT32 uiFont,
 	{
 		b->string = (wchar_t*)MemAlloc( (wcslen((wchar_t *)string)+1)*sizeof(wchar_t) );
 		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateIconAndTextButton." );
-		wcscpy( b->string, string );
+		wcscpy( b->string, (STR16)string );
 	}
 
 	b->bJustification = bJustification;
@@ -4095,8 +4089,10 @@ void DrawDialogBox( INT32 iDlgBox )
 
 // Kaiden: Added for VC6 compatibility
 
+#ifdef JA2_WIN
 #if _MSC_VER <= 1200 
 	template INT32 CreateCheckBoxButton<char const *>(INT16, INT16, char *, INT16, GUI_CALLBACK);
+#endif
 #endif
 
 template INT32 CreateCheckBoxButton<char const *>(INT16, INT16, char const *, INT16, GUI_CALLBACK);

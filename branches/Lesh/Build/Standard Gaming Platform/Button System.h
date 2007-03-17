@@ -17,18 +17,18 @@
 // Names of the default generic button image files.
 #ifdef JA2
 #define DEFAULT_GENERIC_BUTTON_OFF			"GENBUTN.STI"
-#define DEFAULT_GENERIC_BUTTON_ON				"GENBUTN2.STI"
+#define DEFAULT_GENERIC_BUTTON_ON			"GENBUTN2.STI"
 #define DEFAULT_GENERIC_BUTTON_OFF_HI		"GENBUTN3.STI"
 #define DEFAULT_GENERIC_BUTTON_ON_HI		"GENBUTN4.STI"
 #else
 #define DEFAULT_GENERIC_BUTTON_OFF			"Data\\Message Box\\GENBUTN.STI"
-#define DEFAULT_GENERIC_BUTTON_ON				"Data\\Message Box\\GENBUTN2.STI"
+#define DEFAULT_GENERIC_BUTTON_ON			"Data\\Message Box\\GENBUTN2.STI"
 #define DEFAULT_GENERIC_BUTTON_OFF_HI		"Data\\Message Box\\GENBUTN3.STI"
 #define DEFAULT_GENERIC_BUTTON_ON_HI		"Data\\Message Box\\GENBUTN4.STI"
 #endif
 
 #define BUTTON_TEXT_LEFT		-1
-#define BUTTON_TEXT_CENTER	0
+#define BUTTON_TEXT_CENTER		0
 #define BUTTON_TEXT_RIGHT		1
 
 #define TEXT_LJUSTIFIED		BUTTON_TEXT_LEFT
@@ -40,10 +40,10 @@
 #define BUTTON_USE_DEFAULT		-1
 #define BUTTON_NO_FILENAME		NULL
 #define BUTTON_NO_CALLBACK		NULL
-#define BUTTON_NO_IMAGE				-1
-#define BUTTON_NO_SLOT				-1
+#define BUTTON_NO_IMAGE			-1
+#define BUTTON_NO_SLOT			-1
 
-#define BUTTON_INIT						1
+#define BUTTON_INIT				1
 #define BUTTON_WAS_CLICKED		2
 
 //effects how the button is rendered.
@@ -52,46 +52,46 @@
 #define BUTTON_TYPE_MASK				(BUTTON_NO_TOGGLE| BUTTON_ALLOW_DISABLED_CALLBACK | BUTTON_CHECKBOX | BUTTON_IGNORE_CLICKS )
 
 //button flags
-#define BUTTON_TOGGLE										0x00000000
-#define BUTTON_QUICK										0x00000000
-#define BUTTON_ENABLED									0x00000001
-#define BUTTON_CLICKED_ON								0x00000002
-#define BUTTON_NO_TOGGLE								0x00000004
-#define BUTTON_CLICK_CALLBACK						0x00000008
-#define BUTTON_MOVE_CALLBACK						0x00000010
-#define BUTTON_GENERIC									0x00000020
-#define BUTTON_HOT_SPOT									0x00000040
-#define BUTTON_SELFDELETE_IMAGE					0x00000080
-#define BUTTON_DELETION_PENDING					0x00000100
-#define BUTTON_ALLOW_DISABLED_CALLBACK	0x00000200
-#define BUTTON_DIRTY										0x00000400
-#define BUTTON_SAVEBACKGROUND						0x00000800
-#define BUTTON_CHECKBOX									0x00001000
-#define BUTTON_NEWTOGGLE								0x00002000
-#define BUTTON_FORCE_UNDIRTY						0x00004000 // no matter what happens this buttons does NOT get marked dirty
-#define BUTTON_IGNORE_CLICKS						0x00008000 // Ignore any clicks on this button
-#define BUTTON_DISABLED_CALLBACK				0x80000000
+#define BUTTON_TOGGLE						0x00000000
+#define BUTTON_QUICK						0x00000000
+#define BUTTON_ENABLED						0x00000001
+#define BUTTON_CLICKED_ON					0x00000002
+#define BUTTON_NO_TOGGLE					0x00000004
+#define BUTTON_CLICK_CALLBACK				0x00000008
+#define BUTTON_MOVE_CALLBACK				0x00000010
+#define BUTTON_GENERIC						0x00000020
+#define BUTTON_HOT_SPOT						0x00000040
+#define BUTTON_SELFDELETE_IMAGE				0x00000080
+#define BUTTON_DELETION_PENDING				0x00000100
+#define BUTTON_ALLOW_DISABLED_CALLBACK		0x00000200
+#define BUTTON_DIRTY						0x00000400
+#define BUTTON_SAVEBACKGROUND				0x00000800
+#define BUTTON_CHECKBOX						0x00001000
+#define BUTTON_NEWTOGGLE					0x00002000
+#define BUTTON_FORCE_UNDIRTY				0x00004000 // no matter what happens this buttons does NOT get marked dirty
+#define BUTTON_IGNORE_CLICKS				0x00008000 // Ignore any clicks on this button
+#define BUTTON_DISABLED_CALLBACK			0x80000000
 
-#define BUTTON_SOUND_NONE										0x00
-#define BUTTON_SOUND_CLICKED_ON							0x01
-#define BUTTON_SOUND_CLICKED_OFF						0x02
-#define BUTTON_SOUND_MOVED_ONTO							0x04
-#define BUTTON_SOUND_MOVED_OFF_OF						0x08
-#define BUTTON_SOUND_DISABLED_CLICK					0x10
-#define BUTTON_SOUND_DISABLED_MOVED_ONTO		0x20
+#define BUTTON_SOUND_NONE					0x00
+#define BUTTON_SOUND_CLICKED_ON				0x01
+#define BUTTON_SOUND_CLICKED_OFF			0x02
+#define BUTTON_SOUND_MOVED_ONTO				0x04
+#define BUTTON_SOUND_MOVED_OFF_OF			0x08
+#define BUTTON_SOUND_DISABLED_CLICK			0x10
+#define BUTTON_SOUND_DISABLED_MOVED_ONTO	0x20
 #define BUTTON_SOUND_DISABLED_MOVED_OFF_OF	0x40
-#define BUTTON_SOUND_ALREADY_PLAYED					0X80
+#define BUTTON_SOUND_ALREADY_PLAYED			0X80
 
-#define BUTTON_SOUND_ALL_EVENTS							0xff
+#define BUTTON_SOUND_ALL_EVENTS				0xff
 
 
 // Internal use!
-#define	GUI_SND_CLK_ON									BUTTON_SOUND_CLICKED_ON						
-#define	GUI_SND_CLK_OFF									BUTTON_SOUND_CLICKED_OFF					
-#define	GUI_SND_MOV_ON									BUTTON_SOUND_MOVED_ONTO						
-#define	GUI_SND_MOV_OFF									BUTTON_SOUND_MOVED_OFF_OF					
-#define	GUI_SND_DCLK										BUTTON_SOUND_DISABLED_CLICK				
-#define	GUI_SND_DMOV										BUTTON_SOUND_DISABLED_MOVED_ONTO	
+#define	GUI_SND_CLK_ON			BUTTON_SOUND_CLICKED_ON						
+#define	GUI_SND_CLK_OFF			BUTTON_SOUND_CLICKED_OFF					
+#define	GUI_SND_MOV_ON			BUTTON_SOUND_MOVED_ONTO						
+#define	GUI_SND_MOV_OFF			BUTTON_SOUND_MOVED_OFF_OF					
+#define	GUI_SND_DCLK			BUTTON_SOUND_DISABLED_CLICK				
+#define	GUI_SND_DMOV			BUTTON_SOUND_DISABLED_MOVED_ONTO	
 
 extern UINT32 ButtonDestBuffer;
 
@@ -100,50 +100,50 @@ typedef void (*GUI_CALLBACK)(struct _GUI_BUTTON *,INT32);
 
 // GUI_BUTTON structure definitions.
 typedef struct _GUI_BUTTON {
-	INT32					IDNum;						// ID Number, contains it's own button number
-	UINT32				ImageNum;					// Image number to use (see DOCs for details)
-	MOUSE_REGION	Area;							// Mouse System's mouse region to use for this button
-	GUI_CALLBACK	ClickCallback;		// Button Callback when button is clicked
+	INT32			IDNum;					// ID Number, contains it's own button number
+	UINT32			ImageNum;				// Image number to use (see DOCs for details)
+	MOUSE_REGION	Area;					// Mouse System's mouse region to use for this button
+	GUI_CALLBACK	ClickCallback;			// Button Callback when button is clicked
 	GUI_CALLBACK	MoveCallback;			// Button Callback when mouse moved on this region
-	INT16					Cursor;						// Cursor to use for this button
-	UINT32				uiFlags;					// Button state flags etc.( 32-bit )
-	UINT32				uiOldFlags;				// Old flags from previous render loop
-	INT16					XLoc;							// Coordinates where button is on the screen
-	INT16					YLoc;
-	INT32					UserData[4];			// Place holder for user data etc.
-	INT16					Group;						// Group this button belongs to (see DOCs)
-	INT8					bDefaultStatus;
+	INT16			Cursor;					// Cursor to use for this button
+	UINT32			uiFlags;				// Button state flags etc.( 32-bit )
+	UINT32			uiOldFlags;				// Old flags from previous render loop
+	INT16			XLoc;					// Coordinates where button is on the screen
+	INT16			YLoc;
+	INT32			UserData[4];			// Place holder for user data etc.
+	INT16			Group;					// Group this button belongs to (see DOCs)
+	INT8			bDefaultStatus;
 	//Button disabled style
-	INT8					bDisabledStyle;
+	INT8			bDisabledStyle;
 	//For buttons with text
-	wchar_t				*string;					//the string
-	UINT16				usFont;						//font for text 
-	BOOLEAN				fMultiColor;			//font is a multi-color font
-	INT16					sForeColor;				//text colors if there is text
-	INT16					sShadowColor;			
-	INT16					sForeColorDown;		//text colors when button is down (optional)
-	INT16					sShadowColorDown;
-	INT16					sForeColorHilited;		//text colors when button is down (optional)
-	INT16					sShadowColorHilited;
-	INT8					bJustification;		// BUTTON_TEXT_LEFT, BUTTON_TEXT_CENTER, BUTTON_TEXT_RIGHT
-	INT8					bTextXOffset;
-	INT8					bTextYOffset;
-	INT8					bTextXSubOffSet;
-	INT8					bTextYSubOffSet;
-	BOOLEAN				fShiftText;
-	INT16					sWrappedWidth;
+	wchar_t			*string;				//the string
+	UINT16			usFont;					//font for text 
+	BOOLEAN			fMultiColor;			//font is a multi-color font
+	INT16			sForeColor;				//text colors if there is text
+	INT16			sShadowColor;			
+	INT16			sForeColorDown;			//text colors when button is down (optional)
+	INT16			sShadowColorDown;
+	INT16			sForeColorHilited;		//text colors when button is down (optional)
+	INT16			sShadowColorHilited;
+	INT8			bJustification;			// BUTTON_TEXT_LEFT, BUTTON_TEXT_CENTER, BUTTON_TEXT_RIGHT
+	INT8			bTextXOffset;
+	INT8			bTextYOffset;
+	INT8			bTextXSubOffSet;
+	INT8			bTextYSubOffSet;
+	BOOLEAN			fShiftText;
+	INT16			sWrappedWidth;
 	//For buttons with icons (don't confuse this with quickbuttons which have up to 5 states )
-	INT32					iIconID;							
-	INT16					usIconIndex;
-	INT8					bIconXOffset; //-1 means horizontally centered
-	INT8					bIconYOffset; //-1 means vertically centered
-	BOOLEAN				fShiftImage;  //if true, icon is shifted +1,+1 when button state is down.
+	INT32			iIconID;							
+	INT16			usIconIndex;
+	INT8			bIconXOffset; 			//-1 means horizontally centered
+	INT8			bIconYOffset; 			//-1 means vertically centered
+	BOOLEAN			fShiftImage;  			//if true, icon is shifted +1,+1 when button state is down.
 
-	UINT8					ubToggleButtonOldState;		// Varibles for new toggle buttons that work
-	UINT8					ubToggleButtonActivated;
+	UINT8			ubToggleButtonOldState;	// Varibles for new toggle buttons that work
+	UINT8			ubToggleButtonActivated;
 
-	INT32					BackRect;					// Handle to a Background Rectangle
-	UINT8					ubSoundSchemeID;
+	INT32			BackRect;				// Handle to a Background Rectangle
+	UINT8			ubSoundSchemeID;
 } GUI_BUTTON;
 
 
@@ -155,15 +155,15 @@ extern GUI_BUTTON			*ButtonList[MAX_BUTTONS];									// Button System's Main Bu
 
 // Struct definition for the QuickButton pictures.
 typedef struct {
-	HVOBJECT	vobj;						// The Image itself
-	INT32			Grayed;					// Index to use for a "Grayed-out" button
-	INT32			OffNormal;			// Index to use when button is OFF
-	INT32			OffHilite;			// Index to use when button is OFF w/ hilite on it
-	INT32			OnNormal;				// Index to use when button is ON
-	INT32			OnHilite;				// Index to use when button is ON w/ hilite on it
-	UINT32		MaxWidth;				// Width of largest image in use
+	HVOBJECT	vobj;				// The Image itself
+	INT32		Grayed;				// Index to use for a "Grayed-out" button
+	INT32		OffNormal;			// Index to use when button is OFF
+	INT32		OffHilite;			// Index to use when button is OFF w/ hilite on it
+	INT32		OnNormal;			// Index to use when button is ON
+	INT32		OnHilite;			// Index to use when button is ON w/ hilite on it
+	UINT32		MaxWidth;			// Width of largest image in use
  	UINT32		MaxHeight;			// Height of largest image in use
-	UINT32		fFlags;					// Special image flags
+	UINT32		fFlags;				// Special image flags
 } BUTTON_PICS;
 
 #define MAX_BUTTON_PICS			256

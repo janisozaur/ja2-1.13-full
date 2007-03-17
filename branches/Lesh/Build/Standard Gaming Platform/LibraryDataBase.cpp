@@ -178,7 +178,7 @@ BOOLEAN ShutDownFileDatabase( )
 
 		if ( close( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle ) == -1 )
 		{
-			fprintf(stderr, "Error closing file %d (LibDB): errno=%d\n",
+			fprintf(stderr, "Error closing library %d: errno=%d\n",
 				gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle, errno);
 		}
 
@@ -257,6 +257,11 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	UINT32	uiCount=0;	
 	CHAR8		zTempPath[ SGPFILENAME_LEN ];
 
+	BACKSLASH(pLibraryName);
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//open the library for reading ( if it exists )
 	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
 	if( hFile == INVALID_HANDLE_VALUE )
@@ -287,27 +292,91 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 		}
 	}
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	hFile = open( pLibraryName, O_RDONLY );
+	if ( hFile == -1 )
+	{
+		fprintf(stderr, "Error opening library %s: errno=%d\n", pLibraryName, errno);
+		return( FALSE );
+	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	// Read in the library header ( at the begining of the library )
 	if( !ReadFile( hFile, &LibFileHeader, sizeof( LIBHEADER ), (LPDWORD) &uiNumBytesRead, NULL ) )
 		return( FALSE );
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	uiNumBytesRead = read( hFile, &LibFileHeader, sizeof( LIBHEADER ) );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	if( uiNumBytesRead != sizeof( LIBHEADER ) )
 	{
+		fprintf(stderr, "Error reading library header %d: errno=%d\n",
+			hFile, errno);
 		//Error Reading the file database header.
 		return( FALSE );
 	}
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//place the file pointer at the begining of the file headers ( they are at the end of the file )
 	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	if ( lseek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), SEEK_END ) == -1 )
+	{
+		fprintf(stderr, "Error seeking library %d: errno=%d\n",
+			hFile, errno);
+		return(FALSE);
+	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	//loop through the library and determine the number of files that are FILE_OK
 	//ie.  so we dont load the old or deleted files
 	usNumEntries = 0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		//read in the file header
 		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), (LPDWORD) &uiNumBytesRead, NULL ) )
 			return( FALSE );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		uiNumBytesRead = read( hFile, &DirEntry, sizeof( DIRENTRY ) );
+		if( uiNumBytesRead != sizeof( DIRENTRY ) )
+		{
+			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
+				hFile, errno);
+			//Error Reading the file database header.
+			return( FALSE );
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 		if( DirEntry.ubState == FILE_OK )
 			usNumEntries++;
@@ -321,18 +390,52 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 		pLibHeader->uiTotalMemoryAllocatedForLibrary = sizeof( FileHeaderStruct ) * usNumEntries;
 	#endif
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	//place the file pointer at the begining of the file headers ( they are at the end of the file )
 	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	if ( lseek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), SEEK_END ) == -1 )
+	{
+		fprintf(stderr, "Error seeking library at 2nd time %d: errno=%d\n",
+			hFile, errno);
+		return(FALSE);
+	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	//loop through all the entries
 	uiCount=0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 		//read in the file header
 		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), (LPDWORD) &uiNumBytesRead, NULL ) )
 			return( FALSE );
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		uiNumBytesRead = read( hFile, &DirEntry, sizeof( DIRENTRY ) );
+		if( uiNumBytesRead != sizeof( DIRENTRY ) )
+		{
+			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
+				hFile, errno);
+			//Error Reading the file database header.
+			return( FALSE );
+		}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 		if( DirEntry.ubState == FILE_OK )
 		{
@@ -437,9 +540,25 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	hLibraryFile = gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle;
 	uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
 
 	//set the file pointer to the right location
 	SetFilePointer( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), NULL, FILE_BEGIN );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	if ( lseek( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), SEEK_SET ) == -1 )
+	{
+		fprintf(stderr, "Error seeking library %d: errno=%d\n",
+			hLibraryFile, errno);
+		return(FALSE);
+	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 	//if we are trying to read more data then the size of the file, return an error
 	if( uiBytesToRead + uiCurPos > uiLength )
@@ -448,17 +567,26 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 		return( FALSE );
 	}
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//get the data
 	if( !ReadFile( hLibraryFile, pData, uiBytesToRead, (LPDWORD) &uiNumBytesRead, NULL ) )
 		return( FALSE );
 
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+		uiNumBytesRead = read( hLibraryFile, pData, uiBytesToRead );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	if( uiBytesToRead != uiNumBytesRead )
 	{
-//		Gets the reason why the function failed
-//		UINT32 uiLastError = GetLastError();
-//		char zString[1024];
-//		FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-
+		fprintf(stderr, "Error reading library entry %d: errno=%d\n",
+			hLibraryFile, errno);
 		return( FALSE );
 	}
 
@@ -518,7 +646,7 @@ INT16 sLoop1, sBestMatch=-1;
 			if( strlen( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath ) == 0 )
 			{
 				//determine if there is a directory in the file name
-				if( strchr( pFileName, '\\' ) == NULL && strchr( pFileName, '//' ) == NULL )
+				if( strchr( pFileName, '\\' ) == NULL && strchr( pFileName, '/' ) == NULL )
 				{
 					//There is no directory in the file name
 					return( sLoop1 );
@@ -586,7 +714,7 @@ BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeader
 //
 //************************************************************************
 
-INT CompareFileNames( CHAR8 *arg1[], FileHeaderStruct **arg2 )
+INT32 CompareFileNames( CHAR8 *arg1[], FileHeaderStruct **arg2 )
 {
 	CHAR8		sSearchKey[ FILENAME_SIZE ];
 	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
@@ -617,11 +745,11 @@ void AddSlashToPath( STR pName )
 	uiCounter=0;
 	for( uiLoop=0; uiLoop < strlen( pName ) && !fDone; uiLoop++)
 	{
-		if( pName[ uiLoop ] == '\\' )
+		if( pName[ uiLoop ] == SLASH )
 		{
 			sNewName[ uiCounter ] = pName[ uiLoop ];
 			uiCounter++;
-			sNewName[ uiCounter ] = '\\';
+			sNewName[ uiCounter ] = SLASH;
 		}
 		else
 			sNewName[ uiCounter ] = pName[ uiLoop ];
@@ -720,6 +848,9 @@ HWFILE OpenFileFromLibrary( STR pName )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 			//Save the current file position in the library
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_CURRENT );
 
@@ -727,6 +858,28 @@ HWFILE OpenFileFromLibrary( STR pName )
 			uiNewFilePosition = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset, NULL, FILE_BEGIN );
 
 			uiNewFilePosition = GetFileSize( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, NULL );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, SEEK_CUR );
+
+//			lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset, SEEK_SET )
+
+			struct stat file_stat;
+
+			if ( fstat( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &file_stat) == -1 )
+			{
+				fprintf(stderr, "Error getting size of library %d: errno=%d\n",
+					gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
+				return 0;
+			}
+
+			uiNewFilePosition = file_stat.st_size;
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 		}
 		else
@@ -853,8 +1006,20 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 			//reset the libraries file pointer to the positon it was in prior to opening the current file
 			SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, NULL, FILE_CURRENT);
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+			lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, SEEK_SET );
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 			//decrement the number of files that are open
 			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen--;
@@ -987,8 +1152,24 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 	//set that the library isnt open
 	gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen = FALSE;
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//close the file ( note libraries are to be closed by the Windows close function )
 	CloseHandle( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	if ( close( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle ) == -1 )
+	{
+		fprintf(stderr, "Error closing library %d: errno=%d\n",
+			gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
+	}
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
 
 
 
@@ -1019,17 +1200,15 @@ BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 {
 	UINT16 usLoop1=0;
 
-	CHAR8 sName[ 60 ];
-	CHAR8 sPath[ 90 ];
-	CHAR8 sDrive[ 60 ];
-	CHAR8 sExt[ 6 ];
+	CHAR8 *pName;
+	CHAR8 *pFilenameWithoutPath;
 
-	CHAR8	sTempName[ 70 ];
-
-	_splitpath( pFileName, sDrive, sPath, sName, sExt);
-
-	strcpy( sTempName, sName );
-	strcat( sTempName, sExt );
+	pFilenameWithoutPath = pFileName;
+	pName = pFileName;
+	while ((pFilenameWithoutPath = strpbrk(pName, "/\\")) != NULL)
+	{
+		pName = pFilenameWithoutPath + 1;
+	}
 
 	//loop through all the open files to see if 'new' file to open is already open
 	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
@@ -1038,7 +1217,7 @@ BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].uiFileID != 0 )
 		{
 			//Check if the file already exists
-			if( _stricmp( sTempName, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].pFileHeader->pFileName ) == 0 )
+			if( _stricmp( pFilenameWithoutPath, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].pFileHeader->pFileName ) == 0 )
 				return( TRUE );
 		}
 	}
@@ -1063,13 +1242,29 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_BEGIN );
 
 	// Read in the library header ( at the begining of the library )
 	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ), (LPDWORD) &uiNumBytesRead, NULL ) )
 		return( FALSE );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, SEEK_SET );
+	uiNumBytesRead = read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ));
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	if( uiNumBytesRead != sizeof( LIBHEADER ) )
 	{
+		fprintf(stderr, "Error reading library %d: errno=%d\n",
+			gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
 		//Error Reading the file database header.
 		return( FALSE );
 	}
@@ -1088,14 +1283,30 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	iFilePos = -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) );
 
+#ifdef JA2_WIN
+// ---------------------- Windows-specific stuff ---------------------------
+
 	//set the file pointer to the right location
 	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, NULL, FILE_END );
 
 	// Read in the library header ( at the begining of the library )
 	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ), (LPDWORD) &uiNumBytesRead, NULL ) )
 		return( FALSE );
+
+// ------------------- End of Windows-specific stuff -----------------------
+#elif defined(JA2_LINUX)
+// ----------------------- Linux-specific stuff ----------------------------
+
+	lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, SEEK_END );
+	uiNumBytesRead = read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ));
+
+// -------------------- End of Linux-specific stuff ------------------------
+#endif	
+
 	if( uiNumBytesRead != ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ) )
 	{
+		fprintf(stderr, "Error reading library %d: errno=%d\n",
+			gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
 		//Error Reading the file database header.
 		return( FALSE );
 	}
