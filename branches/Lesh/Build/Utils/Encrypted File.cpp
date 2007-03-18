@@ -3,7 +3,7 @@
 #else
 	#include "Encrypted File.h"
 	#include "FileMan.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 #endif
 
 #include "Language Defines.h"

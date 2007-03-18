@@ -9,7 +9,7 @@
 	#include "WordWrap.h"
 	#include "vobject_blitters.h"
 	#include "Render Dirty.h"
-	#include "Message.h"
+	#include "message.h"
 #endif
 
 

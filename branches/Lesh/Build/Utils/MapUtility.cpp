@@ -3,27 +3,27 @@
 #else
 	#include "sgp.h"
 	#ifdef JA2EDITOR
-		#include "Screens.h"
-		#include "Maputility.h"
+		#include "SCREENS.H"
+		#include "maputility.h"
 		#include "worlddef.h"
-		#include "overhead.h"
-		#include "fileman.h"
-		#include "loadscreen.h"
+		#include "Overhead.h"
+		#include "FileMan.h"
+//		#include "loadscreen.h"
 		#include "overhead map.h"
-		#include "radar screen.h"
+		#include "Radar Screen.h"
 		#include "vobject_blitters.h"
-		#include "sticonvert.h"
-		#include "font control.h"
-		#include "worlddat.h"
+		#include "STIConvert.h"
+		#include "Font Control.h"
+		#include "WorldDat.h"
 		#include "english.h"
-		#include "map information.h"
+		#include "Map Information.h"
 		#include "line.h"
 	#endif
 #endif
 
 #ifdef JA2EDITOR
 
-#include "quantize wrap.h" 
+#include "Quantize Wrap.h" 
 
 #define		MINIMAP_X_SIZE			88
 #define		MINIMAP_Y_SIZE			44
@@ -59,6 +59,7 @@ UINT32	MapUtilScreenInit( )
 
 UINT32	MapUtilScreenHandle( )
 {
+#ifdef JA2_WIN
 	static INT16		fNewMap = TRUE;
 	static INT16		sFileNum = 0;
   InputAtom  InputEvent;
@@ -338,6 +339,9 @@ UINT32	MapUtilScreenHandle( )
 	// Set next
 	FListNode = FListNode->pNext;
 	sCurFile++;
+#elif defined( JA2_LINUX )
+	fprintf(stderr, "MapUtilScreenHandle( ) needs rework! (line %d)\n", __LINE__);
+#endif
 
 	return( MAPUTILITY_SCREEN );
 }

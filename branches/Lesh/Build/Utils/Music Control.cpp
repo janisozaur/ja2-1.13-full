@@ -1,18 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include "types.h"
+	#include "Platform.h"
+	#include "Types.h"
 	#include "Music Control.h"
 	#include "soundman.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "gamescreen.h"
 	#include "jascreens.h"
 	#include "Creature Spreading.h"
-	#include "soldier control.h"
-	#include "overhead.h"
-	#include "timer control.h"
+	#include "Soldier Control.h"
+	#include "Overhead.h"
+	#include "Timer Control.h"
 	#include "strategicmap.h"
-	#include "fade screen.h"
+	#include "Fade Screen.h"
 #endif
 
 

@@ -1,9 +1,9 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include "types.h"
+	#include "Platform.h"
+	#include "Types.h"
 	#include "Debug Control.h"
-	#include "stdio.h"
 #endif
 
 

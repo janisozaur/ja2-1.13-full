@@ -2,8 +2,9 @@
 	#include "Utils All.h"
 #else
 	#include "Language Defines.h"
-	#include "text.h"
-	#include "Fileman.h"
+	#include "Text.h"
+	#include "FileMan.h"
+	#include "GameSettings.h"
 #endif
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
@@ -16,7 +17,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 		for (int i=0;i<80;i++)
 		{
 			j++;
-			if ( j<(int)strlen(Item[ubIndex].szLongItemName ))
+			if ( j<(int)strlen((CHAR8*)Item[ubIndex].szLongItemName ))
 			{
 				pNameString[i] =  Item[ubIndex].szLongItemName  [j];
 
@@ -106,7 +107,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 		for (int i=0;i<400;i++)
 		{
 			j++;
-			if ( j<(int)strlen(Item[ubIndex].szItemDesc ))
+			if ( j<(int)strlen((CHAR8*)Item[ubIndex].szItemDesc ))
 			{
 				pInfoString[i] =  Item[ubIndex].szItemDesc  [j];
 
@@ -202,7 +203,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 		for (int i=0;i<80;i++)
 		{
 			j++;
-			if ( j<(int)strlen(Item[ubIndex].szBRName))
+			if ( j<(int)strlen((CHAR8*)Item[ubIndex].szBRName))
 			{
 				pNameString[i] =  Item[ubIndex].szBRName [j];
 
@@ -297,7 +298,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 		for (int i=0;i<400;i++)
 		{
 			j++;
-			if ( j<(int)strlen(Item[ubIndex].szBRDesc))
+			if ( j<(int)strlen((CHAR8*)Item[ubIndex].szBRDesc))
 			{
 				pDescString[i] =  Item[ubIndex].szBRDesc [j];
 
@@ -396,7 +397,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 		{
 			j++;
 			
-			if ( i<(int)strlen(Item[ubIndex].szItemName))
+			if ( i<(int)strlen((CHAR8*)Item[ubIndex].szItemName))
 			{
 				pNameString[i] = Item[ubIndex].szItemName [j];
 

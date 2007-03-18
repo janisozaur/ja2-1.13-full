@@ -9,14 +9,16 @@ INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Utils -I../Laptop -I../Tacti
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \
+	ExceptionHandling.cpp \
+	WinFont.cpp \
 	sgp.cpp \
 	video.cpp \
-	Button\ System.cpp \
-	Button\ Sound\ Control.cpp \
+	Button\\\ System.cpp \
+	Button\\\ Sound\\\ Control.cpp \
 	Flic.cpp \
 	LibraryDataBase.cpp \
-	Cursor\ Control.cpp \
-	Ja2\ Libs.cpp\
+	Cursor\\\ Control.cpp \
+	Ja2\\\ Libs.cpp\
 	mousesystem.cpp \
 	Font.cpp \
 	line.cpp \
@@ -43,14 +45,13 @@ SOURCES  = \
 
 #	ExceptionHandling.cpp \
 #	vobject_blitters.cpp \
-#	WinFont.cpp
 
 #OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS) $(SOURCES)
+$(TARGET): $(OBJECTS)
 #	$(AR) crv $@ $^
 	$(RANLIB) $@
 

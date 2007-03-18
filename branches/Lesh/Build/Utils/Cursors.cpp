@@ -2,18 +2,19 @@
 	#include "Utils All.h"
 	#include "interface items.h"
 #else
-	#include <wchar.h>
+	#include "Platform.h"
 	#include "sgp.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "Timer Control.h"
 	#include "jascreens.h"
-	#include "font.h"
+	#include "Font.h"
 	#include "Font Control.h"
 	#include "Sys Globals.h"
 	#include "Handle UI.h"
-	#include "interface.h"
-	#include "overhead.h"
+	#include "Interface.h"
+	#include "Overhead.h"
 	#include "Cursor Control.h"
+	#include "Sound Control.h"
 #endif
 
 //aim
@@ -1342,11 +1343,19 @@ void DrawMouseText( )
 		else
 			SetFontForeground( FONT_MCOLOR_LTYELLOW );
 
+#ifdef JA2_WIN
 		swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsBulletCount );
+#elif defined( JA2_LINUX )
+		swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsBulletCount );
+#endif
 		FindFontCenterCoordinates( 0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY );
 		mprintf( sX, sY - 10 - GetFontHeight(TINYFONT1), pStr );
 
+#ifdef JA2_WIN
 		swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsTotalBulletCount );
+#elif defined( JA2_LINUX )
+		swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsTotalBulletCount );
+#endif
 		FindFontCenterCoordinates( 0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY );
 		mprintf( sX, sY + 7 + GetFontHeight(TINYFONT1), pStr );
 
@@ -1428,7 +1437,11 @@ void DrawMouseText( )
 				// Set dest for gprintf to be different
 			SetFontDestBuffer( MOUSE_BUFFER , 0, 0, 64, 64, FALSE );
 
+#ifdef JA2_WIN
 			swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsCurrentActionPoints );
+#elif defined( JA2_LINUX )
+			swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsCurrentActionPoints );
+#endif
 
 			if ( gfUIDisplayActionPointsCenter )
 			{

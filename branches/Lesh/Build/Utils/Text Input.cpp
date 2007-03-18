@@ -1,18 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include <math.h>
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include <wchar.h>
+	#include "Platform.h"
 	#include "input.h"
-	#include "font.h"
+	#include "Font.h"
 	#include "english.h"
 	#include "vsurface.h"
 	#include "video.h"
-	#include "debug.h"
-	#include "cursors.h"
+	#include "DEBUG.H"
+	#include "Cursors.h"
 	#include "Text Input.h"
 	#include "Timer Control.h"
 	#include "vobject_blitters.h"
@@ -272,12 +268,20 @@ void AddTextInputField( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, IN
 	{
 		pNode->ubStrLen = (UINT8)wcslen( szInitText );		
 		Assert( pNode->ubStrLen <= ubMaxChars );
+#ifdef JA2_WIN
 		swprintf( pNode->szString, szInitText );
+#elif defined( JA2_LINUX )
+		swprintf( pNode->szString, ubMaxChars, szInitText );
+#endif
 	}
 	else
 	{
 		pNode->ubStrLen = 0;
+#ifdef JA2_WIN
 		swprintf( pNode->szString, L"" );
+#elif defined( JA2_LINUX )
+		swprintf( pNode->szString, ubMaxChars, L"" );
+#endif
 	}
 	pNode->ubMaxChars = ubMaxChars; //max string length
 
@@ -395,12 +399,20 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, wchar_t *szNewText )
 			{
 				curr->ubStrLen = (UINT8)wcslen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
+#ifdef JA2_WIN
 				swprintf( curr->szString, szNewText );
+#elif defined( JA2_LINUX )
+				swprintf( curr->szString, curr->ubMaxChars, szNewText );
+#endif
 			}
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
+#ifdef JA2_WIN
 				swprintf( curr->szString, L"");
+#elif defined( JA2_LINUX )
+				swprintf( curr->szString, curr->ubMaxChars, L"");
+#endif
 			}
 			else
 			{
@@ -412,7 +424,7 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, wchar_t *szNewText )
 	}
 }
 
-void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 * szNewText )
+void SetInputFieldStringWith8BitString( UINT8 ubField, CHAR8 * szNewText )
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -424,12 +436,20 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 * szNewText )
 			{
 				curr->ubStrLen = (UINT8)strlen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
+#ifdef JA2_WIN
 				swprintf( curr->szString, L"%S", szNewText );
+#elif defined( JA2_LINUX )
+				swprintf( curr->szString, curr->ubMaxChars, L"%S", szNewText );
+#endif
 			}
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
+#ifdef JA2_WIN
 				swprintf( curr->szString, L"" );
+#elif defined( JA2_LINUX )
+				swprintf( curr->szString, curr->ubMaxChars, L"" );
+#endif
 			}
 			else
 			{
@@ -466,7 +486,11 @@ void Get16BitStringFromField( UINT8 ubField, wchar_t *szString )
 	{
 		if( curr->ubID == ubField )
 		{
+#ifdef JA2_WIN
 			swprintf( szString, curr->szString );
+#elif defined( JA2_LINUX )
+			wcscpy( szString, curr->szString );
+#endif
 			return;
 		}
 		curr = curr->next;
@@ -515,14 +539,26 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 			if( curr->fUserField )
 				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
 			if( iNumber < 0 ) //negative number converts to blank string
+#ifdef JA2_WIN
 				swprintf( curr->szString, L"" );
+#elif defined( JA2_LINUX )
+				swprintf( curr->szString, curr->ubMaxChars, L"" );
+#endif
 			else 
 			{
 				INT32 iMax = (INT32)pow( 10.0, curr->ubMaxChars );
 				if( iNumber > iMax ) //set string to max value based on number of chars.
+#ifdef JA2_WIN
 					swprintf( curr->szString, L"%d", iMax - 1 );
+#elif defined( JA2_LINUX )
+					swprintf( curr->szString, curr->ubMaxChars, L"%d", iMax - 1 );
+#endif
 				else	//set string to the number given
+#ifdef JA2_WIN
 					swprintf( curr->szString, L"%d", iNumber );
+#elif defined( JA2_LINUX )
+					swprintf( curr->szString, curr->ubMaxChars, L"%d", iNumber );
+#endif
 			}
 			curr->ubStrLen = (UINT8)wcslen( curr->szString );
 			return;

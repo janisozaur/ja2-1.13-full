@@ -1,15 +1,18 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include "types.h"
+	#include "Platform.h"
+	#include "Types.h"
 	#include "Animated ProgressBar.h"
 	#include "MemMan.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "Font Control.h"
 	#include "vsurface.h"
 	#include "video.h"
 	#include "Render Dirty.h"
-	#include "music control.h"
+	#include "Music Control.h"
+	#include "Timer Control.h"
+	#include "sysutil.h"
 #endif
 
 double rStart, rEnd;
@@ -120,9 +123,10 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 	pCurr->usPanelBottom = usBottom;
 	pCurr->usColor = Get16BPPColor( FROMRGB( r, g, b ) );
 	//Calculate the slightly lighter and darker versions of the same rgb color
-	pCurr->usLtColor = Get16BPPColor( FROMRGB( (UINT8)min( 255, (UINT16)(r*1.33)), 
-																						 (UINT8)min( 255, (UINT16)(g*1.33)),
-																						 (UINT8)min( 255, (UINT16)(b*1.33)) ));
+	pCurr->usLtColor = Get16BPPColor( FROMRGB(
+											(UINT8) __min( 255, (UINT16)(r*1.33)), 
+											(UINT8) __min( 255, (UINT16)(g*1.33)),
+											(UINT8) __min( 255, (UINT16)(b*1.33)) ));
 	pCurr->usDkColor = Get16BPPColor( FROMRGB( (UINT8)(r*0.75), (UINT8)(g*0.75), (UINT8)(b*0.75) ) );
 }
 
@@ -143,7 +147,8 @@ void SetProgressBarTitle( UINT32 ubID, wchar_t *pString, UINT32 usFont, UINT8 ub
 	if( pString && wcslen( pString ) )
 	{
 		pCurr->swzTitle = (wchar_t*)MemAlloc( sizeof( wchar_t ) * ( wcslen( pString ) + 1 ) );
-		swprintf( pCurr->swzTitle, pString );
+//		swprintf( pCurr->swzTitle, pString );
+		wcscpy( pCurr->swzTitle, pString );
 	}
 	pCurr->usTitleFont = (UINT16)usFont;
 	pCurr->ubTitleFontForeColor = ubForeColor;

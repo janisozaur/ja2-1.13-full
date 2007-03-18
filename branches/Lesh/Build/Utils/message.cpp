@@ -3,25 +3,23 @@
 	#include "Utils All.h"
 	#include "Game Clock.h"
 #else
+	#include "Platform.h"
 	#include "sgp.h"
-	#include "font.h"
-	#include "types.h"
+	#include "Font.h"
+	#include "Types.h"
 	#include "Font Control.h"
 	#include "message.h"
-	#include "memory.h"
-	#include "mbstring.h"
 	#include "Timer Control.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "renderworld.h"
 	#include "local.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "Map Screen Interface Bottom.h"
 	#include "WordWrap.h"
 	#include "Sound Control.h"
-	#include "Soundman.h"
-	#include "BuildDefines.h"
+	#include "soundman.h"
+	#include "builddefines.h"
 	#include "Dialogue Control.h"
-	#include <stdio.h>
 	#include "Game Clock.h"
 #endif
 
@@ -233,7 +231,11 @@ BOOLEAN CreateStringVideoOverlay( ScrollStringStPtr pStringSt, UINT16 usX, UINT1
 	VideoOverlayDesc.ubFontFore  = (unsigned char)pStringSt->usColor;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+#ifdef JA2_WIN
 	swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)pStringSt->pString16 );
+#elif defined( JA2_LINUX )
+	swprintf( (wchar_t *)VideoOverlayDesc.pzText, VIDEO_OVERLAY_TEXT_LEN, (wchar_t *)pStringSt->pString16 );
+#endif
 	VideoOverlayDesc.BltCallback = BlitString;
 	pStringSt->iVideoOverlay =  RegisterVideoOverlay( ( VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
@@ -623,7 +625,11 @@ void ScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ...)
 		}
 
 		va_start(argptr, pStringA);       	
+#ifdef JA2_WIN
 		vswprintf(DestString, pStringA, argptr);
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);
+#endif
 		va_end(argptr);
 
 		// pass onto tactical message and mapscreen message
@@ -770,7 +776,11 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		    pStringSt=GetNextString(pStringSt);
 
 	va_start(argptr, pStringA);       	// Set up variable argument pointer
+#ifdef JA2_WIN
 	vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+	vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 	va_end(argptr);
 
 	if ( ubPriority == MSG_DEBUG )
@@ -911,7 +921,11 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_UI_FEEDBACK )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
+#ifdef JA2_WIN
 		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 		va_end(argptr);
 
 		BeginUIMessage( DestString );
@@ -921,7 +935,11 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_SKULL_UI_FEEDBACK )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
+#ifdef JA2_WIN
 		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 		va_end(argptr);
 
 		InternalBeginUIMessage( TRUE, DestString );
@@ -932,10 +950,18 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_ERROR )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
+#ifdef JA2_WIN
 		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 		va_end(argptr);
 
-		swprintf( DestStringA, L"DEBUG: %s", DestString );
+#ifdef JA2_WIN
+		swprintf(DestStringA, L"DEBUG: %s", DestString);
+#elif defined( JA2_LINUX )
+		swprintf(DestStringA, 512, L"DEBUG: %s", DestString);
+#endif
 
 		BeginUIMessage( DestStringA );
 		WriteMessageToFile( DestStringA );
@@ -950,7 +976,11 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 			 ( ubPriority == MSG_MAP_UI_POSITION_LOWER  ) )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
+#ifdef JA2_WIN
 		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 		va_end(argptr);
 
 		BeginMapUIMessage( ubPriority, DestString );
@@ -973,7 +1003,11 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		    pStringSt=GetNextString(pStringSt);
 
 	va_start(argptr, pStringA);       	// Set up variable argument pointer
-	vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#ifdef JA2_WIN
+		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+#elif defined( JA2_LINUX )
+		vswprintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
+#endif
 	va_end(argptr);
 
 	if ( ubPriority == MSG_DEBUG )
@@ -983,7 +1017,11 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
+#ifdef JA2_WIN
 		swprintf( DestString, L"Debug: %s", DestStringA );
+#elif defined( JA2_LINUX )
+		swprintf( DestString, 512, L"Debug: %s", DestStringA );
+#endif
 	}
 
 	if ( ubPriority == MSG_DIALOG )

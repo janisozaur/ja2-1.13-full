@@ -2,7 +2,7 @@
 #define __MESSAGE_H
 
 //#include "sgp.h"
-#include "font.h"
+#include "Font.h"
 #include "Font Control.h"
 #include "Types.h"
 #include "FileMan.h"
@@ -46,7 +46,6 @@ typedef struct stringstruct ScrollStringSt;
 typedef ScrollStringSt *ScrollStringStPtr;		  
 
 
-extern ScrollStringStPtr pStringS;
 extern UINT32 StringCount;
 extern UINT8 gubCurrentMapMessageString;
 extern BOOLEAN fDisableJustForIan;

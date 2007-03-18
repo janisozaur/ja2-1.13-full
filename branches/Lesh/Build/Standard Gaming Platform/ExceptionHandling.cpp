@@ -5,6 +5,8 @@
 	#include "Types.h"
 #endif
 
+#ifdef JA2_WIN
+
 #include "ExceptionHandling.h"
 
 
@@ -552,3 +554,5 @@ static void ShowModuleInfo(HWFILE hFile, HINSTANCE ModuleHandle)
 
 
 #endif
+
+#endif	// #ifdef JA2_WIN

@@ -3,13 +3,16 @@
 
 
 #include "World Items.h"
-#include "WorldDef.h"
-#include "rotting corpses.h"
+#include "worlddef.h"
+#include "Rotting Corpses.h"
 
-#include "Soldier Profile Type.h"
+#include "soldier profile type.h"
 
-
+#ifdef JA2_WIN
 #define		MAPS_DIR		"Temp\\"	
+#elif defined( JA2_LINUX )
+#define		MAPS_DIR		"Temp/"	
+#endif
 
 
 

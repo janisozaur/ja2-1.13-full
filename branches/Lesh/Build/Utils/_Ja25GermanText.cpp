@@ -4,8 +4,8 @@
 #else
 	#include "Language Defines.h"
 	#ifdef ENGLISH
-		#include "text.h"
-		#include "Fileman.h"
+		#include "Text.h"
+		#include "FileMan.h"
 	#endif
 #endif
 

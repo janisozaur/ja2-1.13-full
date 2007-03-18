@@ -24,7 +24,6 @@
 	#include "builddefines.h"
 	#include "Intro.h"
 	#include "LibraryDataBase.h"
-	#include ""
 #endif
 
 
@@ -40,7 +39,7 @@
 extern UINT32	MemDebugCounter;
 
 
-extern	BOOLEAN	CheckIfGameCdromIsInCDromDrive();
+//extern	BOOLEAN	CheckIfGameCdromIsInCDromDrive();
 extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 
 // Prototype Declarations
@@ -68,7 +67,7 @@ BOOLEAN						gfCapturingVideo = FALSE;
 UINT32		giStartMem;
 
 // GLOBAL RUN-TIME SETTINGS
-UINT32		guiMouseWheelMsg;			// For mouse wheel messages
+//UINT32		guiMouseWheelMsg;			// For mouse wheel messages
 
 BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
@@ -191,9 +190,12 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Snap: Get the custom Data directory location from ja2.ini (if any)
 	// and initialize the custom catalogue
 	char customDataPath[MAX_PATH];
+
+#if 0
 	if ( GetPrivateProfileString( "Ja2 Settings","CUSTOM_DATA_LOCATION", "", customDataPath, MAX_PATH, "..\\Ja2.ini" ) ) {
 		gCustomDataCat.NewCat(std::string(CurrentDir) + '\\' + customDataPath);
 	}
+#endif
 
 	//InitJA2SplashScreen();
 
@@ -341,6 +343,7 @@ void GetRuntimeSettings( )
 
 	iResolution = -1;
 
+#if 0
 	if (GetPrivateProfileString( "Ja2 Settings","SCREEN_RESOLUTION", "", zScreenResolution, 50, INIFile ))
 	{
 		iResolution = atoi(zScreenResolution);
@@ -352,7 +355,7 @@ void GetRuntimeSettings( )
 			iResolution = atoi(zScreenResolution);
 		}
 #endif
-
+#endif
 
 	int	iResX;
 	int iResY;
@@ -377,10 +380,12 @@ void GetRuntimeSettings( )
 			break;
 	}
 
+#if 0
 	gbPixelDepth = GetPrivateProfileInt( "SGP", "PIXEL_DEPTH", PIXEL_DEPTH, INIFile );
 
 	SCREEN_WIDTH = GetPrivateProfileInt( "SGP", "WIDTH", iResX, INIFile );
 	SCREEN_HEIGHT = GetPrivateProfileInt( "SGP", "HEIGHT", iResY, INIFile );
+#endif
 
 	iScreenWidthOffset = (SCREEN_WIDTH - 640) / 2;
 	iScreenHeightOffset = (SCREEN_HEIGHT - 480) / 2;

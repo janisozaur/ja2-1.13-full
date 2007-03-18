@@ -8,8 +8,8 @@
 	#include	"Cursors.h"
 	#include	"WCheck.h"
 	#include	"Slider.h"
-	#include	"SysUtil.h"
-	#include	"Line.h"
+	#include	"sysutil.h"
+	#include	"line.h"
 #endif
 
 

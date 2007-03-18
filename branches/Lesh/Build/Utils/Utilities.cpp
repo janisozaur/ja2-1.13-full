@@ -1,18 +1,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include "types.h"
-	#include <stdio.h>
+	#include "Types.h"
+	#include "Platform.h"
 	#include "sgp.h"
-	#include "time.h"
 	#include "vobject.h"
 	#include "FileMan.h"
 	#include "Utilities.h"
 	#include "Font Control.h"
-	#include "overhead.h"
-	#include "overhead types.h"
-	#include "wcheck.h"
-	#include "sys globals.h"
+	#include "Overhead.h"
+	#include "Overhead Types.h"
+	#include "WCheck.h"
+	#include "Sys Globals.h"
 #endif
 
 
@@ -245,7 +244,11 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, UINT16 usWidth, INT32 uiFont
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
+#ifdef JA2_WIN
 				swprintf( (wchar_t *)pStr2, (wchar_t *)L"-%s", &(pStr[uiHyphenLet]) );
+#elif defined( JA2_LINUX )
+				swprintf( (wchar_t *)pStr2, 512, (wchar_t *)L"-%s", &(pStr[uiHyphenLet]) );
+#endif
 				pStr[uiHyphenLet] = (INT16)'/0';
 				fLineSplit = TRUE;  //hyphen method
 				break;
@@ -263,7 +266,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, UINT16 usWidth, INT32 uiFont
 
 }
 
-
+#ifdef JA2_WIN
 BOOLEAN IfWinNT(void)
 {
 	OSVERSIONINFO OsVerInfo;
@@ -349,7 +352,7 @@ void HandleLimitedNumExecutions( )
 	FileClose( hFileHandle );
 
 }
-
+#endif
 
 SGPFILENAME	gCheckFilenames[] =
 {

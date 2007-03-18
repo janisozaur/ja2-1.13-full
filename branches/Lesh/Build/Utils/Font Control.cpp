@@ -2,14 +2,12 @@
 	#include "Utils All.h"
   #include "winfont.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
+	#include "Platform.h"
 	#include "sgp.h"
 	#include "himage.h"
 	#include "vsurface.h"
 	#include "vsurface_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "Font Control.h"
 #endif
 
@@ -344,7 +342,8 @@ UINT16    WFGetFontHeight( INT32 FontNum )
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used
-	  return( GetWinFontHeight( L"a\0", GET_WINFONT( ) ) );
+//	  return( GetWinFontHeight( L"a\0", GET_WINFONT( ) ) );
+		fprintf(stderr, "Tried to use winfont WFGetFontHeight(): line %d\n", __LINE__);
   }
   else
   {
@@ -359,7 +358,8 @@ INT16 WFStringPixLength( wchar_t *string,INT32 UseFont )
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used
-	  return( WinFontStringPixLength( string, GET_WINFONT( ) ) );
+//	  return( WinFontStringPixLength( string, GET_WINFONT( ) ) );
+		fprintf(stderr, "Tried to use winfont WFStringPixLength(): line %d\n", __LINE__);
   }
   else
   {

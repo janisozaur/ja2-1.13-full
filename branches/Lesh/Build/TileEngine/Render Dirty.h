@@ -44,6 +44,7 @@ typedef struct
 
 } BACKGROUND_SAVE;
 
+#define VIDEO_OVERLAY_TEXT_LEN	200
 // Struct for topmost blitters
 typedef struct _VIDEO_OVERLAY
 {
@@ -61,7 +62,7 @@ typedef struct _VIDEO_OVERLAY
 		INT16				sY;
 		UINT8				ubFontBack;
 		UINT8				ubFontFore;
-		INT16				zText[ 200 ];
+		INT16				zText[ VIDEO_OVERLAY_TEXT_LEN ];
 		UINT32				uiDestBuff;
 		OVERLAY_CALLBACK	BltCallback;
 

@@ -1,3 +1,7 @@
+#include "Types.h"
+#include "XML.h"
+#include "Weapons.h"
+
 #define	WEAPONSFILENAME					"TABLEDATA\\Weapons.dat"
 #define MAX_CHAR_DATA_LENGTH			500
 

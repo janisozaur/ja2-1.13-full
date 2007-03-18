@@ -1,12 +1,10 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
+	#include "Platform.h"
 	#include "sgp.h"
-	#include "container.h"
-	#include "wcheck.h"
+	#include "Container.h"
+	#include "WCheck.h"
 	#include "Event Manager.h"
 	#include "Timer Control.h"
 #endif

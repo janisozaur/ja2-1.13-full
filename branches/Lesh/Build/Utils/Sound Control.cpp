@@ -3,12 +3,14 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Utils All.h"
 #else
+	#include "Platform.h"
 	#include "sgp.h"
 	#include "Sound Control.h"
 	#include "soundman.h"
-	#include "overhead.h"
-	#include "isometric utils.h"
+	#include "Overhead.h"
+	#include "Isometric Utils.h"
 	#include "renderworld.h"
+	#include "GameSettings.h"
 #endif
 
 #define	SOUND_FAR_VOLUME_MOD    25

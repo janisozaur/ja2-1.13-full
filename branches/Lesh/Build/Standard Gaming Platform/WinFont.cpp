@@ -1,3 +1,5 @@
+#include "builddefines.h"
+#ifdef JA2_WIN
 
 //#define UNICODE
 #include "types.h"
@@ -353,3 +355,4 @@ BOOLEAN DoesWinFontExistOnSystem( STR16 pTypeFaceName, INT32 iCharSet )
 
   return( gfEnumSucceed );
 }
+#endif

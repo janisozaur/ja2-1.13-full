@@ -1,7 +1,7 @@
 #ifndef __TEXT_H
 #define __TEXT_H
 
-#include "items.h"
+#include "Items.h"
 #include "Types.h"
 #include "mapscreen.h"
 
@@ -1516,9 +1516,9 @@ enum
 	NUM_PEOPLE_IN_CREDITS,
 };
 
-STR16	gzCreditNames[];
-STR16	gzCreditNameTitle[];
-STR16	gzCreditNameFunny[];
+extern STR16	gzCreditNames[];
+extern STR16	gzCreditNameTitle[];
+extern STR16	gzCreditNameFunny[];
 
 
 extern wchar_t * GetWeightUnitString( void );

@@ -10,6 +10,8 @@
 //      15.12.2005 Lesh enabled sound in video
 //----------------------------------------------------------------------------------
 //#include "LocalCodeAll.h"
+#include "builddefines.h"
+#ifdef JA2_WIN
 
 #include "Types.h"
 #include <stdio.h>
@@ -306,3 +308,5 @@ void SmkShutdownVideo(void)
 //DEF:
 //	CinematicModeOff();
 }
+
+#endif
