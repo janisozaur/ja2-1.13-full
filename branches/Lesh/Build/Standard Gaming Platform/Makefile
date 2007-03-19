@@ -9,6 +9,7 @@ INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Utils -I../Laptop -I../Tacti
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \
+	vobject_blitters.cpp \
 	ExceptionHandling.cpp \
 	WinFont.cpp \
 	sgp.cpp \
@@ -42,9 +43,6 @@ SOURCES  = \
 	MemMan.cpp \
 	Random.cpp \
 	English.cpp
-
-#	ExceptionHandling.cpp \
-#	vobject_blitters.cpp \
 
 #OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
 OBJECTS = $(SOURCES:.cpp=.o)

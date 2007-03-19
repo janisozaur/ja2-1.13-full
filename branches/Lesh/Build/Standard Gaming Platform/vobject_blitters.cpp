@@ -1,14 +1,12 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else
-	#include "DirectDraw Calls.h"
-	#include <stdio.h>
-	#include "debug.h"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "video.h"													// JA2
 	#include "himage.h"
 	#include "vobject.h"
-	#include "vobject_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "vobject.h"
 	#include "vobject_blitters.h"
 	#include "shading.h"
@@ -639,6 +637,97 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr =
+							((p16BPPPalette[*SrcPtr] >> 1) & guiTranslucentMask) +
+							((*(UINT16*)DestPtr      >> 1) & guiTranslucentMask);
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -818,6 +907,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -873,6 +963,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransZTranslucent(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -947,6 +1040,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1265,6 +1359,40 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr =
+							((p16BPPPalette[*SrcPtr] >> 1) & guiTranslucentMask) +
+							((*(UINT16*)DestPtr      >> 1) & guiTranslucentMask);
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1336,6 +1464,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2028,6 +2157,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferMonoShadowClip( UINT8 *pBuffer, UINT32 uiDestPitc
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferMonoShadowClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2215,6 +2347,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2555,6 +2688,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZClipPixelate( UINT16 *pBuffer, UINT32 uiDes
 
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransZClipPixelate(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2742,6 +2878,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2826,6 +2963,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBClipPixelate( UINT16 *pBuffer, UINT32 uiD
 
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransZNBClipPixelate(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3010,6 +3150,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3104,6 +3245,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransparentClip( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	pPal8BPP=hSrcVObject->pShade8;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransparentClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3308,6 +3452,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3356,6 +3501,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	pPal8BPP=hSrcVObject->pShade8;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransparent(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3455,6 +3603,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3511,6 +3660,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES,
 	LineSkipZ=LineSkip*2;
 	uiZComp=(UINT32)usZValue;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransZ(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3688,6 +3840,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3741,6 +3894,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented Blt8BPPDataTo8BPPBufferTransZNB(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3804,6 +3960,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4008,6 +4165,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransZClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4181,6 +4341,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4262,6 +4423,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransZNBClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4432,6 +4596,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4741,6 +4906,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferShadowZ(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4805,6 +4973,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4856,6 +5025,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferShadowZNB(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4917,6 +5089,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4998,6 +5171,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferShadowZClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5170,6 +5346,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6015,6 +6192,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransShadowZNBClip( UINT16 *pBuffer, UINT32 uiDes
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferTransShadowZNBClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6193,6 +6373,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6240,6 +6421,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES,
 	pPal8BPP = hSrcVObject->pShade8;
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferShadow(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6337,6 +6521,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6415,6 +6600,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo8BPPBufferShadowClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6619,6 +6807,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6703,6 +6892,95 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					switch (*SrcPtr++)
+					{
+						case 0:                     *(UINT16*)DestPtr = usBackground; break;
+						case 1:  if (usShadow != 0) *(UINT16*)DestPtr = usShadow;     break;
+						default:                    *(UINT16*)DestPtr = usForeground; break;
+					}
+					DestPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6896,6 +7174,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6922,6 +7201,18 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	Assert(pDest!=NULL);
 	Assert(pSrc!=NULL);
 
+#ifdef JA2_LINUX
+	UINT32 i;
+
+	for (i = 0; i < uiHeight; i++)
+	{
+		memcpy(
+			(UINT8*)pDest + uiDestPitch * (iDestYPos + i) + 2 * iDestXPos,
+			(UINT8*)pSrc  + uiSrcPitch  * (iSrcYPos  + i) + 2 * iSrcXPos,
+			uiWidth * 2
+		);
+	}
+#elif defined( JA2_WIN )
 	pSrcPtr=(UINT16 *)((UINT8 *)pSrc+(iSrcYPos*uiSrcPitch)+(iSrcXPos*2));
 	pDestPtr=(UINT16 *)((UINT8 *)pDest+(iDestYPos*uiDestPitch)+(iDestXPos*2));
 	uiLineSkipDest=uiDestPitch-(uiWidth*2);
@@ -6968,6 +7259,7 @@ BlitDwords:
 BlitDone:
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -6996,6 +7288,9 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth*2);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth*2);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt16BPPTo16BPPTrans(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -7024,6 +7319,7 @@ Blit3:
 	jnz		BlitNewLine
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7149,6 +7445,9 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPTo8BPP(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -7184,6 +7483,7 @@ BlitLineDone:
 	jnz		BlitNewLine
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7237,6 +7537,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransZPixelate(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7314,6 +7617,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7371,6 +7675,43 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+					}
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7465,6 +7806,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7788,6 +8130,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransZNBPixelate(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7866,6 +8211,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7949,6 +8295,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransZNBClipPixelate(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8135,6 +8484,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8187,6 +8537,41 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if  (data == 0) break;
+			if  (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8255,6 +8640,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8307,6 +8693,40 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8372,6 +8792,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8544,6 +8965,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadow( UINT16 *pBuffer, UINT32 uiDestPitch
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransShadow(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8607,6 +9031,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8658,6 +9083,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZ( UINT16 *pBuffer, UINT32 uiDestPitc
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransShadowZ(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8732,6 +9160,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8783,6 +9212,51 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNB( UINT16 *pBuffer, UINT32 uiDestPi
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					UINT8 px = *SrcPtr++;
+
+					if (px == 254)
+					{
+						if (*(UINT16*)ZPtr < usZValue)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+					}
+					else
+					{
+						if (*(UINT16*)ZPtr <= usZValue)
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8858,6 +9332,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8961,6 +9436,53 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 	uiLineFlag=(iTempY&1);
 
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					UINT8 px = *SrcPtr++;
+
+					if (px == 254)
+					{
+						if (*(UINT16*)ZPtr < usZValue)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+					}
+					else
+					{
+						if (*(UINT16*)ZPtr <= usZValue ||
+								uiLineFlag == (((UINT32)DestPtr & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9061,6 +9583,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9141,6 +9664,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip( UINT16 *pBuffer, UINT32 uiDest
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransShadowZClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9323,6 +9849,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9402,6 +9929,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip( UINT16 *pBuffer, UINT32 uiDestP
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransShadowClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9572,6 +10102,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9651,6 +10182,108 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBClip( UINT16 *pBuffer, UINT32 uiDe
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					UINT8 px = *SrcPtr++;
+
+					if (px == 254)
+					{
+						if (*(UINT16*)ZPtr < usZValue)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+					}
+					else
+					{
+						if (*(UINT16*)ZPtr <= usZValue)
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9834,6 +10467,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9914,6 +10548,112 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					UINT8 px = *SrcPtr++;
+
+					if (px == 254)
+					{
+						if (*(UINT16*)ZPtr < usZValue)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+					}
+					else
+					{
+						if (*(UINT16*)ZPtr <= usZValue ||
+								uiLineFlag == (((UINT32)DestPtr & 2) != 0)) // XXX ugly, can be done better by just examining every other pixel
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10121,6 +10861,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10435,6 +11176,41 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				SrcPtr += data;
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data  > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10498,6 +11274,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10578,6 +11355,89 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				SrcPtr += PxCount;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10751,6 +11611,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10801,6 +11662,37 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10862,6 +11754,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10942,6 +11835,94 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11112,6 +12093,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11192,6 +12174,98 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11365,6 +12439,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11444,6 +12519,97 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11614,6 +12780,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11921,6 +13088,22 @@ BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, H
 	p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		UINT32 w = BlitLength;
+
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr++];
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr  += SrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -11956,6 +13139,7 @@ BlitLoop:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12003,6 +13187,9 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 	p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBuffer(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12096,6 +13283,7 @@ DoneRow:
 
 DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12142,6 +13330,23 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalf( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 	LineSkip=(uiDestPitchBYTES-(usWidth&0xfffffffe));
 	uiSrcSkip=(uiSrcPitch*2)-(usWidth&0xfffffffe);
 
+#ifdef JA2_LINUX
+	usHeight /= 2;
+	do
+	{
+		UINT32 w = usWidth / 2;
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+			SrcPtr += 2;
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr += uiSrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12182,6 +13387,7 @@ ReadMask:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12238,6 +13444,23 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip			= (uiDestPitchBYTES-(usWidth&0xfffffffe));
 	uiSrcSkip			= (uiSrcPitch*2)-(usWidth&0xfffffffe);
 
+#ifdef JA2_LINUX
+	usHeight /= 2;
+	do
+	{
+		UINT32 w = usWidth / 2;
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+			SrcPtr  += 2;
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr  += uiSrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12278,6 +13501,7 @@ ReadMask:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12499,6 +13723,25 @@ BOOLEAN Blt16BPPBufferPixelateRectWithColor(UINT16 *pBuffer, UINT32 uiDestPitchB
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#ifdef JA2_LINUX
+	UINT32 row = 0;
+	do
+	{
+		UINT32 col = 0;
+		UINT32 w = width;
+
+		do
+		{
+			if (Pattern[row][col] != 0) *DestPtr = usColor;
+			DestPtr++;
+			col = (col + 1) % 8;
+		}
+		while (--w > 0);
+		DestPtr += LineSkip / 2;
+		row = (row + 1) % 8;
+	}
+	while (--height > 0);
+#elif defined( JA2_WIN )
 	__asm {
 		mov		esi, Pattern				// Pointer to pixel pattern
 		mov		edi, DestPtr				// Pointer to top left of rect area
@@ -12531,6 +13774,7 @@ BlitLine2:
 		dec		height
 		jnz		BlitNewLine
 	}
+#endif
 
 	return(TRUE);
 }
@@ -12665,6 +13909,34 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+			}
+			else
+			{
+				SrcPtr += data;
+				do
+				{
+					*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					DestPtr += 2;
+				}
+				while (--data  > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -12762,6 +14034,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -12813,6 +14086,34 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitch
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	for (;;)
+	{
+		UINT8 data = *SrcPtr++;
+
+		if (data == 0)
+		{
+			if (--usHeight == 0) break;
+			DestPtr += LineSkip;
+			continue;
+		}
+		if (data & 0x80)
+		{
+			// Transparent
+			DestPtr += (data & 0x7F) * 2;
+		}
+		else
+		{
+			do
+			{
+				*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				SrcPtr++;
+				DestPtr += 2;
+			}
+			while (--data != 0);
+		}
+	}
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -12910,6 +14211,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13156,6 +14458,91 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparentClip( UINT16 *pBuffer, UINT32 uiDestP
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 LSCount;
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr++];
+					DestPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -13368,6 +14755,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13511,6 +14899,83 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	UINT32 LSCount;
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				SrcPtr += PxCount;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+
+				do
+				{
+					*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					DestPtr += 2;
+				}
+				while (--PxCount > 0);
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -13715,6 +15180,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13764,6 +15230,21 @@ UINT16 *DestPtr;
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#ifdef JA2_LINUX
+	do
+	{
+		UINT32 w = width;
+
+		do
+		{
+			*DestPtr = ShadeTable[*DestPtr];
+			DestPtr++;
+		}
+		while (--w > 0);
+		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
+	}
+	while (--height > 0);
+#elif defined( JA2_WIN )
 	__asm {
 		mov		esi, OFFSET ShadeTable
 		mov		edi, DestPtr
@@ -13786,6 +15267,7 @@ BlitLine:
 		dec		edx
 		jnz		BlitNewLine
 }
+#endif
 
 	return(TRUE);
 }
@@ -13833,6 +15315,20 @@ UINT16 *DestPtr;
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#ifdef JA2_LINUX
+	do
+	{
+		UINT32 w = width;
+		do
+		{
+			*DestPtr = IntensityTable[*DestPtr];
+			DestPtr++;
+		}
+		while (--w > 0);
+		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
+	}
+	while (--height > 0);
+#elif defined( JA2_WIN )
 	__asm {
 		mov		esi, OFFSET IntensityTable
 		mov		edi, DestPtr
@@ -13855,6 +15351,7 @@ BlitLine:
 		dec		edx
 		jnz		BlitNewLine
 }
+#endif
 
 	return(TRUE);
 }
@@ -14102,6 +15599,9 @@ UINT16		*startoffset;
 	linelength=x2real-x1real+1;
 	lineskip=uiDestPitchBYTES-(linelength*2);
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function FillRect16BPP(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 		mov		edi, startoffset
 		mov		ax, color
@@ -14138,6 +15638,8 @@ FillLineEnd:
 		jnz		LineLoop
 
 	}
+#endif
+
 	return(TRUE);
 }	
 
@@ -14260,6 +15762,42 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += data * 2;
+			}
+			else
+			{
+				do
+				{
+					UINT32 src = *SrcPtr++;
+
+					if (src != 254)
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[src];
+					}
+					else if (fDoOutline)
+					{
+						*(UINT16*)DestPtr = s16BPPColor;
+					}
+					DestPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -14328,6 +15866,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -14401,6 +15940,99 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					UINT32 src = *SrcPtr++;
+
+					if (src != 254)
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[src];
+					}
+					else if (fDoOutline)
+					{
+						*(UINT16*)DestPtr = s16BPPColor;
+					}
+					DestPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -14576,6 +16208,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -14649,6 +16282,107 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						UINT32 src = *SrcPtr;
+
+						if (src != 254)
+						{
+							*(UINT16*)ZPtr = usZValue;
+							*(UINT16*)DestPtr = p16BPPPalette[src];
+						}
+						else if (fDoOutline)
+						{
+							*(UINT16*)DestPtr = s16BPPColor;
+						}
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit an end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -14840,6 +16574,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -14915,6 +16650,113 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 	uiLineFlag=(iTempY&1);
 
 
+#ifdef JA2_LINUX
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						// XXX original code updates Z value in one of two cases on this path, seems wrong
+						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+					}
+
+					UINT8 px = *SrcPtr;
+					if (px == 254)
+					{
+						if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+					}
+					else
+					{
+						// XXX original code writes garbage (lower 8 bit are the colour index) into the Z buffer at this point
+						*(UINT16*)DestPtr = p16BPPPalette[px];
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15131,6 +16973,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15173,6 +17016,36 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow( UINT16 *pBuffer, UINT32 uiDestPit
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += data * 2;
+			}
+			else
+			{
+				do
+				{
+					if (*SrcPtr++ != 254)
+					{
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+					DestPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15231,6 +17104,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15301,6 +17175,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip( UINT16 *pBuffer, UINT32 uiDes
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferOutlineShadowClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15512,6 +17389,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15554,6 +17432,50 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						UINT8 px = *SrcPtr;
+
+						if (px == 254)
+						{
+							if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+						}
+						else
+						{
+							*(UINT16*)ZPtr = usZValue; // XXX TODO original code writes garbage into the Z buffer, but comment says don't write at all
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15640,6 +17562,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15684,6 +17607,53 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						// XXX original code updates Z value in one of two cases on this path, seems wrong
+						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+					}
+
+					UINT8 px = *SrcPtr;
+					if (px == 254)
+					{
+						if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+					}
+					else
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[px];
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15792,6 +17762,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15836,6 +17807,45 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						UINT8 px = *SrcPtr;
+						if (px == 254)
+						{
+							if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+						}
+						else
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15922,6 +17932,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15973,6 +17984,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferIntensityZ(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16036,6 +18050,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16116,6 +18131,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferIntensityZClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16289,6 +18307,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16339,6 +18358,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitc
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferIntensityZNB(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16400,6 +18422,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16728,6 +18751,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferIntensityClip(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16932,6 +18958,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16980,6 +19007,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf( stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferIntensity(): line %d\n", __LINE__ );
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -17077,6 +19107,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -17161,6 +19192,102 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#ifdef JA2_LINUX
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						if (uiLineFlag != (((UINT32)DestPtr & 2) != 0)) continue;
+					}
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -17353,6 +19480,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
