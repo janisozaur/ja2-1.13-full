@@ -505,8 +505,8 @@ extern HVOBJECT FontObjs[25];
 #ifdef JA2_WIN
 template void _FailMessage<char *, char const *>(char *, unsigned int, char const *);
 template void _FailMessage<char const *, char const *>(char const *, unsigned int, char const *);
-template void _FailMessage<int, char const *>(int, unsigned int, char const *);
-template void _FailMessage<int, char *>(int, unsigned int, char *);
+//template void _FailMessage<int, char const *>(int, unsigned int, char const *);
+//template void _FailMessage<int, char *>(int, unsigned int, char *);
 template void _FailMessage<char *, char *>(char *, unsigned int, char *);
 #if _MSC_VER <= 1200
 	template void _FailMessage<char *, char *>(unsigned char *, unsigned int, char *);

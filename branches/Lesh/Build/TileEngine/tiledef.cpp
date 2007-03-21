@@ -1,20 +1,18 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
+	#include "Platform.h"
 	#include "tiledef.h"
 	#include "worlddef.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include "wcheck.h"
-	#include "stdlib.h"
-	#include "time.h"
+	#include "WCheck.h"
 	#include "video.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "worldman.h"
 	#include "gameloop.h"
 	#include "edit_sys.h"
-	#include "pathai.h"
-	#include "tile surface.h"
+	#include "PATHAI.H"
+	#include "Tile Surface.h"
+	#include "Tactical Save.h"
 #endif
 
 //#include "editscreen.h"

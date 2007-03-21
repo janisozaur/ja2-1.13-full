@@ -1,30 +1,28 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
+	#include "Platform.h"
 	#include "worlddef.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include "wcheck.h"
-	#include "stdlib.h"
-	#include "time.h"
+	#include "WCheck.h"
 	#include "video.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "smooth.h"
 	#include "worldman.h"
 	#include "lighting.h"
 	#include "renderworld.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "ai.h"
 	#include "Sound Control.h"
-	#include "animation control.h"
-	#include "isometric utils.h"
+	#include "Animation Control.h"
+	#include "Isometric Utils.h"
 	#include "Font Control.h"
 	#include "message.h"
-	#include "tile cache.h"
+	#include "Tile Cache.h"
 	#include "Smoothing Utils.h"
 	#include "SaveLoadMap.h"
 	#include "random.h"
-	#include "render fun.h"
+	#include "Render Fun.h"
+	#include "GameSettings.h"
 #endif
 
 extern BOOLEAN	gfBasement;

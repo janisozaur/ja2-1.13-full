@@ -1,5 +1,5 @@
-#include "BuildDefines.h"
-#include "Fileman.h"
+#include "builddefines.h"
+#include "FileMan.h"
 
 #ifdef JA2EDITOR
 
@@ -41,7 +41,7 @@ BOOLEAN ExternalLoadMap( wchar_t *szFilename );
 BOOLEAN ExternalSaveMap( wchar_t *szFilename );
 
 extern BOOLEAN gfErrorCatch;
-extern UINT16 gzErrorCatchString[ 256 ];
+extern CHAR16 gzErrorCatchString[ 256 ];
 
 #endif
 #endif

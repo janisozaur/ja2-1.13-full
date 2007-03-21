@@ -1,72 +1,62 @@
-# Makefile - JA2.dsw
+# Makefile test
 
-.PHONY: all
-all: \
-	Editor \
-	Laptop \
-	"Standard Gaming Platform" \
-	Strategic \
-	Tactical \
-	TacticalAI \
-	TileEngine \
-	Utils \
-	ja2 
+AR	= ar
+RANLIB	= ranlib
 
-.PHONY: Editor
-Editor:
-	$(MAKE) -C Editor -f Editor.mak
+TARGET = Standard\ Gaming\ Platform/SGP.a
+DEFINES = -DJA2 -DENGLISH
+INCLUDE = -I./ -I./SDL/ -I./TileEngine/ -I./Utils/ -I./Laptop/ -I./Tactical/ -I./Strategic/ -I./Standard\ Gaming\ Platform
+LIB = SGP.a
+LIBSO = /usr/lib/libSDL-1.2.so.0
+CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
-.PHONY: Laptop
-Laptop: 
-	$(MAKE) -C Laptop -f Laptop.mak
+SOURCES  = SCREENS.cpp
+#	Main.cpp
+	
+#	aniviewscreen.cpp
+#	Credits.cpp
+#	Fade Screen.cpp
+#	GameInitOptionsScreen.cpp
+#	gameloop.cpp
+#	gamescreen.cpp
+#	GameSettings.cpp
+#	GameVersion.cpp
+#	HelpScreen.cpp
+#	Init.cpp
+#	Intro.cpp
+#	JA2 Splash.cpp
+#	jascreens.cpp
+#	Loading Screen.cpp
+#	MainMenuScreen.cpp
+#	MessageBoxScreen.cpp
+#	Options Screen.cpp
+#	SaveLoadGame.cpp
+#	SaveLoadScreen.cpp
+#	SCREENS.cpp
+#	Sys Globals.cpp
 
-.PHONY: "Standard Gaming Platform"
-"Standard Gaming Platform":
+#OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
+OBJECTS = $(SOURCES:.cpp=.o)
 
-.PHONY: Strategic
-Strategic: 
-	$(MAKE) -C Strategic -f Strategic.mak
+all: $(TARGET)
+	g++ $(CXXFLAGS) -o "ja2" "Main.cpp" $(OBJECTS) $(LIB) $(LIBSO)
 
-.PHONY: Tactical
-Tactical: 
-	$(MAKE) -C Tactical -f Tactical.mak
+Standard\ Gaming\ Platform/SGP.a:
+	cd Standard\ Gaming\ Platform/
+	make -C Standard\ Gaming\ Platform/
+#	echo test >> qqq
+	cd ..
 
-.PHONY: TacticalAI
-TacticalAI:
-	$(MAKE) -C TacticalAI -f TacticalAI.mak
+#$(TARGET): $(OBJECTS)
+#	$(AR) crv $@ $^
+#	$(RANLIB) $@
 
-.PHONY: TileEngine
-TileEngine: 
-	$(MAKE) -C TileEngine -f TileEngine.mak
+.cpp.o:
+	g++ $(CXXFLAGS) -c "$<" -o "$@"
+	$(AR) crv $(TARGET) "$@"
 
-.PHONY: Utils
-Utils:
-	$(MAKE) -C Utils -f Utils.mak
+test:
+	$(shell echo $(INCLUDE))
 
-.PHONY: ja2
-ja2: 
-	$(MAKE) -f JA2.mak
-
-.PHONY: clean
 clean:
-	$(MAKE) -C Editor -f Editor.mak clean
-	$(MAKE) -C Laptop -f Laptop.mak clean
-
-	$(MAKE) -C Strategic -f Strategic.mak clean
-	$(MAKE) -C Tactical -f Tactical.mak clean
-	$(MAKE) -C TacticalAI -f TacticalAI.mak clean
-	$(MAKE) -C TileEngine -f TileEngine.mak clean
-	$(MAKE) -C Utils -f Utils.mak clean
-	$(MAKE) -f JA2.mak clean
-
-.PHONY: depends
-depends:
-	$(MAKE) -C Editor -f Editor.mak depends
-	$(MAKE) -C Laptop -f Laptop.mak depends
-
-	$(MAKE) -C Strategic -f Strategic.mak depends
-	$(MAKE) -C Tactical -f Tactical.mak depends
-	$(MAKE) -C TacticalAI -f TacticalAI.mak depends
-	$(MAKE) -C TileEngine -f TileEngine.mak depends
-	$(MAKE) -C Utils -f Utils.mak depends
-	$(MAKE) -f JA2.mak depends
+	rm -f $(TARGET) $(OBJECTS)

@@ -3,20 +3,21 @@
 #else
 	#include "Types.h"
 	#include "SaveLoadMap.h"
-	#include "OverHead.h"
+	#include "Overhead.h"
 	#include "FileMan.h"
 	#include "Tactical Save.h"
-	#include "Debug.h"
-	#include "WorldMan.h"
-	#include "StrategicMap.h"
+	#include "DEBUG.H"
+	#include "worldman.h"
+	#include "strategicmap.h"
 	#include "Campaign Types.h"
-	#include "RenderWorld.h"
+	#include "renderworld.h"
 	#include "Render Fun.h"
 	#include "fov.h"
-	#include "WorldDef.h"
+	#include "worlddef.h"
 	#include "Exit Grids.h"
-	#include "Message.h"
+	#include "message.h"
 	#include "GameSettings.h"
+	#include "Smell.h"
 #endif
 
 #define			NUM_REVEALED_BYTES			3200

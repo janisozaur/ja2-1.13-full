@@ -3,7 +3,7 @@
 // header for strategic structure
 #include "Types.h"
 #include "mapscreen.h"
-#include "soldier control.h"
+#include "Soldier Control.h"
 
 
 struct strategicmapelement{

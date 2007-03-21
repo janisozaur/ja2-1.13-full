@@ -2,31 +2,28 @@
 	#include "TileEngine All.h"
 	#include "PreBattle Interface.h"
 #else
+	#include "Platform.h"
 	#include "worlddef.h"
-	#include "worlddat.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include "wcheck.h"
-	#include "stdlib.h"
-	#include "time.h"
+	#include "WorldDat.h"
+	#include "WCheck.h"
 	#include "video.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "smooth.h"
 	#include "worldman.h"
 	#include "mousesystem.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "screenids.h"
 	#include "Render Fun.h"
-	#include "font control.h"
+	#include "Font Control.h"
 	#include "lighting.h"
 	#include "structure.h"
 	#include "vobject.h"
 	#include "Soldier Control.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "Interactive Tiles.h" 
-	#include "utilities.h"
-	#include "overhead.h"
-	#include "points.h"
+	#include "Utilities.h"
+	#include "Overhead.h"
+	#include "Points.h"
 	#include "Event Pump.h"
 	#include "Handle UI.h"
 	#include "opplist.h"
@@ -35,20 +32,19 @@
 	#include "World Items.h"
 	#include "renderworld.h"
 	#include "Radar Screen.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
 	#include "Exit Grids.h"
-	#include "tile surface.h"
-	#include "rotting corpses.h"
+	#include "Tile Surface.h"
+	#include "Rotting Corpses.h"
 	#include "Keys.h"
 	#include "Map Information.h"
 	#include "Exit Grids.h"
 	#include "Summary Info.h" 
 	#include "Animated ProgressBar.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "EditorBuildings.h"
 	#include "FileMan.h"
-	#include "music control.h"
 	#include "Map Edgepoints.h"
 	#include "environment.h"
 	#include "Shade Table Util.h"
@@ -58,6 +54,12 @@
 	#include "pits.h"
 	#include "Game Clock.h"
 	#include "Buildings.h"
+	#include "SgpStr.h"
+	#include "overhead map.h"
+	#include "SmokeEffects.h"
+	#include "LightEffects.h"
+	#include "Meanwhile.h"
+	#include "strategicmap.h"
 #endif
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
@@ -78,7 +80,7 @@
 
 #ifdef JA2EDITOR
 	extern BOOLEAN gfErrorCatch;
-	extern UINT16 gzErrorCatchString[256];
+	extern CHAR16 gzErrorCatchString[256];
 #endif
 
 UINT8 gubFilename[200];
@@ -318,7 +320,7 @@ BOOLEAN ReloadTilesetSlot( INT32 iSlot )
 	return(TRUE);
 }
 
-
+// Lesh: ^^^ Disabled ini files ^^^
 BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 {
   SGPFILENAME			cTemp;
@@ -335,12 +337,12 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 
 	// Adjust Current Dir
 	// CHECK IF DEFAULT INI OVERRIDE FILE EXISTS
-	sprintf( INIFile, "%s\\engine.ini", ExeDir );
-	if ( !FileExists( INIFile )	)
-	{
+//	sprintf( INIFile, "%s\\engine.ini", ExeDir );
+//	if ( !FileExists( INIFile )	)
+//	{
 		// USE PER TILESET BASIS
-		sprintf( INIFile, "%s\\engine%d.ini", ExeDir, ubTilesetID );
-	}
+//		sprintf( INIFile, "%s\\engine%d.ini", ExeDir, ubTilesetID );
+//	}
 
 	// If no Tileset filenames are given, return error
 	if (ppTileSurfaceFilenames == NULL)
@@ -379,17 +381,17 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 		// almost completely identical functions
 		if (ppTileSurfaceFilenames == NULL)
 		{
-			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
-			if (*cTemp != '\0')
-			{
-				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
-				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
-				{
-					DestroyTileSurfaces( );
-					return( FALSE );
-				}
-			}
-			else
+//			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
+//			if (*cTemp != '\0')
+//			{
+//				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
+//				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
+//				{
+//					DestroyTileSurfaces( );
+//					return( FALSE );
+//				}
+//			}
+//			else
 			{
 				// Use default
 				if (AddTileSurface( TileSurfaceFilenames[uiLoop], uiLoop, ubTilesetID, FALSE ) == FALSE)
@@ -403,17 +405,17 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 		}
 		else
 		{
-			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
-			if (*cTemp != '\0')
-			{
-				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
-				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
-				{
-					DestroyTileSurfaces(  );
-					return( FALSE );
-				}
-			}
-			else
+//			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
+//			if (*cTemp != '\0')
+//			{
+//				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
+//				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
+//				{
+//					DestroyTileSurfaces(  );
+//					return( FALSE );
+//				}
+//			}
+//			else
 			{
 				if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
 				{
@@ -1715,7 +1717,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( LayerCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				LayerCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1726,7 +1728,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, LayerCount, cnt );
 		}
 		bCounts[ cnt ][ 0 ] = LayerCount;
@@ -1755,7 +1757,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( ObjectCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				ObjectCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1766,7 +1768,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, ObjectCount, cnt );
 		}
 		bCounts[ cnt ][ 1 ] = ObjectCount;
@@ -1785,7 +1787,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( StructCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				StructCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1796,7 +1798,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, StructCount, cnt );
 		}
 		bCounts[ cnt ][ 2 ] = StructCount;
@@ -1820,7 +1822,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( ShadowCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				ShadowCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1831,7 +1833,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, ShadowCount, cnt );
 		}
 		bCounts[ cnt ][ 3 ] = ShadowCount;
@@ -1850,7 +1852,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( RoofCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				RoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1861,7 +1863,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, RoofCount, cnt );
 		}
 		bCounts[ cnt ][ 4 ] = RoofCount;
@@ -1883,7 +1885,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		}
 		if( OnRoofCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
+			WSTR_SPrintf( gzErrorCatchString, 256, L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.", 
 				OnRoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1894,7 +1896,7 @@ BOOLEAN SaveWorld( UINT8 * puiFilename )
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.", 
+			WSTR_SPrintf( gzErrorCatchString, 256, L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.", 
 				uiNumWarningsCaught, OnRoofCount, cnt );
 		}
 		bCounts[ cnt ][ 5 ] = RoofCount;
@@ -2270,7 +2272,7 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 	FileRead( hfile, pBuffer, uiFileSize, &uiBytesRead );
 	FileClose( hfile );
 
-	swprintf( str, L"Analyzing map %S", szFilename );
+	WSTR_SPrintf( str, 40, L"Analyzing map %S", szFilename );
 	if( !gfUpdatingNow )
 		SetRelativeStartAndEndPercentage( 0, 0, 100, str );
 	else

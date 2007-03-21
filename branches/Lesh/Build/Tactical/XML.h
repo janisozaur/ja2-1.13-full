@@ -1,7 +1,7 @@
 #ifndef __XML_H
 #define __XML_H
 
-#include "armsdealerinvinit.h"
+#include "ArmsDealerInvInit.h"
 #include "EnemyItemDrops.h"
 
 enum

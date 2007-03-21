@@ -1,7 +1,7 @@
 #ifndef __AI_H
 #define __AI_H
 
-#include "types.h"
+#include "Types.h"
 #include "worlddef.h"
 #include "Soldier Control.h"
 

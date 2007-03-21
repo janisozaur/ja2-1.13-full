@@ -8,7 +8,7 @@
 
 #ifndef _PATHAI_H
 #define _PATHAI_H
-#include "isometric utils.h"
+#include "Isometric Utils.h"
 
 BOOLEAN InitPathAI( void );
 void ShutDownPathAI( void );

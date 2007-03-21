@@ -1,15 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
-	#include <wchar.h>
-	#include "worlddat.h"
+	#include "Platform.h"
+	#include "WorldDat.h"
 	#include "worlddef.h"
 	#include "tiledef.h"
-	#include "sys globals.h"
-	#include "tile surface.h"
-	#include "fileMan.h"
+	#include "Sys Globals.h"
+	#include "Tile Surface.h"
+	#include "FileMan.h"
+	#include "SgpStr.h"
 #endif
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
@@ -79,7 +78,7 @@ void InitEngineTilesets( )
 		FileRead( hfile, &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8 ), &uiNumBytesRead );
 
 		// Set into tileset 
-		swprintf( (wchar_t *)gTilesets[ cnt ].zName, L"%S", zName );
+		WSTR_SPrintf( (wchar_t *)gTilesets[ cnt ].zName, 32, L"%S", zName );
 
 		// Loop for files
 		for ( cnt2 = 0; cnt2 < uiNumFiles; cnt2++ )

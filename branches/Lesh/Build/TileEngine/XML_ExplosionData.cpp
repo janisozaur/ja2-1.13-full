@@ -2,23 +2,24 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
-    #include "explosion control.h"
+	#include "Platform.h"
+    #include "Explosion Control.h"
+	#include "expat.h"
+	#include "XML.h"
+	#include "FileMan.h"
+	#include "DEBUG.H"
+	#include "Debug Control.h"
 #endif
-
-#include "expat.h"
-#include "XML.h"
 
 struct
 {
 	PARSE_STAGE	curElement;
 
-	INT8		szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
 
 	EXPLOSION_DATA  expData;
 	UINT32			maxArraySize;
-	UINT32			curIndex;	
+	INT32			curIndex;	
 	UINT32			currentDepth;
 	UINT32			maxReadDepth;
 }

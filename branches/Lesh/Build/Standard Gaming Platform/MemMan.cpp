@@ -27,9 +27,6 @@
 #include "Types.h"
 #include "MemMan.h"
 #include "DEBUG.H"
-//	#ifdef _DEBUG
-//		#include <crtdbg.h>
-//	#endif
 //#endif
 
 #ifdef _DEBUG
@@ -42,63 +39,27 @@
 //
 //**************************************************************************
 
-#ifdef JA2
-//#include "mousesystem.h"
-//#include "MessageBoxScreen.h"
-STR16 gzJA2ScreenNames[] = 
-{
-	L"EDIT_SCREEN",
-	L"SAVING_SCREEN",
-	L"LOADING_SCREEN",
-	L"ERROR_SCREEN",
-	L"INIT_SCREEN",
-	L"GAME_SCREEN",
-	L"ANIEDIT_SCREEN",
-	L"PALEDIT_SCREEN",
-	L"DEBUG_SCREEN",
-	L"MAP_SCREEN",
-	L"LAPTOP_SCREEN",
-	L"LOADSAVE_SCREEN",
-	L"MAPUTILITY_SCREEN",
-	L"FADE_SCREEN",
-	L"MSG_BOX_SCREEN",
-	L"MAINMENU_SCREEN",
-	L"AUTORESOLVE_SCREEN",
-	L"SAVE_LOAD_SCREEN",
-	L"OPTIONS_SCREEN",
-	L"SHOPKEEPER_SCREEN",
-	L"SEX_SCREEN",
-	L"GAME_INIT_OPTIONS_SCREEN",
-	L"DEMO_EXIT_SCREEN",
-	L"INTRO_SCREEN",
-	L"CREDIT_SCREEN",
-#ifdef JA2BETAVERSION
-	L"AIVIEWER_SCREEN",
-	L"QUEST_DEBUG_SCREEN",
-#endif
-};
-#endif
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 	typedef struct MEMORY_NODE
 	{
-		PTR pBlock;
-		struct MEMORY_NODE *next, *prev;
-		UINT8	*pCode;
-		UINT32 uiSize;
+		PTR 				pBlock;
+		struct MEMORY_NODE 	*next, *prev;
+		UINT8				*pCode;
+		UINT32 				uiSize;
 	}MEMORY_NODE;
 
-	MEMORY_NODE  *gpMemoryHead = NULL;
-	MEMORY_NODE  *gpMemoryTail = NULL;
-	UINT32				guiMemoryNodes = 0;
-	UINT32				guiTotalMemoryNodes = 0;
+	MEMORY_NODE		*gpMemoryHead       = NULL;
+	MEMORY_NODE		*gpMemoryTail       = NULL;
+	UINT32			guiMemoryNodes      = 0;
+	UINT32			guiTotalMemoryNodes = 0;
 #endif
 
 static BOOLEAN gfMemDebug = TRUE;
 // debug variable for total memory currently allocated
-UINT32	guiMemTotal = 0;
-UINT32  guiMemAlloced = 0;
-UINT32  guiMemFreed = 0;
+UINT32	guiMemTotal     = 0;
+UINT32  guiMemAlloced   = 0;
+UINT32  guiMemFreed     = 0;
 UINT32	MemDebugCounter = 0;
 BOOLEAN fMemManagerInit = FALSE;
 
@@ -135,15 +96,15 @@ BOOLEAN InitializeMemoryManager( void )
 	// Register the memory manager with the debugger
 	RegisterDebugTopic(TOPIC_MEMORY_MANAGER, "Memory Manager");
 	MemDebugCounter = 0;
-	guiMemTotal = 0;
-	guiMemAlloced = 0;
-	guiMemFreed = 0;
+	guiMemTotal     = 0;
+	guiMemAlloced   = 0;
+	guiMemFreed     = 0;
 	fMemManagerInit = TRUE;
 
 	#ifdef EXTREME_MEMORY_DEBUGGING
 		gpMemoryHead = NULL;
 		gpMemoryTail = NULL;
-		guiMemoryNodes = 0;
+		guiMemoryNodes      = 0;
 		guiTotalMemoryNodes = 0;
 	#endif
 
@@ -193,10 +154,10 @@ void ShutdownMemoryManager( void )
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("  >>>>> MEMORY LEAK DETECTED!!! <<<<<  "));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter ));
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated",      MemDebugCounter ));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal ));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed", guiMemFreed));
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated",   guiMemAlloced));
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed",       guiMemFreed));
 
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
@@ -214,11 +175,10 @@ void ShutdownMemoryManager( void )
 					fprintf( fp, "\n\n" );
 					fprintf( fp, ">>>>> MEMORY LEAK DETECTED!!! <<<<<\n" );
 					fprintf( fp, "  %d bytes memory total was allocated\n", guiMemAlloced );
-					fprintf( fp, "- %d bytes memory total was freed\n", guiMemFreed );
+					fprintf( fp, "- %d bytes memory total was freed\n",     guiMemFreed );
 					fprintf( fp, "_______________________________________________\n" );
 					fprintf( fp, "%d bytes memory total STILL allocated\n", guiMemTotal );
-					fprintf( fp, "%d memory blocks still allocated\n", MemDebugCounter );
-//					fprintf( fp, "guiScreenExitedFrom = %S\n", gzJA2ScreenNames[ gMsgBox.uiExitScreen ] );
+					fprintf( fp, "%d memory blocks still allocated\n",      MemDebugCounter );
 					fprintf( fp, "\n\n" );
 				}
 				fclose( fp );
@@ -347,67 +307,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 #endif
 
 
-//PTR MemAllocLocked( UINT32 uiSize )
-//{
-//	PTR	ptr;
-//
-//	if ( !fMemManagerInit )
-//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
-//
-//	
-//	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
-//
-//	if ( ptr )
-//	{
-//    VirtualLock( ptr, uiSize );
-//
-//		guiMemTotal   += uiSize;
-//		guiMemAlloced += uiSize;
-//		MemDebugCounter++;
-//  }
-//  else
-//	{
-//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
-//	}
-//
-//#ifdef DEBUG_MEM_LEAKS
-//  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
-//#endif
-//
-//	return( ptr );
-//}
-//
-//
-//void MemFreeLocked( PTR ptr, UINT32 uiSize )
-//{
-//	if ( !fMemManagerInit )
-//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
-//
-//
-//  if (ptr != NULL)
-//  {
-//	  VirtualUnlock( ptr, uiSize );
-//	  VirtualFree( ptr, uiSize, MEM_RELEASE );
-//
-//		guiMemTotal -= uiSize;
-//		guiMemFreed += uiSize;
-//  }
-//  else
-//  {
-//    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
-//  }
-//
-//  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-//  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
-//  // is not noticed.
-//  MemDebugCounter--;
-//
-//#ifdef DEBUG_MEM_LEAKS
-//  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
-//#endif
-//}
-//
-//
+
 //**************************************************************************
 //
 // MemGetFree
@@ -480,8 +380,8 @@ BOOLEAN MemCheckPool( void )
 
 #ifdef _DEBUG
 
-	fRet = _CrtCheckMemory();
-	Assert( fRet );
+//	fRet = _CrtCheckMemory();
+//	Assert( fRet );
 
 #endif
 
@@ -490,7 +390,6 @@ BOOLEAN MemCheckPool( void )
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 
-#define END_MARKER "123456789012345"
 
 PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void *pSpecial )
 {
@@ -498,15 +397,12 @@ PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void 
 	UINT16 usLength;
 	UINT8 str[70];
 	UINT8 *pStr;
-	UINT32 orgSize = size;
-	char *marker;
 
 	if( !size )
 	{
 		return NULL;
 	}
 
-	size += strlen( (char*)END_MARKER ) + 1;
 
 	if( !pSpecial  )
 	{
@@ -545,11 +441,6 @@ PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void 
 		memset( gpMemoryTail->pCode, 0, usLength );
 		strcpy( (char*)gpMemoryTail->pCode, (char*)str );
 
-		marker = (char*)ptr;
-		marker += orgSize;
-		memset(marker, 0, strlen( (char*)END_MARKER ) + 1);
-		strcpy(marker, END_MARKER);
-
 		//record the size
 		gpMemoryTail->uiSize = size;
 
@@ -565,7 +456,6 @@ PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void 
 void MemFreeXDebug( PTR ptr, const char *szCodeString, INT32 iLineNum, void *pSpecial )
 {
 	MEMORY_NODE *curr;
-	char *marker;
 
   if( ptr )
   {
@@ -574,38 +464,6 @@ void MemFreeXDebug( PTR ptr, const char *szCodeString, INT32 iLineNum, void *pSp
 		{
 			if( curr->pBlock == ptr )
 			{ //Found the node, so detach it and delete it.
-				marker  = (char*)curr->pBlock;
-				marker += curr->uiSize - (strlen( END_MARKER ) + 1);
-				if ( strcmp(marker, END_MARKER) )
-				{
-					UINT32 uiLeft, cnt;
-					UINT8 *p;
-					FILE *fp = fopen("boundsbreaks.txt", "a+t");
-					fprintf( fp, "Bounds checking failed!\n" );
-					fprintf( fp, "Block at %08X\n", curr->pBlock );
-					fprintf( fp, "Size is %d\n", curr->uiSize );
-					fprintf( fp, "MemAlloc file: %s\n", curr->pCode );
-					fprintf( fp, "MemFree file: %s\n", szCodeString );
-					fprintf( fp, "Data:\n" );
-					uiLeft = curr->uiSize;
-					p = (UINT8*)curr->pBlock;
-					cnt = 16;
-					while (uiLeft)
-					{
-						fprintf(fp, "%02X ", *p);
-						p++;
-						uiLeft--;
-						cnt--;
-						if ( !cnt )
-						{
-							fprintf(fp, "\n");
-							cnt = 16;
-						}
-					}
-					fprintf(fp, "\n");
-					fclose(fp);
-				}
-
 
 				if( !pSpecial )
 				{
@@ -650,8 +508,6 @@ PTR	MemReallocXDebug( PTR ptr, UINT32 size, const char *szCodeString, INT32 iLin
 	UINT16 usLength;
 	UINT8 str[70];
 	UINT8 *pStr;
-	//UINT32 orgSize = size;
-	//char *marker;
 
 	if( !ptr && size )
 	{
@@ -663,8 +519,6 @@ PTR	MemReallocXDebug( PTR ptr, UINT32 size, const char *szCodeString, INT32 iLin
 	{
 		if( curr->pBlock == ptr )
 		{
-			//size += strlen( (char*)END_MARKER ) + 1;
-
 			// Note that the ptr changes to ptrNew...
 			if( !pSpecial )
 			{
@@ -690,11 +544,6 @@ PTR	MemReallocXDebug( PTR ptr, UINT32 size, const char *szCodeString, INT32 iLin
 				curr->pCode = (UINT8*)malloc( usLength );
 				memset( curr->pCode, 0, usLength );
 				strcpy( (char*)curr->pCode, (char*)str );
-
-				//marker  = (char*)ptr;
-				//marker += orgSize;
-				//memset(marker, 0, strlen( (char*)END_MARKER ) + 1);
-				//strcpy(marker, END_MARKER);
 			}
 			else
 			{
@@ -771,65 +620,7 @@ void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 	}
 	fprintf(fp, "\n");
 
-	//Allocate enough strings and counters for each node.
-	//pCode = (DUMPFILENAME*)malloc( sizeof( DUMPFILENAME ) * guiMemoryNodes );
-	//memset( pCode, 0, sizeof( DUMPFILENAME ) * guiMemoryNodes );
-	//puiSize = (UINT32*)malloc( 4 * guiMemoryNodes );
-	//memset( puiSize, 0, 4 * guiMemoryNodes );
-	//puiCounter = (UINT32*)malloc( 4 * guiMemoryNodes );
-	//memset( puiCounter, 0, 4 * guiMemoryNodes );
-
-	////Loop through the list and record every unique filename and count them
-	//uiUniqueID = 0;
-	//curr = gpMemoryHead;
-	//while( curr )
-	//{
-	//	strcpy( (char*)tempCode, (char*)curr->pCode );
-	//	fFound = FALSE;
-	//	for( i = 0; i < uiUniqueID; i++ )
-	//	{
-	//		if( !_stricmp( (char*)tempCode, (char*)pCode[i].str ) )
-	//		{ //same string
-	//			fFound = TRUE;
-	//			(puiCounter[ i ])++;
-	//			(puiSize[ i ]) += curr->uiSize;
-	//			break;
-	//		}
-	//	}
-	//	if( !fFound )
-	//	{
-	//		strcpy( (char*)pCode[i].str, (char*)tempCode );
-	//		(puiSize[ i ]) += curr->uiSize;
-	//		(puiCounter[ i ])++;
-	//		uiUniqueID++;
-	//	}
-	//	curr = curr->next;
-	//}
-
-	//Now dump the info.
-	//fprintf( fp, "--------------------------------------------------------------------------------\n" );
-	//fprintf( fp, "%d unique memory allocation locations exist in %d memory nodes\n", uiUniqueID, guiMemoryNodes );
-	//fprintf( fp, "--------------------------------------------------------------------------------\n" );
-	//for( i = 0; i < uiUniqueID; i++ )
-	//{
-	//	fprintf( fp, "%d occurrences of %s (total size %d bytes)\n", puiCounter[i], pCode[i].str, puiSize[i] );
-	//	uiBytesRemainder += puiSize[i];
-	//	if( uiBytesRemainder >= 1024 )
-	//	{
-	//		uiTotalKbWasted += uiBytesRemainder/1024;
-	//		uiBytesRemainder %= 1024;
-	//	}
-	//}
-	//fprintf( fp, "--------------------------------------------------------------------------------\n" );
-	//fprintf( fp, "%dKB of memory total wasn't cleaned up!\n", uiTotalKbWasted );
-	//fprintf( fp, "--------------------------------------------------------------------------------\n" );
-
 	fclose( fp );
-
-	//Free all memory associated with this operation.
-	//free( pCode );
-	//free( puiCounter );
-	//free( puiSize );
 }
 
 BOOLEAN _AddAndRecordMemAlloc( UINT32 size, UINT32 uiLineNum, UINT8 *pSourceFile )

@@ -1,7 +1,7 @@
 #ifndef _SMELL_H_
 #define _SMELL_H_
 
-#include "soldier control.h"
+#include "Soldier Control.h"
 
 #define HUMAN							 0
 #define CREATURE_ON_FLOOR	 0x01

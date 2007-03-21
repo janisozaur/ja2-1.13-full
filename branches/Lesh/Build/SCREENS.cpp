@@ -2,7 +2,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
-	#include "Screens.h"
+	#include "SCREENS.H"
 #endif
 
 int iResolution;		// INI file

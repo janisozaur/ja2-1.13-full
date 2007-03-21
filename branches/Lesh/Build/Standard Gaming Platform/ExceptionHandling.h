@@ -1,6 +1,7 @@
 #ifndef _EXCEPTION_HANDLING__H_
 #define _EXCEPTION_HANDLING__H_
 
+#ifdef JA2_WIN
 
 //uncomment this line if you want Exceptions to be handled
 #ifdef JA2
@@ -9,9 +10,6 @@
 	#define ENABLE_EXCEPTION_HANDLING
 //#endif
 
-#else
-	//Wizardry 
-//#define ENABLE_EXCEPTION_HANDLING
 #endif
 
 
@@ -27,5 +25,7 @@ INT32 RecordExceptionInfo( EXCEPTION_POINTERS *pExceptInfo );
 #ifdef __cplusplus
 }
 #endif
+
+#endif	// #ifdef JA2_WIN
 
 #endif

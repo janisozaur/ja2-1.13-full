@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "Isometric Utils.h"
 	#include "renderworld.h"
 #endif

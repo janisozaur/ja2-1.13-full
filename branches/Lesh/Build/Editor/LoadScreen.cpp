@@ -48,7 +48,7 @@
 //===========================================================================
 
 BOOLEAN gfErrorCatch = FALSE;
-UINT16 gzErrorCatchString[ 256 ] = L"";
+CHAR16 gzErrorCatchString[ 256 ] = L"";
 INT32	giErrorCatchMessageBox = 0;
 
 extern void RemoveMercsInSector();

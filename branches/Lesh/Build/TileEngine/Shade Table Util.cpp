@@ -1,13 +1,13 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <stdio.h>
-	#include "types.h"
+	#include "Platform.h"
+	#include "Types.h"
 	#include "lighting.h"
 	#include "Shade Table Util.h"
 	#include "video.h"
 	#include "WorldDat.h"
-	#include "Fileman.h"
+	#include "FileMan.h"
 #endif
 
 
