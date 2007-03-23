@@ -1,25 +1,27 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <stdio.h>
+	#include "Platform.h"
 	#include "FileMan.h"
-	#include "debug.h"
-	#include "types.h"
+	#include "DEBUG.H"
+	#include "Types.h"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "smooth.h"
 	#include "Exit Grids.h"
 	#include "Editor Undo.h"
-	#include "StrategicMap.h"
+	#include "strategicmap.h"
 	#include "Strategic Movement.h"
 	#include "message.h"
 	#include "Font Control.h"
-	#include "pathai.h"
-	#include "overhead.h"
+	#include "PATHAI.H"
+	#include "Overhead.h"
 	#include "Animation Control.h"
 	#include "Sys Globals.h"
-	#include "quests.h"
+	#include "Quests.h"
 	#include "SaveLoadMap.h"
+	#include "Text.h"
+	
 #endif
 
 BOOLEAN gfLoadingExitGrids = FALSE;

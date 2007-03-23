@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "pits.h"
 	#include "worlddef.h"
 	#include "worldman.h"
@@ -12,9 +12,9 @@
 	#include "Sys Globals.h"
 	#include "strategicmap.h"
 	#include "Isometric Utils.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Sound Control.h"
-	#include "animation control.h"
+	#include "Animation Control.h"
 	#include "strategic.h"
 	#include "Action Items.h"
 #endif

@@ -1,20 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <memory.h>
+	#include "Platform.h"
 	#include "Map Edgepoints.h"
 	#include "Soldier Control.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "ai.h"
 	#include "Map Information.h"
 	#include "renderworld.h"
 	#include "Isometric Utils.h"
-	#include "debug.h"
-	#include "Random.h"
+	#include "DEBUG.H"
+	#include "random.h"
 	#include "strategic.h"
 	#include "Animation Control.h"
 	#include "Render Fun.h"
 	#include "strategicmap.h"
+	#include "environment.h"
+	#include "worldman.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge
@@ -1516,15 +1518,15 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 	iSearchRange = EDGE_OF_MAP_SEARCH;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = __min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = __min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = __min( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = __min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1591,15 +1593,15 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 	}
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = __min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = __min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = __min( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = __min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...

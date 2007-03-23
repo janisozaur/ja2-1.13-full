@@ -4,13 +4,16 @@
 	#include "Types.h"
 	#include "Buildings.h"
 	#include "Isometric Utils.h"
-	#include "Pathai.h"
+	#include "PATHAI.H"
 	#include "Structure Wrap.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Overhead.h"
 	#include "Render Fun.h"
-	#include "Strategicmap.h"
+	#include "strategicmap.h"
 	#include "Sys Globals.h"
+	#include "DEBUG.H"
+	#include "worldman.h"
+	
 #endif
 
 #define ROOF_LOCATION_CHANCE 8

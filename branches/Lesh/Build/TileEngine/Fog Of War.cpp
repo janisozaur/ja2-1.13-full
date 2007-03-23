@@ -1,12 +1,12 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "Fog Of War.h"
 	#include "Isometric Utils.h"
 	#include "worldman.h"
 	#include "Simple Render Utils.h"
-	#include "Renderworld.h"
+	#include "renderworld.h"
 	#include "lighting.h"
 #endif
 

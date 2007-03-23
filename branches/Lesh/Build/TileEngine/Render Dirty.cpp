@@ -3,23 +3,22 @@
   #include "winfont.h"
 
 #else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
+	#include "Platform.h"
 
 	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "vsurface.h"
 	#include "Render Dirty.h"
 	#include "sysutil.h"
-	#include "container.h"
-	#include "wcheck.h"
+	#include "Container.h"
+	#include "WCheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
+	#include "SgpStr.h"
 #endif
 
 #ifdef JA2BETAVERSION
-#include "Message.h"
+#include "message.h"
 #endif
 
 #define		DIRTY_QUEUES			200
@@ -219,8 +218,8 @@ INT32	 iTempX, iTempY;
 	iTempY = sTop;
 
 	// Clip to rect
-	uiLeftSkip=__min( ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	uiRightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	uiLeftSkip=__min( ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	uiRightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	uiTopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 
@@ -756,13 +755,15 @@ INT32 iBack;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
+	WSTR_VSPrintf(string, 512, pFontString, argptr);	// process gprintf string (get output str)
+//	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
   if ( USE_WINFONTS( ) )
   {
-	  uiStringLength=WinFontStringPixLength( string, GET_WINFONT( ) );
-	  uiStringHeight=GetWinFontHeight( string, GET_WINFONT( ) );
+		fprintf(stderr, "Winfonts must be disabled! Line %d\n", __LINE__ );
+//	  uiStringLength=WinFontStringPixLength( string, GET_WINFONT( ) );
+//	  uiStringHeight=GetWinFontHeight( string, GET_WINFONT( ) );
   }
   else
   {
@@ -792,7 +793,8 @@ UINT16 uiStringLength, uiStringHeight;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
+	WSTR_VSPrintf(string, 512, pFontString, argptr);	// process gprintf string (get output str)
+//	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	uiStringLength=StringPixLength(string, FontDefault);
@@ -816,7 +818,8 @@ UINT16 uiStringLength, uiStringHeight;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
+	WSTR_VSPrintf(string, 512, pFontString, argptr);	// process gprintf string (get output str)
+//	vswprintf(string, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	uiStringLength=StringPixLength(string, FontDefault);
@@ -1323,8 +1326,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 					iTempY = sTop + sShiftY;
 
 					// Clip to rect
-					uiLeftSkip=__min( ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-					uiRightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+					uiLeftSkip=__min( ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+					uiRightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 					uiTopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 					uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 

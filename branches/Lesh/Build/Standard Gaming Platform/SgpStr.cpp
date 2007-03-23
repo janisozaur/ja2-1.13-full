@@ -18,6 +18,9 @@
 // LINUX section
 // -------------
 
+// Wide string (UNICODE) functions
+// ===============================
+
 INT32	WSTR_SPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...)
 {
 	INT32 iRet;
@@ -29,6 +32,14 @@ INT32	WSTR_SPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...)
 
 	return( iRet );
 }
+
+INT32	WSTR_VSPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, va_list arg)
+{
+	return( vswprintf(pString, usMaxLen, pFormat, arg) );
+}
+
+// Simple char functions
+// =====================
 
 INT32	STR_SPrintf(CHAR8 *pString, INT16 usMaxLen, const CHAR8 *pFormat, ...)
 {

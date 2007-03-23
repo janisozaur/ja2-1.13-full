@@ -1,13 +1,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "stdio.h"
+	#include "Platform.h"
 	#include "sgp.h"
-	#include "Ambient types.h"
-	#include "fileman.h"
+	#include "Ambient Types.h"
+	#include "FileMan.h"
 	#include "environment.h"
 	#include "Sound Control.h"
 	#include "Game Events.h"
+	#include "random.h"
+	#include "Ambient Control.h"
+	#include "lighting.h"
+	
 #endif
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];

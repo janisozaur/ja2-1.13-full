@@ -17,20 +17,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
+	#include "Platform.h"
 
 	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "vsurface.h"
 	#include "input.h"  
 	#include "sysutil.h"
-	#include "wchar.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
-	#include "debug.h"
-	#include "wcheck.h"
+	#include "DEBUG.H"
+	#include "WCheck.h"
 	#include "worldman.h"
 	#include "jascreens.h"
 	#include "edit_sys.h"
@@ -47,11 +44,12 @@
 	#include "tiledef.h"
 	#include "lighting.h"
 	#include "Structure Internals.h"
-	#include "structure wrap.h"
+	#include "Structure Wrap.h"
 	#include "Shade Table Util.h"
-	#include "rotting corpses.h"
-	#include "Fileman.h"
+	#include "Rotting Corpses.h"
+	#include "FileMan.h"
 	#include "environment.h"
+	#include "PATHAI.H"
 #endif
 
 #define LVL1_L1_PER			(50)
@@ -2488,10 +2486,10 @@ BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 
 			//Kris:  added map boundary checking!!!
 			if(LightRevealWall(
-				 (INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1), 
-				 (INT16)min(max(iX,0),WORLD_COLS-1), 
-				 (INT16)min(max(iY,0),WORLD_ROWS-1)
+				 (INT16)__min(__max((iX+pLight->iDX),0),WORLD_COLS-1),
+				 (INT16)__min(__max((iY+pLight->iDY),0),WORLD_ROWS-1), 
+				 (INT16)__min(__max(iX,0),WORLD_COLS-1), 
+				 (INT16)__min(__max(iY,0),WORLD_ROWS-1)
 				))
 			{
 				uiCount=LightFindNextRay(0, uiCount);
@@ -2729,10 +2727,10 @@ UINT16 usNodeIndex;
 			pLight=pLightList[0]+(usNodeIndex&(~LIGHT_BACKLIGHT));
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
-				 (INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1), 
-				 (INT16)min(max(iX,0),WORLD_COLS-1), 
-				 (INT16)min(max(iY,0),WORLD_ROWS-1)
+				 (INT16)__min(__max((iX+pLight->iDX),0),WORLD_COLS-1),
+				 (INT16)__min(__max((iY+pLight->iDY),0),WORLD_ROWS-1), 
+				 (INT16)__min(__max(iX,0),WORLD_COLS-1), 
+				 (INT16)__min(__max(iY,0),WORLD_ROWS-1)
 				))
 			{
 				uiCount=LightFindNextRay(0, uiCount);

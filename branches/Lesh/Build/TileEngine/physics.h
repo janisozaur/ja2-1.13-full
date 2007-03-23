@@ -4,7 +4,7 @@
 #include "phys math.h"
 #include "sgp.h"
 #include "worlddef.h"
-#include "items.h"
+#include "Items.h"
 #include "Soldier Control.h"
 
 

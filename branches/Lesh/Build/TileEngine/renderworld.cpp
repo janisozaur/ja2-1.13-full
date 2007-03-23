@@ -1,3 +1,11 @@
+
+/*	
+ *  Some asm code here was replaced by code, taken from ja2-stracciatella project.
+ *  Big thanks to two guys, who are leading this project: tron and wolf.
+ *  
+ *						23/03/2007 22:18:49 Lesh
+ */
+
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
@@ -42,6 +50,7 @@
 	#include "World Items.h"
 	#include "GameSettings.h"
 	#include "Interface Control.h"
+	#include "Sound Control.h"
 #endif
 
 ///////////////////////////
@@ -50,7 +59,7 @@
 ///////////////////////////
 
 extern	INT8	gDebugStr[128];
-extern	BOOLEAN fLandLayerDirty	= TRUE;
+BOOLEAN fLandLayerDirty	= TRUE;
 
 extern	INT16	gsVIEWPORT_START_X;		
 extern	INT16	gsVIEWPORT_START_Y;		
@@ -2544,7 +2553,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 								if(!(uiFlags&TILES_DIRTY))
 									UnLockVideoSurface( FRAME_BUFFER );
 								ColorFillVideoSurfaceArea( FRAME_BUFFER, iTempPosX_S, iTempPosY_S, (INT16)(iTempPosX_S + 40), 
-									(INT16)( min( iTempPosY_S + 20, INTERFACE_START_Y )), Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+									(INT16)( __min( iTempPosY_S + 20, INTERFACE_START_Y )), Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 								if(!(uiFlags&TILES_DIRTY))
 									pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 							}
@@ -4295,8 +4304,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPit
 	}
 
 	// Calculate rows hanging off each side of the screen
-	LeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	RightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	LeftSkip=__min(ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	RightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	TopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	BottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 	
@@ -4376,6 +4385,138 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPit
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		usZLevel = usZStartLevel;
+		usZIndex = usZStartIndex;
+		usZColsToGo = usZStartCols;
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+				for (;;)
+				{
+					if (PxCount >= usZColsToGo)
+					{
+						PxCount -= usZColsToGo;
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+					else
+					{
+						usZColsToGo -= PxCount;
+						break;
+					}
+				}
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZLevel)
+					{
+						*(UINT16*)ZPtr = usZLevel;
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+					if (--usZColsToGo == 0)
+					{
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4634,6 +4775,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }	
@@ -4693,8 +4835,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *pBuffer
 	}
 
 	// Calculate rows hanging off each side of the screen
-	LeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	RightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	LeftSkip=__min(ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	RightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	TopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	BottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 	
@@ -4774,6 +4916,138 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *pBuffer
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		usZLevel = usZStartLevel;
+		usZIndex = usZStartIndex;
+		usZColsToGo = usZStartCols;
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+				for (;;)
+				{
+					if (PxCount >= usZColsToGo)
+					{
+						PxCount -= usZColsToGo;
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+					else
+					{
+						usZColsToGo -= PxCount;
+						break;
+					}
+				}
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZLevel)
+					{
+						*(UINT16*)ZPtr = usZLevel;
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+					if (--usZColsToGo == 0)
+					{
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5032,6 +5306,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }	
@@ -5095,8 +5370,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 	}
 
 	// Calculate rows hanging off each side of the screen
-	LeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	RightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	LeftSkip=__min(ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	RightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	TopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	BottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 	
@@ -5178,6 +5453,141 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		uiLineFlag ^= 1; // XXX evaluate before loop
+		TopSkip--;
+	}
+
+	do
+	{
+		usZLevel = usZStartLevel;
+		usZIndex = usZStartIndex;
+		usZColsToGo = usZStartCols;
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+				for (;;)
+				{
+					if (PxCount >= usZColsToGo)
+					{
+						PxCount -= usZColsToGo;
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+					else
+					{
+						usZColsToGo -= PxCount;
+						break;
+					}
+				}
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZLevel ||
+							uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
+					{
+						*(UINT16*)ZPtr = usZLevel;
+						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+					if (--usZColsToGo == 0)
+					{
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		uiLineFlag ^= 1;
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5456,6 +5866,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }	
@@ -5510,8 +5921,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 	}
 
 	// Calculate rows hanging off each side of the screen
-	LeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	RightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	LeftSkip=__min(ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	RightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	TopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	BottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 	
@@ -5592,6 +6003,148 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		usZLevel = usZStartLevel;
+		usZIndex = usZStartIndex;
+		usZColsToGo = usZStartCols;
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+				for (;;)
+				{
+					if (PxCount >= usZColsToGo)
+					{
+						PxCount -= usZColsToGo;
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+					else
+					{
+						usZColsToGo -= PxCount;
+						break;
+					}
+				}
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZLevel ||
+							uiLineFlag == (((uintptr_t)DestPtr & 2) != 0)) // XXX update Z when pixelating?
+					{
+						*(UINT16*)ZPtr = usZLevel;
+						UINT8 Px = *SrcPtr;
+						if (Px == 254)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+						else
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[Px];
+						}
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+					if (--usZColsToGo == 0)
+					{
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		uiLineFlag ^= 1;
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5882,6 +6435,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }	
@@ -5974,8 +6528,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip( UINT16 *pBuffer, UINT3
 	}
 
 	// Calculate rows hanging off each side of the screen
-	LeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	RightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
+	LeftSkip=__min(ClipX1 - __min(ClipX1, iTempX), (INT32)usWidth);
+	RightSkip=__min(__max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
 	TopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
 	BottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
 	
@@ -6054,6 +6608,147 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip( UINT16 *pBuffer, UINT3
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#ifdef JA2_LINUX
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		usZLevel = usZStartLevel;
+		usZIndex = usZStartIndex;
+		usZColsToGo = usZStartCols;
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+				for (;;)
+				{
+					if (PxCount >= usZColsToGo)
+					{
+						PxCount -= usZColsToGo;
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_STRIP_DELTA_Y;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_STRIP_DELTA_Y;
+						}
+					}
+					else
+					{
+						usZColsToGo -= PxCount;
+						break;
+					}
+				}
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZLevel)
+					{
+						*(UINT16*)ZPtr = usZLevel;
+
+						UINT32 Px = *SrcPtr;
+						if (Px == 254)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+						else
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+						}
+					}
+					SrcPtr++;
+					DestPtr += 2;
+					ZPtr += 2;
+					if (--usZColsToGo == 0)
+					{
+						usZColsToGo = 20;
+
+						INT8 delta = pZArray[usZIndex++];
+						if (delta < 0)
+						{
+							usZLevel -= Z_SUBLAYERS;
+						}
+						else if (delta > 0)
+						{
+							usZLevel += Z_SUBLAYERS;
+						}
+					}
+				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6324,6 +7019,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }	
@@ -7069,6 +7765,9 @@ BOOLEAN Zero8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitc
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Zero8BPPDataTo16BPPBufferTransparent(): line %d\n", __LINE__);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7151,6 +7850,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7193,6 +7893,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransInvZ( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Unimplemented function Blt8BPPDataTo16BPPBufferTransInvZ(): line %d\n", __LINE__);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7261,6 +7964,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7303,6 +8007,34 @@ BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(2280-(usWidth*2));
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				SrcPtr += 2 * data;
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue) return FALSE;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7365,6 +8097,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(fHidden);
 

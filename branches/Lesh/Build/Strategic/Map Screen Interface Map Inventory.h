@@ -1,7 +1,7 @@
 #ifndef _MAP_INTERFACE_MAP_INVEN_H
 #define _MAP_INTERFACE_MAP_INVEN_H
 
-#include "types.h"
+#include "Types.h"
 #include "World Items.h"
 
 // this is how close one has to be in the loaded sector to pickup an item

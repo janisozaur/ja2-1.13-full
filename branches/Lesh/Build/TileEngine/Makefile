@@ -9,6 +9,25 @@ INCLUDE = -I./ -I../SDL/ -I../ -I../Standard\ Gaming\ Platform -I../Tactical -I.
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \
+	Ambient\\\ Control.cpp \
+	Buildings.cpp \
+	environment.cpp \
+	Exit\\\ Grids.cpp \
+	Explosion\\\ Control.cpp \
+	Fog\\\ Of\\\ War.cpp \
+	Interactive\\\ Tiles.cpp \
+	Isometric\\\ Utils.cpp \
+	LightEffects.cpp \
+	lighting.cpp \
+	Map\\\ Edgepoints.cpp \
+	overhead\\\ map.cpp \
+	physics.cpp \
+	phys\\\ math.cpp \
+	pits.cpp \
+	Radar\\\ Screen.cpp \
+	Render\\\ Dirty.cpp \
+	Render\\\ Fun.cpp \
+	renderworld.cpp \
 	Render\\\ Z.cpp \
 	SaveLoadMap.cpp \
 	Shade\\\ Table\\\ Util.cpp \
@@ -27,26 +46,6 @@ SOURCES  = \
 	worlddef.cpp \
 	worldman.cpp \
 	XML_ExplosionData.cpp
-
-#	Ambient\\\ Control.cpp \
-#	Buildings.cpp \
-#	environment.cpp \
-#	Exit\\\ Grids.cpp \
-#	Explosion\\\ Control.cpp \
-#	Fog\\\ Of\\\ War.cpp \
-#	Interactive\\\ Tiles.cpp \
-#	Isometric\\\ Utils.cpp \
-#	LightEffects.cpp \
-#	lighting.cpp \
-#	Map\\\ Edgepoints.cpp \
-#	overhead\\\ map.cpp \
-#	physics.cpp \
-#	phys\\\ math.cpp \
-#	pits.cpp \
-#	Radar\\\ Screen.cpp \
-#	Render\\\ Dirty.cpp \
-#	Render\\\ Fun.cpp \
-#	renderworld.cpp \
 
 #OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
 OBJECTS = $(SOURCES:.cpp=.o)

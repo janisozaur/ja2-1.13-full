@@ -357,13 +357,13 @@ UINT32									guiTimerLastUpdate = 0;
 UINT32									guiTimerCursorDelay = 0;
 
 
-INT16			gzLocation[ 20 ];
+CHAR16			gzLocation[ 20 ];
 BOOLEAN		gfLocation = FALSE;
 
-INT16			gzIntTileLocation[ 20 ];
+CHAR16			gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 
-INT16			gzIntTileLocation2[ 20 ];
+CHAR16			gzIntTileLocation2[ 20 ];
 BOOLEAN		gfUIIntTileLocation2;
 
 MOUSE_REGION	gDisableRegion;

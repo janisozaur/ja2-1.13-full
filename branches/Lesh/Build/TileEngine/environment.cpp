@@ -1,14 +1,15 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
+	#include "Platform.h"
 	#include "sgp.h"
 	#include "lighting.h"
 	#include "environment.h"
 	#include "renderworld.h"
-	#include "sound control.h"
-	#include "overhead.h"
+	#include "Sound Control.h"
+	#include "Overhead.h"
 	#include "Game Clock.h"
-	#include "quests.h"
+	#include "Quests.h"
 	#include "Ambient Control.h"
 	#include "AimMembers.h"
 	#include "Strategic Event Handler.h"
@@ -21,8 +22,10 @@
 	#include "Game Events.h"
 	#include "message.h"
 	#include "opplist.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "strategicmap.h"
+	#include "GameSettings.h"
+	
 #endif
 
 //effects whether or not time of day effects the lighting.  Underground
@@ -629,7 +632,7 @@ void EnvDoLightning(void)
 			uiIndex++;
 
 		ubLastLevel=ubLevel;
-		ubLevel=min( ubRealAmbientLightLevel - 1, ubLightningTable[uiStrike][uiIndex][1] );
+		ubLevel=__min( ubRealAmbientLightLevel - 1, ubLightningTable[uiStrike][uiIndex][1] );
 
 /*    // ATE: Don't modify if scrolling!
 	  if ( gfScrollPending || gfScrollInertia )

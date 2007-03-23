@@ -2,7 +2,7 @@
 #define __SKILL_CHECK_H
 
 
-#include "types.h"
+#include "Types.h"
 #include "Soldier Control.h"
 
 extern void ReducePointsForFatigue( SOLDIERTYPE *pSoldier, UINT16 *pusPoints );

@@ -1,3 +1,11 @@
+
+/*	
+ *  Many asm blitters here were replaced by code, taken from ja2-stracciatella project.
+ *  Big thanks to two guys, who are leading this project: tron and wolf.
+ *  
+ *						23/03/2007 22:18:49 Lesh
+ */
+
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #else

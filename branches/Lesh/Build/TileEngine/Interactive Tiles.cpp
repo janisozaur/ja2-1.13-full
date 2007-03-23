@@ -1,38 +1,49 @@
+
+/*	
+ *  One asm code block here was replaced by code, taken from ja2-stracciatella project.
+ *  Big thanks to two guys, who are leading this project: tron and wolf.
+ *  
+ *						23/03/2007 22:18:49 Lesh
+ */
+
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
+	#include "Platform.h"
 	#include "sgp.h"
 	#include "himage.h"
 	#include "vsurface.h"
 	#include "vsurface_private.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "sysutil.h"
 	#include "renderworld.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "Sound Control.h"
 	#include "worlddef.h"
 	#include "Interactive Tiles.h"
-	#include "interface cursors.h"
+	#include "Interface Cursors.h"
 	#include "worldman.h"
 	#include "structure.h"
 	#include "Animation Control.h"
-	#include "points.h"
-	#include "overhead.h"
-	#include "structure wrap.h"
-	#include "tile animation.h"
-	#include "tile cache.h"
-	#include "handle doors.h"
-	#include "Strategicmap.h"
+	#include "Points.h"
+	#include "Overhead.h"
+	#include "Structure Wrap.h"
+	#include "Tile Animation.h"
+	#include "Tile Cache.h"
+	#include "Handle Doors.h"
+	#include "strategicmap.h"
 	#include "Quests.h"
 	#include "Dialogue Control.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "english.h"
-	#include "handle items.h"
+	#include "Handle Items.h"
 	#include "message.h"
-	#include "handle ui.h"
+	#include "Handle UI.h"
+	#include "environment.h"
+	#include "GameSettings.h"
+	#include "NPC.h"
+	#include "Explosion Control.h"
+	#include "Text.h"
 #endif
 
 #define		MAX_INTTILE_STACK							10
@@ -957,6 +968,28 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
+#ifdef JA2_LINUX
+	do
+	{
+		for (;;)
+		{
+			UINT8 PxCount = *SrcPtr++;
+			if (PxCount == 0) break;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+			}
+			else
+			{
+				if (iStartPos < iTestPos && iTestPos <= iStartPos + PxCount) return TRUE;
+				SrcPtr += PxCount;
+			}
+			iStartPos += PxCount;
+		}
+		if (iStartPos >= iTestPos) break;
+	}
+	while (--usHeight > 0);
+#elif defined( JA2_WIN )
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1067,6 +1100,7 @@ BlitFound:
 
 BlitDone:
 	}
+#endif
 
 	return(fDataFound);
 
