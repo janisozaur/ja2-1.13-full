@@ -123,6 +123,7 @@
  */
   #define LOGZONE_MASK       (0xFFFFFFF0) /*!< LOGZONE_MASK : internal Use only! */
   #define LOGZONE_EVERYTHING (0xFFFFFFF0) /*!< LOGZONE_EVERYTHING : if global set, every module will be logged. If given as parameter, the Msg will EVER appear (but only if the Severity also allows the appearance) */
+  #define LOGZONE_DEFAULT    LOGZONE_EVERYTHING /*!< LOGZONE_DEFAULT : same as LOGZONE_EVERYTHING */
   #define LOGZONE_STARTUP    (0x80000000) /*!< LOGZONE_STARTUP : use this in Your, f.i. Init_xxx() functions */
   #define LOGZONE_CLEANUP    (0x40000000) /*!< LOGZONE_CLEANUP : use this in Your, f.i. Exit_xxx() functions, define more if needed */
   #define LOGZONE_ENTRY      (0x20000000) /*!< LOGZONE_ENTRY   : You may want to use this directly when jumped in a function */
@@ -156,6 +157,18 @@
 /* @} */
 
 
+
+/*! \defgroup BitOptions optional Flags for VSSC_SetInt()
+ * @{
+ */
+  #define LOGFLGS_SET_VALUE         0x0000 /*!< LOGFLGS_SET_VALUE   : sets (and overwrites the old) the whole value */
+  #define LOGFLGS_DEFAULT           LOGFLGS_SET_VALUE /*!< LOGFLGS_DEFAULT : same as LOGFLGS_SET_VALUE */
+  #define LOGFLGS_SET_BITS          0x0001 /*!< LOGFLGS_SET_BITS    : treats the Value as a BitFiled + adds (to 1) the given Bits (1) to the previous BitField */
+  #define LOGFLGS_CLR_BITS          0x0002 /*!< LOGFLGS_CLR_BITS    : treats the Value as a BitFiled + clears (to 0) the given Bits (1) from the previous BitField */
+  #define LOGFLGS_TOGGLE_BITS       0x0003 /*!< LOGFLGS_TOGGLE_BITS : treats the Value as a BitFiled + flips (inverts) the given Bits (1) inside the previous BitField */
+/* @} */
+
+
 /*========================================================*/
 /*==                                                    ==*/
 /*========================================================*/
@@ -169,11 +182,14 @@
 /*==                                                    ==*/
 /*========================================================*/
 int VSSC_open(   void );
-int VSSC_open2(  char const * pDestination, short Facility, short Level, char const * pAppName ); /* pointers can be NULL, shorts can be -1 for default */
+int VSSC_open2(  char const * pDestination, short Facility, short Level, char const * pAppName, short bAutoConfig ); /* pointers can be NULL, shorts can be -1 for default */
 int VSSC_close(  int Handle );
 int VSSC_Log(    int Handle, unsigned Level, char const * const Module, char const * const fmt, ... );
+
+int VSSC_AutoCfg(int Handle, short bAutoConfig );
 int VSSC_SetStr( int Handle, char const * const Key, char const * const Val );
-int VSSC_SetInt( int Handle, char const * const Key, const long lVal );
+int VSSC_SetInt( int Handle, char const * const Key, const long lVal, const unsigned short Option );
+int VSSC_SetAll( int Handle, char const * const Keys );
 int VSSC_GetStr( int Handle, char const * const Key, char * pValBuf, size_t MaxBuf );
 int VSSC_GetInt( int Handle, char const * const Key, long *plVal );
 

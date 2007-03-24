@@ -7,11 +7,11 @@
  * 
  * don't forget to include license.txt in every 
  * distribution of this files. 
- * Even, don't forget to read them.
+ * Even, don't forget to read it. ;-)
  * _______________________________________________________
  */
 
-#include "stdafx.h" /* we assume to have all global & common project settings in this file */
+#include "stdafx.h" /* we expect to have all global & common project settings in this file */
 #include "vssc.h"
 
 #include <windows.h>
@@ -22,7 +22,7 @@
 #include <time.h>
 #include <limits.h>
 
-char const * const VsscVersion = "0.1.737.build";
+char const * const VsscVersion = "0.1.750.build";
 
 /*! \file VSSC.cpp
  *  \brief VSSC basic functions interface
@@ -32,20 +32,7 @@ char const * const VsscVersion = "0.1.737.build";
  * \author Sergeant Kolja (Initial Author)<br>
  *
  * \todo here follows a list what I think what has to be done in this file:
- *   - Reading Registry  HKLM/Software/vssc/appname
- *   - writing + reading HKCU ...
  *   - LogLevel from Registry
- *   - Interface for SDK Debug Macros like "IFDBG(svslog_DebugOut(LOG_ERRORS, L"ERROR: buffer length.\n"));"
- *     IFDBG is usually
- *     \code
-       #if defined(DEBUG)
-       #define IFDBG(x)    x
-       #define IFNDBG(x)
-       #else
-       #define IFDBG(x)
-       #define IFNDBG(x)   x
-       #endif
-       \endcode
  *
  */
 
@@ -57,6 +44,67 @@ char const * const VsscVersion = "0.1.737.build";
 #endif
 
 
+/*========================================================*/
+/*== internal Helper structures                         ==*/
+/*========================================================*/
+
+/*! \cond NEVER_DOX */
+#ifndef FIELD_OFFSET
+/* calc offset in bytes from start of struct up to the given su-element */
+#define FIELD_OFFSET(type, field)    ((LONG)&(((type *)0)->field))
+#endif
+
+#define MAX_CONFIG_STRINGLEN 128  /* no argument can exceed this lenght. otherwise we mus use dynamic CfgString */
+#define MAKE_CFGLEN( a ) do{ a.LastPos = DIM( a.Text )-1; }while(0)
+#define MAKE_CFGSTR( grp, nam, typ, cr, dflt )    \
+  {                                               \
+   _T(#grp), _T(#nam), et_##typ,                  \
+   FIELD_OFFSET( CONFIG_BLOCK, grp.nam.Text ),    \
+   MAX_CONFIG_STRINGLEN, (cr!=0), (LONG)_T(dflt)  \
+  }
+
+#define MAKE_CFGINT( grp, nam, typ, cr, dflt ) \
+  {                                            \
+   _T(#grp), _T(#nam), et_##typ,               \
+   FIELD_OFFSET( CONFIG_BLOCK, grp.nam ),      \
+   sizeof(typ), (cr!=0), (LONG)(dflt)          \
+  }
+
+/* no other types are currently allowed. 
+ * This can be extended, but there is no real use for more types
+ * Be aware: 'et_' is a suffix. the prefix MUST be a predefined type
+ */
+enum configdata_types 
+  {
+   et_BYTE 
+  ,et_CHAR 
+  ,et_USHORT 
+  ,et_SHORT 
+  ,et_ULONG 
+  ,et_LONG 
+  ,et_P32STRING
+  };
+
+/* a structure which holds auto-reading config values */
+typedef struct configdata_
+  {
+  TCHAR const * pGroupName;
+  TCHAR const * pKeyName;
+  enum configdata_types ValType;
+  LONG Offset;
+  LONG Size;
+  BOOL WriteIfNotExist;
+  LONG DefaultVal;
+  } TS_configdata, *PTS_configdata;
+
+/* a string which holds a static known number of elements */
+typedef struct
+  {
+  size_t LastPos;
+  TCHAR Text[MAX_CONFIG_STRINGLEN+1]; /* don't bother me with termchar! */
+  }  P32STRING, *PP32STRING;
+
+/*! \endcond */
 
 /*========================================================*/
 /*== internal Handle structure                          ==*/
@@ -66,29 +114,70 @@ char const * const VsscVersion = "0.1.737.build";
 typedef struct vssc_data_
   {
   int            SecCookie1;
+  /* ------[forbidden to set]---- */
+  struct
+    {
+    WSADATA        wsaData;
+    SOCKET         SndSocket;
+    SOCKADDR_IN    SndAddr;
+    SOCKADDR_IN    OwnAddr;
+    HANDLE         hMutex;
+    unsigned short MsgCount;
+    DWORD          UserPID;
+    } internal;
   /* --------------------------- */
-  WSADATA        wsaData;
-  SOCKET         SndSocket;
-  SOCKADDR_IN    SndAddr;
-  SOCKADDR_IN    OwnAddr;
-  HANDLE         hMutex;
-  unsigned short MsgCount;
-  DWORD          UserPID;
+  struct
+    {
+    TCHAR          tcsProfileName[MAX_PATH];
+    } helper;
   /* ------[direct setables]---- */
-  char           AppName[32+1];
-  unsigned       ZoneMask;
-  char           SendTo_Addr[MAX_PATH];
-  unsigned short SendTo_Port;
-  unsigned short From_Port;
-  unsigned       Syslog_Facility;
-  unsigned       Syslog_MaxLevel;
-  /* ------[indirect setables]-- */
-  unsigned       ControlFlags;
+  struct
+    {
+    P32STRING      AppName;
+    ULONG          ZoneMask;
+    USHORT         ControlFlags;
+    } global;
+  struct
+    {
+    USHORT         Use;
+    USHORT         Syslog_Facility;
+    USHORT         Syslog_MaxLevel;
+    P32STRING      SendTo_Addr;
+    USHORT         SendTo_Port;
+    USHORT         From_Port;
+    } udp;
+  struct
+    {
+    USHORT         Use;
+    } file;
   /* --------------------------- */
   int            SecCookie2;
-  } TS_vssc_data, *PTS_vssc_data;
+  } CONFIG_BLOCK, TS_vssc_data, *PTS_vssc_data;
 /*! \endcond */
 
+
+
+/*! \cond NEVER_DOX */
+static TS_configdata AutoConfig[] = 
+  {
+  /*==============================================================*/
+  /* due to some restrictions, this Value MUST be the first we set! */
+   MAKE_CFGSTR( global, AppName        , P32STRING, 1, _T("0815.exe") )
+  /*==============================================================*/
+  ,MAKE_CFGINT( global, ZoneMask       , ULONG    , 1, 7              )
+  ,MAKE_CFGINT( global, ControlFlags   , USHORT   , 1, 0              )  
+  /*==============================================================*/
+  ,MAKE_CFGINT( udp   , Use            , USHORT   , 1, 0              )
+  ,MAKE_CFGINT( udp   , Syslog_Facility, USHORT   , 1, 0              )
+  ,MAKE_CFGINT( udp   , Syslog_MaxLevel, USHORT   , 1, 7              )
+  ,MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, TRUE, _T("localhost") )
+  ,MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , TRUE, 514         )
+  ,MAKE_CFGINT( udp   , From_Port      , USHORT   , FALSE, 0          )
+  /*==============================================================*/
+  ,MAKE_CFGINT( file  , Use            , USHORT   , 1, 0              )
+  /*==============================================================*/
+  };
+/*! \endcond */
 
 
 /*! \cond NEVER_DOX */
@@ -152,6 +241,13 @@ TS_Settings ControlHash[] =
 /*========================================================*/
 /*== internal helper functions                          ==*/
 /*========================================================*/
+/*! \cond NEVER_DOX */
+void TrimmLine( char * pLine );
+BOOL IsComment( char * pLine );
+BOOL Separate( char * pLine, char ** ppRightpart );
+/*! \endcond */
+
+
 
 /*! \cond NEVER_DOX */
 __inline
@@ -168,6 +264,7 @@ void OnDebug_ReportT( TCHAR const * const pMessage )
 
 
 
+/*! \cond NEVER_DOX */
 static 
 int _internal_GetHash( char const * const pControl )
 {{
@@ -180,11 +277,13 @@ int _internal_GetHash( char const * const pControl )
     }
   return -1;
 }}
+/*! \endcond */
 
 
 
 
 
+/*! \cond NEVER_DOX */
 static 
 int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
 {{
@@ -219,6 +318,7 @@ int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
 
   return (int) strlen(pListBuff);
 }}
+/*! \endcond */
 
 
 
@@ -226,6 +326,7 @@ int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
 
 
 
+/*! \cond NEVER_DOX */
 static
 char *_internal_IpFromName( PTS_vssc_data pHnd, const char * HostName, char * IPAddr, int MaxIPlen )
 {{
@@ -264,10 +365,12 @@ char *_internal_IpFromName( PTS_vssc_data pHnd, const char * HostName, char * IP
   *(IPAddr+MaxIPlen-1)='\0';
   return IPAddr;
 }}
+/*! \endcond */
 
 
 
 
+/*! \cond NEVER_DOX */
 /* takes strings like "127.0.0.1:514" or "192.168.0.222" and sets it into the internal 
  * SendTo_XXX Buffers. if so, return is TRUE, else FALSE.
  * But it does not set SndAddr.
@@ -288,25 +391,27 @@ BOOL _internal_VsscRefreshAddr( PTS_vssc_data pHnd, char const * const pDestinat
     {
     *p=0;
     p++;
-    pHnd->SendTo_Port = atoi( p );
+    pHnd->udp.SendTo_Port = atoi( p );
     }
 
-  if( 0 == pHnd->SendTo_Port )
+  if( 0 == pHnd->udp.SendTo_Port )
     {
-    pHnd->SendTo_Port = 514;
+    pHnd->udp.SendTo_Port = 514;
     }
 
   p = _internal_IpFromName( pHnd, DestCopy, IPAddr, DIM(IPAddr) );
-  strncpy( pHnd->SendTo_Addr, (p && *p) ? p : DestCopy, DIM(pHnd->SendTo_Addr) );
-  pHnd->SendTo_Addr[ DIM(pHnd->SendTo_Addr)-1 ]=0;
+  strncpy( pHnd->udp.SendTo_Addr.Text , (p && *p) ? p : DestCopy, pHnd->udp.SendTo_Addr.LastPos );
+  pHnd->udp.SendTo_Addr.Text[ pHnd->udp.SendTo_Addr.LastPos ]=0;
 
   return TRUE;
 }};
+/*! \endcond */
 
 
 
 
 
+/*! \cond NEVER_DOX */
 /* takes Facility and/or Level and stores it into handle struct.
  * if -1 is given, the parameter is not used. if so, return is FALSE, else TRUE.
  */
@@ -317,22 +422,23 @@ BOOL _internal_VsscRefreshLevel( PTS_vssc_data pHnd, short Facility, short Level
 
   if(Facility>=0)
     {
-    pHnd->Syslog_Facility = (unsigned) Facility;
+    pHnd->udp.Syslog_Facility = (unsigned) Facility;
     bRet = TRUE;
     }
   if(Level>=0)
     {
-    /* pHnd->Syslog_MaxLevel = 0 : show nothing
+    /* pHnd->udp.Syslog_MaxLevel = 0 : show nothing
      *               1 : show emergency (LOG_EMERG, 0)
      *               2 : show alert  (LOG_ALERT, 1)
      * so we have a Offset of +1 between both Levels
      */
-    pHnd->Syslog_MaxLevel = (unsigned) Level-1;
+    pHnd->udp.Syslog_MaxLevel = (unsigned) Level-1;
     bRet = TRUE;
     }
 
   return bRet;
 }};
+/*! \endcond */
 
 
 
@@ -340,17 +446,23 @@ BOOL _internal_VsscRefreshLevel( PTS_vssc_data pHnd, short Facility, short Level
 
 
 
+/*! \cond NEVER_DOX */
 /* takes ZoneMask and stores it into handle struct.
  */
 static
 BOOL _internal_VsscRefreshZone( PTS_vssc_data pHnd, unsigned ZoneMask )
 {{
-  pHnd->ZoneMask = ZoneMask;
+  pHnd->global.ZoneMask = ZoneMask;
   return TRUE;
 }};
+/*! \endcond */
 
 
 
+
+
+
+/*! \cond NEVER_DOX */
 /* converts SLOG_xxx global logtype into RFC-SYSLOG compliant level (severity) */
 static
 short _internal_Vssc2syslogLevel( short VsscLevel )
@@ -371,10 +483,12 @@ short _internal_Vssc2syslogLevel( short VsscLevel )
     default            : return LOG_DEBUG;
     }
 }};
+/*! \endcond */
 
 
 
 
+/*! \cond NEVER_DOX */
 /* returns okay if the time stamp is filled or - if the ts not used - if it is properly set empty */
 static
 BOOL _internal_GetTimeStamp( PTS_vssc_data pHnd, char * pTimeStamp, size_t MaxTimeStamp )
@@ -386,7 +500,7 @@ BOOL _internal_GetTimeStamp( PTS_vssc_data pHnd, char * pTimeStamp, size_t MaxTi
     return FALSE;
 
   *pTimeStamp='\0';
-  if(pHnd->ControlFlags & LOGFLGS_RFC3164_TIMESTAMP)
+  if(pHnd->global.ControlFlags & LOGFLGS_RFC3164_TIMESTAMP)
     {
     int iRet;
     now   = time(NULL);
@@ -402,8 +516,13 @@ BOOL _internal_GetTimeStamp( PTS_vssc_data pHnd, char * pTimeStamp, size_t MaxTi
     }
   return TRUE;
 }};
+/*! \endcond */
 
 
+
+
+
+/*! \cond NEVER_DOX */
 /* returns okay if the IP/Hostname is filled or - if the ip/hn not used - if it is properly set empty */
 static
 BOOL _internal_GetIPorName( PTS_vssc_data pHnd, char * pSourceIP, size_t MaxSourceIP )
@@ -412,7 +531,7 @@ BOOL _internal_GetIPorName( PTS_vssc_data pHnd, char * pSourceIP, size_t MaxSour
     return FALSE;
 
   *pSourceIP='\0';
-  if(pHnd->ControlFlags & LOGFLGS_RFC3164_SOURCEIP )
+  if(pHnd->global.ControlFlags & LOGFLGS_RFC3164_SOURCEIP )
     {
     int iRet;
     size_t len;
@@ -435,9 +554,11 @@ BOOL _internal_GetIPorName( PTS_vssc_data pHnd, char * pSourceIP, size_t MaxSour
     }
   return TRUE;
 }};
+/*! \endcond */
 
 
 
+/*! \cond NEVER_DOX */
 /* returns okay if the PID is filled or - if the PID not used - if it is properly set empty */
 static
 BOOL _internal_GetModulePID( PTS_vssc_data pHnd, char *pPID, size_t MaxPID )
@@ -446,15 +567,17 @@ BOOL _internal_GetModulePID( PTS_vssc_data pHnd, char *pPID, size_t MaxPID )
     return FALSE;
 
   *pPID='\0';
-  if(pHnd->ControlFlags & LOGFLGS_PROCESS_ID)
+  if(pHnd->global.ControlFlags & LOGFLGS_PROCESS_ID)
     {
-    _snprintf( pPID, MaxPID, "%08x ", pHnd->UserPID );
+    _snprintf( pPID, MaxPID, "%08x ", pHnd->internal.UserPID );
     }
   return TRUE;
 }};
+/*! \endcond */
 
 
 
+/*! \cond NEVER_DOX */
 /* returns okay if the Sourcename is filled or - if the sn not used - if it is properly set empty */
 static
 BOOL _internal_GetModuleSource( PTS_vssc_data pHnd, char *pModuleName, size_t MaxModuleName, char const * const pModule )
@@ -463,11 +586,11 @@ BOOL _internal_GetModuleSource( PTS_vssc_data pHnd, char *pModuleName, size_t Ma
     return FALSE;
 
   *pModuleName='\0';
-  if(pHnd->ControlFlags & LOGFLGS_MODULE_SOURCE)
+  if(pHnd->global.ControlFlags & LOGFLGS_MODULE_SOURCE)
     {
     size_t Leftpart, Rightpart, MaxSpace, Remainder;
 
-    if(pHnd->ControlFlags & LOGFLGS_LONGTAG)
+    if(pHnd->global.ControlFlags & LOGFLGS_LONGTAG)
       {
       Leftpart=31; 
       Rightpart=32; 
@@ -483,7 +606,7 @@ BOOL _internal_GetModuleSource( PTS_vssc_data pHnd, char *pModuleName, size_t Ma
     MaxSpace = MIN( MaxModuleName, (Leftpart+1+Rightpart+1) ) - 1;
     Remainder = MaxSpace;
 
-    strncpy( pModuleName, pHnd->AppName, Remainder );
+    strncpy( pModuleName, pHnd->global.AppName.Text, Remainder );
     pModuleName[ Remainder-1 ]='\0'; /*cut one more character, to get space for ".\0" */
     Remainder = MaxSpace - strlen(pModuleName);
 
@@ -496,8 +619,12 @@ BOOL _internal_GetModuleSource( PTS_vssc_data pHnd, char *pModuleName, size_t Ma
     }
   return TRUE;
 }};
+/*! \endcond */
 
 
+
+
+/*! \cond NEVER_DOX */
 /* returns okay if the Counter is filled or - if the counter not used - if it is properly set empty */
 static
 BOOL _internal_GetCounter( PTS_vssc_data pHnd, char *pCounter64, size_t MaxCounter64 )
@@ -506,12 +633,254 @@ BOOL _internal_GetCounter( PTS_vssc_data pHnd, char *pCounter64, size_t MaxCount
     return FALSE;
 
   *pCounter64='\0';
-  if(pHnd->ControlFlags & LOGFLGS_COUNTER64)
+  if(pHnd->global.ControlFlags & LOGFLGS_COUNTER64)
     {
-    _snprintf( pCounter64, MaxCounter64, "{%02u} ", pHnd->MsgCount & 0x3F );
+    _snprintf( pCounter64, MaxCounter64, "{%02u} ", pHnd->internal.MsgCount & 0x3F );
     }
   return TRUE;
 }};
+/*! \endcond */
+
+
+
+
+/*! \cond NEVER_DOX */
+/* read 32 bit numerical params from Registry, Private Profile, Environment, Cmd-Line (all after '-SLOG' )*/
+int _internal_ReadConfig_DWORD(  PTS_vssc_data pHnd, 
+                                 TCHAR const * const pGroupName, 
+                                 TCHAR const * const pKeyName, 
+                                 const short WriteIfNotExist, 
+                                 const DWORD DefaultVal, 
+                                 DWORD * pdwValue )
+{{
+  DWORD dwRet;
+
+  if( !pdwValue || !pGroupName || !pKeyName )
+    return FALSE;
+
+  /*=========================================================================*
+   *           1st START LOOKING for Environment                             *
+   *=========================================================================*/
+  #error "not done yet"
+
+  /*=========================================================================*
+   *           if noting in Environment, next look inside                    *
+   *           <Appname>.ini, for Values                                     *
+   *=========================================================================*/
+  #error "not done yet"
+
+  /*=========================================================================*
+   *           NOW START LOOKING INSIDE REGISTRY                             *
+   *=========================================================================*/
+
+  /* startLocalBlock( REG ) */
+    {
+    HKEY   hKey;
+    DWORD  dwDisp;
+    DWORD  dwType;
+    DWORD  ValLen;
+    DWORD  Value;
+    TCHAR  GroupKey[ MAX_PATH ];
+    size_t nLastChar;
+
+    nLastChar = DIM( GroupKey ) - 1;
+    _tcsncpy( GroupKey, pHnd->helper.tcsProfileName, nLastChar );
+    GroupKey[ nLastChar ] = 0;
+    _tcsncat( GroupKey, _T("\\"), nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
+    GroupKey[ nLastChar ] = 0;
+    _tcsncat( GroupKey, pGroupName, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
+    GroupKey[ nLastChar ] = 0;
+
+    /*-----------------------------------------------------------------*
+     *          STEP 1: try to read from Registry-HKCU                 *
+     *          if okay, we did it well                                *
+     *          if failed, we assume first access, so we try to copy   *
+     *          it from HKLM (if access is granted)                    *
+     *-----------------------------------------------------------------*/
+    dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_READ /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+    if( (dwRet == ERROR_SUCCESS) && (dwDisp == REG_OPENED_EXISTING_KEY) )
+      {
+      dwType = REG_DWORD;
+      ValLen = sizeof( DWORD );
+      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
+      RegCloseKey( hKey );
+      if( dwRet == ERROR_SUCCESS )
+        { return TRUE; }
+      }
+  
+    /*-----------------------------------------------------------------*
+     *          STEP 2: try to read from Registry-HKLM                 *
+     *          if okay, we copy the valuse to HKCU + we have done     *
+     *          if failed, we only lack of rights. so we take the      *
+     *          default, try to copy it to HKCU and finished           *
+     *-----------------------------------------------------------------*/
+    dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_READ /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+    if( dwRet == ERROR_SUCCESS )
+      {
+      dwType = REG_DWORD;
+      ValLen = sizeof( DWORD );
+      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
+      RegCloseKey( hKey );
+      if( dwRet != ERROR_SUCCESS )
+        {
+        Value = DefaultVal; 
+        }
+      *pdwValue = Value;
+
+      /* create the copy in HKCU for the next time we access it */
+      dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_WRITE /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+      if( dwRet == ERROR_SUCCESS )
+        {
+        dwType = REG_DWORD;
+        ValLen = sizeof( DWORD );
+        dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
+        RegCloseKey( hKey );
+        }
+      return TRUE;
+      }
+    else
+      {
+      dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_WRITE /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+      if( dwRet == ERROR_SUCCESS )
+        {
+        dwType = REG_DWORD;
+        ValLen = sizeof( DWORD );
+        dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &DefaultVal, ValLen );
+        RegCloseKey( hKey );
+        }
+      }
+    } /* startLocalBlock( REG ) */
+
+  /* finally, if nothing worked til here, we use the default. */
+  *pdwValue = DefaultVal;
+  return TRUE;
+}};
+/*! \endcond */
+
+
+
+/*! \cond NEVER_DOX */
+/* read TCHAR params from Registry, Private Profile, Environment, Cmd-Line (all after '-SLOG' )*/
+int _internal_ReadConfig_TCHAR(  PTS_vssc_data pHnd, 
+                                 TCHAR const * const pGroupName, 
+                                 TCHAR const * const pKeyName, 
+                                 const short WriteIfNotExist,
+                                 TCHAR const * const ptcDefault, 
+                                 TCHAR* ptcValue, 
+                                 const size_t MaxValue )
+{{
+  DWORD dwRet;
+  BOOL bIsSpecialName;
+
+  if( !ptcValue || MaxValue<2 || !pGroupName || !pKeyName )
+    return FALSE;
+
+  bIsSpecialName = ( (0==_tcsicmp( pKeyName, _T("AppName"))) && (0==_tcsicmp( pGroupName, _T("global"))) );
+  /*=========================================================================*
+   *           1st START LOOKING for Environment                             *
+   *=========================================================================*/
+  //#error "not done yet"
+  if( bIsSpecialName )
+    {
+    ; /* dont return! even if we got the name, we have to make the tcsProfileName from it */
+    }
+
+  /*=========================================================================*
+   *           if noting in Environment, next look inside                    *
+   *           <Appname>.ini, for Values                                     *
+   *=========================================================================*/
+  //#error "not done yet"
+  if( bIsSpecialName )
+    {
+    ; /* dont return! even if we got the name, we have to make the tcsProfileName from it */
+    }
+
+  /*=========================================================================*
+   *           NOW START LOOKING INSIDE REGISTRY                             *
+   *=========================================================================*/
+  if( bIsSpecialName )
+    {
+    /* if we come to here, we still don't know our name. 
+     * If so, we take it from the default Value.
+     * If this is also empty, we use GetModuleFileName()
+     */
+    size_t nLastChar;
+    
+    if( ptcDefault )
+      {
+      _tcsncpy( pHnd->global.AppName.Text, ptcDefault, pHnd->global.AppName.LastPos );
+      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
+      }
+    else
+      {
+      TCHAR Name[MAX_PATH] = {0};
+      TCHAR *pPatch;
+      GetModuleFileName( NULL, Name, DIM( Name )-1 );
+      pPatch = _tcsrchr( Name, _T('.') );
+      if(pPatch) *pPatch=0; /* cut away .EXE suffix */
+      pPatch = _tcsrchr( Name, _T('\\') );
+      if(!pPatch) pPatch=Name;
+
+      _tcsncpy( pHnd->global.AppName.Text, pPatch, pHnd->global.AppName.LastPos );
+      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
+      }
+
+    nLastChar = DIM( pHnd->helper.tcsProfileName ) - 1;
+    _tcsncpy( pHnd->helper.tcsProfileName, _T("Software\\sLoggy\\"), nLastChar );
+    pHnd->helper.tcsProfileName[ nLastChar ] = 0;
+    _tcsncat( pHnd->helper.tcsProfileName, pHnd->global.AppName.Text, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
+    pHnd->helper.tcsProfileName[ nLastChar ] = 0;
+    return TRUE;
+    }
+
+
+  /* startLocalBlock( REG ) */
+    {
+    OnDebug_ReportT( _T("real Reading of Cfg String Values not yet finished\r\n") );
+    }
+
+
+  /* finally, if nothing worked til here, we use the default. */
+  if( !ptcDefault )
+    _tcsncpy( ptcValue, _T(""), MaxValue );
+  else
+    _tcsncpy( ptcValue, ptcDefault, MaxValue );
+  ptcValue[ MaxValue-1 ] = 0;
+  return TRUE;
+}};
+/*! \endcond */
 
 
 
@@ -546,7 +915,7 @@ BOOL _internal_GetCounter( PTS_vssc_data pHnd, char *pCounter64, size_t MaxCount
  */
 int VSSC_open( void )
 {{
-  return VSSC_open2( NULL, -1, -1, NULL ); /*! \retval same as VSSC_open2() */
+  return VSSC_open2( NULL, -1, -1, NULL, TRUE ); /*! \retval same as VSSC_open2() */
 }}
 
 
@@ -575,7 +944,8 @@ int VSSC_open( void )
 int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. may be NULL or "" for don't care */
                 short Facility,            /*!< [in] Facility (program type) as declarewd in RFC. May be -1 for don't care */
                 short Level,               /*!< [in] Level. 0=Silent, 7=verbose. May be -1 for don't care */
-                char const * pAppName      /*!< [in] Show all logs as comming from.... may be NULL or "" for don't care */
+                char const * pAppName,     /*!< [in] Show all logs as comming from.... may be NULL or "" for don't care */
+                short bAutoConfig          /*!< [in] >0 means this function automatically tries to read all Setup parameters itself. No further VSSC_SetStr() or VSSC_SetInt() is required */
               )
 {{
   PTS_vssc_data pHnd;
@@ -590,9 +960,15 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
     }
   memset( pHnd, 0x00, sizeof( TS_vssc_data ) );
   pHnd->SecCookie1 = pHnd->SecCookie2 = 0xC001B001;
+  pHnd->internal.MsgCount = 0;
+  pHnd->internal.UserPID = GetCurrentProcessId();
 
-  pHnd->hMutex = CreateMutex( NULL, FALSE, NULL );
-  if( !pHnd->hMutex ) /* Check for error. */
+  /* init all P32STRING Members or they never will be filled! */
+  MAKE_CFGLEN( pHnd->global.AppName );
+  MAKE_CFGLEN( pHnd->udp.SendTo_Addr );
+
+  pHnd->internal.hMutex = CreateMutex( NULL, FALSE, NULL );
+  if( !pHnd->internal.hMutex ) /* Check for error. */
     {
     OutputDebugString( _T("Simple Syslog Client: MUTEX Problem\r\n") );
     free( pHnd );
@@ -608,68 +984,74 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
     }
   */
 
-  iRet = WSAStartup( MAKEWORD(2,2), &pHnd->wsaData );
-  pHnd->SndSocket = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
-  if( pHnd->SndSocket == INVALID_SOCKET)
+  /* read the full Setup ? */
+  if( bAutoConfig )
     {
-    OutputDebugString( _T("Simple Syslog Client: socket() FAILED\r\n") );
-    free( pHnd );
-    return 0; /*! \retval 0 cannot create a IP socket. open failed */
-    }
-
-  if( !pDestination || pDestination ) /* if no destination was given, default 'syslog @ this pc' */
-    {
-    pDestination = "localhost:514";
-    }
-  _internal_VsscRefreshAddr( pHnd, pDestination );
-  _internal_VsscRefreshLevel(pHnd, (short)((Facility>=0) ? Facility : LOG_LOCAL7), 
-                                   (short)((Level   >=0) ? Level    : LOG_INFO ));
-  _internal_VsscRefreshZone( pHnd, LOGZONE_EVERYTHING );
-
-  *pHnd->AppName=0;
-  if( !pAppName || !*pAppName ) /* if no Name was given, take current exe name */
-    {
-    char acBuffer[ MAX_PATH ];
-    char *p;
-    GetModuleFileName( NULL, acBuffer, DIM(acBuffer) -1 );
-    p = strrchr(acBuffer, '.');     /* trow ".exe" part  */
-    if(p) *p=0;
-    p = strrchr(acBuffer, '\\');    /* throw path prefix */
-    if(p)
-      {
-      *p++;
-      strncpy( pHnd->AppName, p, DIM(pHnd->AppName) ); /**/
-      pHnd->AppName[DIM(pHnd->AppName)-1]=0;
-      }
+    iRet = VSSC_AutoCfg( (int) pHnd, bAutoConfig );
     }
   else
     {
-    strncpy( pHnd->AppName, pAppName, DIM(pHnd->AppName) );
-    pHnd->AppName[DIM(pHnd->AppName)-1]=0;
+    /* \todo:  later move this code into VSSC_AutoCfg() and AutoCfg[] Array. */
+    if( !pDestination || pDestination ) /* if no destination was given, default 'syslog @ this pc' */
+      { pDestination = "localhost:514"; }
+    _internal_VsscRefreshAddr( pHnd, pDestination );
+    _internal_VsscRefreshLevel(pHnd, (short)((Facility>=0) ? Facility : LOG_LOCAL7), 
+                                     (short)((Level   >=0) ? Level    : LOG_INFO ));
+    _internal_VsscRefreshZone( pHnd, LOGZONE_EVERYTHING );
+
+    *pHnd->global.AppName.Text=0;
+    if( !pAppName || !*pAppName ) /* if no Name was given, take current exe name */
+      {
+      char acBuffer[ MAX_PATH ];
+      char *p;
+      GetModuleFileName( NULL, acBuffer, DIM(acBuffer) -1 );
+      p = strrchr(acBuffer, '.');     /* trow ".exe" part  */
+      if(p) *p=0;
+      p = strrchr(acBuffer, '\\');    /* throw path prefix */
+      if(p)
+        {
+        *p++;
+        strncpy( pHnd->global.AppName.Text, p, pHnd->global.AppName.LastPos ); /**/
+        pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
+        }
+      }
+    else
+      {
+      strncpy( pHnd->global.AppName.Text, pAppName, pHnd->global.AppName.LastPos );
+      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
+      }
+
+#   ifdef _DEBUG
+    pHnd->global.ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_RFC3164_SOURCEIP | LOGFLGS_COUNTER64 | LOGFLGS_PROCESS_ID | LOGFLGS_LONGTAG;
+#   else
+    pHnd->global.ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_COUNTER64;
+#   endif
     }
-  
 
-  pHnd->MsgCount = 0;
+  if( pHnd->udp.Use )
+    {
+    iRet = WSAStartup( MAKEWORD(2,2), &pHnd->internal.wsaData );
+    pHnd->internal.SndSocket = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    if( pHnd->internal.SndSocket == INVALID_SOCKET)
+      {
+      OutputDebugString( _T("Simple Syslog Client: socket() FAILED\r\n") );
+      free( pHnd );
+      return 0; /*! \retval 0 cannot create a IP socket. open failed */
+      }
 
-# ifdef _DEBUG
-  pHnd->ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_RFC3164_SOURCEIP | LOGFLGS_COUNTER64 | LOGFLGS_PROCESS_ID | LOGFLGS_LONGTAG;
-# else
-  pHnd->ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_COUNTER64;
-# endif
+    memset( &pHnd->internal.SndAddr, 0x00, sizeof( struct sockaddr_in ));
+    pHnd->internal.SndAddr.sin_family = AF_INET;
+    pHnd->internal.SndAddr.sin_port = htons( pHnd->udp.SendTo_Port );
+    pHnd->internal.SndAddr.sin_addr.s_addr = inet_addr( pHnd->udp.SendTo_Addr.Text );
 
-  
-  memset( &pHnd->SndAddr, 0x00, sizeof( struct sockaddr_in ));
-  pHnd->SndAddr.sin_family = AF_INET;
-  pHnd->SndAddr.sin_port = htons( pHnd->SendTo_Port );
-  pHnd->SndAddr.sin_addr.s_addr = inet_addr( pHnd->SendTo_Addr );
+    pHnd->udp.From_Port=0;
+    memset( &pHnd->internal.OwnAddr, 0x00, sizeof( struct sockaddr_in ));
+    pHnd->internal.OwnAddr.sin_family = AF_INET;
+    pHnd->internal.OwnAddr.sin_port = htons( pHnd->udp.From_Port );
+    pHnd->internal.OwnAddr.sin_addr.s_addr = INADDR_ANY;
 
-  pHnd->From_Port=0;
-  memset( &pHnd->OwnAddr, 0x00, sizeof( struct sockaddr_in ));
-  pHnd->OwnAddr.sin_family = AF_INET;
-  pHnd->OwnAddr.sin_port = htons( pHnd->From_Port );
-  pHnd->OwnAddr.sin_addr.s_addr = INADDR_ANY;
-
-  iRet = setsockopt( pHnd->SndSocket, SOL_SOCKET, SO_REUSEADDR, (const char*) &Blocking, sizeof(Blocking) );
+    iRet = setsockopt( pHnd->internal.SndSocket, SOL_SOCKET, SO_REUSEADDR, (const char*) &Blocking, sizeof(Blocking) );
+    } /*if( pHnd->udp.Use )*/
 
 # if 0
   /* old: usually, there is no need for binding UDP sockets, 
@@ -677,7 +1059,7 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
    *      so this makes things more ease.
    * new: we now send using sendto(), so we can change the log target on the fly
    */
-  iRet = bind( pHnd->SndSocket, (struct sockaddr *)&pHnd->OwnAddr, sizeof(pHnd->OwnAddr) );
+  iRet = bind( pHnd->internal.SndSocket, (struct sockaddr *)&pHnd->internal.OwnAddr, sizeof(pHnd->internal.OwnAddr) );
   if( iRet == SOCKET_ERROR )
     {
     OutputDebugString( _T("Simple Syslog Client: bind() FAILED\r\n") );
@@ -685,17 +1067,16 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
     return 0; /*! \retval 0 cannot bind the outgoing udp port. open failed */
     }
 # endif
-  pHnd->UserPID = GetCurrentProcessId();
 
   /*local_block()*/
     {
     char OutTxt[512];
     _snprintf( OutTxt, DIM(OutTxt), "Syslog for %s:%u open and ready. App='%s', Fac=%u, Lev=%u\r\n",
-              pHnd->SendTo_Addr, 
-              pHnd->SendTo_Port,
-              pHnd->AppName, 
-              pHnd->Syslog_Facility, 
-              pHnd->Syslog_MaxLevel );
+              pHnd->udp.SendTo_Addr.Text, 
+              pHnd->udp.SendTo_Port,
+              pHnd->global.AppName.Text, 
+              pHnd->udp.Syslog_Facility, 
+              pHnd->udp.Syslog_MaxLevel );
     OutputDebugString( OutTxt );
     }
   return (int) pHnd;  /*! \retval pHnd A value of nonzero is a valid handle for subsequent VSSC_Log() calls. */
@@ -735,16 +1116,16 @@ int VSSC_close( int Handle /*!< [in] Handle a valid Handle from succesful VSSC_o
     {
     char OutTxt[512];
     _snprintf( OutTxt, DIM(OutTxt), "Syslog for %s:%u closed. App='%s'\r\n",
-              pHnd->SendTo_Addr, 
-              pHnd->SendTo_Port,
-              pHnd->AppName );
+              pHnd->udp.SendTo_Addr.Text, 
+              pHnd->udp.SendTo_Port,
+              pHnd->global.AppName.Text );
     OutputDebugString( OutTxt );
     }
 
-  closesocket( pHnd->SndSocket );
+  closesocket( pHnd->internal.SndSocket );
   WSACleanup();
-  while( ReleaseMutex( pHnd->hMutex ) ){;/*do-a-nothing*/}
-  CloseHandle( pHnd->hMutex );
+  while( ReleaseMutex( pHnd->internal.hMutex ) ){;/*do-a-nothing*/}
+  CloseHandle( pHnd->internal.hMutex );
 
   free( pHnd );
   return (int) TRUE;  /*! \retval TRUE if everything was closed successful. */
@@ -803,13 +1184,13 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
     }
 
   BitMask = (Level & LOGZONE_MASK);
-  if( (BitMask && !(pHnd->ZoneMask & BitMask)) || (BitMask==0 && pHnd->ZoneMask!=LOGZONE_EVERYTHING) )
+  if( (BitMask && !(pHnd->global.ZoneMask & BitMask)) || (BitMask==0 && pHnd->global.ZoneMask!=LOGZONE_EVERYTHING) )
     {
     OnDebug_ReportT( _T("suppressed because of Bitmask\r\n") );
     return 0; /*! \retval 0 : no need to show the message because of Zonemask. */
     }
 
-  /* pHnd->Syslog_MaxLevel = 0 : show nothing
+  /* pHnd->udp.Syslog_MaxLevel = 0 : show nothing
    *               1 : show emergency (LOG_EMERG, 0)
    *               2 : show alert  (LOG_ALERT, 1)
    * so we have a Offset of +1 between both Levels
@@ -822,7 +1203,7 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
     }
 
   Level = _internal_Vssc2syslogLevel( Level );
-  if( pHnd->Syslog_MaxLevel==-1L || pHnd->Syslog_MaxLevel < Level )
+  if( pHnd->udp.Syslog_MaxLevel==-1L || pHnd->udp.Syslog_MaxLevel < Level )
     {
     OnDebug_ReportT( _T("Suppressed because low Level\r\n") );
     return 0; /*! \retval 0 : no need to show the message because of Lower global Level. */
@@ -831,7 +1212,7 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
    * If this trashes to many logs, set a higher value or connect a pipe to the final reader
    */
-  dwWaitResult = WaitForSingleObject( pHnd->hMutex, 100L);
+  dwWaitResult = WaitForSingleObject( pHnd->internal.hMutex, 100L);
   /* sorry, lasts too long. The other Thread won the race */
   /* or mutex killed inbetween? Shit ... at least do not log anything */
   if( (dwWaitResult == WAIT_TIMEOUT) || (dwWaitResult == WAIT_ABANDONED) )
@@ -880,9 +1261,9 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
     va_end( arg_list );
 
     /* glue them all together */
-    pHnd->MsgCount++;
-    FacLev = (pHnd->Syslog_Facility & 0x03f8) | (Level & 0x07);
-    if( pHnd->SndSocket > 0 )
+    pHnd->internal.MsgCount++;
+    FacLev = (pHnd->udp.Syslog_Facility & 0x03f8) | (Level & 0x07);
+    if( pHnd->internal.SndSocket > 0 )
       {
       /* we will start with the PRI part (incl. <> brackets) 
        * then folowed by HEADER parts. Our HEADER can be configured to be invalid (shortened)
@@ -891,14 +1272,14 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
        */
       _snprintf( logmsg, logmsg_size, "<%u>%s%s%s%s%s%s\r\n", 
                                       FacLev, 
-                                      (pHnd->ControlFlags & LOGFLGS_RFC3164_TIMESTAMP)?TimeStamp :"", 
-                                      (pHnd->ControlFlags & LOGFLGS_RFC3164_SOURCEIP )?SourceIp  :"", 
-                                      (pHnd->ControlFlags & LOGFLGS_PROCESS_ID       )?PID       :"",
-                                      (pHnd->ControlFlags & LOGFLGS_MODULE_SOURCE    )?ModuleName:"",
-                                      (pHnd->ControlFlags & LOGFLGS_COUNTER64        )?Counter64 :"",
+                                      (pHnd->global.ControlFlags & LOGFLGS_RFC3164_TIMESTAMP)?TimeStamp :"", 
+                                      (pHnd->global.ControlFlags & LOGFLGS_RFC3164_SOURCEIP )?SourceIp  :"", 
+                                      (pHnd->global.ControlFlags & LOGFLGS_PROCESS_ID       )?PID       :"",
+                                      (pHnd->global.ControlFlags & LOGFLGS_MODULE_SOURCE    )?ModuleName:"",
+                                      (pHnd->global.ControlFlags & LOGFLGS_COUNTER64        )?Counter64 :"",
                                       logtext );
       /* send it to syslog socket */
-      iRet = sendto( pHnd->SndSocket, logmsg, strlen(logmsg), 0, (struct sockaddr*)&pHnd->SndAddr, sizeof(pHnd->SndAddr) );
+      iRet = sendto( pHnd->internal.SndSocket, logmsg, strlen(logmsg), 0, (struct sockaddr*)&pHnd->internal.SndAddr, sizeof(pHnd->internal.SndAddr) );
       if(iRet<1)
         {
         DWORD dwErr = GetLastError();
@@ -915,7 +1296,7 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
     OnDebug_ReportT( _T("Suppressed because reentrace protection blocker != 0\r\n") );
     }
 
-  ReleaseMutex( pHnd->hMutex );
+  ReleaseMutex( pHnd->internal.hMutex );
   return iRet; /*! \retval 0..1024 : count of characters successfully given to UDP Socket Stack */
 }}
 
@@ -938,12 +1319,153 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
  *@{
  */
 
+/*! \brief Auto-reading all Parameters at once
+ *
+ */
+int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
+                  short bAutoConfig   /*!< [in] >0 means this function automatically tries to read all Setup parameters itself. No further VSSC_SetStr() or VSSC_SetInt() is required */
+                )
+{{
+  PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
+  int i, iRet=0;
+  
+  if( !Handle )
+    {
+    OutputDebugString( _T("Parameter Error\r\n") );
+    return (int) FALSE;  /*! \retval FALSE if one Parameter is invalid. */
+    }
+
+  if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
+    {
+    OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
+    return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
+    }
+
+  for( i=0; i<DIM(AutoConfig); i++ )
+    {
+    switch( AutoConfig[i].ValType )
+      {
+      case et_BYTE  :
+      case et_CHAR  :
+      case et_USHORT: 
+      case et_SHORT :
+      case et_ULONG :
+      case et_LONG  :
+      /* more numerical types can be inserted here ... */
+        {
+        char *pHelp;
+        DWORD   dwValue;
+        ULONG  *pStart_UL;
+        LONG   *pStart_SL;
+        BYTE   *pStart_UC;
+        CHAR   *pStart_SC;
+        USHORT *pStart_US;
+        SHORT  *pStart_SS;
+        /* ... and more numerical types can be inserted here ... */
+
+        iRet = VSSC_Log( Handle, SLOG_INFO, pHnd->global.AppName.Text, 
+                             "now reading Type %u of Group='%s', Key='%s'. Dflt/u=%lu, Dflt/s=%ld, writeNew=%u. %u bytes can be written at offs %u", 
+                             AutoConfig[i].ValType,
+                             AutoConfig[i].pGroupName,
+                             AutoConfig[i].pKeyName,
+                             (ULONG) AutoConfig[i].DefaultVal,
+                             (LONG ) AutoConfig[i].DefaultVal,
+                             AutoConfig[i].WriteIfNotExist,
+                             AutoConfig[i].Size,
+                             AutoConfig[i].Offset );
+        
+        /*real reading / writing not implemented yet */
+        iRet = _internal_ReadConfig_DWORD( pHnd, 
+                                           AutoConfig[i].pGroupName,
+                                           AutoConfig[i].pKeyName,
+                                           AutoConfig[i].WriteIfNotExist,
+                                           AutoConfig[i].DefaultVal,
+                                           &dwValue );
+        if( !iRet )
+          dwValue = (DWORD) AutoConfig[i].DefaultVal;
+
+        pHelp  = (char*) pHnd;
+        pHelp += AutoConfig[i].Offset;
+        pStart_UL = (ULONG *) pHelp;
+        pStart_SL = (LONG  *) pHelp;
+        pStart_UC = (BYTE  *) pHelp;
+        pStart_SC = (CHAR  *) pHelp;
+        pStart_US = (USHORT*) pHelp;
+        pStart_SS = (SHORT *) pHelp;
+        /* ... and more numerical types can be inserted here ... */
+
+        switch( AutoConfig[i].ValType )
+          {
+          case et_BYTE  : *pStart_UC = (BYTE  ) dwValue; break;
+          case et_CHAR  : *pStart_SC = (CHAR  ) dwValue; break;
+          case et_USHORT: *pStart_US = (USHORT) dwValue; break;
+          case et_SHORT : *pStart_SS = (SHORT ) dwValue; break;
+          case et_ULONG : *pStart_UL = (ULONG ) dwValue; break;
+          case et_LONG  : *pStart_SL = (LONG  ) dwValue; break;
+          /* ... and, finally more numerical types must be inserted here. */
+          }
+        };break;
+
+      case et_P32STRING:
+        {
+        size_t maxlen, Size;
+        int Size_Offset, delta;
+        char *pStart, *pEnd;
+
+        /* calcultae MaxSize of destination field.
+         * we do not know, which destination field, but we know the Type (so we can get delta between Text and Len)
+         * and we know base addr of text - so we can hook into Len field 
+         */
+        delta = FIELD_OFFSET( P32STRING, Text ) - FIELD_OFFSET( P32STRING, LastPos );
+        Size_Offset = (int)((char*) pHnd);
+        Size_Offset+= (int)( AutoConfig[i].Offset - delta );
+        Size = (size_t) *( (ULONG*) Size_Offset );
+
+        maxlen = MIN( (size_t) AutoConfig[i].Size, Size );
+        iRet = VSSC_Log( Handle, SLOG_INFO, pHnd->global.AppName.Text, 
+                             "now reading Type %u of Group='%s', Key='%s'. Dflt=%s, writeNew=%u. %u bytes can be written at offs %u", 
+                             AutoConfig[i].ValType,
+                             AutoConfig[i].pGroupName,
+                             AutoConfig[i].pKeyName,
+                             (TCHAR*) AutoConfig[i].DefaultVal,
+                             AutoConfig[i].WriteIfNotExist,
+                             AutoConfig[i].Size,
+                             AutoConfig[i].Offset );
+
+        pStart = (char*) pHnd;
+        pStart+= AutoConfig[i].Offset;
+
+        /*real reading / writing not implemented yet */
+        iRet = _internal_ReadConfig_TCHAR( pHnd, 
+                                           AutoConfig[i].pGroupName,
+                                           AutoConfig[i].pKeyName,
+                                           AutoConfig[i].WriteIfNotExist,
+                                           (TCHAR*) AutoConfig[i].DefaultVal,
+                                           (TCHAR*) pStart, 
+                                           maxlen+1 ); /* +1 because maxlen is without \0 and our foo is with \0 */
+        if( !iRet )
+          {
+          pEnd = pStart + (sizeof(TCHAR)*(maxlen));
+          _tcsncpy( (TCHAR*) pStart, "", maxlen );
+          *((TCHAR*)(pEnd)) = 0;
+          }
+
+        };break;
+      } /*sw-end*/
+    } /*for-end*/ 
+
+               /*! \retval 0: parameter not set. */
+  return iRet; /*! \retval not 0: everything went okay. */
+}}
 
 /*! \brief Setting a Parameter (string ASCIIZ)
  *
  * This function is used to control (set) different settings.
- * The value who is controlled is given as a string. For controlling
- * integer values see VSSC_SetInt().
+ * The value who is controlled is given as a string. 
+ * It <i>can</i> be used for controlling integer values.
+ * Integer values can be prefixed with '0x' or '$' or '&H' for interpreting the given string as an hex value.
+ * Integer values can be prefixed with '0d' for interpreting the given string as an decimal value.
+ * Integer values can be prefixed with '0b' for interpreting the following up to 32 characters as an binary value.
  *
  * sample call:
  *  \code
@@ -984,9 +1506,10 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
   switch( Index )
     {
     case CTRL_GENERAL_APPNAME:
-      if( strlen(Val)<DIM(pHnd->AppName) )
+      if( strlen(Val) <= pHnd->global.AppName.LastPos )
         {
-        strcpy( pHnd->AppName, Val );
+        strncpy( pHnd->global.AppName.Text, Val, pHnd->global.AppName.LastPos );
+        pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ] = 0;
         iRet = 1;
         }
       break;
@@ -999,7 +1522,64 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
       break;
 
     default:
-       return 0; /*! \retval 0: this Parameter is currently not implemented or is not of String Type */
+      {
+      signed long Number=0;
+      if(strlen(Val)>2)
+        {
+        if( (Val[0]=='0') && ('X'==toupper(Val[1])) && (1==sscanf( Val, "%x", &Number )) )
+          {/*do nothing, we now have Number*/;
+          }
+        else if( (('$'==Val[0])  || ('&'==Val[0])) && (1==sscanf( Val+1, "%x", &Number )) )
+          {/*do nothing, we now have Number*/;
+          }
+        else if( ('&'==Val[0]) && ('H'==toupper(Val[1])) && (1==sscanf( Val+2, "%x", &Number )) )
+          {/*do nothing, we now have Number*/;
+          }
+        else if( (Val[0]=='0') && ('D'==toupper(Val[1])) && (1==sscanf( Val+2, "%i", &Number )) )
+          {/*do nothing, we now have Number*/;
+          }
+        else if( (Val[0]=='0') && ('B'==toupper(Val[1])) )
+          {
+          char Bits[32+1];
+          int i, len;
+          unsigned long DWord=0, Weight=1;
+
+          strncpy( Bits, Val+2, DIM(Bits) );
+          Bits[32]=0;
+          /*now right align it*/
+          for( len=0 ; (Bits[len]!=0) && ((Bits[len]=='0') || (Bits[len]=='1')); len++ ){;} /*only Count valid chars */
+          for( i=0 ; (i<len); i++ )
+            {
+            Bits[31-i] = Bits[ len-1-i ];
+            }
+          Bits[32]=0;
+          for( ; (i<32); i++ )
+            {
+            Bits[31-i] = '0';
+            }
+
+          len = strlen(Bits);
+          for( i=0 ; i<len ; i++,Weight<<=1 )
+            {
+            DWord |= (Weight * (Bits[31-i]-'0'));
+            }
+          Number = (signed long) DWord;
+          }
+        else if( isdigit( Val[0] ) )
+          {
+          Number = atol( Val );
+          }
+        else
+          {
+          return 0; /*! \retval 0: invalid Data Format (integers may be strings with prefixed 0x or 0b) */
+          }
+        }
+      else
+        {
+        Number = atol( Val );
+        }
+      return VSSC_SetInt( Handle, Key, Number, LOGFLGS_DEFAULT ); /*! \retval 0: this Parameter is currently not implemented or is not of String Type */
+      }
     }
                /*! \retval 0: parameter not set. */
   return iRet; /*! \retval not 0: everything went okay. */
@@ -1026,14 +1606,16 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
  *  \endcode
  *
  */
-int VSSC_SetInt( int Handle,              /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
-                  char const * const Key, /*!< [in] Name of the Key which has to be modified. A short string. f.i. <b>"LogLevel"</b> */
-                  const long lVal         /*!< [in] THE value which has to be changed. f.i. <b>7</b> */
+int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
+                 char const * const Key, /*!< [in] Name of the Key which has to be modified. A short string. f.i. <b>"LogLevel"</b> */
+                 const long lVal,        /*!< [in] THE value which has to be changed. f.i. <b>7</b> */
+                 const unsigned short Option /*!< [in] optional (if not 0) Flag. f.i. <b>0</b> */
                 )
 {{
   PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
   int Index, iRet = 0;
-  
+  unsigned long ulVal;
+
   if( !Handle || !Key || !*Key )
     {
     OutputDebugString( _T("Parameter Error\r\n") );
@@ -1046,31 +1628,48 @@ int VSSC_SetInt( int Handle,              /*!< [in] Handle a valid Handle from s
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
+  ulVal = (long) lVal;
   Index = _internal_GetHash( Key );
   switch( Index )
     {
     case CTRL_GENERAL_ZONEMASK:
-      if( lVal>0xF || lVal==0 )
+      {
+      ulVal &= LOGZONE_MASK; /* throw away bits that are reserved for other use (level) */
+      switch(Option)
         {
-        pHnd->ZoneMask = (unsigned long int) lVal;
-        iRet=1;
+        case LOGFLGS_SET_BITS   : { pHnd->global.ZoneMask |=  ulVal; iRet=1; };break;
+        case LOGFLGS_CLR_BITS   : { pHnd->global.ZoneMask &= ~ulVal; iRet=1; };break;
+        case LOGFLGS_TOGGLE_BITS: { pHnd->global.ZoneMask ^=  ulVal; iRet=1; };break;
+        case LOGFLGS_SET_VALUE  : /* explicit fall trough */ 
+        default                 : { pHnd->global.ZoneMask  =  ulVal; iRet=1; };break;
         }
-      break;
+      }; break;
 
     case CTRL_SYSLOG_PORT:
       if( lVal <= USHRT_MAX )
         {
-        pHnd->SendTo_Port = (unsigned short int) lVal;
-        iRet=1;
+        switch(Option)
+            {
+            case LOGFLGS_SET_VALUE : { pHnd->udp.SendTo_Port = (unsigned short) lVal; iRet=1; };break;
+            default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
+            }
         }
       break;
 
     case CTRL_SYSLOG_FACILITY  :
-      iRet = _internal_VsscRefreshLevel( pHnd, (short) lVal, -1 );
+      switch(Option)
+          {
+          case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, (short) lVal, -1 ); };break;
+          default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
+          }
       break;
 
     case CTRL_SYSLOG_MAXLEVEL  :
-      iRet = _internal_VsscRefreshLevel( pHnd, -1 , (short) lVal);
+      switch(Option)
+          {
+          case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, -1 , (short) lVal); };break;
+          default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
+          }
       break;
 
     default:
@@ -1148,17 +1747,17 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
       break;
 
     case CTRL_GENERAL_APPNAME:
-      if( MaxBuf >= strlen( pHnd->AppName ) )
+      if( MaxBuf >= strlen( pHnd->global.AppName.Text ) )
         {
-        strcpy( pValBuf, pHnd->AppName );
+        strcpy( pValBuf, pHnd->global.AppName.Text );
         iRet=1;
         }
       break;
 
     case CTRL_SYSLOG_HOST:
-      if( MaxBuf >= strlen( pHnd->SendTo_Addr ) )
+      if( MaxBuf >= strlen( pHnd->udp.SendTo_Addr.Text ) )
         {
-        strcpy( pValBuf, pHnd->SendTo_Addr );
+        strcpy( pValBuf, pHnd->udp.SendTo_Addr.Text );
         iRet=1;
         }
       break;
@@ -1167,11 +1766,11 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
       if( MaxBuf >= 16 )
         {
         sprintf( pValBuf, "%u.%u.%u.%u:%u", 
-                 pHnd->OwnAddr.sin_addr.S_un.S_un_b.s_b1,
-                 pHnd->OwnAddr.sin_addr.S_un.S_un_b.s_b2,
-                 pHnd->OwnAddr.sin_addr.S_un.S_un_b.s_b3,
-                 pHnd->OwnAddr.sin_addr.S_un.S_un_b.s_b4,
-                 pHnd->OwnAddr.sin_port );
+                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b1,
+                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b2,
+                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b3,
+                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b4,
+                 pHnd->internal.OwnAddr.sin_port );
         iRet=1;
         }
       break;
@@ -1245,23 +1844,23 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
       break;
 
     case CTRL_GENERAL_ZONEMASK:
-      Val = (long) pHnd->ZoneMask;
+      Val = (long) pHnd->global.ZoneMask;
       break;
 
     case CTRL_SYSLOG_PORT:
-      Val = (long) pHnd->SendTo_Port;
+      Val = (long) pHnd->udp.SendTo_Port;
       break;
 
     case CTRL_SYSLOG_OUTPORT:
-      Val = (long) pHnd->OwnAddr.sin_port;
+      Val = (long) pHnd->internal.OwnAddr.sin_port;
       break;
 
     case CTRL_SYSLOG_FACILITY:
-      Val = (long) pHnd->Syslog_Facility;
+      Val = (long) pHnd->udp.Syslog_Facility;
       break;
 
     case CTRL_SYSLOG_MAXLEVEL:
-      Val = (long) pHnd->Syslog_MaxLevel;
+      Val = (long) pHnd->udp.Syslog_MaxLevel;
       break;
 
     default:
@@ -1271,6 +1870,208 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
   *plVal = Val;
   return 1; /*! \retval not 0: everything went okay. */
 }}
+
+
+/*! \brief Setting a couple of Parameters at once
+ *
+ * This function is used to control (set) different settings.
+ * The value who is controlled is given as a string. For controlling
+ * integer values see VSSC_SetInt().
+ * For param 2, both common types of a 'list' are allowed: 
+ * MultiLine-with-CRLF and C-Stringlists. 
+ * - MultiLine-with-CRLF is a simple char-array, each line separated by CR/LF 
+ *   and finally the whole chain terminated by a single '\\0'.
+ *   It could be, f.i. a complete group of an INI file. 
+ * - C-Stringlist is also a char-array but the chain of strings is separated by a single '\0' from the next
+ *   and finally terminated the by a double terminator ('\\0\\0').
+ *   It could be, f.i. a REG_MULTI_SZ block from the windows registry (but in ANSI instead of UNICODE format).
+ *
+ * \note The functiontries to autodetect this types. If it can find a CR or LF, it assumes to have
+ *       a Multiline and thus, it does'nt need the double terminator. But if the param 2 doesn't
+ *       contain whether the CR/LF nor the '\\0\\0', <b>it will crash with a read exception!</b>
+ *       So, if there is a chance to have only one line in the buffer, it is recommended to terminate it
+ *       with '\\0\\0'. Or, better: use the double terminator in <b>any</b> case.
+ *
+ * sample call:
+ *  \code
+    char const * const mod = "MyModule";
+    int hLog;
+
+    hLog = VSSC_open2( "localhost:514", LOG_LOCAL2, LOG_DEBUG, "TestProg" );
+    if( hLog )
+      {
+      VSSC_SetAll( hLog, "Key1=1\r\nKey2=Value2\r\nKey3=Value3\r\nKey4=\r\n" );
+      VSSC_close( hLog );
+      }
+ *  \endcode
+ *
+ */
+int VSSC_SetAll( int Handle,             /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
+                 char const * const Keys /*!< [in] CRLF separated list of usually more than one 'Key'='Value' pairs.*/
+                )
+{{
+  PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
+  size_t len, all_len, longest_line;
+  char *pLine=NULL, *pCR, *pLF, *pKey, *pValue, *ptr;
+  char const *pcStr, *pLeft;
+  BOOL StringlistType;
+  int iRet, iRetOkay=0, iRetBad=0;
+
+  if( !Handle || !Keys || !*Keys )
+    {
+    OutputDebugString( _T("Parameter Error\r\n") );
+    return 0;  /*! \retval 0 if one Parameter is invalid. */
+    }
+
+  if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
+    {
+    OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
+    return 0;  /*! \retval 0 if the Handle is not valid. */
+    }
+
+  /* let's guess what type we have. May be we can integrate this later in the cutter code */
+  longest_line=0;
+  if( NULL!=(pcStr = strchr( Keys, '\r' )) || NULL!=(pcStr = strchr( Keys, '\r' )) )
+    {
+    /* we have CRLF type */
+    StringlistType=FALSE;
+    all_len = strlen( Keys ) + 2; /* +2 for the terminators*/
+    /*now get the longest line*/
+    pLeft = Keys;
+    do{
+      /*CR, LF, CRLF will be handled properly. We get the rightmost linefeed char.*/
+      pCR = strchr( pLeft, '\r' );
+      pLF = strchr( pLeft, '\n' );
+      /*-------------------------------------------------*
+       * case 1) \r\n
+       * case 2) \n\r
+       * case 3) \r and \n, but \n not adjectant to \r
+       * case 4) \n and \r, but \r not adjectant to \n
+       * case 5) \r
+       * case 6) \n
+       * case 7) none of them
+       *-------------------------------------------------*/
+      if( pCR && pLF && (pCR+1==pLF) )
+        {pcStr=pLF;}
+      else if( pCR && pLF && (pLF+1==pCR) )
+        {pcStr=pCR;}
+      else if( pCR && pLF && (pCR+1<pLF) )
+        {pcStr=pCR;}
+      else if( pCR && pLF && (pLF+1<pCR) )
+        {pcStr=pLF;}
+      else if( pCR && pLF==NULL )
+        {pcStr=pCR;}
+      else if( pLF && pCR==NULL )
+        {pcStr=pLF;}
+      else
+        {pcStr=pLeft+strlen(pLeft);}
+      /*----*/
+      len = pcStr - pLeft + 1 + 1; /* +1 to be correct, +1 for termchar */
+      if( longest_line < len )
+          longest_line = len;
+      pLeft = pcStr + 1;
+      } while( *pLeft );
+    }
+  else
+    {
+    /* we have Stringlist type */
+    StringlistType=TRUE;
+    all_len = 0;
+    pcStr = Keys;
+    do{
+      len = strlen( pcStr ) + 1;
+      if( len>longest_line) 
+        longest_line=len;
+      pcStr = pcStr + len; /* move pcStr to the one char AFTER line terminator */
+      all_len += len; /* respect the characters plus their terminator */
+      } while( *pcStr ); /* if this char AFTER is not the second terminator, continue */
+    all_len++; /* regard the second terminator */
+    }
+
+  /* now the cutter code */
+  pLine = (char*) malloc(longest_line+2);
+  if( !Handle || !Keys || !*Keys )
+    {
+    OutputDebugString( _T("OutOfMem\r\n") );
+    return 0;  /*! \retval 0 if out of MEM. */
+    }
+
+  pLeft = Keys;
+  do{
+    strncpy( pLine, pLeft, longest_line );
+    *(pLine+longest_line+0)='\0';
+    *(pLine+longest_line+1)='\0';
+
+    if(!StringlistType)
+      {
+      /*CR, LF, CRLF will be handled properly. We get the rightmost linefeed char.*/
+      pCR = strchr( pLine, '\r' );
+      pLF = strchr( pLine, '\n' );
+      /*-------------------------------------------------*
+       * case 1) \r\n
+       * case 2) \n\r
+       * case 3) \r and \n, but \n not adjectant to \r
+       * case 4) \n and \r, but \r not adjectant to \n
+       * case 5) \r
+       * case 6) \n
+       * case 7) none of them
+       *-------------------------------------------------*/
+      if( pCR && pLF && (pCR+1==pLF) )
+        {ptr=pLF;}
+      else if( pCR && pLF && (pLF+1==pCR) )
+        {ptr=pCR;}
+      else if( pCR && pLF && (pCR+1<pLF) )
+        {ptr=pCR;}
+      else if( pCR && pLF && (pLF+1<pCR) )
+        {ptr=pLF;}
+      else if( pCR && pLF==NULL )
+        {ptr=pCR;}
+      else if( pLF && pCR==NULL )
+        {ptr=pLF;}
+      else
+        {ptr=NULL;}
+      /*----*/
+      if(ptr)
+        {
+        *ptr='\0'; /*cut the rightmost linefeed, set terminator instead. */
+        pLeft += (ptr - pLine) + 1; /* one char behind terminator 0 */
+        }
+      else
+        {
+        pLeft = NULL; /*Last Line, no CR/LF*/
+        }
+      }
+    else
+      {
+      pLeft += strlen(pLine) + 1; /* one char behind terminator 0 */
+      }
+
+    TrimmLine( pLine );
+    if( !IsComment(pLine) && Separate( pLine, &pValue ) )
+      {
+      pKey=pLine;
+      TrimmLine( pKey );
+      TrimmLine( pValue );
+
+      iRet = VSSC_SetStr( Handle, pKey, pValue );
+      if(iRet==0) 
+        iRetBad--;
+      else
+        iRetOkay++;
+      }
+    } while( pLeft && *pLeft );
+
+  free( pLine );
+
+  if(iRetBad==0) 
+    return iRetOkay; /*! \retval n>0: all n Params properly set. */
+  else
+    return iRetBad; /*! \retval n<0: n of the given Params couldn't set. */
+}}
+
+
+
+
 
 
 
@@ -1310,6 +2111,67 @@ int VSSC_GetValidKeyNames( char * Buffer,    /*!< [out] a Buffer for aprx. > 128
 }}
 
 /*! @} */
+
+
+
+/*! \cond NEVER_DOX */
+void TrimmLine( char * pLine )
+{{
+  size_t len;
+  char *ptr;
+
+  if(!pLine)
+    return;
+  
+  len = strlen(pLine);
+  ptr = pLine+len-1; /*last char*/
+  len++; /*with termchar now*/
+  while(*ptr<=' ')
+    {
+    *ptr-- = 0;
+    len--;
+    }
+  ptr = pLine;
+  while(*ptr<=' ')
+    {
+    ptr++;
+    len--;
+    }
+  memmove( pLine, ptr, len );
+  return;
+}};
+
+BOOL IsComment( char * pLine )
+{{
+  if(!pLine)
+    return TRUE;
+
+  if( (!*pLine) || (*pLine==';') || (*pLine=='#') || ((*pLine=='/') && (*(pLine+1)=='/')) )
+    return TRUE;
+
+  return FALSE;
+}};
+
+
+BOOL Separate( char * pLine, char ** ppRightpart )
+{{
+  char *ptr;
+
+  if( !pLine || !ppRightpart )
+    return FALSE;
+
+  ptr=strchr( pLine, '=' );
+  if(ptr)
+    {
+    *ptr=0;
+    *ppRightpart=ptr+1;
+    return TRUE;
+    }
+
+  *ppRightpart="";
+  return FALSE;
+}};
+/*! \endcond */
 
 
 
