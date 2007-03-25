@@ -1,8 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 	#include "IMP Skill Trait.h"
-	#include "_Ja25Englishtext.h"
+	#include "_Ja25EnglishText.h"
 #else
+	#include "Types.h"
+	#include "laptop.h"
+	#include "soldier profile type.h"
+	#include "CharProfile.h"
+	#include "IMP Compile Character.h"
+	#include "IMP MainPage.h"
+	#include "Cursors.h"
+	#include "Platform.h"
+	#include "Utilities.h"
+	#include "WordWrap.h"
+	#include "IMPVideoObjects.h"
+	#include "Text.h"
+	#include "IMP Skill Trait.h"
+	#include "_Ja25EnglishText.h"
 #endif
 
 

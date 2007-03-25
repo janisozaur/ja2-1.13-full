@@ -3,12 +3,12 @@
 #else
 	#include "laptop.h"
 	#include "AimSort.h"
-	#include "Aim.h"
+	#include "aim.h"
 	#include "WCheck.h"
 	#include "Utilities.h"
 	#include "WordWrap.h"
 	#include "Soldier Profile.h"
-	#include "stdlib.h"
+	#include "Platform.h"
 	#include "Game Clock.h"
 	#include "Text.h"
 	#include "Multi Language Graphic Utils.h"
@@ -667,7 +667,7 @@ void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 
 BOOLEAN SortMercArray(void)
 {
-	qsort( (LPVOID)AimMercArray, (size_t) MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
+	qsort( (void*)AimMercArray, (size_t) MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
 
 	return(TRUE);
 }

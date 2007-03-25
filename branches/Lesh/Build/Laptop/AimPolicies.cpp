@@ -1,6 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
+	#include "Platform.h"
+	#include "SgpStr.h"
 	#include "laptop.h"
 	#include "AimPolicies.h"
 	#include "aim.h"
@@ -133,7 +135,7 @@ enum
 
 	NUM_AIM_POLICY_LOCATIONS
 
-}AimPolicyTextLocatoins;
+}; //AimPolicyTextLocatoins;
 
 
 //Toc menu mouse regions
@@ -676,7 +678,7 @@ UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 	if(fNumber != 0.0)
 	{
 		//Display the section number
-		swprintf(sTemp, L"%2.1f", fNumber);
+		WSTR_SPrintf(sTemp, 20, L"%2.1f", fNumber);
 		DrawTextToScreen(sTemp, AIM_POLICY_PARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -697,7 +699,7 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
 
 	//Display the section number
-	swprintf(sTemp, L"%2.2f", fNumber);
+	WSTR_SPrintf(sTemp, 20, L"%2.2f", fNumber);
 	DrawTextToScreen(sTemp, AIM_POLICY_SUBPARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	//Display the text beside the section number

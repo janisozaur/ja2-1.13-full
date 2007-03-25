@@ -9,17 +9,21 @@
 	#include "WordWrap.h"
 	#include "Cursors.h"
 	#include "florist Gallery.h"
-	#include "stdio.h"
+	#include "Platform.h"
 	#include "Encrypted File.h"
 	#include "florist Cards.h"
 	#include "Text Input.h"
-	#include "Finances.h"
-	#include "Game clock.h"
+	#include "finances.h"
+	#include "Game Clock.h"
 	#include "english.h"
 	#include "Text.h"
+	#include "LaptopSave.h"
+	#include "random.h"
+	#include "SgpStr.h"
+	
 #endif
 
-#include "meanwhile.h"
+#include "Meanwhile.h"
 
 
 #define		FLOWER_ORDEER_TINY_FONT					FONT10ARIAL
@@ -894,7 +898,7 @@ void DisplayFlowerDynamicItems()
 */
 	//order number
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_ORDER_NUMBER], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_ORDER_NUM_NAME_X;
-	swprintf(sTemp, L"%d", LaptopSaveInfo.uiFlowerOrderNumber );
+	WSTR_SPrintf(sTemp, 640, L"%d", LaptopSaveInfo.uiFlowerOrderNumber );
 	DrawTextToScreen( sTemp, usPosX, FLOWER_ORDER_ORDER_NUM_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	guiFlowerPrice = 0;
@@ -927,7 +931,7 @@ void DisplayFlowerDynamicItems()
 	else
 		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubWhenItGetsThereCost;
 
-	swprintf( sTemp, L"$%d.00 %s", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
+	WSTR_SPrintf( sTemp, 640, L"$%d.00 %s", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
 	DrawTextToScreen( sTemp, usPosX, FLOWER_ORDER_BOUQUET_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 }
 

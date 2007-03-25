@@ -10,8 +10,8 @@
 	#include "WCheck.h"
 	#include "Render Dirty.h"
 	#include "sysutil.h"
-	#include "screens.h"
-	#include "cursors.h"
+	#include "SCREENS.H"
+	#include "Cursors.h"
 	#include "Event Pump.h"
 	#include "laptop.h"
 	#include "aim.h"
@@ -52,7 +52,7 @@
 	#include "Interface Control.h"
 	#include "Game Event Hook.h"
 	#include "WordWrap.h"
-	#include "Game init.h"
+	#include "Game Init.h"
 	#include "Game Clock.h"
 	#include "vobject_blitters.h"
 	#include "Soldier Control.h"
@@ -60,25 +60,33 @@
 	#include "Overhead.h"
 	#include "environment.h"
 	#include "LibraryDataBase.h"
-	#include "music control.h"
+	#include "Music Control.h"
 	#include "SaveLoadGame.h"
 	#include "LaptopSave.h"
-	#include "RenderWorld.h"
+	#include "renderworld.h"
 	#include "gameloop.h"
 	#include "english.h"
 	#include "random.h"
 	#include "Merc Hiring.h"
 	#include "Map Screen Interface.h"
-	#include "ambient control.h"
+	#include "Ambient Control.h"
 	#include "Sound Control.h"
-	#include "text.h"
-	#include "Message.h"
+	#include "Text.h"
+	#include "message.h"
 	#include "Map Screen Interface Bottom.h"
 	#include "Cursor Control.h"
 	#include "Quests.h"
 	#include "Multi Language Graphic Utils.h"
 	#include "BrokenLink.h"
 	#include "BobbyRShipments.h"
+	#include "Dialogue Control.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	#include "Arms Dealer Init.h"
+	#include "Strategic Status.h"
+	#include "Cheats.h"
+	#include "HelpScreen.h"
+	
 #endif
 
 
@@ -4228,7 +4236,7 @@ void DisplayPlayersBalanceToDate( void )
   SetFontShadow(NO_SHADOW);
 
 	// parse straigth number
-	swprintf( sString, L"%d", LaptopSaveInfo.iCurrentBalance );
+	WSTR_SPrintf( sString, 100, L"%d", LaptopSaveInfo.iCurrentBalance );
 
 	// put in commas, then dollar sign
 	InsertCommasForDollarFigure( sString );
@@ -5344,7 +5352,7 @@ void PrintBalance( void )
 	SetFontBackground( FONT_BLACK );
 	SetFontShadow( NO_SHADOW );
 
-	swprintf(pString, L"%d", LaptopSaveInfo.iCurrentBalance);
+	WSTR_SPrintf(pString, 32, L"%d", LaptopSaveInfo.iCurrentBalance);
 	InsertCommasForDollarFigure( pString );
 	InsertDollarSignInToString( pString );
 	
@@ -5390,7 +5398,7 @@ void PrintNumberOnTeam( void )
 	}
 
 
-	swprintf( pString, L"%s %d",pPersonnelString[ 0 ], iCounter );
+	WSTR_SPrintf( pString, 32, L"%s %d",pPersonnelString[ 0 ], iCounter );
 
 	usFontHeight = GetFontHeight( FONT10ARIAL );
 	usStrLength = StringPixLength( pString, FONT10ARIAL );
@@ -5735,7 +5743,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
 
-		swprintf( sString, L"%s  -  %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
+		WSTR_SPrintf( sString, 256, L"%s  -  %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
 		mprintf(iScreenWidthOffset + 140 ,iScreenHeightOffset + 33 ,sString);
 	}
 	

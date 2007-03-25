@@ -2,6 +2,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
+	#include "Platform.h"
+	
 	#include "laptop.h"
 	#include "AimArchives.h"
 	#include "aim.h"

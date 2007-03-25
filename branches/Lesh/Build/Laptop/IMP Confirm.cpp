@@ -7,11 +7,11 @@
 	#include "IMPVideoObjects.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "IMP Compile Character.h"
 	#include "soldier profile type.h"
@@ -19,7 +19,6 @@
 	#include "IMP Confirm.h"
 	#include "finances.h"
 	#include "Soldier Profile.h"
-	#include "Soldier Profile Type.h"
 	#include "Soldier Control.h"
 	#include "IMP Portraits.h"
 	#include "IMP Voices.h"
@@ -31,6 +30,9 @@
 	#include "Game Event Hook.h"
 	#include "LaptopSave.h"
 	#include "strategic.h"
+	#include "random.h"
+	#include "Weapons.h"
+	
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"

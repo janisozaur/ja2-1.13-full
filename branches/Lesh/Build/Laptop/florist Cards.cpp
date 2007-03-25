@@ -9,7 +9,7 @@
 	#include "WordWrap.h"
 	#include "Cursors.h"
 	#include "Encrypted File.h"
-	#include "Florist Gallery.h"
+	#include "florist Gallery.h"
 	#include "Text.h"
 #endif
 

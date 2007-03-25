@@ -8,16 +8,19 @@
 	#include "WCheck.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
 	#include "Weapons.h"
 	#include "Store Inventory.h"
 	#include "Game Event Hook.h"
 	#include "Game Clock.h"
 	#include "LaptopSave.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Text.h"
 	#include "Multi Language Graphic Utils.h"
-	#include "Utility.h"
+	#include "GameSettings.h"
+	#include "message.h"
+	#include "ArmsDealerInvInit.h"
+	
 #endif
 
 

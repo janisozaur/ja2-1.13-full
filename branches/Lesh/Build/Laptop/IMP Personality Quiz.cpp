@@ -8,17 +8,20 @@
 	#include "IMPVideoObjects.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "IMP Compile Character.h"
 	#include "soldier profile type.h"
 	#include "IMP Text System.h"
 	#include "input.h"
 	#include "english.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 // Kaiden this line was commented before I screwed with it
@@ -481,7 +484,7 @@ void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 
 			break;
 		}
-		swprintf( sString, L"%d", iCounter + 1 );
+		WSTR_SPrintf( sString, 32, L"%d", iCounter + 1 );
 		SpecifyButtonUpTextColors( giIMPPersonalityQuizAnswerButton[ iCounter ], FONT_WHITE, FONT_BLACK );
 		SpecifyButtonDownTextColors( giIMPPersonalityQuizAnswerButton[ iCounter ], FONT_WHITE, FONT_BLACK  );
 		SpecifyButtonTextOffsets( giIMPPersonalityQuizAnswerButton[ iCounter ], +23, +12, TRUE );
@@ -1582,7 +1585,7 @@ void PrintQuizQuestionNumber( void )
 	SetFontBackground( FONT_BLACK );
 
 	// get current question number into a string
-	swprintf(sString, L"%d", giCurrentPersonalityQuizQuestion + 1);
+	WSTR_SPrintf(sString, 10, L"%d", giCurrentPersonalityQuizQuestion + 1);
   
 	// print current question number
   mprintf( LAPTOP_SCREEN_UL_X + 345 , LAPTOP_SCREEN_WEB_UL_Y + 370 ,sString);

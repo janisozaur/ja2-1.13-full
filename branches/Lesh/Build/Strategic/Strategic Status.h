@@ -1,7 +1,7 @@
 #ifndef __STRATEGIC_STATUS_H
 #define __STRATEGIC_STATUS_H
 
-#include "types.h"
+#include "Types.h"
 #include "Item Types.h"
 #include "Soldier Control.h"
 

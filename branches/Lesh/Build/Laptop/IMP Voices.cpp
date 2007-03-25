@@ -10,15 +10,20 @@
 	#include "WCheck.h"
 	#include "input.h"
 	#include "Isometric Utils.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "Sound Control.h"
 	#include "IMP Text System.h"
-	#include "text.h"
+	#include "Text.h"
+	#include "Soldier Profile.h"
+	#include "IMP Compile Character.h"
+	#include "LaptopSave.h"
+	#include "SgpStr.h"
+	
 #endif
 
 //current and last pages
@@ -559,7 +564,7 @@ void RenderVoiceIndex( void )
 	INT16 sX, sY;
 
 	// render the voice index value on the the blank portrait
-	swprintf( sString, L"%s %d", pIMPVoicesStrings[ 0 ], iCurrentVoices + 1 );
+	WSTR_SPrintf( sString, 32, L"%s %d", pIMPVoicesStrings[ 0 ], iCurrentVoices + 1 );
 
 	FindFontCenterCoordinates( 290 + LAPTOP_UL_X, 0, 100, 0, sString, FONT12ARIAL, &sX, &sY );
 

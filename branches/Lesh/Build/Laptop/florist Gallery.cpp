@@ -1,6 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
+	#include "Platform.h"
+	#include "SgpStr.h"
 	#include "laptop.h"
 	#include "florist.h"
 	#include "florist Gallery.h"
@@ -8,7 +10,6 @@
 	#include "Utilities.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "stdio.h"
 	#include "Encrypted File.h"
 	#include "Text.h"
 #endif
@@ -380,7 +381,7 @@ BOOLEAN DisplayFloralDescriptions()
 		uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex) + FLOR_GALLERY_TEXT_TITLE_SIZE;
 		LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
 		swscanf( sTemp, L"%hu", &usPrice);
-		swprintf( sTemp, L"$%d.00 %s", usPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
+		WSTR_SPrintf( sTemp, 640, L"$%d.00 %s", usPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
 		DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, (UINT16)(usPosY+FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y), 0, FLOR_GALLERY_FLOWER_PRICE_FONT, FLOR_GALLERY_FLOWER_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 		//Display Flower Desc

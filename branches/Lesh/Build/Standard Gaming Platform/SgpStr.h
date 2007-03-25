@@ -1,6 +1,7 @@
 #ifndef _SGP_STR_H
 #define _SGP_STR_H
 
+#include "Types.h"
 #include <stdarg.h>
 
 INT32	WSTR_SPrintf (CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...);

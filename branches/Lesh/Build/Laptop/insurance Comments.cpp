@@ -10,6 +10,8 @@
 	#include "WordWrap.h"
 	#include "Cursors.h"
 	#include "Text.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -139,7 +141,7 @@ void RenderInsuranceComments()
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 
 	//Display the first link text
-	swprintf( sText, L"%s", pMessageStrings[ MSG_HOMEPAGE ] );
+	WSTR_SPrintf( sText, 800, L"%s", pMessageStrings[ MSG_HOMEPAGE ] );
 	DisplayWrappedString( usPosX, INS_CMNT_LINK_Y+13, INS_CMNT_LINK_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,  sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 	//Display the red bar under the link at the bottom
 	DisplaySmallRedLineWithShadow( usPosX, INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT, (UINT16)(usPosX+INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT);

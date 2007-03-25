@@ -1,6 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
+	#include "Platform.h"
+	
 	#include "laptop.h"
 	#include "AimHistory.h"
 	#include "aim.h"
@@ -57,8 +59,8 @@ extern UINT32	guiBottomButton2; // symbol already declared globally in AimPolici
 extern UINT32	guiContentButton; // symbol already declared globally in AimPolicies.cpp (jonathanl)
 
 extern UINT8	gubCurPageNum; // symbol already declared globally in AimPolicies.cpp (jonathanl)
-extern BOOLEAN	gfInToc =  FALSE; // symbol already declared globally in AimPolicies.cpp (jonathanl)
-extern UINT8	gubAimHistoryMenuButtonDown=255; // symbol already declared globally in AimPolicies.cpp (jonathanl)
+BOOLEAN	gfInToc =  FALSE;
+UINT8	gubAimHistoryMenuButtonDown=255;
 
 BOOLEAN		gfExitingAimHistory;
 BOOLEAN		AimHistorySubPagesVisitedFlag[ NUM_AIM_HISTORY_PAGES ];
@@ -111,7 +113,7 @@ enum
 	INCORPORATION_2,
 	DUNN_AND_BRADROAD,
 	INCORPORATION_3,
-} AimHistoryTextLocatoins;
+};// AimHistoryTextLocatoins;
 
 
 

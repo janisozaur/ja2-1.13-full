@@ -3,11 +3,14 @@
 #else
 	#include "Types.h"
 	#include "Store Inventory.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Weapons.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "LaptopSave.h"
 	#include "ShopKeeper Interface.h"
+	#include "GameSettings.h"
+	#include "ArmsDealerInvInit.h"
+	
 #endif
 
 

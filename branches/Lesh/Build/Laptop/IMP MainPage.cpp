@@ -6,11 +6,11 @@
 	#include "IMPVideoObjects.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "finances.h"
 	#include "IMP Attribute Selection.h"
@@ -21,6 +21,9 @@
 	#include "LaptopSave.h"
 	#include "IMP Compile Character.h"
 	#include "IMP Portraits.h"
+	#include "SgpStr.h"
+	#include "Soldier Profile.h"
+	
 #endif
 
 
@@ -285,11 +288,11 @@ void CreateIMPMainPageButtons( void )
 
 	if( iCurrentProfileMode != IMP__VOICE		&&	iCurrentProfileMode != IMP__PORTRAIT )
 	{
-		swprintf( sString, pImpButtonText[ 5 ], iCurrentVoices + 1 );
+		WSTR_SPrintf( sString, 128, pImpButtonText[ 5 ], iCurrentVoices + 1 );
 	}
 	else
 	{
-		swprintf( sString, pImpButtonText[ 25 ] );
+		WSTR_SPrintf( sString, 128, pImpButtonText[ 25 ] );
 	}
 
 	//Voice

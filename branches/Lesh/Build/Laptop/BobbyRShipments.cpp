@@ -4,6 +4,16 @@
 #else
 	#include "laptop.h"
 	#include "BobbyRShipments.h"
+	#include "WCheck.h"
+	#include "BobbyRMailOrder.h"
+	#include "SgpStr.h"
+	#include "Text.h"
+	#include "Cursors.h"
+	#include "WordWrap.h"
+	#include "BobbyR.h"
+	#include "BobbyRGuns.h"
+	#include "Utilities.h"
+	
 #endif
 
 
@@ -314,7 +324,7 @@ void DisplayPreviousShipments()
 			}
 
 			//Display the "ordered on day num"
-			swprintf( zText, L"%s %d", gpGameClockString[0], gpNewBobbyrShipments[ uiCnt ].uiOrderedOnDayNum );
+			WSTR_SPrintf( zText, 512, L"%s %d", gpGameClockString[0], gpNewBobbyrShipments[ uiCnt ].uiOrderedOnDayNum );
 			DrawTextToScreen( zText, BOBBYR_SHIPMENT_ORDER_NUM_X, usPosY, BOBBYR_SHIPMENT_ORDER_NUM_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, ubFontColor, 0, FALSE, CENTER_JUSTIFIED );
 
 			uiNumberItemsInShipments = 0;
@@ -327,7 +337,7 @@ void DisplayPreviousShipments()
 			}
 
 			//Display the # of items
-			swprintf( zText, L"%d", uiNumberItemsInShipments );
+			WSTR_SPrintf( zText, 512, L"%d", uiNumberItemsInShipments );
 			DrawTextToScreen( zText, BOBBYR_SHIPMENT_NUM_ITEMS_X, usPosY, BOBBYR_SHIPMENT_NUM_ITEMS_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, ubFontColor, 0, FALSE, CENTER_JUSTIFIED );
 			usPosY += BOBBYR_SHIPMENT_GAP_BTN_LINES;
 		}

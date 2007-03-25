@@ -10,19 +10,23 @@
 	#include "Cursors.h"
 	#include "Overhead.h"
 	#include "Soldier Add.h"
-	#include "Email.h"
+	#include "email.h"
 	#include "Game Clock.h"
-	#include "Faces.h"
-	#include "dialogue control.h"
+	#include "faces.h"
+	#include "Dialogue Control.h"
 	#include "MercTextBox.h"
 	#include "Merc Hiring.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "LaptopSave.h"
 	#include "GameSettings.h"
 	#include "Text.h"
 	#include "Speck Quotes.h"
 	#include "mercs Account.h"
 	#include "Soldier Profile.h"
+	#include "Game Event Hook.h"
+	#include "Quests.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #define		MERC_TEXT_FONT									FONT12ARIAL
@@ -1549,9 +1553,9 @@ void DisplayTextForSpeckVideoPopUp(wchar_t * pString)
 //	wcscpy(gsSpeckDialogueTextPopUp, pString);
 	//add the "" around the speech.
 #ifdef TAIWANESE
-	swprintf( gsSpeckDialogueTextPopUp, L"%s", pString );
+	WSTR_SPrintf( gsSpeckDialogueTextPopUp, 900, L"%s", pString );
 #else
-	swprintf( gsSpeckDialogueTextPopUp, L"\"%s\"", pString );
+	WSTR_SPrintf( gsSpeckDialogueTextPopUp, 900, L"\"%s\"", pString );
 #endif
 
 	gfDisplaySpeckTextBox = TRUE;

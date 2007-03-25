@@ -10,18 +10,24 @@
 	#include "WordWrap.h"
 	#include "Cursors.h"
 	#include "Soldier Profile.h"
-	#include "stdio.h"
+	#include "Platform.h"
 	#include "Encrypted File.h"
 	#include "AimMembers.h"
 	#include "Game Clock.h"
 	#include "Soldier Add.h"
-	#include "OverHead.h"
+	#include "Overhead.h"
 	#include "Game Clock.h"
 	#include "message.h"
 	#include "Font.h"
 	#include "LaptopSave.h"
 	#include "Text.h"
 	#include "Speck Quotes.h"
+	#include "Multi Language Graphic Utils.h"
+	#include "Quests.h"
+	#include "Assignments.h"
+	#include "english.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #include "Cheats.h"
@@ -592,7 +598,7 @@ void DisplayMercsStats( UINT8 ubMercID )
 	DrawTextToScreen( MercInfo[MERC_FILES_SALARY], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_NAME_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	usPosX = MERC_STATS_SECOND_COL_X + StringPixLength(MercInfo[MERC_FILES_SALARY], MERC_NAME_FONT) + 1;
-	swprintf(sString, L"%d %s", gMercProfiles[ ubMercID ].sSalary, MercInfo[MERC_FILES_PER_DAY]);
+	WSTR_SPrintf(sString, 128, L"%d %s", gMercProfiles[ ubMercID ].sSalary, MercInfo[MERC_FILES_PER_DAY]);
 	DrawTextToScreen( sString, usPosX, usPosY, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 }
 

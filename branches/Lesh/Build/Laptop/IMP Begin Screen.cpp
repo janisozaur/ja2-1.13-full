@@ -9,17 +9,16 @@
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "Timer Control.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "IMP Finish.h"
 	#include "IMP Text System.h"
 	#include "Text Input.h"
-	#include "messageboxscreen.h"
-	#include "Soldier Profile Type.h"
+	#include "MessageBoxScreen.h"
 	#include "IMP Portraits.h"
 	#include "IMP Voices.h"
 	#include "IMP Attribute Selection.h"
@@ -28,7 +27,10 @@
 	#include "Merc Hiring.h"
 	#include "strategic.h"
 	#include "Game Clock.h"
-	#include "text.h"
+	#include "Text.h"
+	#include "LaptopSave.h"
+	#include "soldier profile type.h"
+	
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138

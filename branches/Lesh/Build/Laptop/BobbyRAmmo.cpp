@@ -9,9 +9,9 @@
 	#include "WCheck.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
 	#include "Encrypted File.h"
-	#include "text.h"
+	#include "Text.h"
 #endif
 
 UINT32		guiAmmoBackground;

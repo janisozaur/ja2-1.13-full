@@ -7,11 +7,11 @@
 	#include "CharProfile.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "GameSettings.h"
 	#include "IMP HomePage.h"
 	#include "IMPVideoObjects.h"
@@ -29,10 +29,13 @@
 	#include "IMP Compile Character.h"
 	#include "IMP Voices.h"
 	#include "IMP Finish.h"
-	#include "Soldier Profile Type.h"
+	#include "soldier profile type.h"
 	#include "Soldier Profile.h"
 	#include "Animation Data.h"
 	#include "random.h"
+	#include "LaptopSave.h"
+	#include "Platform.h"
+	
 #endif
 
 // how many times should a 'die' be rolled for skills of the same type?

@@ -11,17 +11,20 @@
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "Timer Control.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "IMP Attribute Selection.h"
 	#include "IMP Text System.h"
 	#include "soundman.h"
 	#include "IMP Compile Character.h"
-	#include "text.h"
+	#include "Text.h"
+	#include "LaptopSave.h"
+	#include "SgpStr.h"
+	
 #endif
 
 // min time btween frames of animation
@@ -215,7 +218,7 @@ void CreateIMPFinishButtons( void )
   SpecifyButtonIcon(  giIMPFinishButton[ 4 ], guiCHARACTERPORTRAIT, 0, 
 													 33, 23, FALSE );
 
-	swprintf( sString, pImpButtonText[ 5 ], iCurrentVoices + 1 );
+	WSTR_SPrintf( sString, 128, pImpButtonText[ 5 ], iCurrentVoices + 1 );
 
 	// the voice button
 	giIMPFinishButtonImage[5]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
@@ -640,7 +643,7 @@ void RenderCharFullName( void )
 	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, pIMPFinishStrings[ 0 ], pFullName );
+	WSTR_SPrintf( sString, 64, pIMPFinishStrings[ 0 ], pFullName );
 
 
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X - 111, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);

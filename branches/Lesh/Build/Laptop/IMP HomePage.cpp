@@ -7,12 +7,12 @@
 	#include "IMPVideoObjects.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "IMP Compile Character.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "laptop.h"
 	#include "IMP Text System.h"
 	#include "Timer Control.h"
@@ -20,6 +20,13 @@
 	#include "LaptopSave.h"
 	#include "line.h"
 	#include "english.h"
+	#include "Merc Hiring.h"
+	#include "GameSettings.h"
+	#include "Text.h"
+	#include "IMP MainPage.h"
+	#include "IMP Confirm.h"
+	#include "Game Clock.h"
+	
 #endif
 
 void GetPlayerKeyBoardInputForIMPHomePage( void );

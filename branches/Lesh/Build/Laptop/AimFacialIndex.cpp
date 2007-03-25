@@ -6,11 +6,15 @@
 	#include "WordWrap.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "stdio.h"
-	#include "Aim.h"
+	#include "Platform.h"
+	#include "aim.h"
 	#include "Soldier Profile.h"
 	#include "email.h"
 	#include "Text.h"
+	#include "SgpStr.h"
+	#include "AimSort.h"
+	#include "Assignments.h"
+	
 #endif
 
 
@@ -160,9 +164,11 @@ BOOLEAN RenderAimFacialIndex()
 
 	//Display the 'A.I.M. Members Sorted Ascending By Price' type string
 	if( gubCurrentListMode == AIM_ASCEND )
-		swprintf(sString, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_ASCENDING ], AimFiText[gubCurrentSortMode] );
+		WSTR_SPrintf(sString, 150, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_ASCENDING ], AimFiText[gubCurrentSortMode] );
+//		swprintf(sString, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_ASCENDING ], AimFiText[gubCurrentSortMode] );
 	else
-		swprintf(sString, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_DESCENDING ], AimFiText[gubCurrentSortMode] );
+		WSTR_SPrintf(sString, 150, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_DESCENDING ], AimFiText[gubCurrentSortMode] );
+//		swprintf(sString, AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_DESCENDING ], AimFiText[gubCurrentSortMode] );
 
 	DrawTextToScreen(sString, AIM_FI_MEMBER_TEXT_X, AIM_FI_MEMBER_TEXT_Y, AIM_FI_MEMBER_TEXT_WIDTH, AIM_MAINTITLE_FONT, AIM_MAINTITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 

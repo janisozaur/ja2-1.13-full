@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include <stdio.h>
+	#include "Platform.h"
 	#include "laptop.h"
 	#include "files.h"
-	#include "Game clock.h"
+	#include "Game Clock.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "WordWrap.h"
 	#include "Render Dirty.h"
 	#include "Encrypted File.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "email.h"
-	#include "text.h"
+	#include "Text.h"
 #endif
 
 #define TOP_X														LAPTOP_SCREEN_UL_X
@@ -1655,7 +1655,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 	UINT32 uiPicture;
 	HVOBJECT hHandle;
 	VOBJECT_DESC VObjectDesc;
-	CHAR sTemp[ 128 ];
+	CHAR8 sTemp[ 128 ];
 
 	iOffset = ubFileOffsets[ iFileNumber ] ;
 
