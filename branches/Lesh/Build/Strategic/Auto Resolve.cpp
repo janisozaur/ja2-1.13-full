@@ -5,7 +5,7 @@
 	#include "GameSettings.h"
 #else
 	#include <stdio.h>
-	#include "types.h"
+	#include "Types.h"
 	#include "Auto Resolve.h"
 	#include "Strategic Movement.h"
 	#include "Queen Command.h"

@@ -2,7 +2,7 @@
 	#include "Strategic All.h"
 	#include "InIReader.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "Game Events.h"
 	#include "soundman.h"
 	#include "environment.h"

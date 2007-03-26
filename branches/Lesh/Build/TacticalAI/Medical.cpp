@@ -1,17 +1,21 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "types.h"
-	#include "wcheck.h"
+	#include "Types.h"
+	#include "WCheck.h"
 	#include "Soldier Control.h"
 	#include "Soldier Functions.h"
 	#include "ai.h"
 	#include "AIInternals.h"
 	#include "Animation Control.h"
-	#include "pathai.h"
-	#include "overhead.h"
-	#include "items.h"
-	#include "Message.h"
+	#include "PATHAI.H"
+	#include "Overhead.h"
+	#include "Items.h"
+	#include "message.h"
+	#include "Buildings.h"
+	#include "worldman.h"
+	#include "Assignments.h"
+	
 #endif
 
 extern BOOLEAN gfAutoBandageFailed;

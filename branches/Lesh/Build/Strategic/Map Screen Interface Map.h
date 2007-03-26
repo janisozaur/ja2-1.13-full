@@ -1,7 +1,8 @@
 #ifndef _MAP_SCREEN_INTERFACE_MAP_H
 #define _MAP_SCREEN_INTERFACE_MAP_H
 
-
+#include "Types.h"
+#include "mapscreen.h"
 #include "Vehicles.h"
 
 // functions

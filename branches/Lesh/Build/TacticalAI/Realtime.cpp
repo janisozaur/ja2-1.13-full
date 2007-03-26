@@ -3,15 +3,21 @@
 #else
 	#include "ai.h"
 	#include "AIInternals.h"
-	#include "Isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "Points.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "opplist.h"
-	#include "rotting corpses.h"
-	#include "soldier add.h"
-	#include "Soldier Profile Type.h"
+	#include "Rotting Corpses.h"
+	#include "Soldier Add.h"
+	#include "soldier profile type.h"
 	#include "Items.h"
 	#include "Weapons.h"
+	#include "Soldier macros.h"
+	#include "Render Fun.h"
+	#include "Quests.h"
+	#include "NPC.h"
+	#include "strategicmap.h"
+	
 #endif
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )

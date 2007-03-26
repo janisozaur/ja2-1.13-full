@@ -115,6 +115,12 @@ typedef struct
 
 } SGPRange;
 
+typedef struct
+{
+	UINT16	x;
+	UINT16	y;
+} SGPPos;
+
 
 typedef FLOAT     VECTOR2[2];       // 2d vector (2x1 matrix)
 typedef FLOAT     VECTOR3[3];       // 3d vector (3x1 matrix)

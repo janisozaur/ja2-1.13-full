@@ -3,34 +3,49 @@
 	#include "interface items.h"
 	
 #else
-	#include "types.h"
-	#include "wcheck.h"
-	#include "overhead.h"
+	#include "Types.h"
+	#include "WCheck.h"
+	#include "Overhead.h"
 	#include "ai.h"
 	#include "Soldier Profile.h"
 	#include "Soldier Control.h"
 	#include "NPC.h"
 	#include "Isometric Utils.h"
 	#include "Quests.h"
-	#include "interface dialogue.h"
+	#include "interface Dialogue.h"
 	#include "Game Clock.h"
 	#include "FileMan.h"
-	#include "Random.h"
-	#include "items.h"
-	#include "interface.h"
+	#include "random.h"
+	#include "Items.h"
+	#include "Interface.h"
 	#include "Assignments.h"
 	#include "QuestDebug.h"
-	#include "soldier macros.h"
-	#include "dialogue control.h"
+	#include "Soldier macros.h"
+	#include "Dialogue Control.h"
 	#include "Strategic Town Loyalty.h"
 	#include "message.h"
 	#include "Timer Control.h"
-	#include "WorldMan.h"
+	#include "worldman.h"
 	#include "Soldier Add.h"
-	#include "Soldier Tile.h"
+	#include "soldier tile.h"
 	#include "Weapons.h"
-	#include "meanwhile.h"
-
+	#include "Meanwhile.h"
+	#include "strategicmap.h"
+	#include "DEBUG.H"
+	#include "Render Fun.h"
+	#include "Platform.h"
+	#include "SkillCheck.h"
+	#include "finances.h"
+	#include "Arms Dealer Init.h"
+	#include "opplist.h"
+	#include "Text.h"
+	#include "SgpStr.h"
+	#include "Interface Items.h"
+	#include "Tactical Save.h"
+	#include "Scheduling.h"
+	#include "Campaign Types.h"
+	#include "Animation Control.h"
+	
 #ifdef JA2TESTVERSION
 	#include	"Quest Debug System.h"
 	#include	"QuestText.h"
@@ -1169,9 +1184,9 @@ BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UIN
 				}
 				else
 				{
-					INT16		sTempString[ 100 ];
+					CHAR16		sTempString[ 100 ];
 
-					swprintf( (wchar_t *)sTempString, L"%ld", iCost - uiMoneyAmount - giHospitalTempBalance );
+					WSTR_SPrintf( sTempString, 100, L"%ld", iCost - uiMoneyAmount - giHospitalTempBalance );
 					InsertDollarSignInToString( sTempString );
 
 					// not enough cash

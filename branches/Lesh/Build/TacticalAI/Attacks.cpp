@@ -6,14 +6,23 @@
 	#include "opplist.h"
 	#include "AIInternals.h"
 	#include "LOS.h"
-	#include "Physics.h"
+	#include "physics.h"
 	#include "Items.h"
-	#include "Weapons.h"
-	#include "Spread Burst.h"
-	#include "overhead.h"
+	#include "Spread burst.h"
+	#include "Overhead.h"
 	#include "SkillCheck.h"
 	#include "Soldier Profile.h"
 	#include "Isometric Utils.h"
+	#include "DEBUG.H"
+	#include "PATHAI.H"
+	#include "Sound Control.h"
+	#include "Platform.h"
+	#include "Soldier macros.h"
+	#include "GameSettings.h"
+	#include "strategicmap.h"
+	#include "lighting.h"
+	#include "environment.h"
+	
 #endif
 
 extern INT16 DirIncrementer[8];

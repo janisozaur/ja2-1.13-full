@@ -3,7 +3,7 @@
 #else
 	#include <memory.h>
 	#include "Fileman.h"
-	#include "types.h"
+	#include "Types.h"
 	#include "Scheduling.h"
 	#include "Soldier Control.h"
 	#include "message.h"

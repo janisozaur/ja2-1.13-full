@@ -2,7 +2,7 @@
 	#include "Strategic All.h"
 	#include "XML.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "Campaign Init.h"
 	#include "Random.h"
 	#include "Campaign Types.h"

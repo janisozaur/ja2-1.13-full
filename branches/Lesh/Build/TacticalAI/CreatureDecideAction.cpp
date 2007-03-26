@@ -1,14 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "types.h"
-	#include "soldier control.h"
+	#include "Types.h"
+	#include "Soldier Control.h"
 	#include "ai.h"
 	#include "AIInternals.h"
 	#include "opplist.h"
 	#include "Items.h"
 	#include "Rotting Corpses.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
+	#include "DEBUG.H"
+	
 #endif
 
 extern INT8 STRAIGHT; //lal
@@ -23,14 +25,14 @@ enum
 	CALLER_INFANT,
 	CALLER_QUEEN,
 	NUM_CREATURE_CALLERS
-} CreatureCaller;
+};
 
 enum
 {
 	CREATURE_MOBILE = 0,
 	CREATURE_CRAWLER,
 	CREATURE_IMMOBILE
-} CreatureMobility;
+};
 
 #define FRENZY_THRESHOLD 8
 #define MAX_EAT_DIST 5

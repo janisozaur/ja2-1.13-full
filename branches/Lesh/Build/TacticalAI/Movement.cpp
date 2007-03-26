@@ -4,16 +4,20 @@
 	#include "ai.h"
 	#include "AIInternals.h"
 	#include "Isometric Utils.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "worldman.h"
-	#include "pathai.h"
-	#include "points.h"
+	#include "PATHAI.H"
+	#include "Points.h"
 	#include "message.h"
 	#include "Smell.h"
 	#include "mapscreen.h"
 	#include "strategic.h"
 	#include "Strategic Pathing.h"
 	#include "Soldier Control.h"
+	#include "Soldier macros.h"
+	#include "Render Fun.h"
+	#include "DEBUG.H"
+	
 #endif
 
 // from strategic

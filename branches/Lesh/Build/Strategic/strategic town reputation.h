@@ -1,7 +1,7 @@
 #ifndef _STRATEGIC_TOWN_REPUTATION_H
 #define _STRATEGIC_TOWN_REPUTATION_H
 
-#include "types.h"
+#include "Types.h"
 #include "Soldier Control.h"
 // header to contain functions to handle strategic town reputation
 

@@ -5,7 +5,7 @@
 	#include "INIReader.h"
 #else
 	#include <stdio.h>
-	#include "types.h"
+	#include "Types.h"
 	#include "english.h"
 	#include "Timer Control.h"
 	#include "vsurface.h"

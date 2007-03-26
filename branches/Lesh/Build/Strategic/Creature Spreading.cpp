@@ -2,7 +2,7 @@
 	#include "Strategic All.h"
 	#include "GameSettings.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "fileman.h"
 	#include "himage.h"
 	#include "Creature Spreading.h"

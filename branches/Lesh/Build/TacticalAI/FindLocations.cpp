@@ -1,15 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include <stdlib.h>
 	#include "Isometric Utils.h"
 	#include "ai.h"
 	#include "AIInternals.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "Weapons.h"
-	#include "Opplist.h"
-	#include "pathai.h"
-	#include "items.h"
+	#include "opplist.h"
+	#include "PATHAI.H"
+	#include "Items.h"
 	#include "World Items.h"
 	#include "Points.h"
 	#include "message.h"
@@ -23,9 +22,16 @@
 		#include "renderworld.h"
 		#include "video.h"
 	#endif
+	#include "Platform.h"
+	#include "Buildings.h"
+	#include "worldman.h"
+	#include "strategicmap.h"
+	#include "environment.h"
+	#include "lighting.h"
+	
 #endif
 
-#include "PathAIDebug.h"
+#include "DEBUG.H"
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];

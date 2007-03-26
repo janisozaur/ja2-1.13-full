@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "strategic town reputation.h"
 	#include "soldier profile type.h"
 	#include "game event hook.h"

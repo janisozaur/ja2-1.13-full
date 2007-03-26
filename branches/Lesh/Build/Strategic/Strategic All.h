@@ -4,7 +4,7 @@
 #pragma message("GENERATED PCH FOR STRATEGIC PROJECT.")
 
 #include <stdio.h>
-#include "types.h"
+#include "Types.h"
 #include "english.h"
 #include "Timer Control.h"
 #include "vsurface.h"

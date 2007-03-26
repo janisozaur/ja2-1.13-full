@@ -4,7 +4,7 @@
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h> 
-	#include "types.h"
+	#include "Types.h"
 	#include "worlddef.h"
 	#include "sgp.h" 
 	#include "strategic.h"

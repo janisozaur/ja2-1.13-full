@@ -61,12 +61,6 @@ typedef struct StringInput
 
 } StringInput;
 
-typedef struct
-{
-	UINT16	x;
-	UINT16	y;
-} SGPPos;
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -3,10 +3,9 @@
 #else
 	#include "FileMan.h"
 	#include "QuestDebug.h"
-	#include "stdarg.h"
-	#include "stdio.h"
-	#include "Debug.h"
-	#include "Message.h"
+	#include "Platform.h"
+	#include "DEBUG.H"
+	#include "message.h"
 #endif
 
 #define	QUEST_DEBUG_FILE			"QuestDebug.txt"

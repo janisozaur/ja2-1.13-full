@@ -8,7 +8,7 @@
 	#include "strategicmap.h"
 	#include "strategic.h"
 	#include "Strategic Mines.h"
-	#include "types.h"
+	#include "Types.h"
 	#include "memory.h"
 	#include <stdio.h>
 	#include <stdarg.h>
