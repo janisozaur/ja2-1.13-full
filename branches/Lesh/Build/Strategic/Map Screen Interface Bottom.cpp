@@ -32,7 +32,7 @@
 	#include "Tactical Save.h"
 	#include "Campaign Types.h"
 	#include "Air Raid.h"
-	#include "Finances.h"
+	#include "finances.h"
 	#include "LaptopSave.h"
 	#include "Sound Control.h"
 	#include "Interface Items.h"

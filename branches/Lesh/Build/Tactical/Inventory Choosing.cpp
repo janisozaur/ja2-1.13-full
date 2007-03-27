@@ -5,7 +5,7 @@
 	#include "Inventory Choosing.h"
 	#include "animation data.h"
 	#include "Items.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Weapons.h"
 	#include "Strategic Status.h"
 	#include "Campaign.h"

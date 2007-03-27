@@ -15,7 +15,7 @@
 	#include "Game Event Hook.h"
 	#include "Game Clock.h"
 	#include "Interface Dialogue.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Overhead.h"
 	#include "Strategic Town Loyalty.h"
 	#include "Soldier Init List.h"
@@ -24,7 +24,7 @@
 	#include "Soldier Create.h"
 	#include "Soldier Add.h"
 	#include "Opplist.h"
-	#include "Renderworld.h"
+	#include "renderworld.h"
 	#include "Soldier Profile.h"
 	#include "email.h"
 #endif

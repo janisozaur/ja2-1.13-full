@@ -2,12 +2,12 @@
 	#include "Strategic All.h"
 #else
 	#include <memory.h>
-	#include "Fileman.h"
+	#include "FileMan.h"
 	#include "Types.h"
 	#include "Scheduling.h"
 	#include "Soldier Control.h"
 	#include "message.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Game Clock.h"
 	#include "Game Event Hook.h"
 	#include "worlddef.h"
@@ -15,7 +15,7 @@
 	#include "Isometric Utils.h"
 	#include "ai.h"
 	#include "debug.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Animation Data.h"
 	#include "Map Information.h"
 	#include "Keys.h"

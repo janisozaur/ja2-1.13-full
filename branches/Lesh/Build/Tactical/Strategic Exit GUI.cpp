@@ -13,17 +13,17 @@
 	#include "Music Control.h"
 	#include "sysutil.h"
 	#include "Font Control.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "PopUpBox.h"
 	#include "Cursors.h"
 	#include "Strategic Exit GUI.h"
 	#include "MercTextBox.h"
 	#include "renderworld.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "cursor control.h"
 	#include "input.h"
 	#include "english.h"
-	#include "text.h"
+	#include "Text.h"
 #endif
 
 BOOLEAN		gfInSectorExitMenu = FALSE;

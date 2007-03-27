@@ -25,9 +25,9 @@
 	#include  "Handle Items.h"
 	#include  "Game Clock.h"
 	#include  "environment.h"
-	#include	"dialogue control.h"
+	#include	"Dialogue Control.h"
 	#include	"Soldier Control.h"
-	#include	"overhead.h"
+	#include	"Overhead.h"
 	#include	"AimMembers.h"
 	#include  "MessageBoxScreen.h"
 	#include	"Stdio.h"
@@ -36,7 +36,7 @@
 	#include  "Keys.h"
 	#include	"Interface Dialogue.h"
 	#include  "SysUtil.h"
-	#include  "Message.h"
+	#include  "message.h"
 #endif
 
 //#ifdef JA2BETAVERSION

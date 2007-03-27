@@ -9,7 +9,7 @@
 	#include "sgp.h" 
 	#include "strategic.h"
 	#include "mapscreen.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "interface panels.h"
 	#include "worldman.h"
 	#include "strategicmap.h"

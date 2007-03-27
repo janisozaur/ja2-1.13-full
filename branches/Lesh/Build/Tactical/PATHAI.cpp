@@ -35,7 +35,7 @@
 	#include "PathAIDebug.h"
 	#include "Points.h"
 	#include "ai.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "message.h"
 	#include "structure wrap.h"
 	#include "keys.h"

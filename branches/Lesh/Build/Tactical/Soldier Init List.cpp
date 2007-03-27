@@ -4,17 +4,17 @@
 	#include <stdio.h>
 	#include <memory.h>
 
-	#include "types.h"
+	#include "Types.h"
 
 	#include "strategicmap.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "isometric utils.h"
 
 	#include "soldier add.h"
 	#include "soldier create.h"
 	#include "Soldier Init List.h"
 	#include "debug.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "items.h"
 
 	#include "cursors.h"

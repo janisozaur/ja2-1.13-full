@@ -4,10 +4,10 @@
 #else
 	#include <stdio.h>
 	#include "fileMan.h"
-	#include "types.h"
+	#include "Types.h"
 	#include "Map Information.h"
 	#include "Soldier Init List.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"

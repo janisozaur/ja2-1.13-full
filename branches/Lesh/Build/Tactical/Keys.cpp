@@ -4,7 +4,7 @@
 	#include <stdio.h>
 	#include <memory.h>
 
-	#include "types.h"
+	#include "Types.h"
 	#include "Soldier Control.h"
 	#include "Keys.h"
 	#include "debug.h"
@@ -15,7 +15,7 @@
 	#include "weapons.h"
 	#include "ai.h"
 	#include "message.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "explosion control.h"
 	#include "isometric utils.h"
 	#include "StrategicMap.h"
@@ -24,7 +24,7 @@
 	#include "los.h"
 	#include "opplist.h"
 	#include "tiledat.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "structure.h"
 	#include "renderworld.h"
 	#include "worldman.h"

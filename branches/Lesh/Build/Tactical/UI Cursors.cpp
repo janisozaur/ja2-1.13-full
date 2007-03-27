@@ -5,7 +5,7 @@
 	#include "weapons.h"
 	#include "Interface Cursors.h"
 	#include "Soldier Control.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
 	#include "points.h"
@@ -24,7 +24,7 @@
 	#include "structure wrap.h"
 	#include "physics.h"
 	#include "soldier macros.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "spread burst.h"
 #endif
 

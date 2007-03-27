@@ -11,7 +11,7 @@
 	#include "Game Event Hook.h"
 	#include "GameSettings.h"
 	#include "Campaign Types.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Strategic Pathing.h"
 	#include "message.h"
 	#include "Sound Control.h"

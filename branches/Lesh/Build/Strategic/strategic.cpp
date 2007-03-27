@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include "Strategic.h"
+	#include "strategic.h"
 	#include "Types.h"
 	#include "Squads.h"
 	#include "jascreens.h"

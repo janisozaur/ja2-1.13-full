@@ -3,21 +3,21 @@
 #else
 	#include "sgp.h"
 	#include "Soldier Control.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "overhead types.h"
 	#include "isometric utils.h"
 	#include "interface panels.h"
 	#include "soldier macros.h"
 	#include "strategicmap.h"
 	#include "strategic.h"
-	#include "animation control.h"
+	#include "Animation Control.h"
 	#include "soldier create.h"
 	#include "Soldier Init List.h"
 	#include "soldier add.h"
 	#include "Map Information.h"
 	#include "fov.h"
 	#include "pathai.h"
-	#include "Random.h"
+	#include "random.h"
 #endif
 
 // Adds a soldier to a world gridno and set's direction

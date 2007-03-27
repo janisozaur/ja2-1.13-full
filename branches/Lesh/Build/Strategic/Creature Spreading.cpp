@@ -3,14 +3,14 @@
 	#include "GameSettings.h"
 #else
 	#include "Types.h"
-	#include "fileman.h"
+	#include "FileMan.h"
 	#include "himage.h"
 	#include "Creature Spreading.h"
 	#include "Campaign Types.h"
 	#include "Strategic Movement.h"
 	#include "Game Event Hook.h"
 	#include "GameSettings.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "message.h"
 	#include "Font Control.h"
 	#include "Soldier Init List.h"
@@ -27,6 +27,13 @@
 	#include "Map Edgepoints.h"
 	#include "Animation Data.h"
 	#include "opplist.h"
+	#include "Meanwhile.h"
+	#include "Strategic AI.h"
+	#include "MessageBoxScreen.h"
+	#include "Map Information.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #ifdef JA2BETAVERSION
@@ -408,7 +415,7 @@ void InitCreatureQuest()
 			#ifdef JA2BETAVERSION
 			{
 				wchar_t str[512];
-				swprintf( str, L"Creature quest never chose a lair and won't infect any mines.  Infectible mines = %d, iRandom = %d.  "
+				WSTR_SPrintf( str, 512, L"Creature quest never chose a lair and won't infect any mines.  Infectible mines = %d, iRandom = %d.  "
 											 L"This isn't a bug if you are not receiving income from any mines.", iNumMinesInfectible, iOrigRandom );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			}

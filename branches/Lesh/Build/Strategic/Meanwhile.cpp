@@ -14,13 +14,13 @@
 	#include "game clock.h"
 	#include "tactical save.h"
 	#include "soldier profile.h"
-	#include "overhead.h"
-	#include "dialogue control.h"
+	#include "Overhead.h"
+	#include "Dialogue Control.h"
 	#include "gameloop.h"
 	#include "npc.h"
-	#include "assignments.h"
+	#include "Assignments.h"
 	#include "strategic.h"
-	#include "text.h"
+	#include "Text.h"
 #endif
 
 #define MAX_MEANWHILE_PROFILES	10

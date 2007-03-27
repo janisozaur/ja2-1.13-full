@@ -9,7 +9,7 @@
 	#include "structure wrap.h"
 	#include "isometric utils.h"
 	#include "worldman.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "renderworld.h"
 	#include "strategicmap.h"
 	#include "rotting corpses.h"

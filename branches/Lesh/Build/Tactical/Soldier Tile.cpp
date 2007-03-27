@@ -17,7 +17,7 @@
 	#include "container.h"
 	#include <math.h>
 	#include "pathai.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "worldman.h"
 	#include "Isometric Utils.h"
 	#include "Render Dirty.h"

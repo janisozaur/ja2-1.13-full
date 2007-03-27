@@ -4,7 +4,7 @@
 #else
 	#include "SkillCheck.h"
 	#include "Soldier Profile.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Items.h"
 	#include "Dialogue Control.h"
 	#include "Overhead.h"

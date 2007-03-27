@@ -10,7 +10,7 @@
 	#include "Animation Data.h"
 	#include "Quests.h"
 	#include "Font.h"
-	#include "Message.h"
+	#include "message.h"
 	#include "LOS.h"
 	#include "World Items.h"
 	#include "Tactical Save.h"

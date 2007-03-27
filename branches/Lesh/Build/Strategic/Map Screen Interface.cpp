@@ -13,7 +13,7 @@
 	#include "Squads.h"
 	#include "Sound Control.h"
 	#include "Soundman.h"
-	#include "Message.h"
+	#include "message.h"
 	#include "PopUpBox.h"
 	#include "Game Clock.h"
 	#include "Handle Items.h"

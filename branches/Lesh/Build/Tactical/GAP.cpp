@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 #else
 	#include "debug.h"
-	#include "types.h"
+	#include "Types.h"
 	//#include "mssw.h"
 	#include "gap.h"
 	#include "Sound Control.h"

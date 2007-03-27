@@ -29,7 +29,7 @@
 	//#include "pathai.h"
 	#include "SaveLoadMap.h"
 	#include "debug.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "quests.h"
 #endif
 

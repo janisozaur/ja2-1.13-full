@@ -19,7 +19,7 @@
 	#include "Strategic Mines.h"
 	#include "finances.h"
 	#include "Map Screen Interface Map Inventory.h" 
-	#include "Strategic.h"
+	#include "strategic.h"
 	#include "Utilities.h"
 	#include "video.h"
 	#include "Town Militia.h"

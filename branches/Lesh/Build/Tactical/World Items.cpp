@@ -3,7 +3,7 @@
 #else
 	#include "items.h"
 	#include "handle Items.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "weapons.h"
 	#include "points.h"
 	#include "tiledef.h"
@@ -13,7 +13,7 @@
 	#include "renderworld.h"
 	#include "Animation Control.h"
 	#include "font control.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "World items.h"
 	#include "debug.h"
 	#include "Isometric utils.h"

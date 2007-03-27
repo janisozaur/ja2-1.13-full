@@ -4,16 +4,21 @@
 #else
 	#include "Types.h"
 	#include "Campaign Init.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Campaign Types.h"
 	#include "Queen Command.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Strategic Movement.h"
 	#include "Strategic Status.h"
 	#include "GameSettings.h"
 	#include "Creature Spreading.h"
 	#include "Strategic AI.h"
 	#include "XML.h"
+	#include "DEBUG.H"
+	#include "Tactical Save.h"
+	#include "Platform.h"
+	#include "Debug Control.h"
+	
 #endif
 
 extern BOOLEAN InitStrategicMovementCosts();
@@ -57,7 +62,7 @@ typedef enum
 typedef struct
 {
 	ALTSECTORS_PARSE_STAGE	curElement;
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	UINT32					uiRowNumber;
 	
 	UINT32					currentDepth;
@@ -118,7 +123,7 @@ altSectorsEndElementHandle(void *userData, const char *name)
 		}
 		else if(strcmp(name, "ROW") == 0 && pData->curElement == ALTSECTORS_ELEMENT_ROW)
 		{
-			INT8 * curBuffer = pData->szCharData + strspn((const char *)pData->szCharData," \t\n\r");
+			CHAR8 * curBuffer = pData->szCharData + strspn((const char *)pData->szCharData," \t\n\r");
 			UINT32 curCellIndex = 0;
 			UINT32 curNumber;
 

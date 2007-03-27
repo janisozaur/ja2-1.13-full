@@ -7,7 +7,7 @@
 	#include "drugs and alcohol.h"
 	#include "items.h"
 	#include "drugs and alcohol.h"
-	#include "morale.h"
+	#include "Morale.h"
 	#include "points.h"
 	#include "message.h"
 #endif

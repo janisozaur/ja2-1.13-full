@@ -4,7 +4,7 @@
 	#include <stdio.h>
 	#include <string.h>
 
-	#include "types.h"
+	#include "Types.h"
 	#include "wcheck.h"
 	#include "stdlib.h"
 	#include "debug.h"

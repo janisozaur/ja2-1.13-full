@@ -334,6 +334,7 @@ enum
 	HIT_BY_BURNABLEGAS = 0x08,
 };
 
+#define	SOLDIERTYPE_NAME_LEN	10
 
 typedef struct
 {
@@ -378,7 +379,7 @@ typedef struct
 	INT8												bScientific;  
 	// traits	
 	INT16												sWeightCarriedAtTurnStart;
-	wchar_t											name[ 10 ];
+	wchar_t											name[ SOLDIERTYPE_NAME_LEN ];
 	
 	INT8												bVisible;			// to render or not to render...
 

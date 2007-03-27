@@ -10,7 +10,7 @@
 	#include "soldier profile.h"
 	#include "LaptopSave.h"
 	#include "Handle Items.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Interface Dialogue.h"
 	#include "Soldier Profile.h"
 	#include "Isometric Utils.h"

@@ -4,22 +4,30 @@
 	#include "sgp.h"
 	#include "Game Clock.h"
 	#include "Font Control.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "Timer Control.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "environment.h"
 	#include "Game Clock.h"
 	#include "message.h"
 	#include "Game Events.h"
-	#include "assignments.h"
+	#include "Assignments.h"
 	#include "MercTextBox.h"
-	#include "Renderworld.h"
-	#include "Lighting.h"
+	#include "renderworld.h"
+	#include "lighting.h"
 	#include "Map Screen Interface.h"
 	#include "PreBattle Interface.h"
 	#include "Event Pump.h"
 	#include "Text.h"
 	#include "Interface Control.h"
+	#include "Map Information.h"
+	#include "gamescreen.h"
+	#include "Fade Screen.h"
+	#include "Map Screen Interface Bottom.h"
+	#include "Map Screen Interface Map.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 //#define DEBUG_GAME_CLOCK
@@ -111,7 +119,7 @@ void InitNewGameClock( )
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
+	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
 	guiTimeCurrentSectorWasLastLoaded = 0;
 	guiGameSecondsPerRealSecond = 0;
 	gubClockResolution = 1;
@@ -243,7 +251,7 @@ void AdvanceClock( UINT8 ubWarpCode )
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
+	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
 
 	if( gfResetAllPlayerKnowsEnemiesFlags && !gTacticalStatus.fEnemyInSector )
 	{
@@ -1019,7 +1027,7 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
+	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
 
 	if( !gfBasement && !gfCaves )
 		gfDoLighting		 = TRUE;

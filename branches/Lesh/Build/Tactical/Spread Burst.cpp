@@ -13,7 +13,7 @@
 	#include "soldier find.h"
 	#include "isometric utils.h"
 	#include "renderworld.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "interface.h"
 	#include "spread burst.h"
 #endif

@@ -1,6 +1,7 @@
 #ifndef __XML_H
 #define __XML_H
 
+#include "expat.h"
 #include "ArmsDealerInvInit.h"
 #include "EnemyItemDrops.h"
 

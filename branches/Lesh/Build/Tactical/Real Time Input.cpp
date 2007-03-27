@@ -18,7 +18,7 @@
 	#include "Handle UI.h"
 	#include "Isometric Utils.h"
 	#include "input.h"    
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Sys Globals.h"
 	#include "screenids.h"
 	#include "interface.h"
@@ -41,7 +41,7 @@
 	#include "soldier profile.h"
 	#include "soldier create.h"
 	#include "soldier add.h"
-	#include "dialogue control.h"
+	#include "Dialogue Control.h"
 	#include "interface dialogue.h"
 	#include "interactive tiles.h"
 	#include "messageboxscreen.h"
@@ -58,7 +58,7 @@
 	#include "renderworld.h"
 	#include	"GameSettings.h"
 	#include "english.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "soldier macros.h"
 #endif
 

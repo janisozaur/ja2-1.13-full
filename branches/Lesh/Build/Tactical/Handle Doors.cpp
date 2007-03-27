@@ -12,7 +12,7 @@
 	#include "structure.h"
 	#include "Animation Control.h"
 	#include "points.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "structure wrap.h"
 	#include "tile animation.h"
 	#include "Interactive Tiles.h"
@@ -21,7 +21,7 @@
 	#include "interface.h" 
 	#include "keys.h"
 	#include "message.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "random.h"
 #endif
 

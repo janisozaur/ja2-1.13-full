@@ -13,10 +13,10 @@
 	#include "tiledef.h"
 	#include "Sys Globals.h"
 	#include "Debug Control.h"
-	#include "utilities.h"
+	#include "Utilities.h"
 	#include "worlddef.h"
 	#include "worldman.h"
-	#include "Fileman.h"
+	#include "FileMan.h"
 #endif
 
 #define EMPTY_SLOT		-1

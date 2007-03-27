@@ -25,12 +25,12 @@
 	#include "sysutil.h"
 	#include "FileMan.h"
 	#include "points.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"
 	#include "soldier ani.h"
 	#include "english.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Soldier Profile.h"
 	#include "Game Clock.h"
 	#include "soldier create.h"
@@ -49,7 +49,7 @@
 	#include "Map Screen Interface Map.h"
 	#include "screenids.h"
 	#include "jascreens.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "Merc Contract.h"
 #endif
 

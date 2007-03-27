@@ -1,7 +1,7 @@
 #ifndef __INVENTORY_CHOOSING_H
 #define __INVENTORY_CHOOSING_H
 
-#include "types.h"
+#include "Types.h"
 #include "Soldier Create.h"
 #include "Strategic Status.h"
 

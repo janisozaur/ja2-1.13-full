@@ -17,13 +17,13 @@
 	#include "jascreens.h"
 	#include "worlddef.h"
 	#include "Soldier Control.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "interface panels.h"
 	#include "isometric utils.h"
 	#include "Ambient Control.h"
 	#include "worlddef.h"
 	#include "worlddat.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "Soldier add.h"
 	#include "soldier macros.h"
 	#include "Strategic Pathing.h"
@@ -53,7 +53,7 @@
 	#include "Exit Grids.h"
 	#include "Tactical Save.h"
 	#include "pathai.h"
-	#include "animation control.h"
+	#include "Animation Control.h"
 	#include "squads.h"
 	#include "worldman.h"
 	#include "Overhead.h"
@@ -64,7 +64,7 @@
 	#include "Shade Table Util.h"
 	#include "Scheduling.h"
 	#include "gameloop.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "ai.h"
 	#include "opplist.h"
 	#include "keys.h"
@@ -80,12 +80,12 @@
 	#include "SaveLoadMap.h"
 	#include "Militia Control.h"
 	#include "gamesettings.h"
-	#include "dialogue control.h"
+	#include "Dialogue Control.h"
 	#include "Town Militia.h"
 	#include "sysutil.h"
 	#include "sound control.h"
 	#include "points.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 #endif
@@ -324,7 +324,7 @@ void CrippledVersionFailureToLoadMapCheck();
 	UINT32 uiNumTablesSaved;
 	UINT32 uiNumTablesLoaded;
 	UINT32 uiNumImagesReloaded;
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "tiledat.h"
 #endif
 

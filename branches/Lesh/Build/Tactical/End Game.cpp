@@ -7,7 +7,7 @@
 	#include "Overhead.h"
 	#include "Boxing.h"
 	#include "Render Fun.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Worldman.h"
 	#include "Soldier Profile.h"
 	#include "NPC.h"

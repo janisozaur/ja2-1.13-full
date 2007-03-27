@@ -4,7 +4,6 @@
 	#include "Strategic All.h"
 	#include "GameSettings.h"
 #else
-	#include <stdio.h>
 	#include "Types.h"
 	#include "Auto Resolve.h"
 	#include "Strategic Movement.h"
@@ -21,8 +20,8 @@
 	#include "video.h"
 	#include "input.h"
 	#include "gamescreen.h"
-	#include "render dirty.h"
-	#include "vObject_Blitters.h"
+	#include "Render Dirty.h"
+	#include "vobject_blitters.h"
 	#include "sysutil.h"
 	#include "Font Control.h"
 	#include "Soldier Create.h"
@@ -37,10 +36,10 @@
 	#include "Tactical Save.h"
 	#include "Strategic Status.h"
 	#include "Map Screen Interface.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "WordWrap.h"
 	#include "Squads.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "line.h"
 	#include "english.h"
 	#include "Strategic Pathing.h"
@@ -53,9 +52,20 @@
 	#include "Strategic AI.h"
 	#include "SkillCheck.h"
 	#include "rt time defines.h"
-	#include "morale.h"
+	#include "Morale.h"
 	#include "Strategic Town Loyalty.h"
 	#include "GameSettings.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	#include "Cheats.h"
+	#include "strategicmap.h"
+	#include "Map Information.h"
+	#include "Soldier macros.h"
+	#include "Game Event Hook.h"
+	#include "Inventory Choosing.h"
+	#include "Quests.h"
+	#include "Meanwhile.h"
+	
 #endif
 
 #include "Reinforcement.h"
@@ -1734,17 +1744,17 @@ void RenderAutoResolve()
 	switch( gubEnemyEncounterCode )
 	{
 		case NO_ENCOUNTER_CODE:
-			swprintf( str, gpStrategicString[STR_AR_ATTACK_HEADER] );
+			WSTR_SPrintf( str, 100, gpStrategicString[STR_AR_ATTACK_HEADER] );
 			break;
 		case ENEMY_ENCOUNTER_CODE:
-			swprintf( str, gpStrategicString[STR_AR_ENCOUNTER_HEADER] );
+			WSTR_SPrintf( str, 100, gpStrategicString[STR_AR_ENCOUNTER_HEADER] );
 			break;
 		case ENEMY_INVASION_CODE:
 		case CREATURE_ATTACK_CODE:
-			swprintf( str, gpStrategicString[STR_AR_DEFEND_HEADER] );
+			WSTR_SPrintf( str, 100, gpStrategicString[STR_AR_DEFEND_HEADER] );
 			break;
 		default: 
-			swprintf( str, gpStrategicString[STR_AR_ATTACK_HEADER] );
+			WSTR_SPrintf( str, 100, gpStrategicString[STR_AR_ATTACK_HEADER] );
 			break;
 	}
 
@@ -1764,7 +1774,7 @@ void RenderAutoResolve()
 	//Display the remaining forces
 	ubGood = (UINT8)(gpAR->ubAliveMercs + gpAR->ubAliveCivs);
 	ubBad = gpAR->ubAliveEnemies;
-	swprintf( str, gzLateLocalizedString[ 17 ], ubGood, ubBad );
+	WSTR_SPrintf( str, 100, gzLateLocalizedString[ 17 ], ubGood, ubBad );
 
 	SetFont( FONT14ARIAL );
 	if( ubGood * 3 <= ubBad * 2 )
@@ -1888,29 +1898,29 @@ void RenderAutoResolve()
 			{
 				case BATTLE_VICTORY:
 					SetFontForeground( FONT_LTGREEN );
-					swprintf( str, gpStrategicString[ STR_AR_OVER_VICTORY ] );
+					WSTR_SPrintf( str, 100, gpStrategicString[ STR_AR_OVER_VICTORY ] );
 					break;
 				case BATTLE_SURRENDERED:
 				case BATTLE_CAPTURED:
 					if( gpAR->ubBattleStatus == BATTLE_SURRENDERED )
 					{
-						swprintf( str, gpStrategicString[ STR_AR_OVER_SURRENDERED ] );
+						WSTR_SPrintf( str, 100, gpStrategicString[ STR_AR_OVER_SURRENDERED ] );
 					}
 					else
 					{
 						DisplayWrappedString( (UINT16)(gpAR->sCenterStartX+16), iScreenHeightOffset + 310, 108, 2,
 							FONT10ARIAL, FONT_YELLOW, gpStrategicString[ STR_ENEMY_CAPTURED ], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
-						swprintf( str, gpStrategicString[ STR_AR_OVER_CAPTURED ] );
+						WSTR_SPrintf( str, 100, gpStrategicString[ STR_AR_OVER_CAPTURED ] );
 					}
 					SetFontForeground( FONT_RED );
 					break;
 				case BATTLE_DEFEAT:
 					SetFontForeground( FONT_RED );
-					swprintf( str, gpStrategicString[ STR_AR_OVER_DEFEAT ] );
+					WSTR_SPrintf( str, 100, gpStrategicString[ STR_AR_OVER_DEFEAT ] );
 					break;
 				case BATTLE_RETREAT:
 					SetFontForeground( FONT_YELLOW );
-					swprintf( str, gpStrategicString[ STR_AR_OVER_RETREATED ] );
+					WSTR_SPrintf( str, 100, gpStrategicString[ STR_AR_OVER_RETREATED ] );
 					break;
 			}
 			//Render the results of the battle.
@@ -1925,7 +1935,7 @@ void RenderAutoResolve()
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
-			swprintf( str, L"%s:  %dm %02ds", 
+			WSTR_SPrintf( str, 100, L"%s:  %dm %02ds", 
 				gpStrategicString[ STR_AR_TIME_ELAPSED ],
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				(gpAR->uiTotalElapsedBattleTimeInMilliseconds%60000)/1000 );
@@ -2099,7 +2109,7 @@ void CreateAutoResolveInterface()
 		gpCivs[i].uiVObjectID = gpAR->iFaces;
 		gpCivs[i].pSoldier->sSectorX = gpAR->ubSectorX;
 		gpCivs[i].pSoldier->sSectorY = gpAR->ubSectorY;
-		swprintf( gpCivs[i].pSoldier->name, gpStrategicString[ STR_AR_MILITIA_NAME ] );
+		WSTR_SPrintf( gpCivs[i].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_MILITIA_NAME ] );
 	}
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
@@ -2117,7 +2127,7 @@ void CreateAutoResolveInterface()
 			}
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_ELITE_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_ELITE_NAME ] );
 		}
 		for( i = 0; i < gpAR->ubTroops; i++, index++ )
 		{
@@ -2126,7 +2136,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = TROOP_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_TROOP_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_TROOP_NAME ] );
 		}
 		for( i = 0; i < gpAR->ubAdmins; i++, index++ )
 		{
@@ -2135,7 +2145,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = ADMIN_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_ADMINISTRATOR_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_ADMINISTRATOR_NAME ] );
 		}
 		AssociateEnemiesWithStrategicGroups();
 	}
@@ -2148,7 +2158,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = AF_CREATURE_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_CREATURE_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_CREATURE_NAME ] );
 		}
 		for( i = 0; i < gpAR->ubAMCreatures; i++, index++ )
 		{
@@ -2157,7 +2167,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = AM_CREATURE_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_CREATURE_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_CREATURE_NAME ] );
 		}
 		for( i = 0; i < gpAR->ubYFCreatures; i++, index++ )
 		{
@@ -2166,7 +2176,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = YF_CREATURE_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_CREATURE_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_CREATURE_NAME ] );
 		}
 		for( i = 0; i < gpAR->ubYMCreatures; i++, index++ )
 		{
@@ -2175,7 +2185,7 @@ void CreateAutoResolveInterface()
 			gpEnemies[index].usIndex = YM_CREATURE_FACE;
 			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
 			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			swprintf( gpEnemies[index].pSoldier->name, gpStrategicString[ STR_AR_CREATURE_NAME ] );
+			WSTR_SPrintf( gpEnemies[index].pSoldier->name, SOLDIERTYPE_NAME_LEN, gpStrategicString[ STR_AR_CREATURE_NAME ] );
 		}
 	}
 
@@ -2345,7 +2355,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve2");
 	{
 		if( gpMercs[ i ].uiVObjectID != -1 )
 			DeleteVideoObjectFromIndex( gpMercs[ i ].uiVObjectID );
-		gpMercs[ i ].uiVObjectID = -1;
+		gpMercs[ i ].uiVObjectID = (UINT32)-1;
 		if( gpMercs[ i ].pRegion )
 		{
 			MSYS_RemoveRegion( gpMercs[ i ].pRegion );
@@ -3350,7 +3360,9 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	else
 	{
 		wcscpy( str, pCell->pSoldier->name );
-		pStr = _wcsupr( str );
+		// Lesh: try to copy, instead of capitalize string
+//		pStr = _wcsupr( str );
+		pStr = str;
 		usColor = FONT_BLACK;
 	}
 
@@ -3358,7 +3370,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 	if( pCell->uiFlags & CELL_RETREATED && gpAR->ubBattleStatus != BATTLE_VICTORY )
 	{
 		usColor = FONT_LTGREEN;
-		swprintf( str, gpStrategicString[ STR_AR_MERC_RETREATED ] );
+		WSTR_SPrintf( str, 20, gpStrategicString[ STR_AR_MERC_RETREATED ] );
 		pStr = str;
 	}
 	else if( pCell->uiFlags & CELL_RETREATING && gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
@@ -3369,7 +3381,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 			if( GetJA2Clock() % 900 < 450 )
 			{ //override the health string with the retreating string.
 				usColor = FONT_LTRED;
-				swprintf( str, gpStrategicString[ STR_AR_MERC_RETREATING ] );
+				WSTR_SPrintf( str, 20, gpStrategicString[ STR_AR_MERC_RETREATING ] );
 				pStr = str;
 			}
 		}
@@ -3379,7 +3391,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 		if( pCell->pSoldier->bLife >= OKLIFE )
 		{
 			SetFontForeground( FONT_YELLOW );
-			swprintf( str, gpStrategicString[ STR_AR_MERC_RETREAT ] );
+			WSTR_SPrintf( str, 20, gpStrategicString[ STR_AR_MERC_RETREAT ] );
 			xp = pCell->xp + 25 - StringPixLength( pStr, SMALLCOMPFONT ) / 2;
 			yp = pCell->yp + 12;
 			mprintf( xp, yp, str );

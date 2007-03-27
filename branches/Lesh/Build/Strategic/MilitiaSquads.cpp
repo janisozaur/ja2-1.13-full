@@ -10,7 +10,7 @@
 	#include "Strategic Town Loyalty.h"
 	#include "Utilities.h"
 	#include "random.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "Map Screen Interface.h"
 	#include "Interface.h"
 	#include "Laptopsave.h"

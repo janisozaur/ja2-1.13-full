@@ -13,13 +13,13 @@
 	#include "cursors.h"
 	#include "worlddef.h"
 	#include "worldman.h"
-	#include "render dirty.h"
+	#include "Render Dirty.h"
 	#include "Interface Cursors.h"
 	#include "interface.h"
 	#include "Isometric utils.h"
 	#include "cursors.h"
 	#include "sys globals.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "interface items.h"
 #endif
 
