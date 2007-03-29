@@ -5,10 +5,11 @@ RANLIB	= ranlib
 
 TARGET = Util.a
 DEFINES = -DJA2 -DENGLISH
-INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Standard\ Gaming\ Platform -I../Laptop -I../Tactical -I../Strategic
+INCLUDE = -I./ -I../SDL/ -I../ -I../TileEngine -I../Standard\ Gaming\ Platform -I../Laptop -I../Tactical -I../Strategic -I../SDL_Config
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \
+	INIReader.cpp \
 	Animated\\\ ProgressBar.cpp\
 	Cinematics.cpp \
 	Cursors.cpp \
@@ -42,7 +43,6 @@ SOURCES  = \
 	Text\\\ Utils.cpp \
 	Timer\\\ Control.cpp
 
-#	INIReader.cpp \
 #	Quantize.cpp \
 #	Quantize\\\ Wrap.cpp \
 #	Utilities.cpp \
@@ -59,11 +59,11 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 #	$(AR) crv $@ $^
-	$(RANLIB) $@
+#	$(RANLIB) $@
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c "$<" -o "$@"
-	$(AR) crv $(TARGET) "$@"
+#	$(AR) crv $(TARGET) "$@"
 
 test:
 	$(shell echo $(INCLUDE))

@@ -127,6 +127,9 @@ extern UINT32 FileSize(STR strFilename);
 #	define BACKSLASH(x)
 #elif defined(JA2_LINUX)
 #	define BACKSLASH(x)		PathBackslash(x)
+
+BOOLEAN PathBackslash(STR path);
+
 #endif
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory );
