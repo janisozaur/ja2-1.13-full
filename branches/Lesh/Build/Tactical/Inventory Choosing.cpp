@@ -3,7 +3,7 @@
 #else
 	#include <memory.h>
 	#include "Inventory Choosing.h"
-	#include "animation data.h"
+	#include "Animation Data.h"
 	#include "Items.h"
 	#include "random.h"
 	#include "Weapons.h"

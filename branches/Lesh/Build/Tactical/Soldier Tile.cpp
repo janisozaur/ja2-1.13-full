@@ -4,7 +4,7 @@
 	#include <wchar.h>
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "Render Fun.h"
 	#include "stdlib.h"
 	#include "debug.h"
@@ -22,19 +22,19 @@
 	#include "Isometric Utils.h"
 	#include "Render Dirty.h"
 	#include "renderworld.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "video.h"
 	#include "points.h"
 	#include "Sound Control.h" 
 	#include "lighting.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 	#include "vobject_blitters.h"
 	#include "Handle UI.h"
 	#include "soldier ani.h"
 	#include "Event pump.h"
 	#include "opplist.h"
 	#include "ai.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "lighting.h"
 	#include "faces.h"
 	#include "Soldier Profile.h"
@@ -48,7 +48,7 @@
 	#endif
 
 	#include "structure wrap.h"
-	#include "items.h"
+	#include "Items.h"
 	#include "Soundman.h"
 	#include "soldier tile.h"
 	#include "soldier add.h"

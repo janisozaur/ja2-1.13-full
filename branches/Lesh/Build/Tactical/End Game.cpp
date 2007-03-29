@@ -16,7 +16,7 @@
 	#include "Dialogue Control.h"
 	#include "Handle UI.h"
 	#include "Points.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "end game.h"
 	#include "Intro.h"
 #endif

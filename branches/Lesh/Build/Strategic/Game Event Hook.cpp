@@ -1,6 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
-	#include "InIReader.h"
+	#include "INIReader.h"
 #else
 	#include "Types.h"
 	#include "Game Events.h"
@@ -16,7 +16,7 @@
 	#include "email.h"
 	#include "Game Clock.h"
 	#include "Merc Hiring.h"
-	#include "Insurance Contract.h"
+	#include "insurance Contract.h"
 	#include "Strategic Merc Handler.h"
 	#include "Strategic Movement.h"
 	#include "Assignments.h"
@@ -28,15 +28,21 @@
 	#include "Scheduling.h"
 	#include "BobbyRGuns.h"
 	#include "Arms Dealer Init.h"
-	#include "Strategic town reputation.h"
-	#include "air raid.h"
-	#include "meanwhile.h"
+	#include "strategic town reputation.h"
+	#include "Air Raid.h"
+	#include "Meanwhile.h"
 	#include "Overhead.h"
 	#include "random.h"
 	#include "Creature Spreading.h"
 	#include "Strategic AI.h"
 	#include "Merc Contract.h"
 	#include "Strategic Status.h"
+	#include "INIReader.h"
+	#include "GameSettings.h"
+	#include "Campaign.h"
+	#include "laptop.h"
+	#include "english.h"
+	
 #endif
 
 #ifdef JA2BETAVERSION
@@ -77,13 +83,15 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 
   BOOLEAN bMercDayOne = FALSE;
 	// Kaiden: Opening the INI File
-	CIniReader iniReader("..\\Ja2_Options.ini");
+	CIniReader iniReader;
 
+	iniReader.Open("..\\Ja2_Options.ini");
 
 	//Kaiden: Getting Value for MERC Available on Day one?
 	// for some reason, this can't be in gamesettings.cpp
 	// or it won't work. 
 	bMercDayOne = iniReader.ReadBoolean("Options","MERC_DAY_ONE",FALSE);
+	iniReader.Close();
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ExecuteStrategicEvent");
 

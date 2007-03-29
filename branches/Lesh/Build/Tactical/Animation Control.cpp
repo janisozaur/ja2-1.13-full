@@ -2,13 +2,13 @@
 	#include "Tactical All.h"
 #else	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
 	#include "FileMan.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 	#include "message.h"
 	#include "structure.h"
 	#include "worlddef.h"

@@ -17,7 +17,7 @@
 	#include "font control.h"
 	#include "Radar Screen.h"
 	#include "game clock.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "sysutil.h"
 	#include "Render Dirty.h"
 	#include "Map Screen Interface.h"

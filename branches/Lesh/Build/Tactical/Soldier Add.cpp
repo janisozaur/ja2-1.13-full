@@ -11,7 +11,7 @@
 	#include "strategicmap.h"
 	#include "strategic.h"
 	#include "Animation Control.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
 	#include "soldier add.h"
 	#include "Map Information.h"

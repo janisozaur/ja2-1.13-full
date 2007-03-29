@@ -5,7 +5,7 @@
 
 	#include <memory.h>
 	#include <math.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "Isometric Utils.h"
 	#include "debug.h"
 	#include "los.h"
@@ -14,14 +14,14 @@
 	#include "soldier control.h"
 	#include "Event Pump.h"
 	#include "Overhead.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 
 	#include "opplist.h"
 	#include "soldier control.h"
 	#include "bullets.h"
 
 	#include "phys math.h"
-	#include "items.h"
+	#include "Items.h"
 	#include "Soldier Profile.h"
 	#include "worldman.h"
 	#include "rotting corpses.h"

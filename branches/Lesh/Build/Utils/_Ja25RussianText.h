@@ -1,6 +1,7 @@
 #ifndef _JA25ENGLISHTEXT__H_
 #define _JA25ENGLISHTEXT__H_
 
+#ifdef RUSSIAN
 
 enum
 {
@@ -37,6 +38,8 @@ enum
 	IMM__IRON_MAN_MODE_WARNING_TEXT,
 };
 extern	STR16	gzIronManModeWarningText[];
+
+#endif //RUSSIAN
 
 #endif
 

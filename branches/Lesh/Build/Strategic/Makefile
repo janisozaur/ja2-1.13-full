@@ -5,7 +5,7 @@ RANLIB	= ranlib
 
 TARGET = Strategic.a
 DEFINES = -DJA2 -DENGLISH
-INCLUDE = -I./ -I../SDL/ -I../ -I../Standard\ Gaming\ Platform -I../Tactical -I../TacticalAI -I../Utils -I../Editor -I../Laptop -I../TileEngine
+INCLUDE = -I./ -I../SDL/ -I../ -I../Standard\ Gaming\ Platform -I../Tactical -I../TacticalAI -I../Utils -I../Editor -I../Laptop -I../TileEngine -I../SDL_Config
 CXXFLAGS  = $(DEFINES) $(INCLUDE)
 
 SOURCES  = \

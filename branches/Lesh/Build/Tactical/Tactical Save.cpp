@@ -30,7 +30,7 @@
 	#include "SaveLoadMap.h"
 	#include "debug.h"
 	#include "random.h"
-	#include "quests.h"
+	#include "Quests.h"
 #endif
 
 BOOLEAN gfWasInMeanwhile = FALSE;

@@ -12,16 +12,16 @@
 	#include "isometric utils.h"
 
 	#include "soldier add.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
 	#include "debug.h"
 	#include "random.h"
-	#include "items.h"
+	#include "Items.h"
 
-	#include "cursors.h"
+	#include "Cursors.h"
 
 	#include "Map Information.h"
-	#include "soldier profile.h"
+	#include "Soldier Profile.h"
 	#include "Sys Globals.h"
 	#include "EditorMercs.h"
 	#include "Animation Data.h"

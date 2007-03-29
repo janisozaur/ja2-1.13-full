@@ -170,10 +170,10 @@ INT32 giHilitedInvolved, giHilitedUninvolved;
 
 extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
-extern void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT8 *pubFontColor );
+extern void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT16 usMaxLen );
+extern void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], UNIT16 usMaxLen );
+extern void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT16 usMaxLen );
+extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT16 usMaxLen, UINT8 *pubFontColor );
 
 
 
@@ -1225,7 +1225,7 @@ void RenderPreBattleInterface()
 							mprintf( x, y, str );
 						}
 						//DEP
-						GetMapscreenMercDepartureString( MercPtrs[ i ], str, &ubJunk );
+						GetMapscreenMercDepartureString( MercPtrs[ i ], str, 100, &ubJunk );
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						line++;

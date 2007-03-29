@@ -21,7 +21,7 @@
 	#include "strategic status.h"
 	#include "squads.h"
 	#include "Assignments.h"
-	#include "items.h"
+	#include "Items.h"
 	#include "tactical save.h"
 	#include "Soldier Ani.h"
 	#include "Strategic AI.h"

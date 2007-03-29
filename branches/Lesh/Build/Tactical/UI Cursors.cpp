@@ -1,8 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "items.h"
-	#include "weapons.h"
+	#include "Items.h"
+	#include "Weapons.h"
 	#include "Interface Cursors.h"
 	#include "Soldier Control.h"
 	#include "Overhead.h"
@@ -17,9 +17,9 @@
 	#include "ui cursors.h"
 	#include "los.h"
 	#include "renderworld.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "ui cursors.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "cursor control.h"
 	#include "structure wrap.h"
 	#include "physics.h"

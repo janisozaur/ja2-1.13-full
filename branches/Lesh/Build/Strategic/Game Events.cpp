@@ -1,20 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include <stdio.h>
+	#include "Platform.h"
 	#include "Types.h"
 	#include "Game Events.h"
 	#include "Game Clock.h"
 	#include "MemMan.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "Font Control.h"
 	#include "message.h"
 	#include "Text.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #ifdef JA2TESTVERSION
 	
-UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
+CHAR16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"Null",
 	L"ChangeLightValue",
@@ -205,7 +207,7 @@ void AdjustClockToEventStamp( STRATEGICEVENT *pEvent, UINT32 *puiAdjustment )
 
 	#endif
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
+	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
 }
 
 //If there are any events pending, they are processed, until the time limit is reached, or

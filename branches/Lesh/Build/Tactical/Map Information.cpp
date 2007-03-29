@@ -17,9 +17,9 @@
 	#include "ja2.h"
 	#include "Animation Data.h"
 	#include "Road Smoothing.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "message.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!

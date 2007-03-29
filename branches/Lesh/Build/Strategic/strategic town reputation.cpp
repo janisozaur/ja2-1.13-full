@@ -9,7 +9,7 @@
 	#include "Overhead.h"
 	#include "Game Clock.h"
 	#include "strategic town loyalty.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "message.h"
 #endif
 

@@ -14,7 +14,7 @@
 	#include "Dialogue Control.h"
 	#include "Handle UI.h"
 	#include "Points.h"
-	#include "interface.h"
+	#include "Interface.h"
 #endif
 
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };

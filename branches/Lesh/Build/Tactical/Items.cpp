@@ -1,9 +1,9 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "items.h"
+	#include "Items.h"
 	#include "Action Items.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 	#include "Interface Cursors.h"
 	#include "Soldier Control.h"
 	#include "Overhead.h"
@@ -17,13 +17,13 @@
 	#include "worldman.h"
 	#include "random.h"
 	#include "Campaign.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "interface panels.h"
 	#include "explosion control.h"
 	#include "Keys.h"
 
-	#include "wcheck.h"
-	#include "soldier profile.h"
+	#include "WCheck.h"
+	#include "Soldier Profile.h"
 	#include "SkillCheck.h"
 	#include "los.h"
 	#include "message.h"

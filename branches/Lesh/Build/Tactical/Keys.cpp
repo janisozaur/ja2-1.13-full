@@ -11,8 +11,8 @@
 	#include "Smoothing Utils.h"
 	#include "SkillCheck.h"
 	#include "opplist.h"
-	#include "items.h"
-	#include "weapons.h"
+	#include "Items.h"
+	#include "Weapons.h"
 	#include "ai.h"
 	#include "message.h"
 	#include "Text.h"
@@ -28,11 +28,11 @@
 	#include "structure.h"
 	#include "renderworld.h"
 	#include "worldman.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "random.h"
 	#include "worlddef.h"
 	#include "campaign.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 #endif
 
 

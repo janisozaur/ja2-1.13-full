@@ -13,7 +13,7 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "MemMan.h"
@@ -23,7 +23,7 @@
 	#include "Animation Data.h"
 	#include "Animation Control.h"
 	#include "container.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include <math.h>
 
 	#include "input.h"

@@ -4,10 +4,10 @@
 #else
 	#include "sgp.h"
 	#include "message.h"
-	#include "quests.h"
+	#include "Quests.h"
 	#include "game clock.h"
 	#include "StrategicMap.h"
-	#include "soldier profile.h"
+	#include "Soldier Profile.h"
 	#include "LaptopSave.h"
 	#include "Handle Items.h"
 	#include "Overhead.h"

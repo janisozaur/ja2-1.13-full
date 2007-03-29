@@ -3,9 +3,9 @@
 #else
 	#include "sgp.h"
 	#include "soldier control.h"
-	#include "soldier profile.h"
+	#include "Soldier Profile.h"
 	#include "drugs and alcohol.h"
-	#include "items.h"
+	#include "Items.h"
 	#include "drugs and alcohol.h"
 	#include "Morale.h"
 	#include "points.h"

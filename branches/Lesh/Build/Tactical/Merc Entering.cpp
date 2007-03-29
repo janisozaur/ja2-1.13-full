@@ -3,11 +3,11 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "soldier control.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 	#include "handle items.h"
 	#include "worlddef.h"	
 	#include "worldman.h"
@@ -17,17 +17,17 @@
 	#include "Animation Control.h"
 	#include "Utilities.h"
 	#include "game clock.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "renderworld.h"
 	#include "tile animation.h"
 	#include "merc entering.h"
-	#include "sound control.h"
+	#include "Sound Control.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
 	#include "Handle UI.h"
 	#include "squads.h"
 	#include "english.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "cursor control.h"
 #endif
 

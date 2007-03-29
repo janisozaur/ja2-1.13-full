@@ -3,18 +3,18 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "soldier control.h"
-	#include "weapons.h"
+	#include "Weapons.h"
 	#include "cursor control.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "soldier find.h"
 	#include "isometric utils.h"
 	#include "renderworld.h"
 	#include "Render Dirty.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "spread burst.h"
 #endif
 

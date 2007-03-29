@@ -5,14 +5,14 @@
 	#include "stdlib.h"
 	#include "Arms Dealer Init.h"
 	#include "String.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Weapons.h"
 	#include "FileMan.h"
 	#include "Game Clock.h"
 	#include "ArmsDealerInvInit.h"
 	#include "message.h"
-	#include "soldier profile.h"
+	#include "Soldier Profile.h"
 	#include "Handle Items.h"
 #endif
 

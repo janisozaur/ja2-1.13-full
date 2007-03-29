@@ -14,7 +14,7 @@
 	#include "SkillCheck.h"
 	#include "drugs and alcohol.h"
 	#include "StrategicMap.h"
-	#include "Debug.h"
+	#include "DEBUG.H"
 #endif
 
 #define MORALE_MOD_MAX 50		// morale *mod* range is -50 to 50, if you change this, check the decay formulas!

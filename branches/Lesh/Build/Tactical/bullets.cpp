@@ -11,7 +11,7 @@
 	#include "Render Dirty.h"
 	#include "sysutil.h"
 	#include "container.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
 	#include "faces.h"

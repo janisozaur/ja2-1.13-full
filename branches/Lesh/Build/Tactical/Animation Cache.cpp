@@ -5,13 +5,13 @@
 	#include <string.h>
 
 	#include "Types.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "Debug Control.h"
 #endif
 

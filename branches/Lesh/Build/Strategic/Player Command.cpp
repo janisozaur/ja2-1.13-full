@@ -9,7 +9,7 @@
 	#include "Strategic Mines.h"
 	#include "Text.h"
 	#include "laptopsave.h"
-	#include "quests.h"
+	#include "Quests.h"
 	#include "Morale.h"
 	#include "Overhead.h"
 	#include "strategicmap.h"

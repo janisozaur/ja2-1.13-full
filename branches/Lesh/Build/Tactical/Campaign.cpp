@@ -5,7 +5,7 @@
 	#include <wchar.h>
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "MemMan.h"

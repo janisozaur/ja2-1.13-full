@@ -4,7 +4,7 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "debug.h"
 	#include "math.h"
@@ -21,7 +21,7 @@
 	#include "Render Fun.h" 
 	#include "Render Dirty.h"
 	#include "mousesystem.h"
-	#include "interface.h"
+	#include "Interface.h"
 	#include "sysutil.h"
 	#include "FileMan.h"
 	#include "points.h"
@@ -33,13 +33,13 @@
 	#include "Overhead.h"
 	#include "Soldier Profile.h"
 	#include "Game Clock.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "Merc Hiring.h"
 	#include "Game Event Hook.h"
 	#include "message.h"
 	#include "strategicmap.h"
 	#include "strategic.h"
-	#include "items.h"
+	#include "Items.h"
 	#include "Soldier Add.h"
 	#include "History.h"
 	#include "Squads.h"

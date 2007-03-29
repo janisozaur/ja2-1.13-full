@@ -122,11 +122,11 @@
 #include "Arms Dealer Init.h"
 #include "Strategic town reputation.h"
 #include "air raid.h"
-#include "meanwhile.h"
+#include "Meanwhile.h"
 #include "MemMan.h"
-#include "Debug.h"
+#include "DEBUG.H"
 #include "worlddef.h"
-#include "fade screen.h"
+#include "Fade Screen.h"
 #include "history.h"
 #include "merc entering.h"
 #include <String.h>
@@ -136,7 +136,7 @@
 #include "Map Screen Interface Map Inventory.h"
 #include "Map Screen Interface Bottom.h"
 #include "Radar Screen.h"
-#include "cursors.h"
+#include "Cursors.h"
 #include "Options Screen.h"
 #include "Cursor Control.h"
 #include "Interface Items.h"
@@ -150,15 +150,15 @@
 #include "Handle Items.h"
 #include <stdarg.h>
 #include <time.h> 
-#include "screens.h"
+#include "SCREENS.H"
 #include <wchar.h>
 #include <tchar.h>
 #include "Interface Cursors.h" 
 #include "Interface Panels.h"  
-#include "sys globals.h"
+#include "Sys Globals.h"
 #include "faces.h"
-#include "strategic turns.h"
-#include "Personnel.h"
+#include "Strategic Turns.h"
+#include "personnel.h"
 #include "Animated ProgressBar.h"
 #include "GameVersion.h"
 #include "SaveLoadScreen.h"

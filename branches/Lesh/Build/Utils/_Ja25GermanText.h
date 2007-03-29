@@ -1,6 +1,7 @@
 #ifndef _JA25GERMANTEXT__H_
 #define _JA25GERMANTEXT__H_
 
+#ifdef GERMAN
 
 enum
 {
@@ -37,6 +38,8 @@ enum
 	IMM__IRON_MAN_MODE_WARNING_TEXT,
 };
 extern	STR16	gzIronManModeWarningText[];
+
+#endif // GERMAN
 
 #endif
 
