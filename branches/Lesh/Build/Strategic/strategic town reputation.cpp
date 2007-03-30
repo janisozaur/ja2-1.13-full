@@ -4,7 +4,7 @@
 	#include "Types.h"
 	#include "strategic town reputation.h"
 	#include "soldier profile type.h"
-	#include "game event hook.h"
+	#include "Game Event Hook.h"
 	#include "Soldier Profile.h"
 	#include "Overhead.h"
 	#include "Game Clock.h"

@@ -10,7 +10,7 @@
 	#include "message.h"
 	#include "Assignments.h"
 	#include "Strategic Movement.h"
-	#include "Strategic Status.h"
+	#include ""Strategic Status.h"
 	#include "SkillCheck.h"
 	#include "drugs and alcohol.h"
 	#include "StrategicMap.h"

@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "Types.h"
 	//#include "mssw.h"
 	#include "gap.h"

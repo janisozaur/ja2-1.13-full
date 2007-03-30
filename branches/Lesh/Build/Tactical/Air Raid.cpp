@@ -4,8 +4,8 @@
 #else
 	#include "sgp.h"
 	#include "air raid.h"
-	#include "game event hook.h"
-	#include "game clock.h"
+	#include "Game Event Hook.h"
+	#include "Game Clock.h"
 	#include "auto bandage.h"
 	#include "strategicmap.h"
 	#include "PreBattle Interface.h"

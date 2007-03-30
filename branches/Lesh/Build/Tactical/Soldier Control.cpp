@@ -7,7 +7,7 @@
 	#include "WCheck.h"
 	#include "Render Fun.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
@@ -42,7 +42,7 @@
 	#include "campaign.h"
 	#include "soldier macros.h"
 	#include "english.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 
 	#ifdef NETWORKED
 	#include "Networking.h"
@@ -50,7 +50,7 @@
 	#endif
 	#include "structure wrap.h"
 	#include "Items.h"
-	#include "Soundman.h"
+	#include "soundman.h"
 	#include "Utilities.h"
 	#include "strategic.h"
 	#include "soldier tile.h"

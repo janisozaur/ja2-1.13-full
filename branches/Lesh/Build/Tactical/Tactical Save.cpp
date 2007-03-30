@@ -28,7 +28,7 @@
 	#include "Map Information.h"
 	//#include "pathai.h"
 	#include "SaveLoadMap.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "random.h"
 	#include "Quests.h"
 #endif

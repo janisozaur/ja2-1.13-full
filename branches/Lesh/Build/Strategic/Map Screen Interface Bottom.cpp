@@ -14,9 +14,9 @@
 	#include "message.h"
 	#include "mapscreen.h"
 	#include "strategicmap.h"
-	#include "font control.h"
+	#include "Font Control.h"
 	#include "Radar Screen.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "Cursors.h"
 	#include "sysutil.h"
 	#include "Render Dirty.h"
@@ -24,7 +24,7 @@
 	#include "Map Screen Interface Map.h"
 	#include "Text.h"
 	#include "Overhead.h"
-	#include "Prebattle Interface.h"
+	#include "PreBattle Interface.h"
 	#include "Options Screen.h"
 	#include "Cursor Control.h"
 	#include "gameloop.h"
@@ -36,6 +36,26 @@
 	#include "LaptopSave.h"
 	#include "Sound Control.h"
 	#include "Interface Items.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	#include "WordWrap.h"
+	#include "Meanwhile.h"
+	#include "Dialogue Control.h"
+	#include "SaveLoadScreen.h"
+	#include "Map Screen Interface Map Inventory.h"
+	#include "Merc Contract.h"
+	#include "Map Screen Interface TownMine Info.h"
+	#include "_Ja25EnglishText.h"
+	#include "_Ja25GermanText.h"
+	#include "_Ja25RussianText.h"
+	#include "GameSettings.h"
+	#include "Assignments.h"
+	#include "Soldier macros.h"
+	#include "Animation Data.h"
+	#include "Map Screen Helicopter.h"
+	#include "Creature Spreading.h"
+	#include "Explosion Control.h"
+	
 #endif
 
 
@@ -916,11 +936,11 @@ void DisplayCompressMode( void )
 	{
 		if( IsTimeBeingCompressed() )
 		{
-			swprintf( sString, L"%s", sTimeStrings[ giTimeCompressMode ] );
+			WSTR_SPrintf( sString, 128, L"%s", sTimeStrings[ giTimeCompressMode ] );
 		}
 		else
 		{
-			swprintf( sString, L"%s", sTimeStrings[ 0 ] );
+			WSTR_SPrintf( sString, 128, L"%s", sTimeStrings[ 0 ] );
 		}
 	}
 
@@ -1382,7 +1402,7 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%s", pMapScreenBottomText[ 0 ] );
+	WSTR_SPrintf( sString, 128, L"%s", pMapScreenBottomText[ 0 ] );
 
 	// WANNE 2
 	// center it
@@ -1392,7 +1412,7 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	// print it
 	mprintf( sFontX, sFontY, L"%s", sString );
 
-	swprintf( sString, L"%s", zMarksMapScreenText[ 2 ] );
+	WSTR_SPrintf( sString, 128, L"%s", zMarksMapScreenText[ 2 ] );
 
 	// WANNE 2
 	// center it
@@ -1421,7 +1441,7 @@ void DisplayCurrentBalanceForMapBottom( void )
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%d", LaptopSaveInfo.iCurrentBalance );
+	WSTR_SPrintf( sString, 128, L"%d", LaptopSaveInfo.iCurrentBalance );
 
 	// insert 
 	
@@ -1535,7 +1555,7 @@ void DisplayProjectedDailyMineIncome( void )
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%d", iRate );
+	WSTR_SPrintf( sString, 128, L"%d", iRate );
 
 	// insert 
 	InsertCommasForDollarFigure( sString );

@@ -14,7 +14,7 @@
 	#include "Soldier Init List.h"
 	#include "Isometric Utils.h"
 	#include "ai.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "random.h"
 	#include "Animation Data.h"
 	#include "Map Information.h"

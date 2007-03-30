@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 #else
 	#include <stdio.h>
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "WCheck.h"
 	#include "worlddef.h"
 	#include "worldman.h"

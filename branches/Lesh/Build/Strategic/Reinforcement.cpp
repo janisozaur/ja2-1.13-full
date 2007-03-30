@@ -17,13 +17,13 @@
 	#include "finances.h"
 	#include "Game Clock.h"
 	#include "Assignments.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "Soldier Create.h"
 	#include "Dialogue Control.h"
 #endif
 
 #include "Reinforcement.h"
-#include "MilitiaSquads.h"
+#include "Militia"Squads.h"
 
 #define IS_ONLY_IN_CITIES ( gGameExternalOptions.gfAllowReinforcementsOnlyInCity ? TRUE: FALSE )
 

@@ -5,7 +5,7 @@
 	#include "sgp.h"
 	#include "message.h"
 	#include "Quests.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "StrategicMap.h"
 	#include "Soldier Profile.h"
 	#include "LaptopSave.h"

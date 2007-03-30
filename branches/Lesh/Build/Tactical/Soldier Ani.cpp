@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
@@ -42,7 +42,7 @@
 	#include "qarray.h"
 	#include "soldier macros.h"
 	#include "Strategic Town Loyalty.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 	#include "worldman.h"
 	#include "structure wrap.h"
 	#include "pathai.h"

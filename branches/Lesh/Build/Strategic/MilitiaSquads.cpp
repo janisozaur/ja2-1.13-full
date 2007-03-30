@@ -17,9 +17,14 @@
 	#include "finances.h"
 	#include "Game Clock.h"
 	#include "Assignments.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "Soldier Create.h"
 	#include "Dialogue Control.h"
+	#include "GameSettings.h"
+	#include "Platform.h"
+	#include "Queen Command.h"
+	#include "Auto Resolve.h"
+	
 #endif
 
 #include "MilitiaSquads.h"
@@ -668,7 +673,7 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	GenerateDirectionInfos( sMapX, sMapY, &uiDirNumber, pMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, FALSE );
 
-	ZeroMemory( gpAttackDirs, sizeof( gpAttackDirs ) );
+	memset( gpAttackDirs, 0, sizeof( gpAttackDirs ) );
 
 	gpAttackDirs[ guiDirNumber ][0] = uiNumGreen = pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];
 	gpAttackDirs[ guiDirNumber ][1] = uiNumReg = pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];

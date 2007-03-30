@@ -8,13 +8,23 @@
 	#include "Strategic Town Loyalty.h"
 	#include "Strategic Mines.h"
 	#include "Text.h"
-	#include "laptopsave.h"
+	#include "LaptopSave.h"
 	#include "Quests.h"
 	#include "Morale.h"
 	#include "Overhead.h"
 	#include "strategicmap.h"
 	#include "Map Screen Helicopter.h"
 	#include "Game Clock.h"
+	#include "Tactical Save.h"
+	#include "Map Screen Interface.h"
+	#include "PreBattle Interface.h"
+	#include "Strategic AI.h"
+	#include "Meanwhile.h"
+	#include "Strategic Status.h"
+	#include "GameSettings.h"
+	#include "email.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -22,14 +32,14 @@ extern BOOLEAN fMapScreenBottomDirty;
 
 
 
-void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString )
+void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString, UINT16 usMaxLen )
 {
 	// will build a string stating current facilities present in sector
 
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags == 0 )
 	{
 		// none
-	  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 0 ] );
+	  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 0 ] );
 		return;
 	}
 
@@ -37,7 +47,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	// hospital
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_HOSPITAL )
 	{
-		swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 1 ] );
+		WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 1 ] );
 	}
 
 	// industry
@@ -45,7 +55,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 2 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 2 ] );
 		}
 		else
 		{
@@ -59,7 +69,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 3 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 3 ] );
 		}
 		else
 		{
@@ -73,7 +83,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 5 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 5 ] );
 		}
 		else
 		{
@@ -87,7 +97,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  swprintf( sFacilitiesString, L"%s", sFacilitiesStrings[ 6 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 6 ] );
 		}
 		else
 		{

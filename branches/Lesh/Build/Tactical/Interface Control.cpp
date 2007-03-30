@@ -35,7 +35,7 @@
 	#include "vobject_blitters.h"
 	#include "faces.h"
 	#include "Handle UI Plan.h"
-	#include "interface control.h"
+	#include "Interface Control.h"
 	#include "interface items.h"
 	#include "interface dialogue.h"
 	#include "interactive tiles.h"
@@ -44,7 +44,7 @@
 	#include "PopUpBox.h"
 	#include "Assignments.h"
 	#include "spread burst.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "line.h"
 #endif
 

@@ -9,7 +9,7 @@
 	#include "Interface Utils.h"
 	#include "Render Dirty.h"
 	#include "Interface.h"
-	#include "interface control.h"
+	#include "Interface Control.h"
 	#include "sysutil.h"
 	#include "faces.h"
 	#include "Render Dirty.h"

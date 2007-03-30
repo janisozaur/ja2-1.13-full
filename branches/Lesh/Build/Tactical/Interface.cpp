@@ -35,7 +35,7 @@
 	#include "vobject_blitters.h"
 	#include "faces.h"
 	#include "Handle UI Plan.h"
-	#include "interface control.h"
+	#include "Interface Control.h"
 	#include "interface items.h"
 	#include "Soldier Profile.h" 
 	#include "MercTextBox.h"
@@ -46,12 +46,12 @@
 	#include "Text.h"
 	#include "points.h"
 	#include "soldier macros.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "physics.h"
 	#include "Map Screen Interface Map.h"
 	#include "line.h"
 	#include "Vehicles.h"
-	#include "messageboxscreen.h"
+	#include "MessageBoxScreen.h"
 	#include "gamesettings.h"
 #endif
 

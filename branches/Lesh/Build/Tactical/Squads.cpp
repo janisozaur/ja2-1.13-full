@@ -2,9 +2,9 @@
 	#include "Tactical All.h"
 #else
 	#include "Types.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 	#include "Strategic Pathing.h"
-	#include "Strategicmap.h"
+	#include "strategicmap.h"
 	#include "Faces.h"
 	#include "Strategic Movement.h"
 	#include "Assignments.h"

@@ -4,7 +4,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
 	#include "FileMan.h"

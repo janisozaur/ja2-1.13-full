@@ -3,7 +3,7 @@
 #else
 	#include "strategic.h"
 	#include "Types.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 	#include "jascreens.h"
 	#include "Assignments.h"
 	#include "Interface Control.h"

@@ -23,6 +23,9 @@
 	#include "Campaign Types.h"
 	#include "Strategic Town Loyalty.h"
 	#include "strategicmap.h"
+	#include "Assignments.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -128,7 +131,7 @@ void DrawTextOnMapBorder( void )
 	CHAR16 sString[ 64 ];
 
 	// parse the string
-	swprintf( sString, zMarksMapScreenText[ 24 ] );
+	WSTR_SPrintf( sString, 64, zMarksMapScreenText[ 24 ] );
 
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
@@ -1201,7 +1204,7 @@ void CreateMouseRegionsForLevelMarkers( void )
 
 		MSYS_SetRegionUserData(&LevelMouseRegions[sCounter],0,sCounter);
 
-		swprintf( sString, L"%s %d", zMarksMapScreenText[ 0 ], sCounter + 1 );
+		WSTR_SPrintf( sString, 64, L"%s %d", zMarksMapScreenText[ 0 ], sCounter + 1 );
 		SetRegionFastHelpText( &LevelMouseRegions[ sCounter ], sString );
   }
 

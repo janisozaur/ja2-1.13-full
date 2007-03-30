@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "math.h"
 	#include "worlddef.h"
 	#include "worldman.h"

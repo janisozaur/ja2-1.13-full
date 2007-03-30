@@ -5,7 +5,7 @@
 	#include <memory.h>
 	#include "Strategic Movement.h"
 	#include "MemMan.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "Campaign Types.h"
 	#include "Game Event Hook.h"
 	#include "Game Clock.h"
@@ -29,7 +29,7 @@
 	#include "Vehicles.h"
 	#include "Map Screen Helicopter.h"
 	#include "Map Screen Interface.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 	#include "random.h"
 	#include "soldier macros.h"
 	#include "Map Information.h"
@@ -39,7 +39,7 @@
 	#include "Town Militia.h"
 #endif
 
-#include "MilitiaSquads.h"
+#include "Militia"Squads.h"
 
 // the delay for a group about to arrive
 #define ABOUT_TO_ARRIVE_DELAY 5

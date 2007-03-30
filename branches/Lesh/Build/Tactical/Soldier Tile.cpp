@@ -7,7 +7,7 @@
 	#include "WCheck.h"
 	#include "Render Fun.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
@@ -49,7 +49,7 @@
 
 	#include "structure wrap.h"
 	#include "Items.h"
-	#include "Soundman.h"
+	#include "soundman.h"
 	#include "soldier tile.h"
 	#include "soldier add.h"
 	#include "fov.h"

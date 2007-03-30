@@ -24,7 +24,7 @@
 	#include "merctextbox.h"
 	#include "renderworld.h"
 	#include "soldier macros.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "screenids.h"
 	#include "Interface Utils.h"
 	#include "strategicmap.h"

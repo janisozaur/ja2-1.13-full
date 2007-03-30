@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "math.h"
 	#include "jascreens.h"
 	#include "pathai.h"
@@ -44,7 +44,7 @@
 	#include "Dialogue Control.h"
 	#include "interface dialogue.h"
 	#include "interactive tiles.h"
-	#include "messageboxscreen.h"
+	#include "MessageBoxScreen.h"
 	#include "gameloop.h"
 	#include "gamescreen.h"
 	#include "spread burst.h"

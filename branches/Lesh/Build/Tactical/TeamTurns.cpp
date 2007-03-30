@@ -18,7 +18,7 @@
 	#include "Text.h"
 	#include "TeamTurns.h"
 	#include "Smell.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "Soldier Functions.h"
 	#include "Cursors.h"
 	#include "Queen Command.h"
@@ -38,7 +38,7 @@
 	#include "AIInternals.h"
 	#include "AIList.h"
 	#ifdef DEBUG_INTERRUPTS
-		#include "debug.h"
+		#include DEBUG.H"
 	#endif
 #endif
 

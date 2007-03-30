@@ -26,6 +26,16 @@
 	#include "english.h"
 	#include "Multi Language Graphic Utils.h"
 	#include "GameSettings.h"
+	#include "message.h"
+	#include "Radar Screen.h"
+	#include "SgpStr.h"
+	#include "WordWrap.h"
+	#include "Sound Control.h"
+	#include "Interface Panels.h"
+	#include "finances.h"
+	#include "Game Clock.h"
+	#include "Weapons.h"
+	
 #endif
 
 #include "ShopKeeper Interface.h"
@@ -863,11 +873,11 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				if ( gpItemPointer == NULL )
 				{
-					swprintf( sString, pMapInventoryErrorString[ 2 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					WSTR_SPrintf( sString, 128, pMapInventoryErrorString[ 2 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
 				}
 				else
 				{
-					swprintf( sString, pMapInventoryErrorString[ 5 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					WSTR_SPrintf( sString, 128, pMapInventoryErrorString[ 5 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
 				}
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -1750,7 +1760,7 @@ void DisplayPagesForMapInventoryPool( void )
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 	
 	// grab current and last pages
-	swprintf( sString, L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
+	WSTR_SPrintf( sString, 32, L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
 	
 	// grab centered coords
 	FindFontCenterCoordinates(MAP_INVENTORY_POOL_PAGE_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_PAGE_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
@@ -1806,7 +1816,7 @@ void DrawNumberOfIventoryPoolItems( void )
 	iNumberOfItems = GetTotalNumberOfItemsInSectorStash( );
 
 	// get number of items
-	swprintf( sString, L"%d", iNumberOfItems );
+	WSTR_SPrintf( sString, 32, L"%d", iNumberOfItems );
 
 	// set font stuff
 	SetFont( COMPFONT );
@@ -1859,7 +1869,7 @@ void DisplayCurrentSector( void )
 	INT16 sX, sY;
 
 
-	swprintf( sString, L"%s%s%s", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
+	WSTR_SPrintf( sString, 32, L"%s%s%s", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
 	// set font stuff
 	SetFont( COMPFONT );
@@ -1982,7 +1992,7 @@ void DrawTextOnSectorInventory( void )
 	CHAR16 sString[ 64 ];
 
 	// parse the string
-	swprintf( sString, zMarksMapScreenText[ 11 ] );
+	WSTR_SPrintf( sString, 64, zMarksMapScreenText[ 11 ] );
 
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
@@ -2230,7 +2240,7 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 
 void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray )
 {
-	qsort( (LPVOID)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
+	qsort( (void*)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
 }
 
 

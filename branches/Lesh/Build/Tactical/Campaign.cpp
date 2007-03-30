@@ -7,7 +7,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
@@ -18,7 +18,7 @@
 	#include "message.h"
 	#include "Game Clock.h"
 	#include "Strategic Mines.h"
-	#include "Strategic Status.h"
+	#include ""Strategic Status.h"
 	#include "Sys Globals.h"
 	#include "Text.h"
 	#include "GameSettings.h"

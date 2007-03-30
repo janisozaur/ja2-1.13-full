@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "soldier control.h"
 	#include "Weapons.h"
 	#include "handle items.h"
@@ -16,7 +16,7 @@
 	#include "isometric utils.h"
 	#include "Animation Control.h"
 	#include "Utilities.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "Soldier Create.h"
 	#include "renderworld.h"
 	#include "soldier add.h"

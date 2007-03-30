@@ -14,7 +14,7 @@
 	#include "soldier add.h"
 	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "random.h"
 	#include "Items.h"
 

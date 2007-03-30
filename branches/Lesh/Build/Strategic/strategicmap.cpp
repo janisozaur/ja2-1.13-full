@@ -28,7 +28,7 @@
 	#include "faces.h"
 	#include "renderworld.h"
 	#include "gamescreen.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "Soldier Init List.h"
 	#include "Strategic Turns.h"
 	#include "merc entering.h"
@@ -50,7 +50,7 @@
 	#include "Tactical Save.h"
 	#include "PATHAI.H"
 	#include "Animation Control.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "worldman.h"
 	#include "Overhead.h"
 	#include "Strategic Town Loyalty.h"
@@ -321,7 +321,7 @@ void CrippledVersionFailureToLoadMapCheck();
 	UINT32 uiNumTablesLoaded;
 	UINT32 uiNumImagesReloaded;
 	#include "Render Dirty.h"
-	#include "tiledat.h"
+	#include "TileDat.h"
 #endif
 
 // SAM externalization stuff

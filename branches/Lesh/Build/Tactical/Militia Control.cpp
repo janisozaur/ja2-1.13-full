@@ -12,7 +12,7 @@
 	#include "PreBattle Interface.h"
 #endif
 
-#include "MilitiaSquads.h"
+#include "Militia"Squads.h"
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 

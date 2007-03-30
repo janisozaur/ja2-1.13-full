@@ -8,7 +8,7 @@
 	#include "renderworld.h"
 	#include "Dialogue Control.h"
 	#include "structure wrap.h"
-	#include "font control.h"
+	#include "Font Control.h"
 	#include "pathai.h"
 	#include "Overhead.h"
 	#include "smell.h"
@@ -22,7 +22,7 @@
 	#include "environment.h"
 	#include "worldman.h"
 	#include "Fog Of War.h"
-	#include "Strategicmap.h"
+	#include "strategicmap.h"
 	#include "boxing.h"
 #endif
 

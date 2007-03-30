@@ -35,7 +35,7 @@
 	#include "GameSettings.h"
 	#include "MercTextBox.h"
 	#include "random.h"
-	#include "Squads.h"
+	#include ""Squads.h"
 	#include "Soldier Profile.h"
 	#include "message.h"
 	#include "personnel.h"
@@ -43,7 +43,7 @@
 	#include "Quests.h"
 	#include "Weapons.h"
 	#include "MessageBoxScreen.h"
-	#include "LINE.H"
+	#include "line.h"
 	#include "Drugs and Alcohol.h"
 #endif
 

@@ -18,13 +18,13 @@
 	#include "finances.h"
 	#include "Game Clock.h"
 	#include "Assignments.h"
-	#include "squads.h"
+	#include "Squads.h"
 	#include "Soldier Create.h"
 	#include "Dialogue Control.h"
 	#include "GameSettings.h"
 #endif
 
-#include "MilitiaSquads.h"
+#include "Militia"Squads.h"
 #define SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST 50
 
 // temporary local global variables

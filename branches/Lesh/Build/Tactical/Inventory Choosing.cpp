@@ -7,7 +7,7 @@
 	#include "Items.h"
 	#include "random.h"
 	#include "Weapons.h"
-	#include "Strategic Status.h"
+	#include ""Strategic Status.h"
 	#include "Campaign.h"
 	#include "GameSettings.h"
 #endif

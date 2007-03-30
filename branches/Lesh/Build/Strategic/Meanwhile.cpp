@@ -4,15 +4,15 @@
 	#include "sgp.h"
 	#include "Meanwhile.h"
 	#include "PreBattle Interface.h"
-	#include "messageboxscreen.h"
+	#include "MessageBoxScreen.h"
 	#include "strategicmap.h"
 	#include "Fade Screen.h"
 	#include "screenids.h"
 	#include "jascreens.h"
 	#include "NPC.h"
-	#include "game event hook.h"
-	#include "game clock.h"
-	#include "tactical save.h"
+	#include "Game Event Hook.h"
+	#include "Game Clock.h"
+	#include "Tactical Save.h"
 	#include "Soldier Profile.h"
 	#include "Overhead.h"
 	#include "Dialogue Control.h"
@@ -21,6 +21,23 @@
 	#include "Assignments.h"
 	#include "strategic.h"
 	#include "Text.h"
+	#include "Strategic AI.h"
+	#include "Quests.h"
+	#include "random.h"
+	#include "Interface.h"
+	#include "Squads.h"
+	#include "Music Control.h"
+	#include "Map Screen Interface.h"
+	#include "GameSettings.h"
+	#include "Campaign Types.h"
+	#include "interface Dialogue.h"
+	#include "Game Events.h"
+	#include "Map Information.h"
+	#include "Map Screen Interface Map.h"
+	#include "Interface Items.h"
+	#include "Interface Control.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #define MAX_MEANWHILE_PROFILES	10
@@ -353,9 +370,9 @@ void BringupMeanwhileBox( )
 	wchar_t zStr[256];
 
 #ifdef JA2TESTVERSION
-	swprintf( (wchar_t *)zStr, (wchar_t *)L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
+	WSTR_SPrintf( zStr, 256, L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
 #else
-	swprintf( (wchar_t *)zStr, (wchar_t *)L"%s.....", pMessageStrings[ MSG_MEANWHILE ] );
+	WSTR_SPrintf( zStr, 256, L"%s.....", pMessageStrings[ MSG_MEANWHILE ] );
 #endif
 
 #ifdef JA2TESTVERSION

@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "soldier control.h"
 	#include "Weapons.h"
 	#include "cursor control.h"

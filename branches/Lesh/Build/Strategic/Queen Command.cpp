@@ -9,7 +9,7 @@
 	#include "Overhead Types.h"
 	#include "strategicmap.h"
 	#include "Soldier Init List.h"
-	#include "debug.h"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Strategic Movement.h"
 	#include "Overhead.h"
@@ -18,14 +18,33 @@
 	#include "message.h"
 	#include "Map Edgepoints.h"
 	#include "PreBattle Interface.h"
-	#include "strategic status.h"
-	#include "squads.h"
+	#include "Strategic Status.h"
+	#include "Squads.h"
 	#include "Assignments.h"
 	#include "Items.h"
-	#include "tactical save.h"
+	#include "Tactical Save.h"
 	#include "Soldier Ani.h"
 	#include "Strategic AI.h"
 	#include "GameSettings.h"
+	#include "Quests.h"
+	#include "Morale.h"
+	#include "Soldier macros.h"
+	#include "Meanwhile.h"
+	#include "Campaign Init.h"
+	#include "Dialogue Control.h"
+	#include "Game Clock.h"
+	#include "Town Militia.h"
+	#include "renderworld.h"
+	#include "Animation Data.h"
+	#include "Game Event Hook.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "jascreens.h"
+	#include "Auto Resolve.h"
+	#include "Strategic Town Loyalty.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #ifdef JA2BETAVERSION
@@ -82,7 +101,7 @@ void ValidateEnemiesHaveWeapons()
 		if( iNumInvalid )
 		{
 			wchar_t str[ 100 ];
-			swprintf( str, L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid );
+			WSTR_SPrintf( str, 100, L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid );
 			iErrorDialog = DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
 		}
 	#endif
@@ -767,7 +786,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		{
 			#ifdef JA2BETAVERSION
 				wchar_t str[256];
-				swprintf( str, L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID );
+				WSTR_SPrintf( str, 256, L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
 			return;
@@ -776,7 +795,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		{
 			#ifdef JA2BETAVERSION
 				wchar_t str[256];
-				swprintf( str, L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID );
+				WSTR_SPrintf( str, 256, L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
 			return;

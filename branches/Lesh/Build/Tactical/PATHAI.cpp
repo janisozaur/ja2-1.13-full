@@ -15,7 +15,7 @@
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"

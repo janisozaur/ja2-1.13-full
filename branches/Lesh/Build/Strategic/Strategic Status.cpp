@@ -2,7 +2,7 @@
 	#include "Strategic All.h"
 #else
 	#include <memory.h>
-	#include "Strategic Status.h"
+	#include ""Strategic Status.h"
 	#include "Inventory Choosing.h"
 	#include "FileMan.h"
 	#include "Soldier Profile.h"

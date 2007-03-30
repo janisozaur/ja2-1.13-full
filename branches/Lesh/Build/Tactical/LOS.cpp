@@ -7,7 +7,7 @@
 	#include <math.h>
 	#include "WCheck.h"
 	#include "Isometric Utils.h"
-	#include "debug.h"
+	#include DEBUG.H"
 	#include "los.h"
 	#include "Animation Control.h"
 	#include "random.h"

@@ -27,7 +27,7 @@
 	#include "Interface.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
-	#include "Strategic Status.h"
+	#include ""Strategic Status.h"
 	#include "aim.h"
 	#include "email.h"
 	#include "Map Screen Interface.h"
