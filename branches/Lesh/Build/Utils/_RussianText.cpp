@@ -1061,7 +1061,7 @@ STR16 sKeyDescriptionStrings[2] =
 
 //The headers used to describe various weapon statistics.
 
-INT16		gWeaponStatsDesc[][ 14 ] =
+wchar_t		gWeaponStatsDesc[][ 14 ] =
 {
 	L"Вес (%s):", 
 	L"Статус:",
@@ -1082,7 +1082,7 @@ INT16		gWeaponStatsDesc[][ 14 ] =
 
 //The headers used for the merc's money.
 
-INT16 gMoneyStatsDesc[][ 13 ] =
+wchar_t gMoneyStatsDesc[][ 13 ] =
 {
 	L"Кол-во",
 	L"Осталось:", //this is the overall balance
@@ -1120,12 +1120,12 @@ STR16	gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-INT16		gzProsLabel[10] = 
+wchar_t		gzProsLabel[10] = 
 {
 	L"За:",
 };
 
-INT16		gzConsLabel[10] = 
+wchar_t		gzConsLabel[10] = 
 {
 	L"Прот:",
 };
