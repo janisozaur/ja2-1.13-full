@@ -4815,7 +4815,7 @@ UINT32 HandleMapUI( )
 							CancelChangeArrivalSectorMode();
 
 							// get the name of the sector
-							GetSectorIDString( sMapX, sMapY, 0, sMsgSubString, FALSE );
+							GetSectorIDString( sMapX, sMapY, 0, sMsgSubString, 64, FALSE );
 
 							// now build the string
 							WSTR_SPrintf( sMsgString, 128, pBullseyeStrings[ 1 ], sMsgSubString );
@@ -10891,7 +10891,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 		{
 			wchar_t str[ 256 ];
 			wchar_t pSectorString[ 128 ];
-			GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, pSectorString, TRUE );
+			GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, pSectorString, 128, TRUE );
 			WSTR_SPrintf( str, 256, gzLateLocalizedString[ 27 ], pSectorString );
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 		}
@@ -12466,7 +12466,7 @@ void DumpSectorDifficultyInfo( void )
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
 
-	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ, wSectorName, TRUE );
+	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ, wSectorName, 128, TRUE );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %s", wSectorName );
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );

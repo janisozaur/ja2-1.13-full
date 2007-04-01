@@ -7423,7 +7423,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA );
+							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA, 128 );
 							WSTR_SPrintf( sString, 128, zMarksMapScreenText[ 21 ], sStringA );
 						}
 						else

@@ -4,8 +4,8 @@
 	#include "Types.h"
 	#include "Soldier Control.h"
 	#include "Strategic Merc Handler.h"
-	#include "History.h"
-	#include "Game clock.h"
+	#include "history.h"
+	#include "Game Clock.h"
 	#include "insurance Contract.h"
 	#include "Soldier Profile.h"
 	#include "Game Event Hook.h"
@@ -16,8 +16,8 @@
 	#include "Dialogue Control.h"
 	#include "random.h"
 	#include "Morale.h"
-	#include "Mercs.h"
-	#include "Mapscreen.h"
+	#include "mercs.h"
+	#include "mapscreen.h"
 	#include "Weapons.h"
 	#include "personnel.h"
 	#include "Strategic Movement.h"
@@ -27,7 +27,7 @@
 	#include "Interface.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
-	#include ""Strategic Status.h"
+	#include "Strategic Status.h"
 	#include "aim.h"
 	#include "email.h"
 	#include "Map Screen Interface.h"
@@ -36,6 +36,14 @@
 	#include "screenids.h"
 	#include "gameloop.h"
 	#include "jascreens.h"
+	#include "Quests.h"
+	#include "Platform.h"
+	#include "GameSettings.h"
+	#include "finances.h"
+	#include "Soldier macros.h"
+	#include "Animation Data.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -47,7 +55,7 @@ BOOLEAN fContractOverMeTooFlag = FALSE;
 BOOLEAN fContractOverAndIWontRenewMeTooFlag = FALSE;
 BOOLEAN fProcessingAMerc = FALSE;
 SOLDIERTYPE *pProcessingSoldier = NULL;
-extern BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat = FALSE;
+BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat = FALSE;
 
 // build a list of mercs based on departure time
 void BuildMercQuitList( SOLDIERTYPE *pMercList );
@@ -306,7 +314,7 @@ void MercDailyUpdate()
 						CHAR16	zMoney[128];
 
 						//create a string for the salary owed to the npc
-						swprintf( zMoney, L"%d", sSalary );
+						swprintf( zMoney, 128, L"%d", sSalary );
 						InsertCommasForDollarFigure( zMoney );
 						InsertDollarSignInToString( zMoney );
 

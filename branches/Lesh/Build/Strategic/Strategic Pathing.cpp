@@ -1,16 +1,13 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "Types.h"
 	#include "worlddef.h"
 	#include "sgp.h" 
 	#include "strategic.h"
 	#include "mapscreen.h"
 	#include "Overhead.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "worldman.h"
 	#include "strategicmap.h"
 	#include "Strategic Pathing.h"
@@ -19,13 +16,15 @@
 	#include "Strategic Movement.h"
 	#include "Campaign Types.h"
 	#include "Assignments.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Vehicles.h"
 	#include "Map Screen Helicopter.h" 
 	#include "input.h"
 	#include "english.h"
 	#include "Map Screen Interface.h"
 	#include "Game Event Hook.h"
+	#include "Strategic AI.h"
+	
 #endif
 
 

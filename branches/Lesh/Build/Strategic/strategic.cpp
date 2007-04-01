@@ -3,7 +3,7 @@
 #else
 	#include "strategic.h"
 	#include "Types.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "jascreens.h"
 	#include "Assignments.h"
 	#include "Interface Control.h"
@@ -14,6 +14,9 @@
 	#include "personnel.h"
 	#include "Tactical Save.h"
 	#include "Isometric Utils.h"
+	#include "Vehicles.h"
+	#include "Game Clock.h"
+	
 #endif
 
 StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];

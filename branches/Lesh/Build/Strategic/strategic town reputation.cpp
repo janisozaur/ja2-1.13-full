@@ -8,7 +8,7 @@
 	#include "Soldier Profile.h"
 	#include "Overhead.h"
 	#include "Game Clock.h"
-	#include "strategic town loyalty.h"
+	#include "Strategic Town Loyalty.h"
 	#include "DEBUG.H"
 	#include "message.h"
 #endif

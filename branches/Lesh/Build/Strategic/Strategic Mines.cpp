@@ -1,7 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include <String.h>
 	#include "Strategic Mines.h"
 	#include "finances.h"
 	#include "Strategic Town Loyalty.h"
@@ -17,6 +16,13 @@
 	#include "message.h"
 	#include "Text.h"
 	#include "Game Event Hook.h"
+	#include "Platform.h"
+	#include "GameSettings.h"
+	#include "DEBUG.H"
+	#include "Campaign Types.h"
+	#include "history.h"
+	#include "Strategic AI.h"
+	
 #endif
 
 

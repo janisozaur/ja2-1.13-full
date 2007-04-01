@@ -2,7 +2,14 @@
 	#include "Strategic All.h"
 	#include "XML.h"
 #else
-	#include <stdio.h>
+	#include "Platform.h"
+	#include "Types.h"
+	#include "FileMan.h"
+	#include "MemMan.h"
+	#include "Strategic AI.h"
+	#include "Debug Control.h"
+	#include "Campaign Types.h"
+	
 	#include "XML.h"
 #endif
 
@@ -36,7 +43,7 @@ typedef struct
 {
 	GARRISON_PARSE_STAGE	curElement;
 
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	garrisonInfo			curGarrisonInfo;
 	UINT32					uiGarrisonCount;
 	
@@ -261,7 +268,7 @@ typedef struct
 {
 	PATROL_PARSE_STAGE		curElement;
 
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	patrolInfo				curPatrolInfo;
 	UINT32					uiPatrolCount;
 	
@@ -626,7 +633,7 @@ typedef struct
 {
 	COMPOSITION_PARSE_STAGE	curElement;
 
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	compositionInfo			curCompositionInfo;
 	INT32					iHighestIndex;
 	

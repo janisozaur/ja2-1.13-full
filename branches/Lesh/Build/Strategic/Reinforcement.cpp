@@ -20,10 +20,15 @@
 	#include "Squads.h"
 	#include "Soldier Create.h"
 	#include "Dialogue Control.h"
+	#include "GameSettings.h"
+	#include "Soldier Init List.h"
+	#include "Queen Command.h"
+	#include "Platform.h"
+	
 #endif
 
 #include "Reinforcement.h"
-#include "Militia"Squads.h"
+#include "MilitiaSquads.h"
 
 #define IS_ONLY_IN_CITIES ( gGameExternalOptions.gfAllowReinforcementsOnlyInCity ? TRUE: FALSE )
 

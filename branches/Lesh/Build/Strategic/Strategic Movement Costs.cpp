@@ -6,6 +6,12 @@
 	#include "Queen Command.h"
 	#include "Strategic Movement.h"
 	#include "XML.h"
+	#include "Platform.h"
+	#include "Tactical Save.h"
+	#include "Debug Control.h"
+	#include "DEBUG.H"
+	#include "SgpStr.h"
+	
 #endif
 
 typedef enum
@@ -22,7 +28,7 @@ typedef enum
 typedef struct
 {
 	SMCTABLE_PARSE_STAGE	curElement;
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	UINT32					currentDepth;
 	UINT32					maxReadDepth;
 
@@ -3390,7 +3396,7 @@ BOOLEAN InitStrategicMovementCosts()
 
 	//WriteInStrategicMovementCosts("TABLEDATA\\~MovementCosts.xml");
 
-
+#ifdef JA2_WIN
 	#ifdef JA2TESTVERSION
 	{ //Simply make sure all shared borders between sectors match.
 		INT32 x,y;
@@ -3440,6 +3446,7 @@ BOOLEAN InitStrategicMovementCosts()
 		}
 	}
 	#endif
+#endif
 
 	return( TRUE );
 }

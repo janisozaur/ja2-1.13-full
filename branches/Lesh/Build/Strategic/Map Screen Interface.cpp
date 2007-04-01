@@ -3729,7 +3729,7 @@ void AddStringsToMoveBox( void )
 
 
 	// add title
-	GetShortSectorString( sSelMapX, sSelMapY, sStringB );
+	GetShortSectorString( sSelMapX, sSelMapY, sStringB, 128 );
 	WSTR_SPrintf( sString, 128, L"%s %s", pMovementMenuStrings[ 0 ], sStringB );
 	AddMonoString(&hStringHandle, sString );
 
@@ -5701,7 +5701,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 	}
 
 	// get the name of the sector
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sString, TRUE );
+	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sString, 128, TRUE );
 
 	bTownId = GetTownIdForSector( sSectorX, sSectorY );
 
@@ -5765,7 +5765,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 	}
 
 	// get the name of the sector
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, TRUE );
+	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, 64, TRUE );
 
 	// now build the string
 	WSTR_SPrintf( sString, 128, pMapErrorString[ 17 ], sStringA );
@@ -5806,7 +5806,7 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 	if( IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ ) )
 	{
 		// get sector id value
-		GetShortSectorString( sSectorX, sSectorY, sStringA );
+		GetShortSectorString( sSectorX, sSectorY, sStringA, 128 );
 
 		WSTR_SPrintf( sString, 128, pMapErrorString[ 22 ], sStringA );
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, ReturnCallback );
@@ -5814,7 +5814,7 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 	else if( bTownId )
 	{
 		// get the name of the sector
-		GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, TRUE );
+		GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, 128, TRUE );
 
 		WSTR_SPrintf( sString, 128, pMapErrorString[ 23 ], sStringA );
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, ReturnCallback );
@@ -5822,7 +5822,7 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 	else
 	{
 		// get sector id value
-		GetShortSectorString( sSectorX, sSectorY, sStringA );
+		GetShortSectorString( sSectorX, sSectorY, sStringA, 128 );
 
 		WSTR_SPrintf( sString, 128, pMapErrorString[ 24 ], sStringA );
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString );

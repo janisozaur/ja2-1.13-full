@@ -86,7 +86,7 @@ BOOLEAN ReadInStrategicMapSectorTownNames(STR fileName);
 BOOLEAN WriteInStrategicMapSectorTownNames(STR fileName);
 
 // get short sector name without town name
-void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
+void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, UINT16 usMaxLen );
 
 //NEW!
 //Calculates the name of the sector based on the loaded sector values.
@@ -96,7 +96,7 @@ void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
 void GetLoadedSectorString( wchar_t *pString );
 
 // This will get an ID string like A9- OMERTA...
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 * zString, BOOLEAN fDetailed );
+void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 * zString, UINT16 usMaxLen, BOOLEAN fDetailed );
 
 void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter );
 

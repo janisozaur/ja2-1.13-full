@@ -596,7 +596,7 @@ void DrawNameOfLoadedSector( void )
 	SetFontBackground( FONT_BLACK );
 	
 
-	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, TRUE );
+	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, 128, TRUE );
 	ReduceStringLength( sString, 80, COMPFONT );
 
 	// WANNE 2

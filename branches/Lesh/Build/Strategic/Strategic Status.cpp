@@ -1,8 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include <memory.h>
-	#include ""Strategic Status.h"
+	#include "Strategic Status.h"
 	#include "Inventory Choosing.h"
 	#include "FileMan.h"
 	#include "Soldier Profile.h"
@@ -10,6 +9,12 @@
 	#include "Strategic Mines.h"
 	#include "email.h"
 	#include "Game Clock.h"
+	#include "Platform.h"
+	#include "GameSettings.h"
+	#include "DEBUG.H"
+	#include "Strategic Town Loyalty.h"
+	#include "history.h"
+	
 #endif
 
 

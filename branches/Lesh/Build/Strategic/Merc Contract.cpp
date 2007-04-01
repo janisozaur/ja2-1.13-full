@@ -1044,7 +1044,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 
 	//GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, TRUE );
 
-	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString );
+	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString, 50 );
 
 	// Set string for generic button
 	WSTR_SPrintf( gzUserDefinedButton1, 128, L"%s", zShortTownIDString );

@@ -1,7 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include <memory.h>
 	#include "FileMan.h"
 	#include "Types.h"
 	#include "Scheduling.h"
@@ -14,7 +13,7 @@
 	#include "Soldier Init List.h"
 	#include "Isometric Utils.h"
 	#include "ai.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Animation Data.h"
 	#include "Map Information.h"
@@ -22,6 +21,14 @@
 	#include "Structure Wrap.h"
 	#include "jascreens.h"
 	#include "strategicmap.h"
+	#include "Platform.h"
+	#include "Soldier Add.h"
+	#include "soldier profile type.h"
+	#include "Soldier Profile.h"
+	#include "Quests.h"
+	#include "Animation Control.h"
+	#include "worldman.h"
+	
 #endif
 
 #ifdef JA2EDITOR

@@ -368,7 +368,7 @@ void AddTextToTownBox( void )
 		// Associated Mine: Sector
 	  WSTR_SPrintf( wString, 64, L"%s:",  pwTownInfoStrings[ 4 ] );
 		AddMonoString( &hStringHandle, wString );
-	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString );
+	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, 64 );
 		AddSecondColumnMonoString( &hStringHandle, wString );
 	}
 }
@@ -559,7 +559,7 @@ void AddSectorToBox(void)
 	WSTR_SPrintf( wString, 64, L"%s:", pwMiscSectorStrings[ 1 ]);
 	AddMonoString( &hStringHandle, wString );
 
-	GetShortSectorString( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString );
+	GetShortSectorString( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, 64 );
 	if (bCurrentTownMineSectorZ != 0 )
 	{
 		WSTR_SPrintf( wString2, 10, L"-%d", bCurrentTownMineSectorZ );

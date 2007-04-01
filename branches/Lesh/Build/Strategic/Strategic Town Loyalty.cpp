@@ -17,11 +17,24 @@
 	#include "Soldier Profile.h"
 	#include "Handle Items.h"
 	#include "random.h"
-	#include "strategic movement.h"
+	#include "Strategic Movement.h"
 	#include "Strategic Pathing.h"
-	#include "vehicles.h"
+	#include "Vehicles.h"
 	#include "Game Clock.h"
 	#include "Game Event Hook.h"
+	#include "Morale.h"
+	#include "DEBUG.H"
+	#include "Town Militia.h"
+	#include "Meanwhile.h"
+	#include "Strategic Status.h"
+	#include "GameSettings.h"
+	#include "history.h"
+	#include "Creature Spreading.h"
+	#include "MessageBoxScreen.h"
+	#include "Text.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	
 #endif
 
 
@@ -1065,7 +1078,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 
 
 	// get sector name string
-	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, TRUE );
+	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, 128, TRUE );
 
 	// go through list of items in sector and randomly remove them
 
@@ -1564,8 +1577,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 	}
 
 	//Report this to player
-	GetSectorIDString( sSectorX, sSectorY, 0, pSectorString, TRUE );
-	swprintf( str, gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
+	GetSectorIDString( sSectorX, sSectorY, 0, pSectorString, 128, TRUE );
+	WSTR_SPrintf( str, 256, gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 
 	// use same formula as if it were a civilian "murder" in tactical!!!
