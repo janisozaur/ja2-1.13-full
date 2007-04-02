@@ -7,6 +7,7 @@
 
 extern UINT8 gubSrcSoldierProfile;
 
+#define QUOTE_STR_LEN	480
 
 // Structure used in Tactical display of NPC dialogue
 typedef struct
@@ -39,7 +40,7 @@ typedef struct
 	BOOLEAN				fHandledCanDeleteVal;
 	BOOLEAN				fRenderSubTitlesNow;
 	BOOLEAN				fSetupSubTitles;
-	INT16					zQuoteStr[ 480 ];			//QIALOGUE_SIZE is in dialog control which includes this file...
+	CHAR16					zQuoteStr[ QUOTE_STR_LEN ];			//QIALOGUE_SIZE is in dialog control which includes this file...
 
 } NPC_DIALOGUE_TYPE;
 

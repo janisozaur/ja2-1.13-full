@@ -1,6 +1,38 @@
 // WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
+#else
+	#include "Types.h"
+	#include "Soldier Control.h"
+	#include "FileMan.h"
+	#include "Civ Quotes.h"
+	#include "Soldier Find.h"
+	#include "random.h"
+	#include "NPC.h"
+	#include "strategicmap.h"
+	#include "Strategic Mines.h"
+	#include "Strategic Town Loyalty.h"
+	#include "Quests.h"
+	#include "Overhead.h"
+	#include "ai.h"
+	#include "Dialogue Control.h"
+	#include "mousesystem.h"
+	#include "Cursors.h"
+	#include "Render Dirty.h"
+	#include "Interface.h"
+	#include "local.h"
+	#include "renderworld.h"
+	#include "MercTextBox.h"
+	#include "Font Control.h"
+	#include "Animation Data.h"
+	#include "Text.h"
+	#include "WCheck.h"
+	#include "Encrypted File.h"
+	#include "Queen Command.h"
+	#include "MessageBoxScreen.h"
+	#include "message.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -96,7 +128,9 @@ typedef struct
 
 QUOTE_SYSTEM_STRUCT	gCivQuoteData;
 
-INT16		gzCivQuote[ 320 ];
+#define	CIV_QUOTE_STR_LEN	320
+
+CHAR16		gzCivQuote[ CIV_QUOTE_STR_LEN ];
 UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
 
@@ -349,9 +383,9 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 #ifdef TAIWANESE
-	swprintf( (wchar_t *)gzCivQuote, (wchar_t *)L"%s", zQuote );
+	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"%s", zQuote );
 #else
-	swprintf( (wchar_t *)gzCivQuote, (wchar_t *)L"\"%s\"", zQuote );
+	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"\"%s\"", zQuote );
 #endif
 
 

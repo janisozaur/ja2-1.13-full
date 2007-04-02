@@ -9,7 +9,7 @@
 	#include "Overhead.h"
 	#include "Handle UI.h"
 	#include "Animation Control.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Sound Control.h"
 	#include "Sys globals.h"
 	#include "Isometric Utils.h"
@@ -19,13 +19,13 @@
 	#include "Campaign.h"
 	#include "Interface.h"
 	#include "interface panels.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "Keys.h"
 
 	#include "WCheck.h"
 	#include "Soldier Profile.h"
 	#include "SkillCheck.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "message.h"
 	#include "Text.h"
 
@@ -2502,7 +2502,7 @@ void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 		{
 			if ( pCursorObj->bStatus[ bLoop ] > 0 )
 			{
-				// take the points here and distribute over the lower #d items
+				// take the Points.here and distribute over the lower #d items
 				for ( bLoop2 = pObj->ubNumberOfObjects - 1; bLoop2 >= 0; bLoop2-- )
 				{
 					if ( pObj->bStatus[ bLoop2 ] < bMaxPoints )
@@ -2529,7 +2529,7 @@ void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 	{
 		if ( pObj->bStatus[ bLoop ] > 0 )
 		{
-			// take the points here and distribute over the lower #d items
+			// take the Points.here and distribute over the lower #d items
 			for ( bLoop2 = bLoop - 1; bLoop2 >= 0; bLoop2-- )
 			{
 				if ( pObj->bStatus[ bLoop2 ] < bMaxPoints )

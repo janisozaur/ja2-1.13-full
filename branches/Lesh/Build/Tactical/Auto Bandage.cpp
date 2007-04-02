@@ -13,7 +13,7 @@
 	#include "Text.h"
 	#include "MercTextBox.h"
 	#include "Interface.h"
-	#include "auto bandage.h"
+	#include "Auto Bandage.h"
 	#include "renderworld.h"
 	#include "Strategic Turns.h"
 	#include "Event Pump.h"
@@ -28,7 +28,9 @@
 	#include "Assignments.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "English.h"
+	#include "english.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -347,7 +349,7 @@ BOOLEAN CreateAutoBandageString( void )
 	
 	if (ubDoctors == 1)
 	{	
-		swprintf( sAutoBandageString, Message[STR_IS_APPLYING_FIRST_AID], MercPtrs[ubDoctor[0]]->name );
+		WSTR_SPrintf( sAutoBandageString, uiDoctorNameStringLength, Message[STR_IS_APPLYING_FIRST_AID], MercPtrs[ubDoctor[0]]->name );
 	}
 	else
 	{
@@ -374,7 +376,7 @@ BOOLEAN CreateAutoBandageString( void )
 				}
 			}
 		}
-		swprintf( sAutoBandageString, Message[STR_ARE_APPLYING_FIRST_AID], sTemp, MercPtrs[ubDoctor[ubDoctors - 1]]->name );
+		WSTR_SPrintf( sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], sTemp, MercPtrs[ubDoctor[ubDoctors - 1]]->name );
 		MemFree( sTemp );
 	}
 	return( TRUE );
@@ -761,7 +763,7 @@ void DisplayAutoBandageUpdatePanel( void )
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex, sCurrentXPosition, sCurrentYPosition );
 					
 				// display the mercs name
-				swprintf( sString, L"%s", ( Menptr[ iDoctorList[ iCounterA * iNumberDoctorsWide + iCounterB ] ] ).name );
+				WSTR_SPrintf( sString, 64, L"%s", ( Menptr[ iDoctorList[ iCounterA * iNumberDoctorsWide + iCounterB ] ] ).name );
 				FindFontCenterCoordinates( ( INT16 )( sCurrentXPosition ), ( INT16 )( sCurrentYPosition ),  ( TACT_UPDATE_MERC_FACE_X_WIDTH - 25 ), 0, sString, TINYFONT1, &sX, &sY );
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_LTRED );
@@ -800,7 +802,7 @@ void DisplayAutoBandageUpdatePanel( void )
 	iCurPixelY = sYPosition + ( ( iCounterA - 1 ) * TACT_UPDATE_MERC_FACE_X_HEIGHT );
 	
 
-	swprintf( sString, L"%s", zMarksMapScreenText[ 13 ] );
+	WSTR_SPrintf( sString, 64, L"%s", zMarksMapScreenText[ 13 ] );
 	FindFontCenterCoordinates( ( INT16 )( sXPosition ), ( INT16 )( sCurrentYPosition ),  ( INT16 )( iTotalPixelsWide ), 0, sString, TINYFONT1, &sX, &sY );
 	// print medic
 	mprintf( sX, sYPosition - 7 , sString );
@@ -836,7 +838,7 @@ void DisplayAutoBandageUpdatePanel( void )
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex + iNumberDoctors, sCurrentXPosition, sCurrentYPosition );
 					
 				// display the mercs name
-				swprintf( sString, L"%s", ( Menptr[ iPatientList[ iIndex ] ] ).name );
+				WSTR_SPrintf( sString, 64, L"%s", ( Menptr[ iPatientList[ iIndex ] ] ).name );
 				FindFontCenterCoordinates( ( INT16 )( sCurrentXPosition ), ( INT16 )( sCurrentYPosition ),  ( TACT_UPDATE_MERC_FACE_X_WIDTH - 25 ), 0, sString, TINYFONT1, &sX, &sY );
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_LTRED );
@@ -908,7 +910,7 @@ void DisplayAutoBandageUpdatePanel( void )
 	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK ); 
 
-	swprintf( sString, L"%s", zMarksMapScreenText[ 14 ]);
+	WSTR_SPrintf( sString, 64, L"%s", zMarksMapScreenText[ 14 ]);
 	FindFontCenterCoordinates( ( INT16 )( sXPosition ), ( INT16 )( sCurrentYPosition ),  ( INT16 )( iTotalPixelsWide ), 0, sString, TINYFONT1, &sX, &sY );	
 	// print patient
 	mprintf( sX, iCurPixelY + ( TACT_UPDATE_MERC_FACE_X_HEIGHT ) + 2, sString );

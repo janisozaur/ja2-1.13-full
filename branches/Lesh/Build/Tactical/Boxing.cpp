@@ -6,15 +6,25 @@
 	#include "Boxing.h"
 	#include "Render Fun.h"
 	#include "random.h"
-	#include "Worldman.h"
+	#include "worldman.h"
 	#include "Soldier Profile.h"
 	#include "NPC.h"
-	#include "Opplist.h"
+	#include "opplist.h"
 	#include "ai.h"
 	#include "Dialogue Control.h"
 	#include "Handle UI.h"
 	#include "Points.h"
 	#include "Interface.h"
+	#include "message.h"
+	#include "Game Clock.h"
+	#include "history.h"
+	#include "strategicmap.h"
+	#include "Animation Data.h"
+	#include "Music Control.h"
+	#include "TeamTurns.h"
+	#include "interface Dialogue.h"
+	#include "Platform.h"
+	
 #endif
 
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };

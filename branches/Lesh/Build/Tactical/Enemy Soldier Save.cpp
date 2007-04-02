@@ -9,7 +9,7 @@
 
 	#include "strategicmap.h"
 	#include "Overhead.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 
 	#include "soldier add.h"
 	#include "Soldier Create.h"

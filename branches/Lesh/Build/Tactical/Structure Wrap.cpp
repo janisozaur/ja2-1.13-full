@@ -7,7 +7,7 @@
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "structure wrap.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "worldman.h"
 	#include "Overhead.h"
 	#include "renderworld.h"

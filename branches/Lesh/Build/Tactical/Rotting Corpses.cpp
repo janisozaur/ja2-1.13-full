@@ -13,7 +13,7 @@
 	#include "worldman.h"
 	#include "rotting corpses.h"
 	#include "tile cache.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "Animation Control.h"
 	#include "Utilities.h"
 	#include "Game Clock.h"
@@ -21,7 +21,7 @@
 	#include "renderworld.h"
 	#include "soldier add.h"
 	#include "strategicmap.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "opplist.h"
 	#include "structure.h"
 	#include "message.h"
@@ -32,7 +32,7 @@
 	#include "Items.h"
 	#include "smell.h"
 	#include "World Items.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "GameSettings.h"
 #endif
 

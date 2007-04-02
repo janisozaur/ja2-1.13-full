@@ -2,29 +2,29 @@
 	#include "Tactical All.h"
 #else
 	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
-
 	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "vsurface.h"
 	#include "Render Dirty.h"
 	#include "sysutil.h"
-	#include "container.h"
+	#include "Container.h"
 	#include "WCheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
 	#include "faces.h"
 	#include "Utilities.h"
 	#include "Overhead.h"
-	#include "gap.h"
+	#include "GAP.H"
 	#include "Soldier Profile.h"
 	#include "Bullets.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "worldman.h"
 	#include "random.h"
 	#include "GameSettings.h"
 	#include "FileMan.h"
+	#include "Platform.h"
+	#include "Buildings.h"
+	
 #endif
 
 
@@ -556,3 +556,4 @@ void DeleteAllBullets( )
 	RecountBullets( );
 
 }
+

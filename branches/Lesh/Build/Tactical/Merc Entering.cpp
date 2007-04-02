@@ -13,7 +13,7 @@
 	#include "worldman.h"
 	#include "rotting corpses.h"
 	#include "tile cache.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "Animation Control.h"
 	#include "Utilities.h"
 	#include "Game Clock.h"

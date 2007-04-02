@@ -24,7 +24,7 @@
 	#include "renderworld.h"
 	#include "Sys Globals.h"
 	#include "video.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Sound Control.h" 
 	#include "Weapons.h"
 	#include "vobject_blitters.h"
@@ -40,7 +40,7 @@
 	#include "gap.h"
 	#include "interface panels.h"
 	#include "campaign.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 	#include "english.h"
 	#include ""Squads.h"
 
@@ -9189,7 +9189,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
      // raise life to OKLIFE
      pVictim->bLife = OKLIFE;
 
-     // reduce bleeding by the same number of life points healed up
+     // reduce bleeding by the same number of life Points.healed up
      pVictim->bBleeding -= ubBelowOKlife;
 
      // use up appropriate # of actual healing points

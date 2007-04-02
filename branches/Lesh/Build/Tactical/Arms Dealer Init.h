@@ -3,6 +3,8 @@
 
 
 #include "Store Inventory.h"
+#include "Types.h"
+
 
 
 //enums for the various arms dealers
@@ -132,12 +134,12 @@ typedef struct
 		{
 			FLOAT		dBuyModifier;				// The price modifier used when this dealer is BUYING something.
 			FLOAT		dSellModifier;			// The price modifier used when this dealer is SELLING something.
-		};
+		} BuySell;
 		struct
 		{
 			FLOAT		dRepairSpeed;				// Modifier to the speed at which a repairman repairs things
 			FLOAT		dRepairCost;				// Modifier to the price a repairman charges for repairs
-		};
+		} Repair;
 	};
 
 	UINT8		ubShopKeeperID;					// Merc Id for the dealer

@@ -5,7 +5,7 @@
 	#include "handle Items.h"
 	#include "Overhead.h"
 	#include "Weapons.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "tiledef.h"
 	#include "worlddef.h"
 	#include "worldman.h"

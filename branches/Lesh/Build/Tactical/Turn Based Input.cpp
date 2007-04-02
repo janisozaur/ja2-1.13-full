@@ -30,7 +30,7 @@
 	#include "screenids.h"
 	#include "Interface.h"
 	#include "cursor control.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Interactive Tiles.h"
 	#include "interface cursors.h"
 	#include "Weapons.h"
@@ -69,16 +69,16 @@
 	#include "spread burst.h"
 	#include "tile animation.h"
 	#include "merc entering.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "QuestDebug.h"
 	#include "Assignments.h"
 	#include "EditScreen.h"
 	#include "SaveLoadGame.h"
 	#include "Structure Wrap.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "Exit Grids.h"
 	#include "Strategic Exit GUI.h"
-	#include "auto bandage.h"
+	#include "Auto Bandage.h"
 	#include	"Options Screen.h"
 	#include "Squads.h"
 	#include "interface panels.h"
@@ -102,7 +102,7 @@
 	#include "Meanwhile.h"
 	#include "Text.h"
 	#include "Inventory Choosing.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 	#include "HelpScreen.h"
 #endif
 
@@ -5085,7 +5085,7 @@ void EscapeUILock( )
 }
 
 #ifdef JA2BETAVERSION
-#include "Map Edgepoints.h"
+#include "Map EdgePoints.h"
 void ToggleMapEdgepoints()
 {
 	#ifdef JA2EDITOR

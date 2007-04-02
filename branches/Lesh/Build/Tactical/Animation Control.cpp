@@ -1,10 +1,9 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
-#else	#include <stdio.h>
-	#include <string.h>
+#else
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
 	#include "FileMan.h"
@@ -13,8 +12,11 @@
 	#include "structure.h"
 	#include "worlddef.h"
 	#include "worldman.h"
-	#include "rotting corpses.h"
-	#include "points.h"
+	#include "Rotting Corpses.h"
+	#include "Points.h"
+	#include "SgpStr.h"
+	#include "Debug Control.h"
+	
 #endif
 
 // Defines for Anim inst reading, taken from orig Jagged

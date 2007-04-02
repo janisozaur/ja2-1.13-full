@@ -2,26 +2,35 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <wchar.h>
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
 	#include "random.h"
-	#include "campaign.h"
+	#include "Campaign.h"
 	#include "Dialogue Control.h"
 	#include "Map Screen Interface.h"
 	#include "message.h"
 	#include "Game Clock.h"
 	#include "Strategic Mines.h"
-	#include ""Strategic Status.h"
+	#include "Strategic Status.h"
 	#include "Sys Globals.h"
 	#include "Text.h"
 	#include "GameSettings.h"
+	#include "strategicmap.h"
+	#include "Town Militia.h"
+	#include "strategic.h"
+	#include "Soldier macros.h"
+	#include "Animation Data.h"
+	#include "Interface.h"
+	#include "Game Event Hook.h"
+	#include "Quests.h"
+	#include "Meanwhile.h"
+	#include "Squads.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #include "email.h"
@@ -627,7 +636,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 				CHAR16 wTempString[ 128 ];
 
 				// tell player about it
-				BuildStatChangeString( wTempString, pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );
+				BuildStatChangeString( wTempString, 128, pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
 			}
 
@@ -1509,7 +1518,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 
 
 
-void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
+void BuildStatChangeString( STR16 wString, UINT16 usMaxLen, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
 {
 	UINT8 ubStringIndex;
 
@@ -1536,7 +1545,7 @@ void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16
 		ubStringIndex += 2;
 	}
 
-	swprintf( wString, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ), 
+	WSTR_SPrintf( wString, usMaxLen, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ), 
 					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
 }
 

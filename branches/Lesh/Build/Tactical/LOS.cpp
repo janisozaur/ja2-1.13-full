@@ -8,7 +8,7 @@
 	#include "WCheck.h"
 	#include "Isometric Utils.h"
 	#include DEBUG.H"
-	#include "los.h"
+	#include "LOS.h"
 	#include "Animation Control.h"
 	#include "random.h"
 	#include "soldier control.h"

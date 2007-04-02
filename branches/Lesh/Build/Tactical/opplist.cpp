@@ -14,7 +14,7 @@
 	#include "Font Control.h"
 	#include "Sys Globals.h"
 	#include "Animation COntrol.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "fov.h"
 	#include "Dialogue Control.h"
 	#include "lighting.h"
@@ -27,8 +27,8 @@
 	#include "interactive tiles.h"
 	#include "render fun.h"
 	#include "Text.h"
-	#include "timer control.h"
-	#include "soldier macros.h"
+	#include "Timer Control.h"
+	#include "Soldier macros.h"
 	#include "soldier functions.h"
 	#include "handle ui.h"
 	#include "Queen Command.h"
@@ -6926,7 +6926,7 @@ void DecayWatchedLocs( INT8 bTeam )
 
 					// halve points
 					gubWatchedLocPoints[ cnt ][ cnt2 ] /= 2;
-					// if points have reached 0, then reset the location
+					// if Points.have reached 0, then reset the location
 					if (gubWatchedLocPoints[ cnt ][ cnt2 ] == 0)
 					{
 						gsWatchedLoc[ cnt ][ cnt2 ] = NOWHERE;

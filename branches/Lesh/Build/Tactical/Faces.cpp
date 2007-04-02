@@ -21,7 +21,7 @@
 	#include "Soldier Profile.h"
 	#include "Sound Control.h"
 	#include "teamturns.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 	#include "Dialogue Control.h"
 	#include "Font Control.h"
 	#include "Assignments.h"

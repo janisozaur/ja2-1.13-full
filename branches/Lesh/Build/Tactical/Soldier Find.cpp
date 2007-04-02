@@ -23,7 +23,7 @@
 	#include "Interface.h"
 	#include "sysutil.h"
 	#include "FileMan.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"

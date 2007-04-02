@@ -4,26 +4,26 @@
 	#include "PreBattle Interface.h"
 #else
 	#include "sgp.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Encrypted File.h"
 	#include "faces.h"
 	#include "WCheck.h"
-	#include "gap.h"
+	#include "GAP.H"
 	#include "Overhead.h"
 	#include "Sound Control.h"
 	#include "Dialogue Control.h"
 	#include "message.h"
 	#include "Render Dirty.h"
 	#include "Soldier Profile.h"
-	#include "wordwrap.h"
+	#include "WordWrap.h"
 	#include "sysutil.h"
 	#include "vobject_blitters.h"
 	#include "AimMembers.h"
 	#include "mercs.h"
-	#include "interface dialogue.h"
-	#include "merctextbox.h"
+	#include "interface Dialogue.h"
+	#include "MercTextBox.h"
 	#include "renderworld.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 	#include "Squads.h"
 	#include "screenids.h"
 	#include "Interface Utils.h"
@@ -46,6 +46,22 @@
 	#include "SkillCheck.h"
 	#include "Interface Control.h"
 	#include "finances.h"
+	#include "Civ Quotes.h"
+	#include "Map Screen Interface Map.h"
+	#include "opplist.h"
+	#include "ai.h"
+	#include "worldman.h"
+	#include "Map Screen Interface Bottom.h"
+	#include "Campaign.h"
+	#include "End Game.h"
+	#include "LOS.h"
+	#include "jascreens.h"
+	#include "video.h"
+	#include "soundman.h"
+	#include "Animation Data.h"
+	#include "qarray.h"
+	#include "FileMan.h"
+	#include "SgpStr.h"
 #endif
 
 #define		DIALOGUESIZE					480
@@ -942,7 +958,7 @@ void HandleDialogue( )
 			if( QItem->uiSpecialEventData < 3 )
 			{
 				// post a notice if the player wants to withdraw money from thier account to cover the difference?
-				swprintf( zMoney, L"%d", QItem->uiSpecialEventData2 );
+				WSTR_SPrintf( zMoney, 128, L"%d", QItem->uiSpecialEventData2 );
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
 			}
@@ -950,21 +966,21 @@ void HandleDialogue( )
 			switch( QItem->uiSpecialEventData  )
 			{
 				case( 0 ):
-						swprintf( zText, SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
+						WSTR_SPrintf( zText, 512, SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
 
 						//popup a message stating the player doesnt have enough money
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, (STR16)zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack );
 				break;
 				case( 1 ):
 						//if the player is trading items
-						swprintf( zText, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE ], zMoney );
+						WSTR_SPrintf( zText, 512, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE ], zMoney );
 					
 						//ask them if we should deduct money out the players account to cover the difference
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, (STR16)zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
 
 				break;
 				case( 2 ):
-						swprintf( zText, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST ], zMoney );
+						WSTR_SPrintf( zText, 512, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST ], zMoney );
 			
 						//ask them if we should deduct money out the players account to cover the difference
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, (STR16)zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
@@ -1014,7 +1030,7 @@ void HandleDialogue( )
 				CHAR16 wTempString[ 128 ];
 
 				// tell player about stat increase
-				BuildStatChangeString( wTempString, pSoldier->name, ( BOOLEAN ) QItem->uiSpecialEventData, ( INT16 ) QItem->uiSpecialEventData2, ( UINT8 ) QItem->uiSpecialEventData3 );
+				BuildStatChangeString( wTempString, 128, pSoldier->name, ( BOOLEAN ) QItem->uiSpecialEventData, ( INT16 ) QItem->uiSpecialEventData2, ( UINT8 ) QItem->uiSpecialEventData3 );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
 			}
 		}
@@ -1184,7 +1200,7 @@ void HandleDialogue( )
 	MemFree( QItem );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT16 usMaxLen, UINT32 *puiSoundID, CHAR8 *zSoundString );
 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
@@ -1620,8 +1636,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	// Check face index
 	CHECKF( iFaceIndex != -1 );
 
-  if ( !GetDialogue( ubCharacterNum, 
-                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, &uiSoundID, zSoundString) )
+  if ( !GetDialogue( ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, QUOTE_MESSAGE_SIZE, &uiSoundID, zSoundString) )
   {
     return( FALSE );
   }
@@ -1706,9 +1721,9 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 }
 
 
-INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
+CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
 {
-	static UINT8 zFileName[164];
+	static CHAR8 zFileName[164];
 	UINT8		ubFileNumID;
 
 	// Are we an NPC OR an RPC that has not been recruited?
@@ -1720,23 +1735,23 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 			// Lesh: patch to allow playback ogg speech files
 			// build name of wav file (characternum + quotenum)
 			#ifdef RUSSIAN
-				sprintf( (char *)zFileName,"NPC_SPEECH\\g_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"NPC_SPEECH\\g_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
 				if ( !FileExists( (STR)zFileName ) )
 				{
-					sprintf( (char *)zFileName,"NPC_SPEECH\\g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					sprintf( zFileName,"NPC_SPEECH\\g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 				}
 			#else
-				sprintf( (char *)zFileName,"NPC_SPEECH\\d_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"NPC_SPEECH\\d_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
 				if ( !FileExists( (STR)zFileName ) )
 				{
-					sprintf( (char *)zFileName,"NPC_SPEECH\\d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					sprintf( zFileName,"NPC_SPEECH\\d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 				}
 			#endif
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( (char *)zFileName,"NPCDATA\\d_%03d.EDT", ubCharacterNum );
+			sprintf( zFileName,"NPCDATA\\d_%03d.EDT", ubCharacterNum );
 		}
 	}
 	else if ( ubCharacterNum >= FIRST_RPC && ubCharacterNum < GASTON &&
@@ -1763,16 +1778,16 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 		if ( fWavFile )
 		{
 			// Lesh: patch to allow playback ogg speech files
-			sprintf( (char *)zFileName,"NPC_SPEECH\\%03d_%03d.ogg",ubFileNumID,usQuoteNum );
+			sprintf( zFileName,"NPC_SPEECH\\%03d_%03d.ogg",ubFileNumID,usQuoteNum );
 			if ( !FileExists( (STR)zFileName ) )
 			{
-				sprintf( (char *)zFileName,"NPC_SPEECH\\%03d_%03d.wav",ubFileNumID,usQuoteNum );
+				sprintf( zFileName,"NPC_SPEECH\\%03d_%03d.wav",ubFileNumID,usQuoteNum );
 			}
 		}
 		else
 		{
 		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( (char *)zFileName,"NPCDATA\\%03d.EDT", ubFileNumID );
+			sprintf( zFileName,"NPCDATA\\%03d.EDT", ubFileNumID );
 		}
 	}
 	else
@@ -1782,50 +1797,50 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 			#ifdef RUSSIAN
 				if( ubCharacterNum >= FIRST_RPC && ubCharacterNum < GASTON && gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
 				{
-					sprintf( (char *) zFileName,"SPEECH\\r_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+					sprintf( zFileName,"SPEECH\\r_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
 					if ( !FileExists( (STR)zFileName ) )
 					{
-						sprintf( (char *) zFileName,"SPEECH\\r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+						sprintf( zFileName,"SPEECH\\r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 					}
 				}
 				else
 			#endif
 			{	// build name of wav file (characternum + quotenum)
-				sprintf( (char *)zFileName,"SPEECH\\%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"SPEECH\\%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
 				if ( !FileExists( (STR)zFileName ) )
 				{
-					sprintf( (char *)zFileName,"SPEECH\\%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					sprintf( zFileName,"SPEECH\\%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 				}
 			}
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( (char *)zFileName,"MERCEDT\\%03d.EDT", ubCharacterNum );
+			sprintf( zFileName,"MERCEDT\\%03d.EDT", ubCharacterNum );
 		}
 	}
 
-	return( (INT8 *) zFileName );
+	return( zFileName );
 }
 
 // Used to see if the dialog text file exists
-BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, UINT8 **ppStr )
+BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, CHAR8 **ppStr )
 {
-  INT8 *pFilename;
+  CHAR8 *pFilename;
 	
 	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, fWavFile );
 
 	if ( ppStr )
 	{
-		(*ppStr ) = (UINT8 *) pFilename;
+		(*ppStr ) = pFilename;
 	}
 
 	return( FileExists( (STR)pFilename ) );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT16 usMaxLen, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
-  UINT8 *pFilename;
+  CHAR8 *pFilename;
 
    // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
@@ -1835,7 +1850,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 				LoadEncryptedDataFromFile( (STR)pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
 				if(zDialogueText[0] == 0) 
         {
-					swprintf( (wchar_t *)zDialogueText, (wchar_t *)L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
+					swprintf( zDialogueText, usMaxLen, L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1844,7 +1859,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 			} 
 			else
 			{
-				swprintf( (wchar_t *)zDialogueText, (wchar_t *)L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
+				swprintf( zDialogueText, usMaxLen, L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1854,7 +1869,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	pFilename = (UINT8 *) GetDialogueDataFilename( ubCharacterNum, usQuoteNum, TRUE );
+	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, TRUE );
 
 	// Copy
 	strcpy( zSoundString, pFilename );
@@ -1903,10 +1918,10 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, L"%s", zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%s", zQuoteStr );
 #else
-	swprintf( (wchar_t *)gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
-	swprintf( (wchar_t *)zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%s\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_STR_LEN, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 }
@@ -1915,7 +1930,7 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 // Handlers for tactical UI stuff
 void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
 
 
@@ -1928,10 +1943,10 @@ void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, L"%s", zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%s", zQuoteStr );
 #else
-	swprintf( (wchar_t *)gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
-	swprintf( (wchar_t *)zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%s\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 
@@ -1961,9 +1976,9 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	// How do we do this with defines?
 	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 #ifdef TAIWANESE
-	swprintf( (wchar_t *)zText, (wchar_t *)L"%s", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s", zQuoteStr );
 #else
-	swprintf( (wchar_t *)zText, (wchar_t *)L"\"%s\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"\"%s\"", zQuoteStr );
 #endif
 	sLeft	= 110;
 
@@ -1974,7 +1989,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	ExecuteTacticalTextBox( sLeft, (STR16)zText );
 
 #ifndef TAIWANESE
-	swprintf( (wchar_t *)zText, L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 	
@@ -2320,7 +2335,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 	UINT8	 *pDestBuf, *pSrcBuf;
 	INT16 sFontX, sFontY;
 	SOLDIERTYPE *pSoldier;
-	INT16					zTownIDString[50];
+	CHAR16	zTownIDString[50];
 
 
 	if ( gpCurrentTalkingFace == NULL )
@@ -2359,7 +2374,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 			// What sector are we in, ( and is it the same as ours? )
 			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
 			{
-				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, (CHAR16 *)zTownIDString, FALSE );
+				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, 50, FALSE );
 
 				ReduceStringLength( (STR16)zTownIDString, 64 , BLOCKFONT2 );
 
@@ -2903,3 +2918,4 @@ void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
   gsExternPanelXPosition     = sXPos;
   gsExternPanelYPosition     = sYPos;
 }
+

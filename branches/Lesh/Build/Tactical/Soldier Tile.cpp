@@ -24,7 +24,7 @@
 	#include "renderworld.h"
 	#include "Sys Globals.h"
 	#include "video.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Sound Control.h" 
 	#include "lighting.h"
 	#include "Weapons.h"

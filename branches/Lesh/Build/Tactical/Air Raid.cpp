@@ -3,34 +3,38 @@
 	#include "PreBattle Interface.h"
 #else
 	#include "sgp.h"
-	#include "air raid.h"
+	#include "Air Raid.h"
 	#include "Game Event Hook.h"
 	#include "Game Clock.h"
-	#include "auto bandage.h"
+	#include "Auto Bandage.h"
 	#include "strategicmap.h"
 	#include "PreBattle Interface.h"
 	#include "screenids.h"
 	#include "jascreens.h"
 	#include "random.h"
-	#include "overhead types.h"
+	#include "Overhead Types.h"
 	#include "Sound Control.h"
-	#include "timer control.h"
+	#include "Timer Control.h"
 	#include "Dialogue Control.h"
 	#include "Overhead.h"
 	#include "message.h"
-	#include "isometric utils.h"
-	#include "soldier macros.h"
+	#include "Isometric Utils.h"
+	#include "Soldier macros.h"
 	#include "worldman.h"
-	#include "los.h"
+	#include "LOS.h"
 	#include "math.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "Interface.h"
 	#include "Music Control.h"
 	#include "Campaign Types.h"
 	#include "GameSettings.h"
 	#include "Text.h"
 	#include "Morale.h"
-	#include "Map screen helicopter.h"
+	#include "Map Screen Helicopter.h"
+	#include "Structure Wrap.h"
+	#include "Platform.h"
+	#include "Meanwhile.h"
+	
 #endif
 
 #define		SCRIPT_DELAY													10
@@ -1254,7 +1258,7 @@ BOOLEAN InAirRaid( )
 
 BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 {
-	return( TRUE ); // lal bugfix air raid hangs (remove to enable air raid)
+	return( TRUE ); // lal bugfix Air Raid.hangs (remove to enable air raid)
 
 	if ( !gfInAirRaid )
 	{

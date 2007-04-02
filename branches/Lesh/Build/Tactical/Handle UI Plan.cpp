@@ -6,7 +6,7 @@
 	#include "Isometric Utils.h"
 	#include "pathai.h"
 	#include "Handle UI.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Weapons.h"
 	#include "renderworld.h"
 	#include "Animation Control.h"

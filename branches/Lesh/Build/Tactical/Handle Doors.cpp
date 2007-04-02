@@ -11,7 +11,7 @@
 	#include "renderworld.h"
 	#include "structure.h"
 	#include "Animation Control.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Overhead.h"
 	#include "structure wrap.h"
 	#include "tile animation.h"

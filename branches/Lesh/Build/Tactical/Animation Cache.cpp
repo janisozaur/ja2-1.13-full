@@ -1,13 +1,10 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
-
 	#include "Types.h"
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "Platform.h"
+	#include "DEBUG.H"
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"

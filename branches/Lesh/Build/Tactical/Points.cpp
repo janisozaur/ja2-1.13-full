@@ -3,7 +3,7 @@
 #else
 	#include "sgp.h"
 	#include "worlddef.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Overhead.h"
 	#include "Font control.h"
 	#include "Interface.h"

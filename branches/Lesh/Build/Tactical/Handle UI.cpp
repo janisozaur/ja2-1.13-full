@@ -26,7 +26,7 @@
 	#include "screenids.h"
 	#include "Interface.h"
 	#include "cursor control.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Interactive Tiles.h"
 	#include "interface cursors.h"
 	#include "opplist.h"
@@ -50,7 +50,7 @@
 	#include "Soldier Create.h"
 	#include "soldier add.h"
 	#include "interface dialogue.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 	#include "soldier functions.h"
 	#include "Assignments.h"
 	#include "Squads.h"
@@ -71,7 +71,7 @@
 	#include "line.h"
 	#include "Render Dirty.h"
 	#include "GameSettings.h"
-	#include "los.h"
+	#include "LOS.h"
 #endif
 
 

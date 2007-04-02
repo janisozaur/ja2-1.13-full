@@ -11,7 +11,7 @@
 	#include "cursor control.h"
 	#include "Cursors.h"
 	#include "soldier find.h"
-	#include "isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "renderworld.h"
 	#include "Render Dirty.h"
 	#include "Interface.h"

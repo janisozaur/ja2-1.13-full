@@ -23,7 +23,7 @@
 	#include "screenids.h"
 	#include "Interface.h"
 	#include "cursor control.h"
-	#include "points.h"
+	#include "Points.h"
 	#include "Interactive Tiles.h"
 	#include "interface cursors.h"
 	#include "Sound Control.h"
@@ -50,7 +50,7 @@
 	#include "spread burst.h"
 	#include "tile animation.h"
 	#include "merc entering.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "message.h"
 	#include "Strategic Exit GUI.h"
 	#include "Assignments.h"
@@ -59,7 +59,7 @@
 	#include	"GameSettings.h"
 	#include "english.h"
 	#include "Text.h"
-	#include "soldier macros.h"
+	#include "Soldier macros.h"
 #endif
 
 

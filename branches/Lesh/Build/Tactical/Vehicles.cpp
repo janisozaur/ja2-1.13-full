@@ -24,7 +24,7 @@
 	#include "Interface.h"
 	#include "random.h"
 	#include "Text.h"
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "Soldier Create.h"
 	#include "Animation Control.h"
 	#include "strategicmap.h"

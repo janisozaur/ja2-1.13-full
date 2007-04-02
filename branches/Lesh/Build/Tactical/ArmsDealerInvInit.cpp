@@ -3,9 +3,18 @@
 #else
 	#include "Types.h"
 	#include "ArmsDealerInvInit.h"
-	#include "Item Types.h"
 	#include "Arms Dealer Init.h"
-	#include "DEbug.h"
+	#include "DEBUG.H"
+	#include "Item Types.h"
+	#include "Weapons.h"
+	#include "Campaign.h"
+	#include "GameSettings.h"
+	#include "LaptopSave.h"
+	#include "Platform.h"
+	#include "random.h"
+	#include "ShopKeeper Interface.h"
+	#include "BobbyR.h"
+	
 #endif
 
 
