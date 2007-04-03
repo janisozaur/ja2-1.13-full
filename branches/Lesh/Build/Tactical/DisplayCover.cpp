@@ -4,7 +4,33 @@
 	#include "Interface.h"
 	#include "opplist.h"
 	#include "_Ja25Englishtext.h"
-	//#include "Ja25 Strategic Ai.h"
+#else
+	#include "Types.h"
+	#include "DisplayCover.h"
+	#include "Interface.h"
+	#include "opplist.h"
+	#include "_Ja25EnglishText.h"
+	#include "GameSettings.h"
+	#include "Overhead.h"
+	#include "worlddef.h"
+	#include "Render Fun.h"
+	#include "Soldier Control.h"
+	#include "Animation Control.h"
+	#include "LOS.h"
+	#include "worldman.h"
+	#include "Isometric Utils.h"
+	#include "renderworld.h"
+	#include "DEBUG.H"
+	#include "strategicmap.h"
+	#include "Platform.h"
+	#include "message.h"
+	#include "Text.h"
+	#include "Weapons.h"
+	#include "lighting.h"
+	#include "Game Clock.h"
+	#include "PATHAI.H"
+	#include "SgpStr.h"
+	
 #endif
 
 //*******  Local Defines **************************************************
@@ -114,7 +140,7 @@ void DisplayCoverOfSelectedGridNo( )
 #ifdef JA2TESTVERSION
 				{
 					CHAR16	zString[512];
-					swprintf( zString, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__DISPLAY_COVER ], gGameSettings.ubSizeOfDisplayCover );
+					WSTR_SPrintf( zString, 512, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__DISPLAY_COVER ], gGameSettings.ubSizeOfDisplayCover );
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
 				}
 #else
@@ -603,7 +629,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	UINT8 bLightLevel = LightTrueLevel(sTargetGridNo, gsInterfaceLevel);
 
 	//display a string with the range to target and target brightness (Snap)
-	swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET ], usRange, SHADE_MIN - bLightLevel, SHADE_MIN );
+	WSTR_SPrintf( zOutputString, 512, zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET ], usRange, SHADE_MIN - bLightLevel, SHADE_MIN );
 
 	//Display the msg
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zOutputString );
@@ -618,7 +644,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, (INT8)(pSoldier->bShownAimTime ), pSoldier->bAimShotLocation );
 		pSoldier->bTargetLevel = bTempTargetLevel;
 
-		swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__GUN_RANGE_AND_CTH ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, uiHitChance );
+		WSTR_SPrintf( zOutputString, 512, zNewTacticalMessages[ TCTL_MSG__GUN_RANGE_AND_CTH ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, uiHitChance );
 
 		//Display the msg
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zOutputString );
@@ -669,7 +695,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 #ifdef JA2TESTVERSION
 				{
 					CHAR16	zString[512];
-					swprintf( zString, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__LOS ], gGameSettings.ubSizeOfLOS );
+					WSTR_SPrintf( zString, 512, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__LOS ], gGameSettings.ubSizeOfLOS );
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
 				}
 #else

@@ -4,7 +4,7 @@
 	#include "Handle UI Plan.h"
 	#include "Overhead.h"
 	#include "Isometric Utils.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "Handle UI.h"
 	#include "Points.h"
 	#include "Weapons.h"

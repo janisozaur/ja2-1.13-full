@@ -3,7 +3,7 @@
 #else
 	#include "Items.h"
 	#include "Action Items.h"
-	#include "handle Items.h"
+	#include "Handle Items.h"
 	#include "Overhead.h"
 	#include "Weapons.h"
 	#include "Points.h"
@@ -15,14 +15,14 @@
 	#include "Animation Control.h"
 	#include "Font Control.h"
 	#include "Render Dirty.h"
-	#include "World items.h"
+	#include "World Items.h"
 	#include "Text.h"
 	#include "Timer Control.h"
 	#include "WCheck.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
 	#include "physics.h"
 	#include "Soldier Profile.h"
-	#include "interface dialogue.h"
+	#include "interface Dialogue.h"
 	#include "Quests.h"
 	#include "message.h"
 	#include "Isometric Utils.h"
@@ -30,31 +30,41 @@
 	#include "Dialogue Control.h"
 	#include "ai.h"
 	#include "Soldier macros.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Strategic Town Loyalty.h"
-	#include "soldier functions.h"
+	#include "Soldier Functions.h"
 	#include "Map Screen Helicopter.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "fov.h"
 	#include "MessageBoxScreen.h"
 	#include "Explosion Control.h"
 	#include "SkillCheck.h"
 	#include "Campaign.h"
 	#include "random.h"
-	#include "structure wrap.h"
-	#include "interactive tiles.h"
+	#include "Structure Wrap.h"
+	#include "Interactive Tiles.h"
 	#include "SaveLoadMap.h"
 	#include "ShopKeeper Interface.h"
 	#include "Arms Dealer Init.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "Sound Control.h"
 	#include "Squads.h"
-	#include "rotting corpses.h"
-	#include "soldier ani.h"
+	#include "Rotting Corpses.h"
+	#include "Soldier Ani.h"
 	#include "opplist.h"
 	#include "qarray.h"
-	#include "render fun.h"
+	#include "Render Fun.h"
 	#include "environment.h"
+	#include "GameSettings.h"
+	#include "NPC.h"
+	#include "strategicmap.h"
+	#include "End Game.h"
+	#include "Interface Control.h"
+	#include "Map Screen Interface Map Inventory.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	#include "Map Information.h"
+	
 #endif
 
 #define					NUM_ITEMS_LISTED			8
@@ -3302,11 +3312,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			// Set string
 			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( (wchar_t *)pStr, (wchar_t *)L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
+				WSTR_SPrintf( pStr, 100, L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( (wchar_t *)pStr, (wchar_t *)L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
+				WSTR_SPrintf( pStr, 100, L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			// Get Width
@@ -3379,7 +3389,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 		{
 			SetFontForeground( FONT_MCOLOR_DKGRAY );
 		}
-		swprintf( (wchar_t *)pStr, (wchar_t *)TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
+		WSTR_SPrintf( pStr, 100, TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
 		gprintfdirty( sFontX, sY, pStr );
 		mprintf( sFontX, sY, pStr );
 		sY += GetFontHeight( SMALLFONT1 ) - 2;
@@ -3409,11 +3419,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( (wchar_t *)pStr, (wchar_t *)L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
+				WSTR_SPrintf( pStr, 100, L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( (wchar_t *)pStr, (wchar_t *)L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
+				WSTR_SPrintf( pStr, 100, L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			gprintfdirty( sFontX, sY, pStr );
@@ -3447,7 +3457,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 				{
 					SetFontForeground( FONT_MCOLOR_DKGRAY );
 				}
-				swprintf( (wchar_t *)pStr, (wchar_t *)TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
+				WSTR_SPrintf( pStr, 100, TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
 				gprintfdirty( sFontX, sY, pStr );
 				mprintf( sFontX, sY, pStr );
 			}

@@ -2,14 +2,18 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Soldier Profile.h"
-	#include "drugs and alcohol.h"
+	#include "Drugs And Alcohol.h"
 	#include "Items.h"
-	#include "drugs and alcohol.h"
 	#include "Morale.h"
 	#include "Points.h"
 	#include "message.h"
+	#include "random.h"
+	#include "Platform.h"
+	#include "Interface.h"
+	#include "Text.h"
+	
 #endif
 
 UINT8 ubDrugTravelRate[]			= { 4,	2 };

@@ -3,7 +3,7 @@
 #else
 	#include "Types.h"
 	#include "Item Types.h"
-	#include "DEbug.h"
+	#include "DEBUG.H"
 	#include "EnemyItemDrops.h"
 #endif
 

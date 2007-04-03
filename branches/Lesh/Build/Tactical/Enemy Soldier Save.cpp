@@ -2,24 +2,17 @@
 	#include "Tactical All.h"
 	#include "Enemy Soldier Save.h"
 #else
-	#include <stdio.h>
-	#include <memory.h>
-
 	#include "Types.h"
-
 	#include "strategicmap.h"
 	#include "Overhead.h"
 	#include "Isometric Utils.h"
-
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Items.h"
-
 	#include "Cursors.h"
-
 	#include "Map Information.h"
 	#include "Soldier Profile.h"
 	#include "Sys Globals.h"
@@ -27,6 +20,14 @@
 	#include "Animation Data.h"
 	#include "message.h"
 	#include "Font Control.h"
+	#include "Campaign Types.h"
+	#include "Tactical Save.h"
+	#include "Platform.h"
+	#include "Game Clock.h"
+	#include "Queen Command.h"
+	#include "Scheduling.h"
+	#include "SgpStr.h"
+	
 #endif
 
 BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *pNode );
@@ -522,7 +523,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
 					}
 
-					swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+					wcscpy( curr->pDetailedPlacement->name, pSoldier->name );
 
 					//Copy patrol points
 					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
@@ -1605,7 +1606,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 							curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
 						}
 
-						swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+						wcscpy( curr->pDetailedPlacement->name, pSoldier->name );
 
 						//Copy patrol points
 						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;

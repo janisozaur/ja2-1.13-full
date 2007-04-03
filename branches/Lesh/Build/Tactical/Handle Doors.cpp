@@ -2,9 +2,6 @@
 	#include "Tactical All.h"
 	#include "language defines.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
 	#include "sgp.h"
 	#include "worlddef.h"
 	#include "worldman.h"
@@ -13,16 +10,28 @@
 	#include "Animation Control.h"
 	#include "Points.h"
 	#include "Overhead.h"
-	#include "structure wrap.h"
-	#include "tile animation.h"
+	#include "Structure Wrap.h"
+	#include "Tile Animation.h"
 	#include "Interactive Tiles.h"
-	#include "handle doors.h"
+	#include "Handle Doors.h"
 	#include "Sound Control.h"
 	#include "Interface.h" 
-	#include "keys.h"
+	#include "Keys.h"
 	#include "message.h"
 	#include "Text.h"
 	#include "random.h"
+	#include "Platform.h"
+	#include "SkillCheck.h"
+	#include "Dialogue Control.h"
+	#include "Render Fun.h"
+	#include "Quests.h"
+	#include "strategicmap.h"
+	#include "Map Screen Interface Map.h"
+	#include "Soldier Profile.h"
+	#include "Isometric Utils.h"
+	#include "Soldier macros.h"
+	#include "ai.h"
+	
 #endif
 
 BOOLEAN gfSetPerceivedDoorState = FALSE;

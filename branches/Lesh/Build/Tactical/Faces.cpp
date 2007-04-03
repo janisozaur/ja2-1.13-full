@@ -1,37 +1,39 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
-
 	#include "worlddef.h"
 	#include "renderworld.h"
 	#include "vsurface.h"
 	#include "Render Dirty.h"
 	#include "sysutil.h"
-	#include "container.h"
 	#include "WCheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
 	#include "faces.h"
 	#include "Utilities.h"
 	#include "Overhead.h"
-	#include "gap.h"
+	#include "GAP.H"
 	#include "Soldier Profile.h"
 	#include "Sound Control.h"
-	#include "teamturns.h"
+	#include "TeamTurns.h"
 	#include "Soldier macros.h"
 	#include "Dialogue Control.h"
 	#include "Font Control.h"
 	#include "Assignments.h"
 	#include "random.h"
 	#include "line.h"
-	#include	"GameSettings.h"
+	#include "GameSettings.h"
 	#include "Squads.h"
 	#include "Interface.h"
 	#include "Quests.h" 
 	#include "Animation Control.h"
+	#include "Platform.h"
+	#include "Drugs And Alcohol.h"
+	#include "Map Screen Interface.h"
+	#include "Meanwhile.h"
+	#include "Interface Items.h"
+	#include "SgpStr.h"
+	
 #endif
 
 // Defines
@@ -1340,7 +1342,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 			{
 				SetFontDestBuffer( uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
-				swprintf( sString, L"%d", pSoldier->bOppCnt );
+				WSTR_SPrintf( sString, 32, L"%d", pSoldier->bOppCnt );
 
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_DKRED );
@@ -1549,11 +1551,11 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 
 				if ( fShowMaximum )
 				{
-					swprintf( sString, L"%d/%d", sPtsAvailable, usMaximumPts );
+					WSTR_SPrintf( sString, 32, L"%d/%d", sPtsAvailable, usMaximumPts );
 				}
 				else
 				{
-					swprintf( sString, L"%d", sPtsAvailable );
+					WSTR_SPrintf( sString, 32, L"%d", sPtsAvailable );
 				}
 
 				usTextWidth = StringPixLength( sString, FONT10ARIAL );
