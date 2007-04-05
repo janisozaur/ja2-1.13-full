@@ -2,8 +2,7 @@
 	#include "Tactical All.h"
 	#include "edit_sys.h"
 #else
-	#include <stdio.h>
-	#include "fileMan.h"
+	#include "FileMan.h"
 	#include "Types.h"
 	#include "Map Information.h"
 	#include "Soldier Init List.h"
@@ -20,6 +19,11 @@
 	#include "Sys Globals.h"
 	#include "message.h"
 	#include "Weapons.h"
+	#include "DEBUG.H"
+	#include "environment.h"
+	#include "lighting.h"
+	#include "Animated ProgressBar.h"
+	
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!

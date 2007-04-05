@@ -1,9 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "sgp.h" 
 	#include "mousesystem.h"
 	#include "vsurface.h"
@@ -16,11 +13,13 @@
 	#include "Render Dirty.h"
 	#include "Interface Cursors.h"
 	#include "Interface.h"
-	#include "Isometric utils.h"
+	#include "Isometric Utils.h"
 	#include "Cursors.h"
 	#include "Sys Globals.h"
 	#include "Overhead.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
+	#include "GameSettings.h"
+	
 #endif
 
 #define DISPLAY_AP_INDEX					MOCKFLOOR1

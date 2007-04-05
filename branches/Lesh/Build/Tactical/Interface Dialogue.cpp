@@ -3,38 +3,35 @@
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
 #else
-	#include <stdio.h>
 	#include "sgp.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Encrypted File.h"
 	#include "faces.h"
 	#include "WCheck.h"
 	#include "Render Dirty.h"
 	#include "Soldier Profile.h"
-	#include "wordwrap.h"
+	#include "WordWrap.h"
 	#include "sysutil.h"
 	#include "vobject_blitters.h"
-	#include "interface dialogue.h"
+	#include "interface Dialogue.h"
 	#include "Font Control.h"
 	#include "Dialogue Control.h"
 	#include "renderworld.h"
 	#include "NPC.h"
-	#include "interface dialogue.h"
-	#include "merctextbox.h"
+	#include "MercTextBox.h"
 	#include "message.h"
 	#include "Items.h"
 	#include "Text.h"
 	#include "Overhead.h"
-	#include "soldier control.h"
 	#include "Assignments.h"
 	#include "strategic.h"
 	#include "strategicmap.h"
 	#include "gamescreen.h"
 	#include "ai.h"
-	#include "aiinternals.h"
-	#include "interactive tiles.h"
+	#include "AIInternals.h"
+	#include "Interactive Tiles.h"
 	#include "Soldier Profile.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Quests.h"
 	#include "Squads.h"
 	#include "Game Event Hook.h"
@@ -46,7 +43,7 @@
 	#include "Fade Screen.h"
 	#include "gameloop.h"
 	#include "finances.h"
-	#include "saveloadmap.h"
+	#include "SaveLoadMap.h"
 	#include "Arms Dealer Init.h"
 	#include "ShopKeeper Interface.h"
 	#include "Strategic Town Loyalty.h"
@@ -55,15 +52,31 @@
 	#include "Strategic Mines.h"
 	#include "Boxing.h"
 	#include "Items.h"
-	#include "WorldMan.h"
+	#include "worldman.h"
 	#include "Render Fun.h"
 	// including this for Strategic AI.h
 	#include "Strategic Movement.h"
 	#include "Strategic AI.h"
 	#include "Handle Doors.h"
-	#include "Soldier create.h"
+	#include "Soldier Create.h"
 	#include "SkillCheck.h"
 	#include "Sound Control.h"
+	#include "PreBattle Interface.h"
+	#include "Keys.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	#include "history.h"
+	#include "opplist.h"
+	#include "Map Screen Helicopter.h"
+	#include "End Game.h"
+	#include "BobbyRMailOrder.h"
+	#include "Campaign.h"
+	#include "Queen Command.h"
+	#include "Map Screen Interface.h"
+	#include "Cheats.h"
+	#include "Morale.h"
+	#include "personnel.h"
+	
 #endif
 
 INT16	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };
@@ -4386,20 +4399,20 @@ void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 		case NPC_ACTION_ASK_ABOUT_ESCORTING_EPC:
 			if ( (ubProfileID == JOHN && gMercProfiles[ MARY ].bMercStatus != MERC_IS_DEAD) || (ubProfileID == MARY && gMercProfiles[ JOHN ].bMercStatus != MERC_IS_DEAD) )
 			{
-				swprintf( zTemp, gzLateLocalizedString[59] );
+				WSTR_SPrintf( zTemp, 256, gzLateLocalizedString[59] );
 			}
 			else
 			{
-				swprintf( zTemp, TacticalStr[ ESCORT_PROMPT ], gMercProfiles[ubProfileID].zNickname );
+				WSTR_SPrintf( zTemp, 256, TacticalStr[ ESCORT_PROMPT ], gMercProfiles[ubProfileID].zNickname );
 			}
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC:
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC_WITH_DAILY_SALARY:
 		case NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS:
-			swprintf( zTemp2, L"%d", gMercProfiles[ubProfileID].sSalary );
+			WSTR_SPrintf( zTemp2, 256, L"%d", gMercProfiles[ubProfileID].sSalary );
 			InsertDollarSignInToString( zTemp2 );
-			swprintf( zTemp, TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2 );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2 );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_DARREN_REQUESTOR:
@@ -4407,16 +4420,16 @@ void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 			DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ BOXING_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
-			swprintf( zTemp2, L"%d", Item[LEATHER_JACKET_W_KEVLAR].usPrice );
+			WSTR_SPrintf( zTemp2, 256, L"%d", Item[LEATHER_JACKET_W_KEVLAR].usPrice );
 			InsertDollarSignInToString( zTemp2 );
-			swprintf( zTemp, TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2 );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2 );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_PROMPT_PLAYER_TO_LIE:
 			DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ YESNOLIE_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNOLIE, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_MEDICAL_REQUESTOR_2:
-			swprintf( zTemp, TacticalStr[ FREE_MEDICAL_PROMPT ] );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ FREE_MEDICAL_PROMPT ] );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_MEDICAL_REQUESTOR:
@@ -4429,25 +4442,25 @@ void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 			{
 				iTemp -= giHospitalRefund;
 			}
-			swprintf( zTemp2, L"%ld", iTemp );
+			WSTR_SPrintf( zTemp2, 256, L"%ld", iTemp );
 			InsertDollarSignInToString( zTemp2 );
-			swprintf( zTemp, TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
 
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_BUY_VEHICLE_REQUESTOR:
-			swprintf( zTemp2, L"%ld", 10000 );
+			WSTR_SPrintf( zTemp2, 256, L"%ld", 10000 );
 			InsertDollarSignInToString( zTemp2 );
-			swprintf( zTemp, TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
 
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_TRIGGER_MARRY_DARYL_PROMPT:
-			swprintf( zTemp, TacticalStr[ MARRY_DARYL_PROMPT ] );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ MARRY_DARYL_PROMPT ] );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_KROTT_REQUESTOR:
-			swprintf( zTemp, TacticalStr[ SPARE_KROTT_PROMPT ] );
+			WSTR_SPrintf( zTemp, 256, TacticalStr[ SPARE_KROTT_PROMPT ] );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		default:

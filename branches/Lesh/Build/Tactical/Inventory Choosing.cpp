@@ -1,15 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <memory.h>
 	#include "Inventory Choosing.h"
 	#include "Animation Data.h"
 	#include "Items.h"
 	#include "random.h"
 	#include "Weapons.h"
-	#include ""Strategic Status.h"
+	#include "Strategic Status.h"
 	#include "Campaign.h"
 	#include "GameSettings.h"
+	#include "DEBUG.H"
+	#include "strategicmap.h"
+	#include "Map Screen Interface Map.h"
+	#include "Auto Resolve.h"
+	#include "strategic.h"
+	#include "EnemyItemDrops.h"
+	#include "Game Clock.h"
+	#include "Platform.h"
 #endif
 
 /*

@@ -1,9 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "sgp.h" 
 	#include "gameloop.h"
 	#include "himage.h"
@@ -22,30 +19,34 @@
 	#include "renderworld.h"
 	#include "Sys Globals.h"
 	#include "Cursors.h"
-	#include "radar screen.h"
+	#include "Radar Screen.h"
 	#include "worldman.h"
 	#include "Font Control.h"
 	#include "Render Dirty.h"
 	#include "Utilities.h"
-	#include "interface cursors.h"
+	#include "Interface Cursors.h"
 	#include "Sound Control.h"
 	#include "lighting.h"
 	#include "Interface Panels.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "vobject_blitters.h"
 	#include "faces.h"
 	#include "Handle UI Plan.h"
 	#include "Interface Control.h"
-	#include "interface items.h"
-	#include "interface dialogue.h"
-	#include "interactive tiles.h"
+	#include "Interface Items.h"
+	#include "interface Dialogue.h"
+	#include "Interactive Tiles.h"
 	#include "Game Clock.h"
 	#include "Strategic Exit GUI.h"
 	#include "PopUpBox.h"
 	#include "Assignments.h"
-	#include "spread burst.h"
+	#include "Spread burst.h"
 	#include "Squads.h"
 	#include "line.h"
+	#include "Civ Quotes.h"
+	#include "Map Screen Interface.h"
+	#include "Militia Control.h"
+	
 #endif
 
 /*  I deleted here declaration of clock coords for tactical screen i will declare them

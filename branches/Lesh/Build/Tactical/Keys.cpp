@@ -1,13 +1,10 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <memory.h>
-
 	#include "Types.h"
 	#include "Soldier Control.h"
 	#include "Keys.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "Smoothing Utils.h"
 	#include "SkillCheck.h"
 	#include "opplist.h"
@@ -18,11 +15,10 @@
 	#include "Text.h"
 	#include "Explosion Control.h"
 	#include "Isometric Utils.h"
-	#include "StrategicMap.h"
+	#include "strategicmap.h"
 	#include "Tactical Save.h"
 	#include "Campaign Types.h"
 	#include "LOS.h"
-	#include "opplist.h"
 	#include "TileDat.h"
 	#include "Overhead.h"
 	#include "structure.h"
@@ -31,8 +27,14 @@
 	#include "WCheck.h"
 	#include "random.h"
 	#include "worlddef.h"
-	#include "campaign.h"
+	#include "Campaign.h"
 	#include "Sound Control.h"
+	#include "Interface.h"
+	#include "Game Clock.h"
+	#include "Map Screen Interface.h"
+	#include "Handle Doors.h"
+	#include "Platform.h"
+	
 #endif
 
 

@@ -1,37 +1,39 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-
-	#include <memory.h>
-	#include <math.h>
 	#include "WCheck.h"
 	#include "Isometric Utils.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "LOS.h"
 	#include "Animation Control.h"
 	#include "random.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Event Pump.h"
 	#include "Overhead.h"
 	#include "Weapons.h"
-
 	#include "opplist.h"
-	#include "soldier control.h"
-	#include "bullets.h"
-
+	#include "Bullets.h"
 	#include "phys math.h"
 	#include "Items.h"
 	#include "Soldier Profile.h"
 	#include "worldman.h"
-	#include "rotting corpses.h"
+	#include "Rotting Corpses.h"
 	#include "GameSettings.h"
-	#include "keys.h"
+	#include "Keys.h"
 	#include "message.h"
 	#include "Structure Wrap.h"
-	#include "campaign.h"
+	#include "Campaign.h"
 	#include "environment.h"
-	#include "Pathai.h"
+	#include "PATHAI.H"
+	#include "Interface.h"
+	#include "Text.h"
+	#include "Soldier macros.h"
+	#include "Points.h"
+	#include "Platform.h"
+	#include "Smell.h"
+	#include "strategicmap.h"
+	#include "Quests.h"
+	
 #endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
@@ -60,6 +62,9 @@ UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
 {
 UINT32 uiResult;
 
+#ifdef JA2_LINUX
+	fprintf(stderr, "Wow! FPMult32 is called! I thought it is unused!\n");
+#elif defined( JA2_WIN )
 	__asm {
 		// Load the 32-bit registers with the two values
 		mov		eax, uiA
@@ -82,6 +87,7 @@ UINT32 uiResult;
 		// Put the result into a returnable variable
 		mov		uiResult, eax
 		}
+#endif
 
 		return(uiResult);
 }
@@ -278,8 +284,7 @@ enum
 	LOC_4_0,
 	LOC_4_3,
 	LOC_4_4
-}
-LocationCode;
+};
 
 BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, DOUBLE ddHorizAngle )
 {

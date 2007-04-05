@@ -1,8 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
 	#include "sgp.h" 
 	#include "himage.h"
 	#include "vobject.h"
@@ -17,6 +15,9 @@
 	#include "Overhead.h"
 	#include "Soldier macros.h"
 	#include "line.h"
+	#include "WCheck.h"
+	#include "Vehicles.h"
+	
 #endif
  
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )

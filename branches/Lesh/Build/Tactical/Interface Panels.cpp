@@ -2,9 +2,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "sgp.h" 
 	#include "gameloop.h"
 	#include "himage.h"
@@ -21,7 +18,7 @@
 	#include "renderworld.h"
 	#include "Sys Globals.h"
 	#include "Cursors.h"
-	#include "radar screen.h"
+	#include "Radar Screen.h"
 	#include "worldman.h"
 	#include "Font Control.h"
 	#include "Render Dirty.h"
@@ -30,7 +27,7 @@
 	#include "Interface Panels.h"
 	#include "Animation Control.h"
 	#include "Soldier Control.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "Weapons.h"
 	#include "lighting.h"
 	#include "faces.h"
@@ -44,11 +41,11 @@
 	#include "mapscreen.h"
 	#include "Soldier macros.h"
 	#include "strategicmap.h"
-	#include "soldier functions.h"
+	#include "Soldier Functions.h"
 	#include "gamescreen.h"
 	#include "Assignments.h"
 	#include "Points.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "strategic.h"
 	#include "Map Screen Interface Map.h"
 	#include "overhead map.h"
@@ -56,13 +53,13 @@
 	#include "Options Screen.h"
 	#include "ShopKeeper Interface.h"
 	#include "english.h"
-	#include "keys.h"
+	#include "Keys.h"
 	#include "Soldier Add.h"
-	#include "vehicles.h"
-	#include "gamesettings.h"
+	#include "Vehicles.h"
+	#include "GameSettings.h"
 	#include "Dialogue Control.h"
 	#include "Items.h"
-	#include "drugs and alcohol.h"
+	#include "Drugs And Alcohol.h"
 	#include "LOS.h"
 	#include "opplist.h"
 	#include "vobject_blitters.h"
@@ -70,6 +67,11 @@
 	#include "LaptopSave.h"
 	#include "Cursor Control.h"
 	#include "MessageBoxScreen.h"
+	#include "Boxing.h"
+	#include "WordWrap.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	
 #endif
 
 /* 
@@ -1825,7 +1827,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 	UINT16	usX, usY;
 	wchar_t sString[9];
 	UINT32	cnt;
-	static INT16 pStr[ 200 ], pMoraleStr[ 20 ];
+	static CHAR16 pStr[ 200 ], pMoraleStr[ 20 ];
 
 	if ( gubSelectSMPanelToMerc != NOBODY )
 	{
@@ -1954,61 +1956,61 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeAgilityTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & AGIL_INCREASE? TRUE: FALSE ) );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bAgility );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bAgility );
 			FindFontRightCoordinates(SM_AGI_X, SM_AGI_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeDexterityTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & DEX_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bDexterity );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bDexterity );
 			FindFontRightCoordinates(SM_DEX_X, SM_DEX_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeStrengthTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & STRENGTH_INCREASE?TRUE: FALSE ) );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bStrength );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bStrength );
 			FindFontRightCoordinates(SM_STR_X, SM_STR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeLeadershipTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & LDR_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bLeadership );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bLeadership );
 			FindFontRightCoordinates(SM_CHAR_X, SM_CHAR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeWisdomTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & WIS_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bWisdom );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bWisdom );
 			FindFontRightCoordinates(SM_WIS_X, SM_WIS_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeLevelTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & LVL_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bExpLevel );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bExpLevel );
 			FindFontRightCoordinates(SM_EXPLVL_X, SM_EXPLVL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeMarksmanshipTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MRK_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bMarksmanship );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bMarksmanship );
 			FindFontRightCoordinates(SM_MRKM_X, SM_MRKM_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeExplosivesTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & EXP_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bExplosive );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bExplosive );
 			FindFontRightCoordinates(SM_EXPL_X, SM_EXPL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeMechanicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MECH_INCREASE ? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bMechanical );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bMechanical );
 			FindFontRightCoordinates(SM_MECH_X, SM_MECH_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			UpdateStatColor( gpSMCurrentMerc-> uiChangeMedicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MED_INCREASE? TRUE: FALSE )  );
 
-			swprintf( sString, L"%2d", gpSMCurrentMerc->bMedical );
+			WSTR_SPrintf( sString, 9, L"%2d", gpSMCurrentMerc->bMedical );
 			FindFontRightCoordinates(SM_MED_X, SM_MED_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
@@ -2024,19 +2026,19 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 			}
 
 			// Display armour value!
-			swprintf( sString, L"%3d", ArmourPercent( gpSMCurrentMerc ) );
+			WSTR_SPrintf( sString, 9, L"%3d", ArmourPercent( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_ARMOR_X, SM_ARMOR_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			// Display wieght value!
-			swprintf( sString, L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
+			WSTR_SPrintf( sString, 9, L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_WEIGHT_X, SM_WEIGHT_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
 			ApplyEquipmentBonuses(gpSMCurrentMerc);
 
 			// Display cammo value!
-			swprintf( sString, L"%3d", max(0, min( (gpSMCurrentMerc->bCamo + gpSMCurrentMerc->wornCamo+gpSMCurrentMerc->urbanCamo+gpSMCurrentMerc->wornUrbanCamo+gpSMCurrentMerc->desertCamo+gpSMCurrentMerc->wornDesertCamo+gpSMCurrentMerc->snowCamo+gpSMCurrentMerc->wornSnowCamo),100 )) );
+			WSTR_SPrintf( sString, 9, L"%3d", max(0, min( (gpSMCurrentMerc->bCamo + gpSMCurrentMerc->wornCamo+gpSMCurrentMerc->urbanCamo+gpSMCurrentMerc->wornUrbanCamo+gpSMCurrentMerc->desertCamo+gpSMCurrentMerc->wornDesertCamo+gpSMCurrentMerc->snowCamo+gpSMCurrentMerc->wornSnowCamo),100 )) );
 			FindFontRightCoordinates(SM_CAMMO_X, SM_CAMMO_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString ); 
 
@@ -2078,18 +2080,18 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		{
       if ( gpSMCurrentMerc->uiStatusFlags & SOLDIER_VEHICLE )
       {
-			  swprintf( (wchar_t *)pStr, TacticalStr[ VEHICLE_VITAL_STATS_POPUPTEXT ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax );
+			  WSTR_SPrintf( pStr, 200, TacticalStr[ VEHICLE_VITAL_STATS_POPUPTEXT ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax );
 			  SetRegionFastHelpText( &(gSM_SELMERCBarsRegion), pStr );
       }
       else if ( gpSMCurrentMerc->uiStatusFlags & SOLDIER_ROBOT )
       {
-			  swprintf( (wchar_t *)pStr, gzLateLocalizedString[ 16 ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax );
+			  WSTR_SPrintf( pStr, 200, gzLateLocalizedString[ 16 ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax );
 			  SetRegionFastHelpText( &(gTEAM_BarsRegions[ cnt ]), pStr );
       }
       else
       {
 			  GetMoraleString( gpSMCurrentMerc, (STR16)pMoraleStr );
-			  swprintf( (wchar_t *)pStr, TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax, pMoraleStr );
+			  WSTR_SPrintf( pStr, 200, TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax, pMoraleStr );
 			  SetRegionFastHelpText( &(gSM_SELMERCBarsRegion), pStr );
       }
 		}
@@ -3845,13 +3847,13 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 					pVehicle = GetSoldierStructureForVehicle( pSoldier->iVehicleId );
 
 					//OK, for each item, set dirty text if applicable!
-					swprintf( (wchar_t *)pStr, TacticalStr[ DRIVER_POPUPTEXT ], pVehicle->bLife, pVehicle->bLifeMax, pVehicle->bBreath, pVehicle->bBreathMax );
+					WSTR_SPrintf( pStr, 200, TacticalStr[ DRIVER_POPUPTEXT ], pVehicle->bLife, pVehicle->bLifeMax, pVehicle->bBreath, pVehicle->bBreathMax );
 					SetRegionFastHelpText( &(gTEAM_FirstHandInv[ cnt ]), pStr );					
 				}
 				// Add text for first hand popup
 				else
 				{
-					GetHelpTextForItem( pStr, &( pSoldier->inv[ HANDPOS ] ), pSoldier );
+					GetHelpTextForItem( pStr, 200, &( pSoldier->inv[ HANDPOS ] ), pSoldier );
 
 					//OK, for each item, set dirty text if applicable!
 					SetRegionFastHelpText( &(gTEAM_FirstHandInv[ cnt ]), pStr );
@@ -3865,7 +3867,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				}
 				else
 				{
-					GetHelpTextForItem( pStr, &( pSoldier->inv[ SECONDHANDPOS ]  ), pSoldier );
+					GetHelpTextForItem( pStr, 200, &( pSoldier->inv[ SECONDHANDPOS ]  ), pSoldier );
 
 					//OK, for each item, set dirty text if applicable!
 					SetRegionFastHelpText( &(gTEAM_SecondHandInv[ cnt ]), pStr );
@@ -3958,18 +3960,18 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				  {
             if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
             {
-			        swprintf( (wchar_t *)pStr, TacticalStr[ VEHICLE_VITAL_STATS_POPUPTEXT ], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax );
+			        WSTR_SPrintf( pStr, 200, TacticalStr[ VEHICLE_VITAL_STATS_POPUPTEXT ], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax );
 			        SetRegionFastHelpText( &(gTEAM_BarsRegions[ cnt ]), pStr );
             }
             else if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
             {
-			        swprintf( (wchar_t *)pStr, gzLateLocalizedString[ 16 ], pSoldier->bLife, pSoldier->bLifeMax );
+			        WSTR_SPrintf( pStr, 200, gzLateLocalizedString[ 16 ], pSoldier->bLife, pSoldier->bLifeMax );
 			        SetRegionFastHelpText( &(gTEAM_BarsRegions[ cnt ]), pStr );
             }
             else
             {
 					    GetMoraleString( pSoldier, (STR16)pMoraleStr );
-					    swprintf( (wchar_t *)pStr, TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax, pMoraleStr );
+					    WSTR_SPrintf( pStr, 200, TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax, pMoraleStr );
 					    SetRegionFastHelpText( &(gTEAM_BarsRegions[ cnt ]), pStr );
             }
 				  }
@@ -5232,7 +5234,7 @@ void RenderTownIDString( )
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, TRUE );
+	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, 80, TRUE );
 	ReduceStringLength( zTownIDString, 80, COMPFONT );
 	VarFindFontCenterCoordinates( LOCATION_NAME_X , LOCATION_NAME_Y, 80, 16, COMPFONT, &sFontX, &sFontY, zTownIDString );
 	mprintf( sFontX, sFontY, L"%s", zTownIDString );
@@ -5906,13 +5908,13 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		    HandleTacticalUI( );
 
-				swprintf( zMoney, L"%d", gpItemPointer->uiMoneyAmount );
+				WSTR_SPrintf( zMoney, 64, L"%d", gpItemPointer->uiMoneyAmount );
 
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
 
 				//ask the user if they are sure they want to deposit the money
-				swprintf( zText, gzMoneyWithdrawMessageText[ CONFIRMATION_TO_DEPOSIT_MONEY_TO_ACCOUNT ], zMoney );
+				WSTR_SPrintf( zText, 512, gzMoneyWithdrawMessageText[ CONFIRMATION_TO_DEPOSIT_MONEY_TO_ACCOUNT ], zMoney );
 
 				if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 				{

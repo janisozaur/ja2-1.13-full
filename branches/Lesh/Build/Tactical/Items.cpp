@@ -11,31 +11,45 @@
 	#include "Animation Control.h"
 	#include "Points.h"
 	#include "Sound Control.h"
-	#include "Sys globals.h"
+	#include "Sys Globals.h"
 	#include "Isometric Utils.h"
 	#include "Animation Data.h"
 	#include "worldman.h"
 	#include "random.h"
 	#include "Campaign.h"
 	#include "Interface.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Explosion Control.h"
 	#include "Keys.h"
-
 	#include "WCheck.h"
 	#include "Soldier Profile.h"
 	#include "SkillCheck.h"
 	#include "LOS.h"
 	#include "message.h"
 	#include "Text.h"
-
 	#include "fov.h"
 	#include "MessageBoxScreen.h"
-
 	#include "PathAIDebug.h"
 	#include "Interface Control.h"
 	#include "ShopKeeper Interface.h"
 	#include "Cursors.h"
+	#include "history.h"
+	#include "GameSettings.h"
+	#include "DEBUG.H"
+	#include "environment.h"
+	#include "Platform.h"
+	#include "lighting.h"
+	#include "Game Clock.h"
+	#include "Smell.h"
+	#include "Soldier macros.h"
+	#include "Inventory Choosing.h"
+	#include "strategicmap.h"
+	#include "Auto Resolve.h"
+	#include "Interface Items.h"
+	#include "Campaign Types.h"
+	#include "SgpStr.h"
+	#include "Utilities.h"
+	
 #endif
 
 #define ANY_MAGSIZE 255
@@ -1868,7 +1882,7 @@ BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAt
 				// well, maybe the player thought he could
 				wchar_t	zTemp[ 100 ];
 				
-				swprintf( zTemp, Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
+				WSTR_SPrintf( zTemp, 100, Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			}
 
@@ -3787,7 +3801,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		{
 			wchar_t	zTemp[ 150 ];
 
-			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
+			WSTR_SPrintf( zTemp, 150, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			return( FALSE );
 		}
@@ -3798,7 +3812,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		{
 			wchar_t	zTemp[ 150 ];
 
-			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
+			WSTR_SPrintf( zTemp, 150, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			return( FALSE );
 		}
