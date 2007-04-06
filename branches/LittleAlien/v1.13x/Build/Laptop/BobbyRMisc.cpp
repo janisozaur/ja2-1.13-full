@@ -38,10 +38,19 @@ BOOLEAN EnterBobbyRMisc()
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMiscGrid));
 
 	InitBobbyBrTitle();
+
+	guiPrevMiscFilterMode = -1;
+	guiCurrentMiscFilterMode = -1;
+
+	SetFirstLastPagesForNew( IC_BOBBY_MISC, guiCurrentMiscFilterMode );
+
 	//Draw menu bar
 	InitBobbyMenuBar( );
+	// WANNE
+	InitBobbyRMiscFilterBar();
 
-	SetFirstLastPagesForNew( IC_BOBBY_MISC );
+
+	
 //	CalculateFirstAndLastIndexs();
 
 	RenderBobbyRMisc( );
@@ -54,8 +63,13 @@ void ExitBobbyRMisc()
 	DeleteVideoObjectFromIndex(guiMiscBackground);
 	DeleteVideoObjectFromIndex(guiMiscGrid);
 	DeleteBobbyBrTitle();
-	DeleteMouseRegionForBigImage();
+
 	DeleteBobbyMenuBar();
+
+	// WANNE
+	DeleteBobbyRMiscFilter();
+
+	DeleteMouseRegionForBigImage();
 
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_MISC;
 }
@@ -71,18 +85,20 @@ void RenderBobbyRMisc()
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiMiscBackground);
 
 	//Display title at top of page
-	DisplayBobbyRBrTitle();
+	//DisplayBobbyRBrTitle();
 
 	// GunForm
 	GetVideoObject(&hPixHandle, guiMiscGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
-	DisplayItemInfo(IC_BOBBY_MISC);
-
+	// WANNE
+	DisplayItemInfo(IC_BOBBY_MISC, guiCurrentMiscFilterMode);
 	UpdateButtonText(guiCurrentLaptopMode);
-  MarkButtonsDirty( );
+	UpdateMiscFilterButtons();
+
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
   	fReDrawScreenFlag = TRUE;
 	fPausedReDrawScreenFlag = TRUE;	
 }

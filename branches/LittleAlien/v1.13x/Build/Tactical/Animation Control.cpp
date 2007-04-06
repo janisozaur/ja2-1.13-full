@@ -2989,9 +2989,9 @@ void	InitAnimationSurfacesPerBodytype( )
 	gubAnimSurfaceCorpseID[ TANK_NE ][ STANDING ]																= TANK2_DEAD;
 	
 	// ELDORADO
-	gubAnimSurfaceIndex[ ELDORADO ][ STANDING ]																	= HUMVEE_BASIC;
-	gubAnimSurfaceIndex[ ELDORADO ][ WALKING ]																	= HUMVEE_BASIC;
-	gubAnimSurfaceIndex[ ELDORADO ][ VEHICLE_DIE ]															= HUMVEE_DIE;
+	gubAnimSurfaceIndex[ ELDORADO ][ STANDING ]																	= ELDORADO_BASIC;
+	gubAnimSurfaceIndex[ ELDORADO ][ WALKING ]																	= ELDORADO_BASIC;
+	gubAnimSurfaceIndex[ ELDORADO ][ VEHICLE_DIE ]															= ELDORADO_DIE;
  
 	// ICECREAMTRUCK
 	gubAnimSurfaceIndex[ ICECREAMTRUCK ][ STANDING ]														= ICECREAMTRUCK_BASIC;
@@ -3000,9 +3000,9 @@ void	InitAnimationSurfacesPerBodytype( )
 	gubAnimSurfaceCorpseID[ ICECREAMTRUCK ][ STANDING ]											  	= ICECREAM_DEAD;
 
 	// JEEP
-	gubAnimSurfaceIndex[ JEEP ][ STANDING ]																			= HUMVEE_BASIC;
-	gubAnimSurfaceIndex[ JEEP ][ WALKING ]																			= HUMVEE_BASIC;
-	gubAnimSurfaceIndex[ JEEP ][ VEHICLE_DIE ]																	= HUMVEE_DIE;
+	gubAnimSurfaceIndex[ JEEP ][ STANDING ]																			= JEEP_BASIC;
+	gubAnimSurfaceIndex[ JEEP ][ WALKING ]																			= JEEP_BASIC;
+	gubAnimSurfaceIndex[ JEEP ][ VEHICLE_DIE ]																	= JEEP_DIE;
 }
 
 BOOLEAN LoadAnimationStateInstructions( )
@@ -3591,6 +3591,7 @@ UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
 	{
+		// WANNE NEW 2
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
 		{

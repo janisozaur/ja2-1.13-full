@@ -158,17 +158,21 @@ of the group.  If the priority of the group is high, they
 
 BOOLEAN gfAutoAIAware = FALSE;
 
+// original values to start a clean new game
+INT32	iOrigGarrisonArraySize;
+INT32	iOrigPatrolArraySize;
+
 //Saved vars
-INT8		gbPadding2[3]						= {0, 0, 0};	//NOT USED
-BOOLEAN gfExtraElites						= 0;	//Set when queen compositions are augmented with bonus elites.
-INT32		giGarrisonArraySize			= 0;
-INT32		giPatrolArraySize				= 0;
-INT32		giForcePercentage				= 0;	//Modifies the starting group sizes relative by percentage
-INT32		giArmyAlertness					= 0;	//The chance the group will spot an adjacent player/militia
-INT32   giArmyAlertnessDecay		= 0;	//How much the spotting chance decreases when spot check succeeds
-UINT8		gubNumAwareBattles			= 0;	//When non-zero, this means the queen is very aware and searching for players.  Every time
-																			//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
-																			//all adjacent sector checks automatically succeed.
+INT8	gbPadding2[3]			= {0, 0, 0};	//NOT USED
+BOOLEAN gfExtraElites			= 0;	//Set when queen compositions are augmented with bonus elites.
+INT32	giGarrisonArraySize		= 0;
+INT32	giPatrolArraySize		= 0;
+INT32	giForcePercentage		= 0;	//Modifies the starting group sizes relative by percentage
+INT32	giArmyAlertness			= 0;	//The chance the group will spot an adjacent player/militia
+INT32   giArmyAlertnessDecay	= 0;	//How much the spotting chance decreases when spot check succeeds
+UINT8	gubNumAwareBattles		= 0;	//When non-zero, this means the queen is very aware and searching for players.  Every time
+										//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
+										//all adjacent sector checks automatically succeed.
 BOOLEAN gfQueenAIAwake					= FALSE;	//This flag turns on/off the strategic decisions.  If it's off, no reinforcements 
 																					//or assaults will happen.  
 																					//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.  If this
@@ -200,14 +204,17 @@ BOOLEAN gfUseAlternateQueenPosition = FALSE;
 #define SAI_PADDING_BYTES				97
 INT8		gbPadding[SAI_PADDING_BYTES];
 //patrol group info plus padding
-#define SAVED_PATROL_GROUPS			50
+#define SAVED_PATROL_GROUPS			MAX_PATROL_GROUPS
 PATROL_GROUP *gPatrolGroup			= NULL;
 //army composition info plus padding
-#define SAVED_ARMY_COMPOSITIONS	60
-ARMY_COMPOSITION gArmyComp[ NUM_ARMY_COMPOSITIONS ];
+#define SAVED_ARMY_COMPOSITIONS		MAX_ARMY_COMPOSITIONS
+ARMY_COMPOSITION gArmyComp[ MAX_ARMY_COMPOSITIONS ];
 //garrison info plus padding
-#define SAVED_GARRISON_GROUPS		100
+#define SAVED_GARRISON_GROUPS		MAX_GARRISON_GROUPS
 GARRISON_GROUP *gGarrisonGroup	= NULL;
+
+// 
+UINT8 NUM_ARMY_COMPOSITIONS;
 
 extern UINT8 gubNumGroupsArrivedSimultaneously;
 
@@ -239,158 +246,158 @@ extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fF
 
 //If you change the MAX_STRATEGIC_TEAM_SIZE, then all the garrison sizes (start, desired) will have to be changed accordingly.
 
-ARMY_COMPOSITION gOrigArmyComp[ NUM_ARMY_COMPOSITIONS ] = 
-{	//COMPOSITION				PRIORITY		ELITE%		TROOP%		ADMIN 		DESIRED#		START#		PADDING
-	//																								START%
-	QUEEN_DEFENCE,				100,			100,		0,			0,			32,				32,				{0,0,0,0,0,0,0,0,0,0},
-	MEDUNA_DEFENCE,				95,				55,			45,			0,			16,				20,				{0,0,0,0,0,0,0,0,0,0},
-	MEDUNA_SAMSITE,				96,				65,			35,			0,			20,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL1_DEFENCE,				40,				20,			80,			0,			12,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL2_DEFENCE,				30,				10,			90,			0,			10,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL3_DEFENCE,				20,				5,			95,			0,			8,				20,				{0,0,0,0,0,0,0,0,0,0},
-	ORTA_DEFENCE,				90,				50,			50,			0,			18,				19,				{0,0,0,0,0,0,0,0,0,0},
-	EAST_GRUMM_DEFENCE,			80,				20,			80,			0,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	WEST_GRUMM_DEFENCE,			70,				0,			100,		40,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	GRUMM_MINE,					85,				25,			75,			45,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	OMERTA_WELCOME_WAGON,		0,				0,			100,		0,			0,				3,				{0,0,0,0,0,0,0,0,0,0},
-	BALIME_DEFENCE,				60,				45,			55,			20,			10,				4,				{0,0,0,0,0,0,0,0,0,0},
-	TIXA_PRISON,				80,				10,			90,			15,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	TIXA_SAMSITE,				85,				10,			90,			0,			12,				12,				{0,0,0,0,0,0,0,0,0,0},
-	ALMA_DEFENCE,				74,				15,			85,			0,			11,				20,				{0,0,0,0,0,0,0,0,0,0},
-	ALMA_MINE,					80,				20,			80,			45,			15,				20,				{0,0,0,0,0,0,0,0,0,0},
-	CAMBRIA_DEFENCE,			50,				0,			100,		30,			10,				6,				{0,0,0,0,0,0,0,0,0,0},
-	CAMBRIA_MINE,				60,				15,			90,			40,			11,				6,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_DEFENCE,			30,				0,			100,		75,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_MINE,				40,				0,			100,		75,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_SAMSITE,			75,				10,			90,			0,			9,				9,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_AIRPORT,			30,				0,			100,		85,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_DEFENCE,			20,				0,			100,		80,			10,				8,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_MINE,				35,				0,			100,		75,			11,				9,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_SAMSITE,			50,				0,			100,		0,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
-	ROADBLOCK,					20,				2,			98,			0,			8,				0,				{0,0,0,0,0,0,0,0,0,0},
-	SANMONA_SMALL,				0,				0,			0,			0,			0,				0,				{0,0,0,0,0,0,0,0,0,0},			
-};
+ARMY_COMPOSITION gOrigArmyComp[ MAX_ARMY_COMPOSITIONS ];// = 
+//{	//COMPOSITION				PRIORITY		ELITE%		TROOP%		ADMIN 		DESIRED#		START#		PADDING
+//	//																								START%
+//	QUEEN_DEFENCE,				100,			100,		0,			0,			32,				32,				{0,0,0,0,0,0,0,0,0,0},
+//	MEDUNA_DEFENCE,				95,				55,			45,			0,			16,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	MEDUNA_SAMSITE,				96,				65,			35,			0,			20,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	LEVEL1_DEFENCE,				40,				20,			80,			0,			12,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	LEVEL2_DEFENCE,				30,				10,			90,			0,			10,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	LEVEL3_DEFENCE,				20,				5,			95,			0,			8,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	ORTA_DEFENCE,				90,				50,			50,			0,			18,				19,				{0,0,0,0,0,0,0,0,0,0},
+//	EAST_GRUMM_DEFENCE,			80,				20,			80,			0,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
+//	WEST_GRUMM_DEFENCE,			70,				0,			100,		40,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
+//	GRUMM_MINE,					85,				25,			75,			45,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
+//	OMERTA_WELCOME_WAGON,		0,				0,			100,		0,			0,				3,				{0,0,0,0,0,0,0,0,0,0},
+//	BALIME_DEFENCE,				60,				45,			55,			20,			10,				4,				{0,0,0,0,0,0,0,0,0,0},
+//	TIXA_PRISON,				80,				10,			90,			15,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
+//	TIXA_SAMSITE,				85,				10,			90,			0,			12,				12,				{0,0,0,0,0,0,0,0,0,0},
+//	ALMA_DEFENCE,				74,				15,			85,			0,			11,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	ALMA_MINE,					80,				20,			80,			45,			15,				20,				{0,0,0,0,0,0,0,0,0,0},
+//	CAMBRIA_DEFENCE,			50,				0,			100,		30,			10,				6,				{0,0,0,0,0,0,0,0,0,0},
+//	CAMBRIA_MINE,				60,				15,			90,			40,			11,				6,				{0,0,0,0,0,0,0,0,0,0},
+//	CHITZENA_DEFENCE,			30,				0,			100,		75,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
+//	CHITZENA_MINE,				40,				0,			100,		75,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
+//	CHITZENA_SAMSITE,			75,				10,			90,			0,			9,				9,				{0,0,0,0,0,0,0,0,0,0},
+//	DRASSEN_AIRPORT,			30,				0,			100,		85,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
+//	DRASSEN_DEFENCE,			20,				0,			100,		80,			10,				8,				{0,0,0,0,0,0,0,0,0,0},
+//	DRASSEN_MINE,				35,				0,			100,		75,			11,				9,				{0,0,0,0,0,0,0,0,0,0},
+//	DRASSEN_SAMSITE,			50,				0,			100,		0,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
+//	ROADBLOCK,					20,				2,			98,			0,			8,				0,				{0,0,0,0,0,0,0,0,0,0},
+//	SANMONA_SMALL,				0,				0,			0,			0,			0,				0,				{0,0,0,0,0,0,0,0,0,0},			
+//};
 
 //Patrol definitions
 //NOTE:	  A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any 
 //				of the patrol groups, I am coding 0 to be ignored.
 //NOTE:		Must have at least two points.
-PATROL_GROUP gOrigPatrolGroup[] =	
-{ //SIZE	PRIORITY	POINT1		POINT2		POINT3		POINT4		MOD 		GROUPID	WEIGHT	PENDING		
-	//																												DAY100									GROUP ID
-	8,			40,				SEC_B1,		SEC_C1,		SEC_C3,		SEC_A3,		-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			35,				SEC_B4,		SEC_B7,		SEC_C7,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			25,				SEC_A8,		SEC_B8,		SEC_B9,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			30,				SEC_B10,	SEC_B12,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	7,			45,				SEC_A11,	SEC_A14,	SEC_D14,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//5	
-	6,			50,				SEC_C8,		SEC_C9,		SEC_D9,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			55,				SEC_D3,		SEC_G3,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			50,				SEC_D6,		SEC_D7,		SEC_F7,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			55,				SEC_E8,		SEC_E11,	SEC_F11,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			60,				SEC_E12,	SEC_E15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//10
-	12,			60,				SEC_G4,		SEC_G7,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			65,				SEC_G10,	SEC_G12,	SEC_F12,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			65,				SEC_G13,	SEC_G15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			65,				SEC_H15,	SEC_J15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	14,			65,				SEC_H12,	SEC_J12,	SEC_J13,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//15
-	13,			70,				SEC_H9,		SEC_I9,		SEC_I10,	SEC_J10,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	11,			70,				SEC_K11,	SEC_K14,	SEC_J14,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			75,				SEC_J2,		SEC_K2,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_I3,		SEC_J3,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_J6,		SEC_K6,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//20
-	13,			85,				SEC_K7,		SEC_K10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			90,				SEC_L10,	SEC_M10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			90,				SEC_N9,		SEC_N10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_L7,		SEC_L8,		SEC_M8,		SEC_M9,		-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	14,			80,				SEC_H4,		SEC_H5,		SEC_I5,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//25
-	7,			40,				SEC_D4,		SEC_E4,		SEC_E5,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	7,			50,				SEC_C10,	SEC_C11,	SEC_D11,	SEC_D12,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	8,			40,				SEC_A15,	SEC_C15,	SEC_C16,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			30,				SEC_L13,	SEC_M13,	SEC_M14,	SEC_L14,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	//29
-};
-#define PATROL_GROUPS 29
+PATROL_GROUP gOrigPatrolGroup[MAX_PATROL_GROUPS];// =	
+//{ //SIZE	PRIORITY	POINT1		POINT2		POINT3		POINT4		MOD 	GROUPID	WEIGHT	PENDING		
+//	//																	DAY100					GROUP ID
+//	8,		40,			SEC_B1,		SEC_C1,		SEC_C3,		SEC_A3,		-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	6,		35,			SEC_B4,		SEC_B7,		SEC_C7,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	6,		25,			SEC_A8,		SEC_B8,		SEC_B9,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	6,		30,			SEC_B10,	SEC_B12,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	7,		45,			SEC_A11,	SEC_A14,	SEC_D14,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//5	
+//	6,		50,			SEC_C8,		SEC_C9,		SEC_D9,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		55,			SEC_D3,		SEC_G3,		0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	10,		50,			SEC_D6,		SEC_D7,		SEC_F7,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	10,		55,			SEC_E8,		SEC_E11,	SEC_F11,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	10,		60,			SEC_E12,	SEC_E15,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//10
+//	12,		60,			SEC_G4,		SEC_G7,		0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		65,			SEC_G10,	SEC_G12,	SEC_F12,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		65,			SEC_G13,	SEC_G15,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	10,		65,			SEC_H15,	SEC_J15,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	14,		65,			SEC_H12,	SEC_J12,	SEC_J13,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//15
+//	13,		70,			SEC_H9,		SEC_I9,		SEC_I10,	SEC_J10,	-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	11,		70,			SEC_K11,	SEC_K14,	SEC_J14,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		75,			SEC_J2,		SEC_K2,		0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		80,			SEC_I3,		SEC_J3,		0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		80,			SEC_J6,		SEC_K6,		0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//20
+//	13,		85,			SEC_K7,		SEC_K10,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		90,			SEC_L10,	SEC_M10,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		90,			SEC_N9,		SEC_N10,	0,			0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		80,			SEC_L7,		SEC_L8,		SEC_M8,		SEC_M9,		-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	14,		80,			SEC_H4,		SEC_H5,		SEC_I5,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//25
+//	7,		40,			SEC_D4,		SEC_E4,		SEC_E5,		0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	7,		50,			SEC_C10,	SEC_C11,	SEC_D11,	SEC_D12,	-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	8,		40,			SEC_A15,	SEC_C15,	SEC_C16,	0,			-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	12,		30,			SEC_L13,	SEC_M13,	SEC_M14,	SEC_L14,	-1,		0,		0,		0,				{0,0,0,0,0,0,0,0,0,0},
+//	//29
+//};
+//#define PATROL_GROUPS 29
 
 
 
-GARRISON_GROUP gOrigGarrisonGroup[] = 
-{ //SECTOR	MILITARY								WEIGHT	UNUSED
-	//				COMPOSITION											GROUP ID
-	SEC_P3,		QUEEN_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_O3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_O4,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N4,		MEDUNA_SAMSITE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//5
-	SEC_N5,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M3,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M4,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M5,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N6,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//10
-	SEC_M2,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L3,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L4,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L5,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M6,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//15
-	SEC_N7,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L2,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K3,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K5,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L6,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//20
-	SEC_M7,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N8,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K4,		ORTA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G1,		WEST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G2,		EAST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//25
-	SEC_H1,		WEST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H2,		EAST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H3,		GRUMM_MINE,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_A9,		OMERTA_WELCOME_WAGON,		0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L11,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//30
-	SEC_L12,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_J9,		TIXA_PRISON,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_I8,		TIXA_SAMSITE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H13,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H14,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//35
-	SEC_I13,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_I14,	ALMA_MINE,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_F8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_F9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//40
-	SEC_G9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H8,		CAMBRIA_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_A2,		CHITZENA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_B2,		CHITZENA_MINE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D2,		CHITZENA_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//45
-	SEC_B13,	DRASSEN_AIRPORT,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C13,	DRASSEN_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D13,	DRASSEN_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D15,	DRASSEN_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G12,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//50
-	SEC_M10,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G6,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C9,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K10,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G7,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//55
-	SEC_G3,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C5,		SANMONA_SMALL,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	//57
-};
+GARRISON_GROUP gOrigGarrisonGroup[MAX_GARRISON_GROUPS];// = 
+//{   //SECTOR	MILITARY						WEIGHT					UNUSED
+//	//			COMPOSITION						GROUP ID
+//	SEC_P3,		QUEEN_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_O3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_O4,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_N3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_N4,		MEDUNA_SAMSITE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//5
+//	SEC_N5,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_M3,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_M4,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_M5,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_N6,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//10
+//	SEC_M2,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L3,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L4,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L5,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_M6,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//15
+//	SEC_N7,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L2,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_K3,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_K5,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L6,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//20
+//	SEC_M7,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_N8,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_K4,		ORTA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G1,		WEST_GRUMM_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G2,		EAST_GRUMM_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//25
+//	SEC_H1,		WEST_GRUMM_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_H2,		EAST_GRUMM_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_H3,		GRUMM_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_A9,		OMERTA_WELCOME_WAGON,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_L11,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//30
+//	SEC_L12,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_J9,		TIXA_PRISON,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_I8,		TIXA_SAMSITE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_H13,	ALMA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_H14,	ALMA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//35
+//	SEC_I13,	ALMA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_I14,	ALMA_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_F8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_F9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//40
+//	SEC_G9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_H8,		CAMBRIA_MINE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_A2,		CHITZENA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_B2,		CHITZENA_MINE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_D2,		CHITZENA_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//45
+//	SEC_B13,	DRASSEN_AIRPORT,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_C13,	DRASSEN_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_D13,	DRASSEN_MINE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_D15,	DRASSEN_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G12,	ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//50
+//	SEC_M10,	ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G6,		ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_C9,		ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_K10,	ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_G7,		ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//55
+//	SEC_G3,		ROADBLOCK,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	SEC_C5,		SANMONA_SMALL,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+//	//57
+//};
 
 //Various decision functions and utils to help make those decisions.
 BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID );
@@ -484,6 +491,43 @@ enum SAIMOVECODE
 };
 void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention );
 
+
+
+
+/* This is only a dirty fix to prevent CTD: 
+ * when loading a game, sometimes I found that
+ * 'gGarrisonGroup' was not allocated.
+ * so I did:
+ * - added NULL check,
+ * - added some AssertMsg, 
+ * - added new allocation on different places
+ * - condensed this paces to the following function
+ * ---------------------------
+ * 2007-03-03, Sgt. Kolja 
+ */
+ 
+/* PUBLIC */
+void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize )
+{{
+  GARRISON_GROUP *pG;
+
+  pG = *ppGarrison;
+
+  if( !pG )
+    {
+    //AssertMsg( 0, "invalid global Array in" __FILE__ );
+    //return;
+  	 pG = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
+    Assert( pG );
+    memcpy( pG, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
+    *pGarraySize = sizeof( gOrigGarrisonGroup ) / sizeof(GARRISON_GROUP);
+    *ppGarrison = pG;
+    }
+  return;  
+}}
+
+
+
 //returns the number of reinforcements permitted to be sent.  Will increased if the denied counter is non-zero.
 INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements )
 {
@@ -491,9 +535,11 @@ INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinfor
 	INT32 iExistingForces;
 	SECTORINFO *pSector;
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic1");
+ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic1");
 
-	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iExistingForces = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 	iReinforcementsRequested = gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation - iExistingForces;
 
@@ -532,7 +578,9 @@ INT32 ReinforcementsAvailable( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	INT32 iReinforcementsAvailable;
 
-	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iReinforcementsAvailable = pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
 	iReinforcementsAvailable -= gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation;
 
@@ -577,7 +625,10 @@ BOOLEAN PlayerForceTooStrong( UINT8 ubSectorID, UINT16 usOffensePoints, UINT16 *
 void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 {
 	INT32 i;
-	for( i = 0; i < giGarrisonArraySize; i++ )
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+ for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID && !gGarrisonGroup[ i ].ubPendingGroupID )
 		{
@@ -625,6 +676,9 @@ void ValidatePendingGroups()
 		GROUP *pGroup;
 		INT32 i, iErrorsForInvalidPendingGroup = 0;
 		UINT8 ubGroupID;
+
+		Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 		for( i = 0; i < giPatrolArraySize; i++ )
 		{
 			ubGroupID = gPatrolGroup[ i ].ubPendingGroupID;
@@ -641,19 +695,19 @@ void ValidatePendingGroups()
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
 			ubGroupID = gGarrisonGroup[ i ].ubPendingGroupID;
-			if( ubGroupID )
-			{
-				pGroup = GetGroup( ubGroupID );
-				if( !pGroup || pGroup->fPlayer )
+  		if( ubGroupID )
+	  	{
+		  	pGroup = GetGroup( ubGroupID );
+			  if( !pGroup || pGroup->fPlayer )
 				{
-					iErrorsForInvalidPendingGroup++;
-					gGarrisonGroup[ i ].ubPendingGroupID = 0;
-				}
-			}
+  				iErrorsForInvalidPendingGroup++;
+	  			gGarrisonGroup[ i ].ubPendingGroupID = 0;
+		  	}
+		  }
 		}
 		if( iErrorsForInvalidPendingGroup )
 		{
-			UINT16 str[256];
+			wchar_t str[256];
 			swprintf( str, L"Strategic AI:  Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save."
 										 L"You can continue playing, as this has been auto-corrected.  No need to send any debug files.", iErrorsForInvalidPendingGroup );
 			SAIReportError( str );
@@ -667,24 +721,28 @@ void ValidateWeights( INT32 iID )
 		INT32 i;
 		INT32 iSumRequestPoints = 0;
 		INT32 iSumReinforcementPoints = 0;
-		for( i = 0; i < giPatrolArraySize; i++ )
-		{
-			iSumRequestPoints += gPatrolGroup[ i ].bWeight;
-		}
-		for( i = 0; i < giGarrisonArraySize; i++ )
-		{
-			if( gGarrisonGroup[ i ].bWeight > 0 )
-			{
-				iSumRequestPoints += gGarrisonGroup[ i ].bWeight;
-			}
-			else if( gGarrisonGroup[ i ].bWeight < 0 )
-			{
-				iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
-			}
-		}
+
+   Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ 
+   for( i = 0; i < giPatrolArraySize; i++ )
+ 	{
+ 		iSumRequestPoints += gPatrolGroup[ i ].bWeight;
+ 	}
+ 	for( i = 0; i < giGarrisonArraySize; i++ )
+ 	{
+ 		if( gGarrisonGroup[ i ].bWeight > 0 )
+ 		{
+ 			iSumRequestPoints += gGarrisonGroup[ i ].bWeight;
+ 		}
+ 		else if( gGarrisonGroup[ i ].bWeight < 0 )
+ 		{
+ 			iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
+ 		}
+ 	}
+   
 		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
 		{
-			UINT16 str[256];
+			wchar_t str[256];
 			swprintf( str, L"Strategic AI:  Internal error #%02d (total request/reinforcement points).  Please report error including error#.  "
 										 L"You can continue playing, as the points have been auto-corrected.  No need to send any save/debug files.", iID );
 			//Correct the misalignment.
@@ -712,7 +770,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 		{
 			#ifdef JA2BETAVERSION
 			{
-				UINT16 str[256];
+				wchar_t str[256];
 				swprintf( str, L"Strategic AI:  Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Strategic Decisions.txt.",
 											 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
 				SAIReportError( str );
@@ -753,7 +811,7 @@ void ValidateLargeGroup( GROUP *pGroup )
 	#ifdef JA2BETAVERSION
 		if( pGroup->ubGroupSize > 25 )
 		{
-			UINT16 str[ 512 ];
+			wchar_t str[ 512 ];
 			swprintf( str, L"Strategic AI warning:  Enemy group containing %d soldiers "
 									 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
 									 L"to evaluate a potential problems with very large enemy groups.",
@@ -810,7 +868,7 @@ void ValidatePlayersAreInOneGroupOnly()
 	GROUP *pGroup, *pOtherGroup;
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
-	UINT16 str[ 1024 ];
+	wchar_t str[ 1024 ];
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
 	iNumErrors = 0;
@@ -1044,18 +1102,17 @@ void InitStrategicAI()
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
 	INT32 iPercentElitesBonus;
-
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
-
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
+	
 	//Initialize the basic variables.
 
 	gbPadding2[0]						= 0;
 	gbPadding2[1]						= 0;
 	gbPadding2[2]						= 0;
 	gfExtraElites						= FALSE;	
-	giGarrisonArraySize			= 0;
-	giPatrolArraySize				= 0;
+	//giGarrisonArraySize			= 0;
+	//giPatrolArraySize				= 0;
 	giForcePercentage				= 0;	
 	giArmyAlertness					= 0;	
 	giArmyAlertnessDecay		= 0;	
@@ -1147,12 +1204,37 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 			gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
 			gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
 			break;
+			// Kaiden: original Experienced troop compositions:
+		  //case DIF_LEVEL_MEDIUM:
+			//gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
+			//gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
+			//break;
+
+		//Kaiden: Added to allow an elite bonus for experienced.
+		//Kaiden: Fixed to add the old way of doing this if the
+		//bonus is set to 0 percent.
 		case DIF_LEVEL_MEDIUM:
-			gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
-			gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
+			if (gGameExternalOptions.iPercentElitesBonusExperienced == 0)
+			{
+				gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
+				gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
+			}
+			else
+			{
+				for( i = 0; i < NUM_ARMY_COMPOSITIONS; i++ )
+				{
+					if ( i != OMERTA_WELCOME_WAGON )
+					{
+						iPercentElitesBonus = gGameExternalOptions.iPercentElitesBonusExperienced;
+						gArmyComp[ i ].bElitePercentage = min(100,gArmyComp[ i ].bElitePercentage + iPercentElitesBonus);
+						gArmyComp[ i ].bTroopPercentage = max(0,gArmyComp[ i ].bTroopPercentage - iPercentElitesBonus);
+						gArmyComp[ i ].bAdminPercentage = 0;
+					}
+				}
+			}
 			break;
 		case DIF_LEVEL_HARD:
-			for( i = 0; i <= NUM_ARMY_COMPOSITIONS; i++ )
+			for( i = 0; i < NUM_ARMY_COMPOSITIONS; i++ )
 			{
 				if ( i != OMERTA_WELCOME_WAGON )
 				{
@@ -1163,7 +1245,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 				}
 			}
 		case DIF_LEVEL_INSANE:
-			for( i = 0; i <= NUM_ARMY_COMPOSITIONS; i++ )
+			for( i = 0; i < NUM_ARMY_COMPOSITIONS; i++ )
 			{
 				if ( i != OMERTA_WELCOME_WAGON )
 				{
@@ -1175,27 +1257,38 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 			}
 			break;
 	}
+
 	//initialize the patrol group definitions
-	giPatrolArraySize = sizeof( gOrigPatrolGroup ) / sizeof( PATROL_GROUP );
-	if( !gPatrolGroup )
-	{ //Allocate it (otherwise, we just overwrite it because the size never changes)
-		gPatrolGroup = (PATROL_GROUP*)MemAlloc( sizeof( gOrigPatrolGroup ) );
-		Assert( gPatrolGroup );
+	giPatrolArraySize = iOrigPatrolArraySize;
+	if( gPatrolGroup )
+	{
+		MemFree( gPatrolGroup );
 	}
+	gPatrolGroup = (PATROL_GROUP*)MemAlloc( sizeof( gOrigPatrolGroup ) );
+	Assert( gPatrolGroup );
 	memcpy( gPatrolGroup, gOrigPatrolGroup, sizeof( gOrigPatrolGroup ) );
 
+	if( gubPatrolReinforcementsDenied )
+	{
+		MemFree( gubPatrolReinforcementsDenied );
+	}
 	gubPatrolReinforcementsDenied = (UINT8*)MemAlloc( giPatrolArraySize );
 	memset( gubPatrolReinforcementsDenied, 0, giPatrolArraySize );
 
 	//initialize the garrison group definitions
-	giGarrisonArraySize = sizeof( gOrigGarrisonGroup ) / sizeof( GARRISON_GROUP );
-	if( !gGarrisonGroup )
+	giGarrisonArraySize = iOrigGarrisonArraySize;
+	if( gGarrisonGroup )
 	{
-		gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
-		Assert( gGarrisonGroup );
+		MemFree( gGarrisonGroup );
 	}
+	gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
+	Assert( gGarrisonGroup );
 	memcpy( gGarrisonGroup, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
 	
+	if ( gubGarrisonReinforcementsDenied )
+	{
+		MemFree( gubGarrisonReinforcementsDenied );
+	}
 	gubGarrisonReinforcementsDenied = (UINT8*)MemAlloc( giGarrisonArraySize );
 	memset( gubGarrisonReinforcementsDenied, 0, giGarrisonArraySize );
 
@@ -1225,6 +1318,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 			gPatrolGroup[ i ].bSize = (INT8)max( gubMinEnemyGroupSize, min( iMaxEnemyGroupSize, (gPatrolGroup[ i ].bSize * giForcePercentage / 100 ) ) );
 		}
 	}
+
 
 	//Now, initialize the garrisons based on the initial sizes (all variances are plus or minus 1).
 	for( i = 0; i < giGarrisonArraySize; i++ )
@@ -1334,6 +1428,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 		//Spread them out so that they process at different times.
 		AddPeriodStrategicEventWithOffset( EVENT_CHECK_ENEMY_CONTROLLED_SECTOR, 140 - 20 * gGameOptions.ubDifficultyLevel + Random( 4 ), 475 + i, gGarrisonGroup[ i ].ubSectorID );
 	}
+
 	//Now, initialize each of the patrol groups
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{	// IGNORE COMMENT, FEATURE REMOVED!
@@ -1379,25 +1474,56 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic3");
 		//}
 	}
 
+	// Lesh: new declaration of sam sites
+	for (i=0; i < NUMBER_OF_SAMS; i++)
+	{
+		SectorInfo[ pSamList[i] ].uiFlags |= SF_SAM_SITE;
+	}
+
 	//Setup the flags for the four sam sites.
-	SectorInfo[SEC_D2].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_D15].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_I8].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_N4].uiFlags |= SF_SAM_SITE;
+	//SectorInfo[SEC_D2].uiFlags |= SF_SAM_SITE;
+	//SectorInfo[SEC_D15].uiFlags |= SF_SAM_SITE;
+	//SectorInfo[SEC_I8].uiFlags |= SF_SAM_SITE;
+	//SectorInfo[SEC_N4].uiFlags |= SF_SAM_SITE;
 
 	//final thing to do is choose 1 cache map out of 5 possible maps.  Simply select the sector randomly,
 	//set up the flags to use the alternate map, then place 8-12 regular troops there (no ai though).
 	//changing MAX_STRATEGIC_TEAM_SIZE may require changes to to the defending force here.
-	switch( Random( 5 ) )
+	if ( !gGameExternalOptions.fEnableAllWeaponCaches )
 	{
-		case 0:	pSector = &SectorInfo[ SEC_E11 ]; break;
-		case 1:	pSector = &SectorInfo[ SEC_H5 ]; break;
-		case 2:	pSector = &SectorInfo[ SEC_H10 ]; break;
-		case 3:	pSector = &SectorInfo[ SEC_J12 ]; break;
-		case 4:	pSector = &SectorInfo[ SEC_M9 ]; break;
+		switch( Random( 5 ) )
+		{
+			case 0:	pSector = &SectorInfo[ SEC_E11 ]; break;
+			case 1:	pSector = &SectorInfo[ SEC_H5 ]; break;
+			case 2:	pSector = &SectorInfo[ SEC_H10 ]; break;
+			case 3:	pSector = &SectorInfo[ SEC_J12 ]; break;
+			case 4:	pSector = &SectorInfo[ SEC_M9 ]; break;
+		}
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
 	}
-	pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
-	pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+	else
+	{
+		pSector = &SectorInfo[ SEC_E11 ];
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+
+		pSector = &SectorInfo[ SEC_H5 ];
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+
+		pSector = &SectorInfo[ SEC_H10 ];
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+
+		pSector = &SectorInfo[ SEC_J12 ];
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+
+		pSector = &SectorInfo[ SEC_M9 ];
+		pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
+		pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+	}
 
 	ValidateWeights( 1 );
 }
@@ -1408,11 +1534,13 @@ void KillStrategicAI()
 	{
 		MemFree( gPatrolGroup );
 		gPatrolGroup = NULL;
+		giPatrolArraySize = 0;
 	}
 	if( gGarrisonGroup )
 	{
 		MemFree( gGarrisonGroup );
 		gGarrisonGroup = NULL;
+		giGarrisonArraySize = 0;
 	}
 	if( gubPatrolReinforcementsDenied )
 	{
@@ -1443,6 +1571,8 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 	SECTORINFO *pSector;
 	BOOLEAN fPermittedToAttack = TRUE;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ 
 	pSector = &SectorInfo[ ubSectorID ];
 	fPermittedToAttack = OkayForEnemyToMoveThroughSector( ubSectorID );
 	if( pGroup && *pGroup && pSector->ubGarrisonID != NO_GARRISON )
@@ -1564,7 +1694,7 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 	UINT8 ubEnemies;
 	pSector = &SectorInfo[ ubSectorID ];
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
+ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
 
 	//First check to see if the player is at his final destination.
 	if( !GroupAtFinalDestination( pPlayerGroup ) )
@@ -1579,6 +1709,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic4");
 		RequestAttackOnSector( ubSectorID, usDefencePoints );
 		return;
 	}
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -1719,6 +1851,8 @@ BOOLEAN HandleEmptySectorNoticedByPatrolGroup( GROUP *pGroup, UINT8 ubEmptySecto
 	UINT8 ubSectorX = (UINT8)(ubEmptySectorID % 16) + 1;
 	UINT8 ubSectorY = (UINT8)(ubEmptySectorID / 16) + 1;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	ubGarrisonID = SectorInfo[ ubEmptySectorID ].ubGarrisonID;
 	if( ubGarrisonID != NO_GARRISON )
 	{
@@ -1765,6 +1899,8 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 		return;
 	}
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( gGarrisonGroup[ ubDstGarrisonID ].ubPendingGroupID )
 	{ //A group is already on-route, so don't send anybody from here.
 		return;
@@ -1789,6 +1925,8 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 	SECTORINFO *pSector;
 	UINT16 usOffensePoints;
 	UINT8 ubSectorX, ubSectorY;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	ubSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
@@ -1852,7 +1990,9 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 		return TRUE;
 	}
 	else if( pGroup->pEnemyGroup->ubIntention == REINFORCEMENTS )
-	{ //The group has arrived at the location where he is supposed to reinforce.
+	{ 
+   Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+   //The group has arrived at the location where he is supposed to reinforce.
 		//Step 1 -- Check for matching garrison location
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
@@ -1950,7 +2090,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 					{
 						UINT8 ubCut;
 						#ifdef JA2BETAVERSION
-						UINT16 str[512];
+						wchar_t str[512];
 						swprintf( str, L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d."
 													 L"Please send Strategic Decisions.txt and PRIOR save.", 
 													 pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
@@ -2238,7 +2378,10 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 	{
 		return;
 	}
-	//First, determine if the sector is still owned by the enemy.  
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+  
+  //First, determine if the sector is still owned by the enemy.  
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -2360,6 +2503,9 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 {
 	INT32 i;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == ubGroupID )
@@ -2426,6 +2572,7 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 	INT32 iWeight, iPrevWeight;
 	INT32 iDesiredPop, iCurrentPop, iPriority;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 6 );
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
@@ -2468,6 +2615,8 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 void RecalculateSectorWeight( UINT8 ubSectorID )
 {
 	INT32 i;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID )
@@ -2504,6 +2653,8 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 	INT32 i, iRandom, iWeight;
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Check to see if we could send reinforcements from Alma.  Only Drassen/Cambria get preferred
 	//service from Alma, due to it's proximity and Alma's purpose as a forward military base.
@@ -2614,6 +2765,7 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 	UINT8 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 8 );
 
 	if( gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_B13 ||
@@ -2846,6 +2998,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 21 );
 
 	//Determine how many units the patrol group needs.
@@ -3018,6 +3171,8 @@ void EvaluateQueenSituation()
 
 	iOrigRequestPoints = giRequestPoints;	// debug only!
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	//go through garrisons first
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
@@ -3168,13 +3323,26 @@ BOOLEAN SaveStrategicAI( HWFILE hFile )
 			return FALSE;
 	}
 	//Save the garrison information!
+  /* Step 1: fill an EMPTY GARRISON for later padding */
 	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
-	FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
+  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+    {
+    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+    }
+
+  /* Step 2: write current Garrison Block of <giGarrisonArraySize> Elements */
+  FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 	if( uiNumBytesWritten != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 		return FALSE;
+
+  /* Step 3: after doing well, calculate how many Garrisons kept empty (and therefore are not saved) 
+   * in <strategic AI.h> it is defined as MAX_GARRISON_GROUPS 100. To have the same offset for the next field
+   * every time, we have to pad the unused garrisons until we have stored 100
+   */
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
-	while( i-- )
+	while( i-- > 0 )
 	{
+    /* write an empty garison as a padding filling block */
 		FileWrite( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 		if( uiNumBytesWritten != sizeof( GARRISON_GROUP ) )
 			return FALSE;
@@ -3294,6 +3462,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	FileRead( hFile, gbPadding,								SAI_PADDING_BYTES, &uiNumBytesRead );
 	if( uiNumBytesRead != SAI_PADDING_BYTES )
 		return FALSE;
+
 	//Restore the army composition 
 	FileRead( hFile, gArmyComp,	NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ), &uiNumBytesRead );
 	if( uiNumBytesRead != NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) )
@@ -3329,14 +3498,29 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	{
 		MemFree( gGarrisonGroup );
 	}
-	gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+
+  /* giGarrisonArraySize has been zero here. Found it several times when loading
+   * a differnet build of JA2.1.13. Now fixed a little bit, I hope.
+   */
+  if( giGarrisonArraySize<iOrigGarrisonArraySize || giGarrisonArraySize<1 )
+    {
+    giGarrisonArraySize = iOrigGarrisonArraySize;
+    }
+  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+    {
+    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+    }
+
+  gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+  Assert( gGarrisonGroup );
 	FileRead( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 	if( uiNumBytesRead != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 	{
 		return FALSE;
 	}
-	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
-	while( i-- )
+  /* if the Savegame File contains more Garrisons then our Array, toss the remaining ones into the saucer */
+  i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
+	while( i-- > 0 ) /* prevent underrun, 2007-03-03, Sgt. Kolja  */
 	{
 		FileRead( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 		if( uiNumBytesRead != sizeof( GARRISON_GROUP ) )
@@ -3375,11 +3559,13 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		InitStrategicMovementCosts();
 	#endif
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.
 
 		//Recreate the compositions
-		memcpy( gArmyComp, gOrigArmyComp, NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) );
+		memcpy( gArmyComp, gOrigArmyComp, MAX_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) );
 		EvolveQueenPriorityPhase( TRUE );
 		
 		//Recreate the patrol desired sizes
@@ -3753,8 +3939,8 @@ void EvolveQueenPriorityPhase( BOOLEAN fForceChange )
 	INT32 i, index, num, iFactor;
 	INT32 iChange, iNew, iNumSoldiers, iNumPromotions;
 	SECTORINFO *pSector;
-	UINT8 ubOwned[ NUM_ARMY_COMPOSITIONS ];
-	UINT8 ubTotal[ NUM_ARMY_COMPOSITIONS ];
+	UINT8 ubOwned[ MAX_ARMY_COMPOSITIONS ];
+	UINT8 ubTotal[ MAX_ARMY_COMPOSITIONS ];
 	UINT8 ubNewPhase;
 	ubNewPhase = CurrentPlayerProgressPercentage() / 10;
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
@@ -3764,6 +3950,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 	{
 		return;
 	}
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gubQueenPriorityPhase > ubNewPhase )
 	{
@@ -3791,8 +3979,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 	//are controlled by her, the desired number will be increased as well as the priority.  On the other
 	//hand, if she doesn't own those sectors, the values will be decreased instead.  All values are based off of
 	//the originals.
-	memset( ubOwned, 0, NUM_ARMY_COMPOSITIONS );
-	memset( ubTotal, 0, NUM_ARMY_COMPOSITIONS );
+	memset( ubOwned, 0, MAX_ARMY_COMPOSITIONS );
+	memset( ubTotal, 0, MAX_ARMY_COMPOSITIONS );
 
 	//Record the values required to calculate the percentage of each composition type that the queen controls.
 	for( i = 0; i < giGarrisonArraySize; i++ )
@@ -3963,6 +4151,8 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 		case STRATEGIC_AI_ACTION_KINGPIN_DEAD:
 			//Immediate send a small garrison to C5 (to discourage access to Tony the dealer)
 			/*
+     Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 * added NULL fix, 2007-03-03, Sgt. Kolja *
+
 			for( i = 0; i < giGarrisonArraySize; i++ )
 			{
 				if( gGarrisonGroup[ i ].ubComposition == SANMONA_SMALL )
@@ -4393,6 +4583,8 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 		return;
 	}
 	
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
 	{ //If the sector doesn't belong to the player, then we shouldn't be calling this function!
 		SAIReportError( L"StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled." );
@@ -4563,6 +4755,9 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 	//AssertMsg( giPatrolArraySize == PATROL_GROUPS && giGarrisonArraySize == GARRISON_GROUPS, "Strategic AI -- Patrol and/or garrison group definition mismatch." );
 	ubBestDist = 255;
 	iBestIndex = -1;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID )
@@ -4689,6 +4884,9 @@ void MassFortifyTowns()
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubNumTroops, ubDesiredTroops;
+
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		pSector = &SectorInfo[ gGarrisonGroup[ i ].ubSectorID ];
@@ -4721,6 +4919,8 @@ void MassFortifyTowns()
 
 void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 {
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
 		INT32 iDesired, iSurplus;
@@ -4756,6 +4956,8 @@ void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 {
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	switch( ubSectorID )
 	{
 		case SEC_B2:
@@ -4790,6 +4992,8 @@ BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 
 	iAvailable = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
@@ -4815,6 +5019,8 @@ BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID )
 	INT32 iAvailable;
 	INT32 iDesired;
 	SECTORINFO *pSector;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gGarrisonGroup[ iGarrisonID ].ubPendingGroupID )
 	{
@@ -4965,7 +5171,7 @@ void UpgradeAdminsToTroops()
 	GROUP *pGroup;
 	INT16 sPatrolIndex;
 
-
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	// on normal, AI evaluates approximately every 10 hrs.  There are about 130 administrators seeded on the map.
 	// Some of these will be killed by the player.
 
@@ -5105,6 +5311,7 @@ INT16 FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID )
 INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 {
 	INT16 sGarrisonIndex;
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( sGarrisonIndex = 0; sGarrisonIndex < giGarrisonArraySize; sGarrisonIndex++ )
 	{
@@ -5155,6 +5362,7 @@ void ReassignAIGroup( GROUP **pGroup )
 
 	(*pGroup)->ubSectorIDOfLastReassignment = ubSectorID;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ClearPreviousAIGroupAssignment( *pGroup );
 
 	//First thing to do, is teleport the group to be AT the sector he is currently moving from.  Otherwise, the 
@@ -5314,6 +5522,8 @@ void RepollSAIGroup( GROUP *pGroup )
 {
 	INT32 i;
 	Assert( !pGroup->fPlayer );
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	if( GroupAtFinalDestination( pGroup ) )
 	{
 		EvaluateGroupSituation( pGroup );
@@ -5345,6 +5555,8 @@ void RepollSAIGroup( GROUP *pGroup )
 void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 {
 	INT32 i;
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
@@ -5414,6 +5626,7 @@ void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSi
 	UINT8 ubOrigNumTroops;
 	UINT8 ubOrigSize;
 
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 	iCompositionID = gGarrisonGroup[ iGarrisonID ].ubComposition;
 
 	CalcNumTroopsBasedOnComposition( &ubNumTroops, &ubNumElites, ubSize, iCompositionID );
@@ -5578,6 +5791,7 @@ void ReinitializeUnvisitedGarrisons()
 	//Recreate the compositions
 	memcpy( gArmyComp, gOrigArmyComp, NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) );
 	EvolveQueenPriorityPhase( TRUE );
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Go through each unvisited sector and recreate the garrison forces based on 
 	//the desired population.
@@ -5644,6 +5858,9 @@ GROUP* FindPendingGroupForGarrisonSector( UINT8 ubSectorID )
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
+
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
 		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )

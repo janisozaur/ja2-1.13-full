@@ -48,6 +48,8 @@ INT32 GlowColorsList[][3] ={
 // btn callbacks
 void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason);
 
+void ResetActivationStringTextBox(void);
+
 // position defines
 #define IMP_PLAYER_ACTIVATION_STRING_X LAPTOP_SCREEN_UL_X + 261
 #define IMP_PLAYER_ACTIVATION_STRING_Y LAPTOP_SCREEN_WEB_UL_Y + 336
@@ -306,7 +308,6 @@ void HandleTextEvent( UINT32 uiKey )
 {
    // this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	 // or delete it
-
   switch( uiKey )
 	{
 	  case ( BACKSPACE ): 
@@ -339,7 +340,7 @@ void HandleTextEvent( UINT32 uiKey )
 	    if( uiKey >= 'A' && uiKey <= 'Z' || 
 					uiKey >= 'a' && uiKey <= 'z' ||
 					uiKey >= '0' && uiKey <= '9' ||
-					uiKey == '_' || uiKey == '.' )
+					uiKey == '_' || uiKey == '.' || uiKey ==' ') // WANNE NEW: added ' '
 			{ 
 				// if the current string position is at max or great, do nothing
         if( iStringPos >= 8 )
@@ -383,50 +384,120 @@ void HandleTextEvent( UINT32 uiKey )
 void ProcessPlayerInputActivationString( void )
 {
   // prcess string to see if it matches activation string
-
-	if( NumberOfMercsOnPlayerTeam() >= 18 )		
-		return;
-
 	char charPlayerActivationString[32];
 	wcstombs(charPlayerActivationString,pPlayerActivationString,32);
 
-//Madd multiple imps if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) )&&( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
-  if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
+	BOOLEAN freeMercSlot = TRUE;
+
+	// WANNE: Check total number of hired mercs
+	if( NumberOfMercsOnPlayerTeam() >= 18 )	
 	{
-		// Kaiden: Need to reset skills, attributes and personalities with the new UB Method.
-		ResetSkillsAttributesAndPersonality( );
-		ClearAllSkillsList( );
-	  iCurrentImpPage = IMP_MAIN_PAGE;
-	
+		freeMercSlot = FALSE;
+	}
+
+	//Madd multiple imps if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) )&&( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
+	if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
+	{
+		// WANNE: Check total number of hired mercs
+		if( freeMercSlot == FALSE )	
+		{
+			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		if (CountFilledIMPSlots(-1) < gGameExternalOptions.iMaxIMPCharacters)
+		{
+			// Kaiden: Need to reset skills, attributes and personalities with the new UB Method.
+			ResetSkillsAttributesAndPersonality( );
+			ClearAllSkillsList( );
+			iCurrentImpPage = IMP_MAIN_PAGE;
+		}
+		else
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 8 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		}
 	}
 	//Madd multiple imps else if( ( wcscmp(pPlayerActivationString, L"90210") == 0 ) && ( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) )
 	else if( wcscmp(pPlayerActivationString, L"90210") == 0 )
 	{
-		LoadImpCharacter( IMP_MERC_FILENAME );
+		// WANNE: Check total number of hired mercs
+		if( freeMercSlot == FALSE )	
+		{
+			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		if (CountFilledIMPSlots(-1) < gGameExternalOptions.iMaxIMPCharacters)
+		{
+			if (LoadImpCharacter( IMP_MERC_FILENAME ) == TRUE)
+			{
+				// Reset activation text box
+				ResetActivationStringTextBox();
+
+				//DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 11 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+				AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), LaptopSaveInfo.iIMPIndex );
+			}
+		}
+		else
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 8 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		}
 	}
 	// Madd: load characters by name
 	else if ( ImpExists( charPlayerActivationString ) )
 	{
-		LoadImpCharacter( charPlayerActivationString );
-	}
+		// WANNE: Check total number of hired mercs
+		if( freeMercSlot == FALSE )	
+		{
+			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_18_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
 
+		if (CountFilledIMPSlots(-1) < gGameExternalOptions.iMaxIMPCharacters)
+		{
+			if (LoadImpCharacter( charPlayerActivationString ) == TRUE)
+			{
+				// Reset activation text box
+				ResetActivationStringTextBox();
+				
+				//DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 11 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+				AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), LaptopSaveInfo.iIMPIndex );
+			}
+		}
+		else
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 8 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		}
+	}
 	else
-  {
+	{
 		if( ( ( wcscmp(pPlayerActivationString, L"XEP624") != 0 ) && ( wcscmp(pPlayerActivationString, L"xep624") != 0 ) ) )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 0 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		}
 		else if( LaptopSaveInfo.fIMPCompletedFlag == TRUE )
 		{
-		   DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 6 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 6 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		}
-		
-		
 	}
+
 	return;
 }
 
+void ResetActivationStringTextBox(void)
+{
+	// Reset activation text box
+	for (int i = 0; i < iStringPos; i++)
+	{
+		pPlayerActivationString[i] = 0;
+	}
 
+	iStringPos = 0;
+	
+	uiCursorPosition = StringPixLength( pPlayerActivationString, FONT14ARIAL ) + IMP_PLAYER_ACTIVATION_STRING_X;
+	DisplayPlayerActivationString();
+	DisplayActivationStringCursor();
+}
 
 void CreateIMPHomePageButtons( void )
 {

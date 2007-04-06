@@ -378,7 +378,7 @@ typedef struct
 	INT8												bScientific;  
 	// traits	
 	INT16												sWeightCarriedAtTurnStart;
-	UINT16											name[ 10 ];
+	wchar_t											name[ 10 ];
 	
 	INT8												bVisible;			// to render or not to render...
 
@@ -927,7 +927,7 @@ typedef struct
 	BOOLEAN											fRTInNonintAnim;
   BOOLEAN                     fDoingExternalDeath;
   INT8                        bCorpseQuoteTolerance;
-  INT8                        bYetAnotherPaddingSpace;
+  INT8                        bDeafenedCounter;
   INT32                       iPositionSndID;  
   INT32                       iTuringSoundID;
   UINT8                       ubLastDamageReason;

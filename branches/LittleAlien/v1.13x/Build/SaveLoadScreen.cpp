@@ -640,7 +640,13 @@ Removed so that the user can click on it and get displayed a message that the qu
 					{
 						memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
 						gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-						gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
+						
+						// WANNE: NEW
+						if (gbSelectedSaveLocation != SAVE__END_TURN_NUM)
+						{
+							gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
+						}
+						
 						gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot = -1;
 					}
 
@@ -714,7 +720,6 @@ void			ExitSaveLoadScreen()
 {
 	INT8	i;
 
-
 	gfLoadGameUponEntry = FALSE;
 
 	if( !gfSaveLoadScreenButtonsCreated )
@@ -738,7 +743,7 @@ void			ExitSaveLoadScreen()
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
 	{
-	  MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
+		MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
 	}
 
 	DeleteVideoObjectFromIndex( guiSlgBackGroundImage );
@@ -847,14 +852,14 @@ void		GetSaveLoadScreenUserInput()
 	}
 
 
-	if( gfKeyState[ ALT ] )
+	/*if( gfKeyState[ ALT ] )
 	{
 		DisplayOnScreenNumber( FALSE );
 	}
 	else
 	{
 		DisplayOnScreenNumber( TRUE );
-	}
+	}*/
 
 	if( gfKeyState[ CTRL ] || fWasCtrlHeldDownLastFrame )
 	{
@@ -1109,7 +1114,7 @@ void SaveLoadGameNumber( INT8 bSaveGameID )
 }
 
 
-BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// do message box and return
   giSaveLoadMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT8 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  pCenteringRect );
@@ -2324,7 +2329,7 @@ BOOLEAN DoQuickSave()
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 
 		if( guiPreviousOptionScreen == MAP_SCREEN )
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
+			DoMapMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 		else
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );
 	}

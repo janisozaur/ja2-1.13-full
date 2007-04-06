@@ -42,6 +42,7 @@
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "utilities.h"
 #endif
 
 struct
@@ -72,6 +73,7 @@ itemStartElementHandle(void *userData, const char *name, const char **atts)
 		{
 			pData->curElement = ELEMENT_LIST;
 
+			// WANNE
 			if ( !localizedTextOnly )
 				memset(pData->curArray,0,sizeof(INVTYPE)*pData->maxArraySize);
 
@@ -81,6 +83,7 @@ itemStartElementHandle(void *userData, const char *name, const char **atts)
 		{
 			pData->curElement = ELEMENT;
 
+			// WANNE
 			if ( !localizedTextOnly )
 				memset(&pData->curItem,0,sizeof(INVTYPE));
 
@@ -115,6 +118,7 @@ itemStartElementHandle(void *userData, const char *name, const char **atts)
 				strcmp(name, "TwoHanded") == 0 ||
 				strcmp(name, "NotBuyable") == 0 ||
 				strcmp(name, "Attachment") == 0 ||
+				strcmp(name, "HiddenAttachment") == 0 ||
 				strcmp(name, "BigGunList") == 0 ||
 				strcmp(name, "NotInEditor") == 0 ||
 				strcmp(name, "DefaultUndroppable") == 0 ||
@@ -205,6 +209,7 @@ itemStartElementHandle(void *userData, const char *name, const char **atts)
 				strcmp(name, "DesertCamoBonus") == 0 ||
 				strcmp(name, "SnowCamoBonus") == 0 ||
 				strcmp(name, "StealthBonus") == 0 ||
+				strcmp(name, "SciFi") == 0 ||
 
 	strcmp(name, "fFlags") == 0 ))
 		{
@@ -281,6 +286,16 @@ itemEndElementHandle(void *userData, const char *name)
 			//	strncpy(pData->curItem.szItemName,pData->szCharData,MAX_CHAR_DATA_LENGTH);
 			//	pData->curItem.szItemName[MAX_CHAR_DATA_LENGTH] = '\0';
 			//}
+
+			// WANNE
+			if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
+				strcpy(pData->curItem.szItemName,pData->szCharData);
+			else
+			{
+				strncpy(pData->curItem.szItemName,pData->szCharData,MAX_CHAR_DATA_LENGTH);
+				pData->curItem.szItemName[MAX_CHAR_DATA_LENGTH] = '\0';
+			}
+
 			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
@@ -292,6 +307,17 @@ itemEndElementHandle(void *userData, const char *name)
 		{
 			//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"itemEndElementHandle: longitemname");
 			pData->curElement = ELEMENT;
+
+			// WANNE
+			if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
+			{
+				strcpy(pData->curItem.szLongItemName,pData->szCharData);
+			}
+			else
+			{
+				strncpy(pData->curItem.szLongItemName,pData->szCharData,MAX_CHAR_DATA_LENGTH);
+				pData->curItem.szLongItemName[MAX_CHAR_DATA_LENGTH] = '\0';
+			}
 
 			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
@@ -314,13 +340,15 @@ itemEndElementHandle(void *userData, const char *name)
 			//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"itemEndElementHandle: itemdesc");
 			pData->curElement = ELEMENT;
 
-			//if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
-			//	strcpy(pData->curItem.szItemDesc,pData->szCharData);
-			//else
-			//{
-			//	strncpy(pData->curItem.szItemDesc,pData->szCharData,MAX_CHAR_DATA_LENGTH);
-			//	pData->curItem.szItemDesc[MAX_CHAR_DATA_LENGTH] = '\0';
-			//}
+			// WANNE
+			if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
+				strcpy(pData->curItem.szItemDesc,pData->szCharData);
+			else
+			{
+				strncpy(pData->curItem.szItemDesc,pData->szCharData,MAX_CHAR_DATA_LENGTH);
+				pData->curItem.szItemDesc[MAX_CHAR_DATA_LENGTH] = '\0';
+			}
+
 			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
@@ -333,13 +361,15 @@ itemEndElementHandle(void *userData, const char *name)
 			//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"itemEndElementHandle: brname");
 			pData->curElement = ELEMENT;
 
-			//if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
-			//	strcpy(pData->curItem.szBRName,pData->szCharData);
-			//else
-			//{
-			//	strncpy(pData->curItem.szBRName,pData->szCharData,MAX_CHAR_DATA_LENGTH);
-			//	pData->curItem.szBRName[MAX_CHAR_DATA_LENGTH] = '\0';
-			//}
+			// WANNE
+			if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
+				strcpy(pData->curItem.szBRName,pData->szCharData);
+			else
+			{
+				strncpy(pData->curItem.szBRName,pData->szCharData,MAX_CHAR_DATA_LENGTH);
+				pData->curItem.szBRName[MAX_CHAR_DATA_LENGTH] = '\0';
+			}
+
 			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
@@ -352,13 +382,15 @@ itemEndElementHandle(void *userData, const char *name)
 			//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"itemEndElementHandle: brdesc");
 			pData->curElement = ELEMENT;
 
-			//if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
-			//	strcpy(pData->curItem.szBRDesc,pData->szCharData);
-			//else
-			//{
-			//	strncpy(pData->curItem.szBRDesc,pData->szCharData,MAX_CHAR_DATA_LENGTH);
-			//	pData->curItem.szBRDesc[MAX_CHAR_DATA_LENGTH] = '\0';
-			//}
+			// WANNE
+			if(MAX_CHAR_DATA_LENGTH >= strlen(pData->szCharData))
+				strcpy(pData->curItem.szBRDesc,pData->szCharData);
+			else
+			{
+				strncpy(pData->curItem.szBRDesc,pData->szCharData,MAX_CHAR_DATA_LENGTH);
+				pData->curItem.szBRDesc[MAX_CHAR_DATA_LENGTH] = '\0';
+			}
+
 			for(int i=0;i<min((int)strlen(pData->szCharData),MAX_CHAR_DATA_LENGTH);i++)
 			{
 				temp = pData->szCharData[i];
@@ -481,6 +513,11 @@ itemEndElementHandle(void *userData, const char *name)
 			pData->curElement = ELEMENT;
 			pData->curItem.attachment = (BOOLEAN) atol(pData->szCharData);
 		}
+		else if(strcmp(name, "HiddenAttachment")	 == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.hiddenattachment = (BOOLEAN) atol(pData->szCharData);
+		}
 		else if(strcmp(name, "BigGunList")	 == 0)
 		{
 			pData->curElement = ELEMENT;
@@ -564,7 +601,7 @@ itemEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "Bipod")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bipod = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.bipod = (INT16) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ToHitBonus")	 == 0)
 		{
@@ -687,6 +724,11 @@ itemEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.thermaloptics   = (BOOLEAN) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "SciFi")	 == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.scifi   = (BOOLEAN) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "HideMuzzleFlash")	 == 0)
 		{
@@ -918,23 +960,22 @@ itemEndElementHandle(void *userData, const char *name)
 			pData->curElement = ELEMENT;
 			pData->curItem.firstaidkit  = (BOOLEAN) atol(pData->szCharData);
 		}
-
 		else if(strcmp(name, "MetalDetector")	 == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.metaldetector  = (BOOLEAN) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "PercentTunnelVision")	 == 0)
+		if(strcmp(name, "PercentTunnelVision")	 == 0) //Madd: had to scrap the "else" due to a compiler limit
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.percenttunnelvision  = (UINT8) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "Jar")	 == 0)
+		if(strcmp(name, "Jar")	 == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.jar    = (BOOLEAN) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "BestLaserRange")	 == 0)
+		if(strcmp(name, "BestLaserRange")	 == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.bestlaserrange    = (INT16) atol(pData->szCharData);
@@ -955,12 +996,13 @@ BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion )
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
 	CHAR8 *		lpcBuffer;
+
 	XML_Parser	parser = XML_ParserCreate(NULL);
 	
 	itemParseData pData;
 	
 	localizedTextOnly = localizedVersion;
-
+	
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Items.xml" );
 
 	// Open items file
@@ -1034,8 +1076,8 @@ BOOLEAN WriteItemStats()
 	
 	{
 		UINT32 cnt;
-		UINT16 str[100];
-		UINT16 strDesc[500];
+		wchar_t str[100];
+		wchar_t strDesc[500];
 
 		FilePrintf(hFile,"<ITEMLIST>\r\n");
 		for(cnt = 0;cnt < 351;cnt++)//just do the old limit for now
@@ -1043,7 +1085,7 @@ BOOLEAN WriteItemStats()
 			LoadShortNameItemInfo( (UINT16)cnt, str );
 
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats: itemname");
-			UINT16 * szRemainder = str; //the remaining string to be output (for making valid XML)
+			wchar_t * szRemainder = str; //the remaining string to be output (for making valid XML)
 
 			FilePrintf(hFile,"\t<ITEM>\r\n");
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",									cnt);
@@ -1052,7 +1094,7 @@ BOOLEAN WriteItemStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				UINT16 invChar = szRemainder[uiCharLoc];
+				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
 				{
@@ -1104,7 +1146,7 @@ BOOLEAN WriteItemStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				UINT16 invChar = szRemainder[uiCharLoc];
+				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
 				{
@@ -1155,7 +1197,7 @@ BOOLEAN WriteItemStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				UINT16 invChar = szRemainder[uiCharLoc];
+				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats: characters set");
 	
@@ -1226,7 +1268,7 @@ BOOLEAN WriteItemStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				UINT16 invChar = szRemainder[uiCharLoc];
+				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
 				{
@@ -1282,7 +1324,7 @@ BOOLEAN WriteItemStats()
 			while(szRemainder[0] != '\0')
 			{
 				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
-				UINT16 invChar = szRemainder[uiCharLoc];
+				wchar_t invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
 				{
@@ -1370,6 +1412,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<NotBuyable>%d</NotBuyable>\r\n",						Item[cnt].notbuyable );
 			FilePrintf(hFile,"\t\t<Attachment>%d</Attachment>\r\n",						Item[cnt].attachment  );
 			FilePrintf(hFile,"\t\t<BigGunList>%d</BigGunList>\r\n",						Item[cnt].biggunlist   );
+			FilePrintf(hFile,"\t\t<SciFi>%d</SciFi>\r\n",						Item[cnt].scifi   );
 			FilePrintf(hFile,"\t\t<NotInEditor>%d</NotInEditor>\r\n",						Item[cnt].notineditor  );
 			FilePrintf(hFile,"\t\t<DefaultUndroppable>%d</DefaultUndroppable>\r\n",						Item[cnt].defaultundroppable );
 			FilePrintf(hFile,"\t\t<Unaerodynamic>%d</Unaerodynamic>\r\n",						Item[cnt].unaerodynamic );

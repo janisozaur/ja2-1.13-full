@@ -1572,10 +1572,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								UIHandleLUIEndLock( NULL );
 
 						}
-						if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & CTRL_DOWN ) )
-						{ 
-							EscapeUILock( );
-						}
+					}
+					//Madd: removed from cheat mode
+					if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & CTRL_DOWN ) )
+					{ 
+						EscapeUILock( );
 					}
 				}
 				else
@@ -2759,18 +2760,19 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						//GoIntoOverheadMap();
 						break;
 
-				case END:
+				// Lalien: commented out, to fix "end move & LOS bug" (same button has two different actions)
+				//case END:
 
-						if ( gusSelectedSoldier != NOBODY )
-						{
-							if ( CheckForMercContMove( MercPtrs[ gusSelectedSoldier ] ) )
-							{
-								// Continue
-								ContinueMercMovement( MercPtrs[ gusSelectedSoldier ] );
-								ErasePath( TRUE );
-							}
-						}
-						break;
+				//		if ( gusSelectedSoldier != NOBODY )
+				//		{
+				//			if ( CheckForMercContMove( MercPtrs[ gusSelectedSoldier ] ) )
+				//			{
+				//				// Continue
+				//				ContinueMercMovement( MercPtrs[ gusSelectedSoldier ] );
+				//				ErasePath( TRUE );
+				//			}
+				//		}
+				//		break;
 
 				case HOME:
 
@@ -3830,7 +3832,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else if( gubLoneMercAttemptingToAbandonEPCs )
 		{
-			UINT16 str[256];
+			wchar_t str[256];
 			if( gubLoneMercAttemptingToAbandonEPCs == 1 )
 			{ //Use the singular version of the string
 				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )

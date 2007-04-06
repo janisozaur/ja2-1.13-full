@@ -474,7 +474,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 	if (gfTurnBasedAI)
 	{
-		if ( ( GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart	) > ( gGameExternalOptions.gubDeadLockDelay * 1000 ) && !gfUIInDeadlock )
+		if ( ( GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart	) > ( (UINT32)gGameExternalOptions.gubDeadLockDelay * 1000 ) && !gfUIInDeadlock )
 		{
       // ATE: Display message that deadlock occured...
       LiveMessage( "Breaking Deadlock" );
@@ -1142,7 +1142,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		{
 #ifdef TESTAI
 			DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
-						String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
+				String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
 #endif
 		}
 
@@ -1157,26 +1157,37 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		// cancel any turning & movement by making current settings desired ones
 		pSoldier->sFinalDestination	= pSoldier->sGridNo;
 
-    if ( !pSoldier->fNoAPToFinishMove )
-    {
-		  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-		  AdjustNoAPToFinishMove( pSoldier, FALSE );
-    }
+		if ( !pSoldier->fNoAPToFinishMove )
+		{
+			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+			AdjustNoAPToFinishMove( pSoldier, FALSE );
+		}
+
+		//Lalien: moved later in ExecuteAction() case AI_ACTION_RAISE_GUN:
+		//AXP 23.03.2007: Sniper deadlock fix
+		//if ( pSoldier->bOrders == SNIPER && pSoldier->bAction == AI_ACTION_RAISE_GUN && pSoldier->bLastAction == AI_ACTION_RAISE_GUN)
+		//{
+		//	pSoldier->bNextAction = AI_ACTION_END_TURN;
+		//}
 
 		// cancel current action
-		pSoldier->bLastAction				= pSoldier->bAction;
-		pSoldier->bAction						= AI_ACTION_NONE;
-		pSoldier->usActionData			= NOWHERE;
+		pSoldier->bLastAction		= pSoldier->bAction;
+		pSoldier->bAction			= AI_ACTION_NONE;
+		pSoldier->usActionData		= NOWHERE;
 		pSoldier->bActionInProgress	= FALSE;
 		pSoldier->fDelayedMovement	= FALSE;
 
-/*
+		/*
 		if ( pSoldier->bLastAction == AI_ACTION_CHANGE_STANCE || pSoldier->bLastAction == AI_ACTION_COWER || pSoldier->bLastAction == AI_ACTION_STOP_COWERING )
 		{
-			SoldierGotoStationaryStance( pSoldier );
+		SoldierGotoStationaryStance( pSoldier );
 		}
 		*/
 
+		if ( pSoldier->bLastAction == AI_ACTION_RAISE_GUN )
+		{
+			HandleSight( pSoldier, SIGHT_LOOK );
+		}
 
 		// make sure pathStored is not left TRUE by accident.
 		// This is possible if we decide on an action that we have no points for
@@ -2557,6 +2568,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_RAISE_GUN: //Madd: action added for snipers to ready weapon and use vision range bonuses
 			SoldierReadyWeapon(pSoldier);
 			HandleSight(pSoldier, SIGHT_LOOK | SIGHT_RADIO);
+			
+			//AXP 23.03.2007: Sniper deadlock fix
+			if ( pSoldier->bOrders == SNIPER && pSoldier->bLastAction == AI_ACTION_RAISE_GUN)
+			{
+				pSoldier->bNextAction = AI_ACTION_END_TURN;
+			}
+			
 			ActionDone( pSoldier );
 			break;
 

@@ -121,7 +121,7 @@ extern void TrashAllSoldiers( );
 extern void ResetJA2ClockGlobalTimers( void );
 
 extern void BeginLoadScreen( void );
-extern EndLoadScreen();
+extern void EndLoadScreen();
 
 //Global variable used
 #ifdef JA2BETAVERSION
@@ -315,7 +315,7 @@ typedef struct
 
 	UINT32	uiUNUSED;
 
-	BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
+	BOOLEAN fSamSiteFound[ MAX_NUMBER_OF_SAMS ];
 
 	UINT8		ubNumTerrorists;
 	UINT8		ubCambriaMedicalObjects;
@@ -1450,6 +1450,10 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//where it would be in a pre-load state.  
 	TrashWorld();
 
+	// Lesh: To kill memory leaks during re-loading a saved game
+	//       release strategic layer resources
+	ShutdownStrategicLayer();
+	FreeGlobalMessageList();
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );
@@ -3565,6 +3569,11 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 		SavedEmail.iFourthData = pEmail->iFourthData;
 		SavedEmail.uiFifthData = pEmail->uiFifthData;
 		SavedEmail.uiSixData = pEmail->uiSixData;
+		
+
+		// WANNE - SAVEGAME-STRUCTURE: Remove the comment, until we have bigger changes in the savegame structure
+		// BECAUSE A NEW GAME MUST BE STARTED! 
+		SavedEmail.iCurrentIMPPosition = pEmail->iCurrentIMPPosition;
 
 
 		// write the email header to the saved game file
@@ -3666,7 +3675,10 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 		pTempEmail->iFourthData = SavedEmail.iFourthData;
 		pTempEmail->uiFifthData = SavedEmail.uiFifthData;
 		pTempEmail->uiSixData = SavedEmail.uiSixData;
-
+		
+		// WANNE - SAVEGAME-STRUCTURE: Remove the comment, until we have bigger changes in the savegame structure
+		// BECAUSE A NEW GAME MUST BE STARTED! 
+		pTempEmail->iCurrentIMPPosition = SavedEmail.iCurrentIMPPosition;
 
 		//add the current email in
 		pEmail->Next = pTempEmail;
@@ -4482,7 +4494,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 
 	sGeneralInfo.fLastBoxingMatchWonByPlayer = gfLastBoxingMatchWonByPlayer;
 
-	memcpy( &sGeneralInfo.fSamSiteFound, &fSamSiteFound, NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
+	memcpy( &sGeneralInfo.fSamSiteFound, &fSamSiteFound, MAX_NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
 
 	sGeneralInfo.ubNumTerrorists = gubNumTerrorists;
 	sGeneralInfo.ubCambriaMedicalObjects = gubCambriaMedicalObjects;
@@ -4748,7 +4760,7 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 
 	gfLastBoxingMatchWonByPlayer = sGeneralInfo.fLastBoxingMatchWonByPlayer;
 
-	memcpy( &fSamSiteFound, &sGeneralInfo.fSamSiteFound, NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
+	memcpy( &fSamSiteFound, &sGeneralInfo.fSamSiteFound, MAX_NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
 
 	gubNumTerrorists = sGeneralInfo.ubNumTerrorists;
 	gubCambriaMedicalObjects = sGeneralInfo.ubCambriaMedicalObjects;

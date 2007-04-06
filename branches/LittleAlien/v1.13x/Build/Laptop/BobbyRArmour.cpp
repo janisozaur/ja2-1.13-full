@@ -23,6 +23,7 @@ void GameInitBobbyRArmour()
 
 }
 
+// WANNE
 BOOLEAN EnterBobbyRArmour()
 {
   VOBJECT_DESC    VObjectDesc;
@@ -38,11 +39,16 @@ BOOLEAN EnterBobbyRArmour()
 	CHECKF(AddVideoObject(&VObjectDesc, &guiArmourGrid));
 
 	InitBobbyBrTitle();
+
+	guiPrevArmourFilterMode = -1;
+	guiCurrentArmourFilterMode = -1;
+
+	SetFirstLastPagesForNew( IC_ARMOUR, guiCurrentArmourFilterMode );
+
 	//Draw menu bar
 	InitBobbyMenuBar( );
-
-	SetFirstLastPagesForNew( IC_ARMOUR );
-//	CalculateFirstAndLastIndexs();
+	// WANNE
+	InitBobbyRArmourFilterBar();
 
 	RenderBobbyRArmour( );
 
@@ -54,6 +60,9 @@ void ExitBobbyRArmour()
 	DeleteVideoObjectFromIndex(guiArmourBackground);
 	DeleteVideoObjectFromIndex(guiArmourGrid);
 	DeleteBobbyMenuBar();
+
+	// WANNE
+	DeleteBobbyRArmourFilter();
 
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();
@@ -74,15 +83,19 @@ void RenderBobbyRArmour()
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiArmourBackground);
 
 	//Display title at top of page
-	DisplayBobbyRBrTitle();
+	//DisplayBobbyRBrTitle();
 
 	// GunForm
 	GetVideoObject(&hPixHandle, guiArmourGrid);
   BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
-	DisplayItemInfo(IC_ARMOUR);
+	DisplayItemInfo(IC_ARMOUR, guiCurrentArmourFilterMode);
 
 	UpdateButtonText(guiCurrentLaptopMode);
+	// TODO
+
+	UpdateArmourFilterButtons(guiCurrentArmourFilterMode, guiPrevArmourFilterMode);
+
   MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);

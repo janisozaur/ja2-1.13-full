@@ -3,17 +3,19 @@
 
 #include "items.h"
 #include "types.h"
+#include "mapscreen.h"
 
 #define STRING_LENGTH 255
 
-extern UINT16 ShortItemNames[MAXITEMS][80];
-extern UINT16 ItemNames[MAXITEMS][80];
-extern UINT16 AmmoCaliber[MAXITEMS][20];
-extern UINT16 BobbyRayAmmoCaliber[MAXITEMS][20];
-extern UINT16 WeaponType[MAXITEMS][30];
+extern STR16 pCreditsJA2113[];
+extern wchar_t ShortItemNames[MAXITEMS][80];
+extern wchar_t ItemNames[MAXITEMS][80];
+extern wchar_t AmmoCaliber[MAXITEMS][20];
+extern wchar_t BobbyRayAmmoCaliber[MAXITEMS][20];
+extern wchar_t WeaponType[MAXITEMS][30];
 
-extern UINT16 Message[][STRING_LENGTH];
-extern UINT16 TeamTurnString[][STRING_LENGTH];
+extern wchar_t Message[][STRING_LENGTH];
+extern wchar_t TeamTurnString[][STRING_LENGTH];
 extern STR16 pMilitiaControlMenuStrings[]; //lal
 //extern STR16 pTalkToAllMenuStrings[];
 extern STR16 pAssignMenuStrings[];
@@ -26,7 +28,7 @@ extern STR16 pLongAttributeStrings[];
 extern STR16 pContractStrings[];
 extern STR16 pAssignmentStrings[];
 extern STR16 pConditionStrings[];
-extern STR16 pTownNames[];
+extern CHAR16 pTownNames[MAX_TOWNS][MAX_TOWN_NAME_LENGHT];	// Lesh: look mapscreen.h for definitions
 extern STR16 pPersonnelScreenStrings[];
 extern STR16 pPersonnelTitle[];
 extern STR16 pUpperLeftMapScreenStrings[];
@@ -160,6 +162,8 @@ extern STR16 gzLateLocalizedString[];
 
 extern STR16 gzCWStrings[];
 
+extern STR16 gzTooltipStrings[];
+
 enum
 {
 	ANTIHACKERSTR_EXITGAME,
@@ -257,7 +261,7 @@ enum
 };
 extern STR16 pMessageStrings[];
 
-extern UINT16 ItemPickupHelpPopup[][40];
+extern wchar_t ItemPickupHelpPopup[][40];
 
 enum
 {
@@ -328,27 +332,71 @@ enum
 	STR_NO_AUTOFIRE,
 	STR_ACCURATE,
 	STR_INACCURATE,
-	STR_NO_SEMI_AUTO
+	STR_NO_SEMI_AUTO,
+	STR_NO_MORE_ITEMS_TO_STEAL,	// WANNE
+	STR_NO_MORE_ITEM_IN_HAND,	// WANNE
+};
+
+// WANNE: Tooltips
+enum
+{
+	STR_TT_CAT_LOCATION,
+	STR_TT_CAT_BRIGHTNESS,
+	STR_TT_CAT_RANGE_TO_TARGET,
+	STR_TT_CAT_ID,
+	STR_TT_CAT_ORDERS,
+	STR_TT_CAT_ATTITUDE,
+	STR_TT_CAT_CURRENT_APS,
+	STR_TT_CAT_CURRENT_HEALTH,
+	STR_TT_CAT_HELMET,
+	STR_TT_CAT_VEST,
+	STR_TT_CAT_LEGGINGS,
+	STR_TT_CAT_ARMOR,
+	STR_TT_HELMET,
+	STR_TT_VEST,
+	STR_TT_LEGGINGS,
+	STR_TT_WORN,
+	STR_TT_NO_ARMOR,
+	STR_TT_CAT_NVG,
+	STR_TT_NO_NVG,
+	STR_TT_CAT_GAS_MASK,
+	STR_TT_NO_MASK,
+	STR_TT_CAT_HEAD_POS_1,
+	STR_TT_CAT_HEAD_POS_2,
+	STR_TT_IN_BACKPACK,
+	STR_TT_CAT_WEAPON,
+	STR_TT_NO_WEAPON,
+	STR_TT_HANDGUN,
+	STR_TT_SMG,
+	STR_TT_RIFLE,
+	STR_TT_MG,
+	STR_TT_SHOTGUN,
+	STR_TT_KNIFE,
+	STR_TT_HEAVY_WEAPON,
+	STR_TT_NO_HELMET,
+	STR_TT_NO_VEST,
+	STR_TT_NO_LEGGING,
+	STR_TT_CAT_ARMOR_2,
 };
 
 #define LARGE_STRING_LENGTH			200
 #define MED_STRING_LENGTH				80
 #define	SMALL_STRING_LENGTH			20
 
-extern UINT16 TacticalStr[][MED_STRING_LENGTH];
-extern UINT16 LargeTacticalStr[][ LARGE_STRING_LENGTH ];
+extern wchar_t TacticalStr[][MED_STRING_LENGTH];
+extern wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ];
 
 
-extern UINT16		zDialogActions[][ SMALL_STRING_LENGTH ];
-extern UINT16		zDealerStrings[][ SMALL_STRING_LENGTH ];
-extern UINT16		zTalkMenuStrings[][ SMALL_STRING_LENGTH ];
+extern wchar_t		zDialogActions[][ SMALL_STRING_LENGTH ];
+extern wchar_t		zDealerStrings[][ SMALL_STRING_LENGTH ];
+extern wchar_t		zTalkMenuStrings[][ SMALL_STRING_LENGTH ];
 extern STR16		gzMoneyAmounts[6];
-extern INT16		gzProsLabel[10];
-extern INT16		gzConsLabel[10];
-extern INT16		gMoneyStatsDesc[][ 13 ];
-extern INT16		gWeaponStatsDesc[][ 14 ];
+extern wchar_t		gzProsLabel[10];
+extern wchar_t		gzConsLabel[10];
+extern wchar_t		gMoneyStatsDesc[][ 13 ];
+extern wchar_t		gWeaponStatsDesc[][ 14 ];
 extern STR16		sKeyDescriptionStrings[2];
-extern UINT16		zHealthStr[][13];
+extern wchar_t		zHealthStr[][13];
 extern STR16		zVehicleName[ 6 ];
 
 enum
@@ -566,7 +614,7 @@ enum
 };
 extern		STR16			MercAccountText[];
 
-// WANNE 3
+// WANNE: The "Next" and "Prev" button text of the merc account page
 extern	STR16 MercAccountPageText[];
 
 
@@ -746,6 +794,50 @@ enum
 };
 extern		STR16			BobbyROrderFormText[];
 
+// WANNE
+enum
+{
+	// Guns
+	BOBBYR_FILTER_GUNS_HEAVY,
+	BOBBYR_FILTER_GUNS_PISTOL,
+	BOBBYR_FILTER_GUNS_M_PISTOL,
+	BOBBYR_FILTER_GUNS_SMG,
+	BOBBYR_FILTER_GUNS_RIFLE,
+	BOBBYR_FILTER_GUNS_SN_RIFLE,
+	BOBBYR_FILTER_GUNS_AS_RIFLE,
+	BOBBYR_FILTER_GUNS_LMG,
+	BOBBYR_FILTER_GUNS_SHOTGUN,
+	// Ammo
+	//BOBBYR_FILTER_AMMO_HEAVY,
+	BOBBYR_FILTER_AMMO_PISTOL,
+	BOBBYR_FILTER_AMMO_M_PISTOL,
+	BOBBYR_FILTER_AMMO_SMG,
+	BOBBYR_FILTER_AMMO_RIFLE,
+	BOBBYR_FILTER_AMMO_SN_RIFLE,
+	BOBBYR_FILTER_AMMO_AS_RIFLE,
+	BOBBYR_FILTER_AMMO_LMG,
+	BOBBYR_FILTER_AMMO_SHOTGUN,
+	// Used
+	BOBBYR_FILTER_USED_GUNS,
+	BOBBYR_FILTER_USED_ARMOR,
+	BOBBYR_FILTER_USED_MISC,
+	// Armour
+	BOBBYR_FILTER_ARMOUR_HELM,
+	BOBBYR_FILTER_ARMOUR_VEST,
+	BOBBYR_FILTER_ARMOUR_LEGGING,
+	BOBBYR_FILTER_ARMOUR_PLATE,
+	// Misc
+	BOBBYR_FILTER_MISC_BLADE,
+	BOBBYR_FILTER_MISC_THROWING_KNIFE,
+	BOBBYR_FILTER_MISC_PUNCH,
+	BOBBYR_FILTER_MISC_GRENADE,
+	BOBBYR_FILTER_MISC_BOMB,
+	BOBBYR_FILTER_MISC_MEDKIT,
+	BOBBYR_FILTER_MISC_KIT,
+	BOBBYR_FILTER_MISC_FACE,
+	BOBBYR_FILTER_MISC_MISC,
+};
+
 
 //BobbyRGuns.c
 enum
@@ -785,6 +877,9 @@ enum
 };
 
 extern		STR16			BobbyRText[];
+
+// WANNE
+extern		STR16			BobbyRFilter[];
 
 
 //BobbyR.c
@@ -908,7 +1003,7 @@ enum
 	AIM_MEMBER_LEAVE_MSG,
 	AIM_MEMBER_DEAD,
 
-	AIM_MEMBER_ALREADY_HAVE_20_MERCS,
+	AIM_MEMBER_ALREADY_HAVE_18_MERCS,
 
 	AIM_MEMBER_PRERECORDED_MESSAGE,
 	AIM_MEMBER_MESSAGE_RECORDED,
@@ -1427,7 +1522,7 @@ STR16	gzCreditNameTitle[];
 STR16	gzCreditNameFunny[];
 
 
-extern INT16 * GetWeightUnitString( void );
+extern wchar_t * GetWeightUnitString( void );
 FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 
 

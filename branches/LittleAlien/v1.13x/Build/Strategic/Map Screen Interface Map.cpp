@@ -74,9 +74,9 @@ INT32 iZoomY = 0;
 #define VERT_SCROLL 10
 
 // the pop up for helicopter stuff
-#define MAP_HELICOPTER_ETA_POPUP_X				400
-#define MAP_HELICOPTER_ETA_POPUP_Y				250
-#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y		50
+#define MAP_HELICOPTER_ETA_POPUP_X				(400 + iScreenWidthOffset)
+#define MAP_HELICOPTER_ETA_POPUP_Y				(250 + iScreenHeightOffset)
+#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y		(50 + iScreenHeightOffset)
 #define MAP_HELICOPTER_ETA_POPUP_WIDTH			120
 #define MAP_HELICOPTER_ETA_POPUP_HEIGHT			68
 
@@ -378,7 +378,7 @@ UINT32 guiMapBorderHeliSectors;
 BOOLEAN sBadSectorsList[ WORLD_MAP_X ][ WORLD_MAP_X ];
 
 
-INT16 sBaseSectorList[12];/*={
+INT16 sBaseSectorList[ MAX_TOWNS - 1 ];/*={
 	// NOTE: These co-ordinates must match the top left corner of the 3x3 town tiles cutouts in Interface/MilitiaMaps.sti!
 	SECTOR(  9, 1 ), // Omerta
 	SECTOR( 13, 2 ), // Drassen
@@ -396,7 +396,7 @@ INT16 sBaseSectorList[12];/*={
 
 // position of town names on the map
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
-POINT pTownPoints[13];/*={
+POINT pTownPoints[ MAX_TOWNS ];/*={
 	{ 0 ,  0 },
 	{ 90, 10}, // Omerta
 	{125, 40}, // Drassen
@@ -413,9 +413,11 @@ POINT pTownPoints[13];/*={
 };
 */
 
-INT16 gpSamSectorX[] = { SAM_1_X, SAM_2_X, SAM_3_X, SAM_4_X };
-INT16 gpSamSectorY[] = { SAM_1_Y, SAM_2_Y, SAM_3_Y, SAM_4_Y };
+// coordinates X,Y of sam sites on strategic map
+INT16 gpSamSectorX[ MAX_NUMBER_OF_SAMS ];
+INT16 gpSamSectorY[ MAX_NUMBER_OF_SAMS ];
 
+extern BOOLEAN fSamSiteFoundOrig[ MAX_NUMBER_OF_SAMS ];
 
 // WANNE 2 (reinitialization in "DrawMap()")
 // map region
@@ -4515,10 +4517,10 @@ void DisplayPositionOfHelicopter( void )
 
 
 			// WANNE 2
-			AssertMsg( ( x >= 0 ) && ( x < SCREEN_WIDTH ), String( "DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
+			AssertMsg( ( x >= 0 ) && ( x < (UINT32)SCREEN_WIDTH ), String( "DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
 							x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minX, maxX ) );
 
-			AssertMsg( ( y >= 0 ) && ( y < SCREEN_HEIGHT ), String( "DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
+			AssertMsg( ( y >= 0 ) && ( y < (UINT32)SCREEN_HEIGHT ), String( "DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
 							y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minY, maxY ) );
 
 
@@ -4584,8 +4586,8 @@ void DisplayDestinationOfHelicopter( void )
 		y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMapY ) + 3;
 
 		// WANNE 2
-		AssertMsg( ( x >= 0 ) && ( x < SCREEN_WIDTH ), String( "DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY ) );
-		AssertMsg( ( y >= 0 ) && ( y < SCREEN_HEIGHT ), String( "DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY ) );
+		AssertMsg( ( x >= 0 ) && ( x < (UINT32)SCREEN_WIDTH ), String( "DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY ) );
+		AssertMsg( ( y >= 0 ) && ( y < (UINT32)SCREEN_HEIGHT ), String( "DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY ) );
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );
@@ -6662,7 +6664,7 @@ void ShowSAMSitesOnStrategicMap( void )
 		BlitSAMGridMarkers( );
 	}
 
-	for( iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; iCounter++ )
+	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
 	{
 		// has the sam site here been found?
 		if( !fSamSiteFound[ iCounter ] )
@@ -6768,7 +6770,7 @@ void BlitSAMGridMarkers( void )
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
 
-	for( iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; iCounter++ )
+	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
 	{	
 		// has the sam site here been found?
 		if( !fSamSiteFound[ iCounter ] )
@@ -7064,15 +7066,16 @@ void HideExistenceOfUndergroundMapSector( UINT8 ubSectorX, UINT8 ubSectorY )
 
 void InitMapSecrets( void )
 {
-	UINT8 ubSamIndex;
+	//UINT8 ubSamIndex;
 
 	fFoundTixa = FALSE;
 	fFoundOrta = FALSE;
 
-	for( ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAMS; ubSamIndex++ )
-	{
-		fSamSiteFound[ ubSamIndex ] = FALSE;
-	}
+	//for( ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAMS; ubSamIndex++ )
+	//{
+	//	fSamSiteFound[ ubSamIndex ] = fSamSiteFoundOrig[ ubSamIndex ];
+	//}
+	memcpy(fSamSiteFound, fSamSiteFoundOrig, sizeof(fSamSiteFound));
 }
 
 

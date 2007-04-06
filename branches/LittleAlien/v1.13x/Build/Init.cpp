@@ -87,6 +87,40 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
 	char fileName[MAX_PATH];
 
+	// WANNE: Enemy drops - begin
+	strcpy(fileName, directoryName);
+	strcat(fileName, ENEMYMISCDROPSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInEnemyMiscDropsStats(gEnemyMiscDrops, fileName))
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, ENEMYEXPLOSIVEDROPSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInEnemyExplosiveDropsStats(gEnemyExplosiveDrops, fileName))
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, ENEMYWEAPONDROPSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInEnemyWeaponDropsStats(gEnemyWeaponDrops, fileName))
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, ENEMYAMMODROPSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInEnemyAmmoDropsStats(gEnemyAmmoDrops, fileName))
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, ENEMYARMOURDROPSFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+	if(!ReadInEnemyArmourDropsStats(gEnemyArmourDrops, fileName))
+		return FALSE;
+
+	// WANNE: Enemy drops - end
+	
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, AMMOTYPESFILENAME);
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
@@ -318,6 +352,38 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if(!ReadInMapStructure(fileName))
 		return FALSE;
 		
+	// Lesh: Strategic movement costs will be read in Strategic\Strategic Movement Costs.cpp,
+	//       function BOOLEAN InitStrategicMovementCosts();
+	//       It is called several times from various places and acts after clearing SectorInfo array
+
+	// Lesh: load altsectors list
+	strcpy(fileName, directoryName);
+	strcat(fileName, ALTSECTORSFILENAME);
+	if ( !ReadInAltSectors(fileName) )
+		return FALSE;
+
+	// Lesh: load samsites - must be after cities.xml
+	strcpy(fileName, directoryName);
+	strcat(fileName, SAMSITESFILENAME);
+	if ( !ReadInSAMInfo(fileName) )
+		return FALSE;
+	
+	// Lesh: army externalization
+	strcpy(fileName, directoryName);
+	strcat(fileName, GARRISONFILENAME);
+	if ( !ReadInGarrisonInfo(fileName) )
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, PATROLFILENAME);
+	if ( !ReadInPatrolInfo(fileName) )
+		return FALSE;
+
+	strcpy(fileName, directoryName);
+	strcat(fileName, COMPOSITIONFILENAME);
+	if ( !ReadInArmyCompositionInfo(fileName) )
+		return FALSE;
+
 	strcpy(fileName, directoryName);
 	strcat(fileName, EXPLOSIONDATAFILENAME);
     if(!ReadInExplosionDataStats(fileName))
@@ -375,7 +441,10 @@ UINT32 InitializeJA2(void)
 	}
 	
 	//needs to be called here to init the SectorInfo struct
-	InitStrategicMovementCosts( );
+	if ( !InitStrategicMovementCosts( ) )
+	{
+		return( ERROR_SCREEN );
+	}
 
 	// Init tactical engine
 	if ( !InitTacticalEngine( ) )

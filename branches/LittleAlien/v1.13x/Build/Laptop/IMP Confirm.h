@@ -7,7 +7,7 @@ void ExitIMPConfirm( void );
 void HandleIMPConfirm( void );
 
 BOOLEAN AddCharacterToPlayersTeam( void );
-void LoadImpCharacter( STR fileName );
+BOOLEAN LoadImpCharacter( STR fileName );
 void WriteOutCurrentImpCharacter( INT32 iProfileId );
 void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName );
 

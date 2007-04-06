@@ -441,13 +441,17 @@ void DecideActiveTerrorists( void )
 		case DIF_LEVEL_EASY:
 			uiChance = 70;
 			break;
-		case DIF_LEVEL_HARD:
+		case DIF_LEVEL_INSANE:
 			uiChance = 30;
 			break;
 		default:
 			uiChance = 50;
 			break;
 	}
+
+	if ( gGameExternalOptions.fEnableAllTerrorists )
+		uiChance = 100;
+
 	// add at least 2 more
 	ubNumAdditionalTerrorists = 2;
 	for (ubLoop = 0; ubLoop < (MAX_ADDITIONAL_TERRORISTS - 2); ubLoop++)
@@ -804,10 +808,10 @@ UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 	uiStats = ((2 * pProfile->bLifeMax) + pProfile->bStrength + pProfile->bAgility + pProfile->bDexterity + ((pProfile->bLeadership + pProfile->bWisdom) / 2)) / 3;
 
 	// marksmanship is very important, count it double
-	uiSkills = (UINT32) ((2   * (pow(pProfile->bMarksmanship, 3) / 10000)) +
-												1.5 *	(pow(pProfile->bMedical, 3) / 10000) +
-															(pow(pProfile->bMechanical, 3) / 10000) +
-															(pow(pProfile->bExplosive, 3) / 10000));
+	uiSkills = (UINT32) ((2   * (pow((double)pProfile->bMarksmanship, 3) / 10000)) +
+												1.5 *	(pow((double)pProfile->bMedical, 3) / 10000) +
+															(pow((double)pProfile->bMechanical, 3) / 10000) +
+															(pow((double)pProfile->bExplosive, 3) / 10000));
 
 	// action points
 	uiActionPoints = 5 + (((10 * pProfile->bExpLevel +

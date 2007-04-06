@@ -570,15 +570,10 @@ BOOLEAN InitBobbyRayNewInventory()
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )
 	{
-		if ( Item[i].usItemClass  == 0 )
-			break;
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
 //		if( ( StoreInventory[ i ][ BOBBY_RAY_NEW ] != 0) && !( Item[ i ].fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
-		if( ( StoreInventory[ i ][ BOBBY_RAY_NEW ] != 0) && !( Item[ i ].notbuyable  ) && ItemIsLegal( i ) )
-		{
-			LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = i;
-			usBobbyrIndex++;
-		}
+		LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = i;
+		usBobbyrIndex++;
 	}
 
 	if ( usBobbyrIndex > 1 )
@@ -608,20 +603,13 @@ BOOLEAN InitBobbyRayUsedInventory()
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )
 	{
-		if ( Item[i].usItemClass  == 0 )
-			break;
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
 //		if( ( StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[ i ].fFlags & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
-		if( ( StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[ i ].notbuyable  ) && ItemIsLegal( i ) )
+		// in case his store inventory list is wrong, make sure this category of item can be sold used
+		if ( CanDealerItemBeSoldUsed( i ) )
 		{
-//			if( (StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[i].fFlags & ITEM_NOT_BUYABLE )  && ItemIsLegal( i ))
-			if( (StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( Item[i].notbuyable )  && ItemIsLegal( i ))
-			// in case his store inventory list is wrong, make sure this category of item can be sold used
-			if ( CanDealerItemBeSoldUsed( i ) )
-			{
-				LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = i;
-				usBobbyrIndex++;
-			}
+			LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = i;
+			usBobbyrIndex++;
 		}
 	}
 
@@ -912,8 +900,6 @@ void CancelAllPendingBRPurchaseOrders(void)
 	// zero out all the quantities on order
 	for(i = 0; i < MAXITEMS; i++)
 	{
-		if ( Item[i].usItemClass  == 0 )
-			break;
 		LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnOrder = 0;
 		LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnOrder = 0;
 	}

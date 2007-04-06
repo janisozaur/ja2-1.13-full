@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifndef _MAP_INTERFACE_MAP_INVEN_H
 #define _MAP_INTERFACE_MAP_INVEN_H
 
@@ -53,8 +52,7 @@ extern INT16 sObjectSourceGridNo;
 extern WORLDITEM *pInventoryPoolList;
 extern INT32 iCurrentInventoryPoolPage;
 extern BOOLEAN fMapInventoryItemCompatable[ ];
-// WANNE 2
-extern MAP_INVENTORY_POOL_SLOT_COUNT; 
+extern INT32 MAP_INVENTORY_POOL_SLOT_COUNT; 
 
 BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem );
 BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem );

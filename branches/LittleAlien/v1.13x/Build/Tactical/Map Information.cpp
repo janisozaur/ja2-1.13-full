@@ -23,11 +23,12 @@
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!
-#ifdef RUSSIAN
-	#define MAJOR_MAP_VERSION		6.00
-#else
+// Lesh: fix the sad situation with the different major map versions
+//#ifdef RUSSIAN
+	//#define MAJOR_MAP_VERSION		6.00
+//#else
 	#define MAJOR_MAP_VERSION		5.00
-#endif
+//#endif
 
 FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
 
@@ -604,7 +605,7 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	else if( gMapInformation.ubMapVersion > MINOR_MAP_VERSION )
 	{
 		//we may have a problem...
-		AssertMsg( 0, "Map version is greater than the current version (old ja2.exe?)" );
+		//AssertMsg( 0, "Map version is greater than the current version (old ja2.exe?)" );
 	}
 	AutoCalculateItemNoOverwriteStatus() ;
 }

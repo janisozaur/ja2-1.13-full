@@ -107,13 +107,24 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-UINT16 ItemNames[MAXITEMS][80] =
+STR16 pCreditsJA2113[] =
+{
+	L"@T,{;JA2 v1.13 Development Team",
+	L"@T,C144,R134,{;Coding",
+	L"@T,C144,R134,{;Graphics and Sounds",
+	L"@};(Various other mods!)",
+	L"@T,C144,R134,{;Items",
+	L"@T,C144,R134,{;Other Contributors",
+	L"@};(All other community members who contributed input and feedback!)",
+};
+
+wchar_t ItemNames[MAXITEMS][80] =
 {
 	L"",
 };
 
 
-UINT16 ShortItemNames[MAXITEMS][80] =
+wchar_t ShortItemNames[MAXITEMS][80] =
 {
 	L"",
 };
@@ -123,7 +134,7 @@ UINT16 ShortItemNames[MAXITEMS][80] =
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-UINT16 AmmoCaliber[MAXITEMS][20];// =
+wchar_t AmmoCaliber[MAXITEMS][20];// =
 //{
 //	L"0",
 //	L".38 cal",
@@ -153,7 +164,7 @@ UINT16 AmmoCaliber[MAXITEMS][20];// =
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-UINT16 BobbyRayAmmoCaliber[MAXITEMS][20] ;//=
+wchar_t BobbyRayAmmoCaliber[MAXITEMS][20] ;//=
 //{
 //	L"0",
 //	L".38 cal",
@@ -177,20 +188,20 @@ UINT16 BobbyRayAmmoCaliber[MAXITEMS][20] ;//=
 //};
 
 
-UINT16 WeaponType[MAXITEMS][30] =
+wchar_t WeaponType[MAXITEMS][30] =
 {
 	L"Other",
 	L"Pistol",
-	L"Machine pistol",
-	L"Submachine gun",
+	L"MP",
+	L"SMG",
 	L"Rifle",
 	L"Sniper rifle",
 	L"Assault rifle",
-	L"Light machine gun",
+	L"LMG",
 	L"Shotgun",
 };
 
-UINT16 TeamTurnString[][STRING_LENGTH] =
+wchar_t TeamTurnString[][STRING_LENGTH] =
 {
 	L"Player's Turn", // player's turn
 	L"Opponents' Turn",
@@ -200,7 +211,7 @@ UINT16 TeamTurnString[][STRING_LENGTH] =
 	// planning turn
 };
 
-UINT16 Message[][STRING_LENGTH] =
+wchar_t Message[][STRING_LENGTH] =
 {
 	L"",
 
@@ -286,7 +297,7 @@ UINT16 Message[][STRING_LENGTH] =
 	L"This attachment will be permanent.  Go ahead with it?",
 	L"%s feels more energetic!",
 	L"%s slipped on some marbles!",
-	L"%s failed to grab the %s!",
+	L"%s failed to grab the %s from enemy's hand!",
 	L"%s has repaired the %s",
 	L"Interrupt for ",
 	L"Surrender?",
@@ -300,12 +311,14 @@ UINT16 Message[][STRING_LENGTH] =
 	L"accurate",
 	L"inaccurate",
 	L"no semi auto",
+	L"The enemy has no more items to steal!",	// WANNE
+	L"The enemy has no item in its hand!", //WANNE
 };
 
 
 // the names of the towns in the game
 
-STR16 pTownNames[] =
+CHAR16 pTownNames[MAX_TOWNS][MAX_TOWN_NAME_LENGHT] =
 {
 	L"",
 	L"Omerta",
@@ -1066,7 +1079,7 @@ STR16 sKeyDescriptionStrings[2] =
 
 //The headers used to describe various weapon statistics.
 
-INT16		gWeaponStatsDesc[][ 14 ] =
+wchar_t		gWeaponStatsDesc[][ 14 ] =
 {
 	L"Weight (%s):", 
 	L"Status:",
@@ -1089,7 +1102,7 @@ INT16		gWeaponStatsDesc[][ 14 ] =
 
 //The headers used for the merc's money.
 
-INT16 gMoneyStatsDesc[][ 13 ] =
+wchar_t gMoneyStatsDesc[][ 13 ] =
 {
 	L"Amount",
 	L"Remaining:", //this is the overall balance
@@ -1105,7 +1118,7 @@ INT16 gMoneyStatsDesc[][ 13 ] =
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
 //only, but represent the precentage of points remaining. 
 
-UINT16 zHealthStr[][13] =
+wchar_t zHealthStr[][13] =
 {
 	L"DYING",		//	>= 0
 	L"CRITICAL", 		//	>= 15
@@ -1127,18 +1140,18 @@ STR16	gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons." 
-INT16		gzProsLabel[10] = 
+wchar_t		gzProsLabel[10] = 
 {
 	L"Pros:",
 };
 
-INT16		gzConsLabel[10] = 
+wchar_t		gzConsLabel[10] = 
 {
 	L"Cons:",
 };
 
 //Conversation options a player has when encountering an NPC
-UINT16 zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
+wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 {
 	L"Come Again?", 	//meaning "Repeat yourself" 
 	L"Friendly",		//approach in a friendly
@@ -1149,7 +1162,7 @@ UINT16 zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 };
 
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
-UINT16 zDealerStrings[4][ SMALL_STRING_LENGTH ]=
+wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 {
 	L"Buy/Sell",
 	L"Buy",
@@ -1157,7 +1170,7 @@ UINT16 zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 	L"Repair",
 };
 
-UINT16 zDialogActions[1][ SMALL_STRING_LENGTH ] = 
+wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] = 
 {
 	L"Done",
 };
@@ -1198,7 +1211,7 @@ STR16	zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-UINT16 TacticalStr[][ MED_STRING_LENGTH ] =
+wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 {
 	L"Air Raid",
 	L"Apply first aid automatically?",
@@ -2067,15 +2080,22 @@ STR16 pMercContractOverStrings[] =
 
 // Text used on IMP Web Pages
 
+// WDS: Allow flexible numbers of IMPs of each sex
+//    note: I only updated the English text to remove "three" below
 STR16 pImpPopUpStrings[] =
 {
-	L"Invalid Authorization Code",
-	L"You Are About To Restart The Entire Profiling Process. Are You Certain?",
-	L"Please Enter A Valid Full Name and Gender",
+	L"Invalid authorization code",
+	L"You are about to restart the entire profiling process. Are you certain?",
+	L"Please enter a valid full name and gender",
 	L"Preliminary analysis of your financial status shows that you cannot afford a profile analysis.",
-  L"Not A Valid Option At This Time.",
+	L"Not a valid option at this time.",
 	L"To complete an accurate profile, you must have room for at least one team member.",
-	L"Profile Already Completed.",
+	L"Profile already completed.",
+	L"Cannot load I.M.P. character from disk.",
+	L"You have already reached the maximum number of I.M.P. characters.",
+	L"You have already the maximum number of I.M.P characters with that gender on your team.",
+	L"You cannot afford the I.M.P character.",
+	L"The new I.M.P character has joined your team.",
 };
 
 
@@ -2532,7 +2552,7 @@ STR16 pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-UINT16 LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
+wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
 {
 	L"You have been defeated in this sector!",
 	L"The enemy, having no mercy for the team's soul, devours each and every one of you!",
@@ -2581,7 +2601,7 @@ STR16			MercAccountText[] =
 	L"Are you sure you want to authorize the payment of %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
-// WANNE 3
+// WANNE:
 // Merc Account Page buttons
 STR16			MercAccountPageText[] = 
 {
@@ -2796,6 +2816,53 @@ STR16			BobbyROrderFormText[] =
 	L"Package Weight**",			// Displays the weight of the package
 	L"** Min. Wt.",				// Disclaimer states that there is a minimum weight for the package
 	L"Shipments",	
+};
+
+// WANNE
+STR16			BobbyRFilter[] =
+{
+	// Guns
+	L"Heavy W.",
+	L"Pistol",
+	L"M. Pistol",
+	L"SMG",
+	L"Rifle",
+	L"SN Rifle",
+	L"AS Rifle",
+	L"MG",
+	L"Shotgun",
+
+	// Ammo
+	L"Pistol",
+	L"M. Pistol",
+	L"SMG",
+	L"Rifle",
+	L"SN Rifle",
+	L"AS Rifle",
+	L"MG",
+	L"Shotgun",
+
+	// Used
+	L"Guns",
+	L"Armor",
+	L"Misc",
+
+	// Armour
+	L"Helmets",
+	L"Vests",
+	L"Leggings",
+	L"Plates",
+
+	// Misc
+	L"Blades",
+	L"Th. Knives",
+	L"Punch. W.",
+	L"Grenades",
+	L"Bombs",
+	L"Med. Kits",
+	L"Kits",
+	L"Face Items",
+	L"Misc.",
 };
 
 
@@ -3275,25 +3342,25 @@ STR16			zSaveLoadText[] =
 	L"Loaded the game successfully",
 	L"ERROR loading the game!",
 
-	L"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
-	L"The saved game files may be invalidated.  Do you want them all deleted?",
+	L"The game version in the saved game file is different then the current version. It is most likely safe to continue.  Continue?",
+	L"The saved game files may be invalidated. Do you want them all deleted?",
 
 	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
 	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
 	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
-	L"Save version has changed.  Please report if there any problems.  Continue?",
+	L"Save version has changed. Please report if there any problems. Continue?",
 #else
-	L"Attempting to load an older version save.  Automatically update and load the save?",
+	L"Attempting to load an older version save. Automatically update and load the save?",
 #endif
 
 	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
 	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
 	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
-	L"Save version and game version have changed.  Please report if there are any problems.  Continue?",
+	L"Save version and game version have changed. Please report if there are any problems. Continue?",
 #else
-	L"Attempting to load an older version save.  Automatically update and load the save?",
+	L"Attempting to load an older version save. Automatically update and load the save?",
 #endif
 
 	L"Are you sure you want to overwrite the saved game in slot #%d?",
@@ -3426,6 +3493,10 @@ STR16		zOptionsToggleText[] =
 	L"Tracer effect for single shot",
 	L"Rain noises",
 	L"Allow crows",
+	L"Random I.M.P personality",
+	L"Auto save",
+	L"Silent Skyrider",
+	L"Low CPU usage",
 };
 
 //This is the help text associated with the above toggles.
@@ -3502,6 +3573,10 @@ STR16	zOptionsScreenHelpText[] =
 	L"When ON, tracer effect will be shown for single shots.",
 	L"When ON, you will hear rain noises when it is raining.",
 	L"When ON, the crows are present in game.",
+	L"When ON, I.M.P characters will get random personality and attitude.",
+	L"When ON, game will be saved after each players turn.",
+	L"When ON, Skyrider will not talk anymore.",
+	L"When ON, game will run with much lower CPU usage.",
 };
 
 
@@ -3616,7 +3691,7 @@ STR16 pMessageStrings[] =
 	L"No description", //Save slots that don't have a description.
 	L"Game Saved.",
 	L"Game Saved.",
-	L"QuickSave", //The name of the quicksave file (filename, text reference)
+	L"QuickSave", //10	The name of the quicksave file (filename, text reference)
 	L"SaveGame",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
 	L"sav",				//The 3 character dos extension (represents sav)
 	L"..\\SavedGames", //The name of the directory where games are saved.
@@ -3626,7 +3701,7 @@ STR16 pMessageStrings[] =
 	L"Demo",				//Demo of JA2
 	L"Debug",				//State of development of a project (JA2) that is a debug build
 	L"Release",			//Release build for JA2
-	L"rpm",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
+	L"rpm",					//20	Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
 	L"min",					//Abbreviation for minute.
 	L"m",						//One character abbreviation for meter (metric distance measurement unit).
 	L"rnds",				//Abbreviation for rounds (# of bullets)
@@ -3636,7 +3711,7 @@ STR16 pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"n/a",					//Lowercase acronym for not applicable.
 	L"Meanwhile",		//Meanwhile
-	L"%s has arrived in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	L"%s has arrived in sector %s%s", //30	Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	L"Version",
 	L"Empty Quick Save Slot",
@@ -3647,7 +3722,7 @@ STR16 pMessageStrings[] =
 	L"Hired %s from AIM", 
 	L"%s has caught %s.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%s has taken the drug.", //'Merc name' has taken the drug
-	L"%s has no medical skill",//'Merc name' has no medical skill.
+	L"%s has no medical skill",//40	'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	L"The integrity of the game has been compromised.",
@@ -3669,7 +3744,7 @@ STR16 pMessageStrings[] =
 	L"No room to pass %s to %s.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" Attached]",
+	L" attached]",			// 50
 
 	//Cheat modes
 	L"Cheat level ONE reached",
@@ -3689,7 +3764,7 @@ STR16 pMessageStrings[] =
 	//These are used in the cheat modes for changing levels in the game.  Going from a basement level to
 	//an upper level, etc.  
 	L"Can't go up from this level...",
-	L"There are no lower levels...",
+	L"There are no lower levels...",		// 60
 	L"Entering basement level %d...",
 	L"Leaving basement...",
 
@@ -3700,26 +3775,26 @@ STR16 pMessageStrings[] =
 	L"3D Cursor ON.",
 	L"Squad %d active.",
 	L"You cannot afford to pay for %s's daily salary of %s",	//first %s is the mercs name, the seconds is a string containing the salary
-	L"Skip",
+	L"Skip",				// 70
 	L"%s cannot leave alone.",
 	L"A save has been created called, SaveGame99.sav.  If needed, rename it to SaveGame01 - SaveGame10 and then you will have access to it in the Load screen.",
 	L"%s drank some %s",
 	L"A package has arrived in Drassen.",
  	L"%s should arrive at the designated drop-off point (sector %s) on day %d, at approximately %s.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"History log updated.",
-	L"Grenade Bursts - Using Targeting Cursor (Spread fire enabled)",
-	L"Grenade Bursts - Using Trajectory Cursor (Spread fire disabled)",
+	L"Grenade Bursts use Targeting Cursor (Spread fire enabled)",
+	L"Grenade Bursts use Trajectory Cursor (Spread fire disabled)",
 	L"Drop All Enabled",
 	L"Drop All Disabled",
-	L"Grenade Launchers - Fire at standard angles",
-	L"Grenade Launchers - Fire at high angles",
+	L"Grenade Launchers fire at standard angles",
+	L"Grenade Launchers fire at higher angles",
 #ifdef JA2BETAVERSION
 	L"Successfully Saved the Game into the End Turn Auto Save slot.",
 #endif
 };
 
 
-UINT16 ItemPickupHelpPopup[][40] =
+wchar_t ItemPickupHelpPopup[][40] =
 {
 	L"OK",
 	L"Scroll Up",
@@ -4072,15 +4147,61 @@ STR16 gzLateLocalizedString[] =
 	L"Escort John and Mary?",
 	
 	// 60
-  L"Switch Activated.",
+	L"Switch Activated.",
 
 	L"%s's armour attachment has been smashed!",
-	L"%s fires %d more rounds than intended!"
+	L"%s fires %d more rounds than intended!",
+	L"%s fires %d more round than intended!",
 };
 
 STR16 gzCWStrings[] = 
 {
 	L"Call reinforcements from adjacent sectors?",
+};
+
+// WANNE: Tooltips
+STR16 gzTooltipStrings[] =
+{
+	// Debug info
+	L"%s|Location: %d\n",
+	L"%s|Brightness: %d / %d\n",
+	L"%s|Range to |Target: %d\n",
+	L"%s|I|D: %d\n",
+	L"%s|Orders: %d\n",
+	L"%s|Attitude: %d\n",
+	L"%s|Current |A|Ps: %d\n",
+	L"%s|Current |Health: %d\n",
+	// Full info
+	L"%s|Helmet: %s\n",
+	L"%s|Vest: %s\n",
+	L"%s|Leggings: %s\n",
+	// Limited, Basic
+	L"|Armor: ",
+	L"Helmet ",
+	L"Vest ",
+	L"Leggings",
+	L"worn",
+	L"no Armor",
+	L"%s|N|V|G: %s\n",
+	L"no NVG",
+	L"%s|Gas |Mask: %s\n",
+	L"no Gas Mask",
+	L"%s|Head |Position |1: %s\n",
+	L"%s|Head |Position |2: %s\n",
+	L"\n(in Backpack) ",
+	L"%s|Weapon: %s ",
+	L"no Weapon",
+	L"Handgun",
+	L"SMG",
+	L"Rifle",
+	L"MG",
+	L"Shotgun",
+	L"Knife",
+	L"Heavy Weapon",
+	L"no Helmet",
+	L"no Vest",
+	L"no Leggings",
+	L"|Armor: %s\n", 
 };
 
 

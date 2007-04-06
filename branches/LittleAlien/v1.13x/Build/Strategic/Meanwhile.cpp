@@ -350,7 +350,7 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 
 void BringupMeanwhileBox( )
 {
-	INT16 zStr[256];
+	wchar_t zStr[256];
 
 #ifdef JA2TESTVERSION
 	swprintf( (wchar_t *)zStr, (wchar_t *)L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
@@ -684,22 +684,39 @@ void ProcessImplicationsOfMeanwhile( void )
 			//HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_BATTLE_LOCATION, 0 );
 			ExecuteStrategicAIAction( NPC_ACTION_SEND_SOLDIERS_TO_BATTLE_LOCATION, 0, 0 );
 			break;
+
 		case CAMBRIA_LIBERATED:
+			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, 8, 7 ); //lalien: The queen should try to get the city back
+			break;
+
 		case ALMA_LIBERATED:
+			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, 14, 9 );//lalien: The queen should try to get the city back
+			break;
+
 		case GRUMM_LIBERATED:
+			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, 3, 8 );//lalien: The queen should try to get the city back
+			break;
+
 		case CHITZENA_LIBERATED:
+			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, 2, 2 );//lalien: The queen should try to get the city back
+			break;
+
 		case BALIME_LIBERATED:
 			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, 11, 12 );//lalien: The queen should try to get the city back
 			break;
+
 		case DRASSEN_LIBERATED:
 			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
 			//HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_DRASSEN, 0 );
 			ExecuteStrategicAIAction( NPC_ACTION_SEND_SOLDIERS_TO_DRASSEN, 13, 4 );
 			break;
+		
 		case CREATURES:
 			// add Rat
 			HandleNPCDoAction( QUEEN, NPC_ACTION_ADD_RAT, 0 );
 			break;
+		
 		case AWOL_SCIENTIST:
 			{
 				INT16	sSectorX, sSectorY;

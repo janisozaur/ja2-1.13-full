@@ -2,6 +2,7 @@
 #define __XML_H
 
 #include "armsdealerinvinit.h"
+#include "EnemyItemDrops.h"
 
 enum
 {
@@ -18,7 +19,6 @@ typedef PARSE_STAGE;
 
 #define GERMAN_PREFIX							"German."
 #define RUSSIAN_PREFIX							"Russian."
-
 
 #define	ATTACHMENTSFILENAME						"Attachments.xml"
 #define	ATTACHMENTINFOFILENAME					"AttachmentInfo.xml"
@@ -38,34 +38,50 @@ typedef PARSE_STAGE;
 #define	ENEMYITEMCHOICESFILENAME				"EnemyItemChoices.xml"
 #define	IMPITEMCHOICESFILENAME					"IMPItemChoices.xml"
 
-#define	TONYINVENTORYFILENAME					"TonyInventory.xml"
-#define	DEVININVENTORYFILENAME					"DevinInventory.xml"
-#define	FRANZINVENTORYFILENAME					"FranzInventory.xml"
-#define	KEITHINVENTORYFILENAME					"KeithInventory.xml"
-#define	SAMINVENTORYFILENAME					"SamInventory.xml"
-#define	JAKEINVENTORYFILENAME					"JakeInventory.xml"
-#define	HOWARDINVENTORYFILENAME					"HowardInventory.xml"
-#define	GABBYINVENTORYFILENAME					"GabbyInventory.xml"
-#define	FRANKINVENTORYFILENAME					"FrankInventory.xml"
-#define	ELGININVENTORYFILENAME					"ElginInventory.xml"
-#define	MANNYINVENTORYFILENAME					"MannyInventory.xml"
-#define	HERVEINVENTORYFILENAME					"HerveInventory.xml"
-#define	PETERINVENTORYFILENAME					"PeterInventory.xml"
-#define	ALBERTOINVENTORYFILENAME				"AlbertoInventory.xml"
-#define	CARLOINVENTORYFILENAME					"CarloInventory.xml"
-#define	MICKEYINVENTORYFILENAME					"MickeyInventory.xml"
-#define	ARNIEINVENTORYFILENAME					"ArnieInventory.xml"
-#define	PERKOINVENTORYFILENAME					"PerkoInventory.xml"
-#define	FREDOINVENTORYFILENAME					"FredoInventory.xml"
+#define TONYINVENTORYFILENAME                   "NPCInventory\\TonyInventory.xml"
+#define DEVININVENTORYFILENAME                  "NPCInventory\\DevinInventory.xml"
+#define FRANZINVENTORYFILENAME                  "NPCInventory\\FranzInventory.xml"
+#define KEITHINVENTORYFILENAME                  "NPCInventory\\KeithInventory.xml"
+#define SAMINVENTORYFILENAME                    "NPCInventory\\SamInventory.xml"
+#define JAKEINVENTORYFILENAME                   "NPCInventory\\JakeInventory.xml"
+#define HOWARDINVENTORYFILENAME                 "NPCInventory\\HowardInventory.xml"
+#define GABBYINVENTORYFILENAME                  "NPCInventory\\GabbyInventory.xml"
+#define FRANKINVENTORYFILENAME                  "NPCInventory\\FrankInventory.xml"
+#define ELGININVENTORYFILENAME                  "NPCInventory\\ElginInventory.xml"
+#define MANNYINVENTORYFILENAME                  "NPCInventory\\MannyInventory.xml"
+#define HERVEINVENTORYFILENAME                  "NPCInventory\\HerveInventory.xml"
+#define PETERINVENTORYFILENAME                  "NPCInventory\\PeterInventory.xml"
+#define ALBERTOINVENTORYFILENAME                "NPCInventory\\AlbertoInventory.xml"
+#define CARLOINVENTORYFILENAME                  "NPCInventory\\CarloInventory.xml"
+#define MICKEYINVENTORYFILENAME                 "NPCInventory\\MickeyInventory.xml"
+#define ARNIEINVENTORYFILENAME                  "NPCInventory\\ArnieInventory.xml"
+#define PERKOINVENTORYFILENAME                  "NPCInventory\\PerkoInventory.xml"
+#define FREDOINVENTORYFILENAME                  "NPCInventory\\FredoInventory.xml"
 
-#define	BOBBYRAYSTRINGSFILENAME					"BobbyRayStrings.xml"
-#define AMMOCALIBERSTRINGSFILENAME				"AmmoCaliberStrings.xml"
-#define SOUNDSFILENAME							"Sounds.xml"
-#define BURSTSOUNDSFILENAME						"BurstSounds.xml"
+#define BOBBYRAYSTRINGSFILENAME                 "BobbyRayStrings.xml"
+#define AMMOCALIBERSTRINGSFILENAME              "AmmoCaliberStrings.xml"
 
-// Lesh: filename definition
+#define SOUNDSFILENAME                          "Sounds\\Sounds.xml"
+#define BURSTSOUNDSFILENAME                     "Sounds\\BurstSounds.xml"
+
 #define EXPLOSIONDATAFILENAME                   "ExplosionData.xml"
-#define CITYTABLEFILENAME "Cities.xml"
+
+#define CITYTABLEFILENAME                       "Map\\Cities.xml"
+#define MOVEMENTCOSTFILENAME                    "Map\\MovementCosts.xml"
+#define ALTSECTORSFILENAME                      "Map\\AltSectors.xml"
+#define SAMSITESFILENAME                        "Map\\SamSites.xml"
+
+#define GARRISONFILENAME                        "Army\\GarrisonGroups.xml"
+#define PATROLFILENAME                          "Army\\PatrolGroups.xml"
+#define COMPOSITIONFILENAME                     "Army\\ArmyComposition.xml"
+
+// WANNE: drops filename
+#define ENEMYWEAPONDROPSFILENAME                "EnemyWeaponDrops.xml"
+#define ENEMYAMMODROPSFILENAME                  "EnemyAmmoDrops.xml"
+#define ENEMYEXPLOSIVEDROPSFILENAME             "EnemyExplosiveDrops.xml"
+#define ENEMYARMOURDROPSFILENAME                "EnemyArmourDrops.xml"
+#define ENEMYMISCDROPSFILENAME                  "EnemyMiscDrops.xml"
+
 
 extern BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion);
 extern BOOLEAN WriteItemStats();
@@ -124,12 +140,39 @@ extern BOOLEAN ReadInSoundArray(STR fileName);
 extern BOOLEAN ReadInAmmoTypeStats(STR fileName);
 extern BOOLEAN WriteAmmoTypeStats();
 
-// Lesh: 2 lines added
+// WANNE: Enemy drops
+extern BOOLEAN ReadInEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileName);
+extern BOOLEAN WriteEnemyWeaponDropsStats(WEAPON_DROPS *pEnemyWeaponDrops, STR fileName);
+extern BOOLEAN ReadInEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName);
+extern BOOLEAN WriteEnemyAmmoDropsStats(AMMO_DROPS *pEnemyAmmoDrops, STR fileName);
+extern BOOLEAN ReadInEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, STR fileName);
+extern BOOLEAN WriteEnemyExplosiveDropsStats(EXPLOSIVE_DROPS *pEnemyExplosiveDrops, STR fileName);
+extern BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName);
+extern BOOLEAN WriteEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName);
+extern BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName);
+extern BOOLEAN WriteEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName);
+
+// Lesh: burst sounds and explosion info
 extern BOOLEAN ReadInBurstSoundArray(STR fileName);
 extern BOOLEAN WriteBurstSoundArray();
-// Lesh: over
-// Lesh: 2 new lines added for explosion data
 extern BOOLEAN ReadInExplosionDataStats(STR fileName);
 extern BOOLEAN WriteExplosionDataStats();
-// Lesh: over
+
+//Lesh: strategic movement costs and alternative sectors table
+extern BOOLEAN ReadInStrategicMovementCosts(STR fileName);
+extern BOOLEAN WriteInStrategicMovementCosts(STR fileName);
+extern BOOLEAN ReadInAltSectors(STR fileName);
+extern BOOLEAN WriteInAltSectors(STR fileName);
+
+//Lesh: samsite info
+extern BOOLEAN ReadInSAMInfo(STR fileName);
+extern BOOLEAN WriteInSAMInfo(STR fileName);
+
+// Lesh: army externalization
+extern BOOLEAN ReadInGarrisonInfo(STR fileName);
+extern BOOLEAN WriteInGarrisonInfo(STR fileName);
+extern BOOLEAN ReadInPatrolInfo(STR fileName);
+extern BOOLEAN WriteInPatrolInfo(STR fileName);
+extern BOOLEAN ReadInArmyCompositionInfo(STR fileName);
+extern BOOLEAN WriteInArmyCompositionInfo(STR fileName);
 #endif

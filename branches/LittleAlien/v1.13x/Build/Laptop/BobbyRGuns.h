@@ -14,7 +14,7 @@
 
 
 #define		BOBBYR_GUNS_BUTTON_FONT						FONT10ARIAL
-#define		BOBBYR_GUNS_TEXT_COLOR_ON					FONT_NEARBLACK
+#define		BOBBYR_GUNS_TEXT_COLOR_ON					FONT_NEARBLACK // FONT_DKGREEN
 #define		BOBBYR_GUNS_TEXT_COLOR_OFF				FONT_NEARBLACK
 //#define		BOBBYR_GUNS_TEXT_COLOR_ON					FONT_MCOLOR_DKWHITE
 //#define		BOBBYR_GUNS_TEXT_COLOR_OFF				FONT_MCOLOR_WHITE
@@ -38,6 +38,16 @@ void ExitBobbyRGuns();
 void HandleBobbyRGuns();
 void RenderBobbyRGuns();
 
+BOOLEAN DeleteBobbyRGunsFilter();
+BOOLEAN DeleteBobbyRAmmoFilter();
+BOOLEAN DeleteBobbyRUsedFilter();
+BOOLEAN DeleteBobbyRArmourFilter();
+BOOLEAN DeleteBobbyRMiscFilter();
+BOOLEAN InitBobbyRGunsFilterBar();
+BOOLEAN InitBobbyRAmmoFilterBar();
+BOOLEAN InitBobbyRUsedFilterBar();
+BOOLEAN InitBobbyRArmourFilterBar();
+BOOLEAN InitBobbyRMiscFilterBar();
 
 BOOLEAN DisplayBobbyRBrTitle();
 BOOLEAN DeleteBobbyBrTitle();
@@ -45,16 +55,25 @@ BOOLEAN InitBobbyBrTitle();
 BOOLEAN InitBobbyMenuBar( );
 BOOLEAN DeleteBobbyMenuBar();
 
+
+
 //BOOLEAN DisplayWeaponInfo();
-BOOLEAN DisplayItemInfo(UINT32 uiItemClass);
+BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter);
 void DeleteMouseRegionForBigImage();
 void UpdateButtonText(UINT32	uiCurPage);
+
+void UpdateAmmoFilterButtons(INT32 iNewButton, INT32 iOldButton);
+void UpdateGunFilterButtons(INT32 iNewButton, INT32 iOldButton);
+void UpdateUsedFilterButtons();
+void UpdateArmourFilterButtons(INT32 iNewButton, INT32 iOldButton);
+void UpdateMiscFilterButtons();
+
 void EnterInitBobbyRGuns();
 void DailyUpdateOfBobbyRaysUsedInventory();
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 //void CalculateFirstAndLastIndexs();
-void SetFirstLastPagesForUsed();
-void SetFirstLastPagesForNew( UINT32 uiClass );
+void SetFirstLastPagesForUsed(INT32 iFilter);
+void SetFirstLastPagesForNew( UINT32 uiClass, INT32 iFilter );
 
 #endif
 

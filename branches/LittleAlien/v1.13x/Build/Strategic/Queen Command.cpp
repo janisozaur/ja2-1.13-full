@@ -53,6 +53,10 @@ extern BOOLEAN gfOverrideSector;
 
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
+
+extern void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize );
+
+
 void ValidateEnemiesHaveWeapons()
 {
 	#ifdef JA2BETAVERSION
@@ -77,7 +81,7 @@ void ValidateEnemiesHaveWeapons()
 		// do message box and return
 		if( iNumInvalid )
 		{
-			UINT16 str[ 100 ];
+			wchar_t str[ 100 ];
 			swprintf( str, L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid );
 			iErrorDialog = DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
 		}
@@ -173,8 +177,8 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
 
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	//Assert( sSectorX >= 1 && sSectorX <= 16 );
+	//Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -203,7 +207,9 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		return( 0 );
 	}
 	
-	// don't count roadblocks as stationary garrison, we want to see how many enemies are in them, not question marks
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+
+  // don't count roadblocks as stationary garrison, we want to see how many enemies are in them, not question marks
 	if ( gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition == ROADBLOCK )
 	{
 		// pretend they're not stationary
@@ -275,7 +281,6 @@ void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pu
 void GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
 	GROUP *pGroup;
-	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
@@ -708,7 +713,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
 	INT32 iNumEnemiesInSector;
 	SECTORINFO *pSector;
-//	UINT16 str[128];
+//	wchar_t str[128];
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 
@@ -761,7 +766,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		if( !pGroup )
 		{
 			#ifdef JA2BETAVERSION
-				UINT16 str[256];
+				wchar_t str[256];
 				swprintf( str, L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
@@ -770,7 +775,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		if( pGroup->fPlayer )
 		{
 			#ifdef JA2BETAVERSION
-				UINT16 str[256];
+				wchar_t str[256];
 				swprintf( str, L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
@@ -958,7 +963,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 						#ifdef JA2BETAVERSION
 							if( guiCurrentScreen == GAME_SCREEN )
 							{
-								if( ubTotalEnemies <= iMaxEnemyGroupSize && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
+								if( ubTotalEnemies <= (UINT32)iMaxEnemyGroupSize && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
 										!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 										pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 								{
@@ -999,7 +1004,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 				{
 					case SOLDIER_CLASS_ADMINISTRATOR:
 						#ifdef JA2BETAVERSION
-						if( ubTotalEnemies <= iMaxEnemyGroupSize && pSector->ubNumAdmins != pSector->ubAdminsInBattle ||
+						if( ubTotalEnemies <= (UINT32)iMaxEnemyGroupSize && pSector->ubNumAdmins != pSector->ubAdminsInBattle ||
 								!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 								pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > iMaxEnemyGroupSize )
 						{
@@ -1017,7 +1022,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 						break;
 					case SOLDIER_CLASS_ARMY:
 						#ifdef JA2BETAVERSION
-						if( ubTotalEnemies <= iMaxEnemyGroupSize && pSector->ubNumTroops != pSector->ubTroopsInBattle ||
+						if( ubTotalEnemies <= (UINT32)iMaxEnemyGroupSize && pSector->ubNumTroops != pSector->ubTroopsInBattle ||
 								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > iMaxEnemyGroupSize )
 						{
@@ -1035,7 +1040,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 						break;
 					case SOLDIER_CLASS_ELITE:
 						#ifdef JA2BETAVERSION
-						if( ubTotalEnemies <= iMaxEnemyGroupSize && pSector->ubNumElites != pSector->ubElitesInBattle ||
+						if( ubTotalEnemies <= (UINT32)iMaxEnemyGroupSize && pSector->ubNumElites != pSector->ubElitesInBattle ||
 								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > iMaxEnemyGroupSize )
 						{
@@ -1053,7 +1058,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 						break;
 					case SOLDIER_CLASS_CREATURE:
 						#ifdef JA2BETAVERSION
-						if( ubTotalEnemies <= iMaxEnemyGroupSize && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
+						if( ubTotalEnemies <= (UINT32)iMaxEnemyGroupSize && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
 								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 						{
@@ -1122,10 +1127,13 @@ void AddPossiblePendingEnemiesToBattle()
 	GROUP *pGroup;
 	SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	static UINT8 ubPredefinedInsertionCode = 255;
+	
+	// check if no world is loaded
+	if ( !gWorldSectorX && !gWorldSectorY && (gbWorldSectorZ == -1) )
+		return;
 
-	if( ( !PlayerMercsInSector( gWorldSectorX, gWorldSectorY, 0 ) && !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) )
+	if( ( !PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, 0 ) && !CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY ) )
 		|| !NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) ) return;
-
 
 /*	if( !gfPendingEnemies )
 	{ //Optimization.  No point in checking if we know that there aren't any more enemies that can

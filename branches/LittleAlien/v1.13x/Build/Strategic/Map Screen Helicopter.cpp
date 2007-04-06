@@ -54,7 +54,7 @@ extern UINT8			gubCurrentTalkingID;
 // current temp path for dest char
 extern PathStPtr pTempHelicopterPath;
 
-extern UINT8 ubSAMControlledSectors[ MAP_WORLD_X ][ MAP_WORLD_Y ];
+extern UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ];
 
 // the seating capacities
 extern INT32 iSeatingCapacities[];
@@ -351,7 +351,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			if ( ( GetNumberOfPassengersInHelicopter() > 0 ) || !fHeliReturnStraightToBase )
 			{
 				// arrived at destination
-				HeliCharacterDialogue( pSkyRider, ARRIVED_IN_NON_HOSTILE_SECTOR );
+				if(gGameSettings.fOptions[ TOPTION_SILENT_SKYRIDER ] == FALSE) HeliCharacterDialogue( pSkyRider, ARRIVED_IN_NON_HOSTILE_SECTOR );
 				StopTimeCompression();
 			}
 
@@ -361,7 +361,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 		else
 		{
 			// Say quote: "Gonna have to abort.  Enemies below"
-			HeliCharacterDialogue( pSkyRider, ARRIVED_IN_HOSTILE_SECTOR );
+			if(gGameSettings.fOptions[ TOPTION_SILENT_SKYRIDER ] == FALSE) HeliCharacterDialogue( pSkyRider, ARRIVED_IN_HOSTILE_SECTOR );
 			StopTimeCompression();
 		}
 
@@ -1709,7 +1709,7 @@ BOOLEAN WillAirRaidBeStopped( INT16 sSectorX, INT16 sSectorY )
 	 
 
 	// which SAM controls this sector?
-	ubSamNumber = ubSAMControlledSectors[ sSectorX ][ sSectorY ];	
+	ubSamNumber = ubSAMControlledSectors[ sSectorY ][ sSectorX ];	
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("WillAirRaidBeStopped: SAM number = %d",ubSamNumber));
 	// if none of them
@@ -1772,7 +1772,7 @@ BOOLEAN HandleSAMSiteAttackOfHelicopterInSector( INT16 sSectorX, INT16 sSectorY 
 	}
 
 	// which SAM controls this sector?
-	ubSamNumber = ubSAMControlledSectors[ sSectorX ][ sSectorY ];	
+	ubSamNumber = ubSAMControlledSectors[ sSectorY ][ sSectorX ];	
 
 	// if none of them
 	if (ubSamNumber == 0)

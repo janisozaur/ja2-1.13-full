@@ -1,3 +1,5 @@
+// WANNE: EDITOR: todo
+
 //FUNCTIONALITY:
 //This popup menu functions IDENTICALLY to Windows95's methodology.  You can use the arrow keys, or the 
 //mouse in two methods.  The first method is where you release the mouse button before
@@ -129,7 +131,7 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	switch( ubPopupMenuID )
 	{
 		case CHANGETSET_POPUP:	//change tileset
-			gPopup.ubNumEntries = NUM_TILESETS;
+			gPopup.ubNumEntries = gubNumSets;
 			break;
 		case OWNERSHIPGROUP_POPUP:
 		case CHANGECIVGROUP_POPUP:

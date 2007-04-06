@@ -1865,7 +1865,7 @@ void AddSoldierInitListBloodcats()
 				ubSectorID != SEC_I16 && ubSectorID != SEC_N5 )
 		{
 			#ifdef JA2BETAVERSION
-				UINT16 str[200];
+				wchar_t str[200];
 				swprintf( str, L"Table specifies that there are %d bloodcat placements in sector %c%d, but the map actually has %d bloodcat placements. Map value takes precedence. KM,LC:1",
 									pSector->bBloodCatPlacements, gWorldSectorY + 'A' - 1, gWorldSectorX, bBloodCatPlacements );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
@@ -2101,7 +2101,7 @@ BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 {
 	SOLDIERINITNODE *curr;
 	UINT32 uiNumInvalids = 0;
-	UINT16 str[512];
+	wchar_t str[512];
 	curr = gSoldierInitHead;
 	while( curr )
 	{
@@ -2343,6 +2343,13 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 	UINT8 ubCurrSlot;
 	UINT8 ubTotalSoldiers;
 	UINT8 bDesiredDirection=0;
+
+	ubTotalSoldiers = ubNumGreen + ubNumReg + ubNumElites;
+
+	// WANNE: If we have no militia soldiers -> exit!
+	if (ubTotalSoldiers == 0)
+		return;
+
 	switch( ubStrategicInsertionCode )
 	{
 		case INSERTION_CODE_NORTH:	bDesiredDirection = SOUTHEAST;										break;
@@ -2355,8 +2362,6 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 		ScreenMsg( FONT_RED, MSG_INTERFACE, L"Militia reinforcements have arrived!  (%d admins, %d troops, %d elite)", ubNumGreen, ubNumReg, ubNumElites );
 	#endif
 
-	ubTotalSoldiers = ubNumGreen + ubNumReg + ubNumElites;
-
 	ChooseMapEdgepoints( &MapEdgepointInfo, ubStrategicInsertionCode, (UINT8)(ubNumGreen + ubNumReg + ubNumElites) );
 	ubCurrSlot = 0;
 	while( ubTotalSoldiers )
@@ -2367,12 +2372,27 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			ubTotalSoldiers--;
 			pSoldier = TacticalCreateMilitia(SOLDIER_CLASS_ELITE_MILITIA);
 
-			pSoldier->bOrders = ONGUARD;
+			// Lesh: if pSoldier is NULL then no slot for a new men or other problems
+			//       it better to leave this function is such case
+			if ( !pSoldier )
+				return;
+
 			pSoldier->ubInsertionDirection = bDesiredDirection;
 
-			pSoldier->bAlertStatus = STATUS_YELLOW;
-			pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-			pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+			// Lesh: militia came from another sector can't reach opposite side of map in case of battle there
+			//       they are often stop at a half way. trying to fix this
+			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
+			{
+				pSoldier->bOrders = SEEKENEMY;
+				pSoldier->bAlertStatus = STATUS_RED;
+			}
+			else
+			{
+				pSoldier->bOrders = ONGUARD;
+				pSoldier->bAlertStatus = STATUS_YELLOW;
+				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+			}
 			
 			//Setup the position
 			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
@@ -2392,13 +2412,28 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			ubTotalSoldiers--;
 			pSoldier = TacticalCreateMilitia(SOLDIER_CLASS_REG_MILITIA);
 
-			pSoldier->bOrders = ONGUARD;
+			// Lesh: if pSoldier is NULL then no slot for a new men or other problems
+			//       it better to leave this function is such case
+			if ( !pSoldier )
+				return;
+
 			pSoldier->ubInsertionDirection = bDesiredDirection;
 
-			pSoldier->bAlertStatus = STATUS_YELLOW;
-			pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-			pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-			
+			// Lesh: militia came from another sector can't reach opposite side of map in case of battle there
+			//       they are often stop at a half way. trying to fix this
+			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
+			{
+				pSoldier->bOrders = SEEKENEMY;
+				pSoldier->bAlertStatus = STATUS_RED;
+			}
+			else
+			{
+				pSoldier->bOrders = ONGUARD;
+				pSoldier->bAlertStatus = STATUS_YELLOW;
+				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+			}
+
 			//Setup the position
 			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
 			{ //using an edgepoint
@@ -2417,13 +2452,27 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			ubTotalSoldiers--;
 			pSoldier = TacticalCreateMilitia(SOLDIER_CLASS_GREEN_MILITIA);
 
-			pSoldier->bOrders = ONGUARD;
+			// Lesh: if pSoldier is NULL then no slot for a new men or other problems
+			//       it better to leave this function is such case
+			if ( !pSoldier )
+				return;
+
 			pSoldier->ubInsertionDirection = bDesiredDirection;
 
-			pSoldier->bAlertStatus = STATUS_YELLOW;
-			pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-			pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-
+			// Lesh: militia came from another sector can't reach opposite side of map in case of battle there
+			//       they are often stop at a half way. trying to fix this
+			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
+			{
+				pSoldier->bOrders = SEEKENEMY;
+				pSoldier->bAlertStatus = STATUS_RED;
+			}
+			else
+			{
+				pSoldier->bOrders = ONGUARD;
+				pSoldier->bAlertStatus = STATUS_YELLOW;
+				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+			}
 
 //			if ( GetTimeOfDayAmbientLightLevel() < NORMAL_LIGHTLEVEL_DAY + 2 )
 //				gTacticalStatus.Team[ ENEMY_TEAM ].bAwareOfOpposition = TRUE;

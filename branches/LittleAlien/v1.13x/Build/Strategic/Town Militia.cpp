@@ -24,6 +24,7 @@
 	#include "GameSettings.h"
 #endif
 
+#include "MilitiaSquads.h"
 #define SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST 50
 
 // temporary local global variables
@@ -33,6 +34,9 @@ INT16	gsTownSectorServerSkipY = -1;
 UINT8 gubTownSectorServerIndex = 0;
 BOOLEAN gfYesNoPromptIsForContinue = FALSE;		// this flag remembers whether we're starting new training, or continuing
 INT32 giTotalCostOfTraining = 0;
+BOOLEAN gfAreWeTrainingMobile = FALSE;
+BOOLEAN gfAreWePromotingGreen = FALSE;
+BOOLEAN gfAreWePromotingRegular = FALSE;
 
 
 //the completed list of sector soldiers for training militia
@@ -45,7 +49,23 @@ INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
 // the selected list of mercs
 extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 
-
+// towns with militia training allowed
+BOOLEAN gfMilitiaAllowedInTown[MAX_TOWNS] =
+{
+	0,	// blank sector
+	0,	// omerta
+	1,	// drassen
+	1,	// alma
+	1,	// grumm
+	0,	// tixa
+	1,	// cambria
+	0,	// san mona
+	0,	// estoni
+	0,	// orta
+	1,	// balime
+	1,	// meduna
+	1,	// chitzena
+};
 
 // private prototypes
 void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue );
@@ -81,7 +101,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 
 	INT32 iMaxMilitiaPerSector = gGameExternalOptions.iMaxMilitiaPerSector;
 	INT32 iTrainingSquadSize = gGameExternalOptions.iTrainingSquadSize;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia1");
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia1");
 	// get town index
 	ubTownId = StrategicMap[ sMapX + sMapY * MAP_WORLD_X ].bNameId;
 
@@ -101,100 +121,151 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia1");
 	// 4) If not enough GREENS there to promote, promote GREENs in other sectors.
 	// 5) If all friendly sectors of this town are completely filled with REGULAR militia, then training effect is wasted
 
-	while (ubMilitiaTrained < iTrainingSquadSize)
+
+	// Kaiden: Roaming Militia Training:
+	// If we're not training roaming militia,
+	// then we will handle everything as normal.
+
+	if( (IsMilitiaTrainableFromSoldiersSectorMaxed( pTrainer, ELITE_MILITIA )) 
+		&& (gGameExternalOptions.gfmusttrainroaming) 
+		&&(GetWorldDay( ) >= gGameExternalOptions.guiAllowMilitiaGroupsDelay))
 	{
-		// is there room for another militia in the training sector itself?
-		if (CountAllMilitiaInSector(sMapX, sMapY) < iMaxMilitiaPerSector)
+		CreateMilitiaSquads(sMapX, sMapY );
+	}
+	else
+	{
+		while (ubMilitiaTrained < iTrainingSquadSize)
 		{
-			// great! Create a new GREEN militia guy in the training sector
-			StrategicAddMilitiaToSector(sMapX, sMapY, GREEN_MILITIA, 1);
+			// is there room for another militia in the training sector itself?
+			if (CountAllMilitiaInSector(sMapX, sMapY) < iMaxMilitiaPerSector)
+			{
+				// great! Create a new GREEN militia guy in the training sector
+				StrategicAddMilitiaToSector(sMapX, sMapY, GREEN_MILITIA, 1);
+			}
+			else
+			{
+				fFoundOne = FALSE;
+
+				if( ubTownId != BLANK_SECTOR )
+				{
+					InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
+
+					// check other eligible sectors in this town for room for another militia
+					while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
+					{
+						// is there room for another militia in this neighbouring sector ?
+						if (CountAllMilitiaInSector(sNeighbourX, sNeighbourY) < iMaxMilitiaPerSector)
+						{
+							// great! Create a new GREEN militia guy in the neighbouring sector
+							StrategicAddMilitiaToSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
+
+							fFoundOne = TRUE;
+							break;
+						}
+					}
+				}
+
+				// if we still haven't been able to train anyone
+				if (!fFoundOne)
+				{
+					// alrighty, then.  We'll have to *promote* guys instead.
+
+					// are there any GREEN militia men in the training sector itself?
+					if (MilitiaInSectorOfRank(sMapX, sMapY, GREEN_MILITIA) > 0)
+					{
+						// great! Promote a GREEN militia guy in the training sector to a REGULAR
+						StrategicPromoteMilitiaInSector(sMapX, sMapY, GREEN_MILITIA, 1);
+						fFoundOne = TRUE;
+					}
+					else
+					{
+					  if( ubTownId != BLANK_SECTOR )
+						{
+							// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
+							InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
+
+							// check other eligible sectors in this town for room for another militia
+							while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
+							{
+								// are there any GREEN militia men in the neighbouring sector ?
+								if (MilitiaInSectorOfRank(sNeighbourX, sNeighbourY, GREEN_MILITIA) > 0)
+								{
+									// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
+									StrategicPromoteMilitiaInSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
+
+									fFoundOne = TRUE;
+									break;
+								}
+							}
+						}
+
+							// Kaiden: Veteran militia training
+							// This is essentially copy/pasted from above
+							// But the names have been changed to protect the innocent
+						if ((!fFoundOne) && (gGameExternalOptions.gfTrainVeteranMilitia)  
+							&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
+						{
+							// are there any REGULAR militia men in the training sector itself?
+							if (MilitiaInSectorOfRank(sMapX, sMapY, REGULAR_MILITIA) > 0)
+							{
+								// great! Promote a REGULAR militia guy in the training sector to a REGULAR
+								StrategicPromoteMilitiaInSector(sMapX, sMapY, REGULAR_MILITIA, 1);
+								fFoundOne = TRUE;
+							}
+							else
+							{
+								if( ubTownId != BLANK_SECTOR )
+								{
+									// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
+									InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
+
+									// check other eligible sectors in this town for room for another militia
+									while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
+									{
+										// are there any REGULAR militia men in the neighbouring sector ?
+										if (MilitiaInSectorOfRank(sNeighbourX, sNeighbourY, REGULAR_MILITIA) > 0)
+										{
+											// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
+											StrategicPromoteMilitiaInSector(sNeighbourX, sNeighbourY, REGULAR_MILITIA, 1);
+
+											fFoundOne = TRUE;
+											break;
+										}
+									}
+								}	
+							}
+						}
+
+						// if we still haven't been able to train anyone
+						if (!fFoundOne)
+						{
+							// Well, that's it.  All eligible sectors of this town are full of REGULARs or ELITEs.
+							// The training goes to waste in this situation.
+							break; // the main while loop
+						}
+					}
+				}
+			}
+
+			// next, please!
+			ubMilitiaTrained++;
 		}
-		else
+
+
+		// if anyone actually got trained
+		if (ubMilitiaTrained > 0)
 		{
-			fFoundOne = FALSE;
+			// update the screen display
+			fMapPanelDirty = TRUE;
 
 			if( ubTownId != BLANK_SECTOR )
 			{
-				InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
-
-				// check other eligible sectors in this town for room for another militia
-				while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
-				{
-					// is there room for another militia in this neighbouring sector ?
-					if (CountAllMilitiaInSector(sNeighbourX, sNeighbourY) < iMaxMilitiaPerSector)
-					{
-						// great! Create a new GREEN militia guy in the neighbouring sector
-						StrategicAddMilitiaToSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
-
-						fFoundOne = TRUE;
-						break;
-					}
-				}
+				// loyalty in this town increases a bit because we obviously care about them...
+				IncrementTownLoyalty( ubTownId, LOYALTY_BONUS_FOR_TOWN_TRAINING );
 			}
 
-			// if we still haven't been able to train anyone
-			if (!fFoundOne)
-			{
-				// alrighty, then.  We'll have to *promote* guys instead.
-
-				// are there any GREEN militia men in the training sector itself?
-				if (MilitiaInSectorOfRank(sMapX, sMapY, GREEN_MILITIA) > 0)
-				{
-					// great! Promote a GREEN militia guy in the training sector to a REGULAR
-					StrategicPromoteMilitiaInSector(sMapX, sMapY, GREEN_MILITIA, 1);
-				}
-				else
-				{
-					if( ubTownId != BLANK_SECTOR )
-					{
-						// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
-						InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
-
-						// check other eligible sectors in this town for room for another militia
-						while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
-						{
-							// are there any GREEN militia men in the neighbouring sector ?
-							if (MilitiaInSectorOfRank(sNeighbourX, sNeighbourY, GREEN_MILITIA) > 0)
-							{
-								// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
-								StrategicPromoteMilitiaInSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
-
-								fFoundOne = TRUE;
-								break;
-							}
-						}
-					}
-
-					// if we still haven't been able to train anyone
-					if (!fFoundOne)
-					{
-						// Well, that's it.  All eligible sectors of this town are full of REGULARs or ELITEs.
-						// The training goes to waste in this situation.
-						break; // the main while loop
-					}
-				}
-			}
 		}
-
-		// next, please!
-		ubMilitiaTrained++;
 	}
-
-
-	// if anyone actually got trained
-	if (ubMilitiaTrained > 0)
-	{
-		// update the screen display
-		fMapPanelDirty = TRUE;
-
-		if( ubTownId != BLANK_SECTOR )
-		{
-			// loyalty in this town increases a bit because we obviously care about them...
-			IncrementTownLoyalty( ubTownId, LOYALTY_BONUS_FOR_TOWN_TRAINING );
-		}
-
-	}
-
 
 	// the trainer announces to player that he's finished his assignment.  Make his sector flash!
 	AssignmentDone( pTrainer, TRUE, FALSE );
@@ -265,7 +336,7 @@ void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRa
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	// damn well better have that many around to promote!
-	Assert(pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank ] >= ubHowMany);
+	//Assert(pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank ] >= ubHowMany);
 
 	//KM : July 21, 1999 patch fix
 	if( pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank ] < ubHowMany )
@@ -519,9 +590,38 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 	iNumberOfSectors = GetNumberOfUnpaidTrainableSectors( );
 	Assert( iNumberOfSectors > 0 );
 
+	// Kaiden: Roaming Militia Training:
+	// We want to charge more for Roaming
+
 	// get total cost
-	giTotalCostOfTraining = iMilitiaTrainingCost * iNumberOfSectors; 
-	Assert( giTotalCostOfTraining > 0 );
+	if( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, ELITE_MILITIA ) 
+		&& (gGameExternalOptions.gfmusttrainroaming)
+		&& (GetWorldDay( ) >= gGameExternalOptions.guiAllowMilitiaGroupsDelay))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iMilitiaCostModifier) * iNumberOfSectors; 
+		Assert( giTotalCostOfTraining > 0 );
+		gfAreWeTrainingMobile = TRUE;
+	}
+	else if (IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, REGULAR_MILITIA ) 
+		&& (gGameExternalOptions.gfTrainVeteranMilitia)
+		&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iVeteranCostModifier) * iNumberOfSectors; 
+		Assert( giTotalCostOfTraining > 0 );
+		gfAreWePromotingRegular = TRUE;
+	}
+	else if (IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, GREEN_MILITIA ))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iRegularCostModifier) * iNumberOfSectors; 
+		Assert( giTotalCostOfTraining > 0 );
+		gfAreWePromotingGreen = TRUE;
+	}
+	else
+	{
+		giTotalCostOfTraining = iMilitiaTrainingCost * iNumberOfSectors; 
+		Assert( giTotalCostOfTraining > 0 );
+	}
+
 
 	gfYesNoPromptIsForContinue = FALSE;
 
@@ -547,17 +647,17 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 	// if we are in mapscreen, make a pop up
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
+		DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 	}
 	else
 	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, GAME_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback, &pCenteringRect );
+		DoMessageBox( MSG_BOX_BASIC_STYLE, sString, GAME_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback, &pCenteringRect );
 	}
 
 	return;
 }
 
-void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, UINT16 *str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, wchar_t *str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
 	{
@@ -575,10 +675,12 @@ void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 	INT16 sSectorX = 0, sSectorY = 0;
 	CHAR16 sStringB[ 128 ];
 	INT8 bTownId;
+	BOOLEAN fIsFull = FALSE;
 
 
 	INT32 iMinLoyaltyToTrain = gGameExternalOptions.iMinLoyaltyToTrain;
 	INT32 iMilitiaTrainingCost = gGameExternalOptions.iMilitiaTrainingCost;
+
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 
 	sSectorX = pSoldier->sSectorX;
@@ -599,7 +701,22 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 		return;
 	}
 
-	if ( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier ) )
+	// Kaiden: Roaming Militia Training:
+	// Changed the if condition from
+	// if ( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier ) )
+	// And we're not training mobile militia from a SAM Site
+
+	if (IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, ELITE_MILITIA ))
+		if (!gGameExternalOptions.gfmusttrainroaming)
+			fIsFull = TRUE;
+		else if (GetWorldDay( ) < gGameExternalOptions.guiAllowMilitiaGroupsDelay)
+			fIsFull = TRUE;
+		else if (IsThisSectorASAMSector(sSectorX,sSectorY,0 ))
+			fIsFull = TRUE;
+		else
+			fIsFull = FALSE;
+
+	if (fIsFull)
 	{
 		// we're full!!! go home!
 		bTownId = GetTownIdForSector( sSectorX, sSectorY );
@@ -619,8 +736,33 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 		return;
 	}
 
-	// continue training always handles just one sector at a time
-	giTotalCostOfTraining = iMilitiaTrainingCost;
+	// Kaiden: Roaming Militia Training:
+	// Charging more to train Roaming Militia
+	// Also Charging more for promotions over Training
+
+	if( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, ELITE_MILITIA ) 
+		&& (gGameExternalOptions.gfmusttrainroaming)
+		&&(GetWorldDay( ) >= gGameExternalOptions.guiAllowMilitiaGroupsDelay))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iMilitiaCostModifier);
+		gfAreWeTrainingMobile = TRUE;
+	}
+	else if (IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, REGULAR_MILITIA ) 
+		&& (gGameExternalOptions.gfTrainVeteranMilitia)
+		&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iVeteranCostModifier);
+		gfAreWePromotingRegular = TRUE;
+	}
+	else if (IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier, GREEN_MILITIA ))
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost*gGameExternalOptions.iRegularCostModifier);
+		gfAreWePromotingGreen = TRUE;
+	}
+	else
+	{
+		giTotalCostOfTraining = (iMilitiaTrainingCost);
+	}
 
 	// can player afford to continue training?
 	if( LaptopSaveInfo.iCurrentBalance < giTotalCostOfTraining )
@@ -638,7 +780,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 
 	// ask player whether he'd like to continue training
 	//DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
-	DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
+	DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 }
 
 
@@ -679,7 +821,7 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 			StopTimeCompression();
 
 			swprintf( sString, L"%s", pMilitiaConfirmStrings[ 2 ] );
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
+			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		}
 	}
 	else if( bExitValue == MSG_BOX_RETURN_NO )
@@ -782,15 +924,15 @@ BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
 	return( FALSE );
 }
 
-BOOLEAN IsTownFullMilitia( INT8 bTownId )
+BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType )
 {
 	INT32 iMaxMilitiaPerSector = gGameExternalOptions.iMaxMilitiaPerSector;
-DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia4");
 
 	INT32 iCounter = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT32 iNumberOfMilitia = 0;
 	INT32 iMaxNumber = 0;
+	BOOLEAN fIncreaseCost = FALSE;
 
 	while( pTownNamesList[ iCounter ] != 0 )
 	{	
@@ -803,15 +945,70 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia4");
 			// if sector is ours get number of militia here
 			if( SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
 			{
+					
+				//Kaiden: Checking for Price Hikes.
+				if (iMilitiaType == GREEN_MILITIA)
+				{
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA );
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+					iMaxNumber += iMaxMilitiaPerSector;
+
+				  if (MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA ) > 0)
+						fIncreaseCost = TRUE;			
+				}
+				else if (iMilitiaType == REGULAR_MILITIA)
+				{
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+					iMaxNumber += iMaxMilitiaPerSector;
+
+					if (MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA ) > 0)
+						fIncreaseCost = TRUE;		
+				}
+
+				//Kaiden: OK So iMilitiaType should be ELITE_MILITIA 
+				// and we're just checking sectors for purposes 
+				// of training mobile militia or ending training
+
 				// don't count GREEN militia, they can be trained into regulars first
-				iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
-				iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
-				iMaxNumber += iMaxMilitiaPerSector;
+				// Kaiden: Veteran Militia Training:
+				// And we don't count regulars either if we're training veterans
+				if (gGameExternalOptions.gfTrainVeteranMilitia && (iMilitiaType == ELITE_MILITIA)
+					&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
+				{
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+					iMaxNumber += iMaxMilitiaPerSector;
+				}
+				else if (iMilitiaType == ELITE_MILITIA)
+				{
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+					iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+					iMaxNumber += iMaxMilitiaPerSector;
+				}
 			}
 		}
 
 		iCounter++;
 	}
+
+		if (iMilitiaType == GREEN_MILITIA)
+		{
+			if (( iNumberOfMilitia == iMaxNumber  ) && (fIncreaseCost))
+				return( TRUE );
+			else
+				return( FALSE );
+
+		}
+		else if (iMilitiaType == REGULAR_MILITIA)
+		{
+			if (( iNumberOfMilitia == iMaxNumber ) && (fIncreaseCost))
+				return( TRUE );
+			else
+				return( FALSE );
+		}
+
+
 
 	// now check the number of militia
 	if ( iMaxNumber > iNumberOfMilitia )
@@ -822,7 +1019,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia4");
 	return( TRUE );
 }
 
-BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY )
+BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY, INT8 iMilitiaType )
 {
 	BOOLEAN fSamSitePresent = FALSE;
 	INT32 iNumberOfMilitia = 0;
@@ -839,11 +1036,54 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia5");
 
 	if( SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
 	{
+
+		 //Kaiden: If we're checking for specific Militia for Price Hikes:
+		if (iMilitiaType == GREEN_MILITIA)
+		{
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA );
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+
+			if (( iNumberOfMilitia == iMaxMilitiaPerSector) && 
+				(MilitiaInSectorOfRank( sSectorX, sSectorY, GREEN_MILITIA ) > 0))
+				return( TRUE );
+			else
+				return( FALSE );
+
+		}
+		else if (iMilitiaType == REGULAR_MILITIA)
+		{
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+
+			if (( iNumberOfMilitia == iMaxMilitiaPerSector) && 
+				(MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA ) > 0))
+				return( TRUE );
+			else
+				return( FALSE );
+		}
+		// Kaiden: Ok we're not checking for militia promotions now, 
+		// so MilitiaType should be ELITE_MILITIA for purposes 
+		// of training Roaming or not.
+
 		// don't count GREEN militia, they can be trained into regulars first
-		iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
-		iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
-		iMaxNumber += iMaxMilitiaPerSector;
+
+		// Kaiden: Veteran Militia Training:
+		// And we don't count regulars either if we're training veterans
+		if (gGameExternalOptions.gfTrainVeteranMilitia && (iMilitiaType == ELITE_MILITIA)
+			&& (GetWorldDay( ) >= gGameExternalOptions.guiTrainVeteranMilitiaDelay))
+		{
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+			iMaxNumber += iMaxMilitiaPerSector;
+		}
+		else if (iMilitiaType == ELITE_MILITIA)
+		{
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
+			iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
+			iMaxNumber += iMaxMilitiaPerSector;
+		}
 	}
+
 
 	// now check the number of militia
 	if ( iMaxNumber > iNumberOfMilitia )
@@ -1121,9 +1361,34 @@ void PayForTrainingInSector( UINT8 ubSector )
 	INT32 iMilitiaTrainingCost = gGameExternalOptions.iMilitiaTrainingCost;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia6");
 	Assert( SectorInfo[ ubSector ].fMilitiaTrainingPaid == FALSE );
+	INT32 CostMultiplyer = 0;
 
 	// spend the money
-	AddTransactionToPlayersBook( TRAIN_TOWN_MILITIA, ubSector, GetWorldTotalMin(), -( iMilitiaTrainingCost ) );
+	// Kaiden: Roaming Militia Training:
+	// Charging more to train Roaming Militia
+	// Or for promotions.
+
+	if ( gfAreWeTrainingMobile)
+	{
+		CostMultiplyer = gGameExternalOptions.iMilitiaCostModifier;
+		gfAreWeTrainingMobile = FALSE;
+	}
+	else if ( gfAreWePromotingGreen)
+	{
+		CostMultiplyer = gGameExternalOptions.iRegularCostModifier;
+		gfAreWePromotingGreen = FALSE;
+	}
+	else if ( gfAreWePromotingRegular)
+	{
+		CostMultiplyer = gGameExternalOptions.iVeteranCostModifier;
+		gfAreWePromotingRegular = FALSE;
+	}
+	else
+	{
+		CostMultiplyer = 1;
+	}
+
+	AddTransactionToPlayersBook( TRAIN_TOWN_MILITIA, ubSector, GetWorldTotalMin(), -( iMilitiaTrainingCost*CostMultiplyer ) );
 
 	// mark this sector sectors as being paid up
 	SectorInfo[ ubSector ].fMilitiaTrainingPaid = TRUE;
@@ -1188,36 +1453,12 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 {
-	switch ( bTownId )
-	{
-		case DRASSEN:
-		case ALMA:
-		case GRUMM:
-		case CAMBRIA:
-		case BALIME:
-		case MEDUNA:
-		case CHITZENA:
-			return(TRUE);
-
-		case OMERTA:
-		case ESTONI:
-		case SAN_MONA:
-		case TIXA:
-		case ORTA:
-			// can't keep militia in these towns
-			return(FALSE);
-
-		case BLANK_SECTOR:
-		default:
-			// not a town sector!
-			return(FALSE);
-
-	}
+	return( gfMilitiaAllowedInTown[bTownId] );
 }
 
-void BuildMilitiaPromotionsString( UINT16 *str )
+void BuildMilitiaPromotionsString( wchar_t *str )
 {
-	UINT16 pStr[256];
+	wchar_t pStr[256];
 	BOOLEAN fAddSpace = FALSE;
 	swprintf( str, L"" );
 

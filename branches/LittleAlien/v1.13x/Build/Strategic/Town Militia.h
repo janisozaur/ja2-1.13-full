@@ -37,7 +37,7 @@ void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UI
 // this will check for promotions and handle them for you
 UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubRecentKillPts);
 
-void BuildMilitiaPromotionsString( UINT16 *str );
+void BuildMilitiaPromotionsString( wchar_t *str );
 
 // call this if the player attacks his own militia
 void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY);
@@ -61,9 +61,9 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY );
 
 // is the town militia full?
-BOOLEAN IsTownFullMilitia( INT8 bTownId );
+BOOLEAN IsTownFullMilitia( INT8 bTownId, INT8 iMilitiaType );
 // is the SAM site full of militia?
-BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY );
+BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY, INT8 iMilitiaType );
 
 
 // now that town training is complete, handle the continue boxes

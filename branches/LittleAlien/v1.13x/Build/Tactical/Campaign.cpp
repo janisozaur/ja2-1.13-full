@@ -252,7 +252,7 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 				usChance = 100 - (bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint));
 
 				// prevent training beyond the training cap
-				if ((ubReason == FROM_TRAINING) && (bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint) >= TRAINING_RATING_CAP))
+				if ((ubReason == FROM_TRAINING) && (bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint) >= gGameExternalOptions.ubTrainingSkillMax))
 				{
 					usChance = 0;
 				}
@@ -277,6 +277,8 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 				usChance /= 5;		// MUCH slower to improve, divide usChance by 5
 			}
 */
+
+
 
       // maximum possible usChance is 99%
       if (usChance > 99)
@@ -354,6 +356,9 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 					usChance = 1;
 				}
       }
+
+			if (usChance <= 0)
+				usChance = 1;
 
       if (PreRandom(100) < usChance )
       {
@@ -1101,8 +1106,9 @@ void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 	// if he's working on another job
 	if (pProfile->bMercStatus == MERC_WORKING_ELSEWHERE)
 	{
+		// Lesh: changed chance from 20 to 70
 		// if he did't do anything interesting today
-		if (Random(100) < 20)
+		if (Random(100) < 70)
 		{
 			// no chance to change today
 			return;
@@ -1114,7 +1120,8 @@ void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 		// 80 wisdom gives 8 rolls per stat per day, 10 stats, avg success rate 40% = 32pts per day,
 		// so about 10 working days to hit lvl 2.  This seems high, but mercs don't actually "work" that often, and it's twice
 		// as long to hit level 3.  If we go lower, attribs & skills will barely move.
-		usNumChances = ( pProfile->bWisdom / 10 );
+		// Lesh: changed wisdom divided by 7 insead of 10
+		usNumChances = ( pProfile->bWisdom / 7 );
 		for (ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++)
 		{
 			ProfileStatChange( pProfile, ubStat, usNumChances, FALSE );
@@ -1163,17 +1170,17 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 	// how many in total can be killed like this depends on player's difficulty setting
 	switch( gGameOptions.ubDifficultyLevel )
 	{
-		case DIF_LEVEL_EASY:
-			ubMaxDeaths = 1;
+		case DIF_LEVEL_EASY:  //Kaiden Externalized ubMaxDeaths Values
+			ubMaxDeaths = gGameExternalOptions.giEasyMercDeaths;
 			break;
 		case DIF_LEVEL_MEDIUM:
-			ubMaxDeaths = 2;
+			ubMaxDeaths = gGameExternalOptions.giExperiencedMercDeaths;
 			break;
 		case DIF_LEVEL_HARD:
-			ubMaxDeaths = 3;
+			ubMaxDeaths = gGameExternalOptions.giExpertMercDeaths;
 			break;
 		case DIF_LEVEL_INSANE:
-			ubMaxDeaths = 3;
+			ubMaxDeaths = gGameExternalOptions.giInsaneMercDeaths;
 			break;
 		default:
 			Assert(FALSE);
@@ -1232,9 +1239,10 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 
 
 // These HAVE to total 100% at all times!!!
-#define PROGRESS_PORTION_KILLS		25
-#define PROGRESS_PORTION_CONTROL	25
-#define PROGRESS_PORTION_INCOME		50
+//#define PROGRESS_PORTION_KILLS	25
+//#define PROGRESS_PORTION_CONTROL	25
+//#define PROGRESS_PORTION_INCOME	50
+//Lalien: Removed due to externalization
 
 
 // returns a number between 0-100, this is an estimate of how far a player has progressed through the game
@@ -1267,7 +1275,7 @@ UINT8 CurrentPlayerProgressPercentage(void)
 	//Kris:  Make sure you don't divide by zero!!!
 	if( uiPossibleIncome > 0)
 	{
-		ubCurrentProgress = (UINT8) ((uiCurrentIncome * PROGRESS_PORTION_INCOME) / uiPossibleIncome);
+		ubCurrentProgress = (UINT8) ((uiCurrentIncome * gGameExternalOptions.ubGameProgressPortionIncome) / uiPossibleIncome);
 	}
 	else
 	{
@@ -1296,9 +1304,9 @@ UINT8 CurrentPlayerProgressPercentage(void)
 	}
 
 	usKillsProgress = gStrategicStatus.usPlayerKills / ubKillsPerPoint;
-	if (usKillsProgress > PROGRESS_PORTION_KILLS)
+	if (usKillsProgress > gGameExternalOptions.ubGameProgressPortionKills)
 	{
-		usKillsProgress = PROGRESS_PORTION_KILLS;
+		usKillsProgress = gGameExternalOptions.ubGameProgressPortionKills;
 	}
 
 	// add kills progress to income progress
@@ -1307,9 +1315,9 @@ UINT8 CurrentPlayerProgressPercentage(void)
 
 	// 19 sectors in mining towns + 3 wilderness SAMs each count double.  Balime & Meduna are extra and not required
 	usControlProgress = CalcImportantSectorControl();
-	if (usControlProgress > PROGRESS_PORTION_CONTROL)
+	if (usControlProgress > gGameExternalOptions.ubGameProgressPortionControl)
 	{
-		usControlProgress = PROGRESS_PORTION_CONTROL;
+		usControlProgress = gGameExternalOptions.ubGameProgressPortionControl;
 	}
 
 	// add control progress
@@ -1571,5 +1579,5 @@ void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue )
 	UINT8 ubEmailOffset = 0;
 
 	ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue ); 
-	AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin() );
+	AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin(), -1);
 }

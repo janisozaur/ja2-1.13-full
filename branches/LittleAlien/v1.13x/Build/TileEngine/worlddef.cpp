@@ -2229,7 +2229,7 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 	INT32 cnt;
 	INT32 i;
 	INT32 iTilesetID;
-	UINT16 str[40];
+	wchar_t str[40];
 	UINT8	bCounts[ WORLD_MAX ][8];
 	UINT8 ubCombine;
 	UINT8 szDirFilename[ 50 ];
@@ -2697,12 +2697,13 @@ BOOLEAN LoadWorld( UINT8 *	puiFilename )
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) ); 
 
-	#ifdef RUSSIAN
-		if( dMajorMapVersion != 6.00 )
-		{
-			return FALSE;
-		}
-	#endif
+	// Lesh: disable this because now we accept any version map
+	//#ifdef RUSSIAN
+	//	if( dMajorMapVersion != 6.00 )
+	//	{
+	//		return FALSE;
+	//	}
+	//#endif
 
 	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
 	
@@ -2981,12 +2982,13 @@ BOOLEAN LoadWorld( UINT8 *	puiFilename )
 	fp += offset;
 	offset = 0;
 
-	#ifdef RUSSIAN
+	// Lesh: read additional bytes for map major version 6.00
+	if( dMajorMapVersion == 6.00 )
 	{
 		UINT32 uiNums[37];
 		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
+		dMajorMapVersion = 5.00;
 	}
-	#endif
 
 	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
 	RenderProgressBar( 0, 100 );

@@ -204,9 +204,12 @@ extern BOOLEAN gfQueenAIAwake;
 extern INT32 giReinforcementPool;
 extern UINT32 guiEventListCurrNodes, guiEventListPeekNodes;
 extern INT32 giReinforcementPoints, giRequestPoints;
-extern ARMY_COMPOSITION gArmyComp[ NUM_ARMY_COMPOSITIONS ];
+extern ARMY_COMPOSITION gArmyComp[ MAX_ARMY_COMPOSITIONS ];
 extern GARRISON_GROUP *gGarrisonGroup;
 extern INT32 giGarrisonArraySize;
+
+
+extern void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize );
 
 
 
@@ -220,7 +223,7 @@ UINT16 gwGroupTypeString[ NUM_ENEMY_INTENTIONS ][ 20 ] =
 };
 
 
-void StringFromValue( UINT16 *str, INT32 iValue, UINT32 uiMax )
+void StringFromValue( wchar_t *str, INT32 iValue, UINT32 uiMax )
 {
 	if( iValue < 0 )			//a blank string is determined by a negative value.
 		str[0] = '\0';
@@ -233,11 +236,13 @@ void StringFromValue( UINT16 *str, INT32 iValue, UINT32 uiMax )
 BOOLEAN CreateAIViewer()
 {
   VOBJECT_DESC    VObjectDesc;
-	UINT16 str[6];
+	wchar_t str[6];
 
 	//Kaiden: Loading INI file to read Values...
-	CIniReader iniReader("..\\Ja2_Options.ini");
-	INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
+	// Here's another one of those INI reads
+	// killing the Map Editor>
+	//CIniReader iniReader("..\\Ja2_Options.ini");
+	//INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
 
 	//Check to see if data exists.
 	if( !FileExists( "DevTools\\arulco.sti" )			|| 
@@ -377,13 +382,13 @@ BOOLEAN CreateAIViewer()
 
 	//Add the enemy population override fields
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	StringFromValue( str, gsAINumAdmins, iMaxEnemyGroupSize );
+	StringFromValue( str, gsAINumAdmins, gGameExternalOptions.iMaxEnemyGroupSize );
 	AddTextInputField( 10, VIEWER_BOTTOM + 30, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
-	StringFromValue( str, gsAINumTroops, iMaxEnemyGroupSize );
+	StringFromValue( str, gsAINumTroops, gGameExternalOptions.iMaxEnemyGroupSize );
 	AddTextInputField( 10, VIEWER_BOTTOM + 50, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
-	StringFromValue( str, gsAINumElites, iMaxEnemyGroupSize );
+	StringFromValue( str, gsAINumElites, gGameExternalOptions.iMaxEnemyGroupSize );
 	AddTextInputField( 10, VIEWER_BOTTOM + 70, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
-	StringFromValue( str, gsAINumCreatures, iMaxEnemyGroupSize );
+	StringFromValue( str, gsAINumCreatures, gGameExternalOptions.iMaxEnemyGroupSize );
 	AddTextInputField( 10, VIEWER_BOTTOM + 90, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//Press buttons in based on current settings
@@ -442,7 +447,7 @@ void RenderStationaryGroups()
 	HVOBJECT hVObject;
 	SECTORINFO *pSector;
 	INT32 x, y, xp, yp;
-	UINT16 str[20];
+	wchar_t str[20];
 	INT32 iSector = 0;
 	UINT8 ubIconColor;
 	UINT8 ubGroupSize = 0;
@@ -452,6 +457,7 @@ void RenderStationaryGroups()
 	SetFontShadow( FONT_NEARBLACK );
 
 	GetVideoObject( &hVObject, guiMapIconsID );
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize ); /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Render groups that are stationary...
 	for( y = 0; y < 16; y++ )
@@ -845,7 +851,7 @@ void RenderViewer()
 		}
 		for( x = 1; x <= 16; x++ )
 		{
-			UINT16 str[3];
+			wchar_t str[3];
 			if( x == gsSelSectorX )
 				SetFontForeground( FONT_RED );
 			else if( x == gsHiSectorX )
@@ -1428,19 +1434,23 @@ void ExtractAndUpdatePopulations()
 
 
 	//Kaiden: Loading INI file to read Values...
-	CIniReader iniReader("..\\Ja2_Options.ini");
-	INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
+	//Tag for later - this is one of the reasons the 
+	// Map Editor won't compile. And I feel stupid about it.
+	// Pointing to a static location for the INI file.
+	// Not only bad, the file is no longer there.
+	//CIniReader iniReader("..\\Ja2_Options.ini");
+	//INT32 iMaxEnemyGroupSize = iniReader.ReadInteger("Options","MAX_STRATEGIC_TEAM_SIZE",20);
 
-	gsAINumAdmins = min( GetNumericStrictValueFromField( 0 ), iMaxEnemyGroupSize );
+	gsAINumAdmins = min( GetNumericStrictValueFromField( 0 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 0, gsAINumAdmins );
 
-	gsAINumTroops = min( GetNumericStrictValueFromField( 1 ), iMaxEnemyGroupSize );
+	gsAINumTroops = min( GetNumericStrictValueFromField( 1 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 1, gsAINumTroops );
 
-	gsAINumElites = min( GetNumericStrictValueFromField( 2 ), iMaxEnemyGroupSize );
+	gsAINumElites = min( GetNumericStrictValueFromField( 2 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 2, gsAINumElites );
 
-	gsAINumCreatures = min( GetNumericStrictValueFromField( 3 ), iMaxEnemyGroupSize );
+	gsAINumCreatures = min( GetNumericStrictValueFromField( 3 ), gGameExternalOptions.iMaxEnemyGroupSize );
 	SetInputFieldStringWithNumericStrictValue( 3, gsAINumCreatures );
 }
 
@@ -1871,11 +1881,12 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 
 
 	pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	// handle garrisoned enemies
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
-		iDesired = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
+   iDesired = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
 		iSurplus = pSector->ubNumTroops + pSector->ubNumAdmins + pSector->ubNumElites - iDesired;
 		SetFontForeground( FONT_WHITE );
 

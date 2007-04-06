@@ -969,6 +969,13 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 	// stop time compression so player can react to the departure
 	StopTimeCompression();
 
+	// WDS: This allows for replacing dead IMP mercs.  See "BtnIMPBeginScreenDoneCallback" in "IMP Begin Screen.cpp"
+	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER ) &&
+		( gMercProfiles[ pSoldier->ubProfile ].bMercStatus == MERC_IS_DEAD ) ) {
+		// Replace the name with an empty string
+		wcsncpy( gMercProfiles[ pSoldier->ubProfile ].zName, L"", 1 );
+	}
+
   // ATE: update team panels....
   UpdateTeamPanelAssignments( );
 
@@ -1138,11 +1145,11 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		if( fInSector == FALSE )
 		{			
 			// set up for mapscreen
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ), MercDepartEquipmentBoxCallBack );
+			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ), MercDepartEquipmentBoxCallBack );
 		}
 		else
 		{
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, (INT16 *)sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ), MercDepartEquipmentBoxCallBack );
+			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ), MercDepartEquipmentBoxCallBack );
 		}
 
 	}

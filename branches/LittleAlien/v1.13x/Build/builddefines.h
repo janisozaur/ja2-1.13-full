@@ -3,31 +3,35 @@
 
 #include "Language Defines.h"
 
-// Beta version
-// #define	JA2BETAVERSION
+// Remove comment to build Beta version & Editor
+//#define	JA2BETAVERSION
 
 // Normal test version
-// #define JA2TESTVERSION
+//#define JA2TESTVERSION
 
-// If we want to include the editor
+// Remove comment to build the editor!
 //#define JA2EDITOR
 
-#ifdef _DEBUG
-	#ifndef JA2TESTVERSION
-		#define JA2TESTVERSION
-	#endif
-#endif
+//#ifdef _DEBUG
+//	#ifndef JA2TESTVERSION
+//		#define JA2TESTVERSION
+//	#endif
+//#endif
 
 // Do combinations
-#ifdef JA2TESTVERSION
-	#define JA2BETAVERSION
-	#define JA2EDITOR
-#endif
+//#ifdef JA2TESTVERSION
+//	#define JA2BETAVERSION
+//	#define JA2EDITOR
+//#endif
+
+
 
 #ifdef JA2BETAVERSION
-	#define SGP_DEBUG
-	#define	FORCE_ASSERTS_ON
-	#define SGP_VIDEO_DEBUGGING
+	#ifndef JA2EDITOR
+		#define SGP_DEBUG
+		#define	FORCE_ASSERTS_ON
+		#define SGP_VIDEO_DEBUGGING
+	#endif
 #endif
 
 //#define CRIPPLED_VERSION

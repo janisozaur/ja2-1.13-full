@@ -50,7 +50,7 @@ struct
 
 	INT8		szCharData[MAX_CHAR_DATA_LENGTH+1];
 
-	UINT16			curAttachment[2];
+	UINT16			curAttachment[3];
 	UINT32			maxArraySize;
 	UINT32			curIndex;	
 	UINT32			currentDepth;
@@ -84,6 +84,7 @@ attachmentStartElementHandle(void *userData, const char *name, const char **atts
 		}
 		else if(pData->curElement == ELEMENT &&
 				(strcmp(name, "attachmentIndex") == 0 ||
+				strcmp(name, "APCost") == 0 ||
 				strcmp(name, "itemIndex") == 0 ))
 		{
 			pData->curElement = ELEMENT_PROPERTY;
@@ -131,6 +132,7 @@ attachmentEndElementHandle(void *userData, const char *name)
 				//DebugMsg(TOPIC_JA2, DBG_LEVEL_3,"AttachmentStartElementHandle: writing attachment to array");
 				Attachment[pData->curIndex][0] = pData->curAttachment[0]; //write the attachment into the table
 				Attachment[pData->curIndex][1] = pData->curAttachment[1];
+				Attachment[pData->curIndex][2] = pData->curAttachment[2];
 			}
 		}
 		else if(strcmp(name, "attachmentIndex") == 0)
@@ -142,6 +144,11 @@ attachmentEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curAttachment[1] = (UINT16) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "APCost") == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curAttachment[2] = (UINT16) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -234,6 +241,7 @@ BOOLEAN WriteAttachmentStats()
 
 			FilePrintf(hFile,"\t\t<attachmentIndex>%d</attachmentIndex>\r\n",						Attachment[cnt][0]);
 			FilePrintf(hFile,"\t\t<itemIndex>%d</itemIndex>\r\n",							Attachment[cnt][1]);
+			FilePrintf(hFile,"\t\t<APCost>%d</APCost>\r\n",							Attachment[cnt][2]);
 
 			FilePrintf(hFile,"\t</ATTACHMENT>\r\n");
 		}

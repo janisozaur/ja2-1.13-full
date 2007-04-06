@@ -65,7 +65,10 @@
 // Spreads the effects of explosions...
 BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
 
-extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
+// Flashbang effect on soldier
+UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOLEAN fInBuilding);
+
+extern INT8	 gbSAMGraphicList[ MAX_NUMBER_OF_SAMS ];
 extern  void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
 extern void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation );
 void FatigueCharacter( SOLDIERTYPE *pSoldier );
@@ -260,12 +263,12 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 	// No explosive but an attacker with HE ammo.
 	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) && ubOwner != NOBODY)
 	{
-		ExpParams.ubTypeID = Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ubGunAmmoType].highExplosive].ubAnimationID;
+		ExpParams.ubTypeID = (INT8)Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].ubGunAmmoType].highExplosive].ubAnimationID;
 		//	return;
 	}
 	else // just normal explosives should get here
 	{
-		ExpParams.ubTypeID = Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
+		ExpParams.ubTypeID = (INT8)Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
 	}	
 	// Callahan end
 
@@ -386,17 +389,17 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	// Setup explosion!
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
-	AniParams.sGridNo							= sGridNo;
-	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
+	AniParams.sGridNo		= sGridNo;
+	AniParams.ubLevelID		= ANI_TOPMOST_LEVEL;
 	AniParams.sDelay		= gExpAniData[ ubTypeID ].sBlastSpeed; // Lesh: edit this line
-	AniParams.sStartFrame					= pExplosion->sCurrentFrame;
-	AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
+	AniParams.sStartFrame	= pExplosion->sCurrentFrame;
+	AniParams.uiFlags		= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
 
 	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
 	{
 		// Change type to water explosion...
 		ubTypeID = WATER_BLAST;
-		AniParams.uiFlags						|= ANITILE_ALWAYS_TRANSLUCENT;
+		AniParams.uiFlags	|= ANITILE_ALWAYS_TRANSLUCENT;
 	}
 
 
@@ -415,35 +418,40 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	}
 
 	AniParams.ubKeyFrame1		= gExpAniData[ ubTypeID ].ubTransKeyFrame; // Lesh: edit this line
-	AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
+	AniParams.uiKeyFrame1Code	= ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
 
 	if ( !( uiFlags & EXPLOSION_FLAG_DISPLAYONLY ) )
 	{
 		AniParams.ubKeyFrame2		= gExpAniData[ ubTypeID ].ubDamageKeyFrame; // Lesh: edit this line
-		AniParams.uiKeyFrame2Code			= ANI_KEYFRAME_BEGIN_DAMAGE;
+		AniParams.uiKeyFrame2Code	= ANI_KEYFRAME_BEGIN_DAMAGE;
 	}
-	AniParams.uiUserData					= usItem;
-	AniParams.ubUserData2					= ubOwner;
-	AniParams.uiUserData3					= pExplosion->iID;
+	AniParams.uiUserData	= usItem;
+	AniParams.ubUserData2	= ubOwner;
+	AniParams.uiUserData3	= pExplosion->iID;
 
 
 	strcpy( AniParams.zCachedFile, gExpAniData[ ubTypeID ].zBlastFilename ); // Lesh: edit this line
 
 	CreateAnimationTile( &AniParams );
 
-	//  set light source....
-	if ( pExplosion->iLightID == -1 )
+	//  set light source for flashbangs.... or...
+	if ( pExplosion->Params.ubTypeID == FLASHBANG_EXP )
 	{
+		pExplosion->iLightID = LightSpriteCreate("FLSHBANG.LHT", 0 );
+	}
+	else
+		// generic light
 		// DO ONLY IF WE'RE AT A GOOD LEVEL
 		if ( ubAmbientLightLevel >= MIN_AMB_LEVEL_FOR_MERC_LIGHTS )
 		{
-			if( ( pExplosion->iLightID = LightSpriteCreate("L-R04.LHT", 0 ) ) != (-1) )
-			{
-				LightSpritePower( pExplosion->iLightID, TRUE );
-
-				LightSpritePosition( pExplosion->iLightID, (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE) );
-			}
+			pExplosion->iLightID = LightSpriteCreate("L-R04.LHT", 0 );
 		}
+
+	if( pExplosion->iLightID != -1 )
+	{
+		LightSpritePower     ( pExplosion->iLightID, TRUE );
+		LightSpriteRoofStatus( pExplosion->iLightID, pExplosion->Params.bLevel );
+		LightSpritePosition  ( pExplosion->iLightID, (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE) );
 	}
 
     // Lesh: sound randomization
@@ -468,6 +476,18 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame )
 {
 	gExplosionData[ iIndex ].sCurrentFrame = sCurrentFrame;
+
+	// Lesh: make sparkling effect
+	if ( gExplosionData[iIndex].Params.ubTypeID == FLASHBANG_EXP )
+	{
+		if ( gExplosionData[iIndex].iLightID != -1 )
+		{
+			INT16 iX, iY;
+			iX = gExplosionData[iIndex].Params.sX/CELL_X_SIZE + Random(3) - 1;
+			iY = gExplosionData[iIndex].Params.sY/CELL_Y_SIZE + Random(3) - 1;
+			LightSpritePosition( gExplosionData[iIndex].iLightID, iX, iY);
+		}
+	}
 }
 
 void RemoveExplosionData( INT32 iIndex )
@@ -1080,7 +1100,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 				// Get tile type
 				GetTileType( pNode->usIndex, &uiTileType );
 				// Check if we are a fountain!
-				if ( stricmp( gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ uiTileType ], "fount1.sti" ) == 0 )
+				if ( _stricmp( gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ uiTileType ], "fount1.sti" ) == 0 )
 				{
 					// Yes we are!
 					// Remove water....
@@ -1172,23 +1192,24 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 
 STRUCTURE *gStruct;
 
+// Lesh: somewhere here once I got CTD when militia stepped on mine in cambria sam
 void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
-	STRUCTURE							* pCurrent, *pNextCurrent, *pStructure;
-	STRUCTURE *						pBaseStructure;
-	INT16									sDesiredLevel;
-	DB_STRUCTURE_TILE			**ppTile;
-	UINT8									ubLoop, ubLoop2;
-	INT16									sNewGridNo, sNewGridNo2, sBaseGridNo;
-	BOOLEAN								fToBreak = FALSE;
-	BOOLEAN								fMultiStructure = FALSE;
-	UINT8									ubNumberOfTiles;
-	BOOLEAN								fMultiStructSpecialFlag = FALSE;
-	BOOLEAN								fExplodeDamageReturn = FALSE;
+	STRUCTURE			* pCurrent, *pNextCurrent, *pStructure;
+	STRUCTURE *			pBaseStructure;
+	INT16				sDesiredLevel;
+	DB_STRUCTURE_TILE	**ppTile;
+	UINT8				ubLoop, ubLoop2;
+	INT16				sNewGridNo, sNewGridNo2, sBaseGridNo;
+	BOOLEAN				fToBreak = FALSE;
+	BOOLEAN				fMultiStructure = FALSE;
+	UINT8				ubNumberOfTiles;
+	BOOLEAN				fMultiStructSpecialFlag = FALSE;
+	BOOLEAN				fExplodeDamageReturn = FALSE;
 
 	// Based on distance away, damage any struct at this gridno
 	// OK, loop through structures and damage!
-	pCurrent			 =  gpWorldLevelData[ sGridNo ].pStructureHead;
+	pCurrent		 = gpWorldLevelData[ sGridNo ].pStructureHead;
 	sDesiredLevel	 = STRUCTURE_ON_GROUND;
 
 	// This code gets a little hairy because 
@@ -1203,8 +1224,10 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			sBaseGridNo = pBaseStructure->sGridNo;
 			ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
-      ppTile = (DB_STRUCTURE_TILE **) MemAlloc( sizeof( DB_STRUCTURE_TILE ) * ubNumberOfTiles );
-      memcpy( ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof( DB_STRUCTURE_TILE ) * ubNumberOfTiles );
+			ppTile = (DB_STRUCTURE_TILE **) MemAlloc( sizeof( DB_STRUCTURE_TILE ) * ubNumberOfTiles );
+
+			// Lesh: CTD was in next line once
+			memcpy( ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof( DB_STRUCTURE_TILE ) * ubNumberOfTiles );
 
 			if ( bMultiStructSpecialFlag == -1 )
 			{
@@ -1257,10 +1280,10 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 			// ATE: Don't after first attack...
 			if ( uiDist > 1 )
 			{
-		    if ( pBaseStructure )
-		    {
-          MemFree( ppTile );
-        }
+				if ( pBaseStructure )
+				{
+					MemFree( ppTile );
+				}
 				return;
 			}
 
@@ -1312,8 +1335,8 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 
 		if ( pBaseStructure )
 		{
-      MemFree( ppTile );
-    }
+			MemFree( ppTile );
+		}
 
 		pCurrent = pNextCurrent;
 	}
@@ -1325,7 +1348,11 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 {
 	 SOLDIERTYPE *pSoldier;
 	 INT16 sNewWoundAmt = 0;
-	 UINT8		ubDirection;
+	 UINT8	ubDirection;
+	 UINT8	ubSpecial = 0;
+	 BOOLEAN fInBuilding = InBuilding(sBombGridNo);
+	 BOOLEAN fFlashbang = Explosive[Item[usItem].ubClassIndex].ubType == EXPLOSV_FLASHBANG;
+	 UINT16 usHalfExplosionRadius;
 
 	 pSoldier = MercPtrs[ ubPerson ];   // someone is here, and they're gonna get hurt
 
@@ -1335,6 +1362,15 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 	 if ( pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_HURT_BY_EXPLOSION )
 	 {
 		// don't want to damage the guy twice
+		return( FALSE );
+	 }
+
+	 // Lesh: if flashbang
+ 	 // check if soldier is outdoor and situated farther that half explosion radius and not underground
+	 usHalfExplosionRadius = Explosive[Item[usItem].ubClassIndex].ubRadius / 2;
+	 if ( fFlashbang && !gbWorldSectorZ && !fInBuilding && (UINT16)uiDist > usHalfExplosionRadius )
+	 {
+		// then no effect
 		return( FALSE );
 	 }
 
@@ -1350,7 +1386,14 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 	 {
 		sNewWoundAmt = 0;
 	 }
-	 EVENT_SoldierGotHit( pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, (INT16)uiDist, ubOwner, 0, ANIM_CROUCH, sSubsequent, sBombGridNo );
+
+	 // Lesh: flashbang does affect on soldier or not - check it
+	 if ( (Item[usItem].usItemClass & IC_EXPLOSV) && fFlashbang )
+	 {
+		 ubSpecial = DetermineFlashbangEffect( pSoldier, ubDirection, fInBuilding);
+	 }
+
+	 EVENT_SoldierGotHit( pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, (INT16)uiDist, ubOwner, ubSpecial, ANIM_CROUCH, sSubsequent, sBombGridNo );
 
 	 pSoldier->ubMiscSoldierFlags |= SOLDIER_MISC_HURT_BY_EXPLOSION;
 
@@ -1531,12 +1574,12 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 	EXPLOSIVETYPE *pExplosive;
 	INT16 sX, sY;
 	BOOLEAN fRecompileMovementCosts = FALSE;
-	BOOLEAN fSmokeEffect=FALSE;
-	BOOLEAN fStunEffect = FALSE;
-	INT8		bSmokeEffectType = 0;
+	BOOLEAN fSmokeEffect = FALSE;
+	BOOLEAN fStunEffect  = FALSE;
 	BOOLEAN	fBlastEffect = TRUE;
-	INT16		sNewGridNo;
 	BOOLEAN	fBloodEffect = FALSE;
+	INT8	bSmokeEffectType = 0;
+	INT16	sNewGridNo;
 	ITEM_POOL * pItemPool, * pItemPoolNext;
 	UINT32	uiRoll;
 
@@ -2390,7 +2433,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )
 	{
-		MakeNoise( NOBODY, sGridNo, bLevel, gpWorldLevelData[sGridNo].ubTerrainID, Explosive[ Item [ usItem ].ubClassIndex ].ubVolume, NOISE_EXPLOSION );
+		MakeNoise( NOBODY, sGridNo, bLevel, gpWorldLevelData[sGridNo].ubTerrainID, (UINT8)Explosive[ Item [ usItem ].ubClassIndex ].ubVolume, NOISE_EXPLOSION );
 
 	}
 }
@@ -2949,7 +2992,7 @@ void HandleExplosionQueue( void )
 			}
 			else if ( pObj->usBombItem == TRIP_FLARE )
 			{
-				NewLightEffect( sGridNo, Explosive[pObj->usItem].ubDuration, Explosive[pObj->usItem].ubStartRadius );
+				NewLightEffect( sGridNo, (UINT8)Explosive[pObj->usItem].ubDuration, (UINT8)Explosive[pObj->usItem].ubStartRadius );
 				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
 			}
 			else
@@ -3603,4 +3646,26 @@ void RemoveAllActiveTimedBombs( void )
 		}
 	} while( iItemIndex != -1 );
 	
+}
+
+UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOLEAN fInBuilding)
+{
+	INT8 bNumTurns;
+	UINT16 usHeadItem1, usHeadItem2;
+	
+	bNumTurns   = FindNumTurnsBetweenDirs(pSoldier->bDirection, ubExplosionDir);
+	usHeadItem1 = pSoldier->inv[ HEAD1POS ].usItem;
+	usHeadItem2 = pSoldier->inv[ HEAD2POS ].usItem;
+	
+	// if soldier got in explosion area check if he is affected by flash
+	// if soldier wears sun goggles OR grenade behind him OR
+	//    (he is not underground AND it is day AND he is outdoor)
+	if ( (usHeadItem1 == SUNGOGGLES || usHeadItem2 == SUNGOGGLES) || (bNumTurns > 1) ||
+		(!gbWorldSectorZ && !NightTime() && !fInBuilding) )
+	{
+		// soldier didn't see flash or wears protective sungogles or outdoor at day, so he is only deafened
+		return ( FIRE_WEAPON_DEAFENED );
+	}
+
+	return ( FIRE_WEAPON_BLINDED_AND_DEAFENED );
 }

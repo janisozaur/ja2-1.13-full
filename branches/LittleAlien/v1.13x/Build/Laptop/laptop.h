@@ -37,7 +37,7 @@ void			BlitTitleBarIcons( void );
 void			HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 usKeyState );
 BOOLEAN		RenderWWWProgramTitleBar( void );
 void			DisplayProgramBoundingBox( BOOLEAN fMarkButtons );
-BOOLEAN		DoLapTopSystemMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+BOOLEAN		DoLapTopSystemMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 BOOLEAN		RemoveBookMark( INT32 iBookId );
 void			CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText );
 BOOLEAN		InitLaptopAndLaptopScreens();
@@ -46,6 +46,23 @@ BOOLEAN		InitLaptopAndLaptopScreens();
 void ClearOutTempLaptopFiles( void );
 
 void HaventMadeImpMercEmailCallBack();
+
+extern INT32 guiCurrentGunFilterMode;
+extern INT32 guiPrevGunFilterMode;
+
+extern INT32 guiCurrentAmmoFilterMode;
+extern INT32 guiPrevAmmoFilterMode;
+
+extern INT32 guiCurrentUsedFilterMode;
+extern INT32 guiPrevUsedFilterMode;
+
+extern INT32 guiCurrentArmourFilterMode;
+extern INT32 guiPrevArmourFilterMode;
+
+extern INT32 guiCurrentMiscFilterMode;
+extern INT32 guiPrevMiscFilterMode;
+
+extern BOOLEAN gbMessageDisplayed;
 
 extern UINT32 guiCurrentLaptopMode;
 extern UINT32 guiPreviousLaptopMode;

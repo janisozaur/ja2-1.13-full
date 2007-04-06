@@ -116,6 +116,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo );
 BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel ) 
 {
 	BOOLEAN						fBadChangeToGetThrough = FALSE;
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleCheckForBadChangeToGetThrough"));
 
 	if ( pTargetSoldier != NULL )
 	{
@@ -503,7 +504,18 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 
 				if((__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto) > 0 && pSoldier->bTeam == OUR_TEAM)
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto );
+				{
+					// More than 1 round
+					if (__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto > 1)
+					{
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto );
+					}
+					// 1 round
+					else
+					{
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 63 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto );
+					}
+				}
 				
 			
 				//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Chance:%d.%d, AvgAps=%f, APs=%d", chanceToMisfire/(diceSides/100),chanceToMisfire%(diceSides/100), avgAPadded,sAPCost-startAPcost);
@@ -3197,7 +3209,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 	INT16 sY;
 	INVTYPE			*pItem;
 	ITEM_POOL		*pTempItemPool;
-	INT16 pStr[ 100 ];
+	wchar_t pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
 	INT16	 sLargeLineWidth = 0, sLineWidth;
 	BOOLEAN			fRecalcNumListed = FALSE;
@@ -3368,7 +3380,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			SetFontForeground( FONT_MCOLOR_DKGRAY );
 		}
 		swprintf( (wchar_t *)pStr, (wchar_t *)TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
-		gprintfdirty( sFontX, sY, (UINT16 *)pStr );
+		gprintfdirty( sFontX, sY, pStr );
 		mprintf( sFontX, sY, pStr );
 		sY += GetFontHeight( SMALLFONT1 ) - 2;
 		cnt++;
@@ -3404,7 +3416,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 				swprintf( (wchar_t *)pStr, (wchar_t *)L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
 			}
 
-			gprintfdirty( sFontX, sY, (UINT16 *)pStr );
+			gprintfdirty( sFontX, sY, pStr );
 			mprintf( sFontX, sY, pStr );
 
 			sY += GetFontHeight( SMALLFONT1 ) - 2;
@@ -3436,7 +3448,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 					SetFontForeground( FONT_MCOLOR_DKGRAY );
 				}
 				swprintf( (wchar_t *)pStr, (wchar_t *)TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
-				gprintfdirty( sFontX, sY, (UINT16 *)pStr );
+				gprintfdirty( sFontX, sY, pStr );
 				mprintf( sFontX, sY, pStr );
 			}
 	}
@@ -5307,31 +5319,70 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 	ITEM_POOL	*pItemPool,*pTempItemPool,*pTempLastItemPool;
 	OBJECTTYPE	*pObject;	
 	UINT8		i;
+	BOOLEAN		fStealItem = FALSE;
 
 	//Create a temporary item pool, with index in Opponent's inventory as index
 	pItemPool=NULL;
 	for(i=0 ; i<NUM_INV_SLOTS; i++)
 	{
+		fStealItem = FALSE;
+
 		pObject=pOpponent->inv+i;
 		if (pObject->usItem!=0)
 		{
-			pTempItemPool = (ITEM_POOL*)MemAlloc(sizeof(ITEM_POOL));
-			++ubCount;
-			if (pItemPool == NULL)
+			// Is the enemy collapsed
+			if ( pOpponent->bLife < OKLIFE || pOpponent->bCollapsed )
 			{
-				pItemPool = pTempItemPool;
-				pItemPool->pPrev = NULL;
+				// We can steal any of his items in the inventory
+				fStealItem = TRUE;
 			}
 			else
 			{
-				pTempItemPool->pPrev = pTempLastItemPool;
-				pTempLastItemPool->pNext = pTempItemPool;
+				// Check, if we can steal the item
+				switch (i)
+				{
+					case HANDPOS:
+					case SECONDHANDPOS:
+					case BIGPOCK1POS:
+					case BIGPOCK2POS:
+					case BIGPOCK3POS:
+					case BIGPOCK4POS:
+					case SMALLPOCK1POS:
+					case SMALLPOCK2POS:
+					case SMALLPOCK3POS:
+					case SMALLPOCK4POS:
+					case SMALLPOCK5POS:
+					case SMALLPOCK6POS:
+					case SMALLPOCK7POS:
+					case SMALLPOCK8POS:
+						fStealItem = TRUE;
+						break;
+					default:
+						fStealItem = FALSE;
+						break;
+				}
 			}
-			pTempItemPool->pNext = NULL;
-			pTempItemPool->iItemIndex = i;
-			//very bad, jack, to test if we are stealing?
-			pTempItemPool->pLevelNode=NULL;//finally not used
-			pTempLastItemPool=pTempItemPool;
+
+			if (fStealItem == TRUE)
+			{
+				pTempItemPool = (ITEM_POOL*)MemAlloc(sizeof(ITEM_POOL));
+				++ubCount;
+				if (pItemPool == NULL)
+				{
+					pItemPool = pTempItemPool;
+					pItemPool->pPrev = NULL;
+				}
+				else
+				{
+					pTempItemPool->pPrev = pTempLastItemPool;
+					pTempLastItemPool->pNext = pTempItemPool;
+				}
+				pTempItemPool->pNext = NULL;
+				pTempItemPool->iItemIndex = i;
+				//very bad, jack, to test if we are stealing?
+				pTempItemPool->pLevelNode=NULL;//finally not used
+				pTempLastItemPool=pTempItemPool;
+			}
 		}
 	}
 	if (ubCount == 0)

@@ -162,8 +162,8 @@ enum{
 #define NUMBER_OF_INVENTORY_PERSONNEL 8
 #define Y_SIZE_OF_PERSONNEL_SCROLL_REGION ( 422 - 219 )
 #define X_SIZE_OF_PERSONNEL_SCROLL_REGION ( 589 - 573 )
-#define Y_OF_PERSONNEL_SCROLL_REGION					iScreenHeightOffset + 219
-#define X_OF_PERSONNEL_SCROLL_REGION					iScreenWidthOffset + 573
+#define Y_OF_PERSONNEL_SCROLL_REGION					(iScreenHeightOffset + 219)
+#define X_OF_PERSONNEL_SCROLL_REGION					(iScreenWidthOffset + 573)
 #define SIZE_OF_PERSONNEL_CURSOR 19
 
 // number buttons
@@ -3748,6 +3748,9 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 	// run through active soldiers
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
+		// Only count stats of merc (not vehicles)
+		if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		{
 		 if(( pTeamSoldier->bActive)&&( pTeamSoldier->bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
 		 {
 			 switch( iStat )
@@ -3821,6 +3824,7 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 
 			 ubNumberOfMercsInCalculation++;
 		 }
+	}	
 	}	
 
 
@@ -3905,6 +3909,8 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 		}
 
 		pTeamSoldier = &( gMercProfiles[ cnt ] );
+
+
 
 		switch( iStat )
 		{

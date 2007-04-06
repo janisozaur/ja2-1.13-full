@@ -128,7 +128,7 @@ void DestroyConfirmButtons( void );
 void GiveItemsToPC( UINT8 ubProfileId );
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem);
+INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany);
 
 // callbacks
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason );
@@ -225,7 +225,8 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
 
-	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
+	// WANNE NEW: Any changes here. I don't think so
+	HireMercStruct.ubProfileID = ( UINT8 )( LaptopSaveInfo.iIMPIndex ) ;
 
 	if( fLoadingCharacterForPreviousImpProfile == FALSE )
 	{
@@ -295,12 +296,12 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 			LaptopSaveInfo.fIMPCompletedFlag = TRUE;
 
 			// charge the player
-			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
+			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(LaptopSaveInfo.iIMPIndex), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
       AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
 			AddCharacterToPlayersTeam( );
 			
 			// write the created imp merc
-			WriteOutCurrentImpCharacter( ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) );
+			WriteOutCurrentImpCharacter( ( UINT8 )( LaptopSaveInfo.iIMPIndex ) );
 		
 			fButtonPendingFlag = TRUE;
 			iCurrentImpPage = IMP_HOME_PAGE;
@@ -314,15 +315,14 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 			//Kaiden: And here is my Answer to the IMP E-mails only
 			// profiling the last IMP made. You get the results immediately
-			// But they should become different per different IMP.
-			AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ) );
+			AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), LaptopSaveInfo.iIMPIndex );
 
 			//RenderCharProfile( );
 
 			ResetCharacterStats();
 
 			//Display a popup msg box telling the user when and where the merc will arrive
-			//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId );
+			//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( LaptopSaveInfo.iIMPIndex );
 		
 			//reset the id of the last merc so we dont get the DisplayPopUpBoxExplainingMercArrivalLocationAndTime() pop up box in another screen by accident
 			LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
@@ -597,7 +597,7 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 {
 	INT32 iSlot;
 
-	iSlot = FirstFreeBigEnoughPocket(pProfile, usItem);
+	iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 
 	if (iSlot == -1)
 	{
@@ -618,11 +618,29 @@ void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT1
 }
 
 
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem)
+INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHowMany)
 {
 	UINT32 uiPos;
 
+	if (ubHowMany == 1)
+	{
+		// check body spots
 
+		if ( pProfile->inv[HELMETPOS] == NONE && Item[usItem].usItemClass == IC_ARMOUR && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_HELMET )
+			return HELMETPOS;
+		if ( pProfile->inv[VESTPOS] == NONE && Item[usItem].usItemClass == IC_ARMOUR && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_VEST )
+			return VESTPOS;
+		if ( pProfile->inv[LEGPOS] == NONE && Item[usItem].usItemClass == IC_ARMOUR && Armour[Item[usItem].ubClassIndex].ubArmourClass == ARMOURCLASS_LEGGINGS )
+			return LEGPOS;
+		if ( pProfile->inv[HEAD1POS] == NONE && Item[usItem].usItemClass == IC_FACE && CompatibleFaceItem(usItem,pProfile->inv[HEAD2POS]) )
+			return HEAD1POS;
+		if ( pProfile->inv[HEAD2POS] == NONE && Item[usItem].usItemClass == IC_FACE && CompatibleFaceItem(usItem,pProfile->inv[HEAD1POS]) )
+			return HEAD2POS;
+		if ( pProfile->inv[HANDPOS] == NONE )
+			return HANDPOS;
+		if ( pProfile->inv[SECONDHANDPOS] == NONE )
+			return SECONDHANDPOS;
+	}
 	// if it fits into a small pocket
 	if (Item[usItem].ubPerPocket != 0)
 	{
@@ -644,7 +662,6 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem)
 			return(uiPos);
 		}
 	}
-
 
 	return(-1);
 }
@@ -689,23 +706,30 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 	// write out the profile id
 	if (!FileWrite(hFile, &iProfileId, sizeof( INT32 ), &uiBytesWritten))
 	{
+		if (hFile)
+			FileClose(hFile);
 		return;
 	}
 
 	// write out the portrait id
 	if (!FileWrite(hFile, &iPortraitNumber, sizeof( INT32 ), &uiBytesWritten))
 	{
+		if (hFile)
+			FileClose(hFile);
 		return;
 	}
 
 	// write out the profile itself
 	if (!FileWrite(hFile, &gMercProfiles[ iProfileId ], sizeof( MERCPROFILESTRUCT ), &uiBytesWritten))
 	{
+		if (hFile)
+			FileClose(hFile);
 		return;
 	}
 
 	// close file
-	FileClose(hFile);
+	if (hFile)
+		FileClose(hFile);
 
 	return;
 }
@@ -723,7 +747,7 @@ BOOLEAN ImpExists ( STR nickName )
 	return FileExistsNoDB(zFileName);
 }
 
-void LoadImpCharacter( STR nickName )
+BOOLEAN LoadImpCharacter( STR nickName )
 {
 	INT32 iProfileId = 0;
 	HWFILE hFile;
@@ -740,51 +764,80 @@ void LoadImpCharacter( STR nickName )
 	// valid file?
 	if( hFile == -1 )
 	{
-		return;
+		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return FALSE;
 	}
 
 	// read in the profile
-	if (!FileRead(hFile, &iProfileId,sizeof( INT32 ), &uiBytesRead))
+
+	if (!FileRead(hFile, &iProfileId, sizeof( INT32 ), &uiBytesRead))
 	{
-		return;
+		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return FALSE;
 	}
 
 	// read in the portrait
 	if (!FileRead(hFile, &iPortraitNumber ,sizeof( INT32 ), &uiBytesRead))
 	{
-		return;
+		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return FALSE;
 	}
 
-	// read in the profile
-	if (!FileRead(hFile, &gMercProfiles[ iProfileId ] ,sizeof( MERCPROFILESTRUCT ), &uiBytesRead))
+	// Set the ID of the new IMP
+	iProfileId = GetFreeIMPSlot(iProfileId, iProfileId);
+
+	// We can create the new imp, beacuse we found an empty slot
+	if (iProfileId != -1)
 	{
-		return;
-	}
+		LaptopSaveInfo.iIMPIndex = iProfileId;
 
-	// close file
-	FileClose(hFile);
-	
-	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
+		// read in the profile
+		if (!FileRead(hFile, &gMercProfiles[ iProfileId ] ,sizeof( MERCPROFILESTRUCT ), &uiBytesRead))
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return FALSE;
+		}
+
+		// close file
+		FileClose(hFile);
+		
+		if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
+		{
+			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 3 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+
+			// not enough
+			return FALSE;
+		}
+		
+
+		// charge the player
+		// is the character male?
+		fCharacterIsMale = ( gMercProfiles[ iProfileId ].bSex == MALE );
+		fLoadingCharacterForPreviousImpProfile = TRUE;
+		AddTransactionToPlayersBook(IMP_PROFILE,0, GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
+		AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
+		LaptopSaveInfo.iIMPIndex = iProfileId;
+		AddCharacterToPlayersTeam( );
+		// WANNE: Email is sent immediatly after the imp was created. So no need to send it later again
+		//AddFutureDayStrategicEvent( EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2 );
+		LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+		fPausedReDrawScreenFlag = TRUE;
+		fLoadingCharacterForPreviousImpProfile = FALSE;
+
+		return TRUE;
+	}
+	else
 	{
-		// not enough
-		return;
+		// close file
+		FileClose(hFile);
+
+		// WDS: Allow flexible numbers of IMPs of each sex
+		//  note: check this
+
+		// You cannot have more than 3 I.M.P characters with the same gender on your team.
+		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 9 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		return FALSE;
 	}
-	
-
-	// charge the player
-	// is the character male?
-	fCharacterIsMale = ( gMercProfiles[ iProfileId ].bSex == MALE );
-	fLoadingCharacterForPreviousImpProfile = TRUE;
-	AddTransactionToPlayersBook(IMP_PROFILE,0, GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
-  AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
-	LaptopSaveInfo.iVoiceId = iProfileId - PLAYER_GENERATED_CHARACTER_ID;
-	AddCharacterToPlayersTeam( );
-	AddFutureDayStrategicEvent( EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2 );
-	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;
-	fLoadingCharacterForPreviousImpProfile = FALSE;
-
-	return;
 }
 
 
@@ -834,7 +887,7 @@ void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 		{
 			usItem = DefaultMagazine(usItem);
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPRandomItems: give ammo typeIndex = %d, usItem = %d ",typeIndex, usItem ));
-			MakeProfileInvItemAnySlot(pProfile,usItem,100,(1+Random(3)));
+			MakeProfileInvItemAnySlot(pProfile,usItem,100,(1+Random(1)));
 		}
 
 		// give launchables for launchers
@@ -842,7 +895,7 @@ void GiveIMPRandomItems( MERCPROFILESTRUCT *pProfile, UINT8 typeIndex )
 		{
 			usItem = PickARandomLaunchable(usItem);
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPRandomItems: give launchable typeIndex = %d, usItem = %d",typeIndex, usItem ));
-			MakeProfileInvItemAnySlot(pProfile,usItem,100,(1+Random(3)));
+			MakeProfileInvItemAnySlot(pProfile,usItem,100,(2+Random(2)));
 		}
 	}
 
@@ -879,7 +932,7 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 			{
 				usItem = DefaultMagazine(usItem);
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: give ammo typeIndex = %d, usItem = %d",typeIndex, usItem ));
-				MakeProfileInvItemAnySlot(pProfile,usItem,100,(1+Random(3)));
+				MakeProfileInvItemAnySlot(pProfile,usItem,100,(2+Random(2)));
 			}
 
 			// give launchables for launchers
@@ -887,7 +940,7 @@ void GiveIMPItems( MERCPROFILESTRUCT *pProfile, INT8 abilityValue, UINT8 typeInd
 			{
 				usItem = PickARandomLaunchable(usItem);
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("GiveIMPItems: give launchable typeIndex = %d, usItem = %d",typeIndex, usItem ));
-				MakeProfileInvItemAnySlot(pProfile,usItem,100,(1+Random(3)));
+				MakeProfileInvItemAnySlot(pProfile,usItem,100,(2+Random(2)));
 			}
 		}
 		iChoice--;

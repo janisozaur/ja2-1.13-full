@@ -407,7 +407,7 @@ void InitCreatureQuest()
 		default:
 			#ifdef JA2BETAVERSION
 			{
-				UINT16 str[512];
+				wchar_t str[512];
 				swprintf( str, L"Creature quest never chose a lair and won't infect any mines.  Infectible mines = %d, iRandom = %d.  "
 											 L"This isn't a bug if you are not receiving income from any mines.", iNumMinesInfectible, iOrigRandom );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
@@ -939,7 +939,7 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 void ChooseCreatureQuestStartDay()
 {
 //	INT32 iRandom, iDay;
-	if( !(gGameOptions.ubGameStyle == STYLE_SCIFI) )
+	if( !(gGameOptions.ubGameStyle == STYLE_SCIFI) || !gGameExternalOptions.fEnableCrepitus)
 		return; //only available in science fiction mode.
 	//Post the event.  Once it becomes due, it will setup the queen monster's location, and
 	//begin spreading and attacking towns from there.
@@ -1385,7 +1385,7 @@ void CreatureNightPlanning()
 void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	UINT8 ubValidMines = 0;
-	if( !(gGameOptions.ubGameStyle == STYLE_SCIFI) )
+	if( !(gGameOptions.ubGameStyle == STYLE_SCIFI) || !gGameExternalOptions.fEnableCrepitus)
 		return; //No scifi, no creatures...
 	if( giLairID )
 		return;	//Creature quest already begun

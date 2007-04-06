@@ -2594,7 +2594,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 			case NPC_ACTION_NO_SCI_FI_END_MEANWHILE:
 
-				if ( !( gGameOptions.ubGameStyle == STYLE_SCIFI ) )
+				if ( !( gGameOptions.ubGameStyle == STYLE_SCIFI && gGameExternalOptions.fEnableCrepitus) )
 				{
 					// End meanwhile....
 					// End meanwhile....
@@ -3892,7 +3892,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_TRIGGER_MICKY_BY_SCI_FI:
-				if ( gGameOptions.ubGameStyle == STYLE_SCIFI )
+				if ( gGameOptions.ubGameStyle == STYLE_SCIFI && gGameExternalOptions.fEnableCrepitus)
 				{
 					TriggerNPCRecord( MICKY, 7 );
 				}
@@ -4359,7 +4359,11 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 		}
 	}
 
-	if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2) - 2 )
+	// WANNE
+	//if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2) - 2 )
+	//if ( uiCount <= (18 - 2) )
+
+	if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum].bLastID - 2) - 1 )
 	{
 		return( TRUE );
 	}
@@ -4374,7 +4378,7 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 {
 	INT32			iTemp;
-	UINT16		zTemp[256], zTemp2[256];
+	wchar_t		zTemp[256], zTemp2[256];
 
 	gusDialogueMessageBoxType = usMessageBoxType;
 	switch( gusDialogueMessageBoxType )
@@ -4475,8 +4479,9 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 				{
 					if ( ubProfile == JOHN )
 					{
+						// WANNE: Bugfix: CTD when recruting John and Mary and there is only one place left in the team.
 						// Mary might be alive, and if so we need to ensure two places
-						pSoldier = FindSoldierByProfileID( MARY, TRUE );
+						pSoldier = FindSoldierByProfileID( MARY, FALSE );
 						if ( pSoldier && !PlayerTeamHasTwoSpotsLeft() )
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_RECRUIT_TEAM_FULL ] );							

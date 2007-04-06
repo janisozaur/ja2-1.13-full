@@ -85,7 +85,7 @@ BOOLEAN InitTileCache(  )
 					SET_ERROR(  "Cannot load tilecache JSD: %s", gpTileCacheStructInfo[ cnt ].Filename );		
 				}
 #endif
-        if ( stricmp( gpTileCacheStructInfo[ cnt ].zRootName, "l_dead1" ) == 0 )
+        if ( _stricmp( gpTileCacheStructInfo[ cnt ].zRootName, "l_dead1" ) == 0 )
         {
            giDefaultStructIndex = cnt;
         }
@@ -353,7 +353,7 @@ void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 void GetRootName( INT8 * pDestStr, INT8 * pSrcStr )
 {
 	// Remove path and extension
-	INT8		cTempFilename[ 120 ];
+	CHAR8		cTempFilename[ 120 ];
 	STR			cEndOfName;
 
 	// Remove path
@@ -370,7 +370,7 @@ void GetRootName( INT8 * pDestStr, INT8 * pSrcStr )
 	}
 
 	// Now remove extension...
-	cEndOfName = strchr( (const char *)pDestStr, '.' );
+	cEndOfName = strchr( (char *)pDestStr, '.' );
 	if (cEndOfName != NULL)
 	{
 		*cEndOfName = '\0';

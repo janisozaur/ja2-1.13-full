@@ -169,7 +169,9 @@ void InitSightRange()
 	STRAIGHT   =     (INT8)( STRAIGHT_RATIO * gGameExternalOptions.ubStraightSightRange );
 
 	INT8 dummy[15][15];
-
+	
+	
+	{	//Pulmu: VC6 compatibility
 	for (int i=0; i<8; i++)
 	{
 			dummy[i][i]=STRAIGHT;
@@ -187,6 +189,7 @@ void InitSightRange()
 			dummy[i+6][i]=SIDE;
 			dummy[i][i+7]=ANGLE;
 			dummy[i+7][i]=ANGLE;
+	}
 	}
 	for (int i=0; i<8; i++)
 	{
@@ -4310,7 +4313,7 @@ void DebugSoldierPage3( )
 
 }
 
-void AppendAttachmentCode( UINT16 usItem, UINT16 *str )
+void AppendAttachmentCode( UINT16 usItem, wchar_t *str )
 {
 	switch( usItem )
 	{
@@ -4331,7 +4334,7 @@ void AppendAttachmentCode( UINT16 usItem, UINT16 *str )
 
 void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 {
-	UINT16 szAttach[30];
+	wchar_t szAttach[30];
 	BOOLEAN fAttachments;
 	//100%  Qty: 2  Attach:
 	//100%  Qty: 2  
@@ -4357,8 +4360,8 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 	{ //ammo
 		if( pObject->ubNumberOfObjects > 1 )
 		{
-			UINT16 str[50];
-			UINT16 temp[5];
+			wchar_t str[50];
+			wchar_t temp[5];
 			UINT8 i;
 			swprintf( str, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
@@ -4397,8 +4400,8 @@ void DebugSoldierPage4( )
 {
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiMercFlags;
-	UINT16 szOrders[20];
-	UINT16 szAttitude[20];
+	wchar_t szOrders[20];
+	wchar_t szAttitude[20];
 	UINT16						usSoldierIndex;
 	UINT8							ubLine;
 
@@ -5458,6 +5461,12 @@ UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubN
 			UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2)
 {
 	INT32 iEffVolume, iDistance;
+
+	// Lesh: deafness
+	if ( pSoldier->bDeafenedCounter > 0 )
+	{
+		return( 0 );
+	}
 
 	if ( FindWalkman(pSoldier) != ITEM_NOT_FOUND  )
 	{

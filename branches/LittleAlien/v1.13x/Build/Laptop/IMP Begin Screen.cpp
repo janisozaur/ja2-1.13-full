@@ -332,11 +332,14 @@ void RemoveIMPBeginScreenButtons( void )
 }
 
 
+
 void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
 
 	// easter egg check
 	BOOLEAN fEggOnYouFace = FALSE;
+
+	BOOLEAN bProceed = TRUE;
 
 	// btn callback for IMP Begin Screen done button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -350,9 +353,8 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+			 btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
-			
 			if( fFinishedCharGeneration )
 			{
 				// simply reviewing name and gender, exit to finish page
@@ -360,6 +362,7 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 				fButtonPendingFlag = TRUE;
 				return;
 			}
+			/*
 			else
 			{
 			  if( CheckCharacterInputForEgg( ) )
@@ -367,20 +370,69 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 					fEggOnYouFace = TRUE;
 				}
 			}
+			*/
 
+			// WDS: Allow flexible numbers of IMPs of each sex
+			if (bProceed == TRUE)
+			{
+				// check to see if a name has been selected, if not, do not allow player to proceed with more char generation
+				if( ( pFullNameString[ 0 ] != 0) && ( pFullNameString[ 0 ] != L' ' ) && ( bGenderFlag != -1 ) )
+				{
+					if (bGenderFlag == IMP_MALE)
+					{
+						if (CountEmptyIMPSlots(MALE) == 0)
+						{
+							// You cannot have more than the male max I.M.P characters on your team.
+							DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 9 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+							bProceed = FALSE;
+						}
+					}
+					else if (bGenderFlag == IMP_FEMALE)
+					{
+						if (CountEmptyIMPSlots(FEMALE) == 0)
+						{
+							// You cannot have more than the female max I.M.P characters on your team.
+							DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 9 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+							bProceed = FALSE;
+						}
+					}
+				}
+				else
+				{
+					// invalid name, reset current mode
+					DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 2 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+					iCurrentProfileMode = IMP__REGISTRY;
+					bProceed = FALSE;
+				}
+			}
 
-			// back to mainpage
-			
+			// Check if we can create an imp with the selected gender
+			// WANNE NEW
+			/*if (bProceed == TRUE)
+			{
+				if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
+				{
+				    bGenderFlag = IMP_FEMALE;
+				}
+			    else if( MALE_GENDER_SELECT  == ubTextEnterMode  )
+				{
+					bGenderFlag = IMP_MALE;
+				}
+				else
+				{
+					bProceed = FALSE;
+				}
+			}*/
 
-			// check to see if a name has been selected, if not, do not allow player to proceed with more char generation
-			if( ( pFullNameString[ 0 ] != 0) && ( pFullNameString[ 0 ] != L' ' ) && ( bGenderFlag != -1 ) )
+			// Data is valid
+			if (bProceed == TRUE)
 			{
 				// valid full name, check to see if nick name
 				if( ( pNickNameString[ 0 ] == 0 ) || ( pNickNameString[ 0 ] == L' '))
 				{
 					// no nick name
 					// copy first name to nick name
-          CopyFirstNameIntoNickName( );
+					CopyFirstNameIntoNickName( );
 				}
 				// ok, now set back to main page, and set the fact we have completed part 1
 				if ( ( iCurrentProfileMode < IMP__PERSONALITY ) &&( bGenderFlag != -1 ) )
@@ -394,16 +446,9 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 				// no easter egg?...then proceed along
 				if( fEggOnYouFace == FALSE )
 				{
-				  iCurrentImpPage = IMP_MAIN_PAGE;
-          fButtonPendingFlag = TRUE;
+					iCurrentImpPage = IMP_MAIN_PAGE;
+					fButtonPendingFlag = TRUE;
 				}
-
-			}
-			else
-			{
-				// invalid name, reset current mode
-				DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 2 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-				iCurrentProfileMode = IMP__REGISTRY;	
 			}
 		}
 	}	
@@ -586,7 +631,7 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 						       uiFullNameCharacterPosition = 0;
 								 }
 								 // make sure we haven't moved too far
-								 if( ( uiFullNameCursorPosition + StringPixLength( ( CHAR16 *)&(uiKey ), FONT14ARIAL ) ) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+								 if( ( uiFullNameCursorPosition + StringPixLength( ( CHAR16 *)&(uiKey ), FONT14ARIAL ) ) > (UINT32)FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
 								 {
 									 // do nothing for now, when pop up is in place, display
 									 break;
@@ -622,7 +667,7 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 								 }
 
 								  // make sure we haven't moved too far
-								 if( ( uiNickNameCursorPosition + StringPixLength( (CHAR16 *)&(uiKey ), FONT14ARIAL ) ) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X )
+								 if( ( uiNickNameCursorPosition + StringPixLength( (CHAR16 *)&(uiKey ), FONT14ARIAL ) ) > (UINT32)NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X )
 								 {
 									 // do nothing for now, when pop up is in place, display
 									 break;
@@ -1000,7 +1045,7 @@ void DecrementTextEnterMode( void )
 	// if at IMP_FEMALE gender selection, reset to full name
 	if(  FULL_NAME_MODE == ubTextEnterMode)
 	{
-    ubTextEnterMode =  FEMALE_GENDER_SELECT;
+		ubTextEnterMode =  FEMALE_GENDER_SELECT;
 	}
   else
 	{
@@ -1182,7 +1227,7 @@ void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-    ubTextEnterMode = FEMALE_GENDER_SELECT;
+		ubTextEnterMode = FEMALE_GENDER_SELECT;
 		fNewCharInString = TRUE;
 	}
 }
@@ -1196,7 +1241,7 @@ void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-    ubTextEnterMode = MALE_GENDER_SELECT;
+		ubTextEnterMode = MALE_GENDER_SELECT;
 		fNewCharInString = TRUE;
 	}
 }
@@ -1244,8 +1289,6 @@ void Print8CharacterOnlyString( void )
 
 BOOLEAN CheckCharacterInputForEgg( void )
 {
-	MERC_HIRE_STRUCT HireMercStruct;
-
 #ifndef JA2BETAVERSION
 	return( FALSE );
 #else
@@ -1272,7 +1315,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_ASSHOLE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 	  return TRUE;
 	}
@@ -1296,7 +1340,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_FRIENDLY;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 1;
 	  return TRUE;
 	}
@@ -1320,7 +1365,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_FRIENDLY;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 2;
+		LaptopSaveInfo.iCurrentVoice = 2;
+		LaptopSaveInfo.iCharIndex = 2;
 		iPortraitNumber = 1;
 	  return TRUE;
 	}
@@ -1347,7 +1393,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 4;
 	  return TRUE;
 	}
@@ -1374,7 +1421,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_ARROGANT;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 	  return TRUE;
 	}
@@ -1401,7 +1449,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 4;
 	  return TRUE;
 	}
@@ -1428,7 +1477,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 3;
 	  return TRUE;
 	}
@@ -1452,10 +1502,13 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = PSYCHO;
 		iAttitude = ATT_ASSHOLE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 
 		//DEF: temp
+		MERC_HIRE_STRUCT HireMercStruct;
+
 		HireMercStruct.sSectorX = gsMercArriveSectorX;
 		HireMercStruct.sSectorY = gsMercArriveSectorY;
 		HireMercStruct.bSectorZ = 0;
@@ -1506,7 +1559,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iCurrentVoice = 1;
+		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 3;
 	  return TRUE;
 	}
@@ -1535,7 +1589,7 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iVoiceId = 1;
+		LaptopSaveInfo.iIMPIndex = 54;
 		iPortraitNumber = 5;
 		return (TRUE );
 	}

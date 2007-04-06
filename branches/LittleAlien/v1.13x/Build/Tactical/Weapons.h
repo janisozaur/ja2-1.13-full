@@ -181,6 +181,7 @@ enum
 	EXPLOSV_SMOKE,
 	EXPLOSV_CREATUREGAS,
 	EXPLOSV_BURNABLEGAS,
+	EXPLOSV_FLASHBANG,
 };
 
 #define AMMO_DAMAGE_ADJUSTMENT_BUCKSHOT( x ) (x / 4)
@@ -285,6 +286,7 @@ typedef struct
 {
 	UINT8	ubArmourClass;
 	UINT16	ubProtection;
+	UINT8	ubCoverage;	// Captain J
 	UINT8	ubDegradePercent;
 	UINT32		uiIndex;
 } ARMOURTYPE;

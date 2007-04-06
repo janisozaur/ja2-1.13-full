@@ -51,6 +51,10 @@ enum
 	TOPTION_TRACERS_FOR_SINGLE_FIRE,
 	TOPTION_RAIN_SOUND,
 	TOPTION_ALLOW_CROWS,
+	TOPTION_USE_RANDOM_PERSONALITY,
+	TOPTION_USE_AUTO_SAVE,
+	TOPTION_SILENT_SKYRIDER,
+	TOPTION_LOW_CPU_USAGE,
 	NUM_GAME_OPTIONS,				//Toggle up this will be able to be Toggled by the player
 	
 
@@ -142,6 +146,15 @@ typedef struct
 	BOOLEAN fSellAll;
 	INT16 iPriceModifier;
 
+	// WDS: Allow flexible numbers of IMPs of each sex
+	INT32 iIMPMaleCharacterCount;	// Count of how many there are
+	INT32 iIMPFemaleCharacterCount;
+	INT32 iMaxIMPCharacters;		// Limit of how many to allow
+	//
+	// iaIMPSlots is an array of the slots (in prof.dat) to use for IMPs.
+	//
+	INT32 *iaIMPSlots;
+
 	INT32 iMinAttribute;
 	INT32 iMaxAttribute;
 	INT32 iImpAttributePoints;
@@ -151,6 +164,9 @@ typedef struct
 	INT32 iMaxMilitiaPerSector;
 	INT32 iTrainingSquadSize;
 	INT32 iMilitiaTrainingCost;
+	INT32 iMilitiaCostModifier;
+	INT32 iRegularCostModifier;
+	INT32 iVeteranCostModifier;
 	INT32 iMinLoyaltyToTrain;
 
 	INT32 iMaxEnemyGroupSize;
@@ -167,6 +183,7 @@ typedef struct
 
 	INT32 iPercentElitesBonusExpert;
 	INT32 iPercentElitesBonusInsane;
+	INT32 iPercentElitesBonusExperienced;
 
 	UINT8 ubMinEnemyGroupSizeNovice;
 	UINT8 ubMinEnemyGroupSizeExperienced;
@@ -176,7 +193,7 @@ typedef struct
 	BOOLEAN fMercDayOne;
 	BOOLEAN fAllMercsAvailable;
 
-	BOOLEAN fPers_att;
+	//BOOLEAN fPers_att;
 
 	INT8 iCustomPersonality;
 	INT8 iCustomAttitude;
@@ -185,7 +202,8 @@ typedef struct
 	INT8 iExperiencedAPBonus;
 	INT8 iExpertAPBonus;
 	INT8 iInsaneAPBonus;
-
+	// Kaiden: Vehicle Inventory change - Added for INI Option
+	BOOLEAN fVehicleInventory;
 
 	// System settings
 	UINT8 gubDeadLockDelay;
@@ -205,14 +223,20 @@ typedef struct
 	//Sound settings
 	UINT32 guiWeaponSoundEffectsVolume;
 
+	// WDS - Option to turn off stealing
+	BOOLEAN fStealingDisabled;
+
 	// Militia Settings	
 	BOOLEAN fAllowTacticalMilitiaCommand;
-
+	BOOLEAN gfTrainVeteranMilitia;
 	BOOLEAN gfAllowMilitiaGroups;
+	BOOLEAN gfmusttrainroaming;
 	BOOLEAN gfAllowReinforcements;
 	BOOLEAN gfAllowReinforcementsOnlyInCity;
 	UINT32	guiBaseQueenPoolIncrement;
 	
+	UINT32	guiAllowMilitiaGroupsDelay;
+	UINT32	guiTrainVeteranMilitiaDelay;
 	UINT32	guiCreateEachNHours;
 	UINT32	guiDivOfOriginalMilitia;
 	UINT32	guiMinMilitiaSquadSize;
@@ -237,12 +261,20 @@ typedef struct
 	double ubBreathGainReductionPerRainIntensity;
 
 	// Thunder settings
+	BOOLEAN gfAllowLightning;
 	UINT32 guiMinLightningInterval;
 	UINT32 guiMaxLightningInterval;
 	UINT32 guiMinDLInterval;
 	UINT32 guiMaxDLInterval;
 	UINT32 guiProlongLightningIfSeenSomeone;
 	UINT32 guiChanceToDoLightningBetweenTurns;
+
+	// WDS: Progress settings
+
+	UINT32 ubGameProgressPortionKills;
+	UINT32 ubGameProgressPortionControl;
+	UINT32 ubGameProgressPortionIncome;
+	UINT32 ubGameProgressPortionVisited;
 
 	// Event settings
 
@@ -304,7 +336,80 @@ typedef struct
 	BOOLEAN gfHardAggressiveQueen;
 	BOOLEAN gfInsaneAggressiveQueen;
 
+	// WANNE
+	INT32 ubEnemiesItemDrop;
+
+	BOOLEAN gfUseAutoSave;
+
+	//Merc Assignment settings
+	INT32 ubAssignmentUnitsPerDay;
+	INT32 ubMinutesForAssignmentToCount;
+
+	INT32 ubTrainingSkillMin;
+	INT32 ubTrainingSkillMax;
+	INT32 ubSelfTrainingDivisor;
+	INT32 ubInstructedTrainingDivisor;
+	INT32 ubGunRangeTrainingBonus;
+	INT32 ubTownMilitiaTrainingRate;
+	INT32 ubMaxMilitiaTrainersPerSector;
+	INT32 ubTeachBonusToTrain;
+	INT32 ubRpcBonusToTrainMilitia;
+	INT32 ubMinSkillToTeach;
+
+	INT32 ubLowActivityLevel;
+	INT32 ubMediumActivityLevel;
+	INT32 ubHighActivityLevel;
+	INT32 ubDoctoringRateDivisor;
+	INT32 ubHospitalHealingRate;
+	INT32 ubBaseMedicalSkillToDealWithEmergency;
+	INT32 ubMultiplierForDifferenceInLifeValueForEmergency;
+	INT32 ubPointCostPerHealthBelowOkLife;//OKLIFE = 15
+
+	INT32 ubRepairCostPerJam;
+	INT32 ubRepairRateDivisor;
+
+	//Misc settings
 	BOOLEAN fAmmoDynamicWeight; //Pulmu
+	BOOLEAN fEnableCrepitus;
+	BOOLEAN fEnableAllWeaponCaches;
+	BOOLEAN fEnableAllTerrorists;
+
+	BOOLEAN fEnableArmorCoverage; // ShadoWarrior for Captain J's armor coverage
+
+	// ShadoWarrior: Tooltip changes (start)
+	UINT8 ubSoldierTooltipDetailLevel;
+
+	BOOLEAN fEnableDynamicSoldierTooltips;
+	BOOLEAN fEnableSoldierTooltipLocation;
+	BOOLEAN fEnableSoldierTooltipBrightness;
+	BOOLEAN fEnableSoldierTooltipRangeToTarget;
+	BOOLEAN fEnableSoldierTooltipID;
+	BOOLEAN fEnableSoldierTooltipOrders;
+	BOOLEAN fEnableSoldierTooltipAttitude;
+	BOOLEAN fEnableSoldierTooltipActionPoints;
+	BOOLEAN fEnableSoldierTooltipHealth;
+	BOOLEAN fEnableSoldierTooltipHelmet;
+	BOOLEAN fEnableSoldierTooltipVest;
+	BOOLEAN fEnableSoldierTooltipLeggings;
+	BOOLEAN fEnableSoldierTooltipHeadItem1;
+	BOOLEAN fEnableSoldierTooltipHeadItem2;
+	BOOLEAN fEnableSoldierTooltipWeapon;
+	BOOLEAN fEnableSoldierTooltipSecondHand;
+	BOOLEAN fEnableSoldierTooltipBigSlot1;
+	BOOLEAN fEnableSoldierTooltipBigSlot2;
+	BOOLEAN fEnableSoldierTooltipBigSlot3;
+	BOOLEAN fEnableSoldierTooltipBigSlot4;
+	// ShadoWarrior: Tooltip changes (end)
+
+	//Kaiden MERC Deaths Externalized:
+	BOOLEAN gfMercsDieOnAssignment;
+	INT32 giEasyMercDeaths;
+	INT32 giExperiencedMercDeaths;
+	INT32 giExpertMercDeaths;
+	INT32 giInsaneMercDeaths;
+
+	// Lesh: slow enemy items choice progress
+	BOOLEAN fSlowProgressForEnemyItemsChoice;
 
 } GAME_EXTERNAL_OPTIONS;
 

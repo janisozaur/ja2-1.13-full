@@ -48,6 +48,8 @@ UINT16 gusLOSEndSoldier = NOBODY;
 extern UINT32 guiSoldierFlags;
 extern INT16 DirIncrementer[8];
 
+extern BOOLEAN fTracer;
+
 static FIXEDPT gqStandardWallHeight = INT32_TO_FIXEDPT( WALL_HEIGHT_UNITS );
 static FIXEDPT gqStandardWindowBottomHeight = INT32_TO_FIXEDPT( WINDOW_BOTTOM_HEIGHT_UNITS );
 static FIXEDPT gqStandardWindowTopHeight = INT32_TO_FIXEDPT( WINDOW_TOP_HEIGHT_UNITS );
@@ -144,7 +146,7 @@ static UINT8 gubTreeSightReduction[ANIM_STAND + 1] =
 
 #define MAX_CHANCE_OF_HITTING_STRUCTURE 90
 
-static guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
+static UINT32 guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
 {
 	 0,	// 0 tiles
 	 0,
@@ -200,7 +202,7 @@ static guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE
 // MoveBullet and ChanceToGetThrough use this array to maintain which
 // of which structures in a tile might be hit by a bullet.
 
-#define MAX_LOCAL_STRUCTURES 20
+#define MAX_LOCAL_STRUCTURES 100
 
 STRUCTURE * gpLocalStructure[MAX_LOCAL_STRUCTURES];
 UINT32			guiLocalStructureCTH[MAX_LOCAL_STRUCTURES];
@@ -2468,43 +2470,47 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		// Does it have a lock?
 		INT16 lockBustingPower = AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].lockBustingPower;
 
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Door info: damage = %d, pick difficulty = %d, smash difficulty = %d, lockbuster power = %d",pDoor->bLockDamage,LockTable[ pDoor->ubLockID ].ubPickDifficulty,LockTable[ pDoor->ubLockID ].ubSmashDifficulty,lockBustingPower) );
-
-		if ( pDoor && (( LockTable[ pDoor->ubLockID ].ubPickDifficulty < 50 && LockTable[ pDoor->ubLockID ].ubSmashDifficulty < 70 ) || lockBustingPower*2 >= LockTable[ pDoor->ubLockID ].ubSmashDifficulty ) )
+		// WANNE: bugfix: No door returned, so the game crashes!
+		if (pDoor)
 		{
-			// Yup.....
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Door info: damage = %d, pick difficulty = %d, smash difficulty = %d, lockbuster power = %d",pDoor->bLockDamage,LockTable[ pDoor->ubLockID ].ubPickDifficulty,LockTable[ pDoor->ubLockID ].ubSmashDifficulty,lockBustingPower) );
 
-			// Chance that it hit the lock....
-			if ( PreRandom( 2 ) == 0 || lockBustingPower > 0 )
+			if ( pDoor && (( LockTable[ pDoor->ubLockID ].ubPickDifficulty < 50 && LockTable[ pDoor->ubLockID ].ubSmashDifficulty < 70 ) || lockBustingPower*2 >= LockTable[ pDoor->ubLockID ].ubSmashDifficulty ) )
 			{
-				// Adjust damage-- CC adjust this based on gun type, etc.....
-				//sLockDamage = (INT16)( 35 + Random( 35 ) );
-				sLockDamage = (INT16) (pBullet->iImpact - pBullet->iImpactReduction );
-				sLockDamage += (INT16) PreRandom( sLockDamage );
-				sLockDamage += lockBustingPower;
+				// Yup.....
 
-				sLockDamage = min(sLockDamage,127);
-
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_HIT ] );
-
-				//Madd: catch the overflow
-				if ( sLockDamage + pDoor->bLockDamage > 127 )
-					pDoor->bLockDamage = 127;
-				else
-					pDoor->bLockDamage+= sLockDamage;
-
-				// Check if it has been shot!
-				if ( pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty || sLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
+				// Chance that it hit the lock....
+				if ( PreRandom( 2 ) == 0 || lockBustingPower > 0 )
 				{
-					// Display message!
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_DESTROYED ] );
+					// Adjust damage-- CC adjust this based on gun type, etc.....
+					//sLockDamage = (INT16)( 35 + Random( 35 ) );
+					sLockDamage = (INT16) (pBullet->iImpact - pBullet->iImpactReduction );
+					sLockDamage += (INT16) PreRandom( sLockDamage );
+					sLockDamage += lockBustingPower;
 
-					// succeeded! door can never be locked again, so remove from door list...
-					RemoveDoorInfoFromTable( pDoor->sGridNo );
+					sLockDamage = min(sLockDamage,127);
 
-					// MARKSMANSHIP GAIN (marksPts): Opened/Damaged a door
-					StatChange( pBullet->pFirer, MARKAMT, 10, FALSE );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_HIT ] );
 
+					//Madd: catch the overflow
+					if ( sLockDamage + pDoor->bLockDamage > 127 )
+						pDoor->bLockDamage = 127;
+					else
+						pDoor->bLockDamage+= sLockDamage;
+
+					// Check if it has been shot!
+					if ( pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty || sLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
+					{
+						// Display message!
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ LOCK_HAS_BEEN_DESTROYED ] );
+
+						// succeeded! door can never be locked again, so remove from door list...
+						RemoveDoorInfoFromTable( pDoor->sGridNo );
+
+						// MARKSMANSHIP GAIN (marksPts): Opened/Damaged a door
+						StatChange( pBullet->pFirer, MARKAMT, 10, FALSE );
+
+					}
 				}
 			}
 		}
@@ -3559,6 +3565,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	ddOrigVerticAngle = atan2( dDeltaZ, (d2DDistance * 2.56f) );
 
 	ubShots = 1;
+	fTracer = FALSE;
 
 	// Check if we have spit as a weapon!
 	if ( Weapon[ usHandItem ].ubWeaponClass == MONSTERCLASS )
@@ -3588,7 +3595,8 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	}
 	else if ( AmmoTypes[ pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType ].tracerEffect && (pFirer->bDoBurst || gGameSettings.fOptions[ TOPTION_TRACERS_FOR_SINGLE_FIRE ]) )
 	{
-		usBulletFlags |= BULLET_FLAG_TRACER;
+		//usBulletFlags |= BULLET_FLAG_TRACER;
+		fTracer = TRUE;
 	}
 
 	ubImpact =(UINT8) GetDamage(&pFirer->inv[pFirer->ubAttackingHand]);
@@ -4252,7 +4260,7 @@ void MoveBullet( INT32 iBullet )
 					return;
 				}
 
-				if ( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT | BULLET_FLAG_TRACER ) )
+				if (( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT /*| BULLET_FLAG_TRACER*/  ) ) || fTracer == TRUE)
 				{
 					INT8 bStepsPerMove = STEPS_FOR_BULLET_MOVE_TRAILS;
 
@@ -4537,11 +4545,11 @@ void MoveBullet( INT32 iBullet )
 					pBullet->iCurrCubesZ = CONVERT_HEIGHTUNITS_TO_INDEX( FIXEDPT_TO_INT32( pBullet->qCurrZ ) );
 					pBullet->iLoop++;
 
-					if ( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT | BULLET_FLAG_TRACER ) )
+					if (( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT /*| BULLET_FLAG_TRACER */) ) || fTracer == TRUE)
 					{
 						INT8 bStepsPerMove = STEPS_FOR_BULLET_MOVE_TRAILS;
 
-						if ( pBullet->usFlags & ( BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TRACER ) )
+						if (( pBullet->usFlags & ( BULLET_FLAG_SMALL_MISSILE /*| BULLET_FLAG_TRACER*/ ) ) || fTracer == TRUE)
 						{
 							bStepsPerMove = STEPS_FOR_BULLET_MOVE_SMALL_TRAILS;
 						}

@@ -266,7 +266,7 @@ UINT32 ErrorScreenHandle(void)
   InputAtom  InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 #ifdef JA2BETAVERSION
-	UINT16 str[256];
+	wchar_t str[256];
 #endif
 
 	// For quick setting of new video stuff / to be changed
@@ -285,6 +285,7 @@ UINT32 ErrorScreenHandle(void)
 	SetFontShadow( 60 );		 //60 is near black
 	mprintf( 50, 255, L"%S", gubErrorText );
 	SetFontForeground( FONT_LTRED ); 
+
 
 #ifdef JA2BETAVERSION
   

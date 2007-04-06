@@ -289,6 +289,7 @@ typedef struct
 	BOOLEAN twohanded;
 	BOOLEAN notbuyable;
 	BOOLEAN attachment;
+	BOOLEAN hiddenattachment;
 	BOOLEAN biggunlist;
 	BOOLEAN notineditor;
 	BOOLEAN defaultundroppable;
@@ -312,7 +313,7 @@ typedef struct
 	BOOLEAN lockbomb;
 	BOOLEAN flare;
 	INT16 percentnoisereduction;
-	BOOLEAN bipod;
+	INT16 bipod;
 	INT16 tohitbonus;
 	INT16 bestlaserrange;
 	INT16 rangebonus;
@@ -387,6 +388,8 @@ typedef struct
 	INT16 urbanCamobonus;
 	INT16 desertCamobonus;
 	INT16 snowCamobonus;
+
+	BOOLEAN scifi; // item only available in scifi mode
 
 	UINT16 defaultattachment;
 } INVTYPE;
@@ -812,7 +815,7 @@ typedef enum
 #define MAXATTACHMENTS 30000
 
 extern INVTYPE Item[MAXITEMS];
-extern UINT16 Attachment[MAXATTACHMENTS][2];
+extern UINT16 Attachment[MAXATTACHMENTS][3];
 
 typedef struct
 {
@@ -841,7 +844,7 @@ typedef enum
 	USE_ITEM_HARD
 } MergeType;
 
-extern UINT16 Merge[MAXITEMS+1][4];
+extern UINT16 Merge[MAXITEMS+1][6];
 
 typedef struct
 {

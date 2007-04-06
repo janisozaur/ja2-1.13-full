@@ -102,14 +102,14 @@
 
 
 // town loyalty table
-TOWN_LOYALTY gTownLoyalty[ NUM_TOWNS ];
+TOWN_LOYALTY gTownLoyalty[ MAX_TOWNS ];
 
 
 // town name and locations arrays, for town theft and what not
-INT32 pTownNamesList[ 40 ];
-INT32 pTownLocationsList[ 40 ]; 
+INT32 pTownNamesList     [ MAX_TOWN_SECTORS ];
+INT32 pTownLocationsList [ MAX_TOWN_SECTORS ]; 
 
-INT32 iTownDistances[ NUM_TOWNS ][ NUM_TOWNS ];
+INT32 iTownDistances[ MAX_TOWNS ][ MAX_TOWNS ];
 
 
 #define BASIC_COST_FOR_CIV_MURDER	(10 * GAIN_PTS_PER_LOYALTY_PT)
@@ -129,39 +129,39 @@ UINT32 uiPercentLoyaltyDecreaseForCivMurder[]={
 
 // on a scale of 1-100, this is a measure of how much each town hates the Queen's opression & is willing to stand against it
 // it primarily controls the RATE of loyalty change in each town: the loyalty effect of the same events depends on it
-UINT8 gubTownRebelSentiment[ NUM_TOWNS ] =
-{
-	0,	// not a town - blank sector index
- 90,	// OMERTA,	- They ARE the rebels!!!
- 30,	// DRASSEN,	- Rebel friendly, makes it pretty easy to get first mine's income going at the start
- 12,	// ALMA			- Military town, high loyalty to Queen, need quests to get 100%
- 15,	// GRUMM,		- Close to Meduna, strong influence
- 20,	// TIXA,		- Not a real town
- 15,	// CAMBRIA, - Artificially much lower 'cause it's big and central and too easy to get loyalty up there
- 20,	// SAN_MONA,- Neutral ground, loyalty doesn't vary
- 20,	// ESTONI,	- Not a real town
- 20,	// ORTA,		- Not a real town
- 12,	// BALIME,	- Rich town, high loyalty to Queen
- 10,	// MEDUNA,	- Enemy HQ, for God's sake!
- 35,	// CHITZENA, - Artificially high 'cause there's not enough fights near it to get the loyalty up otherwise
-};
+UINT8 gubTownRebelSentiment[ MAX_TOWNS ]; // =
+//{
+//	0,	// not a town - blank sector index
+// 90,	// OMERTA,	- They ARE the rebels!!!
+// 30,	// DRASSEN,	- Rebel friendly, makes it pretty easy to get first mine's income going at the start
+// 12,	// ALMA			- Military town, high loyalty to Queen, need quests to get 100%
+// 15,	// GRUMM,		- Close to Meduna, strong influence
+// 20,	// TIXA,		- Not a real town
+// 15,	// CAMBRIA, - Artificially much lower 'cause it's big and central and too easy to get loyalty up there
+// 20,	// SAN_MONA,- Neutral ground, loyalty doesn't vary
+// 20,	// ESTONI,	- Not a real town
+// 20,	// ORTA,		- Not a real town
+// 12,	// BALIME,	- Rich town, high loyalty to Queen
+// 10,	// MEDUNA,	- Enemy HQ, for God's sake!
+// 35,	// CHITZENA, - Artificially high 'cause there's not enough fights near it to get the loyalty up otherwise
+//};
 
-BOOLEAN gfTownUsesLoyalty[ NUM_TOWNS ] =
-{
-	FALSE,		// not a town - blank sector index
-	TRUE	,		// OMERTA
-	TRUE,			// DRASSEN
-	TRUE,			// ALMA
-	TRUE,			// GRUMM
-	FALSE,		// TIXA
-	TRUE,			// CAMBRIA
-	FALSE,		// SAN_MONA
-	FALSE,		// ESTONI
-	FALSE,		// ORTA
-	TRUE,			// BALIME
-	TRUE,			// MEDUNA
-	TRUE,			// CHITZENA
-};
+BOOLEAN gfTownUsesLoyalty[ MAX_TOWNS ];// =
+//{
+//	FALSE,		// not a town - blank sector index
+//	TRUE	,		// OMERTA
+//	TRUE,			// DRASSEN
+//	TRUE,			// ALMA
+//	TRUE,			// GRUMM
+//	FALSE,		// TIXA
+//	TRUE,			// CAMBRIA
+//	FALSE,		// SAN_MONA
+//	FALSE,		// ESTONI
+//	FALSE,		// ORTA
+//	TRUE,			// BALIME
+//	TRUE,			// MEDUNA
+//	TRUE,			// CHITZENA
+//};
 
 // location of first enocunter with enemy
 INT16 sWorldSectorLocationOfFirstBattle = 0;
@@ -172,7 +172,7 @@ extern UINT32	guiNumWorldItems;
 // preprocess sector for mercs in it
 extern BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_X ][ 4 ];
 
-extern STR16 pTownNames[];
+extern CHAR16 pTownNames[MAX_TOWNS][MAX_TOWN_NAME_LENGHT];
 
 
 
@@ -1295,7 +1295,7 @@ void WriteOutDistancesBetweenTowns( void )
 
 	hFileHandle = FileOpen( "BinaryData\\TownDistances.dat", FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE );
 
-	FileWrite( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
+	FileWrite( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * MAX_TOWNS * MAX_TOWNS ), NULL );
 
 	// close file
   FileClose( hFileHandle );
@@ -1360,7 +1360,7 @@ void ReadInDistancesBetweenTowns( void )
 
 	hFileHandle = FileOpen( "BinaryData\\TownDistances.dat", FILE_ACCESS_READ, FALSE );
 
-	FileRead( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
+	FileRead( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * MAX_TOWNS * MAX_TOWNS ), NULL );
 
 	// close file
   FileClose( hFileHandle );
@@ -1432,8 +1432,8 @@ BOOLEAN SaveStrategicTownLoyaltyToSaveGameFile( HWFILE hFile )
 	UINT32	uiNumBytesWritten;
 
 	//Save the Town Loyalty
-	FileWrite( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * NUM_TOWNS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( TOWN_LOYALTY ) * NUM_TOWNS )
+	FileWrite( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * MAX_TOWNS, &uiNumBytesWritten );
+	if( uiNumBytesWritten != sizeof( TOWN_LOYALTY ) * MAX_TOWNS )
 	{
 		return( FALSE );
 	}
@@ -1446,8 +1446,8 @@ BOOLEAN LoadStrategicTownLoyaltyFromSavedGameFile( HWFILE hFile )
 	UINT32	uiNumBytesRead;
 
 	//Restore the Town Loyalty
-	FileRead( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * NUM_TOWNS, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( TOWN_LOYALTY ) * NUM_TOWNS )
+	FileRead( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * MAX_TOWNS, &uiNumBytesRead );
+	if( uiNumBytesRead != sizeof( TOWN_LOYALTY ) * MAX_TOWNS )
 	{
 		return( FALSE );
 	}
@@ -1550,8 +1550,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 {
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyChange = 0;
-	UINT16 str[256];
-	UINT16 pSectorString[128];
+	wchar_t str[256];
+	wchar_t pSectorString[128];
 
 
 	// get town id
@@ -1678,7 +1678,7 @@ void AffectAllTownsLoyaltyByDistanceFrom( INT32 iLoyaltyChange, INT16 sSectorX, 
 	INT8 bTownId;
 	UINT32 uiIndex;
 	INT32 iThisDistance;
-	INT32 iShortestDistance[NUM_TOWNS];
+	INT32 iShortestDistance[MAX_TOWNS];
 	INT32 iPercentAdjustment;
 	INT32 iDistanceAdjustedLoyalty;
 

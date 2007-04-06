@@ -28,15 +28,16 @@ extern INT16	gWorldSectorX;
 extern INT16	gWorldSectorY;
 extern INT8		gbWorldSectorZ;
 
-#define NUMBER_OF_SAMS 4
- 
+// SAM definitions
+extern UINT8	NUMBER_OF_SAMS;
+#define MAX_NUMBER_OF_SAMS	50	//4 
 
-extern INT16 pSamList[ NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoAList[ NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoBList[ NUMBER_OF_SAMS ];
+extern INT16 pSamList[ MAX_NUMBER_OF_SAMS ];
+extern INT16 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
+extern INT16 pSamGridNoBList[ MAX_NUMBER_OF_SAMS ];
 
 extern BOOLEAN fFoundOrta;
-extern BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
+extern BOOLEAN fSamSiteFound[ MAX_NUMBER_OF_SAMS ];
 
 extern	BOOLEAN		gfUseAlternateMap;
 
@@ -81,6 +82,8 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 BOOLEAN ReadInMapStructure(STR fileName);
+BOOLEAN ReadInStrategicMapSectorTownNames(STR fileName);
+BOOLEAN WriteInStrategicMapSectorTownNames(STR fileName);
 
 // get short sector name without town name
 void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
@@ -90,7 +93,7 @@ void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
 //Examples:		A9		
 //						A10_B1		
 //						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-void GetLoadedSectorString( UINT16 *pString );
+void GetLoadedSectorString( wchar_t *pString );
 
 // This will get an ID string like A9- OMERTA...
 void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 * zString, BOOLEAN fDetailed );

@@ -270,72 +270,72 @@ INT16						gsJumpOverGridNo = 0;
 
 UI_EVENT gEvents[ NUM_UI_EVENTS ] =
 {	
-	0,																											IDLE_MODE,						UIHandleIDoNothing, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											IDLE_MODE,						UIHandleExit, FALSE, FALSE, 0,  0, 0,  0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleNewMerc, FALSE, FALSE, 0, 0, 0,  0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleNewBadMerc, FALSE, FALSE, 0, 0, 0,  0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleSelectMerc, FALSE, FALSE, 0, 0, 0,  0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleEnterEditMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleEnterPalEditMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleEndTurn, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleTestHit, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleChangeLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleIOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleIChangeToIdle, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleILoadLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleISoldierDebug, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILOSDebug, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILevelNodeDebug, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleIGotoDemoMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFirstLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadSecondLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadThirdLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFourthLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFifthLevel, FALSE, FALSE, 0, 0, 0, 0,
+	0,						IDLE_MODE,				UIHandleIDoNothing, FALSE, FALSE, 0, 0, 0, 0,
+	0,						IDLE_MODE,				UIHandleExit, FALSE, FALSE, 0,  0, 0,  0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleNewMerc, FALSE, FALSE, 0, 0, 0,  0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleNewBadMerc, FALSE, FALSE, 0, 0, 0,  0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleSelectMerc, FALSE, FALSE, 0, 0, 0,  0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleEnterEditMode, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleEnterPalEditMode, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleEndTurn, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleTestHit, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleChangeLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	IDLE_MODE,				UIHandleIOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	IDLE_MODE,				UIHandleIChangeToIdle, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	IDLE_MODE,				UIHandleILoadLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleISoldierDebug, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILOSDebug, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILevelNodeDebug, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleIGotoDemoMode, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILoadFirstLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILoadSecondLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILoadThirdLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILoadFourthLevel, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	DONT_CHANGEMODE,		UIHandleILoadFifthLevel, FALSE, FALSE, 0, 0, 0, 0,
 
-	0,																											ENEMYS_TURN_MODE,			UIHandleIETOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleIETEndTurn, FALSE, FALSE, 0, 0, 0, 0,
+	0,						ENEMYS_TURN_MODE,		UIHandleIETOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleIETEndTurn, FALSE, FALSE, 0, 0, 0, 0,
 
 
-	0,																											MOVE_MODE,						UIHandleMOnTerrain, FALSE, FALSE, 0, 0, 0, 0, 
-	UIEVENT_SINGLEEVENT,																		ACTION_MODE,					UIHandleMChangeToAction, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		HANDCURSOR_MODE,			UIHandleMChangeToHandMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleMCycleMovement, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		CONFIRM_MOVE_MODE,		UIHandleMCycleMoveAll, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SNAPMOUSE,																			ADJUST_STANCE_MODE,		UIHandleMAdjustStanceMode, FALSE, FALSE, 0, 0, 0, 0, 
-	0,																											POPUP_MODE,						UIHandlePOPUPMSG, FALSE, FALSE, 0, 0, 0, 0, 
-	0,																											ACTION_MODE,					UIHandleAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleAChangeToMove, FALSE, FALSE, 0, 0, 0, 0, 
-	UIEVENT_SINGLEEVENT,																		CONFIRM_ACTION_MODE,	UIHandleAChangeToConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleAEndAction, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SNAPMOUSE,																			MENU_MODE,						UIHandleMovementMenu, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SNAPMOUSE,																			MENU_MODE,						UIHandlePositionMenu, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											CONFIRM_MOVE_MODE,	  UIHandleCWait, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleCMoveMerc, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											CONFIRM_MOVE_MODE,		UIHandleCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											MOVE_MODE,						UIHandlePADJAdjustStance, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											CONFIRM_ACTION_MODE,	UIHandleCAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		ACTION_MODE,					UIHandleCAMercShoot, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		ACTION_MODE,					UIHandleCAEndConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											HANDCURSOR_MODE,			UIHandleHCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											GETTINGITEM_MODE,			UIHandleHCGettingItem, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											LOOKCURSOR_MODE,			UIHandleLCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		LOOKCURSOR_MODE,			UIHandleLCChangeToLook, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleLCLook, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											TALKINGMENU_MODE,			UIHandleTATalkingMenu, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											TALKCURSOR_MODE,			UIHandleTOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		TALKCURSOR_MODE,			UIHandleTChangeToTalking, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											LOCKUI_MODE,					UIHandleLUIOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											LOCKUI_MODE,					UIHandleLUIBeginLock, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleLUIEndLock, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											OPENDOOR_MENU_MODE,		UIHandleOpenDoorMenu, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											LOCKOURTURN_UI_MODE,	UIHandleLAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											LOCKOURTURN_UI_MODE,	UIHandleLABeginLockOurTurn, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleLAEndLockOurTurn, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											EXITSECTORMENU_MODE,	UIHandleEXExitSectorMenu, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											RUBBERBAND_MODE,			UIHandleRubberBandOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											JUMPOVER_MODE,				UIHandleJumpOverOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											MOVE_MODE,						UIHandleJumpOver, FALSE, FALSE, 0, 0, 0, 0,
+	0,						MOVE_MODE,				UIHandleMOnTerrain, FALSE, FALSE, 0, 0, 0, 0, 
+	UIEVENT_SINGLEEVENT,	ACTION_MODE,			UIHandleMChangeToAction, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	HANDCURSOR_MODE,		UIHandleMChangeToHandMode, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleMCycleMovement, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	CONFIRM_MOVE_MODE,		UIHandleMCycleMoveAll, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SNAPMOUSE,		ADJUST_STANCE_MODE,		UIHandleMAdjustStanceMode, FALSE, FALSE, 0, 0, 0, 0, 
+	0,						POPUP_MODE,				UIHandlePOPUPMSG, FALSE, FALSE, 0, 0, 0, 0, 
+	0,						ACTION_MODE,			UIHandleAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleAChangeToMove, FALSE, FALSE, 0, 0, 0, 0, 
+	UIEVENT_SINGLEEVENT,	CONFIRM_ACTION_MODE,	UIHandleAChangeToConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleAEndAction, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SNAPMOUSE,		MENU_MODE,				UIHandleMovementMenu, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SNAPMOUSE,		MENU_MODE,				UIHandlePositionMenu, FALSE, FALSE, 0, 0, 0, 0,
+	0,						CONFIRM_MOVE_MODE,		UIHandleCWait, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleCMoveMerc, FALSE, FALSE, 0, 0, 0, 0,
+	0,						CONFIRM_MOVE_MODE,		UIHandleCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						MOVE_MODE,				UIHandlePADJAdjustStance, FALSE, FALSE, 0, 0, 0, 0,
+	0,						CONFIRM_ACTION_MODE,	UIHandleCAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	ACTION_MODE,			UIHandleCAMercShoot, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	ACTION_MODE,			UIHandleCAEndConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
+	0,						HANDCURSOR_MODE,		UIHandleHCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						GETTINGITEM_MODE,		UIHandleHCGettingItem, FALSE, FALSE, 0, 0, 0, 0,
+	0,						LOOKCURSOR_MODE,		UIHandleLCOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	LOOKCURSOR_MODE,		UIHandleLCChangeToLook, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleLCLook, FALSE, FALSE, 0, 0, 0, 0,
+	0,						TALKINGMENU_MODE,		UIHandleTATalkingMenu, FALSE, FALSE, 0, 0, 0, 0,
+	0,						TALKCURSOR_MODE,		UIHandleTOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	TALKCURSOR_MODE,		UIHandleTChangeToTalking, FALSE, FALSE, 0, 0, 0, 0,
+	0,						LOCKUI_MODE,			UIHandleLUIOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						LOCKUI_MODE,			UIHandleLUIBeginLock, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleLUIEndLock, FALSE, FALSE, 0, 0, 0, 0,
+	0,						OPENDOOR_MENU_MODE,		UIHandleOpenDoorMenu, FALSE, FALSE, 0, 0, 0, 0,
+	0,						LOCKOURTURN_UI_MODE,	UIHandleLAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						LOCKOURTURN_UI_MODE,	UIHandleLABeginLockOurTurn, FALSE, FALSE, 0, 0, 0, 0,
+	UIEVENT_SINGLEEVENT,	MOVE_MODE,				UIHandleLAEndLockOurTurn, FALSE, FALSE, 0, 0, 0, 0,
+	0,						EXITSECTORMENU_MODE,	UIHandleEXExitSectorMenu, FALSE, FALSE, 0, 0, 0, 0,
+	0,						RUBBERBAND_MODE,		UIHandleRubberBandOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						JUMPOVER_MODE,			UIHandleJumpOverOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
+	0,						MOVE_MODE,				UIHandleJumpOver, FALSE, FALSE, 0, 0, 0, 0,
 
 };
 
@@ -1063,9 +1063,9 @@ UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 			{
 				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Merc hire failed:  Either already hired or dislikes you." );
 			}
-			else if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
+			else if( bReturnCode == MERC_HIRE_OVER_18_MERCS_HIRED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Can't hire more than 20 mercs." );
+				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Can't hire more than 18 mercs." );
 			}
 			else
 			{
@@ -1172,7 +1172,11 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 	}
 	else
 	{
-		if( FileExists( "..\\AutoSave.pls" ) && CanGameBeSaved() )
+		// WANNE: Changed the auto save depending from AutoSave.pls
+		// to an option setting.
+		// So no more need to have a file AutoSave.pls in you ja2 root directory
+		//if( FileExists( "..\\AutoSave.pls" ) && CanGameBeSaved() )
+		if (gGameSettings.fOptions[TOPTION_USE_AUTO_SAVE] == TRUE && CanGameBeSaved() )
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;
@@ -2550,7 +2554,7 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 				// If this is one of our own guys.....pop up requiester...
 				if ( ( pTSoldier->bTeam == gbPlayerNum || pTSoldier->bTeam == MILITIA_TEAM ) && Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass != IC_MEDKIT && !Item[pSoldier->inv[ HANDPOS ].usItem].gascan && gTacticalStatus.ubLastRequesterTargetID != pTSoldier->ubProfile && ( pTSoldier->ubID != pSoldier->ubID ) )
 				{
-					INT16							zStr[200];
+					wchar_t	zStr[200];
 
 					gpRequesterMerc			  = pSoldier;
 					gpRequesterTargetMerc = pTSoldier;
@@ -3965,6 +3969,10 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiFlags 
 			 if ( sGotLocation != NOWHERE )
 			 {
 				 sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, TRUE );
+
+				 // WANNE: Turn around APs were missing!
+				//sAPCost += APsToTurnAround(pSoldier, sAdjustedGridNo);
+				
 				 sAPCost += UIPlotPath( pSoldier, sGotLocation, NO_COPYROUTE, fPlot, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints);
 
 				 if ( sGotLocation != pSoldier->sGridNo && fGotAdjacent )
@@ -4077,6 +4085,39 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiFlags 
 	}
 
 	return( bReturnCode );
+}
+
+// WANNE: Calculate the APs to turn around
+INT16 APsToTurnAround(SOLDIERTYPE *pSoldier, INT16 sAdjustedGridNo)
+{
+	INT16 sAPCost = 0;
+	BOOLEAN fInitalMove = FALSE;
+
+	// Get the new direction
+	UINT8 ubDirection = (UINT8)GetDirectionFromGridNo( sAdjustedGridNo, pSoldier );
+
+	// If new direction is not the same than the old direction
+	if ( pSoldier->bDesiredDirection != ubDirection)
+	{
+		if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_BREATH | ANIM_OK_CHARGE_AP_FOR_TURN | ANIM_FIREREADY ) && !fInitalMove && !pSoldier->fDontChargeTurningAPs )
+		{
+			// Which position has the soldier?
+			switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
+			{
+				case ANIM_STAND:
+					sAPCost += AP_LOOK_STANDING;
+					break;
+				case ANIM_CROUCH:
+					sAPCost += AP_LOOK_CROUCHED;
+					break;
+				case ANIM_PRONE:
+					sAPCost += AP_LOOK_PRONE;
+					break;
+			}
+		}
+	}
+
+	return sAPCost;
 }
 
 
@@ -4526,14 +4567,16 @@ UINT32 UIHandleLCOnTerrain( UI_EVENT *pUIEvent )
 	{
 		usAnimState = PickSoldierReadyAnimation( pSoldier, FALSE );
 
+		gsCurrentActionPoints = 0;
+
+		// Lesh: raise weapon include APs to set weapon towards enemy and APs to aquire/change target
+		if( pSoldier->sLastTarget != sXPos + (MAXCOL * sYPos ) )
+			gsCurrentActionPoints = AP_CHANGE_TARGET;
+
 		if( usAnimState != INVALID_ANIMATION )
 		{
-			gsCurrentActionPoints = GetAPsToReadyWeapon( pSoldier, usAnimState );// Madd: removed the next part since it was deducting 2 extra aps that would not be deducted when readying the old way //+ AP_TO_AIM_TILE_IF_GETTING_READY;
+			gsCurrentActionPoints += GetAPsToReadyWeapon( pSoldier, usAnimState );// Madd: removed the next part since it was deducting 2 extra aps that would not be deducted when readying the old way //+ AP_TO_AIM_TILE_IF_GETTING_READY;
 		}
-		else if( pSoldier->sLastTarget != sXPos + (MAXCOL * sYPos ) )
-			gsCurrentActionPoints = AP_TO_AIM_TILE_IF_ALREADY_READY;
-		else
-			gsCurrentActionPoints = 0;
 
 		gfUIHandleShowMoveGrid = TRUE;
 		gsUIHandleShowMoveGridLocation = sXPos + (MAXCOL * sYPos );
@@ -4548,7 +4591,7 @@ UINT32 UIHandleLCOnTerrain( UI_EVENT *pUIEvent )
 		gfUIDisplayActionPointsInvalid = TRUE;
 	}
 
-	HandleSight( pSoldier, SIGHT_LOOK ); 
+	//HandleSight( pSoldier, SIGHT_LOOK ); 
 
 	return( GAME_SCREEN );
 
@@ -4601,21 +4644,19 @@ BOOLEAN MakeSoldierTurn( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos )
 	{
 		usAnimState = PickSoldierReadyAnimation( pSoldier, FALSE );
 
-		sAPCostToReady = 0;
+		sAPCostToReady = sAPCost = 0;
+
+		// Lesh: raise weapon include APs to set weapon towards enemy and APs to aquire/change target
+		if( pSoldier->sLastTarget != sXPos + (MAXCOL * sYPos ) )
+			sAPCost = AP_CHANGE_TARGET;
 
 		if( usAnimState != INVALID_ANIMATION )
 		{
 			sAPCostToReady = GetAPsToReadyWeapon( pSoldier, usAnimState );
-			sAPCost = sAPCostToReady; // Madd: removed this part since it was costing too many aps to ready weapon -- see other comment //+ AP_TO_AIM_TILE_IF_GETTING_READY;
 		}
-		else if( pSoldier->sLastTarget != sXPos + (MAXCOL * sYPos ) )
-			sAPCost = AP_TO_AIM_TILE_IF_ALREADY_READY;
-		else
-			return FALSE;
-
 
 		// Check AP cost...
-		if ( !EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
+		if ( !EnoughPoints( pSoldier, sAPCost + sAPCostToReady, 0, TRUE ) )
 		{
 			return( FALSE );
 		}
@@ -4629,9 +4670,7 @@ BOOLEAN MakeSoldierTurn( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos )
 		// Setting "Last Target"
 
 		pSoldier->sLastTarget = sXPos + (MAXCOL * sYPos);
-		DeductPoints( pSoldier, (INT16)(sAPCost - sAPCostToReady), 0 );
-
-		HandleSight( pSoldier, SIGHT_LOOK ); 
+		DeductPoints( pSoldier, sAPCost, 0 );
 
 		return( TRUE );
 	}
@@ -5674,45 +5713,52 @@ BOOLEAN HandleTalkInit(  )
 
 			if ( ( uiRange > commandRange ) && ( !CheckIfRadioIsEquipped() ) ) //lal
 			{
-				// First get an adjacent gridno....
-				sActionGridNo =  FindAdjacentGridEx( pSoldier, pTSoldier->sGridNo, &ubDirection, NULL, FALSE, TRUE );
-
-				if ( sActionGridNo == -1 )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-					return( FALSE );
-				}
-
-				if ( UIPlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints ) == 0 )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-					return( FALSE );
-				}
-
-				// Walk up and talk to buddy....
-				gfNPCCircularDistLimit = TRUE;
-				sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, pSoldier->usUIMovementMode, pTSoldier->sGridNo, (NPC_TALK_RADIUS-1), &ubNewDirection, TRUE );
-				gfNPCCircularDistLimit = FALSE;
-
-				// First calculate APs and validate...
-				sAPCost = AP_TALK;				
-				//sAPCost += UIPlotPath( pSoldier, sGoodGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
-
-				// Check AP cost...
-				if ( !EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
+				if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )				
 				{
 					return( FALSE );
 				}
+				else
+				{
+					// First get an adjacent gridno....
+					sActionGridNo =  FindAdjacentGridEx( pSoldier, pTSoldier->sGridNo, &ubDirection, NULL, FALSE, TRUE );
 
-				// Now walkup to talk....
-				pSoldier->ubPendingAction = MERC_TALK;
-				pSoldier->uiPendingActionData1 = pTSoldier->ubID;
-				pSoldier->ubPendingActionAnimCount = 0;
+					if ( sActionGridNo == -1 )
+					{
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+						return( FALSE );
+					}
 
-				// WALK UP TO DEST FIRST
-				EVENT_InternalGetNewSoldierPath( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );					
+					if ( UIPlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints ) == 0 )
+					{
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+						return( FALSE );
+					}
 
-				return( FALSE );
+					// Walk up and talk to buddy....
+					gfNPCCircularDistLimit = TRUE;
+					sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, pSoldier->usUIMovementMode, pTSoldier->sGridNo, (NPC_TALK_RADIUS-1), &ubNewDirection, TRUE );
+					gfNPCCircularDistLimit = FALSE;
+
+					// First calculate APs and validate...
+					sAPCost = AP_TALK;				
+					//sAPCost += UIPlotPath( pSoldier, sGoodGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+
+					// Check AP cost...
+					if ( !EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
+					{
+						return( FALSE );
+					}
+
+					// Now walkup to talk....
+					pSoldier->ubPendingAction = MERC_TALK;
+					pSoldier->uiPendingActionData1 = pTSoldier->ubID;
+					pSoldier->ubPendingActionAnimCount = 0;
+
+					// WALK UP TO DEST FIRST
+					EVENT_InternalGetNewSoldierPath( pSoldier, sGoodGridNo, pSoldier->usUIMovementMode , TRUE , pSoldier->fNoAPToFinishMove );					
+
+					return( FALSE );
+				}
 			}
 			else
 			{

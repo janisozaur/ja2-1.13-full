@@ -80,7 +80,13 @@ extern UINT8			gubAssertString[128];
 
 //*******************************************************************************************
 #endif
- 
+
+
+// Kaiden: Added this for Map Editor
+#ifdef JA2BETAVERSION
+	extern UINT8			gubAssertString[128];
+#endif
+	
 // Moved these out of the defines - debug mgr always initialized
 #define InitializeDebugManager()		DbgInitialize()
 #define ShutdownDebugManager()			DbgShutdown()
@@ -129,7 +135,9 @@ extern void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel
 
 extern	BOOLEAN	DbgSetDebugLevel(UINT16 TopicId, UINT8 uiDebugLevel);
 extern	void		DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine );
-//extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
+#if _MSC_VER <= 1200
+	extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
+#endif
 extern	void		DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage );
 extern	void		DbgClearAllTopics( void );
 extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString);

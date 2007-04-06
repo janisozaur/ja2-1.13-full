@@ -142,7 +142,7 @@ UINT16			gusSubtitleBoxHeight;
 INT32				giTextBoxOverlay = -1;
 BOOLEAN			gfFacePanelActive = FALSE;
 UINT32			guiScreenIDUsedWhenUICreated;
-INT16					gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
+wchar_t					gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
 MOUSE_REGION	gTextBoxMouseRegion;
 MOUSE_REGION	gFacePopupMouseRegion;
 BOOLEAN				gfUseAlternateDialogueFile = FALSE;
@@ -187,12 +187,12 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
 
 // Handler functions for tactical ui diaplay
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr );
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr );
+void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr );
+void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr );
 void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex );
 
 void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr );
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr );
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr );
 
 
 void HandleExternNPCSpeechFace( INT32 iIndex );
@@ -1184,7 +1184,7 @@ void HandleDialogue( )
 	MemFree( QItem );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, UINT16 * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
@@ -1621,7 +1621,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	CHECKF( iFaceIndex != -1 );
 
   if ( !GetDialogue( ubCharacterNum, 
-                    usQuoteNum, DIALOGUESIZE, (UINT16 *)gzQuoteStr, &uiSoundID, zSoundString) )
+                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, &uiSoundID, zSoundString) )
   {
     return( FALSE );
   }
@@ -1648,7 +1648,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 }
 
 
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr )
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr )
 {
 
 	// Show text, if on
@@ -1717,11 +1717,20 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 	{
 		if ( fWavFile )
 		{
+			// Lesh: patch to allow playback ogg speech files
 			// build name of wav file (characternum + quotenum)
 			#ifdef RUSSIAN
-				sprintf( (char *)zFileName,"NPC_SPEECH\\g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( (char *)zFileName,"NPC_SPEECH\\g_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				if ( !FileExists( (STR)zFileName ) )
+				{
+					sprintf( (char *)zFileName,"NPC_SPEECH\\g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				}
 			#else
-				sprintf( (char *)zFileName,"NPC_SPEECH\\d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( (char *)zFileName,"NPC_SPEECH\\d_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				if ( !FileExists( (STR)zFileName ) )
+				{
+					sprintf( (char *)zFileName,"NPC_SPEECH\\d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				}
 			#endif
 		}
 		else
@@ -1753,7 +1762,12 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 
 		if ( fWavFile )
 		{
-			sprintf( (char *)zFileName,"NPC_SPEECH\\%03d_%03d.wav",ubFileNumID,usQuoteNum );
+			// Lesh: patch to allow playback ogg speech files
+			sprintf( (char *)zFileName,"NPC_SPEECH\\%03d_%03d.ogg",ubFileNumID,usQuoteNum );
+			if ( !FileExists( (STR)zFileName ) )
+			{
+				sprintf( (char *)zFileName,"NPC_SPEECH\\%03d_%03d.wav",ubFileNumID,usQuoteNum );
+			}
 		}
 		else
 		{
@@ -1768,12 +1782,20 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 			#ifdef RUSSIAN
 				if( ubCharacterNum >= FIRST_RPC && ubCharacterNum < GASTON && gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
 				{
-					sprintf( (char *) zFileName,"SPEECH\\r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					sprintf( (char *) zFileName,"SPEECH\\r_%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+					if ( !FileExists( (STR)zFileName ) )
+					{
+						sprintf( (char *) zFileName,"SPEECH\\r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					}
 				}
 				else
 			#endif
 			{	// build name of wav file (characternum + quotenum)
-				sprintf( (char *)zFileName,"SPEECH\\%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( (char *)zFileName,"SPEECH\\%03d_%03d.ogg",ubCharacterNum,usQuoteNum );
+				if ( !FileExists( (STR)zFileName ) )
+				{
+					sprintf( (char *)zFileName,"SPEECH\\%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				}
 			}
 		}
 		else
@@ -1801,7 +1823,7 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 	return( FileExists( (STR)pFilename ) );
 }
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, UINT16 * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t * zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
   UINT8 *pFilename;
 
@@ -1868,9 +1890,9 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 
 
 // Handlers for tactical UI stuff
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr )
+void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t									zText[ QUOTE_MESSAGE_SIZE ];
 
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
@@ -1930,9 +1952,9 @@ void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
 }
 
 
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr )
+void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t									zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
 
 	//BUild text

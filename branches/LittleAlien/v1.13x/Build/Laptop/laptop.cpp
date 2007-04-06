@@ -267,6 +267,24 @@ extern BOOLEAN fFirstTimeInGameScreen;
 #define		LAPTOP__NEW_EMAIL_ICON_X						iScreenWidthOffset + 67
 #define		LAPTOP__NEW_EMAIL_ICON_Y						LAPTOP__NEW_FILE_ICON_Y
 
+// WANNE
+INT32 guiCurrentGunFilterMode;
+INT32 guiPrevGunFilterMode;
+
+INT32 guiCurrentAmmoFilterMode;
+INT32 guiPrevAmmoFilterMode;
+
+INT32 guiCurrentUsedFilterMode;
+INT32 guiPrevUsedFilterMode;
+
+INT32 guiCurrentArmourFilterMode;
+INT32 guiPrevArmourFilterMode;
+
+INT32 guiCurrentMiscFilterMode;
+INT32 guiPrevMiscFilterMode;
+
+BOOLEAN	gbMessageDisplayed;
+
 
 // Mode values
 UINT32 guiCurrentLaptopMode;
@@ -2627,7 +2645,7 @@ void HaventMadeImpMercEmailCallBack()
 	if( ( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) && ( LaptopSaveInfo.fSentImpWarningAlready == FALSE ) )
 	{
 		LaptopSaveInfo.fSentImpWarningAlready = TRUE;
-		AddEmail(IMP_EMAIL_AGAIN,IMP_EMAIL_AGAIN_LENGTH,1, GetWorldTotalMin( ) );
+		AddEmail(IMP_EMAIL_AGAIN,IMP_EMAIL_AGAIN_LENGTH,1, GetWorldTotalMin( ), -1 );
 	}
 }
 
@@ -4421,6 +4439,8 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	return;
 }
 
+template BOOLEAN DoLapTopMessageBox<wchar_t *>(UINT8, wchar_t *, UINT32, UINT8, MSGBOX_CALLBACK);
+template BOOLEAN DoLapTopMessageBox<wchar_t const *>(UINT8, wchar_t const *, UINT32, UINT8, MSGBOX_CALLBACK);
 template BOOLEAN DoLapTopMessageBox<unsigned short *>(UINT8, unsigned short *, UINT32, UINT8, MSGBOX_CALLBACK);
 template BOOLEAN DoLapTopMessageBox<unsigned short const *>(UINT8, unsigned short const *, UINT32, UINT8, MSGBOX_CALLBACK);
 template <typename string2>
@@ -4444,7 +4464,7 @@ BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, string2 zString, UINT32 uiExitScreen
 }
 
 
-BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
@@ -4456,7 +4476,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 
 	return( ( iLaptopMessageBox != -1 ) );
 }
 
-BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect CenteringRect= {iScreenWidthOffset, iScreenHeightOffset,
 		iScreenWidthOffset + 640, INV_INTERFACE_START_Y };

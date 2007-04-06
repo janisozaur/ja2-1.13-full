@@ -2512,7 +2512,7 @@ DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("physics.cpp line 2337"));
 		if ( Item[pObject->Obj.usItem].flare )
 		{
 			//if the light object will ber created OFF the ground
-			if( pObject->Position.z > 0 )
+			if( pObject->Position.z > 0 && FindBuilding(pObject->sGridNo) )
 			{
 				//we cannot create the light source above the ground, or on a roof.  The system doesnt support it.
 				AddItemToPool( pObject->sGridNo, &( pObject->Obj ), 1, 1, 0, -1 );
@@ -2521,7 +2521,7 @@ DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("physics.cpp line 2337"));
 			{
 				// Add a light effect...
 				
-				NewLightEffect( pObject->sGridNo, Explosive[Item[pObject->Obj.usItem].ubClassIndex].ubDuration , Explosive[Item[pObject->Obj.usItem].ubClassIndex].ubStartRadius );
+				NewLightEffect( pObject->sGridNo, (UINT8)Explosive[Item[pObject->Obj.usItem].ubClassIndex].ubDuration , (UINT8)Explosive[Item[pObject->Obj.usItem].ubClassIndex].ubStartRadius );
 			}
 		}
 		else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE  )

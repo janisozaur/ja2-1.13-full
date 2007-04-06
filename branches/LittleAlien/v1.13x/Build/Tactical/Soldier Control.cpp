@@ -1333,6 +1333,7 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 // THIS IS CALLED FROM AN EVENT ( S_CHANGESTATE )!
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"EVENT_InitNewSoldierAnim");
 	UINT16  usNewGridNo = 0;
 	INT16		sAPCost = 0;
 	INT16		sBPCost = 0;
@@ -2244,6 +2245,16 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	// Setup offset information for UI above guy
 	SetSoldierLocatorOffsets( pSoldier );
 
+	// Lesh: test fix visibility after raising gun
+	if ( ( gAnimControl[ pSoldier->usOldAniState ].uiFlags & ANIM_RAISE_WEAPON) && (gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY) )
+	//equivalent if ( (pSoldier->usAnimState == AIM_RIFLE_PRONE) || (pSoldier->usAnimState == AIM_RIFLE_CROUCH) || (pSoldier->usAnimState == AIM_RIFLE_STAND) )
+	{
+		if ( (pSoldier->usOldAniState == READY_RIFLE_STAND) || (pSoldier->usOldAniState == READY_RIFLE_CROUCH) || (pSoldier->usOldAniState == READY_RIFLE_PRONE) )
+		{
+			HandleSight(pSoldier,SIGHT_LOOK);
+		}
+	}
+
 	// If our own guy...
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
@@ -2827,6 +2838,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 				pSoldier->bBulletsLeft = __min( pSoldier->bDoAutofire, pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft );
 			else
 			{
+				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"EVENT_FireSoldierWeapon: do burst");
 				if ( pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST )
 					pSoldier->bBulletsLeft = __min( Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[pSoldier->ubAttackingHand])].ubShotsPerBurst, pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft );
 				else
@@ -3547,11 +3559,58 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 		ubReason = TAKE_DAMAGE_HANDTOHAND;
 	}
         // marke added one 'or' for explosive ammo. variation of: AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1
-	// marke need another attacker id assignment
-	//	MercPtrs[ubAttackerID]->bLastAttackHit = TRUE;
 	//  extracting attacker´s ammo type
 	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
 	{	
+		INT8 bDeafValue;
+
+		bDeafValue = Explosive[ Item[ usWeaponIndex ].ubClassIndex ].ubVolume / 10;
+		if ( bDeafValue == 0 )
+			bDeafValue = 1;
+
+		// Lesh: flashbang does damage
+		switch ( ubSpecial )
+		{
+		case FIRE_WEAPON_BLINDED_AND_DEAFENED:
+			pSoldier->bDeafenedCounter = bDeafValue;
+		    //ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Soldier is blinded and deafened" );
+
+			// if soldier in building OR underground
+			if ( InBuilding(sLocationGrid) || (gbWorldSectorZ) )
+			{
+				// deal max special damage
+				pSoldier->bBlindedCounter = (INT8)Explosive[ Item[ usWeaponIndex ].ubClassIndex ].ubDuration;
+				// say quote
+				if (pSoldier->uiStatusFlags & SOLDIER_PC)
+				{
+					TacticalCharacterDialogue( pSoldier, QUOTE_BLINDED );
+				}
+			}
+            else if ( NightTime() ) // if soldier outside at night
+			{
+				// halve effect
+				pSoldier->bBlindedCounter = (INT8)Explosive[ Item[ usWeaponIndex ].ubClassIndex ].ubDuration / 2;
+				if ( pSoldier->bBlindedCounter == 0 )
+					pSoldier->bBlindedCounter = 1;
+				pSoldier->bDeafenedCounter /= 2;
+				// say quote
+				if (pSoldier->uiStatusFlags & SOLDIER_PC)
+				{
+					TacticalCharacterDialogue( pSoldier, QUOTE_BLINDED );
+				}
+			}
+			DecayIndividualOpplist( pSoldier ); 
+			break;
+
+		case FIRE_WEAPON_BLINDED:
+			break;
+
+		case FIRE_WEAPON_DEAFENED:
+			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Soldier is deafened" );
+			pSoldier->bDeafenedCounter = bDeafValue;
+			break;
+		};
+
 		if ( usWeaponIndex == STRUCTURE_EXPLOSION )
 		{
 			ubReason = TAKE_DAMAGE_STRUCTURE_EXPLOSION;
@@ -4108,11 +4167,97 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
     return;
   }
 
+	// Lesh: possible soldier behavior when affected by flashbang
+	// Soldier can:
+	//   1. stand as if there was no explosion at all
+	//   2. crouch. represent that soldier didn't expect such blow and instinctively
+	//      made defensive movement to protect his body
+	//   3. fall forward. again, he didn't expect that something will explode behind
+	//      him and deafens him
+	//   4. fall backward. unexpected blast, fear, clumsy moves and soldier flies backward.
+
 	// Based on stance, select generic hit animation
 	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		case ANIM_STAND:
+			if ( ubSpecial == FIRE_WEAPON_DEAFENED )
+			{
+				switch( Random(10) )
+				{
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+					// 6 of 10 - crouch
+					ChangeSoldierStance( pSoldier, ANIM_CROUCH );
+					break;
+				case 6:
+				case 7:
+				case 8:
+					// 3 of 10 - fall forward
+                    BeginTyingToFall( pSoldier );
+					EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
+					break;
+				case 9:
+					// 1 of 10 - still standing
+					DoGenericHit( pSoldier, 0, bDirection );
+					break;
+				};
+				break;
+			}
+			else if ( ubSpecial == FIRE_WEAPON_BLINDED_AND_DEAFENED )
+			{
+				switch( Random(10) )
+				{
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					// 5 of 10 - crouch
+					ChangeSoldierStance( pSoldier, ANIM_CROUCH );
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+					// 4 of 10 - fall backward (if possible) either forward
+					// Check behind us!
+					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
+					{
+						EVENT_SetSoldierDirection( pSoldier, (INT8)bDirection );
+						EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
+						ChangeToFallbackAnimation( pSoldier, (INT8)bDirection );
+					}
+					else
+					{
+						BeginTyingToFall( pSoldier );
+						EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
+					}
+					break;
+				case 9:
+					// 1 of 10 - still standing
+					DoGenericHit( pSoldier, 0, bDirection );
+					break;
+				};
+				break;
+			}
+			else if ( ubSpecial == FIRE_WEAPON_BLINDED )
+			{
+			}
+
 		case ANIM_CROUCH:
+
+			if ( ubSpecial == FIRE_WEAPON_BLINDED ||
+				 ubSpecial == FIRE_WEAPON_BLINDED_AND_DEAFENED ||
+				 ubSpecial == FIRE_WEAPON_DEAFENED )
+			{
+				DoGenericHit( pSoldier, 0, bDirection );
+				break;
+			}
 
 			EVENT_SetSoldierDirection( pSoldier, (INT8)bDirection );
 			EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
@@ -4709,7 +4854,7 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usN
 					DeductPoints( pSoldier, AP_LOOK_PRONE, 0 );
 					break;
 			}
-
+		
 		}
 
 		pSoldier->fDontChargeTurningAPs = FALSE;
@@ -4916,6 +5061,12 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
         // Dirty panel
         fInterfacePanelDirty = DIRTYLEVEL2;
 			}
+		}
+
+
+		if ( pSoldier->bDeafenedCounter > 0 )
+		{
+			pSoldier->bDeafenedCounter--;
 		}
 
 		// ATE: To get around a problem...
@@ -5167,6 +5318,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		{
 			if ( ( (gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY ) && !pSoldier->fTurningFromPronePosition ) || pSoldier->ubBodyType == ROBOTNOWEAPON || pSoldier->ubBodyType == TANK_NW || pSoldier->ubBodyType == TANK_NE  )
 			{
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("TurnSoldier: EVENT_InitNewSoldierAnim") );
 				EVENT_InitNewSoldierAnim( pSoldier, SelectFireAnimation( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ), 0, FALSE );
 				pSoldier->fTurningToShoot = FALSE;
 
@@ -5744,6 +5896,7 @@ void AdjustAniSpeed( SOLDIERTYPE *pSoldier )
 
 void CalculateSoldierAniSpeed( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pStatsSoldier )
 {
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"CalculateSoldierAniSpeed");
 	UINT32 uiTerrainDelay;
 	UINT32 uiSpeed = 0;
  
@@ -5924,6 +6077,7 @@ void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE *pStatsSoldier;
 		
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"SetSoldierAniSpeed");
 
 	// ATE: If we are an enemy and are not visible......
 	// Set speed to 0
@@ -7238,18 +7392,31 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	// OK, build file and play!
 	if ( pSoldier->ubProfile != NO_PROFILE )
 	{
-		sprintf( zFilename, "BATTLESNDS\\%03d_%s.wav", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
+		sprintf( zFilename, "BATTLESNDS\\%03d_%s.ogg", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
+
+		if ( !FileExists( (STR)zFilename ) )
+		{
+			sprintf( zFilename, "BATTLESNDS\\%03d_%s.wav", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
+		}
 		
 		if ( !FileExists( zFilename ) )
 		{
 			// OK, temp build file...
 			if ( pSoldier->ubBodyType == REGFEMALE )
 			{
-				sprintf( zFilename, "BATTLESNDS\\f_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS\\f_%s.ogg", gBattleSndsData[ ubSoundID ].zName );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\f_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				}
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\m_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS\\m_%s.ogg", gBattleSndsData[ ubSoundID ].zName );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\m_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				}
 			}
 		}
 	}
@@ -7265,22 +7432,38 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 		{
 			if ( ubSoundID == BATTLE_SOUND_DIE1 )
 			{
-				sprintf( zFilename, "BATTLESNDS\\kid%d_dying.wav", pSoldier->ubBattleSoundID );
+				sprintf( zFilename, "BATTLESNDS\\kid%d_dying.ogg", pSoldier->ubBattleSoundID );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\kid%d_dying.wav", pSoldier->ubBattleSoundID );
+				}
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\kid%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS\\kid%d_%s.ogg", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\kid%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				}
 			}
 		}
 		else
 		{
 			if ( ubSoundID == BATTLE_SOUND_DIE1 )
 			{
-				sprintf( zFilename, "BATTLESNDS\\bad%d_die.wav", pSoldier->ubBattleSoundID );
+				sprintf( zFilename, "BATTLESNDS\\bad%d_die.ogg", pSoldier->ubBattleSoundID );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\bad%d_die.wav", pSoldier->ubBattleSoundID );
+				}
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\bad%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS\\bad%d_%s.ogg", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				if ( !FileExists( (STR)zFilename ) )
+				{
+					sprintf( zFilename, "BATTLESNDS\\bad%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				}
 			}
 		}
 	}
@@ -8125,6 +8308,7 @@ void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance )
 
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("SendBeginFireWeaponEvent"));
 	EV_S_BEGINFIREWEAPON		SBeginFireWeapon;
 
 	SBeginFireWeapon.usSoldierID			= pSoldier->ubID;
@@ -8625,14 +8809,12 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 		return;
 	}
 
-
 	if ( fChangeDirection )
 	{
-			// CHANGE DIRECTION AND GOTO ANIMATION NOW
+		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 	}
-
 
 	// Are we a martial artist?
 	if ( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) )
@@ -9189,6 +9371,7 @@ void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier )
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy )
 {
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("HaultSoldierFromSighting") );
 	// SEND HUALT EVENT!
 	//EV_S_STOP_MERC				SStopMerc;
 
@@ -9208,6 +9391,14 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	{
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
+		
+		//AXP 25.03.2007: Not needed anymore, grenade costs are only deducted on throwing the object
+		//AXP 24.03.2007: Give APs back if we wanted to throw grenade, but interrupt/spotting occured
+		//if ( pSoldier->pThrowParams->ubActionCode == THROW_ARM_ITEM )
+		//{
+		//	DeductPoints( pSoldier, -MinAPsToAttack( pSoldier, pSoldier->sTargetGridNo, FALSE ), 0 );
+		//}
+		
 		MemFree( pSoldier->pTempObject );
 		pSoldier->pTempObject					= NULL;
 		pSoldier->usPendingAnimation  = NO_PENDING_ANIMATION;
@@ -11297,7 +11488,7 @@ void DebugValidateSoldierData( )
 	SOLDIERTYPE		*pSoldier;
 	CHAR16 sString[ 1024 ];
 	BOOLEAN fProblemDetected = FALSE;
-	static uiFrameCount = 0;
+	static UINT32 uiFrameCount = 0;
 
 
 	// this function is too slow to run every frame, so do the check only every 50 frames

@@ -333,7 +333,7 @@ UINT16 GetAnimStateFromName( INT8 *zName )
 	// FInd the next animation with start height the same...
 	for ( cnt = 0; cnt < NUMANIMATIONSTATES; cnt++ )
 	{
-		if ( stricmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
+		if ( _stricmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
 		{
 			return( (UINT16) cnt );
 		}
@@ -350,7 +350,7 @@ void BuildListFile( )
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;
-	INT16 zError[128];
+	wchar_t zError[128];
 	
 
 	//Verify the existance of the header text file.

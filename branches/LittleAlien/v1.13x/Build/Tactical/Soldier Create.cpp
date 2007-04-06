@@ -405,12 +405,13 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			Soldier.ubBattleSoundID = (UINT8)Random( 3 );
 		}
 
+		// Lesh: disable this - yeah! its feminism! :)
 		// ATE: TEMP : No enemy women mercs (unless elite)!
-		if( Soldier.ubProfile == NO_PROFILE && Soldier.bTeam == ENEMY_TEAM && 
-				Soldier.ubBodyType == REGFEMALE && Soldier.ubSoldierClass != SOLDIER_CLASS_ELITE )
-		{
-			Soldier.ubBodyType = (UINT8)( REGMALE + Random( 3 ) );
-		}
+		//if( Soldier.ubProfile == NO_PROFILE && Soldier.bTeam == ENEMY_TEAM && 
+		//		Soldier.ubBodyType == REGFEMALE && Soldier.ubSoldierClass != SOLDIER_CLASS_ELITE )
+		//{
+		//	Soldier.ubBodyType = (UINT8)( REGMALE + Random( 3 ) );
+		//}
 
 		// ATE
 		// Set some values for variation in anims...
@@ -457,10 +458,10 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					if ( i != NO_SLOT && Random( 5 ) < SoldierDifficultyLevel( &Soldier ))
 					{
 						// start camouflaged
-						Soldier.bCamo = (INT8)Item[i].camobonus;
-						Soldier.urbanCamo = (INT8)Item[i].urbanCamobonus;
-						Soldier.desertCamo = (INT8)Item[i].desertCamobonus;
-						Soldier.snowCamo = (INT8)Item[i].snowCamobonus;
+						Soldier.bCamo = (INT8)Item[Soldier.inv[ i ].usItem].camobonus;
+						Soldier.urbanCamo = (INT8)Item[Soldier.inv[ i ].usItem].urbanCamobonus;
+						Soldier.desertCamo = (INT8)Item[Soldier.inv[ i ].usItem].desertCamobonus;
+						Soldier.snowCamo = (INT8)Item[Soldier.inv[ i ].usItem].snowCamobonus;
 					}
 				}
 			}
@@ -1095,6 +1096,42 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 			if ( ubProgress >= 50 && Chance( 20 ) )
 			{
 				pSoldier->ubSkillTrait2 = NIGHTOPS;
+			}
+		}
+	}
+
+
+
+	// Lesh: give to enemies AMBIDEXTEROUS skill and a second pistol
+	if( pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE || pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE_MILITIA )
+	{
+		if ( Chance( 20 ) )
+		{
+			pSoldier->ubSkillTrait1 = AMBIDEXT;
+			if ( Chance( 10 ) )
+			{
+				pSoldier->ubSkillTrait2 = AMBIDEXT;
+			}
+			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
+				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
+			{
+				memcpy( &(pCreateStruct->Inv[SECONDHANDPOS]), &(pCreateStruct->Inv[HANDPOS]), sizeof( OBJECTTYPE ) );
+			}
+		}
+	}
+	else if( pSoldier->ubSoldierClass == SOLDIER_CLASS_ARMY || pSoldier->ubSoldierClass == SOLDIER_CLASS_REG_MILITIA )
+	{
+		if ( Chance( 10 ) )
+		{
+			pSoldier->ubSkillTrait1 = AMBIDEXT;
+			if ( Chance( 5 ) )
+			{
+				pSoldier->ubSkillTrait2 = AMBIDEXT;
+			}
+			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
+				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
+			{
+				memcpy( &(pCreateStruct->Inv[SECONDHANDPOS]), &(pCreateStruct->Inv[HANDPOS]), sizeof( OBJECTTYPE ) );
 			}
 		}
 	}

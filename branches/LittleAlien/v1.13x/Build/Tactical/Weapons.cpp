@@ -957,7 +957,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] / 100;
+	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 
 //	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
 	bPlate = FindFirstArmourAttachment( pObj );
@@ -966,7 +966,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 		INT32 iValue2;
 
 		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
+		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
 
 		iValue += iValue2;
 	}
@@ -976,12 +976,23 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 {
 	INT32 iVest, iHelmet, iLeg;
+	INT32 iDivideValue;
 
 	if (pSoldier->inv[VESTPOS].usItem)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
-		// convert to % of best; ignoring bug-treated stuff
-		iVest = 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection );
+		iDivideValue = ( ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubCoverage ) + ( Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection * Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubCoverage ) );
+
+		// WANNE: Just to be on the save side
+		if (iDivideValue > 0)
+		{
+			// convert to % of best; ignoring bug-treated stuff
+			iVest = 6500 * iVest / iDivideValue;
+		}
+		else
+		{
+			iVest = 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection );
+		}
 	}
 	else
 	{
@@ -991,8 +1002,18 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	if (pSoldier->inv[HELMETPOS].usItem)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
-		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection;
+		iDivideValue = ( Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubCoverage );
+
+		// WANNE: Just to be on the save side
+		if (iDivideValue > 0)
+		{
+			// convert to % of best; ignoring bug-treated stuff
+			iHelmet = 1500 * iHelmet / iDivideValue;
+		}
+		else
+		{
+			iHelmet = 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection;
+		}
 	}
 	else
 	{
@@ -1002,8 +1023,18 @@ INT32 ArmourPercent( SOLDIERTYPE * pSoldier )
 	if (pSoldier->inv[LEGPOS].usItem)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
-		// convert to % of best; ignoring bug-treated stuff
-		iLeg = 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection;
+		iDivideValue = ( Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubCoverage );
+
+		// WANNE: Just to be on the save side
+		if (iDivideValue > 0)
+		{
+			// convert to % of best; ignoring bug-treated stuff
+			iLeg = 2500 * iLeg / iDivideValue;
+		}
+		else
+		{
+			iLeg = 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection;
+		}
 	}
 	else
 	{
@@ -1022,7 +1053,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] / 100;
+	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 	if ( Item[pObj->usItem].flakjacket )
 	{
 		// increase value for flak jackets!
@@ -1035,7 +1066,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 		INT32 iValue2;
 
 		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
+		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
 
 		iValue += iValue2;
 	}
@@ -1051,7 +1082,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = __min( 65, 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection) );
+		iVest = __min( 65, 6500 * iVest / ( ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubCoverage ) + ( Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection * Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubCoverage ) ) );
 	}
 	else
 	{
@@ -1062,7 +1093,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = __min( 15, 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection );
+		iHelmet = __min( 15, 1500 * iHelmet / ( Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubCoverage ) );
 	}
 	else
 	{
@@ -1073,7 +1104,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = __min( 25, 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection );
+		iLeg = __min( 25, 2500 * iLeg / ( Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection * Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubCoverage ) );
 	}
 	else
 	{
@@ -2130,18 +2161,26 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	INT16								sAPCost;
 	EV_S_WEAPONHIT			SWeaponHit;
 	INT32								iImpact;
-	UINT16							usOldItem;
+	UINT16							usOldItem, usNewItem;
 	UINT8								ubExpGain;
 	UINT8					ubIndexRet;
-	BOOLEAN					fFailure;
+	BOOLEAN					fFailure;		// no stealing occured
+	BOOLEAN					fNoMoreItems = FALSE;	// The enemy has no more items to steal!
+	BOOLEAN					fNoMoreItemInHand = FALSE;
+	BOOLEAN					fSoldierCollapsed = FALSE;
 	// Deduct points!
 	// August 13 2002: unless stealing - APs already deducted elsewhere
 
-//	if (!fStealing)
+	// Punch the enemy
+	if (!fStealing)
 	{
  		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
-
 		DeductPoints( pSoldier, sAPCost, 0 );
+	}
+	// Steal from the enemy
+	else
+	{
+		// APs were already reduced!
 	}
 	
 	// See if a guy is here!
@@ -2157,6 +2196,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 
 		if (fStealing)
 		{
+			// Calculate the possible chance to steal!
 			if ( AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) || CREATURE_OR_BLOODCAT( pTargetSoldier ) || TANK( pTargetSoldier ) )
 			{
 				iHitChance = 0;
@@ -2169,6 +2209,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			else if ( pTargetSoldier->bLife < OKLIFE || pTargetSoldier->bCollapsed )
 			{
 				iHitChance = 100;
+				fSoldierCollapsed = TRUE;
 			}
 			else
 			{
@@ -2201,28 +2242,53 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 		// GET TARGET XY VALUES
 		ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
-if (fStealing )
+		// -----------------------------------
+		// Steal from the Enemy
+		// -----------------------------------
+		if (fStealing )
 		{
 			fFailure=FALSE;
-			if ( iDiceRoll <= iHitChance )
+
+			// Do we have luck on stealing?
+			if ( iDiceRoll <= iHitChance && iHitChance > 0 )
 			{
-				if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
-				{
-					// made a steal; give experience
-					StatChange( pSoldier, STRAMT, 8, FALSE );
-					StatChange( pSoldier, DEXTAMT, 3, FALSE );
-					StatChange( pSoldier, AGILAMT, 3, FALSE );
-				}
+				// Do we have the chance to steal more than 1 item?
 				if (( iDiceRoll <= iHitChance * 2 / 3) || (pTargetSoldier->bCollapsed))
 				{
-					if (StealItems(pSoldier, pTargetSoldier,&ubIndexRet) == 1)
+					// The item that the enemy holds in his hand before the stealing
+					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
+
+					INT16 sNumStolenItems = StealItems(pSoldier, pTargetSoldier,&ubIndexRet);
+
+					// We have only stolen 1 item, because the enemy has not more than one item.
+					if ( sNumStolenItems == 1)
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[ubIndexRet].usItem ] );
+						
+						// Try to place the item in the merc inventory
 						if (!AutoPlaceObject( pSoldier, &(pTargetSoldier->inv[ubIndexRet]), TRUE ))
+						{
+							// Place the item on the ground
 							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+						}
 						DeleteObj( &(pTargetSoldier->inv[ubIndexRet]) );
+
+						// WANNE: NEW
+						// The item that the enemy holds in his hand before the stealing
+						usNewItem = pTargetSoldier->inv[HANDPOS].usItem;
+
+						if (usOldItem != usNewItem)
+						{	
+							ReLoadSoldierAnimationDueToHandItemChange(pTargetSoldier, usOldItem, usNewItem );
+						}
+					}
+					// The enemy has no more items to steal
+					else if (sNumStolenItems == 0)
+					{
+						fNoMoreItems = TRUE;
 					}
 				}
+				// We had not much luck, so we can only steal 1 item.
 				else if ( pTargetSoldier->inv[HANDPOS].usItem != NOTHING )
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
@@ -2248,46 +2314,85 @@ if (fStealing )
 					// Reload buddy's animation...
 					ReLoadSoldierAnimationDueToHandItemChange( pTargetSoldier, usOldItem, NOTHING );
 				}
+				// Enemy has no item in his hand.
 				else
 				{
-					fFailure=TRUE;
+					fNoMoreItemInHand = TRUE;
 				}
 				// Reload buddy's animation...
 				//ReLoadSoldierAnimationDueToHandItemChange( pTargetSoldier, usOldItem, NOTHING );
 			}
+			// We could not steal from the enemy, we had no luck
 			else
 			{
 				fFailure=TRUE;
 			}
+
+			// We failed to steal something!
 			if (fFailure)
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
-					Message[ STR_FAILED_TO_STEAL_SOMETHING ], 
-					pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
-				if ( pSoldier->bTeam == gbPlayerNum )
+				// Only report if it was not the Nada item!
+				if (pTargetSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
+						Message[ STR_FAILED_TO_STEAL_SOMETHING ], 
+						pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
+					
+					if ( pSoldier->bTeam == gbPlayerNum )
+					{
+						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+					}
 				}
+				else
+				{
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
+					Message[ STR_NO_MORE_ITEM_IN_HAND ]); 
+				}
+			}
+			// Enemy had no item in its hand
+			else if (fNoMoreItemInHand == TRUE)
+			{
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
+					Message[ STR_NO_MORE_ITEM_IN_HAND ]); 
+			}
 
-				if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
-				{	
+			// The enemy has no more items to steal
+			else if (fNoMoreItems == TRUE)
+			{
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, 
+					Message[ STR_NO_MORE_ITEMS_TO_STEAL ]); 
+			}
+
+			// Give some experience
+			if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
+			{
+				if (fFailure == FALSE)
+				{
+					// We were successfull in stealing. Give some experience
+					StatChange( pSoldier, STRAMT, 8, FALSE );
+					StatChange( pSoldier, DEXTAMT, 3, FALSE );
+					StatChange( pSoldier, AGILAMT, 3, FALSE );
+				}
+				else
+				{
 					// failed a steal; give some experience
 					StatChange( pSoldier, STRAMT, 4, FROM_FAILURE );
 					StatChange( pSoldier, DEXTAMT, 1, FROM_FAILURE );
 					StatChange( pSoldier, AGILAMT, 1, FROM_FAILURE );
 				}
-
 			}
 
 			#ifdef JA2BETAVERSION
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - steal") );
 			#endif
 			FreeUpAttacker( (UINT8) pSoldier->ubID );
-
 		}
+
+		// -----------------------------------
+		// Punch, Kick the Enemy
+		// -----------------------------------
 		else
 		{
-
 			// ATE/CC: if doing ninja spin kick (only), automatically make it a hit
 			if ( pSoldier->usAnimState == NINJA_SPINKICK)
 			{
@@ -2481,6 +2586,17 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	
 	CalculateLaunchItemParamsForThrow( pSoldier, sTargetGridNo, pSoldier->bTargetLevel, (INT16)(pSoldier->bTargetLevel * 256 ), &(pSoldier->inv[ HANDPOS ] ), (INT8)(uiDiceRoll - uiHitChance), THROW_ARM_ITEM, 0 );
 
+	//AXP 25.03.2007: Cleaned up throwing AP costs. Now only turning + stance change AP 
+	//	costs are deducted. Final throw cost is deducted on creating the grenade object
+	if ( (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier ) != pSoldier->bDirection )
+			sAPCost += (INT16)GetAPsToLook( pSoldier );
+	sAPCost += (INT16)GetAPsToChangeStance( pSoldier, ANIM_STAND );
+
+	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
+	DeductPoints( pSoldier, sAPCost, 0 );
+	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+	
+	/*
 	// Madd: Next 2 lines added: Deduct points!
 
 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
@@ -2492,7 +2608,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
     // Kaiden: Deducting points too early, moving the line down
 	DeductPoints( pSoldier, sAPCost, 0 );
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
-
+	*/
 	return( TRUE );
 }
 
@@ -3573,7 +3689,9 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if (pSoldier->bShock)
 		iChance -= (pSoldier->bShock * AIM_PENALTY_PER_SHOCK);
 
-	if ( Item[ usInHand ].usItemClass == IC_GUN )
+	// WANNE NEW: Changed this, because RPGs are not in the calculation, only guns
+	//if ( Item[ usInHand ].usItemClass == IC_GUN )
+	if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_LAUNCHER)
 	{
 		iMaxRange = GunRange( pInHand );
 	}
@@ -3998,14 +4116,26 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 	return( iReduction );
 }
 
-INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType )
+INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType, BOOLEAN *plateHit )
 {
-	INT32		iProtection, iAppliedProtection, iFailure;
+	INT32		iProtection, iAppliedProtection, iFailure, iCoverage;
 
 	iProtection = Armour[ ubArmourType ].ubProtection;
+	iCoverage = Armour [ ubArmourType ].ubCoverage;
+	if ( *plateHit ) iCoverage = 100;
 
 	if ( !AM_A_ROBOT( pTarget ) )
 	{
+		// check for the bullet missing armor due to coverage
+		iFailure = PreRandom( 100 ) + 1 - iCoverage;
+		if (iFailure > 0 )
+		{
+			if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_VEST && !AmmoTypes[ubAmmoType].ignoreArmour)
+			{
+			 	return ( iImpact/2 );
+			}
+			else return ( 0 );
+		}
 		// check for the bullet hitting a weak spot in the armour
 		iFailure = PreRandom( 100 ) + 1 - *pbStatus;
 		if (iFailure > 0)
@@ -4013,6 +4143,7 @@ INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbSta
 			iProtection -= iFailure;
 			if (iProtection < 0)
 			{
+				if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_PLATE ) *plateHit=true;
 				return( 0 );
 			}
 		}
@@ -4074,6 +4205,7 @@ INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT16 ubArmourType, INT8 * pbSta
 	}
 
 	// return armour protection
+	if (Armour[ ubArmourType ].ubArmourClass == ARMOURCLASS_PLATE ) *plateHit=true;
 	return( iProtection );
 }
 
@@ -4083,14 +4215,16 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 	INT32					iTotalProtection = 0, iSlot;
 	OBJECTTYPE *	pArmour;
 	INT8					bPlatePos = -1;
+	BOOLEAN					plateHit = false;
 
 	if (pTarget->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		INT8 bDummyStatus = 100;
+		BOOLEAN dummyCoverage = true;
 
 		//bDummyStatus = (INT8) pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ];
 
-		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType );
+		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType, &dummyCoverage );
 
 		//pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ] = bDummyStatus; 
 
@@ -4126,7 +4260,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 				if (bPlatePos != -1)
 				{
 					// bullet got through jacket; apply ceramic plate armour
-					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType );
+					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType, &plateHit );
 					if ( pArmour->bAttachStatus[bPlatePos] < USABLE )
 					{
 						// destroy plates!
@@ -4148,7 +4282,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType );
+				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType, &plateHit );
 				if ( pArmour->bStatus[ 0 ] < USABLE )
 				{
 					//Madd: put any attachments that someone might have added to the armour in the merc's inventory
