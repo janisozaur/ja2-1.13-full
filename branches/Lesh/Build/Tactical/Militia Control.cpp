@@ -10,9 +10,31 @@
 	#include "Overhead.h"
 	#include "strategicmap.h"
 	#include "PreBattle Interface.h"
+	#include "Map Screen Interface.h"
+	#include "mapscreen.h"
+	#include "Campaign.h"
+	#include "Points.h"
+	#include "Animation Control.h"
+	#include "Isometric Utils.h"
+	#include "ai.h"
+	#include "opplist.h"
+	#include "PopUpBox.h"
+	#include "LOS.h"
+	#include "GameSettings.h"
+	#include "Font Control.h"
+	#include "renderworld.h"
+	#include "Interface.h"
+	#include "Interface Control.h"
+	#include "Utilities.h"
+	#include "Text.h"
+	#include "Map Screen Interface Map.h"
+	#include "strategic.h"
+	#include "Queen Command.h"
+	#include "SgpStr.h"
+	
 #endif
 
-#include "Militia"Squads.h"
+#include "MilitiaSquads.h"
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 
@@ -618,7 +640,7 @@ void CreateMilitiaControlBox( void )
 	// add strings for box
 	for(uiCounter=0; uiCounter < MAX_MILCON_STRING_COUNT; uiCounter++)
 	{
-		swprintf( sString, pMilitiaControlMenuStrings[uiCounter] );
+		WSTR_SPrintf( sString, 128, pMilitiaControlMenuStrings[uiCounter] );
 
 		AddMonoString(&hStringHandle, sString );
   

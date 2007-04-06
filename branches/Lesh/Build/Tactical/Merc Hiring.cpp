@@ -2,12 +2,8 @@
 	#include "Tactical All.h"
 	#include "strategic.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "math.h"
+	#include "DEBUG.H"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"
@@ -28,7 +24,7 @@
 	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"
-	#include "soldier ani.h"
+	#include "Soldier Ani.h"
 	#include "english.h"
 	#include "Overhead.h"
 	#include "Soldier Profile.h"
@@ -41,8 +37,8 @@
 	#include "strategic.h"
 	#include "Items.h"
 	#include "Soldier Add.h"
-	#include "History.h"
-	#include ""Squads.h"
+	#include "history.h"
+	#include "Squads.h"
 	#include "Strategic Merc Handler.h"
 	#include "Dialogue Control.h"
 	#include "Map Screen Interface.h"
@@ -51,6 +47,14 @@
 	#include "jascreens.h"
 	#include "Text.h"
 	#include "Merc Contract.h"
+	#include "LaptopSave.h"
+	#include "personnel.h"
+	#include "Auto Resolve.h"
+	#include "Quests.h"
+	#include "Map Screen Interface Bottom.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #define	MIN_FLIGHT_PREP_TIME	6
@@ -621,7 +625,7 @@ void CheckForValidArrivalSector( )
 		return;
 	}
 
-	GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString1 );
+	GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString1, 50 );
 
 
 	// If here - we need to do a search!
@@ -663,9 +667,9 @@ void CheckForValidArrivalSector( )
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2 );
+		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2, 50 );
 
-		swprintf( sString, L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
+		WSTR_SPrintf( sString, 1024, L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 

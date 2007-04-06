@@ -2,10 +2,8 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
-	//#include "ai.h"
 	#include "Isometric Utils.h"
 	#include "Overhead.h"
-	#include "math.h"
 	#include "Event Pump.h"
 	#include "random.h"
 	#include "Overhead Types.h"
@@ -13,26 +11,26 @@
 	#include "ai.h"
 	#include "Font Control.h"
 	#include "Sys Globals.h"
-	#include "Animation COntrol.h"
+	#include "Animation Control.h"
 	#include "LOS.h"
 	#include "fov.h"
 	#include "Dialogue Control.h"
 	#include "lighting.h"
 	#include "environment.h"
 	#include "Points.h"
-	#include "interface dialogue.h"
+	#include "interface Dialogue.h"
 	#include "message.h"
 	#include "Soldier Profile.h"
 	#include "TeamTurns.h"
-	#include "interactive tiles.h"
-	#include "render fun.h"
+	#include "Interactive Tiles.h"
+	#include "Render Fun.h"
 	#include "Text.h"
 	#include "Timer Control.h"
 	#include "Soldier macros.h"
-	#include "soldier functions.h"
-	#include "handle ui.h"
+	#include "Soldier Functions.h"
+	#include "Handle UI.h"
 	#include "Queen Command.h"
-	#include "keys.h"
+	#include "Keys.h"
 	#include "Campaign.h"
 	#include "Soldier Init List.h"
 	#include "Music Control.h"
@@ -40,8 +38,18 @@
 	#include "strategicmap.h"
 	#include "Quests.h"
 	#include "Meanwhile.h"
-	#include "WorldMan.h"
+	#include "worldman.h"
 	#include "SkillCheck.h"
+	#include "GameSettings.h"
+	#include "Interface.h"
+	#include "Drugs And Alcohol.h"
+	#include "Smell.h"
+	#include "Platform.h"
+	#include "Sound Control.h"
+	#include "SgpStr.h"
+	#include "Civ Quotes.h"
+	#include "Game Clock.h"
+	
 #endif
 
 //rain
@@ -4348,7 +4356,7 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 		  pObject->usAttachItem[2] || pObject->usAttachItem[3] )
 	{
 		fAttachments = TRUE;
-		swprintf( szAttach, L"(" );
+		WSTR_SPrintf( szAttach, 50, L"(" );
 		AppendAttachmentCode( pObject->usAttachItem[0], szAttach );
 		AppendAttachmentCode( pObject->usAttachItem[1], szAttach );
 		AppendAttachmentCode( pObject->usAttachItem[2], szAttach );
@@ -4363,10 +4371,10 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 			wchar_t str[50];
 			wchar_t temp[5];
 			UINT8 i;
-			swprintf( str, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
+			WSTR_SPrintf( str, 60, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
 			{
-				swprintf( temp, L", %d", pObject->bStatus[0] );
+				WSTR_SPrintf( temp, 5, L", %d", pObject->bStatus[0] );
 				wcscat( str, temp );
 			}
 			wcscat( str, L")" );
@@ -4438,25 +4446,25 @@ void DebugSoldierPage4( )
 			SOLDIERINITNODE		*pNode;
 			switch( pSoldier->bOrders )
 			{
-				case STATIONARY:	swprintf( szOrders, L"STATIONARY" );			break;
-				case ONGUARD:			swprintf( szOrders, L"ON GUARD" );				break;
-				case ONCALL:			swprintf( szOrders, L"ON CALL" );					break;
-				case SEEKENEMY:		swprintf( szOrders, L"SEEK ENEMY" );			break;
-				case CLOSEPATROL:	swprintf( szOrders, L"CLOSE PATROL" );		break;
-				case FARPATROL:		swprintf( szOrders, L"FAR PATROL" );			break;
-				case POINTPATROL:	swprintf( szOrders, L"SGPPos PATROL" );		break;
-				case RNDPTPATROL:	swprintf( szOrders, L"RND PT PATROL" );		break;
-				default:					swprintf( szOrders, L"UNKNOWN" );					break;
+				case STATIONARY:	WSTR_SPrintf( szOrders, 20, L"STATIONARY" );		break;
+				case ONGUARD:		WSTR_SPrintf( szOrders, 20, L"ON GUARD" );			break;
+				case ONCALL:		WSTR_SPrintf( szOrders, 20, L"ON CALL" );			break;
+				case SEEKENEMY:		WSTR_SPrintf( szOrders, 20, L"SEEK ENEMY" );		break;
+				case CLOSEPATROL:	WSTR_SPrintf( szOrders, 20, L"CLOSE PATROL" );		break;
+				case FARPATROL:		WSTR_SPrintf( szOrders, 20, L"FAR PATROL" );		break;
+				case POINTPATROL:	WSTR_SPrintf( szOrders, 20, L"SGPPos PATROL" );		break;
+				case RNDPTPATROL:	WSTR_SPrintf( szOrders, 20, L"RND PT PATROL" );		break;
+				default:			WSTR_SPrintf( szOrders, 20, L"UNKNOWN" );			break;
 			}
 			switch( pSoldier->bAttitude )
 			{
-				case DEFENSIVE:		swprintf( szAttitude, L"DEFENSIVE" );			break;
-				case BRAVESOLO:		swprintf( szAttitude, L"BRAVE SOLO" );		break;
-				case BRAVEAID:		swprintf( szAttitude, L"BRAVE AID" );			break;
-				case AGGRESSIVE:	swprintf( szAttitude, L"AGGRESSIVE" );		break;
-				case CUNNINGSOLO:	swprintf( szAttitude, L"CUNNING SOLO" );	break;
-				case CUNNINGAID:	swprintf( szAttitude, L"CUNNING AID"	);	break;
-				default:					swprintf( szAttitude, L"UNKNOWN" );				break;
+				case DEFENSIVE:		WSTR_SPrintf( szAttitude, 20, L"DEFENSIVE" );		break;
+				case BRAVESOLO:		WSTR_SPrintf( szAttitude, 20, L"BRAVE SOLO" );		break;
+				case BRAVEAID:		WSTR_SPrintf( szAttitude, 20, L"BRAVE AID" );		break;
+				case AGGRESSIVE:	WSTR_SPrintf( szAttitude, 20, L"AGGRESSIVE" );		break;
+				case CUNNINGSOLO:	WSTR_SPrintf( szAttitude, 20, L"CUNNING SOLO" );	break;
+				case CUNNINGAID:	WSTR_SPrintf( szAttitude, 20, L"CUNNING AID"	);	break;
+				default:			WSTR_SPrintf( szAttitude, 20, L"UNKNOWN" );			break;
 			}
 			pNode = gSoldierInitHead;
 			while( pNode )
@@ -5549,7 +5557,7 @@ UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubN
 		iEffVolume -= 5;
 	}
 
- if (pSoldier->bAssignment == SLEEPING )
+ if (pSoldier->usAnimState == SLEEPING )
  {
 	// decrease effective volume since we're asleep!
 	 iEffVolume -= 5;

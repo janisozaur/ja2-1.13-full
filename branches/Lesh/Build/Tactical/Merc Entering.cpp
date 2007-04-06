@@ -1,25 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "soldier control.h"
+	#include "DEBUG.H"
+	#include "Soldier Control.h"
 	#include "Weapons.h"
-	#include "handle items.h"
+	#include "Handle Items.h"
 	#include "worlddef.h"	
 	#include "worldman.h"
-	#include "rotting corpses.h"
-	#include "tile cache.h"
+	#include "Rotting Corpses.h"
+	#include "Tile Cache.h"
 	#include "Isometric Utils.h"
 	#include "Animation Control.h"
 	#include "Utilities.h"
 	#include "Game Clock.h"
 	#include "Soldier Create.h"
 	#include "renderworld.h"
-	#include "tile animation.h"
+	#include "Tile Animation.h"
 	#include "merc entering.h"
 	#include "Sound Control.h"
 	#include "strategic.h"
@@ -28,7 +25,17 @@
 	#include "Squads.h"
 	#include "english.h"
 	#include "Cursors.h"
-	#include "cursor control.h"
+	#include "Cursor Control.h"
+	#include "Merc Hiring.h"
+	#include "Font Control.h"
+	#include "message.h"
+	#include "Text.h"
+	#include "Strategic Turns.h"
+	#include "ai.h"
+	#include "Dialogue Control.h"
+	#include "Music Control.h"
+	#include "Platform.h"
+	
 #endif
 
 #define		MAX_MERC_IN_HELI		20
@@ -47,7 +54,7 @@ enum
 	HELI_EXIT,
 	NUM_HELI_STATES
 
-} HeliStateEnums;
+};
 
 enum
 {
@@ -69,7 +76,7 @@ enum
 	HELI_DONE,
 
 
-} HeliCodes;
+};
 
 
 UINT8			ubHeliScripts[ NUM_HELI_STATES ][ MAX_HELI_SCRIPT ] =
