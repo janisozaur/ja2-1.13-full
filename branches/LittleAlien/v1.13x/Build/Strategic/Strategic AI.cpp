@@ -644,22 +644,27 @@ void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 
 
 
-BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID )
+BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID ) 
 {
 	SECTORINFO *pSector;
+	
 	switch( ubSectorID )
 	{
-		case SEC_A9:	case SEC_A10:								//Omerta
+		//case SEC_A9:	case SEC_A10:					//Omerta
 		case SEC_C5:	case SEC_C6:	case SEC_D5:	//San Mona
-		case SEC_I6:															//Estoni
-			//These sectors aren't important.
+		case SEC_I6:									//Estoni
+		
+			//These sectors aren't important. //Lalien: changed this, need to externalize		
 			return FALSE;
 	}
+
 	pSector = &SectorInfo[ ubSectorID ];
+
 	if( pSector->ubNumTroops || pSector->ubNumElites || pSector->ubNumAdmins )
 	{
 		return FALSE;
 	}
+
 	if( pSector->ubTraversability[ 4 ] == TOWN )
 	{
 		if( !PlayerSectorDefended( ubSectorID ) )
@@ -1609,19 +1614,19 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 			if( CheckFact( 273, FALSE ) )
 				return FALSE;
 			break;
-		case SEC_A9:
-		case SEC_A10:
-			//Omerta -- not until Day 2 at 7:45AM.	
-			if( GetWorldTotalMin() < 3345 )
-				return FALSE;
-			break;
-		case SEC_B13:
-		case SEC_C13:
-		case SEC_D13:
-			//Drassen -- not until Day 3 at 6:30AM.
-			if( GetWorldTotalMin() < 4710 )
-				return FALSE;
-			break;
+		//case SEC_A9:
+		//case SEC_A10:
+		//	//Omerta -- not until Day 2 at 7:45AM.	
+		//	if( GetWorldTotalMin() < 3345 )
+		//		return FALSE;
+		//	break;
+		//case SEC_B13:
+		//case SEC_C13:
+		//case SEC_D13:
+		//	//Drassen -- not until Day 3 at 6:30AM.
+		//	if( GetWorldTotalMin() < 4710 )
+		//		return FALSE;
+		//	break;
 		case SEC_C5:
 		case SEC_C6:
 		case SEC_D5:
@@ -4455,14 +4460,14 @@ void ClearStrategicLog()
 
 void InvestigateSector( UINT8 ubSectorID )
 {
-/*
+
 	INT32 i;
 	SECTORINFO *pSector;
 	INT16 sSectorX, sSectorY;
 	UINT8 ubAdmins[4], ubTroops[4], ubElites[4], ubNumToSend, ubTotal;
 
 	//@@@ Disabled!  Also commented out the posting of the event
-	return;
+	//return;
 
 	sSectorX = (INT16)SECTORX( ubSectorID );
 	sSectorY = (INT16)SECTORY( ubSectorID );
@@ -4571,7 +4576,7 @@ void InvestigateSector( UINT8 ubSectorID )
 	{
 		gfFirstBattleMeanwhileScenePending = TRUE;
 	}
-*/
+
 }
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
@@ -4582,7 +4587,7 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	{ //The queen doesn't care about anything happening under the ground.
 		return;
 	}
-	
+
 	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
@@ -4606,27 +4611,33 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 		return;
 	}
 	else
-	{ //check to see if there are any pending reinforcements.  If so, then cancel their orders and have them
-		//reassigned, so the player doesn't get pestered.  This is a feature that *dumbs* down the AI, and is done
-		//for the sake of gameplay.  We don't want the game to be tedious.
-		if( !pSector->uiTimeLastPlayerLiberated )
-		{
-			pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds();
-		}
-		else
-		{ //convert hours to seconds and subtract up to half of it randomly "seconds - (hours*3600 / 2)"
-			pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds() - Random( gubHoursGracePeriod * 1800 );
-		}
-		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
-		{
-			GROUP *pGroup;
-			pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
-			if( pGroup )
-			{
-				ReassignAIGroup( &pGroup );
-			}
-			gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID = 0;
-		}
+	{
+		//if (0)
+		//{
+		//	//check to see if there are any pending reinforcements.  If so, then cancel their orders and have them
+		//	//reassigned, so the player doesn't get pestered.  This is a feature that *dumbs* down the AI, and is done
+		//	//for the sake of gameplay.  We don't want the game to be tedious.
+		//	if( !pSector->uiTimeLastPlayerLiberated )
+		//	{
+		//		pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds();
+		//	}
+		//	else
+		//	{ //convert hours to seconds and subtract up to half of it randomly "seconds - (hours*3600 / 2)"
+		//		pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds() - Random( gubHoursGracePeriod * 1800 );
+		//	}
+
+		//	if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
+		//	{
+		//		GROUP *pGroup;
+		//		pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
+
+		//		if( pGroup )
+		//		{
+		//			ReassignAIGroup( &pGroup );
+		//		}
+		//		gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID = 0;
+		//	}
+		//}
 	}
 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
@@ -4709,16 +4720,17 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 			return;
 	}
 	
-	if( pSector->ubInvestigativeState >= ( 4 * gGameOptions.ubDifficultyLevel ) && gGameOptions.ubDifficultyLevel < DIF_LEVEL_INSANE )  //Madd: tweaked to increase attacks for experienced and expert to 8 and 12, and unlimited for insane
-	{ //This is the 4th time the player has conquered this sector.  We won't pester the player with probing attacks here anymore.
-		return;  
-	}
+	//if( pSector->ubInvestigativeState >= ( 4 * gGameOptions.ubDifficultyLevel ) && gGameOptions.ubDifficultyLevel < DIF_LEVEL_INSANE )  //Madd: tweaked to increase attacks for experienced and expert to 8 and 12, and unlimited for insane
+	//{ //This is the 4th time the player has conquered this sector.  We won't pester the player with probing attacks here anymore.
+	//	return;  
+	//}
+
 	if( sSectorX != gWorldSectorX || sSectorY != gWorldSectorY )
 	{ //The sector isn't loaded, so don't probe attack it.  Otherwise, autoresolve would get them smoked!
 		return;
 	}
 	//@@@ disabled
-	//AddStrategicEventUsingSeconds( EVENT_INVESTIGATE_SECTOR, GetWorldTotalSeconds() + 45 * pSector->ubInvestigativeState + Random( 60 ), SECTOR( sSectorX, sSectorY ) );
+	AddStrategicEventUsingSeconds( EVENT_INVESTIGATE_SECTOR, GetWorldTotalSeconds() + 45 * pSector->ubInvestigativeState + Random( 60 ), SECTOR( sSectorX, sSectorY ) );
 }
 
 void RequestHighPriorityStagingGroupReinforcements( GROUP *pGroup )
@@ -4882,7 +4894,7 @@ void MassFortifyTowns()
 {
 	INT32 i;
 	SECTORINFO *pSector;
-	GROUP *pGroup;
+	//GROUP *pGroup;
 	UINT8 ubNumTroops, ubDesiredTroops;
 
 	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
@@ -4892,29 +4904,33 @@ void MassFortifyTowns()
 		pSector = &SectorInfo[ gGarrisonGroup[ i ].ubSectorID ];
 		ubNumTroops = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 		ubDesiredTroops = (UINT8)gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bDesiredPopulation;
+		
 		if( ubNumTroops < ubDesiredTroops  )
 		{
 			if( !gGarrisonGroup[ i ].ubPendingGroupID && 
-					gGarrisonGroup[ i ].ubComposition != ROADBLOCK &&
-					EnemyPermittedToAttackSector( NULL, gGarrisonGroup[ i ].ubSectorID ) )
+				gGarrisonGroup[ i ].ubComposition != ROADBLOCK &&
+				EnemyPermittedToAttackSector( NULL, gGarrisonGroup[ i ].ubSectorID ) )
 			{
 				RequestHighPriorityGarrisonReinforcements( i, (UINT8)(ubDesiredTroops - ubNumTroops) );
 			}
 		}
 	}
+	
+	//Lalien: removed, the queen should attack and stay in Omerta
+
 	//Convert the garrison sitting in Omerta (if alive), and reassign them
-	pSector = &SectorInfo[ SEC_A9 ];
-	if( pSector->ubNumTroops )
-	{
-		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_A9, 0, pSector->ubNumTroops, 0 );
-		Assert( pGroup );
-		pSector->ubNumTroops = 0;
-		pGroup->pEnemyGroup->ubIntention = PATROL;
-		pGroup->ubMoveType = ONE_WAY;
-		ReassignAIGroup( &pGroup );
-		ValidateGroup( pGroup );
-		RecalculateSectorWeight( SEC_A9 );
-	}
+	//pSector = &SectorInfo[ SEC_A9 ];
+	//if( pSector->ubNumTroops )
+	//{
+	//	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_A9, 0, pSector->ubNumTroops, 0 );
+	//	Assert( pGroup );
+	//	pSector->ubNumTroops = 0;
+	//	pGroup->pEnemyGroup->ubIntention = PATROL;
+	//	pGroup->ubMoveType = ONE_WAY;
+	//	ReassignAIGroup( &pGroup );
+	//	ValidateGroup( pGroup );
+	//	RecalculateSectorWeight( SEC_A9 );
+	//}
 }
 
 void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
