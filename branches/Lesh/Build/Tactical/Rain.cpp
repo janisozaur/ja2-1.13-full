@@ -3,16 +3,16 @@
 	#include "Tactical All.h"
 #else
 	#include "Types.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Overhead.h"
 	#include "Animation Control.h"
 	#include "Points.h"
 	#include "opplist.h"
-	#include "event pump.h"
+	#include "Event Pump.h"
 	#include "Sound Control.h"
 	#include "Interface.h"
 	#include "Isometric Utils.h"
-	#include "Font Control.H"
+	#include "Font Control.h"
 	#include "ai.h"
 	#include "Interface.h"
 	#include "message.h"
@@ -23,7 +23,7 @@
 	#include "Soldier Functions.h"
 	#include "Cursors.h"
 	#include "Queen Command.h"
-	#include "Pathai.h"
+	#include "PATHAI.H"
 	#include "Music Control.h"
 	#include "Strategic Turns.h"
 	#include "lighting.h"
@@ -32,15 +32,25 @@
 	#include "Dialogue Control.h"
 	#include "soldier profile type.h"
 	#include "SmokeEffects.h"
-	#include "lighteffects.h"
+	#include "LightEffects.h"
 	#include "Air Raid.h"
 	#include "Meanwhile.h"
 	#include "SkillCheck.h"
 	#include "AIInternals.h"
 	#include "AIList.h"
 	#ifdef DEBUG_INTERRUPTS
-		#include DEBUG.H"
+		#include "DEBUG.H"
 	#endif
+	#include "vsurface.h"
+	#include "local.h"
+	#include "Render Dirty.h"
+	#include "GameSettings.h"
+	#include "line.h"
+	#include "Platform.h"
+	#include "overhead map.h"
+	#include "interface Dialogue.h"
+	#include "MercTextBox.h"
+	
 #endif
 
 #include "Rain.h"
@@ -131,7 +141,6 @@ extern INT16 gsVIEWPORT_WINDOW_START_Y;
 extern VIDEO_OVERLAY gVideoOverlays[ VIDEO_OVERLAYS ];
 extern UINT32 guiNumVideoOverlays;
 
-extern MercPopUpBox *gPopUpTextBox;
 
 INT8 GetRainIntensityFromEnvWeather()
 {

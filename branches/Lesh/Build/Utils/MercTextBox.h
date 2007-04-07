@@ -71,5 +71,6 @@ enum{
 	LAPTOP_POP_BORDER
 };
 
+extern MercPopUpBox *gPopUpTextBox;
 
 #endif

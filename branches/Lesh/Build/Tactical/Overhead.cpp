@@ -3,12 +3,8 @@
 	#include "PreBattle Interface.h"
   #include "creature spreading.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "math.h"
+	#include "DEBUG.H"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"
@@ -29,22 +25,21 @@
 	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"
-	#include "soldier ani.h"
+	#include "Soldier Ani.h"
 	#include "english.h"
 	#include "Overhead.h"
 	#include "opplist.h"
 	#include "Sound Control.h"
 	#include "Font Control.h"
 	#include "lighting.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "screenids.h"
-	#include "interface cursors.h"
+	#include "Interface Cursors.h"
 	#include "Weapons.h"
-	#include "rotting corpses.h"
-	#include "lighting.h"
+	#include "Rotting Corpses.h"
 	#include "Handle UI Plan.h"
 	#include "structure.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "message.h"
 	#include "Items.h"
 	#include "Soldier Profile.h"
@@ -56,11 +51,11 @@
 		#include "Networking.h"
 		#include "NetworkEvent.h"
 	#endif
-	#include "structure wrap.h"
-	#include "tile animation.h"
+	#include "Structure Wrap.h"
+	#include "Tile Animation.h"
 	#include "Strategic Merc Handler.h"
 	#include "Strategic Turns.h"    
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Morale.h"
 	#include "Campaign.h"
 	#include "Music Control.h"
@@ -71,33 +66,47 @@
 	#include "NPC.h"
 	#include "strategicmap.h"
 	#include "Soldier Profile.h"
-	#include "soldier functions.h"
+	#include "Soldier Functions.h"
 	#include "Auto Bandage.h"
 	#include "Game Event Hook.h"
 	#include "Explosion Control.h"
 	#include "SkillCheck.h"
 	#include "World Items.h"
-	#include "smell.h"
+	#include "Smell.h"
 	#include "Player Command.h"
 	#include "GameSettings.h"
 	#include "MessageBoxScreen.h"
 	#include "Game Clock.h"
 	#include "Strategic Town Loyalty.h"
 	#include "Strategic Mines.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
 	#include "Text.h"
-	#include "keys.h"
+	#include "Keys.h"
 	#include "Boxing.h"
 	#include "Town Militia.h"
 	#include "Meanwhile.h"
 	#include "Map Screen Helicopter.h"
 	#include "Interface Control.h"
-	#include "exit grids.h"
+	#include "Exit Grids.h"
 	#include "Fade Screen.h"
 	#include "Game Init.h"
 	#include "jascreens.h"
 	#include "strategic.h"
-	#include "arms dealer init.h"
+	#include "Arms Dealer Init.h"
+	#include "PreBattle Interface.h"
+	#include "Militia Control.h"
+	#include "LOS.h"
+	#include "End Game.h"
+	#include "Strategic Status.h"
+	#include "history.h"
+	#include "interface Dialogue.h"
+	#include "Strategic AI.h"
+	#include "Drugs And Alcohol.h"
+	#include "Air Raid.h"
+	#include "Civ Quotes.h"
+	#include "Platform.h"
+	#include "Interface Utils.h"
+	
 #endif
 
 extern UINT8	gubAICounter;
@@ -721,7 +730,7 @@ BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
 	// Check range of index given
 	*ppSoldier = NULL;
 
-	if ( usSoldierIndex < 0 || usSoldierIndex > TOTAL_SOLDIERS-1 )
+	if ( usSoldierIndex > TOTAL_SOLDIERS-1 )
 	{
 		// Set debug message
 		return( FALSE );
@@ -3186,7 +3195,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 {
 	SOLDIERTYPE *pKiller = NULL;
-  BOOLEAN bVisible;
+  INT8 bVisible;
 
 	pSoldierOld->uiStatusFlags |= SOLDIER_DEAD;
   bVisible = pSoldierOld->bVisible;

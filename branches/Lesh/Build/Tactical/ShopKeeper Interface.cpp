@@ -7,7 +7,7 @@
 	#include "Utilities.h"
 	#include "Game Clock.h"
 	#include "Render Dirty.h"
-	#include "wCheck.h"
+	#include "WCheck.h"
 	#include "Font Control.h"
 	#include "WordWrap.h"
 	#include "Text Input.h"
@@ -15,27 +15,26 @@
 	#include "Interface Control.h"
 	#include "Overhead.h"
 	#include "Cursors.h"
-	//#include "Store Inventory.h"
-	#include "SysUtil.h"
+	#include "sysutil.h"
 	#include "Interface Panels.h"
 	#include "Radar Screen.h"
 	#include "Interface Items.h"
 	#include "Interface Utils.h"
-	#include "VObject_Blitters.h"
+	#include "vobject_blitters.h"
 	#include "finances.h"
 	#include "Text.h"
 	#include "Cursor Control.h"
-	#include "Input.h"
+	#include "input.h"
 	#include "Arms Dealer Init.h"
 	#include "english.h"
 	#include "Soldier Add.h"
-	#include "Faces.h"
+	#include "faces.h"
 	#include "Dialogue Control.h"
 	#include "ShopKeeper Quotes.h"
 	#include "GameSettings.h"
 	#include "MercTextBox.h"
 	#include "random.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Soldier Profile.h"
 	#include "message.h"
 	#include "personnel.h"
@@ -44,10 +43,22 @@
 	#include "Weapons.h"
 	#include "MessageBoxScreen.h"
 	#include "line.h"
-	#include "Drugs and Alcohol.h"
+	#include "Drugs And Alcohol.h"
+	#include "opplist.h"
+	#include "Soldier Create.h"
+	#include "NPC.h"
+	#include "strategicmap.h"
+	#include "SgpStr.h"
+	#include "ArmsDealerInvInit.h"
+	#include "LOS.h"
+	#include "Soldier macros.h"
+	#include "Animation Data.h"
+	#include "Platform.h"
+	#include "Map Screen Interface.h"
+	
 #endif
 
-#include "BuildDefines.h"
+#include "builddefines.h"
 
 // temp
 struct skirgbcolor
@@ -369,7 +380,8 @@ wchar_t		gsShopKeeperTalkingText[ SKI_SUBTITLE_TEXT_SIZE ];
 UINT16		gusPositionOfSubTitlesX=0;
 
 // the transfer funds string
-CHAR16 gzSkiAtmTransferString[ 32 ];
+#define TRANSFER_FUNDS_STR_LEN 32
+CHAR16 gzSkiAtmTransferString[ TRANSFER_FUNDS_STR_LEN ];
 
 BOOLEAN	gfExitSKIDueToMessageBox=FALSE;
 
@@ -652,9 +664,9 @@ void			DisplayTheSkiDropItemToGroundString();
 
 UINT32		EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot );
 
-void			BuildItemHelpTextString( wchar_t sString[], INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea );
-void			BuildRepairTimeString( wchar_t sString[], UINT32 uiTimeInMinutesToFixItem );
-void			BuildDoneWhenTimeString( wchar_t sString[], UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
+void			BuildItemHelpTextString( wchar_t sString[], UINT16 usMaxLen, INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea );
+void			BuildRepairTimeString( wchar_t sString[], UINT16 usMaxLen, UINT32 uiTimeInMinutesToFixItem );
+void			BuildDoneWhenTimeString( wchar_t sString[], UINT16 usMaxLen, UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
 
 void DisableAllDealersInventorySlots( void );
 void EnableAllDealersInventorySlots( void );
@@ -670,7 +682,7 @@ extern BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
 #ifdef JA2TESTVERSION
 BOOLEAN gfTestDisplayDealerCash = FALSE;
 void DisplayAllDealersCash();
-#endif;
+#endif
 
 //ppp
 
@@ -1431,7 +1443,7 @@ BOOLEAN RenderShopKeeperInterface()
 	DisplayWrappedString( SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_Y, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, 2, SKI_LABEL_FONT, SKI_TITLE_COLOR, SkiMessageBoxText[ SKI_PLAYERS_CURRENT_BALANCE ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	//Display the players current balance value
-	swprintf( zMoney, L"%d", LaptopSaveInfo.iCurrentBalance );
+	WSTR_SPrintf( zMoney, 128, L"%d", LaptopSaveInfo.iCurrentBalance );
 
 	InsertCommasForDollarFigure( zMoney );
 	InsertDollarSignInToString( zMoney );
@@ -1612,7 +1624,7 @@ void DisplayAllDealersCash()
 		DrawTextToScreen( gMercProfiles[ ArmsDealerInfo[ bArmsDealer ].ubShopKeeperID ].zNickname, SCREEN_X_OFFSET + 540, SCREEN_Y_OFFSET + usPosY, 0, FONT10ARIAL, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
 
 		//Display the arms dealer cash on hand
-		swprintf( zTemp, L"%d", gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash );
+		WSTR_SPrintf( zTemp, 512, L"%d", gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash );
 
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
@@ -2408,7 +2420,7 @@ void InitializeShopKeeper( BOOLEAN fResetPage )
 		}
 
 		//or if the current page will be an invalid page ( before the first, and after the last )
-		else if( gSelectArmsDealerInfo.ubCurrentPage < 0 || gSelectArmsDealerInfo.ubCurrentPage > gSelectArmsDealerInfo.ubNumberOfPages )
+		else if( gSelectArmsDealerInfo.ubCurrentPage > gSelectArmsDealerInfo.ubNumberOfPages )
 		{
 			gSelectArmsDealerInfo.ubCurrentPage = 1;
 		}
@@ -2481,7 +2493,7 @@ void DisplayArmsDealerCurrentInventoryPage( )
 
 			//Display the Current Page number
 			uiFontHeight = GetFontHeight( SKI_LABEL_FONT );
-			swprintf( zTemp, L"%d/%d", gSelectArmsDealerInfo.ubCurrentPage, gSelectArmsDealerInfo.ubNumberOfPages );
+			WSTR_SPrintf( zTemp, 32, L"%d/%d", gSelectArmsDealerInfo.ubCurrentPage, gSelectArmsDealerInfo.ubNumberOfPages );
 			DrawTextToScreen( zTemp, SKI_PAGE_X, (UINT16)(SKI_PAGE_Y+uiFontHeight+6), SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
 		}
 
@@ -2618,8 +2630,8 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 
-	sCenX = usPosX + 7 + (INT16)( abs( SKI_INV_WIDTH - 3.0 - usWidth ) / 2 ) - pTrav->sOffsetX;
-	sCenY = usPosY + (INT16)( abs( SKI_INV_HEIGHT - (double)usHeight ) / 2 ) - pTrav->sOffsetY;
+	sCenX = usPosX + 7 + (INT16)( abs( SKI_INV_WIDTH - 3 - usWidth ) / 2 ) - pTrav->sOffsetX;
+	sCenY = usPosY + (INT16)( abs( SKI_INV_HEIGHT - usHeight ) / 2 ) - pTrav->sOffsetY;
 
 
 	//Restore the background region
@@ -2670,7 +2682,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 			else
 			{
 				// show the UNIT price, not the total value of all if stacked
-				uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, TRUE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier, pItemObject );
+				uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, TRUE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dSellModifier, pItemObject );
 			}
 		}
 		else // UNDER REPAIR
@@ -2685,7 +2697,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 			Assert( gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement != -1);
 			ubElement = (UINT8) gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement;
 
-			BuildDoneWhenTimeString( zTemp, gbSelectedArmsDealerID, usItemIndex, ubElement );
+			BuildDoneWhenTimeString( zTemp, 64, gbSelectedArmsDealerID, usItemIndex, ubElement );
 			DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 			//if the item belongs to a merc
@@ -2708,14 +2720,14 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 			uiItemCost = CalculateObjectItemRepairCost( gbSelectedArmsDealerID, pItemObject );
 		}
 		else
-			uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, FALSE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier, pItemObject );
+			uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, FALSE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dSellModifier, pItemObject );
 
 	}
 
 	//if the item has a price, display it
 	if( uiItemCost != 0 )
 	{
-		swprintf( zTemp, L"%d", uiItemCost );
+		WSTR_SPrintf( zTemp, 64, L"%d", uiItemCost );
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
@@ -2729,7 +2741,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 			( ( pItemObject->ubNumberOfObjects == 1 ) && DealerItemIsSafeToStack( usItemIndex ) &&
 				( ubItemArea == ARMS_DEALER_INVENTORY ) && ( gpTempDealersInventory[ ubSlotNum ].uiFlags & ARMS_INV_ITEM_SELECTED ) ) )
 	{
-		swprintf( zTemp, L"x%d", pItemObject->ubNumberOfObjects );
+		WSTR_SPrintf( zTemp, 64, L"x%d", pItemObject->ubNumberOfObjects );
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ITEM_NUMBER_TEXT_OFFSET_X), (UINT16)(usPosY+SKI_ITEM_NUMBER_TEXT_OFFSET_Y), SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );	
 	}
 
@@ -2751,20 +2763,20 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	if( ItemHasAttachments( pItemObject ) )
 	{
 		//Display the '*' in the bottom right corner of the square
-		swprintf( zTemp, L"*" );
+		WSTR_SPrintf( zTemp, 64, L"*" );
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
 	}
 
 	// Display 'JAMMED' if it's jammed
 	if ( pItemObject->bGunAmmoStatus < 0 )
 	{
-		swprintf( zTemp, TacticalStr[ JAMMED_ITEM_STR ] );
+		WSTR_SPrintf( zTemp, 64, TacticalStr[ JAMMED_ITEM_STR ] );
 		VarFindFontCenterCoordinates( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, TINYFONT1, &sCenX, &sCenY, zTemp );
 		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
 	}
 	else if ( fPrintRepaired )
 	{
-		swprintf( zTemp, SKI_Text[ SKI_TEXT_REPAIRED ] );
+		WSTR_SPrintf( zTemp, 64, SKI_Text[ SKI_TEXT_REPAIRED ] );
 		VarFindFontCenterCoordinates( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, TINYFONT1, &sCenX, &sCenY, zTemp );
 		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
 	}
@@ -3367,7 +3379,7 @@ void DisplayArmsDealerOfferArea()
 		RestoreExternBackgroundRect( SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y, SKI_ARMS_DEALER_TOTAL_COST_WIDTH, SKI_ARMS_DEALER_TOTAL_COST_HEIGHT );
 
 		//Display the total cost text
-		swprintf( zTemp, L"%d", uiTotalCost );
+		WSTR_SPrintf( zTemp, 32, L"%d", uiTotalCost );
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 		DrawTextToScreen( zTemp, SKI_ARMS_DEALER_TOTAL_COST_X, (UINT16)(SKI_ARMS_DEALER_TOTAL_COST_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
@@ -3446,7 +3458,7 @@ void SetSkiRegionHelpText( INVENTORY_IN_SLOT *pInv, MOUSE_REGION *pRegion, UINT8
 
 	Assert( pRegion );
 
-	BuildItemHelpTextString( zHelpText, pInv, ubScreenArea );
+	BuildItemHelpTextString( zHelpText, 512, pInv, ubScreenArea );
 
 	SetRegionFastHelpText( pRegion, zHelpText );
 	SetRegionHelpEndCallback( pRegion, SkiHelpTextDoneCallBack );
@@ -3463,9 +3475,9 @@ void SetSkiFaceRegionHelpText( INVENTORY_IN_SLOT *pInv, MOUSE_REGION *pRegion, U
 	//if the item isn't NULL, and is owned by a merc
 	if( ( pInv != NULL ) && ( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE ) )
 	{
-		BuildItemHelpTextString( zTempText, pInv, ubScreenArea );
+		BuildItemHelpTextString( zTempText, 512, pInv, ubScreenArea );
 		// add who owns it
-		swprintf( zHelpText, L"%s%s %s", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
+		WSTR_SPrintf( zHelpText, 512, L"%s%s %s", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
 	}
 	else
 	{
@@ -3649,7 +3661,7 @@ void DisplayPlayersOfferArea()
 		RestoreExternBackgroundRect( SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y, SKI_PLAYERS_TOTAL_VALUE_WIDTH, SKI_PLAYERS_TOTAL_VALUE_HEIGHT );
 
 		//Display the total cost text
-		swprintf( zTemp, L"%d", uiTotalCost );
+		WSTR_SPrintf( zTemp, 32, L"%d", uiTotalCost );
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 		DrawTextToScreen( zTemp, SKI_PLAYERS_TOTAL_VALUE_X, (UINT16)(SKI_PLAYERS_TOTAL_VALUE_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );	
@@ -3713,7 +3725,7 @@ UINT32 CalculateTotalArmsDealerCost()
 			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 				uiTotal += CalculateObjectItemRepairCost( gbSelectedArmsDealerID, &( ArmsDealerOfferArea[ uiCnt ].ItemObject ) );
 			else
-				uiTotal += CalcShopKeeperItemPrice( DEALER_SELLING, FALSE, ArmsDealerOfferArea[ uiCnt ].sItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier, &ArmsDealerOfferArea[uiCnt].ItemObject );
+				uiTotal += CalcShopKeeperItemPrice( DEALER_SELLING, FALSE, ArmsDealerOfferArea[ uiCnt ].sItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dSellModifier, &ArmsDealerOfferArea[uiCnt].ItemObject );
 		}
 	}
 	return( uiTotal );
@@ -4117,7 +4129,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			gpItemPointer = &gMoveingItem.ItemObject;
 
 			//if there is an owner of the item
-			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != -1 )
+			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != 0xFF )
 			{
 				gpItemPointerSoldier = FindSoldierByProfileID( gMoveingItem.ubIdOfMercWhoOwnsTheItem, TRUE );
 				//make sure the soldier is not null
@@ -4164,7 +4176,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			gpItemPointer = &gMoveingItem.ItemObject;
 
 			//if there is an owner of the item
-			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != -1 )
+			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != 0xFF )
 			{
 				gpItemPointerSoldier = FindSoldierByProfileID( gMoveingItem.ubIdOfMercWhoOwnsTheItem, TRUE );
 				//make sure the soldier is not null
@@ -4748,9 +4760,9 @@ void			InitShopKeeperSubTitledText( STR16 pString )
 	memset( gsShopKeeperTalkingText, 0, SKI_SUBTITLE_TEXT_SIZE );
 
 #ifdef TAIWANESE
-	swprintf( gsShopKeeperTalkingText, L"%s", pString );
+	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"%s", pString );
 #else
-	swprintf( gsShopKeeperTalkingText, L"\"%s\"", pString );
+	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"\"%s\"", pString );
 #endif
 
 
@@ -5198,11 +5210,11 @@ void HandleAtmOK()
 			UINT32	uiFundsOnCurrentMerc = GetFundsOnMerc( gpSMCurrentMerc );
 
 			if( uiFundsOnCurrentMerc == 0 )
-				memset( gzSkiAtmTransferString, 0, 32 );
+				memset( gzSkiAtmTransferString, 0, TRANSFER_FUNDS_STR_LEN );
 			else
 			{
 				//Set the amount to transfer
-				swprintf( gzSkiAtmTransferString, L"%d", uiFundsOnCurrentMerc );
+				WSTR_SPrintf( gzSkiAtmTransferString, TRANSFER_FUNDS_STR_LEN, L"%d", uiFundsOnCurrentMerc );
 			}
 
 			gubCurrentSkiAtmMode = SKI_ATM_ERR_TAKE_MODE;
@@ -5222,11 +5234,11 @@ void HandleAtmOK()
 		if( iAmountToTransfer > LaptopSaveInfo.iCurrentBalance )
 		{
 			if( LaptopSaveInfo.iCurrentBalance == 0 )
-				memset( gzSkiAtmTransferString, 0, 32 );
+				memset( gzSkiAtmTransferString, 0, TRANSFER_FUNDS_STR_LEN );
 			else
 			{
 				//Set the amount to transfer
-				swprintf( gzSkiAtmTransferString, L"%d", LaptopSaveInfo.iCurrentBalance );
+				WSTR_SPrintf( gzSkiAtmTransferString, TRANSFER_FUNDS_STR_LEN, L"%d", LaptopSaveInfo.iCurrentBalance );
 			}
 
 			gubCurrentSkiAtmMode = SKI_ATM_ERR_GIVE_MODE;
@@ -5244,7 +5256,7 @@ void HandleAtmOK()
 	{ 
 		gubCurrentSkiAtmMode = SKI_ATM_DISABLED_MODE;
 		EnableDisableSkiAtmButtons();
-		memset( gzSkiAtmTransferString, 0, 32 );
+		memset( gzSkiAtmTransferString, 0, TRANSFER_FUNDS_STR_LEN );
 	}
 
 	//Redraw the screen
@@ -5286,7 +5298,7 @@ void AddNumberToSkiAtm( UINT8 ubNumber )
 	if( gzSkiAtmTransferString[0] == L'\0' && ubNumber == SKI_ATM_0 )
 		return;
 
-	swprintf( zTemp, L"%d", ubNumber );
+	WSTR_SPrintf( zTemp, 16, L"%d", ubNumber );
 
 	//add the number to the current amount
 	wcscat( gzSkiAtmTransferString, zTemp );
@@ -5315,7 +5327,7 @@ void DisplaySkiAtmTransferString()
 	//
 	uiMoney = GetFundsOnMerc( gpSMCurrentMerc );
 
-	swprintf( zSkiAtmTransferString, L"%d", uiMoney );
+	WSTR_SPrintf( zSkiAtmTransferString, 32, L"%d", uiMoney );
 
 	InsertCommasForDollarFigure( zSkiAtmTransferString );
 	InsertDollarSignInToString( zSkiAtmTransferString );
@@ -5472,11 +5484,11 @@ void HandleCurrentModeText( UINT8 ubMode )
 			break;
 
 		case SKI_ATM_DISPLAY_PLAYERS_BALANCE:
-			swprintf( zMoney, L"%d", LaptopSaveInfo.iCurrentBalance );
+			WSTR_SPrintf( zMoney, 128, L"%d", LaptopSaveInfo.iCurrentBalance );
 			InsertCommasForDollarFigure( zMoney );
 			InsertDollarSignInToString( zMoney );
 
-			swprintf( zTemp, L"%s: %s", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
+			WSTR_SPrintf( zTemp, 128, L"%s: %s", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
 			break;
 	}
 
@@ -7609,17 +7621,17 @@ UINT32 EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot )
 		if( ( sSoldierID != -1 ) && ( GetDrunkLevel( &Menptr[ sSoldierID ] ) == DRUNK ) )
 		{
 			//Micky is DRUNK, pays more!
-			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier;
+			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dSellModifier;
 		}
 		else
 		{
 			// Micky isn't drunk, charge regular price
-			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dBuyModifier;
+			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dBuyModifier;
 		}
 	}
 	else
 	{
-		dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dBuyModifier;
+		dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].BuySell.dBuyModifier;
 	}
 
 
@@ -7659,7 +7671,7 @@ UINT32 EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot )
 #define REPAIR_MINUTES_INTERVAL	15
 
 
-void BuildRepairTimeString( wchar_t sString[], UINT32 uiTimeInMinutesToFixItem )
+void BuildRepairTimeString( wchar_t sString[], UINT16 usMaxLen, UINT32 uiTimeInMinutesToFixItem )
 {
 	UINT16	usNumberOfHoursToFixItem = 0;
 
@@ -7683,7 +7695,7 @@ void BuildRepairTimeString( wchar_t sString[], UINT32 uiTimeInMinutesToFixItem )
 	if ( uiTimeInMinutesToFixItem <= 90 )
 	{
 		// show minutes
-		swprintf( sString, SKI_Text[ SKI_TEXT_MINUTES ], uiTimeInMinutesToFixItem );
+		WSTR_SPrintf( sString, usMaxLen, SKI_Text[ SKI_TEXT_MINUTES ], uiTimeInMinutesToFixItem );
 	}
 	else
 	{
@@ -7694,7 +7706,7 @@ void BuildRepairTimeString( wchar_t sString[], UINT32 uiTimeInMinutesToFixItem )
 
 		if ( usNumberOfHoursToFixItem > 1 )
 		{
-			swprintf( sString, SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem );
+			WSTR_SPrintf( sString, usMaxLen, SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem );
 		}
 		else
 		{
@@ -7705,7 +7717,7 @@ void BuildRepairTimeString( wchar_t sString[], UINT32 uiTimeInMinutesToFixItem )
 
 
 
-void BuildDoneWhenTimeString( wchar_t sString[], UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement )
+void BuildDoneWhenTimeString( wchar_t sString[], UINT16 usMaxLen, UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement )
 {
 	UINT32 uiDoneTime;
 	UINT32 uiDay, uiHour, uiMin;
@@ -7743,30 +7755,30 @@ void BuildDoneWhenTimeString( wchar_t sString[], UINT8 ubArmsDealer, UINT16 usIt
 	// only show day if it's gonna take overnight
 	if ( GetWorldDay() != uiDay )
 	{
-		swprintf( sString, L"%s %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+		WSTR_SPrintf( sString, usMaxLen, L"%s %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
 	}
 	else
 	{
-		swprintf( sString, L"%02d:%02d", uiHour, uiMin );
+		WSTR_SPrintf( sString, usMaxLen, L"%02d:%02d", uiHour, uiMin );
 	}
 }
 
 
-void BuildItemHelpTextString( wchar_t sString[], INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea )
+void BuildItemHelpTextString( wchar_t sString[], UINT16 usMaxLen, INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea )
 {
 	CHAR16 zHelpText[ 512 ];
 	CHAR16 zRepairTime[ 64 ];
 
 	if( pInv != NULL )
 	{
-		GetHelpTextForItem( zHelpText, &( pInv->ItemObject ), NULL );
+		GetHelpTextForItem( zHelpText, 512, &( pInv->ItemObject ), NULL );
 
 		// add repair time for items in a repairman's offer area
 		if ( ( ubScreenArea == ARMS_DEALER_OFFER_AREA ) &&
 				 ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS ) )
 		{
-			BuildRepairTimeString( zRepairTime, CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
-			swprintf( sString, L"%s\n(%s: %s)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
+			BuildRepairTimeString( zRepairTime, 64, CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
+			WSTR_SPrintf( sString, usMaxLen, L"%s\n(%s: %s)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
 		}
 		else
 		{

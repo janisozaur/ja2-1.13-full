@@ -6,18 +6,22 @@
 	#include "Overhead.h"
 	#include "Overhead Types.h"
 	#include "Isometric Utils.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Soldier macros.h"
 	#include "strategicmap.h"
 	#include "strategic.h"
 	#include "Animation Control.h"
 	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "Map Information.h"
 	#include "fov.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "random.h"
+	#include "Render Fun.h"
+	#include "Meanwhile.h"
+	#include "Exit Grids.h"
+	
 #endif
 
 // Adds a soldier to a world gridno and set's direction

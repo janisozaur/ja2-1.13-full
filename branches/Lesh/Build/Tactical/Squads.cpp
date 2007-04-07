@@ -2,18 +2,23 @@
 	#include "Tactical All.h"
 #else
 	#include "Types.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Strategic Pathing.h"
 	#include "strategicmap.h"
-	#include "Faces.h"
+	#include "faces.h"
 	#include "Strategic Movement.h"
 	#include "Assignments.h"
-	#include "OverHead.h"
-	#include "RenderWorld.h"
+	#include "Overhead.h"
+	#include "renderworld.h"
 	#include "Interface.h"
 	#include "Vehicles.h"
 	#include "Map Screen Helicopter.h"
 	#include "Soldier Profile.h"
+	#include "DEBUG.H"
+	#include "screenids.h"
+	#include "Soldier macros.h"
+	#include "jascreens.h"
+	
 #endif
 
 

@@ -23,7 +23,7 @@
 	#include "Soldier Init List.h"
 	#include "EditorMercs.h"
 	#include "Smell.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Interface Panels.h"
 	#include "strategicmap.h"
 	#include "Inventory Choosing.h"
@@ -34,14 +34,19 @@
 	#include "Sys Globals.h"
 	#include "Scheduling.h"
 	#include "Rotting Corpses.h"
-	#include "vehicles.h"
-	#include "handle ui.h"
+	#include "Vehicles.h"
+	#include "Handle UI.h"
 	#include "Text.h"
 	#include "Campaign.h"
 	#include "GameSettings.h"
 	#include "PreBattle Interface.h"
 	#include "Auto Resolve.h"
 	#include "Morale.h"
+	#include "ai.h"
+	#include "Strategic Mines.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	
 #endif
 
 
@@ -1146,26 +1151,26 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//Expanded the default names based on team.
 	switch( pCreateStruct->bTeam )
 	{
-		case ENEMY_TEAM:		swprintf( pSoldier->name, TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
-		case MILITIA_TEAM:	swprintf( pSoldier->name, TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
+		case ENEMY_TEAM:	WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
+		case MILITIA_TEAM:	WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
 		case CIV_TEAM:			
 			if( pSoldier->ubSoldierClass == SOLDIER_CLASS_MINER )
 			{
-				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MINER_NAME ] );
+				WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, TacticalStr[ CIV_TEAM_MINER_NAME ] );
 			}
 			else
 			{
-				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MERC_NAME ] );	
+				WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, TacticalStr[ CIV_TEAM_MERC_NAME ] );	
 			}
 			break;
 		case CREATURE_TEAM:	
 			if( pSoldier->ubBodyType == BLOODCAT )
 			{
-				swprintf( pSoldier->name, gzLateLocalizedString[ 36 ] );
+				WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, gzLateLocalizedString[ 36 ] );
 			}
 			else
 			{
-				swprintf( pSoldier->name, TacticalStr[ CREATURE_TEAM_MERC_NAME ] );	break;
+				WSTR_SPrintf( pSoldier->name, SOLDIERTYPE_NAME_LEN, TacticalStr[ CREATURE_TEAM_MERC_NAME ] );	break;
 			}
 			break;
 	}
@@ -1245,7 +1250,7 @@ BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVeh
 	SOLDIERTYPE *		pSoldier;
 
 	// Check range of index given
-	if ( usSoldierIndex < 0 || usSoldierIndex > TOTAL_SOLDIERS-1 )
+	if ( usSoldierIndex > TOTAL_SOLDIERS-1 )
 	{
 		// Set debug message
 

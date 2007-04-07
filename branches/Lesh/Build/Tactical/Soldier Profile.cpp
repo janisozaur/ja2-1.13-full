@@ -1,16 +1,11 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "math.h"
+	#include "DEBUG.H"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"
-
 	#include "Soldier Control.h"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
@@ -27,7 +22,7 @@
 	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"
-	#include "soldier ani.h"
+	#include "Soldier Ani.h"
 	#include "english.h"
 	#include "Overhead.h"
 	#include "Soldier Profile.h"
@@ -35,7 +30,7 @@
 	#include "Assignments.h"
 	#include "Dialogue Control.h"
 	#include "Soldier Create.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "opplist.h"
 	#include "Weapons.h"
 	#include "Strategic Town Loyalty.h"
@@ -43,9 +38,19 @@
 	#include "Tactical Save.h"
 	#include "Quests.h"
 	#include "aim.h"
-	#include "Interface Dialogue.h"
+	#include "interface Dialogue.h"
 	#include "GameSettings.h"
 	#include "strategic town reputation.h"
+	#include "Player Command.h"
+	#include "environment.h"
+	#include "personnel.h"
+	#include "history.h"
+	#include "Map Information.h"
+	#include "Game Event Hook.h"
+	#include "strategicmap.h"
+	#include "Interface Utils.h"
+	#include "Platform.h"
+	
 #endif
 
 #ifdef JA2EDITOR

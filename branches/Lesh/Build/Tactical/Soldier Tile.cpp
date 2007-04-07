@@ -1,22 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <wchar.h>
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
 	#include "Render Fun.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
-	#include "container.h"
-	#include <math.h>
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "random.h"
 	#include "worldman.h"
 	#include "Isometric Utils.h"
@@ -30,29 +24,34 @@
 	#include "Weapons.h"
 	#include "vobject_blitters.h"
 	#include "Handle UI.h"
-	#include "soldier ani.h"
-	#include "Event pump.h"
+	#include "Soldier Ani.h"
+	#include "Event Pump.h"
 	#include "opplist.h"
 	#include "ai.h"
 	#include "Interface.h"
 	#include "lighting.h"
 	#include "faces.h"
 	#include "Soldier Profile.h"
-	#include "gap.h"
-	#include "interface panels.h"
-	#include "campaign.h"
+	#include "GAP.H"
+	#include "Interface Panels.h"
+	#include "Campaign.h"
 
 	#ifdef NETWORKED
 	#include "Networking.h"
 	#include "NetworkEvent.h"
 	#endif
 
-	#include "structure wrap.h"
+	#include "Structure Wrap.h"
 	#include "Items.h"
 	#include "soundman.h"
 	#include "soldier tile.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "fov.h"
+	#include "Font Control.h"
+	#include "message.h"
+	#include "Text.h"
+	#include "NPC.h"
+	
 #endif
 
 extern INT8		gbNumMercsUntilWaitingOver;

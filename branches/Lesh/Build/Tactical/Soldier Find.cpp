@@ -1,12 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "math.h"
+	#include "DEBUG.H"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"
@@ -27,21 +23,21 @@
 	#include "random.h"
 	#include "ai.h"
 	#include "Interactive Tiles.h"
-	#include "soldier ani.h"
+	#include "Soldier Ani.h"
 	#include "english.h"
 	#include "Overhead.h"
 	#include "opplist.h"
 	#include "Sound Control.h"
 	#include "Font Control.h"
 	#include "lighting.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "screenids.h"
-	#include "interface cursors.h"
+	#include "Interface Cursors.h"
 	#include "Weapons.h"
 	#include "lighting.h"
 	#include "Handle UI Plan.h"
 	#include "structure.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "message.h"
 	#include "Items.h"
 	#include "Soldier Profile.h"
@@ -49,7 +45,11 @@
 	#include "Soldier macros.h"
 	#include "EditorMercs.h"
 	#include "soldier tile.h"
-	#include "soldier find.h"
+	#include "Soldier Find.h"
+	#include "GameSettings.h"
+	#include "UI Cursors.h"
+	#include "Vehicles.h"
+	
 #endif
 
 

@@ -1,22 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <wchar.h>
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
 	#include "Render Fun.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
-	#include "container.h"
-	#include <math.h>
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "random.h"
 	#include "worldman.h"
 	#include "Isometric Utils.h"
@@ -29,26 +23,26 @@
 	#include "Weapons.h"
 	#include "vobject_blitters.h"
 	#include "Handle UI.h"
-	#include "soldier ani.h"
-	#include "Event pump.h"
+	#include "Soldier Ani.h"
+	#include "Event Pump.h"
 	#include "opplist.h"
 	#include "ai.h"
 	#include "Interface.h"
 	#include "lighting.h"
 	#include "faces.h"
 	#include "Soldier Profile.h"
-	#include "gap.h"
-	#include "interface panels.h"
-	#include "campaign.h"
+	#include "GAP.H"
+	#include "Interface Panels.h"
+	#include "Campaign.h"
 	#include "Soldier macros.h"
 	#include "english.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 
 	#ifdef NETWORKED
 	#include "Networking.h"
 	#include "NetworkEvent.h"
 	#endif
-	#include "structure wrap.h"
+	#include "Structure Wrap.h"
 	#include "Items.h"
 	#include "soundman.h"
 	#include "Utilities.h"
@@ -57,7 +51,7 @@
 	#include "Smell.h"
 	#include "Keys.h"
 	#include "Dialogue Control.h"
-	#include "soldier functions.h"
+	#include "Soldier Functions.h"
 	#include "rt time defines.h"
 	#include "Exit Grids.h"
 	#include "gamescreen.h"
@@ -65,23 +59,36 @@
 	#include "message.h"
 	#include "NPC.h"
 	#include "SkillCheck.h"
-	#include "handle doors.h"
-	#include "interface dialogue.h"
-	#include "smokeeffects.h"
-	#include	"GameSettings.h"
-	#include "tile animation.h"
+	#include "Handle Doors.h"
+	#include "interface Dialogue.h"
+	#include "SmokeEffects.h"
+	#include "GameSettings.h"
+	#include "Tile Animation.h"
 	#include "ShopKeeper Interface.h"
 	#include "Arms Dealer Init.h"
-	#include "vehicles.h"
-	#include "rotting corpses.h"
+	#include "Vehicles.h"
+	#include "Rotting Corpses.h"
 	#include "Interface Control.h"
 	#include "strategicmap.h"
 	#include "Morale.h"
 	#include "Meanwhile.h"
-	#include "drugs and alcohol.h"
+	#include "Drugs And Alcohol.h"
 	#include "SkillCheck.h"
-	#include "boxing.h"
+	#include "Boxing.h"
 	#include "overhead map.h"
+	#include "SgpStr.h"
+	#include "Platform.h"
+	#include "Civ Quotes.h"
+	#include "Text.h"
+	#include "Strategic Status.h"
+	#include "Game Clock.h"
+	#include "Campaign Types.h"
+	#include "Strategic Merc Handler.h"
+	#include "Buildings.h"
+	#include "Explosion Control.h"
+	#include "environment.h"
+	#include "Map Information.h"
+	
 #endif
 
 //turnspeed
@@ -121,7 +128,7 @@ enum
 	EX_NORTHWEST							= 28,
 	EX_NUM_WORLD_DIRECTIONS		= 32,
 	EX_DIRECTION_IRRELEVANT
-} ExtendedWorldDirections;
+};
 
 // LUT for conversion from 8-direction to extended direction
 UINT8 ubExtDirection[] = 
@@ -3956,10 +3963,11 @@ UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss )
 			ubVolume += 2;
 */
 
-	if (ubVolume < 0)
-	{
-	 ubVolume = 0;
-	}
+	// Lesh: UINT8 can't be less than zero
+//	if (ubVolume < 0)
+//	{
+//	 ubVolume = 0;
+//	}
 
 	return( ubVolume );
 }
@@ -11514,13 +11522,13 @@ void DebugValidateSoldierData( )
 				if ( pSoldier->ubGroupID == 0 && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_POW && !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
 				{
 					// This is bad!
-					swprintf( sString, L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", cnt );
+					WSTR_SPrintf( sString, 1024, L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", cnt );
 					fProblemDetected = TRUE;
 				}
 				else if ( ( pSoldier->ubGroupID != 0 ) && ( GetGroup( pSoldier->ubGroupID ) == NULL ) )
 				{
 					// This is bad!
-					swprintf( sString, L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", cnt, pSoldier->ubGroupID );
+					WSTR_SPrintf( sString, 1024, L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", cnt, pSoldier->ubGroupID );
 					fProblemDetected = TRUE;
 				}
 			}
@@ -11540,7 +11548,7 @@ void DebugValidateSoldierData( )
 						 ( pSoldier->sSectorY <= 0 ) || ( pSoldier->sSectorY >= 17 ) ||
 						 ( pSoldier->bSectorZ  < 0 ) || ( pSoldier->bSectorZ >   3 ) ) )
 			{
-				swprintf( sString, L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", cnt, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+				WSTR_SPrintf( sString, 1024, L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", cnt, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 				fProblemDetected = TRUE;
 			}
 		}

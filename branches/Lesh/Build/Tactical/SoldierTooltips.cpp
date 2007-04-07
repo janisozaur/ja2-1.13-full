@@ -1,4 +1,26 @@
-#include "Tactical All.h"
+#ifdef PRECOMPILEDHEADERS
+	#include "Tactical All.h"
+#else
+	#include "Types.h"
+	#include "Soldier Control.h"
+	#include "english.h"
+	#include "Text.h"
+	#include "video.h"
+	#include "line.h"
+	#include "local.h"
+	#include "Font.h"
+	#include "Font Control.h"
+	#include "GameSettings.h"
+	#include "Weapons.h"
+	#include "renderworld.h"
+	#include "SgpStr.h"
+	#include "lighting.h"
+	#include "Interface.h"
+	#include "Isometric Utils.h"
+	#include "Overhead.h"
+	#include "Game Clock.h"
+	
+#endif
 
 struct MOUSETT 
 {	
@@ -16,7 +38,7 @@ const int	DL_Basic		= 2;
 const int	DL_Full			= 3;
 const int	DL_Debug		= 4;
 
-void DisplayWeaponInfo( SOLDIERTYPE*, CHAR16*, UINT8, UINT8 );
+void DisplayWeaponInfo( SOLDIERTYPE*, CHAR16*, UINT16, UINT8, UINT8 );
 void DrawMouseTooltip(void);
 
 #define MAX(a, b) (a > b ? a : b)
@@ -124,37 +146,37 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			}
 		}
 
-		swprintf( pStrInfo, L"" );
+		WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"" );
 		if ( ubTooltipDetailLevel == DL_Debug )
 		{
 			// display "debug" info
 			if ( gGameExternalOptions.fEnableSoldierTooltipLocation )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_LOCATION], pStrInfo, sSoldierGridNo );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_LOCATION], pStrInfo, sSoldierGridNo );
 			if ( gGameExternalOptions.fEnableSoldierTooltipBrightness )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], pStrInfo, SHADE_MIN - LightTrueLevel( sSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], pStrInfo, SHADE_MIN - LightTrueLevel( sSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
 			if ( gGameExternalOptions.fEnableSoldierTooltipRangeToTarget )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_RANGE_TO_TARGET], pStrInfo, iRangeToTarget );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_RANGE_TO_TARGET], pStrInfo, iRangeToTarget );
 			if ( gGameExternalOptions.fEnableSoldierTooltipID )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ID], pStrInfo, pSoldier->ubID );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ID], pStrInfo, pSoldier->ubID );
 			if ( gGameExternalOptions.fEnableSoldierTooltipOrders )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->bOrders );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->bOrders );
 			if ( gGameExternalOptions.fEnableSoldierTooltipAttitude )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->bAttitude );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->bAttitude );
 			if ( gGameExternalOptions.fEnableSoldierTooltipActionPoints )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_APS], pStrInfo, pSoldier->bActionPoints );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_CURRENT_APS], pStrInfo, pSoldier->bActionPoints );
 			if ( gGameExternalOptions.fEnableSoldierTooltipHealth )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->bLife );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->bLife );
 		}
 
 		// armor info code block start
 		if ( ubTooltipDetailLevel >= DL_Full )
 		{
 			if ( gGameExternalOptions.fEnableSoldierTooltipHelmet )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_HELMET], pStrInfo, pSoldier->inv[HELMETPOS].usItem ? ItemNames[ pSoldier->inv[HELMETPOS].usItem ] : gzTooltipStrings[STR_TT_NO_HELMET] );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HELMET], pStrInfo, pSoldier->inv[HELMETPOS].usItem ? ItemNames[ pSoldier->inv[HELMETPOS].usItem ] : gzTooltipStrings[STR_TT_NO_HELMET] );
 			if ( gGameExternalOptions.fEnableSoldierTooltipVest )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_VEST], pStrInfo, pSoldier->inv[VESTPOS].usItem ? ItemNames[ pSoldier->inv[VESTPOS].usItem ] : gzTooltipStrings[STR_TT_NO_VEST] );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_VEST], pStrInfo, pSoldier->inv[VESTPOS].usItem ? ItemNames[ pSoldier->inv[VESTPOS].usItem ] : gzTooltipStrings[STR_TT_NO_VEST] );
 			if ( gGameExternalOptions.fEnableSoldierTooltipLeggings )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_LEGGINGS], pStrInfo, pSoldier->inv[LEGPOS].usItem ? ItemNames[ pSoldier->inv[LEGPOS].usItem ] : gzTooltipStrings[STR_TT_NO_LEGGING] );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_LEGGINGS], pStrInfo, pSoldier->inv[LEGPOS].usItem ? ItemNames[ pSoldier->inv[LEGPOS].usItem ] : gzTooltipStrings[STR_TT_NO_LEGGING] );
 		}
 		else
 		{
@@ -165,25 +187,25 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				if ( ArmourPercent( pSoldier ) )
 				{
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ARMOR] );
+					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR] );
 					if ( ubTooltipDetailLevel == DL_Basic )
 					{
 						if ( gGameExternalOptions.fEnableSoldierTooltipHelmet )
-							swprintf( pStrInfo, L"%s%s", pStrInfo, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
 						if ( gGameExternalOptions.fEnableSoldierTooltipVest )
-							swprintf( pStrInfo, L"%s%s", pStrInfo, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
 						if ( gGameExternalOptions.fEnableSoldierTooltipLeggings )
-							swprintf( pStrInfo, L"%s%s", pStrInfo, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
 						wcscat( pStrInfo, L"\n" );
 					}
 					else // ubTooltipDetailLevel == DL_Limited
 					{
-						swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_WORN] );
+						WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_WORN] );
 					}
 				}
 				else
 				{
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_NO_ARMOR] );
+					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_ARMOR_2], gzTooltipStrings[STR_TT_NO_ARMOR] );
 				}
 			}
 		}
@@ -204,30 +226,30 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				if ( ubTooltipDetailLevel >= DL_Full )
 				{
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo,
+					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo,
 						iNVG ? ItemNames[ pSoldier->inv[ iNVG ].usItem ] : gzTooltipStrings[STR_TT_NO_NVG] );
 				}
 				else
 				{
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo, iNVG ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_NVG] );
+					WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_NVG], pStrInfo, iNVG ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_NVG] );
 				}
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_GAS_MASK], pStrInfo,
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_GAS_MASK], pStrInfo,
 					( FindGasMask(pSoldier) != NO_SLOT ) ? gzTooltipStrings[STR_TT_WORN] : gzTooltipStrings[STR_TT_NO_MASK] );
 			}
 		}
 		else // gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Debug
 		{
 			if ( gGameExternalOptions.fEnableSoldierTooltipHeadItem1 )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_HEAD_POS_1], pStrInfo, ItemNames[ pSoldier->inv[HEAD1POS].usItem ] );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_1], pStrInfo, ItemNames[ pSoldier->inv[HEAD1POS].usItem ] );
 			if ( gGameExternalOptions.fEnableSoldierTooltipHeadItem2 )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_HEAD_POS_2], pStrInfo, ItemNames[ pSoldier->inv[HEAD2POS].usItem ] );
+				WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), gzTooltipStrings[STR_TT_CAT_HEAD_POS_2], pStrInfo, ItemNames[ pSoldier->inv[HEAD2POS].usItem ] );
 		}
 		// head slots info code block end
 
 		// weapon in primary hand info code block start
 		if ( gGameExternalOptions.fEnableSoldierTooltipWeapon )
 		{
-			DisplayWeaponInfo( pSoldier, pStrInfo, HANDPOS, ubTooltipDetailLevel );
+			DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), HANDPOS, ubTooltipDetailLevel );
 		} // gGameExternalOptions.fEnableSoldierTooltipWeapon
 		// weapon in primary hand info code block end
 
@@ -238,7 +260,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				// if there's something in the slot display it
 				wcscat( pStrInfo, L"\n" );
-				DisplayWeaponInfo( pSoldier, pStrInfo, SECONDHANDPOS, ubTooltipDetailLevel );
+				DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), SECONDHANDPOS, ubTooltipDetailLevel );
 			}
 		}
 		// weapon in off hand info code block end
@@ -296,7 +318,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			if ( fDisplayBigSlotItem )
 			{
 				wcscat( pStrInfo, gzTooltipStrings[STR_TT_IN_BACKPACK] );
-				DisplayWeaponInfo( pSoldier, pStrInfo, BigSlot, ubTooltipDetailLevel );
+				DisplayWeaponInfo( pSoldier, pStrInfo, sizeof( pRegion->FastHelpText ), BigSlot, ubTooltipDetailLevel );
 				fDisplayBigSlotItem = FALSE;
 			}
 		}
@@ -319,7 +341,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 } // SoldierTooltip(SOLDIERTYPE* pSoldier)
 
 
-void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
+void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT16 usMaxLen, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
 {
 	INT32		iNumAttachments		= 0;
 	BOOLEAN		fDisplayAttachment	= FALSE;
@@ -327,7 +349,7 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 	if ( ubTooltipDetailLevel >= DL_Full )
 	{
 		// display exact weapon model
-		swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo,
+		WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo,
 			WeaponInHand( pSoldier ) ? ItemNames[ pSoldier->inv[ubSlot].usItem ] : gzTooltipStrings[STR_TT_NO_WEAPON] );
 	}
 	else
@@ -338,32 +360,32 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 			switch( Weapon[pSoldier->inv[ubSlot].usItem].ubWeaponClass )
 			{
 				case HANDGUNCLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_HANDGUN] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_HANDGUN] );
 					break;
 				case SMGCLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_SMG] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_SMG] );
 					break;
 				case RIFLECLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_RIFLE] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_RIFLE] );
 					break;
 				case MGCLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_MG] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_MG] );
 					break;
 				case SHOTGUNCLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_SHOTGUN] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_SHOTGUN] );
 					break;
 				case KNIFECLASS:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_KNIFE] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_KNIFE] );
 					break;
 				default:
-					swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_HEAVY_WEAPON] );
+					WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo, gzTooltipStrings[STR_TT_HEAVY_WEAPON] );
 					break;
 			}
 		}
 		else
 		{
 			// display general weapon type
-			swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo,
+			WSTR_SPrintf( pStrInfo, usMaxLen, gzTooltipStrings[STR_TT_CAT_WEAPON], pStrInfo,
 				WeaponInHand( pSoldier) ? WeaponType[Weapon[pSoldier->inv[ubSlot].usItem].ubWeaponType] : gzTooltipStrings[STR_TT_NO_WEAPON] );
 		}
 	}

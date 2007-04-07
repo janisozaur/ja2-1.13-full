@@ -1,24 +1,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <memory.h>
-
 	#include "Types.h"
-
 	#include "strategicmap.h"
 	#include "Overhead.h"
 	#include "Isometric Utils.h"
-
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Items.h"
-
 	#include "Cursors.h"
-
 	#include "Map Information.h"
 	#include "Soldier Profile.h"
 	#include "Sys Globals.h"
@@ -26,9 +19,29 @@
 	#include "Animation Data.h"
 	#include "message.h"
 	#include "Font Control.h"
+	#include "Sound Control.h"
+	#include "Quests.h"
+	#include "strategic.h"
+	#include "opplist.h"
+	#include "Campaign Types.h"
+	#include "Render Fun.h"
+	#include "Meanwhile.h"
+	#include "Strategic AI.h"
+	#include "Map Screen Interface Map.h"
+	#include "Debug Control.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "Scheduling.h"
+	#include "NPC.h"
+	#include "SaveLoadScreen.h"
+	#include "Inventory Choosing.h"
+	#include "SgpStr.h"
+	#include "ai.h"
+	
 #endif
 
-#include "Map EdgePoints.h"
+#include "Map Edgepoints.h"
+
 BOOLEAN gfOriginalList = TRUE;
 
 SOLDIERINITNODE *gSoldierInitHead = NULL;
@@ -1866,7 +1879,7 @@ void AddSoldierInitListBloodcats()
 		{
 			#ifdef JA2BETAVERSION
 				wchar_t str[200];
-				swprintf( str, L"Table specifies that there are %d bloodcat placements in sector %c%d, but the map actually has %d bloodcat placements. Map value takes precedence. KM,LC:1",
+				WSTR_SPrintf( str, 200, L"Table specifies that there are %d bloodcat placements in sector %c%d, but the map actually has %d bloodcat placements. Map value takes precedence. KM,LC:1",
 									pSector->bBloodCatPlacements, gWorldSectorY + 'A' - 1, gWorldSectorX, bBloodCatPlacements );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
@@ -2119,7 +2132,7 @@ BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 		switch( ubCode )
 		{
 			case 1: //loading save
-				swprintf( str, L"Error detected in save file WHILE LOADING.  Please send save and text files associated with save to Kris and Dave."
+				WSTR_SPrintf( str, 512, L"Error detected in save file WHILE LOADING.  Please send save and text files associated with save to Kris and Dave."
 											 L"  After doing so, go back into the game and immediately resave the game which will fix the problem."
 											 L"  This is the bug responsible for mercs disappearing.  Be prepared to answer lots of questions..." );
 				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, str, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, ErrorDetectedInSaveCallback );
@@ -2138,7 +2151,7 @@ BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 				break;
 			case 4: //after fade in
 				gfDoDialogOnceGameScreenFadesIn = FALSE;
-				swprintf( str, L"Error detected while entering sector USING TEMP FILES.  Please send previous save and text files associated with save to Kris and Dave."
+				WSTR_SPrintf( str, 512, L"Error detected while entering sector USING TEMP FILES.  Please send previous save and text files associated with save to Kris and Dave."
 											 L"  After doing so, go back into the game and saving the game, reloading it, and saving it again *could* fix it."
 											 L"  This is the bug responsible for mercs disappearing.  Be prepared to answer lots of questions..." );
 				DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );

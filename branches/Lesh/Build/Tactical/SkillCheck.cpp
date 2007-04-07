@@ -11,8 +11,10 @@
 	#include "Soldier macros.h"
 	#include "Isometric Utils.h" 
 	#include "Morale.h"
-	#include "drugs and alcohol.h"
+	#include "Drugs And Alcohol.h"
 	#include "strategicmap.h"
+	#include "Platform.h"
+	
 #endif
 
 INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )

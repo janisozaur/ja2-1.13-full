@@ -11,39 +11,34 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "MemMan.h"
 	#include "Overhead Types.h"
 	#include "Soldier Control.h"
 	#include "Animation Cache.h"
 	#include "Animation Data.h"
 	#include "Animation Control.h"
-	#include "container.h"
 	#include "Interface.h"
-	#include <math.h>
-
 	#include "input.h"
 	#include "english.h"
 	#include "worlddef.h"
 	#include "worldman.h"
 	#include "renderworld.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "PathAIDebug.h"
 	#include "Points.h"
 	#include "ai.h"
 	#include "random.h"
 	#include "message.h"
-	#include "structure wrap.h"
-	#include "keys.h"
-	#include "gamesettings.h"
+	#include "Structure Wrap.h"
+	#include "Keys.h"
+	#include "GameSettings.h"
 	#include "Buildings.h"
+	#include "Game Clock.h"
+	#include "Platform.h"
+	
 #endif
-
-#include "PathAIDebug.h"
 
 extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 
@@ -126,7 +121,7 @@ typedef struct trail_s trail_t;
 enum
 {
 	STEP_BACKWARDS = 0x01,
-} TrailFlags;
+};
 
 #define EASYWATERCOST	TRAVELCOST_FLAT / 2
 #define ISWATER(t)	(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))
