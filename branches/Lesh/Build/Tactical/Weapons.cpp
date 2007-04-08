@@ -13,7 +13,6 @@
 	#include "Handle UI.h"
 	#include "Isometric Utils.h"
 	#include "worldman.h"
-	#include "math.h"
 	#include "Points.h"
 	#include "ai.h"
 	#include "LOS.h"
@@ -21,27 +20,33 @@
 	#include "opplist.h"
 	#include "Interface.h"
 	#include "message.h"
-	#include "campaign.h"
+	#include "Campaign.h"
 	#include "Items.h"
 	#include "Text.h"
 	#include "Soldier Profile.h"
-	#include "tile animation.h"
+	#include "Tile Animation.h"
 	#include "Dialogue Control.h"
 	#include "SkillCheck.h"
 	#include "Explosion Control.h"
 	#include "Quests.h"
-	#include "Physics.h"
+	#include "physics.h"
 	#include "random.h"
 	#include "Vehicles.h"
-	#include "bullets.h"
+	#include "Bullets.h"
 	#include "Morale.h"
 	#include "Meanwhile.h"
 	#include "SkillCheck.h"
-	#include "gamesettings.h"
+	#include "GameSettings.h"
 	#include "SaveLoadMap.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "Soldier macros.h"
+	#include "Platform.h"
+	#include "Auto Resolve.h"
+	#include "SmokeEffects.h"
+	#include "lighting.h"
+	
 #endif
 
 //rain
@@ -5663,12 +5668,12 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	if ( Item[pObj->usItem].usItemClass == IC_BLADE || Item[pObj->usItem].usItemClass == IC_PUNCH || Item[pObj->usItem].usItemClass == IC_TENTACLES )
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact + GetMeleeDamageBonus(pObj);
-		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubMeleeDamageMultiplier ) );
+		return (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubMeleeDamageMultiplier );
 	}
 	else
 	{
 		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact + GetDamageBonus(pObj);
-		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier ) );
+		return (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier );
 	}
 }
 

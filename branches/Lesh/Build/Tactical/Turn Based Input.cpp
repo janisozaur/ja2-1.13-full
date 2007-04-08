@@ -4,18 +4,14 @@
 	#include "Language Defines.h"
 	#include "HelpScreen.h"
 	#include "PreBattle Interface.h"
-  #include "ambient control.h"
+    #include "ambient control.h"
 	#include "DisplayCover.h"
 	#include "_Ja25Englishtext.h"
 #else
-	#include <stdio.h>
-	#include <string.h>
 	#include "WCheck.h"
-	#include "stdlib.h"
-	#include DEBUG.H"
-	#include "math.h"
+	#include "DEBUG.H"
 	#include "jascreens.h"
-	#include "pathai.h"
+	#include "PATHAI.H"
 	#include "Soldier Control.h"
 	#include "Animation Control.h"
 	#include "Animation Data.h"
@@ -29,10 +25,10 @@
 	#include "Sys Globals.h"
 	#include "screenids.h"
 	#include "Interface.h"
-	#include "cursor control.h"
+	#include "Cursor Control.h"
 	#include "Points.h"
 	#include "Interactive Tiles.h"
-	#include "interface cursors.h"
+	#include "Interface Cursors.h"
 	#include "Weapons.h"
 	#include "lighting.h"
 	#include "Sound Control.h"
@@ -49,64 +45,75 @@
 	#include "Communication.h"
 	#endif
 	#include "overhead map.h"
-	#include "world items.h"
+	#include "World Items.h"
 	#include "Game Clock.h"
-	#include "interface items.h"
+	#include "Interface Items.h"
 	#include "physics.h"
-	#include "ui cursors.h"
+	#include "UI Cursors.h"
 	#include "worldman.h"
 	#include "strategicmap.h"
 	#include "Soldier Profile.h"
 	#include "Soldier Create.h"
-	#include "soldier add.h"
+	#include "Soldier Add.h"
 	#include "Dialogue Control.h"
-	#include "interface dialogue.h"
+	#include "interface Dialogue.h"
 	#include "opplist.h"
-	#include "interactive tiles.h"
+	#include "Interactive Tiles.h"
 	#include "MessageBoxScreen.h"
 	#include "gameloop.h"
 	#include "gamescreen.h"
-	#include "spread burst.h"
-	#include "tile animation.h"
+	#include "Spread burst.h"
+	#include "Tile Animation.h"
 	#include "merc entering.h"
 	#include "Explosion Control.h"
 	#include "QuestDebug.h"
 	#include "Assignments.h"
-	#include "EditScreen.h"
+	#include "editscreen.h"
 	#include "SaveLoadGame.h"
 	#include "Structure Wrap.h"
 	#include "LOS.h"
 	#include "Exit Grids.h"
 	#include "Strategic Exit GUI.h"
 	#include "Auto Bandage.h"
-	#include	"Options Screen.h"
+	#include "Options Screen.h"
 	#include "Squads.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "soldier tile.h"
-	#include "Soldier functions.h"
+	#include "Soldier Functions.h"
 	#include "Game Events.h"
 	#include "english.h"
 	#include "random.h"
 	#include "Assignments.h"
 	#include "Map Screen Interface.h"
 	#include "renderworld.h"
-	#include	"Quest Debug System.h"
-	//#include "medical.h"
+	#include "Quest Debug System.h"
 	#include "Arms Dealer Init.h"
 	#include "ShopKeeper Interface.h"
 	#include "GameSettings.h"
-	#include "vehicles.h"
+	#include "Vehicles.h"
 	#include "GameVersion.h"
 	#include "SaveLoadScreen.h"
-	#include "Air raid.h"
+	#include "Air Raid.h"
 	#include "Meanwhile.h"
 	#include "Text.h"
 	#include "Inventory Choosing.h"
 	#include "Soldier macros.h"
 	#include "HelpScreen.h"
+	#include "DisplayCover.h"
+	#include "input.h"
+	#include "Cheats.h"
+	#include "Militia Control.h"
+	#include "Queen Command.h"
+	#include "Map Edgepoints.h"
+	#include "history.h"
+	#include "_Ja25EnglishText.h"
+    #include "Ambient Control.h"
+	#include "Strategic AI.h"
+	#include "PreBattle Interface.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
-
-	#include	"Quest Debug System.h"
 
 
 
@@ -3837,12 +3844,12 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 			{ //Use the singular version of the string
 				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
 				{ //male singular
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name, 
+					WSTR_SPrintf( str, 256, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name, 
 										MercPtrs[ gbPotentiallyAbandonedEPCSlotID ]->name );
 				}
 				else
 				{ //female singular
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name, 
+					WSTR_SPrintf( str, 256, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name, 
 										MercPtrs[ gbPotentiallyAbandonedEPCSlotID ]->name );
 				}
 			}
@@ -3850,11 +3857,11 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 			{ //Use the plural version of the string
 				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
 				{ //male plural
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					WSTR_SPrintf( str, 256, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
 				}
 				else
 				{ //female plural
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					WSTR_SPrintf( str, 256, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
 				}
 			}
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, str );
@@ -5085,7 +5092,6 @@ void EscapeUILock( )
 }
 
 #ifdef JA2BETAVERSION
-#include "Map EdgePoints.h"
 void ToggleMapEdgepoints()
 {
 	#ifdef JA2EDITOR

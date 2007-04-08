@@ -2,16 +2,16 @@
 	#include "Tactical All.h"
 #else
 	#include "Types.h"
-	#include "soldier control.h"
+	#include "Soldier Control.h"
 	#include "Overhead.h"
 	#include "Animation Control.h"
 	#include "Points.h"
 	#include "opplist.h"
-	#include "event pump.h"
+	#include "Event Pump.h"
 	#include "Sound Control.h"
 	#include "Interface.h"
 	#include "Isometric Utils.h"
-	#include "Font Control.H"
+	#include "Font Control.h"
 	#include "ai.h"
 	#include "Interface.h"
 	#include "message.h"
@@ -22,7 +22,7 @@
 	#include "Soldier Functions.h"
 	#include "Cursors.h"
 	#include "Queen Command.h"
-	#include "Pathai.h"
+	#include "PATHAI.H"
 	#include "Music Control.h"
 	#include "Strategic Turns.h"
 	#include "lighting.h"
@@ -31,15 +31,21 @@
 	#include "Dialogue Control.h"
 	#include "soldier profile type.h"
 	#include "SmokeEffects.h"
-	#include "lighteffects.h"
+	#include "LightEffects.h"
 	#include "Air Raid.h"
 	#include "Meanwhile.h"
 	#include "SkillCheck.h"
 	#include "AIInternals.h"
 	#include "AIList.h"
-	#ifdef DEBUG_INTERRUPTS
-		#include DEBUG.H"
-	#endif
+	#include "DEBUG.H"
+	#include "NPC.h"
+	#include "Soldier Profile.h"
+	#include "Soldier macros.h"
+	#include "Assignments.h"
+	#include "renderworld.h"
+	#include "Rotting Corpses.h"
+	#include "Squads.h"
+	
 #endif
 
 #include "Reinforcement.h"
@@ -674,7 +680,7 @@ void StartInterrupt( void )
 	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
-		INT16		sTemp[ 255 ];
+		CHAR16		sTemp[ 255 ];
 		UINT8		ubInterrupters = 0;
 		INT32		iSquad, iCounter;
 

@@ -2,24 +2,23 @@
 	#include "Tactical All.h"
 #else 
 	#include "Vehicles.h"
-	#include "String.h"
 	#include "Strategic Pathing.h"
 	#include "Assignments.h"
 	#include "Strategic Movement.h"
-	#include ""Squads.h"
+	#include "Squads.h"
 	#include "Map Screen Helicopter.h"
 	#include "Game Clock.h"
 	#include "Overhead.h"
 	#include "Soldier Profile.h"
 	#include "Sound Control.h"
 	#include "soundman.h"
-	#include "soldier add.h"
-	#include "interface panels.h"
+	#include "Soldier Add.h"
+	#include "Interface Panels.h"
 	#include "strategic.h"
 	#include "worlddef.h"
-	#include "tile animation.h"
+	#include "Tile Animation.h"
 	#include "Isometric Utils.h"
-	#include "Mapscreen.h"
+	#include "mapscreen.h"
 	#include "message.h"
 	#include "Interface.h"
 	#include "random.h"
@@ -29,6 +28,18 @@
 	#include "Animation Control.h"
 	#include "strategicmap.h"
 	#include "Interface Control.h"
+	#include "DEBUG.H"
+	#include "Soldier macros.h"
+	#include "Quests.h"
+	#include "screenids.h"
+	#include "jascreens.h"
+	#include "Tactical Save.h"
+	#include "Map Screen Interface.h"
+	#include "Campaign Types.h"
+	#include "Soldier Ani.h"
+	#include "opplist.h"
+	#include "Sys Globals.h"
+	
 #endif
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];
@@ -2013,7 +2024,8 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+// Lesh: seems weird and unused
+						  //pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(pVehicleList[cnt].pPassengers[ ubPassengerCnt ]), FALSE );
   					}
           }
           else
@@ -2022,7 +2034,8 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+// Lesh: seems weird and unused
+						  //pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
   					}
             else
             {

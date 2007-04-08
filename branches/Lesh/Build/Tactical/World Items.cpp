@@ -2,7 +2,7 @@
 	#include "Tactical All.h"
 #else
 	#include "Items.h"
-	#include "handle Items.h"
+	#include "Handle Items.h"
 	#include "Overhead.h"
 	#include "Weapons.h"
 	#include "Points.h"
@@ -14,9 +14,9 @@
 	#include "Animation Control.h"
 	#include "Font Control.h"
 	#include "Render Dirty.h"
-	#include "World items.h"
-	#include DEBUG.H"
-	#include "Isometric utils.h"
+	#include "World Items.h"
+	#include "DEBUG.H"
+	#include "Isometric Utils.h"
 	#include "Sys Globals.h"
 	#include "Tactical Save.h"
 	#include "strategicmap.h"
@@ -25,6 +25,10 @@
 	#include "Action Items.h"
 	#include "pits.h"
 	#include "GameSettings.h"
+	#include "Soldier Profile.h"
+	#include "Quests.h"
+	#include "message.h"
+	
 #endif
 
 //Global dynamic array of all of the items in a loaded map.

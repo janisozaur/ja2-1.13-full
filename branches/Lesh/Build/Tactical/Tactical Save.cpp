@@ -8,29 +8,46 @@
 	#include "Item Types.h"
 	#include "Items.h"
 	#include "Handle Items.h"
-	#include "StrategicMap.h"
+	#include "strategicmap.h"
 	#include "Tactical Save.h"
-	#include <stdio.h>
 	#include "Campaign Types.h"
 	#include "SaveLoadGame.h"
-	#include "WorldDef.h"
-	#include "rotting corpses.h"
-	#include "OverHead.h"
+	#include "worlddef.h"
+	#include "Rotting Corpses.h"
+	#include "Overhead.h"
 	#include "Keys.h"
 	#include "Soldier Create.h"
 	#include "Soldier Profile.h"
 	#include "Isometric Utils.h"
 	#include "Soldier Add.h"
-	#include "Npc.h"
-	#include "Ai.h"
+	#include "NPC.h"
+	#include "ai.h"
 	#include "Game Clock.h"
 	#include "Animation Control.h"
 	#include "Map Information.h"
-	//#include "pathai.h"
 	#include "SaveLoadMap.h"
-	#include DEBUG.H"
+	#include "DEBUG.H"
 	#include "random.h"
 	#include "Quests.h"
+	#include "Enemy Soldier Save.h"
+	#include "Map Screen Interface Map Inventory.h"
+	#include "Queen Command.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "Text.h"
+	#include "sgp.h"
+	#include "Soldier macros.h"
+	#include "Strategic Status.h"
+	#include "Map Screen Interface Map.h"
+	#include "strategic.h"
+	#include "LightEffects.h"
+	#include "GameVersion.h"
+	#include "PATHAI.H"
+	#include "Meanwhile.h"
+	#include "SmokeEffects.h"
+	#include "Animated ProgressBar.h"
+	#include "Platform.h"
+	
 #endif
 
 BOOLEAN gfWasInMeanwhile = FALSE;
@@ -2523,7 +2540,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 {
 	UINT32			uiNumberOfItems;
 	WORLDITEM		*pWorldItems=NULL;
-	UINT				i;
+	UINT32				i;
 	UINT8				bCount=0;
 	UINT16			uiFlagsForWorldItems=0;
 	UINT16			usFlagsForRottingCorpse=0;
@@ -2973,7 +2990,7 @@ BOOLEAN JA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, U
 
 void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	CHAR	zTempName[512];
+	CHAR8	zTempName[512];
 
 	//Convert the current sector location into a file name
 	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE, FALSE );
