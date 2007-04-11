@@ -1523,7 +1523,7 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 				UINT8 ubSectorY;
 				ubSectorX = (UINT8)SECTORX( pFinance->ubSecondCode );
 				ubSectorY = (UINT8)SECTORY( pFinance->ubSecondCode );
-				GetSectorIDString( ubSectorX, ubSectorY, 0, str, TRUE );
+				GetSectorIDString( ubSectorX, ubSectorY, 0, str, 128, TRUE );
 				WSTR_SPrintf(pString, usMaxLen, pTransactionText[ TRAIN_TOWN_MILITIA ], str );
 			}
 			break;

@@ -1,47 +1,18 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "sgp.h"
-	#include "Overhead Types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
-	#include "Overhead.h"
-	#include "Event Pump.h"
-	#include "Weapons.h"
-	#include "Animation Control.h"
-	#include "Sys Globals.h"
-	#include "Handle UI.h"
-	#include "Isometric Utils.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "Points.h"
-	#include "ai.h"
-	#include "LOS.h"
-	#include "renderworld.h"
-	#include "opplist.h"
-	#include "Interface.h"
-	#include "message.h"
-	#include "campaign.h"
-	#include "Items.h"
+	#include "Types.h"
+	#include "DEBUG.H"
+	#include "MemMan.h"
 	#include "Text.h"
-	#include "Soldier Profile.h"
-	#include "tile animation.h"
-	#include "Dialogue Control.h"
-	#include "SkillCheck.h"
-	#include "Explosion Control.h"
-	#include "Quests.h"
-	#include "Physics.h"
-	#include "random.h"
-	#include "Vehicles.h"
-	#include "bullets.h"
-	#include "Morale.h"
-	#include "Meanwhile.h"
-	#include "SkillCheck.h"
-	#include "gamesettings.h"
-	#include "SaveLoadMap.h"
+	#include "Weapons.h"
+	#include "SgpStr.h"
+	#include "FileMan.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "GameSettings.h"
+	#include "Platform.h"
 	#include "EnemyItemDrops.h"
 #endif
 
@@ -49,7 +20,7 @@ struct
 {
 	PARSE_STAGE	curElement;
 
-	INT8		szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
 	EXPLOSIVE_DROPS	curExplosiveDrop;
 	EXPLOSIVE_DROPS *	curArray;
 

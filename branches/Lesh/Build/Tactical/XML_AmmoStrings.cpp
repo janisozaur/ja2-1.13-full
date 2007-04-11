@@ -1,54 +1,23 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "sgp.h"
-	#include "Overhead Types.h"
-	#include "Sound Control.h"
-	#include "Soldier Control.h"
-	#include "Overhead.h"
-	#include "Event Pump.h"
-	#include "Weapons.h"
-	#include "Animation Control.h"
-	#include "Sys Globals.h"
-	#include "Handle UI.h"
-	#include "Isometric Utils.h"
-	#include "worldman.h"
-	#include "math.h"
-	#include "Points.h"
-	#include "ai.h"
-	#include "LOS.h"
-	#include "renderworld.h"
-	#include "opplist.h"
-	#include "Interface.h"
-	#include "message.h"
-	#include "campaign.h"
-	#include "Items.h"
+	#include "Types.h"
+	#include "DEBUG.H"
+	#include "MemMan.h"
 	#include "Text.h"
-	#include "Soldier Profile.h"
-	#include "tile animation.h"
-	#include "Dialogue Control.h"
-	#include "SkillCheck.h"
-	#include "Explosion Control.h"
-	#include "Quests.h"
-	#include "Physics.h"
-	#include "random.h"
-	#include "Vehicles.h"
-	#include "bullets.h"
-	#include "Morale.h"
-	#include "Meanwhile.h"
-	#include "SkillCheck.h"
-	#include "gamesettings.h"
-	#include "SaveLoadMap.h"
+	#include "SgpStr.h"
+	#include "FileMan.h"
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "Platform.h"
 #endif
 
 struct
 {
 	PARSE_STAGE	curElement;
 
-	INT8		szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8		szCharData[MAX_CHAR_DATA_LENGTH+1];
 
 	UINT32			maxArraySize;
 	UINT32			curIndex;	
@@ -198,7 +167,7 @@ BOOLEAN ReadInAmmoStats(STR fileName)
 	
 	memset(&pData,0,sizeof(pData));
 	pData.maxArraySize = MAXITEMS; 
-	pData.curIndex = -1;
+	pData.curIndex = 0xFFFFFFFF;
 	
 	XML_SetUserData(parser, &pData);
 
@@ -244,7 +213,7 @@ BOOLEAN WriteAmmoStats()
 			FilePrintf(hFile,"\t\t<AmmoCaliber>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder, L"&<>\'\"\0");
 				UINT16 invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)
@@ -292,7 +261,7 @@ BOOLEAN WriteAmmoStats()
 			FilePrintf(hFile,"\t\t<BRCaliber>");
 			while(szRemainder[0] != '\0')
 			{
-				UINT32 uiCharLoc = strcspn(szRemainder,"&<>\'\"\0");
+				UINT32 uiCharLoc = wcscspn(szRemainder, L"&<>\'\"\0");
 				UINT16 invChar = szRemainder[uiCharLoc];
 				
 				if(uiCharLoc)

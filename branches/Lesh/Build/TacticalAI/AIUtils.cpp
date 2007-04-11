@@ -601,7 +601,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	*/
 
 	// if range is restricted, make sure origin is a legal gridno!
-	if (fRangeRestricted && ((usOrigin < 0) || (usOrigin >= GRIDSIZE)))
+	if (fRangeRestricted && (usOrigin >= GRIDSIZE))
 	{
 #ifdef BETAVERSION
 		NameMessage(pSoldier,"has illegal origin, but his roaming range is restricted!",1000);

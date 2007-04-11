@@ -534,7 +534,7 @@ void RenderTacticalPlacementGUI()
 		SetFontForeground( FONT_BEIGE );
 		SetFontShadow( 141 );
 		
-		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, TRUE );
+		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, 128, TRUE );
 
 		mprintf(120, SCREEN_HEIGHT - 145, L"%s %s -- %s...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
 
@@ -848,7 +848,7 @@ void ChooseRandomEdgepoints()
 			}
 			else
 			{
-				if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData < 0 || gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX )
+				if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX )
 				{
 					i = i;
 				}

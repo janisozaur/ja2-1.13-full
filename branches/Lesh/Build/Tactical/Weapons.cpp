@@ -288,7 +288,7 @@ EXPLOSIVETYPE Explosive[MAXITEMS+1];// =
 //};
 
 
-INT8 gzBurstSndStrings[MAXITEMS*2][128];// =
+CHAR8 gzBurstSndStrings[MAXITEMS*2][128];// =
 //{
 //	"",													// NOAMMO
 //	"",													// 38

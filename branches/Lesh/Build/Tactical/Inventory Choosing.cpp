@@ -712,7 +712,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 			else
 			{
 				//check for incompatibilities 
-				for(i = 0;i<sizeof(IncompatibleAttachments);i++)
+				for(i = 0; i<MAXATTACHMENTS; i++)
 				{
 					if ( IncompatibleAttachments[i][0] == NONE )
 						break;
@@ -733,7 +733,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 				else
 				{
 					//check for incompatibilities w/scope
-					for(i = 0;i<sizeof(IncompatibleAttachments);i++)
+					for(i = 0; i<MAXATTACHMENTS; i++)
 					{
 						if ( IncompatibleAttachments[i][0] == NONE )
 							break;
@@ -751,7 +751,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		else if ( usScopeIndex > 0 )
 		{
 			//check for incompatibilities with scope
-			for(i = 0;i<sizeof(IncompatibleAttachments);i++)
+			for(i = 0; i<MAXATTACHMENTS; i++)
 			{
 				if ( IncompatibleAttachments[i][0] == NONE )
 					break;
@@ -772,7 +772,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 				usAttachIndex2 = PickARandomAttachment(ATTACHMENTS,usGunIndex,bAttachClass,FALSE);
 								
 				//check for incompatibilities with 1st attachment
-				for(i = 0;i<sizeof(IncompatibleAttachments);i++)
+				for(i = 0; i<MAXATTACHMENTS; i++)
 				{
 					if ( IncompatibleAttachments[i][0] == NONE )
 						break;
@@ -3042,7 +3042,7 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 		// WANNE
 		pickItem = FALSE;
 
-		if (usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem))
+		if (Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem))
 		{
 			// On day
 			if (DayTime() == TRUE)
@@ -3108,7 +3108,7 @@ UINT16 PickARandomAttachment(UINT8 typeIndex, UINT16 usBaseItem, UINT8 maxCoolne
 		uiChoice = Random(gArmyItemChoices[ typeIndex ].ubChoices);
 		usItem = gArmyItemChoices[ typeIndex ].bItemNo[ uiChoice ];
 
-		if ( usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ValidAttachment(usItem,usBaseItem))
+		if ( Item[usItem].ubCoolness <= maxCoolness && ValidAttachment(usItem,usBaseItem))
 		{
 			// pick a default item in case we don't find anything with a matching coolness, but pick the coolest item we can find
 			if ( defaultItem == 0 || Item[usItem].ubCoolness > Item[defaultItem].ubCoolness )
