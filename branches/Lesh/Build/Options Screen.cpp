@@ -3,7 +3,7 @@
 #else
 	#include	"Types.h"
 	#include	"Options Screen.h"
-	#include	"Video.h"
+	#include	"video.h"
 	#include	"Font Control.h"
 	#include	"Game Clock.h"
 	#include	"Render Dirty.h"
@@ -15,29 +15,32 @@
 	#include	"WCheck.h"
 	#include	"Utilities.h"
 	#include	"Slider.h"
-	#include	"Debug.h"
+	#include	"DEBUG.H"
 	#include	"Music Control.h"
 	#include	"Sound Control.h"
 	#include	"soundman.h"
 	#include	"Ambient Control.h"
-	#include	"Worlddat.h"
-	#include	"Worlddef.h"
+	#include	"WorldDat.h"
+	#include	"worlddef.h"
 	#include	"GameSettings.h"
 	#include  "Game Init.h"
-	#include	"English.h"
+	#include	"english.h"
 	#include	"Overhead.h"
-	#include	"Gap.h"
+	#include	"GAP.H"
 	#include	"Cursors.h"
-	#include	"SysUtil.h"
+	#include	"sysutil.h"
 	#include	"Exit Grids.h"
 	#include	"Text.h"
 	#include	"Interface Control.h"
-	#include	"Message.h"
+	#include	"message.h"
 	#include	"Language Defines.h"
 	#include "Multi Language Graphic Utils.h"
+	#include "Map Information.h"
+	#include "SmokeEffects.h"
+	
 #endif
 
-#include		"WorldMan.h"
+#include		"worldman.h"
 
 /////////////////////////////////
 //
@@ -895,7 +898,7 @@ void		GetOptionsScreenUserInput()
 
 
 				case 'z':
-					 SetErrorMode( SEM_FAILCRITICALERRORS );
+//					 SetErrorMode( SEM_FAILCRITICALERRORS );
 					break;
 
 				case 'q':

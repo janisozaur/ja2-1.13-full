@@ -1,23 +1,20 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "sgp.h" 
 	#include "gameloop.h"
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
 	#include "vobject_blitters.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "worlddef.h" 
 	#include "renderworld.h"
 	#include "input.h"
-	#include "font.h"  
+	#include "Font.h"  
 	#include "screenids.h"
-	#include "container.h" 
-	#include "overhead.h"
+	#include "Container.h" 
+	#include "Overhead.h"
 	#include "Isometric Utils.h"
 	#include "sysutil.h"
 	#include "Font Control.h"  
@@ -29,13 +26,13 @@
 	#include "Timer Control.h"
 	#include "Render Dirty.h"
 	#include "Sys Globals.h"
-	#include "interface.h"
-	#include "soldier ani.h"
-	#include <wchar.h>
-	#include <tchar.h>
+	#include "Interface.h"
+	#include "Soldier Ani.h"
 	#include "english.h"
-	#include "Fileman.h"
-	#include "messageboxscreen.h"
+	#include "FileMan.h"
+	#include "MessageBoxScreen.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -393,7 +390,7 @@ void BuildListFile( )
 		}
 		else
 		{
-			swprintf( (wchar_t *)zError, (wchar_t *)L"Animation str %S is not known: ", currFilename );
+			WSTR_SPrintf( zError, 128, L"Animation str %S is not known: ", currFilename );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, NULL, NULL );
 			fclose( infoFile );
 			return;

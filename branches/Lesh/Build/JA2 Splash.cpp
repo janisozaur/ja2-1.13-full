@@ -2,6 +2,15 @@
 	#include "JA2 All.h"
 #else
 	//add includes here!
+	#include "Types.h"
+	#include "JA2 Splash.h"
+	#include "vsurface.h"
+	#include "video.h"
+	#include "vobject.h"
+	#include "Utilities.h"
+	#include "Timer Control.h"
+	#include "Platform.h"
+	
 #endif
 
 UINT32 guiSplashFrameFade = 10;

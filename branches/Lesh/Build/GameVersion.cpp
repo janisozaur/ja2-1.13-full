@@ -13,12 +13,12 @@
 #ifdef JA2BETAVERSION
 
 //BETA/TEST BUILD VERSION
-INT16		zVersionLabel[256]		= { L"Map Editor v1.13.687" }; 
+CHAR16		zVersionLabel[256]		= { L"Map Editor v1.13.687" }; 
 
 #elif defined CRIPPLED_VERSION
 
 //RELEASE BUILD VERSION 
-INT16		zVersionLabel[256]		= { L"Beta v. 0.98" }; 
+CHAR16		zVersionLabel[256]		= { L"Beta v. 0.98" }; 
 
 #else
 
@@ -28,7 +28,7 @@ INT16		zVersionLabel[256]		= { L"Beta v. 0.98" };
 
 #endif
 										
-INT8		czVersionNumber[16]	= { "Build 07.03.30" };		//YY.MM.DD
+CHAR8		czVersionNumber[16]	= { "Build 07.03.30" };		//YY.MM.DD
 wchar_t		zTrackingNumber[16]	= { L"Z" };
 	
 

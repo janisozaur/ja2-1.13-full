@@ -356,7 +356,7 @@ void GetRootName( INT8 * pDestStr, INT8 * pSrcStr )
 
 	// Remove path
 	strcpy( cTempFilename, pSrcStr );
-	cEndOfName = strrchr( cTempFilename, '\\' );
+	cEndOfName = strrchr( cTempFilename, BACKSLASH );
 	if (cEndOfName != NULL)
 	{
 		cEndOfName++;

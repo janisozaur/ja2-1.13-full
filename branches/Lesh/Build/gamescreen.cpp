@@ -3,19 +3,16 @@
 	#include "HelpScreen.h"
 	#include "PreBattle Interface.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h> 
 	#include "sgp.h" 
 	#include "gameloop.h"
 	#include "vobject.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "worlddef.h" 
 	#include "renderworld.h"
-	#include "font.h"  
+	#include "Font.h"  
 	#include "screenids.h"
-	#include "screens.h"
-	#include "overhead.h"
+	#include "SCREENS.H"
+	#include "Overhead.h"
 	#include "Isometric Utils.h"
 	#include "sysutil.h"
 	#include "input.h" 
@@ -26,58 +23,62 @@
 	#include "Render Dirty.h"
 	#include "Interface.h"
 	#include "Handle UI.h"
-	#include <wchar.h>
-	#include <tchar.h>
-	#include "cursors.h"    
+	#include "Cursors.h"    
 	#include "vobject_blitters.h"
 	#include "Button System.h"
 	#include "lighting.h"
 	#include "renderworld.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "environment.h"
 	#include "Music Control.h"
-	#include "bullets.h"
+	#include "Bullets.h"
 	#include "Assignments.h"
 	#include "message.h"
-	#include <string.h>
 	#include "overhead map.h"
 	#include "Strategic Exit GUI.h"
-	#include "strategic movement.h"
+	#include "Strategic Movement.h"
 	#include "Tactical Placement GUI.h"
-	#include "Air raid.h"
+	#include "Air Raid.h"
 	#include "Game Clock.h"
-	#include "game init.h"
+	#include "Game Init.h"
 
 	//DEF: Test Code
 	#ifdef NETWORKED
 	#include "Networking.h"
 	#endif
-	#include "interface control.h"
-	#include "game clock.h"
+	#include "Interface Control.h"
+	#include "Game Clock.h"
 	#include "physics.h"
-	#include "fade screen.h" 
-	#include "dialogue control.h"
-	#include "soldier macros.h"
+	#include "Fade Screen.h" 
+	#include "Dialogue Control.h"
+	#include "Soldier macros.h"
 	#include "faces.h"
 	#include "strategicmap.h"
 	#include "gamescreen.h"
-	#include "interface.h"
-	#include "cursor control.h"
-	#include "strategic turns.h"
-
+	#include "Cursor Control.h"
+	#include "Strategic Turns.h"
 	#include "merc entering.h"
-	#include "soldier create.h"
+	#include "Soldier Create.h"
 	#include "Soldier Init List.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Map Information.h"
 	#include "environment.h"
 	#include "Squads.h"
-	#include "interface dialogue.h"
-	#include "auto bandage.h"
-	#include "meanwhile.h"
-	#include "strategic ai.h"
+	#include "interface Dialogue.h"
+	#include "Auto Bandage.h"
+	#include "Meanwhile.h"
+	#include "Strategic AI.h"
 	#include "HelpScreen.h"
 	#include "PreBattle Interface.h"
+	#include "random.h"
+	#include "GameSettings.h"
+	#include "Scheduling.h"
+	#include "MessageBoxScreen.h"
+	#include "Text.h"
+	#include "Sound Control.h"
+	#include "editscreen.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -165,7 +166,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"90" );
+	wcscpy( VideoOverlayDesc.pzText, L"90" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
@@ -174,7 +175,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.sTop				 = 0;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"Levelnodes: 100000" );
+	wcscpy( VideoOverlayDesc.pzText, L"Levelnodes: 100000" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
   
@@ -703,7 +704,7 @@ UINT32  MainGameScreenHandle(void)
 		#ifdef JA2EDITOR
 		else if( gfIntendOnEnteringEditor )
 		{
-			OutputDebugString( "Aborting normal game mode and entering editor mode...\n" );
+//			OutputDebugString( "Aborting normal game mode and entering editor mode...\n" );
 			SetPendingNewScreen( 0xffff ); //NO_SCREEN
 			return EDIT_SCREEN;
 		}

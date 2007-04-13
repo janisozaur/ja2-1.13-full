@@ -1,62 +1,57 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
 	#include "sgp.h"
 	#include "gameloop.h"
 	#include "himage.h"
 	#include "vobject.h"
 	#include "vobject_private.h"
 	#include "vobject_blitters.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "input.h"
-	#include "font.h"
+	#include "Font.h"
 	#include "mousesystem.h"
 	#include "screenids.h"
-	#include "screens.h"
+	#include "SCREENS.H"
 	#include "Font Control.h" 
 	#include "sysutil.h"
 	#include "renderworld.h"
 	#include "tiledef.h"
 	#include "worlddef.h"
 	#include "editscreen.h"
-	#include <wchar.h>
-	#include <tchar.h>
 	#include "Timer Control.h"     
 	#include "Sys Globals.h"
-	#include "interface.h"
-	#include "overhead.h"
-	#include "utilities.h"
-	#include "render dirty.h"
+	#include "Interface.h"
+	#include "Overhead.h"
+	#include "Utilities.h"
+	#include "Render Dirty.h"
 	#include "jascreens.h"
 	#include "gameloop.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "Event Pump.h"
 	#include "environment.h"
-	#include "animation cache.h"
+	#include "Animation Cache.h"
 	#include "lighting.h"
-	#include "interface panels.h"
+	#include "Interface Panels.h"
 	#include "Music Control.h"
 	#include "Sound Control.h"
 	#include "mainmenuscreen.h"
 	#include "Game Init.h"
-	#include "init.h"
-	#include "cursor control.h"
-	#include "utilities.h"
+	#include "Init.h"
+	#include "Cursor Control.h"
 	#include "GameVersion.h"
-	#include "game clock.h"
+	#include "Game Clock.h"
 	#include "gamescreen.h"
 	#include "english.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "WordWrap.h"
-	#include "Sound Control.h"
-	#include "fade screen.h"
-	#include "WordWrap.h"
+	#include "Fade Screen.h"
 	#include "Multi Language Graphic Utils.h"
-	#include "text.h"
+	#include "Text.h"
 	#include "Language Defines.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	
 #endif
 
 #define _UNICODE
@@ -150,12 +145,12 @@ void DisplayFrameRate( )
 	{
 		// FRAME RATE
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-		swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"%ld", __min( uiFPS, 1000 ) );
+		WSTR_SPrintf( VideoOverlayDesc.pzText, VIDEO_OVERLAY_TEXT_LEN, L"%ld", __min( uiFPS, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
 
 		// TIMER COUNTER		
-		swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"%ld", __min( giTimerDiag, 1000 ) );
+		WSTR_SPrintf( VideoOverlayDesc.pzText, VIDEO_OVERLAY_TEXT_LEN, L"%ld", __min( giTimerDiag, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
 		
@@ -290,7 +285,7 @@ UINT32 ErrorScreenHandle(void)
   
 	  if( gubAssertString[0] )
 	  {
-		  swprintf( str, L"%S", gubAssertString );
+		  WSTR_SPrintf( str, 256, L"%S", gubAssertString );
 		  DisplayWrappedString( 50, 270, 560, 2, FONT12ARIAL, FONT_RED, str, FONT_BLACK, TRUE, LEFT_JUSTIFIED );
 	  }
 #endif

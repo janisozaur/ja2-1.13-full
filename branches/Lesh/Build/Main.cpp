@@ -16,7 +16,6 @@ static void GameQuit( void )
 int main(int argc, char *argv[])
 {
 	SDL_Event	event;
-	//SDL_Surface *screen;
 
 	printf("JA2 1.13 startup\n");
 
@@ -34,11 +33,10 @@ int main(int argc, char *argv[])
 		return FALSE;
 	}
 
-	//screen = SDL_SetVideoMode(800, 600, 16, SDL_SWSURFACE);
 	SDL_EventState(SDL_QUIT, SDL_ENABLE);
 	printf("SDL initialized\n");
 
-	__try
+//	__try
 	{
 		fflush(stdout);
 		fflush(stderr);
@@ -154,9 +152,9 @@ int main(int argc, char *argv[])
 		ShutdownStandardGamingPlatform();
 		printf("SGP closed\n");
 	}
-	__except( RecordExceptionInfo( GetExceptionInformation() ))
-	{
-	}
+//	__except( RecordExceptionInfo( GetExceptionInformation() ))
+//	{
+//	}
 	SDL_Quit();
 	printf("SDL closed\n");
 

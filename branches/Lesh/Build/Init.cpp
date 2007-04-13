@@ -3,13 +3,11 @@
 	#include "HelpScreen.h"
 	#include "Multilingual Text Code Generator.h"
 	#include "INIReader.h"
-	
 #else
-	#include <stdio.h>
 	#include "sgp.h"
-	#include "Gameloop.h"
-	#include "Screens.h"
-	#include "Wcheck.h"
+	#include "gameloop.h"
+	#include "SCREENS.H"
+	#include "WCheck.h"
 	#include "INIReader.h"
 	#include "vobject_blitters.h"
 	#include "renderworld.h"
@@ -17,34 +15,33 @@
 	#include "sysutil.h"
 	#include "worlddef.h"
 	#include "Animation Data.h"
-	#include "overhead.h"
+	#include "Overhead.h"
 	#include "Font Control.h"
 	#include "Button System.h"
 	#include "Timer Control.h"
 	#include "Utilities.h"
 	#include "Radar Screen.h"
 	#include "Render Dirty.h"
-	#include "cursors.h"
+	#include "Cursors.h"
 	#include "Sound Control.h"
 	#include "Event Pump.h"
 	#include "lighting.h"
 	#include "Cursor Control.h"
-	#include "music control.h"
+	#include "Music Control.h"
 	#include "video.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "mapscreen.h"
-	#include "interface items.h"
-	#include "Maputility.h"
+	#include "Interface Items.h"
+	#include "maputility.h"
 	#include "strategic.h"
-	#include "dialogue control.h"
+	#include "Dialogue Control.h"
 	#include "Text.h"
 	#include "laptop.h"
 	#include "NPC.h"
 	#include "MercTextBox.h"
-	#include "tile cache.h"
+	#include "Tile Cache.h"
 	#include "strategicmap.h"
 	#include "Map Information.h"
-	#include "laptop.h"
 	#include "Shade Table Util.h"
 	#include "Exit Grids.h"
 	#include "Summary Info.h" 
@@ -54,9 +51,14 @@
 	#include "jascreens.h"
 	#include "XML.h"
 	#include "SaveLoadGame.h"
+	#include "editscreen.h"
+	#include "Vehicles.h"
+	#include "Weapons.h"
+	#include "Multilingual Text Code Generator.h"
+	
 #endif
 
-extern BOOLEAN GetCDromDriveLetter( STR8	pString );
+//extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
@@ -65,11 +67,11 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 #endif
 
-#if defined( GERMAN ) && !defined( _DEBUG )
+//#if defined( GERMAN ) && !defined( _DEBUG )
 	//#define LASERLOCK_ENABLED
-#endif
+//#endif
 
-
+/*
 #ifdef LASERLOCK_ENABLED
 	int	LASERLOK_Init( HINSTANCE hInstance );
 	int	LASERLOK_Run();
@@ -81,7 +83,7 @@ extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 #endif
 
 extern	HINSTANCE					ghInstance;
-
+*/
 
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
@@ -396,11 +398,11 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 UINT32 InitializeJA2(void)
 { 
 
-#ifdef LASERLOCK_ENABLED
-	HandleLaserLockResult( PrepareLaserLockSystem() );
-#endif
+//#ifdef LASERLOCK_ENABLED
+//	HandleLaserLockResult( PrepareLaserLockSystem() );
+//#endif
 
-  HandleJA2CDCheck( );
+//  HandleJA2CDCheck( );
 
 	gfWorldLoaded = FALSE;
 
@@ -530,7 +532,7 @@ UINT32 InitializeJA2(void)
 		// CHECK COMMANDLINE FOR SPECIAL UTILITY
 		if( !strcmp( gzCommandLine, "-EDITORAUTO" ) )
 		{
-			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
+//			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
 			sprintf( (char *)gubFilename, "none");
 			//also set the sector
@@ -544,7 +546,7 @@ UINT32 InitializeJA2(void)
 		}
 		if ( strcmp( gzCommandLine, "-EDITOR" ) == 0 )
 		{
-			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
+//			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
 			sprintf( (char *)gubFilename, "none");
 			//also set the sector
@@ -622,7 +624,7 @@ void ShutdownJA2(void)
 	ClearOutVehicleList();
 }
 
-
+/*
 #ifdef LASERLOCK_ENABLED
 
 BOOLEAN PrepareLaserLockSystem()
@@ -690,3 +692,4 @@ void HandleLaserLockResult( BOOLEAN fSuccess )
 }
 
 #endif
+*/

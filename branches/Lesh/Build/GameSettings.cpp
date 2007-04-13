@@ -8,7 +8,6 @@
 	#include	"Types.h"
 	#include	"GameSettings.h"
 	#include	"FileMan.h"
-	#include	"String.h"
 	#include	"Sound Control.h"
 	#include	"SaveLoadScreen.h"
 	#include	"Music Control.h"
@@ -16,10 +15,20 @@
 	#include	"Overhead.h"
 	#include	"GameVersion.h"
 	#include	"LibraryDataBase.h"
-	#include	"Debug.h"
+	#include	"DEBUG.H"
 	#include	"Language Defines.h"
 	#include "HelpScreen.h"
 	#include "INIReader.h"
+	#include "Queen Command.h"
+	#include "strategicmap.h"
+	#include "Meanwhile.h"
+	#include "Campaign.h"
+	#include "message.h"
+	#include "sgp.h"
+	#include "random.h"
+	#include "Shade Table Util.h"
+	#include "SaveLoadGame.h"
+	
 #endif
 
 #include	"Text.h"
@@ -308,8 +317,8 @@ extern INT32 CountEmptyIMPSlots( INT8 iSex );
 void LoadGameExternalOptions()
 {
 	//Kaiden: Setting Ja2_Options.ini file to be read
-	CIniReader iniReader(GAME_EXTERNAL_OPTIONS_FILE);
-
+	CIniReader iniReader;
+	iniReader.Open(GAME_EXTERNAL_OPTIONS_FILE);
 
 	//################# Laptop Settings #################
 
@@ -663,9 +672,10 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fEnableSoldierTooltipBigSlot4		= iniReader.ReadBoolean("JA2 Tactical Settings", "SOLDIER_TOOLTIP_DISPLAY_BIG_SLOT_4", TRUE);
 	// ShadoWarrior: Tooltip changes (end)
 
+	iniReader.Close();
 }
 
-
+/*
 BOOLEAN GetCDLocation( )
 {
 	UINT32	uiStrngLength = 0;
@@ -727,9 +737,9 @@ BOOLEAN GetCDLocation( )
 
 	return( TRUE );
 }
+*/
 
-
-
+/*
 BOOLEAN GetCDromDriveLetter( STR8	pString )
 {
 	UINT32	uiSize=0;
@@ -831,6 +841,7 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 
 */
 
+/*
 BOOLEAN CheckIfGameCdromIsInCDromDrive()
 {
 	CHAR8		zVolumeNameBuffer[512];
@@ -891,8 +902,9 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 
 	return( TRUE );	
 }
+*/
 
-
+/*
 BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 {
 	UINT32	uiRetVal=0;
@@ -912,8 +924,9 @@ BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 		return( TRUE );
 	}
 }
+*/
 
-
+/*
 void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 {
 	if( bExitValue == MSG_BOX_RETURN_OK )
@@ -930,8 +943,9 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 		gfProgramIsRunning = FALSE;
 	}
 }
+*/
 
-
+/*
 BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 {
 	UINT32	uiDriveType;
@@ -955,6 +969,7 @@ BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 
 	return( FALSE );
 }
+*/
 
 void DisplayGameSettings( )
 {

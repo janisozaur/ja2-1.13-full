@@ -2,7 +2,16 @@
 	#include "JA2 All.h"
 	#include "Loading Screen.h"
 #else
-	//???
+	#include "Types.h"
+	#include "video.h"
+	#include "Render Dirty.h"
+	#include "Font.h"
+	#include "Font Control.h"
+	#include "Campaign Types.h"
+	#include "random.h"
+	#include "Game Clock.h"
+	
+	#include "Loading Screen.h"
 #endif
 
 extern HVSURFACE ghFrameBuffer;

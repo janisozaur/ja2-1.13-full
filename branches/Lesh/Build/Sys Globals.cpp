@@ -1,13 +1,12 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
-	#include <stdarg.h>
-	#include <stdio.h>
-	#include <wchar.h>
-	#include "types.h"
+	#include "Types.h"
 	#include "screenids.h"
 	#include "Sys Globals.h"
 	#include "gameloop.h"
+	#include "Platform.h"
+	
 #endif
 
 

@@ -6,6 +6,22 @@
 #else
 	#include "Types.h"
 	#include "Credits.h"
+	#include "Encrypted File.h"
+	#include "vsurface.h"
+	#include "Render Dirty.h"
+	#include "random.h"
+	#include "video.h"
+	#include "Timer Control.h"
+	#include "Text.h"
+	#include "WordWrap.h"
+	#include "Font.h"
+	#include "english.h"
+	#include "Font Control.h"
+	#include "WCheck.h"
+	#include "Utilities.h"
+	#include "Cursors.h"
+	#include "sysutil.h"
+	
 #endif
 
 

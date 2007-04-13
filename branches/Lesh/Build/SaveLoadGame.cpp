@@ -11,32 +11,29 @@
 	#include "Types.h"
 	#include "Soldier Profile.h"
 	#include "FileMan.h"
-	#include <string.h>
-	#include <stdio.h>
-	#include "Debug.h"
-	#include "OverHead.h"
+	#include "DEBUG.H"
+	#include "Overhead.h"
 	#include "Keys.h"
 	#include "finances.h"
-	#include "History.h"
+	#include "history.h"
 	#include "files.h"
-	#include "Laptop.h"
-	#include "iniReader.h"
-	#include "Email.h"
-	#include "Strategicmap.h"
+	#include "laptop.h"
+	#include "INIReader.h"
+	#include "email.h"
+	#include "strategicmap.h"
 	#include "Game Events.h"
 	#include "Game Clock.h"
 	#include "Soldier Create.h"
-	#include "WorldDef.h"
+	#include "worlddef.h"
 	#include "LaptopSave.h"
-	#include "strategicmap.h"
 	#include "Queen Command.h"
 	#include "SaveLoadGame.h"
 	#include "Tactical Save.h"
 	#include "Squads.h"
-	#include "Environment.h"
-	#include "Lighting.h"
+	#include "environment.h"
+	#include "lighting.h"
 	#include "Strategic Movement.h"
-	#include "Strategic.h"
+	#include "strategic.h"
 	#include "Isometric Utils.h"
 	#include "Quests.h"
 	#include "opplist.h"
@@ -47,19 +44,18 @@
 	#include "GameVersion.h"
 	#include "GameSettings.h"
 	#include "Music Control.h"
-	#include "GameScreen.h"
+	#include "gamescreen.h"
 	#include "Options Screen.h"
-	#include "Ai.h"
-	#include "RenderWorld.h"
+	#include "ai.h"
+	#include "renderworld.h"
 	#include "SmokeEffects.h"
-	#include "Random.h"
+	#include "random.h"
 	#include "Map Screen Interface.h"
 	#include "Map Screen Interface Border.h"
 	#include "Map Screen Interface Bottom.h"
 
 	#include "Interface.h"
 	#include "Map Screen Helicopter.h"
-	#include "Environment.h"
 	#include "Arms Dealer Init.h"
 	#include "Tactical Placement GUI.h"
 
@@ -69,39 +65,52 @@
 	#include "Vehicles.h"
 	#include "Merc Contract.h"
 	#include "Bullets.h"
-	#include "air raid.h"
+	#include "Air Raid.h"
 	#include "physics.h"
 	#include "Strategic Pathing.h"
 
 	#include "TeamTurns.h"
 
-	#include "explosion control.h"
+	#include "Explosion Control.h"
 	#include "Creature Spreading.h"
 	#include "Strategic Status.h"
-	#include "Prebattle Interface.h"
+	#include "PreBattle Interface.h"
 	#include "Boxing.h"
 	#include "Strategic AI.h"
 	#include "Map Screen Interface Map.h"
 
 	#include "Meanwhile.h"
-	#include "dialogue control.h"
-	#include "text.h"
+	#include "Dialogue Control.h"
+	#include "Text.h"
 	#include	"Map Screen Interface.h"
-	#include	"lighteffects.h"
+	#include	"LightEffects.h"
 	#include "HelpScreen.h"
 	#include "Animated ProgressBar.h"
+	#include "Assignments.h"
+	#include "Map Information.h"
+	#include "interface Dialogue.h"
+	#include "MercTextBox.h"
+	#include "Cheats.h"
+	#include "Interface Items.h"
+	#include "Animation Data.h"
+	#include "Civ Quotes.h"
+	#include "Scheduling.h"
+	#include "Game Init.h"
+	#include "Strategic Event Handler.h"
+	#include "Interface Panels.h"
+	#include "SgpStr.h"
+	#include "Render Dirty.h"
+	
 #endif
 
 #include		"BobbyR.h"
-#include		"Imp Portraits.h"
+#include		"IMP Portraits.h"
 #include		"Loading Screen.h"
 #include		"Interface Utils.h"
-#include		"Squads.h"
 #include		"IMP Confirm.h"
 #include "Enemy Soldier Save.h"
 #include "BobbyRMailOrder.h"
-#include "Mercs.h"
-#include "INIReader.h"
+#include "mercs.h"
 
 //rain
 #include "Rain.h"
@@ -127,7 +136,7 @@ extern void EndLoadScreen();
 #ifdef JA2BETAVERSION
 UINT32		guiNumberOfMapTempFiles;		//Test purposes
 UINT32		guiSizeOfTempFiles;
-CHAR			gzNameOfMapTempFile[128];
+CHAR8		gzNameOfMapTempFile[128];
 #endif
 
 extern		SOLDIERTYPE		*gpSMCurrentMerc;
@@ -449,7 +458,7 @@ void	HandleOldBobbyRMailOrders();
 	void			LoadGameFilePosition( INT32 iPos, STR pMsg );
 
 	
-	void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFile );
+	void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile );
 	void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGameID  );
 #endif
 
@@ -507,6 +516,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	INT32		iSaveLoadGameMessageBoxID = -1;
 	UINT16	usPosX, usActualWidth, usActualHeight;
 	BOOLEAN fWePausedIt = FALSE;
+	CHAR16	zSaveGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 
 
 	//sprintf( (char *) saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
@@ -604,15 +614,17 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		guiCurrentQuickSaveNumber++;
 
 		if( gfUseConsecutiveQuickSaveSlots )
-			swprintf( pGameDesc, L"%s%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
+			WSTR_SPrintf( zSaveGameDesc, SIZE_OF_SAVE_GAME_DESC, L"%s%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
 		else
 #endif
-			swprintf( pGameDesc, pMessageStrings[ MSG_QUICKSAVE_NAME ] );
+			WSTR_SPrintf( zSaveGameDesc, SIZE_OF_SAVE_GAME_DESC, pMessageStrings[ MSG_QUICKSAVE_NAME ] );
 	}
 
 	//If there was no string, add one
 	if( pGameDesc[0] == '\0' )
-		wcscpy( pGameDesc, pMessageStrings[ MSG_NODESC ] );
+		wcscpy( zSaveGameDesc, pMessageStrings[ MSG_NODESC ] );
+	else
+		wcscpy( zSaveGameDesc, pGameDesc );
 
 	//Check to see if the save directory exists
 	/*if( FileGetAttributes( (STR) saveDir ) ==  0xFFFFFFFF )
@@ -669,7 +681,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	//
 
 	SaveGameHeader.uiSavedGameVersion = guiSavedGameVersion;
-	wcscpy( SaveGameHeader.sSavedGameDesc, pGameDesc );
+	wcscpy( SaveGameHeader.sSavedGameDesc, zSaveGameDesc );
 	strcpy( SaveGameHeader.zGameVersionNumber, czVersionNumber );
 
 	SaveGameHeader.uiFlags;
@@ -4969,7 +4981,7 @@ void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGa
 	}
 }
 
-void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFile )
+void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile )
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -5299,8 +5311,8 @@ void UpdateMercMercContractInfo()
 
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
-	CHAR	zFileName1[MAX_PATH];
-	CHAR	zFileName2[MAX_PATH];
+	CHAR8	zFileName1[MAX_PATH];
+	CHAR8	zFileName2[MAX_PATH];
 	HWFILE	hFile;
 	BOOLEAN	fFile1Exist, fFile2Exist;
 	SGP_FILETIME	CreationTime1, LastAccessedTime1, LastWriteTime1;

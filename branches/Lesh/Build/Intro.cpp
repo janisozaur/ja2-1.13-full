@@ -4,24 +4,30 @@
 	#include "Cinematics.h"
 #else
 	#include "sgp.h"
-	#include "sys globals.h"
+	#include "Sys Globals.h"
 	#include "sysutil.h"
 	#include "vobject_blitters.h"
-	#include "wcheck.h"
-	#include "cursors.h"
-	#include "font control.h"
-	#include "cursor control.h"
-	#include "render dirty.h"
-	#include "GameScreen.h"
-	#include	"Text.h"
-	#include	"Utilities.h"
-	#include	"WordWrap.h"
+	#include "WCheck.h"
+	#include "Cursors.h"
 	#include "Font Control.h"
-	#include "text.h"
+	#include "Cursor Control.h"
+	#include "Render Dirty.h"
+	#include "gamescreen.h"
+	#include "Text.h"
+	#include "Utilities.h"
+	#include "WordWrap.h"
+	#include "Font Control.h"
+	#include "Text.h"
 	#include "Multi Language Graphic Utils.h"
-	#include "Line.h"
+	#include "line.h"
 	#include "Intro.h"
 	#include "Cinematics.h"
+	#include "Music Control.h"
+	#include "english.h"
+	#include "Soldier Profile.h"
+	#include "mainmenuscreen.h"
+	#include "Game Init.h"
+	
 #endif
 
 extern STR16	gzIntroScreen[];
@@ -75,7 +81,7 @@ enum
 
 INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 
-CHAR		*gpzSmackerFileNames[] = 
+CHAR8		*gpzSmackerFileNames[] = 
 {
 	//begining of the game
 	"INTRO\\Rebel_cr.smk",

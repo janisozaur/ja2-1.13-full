@@ -1,15 +1,15 @@
 #ifndef _CINEMATICS_H_
 #define _CINEMATICS_H_
 
-#include "smack.h"
+//#include "SMACK.H"
 
 typedef struct {
 
 		CHAR8										*cFilename;
 //		HFILE										hFileHandle;
 		HWFILE									hFileHandle;
-		Smack										*SmackHandle;
-		SmackBuf								*SmackBuffer;
+//		Smack										*SmackHandle;
+//		SmackBuf								*SmackBuffer;
 		UINT32									uiFlags;
 		//LPDIRECTDRAWSURFACE2		lpDDS;
 		//HWND										hWindow;
@@ -20,6 +20,8 @@ typedef struct {
 //		UINT8										*pAudioData;
 //		UINT8										*pCueData;
 							}	SMKFLIC;
+
+#define HWND UINT32
 
 void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
 void				SmkShutdown(void);
