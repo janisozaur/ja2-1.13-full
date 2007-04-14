@@ -41,16 +41,16 @@ SOURCES  = \
 	_TaiwaneseText.cpp \
 	Text\\\ Input.cpp \
 	Text\\\ Utils.cpp \
-	Timer\\\ Control.cpp
+	Timer\\\ Control.cpp \
+	Utilities.cpp \
+	WordWrap.cpp \
+	Quantize.cpp \
+	Quantize\\\ Wrap.cpp
 
-#	Quantize.cpp \
-#	Quantize\\\ Wrap.cpp \
-#	Utilities.cpp \
-#	WordWrap.cpp \
 #	XMLAccess.cpp \
 #	XML_Items.cpp \
-#	XML_Strings2.cpp \
 #	XML_Strings.cpp
+#	XML_Strings2.cpp
 
 #OBJECTS = $(shell echo $(SOURCES) | sed -e 's,\.cpp,\.o,g')
 OBJECTS = $(SOURCES:.cpp=.o)
@@ -69,4 +69,4 @@ test:
 	$(shell echo $(INCLUDE))
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS) *~

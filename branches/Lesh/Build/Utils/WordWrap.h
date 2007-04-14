@@ -65,7 +65,7 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY );
 
 
-BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont );
+BOOLEAN ReduceStringLength( STR16 pString, UINT16 usMaxLen, UINT32 uiWidthToFitIn, UINT32 uiFont );
 
 
 void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords );

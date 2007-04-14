@@ -54,14 +54,14 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 #	$(AR) crv $@ $^
-	$(RANLIB) $@
+#	$(RANLIB) $@
 
 .cpp.o:
 	g++ $(CXXFLAGS) -c "$<" -o "$@"
-	$(AR) crv $(TARGET) "$@"
+#	$(AR) crv $(TARGET) "$@"
 
 test:
 	$(shell echo $(INCLUDE))
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS) *~

@@ -15,6 +15,8 @@
 	#include "Overhead.h"
 	#include "Cursor Control.h"
 	#include "Sound Control.h"
+	#include "SgpStr.h"
+	
 #endif
 
 //aim
@@ -1304,7 +1306,7 @@ void BltJA2CursorData( )
 
 void DrawMouseText( )
 {
-	INT16 pStr[ 512 ];
+	CHAR16 pStr[ 512 ];
 	INT16 sX, sY;
 	static BOOLEAN fShow = FALSE;
 	static BOOLEAN fHoldInvalid = TRUE;
@@ -1343,19 +1345,11 @@ void DrawMouseText( )
 		else
 			SetFontForeground( FONT_MCOLOR_LTYELLOW );
 
-#ifdef JA2_WIN
-		swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsBulletCount );
-#elif defined( JA2_LINUX )
-		swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsBulletCount );
-#endif
+		WSTR_SPrintf( pStr, 512, L"%d", gsBulletCount );
 		FindFontCenterCoordinates( 0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY );
 		mprintf( sX, sY - 10 - GetFontHeight(TINYFONT1), pStr );
 
-#ifdef JA2_WIN
-		swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsTotalBulletCount );
-#elif defined( JA2_LINUX )
-		swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsTotalBulletCount );
-#endif
+		WSTR_SPrintf( pStr, 512, L"%d", gsTotalBulletCount );
 		FindFontCenterCoordinates( 0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY );
 		mprintf( sX, sY + 7 + GetFontHeight(TINYFONT1), pStr );
 
@@ -1437,11 +1431,7 @@ void DrawMouseText( )
 				// Set dest for gprintf to be different
 			SetFontDestBuffer( MOUSE_BUFFER , 0, 0, 64, 64, FALSE );
 
-#ifdef JA2_WIN
-			swprintf( (wchar_t *)pStr, (wchar_t *)L"%d", gsCurrentActionPoints );
-#elif defined( JA2_LINUX )
-			swprintf( (wchar_t *)pStr, 512, (wchar_t *)L"%d", gsCurrentActionPoints );
-#endif
+			WSTR_SPrintf( pStr, 512, L"%d", gsCurrentActionPoints );
 
 			if ( gfUIDisplayActionPointsCenter )
 			{
@@ -1518,7 +1508,7 @@ void DrawMouseText( )
 		{
 			SetFontDestBuffer( MOUSE_BUFFER , 0, 0, 64, 64, FALSE );
 
-			swprintf( pStr, L"x%d", gpItemPointer->ubNumberOfObjects );
+			WSTR_SPrintf( pStr, 512, L"x%d", gpItemPointer->ubNumberOfObjects );
 
 			FindFontCenterCoordinates( 0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY );
 

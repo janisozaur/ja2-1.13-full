@@ -2,12 +2,13 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <windows.h>
-#include "types.h"
+#include "Types.h"
 #include "himage.h"
 #include "Quantize.h"
 #include "Quantize Wrap.h"
 #include "phys math.h"
+#include "Platform.h"
+
 
 typedef struct
 {

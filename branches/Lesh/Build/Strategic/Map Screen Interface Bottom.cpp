@@ -597,7 +597,7 @@ void DrawNameOfLoadedSector( void )
 	
 
 	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, 128, TRUE );
-	ReduceStringLength( sString, 80, COMPFONT );
+	ReduceStringLength( sString, 128, 80, COMPFONT );
 
 	// WANNE 2
 	//VarFindFontCenterCoordinates( 548, 426, 80, 16, COMPFONT, &sFontX, &sFontY, sString );

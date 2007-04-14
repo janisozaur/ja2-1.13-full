@@ -5235,7 +5235,7 @@ void RenderTownIDString( )
 	SetFontBackground( FONT_BLACK );
 
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, 80, TRUE );
-	ReduceStringLength( zTownIDString, 80, COMPFONT );
+	ReduceStringLength( zTownIDString, 80, 80, COMPFONT );
 	VarFindFontCenterCoordinates( LOCATION_NAME_X , LOCATION_NAME_Y, 80, 16, COMPFONT, &sFontX, &sFontY, zTownIDString );
 	mprintf( sFontX, sFontY, L"%s", zTownIDString );
 }

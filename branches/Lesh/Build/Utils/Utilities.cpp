@@ -12,6 +12,8 @@
 	#include "Overhead Types.h"
 	#include "WCheck.h"
 	#include "Sys Globals.h"
+	#include "SgpStr.h"
+	
 #endif
 
 
@@ -99,6 +101,7 @@ BOOLEAN PerformTimeLimitedCheck();
 //#define	TIME_LIMITED_VERSION
 void FilenameForBPP(STR pFilename, STR pDestination)
 {
+#ifdef JA2_WIN
 UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 
 	if(GETPIXELDEPTH()==16)
@@ -118,7 +121,9 @@ UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 		strcat(pDestination, Name);
 		strcat(pDestination, Ext);
 	}
-
+#elif defined( JA2_LINUX )
+	strcpy(pDestination, pFilename);
+#endif
 }
 
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
@@ -229,7 +234,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, UINT16 usWidth, INT32 uiFont
 					 // Split Line!
 					 fLineSplit = TRUE;
 
-					 pStr[ uiNewLet ] = (INT16)'\0';
+					 pStr[ uiNewLet ] = 0;
 
 					 wcscpy( pStr2, &(pStr[ uiNewLet + 1 ]) );
 				}
@@ -244,12 +249,8 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, UINT16 usWidth, INT32 uiFont
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
-#ifdef JA2_WIN
-				swprintf( (wchar_t *)pStr2, (wchar_t *)L"-%s", &(pStr[uiHyphenLet]) );
-#elif defined( JA2_LINUX )
-				swprintf( (wchar_t *)pStr2, 512, (wchar_t *)L"-%s", &(pStr[uiHyphenLet]) );
-#endif
-				pStr[uiHyphenLet] = (INT16)'/0';
+				WSTR_SPrintf( pStr2, 512, L"-%s", &(pStr[uiHyphenLet]) );
+				pStr[uiHyphenLet] = 0;
 				fLineSplit = TRUE;  //hyphen method
 				break;
 			}

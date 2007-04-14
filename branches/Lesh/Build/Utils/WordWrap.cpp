@@ -6,7 +6,10 @@
 	#include "sgp.h"
 	#include "Render Dirty.h"
 	#include "Font Control.h"
-	#include "Stdio.h"
+	#include "Platform.h"
+	#include "SgpStr.h"
+	#include "WinFont.h"
+	
 #endif
 
 
@@ -50,7 +53,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 		return(FALSE);
 
 	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, pString, argptr);	// process string (get output str)
+	WSTR_VSPrintf(TempString, 1024, pString, argptr);	// process string (get output str)
 	va_end(argptr);
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
@@ -172,7 +175,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 		return(FALSE);
 	}
 	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, pString, argptr);	// process string (get output str)
+	WSTR_VSPrintf(TempString, 1024, pString, argptr);	// process string (get output str)
 	va_end(argptr);
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
@@ -330,7 +333,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			}
 			else
 			{
-				CHAR	zText[1024];
+				CHAR8	zText[1024];
 
 				sprintf( zText, "LineWrap() Error!  The string ( %S ) has a word ( %S ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels  );
 
@@ -1961,10 +1964,10 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 	return ( CurrentRecord );
 }
 
-BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont )
+BOOLEAN ReduceStringLength( STR16 pString, UINT16 usMaxLen, UINT32 uiWidthToFitIn, UINT32 uiFont )
 {
 	wchar_t			OneChar[2];
-	UINT16			zTemp[ 1024 ];
+	CHAR16			zTemp[ 1024 ];
 	wchar_t			zStrDots[16];
 	UINT32			uiDotWidth;
 	UINT32			uiTempStringPixWidth=0;
@@ -2026,7 +2029,7 @@ BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont 
 
 
 	//combine the temp string and the '...' to form the finished string
-	swprintf( (wchar_t *)pString, (wchar_t *)L"%s%s", zTemp, zStrDots );
+	WSTR_SPrintf( pString, usMaxLen, L"%s%s", zTemp, zStrDots );
 
 	return( TRUE );
 }

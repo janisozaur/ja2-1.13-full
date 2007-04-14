@@ -1406,7 +1406,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			DrawTextToScreen( zDateString, (UINT16)(usPosX+SLG_DATE_OFFSET_X), (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 			//if the sector string exceeds the width, and the ...
-			ReduceStringLength( zLocationString, SLG_SECTOR_WIDTH, uiFont );
+			ReduceStringLength( zLocationString, 128, SLG_SECTOR_WIDTH, uiFont );
 
 			//The Sector
 			DrawTextToScreen( zLocationString, (UINT16)(usPosX+SLG_SECTOR_OFFSET_X), (UINT16)(usPosY+SLG_SECTOR_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
