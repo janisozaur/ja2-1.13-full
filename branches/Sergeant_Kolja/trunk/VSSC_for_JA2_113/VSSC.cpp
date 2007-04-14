@@ -22,6 +22,14 @@
 #include <time.h>
 #include <limits.h>
 
+#include <sys/types.h> /* need for stat */
+#include <sys/stat.h>  /* need for stat */
+
+#include <shlobj.h> /* for home directories under Win32 */
+#ifndef CSIDL_COMMON_APPDATA
+#define CSIDL_COMMON_APPDATA (0x0023)
+#endif
+
 char const * const VsscVersion = "0.1.750.build";
 
 /*! \file VSSC.cpp
@@ -60,14 +68,14 @@ char const * const VsscVersion = "0.1.750.build";
   {                                               \
    _T(#grp), _T(#nam), et_##typ,                  \
    FIELD_OFFSET( CONFIG_BLOCK, grp.nam.Text ),    \
-   MAX_CONFIG_STRINGLEN, (cr!=0), (LONG)_T(dflt)  \
+   MAX_CONFIG_STRINGLEN, (cr), (LONG)_T(dflt)     \
   }
 
 #define MAKE_CFGINT( grp, nam, typ, cr, dflt ) \
   {                                            \
    _T(#grp), _T(#nam), et_##typ,               \
    FIELD_OFFSET( CONFIG_BLOCK, grp.nam ),      \
-   sizeof(typ), (cr!=0), (LONG)(dflt)          \
+   sizeof(typ), (cr),    (LONG)(dflt)          \
   }
 
 /* no other types are currently allowed. 
@@ -85,6 +93,21 @@ enum configdata_types
   ,et_P32STRING
   };
 
+#define INI_LOCATION_EXE        0 /* same path as the Application    */
+#define INI_LOCATION_USRAPPDATA 1 /* Users home directory            */
+#define INI_LOCATION_ALLUSRAPPD 2 /* Common All Users Home directory */
+#define INI_LOCATIONS           (1+INI_LOCATION_ALLUSRAPPD)
+
+
+#define _SLOG_CREATE_NOT          0
+#define _SLOG_CREATE_INIEXE     0x1
+#define _SLOG_CREATE_INIHOME    0x2
+#define _SLOG_CREATE_INIALLHOME 0x4
+#define _SLOG_CREATE_REGHKCU    0x8
+#define _SLOG_CREATE_BOTH  ( _SLOG_CREATE_INIEXE | _SLOG_CREATE_REGHKCU )
+#define _SLOG_CREATE_REGHKLM   0x10 /* usually not used */
+
+
 /* a structure which holds auto-reading config values */
 typedef struct configdata_
   {
@@ -93,7 +116,7 @@ typedef struct configdata_
   enum configdata_types ValType;
   LONG Offset;
   LONG Size;
-  BOOL WriteIfNotExist;
+  USHORT WriteIfNotExist;
   LONG DefaultVal;
   } TS_configdata, *PTS_configdata;
 
@@ -124,6 +147,8 @@ typedef struct vssc_data_
     HANDLE         hMutex;
     unsigned short MsgCount;
     DWORD          UserPID;
+    TCHAR *        pMyCmdLine;
+    TCHAR          Ini_File[INI_LOCATIONS][MAX_PATH];
     } internal;
   /* --------------------------- */
   struct
@@ -136,6 +161,7 @@ typedef struct vssc_data_
     P32STRING      AppName;
     ULONG          ZoneMask;
     USHORT         ControlFlags;
+    USHORT         ReEntranceBlock;
     } global;
   struct
     {
@@ -160,22 +186,23 @@ typedef struct vssc_data_
 /*! \cond NEVER_DOX */
 static TS_configdata AutoConfig[] = 
   {
-  /*==============================================================*/
-  /* due to some restrictions, this Value MUST be the first we set! */
-   MAKE_CFGSTR( global, AppName        , P32STRING, 1, _T("0815.exe") )
-  /*==============================================================*/
-  ,MAKE_CFGINT( global, ZoneMask       , ULONG    , 1, 7              )
-  ,MAKE_CFGINT( global, ControlFlags   , USHORT   , 1, 0              )  
-  /*==============================================================*/
-  ,MAKE_CFGINT( udp   , Use            , USHORT   , 1, 0              )
-  ,MAKE_CFGINT( udp   , Syslog_Facility, USHORT   , 1, 0              )
-  ,MAKE_CFGINT( udp   , Syslog_MaxLevel, USHORT   , 1, 7              )
-  ,MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, TRUE, _T("localhost") )
-  ,MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , TRUE, 514         )
-  ,MAKE_CFGINT( udp   , From_Port      , USHORT   , FALSE, 0          )
-  /*==============================================================*/
-  ,MAKE_CFGINT( file  , Use            , USHORT   , 1, 0              )
-  /*==============================================================*/
+  /*====================================================================================*/
+  /* due to some restrictions, this Value MUST be the first we set!                     */
+   MAKE_CFGSTR( global, AppName        , P32STRING, _SLOG_CREATE_NOT, _T("0815.exe")     )
+  /*====================================================================================*/
+  ,MAKE_CFGINT( global, ZoneMask       , ULONG    , _SLOG_CREATE_REGHKCU, 7              )
+  ,MAKE_CFGINT( global, ControlFlags   , USHORT   , _SLOG_CREATE_REGHKCU, 0              )
+  ,MAKE_CFGINT( global, ReEntranceBlock, USHORT   , _SLOG_CREATE_REGHKCU, 0              )
+  /*====================================================================================*/
+  ,MAKE_CFGINT( udp   , Use            , USHORT   , _SLOG_CREATE_BOTH   , 0              )
+  ,MAKE_CFGINT( udp   , Syslog_Facility, USHORT   , _SLOG_CREATE_REGHKCU, 0              )
+  ,MAKE_CFGINT( udp   , Syslog_MaxLevel, USHORT   , _SLOG_CREATE_INIEXE , 7              )
+  ,MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, _SLOG_CREATE_INIEXE , _T("localhost"))
+  ,MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , _SLOG_CREATE_INIEXE , 514            )
+  ,MAKE_CFGINT( udp   , From_Port      , USHORT   , _SLOG_CREATE_NOT    , 0              )
+  /*====================================================================================*/
+  ,MAKE_CFGINT( file  , Use            , USHORT   , _SLOG_CREATE_REGHKCU, 0              )
+  /*====================================================================================*/
   };
 /*! \endcond */
 
@@ -245,6 +272,20 @@ TS_Settings ControlHash[] =
 void TrimmLine( char * pLine );
 BOOL IsComment( char * pLine );
 BOOL Separate( char * pLine, char ** ppRightpart );
+static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd );
+static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index );
+static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
+                                TCHAR const * const pVar_Name,
+                                TCHAR const * const pVarToken,
+                                TCHAR const * const pValTokenIn,
+                                TCHAR const * const pValTokenOut,
+                                TCHAR *pValBuffer,
+                                size_t MaxBuf );
+static BOOL _internal_SetValue( DWORD *pdwValue, 
+                                TCHAR *ptcValue, 
+                                size_t MaxValue, 
+                                TCHAR const * const pSourceBuffer );
+
 /*! \endcond */
 
 
@@ -644,112 +685,522 @@ BOOL _internal_GetCounter( PTS_vssc_data pHnd, char *pCounter64, size_t MaxCount
 
 
 
-/*! \cond NEVER_DOX */
-/* read 32 bit numerical params from Registry, Private Profile, Environment, Cmd-Line (all after '-SLOG' )*/
-int _internal_ReadConfig_DWORD(  PTS_vssc_data pHnd, 
-                                 TCHAR const * const pGroupName, 
-                                 TCHAR const * const pKeyName, 
-                                 const short WriteIfNotExist, 
-                                 const DWORD DefaultVal, 
-                                 DWORD * pdwValue )
+
+static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd )
+{{
+  TCHAR *pCmdLine, *pSeekPos;
+  size_t len;
+
+  if( pHnd->internal.pMyCmdLine )
+    return (*pHnd->internal.pMyCmdLine) ? TRUE : FALSE; /* is already filled or empty */
+  
+  pCmdLine = GetCommandLine();
+  len = _tcslen( pCmdLine ) + 1;
+  pHnd->internal.pMyCmdLine = (TCHAR*) malloc( len );
+  _tcscpy( pHnd->internal.pMyCmdLine, pCmdLine );
+
+  _tcsupr( pHnd->internal.pMyCmdLine );
+  pSeekPos = _tcsstr( pHnd->internal.pMyCmdLine, _T("-SLOG ") );
+  if( !pSeekPos )
+       pSeekPos = _tcsstr( pHnd->internal.pMyCmdLine, _T("/SLOG ") );
+
+  if( !pSeekPos ) /* we didn't found somewhat after /SLOG or SLOG */
+    {
+    *(pHnd->internal.pMyCmdLine)=0;
+    return FALSE;
+    }
+
+  /* we found somewhat after /SLOG or SLOG */
+  /*copy again, this time without changing upper/lower*/
+  _tcscpy( pHnd->internal.pMyCmdLine, pSeekPos );
+  /* Array now contains only everything following the SLOG specifier */
+  
+  return (*pHnd->internal.pMyCmdLine) ? TRUE : FALSE; /* is already filled or empty */
+}}
+
+static BOOL _internal_FileExist( TCHAR const * const pFileName )
+{{
+  struct _stat status;
+  int result;
+
+  result = _tstat( pFileName, &status );
+  if( (0==result) && (status.st_mode & _S_IFREG) && (status.st_mode & _S_IREAD) )
+    return TRUE;
+  else
+    return FALSE;
+}}
+
+
+static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index )
+{{
+  size_t RemainLen;
+  int    i;
+  TCHAR *pPatch;
+  TCHAR  Name[MAX_PATH] = {0};
+  
+  for( i=0 ;i < INI_LOCATIONS; i++ )
+    {
+    if( ! *pHnd->internal.Ini_File[i] )
+      {
+      switch(i)
+        {
+        case INI_LOCATION_EXE: /* same path as the Application */
+          {
+          GetModuleFileName( NULL, Name, DIM( Name )-1 );
+          pPatch = _tcsrchr( Name, _T('.') );
+          if(pPatch) 
+            *pPatch=0; /* cut away .EXE suffix */
+          RemainLen = DIM( pHnd->internal.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->internal.Ini_File[ i ], pPatch, RemainLen );
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+          _tcsncat( pHnd->internal.Ini_File[ i ], _T(".ini"), RemainLen ); 
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          };break;
+
+        case INI_LOCATION_USRAPPDATA: /* Users home directory */
+        case INI_LOCATION_ALLUSRAPPD: /* Common All Users Home directory */
+          {
+          int Folder;
+          HRESULT res;
+          if( INI_LOCATION_USRAPPDATA==i )
+            Folder = CSIDL_APPDATA;
+          else
+            Folder = CSIDL_COMMON_APPDATA;
+
+          res = SHGetSpecialFolderPath( NULL, Name, Folder, FALSE );
+          if( NOERROR!=res ) break;
+
+          RemainLen = DIM( pHnd->internal.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->internal.Ini_File[ i ], Name, RemainLen );
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+
+          _tcsncat( pHnd->internal.Ini_File[ i ], _T("\\"), RemainLen ); 
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+
+          _tcsncat( pHnd->internal.Ini_File[ i ], pHnd->global.AppName.Text, RemainLen ); 
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+
+          _tcsncat( pHnd->internal.Ini_File[ i ], _T(".ini"), RemainLen ); 
+          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          };break;
+        }
+      }
+    }
+
+  if( _internal_FileExist( pHnd->internal.Ini_File[ Index ] ) )
+    return TRUE;
+  else
+    return FALSE;
+}};
+
+
+
+static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
+                                TCHAR const * const pVar_Name,
+                                TCHAR const * const pVarToken,
+                                TCHAR const * const pValTokenIn,
+                                TCHAR const * const pValTokenOut,
+                                TCHAR *pValBuffer,
+                                size_t MaxBuf )
+{{
+  BOOL bFound=FALSE;
+  size_t len;
+  TCHAR *pKeyPos, *pValPos, *pValEnd;
+  TCHAR *pParseBuffer;
+  TCHAR DefaultYES[]="1";
+
+  pParseBuffer = (TCHAR*) malloc( (_tcslen(pKeyValuePair) * sizeof(TCHAR)) +1 );
+  if(!pParseBuffer)
+    return FALSE;
+
+  _tcscpy( pParseBuffer, pKeyValuePair );
+  /* pParseBuffer now contains everything following the /SLOG: specifier */
+
+  len = _tcslen( pVar_Name );
+  
+  #pragma message("special handling for empty or NULL pVarToken required for Environment")
+  /* seek for first sequence of 'VarDelimiter, Var_Name, ValDelimiter, Value' */
+  pValPos = pKeyPos = _tcstok( pParseBuffer, pVarToken ); 
+  while( !bFound && pKeyPos )
+    {
+    /*did we found 'VarDelimiter, Var_Name' ? */
+    if( 0==_tcsnicmp( pKeyPos, pVar_Name, len ) )
+      {
+      pValPos = _tcspbrk( pKeyPos, pValTokenIn );
+      /*YES, But did we really found 'VarDelimiter, Var_Name, ValDelimiter' or only a related Var_Name_longer ? */
+      if( pValPos == (pKeyPos+len) )
+        {
+        pValPos++;
+        bFound=TRUE; /*we found EXACTLY our Var_Name*/
+        }
+      else if( pVarToken && *pVarToken && 
+               ((pKeyPos+len)==_tcspbrk( pKeyPos, pValTokenOut ) || 
+                (pKeyPos+len)==_tcspbrk( pKeyPos, pVarToken    )
+               )
+             )
+        {
+        /* "special handling for empty Values (only switch, means bool YES) required. only with NULL!=pVarToken" */
+        pValPos=DefaultYES;
+        bFound=TRUE; /*we found EXACTLY our Var_Name but with no Argument. BOOL switch*/
+        }
+      }
+    else
+      {
+      pKeyPos = _tcstok( pParseBuffer, NULL ); 
+      }
+    }
+    
+  if( (pValPos<=pKeyPos) && (pValPos!=DefaultYES) ) /*sanity check*/
+    bFound=FALSE;
+  
+  if( bFound )
+    {
+    TCHAR Hyphen=0;
+    /* we found our switch! */
+    while( *pValPos && (*pValPos==_T(' ') || *pValPos==_T('\t')) )
+       pValPos++; /* skip optional whitespaces */
+
+    if( *pValPos=='"' || *pValPos=='\'' || *pValPos=='´' || *pValPos=='`' )
+      {
+      Hyphen=*pValPos;
+      pValPos++;
+      }
+
+    pValEnd = pValPos;
+    
+    /* hyphenated or quoted string? */
+    while( Hyphen && *pValEnd && ((*pValEnd!=Hyphen) || (*(pValEnd-1)=='\\')) )
+      {
+      pValEnd++;
+      }
+
+    if( Hyphen )
+      {    
+      *pValEnd=0;  /* cut string at last hyphen */
+      }
+    else
+      {
+      pValEnd = _tcspbrk( pValEnd, pValTokenOut );
+      if(pValEnd) 
+        *pValEnd=0; /* cut string at first Out-Token */
+      }
+    _tcsncpy( pValBuffer, pValPos, MaxBuf );
+    pValBuffer[ MaxBuf-1 ]=0;
+
+    /*if only a fraction of Value was copied, we report having nothing:*/
+    if(_tcslen(pValBuffer) != _tcslen(pValPos) )
+      bFound=FALSE;
+    }
+
+  free( pParseBuffer );
+  return bFound;
+}}
+
+
+
+
+
+
+static BOOL _internal_GetIniValString( TCHAR const * const pIniFile,
+                                       TCHAR const * const pGroupName,  TCHAR const * const pKeyName,
+                                       TCHAR *pValBuffer,               size_t MaxBuf, 
+                                       TCHAR const * const pDefaultVal, const USHORT WriteIfNotExist )
 {{
   DWORD dwRet;
+  size_t len;
+  //TCHAR DefBuffer[MAX_PATH];
+  TCHAR ValBuffer[MAX_PATH];
+  BOOL  bFound=FALSE;
+  TCHAR DummyString[]="0xCaFeAfFe"; /* cafe+affe reads in German as Coffe and Ape ;-) */
+
+  /* to see, if we have the Value inside the INI, we must use a trick:
+   * First, we try to read it, but give a total crazy default-value.
+   * if we get this value returned, we really don't knwo if it is 
+   * crazy or not (can be coincidental the real value).
+   * So in this case, we call it again, but this time with the real default
+   * value. If we again get the Crazy Value, the value isn't that crazy.
+   */
+  len = DIM(ValBuffer) - 1;
+  if( 0==_tcscmp( ValBuffer, pDefaultVal ) )
+    {
+    /* make shure they are not identical!*/
+    DummyString[1]++;
+    }
+
+  dwRet = GetPrivateProfileString( pGroupName, pKeyName, DummyString, ValBuffer, len, pIniFile );
+  if( dwRet <= len )
+    {
+    /* we found it in the INI-File. Or not. In this case, we need to read again, but with different defaultval */
+    if( 0==_tcscmp( ValBuffer, DummyString ) )
+      {
+      dwRet = GetPrivateProfileString( pGroupName, pKeyName, pDefaultVal, ValBuffer, len, pIniFile );
+      if( dwRet <= len )
+        {
+        /* at least NOW we have read a value */
+        bFound = TRUE;
+        }
+      }
+    else
+      {
+      bFound = TRUE;
+      }
+    } /*1st read okay */
+
+  if( bFound ) /* only use the value, if it is real */
+    {
+    _tcsncpy( pValBuffer, ValBuffer, MaxBuf );
+    pValBuffer[ MaxBuf-1 ]=0;
+    }
+  else /* otherwise use the DefaultVal */
+    {
+    _tcsncpy( pValBuffer, pDefaultVal, MaxBuf );
+    pValBuffer[ MaxBuf-1 ]=0;
+    }
+
+  if( !bFound && (WriteIfNotExist & _SLOG_CREATE_INI) )
+    {
+    WritePrivateProfileString( pGroupName, pKeyName, pDefaultVal, pIniFile );
+    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    }
+  
+  return bFound;
+}}
+
+
+
+
+
+
+
+static BOOL  _internal_GetIniValDword( TCHAR const * const pIniFile,
+                                       TCHAR const * const pGroupName,  TCHAR const * const pKeyName,
+                                       DWORD *pdwValue,                 const DWORD DefaultVal,
+                                       const USHORT WriteIfNotExist )
+{{
+  size_t len;
+  TCHAR DefBuffer[MAX_PATH];
+  TCHAR ValBuffer[MAX_PATH];
+  BOOL bFound=FALSE;
+
+  len = DIM(DefBuffer) - 1;
+
+  /* some luxurity follows: 
+   *    negative values between -1 and -1024 are used as negative decimal string 
+   *    positive values between  0 and +1024 are used as positive decimal string
+   *    all others are used as hexadecimal strings
+   */
+  if( ((long)DefaultVal <= -1L) && ((long)DefaultVal <= -1024L) )
+    _sntprintf( DefBuffer, len, _T("%li"), (long) DefaultVal ); 
+  else if( (DefaultVal >= 0) && (DefaultVal <= 1024) )
+    _sntprintf( DefBuffer, len, _T("%lu"), DefaultVal ); 
+  else
+    _sntprintf( DefBuffer, len, _T("0x%08x"), DefaultVal ); 
+
+  len = DIM(ValBuffer) - 1;
+  bFound = _internal_GetIniValString( pIniFile, pGroupName, pKeyName, ValBuffer, len, DefBuffer, WriteIfNotExist );
+  /* we use the string function because of more powerful number format handling */
+
+  if( bFound )
+    {
+    #pragma message ("use better xtol()")
+    *pdwValue = (DWORD) _ttol( ValBuffer );
+    }
+
+  if( !bFound && (WriteIfNotExist & _SLOG_CREATE_INI) )
+    {
+    WritePrivateProfileString( pGroupName, pKeyName, DefBuffer, pIniFile );
+    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    }
+  
+  return bFound;
+}}
+
+
+
+
+
+
+
+
+static BOOL _internal_SetValue( DWORD *pdwValue, TCHAR *ptcValue, size_t MaxValue, TCHAR const * const pSourceBuffer )
+{{
+  BOOL bRet=FALSE;
+
+  if(ptcValue && MaxValue>1)
+    {
+    /* we have the string now !, if STRING foo, we can '_tcsncpy(target,..,..)' " */
+    _tcsncpy( ptcValue, pSourceBuffer, MaxValue );
+    ptcValue[ MaxValue-1 ]=0;
+    bRet = TRUE;
+    }
+
+  if(pdwValue) /*if pointer to DWORD, we want to get the DWORD val */
+    {
+    #pragma message ("use better xtol()")
+    *pdwValue = (DWORD) _ttol( pSourceBuffer );
+    bRet = TRUE;
+    }
+  return bRet;
+}}
+
+
+
+
+
+#pragma message("WriteIfNotExist shall specify if writing to INI, HKCU, HKLM (define some Bitmasks!)" )
+
+
+
+
+/*! \cond NEVER_DOX */
+/* read 32 bit numerical params from Cmd-Line (all after '-SLOG' ), Environment, Private Profile .INI, Registry */
+int _internal_ReadConfig(  PTS_vssc_data pHnd, 
+                           TCHAR const * const pGroupName, 
+                           TCHAR const * const pKeyName, 
+                           const short WriteIfNotExist,
+                           TCHAR const * const ptcDefault, 
+                           TCHAR* ptcValue, 
+                           const size_t MaxValue, 
+                           const DWORD DefaultVal, 
+                           DWORD * pdwValue )
+{{
+  DWORD dwRet = FALSE;
+  BOOL bRet = FALSE, bFound = FALSE;
+  size_t RemainLen;
+  //UINT  Ini_value;
+  int   i;
+  TCHAR Var_Name[MAX_PATH];
+  TCHAR ValBuffer[MAX_PATH];
+  //TCHAR *pSeekPos;
 
   if( !pdwValue || !pGroupName || !pKeyName )
     return FALSE;
 
-  /*=========================================================================*
-   *           1st START LOOKING for Environment                             *
-   *=========================================================================*/
-  #error "not done yet"
+  do{ /* do-once */
+    /* combine Groupname and Varname to one word, for Environment and for CmdLine. They both dont support GroupNames */
+    RemainLen = DIM( Var_Name ) -1;
+    _tcsncpy( Var_Name, pGroupName, RemainLen ); Var_Name[ RemainLen ] =0; RemainLen -= _tcslen(Var_Name);
+    _tcsncat( Var_Name, _T("_")   , RemainLen ); Var_Name[ RemainLen ] =0; RemainLen -= _tcslen(Var_Name);
+    _tcsncat( Var_Name, pKeyName  , RemainLen ); Var_Name[ RemainLen ] =0; 
 
-  /*=========================================================================*
-   *           if noting in Environment, next look inside                    *
-   *           <Appname>.ini, for Values                                     *
-   *=========================================================================*/
-  #error "not done yet"
-
-  /*=========================================================================*
-   *           NOW START LOOKING INSIDE REGISTRY                             *
-   *=========================================================================*/
-
-  /* startLocalBlock( REG ) */
-    {
-    HKEY   hKey;
-    DWORD  dwDisp;
-    DWORD  dwType;
-    DWORD  ValLen;
-    DWORD  Value;
-    TCHAR  GroupKey[ MAX_PATH ];
-    size_t nLastChar;
-
-    nLastChar = DIM( GroupKey ) - 1;
-    _tcsncpy( GroupKey, pHnd->helper.tcsProfileName, nLastChar );
-    GroupKey[ nLastChar ] = 0;
-    _tcsncat( GroupKey, _T("\\"), nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
-    GroupKey[ nLastChar ] = 0;
-    _tcsncat( GroupKey, pGroupName, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
-    GroupKey[ nLastChar ] = 0;
-
-    /*-----------------------------------------------------------------*
-     *          STEP 1: try to read from Registry-HKCU                 *
-     *          if okay, we did it well                                *
-     *          if failed, we assume first access, so we try to copy   *
-     *          it from HKLM (if access is granted)                    *
-     *-----------------------------------------------------------------*/
-    dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_READ /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-    if( (dwRet == ERROR_SUCCESS) && (dwDisp == REG_OPENED_EXISTING_KEY) )
+    /*=========================================================================*
+     *           1st START LOOKING for Cmd Line Param                          *
+     *=========================================================================*/
+    if( _internal_GetCmdLine( pHnd ) &&
+        _internal_GetValue( pHnd->internal.pMyCmdLine, Var_Name, "-/", ":= \t", " \t-/", ValBuffer, DIM(ValBuffer) ) )
       {
-      dwType = REG_DWORD;
-      ValLen = sizeof( DWORD );
-      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
-      RegCloseKey( hKey );
-      if( dwRet == ERROR_SUCCESS )
-        { return TRUE; }
+      bRet = _internal_SetValue( pdwValue, ptcValue, MaxValue, ValBuffer );
+      if(bRet) 
+        break; /* to the end of do-once, but only if we got some value */
+      } /*end-if-got a nice formed value from CmdLine */
+
+    /*=========================================================================*
+     *           2nd now LOOKING for Environment                               *
+     *=========================================================================*/
+    dwRet = GetEnvironmentVariable( Var_Name, ValBuffer, DIM(ValBuffer)-1 );
+    if( dwRet>0 && dwRet<DIM(ValBuffer) )
+      {
+      /* we found it in the Environment*/
+      bRet = _internal_SetValue( pdwValue, ptcValue, MaxValue, ValBuffer );
+      if(bRet) 
+        break; /* to the end of do-once */
       }
-  
-    /*-----------------------------------------------------------------*
-     *          STEP 2: try to read from Registry-HKLM                 *
-     *          if okay, we copy the valuse to HKCU + we have done     *
-     *          if failed, we only lack of rights. so we take the      *
-     *          default, try to copy it to HKCU and finished           *
-     *-----------------------------------------------------------------*/
-    dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_READ /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-    if( dwRet == ERROR_SUCCESS )
-      {
-      dwType = REG_DWORD;
-      ValLen = sizeof( DWORD );
-      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
-      RegCloseKey( hKey );
-      if( dwRet != ERROR_SUCCESS )
-        {
-        Value = DefaultVal; 
-        }
-      *pdwValue = Value;
 
-      /* create the copy in HKCU for the next time we access it */
+    /*=========================================================================*
+     *           3rd: if noting in Environment,                                *
+     *           next look inside <Appname>.ini, for Values                    *
+     *=========================================================================*/
+    for( i=0 ; i<INI_LOCATIONS ; i++ )
+      {
+      if( _internal_GetIniFileName( pHnd, i ) )
+        {
+        /* we shall read a string ? */
+        if( ptcValue && _internal_GetIniValString( pHnd->internal.Ini_File[i], 
+                                                   pGroupName, pKeyName, 
+                                                   ptcValue,   MaxValue, 
+                                                   ptcDefault, WriteIfNotExist ) )
+          {
+          bRet = TRUE; /* we found it in the INI File */
+          }
+        /* we shall read a DWORD */
+        if( pdwValue && _internal_GetIniValDword( pHnd->internal.Ini_File[i], 
+                                                  pGroupName, pKeyName, 
+                                                  pdwValue,   DefaultVal,
+                                                  WriteIfNotExist ) )
+          {
+          bRet = TRUE; /* we found it in the INI File */
+          }
+        } /* endif this INI FILE FOUND */
+      }/* end for all INI locations */
+    if( bFound ) /* do not search further */
+      break; /* to the end of do-once */
+
+    /*=========================================================================*
+     *           NOW START LOOKING INSIDE REGISTRY                             *
+     *=========================================================================*/
+
+    /* startLocalBlock( REG ) */
+      {
+      HKEY   hKey;
+      DWORD  dwDisp;
+      DWORD  dwType;
+      DWORD  ValLen;
+      DWORD  Value;
+      TCHAR  GroupKey[ MAX_PATH ];
+      size_t nLastChar;
+
+      nLastChar = DIM( GroupKey ) - 1;
+      _tcsncpy( GroupKey, pHnd->helper.tcsProfileName, nLastChar );
+      GroupKey[ nLastChar ] = 0;
+      _tcsncat( GroupKey, _T("\\"), nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
+      GroupKey[ nLastChar ] = 0;
+      _tcsncat( GroupKey, pGroupName, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
+      GroupKey[ nLastChar ] = 0;
+
+      /*-----------------------------------------------------------------*
+       *          STEP 1: try to read from Registry-HKCU                 *
+       *          if okay, we did it well                                *
+       *          if failed, we assume first access, so we try to copy   *
+       *          it from HKLM (if access is granted)                    *
+       *-----------------------------------------------------------------*/
       dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
                             GroupKey, 
                             0 /*Reserved; must be zero*/, 
                             NULL /*object type, ignored on read or if already exist*/, 
                             REG_OPTION_NON_VOLATILE, 
-                            KEY_WRITE /*desired Access*/, 
+                            KEY_READ /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+      if( (dwRet == ERROR_SUCCESS) && (dwDisp == REG_OPENED_EXISTING_KEY) )
+        {
+        dwType = REG_DWORD;
+        ValLen = sizeof( DWORD );
+        dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
+        RegCloseKey( hKey );
+        if( dwRet == ERROR_SUCCESS )
+          { 
+          bRet = TRUE;
+          break; /* to the end of do-once */
+          }
+        }
+  
+      /*-----------------------------------------------------------------*
+       *          STEP 2: try to read from Registry-HKLM                 *
+       *          if okay, we copy the valuse to HKCU + we have done     *
+       *          if failed, we only lack of rights. so we take the      *
+       *          default, try to copy it to HKCU and finished           *
+       *-----------------------------------------------------------------*/
+      dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_READ /*desired Access*/, 
                             NULL /*lpSec*/, 
                             &hKey /*receives the handle we will need next*/, 
                             &dwDisp );
@@ -757,14 +1208,18 @@ int _internal_ReadConfig_DWORD(  PTS_vssc_data pHnd,
         {
         dwType = REG_DWORD;
         ValLen = sizeof( DWORD );
-        dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
+        dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
         RegCloseKey( hKey );
-        }
-      return TRUE;
-      }
-    else
-      {
-      dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
+        if( dwRet != ERROR_SUCCESS )
+          {
+          Value = DefaultVal; 
+          }
+        *pdwValue = Value;
+
+        /* create the copy in HKCU for the next time we access it */
+        if( WriteIfNotExist & _SLOG_CREATE_HKCU )
+          {
+          dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
                             GroupKey, 
                             0 /*Reserved; must be zero*/, 
                             NULL /*object type, ignored on read or if already exist*/, 
@@ -773,18 +1228,63 @@ int _internal_ReadConfig_DWORD(  PTS_vssc_data pHnd,
                             NULL /*lpSec*/, 
                             &hKey /*receives the handle we will need next*/, 
                             &dwDisp );
-      if( dwRet == ERROR_SUCCESS )
-        {
-        dwType = REG_DWORD;
-        ValLen = sizeof( DWORD );
-        dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &DefaultVal, ValLen );
-        RegCloseKey( hKey );
+          if( dwRet == ERROR_SUCCESS )
+            {
+            dwType = REG_DWORD;
+            ValLen = sizeof( DWORD );
+            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
+            RegCloseKey( hKey );
+            }
+          }
         }
-      }
-    } /* startLocalBlock( REG ) */
+      else /* not able to open HKLM: */
+        {
+        if( WriteIfNotExist & _SLOG_CREATE_HKLM )
+          {
+          dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_WRITE /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+          if( dwRet == ERROR_SUCCESS )
+            {
+            dwType = REG_DWORD;
+            ValLen = sizeof( DWORD );
+            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &DefaultVal, ValLen );
+            RegCloseKey( hKey );
+            }
+        /* also create a copy in HKCU for the next time we access it */
+        if( WriteIfNotExist & _SLOG_CREATE_HKCU )
+          {
+          dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
+                            GroupKey, 
+                            0 /*Reserved; must be zero*/, 
+                            NULL /*object type, ignored on read or if already exist*/, 
+                            REG_OPTION_NON_VOLATILE, 
+                            KEY_WRITE /*desired Access*/, 
+                            NULL /*lpSec*/, 
+                            &hKey /*receives the handle we will need next*/, 
+                            &dwDisp );
+          if( dwRet == ERROR_SUCCESS )
+            {
+            dwType = REG_DWORD;
+            ValLen = sizeof( DWORD );
+            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
+            RegCloseKey( hKey );
+            }
+          }
+        } /* opend HKLM or not */
+      } /* startLocalBlock( REG ) */
 
-  /* finally, if nothing worked til here, we use the default. */
-  *pdwValue = DefaultVal;
+    /* finally, if nothing worked til here, we use the default. */
+    *pdwValue = DefaultVal;
+    }
+  }while(0); /* do-once */
+
   return TRUE;
 }};
 /*! \endcond */
@@ -801,7 +1301,6 @@ int _internal_ReadConfig_TCHAR(  PTS_vssc_data pHnd,
                                  TCHAR* ptcValue, 
                                  const size_t MaxValue )
 {{
-  DWORD dwRet;
   BOOL bIsSpecialName;
 
   if( !ptcValue || MaxValue<2 || !pGroupName || !pKeyName )
@@ -1127,6 +1626,7 @@ int VSSC_close( int Handle /*!< [in] Handle a valid Handle from succesful VSSC_o
   while( ReleaseMutex( pHnd->internal.hMutex ) ){;/*do-a-nothing*/}
   CloseHandle( pHnd->internal.hMutex );
 
+  free( pHnd->internal.pMyCmdLine );
   free( pHnd );
   return (int) TRUE;  /*! \retval TRUE if everything was closed successful. */
 }}
@@ -1374,11 +1874,11 @@ int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succe
                              AutoConfig[i].Size,
                              AutoConfig[i].Offset );
         
-        /*real reading / writing not implemented yet */
-        iRet = _internal_ReadConfig_DWORD( pHnd, 
-                                           AutoConfig[i].pGroupName,
+        iRet = _internal_ReadConfig( pHnd, AutoConfig[i].pGroupName,
                                            AutoConfig[i].pKeyName,
                                            AutoConfig[i].WriteIfNotExist,
+                                           NULL/*string default*/,
+                                           NULL/*string buffer*/, 0/*string maxlen*/, 
                                            AutoConfig[i].DefaultVal,
                                            &dwValue );
         if( !iRet )
@@ -1435,14 +1935,14 @@ int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succe
         pStart = (char*) pHnd;
         pStart+= AutoConfig[i].Offset;
 
-        /*real reading / writing not implemented yet */
-        iRet = _internal_ReadConfig_TCHAR( pHnd, 
-                                           AutoConfig[i].pGroupName,
+        iRet = _internal_ReadConfig( pHnd, AutoConfig[i].pGroupName,
                                            AutoConfig[i].pKeyName,
                                            AutoConfig[i].WriteIfNotExist,
                                            (TCHAR*) AutoConfig[i].DefaultVal,
                                            (TCHAR*) pStart, 
-                                           maxlen+1 ); /* +1 because maxlen is without \0 and our foo is with \0 */
+                                           maxlen+1 /* +1 because maxlen is without \0 and our foo is with \0 */, 
+                                           0 /*dword default*/,
+                                           NULL/*dword pointer*/ );
         if( !iRet )
           {
           pEnd = pStart + (sizeof(TCHAR)*(maxlen));
