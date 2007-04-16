@@ -32,6 +32,7 @@
 	#include "Structure Wrap.h"
 	#include "history.h"
 	#include "DEBUG.H"
+	#include "GameSettings.h"
 	
 #endif
 #include "BobbyRMailOrder.h"
@@ -157,8 +158,10 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		memset( pStolenObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
+	// WDS - Option to turn off stealing
 	// check for potential theft
-	if (CheckFact( FACT_PABLO_WONT_STEAL, 0 ))
+	if (gGameExternalOptions.fStealingDisabled ||
+		CheckFact( FACT_PABLO_WONT_STEAL, 0 ))
 	{
 		uiChanceOfTheft = 0;
 	}
