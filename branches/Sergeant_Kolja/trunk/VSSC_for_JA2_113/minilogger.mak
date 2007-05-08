@@ -43,6 +43,7 @@ CLEAN :
 	-@erase "$(INTDIR)\minilogger.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\VSSC.obj"
+	-@erase "$(INTDIR)\xtoi.obj"
 	-@erase "$(OUTDIR)\minilogger.exe"
 
 "$(OUTDIR)" :
@@ -57,7 +58,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib ws2_32.lib advapi32.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\minilogger.pdb" /machine:I386 /out:"$(OUTDIR)\minilogger.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\minilogger.obj" \
-	"$(INTDIR)\VSSC.obj"
+	"$(INTDIR)\VSSC.obj" \
+	"$(INTDIR)\xtoi.obj"
 
 "$(OUTDIR)\minilogger.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -80,13 +82,14 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\VSSC.obj"
+	-@erase "$(INTDIR)\xtoi.obj"
 	-@erase "$(OUTDIR)\minilogger.exe"
 	-@erase "$(OUTDIR)\minilogger.map"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "DEBUG_SLOGGY" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\minilogger.bsc" 
 BSC32_SBRS= \
@@ -95,7 +98,8 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib shell32.lib ws2_32.lib advapi32.lib /nologo /subsystem:console /profile /map:"$(INTDIR)\minilogger.map" /debug /machine:I386 /out:"$(OUTDIR)\minilogger.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\minilogger.obj" \
-	"$(INTDIR)\VSSC.obj"
+	"$(INTDIR)\VSSC.obj" \
+	"$(INTDIR)\xtoi.obj"
 
 "$(OUTDIR)\minilogger.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -153,6 +157,11 @@ SOURCE=.\minilogger.cpp
 SOURCE=.\VSSC.cpp
 
 "$(INTDIR)\VSSC.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\xtoi.c
+
+"$(INTDIR)\xtoi.obj" : $(SOURCE) "$(INTDIR)"
 
 
 

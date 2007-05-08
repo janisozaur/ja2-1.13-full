@@ -3,7 +3,8 @@
  *
  * Copyright :
  * (c) 2006, SergeantKolja(at)yahoo.de (aka Modem-Man)
- * all rights reserved
+ * all rights reserved. Licensed under LGPL.
+ * For more information, read license.txt.
  * 
  * don't forget to include license.txt in every 
  * distribution of this files. 
@@ -13,6 +14,7 @@
 
 #include "stdafx.h" /* we expect to have all global & common project settings in this file */
 #include "vssc.h"
+#include "xtoi.h"
 
 #include <windows.h>
 #include <winsock2.h>
@@ -30,7 +32,7 @@
 #define CSIDL_COMMON_APPDATA (0x0023)
 #endif
 
-char const * const VsscVersion = "0.1.750.build";
+char const * const VsscVersion = "0.1.790.build";
 
 /*! \file VSSC.cpp
  *  \brief VSSC basic functions interface
@@ -65,18 +67,15 @@ char const * const VsscVersion = "0.1.750.build";
 #define MAX_CONFIG_STRINGLEN 128  /* no argument can exceed this lenght. otherwise we mus use dynamic CfgString */
 #define MAKE_CFGLEN( a ) do{ a.LastPos = DIM( a.Text )-1; }while(0)
 #define MAKE_CFGSTR( grp, nam, typ, cr, dflt )    \
-  {                                               \
    _T(#grp), _T(#nam), et_##typ,                  \
    FIELD_OFFSET( CONFIG_BLOCK, grp.nam.Text ),    \
-   MAX_CONFIG_STRINGLEN, (cr), (LONG)_T(dflt)     \
-  }
+   MAX_CONFIG_STRINGLEN, (cr), (LONG)_T(dflt)
 
 #define MAKE_CFGINT( grp, nam, typ, cr, dflt ) \
-  {                                            \
    _T(#grp), _T(#nam), et_##typ,               \
    FIELD_OFFSET( CONFIG_BLOCK, grp.nam ),      \
-   sizeof(typ), (cr),    (LONG)(dflt)          \
-  }
+   sizeof(typ), (cr),    (LONG)(dflt)
+
 
 /* no other types are currently allowed. 
  * This can be extended, but there is no real use for more types
@@ -98,6 +97,11 @@ enum configdata_types
 #define INI_LOCATION_ALLUSRAPPD 2 /* Common All Users Home directory */
 #define INI_LOCATIONS           (1+INI_LOCATION_ALLUSRAPPD)
 
+#define REG_LOCATION_HKCU_APP   0 /* Current User\...\Appname */
+#define REG_LOCATION_HKCU       1 /* Current User\...\        */
+#define REG_LOCATION_HKLM       2 /* Local Machine\...\       */
+#define REG_LOCATIONS           (1+REG_LOCATION_HKLM)
+
 
 #define _SLOG_CREATE_NOT          0
 #define _SLOG_CREATE_INIEXE     0x1
@@ -118,6 +122,8 @@ typedef struct configdata_
   LONG Size;
   USHORT WriteIfNotExist;
   LONG DefaultVal;
+  USHORT AccessMode;
+  USHORT AccessToken;
   } TS_configdata, *PTS_configdata;
 
 /* a string which holds a static known number of elements */
@@ -126,7 +132,6 @@ typedef struct
   size_t LastPos;
   TCHAR Text[MAX_CONFIG_STRINGLEN+1]; /* don't bother me with termchar! */
   }  P32STRING, *PP32STRING;
-
 /*! \endcond */
 
 /*========================================================*/
@@ -148,28 +153,33 @@ typedef struct vssc_data_
     unsigned short MsgCount;
     DWORD          UserPID;
     TCHAR *        pMyCmdLine;
-    TCHAR          Ini_File[INI_LOCATIONS][MAX_PATH];
     } internal;
   /* --------------------------- */
   struct
     {
     TCHAR          tcsProfileName[MAX_PATH];
+    TCHAR          Ini_File[INI_LOCATIONS][MAX_PATH];
+    TCHAR          Reg_Tree[REG_LOCATIONS][MAX_PATH];
     } helper;
   /* ------[direct setables]---- */
   struct
     {
     P32STRING      AppName;
+    LONG           CreateDefault;
+    P32STRING      Version;
+    /*-------      -------------*/
     ULONG          ZoneMask;
     USHORT         ControlFlags;
-    USHORT         ReEntranceBlock;
+    ULONG          ThreadWaitMax;
     } global;
   struct
     {
     USHORT         Use;
-    USHORT         Syslog_Facility;
-    USHORT         Syslog_MaxLevel;
+    USHORT         Facility;
+    USHORT         MaxLevel;
     P32STRING      SendTo_Addr;
     USHORT         SendTo_Port;
+    P32STRING      From_Addr;
     USHORT         From_Port;
     } udp;
   struct
@@ -181,73 +191,76 @@ typedef struct vssc_data_
   } CONFIG_BLOCK, TS_vssc_data, *PTS_vssc_data;
 /*! \endcond */
 
+/*! \cond NEVER_DOX */
 
+/* Access Modes to specify WHEN should be set / read */
+#define ACC_NONE     0
+#define ACC_READ     1
+#define ACC_WRITE    2
+#define ACC_AUTOSET  4
+#define ACC_SETALL   (ACC_WRITE|ACC_AUTOSET)
+#define ACC_AUTOREAD (ACC_READ|ACC_AUTOSET)
+#define ACC_RW       (ACC_READ|ACC_WRITE)
+#define ACC_FULL     (ACC_READ|ACC_WRITE|ACC_AUTOSET)
+
+/* Access Tokens to specify WHAT should be set / read */
+#define CTRL_NOT                   0
+#define CTRL_GENERAL_VERSION       1
+#define CTRL_GENERAL_APPNAME       2
+#define CTRL_GENERAL_ZONEMASK      3
+#define CTRL_SYSLOG_UDP_HOST       4
+#define CTRL_SYSLOG_UDP_OUTPORT    5    
+#define CTRL_SYSLOG_UDP_OUTBIND    6
+#define CTRL_SYSLOG_UDP_MAXLEVEL   7
+#define CTRL_SYSLOG_UDP_PORT       8
+#define CTRL_SYSLOG_UDP_FACILITY   9
+#define CTRL_SYSLOG_UDP_USE       10
+#define CTRL_SYSLOG_UDP_FLAGS     11	 /* pls. rename to CTRL_GLOBAL_FLAGS */
+#define CTRL_SYSLOG_FILE_USE      12
+/*! \endcond */
 
 /*! \cond NEVER_DOX */
+
+/*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*
+ There are 2 Variables, controlling the R/W Behavior: 
+ _SLOG_CREATE_xxx controls _if_ and _where_ they are 
+ created on Startup.
+ ACC_xxx controls _if_ this Value is readable/writeable
+ via VSSC_SetXxx() / VSSC_GetXxx() Methods.
+ The last Param (CTRL_Xxxx) only defines the numerical
+ access helper token. Maybe this will be junked later.
+ *-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+
+
+
+
 static TS_configdata AutoConfig[] = 
   {
-  /*====================================================================================*/
-  /* due to some restrictions, this Value MUST be the first we set!                     */
-   MAKE_CFGSTR( global, AppName        , P32STRING, _SLOG_CREATE_NOT, _T("0815.exe")     )
-  /*====================================================================================*/
-  ,MAKE_CFGINT( global, ZoneMask       , ULONG    , _SLOG_CREATE_REGHKCU, 7              )
-  ,MAKE_CFGINT( global, ControlFlags   , USHORT   , _SLOG_CREATE_REGHKCU, 0              )
-  ,MAKE_CFGINT( global, ReEntranceBlock, USHORT   , _SLOG_CREATE_REGHKCU, 0              )
-  /*====================================================================================*/
-  ,MAKE_CFGINT( udp   , Use            , USHORT   , _SLOG_CREATE_BOTH   , 0              )
-  ,MAKE_CFGINT( udp   , Syslog_Facility, USHORT   , _SLOG_CREATE_REGHKCU, 0              )
-  ,MAKE_CFGINT( udp   , Syslog_MaxLevel, USHORT   , _SLOG_CREATE_INIEXE , 7              )
-  ,MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, _SLOG_CREATE_INIEXE , _T("localhost"))
-  ,MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , _SLOG_CREATE_INIEXE , 514            )
-  ,MAKE_CFGINT( udp   , From_Port      , USHORT   , _SLOG_CREATE_NOT    , 0              )
-  /*====================================================================================*/
-  ,MAKE_CFGINT( file  , Use            , USHORT   , _SLOG_CREATE_REGHKCU, 0              )
-  /*====================================================================================*/
+  /*====================================================================================.=====================================*/
+  /* due to some restrictions, this Value MUST be the first we set!                                                           */
+   {MAKE_CFGSTR( global, AppName        , P32STRING, _SLOG_CREATE_NOT, _T("0815.exe")     ), ACC_AUTOREAD, CTRL_GENERAL_APPNAME}
+  /* due to some restrictions, this Value MUST be the second we set!                                                          */
+  ,{MAKE_CFGINT( global, CreateDefault  , LONG     , _SLOG_CREATE_NOT, -1L                ), ACC_AUTOREAD, CTRL_NOT            }
+  /*====================================================================================.=====================================*/
+  ,{MAKE_CFGINT( global, Version        , P32STRING, _SLOG_CREATE_NOT, _T("")             ), ACC_READ, CTRL_GENERAL_VERSION    }
+  ,{MAKE_CFGINT( global, ZoneMask       , ULONG    , _SLOG_CREATE_REGHKCU, 7              ), ACC_FULL, CTRL_GENERAL_ZONEMASK   }
+  ,{MAKE_CFGINT( global, ControlFlags   , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL, CTRL_SYSLOG_UDP_FLAGS   }
+  ,{MAKE_CFGINT( global, ThreadWaitMax  , ULONG    , _SLOG_CREATE_REGHKCU, 100            ), ACC_AUTOREAD, CTRL_NOT            }
+  /*====================================================================================.=====================================*/
+  ,{MAKE_CFGINT( udp   , Use            , USHORT   , _SLOG_CREATE_BOTH   , 1              ), ACC_FULL, CTRL_SYSLOG_UDP_USE     }
+  ,{MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, _SLOG_CREATE_INIEXE , _T("localhost")), ACC_FULL, CTRL_SYSLOG_UDP_HOST    }
+  ,{MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , _SLOG_CREATE_INIEXE , 514            ), ACC_FULL, CTRL_SYSLOG_UDP_PORT    }
+  ,{MAKE_CFGSTR( udp   , From_Addr      , P32STRING, _SLOG_CREATE_NOT    , _T("")         ), ACC_READ, CTRL_SYSLOG_UDP_OUTBIND }
+  ,{MAKE_CFGINT( udp   , From_Port      , USHORT   , _SLOG_CREATE_NOT    , 0              ), ACC_READ, CTRL_SYSLOG_UDP_OUTPORT }
+  ,{MAKE_CFGINT( udp   , Facility       , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL, CTRL_SYSLOG_UDP_FACILITY}
+  ,{MAKE_CFGINT( udp   , MaxLevel       , USHORT   , _SLOG_CREATE_INIEXE , 7              ), ACC_FULL, CTRL_SYSLOG_UDP_MAXLEVEL}
+  /*====================================================================================.=====================================*/
+  ,{MAKE_CFGINT( file  , Use            , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_NONE, CTRL_SYSLOG_FILE_USE    }
+  /*====================================================================================.=====================================*/
   };
 /*! \endcond */
 
 
-/*! \cond NEVER_DOX */
-typedef struct Settings_
-  {
-  char const * pKey;
-  short AccessToken;
-  short StringType;
-  } TS_Settings, *PTS_Settings;
-/*! \endcond */
-
-
-/*! \cond NEVER_DOX */
-#define CTRL_GENERAL_VERSION   0
-#define CTRL_GENERAL_APPNAME   1
-#define CTRL_GENERAL_ZONEMASK  2
-#define CTRL_SYSLOG_FACILITY   3  
-#define CTRL_SYSLOG_MAXLEVEL   4
-#define CTRL_SYSLOG_HOST       5
-#define CTRL_SYSLOG_PORT       6
-#define CTRL_SYSLOG_OUTPORT    7    
-#define CTRL_SYSLOG_OUTBIND    8
-/*! \endcond */
-
-
-
-
-/*! \cond NEVER_DOX */
-static
-TS_Settings ControlHash[] = 
-  {
-     { "Version"        , CTRL_GENERAL_VERSION , 1 }
-    ,{ "AppName"        , CTRL_GENERAL_APPNAME , 1 } 
-    ,{ "ZoneMask"       , CTRL_GENERAL_ZONEMASK, 0 } 
-    ,{ "SyslogHost"     , CTRL_SYSLOG_HOST     , 1 } 
-    ,{ "SyslogPort"     , CTRL_SYSLOG_PORT     , 0 } 
-    ,{ "SyslogBindPort" , CTRL_SYSLOG_OUTPORT  , 0 }  
-    ,{ "SyslogBindAddr" , CTRL_SYSLOG_OUTBIND  , 1 } 
-    ,{ "SyslogFacility" , CTRL_SYSLOG_FACILITY , 0 }   
-    ,{ "SyslogLevel"    , CTRL_SYSLOG_MAXLEVEL , 0 } 
-    ,{ NULL,              -1                   , 0 } 
-  };
-/*! \endcond */
 
 
 
@@ -269,22 +282,70 @@ TS_Settings ControlHash[] =
 /*== internal helper functions                          ==*/
 /*========================================================*/
 /*! \cond NEVER_DOX */
-void TrimmLine( char * pLine );
-BOOL IsComment( char * pLine );
-BOOL Separate( char * pLine, char ** ppRightpart );
+static void TrimmLine( char * pLine );
+static BOOL IsComment( char * pLine );
+static BOOL Separate( char * pLine, char ** ppRightpart );
+
+static int _internal_GetHash( char const * const pControl );
+
 static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd );
 static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index );
-static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
-                                TCHAR const * const pVar_Name,
-                                TCHAR const * const pVarToken,
-                                TCHAR const * const pValTokenIn,
-                                TCHAR const * const pValTokenOut,
+static BOOL _internal_GetValueFromString( const TCHAR* pKeyValuePair,
+                                const TCHAR* pVar_Name,
+                                const TCHAR* pVarToken,
+                                const TCHAR* pValTokenIn,
+                                const TCHAR* pValTokenOut,
                                 TCHAR *pValBuffer,
                                 size_t MaxBuf );
-static BOOL _internal_SetValue( DWORD *pdwValue, 
+static BOOL _internal_SetValueFromString( DWORD *pdwValue, 
                                 TCHAR *ptcValue, 
                                 size_t MaxValue, 
-                                TCHAR const * const pSourceBuffer );
+                                const TCHAR* pSourceBuffer );
+
+static BOOL _internal_GetIniValString( PTS_vssc_data pHnd, const TCHAR* pIniFile,
+                                const TCHAR* pGroupName,   const TCHAR* pKeyName,
+                                TCHAR *pValBuffer,         size_t MaxBuf, 
+                                const TCHAR* pDefaultVal, 
+                                const USHORT AccessMode,   const USHORT WriteIfNotExist );
+
+static BOOL  _internal_GetIniValDword( PTS_vssc_data pHnd, const TCHAR* pIniFile,
+                                const TCHAR* pGroupName,   const TCHAR* pKeyName,
+                                DWORD *pdwValue,           const DWORD DefaultVal,
+                                const USHORT AccessMode,   const USHORT WriteIfNotExist );
+
+static BOOL _internal_SetIniValString( PTS_vssc_data pHnd,
+                                const TCHAR* pGroupName,   const TCHAR* pKeyName,
+                                const TCHAR* pDefaultVal, 
+                                const USHORT AccessMode,   const USHORT WriteIfNotExist );
+
+static BOOL _internal_SetIniValDword( PTS_vssc_data pHnd,
+                                const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                DWORD dwValue, 
+                                const USHORT AccessMode,  const USHORT WriteIfNotExist );
+
+static BOOL  _internal_GetTOPKEY( HKEY *phTopKey, size_t *pOffset, const TCHAR* pRegTree );
+
+static BOOL  _internal_GetRegValDword( PTS_vssc_data pHnd, 
+                                       const TCHAR* pRegTree,   const TCHAR* pGroupName,  
+                                       const TCHAR* pKeyName,   DWORD *pdwValue,
+                                       const DWORD DefaultVal,
+                                       const USHORT AccessMode, const USHORT WriteIfNotExist );
+
+static BOOL  _internal_GetRegValString( PTS_vssc_data pHnd,      const TCHAR* pRegTree,
+                                        const TCHAR* pGroupName, const TCHAR* pKeyName,
+                                        TCHAR *pValBuffer,       size_t MaxBuf, 
+                                        const TCHAR* pDefaultVal, 
+                                        const USHORT AccessMode, const USHORT WriteIfNotExist );
+
+static BOOL  _internal_SetRegValDword( PTS_vssc_data pHnd, 		  const TCHAR* pRegTree,
+                                       const TCHAR* pGroupName, const TCHAR* pKeyName,
+                                       DWORD Value, 
+                                       const USHORT AccessMode, const USHORT WriteIfNotExist );
+
+static BOOL  _internal_SetRegValString( PTS_vssc_data pHnd,       const TCHAR* pRegTree,
+                                        const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                        const TCHAR* pDefaultVal, 
+                                        const USHORT AccessMode,  const USHORT WriteIfNotExist );
 
 /*! \endcond */
 
@@ -292,7 +353,7 @@ static BOOL _internal_SetValue( DWORD *pdwValue,
 
 /*! \cond NEVER_DOX */
 __inline
-void OnDebug_ReportT( TCHAR const * const pMessage )
+void OnDebug_ReportT( const TCHAR* pMessage )
 {{
   #if defined( DEBUG ) || defined( _DEBUG )
   OutputDebugString( pMessage );
@@ -309,11 +370,23 @@ void OnDebug_ReportT( TCHAR const * const pMessage )
 static 
 int _internal_GetHash( char const * const pControl )
 {{
-  int i=0;
-  while( ControlHash[i].pKey )
+  int iRemain, i=0, maxi=DIM(AutoConfig);
+  char CombinedValue[MAX_PATH];
+
+  while( i<maxi )
     {
-    if( 0==stricmp( pControl, ControlHash[i].pKey ) )
-      return ControlHash[i].AccessToken;
+    iRemain = DIM(CombinedValue);
+    strncpy( CombinedValue, AutoConfig[i].pGroupName, iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+    iRemain = DIM(CombinedValue) - strlen(CombinedValue);
+    strncat( CombinedValue, _T("."), iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+    iRemain = DIM(CombinedValue) - strlen(CombinedValue);
+    strncat( CombinedValue, AutoConfig[i].pKeyName, iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+
+    if( 0==stricmp( pControl, CombinedValue ) )
+      return AutoConfig[i].AccessToken;
     i++;
     }
   return -1;
@@ -328,26 +401,52 @@ int _internal_GetHash( char const * const pControl )
 static 
 int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
 {{
-  int i=0;
-  size_t len, Remainder = MaxBuff -1;
+  int iRemain, i=0, maxi=DIM(AutoConfig);
+  size_t len, FullRemainder = MaxBuff -1;
+  char CombinedValue[MAX_PATH];
 
-  if( !pListBuff || Remainder<1 )
+  if( !pListBuff || FullRemainder<10 )
     return 0;
 
   *pListBuff=0;
   
-  while( ControlHash[i].pKey )
+  iRemain = DIM(CombinedValue);
+  while( i<maxi )
     {
-    len = strlen( ControlHash[i].pKey );
-    if( Remainder >= len + 11 )
-      {
-      strcat( pListBuff, ControlHash[i].pKey );
-      if( ControlHash[i].StringType==1 )
-        strcat( pListBuff, " (string)\r\n" );
-      else
-        strcat( pListBuff, " (number)\r\n" );
+    strncpy( CombinedValue, AutoConfig[i].pGroupName, iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+    iRemain = DIM(CombinedValue) - strlen(CombinedValue);
+    strncat( CombinedValue, _T("."), iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+    iRemain = DIM(CombinedValue) - strlen(CombinedValue);
+    strncat( CombinedValue, AutoConfig[i].pKeyName, iRemain );
+    CombinedValue[ DIM(CombinedValue)-1 ]=0;
+    iRemain = DIM(CombinedValue) - strlen(CombinedValue);
 
-      Remainder -= (len+11);
+    switch( AutoConfig[i].ValType )
+      {
+      case et_BYTE  :
+      case et_CHAR  :
+      case et_USHORT: 
+      case et_SHORT :
+      case et_ULONG :
+      case et_LONG  :
+        {
+        strncat( CombinedValue, " (number)\r\n", iRemain );
+        CombinedValue[ DIM(CombinedValue)-1 ]=0;
+        };break;
+      case et_P32STRING:
+        {
+        strncat( CombinedValue, " (string)\r\n", iRemain );
+        CombinedValue[ DIM(CombinedValue)-1 ]=0;
+        };break;
+      }
+
+    len = strlen(CombinedValue);
+    if( FullRemainder >= len )
+      {
+      strcat( pListBuff, CombinedValue );
+      FullRemainder -= (len);
       }
     else
       {
@@ -357,7 +456,7 @@ int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
     i++;
     }
 
-  return (int) strlen(pListBuff);
+  return (int) MaxBuff+FullRemainder;
 }}
 /*! \endcond */
 
@@ -463,17 +562,17 @@ BOOL _internal_VsscRefreshLevel( PTS_vssc_data pHnd, short Facility, short Level
 
   if(Facility>=0)
     {
-    pHnd->udp.Syslog_Facility = (unsigned) Facility;
+    pHnd->udp.Facility = (unsigned) Facility;
     bRet = TRUE;
     }
   if(Level>=0)
     {
-    /* pHnd->udp.Syslog_MaxLevel = 0 : show nothing
+    /* pHnd->udp.MaxLevel = 0 : show nothing
      *               1 : show emergency (LOG_EMERG, 0)
      *               2 : show alert  (LOG_ALERT, 1)
      * so we have a Offset of +1 between both Levels
      */
-    pHnd->udp.Syslog_MaxLevel = (unsigned) Level-1;
+    pHnd->udp.MaxLevel = (unsigned) Level-1;
     bRet = TRUE;
     }
 
@@ -686,6 +785,8 @@ BOOL _internal_GetCounter( PTS_vssc_data pHnd, char *pCounter64, size_t MaxCount
 
 
 
+
+
 static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd )
 {{
   TCHAR *pCmdLine, *pSeekPos;
@@ -718,6 +819,12 @@ static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd )
   return (*pHnd->internal.pMyCmdLine) ? TRUE : FALSE; /* is already filled or empty */
 }}
 
+
+
+
+
+
+
 static BOOL _internal_FileExist( TCHAR const * const pFileName )
 {{
   struct _stat status;
@@ -731,8 +838,48 @@ static BOOL _internal_FileExist( TCHAR const * const pFileName )
 }}
 
 
+
+
+
+
+static BOOL _internal_RegTreeExist( TCHAR const * const pRegTree )
+{{
+  BOOL   bRet = FALSE;
+  size_t Offset;
+  DWORD  dwRet;
+  HKEY   hTopKey = NULL, hKey = NULL;
+  DWORD  dwDisp = REG_CREATED_NEW_KEY;
+
+  if( !_internal_GetTOPKEY( &hTopKey, &Offset, pRegTree ) )
+    return FALSE;
+
+  dwRet = RegCreateKeyEx( hTopKey, 
+                          pRegTree+Offset, 
+                          0 /*Reserved; must be zero*/, 
+                          NULL /*object type, ignored on read or if already exist*/, 
+                          REG_OPTION_NON_VOLATILE, 
+                          KEY_READ /*desired Access*/, 
+                          NULL /*lpSec*/, 
+                          &hKey /*receives the handle we will need next*/, 
+                          &dwDisp );
+  if( ERROR_SUCCESS==dwRet )
+    {
+    if( REG_OPENED_EXISTING_KEY==dwDisp )
+      {
+      bRet = TRUE;
+      }
+    RegCloseKey( hKey );
+    }
+
+  return bRet;
+}}
+
+
+
+
 static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index )
 {{
+  BOOL bRet = FALSE;
   size_t RemainLen;
   int    i;
   TCHAR *pPatch;
@@ -740,7 +887,7 @@ static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index )
   
   for( i=0 ;i < INI_LOCATIONS; i++ )
     {
-    if( ! *pHnd->internal.Ini_File[i] )
+    if( ! *pHnd->helper.Ini_File[i] )
       {
       switch(i)
         {
@@ -750,12 +897,12 @@ static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index )
           pPatch = _tcsrchr( Name, _T('.') );
           if(pPatch) 
             *pPatch=0; /* cut away .EXE suffix */
-          RemainLen = DIM( pHnd->internal.Ini_File[ i ] )-1;
-          _tcsncpy( pHnd->internal.Ini_File[ i ], pPatch, RemainLen );
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
-          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
-          _tcsncat( pHnd->internal.Ini_File[ i ], _T(".ini"), RemainLen ); 
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen = DIM( pHnd->helper.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->helper.Ini_File[ i ], Name, RemainLen );
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->helper.Ini_File[ i ] );
+          _tcsncat( pHnd->helper.Ini_File[ i ], _T(".ini"), RemainLen ); 
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
           };break;
 
         case INI_LOCATION_USRAPPDATA: /* Users home directory */
@@ -769,41 +916,205 @@ static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index )
             Folder = CSIDL_COMMON_APPDATA;
 
           res = SHGetSpecialFolderPath( NULL, Name, Folder, FALSE );
-          if( NOERROR!=res ) break;
+          if( 1 != res ) break; /* other than stated by MSDN, NOERROR does not work for okay. */
 
-          RemainLen = DIM( pHnd->internal.Ini_File[ i ] )-1;
-          _tcsncpy( pHnd->internal.Ini_File[ i ], Name, RemainLen );
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
-          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+          RemainLen = DIM( pHnd->helper.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->helper.Ini_File[ i ], Name, RemainLen );
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->helper.Ini_File[ i ] );
 
-          _tcsncat( pHnd->internal.Ini_File[ i ], _T("\\"), RemainLen ); 
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
-          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+          _tcsncat( pHnd->helper.Ini_File[ i ], _T("\\"), RemainLen ); 
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->helper.Ini_File[ i ] );
 
-          _tcsncat( pHnd->internal.Ini_File[ i ], pHnd->global.AppName.Text, RemainLen ); 
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
-          RemainLen -= _tcslen( pHnd->internal.Ini_File[ i ] );
+          _tcsncat( pHnd->helper.Ini_File[ i ], pHnd->global.AppName.Text, RemainLen ); 
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->helper.Ini_File[ i ] );
 
-          _tcsncat( pHnd->internal.Ini_File[ i ], _T(".ini"), RemainLen ); 
-          pHnd->internal.Ini_File[ i ][ RemainLen ]=0;
+          _tcsncat( pHnd->helper.Ini_File[ i ], _T(".ini"), RemainLen ); 
+          pHnd->helper.Ini_File[ i ][ RemainLen ]=0;
           };break;
         }
       }
+    }/* for-end*/
+
+  if( Index>=0 && Index<INI_LOCATIONS )
+    {
+    /* now check, if the Requested one is existing */
+    if( _internal_FileExist( pHnd->helper.Ini_File[ Index ] ) )
+      bRet=TRUE;
+    else
+      bRet=FALSE;
+    }
+  else
+    {
+    /* or, if given -1 as Index, now check, if ALL are existing */
+    bRet = TRUE;
+    for( i=0 ;i < INI_LOCATIONS; i++ )
+      {
+      if( bRet )
+         bRet = _internal_FileExist( pHnd->helper.Ini_File[ i ] );
+      if( !bRet )
+         break;
+      }
     }
 
-  if( _internal_FileExist( pHnd->internal.Ini_File[ Index ] ) )
-    return TRUE;
-  else
-    return FALSE;
+  return bRet;
 }};
 
 
 
-static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
-                                TCHAR const * const pVar_Name,
-                                TCHAR const * const pVarToken,
-                                TCHAR const * const pValTokenIn,
-                                TCHAR const * const pValTokenOut,
+
+
+
+static BOOL _internal_GetRegTreeName( PTS_vssc_data pHnd, int Index )
+{{
+  BOOL bRet = FALSE;
+  size_t RemainLen;
+  int    i;
+  TCHAR  Name[MAX_PATH] = {0};
+  
+  for( i=0 ;i < REG_LOCATIONS; i++ )
+    {
+    if( ! *pHnd->helper.Reg_Tree[i] )
+      {
+      switch(i)
+        {
+        case REG_LOCATION_HKCU_APP: /* same path as the Application */
+          {
+          RemainLen = DIM( pHnd->helper.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->helper.Reg_Tree[ i ], _T("HKEY_CURRENT_USER\\Software\\sLoggy\\"), RemainLen );
+          pHnd->helper.Reg_Tree[ i ][ RemainLen ]=0;
+          RemainLen -= _tcslen( pHnd->helper.Reg_Tree[ i ] );
+
+          assert( *pHnd->global.AppName.Text );
+
+          _tcsncat( pHnd->helper.Reg_Tree[ i ], pHnd->global.AppName.Text, RemainLen );
+          pHnd->helper.Reg_Tree[ i ][ RemainLen ]=0;
+          };break;
+
+        case REG_LOCATION_HKCU: /* Users home */
+          {
+          RemainLen = DIM( pHnd->helper.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->helper.Reg_Tree[ i ], _T("HKEY_CURRENT_USER\\Software\\sLoggy"), RemainLen );
+          pHnd->helper.Reg_Tree[ i ][ RemainLen ]=0;
+          };break;
+
+        case REG_LOCATION_HKLM: /* Common All Users RegTree, only Admin ACCESS */
+          {
+          RemainLen = DIM( pHnd->helper.Ini_File[ i ] )-1;
+          _tcsncpy( pHnd->helper.Reg_Tree[ i ], _T("HKEY_LOCAL_MACHINE\\Software\\sLoggy"), RemainLen );
+          pHnd->helper.Reg_Tree[ i ][ RemainLen ]=0;
+          };break;
+        }
+      }
+    }/* for-end*/
+
+  if( Index>=0 && Index<REG_LOCATIONS )
+    {
+    /* now check, if the Requested one is existing */
+    if( _internal_RegTreeExist( pHnd->helper.Reg_Tree[ Index ] ) )
+      bRet=TRUE;
+    else
+      bRet=FALSE;
+    }
+  else
+    {
+    /* or, if given -1 as Index, now check, if ALL are existing */
+    bRet = TRUE;
+    for( i=0 ;i < REG_LOCATIONS; i++ )
+      {
+      if( bRet )
+         bRet = _internal_RegTreeExist( pHnd->helper.Reg_Tree[ i ] );
+      if( !bRet )
+         break;
+      }
+    }
+
+  return bRet;
+}};
+
+
+
+
+
+
+static BOOL _internal_GetTOPKEY( HKEY *phTopKey, size_t *pOffset, const TCHAR* pRegTree )
+{{
+  BOOL bRet = FALSE;
+  TCHAR *pSeek;
+  
+  /* "HKEY_CURRENT_USER\\Software\\sLoggy\\" or 
+     "HKEY_LOCAL_MACHINE\\Software\\sLoggy" */
+  pSeek = _tcschr( pRegTree, _T('\\') );
+  if( pSeek )
+    {
+    *pOffset = (pSeek - pRegTree) / sizeof(TCHAR);
+    if( 0==_tcsncmp( pRegTree, _T("HKEY_CURRENT_USER"), *pOffset ) )
+      {
+      *phTopKey = HKEY_CURRENT_USER;
+      *pOffset++; /* point to char AFTER '\' */
+      bRet = TRUE;
+      }
+    else	if( 0==_tcsncmp( pRegTree, _T("HKEY_LOCAL_MACHINE"), *pOffset ) )
+      {
+      *phTopKey = HKEY_LOCAL_MACHINE;
+      *pOffset++; /* point to char AFTER '\' */
+      bRet = TRUE;
+      }
+    }
+  
+  return bRet;
+}}
+
+
+
+
+
+
+
+
+static BOOL  _internal_GetGroupKeyName( TCHAR *      pReturnName, 
+                                        size_t       MaxBuf, 
+                                        const TCHAR* pRegTree,
+                                        const TCHAR* pGroupName,
+                                        size_t       Offset )
+{{
+  size_t nLastChar, len;
+
+  /* Create the Name of the SubKey */
+  nLastChar = MaxBuf - 1;
+  _tcsncpy( pReturnName, pRegTree+Offset, nLastChar );
+  pReturnName[ nLastChar ] = 0;
+
+  if( pGroupName && *pGroupName )
+    {
+    len = _tcslen( pReturnName );
+    /* Append optional Group Name to get a sub-sub-Tree */
+    if( _T('\\') != pReturnName[ len-1 ] )
+      {
+      _tcsncat( pReturnName, _T("\\"), nLastChar - len );
+      pReturnName[ nLastChar ] = 0;
+      }
+    _tcsncat( pReturnName, pGroupName, nLastChar - len );
+    pReturnName[ nLastChar ] = 0;
+    }
+  return TRUE;
+}}
+
+
+
+
+
+
+
+
+
+static BOOL _internal_GetValueFromString( const TCHAR* pKeyValuePair,
+                                const TCHAR* pVar_Name,
+                                const TCHAR* pVarToken,
+                                const TCHAR* pValTokenIn,
+                                const TCHAR* pValTokenOut,
                                 TCHAR *pValBuffer,
                                 size_t MaxBuf )
 {{
@@ -812,6 +1123,9 @@ static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
   TCHAR *pKeyPos, *pValPos, *pValEnd;
   TCHAR *pParseBuffer;
   TCHAR DefaultYES[]="1";
+
+  if( !pVarToken || !pValTokenIn )
+    return FALSE;
 
   pParseBuffer = (TCHAR*) malloc( (_tcslen(pKeyValuePair) * sizeof(TCHAR)) +1 );
   if(!pParseBuffer)
@@ -822,9 +1136,9 @@ static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
 
   len = _tcslen( pVar_Name );
   
-  #pragma message("special handling for empty or NULL pVarToken required for Environment")
   /* seek for first sequence of 'VarDelimiter, Var_Name, ValDelimiter, Value' */
-  pValPos = pKeyPos = _tcstok( pParseBuffer, pVarToken ); 
+  pValPos = pKeyPos = _tcstok( pParseBuffer, pVarToken );
+
   while( !bFound && pKeyPos )
     {
     /*did we found 'VarDelimiter, Var_Name' ? */
@@ -837,20 +1151,28 @@ static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
         pValPos++;
         bFound=TRUE; /*we found EXACTLY our Var_Name*/
         }
-      else if( pVarToken && *pVarToken && 
+      else if( *pVarToken && 
                ((pKeyPos+len)==_tcspbrk( pKeyPos, pValTokenOut ) || 
                 (pKeyPos+len)==_tcspbrk( pKeyPos, pVarToken    )
                )
-             )
+             )/* "special handling for empty Values (only switch, means bool YES) required. only with NULL!=pVarToken" */
         {
-        /* "special handling for empty Values (only switch, means bool YES) required. only with NULL!=pVarToken" */
         pValPos=DefaultYES;
         bFound=TRUE; /*we found EXACTLY our Var_Name but with no Argument. BOOL switch*/
+        }
+      else if( !pValPos && ( _tcslen(pKeyPos) == len) ) /* "special handling for empty Values (only switch, means bool YES) required. only with NULL!=pVarToken" */
+        {
+        pValPos=DefaultYES;
+        bFound=TRUE; /*we found EXACTLY our Var_Name but with no Argument. BOOL switch*/
+        }
+      else
+        {
+        pKeyPos = _tcstok( NULL, pVarToken ); 
         }
       }
     else
       {
-      pKeyPos = _tcstok( pParseBuffer, NULL ); 
+      pKeyPos = _tcstok( NULL, pVarToken ); 
       }
     }
     
@@ -884,7 +1206,11 @@ static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
       }
     else
       {
-      pValEnd = _tcspbrk( pValEnd, pValTokenOut );
+      if( pValTokenOut )
+        pValEnd = _tcspbrk( pValEnd, pValTokenOut );
+      else
+        pValEnd += _tcslen( pValEnd );
+
       if(pValEnd) 
         *pValEnd=0; /* cut string at first Out-Token */
       }
@@ -902,13 +1228,95 @@ static BOOL _internal_GetValue( TCHAR const * const pKeyValuePair,
 
 
 
+static BOOL _internal_SetValueFromString( DWORD *pdwValue, TCHAR *ptcValue, size_t MaxValue, const TCHAR* pSourceBuffer )
+{{
+  BOOL bRet=FALSE;
+
+  if(ptcValue && MaxValue>1)
+    {
+    /* we have the string now !, if STRING foo, we can '_tcsncpy(target,..,..)' " */
+    _tcsncpy( ptcValue, pSourceBuffer, MaxValue );
+    ptcValue[ MaxValue-1 ]=0;
+    bRet = TRUE;
+    }
+
+  if(pdwValue) /*if pointer to DWORD, we want to get the DWORD val */
+    {
+    *pdwValue = (DWORD) _txtol( pSourceBuffer );
+    bRet = TRUE;
+    }
+  return bRet;
+}}
 
 
 
-static BOOL _internal_GetIniValString( TCHAR const * const pIniFile,
-                                       TCHAR const * const pGroupName,  TCHAR const * const pKeyName,
-                                       TCHAR *pValBuffer,               size_t MaxBuf, 
-                                       TCHAR const * const pDefaultVal, const USHORT WriteIfNotExist )
+
+
+
+
+static BOOL _internal_SetIniValString( PTS_vssc_data pHnd,
+                                       const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                       const TCHAR* pDefaultVal, 
+                                       const USHORT AccessMode,  const USHORT WriteIfNotExist )
+{{
+  TCHAR *pIniFile = _T("");
+
+  if( WriteIfNotExist & _SLOG_CREATE_INIEXE )
+    {
+    pIniFile = pHnd->helper.Ini_File[ INI_LOCATION_EXE ];
+    WritePrivateProfileString( pGroupName, pKeyName, pDefaultVal, pIniFile );
+    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    }
+
+  if( WriteIfNotExist & _SLOG_CREATE_INIHOME )
+    {
+    pIniFile = pHnd->helper.Ini_File[ INI_LOCATION_USRAPPDATA ];
+    WritePrivateProfileString( pGroupName, pKeyName, pDefaultVal, pIniFile );
+    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    }
+
+  if( WriteIfNotExist & _SLOG_CREATE_INIALLHOME )
+    {
+    pIniFile = pHnd->helper.Ini_File[ INI_LOCATION_ALLUSRAPPD ];
+    WritePrivateProfileString( pGroupName, pKeyName, pDefaultVal, pIniFile );
+    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    }
+
+  return TRUE;
+}}
+
+
+
+
+static BOOL _internal_SetIniValDword( PTS_vssc_data pHnd,
+                                      const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                      DWORD dwValue, 
+                                      const USHORT AccessMode,  const USHORT WriteIfNotExist )
+{{
+  size_t len;
+  TCHAR ValBuffer[MAX_PATH];
+  len = DIM( ValBuffer );
+
+  if( ((long)dwValue <= -1L) && ((long)dwValue >= -1024L) )
+    _sntprintf( ValBuffer, len, _T("%li"), (long) dwValue ); 
+  else if( (dwValue >= 0) && (dwValue <= 1024) )
+    _sntprintf( ValBuffer, len, _T("%lu"), dwValue ); 
+  else
+    _sntprintf( ValBuffer, len, _T("0x%08x"), dwValue ); 
+
+  return _internal_SetIniValString( pHnd, pGroupName, pKeyName, ValBuffer, AccessMode, WriteIfNotExist );
+}}
+
+
+
+
+
+
+static BOOL _internal_GetIniValString( PTS_vssc_data pHnd, const TCHAR* pIniFile,
+                                       const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                       TCHAR *pValBuffer,        size_t MaxBuf, 
+                                       const TCHAR* pDefaultVal, 
+                                       const USHORT AccessMode,  const USHORT WriteIfNotExist )
 {{
   DWORD dwRet;
   size_t len;
@@ -961,10 +1369,10 @@ static BOOL _internal_GetIniValString( TCHAR const * const pIniFile,
     pValBuffer[ MaxBuf-1 ]=0;
     }
 
-  if( !bFound && (WriteIfNotExist & _SLOG_CREATE_INI) )
+  if( !bFound )
     {
-    WritePrivateProfileString( pGroupName, pKeyName, pDefaultVal, pIniFile );
-    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    /* other than the name suggests, this foo does not write in ANY case. It depends from WriteIfNotExist. */
+    _internal_SetIniValString( pHnd, pGroupName, pKeyName, pDefaultVal, AccessMode, WriteIfNotExist );
     }
   
   return bFound;
@@ -976,10 +1384,10 @@ static BOOL _internal_GetIniValString( TCHAR const * const pIniFile,
 
 
 
-static BOOL  _internal_GetIniValDword( TCHAR const * const pIniFile,
-                                       TCHAR const * const pGroupName,  TCHAR const * const pKeyName,
-                                       DWORD *pdwValue,                 const DWORD DefaultVal,
-                                       const USHORT WriteIfNotExist )
+static BOOL  _internal_GetIniValDword( PTS_vssc_data pHnd, const TCHAR* pIniFile,
+                                       const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                       DWORD *pdwValue,          const DWORD DefaultVal,
+                                       const USHORT AccessMode,  const USHORT WriteIfNotExist )
 {{
   size_t len;
   TCHAR DefBuffer[MAX_PATH];
@@ -993,7 +1401,7 @@ static BOOL  _internal_GetIniValDword( TCHAR const * const pIniFile,
    *    positive values between  0 and +1024 are used as positive decimal string
    *    all others are used as hexadecimal strings
    */
-  if( ((long)DefaultVal <= -1L) && ((long)DefaultVal <= -1024L) )
+  if( ((long)DefaultVal <= -1L) && ((long)DefaultVal >= -1024L) )
     _sntprintf( DefBuffer, len, _T("%li"), (long) DefaultVal ); 
   else if( (DefaultVal >= 0) && (DefaultVal <= 1024) )
     _sntprintf( DefBuffer, len, _T("%lu"), DefaultVal ); 
@@ -1001,19 +1409,19 @@ static BOOL  _internal_GetIniValDword( TCHAR const * const pIniFile,
     _sntprintf( DefBuffer, len, _T("0x%08x"), DefaultVal ); 
 
   len = DIM(ValBuffer) - 1;
-  bFound = _internal_GetIniValString( pIniFile, pGroupName, pKeyName, ValBuffer, len, DefBuffer, WriteIfNotExist );
+  bFound = _internal_GetIniValString( pHnd, pIniFile, pGroupName, pKeyName, ValBuffer, len, DefBuffer, AccessMode, WriteIfNotExist );
   /* we use the string function because of more powerful number format handling */
 
   if( bFound )
     {
-    #pragma message ("use better xtol()")
-    *pdwValue = (DWORD) _ttol( ValBuffer );
+    *pdwValue = (DWORD) _txtol( ValBuffer ); /* ttol() is the TCHAR version of atol(), txtol() is the TCHAR of xtol() */
     }
 
-  if( !bFound && (WriteIfNotExist & _SLOG_CREATE_INI) )
+  if( !bFound  )
     {
-    WritePrivateProfileString( pGroupName, pKeyName, DefBuffer, pIniFile );
-    WritePrivateProfileString( NULL, NULL, NULL, pIniFile ); /* flush the INI cache */
+    /* other than the name suggests, this foo does not write in ANY case. It depends from WriteIfNotExist. */
+    /* hint: this is already done by String-Foo, but not so luxurious. Maybe suppressing there not here would be better *
+    _internal_SetIniValDword( pHnd, pGroupName, pKeyName, pDefaultVal, WriteIfNotExist ); */
     }
   
   return bFound;
@@ -1025,48 +1433,322 @@ static BOOL  _internal_GetIniValDword( TCHAR const * const pIniFile,
 
 
 
-
-static BOOL _internal_SetValue( DWORD *pdwValue, TCHAR *ptcValue, size_t MaxValue, TCHAR const * const pSourceBuffer )
+static BOOL  _internal_GetRegValDword( PTS_vssc_data pHnd, 		 const TCHAR* pRegTree,
+                                       const TCHAR* pGroupName, const TCHAR* pKeyName,
+                                       DWORD *pdwValue,         const DWORD DefaultVal,
+                                       const USHORT AccessMode, const USHORT WriteIfNotExist )
 {{
-  BOOL bRet=FALSE;
+  BOOL   bRet = FALSE;
+  TCHAR  GroupKey[ MAX_PATH ];
+  size_t Offset;
+  DWORD  dwRet;
+  HKEY   hTopKey = NULL, hKey = NULL;
+  DWORD  dwDisp = REG_CREATED_NEW_KEY;
 
-  if(ptcValue && MaxValue>1)
+  if( !_internal_GetTOPKEY( &hTopKey, &Offset, pRegTree ) )
+    return FALSE;
+
+  /* Create the Name of the SubKey */
+	 if( !_internal_GetGroupKeyName( GroupKey, DIM(GroupKey), pRegTree, pGroupName, Offset ) )
+    return FALSE;
+
+  /*-----------------------------------------------------------------*
+   *          STEP 1: try to read from Registry-HKCU                 *
+   *          if okay, we did it well                                *
+   *-----------------------------------------------------------------*/
+  dwRet = RegCreateKeyEx( hTopKey, 
+                          GroupKey, 
+                          0 /*Reserved; must be zero*/, 
+                          NULL /*object type, ignored on read or if already exist*/, 
+                          REG_OPTION_NON_VOLATILE, 
+                          KEY_READ /*desired Access*/, 
+                          NULL /*lpSec*/, 
+                          &hKey /*receives the handle we will need next*/, 
+                          &dwDisp );
+  if( ERROR_SUCCESS==dwRet )
     {
-    /* we have the string now !, if STRING foo, we can '_tcsncpy(target,..,..)' " */
-    _tcsncpy( ptcValue, pSourceBuffer, MaxValue );
-    ptcValue[ MaxValue-1 ]=0;
-    bRet = TRUE;
+    if( REG_OPENED_EXISTING_KEY==dwDisp )
+      {
+      DWORD  dwType;
+      DWORD  ValLen;
+      DWORD  Value;
+
+      dwType = REG_DWORD;
+      ValLen = sizeof( DWORD );
+      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) &Value, &ValLen );
+      if( (dwRet == ERROR_SUCCESS) && (dwType == REG_DWORD) )
+        {
+        *pdwValue = Value;
+        bRet = TRUE;
+        }
+      }
+    RegCloseKey( hKey );
     }
 
-  if(pdwValue) /*if pointer to DWORD, we want to get the DWORD val */
+  if( (ERROR_SUCCESS==dwRet) && (REG_CREATED_NEW_KEY==dwDisp) )
     {
-    #pragma message ("use better xtol()")
-    *pdwValue = (DWORD) _ttol( pSourceBuffer );
-    bRet = TRUE;
+    RegCloseKey( hKey );
+    /* other than the name suggests, this foo does not write in ANY case. It depends from WriteIfNotExist. */
+    bRet = _internal_SetRegValDword( pHnd, GroupKey, NULL, pKeyName, DefaultVal, AccessMode, WriteIfNotExist );
     }
-  return bRet;
+
+  return	bRet;
 }}
 
 
 
 
 
-#pragma message("WriteIfNotExist shall specify if writing to INI, HKCU, HKLM (define some Bitmasks!)" )
+
+
+
+
+static BOOL  _internal_GetRegValString( PTS_vssc_data pHnd,      const TCHAR* pRegTree,
+                                        const TCHAR* pGroupName, const TCHAR* pKeyName,
+                                        TCHAR *pValBuffer,       size_t MaxBuf, 
+                                        const TCHAR* pDefaultVal, 
+                                        const USHORT AccessMode, const USHORT WriteIfNotExist )
+{{
+  BOOL   bRet = FALSE;
+  TCHAR  GroupKey[ MAX_PATH ];
+  size_t Offset;
+  DWORD  dwRet;
+  HKEY   hTopKey = NULL, hKey = NULL;
+  DWORD  dwDisp = REG_CREATED_NEW_KEY;
+
+  if( !_internal_GetTOPKEY( &hTopKey, &Offset, pRegTree ) )
+    return FALSE;
+
+  /* Create the Name of the SubKey */
+	 if( !_internal_GetGroupKeyName( GroupKey, DIM(GroupKey), pRegTree, pGroupName, Offset ) )
+    return FALSE;
+
+  /*-----------------------------------------------------------------*
+   *          STEP 1: try to read from Registry-HKCU                 *
+   *          if okay, we did it well                                *
+   *-----------------------------------------------------------------*/
+  dwRet = RegCreateKeyEx( hTopKey, 
+                          GroupKey, 
+                          0 /*Reserved; must be zero*/, 
+                          NULL /*object type, ignored on read or if already exist*/, 
+                          REG_OPTION_NON_VOLATILE, 
+                          KEY_READ /*desired Access*/, 
+                          NULL /*lpSec*/, 
+                          &hKey /*receives the handle we will need next*/, 
+                          &dwDisp );
+  if( ERROR_SUCCESS==dwRet )
+    {
+    if( REG_OPENED_EXISTING_KEY==dwDisp )
+      {
+      DWORD  dwType;
+      DWORD  ValLen;
+
+      dwType = REG_SZ;
+      ValLen = MaxBuf;
+      dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pValBuffer, &ValLen );
+      if( (dwRet == ERROR_SUCCESS) && (dwType == REG_DWORD) )
+        {
+        if(ValLen<MaxBuf) 
+          pValBuffer[ValLen+1]=0; /*if we have space, better terminate extra, for the case the writer forgot to write the termchar*/
+        bRet = TRUE;
+        }
+      }
+    RegCloseKey( hKey );
+    }
+
+  if( (ERROR_SUCCESS==dwRet) && (REG_CREATED_NEW_KEY==dwDisp) )
+    {
+    RegCloseKey( hKey );
+    /* other than the name suggests, this foo does not write in ANY case. It depends from WriteIfNotExist. */
+    bRet = _internal_SetRegValString( pHnd, GroupKey, NULL, pKeyName, pDefaultVal, AccessMode, WriteIfNotExist );
+    }
+
+  return	bRet;
+}}
+
+
+
+
+
+static BOOL  _internal_SetRegValString( PTS_vssc_data pHnd,       const TCHAR* pRegTree,
+                                        const TCHAR* pGroupName,  const TCHAR* pKeyName,
+                                        const TCHAR* pDefaultVal, 
+                                        const USHORT AccessMode,  const USHORT WriteIfNotExist )
+{{
+  BOOL   bRet = FALSE, DoWrite = FALSE;
+  TCHAR  GroupKey[ MAX_PATH ];
+  size_t Offset;
+  DWORD  dwRet;
+  HKEY   hTopKey = NULL, hKey = NULL;
+  DWORD  dwDisp = REG_CREATED_NEW_KEY;
+
+  if( !_internal_GetTOPKEY( &hTopKey, &Offset, pRegTree ) )
+    return FALSE;
+
+  if( (HKEY_CURRENT_USER==hTopKey) && (_SLOG_CREATE_REGHKCU & WriteIfNotExist) )
+    {
+    DoWrite = TRUE;
+    }
+  else if( (HKEY_LOCAL_MACHINE==hTopKey) && (_SLOG_CREATE_REGHKLM & WriteIfNotExist) )
+    {
+    DoWrite = TRUE;
+    }
+
+  if( !DoWrite )
+    return TRUE;	/* act as if it was okay. */
+
+  /* Create the Name of the SubKey */
+	 if( !_internal_GetGroupKeyName( GroupKey, DIM(GroupKey), pRegTree, pGroupName, Offset ) )
+    return FALSE;
+
+  /*-----------------------------------------------------------------*
+   *          STEP 1: try to read from Registry-HKCU                 *
+   *          if okay, we did it well                                *
+   *-----------------------------------------------------------------*/
+  dwRet = RegCreateKeyEx( hTopKey, 
+                          GroupKey, 
+                          0 /*Reserved; must be zero*/, 
+                          TEXT("") /*object type, will be set later by RegSetValueEx */, 
+                          REG_OPTION_NON_VOLATILE, 
+                          KEY_READ | KEY_WRITE	/*desired Access*/, 
+                          NULL /*lpSec*/, 
+                          &hKey /*receives the handle we will need next*/, 
+                          &dwDisp );
+  if( ERROR_SUCCESS==dwRet )
+    {
+    DWORD  dwType;
+    DWORD  ValLen;
+
+    dwType = REG_SZ;
+    ValLen = _tcslen( pDefaultVal ) + 1;
+    dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) pDefaultVal, ValLen );
+    if( dwRet == ERROR_SUCCESS )
+      {
+      bRet = TRUE;
+      }
+    RegCloseKey( hKey );
+    }
+  return	bRet;
+}}
+
+
+
+
+
+
+
+
+static BOOL  _internal_SetRegValDword( PTS_vssc_data pHnd, 		  const TCHAR* pRegTree,
+                                       const TCHAR* pGroupName, const TCHAR* pKeyName,
+                                       DWORD Value, 
+                                       const USHORT AccessMode, const USHORT WriteIfNotExist )
+{{
+  BOOL   bRet = FALSE, DoWrite = FALSE;
+  TCHAR  GroupKey[ MAX_PATH ];
+  size_t Offset;
+  DWORD  dwRet;
+  HKEY   hTopKey = NULL, hKey = NULL;
+  DWORD  dwDisp = REG_CREATED_NEW_KEY;
+
+  if( !_internal_GetTOPKEY( &hTopKey, &Offset, pRegTree ) )
+    return FALSE;
+
+  if( (HKEY_CURRENT_USER==hTopKey) && (_SLOG_CREATE_REGHKCU & WriteIfNotExist) )
+    {
+    DoWrite = TRUE;
+    }
+  else if( (HKEY_LOCAL_MACHINE==hTopKey) && (_SLOG_CREATE_REGHKLM & WriteIfNotExist) )
+    {
+    DoWrite = TRUE;
+    }
+
+  if( !DoWrite )
+    return TRUE;	/* act as if it was okay. */
+
+  /* Create the Name of the SubKey */
+	 if( !_internal_GetGroupKeyName( GroupKey, DIM(GroupKey), pRegTree, pGroupName, Offset ) )
+    return FALSE;
+
+  /*-----------------------------------------------------------------*
+   *          STEP 1: try to read from Registry-HKCU                 *
+   *          if okay, we did it well                                *
+   *-----------------------------------------------------------------*/
+  dwRet = RegCreateKeyEx( hTopKey, 
+                          GroupKey, 
+                          0 /*Reserved; must be zero*/, 
+                          TEXT("") /*object type, will be set later by RegSetValueEx */, 
+                          REG_OPTION_NON_VOLATILE, 
+                          KEY_READ | KEY_WRITE	/*desired Access*/, 
+                          NULL /*lpSec*/, 
+                          &hKey /*receives the handle we will need next*/, 
+                          &dwDisp );
+  if( ERROR_SUCCESS==dwRet )
+    {
+    DWORD  dwType;
+    DWORD  ValLen;
+
+    dwType = REG_DWORD;
+    ValLen = sizeof( DWORD );
+    dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
+    if( dwRet == ERROR_SUCCESS )
+      {
+      bRet = TRUE;
+      }
+    RegCloseKey( hKey );
+    }
+  return	bRet;
+}}
+
+
+
+
+
+
 
 
 
 
 /*! \cond NEVER_DOX */
-/* read 32 bit numerical params from Cmd-Line (all after '-SLOG' ), Environment, Private Profile .INI, Registry */
-int _internal_ReadConfig(  PTS_vssc_data pHnd, 
-                           TCHAR const * const pGroupName, 
-                           TCHAR const * const pKeyName, 
-                           const short WriteIfNotExist,
-                           TCHAR const * const ptcDefault, 
-                           TCHAR* ptcValue, 
-                           const size_t MaxValue, 
-                           const DWORD DefaultVal, 
-                           DWORD * pdwValue )
+
+
+/*! \addtogroup internal_setup_functions Functions (Setup, internal)
+ *@{
+ */
+
+/*! \brief Reading Setup Information from multiple optional sources.
+ *
+ * Reads whether a 32 bit numerical param or a String.
+ * If allowed by Flag WriteIfNotExist, it also creates the value with default content at a given Place.
+ * It tries to red multiple sources, until it found the Key. Search is prioritized in the following order:
+ * - Command-Line Parameters (all after '-SLOG', so it does not affect the original programs Cmd Line )
+ * - Environment Variables
+ * - <Appname>.ini Files, in the order:
+ *   - Directory of Appname executeable
+ *   - Users home directory for Application Data (%APPDATA%, often somewhat like C:\Documents and Settings\Username\Application Data)
+ *   - Common All Users Application Data Home directory (%ALLUSERSPROFILE%\Anwendungsdaten, often somewhat like C:\Dokumente und Einstellungen\All Users\Anwendungsdaten) 
+ * - Registry / Hive Database, in the order:
+ *   - HKey Current User\...\Software\Appname
+ *   - HKey Current User\...\Software
+ *   - HKey Local Machine\...\Software
+ * As said, if the first hit was found, the search stops and reads its Value.
+ * If nothing was found, the Key is created with a useful default Value.
+ * The creation does not take place in CmdLine and in Environment.
+ *
+ * \todo: the WriteIfNotExist is aggressiv at the moment.
+ *  this means, it will create a value on the given place, even if the Value would be found in a subordered location.
+ *  since this could be felt wrong, we will fix it sometimes...
+ *
+ */
+int _internal_ReadConfigALL( PTS_vssc_data pHnd,
+                             const TCHAR* pGroupName, 
+                             const TCHAR* pKeyName, 
+                             const short  WriteIfNotExist,
+                             const USHORT AccessMode,
+                             const TCHAR* ptcDefault, 
+                             TCHAR      * ptcValue, 
+                             const size_t MaxValue, 
+                             const DWORD DefaultVal, 
+                             DWORD *pdwValue )
 {{
   DWORD dwRet = FALSE;
   BOOL bRet = FALSE, bFound = FALSE;
@@ -1077,9 +1759,13 @@ int _internal_ReadConfig(  PTS_vssc_data pHnd,
   TCHAR ValBuffer[MAX_PATH];
   //TCHAR *pSeekPos;
 
-  if( !pdwValue || !pGroupName || !pKeyName )
+  if( !pGroupName || !pKeyName )
     return FALSE;
 
+  if( !pdwValue && (!ptcValue || MaxValue<2) ) /* wheter no dw nor string: nothing can be done! */
+    return FALSE;
+  
+  
   do{ /* do-once */
     /* combine Groupname and Varname to one word, for Environment and for CmdLine. They both dont support GroupNames */
     RemainLen = DIM( Var_Name ) -1;
@@ -1087,13 +1773,42 @@ int _internal_ReadConfig(  PTS_vssc_data pHnd,
     _tcsncat( Var_Name, _T("_")   , RemainLen ); Var_Name[ RemainLen ] =0; RemainLen -= _tcslen(Var_Name);
     _tcsncat( Var_Name, pKeyName  , RemainLen ); Var_Name[ RemainLen ] =0; 
 
+
+    /*=========================================================================*
+     *           one of the sepacial cases?                                    *
+     *=========================================================================*/
+    if( 0==_tcsicmp( Var_Name, _T("global_AppName")) )
+      {
+      TCHAR ValBuffer[MAX_PATH] = {0};
+      TCHAR *pPatch;
+      GetModuleFileName( NULL, ValBuffer, DIM( ValBuffer )-1 );
+      pPatch = _tcsrchr( ValBuffer, _T('.') );
+      if(pPatch) *pPatch=0; /* cut away .EXE suffix */
+      pPatch = _tcsrchr( ValBuffer, _T('\\') );
+      if(pPatch) 
+        pPatch++; /* skip the '\' */
+      else
+        pPatch=ValBuffer;
+
+
+      /*
+      _tcsncpy( pHnd->global.AppName.Text, pPatch, pHnd->global.AppName.LastPos );
+      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
+      */
+
+      bRet = _internal_SetValueFromString( pdwValue, ptcValue, MaxValue, pPatch );
+      if(bRet) 
+        break; /* to the end of do-once, but only if we got some value */
+      }
+
+    
     /*=========================================================================*
      *           1st START LOOKING for Cmd Line Param                          *
      *=========================================================================*/
     if( _internal_GetCmdLine( pHnd ) &&
-        _internal_GetValue( pHnd->internal.pMyCmdLine, Var_Name, "-/", ":= \t", " \t-/", ValBuffer, DIM(ValBuffer) ) )
+        _internal_GetValueFromString( pHnd->internal.pMyCmdLine, Var_Name, "-/", ":= \t", " \t-/", ValBuffer, DIM(ValBuffer) ) )
       {
-      bRet = _internal_SetValue( pdwValue, ptcValue, MaxValue, ValBuffer );
+      bRet = _internal_SetValueFromString( pdwValue, ptcValue, MaxValue, ValBuffer );
       if(bRet) 
         break; /* to the end of do-once, but only if we got some value */
       } /*end-if-got a nice formed value from CmdLine */
@@ -1105,7 +1820,7 @@ int _internal_ReadConfig(  PTS_vssc_data pHnd,
     if( dwRet>0 && dwRet<DIM(ValBuffer) )
       {
       /* we found it in the Environment*/
-      bRet = _internal_SetValue( pdwValue, ptcValue, MaxValue, ValBuffer );
+      bRet = _internal_SetValueFromString( pdwValue, ptcValue, MaxValue, ValBuffer );
       if(bRet) 
         break; /* to the end of do-once */
       }
@@ -1119,18 +1834,18 @@ int _internal_ReadConfig(  PTS_vssc_data pHnd,
       if( _internal_GetIniFileName( pHnd, i ) )
         {
         /* we shall read a string ? */
-        if( ptcValue && _internal_GetIniValString( pHnd->internal.Ini_File[i], 
+        if( ptcValue && _internal_GetIniValString( pHnd, pHnd->helper.Ini_File[i], 
                                                    pGroupName, pKeyName, 
-                                                   ptcValue,   MaxValue, 
-                                                   ptcDefault, WriteIfNotExist ) )
+                                                   ptcValue,   MaxValue, ptcDefault, 
+                                                   AccessMode, WriteIfNotExist ) )
           {
           bRet = TRUE; /* we found it in the INI File */
           }
         /* we shall read a DWORD */
-        if( pdwValue && _internal_GetIniValDword( pHnd->internal.Ini_File[i], 
+        if( pdwValue && _internal_GetIniValDword( pHnd, pHnd->helper.Ini_File[i], 
                                                   pGroupName, pKeyName, 
-                                                  pdwValue,   DefaultVal,
-                                                  WriteIfNotExist ) )
+                                                  pdwValue,   DefaultVal, 
+                                                  AccessMode, WriteIfNotExist ) )
           {
           bRet = TRUE; /* we found it in the INI File */
           }
@@ -1142,244 +1857,59 @@ int _internal_ReadConfig(  PTS_vssc_data pHnd,
     /*=========================================================================*
      *           NOW START LOOKING INSIDE REGISTRY                             *
      *=========================================================================*/
-
-    /* startLocalBlock( REG ) */
+    for( i=0 ; i<REG_LOCATIONS ; i++ )
       {
-      HKEY   hKey;
-      DWORD  dwDisp;
-      DWORD  dwType;
-      DWORD  ValLen;
-      DWORD  Value;
-      TCHAR  GroupKey[ MAX_PATH ];
-      size_t nLastChar;
-
-      nLastChar = DIM( GroupKey ) - 1;
-      _tcsncpy( GroupKey, pHnd->helper.tcsProfileName, nLastChar );
-      GroupKey[ nLastChar ] = 0;
-      _tcsncat( GroupKey, _T("\\"), nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
-      GroupKey[ nLastChar ] = 0;
-      _tcsncat( GroupKey, pGroupName, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
-      GroupKey[ nLastChar ] = 0;
-
-      /*-----------------------------------------------------------------*
-       *          STEP 1: try to read from Registry-HKCU                 *
-       *          if okay, we did it well                                *
-       *          if failed, we assume first access, so we try to copy   *
-       *          it from HKLM (if access is granted)                    *
-       *-----------------------------------------------------------------*/
-      dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_READ /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-      if( (dwRet == ERROR_SUCCESS) && (dwDisp == REG_OPENED_EXISTING_KEY) )
+      if( _internal_GetRegTreeName( pHnd, i ) )
         {
-        dwType = REG_DWORD;
-        ValLen = sizeof( DWORD );
-        dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
-        RegCloseKey( hKey );
-        if( dwRet == ERROR_SUCCESS )
-          { 
-          bRet = TRUE;
-          break; /* to the end of do-once */
-          }
-        }
-  
-      /*-----------------------------------------------------------------*
-       *          STEP 2: try to read from Registry-HKLM                 *
-       *          if okay, we copy the valuse to HKCU + we have done     *
-       *          if failed, we only lack of rights. so we take the      *
-       *          default, try to copy it to HKCU and finished           *
-       *-----------------------------------------------------------------*/
-      dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_READ /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-      if( dwRet == ERROR_SUCCESS )
-        {
-        dwType = REG_DWORD;
-        ValLen = sizeof( DWORD );
-        dwRet  = RegQueryValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, &dwType, (BYTE*) pdwValue, &ValLen );
-        RegCloseKey( hKey );
-        if( dwRet != ERROR_SUCCESS )
+        /* we shall read a string ? */
+        if( ptcValue && _internal_GetRegValString( pHnd, pHnd->helper.Reg_Tree[i], 
+                                                   pGroupName, pKeyName, 
+                                                   ptcValue,   MaxValue, ptcDefault, 
+                                                   AccessMode, WriteIfNotExist ) )
           {
-          Value = DefaultVal; 
+          bRet = TRUE; /* we found it in the INI File */
           }
-        *pdwValue = Value;
+        /* we shall read a DWORD */
+        if( pdwValue && _internal_GetRegValDword( pHnd, pHnd->helper.Reg_Tree[i], 
+                                                  pGroupName, pKeyName, 
+                                                  pdwValue,   DefaultVal,
+                                                  AccessMode, WriteIfNotExist ) )
+          {
+          bRet = TRUE; /* we found it in the INI File */
+          }
+        } /* endif this INI FILE FOUND */
+      }/* end for all INI locations */
 
-        /* create the copy in HKCU for the next time we access it */
-        if( WriteIfNotExist & _SLOG_CREATE_HKCU )
-          {
-          dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_WRITE /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-          if( dwRet == ERROR_SUCCESS )
-            {
-            dwType = REG_DWORD;
-            ValLen = sizeof( DWORD );
-            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
-            RegCloseKey( hKey );
-            }
-          }
-        }
-      else /* not able to open HKLM: */
-        {
-        if( WriteIfNotExist & _SLOG_CREATE_HKLM )
-          {
-          dwRet = RegCreateKeyEx( HKEY_LOCAL_MACHINE, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_WRITE /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-          if( dwRet == ERROR_SUCCESS )
-            {
-            dwType = REG_DWORD;
-            ValLen = sizeof( DWORD );
-            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &DefaultVal, ValLen );
-            RegCloseKey( hKey );
-            }
-        /* also create a copy in HKCU for the next time we access it */
-        if( WriteIfNotExist & _SLOG_CREATE_HKCU )
-          {
-          dwRet = RegCreateKeyEx( HKEY_CURRENT_USER, 
-                            GroupKey, 
-                            0 /*Reserved; must be zero*/, 
-                            NULL /*object type, ignored on read or if already exist*/, 
-                            REG_OPTION_NON_VOLATILE, 
-                            KEY_WRITE /*desired Access*/, 
-                            NULL /*lpSec*/, 
-                            &hKey /*receives the handle we will need next*/, 
-                            &dwDisp );
-          if( dwRet == ERROR_SUCCESS )
-            {
-            dwType = REG_DWORD;
-            ValLen = sizeof( DWORD );
-            dwRet  = RegSetValueEx( hKey, pKeyName, NULL /*Reserved; must be NULL.*/, dwType, (BYTE*) &Value, ValLen );
-            RegCloseKey( hKey );
-            }
-          }
-        } /* opend HKLM or not */
-      } /* startLocalBlock( REG ) */
+    if( bFound ) /* do not search further */
+      break; /* to the end of do-once */
+
+
+
+
 
     /* finally, if nothing worked til here, we use the default. */
-    *pdwValue = DefaultVal;
-    }
-  }while(0); /* do-once */
+    if( !bRet && pdwValue)
+      {
+      *pdwValue = DefaultVal;
+      bRet = TRUE; /* at least, we got some Value somehow */
+      }
 
-  return TRUE;
+    if( !bRet && ptcValue && MaxValue>0 )
+      {
+      _tcsncpy( ptcValue, ptcDefault, MaxValue );
+      ptcValue[ MaxValue-1 ]=_T('\0');
+      bRet = TRUE; /* at least, we got some Value somehow */
+      }
+
+    } while(0); /* do-once */
+
+  return bRet;
 }};
+/*! @} internal_setup_functions */
 /*! \endcond */
 
 
 
-/*! \cond NEVER_DOX */
-/* read TCHAR params from Registry, Private Profile, Environment, Cmd-Line (all after '-SLOG' )*/
-int _internal_ReadConfig_TCHAR(  PTS_vssc_data pHnd, 
-                                 TCHAR const * const pGroupName, 
-                                 TCHAR const * const pKeyName, 
-                                 const short WriteIfNotExist,
-                                 TCHAR const * const ptcDefault, 
-                                 TCHAR* ptcValue, 
-                                 const size_t MaxValue )
-{{
-  BOOL bIsSpecialName;
-
-  if( !ptcValue || MaxValue<2 || !pGroupName || !pKeyName )
-    return FALSE;
-
-  bIsSpecialName = ( (0==_tcsicmp( pKeyName, _T("AppName"))) && (0==_tcsicmp( pGroupName, _T("global"))) );
-  /*=========================================================================*
-   *           1st START LOOKING for Environment                             *
-   *=========================================================================*/
-  //#error "not done yet"
-  if( bIsSpecialName )
-    {
-    ; /* dont return! even if we got the name, we have to make the tcsProfileName from it */
-    }
-
-  /*=========================================================================*
-   *           if noting in Environment, next look inside                    *
-   *           <Appname>.ini, for Values                                     *
-   *=========================================================================*/
-  //#error "not done yet"
-  if( bIsSpecialName )
-    {
-    ; /* dont return! even if we got the name, we have to make the tcsProfileName from it */
-    }
-
-  /*=========================================================================*
-   *           NOW START LOOKING INSIDE REGISTRY                             *
-   *=========================================================================*/
-  if( bIsSpecialName )
-    {
-    /* if we come to here, we still don't know our name. 
-     * If so, we take it from the default Value.
-     * If this is also empty, we use GetModuleFileName()
-     */
-    size_t nLastChar;
-    
-    if( ptcDefault )
-      {
-      _tcsncpy( pHnd->global.AppName.Text, ptcDefault, pHnd->global.AppName.LastPos );
-      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
-      }
-    else
-      {
-      TCHAR Name[MAX_PATH] = {0};
-      TCHAR *pPatch;
-      GetModuleFileName( NULL, Name, DIM( Name )-1 );
-      pPatch = _tcsrchr( Name, _T('.') );
-      if(pPatch) *pPatch=0; /* cut away .EXE suffix */
-      pPatch = _tcsrchr( Name, _T('\\') );
-      if(!pPatch) pPatch=Name;
-
-      _tcsncpy( pHnd->global.AppName.Text, pPatch, pHnd->global.AppName.LastPos );
-      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
-      }
-
-    nLastChar = DIM( pHnd->helper.tcsProfileName ) - 1;
-    _tcsncpy( pHnd->helper.tcsProfileName, _T("Software\\sLoggy\\"), nLastChar );
-    pHnd->helper.tcsProfileName[ nLastChar ] = 0;
-    _tcsncat( pHnd->helper.tcsProfileName, pHnd->global.AppName.Text, nLastChar- _tcslen( pHnd->helper.tcsProfileName ) );
-    pHnd->helper.tcsProfileName[ nLastChar ] = 0;
-    return TRUE;
-    }
-
-
-  /* startLocalBlock( REG ) */
-    {
-    OnDebug_ReportT( _T("real Reading of Cfg String Values not yet finished\r\n") );
-    }
-
-
-  /* finally, if nothing worked til here, we use the default. */
-  if( !ptcDefault )
-    _tcsncpy( ptcValue, _T(""), MaxValue );
-  else
-    _tcsncpy( ptcValue, ptcDefault, MaxValue );
-  ptcValue[ MaxValue-1 ] = 0;
-  return TRUE;
-}};
-/*! \endcond */
 
 
 
@@ -1574,8 +2104,8 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
               pHnd->udp.SendTo_Addr.Text, 
               pHnd->udp.SendTo_Port,
               pHnd->global.AppName.Text, 
-              pHnd->udp.Syslog_Facility, 
-              pHnd->udp.Syslog_MaxLevel );
+              pHnd->udp.Facility, 
+              pHnd->udp.MaxLevel );
     OutputDebugString( OutTxt );
     }
   return (int) pHnd;  /*! \retval pHnd A value of nonzero is a valid handle for subsequent VSSC_Log() calls. */
@@ -1684,13 +2214,18 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
     }
 
   BitMask = (Level & LOGZONE_MASK);
+
   if( (BitMask && !(pHnd->global.ZoneMask & BitMask)) || (BitMask==0 && pHnd->global.ZoneMask!=LOGZONE_EVERYTHING) )
     {
     OnDebug_ReportT( _T("suppressed because of Bitmask\r\n") );
+#   if !defined( DEBUG_SLOGGY )
+    /* I want to see every mesage in the system debugger. But this only belongs to me */
     return 0; /*! \retval 0 : no need to show the message because of Zonemask. */
+#   endif
     }
 
-  /* pHnd->udp.Syslog_MaxLevel = 0 : show nothing
+
+  /* pHnd->udp.MaxLevel = 0 : show nothing
    *               1 : show emergency (LOG_EMERG, 0)
    *               2 : show alert  (LOG_ALERT, 1)
    * so we have a Offset of +1 between both Levels
@@ -1699,20 +2234,26 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
   if( Level==0 )
     {
     OnDebug_ReportT( _T("Suppressed because own Level 0\r\n") );
+#   if !defined( DEBUG_SLOGGY )
+    /* I want to see every mesage in the system debugger. But this only belongs to me */
     return 0; /*! \retval 0 : no need to show the message because of too low own Level. */
+#   endif
     }
 
   Level = _internal_Vssc2syslogLevel( Level );
-  if( pHnd->udp.Syslog_MaxLevel==-1L || pHnd->udp.Syslog_MaxLevel < Level )
+  if( pHnd->udp.MaxLevel==-1L || pHnd->udp.MaxLevel < Level )
     {
     OnDebug_ReportT( _T("Suppressed because low Level\r\n") );
+#   if !defined( DEBUG_SLOGGY )
+    /* I want to see every mesage in the system debugger. But this only belongs to me */
     return 0; /*! \retval 0 : no need to show the message because of Lower global Level. */
+#   endif
     }
 
   /* request Mutex from other Thread or give up if it last longer than, say, 1/10 s
    * If this trashes to many logs, set a higher value or connect a pipe to the final reader
    */
-  dwWaitResult = WaitForSingleObject( pHnd->internal.hMutex, 100L);
+  dwWaitResult = WaitForSingleObject( pHnd->internal.hMutex, (DWORD) pHnd->global.ThreadWaitMax );
   /* sorry, lasts too long. The other Thread won the race */
   /* or mutex killed inbetween? Shit ... at least do not log anything */
   if( (dwWaitResult == WAIT_TIMEOUT) || (dwWaitResult == WAIT_ABANDONED) )
@@ -1762,15 +2303,25 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
 
     /* glue them all together */
     pHnd->internal.MsgCount++;
-    FacLev = (pHnd->udp.Syslog_Facility & 0x03f8) | (Level & 0x07);
-    if( pHnd->internal.SndSocket > 0 )
-      {
-      /* we will start with the PRI part (incl. <> brackets) 
-       * then folowed by HEADER parts. Our HEADER can be configured to be invalid (shortened)
-       * then followed by MSG parts (TAG+CONTENT). Our MSG can be configured to have extralong
-       * TAGs. But CONTENT is in any case 'logtext'
-       */
-      _snprintf( logmsg, logmsg_size, "<%u>%s%s%s%s%s%s\r\n", 
+    FacLev = (pHnd->udp.Facility & 0x03f8) | (Level & 0x07);
+
+#   if defined( DEBUG_SLOGGY )
+      /* I skipped the BitMask Check above in the special Debug mode. Now I have to respect it. */
+      if( ( pHnd->internal.SndSocket > 0 ) &&
+         !( (BitMask && !(pHnd->global.ZoneMask & BitMask)) || (BitMask==0 && pHnd->global.ZoneMask!=LOGZONE_EVERYTHING) ) &&
+         !( Level==0 ) &&
+         !(( pHnd->udp.MaxLevel==-1L || pHnd->udp.MaxLevel < Level ))
+        )
+#   else
+      if( pHnd->internal.SndSocket > 0 )
+#   endif
+        {
+        /* we will start with the PRI part (incl. <> brackets) 
+         * then folowed by HEADER parts. Our HEADER can be configured to be invalid (shortened)
+         * then followed by MSG parts (TAG+CONTENT). Our MSG can be configured to have extralong
+         * TAGs. But CONTENT is in any case 'logtext'
+         */
+        _snprintf( logmsg, logmsg_size, "<%u>%s%s%s%s%s%s\r\n", 
                                       FacLev, 
                                       (pHnd->global.ControlFlags & LOGFLGS_RFC3164_TIMESTAMP)?TimeStamp :"", 
                                       (pHnd->global.ControlFlags & LOGFLGS_RFC3164_SOURCEIP )?SourceIp  :"", 
@@ -1778,15 +2329,15 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
                                       (pHnd->global.ControlFlags & LOGFLGS_MODULE_SOURCE    )?ModuleName:"",
                                       (pHnd->global.ControlFlags & LOGFLGS_COUNTER64        )?Counter64 :"",
                                       logtext );
-      /* send it to syslog socket */
-      iRet = sendto( pHnd->internal.SndSocket, logmsg, strlen(logmsg), 0, (struct sockaddr*)&pHnd->internal.SndAddr, sizeof(pHnd->internal.SndAddr) );
-      if(iRet<1)
-        {
-        DWORD dwErr = GetLastError();
-        OnDebug_ReportT( _T("not sent, sendto() failed\r\n") );
-        iRet = - (int) dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
+        /* send it to syslog socket */
+        iRet = sendto( pHnd->internal.SndSocket, logmsg, strlen(logmsg), 0, (struct sockaddr*)&pHnd->internal.SndAddr, sizeof(pHnd->internal.SndAddr) );
+        if(iRet<1)
+          {
+          DWORD dwErr = GetLastError();
+          OnDebug_ReportT( _T("not sent, sendto() failed\r\n") );
+          iRet = - (int) dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
+          }
         }
-      }
     _snprintf( logmsg, logmsg_size, "%08u: <%u> %s\r\n", GetTickCount(), FacLev, logtext );
     OutputDebugString( logmsg );
     ReentranceBlocker--;
@@ -1821,6 +2372,11 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
 
 /*! \brief Auto-reading all Parameters at once
  *
+ * This function is (mostly) used to read the setup at Program start.
+ * It subsequently calls _internal_ReadConfigALL() with the parameters
+ * Name of the Key, Type of the Keys Value, Default Value, Position inside Handle-struct, and so on.
+ * this is repeated for whole the AutoConfig Macro Array.
+ * The Flag bAutoConfig is currently not used and the description about it is not correct.
  */
 int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succesful VSSC_openX() call */
                   short bAutoConfig   /*!< [in] >0 means this function automatically tries to read all Setup parameters itself. No further VSSC_SetStr() or VSSC_SetInt() is required */
@@ -1841,6 +2397,24 @@ int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succe
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
+  /*this has also to be done very early: */
+  _tcsncpy( pHnd->helper.tcsProfileName, _T("Software\\sLoggy\\"), DIM( pHnd->helper.tcsProfileName ) );
+  pHnd->helper.tcsProfileName[ DIM( pHnd->helper.tcsProfileName ) - 1 ] = 0;
+  
+  /* default 'syslog @ this pc' */
+  _internal_VsscRefreshAddr( pHnd, "localhost:514" );
+  _internal_VsscRefreshLevel(pHnd, LOG_LOCAL7, LOG_INFO );
+  _internal_VsscRefreshZone( pHnd, LOGZONE_EVERYTHING );
+
+# ifdef _DEBUG
+    pHnd->global.ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_RFC3164_SOURCEIP | LOGFLGS_COUNTER64 | LOGFLGS_PROCESS_ID | LOGFLGS_LONGTAG;
+# else
+    pHnd->global.ControlFlags = LOGFLGS_RFC3164_TIMESTAMP | LOGFLGS_MODULE_SOURCE | LOGFLGS_COUNTER64;
+# endif
+
+  
+  
+  pHnd->global.CreateDefault = -1;
   for( i=0; i<DIM(AutoConfig); i++ )
     {
     switch( AutoConfig[i].ValType )
@@ -1874,13 +2448,15 @@ int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succe
                              AutoConfig[i].Size,
                              AutoConfig[i].Offset );
         
-        iRet = _internal_ReadConfig( pHnd, AutoConfig[i].pGroupName,
-                                           AutoConfig[i].pKeyName,
-                                           AutoConfig[i].WriteIfNotExist,
-                                           NULL/*string default*/,
-                                           NULL/*string buffer*/, 0/*string maxlen*/, 
-                                           AutoConfig[i].DefaultVal,
-                                           &dwValue );
+        iRet = _internal_ReadConfigALL( pHnd, 
+                                        AutoConfig[i].pGroupName,
+                                        AutoConfig[i].pKeyName,
+                                        (USHORT)((pHnd->global.CreateDefault!=-1L) ? pHnd->global.CreateDefault : AutoConfig[i].WriteIfNotExist),
+                                        AutoConfig[i].AccessMode,
+                                        NULL/*string default*/,
+                                        NULL/*string buffer*/, 0/*string maxlen*/, 
+                                        AutoConfig[i].DefaultVal,
+                                        &dwValue );
         if( !iRet )
           dwValue = (DWORD) AutoConfig[i].DefaultVal;
 
@@ -1935,14 +2511,16 @@ int VSSC_AutoCfg( int Handle,         /*!< [in] Handle a valid Handle from succe
         pStart = (char*) pHnd;
         pStart+= AutoConfig[i].Offset;
 
-        iRet = _internal_ReadConfig( pHnd, AutoConfig[i].pGroupName,
-                                           AutoConfig[i].pKeyName,
-                                           AutoConfig[i].WriteIfNotExist,
-                                           (TCHAR*) AutoConfig[i].DefaultVal,
-                                           (TCHAR*) pStart, 
-                                           maxlen+1 /* +1 because maxlen is without \0 and our foo is with \0 */, 
-                                           0 /*dword default*/,
-                                           NULL/*dword pointer*/ );
+        iRet = _internal_ReadConfigALL( pHnd, 
+                                        AutoConfig[i].pGroupName,
+                                        AutoConfig[i].pKeyName,
+                                        (USHORT)((pHnd->global.CreateDefault!=-1L) ? pHnd->global.CreateDefault : AutoConfig[i].WriteIfNotExist),
+                                        AutoConfig[i].AccessMode,
+                                        (TCHAR*) AutoConfig[i].DefaultVal,
+                                        (TCHAR*) pStart, 
+                                        maxlen+1 /* +1 because maxlen is without \0 and our foo is with \0 */, 
+                                        0 /*dword default*/,
+                                        NULL/*dword pointer*/ );
         if( !iRet )
           {
           pEnd = pStart + (sizeof(TCHAR)*(maxlen));
@@ -2014,7 +2592,7 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
         }
       break;
 
-    case CTRL_SYSLOG_HOST:
+    case CTRL_SYSLOG_UDP_HOST:
       if( strlen(Val) > 0 )
         {
         iRet = (int) _internal_VsscRefreshAddr( pHnd, Val );
@@ -2145,7 +2723,7 @@ int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from su
         }
       }; break;
 
-    case CTRL_SYSLOG_PORT:
+    case CTRL_SYSLOG_UDP_PORT:
       if( lVal <= USHRT_MAX )
         {
         switch(Option)
@@ -2156,7 +2734,7 @@ int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from su
         }
       break;
 
-    case CTRL_SYSLOG_FACILITY  :
+    case CTRL_SYSLOG_UDP_FACILITY  :
       switch(Option)
           {
           case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, (short) lVal, -1 ); };break;
@@ -2164,7 +2742,7 @@ int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from su
           }
       break;
 
-    case CTRL_SYSLOG_MAXLEVEL  :
+    case CTRL_SYSLOG_UDP_MAXLEVEL  :
       switch(Option)
           {
           case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, -1 , (short) lVal); };break;
@@ -2254,7 +2832,7 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
         }
       break;
 
-    case CTRL_SYSLOG_HOST:
+    case CTRL_SYSLOG_UDP_HOST:
       if( MaxBuf >= strlen( pHnd->udp.SendTo_Addr.Text ) )
         {
         strcpy( pValBuf, pHnd->udp.SendTo_Addr.Text );
@@ -2262,7 +2840,7 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
         }
       break;
 
-    case CTRL_SYSLOG_OUTBIND:
+    case CTRL_SYSLOG_UDP_OUTBIND:
       if( MaxBuf >= 16 )
         {
         sprintf( pValBuf, "%u.%u.%u.%u:%u", 
@@ -2336,8 +2914,10 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
     }
   *plVal=-1L;
 
+  #error "this should be compacted by using the FIELD_OFFSET and real offset and Type info instead of helper-AccessToken"
+
   Index = _internal_GetHash( Key );
-  switch( Index )
+  switch( Index ) 
     {
     case CTRL_GENERAL_VERSION:
       Val = atol( VsscVersion );
@@ -2347,20 +2927,20 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
       Val = (long) pHnd->global.ZoneMask;
       break;
 
-    case CTRL_SYSLOG_PORT:
+    case CTRL_SYSLOG_UDP_PORT:
       Val = (long) pHnd->udp.SendTo_Port;
       break;
 
-    case CTRL_SYSLOG_OUTPORT:
+    case CTRL_SYSLOG_UDP_OUTPORT:
       Val = (long) pHnd->internal.OwnAddr.sin_port;
       break;
 
-    case CTRL_SYSLOG_FACILITY:
-      Val = (long) pHnd->udp.Syslog_Facility;
+    case CTRL_SYSLOG_UDP_FACILITY:
+      Val = (long) pHnd->udp.Facility;
       break;
 
-    case CTRL_SYSLOG_MAXLEVEL:
-      Val = (long) pHnd->udp.Syslog_MaxLevel;
+    case CTRL_SYSLOG_UDP_MAXLEVEL:
+      Val = (long) pHnd->udp.MaxLevel;
       break;
 
     default:

@@ -68,7 +68,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "DEBUG_SLOGGY" /FD /GZ /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x407 /d "_DEBUG"
@@ -96,6 +96,10 @@ SOURCE=.\minilogger.cpp
 
 SOURCE=.\VSSC.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\xtoi.c
+# End Source File
 # End Group
 # Begin Group "Header-Dateien"
 
@@ -115,6 +119,10 @@ SOURCE=.\VSSC_4_JA2.H
 # Begin Source File
 
 SOURCE=.\VSSC_intro.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\xtoi.h
 # End Source File
 # End Group
 # Begin Group "Ressourcendateien"

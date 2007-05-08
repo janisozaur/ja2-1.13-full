@@ -185,7 +185,7 @@ struct HandleS
 /*! \cond NEVER_DOX */
 int main(int argc, char* argv[])
 {{
-  const int test_number = 0x10;
+  const int test_number = 0x64;
 
   int Handle, iRet;
   char Buffer[1024];
@@ -275,21 +275,51 @@ int main(int argc, char* argv[])
     printf("-----------------------------\r\n");
     }
 
-
+    
   /*===========================================================================*
    *
-   *         Test #3: single set methods with checking their effect to loglevel
+   *         Test #3: single Get methods #2
    *
    *===========================================================================*/
   if( test_number & 0x4 )
     {
-    iRet = VSSC_SetStr( Handle, "AppName", "Demo-0815" );
-    iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_INFO, LOGFLGS_SET_VALUE );
+    char List[ 1024 ];
+    iRet = VSSC_GetValidKeyNames( List, DIM(List) );
+    printf( List );
+
+    iRet = VSSC_GetStr( Handle, "global.AppName"      , Buffer, DIM(Buffer) );
+    iRet = VSSC_GetInt( Handle, "global.CreateDefault", &lVal ); /* not readable or writeable */
+    iRet = VSSC_GetStr( Handle, "global.Version"      , Buffer, DIM(Buffer) );
+    iRet = VSSC_GetInt( Handle, "global.ZoneMask"     , &lVal );
+    iRet = VSSC_GetInt( Handle, "global.ControlFlags" , &lVal );
+    iRet = VSSC_GetInt( Handle, "global.ThreadWaitMax", &lVal );
+    iRet = VSSC_GetInt( Handle, "udp.Use"             , &lVal );
+    iRet = VSSC_GetStr( Handle, "udp.SendTo_Addr"     , Buffer, DIM(Buffer) );
+    iRet = VSSC_GetInt( Handle, "udp.SendTo_Port"     , &lVal );
+    iRet = VSSC_GetStr( Handle, "udp.From_Addr"       , Buffer, DIM(Buffer) );
+    iRet = VSSC_GetInt( Handle, "udp.From_Port"       , &lVal );
+    iRet = VSSC_GetInt( Handle, "udp.Facility"        , &lVal );
+    iRet = VSSC_GetInt( Handle, "udp.MaxLevel"        , &lVal );
+    iRet = VSSC_GetInt( Handle, "file.Use"            , &lVal );
+    printf("-----------------------------\r\n");
+    }
+
+
+  /*===========================================================================*
+   *
+   *         Test #4: single set methods with checking their effect to loglevel
+   *
+   *===========================================================================*/
+  if( test_number & 0x8 )
+    {
+    iRet = VSSC_SetStr( Handle, "global.AppName", "Demo-0815" );
+    
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_INFO, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' MUSS" );
     iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO'   MUSS" );
     iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf NICHT" );
 
-    iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_EMERG, LOGFLGS_SET_VALUE );
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_EMERG, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht " );
     iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  MUSS" );
     iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  darf nicht" );
@@ -301,7 +331,7 @@ int main(int argc, char* argv[])
     iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
     iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
   
-    iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_ALERT, LOGFLGS_SET_VALUE );
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_ALERT, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht " );
     iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  MUSS" );
     iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  MUSS" );
@@ -313,7 +343,7 @@ int main(int argc, char* argv[])
     iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
     iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
   
-    iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_SILENT, LOGFLGS_SET_VALUE );
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_SILENT, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_SILENT , mod, "'SILENT' soll nicht" );
     iRet = VSSC_Log( Handle, SLOG_EMERG  , mod, "'EMERG'  darf nicht" );
     iRet = VSSC_Log( Handle, SLOG_ALERT  , mod, "'ALERT'  darf nicht" );
@@ -325,25 +355,25 @@ int main(int argc, char* argv[])
     iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG'  darf nicht" );
     iRet = VSSC_Log( Handle, SLOG_DEBUG2 , mod, "'DEBUG2' darf nicht" );
   
-    iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_NOTICE , mod, "'NOTICE' muss" );
     iRet = VSSC_Log( Handle, SLOG_INFO   , mod, "'INFO' muss"   );
     iRet = VSSC_Log( Handle, SLOG_DEBUG  , mod, "'DEBUG' muss" );
 
-    iRet = VSSC_SetStr( Handle, "AppName", "__XX__" );
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP | LOGZONE_ENTRY | LOGZONE_EXIT | LOGZONE_DATA, LOGFLGS_SET_VALUE );
+    iRet = VSSC_SetStr( Handle, "global.AppName", "__XX__" );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_MAINLOOP | LOGZONE_ENTRY | LOGZONE_EXIT | LOGZONE_DATA, LOGFLGS_SET_VALUE );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_EVERYTHING, mod, "** LOGZONES** 'EVERYTHING EMERG'  %u", SLOG_EMERG  );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_NOTHING   , mod, "** LOGZONES** 'NOTHING EMERG'  %u", SLOG_EMERG  );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP  , mod, "** LOGZONES** 'MAINLOOP EMERG'  %u", SLOG_EMERG  );
 
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_DEFAULT, LOGFLGS_DEFAULT );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_DEFAULT, LOGFLGS_DEFAULT );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP, mod, "** show **" );
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_CLR_BITS );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_CLR_BITS );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP, mod, "** dont show **" );
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_TOGGLE_BITS );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_TOGGLE_BITS );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP, mod, "** show **" );
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_CLR_BITS );
-    iRet = VSSC_SetInt( Handle, "ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_SET_BITS );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_CLR_BITS );
+    iRet = VSSC_SetInt( Handle, "global.ZoneMask", LOGZONE_MAINLOOP, LOGFLGS_SET_BITS );
     iRet = VSSC_Log( Handle, SLOG_EMERG | LOGZONE_MAINLOOP, mod, "** show **" );
 
     printf("-----------------------------\r\n");
@@ -351,11 +381,11 @@ int main(int argc, char* argv[])
 
   /*===========================================================================*
    *
-   *         Test #4: single set methods with flexible numerical values
+   *         Test #5: single set methods with flexible numerical values
    *                  bunch-at-once set methods
    *
    *===========================================================================*/
-  if( test_number & 0x8 )
+  if( test_number & 0x10 )
     {
     iRet = VSSC_SetStr( Handle, "ZoneMask", "0xAFFE" );
     iRet = VSSC_SetStr( Handle, "ZoneMask", "$CAFFE" );
@@ -395,138 +425,32 @@ int main(int argc, char* argv[])
 
   /*===========================================================================*
    *
-   *         Test #5: Reading Setup at once
+   *         Test #6: Reading Setup at once
    *
    *===========================================================================*/
-  if( test_number & 0x10 )
+  if( test_number & 0x20 )
     {
-    int i;
-    struct HandleS OurDemoHandle={0};
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
 
-    MAKE_CFGLEN( OurDemoHandle.Setup.global.gstring1 );
-    MAKE_CFGLEN( OurDemoHandle.Setup.udp.Portname );
-    MAKE_CFGLEN( OurDemoHandle.Setup.file.Filename );
+    iRet = VSSC_Log( Handle, SLOG_INFO, mod, "--------------{BEFORE}-------------------" );
 
-    /*localBlock(), needed for ANSI-C-Compliance */
-      {
-      TS_configdata cfg[] = 
-        {
-        /*==============================================================*/
-         MAKE_CFGSTR( global, gstring1     , P32STRING, 1, "default string" )
-        ,MAKE_CFGINT( global, Level        , ULONG    , 1, 889900L          )
-        ,MAKE_CFGINT( global, NegativeValue, LONG     , 0, -123L            )
-        /*==============================================================*/
-        ,MAKE_CFGSTR( udp, Portname        , P32STRING, TRUE, "localhost"   )
-        ,MAKE_CFGINT( udp, Portnummer      , ULONG    , TRUE, 514           )
-        /*==============================================================*/
-        ,MAKE_CFGSTR( file, Filename       , P32STRING, TRUE, "logfile.txt" )
-        ,MAKE_CFGINT( file, FileSize       , ULONG    , TRUE, 120*1024      )
-        /*==============================================================*/
-        };
-      iRet = VSSC_SetInt( Handle, "SyslogLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
+    iRet = VSSC_AutoCfg( Handle, TRUE );
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
 
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "--------------{BEFORE}-------------------" );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.gstring1.Text='%s'", OurDemoHandle.Setup.global.gstring1.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.Level        =%lu" , OurDemoHandle.Setup.global.Level );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.NegativeValue=%ld" , OurDemoHandle.Setup.global.NegativeValue );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "udp.Portname.Text   ='%s'", OurDemoHandle.Setup.udp.Portname.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "udp.Portnummer      =%lu" , OurDemoHandle.Setup.udp.Portnummer );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "file.Filename.Text  ='%s'", OurDemoHandle.Setup.file.Filename.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "file.FileSize       =%lu" , OurDemoHandle.Setup.file.FileSize );
-
-      for( i=0; i<DIM(cfg); i++ )
-        {
-        /* HandleS.Setup */
-        switch( cfg[i].ValType )
-          {
-          case et_BYTE  :
-          case et_CHAR  :
-          case et_USHORT: 
-          case et_SHORT :
-          case et_ULONG :
-          case et_LONG  :
-          /* more numerical types can be inserted here ... */
-            {
-            char *pHelp;
-            ULONG  *pStart_UL;
-            LONG   *pStart_SL;
-            BYTE   *pStart_UC;
-            CHAR   *pStart_SC;
-            USHORT *pStart_US;
-            SHORT  *pStart_SS;
-            /* ... and more numerical types can be inserted here ... */
-
-            iRet = VSSC_Log( Handle, SLOG_INFO, mod, 
-                             "now reading Type %u of Group='%s', Key='%s'. Dflt/u=%lu, Dflt/s=%ld, writeNew=%u. %u bytes can be written at offs %u", 
-                             cfg[i].ValType,
-                             cfg[i].pGroupName,
-                             cfg[i].pKeyName,
-                             (ULONG) cfg[i].DefaultVal,
-                             (LONG ) cfg[i].DefaultVal,
-                             cfg[i].WriteIfNotExist,
-                             cfg[i].Size,
-                             cfg[i].Offset );
-            /*real reading / writing not implemented yet */
-
-            pHelp  = (char*) &OurDemoHandle.Setup;
-            pHelp += cfg[i].Offset;
-            pStart_UL = (ULONG *) pHelp;
-            pStart_SL = (LONG  *) pHelp;
-            pStart_UC = (BYTE  *) pHelp;
-            pStart_SC = (CHAR  *) pHelp;
-            pStart_US = (USHORT*) pHelp;
-            pStart_SS = (SHORT *) pHelp;
-            /* ... and more numerical types can be inserted here ... */
-
-            switch( cfg[i].ValType )
-              {
-              case et_BYTE  : *pStart_UC = (BYTE  ) cfg[i].DefaultVal; break;
-              case et_CHAR  : *pStart_SC = (CHAR  ) cfg[i].DefaultVal; break;
-              case et_USHORT: *pStart_US = (USHORT) cfg[i].DefaultVal; break;
-              case et_SHORT : *pStart_SS = (SHORT ) cfg[i].DefaultVal; break;
-              case et_ULONG : *pStart_UL = (ULONG ) cfg[i].DefaultVal; break;
-              case et_LONG  : *pStart_SL = (LONG  ) cfg[i].DefaultVal; break;
-              /* ... and, finally more numerical types must be inserted here. */
-              }
-            };break;
-
-          case et_P32STRING:
-            {
-            size_t maxlen;
-            char *pStart, *pEnd;
-
-            maxlen = MIN( (size_t) cfg[i].Size, OurDemoHandle.Setup.global.gstring1.LastPos );
-            iRet = VSSC_Log( Handle, SLOG_INFO, mod, 
-                             "now reading Type %u of Group='%s', Key='%s'. Dflt=%s, writeNew=%u. %u bytes can be written at offs %u", 
-                             cfg[i].ValType,
-                             cfg[i].pGroupName,
-                             cfg[i].pKeyName,
-                             (TCHAR*) cfg[i].DefaultVal,
-                             cfg[i].WriteIfNotExist,
-                             cfg[i].Size,
-                             cfg[i].Offset );
-            /*real reading / writing not implemented yet */
-            pStart = (char*) &OurDemoHandle.Setup;
-            pStart+= cfg[i].Offset;
-            pEnd   = pStart + (sizeof(TCHAR)*(maxlen));
-            _tcsncpy( (TCHAR*) pStart, (TCHAR*) (cfg[i].DefaultVal), maxlen );
-            *((TCHAR*)(pEnd)) = 0;
-            };break;
-          } /*sw-end*/
-        } /*for-end*/ 
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "--------------{AFTER}-------------------" );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.gstring1.Text='%s'", OurDemoHandle.Setup.global.gstring1.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.Level        =%lu" , OurDemoHandle.Setup.global.Level );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "global.NegativeValue=%ld" , OurDemoHandle.Setup.global.NegativeValue );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "udp.Portname.Text   ='%s'", OurDemoHandle.Setup.udp.Portname.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "udp.Portnummer      =%lu" , OurDemoHandle.Setup.udp.Portnummer );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "file.Filename.Text  ='%s'", OurDemoHandle.Setup.file.Filename.Text );
-      iRet = VSSC_Log( Handle, SLOG_INFO, mod, "file.FileSize       =%lu" , OurDemoHandle.Setup.file.FileSize );
-      } /*localBlock-end*/
+    iRet = VSSC_Log( Handle, SLOG_INFO, mod, "--------------{AFTER}-------------------" );
     printf("-----------------------------\r\n");
     }
 
-
+  /*===========================================================================*
+   *
+   *         Test #7: ????
+   *
+   *===========================================================================*/
+  if( test_number & 0x40 )
+    {
+    iRet = VSSC_SetInt( Handle, "udp.MaxLevel", SLOG_DEBUGMAX, LOGFLGS_SET_VALUE );
+    printf("-----------------------------\r\n");
+    }
   
   iRet = VSSC_close( Handle );
   printf("-----------------------------\r\n");
