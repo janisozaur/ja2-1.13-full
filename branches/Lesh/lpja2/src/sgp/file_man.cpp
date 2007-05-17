@@ -996,64 +996,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	return(fRet);
 }
 
-//**************************************************************************
-//
-// FileLoad
-//
-//		To open, read, and close a file.
-//
-// Parameter List :
-//
-//
-// Return Value :
-//
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
-//
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//		08Dec97:ARM		-> return FALSE if bytes to read != bytes read (CHECKF is inappropriate?)
-//
-//**************************************************************************
-
-#if 0
-BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
-{
-	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
-	BOOLEAN	fRet;
-
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	hFile = FileOpen( strFilename, FILE_ACCESS_READ, FALSE );
-	if ( hFile )
-	{
-		fRet = FileRead( hFile, pDest, uiBytesToRead, &uiNumBytesRead );
-		FileClose( hFile );
-
-		if (uiBytesToRead != uiNumBytesRead)
-			fRet = FALSE;
-
-		if ( puiBytesRead )
-			*puiBytesRead = uiNumBytesRead;
-
-		CHECKF( uiNumBytesRead == uiBytesToRead );
-	}
-	else
-		fRet = FALSE;
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
-	return(fRet);
-}
-#endif
 
 //**************************************************************************
 //

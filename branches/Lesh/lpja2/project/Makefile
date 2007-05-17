@@ -27,8 +27,8 @@ VPATH := $(source_dirs)
 include $(wildcard *.d)
 
 clean:
-	rm ../bin/release/*.*
-	rm ../bin/debug/*.*
+	rm ../bin/release/*
+	rm ../bin/debug/*
 
 purge:
 	purge_dirs  := $(addprefix ../src/, $(source_dirs) )

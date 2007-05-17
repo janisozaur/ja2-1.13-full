@@ -49,10 +49,10 @@ typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
 typedef char			CHAR8;
-typedef wchar_t			CHAR16;
 typedef char *			STR;
 typedef char *			STR8;
 typedef wchar_t *		STR16;
+typedef wchar_t			CHAR16;
 // flags (individual bits used)
 typedef unsigned char	FLAGS8;
 typedef unsigned short	FLAGS16;
@@ -140,7 +140,7 @@ typedef UINT32 TIMER;			// timer definition
 
 #ifdef JA2_LINUX
 #include <sys/stat.h>
-typedef time_t		FILETIME;
+typedef long long		FILETIME;
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF
 #endif
 

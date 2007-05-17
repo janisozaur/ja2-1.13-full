@@ -113,7 +113,6 @@ extern void		FileClose( HWFILE );
 
 extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
-extern BOOLEAN	FileLoad( STR filename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 
 extern BOOLEAN  FilePrintf( HWFILE hFile, char * strFormatted, ... );
 
@@ -137,7 +136,7 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
 BOOLEAN GetHomeDirectory( STRING512 pcDirectory );
 
-BOOLEAN DirectoryExists( STRING512 pcDirectory );
+BOOLEAN DirectoryExists( STRING512 pcDirectory );	// not used in sources
 BOOLEAN MakeFileManDirectory( STRING512 pcDirectory );
 
 // WARNING: THESE DELETE ALL FILES IN THE DIRECTORY ( and all subdirectories if fRecursive is TRUE!! )
@@ -151,13 +150,10 @@ typedef struct _GETFILESTRUCT_TAG {
 	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
 
+// File searching stuff
 BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct );
-
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct );
 void GetFileClose( GETFILESTRUCT *pGFStruct );
-
-BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists);
-BOOLEAN FileMove(STR strOldName, STR strNewName);
 
 //Added by Kris Morness
 BOOLEAN FileSetAttributes( STR filename, UINT32 uiNewAttribs );
@@ -190,8 +186,6 @@ BOOLEAN FileIsOlderThanFile(CHAR8 *pcFileName1, CHAR8 *pcFileName2, UINT32 ulNum
 //		if its a Real File, the return will be the handle of the REAL file
 //		if its a LIBRARY file, the return will be the handle of the LIBRARY
 HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile );
-
-BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory);
 
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from

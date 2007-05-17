@@ -153,6 +153,7 @@ typedef struct
 } LIBHEADER;
 
 
+
 typedef struct 
 {
 	CHAR8		sFileName[ FILENAME_SIZE ];
@@ -163,7 +164,6 @@ typedef struct
 	FILETIME	sFileTime;
 	UINT16		usReserved2;
 } DIRENTRY;
-
 
 
 #ifdef __cplusplus

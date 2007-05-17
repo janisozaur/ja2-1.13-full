@@ -24,6 +24,8 @@
 	#include "build_defines.h"
 	#include "intro.h"
 	#include "library_database.h"
+	#include "vfs.hpp"
+	
 #endif
 
 
@@ -209,6 +211,9 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		gCustomDataCat.NewCat(customDataPath);
 	}
 	customDP.Close();
+
+	if ( !VFS.AddContainerByIndex(0) )
+		printf("AddContainer failed!\n");
 
 	//InitJA2SplashScreen();
 
