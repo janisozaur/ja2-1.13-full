@@ -1994,7 +1994,7 @@ void TransferToSGPFileFind( GETFILESTRUCT *pGFStruct, FILELIST *pFindEntry )
 	// Copy the filename
 	strncpy(pGFStruct->zFileName, pFindEntry->Info.gl_pathv[ pFindEntry->uiIndex ], 260);
 
-	pGFStruct->uiFileAttribs |= FILE_IS_NORMAL;
+//	pGFStruct->uiFileAttribs |= FILE_IS_NORMAL;
 }
 
 // -------------------- End of Linux-specific stuff ------------------------

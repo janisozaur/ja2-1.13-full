@@ -1,7 +1,7 @@
 // Author: Lesh		May 2007
 
 //===================================================================
-//	vfs.cpp - virtual file system header
+//	vfs.cpp - virtual file system
 //
 //		VFS provides unified access to file resources for the
 //	application. VFS hides real file system, where application
@@ -70,11 +70,13 @@
 //	of Root-dir and Rel-path, i.e. "/home/lesh/ja2_113/Data-1.13/Ambient/Bird9.wav".
 //	Thus, we'll have no problem with case-sensitive file systems.
 //
-// 	To increase versality of this technique, I am planning to replace
+// 	To increase versality of this technique, it is better to replace
 //	R-name with an object, incapsulating common file operations.
-//	This means I'll be using object-oriented approach and create
-//	objects, that will represent real files and files in containers.
+//	This means object-oriented approach to be used and objects to
+//	be created, that will represent real files and files in containers.
 //	Also wrapper-objects for containers are possible (slf, zip).
+//	But probably, I'll be happy to do only structure instead of objects.
+//	Objects seems to me much of work to redo.
 //
 //===================================================================
 

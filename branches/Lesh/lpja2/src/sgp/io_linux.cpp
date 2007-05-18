@@ -12,6 +12,9 @@
 #include "io_layer.h"
 #include "types.h"
 
+static UINT32 globIndex;
+static glob_t globResult;
+
 
 BOOLEAN IO_IsDirectory(const STR8 path)
 {
@@ -223,6 +226,40 @@ INT32 IO_File_GetPosition( HWFILE file )
 		iPositionInFile = 0;
 	}
 	return( iPositionInFile );
+}
+
+BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize )
+{
+	memset( globResult, GLOB_ERR | GLOB_MARK | GLOB_NOSORT, sizeof(globResult) );
+
+	if ( glob( pattern, 0, NULL, &globResult )
+	{
+		fprintf(stderr, "Error while trying to glob() using mask: %s, errno=%d\n", pattern, errno);
+		globfree( &globResult );
+		return FALSE;
+	}
+
+	strncpy( buffer, globResult.gl_pathv[0], bufferSize );
+	
+	globIndex = 1;
+	return TRUE;
+}
+
+BOOLEAN IO_File_GetNext( STR8 buffer, UINT16 bufferSize )
+{
+	if ( globIndex >= globResult.gl_pathc )
+		return FALSE;
+
+	strncpy( buffer, globResult.gl_pathv[ globIndex++ ], bufferSize );
+	
+	return TRUE;
+}
+
+BOOLEAN IO_File_GetClose( void )
+{
+	globfree( &globResult );
+
+	return TRUE;	
 }
 
 #endif	//JA2_LINUX

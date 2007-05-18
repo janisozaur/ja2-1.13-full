@@ -146,8 +146,8 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory);
 typedef struct _GETFILESTRUCT_TAG {
 	INT32 iFindHandle;
 	CHAR8 zFileName[ 260 ];			// changed from UINT16, Alex Meduna, Mar-20'98
-	UINT32 uiFileSize;
-	UINT32 uiFileAttribs;
+//	UINT32 uiFileSize;
+//	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
 
 // File searching stuff
