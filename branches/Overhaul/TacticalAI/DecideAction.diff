@@ -1,0 +1,72 @@
+2267c2267
+< 			while(	pSoldier->bActionPoints - (BestShot.ubAPCost - BestShot.ubAimTime) > ubBurstAPs &&
+---
+> 			while(pSoldier->bActionPoints - BestShot.ubAPCost > ubBurstAPs &&
+2276c2276
+< 			if (pSoldier->bDoAutofire >= 10 &&  pSoldier->bActionPoints - (BestShot.ubAPCost - BestShot.ubAimTime) >= ubBurstAPs )
+---
+> 			if (pSoldier->bDoAutofire >= 10 &&  pSoldier->bActionPoints - BestShot.ubAPCost >= ubBurstAPs )
+3380a3381
+> 
+3763c3764,3765
+< 			 ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,DONTADDTURNCOST);
+---
+> 				// DNS:  Add turning cost!  Even if shooting at the same opponent, it is possible that the opponent has moved.
+> 				ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,ADDTURNCOST); 
+3934c3936
+< 				 //sprintf((CHAR *)tempstr,"%s - ubMinAPCost = %d",pSoldier->name,ubMinAPCost);
+---
+> 					//sprintf(tempstr,"%s - ubMinAPCost = %d",pSoldier->name,ubMinAPCost);
+4201c4203
+< 			if ( !TANK( pSoldier ) && ( pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) ) >= (AP_CROUCH + GetAPsToReadyWeapon( pSoldier, pSoldier->usAnimState ) ) )
+---
+> 			if ( !TANK( pSoldier ) && ( pSoldier->bActionPoints >= AP_CROUCH + MinAPsToAttack( pSoldier, BestAttack.sTarget, TRUE, 1) ) )
+4256c4258,4260
+< 						if ( BestAttack.ubAPCost + ubStanceCost > pSoldier->bActionPoints )
+---
+> 						BestAttack.ubAPCost = MinAPsToAttack( pSoldier, BestAttack.sTarget, ADDTURNCOST, TRUE) + ubStanceCost;
+> 
+> 						if ( BestAttack.ubAPCost + BestAttack.ubAimTime > pSoldier->bActionPoints )
+4259,4263c4263,4265
+< 							BestAttack.ubAimTime -= (BestAttack.ubAimTime - ubStanceCost);
+< 						}
+< 						else
+< 						{
+< 							BestAttack.ubAPCost += GetAPsToChangeStance( pSoldier, ubBestStance );
+---
+> 							// Aim time must not fall below 0, so just figure out what's left after changing stance and basic shooting
+> 							BestAttack.ubAimTime = __max( pSoldier->bActionPoints - BestAttack.ubAPCost, 0);
+> 							pSoldier->bAimTime = BestAttack.ubAimTime;
+4264a4267,4270
+> 						//else
+> 						//{
+> 						//BestAttack.ubAPCost += ubStanceCost;
+> 						//}
+4283c4289
+< 				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) >= ubBurstAPs )
+---
+> 				if (pSoldier->bActionPoints - BestAttack.ubAPCost >= ubBurstAPs )
+4327c4333,4334
+< 						BestAttack.ubAPCost = BestAttack.ubAPCost - BestAttack.ubAimTime + CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]) );
+---
+> 						BestAttack.ubAPCost += ubBurstAPs;
+> 
+4349c4356
+< 				while(	pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) > ubBurstAPs &&
+---
+> 				while( pSoldier->bActionPoints - BestAttack.ubAPCost >= ubBurstAPs &&
+4353,4354d4359
+< 				
+< 				
+4355a4361
+> 
+4360c4366
+< 				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) >= ubBurstAPs )
+---
+> 					if (pSoldier->bActionPoints - BestAttack.ubAPCost >= ubBurstAPs )
+4402a4409
+> 							BestAttack.ubAPCost += ubBurstAPs;
+4404d4410
+< 						BestAttack.ubAPCost = BestAttack.ubAPCost - BestAttack.ubAimTime + CalcAPsToAutofire( CalcActionPoints( pSoldier ), &(pSoldier->inv[BestAttack.bWeaponIn]), pSoldier->bDoAutofire );
+4872a4879
+> }
