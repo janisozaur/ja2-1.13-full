@@ -7,6 +7,8 @@
 //	  
 //===================================================================
 
+#include "build_defines.h"
+
 #ifdef JA2_LINUX
 
 #include "io_layer.h"
@@ -15,7 +17,16 @@
 static UINT32 globIndex;
 static glob_t globResult;
 
-
+//===================================================================
+//
+//	IO_IsDirectory - checks path as directory. Path can end by slash
+//	or can be slash-less.
+//
+//	in	path: string, that holds path to be checked
+//
+//	return:	TRUE, if path is a directory, FALSE, if not
+//	  
+//===================================================================
 BOOLEAN IO_IsDirectory(const STR8 path)
 {
 	struct stat dir_stat;
@@ -29,6 +40,15 @@ BOOLEAN IO_IsDirectory(const STR8 path)
 	return( S_ISDIR(dir_stat.st_mode) );
 }
 
+//===================================================================
+//
+//	IO_IsRegularFile - checks path as file.
+//
+//	in	path: string, that holds path to be checked
+//
+//	return:	TRUE, if path is a file, FALSE, if not
+//	  
+//===================================================================
 BOOLEAN IO_IsRegularFile(const STR8 path)
 {
 	struct stat file_stat;
@@ -42,6 +62,15 @@ BOOLEAN IO_IsRegularFile(const STR8 path)
 	return( S_ISREG(file_stat.st_mode) );
 }
 
+//===================================================================
+//
+//	IO_Dir_SetCurrentDirectory - set current directory.
+//
+//	in	path: string, that contain path of the new directory
+//
+//	return:	TRUE, if path was set, FALSE, if not
+//	  
+//===================================================================
 BOOLEAN IO_Dir_SetCurrentDirectory( const STR8 path )
 {
 	if ( chdir( path ) == -1 )
@@ -54,7 +83,16 @@ BOOLEAN IO_Dir_SetCurrentDirectory( const STR8 path )
 	return TRUE;
 }
 
-BOOLEAN IO_Dir_GetCurrentDirectory( STRING512 path )
+//===================================================================
+//
+//	IO_Dir_GetCurrentDirectory - get current directory.
+//
+//	out	path: string, that will contain path of the current directory
+//
+//	return:	TRUE, if path was get, FALSE, if there was an error
+//	  
+//===================================================================
+BOOLEAN IO_Dir_GetCurrentDirectory( STR8 path )
 {
 	if ( !getcwd( path, 512 ) )
 	{
@@ -66,7 +104,17 @@ BOOLEAN IO_Dir_GetCurrentDirectory( STRING512 path )
 	return( TRUE );
 }
 
-BOOLEAN IO_Dir_DirectoryExists( const STRING512 path )
+//===================================================================
+//
+//	IO_Dir_DirectoryExists - checks directory for existance. Path can
+//	end by slash or can be slash-less.
+//
+//	in	path: string, that holds path to be checked
+//
+//	return:	TRUE, if directory in path exists, FALSE, if not
+//	  
+//===================================================================
+BOOLEAN IO_Dir_DirectoryExists( const STR8 path )
 {
 	struct stat file_stat;
 
@@ -79,7 +127,18 @@ BOOLEAN IO_Dir_DirectoryExists( const STRING512 path )
 	return FALSE;
 }
 
-BOOLEAN IO_Dir_MakeDirectory( const STRING512 path )
+//===================================================================
+//
+//	IO_Dir_MakeDirectory - make directory in specified place.
+//	You can't create directory in non-existant directory.
+//
+//	in	path: string, containing path of directory to be created
+//
+//	return:	TRUE, if directory was successfully created,
+//			FALSE, if there was an error
+//	  
+//===================================================================
+BOOLEAN IO_Dir_MakeDirectory( const STR8 path )
 {
 	if ( mkdir(path, 0755) == -1 )
 	{
@@ -90,17 +149,46 @@ BOOLEAN IO_Dir_MakeDirectory( const STRING512 path )
 	return TRUE;
 }
 
+//===================================================================
+//
+//	IO_Dir_Delete - delete specified directory.
+//
+//	in	path: string, containing path of directory to be deleted
+//
+//	return:	TRUE, if directory was successfully deleted,
+//			FALSE, if there was an error
+//	  
+//===================================================================
 BOOLEAN IO_Dir_Delete( const STR8 path )
 {
-	return( unlink(path) == 0 );
+	return( rmdir(path) == 0 );
 }
 
+//===================================================================
+//
+//	IO_File_Delete - delete specified file.
+//
+//	in	path: string, containing path of file to be deleted
+//
+//	return:	TRUE, if file was successfully deleted,
+//			FALSE, if there was an error
+//	  
+//===================================================================
 BOOLEAN IO_File_Delete( const STR8 path )
 {
 	return( unlink(path) == 0 );
 }
 
-UINT32 IO_File_GetSize( HANDLE file )
+//===================================================================
+//
+//	IO_File_GetSize - get size of specified file.
+//
+//	in	file: file handler
+//
+//	return:	size of file as UINT32, or 0, when error occured
+//	  
+//===================================================================
+UINT32 IO_File_GetSize( HWFILE file )
 {
 	struct stat file_stat;
 
@@ -114,6 +202,15 @@ UINT32 IO_File_GetSize( HANDLE file )
 	return( file_stat.st_size );
 }
 
+//===================================================================
+//
+//	IO_File_GetSize - get size of specified file.
+//
+//	in	path: string, containing path of file
+//
+//	return:	size of file as UINT32, or 0, when error occured
+//	  
+//===================================================================
 UINT32 IO_File_GetSize( const STR8 path )
 {
 	struct stat file_stat;
@@ -154,6 +251,16 @@ HWFILE IO_File_Open( const STR8 path, UINT32 flags )
 	return hFile;
 }
 
+//===================================================================
+//
+//	IO_File_Close - close specified file.
+//
+//	in	file: file handler
+//
+//	return:	TRUE, if file was successfully closed,
+//			FALSE, if there was an error
+//	  
+//===================================================================
 BOOLEAN IO_File_Close( HWFILE file )
 {
 	if ( close( file ) == -1 )
@@ -228,33 +335,69 @@ INT32 IO_File_GetPosition( HWFILE file )
 	return( iPositionInFile );
 }
 
+//===================================================================
+//
+//	IO_File_GetFirst - begin file search by specified mask in
+//	in specified path. Return first found filename. Special dirs
+//	("." and "..") are not returned.
+//
+//	in	pattern:	path with mask
+//	out	buffer:		file or dir name returned here
+//	in	bufferSize:	size of buffer (to exclude buffer overflow)
+//
+//	return:	TRUE, if at least one file was found,
+//			FALSE, if there was an error or no found files
+//	  
+//===================================================================
 BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize )
 {
-	memset( globResult, GLOB_ERR | GLOB_MARK | GLOB_NOSORT, sizeof(globResult) );
+	memset( &globResult, GLOB_ERR | GLOB_MARK | GLOB_NOSORT, sizeof(globResult) );
 
-	if ( glob( pattern, 0, NULL, &globResult )
+	if ( glob( pattern, 0, NULL, &globResult ) )
 	{
 		fprintf(stderr, "Error while trying to glob() using mask: %s, errno=%d\n", pattern, errno);
 		globfree( &globResult );
 		return FALSE;
 	}
 
-	strncpy( buffer, globResult.gl_pathv[0], bufferSize );
+	strncpy( buffer, globResult.gl_pathv[0], bufferSize - 1 );
 	
 	globIndex = 1;
 	return TRUE;
 }
 
+//===================================================================
+//
+//	IO_File_GetNext - continue file search by specified mask in
+//	in specified path. Return next found filename. Special dirs
+//	("." and "..") are not returned.
+//
+//	out	buffer:		file or dir name returned here
+//	in	bufferSize:	size of buffer (to exclude buffer overflow)
+//
+//	return:	TRUE, if next file was found,
+//			FALSE, if there was an error or no found files
+//	  
+//===================================================================
 BOOLEAN IO_File_GetNext( STR8 buffer, UINT16 bufferSize )
 {
 	if ( globIndex >= globResult.gl_pathc )
 		return FALSE;
 
-	strncpy( buffer, globResult.gl_pathv[ globIndex++ ], bufferSize );
+	strncpy( buffer, globResult.gl_pathv[ globIndex++ ], bufferSize - 1 );
 	
 	return TRUE;
 }
 
+//===================================================================
+//
+//	IO_File_GetClose - close file search by specified mask in
+//	in specified path and free all its associated resources.
+//
+//	return:	TRUE, if file search was successfully closed,
+//			FALSE, if there was an error
+//	  
+//===================================================================
 BOOLEAN IO_File_GetClose( void )
 {
 	globfree( &globResult );

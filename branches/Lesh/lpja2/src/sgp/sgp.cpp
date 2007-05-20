@@ -25,7 +25,8 @@
 	#include "intro.h"
 	#include "library_database.h"
 	#include "vfs.hpp"
-	
+	#include "io_layer.h"
+		
 #endif
 
 
@@ -49,6 +50,7 @@ extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 BOOLEAN          InitializeStandardGamingPlatform(void);
 void             ShutdownStandardGamingPlatform(void);
 void			 GetRuntimeSettings( );
+void 			 TestIO( void );
 
 #if !defined(JA2) && !defined(UTILS)
 void	ProcessCommandLine(CHAR8 *pCommandLine);
@@ -96,6 +98,8 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
+
+	TestIO();	// $$$
 
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();
@@ -441,4 +445,26 @@ void ProcessJa2CommandLineBeforeInitialization(void)
 		}
 		cnt++;
 	}
+}
+
+void TestIO( void )
+{
+//	const STR8	name = "/home/lesh/ja2_113/test1.txt";
+//	HWFILE	file;
+
+//	file = IO_File_Open( name, IO_ACCESS_READ );
+//	printf("File opened: %d\n", file );
+//	printf("File size  : %d\n", IO_File_GetSize( file ) );
+//	printf("File closed: %d\n", IO_File_Close( file ) );
+
+	char	buffer[256];
+	const	STR8 pattern = "/home/lesh/ja2_113/*";
+
+	IO_Dir_SetCurrentDirectory( "/home/lesh/ja2_113/" );
+	IO_File_GetFirst( pattern, buffer, 256 );
+	do
+	{
+		printf("%s\n", buffer);
+	} while ( IO_File_GetNext( buffer, 256 ) );
+	IO_File_GetClose();
 }
