@@ -32,7 +32,7 @@
 #define CSIDL_COMMON_APPDATA (0x0023)
 #endif
 
-char const * const VsscVersion = "0.1.790.build";
+TCHAR const * const VsscVersion = "0.1.790.build";
 
 /*! \file VSSC.cpp
  *  \brief VSSC basic functions interface
@@ -123,7 +123,7 @@ typedef struct configdata_
   USHORT WriteIfNotExist;
   LONG DefaultVal;
   USHORT AccessMode;
-  USHORT AccessToken;
+  //USHORT AccessToken;
   } TS_configdata, *PTS_configdata;
 
 /* a string which holds a static known number of elements */
@@ -153,6 +153,7 @@ typedef struct vssc_data_
     unsigned short MsgCount;
     DWORD          UserPID;
     TCHAR *        pMyCmdLine;
+    BOOL           bSndAddrKnown;
     } internal;
   /* --------------------------- */
   struct
@@ -236,27 +237,27 @@ typedef struct vssc_data_
 
 static TS_configdata AutoConfig[] = 
   {
-  /*====================================================================================.=====================================*/
-  /* due to some restrictions, this Value MUST be the first we set!                                                           */
-   {MAKE_CFGSTR( global, AppName        , P32STRING, _SLOG_CREATE_NOT, _T("0815.exe")     ), ACC_AUTOREAD, CTRL_GENERAL_APPNAME}
-  /* due to some restrictions, this Value MUST be the second we set!                                                          */
-  ,{MAKE_CFGINT( global, CreateDefault  , LONG     , _SLOG_CREATE_NOT, -1L                ), ACC_AUTOREAD, CTRL_NOT            }
-  /*====================================================================================.=====================================*/
-  ,{MAKE_CFGINT( global, Version        , P32STRING, _SLOG_CREATE_NOT, _T("")             ), ACC_READ, CTRL_GENERAL_VERSION    }
-  ,{MAKE_CFGINT( global, ZoneMask       , ULONG    , _SLOG_CREATE_REGHKCU, 7              ), ACC_FULL, CTRL_GENERAL_ZONEMASK   }
-  ,{MAKE_CFGINT( global, ControlFlags   , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL, CTRL_SYSLOG_UDP_FLAGS   }
-  ,{MAKE_CFGINT( global, ThreadWaitMax  , ULONG    , _SLOG_CREATE_REGHKCU, 100            ), ACC_AUTOREAD, CTRL_NOT            }
-  /*====================================================================================.=====================================*/
-  ,{MAKE_CFGINT( udp   , Use            , USHORT   , _SLOG_CREATE_BOTH   , 1              ), ACC_FULL, CTRL_SYSLOG_UDP_USE     }
-  ,{MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, _SLOG_CREATE_INIEXE , _T("localhost")), ACC_FULL, CTRL_SYSLOG_UDP_HOST    }
-  ,{MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , _SLOG_CREATE_INIEXE , 514            ), ACC_FULL, CTRL_SYSLOG_UDP_PORT    }
-  ,{MAKE_CFGSTR( udp   , From_Addr      , P32STRING, _SLOG_CREATE_NOT    , _T("")         ), ACC_READ, CTRL_SYSLOG_UDP_OUTBIND }
-  ,{MAKE_CFGINT( udp   , From_Port      , USHORT   , _SLOG_CREATE_NOT    , 0              ), ACC_READ, CTRL_SYSLOG_UDP_OUTPORT }
-  ,{MAKE_CFGINT( udp   , Facility       , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL, CTRL_SYSLOG_UDP_FACILITY}
-  ,{MAKE_CFGINT( udp   , MaxLevel       , USHORT   , _SLOG_CREATE_INIEXE , 7              ), ACC_FULL, CTRL_SYSLOG_UDP_MAXLEVEL}
-  /*====================================================================================.=====================================*/
-  ,{MAKE_CFGINT( file  , Use            , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_NONE, CTRL_SYSLOG_FILE_USE    }
-  /*====================================================================================.=====================================*/
+  /*====================================================================================.===============*/
+  /* due to some restrictions, this Value MUST be the first we set!                                     */
+   {MAKE_CFGSTR( global, AppName        , P32STRING, _SLOG_CREATE_NOT, _T("0815.exe")     ), ACC_AUTOREAD}
+  /* due to some restrictions, this Value MUST be the second we set!                                    */
+  ,{MAKE_CFGINT( global, CreateDefault  , LONG     , _SLOG_CREATE_NOT, -1L                ), ACC_AUTOREAD}
+  ,{MAKE_CFGINT( global, Version        , P32STRING, _SLOG_CREATE_NOT, _T("")             ), ACC_READ    }
+  /*====================================================================================.===============*/
+  ,{MAKE_CFGINT( global, ZoneMask       , ULONG    , _SLOG_CREATE_REGHKCU, 7              ), ACC_FULL    }
+  ,{MAKE_CFGINT( global, ControlFlags   , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL    }
+  ,{MAKE_CFGINT( global, ThreadWaitMax  , ULONG    , _SLOG_CREATE_REGHKCU, 100            ), ACC_AUTOREAD}
+  /*====================================================================================.===============*/
+  ,{MAKE_CFGINT( udp   , Use            , USHORT   , _SLOG_CREATE_BOTH   , 1              ), ACC_FULL    }
+  ,{MAKE_CFGSTR( udp   , SendTo_Addr    , P32STRING, _SLOG_CREATE_INIEXE , _T("localhost")), ACC_FULL    }
+  ,{MAKE_CFGINT( udp   , SendTo_Port    , USHORT   , _SLOG_CREATE_INIEXE , 514            ), ACC_FULL    }
+  ,{MAKE_CFGSTR( udp   , From_Addr      , P32STRING, _SLOG_CREATE_NOT    , _T("")         ), ACC_READ    }
+  ,{MAKE_CFGINT( udp   , From_Port      , USHORT   , _SLOG_CREATE_NOT    , 0              ), ACC_READ    }
+  ,{MAKE_CFGINT( udp   , Facility       , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_FULL    }
+  ,{MAKE_CFGINT( udp   , MaxLevel       , USHORT   , _SLOG_CREATE_INIEXE , 7              ), ACC_FULL    }
+  /*====================================================================================.===============*/
+  ,{MAKE_CFGINT( file  , Use            , USHORT   , _SLOG_CREATE_REGHKCU, 0              ), ACC_NONE    }
+  /*====================================================================================.===============*/
   };
 /*! \endcond */
 
@@ -286,7 +287,7 @@ static void TrimmLine( char * pLine );
 static BOOL IsComment( char * pLine );
 static BOOL Separate( char * pLine, char ** ppRightpart );
 
-static int _internal_GetHash( char const * const pControl );
+static int _internal_GetIndex( char const * const pControl );
 
 static BOOL _internal_GetCmdLine( PTS_vssc_data pHnd );
 static BOOL _internal_GetIniFileName( PTS_vssc_data pHnd, int Index );
@@ -368,13 +369,14 @@ void OnDebug_ReportT( const TCHAR* pMessage )
 
 /*! \cond NEVER_DOX */
 static 
-int _internal_GetHash( char const * const pControl )
+int _internal_GetIndex( char const * const pControl )
 {{
   int iRemain, i=0, maxi=DIM(AutoConfig);
   char CombinedValue[MAX_PATH];
 
   while( i<maxi )
     {
+    /*== copy GroupName + '.' + KeyName ==*/
     iRemain = DIM(CombinedValue);
     strncpy( CombinedValue, AutoConfig[i].pGroupName, iRemain );
     CombinedValue[ DIM(CombinedValue)-1 ]=0;
@@ -385,8 +387,9 @@ int _internal_GetHash( char const * const pControl )
     strncat( CombinedValue, AutoConfig[i].pKeyName, iRemain );
     CombinedValue[ DIM(CombinedValue)-1 ]=0;
 
+    /*== check if this is the same as the given String ==*/
     if( 0==stricmp( pControl, CombinedValue ) )
-      return AutoConfig[i].AccessToken;
+      return i;
     i++;
     }
   return -1;
@@ -463,6 +466,26 @@ int _internal_GetListOfCommands( char * pListBuff, size_t MaxBuff )
 
 
 
+/*! \cond NEVER_DOX */
+static
+BOOL _internal_RegisterOwnAddr( PTS_vssc_data pHnd )
+{{
+  if(pHnd->internal.bSndAddrKnown)
+    return TRUE;
+
+  _snprintf( pHnd->udp.From_Addr.Text, pHnd->udp.From_Addr.LastPos,
+             "%u.%u.%u.%u:%u", 
+             pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b1,
+             pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b2,
+             pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b3,
+             pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b4,
+             pHnd->internal.OwnAddr.sin_port );
+  pHnd->udp.From_Addr.Text[ pHnd->udp.From_Addr.LastPos - 1 ] = 0;
+
+  pHnd->internal.bSndAddrKnown = TRUE;
+  return TRUE;
+}};
+/*! \endcond */
 
 
 
@@ -543,6 +566,7 @@ BOOL _internal_VsscRefreshAddr( PTS_vssc_data pHnd, char const * const pDestinat
   strncpy( pHnd->udp.SendTo_Addr.Text , (p && *p) ? p : DestCopy, pHnd->udp.SendTo_Addr.LastPos );
   pHnd->udp.SendTo_Addr.Text[ pHnd->udp.SendTo_Addr.LastPos ]=0;
 
+  pHnd->internal.bSndAddrKnown = FALSE;
   return TRUE;
 }};
 /*! \endcond */
@@ -1777,28 +1801,10 @@ int _internal_ReadConfigALL( PTS_vssc_data pHnd,
     /*=========================================================================*
      *           one of the sepacial cases?                                    *
      *=========================================================================*/
-    if( 0==_tcsicmp( Var_Name, _T("global_AppName")) )
+    if( 0==_tcsicmp( Var_Name, _T("global_AppName")) ||
+        0==_tcsicmp( Var_Name, _T("global_Version")) )
       {
-      TCHAR ValBuffer[MAX_PATH] = {0};
-      TCHAR *pPatch;
-      GetModuleFileName( NULL, ValBuffer, DIM( ValBuffer )-1 );
-      pPatch = _tcsrchr( ValBuffer, _T('.') );
-      if(pPatch) *pPatch=0; /* cut away .EXE suffix */
-      pPatch = _tcsrchr( ValBuffer, _T('\\') );
-      if(pPatch) 
-        pPatch++; /* skip the '\' */
-      else
-        pPatch=ValBuffer;
-
-
-      /*
-      _tcsncpy( pHnd->global.AppName.Text, pPatch, pHnd->global.AppName.LastPos );
-      pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ]=0;
-      */
-
-      bRet = _internal_SetValueFromString( pdwValue, ptcValue, MaxValue, pPatch );
-      if(bRet) 
-        break; /* to the end of do-once, but only if we got some value */
+      break; /* to the end of do-once, in every case */
       }
 
     
@@ -1994,6 +2000,7 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
 
   /* init all P32STRING Members or they never will be filled! */
   MAKE_CFGLEN( pHnd->global.AppName );
+  MAKE_CFGLEN( pHnd->global.Version );
   MAKE_CFGLEN( pHnd->udp.SendTo_Addr );
 
   pHnd->internal.hMutex = CreateMutex( NULL, FALSE, NULL );
@@ -2012,6 +2019,28 @@ int VSSC_open2( char const * pDestination, /*!< [in] IP and Port for Syslogd. ma
 #   endif
     }
   */
+
+	 #error
+	 {
+  TCHAR ValBuffer[MAX_PATH] = {0};
+  TCHAR *pPatch;
+  
+  GetModuleFileName( NULL, ValBuffer, DIM( ValBuffer )-1 );
+  pPatch = _tcsrchr( ValBuffer, _T('.') );
+  if(pPatch) *pPatch=0; /* cut away .EXE suffix */
+  pPatch = _tcsrchr( ValBuffer, _T('\\') );
+  if(pPatch) 
+     pPatch++; /* skip the '\' */
+  else
+     pPatch=ValBuffer;
+
+  _tcsncpy( pHnd->global.AppName.Text, pModuleName, pHnd->global.AppName.LastPos );
+  pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ] = 0;
+  
+  _tcsncpy( pHnd->global.Version.Text, VsscVersion, pHnd->global.AppName.LastPos );
+  pHnd->global.AppName.Text[ pHnd->global.AppName.LastPos ] = 0;
+	 }
+
 
   /* read the full Setup ? */
   if( bAutoConfig )
@@ -2337,6 +2366,11 @@ int VSSC_Log( int Handle,                /*!< [in] Handle a valid Handle from su
           OnDebug_ReportT( _T("not sent, sendto() failed\r\n") );
           iRet = - (int) dwErr; /*! \retval -n : remove the '-' and lookup in winerror.h why sendto() failed */
           }
+        else
+          {
+          if( !pHnd->internal.bSndAddrKnown )
+            _internal_RegisterOwnAddr( pHnd );
+          }
         }
     _snprintf( logmsg, logmsg_size, "%08u: <%u> %s\r\n", GetTickCount(), FacLev, logtext );
     OutputDebugString( logmsg );
@@ -2580,7 +2614,14 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
-  Index = _internal_GetHash( Key );
+  Index = _internal_GetIndex( Key );
+  if( Index<0 )
+  	 {
+    return (int) FALSE;  /*! \retval FALSE if the given Key name is not valid. */
+  	 }
+  
+#error "this should be compacted by using the FIELD_OFFSET and real offset and Type info instead of helper-AccessToken"
+
   switch( Index )
     {
     case CTRL_GENERAL_APPNAME:
@@ -2649,7 +2690,7 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
           }
         else
           {
-          return 0; /*! \retval 0: invalid Data Format (integers may be strings with prefixed 0x or 0b) */
+          return (int) FALSE; /*! \retval FALSE: invalid Data Format (integers may be strings with prefixed 0x or 0b) */
           }
         }
       else
@@ -2659,8 +2700,8 @@ int VSSC_SetStr( int Handle,              /*!< [in] Handle a valid Handle from s
       return VSSC_SetInt( Handle, Key, Number, LOGFLGS_DEFAULT ); /*! \retval 0: this Parameter is currently not implemented or is not of String Type */
       }
     }
-               /*! \retval 0: parameter not set. */
-  return iRet; /*! \retval not 0: everything went okay. */
+               /*! \retval FALSE: parameter not set. */
+  return iRet; /*! \retval TRUE: everything went okay. */
 }}
 
 /*! \brief Setting a Parameter (signed long int)
@@ -2693,6 +2734,9 @@ int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from su
   PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
   int Index, iRet = 0;
   unsigned long ulVal;
+  char *pHelp;
+  PP32STRING pString;
+  enum configdata_types ValType;
 
   if( !Handle || !Key || !*Key )
     {
@@ -2706,55 +2750,93 @@ int VSSC_SetInt( int Handle,             /*!< [in] Handle a valid Handle from su
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
-  ulVal = (long) lVal;
-  Index = _internal_GetHash( Key );
-  switch( Index )
+  ulVal = (unsigned long) lVal;
+  Index = _internal_GetIndex( Key );
+  if( Index<0 )
+  	 {
+    return (int) FALSE;  /*! \retval FALSE if the given Key name is not valid. */
+  	 }
+  
+  pHelp   = (char*) pHnd;
+  pHelp  += AutoConfig[ Index ].Offset;
+  pString = (PP32STRING) pHelp;
+
+  /* do the Value fit? */
+  ValType = AutoConfig[ Index ].ValType;
+  if(      et_BYTE   == ValType ) { min=SCHAR_MIN; max=SCHAR_MAX; };
+  else if( et_CHAR   == ValType ) { min=        0; max=UCHAR_MAX; };
+  else if( et_USHORT == ValType ) { min= SHRT_MIN; max= SHRT_MAX; };
+  else if( et_SHORT  == ValType ) { min=        0; max=USHRT_MAX; };
+  else if( et_ULONG  == ValType ) { min= LONG_MIN; max= LONG_MAX; };
+  else if( et_LONG   == ValType ) { min=        0; max=ULONG_MAX; };
+
+  if( 0==min )
     {
-    case CTRL_GENERAL_ZONEMASK:
-      {
-      ulVal &= LOGZONE_MASK; /* throw away bits that are reserved for other use (level) */
-      switch(Option)
-        {
-        case LOGFLGS_SET_BITS   : { pHnd->global.ZoneMask |=  ulVal; iRet=1; };break;
-        case LOGFLGS_CLR_BITS   : { pHnd->global.ZoneMask &= ~ulVal; iRet=1; };break;
-        case LOGFLGS_TOGGLE_BITS: { pHnd->global.ZoneMask ^=  ulVal; iRet=1; };break;
-        case LOGFLGS_SET_VALUE  : /* explicit fall trough */ 
-        default                 : { pHnd->global.ZoneMask  =  ulVal; iRet=1; };break;
-        }
-      }; break;
-
-    case CTRL_SYSLOG_UDP_PORT:
-      if( lVal <= USHRT_MAX )
-        {
-        switch(Option)
-            {
-            case LOGFLGS_SET_VALUE : { pHnd->udp.SendTo_Port = (unsigned short) lVal; iRet=1; };break;
-            default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
-            }
-        }
-      break;
-
-    case CTRL_SYSLOG_UDP_FACILITY  :
-      switch(Option)
-          {
-          case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, (short) lVal, -1 ); };break;
-          default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
-          }
-      break;
-
-    case CTRL_SYSLOG_UDP_MAXLEVEL  :
-      switch(Option)
-          {
-          case LOGFLGS_SET_VALUE : { iRet = _internal_VsscRefreshLevel( pHnd, -1 , (short) lVal); };break;
-          default                : { iRet = FALSE; };break; /*! \retval FALSE if the Option is not valid for the given Key. */
-          }
-      break;
-
-    default:
-       return 0; /*! \retval 0 : this Parameter is currently not implemented or is not of Integer Type */
+    if( lValue > (ULONG) max ) return (int) FALSE; /*! \retval FALSE if the given unsigned value is to big for this Variable */
+    if( lValue <           0 ) return (int) FALSE; /*! \retval FALSE if the given unsigned value is to low for this Variable */
     }
-               /*! \retval 0: parameter not set. */
-  return iRet; /*! \retval not 0: everything went okay. */
+  else
+    {
+    if( lValue > (LONG) max ) return (int) FALSE; /*! \retval FALSE if the given signed value is to big for this Variable */
+    if( lValue < (LONG) min ) return (int) FALSE; /*! \retval FALSE if the given signed value is to low for this Variable */
+    }
+  
+#error "this should be compacted by using the FIELD_OFFSET and real offset and Type info instead of helper-AccessToken"
+
+  if( &(pHnd->global.ZoneMask) == pHelp )
+    {
+    ulVal &= LOGZONE_MASK; /* throw away bits that are reserved for other use (level) */
+    switch(Option)
+      {
+      case LOGFLGS_SET_BITS   : { pHnd->global.ZoneMask |=  ulVal; iRet=(int) TRUE; };break;
+      case LOGFLGS_CLR_BITS   : { pHnd->global.ZoneMask &= ~ulVal; iRet=(int) TRUE; };break;
+      case LOGFLGS_TOGGLE_BITS: { pHnd->global.ZoneMask ^=  ulVal; iRet=(int) TRUE; };break;
+      case LOGFLGS_SET_VALUE  : /* explicit fall trough */ 
+      default                 : { pHnd->global.ZoneMask  =  ulVal; iRet=(int) TRUE; };break;
+      }
+    iRet = (iRet) ? _internal_VsscRefreshZone( pHnd, (unsigned) ulVal ) : iRet;
+    return iRet;
+    }
+  else if( &(pHnd->udp.Facility) == pHelp )
+    {
+    if( LOGFLGS_SET_VALUE == Option )
+      {
+      return _internal_VsscRefreshLevel( pHnd, (short) lVal, -1 );
+      }
+    }
+  else if( &(pHnd->udp.MaxLevel) == pHelp )
+    {
+    if( LOGFLGS_SET_VALUE == Option )
+      {
+      return _internal_VsscRefreshLevel( pHnd, -1, (short) lVal );
+      }
+    }
+  else if( et_P32STRING == ValType )
+    {
+    char AsText[34];
+
+    if( 0==min )
+      _snprintf( AsText, DIM(AsText), "%l", lVal );
+    else
+      _snprintf( AsText, DIM(AsText), "%lu", (ULONG) lVal );
+    AsText[ DIM(AsText) - 1] = 0;
+
+    if( pString->LastPos < DIM(AsText) ) 
+      return (int) FALSE; /*! \retval FALSE : to big to fit as string */
+
+    _tcsncpy( pString->Text, AsText, pString->LastPos );
+    }
+  else /* if( et_P32STRING != ValType ) */
+    {
+    if(      et_BYTE   == ValType ) { *( (  BYTE*) pHelp) = (  BYTE) lVal; };
+    else if( et_CHAR   == ValType ) { *( (  CHAR*) pHelp) = (  CHAR) lVal; };
+    else if( et_USHORT == ValType ) { *( (USHORT*) pHelp) = (USHORT) lVal; };
+    else if( et_SHORT  == ValType ) { *( ( SHORT*) pHelp) = ( SHORT) lVal; };
+    else if( et_ULONG  == ValType ) { *( ( ULONG*) pHelp) = ( ULONG) lVal; };
+    else if( et_LONG   == ValType ) { *( (  LONG*) pHelp) =          lVal; };
+    }
+
+  return (int) TRUE; /*! \retval TRUE: everything went okay. */
 }}
 
 
@@ -2798,14 +2880,15 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
 {{
   PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
   int Index, iRet=0;
+  char *pHelp;
+  PP32STRING pString;
+  enum configdata_types ValType;
   
   if( !Handle || !Key || !*Key || !pValBuf || MaxBuf<1 )
     {
     OutputDebugString( _T("Parameter Error\r\n") );
     return (int) FALSE;  /*! \retval FALSE if one Parameter is invalid. */
     }
-  MaxBuf--; /* regard the terminating zero */
-  *pValBuf='\0';
 
   if( (pHnd->SecCookie1 != 0xC001B001) || (pHnd->SecCookie2 != 0xC001B001) )
     {
@@ -2813,51 +2896,49 @@ int VSSC_GetStr( int Handle,              /*!< [in] Handle a valid Handle from s
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
 
-  Index = _internal_GetHash( Key );
-  switch( Index )
+  MaxBuf--; /* regard the terminating zero */
+  *pValBuf='\0';
+
+  Index = _internal_GetIndex( Key );
+  if( Index<0 )
+  	 {
+    return (int) FALSE;  /*! \retval FALSE if the given Key name is not valid. */
+  	 }
+
+  ValType = AutoConfig[ Index ].ValType;
+  if( et_P32STRING != ValType )
     {
-    case CTRL_GENERAL_VERSION:
-      if( MaxBuf >= strlen( VsscVersion ) )
-        {
-        strcpy( pValBuf, VsscVersion );
-        iRet=1;
-        }
-      break;
+    long lValue, min;
 
-    case CTRL_GENERAL_APPNAME:
-      if( MaxBuf >= strlen( pHnd->global.AppName.Text ) )
-        {
-        strcpy( pValBuf, pHnd->global.AppName.Text );
-        iRet=1;
-        }
-      break;
+    iRet = VSSC_GetInt( Handle, Key, &lValue );
+    if(!iRet)
+      return (int) FALSE;  /*! \retval FALSE if the given Key name is not valid. */
+  
+    if(      et_BYTE   == ValType ) { min=SCHAR_MIN; };
+    else if( et_CHAR   == ValType ) { min=        0; };
+    else if( et_USHORT == ValType ) { min= SHRT_MIN; };
+    else if( et_SHORT  == ValType ) { min=        0; };
+    else if( et_ULONG  == ValType ) { min= LONG_MIN; };
+    else if( et_LONG   == ValType ) { min=        0; };
 
-    case CTRL_SYSLOG_UDP_HOST:
-      if( MaxBuf >= strlen( pHnd->udp.SendTo_Addr.Text ) )
-        {
-        strcpy( pValBuf, pHnd->udp.SendTo_Addr.Text );
-        iRet=1;
-        }
-      break;
 
-    case CTRL_SYSLOG_UDP_OUTBIND:
-      if( MaxBuf >= 16 )
-        {
-        sprintf( pValBuf, "%u.%u.%u.%u:%u", 
-                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b1,
-                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b2,
-                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b3,
-                 pHnd->internal.OwnAddr.sin_addr.S_un.S_un_b.s_b4,
-                 pHnd->internal.OwnAddr.sin_port );
-        iRet=1;
-        }
-      break;
+    if( 0==min )
+      _snprintf( pValBuf, MaxBuf, "%l", lValue );
+    else
+      _snprintf( pValBuf, MaxBuf, "%lu", (ULONG) lValue );
 
-    default:
-       return 0; /*! \retval 0: this Parameter is currently not implemented or is not of String Type */
-    }
-               /*! \retval 0: parameter not set. */
-  return iRet; /*! \retval not 0: everything went okay. */
+    pValBuf[ MaxBuf - 1 ] = 0;
+    return iRet; /*! \retval VSSC_GetInt-returns : if called for number values, it will try to give back 
+                     the number as string and returns the results of VSSC_GetInt() */
+  	 }
+  
+  pHelp   = (char*) pHnd;
+  pHelp  += AutoConfig[ Index ].Offset;
+  pString = (PP32STRING) pHelp;
+
+  strcpy( pValBuf, pString.Text, MaxBuf );
+  pValBuf[ MaxBuf ] = 0;
+  return (int) TRUE; /*! \retval TRUE: everything went okay. */
 }}
 
 
@@ -2899,8 +2980,9 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
 {{
   PTS_vssc_data pHnd = (PTS_vssc_data) Handle;
   int Index, iRet=0;
+  char *pHelp;
   long Val;
-  
+
   if( !Handle || !Key || !*Key || !plVal )
     {
     OutputDebugString( _T("Parameter Error\r\n") );
@@ -2912,43 +2994,31 @@ int VSSC_GetInt( int Handle,              /*!< [in] Handle a valid Handle from s
     OutputDebugString( _T("Simple Syslog Handle corrupt\r\n") );
     return (int) FALSE;  /*! \retval FALSE if the Handle is not valid. */
     }
+  
   *plVal=-1L;
+  
+  Index = _internal_GetIndex( Key );
+  if( Index<0 )
+  	 {
+    return (int) FALSE;  /*! \retval FALSE if the given Key name is not valid. */
+  	 }
 
-  #error "this should be compacted by using the FIELD_OFFSET and real offset and Type info instead of helper-AccessToken"
-
-  Index = _internal_GetHash( Key );
-  switch( Index ) 
+  if( (et_BYTE   != AutoConfig[ Index ].ValType ) &&
+      (et_CHAR   != AutoConfig[ Index ].ValType ) &&
+      (et_USHORT != AutoConfig[ Index ].ValType ) &&
+      (et_SHORT  != AutoConfig[ Index ].ValType ) &&
+      (et_ULONG  != AutoConfig[ Index ].ValType ) &&
+      (et_LONG   != AutoConfig[ Index ].ValType ) )
     {
-    case CTRL_GENERAL_VERSION:
-      Val = atol( VsscVersion );
-      break;
+    return (int) FALSE; /*! \retval FALSE : this Parameter is currently not implemented or is not of Integer Type */
+  	 }
 
-    case CTRL_GENERAL_ZONEMASK:
-      Val = (long) pHnd->global.ZoneMask;
-      break;
+  pHelp  = (char*) pHnd;
+  pHelp += AutoConfig[ Index ].Offset;
 
-    case CTRL_SYSLOG_UDP_PORT:
-      Val = (long) pHnd->udp.SendTo_Port;
-      break;
-
-    case CTRL_SYSLOG_UDP_OUTPORT:
-      Val = (long) pHnd->internal.OwnAddr.sin_port;
-      break;
-
-    case CTRL_SYSLOG_UDP_FACILITY:
-      Val = (long) pHnd->udp.Facility;
-      break;
-
-    case CTRL_SYSLOG_UDP_MAXLEVEL:
-      Val = (long) pHnd->udp.MaxLevel;
-      break;
-
-    default:
-       return 0; /*! \retval 0 : this Parameter is currently not implemented or is not of Integer Type */
-    }
-
+	 Val = (long) *( (long*) pHelp );
   *plVal = Val;
-  return 1; /*! \retval not 0: everything went okay. */
+  return (int) TRUE; /*! \retval TRUE: everything went okay. */
 }}
 
 
