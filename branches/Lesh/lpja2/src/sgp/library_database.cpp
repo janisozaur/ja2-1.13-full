@@ -1028,12 +1028,6 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 	*pFileNum = DB_EXTRACT_FILE_ID( hlibFile );
 	*pLibraryID = (UINT16)DB_EXTRACT_LIBRARY( hlibFile );
 
-//TEST: qq
-/*	if( *pLibraryID == LIBRARY_SOUNDS )
-	{
-		int q=5;
-	}
-*/
 	return( TRUE );
 }
 

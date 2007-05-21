@@ -13,6 +13,8 @@
 #include "types.h"
 #include "platform.h"
 
+typedef INT32	IOFILE;
+
 #define IO_ACCESS_READ	    0x01
 #define IO_ACCESS_WRITE	    0x02
 #define IO_ACCESS_READWRITE	0x03
@@ -30,14 +32,14 @@ BOOLEAN IO_IsDirectory(const STR8 path);
 BOOLEAN IO_IsRegularFile(const STR8 path);
 
 BOOLEAN IO_File_Delete( const STR8 path );
-UINT32 	IO_File_GetSize( HWFILE file );
+UINT32 	IO_File_GetSize( IOFILE file );
 UINT32 	IO_File_GetSize( const STR8 path );
-HWFILE 	IO_File_Open( const STR8 path, UINT32 flags );
-BOOLEAN IO_File_Close( HWFILE file );
-UINT32 	IO_File_Read( HWFILE file, PTR buffer, UINT32 size );
-UINT32 	IO_File_Write( HWFILE file, PTR buffer, UINT32 size );
-BOOLEAN IO_File_Seek( HWFILE file, INT32 distance, UINT8 method );
-INT32 	IO_File_GetPosition( HWFILE file );
+IOFILE 	IO_File_Open( const STR8 path, UINT32 flags );
+BOOLEAN IO_File_Close( IOFILE file );
+INT32 	IO_File_Read( IOFILE file, PTR buffer, INT32 size );
+INT32 	IO_File_Write( IOFILE file, PTR buffer, INT32 size );
+BOOLEAN IO_File_Seek( IOFILE file, INT32 distance, UINT8 method );
+INT32 	IO_File_GetPosition( IOFILE file );
 BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize );
 BOOLEAN IO_File_GetNext( STR8 buffer, UINT16 bufferSize );
 BOOLEAN IO_File_GetClose( void );

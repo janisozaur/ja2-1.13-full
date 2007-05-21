@@ -188,7 +188,7 @@ BOOLEAN IO_File_Delete( const STR8 path )
 //	return:	size of file as UINT32, or 0, when error occured
 //	  
 //===================================================================
-UINT32 IO_File_GetSize( HWFILE file )
+UINT32 IO_File_GetSize( IOFILE file )
 {
 	struct stat file_stat;
 
@@ -224,10 +224,26 @@ UINT32 IO_File_GetSize( const STR8 path )
 	return( file_stat.st_size );
 }
 
-HWFILE IO_File_Open( const STR8 path, UINT32 flags )
+//===================================================================
+//
+//	IO_File_Open - open/create specified file for reading/writing.
+//
+//	in	path:	string, containing path of file
+//	in	flags:	open flags. Can be combined by OR operator.
+//
+//	Open flags reference:
+//		IO_ACCESS_READ   - open file for reading.
+//		IO_ACCESS_WRITE  - open file for writing.
+//		IO_CREATE_NEW    - create file, if it is not exist, otherwise fail.
+//		IO_CREATE_ALWAYS - always create file, even it is exist.
+//
+//	return:	handler of file as IOFILE (INT32), or -1, when error occured
+//	  
+//===================================================================
+IOFILE IO_File_Open( const STR8 path, UINT32 flags )
 {
 	UINT32	uiOpenFlags = 0;
-	HWFILE	hFile;
+	IOFILE	hFile;
 
 	if  ( flags & (IO_ACCESS_READ | IO_ACCESS_WRITE) )
 		uiOpenFlags = O_RDWR;
@@ -261,7 +277,7 @@ HWFILE IO_File_Open( const STR8 path, UINT32 flags )
 //			FALSE, if there was an error
 //	  
 //===================================================================
-BOOLEAN IO_File_Close( HWFILE file )
+BOOLEAN IO_File_Close( IOFILE file )
 {
 	if ( close( file ) == -1 )
 	{
@@ -272,32 +288,74 @@ BOOLEAN IO_File_Close( HWFILE file )
 	return TRUE;
 }
 
-UINT32 IO_File_Read( HWFILE file, PTR buffer, UINT32 size )
+//===================================================================
+//
+//	IO_File_Read - read from file into buffer specified amount of
+//	bytes.
+//
+//	in	file:	file handler
+//	in	buffer:	pointer to read buffer
+//	in	size:	amount of bytes to read (buffer must hold this amount)
+//
+//	return:	amount of bytes actually read. -1 in case of error
+//	  
+//===================================================================
+INT32 IO_File_Read( IOFILE file, PTR buffer, INT32 size )
 {
-	UINT32 uiBytesRead;
+	INT32 iBytesRead;
 
-	uiBytesRead = read( file, buffer, size );
-	if ( size != uiBytesRead )
+	iBytesRead = read( file, buffer, size );
+	if ( iBytesRead == -1 || iBytesRead != size )
 	{
 		fprintf(stderr, "Error reading file %d: errno=%d\n",
 			file, errno);
-		return FALSE;
 	}
-	return TRUE;
+	return iBytesRead;
 }
 
-UINT32 IO_File_Write( HWFILE file, PTR buffer, UINT32 size )
+//===================================================================
+//
+//	IO_File_Write - write to file from buffer specified amount of
+//	bytes.
+//
+//	in	file:	file handler
+//	in	buffer:	pointer to write buffer
+//	in	size:	amount of bytes to write
+//
+//	return:	amount of bytes actually written. -1 in case of error
+//	  
+//===================================================================
+INT32 IO_File_Write( IOFILE file, PTR buffer, INT32 size )
 {
-	if ( write( file, buffer, size ) == -1 )
+	INT32 iBytesWritten;
+
+	iBytesWritten = write( file, buffer, size );
+	if ( iBytesWritten == -1 || iBytesWritten != size )
 	{
 		fprintf(stderr, "Error writing file %d: errno=%d\n",
 			file, errno);
-		return FALSE;
 	}
-	return TRUE;
+	return iBytesWritten;
 }
 
-BOOLEAN IO_File_Seek( HWFILE file, INT32 distance, UINT8 method )
+//===================================================================
+//
+//	IO_File_Seek - seek specified position in file.
+//
+//	in	file:		file handler
+//	in	distance:	offset
+//	in	method:	method of seeking
+//
+//	Possible methods reference:
+//		IO_SEEK_FROM_START   - seek from beginning of file
+//		IO_SEEK_FROM_END     - seek from end of file
+//		IO_SEEK_FROM_CURRENT - seek from current position
+//
+//	return:	TRUE, if file was successfully repositioned,
+//			FALSE, if there was an error
+//	  
+//===================================================================
+BOOLEAN IO_File_Seek( IOFILE file, INT32 distance, UINT8 method )
 {
 	UINT32 uiMoveMethod;
 
@@ -321,7 +379,16 @@ BOOLEAN IO_File_Seek( HWFILE file, INT32 distance, UINT8 method )
 	return(TRUE);
 }
 
-INT32 IO_File_GetPosition( HWFILE file )
+//===================================================================
+//
+//	IO_File_GetPosition - get current position in file.
+//
+//	in	file:		file handler
+//
+//	return:	current position in file as INT32
+//	  
+//===================================================================
+INT32 IO_File_GetPosition( IOFILE file )
 {
 	INT32 iPositionInFile;
 
@@ -351,7 +418,7 @@ INT32 IO_File_GetPosition( HWFILE file )
 //===================================================================
 BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize )
 {
-	memset( &globResult, GLOB_ERR | GLOB_MARK | GLOB_NOSORT, sizeof(globResult) );
+	memset( &globResult, GLOB_ERR | GLOB_NOSORT, sizeof(globResult) );
 
 	if ( glob( pattern, 0, NULL, &globResult ) )
 	{
