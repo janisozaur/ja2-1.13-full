@@ -27,7 +27,7 @@ static glob_t globResult;
 //	return:	TRUE, if path is a directory, FALSE, if not
 //	  
 //===================================================================
-BOOLEAN IO_IsDirectory(const STR8 path)
+BOOLEAN IO_IsDirectory(const CHAR8 *path)
 {
 	struct stat dir_stat;
 
@@ -49,7 +49,7 @@ BOOLEAN IO_IsDirectory(const STR8 path)
 //	return:	TRUE, if path is a file, FALSE, if not
 //	  
 //===================================================================
-BOOLEAN IO_IsRegularFile(const STR8 path)
+BOOLEAN IO_IsRegularFile(const CHAR8 *path)
 {
 	struct stat file_stat;
 
@@ -71,7 +71,7 @@ BOOLEAN IO_IsRegularFile(const STR8 path)
 //	return:	TRUE, if path was set, FALSE, if not
 //	  
 //===================================================================
-BOOLEAN IO_Dir_SetCurrentDirectory( const STR8 path )
+BOOLEAN IO_Dir_SetCurrentDirectory( const CHAR8 *path )
 {
 	if ( chdir( path ) == -1 )
 	{
@@ -88,13 +88,14 @@ BOOLEAN IO_Dir_SetCurrentDirectory( const STR8 path )
 //	IO_Dir_GetCurrentDirectory - get current directory.
 //
 //	out	path: string, that will contain path of the current directory
+//	in	strLen: max lenght of string 'path'
 //
 //	return:	TRUE, if path was get, FALSE, if there was an error
 //	  
 //===================================================================
-BOOLEAN IO_Dir_GetCurrentDirectory( STR8 path )
+BOOLEAN IO_Dir_GetCurrentDirectory( CHAR8 *path, UINT16 strLen )
 {
-	if ( !getcwd( path, 512 ) )
+	if ( !getcwd( path, strLen ) )
 	{
 		fprintf(stderr, "Error getting dir %s: errno=%d\n",
 			path, errno);
@@ -114,7 +115,7 @@ BOOLEAN IO_Dir_GetCurrentDirectory( STR8 path )
 //	return:	TRUE, if directory in path exists, FALSE, if not
 //	  
 //===================================================================
-BOOLEAN IO_Dir_DirectoryExists( const STR8 path )
+BOOLEAN IO_Dir_DirectoryExists( const CHAR8 *path )
 {
 	struct stat file_stat;
 
@@ -138,7 +139,7 @@ BOOLEAN IO_Dir_DirectoryExists( const STR8 path )
 //			FALSE, if there was an error
 //	  
 //===================================================================
-BOOLEAN IO_Dir_MakeDirectory( const STR8 path )
+BOOLEAN IO_Dir_MakeDirectory( const CHAR8 *path )
 {
 	if ( mkdir(path, 0755) == -1 )
 	{
@@ -159,7 +160,7 @@ BOOLEAN IO_Dir_MakeDirectory( const STR8 path )
 //			FALSE, if there was an error
 //	  
 //===================================================================
-BOOLEAN IO_Dir_Delete( const STR8 path )
+BOOLEAN IO_Dir_Delete( const CHAR8 *path )
 {
 	return( rmdir(path) == 0 );
 }
@@ -174,7 +175,7 @@ BOOLEAN IO_Dir_Delete( const STR8 path )
 //			FALSE, if there was an error
 //	  
 //===================================================================
-BOOLEAN IO_File_Delete( const STR8 path )
+BOOLEAN IO_File_Delete( const CHAR8 *path )
 {
 	return( unlink(path) == 0 );
 }
@@ -211,7 +212,7 @@ UINT32 IO_File_GetSize( IOFILE file )
 //	return:	size of file as UINT32, or 0, when error occured
 //	  
 //===================================================================
-UINT32 IO_File_GetSize( const STR8 path )
+UINT32 IO_File_GetSize( const CHAR8 *path )
 {
 	struct stat file_stat;
 
@@ -240,7 +241,7 @@ UINT32 IO_File_GetSize( const STR8 path )
 //	return:	handler of file as IOFILE (INT32), or -1, when error occured
 //	  
 //===================================================================
-IOFILE IO_File_Open( const STR8 path, UINT32 flags )
+IOFILE IO_File_Open( const CHAR8 *path, UINT32 flags )
 {
 	UINT32	uiOpenFlags = 0;
 	IOFILE	hFile;
@@ -416,7 +417,7 @@ INT32 IO_File_GetPosition( IOFILE file )
 //			FALSE, if there was an error or no found files
 //	  
 //===================================================================
-BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize )
+BOOLEAN IO_File_GetFirst( const CHAR8 *pattern, CHAR8 *buffer, UINT16 bufferSize )
 {
 	memset( &globResult, GLOB_ERR | GLOB_NOSORT, sizeof(globResult) );
 
@@ -446,7 +447,7 @@ BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize )
 //			FALSE, if there was an error or no found files
 //	  
 //===================================================================
-BOOLEAN IO_File_GetNext( STR8 buffer, UINT16 bufferSize )
+BOOLEAN IO_File_GetNext( CHAR8 *buffer, UINT16 bufferSize )
 {
 	if ( globIndex >= globResult.gl_pathc )
 		return FALSE;

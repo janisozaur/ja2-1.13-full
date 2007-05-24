@@ -28,26 +28,26 @@ typedef INT32	IOFILE;
 #define IO_SEEK_FROM_END		0x02
 #define IO_SEEK_FROM_CURRENT	0x04
 
-BOOLEAN IO_IsDirectory(const STR8 path);
-BOOLEAN IO_IsRegularFile(const STR8 path);
+BOOLEAN IO_IsDirectory(const CHAR8 *path);
+BOOLEAN IO_IsRegularFile(const CHAR8 *path);
 
-BOOLEAN IO_File_Delete( const STR8 path );
+BOOLEAN IO_File_Delete( const CHAR8 *path );
 UINT32 	IO_File_GetSize( IOFILE file );
-UINT32 	IO_File_GetSize( const STR8 path );
-IOFILE 	IO_File_Open( const STR8 path, UINT32 flags );
+UINT32 	IO_File_GetSize( const CHAR8 *path );
+IOFILE 	IO_File_Open( const CHAR8 *path, UINT32 flags );
 BOOLEAN IO_File_Close( IOFILE file );
 INT32 	IO_File_Read( IOFILE file, PTR buffer, INT32 size );
 INT32 	IO_File_Write( IOFILE file, PTR buffer, INT32 size );
 BOOLEAN IO_File_Seek( IOFILE file, INT32 distance, UINT8 method );
 INT32 	IO_File_GetPosition( IOFILE file );
-BOOLEAN IO_File_GetFirst( const STR8 pattern, STR8 buffer, UINT16 bufferSize );
-BOOLEAN IO_File_GetNext( STR8 buffer, UINT16 bufferSize );
+BOOLEAN IO_File_GetFirst( const CHAR8 *pattern, CHAR8 *buffer, UINT16 bufferSize );
+BOOLEAN IO_File_GetNext( CHAR8 *buffer, UINT16 bufferSize );
 BOOLEAN IO_File_GetClose( void );
 
-BOOLEAN IO_Dir_SetCurrentDirectory( const STR8 path );
-BOOLEAN IO_Dir_GetCurrentDirectory( STR8 path );
-BOOLEAN IO_Dir_DirectoryExists( const STR8 path );
-BOOLEAN IO_Dir_MakeDirectory( const STR8 path );
-BOOLEAN IO_Dir_Delete( const STR8 path );
+BOOLEAN IO_Dir_SetCurrentDirectory( const CHAR8 *path );
+BOOLEAN IO_Dir_GetCurrentDirectory( CHAR8 *path, UINT16 strLen );
+BOOLEAN IO_Dir_DirectoryExists( const CHAR8 *path );
+BOOLEAN IO_Dir_MakeDirectory( const CHAR8 *path );
+BOOLEAN IO_Dir_Delete( const CHAR8 *path );
 
 #endif

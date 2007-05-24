@@ -216,8 +216,11 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 	customDP.Close();
 
-	if ( !VFS.AddContainerByIndex(0) )
-		printf("AddContainer failed!\n");
+//	if ( !VFS.AddContainerByIndex(0) )
+//		printf("AddContainer failed!\n");
+
+	if ( !VFS.AddReadDirectory("/home/lesh/ja2_113/Data/") )
+		printf("AddReadDirectory failed!\n");
 
 	//InitJA2SplashScreen();
 
@@ -457,9 +460,10 @@ void TestIO( void )
 //	printf("File size  : %d\n", IO_File_GetSize( file ) );
 //	printf("File closed: %d\n", IO_File_Close( file ) );
 
-	char	buffer[256];
-	const	STR8 pattern = "/home/lesh/ja2_113/*";
+	CHAR8	buffer[256];
+	const	CHAR8 *pattern = "*";
 
+//	IO_Dir_SetCurrentDirectory( "/home/lesh/");
 	IO_Dir_SetCurrentDirectory( "/home/lesh/ja2_113/" );
 	IO_File_GetFirst( pattern, buffer, 256 );
 	do

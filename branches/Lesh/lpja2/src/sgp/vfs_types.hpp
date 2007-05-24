@@ -23,8 +23,11 @@
 #include "platform.h"
 #include <map>
 #include <string>
+#include <vector>
 
 typedef std::string							vfsString;
 typedef std::map <vfsString, vfsString>	vfsFileMap;
+typedef std::vector <vfsString>				vfsStringArray;
+typedef std::vector <vfsString>::iterator	vfsStringArrayIterator;
 
 #endif

@@ -58,6 +58,7 @@ protected:
 
 	BOOLEAN		AddResourceFile( const vfsString& RealFileName );
 	BOOLEAN		AddDirectory   ( const vfsString& DirAName );
+	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
 
 public:
 	sgpVFS();

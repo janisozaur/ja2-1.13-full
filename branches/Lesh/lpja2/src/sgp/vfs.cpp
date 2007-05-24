@@ -82,6 +82,8 @@
 
 #include "vfs.hpp"
 #include "library_database.h"
+#include "io_layer.h"
+
 
 sgpVFS	VFS;
 
@@ -97,10 +99,8 @@ sgpVFS::~sgpVFS()
 
 BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 {
-	FILE	*file;
 	UINT32	uiResCounter, uiContCounter;
 	vfsString	strContainerDir, strResourceName;
-	vfsFileMap::iterator	FilesIterator;
 
 	// enumerate all container resources
 
@@ -120,6 +120,8 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 		}
 	}
 
+	FILE	*file;
+	vfsFileMap::iterator	FilesIterator;
 	if ( (file = fopen("add.log", "w+t")) == NULL )
 		return FALSE;
 	fprintf(file, "%d\n", ResourceMap.size() );
@@ -133,7 +135,7 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName )
 {
 	// FileAppName is an application name of resource, transformed from RealFileName. It is unified.
-	// $$$
+	// todo: $$$ - more work needed
 	vfsString FileAppName = RealFileName;
 
 	ResourceMap[ FileAppName ] = RealFileName;
@@ -144,7 +146,7 @@ BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName )
 BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName )
 {
 	// DirAppName is an application name of resource, transformed from ReadDirName. It is unified.
-	// $$$
+	// todo: $$$ - more work needed
 	vfsString DirAppName = RealDirName;
 
 	ResourceMap[ DirAppName ] = RealDirName;
@@ -152,8 +154,87 @@ BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName )
 	return TRUE;
 }
 
-BOOLEAN	AddReadDirectory( const STR8 pDirPath )
+BOOLEAN	sgpVFS::AddReadDirectory( const STR8 pDirPath )
 {
+	// Theory
+	// We need to enumerate all files and subdirectoies under pDirPath.
+	// So we'll use supplied path and set it as current directory.
+	// For our help we'll use vector dirToLook. There we will store
+	// all subdirectories, we need to search in.
+	//
+	// Each iteration last element is taken from dirToLook (and deleted
+	// from vector) and concatenated with pattern ("*"). Then search
+	// process goes and result is in foundFiles (again vector).
+	//
+	// For each element in foundFiles a check is performed: if element is
+	// a directory, then it is added to dirToLook and added to resource map.
+	// If element is an ordinary file, it is simply added to resource map.
+	//
+	// Initially dirToLook holds only one element "" (empty string).
+
+	STRING512		zCurDirSave;
+	vfsStringArray	dirToLook, foundFiles;
+	vfsString		dirToBeLooked;
+	vfsStringArrayIterator	foundFilesIterator;
+
+	IO_Dir_GetCurrentDirectory( zCurDirSave, 512 );
+	IO_Dir_SetCurrentDirectory( pDirPath );
+	dirToLook.push_back("");
+
+	while ( !dirToLook.empty() )
+	{
+		GetDirectoryEntries( dirToLook.back(), foundFiles );
+		dirToLook.pop_back();
+
+		for ( 	foundFilesIterator = foundFiles.begin();
+				foundFilesIterator != foundFiles.end();
+				foundFilesIterator++ )
+		{
+			if ( IO_IsDirectory( foundFilesIterator->c_str() ) )
+			{
+				dirToLook.push_back( *foundFilesIterator );
+				AddDirectory( *foundFilesIterator );
+			}
+			else
+			{
+				AddResourceFile( *foundFilesIterator );
+			}
+		}
+	}
+
+	IO_Dir_SetCurrentDirectory( zCurDirSave );
+
+	FILE	*file;
+	vfsFileMap::iterator	FilesIterator;
+	if ( (file = fopen("add1.log", "w+t")) == NULL )
+		return FALSE;
+	fprintf(file, "%d\n", ResourceMap.size() );
+	for ( FilesIterator = ResourceMap.begin(); FilesIterator != ResourceMap.end(); FilesIterator++ )
+		fprintf(file, "%s\n", FilesIterator->second.c_str() );
+	fclose( file );
+
+	return TRUE;
+}
+
+BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList )
+{
+	STRING512	entry;
+	vfsString	dirPattern = DirToLook + "*";
+
+	FileList.clear();
+
+	if ( IO_File_GetFirst( dirPattern.c_str(), entry, 512 ) )
+	{
+		do
+		{
+			// add filename in file list
+			// additionally, in case of directory, add an ending slash to it
+			FileList.push_back( entry );
+			if ( IO_IsDirectory( entry ) )
+				FileList.back() += "/";
+				
+		} while ( IO_File_GetNext( entry, 512 ) );
+	}
 
 	return TRUE;
 }
