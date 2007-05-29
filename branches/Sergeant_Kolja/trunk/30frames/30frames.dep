@@ -1,0 +1,9 @@
+# Microsoft Developer Studio erstellte Abhängigkeitsdatei, einbezogen von 30frames.mak
+
+.\30frames.cpp : \
+	".\StdAfx.h"\
+	
+
+.\StdAfx.cpp : \
+	".\StdAfx.h"\
+	
