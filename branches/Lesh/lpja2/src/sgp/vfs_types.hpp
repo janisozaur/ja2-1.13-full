@@ -26,8 +26,19 @@
 #include <vector>
 
 typedef std::string							vfsString;
-typedef std::map <vfsString, vfsString>	vfsFileMap;
 typedef std::vector <vfsString>				vfsStringArray;
 typedef std::vector <vfsString>::iterator	vfsStringArrayIterator;
+
+#define	LIB_REAL_FILE	0xFFFFFFFF
+
+typedef struct
+{
+	vfsString	RealName;
+	BOOLEAN		IsDirectory;
+	BOOLEAN		IsWriteable;
+	UINT32		LibraryID;
+} vfsEntry;
+
+typedef std::map <vfsString, vfsEntry>	vfsFileMap;
 
 #endif

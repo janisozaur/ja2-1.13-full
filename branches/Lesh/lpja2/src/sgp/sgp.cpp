@@ -216,11 +216,13 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 	customDP.Close();
 
-//	if ( !VFS.AddContainerByIndex(0) )
-//		printf("AddContainer failed!\n");
+	if ( !VFS.AddContainerByIndex(0) )
+		printf("AddContainer failed!\n");
 
 	if ( !VFS.AddReadDirectory("/home/lesh/ja2_113/Data/") )
 		printf("AddReadDirectory failed!\n");
+
+	VFS.DebugDumpResources( "map_dump.txt" );
 
 	//InitJA2SplashScreen();
 

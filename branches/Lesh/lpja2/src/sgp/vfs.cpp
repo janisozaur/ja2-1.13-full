@@ -120,15 +120,6 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 		}
 	}
 
-	FILE	*file;
-	vfsFileMap::iterator	FilesIterator;
-	if ( (file = fopen("add.log", "w+t")) == NULL )
-		return FALSE;
-	fprintf(file, "%d\n", ResourceMap.size() );
-	for ( FilesIterator = ResourceMap.begin(); FilesIterator != ResourceMap.end(); FilesIterator++ )
-		fprintf(file, "%s\n", FilesIterator->second.c_str() );
-	fclose( file );
-
 	return TRUE;
 }
 
@@ -136,9 +127,17 @@ BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName )
 {
 	// FileAppName is an application name of resource, transformed from RealFileName. It is unified.
 	// todo: $$$ - more work needed
-	vfsString FileAppName = RealFileName;
+	vfsString	FileAppName = RealFileName;
+	vfsEntry	Entry;
 
-	ResourceMap[ FileAppName ] = RealFileName;
+	ConvertToApplicationName( FileAppName );
+
+	Entry.RealName    = RealFileName;
+	Entry.IsDirectory = FALSE;
+	Entry.IsWriteable = FALSE;
+	Entry.LibraryID   = LIB_REAL_FILE;
+
+	ResourceMap[ FileAppName ] = Entry;
 
 	return TRUE;
 }
@@ -148,8 +147,16 @@ BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName )
 	// DirAppName is an application name of resource, transformed from ReadDirName. It is unified.
 	// todo: $$$ - more work needed
 	vfsString DirAppName = RealDirName;
+	vfsEntry	Entry;
 
-	ResourceMap[ DirAppName ] = RealDirName;
+	ConvertToApplicationName( DirAppName );
+
+	Entry.RealName    = RealDirName;
+	Entry.IsDirectory = TRUE;
+	Entry.IsWriteable = FALSE;
+	Entry.LibraryID   = LIB_REAL_FILE;
+
+	ResourceMap[ DirAppName ] = Entry;
 
 	return TRUE;
 }
@@ -204,15 +211,6 @@ BOOLEAN	sgpVFS::AddReadDirectory( const STR8 pDirPath )
 
 	IO_Dir_SetCurrentDirectory( zCurDirSave );
 
-	FILE	*file;
-	vfsFileMap::iterator	FilesIterator;
-	if ( (file = fopen("add1.log", "w+t")) == NULL )
-		return FALSE;
-	fprintf(file, "%d\n", ResourceMap.size() );
-	for ( FilesIterator = ResourceMap.begin(); FilesIterator != ResourceMap.end(); FilesIterator++ )
-		fprintf(file, "%s\n", FilesIterator->second.c_str() );
-	fclose( file );
-
 	return TRUE;
 }
 
@@ -237,4 +235,35 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 	}
 
 	return TRUE;
+}
+
+BOOLEAN	sgpVFS::ConvertToApplicationName( vfsString& FileName )
+{
+	UINT32	uiCharIndex;
+
+	for ( uiCharIndex = 0; uiCharIndex < FileName.length(); uiCharIndex++ )
+	{
+		if ( FileName[ uiCharIndex ] == '/' )
+			FileName[ uiCharIndex ] = '\\';
+		else
+			FileName[ uiCharIndex ] = toupper( FileName[ uiCharIndex ] );
+	}
+	return TRUE;
+}
+
+void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )
+{
+	FILE	*file;
+	vfsFileMap::iterator	FilesIterator;
+	if ( (file = fopen( pDumpFileName, "w+t" )) == NULL )
+		return;
+	fprintf(file, "Resources in map: %d\n", ResourceMap.size() );
+	for ( FilesIterator = ResourceMap.begin(); FilesIterator != ResourceMap.end(); FilesIterator++ )
+		fprintf(file, "%-32s ==>> %s, %c, %s, %s\n",
+			FilesIterator->first.c_str(),
+			FilesIterator->second.IsDirectory ? "Dir " : "File",
+			FilesIterator->second.IsWriteable ? 'W' : 'R',
+			FilesIterator->second.LibraryID == LIB_REAL_FILE ? "FS " : "SLF",
+			FilesIterator->second.RealName.c_str() );
+	fclose( file );
 }

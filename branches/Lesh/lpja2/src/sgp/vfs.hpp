@@ -59,6 +59,7 @@ protected:
 	BOOLEAN		AddResourceFile( const vfsString& RealFileName );
 	BOOLEAN		AddDirectory   ( const vfsString& DirAName );
 	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
+	BOOLEAN		ConvertToApplicationName( vfsString& FileName );
 
 public:
 	sgpVFS();
@@ -70,19 +71,21 @@ public:
 	UINT32		Open ( const STR8 pResourceName, UINT32 uiOpenFlags  );
 	void		Close( UINT32 uiFileHandle );
 
-	BOOLEAN		Read ( UINT32 uiFileHandle, void* pReadBuffer,  UINT32 uiSize );
-	BOOLEAN		Write( UINT32 uiFileHandle, void* pWriteBuffer, UINT32 uiSize );
+	BOOLEAN		Read ( UINT32 uiFileHandle, void *pReadBuffer,  UINT32 uiSize );
+	BOOLEAN		Write( UINT32 uiFileHandle, void *pWriteBuffer, UINT32 uiSize );
 
 	UINT32		Seek ( UINT32 uiFileHandle, UINT32 uiPosition, UINT32 uiMethod );
 	UINT32		Tell ( UINT32 uiFileHandle                                     );
 
 	UINT32		GetSize( UINT32 uiFileHandle );
 	BOOLEAN		IsEOF  ( UINT32 uiFileHandle );
-	BOOLEAN		IsFileExist( const STR* pResourceName   );
-	BOOLEAN		IsDirExist ( const STR* pDirectoryName  );
+	BOOLEAN		IsFileExist( const CHAR8 *pResourceName   );
+	BOOLEAN		IsDirExist ( const CHAR8 *pDirectoryName  );
 
 	BOOLEAN		AddContainerByIndex( UINT32 uiContainerID );
 	BOOLEAN		AddReadDirectory( const STR8 pDirPath );
+
+	void		DebugDumpResources( const CHAR8 *pDumpFileName );
 };
 
 extern sgpVFS	VFS;
