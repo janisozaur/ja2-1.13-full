@@ -5,9 +5,8 @@ float ran1(long *idum);
 
 
 
-
-
 /* gaussian normal distributed random numbers */
+
 float gasdev(long *idum)
   {
   static int iset=0;
