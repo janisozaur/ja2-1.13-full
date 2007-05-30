@@ -56,10 +56,10 @@ private:
 protected:
 	vfsFileMap ResourceMap;
 
-	BOOLEAN		AddResourceFile( const vfsString& RealFileName );
-	BOOLEAN		AddDirectory   ( const vfsString& DirAName );
+	BOOLEAN		AddResourceFile( const vfsString& RealFileName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
+	BOOLEAN		AddDirectory   ( const vfsString& DirAName,     const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
 	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
-	BOOLEAN		ConvertToApplicationName( vfsString& FileName );
+	vfsString	ConvertToApplicationName( const vfsString& FileName );
 
 public:
 	sgpVFS();
@@ -82,8 +82,8 @@ public:
 	BOOLEAN		IsFileExist( const CHAR8 *pResourceName   );
 	BOOLEAN		IsDirExist ( const CHAR8 *pDirectoryName  );
 
-	BOOLEAN		AddContainerByIndex( UINT32 uiContainerID );
-	BOOLEAN		AddReadDirectory( const STR8 pDirPath );
+	BOOLEAN		AddContainerByIndex ( UINT32 uiContainerID );
+	BOOLEAN		AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable = FALSE );
 
 	void		DebugDumpResources( const CHAR8 *pDumpFileName );
 };

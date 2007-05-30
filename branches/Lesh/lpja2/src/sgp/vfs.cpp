@@ -111,57 +111,57 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 	{
 		// print directory first, and it's contents then
 		strContainerDir = gFileDataBase.pLibraries[ uiContCounter ].sLibraryPath;
-		AddDirectory( strContainerDir );
+		AddDirectory( strContainerDir, "", uiContCounter, FALSE );
 
 		for ( uiResCounter = 0; uiResCounter < gFileDataBase.pLibraries[ uiContCounter ].usNumberOfEntries; uiResCounter++ )
 		{
 			strResourceName = strContainerDir + gFileDataBase.pLibraries[ uiContCounter ].pFileHeader[uiResCounter].pFileName;
-			AddResourceFile( strResourceName );
+			AddResourceFile( strResourceName, "", uiContCounter, FALSE );
 		}
 	}
 
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName )
+BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable )
 {
 	// FileAppName is an application name of resource, transformed from RealFileName. It is unified.
 	// todo: $$$ - more work needed
-	vfsString	FileAppName = RealFileName;
+	vfsString	FileAppName;
 	vfsEntry	Entry;
 
-	ConvertToApplicationName( FileAppName );
+	FileAppName = ConvertToApplicationName( RealFileName );
 
-	Entry.RealName    = RealFileName;
+	Entry.RealName    = RootDir + RealFileName;
 	Entry.IsDirectory = FALSE;
-	Entry.IsWriteable = FALSE;
-	Entry.LibraryID   = LIB_REAL_FILE;
+	Entry.IsWriteable = Writeable;
+	Entry.LibraryID   = LibraryID;
 
 	ResourceMap[ FileAppName ] = Entry;
 
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName )
+BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable )
 {
 	// DirAppName is an application name of resource, transformed from ReadDirName. It is unified.
 	// todo: $$$ - more work needed
-	vfsString DirAppName = RealDirName;
+	vfsString DirAppName;
 	vfsEntry	Entry;
 
-	ConvertToApplicationName( DirAppName );
+	DirAppName = ConvertToApplicationName( RealDirName );
 
-	Entry.RealName    = RealDirName;
+	Entry.RealName    = RootDir + RealDirName;
 	Entry.IsDirectory = TRUE;
-	Entry.IsWriteable = FALSE;
-	Entry.LibraryID   = LIB_REAL_FILE;
+	Entry.IsWriteable = Writeable;
+	Entry.LibraryID   = LibraryID;
 
 	ResourceMap[ DirAppName ] = Entry;
 
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::AddReadDirectory( const STR8 pDirPath )
+BOOLEAN	sgpVFS::AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable )
 {
 	// Theory
 	// We need to enumerate all files and subdirectoies under pDirPath.
@@ -193,18 +193,16 @@ BOOLEAN	sgpVFS::AddReadDirectory( const STR8 pDirPath )
 		GetDirectoryEntries( dirToLook.back(), foundFiles );
 		dirToLook.pop_back();
 
-		for ( 	foundFilesIterator = foundFiles.begin();
-				foundFilesIterator != foundFiles.end();
-				foundFilesIterator++ )
+		for ( foundFilesIterator = foundFiles.begin(); foundFilesIterator != foundFiles.end(); foundFilesIterator++ )
 		{
 			if ( IO_IsDirectory( foundFilesIterator->c_str() ) )
 			{
 				dirToLook.push_back( *foundFilesIterator );
-				AddDirectory( *foundFilesIterator );
+				AddDirectory( *foundFilesIterator, pDirPath, LIB_REAL_FILE, fWriteable );
 			}
 			else
 			{
-				AddResourceFile( *foundFilesIterator );
+				AddResourceFile( *foundFilesIterator, pDirPath, LIB_REAL_FILE, fWriteable );
 			}
 		}
 	}
@@ -237,18 +235,19 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::ConvertToApplicationName( vfsString& FileName )
+vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName )
 {
-	UINT32	uiCharIndex;
+	UINT32		uiCharIndex;
+	vfsString	ConvertedName;
 
 	for ( uiCharIndex = 0; uiCharIndex < FileName.length(); uiCharIndex++ )
 	{
 		if ( FileName[ uiCharIndex ] == '/' )
-			FileName[ uiCharIndex ] = '\\';
+			ConvertedName += '\\';
 		else
-			FileName[ uiCharIndex ] = toupper( FileName[ uiCharIndex ] );
+			ConvertedName += toupper( FileName[ uiCharIndex ] );
 	}
-	return TRUE;
+	return ConvertedName;
 }
 
 void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )

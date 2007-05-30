@@ -219,8 +219,8 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	if ( !VFS.AddContainerByIndex(0) )
 		printf("AddContainer failed!\n");
 
-	if ( !VFS.AddReadDirectory("/home/lesh/ja2_113/Data/") )
-		printf("AddReadDirectory failed!\n");
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data/") )
+		printf("AddDirectoryContents failed!\n");
 
 	VFS.DebugDumpResources( "map_dump.txt" );
 
@@ -457,20 +457,4 @@ void TestIO( void )
 //	const STR8	name = "/home/lesh/ja2_113/test1.txt";
 //	HWFILE	file;
 
-//	file = IO_File_Open( name, IO_ACCESS_READ );
-//	printf("File opened: %d\n", file );
-//	printf("File size  : %d\n", IO_File_GetSize( file ) );
-//	printf("File closed: %d\n", IO_File_Close( file ) );
-
-	CHAR8	buffer[256];
-	const	CHAR8 *pattern = "*";
-
-//	IO_Dir_SetCurrentDirectory( "/home/lesh/");
-	IO_Dir_SetCurrentDirectory( "/home/lesh/ja2_113/" );
-	IO_File_GetFirst( pattern, buffer, 256 );
-	do
-	{
-		printf("%s\n", buffer);
-	} while ( IO_File_GetNext( buffer, 256 ) );
-	IO_File_GetClose();
 }
