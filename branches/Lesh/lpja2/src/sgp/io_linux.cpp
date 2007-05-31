@@ -189,7 +189,7 @@ BOOLEAN IO_File_Delete( const CHAR8 *path )
 //	return:	size of file as UINT32, or 0, when error occured
 //	  
 //===================================================================
-UINT32 IO_File_GetSize( IOFILE file )
+INT32 IO_File_GetSize( IOFILE file )
 {
 	struct stat file_stat;
 
@@ -212,7 +212,7 @@ UINT32 IO_File_GetSize( IOFILE file )
 //	return:	size of file as UINT32, or 0, when error occured
 //	  
 //===================================================================
-UINT32 IO_File_GetSize( const CHAR8 *path )
+INT32 IO_File_GetSize( const CHAR8 *path )
 {
 	struct stat file_stat;
 

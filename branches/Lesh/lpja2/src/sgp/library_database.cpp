@@ -9,7 +9,9 @@
 	#include "wcheck.h"
 	#include "debug.h"
 	#include "video.h"
-	#include	"game_settings.h"
+	#include "game_settings.h"
+	#include "io_layer.h"
+	
 #endif
 
 //NUMBER_OF_LIBRARIES
@@ -223,6 +225,7 @@ BOOLEAN ShutDownFileDatabase( )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg( String("ShutDownFileDatabase( ):  ERROR:  real file id still exists, wasnt closed") );
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -240,6 +243,12 @@ BOOLEAN ShutDownFileDatabase( )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+		if ( !IO_File_Close( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle ) )
+		{
+			fprintf(stderr, "Error closing library %d: errno=%d\n",
+				gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle, errno);
+		}
 	}
 
 	//Free up the memory used for the real files array for the opened files
@@ -262,6 +271,7 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 
 	BACKSLASH(pLibraryName);
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -295,8 +305,8 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
-
-	return( fRetVal );
+*/
+	return( IO_IsRegularFile( pLibraryName ) );
 }
 
 
@@ -314,7 +324,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	CHAR8		zTempPath[ SGPFILENAME_LEN ];
 
 	BACKSLASH(pLibraryName);
-
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -361,7 +371,16 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
 
+	hFile = IO_File_Open( pLibraryName, IO_ACCESS_READ );
+	if ( hFile == -1 )
+	{
+		fprintf(stderr, "Error opening library %s: errno=%d\n", pLibraryName, errno);
+		return( FALSE );
+	}
+
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -377,6 +396,9 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	uiNumBytesRead = IO_File_Read( hFile, &LibFileHeader, sizeof( LIBHEADER ) );
 
 	if( uiNumBytesRead != sizeof( LIBHEADER ) )
 	{
@@ -386,6 +408,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 		return( FALSE );
 	}
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -405,12 +428,21 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	if ( !IO_File_Seek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), IO_SEEK_FROM_END ) )
+	{
+		fprintf(stderr, "Error seeking library %d: errno=%d\n",
+			hFile, errno);
+		return(FALSE);
+	}
 
 	//loop through the library and determine the number of files that are FILE_OK
 	//ie.  so we dont load the old or deleted files
 	usNumEntries = 0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -433,6 +465,16 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+		uiNumBytesRead = IO_File_Read( hFile, &DirEntry, sizeof( DIRENTRY ) );
+		if( uiNumBytesRead != sizeof( DIRENTRY ) )
+		{
+			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
+				hFile, errno);
+			//Error Reading the file database header.
+			return( FALSE );
+		}
 
 		if( DirEntry.ubState == FILE_OK )
 			usNumEntries++;
@@ -446,6 +488,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 		pLibHeader->uiTotalMemoryAllocatedForLibrary = sizeof( FileHeaderStruct ) * usNumEntries;
 	#endif
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -465,11 +508,20 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	if ( !IO_File_Seek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), IO_SEEK_FROM_END ) )
+	{
+		fprintf(stderr, "Error seeking library at 2nd time %d: errno=%d\n",
+			hFile, errno);
+		return(FALSE);
+	}
 
 	//loop through all the entries
 	uiCount=0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -492,6 +544,16 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+		uiNumBytesRead = IO_File_Read( hFile, &DirEntry, sizeof( DIRENTRY ) );
+		if( uiNumBytesRead != sizeof( DIRENTRY ) )
+		{
+			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
+				hFile, errno);
+			//Error Reading the file database header.
+			return( FALSE );
+		}
 
 		if( DirEntry.ubState == FILE_OK )
 		{
@@ -592,10 +654,11 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 
 	//get the offset into the library, the length and current position of the file pointer.
 	uiOffsetInLibrary = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset;
-	uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
-	hLibraryFile = gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle;
-	uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
+	uiLength          = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+	hLibraryFile      = gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle;
+	uiCurPos          = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -615,6 +678,14 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	if ( !IO_File_Seek( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), IO_SEEK_FROM_START ) )
+	{
+		fprintf(stderr, "Error seeking library (load) %d: errno=%d\n",
+			hLibraryFile, errno);
+		return(FALSE);
+	}
 
 	//if we are trying to read more data then the size of the file, return an error
 	if( uiBytesToRead + uiCurPos > uiLength )
@@ -623,6 +694,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 		return( FALSE );
 	}
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -638,6 +710,9 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	uiNumBytesRead = IO_File_Read( hLibraryFile, pData, uiBytesToRead );
 
 	if( uiBytesToRead != uiNumBytesRead )
 	{
@@ -904,6 +979,7 @@ HWFILE OpenFileFromLibrary( STR pName )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -936,7 +1012,16 @@ HWFILE OpenFileFromLibrary( STR pName )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
 
+			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = IO_File_GetPosition( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
+
+			if ( (uiNewFilePosition = IO_File_GetSize( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle )) == -1 )
+			{
+				fprintf(stderr, "Error getting size of library %d: errno=%d\n",
+					gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
+				return 0;
+			}
 		}
 		else
 		{
@@ -1056,6 +1141,7 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1070,6 +1156,9 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+			IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, IO_SEEK_FROM_START );
 
 			//decrement the number of files that are open
 			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen--;
@@ -1201,6 +1290,7 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 	//set that the library isnt open
 	gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen = FALSE;
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1219,7 +1309,13 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
 
+	if ( !IO_File_Close( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle ) )
+	{
+		fprintf(stderr, "Error closing library %d: errno=%d\n",
+			gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
+	}
 
 
 	return( TRUE );
@@ -1291,6 +1387,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1309,6 +1406,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, IO_SEEK_FROM_START );
+	uiNumBytesRead = IO_File_Read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ));
 
 	if( uiNumBytesRead != sizeof( LIBHEADER ) )
 	{
@@ -1332,6 +1433,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	iFilePos = -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) );
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1351,6 +1453,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+
+	IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, IO_SEEK_FROM_END );
+	uiNumBytesRead = IO_File_Read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ));
 
 	if( uiNumBytesRead != ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ) )
 	{

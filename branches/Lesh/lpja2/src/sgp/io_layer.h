@@ -32,8 +32,8 @@ BOOLEAN IO_IsDirectory(const CHAR8 *path);
 BOOLEAN IO_IsRegularFile(const CHAR8 *path);
 
 BOOLEAN IO_File_Delete( const CHAR8 *path );
-UINT32 	IO_File_GetSize( IOFILE file );
-UINT32 	IO_File_GetSize( const CHAR8 *path );
+INT32 	IO_File_GetSize( IOFILE file );
+INT32 	IO_File_GetSize( const CHAR8 *path );
 IOFILE 	IO_File_Open( const CHAR8 *path, UINT32 flags );
 BOOLEAN IO_File_Close( IOFILE file );
 INT32 	IO_File_Read( IOFILE file, PTR buffer, INT32 size );
