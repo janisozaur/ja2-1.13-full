@@ -4486,7 +4486,7 @@ void MoveBullet( INT32 iBullet )
 
 												// Moved here to keep ABC >0 as long as possible
 												RemoveBullet( iBullet );
-												ReduceAttackBusyCount( );
+												// ReduceAttackBusyCount( );
 												return;
 											}
 											else if ( iRemainingImpact <= 0 )

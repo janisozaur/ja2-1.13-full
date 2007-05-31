@@ -184,6 +184,8 @@ void RemoveBullet( INT32 iBullet )
 		OutputDebugString( String( "Deleting a bullet for %d.\n", gBullets[ iBullet].ubFirerID ) );
 		ReduceAttackBusyCount( );
 
+		// if ( gBullets[ iBullet ].usFlags & ( BULLET_FLAG_KNIFE ) )
+		// {
 		// Delete ani tile
 		if ( gBullets[ iBullet ].pAniTile != NULL )
 		{
@@ -191,11 +193,16 @@ void RemoveBullet( INT32 iBullet )
 			gBullets[ iBullet ].pAniTile = NULL;
 		}
 
+		// Delete shadow
+		// if ( gBullets[ iBullet ].usFlags & ( BULLET_FLAG_KNIFE ) )
+		// {
 		if ( gBullets[ iBullet ].pShadowAniTile != NULL )
 		{
 			DeleteAniTile( gBullets[ iBullet ].pShadowAniTile );
 			gBullets[ iBullet ].pShadowAniTile = NULL;
 		}
+//	}
+//		}
 	}
 	else
 	{

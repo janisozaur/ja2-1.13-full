@@ -971,7 +971,11 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 				else
 				{
 					pSoldier->usActionData = FindClosestClimbPoint(pSoldier, fUp );
-					if ( pSoldier->usActionData != NOWHERE )
+					// Added the check here because sniper militia who are locked inside of a building without keys
+					// will still have a >100% chance to want to climb, which means an infinite loop.  In fact, any
+					// time a move is desired, there is also probably be a need to check for a path.
+					if ( pSoldier->usActionData != NOWHERE &&
+						LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, 0 ))
 					{
 						return( AI_ACTION_MOVE_TO_CLIMB  );
 					}

@@ -496,7 +496,7 @@ UINT32		gRenderFlags=0;
  *  any questions? joker
  */
 SGPRect		gClippingRect;//			= { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - INTERFACE_HEIGHT};
-SGPRect		gOldClipRect;
+SGPRect		gOldClipRect = { 0, 0, 1024, 768 }; // 0verhaul:  This MUST mirror the gDirtyClipRect init, otherwise funkiness with video overlays will happen
 INT16		gsRenderCenterX;
 INT16		gsRenderCenterY;
 INT16		gsRenderWorldOffsetX	= 0;  //lal was -1 : bugfix for merc screen position in tactical on high resolution

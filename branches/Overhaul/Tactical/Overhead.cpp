@@ -100,6 +100,8 @@
 #include "arms dealer init.h"
 #endif
 
+extern void HandleBestSightingPositionInRealtime();
+
 extern UINT8	gubAICounter;
 
 
@@ -345,8 +347,6 @@ UINT32	guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN	gfKillingGuysForLosingBattle = FALSE;
 
 // The last soldier to do something
-SOLDIERTYPE *gLastActingSoldier = NULL;
-
 INT32 GetFreeMercSlot(void)
 {
 	UINT32 uiCount;
@@ -1512,6 +1512,9 @@ BOOLEAN ExecuteOverhead( )
 										{
 											// ATE: Added this to fcalilitate the fact
 											// that our final dest may now have people on it....
+											// 0verhaul:  But what if this is turn-based?  The soldier may be waiting forever for
+											// the other one to leave the position, but since it's turn-based he never will.
+											// Is that an issue here?
 											if ( FindBestPath( pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) != 0 )
 											{
 												INT16 sNewGridNo;
@@ -1525,6 +1528,8 @@ BOOLEAN ExecuteOverhead( )
 											if ( !EVENT_InternalGetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
 											{
 												// ATE: To do here.... we could not get path, so we have to stop
+												// 0verhaul:  May also need to clear the action type so that the soldier will know
+												// to re-think another move instead of waiting for nothing to finish happening.
 												SoldierGotoStationaryStance( pSoldier );
 												continue;
 											}
@@ -2758,16 +2763,6 @@ void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fF
 {
 	SOLDIERTYPE             *pSoldier, *pOldSoldier;
 
-	// Make sure at least some soldier is in the last acting slot
-	if (gusSelectedSoldier == NOBODY)
-	{
-		gLastActingSoldier = NULL;
-	}
-	else
-	{
-		gLastActingSoldier = MercPtrs[ gusSelectedSoldier ];
-	}
-
 	// ARM: can't call SelectSoldier() in mapscreen, that will initialize interface panels!!!
 	// ATE: Adjusted conditions a bit ( sometimes were not getting selected )
 	if ( guiCurrentScreen == LAPTOP_SCREEN || guiCurrentScreen == MAP_SCREEN )
@@ -2808,9 +2803,6 @@ void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fF
 		}
 		return;
 	}
-
-	// The new soldier is approved, so update the pointer.
-	gLastActingSoldier = pSoldier;
 
 	if ( pSoldier->ubID == gusSelectedSoldier )
 	{
@@ -6297,7 +6289,9 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		// Kaiden: More UB Reveal All Items after combat code.
 		//When all the enemy gets killed, reveal the items they dropped
-		RevealAllDroppedEnemyItems();
+		//But only if the option is turned ON.
+		if(gGameExternalOptions.gfRevealItems)
+			RevealAllDroppedEnemyItems();
 
 		return( TRUE );
 	}
@@ -7089,16 +7083,17 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleSuppressionFire: setup change stance"));
 				// This person is going to change stance
 
-				OutputDebugString( String( "Stance at suppression is %s\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr ) );
-
 				// This person will be busy while they crouch or go prone
 				if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting suppression, on %d", pSoldier->ubID ) );
+					OutputDebugString( String("!!!!!!! Starting suppression, on %d\n", pSoldier->ubID ) );
+					//gTacticalStatus.ubAttackBusyCount++;
 
 					// make sure supressor ID is the same!
 					pSoldier->ubSuppressorID = ubCausedAttacker;
 				}
+
 				// AI people will have to have their actions cancelled
 				if (!(pSoldier->uiStatusFlags & SOLDIER_PC))				
 				{
@@ -7116,12 +7111,12 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 				// ATE: Turn off non-interrupt flag ( this NEEDS to be done! )
 				pSoldier->fInNonintAnim = FALSE;
 				pSoldier->fRTInNonintAnim = FALSE;
+				gTacticalStatus.ubAttackBusyCount++;
+				OutputDebugString( String( "Attack busy %d due to suppression fire on %d\n", gTacticalStatus.ubAttackBusyCount, pSoldier->ubID ));
 
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleSuppressionFire: change stance"));
 				ChangeSoldierStance( pSoldier, ubNewStance );
 
-				gTacticalStatus.ubAttackBusyCount++;
-				OutputDebugString( String( "Attack busy %d due to suppression fire on %d\n", gTacticalStatus.ubAttackBusyCount, pSoldier->ubID ));
 				pSoldier->fChangingStanceDueToSuppression = TRUE;
 				pSoldier->fDontChargeAPsForStanceChange = TRUE;
 			}
@@ -7309,6 +7304,42 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 	UINT32						cnt;
 	UINT8						ubID;
 
+#if 0
+// 0verhaul:  None of this is necessary anymore with the new attack busy system
+	if (ubID == NOBODY)
+	{
+		pSoldier = NULL;
+		pTarget = NULL;
+	}
+	else
+	{
+		pSoldier = MercPtrs[ ubID ];
+		if ( ubTargetID != NOBODY)
+		{
+			pTarget = MercPtrs[ ubTargetID ];
+		}
+		else
+		{
+			pTarget = NULL;
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(">>Target ptr is null!" ) );
+		}
+	}
+
+	if (fCalledByAttacker)
+	{
+		if (pSoldier && Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
+		{
+			if (pSoldier->bBulletsLeft > 0)
+			{
+				return( pTarget );
+			}
+		}
+	}
+#endif
+
+//	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
+//	{
+
 	if ( gTacticalStatus.ubAttackBusyCount == 0 )
 	{
 		// ATE: We have a problem here... if testversion, report error......
@@ -7341,9 +7372,31 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 	// started this chain of events.  So we'll grab that one instead of relying on the correct one passed in.
 	// This should help with collapses and other 'attacks' with
 	// no attackers that happened due to actions from other soldiers or turns, shots against dead bodies, etc.
-	pSoldier = 	gLastActingSoldier;
+
+	pSoldier = NULL;
+
+	if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
+	{
+		pSoldier = MercPtrs[ gusSelectedSoldier ];
+	}
+	else
+	{
+		for (cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
+			cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID;
+			cnt++)
+		{
+			if (MercPtrs[ cnt ] &&
+				MercPtrs[ cnt ]->uiStatusFlags & SOLDIER_UNDERAICONTROL)
+			{
+				pSoldier = MercPtrs[ cnt ];
+				break;
+			}
+		}
+	}
+
 	ubID = pSoldier->ubID;
 
+	OutputDebugString( String( "Ending action for %d\n", ubID ) );
 	// Get the intended target info
 	pTarget = NULL;
 	if (pSoldier->ubTargetID != NOBODY)
@@ -7383,6 +7436,16 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 	{
 		return( NULL );
 	}
+
+#if 0
+// 0verhaul:  This is moved to the end loop where everybody's state is reset for the next action
+	if (pTarget)
+	{
+		// reset # of shotgun pellets hit by
+		pTarget->bNumPelletsHitBy = 0;
+		// reset flag for making "ow" sound on being shot
+	}
+#endif
 
 	if (pSoldier)
 	{
@@ -7500,6 +7563,11 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 
 		if ( !fEnterCombat )
 		{
+			// It's still possible that something happened
+			if (!(gTacticalStatus.uiFlags & INCOMBAT) )
+			{
+				HandleBestSightingPositionInRealtime();
+			}
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Not to enter combat from this attack" );
 		}
 
@@ -7634,6 +7702,18 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 
 SOLDIERTYPE * ReduceAttackBusyCount( )
 {
+#if 0
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyCount") );	
+	if ( ubID == NOBODY )
+	{
+		return( InternalReduceAttackBusyCount( ubID, fCalledByAttacker, NOBODY ) );
+	}
+	else
+	{
+		return( InternalReduceAttackBusyCount( ubID, fCalledByAttacker, MercPtrs[ ubID ]->ubTargetID ) );
+	}
+#endif
+// 0verhaul:  This is now a simple subroutine.
 	return InternalReduceAttackBusyCount( );
 }
 
@@ -7648,6 +7728,28 @@ SOLDIERTYPE * FreeUpAttacker( )
 	gTacticalStatus.ubAttackBusyCount++;
 	return( ReduceAttackBusyCount( ) );
 }
+
+#if 0
+// 0verhaul:  These routines are declared obsolete.  Call ReduceAttackBusyCount instead.
+SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID )
+{
+	// Strange as this may seem, this function returns a pointer to
+	// the *target* in case the target has changed sides as a result
+	// of being attacked
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttackerGivenTarget") );	
+	return( InternalReduceAttackBusyCount( ubID, TRUE, ubTargetID ) );
+}
+
+SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID )
+{
+	// Strange as this may seem, this function returns a pointer to
+	// the *target* in case the target has changed sides as a result
+	// of being attacked
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReduceAttackBusyGivenTarget") );	
+	return( InternalReduceAttackBusyCount( ubID, FALSE, ubTargetID ) );
+}
+#endif
+
 
 void StopMercAnimation( BOOLEAN fStop )
 {

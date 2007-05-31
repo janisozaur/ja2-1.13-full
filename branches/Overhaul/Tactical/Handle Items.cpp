@@ -227,6 +227,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
+//  if ( pTargetSoldier )
+//  {
+//    pTargetSoldier->bBeingAttackedCount = 0;
+//  }
+
+
 	// Check our soldier's life for unconscious!
 	if ( pSoldier->bLife < OKLIFE )
 	{
@@ -356,6 +362,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 
 		// Get gridno - either soldier's position or the gridno
+		// ??? Why isn't the target's gridno the same as the gridno of the soldier on that grid?
+		// Real example:  Soldier fires at 16701.  It finds a soldier there.  That soldier's sGridNo is 16547.  So why
+		// isn't this soldier at grid 16547?
 		if ( pTargetSoldier != NULL )
 		{
 			sTargetGridNo	= pTargetSoldier->sGridNo;

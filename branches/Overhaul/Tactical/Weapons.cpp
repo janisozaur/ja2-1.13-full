@@ -2102,6 +2102,9 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				 StatChange( MercPtrs[ pTargetSoldier->ubID ], STRAMT, 5, FALSE);
 				}
 			}
+			// 0verhaul:  Another case that is handled by the animation transition system.
+			// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - missed in knife attack") );
+			// FreeUpAttacker( (UINT8) pSoldier->ubID );
 		}
 	
 		if ( PTR_OURTEAM && pSoldier->ubTargetID != NOBODY)
@@ -2141,6 +2144,12 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			StatChange( pSoldier, STRAMT, usExpGain/3, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );				
 		}
 	}
+	// 0verhaul:  This case is also handled by the animation translations
+	// else
+	// {
+	//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - missed in knife attack") );
+	//	FreeUpAttacker( (UINT8) pSoldier->ubID );
+	// }
 
 	// possibly reduce monster smell
 	if ( pSoldier->bMonsterSmell > 0 && Random( 5 ) == 0 )
@@ -2381,6 +2390,12 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					StatChange( pSoldier, AGILAMT, 1, FROM_FAILURE );
 				}
 			}
+
+			// 0verhaul:  Also handled in the animation transition
+			// #ifdef JA2BETAVERSION
+			//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - steal") );
+			// #endif
+			// FreeUpAttacker( (UINT8) pSoldier->ubID );
 		}
 
 		// -----------------------------------
@@ -2466,6 +2481,12 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 				SWeaponHit.ubSpecial				= FIRE_WEAPON_NO_SPECIAL;
 				AddGameEvent( S_WEAPONHIT, (UINT16) 20, &SWeaponHit );				
 			}
+			// 0verhaul:  And this too
+			// else
+			// {
+			//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - missed in HTH attack") );
+			//	FreeUpAttacker( (UINT8) pSoldier->ubID );
+			// }
 		}
 	}
 
@@ -2776,6 +2797,9 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 			if ( fFreeupAttacker )
 			{
 				RemoveBullet( iBullet );
+				// 0verhaul:  No longer necessary
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo") );
+				// FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 		}
 
@@ -2810,6 +2834,9 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 			if ( fFreeupAttacker )
 			{
 				RemoveBullet( iBullet );
+				// 0verhaul:  No longer necessary.
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo") );
+				// FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 		}
 
@@ -2844,6 +2871,9 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 			if ( fFreeupAttacker )
 			{
 				RemoveBullet( iBullet );
+				// 0verhaul:  No longer necessary.
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo") );
+				// FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 		}
 
@@ -2903,6 +2933,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
+		// Reduce attacker count!
 		//TODO: Madd --- I don't think this code will ever get called for the HE ammo -- the EXPLOSIVE_GUN check filters out regular guns 
 		// marke test mag ammo type: pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType
                 // 2cond 'or' added
@@ -2931,23 +2962,29 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 		{
 			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), TANK_SHELL, pTargetSoldier->bLevel );
 		}
+
+		// 0verhaul:  No longer necessary
+		// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of LAW fire") );
+		// FreeUpAttacker( ubAttackerID );
 		return;
 	}
 
 	DoSpecialEffectAmmoMiss( ubAttackerID, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, 0 );
 
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
-  // ATE: This is 'cause of that darn smoke effect that could potnetially kill
-  // the poor bastard .. so check
-  if ( !pTargetSoldier->fDoingExternalDeath )
-  {
-	  EVENT_SoldierGotHit( pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation, 0, NOWHERE );
-  }
-  else
-  {
-    // Buddy had died from additional dammage - free up attacker here...
-		OutputDebugString( "Special effect killed before bullet impact\n" );
-  }
+	// ATE: This is 'cause of that darn smoke effect that could potnetially kill
+	// the poor bastard .. so check
+	if ( !pTargetSoldier->fDoingExternalDeath )
+	{
+		EVENT_SoldierGotHit( pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation, 0, NOWHERE );
+	}
+	// else
+	// {
+	//	Buddy had died from additional dammage - free up attacker here...
+	//	ReduceAttackBusyCount( pTargetSoldier->ubAttackerID, FALSE );
+	//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Special effect killed before bullet impact, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+	//	OutputDebugString( "Special effect killed before bullet impact\n" );
+	// }
 }
 
 
@@ -3023,6 +3060,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 		{
 			// Reduce attacker count!
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of LAW fire") );
+			// FreeUpAttacker( ubAttackerID );
 			if ( Item[usWeaponIndex].singleshotrocketlauncher )
 			{
 				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, C1, (INT8)( sZPos >= WALL_HEIGHT ) );
@@ -3050,9 +3088,11 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 		if ( Item[usWeaponIndex].cannon )
 		{
 			// Reduce attacker count!
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of TANK fire") );
+			//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of TANK fire") );
+			//FreeUpAttacker( ubAttackerID );
 
 			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, TANK_SHELL, (INT8)( sZPos >= WALL_HEIGHT ) );
+			//FreeUpAttacker( (UINT8) ubAttackerID );
 
 			// Moved here to keep ABC >0 as long as possible
 			RemoveBullet( iBullet );
@@ -3095,9 +3135,11 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 
 		case MONSTERCLASS:
 
-      DoSpecialEffectAmmoMiss( ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, iBullet );
+			DoSpecialEffectAmmoMiss( ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, iBullet );
 
 			RemoveBullet( iBullet );
+			// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - monster attack hit structure") );
+			// FreeUpAttacker( (UINT8) ubAttackerID );
 
 			//PlayJA2Sample( SPIT_RICOCHET , RATE_11025, uiMissVolume, 1, SoundDir( sGridNo ) );			
 			break;
@@ -3127,6 +3169,8 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 				}
 
 				RemoveBullet( iBullet );
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - knife attack hit structure") );
+				// FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 	}
 	
@@ -3153,6 +3197,8 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			if ( fStopped )
 			{
 				RemoveBullet( iBullet );
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - bullet hit same structure twice") );
+				// FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 		}
 		else
@@ -4787,6 +4833,9 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 		}
 
 	}
+
+	// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - bullet missed") );
+	// FreeUpAttacker( ubAttackerID );
 }
 
 UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime, UINT8 ubMode )
@@ -5689,8 +5738,10 @@ UINT8 GetMagSize( OBJECTTYPE *pObj )
 }
 BOOLEAN WeaponReady(SOLDIERTYPE * pSoldier)
 {
+#ifdef ROBOT_ALWAYS_READY
 	if ( AM_A_ROBOT( pSoldier) )
 		return TRUE;
+#endif
 	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY )
 		return TRUE;
 	else

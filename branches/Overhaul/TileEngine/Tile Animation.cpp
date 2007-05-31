@@ -416,6 +416,10 @@ void DeleteAniTile( ANITILE *pAniTile )
 				{
 					// First delete the bullet!
 					RemoveBullet( pAniNode->uiUserData3 );
+					
+					// 0verhaul:  Removed because it's handled by RemoveBullet.
+					// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - miss finished animation") );
+					// FreeUpAttacker( (UINT8) pAniNode->ubAttackerMissed );					
 				}
 			}
 			else

@@ -621,6 +621,8 @@ INT8 CalcActionPoints(SOLDIERTYPE *pSold)
 			ubPoints +=0;
 		}
 	}
+	else
+		ubPoints += gGameExternalOptions.iPlayerAPBonus;
 
 	// if we are in boxing mode, adjust APs... THIS MUST BE LAST!
 	if ( gTacticalStatus.bBoxingState == BOXING || gTacticalStatus.bBoxingState == PRE_BOXING )
@@ -687,7 +689,7 @@ void CalcNewActionPoints( SOLDIERTYPE *pSoldier )
 		}
 		else
 		{ //Kaiden: Players just max out normally unless drugged
-			pSoldier->bActionPoints	= __min( pSoldier->bActionPoints, gubMaxActionPoints[ pSoldier->ubBodyType ] );
+			pSoldier->bActionPoints	= __min( pSoldier->bActionPoints, (gubMaxActionPoints[ pSoldier->ubBodyType ] + gGameExternalOptions.iPlayerAPBonus) );
 		}
 
 	}
@@ -1292,8 +1294,13 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 
 	if ( usOldAniState != usNewState && ( uiOldAnimFlags & ANIM_HITSTART ) && !( uiNewAnimFlags & ANIM_HITFINISH ) && !( uiNewAnimFlags & ANIM_IGNOREHITFINISH ) && !(pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
 	{
+		// 0verhaul:  Yet again, this is handled by the state transition code.
+		// Release attacker
+		// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, normal hit animation ended NEW: %s ( %d ) OLD: %s ( %d )", gAnimControl[ usNewState ].zAnimStr, usNewState, gAnimControl[ usOldAniState ].zAnimStr, pSoldier->usOldAniState ) );
+		// ReleaseSoldiersAttacker( pSoldier );
+
 		//FREEUP GETTING HIT FLAG
-		pSoldier->fGettingHit = FALSE;
+		// pSoldier->fGettingHit = FALSE;
 
 		// ATE: if our guy, have 10% change of say damn, if still conscious...
 		if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE )
@@ -1309,8 +1316,13 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 	// OBLY DO THIS IF 1 ) We are dead already or 2 ) We are alive still
 	if ( ( uiOldAnimFlags & ANIM_HITWHENDOWN ) && ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) || pSoldier->bLife != 0 ) )
 	{
+		// 0verhaul:  Ditto
+		// Release attacker
+		// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, animation of kill on the ground ended") );
+		// ReleaseSoldiersAttacker( pSoldier );
+
 		//FREEUP GETTING HIT FLAG
-		pSoldier->fGettingHit = FALSE;
+		// pSoldier->fGettingHit = FALSE;
 
 		if ( pSoldier->bLife == 0 )
 		{
@@ -3438,6 +3450,12 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 	return( INVALID_ANIMATION );
 }
 
+// 0verhaul:  These routines are obsolete.  Just call ReduceAttackBusyCount to reduce the ABC or
+// FreeUpAttacker to abort the current action.
+// extern SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID );
+// extern SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID );
+
+
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
 void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGrid )
 {
@@ -3448,6 +3466,22 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3 , "EVENT_SoldierGotHit");
 
+#if 0
+	// 0verhaul: Under the new ABC system this is no longer necessary.
+	// ATE: If we have gotten hit, but are still in our attack animation, reduce count!
+	switch ( pSoldier->usAnimState )
+	{
+		case SHOOT_ROCKET:
+		case SHOOT_MORTAR:
+		case THROW_ITEM:
+		case LOB_ITEM:
+			
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY HIT ANIMATION, Now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, gTacticalStatus.ubAttackBusyCount ) );
+			ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+			break;
+	}
+#endif
+
 	// DO STUFF COMMON FOR ALL TYPES
 	if (	ubAttackerID != NOBODY)
 	{
@@ -3456,6 +3490,23 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 
 	// Set attacker's ID
 	pSoldier->ubAttackerID = ubAttackerID;
+
+#if 0
+	// 0verhaul:  Slashing out more unnecessary and reworked code
+	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	{
+		// Increment  being attacked count
+		pSoldier->bBeingAttackedCount++;
+	}
+
+	// if defender is a vehicle, there will be no hit animation played!
+	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	{
+		// Increment the number of people busy doing stuff because of an attack (busy doing hit anim!)
+		gTacticalStatus.ubAttackBusyCount++;
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Person got hit, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+	}
+#endif
 
 	// ATE; Save hit location info...( for later anim determination stuff )
 	pSoldier->ubHitLocation = ubHitLocation;
@@ -3616,6 +3667,35 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Weapon class not handled in SoldierGotHit( ) %d", usWeaponIndex ) );
 	}
+
+
+#if 0
+	// 0verhaul:  None of this hairyness is necessary anymore!  Hazaa!
+	// CJC: moved to after SoldierTakeDamage so that any quotes from the defender
+	// will not be said if they are knocked out or killed
+	if ( ubReason != TAKE_DAMAGE_TENTACLES && ubReason != TAKE_DAMAGE_OBJECT )
+	{
+		// OK, OK: THis is hairy, however, it's ness. because the normal freeup call uses the
+		// attckers intended target, and here we want to use thier actual target....
+
+		// ATE: If it's from GUNFIRE damage, keep in mind bullets...
+		if ( Item[ usWeaponIndex ].usItemClass & IC_GUN )
+		{
+			pNewSoldier = FreeUpAttackerGivenTarget( pSoldier->ubAttackerID, pSoldier->ubID );
+		}
+		else
+		{
+			pNewSoldier = ReduceAttackBusyGivenTarget( pSoldier->ubAttackerID, pSoldier->ubID );
+		}
+
+		if (pNewSoldier != NULL)
+		{
+			pSoldier = pNewSoldier;
+		}
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+	}
+#endif
+
 
 	// OK, If we are a vehicle.... damage vehicle...( people inside... )
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
@@ -4055,6 +4135,9 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 	// IF HERE AND GUY IS DEAD, RETURN!
 	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 	{
+		// 0verhaul:  Handled in the soldier state change code
+		// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker,Dead soldier hit" ) );
+		// ReleaseSoldiersAttacker( pSoldier );
 		return;
 	}
 
@@ -4645,12 +4728,9 @@ void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 		pSoldier->ubDesiredHeight = ubDesiredStance;
 
 		// Now change to appropriate animation
-		if ( !EVENT_InitNewSoldierAnim( pSoldier, usNewState, 0 , FALSE ) )
-		{
-			int i = 1;
+		EVENT_InitNewSoldierAnim( pSoldier, usNewState, 0 , FALSE );
 		}
 	}
-}
 
 void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState )
 {
@@ -5399,6 +5479,8 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 
 		if ( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT )
 		{
+			// This section seems problem-prone.  It relies on all animations happening without interruption.  There must be a more
+			// foolproof method.
 			if ( pSoldier->fGettingHit == 1 )
 			{
 				if ( pSoldier->usPendingAnimation != FALLFORWARD_ROOF && pSoldier->usPendingAnimation != FALLOFF && pSoldier->usAnimState != FALLFORWARD_ROOF && pSoldier->usAnimState != FALLOFF )
@@ -5419,8 +5501,15 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				// Turn off
 				pSoldier->uiStatusFlags &= (~SOLDIER_TURNINGFROMHIT );
 
+
+				// Release attacker
+				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, turning from hit animation ended") );
+				// ReleaseSoldiersAttacker( pSoldier );
+				OutputDebugString( "Finished turning from hit.  Reducing attack busy.\n");
+				ReduceAttackBusyCount( );
+
 				//FREEUP GETTING HIT FLAG
-				pSoldier->fGettingHit = FALSE;
+				// pSoldier->fGettingHit = FALSE;
 			}
 		}
 
@@ -6415,7 +6504,11 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 
 		}		
 	}
-
+	else
+	{
+		OutputDebugString( String( "Soldier %d tried to climb where no roof is.\n", pSoldier->ubID ) );
+		pSoldier->bAction = AI_ACTION_NONE;
+	}
 }
 
 void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
@@ -6619,6 +6712,16 @@ void HandleTakeDamageDeath( SOLDIERTYPE *pSoldier, UINT8 bOldLife, UINT8 ubReaso
 		}
 		break;
 	}
+
+	// 0verhaul:  This is also already handled by the animation transitions
+	// if ( ubReason == TAKE_DAMAGE_ELECTRICITY )
+	// {
+	//	if ( pSoldier->bLife >= OKLIFE )
+	//	{
+	//		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Freeing up attacker from electricity damage") );
+	//		ReleaseSoldiersAttacker( pSoldier );
+	//	}
+	// }
 }
 
 
@@ -8274,6 +8377,52 @@ void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	AddGameEvent( S_BEGINFIREWEAPON, 0, &SBeginFireWeapon );			
 
 }
+
+#if 0
+// This function is now obsolete.  Just call ReduceAttackBusyCount.
+
+// This function just encapolates the check for turnbased and having an attacker in the first place
+void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
+{
+	INT32 cnt;
+	UINT8	ubNumToFree;
+
+	//if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+	{
+		// ATE: Removed...
+		//if ( pSoldier->ubAttackerID != NOBODY )
+		{
+			// JA2 Gold
+			// set next-to-previous attacker, so long as this isn't a repeat attack
+			if (pSoldier->ubPreviousAttackerID != pSoldier->ubAttackerID)
+			{
+				pSoldier->ubNextToPreviousAttackerID = pSoldier->ubPreviousAttackerID;
+			}
+
+			// get previous attacker id
+			pSoldier->ubPreviousAttackerID = pSoldier->ubAttackerID;
+
+			// Copy BeingAttackedCount here....
+			ubNumToFree = pSoldier->bBeingAttackedCount;
+			// Zero it out BEFORE, as supression may increase it again...
+			pSoldier->bBeingAttackedCount = 0;
+			
+			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
+			{
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker of %d (attacker is %d) - releasesoldierattacker num to free is %d", pSoldier->ubID, pSoldier->ubAttackerID, ubNumToFree ) );
+				ReduceAttackBusyCount( pSoldier->ubAttackerID, FALSE );
+			}
+
+			// ATE: Set to NOBODY if this person is NOT dead
+			// otherise, we keep it so the kill can be awarded!
+			if ( pSoldier->bLife != 0 && pSoldier->ubBodyType != QUEENMONSTER )
+			{
+				pSoldier->ubAttackerID = NOBODY;
+			}
+		}
+	}
+}
+#endif
 
 BOOLEAN MercInWater( SOLDIERTYPE *pSoldier )
 {

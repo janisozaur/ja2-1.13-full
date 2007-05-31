@@ -500,6 +500,13 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		}
 	}
 
+	// We STILL do not want to issue new orders while an attack busy situation is going on.  This can happen, for example,
+	// when a gun is fired in real-time and an enemy sees it.  Delay the AI until that action is done.
+	if ( gTacticalStatus.ubAttackBusyCount > 0 )
+	{
+		return;
+	}
+
 	if (pSoldier->bAction == AI_ACTION_NONE)
 	{ 
 		// being handled so turn off muzzle flash
@@ -2008,6 +2015,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
 
+	OutputDebugString( "Executing action.\n" );
+
 	// in most cases, merc will change location, or may cause damage to opponents,
 	// so a new cover check will be necessary.  Exceptions handled individually.
 	SkipCoverCheck = FALSE;
@@ -2096,6 +2105,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_DROP_ITEM:					 // drop item in hand
 		SoldierDropItem( pSoldier, &(pSoldier->inv[HANDPOS]) );
 		DeleteObj( &(pSoldier->inv[HANDPOS]) );
+		// 0verhaul:  Moved into PickDropAnimation because when something is dropped while crouched there's nothing to wait for
+		// pSoldier->bAction = AI_ACTION_PENDING_ACTION;
 		break;
 
 		//case AI_ACTION_MOVE_TO_CLIMB:
@@ -2836,7 +2847,8 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 			}
 			else
 			{
-				pSoldier->bNewSituation = IS_NEW_SITUATION;
+				// 0verhaul:  Let's see if we can do without this.
+				// pSoldier->bNewSituation = IS_NEW_SITUATION;
 			}
 
 			if ( gTacticalStatus.ubAttackBusyCount != 0 )

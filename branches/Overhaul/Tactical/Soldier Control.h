@@ -1096,6 +1096,8 @@ UINT8 atan8FromAngle( DOUBLE dAngle );
 INT8 CalcActionPoints(SOLDIERTYPE *pSold );
 BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
+// This function is now obsolete.  Call ReduceAttackBusyCount instead.
+// void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 BOOLEAN MercInWater( SOLDIERTYPE *pSoldier );
 UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );

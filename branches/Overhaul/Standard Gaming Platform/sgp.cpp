@@ -40,6 +40,7 @@
 
 #include "dbt.h"
 #include "INIReader.h"
+#include "Console.h"
 
 #ifdef JA2
 	#include "BuildDefines.h"
@@ -120,7 +121,13 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 { 
 	static BOOLEAN fRestore = FALSE;
 
-  if(gfIgnoreMessages)
+	if ( Message == WM_USER )
+	{
+		FreeConsole();
+		return 0L;
+	}
+	
+	if(gfIgnoreMessages)
 		return(DefWindowProc(hWindow, Message, wParam, lParam));
 
 	// ATE: This is for older win95 or NT 3.51 to get MOUSE_WHEEL Messages
@@ -779,6 +786,8 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
     }
     else
     { // Windows hasn't processed any messages, therefore we handle the rest
+	  	PollConsole( );
+
       if (gfApplicationActive == FALSE)
       { // Well we got nothing to do but to wait for a message to activate
         WaitMessage();

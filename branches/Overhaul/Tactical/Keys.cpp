@@ -661,6 +661,9 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 	    // Set attacker's ID
 	    pSoldier->ubAttackerID = pSoldier->ubID;
+	    // Increment  being attacked count
+	    // pSoldier->bBeingAttackedCount++;
+		  // gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 		  OutputDebugString( String("!!!!!!! Trap gone off %d\n", gTacticalStatus.ubAttackBusyCount) );
 
@@ -673,6 +676,9 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 	    // Set attacker's ID
 	    pSoldier->ubAttackerID = pSoldier->ubID;
+	    // Increment  being attacked count
+	    // pSoldier->bBeingAttackedCount++;
+		//  gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 		  OutputDebugString( String("!!!!!!! Trap gone off %d\n", gTacticalStatus.ubAttackBusyCount) );
 

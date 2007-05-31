@@ -2255,21 +2255,23 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			case DIALOGUE_TACTICAL_UI:
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				// Remove if created
+				// 0verhaul:  Both of these events are more or less independent.  Most often the gTextBoxOverlay fails to init.
+				// Therefore I am removing the dependency on giTextBoxOverlay before it decides to destroy the popup box region.
+				// This should prevent blockage of buttons and also clicks on the tactical map.
 				if ( giTextBoxOverlay != -1 )
 				{
 					RemoveVideoOverlay( giTextBoxOverlay );
 					giTextBoxOverlay = -1;
-					
-					if ( fTextBoxMouseRegionCreated )
-					{
-						RemoveMercPopupBoxFromIndex( iDialogueBox );
+				}
+
+				if ( fTextBoxMouseRegionCreated )
+				{
+					RemoveMercPopupBoxFromIndex( iDialogueBox );
 						
-						// reset box id
-						iDialogueBox = -1;
-						MSYS_RemoveRegion( &gTextBoxMouseRegion );
-						fTextBoxMouseRegionCreated = FALSE;
-					}
-					
+					// reset box id
+					iDialogueBox = -1;
+					MSYS_RemoveRegion( &gTextBoxMouseRegion );
+					fTextBoxMouseRegionCreated = FALSE;
 				}
 
 				break;

@@ -790,16 +790,17 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					pSoldier->fDoSpread = FALSE;
 					pSoldier->bDoBurst = 1;
-					//						pSoldier->fBurstCompleted = TRUE;
+					// pSoldier->fBurstCompleted = TRUE;
 					if ( fFreeUpAttacker )
 					{
-						//							DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - aborting start of attack") );
-						//							FreeUpAttacker( pSoldier->ubID );		
+						// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - aborting start of attack") );
+						// FreeUpAttacker( pSoldier->ubID );		
 					}
 
 					// ATE; Reduce it due to animation being stopped...
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - Burst animation ended") );
-					OutputDebugString( "@@@@@@@ Freeing up attacker - Burst animation ended\n");
+					// 0verhaul: No longer necessary or desired
+					// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - Burst animation ended") );
+					// ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 
 
 					if ( CheckForImproperFireGunEnd( pSoldier ) )
@@ -809,6 +810,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// END: GOTO AIM STANCE BASED ON HEIGHT
 					// If we are a robot - we need to do stuff different here
+					// 0verhaul:  Ya know, if the robot simply used the same animation for standing and rifle standing,
+					// we probably wouldn't need this special case code.
 					if ( AM_A_ROBOT( pSoldier ) )
 					{
 						ChangeSoldierState( pSoldier, STANDING, 0 , FALSE );
@@ -1383,6 +1386,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								{
 									// OK, pick a larger direction to goto....
 									pSoldier->uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
+									// This becomes an attack busy situation
+									gTacticalStatus.ubAttackBusyCount++;
+									OutputDebugString( String( "Soldier turning from a hit.  Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 									// Pick evenly between both
 									if ( Random( 50 ) < 25 )
@@ -1425,8 +1431,15 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 			case 480:
 
+				// 0verhaul:  This is handled in the ReduceAttackBusyCount call
+				// CODE: FORCE FREE ATTACKER
+				// Release attacker
+				//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 480") );
+
+				//ReleaseSoldiersAttacker( pSoldier );
+
 				//FREEUP GETTING HIT FLAG
-				pSoldier->fGettingHit = FALSE;
+				//pSoldier->fGettingHit = FALSE;
 				break;
 
 			case 481:
@@ -1901,6 +1914,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						gfPotentialTeamChangeDuringDeath = TRUE;
 
+						// 0verhaul: This is now already handled
+						// Release attacker
+						// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 497 = check for death") );
+						// ReleaseSoldiersAttacker( pSoldier );
+
 						// ATE: OK - the above call can potentially
 						// render the soldier bactive to false - check heare
 						if ( !pSoldier->bActive )
@@ -1983,6 +2001,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 
 					pSoldier->ubDesiredHeight = NO_DESIRED_HEIGHT;
+
+					// 0verhaul:  This is moved to the animation state transition code to make sure it isn't sidestepped.
+					// if (pSoldier->fChangingStanceDueToSuppression)
+					// {
+					//	pSoldier->fChangingStanceDueToSuppression = FALSE;
+					//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of suppression stance change") );
+					//	ReduceAttackBusyCount( pSoldier->ubSuppressorID, FALSE );
+					// }
 
 					if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->fTurningFromPronePosition != 3 ) && ( pSoldier->fTurningFromPronePosition != 1 ) )
 					{
@@ -3168,6 +3194,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// Find next closest team member!
 		if ( pSoldier->bTeam == gbPlayerNum )
 		{
+			OutputDebugString( "Merc dying.\n");
 			// Set guy to close panel!
 			// ONLY IF VISIBLE ON SCREEN
 			if ( IsMercPortraitVisible( pSoldier->ubID ) )
@@ -3288,6 +3315,17 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// Re-evaluate visiblitiy for the team!
 		BetweenTurnsVisibilityAdjustments();
 
+		// 0verhaul: This is now handled in the death state transitions
+		// if ( pSoldier->bTeam != gbPlayerNum )
+		// {
+		//	if ( !pSoldier->fDoingExternalDeath )
+      		//	{
+		//		// Release attacker
+		//		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death") );
+		//		ReleaseSoldiersAttacker( pSoldier );
+		//	}
+		// }
+
 		if ( !( *pfMadeCorpse ) )
 		{
 			fBuddyJustDead = TRUE;
@@ -3309,7 +3347,14 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier )
 {
+	// 0verhaul:  This is now handled in the death state transition.
 	// Release attacker
+	// if ( !pSoldier->fDoingExternalDeath )
+	// {
+	//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death") );
+	//	ReleaseSoldiersAttacker( pSoldier );
+	// }
+
 	HandlePlayerTeamMemberDeath( pSoldier );
 
 	// now remove character from a squad
@@ -3585,6 +3630,10 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 	{
 		DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
 		pSoldier->fDeadSoundPlayed = TRUE;
+
+		// 0verhaul:  The bBeingAttackedCount is now obsolete.
+		// Increment  being attacked count
+		// pSoldier->bBeingAttackedCount++;
 
 		if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 		{
