@@ -87,16 +87,31 @@
 
 sgpVFS	VFS;
 
+//===================================================================
+//
+//	Constructor of the VFS.
+//
+//===================================================================
 sgpVFS::sgpVFS()
 {
 	ResourceMap.clear();
 }
 
+//===================================================================
+//
+//	Destructor of the VFS.
+//
+//===================================================================
 sgpVFS::~sgpVFS()
 {
 	ResourceMap.clear();
 }
 
+//===================================================================
+//
+//	AddContainerByIndex
+//
+//===================================================================
 BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 {
 	UINT32	uiResCounter, uiContCounter;
@@ -149,7 +164,7 @@ BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName, const vfsString& 
 	vfsString DirAppName;
 	vfsEntry	Entry;
 
-	DirAppName = ConvertToApplicationName( RealDirName );
+	DirAppName = ConvertToApplicationName( RealDirName, TRUE );
 
 	Entry.RealName    = RootDir + RealDirName;
 	Entry.IsDirectory = TRUE;
@@ -235,7 +250,7 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 	return TRUE;
 }
 
-vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName )
+vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName, BOOLEAN IsDirectory )
 {
 	UINT32		uiCharIndex;
 	vfsString	ConvertedName;
@@ -247,9 +262,27 @@ vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName )
 		else
 			ConvertedName += toupper( FileName[ uiCharIndex ] );
 	}
+
+	if ( IsDirectory && ConvertedName[ ConvertedName.length() - 1 ] != '\\' )
+		ConvertedName += '\\';
+
 	return ConvertedName;
 }
 
+//===================================================================
+//
+//	DebugDumpResources - output contents of resource map to file
+//	for debug purposes. The output has format:
+//	<AppName> ==> <Type>, <R/W>, <Container>, <RealName>
+//	where	<Type> - entry type: file or directory
+//			<R/W> - read only or writeable entry
+//			<Container> - shows, entry is in container or on file system
+//			<AppName> - application name (unified)
+//			<RealName> - real name of entry
+//
+//	in	pDumpFileName: pointer to output file name
+//
+//===================================================================
 void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )
 {
 	FILE	*file;
@@ -265,4 +298,79 @@ void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )
 			FilesIterator->second.LibraryID == LIB_REAL_FILE ? "FS " : "SLF",
 			FilesIterator->second.RealName.c_str() );
 	fclose( file );
+}
+
+//===================================================================
+//
+//	IsFileExist - checks resource for existance in resource map
+//
+//	in	pResourceName: pointer to resource name
+//
+//	return:	TRUE, if specified file exists, FALSE if not
+//
+//===================================================================
+BOOLEAN	sgpVFS::IsFileExist( const CHAR8 *pResourceName   )
+{
+	// First, convert given name to application name. Then locate it
+	// in resource map. There is three possible situations:
+	// 1. given name is not found                 ==> FALSE
+	// 2. given name is found, but it is not file ==> FALSE
+	// 3. given name is found, but it is file     ==> TRUE
+
+	vfsFileMapIterator	FoundEntry;
+
+	FoundEntry = ResourceMap.find( ConvertToApplicationName( pResourceName ) );
+
+	if ( FoundEntry == ResourceMap.end() )
+		return FALSE;
+
+	if ( FoundEntry->second.IsDirectory )
+		return FALSE;
+
+	return TRUE;
+}
+
+//===================================================================
+//
+//	IsDirExist - checks directory for existance in resource map
+//
+//	in	pDirectoryName: pointer to directory name
+//
+//	return:	TRUE, if specified directory exists, FALSE if not
+//
+//===================================================================
+BOOLEAN	sgpVFS::IsDirExist ( const CHAR8 *pDirectoryName  )
+{
+	// First, convert given name to application name. Then locate it
+	// in resource map. There is three possible situations:
+	// 1. given name is not found                      ==> FALSE
+	// 2. given name is found, but it is not directory ==> FALSE
+	// 3. given name is found, but it is directory     ==> TRUE
+
+	vfsFileMapIterator	FoundEntry;
+
+	FoundEntry = ResourceMap.find( ConvertToApplicationName( pDirectoryName, TRUE ) );
+
+	if ( FoundEntry == ResourceMap.end() )
+		return FALSE;
+
+	if ( !FoundEntry->second.IsDirectory )
+		return FALSE;
+
+	return TRUE;
+}
+
+INT32	sgpVFS::GetSize( UINT32 uiFileHandle )
+{
+	return TRUE;
+}
+
+INT32	sgpVFS::GetSize( const CHAR8 *pResourceName )
+{
+	return TRUE;
+}
+
+BOOLEAN	sgpVFS::IsEOF  ( UINT32 uiFileHandle )
+{
+	return TRUE;
 }

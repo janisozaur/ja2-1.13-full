@@ -59,7 +59,7 @@ protected:
 	BOOLEAN		AddResourceFile( const vfsString& RealFileName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
 	BOOLEAN		AddDirectory   ( const vfsString& DirAName,     const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
 	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
-	vfsString	ConvertToApplicationName( const vfsString& FileName );
+	vfsString	ConvertToApplicationName( const vfsString& FileName, BOOLEAN IsDirectory = FALSE );
 
 public:
 	sgpVFS();
@@ -74,10 +74,11 @@ public:
 	BOOLEAN		Read ( UINT32 uiFileHandle, void *pReadBuffer,  UINT32 uiSize );
 	BOOLEAN		Write( UINT32 uiFileHandle, void *pWriteBuffer, UINT32 uiSize );
 
-	UINT32		Seek ( UINT32 uiFileHandle, UINT32 uiPosition, UINT32 uiMethod );
-	UINT32		Tell ( UINT32 uiFileHandle                                     );
+	INT32		Seek ( UINT32 uiFileHandle, UINT32 uiPosition, UINT32 uiMethod );
+	INT32		Tell ( UINT32 uiFileHandle                                     );
 
-	UINT32		GetSize( UINT32 uiFileHandle );
+	INT32		GetSize( UINT32 uiFileHandle );
+	INT32		GetSize( const CHAR8 *pResourceName );
 	BOOLEAN		IsEOF  ( UINT32 uiFileHandle );
 	BOOLEAN		IsFileExist( const CHAR8 *pResourceName   );
 	BOOLEAN		IsDirExist ( const CHAR8 *pDirectoryName  );

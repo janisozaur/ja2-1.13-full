@@ -39,6 +39,7 @@ typedef struct
 	UINT32		LibraryID;
 } vfsEntry;
 
-typedef std::map <vfsString, vfsEntry>	vfsFileMap;
+typedef std::map <vfsString, vfsEntry>				vfsFileMap;
+typedef std::map <vfsString, vfsEntry>::iterator	vfsFileMapIterator;
 
 #endif

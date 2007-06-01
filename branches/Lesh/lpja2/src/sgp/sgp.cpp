@@ -220,7 +220,16 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		printf("AddContainer failed!\n");
 
 	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data/") )
-		printf("AddDirectoryContents failed!\n");
+		printf("AddDirectoryContents(1) failed!\n");
+
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/") )
+		printf("AddDirectoryContents(2) failed!\n");
+
+	if ( VFS.IsDirExist( "ANIMS" ) )
+		printf("VFS.IsDirExist\n");
+
+	if ( VFS.IsFileExist( "Anims\\CAMO.COL" ) )
+		printf("VFS.IsFileExist\n");
 
 	VFS.DebugDumpResources( "map_dump.txt" );
 

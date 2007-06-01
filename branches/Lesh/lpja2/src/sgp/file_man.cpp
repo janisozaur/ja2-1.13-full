@@ -35,6 +35,8 @@
 	#include "debug.h"
 	#include "container.h"
 	#include "library_database.h"
+	#include "vfs.hpp"
+	
 #endif
 //**************************************************************************
 //
@@ -300,6 +302,7 @@ BOOLEAN PathBackslash(STR path)
 //**************************************************************************
 BOOLEAN	FileExists( STR strFilename )
 {
+#if 0
 	BACKSLASH(strFilename);
 
 	// First check to see if it's in a library (most files should be there)
@@ -337,7 +340,8 @@ BOOLEAN	FileExists( STR strFilename )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
-	return FALSE;
+#endif
+	return VFS.IsFileExist( strFilename );
 }
 
 //**************************************************************************
@@ -364,6 +368,7 @@ BOOLEAN	FileExists( STR strFilename )
 //**************************************************************************
 extern BOOLEAN	FileExistsNoDB( STR strFilename )
 {
+#if 0
 	BACKSLASH(strFilename);
 
 	// First check if it's in the custom Data directory
@@ -398,8 +403,8 @@ extern BOOLEAN	FileExistsNoDB( STR strFilename )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif
-
-	return FALSE;
+#endif
+	return VFS.IsFileExist( strFilename );
 }
 
 //**************************************************************************
@@ -1442,6 +1447,7 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory )
 {
+#if 0
 	UINT32	uiAttribs;
 	UINT32		uiLastError;
 
@@ -1487,9 +1493,10 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+#endif
 
 	// this could also mean that the name given is that of a file, or that an error occurred
-	return FALSE;
+	return VFS.IsDirExist( pcDirectory );
 }
 
 
