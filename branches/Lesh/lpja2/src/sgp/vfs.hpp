@@ -56,8 +56,7 @@ private:
 protected:
 	vfsFileMap ResourceMap;
 
-	BOOLEAN		AddResourceFile( const vfsString& RealFileName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
-	BOOLEAN		AddDirectory   ( const vfsString& DirAName,     const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable );
+	BOOLEAN		AddResourceEntry( const vfsString& ResourceName, const vfsString& RealName, BOOLEAN IsDirectory, UINT32 LibraryID, BOOLEAN Writeable );
 	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
 	vfsString	ConvertToApplicationName( const vfsString& FileName, BOOLEAN IsDirectory = FALSE );
 
@@ -67,6 +66,8 @@ public:
 
 	BOOLEAN		Initialize	( void );
 	void		Shutdown	( void );
+
+	BOOLEAN		FindResource( const CHAR8 *pResourceName, vfsEntry& Entry );
 
 	UINT32		Open ( const STR8 pResourceName, UINT32 uiOpenFlags  );
 	void		Close( UINT32 uiFileHandle );
@@ -84,7 +85,7 @@ public:
 	BOOLEAN		IsDirExist ( const CHAR8 *pDirectoryName  );
 
 	BOOLEAN		AddContainerByIndex ( UINT32 uiContainerID );
-	BOOLEAN		AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable = FALSE );
+	BOOLEAN		AddDirectoryContents( const CHAR8 *pDirPath, BOOLEAN fWriteable, const CHAR8 *pOptionalDirectoryName = NULL );
 
 	void		DebugDumpResources( const CHAR8 *pDumpFileName );
 };

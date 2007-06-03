@@ -219,10 +219,13 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	if ( !VFS.AddContainerByIndex(0) )
 		printf("AddContainer failed!\n");
 
-	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data/") )
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data/", FALSE) )
 		printf("AddDirectoryContents(1) failed!\n");
 
-	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/") )
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/", FALSE) )
+		printf("AddDirectoryContents(2) failed!\n");
+
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/SavedGames", TRUE, "SAVEDGAMES") )
 		printf("AddDirectoryContents(2) failed!\n");
 
 	if ( VFS.IsDirExist( "ANIMS" ) )

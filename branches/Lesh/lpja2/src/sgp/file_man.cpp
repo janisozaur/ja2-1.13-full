@@ -36,6 +36,7 @@
 	#include "container.h"
 	#include "library_database.h"
 	#include "vfs.hpp"
+	#include "io_layer.h"
 	
 #endif
 //**************************************************************************
@@ -404,7 +405,12 @@ extern BOOLEAN	FileExistsNoDB( STR strFilename )
 // -------------------- End of Linux-specific stuff ------------------------
 #endif
 #endif
-	return VFS.IsFileExist( strFilename );
+	vfsEntry	entry;
+
+	if ( VFS.FindResource( strFilename, entry ) )
+		return (entry.LibraryID == LIB_REAL_FILE);
+
+	return FALSE;
 }
 
 //**************************************************************************
@@ -480,20 +486,16 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
 	HWFILE	hFile;
 	HANDLE	hRealFile;
-	BOOLEAN	fExists;
-	HDBFILE	hDBFile;
-	HWFILE hLibFile;
+	HWFILE  hLibFile;
 	UINT32	dwAccess;
 	UINT32	dwFlagsAndAttributes;
 	UINT32	dwCreationFlags;
 
 	hFile = 0;
-	hDBFile = 0;
 	dwCreationFlags = 0;
 	dwAccess = 0;
 	
-	BACKSLASH(strFilename);
-
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -519,33 +521,108 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
 
-	// Snap: This seems like an unnecessary check, but I don't feel like
-	// rewriting the function to eliminate it...
+	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
+		dwAccess = IO_ACCESS_READWRITE;
+	else if ( uiOptions & FILE_ACCESS_READ )
+		dwAccess = IO_ACCESS_READ;
+	else if ( uiOptions & FILE_ACCESS_WRITE )
+		dwAccess = IO_ACCESS_WRITE;
 
-	// check if the file exists - note that we use the function FileExistsNoDB
-	// because it doesn't check the databases, and we don't want to do that here
-	fExists = FileExistsNoDB( strFilename );
+	vfsEntry	entry;
+	STRING512	filename;
 
-	// Snap: First see if the file is in the custom Data catalogue:
-	std::string filePath;
-	if ( gCustomDataCat.FindFile(strFilename) ) {
-		filePath = gCustomDataCat.GetRootDir() + SLASH;
+	printf("Request to open %s...\n", strFilename);
+	if ( VFS.FindResource( strFilename, entry ) )
+	{
+		strncpy( filename, entry.RealName.c_str(), 511 );
+
+		//if the file is on the disk
+		if ( entry.LibraryID == LIB_REAL_FILE )
+		{
+//			printf("Opening file on file system\n" );
+			hRealFile = IO_File_Open( filename, dwAccess );
+
+			if ( hRealFile == -1 )
+			{
+				fprintf(stderr, "Error opening file %s: errno=%d\n", strFilename, errno);
+				return(0);
+			}
+
+			//create a file handle for the 'real file'
+			hFile = CreateRealFileHandle( hRealFile );
+		}
+		// if the file did not exist, try to open it from the database
+		else if ( gFileDataBase.fInitialized ) 
+		{
+//			printf("Opening file from container\n" );
+			//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
+			if( fDeleteOnClose )
+			{
+				return( 0 );
+			}
+
+			//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
+			if( uiOptions & FILE_ACCESS_WRITE )
+			{
+				//if the files is to be written to
+				if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
+				{
+					hFile = 0;
+				}
+			}
+			else
+			{
+				//If the file is in the library, get a handle to it.
+				hLibFile = OpenFileFromLibrary( (STR) filename );
+
+				//tried to open a file that wasnt in the database
+				if( !hLibFile )
+					return( 0 );
+				else			
+					return( hLibFile );		//return the file handle
+			}
+		}
 	}
-	filePath += strFilename;
-	// Bad cast! strFilename should have been const.  Oh well...
-	strFilename = const_cast<STR>( filePath.c_str() );
-	// Now strFilename points either to the original file name,
-	// or to the full file path in the custom Data directory.
-	// Except for this substitution, the rest of the function is unchanged.
+	else
+	{
+//		fExists = FALSE;
+		printf("Resource not found!\n" );
+		strncpy( filename, strFilename, 511 );
+		if ( uiOptions & FILE_CREATE_NEW )
+		{
+			dwAccess |= IO_OPEN_EXISTING;
+		}
+		else if ( uiOptions & FILE_CREATE_ALWAYS )
+		{
+			dwAccess |= IO_OPEN_ALWAYS;
+		}
 
+		BACKSLASH(filename);
+		printf("Creating %s...\n", filename);
+		hRealFile = IO_File_Open( filename, dwAccess );
+
+		if ( hRealFile == -1 )
+		{
+			fprintf(stderr, "Error opening/creating file %s: errno=%d\n", strFilename, errno);
+			return(0);
+		}
+
+		hFile = CreateRealFileHandle( hRealFile );
+
+		if ( !hFile )
+			return(0);
+	}
+
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
 	//if the file is on the disk
 	if ( fExists )
 	{
-		hRealFile = CreateFile( (LPCSTR) strFilename, dwAccess, 0, NULL, OPEN_ALWAYS,
+		hRealFile = CreateFile( (LPCSTR) filename, dwAccess, 0, NULL, OPEN_ALWAYS,
 										dwFlagsAndAttributes, NULL );
 
 		if ( hRealFile == INVALID_HANDLE_VALUE )
@@ -574,16 +651,10 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 				hFile = 0;
 			}
 		}
-		//else if the file is to be opened using FILE_OPEN_EXISTING, and the file doesnt exists, fail out of the function)
-//		else if( uiOptions & FILE_OPEN_EXISTING )
-//		{
-			//fail out of the function
-//			return( 0 );
-//		}
 		else
 		{
 			//If the file is in the library, get a handle to it.
-			hLibFile = OpenFileFromLibrary( (STR) strFilename );
+			hLibFile = OpenFileFromLibrary( (STR) filename );
 
 			//tried to open a file that wasnt in the database
 			if( !hLibFile )
@@ -620,7 +691,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 			dwCreationFlags = OPEN_ALWAYS;
 		}
 
-		
+		BACKSLASH(strFilename);
 		hRealFile = CreateFile( (LPCSTR) strFilename, dwAccess, 0, NULL, dwCreationFlags,
 										dwFlagsAndAttributes, NULL );
 		if ( hRealFile == INVALID_HANDLE_VALUE )
@@ -645,7 +716,8 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	//if the file is on the disk
 	if ( fExists )
 	{
-		hRealFile = open( strFilename, dwAccess );
+		printf("Opening file on file system\n" );
+		hRealFile = open( filename, dwAccess );
 
 		if ( hRealFile == -1 )
 		{
@@ -659,6 +731,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	// if the file did not exist, try to open it from the database
 	else if ( gFileDataBase.fInitialized ) 
 	{
+		printf("Opening file from container\n" );
 		//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
 		if( fDeleteOnClose )
 		{
@@ -677,7 +750,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		else
 		{
 			//If the file is in the library, get a handle to it.
-			hLibFile = OpenFileFromLibrary( (STR) strFilename );
+			hLibFile = OpenFileFromLibrary( (STR) filename );
 
 			//tried to open a file that wasnt in the database
 			if( !hLibFile )
@@ -702,6 +775,8 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 			dwAccess |= O_CREAT | O_TRUNC;
 		}
 
+		BACKSLASH(strFilename);
+		printf("Creating %s...\n", strFilename);
 		hRealFile = open( strFilename, dwAccess );
 
 		if ( hRealFile == -1 )
@@ -718,7 +793,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
-
+*/
 	return(hFile);
 }
 

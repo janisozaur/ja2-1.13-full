@@ -126,57 +126,34 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 	{
 		// print directory first, and it's contents then
 		strContainerDir = gFileDataBase.pLibraries[ uiContCounter ].sLibraryPath;
-		AddDirectory( strContainerDir, "", uiContCounter, FALSE );
+		AddResourceEntry( strContainerDir, strContainerDir, TRUE, uiContCounter, FALSE );
 
 		for ( uiResCounter = 0; uiResCounter < gFileDataBase.pLibraries[ uiContCounter ].usNumberOfEntries; uiResCounter++ )
 		{
 			strResourceName = strContainerDir + gFileDataBase.pLibraries[ uiContCounter ].pFileHeader[uiResCounter].pFileName;
-			AddResourceFile( strResourceName, "", uiContCounter, FALSE );
+			AddResourceEntry( strResourceName, strResourceName, FALSE, uiContCounter, FALSE );
 		}
 	}
 
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::AddResourceFile( const vfsString& RealFileName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable )
+BOOLEAN	sgpVFS::AddResourceEntry( const vfsString& ResourceName, const vfsString& RealName, BOOLEAN IsDirectory, UINT32 LibraryID, BOOLEAN Writeable )
 {
-	// FileAppName is an application name of resource, transformed from RealFileName. It is unified.
 	// todo: $$$ - more work needed
-	vfsString	FileAppName;
 	vfsEntry	Entry;
 
-	FileAppName = ConvertToApplicationName( RealFileName );
-
-	Entry.RealName    = RootDir + RealFileName;
-	Entry.IsDirectory = FALSE;
+	Entry.RealName    = RealName;
+	Entry.IsDirectory = IsDirectory;
 	Entry.IsWriteable = Writeable;
 	Entry.LibraryID   = LibraryID;
 
-	ResourceMap[ FileAppName ] = Entry;
+	ResourceMap[ ConvertToApplicationName( ResourceName ) ] = Entry;
 
 	return TRUE;
 }
 
-BOOLEAN	sgpVFS::AddDirectory   ( const vfsString& RealDirName, const vfsString& RootDir, UINT32 LibraryID, BOOLEAN Writeable )
-{
-	// DirAppName is an application name of resource, transformed from ReadDirName. It is unified.
-	// todo: $$$ - more work needed
-	vfsString DirAppName;
-	vfsEntry	Entry;
-
-	DirAppName = ConvertToApplicationName( RealDirName, TRUE );
-
-	Entry.RealName    = RootDir + RealDirName;
-	Entry.IsDirectory = TRUE;
-	Entry.IsWriteable = Writeable;
-	Entry.LibraryID   = LibraryID;
-
-	ResourceMap[ DirAppName ] = Entry;
-
-	return TRUE;
-}
-
-BOOLEAN	sgpVFS::AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable )
+BOOLEAN	sgpVFS::AddDirectoryContents( const CHAR8 *pDirPath, BOOLEAN fWriteable, const CHAR8 *pOptionalDirectoryName )
 {
 	// Theory
 	// We need to enumerate all files and subdirectoies under pDirPath.
@@ -197,7 +174,19 @@ BOOLEAN	sgpVFS::AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable )
 	STRING512		zCurDirSave;
 	vfsStringArray	dirToLook, foundFiles;
 	vfsString		dirToBeLooked;
+	vfsString		OptionalDirectoryName, RootDirectory;
 	vfsStringArrayIterator	foundFilesIterator;
+	BOOLEAN			fIsDirectory;
+
+	RootDirectory = pDirPath;
+
+	if ( pOptionalDirectoryName == NULL )
+		OptionalDirectoryName = "";
+	else
+	{
+		OptionalDirectoryName = ConvertToApplicationName( pOptionalDirectoryName, TRUE );
+		AddResourceEntry( OptionalDirectoryName, RootDirectory, TRUE, LIB_REAL_FILE, fWriteable );
+	}
 
 	IO_Dir_GetCurrentDirectory( zCurDirSave, 512 );
 	IO_Dir_SetCurrentDirectory( pDirPath );
@@ -210,15 +199,10 @@ BOOLEAN	sgpVFS::AddDirectoryContents( const STR8 pDirPath, BOOLEAN fWriteable )
 
 		for ( foundFilesIterator = foundFiles.begin(); foundFilesIterator != foundFiles.end(); foundFilesIterator++ )
 		{
-			if ( IO_IsDirectory( foundFilesIterator->c_str() ) )
-			{
+			fIsDirectory = IO_IsDirectory( foundFilesIterator->c_str() );
+			if ( fIsDirectory )
 				dirToLook.push_back( *foundFilesIterator );
-				AddDirectory( *foundFilesIterator, pDirPath, LIB_REAL_FILE, fWriteable );
-			}
-			else
-			{
-				AddResourceFile( *foundFilesIterator, pDirPath, LIB_REAL_FILE, fWriteable );
-			}
+			AddResourceEntry( OptionalDirectoryName + *foundFilesIterator, RootDirectory + *foundFilesIterator, fIsDirectory, LIB_REAL_FILE, fWriteable );
 		}
 	}
 
@@ -372,5 +356,19 @@ INT32	sgpVFS::GetSize( const CHAR8 *pResourceName )
 
 BOOLEAN	sgpVFS::IsEOF  ( UINT32 uiFileHandle )
 {
+	return TRUE;
+}
+
+BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
+{
+	vfsFileMapIterator	FoundEntry;
+
+	FoundEntry = ResourceMap.find( ConvertToApplicationName( pResourceName ) );
+
+	if ( FoundEntry == ResourceMap.end() )
+		return FALSE;
+
+	Entry = FoundEntry->second;
+
 	return TRUE;
 }
