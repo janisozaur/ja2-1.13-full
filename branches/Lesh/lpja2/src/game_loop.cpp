@@ -85,6 +85,7 @@ BOOLEAN InitializeGame(void)
 { 
 	UINT32				uiIndex;
 
+	printf("Initializing Game...\n");
 	giStartingMemValue = MemGetFree( );
 
 	
@@ -139,7 +140,7 @@ BOOLEAN InitializeGame(void)
 
 	guiCurrentScreen = INIT_SCREEN;
 	
-	printf("InitializeGame() done\n");
+	printf("Initializing Game...done\n\n");
 
   return TRUE;
 }

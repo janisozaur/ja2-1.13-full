@@ -108,22 +108,22 @@ weaponDropEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curWeaponDrop.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubWeaponType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubWeaponType   = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubWeaponType   = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubEnemyDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubEnemyDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubEnemyDropRate  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMilitiaDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curWeaponDrop.ubMilitiaDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curWeaponDrop.ubMilitiaDropRate  = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

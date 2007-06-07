@@ -1211,6 +1211,7 @@ int count;
 UINT16 uiRight, uiBottom;
 UINT8 uiPixelDepth;
 
+	printf("Initializing Font Manager...\n");
 	FontDefault=(-1);
 	FontDestBuffer=BACKBUFFER;
 	FontDestPitch=0;

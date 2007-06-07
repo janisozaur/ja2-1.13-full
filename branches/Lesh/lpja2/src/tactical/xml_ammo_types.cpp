@@ -130,147 +130,147 @@ ammotypeEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAmmoType.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "fontColour") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.fontColour  = (UINT8) atol(pData->szCharData);
+			pData->curAmmoType.fontColour  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "grayed") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.grayed  = (INT32) atol(pData->szCharData);
+			pData->curAmmoType.grayed  = (INT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "offNormal") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.offNormal  = (INT32) atol(pData->szCharData);
+			pData->curAmmoType.offNormal  = (INT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "onNormal") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.onNormal  = (INT32) atol(pData->szCharData);
+			pData->curAmmoType.onNormal  = (INT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "structureImpactReductionMultiplier") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.structureImpactReductionMultiplier  = (INT32) atol(pData->szCharData);
+			pData->curAmmoType.structureImpactReductionMultiplier  = (INT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "armourImpactReductionMultiplier") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.armourImpactReductionMultiplier  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.armourImpactReductionMultiplier  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "afterArmourDamageMultiplier") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.afterArmourDamageMultiplier  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.afterArmourDamageMultiplier  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "beforeArmourDamageMultiplier") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.beforeArmourDamageMultiplier  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.beforeArmourDamageMultiplier  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "multipleBulletDamageMultiplier") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.multipleBulletDamageMultiplier  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.multipleBulletDamageMultiplier  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "structureImpactReductionDivisor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.structureImpactReductionDivisor  = (INT32) atol(pData->szCharData);
+			pData->curAmmoType.structureImpactReductionDivisor  = (INT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "armourImpactReductionDivisor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.armourImpactReductionDivisor  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.armourImpactReductionDivisor  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "afterArmourDamageDivisor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.afterArmourDamageDivisor  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.afterArmourDamageDivisor  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "beforeArmourDamageDivisor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.beforeArmourDamageDivisor  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.beforeArmourDamageDivisor  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "multipleBulletDamageDivisor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.multipleBulletDamageDivisor  = (INT32) atol((char *)pData->szCharData);
+			pData->curAmmoType.multipleBulletDamageDivisor  = (INT32) atoi((char *)pData->szCharData);
 		}
 		else if(strcmp(name, "lockBustingPower") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.lockBustingPower  = (INT16) atol(pData->szCharData);
+			pData->curAmmoType.lockBustingPower  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "zeroMinimumDamage") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.zeroMinimumDamage  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.zeroMinimumDamage  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "canGoThrough") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.canGoThrough  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.canGoThrough  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "standardIssue") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.standardIssue  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.standardIssue  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "numberOfBullets") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.numberOfBullets  = (UINT8) atol(pData->szCharData);
+			pData->curAmmoType.numberOfBullets  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "highExplosive") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.highExplosive  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.highExplosive  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "explosionSize") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.explosionSize  = (UINT8) atol(pData->szCharData);
+			pData->curAmmoType.explosionSize  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "antiTank") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.antiTank  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.antiTank  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "dart") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.dart  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.dart  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "knife") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.knife  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.knife  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "monsterSpit") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.monsterSpit  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.monsterSpit  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ignoreArmour") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.ignoreArmour  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.ignoreArmour  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "acidic") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.acidic  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.acidic  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "tracerEffect") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAmmoType.tracerEffect  = (BOOLEAN) atol(pData->szCharData);
+			pData->curAmmoType.tracerEffect  = (BOOLEAN) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

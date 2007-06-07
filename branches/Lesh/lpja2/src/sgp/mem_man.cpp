@@ -95,6 +95,7 @@ BOOLEAN InitializeMemoryManager( void )
 {
 	// Register the memory manager with the debugger
 	RegisterDebugTopic(TOPIC_MEMORY_MANAGER, "Memory Manager");
+	printf("Initializing Memory Manager...\n");
 	MemDebugCounter = 0;
 	guiMemTotal     = 0;
 	guiMemAlloced   = 0;

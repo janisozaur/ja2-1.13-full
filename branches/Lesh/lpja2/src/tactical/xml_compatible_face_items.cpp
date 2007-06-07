@@ -107,12 +107,12 @@ compatiblefaceitemEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "compatiblefaceitemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curCompatibleFaceItem[0] = (UINT16) atol(pData->szCharData);
+			pData->curCompatibleFaceItem[0] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "itemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curCompatibleFaceItem[1] = (UINT16) atol(pData->szCharData);
+			pData->curCompatibleFaceItem[1] = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

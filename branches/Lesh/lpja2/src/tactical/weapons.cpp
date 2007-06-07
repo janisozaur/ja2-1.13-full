@@ -333,7 +333,7 @@ struct
 {
 	WEP_PARSE_STAGE	curElement;
 
-	INT8			szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8			szCharData[MAX_CHAR_DATA_LENGTH+1];
 	WEAPONTYPE		curWeapon;
 	WEAPONTYPE *	curWeaponList;
 	UINT32			maxWeapons;
@@ -452,7 +452,7 @@ weaponEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.uiIndex = atol(pData->szCharData);
+			pData->curWeapon.uiIndex = atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "szWeaponName") == 0)
 		{
@@ -469,164 +469,164 @@ weaponEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "ubWeaponClass") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubWeaponClass = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubWeaponClass = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubWeaponType") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubWeaponType = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubWeaponType = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCalibre") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubCalibre = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubCalibre = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubReadyTime") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubReadyTime = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubReadyTime = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubShotsPer4Turns") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubShotsPer4Turns = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubShotsPer4Turns = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubShotsPerBurst") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubShotsPerBurst = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubShotsPerBurst = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubBurstPenalty") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubBurstPenalty = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubBurstPenalty = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubBulletSpeed") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubBulletSpeed = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubBulletSpeed = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubImpact") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubImpact = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubImpact = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubDeadliness") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubDeadliness = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubDeadliness = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bAccuracy") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.bAccuracy = (INT8) atol(pData->szCharData);
+			pData->curWeapon.bAccuracy = (INT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMagSize") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubMagSize = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubMagSize = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usRange")	 == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.usRange = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.usRange = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usReloadDelay") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.usReloadDelay = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.usReloadDelay = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubAttackVolume") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubAttackVolume = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubAttackVolume = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubHitVolume") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.ubHitVolume = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.ubHitVolume = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.sSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.sSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sBurstSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.sBurstSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.sBurstSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sSilencedBurstSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.sSilencedBurstSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.sSilencedBurstSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sReloadSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.sReloadSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.sReloadSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sLocknLoadSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.sLocknLoadSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.sLocknLoadSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bBurstAP") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.bBurstAP = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.bBurstAP = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bAutofireShotsPerFiveAP") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.bAutofireShotsPerFiveAP = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.bAutofireShotsPerFiveAP = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "APsToReload") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.APsToReload = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.APsToReload = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SilencedSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.silencedSound = (UINT16) atol(pData->szCharData);
+			pData->curWeapon.silencedSound = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SwapClips") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.swapClips = (BOOLEAN) atol(pData->szCharData);
+			pData->curWeapon.swapClips = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "MaxDistForMessyDeath") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.maxdistformessydeath = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.maxdistformessydeath = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "AutoPenalty") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.AutoPenalty = (UINT8) atol(pData->szCharData);
+			pData->curWeapon.AutoPenalty = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "NoSemiAuto") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-			pData->curWeapon.NoSemiAuto = (BOOLEAN) atol(pData->szCharData);
+			pData->curWeapon.NoSemiAuto = (BOOLEAN) atoi(pData->szCharData);
 		}
         // Lesh: xmlreader must handle new field
    		else if(strcmp(name, "BurstAniDelay") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-            pData->curWeapon.sAniDelay = (INT16) atol(pData->szCharData);
+            pData->curWeapon.sAniDelay = (INT16) atoi(pData->szCharData);
 		}
         // Lesh: end
    		else if(strcmp(name, "APsToReloadManually") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-            pData->curWeapon.APsToReloadManually = (UINT8) atol(pData->szCharData);
+            pData->curWeapon.APsToReloadManually = (UINT8) atoi(pData->szCharData);
 		}
    		else if(strcmp(name, "ManualReloadSound") == 0)
 		{
 			pData->curElement = WEAPON_ELEMENT_WEAPON;
-            pData->curWeapon.ManualReloadSound = (UINT16) atol(pData->szCharData);
+            pData->curWeapon.ManualReloadSound = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

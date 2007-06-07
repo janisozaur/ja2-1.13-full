@@ -155,262 +155,262 @@ armyitemchoicesEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curArmyItemChoices.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubChoices") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.ubChoices  = (UINT8) atol(pData->szCharData);
+			pData->curArmyItemChoices.ubChoices  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo1") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[0] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[0] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo2") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[1] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[1] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo3") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[2] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[2] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo4") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[3] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[3] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo5") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[4] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[4] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo6") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[5] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[5] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo7") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[6] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[6] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo8") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[7] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[7] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo9") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[8] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[8] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo10") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[9] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[9] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo11") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[10] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[10] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo12") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[11] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[11] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo13") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[12] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[12] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo14") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[13] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[13] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo15") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[14] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[14] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo16") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[15] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[15] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo17") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[16] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[16] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo18") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[17] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[17] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo19") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[18] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[18] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo20") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[19] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[19] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo21") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[20] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[20] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo22") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[21] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[21] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo23") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[22] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[22] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo24") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[23] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[23] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo25") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[24] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[24] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo26") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[25] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[25] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo27") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[26] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[26] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo28") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[27] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[27] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo29") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[28] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[28] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo30") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[29] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[29] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo31") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[30] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[30] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo32") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[31] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[31] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo33") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[32] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[32] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo34") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[33] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[33] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo35") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[34] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[34] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo36") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[35] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[35] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo37") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[36] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[36] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo38") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[37] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[37] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo39") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[38] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[38] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo40") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[39] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[39] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo41") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[40] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[40] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo42") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[41] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[41] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo43") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[42] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[42] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo44") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[43] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[43] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo45") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[44] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[44] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo46") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[45] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[45] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo47") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[46] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[46] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo48") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[47] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[47] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo49") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[48] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[48] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo50") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmyItemChoices.bItemNo[49] = (INT16) atol(pData->szCharData);
+			pData->curArmyItemChoices.bItemNo[49] = (INT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

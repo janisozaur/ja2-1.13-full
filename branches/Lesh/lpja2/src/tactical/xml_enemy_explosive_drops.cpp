@@ -108,22 +108,22 @@ explosiveDropEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curExplosiveDrop.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubType   = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubType   = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubEnemyDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubEnemyDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubEnemyDropRate  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMilitiaDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosiveDrop.ubMilitiaDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curExplosiveDrop.ubMilitiaDropRate  = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

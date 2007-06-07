@@ -212,6 +212,7 @@ BOOLEAN InitializeSoundManager(void)
 {
     UINT32 uiCount;
 
+	printf("Initializing Sound Manager...\n");
     InitLogging();
 
 	if(fSoundSystemInit)

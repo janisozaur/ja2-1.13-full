@@ -174,12 +174,32 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	STRING512			DataDir;
 
 	InitializeJA2Clock();
-	//InitializeJA2TimerID();
+
 	// Get Executable Directory
 	GetExecutableDirectory( CurrentDir );
+	CIniReader	customDP;
+	const CHAR8 *pCustomDir;
+	CHAR8 customDataPath[MAX_PATH];
+
+	if ( !SetFileManCurrentDirectory( CurrentDir ) )
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find exe directory, shutting down");
+		return FALSE;
+	}
+
+	customDP.Open("Ja2.ini", TRUE);
+	pCustomDir = customDP.ReadString("Ja2 Settings", "CUSTOM_DATA_LOCATION", NULL);
+	if ( !pCustomDir )
+		printf("Custom dir isn't specified\n");
+	else
+	{
+		sprintf(customDataPath, "%s%s%c", CurrentDir, pCustomDir, SLASH);
+		printf("Custom dir = %s\n", customDataPath);
+	}
+	customDP.Close();
 
 	// Adjust Current Dir
-	sprintf( DataDir, "%s\\Data", CurrentDir );
+	sprintf( DataDir, "%sData%c", CurrentDir, SLASH );
 	printf("Data directory is %s\n", DataDir);
 	if ( !SetFileManCurrentDirectory( DataDir ) )
 	{
@@ -188,7 +208,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 
 	//Initialize the file database
-	//InitializeFileDatabase( gGameLibaries, NUMBER_OF_LIBRARIES ); // ?!?! doesn't take parameters (jonathanl)
 	if ( !InitializeFileDatabase() )
 	{
 		fprintf(stderr, "Couldn't init library database\n");
@@ -197,42 +216,21 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	// Snap: Initialize the Data directory catalogue
 	gDefaultDataCat.NewCat(DataDir);
-
-	// Snap: Get the custom Data directory location from ja2.ini (if any)
-	// and initialize the custom catalogue
-	CHAR8 customDataPath[MAX_PATH];
-	const CHAR8 *pCustomDir;
-	CIniReader	customDP;
-
-	customDP.Open("..\\Ja2.ini", TRUE);
-	pCustomDir = customDP.ReadString("Ja2 Settings", "CUSTOM_DATA_LOCATION", NULL);
-	if ( !pCustomDir )
-		printf("Custom dir isn't specified\n");
-	else
-	{
-		sprintf(customDataPath, "%s\\%s", CurrentDir, pCustomDir);
-		printf("Custom dir = %s\n", customDataPath);
+	if ( pCustomDir )
 		gCustomDataCat.NewCat(customDataPath);
-	}
-	customDP.Close();
 
+	// Lesh: New VFS service (replaces custom catalogue)
 	if ( !VFS.AddContainerByIndex(0) )
 		printf("AddContainer failed!\n");
 
-	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data/", FALSE) )
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2-1.13/Data/", FALSE) )
 		printf("AddDirectoryContents(1) failed!\n");
 
-	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/", FALSE) )
+	if ( !VFS.AddDirectoryContents("/home/lesh/ja2-1.13/Data-1.13/", FALSE) )
 		printf("AddDirectoryContents(2) failed!\n");
 
-	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/SavedGames", TRUE, "SAVEDGAMES") )
-		printf("AddDirectoryContents(2) failed!\n");
-
-	if ( VFS.IsDirExist( "ANIMS" ) )
-		printf("VFS.IsDirExist\n");
-
-	if ( VFS.IsFileExist( "Anims\\CAMO.COL" ) )
-		printf("VFS.IsFileExist\n");
+//	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/SavedGames", TRUE, "SAVEDGAMES") )
+//		printf("AddDirectoryContents(2) failed!\n");
 
 	VFS.DebugDumpResources( "map_dump.txt" );
 
@@ -281,9 +279,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		FastDebugMsg("FAILED : Initializing Game Manager");
 		return FALSE;
 	}
-//
-//	// Register mouse wheel message
-//	guiMouseWheelMsg = RegisterWindowMessage( MSH_MOUSEWHEEL );
 
 	gfGameInitialized = TRUE;
 	fSGPClosed = FALSE;
@@ -362,11 +357,6 @@ void SGPExit(void)
 
 	ShutdownStandardGamingPlatform();
 	SDL_Quit();
-//	ShowCursor(TRUE);
-//	if(strlen(gzErrorMsg))
-//	{
-//		MessageBox(NULL, gzErrorMsg, "Error", MB_OK | MB_ICONERROR  );
-//	}
 }
 
 void GetRuntimeSettings( )
@@ -378,7 +368,7 @@ void GetRuntimeSettings( )
 	// Get Executable Directory
 	GetHomeDirectory( INIFile );
 
-	strcat(INIFile, "\\Ja2.ini");
+	strcat(INIFile, "Ja2.ini");
 
 	printf("Reading run-time settings from: %s\n", INIFile);
 	if ( !rtIni.Open( INIFile, TRUE ) )

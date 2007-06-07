@@ -50,8 +50,8 @@
 	
 #endif
 
-BOOLEAN gfWasInMeanwhile = FALSE;
-
+BOOLEAN		gfWasInMeanwhile = FALSE;
+STRING512	zTacticalSaveDir;
 
 
 ///////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ typedef struct
 
 
 
-#define		NPC_TEMP_QUOTE_FILE			"Temp\\NpcQuote.tmp"
+#define		NPC_TEMP_QUOTE_FILE			"NpcQuote.tmp"
 
 
 
@@ -1480,22 +1480,22 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 {
 	UINT32	uiRetVal;
 
+	GetTempDirectory( zTacticalSaveDir );
+	strcat( zTacticalSaveDir, TACTICAL_SAVE_DIR );
+
 	//If the Map Temp directory exists, removes the temp files
-	uiRetVal = FileGetAttributes( MAPS_DIR );
-	if( uiRetVal != 0xFFFFFFFF )
+	uiRetVal = DirectoryExists( zTacticalSaveDir );
+	if( uiRetVal )
 	{
-		if( uiRetVal & FILE_ATTRIBUTES_DIRECTORY )
+		//Erase the directory
+		if( !EraseDirectory( zTacticalSaveDir ) )
 		{
-			//Erase the directory
-			if( !EraseDirectory( MAPS_DIR ) )
-			{
-				//error erasing the temporary maps directory
-			}
+			//error erasing the temporary maps directory
 		}
 	}
 	else
 	{
-		if( !MakeFileManDirectory( MAPS_DIR ) )
+		if( !MakeFileManDirectory( zTacticalSaveDir ) )
 		{
 			//Erro creating the temp map directory
 			AssertMsg( 0, "Error creating the Temp Directory.");
@@ -2126,10 +2126,13 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
 	HWFILE	hFile;
+	STRING512	filename;
 
+	strcpy( filename, zTacticalSaveDir );
+	strcat( filename, NPC_TEMP_QUOTE_FILE );
 
 	//Open the temp npc file
-	hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
@@ -2998,51 +3001,51 @@ void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, 
 	switch( uiType )
 	{
 		case SF_ITEM_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\i_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%si_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_ROTTING_CORPSE_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\r_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sr_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\m_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sm_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_DOOR_TABLE_TEMP_FILES_EXISTS:
-			sprintf( (char *)pMapName, "%s\\d_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sd_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_REVEALED_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\v_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sv_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_DOOR_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\ds_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sds_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\e_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%se_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
 			// NB save game version 0 is "saving game"
 			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion != 0 && guiSaveGameVersion < 78 )
 			{
-				sprintf( (char *)pMapName, "%s\\c_%s", MAPS_DIR, zTempName);
+				sprintf( (char *)pMapName, "%sc_%s", zTacticalSaveDir, zTempName);
 			}
 			else
 			{
-				sprintf( (char *)pMapName, "%s\\cc_%s", MAPS_DIR, zTempName);
+				sprintf( (char *)pMapName, "%scc_%s", zTacticalSaveDir, zTempName);
 			}
 			break;
 
 		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\sm_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%ssm_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\l_%s", MAPS_DIR, zTempName);
+			sprintf( (char *)pMapName, "%sl_%s", zTacticalSaveDir, zTempName);
 			break;
 
 		default:

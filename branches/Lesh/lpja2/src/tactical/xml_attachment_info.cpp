@@ -107,27 +107,27 @@ attachmentinfoEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAttachmentInfo.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usItem") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.usItem   = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentInfo.usItem   = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "uiItemClass") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.uiItemClass= (UINT32) atol(pData->szCharData);
+			pData->curAttachmentInfo.uiItemClass= (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bAttachmentSkillCheck") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheck  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheck  = (INT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bAttachmentSkillCheckMod") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheckMod  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheckMod  = (INT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

@@ -9,9 +9,9 @@
 #include "soldier_profile_type.h"
 
 #ifdef JA2_WIN
-#define		MAPS_DIR		"Temp\\"	
+#define		TACTICAL_SAVE_DIR		"Temp\\"	
 #elif defined( JA2_LINUX )
-#define		MAPS_DIR		"Temp/"	
+#define		TACTICAL_SAVE_DIR		"Temp/"	
 #endif
 
 

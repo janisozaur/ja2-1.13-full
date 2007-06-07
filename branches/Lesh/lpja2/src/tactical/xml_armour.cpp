@@ -107,30 +107,30 @@ armourEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curArmour.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubArmourClass") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubArmourClass  = (UINT8) atol(pData->szCharData);
+			pData->curArmour.ubArmourClass  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubProtection") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubProtection = (UINT8) atol(pData->szCharData);
+			pData->curArmour.ubProtection = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCoverage") == 0)
 		{
 			pData->curElement = ELEMENT;
 			if ( gGameExternalOptions.fEnableArmorCoverage )
-				pData->curArmour.ubCoverage = (UINT8) atol(pData->szCharData);
+				pData->curArmour.ubCoverage = (UINT8) atoi(pData->szCharData);
 			else
 				pData->curArmour.ubCoverage = 100;
 		}
 		else if(strcmp(name, "ubDegradePercent") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubDegradePercent   = (UINT8) atol(pData->szCharData);
+			pData->curArmour.ubDegradePercent   = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

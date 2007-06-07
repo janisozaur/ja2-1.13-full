@@ -37,7 +37,7 @@
 
 #define				GAME_INI_FILE					"..\\Ja2.ini"
 
-#define				GAME_EXTERNAL_OPTIONS_FILE	"Ja2_Options.ini"
+#define				GAME_EXTERNAL_OPTIONS_FILE	"Ja2_Options.INI"
 
 #define				CD_ROOT_DIR						"DATA\\"
 

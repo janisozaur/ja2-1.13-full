@@ -107,27 +107,27 @@ attachmentcombomergeEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usItem") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usItem  = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usItem  = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usAttachment1") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usAttachment[0] = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usAttachment[0] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usAttachment2") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usAttachment[1] = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usAttachment[1] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usResult") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usResult   = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usResult   = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

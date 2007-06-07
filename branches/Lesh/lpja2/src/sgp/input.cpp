@@ -242,6 +242,7 @@ void MouseButton(SDL_MouseButtonEvent *MouseButton)
 BOOLEAN InitializeInputManager(void)
 {
 	RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
+	printf("Initializing Input Manager...\n");
 
 	// Initialize the gfKeyState table to FALSE everywhere
 	memset(gfKeyState, FALSE, 256);

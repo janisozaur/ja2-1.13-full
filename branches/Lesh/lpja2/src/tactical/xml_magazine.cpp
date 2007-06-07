@@ -106,22 +106,22 @@ magazineEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curMagazine.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCalibre") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubCalibre  = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubCalibre  = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMagSize") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubMagSize = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubMagSize = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubAmmoType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubAmmoType   = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubAmmoType   = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

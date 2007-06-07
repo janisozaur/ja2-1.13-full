@@ -109,17 +109,17 @@ attachmentEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "attachmentIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachment[0] = (UINT16) atol(pData->szCharData);
+			pData->curAttachment[0] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "itemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachment[1] = (UINT16) atol(pData->szCharData);
+			pData->curAttachment[1] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "APCost") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachment[2] = (UINT16) atol(pData->szCharData);
+			pData->curAttachment[2] = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

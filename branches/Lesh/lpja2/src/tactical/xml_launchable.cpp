@@ -107,12 +107,12 @@ launchableEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "launchableIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curLaunchable[0] = (UINT16) atol(pData->szCharData);
+			pData->curLaunchable[0] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "itemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curLaunchable[1] = (UINT16) atol(pData->szCharData);
+			pData->curLaunchable[1] = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

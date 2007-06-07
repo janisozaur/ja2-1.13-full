@@ -115,32 +115,32 @@ mergeEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "firstItemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[0] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[0] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "secondItemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[1] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[1] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "firstResultingItemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[2] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[2] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "secondResultingItemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[3] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[3] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "mergeType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[4] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[4] = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "APCost") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMerge[5] = (UINT16) atol(pData->szCharData);
+			pData->curMerge[5] = (UINT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

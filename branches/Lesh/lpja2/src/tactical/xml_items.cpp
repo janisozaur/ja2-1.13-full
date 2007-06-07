@@ -273,7 +273,7 @@ itemEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.uiIndex = atol(pData->szCharData);
+			pData->curItem.uiIndex = atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "szItemName") == 0)
 		{
@@ -402,584 +402,582 @@ itemEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "usItemClass") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.usItemClass = (UINT32) atol(pData->szCharData);
+			pData->curItem.usItemClass = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubClassIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubClassIndex = (UINT16) atol(pData->szCharData);
+			pData->curItem.ubClassIndex = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCursor") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubCursor = (UINT8) atol(pData->szCharData);
+			pData->curItem.ubCursor = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bSoundType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bSoundType = (INT8) atol(pData->szCharData);
+			pData->curItem.bSoundType = (INT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubGraphicType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubGraphicType = (UINT8) atol(pData->szCharData);
+			pData->curItem.ubGraphicType = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubGraphicNum") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubGraphicNum = (UINT16) atol(pData->szCharData);
+			pData->curItem.ubGraphicNum = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubWeight") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubWeight = (UINT8) atol(pData->szCharData);
+			pData->curItem.ubWeight = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubPerPocket") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubPerPocket = (UINT8) atol(pData->szCharData);
+			pData->curItem.ubPerPocket = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "usPrice") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.usPrice = (UINT16) atol(pData->szCharData);
+			pData->curItem.usPrice = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCoolness") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.ubCoolness = (UINT8) atol(pData->szCharData);
+			pData->curItem.ubCoolness = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bReliability") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bReliability = (INT8) atol(pData->szCharData);
+			pData->curItem.bReliability = (INT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "bRepairEase") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bRepairEase = (INT8) atol(pData->szCharData);
+			pData->curItem.bRepairEase = (INT8) atoi(pData->szCharData);
 		}
 		//else if(strcmp(name, "fFlags")	 == 0)
 		//{
 		//	pData->curElement = ELEMENT;
-		//	pData->curItem.fFlags = (BOOLEAN) atol(pData->szCharData);
+		//	pData->curItem.fFlags = (BOOLEAN) atoi(pData->szCharData);
 		//}
 		else if(strcmp(name, "Damageable")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.damageable = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.damageable = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Repairable")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.repairable = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.repairable = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "WaterDamages")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.waterdamages = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.waterdamages = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Metal")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.metal = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.metal = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Sinks")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.sinks = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.sinks = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ShowStatus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.showstatus = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.showstatus = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "HiddenAddon")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.hiddenaddon = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.hiddenaddon = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "TwoHanded")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.twohanded = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.twohanded = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "NotBuyable")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.notbuyable  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.notbuyable  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Attachment")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.attachment = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.attachment = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "HiddenAttachment")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.hiddenattachment = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.hiddenattachment = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BigGunList")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.biggunlist = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.biggunlist = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "NotInEditor")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.notineditor = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.notineditor = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DefaultUndroppable")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.defaultundroppable = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.defaultundroppable = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Unaerodynamic")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.unaerodynamic = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.unaerodynamic = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Electronic")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.electronic = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.electronic = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Inseparable")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.inseparable = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.inseparable = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BR_NewInventory")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			StoreInventory[pData->curItem.uiIndex][0] = (UINT8) atol(pData->szCharData);
+			StoreInventory[pData->curItem.uiIndex][0] = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BR_UsedInventory")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			StoreInventory[pData->curItem.uiIndex][1] = (UINT8) atol(pData->szCharData);
+			StoreInventory[pData->curItem.uiIndex][1] = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BR_ROF")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-		 	WeaponROF[pData->curItem.uiIndex] = (INT16) atol(pData->szCharData);
+		 	WeaponROF[pData->curItem.uiIndex] = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "CamoBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-		 	pData->curItem.camobonus = (INT16) atol(pData->szCharData);
+		 	pData->curItem.camobonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DesertCamoBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-		 	pData->curItem.desertCamobonus = (INT16) atol(pData->szCharData);
+		 	pData->curItem.desertCamobonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "UrbanCamoBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-		 	pData->curItem.urbanCamobonus = (INT16) atol(pData->szCharData);
+		 	pData->curItem.urbanCamobonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SnowCamoBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-		 	pData->curItem.snowCamobonus = (INT16) atol(pData->szCharData);
+		 	pData->curItem.snowCamobonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "StealthBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.stealthbonus = (INT16) atol(pData->szCharData);
+			pData->curItem.stealthbonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentNoiseReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentnoisereduction = (INT16) atol(pData->szCharData);
+			pData->curItem.percentnoisereduction = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "GasMask")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.gasmask = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.gasmask = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Bipod")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bipod = (INT16) atol(pData->szCharData);
+			pData->curItem.bipod = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ToHitBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.tohitbonus = (INT16) atol(pData->szCharData);
+			pData->curItem.tohitbonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.rangebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.rangebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "AimBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.aimbonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.aimbonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "MinRangeForAimBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.minrangeforaimbonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.minrangeforaimbonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentAPReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentapreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentapreduction  = (INT16) atoi(pData->szCharData);
 		}
-
 		else if(strcmp(name, "MagSizeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.magsizebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.magsizebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentAutofireAPReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentautofireapreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentautofireapreduction  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentBurstFireAPReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentburstfireapreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentburstfireapreduction  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "AutoFireToHitBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.autofiretohitbonus   = (INT16) atol(pData->szCharData);
+			pData->curItem.autofiretohitbonus   = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "APBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.APBonus = (INT16) atol(pData->szCharData);
+			pData->curItem.APBonus = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RateOfFireBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.rateoffirebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.rateoffirebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BurstSizeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.burstsizebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.burstsizebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BurstToHitBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bursttohitbonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.bursttohitbonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentReadyTimeAPReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentreadytimeapreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentreadytimeapreduction  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "PercentReloadTimeAPReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentreloadtimeapreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentreloadtimeapreduction  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BulletSpeedBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bulletspeedbonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.bulletspeedbonus  = (INT16) atoi(pData->szCharData);
 		}
-
 		else if(strcmp(name, "PercentStatusDrainReduction")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percentstatusdrainreduction  = (INT16) atol(pData->szCharData);
+			pData->curItem.percentstatusdrainreduction  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "GrenadeLauncher")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.grenadelauncher  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.grenadelauncher  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "LockBomb")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.lockbomb  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.lockbomb  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Flare")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.flare = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.flare = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Duckbill")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.duckbill  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.duckbill  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Detonator")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.detonator  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.detonator  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RemoteDetonator")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.remotedetonator  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.remotedetonator  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ThermalOptics")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.thermaloptics   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.thermaloptics   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SciFi")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.scifi   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.scifi   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "HideMuzzleFlash")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.hidemuzzleflash  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.hidemuzzleflash  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Cannon")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.cannon   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.cannon   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RocketRifle")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.rocketrifle   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.rocketrifle   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Alcohol")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.alcohol  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.alcohol  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Hardware")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.hardware  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.hardware  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Medical")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.medical  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.medical  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DamageBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.damagebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.damagebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "MeleeDamageBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.meleedamagebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.meleedamagebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Mortar")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.mortar = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.mortar = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RocketLauncher")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.rocketlauncher  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.rocketlauncher  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SingleShotRocketLauncher")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.singleshotrocketlauncher  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.singleshotrocketlauncher  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DiscardedLauncherItem")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.discardedlauncheritem  = (UINT16) atol(pData->szCharData);
+			pData->curItem.discardedlauncheritem  = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "SingleShotRocketLauncher")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.singleshotrocketlauncher  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.singleshotrocketlauncher  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BloodiedItem")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bloodieditem  = (UINT16) atol(pData->szCharData);
+			pData->curItem.bloodieditem  = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DefaultAttachment")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.defaultattachment  = (UINT16) atol(pData->szCharData);
+			pData->curItem.defaultattachment  = (UINT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BrassKnuckles")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.brassknuckles   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.brassknuckles   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Crowbar")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.crowbar  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.crowbar  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "GLGrenade")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.glgrenade   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.glgrenade   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "FlakJacket")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.flakjacket = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.flakjacket = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "HearingRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.hearingrangebonus  = (INT16) atol(pData->szCharData);
+			pData->curItem.hearingrangebonus  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "VisionRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.visionrangebonus   = (INT16) atol(pData->szCharData);
+			pData->curItem.visionrangebonus   = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "NightVisionRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.nightvisionrangebonus   = (INT16) atol(pData->szCharData);
+			pData->curItem.nightvisionrangebonus   = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DayVisionRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.dayvisionrangebonus   = (INT16) atol(pData->szCharData);
+			pData->curItem.dayvisionrangebonus   = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "CaveVisionRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.cavevisionrangebonus   = (INT16) atol(pData->szCharData);
+			pData->curItem.cavevisionrangebonus   = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BrightLightVisionRangeBonus")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.brightlightvisionrangebonus    = (INT16) atol(pData->szCharData);
+			pData->curItem.brightlightvisionrangebonus    = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "LeatherJacket")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.leatherjacket    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.leatherjacket    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "NeedsBatteries")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.needsbatteries    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.needsbatteries    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Batteries")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.batteries    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.batteries    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "XRay")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.xray    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.xray    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "WireCutters")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.wirecutters    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.wirecutters    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Toolkit")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.toolkit    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.toolkit    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Canteen")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.canteen    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.canteen    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Marbles")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.marbles    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.marbles    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Walkman")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.walkman    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.walkman    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RemoteTrigger")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.remotetrigger    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.remotetrigger    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "RobotRemoteControl")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.robotremotecontrol    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.robotremotecontrol    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "CamouflageKit")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.camouflagekit  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.camouflagekit  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "LocksmithKit")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.locksmithkit = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.locksmithkit = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Mine")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.mine   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.mine   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "GasCan")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.gascan  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.gascan  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "CanAndString")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.canandstring     = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.canandstring     = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ContainsLiquid")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.containsliquid    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.containsliquid    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "FingerPrintID")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.fingerprintid    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.fingerprintid    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Rock")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.rock   = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.rock   = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "MedicalKit")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.medicalkit    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.medicalkit    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "FirstAidKit")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.firstaidkit  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.firstaidkit  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "MetalDetector")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.metaldetector  = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.metaldetector  = (BOOLEAN) atoi(pData->szCharData);
 		}
 		if(strcmp(name, "PercentTunnelVision")	 == 0) //Madd: had to scrap the "else" due to a compiler limit
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.percenttunnelvision  = (UINT8) atol(pData->szCharData);
+			pData->curItem.percenttunnelvision  = (UINT8) atoi(pData->szCharData);
 		}
 		if(strcmp(name, "Jar")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.jar    = (BOOLEAN) atol(pData->szCharData);
+			pData->curItem.jar    = (BOOLEAN) atoi(pData->szCharData);
 		}
 		if(strcmp(name, "BestLaserRange")	 == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curItem.bestlaserrange    = (INT16) atol(pData->szCharData);
+			pData->curItem.bestlaserrange    = (INT16) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -1004,13 +1002,13 @@ BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion )
 	
 	localizedTextOnly = localizedVersion;
 	
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Items.xml" );
+//	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Loading Items.xml" );
 
 	// Open items file
 	hFile = FileOpen( fileName, FILE_ACCESS_READ, FALSE );
 	if ( !hFile )
 		return( FALSE );
-	
+
 	uiFSize = FileGetSize(hFile);
 	lpcBuffer = (CHAR8 *) MemAlloc(uiFSize+1);
 
@@ -1066,7 +1064,7 @@ BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion )
 }
 BOOLEAN WriteItemStats()
 {
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats");
+//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats");
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

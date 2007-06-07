@@ -141,7 +141,7 @@ BOOLEAN IO_Dir_DirectoryExists( const CHAR8 *path )
 //===================================================================
 BOOLEAN IO_Dir_MakeDirectory( const CHAR8 *path )
 {
-	if ( mkdir(path, 0755) == -1 )
+	if ( mkdir(path, 0700) == -1 )
 	{
 		fprintf(stderr, "Error creating dir %s: errno=%d\n",
 			path, errno);
@@ -254,11 +254,11 @@ IOFILE IO_File_Open( const CHAR8 *path, UINT32 flags )
 		uiOpenFlags = O_WRONLY;
 
 	if  ( flags & IO_CREATE_NEW )
-		uiOpenFlags |= O_CREAT | O_EXCL;
+		uiOpenFlags |= O_CREAT | O_EXCL | O_TRUNC;
 	else if ( flags & IO_CREATE_ALWAYS )
-		uiOpenFlags |= O_CREAT;
+		uiOpenFlags |= O_CREAT | O_TRUNC;
 
-	hFile = open( path, uiOpenFlags );
+	hFile = open( path, uiOpenFlags, S_IRWXU );
 	if ( hFile == -1 )
 	{
 		fprintf(stderr, "Error opening file %s: errno=%d\n",

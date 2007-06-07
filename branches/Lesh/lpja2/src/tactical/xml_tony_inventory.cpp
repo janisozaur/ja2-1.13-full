@@ -105,17 +105,17 @@ inventoryEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curInventory.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curInventory.uiIndex   = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "sItemIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curInventory.sItemIndex  = (INT16) atol(pData->szCharData);
+			pData->curInventory.sItemIndex  = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ubOptimalNumber") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curInventory.ubOptimalNumber = (UINT8) atol(pData->szCharData);
+			pData->curInventory.ubOptimalNumber = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
