@@ -22,39 +22,13 @@
 
 #include "vfs_types.hpp"
 
-//using namespace std;
-
-/*
-class sgpAbstractFileResource
-{
-private:
-protected:
-	CHAR8*	zApplicationName;
-	CHAR8*	zRealName;
-	BOOLEAN	fIsReadOnly;
-
-public:
-	sgpAbstractFileResource();
-	~sgpAbstractFileResource() = 0;
-
-	BOOLEAN	Open ( UINT32 uiOpenFlags ) = 0;
-	void		Close( void                   ) = 0;
-
-	BOOLEAN	Read ( void* pReadBuffer,  UINT32 uiSize ) = 0;
-	BOOLEAN	Write( void* pWriteBuffer, UINT32 uiSize ) = 0;
-
-	UINT32	Seek ( UINT32 uiPosition, UINT32 uiMethod ) = 0;
-	UINT32	Tell ( void                                       ) = 0;
-
-	UINT32	GetSize( void ) = 0;
-};
-*/
-
 class sgpVFS
 {
 private:
 protected:
-	vfsFileMap ResourceMap;
+	vfsFileMap 		ResourceMap;
+	vfsStringArray	FileMatchResults;
+	UINT32			FileMatchIndex;
 
 	BOOLEAN		AddResourceEntry( const vfsString& ResourceName, const vfsString& RealName, BOOLEAN IsDirectory, UINT32 LibraryID, BOOLEAN Writeable );
 	BOOLEAN		GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList );
@@ -68,6 +42,9 @@ public:
 	void		Shutdown	( void );
 
 	BOOLEAN		FindResource( const CHAR8 *pResourceName, vfsEntry& Entry );
+	UINT32		StartFilePatternMatch ( const CHAR8 *pPattern );
+	BOOLEAN		GetNextMatch          ( CHAR8 *pFilename, UINT32 uiMaxLen );
+	void		FinishFilePatternMatch( void );
 
 	UINT32		Open ( const STR8 pResourceName, UINT32 uiOpenFlags  );
 	void		Close( UINT32 uiFileHandle );

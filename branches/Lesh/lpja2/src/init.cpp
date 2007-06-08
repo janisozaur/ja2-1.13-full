@@ -67,24 +67,6 @@
 extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 #endif
 
-//#if defined( GERMAN ) && !defined( _DEBUG )
-	//#define LASERLOCK_ENABLED
-//#endif
-
-/*
-#ifdef LASERLOCK_ENABLED
-	int	LASERLOK_Init( HINSTANCE hInstance );
-	int	LASERLOK_Run();
-	int	LASERLOK_Check();
-
-	BOOLEAN	PrepareLaserLockSystem();
-	void HandleLaserLockResult( BOOLEAN fSuccess );
-//	int	TestCall( int n);
-#endif
-
-extern	HINSTANCE					ghInstance;
-*/
-
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
 	char fileName[MAX_PATH];
@@ -397,25 +379,23 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 UINT32 InitializeJA2(void)
 { 
-
-//#ifdef LASERLOCK_ENABLED
-//	HandleLaserLockResult( PrepareLaserLockSystem() );
-//#endif
-
-//  HandleJA2CDCheck( );
+	printf("Initialize JA2\n");
 
 	gfWorldLoaded = FALSE;
 
 	//Load external game mechanic data
+	printf("Loading external data\n");
 	if ( !LoadExternalGameplayData(TABLEDATA_DIRECTORY))
 	{
 		return( ERROR_SCREEN );
 	}
 	
 	// Load external text
+	printf("Loading external text\n");
 	LoadAllExternalText();
 
 	// Init JA2 sounds
+	printf("Initializing JA2 sound\n");
 	InitJA2Sound( );
 
 	gsRenderCenterX = 805;
@@ -423,32 +403,39 @@ UINT32 InitializeJA2(void)
  
 
 	// Init data
+	printf("Initializing system video objects\n");
 	InitializeSystemVideoObjects( );
 
 	// Init animation system
+	printf("Initializing animation system\n");
 	if ( !InitAnimationSystem( ) )
 	{
 		return( ERROR_SCREEN );
 	}
 
 	// Init lighting system
+	printf("Initializing light system\n");
 	InitLightingSystem();
 
 	// Init dialog queue system
+	printf("Initializing dialogue control\n");
 	InitalizeDialogueControl();
 
+	printf("Initializing strategic engine\n");
 	if ( !InitStrategicEngine( ) )
 	{
 		return( ERROR_SCREEN );
 	}
 	
 	//needs to be called here to init the SectorInfo struct
+	printf("Initializing strategic movement costs\n");
 	if ( !InitStrategicMovementCosts( ) )
 	{
 		return( ERROR_SCREEN );
 	}
 
 	// Init tactical engine
+	printf("Initializing tactical engine\n");
 	if ( !InitTacticalEngine( ) )
 	{
 		return( ERROR_SCREEN );
@@ -459,25 +446,31 @@ UINT32 InitializeJA2(void)
 	//InitializeJA2Clock( );
 
 	// INit shade tables
+	printf("Building shade table\n");
 	BuildShadeTable( );
 
 	// INit intensity tables
+	printf("Building intensity table\n");
 	BuildIntensityTable( );
 	
 	// Init Event Manager
+	printf("Initializing event manager\n");
 	if ( !InitializeEventManager( ) )
 	{
 		return( ERROR_SCREEN );
 	}
 
 	// Initailize World
+	printf("Initializing world\n");
 	if ( !InitializeWorld( ) )
 	{
 		return( ERROR_SCREEN );
 	}
 
+	printf("Initializing tile cache\n");
 	InitTileCache( );
 
+	printf("Initializing merc popup box\n");
 	InitMercPopupBox( );
 
 	// Set global volume
@@ -486,10 +479,13 @@ UINT32 InitializeJA2(void)
 	DetermineRGBDistributionSettings();
 
 	// Snap: Init save game directory
+	printf("Initializing savegame directory\n");
 	if ( !InitSaveDir() )
 	{
 		return( ERROR_SCREEN );
 	}
+
+	printf("Game ready!\n");
 
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR

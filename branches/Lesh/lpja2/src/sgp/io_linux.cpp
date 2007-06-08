@@ -473,4 +473,17 @@ BOOLEAN IO_File_GetClose( void )
 	return TRUE;	
 }
 
+//===================================================================
+//
+//	IO_DoesFilenameMatchesPattern - tests, if filename matches the
+//	pattern? (e.g. Sounds.slf matches *.slf). Case-insensitive!
+//
+//	return:	TRUE, if filename matches the pattern,
+//			FALSE, if not
+//	  
+//===================================================================
+BOOLEAN IO_DoesFilenameMatchesPattern( const CHAR8 *pattern, const CHAR8 *filename )
+{
+	return( fnmatch ( pattern, filename, FNM_NOESCAPE | FNM_CASEFOLD ) == 0 );
+}
 #endif	//JA2_LINUX

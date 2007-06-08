@@ -17,7 +17,7 @@
 
 
 UINT32	guiNumTileCacheStructs = 0;
-UINT32 guiMaxTileCacheSize		= 50;
+UINT32 guiMaxTileCacheSize		= 200;
 UINT32 guiCurTileCacheSize		= 0;
 INT32  giDefaultStructIndex   = -1;
 
@@ -28,9 +28,9 @@ TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
 
 BOOLEAN InitTileCache(  )
 {	
-	UINT32				cnt;
-	GETFILESTRUCT FileInfo;
-	INT16					sFiles = 0;
+	UINT32			cnt;
+	GETFILESTRUCT	FileInfo;
+	INT16			sFiles = 0;
 
 	gpTileCache = (TILE_CACHE_ELEMENT *)MemAlloc( sizeof( TILE_CACHE_ELEMENT ) * guiMaxTileCacheSize );
 
@@ -42,7 +42,6 @@ BOOLEAN InitTileCache(  )
 	}
 
 	guiCurTileCacheSize = 0;
-
 
 	// OK, look for JSD files in the tile cache directory and
 	// load any we find....
@@ -69,7 +68,8 @@ BOOLEAN InitTileCache(  )
 		{
 			while( GetFileNext(&FileInfo) )
 			{
-				sprintf( gpTileCacheStructInfo[ cnt ].Filename, "TILECACHE\\%s", FileInfo.zFileName );
+				//sprintf( gpTileCacheStructInfo[ cnt ].Filename, "TILECACHE\\%s", FileInfo.zFileName );
+				strcpy( gpTileCacheStructInfo[ cnt ].Filename, FileInfo.zFileName );
 
 				// Get root name
 				GetRootName( gpTileCacheStructInfo[ cnt ].zRootName, gpTileCacheStructInfo[ cnt ].Filename );

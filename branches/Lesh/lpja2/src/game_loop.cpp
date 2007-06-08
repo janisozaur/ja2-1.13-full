@@ -91,7 +91,6 @@ BOOLEAN InitializeGame(void)
 	
 	ClearAllDebugTopics();
 	RegisterJA2DebugTopic( TOPIC_JA2OPPLIST, "Reg" );
-	//RegisterJA2DebugTopic( TOPIC_MEMORY_MANAGER, "Reg" );
 
 
 	// Snap: Read options from an INI file in the default of custom Data directory

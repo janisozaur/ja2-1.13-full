@@ -539,7 +539,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	vfsEntry	entry;
 	STRING512	filename;
 
-//	printf("Request to open %s...\n", strFilename);
+	printf("Request to open %s...\n", strFilename);
 	if ( VFS.FindResource( strFilename, entry ) )
 	{
 		strncpy( filename, entry.RealName.c_str(), 511 );
@@ -593,7 +593,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	}
 	else
 	{
-		printf("Request to open non-mapped resource %s...\n", strFilename);
+//		printf("Request to open non-mapped resource %s...\n", strFilename);
 		strncpy( filename, strFilename, 511 );
 		if ( uiOptions & FILE_CREATE_NEW )
 		{
@@ -605,7 +605,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		}
 
 		BACKSLASH(filename);
-		printf("Creating %s... (0x%04X)\n", filename, dwAccess);
+//		printf("Creating %s... (0x%04X)\n", filename, dwAccess);
 		hRealFile = IO_File_Open( filename, dwAccess );
 
 		if ( hRealFile == -1 )
@@ -1947,8 +1947,11 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 {
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
+	UINT32	uiQuantity = 0;
+	STRING512	pattern;
 
-	BACKSLASH(pSpec);
+	strncpy( pattern, pSpec, 511 );
+	BACKSLASH(pattern);
 
 	CHECKF( pSpec != NULL );
 	CHECKF( pGFStruct != NULL );
@@ -1968,6 +1971,7 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 
 	pGFStruct->iFindHandle = iWhich;
 
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -1994,6 +1998,12 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+//	printf("Searching resources using %s pattern\n", pSpec);
+	uiQuantity = VFS.StartFilePatternMatch( pSpec );
+//	printf("Found %d matches\n", uiQuantity);
+	if ( !VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
+		return FALSE;
 
 	fFindInfoInUse[iWhich] = TRUE;
 
@@ -2013,7 +2023,7 @@ BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct )
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
 	CHECKF( pGFStruct != NULL );
-
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 	
@@ -2036,6 +2046,9 @@ BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
+*/
+	if ( VFS.GetNextMatch( pGFStruct->zFileName, 260 ) )
+		return TRUE;
 
 	return(FALSE);
 }
@@ -2053,7 +2066,7 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
 	if ( pGFStruct == NULL )
 		return;
-
+/*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
 
@@ -2068,7 +2081,8 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
-
+*/
+	VFS.FinishFilePatternMatch();
 	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 
 	return;

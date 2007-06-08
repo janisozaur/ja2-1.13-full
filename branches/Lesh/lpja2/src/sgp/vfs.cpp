@@ -95,6 +95,8 @@ sgpVFS	VFS;
 sgpVFS::sgpVFS()
 {
 	ResourceMap.clear();
+	FileMatchResults.clear();
+	FileMatchIndex = 0;
 }
 
 //===================================================================
@@ -105,6 +107,7 @@ sgpVFS::sgpVFS()
 sgpVFS::~sgpVFS()
 {
 	ResourceMap.clear();
+	FileMatchResults.clear();
 }
 
 //===================================================================
@@ -138,9 +141,21 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 	return TRUE;
 }
 
+//===================================================================
+//
+//	AddResourceEntry - adds entry (file or dir) to resource map
+//
+//	in	ResourceName: name of the game resource
+//	in	RealName: filename with full path of this resource
+//	in	IsDirectory: specifies, it is directory entry or not
+//	in	LibraryID: holds library ID, where resource in contained
+//	in	Writeable: specifies, it is writeable entry or not
+//
+//	return:	TRUE always
+//
+//===================================================================
 BOOLEAN	sgpVFS::AddResourceEntry( const vfsString& ResourceName, const vfsString& RealName, BOOLEAN IsDirectory, UINT32 LibraryID, BOOLEAN Writeable )
 {
-	// todo: $$$ - more work needed
 	vfsEntry	Entry;
 
 	Entry.RealName    = RealName;
@@ -270,7 +285,7 @@ vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName, BOOLEAN I
 void sgpVFS::DebugDumpResources( const CHAR8 *pDumpFileName )
 {
 	FILE	*file;
-	vfsFileMap::iterator	FilesIterator;
+	vfsFileMapIterator	FilesIterator;
 	if ( (file = fopen( pDumpFileName, "w+t" )) == NULL )
 		return;
 	fprintf(file, "Resources in map: %d\n", ResourceMap.size() );
@@ -344,21 +359,6 @@ BOOLEAN	sgpVFS::IsDirExist ( const CHAR8 *pDirectoryName  )
 	return TRUE;
 }
 
-INT32	sgpVFS::GetSize( UINT32 uiFileHandle )
-{
-	return TRUE;
-}
-
-INT32	sgpVFS::GetSize( const CHAR8 *pResourceName )
-{
-	return TRUE;
-}
-
-BOOLEAN	sgpVFS::IsEOF  ( UINT32 uiFileHandle )
-{
-	return TRUE;
-}
-
 BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
 {
 	vfsFileMapIterator	FoundEntry;
@@ -371,4 +371,36 @@ BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
 	Entry = FoundEntry->second;
 
 	return TRUE;
+}
+
+UINT32	sgpVFS::StartFilePatternMatch( const CHAR8 *pPattern )
+{
+	vfsFileMapIterator	ResourceIterator;
+	vfsString	pattern = ConvertToApplicationName( pPattern );
+
+	FileMatchResults.clear();
+	FileMatchIndex = 0;
+
+	for ( ResourceIterator = ResourceMap.begin(); ResourceIterator != ResourceMap.end(); ResourceIterator++ )
+	{
+		if ( IO_DoesFilenameMatchesPattern( pattern.c_str(), ResourceIterator->first.c_str() ) )
+			FileMatchResults.push_back( ResourceIterator->first );
+	}
+
+	return( FileMatchResults.size() );
+}
+
+BOOLEAN	sgpVFS::GetNextMatch( CHAR8 *pFilename, UINT32 uiMaxLen )
+{
+	if ( FileMatchIndex >= FileMatchResults.size() )
+		return FALSE;
+
+	strncpy( pFilename, FileMatchResults.at( FileMatchIndex++ ).c_str(), uiMaxLen );
+	return TRUE;
+}
+
+void sgpVFS::FinishFilePatternMatch( void )
+{
+	FileMatchResults.clear();
+	FileMatchIndex = 0;
 }
