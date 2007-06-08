@@ -30,6 +30,8 @@
 	#if !defined( JA2 ) && !defined( UTIL )
 		#include "GameData.h"               // for MoveTimer() [Wizardry specific]
 	#endif
+	#include "LibraryDataBase.h"
+	#include "utilities.h"
 #endif
 
 	#include "input.h"
@@ -759,6 +761,10 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
     return 0;
   }
 
+#ifdef LUACONSOLE
+  CreateConsole();
+#endif
+
 #ifdef JA2
 	#ifdef ENGLISH
 		SetIntroType( INTRO_SPLASH );
@@ -786,7 +792,9 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
     }
     else
     { // Windows hasn't processed any messages, therefore we handle the rest
-	  	PollConsole( );
+#ifdef LUACONSOLE
+		PollConsole( );
+#endif
 
       if (gfApplicationActive == FALSE)
       { // Well we got nothing to do but to wait for a message to activate

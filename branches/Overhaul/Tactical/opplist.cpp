@@ -42,6 +42,13 @@
 	#include "meanwhile.h"
 	#include "WorldMan.h"
 	#include "SkillCheck.h"
+	#include "GameSettings.h"
+	#include "Smell.h"
+	#include "Game Clock.h"
+	#include "civ quotes.h"
+	#include "Sound Control.h"
+	#include "drugs and alcohol.h"
+	#include "Interface.h"
 #endif
 
 //rain
@@ -3737,7 +3744,7 @@ void DebugSoldierPage1( )
 		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bHasKeys );
 		ubLine++;
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE ONE" );
@@ -3896,7 +3903,7 @@ void DebugSoldierPage2( )
 		gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SECONDHANDPOS].usItem] );
 		ubLine++;
 
-		if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 			gprintf( 0, LINE_HEIGHT * ubLine, L"CurrGridNo:");
@@ -3906,7 +3913,7 @@ void DebugSoldierPage2( )
 		}
 
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE TWO" );
@@ -4237,7 +4244,7 @@ void DebugSoldierPage3( )
 		}
 
 	}
-	else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	else if ( GetMouseMapPos( &usMapPos ) )
 	{
 		DOOR_STATUS	*pDoorStatus;
 		STRUCTURE *pStructure;

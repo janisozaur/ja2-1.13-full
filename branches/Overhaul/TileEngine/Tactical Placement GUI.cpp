@@ -42,6 +42,7 @@
 	#include "assignments.h"
 	#include "text.h"
 	#include "WordWrap.h"
+	#include "Game Clock.h"
 #endif
 
 typedef struct MERCPLACEMENT

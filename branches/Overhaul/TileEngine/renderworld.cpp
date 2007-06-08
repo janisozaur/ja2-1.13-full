@@ -47,6 +47,7 @@
 	#include "world items.h"
 	#include "GameSettings.h"
 	#include "interface control.h"
+	#include "Sound Control.h"
 #endif
 
 ///////////////////////////

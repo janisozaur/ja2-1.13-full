@@ -46,6 +46,16 @@
 	#include "SkillCheck.h"
 	#include "Interface Control.h"
 	#include "finances.h"
+	#include "civ quotes.h"
+	#include "Map Screen Interface Map.h"
+	#include "opplist.h"
+	#include "ai.h"
+	#include "worldman.h"
+	#include "Map Screen Interface Bottom.h"
+	#include "Campaign.h"
+	#include "end game.h"
+	#include "los.h"
+	#include "qarray.h"
 #endif
 
 #define		DIALOGUESIZE					480

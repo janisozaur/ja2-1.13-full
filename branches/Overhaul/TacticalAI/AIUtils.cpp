@@ -17,6 +17,12 @@
 	#include "Points.h"
 	#include "GameSettings.h"
 	#include "Buildings.h"
+	#include "Soldier macros.h"
+	#include "Render Fun.h"
+	#include "strategicmap.h"
+	#include "environment.h"
+	#include "lighting.h"
+	#include "Soldier Create.h"
 #endif
 
 //

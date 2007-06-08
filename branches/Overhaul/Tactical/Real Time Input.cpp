@@ -60,6 +60,8 @@
 #include "english.h"
 #include "text.h"
 #include "soldier macros.h"
+#include "render dirty.h"
+#include "Militia Control.h"
 #endif
 
 
@@ -114,7 +116,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	// LEFT MOUSE BUTTON
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		if (!GetMouseMapPos( (INT16 *)&usMapPos ) && !gfUIShowExitSouth )
+		if (!GetMouseMapPos( &usMapPos ) && !gfUIShowExitSouth )
 		{
 			return;
 		}
@@ -935,7 +937,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		if (!GetMouseMapPos( (INT16 *)&usMapPos ) )
+		if (!GetMouseMapPos( &usMapPos ) )
 		{
 			return;
 		}
@@ -1250,7 +1252,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 	static BOOLEAN		fOnValidGuy = FALSE;
 
 
-	if (!GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if (!GetMouseMapPos( &usMapPos ) )
 	{
 		return;
 	}

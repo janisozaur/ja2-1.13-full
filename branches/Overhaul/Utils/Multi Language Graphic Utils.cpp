@@ -1,4 +1,13 @@
+#ifdef PRECOMPILEDHEADERS
 #include "Utils All.h"
+#else
+#include "builddefines.h"
+#include "stdio.h"
+#include "Windows.h"
+#include "Types.h"
+#include "Multi Language Graphic Utils.h"
+#endif
+
 #include "Language Defines.h"
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )

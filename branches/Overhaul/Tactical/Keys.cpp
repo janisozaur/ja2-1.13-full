@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <memory.h>
 
@@ -33,6 +34,10 @@
 	#include "worlddef.h"
 	#include "campaign.h"
 	#include "sound control.h"
+	#include "Interface.h"
+	#include "Game Clock.h"
+	#include "handle doors.h"
+	#include "Map Screen Interface.h"
 #endif
 
 
@@ -665,7 +670,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	    // pSoldier->bBeingAttackedCount++;
 		  // gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
-		  OutputDebugString( String("!!!!!!! Trap gone off %d\n", gTacticalStatus.ubAttackBusyCount) );
+		  DebugAttackBusy( "!!!!!!! Trap gone off\n" );
 
 			SoldierTakeDamage( pSoldier, 0, (UINT16) (10 + PreRandom( 10 )), (UINT16) ((3 + PreRandom( 3 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
 			break;
@@ -680,7 +685,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	    // pSoldier->bBeingAttackedCount++;
 		//  gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
-		  OutputDebugString( String("!!!!!!! Trap gone off %d\n", gTacticalStatus.ubAttackBusyCount) );
+		  DebugAttackBusy( "!!!!!!! Trap gone off\n" );
 
 			SoldierTakeDamage( pSoldier, 0, (UINT16) (20 + PreRandom( 20 )), (UINT16) ((6 + PreRandom( 6 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
 			break;

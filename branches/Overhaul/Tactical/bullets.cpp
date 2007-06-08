@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include "math.h"
 	#include <stdio.h>
 	#include <errno.h>
@@ -25,6 +26,8 @@
 	#include "random.h"
 	#include "GameSettings.h"
 	#include "FileMan.h"
+	#include "lighting.h"
+	#include "Buildings.h"
 #endif
 
 
@@ -100,7 +103,7 @@ INT32	CreateBullet( UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags,UINT16 fromIt
 		pBullet->fReal = TRUE;
 //		gBullets[ iBullet ].pFirer->bBulletsLeft++;
 		gTacticalStatus.ubAttackBusyCount++;
-		OutputDebugString( String( "Creating a new bullet for %d.  ABC now %d\n", ubFirerID, gTacticalStatus.ubAttackBusyCount) );
+		DebugAttackBusy( String( "Creating a new bullet for %d.  ABC now %d\n", ubFirerID, gTacticalStatus.ubAttackBusyCount) );
 	}
 
 	return( iBulletIndex );
@@ -179,9 +182,9 @@ void RemoveBullet( INT32 iBullet )
 		// decrement reference to bullet in the firer
 //		gBullets[ iBullet ].pFirer->bBulletsLeft--;
 //		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending bullet, bullets left %d", gBullets[ iBullet ].pFirer->bBulletsLeft ) );
-//		OutputDebugString( String( "Deleting a bullet for %d.  Total count now %d\n", gBullets[ iBullet].ubFirerID, gBullets[ iBullet ].pFirer->bBulletsLeft) );
+//		DebugAttackBusy( String( "Deleting a bullet for %d.  Total count now %d\n", gBullets[ iBullet].ubFirerID, gBullets[ iBullet ].pFirer->bBulletsLeft) );
 		// Nah, just decrement the attack busy count and be done with it
-		OutputDebugString( String( "Deleting a bullet for %d.\n", gBullets[ iBullet].ubFirerID ) );
+		DebugAttackBusy( String( "Deleting a bullet for %d.\n", gBullets[ iBullet].ubFirerID ) );
 		ReduceAttackBusyCount( );
 
 		// if ( gBullets[ iBullet ].usFlags & ( BULLET_FLAG_KNIFE ) )

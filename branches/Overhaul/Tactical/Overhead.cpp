@@ -98,6 +98,18 @@
 #include "jascreens.h"
 #include "strategic.h"
 #include "arms dealer init.h"
+#include "interface utils.h"
+#include "Air Raid.h"
+#include "civ quotes.h"
+#include "drugs and alcohol.h"
+#include "history.h"
+#include "los.h"
+#include "interface dialogue.h"
+#include "Strategic AI.h"
+#include "end game.h"
+#include "Strategic Status.h"
+#include "PreBattle Interface.h"
+#include "Militia Control.h"
 #endif
 
 extern void HandleBestSightingPositionInRealtime();
@@ -1515,23 +1527,36 @@ BOOLEAN ExecuteOverhead( )
 											// 0verhaul:  But what if this is turn-based?  The soldier may be waiting forever for
 											// the other one to leave the position, but since it's turn-based he never will.
 											// Is that an issue here?
-											if ( FindBestPath( pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) != 0 )
+											// Yes, I think it is.  I found a situation where the soldier's path led through another
+											// soldier.  The other soldier wasn't even at the destination but his path invariably
+											// led through that soldier.  Since this was set up to allow that, he ended up deadlocked
+											// in "take cover" mode waiting for the soldier right next to him to leave.
+											// So in turn-based mode, we will just allow the soldier to re-think his next move.
+											if ( gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 											{
-												INT16 sNewGridNo;
-
-												sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
-
-												SetDelayedTileWaiting( pSoldier, sNewGridNo, 1 );
-											}
-
-											// We have not made it to our dest... set flag that we are waiting....
-											if ( !EVENT_InternalGetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
-											{
-												// ATE: To do here.... we could not get path, so we have to stop
-												// 0verhaul:  May also need to clear the action type so that the soldier will know
-												// to re-think another move instead of waiting for nothing to finish happening.
-												SoldierGotoStationaryStance( pSoldier );
+												ActionDone( pSoldier);
 												continue;
+											}
+											else
+											{
+												if ( FindBestPath( pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) != 0 )
+												{
+													INT16 sNewGridNo;
+
+													sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+
+													SetDelayedTileWaiting( pSoldier, sNewGridNo, 1 );
+												}
+
+												// We have not made it to our dest... set flag that we are waiting....
+												if ( !EVENT_InternalGetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
+												{
+													// ATE: To do here.... we could not get path, so we have to stop
+													// 0verhaul:  May also need to clear the action type so that the soldier will know
+													// to re-think another move instead of waiting for nothing to finish happening.
+													SoldierGotoStationaryStance( pSoldier );
+													continue;
+												}
 											}
 										}
 									}
@@ -7087,7 +7112,7 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 				if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting suppression, on %d", pSoldier->ubID ) );
-					OutputDebugString( String("!!!!!!! Starting suppression, on %d\n", pSoldier->ubID ) );
+					DebugAttackBusy( String("!!!!!!! Starting suppression, on %d\n", pSoldier->ubID ) );
 					//gTacticalStatus.ubAttackBusyCount++;
 
 					// make sure supressor ID is the same!
@@ -7112,7 +7137,7 @@ void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 				pSoldier->fInNonintAnim = FALSE;
 				pSoldier->fRTInNonintAnim = FALSE;
 				gTacticalStatus.ubAttackBusyCount++;
-				OutputDebugString( String( "Attack busy %d due to suppression fire on %d\n", gTacticalStatus.ubAttackBusyCount, pSoldier->ubID ));
+				DebugAttackBusy( String( "Attack busy %d due to suppression fire on %d\n", gTacticalStatus.ubAttackBusyCount, pSoldier->ubID ));
 
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleSuppressionFire: change stance"));
 				ChangeSoldierStance( pSoldier, ubNewStance );
@@ -7349,7 +7374,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! &&&&&&& Problem with attacker busy count decrementing past 0.... preventing wrap-around." ) );
 #ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Attack busy problem. Save, exit and send debug.txt + save file to Sir-Tech." );
-			OutputDebugString( "Attack Busy Problem\n");
+			DebugAttackBusy( "Attack Busy Problem\n");
 #endif
 		}
 	}
@@ -7358,7 +7383,7 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 		gTacticalStatus.ubAttackBusyCount--;
 	}
 
-	OutputDebugString( String( "New attack busy %d\n", gTacticalStatus.ubAttackBusyCount));
+	DebugAttackBusy( String( "New attack busy %d\n", gTacticalStatus.ubAttackBusyCount));
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
 	//	}
@@ -7393,10 +7418,17 @@ SOLDIERTYPE *InternalReduceAttackBusyCount( )
 			}
 		}
 	}
+	// If we still haven't figured out who last acted, it could be that the team number changed during the attack.  Unfortunately this
+	// can happen during a switch from real-time.  For now we will assume the last actor was a PC, but a real "Who started this?" pointer
+	// would work quite well.  If only I could close all the holes that the UI opens so that one routine could handle everything.
+	if (!pSoldier)
+	{
+		pSoldier = MercPtrs[ gusSelectedSoldier ];
+	}
 
 	ubID = pSoldier->ubID;
 
-	OutputDebugString( String( "Ending action for %d\n", ubID ) );
+	DebugAttackBusy( String( "Ending action for %d\n", ubID ) );
 	// Get the intended target info
 	pTarget = NULL;
 	if (pSoldier->ubTargetID != NOBODY)
@@ -7724,7 +7756,7 @@ SOLDIERTYPE * FreeUpAttacker( )
 	// If the ABC is 0 at this point, such as an aborted action might give, this will finalize the
 	// action and allow the soldier to try something else.
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FreeUpAttacker") );	
-	OutputDebugString( "Freeing up attacker\n");
+	DebugAttackBusy( "Freeing up attacker\n");
 	gTacticalStatus.ubAttackBusyCount++;
 	return( ReduceAttackBusyCount( ) );
 }

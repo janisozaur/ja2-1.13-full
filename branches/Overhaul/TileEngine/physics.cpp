@@ -30,6 +30,8 @@
 #include "opplist.h"
 #include "World Items.h"
 #include "environment.h"
+#include "GameSettings.h"
+#include "Buildings.h"
 #endif
 
 #include "Campaign.h"
@@ -231,7 +233,7 @@ INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, r
 	if (!fTestObject)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		OutputDebugString( String( "@@@@@@@ Increasing attacker busy count..., PHYSICS OBJECT effect started.  Now %d\n", gTacticalStatus.ubAttackBusyCount) );
+		DebugAttackBusy( String( "@@@@@@@ Increasing attacker busy count..., PHYSICS OBJECT effect started.  Now %d\n", gTacticalStatus.ubAttackBusyCount) );
 	}
 
 	return( iObjectIndex );
@@ -520,7 +522,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 			}
 
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off") );
-			OutputDebugString( "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off\n" );
+			DebugAttackBusy( "@@@@@@@ PHYSICS OBJECT effect finished\n" );
 			ReduceAttackBusyCount( );
 
 			// ATE: Handle end of animation...
@@ -1016,7 +1018,7 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 					if ( pObject->ubActionCode == THROW_ARM_ITEM )
 					{
 						gTacticalStatus.ubAttackBusyCount++;
-						OutputDebugString( String( "Incrementing attack busy because of delayed water explosion. Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+						DebugAttackBusy( String( "Incrementing attack busy because of delayed water explosion. Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 						AniParams.ubKeyFrame1					= 11;
 						AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_CHAIN_WATER_EXPLOSION;
 						AniParams.uiUserData					= pObject->Obj.usItem;

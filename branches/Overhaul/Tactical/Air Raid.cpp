@@ -31,6 +31,8 @@
 	#include "text.h"
 	#include "Morale.h"
 	#include "Map screen helicopter.h"
+	#include "structure wrap.h"
+	#include "meanwhile.h"
 #endif
 
 #define		SCRIPT_DELAY													10
@@ -643,7 +645,7 @@ void BeginDive( )
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack BEGIN DIVE %d", gTacticalStatus.ubAttackBusyCount) );
-	OutputDebugString( String("!!!!!!! Starting attack BEGIN DIVE %d", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String("!!!!!!! Starting attack BEGIN DIVE %d", gTacticalStatus.ubAttackBusyCount) );
 
 	// Pick location...
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginDive: pick location"));
@@ -1000,7 +1002,7 @@ void DoBombing(  )
 							// Increase attacker busy...
 							gTacticalStatus.ubAttackBusyCount++;
 							DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID ( bombs away ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
-							OutputDebugString( String("!!!!!!! Starting attack AIR RAID ( bombs away ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+							DebugAttackBusy( String("!!!!!!! Starting attack AIR RAID ( bombs away ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
 						}
 
 						// Drop bombs...
@@ -1281,7 +1283,7 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
-	OutputDebugString( String("!!!!!!! Starting attack AIR RAID, attack count now %d\n", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String("!!!!!!! Starting attack AIR RAID, attack count now %d\n", gTacticalStatus.ubAttackBusyCount) );
 
 	AddTopMessage( AIR_RAID_TURN_MESSAGE, TacticalStr[ AIR_RAID_TURN_STR ] );
 

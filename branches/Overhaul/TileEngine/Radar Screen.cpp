@@ -29,6 +29,9 @@
 	#include "Game Clock.h"
 	#include "Map Screen Interface Map Inventory.h"
 	#include "environment.h"
+	#include "meanwhile.h"
+	#include "strategicmap.h"
+	#include "Animation Data.h"
 #endif
 
 extern INT32 iCurrentMapSectorZ;

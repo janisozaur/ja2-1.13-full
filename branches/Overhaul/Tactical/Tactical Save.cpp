@@ -31,6 +31,23 @@
 	#include "debug.h"
 	#include "Random.h"
 	#include "quests.h"
+	#include "Animated ProgressBar.h"
+	#include "Text.h"
+	#include "meanwhile.h"
+	#include "Enemy Soldier Save.h"
+	#include "SmokeEffects.h"
+	#include "LightEffects.h"
+	#include "PATHAI.H"
+	#include "GameVersion.h"
+	#include "strategic.h"
+	#include "Map Screen Interface Map.h"
+	#include "Strategic Status.h"
+	#include "Soldier macros.h"
+	#include "sgp.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "Queen Command.h"
+	#include "Map Screen Interface Map Inventory.h"
 #endif
 
 BOOLEAN gfWasInMeanwhile = FALSE;

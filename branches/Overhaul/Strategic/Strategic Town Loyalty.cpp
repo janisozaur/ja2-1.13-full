@@ -24,6 +24,15 @@
 	#include "vehicles.h"
 	#include "Game Clock.h"
 	#include "Game Event Hook.h"
+	#include "Morale.h"
+	#include "GameSettings.h"
+	#include "Text.h"
+	#include "MessageBoxScreen.h"
+	#include "Creature Spreading.h"
+	#include "Town Militia.h"
+	#include "history.h"
+	#include "meanwhile.h"
+	#include "Strategic Status.h"
 #endif
 
 

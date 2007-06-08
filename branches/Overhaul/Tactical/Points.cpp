@@ -24,6 +24,14 @@
 	#include "SkillCheck.h"
 	#include "wcheck.h"
 	#include "Soldier Profile.h"
+	#include "Soldier macros.h"
+	#include "Random.h"
+	#include "Campaign.h"
+	#include "drugs and alcohol.h"
+	#include "GameSettings.h"
+	#include "worldman.h"
+	#include "math.h"
+	#include "Interface Items.h"
 #endif
 
 //rain

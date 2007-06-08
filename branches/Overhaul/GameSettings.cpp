@@ -20,6 +20,18 @@
 	#include	"Language Defines.h"
 	#include "HelpScreen.h"
 	#include "INIReader.h"
+	#include "Shade Table Util.h"
+	#include "soldier profile type.h"
+	#include "Random.h"
+	#include "SaveLoadGame.h"
+	#include "sgp.h"
+	#include "screenids.h"
+	#include "Font Control.h"
+	#include "message.h"
+	#include "Campaign.h"
+	#include "meanwhile.h"
+	#include "strategicmap.h"
+	#include "Queen Command.h"
 #endif
 
 #include	"Text.h"
@@ -581,10 +593,8 @@ void LoadGameExternalOptions()
 	// WANNE: Drop Items
 	gGameExternalOptions.ubEnemiesItemDrop					= iniReader.ReadInteger("JA2 Gameplay Settings","ENEMIES_ITEM_DROP", 0);
 
-	// WANNE: Auto save: Attention: The game always crashes after a "normal" savegame is loaded after loading an autosave
-	// So for now USE_AUTO_SAVE is always false.
-	// The game crashes when removing mouse region that are not set
-	//gGameExternalOptions.gfUseAutoSave						= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_AUTO_SAVE",FALSE);
+	// WANNE: External sector Loadscreens [2007-05-19]
+	gGameExternalOptions.gfUseExternalLoadscreens				= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_EXTERNALIZED_LOADSCREENS", FALSE);
 
 	// Militia settings
 	gGameExternalOptions.guiAllowMilitiaGroupsDelay  = iniReader.ReadInteger("JA2 Gameplay Settings","ALLOW_MILITIA_MOBILE_DELAY",1);

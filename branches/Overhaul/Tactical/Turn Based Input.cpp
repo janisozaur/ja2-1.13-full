@@ -8,6 +8,7 @@
 #include "DisplayCover.h"
 #include "_Ja25Englishtext.h"
 #else
+#include "builddefines.h"
 #include <stdio.h>
 #include <string.h>
 #include "wcheck.h"
@@ -104,6 +105,16 @@
 #include "Inventory Choosing.h"
 #include "soldier macros.h"
 #include "HelpScreen.h"
+#include "cheats.h"
+#include "displaycover.h"
+#include "Tactical Save.h"
+#include "history.h"
+#include "Queen Command.h"
+#include "PreBattle Interface.h"
+#include "_Ja25EnglishText.h"
+#include "Militia Control.h"
+#include "Ambient Control.h"
+#include "Strategic AI.h"
 #endif
 
 #include	"Quest Debug System.h"
@@ -248,7 +259,7 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 	// LEFT MOUSE BUTTON
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{	
-		if (!GetMouseMapPos( (INT16 *)&usMapPos ) && !gfUIShowExitSouth )
+		if (!GetMouseMapPos( &usMapPos ) && !gfUIShowExitSouth )
 		{
 			return;
 		}
@@ -725,7 +736,7 @@ void	QueryTBRightButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE		*pSoldier;
 	UINT16				usMapPos;
 	BOOLEAN				fDone = FALSE;
-	if (!GetMouseMapPos( (INT16 *) &usMapPos ) )
+	if (!GetMouseMapPos( &usMapPos ) )
 	{
 		return;
 	}
@@ -974,7 +985,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 
 
-	if (!GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if (!GetMouseMapPos( &usMapPos ) )
 	{
 		return;
 	}
@@ -1409,7 +1420,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 	GetCursorPos(&MousePos);
 
-	GetMouseMapPos( (INT16 *)&usMapPos );
+	GetMouseMapPos( &usMapPos );
 
 	while (DequeueEvent(&InputEvent) == TRUE)
 	{
@@ -2056,7 +2067,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					if( DEBUG_CHEAT_LEVEL( ) )
 					{
-						GetMouseMapPos( &gsQdsEnteringGridNo );
+						GetMouseMapPos( &gusQdsEnteringGridNo );
 						LeaveTacticalScreen( QUEST_DEBUG_SCREEN );
 					}
 				}
@@ -2069,8 +2080,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					UINT8 ubProfile = TONY;
 
-					GetMouseMapPos( &gsQdsEnteringGridNo );
-					AddShopkeeperToGridNo( ubProfile, gsQdsEnteringGridNo );
+					GetMouseMapPos( &gusQdsEnteringGridNo );
+					AddShopkeeperToGridNo( ubProfile, gusQdsEnteringGridNo );
 					EnterShopKeeperInterfaceScreen( ubProfile );
 				}
 #endif
@@ -2532,13 +2543,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 				{
-					INT16 sGridNo;
+					UINT16 usGridNo;
 
 					//Get the gridno the cursor is at
-					GetMouseMapPos( &sGridNo );
+					GetMouseMapPos( &usGridNo );
 
 					//if there is a selected soldier, and the cursor location is valid
-					if( gusSelectedSoldier != NOBODY && sGridNo != NOWHERE )
+					if( gusSelectedSoldier != NOBODY && usGridNo != NOWHERE )
 					{
 						//if the cursor is over someone
 						if( gfUIFullTargetFound )
@@ -2549,7 +2560,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						else
 						{
 							//Display the range to the target
-							DisplayRangeToTarget( MercPtrs[ gusSelectedSoldier ], sGridNo );
+							DisplayRangeToTarget( MercPtrs[ gusSelectedSoldier ], usGridNo );
 						}
 					}
 				}
@@ -2997,9 +3008,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				// swap sungoggles and nightgoggles
 			case 'N':
 				{
+						/* CHRISL - Adjusted this option to allow the game to search through Helmet attachments
+							as well as inventory positions.
+						*/
 					SOLDIERTYPE	*pTeamSoldier;
-					INT8		bLoop, bSlot1, bSlot2, temp;
-					INT16		lastBonus=0;
+						OBJECTTYPE * pObj;
+						INT8		bLoop, bSlot1, bSlot2, bSlot3, temp, tempStatus=0;
+						INT16		lastBonus=0, tempItem=0;
 					for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
 					{
 						if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
@@ -3011,7 +3026,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{
 									lastBonus=0;
 									bSlot2 = ITEM_NOT_FOUND;
+										bSlot3 = ITEM_NOT_FOUND;
 									temp = 0;
+										pObj = &(pTeamSoldier->inv[HELMETPOS]);
 									while (temp != ITEM_NOT_FOUND)
 									{
 										temp = FindNightGoggles( pTeamSoldier, lastBonus );
@@ -3021,8 +3038,29 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											bSlot2 = temp;
 										}
 									}
-									if ( bSlot2 != ITEM_NOT_FOUND )
+										for (int i = 0; i < MAX_ATTACHMENTS; i++)
 									{
+											if ( Item[ pObj->usAttachItem[i] ].nightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
+											{
+												bSlot2 = ITEM_NOT_FOUND;
+												bSlot3 = i;
+												lastBonus = Item[ pObj->usAttachItem[i] ].nightvisionrangebonus;
+											}
+										}
+										if ( bSlot3 != ITEM_NOT_FOUND )
+										{
+											// Duplicate item in helmet attachment slot
+											tempItem = pObj->usAttachItem[bSlot3];
+											tempStatus = pObj->bAttachStatus[bSlot3];
+											// Replace helmet attachment with face slot
+											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											// Replace face slot with helmet attachment from temp
+											pTeamSoldier->inv[bSlot1].usItem = tempItem;
+											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+										}
+										else if ( bSlot2 != ITEM_NOT_FOUND )
+										{
 										SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
 									}
 									break;
@@ -3031,7 +3069,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{
 									lastBonus=0;
 									bSlot2 = ITEM_NOT_FOUND;
+										bSlot3 = ITEM_NOT_FOUND;
 									temp = 0;
+										pObj = &(pTeamSoldier->inv[HELMETPOS]);
 									while (temp != ITEM_NOT_FOUND)
 									{
 										temp = FindSunGoggles( pTeamSoldier, lastBonus );
@@ -3041,8 +3081,29 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											bSlot2 = temp;
 										}
 									}
-									if ( bSlot2 != ITEM_NOT_FOUND )
+										for (int i = 0; i < MAX_ATTACHMENTS; i++)
 									{
+											if ( Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
+											{
+												bSlot2 = ITEM_NOT_FOUND;
+												bSlot3 = i;
+												lastBonus = Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus;
+											}
+										}
+										if ( bSlot3 != ITEM_NOT_FOUND )
+										{
+											// Duplicate item in helmet attachment slot
+											tempItem = pObj->usAttachItem[bSlot3];
+											tempStatus = pObj->bAttachStatus[bSlot3];
+											// Replace helmet attachment with face slot
+											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											// Replace face slot with helmet attachment from temp
+											pTeamSoldier->inv[bSlot1].usItem = tempItem;
+											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+										}
+										else if ( bSlot2 != ITEM_NOT_FOUND )
+										{
 										SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
 									}
 									break;
@@ -3054,6 +3115,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							PositionSoldierLight( pTeamSoldier );
 						}
 					}
+						/* CHRISL - Adjusted this option to allow the game to search through Helmet attachments
+							as well as inventory positions.
+						*/
 				}
 				break;
 
@@ -3854,7 +3918,7 @@ void HandleItemMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 {
-	INT16 sMapPos;
+	UINT16 usMapPos;
 
 	// If not in move mode, return!
 	if ( gCurrentUIMode != MOVE_MODE )
@@ -3942,14 +4006,14 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 			}
 			else
 			{
-				if ( !GetMouseMapPos( &sMapPos ) )
+				if ( !GetMouseMapPos( &usMapPos ) )
 				{
 					return( FALSE );
 				}
 
 				// Goto next sector
 				//SimulateMouseMovement( gusMouseXPos - 5, gusMouseYPos );
-				InitSectorExitMenu( DIRECTION_EXITGRID, sMapPos );
+				InitSectorExitMenu( DIRECTION_EXITGRID, usMapPos );
 			}
 		}
 		return( TRUE );
@@ -4034,7 +4098,7 @@ void CreateRandomItem()
 {
 	OBJECTTYPE		Object;
 	UINT16 usMapPos;
-	if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
 		AddItemToPool( usMapPos, &Object, -1 , 0, 0, 0 );
@@ -4047,7 +4111,7 @@ void MakeSelectedSoldierTired()
 	SOLDIERTYPE				*pSoldier;
 	OBJECTTYPE		Object;
 	UINT16 usMapPos;
-	if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		CreateItem( (UINT16)TNT, 100, &Object );
 		AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
@@ -4134,7 +4198,7 @@ void ToggleViewAllItems()
 void TestExplosion()
 {
 	UINT16 usMapPos;
-	if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		EXPLOSION_PARAMS	ExpParams ;
 		ExpParams.uiFlags			= 0;
@@ -4207,7 +4271,7 @@ void RefreshSoldier()
 
 	}
 
-	if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseMapPos( &usMapPos ) )
 		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
 		gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
 		gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
@@ -4273,7 +4337,7 @@ void TeleportSelectedSoldier()
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 	{
-		if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			// Check level first....
 			if ( gsInterfaceLevel == 0 )
@@ -4345,7 +4409,7 @@ void TogglePlanningMode()
 		{
 			EndUIPlan( );
 		}
-		else if ( GetMouseMapPos( (INT16 *)&usMapPos ) )
+		else if ( GetMouseMapPos( &usMapPos ) )
 		{
 			switch( gCurrentUIMode )
 			{
@@ -4446,7 +4510,7 @@ void CreateNextCivType()
 	UINT16 usMapPos;
 	static						INT8 bBodyType = FATCIV;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{	
 		INT8							iNewIndex;
 
@@ -4504,7 +4568,7 @@ void CreateCow()
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT16 usMapPos;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{	
 		INT8							iNewIndex;
 
@@ -4536,7 +4600,7 @@ void CreatePlayerControlledCow()
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT16 usMapPos;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{	
 		INT8							iNewIndex;
 
@@ -4614,7 +4678,7 @@ void CreatePlayerControlledMonster()
 {
 	INT16							sWorldX, sWorldY;
 	UINT16 usMapPos;
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( (INT16 *)&usMapPos ) )
+	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{		 
 		SOLDIERCREATE_STRUCT		MercCreateStruct;
 		INT8							iNewIndex;

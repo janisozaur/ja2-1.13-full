@@ -18,6 +18,8 @@
 	#include "wcheck.h"
 	#include "video.h"
 	#include "vobject_blitters.h"
+	#include "WinFont.h"
+	#include "Font Control.h"
 #endif
 
 #ifdef JA2BETAVERSION

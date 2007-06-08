@@ -41,6 +41,12 @@
 	#ifdef DEBUG_INTERRUPTS
 		#include "debug.h"
 	#endif
+	#include "renderworld.h"
+	#include "rotting corpses.h"
+	#include "Squads.h"
+	#include "Soldier macros.h"
+	#include "Soldier Profile.h"
+	#include "NPC.h"
 #endif
 
 #include "Reinforcement.h"

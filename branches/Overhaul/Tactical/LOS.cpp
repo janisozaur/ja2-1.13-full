@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 #include "Tactical All.h"
 #else
+#include "builddefines.h"
 #include <stdio.h>
 
 #include <memory.h>
@@ -32,6 +33,13 @@
 #include "campaign.h"
 #include "environment.h"
 #include "Pathai.h"
+#include "Soldier macros.h"
+#include "strategicmap.h"
+#include "Interface.h"
+#include "points.h"
+#include "Smell.h"
+#include "Text.h"
+#include "Quests.h"
 #endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10

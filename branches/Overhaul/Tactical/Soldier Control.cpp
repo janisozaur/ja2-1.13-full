@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 #include "Tactical All.h"
 #else
+#include "builddefines.h"
 #include <wchar.h>
 #include <stdio.h>
 #include <string.h>
@@ -83,6 +84,16 @@
 #include "SkillCheck.h"
 #include "boxing.h"
 #include "overhead map.h"
+#include "Map Information.h"
+#include "environment.h"
+#include "Game Clock.h"
+#include "Explosion Control.h"
+#include "Buildings.h"
+#include "Text.h"
+#include "Strategic Merc Handler.h"
+#include "Campaign Types.h"
+#include "Strategic Status.h"
+#include "civ quotes.h"
 #endif
 
 //turnspeed
@@ -2184,15 +2195,15 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	{
 		if ( uiNewAnimFlags & ANIM_ATTACK ) {
 			gTacticalStatus.ubAttackBusyCount++;
-			OutputDebugString( String( "**** Attack animation transfer to %s for %d.\nABC now %d\n", gAnimControl[ usNewState ].zAnimStr, pSoldier->ubID, gTacticalStatus.ubAttackBusyCount ) );
+			DebugAttackBusy( String( "**** Attack animation transfer to %s for %d.\nABC now %d\n", gAnimControl[ usNewState ].zAnimStr, pSoldier->ubID, gTacticalStatus.ubAttackBusyCount ) );
 		} else if (uiOldAnimFlags & ANIM_ATTACK || pSoldier->fChangingStanceDueToSuppression ) {
-			OutputDebugString( String( "**** Transfer to %s for %d.\n", gAnimControl[ usNewState ].zAnimStr, pSoldier->ubID ) );
+			DebugAttackBusy( String( "**** Transfer to %s for %d.\n", gAnimControl[ usNewState ].zAnimStr, pSoldier->ubID ) );
 		}
 		if (uiOldAnimFlags & ANIM_ATTACK ) {
-			OutputDebugString( String( "**** Attack animation transfer from %s for %d.  Reducing ABC.\n", gAnimControl[ pSoldier->usOldAniState ].zAnimStr, pSoldier->ubID ) );
+			DebugAttackBusy( String( "**** Attack animation transfer from %s for %d.  Reducing ABC.\n", gAnimControl[ pSoldier->usOldAniState ].zAnimStr, pSoldier->ubID ) );
 			ReduceAttackBusyCount( );
 		} else if (uiNewAnimFlags & ANIM_ATTACK  || pSoldier->fChangingStanceDueToSuppression ) {
-			OutputDebugString( String( "**** Transfer from %s for %d\n", gAnimControl[ pSoldier->usOldAniState ].zAnimStr, pSoldier->ubID ) );
+			DebugAttackBusy( String( "**** Transfer from %s for %d\n", gAnimControl[ pSoldier->usOldAniState ].zAnimStr, pSoldier->ubID ) );
 		}
 	}
 
@@ -2200,7 +2211,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	{
 		pSoldier->fChangingStanceDueToSuppression = FALSE;
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of suppression stance change") );
-		OutputDebugString( String( "@@@@@@@ Freeing up attacker - end of suppression stance change for %d\n", pSoldier->ubID ) );
+		DebugAttackBusy( String( "@@@@@@@ Freeing up attacker - end of suppression stance change for %d\n", pSoldier->ubID ) );
 		ReduceAttackBusyCount( );
 	}
 
@@ -2836,10 +2847,18 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//		break;
 	//}
 
+#if 0
+	// 0verhaul:  This does not go here!  In spite of this function's name, it is not the actual "fire" function.
+	// In fact this sets the muzzle flash even while the soldier may be turning to shoot, which can cause
+	// problems for real-time shooting.
+
+	// The correct place for this is UseGun, which already has code to set or reset the flash.
+
 	if ( IsFlashSuppressor (&pSoldier->inv[ pSoldier->ubAttackingHand ], pSoldier ) )
 		pSoldier->fMuzzleFlash = FALSE;
 	else	
 		pSoldier->fMuzzleFlash = TRUE;
+#endif
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EVENT_FireSoldierWeapon: Muzzle flash = %d",pSoldier->fMuzzleFlash));
 
@@ -2849,7 +2868,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	// Nah, just let the animations speak for themselves
 	//	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
-	OutputDebugString( String("!!!!!!! Starting fire weapon attack, attack count now %d\n", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String("!!!!!!! Starting fire weapon attack, attack count now %d\n", gTacticalStatus.ubAttackBusyCount) );
 	//}
 
 	// Set soldier's target gridno
@@ -3460,7 +3479,7 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGrid )
 {
 	UINT8		ubCombinedLoss, ubVolume, ubReason;
-	SOLDIERTYPE * pNewSoldier;
+//	SOLDIERTYPE * pNewSoldier;
 
 	ubReason = 0;
 
@@ -3474,6 +3493,9 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 		case SHOOT_ROCKET:
 		case SHOOT_MORTAR:
 		case THROW_ITEM:
+		// <SB> crouch throwing
+		case THROW_ITEM_CROUCHED:
+		// <SB> crouch throwing
 		case LOB_ITEM:
 			
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY HIT ANIMATION, Now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, gTacticalStatus.ubAttackBusyCount ) );
@@ -5505,7 +5527,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				// Release attacker
 				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, turning from hit animation ended") );
 				// ReleaseSoldiersAttacker( pSoldier );
-				OutputDebugString( "Finished turning from hit.  Reducing attack busy.\n");
+				DebugAttackBusy( "Finished turning from hit.  Reducing attack busy.\n");
 				ReduceAttackBusyCount( );
 
 				//FREEUP GETTING HIT FLAG
@@ -6506,7 +6528,7 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-		OutputDebugString( String( "Soldier %d tried to climb where no roof is.\n", pSoldier->ubID ) );
+		DebugAttackBusy( String( "Soldier %d tried to climb where no roof is.\n", pSoldier->ubID ) );
 		pSoldier->bAction = AI_ACTION_NONE;
 	}
 }
@@ -8681,7 +8703,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//{
 //	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount) );
-	OutputDebugString( String( "Begin blade attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String( "Begin blade attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
 
 	//}
 
@@ -8857,7 +8879,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//{
 //	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount) );
-	OutputDebugString( String( "Begin HTH attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String( "Begin HTH attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
 
 	//}
 
@@ -8982,7 +9004,7 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	//}
 //	pSoldier->bBulletsLeft = 1;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting knifethrow attack, bullets left %d", pSoldier->bBulletsLeft) );
-	OutputDebugString( String( "Begin knife throwing attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
+	DebugAttackBusy( String( "Begin knife throwing attack: ATB  %d\n", gTacticalStatus.ubAttackBusyCount) );
 
 	EVENT_InitNewSoldierAnim( pSoldier, THROW_KNIFE, 0 , FALSE );
 
@@ -9472,7 +9494,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 
 		// Decrement attack counter...
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending throw because saw something") );
-		OutputDebugString("@@@@@@@ Reducing attacker busy count..., ending throw because saw something\n");
+		DebugAttackBusy("@@@@@@@ Reducing attacker busy count..., ending throw because saw something\n");
 		FreeUpAttacker( );
 
 		// ATE: Goto stationary stance......
@@ -9490,7 +9512,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	{
 		// Decrement attack counter...
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending throw knife because saw something") );
-		OutputDebugString("@@@@@@@ Reducing attacker busy count..., ending throw knife because saw something");
+		DebugAttackBusy("@@@@@@@ Reducing attacker busy count..., ending throw knife because saw something");
 		FreeUpAttacker( );
 
 		// ATE: Goto stationary stance......
@@ -9525,7 +9547,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 			pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
 
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something") );
-			OutputDebugString("@@@@@@@ Reducing attacker busy count..., ending fire because saw something\n");
+			DebugAttackBusy("@@@@@@@ Reducing attacker busy count..., ending fire because saw something\n");
 			FreeUpAttacker( );
 
 		}
@@ -9613,7 +9635,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 		pSoldier->fTurningToShoot = FALSE;
 		// Release attacker
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something") );
-		OutputDebugString("@@@@@@@ Reducing attacker busy count..., ending fire because saw something\n");
+		DebugAttackBusy("@@@@@@@ Reducing attacker busy count..., ending fire because saw something\n");
 		FreeUpAttacker( );
 	}
 
@@ -11042,7 +11064,7 @@ void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget )
 		// reset attacking item (hand)
 		pSoldier->usAttackingWeapon = 0;
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting STEAL attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
-		OutputDebugString( String( "!!!!!!! Starting STEAL attack, attack count now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+		DebugAttackBusy( String( "!!!!!!! Starting STEAL attack, attack count now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 		SetUIBusy( pSoldier->ubID );
 	}
@@ -11424,7 +11446,7 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 					// after turn is done - so set flag here to tell it not to...
 					pSoldier->fDontUnsetLastTargetFromTurn = TRUE;			    
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION") );
-					OutputDebugString( "@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION\n" );
+					DebugAttackBusy( "@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION\n" );
 					FreeUpAttacker( );
 				}
 
@@ -11439,7 +11461,7 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 
 					// Decrement attack counter...
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION") );
-					OutputDebugString("@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION\n");
+					DebugAttackBusy("@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION\n");
 					FreeUpAttacker( );
 				}
 

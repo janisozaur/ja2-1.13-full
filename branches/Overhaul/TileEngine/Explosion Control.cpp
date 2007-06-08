@@ -57,6 +57,15 @@
 #include "Opplist.h"
 #include "smell.h"
 #include "GameSettings.h"
+#include "Interface.h"
+#include "end game.h"
+#include "WorldDat.h"
+#include "environment.h"
+#include "Buildings.h"
+#include "Keys.h"
+#include "Morale.h"
+#include "fov.h"
+#include "Map Information.h"
 #endif
 
 #include "Soldier Macros.h"
@@ -256,7 +265,6 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 	// gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
-	OutputDebugString( String("Incrementing Attack: Explosion gone off, Count now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 
 	// OK, go on!
@@ -440,7 +448,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	if (CreateAnimationTile( &AniParams ) )
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		OutputDebugString( String( "Explosion started.  Incrementing attack busy, now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+		DebugAttackBusy( String( "Explosion started.  Incrementing attack busy, now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 	}
 
 	//  set light source for flashbangs.... or...
@@ -1389,7 +1397,7 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 	// Increment attack counter...
 	//  gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount ) );
-	OutputDebugString( String("Incrementing Attack: Explosion dishing out damage to %d, Count now %d\n", pSoldier->ubID, gTacticalStatus.ubAttackBusyCount ) );
+	DebugAttackBusy( String("Explosion dishing out damage to %d\n", pSoldier->ubID) );
 
 	sNewWoundAmt = sWoundAmt - __min( sWoundAmt, 35 ) * ArmourVersusExplosivesPercent( pSoldier ) / 100;
 	if ( sNewWoundAmt < 0 )

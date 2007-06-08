@@ -21,6 +21,18 @@
 #include "Render Fun.h"
 #include "Boxing.h"
 //	#include "Air Raid.h"
+#include "Soldier Profile.h"
+#include "soldier profile type.h"
+#include "Soldier macros.h"
+#include "los.h"
+#include "Buildings.h"
+#include "strategicmap.h"
+#include "Quests.h"
+#include "Map Screen Interface Map.h"
+#include "soldier ani.h"
+#include "rotting corpses.h"
+#include "GameSettings.h"
+#include "Dialogue Control.h"
 #endif
 
 extern BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance );

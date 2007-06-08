@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <string.h>
 	#include "wcheck.h"
@@ -34,6 +35,14 @@
 	#include "World Items.h"
 	#include "explosion control.h"
 	#include "GameSettings.h"
+	#include "Interface Items.h"
+	#include "Soldier Profile.h"
+	#include "Soldier macros.h"
+	#include "Keys.h"
+	#include "Render Fun.h"
+	#include "strategic.h"
+	#include "qarray.h"
+	#include "Interface.h"
 #endif
 
 #define CORPSE_WARNING_MAX 5
@@ -954,7 +963,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	// This should free up ABC for death codes
 	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_ATTACK )
 	{
-		OutputDebugString( "%%%%%%%%% Freeing up attacker because soldier became a corpse.\n");
+		DebugAttackBusy( "%%%%%%%%% Freeing up attacker because soldier became a corpse.\n");
 		ReduceAttackBusyCount( );
 	}
 

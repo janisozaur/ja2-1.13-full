@@ -55,6 +55,11 @@
 	#include "qarray.h"
 	#include "render fun.h"
 	#include "environment.h"
+	#include "Map Information.h"
+	#include "GameSettings.h"
+	#include "end game.h"
+	#include "interface control.h"
+	#include "Map Screen Interface Map Inventory.h"
 #endif
 
 #define					NUM_ITEMS_LISTED			8
@@ -1257,7 +1262,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 //		gTacticalStatus.ubAttackBusyCount++;
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount) );
-		OutputDebugString( String( "Attack busy %d due to swipe attack\n", gTacticalStatus.ubAttackBusyCount));
+		DebugAttackBusy( "Swipe attack\n");
 
 
 		sAPCost = CalcTotalAPsToAttack( pSoldier, sGridNo, FALSE, pSoldier->bAimTime );
@@ -1343,7 +1348,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 				// Increment attack counter...
 //				gTacticalStatus.ubAttackBusyCount++;
-				OutputDebugString( String( "Attack busy %d due to weapon fire\n", gTacticalStatus.ubAttackBusyCount));
+				DebugAttackBusy( "Weapon fire\n");
 
 
 				// ATE: Don't charge turning...

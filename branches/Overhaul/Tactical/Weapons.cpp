@@ -42,6 +42,10 @@
 	#include "Debug Control.h"
 	#include "expat.h"
 	#include "XML.h"
+	#include "Soldier macros.h"
+	#include "SmokeEffects.h"
+	#include "lighting.h"
+	#include "Auto Resolve.h"
 #endif
 
 //rain
@@ -1886,7 +1890,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
       // 
 		// Not anymore.  Only the attack animation was increased, and it will decrease itself.
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK, Now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, gTacticalStatus.ubAttackBusyCount ) );
-		  OutputDebugString( String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr ) );
+		  DebugAttackBusy( String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr ) );
 //		  ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 
       return( FALSE );
@@ -1926,7 +1930,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// Increment attack counter...
 //				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Exaust from LAW", gTacticalStatus.ubAttackBusyCount ) );
-				OutputDebugString( String("Incrementing Attack: Exaust from LAW, %d\n", gTacticalStatus.ubAttackBusyCount ) );
+				DebugAttackBusy( "Incrementing Attack: Exaust from LAW\n" );
 
 				EVENT_SoldierGotHit( MercPtrs[ ubMerc ], MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, 0, sNewGridNo );
 			}
@@ -2687,7 +2691,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
     // Reduce again for attack end 'cause it has been incremented for a normal attack
     // Nope, not anymore.
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK, Now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, gTacticalStatus.ubAttackBusyCount ) );
-		OutputDebugString( String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr ) );
+		DebugAttackBusy( String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr ) );
 		// ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 
     // So all's well, should be good from here....

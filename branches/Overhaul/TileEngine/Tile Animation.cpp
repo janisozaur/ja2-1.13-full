@@ -26,6 +26,9 @@
 #include "weapons.h"
 #include "Keys.h"
 #include "bullets.h"
+#include "LightEffects.h"
+#include "rotting corpses.h"
+#include "SmokeEffects.h"
 #endif
 
 
@@ -406,7 +409,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 
 					// Freeup attacker from explosion
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off") );
-					OutputDebugString( "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off\n");
+					DebugAttackBusy( "@@@@@@@ EXPLOSION effect finished.\n");
 					ReduceAttackBusyCount( );
 
 				}
@@ -545,7 +548,7 @@ void UpdateAniTiles( )
 						case ANI_KEYFRAME_CHAIN_WATER_EXPLOSION:
 
 							IgniteExplosion( pNode->ubUserData2, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)( pNode->uiUserData ), 0 );
-							OutputDebugString( "Reducing attack busy from water explosion delay.\n");
+							DebugAttackBusy( "Reducing attack busy from water explosion delay.\n");
 							ReduceAttackBusyCount( );
 							break;
 

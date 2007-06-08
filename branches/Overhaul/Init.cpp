@@ -5,6 +5,7 @@
 	#include "INIReader.h"
 	
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "sgp.h"
 	#include "Gameloop.h"
@@ -54,6 +55,11 @@
 	#include "jascreens.h"
 	#include "XML.h"
 	#include "SaveLoadGame.h"
+	#include "weapons.h"
+	#include "Strategic Movement.h"
+	#include "Vehicles.h"
+	#include "Multilingual Text Code Generator.h"
+	#include "editscreen.h"
 #endif
 
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );

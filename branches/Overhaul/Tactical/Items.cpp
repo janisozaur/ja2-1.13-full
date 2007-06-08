@@ -36,6 +36,20 @@
 	#include "Interface Control.h"
 	#include "ShopKeeper Interface.h"
 	#include "Cursors.h"
+
+	#include "GameSettings.h"
+	#include "environment.h"
+	#include "Auto Resolve.h"
+	#include "Interface Items.h"
+	#include "Campaign Types.h"
+	#include "history.h"
+	#include "Game Clock.h"
+	#include "strategicmap.h"
+	#include "Inventory Choosing.h"
+	#include "Soldier macros.h"
+	#include "Smell.h"
+	#include "lighting.h"
+	#include "utilities.h"
 #endif
 
 #define ANY_MAGSIZE 255
@@ -6556,6 +6570,14 @@ INT16 GetRateOfFireBonus( OBJECTTYPE * pObj )
 {
 	INT8	bLoop;
 	INT16 bns=0;
+
+  if( (MAXITEMS <= pObj->usItem) || (MAXITEMS <= pObj->usGunAmmoItem) )
+    {
+   	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->usGunAmmoItem, MAXITEMS ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->usGunAmmoItem, MAXITEMS );
+    AssertMsg( 0, "GetRateOfFireBonus would crash" );
+    return 0; /* cannot calculate Bonus, this only happens sometimes in FULLSCREEN */
+    }
 
 	bns = BonusReduceMore( Item[pObj->usItem].rateoffirebonus, pObj->bStatus[0] );
 	bns += Item[pObj->usGunAmmoItem].rateoffirebonus ;

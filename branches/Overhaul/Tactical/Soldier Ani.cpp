@@ -55,6 +55,12 @@
 #include "campaign.h"
 #include "los.h"
 #include "GameSettings.h"
+#include "Boxing.h"
+#include "drugs and alcohol.h"
+#include "Smell.h"
+#include "GameSettings.h"
+#include "interface dialogue.h"
+#include "Strategic Status.h"
 #endif
 
 #define		NO_JUMP											0
@@ -1388,7 +1394,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									pSoldier->uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
 									// This becomes an attack busy situation
 									gTacticalStatus.ubAttackBusyCount++;
-									OutputDebugString( String( "Soldier turning from a hit.  Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+									DebugAttackBusy( String( "Soldier turning from a hit.  Increasing attack busy.  Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 
 									// Pick evenly between both
 									if ( Random( 50 ) < 25 )
@@ -2501,7 +2507,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// code: freeup attcker
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState ) );
-				OutputDebugString( String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState ) );
+				DebugAttackBusy( String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState ) );
 				// ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 
 				// ATE: Here, reduce again if creaturequeen tentical attack...
@@ -2509,7 +2515,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( pSoldier->usAnimState == QUEEN_SWIPE )
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count for end of queen swipe\n" ) );
-					OutputDebugString( "@@@@@@@ Reducing attacker busy count for end of queen swipe" );
+					DebugAttackBusy( "@@@@@@@ Reducing attacker busy count for end of queen swipe" );
 					// ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 				}
 				break;
@@ -2558,7 +2564,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// INcrement attacker busy count....
 //				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount ) );
-				OutputDebugString( String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount ) );
+				DebugAttackBusy( String("!!!!! CODE FROM ANIMATION %s ( %d )\n", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState ) );
 				break;
 
 			case 758:
@@ -3194,7 +3200,6 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// Find next closest team member!
 		if ( pSoldier->bTeam == gbPlayerNum )
 		{
-			OutputDebugString( "Merc dying.\n");
 			// Set guy to close panel!
 			// ONLY IF VISIBLE ON SCREEN
 			if ( IsMercPortraitVisible( pSoldier->ubID ) )

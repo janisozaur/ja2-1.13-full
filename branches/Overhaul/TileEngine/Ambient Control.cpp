@@ -10,6 +10,9 @@
 	#include "environment.h"
 	#include "Sound Control.h"
 	#include "Game Events.h"
+	#include "Ambient Control.h"
+	#include "lighting.h"
+	#include "Random.h"
 #endif
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];

@@ -40,6 +40,17 @@
 #include "Vehicles.h"
 #include "renderworld.h"
 #include "AIList.h"
+#include "Soldier macros.h"
+#include "Bullets.h"
+#include "physics.h"
+#include "GameSettings.h"
+#include "Debug Control.h"
+#include "interface panels.h"
+#include "Sound Control.h"
+#include "civ quotes.h"
+#include "Quests.h"
+#include "Campaign Types.h"
+#include "Queen Command.h"
 #endif
 
 extern void PauseAITemporarily( void );
@@ -1245,9 +1256,6 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"NPCDoesAct");
 
-	// Update last acting soldier
-	gLastActingSoldier = pSoldier;
-
 	// if the action is visible and we're in a hidden turnbased mode, go to turnbased
 	if (gTacticalStatus.uiFlags & TURNBASED && !(gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->bAction == AI_ACTION_FIRE_GUN || pSoldier->bAction == AI_ACTION_TOSS_PROJECTILE || pSoldier->bAction == AI_ACTION_KNIFE_MOVE || pSoldier->bAction == AI_ACTION_KNIFE_STAB || pSoldier->bAction == AI_ACTION_THROW_KNIFE) )
 	{
@@ -2015,7 +2023,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
 
-	OutputDebugString( "Executing action.\n" );
+//	OutputDebugString( "Executing action.\n" );
 
 	// in most cases, merc will change location, or may cause damage to opponents,
 	// so a new cover check will be necessary.  Exceptions handled individually.
@@ -2843,7 +2851,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 			// allow new situation to be set
 			if (gTacticalStatus.ubAttackBusyCount > 0)
 			{
-				OutputDebugString( "@#!%  NOT setting NewSituation because still busy attacking.\n" );
+				DebugAttackBusy( "@#!%  NOT setting NewSituation because still busy attacking.\n" );
 			}
 			else
 			{

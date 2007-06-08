@@ -2,6 +2,7 @@
 	#include "Tactical All.h"
 	#include "language defines.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h> 
@@ -65,6 +66,13 @@
 	#include "MessageBoxScreen.h"
 	#include "Language Defines.h"
 	#include "GameSettings.h"
+	#include "Map Screen Interface Map Inventory.h"
+	#include "Quests.h"
+	#include "Map Screen Interface.h"
+	#include "Campaign Types.h"
+	#include "opplist.h"
+	#include "los.h"
+	#include "Map Screen Interface Map.h"
 #endif
 
 #define		ITEMDESC_FONT							BLOCKFONT2
@@ -4487,7 +4495,7 @@ void DrawItemTileCursor( )
 	INT16							sDist;
 	INT8							bLevel;	
 
-	if (GetMouseMapPos( (INT16 *)&usMapPos) )
+	if (GetMouseMapPos( &usMapPos) )
 	{
 		if ( gfUIFullTargetFound )
 		{
@@ -5122,15 +5130,23 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							  // Turn to face, then do animation....
 							  EVENT_SetSoldierDesiredDirection( pSoldier, ubFacingDirection );
 							  pSoldier->fTurningUntilDone	 = TRUE;
+
+							 if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
+							 {
 							  pSoldier->usPendingAnimation = PASS_OBJECT;
               }
+						 }
 
 						  if ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubEndHeight == ANIM_STAND && !MercInWater( gpItemPointerSoldier ) )
 						  {
 							  EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, gOppositeDirection[ ubFacingDirection ] );
 							  gpItemPointerSoldier->fTurningUntilDone	 = TRUE;
+
+							  if (gAnimControl[ gpItemPointerSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
+							  {
 							  gpItemPointerSoldier->usPendingAnimation = PASS_OBJECT;
 						  }
+					  }
 					  }
 	
 						return( TRUE );
@@ -5227,7 +5243,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// Increment attacker count...
 			// gTacticalStatus.ubAttackBusyCount++;
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount) );
-			OutputDebugString( String("Incremtning ABC: Throw item to %d\n", gTacticalStatus.ubAttackBusyCount) );
+			DebugAttackBusy( "Incrementing ABC: Throw item\n" );
 
 			
 			// Given our gridno, throw grenate!
