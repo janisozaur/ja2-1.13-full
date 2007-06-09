@@ -18,10 +18,13 @@
 	#include "message.h"
 	#include "laptop_save.h"
 	#include "sgp_str.h"
+	#include "tactical_save.h"
 	
 #endif
 
+#define		HISTORY_DATA_FILE		"history.dat"
 
+STRING512	gzHistoryDataFile;
 
 #define TOP_X											LAPTOP_SCREEN_UL_X
 #define TOP_Y											LAPTOP_SCREEN_UL_Y
@@ -221,15 +224,12 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 
 void GameInitHistory()
 {
-  if( ( FileExists( HISTORY_DATA_FILE ) ) )
-	{
-	  // unlink history file
-		FileClearAttributes( HISTORY_DATA_FILE );
-	  FileDelete( HISTORY_DATA_FILE );
-	}
+	STR_SPrintf(gzHistoryDataFile, 512, "%s%s", gzTacticalSaveDir, HISTORY_DATA_FILE );
+	
+  	if( ( FileExists( gzHistoryDataFile ) ) )
+	 	 FileDelete( gzHistoryDataFile );
 
 	AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin( ), -1, -1);
-	
 }
 
 void EnterHistory()
@@ -516,11 +516,11 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 	UINT32	uiFileSize=0;
 	UINT32  uiSizeOfRecordsOnEachPage = 0;
 	
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -647,11 +647,11 @@ void OpenAndReadHistoryFile( void )
 	ClearHistoryList( );
 
 	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -706,7 +706,7 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 	
   
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzHistoryDataFile, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1256,11 +1256,11 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 	}
 
 
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1355,11 +1355,11 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 	}
 
 
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_WRITE ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_WRITE ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1485,11 +1485,11 @@ void SetLastPageInHistoryRecords( void )
   INT32 iBytesRead=0;
 
 	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1525,11 +1525,11 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
   INT32 iFileSize = 0; 
 
 	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1565,7 +1565,7 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 	
   
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzHistoryDataFile, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1729,11 +1729,11 @@ INT32 GetNumberOfHistoryPages()
 	UINT32  uiSizeOfRecordsOnEachPage = 0;
 	INT32		iNumberOfHistoryPages = 0;
 	
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
+	if ( ! (FileExists( gzHistoryDataFile ) ) )
 		return( 0 );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzHistoryDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)

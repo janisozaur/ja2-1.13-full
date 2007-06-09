@@ -38,6 +38,22 @@ INT32	WSTR_VSPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, va_l
 	return( vswprintf(pString, usMaxLen - 1, pFormat, arg) );
 }
 
+INT32	UTF16toUTF32(UINT16 *pUTF16, CHAR16 *pUTF32, UINT16 usMaxLen)
+{
+	// let's be safe as possible
+	UINT16	usCharsLeft = usMaxLen;
+	UINT16	*utf16 = pUTF16;
+	CHAR16	*utf32 = pUTF32;
+
+	for (; usCharsLeft && (utf16 != 0); utf16++, utf32++, usCharsLeft--)
+		*utf32 = *utf16;
+
+	if ( usCharsLeft )
+		*utf32 = 0;
+
+	return usMaxLen - usCharsLeft;
+}
+
 // Simple char functions
 // =====================
 

@@ -7,7 +7,7 @@ void ExitFinances();
 void HandleFinances();
 void RenderFinances();
 
-#define	FINANCES_DATA_FILE					"TEMP\\finances.dat"
+extern STRING512	gzFinancesDataFile;
 
 // the financial structure
 struct finance{

@@ -359,8 +359,8 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 {
 	INT32		iStartingCash;
 
+	printf("Initializing new game\n");
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame");
-//	static fScreenCount = 0;
 
 	if( fReset )
 	{
@@ -377,6 +377,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: loading merc profiles");
 	if( gubScreenCount == 0 )
 	{
+		printf("Loading merc profiles\n");
 		if( !LoadMercProfiles() )
 			return(FALSE);
 	}
@@ -386,11 +387,14 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	if( gubScreenCount == 0 )
 	{
 		//Init all the arms dealers inventory
+		printf("Initializing arm dealers\n");
 		InitAllArmsDealers();
 		InitBobbyRayInventory();
 	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: clearing messages");
+	printf("Clearing messages\n");
+
 	// clear tactical 
 	ClearTacticalMessageQueue( );
 
@@ -401,9 +405,12 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	if ( gubScreenCount == 0 )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: first time: init laptop");
+		printf("Initializing laptop\n");
+
 		//Init the laptop here
 		InitLaptopAndLaptopScreens();
 
+		printf("Initializing strategic layer\n");
 		InitStrategicLayer();
 
 		// Set new game flag

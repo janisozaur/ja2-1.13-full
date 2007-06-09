@@ -29,6 +29,7 @@
 #endif
 
 
+
 //ATE: Added to let Wiz default creating mouse regions with no cursor, JA2 default to a cursor ( first one )
 #ifdef JA2
 	#define		MSYS_STARTING_CURSORVAL		0
@@ -4005,8 +4006,8 @@ BOOLEAN SetDialogAttributes( CreateDlgInfo *pDlgInfo, INT32 iAttrib, ... )
 
 			if ( iFontOptions & DLG_USE_MONO_FONTS )
 			{
-				ubFGrnd = va_arg( arg, UINT8 );
-				ubBGrnd = va_arg( arg, UINT8 );
+				ubFGrnd = va_arg( arg, UINT32 );
+				ubBGrnd = va_arg( arg, UINT32);
 				pDlgInfo->usTextCols = ((((UINT16)ubBGrnd)<<8) | (UINT16)ubFGrnd);
 			}
 			break;

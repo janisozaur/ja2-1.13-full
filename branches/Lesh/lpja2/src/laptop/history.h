@@ -7,8 +7,7 @@ void ExitHistory();
 void HandleHistory();
 void RenderHistory();
 
-
-#define		HISTORY_DATA_FILE						"TEMP\\History.dat"
+extern STRING512	gzHistoryDataFile;
 
 // the financial structure
 struct history{

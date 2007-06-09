@@ -2,7 +2,7 @@
 #define __FILES_H
 
 
-#define	FILES_DAT_FILE			"TEMP\\files.dat"
+extern STRING512 gzFilesDataFile;
 
 void GameInitFiles();
 void EnterFiles();

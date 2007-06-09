@@ -8,12 +8,7 @@
 
 #include "soldier_profile_type.h"
 
-#ifdef JA2_WIN
-#define		TACTICAL_SAVE_DIR		"Temp\\"	
-#elif defined( JA2_LINUX )
-#define		TACTICAL_SAVE_DIR		"Temp/"	
-#endif
-
+extern STRING512	gzTacticalSaveDir;
 
 
 //Defines used for the bUseMercGridNoPlacement contained in the the merc profile struct

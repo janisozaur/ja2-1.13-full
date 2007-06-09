@@ -329,9 +329,11 @@ UINT32	GameInitOptionsScreenShutdown( void )
 
 BOOLEAN		EnterGIOScreen()
 {
-  VOBJECT_DESC    VObjectDesc;
-	UINT16					cnt;
-	UINT16					usPosY;
+	VOBJECT_DESC	VObjectDesc;
+	UINT16			cnt;
+	UINT16			usPosY;
+
+	printf("Entering game init options screen\n");
 
 	if( gfGIOButtonsAllocated )
 		return( TRUE );
@@ -538,6 +540,7 @@ BOOLEAN		ExitGIOScreen()
 {
 	UINT16	cnt;
 
+	printf("Exiting game init options screen\n");
 	if( !gfGIOButtonsAllocated )
 		return( TRUE );
 

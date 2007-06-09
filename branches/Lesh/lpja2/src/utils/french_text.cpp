@@ -3666,7 +3666,7 @@ STR16 pMessageStrings[] =
 	L"Sauvegarde rapide", //The name of the quicksave file (filename, text reference)
 	L"Partie",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
 	L"sav",				//The 3 character dos extension (represents sav)
-	L"..\\SavedGames", //The name of the directory where games are saved.
+	L"SavedGames", //The name of the directory where games are saved.
 	L"Jour",
 	L"Mercs",
 	L"Vide", //An empty save game slot

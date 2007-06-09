@@ -12,6 +12,8 @@
 	#include "imp_personality_finish.h"
 	#include "imp_attribute_selection.h"
 	#include "imp_main_page.h"
+	#include "sgp_str.h"
+	
 #endif
 
 #define IMP_SEEK_AMOUNT 5 * 80 * 2
@@ -48,10 +50,11 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 {
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
 	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in font uiFont
-  CHAR16 sString[ 1024 ];
-  INT32 iCounter =0;
-  BOOLEAN fNotDonePrintingFlag = TRUE;
-  INT32 iRecordPosition = 0;
+	CHAR16 sString[ 1024 ];
+	UINT16 zUTF16String[ 1024 ];
+	INT32 iCounter =0;
+	BOOLEAN fNotDonePrintingFlag = TRUE;
+	INT32 iRecordPosition = 0;
 
 	if( fShadow == FALSE )
 	{
@@ -59,8 +62,9 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 		SetFontShadow( NO_SHADOW );
 	}
 
-   // load the string
-	LoadEncryptedDataFromFile("BINARYDATA\\IMPText.EDT", sString, ( UINT32 ) ( ( sIMPTextRecordNumber ) * IMP_SEEK_AMOUNT ), IMP_SEEK_AMOUNT);
+	// load the string
+	LoadEncryptedDataFromFile("BINARYDATA\\IMPText.EDT", (CHAR16*)zUTF16String, ( UINT32 ) ( ( sIMPTextRecordNumber ) * IMP_SEEK_AMOUNT ), IMP_SEEK_AMOUNT);
+	ConvertUTF16to32(zUTF16String, sString, 1024);
     
 	// null put last char
 	sString[ wcslen( sString) ] = 0;
@@ -71,13 +75,10 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 		uiFlags = LEFT_JUSTIFIED;
 	}
 
-  DisplayWrappedString( sStartX, ( INT16 )( sStartY  ), sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK,FALSE, uiFlags);
-
+	DisplayWrappedString( sStartX, ( INT16 )( sStartY  ), sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK,FALSE, uiFlags);
 
 	// reset shadow
 	SetFontShadow( DEFAULT_SHADOW );
-
-
 }
 
 

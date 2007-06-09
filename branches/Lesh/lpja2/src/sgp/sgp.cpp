@@ -456,7 +456,8 @@ void ProcessJa2CommandLineBeforeInitialization(void)
 
 void TestIO( void )
 {
-//	const STR8	name = "/home/lesh/ja2_113/test1.txt";
-//	HWFILE	file;
-
+	printf("Some data amounts:\n");
+	printf("sizeof(CHAR16)=%d\n", sizeof(CHAR16));
+	printf("sizeof(UINT16)=%d\n", sizeof(UINT16));
+	printf("sizeof(STRING512)=%d\n", sizeof(STRING512));
 }

@@ -3482,7 +3482,7 @@ STR16 pMessageStrings[] =
 	L"QuickSave", //10	The name of the quicksave file (filename, text reference)
 	L"Spielstand",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
 	L"sav",				//The 3 character dos extension (represents sav)
-	L"..\\Spielstände", //The name of the directory where games are saved.
+	L"Spielstände", //The name of the directory where games are saved.
 	L"Tag",
 	L"Söldner",
 	L"Leerer Slot", //An empty save game slot

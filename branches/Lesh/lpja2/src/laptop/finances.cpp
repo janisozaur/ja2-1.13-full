@@ -18,10 +18,16 @@
 	#include "sgp_str.h"
 	#include "strategic_map.h"
 	#include "campaign_types.h"
+	#include "sgp_str.h"
+	#include "tactical_save.h"
 	
 #endif
 
 // the global defines
+
+#define	FINANCES_DATA_FILE					"finances.dat"
+
+STRING512	gzFinancesDataFile;
 
 // graphical positions
 #define TOP_X									LAPTOP_SCREEN_UL_X
@@ -422,12 +428,13 @@ INT32 GetConfidenceValue()
 
 void GameInitFinances()
 {
-  // initialize finances on game start up
+	// initialize finances on game start up
+	STR_SPrintf(gzFinancesDataFile, 512, "%s%s", gzTacticalSaveDir, FINANCES_DATA_FILE);
+
 	// unlink Finances data file
-	if( (FileExists( FINANCES_DATA_FILE ) ) )
+	if( (FileExists( gzFinancesDataFile ) ) )
 	{
-		FileClearAttributes( FINANCES_DATA_FILE );
-	  FileDelete( FINANCES_DATA_FILE );
+		FileDelete( gzFinancesDataFile );
 	}
 	GetBalanceFromDisk( );
 }
@@ -1117,11 +1124,11 @@ void OpenAndReadFinancesFile( void )
 	ClearFinanceList( );
 
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1601,7 +1608,7 @@ BOOLEAN WriteBalanceToDisk( void )
 	
   
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzFinancesDataFile, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
 	// write balance to disk
   FileWrite( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), NULL );
@@ -1622,7 +1629,7 @@ void GetBalanceFromDisk( void )
   INT32 iBytesRead=0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1657,7 +1664,7 @@ BOOLEAN AppendFinanceToEndOfFile( FinanceUnitPtr pFinance )
 	
   
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzFinancesDataFile, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1701,11 +1708,11 @@ UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber( void )
   INT32 iFileSize = 0; 
 
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1741,11 +1748,11 @@ void SetLastPageInRecords( void )
   INT32 iBytesRead=0;
 
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1842,11 +1849,11 @@ BOOLEAN LoadInRecords( UINT32 uiPage )
 	}
 
 
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2026,11 +2033,11 @@ INT32 GetPreviousBalanceToDate( void )
   INT32 iBalanceToDate=0;
 
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2081,11 +2088,11 @@ INT32 GetPreviousDaysBalance( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2175,11 +2182,11 @@ INT32 GetTodaysBalance( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2257,11 +2264,11 @@ INT32 GetPreviousDaysIncome( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2358,11 +2365,11 @@ INT32 GetTodaysDaysIncome( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2490,11 +2497,11 @@ INT32 GetTodaysOtherDeposits( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2588,11 +2595,11 @@ INT32 GetYesterdaysOtherDeposits( void )
   
 	// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -2685,14 +2692,14 @@ void LoadCurrentBalance( void )
 	// is the first record in the file
 		// error checking
 	// no file, return
-	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
+	if ( ! (FileExists( gzFinancesDataFile ) ) )
 	{
 		LaptopSaveInfo.iCurrentBalance= 0;
 		return;
 	}
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFinancesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)

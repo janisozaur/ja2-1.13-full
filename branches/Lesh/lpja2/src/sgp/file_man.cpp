@@ -345,6 +345,9 @@ BOOLEAN	FileExists( STR strFilename )
 // -------------------- End of Linux-specific stuff ------------------------
 #endif	
 #endif
+	if ( IsRootPath( strFilename ) )
+		return IO_IsRegularFile( strFilename );
+
 	return VFS.IsFileExist( strFilename );
 }
 
@@ -413,6 +416,9 @@ extern BOOLEAN	FileExistsNoDB( STR strFilename )
 	if ( VFS.FindResource( strFilename, entry ) )
 		return (entry.LibraryID == LIB_REAL_FILE);
 
+	if ( IsRootPath( strFilename ) )
+		return IO_IsRegularFile( strFilename );
+
 	return FALSE;
 }
 
@@ -460,7 +466,8 @@ BOOLEAN	FileDelete( STR strFilename )
 // -------------------- End of Linux-specific stuff ------------------------
 #endif
 */
-	return( IO_File_Delete( strFilename ) );
+	if ( IsRootPath( strFilename ) )
+		return( IO_File_Delete( strFilename ) );
 }
 
 //**************************************************************************
@@ -539,7 +546,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	vfsEntry	entry;
 	STRING512	filename;
 
-	printf("Request to open %s...\n", strFilename);
+//	printf("Request to open %s...\n", strFilename);
 	if ( VFS.FindResource( strFilename, entry ) )
 	{
 		strncpy( filename, entry.RealName.c_str(), 511 );

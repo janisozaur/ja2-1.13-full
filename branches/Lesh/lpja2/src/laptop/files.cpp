@@ -14,7 +14,14 @@
 	#include "cursors.h"
 	#include "email.h"
 	#include "text.h"
+	#include "sgp_str.h"
+	#include "tactical_save.h"
+	
 #endif
+
+#define	FILES_DATA_FILE			"files.dat"
+
+STRING512	gzFilesDataFile;
 
 #define TOP_X														LAPTOP_SCREEN_UL_X
 #define TOP_Y														LAPTOP_SCREEN_UL_Y
@@ -208,14 +215,13 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 	// return unique id of this transaction
 	return uiId;
 }
+
 void GameInitFiles( )
 {
+	STR_SPrintf(gzFilesDataFile, 512, "%s%s", gzTacticalSaveDir, FILES_DATA_FILE);
 
-	if (  (FileExists( FILES_DAT_FILE ) == TRUE ) )
-	{
-		 FileClearAttributes( FILES_DAT_FILE );
-		 FileDelete( FILES_DAT_FILE );
-	}
+	if (  (FileExists( gzFilesDataFile ) == TRUE ) )
+		 FileDelete( gzFilesDataFile );
 
 	ClearFilesList( );
 
@@ -506,11 +512,11 @@ void OpenAndReadFilesFile( void )
 	ClearFilesList( );
 
 	// no file, return
-	if ( ! (FileExists( FILES_DAT_FILE ) ) )
+	if ( ! (FileExists( gzFilesDataFile ) ) )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( FILES_DAT_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+ 	hFileHandle=FileOpen( gzFilesDataFile,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -580,7 +586,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 	}
 		
 	// open file
- 	hFileHandle=FileOpen( FILES_DAT_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzFilesDataFile, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1024,6 +1030,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidthPtr WidthList = NULL;
+	UINT16	zUTF16String[2048];
 
 
 	UINT32 uiPicture;
@@ -1040,9 +1047,11 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 			// read one record from file manager file
 
 			WidthList = CreateWidthRecordsForAruloIntelFile( );
-		  while( iCounter < LENGTH_OF_ENRICO_FILE )
+			while( iCounter < LENGTH_OF_ENRICO_FILE )
 			{
-			  LoadEncryptedDataFromFile( "BINARYDATA\\RIS.EDT", sString, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
+				// Lesh: dirty conversion
+				LoadEncryptedDataFromFile( "BINARYDATA\\RIS.EDT", (wchar_t*)zUTF16String, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
+				ConvertUTF16to32(zUTF16String, sString, 2048);
 				AddStringToFilesList( sString );
 				iCounter++;
 			}
