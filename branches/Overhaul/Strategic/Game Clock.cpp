@@ -24,6 +24,7 @@
 	#include "Map Screen Interface Bottom.h"
 	#include "gamescreen.h"
 	#include "Map Information.h"
+	#include "GameSettings.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK
@@ -78,7 +79,7 @@ BOOLEAN			gfGamePaused						= TRUE;
 BOOLEAN			gfTimeInterrupt					= FALSE;
 BOOLEAN			gfTimeInterruptPause    = FALSE;
 BOOLEAN			fSuperCompression				= FALSE;
-UINT32			guiGameClock						= STARTING_TIME;
+UINT32			guiGameClock				= gGameExternalOptions.iGameStartingTime;
 UINT32			guiPreviousGameClock = 0;		// used only for error-checking purposes
 UINT32			guiGameSecondsPerRealSecond;
 UINT32			guiTimesThisSecondProcessed = 0;
@@ -110,8 +111,8 @@ extern			UINT32		guiEnvDay;
 
 void InitNewGameClock( )
 {
-	guiGameClock = STARTING_TIME;
-	guiPreviousGameClock = STARTING_TIME;
+	guiGameClock = gGameExternalOptions.iGameStartingTime;
+	guiPreviousGameClock = gGameExternalOptions.iGameStartingTime;
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;

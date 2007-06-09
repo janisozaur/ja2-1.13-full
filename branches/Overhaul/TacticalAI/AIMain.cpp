@@ -1249,8 +1249,7 @@ THREATTYPE Threat[MAXMERCS];
 // opplist value:        -4  -3  -2  -1 SEEN  1    2   3   4   5
 int ThreatPercent[10] = { 20, 40, 60, 80, 25, 100, 90, 75, 60, 45 };
 
-// Defined in overhead.cpp
-extern SOLDIERTYPE *gLastActingSoldier;
+
 
 void NPCDoesAct(SOLDIERTYPE *pSoldier)
 {
@@ -2022,8 +2021,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
 	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
-
-//	OutputDebugString( "Executing action.\n" );
 
 	// in most cases, merc will change location, or may cause damage to opponents,
 	// so a new cover check will be necessary.  Exceptions handled individually.

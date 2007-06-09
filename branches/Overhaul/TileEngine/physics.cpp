@@ -469,7 +469,6 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 			}
 
 			if ( pObject->ubActionCode == THROW_ARM_ITEM && !pObject->fInWater )
-//			if ( pObject->ubActionCode == THROW_ARM_ITEM ) // Changed because this actually has code to handle water explosions too.
 			{
 				HandleArmedObjectImpact( pObject );
 			}

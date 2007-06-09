@@ -1613,7 +1613,6 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 		// fix up our interrupt duel pts if necessary
 		if (pSoldier->bInterruptDuelPts < pOpponent->bInterruptDuelPts)
 		{
-			// 0verhaul:  Go through the proper channels!
 			pSoldier->bInterruptDuelPts = pOpponent->bInterruptDuelPts;
 		}
 	}
@@ -1893,6 +1892,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 							if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > MaxDistanceVisible() )
 							{
 								pOpponent->bInterruptDuelPts = NO_INTERRUPT;
+
 								DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Resetting int pts for %d - NOISE BEYOND SIGHT DISTANCE!?", pOpponent->ubID ) );
 
 								continue;
@@ -1901,6 +1901,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						else if ( pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 						{
 							pOpponent->bInterruptDuelPts = NO_INTERRUPT;
+
 							DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Resetting int pts for %d - DOESN'T SEE ON SIGHT INTERRUPT!?", pOpponent->ubID ) );
 
 

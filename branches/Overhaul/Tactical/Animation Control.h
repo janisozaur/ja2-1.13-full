@@ -77,8 +77,6 @@
 #define ANIM_BREATH									0x40000000
 #define ANIM_IGNOREHITFINISH				0x80000000
 
-// EFLAG defines
-#define EANIM_ATTACK                        0x00000001
 
 //ANIMATION HEIGHT VALUES
 #define ANIM_STAND						6
@@ -540,7 +538,10 @@ enum AnimationStates
 	CRIPPLE_END_OPEN_DOOR,
 	CRIPPLE_END_OPEN_LOCKED_DOOR,
   LOCKPICK_CROUCHED,
+
+  //<SB> crouch throwing
   THROW_ITEM_CROUCHED,
+  //</SB>
 
 	NUMANIMATIONSTATES
 

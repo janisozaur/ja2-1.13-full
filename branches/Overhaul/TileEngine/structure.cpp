@@ -717,7 +717,7 @@ BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 				if ( pExistingStructure->fFlags & STRUCTURE_MOBILE && !(pExistingStructure->fFlags & STRUCTURE_PASSABLE) && !(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE) )
 				{
 					// don't allow 2 people in the same tile
-					//return( FALSE );
+					return( FALSE );
 				}
 
         // ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!

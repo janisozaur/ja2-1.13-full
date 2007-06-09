@@ -1469,7 +1469,7 @@ BOOLEAN CanCharacterOnDuty( SOLDIERTYPE *pSoldier )
 			// enemies in sector
 			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
 			{
-				return( FALSE );
+				return( TRUE );
 			}
 		}
 	}

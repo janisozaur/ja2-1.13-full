@@ -358,7 +358,6 @@ UINT32	guiWaitingForAllMercsToExitData[3];
 UINT32	guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN	gfKillingGuysForLosingBattle = FALSE;
 
-// The last soldier to do something
 INT32 GetFreeMercSlot(void)
 {
 	UINT32 uiCount;

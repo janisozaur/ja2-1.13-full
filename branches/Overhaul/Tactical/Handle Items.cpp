@@ -1511,9 +1511,24 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		}
 		break;
 
-	case ANIM_CROUCH:
+		//<SB> crouch throwing
 	case ANIM_PRONE:
+			if ( sGridNo == pSoldier->sGridNo )
+			{
+				// OK, JUST DROP ITEM!
+				if ( pSoldier->pTempObject != NULL )
+				{
+					AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0, -1 );
+					NotifySoldiersToLookforItems( );
 
+					MemFree( pSoldier->pTempObject );
+					pSoldier->pTempObject = NULL;
+				}
+				break;
+			}
+			ChangeSoldierStance( pSoldier, ANIM_CROUCH );
+
+		case ANIM_CROUCH:
 		// CHECK IF WE ARE NOT ON THE SAME GRIDNO
 		if ( sGridNo == pSoldier->sGridNo )
 		{
@@ -1529,12 +1544,18 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		}
 		else
 		{
-			// OK, go from prone/crouch to stand first!
+				// CHANGE DIRECTION AT LEAST
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
-			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 
-			ChangeSoldierState( pSoldier, THROW_ITEM, 0 , FALSE );
+				SoldierGotoStationaryStance( pSoldier );
+
+			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+				pSoldier->fTurningUntilDone = TRUE;
+
+				pSoldier->usPendingAnimation = THROW_ITEM_CROUCHED;
 		}
+			break;
+//</SB>
 	}
 
 }
@@ -3452,9 +3473,6 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			// Set string
 			if ( cnt == gbCurrentItemSel )
 			{
-				// Set string
-				if ( cnt == gbCurrentItemSel )
-				{
 					SetFontForeground( FONT_MCOLOR_LTGRAY );
 				}
 				else
@@ -3465,15 +3483,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 				gprintfdirty( sFontX, sY, pStr );
 				mprintf( sFontX, sY, pStr );
 			}
-			else
-			{
-				SetFontForeground( FONT_MCOLOR_DKGRAY );
 			}
-			swprintf( pStr, TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
-			gprintfdirty( sFontX, sY, pStr );
-			mprintf( sFontX, sY, pStr );
-		}
-	}
 
 	return( fSelectionDone );
 
