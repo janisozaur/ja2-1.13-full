@@ -13,7 +13,7 @@
 
 // #define DEBUG_ATTACKBUSY
 
-// #define LUA_CONSOLE
+// #define LUACONSOLE
 
 //#ifdef _DEBUG
 //	#ifndef JA2TESTVERSION
