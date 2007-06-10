@@ -95,7 +95,11 @@ BOOLEAN InitializeGame(void)
 
 	// Snap: Read options from an INI file in the default of custom Data directory
 	// Moved this up because some settings are used during other inits
-	LoadGameExternalOptions();
+	if ( !LoadGameExternalOptions() )
+	{
+		fprintf(stderr,"Failed to load external options\n");
+		return FALSE;
+	}
 	InitSightRange(); //lal
 
 	// Initlaize mouse subsystems
@@ -110,8 +114,6 @@ BOOLEAN InitializeGame(void)
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "COULD NOT INUT FONT SYSTEM...");
 		return( ERROR_SCREEN );
 	}
-
-	printf("InitializeFonts() done\n");
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );

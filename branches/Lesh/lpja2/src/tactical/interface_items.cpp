@@ -2371,7 +2371,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	UINT8 ubString[48];
 	INT32		cnt;
 	CHAR16		pStr[10];
-	UINT16	usX, usY;
+	INT16	usX, usY;
 	INT16		sForeColour;
 	INT16 sProsConsIndent;
 
@@ -3070,7 +3070,7 @@ void RenderItemDescriptionBox( )
 	static CHAR16					pStr[ 100 ];
 	INT32									cnt;
 	FLOAT									fWeight;
-	UINT16								usX, usY;
+	INT16								usX, usY;
 	UINT8									ubAttackAPs;
 	BOOLEAN								fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
 	INT16									sProsConsIndent;

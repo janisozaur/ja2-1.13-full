@@ -314,11 +314,12 @@ extern INT32 CountFilledIMPSlots( INT8 iSex );
 extern INT32 CountEmptyIMPSlots( INT8 iSex );
 
 // Snap: Read options from an INI file in the default of custom Data directory
-void LoadGameExternalOptions()
+BOOLEAN LoadGameExternalOptions()
 {
 	//Kaiden: Setting Ja2_Options.ini file to be read
 	CIniReader iniReader;
-	iniReader.Open(GAME_EXTERNAL_OPTIONS_FILE);
+	if ( !iniReader.Open(GAME_EXTERNAL_OPTIONS_FILE) )
+		return FALSE;
 
 	//################# Laptop Settings #################
 
@@ -676,6 +677,7 @@ void LoadGameExternalOptions()
 	// ShadoWarrior: Tooltip changes (end)
 
 	iniReader.Close();
+	return TRUE;
 }
 
 

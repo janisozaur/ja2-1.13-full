@@ -51,7 +51,6 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
 	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in font uiFont
 	CHAR16 sString[ 1024 ];
-	UINT16 zUTF16String[ 1024 ];
 	INT32 iCounter =0;
 	BOOLEAN fNotDonePrintingFlag = TRUE;
 	INT32 iRecordPosition = 0;
@@ -63,8 +62,7 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 	}
 
 	// load the string
-	LoadEncryptedDataFromFile("BINARYDATA\\IMPText.EDT", (CHAR16*)zUTF16String, ( UINT32 ) ( ( sIMPTextRecordNumber ) * IMP_SEEK_AMOUNT ), IMP_SEEK_AMOUNT);
-	ConvertUTF16to32(zUTF16String, sString, 1024);
+	LoadEncryptedDataFromFile("BINARYDATA\\IMPText.EDT", sString, ( UINT32 ) ( ( sIMPTextRecordNumber ) * IMP_SEEK_AMOUNT ), IMP_SEEK_AMOUNT);
     
 	// null put last char
 	sString[ wcslen( sString) ] = 0;

@@ -1954,7 +1954,7 @@ void DisplaySelectedNPC()
 {
 	UINT16	i;
 	UINT16	usPosX, usPosY;
-	UINT16  usLocationX = 0, usLocationY = 0;
+	INT16  usLocationX = 0, usLocationY = 0;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	CHAR16  sTempString[ 64 ];
 	wchar_t	zButtonName[ 256 ];
@@ -2022,7 +2022,7 @@ void DisplaySelectedNPC()
 //			GetShortSectorString( gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorX, gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorY, sTempString );
 		}
 
-		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, (UINT16)(usPosY), gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
+		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
 		// the location value
 		DrawTextToScreen( sTempString, usLocationX, (UINT16)(usPosY), 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);

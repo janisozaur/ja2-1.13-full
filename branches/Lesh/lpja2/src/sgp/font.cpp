@@ -322,10 +322,7 @@ int count;
 //  This function returns (-1) if it fails, and debug msgs for a reason.
 //  Otherwise the font number is returned.
 //*****************************************************************************
-template INT32 LoadFontFile<char *>(char *);
-template INT32 LoadFontFile<char const *>(char const *);
-template <typename string1>
-INT32 LoadFontFile(string1 filename)
+INT32 LoadFontFile(const CHAR8 *filename)
 {
 VOBJECT_DESC		vo_desc;
 UINT32					LoadIndex;
@@ -405,7 +402,7 @@ UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, STR16 pFontString, ...)
 {
 va_list argptr;
-wchar_t	string[512];
+CHAR16	string[512];
 
 	Assert(pFontString!=NULL);
 
@@ -442,14 +439,14 @@ wchar_t	string[512];
 //*****************************************************************************
 INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, STR16 pFontString )
 {
-	wchar_t	string[512];
+	CHAR16	string[512];
 	UINT32 i, index;
 	INT16 sBoldDiff = 0;
-	UINT16 str[2];
+	CHAR16 str[2];
 
 	Assert(pFontString!=NULL);
 
-	wcscpy( string, (wchar_t*) pFontString );
+	wcscpy( string, pFontString );
 
   // make sure the character count is legal
   if (uiCharCount > wcslen(string))
@@ -501,10 +498,10 @@ INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCha
 //  Created on:     12/1/99
 //
 //*****************************************************************************************
-INT16 StringNPixLength(UINT16 *string, UINT32 uiMaxCount, INT32 UseFont)
+INT16 StringNPixLength(CHAR16 *string, UINT32 uiMaxCount, INT32 UseFont)
 {
-	UINT32 Cur, uiCharCount;
-	UINT16 *curletter,transletter;
+	INT16 Cur, uiCharCount;
+	CHAR16 *curletter,transletter;
 
 	Cur = 0;
 	uiCharCount = 0;
@@ -516,7 +513,7 @@ INT16 StringNPixLength(UINT16 *string, UINT32 uiMaxCount, INT32 UseFont)
 		Cur+=GetWidth(FontObjs[UseFont], transletter);
 		uiCharCount++;
 	}
-	return((INT16)Cur);
+	return(Cur);
 }
 
 //*****************************************************************************
@@ -526,15 +523,10 @@ INT16 StringNPixLength(UINT16 *string, UINT32 uiMaxCount, INT32 UseFont)
 //	Returns the length of a string in pixels, depending on the font given.
 //
 //*****************************************************************************
-template INT16 StringPixLength<short *>(short *, INT32);
-template INT16 StringPixLength<wchar_t *>(wchar_t *, INT32);
-template INT16 StringPixLength<wchar_t const *>(wchar_t const*, INT32);
-template INT16 StringPixLength<unsigned short const *>(unsigned short const *, INT32);
-template <typename type1>
-INT16 StringPixLength(type1 string, INT32 UseFont)
+INT16 StringPixLength(STR16 string, INT32 UseFont)
 {
-	UINT32 Cur;
-	UINT16 *curletter,transletter;
+	INT16 Cur;
+	CHAR16 *curletter, transletter;
 
 	if (string == NULL)
 	{
@@ -542,14 +534,14 @@ INT16 StringPixLength(type1 string, INT32 UseFont)
 	}
 
 	Cur=0;
-	curletter = (UINT16 *)string;
+	curletter = string;
 
 	while((*curletter) != L'\0')
 	{
 		transletter=GetIndex(*curletter++);
 		Cur+=GetWidth(FontObjs[UseFont], transletter);
 	}
-	return((INT16)Cur);
+	return(Cur);
 }
 
 
@@ -641,7 +633,7 @@ UINT16 GetFontHeight(INT32 FontNum)
 //	CreateEnglishTransTable()
 //
 //*****************************************************************************
-INT16 GetIndex(UINT16 siChar)
+INT16 GetIndex(CHAR16 siChar)
 {
 	UINT16 *pTrav;
 	UINT16 ssCount=0;
@@ -653,8 +645,8 @@ INT16 GetIndex(UINT16 siChar)
 	{
 		if (siChar == *pTrav)
 		{
-      return ssCount;
-    }
+      		return ssCount;
+    	}
 		ssCount++;
 		pTrav++;
 	}
@@ -715,13 +707,7 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters. Uses monochrome font color settings
 //*****************************************************************************
-template UINT32 mprintf<short *>(INT32, INT32, short *, ...);
-template UINT32 mprintf<wchar_t *>(INT32, INT32, wchar_t *, ...);
-template UINT32 mprintf<wchar_t const *>(INT32, INT32, wchar_t const *, ...);
-template UINT32 mprintf<unsigned short *>(INT32, INT32, unsigned short *, ...);
-template UINT32 mprintf<unsigned short const *>(INT32, INT32, unsigned short const *, ...);
-template <typename type3>
-UINT32 mprintf(INT32 x, INT32 y, type3 pFontString, ...)
+UINT32 mprintf(INT32 x, INT32 y, STR16 pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
@@ -733,7 +719,7 @@ UINT8				*pDestBuf;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	WSTR_VSPrintf(string, 512, (wchar_t *)pFontString, argptr);	// process gprintf string (get output str)
+	WSTR_VSPrintf(string, 512, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -772,11 +758,7 @@ UINT8				*pDestBuf;
 	return(0);
 }
 
-template void VarFindFontRightCoordinates<short *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, short *, ...);
-template void VarFindFontRightCoordinates<wchar_t *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, wchar_t *, ...);
-template void VarFindFontRightCoordinates<unsigned short *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, unsigned short *, ...);
-template <typename type8>
-void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, type8 pFontString, ... )
+void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, STR16 pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
@@ -788,13 +770,7 @@ void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 	FindFontRightCoordinates( sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY );
 }
 
-template void VarFindFontCenterCoordinates<short *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, short *, ...);
-template void VarFindFontCenterCoordinates<wchar_t *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, wchar_t *, ...);
-template void VarFindFontCenterCoordinates<wchar_t const *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, wchar_t const *, ...);
-template void VarFindFontCenterCoordinates<unsigned short *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, unsigned short *, ...);
-template void VarFindFontCenterCoordinates<unsigned short const *>(INT16, INT16, INT16, INT16, INT32, INT16 *, INT16 *, unsigned short const*, ...);
-template <typename type8>
-void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, type8 pFontString, ... )
+void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, STR16 pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
@@ -806,15 +782,7 @@ void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 
 	FindFontCenterCoordinates( sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY );
 }
 
-template void FindFontRightCoordinates<short *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, short *, INT32, unsigned short *, unsigned short *);
-template void FindFontRightCoordinates<short *, short *, unsigned short *>(INT16, INT16, INT16, INT16, short *, INT32, short *, unsigned short *);
-template void FindFontRightCoordinates<wchar_t *, short *, short *>(INT16, INT16, INT16, INT16, wchar_t *, INT32, short *, short *);
-template void FindFontRightCoordinates<wchar_t *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, wchar_t *, INT32, unsigned short *, unsigned short *);
-template void FindFontRightCoordinates<wchar_t *, short *, unsigned short *>(INT16, INT16, INT16, INT16, wchar_t *, INT32, short *, unsigned short *);
-template void FindFontRightCoordinates<unsigned short *, short *, short *>(INT16, INT16, INT16, INT16, unsigned short *, INT32, short *, short *);
-template void FindFontRightCoordinates<unsigned short *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, unsigned short *, INT32, unsigned short *, unsigned short *);
-template <typename string5, typename string7, typename string8>
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, string5 pStr, INT32 iFontIndex, string7 psNewX, string8 psNewY )
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, STR16 pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -826,14 +794,7 @@ void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
 	*psNewY = yp;
 }
 
-template void FindFontCenterCoordinates<short *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, short *, INT32, unsigned short *, unsigned short *);
-template void FindFontCenterCoordinates<unsigned short *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, unsigned short *, INT32, unsigned short *, unsigned short *);
-template void FindFontCenterCoordinates<unsigned short *, short *, short *>(INT16, INT16, INT16, INT16, unsigned short *, INT32, short *, short *);
-template void FindFontCenterCoordinates<short *, short *, short *>(INT16, INT16, INT16, INT16, short *, INT32, short *, short *);
-template void FindFontCenterCoordinates<wchar_t *, short *, short *>(INT16, INT16, INT16, INT16, wchar_t *, INT32, short *, short *);
-template void FindFontCenterCoordinates<wchar_t *, unsigned short *, unsigned short *>(INT16, INT16, INT16, INT16, wchar_t *, INT32, unsigned short *, unsigned short *);
-template <typename string5, typename string7, typename string8>
-void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, string5 pStr, INT32 iFontIndex, string7 psNewX, string8 psNewY )
+void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, STR16 pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -1017,13 +978,7 @@ wchar_t	string[512];
 	return(0);
 }
 
-template UINT32	mprintf_buffer<short *>(UINT8 *, UINT32, UINT32, INT32, INT32, short *, ...);
-template UINT32	mprintf_buffer<wchar_t *>(UINT8 *, UINT32, UINT32, INT32, INT32, wchar_t *, ...);
-template UINT32	mprintf_buffer<wchar_t const *>(UINT8 *, UINT32, UINT32, INT32, INT32, wchar_t const *, ...);
-template UINT32	mprintf_buffer<unsigned short *>(UINT8 *, UINT32, UINT32, INT32, INT32, unsigned short *, ...);
-template UINT32	mprintf_buffer<unsigned short const*>(UINT8 *, UINT32, UINT32, INT32, INT32, unsigned short const*, ...);
-template <typename string6>
-UINT32	mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, string6 pFontString, ...)
+UINT32	mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, STR16 pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
@@ -1066,10 +1021,7 @@ wchar_t	string[512];
 	return(0);
 }
 
-template UINT32 mprintf_buffer_coded<short *>(UINT8 *, UINT32, UINT32, INT32, INT32, short *, ...);
-template UINT32 mprintf_buffer_coded<wchar_t *>(UINT8 *, UINT32, UINT32, INT32, INT32, wchar_t *, ...);
-template <typename string6>
-UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, string6 pFontString, ...)
+UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, STR16 pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;

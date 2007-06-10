@@ -229,6 +229,7 @@ void GameInitHistory()
   	if( ( FileExists( gzHistoryDataFile ) ) )
 	 	 FileDelete( gzHistoryDataFile );
 
+	OpenAndWriteHistoryFile();
 	AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin( ), -1, -1);
 }
 
@@ -772,7 +773,7 @@ void ClearHistoryList( void )
 void DisplayHistoryListHeaders( void )
 {
   // this procedure will display the headers to each column in History
-  UINT16 usX, usY;
+  INT16 usX, usY;
 
 	// font stuff
 	SetFont(HISTORY_TEXT_FONT);
@@ -829,7 +830,7 @@ void DrawHistoryRecordsText( void )
   HistoryUnitPtr pTempHistory=pHistoryListHead;
 	wchar_t sString[512];
   INT32 iCounter=0;
-	UINT16 usX, usY;
+	INT16 usX, usY;
   INT32 iBalance=0;
 	INT16 sX =0, sY =0;
 

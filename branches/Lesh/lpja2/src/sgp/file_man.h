@@ -84,8 +84,8 @@ typedef UINT32				HANDLE;
 
 // Snap: At program launch we build two directory catalogues:
 // one for the default Data directory, the other for the custom Data directory.
-extern TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
-extern TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
+//extern TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
+//extern TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
 
 //**************************************************************************
 //
@@ -108,8 +108,8 @@ BOOLEAN	FileExists( STR strFilename );
 extern BOOLEAN	FileExistsNoDB( STR strFilename );
 extern BOOLEAN	FileDelete( STR strFilename );
 extern HWFILE	FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
-
 extern void		FileClose( HWFILE );
+extern BOOLEAN	FileCreateEmptyFile( STR strFilename );
 
 extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );

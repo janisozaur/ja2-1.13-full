@@ -42,6 +42,7 @@ public:
 	void		Shutdown	( void );
 
 	BOOLEAN		FindResource( const CHAR8 *pResourceName, vfsEntry& Entry );
+	BOOLEAN		GetResourceFilename( const CHAR8 *pResourceName, CHAR8 *pFilename, UINT32 uiMaxLen );
 	UINT32		StartFilePatternMatch ( const CHAR8 *pPattern );
 	BOOLEAN		GetNextMatch          ( CHAR8 *pFilename, UINT32 uiMaxLen );
 	void		FinishFilePatternMatch( void );

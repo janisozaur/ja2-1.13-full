@@ -424,7 +424,7 @@ extern GAME_EXTERNAL_OPTIONS gGameExternalOptions;
 BOOLEAN	SaveGameSettings();
 BOOLEAN LoadGameSettings();
 // Snap: Read options from an INI file in the default of custom Data directory
-void LoadGameExternalOptions();
+BOOLEAN LoadGameExternalOptions();
 
 void InitGameOptions();
 

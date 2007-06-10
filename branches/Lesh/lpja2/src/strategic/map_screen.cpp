@@ -1553,7 +1553,7 @@ void DrawPay(INT16 sCharNumber)
 	// will draw the pay
 	INT32 uiSalary;
 	wchar_t sString[7];
-	UINT16 usX, usY;
+	INT16 usX, usY;
 	INT16 usMercProfileID;
 
 
@@ -1645,7 +1645,7 @@ void DrawCharStats( INT16 sCharNum )
 {
 	// will draw the characters stats, max life, strength, dex, and skills
 	wchar_t sString[9];
-	UINT16 usX, usY;
+	INT16 usX, usY;
 	//HVOBJECT hCrossHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1898,7 +1898,7 @@ void DrawCharHealth( INT16 sCharNum )
 {
 	UINT32 uiHealthPercent = 0;
 	wchar_t sString[9];
-	UINT16 usX, usY;
+	INT16 usX, usY;
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -1992,7 +1992,7 @@ void DrawCharHealth( INT16 sCharNum )
 void DrawCharacterInfo(INT16 sCharNumber)
 {
 	wchar_t sString[80];
-	UINT16 usX, usY;
+	INT16 usX, usY;
 	INT16 usMercProfileID;
 	INT32 iTimeRemaining=0;
 	INT8 bMorale =0;
@@ -4312,20 +4312,20 @@ void SetClockMin(STR16 pStringA, ...)
 // WANNE 2 <change 2>
 void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
+	INT16 usX=0;
+	INT16 usY=0;
 
 	// mercs
 	if( sRowIndex < FIRST_VEHICLE )
 	{
-		FindFontCenterCoordinates((short)NAME_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)NAME_WIDTH, (short)Y_SIZE, pName, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(NAME_X + 1, (Y_START+(sRowIndex*Y_SIZE)), NAME_WIDTH, Y_SIZE, pName, iFont, &usX, &usY);
 	}
 	// vehicles
 	else
 	{
 		sRowIndex = sRowIndex - FIRST_VEHICLE;
 		//FindFontCenterCoordinates((short)NAME_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)NAME_WIDTH, (short)Y_SIZE, pName, (long)iFont, &usX, &usY);
-		FindFontCenterCoordinates((short)NAME_X + 1, (short)(usVehicleY+(sRowIndex*Y_SIZE)), (short)NAME_WIDTH, (short)Y_SIZE, pName, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(NAME_X + 1, (usVehicleY+(sRowIndex*Y_SIZE)), NAME_WIDTH, Y_SIZE, pName, iFont, &usX, &usY);
 	}
 
 	//RestoreExternBackgroundRect(NAME_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), NAME_WIDTH, Y_SIZE);
@@ -4335,8 +4335,8 @@ void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 
 void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
+	INT16 usX=0;
+	INT16 usY=0;
 	wchar_t sString[32];
 
 
@@ -4344,14 +4344,14 @@ void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 	if( sRowIndex < FIRST_VEHICLE )
 	{
-		FindFontCenterCoordinates((short)ASSIGN_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)ASSIGN_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(ASSIGN_X + 1, (Y_START+(sRowIndex*Y_SIZE)), ASSIGN_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 	else
 	{
 		// WANNE 2
 		sRowIndex = sRowIndex - FIRST_VEHICLE;
 		//FindFontCenterCoordinates((short)ASSIGN_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)ASSIGN_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-		FindFontCenterCoordinates((short)ASSIGN_X + 1, (short)(usVehicleY+(sRowIndex*Y_SIZE)), (short)ASSIGN_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(ASSIGN_X + 1, (usVehicleY+(sRowIndex*Y_SIZE)), ASSIGN_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 
 	if( fFlashAssignDone == TRUE )
@@ -4369,8 +4369,8 @@ void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
+	INT16 usX=0;
+	INT16 usY=0;
 	wchar_t sString[32];
 
 	GetMapscreenMercLocationString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString, 32 );
@@ -4378,14 +4378,14 @@ void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	if( sRowIndex < FIRST_VEHICLE )
 	{
 		// center
-		FindFontCenterCoordinates((short)LOC_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)LOC_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(LOC_X + 1, (Y_START+(sRowIndex*Y_SIZE)), LOC_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 	else
 	{
 		// WANNE 2
 		//FindFontCenterCoordinates((short)LOC_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)LOC_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
 		sRowIndex = sRowIndex - FIRST_VEHICLE;
-		FindFontCenterCoordinates((short)LOC_X + 1, (short)(usVehicleY+(sRowIndex*Y_SIZE)), (short)LOC_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(LOC_X + 1, (usVehicleY+(sRowIndex*Y_SIZE)), LOC_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 	// restore background
 	//RestoreExternBackgroundRect(LOC_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), LOC_WIDTH, Y_SIZE);
@@ -4397,8 +4397,8 @@ void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
+	INT16 usX=0;
+	INT16 usY=0;
 	wchar_t sString[32];
 
 	GetMapscreenMercDestinationString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString, 32 );
@@ -4410,14 +4410,14 @@ void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 	if( sRowIndex < FIRST_VEHICLE )
 	{
-		FindFontCenterCoordinates((short)DEST_ETA_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)DEST_ETA_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(DEST_ETA_X + 1, (Y_START+(sRowIndex*Y_SIZE)), DEST_ETA_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 	else
 	{
 		// WANNE 2
 		sRowIndex = sRowIndex - FIRST_VEHICLE;
 		//FindFontCenterCoordinates((short)DEST_ETA_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6 ), (short)DEST_ETA_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-		FindFontCenterCoordinates((short)DEST_ETA_X + 1, (short)(usVehicleY+(sRowIndex*Y_SIZE)), (short)DEST_ETA_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(DEST_ETA_X + 1, (usVehicleY+(sRowIndex*Y_SIZE)), DEST_ETA_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 
 	//RestoreExternBackgroundRect(DEST_ETA_X+1, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), DEST_ETA_WIDTH-1, Y_SIZE);
@@ -4428,8 +4428,8 @@ void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 void DrawTimeRemaining( INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor )
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
+	INT16 usX=0;
+	INT16 usY=0;
 	wchar_t sString[32];
 
 
@@ -4446,14 +4446,14 @@ void DrawTimeRemaining( INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor )
 
 	if( sCharNumber < FIRST_VEHICLE )
 	{
-		FindFontCenterCoordinates((short)TIME_REMAINING_X + 1, (short)(Y_START+(sCharNumber*Y_SIZE)), (short)TIME_REMAINING_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(TIME_REMAINING_X + 1, (Y_START+(sCharNumber*Y_SIZE)), TIME_REMAINING_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 	else
 	{
 		// WANNE 2
 		sCharNumber = sCharNumber - FIRST_VEHICLE;
 		//FindFontCenterCoordinates((short)TIME_REMAINING_X + 1, (short)(Y_START+(sCharNumber*Y_SIZE) + 6 ), (short)TIME_REMAINING_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-		FindFontCenterCoordinates((short)TIME_REMAINING_X + 1, (short)(usVehicleY+(sCharNumber*Y_SIZE)), (short)TIME_REMAINING_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(TIME_REMAINING_X + 1, (usVehicleY+(sCharNumber*Y_SIZE)), TIME_REMAINING_WIDTH, Y_SIZE, sString, iFont, &usX, &usY);
 	}
 
 	//RestoreExternBackgroundRect(TIME_REMAINING_X, ((UINT16)(usY+(Y_OFFSET*sCharNumber+1))), TIME_REMAINING_WIDTH, Y_SIZE);
@@ -6765,7 +6765,7 @@ void BltCharInvPanel()
 	HVOBJECT hCharListHandle;
 	SOLDIERTYPE	*pSoldier;
 	CHAR16 sString[ 32 ];
-	UINT16 usX, usY;
+	INT16 usX, usY;
 	INT32 iCounter = 0;
 
 

@@ -404,3 +404,14 @@ void sgpVFS::FinishFilePatternMatch( void )
 	FileMatchResults.clear();
 	FileMatchIndex = 0;
 }
+
+BOOLEAN	sgpVFS::GetResourceFilename( const CHAR8 *pResourceName, CHAR8 *pFilename, UINT32 uiMaxLen )
+{
+	vfsEntry	entry;
+
+	if ( !FindResource( pResourceName, entry ) )
+		return FALSE;
+
+	strncpy( pFilename, entry.RealName.c_str(), uiMaxLen );
+	return TRUE;
+}

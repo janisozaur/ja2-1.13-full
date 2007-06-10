@@ -227,7 +227,6 @@ void GameInitFiles( )
 
 	// add background check by RIS
 	AddFilesToPlayersLog( ENRICO_BACKGROUND, 0,255, NULL, NULL );
-
 }
 
 void EnterFiles()
@@ -1030,7 +1029,6 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidthPtr WidthList = NULL;
-	UINT16	zUTF16String[2048];
 
 
 	UINT32 uiPicture;
@@ -1049,9 +1047,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 			WidthList = CreateWidthRecordsForAruloIntelFile( );
 			while( iCounter < LENGTH_OF_ENRICO_FILE )
 			{
-				// Lesh: dirty conversion
-				LoadEncryptedDataFromFile( "BINARYDATA\\RIS.EDT", (wchar_t*)zUTF16String, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
-				ConvertUTF16to32(zUTF16String, sString, 2048);
+				LoadEncryptedDataFromFile( "BINARYDATA\\RIS.EDT", sString, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
 				AddStringToFilesList( sString );
 				iCounter++;
 			}

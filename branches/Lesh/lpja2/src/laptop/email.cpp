@@ -790,7 +790,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, 
   //pTempEmail->pText[iCounter]=NULL;
 
 	// copy subject
-	pTempEmail->pSubject = (STR16) MemAlloc( 128 * 2 );
+	pTempEmail->pSubject = (STR16) MemAlloc( 128 * sizeof(CHAR16) );
 	memset( pTempEmail->pSubject, 0, sizeof( CHAR16 ) * 128 );
 	wcscpy(pTempEmail->pSubject,pSubject);
   
@@ -1228,7 +1228,7 @@ void SwapMessages(INT32 iIdA, INT32 iIdB)
  EmailPtr pA=pEmailList;
  EmailPtr pB=pEmailList;
  EmailPtr pTemp= (EmailPtr) MemAlloc(sizeof(Email) );
- pTemp->pSubject = (STR16) MemAlloc( 128 * 2 );
+ pTemp->pSubject = (STR16) MemAlloc( 128 * sizeof(CHAR16) );
 
  memset( pTemp->pSubject, 0, sizeof( CHAR16 ) * 128 );
 
@@ -2942,8 +2942,8 @@ void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 {
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
-  UINT16 usX, usY;
-  wchar_t sString[100];
+  	INT16 usX, usY;
+  	wchar_t sString[100];
 
 	// font stuff	
 	SetFont(MESSAGE_FONT);
@@ -2955,15 +2955,15 @@ void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 
 	// all headers, but not info are right justified 
 	
-  // print from
-  FindFontRightCoordinates( MESSAGE_HEADER_X-20, ( INT16 ) ( MESSAGE_FROM_Y + (INT16)iViewerY ) ,  MESSAGE_HEADER_WIDTH, ( INT16 ) ( MESSAGE_FROM_Y + GetFontHeight ( MESSAGE_FONT ) ) ,pEmailHeaders[0] ,MESSAGE_FONT, &usX, &usY);
+  	// print from
+  	FindFontRightCoordinates( MESSAGE_HEADER_X-20, ( INT16 ) ( MESSAGE_FROM_Y + (INT16)iViewerY ) ,  MESSAGE_HEADER_WIDTH, ( INT16 ) ( MESSAGE_FROM_Y + GetFontHeight ( MESSAGE_FONT ) ) ,pEmailHeaders[0] ,MESSAGE_FONT, &usX, &usY);
 	mprintf( usX, MESSAGE_FROM_Y + (UINT16)iViewerY, pEmailHeaders[0]);
 	
 	// the actual from info
 	mprintf( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
 
 
-  // print date
+  	// print date
 	FindFontRightCoordinates( MESSAGE_HEADER_X+168, ( INT16 ) ( MESSAGE_DATE_Y + (UINT16)iViewerY ),  MESSAGE_HEADER_WIDTH, ( INT16 ) ( MESSAGE_DATE_Y + GetFontHeight ( MESSAGE_FONT ) ) ,pEmailHeaders[2] ,MESSAGE_FONT, &usX, &usY);
 	mprintf( usX, MESSAGE_DATE_Y+ (UINT16)iViewerY , pEmailHeaders[2]);
 	

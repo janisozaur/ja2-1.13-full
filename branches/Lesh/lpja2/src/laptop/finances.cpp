@@ -436,6 +436,7 @@ void GameInitFinances()
 	{
 		FileDelete( gzFinancesDataFile );
 	}
+	WriteBalanceToDisk( );
 	GetBalanceFromDisk( );
 }
 
@@ -702,7 +703,7 @@ void DrawRecordsBackGround( void )
 void DrawRecordsColumnHeadersText( void )
 {
   // write the headers text for each column
-  UINT16 usX, usY;
+  INT16 usX, usY;
  
 	// font stuff
 	SetFont(FINANCE_TEXT_FONT);
@@ -736,19 +737,19 @@ void DrawRecordsColumnHeadersText( void )
 
 void DrawRecordsText( void )
 {
-  // draws the text of the records
-  FinanceUnitPtr pCurFinance=pCurrentFinance;
-  FinanceUnitPtr pTempFinance=pFinanceListHead;
+  	// draws the text of the records
+  	FinanceUnitPtr pCurFinance=pCurrentFinance;
+  	FinanceUnitPtr pTempFinance=pFinanceListHead;
 	wchar_t sString[512];
-  INT32 iCounter=0;
-	UINT16 usX, usY;
-  INT32 iBalance=0;
+  	INT32 iCounter=0;
+	INT16 usX, usY;
+  	INT32 iBalance=0;
 
-  // setup the font stuff
+  	// setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
+  	SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
+  	SetFontShadow(NO_SHADOW);
 
 	
 	// anything to print
@@ -1664,7 +1665,7 @@ BOOLEAN AppendFinanceToEndOfFile( FinanceUnitPtr pFinance )
 	
   
 	// open file
- 	hFileHandle=FileOpen( gzFinancesDataFile, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzFinancesDataFile, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)

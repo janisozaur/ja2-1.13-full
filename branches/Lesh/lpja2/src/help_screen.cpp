@@ -31,6 +31,7 @@
 	#include "laptop.h"
 	#include "game_settings.h"
 	#include "game_clock.h"
+	#include "encrypted_file.h"
 	
 #endif
 

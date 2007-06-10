@@ -214,11 +214,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	// Snap: Initialize the Data directory catalogue
-	gDefaultDataCat.NewCat(DataDir);
-	if ( pCustomDir )
-		gCustomDataCat.NewCat(customDataPath);
-
 	// Lesh: New VFS service (replaces custom catalogue)
 	if ( !VFS.AddContainerByIndex(0) )
 		printf("AddContainer failed!\n");

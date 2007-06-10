@@ -1824,7 +1824,7 @@ BOOLEAN ShutdownSMPanel( )
 void RenderSMPanel( BOOLEAN *pfDirty )
 {
 	INT16 sFontX, sFontY;
-	UINT16	usX, usY;
+	INT16	usX, usY;
 	wchar_t sString[9];
 	UINT32	cnt;
 	static CHAR16 pStr[ 200 ], pMoraleStr[ 20 ];

@@ -2,6 +2,8 @@
 #include "platform.h"
 #include "SDL_config_lib.h"
 #include "file_man.h"
+#include "vfs.hpp"
+
 
 // Kaiden: INI reading function definitions:
 
@@ -26,7 +28,6 @@ int CIniReader::ReadInteger(const char* szSection, const char* szKey, int iDefau
 		else
 			return CFG_ReadInt( szKey, iDefaultValue );
 	}
-//	return GetPrivateProfileInt(szSection,  szKey, iDefaultValue, m_szFileName); 
 }
 
 
@@ -55,13 +56,6 @@ float CIniReader::ReadFloat(const char* szSection, const char* szKey, float fltD
 		else
 			return CFG_ReadFloat( szKey, fltDefaultValue );
 	}
-// char szResult[255];
-// char szDefault[255];
-// float fltResult;
-// sprintf(szDefault, "%f",fltDefaultValue);
-// GetPrivateProfileString(szSection,  szKey, szDefault, szResult, 255, m_szFileName); 
-// fltResult = (float) atof(szResult);
-// return fltResult;
 }
 
 
@@ -79,13 +73,6 @@ bool CIniReader::ReadBoolean(const char* szSection, const char* szKey, bool bolD
 		else
 			return CFG_ReadBool( szKey, bolDefaultValue );
 	}
-// char szResult[255];
-// char szDefault[255];
-// bool bolResult;
-// sprintf(szDefault, "%s", bolDefaultValue? "TRUE" : "FALSE");
-// GetPrivateProfileString(szSection, szKey, szDefault, szResult, 255, m_szFileName); 
-// bolResult =  (strcmp(szResult, "TRUE") == 0 || strcmp(szResult, "TRUE") == 0) ? true : false;
-// return bolResult;
 }
 
 
@@ -103,10 +90,6 @@ const char* CIniReader::ReadString(const char* szSection, const char* szKey, con
 		else
 			return CFG_ReadText( szKey, szDefaultValue );
 	}
-// char* szResult = new char[255];
-// memset(szResult, 0x00, 255);
-// GetPrivateProfileString(szSection,  szKey, szDefaultValue, szResult, 255, m_szFileName); 
-// return szResult;
 }
 
 bool CIniReader::Open(const char* szFileName, bool bAbsolutePath)
@@ -118,14 +101,17 @@ bool CIniReader::Open(const char* szFileName, bool bAbsolutePath)
 	{
 		strcpy(m_szFileName, szFileName);
 	}
-	else if ( gCustomDataCat.FindFile(szFileName) )
-	{
-		sprintf(m_szFileName, "%s\\%s", gCustomDataCat.GetRootDir().c_str(), szFileName);
-	}
-	else
-	{
-		sprintf(m_szFileName, "%s\\%s", gDefaultDataCat.GetRootDir().c_str(), szFileName);
-	}
+//	else if ( gCustomDataCat.FindFile(szFileName) )
+//	{
+//		sprintf(m_szFileName, "%s\\%s", gCustomDataCat.GetRootDir().c_str(), szFileName);
+//	}
+//	else
+//	{
+//		sprintf(m_szFileName, "%s\\%s", gDefaultDataCat.GetRootDir().c_str(), szFileName);
+//	}
+	printf("CIniReader::Open(): make proper opening\n");
+	if ( !VFS.GetResourceFilename( szFileName, m_szFileName, MAX_PATH ) )
+		return FALSE;
 
 	BACKSLASH( m_szFileName );
 

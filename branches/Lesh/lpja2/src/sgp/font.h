@@ -122,59 +122,48 @@ UINT16 *GetFontObjectPalette16BPP(INT32 iFont);
 
 void DestroyEnglishTransTable( void );
 
-extern HVOBJECT	 GetFontObject(INT32 iFont);
-extern UINT32		 gprintf(INT32 x, INT32 y, wchar_t *pFontString, ...);
-extern UINT32    gprintfDirty(INT32 x, INT32 y, wchar_t *pFontString, ...);
-template <typename type3>
-extern UINT32		 mprintf(INT32 x, INT32 y, type3 pFontString, ...);
-extern UINT32		 gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...);
-template <typename string6>
-extern UINT32	mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, string6 pFontString, ...);
+extern HVOBJECT	GetFontObject(INT32 iFont);
+extern UINT32	gprintf(INT32 x, INT32 y, STR16 pFontString, ...);
+extern UINT32   gprintfDirty(INT32 x, INT32 y, STR16 pFontString, ...);
+extern UINT32	mprintf(INT32 x, INT32 y, STR16 pFontString, ...);
+extern UINT32	gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, STR16 pFontString, ...);
+extern UINT32	mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, STR16 pFontString, ...);
 
 // Function for displaying coded test. Since it's slower to do this, it's separate from  the normal fuctions
 #define FONT_CODE_BEGINCOLOR				180
 #define FONT_CODE_RESETCOLOR				181
 
-template <typename string6>
-UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, string6 pFontString, ...);
-UINT32 mprintf_coded( INT32 x, INT32 y, wchar_t *pFontString, ...);
+UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, STR16 pFontString, ...);
+UINT32 mprintf_coded( INT32 x, INT32 y, STR16 pFontString, ...);
 
 
 extern BOOLEAN	 SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2, BOOLEAN wrap);
 extern BOOLEAN	 SetFont(INT32 iFontIndex);
 
-template <typename string1>
-extern INT32		 LoadFontFile(string1 pFileName);
-extern UINT16    GetFontHeight(INT32 FontNum);
-extern BOOLEAN   InitializeFontManager(UINT16 usDefaultPixDepth, FontTranslationTable *pTransTable);
-extern void      ShutdownFontManager(void);
-extern void			 UnloadFont(UINT32 FontIndex);
+extern INT32		LoadFontFile(const CHAR8 *pFileName);
+extern UINT16		GetFontHeight(INT32 FontNum);
+extern BOOLEAN   	InitializeFontManager(UINT16 usDefaultPixDepth, FontTranslationTable *pTransTable);
+extern void      	ShutdownFontManager(void);
+extern void			UnloadFont(UINT32 FontIndex);
 
 extern FontTranslationTable *CreateEnglishTransTable(  );
 
-extern INT16 GetIndex(UINT16 siChar);
+extern INT16 GetIndex(CHAR16 siChar);
 extern UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex);
 
 extern INT16 StringPixLengthArgFastHelp( INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, STR16 pFontString );
 extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, STR16 pFontString, ...);
-template <typename type1>
-extern INT16 StringPixLength(type1 string,INT32 UseFont);
+extern INT16 StringPixLength(STR16 string,INT32 UseFont);
 
-extern INT16 StringNPixLength(wchar_t *string, UINT32 uiMaxCount, INT32 UseFont);
+extern INT16 StringNPixLength(CHAR16 *string, UINT32 uiMaxCount, INT32 UseFont);
 extern void SaveFontSettings(void);
 extern void RestoreFontSettings(void);
 
-template <typename type8>
-void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, type8 pFontString, ... );
+void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, STR16 pFontString, ... );
+void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, STR16 pFontString, ... );
 
-template <typename type8>
-void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, type8 pFontString, ... );
-
-template <typename string5, typename string7, typename string8>
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, string5 pStr, INT32 iFontIndex, string7 psNewX, string8 psNewY );
-
-template <typename string5, typename string7, typename string8>
-void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, string5 pStr, INT32 iFontIndex, string7 psNewX, string8 psNewY );
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, STR16 pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY );
+void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, STR16 pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY );
 
 //extern FontBase *LoadFontFile(UINT8 *pFileName);
 //extern UINT8    *GetFontPalette(UINT8 *pFileName);

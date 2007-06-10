@@ -377,9 +377,9 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
-  UINT16	usHeight;
+  	UINT16	usHeight;
 
-  usHeight = WFGetFontHeight(uiFont);
+  	usHeight = WFGetFontHeight(uiFont);
 
 	//If we are to a Single char for a word ( like in Taiwan )
 	if( gfUseSingleCharWordsForWordWrap )
@@ -470,39 +470,39 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	}
 	else if( ulFlags & RIGHT_JUSTIFIED )
 	{
-  	VarFindFontRightCoordinates( usLocX, usLocY, usWidth, WFGetFontHeight(ulFont), ulFont, (INT16 *)&usPosX, (INT16 *)&usPosY, pStr );
+  		VarFindFontRightCoordinates( usLocX, usLocY, usWidth, WFGetFontHeight(ulFont), ulFont, (INT16 *)&usPosX, (INT16 *)&usPosY, pStr );
 	}
 
 	SetFont(ulFont);
   
-  if ( USE_WINFONTS( ) )
-  {
-    COLORVAL Color = FROMRGB( 255, 255, 255 );
-    SetWinFontForeColor( GET_WINFONT( ), &Color );
-  }
-  else
-  {
-    SetFontForeground(ubColor);
-    SetFontBackground( ubBackGroundColor );
-  }
+  	if ( USE_WINFONTS( ) )
+  	{
+    	COLORVAL Color = FROMRGB( 255, 255, 255 );
+    	SetWinFontForeColor( GET_WINFONT( ), &Color );
+  	}
+  	else
+  	{
+    	SetFontForeground(ubColor);
+    	SetFontBackground( ubBackGroundColor );
+  	}
   
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-  if ( USE_WINFONTS( ) )
-  {
-	  if( fDirty )
-	  {
-		  gprintfdirty( usPosX, usPosY, pStr);
-		  WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
-	  }
-	  else
-	  {
-		  WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
-	  }
-  }
-  else
-  {
+  	if ( USE_WINFONTS( ) )
+  	{
+	  	if( fDirty )
+	  	{
+		  	gprintfdirty( usPosX, usPosY, pStr);
+		  	WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
+	  	}
+	  	else
+	  	{
+		  	WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr); 
+	  	}
+  	}
+  	else
+  	{
 	  if( fDirty )
 	  {
 		  gprintfdirty( usPosX, usPosY, pStr);
@@ -512,7 +512,7 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 	  {
 		  mprintf(usPosX,usPosY,pStr); 
 	  }
-  }
+  	}
 
 	if( IAN_WRAP_NO_SHADOW & ulFlags )
 	{

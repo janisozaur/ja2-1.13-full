@@ -6877,7 +6877,7 @@ void ShowItemsOnMap( void )
 {
 	INT16 sMapX, sMapY;
 	INT16 sXCorner, sYCorner;
-	UINT16 usXPos, usYPos;
+	INT16 usXPos, usYPos;
 	UINT32 uiItemCnt;
 	CHAR16 sString[ 10 ];
 
@@ -6888,8 +6888,8 @@ void ShowItemsOnMap( void )
 	SetFontDestBuffer( guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom , FALSE );
 
 	SetFont(MAP_FONT);
-  SetFontForeground(FONT_MCOLOR_LTGREEN);
-  SetFontBackground(FONT_MCOLOR_BLACK);
+  	SetFontForeground(FONT_MCOLOR_LTGREEN);
+  	SetFontBackground(FONT_MCOLOR_BLACK);
 
 	// run through sectors
 	for( sMapX = 1; sMapX < ( MAP_WORLD_X - 1 ); sMapX++ )
