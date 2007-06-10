@@ -5,6 +5,7 @@
 	#include "text.h"
 	#include "file_man.h"
 	#include "game_settings.h"
+	#include "platform.h"
 #endif
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )

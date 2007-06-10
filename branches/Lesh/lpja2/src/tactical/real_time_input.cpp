@@ -57,7 +57,7 @@
 	#include "soldier_macros.h"
 	#include "render_dirty.h"
 	#include "militia_control.h"
-	
+	#include "platform.h"
 #endif
 
 

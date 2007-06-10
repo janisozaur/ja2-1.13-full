@@ -24,7 +24,7 @@
 	#include "multi_language_graphic_utils.h"
 	#include "sgp_str.h"
 	#include "strategic_map.h"
-	
+	#include "platform.h"
 #endif
 
 

@@ -19,7 +19,7 @@
 	#include "weapons.h"
 	#include "game_settings.h"
 	#include "sgp_str.h"
-	
+	#include "platform.h"
 #endif
 
 

@@ -10,7 +10,7 @@
 	#include "campaign_types.h"
 	#include "random.h"
 	#include "game_clock.h"
-	
+	#include "platform.h"
 	#include "loading_screen.h"
 #endif
 

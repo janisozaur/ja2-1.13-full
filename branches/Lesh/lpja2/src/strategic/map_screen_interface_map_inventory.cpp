@@ -35,6 +35,7 @@
 	#include "finances.h"
 	#include "game_clock.h"
 	#include "weapons.h"
+	#include "platform.h"
 	
 #endif
 

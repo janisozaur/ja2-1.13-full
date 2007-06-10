@@ -26,7 +26,7 @@
 	#include "imp_main_page.h"
 	#include "imp_confirm.h"
 	#include "game_clock.h"
-	
+	#include "platform.h"
 #endif
 
 void GetPlayerKeyBoardInputForIMPHomePage( void );

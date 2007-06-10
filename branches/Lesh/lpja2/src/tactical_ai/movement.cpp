@@ -17,7 +17,7 @@
 	#include "soldier_macros.h"
 	#include "render_fun.h"
 	#include "debug.h"
-	
+	#include "platform.h"
 #endif
 
 // from strategic

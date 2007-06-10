@@ -4,6 +4,7 @@
 #include "game_clock.h"
 #include "exception_handling.h"
 #include "game_loop.h"
+#include "platform.h"
 
 static BOOLEAN fRestore = FALSE;
 

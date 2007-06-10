@@ -6,7 +6,7 @@
 	#include "debug.h"
 	#include "sgp_str.h"
 	#include "mem_man.h"
-	
+	#include "platform.h"
 #endif
 
 #include "language_defines.h"

@@ -9,8 +9,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "tile_engine_all.h"
 #else
-	#include "platform.h"
-	
 	#include "world_def.h"
 	#include "render_world.h"
 	#include "vsurface.h"
@@ -53,6 +51,7 @@
 	#include "sound_control.h"
 	#include "shading.h"
 	#include "render_z.h"
+	#include "platform.h"
 #endif
 
 

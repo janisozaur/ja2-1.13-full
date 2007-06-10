@@ -57,7 +57,7 @@
 	#include "smell.h"
 	#include "strategic_status.h"
 	#include "interface_dialogue.h"
-	
+	#include "platform.h"
 #endif
 
 #define		NO_JUMP											0

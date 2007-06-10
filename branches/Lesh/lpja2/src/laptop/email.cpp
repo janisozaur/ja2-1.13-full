@@ -22,7 +22,7 @@
 	#include "laptop_save.h"
 	#include "sgp_str.h"
 	#include "finances.h"
-	
+	#include "platform.h"
 #endif
 
 //static EmailPtr pEmailList; 

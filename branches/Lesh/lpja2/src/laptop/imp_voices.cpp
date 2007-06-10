@@ -24,7 +24,7 @@
 	#include "laptop_save.h"
 	#include "sgp_str.h"
 	#include "game_settings.h"
-
+	#include "platform.h"
 #endif
 
 INT32 iCurrentVoice = 0;

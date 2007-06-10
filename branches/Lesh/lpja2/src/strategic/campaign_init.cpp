@@ -18,7 +18,7 @@
 	#include "tactical_save.h"
 	#include "platform.h"
 	#include "debug_control.h"
-	
+	#include "platform.h"
 #endif
 
 extern BOOLEAN InitStrategicMovementCosts();

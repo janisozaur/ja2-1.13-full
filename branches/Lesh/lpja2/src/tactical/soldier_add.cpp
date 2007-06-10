@@ -21,7 +21,7 @@
 	#include "render_fun.h"
 	#include "meanwhile.h"
 	#include "exit_grids.h"
-	
+	#include "platform.h"
 #endif
 
 // Adds a soldier to a world gridno and set's direction

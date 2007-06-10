@@ -20,7 +20,7 @@
 	#include "game_settings.h"
 	#include "message.h"
 	#include "arms_dealer_inv_init.h"
-	
+	#include "platform.h"
 #endif
 
 

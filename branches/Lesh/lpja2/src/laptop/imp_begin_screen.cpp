@@ -30,7 +30,7 @@
 	#include "text.h"
 	#include "laptop_save.h"
 	#include "soldier_profile_type.h"
-	
+	#include "platform.h"
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138

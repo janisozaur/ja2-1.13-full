@@ -20,7 +20,6 @@
 //**************************************************************************
 
 #include "types.h"
-#include "file_cat.h"
 
 //**************************************************************************
 //
@@ -82,10 +81,6 @@ typedef UINT32				HANDLE;
 //
 //**************************************************************************
 
-// Snap: At program launch we build two directory catalogues:
-// one for the default Data directory, the other for the custom Data directory.
-//extern TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
-//extern TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
 
 //**************************************************************************
 //

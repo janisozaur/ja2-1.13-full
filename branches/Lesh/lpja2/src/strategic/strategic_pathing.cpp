@@ -24,7 +24,7 @@
 	#include "map_screen_interface.h"
 	#include "game_event_hook.h"
 	#include "strategic_ai.h"
-	
+	#include "platform.h"
 #endif
 
 

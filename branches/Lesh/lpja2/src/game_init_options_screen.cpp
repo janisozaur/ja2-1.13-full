@@ -25,6 +25,7 @@
 	#include "ja25_russian_text.h"
 	#include "text.h"
 	#include "soldier_profile.h"
+	#include "platform.h"
 	
 #endif
 
