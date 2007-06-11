@@ -1431,15 +1431,15 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 	switch( pFinance->ubCode)
 	{
 		case ACCRUED_INTEREST:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ACCRUED_INTEREST]);
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ACCRUED_INTEREST]);
 			break;
 
 		case ANONYMOUS_DEPOSIT:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ANONYMOUS_DEPOSIT]);
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ANONYMOUS_DEPOSIT]);
 			break;
 
 		case TRANSACTION_FEE:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[TRANSACTION_FEE]);
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[TRANSACTION_FEE]);
 			break;
 
 		case HIRED_MERC:
@@ -1447,11 +1447,11 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 			break;
 
 		case BOBBYR_PURCHASE:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ BOBBYR_PURCHASE ]);
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ BOBBYR_PURCHASE ]);
 			break;
 
 		case PAY_SPECK_FOR_MERC:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ PAY_SPECK_FOR_MERC ], gMercProfiles[pFinance->ubSecondCode].zName);
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ PAY_SPECK_FOR_MERC ], gMercProfiles[pFinance->ubSecondCode].zName);
 			break;
 	
 		case MEDICAL_DEPOSIT:
@@ -1459,7 +1459,7 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 			break;
 		
 		case IMP_PROFILE:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ IMP_PROFILE ] );
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ IMP_PROFILE ] );
 			break;
 
 		case PURCHASED_INSURANCE:
@@ -1500,7 +1500,7 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 			break;
 
 		case PURCHASED_FLOWERS:
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ PURCHASED_FLOWERS ] );
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ PURCHASED_FLOWERS ] );
 			break;
 
 		case FULL_MEDICAL_REFUND:
@@ -1537,7 +1537,7 @@ void ProcessTransactionString(STR16 pString, INT16 usMaxLen, FinanceUnitPtr pFin
 			break;
 
 		case( SOLD_ITEMS ):
-			WSTR_SPrintf(pString, usMaxLen, L"%s", pTransactionText[ SOLD_ITEMS ] );
+			WSTR_SPrintf(pString, usMaxLen, L"%ls", pTransactionText[ SOLD_ITEMS ] );
 			break;
 
 		case( PURCHASED_ITEM_FROM_DEALER ):
@@ -1576,7 +1576,7 @@ void DisplayFinancePageNumberAndDateRange( void )
 		pCurrentFinance = pFinanceListHead;
     	if( !pCurrentFinance )
 		{
-     		WSTR_SPrintf( sString, 50, L"%s %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+     		WSTR_SPrintf( sString, 50, L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	   		mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 		 	return;
 		}
@@ -1592,7 +1592,7 @@ void DisplayFinancePageNumberAndDateRange( void )
   
 	// get the last page
    
-  	WSTR_SPrintf( sString, 50, L"%s %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+  	WSTR_SPrintf( sString, 50, L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 	
 	// reset shadow

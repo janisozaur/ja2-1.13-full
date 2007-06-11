@@ -180,6 +180,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	CIniReader	customDP;
 	const CHAR8 *pCustomDir;
 	CHAR8 customDataPath[MAX_PATH];
+	STRING512	IniName;
 
 	if ( !SetFileManCurrentDirectory( CurrentDir ) )
 	{
@@ -187,7 +188,8 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	customDP.Open("Ja2.ini", TRUE);
+	sprintf( IniName, "%s%s", CurrentDir, "Ja2.ini");
+	customDP.Open(IniName, TRUE);
 	pCustomDir = customDP.ReadString("Ja2 Settings", "CUSTOM_DATA_LOCATION", NULL);
 	if ( !pCustomDir )
 		printf("Custom dir isn't specified\n");
@@ -227,7 +229,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 //	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/SavedGames", TRUE, "SAVEDGAMES") )
 //		printf("AddDirectoryContents(2) failed!\n");
 
-	VFS.DebugDumpResources( "map_dump.txt" );
+	//VFS.DebugDumpResources( "map_dump.txt" );
 
 	//InitJA2SplashScreen();
 
@@ -287,7 +289,7 @@ void ShutdownStandardGamingPlatform(void)
 	//
 	// Shut down the different components of the SGP
 	//
-
+	printf("Closing SGP\n");
 	// TEST
 	SoundServiceStreams();
 
@@ -328,6 +330,7 @@ void ShutdownStandardGamingPlatform(void)
 
 	ShutdownDebugManager();
 	fSGPClosed = TRUE;
+	printf("SGP is closed\n");
 }
 
 void SGPExit(void)

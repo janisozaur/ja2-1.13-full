@@ -44,6 +44,7 @@
 	#include "strategic_map.h"
 	#include "quests.h"
 	#include "assignments.h"
+	#include "encrypted_file.h"
 	
 #endif
 
@@ -90,8 +91,10 @@
 #define	MED_STAT_COLOR									FONT_MCOLOR_DKWHITE
 #define	LOW_STAT_COLOR									FONT_MCOLOR_DKWHITE
 
-#define	SIZE_MERC_BIO_INFO	400	* 2 
-#define SIZE_MERC_ADDITIONAL_INFO 160 * 2
+#define MERC_BIO_INFO_LEN			400
+#define MERC_ADDITIONAL_INFO_LEN	160
+#define	SIZE_MERC_BIO_INFO			MERC_BIO_INFO_LEN	* 2 
+#define SIZE_MERC_ADDITIONAL_INFO 	MERC_ADDITIONAL_INFO_LEN * 2
 
 #define	MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES	6 * 60
 #define	NUMBER_HATED_MERCS_ONTEAM							3
@@ -1069,7 +1072,7 @@ BOOLEAN	UpdateMercInfo(void)
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 
-		WSTR_SPrintf( sMedicalString, 40, L"%s %s", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] ); 
+		WSTR_SPrintf( sMedicalString, 40, L"%ls %ls", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] ); 
 	
 		// If the string will be displayed in more then 2 lines, recenter the string
 		if( ( DisplayWrappedString( 0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT,  sMedicalString, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( AIM_FONT12ARIAL ) ) > 2 )
@@ -1098,110 +1101,25 @@ BOOLEAN	UpdateMercInfo(void)
 
 BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 {
-	HWFILE		hFile;
-	UINT32		uiBytesRead;
-	UINT16		i;
 	UINT32		uiStartSeekAmount;
-
-
-	hFile = FileOpen(MERCBIOSFILENAME, FILE_ACCESS_READ, FALSE);
-	if ( !hFile )
-	{
-		return( FALSE );
-	}
 
 
 	// Get current mercs bio info
 	uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
 
-	if ( FileSeek( hFile, uiStartSeekAmount, FILE_SEEK_FROM_START ) == FALSE )
+	if( !LoadEncryptedDataFromFile( MERCBIOSFILENAME, pInfoString, uiStartSeekAmount, SIZE_MERC_BIO_INFO) )
 	{
 		return( FALSE );
 	}
-
-	if( !FileRead( hFile, pInfoString, SIZE_MERC_BIO_INFO, &uiBytesRead) )
-	{
-		return( FALSE );
-	}
-
-	// Decrement, by 1, any value > 32
-	for(i=0; (i<SIZE_MERC_BIO_INFO) && (pInfoString[i] != 0); i++ )
-	{
-		if( pInfoString[i] > 33 )
-			pInfoString[i] -= 1;
-		#ifdef POLISH
-			switch( pInfoString[ i ] )
-			{
-				case 260:		pInfoString[ i ] = 165;		break;
-				case 262:		pInfoString[ i ] = 198;		break;
-				case 280:		pInfoString[ i ] = 202;		break;
-				case 321:		pInfoString[ i ] = 163;		break;
-				case 323:		pInfoString[ i ] = 209;		break;
-				case 211:		pInfoString[ i ] = 211;		break;
-
-				case 346:		pInfoString[ i ] = 338;		break;
-				case 379:		pInfoString[ i ] = 175;		break;
-				case 377:		pInfoString[ i ] = 143;		break;
-				case 261:		pInfoString[ i ] = 185;		break;
-				case 263:		pInfoString[ i ] = 230;		break;
-				case 281:		pInfoString[ i ] = 234;		break;
-
-				case 322:		pInfoString[ i ] = 179;		break;
-				case 324:		pInfoString[ i ] = 241;		break;
-				case 243:		pInfoString[ i ] = 243;		break;
-				case 347:		pInfoString[ i ] = 339;		break;
-				case 380:		pInfoString[ i ] = 191;		break;
-				case 378:		pInfoString[ i ] = 376;		break;
-			}
-		#endif
-	}
-
 
 	// Get the additional info
 	uiStartSeekAmount = ((SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex )+ SIZE_MERC_BIO_INFO ;
-	if ( FileSeek( hFile, uiStartSeekAmount, FILE_SEEK_FROM_START ) == FALSE )
+
+	if( !LoadEncryptedDataFromFile( MERCBIOSFILENAME, pAddInfo, uiStartSeekAmount, SIZE_MERC_ADDITIONAL_INFO) )
 	{
 		return( FALSE );
 	}
 
-	if( !FileRead( hFile, pAddInfo, SIZE_MERC_ADDITIONAL_INFO, &uiBytesRead) )
-	{
-		return( FALSE );
-	}
-
-	// Decrement, by 1, any value > 32
-	for(i=0; (i<SIZE_MERC_BIO_INFO) && (pAddInfo[i] != 0); i++ )
-	{
-		if( pAddInfo[i] > 33 )
-			pAddInfo[i] -= 1;
-		#ifdef POLISH
-			switch( pAddInfo[ i ] )
-			{
-				case 260:		pAddInfo[ i ] = 165;		break;
-				case 262:		pAddInfo[ i ] = 198;		break;
-				case 280:		pAddInfo[ i ] = 202;		break;
-				case 321:		pAddInfo[ i ] = 163;		break;
-				case 323:		pAddInfo[ i ] = 209;		break;
-				case 211:		pAddInfo[ i ] = 211;		break;
-
-				case 346:		pAddInfo[ i ] = 338;		break;
-				case 379:		pAddInfo[ i ] = 175;		break;
-				case 377:		pAddInfo[ i ] = 143;		break;
-				case 261:		pAddInfo[ i ] = 185;		break;
-				case 263:		pAddInfo[ i ] = 230;		break;
-				case 281:		pAddInfo[ i ] = 234;		break;
-
-				case 322:		pAddInfo[ i ] = 179;		break;
-				case 324:		pAddInfo[ i ] = 241;		break;
-				case 243:		pAddInfo[ i ] = 243;		break;
-				case 347:		pAddInfo[ i ] = 339;		break;
-				case 380:		pAddInfo[ i ] = 191;		break;
-				case 378:		pAddInfo[ i ] = 376;		break;
-			}
-		#endif
-	}
-
-	FileClose(hFile);
 	return(TRUE);
 }
 
@@ -1833,12 +1751,12 @@ BOOLEAN DisplayVideoConferencingDisplay()
 	//Title & Name
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
-		WSTR_SPrintf( sMercName, 128, L"%s",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
+		WSTR_SPrintf( sMercName, 128, L"%ls",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 	else
 	{
-		WSTR_SPrintf( sMercName, 128, L"%s %s",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
+		WSTR_SPrintf( sMercName, 128, L"%ls %ls",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -2011,9 +1929,9 @@ UINT32 DisplayMercChargeAmount()
 //	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
 	{
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-			WSTR_SPrintf(wTemp, 50, L"%s %s", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
+			WSTR_SPrintf(wTemp, 50, L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
 		else
-			WSTR_SPrintf(wTemp, 50, L"%s", wDollarTemp );
+			WSTR_SPrintf(wTemp, 50, L"%ls", wDollarTemp );
 
 		DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X+1, AIM_CONTRACT_CHARGE_AMOUNNT_Y+3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
@@ -2441,9 +2359,9 @@ void DisplayTextForMercFaceVideoPopUp(wchar_t * pString)
 {
 
 #ifdef TAIWANESE
-	WSTR_SPrintf( gsTalkingMercText, TEXT_POPUP_STRING_SIZE, L"%s", pString );
+	WSTR_SPrintf( gsTalkingMercText, TEXT_POPUP_STRING_SIZE, L"%ls", pString );
 #else
-	WSTR_SPrintf( gsTalkingMercText, TEXT_POPUP_STRING_SIZE, L"\"%s\"", pString );
+	WSTR_SPrintf( gsTalkingMercText, TEXT_POPUP_STRING_SIZE, L"\"%ls\"", pString );
 #endif
 	
 	//Set the minimum time for the dialogue text to be present

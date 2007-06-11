@@ -5398,7 +5398,7 @@ void PrintNumberOnTeam( void )
 	}
 
 
-	WSTR_SPrintf( pString, 32, L"%s %d",pPersonnelString[ 0 ], iCounter );
+	WSTR_SPrintf( pString, 32, L"%ls %d",pPersonnelString[ 0 ], iCounter );
 
 	usFontHeight = GetFontHeight( FONT10ARIAL );
 	usStrLength = StringPixLength( pString, FONT10ARIAL );
@@ -5743,7 +5743,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
 
-		WSTR_SPrintf( sString, 256, L"%s  -  %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
+		WSTR_SPrintf( sString, 256, L"%ls  -  %ls", pWebTitle[0], pWebPagesTitles[ iIndex ] );
 		mprintf(iScreenWidthOffset + 140 ,iScreenHeightOffset + 33 ,sString);
 	}
 	

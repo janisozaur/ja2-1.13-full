@@ -322,9 +322,9 @@ UINT32	MapUtilScreenHandle( )
 	SetFont( TINYFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_MCOLOR_DKGRAY );				
-	mprintf( 10, 340, L"Writing radar image %S", zFilename2 );
+	mprintf( 10, 340, L"Writing radar image %hs", zFilename2 );
 
-	mprintf( 10, 350, L"Using tileset %s", gTilesets[ giCurrentTilesetID ].zName );
+	mprintf( 10, 350, L"Using tileset %ls", gTilesets[ giCurrentTilesetID ].zName );
 
 	InvalidateScreen( );
 

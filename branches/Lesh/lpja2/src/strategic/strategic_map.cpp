@@ -380,8 +380,8 @@ typedef struct
 {
 	SAMSITE_PARSE_STAGE	curElement;
 
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
-	samInfo					curSamInfo;
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	samInfo				curSamInfo;
 	UINT32					uiRowNumber;
 	UINT32					uiHighestIndex;
 	
@@ -415,7 +415,7 @@ samsiteStartElementHandle(void *userData, const char *name, const char **atts)
 			for(uiAttrIndex = 0;atts[uiAttrIndex] != NULL;uiAttrIndex += 2)
 				if(strcmp(atts[uiAttrIndex], "row") == 0)
 				{
-					pData->uiRowNumber = atol(atts[uiAttrIndex+1]);
+					pData->uiRowNumber = atoi(atts[uiAttrIndex+1]);
 					break;
 				}
 
@@ -518,7 +518,7 @@ samsiteEndElementHandle(void *userData, const char *name)
 		}
 		else if(strcmp(name, "MAP_ROW") == 0 && pData->curElement == SAMSITE_ELEMENT_MAP_ROW)
 		{
-			INT8 * curBuffer = pData->szCharData + strspn((const char *)pData->szCharData," \t\n\r");
+			CHAR8 * curBuffer = pData->szCharData + strspn(pData->szCharData," \t\n\r");
 			UINT32 curCellIndex = 0;
 			UINT32 curNumber;
 
@@ -526,13 +526,13 @@ samsiteEndElementHandle(void *userData, const char *name)
 
 			while(curBuffer[0] != '\0')
 			{
-				sscanf( (const char *)curBuffer,"%d",&curNumber);
+				sscanf( curBuffer,"%d",&curNumber);
 
 				ubSAMControlledSectors[pData->uiRowNumber][curCellIndex] = curNumber;
 
 				curCellIndex++;
 				curBuffer += strcspn(curBuffer," \t\n\r\0");
-				curBuffer += strspn((const char *)curBuffer," \t\n\r");
+				curBuffer += strspn(curBuffer," \t\n\r");
 			}
 		}
 		else if(strcmp(name, "SAMLIST") == 0 && pData->curElement == SAMSITE_ELEMENT_SAMLIST)
@@ -561,7 +561,7 @@ samsiteEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAM;
 
-			pData->curSamInfo.uiIndex = atol(pData->szCharData);
+			pData->curSamInfo.uiIndex = atoi(pData->szCharData);
 			if ( !pData->curSamInfo.uiIndex || pData->curSamInfo.uiIndex > MAX_NUMBER_OF_SAMS )
 			{
 				pData->curSamInfo.uiIndex = INVALID_SAMSITE_INDEX;
@@ -579,25 +579,25 @@ samsiteEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAMSECTOR;
 
-			pData->curSamInfo.samSectorX = (INT16) atol(pData->szCharData);
+			pData->curSamInfo.samSectorX = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "y") == 0 && pData->curElement == SAMSITE_ELEMENT_SAMSECTOR_Y)
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAMSECTOR;
 
-			pData->curSamInfo.samSectorY = (INT16) atol(pData->szCharData);
+			pData->curSamInfo.samSectorY = (INT16) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "samHidden") == 0 && pData->curElement == SAMSITE_ELEMENT_SAM_HIDDEN )
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAM;
 
-			pData->curSamInfo.samHidden = (BOOLEAN)atol(pData->szCharData);
+			pData->curSamInfo.samHidden = (BOOLEAN)atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "samOrientation") == 0 && pData->curElement == SAMSITE_ELEMENT_SAM_ORIENTATION )
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAM;
 
-			pData->curSamInfo.samOrientation = (INT8)atol(pData->szCharData);
+			pData->curSamInfo.samOrientation = (INT8)atoi(pData->szCharData);
 			if ( pData->curSamInfo.samOrientation != 3 || pData->curSamInfo.samOrientation != 4 )
 			{
 				pData->curSamInfo.samOrientation = 3;
@@ -607,7 +607,7 @@ samsiteEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAM;
 
-			pData->curSamInfo.samGridNoA = (INT16)atol(pData->szCharData);
+			pData->curSamInfo.samGridNoA = (INT16)atoi(pData->szCharData);
 			if ( pData->curSamInfo.samGridNoA >= WORLD_MAX )
 			{
 				pData->curSamInfo.samGridNoA = 0;
@@ -617,7 +617,7 @@ samsiteEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = SAMSITE_ELEMENT_SAM;
 
-			pData->curSamInfo.samGridNoB = (INT16)atol(pData->szCharData);
+			pData->curSamInfo.samGridNoB = (INT16)atoi(pData->szCharData);
 			if ( pData->curSamInfo.samGridNoB >= WORLD_MAX )
 			{
 				pData->curSamInfo.samGridNoB = 1;
@@ -795,7 +795,7 @@ typedef struct
 {
 	CITYTABLE_PARSE_STAGE	curElement;
 
-	INT8					szCharData[MAX_CHAR_DATA_LENGTH+1];
+	CHAR8					szCharData[MAX_CHAR_DATA_LENGTH+1];
 	cityInfo				curCityInfo;
 	UINT32					uiRowNumber;
 	UINT32					uiHighestIndex;
@@ -830,7 +830,7 @@ citytableStartElementHandle(void *userData, const char *name, const char **atts)
 			for(uiAttrIndex = 0;atts[uiAttrIndex] != NULL;uiAttrIndex += 2)
 				if(strcmp(atts[uiAttrIndex], "row") == 0)
 				{
-					pData->uiRowNumber = atol(atts[uiAttrIndex+1]);
+					pData->uiRowNumber = atoi(atts[uiAttrIndex+1]);
 					break;
 				}
 
@@ -947,7 +947,7 @@ citytableEndElementHandle(void *userData, const char *name)
 		}
 		else if(strcmp(name, "CITY_TABLE_ROW") == 0 && pData->curElement == CITYTABLE_ELEMENT_CITYTABLEROW)
 		{
-			INT8 * curBuffer = pData->szCharData + strspn((const char *)pData->szCharData," \t\n\r");
+			CHAR8 * curBuffer = pData->szCharData + strspn(pData->szCharData," \t\n\r");
 			UINT32 curCellIndex = 0;
 			UINT32 curNumber;
 
@@ -955,13 +955,13 @@ citytableEndElementHandle(void *userData, const char *name)
 
 			while(curBuffer[0] != '\0')
 			{
-				sscanf( (const char *)curBuffer,"%d",&curNumber);
+				sscanf( curBuffer,"%d",&curNumber);
 
 				StrategicMap[curCellIndex+MAP_WORLD_X*pData->uiRowNumber].bNameId = curNumber;
 
 				curCellIndex++;
 				curBuffer += strcspn(curBuffer," \t\n\r\0");
-				curBuffer += strspn((const char *)curBuffer," \t\n\r");
+				curBuffer += strspn(curBuffer," \t\n\r");
 			}
 		}
 		else if(strcmp(name, "CITYLIST") == 0 && pData->curElement == CITYTABLE_ELEMENT_CITYLIST)
@@ -988,7 +988,7 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_CITY;
 
-			pData->curCityInfo.uiIndex = atol(pData->szCharData);
+			pData->curCityInfo.uiIndex = atoi(pData->szCharData);
 			if ( !pData->curCityInfo.uiIndex || pData->curCityInfo.uiIndex >= MAX_TOWNS )
 			{
 				pData->curCityInfo.uiIndex = INVALID_TOWN_INDEX;
@@ -1009,13 +1009,13 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_CITY;
 
-			pData->curCityInfo.townUsesLoyalty = (BOOLEAN)atol(pData->szCharData);
+			pData->curCityInfo.townUsesLoyalty = (BOOLEAN)atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "townRebelSentiment") == 0 && pData->curElement == CITYTABLE_ELEMENT_REBEL_SENTIMENT )
 		{
 			pData->curElement = CITYTABLE_ELEMENT_CITY;
 
-			pData->curCityInfo.townRebelSentiment = (UINT8)atol(pData->szCharData);
+			pData->curCityInfo.townRebelSentiment = (UINT8)atoi(pData->szCharData);
 			if ( pData->curCityInfo.townRebelSentiment > 100 )
 			{
 				pData->curCityInfo.townRebelSentiment = 100;
@@ -1027,7 +1027,7 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_CITY;
 
-			pData->curCityInfo.townMilitiaAllowed = (BOOLEAN)atol(pData->szCharData);
+			pData->curCityInfo.townMilitiaAllowed = (BOOLEAN)atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "baseSector") == 0 && pData->curElement == CITYTABLE_ELEMENT_BASESECTOR)
 		{
@@ -1037,13 +1037,13 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_BASESECTOR;
 
-			pData->curCityInfo.ubBaseX = (UINT8) atol(pData->szCharData);
+			pData->curCityInfo.ubBaseX = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "y") == 0 && pData->curElement == CITYTABLE_ELEMENT_BASESECTOR_Y)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_BASESECTOR;
 
-			pData->curCityInfo.ubBaseY = (UINT8) atol(pData->szCharData);
+			pData->curCityInfo.ubBaseY = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "townPoint") == 0 && pData->curElement == CITYTABLE_ELEMENT_TOWNPOINT)
 		{
@@ -1053,13 +1053,13 @@ citytableEndElementHandle(void *userData, const char *name)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_TOWNPOINT;
 
-			pData->curCityInfo.townPoint.x = (UINT16)atol(pData->szCharData);
+			pData->curCityInfo.townPoint.x = (UINT16)atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "y") == 0 && pData->curElement == CITYTABLE_ELEMENT_TOWNPOINT_Y)
 		{
 			pData->curElement = CITYTABLE_ELEMENT_TOWNPOINT;
 
-			pData->curCityInfo.townPoint.y = (UINT16)atol(pData->szCharData);
+			pData->curCityInfo.townPoint.y = (UINT16)atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

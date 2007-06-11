@@ -244,6 +244,7 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 				FileList.back() += "/";
 				
 		} while ( IO_File_GetNext( entry, 512 ) );
+		IO_File_GetClose();
 	}
 
 	return TRUE;

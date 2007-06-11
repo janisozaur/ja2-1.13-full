@@ -1629,7 +1629,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 	WSTR_SPrintf( sDollarTemp, 60, L"%d", CalculateTotalPurchasePrice() );
 	InsertCommasForDollarFigure( sDollarTemp );
 	InsertDollarSignInToString( sDollarTemp );
-	WSTR_SPrintf( sTemp, 60, L"%s %s", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
+	WSTR_SPrintf( sTemp, 60, L"%ls %ls", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
 	DrawTextToScreen(sTemp, BOBBYR_ORDER_SUBTOTAL_X, BOBBYR_ORDER_SUBTOTAL_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | TEXT_SHADOWED);
 
 	//Display the Used item disclaimer
@@ -1878,9 +1878,9 @@ UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_ROF], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	if( WeaponROF[ usIndex ] == -1 )
-		WSTR_SPrintf(sTemp, 20, L"? %s", pMessageStrings[ MSG_RPM ] );
+		WSTR_SPrintf(sTemp, 20, L"? %ls", pMessageStrings[ MSG_RPM ] );
 	else
-		WSTR_SPrintf(sTemp, 20, L"%3d/%s", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
+		WSTR_SPrintf(sTemp, 20, L"%3d/%ls", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
 	
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
@@ -1915,7 +1915,7 @@ UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_RANGE], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	WSTR_SPrintf(sTemp, 20, L"%3d %s", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
+	WSTR_SPrintf(sTemp, 20, L"%3d %ls", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -1926,7 +1926,7 @@ UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_MAGAZINE], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	WSTR_SPrintf(sTemp, 20, L"%3d %s", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
+	WSTR_SPrintf(sTemp, 20, L"%3d %ls", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -1941,13 +1941,13 @@ UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	//	if ammo is begin drawn
 	if( Item[ usIndex].usItemClass == IC_AMMO )
 	{
-		WSTR_SPrintf( zTemp, 128, L"%s", BobbyRayAmmoCaliber[ Magazine[ Item[ usIndex ].ubClassIndex ].ubCalibre] );
+		WSTR_SPrintf( zTemp, 128, L"%ls", BobbyRayAmmoCaliber[ Magazine[ Item[ usIndex ].ubClassIndex ].ubCalibre] );
 //		DrawTextToScreen( AmmoCaliber[ Magazine[ Item[ usIndex ].ubClassIndex ].ubCalibre], BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	}
 	else
 	{
 		//else a gun is being displayed
-		WSTR_SPrintf( zTemp, 128, L"%s", BobbyRayAmmoCaliber[ Weapon[ Item[ usIndex ].ubClassIndex ].ubCalibre ] );
+		WSTR_SPrintf( zTemp, 128, L"%ls", BobbyRayAmmoCaliber[ Weapon[ Item[ usIndex ].ubClassIndex ].ubCalibre ] );
 //		DrawTextToScreen( AmmoCaliber[ Weapon[ Item[ usIndex ].ubClassIndex ].ubCalibre ], BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	}
 
@@ -1970,7 +1970,7 @@ UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	//display the 'weight' string
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_WEIGHT], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
-	WSTR_SPrintf(sTemp, 20, L"%3.2f %s", GetWeightBasedOnMetricOption(Item[ usIndex ].ubWeight)/10, GetWeightUnitString() );
+	WSTR_SPrintf(sTemp, 20, L"%3.2f %ls", GetWeightBasedOnMetricOption(Item[ usIndex ].ubWeight)/10, GetWeightUnitString() );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -2342,7 +2342,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 			{
 				UINT16 gunDamage = (UINT16)( Weapon[ pItemNumbers[ i ] ].ubImpact + ( (double) Weapon[ pItemNumbers[ i ] ].ubImpact / 100) * gGameExternalOptions.ubGunDamageMultiplier );
 
-				WSTR_SPrintf( pStr, 250, L"%s (%s)\n%s %d\n%s %d\n%s %d\n%s %s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls (%ls)\n%ls %d\n%ls %d\n%ls %d\n%ls %ls\n%ls %1.1f %ls", 
 					ItemNames[ pItemNumbers[ i ] ], 
 					AmmoCaliber[ Weapon[ pItemNumbers[ i ] ].ubCalibre ], 
 					gWeaponStatsDesc[ 9 ],					//Accuracy String
@@ -2404,7 +2404,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 			{
 				UINT16 gunDamage = (UINT16)( Weapon[ pItemNumbers[ i ] ].ubImpact + ( (double) Weapon[ pItemNumbers[ i ] ].ubImpact / 100) * gGameExternalOptions.ubGunDamageMultiplier );
 
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %d\n%s %d\n%s %d\n%s %s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %d\n%ls %d\n%ls %d\n%ls %ls\n%ls %1.1f %ls", 
 					ItemNames[ pItemNumbers[ i ] ], 
 					gWeaponStatsDesc[ 9 ],					//Accuracy String
 					Weapon[ pItemNumbers[ i ] ].bAccuracy,	//Accuracy
@@ -2428,7 +2428,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 			{
 				UINT16 meleeDamage = (UINT16)( Weapon[ pItemNumbers[ i ] ].ubImpact + ( (double) Weapon[ pItemNumbers[ i ] ].ubImpact / 100) * gGameExternalOptions.ubMeleeDamageMultiplier );
 
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %d\n%s %s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %d\n%ls %ls\n%ls %1.1f %ls", 
 					ItemNames[ pItemNumbers[ i ] ], 
 					gWeaponStatsDesc[ 11 ],					//Damage String
 					meleeDamage,							//Melee damage
@@ -2444,7 +2444,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 
 		case IC_AMMO:
 			{
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %1.1f %s", 				
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %1.1f %ls", 				
 					ItemNames[ pItemNumbers[ i ] ],	//Item long name
 					gWeaponStatsDesc[ 12 ],			//Weight String
 					fWeight,						//Weight
@@ -2452,7 +2452,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 					);
 
 				//Lal: do not delete, commented out for next version
-				//WSTR_SPrintf( pStr, 250, L"%s %s %s %d [%d rnds]\n%s %1.1f %s", 				
+				//WSTR_SPrintf( pStr, 250, L"%ls %ls %ls %d [%d rnds]\n%ls %1.1f %ls", 				
 				//	AmmoCaliber[ Magazine[ Item[usItem].ubClassIndex ].ubCalibre ],			//Ammo calibre
 				//	AmmoTypes[Magazine[ Item[usItem].ubClassIndex ].ubAmmoType].ammoName,	//Ammo type
 				//	MagNames[Magazine[ Item[usItem].ubClassIndex ].ubMagType],				//Magazine type
@@ -2468,7 +2468,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 				ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID( pItemNumbers[ i ] );
 				if( ubItemCount != 0 )
 				{				
-					WSTR_SPrintf( zItemName, SIZE_ITEM_NAME, L"\n%s %d %s",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
+					WSTR_SPrintf( zItemName, SIZE_ITEM_NAME, L"\n%ls %d %ls",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
 					wcscat( pStr, zItemName );
 				}
 			}
@@ -2482,7 +2482,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 				UINT16 explDamage = (UINT16)( Explosive[Item[ pItemNumbers[ i ] ].ubClassIndex].ubDamage + ( (double) Explosive[Item[ pItemNumbers[ i ] ].ubClassIndex].ubDamage / 100) * gGameExternalOptions.ubExplosivesDamageMultiplier );
 				UINT16 explStunDamage = (UINT16)( Explosive[Item[ pItemNumbers[ i ] ].ubClassIndex].ubStunDamage + ( (double) Explosive[Item[ pItemNumbers[ i ] ].ubClassIndex].ubStunDamage / 100) * gGameExternalOptions.ubExplosivesDamageMultiplier );
 
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %d\n%s %d\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %d\n%ls %d\n%ls %1.1f %ls", 
 					ItemNames[ pItemNumbers[ i ] ], 
 					gWeaponStatsDesc[ 11 ],		//Damage String
 					explDamage,					//Expl damage
@@ -2520,7 +2520,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 					break;
 				}
 
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %d%% (%d)\n%s %d%%\n%s %1.1f %s", 				
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %d%% (%d)\n%ls %d%%\n%ls %1.1f %ls", 				
 					ItemNames[ pItemNumbers[ i ] ],									//Item long name
 					pInvPanelTitleStrings[ 4 ],										//Protection string
 					iProtection,													//Protection rating in % based on best armor
@@ -2541,7 +2541,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 		default:
 			// The final, and typical case, is that of an item with a percent status
 			{
-				WSTR_SPrintf( pStr, 250, L"%s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls\n%ls %1.1f %ls", 
 					ItemNames[ pItemNumbers[ i ] ],	//Item long name
 					gWeaponStatsDesc[ 12 ],			//Weight String
 					fWeight,						//Weight

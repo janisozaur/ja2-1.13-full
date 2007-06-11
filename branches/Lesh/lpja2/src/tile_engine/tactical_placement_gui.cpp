@@ -536,7 +536,7 @@ void RenderTacticalPlacementGUI()
 		
 		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, 128, TRUE );
 
-		mprintf(120, SCREEN_HEIGHT - 145, L"%s %s -- %s...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
+		mprintf(120, SCREEN_HEIGHT - 145, L"%ls %ls -- %ls...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
 
 		//Shade out the part of the tactical map that isn't considered placable.
 		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, SCREEN_HEIGHT - 160, SCREEN_WIDTH, 160);

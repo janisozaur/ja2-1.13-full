@@ -962,10 +962,10 @@ void DisplayPageNumberAndDateRange( void )
 
 	if( !pCurrentHistory )
 	{
-    WSTR_SPrintf( sString, 50, L"%s  %d / %d",pHistoryHeaders[1], 1, 1 );
+    WSTR_SPrintf( sString, 50, L"%ls  %d / %d",pHistoryHeaders[1], 1, 1 );
 	  mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 
-    WSTR_SPrintf( sString, 50, L"%s %d - %d",pHistoryHeaders[2], 1 , 1 );
+    WSTR_SPrintf( sString, 50, L"%ls %d - %d",pHistoryHeaders[2], 1 , 1 );
     mprintf( HISTORY_DATE_X, HISTORY_DATE_Y, sString );
  
     // reset shadow
@@ -1009,10 +1009,10 @@ void DisplayPageNumberAndDateRange( void )
 
 	// get the last page
    
-  WSTR_SPrintf( sString, 50, L"%s  %d / %d",pHistoryHeaders[1], iCurrentHistoryPage , iLastPage +1 );
+  WSTR_SPrintf( sString, 50, L"%ls  %d / %d",pHistoryHeaders[1], iCurrentHistoryPage , iLastPage +1 );
 	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 
-  WSTR_SPrintf( sString, 50, L"%s %d - %d",pHistoryHeaders[2], pCurrentHistory->uiDate / ( 24 * 60 ) , uiLastDate/( 24 * 60 ) );
+  WSTR_SPrintf( sString, 50, L"%ls %d - %d",pHistoryHeaders[2], pCurrentHistory->uiDate / ( 24 * 60 ) , uiLastDate/( 24 * 60 ) );
   mprintf( HISTORY_DATE_X, HISTORY_DATE_Y, sString );
 
 	

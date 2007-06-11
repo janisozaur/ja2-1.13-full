@@ -496,7 +496,7 @@ UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;
-	UINT32 rmod, gmod, bmod;
+	UINT32 rmod = 0, gmod = 0, bmod = 0;
 	UINT8	 r,g,b;
 
 	Assert( pPalette != NULL );

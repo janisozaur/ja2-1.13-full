@@ -931,7 +931,7 @@ void DisplayFlowerDynamicItems()
 	else
 		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubWhenItGetsThereCost;
 
-	WSTR_SPrintf( sTemp, 640, L"$%d.00 %s", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
+	WSTR_SPrintf( sTemp, 640, L"$%d.00 %ls", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
 	DrawTextToScreen( sTemp, usPosX, FLOWER_ORDER_BOUQUET_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 }
 

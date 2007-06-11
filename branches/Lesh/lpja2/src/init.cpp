@@ -565,6 +565,7 @@ void ShutdownJA2(void)
 { 
   UINT32 uiIndex;
 
+	printf("Closing JA2...\n");
 	// Clear screen....
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	//InvalidateScreen( );
@@ -573,51 +574,69 @@ void ShutdownJA2(void)
 
 	RefreshScreen( NULL );
 		
+	printf("Closing strategic layer\n");
 	ShutdownStrategicLayer();
 
 	// remove temp files built by laptop
+	printf("Clearing laptop files\n");
 	ClearOutTempLaptopFiles( );
 
 	// Shutdown queue system
+	printf("Closing dialogue control\n");
 	ShutdownDialogueControl();
 
   // Shutdown Screens
-  for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-  { 
-    (*(GameScreens[uiIndex].ShutdownScreen))();
-  }
+	printf("Closing screens\n");
+  	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
+  	{ 
+    	(*(GameScreens[uiIndex].ShutdownScreen))();
+  	}
 
 
 	// Shutdown animation system
+	printf("Closing animation system\n");
 	DeInitAnimationSystem( );
 
+	printf("Closing lighting system\n");
 	ShutdownLightingSystem();
 
 	CursorDatabaseClear();
 
+	printf("Closing tactical engine\n");
 	ShutdownTacticalEngine( );
 
 	// Shutdown Overhead
+	printf("Closing overhead\n");
 	ShutdownOverhead( );
 
+	printf("Closing world\n");
 	DeinitializeWorld( );
 
+	printf("Deleting tile cache\n");
 	DeleteTileCache( );
 
+	printf("Closing ja2 clock\n");
 	ShutdownJA2Clock( );
 
+	printf("Closing fonts\n");
 	ShutdownFonts();
 
+	printf("Closing sounds\n");
 	ShutdownJA2Sound( );
 
+	printf("Closing event manager\n");
 	ShutdownEventManager( );
 
+	printf("Closing dirty rectangle queue\n");
 	ShutdownBaseDirtyRectQueue( );
 
 	// Unload any text box images!
+	printf("Closing text merc popup boxes\n");
 	RemoveTextMercPopupImages( );
 
+	printf("Clearing vehicle list\n");
 	ClearOutVehicleList();
+	printf("Closing JA2...done!\n");
 }
 
 /*

@@ -502,7 +502,7 @@ void RenderVoiceIndex( void )
 	INT16 sX, sY;
 
 	// render the voice index value on the the blank portrait
-	WSTR_SPrintf( sString, 32, L"%s %d", pIMPVoicesStrings[ 0 ], GetVoiceCountFromVoiceSlot(iCurrentVoice) );
+	WSTR_SPrintf( sString, 32, L"%ls %d", pIMPVoicesStrings[ 0 ], GetVoiceCountFromVoiceSlot(iCurrentVoice) );
 
 	FindFontCenterCoordinates( 290 + LAPTOP_UL_X, 0, 100, 0, sString, FONT12ARIAL, &sX, &sY );
 

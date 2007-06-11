@@ -150,7 +150,8 @@ BOOLEAN InitializeGame(void)
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 void    ShutdownGame(void)
-{ 
+{
+	printf("Closing Game...\n"); 
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
@@ -169,6 +170,7 @@ void    ShutdownGame(void)
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( FALSE );
+	printf("Closing Game...done!\n\n"); 
 }
 
  

@@ -109,11 +109,12 @@ bool CIniReader::Open(const char* szFileName, bool bAbsolutePath)
 //	{
 //		sprintf(m_szFileName, "%s\\%s", gDefaultDataCat.GetRootDir().c_str(), szFileName);
 //	}
-	printf("CIniReader::Open(): make proper opening\n");
-	if ( !VFS.GetResourceFilename( szFileName, m_szFileName, MAX_PATH ) )
+	else if ( !VFS.GetResourceFilename( szFileName, m_szFileName, MAX_PATH ) )
 		return FALSE;
 
-	BACKSLASH( m_szFileName );
+	printf("CIniReader::Open(): make proper opening\n");
+
+//	BACKSLASH( m_szFileName );
 
 	if ( CFG_OpenFile( m_szFileName, &cfg ) != CFG_OK )
 	{

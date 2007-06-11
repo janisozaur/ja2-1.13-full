@@ -1438,7 +1438,7 @@ void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-  WSTR_SPrintf(sString, 20, L"%s %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) ); 
+  WSTR_SPrintf(sString, 20, L"%ls %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) ); 
   mprintf(DATE_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ),sString);
 
 	SetFont( MESSAGE_FONT );
@@ -3378,7 +3378,7 @@ void HandleIMPCharProfileResultsMessage( void)
 
 				iCurrentIMPSlot = giCurrentIMPSlot;
 
-				WSTR_SPrintf( zTemp, 512, L" %s", gMercProfiles[ iCurrentIMPSlot ].zName );
+				WSTR_SPrintf( zTemp, 512, L" %ls", gMercProfiles[ iCurrentIMPSlot ].zName );
 				wcscat( pString, zTemp );
 			}
 			
