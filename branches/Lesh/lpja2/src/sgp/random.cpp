@@ -46,9 +46,10 @@ UINT32 Random(UINT32 uiRange)
 		}
 	#endif
 
-  if (uiRange == 0)	
+	long long	rnd = rand();
+ 	if (uiRange == 0)	
 		return(0);
-	return rand() * uiRange / RAND_MAX % uiRange;
+	return rnd * uiRange / RAND_MAX % uiRange;
 }
 
 BOOLEAN Chance( UINT32 uiChance )
