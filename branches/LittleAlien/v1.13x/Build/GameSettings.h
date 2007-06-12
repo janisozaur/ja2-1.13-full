@@ -143,6 +143,9 @@ typedef struct
 	INT32	iStartingCashExpert;
 	INT32	iStartingCashInsane;
 
+	UINT32 iGameStartingTime; //Lalien: game starting time	
+	UINT32 iFirstArrivalDelay; 
+
 	BOOLEAN fSellAll;
 	INT16 iPriceModifier;
 
@@ -202,6 +205,7 @@ typedef struct
 	INT8 iExperiencedAPBonus;
 	INT8 iExpertAPBonus;
 	INT8 iInsaneAPBonus;
+	INT8 iPlayerAPBonus;
 	// Kaiden: Vehicle Inventory change - Added for INI Option
 	BOOLEAN fVehicleInventory;
 
@@ -231,6 +235,7 @@ typedef struct
 	BOOLEAN gfTrainVeteranMilitia;
 	BOOLEAN gfAllowMilitiaGroups;
 	BOOLEAN gfmusttrainroaming;
+	BOOLEAN gflimitedRoaming;
 	BOOLEAN gfAllowReinforcements;
 	BOOLEAN gfAllowReinforcementsOnlyInCity;
 	UINT32	guiBaseQueenPoolIncrement;
@@ -250,6 +255,9 @@ typedef struct
 	UINT32  ubStraightSightRange;
 	UINT32 ubVisDistDecreasePerRainIntensity;
 	BOOLEAN gfAllowLimitedVision;
+
+	BOOLEAN gfShiftFUnloadWeapons;
+	BOOLEAN gfShiftFRemoveAttachments;
 
 	// Rain settings
 	BOOLEAN gfAllowRain;
@@ -336,8 +344,14 @@ typedef struct
 	BOOLEAN gfHardAggressiveQueen;
 	BOOLEAN gfInsaneAggressiveQueen;
 
+	BOOLEAN gfInvestigateSector;
+	BOOLEAN gfReassignPendingReinforcements;
+
 	// WANNE
 	INT32 ubEnemiesItemDrop;
+
+	// WANNE: External sector loadscreens [2007-05-19]
+	BOOLEAN	gfUseExternalLoadscreens;
 
 	BOOLEAN gfUseAutoSave;
 
@@ -373,7 +387,7 @@ typedef struct
 	BOOLEAN fEnableCrepitus;
 	BOOLEAN fEnableAllWeaponCaches;
 	BOOLEAN fEnableAllTerrorists;
-
+	BOOLEAN gfRevealItems;
 	BOOLEAN fEnableArmorCoverage; // ShadoWarrior for Captain J's armor coverage
 
 	// ShadoWarrior: Tooltip changes (start)

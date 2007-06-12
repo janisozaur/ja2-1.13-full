@@ -2,6 +2,7 @@
 #define _SAVE_LOAD_GAME_H_
 
 #include "Soldier Control.h"
+#include "GameSettings.h"
 
 #define		BYTESINMEGABYTE						1048576 //1024*1024
 #define		REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)
@@ -16,7 +17,7 @@
 typedef struct
 {
 	UINT32	uiSavedGameVersion;
-	INT8		zGameVersionNumber[ GAME_VERSION_LENGTH ];
+	CHAR8		zGameVersionNumber[ GAME_VERSION_LENGTH ];
 
 	CHAR16	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 

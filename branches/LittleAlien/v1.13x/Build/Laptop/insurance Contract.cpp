@@ -24,6 +24,7 @@
 	#include "Random.h"
 	#include "Strategic Status.h"
 	#include "Assignments.h"
+	#include "Map Screen Interface.h"
 #endif
 
 #define		INS_CTRCT_ORDER_GRID_WIDTH					132
@@ -31,8 +32,8 @@
 #define		INS_CTRCT_ORDER_GRID_OFFSET_X				INS_CTRCT_ORDER_GRID_WIDTH + 2
 
 
-#define		INS_CTRCT_ORDER_GRID1_X							76 + LAPTOP_SCREEN_UL_X
-#define		INS_CTRCT_ORDER_GRID1_Y							126 + LAPTOP_SCREEN_WEB_UL_Y
+#define		INS_CTRCT_ORDER_GRID1_X							(76 + LAPTOP_SCREEN_UL_X)
+#define		INS_CTRCT_ORDER_GRID1_Y							(126 + LAPTOP_SCREEN_WEB_UL_Y)
 
 #define		INS_CTRCT_ORDER_GRID2_X							INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ORDER_GRID_OFFSET_X
 
@@ -189,7 +190,7 @@ void GameInitInsuranceContract()
 
 void EnterLaptopInitInsuranceContract()
 {
-	wchar_t		zTextField[14];
+	CHAR16		zTextField[14];
 
 	swprintf( zTextField, L"%d", 0 );
 	SetInputFieldStringWith16BitString( 1, zTextField );
@@ -328,7 +329,7 @@ void HandleInsuranceContract()
 void RenderInsuranceContract()
 {
   HVOBJECT	hPixHandle;
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT8			ubCount=0;
 	INT16			sMercID;
 	INT16			sNextMercID;
@@ -361,7 +362,7 @@ void RenderInsuranceContract()
 
 	//Display the title slogan
 	GetInsuranceText( INS_SNGL_ENTERING_REVIEWING_CLAIM, sText );
-	DrawTextToScreen( sText, LAPTOP_SCREEN_UL_X, INS_CTRCT_TITLE_Y, LAPTOP_SCREEN_LR_X-LAPTOP_SCREEN_UL_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+	DrawTextToScreen( sText, LAPTOP_SCREEN_UL_X, INS_CTRCT_TITLE_Y, LAPTOP_SCREEN_LR_X-LAPTOP_SCREEN_UL_X-iScreenWidthOffset, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 
 	//Get and display the insurance bullet
@@ -501,7 +502,7 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 	UINT32	uiInsMercFaceImage;
 	INT32		iCostOfContract=0;
 	char			sTemp[100];
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
 
 	SOLDIERTYPE	*pSoldier;
@@ -1619,7 +1620,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 		//if the player doesnt have enough money, tell him
 		if( LaptopSaveInfo.iCurrentBalance < iAmountOfMoneyTransfer )
 		{
-			wchar_t		sText[800];
+			CHAR16		sText[800];
 
 			GetInsuranceText( INS_MLTI_NOT_ENOUGH_FUNDS, sText );
 			if( guiCurrentScreen == LAPTOP_SCREEN )

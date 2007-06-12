@@ -10,6 +10,26 @@
 	#include "Overhead.h"
 	#include "strategicmap.h"
 	#include "PreBattle Interface.h"
+	#include "Map Screen Interface.h"
+	#include "Queen Command.h"
+	#include "strategic.h"
+	#include "popupbox.h"
+	#include "interface control.h"
+	#include "Map Screen Interface Map.h"
+	#include "renderworld.h"
+	#include "Text.h"
+	#include "utilities.h"
+	#include "Interface.h"
+	#include "GameSettings.h"
+	#include "Input.h"
+	#include "opplist.h"
+	#include "los.h"
+	#include "Items.h"
+	#include "Animation Control.h"
+	#include "points.h"
+	#include "Campaign.h"
+	#include "ai.h"
+	#include "Isometric Utils.h"
 #endif
 
 #include "MilitiaSquads.h"
@@ -233,7 +253,7 @@ void HandleMilitiaPromotions( void )
 	{
     // ATE: Problems here with bringing up message box...
 
-		// wchar_t str[ 512 ];
+		// CHAR16 str[ 512 ];
 		// BuildMilitiaPromotionsString( str );
 		// DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 	}

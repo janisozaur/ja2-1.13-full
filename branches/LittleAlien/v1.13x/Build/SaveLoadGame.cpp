@@ -90,6 +90,19 @@
 	#include	"lighteffects.h"
 	#include "HelpScreen.h"
 	#include "Animated ProgressBar.h"
+	#include "merctextbox.h"
+	#include "render dirty.h"
+	#include "Map Information.h"
+	#include "Interface Items.h"
+	#include "Civ Quotes.h"
+	#include "Scheduling.h"
+	#include "Animation Data.h"
+	#include "Game Init.h"
+	#include "cheats.h"
+	#include "Strategic Event Handler.h"
+	#include "interface panels.h"
+	#include "interface dialogue.h"
+	#include "Assignments.h"
 #endif
 
 #include		"BobbyR.h"
@@ -477,7 +490,7 @@ BOOLEAN InitSaveDir()
 
 	// The locale-specific save dir location is of the form L"..\\SavedGames"
 	// This has not changed; instead, we strip the ".." at the beginning
-	sprintf( (char *) gSaveDir, "%s%S", dataDir.c_str(), pMessageStrings[ MSG_SAVEDIRECTORY ] + 2 );
+	sprintf(  gSaveDir, "%s%S", dataDir.c_str(), pMessageStrings[ MSG_SAVEDIRECTORY ] + 2 );
 
 	// This was moved here from SaveGame
 	//Check to see if the save directory exists
@@ -509,7 +522,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	BOOLEAN fWePausedIt = FALSE;
 
 
-	//sprintf( (char *) saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
+	//sprintf(  saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
 
 #ifdef JA2BETAVERSION
 #ifndef CRIPPLED_VERSION
@@ -3632,10 +3645,10 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 		}
 
 		//allocate space for the subject
-		pData = (UINT8 *) MemAlloc( EMAIL_SUBJECT_LENGTH * sizeof( wchar_t ) );
+		pData = (UINT8 *) MemAlloc( EMAIL_SUBJECT_LENGTH * sizeof( CHAR16 ) );
 		if( pData == NULL )
 			return( FALSE );
-		memset( pData, 0, EMAIL_SUBJECT_LENGTH * sizeof( wchar_t ) );
+		memset( pData, 0, EMAIL_SUBJECT_LENGTH * sizeof( CHAR16 ) );
 
 		//Get the subject
 		FileRead( hFile, pData, uiSizeOfSubject, &uiNumBytesRead );

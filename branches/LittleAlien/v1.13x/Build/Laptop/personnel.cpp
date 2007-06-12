@@ -28,6 +28,9 @@
 	#include "Soldier Add.h"
 	#include "Interface Items.h"
 	#include "Weapons.h"
+	#include "strategicmap.h"
+	#include "GameSettings.h"
+	#include "Merc Contract.h"
 #endif
 
 #include "Soldier Macros.h"
@@ -1501,8 +1504,8 @@ Moved so the name of the town will be in the same line as the name
 void DisplayCharStats(INT32 iId, INT32 iSlot)
 {
 	INT32 iCounter=0;
-	wchar_t sString[50];
-//	wchar_t sStringA[ 50 ];
+	CHAR16 sString[50];
+//	CHAR16 sStringA[ 50 ];
 	INT16 sX, sY;
 	UINT32 uiHits = 0;
 	SOLDIERTYPE *pSoldier = &Menptr[iId];
@@ -1967,7 +1970,7 @@ void DrawPageNumber( void )
 {
 	// draws the page number
 	
-	wchar_t sString[10];
+	CHAR16 sString[10];
 	INT16 sX, sY;
   INT32 iPageNumber, iLastPage;
   
@@ -5124,7 +5127,7 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 {
 	INT32 iCounter=0;
-	wchar_t sString[50];
+	CHAR16 sString[50];
 	INT16 sX, sY;
 	UINT32 uiHits = 0;
 
@@ -6877,8 +6880,8 @@ BOOLEAN IsPastMercOther( INT32 iId )
 void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 {
 	INT32 iCounter=0;
-	wchar_t sString[50];
-	wchar_t sStringA[ 50 ];
+	CHAR16 sString[50];
+	CHAR16 sStringA[ 50 ];
 	INT16 sX, sY;
 	UINT32 uiHits = 0;
 	

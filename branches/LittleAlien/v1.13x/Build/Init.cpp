@@ -5,6 +5,7 @@
 	#include "INIReader.h"
 	
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "sgp.h"
 	#include "Gameloop.h"
@@ -54,6 +55,11 @@
 	#include "jascreens.h"
 	#include "XML.h"
 	#include "SaveLoadGame.h"
+	#include "weapons.h"
+	#include "Strategic Movement.h"
+	#include "Vehicles.h"
+	#include "Multilingual Text Code Generator.h"
+	#include "editscreen.h"
 #endif
 
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
@@ -120,6 +126,22 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 	// WANNE: Enemy drops - end
 	
+	// WANNE: Sector Loadscreens [2007-05-18]
+	strcpy(fileName, directoryName);
+	strcat(fileName, SECTORLOADSCREENSFILENAME);
+
+	if ( FileExists(fileName) )
+	{
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+		if(!ReadInSectorLoadscreensStats(gSectorLoadscreens, fileName))
+			return FALSE;
+	}
+	else
+	{
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("File does not exist, fileName = %s", fileName));
+		// Reset ini-option
+		gGameExternalOptions.gfUseExternalLoadscreens = FALSE;
+	}
 
 	strcpy(fileName, directoryName);
 	strcat(fileName, AMMOTYPESFILENAME);
@@ -389,6 +411,13 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
     if(!ReadInExplosionDataStats(fileName))
 		return FALSE;
 
+	// Kaiden: Read in Restricted Sectors for Mobile Militia
+	strcpy(fileName, directoryName);
+	strcat(fileName, ROAMINGMILITIAFILENAME);
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
+    if(!ReadInRoamingInfo(fileName))
+		return FALSE;
+
 	return TRUE;
 }
 
@@ -502,7 +531,7 @@ UINT32 InitializeJA2(void)
 #endif
 	
 #ifdef JA2BETAVERSION
-	if( ProcessIfMultilingualCmdLineArgDetected( (UINT8 *)gzCommandLine ) )
+	if( ProcessIfMultilingualCmdLineArgDetected( gzCommandLine ) )
 	{ //If the multilingual text code generator has activated, quit now.
 		gfProgramIsRunning = FALSE;
 		return( INIT_SCREEN );
@@ -532,7 +561,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			sprintf( (char *)gubFilename, "none");
+			sprintf( gubFilename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;
@@ -546,7 +575,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			sprintf( (char *)gubFilename, "none");
+			sprintf( gubFilename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;

@@ -121,7 +121,7 @@ typedef struct
 	UINT16							usTactialTurnLimitCounter;
 	BOOLEAN							fInTopMessage;
 	UINT8								ubTopMessageType;
-	wchar_t								zTopMessageString[20];
+	CHAR16								zTopMessageString[20];
 	UINT16							usTactialTurnLimitMax;
 	UINT32							uiTactialTurnLimitClock;
 	BOOLEAN							fTactialTurnLimitStartedBeep;
@@ -304,7 +304,7 @@ void CycleThroughKnownEnemies( );
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen );
 
-SOLDIERTYPE * FreeUpAttacker( UINT8 ubID );
+SOLDIERTYPE * FreeUpAttacker( );
 
 BOOLEAN PlayerTeamFull( );
 
@@ -314,7 +314,7 @@ void ResetAllMercSpeeds( );
 
 BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLEAN fInitialMove, UINT16 usAnimState );
 
-SOLDIERTYPE * ReduceAttackBusyCount( UINT8 ubID, BOOLEAN fCalledByAttacker );
+SOLDIERTYPE * ReduceAttackBusyCount( );
 
 void CommonEnterCombatModeCode( );
 

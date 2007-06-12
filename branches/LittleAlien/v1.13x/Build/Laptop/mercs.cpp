@@ -23,6 +23,8 @@
 	#include "Speck Quotes.h"
 	#include "mercs Account.h"
 	#include "Soldier Profile.h"
+	#include "Game Event Hook.h"
+	#include "Quests.h"
 #endif
 
 #define		MERC_TEXT_FONT									FONT12ARIAL
@@ -182,7 +184,7 @@ UINT8			gubCurMercIndex;
 INT32			iMercPopUpBox = -1;
 
 UINT16		gusPositionOfSpecksDialogBox_X;
-wchar_t		gsSpeckDialogueTextPopUp[ 900 ];
+CHAR16		gsSpeckDialogueTextPopUp[ 900 ];
 UINT16		gusSpeckDialogueX;
 UINT16		gusSpeckDialogueActualWidth;
 
@@ -1537,7 +1539,7 @@ void HandleTalkingSpeck()
 		}
 }
 
-void DisplayTextForSpeckVideoPopUp(wchar_t * pString)
+void DisplayTextForSpeckVideoPopUp(STR16 pString)
 {
 	UINT16	usActualHeight;
 	INT32		iOldMercPopUpBoxId = iMercPopUpBox;

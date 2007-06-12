@@ -3,6 +3,7 @@
 	#include "BuildDefines.h"
 	
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <string.h>
 	#include "wcheck.h"
@@ -72,6 +73,18 @@
 	#include "render dirty.h"
 	#include "GameSettings.h"
 	#include "los.h"
+	#include "Campaign Types.h"
+	#include "Queen Command.h"
+	#include "Options Screen.h"
+	#include "SaveLoadGame.h"
+	#include "Spread Burst.h"
+	#include "ai.h"
+	#include "Game Clock.h"
+	#include "civ quotes.h"
+	#include "Militia Control.h"
+	#include "qarray.h"
+	#include "environment.h"
+	#include "Map Information.h"
 #endif
 
 
@@ -357,13 +370,13 @@ UINT32									guiTimerLastUpdate = 0;
 UINT32									guiTimerCursorDelay = 0;
 
 
-INT16			gzLocation[ 20 ];
+CHAR16			gzLocation[ 20 ];
 BOOLEAN		gfLocation = FALSE;
 
-INT16			gzIntTileLocation[ 20 ];
+CHAR16			gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 
-INT16			gzIntTileLocation2[ 20 ];
+CHAR16			gzIntTileLocation2[ 20 ];
 BOOLEAN		gfUIIntTileLocation2;
 
 MOUSE_REGION	gDisableRegion;
@@ -1028,7 +1041,7 @@ UINT32 UIHandleExit( UI_EVENT *pUIEvent )
 UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 {
 	 static UINT8				ubTemp = 3;
-	 INT16							usMapPos;
+	 UINT16							usMapPos;
    static INT32       iSoldierCount=0;     
 	 MERC_HIRE_STRUCT HireMercStruct;
 	 INT8		bReturnCode;
@@ -1223,8 +1236,8 @@ UINT32 UIHandleTestHit( UI_EVENT *pUIEvent )
 			}
 		}
 
-		gTacticalStatus.ubAttackBusyCount++;
-        
+		// gTacticalStatus.ubAttackBusyCount++;
+		DebugAttackBusy( "Testing a hit.\n" );
 		 EVENT_SoldierGotHit( pSoldier, 1, bDamage, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pSoldier->bAimShotLocation, 0, NOWHERE );
 		// callahan update end - put everything as it was
 	}
@@ -2554,7 +2567,7 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 				// If this is one of our own guys.....pop up requiester...
 				if ( ( pTSoldier->bTeam == gbPlayerNum || pTSoldier->bTeam == MILITIA_TEAM ) && Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass != IC_MEDKIT && !Item[pSoldier->inv[ HANDPOS ].usItem].gascan && gTacticalStatus.ubLastRequesterTargetID != pTSoldier->ubProfile && ( pTSoldier->ubID != pSoldier->ubID ) )
 				{
-					wchar_t	zStr[200];
+					CHAR16	zStr[200];
 
 					gpRequesterMerc			  = pSoldier;
 					gpRequesterTargetMerc = pTSoldier;
@@ -2562,7 +2575,7 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 
 					fDidRequester = TRUE;
 
-					swprintf( (wchar_t *)zStr, (wchar_t *)TacticalStr[ ATTACK_OWN_GUY_PROMPT ], pTSoldier->name );
+					swprintf( zStr, TacticalStr[ ATTACK_OWN_GUY_PROMPT ], pTSoldier->name );
 
 					DoMessageBox( MSG_BOX_BASIC_STYLE, zStr, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, AttackRequesterCallback, NULL );
 
@@ -6109,6 +6122,9 @@ BOOLEAN SelectedGuyInBusyAnimation( )
 
 		if ( pSoldier->usAnimState == LOB_ITEM || 
 				 pSoldier->usAnimState == THROW_ITEM ||
+				 //<SB> crouch throwing
+				 pSoldier->usAnimState == THROW_ITEM_CROUCHED ||
+				 //<SB> crouch throwing
 				 pSoldier->usAnimState == PICKUP_ITEM ||
 				 pSoldier->usAnimState == DROP_ITEM ||
 				 pSoldier->usAnimState == OPEN_DOOR ||

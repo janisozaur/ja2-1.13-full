@@ -20,6 +20,11 @@
 	#include "Event Pump.h"
 	#include "Text.h"
 	#include "Interface Control.h"
+	#include "Map Screen Interface Map.h"
+	#include "Map Screen Interface Bottom.h"
+	#include "gamescreen.h"
+	#include "Map Information.h"
+	#include "GameSettings.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK
@@ -74,7 +79,7 @@ BOOLEAN			gfGamePaused						= TRUE;
 BOOLEAN			gfTimeInterrupt					= FALSE;
 BOOLEAN			gfTimeInterruptPause    = FALSE;
 BOOLEAN			fSuperCompression				= FALSE;
-UINT32			guiGameClock						= STARTING_TIME;
+UINT32			guiGameClock				= gGameExternalOptions.iGameStartingTime;
 UINT32			guiPreviousGameClock = 0;		// used only for error-checking purposes
 UINT32			guiGameSecondsPerRealSecond;
 UINT32			guiTimesThisSecondProcessed = 0;
@@ -82,7 +87,7 @@ INT32			  iPausedPopUpBox = -1;
 UINT32			guiDay;
 UINT32			guiHour;
 UINT32			guiMin;
-wchar_t			gswzWorldTimeStr[20];
+CHAR16			gswzWorldTimeStr[20];
 INT32				giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
 UINT16      usPausedActualWidth;
 UINT16			usPausedActualHeight;
@@ -106,8 +111,8 @@ extern			UINT32		guiEnvDay;
 
 void InitNewGameClock( )
 {
-	guiGameClock = STARTING_TIME;
-	guiPreviousGameClock = STARTING_TIME;
+	guiGameClock = gGameExternalOptions.iGameStartingTime;
+	guiPreviousGameClock = gGameExternalOptions.iGameStartingTime;
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;

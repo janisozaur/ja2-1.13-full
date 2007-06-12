@@ -3,6 +3,7 @@
 	#include "HelpScreen.h"
 	#include "PreBattle Interface.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h> 
@@ -78,6 +79,13 @@
 	#include "strategic ai.h"
 	#include "HelpScreen.h"
 	#include "PreBattle Interface.h"
+	#include "Sound Control.h"
+	#include "MessageBoxScreen.h"
+	#include "Text.h"
+	#include "GameSettings.h"
+	#include "Random.h"
+	#include "editscreen.h"
+	#include "Scheduling.h"
 #endif
 
 
@@ -165,7 +173,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"90" );
+	swprintf( VideoOverlayDesc.pzText, L"90" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
@@ -174,7 +182,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.sTop				 = 0;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( (wchar_t *)VideoOverlayDesc.pzText, (wchar_t *)L"Levelnodes: 100000" );
+	swprintf( VideoOverlayDesc.pzText, L"Levelnodes: 100000" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
   
@@ -1096,7 +1104,7 @@ void InitHelicopterEntranceByMercs( void )
 		AIR_RAID_DEFINITION	AirRaidDef;
 
 		// Update clock ahead from STARTING_TIME to make mercs arrive!
-		WarpGameTime( FIRST_ARRIVAL_DELAY, WARPTIME_PROCESS_EVENTS_NORMALLY );
+		WarpGameTime( gGameExternalOptions.iFirstArrivalDelay, WARPTIME_PROCESS_EVENTS_NORMALLY );
 
 		AirRaidDef.sSectorX		= 9;
 		AirRaidDef.sSectorY		= 1;

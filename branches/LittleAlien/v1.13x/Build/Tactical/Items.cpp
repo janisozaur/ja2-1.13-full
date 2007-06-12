@@ -36,6 +36,20 @@
 	#include "Interface Control.h"
 	#include "ShopKeeper Interface.h"
 	#include "Cursors.h"
+
+	#include "GameSettings.h"
+	#include "environment.h"
+	#include "Auto Resolve.h"
+	#include "Interface Items.h"
+	#include "Campaign Types.h"
+	#include "history.h"
+	#include "Game Clock.h"
+	#include "strategicmap.h"
+	#include "Inventory Choosing.h"
+	#include "Soldier macros.h"
+	#include "Smell.h"
+	#include "lighting.h"
+	#include "utilities.h"
 #endif
 
 #define ANY_MAGSIZE 255
@@ -1607,7 +1621,8 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 	
 	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
-		if ( (Item[ pSoldier->inv[ bLoop ].usItem ].usItemClass & IC_GRENADE) && !GLGrenadeInSlot( pSoldier, bLoop ) )
+		if ( (Item[ pSoldier->inv[ bLoop ].usItem ].usItemClass & IC_GRENADE) && // Try this check instead, to avoid tossing RPG rounds     !GLGrenadeInSlot( pSoldier, bLoop ) &&
+			GetLauncherFromLaunchable( pSoldier->inv[ bLoop ].usItem) == NOTHING )
 		{
 			return( bLoop );
 		}
@@ -1866,7 +1881,7 @@ BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAt
 			if ( fAttemptingAttachment && ValidAttachmentClass( usAttachment, pObj->usItem ) )
 			{
 				// well, maybe the player thought he could
-				wchar_t	zTemp[ 100 ];
+				CHAR16	zTemp[ 100 ];
 				
 				swprintf( zTemp, Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
@@ -3252,8 +3267,11 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				//		IsAGLorRL = TRUE;
 				//	}
 				//}
-
-				pTargetObj->usGunAmmoItem = pAttachment->usItem;
+				
+				if ( fValidLaunchable )
+				{
+					pTargetObj->usGunAmmoItem = pAttachment->usItem;
+				}
 			}
 		}
 
@@ -3790,7 +3808,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
-			wchar_t	zTemp[ 150 ];
+			CHAR16	zTemp[ 150 ];
 
 			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
@@ -3801,7 +3819,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
-			wchar_t	zTemp[ 150 ];
+			CHAR16	zTemp[ 150 ];
 
 			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
@@ -6552,6 +6570,14 @@ INT16 GetRateOfFireBonus( OBJECTTYPE * pObj )
 {
 	INT8	bLoop;
 	INT16 bns=0;
+
+  if( (MAXITEMS <= pObj->usItem) || (MAXITEMS <= pObj->usGunAmmoItem) )
+    {
+   	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->usGunAmmoItem, MAXITEMS ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->usGunAmmoItem, MAXITEMS );
+    AssertMsg( 0, "GetRateOfFireBonus would crash" );
+    return 0; /* cannot calculate Bonus, this only happens sometimes in FULLSCREEN */
+    }
 
 	bns = BonusReduceMore( Item[pObj->usItem].rateoffirebonus, pObj->bStatus[0] );
 	bns += Item[pObj->usGunAmmoItem].rateoffirebonus ;

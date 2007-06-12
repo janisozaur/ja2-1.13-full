@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "PreBattle Interface.h"
 	#include "Button System.h"
@@ -32,6 +33,17 @@
 	#include "Random.h"
 	#include "Creature Spreading.h"
 	#include "Multi Language Graphic Utils.h"
+	#include "Map Screen Helicopter.h"
+	#include "Quests.h"
+	#include "Map Screen Interface Border.h"
+	#include "Strategic Status.h"
+	#include "interface control.h"
+	#include "Strategic Town Loyalty.h"
+	#include "Squads.h"
+	#include "Assignments.h"
+	#include "Soldier macros.h"
+	#include "history.h"
+	#include "Cheats.h"
 #endif
 
 extern void InitializeTacticalStatusAtBattleStart();
@@ -89,7 +101,7 @@ void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason );
 void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason );
 void RetreatMercsCallback( GUI_BUTTON *btn, INT32 reason );
 
-void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, wchar_t *szCondition, UINT8 *pubHPPercent, UINT8 *pubBPPercent );
+void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *pubHPPercent, UINT8 *pubBPPercent );
 
 void CheckForRobotAndIfItsControlled( void );
 
@@ -170,10 +182,10 @@ INT32 giHilitedInvolved, giHilitedUninvolved;
 
 extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
-extern void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT8 *pubFontColor );
+extern void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, CHAR16 sString[] );
+extern void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] );
+extern void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] );
+extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sString[], UINT8 *pubFontColor );
 
 
 
@@ -213,7 +225,7 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 
 	if( ubInvalidGroups || pSector->ubAdminsInBattle || pSector->ubTroopsInBattle || pSector->ubElitesInBattle || pSector->ubCreaturesInBattle )
 	{
-		wchar_t str[ 512 ];
+		CHAR16 str[ 512 ];
 		swprintf( str, L"Strategic info warning:  Sector 'in battle' counters are not clear when they should be.  "
 									 L"If you can provide information on how a previous battle was resolved here or nearby patrol "
 									 L"(auto resolve, tactical battle, cheat keys, or retreat),"
@@ -904,7 +916,7 @@ void KillPreBattleInterface()
 
 void RenderPBHeader( INT32 *piX, INT32 *piWidth)
 {
-	wchar_t str[100];
+	CHAR16 str[100];
 	INT32 x, width;
 	SetFont( FONT10ARIALBOLD );
 	if( gfBlinkHeader )
@@ -967,8 +979,8 @@ void RenderPreBattleInterface()
 	GROUP *pGroup;
 	HVOBJECT hVObject;
 	INT32 i, x, y, line, width;
-	wchar_t str[100];
-	wchar_t pSectorName[ 128 ];
+	CHAR16 str[100];
+	CHAR16 pSectorName[ 128 ];
 	UINT8 ubHPPercent, ubBPPercent;
 	BOOLEAN fMouseInRetreatButtonArea;
 	UINT8 ubJunk;
@@ -1417,7 +1429,7 @@ enum
 	COND_DEAD
 };
 
-void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, wchar_t *szCondition, UINT8 *pubHPPercent, UINT8 *pubBPPercent )
+void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *pubHPPercent, UINT8 *pubBPPercent )
 {
 	Assert( pSoldier );
 	*pubHPPercent = (UINT8)(pSoldier->bLife * 100 / pSoldier->bLifeMax);

@@ -19,6 +19,7 @@
 	#include "LaptopSave.h"
 	#include "Text.h"
 	#include "Speck Quotes.h"
+	#include "Multi Language Graphic Utils.h"
 #endif
 
 #define		MERC_ACCOUNT_TEXT_FONT				FONT14ARIAL
@@ -351,7 +352,7 @@ void HandleMercsAccount()
 
 void RenderMercsAccount()
 {
-	wchar_t		sText[100];
+	CHAR16		sText[100];
   HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -470,7 +471,7 @@ void DisplayHiredMercs()
 {
 	UINT16	usPosY;
 	UINT32	uiContractCharge;	
-	wchar_t	sTemp[20];
+	CHAR16	sTemp[20];
 	UINT8	i, usMercID;
 	UINT8	ubFontColor;
 	UINT8 usMercIDStart;

@@ -3,6 +3,7 @@
 	#include "Strategic All.h"
 	#include "GameSettings.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "types.h"
 	#include "Strategic Movement.h"
@@ -20,6 +21,22 @@
 	#include "strategic.h"
 	#include "Explosion Control.h"
 	#include "Town Militia.h"
+	#include "Overhead.h"
+	#include "Squads.h"
+	#include "jascreens.h"
+	#include "screenids.h"
+	#include "MessageBoxScreen.h"
+	#include "Quests.h"
+	#include "Player Command.h"
+	#include "Campaign.h"
+	#include "Campaign Init.h"
+	#include "Game Init.h"
+	#include "PreBattle Interface.h"
+	#include "Quests.h"
+	#include "Soldier Profile.h"
+	#include "Scheduling.h"
+	#include "Map Information.h"
+	#include "interface dialogue.h"
 #endif
 
 #define SAI_VERSION		29
@@ -425,8 +442,8 @@ void ReinitializeUnvisitedGarrisons();
 //was made.
 #ifdef JA2BETAVERSION
 
-void LogStrategicEvent( char * str, ... ); //adds a timestamp.
-void LogStrategicMsg( char * str, ... ); //doesn't use the time stamp
+void LogStrategicEvent( STR8  str, ... ); //adds a timestamp.
+void LogStrategicMsg( STR8  str, ... ); //doesn't use the time stamp
 
 void ClearStrategicLog();
 #endif
@@ -644,7 +661,7 @@ void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 
 
 
-BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID ) 
+BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID )
 {
 	SECTORINFO *pSector;
 	
@@ -654,8 +671,8 @@ BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID )
 		case SEC_C5:	case SEC_C6:	case SEC_D5:	//San Mona
 		case SEC_I6:									//Estoni
 		
-			//These sectors aren't important. //Lalien: changed this, need to externalize		
-			return FALSE;
+		//These sectors aren't important. //Lalien: changed this, need to externalize		
+		return FALSE;
 	}
 
 	pSector = &SectorInfo[ ubSectorID ];
@@ -712,7 +729,7 @@ void ValidatePendingGroups()
 		}
 		if( iErrorsForInvalidPendingGroup )
 		{
-			wchar_t str[256];
+			CHAR16 str[256];
 			swprintf( str, L"Strategic AI:  Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save."
 										 L"You can continue playing, as this has been auto-corrected.  No need to send any debug files.", iErrorsForInvalidPendingGroup );
 			SAIReportError( str );
@@ -747,7 +764,7 @@ void ValidateWeights( INT32 iID )
    
 		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
 		{
-			wchar_t str[256];
+			CHAR16 str[256];
 			swprintf( str, L"Strategic AI:  Internal error #%02d (total request/reinforcement points).  Please report error including error#.  "
 										 L"You can continue playing, as the points have been auto-corrected.  No need to send any save/debug files.", iID );
 			//Correct the misalignment.
@@ -775,7 +792,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 		{
 			#ifdef JA2BETAVERSION
 			{
-				wchar_t str[256];
+				CHAR16 str[256];
 				swprintf( str, L"Strategic AI:  Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Strategic Decisions.txt.",
 											 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
 				SAIReportError( str );
@@ -816,7 +833,7 @@ void ValidateLargeGroup( GROUP *pGroup )
 	#ifdef JA2BETAVERSION
 		if( pGroup->ubGroupSize > 25 )
 		{
-			wchar_t str[ 512 ];
+			CHAR16 str[ 512 ];
 			swprintf( str, L"Strategic AI warning:  Enemy group containing %d soldiers "
 									 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
 									 L"to evaluate a potential problems with very large enemy groups.",
@@ -873,7 +890,7 @@ void ValidatePlayersAreInOneGroupOnly()
 	GROUP *pGroup, *pOtherGroup;
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
-	wchar_t str[ 1024 ];
+	CHAR16 str[ 1024 ];
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
 	iNumErrors = 0;
@@ -1051,7 +1068,7 @@ void ValidatePlayersAreInOneGroupOnly()
 	if( iNumErrors )
 	{ //The first error to be detected is the one responsible for building the strings.  We will simply append another string containing
 		//the total number of detected errors.
-		UINT16 tempstr[ 128 ];
+		CHAR16 tempstr[ 128 ];
 		swprintf( tempstr, L"  A total of %d related errors have been detected.", iNumErrors );
 		wcscat( str, tempstr );
 		SAIReportError( str );
@@ -1084,8 +1101,8 @@ void SAIReportError( STR16 wErrorString )
 		}
 		if( guiCurrentScreen == AIVIEWER_SCREEN )
 		{
-			UINT8 str[ 512 ];
-			sprintf( (char *)str, "%S\n", wErrorString );
+			CHAR8 str[ 512 ];
+			sprintf( str, "%S\n", wErrorString );
 			OutputDebugString( (LPCSTR) str );
 		}
 
@@ -1614,6 +1631,8 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 			if( CheckFact( 273, FALSE ) )
 				return FALSE;
 			break;
+		
+		//Lalien: deactivated
 		//case SEC_A9:
 		//case SEC_A10:
 		//	//Omerta -- not until Day 2 at 7:45AM.	
@@ -1627,6 +1646,7 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 		//	if( GetWorldTotalMin() < 4710 )
 		//		return FALSE;
 		//	break;
+
 		case SEC_C5:
 		case SEC_C6:
 		case SEC_D5:
@@ -2095,7 +2115,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 					{
 						UINT8 ubCut;
 						#ifdef JA2BETAVERSION
-						wchar_t str[512];
+						CHAR16 str[512];
 						swprintf( str, L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d."
 													 L"Please send Strategic Decisions.txt and PRIOR save.", 
 													 pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
@@ -4385,10 +4405,10 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 #ifdef JA2BETAVERSION
 
-void LogStrategicMsg( char * str, ... )
+void LogStrategicMsg( STR8  str, ... )
 {
 	va_list argptr;
-	UINT8	string[512];
+	CHAR8	string[512];
 
 	FILE *fp;
 
@@ -4397,7 +4417,7 @@ void LogStrategicMsg( char * str, ... )
 		return;
 
 	va_start(argptr, str );       	
-	vsprintf( (char *)string, str, argptr);				
+	vsprintf( string, str, argptr);				
 	va_end(argptr);
 
 	fprintf( fp, "%s\n", string );
@@ -4414,10 +4434,10 @@ void LogStrategicMsg( char * str, ... )
 	fclose( fp );
 }
 
-void LogStrategicEvent( char * str, ... )
+void LogStrategicEvent( STR8  str, ... )
 {
 	va_list argptr;
-	UINT8	string[512];
+	CHAR8	string[512];
 
 	FILE *fp;
 
@@ -4426,7 +4446,7 @@ void LogStrategicEvent( char * str, ... )
 		return;
 
 	va_start(argptr, str );       	
-	vsprintf( (char *)string, str, argptr);				
+	vsprintf( string, str, argptr);				
 	va_end(argptr);
 
 	
@@ -4460,38 +4480,41 @@ void ClearStrategicLog()
 
 void InvestigateSector( UINT8 ubSectorID )
 {
-
-	INT32 i;
-	SECTORINFO *pSector;
-	INT16 sSectorX, sSectorY;
-	UINT8 ubAdmins[4], ubTroops[4], ubElites[4], ubNumToSend, ubTotal;
-
-	//@@@ Disabled!  Also commented out the posting of the event
-	//return;
-
-	sSectorX = (INT16)SECTORX( ubSectorID );
-	sSectorY = (INT16)SECTORY( ubSectorID );
-
-	if( guiCurrentScreen != GAME_SCREEN )
-	{ //If we aren't in tactical, then don't do this.  It is strictly added flavour and would be irritating if
-		//you got the prebattle interface in mapscreen while compressing time (right after clearing it...)
-		return;
-	}
-
-	if( sSectorX != gWorldSectorX || sSectorY != gWorldSectorY || gbWorldSectorZ )
-	{ //The sector isn't loaded, so don't bother...
-		return;
-	}
-
-	//Now, we will investigate this sector if there are forces in adjacent towns.  For each 
-	//sector that applies, we will add 1-2 soldiers.
-
-	ubTotal = 0;
-	for( i = 0; i < 4; i++ )
+	//Lalien: enabled
+	if ( gGameExternalOptions.gfInvestigateSector == TRUE )
 	{
-		ubAdmins[i] = ubTroops[i] = ubElites[i] = 0;
-		switch( i )
+		INT32 i;
+		SECTORINFO *pSector;
+		INT16 sSectorX, sSectorY;
+		UINT8 ubAdmins[4], ubTroops[4], ubElites[4], ubNumToSend, ubTotal;
+
+		//Lalien: enabled again
+		//@@@ Disabled!  Also commented out the posting of the event
+		//return;
+
+		sSectorX = (INT16)SECTORX( ubSectorID );
+		sSectorY = (INT16)SECTORY( ubSectorID );
+
+		if( guiCurrentScreen != GAME_SCREEN )
+		{ //If we aren't in tactical, then don't do this.  It is strictly added flavour and would be irritating if
+			//you got the prebattle interface in mapscreen while compressing time (right after clearing it...)
+			return;
+		}
+
+		if( sSectorX != gWorldSectorX || sSectorY != gWorldSectorY || gbWorldSectorZ )
+		{ //The sector isn't loaded, so don't bother...
+			return;
+		}
+
+		//Now, we will investigate this sector if there are forces in adjacent towns.  For each 
+		//sector that applies, we will add 1-2 soldiers.
+
+		ubTotal = 0;
+		for( i = 0; i < 4; i++ )
 		{
+			ubAdmins[i] = ubTroops[i] = ubElites[i] = 0;
+			switch( i )
+			{
 			case 0: //NORTH
 				if( sSectorY == 1 )
 					continue;
@@ -4512,51 +4535,54 @@ void InvestigateSector( UINT8 ubSectorID )
 					continue;
 				pSector = &SectorInfo[ ubSectorID - 1 ];
 				break;
-		}
-		if( pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites > 4 )
-		{
-			ubNumToSend = (UINT8)(Random( 2 ) + 1);
-			while( ubNumToSend )
+			}
+
+			if( pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites > 4 )
 			{
-				if( pSector->ubNumAdmins )
+				ubNumToSend = (UINT8)(Random( 2 ) + 1);
+				while( ubNumToSend )
 				{
-					pSector->ubNumAdmins--;
-					ubNumToSend--;
-					ubAdmins[i]++;
-					ubTotal++;
-				}
-				else if( pSector->ubNumTroops )
-				{
-					pSector->ubNumTroops--;
-					ubNumToSend--;
-					ubTroops[i]++;
-					ubTotal++;
-				}
-				else if( pSector->ubNumElites )
-				{
-					pSector->ubNumTroops--;
-					ubNumToSend--;
-					ubTroops[i]++;
-					ubTotal++;
-				}
-				else
-				{
-					break; //???
+					if( pSector->ubNumAdmins )
+					{
+						pSector->ubNumAdmins--;
+						ubNumToSend--;
+						ubAdmins[i]++;
+						ubTotal++;
+					}
+					else if( pSector->ubNumTroops )
+					{
+						pSector->ubNumTroops--;
+						ubNumToSend--;
+						ubTroops[i]++;
+						ubTotal++;
+					}
+					else if( pSector->ubNumElites )
+					{
+						pSector->ubNumTroops--;
+						ubNumToSend--;
+						ubTroops[i]++;
+						ubTotal++;
+					}
+					else
+					{
+						break; //???
+					}
 				}
 			}
 		}
-	}
-	if( !ubTotal )
-	{ //Nobody is available to investigate
-		return;
-	}
-	//Now we have decided who to send, so send them.
-	for( i = 0; i < 4; i++ )
-	{
-		if( ubAdmins[i] + ubTroops[i] + ubElites[i] )
+
+		if( !ubTotal )
+		{ //Nobody is available to investigate
+			return;
+		}
+
+		//Now we have decided who to send, so send them.
+		for( i = 0; i < 4; i++ )
 		{
-			switch( i )
+			if( ubAdmins[i] + ubTroops[i] + ubElites[i] )
 			{
+				switch( i )
+				{
 				case 0: //NORTH 
 					AddEnemiesToBattle( NULL, INSERTION_CODE_NORTH, ubAdmins[i], ubTroops[i], ubElites[i], TRUE );	
 					break;
@@ -4569,14 +4595,15 @@ void InvestigateSector( UINT8 ubSectorID )
 				case 3: //WEST 
 					AddEnemiesToBattle( NULL, INSERTION_CODE_WEST, ubAdmins[i], ubTroops[i], ubElites[i], TRUE );	
 					break;
+				}
 			}
 		}
-	}
-	if( !gfQueenAIAwake )
-	{
-		gfFirstBattleMeanwhileScenePending = TRUE;
-	}
 
+		if( !gfQueenAIAwake )
+		{
+			gfFirstBattleMeanwhileScenePending = TRUE;
+		}
+	}
 }
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
@@ -4591,7 +4618,8 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
-	{ //If the sector doesn't belong to the player, then we shouldn't be calling this function!
+	{ 
+		//If the sector doesn't belong to the player, then we shouldn't be calling this function!
 		SAIReportError( L"StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled." );
 		return;
 	}
@@ -4612,32 +4640,34 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	}
 	else
 	{
-		//if (0)
-		//{
-		//	//check to see if there are any pending reinforcements.  If so, then cancel their orders and have them
-		//	//reassigned, so the player doesn't get pestered.  This is a feature that *dumbs* down the AI, and is done
-		//	//for the sake of gameplay.  We don't want the game to be tedious.
-		//	if( !pSector->uiTimeLastPlayerLiberated )
-		//	{
-		//		pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds();
-		//	}
-		//	else
-		//	{ //convert hours to seconds and subtract up to half of it randomly "seconds - (hours*3600 / 2)"
-		//		pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds() - Random( gubHoursGracePeriod * 1800 );
-		//	}
+		//Lalien
+		if ( gGameExternalOptions.gfReassignPendingReinforcements == TRUE )
+		{
+			//check to see if there are any pending reinforcements.  If so, then cancel their orders and have them
+			//reassigned, so the player doesn't get pestered.  This is a feature that *dumbs* down the AI, and is done
+			//for the sake of gameplay.  We don't want the game to be tedious.
+			if( !pSector->uiTimeLastPlayerLiberated )
+			{
+				pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds();
+			}
+			else
+			{ 
+				//convert hours to seconds and subtract up to half of it randomly "seconds - (hours*3600 / 2)"
+				pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds() - Random( gubHoursGracePeriod * 1800 );
+			}
 
-		//	if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
-		//	{
-		//		GROUP *pGroup;
-		//		pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
+			if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
+			{
+				GROUP *pGroup;
+				pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
 
-		//		if( pGroup )
-		//		{
-		//			ReassignAIGroup( &pGroup );
-		//		}
-		//		gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID = 0;
-		//	}
-		//}
+				if( pGroup )
+				{
+					ReassignAIGroup( &pGroup );
+				}
+				gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID = 0;
+			}
+		}
 	}
 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
@@ -4720,18 +4750,26 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 			return;
 	}
 	
-	//if( pSector->ubInvestigativeState >= ( 4 * gGameOptions.ubDifficultyLevel ) && gGameOptions.ubDifficultyLevel < DIF_LEVEL_INSANE )  //Madd: tweaked to increase attacks for experienced and expert to 8 and 12, and unlimited for insane
-	//{ //This is the 4th time the player has conquered this sector.  We won't pester the player with probing attacks here anymore.
-	//	return;  
-	//}
+	//Madd: tweaked to increase attacks for experienced and expert to 8 and 12, and unlimited for insane
+	if( pSector->ubInvestigativeState >= ( 4 * gGameOptions.ubDifficultyLevel ) && gGameOptions.ubDifficultyLevel < DIF_LEVEL_INSANE )
+	{ 
+		//This is the 4th time the player has conquered this sector.  We won't pester the player with probing attacks here anymore.
+		return;  
+	}
 
 	if( sSectorX != gWorldSectorX || sSectorY != gWorldSectorY )
 	{ //The sector isn't loaded, so don't probe attack it.  Otherwise, autoresolve would get them smoked!
 		return;
 	}
+
 	//@@@ disabled
-	AddStrategicEventUsingSeconds( EVENT_INVESTIGATE_SECTOR, GetWorldTotalSeconds() + 45 * pSector->ubInvestigativeState + Random( 60 ), SECTOR( sSectorX, sSectorY ) );
+	//Lalien: enabled investigation of lost sector by enemy
+	if ( gGameExternalOptions.gfInvestigateSector == TRUE)
+	{
+		AddStrategicEventUsingSeconds( EVENT_INVESTIGATE_SECTOR, GetWorldTotalSeconds() + 45 * pSector->ubInvestigativeState + Random( 60 ), SECTOR( sSectorX, sSectorY ) );
+	}
 }
+
 
 void RequestHighPriorityStagingGroupReinforcements( GROUP *pGroup )
 {

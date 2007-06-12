@@ -12,6 +12,11 @@
 	#include "Soldier Profile Type.h"
 	#include "Items.h"
 	#include "Weapons.h"
+	#include "Soldier Macros.h"
+	#include "Soldier Profile.h"
+	#include "NPC.h"
+	#include "Render Fun.h"
+	#include "Quests.h"
 #endif
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
@@ -29,8 +34,8 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 
 	#ifdef DEBUGDECISIONS
 		STR tempstr;
-		sprintf((CHAR *)tempstr,"DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->usActionData);
-		DebugAI((STR) tempstr );
+		sprintf(tempstr,"DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->usActionData);
+		DebugAI( tempstr );
 	#endif
 
 	return(bAction);

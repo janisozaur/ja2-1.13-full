@@ -1,6 +1,8 @@
 #ifndef _MSGBOX_H
 #define _MSGBOX_H
 
+#include "mousesystem.h"
+
 // Message box flags
 #define		MSG_BOX_FLAG_USE_CENTERING_RECT			0x0001			// Pass in a rect to center in
 #define   MSG_BOX_FLAG_OK											0x0002			// Displays OK button
@@ -89,20 +91,18 @@ extern		BOOLEAN							gfDontOverRideSaveBuffer;
 // pCenteringRect	Rect to send if MSG_BOX_FLAG_USE_CENTERING_RECT set. Can be NULL 
 ////////////////////////////////
 
-template <typename string2>
-INT32 DoMessageBox( UINT8 ubStyle, string2 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
-template <typename string1>
-void DoScreenIndependantMessageBox( string1 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-void DoUpperScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+INT32 DoMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+void DoScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+void DoUpperScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
-void DoLowerScreenIndependantMessageBox( wchar_t * zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-void DoScreenIndependantMessageBoxWithRect( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+void DoLowerScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+void DoScreenIndependantMessageBoxWithRect( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
 
 //wrappers for other screens
-BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
-INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
-BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
-BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
 
 
 #endif

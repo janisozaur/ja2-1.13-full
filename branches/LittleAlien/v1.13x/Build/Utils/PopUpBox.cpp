@@ -393,7 +393,7 @@ void AddMonoString(UINT32 *hStringHandle, STR16 pString)
  if (pStringSt == NULL)
 	return;
 
- pLocalString=(STR16)(MemAlloc(wcslen(pString)*2+2));
+ pLocalString=(STR16)MemAlloc((wcslen(pString)+1)*sizeof(CHAR16));
  if (pLocalString == NULL)
 	return;
 
@@ -443,7 +443,7 @@ void AddSecondColumnMonoString( UINT32 *hStringHandle, STR16 pString )
 	if (pStringSt == NULL)
 		return;
 
-  pLocalString=(STR16)(MemAlloc(wcslen(pString)*2+2));
+  pLocalString=(STR16)MemAlloc((wcslen(pString)+1)*sizeof(CHAR16));
 	if (pLocalString == NULL)
 		return;
 
@@ -490,7 +490,7 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
  if (pStringSt == NULL)
 	return;
 
- pLocalString=(STR16)(MemAlloc(wcslen(pString)*2+2));
+ pLocalString=(STR16)MemAlloc((wcslen(pString)+1)*sizeof(CHAR16));
  if (pLocalString == NULL)
 	return;
 
@@ -1381,7 +1381,7 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 {
  UINT32 uiCount=0;
  INT16 uX, uY;
- wchar_t sString[100];
+ CHAR16 sString[100];
 
  
 	if ( ( uiCounter < 0 ) || ( uiCounter >= MAX_POPUP_BOX_COUNT ) )

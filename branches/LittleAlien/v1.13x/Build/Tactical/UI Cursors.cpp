@@ -26,6 +26,9 @@
 	#include "soldier macros.h"
 	#include "text.h"
 	#include "spread burst.h"
+	#include "GameSettings.h"
+	#include "Interactive Tiles.h"
+	#include "PATHAI.H"
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
@@ -570,7 +573,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 				{
 					//AXP 29.03.2007: Rooftop CtH fix. See below.
 					INT8 bTempTargetLevel = pSoldier->bTargetLevel;
-					pSoldier->bTargetLevel = gsInterfaceLevel;
+					pSoldier->bTargetLevel = (INT8) gsInterfaceLevel;
 
 					UINT32 uiHitChance;
 					uiHitChance = CalcChanceToHitGun( pSoldier, usMapPos, 0, pSoldier->bAimShotLocation );
@@ -590,7 +593,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 				//AXP 29.03.2007: Rooftop CtH fix. Temporarily set soldier targetlevel to the real interface
 				//level (selected with TAB), so the first shot after switching TL is calculated correctly
 				INT8 bTempTargetLevel = pSoldier->bTargetLevel;
-				pSoldier->bTargetLevel = gsInterfaceLevel;
+				pSoldier->bTargetLevel = (INT8) gsInterfaceLevel;
 
 				UINT32 uiHitChance;
 				uiHitChance = CalcChanceToHitGun( pSoldier, usMapPos, (INT8)(pSoldier->bShownAimTime ), pSoldier->bAimShotLocation );
@@ -1129,7 +1132,7 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 		// ALWAYS SET AIM LOCATION TO NOTHING
 		pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		if( !GetMouseMapPos( (INT16 *)&usMapPos) )
+		if( !GetMouseMapPos( &usMapPos) )
 		{
 			return;
 		}
@@ -1919,7 +1922,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
 	UINT16				usInHand;
 	UINT8					ubItemCursor;
-	INT16					sGridNo;
+	UINT16					usGridNo;
 
 	// LOOK IN GUY'S HAND TO CHECK LOCATION
 	usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -1938,7 +1941,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if (!GetMouseMapPos( &sGridNo ) )
+	if (!GetMouseMapPos( &usGridNo ) )
 	{
 		return;
 	}
@@ -2002,7 +2005,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 		case TOSSCURS:
 
-			//BeginAimCubeUI( pSoldier, sGridNo, (INT8)gsInterfaceLevel, 0, 0 );
+			//BeginAimCubeUI( pSoldier, usGridNo, (INT8)gsInterfaceLevel, 0, 0 );
 			//break;
 
 		default:

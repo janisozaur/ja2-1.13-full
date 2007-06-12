@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <string.h>
 	#include "wcheck.h"
@@ -34,6 +35,14 @@
 	#include "World Items.h"
 	#include "explosion control.h"
 	#include "GameSettings.h"
+	#include "Interface Items.h"
+	#include "Soldier Profile.h"
+	#include "Soldier macros.h"
+	#include "Keys.h"
+	#include "Render Fun.h"
+	#include "strategic.h"
+	#include "qarray.h"
+	#include "Interface.h"
 #endif
 
 #define CORPSE_WARNING_MAX 5
@@ -186,13 +195,14 @@ CHAR8	zNoBloodCorpseFilenames[ NUM_CORPSES ][70] =
 
 UINT8		gb4DirectionsFrom8[8] =
 {
-	7,		// NORTH
+//	7,		// NORTH
+	0,
 	0,		// NE
-	0,		// E
+	1,		// E
 	0,		// SE
-	1,		// S
+	2,		// S
 	0,		// SW,
-	2,		// W,
+	3,		// W,
 	0			// NW
 };
 
@@ -419,10 +429,10 @@ UINT16 GetCorpseStructIndex( ROTTING_CORPSE_DEFINITION *pCorpseDef, BOOLEAN fFor
 			// OK , these have 4 directions....
 			bDirection = gb4DirectionsFrom8[ pCorpseDef->bDirection ];
 
-      if ( fForImage )
-      {
-			  bDirection = gOneCDirection[ bDirection ];
-      }
+//      if ( fForImage )
+//      {
+//			  bDirection = gOneCDirection[ bDirection ];
+//      }
 			break;
 
 		default:
@@ -448,7 +458,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	ANITILE_PARAMS		AniParams;
 	UINT8							ubLevelID;
 	STRUCTURE_FILE_REF * pStructureFileRef = NULL;
-	INT8						zFilename[150];
+	CHAR8						zFilename[150];
 	DB_STRUCTURE_REF	 *pDBStructureRef;
 	UINT8									ubLoop;
 	INT16							sTileGridNo;
@@ -606,7 +616,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 
 	// Get root filename... this removes path and extension
 	// USed to find struct data fo rthis corpse...
-	GetRootName( zFilename, (INT8 *) AniParams.zCachedFile );
+	GetRootName( zFilename, AniParams.zCachedFile );
 
 	// Add structure data.....
 	CheckForAndAddTileCacheStructInfo( pCorpse->pAniTile->pLevelNode, pCorpse->def.sGridNo, ( UINT16 ) ( pCorpse->iCachedTileID ), GetCorpseStructIndex( pCorpseDef, TRUE ) );
@@ -949,6 +959,13 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	//Madd: set warning value to signal other enemies
 	if( pSoldier->bTeam == ENEMY_TEAM )
 		Corpse.ubAIWarningValue = 20;
+
+	// This should free up ABC for death codes
+	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_ATTACK )
+	{
+		DebugAttackBusy( "%%%%%%%%% Freeing up attacker because soldier became a corpse.\n");
+		ReduceAttackBusyCount( );
+	}
 
 	//if we are to call TacticalRemoveSoldier after adding the corpse
 	if( fRemoveMerc )
@@ -1573,7 +1590,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	STRUCTURE_FILE_REF * pStructureFileRef = NULL;
-	INT8						zFilename[150];
+	CHAR8						zFilename[150];
 	UINT8						ubBestDirection=0;
 	BOOLEAN	fSetDirection   = FALSE;
 
@@ -1581,7 +1598,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 
 	// Get root filename... this removes path and extension
 	// USed to find struct data fo rthis corpse...
-	GetRootName( zFilename, (INT8 *) zCorpseFilenames[pDef->ubType ] );
+	GetRootName( zFilename, zCorpseFilenames[pDef->ubType ] );
 
 	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename );
 

@@ -23,6 +23,11 @@
 		#include "renderworld.h"
 		#include "video.h"
 	#endif
+	#include "worldman.h"
+	#include "strategicmap.h"
+	#include "environment.h"
+	#include "lighting.h"
+		#include "Buildings.h"
 #endif
 
 #include "PathAIDebug.h"
@@ -55,7 +60,7 @@ INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32
  if (iValueChange <= 0)
   {
 #ifdef BETAVERSION
-   sprintf((CHAR *)tempstr,"CalcPercentBetter: ERROR - invalid valueChange = %d",valueChange);
+   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid valueChange = %d",valueChange);
 
 #ifdef RECORDNET
    fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
@@ -74,7 +79,7 @@ INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32
  if (iScaleSum <= 0)
   {
 #ifdef BETAVERSION
-   sprintf((CHAR *)tempstr,"CalcPercentBetter: ERROR - invalid scaleSum = %d",iScaleSum);
+   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid scaleSum = %d",iScaleSum);
 
 #ifdef RECORDNET
    fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
@@ -554,6 +559,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	UINT8	ubLightPercentDifference;
 	BOOLEAN		fNight;
 
+	// There's no cover when boxing!
+	if (gTacticalStatus.bBoxingState == BOXING)
+	{
+		return (NOWHERE);
+	}
+
 	if ( gbWorldSectorZ > 0 )
 	{
 		fNight = FALSE;
@@ -771,7 +782,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			// add this opponent's cover value to our current total cover value
 			iCurrentCoverValue += CalcCoverValue(pSoldier,pSoldier->sGridNo,iMyThreatValue,pSoldier->bActionPoints,uiLoop,Threat[uiLoop].iOrigRange,morale,&iCurrentScale);
 		}
-		//sprintf((CHAR *)tempstr,"iCurrentCoverValue after opponent %d is now %d",iLoop,iCurrentCoverValue);
+		//sprintf(tempstr,"iCurrentCoverValue after opponent %d is now %d",iLoop,iCurrentCoverValue);
 		//PopMessage(tempstr);
 	}
 
@@ -818,7 +829,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 #ifdef DEBUGDECISIONS
 	STR tempstr="";
-	sprintf((CHAR *) tempstr, "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
+	sprintf( tempstr, "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
 	DebugAI( tempstr );
 #endif
 
@@ -954,7 +965,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 						uiLoop,iThreatRange,morale,&iCoverScale);
 				}
 
-				//sprintf((CHAR *)tempstr,"iCoverValue after opponent %d is now %d",iLoop,iCoverValue);
+				//sprintf(tempstr,"iCoverValue after opponent %d is now %d",iLoop,iCoverValue);
 				//PopMessage(tempstr);
 			}
 
@@ -1023,7 +1034,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 #ifdef DEBUGDECISIONS
 				STR tempstr;
-				sprintf((CHAR *) tempstr,"FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
+				sprintf( tempstr,"FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
 				DebugAI( tempstr );
 #endif
 				// remember it instead
@@ -1075,7 +1086,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		{
 #ifdef DEBUGDECISIONS
 			STR tempstr;
-			sprintf((CHAR *) tempstr,"Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter  );
+			sprintf( tempstr,"Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter  );
 			DebugAI( tempstr );
 #endif
 
@@ -1638,6 +1649,12 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	iTempValue = -1;
 	iItemIndex = iBestItemIndex = -1;
 
+	// No fair picking up weapons while boxing!
+	if (gTacticalStatus.bBoxingState == BOXING)
+	{
+		return AI_ACTION_NONE;
+	}
+
 	if (pSoldier->bActionPoints < AP_PICKUP_ITEM)
 	{
 		return( AI_ACTION_NONE );
@@ -1925,7 +1942,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	if (sBestSpot != NOWHERE)
 	{
-		DebugAI( (STR)String( "%d decides to pick up %S", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].o.usItem ] ) );
+		DebugAI( String( "%d decides to pick up %S", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].o.usItem ] ) );
 		if (Item[gWorldItems[ iBestItemIndex ].o.usItem].usItemClass == IC_GUN)
 		{
 			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
@@ -1937,14 +1954,14 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 				if (pSoldier->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 				{
 					// destroy this item!
-					DebugAI( (STR)String( "%d decides he must drop %S first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
+					DebugAI( String( "%d decides he must drop %S first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
 					DeleteObj( &(pSoldier->inv[HANDPOS]) );
 					DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
 				}
 				else
 				{
 					// we want to drop this item!
-					DebugAI( (STR)String( "%d decides he must drop %S first", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
+					DebugAI( String( "%d decides he must drop %S first", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
 
 					pSoldier->bNextAction = AI_ACTION_PICKUP_ITEM;
 					pSoldier->usNextActionData = sBestSpot;

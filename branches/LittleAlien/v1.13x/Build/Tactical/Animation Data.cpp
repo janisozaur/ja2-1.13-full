@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include <string.h>
 	#include "wcheck.h"
@@ -466,6 +467,12 @@ AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 	JEEP_DIE,						"ANIMS\\VEHICLES\\HM_WREK.STI",		NO_STRUCT,	0,			2, TO_INIT, NULL, NULL, 0, -1,
 
 	BODYEXPLODE,				"ANIMS\\S_MERC\\BOD_BLOW.STI",		NO_STRUCT,	0,				1, TO_INIT, NULL, NULL, 0, -1,
+
+	//<SB> crouch throwing
+	RGMCRTHROW,	"ANIMS\\S_MERC\\S_CR_THR.STI",	C_STRUCT,	0,	8, TO_INIT,	NULL,	NULL,	0,	-1,
+	BGMCRTHROW,	"ANIMS\\M_MERC\\M_CR_THR.STI",	C_STRUCT,	0,	8, TO_INIT,	NULL,	NULL,	0,	-1,
+	RGFCRTHROW,	"ANIMS\\F_MERC\\F_CR_THR.STI",	C_STRUCT,	0,	8, TO_INIT,	NULL,	NULL,	0,	-1,
+	//</SB>
 };
 
 
@@ -843,7 +850,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
-		sprintf( (char *)gSystemDebugStr, "Cache Load" );
+		sprintf( gSystemDebugStr, "Cache Load" );
 
 	  // Create video object
 		FilenameForBPP(gAnimSurfaceDatabase[ usSurfaceIndex ].Filename, sFilename);

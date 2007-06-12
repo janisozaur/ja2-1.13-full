@@ -5,7 +5,7 @@
 #include "Types.h"
 #include "Soldier Control.h"
 #include "MessageBoxScreen.h"
-
+#include "Font Control.h"
 
 
 typedef struct FASTHELPREGION {
@@ -391,7 +391,7 @@ void EnableTeamInfoPanels( void );
 void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, INT16 yp );
 
 // do mapscreen message box
-INT32 DoMapMessageBox( UINT8 ubStyle,  wchar_t * zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+INT32 DoMapMessageBox( UINT8 ubStyle,  STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
 // hop up one leve,l int he map screen level interface
 void GoUpOneLevelInMap( void );

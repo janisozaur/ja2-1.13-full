@@ -28,7 +28,7 @@
 
 #define		INS_INFO_SPACE_BN_PARAGRAPHS			12
 
-#define		INS_INFO_INFO_TOC_TITLE_X					170
+#define		INS_INFO_INFO_TOC_TITLE_X					(iScreenWidthOffset + 170)	// ROMAN
 #define		INS_INFO_INFO_TOC_TITLE_Y					54 + LAPTOP_SCREEN_WEB_UL_Y
 
 #define		INS_INFO_TOC_SUBTITLE_X						INS_INFO_SUBTITLE_X
@@ -39,7 +39,7 @@
 #define		INS_INFO_LINK_TO_CONTRACT_WIDTH		97//107
 
 #define		INS_INFO_LINK_START_OFFSET				20//14
-#define		INS_INFO_LINK_START_X							262 + INS_INFO_LINK_START_OFFSET
+#define		INS_INFO_LINK_START_X							262 + INS_INFO_LINK_START_OFFSET + iScreenWidthOffset // ROMAN
 #define		INS_INFO_LINK_START_Y							392 + LAPTOP_SCREEN_WEB_UL_Y
 
 #define		INS_INFO_LINK_TO_CONTRACT_TEXT_Y	355 + LAPTOP_SCREEN_WEB_UL_Y
@@ -182,7 +182,7 @@ void HandleInsuranceInfo()
 
 void RenderInsuranceInfo()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	UINT16		usPosX;
 
@@ -332,7 +332,7 @@ void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRe
 
 void DisplaySubmitClaimPage()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	UINT16	usPosX;
 
@@ -371,7 +371,7 @@ void DisplaySubmitClaimPage()
 
 void DisplayPremiumPage()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
   HVOBJECT hPixHandle;
 
@@ -417,7 +417,7 @@ void DisplayPremiumPage()
 
 void DisplayRenewingPremiumPage()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 //  HVOBJECT hPixHandle;
 
@@ -456,7 +456,7 @@ void DisplayRenewingPremiumPage()
 
 void DisplayCancelationPagePage()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
@@ -513,7 +513,7 @@ void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 
 void DisplayInfoTocPage()
 {
-	wchar_t		sText[800];
+	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
   HVOBJECT hPixHandle;
 	UINT16		usPosY;

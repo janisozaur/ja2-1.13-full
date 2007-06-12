@@ -4,6 +4,7 @@
 	#include "Strategic All.h"
 	#include "GameSettings.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "types.h"
 	#include "Auto Resolve.h"
@@ -56,6 +57,15 @@
 	#include "morale.h"
 	#include "Strategic Town Loyalty.h"
 	#include "GameSettings.h"
+	#include "Soldier macros.h"
+	#include "strategicmap.h"
+	#include "Quests.h"
+	#include "meanwhile.h"
+	#include "Inventory Choosing.h"
+	#include "Game Event Hook.h"
+	#include "Assignments.h"
+	#include "cheats.h"
+	#include "Map Information.h"
 #endif
 
 #include "Reinforcement.h"
@@ -1654,7 +1664,7 @@ void RenderAutoResolve()
 	INT32 xp, yp;
 	SOLDIERCELL *pCell = NULL;
 	INT32 index = 0;
-	wchar_t str[100];
+	CHAR16 str[100];
 	UINT8 bTownId = 0;
 	UINT8 ubGood, ubBad;
 	
@@ -3293,8 +3303,8 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 {
 	INT32 cnt, cntStart;
 	INT32 xp, yp;
-	wchar_t *pStr;
-	wchar_t str[20];
+	STR16 pStr;
+	CHAR16 str[20];
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	UINT16 usColor;

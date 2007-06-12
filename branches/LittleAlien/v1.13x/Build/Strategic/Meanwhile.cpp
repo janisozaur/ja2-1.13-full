@@ -21,6 +21,21 @@
 	#include "assignments.h"
 	#include "strategic.h"
 	#include "text.h"
+	#include "interface control.h"
+	#include "Interface Items.h"
+	#include "Map Information.h"
+	#include "Map Screen Interface Map.h"
+	#include "Map Screen Interface.h"
+	#include "Music Control.h"
+	#include "Interface.h"
+	#include "Game Events.h"
+	#include "GameSettings.h"
+	#include "Strategic AI.h"
+	#include "interface dialogue.h"
+	#include "Quests.h"
+	#include "Campaign Types.h"
+	#include "Squads.h"
+	#include "Random.h"
 #endif
 
 #define MAX_MEANWHILE_PROFILES	10
@@ -350,12 +365,12 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 
 void BringupMeanwhileBox( )
 {
-	wchar_t zStr[256];
+	CHAR16 zStr[256];
 
 #ifdef JA2TESTVERSION
-	swprintf( (wchar_t *)zStr, (wchar_t *)L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
+	swprintf( zStr, L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
 #else
-	swprintf( (wchar_t *)zStr, (wchar_t *)L"%s.....", pMessageStrings[ MSG_MEANWHILE ] );
+	swprintf( zStr, L"%s.....", pMessageStrings[ MSG_MEANWHILE ] );
 #endif
 
 #ifdef JA2TESTVERSION

@@ -29,6 +29,7 @@
 	#include "strategic.h"
 	#include "Game Clock.h"
 	#include "text.h"
+	#include "LaptopSave.h"
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
@@ -1315,8 +1316,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_ASSHOLE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 	  return TRUE;
 	}
@@ -1340,8 +1341,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_FRIENDLY;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 1;
 	  return TRUE;
 	}
@@ -1365,8 +1366,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_FRIENDLY;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 2;
-		LaptopSaveInfo.iCharIndex = 2;
+//		LaptopSaveInfo.iCurrentVoice = 2;
+//		LaptopSaveInfo.iCharIndex = 2;
 		iPortraitNumber = 1;
 	  return TRUE;
 	}
@@ -1393,8 +1394,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 4;
 	  return TRUE;
 	}
@@ -1421,8 +1422,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_ARROGANT;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 	  return TRUE;
 	}
@@ -1449,8 +1450,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_AGGRESSIVE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 4;
 	  return TRUE;
 	}
@@ -1477,8 +1478,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 3;
 	  return TRUE;
 	}
@@ -1502,8 +1503,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
     iPersonality = PSYCHO;
 		iAttitude = ATT_ASSHOLE;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 2;
 
 		//DEF: temp
@@ -1559,8 +1560,8 @@ BOOLEAN CheckCharacterInputForEgg( void )
 		iPersonality = NO_PERSONALITYTRAIT;
 		iAttitude = ATT_LONER;
 		iCurrentImpPage = IMP_FINISH;
-		LaptopSaveInfo.iCurrentVoice = 1;
-		LaptopSaveInfo.iCharIndex = 1;
+//		LaptopSaveInfo.iCurrentVoice = 1;
+//		LaptopSaveInfo.iCharIndex = 1;
 		iPortraitNumber = 3;
 	  return TRUE;
 	}

@@ -73,6 +73,7 @@
 	#include "Inventory Choosing.h"
 	#include "Music Control.h"
 	#include "Soldier Profile.h"
+	#include "GameSettings.h"
 #endif
 
 
@@ -119,7 +120,7 @@ BOOLEAN			gfConfirmExitPending = FALSE;
 BOOLEAN			gfIntendOnEnteringEditor = FALSE;
 
 //original
-extern UINT8				gubFilename[ 200 ];
+extern CHAR8				gubFilename[ 200 ];
 INT16				gsBanksSubIndex = 0;
 INT16				gsOldBanksSubIndex = 1;
 INT16				gsCliffsSubIndex = 0;
@@ -3540,7 +3541,7 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				gubMaxRoomNumber++;
 				if( iCurrentTaskbar == TASK_BUILDINGS && TextInputMode() )
 				{
-					wchar_t str[4];
+					CHAR16 str[4];
 					swprintf( str, L"%d", gubCurrRoomNumber );
 					SetInputFieldStringWith16BitString( 1, str );
 					SetActiveField( 0 );
@@ -3816,7 +3817,7 @@ void UpdateLastActionBeforeLeaving()
 
 void ReloadMap()
 {
-	UINT16 szFilename[30];
+	CHAR16 szFilename[30];
 	swprintf( szFilename, L"%S", gubFilename );
 	ExternalLoadMap( szFilename );
 }

@@ -31,6 +31,23 @@
 	#include "debug.h"
 	#include "Random.h"
 	#include "quests.h"
+	#include "Animated ProgressBar.h"
+	#include "Text.h"
+	#include "meanwhile.h"
+	#include "Enemy Soldier Save.h"
+	#include "SmokeEffects.h"
+	#include "LightEffects.h"
+	#include "PATHAI.H"
+	#include "GameVersion.h"
+	#include "strategic.h"
+	#include "Map Screen Interface Map.h"
+	#include "Strategic Status.h"
+	#include "Soldier macros.h"
+	#include "sgp.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "Queen Command.h"
+	#include "Map Screen Interface Map Inventory.h"
 #endif
 
 BOOLEAN gfWasInMeanwhile = FALSE;
@@ -420,11 +437,11 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 
 				if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
 				{
-					INT8 pMapName[ 128 ];
+					CHAR8 pMapName[ 128 ];
 
 					// KILL IT!!! KILL KIT!!!! IT IS CORRUPTED!!!
-					GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, (STR)pMapName, sMapX, sMapY, 0 );
-					FileDelete( (STR)pMapName );
+					GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, pMapName, sMapX, sMapY, 0 );
+					FileDelete( pMapName );
 
 					// turn off the flag
 					SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags &= (~SF_CIV_PRESERVED_TEMP_FILE_EXISTS);
@@ -514,11 +531,11 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 				return FALSE;
 			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
 			{
-				INT8 pMapName[ 128 ];
+				CHAR8 pMapName[ 128 ];
 
 				// KILL IT!!! KILL KIT!!!! IT IS CORRUPTED!!!
-				GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, (STR)pMapName, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ );
-				FileDelete( (STR)pMapName );
+				GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, pMapName, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ );
+				FileDelete( pMapName );
 
 				// turn off the flag
 				TempNode->uiFlags &= (~SF_CIV_PRESERVED_TEMP_FILE_EXISTS);
@@ -1741,13 +1758,113 @@ BOOLEAN LoadRottingCorpsesFromTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMa
 }
 
 
+// Rewritten to load the temp file once, update with the list, and then write it.  This was getting insane as items piled up in sectors.
+// A few dozen read, update, writes was okay but a few hundred is pushing it.
 
-
-BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, WORLDITEM *pWorldItem, BOOLEAN fOverWrite )
+BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItemsToAdd, WORLDITEM *pWorldItem, BOOLEAN fOverWrite )
 {
 	UINT32 uiLoop;
 	BOOLEAN fLoop=fOverWrite;
+	UINT32 uiLastItemPos;
+	UINT32 uiNumberOfItems;
+	WORLDITEM *pWorldItems;
 
+	if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
+	{
+		//Errror getting the numbers of the items from the sector
+		return( FALSE );
+	}
+
+	//Allocate memory for the item
+	pWorldItems = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
+	if( pWorldItems == NULL )
+	{
+		//Error Allocating memory for the temp item array
+		return( FALSE );
+	}
+
+	//Clear the memory
+	memset( pWorldItems, 0, sizeof( WORLDITEM ) * uiNumberOfItems );
+
+	//Load in the sectors Item Info
+	if( !LoadWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, pWorldItems ) )
+	{
+		//error reading in the items from the Item mod file 
+		MemFree( pWorldItems );
+		return( FALSE );
+	}
+
+
+	//if we are to replace the entire file
+	if( fOverWrite )
+	{
+		//first loop through and mark all entries that they dont exists
+		for( UINT32 cnt=0; cnt<uiNumberOfItems; cnt++)
+			pWorldItems[ cnt ].fExists = FALSE;
+
+		//Now delete the item temp file
+		DeleteTempItemMapFile( sMapX, sMapY, bMapZ );
+	}
+
+	uiLastItemPos = 0;
+
+	//loop through all the objects to add
+	for( uiLoop=0; uiLoop < uiNumberOfItemsToAdd; uiLoop++)
+	{
+		//Loop through the array to see if there is a free spot to add an item to it
+		for( ; uiLastItemPos < uiNumberOfItems; uiLastItemPos++)
+		{
+			if( pWorldItems[ uiLastItemPos ].fExists == FALSE )
+			{
+				//We have found a free spot, break
+				break;
+			}
+		}
+
+		if( uiLastItemPos == ( uiNumberOfItems ) )
+		{
+			//Error, there wasnt a free spot.  Reallocate memory for the array
+			pWorldItems = (WORLDITEM *) MemRealloc( pWorldItems, sizeof( WORLDITEM ) * (uiNumberOfItems + 1 ) );
+			if( pWorldItems == NULL )
+			{
+				//error realloctin memory
+				return( FALSE );
+			}
+
+			//Increment the total number of item in the array
+			uiNumberOfItems++;
+		}
+
+		pWorldItems[ uiLastItemPos ].fExists = TRUE;
+		pWorldItems[ uiLastItemPos ].sGridNo = pWorldItem[ uiLoop ].sGridNo;
+		pWorldItems[ uiLastItemPos ].ubLevel = pWorldItem[ uiLoop ].ubLevel;
+		pWorldItems[ uiLastItemPos ].usFlags = pWorldItem[ uiLoop ].usFlags;
+		pWorldItems[ uiLastItemPos ].bVisible = pWorldItem[ uiLoop ].bVisible;
+		pWorldItems[ uiLastItemPos ].bRenderZHeightAboveLevel = pWorldItem[ uiLoop ].bRenderZHeightAboveLevel;
+
+
+		//Check
+		if( pWorldItem[ uiLoop ].sGridNo == NOWHERE && !( pWorldItems[ uiLastItemPos ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
+		{
+			pWorldItems[ uiLastItemPos ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
+
+			// Display warning.....
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[ uiLoop ].o.usItem, ItemNames[pWorldItems[ uiLoop ].o.usItem] );
+		}
+
+		
+		memcpy( &(pWorldItems[ uiLastItemPos ].o), &pWorldItem[ uiLoop ].o, sizeof( OBJECTTYPE ) );
+	}
+
+	//Save the Items to the the file
+	SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems );
+
+
+	//Free the memory used to load in the item array
+	MemFree( pWorldItems );
+
+#if 0
+// The old excruciatingly inefficient code
 	for( uiLoop=0; uiLoop<uiNumberOfItems; uiLoop++)
 	{
 		//If the item exists
@@ -1758,6 +1875,7 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 			fLoop = FALSE;
 		}
 	}
+#endif
 
 	return( TRUE );
 }
@@ -2981,51 +3099,51 @@ void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, 
 	switch( uiType )
 	{
 		case SF_ITEM_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\i_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\i_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_ROTTING_CORPSE_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\r_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\r_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\m_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\m_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_DOOR_TABLE_TEMP_FILES_EXISTS:
-			sprintf( (char *)pMapName, "%s\\d_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\d_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_REVEALED_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\v_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\v_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_DOOR_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\ds_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\ds_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\e_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\e_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
 			// NB save game version 0 is "saving game"
 			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion != 0 && guiSaveGameVersion < 78 )
 			{
-				sprintf( (char *)pMapName, "%s\\c_%s", MAPS_DIR, zTempName);
+				sprintf( pMapName, "%s\\c_%s", MAPS_DIR, zTempName);
 			}
 			else
 			{
-				sprintf( (char *)pMapName, "%s\\cc_%s", MAPS_DIR, zTempName);
+				sprintf( pMapName, "%s\\cc_%s", MAPS_DIR, zTempName);
 			}
 			break;
 
 		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\sm_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\sm_%s", MAPS_DIR, zTempName);
 			break;
 
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%s\\l_%s", MAPS_DIR, zTempName);
+			sprintf( pMapName, "%s\\l_%s", MAPS_DIR, zTempName);
 			break;
 
 		default:

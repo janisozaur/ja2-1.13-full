@@ -15,6 +15,7 @@
 	#include "edit_sys.h"
 	#include "pathai.h"
 	#include "tile surface.h"
+	#include "Tactical Save.h"
 #endif
 
 //#include "editscreen.h"
@@ -982,6 +983,8 @@ UINT8		GetLandLevelDepth( UINT32 iMapIndex )
 BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 {
 	UINT32 uiType=0;
+	*pusSubIndex = 0xffff;
+
 	if( GetTileType( usTileIndex, &uiType ) )
 	{
 		*pusSubIndex = usTileIndex - gTileTypeStartIndex[ uiType ] + 1;
@@ -995,6 +998,8 @@ BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16
 
 	// Tile database is zero-based, Type indecies are 1-based!
 
+    *pusSubIndex = 0xffff;
+
 	CHECKF ( uiCheckType < NUMBEROFTILETYPES );
 
 	*pusSubIndex = usIndex - gTileTypeStartIndex[ uiCheckType ] + 1;
@@ -1004,6 +1009,7 @@ BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16
 
 BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pubSubIndex )
 {
+   *pubSubIndex = 0xff;
 
 	// Tile database is zero-based, Type indecies are 1-based!
 
@@ -1017,6 +1023,8 @@ BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UI
 BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UINT16 *pusTileIndex )
 {
 	// Tile database is zero-based, Type indecies are 1-based!
+
+	*pusTileIndex = 0xffff;
 
 	CHECKF ( uiCheckType < NUMBEROFTILETYPES );
 
@@ -1045,6 +1053,8 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 {
   TILE_ELEMENT		TileElem;
 
+    *puiType = 0xffffffff;
+
 	CHECKF( usIndex != NO_TILE );
 	CHECKF( usIndex < NUMBEROFTILES ); //lal bugfix
 
@@ -1059,6 +1069,8 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 {
   TILE_ELEMENT		TileElem;
+
+  *puiFlags = 0;
 
 	CHECKF( usIndex != NO_TILE );
 	CHECKF( usIndex < NUMBEROFTILES );
@@ -1197,7 +1209,9 @@ BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 {
   TILE_ELEMENT		TileElem;
 
-	CHECKF( usIndex != NO_TILE );
+  	*pusWallOrientation = 0xffff;
+  
+  CHECKF( usIndex != NO_TILE );
 	CHECKF( usIndex < NUMBEROFTILES ); //lal bugfix
 
 	// Get tile element

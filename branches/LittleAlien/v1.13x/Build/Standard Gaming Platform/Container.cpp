@@ -32,7 +32,9 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "Container.h"
+	#if _MSC_VER < 1300 //(iostream.h was removed from VC.NET2003)
 	#include <iostream.h>
+	#endif
 #endif
 
 
@@ -76,8 +78,8 @@ typedef struct OrdHeaderTag
 	{
 		UINT32 me;
 		long you;
-		char *k;
-		char *p;
+		STR8 k;
+		STR8 p;
 
 	} TEST;
 

@@ -20,6 +20,18 @@
 	#include	"Language Defines.h"
 	#include "HelpScreen.h"
 	#include "INIReader.h"
+	#include "Shade Table Util.h"
+	#include "soldier profile type.h"
+	#include "Random.h"
+	#include "SaveLoadGame.h"
+	#include "sgp.h"
+	#include "screenids.h"
+	#include "Font Control.h"
+	#include "message.h"
+	#include "Campaign.h"
+	#include "meanwhile.h"
+	#include "strategicmap.h"
+	#include "Queen Command.h"
 #endif
 
 #include	"Text.h"
@@ -414,14 +426,17 @@ void LoadGameExternalOptions()
 
 	//################# Tactical Settings #################
 
+	gGameExternalOptions.gfRevealItems  = iniReader.ReadBoolean("JA2 Tactical Settings","REVEAL_ITEMS_AFTER_COMBAT",TRUE);
+
 	// Militia Settings	
 	gGameExternalOptions.fAllowTacticalMilitiaCommand	= iniReader.ReadBoolean("JA2 Tactical Settings","ALLOW_TACTICAL_MILITIA_COMMAND",0);
 
 	// Enemy AP settings
-	gGameExternalOptions.iEasyAPBonus					= iniReader.ReadInteger("JA2 Tactical Settings","NOVICE_AP_BONUS",0);
-	gGameExternalOptions.iExperiencedAPBonus			= iniReader.ReadInteger("JA2 Tactical Settings","EXPERIENCED_AP_BONUS",0);
-	gGameExternalOptions.iExpertAPBonus					= iniReader.ReadInteger("JA2 Tactical Settings","EXPERT_AP_BONUS",0);
-	gGameExternalOptions.iInsaneAPBonus					= iniReader.ReadInteger("JA2 Tactical Settings","INSANE_AP_BONUS",0);
+	gGameExternalOptions.iEasyAPBonus					= iniReader.ReadInteger("JA2 Gameplay Settings","NOVICE_AP_BONUS",0);
+	gGameExternalOptions.iExperiencedAPBonus			= iniReader.ReadInteger("JA2 Gameplay Settings","EXPERIENCED_AP_BONUS",0);
+	gGameExternalOptions.iExpertAPBonus					= iniReader.ReadInteger("JA2 Gameplay Settings","EXPERT_AP_BONUS",0);
+	gGameExternalOptions.iInsaneAPBonus					= iniReader.ReadInteger("JA2 Gameplay Settings","INSANE_AP_BONUS",0);
+	gGameExternalOptions.iPlayerAPBonus					= iniReader.ReadInteger("JA2 Gameplay Settings","PLAYER_AP_BONUS",0);
 
 	// Sight range
 	gGameExternalOptions.ubStraightSightRange				= iniReader.ReadInteger("JA2 Tactical Settings","BASE_SIGHT_RANGE",13);
@@ -433,6 +448,10 @@ void LoadGameExternalOptions()
 
 	// Soldier tool tips
 	gGameExternalOptions.gfAllowSoldierToolTips		= iniReader.ReadBoolean("JA2 Tactical Settings","ALLOW_SOLDIER_TOOL_TIPS",0);
+
+	// Unload weapons & remove attachments
+	gGameExternalOptions.gfShiftFUnloadWeapons		= iniReader.ReadBoolean("JA2 Tactical Settings","SHIFT_F_UNLOAD_WEAPONS",1);
+	gGameExternalOptions.gfShiftFRemoveAttachments	= iniReader.ReadBoolean("JA2 Tactical Settings","SHIFT_F_REMOVE_ATTACHMENTS",1);
 
 	//################# Rain Settings ##################
 	  
@@ -458,11 +477,19 @@ void LoadGameExternalOptions()
 
 	//################# Gameplay Settings ##################
 
+	//################# Settings valid on game start only ##################
 	//Money settings
 	gGameExternalOptions.iStartingCashNovice		= iniReader.ReadInteger("JA2 Gameplay Settings", "NOVICE_CASH",45000);
 	gGameExternalOptions.iStartingCashExperienced	= iniReader.ReadInteger("JA2 Gameplay Settings", "EXPERIENCED_CASH",35000);
 	gGameExternalOptions.iStartingCashExpert		= iniReader.ReadInteger("JA2 Gameplay Settings", "EXPERT_CASH",30000);
 	gGameExternalOptions.iStartingCashInsane		= iniReader.ReadInteger("JA2 Gameplay Settings", "INSANE_CASH",15000);
+
+	//Lalien: Game starting time
+	gGameExternalOptions.iGameStartingTime			= iniReader.ReadInteger("JA2 Gameplay Settings", "GAME_STARTING_TIME", 3600);	
+	gGameExternalOptions.iFirstArrivalDelay			= iniReader.ReadInteger("JA2 Gameplay Settings", "FIRST_ARRIVAL_DELAY", 21600);
+	
+	//################# Settings valid on game start only end ##################
+
 
 	gGameExternalOptions.fSellAll					= iniReader.ReadBoolean("JA2 Gameplay Settings","CAN_SELL_ALT_LMB",FALSE);
 	gGameExternalOptions.iPriceModifier				= iniReader.ReadInteger("JA2 Gameplay Settings","PRICE_MODIFIER",10);
@@ -567,13 +594,15 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gfHardAggressiveQueen				= iniReader.ReadBoolean("JA2 Gameplay Settings","EXPERT_QUEEN_AGGRESSIVE",FALSE);
 	gGameExternalOptions.gfInsaneAggressiveQueen			= iniReader.ReadBoolean("JA2 Gameplay Settings","INSANE_QUEEN_AGGRESSIVE",TRUE);
 
+	gGameExternalOptions.gfInvestigateSector				= iniReader.ReadBoolean("JA2 Gameplay Settings","ENEMY_INVESTIGATE_SECTOR",FALSE);
+	gGameExternalOptions.gfReassignPendingReinforcements	= iniReader.ReadBoolean("JA2 Gameplay Settings","REASSIGN_PENDING_REINFORCEMENTS",TRUE);
+
+
 	// WANNE: Drop Items
 	gGameExternalOptions.ubEnemiesItemDrop					= iniReader.ReadInteger("JA2 Gameplay Settings","ENEMIES_ITEM_DROP", 0);
 
-	// WANNE: Auto save: Attention: The game always crashes after a "normal" savegame is loaded after loading an autosave
-	// So for now USE_AUTO_SAVE is always false.
-	// The game crashes when removing mouse region that are not set
-	//gGameExternalOptions.gfUseAutoSave						= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_AUTO_SAVE",FALSE);
+	// WANNE: External sector Loadscreens [2007-05-19]
+	gGameExternalOptions.gfUseExternalLoadscreens				= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_EXTERNALIZED_LOADSCREENS", FALSE);
 
 	// Militia settings
 	gGameExternalOptions.guiAllowMilitiaGroupsDelay  = iniReader.ReadInteger("JA2 Gameplay Settings","ALLOW_MILITIA_MOBILE_DELAY",1);
@@ -598,7 +627,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.iRegularCostModifier				= iniReader.ReadInteger("JA2 Gameplay Settings","REGULAR_COST_MODIFIER",1);
 	gGameExternalOptions.iVeteranCostModifier				= iniReader.ReadInteger("JA2 Gameplay Settings","VETERAN_COST_MODIFIER",2);
 	gGameExternalOptions.iMinLoyaltyToTrain					= iniReader.ReadInteger("JA2 Gameplay Settings","MIN_LOYALTY_TO_TRAIN",20);
-
+	gGameExternalOptions.gflimitedRoaming					= iniReader.ReadBoolean("JA2 Gameplay Settings","RESTRICT_ROAMING",FALSE);
 	//Assignment Settings (training, repairing, doctoring, etc)
 	gGameExternalOptions.ubAssignmentUnitsPerDay			= iniReader.ReadInteger("JA2 Gameplay Settings","ASSIGNMENT_UNITS_PER_DAY",24);
 	gGameExternalOptions.ubMinutesForAssignmentToCount		= iniReader.ReadInteger("JA2 Gameplay Settings","MINUTES_FOR_ASSIGNMENT_TO_COUNT",45);

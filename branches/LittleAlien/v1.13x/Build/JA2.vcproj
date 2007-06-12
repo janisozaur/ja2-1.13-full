@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libexpatMT.lib mss32.lib winmm.lib smackw32.lib fmodvc.lib"
-				OutputFile="C:\Games\Jagged Alliance 2 v1.13\ja2_debug_687_en.exe"
+				OutputFile="C:\Games\Jagged Alliance 2\ja2_debug_911_en.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=".\..\..\Standard Gaming Platform\"
@@ -524,7 +524,7 @@
 				FavorSizeOrSpeed="1"
 				OptimizeForProcessor="3"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\"
+				AdditionalIncludeDirectories="&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\Lua;.\"
 				PreprocessorDefinitions="CALLBACKTIMER;PRECOMPILEDHEADERS;NDEBUG;WIN32;_WINDOWS;JA2;XML_STATIC;CINTERFACE"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
@@ -545,8 +545,8 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib mss32.lib fmodvc.lib"
-				OutputFile="D:\games\Jagged Alliance 2 v1.13\ja2 v1.13.830_EN.exe"
+				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib mss32.lib fmodvc.lib lua51_vs2003.lib"
+				OutputFile="D:\games\Jagged Alliance 2 v1.13\JA2 v1.13.933L_EN.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=".\..\..\Standard Gaming Platform\"

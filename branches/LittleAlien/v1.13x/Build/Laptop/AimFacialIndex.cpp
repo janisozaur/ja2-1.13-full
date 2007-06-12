@@ -11,6 +11,8 @@
 	#include "Soldier Profile.h"
 	#include "email.h"
 	#include "Text.h"
+	#include "aimsort.h"
+	#include "Assignments.h"
 #endif
 
 
@@ -153,7 +155,7 @@ void HandleAimFacialIndex()
 BOOLEAN RenderAimFacialIndex()
 {
 	UINT16		usPosX, usPosY, x,y;
-	wchar_t		sString[150];
+	CHAR16		sString[150];
 	UINT8			i;
 
 	DrawAimDefaults();

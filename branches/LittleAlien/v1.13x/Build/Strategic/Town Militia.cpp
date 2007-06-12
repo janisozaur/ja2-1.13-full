@@ -1,3 +1,5 @@
+#include "builddefines.h"
+
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "GameSettings.h"
@@ -22,6 +24,11 @@
 	#include "Soldier Create.h"
 	#include "Dialogue Control.h"
 	#include "GameSettings.h"
+	#include "Queen Command.h"
+	#include "PreBattle Interface.h"
+	#include "Map Screen Interface Border.h"
+	#include "interface control.h"
+	#include "Map Screen Interface Map.h"
 #endif
 
 #include "MilitiaSquads.h"
@@ -208,7 +215,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 							// are there any REGULAR militia men in the training sector itself?
 							if (MilitiaInSectorOfRank(sMapX, sMapY, REGULAR_MILITIA) > 0)
 							{
-								// great! Promote a REGULAR militia guy in the training sector to a REGULAR
+								// great! Promote a REGULAR militia guy in the training sector to a VETERAN
 								StrategicPromoteMilitiaInSector(sMapX, sMapY, REGULAR_MILITIA, 1);
 								fFoundOne = TRUE;
 							}
@@ -216,7 +223,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 							{
 								if( ubTownId != BLANK_SECTOR )
 								{
-									// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
+									// dammit! Last chance - try to find other eligible sectors in the same town with a Regular guy to be promoted
 									InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
 
 									// check other eligible sectors in this town for room for another militia
@@ -225,7 +232,7 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 										// are there any REGULAR militia men in the neighbouring sector ?
 										if (MilitiaInSectorOfRank(sNeighbourX, sNeighbourY, REGULAR_MILITIA) > 0)
 										{
-											// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
+											// great! Promote a Regular militia guy in the neighbouring sector to a Veteran
 											StrategicPromoteMilitiaInSector(sNeighbourX, sNeighbourY, REGULAR_MILITIA, 1);
 
 											fFoundOne = TRUE;
@@ -657,7 +664,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 	return;
 }
 
-void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, wchar_t *str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, const STR16 str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
 	{
@@ -725,12 +732,12 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia3");
 			// wilderness SAM site
 			GetSectorIDString( sSectorX, sSectorY, 0, sStringB, TRUE );
 			void (*tempFptr)(INT16 , INT16 , INT8  , CHAR16 *, BOOLEAN) = GetSectorIDString;
-			swprintf( (wchar_t *)sString, (wchar_t *)pMilitiaConfirmStrings[ 10 ], sStringB, tempFptr, iMinLoyaltyToTrain );
+			swprintf( sString, pMilitiaConfirmStrings[ 10 ], sStringB, tempFptr, iMinLoyaltyToTrain );
 		}
 		else
 		{
 			// town
-			swprintf( (wchar_t *)sString, (wchar_t *)pMilitiaConfirmStrings[ 10 ], pTownNames[ bTownId ], iMinLoyaltyToTrain );
+			swprintf( sString, pMilitiaConfirmStrings[ 10 ], pTownNames[ bTownId ], iMinLoyaltyToTrain );
 		}
 		DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
@@ -1456,9 +1463,9 @@ BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 	return( gfMilitiaAllowedInTown[bTownId] );
 }
 
-void BuildMilitiaPromotionsString( wchar_t *str )
+void BuildMilitiaPromotionsString( STR16 str )
 {
-	wchar_t pStr[256];
+	CHAR16 pStr[256];
 	BOOLEAN fAddSpace = FALSE;
 	swprintf( str, L"" );
 

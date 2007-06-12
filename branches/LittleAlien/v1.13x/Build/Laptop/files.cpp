@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "laptop.h"
 	#include "files.h"
@@ -816,7 +817,7 @@ BOOLEAN DisplayFormattedText( void )
 	INT32 iHeight=0;
 	INT32 iOffSet=0;
 	INT32 iMessageCode;
-	wchar_t sString[2048];
+	CHAR16 sString[2048];
   HVOBJECT hHandle;
   UINT32 uiFirstTempPicture;
 	UINT32 uiSecondTempPicture;
@@ -1013,7 +1014,7 @@ BOOLEAN DisplayFormattedText( void )
 BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 {
 	INT32 iCounter = 0;
-  wchar_t sString[2048];
+  CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
 	INT32 iTotalYPosition = 0;
@@ -1251,7 +1252,7 @@ void AddStringToFilesList( STR16 pString )
 	
 	
   // alloc string and copy
-	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) * 2 ) + 2 );
+	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
 	wcscpy( pFileString->pString, pString );
 	pFileString->pString[ wcslen( pString ) ] = 0;
 
@@ -1640,7 +1641,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 {
 
 	INT32 iCounter = 0;
-  wchar_t sString[2048];
+  CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
 	INT32 iTotalYPosition = 0;
@@ -1782,7 +1783,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 
 //def: 3/24/99
 //				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  30 ), ( INT16 ) ( iYPositionOnPage + 5), VO_BLT_SRCTRANSPARENCY,NULL);
-				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  30 ), ( INT16 ) ( iYPositionOnPage + 21), VO_BLT_SRCTRANSPARENCY,NULL);
+				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  30 ), ( INT16 ) ( iScreenHeightOffset + iYPositionOnPage + 21), VO_BLT_SRCTRANSPARENCY,NULL);
 
 				DeleteVideoObjectFromIndex( uiPicture ); 
 
@@ -1793,7 +1794,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 				//Blt face to screen to 
 				GetVideoObject(&hHandle, uiPicture);
 
-				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  25 ), ( INT16 ) ( iYPositionOnPage + 16 ), VO_BLT_SRCTRANSPARENCY,NULL);
+				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  25 ), ( INT16 ) ( iScreenHeightOffset + iYPositionOnPage + 16 ), VO_BLT_SRCTRANSPARENCY,NULL);
 
 				DeleteVideoObjectFromIndex( uiPicture ); 
 			}

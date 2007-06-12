@@ -22,10 +22,16 @@
 	#include "Structure Wrap.h"
 	#include "jascreens.h"
 	#include "strategicmap.h"
+	#include "worldman.h"
+	#include "Animation Control.h"
+	#include "Soldier Add.h"
+	#include "Soldier Profile.h"
+	#include "soldier profile type.h"
+	#include "Quests.h"
 #endif
 
 #ifdef JA2EDITOR
-extern UINT16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
+extern CHAR16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
 #endif
 
 BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime );

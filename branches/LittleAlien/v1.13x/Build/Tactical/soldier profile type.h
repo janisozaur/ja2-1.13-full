@@ -1,6 +1,7 @@
 #ifndef __SOLDER_PROFILE_TYPE_H
 #define __SOLDER_PROFILE_TYPE_H
 
+#include "overhead types.h"
 
 #define NUM_PROFILES		170
 #define FIRST_RPC 57
@@ -161,8 +162,8 @@ typedef enum{
 
 typedef struct	
 {
-	wchar_t	zName[ NAME_LENGTH ];
-	wchar_t	zNickname[ NICKNAME_LENGTH ];
+	CHAR16	zName[ NAME_LENGTH ];
+	CHAR16	zNickname[ NICKNAME_LENGTH ];
 	UINT32	uiAttnSound;
 	UINT32	uiCurseSound;
 	UINT32	uiDieSound;

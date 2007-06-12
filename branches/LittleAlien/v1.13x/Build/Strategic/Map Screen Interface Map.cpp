@@ -41,6 +41,9 @@
 	#include "Town Militia.h"
 	#include "Militia Control.h"
 	#include "GameSettings.h"
+	#include "Tactical Save.h"
+	#include "Map Information.h"
+	#include "Air Raid.h"
 #endif
 
 // zoom x and y coords for map scrolling
@@ -6872,7 +6875,7 @@ void ShowItemsOnMap( void )
 {
 	INT16 sMapX, sMapY;
 	INT16 sXCorner, sYCorner;
-	UINT16 usXPos, usYPos;
+	INT16 usXPos, usYPos;
 	UINT32 uiItemCnt;
 	CHAR16 sString[ 10 ];
 

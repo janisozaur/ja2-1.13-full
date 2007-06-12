@@ -3,6 +3,7 @@
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
 #else
+	#include "builddefines.h"
 	#include <stdio.h>
 	#include "sgp.h"
 	#include "soldier control.h"
@@ -64,6 +65,18 @@
 	#include "Soldier create.h"
 	#include "SkillCheck.h"
 	#include "Sound Control.h"
+	#include "opplist.h"
+	#include "PreBattle Interface.h"
+	#include "history.h"
+	#include "Keys.h"
+	#include "Morale.h"
+	#include "personnel.h"
+	#include "Map Screen Interface.h"
+	#include "Queen Command.h"
+	#include "Campaign.h"
+	#include "BobbyRMailOrder.h"
+	#include "end game.h"
+	#include "Map Screen Helicopter.h"
 #endif
 
 INT16	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };
@@ -359,7 +372,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	UINT16						usHeight;
   VOBJECT_DESC			VObjectDesc;
 	INT16							sCenterYVal, sCenterXVal;
-	UINT8							ubString[48];
+	CHAR8							ubString[48];
 
 
 	// disable scroll messages
@@ -500,7 +513,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
   gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
-	sprintf( (char *)ubString, "INTERFACE\\talkbox2.sti" );
+	sprintf( ubString, "INTERFACE\\talkbox2.sti" );
 	gTalkPanel.iButtonImages			= LoadButtonImage( ubString, -1,3,-1,4,-1 );
 
 
@@ -598,7 +611,9 @@ void DeleteTalkingMenu( )
 	// Set cursor back to normal mode...
 	guiPendingOverrideEvent = A_CHANGE_TO_MOVE;	
 
-	// Rerender world
+	// WANNE: This check is used, to prevent scrolling in small maps (e.g: Rebel Basement) in higher resolution (1024x768) [2007-05-14]
+	gfDialogControl = TRUE;
+
 	SetRenderFlags( RENDER_FLAG_FULL );
 
 	gfInTalkPanel = FALSE;
@@ -766,7 +781,7 @@ void RenderTalkingMenu( )
 
       SET_USE_WINFONTS( TRUE );
       SET_WINFONT( giSubTitleWinFont ); 
-			iInterfaceDialogueBox = PrepareMercPopupBox( iInterfaceDialogueBox,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, (STR16) gTalkPanel.zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight );
+			iInterfaceDialogueBox = PrepareMercPopupBox( iInterfaceDialogueBox,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER,  gTalkPanel.zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight );
       SET_USE_WINFONTS( FALSE );
 
 			gTalkPanel.fSetupSubTitles = FALSE;
@@ -4378,7 +4393,7 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 {
 	INT32			iTemp;
-	wchar_t		zTemp[256], zTemp2[256];
+	CHAR16		zTemp[256], zTemp2[256];
 
 	gusDialogueMessageBoxType = usMessageBoxType;
 	switch( gusDialogueMessageBoxType )

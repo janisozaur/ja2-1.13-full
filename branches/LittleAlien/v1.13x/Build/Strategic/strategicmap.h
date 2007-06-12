@@ -30,7 +30,7 @@ extern INT8		gbWorldSectorZ;
 
 // SAM definitions
 extern UINT8	NUMBER_OF_SAMS;
-#define MAX_NUMBER_OF_SAMS	50	//4 
+#define MAX_NUMBER_OF_SAMS	4	//4 
 
 extern INT16 pSamList[ MAX_NUMBER_OF_SAMS ];
 extern INT16 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
@@ -93,10 +93,10 @@ void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
 //Examples:		A9		
 //						A10_B1		
 //						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-void GetLoadedSectorString( wchar_t *pString );
+void GetLoadedSectorString( STR16 pString );
 
 // This will get an ID string like A9- OMERTA...
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 * zString, BOOLEAN fDetailed );
+void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , STR16 zString, BOOLEAN fDetailed );
 
 void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter );
 

@@ -3,6 +3,7 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
+	#include "builddefines.h"
 	#include <math.h>
 	#include <stdlib.h>
 	#include "types.h"
@@ -54,7 +55,7 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 
 	// Depending on extension of filename, use different image readers
 	// Get extension
-	StrPtr = strstr( (char *)ImageFile, (const char *)ExtensionSep );
+	StrPtr = strstr( ImageFile, ExtensionSep );
 
 	if ( StrPtr == NULL )
 	{

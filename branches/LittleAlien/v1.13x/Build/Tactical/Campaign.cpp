@@ -2,6 +2,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "builddefines.h"
 	#include <wchar.h>
 	#include <stdio.h>
 	#include <string.h>
@@ -22,6 +23,19 @@
 	#include "Sys Globals.h"
 	#include "Text.h"
 	#include "GameSettings.h"
+	#include "Assignments.h"
+	#include "Interface.h"
+	#include "Game Event Hook.h"
+	#include "Overhead.h"
+	#include "meanwhile.h"
+	#include "Quests.h"
+	#include "Squads.h"
+	#include "Soldier macros.h"
+	#include "strategic.h"
+	#include "strategicmap.h"
+	#include "Town Militia.h"
+	#include "Campaign Types.h"
+	#include "Tactical Save.h"
 #endif
 
 #include "email.h"
@@ -55,6 +69,7 @@ STR16 wDebugStatStrings[]={
 
 // local prototypes
 UINT8 CalcImportantSectorControl( void );
+UINT16 CountSurfaceSectorsVisited( void );
 
 
 
@@ -1254,6 +1269,7 @@ UINT8 CurrentPlayerProgressPercentage(void)
 	UINT8 ubKillsPerPoint;
 	UINT16 usKillsProgress;
 	UINT16 usControlProgress;
+	UINT16 usVisitProgress;
 
 
 	if( gfEditMode )
@@ -1322,6 +1338,13 @@ UINT8 CurrentPlayerProgressPercentage(void)
 
 	// add control progress
 	ubCurrentProgress += usControlProgress;
+
+	// WDS: Adding more ways to progress in the game
+	// Get a ratio of sectors visited to the total number of sectors
+	usVisitProgress = CountSurfaceSectorsVisited() * gGameExternalOptions.ubGameProgressPortionVisited / ((MAP_WORLD_X - 2) * (MAP_WORLD_Y - 2));
+
+	// add control progress
+	ubCurrentProgress += usVisitProgress;
 
 	return(ubCurrentProgress);
 }
@@ -1573,6 +1596,26 @@ UINT8 CalcImportantSectorControl( void )
 	return( ubSectorControlPts );
 }
 
+
+// WDS: Adding more ways to progress in the game
+// Count how many surface sectors the player has visited
+UINT16 CountSurfaceSectorsVisited( void )
+{
+	UINT8 ubMapX, ubMapY;
+	UINT16	ubSectorsVisited = 0;
+
+
+	for ( ubMapX = 1; ubMapX < MAP_WORLD_X - 1; ubMapX++ )
+	{
+		for ( ubMapY = 1; ubMapY < MAP_WORLD_Y - 1; ubMapY++ )
+		{
+			if( GetSectorFlagStatus( ubMapX, ubMapY, 0, SF_ALREADY_VISITED ) == TRUE )
+				++ubSectorsVisited;
+		}
+	}
+
+	return( ubSectorsVisited );
+}
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue )
 {

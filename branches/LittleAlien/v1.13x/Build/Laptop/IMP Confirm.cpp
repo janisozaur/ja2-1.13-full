@@ -31,6 +31,8 @@
 	#include "Game Event Hook.h"
 	#include "LaptopSave.h"
 	#include "strategic.h"
+	#include "weapons.h"
+	#include "Random.h"
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"
@@ -741,7 +743,7 @@ BOOLEAN ImpExists ( STR nickName )
 	strcpy(zFileName,nickName);
 	strcat(zFileName,IMP_FILENAME_SUFFIX);
 
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s", (STR) zFileName));
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",  zFileName));
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
 
 	return FileExistsNoDB(zFileName);

@@ -1,3 +1,5 @@
+#include "builddefines.h"
+
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
@@ -79,7 +81,7 @@ void InitEngineTilesets( )
 		FileRead( hfile, &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8 ), &uiNumBytesRead );
 
 		// Set into tileset 
-		swprintf( (wchar_t *)gTilesets[ cnt ].zName, L"%S", zName );
+		swprintf( gTilesets[ cnt ].zName, L"%S", zName );
 
 		// Loop for files
 		for ( cnt2 = 0; cnt2 < uiNumFiles; cnt2++ )

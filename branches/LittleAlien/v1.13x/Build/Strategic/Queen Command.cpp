@@ -26,6 +26,23 @@
 	#include "Soldier Ani.h"
 	#include "Strategic AI.h"
 	#include "GameSettings.h"
+	#include "MessageBoxScreen.h"
+	#include "screenids.h"
+	#include "Strategic Town Loyalty.h"
+	#include "Soldier Profile.h"
+	#include "Quests.h"
+	#include "jascreens.h"
+	#include "Auto Resolve.h"
+	#include "Game Event Hook.h"
+	#include "Animation Data.h"
+	#include "Game Clock.h"
+	#include "renderworld.h"
+	#include "Town Militia.h"
+	#include "Dialogue Control.h"
+	#include "Campaign Init.h"
+	#include "meanwhile.h"
+	#include "Soldier macros.h"
+	#include "Morale.h"	
 #endif
 
 #ifdef JA2BETAVERSION
@@ -81,7 +98,7 @@ void ValidateEnemiesHaveWeapons()
 		// do message box and return
 		if( iNumInvalid )
 		{
-			wchar_t str[ 100 ];
+			CHAR16 str[ 100 ];
 			swprintf( str, L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid );
 			iErrorDialog = DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
 		}
@@ -713,7 +730,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
 	INT32 iNumEnemiesInSector;
 	SECTORINFO *pSector;
-//	wchar_t str[128];
+//	CHAR16 str[128];
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 
@@ -766,7 +783,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		if( !pGroup )
 		{
 			#ifdef JA2BETAVERSION
-				wchar_t str[256];
+				CHAR16 str[256];
 				swprintf( str, L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
@@ -775,7 +792,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 		if( pGroup->fPlayer )
 		{
 			#ifdef JA2BETAVERSION
-				wchar_t str[256];
+				CHAR16 str[256];
 				swprintf( str, L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif

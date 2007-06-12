@@ -1,3 +1,5 @@
+#include "builddefines.h"
+
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
@@ -22,6 +24,15 @@
 	#include "vehicles.h"
 	#include "Game Clock.h"
 	#include "Game Event Hook.h"
+	#include "Morale.h"
+	#include "GameSettings.h"
+	#include "Text.h"
+	#include "MessageBoxScreen.h"
+	#include "Creature Spreading.h"
+	#include "Town Militia.h"
+	#include "history.h"
+	#include "meanwhile.h"
+	#include "Strategic Status.h"
 #endif
 
 
@@ -1550,8 +1561,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 {
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyChange = 0;
-	wchar_t str[256];
-	wchar_t pSectorString[128];
+	CHAR16 str[256];
+	CHAR16 pSectorString[128];
 
 
 	// get town id
