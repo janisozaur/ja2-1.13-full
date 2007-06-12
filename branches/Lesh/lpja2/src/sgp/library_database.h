@@ -177,15 +177,15 @@ extern DatabaseManagerHeaderStruct gFileDataBase;
 
 //Function Prototypes
 
-BOOLEAN CheckForLibraryExistence( STR pLibraryName );
-BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibheader, BOOLEAN fCanBeOnCDrom );
+BOOLEAN CheckForLibraryExistence( const CHAR8 *pLibraryName );
+BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibheader, BOOLEAN fCanBeOnCDrom );
 
 BOOLEAN InitializeFileDatabase( );
 BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
-BOOLEAN CheckIfFileExistInLibrary( STR pFileName );
-INT16 GetLibraryIDFromFileName( STR pFileName );
-HWFILE OpenFileFromLibrary( STR pName );
+BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName );
+INT16 GetLibraryIDFromFileName(const CHAR8 *pFileName );
+HWFILE OpenFileFromLibrary(const CHAR8 *pName );
 HWFILE CreateRealFileHandle( HANDLE hFile );
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID );
 BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );

@@ -83,10 +83,10 @@ CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
 INT32		CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
-BOOLEAN		GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader );
+BOOLEAN		GetFileHeaderFromLibrary( INT16 sLibraryID, const CHAR8 *pstrFileName, FileHeaderStruct **pFileHeader );
 void		AddSlashToPath( STR pName );
 HWFILE		CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
-BOOLEAN 	CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID );
+BOOLEAN 	CheckIfFileIsAlreadyOpen( const CHAR8 *pFileName, INT16 sLibraryID );
 
 INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 
@@ -264,12 +264,12 @@ BOOLEAN ShutDownFileDatabase( )
 
 
 
-BOOLEAN CheckForLibraryExistence( STR pLibraryName )
+BOOLEAN CheckForLibraryExistence( const CHAR8 *pLibraryName )
 {
 	BOOLEAN fRetVal = FALSE;
 	HANDLE	hFile;
 
-	BACKSLASH(pLibraryName);
+//	BACKSLASH(pLibraryName);
 
 /*
 #ifdef JA2_WIN
@@ -312,7 +312,7 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 
 
 
-BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
+BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
 {
 	HANDLE	hFile;
 	UINT16	usNumEntries=0;
@@ -323,7 +323,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	UINT32	uiCount=0;	
 	CHAR8		zTempPath[ SGPFILENAME_LEN ];
 
-	BACKSLASH(pLibraryName);
+//	BACKSLASH(pLibraryName);
 /*
 #ifdef JA2_WIN
 // ---------------------- Windows-specific stuff ---------------------------
@@ -736,7 +736,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 //
 //************************************************************************
 
-BOOLEAN CheckIfFileExistInLibrary( STR pFileName )
+BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName )
 {
 	INT16 sLibraryID;
 	FileHeaderStruct *pFileHeader;
@@ -763,7 +763,7 @@ BOOLEAN CheckIfFileExistInLibrary( STR pFileName )
 //	( eg. File is  Laptop\Test.sti, if the Laptop\ library is open, it returns true
 //
 //************************************************************************
-INT16 GetLibraryIDFromFileName( STR pFileName )
+INT16 GetLibraryIDFromFileName( const CHAR8 *pFileName )
 {
 INT16 sLoop1, sBestMatch=-1;
 
@@ -812,7 +812,7 @@ INT16 sLoop1, sBestMatch=-1;
 //
 //************************************************************************
 
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader )
+BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, const CHAR8 *pstrFileName, FileHeaderStruct **pFileHeader )
 {
 	FileHeaderStruct **ppFileHeader;
 	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
@@ -901,7 +901,7 @@ void AddSlashToPath( STR pName )
 //
 //************************************************************************
 
-HWFILE OpenFileFromLibrary( STR pName )
+HWFILE OpenFileFromLibrary(const CHAR8 *pName )
 {
 	FileHeaderStruct *pFileHeader;
 	HWFILE					hLibFile;
@@ -1341,15 +1341,15 @@ BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 
 
 
-BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
+BOOLEAN CheckIfFileIsAlreadyOpen( const CHAR8 *pFileName, INT16 sLibraryID )
 {
 	UINT16 usLoop1=0;
-
 	CHAR8 *pName;
 	CHAR8 *pFilenameWithoutPath;
 
-	pFilenameWithoutPath = pFileName;
-	pName = pFileName;
+	pFilenameWithoutPath = (CHAR8*) pFileName;
+	pName = (CHAR8*) pFileName;
+
 	while ((pFilenameWithoutPath = strpbrk(pName, "/\\")) != NULL)
 	{
 		pName = pFilenameWithoutPath + 1;

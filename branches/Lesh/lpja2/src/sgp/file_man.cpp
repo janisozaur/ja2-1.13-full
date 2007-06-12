@@ -336,43 +336,12 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
 	HWFILE	hFile;
 	HANDLE	hRealFile;
-	HWFILE  hLibFile;
 	UINT32	dwAccess;
 	UINT32	dwFlagsAndAttributes;
-	UINT32	dwCreationFlags;
 
 	hFile = 0;
-	dwCreationFlags = 0;
 	dwAccess = 0;
 	
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	if ( uiOptions & FILE_ACCESS_READ )
-		dwAccess |= GENERIC_READ;
-	if ( uiOptions & FILE_ACCESS_WRITE )
-		dwAccess |= GENERIC_WRITE;
-
-	dwFlagsAndAttributes = FILE_FLAG_RANDOM_ACCESS;
-	if ( fDeleteOnClose )
-		dwFlagsAndAttributes |= FILE_FLAG_DELETE_ON_CLOSE;
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
-		dwAccess = O_RDWR;
-	else if ( uiOptions & FILE_ACCESS_READ )
-		dwAccess = O_RDONLY;
-	else if ( uiOptions & FILE_ACCESS_WRITE )
-		dwAccess = O_WRONLY;
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 	if ( (uiOptions & FILE_ACCESS_READ) && (uiOptions & FILE_ACCESS_WRITE) )
 		dwAccess = IO_ACCESS_READWRITE;
 	else if ( uiOptions & FILE_ACCESS_READ )
@@ -380,175 +349,41 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	else if ( uiOptions & FILE_ACCESS_WRITE )
 		dwAccess = IO_ACCESS_WRITE;
 
+	if ( uiOptions & FILE_CREATE_NEW )
+		dwAccess |= IO_CREATE_NEW;
+	if ( uiOptions & FILE_CREATE_ALWAYS )
+		dwAccess |= IO_CREATE_ALWAYS;
+
 	vfsEntry	entry;
-	STRING512	filename;
 
 //	printf("Request to open %s...\n", strFilename);
-	if ( VFS.FindResource( strFilename, entry ) )
+	if ( !VFS.FindResource( strFilename, entry ) )
 	{
-		strncpy( filename, entry.RealName.c_str(), 511 );
+		entry.LibraryID = LIB_REAL_FILE;
+		entry.IsWriteable = TRUE;
+		entry.IsDirectory = FALSE;
+		entry.RealName = strFilename;
+	}
 
-		//if the file is on the disk
-		if ( entry.LibraryID == LIB_REAL_FILE )
-		{
-//			printf("Opening file on file system\n" );
-			hRealFile = IO_File_Open( filename, dwAccess );
-
-			if ( hRealFile == -1 )
-			{
-				fprintf(stderr, "Error opening file %s: %s\n", strFilename, strerror(errno) );
-				return(0);
-			}
-
-			//create a file handle for the 'real file'
-			hFile = CreateRealFileHandle( hRealFile );
-		}
-		// if the file did not exist, try to open it from the database
-		else if ( gFileDataBase.fInitialized ) 
+	// where is resource ?
+	if ( entry.LibraryID != LIB_REAL_FILE )
+	{
+		// resource is in container
+		if ( gFileDataBase.fInitialized ) 
 		{
 //			printf("Opening file from container\n" );
-			//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
-			if( fDeleteOnClose )
-			{
-				return( 0 );
-			}
-
-			//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
-			if( uiOptions & FILE_ACCESS_WRITE )
-			{
-				//if the files is to be written to
-				if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
-				{
-					hFile = 0;
-				}
-			}
-			else
-			{
-				//If the file is in the library, get a handle to it.
-				hLibFile = OpenFileFromLibrary( (STR) filename );
-
-				//tried to open a file that wasnt in the database
-				if( !hLibFile )
-					return( 0 );
-				else			
-					return( hLibFile );		//return the file handle
-			}
+			hFile = OpenFileFromLibrary( entry.RealName.c_str() );
 		}
 	}
 	else
 	{
-//		printf("Request to open non-mapped resource %s...\n", strFilename);
-		strncpy( filename, strFilename, 511 );
-		if ( uiOptions & FILE_CREATE_NEW )
-		{
-			dwAccess |= IO_CREATE_NEW;
-		}
-		if ( uiOptions & FILE_CREATE_ALWAYS )
-		{
-			dwAccess |= IO_CREATE_ALWAYS;
-		}
-
-		BACKSLASH(filename);
-		printf("Creating %s... (0x%04X)\n", filename, dwAccess);
-		hRealFile = IO_File_Open( filename, dwAccess );
+		// resource is on file system
+//		printf("Opening non-mapped resource %s... (0x%04X)\n", entry.RealName.c_str(), dwAccess);
+		hRealFile = IO_File_Open( entry.RealName.c_str(), dwAccess );
 
 		if ( hRealFile == -1 )
 		{
-			fprintf(stderr, "Error opening/creating file %s: %s\n", strFilename, strerror(errno) );
-			return(0);
-		}
-
-		hFile = CreateRealFileHandle( hRealFile );
-
-		if ( !hFile )
-			return(0);
-	}
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//if the file is on the disk
-	if ( fExists )
-	{
-		hRealFile = CreateFile( (LPCSTR) filename, dwAccess, 0, NULL, OPEN_ALWAYS,
-										dwFlagsAndAttributes, NULL );
-
-		if ( hRealFile == INVALID_HANDLE_VALUE )
-		{
-			return(0);
-		}
-
-		//create a file handle for the 'real file'
-		hFile = CreateRealFileHandle( hRealFile );
-	}
-	// if the file did not exist, try to open it from the database
-	else if ( gFileDataBase.fInitialized ) 
-	{
-		//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
-		if( fDeleteOnClose )
-		{
-			return( 0 );
-		}
-
-		//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
-		if( uiOptions & FILE_ACCESS_WRITE )
-		{
-			//if the files is to be written to
-			if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
-			{
-				hFile = 0;
-			}
-		}
-		else
-		{
-			//If the file is in the library, get a handle to it.
-			hLibFile = OpenFileFromLibrary( (STR) filename );
-
-			//tried to open a file that wasnt in the database
-			if( !hLibFile )
-				return( 0 );
-			else			
-				return( hLibFile );		//return the file handle
-		}
-	}
-
-	if ( !hFile )
-	{
-		if ( uiOptions & FILE_CREATE_NEW )
-		{
-			dwCreationFlags = CREATE_NEW;
-		}
-		else if ( uiOptions & FILE_CREATE_ALWAYS )
-		{
-			dwCreationFlags = CREATE_ALWAYS;
-		}
-		else if ( uiOptions & FILE_OPEN_EXISTING || uiOptions & FILE_ACCESS_READ )
-		{
-			dwCreationFlags = OPEN_EXISTING;
-		}
-		else if ( uiOptions & FILE_OPEN_ALWAYS )
-		{
-			dwCreationFlags = OPEN_ALWAYS;
-		}
-		else if ( uiOptions & FILE_TRUNCATE_EXISTING )
-		{
-			dwCreationFlags = TRUNCATE_EXISTING;
-		}
-		else
-		{
-			dwCreationFlags = OPEN_ALWAYS;
-		}
-
-		BACKSLASH(strFilename);
-		hRealFile = CreateFile( (LPCSTR) strFilename, dwAccess, 0, NULL, dwCreationFlags,
-										dwFlagsAndAttributes, NULL );
-		if ( hRealFile == INVALID_HANDLE_VALUE )
-		{
-				UINT32 uiLastError = GetLastError();
-				char zString[1024];
-				FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-
+			fprintf(stderr, "Error opening/creating file %s: %s\n", entry.RealName.c_str(), strerror(errno) );
 			return(0);
 		}
 
@@ -558,91 +393,6 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 	if ( !hFile )
 		return(0);
 
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	//if the file is on the disk
-	if ( fExists )
-	{
-		printf("Opening file on file system\n" );
-		hRealFile = open( filename, dwAccess );
-
-		if ( hRealFile == -1 )
-		{
-			fprintf(stderr, "Error opening file %s: errno=%d\n", strFilename, errno);
-			return(0);
-		}
-
-		//create a file handle for the 'real file'
-		hFile = CreateRealFileHandle( hRealFile );
-	}
-	// if the file did not exist, try to open it from the database
-	else if ( gFileDataBase.fInitialized ) 
-	{
-		printf("Opening file from container\n" );
-		//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
-		if( fDeleteOnClose )
-		{
-			return( 0 );
-		}
-
-		//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
-		if( uiOptions & FILE_ACCESS_WRITE )
-		{
-			//if the files is to be written to
-			if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
-			{
-				hFile = 0;
-			}
-		}
-		else
-		{
-			//If the file is in the library, get a handle to it.
-			hLibFile = OpenFileFromLibrary( (STR) filename );
-
-			//tried to open a file that wasnt in the database
-			if( !hLibFile )
-				return( 0 );
-			else			
-				return( hLibFile );		//return the file handle
-		}
-	}
-
-	if ( !hFile )
-	{
-		if ( uiOptions & FILE_CREATE_NEW )
-		{
-			dwAccess |= O_CREAT | O_EXCL;
-		}
-		else if ( uiOptions & FILE_CREATE_ALWAYS )
-		{
-			dwAccess |= O_CREAT;
-		}
-		else if ( uiOptions & FILE_TRUNCATE_EXISTING )
-		{
-			dwAccess |= O_CREAT | O_TRUNC;
-		}
-
-		BACKSLASH(strFilename);
-		printf("Creating %s...\n", strFilename);
-		hRealFile = open( strFilename, dwAccess );
-
-		if ( hRealFile == -1 )
-		{
-			fprintf(stderr, "Error opening/creating file %s: errno=%d\n", strFilename, errno);
-			return(0);
-		}
-
-		hFile = CreateRealFileHandle( hRealFile );
-	}
-
-	if ( !hFile )
-		return(0);
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 	return(hFile);
 }
 
