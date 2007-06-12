@@ -478,6 +478,9 @@ BOOLEAN IO_File_GetClose( void )
 //	IO_DoesFilenameMatchesPattern - tests, if filename matches the
 //	pattern? (e.g. Sounds.slf matches *.slf). Case-insensitive!
 //
+//	in	pattern: filename with wildcards to use in comparison
+//	in	filename: filename to check for match
+//
 //	return:	TRUE, if filename matches the pattern,
 //			FALSE, if not
 //	  
@@ -485,5 +488,24 @@ BOOLEAN IO_File_GetClose( void )
 BOOLEAN IO_DoesFilenameMatchesPattern( const CHAR8 *pattern, const CHAR8 *filename )
 {
 	return( fnmatch ( pattern, filename, FNM_NOESCAPE | FNM_CASEFOLD ) == 0 );
+}
+
+//===================================================================
+//
+//	IO_IsRootPath - tests, if it is root path or not.
+//	i.e. if it starts from '/' under linux, it is considered
+//	as root path.
+//
+//	in	path: a path to test
+//
+//	return:	TRUE, if path is root,
+//			FALSE, if not
+//	  
+//===================================================================
+BOOLEAN IO_IsRootPath(const CHAR8 *path)
+{
+	if ( path[0] == '/' )
+		return TRUE;
+	return FALSE;
 }
 #endif	//JA2_LINUX

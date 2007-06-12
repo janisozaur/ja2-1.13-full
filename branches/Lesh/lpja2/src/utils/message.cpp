@@ -1208,7 +1208,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 	{
 		if( gMapScreenMessageList[ uiCount ] )
 		{
-			uiSizeOfString = ( wcslen( gMapScreenMessageList[ uiCount ]->pString16 ) + 1 ) * 2;
+			uiSizeOfString = ( wcslen( gMapScreenMessageList[ uiCount ]->pString16 ) + 1 ) * sizeof(CHAR16);
 		}
 		else
 			uiSizeOfString = 0;

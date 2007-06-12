@@ -31,6 +31,7 @@ typedef INT32	IOFILE;
 BOOLEAN IO_IsDirectory(const CHAR8 *path);
 BOOLEAN IO_IsRegularFile(const CHAR8 *path);
 BOOLEAN IO_DoesFilenameMatchesPattern( const CHAR8 *pattern, const CHAR8 *filename );
+BOOLEAN IO_IsRootPath(const CHAR8 *path);
 
 BOOLEAN IO_File_Delete( const CHAR8 *path );
 INT32 	IO_File_GetSize( IOFILE file );

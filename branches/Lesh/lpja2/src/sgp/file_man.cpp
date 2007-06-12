@@ -94,7 +94,6 @@ STRING512	gzTempPath;
 
 void	FileDebugPrint( void );
 HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
-BOOLEAN	IsRootPath( const STR path );
 
 //**************************************************************************
 //
@@ -240,7 +239,7 @@ BOOLEAN PathBackslash(STR path)
 //**************************************************************************
 BOOLEAN	FileExists( STR strFilename )
 {
-	if ( IsRootPath( strFilename ) )
+	if ( IO_IsRootPath( strFilename ) )
 		return IO_IsRegularFile( strFilename );
 
 	return VFS.IsFileExist( strFilename );
@@ -275,7 +274,7 @@ BOOLEAN	FileExistsNoDB( STR strFilename )
 	if ( VFS.FindResource( strFilename, entry ) )
 		return (entry.LibraryID == LIB_REAL_FILE);
 
-	if ( IsRootPath( strFilename ) )
+	if ( IO_IsRootPath( strFilename ) )
 		return IO_IsRegularFile( strFilename );
 
 	return FALSE;
@@ -303,7 +302,7 @@ BOOLEAN	FileExistsNoDB( STR strFilename )
 //**************************************************************************	
 BOOLEAN	FileDelete( STR strFilename )
 {
-	if ( IsRootPath( strFilename ) )
+	if ( IO_IsRootPath( strFilename ) )
 		return( IO_File_Delete( strFilename ) );
 	return FALSE;
 }
@@ -450,7 +449,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		}
 
 		BACKSLASH(filename);
-		//printf("Creating %s... (0x%04X)\n", filename, dwAccess);
+		printf("Creating %s... (0x%04X)\n", filename, dwAccess);
 		hRealFile = IO_File_Open( filename, dwAccess );
 
 		if ( hRealFile == -1 )
@@ -1204,7 +1203,7 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory )
 {
-	if ( IsRootPath( pcDirectory ) )
+	if ( IO_IsRootPath( pcDirectory ) )
 		IO_Dir_DirectoryExists( pcDirectory );
 
 	return VFS.IsDirExist( pcDirectory );
@@ -2007,13 +2006,6 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 		}
 	}
 	return( 0 );
-}
-
-BOOLEAN	IsRootPath( const STR path )
-{
-	if ( path[0] == '/' || path[1] == ':' )
-		return TRUE;
-	return FALSE;
 }
 
 BOOLEAN	FileCreateEmptyFile( STR strFilename )

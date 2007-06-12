@@ -84,7 +84,7 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE		"NpcQuote.tmp"
 #define		TACTICAL_SAVE_DIR		"Temp"	
 
-
+STRING512	zNPCQuoteFile;
 
 
 
@@ -2129,13 +2129,10 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
 	HWFILE	hFile;
-	STRING512	filename;
 
-	strcpy( filename, gzTacticalSaveDir );
-	strcat( filename, NPC_TEMP_QUOTE_FILE );
-
+	STR_SPrintf( zNPCQuoteFile, 512, "%s%s", gzTacticalSaveDir, NPC_TEMP_QUOTE_FILE );
 	//Open the temp npc file
-	hFile = FileOpen( filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hFile = FileOpen( zNPCQuoteFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
@@ -2190,7 +2187,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 	if( gpNPCQuoteInfoArray[ ubNpcId ] )
 	{
 
-		hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen( zNPCQuoteFile, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
 		if( hFile == 0 )
 		{
 			//Error opening temp npc quote info
@@ -2256,7 +2253,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	}
 
 
-	hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_READ | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zNPCQuoteFile, FILE_ACCESS_READ | FILE_OPEN_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
@@ -2715,12 +2712,12 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
 {
-	return( SaveFilesToSavedGame( NPC_TEMP_QUOTE_FILE, hFile ) );
+	return( SaveFilesToSavedGame( zNPCQuoteFile, hFile ) );
 }
 
 BOOLEAN LoadTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
 {
-	return( LoadFilesFromSavedGame( NPC_TEMP_QUOTE_FILE, hFile ) );
+	return( LoadFilesFromSavedGame( zNPCQuoteFile, hFile ) );
 }
 
 void TempFileLoadErrorMessageReturnCallback( UINT8 ubRetVal )
