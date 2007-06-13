@@ -3517,6 +3517,9 @@
 				RelativePath="mapscreen.h">
 			</File>
 			<File
+				RelativePath=".\Meanwhile.h">
+			</File>
+			<File
 				RelativePath="Merc Contract.h">
 			</File>
 			<File
@@ -3529,7 +3532,13 @@
 				RelativePath="Queen Command.h">
 			</File>
 			<File
+				RelativePath=".\Quest Debug System.h">
+			</File>
+			<File
 				RelativePath="Quests.h">
+			</File>
+			<File
+				RelativePath=".\QuestText.h">
 			</File>
 			<File
 				RelativePath="Scheduling.h">
@@ -3563,6 +3572,9 @@
 			</File>
 			<File
 				RelativePath="strategic town reputation.h">
+			</File>
+			<File
+				RelativePath=".\Strategic Turns.h">
 			</File>
 			<File
 				RelativePath="strategic.h">

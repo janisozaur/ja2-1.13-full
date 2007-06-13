@@ -1762,6 +1762,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Render Z.c">
+			</File>
+			<File
 				RelativePath="renderworld.c">
 				<FileConfiguration
 					Name="Demo Bounds Checker|Win32">
@@ -3042,6 +3045,9 @@
 				RelativePath="Exit Grids.h">
 			</File>
 			<File
+				RelativePath=".\Explosion Control.h">
+			</File>
+			<File
 				RelativePath="Fog Of War.h">
 			</File>
 			<File
@@ -3051,10 +3057,22 @@
 				RelativePath="Isometric Utils.h">
 			</File>
 			<File
+				RelativePath=".\LightEffects.h">
+			</File>
+			<File
 				RelativePath="lighting.h">
 			</File>
 			<File
 				RelativePath="Map Edgepoints.h">
+			</File>
+			<File
+				RelativePath=".\overhead map.h">
+			</File>
+			<File
+				RelativePath=".\phys math.h">
+			</File>
+			<File
+				RelativePath=".\physics.h">
 			</File>
 			<File
 				RelativePath="pits.h">
@@ -3084,6 +3102,9 @@
 				RelativePath="Smell.h">
 			</File>
 			<File
+				RelativePath=".\SmokeEffects.h">
+			</File>
+			<File
 				RelativePath="Structure Internals.h">
 			</File>
 			<File
@@ -3093,7 +3114,16 @@
 				RelativePath="sysutil.h">
 			</File>
 			<File
+				RelativePath=".\Tactical Placement GUI.h">
+			</File>
+			<File
 				RelativePath="Tile Animation.h">
+			</File>
+			<File
+				RelativePath=".\Tile Cache.h">
+			</File>
+			<File
+				RelativePath=".\Tile Surface.h">
 			</File>
 			<File
 				RelativePath="TileDat.h">
@@ -3105,6 +3135,9 @@
 				RelativePath="TileEngine All.h">
 			</File>
 			<File
+				RelativePath=".\World Tileset Enums.h">
+			</File>
+			<File
 				RelativePath="WorldDat.h">
 			</File>
 			<File
@@ -3113,10 +3146,6 @@
 			<File
 				RelativePath="worldman.h">
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe">
 		</Filter>
 	</Files>
 	<Globals>

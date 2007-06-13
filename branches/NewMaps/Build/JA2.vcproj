@@ -572,81 +572,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90">
 			<File
-				RelativePath="Utils\_Ja25GermanText.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Demo|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Demo Bounds Checker|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Demo Release with Debug Info|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release with Debug Info|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Bounds Checker|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Demo|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="aniviewscreen.c">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -2288,7 +2213,13 @@
 				RelativePath="builddefines.h">
 			</File>
 			<File
+				RelativePath=".\Cheats.h">
+			</File>
+			<File
 				RelativePath="Credits.h">
+			</File>
+			<File
+				RelativePath=".\Fade Screen.h">
 			</File>
 			<File
 				RelativePath="GameInitOptionsScreen.h">
@@ -2297,13 +2228,37 @@
 				RelativePath="gameloop.h">
 			</File>
 			<File
+				RelativePath=".\gamescreen.h">
+			</File>
+			<File
 				RelativePath="GameSettings.h">
+			</File>
+			<File
+				RelativePath=".\GameVersion.h">
+			</File>
+			<File
+				RelativePath=".\HelpScreen.h">
+			</File>
+			<File
+				RelativePath=".\HelpScreenText.h">
+			</File>
+			<File
+				RelativePath=".\Init.h">
+			</File>
+			<File
+				RelativePath=".\Intro.h">
 			</File>
 			<File
 				RelativePath="JA2 All.h">
 			</File>
 			<File
 				RelativePath="JA2 Demo Ads.h">
+			</File>
+			<File
+				RelativePath=".\JA2 Splash.h">
+			</File>
+			<File
+				RelativePath=".\ja2.h">
 			</File>
 			<File
 				RelativePath="jascreens.h">
@@ -2318,10 +2273,16 @@
 				RelativePath="local.h">
 			</File>
 			<File
+				RelativePath=".\mainmenuscreen.h">
+			</File>
+			<File
 				RelativePath="MessageBoxScreen.h">
 			</File>
 			<File
 				RelativePath="Options Screen.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
 			</File>
 			<File
 				RelativePath="SaveLoadGame.h">

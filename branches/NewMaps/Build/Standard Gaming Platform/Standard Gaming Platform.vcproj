@@ -1072,6 +1072,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Flic.c">
+			</File>
+			<File
 				RelativePath="Font.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
@@ -2525,7 +2528,16 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\Bitmap.h">
+			</File>
+			<File
+				RelativePath=".\Button Sound Control.h">
+			</File>
+			<File
 				RelativePath="Button System.h">
+			</File>
+			<File
+				RelativePath=".\Compression.h">
 			</File>
 			<File
 				RelativePath="container.h">
@@ -2546,6 +2558,9 @@
 				RelativePath="DirectX Common.h">
 			</File>
 			<File
+				RelativePath=".\dsound.h">
+			</File>
+			<File
 				RelativePath="english.h">
 			</File>
 			<File
@@ -2553,6 +2568,9 @@
 			</File>
 			<File
 				RelativePath="FileMan.h">
+			</File>
+			<File
+				RelativePath=".\flic.h">
 			</File>
 			<File
 				RelativePath="..\Utils\Font Control.h">
@@ -2579,6 +2597,9 @@
 				RelativePath="Install.h">
 			</File>
 			<File
+				RelativePath=".\Ja2 Libs.h">
+			</File>
+			<File
 				RelativePath="JA2 SGP ALL.H">
 			</File>
 			<File
@@ -2603,10 +2624,19 @@
 				RelativePath="mousesystem_macros.h">
 			</File>
 			<File
+				RelativePath=".\Mss-old.h">
+			</File>
+			<File
+				RelativePath=".\Mss.h">
+			</File>
+			<File
 				RelativePath="Mutex Manager.h">
 			</File>
 			<File
 				RelativePath="pcx.h">
+			</File>
+			<File
+				RelativePath=".\Rad.h">
 			</File>
 			<File
 				RelativePath="random.h">
@@ -2628,6 +2658,9 @@
 			</File>
 			<File
 				RelativePath="shading.h">
+			</File>
+			<File
+				RelativePath=".\Smack.h">
 			</File>
 			<File
 				RelativePath="soundman.h">
@@ -2685,6 +2718,9 @@
 			</File>
 			<File
 				RelativePath="ZCONF.H">
+			</File>
+			<File
+				RelativePath=".\Zlib.h">
 			</File>
 		</Filter>
 	</Files>

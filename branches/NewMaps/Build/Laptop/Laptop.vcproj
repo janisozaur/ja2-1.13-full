@@ -2352,6 +2352,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\GunEmporium.c">
+			</File>
+			<File
 				RelativePath="history.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
@@ -4579,7 +4582,28 @@
 				RelativePath="aim.h">
 			</File>
 			<File
+				RelativePath=".\AimArchives.h">
+			</File>
+			<File
+				RelativePath=".\AimFacialIndex.h">
+			</File>
+			<File
+				RelativePath=".\AimHistory.h">
+			</File>
+			<File
+				RelativePath=".\AimLinks.h">
+			</File>
+			<File
 				RelativePath="AimMembers.h">
+			</File>
+			<File
+				RelativePath=".\AimPolicies.h">
+			</File>
+			<File
+				RelativePath=".\AimSort.h">
+			</File>
+			<File
+				RelativePath=".\BobbyR.h">
 			</File>
 			<File
 				RelativePath="BobbyRAmmo.h">
@@ -4631,6 +4655,9 @@
 			</File>
 			<File
 				RelativePath="funeral.h">
+			</File>
+			<File
+				RelativePath=".\GunEmporium.h">
 			</File>
 			<File
 				RelativePath="history.h">
@@ -4711,6 +4738,15 @@
 				RelativePath="LaptopSave.h">
 			</File>
 			<File
+				RelativePath=".\mercs Account.h">
+			</File>
+			<File
+				RelativePath=".\mercs Files.h">
+			</File>
+			<File
+				RelativePath=".\mercs No Account.h">
+			</File>
+			<File
 				RelativePath="mercs.h">
 			</File>
 			<File
@@ -4718,6 +4754,9 @@
 			</File>
 			<File
 				RelativePath="sirtech.h">
+			</File>
+			<File
+				RelativePath=".\Speck Quotes.h">
 			</File>
 			<File
 				RelativePath="Store Inventory.h">

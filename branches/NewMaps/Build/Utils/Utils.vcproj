@@ -1107,6 +1107,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\_TaiwaneseText.c">
+			</File>
+			<File
 				RelativePath="Animated ProgressBar.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
@@ -2982,6 +2985,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Win Util.c">
+			</File>
+			<File
 				RelativePath="WordWrap.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
@@ -3061,10 +3067,16 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\_Ja25EnglishText.h">
+			</File>
+			<File
 				RelativePath="_Ja25GermanText.h">
 			</File>
 			<File
 				RelativePath="Animated ProgressBar.h">
+			</File>
+			<File
+				RelativePath=".\Cinematics.h">
 			</File>
 			<File
 				RelativePath="cursors.h">
@@ -3076,6 +3088,9 @@
 				RelativePath="dsutil.h">
 			</File>
 			<File
+				RelativePath=".\Encrypted File.h">
+			</File>
+			<File
 				RelativePath="Event Manager.h">
 			</File>
 			<File
@@ -3083,6 +3098,12 @@
 			</File>
 			<File
 				RelativePath="Font Control.h">
+			</File>
+			<File
+				RelativePath=".\maputility.h">
+			</File>
+			<File
+				RelativePath=".\MercTextBox.h">
 			</File>
 			<File
 				RelativePath="message.h">
@@ -3097,7 +3118,22 @@
 				RelativePath="Music Control.h">
 			</File>
 			<File
+				RelativePath=".\PopUpBox.h">
+			</File>
+			<File
+				RelativePath=".\Quantize Wrap.h">
+			</File>
+			<File
+				RelativePath=".\Quantize.h">
+			</File>
+			<File
+				RelativePath=".\Slider.h">
+			</File>
+			<File
 				RelativePath="Sound Control.h">
+			</File>
+			<File
+				RelativePath=".\STIConvert.h">
 			</File>
 			<File
 				RelativePath="Text Input.h">
@@ -3113,6 +3149,12 @@
 			</File>
 			<File
 				RelativePath="Utils All.h">
+			</File>
+			<File
+				RelativePath=".\Win Util.h">
+			</File>
+			<File
+				RelativePath=".\WordWrap.h">
 			</File>
 		</Filter>
 		<Filter
