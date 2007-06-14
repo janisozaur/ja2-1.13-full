@@ -240,7 +240,7 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	BOOLEAN						fOnInterTile = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
-	static INT16		sMoveClickGridNo					= 0;
+	static INT32		sMoveClickGridNo					= 0;
 
 
 	// LEFT MOUSE BUTTON
@@ -963,7 +963,7 @@ extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
 	UINT32 usMapPos;
-	static UINT16			usOldMapPos = 0;
+	static UINT32			usOldMapPos = 0;
 	SOLDIERTYPE		*pSoldier;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
@@ -3433,7 +3433,7 @@ void HandleItemMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 {
-	INT16 sMapPos;
+	INT32 sMapPos;
 
 	// If not in move mode, return!
 	if ( gCurrentUIMode != MOVE_MODE )

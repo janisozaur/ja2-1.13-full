@@ -433,7 +433,7 @@ SCROLL_BOX	gItemListBox;				// The Npc Scroll box
 
 SCROLL_BOX	*gpActiveListBox;		// Only 1 scroll box is active at a time, this is set to it.
 
-INT16				gsQdsEnteringGridNo	=0;
+INT32				gsQdsEnteringGridNo	=0;
 
 
 UINT8				gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
@@ -2982,7 +2982,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 	//Add all the npc in the current sectory the npc array
 	AddNPCsInSectorToArray();
 
-	gsQdsEnteringGridNo = (INT16)iGridNo;
+	gsQdsEnteringGridNo = iGridNo;
 }
 
 
@@ -2991,7 +2991,7 @@ void AddItemToGridNo( INT32 iGridNo )
 {
 	OBJECTTYPE		Object;
 
-	gsQdsEnteringGridNo = (INT16)iGridNo;
+	gsQdsEnteringGridNo = iGridNo;
 
 
 	if( Item[ gItemListBox.sCurSelectedItem ].usItemClass == IC_KEY )

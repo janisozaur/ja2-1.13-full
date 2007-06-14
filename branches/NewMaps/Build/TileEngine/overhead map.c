@@ -427,7 +427,7 @@ void HandleOverheadMap( )
 
 	if( !gfEditMode && !gfTacticalPlacementGUIActive )
 	{
-		INT16 usMapPos;
+		INT32 usMapPos;
 		ITEM_POOL	*pItemPool;
 
 		gfUIHandleSelectionAboveGuy			= FALSE;
@@ -593,7 +593,7 @@ void GoIntoOverheadMap( )
 void HandleOverheadUI( )
 {
   InputAtom					InputEvent;
-	INT16							sMousePos=0;
+	INT32							sMousePos=0;
 	UINT8							ubID;
 
 	// CHECK FOR MOUSE OVER REGIONS...

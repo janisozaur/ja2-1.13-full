@@ -911,7 +911,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 				//INT32		cnt;
 				//INT16		sSpot;	
 				UINT8		ubGuyThere;
-				INT16		sGotLocation = NOWHERE;
+				INT32		sGotLocation = NOWHERE;
 				BOOLEAN	fGotAdjacent = FALSE;
 				SOLDIERTYPE	*pTarget;
 

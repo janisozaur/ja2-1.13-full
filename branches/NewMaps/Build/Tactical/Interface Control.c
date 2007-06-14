@@ -55,7 +55,7 @@ SGPRect				gOldClippingRect, gOldDirtyClippingRect;
 UINT32		guiTacticalInterfaceFlags;
 
 UINT16		gusUICurIntTileEffectIndex;
-INT16			gsUICurIntTileEffectGridNo;
+INT32			gsUICurIntTileEffectGridNo;
 UINT8			gsUICurIntTileOldShade;
 
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;

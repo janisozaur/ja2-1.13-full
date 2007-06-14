@@ -343,7 +343,7 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 	}
 }
 
-void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
+void NewDest(SOLDIERTYPE *pSoldier, UINT32 usGridNo)
 {
 	// ATE: Setting sDestination? Tis does not make sense...
 	//pSoldier->sDestination = usGridNo;

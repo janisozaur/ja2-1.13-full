@@ -994,8 +994,8 @@ UINT32 UIHandleExit( UI_EVENT *pUIEvent )
 UINT32 UIHandleNewMerc( UI_EVENT *pUIEvent )
 {
 	 static UINT8				ubTemp = 3;
-	 INT16							usMapPos;
-   static INT32       iSoldierCount=0;     
+	 INT32							usMapPos;
+	 static INT32       iSoldierCount=0;     
 	 MERC_HIRE_STRUCT HireMercStruct;
 	 INT8		bReturnCode;
 	 SOLDIERTYPE *pSoldier;
