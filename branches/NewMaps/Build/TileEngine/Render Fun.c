@@ -181,7 +181,7 @@ void SetGridNoRevealedFlag( UINT32 sGridNo )
 }
 
 
-void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
+void ExamineGridNoForSlantRoofExtraGraphic( UINT32 sCheckGridNo )
 {
 	LEVELNODE					*pNode = NULL;
 	STRUCTURE					*pStructure, *pBase;

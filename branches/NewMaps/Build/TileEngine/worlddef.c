@@ -879,13 +879,13 @@ void CompileTileMovementCosts( UINT32 usGridNo )
 							SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_OBSTACLE );	
 						}
 
-						if ( FindStructure( (UINT16) (usGridNo - WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(usGridNo + WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE )
+						if ( FindStructure( (usGridNo - WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (usGridNo + WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE )
 						{
 							FORCE_SET_MOVEMENTCOST( usGridNo, NORTH, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( usGridNo, SOUTH, 0, TRAVELCOST_FENCE );
 						}
 
-						if ( FindStructure( (UINT16)(usGridNo - 1), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(usGridNo + 1), STRUCTURE_OBSTACLE ) == FALSE )
+						if ( FindStructure( (usGridNo - 1), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (usGridNo + 1), STRUCTURE_OBSTACLE ) == FALSE )
 						{
 							FORCE_SET_MOVEMENTCOST( usGridNo, EAST, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( usGridNo, WEST, 0, TRAVELCOST_FENCE );
@@ -1380,9 +1380,9 @@ void CompileTileMovementCosts( UINT32 usGridNo )
 
 #define LOCAL_RADIUS 4
 
-void RecompileLocalMovementCosts( INT16 sCentreGridNo )
+void RecompileLocalMovementCosts( INT32 sCentreGridNo )
 {
-	INT16		usGridNo;
+	INT32		usGridNo;
 	INT16		sGridX, sGridY;
 	INT16		sCentreGridX, sCentreGridY;
 	INT8		bDirLoop;		
@@ -1422,9 +1422,9 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 }
 
 
-void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
+void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius )
 {
-	INT16		usGridNo;
+	INT32		usGridNo;
 	INT16		sGridX, sGridY;
 	INT16		sCentreGridX, sCentreGridY;
 	INT8		bDirLoop;		
@@ -1478,7 +1478,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 
 void AddTileToRecompileArea( INT32 sGridNo )
 {
-	INT16	sCheckGridNo;
+	INT32	sCheckGridNo;
 	INT16	sCheckX;
 	INT16 sCheckY;
 
@@ -1519,7 +1519,7 @@ void AddTileToRecompileArea( INT32 sGridNo )
 
 void RecompileLocalMovementCostsInAreaWithFlags( void )
 {
-	INT16		usGridNo;
+	INT32		usGridNo;
 	INT16		sGridX, sGridY;
 	INT8		bDirLoop;		
 
@@ -1559,7 +1559,8 @@ void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 {
 	INT8		bDirLoop;		
 	INT16		sUp, sDown, sLeft, sRight;
-	INT16		sX, sY, sTempGridNo;
+	INT16		sX, sY;
+	INT32		sTempGridNo;
 
 	switch( ubOrientation )
 	{

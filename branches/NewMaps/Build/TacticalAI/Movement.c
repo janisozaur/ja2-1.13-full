@@ -1151,9 +1151,9 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 				break;
 		}
 		iRunGridNo = iRunX + iRunY * WORLD_COLS;
-		if (LegalNPCDestination( pSoldier, (UINT16) iRunGridNo, ENSURE_PATH, TRUE,0))
+		if (LegalNPCDestination( pSoldier, iRunGridNo, ENSURE_PATH, TRUE,0))
 		{
-			return( (UINT16) iRunGridNo );
+			return( iRunGridNo );
 		}
 		// otherwise we'll try again another time
 	}

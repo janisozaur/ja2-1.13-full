@@ -17,7 +17,7 @@ INT16 UIPlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 b
 INT16 EstimatePlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
 
 void ErasePath(char bEraseOldOne);
-INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags );
+INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags );
 void GlobalReachableTest( INT16 sStartGridNo );
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 );
 void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID );

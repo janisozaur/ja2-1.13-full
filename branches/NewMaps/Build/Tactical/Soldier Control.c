@@ -1250,7 +1250,7 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 // THIS IS CALLED FROM AN EVENT ( S_CHANGESTATE )!
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
-	UINT16  usNewGridNo = 0;
+	UINT32  usNewGridNo = 0;
 	INT16		sAPCost = 0;
 	INT16		sBPCost = 0;
 	UINT32	uiOldAnimFlags;
@@ -2006,12 +2006,12 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				
 				// Set path....
 				{
-					UINT16 usNewGridNo;
+					UINT32 usNewGridNo;
 
 					DeductPoints( pSoldier, AP_JUMP_OVER, BP_JUMP_OVER );				
 
 					usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
-					usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( pSoldier->bDirection ) );
+					usNewGridNo = NewGridNo( usNewGridNo, DirectionInc( pSoldier->bDirection ) );
 
 					pSoldier->usPathDataSize = 0;
 					pSoldier->usPathIndex    = 0;
@@ -3807,7 +3807,7 @@ void DoGenericHit( SOLDIERTYPE *pSoldier, UINT8 ubSpecial, INT16 bDirection )
 
 void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
 {
-	UINT16	usNewGridNo;
+	UINT32	usNewGridNo;
 	BOOLEAN	fBlownAway = FALSE;
 	BOOLEAN	fHeadHit = FALSE;
 	BOOLEAN	fFallenOver = FALSE;
@@ -3829,7 +3829,7 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 						// CHECK OK DESTINATION!
 						if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, pSoldier->bDirection, JFK_HITDEATH ) )
 						{
-							usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (INT8)( DirectionInc( pSoldier->bDirection ) ) );
+							usNewGridNo = NewGridNo( usNewGridNo, (INT8)( DirectionInc( pSoldier->bDirection ) ) );
 
 							if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
 							{
@@ -3853,7 +3853,7 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 
 							if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
 							{
-								usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+								usNewGridNo = NewGridNo( usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
 
 								if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], pSoldier->usAnimState ) )
 								{
@@ -4076,7 +4076,7 @@ void SoldierGotHitPunch( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDam
 }
 
 
-BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim )
+BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim )
 {
 	INT32	iDest;
 	INT32 sNewGridNo;
@@ -4084,7 +4084,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	UINT32	uiDist;
 	UINT16	usAnimState;
 	UINT16	usMoveAnimState = usMovementAnim;
-	INT16							sMercGridNo;
+	INT32							sMercGridNo;
 	UINT16						usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT8							ubPathingMaxDirection;
 	BOOLEAN						fAdvancePath = TRUE;
@@ -4262,7 +4262,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	return( FALSE );
 }
 
-void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim )
+void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim )
 {
 	// ATE: Default restart of animation to TRUE
 	EVENT_InternalGetNewSoldierPath( pSoldier, sDestGridNo, usMovementAnim, FALSE, TRUE );
@@ -4396,7 +4396,7 @@ void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 
 void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState )
 {
-	UINT16	usNewGridNo;
+	UINT32	usNewGridNo;
 	INT16		sXPos, sYPos;
 
 	// Get dest gridno, convert to center coords
@@ -7231,7 +7231,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			if ( fDoForwards )
 			{
 				pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sGridNo, (INT16)( -1 * DirectionInc(bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection( pSoldier, gOppositeDirection[ bNewDirection ] );
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLFORWARD_ROOF;
@@ -7247,7 +7247,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			{
 
 				pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection( pSoldier, bNewDirection );
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLOFF;
@@ -7777,7 +7777,7 @@ void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNew
 
 }
 
-void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination )
+void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT32 usNewDestination )
 {
 	// Sent event for position update
 	EV_S_CHANGEDEST	SChangeDest;
@@ -7816,7 +7816,7 @@ void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesire
 
 }
 
-void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim )
+void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim )
 {
 	EV_S_GETNEWPATH	SGetNewPath;
 
@@ -8074,7 +8074,7 @@ LEVELNODE *GetAnimProfileFlags( UINT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **p
 }
 
 
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16 *usFlags )
+BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT32 sTestGridNo, UINT16 *usFlags )
 {
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;
@@ -10357,11 +10357,11 @@ void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier )
 
 void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
-	UINT16 usNewGridNo;
+	UINT32 usNewGridNo;
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
-	usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+	usNewGridNo = NewGridNo( usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -10382,11 +10382,11 @@ void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
-	UINT16 usNewGridNo;
+	UINT32 usNewGridNo;
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
-	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
+	//usNewGridNo = NewGridNo( usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;

@@ -70,7 +70,7 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 	{
 		UINT32	uiLoop;
 		UINT16	usTemp;
-		UINT16	usNewGridNo;
+		UINT32	usNewGridNo;
 
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
@@ -340,7 +340,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 b
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REVEALED;
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REDRAW;
 					SetRenderFlags(RENDER_FLAG_MARKED);
-					RecompileLocalMovementCosts( (UINT16)sGridNo );
+					RecompileLocalMovementCosts( sGridNo );
 				}
 
 				// Unset flag for blocked by soldier...

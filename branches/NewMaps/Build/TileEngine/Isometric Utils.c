@@ -754,7 +754,7 @@ BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDi
 	// LOOP THROUGH ALL 8 DIRECTIONS
 	for ( cnt = 0; cnt < 8; cnt+= 2 )
 	{
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sNewGridNo = NewGridNo( sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
 	
 		if ( NewOKDestination( pSoldier, sNewGridNo, TRUE, 1 ) )
 		{
@@ -796,7 +796,7 @@ BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir,
 	// LOOP THROUGH ALL 8 DIRECTIONS
 	for ( cnt = 0; cnt < 8; cnt+= 2 )
 	{
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sNewGridNo = NewGridNo( sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
 	
 			// Make sure there is NOT a roof here...
 			// Check OK destination
@@ -1025,7 +1025,7 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStar
 	for ( cnt = 0; cnt < 8; cnt+= 2 )
 	{
 		// go out *2* tiles
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sNewGridNo = NewGridNo( sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
 		sOtherSideOfFence = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
 	
 		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )

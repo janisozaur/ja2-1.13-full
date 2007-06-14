@@ -74,7 +74,7 @@ typedef struct
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
-	UINT16	usNewDestination;
+	UINT32	usNewDestination;
 
 } EV_S_CHANGEDEST;
 

@@ -24,7 +24,7 @@ BOOLEAN InAHiddenRoom( UINT32 sGridNo, UINT8 *pubRoomNo );
 
 void SetGridNoRevealedFlag( UINT32 sGridNo );
 
-void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo );
+void ExamineGridNoForSlantRoofExtraGraphic( UINT32 sCheckGridNo );
 
 void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius);
 

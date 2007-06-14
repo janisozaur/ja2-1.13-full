@@ -33,7 +33,7 @@
 typedef struct
 {
 	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
-	UINT16 usStartingGridNo;				//Where the placement position is.
+	UINT32 usStartingGridNo;				//Where the placement position is.
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		
@@ -41,7 +41,7 @@ typedef struct
 	INT8 bOrders;										
 	INT8 bAttitude;									
 	INT8 bBodyType;									//up to 128 body types, -1 means random
-	INT16 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
 	INT8 bPatrolCnt;
 	BOOLEAN fOnRoof;
 	UINT8	ubSoldierClass;							//army, administrator, elite

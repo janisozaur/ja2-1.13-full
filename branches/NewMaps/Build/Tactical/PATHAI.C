@@ -492,7 +492,7 @@ void RestorePathAIToDefaults( void )
 ///////////////////////////////////////////////////////////////////////
 //	FINDBESTPATH                                                   /
 ////////////////////////////////////////////////////////////////////////
-INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags )
+INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags )
 {
 	INT32 iDestination = sDestination, iOrigination;
 	INT32 iCnt=-1, iStructIndex;
@@ -505,7 +505,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 	INT32	newLoc,curLoc;
 	//INT32 curY;
 	INT32 curCost,newTotCost,nextCost;
-	INT16	sCurPathNdx;
+	INT32	sCurPathNdx;
 	INT32 prevCost;
 	INT32 iWaterToWater;
 	UINT8 ubCurAPCost,ubAPCost;
@@ -2209,12 +2209,12 @@ void ErasePath(char bEraseOldOne)
 
 
 
-INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT16 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
- INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
+ INT16 sTileCost,sPoints=0,sAnimCost=0;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
  INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
- INT32 iLastGrid;
+ INT32 iLastGrid, sTempGrid;
  INT32 iCnt;
  INT16 sOldGrid=0;
  INT16 sFootOrderIndex;
@@ -2226,7 +2226,7 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
  LEVELNODE	*pNode;
  UINT16 usMovementModeToUseForAPs;
  BOOLEAN  bIgnoreNextCost = FALSE;
- INT16    sTestGridno;
+ INT32    sTestGridno;
 
  if ( bPlot && gusPathShown )
  {
@@ -2234,7 +2234,7 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
  }
 
  gusAPtsToMove	 = 0;
- sTempGrid			 = (INT16) pSold->sGridNo;
+ sTempGrid			 =  pSold->sGridNo;
  
  sFootOrderIndex = 0;
  

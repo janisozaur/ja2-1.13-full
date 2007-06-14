@@ -80,7 +80,7 @@ typedef struct
 	UINT8			ubIDs[ MAX_STACKED_MERCS ];
 	INT8			bCur;
 	BOOLEAN		fUseGridNo;
-	UINT16		sUseGridNoGridNo;
+	UINT32		sUseGridNoGridNo;
 
 } SOLDIER_STACK_TYPE;
 
