@@ -551,7 +551,7 @@ void RenderTopmostTacticalInterface( )
   VOBJECT_DESC    VObjectDesc;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	ITEM_POOL					*pItemPool;
 
 	

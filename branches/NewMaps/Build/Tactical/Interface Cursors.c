@@ -235,7 +235,7 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 
 BOOLEAN DrawUICursor( )
 {
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;

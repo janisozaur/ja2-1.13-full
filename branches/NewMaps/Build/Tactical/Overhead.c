@@ -5071,7 +5071,7 @@ INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 }
 
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT32 usMapPos )
 {
 	BOOLEAN fVisible;
 

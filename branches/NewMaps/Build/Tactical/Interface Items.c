@@ -4188,7 +4188,7 @@ void HideItemTileCursor( )
 
 }
 
-BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
+BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 {
 	return( TRUE );
 /*-
@@ -4231,13 +4231,13 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 
 void DrawItemTileCursor( )
 {
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	UINT16						usIndex;
 	UINT8							ubSoldierID;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
 	UINT32						uiCursorFlags;
-	INT16							sFinalGridNo;
+	INT32 sFinalGridNo;
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
 	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGiveItem = FALSE;
@@ -4540,7 +4540,7 @@ BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 }
 
 
-BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
+BOOLEAN HandleItemPointerClick( UINT32 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
@@ -4998,7 +4998,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	return( TRUE );
 }
 
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos )
+BOOLEAN ItemCursorInLobRange( UINT32 usMapPos )
 {
 	// Draw item depending on distance from buddy
 	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )

@@ -2241,7 +2241,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
 	UINT8									ubID;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 
 	if ( GetMouseXY( &sGridX, &sGridY ) )
 	{

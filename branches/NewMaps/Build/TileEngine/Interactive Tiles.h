@@ -35,7 +35,7 @@ void EndCurInteractiveTileCheck( );
 void LogMouseOverInteractiveTile( INT32 sGridNo );
 BOOLEAN ShouldCheckForMouseDetections( );
  
-void CycleIntTileFindStack( UINT16 usMapPos );
+void CycleIntTileFindStack( UINT32 usMapPos );
 void SetActionModeDoorCursorText( );
 
 LEVELNODE *GetCurInteractiveTile( );

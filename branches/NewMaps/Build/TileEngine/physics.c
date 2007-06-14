@@ -101,7 +101,7 @@ UINT16          RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8
 void						HandleArmedObjectImpact( REAL_OBJECT *pObject );
 void ObjectHitWindow( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
 FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psFinalGridNo );
-vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo, FLOAT *pzMagForce );
+vector_3 FindBestForceForTrajectory( INT32 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo, FLOAT *pzMagForce );
 INT32 ChanceToGetThroughObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psFinalGridNo, INT8 *pbLevel, BOOLEAN fFromUI );
 FLOAT CalculateSoldierMaxForce( SOLDIERTYPE *pSoldier,  FLOAT dDegrees, OBJECTTYPE *pObject, BOOLEAN fArmed );
 BOOLEAN AttemptToCatchObject( REAL_OBJECT *pObject );
@@ -1309,7 +1309,7 @@ void ObjectHitWindow( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSo
 }
 
 
-vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo, real *pdMagForce )
+vector_3 FindBestForceForTrajectory( INT32 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo, real *pdMagForce )
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1403,7 +1403,7 @@ vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT32 sGridNo,INT16 sStar
 }
 
 
-INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT16 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem )
+INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT32 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem )
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1445,7 +1445,7 @@ INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT16 sSrcGridNo, INT32 sGr
 }
 
 
-real FindBestAngleForTrajectory( INT16 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dForce, OBJECTTYPE *pItem, INT32 *psGridNo )
+real FindBestAngleForTrajectory( INT32 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, INT16 sEndZ, real dForce, OBJECTTYPE *pItem, INT32 *psGridNo )
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1544,7 +1544,7 @@ real FindBestAngleForTrajectory( INT16 sSrcGridNo, INT32 sGridNo,INT16 sStartZ, 
 }
 
 
-void FindTrajectory( INT16 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo )
+void FindTrajectory( INT32 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem, INT32 *psGridNo )
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1938,9 +1938,9 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE
 FLOAT CalculateForceFromRange( INT16 sRange, FLOAT dDegrees )
 {
 	FLOAT				dMagForce;
-	INT16				sSrcGridNo, sDestGridNo;
+	INT32 sSrcGridNo, sDestGridNo;
 	OBJECTTYPE	Object;
-	INT16				sFinalGridNo;
+	INT32 sFinalGridNo;
 
 	// OK, use a fake gridno, find the new gridno based on range, use height of merc, end height of ground,
 	// 45 degrees
@@ -1980,7 +1980,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UI
 	FLOAT				dForce, dDegrees;	
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
 	vector_3		vForce, vDirNormal;
-	INT16				sFinalGridNo;
+	INT32 sFinalGridNo;
 	BOOLEAN			fArmed = FALSE;
 	UINT16			usLauncher;
 	INT16				sStartZ;

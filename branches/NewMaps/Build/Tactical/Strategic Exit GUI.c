@@ -111,7 +111,7 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 	INT32 i;
 	SGPRect	aRect;
 	UINT16	usTextBoxWidth, usTextBoxHeight;
-	UINT16	usMapPos = 0;
+	UINT32 usMapPos = 0;
 	INT8		bExitCode = -1;
 	BOOLEAN	OkExitCode;
 

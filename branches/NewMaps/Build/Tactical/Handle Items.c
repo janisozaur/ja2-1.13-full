@@ -2906,7 +2906,7 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	return( TRUE );
 }
 
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
+BOOLEAN	GetItemPool( UINT32 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 {
 	LEVELNODE *pObject;
 

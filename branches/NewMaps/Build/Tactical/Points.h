@@ -292,7 +292,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos );
 UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
@@ -300,7 +300,7 @@ UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 
 UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier );
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos );
 
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
 

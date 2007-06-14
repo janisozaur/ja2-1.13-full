@@ -264,7 +264,7 @@ void StopMercAnimation( BOOLEAN fStop );
 
 UINT32 EnterTacticalDemoMode();
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT32 usMapPos );
 
 INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
 INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );

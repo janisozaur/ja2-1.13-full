@@ -373,7 +373,7 @@ BOOLEAN GetMouseMapPos( INT32	*psMapPos )
 
 
 
-BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos )
+BOOLEAN ConvertMapPosToWorldTileCenter( UINT32 usMapPos, INT16 *psXPos, INT16 *psYPos )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sCellX, sCellY;

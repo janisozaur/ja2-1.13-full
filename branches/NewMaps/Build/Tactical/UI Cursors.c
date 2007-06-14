@@ -28,20 +28,20 @@
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
 UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
 UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
 UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT8 ubCursor );
-UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor );
-UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT8 ubCursor );
+UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor );
+UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiCursorFlags );
 UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
 UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiCursorFlags );
 
 extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT32 sTargetGridNo , INT8 bLevel );
 
@@ -114,7 +114,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated )
+UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT32 usMapPos, BOOLEAN fActivated )
 {
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiCursorFlags;
@@ -302,7 +302,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 }
 
 
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
 {
 	 UINT8							switchVal;
 	 BOOLEAN						fEnoughPoints = TRUE;
@@ -711,7 +711,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 
 
 
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags  )
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags  )
 {
   UINT16				usInHand;
 
@@ -860,7 +860,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , B
 
 void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc )
 {
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	SOLDIERTYPE				*pTargetSoldier = NULL, *pSoldier;
 	UINT16	usFlags;
 	INT16	sMouseX, sMouseY, sCellX, sCellY, sScreenX, sScreenY;
@@ -1363,7 +1363,7 @@ UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ub
 
 UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubItemCursor )
 {
-	INT16 sFinalGridNo;
+	INT32 sFinalGridNo;
 	static BOOLEAN fBadCTGH = FALSE;
 	BOOLEAN fArmed = FALSE;
 	INT8		bLevel;

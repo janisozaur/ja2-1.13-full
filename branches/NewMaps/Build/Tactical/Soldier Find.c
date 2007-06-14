@@ -466,7 +466,7 @@ BOOLEAN FindSoldier( INT32 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 	return( FALSE );
 }
 
-BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
+BOOLEAN CycleSoldierFindStack( UINT32 usMapPos )
 {
 	UINT16  usSoldierIndex;
 	UINT32	uiMercFlags;

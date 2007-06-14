@@ -168,7 +168,7 @@ SOLDIERTYPE *gpExchangeSoldier1;
 SOLDIERTYPE *gpExchangeSoldier2;
 
 
-BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
+BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT16 usOldMapPos );
 
 BOOLEAN	gfNextFireJam = FALSE;
 
@@ -236,7 +236,7 @@ void	GetTBMouseButtonInput( UINT32 *puiNewEvent )
 void	QueryTBLeftButton( UINT32 *puiNewEvent )
 {
 	SOLDIERTYPE								 *pSoldier;
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	BOOLEAN						fOnInterTile = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
@@ -719,7 +719,7 @@ void	QueryTBRightButton( UINT32 *puiNewEvent )
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
 	SOLDIERTYPE		*pSoldier;
-	UINT16				usMapPos;
+	UINT32 usMapPos;
 	BOOLEAN				fDone = FALSE;
 	if (!GetMouseMapPos( &usMapPos ) )
 	{
@@ -962,7 +962,7 @@ extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
 void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	static UINT16			usOldMapPos = 0;
 	SOLDIERTYPE		*pSoldier;
 	BOOLEAN						bHandleCode;
@@ -1400,7 +1400,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 	static BOOLEAN	fShifted = FALSE;
 	static BOOLEAN	fShifted2 = FALSE;
 	static BOOLEAN	fAltDown = FALSE;
-	UINT16						usMapPos;
+	UINT32 usMapPos;
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
 	GetCursorPos(&MousePos);
@@ -3612,7 +3612,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 void CreateRandomItem()
 {
 	OBJECTTYPE		Object;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
@@ -3625,7 +3625,7 @@ void MakeSelectedSoldierTired()
 	// Key to make guy get tired!
 	SOLDIERTYPE				*pSoldier;
 	OBJECTTYPE		Object;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		CreateItem( (UINT16)TNT, 100, &Object );
@@ -3712,7 +3712,7 @@ void ToggleViewAllItems()
 
 void TestExplosion()
 {
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
 	{
 		EXPLOSION_PARAMS	ExpParams ;
@@ -3774,7 +3774,7 @@ void ToggleWireFrame()
 void RefreshSoldier()
 {
 	SOLDIERTYPE *pSoldier;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if ( gfUIFullTargetFound )
 	{
@@ -3848,7 +3848,7 @@ void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 void TeleportSelectedSoldier()
 {
 	SOLDIERTYPE *pSoldier;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 	{
@@ -3915,7 +3915,7 @@ void ToggleZBuffer()
 void TogglePlanningMode()
 {
 	SOLDIERTYPE *pSoldier;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	// DO ONLY IN TURNED BASED!
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
@@ -4022,7 +4022,7 @@ void CreateNextCivType()
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	static						INT8 bBodyType = FATCIV;
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
@@ -4081,7 +4081,7 @@ void CreateCow()
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{	
@@ -4113,7 +4113,7 @@ void CreatePlayerControlledCow()
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{	
@@ -4192,7 +4192,7 @@ void GrenadeTest3()
 void CreatePlayerControlledMonster()
 {
 	INT16							sWorldX, sWorldY;
-	UINT16 usMapPos;
+	UINT32 usMapPos;
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{		 
 		SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -4222,7 +4222,7 @@ void CreatePlayerControlledMonster()
 }
 
 
-INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode )
+INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fMovementMode )
 {
 	// Look for an item pool
 	INT32 sActionGridNo;
@@ -4282,7 +4282,7 @@ INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT
 	return( 0 );
 }
 
-void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
+void HandleHandCursorClick( UINT32 usMapPos, UINT32 *puiNewEvent )
 {
 	SOLDIERTYPE *pSoldier;
 	LEVELNODE					*pIntTile;
@@ -4453,7 +4453,7 @@ void ExchangeMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
+INT8 HandleMoveModeInteractiveClick( UINT32 usMapPos, UINT32 *puiNewEvent )
 {
 	// Look for an item pool
 	ITEM_POOL					*pItemPool;
@@ -4623,7 +4623,7 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos )
+BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT16 usOldMapPos )
 {
 	// OK, most times we want to leave confirm mode if our
 	// gridno is different... but if we are in the grenade throw
