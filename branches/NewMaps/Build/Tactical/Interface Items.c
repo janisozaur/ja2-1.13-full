@@ -4676,7 +4676,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				{
 					 INT32 sActionGridNo;
 					 UINT8	ubDirection;
-					 INT16	sAdjustedGridNo;
+					 INT32 sAdjustedGridNo;
 						
 					 // Walk up to him and reload!
 					 // See if we can get there to stab	

@@ -3308,7 +3308,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {
 	// change destination in Darrel record 10 to go to a gridno adjacent to the 
 	// soldier's gridno, and destination in record 11
-	INT16 sAdjustedGridNo;
+	INT32 sAdjustedGridNo;
 	UINT8 ubDummyDirection;
 	SOLDIERTYPE *		pDarrel;
 

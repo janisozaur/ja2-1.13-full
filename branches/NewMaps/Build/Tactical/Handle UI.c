@@ -1272,7 +1272,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 	UINT32						uiCursorFlags;
 	LEVELNODE					*pIntNode;
 	EXITGRID					ExitGrid;
-	INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	BOOLEAN						fContinue = TRUE;
 	ITEM_POOL					*pItemPool;
 
@@ -1777,7 +1777,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 	BOOLEAN						fAllMove;
 	INT8							bLoop;
 	LEVELNODE					*pIntTile;
-	INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	BOOLEAN						fOldFastMove;
 						
 	if ( gusSelectedSoldier != NO_SOLDIER )
@@ -3680,8 +3680,8 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiFlags 
 	BOOLEAN						fOnInterTile = FALSE;
 	UINT8							ubDirection;
 //	ITEM_POOL					*pItemPool;
-	INT16							sAdjustedGridNo;
-  INT16							sIntTileGridNo;
+	INT32 sAdjustedGridNo;
+	INT32 sIntTileGridNo;
 	LEVELNODE					*pIntTile;
 	INT8							bReturnCode = 0;
 	BOOLEAN						fPlot;
@@ -5682,7 +5682,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 usM
 	static BOOLEAN		fOverPool = FALSE;
 	static BOOLEAN		fOverEnemy = FALSE;
 	INT32 sActionGridNo;
-	INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	BOOLEAN						fContinue = TRUE;
 	STRUCTURE					*pStructure = NULL;
 	BOOLEAN						fPoolContainsHiddenItems = FALSE;

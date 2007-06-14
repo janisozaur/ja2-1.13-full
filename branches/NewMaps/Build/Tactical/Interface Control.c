@@ -784,7 +784,7 @@ void RenderTopmostTacticalInterface( )
 				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
 				{
 					STRUCTURE					*pStructure = NULL;
-					INT16							sIntTileGridNo;
+					INT32 sIntTileGridNo;
 					INT8							bZLevel = 0;
 					INT32 sActionGridNo = usMapPos;
 
@@ -823,7 +823,7 @@ void RenderTopmostTacticalInterface( )
 				  if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, bCheckLevel ) )
 				  {
 					  STRUCTURE					*pStructure = NULL;
-					  INT16							sIntTileGridNo;
+					  INT32 sIntTileGridNo;
 					  INT8							bZLevel = 0;
 					  INT32 sActionGridNo = usMapPos;
 

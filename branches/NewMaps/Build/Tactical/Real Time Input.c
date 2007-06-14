@@ -649,7 +649,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																			//}/
 																			//else
 																			{
-																			  INT16							sIntTileGridNo;
+																			  INT32 sIntTileGridNo;
 
 																				if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 																				{

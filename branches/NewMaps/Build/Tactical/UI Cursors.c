@@ -1566,7 +1566,7 @@ UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFla
 UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	STRUCTURE					*pStructure;
-  INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	LEVELNODE					*pIntTile;
 
 

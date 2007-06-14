@@ -4286,11 +4286,11 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 {
 	SOLDIERTYPE *pSoldier;
 	LEVELNODE					*pIntTile;
-  INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT16							sAPCost;
-	INT16							sAdjustedGridNo;
+	INT32 sAdjustedGridNo;
 	STRUCTURE					*pStructure = NULL;
 	ITEM_POOL					*pItemPool;
 	BOOLEAN						fIgnoreItems = FALSE;
@@ -4460,7 +4460,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	BOOLEAN						fContinue = TRUE;
 	SOLDIERTYPE				*pSoldier;
 	LEVELNODE					*pIntTile;
-  INT16							sIntTileGridNo;
+	INT32 sIntTileGridNo;
 	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT8							bReturnCode = 0;

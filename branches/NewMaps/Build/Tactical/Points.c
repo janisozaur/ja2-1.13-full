@@ -866,7 +866,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 	UINT16						usItemNum;	
 	INT32 sActionGridNo;
 	UINT8							ubDirection;
-	INT16							sAdjustedGridNo;
+	INT32 sAdjustedGridNo;
 	UINT32						uiItemClass;
 	
 	// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
@@ -1690,9 +1690,9 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
 {
 	UINT16						sAPCost = 0;
-  INT32 sActionGridNo;
-  UINT8             ubDirection;
-  INT16             sAdjustedGridNo;
+	INT32 sActionGridNo;
+	UINT8             ubDirection;
+	INT32 sAdjustedGridNo;
 
 	sActionGridNo = FindAdjacentGridEx( pSoldier, pRobot->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 

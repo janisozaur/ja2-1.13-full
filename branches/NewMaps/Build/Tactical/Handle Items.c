@@ -3953,7 +3953,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	INT32 sActionGridNo;
 	BOOLEAN			fStructFound = FALSE;
 	UINT8				ubDirection;
-	INT16				sAdjustedGridNo;
+	INT32 sAdjustedGridNo;
 	UINT8				ubTargetID;
 
 	
