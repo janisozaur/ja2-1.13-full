@@ -38,8 +38,8 @@ void DisplayItemStatistics();
 void DetermineItemsScrolling();
 
 //User actions
-void AddSelectedItemToWorld( INT16 sGridNo );
-void HandleRightClickOnItem( INT16 sGridNo );
+void AddSelectedItemToWorld( INT32 sGridNo );
+void HandleRightClickOnItem( INT32 sGridNo );
 void DeleteSelectedItem();
 void ShowSelectedItem();
 void HideSelectedItem();

@@ -31,7 +31,7 @@ extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
 
 INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
-INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel )
+INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8 bLevel )
 {
 		INT16	sAPCost = 0;
 	  INT16  sSwitchValue;
@@ -165,7 +165,7 @@ INT16 BreathPointAdjustmentForCarriedWeight( SOLDIERTYPE * pSoldier )
 }
 
 
-INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode)
+INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridno,INT8 bDir, UINT16 usMovementMode)
 {
  INT32 iPoints=0;
  UINT8 ubMovementCost;
@@ -244,7 +244,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 }
 
 
-INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode )
+INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode )
 {
 	INT16 sTileCost, sPoints, sSwitchValue;
 
@@ -321,7 +321,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	return( sPoints );
 }	
 
-INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength )
+INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength )
 {
 	// This action point cost code includes the penalty for having to change
 	// stance after jumping a fence IF our path continues...
@@ -860,7 +860,7 @@ UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj )
 }
 
 
-UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, INT8 bAimTime )
+UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, INT8 bAimTime )
 {
 	UINT16						sAPCost = 0;
 	UINT16						usItemNum;	
@@ -997,7 +997,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 }
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost)
+UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost)
 {
 	UINT16						sAPCost = 0;
 	UINT32						uiItemClass;
@@ -1089,7 +1089,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	return( ( ( ( 100 * sTop ) / sBottom ) + 1) / 2);
 }
 
-void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
+void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
 {
 	 UINT8 ubDirection;
    UINT32	uiMercFlags;
@@ -1143,7 +1143,7 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 	(*pfChargeRaise )  = fAddingRaiseGunCost;
 }
 
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost)
 {
  UINT32	uiMercFlags;
  UINT16	usTargID;
@@ -1284,7 +1284,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 }
 
 
-UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
+UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost)
 {
  UINT8	bAPCost = 0;
  UINT16 usTargID;
@@ -1970,7 +1970,7 @@ INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier )
 #define AP_MAX_AIM_ATTACK       4       // maximum permitted extra aiming
 
 
-INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost )
+INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost )
 {
 	INT32 iTop, iBottom;
 	INT32	iFullAPs;
@@ -2065,7 +2065,7 @@ UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier )
 	return( AP_DROP_BOMB );
 }
 
-UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sAPs = 0;
 

@@ -327,7 +327,7 @@ BOOLEAN InternalInitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pS
 }
 
 
-BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT16 sGridNo )
+BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT32 sGridNo )
 {
 	INT16							sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16							sX, sY;

@@ -128,7 +128,7 @@ void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
 	}
 }
 
-INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel )
+INT32 FindWorldItemForBombInGridNo( INT32 sGridNo, INT8 bLevel )
 {
 	UINT32					uiBombIndex;
 
@@ -277,7 +277,7 @@ UINT32 GetNumUsedWorldItems( void )
 
 
 
-INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
+INT32 AddItemToWorld( INT32 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
 {
 	UINT32	iItemIndex;
 	INT32		iReturn;

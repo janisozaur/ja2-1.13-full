@@ -229,7 +229,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 {
 	UINT32 i;
-	UINT8 ubNumIndividuals;
+	UINT16 ubNumIndividuals;
 	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;

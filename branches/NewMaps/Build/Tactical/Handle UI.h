@@ -293,7 +293,7 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags );
 BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags );
 BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
 
-BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
 BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
 BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
@@ -329,7 +329,7 @@ BOOLEAN SelectedGuyInBusyAnimation( );
 void GotoLowerStance( SOLDIERTYPE *pSoldier );
 void GotoHeigherStance( SOLDIERTYPE *pSoldier );
 
-BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo , BOOLEAN fCheckForPath);
+BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT32 sGridNo , BOOLEAN fCheckForPath);
 
 void PopupAssignmentMenuInTactical( SOLDIERTYPE *pSoldier );
 

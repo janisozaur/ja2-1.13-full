@@ -334,10 +334,10 @@ BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 }
 
 
-BOOLEAN GetMouseMapPos( INT16	*psMapPos )
+BOOLEAN GetMouseMapPos( INT32	*psMapPos )
 {
 	 INT16				sWorldX, sWorldY;
-	 static				INT16	  sSameCursorPos;
+	 static				INT32	  sSameCursorPos;
 	 static				UINT32	uiOldFrameNumber = 99999;
 
 	 // Check if this is the same frame as before, return already calculated value if so!
@@ -490,7 +490,7 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 // UTILITY FUNTIONS
 
-INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
+INT32 OutOfBounds(INT32 sGridno, INT16 sProposedGridno)
 {
  INT16 sMod,sPropMod;
 
@@ -526,9 +526,9 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 
 
 
-INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
+INT32 NewGridNo(INT32 sGridno, INT16 sDirInc)
 {
- INT16 sProposedGridno = sGridno + sDirInc;
+ INT32 sProposedGridno = sGridno + sDirInc;
 
  // now check for out-of-bounds 
  if (OutOfBounds(sGridno,sProposedGridno))
@@ -573,13 +573,13 @@ INT16 sDeltaScreenX, sDeltaScreenY;
 
 }
 
-void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
+void ConvertGridNoToXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
 	*sYPos = sGridNo / WORLD_COLS;
 	*sXPos = ( sGridNo - ( *sYPos * WORLD_COLS ) );
 }
 
-void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
+void ConvertGridNoToCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
 	*sYPos = ( sGridNo / WORLD_COLS );
 	*sXPos = sGridNo - ( *sYPos * WORLD_COLS );
@@ -588,7 +588,7 @@ void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 	*sXPos = ( *sXPos * CELL_X_SIZE );
 }
 
-void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
+void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
 	*sYPos = ( sGridNo / WORLD_COLS );
 	*sXPos = ( sGridNo - ( *sYPos * WORLD_COLS ) );
@@ -597,7 +597,7 @@ void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 	*sXPos = ( *sXPos * CELL_X_SIZE ) + ( CELL_X_SIZE / 2 );
 }
 
-INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
+INT32 GetRangeFromGridNoDiff( INT32 sGridNo1, INT32 sGridNo2 )
 {
 	INT32					uiDist;
 	INT16					sXPos, sYPos, sXPos2, sYPos2;
@@ -613,7 +613,7 @@ INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	return( uiDist );
 }
 
-INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
+INT32 GetRangeInCellCoordsFromGridNoDiff( INT32 sGridNo1, INT32 sGridNo2 )
 {
 	INT16					sXPos, sYPos, sXPos2, sYPos2;
 
@@ -735,7 +735,7 @@ INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 )
 }
 
 
-BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
 	INT16			sNewGridNo;
@@ -784,7 +784,7 @@ BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDi
 	return( FALSE );
 }
 
-BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
 	INT16			sNewGridNo;
@@ -894,7 +894,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 
 
 // Returns the (center ) cell coordinates in X
-INT16 CenterX( INT16 sGridNo ) 
+INT16 CenterX( INT32 sGridNo ) 
 {
 	INT16 sYPos, sXPos;
 
@@ -906,7 +906,7 @@ INT16 CenterX( INT16 sGridNo )
 
 
 // Returns the (center ) cell coordinates in Y
-INT16 CenterY( INT16 sGridNo ) 
+INT16 CenterY( INT32 sGridNo ) 
 {
 	INT16 sYPos, sXPos;
 
@@ -917,7 +917,7 @@ INT16 CenterY( INT16 sGridNo )
 }
 
 
-INT16 MapX( INT16 sGridNo ) 
+INT16 MapX( INT32 sGridNo ) 
 {
 	INT16 sYPos, sXPos;
 
@@ -928,7 +928,7 @@ INT16 MapX( INT16 sGridNo )
 }
 
 
-INT16 MapY( INT16 sGridNo ) 
+INT16 MapY( INT32 sGridNo ) 
 {
 	INT16 sYPos, sXPos;
 
@@ -940,7 +940,7 @@ INT16 MapY( INT16 sGridNo )
 
 
 
-BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
+BOOLEAN GridNoOnVisibleWorldTile( INT32 sGridNo )
 {
 	INT16 sWorldX;
 	INT16 sWorldY;
@@ -965,7 +965,7 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 // This function is used when we care about astetics with the top Y portion of the
 // gma eplay area
 // mostly due to UI bar that comes down....
-BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo )
+BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT32 sGridNo )
 {
 	INT16 sWorldX;
 	INT16 sWorldY;
@@ -987,7 +987,7 @@ BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo )
 }
 
 
-BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
+BOOLEAN GridNoOnEdgeOfMap( INT32 sGridNo, INT8 * pbDirection )
 {
 	INT8		bDir;
 
@@ -1006,7 +1006,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 }
 
 
-BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;
@@ -1060,7 +1060,7 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStar
 }
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
-INT16 RandomGridNo()
+INT32 RandomGridNo()
 {
 	INT32 iMapXPos, iMapYPos, iMapIndex;
 	do
@@ -1068,6 +1068,6 @@ INT16 RandomGridNo()
 		iMapXPos = Random( WORLD_COLS );
 		iMapYPos = Random( WORLD_ROWS );
 		iMapIndex = iMapYPos * WORLD_COLS + iMapXPos;
-	}while( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) );
-	return (INT16)iMapIndex;
+	}while( !GridNoOnVisibleWorldTile( iMapIndex ) );
+	return iMapIndex;
 }

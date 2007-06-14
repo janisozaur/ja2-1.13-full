@@ -609,7 +609,7 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 
 void RenderMapEntryPointsAndLights()
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16 sScreenX, sScreenY;
 	INT32 i;
 	if( gfSummaryWindowActive )

@@ -68,7 +68,7 @@ INT32 giDefaultExistChance = 100;
 
 typedef struct IPListNode
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	struct IPListNode *next;
 }IPListNode;
 
@@ -778,7 +778,7 @@ void HideItemCursor( INT32 iMapIndex )
 	RemoveTopmost( iMapIndex, SELRING1 );
 }
 
-BOOLEAN TriggerAtGridNo( INT16 sGridNo )
+BOOLEAN TriggerAtGridNo( INT32 sGridNo )
 {
 	ITEM_POOL *pItemPool;
 	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
@@ -797,7 +797,7 @@ BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 }
 
 
-void AddSelectedItemToWorld( INT16 sGridNo )
+void AddSelectedItemToWorld( INT32 sGridNo )
 {
 	OBJECTTYPE	tempObject;
 	OBJECTTYPE *pObject;
@@ -982,7 +982,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	}
 }
 
-void HandleRightClickOnItem( INT16 sGridNo )
+void HandleRightClickOnItem( INT32 sGridNo )
 {
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
@@ -1033,7 +1033,7 @@ void DeleteSelectedItem()
 	}
 	if( gpItemPool )
 	{ //Okay, we have a selected item...
-		INT16 sGridNo;
+		INT32 sGridNo;
 		//save the mapindex
 		if( gpItemPool->pNext )
 		{

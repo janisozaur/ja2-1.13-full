@@ -138,7 +138,7 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 }
 
 
-void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
+void SetFinalTile( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fGivenUp )
 {
 	// OK, If we were waiting for stuff, do it here...
 
@@ -167,7 +167,7 @@ void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
 }
 
 
-void MarkMovementReserved( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void MarkMovementReserved( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	// Check if we have one reserrved already, and free it first!
 	if ( pSoldier->sReservedMovementGridNo != NOWHERE )
@@ -206,7 +206,7 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 	}
 }
 
-INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 bLevel )
+INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 bLevel )
 {
 	UINT8		ubPerson;
 	INT16		sTempDestGridNo;
@@ -373,7 +373,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 b
 
 
 
-BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile )
+BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT32 sGridNo, INT16 sFinalDestTile )
 {
 	INT8 bBlocked;
 	INT16	bOverTerrainType;
@@ -743,7 +743,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
+BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fForce )
 {
 	INT16 sX, sY;
 
@@ -786,7 +786,7 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 // Swaps 2 soldier positions...
 void SwapMercPositions( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2 )
 {
-	INT16 sGridNo1, sGridNo2;
+	INT32 sGridNo1, sGridNo2;
 
 	// OK, save positions...
 	sGridNo1 = pSoldier1->sGridNo;

@@ -139,7 +139,7 @@ BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 void HandleModalTactical( );
 extern void CheckForDisabledRegionRemove( );
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce );
 
 
 

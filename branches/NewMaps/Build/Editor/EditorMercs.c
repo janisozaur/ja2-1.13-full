@@ -1292,7 +1292,7 @@ void DisplayWayPoints(void)
 	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
 	SOLDIERTYPE *pSoldier;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	
 
 	if ( gsSelectedMercID == -1 || (gsSelectedMercID <= (INT32)gTacticalStatus.Team[ OUR_TEAM ].bLastID) || gsSelectedMercID >= MAXMERCS )

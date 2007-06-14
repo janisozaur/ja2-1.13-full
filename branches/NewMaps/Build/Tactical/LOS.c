@@ -1705,7 +1705,7 @@ BOOLEAN SoldierToSoldierLineOfSightTimingTest( SOLDIERTYPE * pStartSoldier, SOLD
 	return( TRUE );
 }
 
-INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware )
+INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sXPos, sYPos;
@@ -1745,7 +1745,7 @@ INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGr
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
 }
 
-INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
+INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	SOLDIERTYPE * pEndSoldier;
 	UINT8 ubTargetID;
@@ -1796,7 +1796,7 @@ INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGrid
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
 }
 
-INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware )
+INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sXPos, sYPos;
@@ -1836,7 +1836,7 @@ INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
 }
 
-INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware )
+INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	return( SoldierTo3DLocationLineOfSightTest( pStartSoldier, sGridNo, 0, 0, ubTileSightLimit, bAware ) );
 }
@@ -2314,7 +2314,7 @@ void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, 
 	StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, fStopped );
 }
 
-void BulletHitWindow( BULLET *pBullet, INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth )
+void BulletHitWindow( BULLET *pBullet, INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth )
 {
 	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, FALSE );
 }
@@ -3073,7 +3073,7 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough( SOLDIERTYPE * pStartSoldier, S
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
-UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID )
+UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID )
 {
 	FLOAT			dEndZPos;
 	INT16			sXPos;
@@ -3157,7 +3157,7 @@ UINT8 AISoldierToSoldierChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIER
 	return( ubChance );
 }
 
-UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel )
+UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel )
 {
 	FLOAT			dEndZPos;
 	INT16			sXPos;

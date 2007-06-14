@@ -49,16 +49,16 @@
 extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void MakeBloodcatsHostile( void );
 
-void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume,	UINT8 ubNoiseType );
-void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType );
-void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType);
-UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
-void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 *ubSeen);
-void TellPlayerAboutNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir );
+void OurNoise( UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume,	UINT8 ubNoiseType );
+void TheirNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType );
+void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType);
+UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
+void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT32 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 *ubSeen);
+void TellPlayerAboutNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir );
 void OurTeamSeesSomeone( SOLDIERTYPE * pSoldier, INT8 bNumReRevealed, INT8 bNumNewEnemies );
 
-void IncrementWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel );
-void SetWatchedLocAsUsed( UINT8 ubID, INT16 sGridNo, INT8 bLevel );
+void IncrementWatchedLoc( UINT8 ubID, INT32 sGridNo, INT8 bLevel );
+void SetWatchedLocAsUsed( UINT8 ubID, INT32 sGridNo, INT8 bLevel );
 void DecayWatchedLocs( INT8 bTeam );
 
 void HandleManNoLongerSeen( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent, INT8 * pPersOL, INT8 * pbPublOL );
@@ -2632,7 +2632,7 @@ IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
 
 
 
-void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel)
+void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT8 bLevel)
 {
  INT32 cnt;
  INT8 *pbPublOL;
@@ -2693,7 +2693,7 @@ void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT
 
 
 
-void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel)
+void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT8 bLevel)
 {
 	/*
 #ifdef RECORDOPPLIST
@@ -4736,7 +4736,7 @@ UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier )
 	}		
 }
 
-void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
+void MakeNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
 {
 	EV_S_NOISE	SNoise;
 
@@ -4832,7 +4832,7 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 }
 
 
-void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
+void OurNoise( UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
 {
 	INT8 bSendNoise = FALSE;
 	SOLDIERTYPE *pSoldier;
@@ -4871,7 +4871,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 
 
 
-void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume,
+void TheirNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume,
 	UINT8 ubNoiseType )
 {
 //	SOLDIERTYPE *pSoldier;
@@ -4933,7 +4933,7 @@ void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType
 
 
 
-void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType)
+void ProcessNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT8 bLoop, bTeam;
@@ -5362,7 +5362,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 
 
 
-UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume,
+UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume,
 			UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2)
 {
 	INT32 iEffVolume, iDistance;
@@ -5503,7 +5503,7 @@ UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubN
 
 
 
-void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume,
+void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT32 sGridNo, INT8 bLevel, UINT8 ubVolume,
 		UINT8 ubNoiseType, UINT8 *ubSeen)
 {
 	INT16		sNoiseX, sNoiseY;
@@ -5831,7 +5831,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 	}
 }
 
-void TellPlayerAboutNoise( SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir )
+void TellPlayerAboutNoise( SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir )
 {
 	UINT8 ubVolumeIndex;
 
@@ -6590,7 +6590,7 @@ INT8 FindWatchedLocWithLessThanXPointsLeft( UINT8 ubID, UINT8 ubPointLimit )
 	return( -1 );
 }
 
-INT8 FindWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
+INT8 FindWatchedLoc( UINT8 ubID, INT32 sGridNo, INT8 bLevel )
 {
 	INT8	bLoop;
 
@@ -6607,7 +6607,7 @@ INT8 FindWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
 	return( -1 );
 }
 
-INT8 GetWatchedLocPoints( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
+INT8 GetWatchedLocPoints( UINT8 ubID, INT32 sGridNo, INT8 bLevel )
 {
 	INT8	bLoc;
 
@@ -6671,7 +6671,7 @@ INT8 GetHighestWatchedLocPoints( UINT8 ubID )
 }
 
 
-void CommunicateWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel, UINT8 ubPoints )
+void CommunicateWatchedLoc( UINT8 ubID, INT32 sGridNo, INT8 bLevel, UINT8 ubPoints )
 {
 	UINT8		ubLoop;
 	INT8		bTeam, bLoopPoint, bPoint;
@@ -6716,7 +6716,7 @@ void CommunicateWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel, UINT8 ubPoin
 }
 
 
-void IncrementWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
+void IncrementWatchedLoc( UINT8 ubID, INT32 sGridNo, INT8 bLevel )
 {
 	INT8	bPoint;
 
@@ -6755,7 +6755,7 @@ void IncrementWatchedLoc( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
 	}
 }
 
-void SetWatchedLocAsUsed( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
+void SetWatchedLocAsUsed( UINT8 ubID, INT32 sGridNo, INT8 bLevel )
 {
 	INT8	bPoint;
 
@@ -6766,7 +6766,7 @@ void SetWatchedLocAsUsed( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
 	}
 }
 
-BOOLEAN WatchedLocLocationIsEmpty( INT16 sGridNo, INT8 bLevel, INT8 bTeam )
+BOOLEAN WatchedLocLocationIsEmpty( INT32 sGridNo, INT8 bLevel, INT8 bTeam )
 {
 	// look to see if there is anyone near the watched loc who is not on this team
 	UINT8	ubID;

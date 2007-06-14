@@ -63,7 +63,7 @@ enum
 UINT32 iTPButtons[ NUM_TP_BUTTONS ];
 
 extern BOOLEAN gfOverheadMapDirty;
-extern BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
+extern BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo );
 
 UINT8	gubDefaultButton = CLEAR_BUTTON;
 BOOLEAN gfTacticalPlacementGUIActive = FALSE;
@@ -955,7 +955,7 @@ void SelectNextUnplacedUnit()
 void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason )
 {
 	INT32 i;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	BOOLEAN fInvalidArea = FALSE;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{ //if we have a selected merc, move him to the new closest map edgepoint of his side.
@@ -1055,7 +1055,8 @@ void SetCursorMerc( INT8 bPlacementID )
 
 void PutDownMercPiece( INT32 iPlacement )
 {
-	INT16 sGridNo, sCellX, sCellY;
+	INT32 sGridNo;
+	INT16 sCellX, sCellY;
 	UINT8 ubDirection;
 
 	SOLDIERTYPE *pSoldier;

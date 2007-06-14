@@ -37,18 +37,18 @@ typedef struct TAG_SMOKE_EFFECT
 
 
 // Returns NO_SMOKE_EFFECT if none there...
-INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel );
+INT8 GetSmokeEffectOnTile( INT32 sGridNo, INT8 bLevel );
 
 // Decays all smoke effects...
 void DecaySmokeEffects( UINT32 uiTime );
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel );
+void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT32 sGridNo, INT8 bLevel );
 
-void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
+void RemoveSmokeEffectFromTile( INT32 sGridNo, INT8 bLevel );
 
-INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner );
+INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner );
 
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile );

@@ -173,7 +173,7 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction );
 
 INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit);
 INT32 EstimateStabDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,	UINT8 ubChanceToHit, BOOLEAN fBladeAttack);
-INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno);
+INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT32 sGridno);
 INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo );
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
@@ -186,15 +186,15 @@ INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bActi
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier );
 
-BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
 void InitAttackType(ATTACKTYPE *pAttack);
 
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags );
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
+int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
 INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
@@ -215,7 +215,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost );
 INT16 TrackScent( SOLDIERTYPE * pSoldier );
 void RefreshAI(SOLDIERTYPE *pSoldier);
-BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel );
+BOOLEAN InLightAtNight( INT32 sGridNo, INT8 bLevel );
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ArmySeesOpponents( void );

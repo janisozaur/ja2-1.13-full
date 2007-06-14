@@ -610,7 +610,7 @@ void			InitShopKeeperItemDescBox( OBJECTTYPE *pObject, UINT8 ubPocket, UINT8	ubF
 void			StartSKIDescriptionBox( void );
 
 BOOLEAN		ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem );
-void			ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel );
+void			ShopkeeperAddItemToPool( INT32 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel );
 
 void			IfMercOwnedCopyItemToMercInv( INVENTORY_IN_SLOT *pInv );
 void			IfMercOwnedRemoveItemFromMercInv( INVENTORY_IN_SLOT *pInv );
@@ -6833,7 +6833,7 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 
 // The Shopkeeper interface *MUST* use this intermediary function instead of calling AddItemToPool() directly!
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
-void ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel )
+void ShopkeeperAddItemToPool( INT32 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel )
 {
 	OBJECTTYPE CopyOfObject;
 	UINT8 ubObjectsLeftToPlace;
@@ -7059,7 +7059,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 
 #ifdef JA2TESTVERSION
 
-void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo )
+void AddShopkeeperToGridNo( UINT8 ubProfile, INT32 sGridNo )
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;

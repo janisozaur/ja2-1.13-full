@@ -394,7 +394,7 @@ void AddMercToHeli( UINT8 ubID )
 }
 
 
-void StartHelicopterRun( INT16 sGridNoSweetSpot )
+void StartHelicopterRun( INT32 sGridNoSweetSpot )
 {
 	INT16 sX, sY;
 
@@ -771,7 +771,7 @@ void HandleHeliDrop( )
 }
 
 
-void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void BeginMercEntering( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	ResetHeliSeats( );
 

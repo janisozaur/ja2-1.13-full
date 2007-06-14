@@ -2448,7 +2448,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else
 					{
-						INT16 sGridNo;
+						INT32 sGridNo;
 
 						//Get the gridno the cursor is at
 						GetMouseMapPos( &sGridNo );

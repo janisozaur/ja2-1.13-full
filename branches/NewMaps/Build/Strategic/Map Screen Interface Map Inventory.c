@@ -747,7 +747,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	UINT16 usOldItemIndex, usNewItemIndex;
-	INT16 sGridNo = 0;
+	INT32 sGridNo = 0;
 	INT32 iOldNumberOfObjects = 0;
 	INT16 sDistanceFromObject = 0;
 	SOLDIERTYPE *pSoldier = NULL;

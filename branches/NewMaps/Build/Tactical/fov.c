@@ -228,7 +228,7 @@ void ClearSlantRoofs( void )
 	guiNumSlantRoofs = 0;
 }
 
-BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
+BOOLEAN FindSlantRoofSlot( INT32 sGridNo )
 {
 	UINT32 uiCount;
 
@@ -246,7 +246,7 @@ BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 	return( FALSE );
 }
 
-void AddSlantRoofFOVSlot( INT16 sGridNo )
+void AddSlantRoofFOVSlot( INT32 sGridNo )
 {
 	INT32									iSlantRoofSlot;
 	SLANT_ROOF_FOV_TYPE		*pSlantRoof;

@@ -621,7 +621,7 @@ int x,dif,absDif;
 }
 #endif
 
-INT8 SoundDir( INT16 sGridNo )
+INT8 SoundDir( INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -675,7 +675,7 @@ INT8 SoundDir( INT16 sGridNo )
 }
 
 
-INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
+INT8 SoundVolume( INT8 bInitialVolume, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -812,7 +812,7 @@ void RecountPositionSnds( void )
 }
 
 
-INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
+INT32 NewPositionSnd( INT32 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
 {
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;
@@ -870,7 +870,7 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
   }
 }
 
-void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
+void SetPositionSndGridNo( INT32 iPositionSndIndex, INT32 sGridNo )
 {
 	POSITIONSND *pPositionSnd;
 
@@ -935,7 +935,7 @@ void SetPositionSndsInActive( )
   }
 }
 
-INT8 PositionSoundDir( INT16 sGridNo )
+INT8 PositionSoundDir( INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -989,7 +989,7 @@ INT8 PositionSoundDir( INT16 sGridNo )
 }
 
 
-INT8 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
+INT8 PositionSoundVolume( INT8 bInitialVolume, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;

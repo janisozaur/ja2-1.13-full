@@ -35,8 +35,8 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius );
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace );
 
-void PasteTextureEx( INT16 sGridNo, UINT16 usType );
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius );
+void PasteTextureEx( INT32 sGridNo, UINT16 usType );
+void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius );
 
 
 BOOLEAN			gfWarning = FALSE;   
@@ -1059,7 +1059,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 }
 
 // ATE FIXES
-void PasteTextureEx( INT16 sGridNo, UINT16 usType )
+void PasteTextureEx( INT32 sGridNo, UINT16 usType )
 {
 	UINT16 usIndex;
 	UINT8	 ubTypeLevel;
@@ -1089,7 +1089,7 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 }
 
 
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
+void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

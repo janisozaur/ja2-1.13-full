@@ -76,9 +76,9 @@ UINT16	gusINTOldMousePosX = 0;
 UINT16	gusINTOldMousePosY = 0;
 
 
-BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode );
+BOOLEAN RefinePointCollisionOnStruct( INT32 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode );
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
-BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode );
+BOOLEAN RefineLogicOnStruct( INT32 sGridNo, LEVELNODE *pNode );
 
 
 BOOLEAN InitInteractiveTileManagement( )
@@ -90,12 +90,12 @@ void ShutdownInteractiveTileManagement( )
 {
 }
 
-BOOLEAN AddInteractiveTile( INT16 sGridNo, LEVELNODE *pLevelNode, UINT32 uiFlags, UINT16 usType )
+BOOLEAN AddInteractiveTile( INT32 sGridNo, LEVELNODE *pLevelNode, UINT32 uiFlags, UINT16 usType )
 {
 	return( TRUE );
 }
 
-BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
+BOOLEAN StartInteractiveObject( INT32 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
 	STRUCTURE * pStructure;
 
@@ -137,7 +137,7 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 }
 
 
-BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *psAPCost, INT16 *psBPCost )
+BOOLEAN CalcInteractiveObjectAPs( INT32 sGridNo, STRUCTURE * pStructure, INT16 *psAPCost, INT16 *psBPCost )
 {
 	if (pStructure == NULL)
 	{
@@ -209,7 +209,7 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
   return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
 }
 
-void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	STRUCTURE			*pStructure, *pNewStructure;
 	INT16					sAPCost = 0, sBPCost = 0;
@@ -416,7 +416,7 @@ void SetActionModeDoorCursorText( )
 }
 
 
-void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo )
+void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT16 sYPos, INT32 sGridNo )
 {
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
@@ -503,7 +503,7 @@ void CompileInteractiveTiles( )
 }
 
 
-void LogMouseOverInteractiveTile( INT16 sGridNo )
+void LogMouseOverInteractiveTile( INT32 sGridNo )
 {
 	SGPRect				aRect;
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
@@ -641,7 +641,7 @@ LEVELNODE *GetCurInteractiveTile( )
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
+LEVELNODE *GetCurInteractiveTileGridNo( INT32 *psGridNo )
 {
 	LEVELNODE *pNode;
 	
@@ -661,7 +661,7 @@ LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 
 
 
-LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
+LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
 {
 	LEVELNODE *pNode;
 	STRUCTURE	*pStructure;
@@ -700,7 +700,7 @@ LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, 
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure )
+LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure )
 {
 	return( ConditionalGetCurInteractiveTileGridNoAndStructure( psGridNo, ppStructure, TRUE ) );
 }
@@ -769,7 +769,7 @@ void EndCurInteractiveTileCheck( )
 }
 
 
-BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
+BOOLEAN RefineLogicOnStruct( INT32 sGridNo, LEVELNODE *pNode )
 {
 	TILE_ELEMENT *TileElem;
 	STRUCTURE		 *pStructure;
@@ -892,7 +892,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 }
 
 
-BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode )
+BOOLEAN RefinePointCollisionOnStruct( INT32 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode )
 {
 	TILE_ELEMENT *TileElem;
 

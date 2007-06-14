@@ -2789,7 +2789,7 @@ BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 }
 
 
-void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	INT8	bBuddyIndex[ 20 ] = { -1 };
@@ -2896,7 +2896,7 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 }
 
 
-void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {	
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -3774,7 +3774,7 @@ BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier )
 
 #endif
 
-BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
+BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
 {
 	STRUCTURE_FILE_REF *	pStructureFileRef;
 	UINT16								usAnimSurface;

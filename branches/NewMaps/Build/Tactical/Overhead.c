@@ -143,7 +143,7 @@ void CaptureTimerCallback( void );
 
 extern void CheckForAlertWhenEnemyDies( SOLDIERTYPE * pDyingSoldier );
 extern void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-extern void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel );
+extern void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel );
 extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
 
 
@@ -2918,7 +2918,7 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 }
 
 
-void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
+void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce )
 {
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
 	
@@ -2933,14 +2933,14 @@ void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
 	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
 }
 
-void LocateGridNo( UINT16 sGridNo )
+void LocateGridNo( UINT32 sGridNo )
 {
 	InternalLocateGridNo( sGridNo, FALSE );
 }
 
 
 
-void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
+void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
 {
 	INT32 cnt;
 
@@ -4134,7 +4134,7 @@ CHAR8 *GetSceneFilename(  )
 extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
 
 // NB if making changes don't forget to update NewOKDestinationAndDirection
-INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel )
+INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel )
 {
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
@@ -4263,7 +4263,7 @@ INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeop
 }
 
 // NB if making changes don't forget to update NewOKDestination
-INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, INT8 bDirection, BOOLEAN fPeopleToo, INT8 bLevel )
+INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, INT8 bDirection, BOOLEAN fPeopleToo, INT8 bLevel )
 {
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
@@ -4466,7 +4466,7 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 }
 
 
-BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
+BOOLEAN TeamMemberNear(INT8 bTeam, INT32 sGridNo, INT32 iRange)
 {
 	UINT8 bLoop;
 	SOLDIERTYPE * pSoldier;
@@ -4485,7 +4485,7 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 	return(FALSE);
 }
 
-INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
+INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
 {
 // psAdjustedGridNo gets the original gridno or the new one if updated
 	// It will ONLY be updated IF we were over a merc, ( it's updated to their gridno )
@@ -4494,11 +4494,11 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 // in that location, because we could be passed a gridno based on the overlap of soldier's graphic
 // fDoor determines whether special door-handling code should be used (for interacting with doors)
 
- INT16 sFourGrids[4], sDistance=0;
+ INT32 sFourGrids[4], sDistance=0;
  INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
  INT32 cnt;
- INT16 sClosest=NOWHERE, sSpot, sOkTest;
- INT16 sCloseGridNo=NOWHERE;
+ INT32 sClosest=NOWHERE, sSpot, sOkTest;
+ INT32 sCloseGridNo=NOWHERE;
  UINT32                                         uiMercFlags;
  UINT16                                         usSoldierIndex;
  UINT8                                          ubDir;
@@ -4772,7 +4772,7 @@ INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirect
 }
 
 
-INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
+INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
 {
 // This function works in a similar way as FindAdjacentGridEx, but looks for a location 2 tiles away
 
@@ -4782,11 +4782,11 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 // in that location, because we could be passed a gridno based on the overlap of soldier's graphic
 // fDoor determines whether special door-handling code should be used (for interacting with doors)
 
- INT16 sFourGrids[4], sDistance=0;
+ INT32 sFourGrids[4], sDistance=0;
  INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
  INT32 cnt;
- INT16 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
- INT16 sCloseGridNo=NOWHERE;
+ INT32 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
+ INT32 sCloseGridNo=NOWHERE;
  UINT32                                         uiMercFlags;
  UINT16                                         usSoldierIndex;
  UINT8                                          ubDir;

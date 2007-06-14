@@ -1361,7 +1361,7 @@ BOOLEAN CreateCorpseShadedPalette( ROTTING_CORPSE *pCorpse, UINT32 uiBase, SGPPa
 }
 
 
-ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT16 sGridNo, STRUCTURE *pStructure )
+ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT32 sGridNo, STRUCTURE *pStructure )
 {
 	LEVELNODE					*pLevelNode;
 	ROTTING_CORPSE		*pCorpse = NULL;
@@ -1386,7 +1386,7 @@ ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT16 sGridNo, STRUCTURE *pStructur
 }
 
 
-void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
+void CorpseHit( INT32 sGridNo, UINT16 usStructureID )
 {
 #if 0
 	STRUCTURE				*pStructure, *pBaseStructure;
@@ -1437,7 +1437,7 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 }
 
 
-void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
+void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
@@ -1649,7 +1649,7 @@ BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse )
 }
 
 
-ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
+ROTTING_CORPSE *GetCorpseAtGridNo( INT32 sGridNo, INT8 bLevel )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
 	INT16						sBaseGridNo;
@@ -1674,7 +1674,7 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 }
 
 
-void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
+void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo,  INT8 bLevel )
 {
 	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
@@ -1813,7 +1813,7 @@ void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot
 }
 
 
-void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel )
+void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubLevel )
 {
 	ROTTING_CORPSE *pCorpse;
   INT8            bToleranceThreshold = 0;
@@ -1914,7 +1914,7 @@ void DecayRottingCorpseAIWarnings( void )
  
 }
 
-UINT8 GetNearestRottingCorpseAIWarning( INT16 sGridNo )
+UINT8 GetNearestRottingCorpseAIWarning( INT32 sGridNo )
 {
 	INT32				cnt;
 	ROTTING_CORPSE *	pCorpse;

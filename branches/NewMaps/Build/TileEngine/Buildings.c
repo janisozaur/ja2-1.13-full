@@ -330,7 +330,7 @@ BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 	return( pBuilding );
 }
 
-BUILDING * FindBuilding( INT16 sGridNo )
+BUILDING * FindBuilding( INT32 sGridNo )
 {
 	UINT8					ubBuildingID;
 	//UINT8					ubRoomNo;
@@ -367,7 +367,7 @@ BUILDING * FindBuilding( INT16 sGridNo )
 	return( &(gBuildings[ ubBuildingID ]) );
 }
 
-BOOLEAN InBuilding( INT16 sGridNo )
+BOOLEAN InBuilding( INT32 sGridNo )
 {
 	if ( FindBuilding( sGridNo ) == NULL )
 	{
@@ -454,7 +454,7 @@ INT16 FindClosestClimbPoint( INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN f
 	return( sClosestSpot );
 }
 
-BOOLEAN SameBuilding( INT16 sGridNo1, INT16 sGridNo2 )
+BOOLEAN SameBuilding( INT32 sGridNo1, INT32 sGridNo2 )
 {
 	if ( gubBuildingInfo[ sGridNo1 ] == NO_BUILDING )
 	{

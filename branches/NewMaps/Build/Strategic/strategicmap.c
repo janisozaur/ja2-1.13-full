@@ -1877,7 +1877,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				//a missing part of the map or possible fault in strategic movement costs, traversal logic, etc.
 				UINT16 szEntry[10];
 				UINT16 szSector[10];
-				INT16 sGridNo;
+				INT32 sGridNo;
 				GetLoadedSectorString( szSector );
 				if( gMapInformation.sNorthGridNo != -1 )
 				{
@@ -3101,7 +3101,7 @@ BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UIN
 	INT16 sWorldX;
 	INT16 sWorldY;
 	UINT8	ubDirection;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16	sAPs;
 
 	// if the soldiers gridno is not NOWHERE

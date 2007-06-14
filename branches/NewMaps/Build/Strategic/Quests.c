@@ -178,7 +178,7 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 	}
 }
 
-BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
+BOOLEAN CheckNPCAt( UINT8 ubNPC, INT32 sGridNo )
 {
 	SOLDIERTYPE * pNPC;
 
@@ -540,7 +540,7 @@ BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 
 
 }
 
-BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
+BOOLEAN AIMMercWithin( INT32 sGridNo, INT16 sDistance )
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pSoldier;

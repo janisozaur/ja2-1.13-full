@@ -765,7 +765,7 @@ void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
 }
 
 
-ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
+ANITILE *GetCachedAniTileOfType( INT32 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
 {
 	LEVELNODE *pNode = NULL;
 

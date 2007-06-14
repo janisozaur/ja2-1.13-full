@@ -130,7 +130,7 @@ UINT32 uiMeanWhileFlags = 0;
 #define INTERROGATION_FLAG										0x00008000								
 #define BALIME_LIBERATED_FLAG									0x00010000
 
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce );
 
 
 void ProcessImplicationsOfMeanwhile( void );
@@ -881,7 +881,7 @@ void DoneFadeInMeanwhileOnceDone( )
 
 void LocateMeanWhileGrid( void )
 {
-	INT16 sGridNo = 0;
+	INT32 sGridNo = 0;
 
 	// go to the approp. gridno
 	sGridNo = gusMeanWhileGridNo[ ubCurrentMeanWhileId ];

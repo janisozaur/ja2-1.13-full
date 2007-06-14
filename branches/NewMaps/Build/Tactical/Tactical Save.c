@@ -693,7 +693,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 }
 
 
-BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItemsToAdd, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, BOOLEAN fReplaceEntireFile )
+BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT32 sGridNo, UINT32 uiNumberOfItemsToAdd, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, BOOLEAN fReplaceEntireFile )
 {
 	UINT32	uiNumberOfItems=0;
 	WORLDITEM *pWorldItems;
@@ -921,7 +921,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 	UINT32 uiCounter = 0;
 	UINT8	ubDir, ubMovementCost;
 	BOOLEAN fReachable = FALSE;
-	INT16 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
+	INT32 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
 	INT16	sNewLoc;
 
 	SOLDIERTYPE * pSoldier;
@@ -1696,7 +1696,7 @@ BOOLEAN LoadRottingCorpsesFromTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMa
 
 
 
-BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, WORLDITEM *pWorldItem, BOOLEAN fOverWrite )
+BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT32 sGridNo, UINT32 uiNumberOfItems, WORLDITEM *pWorldItem, BOOLEAN fOverWrite )
 {
 	UINT32 uiLoop;
 	BOOLEAN fLoop=fOverWrite;

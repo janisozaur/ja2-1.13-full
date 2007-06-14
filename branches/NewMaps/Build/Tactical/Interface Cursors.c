@@ -690,7 +690,7 @@ void EraseSnappingCursor( )
 
 
 
-void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
+void StartLooseCursor( INT32 sGridNo, UINT32 uiCursorID )
 {
 	gfLooseCursorOn		= TRUE;
 

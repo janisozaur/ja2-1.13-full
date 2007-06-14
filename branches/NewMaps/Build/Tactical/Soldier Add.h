@@ -48,16 +48,16 @@ INT16 GetSoldierIDFromMercID(UINT8 ubMercID);
 UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc );
 
 /*
-void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 */
 
 UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, SOLDIERTYPE *pSrcSoldier );
 
-void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
-BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT16 sMaxTiles, INT8 bLevel );
+BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT16 sMaxTiles, INT8 bLevel );
 
 
 #endif

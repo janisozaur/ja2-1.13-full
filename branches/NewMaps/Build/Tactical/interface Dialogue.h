@@ -52,7 +52,7 @@ NPC_DIALOGUE_TYPE		gTalkPanel;
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData );
 
 // THis fuction will allocate and setup an NPCDiaogue structure. Loads the face for the character..
-BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT16 sGridNo );
+BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT32 sGridNo );
 
 // Begins quote of NPC Dialogue
 BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum );

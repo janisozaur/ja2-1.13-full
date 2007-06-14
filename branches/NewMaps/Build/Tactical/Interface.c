@@ -3537,7 +3537,7 @@ typedef struct
 	BOOLEAN			fActiveHeightBar;
 	BOOLEAN			fActivePowerBar;
 	BOOLEAN			fAtEndHeight;
-	INT16				sTargetGridNo;
+	INT32 sTargetGridNo;
 	FLOAT				dInitialForce;
 	FLOAT				dForce;
 	FLOAT				dDegrees;
@@ -3616,7 +3616,7 @@ BOOLEAN AimCubeUIClick( )
 	}
 }
 
-void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
+void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
 {
 	gfInAimCubeUI = TRUE;
 
@@ -3797,7 +3797,7 @@ static INT16	 gsPhysicsImpactPointGridNo;
 static INT8		 gbPhysicsImpactPointLevel;
 static BOOLEAN gfBadPhysicsCTGT = FALSE;
 
-void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
+void BeginPhysicsTrajectoryUI( INT32 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 {
 	gfDisplayPhysicsUI					= TRUE;
 	gsPhysicsImpactPointGridNo	= sGridNo;
@@ -3878,7 +3878,7 @@ INT16     gsMultiPurposeLocatorGridNo;
 INT8      gbMultiPurposeLocatorLevel;
 INT8      gbMultiPurposeLocatorCycles;
 
-void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
+void BeginMultiPurposeLocator( INT32 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 {
   guiMultiPurposeLocatorLastUpdate = 0;
   gbMultiPurposeLocatorCycles      = 0;

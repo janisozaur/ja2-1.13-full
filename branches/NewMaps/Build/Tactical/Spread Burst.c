@@ -25,7 +25,7 @@ typedef struct
 {
 	INT16 sX;
 	INT16 sY;
-	INT16 sGridNo;
+	INT32 sGridNo;
 
 } BURST_LOCATIONS;
 
@@ -42,7 +42,7 @@ void ResetBurstLocations( )
 	gbNumBurstLocations = 0;
 }
 
-void AccumulateBurstLocation( INT16 sGridNo )
+void AccumulateBurstLocation( INT32 sGridNo )
 {
 	INT32 cnt;
 

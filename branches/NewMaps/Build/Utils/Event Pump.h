@@ -133,7 +133,7 @@ typedef struct
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
+	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
 } EV_S_BEGINFIREWEAPON;
@@ -143,7 +143,7 @@ typedef struct
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
+	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
 } EV_S_FIREWEAPON;
@@ -197,7 +197,7 @@ typedef struct
 typedef struct
 {
 	UINT8 ubNoiseMaker;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT8 bLevel;
 	UINT8 ubTerrType;
 	UINT8 ubVolume;

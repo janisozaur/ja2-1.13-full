@@ -313,7 +313,7 @@ STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( INT8 *cFilename )
 }
 
 
-void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 usIndex, UINT16 usSubIndex )
+void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT32 sGridNo, UINT16 usIndex, UINT16 usSubIndex )
 { 
 	STRUCTURE_FILE_REF *pStructureFileRef;
 

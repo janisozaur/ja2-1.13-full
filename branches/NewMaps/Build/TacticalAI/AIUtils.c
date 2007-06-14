@@ -1163,7 +1163,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 
 INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
 {
-	INT16 sGridNo, sClosestOpponent = NOWHERE;
+	INT32 sGridNo, sClosestOpponent = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
 	INT8	*pbPersOL;
@@ -1673,7 +1673,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 	return( sMinDist );
 }
 
-BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	if (WaterTooDeepForAttacks( sGridNo ))
 	{
@@ -1696,7 +1696,7 @@ BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	return(FALSE);
 }
 
-BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	// smoke
 	if (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_SMOKE)
@@ -1715,7 +1715,7 @@ BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
+INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	if (WaterTooDeepForAttacks( sGridNo ))
 	{
@@ -1732,7 +1732,7 @@ INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 	return(FALSE);
 }
 
-BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	// tear/mustard gas
 	if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
@@ -1775,7 +1775,7 @@ BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
 	return( TRUE );
 }
 
-BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
+BOOLEAN InLightAtNight( INT32 sGridNo, INT8 bLevel )
 {
 	UINT8 ubBackgroundLightLevel;
 	

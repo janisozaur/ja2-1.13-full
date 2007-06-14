@@ -39,7 +39,7 @@ typedef struct
 
 
 // Itempickup stuff
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
+BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
 void RenderItemPickupMenu( );
 void RemoveItemPickupMenu( );
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );

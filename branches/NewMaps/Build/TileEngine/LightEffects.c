@@ -96,7 +96,7 @@ void UpdateLightingSprite( LIGHTEFFECT *pLight )
 }
 
 
-INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
+INT32 NewLightEffect( INT32 sGridNo, INT8 bType )
 {
 	LIGHTEFFECT *pLight;
 	INT32				iLightIndex;
@@ -141,7 +141,7 @@ INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
 
 
 
-void RemoveLightEffectFromTile( INT16 sGridNo )
+void RemoveLightEffectFromTile( INT32 sGridNo )
 {
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;

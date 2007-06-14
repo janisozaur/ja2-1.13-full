@@ -203,7 +203,7 @@ void RemoveAllPits()
 	}
 }
 
-void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 sRadius )
+void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT32 sGridNo, INT16 sRadius )
 {
 	INT16 x, y, sNewGridNo;
 	UINT8	ubID;

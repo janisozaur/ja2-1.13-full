@@ -319,7 +319,7 @@ INT16 PickLocationNearAnyMercInSector( )
 	return( NOWHERE );
 }
 
-INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 sRandomVar )
+INT16 PickRandomLocationAtMinSpacesAway( INT32 sGridNo, INT16 sMinValue, INT16 sRandomVar )
 {
 	INT16 sNewGridNo = NOWHERE;
 
@@ -532,7 +532,7 @@ void 	AirRaidStartEnding( )
 
 void BeginBombing( )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT32	iSoundStartDelay;
 
 	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -585,7 +585,7 @@ void BeginBombing( )
 
 void BeginDive( )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT32	iSoundStartDelay;
 
 	// Start diving sound...

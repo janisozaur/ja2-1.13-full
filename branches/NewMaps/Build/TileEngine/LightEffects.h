@@ -31,11 +31,11 @@ void DecayLightEffects( UINT32 uiTime );
 
 // Add light to gridno
 // ( Replacement algorithm uses distance away )
-void AddLightEffectToTile( INT8 bType, INT16 sGridNo );
+void AddLightEffectToTile( INT8 bType, INT32 sGridNo );
 
-void RemoveLightEffectFromTile( INT16 sGridNo );
+void RemoveLightEffectFromTile( INT32 sGridNo );
 
-INT32 NewLightEffect( INT16 sGridNo, INT8 bType );
+INT32 NewLightEffect( INT32 sGridNo, INT8 bType );
 
 
 BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile );

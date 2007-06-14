@@ -115,7 +115,7 @@ void ProcessTilesetNamesForBPP(void);
 BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos );
 
 
-INT8 IsHiddenTileMarkerThere( INT16 sGridNo );
+INT8 IsHiddenTileMarkerThere( INT32 sGridNo );
 extern void SetInterfaceHeightLevel( );
 extern void GetRootName( INT8 *pDestStr, INT8 *pSrcStr );
 
@@ -1476,7 +1476,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 	}
 }
 
-void AddTileToRecompileArea( INT16 sGridNo )
+void AddTileToRecompileArea( INT32 sGridNo )
 {
 	INT16	sCheckGridNo;
 	INT16	sCheckX;
@@ -1555,7 +1555,7 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 	}
 }
 
-void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
+void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 {
 	INT8		bDirLoop;		
 	INT16		sUp, sDown, sLeft, sRight;
@@ -3580,7 +3580,7 @@ void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoad
 }
 
 
-void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
+void AddWireFrame( INT32 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 {
 	LEVELNODE			*pTopmost, *pTopmostTail;
 
@@ -3607,7 +3607,7 @@ void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 }
 
 
-UINT16 GetWireframeGraphicNumToUseForWall( INT16 sGridNo, STRUCTURE *pStructure )
+UINT16 GetWireframeGraphicNumToUseForWall( INT32 sGridNo, STRUCTURE *pStructure )
 {
 	LEVELNODE     *pNode = NULL;
 	UINT8					ubWallOrientation;
@@ -3885,7 +3885,7 @@ void RemoveWorldWireFrameTiles( )
 }
 
 
-void RemoveWireFrameTiles( INT16 sGridNo )
+void RemoveWireFrameTiles( INT32 sGridNo )
 {
 	LEVELNODE			*pTopmost, *pNewTopmost;
 	TILE_ELEMENT *	pTileElement;
@@ -3913,7 +3913,7 @@ void RemoveWireFrameTiles( INT16 sGridNo )
 
 
  
-INT8 IsHiddenTileMarkerThere( INT16 sGridNo )
+INT8 IsHiddenTileMarkerThere( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 

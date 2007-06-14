@@ -132,7 +132,7 @@ void DeleteAniTiles( );
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide );
 void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause );
 
-ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags );
+ANITILE *GetCachedAniTileOfType( INT32 sGridNo, UINT8 ubLevelID, UINT32 uiFlags );
 
 void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause );
 

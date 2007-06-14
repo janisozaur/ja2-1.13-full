@@ -2330,13 +2330,13 @@ UINT32 UIHandleCAOnTerrain( UI_EVENT *pUIEvent )
 void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, UINT16 usMapPos )
 {
 	INT32							iHandleReturn;
-	INT16							sTargetGridNo;
+	INT32							sTargetGridNo;
 	INT8							bTargetLevel;
 	UINT16						usItem;
 	LEVELNODE					*pIntNode;
 	STRUCTURE					*pStructure;
 	INT16							sGridNo, sNewGridNo;
-  UINT8             ubItemCursor;
+	UINT8             ubItemCursor;
   
   // get cursor
   ubItemCursor  =  GetActionModeCursor( pSoldier );
@@ -2800,7 +2800,7 @@ BOOLEAN SelectedMercCanAffordAttack( )
 	SOLDIERTYPE						*pSoldier;
 	SOLDIERTYPE				*pTargetSoldier;
 	UINT16						usMapPos;
-	INT16							sTargetGridNo;
+	INT32 sTargetGridNo;
 	BOOLEAN						fEnoughPoints = TRUE;
 	INT16							sAPCost;
 	UINT8							ubItemCursor;
@@ -4204,7 +4204,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16							sAPCost;
 	ITEM_POOL					*pItemPool;
@@ -4593,7 +4593,7 @@ UINT32 UIHandleTOnTerrain( UI_EVENT *pUIEvent )
 	UINT32						uiRange;
 	UINT16						usMapPos;
 	BOOLEAN						fValidTalkableGuy = FALSE;
-	INT16							sTargetGridNo;
+	INT32 sTargetGridNo;
 	INT16							sDistVisible;
 
 	// Get soldier
@@ -4821,7 +4821,7 @@ UINT32 UIHandleLAOnTerrain( UI_EVENT *pUIEvent )
 }
 
 
-void GetGridNoScreenXY( INT16 sGridNo, INT16 *pScreenX, INT16 *pScreenY )
+void GetGridNoScreenXY( INT32 sGridNo, INT16 *pScreenX, INT16 *pScreenY )
 {
 	INT16	sScreenX, sScreenY;
 	INT16 sOffsetX, sOffsetY;
@@ -6156,9 +6156,9 @@ BOOLEAN ValidQuickExchangePosition( )
 
 // This function contains the logic for allowing the player
 // to jump over people.
-BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath )
+BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fCheckForPath )
 {
-	INT16 sFourGrids[4], sDistance=0, sSpot, sIntSpot;
+	INT32 sFourGrids[4], sDistance=0, sSpot, sIntSpot;
 	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	INT32 cnt;
 	UINT8	ubGuyThere;

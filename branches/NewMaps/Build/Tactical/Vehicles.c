@@ -198,7 +198,7 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
   pVehicle->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
 }
 
-INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
+INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT32 sGridNo, UINT8 ubType )
 {
 	// insert this vehicle into the list
 	// how many vehicles are there?
@@ -1559,7 +1559,7 @@ void AddPassangersToTeamPanel( INT32 iId )
 }	
 
 
-void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, UINT8 ubAttackerID )
+void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT32 sGridNo, UINT8 ubAttackerID )
 {
 	INT16 sOldDmgValue = 0;
 
@@ -1590,7 +1590,7 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 }
 
 
-void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID )
+void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT32 sGridNo, UINT8 ubAttackerID )
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur

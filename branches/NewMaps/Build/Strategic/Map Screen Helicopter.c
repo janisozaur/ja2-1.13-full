@@ -1880,7 +1880,7 @@ BOOLEAN CanHelicopterTakeOff( void )
 	return( FALSE );
 }
 
-void AddHeliPeice( INT16 sGridNo, UINT16 sOStruct )
+void AddHeliPeice( INT32 sGridNo, UINT16 sOStruct )
 {
 	UINT16 usDummy;
 
@@ -1895,7 +1895,7 @@ void AddHeliPeice( INT16 sGridNo, UINT16 sOStruct )
 
 void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 {
- 	INT16 sGridNo = sRefuelStartGridNo[ ubSite ];
+ 	INT32 sGridNo = sRefuelStartGridNo[ ubSite ];
 	INT16 sOStruct = 0;
 	INT16	usGridNo;
 	INT16	sGridX, sGridY;

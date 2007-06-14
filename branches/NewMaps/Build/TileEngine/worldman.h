@@ -27,9 +27,9 @@ void AdjustAllRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff );
 void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
 void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
 BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex );
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
-void RemoveWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
-BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex );
+void SetWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags );
+void RemoveWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags );
+BOOLEAN IndexExistsInRoofLayer( INT32 sGridNo, UINT16 usIndex );
 
 
 // OnRoof manipulation functions
@@ -60,10 +60,10 @@ BOOLEAN AdjustForFullTile( UINT32 iMapIndex );
 void SetAllLandShadeLevels( UINT32 iMapIndex, UINT8 ubShadeLevel );
 void AdjustAllLandShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff );
 void AdjustAllLandDirtyCount( UINT32 iMapIndex, INT8 bDirtyDiff );
-UINT8	GetTerrainType( INT16 sGridNo );
-BOOLEAN Water( INT16 sGridNo );
-BOOLEAN DeepWater( INT16 sGridNo );
-BOOLEAN WaterTooDeepForAttacks( INT16 sGridNo );
+UINT8	GetTerrainType( INT32 sGridNo );
+BOOLEAN Water( INT32 sGridNo );
+BOOLEAN DeepWater( INT32 sGridNo );
+BOOLEAN WaterTooDeepForAttacks( INT32 sGridNo );
 
 // Structure manipulation routines
 BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex );
@@ -110,9 +110,9 @@ BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo );
 BOOLEAN RemoveMerc( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder  );
-UINT8 WhoIsThere2( INT16 sGridNo, INT8 bLevel );
-BOOLEAN AddMercStructureInfo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
-BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );
+UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel );
+BOOLEAN AddMercStructureInfo( INT32 sGridNo, SOLDIERTYPE *pSoldier );
+BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );
 BOOLEAN UpdateMercStructureInfo( SOLDIERTYPE *pSoldier );
 BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection );
  
@@ -131,14 +131,14 @@ void RemoveUIElem( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 
-BOOLEAN IsLowerLevel( INT16 sGridNo );
-BOOLEAN IsHeigherLevel( INT16 sGridNo );
+BOOLEAN IsLowerLevel( INT32 sGridNo );
+BOOLEAN IsHeigherLevel( INT32 sGridNo );
 BOOLEAN IsRoofVisible( INT16 sMapPos );
 BOOLEAN IsRoofVisible2( INT16 sMapPos );
 
 
-LEVELNODE * FindLevelNodeBasedOnStructure( INT16 sGridNo, STRUCTURE * pStructure );
-LEVELNODE * FindShadow( INT16 sGridNo, UINT16 usStructIndex );
+LEVELNODE * FindLevelNodeBasedOnStructure( INT32 sGridNo, STRUCTURE * pStructure );
+LEVELNODE * FindShadow( INT32 sGridNo, UINT16 usStructIndex );
 
 void WorldHideTrees( );
 void WorldShowTrees( );

@@ -598,7 +598,7 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 	return fSorted;
 }
 
-BOOLEAN BumpAnyExistingMerc( INT16 sGridNo ) 
+BOOLEAN BumpAnyExistingMerc( INT32 sGridNo ) 
 {
 	UINT8						ubID;
 	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,

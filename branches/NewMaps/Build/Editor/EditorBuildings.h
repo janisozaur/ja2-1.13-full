@@ -27,7 +27,7 @@ void KillBuilding( UINT32 iMapIndex );
 typedef struct BUILDINGLAYOUTNODE
 {
 	struct BUILDINGLAYOUTNODE *next;
-	INT16 sGridNo;
+	INT32 sGridNo;
 }BUILDINGLAYOUTNODE;
 
 extern BUILDINGLAYOUTNODE *gpBuildingLayoutList;

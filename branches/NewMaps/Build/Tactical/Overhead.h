@@ -224,7 +224,7 @@ BOOLEAN InitOverhead( );
 BOOLEAN ShutdownOverhead( );
 BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex );
 
-INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel );
+INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel );
 
 //Simple check to see if a (one-tiled) soldier can occupy a given location on the ground or roof.
 extern BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof );
@@ -242,11 +242,11 @@ void EndTacticalDemo( );
 void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
 
 
-void LocateGridNo( UINT16 sGridNo );
+void LocateGridNo( UINT32 sGridNo );
 void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
-void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
+void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
 void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo );
 
 void RebuildAllSoldierShadeTables( );
@@ -266,12 +266,12 @@ UINT32 EnterTacticalDemoMode();
 
 BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 
-INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
-INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
+INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
+INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirection, INT32 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
 
 
 void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier );
-BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
+BOOLEAN TeamMemberNear(INT8 bTeam, INT32 sGridNo, INT32 iRange);
 BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID );
 
 

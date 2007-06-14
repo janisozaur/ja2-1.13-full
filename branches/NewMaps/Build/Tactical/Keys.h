@@ -199,16 +199,16 @@ BOOLEAN		LoadDoorTableFromDoorTableTempFile( );
 //  if the door already exists, nothing happens
 // fOpen is True if the door is to be initially open, false if it is closed
 // fInitiallyPercieveOpen is true if the door is to be initially open, else false
-BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen );
+BOOLEAN ModifyDoorStatus( INT32 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen );
 
 //Deletes the door status array
 void TrashDoorStatusArray( );
 
 // Returns true if the door is open, otherwise false
-BOOLEAN	IsDoorOpen( INT16 sGridNo );
+BOOLEAN	IsDoorOpen( INT32 sGridNo );
 
 //Returns true if the door is perceioved as open
-BOOLEAN	IsDoorPerceivedOpen( INT16 sGridNo );
+BOOLEAN	IsDoorPerceivedOpen( INT32 sGridNo );
 
 // Saves the Door Status array to the MapTempfile
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
@@ -217,10 +217,10 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile();
 
 //Modify the Doors open status
-BOOLEAN	SetDoorOpenStatus( INT16 sGridNo, BOOLEAN fOpen );
+BOOLEAN	SetDoorOpenStatus( INT32 sGridNo, BOOLEAN fOpen );
 
 //Modify the doors perceived open status
-BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen );
+BOOLEAN	SetDoorPerceivedOpenStatus( INT32 sGridNo, BOOLEAN fPerceivedOpen );
 
 
 //Save the key table to the saved game file
@@ -230,11 +230,11 @@ BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile );
 BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile );
 
 // Returns a doors status value, NULL if not found
-DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );
+DOOR_STATUS	*GetDoorStatus( INT32 sGridNo );
 
-BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo );
+BOOLEAN UpdateDoorStatusPerceivedValue( INT32 sGridNo );
 
-BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue );
+BOOLEAN AllMercsLookForDoor( INT32 sGridNo, BOOLEAN fUpdateValue );
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue );
 
@@ -248,8 +248,8 @@ void ExamineDoorsOnEnteringSector( );
 
 void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded( );
 
-void AttachStringToDoor( INT16 sGridNo );
+void AttachStringToDoor( INT32 sGridNo );
 
-void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded );
+void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded );
 
 #endif

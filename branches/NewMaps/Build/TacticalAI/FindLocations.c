@@ -99,7 +99,7 @@ INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32
  return(iPercentBetter);
 }
 
-void AICenterXY( INT16 sGridNo, FLOAT * pdX, FLOAT * pdY )
+void AICenterXY( INT32 sGridNo, FLOAT * pdX, FLOAT * pdY )
 {
 	INT16		sXPos, sYPos;
 
@@ -498,7 +498,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 }
 
 
-UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT16 sGridNo )
+UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT32 sGridNo )
 {
 	UINT8	ubLoop, ubCount, ubWhoIsThere;
 	INT16	sTempGridNo;
@@ -1096,7 +1096,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16 sBestSpot = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iThreatRange,iClosestThreatRange = 1500, iSpotClosestThreatRange;
@@ -1398,7 +1398,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 
 INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 {
-	INT16 sGridNo,sClosestLand = NOWHERE,sPathCost,sShortestPath = 1000;
+	INT32 sGridNo,sClosestLand = NOWHERE,sPathCost,sShortestPath = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
 
@@ -1507,7 +1507,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 {
-	INT16 sGridNo, sClosestSpot = NOWHERE, sPathCost;
+	INT32 sGridNo, sClosestSpot = NOWHERE, sPathCost;
 	INT32	iSpotValue, iBestSpotValue = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
@@ -2021,7 +2021,7 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	return( sClosestDoor );
 }
 
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
+INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode )
 {
 	INT32			iLoop;
 	INT16			*psEdgepointArray;
@@ -2067,7 +2067,7 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 	return( sClosestSpot );
 }
 
-INT16 FindNearestEdgePoint( INT16 sGridNo )
+INT16 FindNearestEdgePoint( INT32 sGridNo )
 {
 	INT16			sGridX, sGridY;
 	INT16			sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
@@ -2147,7 +2147,7 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16 sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT8	bDirection, bClosestDirection;
 	INT32 iPathCost, iClosestPathCost = 1000;
 
@@ -2252,7 +2252,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16 sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT32 iDistance, iClosestDistance = 9999;
 	UINT8	ubRoom;
 

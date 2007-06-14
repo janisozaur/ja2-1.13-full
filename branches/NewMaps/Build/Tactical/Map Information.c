@@ -77,7 +77,7 @@ Version 11 -- Kris -- obsolete May 2, 1998
 
 //EntryPoints can't be placed on the top two gridnos in a map.  So all we do in this case
 //is return the closest gridno.  Returns TRUE if the mapindex changes.
-BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
+BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo )
 {
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;

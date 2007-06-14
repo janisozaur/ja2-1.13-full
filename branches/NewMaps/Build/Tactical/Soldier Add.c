@@ -21,7 +21,7 @@
 #endif
 
 // Adds a soldier to a world gridno and set's direction
-void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
+void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
 UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc );
 
@@ -886,7 +886,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldie
 }
 
 
-BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT16 sMaxTiles, INT8 bLevel )
+BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT16 sMaxTiles, INT8 bLevel )
 {
 	INT32 iNumTiles;
 	INT16	sActionGridNo;
@@ -1223,7 +1223,7 @@ BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation( UINT8 ubID, UINT16 u
 }
 
 
-void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fDoTransition )
+void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fDoTransition )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1270,7 +1270,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN
 	}
 }
 
-void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1299,14 +1299,14 @@ void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 
 /*
-void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	InternalSoldierInSectorSleep( pSoldier, sGridNo, TRUE );
 }
 */
 
 
-void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1341,7 +1341,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1376,7 +1376,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1412,7 +1412,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest );
 
-void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
+void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sNewGridNo;

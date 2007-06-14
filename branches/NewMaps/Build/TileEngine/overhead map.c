@@ -87,7 +87,7 @@ void HandleOverheadUI( );
 void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void DeleteOverheadDB( );
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo );
+BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo );
 
 
 extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
@@ -95,8 +95,8 @@ extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *p
 
 
 //Isometric utilities (for overhead stuff only)
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
+BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo );
+void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
 void CopyOverheadDBShadetablesFromTileset( );
 
 void RenderOverheadOverlays();
@@ -1503,7 +1503,7 @@ void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 
 
 
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
+void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
 {
 	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
 	*psScreenX /= 5;
@@ -1516,7 +1516,7 @@ void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psSc
   //*psScreenY -= gpWorldLevelData[ sGridNo ].sHeight / 5;
 }
 
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
+BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
@@ -1552,7 +1552,7 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 }
 
 
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
+BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo )
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;

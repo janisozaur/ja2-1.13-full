@@ -5930,7 +5930,7 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 }
 
 
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
+BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
 {
   VOBJECT_DESC    VObjectDesc;
 	UINT8						ubString[48];

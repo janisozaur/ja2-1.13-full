@@ -27,7 +27,7 @@ extern INT16 DirYIncrementer[8];
 // GoAsFarAsPossibleTowards - C.O. stuff related to current animation esp first aid
 // SetCivilianDestination - C.O. stuff for if we don't control the civ
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
+int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
 	BOOLEAN fSkipTilesWithMercs;
  
@@ -115,7 +115,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 
 
-int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
+int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT32 sGridno)
 {
 	UINT8 ubGottaCancel = FALSE;
 	UINT8 ubSuccess = FALSE;
@@ -850,7 +850,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 	}
 }
 
-void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
+void SetCivilianDestination(UINT8 ubWho, INT32 sGridno)
 {
  SOLDIERTYPE *pSoldier;
 
