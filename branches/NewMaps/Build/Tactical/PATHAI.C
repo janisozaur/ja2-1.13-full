@@ -2035,7 +2035,7 @@ ENDOFLOOP:
 	return(0);
 }
 
-void GlobalReachableTest( INT16 sStartGridNo )
+void GlobalReachableTest( INT32 sStartGridNo )
 {
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo =0;
@@ -2056,7 +2056,7 @@ void GlobalReachableTest( INT16 sStartGridNo )
 	RestorePathAIToDefaults();
 }
 
-void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
+void LocalReachableTest( INT32 sStartGridNo, INT8 bRadius )
 {
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo = 0;
@@ -2098,7 +2098,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 	gubNPCDistLimit = 0;
 }
 
-void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
+void GlobalItemsReachableTest( INT32 sStartGridNo1, INT32 sStartGridNo2 )
 {
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo =0;
@@ -2124,7 +2124,7 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 	RestorePathAIToDefaults();
 }
 
-void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID )
+void RoofReachableTest( INT32 sStartGridNo, UINT8 ubBuildingID )
 {
 	SOLDIERTYPE s;
 

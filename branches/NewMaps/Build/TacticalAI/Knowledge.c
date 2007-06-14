@@ -148,13 +148,13 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 {
 	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;
-	INT16 *psLastLoc,*psNoiseGridNo;
+	INT32 *psLastLoc,*psNoiseGridNo;
 	INT8 * pbNoiseLevel;
 	INT8 *pbLastLevel;
 	UINT8 *pubNoiseVolume;
 	INT32 iDistAway;
 	INT32	iNoiseValue, iBestValue = -10000;
-	INT16 sBestGridNo = NOWHERE;
+	INT32 sBestGridNo = NOWHERE;
 	INT8	bBestLevel = 0;
 	INT16 sClimbingGridNo;
 	BOOLEAN fClimbingNecessary = FALSE;

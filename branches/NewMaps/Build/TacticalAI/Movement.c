@@ -420,8 +420,8 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 	INT16 sLoop,sAPCost;
-	INT16 sTempDest,sGoToGrid;
-	INT16 sOrigin;
+	INT32 sTempDest,sGoToGrid;
+	INT32 sOrigin;
 	UINT16 usMaxDist;
 	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
 	INT8 bAPsLeft, fPathFlags;

@@ -655,7 +655,7 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 }
 
 
-INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
+INT16 PythSpacesAway(INT32 sOrigin, INT32 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
@@ -671,7 +671,7 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 }
 
 
-INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
+INT16 SpacesAway(INT32 sOrigin, INT32 sDest)
 {
  INT16 sRows,sCols;
 
@@ -681,7 +681,7 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 	return( __max( sRows, sCols ) );
 }
 
-INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest) 
+INT16 CardinalSpacesAway(INT32 sOrigin, INT32 sDest) 
 // distance away, ignoring diagonals!
 {
  INT16 sRows,sCols;

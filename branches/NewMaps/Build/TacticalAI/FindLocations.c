@@ -538,7 +538,7 @@ INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	UINT32	uiThreatCnt = 0;
 	INT32 iMaxMoveTilesLeft, iSearchRange, iRoamRange;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16	sOrigin;	// has to be a short, need a pointer
+	INT32	sOrigin;	// has to be a short, need a pointer
 	INT16	*		pusLastLoc;
 	INT8 *		pbPersOL;
 	INT8 *		pbPublOL;
@@ -1094,19 +1094,19 @@ INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	return(NOWHERE);       // return that no suitable cover was found
 }
 
-INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
+INT32 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 {
 	INT32 sGridNo;
-	INT16 sBestSpot = NOWHERE;
+	INT32 sBestSpot = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iThreatRange,iClosestThreatRange = 1500, iSpotClosestThreatRange;
-	INT16 sThreatLoc, sThreatGridNo[MAXMERCS];
+	INT32 sThreatLoc, sThreatGridNo[MAXMERCS];
 	UINT32 uiThreatCnt = 0;
 	INT32 iSearchRange;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT8 * pbPersOL,*pbPublOL, bEscapeDirection, bBestEscapeDirection = -1;
 	SOLDIERTYPE *pOpponent;
-	INT16	sOrigin;
+	INT32	sOrigin;
 	INT32	iRoamRange;
 
 	INT8	fHasGasMask;
@@ -1396,7 +1396,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	return( sBestSpot );
 }
 
-INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
+INT32 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 {
 	INT32 sGridNo,sClosestLand = NOWHERE,sPathCost,sShortestPath = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
@@ -1513,7 +1513,7 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	INT32 iSearchRange;
 	INT8 bLightLevel, bCurrLightLevel, bLightDiff;
 	INT32 iRoamRange;
-	INT16 sOrigin;
+	INT32 sOrigin;
 
 	bCurrLightLevel = LightTrueLevel( pSoldier->sGridNo, pSoldier->bLevel );
 
@@ -1978,9 +1978,9 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	return( AI_ACTION_NONE );
 }
 
-INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
+INT32 FindClosestDoor( SOLDIERTYPE * pSoldier )
 {
-	INT16		sClosestDoor = NOWHERE;
+	INT32		sClosestDoor = NOWHERE;
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT32 sGridNo;
@@ -2021,12 +2021,12 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	return( sClosestDoor );
 }
 
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode )
+INT32 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode )
 {
 	INT32			iLoop;
-	INT16			*psEdgepointArray;
+	INT32			*psEdgepointArray;
 	INT32			iEdgepointArraySize;
-	INT16			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
+	INT32			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	switch( bEdgeCode )
 	{
@@ -2067,7 +2067,7 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode )
 	return( sClosestSpot );
 }
 
-INT16 FindNearestEdgePoint( INT32 sGridNo )
+INT32 FindNearestEdgePoint( INT32 sGridNo )
 {
 	INT16			sGridX, sGridY;
 	INT16			sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
@@ -2142,7 +2142,7 @@ INT16 FindNearestEdgePoint( INT32 sGridNo )
 
 #define EDGE_OF_MAP_SEARCH 5
 
-INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
+INT32 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;

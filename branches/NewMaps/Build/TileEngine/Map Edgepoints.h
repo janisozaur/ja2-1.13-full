@@ -19,10 +19,10 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer );
 void TrashMapEdgepoints();
 
 //dynamic arrays that contain the valid gridno's for each edge
-extern INT16 *gps1stNorthEdgepointArray;
-extern INT16 *gps1stEastEdgepointArray;
-extern INT16 *gps1stSouthEdgepointArray;
-extern INT16 *gps1stWestEdgepointArray;
+extern INT32 *gps1stNorthEdgepointArray;
+extern INT32 *gps1stEastEdgepointArray;
+extern INT32 *gps1stSouthEdgepointArray;
+extern INT32 *gps1stWestEdgepointArray;
 //contains the size for each array
 extern UINT16 gus1stNorthEdgepointArraySize;
 extern UINT16 gus1stEastEdgepointArraySize;

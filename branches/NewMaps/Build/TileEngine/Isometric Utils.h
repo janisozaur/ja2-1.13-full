@@ -85,9 +85,9 @@ BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
 BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRect, INT16 *sXRel, INT16 *sRelY );
 
 
-INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest);
-INT16 SpacesAway(INT16 sOrigin, INT16 sDest);
-INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
+INT16 PythSpacesAway(INT32 sOrigin, INT32 sDest);
+INT16 SpacesAway(INT32 sOrigin, INT32 sDest);
+INT16 CardinalSpacesAway(INT32 sOrigin, INT32 sDest);
 INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 );
 BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );

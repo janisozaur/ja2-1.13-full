@@ -563,7 +563,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	UINT8					ubDirsLeft;
 	BOOLEAN				fDirChecked[8];
 	BOOLEAN				fRangeRestricted = FALSE, fFound = FALSE;
-	UINT16				usDest, usOrigin;
+	UINT32				usDest, usOrigin;
 	SOLDIERTYPE *	pFriend;
 
 
@@ -698,10 +698,10 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 }
 
 
-INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
+INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 {
-	INT16 sRandDest = NOWHERE;
-	UINT16 usOrigin, usMaxDist;
+	INT32 sRandDest = NOWHERE;
+	UINT32 usOrigin, usMaxDist;
 	UINT8	ubTriesLeft;
 	BOOLEAN fLimited = FALSE, fFound = FALSE;
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;
@@ -840,23 +840,23 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	return(sRandDest); // defaults to NOWHERE
 }
 
-INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel )
+INT32 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel )
 {
-	INT16		*psLastLoc, *pusNoiseGridNo;
+	INT32		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT32 sGridNo=-1;
 	INT8		bLevel, bClosestLevel;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
-	INT16		sClosestDisturbance = NOWHERE;
+	INT32		sClosestDisturbance = NOWHERE;
 	UINT32	uiLoop;
-	UINT16	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
+	UINT32	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
 	INT32		iShortestPath = 1000;
 	INT32		iShortestPathConscious = 1000,iShortestPathUnconscious = 1000;
 	UINT8		*pubNoiseVolume;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;
-	INT16		sClimbGridNo;
+	INT32		sClimbGridNo;
 	SOLDIERTYPE * pOpp;
 
 	// CJC: can't trace a path to every known disturbance!
@@ -1050,9 +1050,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 }
 
 
-INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
+INT32 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT32 * psGridNo, INT8 * pbLevel)
 {
-	INT16 *psLastLoc,sGridNo, sClosestOpponent = NOWHERE;
+	INT32 *psLastLoc,sGridNo, sClosestOpponent = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
 	INT8	*pbPersOL,*pbPublOL;
@@ -1161,7 +1161,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 	return( sClosestOpponent );
 }
 
-INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
+INT32 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT32 * psGridNo, INT8 * pbLevel)
 {
 	INT32 sGridNo, sClosestOpponent = NOWHERE;
 	UINT32 uiLoop;
@@ -1314,7 +1314,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 {
 	INT32 sGridNo;
-	INT16	sRoamingOrigin;
+	INT32	sRoamingOrigin;
 	INT16	sRoamingRange;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_PC )
@@ -1521,10 +1521,10 @@ BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
-INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary)
+INT32 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary)
 {
 	UINT32 uiLoop;
-	INT16 sPathCost, sClosestFriend = NOWHERE, sShortestPath = 1000, sClimbGridNo;
+	INT32 sPathCost, sClosestFriend = NOWHERE, sShortestPath = 1000, sClimbGridNo;
 	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	SOLDIERTYPE *pFriend;
 
@@ -1715,7 +1715,7 @@ BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 }
 
 
-INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridNo)
+BOOLEAN InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	if (WaterTooDeepForAttacks( sGridNo ))
 	{

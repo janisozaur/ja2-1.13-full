@@ -879,7 +879,7 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridno)
 }
 
 
-INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno)
+INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno)
 {
 	INT32 cnt;
 	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};

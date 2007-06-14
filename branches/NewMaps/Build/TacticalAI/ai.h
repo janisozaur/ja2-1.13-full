@@ -150,7 +150,7 @@ void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
 
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 
-INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
+INT32 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
 INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance );
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
@@ -204,7 +204,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);
 
 void InitPanicSystem();
-INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridno);
+BOOLEAN InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridno);
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
 BOOLEAN InitAI( void );
 
@@ -217,7 +217,7 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
 void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);
 
-INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier);
+INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier);
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier);
 INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT32 *pFromGridno);
 

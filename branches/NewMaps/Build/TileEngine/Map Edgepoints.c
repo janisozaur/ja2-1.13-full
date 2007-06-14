@@ -18,10 +18,10 @@
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge
-INT16 *gps1stNorthEdgepointArray					= NULL;
-INT16 *gps1stEastEdgepointArray						= NULL;
-INT16 *gps1stSouthEdgepointArray					= NULL;
-INT16 *gps1stWestEdgepointArray						= NULL;
+INT32 *gps1stNorthEdgepointArray					= NULL;
+INT32 *gps1stEastEdgepointArray						= NULL;
+INT32 *gps1stSouthEdgepointArray					= NULL;
+INT32 *gps1stWestEdgepointArray						= NULL;
 //contains the size for each array
 UINT16 gus1stNorthEdgepointArraySize			= 0;
 UINT16 gus1stEastEdgepointArraySize				= 0;
