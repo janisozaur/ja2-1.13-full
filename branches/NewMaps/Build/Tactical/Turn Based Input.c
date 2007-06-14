@@ -4225,7 +4225,7 @@ void CreatePlayerControlledMonster()
 INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode )
 {
 	// Look for an item pool
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	SOLDIERTYPE       *pTSoldier;
 	INT16							sAPCost = 0;
@@ -4287,7 +4287,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	SOLDIERTYPE *pSoldier;
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT16							sAPCost;
 	INT16							sAdjustedGridNo;
@@ -4461,7 +4461,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	SOLDIERTYPE				*pSoldier;
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT8							bReturnCode = 0;
 	INT8							bZLevel;

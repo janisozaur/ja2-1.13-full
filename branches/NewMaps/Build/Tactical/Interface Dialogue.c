@@ -4818,7 +4818,7 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 {
 	STRUCTURE					*pStructure;
 	INT16							sStructGridNo;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT32 sGridNo;
 	DOOR *						pDoor;

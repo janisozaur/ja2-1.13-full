@@ -4241,7 +4241,7 @@ void DrawItemTileCursor( )
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
 	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGiveItem = FALSE;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	static UINT32			uiOldCursorId = 0;
 	static UINT16			usOldMousePos = 0;
@@ -4674,7 +4674,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				// Check if we can reload robot....
 				if ( IsValidAmmoToReloadRobot( MercPtrs[ ubSoldierID ], &TempObject ) )
 				{
-					 INT16	sActionGridNo;
+					 INT32 sActionGridNo;
 					 UINT8	ubDirection;
 					 INT16	sAdjustedGridNo;
 						

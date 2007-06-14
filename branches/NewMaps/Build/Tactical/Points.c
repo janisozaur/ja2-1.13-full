@@ -864,7 +864,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 {
 	UINT16						sAPCost = 0;
 	UINT16						usItemNum;	
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT16							sAdjustedGridNo;
 	UINT32						uiItemClass;
@@ -1560,7 +1560,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 {
 	ITEM_POOL					*pItemPool;
 	UINT16						sAPCost = 0;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 
 	// Check if we are over an item pool
 	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->bLevel ) )
@@ -1690,7 +1690,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
 {
 	UINT16						sAPCost = 0;
-  INT16             sActionGridNo;
+  INT32 sActionGridNo;
   UINT8             ubDirection;
   INT16             sAdjustedGridNo;
 

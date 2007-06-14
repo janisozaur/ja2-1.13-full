@@ -889,7 +889,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldie
 BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT16 sMaxTiles, INT8 bLevel )
 {
 	INT32 iNumTiles;
-	INT16	sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8	ubDirection;
 
 	if ( pSoldier->bLevel != bLevel )

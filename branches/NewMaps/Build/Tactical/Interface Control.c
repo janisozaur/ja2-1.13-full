@@ -786,7 +786,7 @@ void RenderTopmostTacticalInterface( )
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
 					INT8							bZLevel = 0;
-					INT16							sActionGridNo = usMapPos;
+					INT32 sActionGridNo = usMapPos;
 
 					// Get interactive tile...
 					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -825,7 +825,7 @@ void RenderTopmostTacticalInterface( )
 					  STRUCTURE					*pStructure = NULL;
 					  INT16							sIntTileGridNo;
 					  INT8							bZLevel = 0;
-					  INT16							sActionGridNo = usMapPos;
+					  INT32 sActionGridNo = usMapPos;
 
 					  // Get interactive tile...
 					  if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )

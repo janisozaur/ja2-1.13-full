@@ -93,7 +93,7 @@ extern								UINT32	guiUITargetSoldierId;
 
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
-	INT16							sMapPos;
+	INT32							sMapPos;
 	
 	*pMercFlags = 0;
 
@@ -110,7 +110,7 @@ BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 
 BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
-	INT16							sMapPos;
+	INT32							sMapPos;
 	
 	*pMercFlags = 0;
 

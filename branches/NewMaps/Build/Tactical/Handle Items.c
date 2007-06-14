@@ -1432,7 +1432,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 
 void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECTTYPE *pObject, INT8 bInvPos )
 {
-	INT16 sActionGridNo, sAdjustedGridNo;
+	INT32 sActionGridNo, sAdjustedGridNo;
 	UINT8	ubDirection;
 
 	 // Remove any previous actions
@@ -1498,7 +1498,7 @@ BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo, INT8 bZLevel )
 {
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -3950,7 +3950,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	STRUCTURE		*pStructure;
 	INT16				sDesiredLevel;
-	INT16				sActionGridNo;
+	INT32 sActionGridNo;
 	BOOLEAN			fStructFound = FALSE;
 	UINT8				ubDirection;
 	INT16				sAdjustedGridNo;

@@ -1771,7 +1771,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 	UINT16						usMapPos;
 	SOLDIERTYPE				*pSoldier;
 	INT16							sDestGridNo;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	STRUCTURE					*pStructure;
 	UINT8							ubDirection;
 	BOOLEAN						fAllMove;
@@ -3675,7 +3675,7 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, UIN
 INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiFlags )
 {
 	INT16							sAPCost, sBPCost;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	STRUCTURE					*pStructure;
 	BOOLEAN						fOnInterTile = FALSE;
 	UINT8							ubDirection;
@@ -5424,7 +5424,7 @@ BOOLEAN HandleTalkInit(  )
 	UINT8							ubQuoteNum;
 	UINT8							ubDiceRoll;
 	INT16							sDistVisible;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 
 	// Get soldier
@@ -5681,7 +5681,7 @@ INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 usM
 	LEVELNODE					*pIntTile;
 	static BOOLEAN		fOverPool = FALSE;
 	static BOOLEAN		fOverEnemy = FALSE;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	INT16							sIntTileGridNo;
 	BOOLEAN						fContinue = TRUE;
 	STRUCTURE					*pStructure = NULL;

@@ -10440,7 +10440,7 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 
 void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget )
 {
-		INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
+		INT32 sActionGridNo, sGridNo, sAdjustedGridNo;
 		UINT8	ubDirection;
 
 
