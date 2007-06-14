@@ -610,7 +610,7 @@ typedef struct
 	INT8												bDominantDir;				// AI main direction to face...
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
-	INT16											  usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
+	INT32											  usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
 	INT32												sNoiseGridno;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;

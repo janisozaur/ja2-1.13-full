@@ -490,7 +490,7 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 // UTILITY FUNTIONS
 
-INT32 OutOfBounds(INT32 sGridno, INT16 sProposedGridno)
+INT32 OutOfBounds(INT32 sGridno, INT32 sProposedGridno)
 {
  INT16 sMod,sPropMod;
 

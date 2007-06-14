@@ -531,7 +531,7 @@ INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT32 sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
 	INT32	iThreatRange, iClosestThreatRange = 1500;
-//	INT16 sClosestThreatGridno = NOWHERE;
+//	INT32 sClosestThreatGridno = NOWHERE;
 	INT32	iMyThreatValue;
 	INT32	sThreatLoc;
 	INT32 iMaxThreatRange;

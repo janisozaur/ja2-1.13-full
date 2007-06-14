@@ -169,11 +169,11 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
 
-INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno);
-INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
-INT16 FindClosestDoor( SOLDIERTYPE * pSoldier );
-INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
-INT16 FindNearestEdgePoint( INT32 sGridNo );
+INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno);
+INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
+INT32 FindClosestDoor( SOLDIERTYPE * pSoldier );
+INT32 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
+INT32 FindNearestEdgePoint( INT32 sGridNo );
 
 //Kris:  Added these as I need specific searches on certain sides.
 enum
@@ -183,12 +183,12 @@ enum
 	SOUTH_EDGEPOINT_SEARCH,
 	WEST_EDGEPOINT_SEARCH,
 };
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode );
+INT32 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode );
 
-INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier);
+INT32 FindNearestUngassedLand(SOLDIERTYPE *pSoldier);
 BOOLEAN FindRoofClimbingPoints( SOLDIERTYPE * pSoldier, INT16 sDesiredSpot );
-INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier);
-INT16 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
+INT32 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier);
+INT32 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
 
 void FreeUpNPCFromAttacking(UINT8 ubID);
 void FreeUpNPCFromPendingAction( SOLDIERTYPE * pSoldier );
@@ -219,7 +219,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);
 
 INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier);
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier);
-INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 *pFromGridno);
+INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT32 *pFromGridno);
 
 void SetCivilianDestination(UINT8 ubWho, INT32 sGridno);
 void SetNewSituation( SOLDIERTYPE * pSoldier );

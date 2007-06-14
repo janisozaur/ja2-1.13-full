@@ -12,9 +12,9 @@
 
 BOOLEAN InitPathAI( void );
 void ShutDownPathAI( void );
-INT16 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
-INT16 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
-INT16 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
+INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
+INT32 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
+INT32 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget);
 
 void ErasePath(char bEraseOldOne);
 INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags );

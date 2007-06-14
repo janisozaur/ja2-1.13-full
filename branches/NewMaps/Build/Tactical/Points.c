@@ -1344,7 +1344,8 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
  // look around all 8 directions and return lowest terrain cost
  INT32	cnt;
  INT16	sLowest=127;
- INT16	sGridno,sCost;
+ INT16	sCost;
+ INT32 sGridno;
 
  if ( TANK( pSoldier ) )
  {
@@ -1367,7 +1368,8 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
-	INT16	sGridno,sCost;
+	INT16	sCost;
+	INT32	sGridno;
 	INT8	bOverTerrainType;
 	UINT16	usMoveModeToUse;
 

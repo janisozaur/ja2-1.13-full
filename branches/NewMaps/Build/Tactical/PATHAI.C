@@ -2209,7 +2209,7 @@ void ErasePath(char bEraseOldOne)
 
 
 
-INT16 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
  INT16 sTileCost,sPoints=0,sAnimCost=0;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
@@ -2594,11 +2594,11 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
 
 }
 
-INT16 UIPlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
 	// This function is specifically for UI calls to the pathing routine, to 
 	// check whether the shift key is pressed, etc.
-	INT16	 sRet;
+	INT32	 sRet;
 
 	if ( _KeyDown( SHIFT ) )
 	{
@@ -2637,11 +2637,11 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode )
 	return( sRet );
 }
 
-INT16 EstimatePlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
 	// This function is specifically for AI calls to estimate path cost to a location
 	// It sets stuff up to ignore all people
-	INT16			sRet;
+	INT32			sRet;
 
 	gfEstimatePath = TRUE;
 

@@ -89,7 +89,7 @@ typedef struct
 	INT16								sSlideReason;
 	UINT32							uiTimeSinceMercAIStart;
 	INT8								fPanicFlags;
-	INT16								sPanicTriggerGridnoUnused;
+	INT32								sPanicTriggerGridnoUnused;
 	INT16								sHandGrid;
 	UINT8								ubSpottersCalledForBy;
 	UINT8								ubTheChosenOne;

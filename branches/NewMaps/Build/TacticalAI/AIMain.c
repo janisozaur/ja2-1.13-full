@@ -883,8 +883,8 @@ INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno)
 {
 	INT32 cnt;
 	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
-	INT16 sTempGridno,sCheapestCost=500,sMovementCost,sCheapestDest=NOWHERE;
-
+	INT32 sTempGridno, sCheapestDest=NOWHERE;
+	INT16 sCheapestCost=500, sMovementCost;
 
 	for (cnt=0; cnt < 4; cnt++)
 	{

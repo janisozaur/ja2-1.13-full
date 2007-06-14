@@ -65,7 +65,7 @@ extern INT8 gbLastKnownOppLevel[TOTAL_SOLDIERS][TOTAL_SOLDIERS];
 extern INT16 gsPublicLastKnownOppLoc[MAXTEAMS][TOTAL_SOLDIERS];	// team vs. merc
 extern INT8 gbPublicLastKnownOppLevel[MAXTEAMS][TOTAL_SOLDIERS];
 extern UINT8 gubPublicNoiseVolume[MAXTEAMS];
-extern INT16 gsPublicNoiseGridno[MAXTEAMS];
+extern INT32 gsPublicNoiseGridno[MAXTEAMS];
 extern INT8 gbPublicNoiseLevel[MAXTEAMS];
 extern UINT8 gubKnowledgeValue[10][10];
 extern INT8 gbLookDistance[8][8];
@@ -94,7 +94,7 @@ void GloballyDecideWhoSeesWho(void);
 UINT16 GetClosestMerc( UINT16 usSoldierIndex );
 void ManLooksForOtherTeams(SOLDIERTYPE *pSoldier);
 void OtherTeamsLookForMan(SOLDIERTYPE *pOpponent);
-void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2);
+void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2);
 void DecideTrueVisibility(SOLDIERTYPE *pSoldier, UINT8 ubLocate);
 void AddOneOpponent(SOLDIERTYPE *pSoldier);
 void RemoveOneOpponent(SOLDIERTYPE *pSoldier);

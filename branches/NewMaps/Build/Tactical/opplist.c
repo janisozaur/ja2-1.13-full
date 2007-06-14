@@ -107,7 +107,7 @@ INT8 gbLastKnownOppLevel[TOTAL_SOLDIERS][TOTAL_SOLDIERS];
 INT16 gsPublicLastKnownOppLoc[MAXTEAMS][TOTAL_SOLDIERS];	// team vs. merc
 INT8 gbPublicLastKnownOppLevel[MAXTEAMS][TOTAL_SOLDIERS];
 UINT8 gubPublicNoiseVolume[MAXTEAMS];
-INT16 gsPublicNoiseGridno[MAXTEAMS];
+INT32 gsPublicNoiseGridno[MAXTEAMS];
 INT8	gbPublicNoiseLevel[MAXTEAMS];
 
 UINT8 gubKnowledgeValue[10][10] =
@@ -1815,7 +1815,7 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 
 
 
-void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2)
+void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2)
 {
  INT8 bDoLocate = FALSE;
  BOOLEAN fNewOpponent = FALSE;

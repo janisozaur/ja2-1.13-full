@@ -79,7 +79,7 @@ BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 // Disgusting hacks: have to keep track of these values for accesses in callbacks
 static SOLDIERTYPE *	gpTempSoldier;
-static INT16					gsTempGridno;
+static INT32					gsTempGridno;
 static INT8						bTempFrequency;
 
 void BombMessageBoxCallBack( UINT8 ubExitValue );

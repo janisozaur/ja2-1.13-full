@@ -2201,7 +2201,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 	return(iThreatValue);
 }
 
-INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
+INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT32 * pusFromGridNo)
 {
 	if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 	{
