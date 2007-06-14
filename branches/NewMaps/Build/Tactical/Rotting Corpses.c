@@ -756,7 +756,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	INT8												bVisible = -1;
 	OBJECTTYPE									*pObj;
   UINT8                       ubNumGoo;
-  INT16                       sNewGridNo;
+  INT32 sNewGridNo;
   OBJECTTYPE                  ItemObject;
 
 
@@ -1391,7 +1391,7 @@ void CorpseHit( INT32 sGridNo, UINT16 usStructureID )
 #if 0
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 	
 	pStructure = FindStructureByID( sGridNo, usStructureID );
 	
@@ -1441,7 +1441,7 @@ void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 	ANITILE_PARAMS		AniParams;
 	
 	pStructure = FindStructureByID( sGridNo, usStructureID );
@@ -1502,7 +1502,7 @@ void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
 
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
 {
-	INT16  sSweetGridNo;
+	INT32 sSweetGridNo;
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2, cnt3;
@@ -1652,7 +1652,7 @@ BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse )
 ROTTING_CORPSE *GetCorpseAtGridNo( INT32 sGridNo, INT8 bLevel )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_CORPSE );
 

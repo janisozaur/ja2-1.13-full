@@ -487,7 +487,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 	INT16 sX, sY;
 	STRUCTURE		*pBase, *pWallStruct, *pAttached, *pAttachedBase;
 	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
-	INT16 sNewGridNo, sStructGridNo;
+	INT32 sNewGridNo, sStructGridNo;
 	INT16	sNewIndex, sSubIndex;
 	UINT16 usObjectIndex, usTileIndex;
 	UINT8	 ubNumberOfTiles, ubLoop;
@@ -496,7 +496,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 	INT8		bDamageReturnVal;
 	BOOLEAN	fContinue;
 	UINT32	uiTileType;
-	INT16		sBaseGridNo;
+	INT32 sBaseGridNo;
 	BOOLEAN	fExplosive;
 
 	// ATE: Check for O3 statue for special damage..
@@ -1123,7 +1123,7 @@ void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 	INT16									sDesiredLevel;
 	DB_STRUCTURE_TILE			**ppTile;
 	UINT8									ubLoop, ubLoop2;
-	INT16									sNewGridNo, sNewGridNo2, sBaseGridNo;
+	INT32 sNewGridNo, sNewGridNo2, sBaseGridNo;
 	BOOLEAN								fToBreak = FALSE;
 	BOOLEAN								fMultiStructure = FALSE;
 	UINT8									ubNumberOfTiles;
@@ -1461,7 +1461,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usIte
 	BOOLEAN fStunEffect = FALSE;
 	INT8		bSmokeEffectType = 0;
 	BOOLEAN	fBlastEffect = TRUE;
-	INT16		sNewGridNo;
+	INT32 sNewGridNo;
 	BOOLEAN	fBloodEffect = FALSE;
 	ITEM_POOL * pItemPool, * pItemPoolNext;
 	UINT32	uiRoll;
@@ -1863,7 +1863,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
    INT8					Blocking, BlockingTemp;
 	 BOOLEAN      fTravelCostObs = FALSE;
    UINT32       uiRangeReduce;
-   INT16        sNewGridNo;
+   INT32 sNewGridNo;
 	 STRUCTURE *	pBlockingStructure;
    BOOLEAN      fBlowWindowSouth = FALSE;
 	 BOOLEAN			fReduceRay = TRUE;

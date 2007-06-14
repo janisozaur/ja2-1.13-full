@@ -48,7 +48,7 @@ INT8 gzMeanwhileStr[][30] =
 
 
 // the snap to grid nos for meanwhile scenes
-UINT16 gusMeanWhileGridNo[]=
+UINT32 gusMeanWhileGridNo[]=
 {
 	12248,
 	12248,

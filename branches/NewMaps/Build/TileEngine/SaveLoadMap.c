@@ -868,7 +868,7 @@ void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, IN
 }
 
 
-void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
+void AddExitGridToMapTempFile( UINT32 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
 {
 	MODIFY_MAP Map;
 
@@ -1034,7 +1034,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 	STRUCTURE * pBase;
 	BOOLEAN			fStatusOnTheMap;
 	ITEM_POOL			*pItemPool;
-  INT16     sBaseGridNo = (INT16)uiMapIndex;
+  INT32 sBaseGridNo = (INT16)uiMapIndex;
 
 	pStructure = FindStructure( (UINT16)uiMapIndex, STRUCTURE_OPENABLE );
 
@@ -1087,7 +1087,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 
 
 
-BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen )
+BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT32 usGridNo, BOOLEAN fChangeToOpen )
 {
 //	STRUCTURE * pStructure;
 //	MODIFY_MAP Map;

@@ -1000,7 +1000,7 @@ INT16 MaxDistanceVisible( void )
 	return( STRAIGHT * 2 );
 }
 
-INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel )
+INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT32 sSubjectGridNo, INT8 bLevel )
 {
 	INT16 sDistVisible;
 	INT8	bLightLevel;

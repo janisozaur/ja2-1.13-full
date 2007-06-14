@@ -602,7 +602,7 @@ BOOLEAN BumpAnyExistingMerc( INT32 sGridNo )
 {
 	UINT8						ubID;
 	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,
-	INT16						sNewGridNo;
+	INT32 sNewGridNo;
 	UINT8						ubDir;
 	INT16						sCellX, sCellY;
 
@@ -1034,12 +1034,12 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridNo )
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT32 usGridNo )
 {
-	INT16			sDoorGridNo;
+	INT32			sDoorGridNo;
 	DOOR *		pDoor;
 
-	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) usGridNo );
+	sDoorGridNo = FindDoorAtGridNoOrAdjacent( usGridNo );
 	if (sDoorGridNo != NOWHERE)
 	{
 		switch( ubScheduleAction )
@@ -1338,7 +1338,7 @@ void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
 				if ( usSleepSpot2 == usSleepSpot )
 				{
 					// conflict!
-					//usNewSleepSpot = (INT16) FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
+					//usNewSleepSpot = FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
 					usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier2, usSleepSpot2, 3, &ubDirection );
 					if ( usNewSleepSpot != NOWHERE )
 					{

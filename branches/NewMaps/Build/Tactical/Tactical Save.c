@@ -1281,7 +1281,7 @@ BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiNumberOfItems=0;
 	WORLDITEM *pWorldItems = NULL;
 	UINT32	cnt;
-  INT16   sNewGridNo;
+  INT32 sNewGridNo;
 
 	//Get the number of items from the file
 	if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )

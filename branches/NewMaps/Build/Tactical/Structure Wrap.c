@@ -153,7 +153,7 @@ LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT32 sGridNo, IN
 BOOLEAN IsDoorVisibleAtGridNo( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
-	INT16				sNewGridNo;
+	INT32 sNewGridNo;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
 

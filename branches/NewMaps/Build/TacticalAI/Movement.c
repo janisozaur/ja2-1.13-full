@@ -799,7 +799,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 #endif
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
 	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );

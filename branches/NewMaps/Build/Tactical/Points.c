@@ -53,7 +53,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Is this obstcale a hidden tile that has not been revealed yet?
-		if( DoesGridnoContainHiddenStruct( (UINT16)sGridno, &fHiddenStructVisible ) )
+		if( DoesGridnoContainHiddenStruct( sGridno, &fHiddenStructVisible ) )
 		{
 			// Are we not visible, if so use terrain costs!
 			if ( !fHiddenStructVisible )

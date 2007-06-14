@@ -838,7 +838,7 @@ BOOLEAN RefineLogicOnStruct( INT32 sGridNo, LEVELNODE *pNode )
 			if ( pStructure->fFlags & STRUCTURE_SWITCH )
 			{
 				// Find a new gridno based on switch's orientation...
-				INT16 sNewGridNo = NOWHERE;
+				INT32 sNewGridNo = NOWHERE;
 
 				switch( pStructure->pDBStructureRef->pDBStructure->ubWallOrientation )
 				{

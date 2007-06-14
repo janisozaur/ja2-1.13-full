@@ -41,8 +41,8 @@
 #define ALWAYS_CONSIDER_HIT (STRUCTURE_WALLSTUFF | STRUCTURE_CAVEWALL | STRUCTURE_FENCE)
 
 
-UINT16 gusLOSStartGridNo = 0;
-UINT16 gusLOSEndGridNo = 0;
+UINT32 gusLOSStartGridNo = 0;
+UINT32 gusLOSEndGridNo = 0;
 UINT16 gusLOSStartSoldier = NOBODY;
 UINT16 gusLOSEndSoldier = NOBODY;
 extern UINT32 guiSoldierFlags;
@@ -1903,7 +1903,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	INT8								bHeadSlot = NO_SLOT;
 	OBJECTTYPE					Object;
 	SOLDIERTYPE *				pTarget;
-  INT16               sNewGridNo;
+  INT32 sNewGridNo;
   BOOLEAN             fCanSpewBlood = FALSE;
   INT8                bSpewBloodLevel;
 

@@ -143,7 +143,7 @@ INT8 GetZLevelOfItemPoolGivenStructure( INT32 sGridNo, UINT8 ubLevel, STRUCTURE 
 
 INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool );
 
-BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo );
+BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT32 * psProblemGridNo );
 void MineSpottedDialogueCallBack( void );
 
 extern INT16 gsBoobyTrapGridNo;
@@ -163,7 +163,7 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot );
 
 BOOLEAN ItemTypeExistsAtLocation( INT32 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex );
 
-INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius );
+INT16 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius );
 
 BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay );
 

@@ -1501,9 +1501,9 @@ BOOLEAN ExecuteOverhead( )
 											// that our final dest may now have people on it....
 											if ( FindBestPath( pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) != 0 )
 											{
-												INT16 sNewGridNo;
+												INT32 sNewGridNo;
 
-												sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+												sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 												SetDelayedTileWaiting( pSoldier, sNewGridNo, 1 );
 											}
@@ -1782,7 +1782,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 {
 	INT16                           sAPCost;
 	INT16                           sBPCost;
-	UINT16                          usNewGridNo, sOverFenceGridNo, sMineGridNo;
+	UINT32                          usNewGridNo, sOverFenceGridNo, sMineGridNo;
 
 	if (gTacticalStatus.uiFlags & INCOMBAT && fInitialMove )
 	{
@@ -1826,7 +1826,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 	// OK, check if this is a fence cost....
 	if ( gubWorldMovementCosts[ usNewGridNo ][ (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ][ pSoldier->bLevel ] == TRAVELCOST_FENCE )
@@ -1873,7 +1873,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 	{
 		STRUCTURE * pStructure;
 		INT8				bDirection;
-		INT16				sDoorGridNo;
+		INT32				sDoorGridNo;
 
 		// OK, if we are here, we have been told to get a pth through a door.
 
@@ -1887,7 +1887,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		// OK, based on the direction, get door gridno
 		if ( bDirection == NORTH || bDirection == WEST )
 		{
-			sDoorGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+			sDoorGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 		}
 		else if ( bDirection == SOUTH || bDirection == EAST )
 		{
@@ -2981,7 +2981,7 @@ void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSet
 }
 
 
-void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo )
+void SlideToLocation( UINT16 usReasonID, INT32 sDestGridNo )
 {
 	if ( sDestGridNo == NOWHERE )
 	{
@@ -4131,7 +4131,7 @@ CHAR8 *GetSceneFilename(  )
 	return( gzLevelFilenames[ gubCurrentScene ] );
 }
 
-extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
+extern BOOLEAN InternalOkayToAddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
 
 // NB if making changes don't forget to update NewOKDestinationAndDirection
 INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel )

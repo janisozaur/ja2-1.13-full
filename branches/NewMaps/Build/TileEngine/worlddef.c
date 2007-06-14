@@ -695,7 +695,7 @@ void CompileWorldTerrainIDs( void )
 	}
 }
 
-void CompileTileMovementCosts( UINT16 usGridNo )
+void CompileTileMovementCosts( UINT32 usGridNo )
 {
 	UINT8						ubTerrainID;
 	TILE_ELEMENT		TileElem;
@@ -1602,7 +1602,7 @@ void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 // GLOBAL WORLD MANIPULATION FUNCTIONS
 void CompileWorldMovementCosts( )
 {
-	UINT16					usGridNo;
+	UINT32 usGridNo;
 
 	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
 
@@ -2129,7 +2129,7 @@ INT8	bDirectionsForShadowSearch[ NUM_DIR_SEARCHES ] =
 void OptimizeMapForShadows( )
 {
 	INT32 cnt, dir;
-	INT16 sNewGridNo;
+	INT32 sNewGridNo;
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
 		// CHECK IF WE ARE A TREE HERE

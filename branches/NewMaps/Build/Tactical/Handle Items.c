@@ -841,7 +841,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT32 usGridNo, INT8 bLevel, UINT16 us
 		 // For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
 		 if ( IsRefuelableStructAtGridNo( usGridNo, &ubMercID ) )
 		 {
-				INT16 sNewGridNo;
+				INT32 sNewGridNo;
 				UINT8	ubDirection;
 
 				sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
@@ -1194,7 +1194,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT32 usGridNo, INT8 bLevel, UINT16 us
 	// THIS IS IF WE WERE FROM THE UI
 	if ( Item[ usHandItem ].usItemClass == IC_GRENADE || Item[ usHandItem ].usItemClass == IC_LAUNCHER || Item[ usHandItem ].usItemClass == IC_THROWN )
 	{
-		INT16 sCheckGridNo;
+		INT32 sCheckGridNo;
 
 		// Get gridno - either soldier's position or the gridno
 		if ( pTargetSoldier != NULL )
@@ -1214,7 +1214,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT32 usGridNo, INT8 bLevel, UINT16 us
 			ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
 
 			// Get new gridno!
-			sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
+			sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
 
 			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubDirection , pSoldier->usAnimState ) )
 			{
@@ -1993,11 +1993,11 @@ OBJECTTYPE* InternalAddItemToPool( INT32 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	INT32				iWorldItem;
 	STRUCTURE		*pStructure, *pBase;
 	INT16				sDesiredLevel;
-	INT16       sNewGridNo = *psGridNo;
+	INT32       sNewGridNo = *psGridNo;
 	LEVELNODE		*pNode;
 	BOOLEAN			fForceOnGround = FALSE;
 	BOOLEAN			fObjectInOpenable = FALSE;
-  INT8        bTerrainID;
+	INT8        bTerrainID;
 
 	Assert( pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
@@ -4554,9 +4554,9 @@ void SwitchMessageBoxCallBack( UINT8 ubExitValue )
 	}
 }
 
-BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo )
+BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT32 * psProblemGridNo )
 {
-	INT16						sNextGridNo;
+	INT32						sNextGridNo;
 	// BOOLEAN fWorthChecking = FALSE, fProblemExists = FALSE, fDetectedProblem = FALSE;
 	UINT8						ubDetectLevel, ubDirection;
 	MAP_ELEMENT *		pMapElement;
@@ -5043,7 +5043,7 @@ void RefreshItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 }
 
 
-INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
+INT16 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

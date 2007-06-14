@@ -400,9 +400,9 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTa
 	INT32		iBulletGetThrough=0;
 	INT32		iHighestValue=0;
 	INT32		iCover=0;
-	UINT16	usMaxRange;
-	UINT16	usRange;
-	UINT16	usSightLimit;
+	UINT32	usMaxRange;
+	UINT32	usRange;
+	UINT32	usSightLimit;
 
 	//loop through all the enemies and determine the cover 
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
@@ -433,7 +433,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTa
 			continue;          // next merc
 		}
 
-		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
+		usRange = GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
 		usSightLimit = DistanceVisible( pOpponent, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->bLevel );
 
 		if( usRange > ( usSightLimit * CELL_X_SIZE ) )

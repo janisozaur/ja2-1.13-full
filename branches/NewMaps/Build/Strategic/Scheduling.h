@@ -44,8 +44,8 @@ typedef struct SCHEDULENODE
 {
 	struct SCHEDULENODE *next;
 	UINT16 usTime[MAX_SCHEDULE_ACTIONS];	//converted to minutes 12:30PM would be 12*60 + 30 = 750
-	UINT16 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
-	UINT16 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
+	UINT32 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
+	UINT32 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
 	UINT8 ubScheduleID;
 	UINT8 ubSoldierID;

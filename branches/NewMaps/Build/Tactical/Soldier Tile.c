@@ -186,7 +186,7 @@ void MarkMovementReserved( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 
 void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 {
-	INT16 sNewGridNo;
+	INT32 sNewGridNo;
 
 	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(pSoldier->dYPos, pSoldier->dXPos );
 
@@ -210,7 +210,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 b
 {
 	UINT8		ubPerson;
 	INT16		sTempDestGridNo;
-	INT16		sNewGridNo;
+	INT32 sNewGridNo;
 	BOOLEAN	fSwapInDoor = FALSE;
 
 	if ( sGridNo == NOWHERE )
@@ -261,7 +261,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 b
 							pSoldier->fBlockedByAnotherMerc = FALSE;
 
 							// Is the next tile blocked too?
-							sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+							sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 							return( TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel ) );
 						} 
@@ -500,7 +500,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 	// Buddy is waiting to continue his path
 	INT8		bBlocked, bPathBlocked;
 	INT16		sCost;
-	INT16   sNewGridNo, sCheckGridNo;
+	INT32 sNewGridNo, sCheckGridNo;
 	UINT8		ubDirection, bCauseDirection;
 	UINT8		ubPerson;
 	UINT8		fFlags = 0;
@@ -605,7 +605,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 				if ( sCost > 0 )
 				{
 					// Is the next tile blocked too?
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+					sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 					bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
 
@@ -623,7 +623,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 						gfPlotPathToExitGrid = FALSE;
 
 						// Is the next tile in this new path blocked too?
-						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
+						sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)guiPathingData[ 0 ] ) );
 
 						bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
 

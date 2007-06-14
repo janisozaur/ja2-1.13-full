@@ -225,7 +225,7 @@ void DeleteOverheadDB( )
 }
 
 
-BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel )
+BOOLEAN GetClosestItemPool( INT32 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -275,7 +275,7 @@ BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, 
 }
 
 
-BOOLEAN GetClosestMercInOverheadMap( INT16 sSweetGridNo, SOLDIERTYPE **ppReturnedSoldier, UINT8 ubRadius )
+BOOLEAN GetClosestMercInOverheadMap( INT32 sSweetGridNo, SOLDIERTYPE **ppReturnedSoldier, UINT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

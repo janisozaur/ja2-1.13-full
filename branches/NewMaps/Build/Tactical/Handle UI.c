@@ -228,8 +228,8 @@ extern BOOLEAN gfInOpenDoorMenu;
 
 SOLDIERTYPE			*gpRequesterMerc = NULL;
 SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
-INT16						gsRequesterGridNo;	
-INT16						gsOverItemsGridNo = NOWHERE;
+INT32						gsRequesterGridNo;	
+INT32						gsOverItemsGridNo = NOWHERE;
 INT16						gsOverItemsLevel	= 0;
 BOOLEAN					gfUIInterfaceSetBusy = FALSE;
 UINT32					guiUIInterfaceBusyTime = 0;
@@ -239,11 +239,11 @@ LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
 BOOLEAN					gfResetUIMovementOptimization = FALSE;
 BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
 BOOLEAN					gfBeginVehicleCursor = FALSE;
-UINT16					gsOutOfRangeGridNo = NOWHERE;
+UINT32					gsOutOfRangeGridNo = NOWHERE;
 UINT8						gubOutOfRangeMerc = NOBODY;
 BOOLEAN					gfOKForExchangeCursor = FALSE;
 UINT32					guiUIInterfaceSwapCursorsTime = 0;
-INT16						gsJumpOverGridNo = 0;
+INT32						gsJumpOverGridNo = 0;
 
 
 UI_EVENT gEvents[ NUM_UI_EVENTS ] =
@@ -358,7 +358,7 @@ BOOLEAN fIgnoreLeftUp		= FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-UINT16	gsUITargetShotGridNo	= NOWHERE;
+UINT32	gsUITargetShotGridNo	= NOWHERE;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -404,13 +404,13 @@ BOOLEAN		gfUIKeyCheatModeOn								= FALSE;		// Sets cool cheat keys on
 BOOLEAN		gfUIAllMoveOn											= FALSE;		// Sets to all move
 BOOLEAN		gfUICanBeginAllMoveCycle					= FALSE;		// GEts set so we know that the next right-click is a move-call inc\stead of a movement cycle through
 
-INT16			gsSelectedGridNo								= 0;
+INT32 gsSelectedGridNo								= 0;
 INT16			gsSelectedLevel									= I_GROUND_LEVEL;
 INT16			gsSelectedGuy										= NO_SOLDIER;
 
 BOOLEAN		gfUIDisplayDamage								= FALSE;
 INT8			gbDamage												= 0;
-UINT16		gsDamageGridNo									= 0;
+UINT32		gsDamageGridNo									= 0;
 
 BOOLEAN		gfUIRefreshArrows								= FALSE;
 
@@ -3803,7 +3803,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiFlags 
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
 		if ( IsRepairableStructAtGridNo( usMapPos, &ubMercID ) == 2 )
 		{
-			INT16 sNewGridNo;
+			INT32 sNewGridNo;
 			UINT8	ubDirection;
 
 		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
@@ -3835,7 +3835,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiFlags 
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
 		if ( IsRefuelableStructAtGridNo( usMapPos, &ubMercID ) == 2 )
 		{
-			INT16 sNewGridNo;
+			INT32 sNewGridNo;
 			UINT8	ubDirection;
 
 		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );

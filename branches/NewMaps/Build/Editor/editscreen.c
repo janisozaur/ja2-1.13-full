@@ -2992,7 +2992,7 @@ BOOLEAN CheckForSlantRoofs( void )
 void MapOptimize(void)
 {
 #if 0
-	INT16 gridno;
+	INT32 gridno;
 	LEVELNODE *start, *head, *end, *node, *temp;
 	MAP_ELEMENT		*pMapTile;
 	BOOLEAN fFound, fChangedHead, fChangedTail;

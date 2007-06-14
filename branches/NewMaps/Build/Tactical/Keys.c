@@ -1449,7 +1449,7 @@ void SyncronizeDoorStatusToStructureData( DOOR_STATUS *pDoorStatus )
 {
 	STRUCTURE *pStructure, *pBaseStructure;
 	LEVELNODE * pNode;
-	INT16 sBaseGridNo				 = NOWHERE;
+	INT32 sBaseGridNo				 = NOWHERE;
 
 	// First look for a door structure here...
 	pStructure = FindStructure( pDoorStatus->sGridNo, STRUCTURE_ANYDOOR );
@@ -1531,7 +1531,7 @@ void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUse
 	LEVELNODE * pNode;
 	BOOLEAN		fWantToBeOpen  = FALSE;
 	BOOLEAN		fDifferent     = FALSE;
-	INT16 sBaseGridNo				 = NOWHERE;
+	INT32 sBaseGridNo				 = NOWHERE;
 
 
 	// OK, look at perceived status and adjust graphic

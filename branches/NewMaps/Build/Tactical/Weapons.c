@@ -865,7 +865,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 	INT8								bSilencerPos;
 	INT8								zBurstString[50];
 	UINT8								ubDirection;
-	INT16								sNewGridNo;
+	INT32 sNewGridNo;
 	UINT8								ubMerc;
 	BOOLEAN							fGonnaHit = FALSE;
 	UINT16							usExpGain = 0;
@@ -1172,7 +1172,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 
 		// Direction to center of explosion
 	  ubDirection = gOppositeDirection[ pSoldier->bDirection ];
-		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
+		sNewGridNo  = NewGridNo( pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
 		ubMerc = WhoIsThere2( sNewGridNo, pSoldier->bLevel );

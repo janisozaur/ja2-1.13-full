@@ -35,10 +35,10 @@ BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile );
 //
 // functions at the structure instance level
 //
-BOOLEAN OkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID );
+BOOLEAN OkayToAddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID );
 
 // for the PTR argument of AddStructureToWorld, pass in a LEVELNODE * please!
-BOOLEAN AddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN );
+BOOLEAN AddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN );
 BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure );
 
 //

@@ -2967,7 +2967,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 	MercCreateStruct.sSectorX			= sSectorX;
 	MercCreateStruct.sSectorY			= sSectorY;
 	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-	MercCreateStruct.sInsertionGridNo		= (UINT16) iGridNo;
+	MercCreateStruct.sInsertionGridNo		= iGridNo;
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );
 
@@ -3005,7 +3005,7 @@ void AddItemToGridNo( INT32 iGridNo )
 		CreateItem( gItemListBox.sCurSelectedItem, (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &Object );
 
 		//add the item to the world
-		AddItemToPool( (UINT16) iGridNo, &Object, -1, 0, 0, 0 );
+		AddItemToPool( iGridNo, &Object, -1, 0, 0, 0 );
 	}
 }
 

@@ -1034,7 +1034,7 @@ void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight );
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier );
-void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove );
+void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT32 sNewGridNo, BOOLEAN fForceRemove );
 
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierGetup( SOLDIERTYPE *pSoldier );
@@ -1047,7 +1047,7 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
 void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 void ModifySoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void StopSoldier( SOLDIERTYPE *pSoldier );
-UINT8 SoldierTakeDamage( SOLDIERTYPE *pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathDeduct, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, INT16 sSubsequent, BOOLEAN fShowDamage );
+UINT8 SoldierTakeDamage( SOLDIERTYPE *pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathDeduct, UINT8 ubReason, UINT8 ubAttacker, INT32 sSourceGrid, INT16 sSubsequent, BOOLEAN fShowDamage );
 void RevivePlayerTeam( );
 void ReviveSoldier( SOLDIERTYPE *pSoldier );
 

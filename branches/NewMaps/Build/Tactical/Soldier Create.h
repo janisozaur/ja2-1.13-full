@@ -67,7 +67,7 @@ typedef struct
 	INT16							sSectorX;
 	INT16							sSectorY;
 	INT8							bDirection;
-	INT16							sInsertionGridNo;
+	INT32							sInsertionGridNo;
 
 	// Can force a team, but needs flag set
 	INT8							bTeam;

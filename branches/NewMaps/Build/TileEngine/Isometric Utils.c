@@ -738,7 +738,7 @@ INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 )
 BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
-	INT16			sNewGridNo;
+	INT32 sNewGridNo;
 	BOOLEAN		fFound = FALSE;
 	UINT8			bMinNumTurns = 100;
 	INT8			bNumTurns;
@@ -787,7 +787,7 @@ BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDi
 BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
-	INT16			sNewGridNo;
+	INT32 sNewGridNo;
 	BOOLEAN		fFound = FALSE;
 	UINT8			bMinNumTurns = 100;
 	INT8			bNumTurns;
@@ -1009,7 +1009,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT32 sGridNo, INT8 * pbDirection )
 BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
 	INT32			cnt;
-	INT16			sNewGridNo, sOtherSideOfFence;
+	INT32 sNewGridNo, sOtherSideOfFence;
 	BOOLEAN		fFound = FALSE;
 	UINT8			bMinNumTurns = 100;
 	INT8			bNumTurns;
@@ -1026,7 +1026,7 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStar
 	{
 		// go out *2* tiles
 		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
-		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sOtherSideOfFence = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
 	
 		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )
 		{

@@ -188,7 +188,7 @@ BOOLEAN		gfUIDoNotHighlightSelMerc;
 UINT32		guiShowUPDownArrows;
 BOOLEAN		gfUIHandleSelection;
 BOOLEAN		gfUIHandleSelectionAboveGuy;
-INT16			gsSelectedGridNo;
+INT32			gsSelectedGridNo;
 INT16			gsSelectedGuy;
 BOOLEAN		gfUIInDeadlock;
 UINT8			gUIDeadlockedSoldier;
@@ -203,13 +203,13 @@ UINT16		gsUIHandleShowMoveGridLocation;
 
 BOOLEAN		gfUIDisplayDamage;
 INT8			gbDamage;
-UINT16		gsDamageGridNo;
+UINT32		gsDamageGridNo;
 
 BOOLEAN		gfFontPopupDo;
 
 BOOLEAN		gUITargetReady;
 BOOLEAN		gUITargetShotWaiting;
-UINT16		gsUITargetShotGridNo;
+UINT32		gsUITargetShotGridNo;
 
 INT16			gzLocation[ 20 ];
 BOOLEAN		gfUIBodyHitLocation;
@@ -241,7 +241,7 @@ UINT16	gusUIFullTargetID;
 UINT32	guiUIFullTargetFlags;
 
 BOOLEAN	gfUIConfirmExitArrows;
-INT16		gsJumpOverGridNo;
+INT32		gsJumpOverGridNo;
 
 UINT32  HandleTacticalUI(void);
 UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent );

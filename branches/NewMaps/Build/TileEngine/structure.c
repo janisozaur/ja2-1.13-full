@@ -516,7 +516,7 @@ STRUCTURE * CreateStructureFromDB( DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubT
 	return( pStructure );
 }
 
-BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubTileIndex, INT16 sExclusionID, BOOLEAN fIgnorePeople )
+BOOLEAN OkayToAddStructureToTile( INT32 sBaseGridNo, INT16 sCubeOffset, DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubTileIndex, INT16 sExclusionID, BOOLEAN fIgnorePeople )
 { // Verifies whether a structure is blocked from being added to the map at a particular point
 	DB_STRUCTURE *	pDBStructure;
 	DB_STRUCTURE_TILE	**	ppTile;
@@ -749,7 +749,7 @@ BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 	return( TRUE );
 }
 
-BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople )
+BOOLEAN InternalOkayToAddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople )
 {
 	UINT8									ubLoop;
 	INT16									sCubeOffset;
@@ -792,7 +792,7 @@ BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_ST
 	return( TRUE );
 }
 
-BOOLEAN OkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID )
+BOOLEAN OkayToAddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID )
 {
 	return( InternalOkayToAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, sExclusionID, (BOOLEAN)(sExclusionID == IGNORE_PEOPLE_STRUCTURE_ID) ) );
 }
@@ -823,7 +823,7 @@ BOOLEAN AddStructureToTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure, U
 }
 
 
-STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, LEVELNODE * pLevelNode )
+STRUCTURE * InternalAddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, LEVELNODE * pLevelNode )
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
 	INT32 sGridNo;
 	STRUCTURE **					ppStructure;
@@ -988,7 +988,7 @@ STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRU
 	return( pBaseStructure );
 }
 
-BOOLEAN AddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN )
+BOOLEAN AddStructureToWorld( INT32 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN )
 {
 	STRUCTURE * pStructure;
 
@@ -1052,7 +1052,7 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 	STRUCTURE *						pCurrent;
 	UINT8									ubLoop, ubLoop2;
 	UINT8									ubNumberOfTiles;
-	INT16									sBaseGridNo, sGridNo;
+	INT32 sBaseGridNo, sGridNo;
 	UINT16								usStructureID;
 	BOOLEAN								fMultiStructure;
 	BOOLEAN								fRecompileMPs;

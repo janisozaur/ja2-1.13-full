@@ -85,7 +85,7 @@ typedef struct
 	UINT32							uiFlags;
 	TacticalTeamType		Team[ MAXTEAMS ];
 	UINT8								ubCurrentTeam;
-	INT16								sSlideTarget;
+	INT32								sSlideTarget;
 	INT16								sSlideReason;
 	UINT32							uiTimeSinceMercAIStart;
 	INT8								fPanicFlags;
@@ -143,13 +143,13 @@ typedef struct
 	BOOLEAN							ubItemsSeenOnAttackSoldier;
 	BOOLEAN							fBeenInCombatOnce;
 	BOOLEAN							fSaidCreatureSmellQuote;
-	UINT16							usItemsSeenOnAttackGridNo;
+	UINT32							usItemsSeenOnAttackGridNo;
 	BOOLEAN							fLockItemLocators;
 	UINT8								ubLastQuoteSaid;
 	UINT8								ubLastQuoteProfileNUm;
 	BOOLEAN							fCantGetThrough;
-	INT16								sCantGetThroughGridNo;
-	INT16								sCantGetThroughSoldierGridNo;
+	INT32								sCantGetThroughGridNo;
+	INT32								sCantGetThroughSoldierGridNo;
 	UINT8								ubCantGetThroughID;
 	BOOLEAN							fDidGameJustStart;
 	BOOLEAN							fStatChangeCheatOn;
