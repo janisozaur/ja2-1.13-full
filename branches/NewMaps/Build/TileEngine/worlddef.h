@@ -262,8 +262,8 @@ BOOLEAN NewWorld( void );
 BOOLEAN SaveWorld( UINT8	*puiFilename );
 BOOLEAN LoadWorld( UINT8	*puiFilename );
 void CompileWorldMovementCosts( );
-void RecompileLocalMovementCosts( INT16 sCentreGridNo );
-void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
+void RecompileLocalMovementCosts( INT32 sCentreGridNo );
+void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius );
 
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID );

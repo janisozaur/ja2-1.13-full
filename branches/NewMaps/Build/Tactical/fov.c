@@ -781,7 +781,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 					{
 						gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
 						SetRenderFlags(RENDER_FLAG_MARKED);
-						RecompileLocalMovementCosts( (UINT16)marker );
+						RecompileLocalMovementCosts( marker );
 					}
 				}
 

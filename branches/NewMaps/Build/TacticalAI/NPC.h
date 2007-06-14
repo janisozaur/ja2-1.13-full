@@ -46,7 +46,7 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+		INT32		sRequiredGridno;		// location for NPC req'd to say quote
 	};
 	UINT16	usFactMustBeTrue;		// ...before saying quote
 	UINT16 	usFactMustBeFalse;	// ...before saying quote
@@ -68,7 +68,7 @@ typedef struct
 	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	usGoToGridno;
+	UINT32	usGoToGridno;
 	INT16		sActionData;		// special action value	
 
 #if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )

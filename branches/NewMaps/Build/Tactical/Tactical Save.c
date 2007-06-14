@@ -54,10 +54,10 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+		INT32		sRequiredGridno;		// location for NPC req'd to say quote
 	};
 
-	UINT16	usGoToGridno;
+	UINT32	usGoToGridno;
 
 } TempNPCQuoteInfoSave;			
 

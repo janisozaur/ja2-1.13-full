@@ -1317,10 +1317,10 @@ void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
 }
 
 
-void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
+void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT32 usSleepSpot )
 {
 	SOLDIERTYPE *			pSoldier2;
-	UINT16						usSleepSpot2, usNewSleepSpot;
+	UINT32						usSleepSpot2, usNewSleepSpot;
 	UINT32						uiLoop;
 	SCHEDULENODE *		pSchedule;
 	UINT8							ubDirection;

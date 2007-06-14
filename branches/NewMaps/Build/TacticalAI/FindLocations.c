@@ -521,7 +521,7 @@ UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT32 sGridNo )
 	return( ubCount );
 }
 
-INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentBetter)
+INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentBetter)
 {
 	// all 32-bit integers for max. speed
 	UINT32 uiLoop;
@@ -533,7 +533,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT32	iThreatRange, iClosestThreatRange = 1500;
 //	INT16 sClosestThreatGridno = NOWHERE;
 	INT32	iMyThreatValue;
-	INT16	sThreatLoc;
+	INT32	sThreatLoc;
 	INT32 iMaxThreatRange;
 	UINT32	uiThreatCnt = 0;
 	INT32 iMaxMoveTilesLeft, iSearchRange, iRoamRange;
@@ -1088,7 +1088,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			SnuggleDebug(pSoldier,"Found Cover");
 #endif
 
-			return((INT16)sBestCover);       // return the gridno of that cover
+			return(sBestCover);       // return the gridno of that cover
 		}
 	}
 	return(NOWHERE);       // return that no suitable cover was found

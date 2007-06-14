@@ -53,7 +53,7 @@ void Add3X3Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex + 161, &ExitGrid );
 		AddExitGridToWorld( iMapIndex +   1, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 159, &ExitGrid );
-		RecompileLocalMovementCostsFromRadius( (INT16)iMapIndex, 2 );
+		RecompileLocalMovementCostsFromRadius( iMapIndex, 2 );
 	}
 
 	MarkWorldDirty();
@@ -122,7 +122,7 @@ void Add5X5Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex +   2, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 158, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 318, &ExitGrid );
-		RecompileLocalMovementCostsFromRadius( (INT16)iMapIndex, 3 );
+		RecompileLocalMovementCostsFromRadius( iMapIndex, 3 );
 	}
 	MarkWorldDirty();
 	if( !gfEditMode )

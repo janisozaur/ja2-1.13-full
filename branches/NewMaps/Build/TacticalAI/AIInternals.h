@@ -122,7 +122,7 @@ typedef struct
  UINT8 ubAimTime;							// how many extra APs to spend on aiming
  UINT8 ubChanceToReallyHit;   // chance to hit * chance to get through cover
  INT32 iAttackValue;          // relative worthiness of this type of attack
- INT16 sTarget;								// target gridno of this attack
+ INT32 sTarget;								// target gridno of this attack
  INT8  bTargetLevel;					// target level of this attack
  UINT8 ubAPCost;							// how many APs the attack will use up
  INT8	 bWeaponIn;							// the inv slot of the weapon in question
