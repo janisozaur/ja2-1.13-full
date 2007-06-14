@@ -229,14 +229,14 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 }
 
 
-UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
+UINT32 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
 	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
+	INT32 sLowestGridNo=0;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	SOLDIERTYPE soldier;
@@ -351,14 +351,14 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSwe
 }
 
 
-UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo, INT8 ubRadius )
+UINT32 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo, INT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
 	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
+	INT32		sLowestGridNo=0;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	EXITGRID	ExitGrid;

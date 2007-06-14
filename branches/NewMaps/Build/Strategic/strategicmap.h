@@ -132,7 +132,7 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile );
 
 void AllMercsHaveWalkedOffSector( );
 
-void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection );
+void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT8 ubTacticalDirection );
 
 void AllMercsWalkedToExitGrid();
 UINT8 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue );

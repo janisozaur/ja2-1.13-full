@@ -32,6 +32,6 @@ extern BOOLEAN gfOverrideInsertionWithExitGrid;
 // valid paths, destinations, etc.
 UINT32 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
 
-UINT32 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 ubRadius );
+UINT32 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo, INT8 ubRadius );
 
 #endif

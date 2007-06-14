@@ -247,7 +247,7 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
 void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
-void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo );
+void SlideToLocation( UINT16 usReasonID, INT32 sDestGridNo );
 
 void RebuildAllSoldierShadeTables( );
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );

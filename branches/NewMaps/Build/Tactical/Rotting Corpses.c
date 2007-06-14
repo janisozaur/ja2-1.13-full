@@ -947,7 +947,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 {
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo = NOWHERE;
+	INT32 sLowestGridNo = NOWHERE;
 	INT32		cnt;
 	ROTTING_CORPSE		*pCorpse;
 
@@ -1508,7 +1508,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	INT16  cnt1, cnt2, cnt3;
 	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
+	INT32 sLowestGridNo=0;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	SOLDIERTYPE soldier;

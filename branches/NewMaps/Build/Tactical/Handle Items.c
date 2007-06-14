@@ -5050,7 +5050,7 @@ INT16 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
 	INT16  cnt1, cnt2, cnt3;
 	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
+	INT32 sLowestGridNo=0;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	SOLDIERTYPE soldier;

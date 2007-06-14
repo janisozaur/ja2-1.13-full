@@ -2348,7 +2348,7 @@ void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 
 BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 {
-	INT16														sMineGridNo;
+	INT32								sMineGridNo;
 	UINT8		                        ubVolume;
 
 	
