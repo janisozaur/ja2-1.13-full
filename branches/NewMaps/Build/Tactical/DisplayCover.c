@@ -18,7 +18,7 @@
 
 typedef struct
 {
-	INT16	sGridNo;
+	INT32 sGridNo;
 	INT8	bCover;				//% chance that the gridno is fully covered.  ie 100 if safe, 0  is has no cover		
 //	BOOLEAN fRoof;
 } BEST_COVER_STRUCT;
@@ -278,7 +278,7 @@ void CalculateCoverInRadiusAroundGridno( INT32 sTargetGridNo, INT8	bSearchRange 
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
-	INT16	sGridNo;
+	INT32 sGridNo;
 	INT16	sCounterX, sCounterY;
 	UINT8	ubID;
 	INT8 bStance;
@@ -688,7 +688,7 @@ void CalculateVisibleToSoldierAroundGridno( INT32 sTargetGridNo, INT8 bSearchRan
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
-	INT16	sGridNo;
+	INT32 sGridNo;
 	INT16	sCounterX, sCounterY;
 	BOOLEAN	fRoof=FALSE;
 

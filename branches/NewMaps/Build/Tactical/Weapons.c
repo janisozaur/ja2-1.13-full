@@ -1984,7 +1984,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	ANITILE_PARAMS	AniParams;
 	UINT16					usMissTileIndex, usMissTileType;
 	STRUCTURE				*pStructure = NULL;

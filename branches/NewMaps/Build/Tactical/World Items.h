@@ -16,7 +16,7 @@
 typedef struct
 {
 	BOOLEAN				fExists;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	UINT8					ubLevel;
 	OBJECTTYPE		o;
 	UINT16				usFlags;

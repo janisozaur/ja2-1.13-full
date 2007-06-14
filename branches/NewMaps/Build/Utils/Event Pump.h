@@ -183,7 +183,7 @@ typedef struct
 
 typedef struct
 {
-	INT16		sGridNo;
+	INT32 sGridNo;
 	UINT16	usStructureID;
 	BOOLEAN	fBlowWindowSouth;
 	BOOLEAN	fLargeForce;
@@ -210,7 +210,7 @@ typedef struct
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT8		bDirection;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT16		sXPos;
 	INT16		sYPos;
 

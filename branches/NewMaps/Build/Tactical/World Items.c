@@ -150,7 +150,7 @@ void FindPanicBombsAndTriggers( void )
 	UINT32					uiBombIndex;
 	OBJECTTYPE *		pObj;
 	STRUCTURE *			pSwitch;
-	INT16						sGridNo = NOWHERE;
+	INT32 sGridNo = NOWHERE;
 	BOOLEAN					fPanicTriggerIsAlarm = FALSE;
 	INT8						bPanicIndex;
 	
@@ -500,7 +500,7 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 {
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	UINT8		ubLevel;
 
 	// only do this after Carmen has talked to player and terrorists have been placed
@@ -542,7 +542,7 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 {
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	UINT8		ubLevel;
 	INT8		bSlot;
 

@@ -187,7 +187,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 	STRUCTURE					*pStructure, *pBase;
 	UINT8							ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	UINT16						usIndex;
 	BOOLEAN						fChanged = FALSE;
 

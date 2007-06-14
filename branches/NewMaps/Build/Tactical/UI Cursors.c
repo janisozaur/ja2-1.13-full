@@ -1671,7 +1671,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
 	UINT16				usInHand;
 	UINT8					ubItemCursor;
-	INT16					sGridNo;
+	INT32 sGridNo;
 
 	// LOOK IN GUY'S HAND TO CHECK LOCATION
 	usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -1775,7 +1775,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	INT8					bFutureAim;
 	UINT8					ubCursor;
 	SOLDIERTYPE		*pTSoldier;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT8					bTargetLevel;
 
 	usInHand = pSoldier->inv[HANDPOS].usItem;

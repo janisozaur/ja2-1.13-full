@@ -76,7 +76,7 @@ typedef struct
 	INT16		sX;
 	INT16		sY;
 	INT16		sZ;
-	INT16		sGridNo;
+	INT32 sGridNo;
 
 } NPC_SAVE_INFO;
 

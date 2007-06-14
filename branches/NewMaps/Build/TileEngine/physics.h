@@ -38,7 +38,7 @@ typedef struct
 	vector_3		CollisionVelocity;
 	real				CollisionElasticity;
 
-	INT16				sGridNo;
+	INT32 sGridNo;
 	INT32				iID;
 	LEVELNODE		*pNode;
 	LEVELNODE   *pShadow;

@@ -4707,7 +4707,7 @@ UINT8 MovementNoise( SOLDIERTYPE *pSoldier )
 
 UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier )
 {
-	INT16						sGridNo;
+	INT32 sGridNo;
 	DOOR_STATUS	*		pDoorStatus;
 	UINT8						ubDoorNoise;
 

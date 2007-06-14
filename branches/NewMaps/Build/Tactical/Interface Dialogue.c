@@ -1738,7 +1738,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 	INT32										cnt;
 	SOLDIERTYPE             *pSoldier, *pSoldier2;
 	INT8										bNumDone = 0;
-	INT16										sGridNo = NOWHERE, sAdjustedGridNo;
+	INT32 sGridNo = NOWHERE, sAdjustedGridNo;
 	INT8										bItemIn;
 	UINT8										ubDesiredMercDir;
 	EXITGRID								ExitGrid;
@@ -2348,7 +2348,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// and then have him pick it up
 				{
 					OBJECTTYPE	Object;
-					INT16				sGridNo = 14952;
+					INT32 sGridNo = 14952;
 					INT32				iWorldItem;
 
 					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
@@ -4307,7 +4307,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 {
 	INT32		cnt;
 	UINT32	uiCostSoFar;
-	INT16		sGridNo = 0;
+	INT32 sGridNo = 0;
 	SOLDIERTYPE * pSoldier, *pNPC;
 
 	uiCostSoFar = 0;
@@ -4820,7 +4820,7 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 	INT16							sStructGridNo;
 	INT16							sActionGridNo;
 	UINT8							ubDirection;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	DOOR *						pDoor;
 
 	// Find closest door and get struct data for it!

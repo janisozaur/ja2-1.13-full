@@ -12,7 +12,7 @@ enum
 
 typedef struct
 {
-	INT16		sGridNo;          // gridno at which the tear gas cloud is centered
+	INT32 sGridNo;          // gridno at which the tear gas cloud is centered
 
 	UINT8		ubDuration;		       // the number of turns will remain effective
 	UINT8		bRadius;	          // the current radius

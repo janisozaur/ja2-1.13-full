@@ -105,7 +105,7 @@ enum
 typedef struct
 {
  SOLDIERTYPE *	pOpponent;
- INT16					sGridNo;
+ INT32 sGridNo;
  INT32					iValue;
  INT32					iAPs;
  INT32					iCertainty;

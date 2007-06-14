@@ -722,7 +722,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Do explosive graphic....
 		{
 			ANITILE_PARAMS	AniParams;
-			INT16						sGridNo;
+			INT32 sGridNo;
 			INT16						sX, sY, sZ;
 
 			// Get gridno
@@ -1375,7 +1375,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 {
 	INT32                    cnt, cnt2;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 	DOOR_STATUS							 *pDoorStatus;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 	INT16										 usNewGridNo;

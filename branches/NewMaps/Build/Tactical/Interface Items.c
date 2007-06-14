@@ -4553,7 +4553,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	INT16			sEndZ = 0;
 	BOOLEAN		fGiveItem = FALSE;
 	OBJECTTYPE TempObject;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	INT16			sDist;
 	INT16			sDistVisible;
 
@@ -5866,7 +5866,7 @@ typedef struct
 	BOOLEAN				fDirtyLevel;
 	INT32					iDirtyRect;
 	BOOLEAN				fHandled;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT8					bZLevel;
 	INT16					sButtomPanelStartY;
 	SOLDIERTYPE		*pSoldier;

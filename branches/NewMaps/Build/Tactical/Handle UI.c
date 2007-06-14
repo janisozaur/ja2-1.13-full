@@ -2335,7 +2335,7 @@ void UIHandleMercAttack( SOLDIERTYPE *pSoldier , SOLDIERTYPE *pTargetSoldier, UI
 	UINT16						usItem;
 	LEVELNODE					*pIntNode;
 	STRUCTURE					*pStructure;
-	INT16							sGridNo, sNewGridNo;
+	INT32 sGridNo, sNewGridNo;
 	UINT8             ubItemCursor;
   
   // get cursor
@@ -6046,7 +6046,7 @@ void SetInterfaceHeightLevel( )
 {
 	INT16 sHeight;
 	static INT16 sOldHeight = 0;
-	INT16	sGridNo;
+	INT32 sGridNo;
 
 	if( gfBasement || gfCaves )
 	{

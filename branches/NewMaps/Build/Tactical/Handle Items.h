@@ -55,7 +55,7 @@ typedef struct TAG_ITEM_POOL
 	INT8				bVisible;
 	INT8				bFlashColor;
 	UINT32			uiTimerID;
-	INT16				sGridNo;
+	INT32 sGridNo;
 	UINT8				ubLevel;
 	UINT16			usFlags;
 	INT8				bRenderZHeightAboveLevel;

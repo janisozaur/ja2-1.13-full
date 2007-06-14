@@ -23,7 +23,7 @@ typedef struct
 	INT16												sX;										// World X ( optional )
 	INT16												sY;										// World Y ( optional )
 	INT16												sZ;										// World Z ( optional )
-	INT16												sGridNo;							// World GridNo
+	INT32 sGridNo;							// World GridNo
 	BOOLEAN											fLocate;
 	INT8												bLevel;								// World level
 	UINT8												ubUnsed[1];

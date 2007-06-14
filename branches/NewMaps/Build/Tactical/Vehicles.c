@@ -1486,7 +1486,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE		*pVehicle;
 	UINT8					ubDirection;
-	INT16					sGridNo;
+	INT32 sGridNo;
 
 	// Get vehicle from soldier...
 	pVehicle = GetVehicleSoldierPointerFromPassenger( pSoldier );

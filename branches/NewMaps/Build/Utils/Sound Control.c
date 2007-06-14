@@ -760,7 +760,7 @@ void DelayedSoundTimerCallback( void )
 typedef struct
 {
   UINT32        uiFlags;
-  INT16         sGridNo;
+  INT32 sGridNo;
   INT32         iSoundSampleID;
   INT32         iSoundToPlay;
   UINT32        uiData;

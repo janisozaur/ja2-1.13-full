@@ -141,7 +141,7 @@ extern HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile );
 void RenderAccumulatedBurstLocations( )
 {
 	INT32			cnt;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	HVOBJECT	hVObject;
 
 	if ( !gfBeginBurstSpreadTracking )

@@ -647,7 +647,7 @@ void DestroyTileSurfaces( )
 
 void CompileWorldTerrainIDs( void )
 {
-	INT16						sGridNo;
+	INT32 sGridNo;
 	INT16						sTempGridNo;
 	LEVELNODE	*			pNode;
 	TILE_ELEMENT *	pTileElement;
@@ -3679,7 +3679,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 {
 	INT32					cnt;
 	STRUCTURE		 *pStructure;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	UINT8					ubWallOrientation;
 	INT8					bHiddenVal;
 	INT8					bNumWallsSameGridNo;

@@ -844,7 +844,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 {
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
-	INT16		sGridNo=-1;
+	INT32 sGridNo=-1;
 	INT8		bLevel, bClosestLevel;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
@@ -1262,7 +1262,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 	SOLDIERTYPE		*pTargetSoldier;
 	INT16					sMinDist = (INT16)WORLD_MAX;
 	INT16					sDist;
-	INT16					sGridNo = NOWHERE;
+	INT32 sGridNo = NOWHERE;
 
 	// Loop through all mercs on player team
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -1313,7 +1313,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 {
-	INT16	sGridNo;
+	INT32 sGridNo;
 	INT16	sRoamingOrigin;
 	INT16	sRoamingRange;
 

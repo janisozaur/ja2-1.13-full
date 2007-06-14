@@ -1508,7 +1508,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT8		bDirection;
 
 	pSoldier->sGridNo = sEdgepoint;
@@ -1577,7 +1577,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 
 	pSoldier->sGridNo = sEdgepoint1;
 

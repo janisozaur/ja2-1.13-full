@@ -119,7 +119,7 @@ struct trail_s
 	INT16 nextLink;
 	INT8	stepDir;
 	INT8	fFlags;
-	INT16	sGridNo;
+	INT32 sGridNo;
 };
 typedef struct trail_s trail_t;
 

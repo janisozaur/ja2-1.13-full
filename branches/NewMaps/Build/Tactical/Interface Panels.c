@@ -2756,7 +2756,7 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
 	FACETYPE *pFace;
-	INT16			sGridNo;
+	INT32 sGridNo;
 
 	if ( pSoldier == NULL )
 	{

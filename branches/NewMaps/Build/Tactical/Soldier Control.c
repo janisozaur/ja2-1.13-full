@@ -7984,7 +7984,7 @@ void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN 
 	ANIM_PROF_TILE		*pProfileTile;
 	INT8							bProfileID;
 	UINT32						iTileCount;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	UINT16						usAnimSurface;
 
 	// ATE
@@ -8081,7 +8081,7 @@ BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UI
 	ANIM_PROF_TILE		*pProfileTile;
 	INT8							bProfileID;
 	UINT32						iTileCount;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	UINT16						usAnimSurface;
 
 	// Get Surface Index
@@ -9273,7 +9273,7 @@ UINT16 *CreateEnemyGreyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscal
 void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 {
 	INT16		sAPCost;	
-	INT16		sGridNo;
+	INT32 sGridNo;
 
 	sGridNo = pSoldier->sFinalDestination;
 

@@ -523,7 +523,7 @@ BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 	STRUCTURE *			pExistingStructure;
 	STRUCTURE *			pOtherExistingStructure;
 	INT8						bLoop, bLoop2;
-	INT16						sGridNo;
+	INT32 sGridNo;
 	INT16						sOtherGridNo;
 
 	ppTile = pDBStructureRef->ppTile;
@@ -825,7 +825,7 @@ BOOLEAN AddStructureToTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure, U
 
 STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, LEVELNODE * pLevelNode )
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
-	INT16									sGridNo;
+	INT32 sGridNo;
 	STRUCTURE **					ppStructure;
 	STRUCTURE *						pBaseStructure;
 	DB_STRUCTURE *				pDBStructure;

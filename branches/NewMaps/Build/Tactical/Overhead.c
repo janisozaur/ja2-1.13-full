@@ -840,7 +840,7 @@ BOOLEAN ExecuteOverhead( )
 	BOOLEAN                         fKeepMoving;
   INT8                            bShadeLevel;
 	BOOLEAN                         fNoAPsForPendingAction;
-	INT16                                   sGridNo;
+	INT32 sGridNo;
 	STRUCTURE                       *pStructure;
 	BOOLEAN													fHandleAI = FALSE;
 

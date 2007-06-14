@@ -3777,7 +3777,7 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 		*/
 	/*
 		UINT32	uiLoop;
-		INT16		sGridNo;
+		INT32 sGridNo;
 		UINT32	uiStartTime, uiEndTime;
 
 		if (GetMouseMapPos( &sGridNo ))

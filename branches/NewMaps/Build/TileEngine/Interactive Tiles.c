@@ -39,7 +39,7 @@
 
 typedef struct
 {
-	INT16					sGridNo;
+	INT32 sGridNo;
 	UINT8					ubFlags;
 	INT16					sTileIndex;
 	INT16					sMaxScreenY;
@@ -192,7 +192,7 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 {
 	STRUCTURE			*pStructure;
 	UINT16				usStructureID;
-	INT16					sGridNo;
+	INT32 sGridNo;
 		
 
 	sGridNo					= pSoldier->sPendingActionData2;
@@ -346,7 +346,7 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 { 
 	LEVELNODE	 *pIntNode;
 	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
+	INT32 sGridNo;
 
 	// OK, first see if we have an in tile...
 	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
@@ -395,7 +395,7 @@ void SetActionModeDoorCursorText( )
 { 
 	LEVELNODE	 *pIntNode;
 	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
+	INT32 sGridNo;
 
   // If we are over a merc, don't
   if ( gfUIFullTargetFound )

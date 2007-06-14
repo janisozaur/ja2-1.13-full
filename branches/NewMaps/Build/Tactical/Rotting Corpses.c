@@ -982,7 +982,7 @@ void AddCrowToCorpse( ROTTING_CORPSE *pCorpse )
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
 	UINT8										iNewIndex;
-	INT16										sGridNo;
+	INT32 sGridNo;
 	UINT8										ubDirection;
 	SOLDIERTYPE							*pSoldier;
 	UINT8										ubRoomNum;
@@ -1063,7 +1063,7 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 void HandleCrowFlyAway( SOLDIERTYPE *pSoldier )
 {
 	UINT8 ubDirection;
-	INT16	sGridNo;
+	INT32 sGridNo;
 
 	// Set desired height
 	pSoldier->sDesiredHeight			= 100;
@@ -1177,7 +1177,7 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	INT32                    cnt;
 	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 
 	// If this cump is already visible, return
 	if ( pCorpse->def.bVisible == 1 )
@@ -1223,7 +1223,7 @@ void MercLooksForCorpses( SOLDIERTYPE *pSoldier )
 {
 	INT32                    cnt;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 	ROTTING_CORPSE					 *pCorpse;
 
 	// Should we say disgust quote?
@@ -1506,7 +1506,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2, cnt3;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
 	INT32					leftmost;

@@ -59,7 +59,7 @@ typedef struct
  INT16     sSectorY;   // Y position on the Stategic Map
  INT16     sSectorZ;
  BOOLEAN fBetweenSectors;  // between sectors?
- INT16		 sGridNo;   // location in tactical
+ INT32 sGridNo;   // location in tactical
  SOLDIERTYPE *pPassengers[ 10 ];
  UINT8		 ubDriver;
  INT16		 sInternalHitLocations[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];

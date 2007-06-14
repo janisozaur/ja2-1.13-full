@@ -1824,7 +1824,7 @@ UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier )
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
 {
 	INT16 sAPCost;
-	INT16	sGridNo;
+	INT32 sGridNo;
 
 	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{

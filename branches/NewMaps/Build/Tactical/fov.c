@@ -174,7 +174,7 @@ void BuildSightDir(UINT32 dir, UINT32 *One, UINT32 *Two, UINT32 *Three, UINT32 *
 
 typedef struct
 {
-	INT16			sGridNo;
+	INT32 sGridNo;
 	BOOLEAN		fAllocated;
 
 } SLANT_ROOF_FOV_TYPE;

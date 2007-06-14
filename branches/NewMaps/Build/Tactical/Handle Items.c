@@ -3681,7 +3681,7 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 	UINT16 usSoldierIndex;
 	OBJECTTYPE	*pObject;
 
-	INT16				sGridNo;
+	INT32 sGridNo;
 	UINT8				ubDirection;
 	UINT8				ubTargetMercID;
 
@@ -3748,7 +3748,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	OBJECTTYPE	TempObject;
 	UINT8				ubProfile;
 
-	INT16				sGridNo;
+	INT32 sGridNo;
 	UINT8				ubDirection;
 	UINT8				ubTargetMercID;
 	UINT16			usItemNum;
@@ -5048,7 +5048,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2, cnt3;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
 	INT32					leftmost;

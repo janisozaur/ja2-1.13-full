@@ -116,7 +116,7 @@ typedef	struct
 	FLOAT					dYPos;
 	INT16					sX;
 	INT16					sY;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	
 
 	UINT8					ubFiller[ 32 ];
@@ -658,7 +658,7 @@ void MoveDiveAirplane( FLOAT dAngle )
 void DoDive(  )
 {
 	INT16		sRange;
-	INT16		sGridNo, sOldGridNo;
+	INT32 sGridNo, sOldGridNo;
 
 	INT16		sTargetX, sTargetY;
 	INT16		sStrafeX, sStrafeY;
@@ -825,7 +825,7 @@ void DoDive(  )
 void DoBombing(  )
 {
 	INT16		sRange;
-	INT16		sGridNo, sOldGridNo, sBombGridNo;
+	INT32 sGridNo, sOldGridNo, sBombGridNo;
 
 	INT16		sTargetX, sTargetY;
 	UINT16	usItem;

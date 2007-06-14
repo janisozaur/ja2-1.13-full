@@ -528,7 +528,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
 	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
-	INT16	sGridNo, sBestCover = NOWHERE;
+	INT32 sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
 	INT32	iThreatRange, iClosestThreatRange = 1500;
 //	INT16 sClosestThreatGridno = NOWHERE;
@@ -1644,7 +1644,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 {
 	INT32					iSearchRange;
 	INT16					sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT16					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
 	ITEM_POOL *		pItemPool;
@@ -1983,7 +1983,7 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	INT16		sClosestDoor = NOWHERE;
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		iDist, iClosestDist = 10;
 
 	iSearchRange = 5;
@@ -2306,7 +2306,7 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16		sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT32		iDistance, iClosestDistance = 9999;
 	STRUCTURE * pStructure;
 

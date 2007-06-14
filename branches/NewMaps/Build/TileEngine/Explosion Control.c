@@ -254,7 +254,7 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 	INT16			sX;
 	INT16			sY;
 	INT16			sZ;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	UINT16		usItem;
 	INT32			iIndex;
 	INT8			bLevel;
@@ -309,7 +309,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	INT16			sX;
 	INT16			sY;
 	INT16			sZ;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	UINT16		usItem;
 	UINT8			ubTerrainType;
 	INT8			bLevel;
@@ -2819,7 +2819,7 @@ void HandleExplosionQueue( void )
 	UINT32				uiIndex;
 	UINT32				uiWorldBombIndex;
 	UINT32				uiCurrentTime;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	OBJECTTYPE *	pObj;
   UINT8         ubLevel;
 

@@ -3529,7 +3529,7 @@ typedef struct
 {
 	INT8				bHeight;
 	INT8				bPower;
-	INT16				sGridNo;
+	INT32 sGridNo;
 	UINT8				ubLevel;
 	SOLDIERTYPE	*pSoldier;
 	BOOLEAN			fShowHeight;

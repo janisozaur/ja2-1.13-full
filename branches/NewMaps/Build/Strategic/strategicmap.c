@@ -2416,7 +2416,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	if( pGroup->fPlayer )
 	{	//For player groups, update the soldier information
 		PLAYERGROUP *curr;
-		INT16				sGridNo;
+		INT32 sGridNo;
 		UINT8				ubNum = 0;
 
 		curr = pGroup->pPlayerList;
@@ -3035,7 +3035,7 @@ void DoneFadeOutAdjacentSector( )
 		//For player groups, update the soldier information
 		PLAYERGROUP *curr;
 		UINT32 uiAttempts;
-		INT16				sGridNo, sOldGridNo;
+		INT32 sGridNo, sOldGridNo;
 		UINT8				ubNum = 0;
 		INT16 sWorldX, sWorldY;
 		curr = gpAdjacentGroup->pPlayerList;
@@ -3780,7 +3780,7 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 
 INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
+	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
 	UINT8			bAdjustedDist = 0;
 	UINT32		cnt;
@@ -4198,7 +4198,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
+	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
 	UINT8			bAdjustedDist = 0;
 	UINT32		cnt;
