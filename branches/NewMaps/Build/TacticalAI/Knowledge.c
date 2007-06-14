@@ -144,7 +144,7 @@ void CallEldinTo( INT32 sGridNo )
 }
 
 
-INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
+INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
 {
 	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;

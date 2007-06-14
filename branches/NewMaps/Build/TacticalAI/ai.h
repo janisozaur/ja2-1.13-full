@@ -150,8 +150,8 @@ void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
 
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 
-INT32 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
-INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance );
+INT32 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT32 * psGridNo, INT8 * pbLevel);
+INT32 ClosestPC( SOLDIERTYPE *pSoldier, INT32 * psDistance );
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
 void DebugAI( STR szOutput );

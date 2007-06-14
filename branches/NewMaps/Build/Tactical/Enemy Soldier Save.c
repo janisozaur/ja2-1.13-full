@@ -291,7 +291,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
-							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+							sizeof( INT32 ) * curr->pBasicPlacement->bPatrolCnt );
 
 						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
 						if( uiNumBytesRead != 2 )
@@ -526,7 +526,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 					//Copy patrol points
 					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
-					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 							
 					//copy colors for soldier based on the body type.
 					sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
@@ -1009,7 +1009,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
-						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+						sizeof( INT32 ) * curr->pBasicPlacement->bPatrolCnt );
 
 					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
 					if( uiNumBytesRead != 2 )
@@ -1366,7 +1366,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
-							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+							sizeof( INT32 ) * curr->pBasicPlacement->bPatrolCnt );
 
 						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
 						if( uiNumBytesRead != 2 )
@@ -1609,7 +1609,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 						//Copy patrol points
 						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
-						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 								
 						//copy colors for soldier based on the body type.
 						sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
@@ -2053,7 +2053,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
-						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+						sizeof( INT32 ) * curr->pBasicPlacement->bPatrolCnt );
 
 					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
 					if( uiNumBytesRead != 2 )

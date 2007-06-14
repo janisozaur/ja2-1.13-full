@@ -417,7 +417,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 
 
-INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
+INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 	INT16 sLoop,sAPCost;
 	INT32 sTempDest,sGoToGrid;
@@ -742,14 +742,14 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
   }
 }
 										
-INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction)
+INT32 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bAction)
 {
 	return( InternalGoAsFarAsPossibleTowards( pSoldier, sDesGrid, -1, bAction, 0 ) );
 }
 	
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 {
-	INT16 usNewGridNo,bAPCost;
+	INT32 usNewGridNo,bAPCost;
 
 
 	// turn off the flag now that we're going to do something about it...

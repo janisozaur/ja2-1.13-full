@@ -109,7 +109,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 
 BOOLEAN ConsiderProne( SOLDIERTYPE * pSoldier )
 {
-	INT16		sOpponentGridNo;
+	INT32		sOpponentGridNo;
 	INT8		bOpponentLevel;
 	INT32		iRange;
 
@@ -861,7 +861,7 @@ INT32 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 
 	// CJC: can't trace a path to every known disturbance!
 	// for starters, try the closest one as the crow flies
-	INT16		sClosestEnemy = NOWHERE, sDistToClosestEnemy = 1000, sDistToEnemy;
+	INT32		sClosestEnemy = NOWHERE, sDistToClosestEnemy = 1000, sDistToEnemy;
 
 	*pfChangeLevel = FALSE;
 
@@ -1252,7 +1252,7 @@ INT32 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT32 * psGridNo, INT8 * pbLeve
 }
 
 
-INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
+INT32 ClosestPC( SOLDIERTYPE *pSoldier, INT32 * psDistance )
 {
 	// used by NPCs... find the closest PC
 
@@ -1260,8 +1260,8 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 
 	UINT8					ubLoop;
 	SOLDIERTYPE		*pTargetSoldier;
-	INT16					sMinDist = (INT16)WORLD_MAX;
-	INT16					sDist;
+	INT32					sMinDist = WORLD_MAX;
+	INT32					sDist;
 	INT32 sGridNo = NOWHERE;
 
 	// Loop through all mercs on player team
@@ -1311,7 +1311,7 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 	return( sGridNo );
 }
 
-INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
+INT32 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp )
 {
 	INT32 sGridNo;
 	INT32	sRoamingOrigin;
@@ -1362,7 +1362,7 @@ BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDest
 	}
 }
 
-INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary )
+INT32 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary )
 {
 	if (pSoldier->bLevel == bDestLevel)
 	{
@@ -1397,10 +1397,10 @@ INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo,
 	}
 }
 
-INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo )
+INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT32 * psClimbGridNo )
 {
 	INT16	sPathCost;
-	INT16 sClimbGridNo;
+	INT32 sClimbGridNo;
 
 	if (pSoldier->bLevel == bDestLevel)
 	{

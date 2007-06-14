@@ -689,7 +689,7 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 	pSoldier->bAttitude							= pCreateStruct->bAttitude;
 	pSoldier->bDirection						= pCreateStruct->bDirection;
 	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 	
 	if ( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
 	{
@@ -1059,7 +1059,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//Adding patrol points
 	//CAUTION:  CONVERTING SIGNED TO UNSIGNED though the values should never be negative.
 	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 			
 	//Kris:  November 10, 1997
 	//Expanded the default names based on team.
@@ -1600,7 +1600,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 	//Transfer over the patrol points.
 	pp->bPatrolCnt		= bp->bPatrolCnt;
-	memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 
 	//If it is a detailed placement, don't do this yet, as detailed placements may have their
 	//own equipment.
@@ -1669,7 +1669,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 
 	//Transfer over the patrol points.
 	spp->bPatrolCnt			= bp->bPatrolCnt;
-	memcpy( spp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	memcpy( spp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 
 	//Starts with nothing
 	for( i = 0; i < NUM_INV_SLOTS; i++ )
@@ -1714,7 +1714,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		pp->bAttitude							= bp->bAttitude;
 		pp->bDirection						= bp->bDirection;
 		pp->bPatrolCnt						= bp->bPatrolCnt;
-		memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+		memcpy( pp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT32 ) * MAXPATROLGRIDS );
 		pp->fHasKeys							= bp->fHasKeys;
 		pp->ubCivilianGroup				= bp->ubCivilianGroup;
 		

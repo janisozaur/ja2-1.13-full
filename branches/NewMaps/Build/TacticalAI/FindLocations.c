@@ -539,7 +539,7 @@ INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT32 iMaxMoveTilesLeft, iSearchRange, iRoamRange;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT32	sOrigin;	// has to be a short, need a pointer
-	INT16	*		pusLastLoc;
+	INT32	*		pusLastLoc;
 	INT8 *		pbPersOL;
 	INT8 *		pbPublOL;
 	SOLDIERTYPE *pOpponent;
@@ -2074,9 +2074,9 @@ INT32 FindNearestEdgePoint( INT32 sGridNo )
 	INT16			sDist[5], sMinDist;
 	INT32			iLoop;
 	INT8			bMinIndex;
-	INT16 *		psEdgepointArray;
+	INT32 *		psEdgepointArray;
 	INT32			iEdgepointArraySize;
-	INT16			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
+	INT32			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	ConvertGridNoToXY( sGridNo, &sGridX, &sGridY );
 	GetWorldXYAbsoluteScreenXY( sGridX, sGridY, &sScreenX, &sScreenY );
@@ -2229,7 +2229,7 @@ INT32 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	return( sClosestSpot );
 }
 
-INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo )
+INT32 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT32 sDestGridNo )
 {
 	// the first thing to do is restore the soldier's gridno from the X and Y
 	// values
@@ -2247,7 +2247,7 @@ INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo )
 
 }
 
-INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
+INT32 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;

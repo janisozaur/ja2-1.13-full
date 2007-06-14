@@ -104,7 +104,7 @@ typedef struct
 	PaletteRepID			MiscPal;
 	
 	//Waypoint information for patrolling
-	INT16 sPatrolGrid[ MAXPATROLGRIDS ];
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
 	INT8 bPatrolCnt;
 	
 	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)

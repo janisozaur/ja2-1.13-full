@@ -231,7 +231,7 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 	INT8						bPatientPriority;
 	UINT8						ubDirection;
 	INT32 sAdjustedGridNo, sAdjacentGridNo, sOtherAdjacentGridNo;
-	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
+	INT32						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
 
 	gubGlobalPathFlags = PATH_THROUGH_PEOPLE;

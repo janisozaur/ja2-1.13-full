@@ -19,7 +19,7 @@ enum
 	BAD_ATTACK
 } DisqualificationReasons;
 
-extern INT16 gsBoxerGridNo[ NUM_BOXERS ];
+extern INT32 gsBoxerGridNo[ NUM_BOXERS ];
 extern UINT8 gubBoxerID[ NUM_BOXERS ];
 extern BOOLEAN gfBoxerFought[ NUM_BOXERS ];
 extern INT8 gbBoxingState;

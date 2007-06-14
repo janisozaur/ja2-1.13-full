@@ -2259,7 +2259,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 {
-	INT16 sDist;
+	INT32 sDist;
 
 	if ( !pSoldier )
 	{
@@ -2296,7 +2296,7 @@ void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 {
 	SOLDIERTYPE * pSoldier2 = NULL;
-	INT16 sDist;
+	INT32 sDist;
 
 	if ( !pSoldier )
 	{
@@ -2642,7 +2642,7 @@ BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
 			case OLGA:
 			case TYRONE:
 				{
-					INT16 sDesiredMercDist;
+					INT32 sDesiredMercDist;
 					
 					if ( ClosestPC( pSoldier, &sDesiredMercDist ) != NOWHERE )
 					{
@@ -6837,7 +6837,7 @@ INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
 void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
 {
 	INT8									bTolerance;
-	INT16									sClosestOpponent, sClosestOppLoc;
+	INT32									sClosestOpponent, sClosestOppLoc;
 	UINT8									ubPointsLost, ubTotalPointsLost, ubNewStance;
 	UINT32								uiLoop;
 	UINT8									ubLoop2;

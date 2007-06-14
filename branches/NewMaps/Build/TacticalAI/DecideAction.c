@@ -555,10 +555,10 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 
 INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 {
-	INT16 sDesiredMercLoc;
+	INT32 sDesiredMercLoc;
 	UINT8	ubDesiredMercDir;
 	UINT8	ubDesiredMerc;
-	INT16	sDesiredMercDist;
+	INT32	sDesiredMercDist;
 
 	// if a quote record has been set and we're not doing movement, then
 	// it means we have to wait until someone is nearby and then see

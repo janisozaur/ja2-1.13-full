@@ -162,7 +162,7 @@ BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDest
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 INT32 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel );
 INT32 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary);
-INT32 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
+INT32 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT32 * psGridNo, INT8 * pbLevel);
 void CreatureCall( SOLDIERTYPE * pCaller );
 INT8 CreatureDecideAction( SOLDIERTYPE * pCreature );
 void CreatureDecideAlertStatus( SOLDIERTYPE *pCreature );
@@ -174,15 +174,15 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction );
 INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit);
 INT32 EstimateStabDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,	UINT8 ubChanceToHit, BOOLEAN fBladeAttack);
 INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT32 sGridno);
-INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo );
+INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT32 * psClimbGridNo );
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
-INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp );
-INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo );
-INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing );
-INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
+INT32 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp );
+INT32 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT32 sDestGridNo );
+INT32 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing );
+INT32 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
 UINT8 GetTraversalQuoteActionID( INT8 bDirection );
-INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction);
+INT32 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bAction);
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier );
 
@@ -192,12 +192,12 @@ BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
 void InitAttackType(ATTACKTYPE *pAttack);
 
-INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags );
+INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags );
 
 int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
-INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
-INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
+INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
+INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
 void NPCDoesAct(SOLDIERTYPE *pSoldier);
 void NPCDoesNothing(SOLDIERTYPE *pSoldier);
 INT8 OKToAttack(SOLDIERTYPE *ptr, int target);
