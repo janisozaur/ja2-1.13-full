@@ -22,7 +22,7 @@ void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fF
 void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth );
 
 void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth );
-void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius );
+void SmoothExitGridRadius( INT32 sMapIndex, UINT8 ubRadius );
 
 #endif
 #endif

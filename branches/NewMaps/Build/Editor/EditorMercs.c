@@ -192,7 +192,7 @@ BASIC_SOLDIERCREATE_STRUCT gTempBasicPlacement;
 SOLDIERCREATE_STRUCT gTempDetailedPlacement;
 
 INT16						gsSelectedMercID;
-INT16						gsSelectedMercGridNo;
+INT32						gsSelectedMercGridNo;
 SOLDIERINITNODE *gpSelected;
 
 UINT8						gubCurrMercMode									= MERC_TEAMMODE;
@@ -522,7 +522,7 @@ void AddMercToWorld( INT32 iMapIndex )
 		//Set up some general information.
 		gTempBasicPlacement.fDetailedPlacement = FALSE;
 		gTempBasicPlacement.fPriorityExistance = FALSE;
-		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
+		gTempBasicPlacement.usStartingGridNo = iMapIndex;
 		gTempBasicPlacement.bOrders = gbDefaultOrders;	
 		gTempBasicPlacement.bAttitude = gbDefaultAttitude;
 		gTempBasicPlacement.bRelativeAttributeLevel = gbDefaultRelativeAttributeLevel; 
@@ -574,7 +574,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 	INT16 sThisMercID;
 	INT16 sCellX, sCellY;
 
-	ConvertGridNoToCellXY( (INT16)iMapIndex, &sCellX, &sCellY );
+	ConvertGridNoToCellXY( iMapIndex, &sCellX, &sCellY );
 
 	sThisMercID = (INT16)IsMercHere( iMapIndex );
 
@@ -607,7 +607,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 				gpSelected->pDetailedPlacement->fOnRoof = FALSE;
 			SetSoldierHeight( gpSelected->pSoldier, 0.0 );
 		}
-		gsSelectedMercGridNo = (INT16)iMapIndex;
+		gsSelectedMercGridNo = iMapIndex;
 		gpSelected->pBasicPlacement->usStartingGridNo = gsSelectedMercGridNo;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sInsertionGridNo = gsSelectedMercGridNo;
@@ -671,10 +671,10 @@ void AddMercWaypoint( UINT32 iMapIndex )
 		// Fill up missing waypoints with same value as new one
 		for(iNum = gpSelected->pSoldier->bPatrolCnt + 1; iNum <= iActionParam; iNum++)
 		{
-			gpSelected->pBasicPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
+			gpSelected->pBasicPlacement->sPatrolGrid[iNum] = iMapIndex;
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
-			gpSelected->pSoldier->usPatrolGrid[iNum] = (UINT16)iMapIndex;
+				gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = iMapIndex;
+			gpSelected->pSoldier->usPatrolGrid[iNum] = iMapIndex;
 		}
 		
 		gpSelected->pBasicPlacement->bPatrolCnt = (INT8)iActionParam;
@@ -686,10 +686,10 @@ void AddMercWaypoint( UINT32 iMapIndex )
 	else
 	{
 		// Set this way point
-		gpSelected->pBasicPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
+		gpSelected->pBasicPlacement->sPatrolGrid[iActionParam] = iMapIndex;
 		if( gpSelected->pDetailedPlacement )
-			gpSelected->pDetailedPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
-		gpSelected->pSoldier->usPatrolGrid[iActionParam] = (UINT16)iMapIndex;
+			gpSelected->pDetailedPlacement->sPatrolGrid[iActionParam] = iMapIndex;
+		gpSelected->pSoldier->usPatrolGrid[iActionParam] = iMapIndex;
 	}
 	gfRenderWorld = TRUE;
 }
@@ -879,7 +879,7 @@ INT32 IsMercHere( INT32 iMapIndex )
 	{
 		if ( GetSoldier( &pSoldier, (INT16)IDNumber ) )
 		{
-			if ( pSoldier->sGridNo == (INT16)iMapIndex )
+			if ( pSoldier->sGridNo == iMapIndex )
 			{
 				fSoldierFound = TRUE;
 				RetIDNumber = IDNumber;
@@ -3309,7 +3309,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 		if( gfSingleAction )
 			return;
 		iDrawMode = DRAW_MODE_PLAYER + gpSelected->pBasicPlacement->bTeam;
-		gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
+		gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = iMapIndex;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex ], str );
 		DetermineScheduleEditability();
 		gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
@@ -3352,7 +3352,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 			case SCHEDULE_ACTION_NONE:
 				break;
 		}
-		gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
+		gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = iMapIndex;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex ], str );
 	}
 }
@@ -3505,7 +3505,7 @@ void RenderCurrentSchedule()
 			continue;
 
 		// Convert it's location to screen coordinates
-		ConvertGridNoToXY( (INT16)iMapIndex, &sXMapPos, &sYMapPos );
+		ConvertGridNoToXY( iMapIndex, &sXMapPos, &sYMapPos );
 
 		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
@@ -3656,7 +3656,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 		//Set up some general information.
 		//gTempBasicPlacement.fDetailedPlacement = TRUE;
-		gTempBasicPlacement.usStartingGridNo = (UINT16)iMapIndex;
+		gTempBasicPlacement.usStartingGridNo = iMapIndex;
 
 		//Generate detailed placement information given the temp placement information.
 		if( gTempBasicPlacement.fDetailedPlacement )

@@ -189,7 +189,7 @@ INT32 iJA2ToolbarLastWallState;
 
 INT32 iCurrentTaskbar;
 
-UINT16 iCurBankMapIndex;
+UINT32 iCurBankMapIndex;
 
 InputAtom EditorInputEvent;
 BOOLEAN fBeenWarned = FALSE;
@@ -633,7 +633,7 @@ BOOLEAN DoWindowSelection( void )
 //in the world.
 void RemoveTempMouseCursorObject( void )
 {
-	if ( iCurBankMapIndex < 0x8000 )
+	if ( iCurBankMapIndex < 0x80000000 )
 	{
 		ForceRemoveStructFromTail( iCurBankMapIndex );
 		gCursorNode = NULL;
@@ -723,7 +723,7 @@ BOOLEAN DrawTempMouseCursorObject(void)
 
 	if ( GetMouseXY( &sMouseX_M, &sMouseY_M ) )
 	{
-		if ( (iCurBankMapIndex = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x8000 )
+		if ( (iCurBankMapIndex = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x80000000 )
 		{
 
 			//Hook into the smart methods to override the selection window methods.
@@ -1922,7 +1922,7 @@ UINT32 PerformSelectedAction( void )
 			{		
 				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
 
-				if ( iMapIndex < 0x8000 )
+				if ( iMapIndex < 0x80000000 )
 				{
 					QuickEraseMapTile( iMapIndex );
 				}
@@ -3285,7 +3285,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_PLACE_ITEM:
 				if( gfFirstPlacement )
 				{
-					AddSelectedItemToWorld( (UINT16)iMapIndex );
+					AddSelectedItemToWorld( iMapIndex );
 					gfFirstPlacement = FALSE;
 				}
 				break;
@@ -3307,7 +3307,7 @@ void HandleMouseClicksInGameScreen()
 				HandleRightClickOnMerc( iMapIndex );
 				break;
 			case DRAW_MODE_PLACE_ITEM:
-				HandleRightClickOnItem( (UINT16)iMapIndex );
+				HandleRightClickOnItem( iMapIndex );
 				break;
 
 			// Handle the right clicks in the main window to bring up the appropriate selection window
@@ -3345,7 +3345,7 @@ void HandleMouseClicksInGameScreen()
 				RestoreWalls( iMapIndex );
 				break;
 			case DRAW_MODE_EXITGRID:
-				if( GetExitGrid( (UINT16)iMapIndex, &gExitGrid ) )
+				if( GetExitGrid( iMapIndex, &gExitGrid ) )
 					ApplyNewExitGridValuesToTextFields();
 				break;
 			default:
@@ -3380,7 +3380,7 @@ BOOLEAN DoIRenderASpecialMouseCursor()
 	// Draw basic mouse
 	if ( GetMouseXY( &sMouseX_M, &sMouseY_M ) )
 	{
-		if ( (gsCursorGridNo = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x8000 )
+		if ( (gsCursorGridNo = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x80000000 )
 		{
 			// Add basic cursor
 			//gBasicCursorNode = AddTopmostToTail( gsCursorGridNo, FIRSTPOINTERS1 );
@@ -3591,7 +3591,7 @@ void DrawObjectsBasedOnSelectionRegion()
 					case DRAW_MODE_EXITGRID:  
 						AddToUndoList( iMapIndex );
 						AddExitGridToWorld( iMapIndex, &gExitGrid );			
-						AddTopmostToTail( (UINT16)iMapIndex, FIRSTPOINTERS8 );
+						AddTopmostToTail( iMapIndex, FIRSTPOINTERS8 );
 						break;
 					case DRAW_MODE_DEBRIS:		PasteDebris( iMapIndex );													break;
 					case DRAW_MODE_FLOORS:		PasteSingleFloor( iMapIndex );										break;

@@ -349,7 +349,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 		{
 			gpEditingItemPool = gpItemPool;
 		}
-		gsItemGridNo = (INT16)iMapIndex;
+		gsItemGridNo = iMapIndex;
 	}
 	else
 		RemoveItemGUI();

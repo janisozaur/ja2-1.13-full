@@ -16,6 +16,17 @@
 #define WORLD_MAX					25600
 #define CELL_X_SIZE					10
 #define CELL_Y_SIZE					10
+//<SB> variable map size
+//extern INT32 guiWorldCols;
+//extern INT32 guiWorldRows;
+//
+//#define WORLD_COLS			guiWorldCols
+//#define WORLD_ROWS			guiWorldRows
+//#define WORLD_COORD_COLS			(WORLD_COLS*CELL_X_SIZE)
+//#define WORLD_COORD_ROWS			(WORLD_ROWS*CELL_Y_SIZE)
+//#define WORLD_MAX					(WORLD_COLS*WORLD_ROWS)
+//</SB>
+
 
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80

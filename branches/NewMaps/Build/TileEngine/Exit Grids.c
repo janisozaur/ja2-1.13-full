@@ -48,7 +48,7 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
 }
 
-BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
+BOOLEAN	GetExitGrid( UINT32 usMapIndex, EXITGRID *pExitGrid )
 {
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
@@ -69,7 +69,7 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 	return FALSE;	
 }
 
-BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
+BOOLEAN	ExitGridAtGridNo( UINT32 usMapIndex )
 {
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
@@ -85,7 +85,7 @@ BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 	return FALSE;	
 }
 
-BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode )
+BOOLEAN	GetExitGridLevelNode( UINT32 usMapIndex, LEVELNODE **ppLevelNode )
 {
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
@@ -115,7 +115,7 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{ //we have found an existing exitgrid in this node, so replace it with the new information.
 			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
-			//SmoothExitGridRadius( (UINT16)iMapIndex, 0 );
+			//SmoothExitGridRadius( iMapIndex, 0 );
 			return;
 		}
 		pShadow = pShadow->pNext;
@@ -133,7 +133,7 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 	//Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
 	if( !gfEditMode && !gfLoadingExitGrids )
 	{
-		AddExitGridToMapTempFile( (UINT16)iMapIndex, pExitGrid, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		AddExitGridToMapTempFile( iMapIndex, pExitGrid, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 	}
 }
 
@@ -171,15 +171,15 @@ void LoadExitGrids( INT8 **hBuffer )
 	EXITGRID exitGrid;
 	UINT16 x;
 	UINT16 usNumSaved;
-	UINT16 usMapIndex;
+	UINT32 usMapIndex;
 	gfLoadingExitGrids = TRUE;
 	LOADDATA( &usNumSaved, *hBuffer, 2 );
 	//FileRead( hfile, &usNumSaved, 2, NULL);
 	for( x = 0; x < usNumSaved; x++ )
 	{
-		LOADDATA( &usMapIndex, *hBuffer, 2 );
+		LOADDATA( &usMapIndex, *hBuffer, sizeof(usMapIndex) );
 		//FileRead( hfile, &usMapIndex, 2, NULL);
-		LOADDATA( &exitGrid, *hBuffer, 5 );
+		LOADDATA( &exitGrid, *hBuffer, sizeof(exitGrid) );
 		//FileRead( hfile, &exitGrid, 5, NULL);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}

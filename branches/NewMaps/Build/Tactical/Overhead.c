@@ -4417,7 +4417,7 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
 	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
-	if( WhoIsThere2( (INT16)iMapIndex, 0 ) != NO_SOLDIER )
+	if( WhoIsThere2( iMapIndex, 0 ) != NO_SOLDIER )
     return FALSE;
 	//Locations on roofs without a roof is not possible, so
 	//we convert the onroof intention to ground.
@@ -4428,7 +4428,7 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES );
+		pStructure = FindStructure( iMapIndex, STRUCTURE_BLOCKSMOVES );
 		while( pStructure )
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
@@ -4454,7 +4454,7 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES );
+		pStructure = FindStructure( iMapIndex, STRUCTURE_BLOCKSMOVES );
 		while( pStructure )
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )

@@ -270,7 +270,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 void PasteSmartWall( UINT32 iMapIndex )
 {
 	static BOOLEAN fWallAlone = FALSE;
-	static UINT32 iAloneMapIndex = 0x8000;
+	static UINT32 iAloneMapIndex = 0x80000000;
 	UINT16 usWallType;
 
 	//These are the counters for the walls of each type 

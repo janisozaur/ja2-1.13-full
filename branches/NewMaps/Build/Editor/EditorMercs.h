@@ -52,7 +52,7 @@ extern UINT8 gubCurrMercMode, gubPrevMercMode;
 extern UINT16 *zDiffNames[NUM_DIFF_LVLS];
 extern INT16 sCurBaseDiff;
 extern INT16 gsSelectedMercID;
-extern INT16 gsSelectedMercGridNo;
+extern INT32 gsSelectedMercGridNo;
 extern UINT8 gubCurrMercMode;
 
 enum _ForUseWithIndicateSelectedMerc

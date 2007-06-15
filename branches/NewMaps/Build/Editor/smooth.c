@@ -245,7 +245,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	*piNewTile = usTileIndex;
 } 
 
-void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius )
+void SmoothExitGridRadius( INT32 sMapIndex, UINT8 ubRadius )
 {
 	LEVELNODE* pShadow;
 	INT16 x, y;

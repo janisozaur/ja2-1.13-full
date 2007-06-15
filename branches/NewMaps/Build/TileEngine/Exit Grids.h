@@ -13,9 +13,9 @@ typedef struct //for exit grids (object level)
 	UINT8 ubGotoSectorZ;
 }EXITGRID;
 
-BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex );
-BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode );
-BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid );
+BOOLEAN	ExitGridAtGridNo( UINT32 usMapIndex );
+BOOLEAN	GetExitGridLevelNode( UINT32 usMapIndex, LEVELNODE **ppLevelNode );
+BOOLEAN	GetExitGrid( UINT32 usMapIndex, EXITGRID *pExitGrid );
 
 void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid );
 void RemoveExitGridFromWorld( INT32 iMapIndex );

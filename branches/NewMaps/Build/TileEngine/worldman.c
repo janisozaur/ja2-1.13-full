@@ -1103,7 +1103,7 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 			{
 				if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 				{
-					if (AddStructureToWorld( (INT16) iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
+					if (AddStructureToWorld( iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
 					{
 						MemFree( pNextStruct );
 						guiLevelNodes--;
@@ -1141,7 +1141,7 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 
 				if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 				{
-					if (AddStructureToWorld( (INT16) iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
+					if (AddStructureToWorld( iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
 					{
 						MemFree( pNextStruct );
 						guiLevelNodes--;
@@ -1178,7 +1178,7 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 			gpWorldLevelData[ iMapIndex ].ubExtFlags[0] &= (~MAPELEMENT_EXT_NOBURN_STRUCT);
 
 			// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-			if ( !FindStructure( (INT16)iMapIndex, STRUCTURE_WALLSTUFF ) && pDBStructure->ubNumberOfTiles == 1 )
+			if ( !FindStructure( iMapIndex, STRUCTURE_WALLSTUFF ) && pDBStructure->ubNumberOfTiles == 1 )
 			{
 				// Set flag...
 				gpWorldLevelData[ iMapIndex ].ubExtFlags[0] |= MAPELEMENT_EXT_NOBURN_STRUCT;
@@ -1212,7 +1212,7 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 		{
-			if (AddStructureToWorld( (INT16) iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
+			if (AddStructureToWorld( iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
 			{
 				MemFree( pNextStruct );
 				guiLevelNodes--;
@@ -1227,7 +1227,7 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 	// Set head
 	gpWorldLevelData[ iMapIndex ].pStructHead = pNextStruct;
 
-	SetWorldFlagsFromNewNode( (UINT16)iMapIndex, pNextStruct->usIndex );
+	SetWorldFlagsFromNewNode( iMapIndex, pNextStruct->usIndex );
 
 	if ( usIndex < NUMBEROFTILES )
 	{
@@ -1247,7 +1247,7 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 			gpWorldLevelData[ iMapIndex ].ubExtFlags[0] &= (~MAPELEMENT_EXT_NOBURN_STRUCT);
 
 			// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-			if ( !!FindStructure( (INT16)iMapIndex, STRUCTURE_WALLSTUFF ) && pDBStructure->ubNumberOfTiles == 1 )
+			if ( !!FindStructure( iMapIndex, STRUCTURE_WALLSTUFF ) && pDBStructure->ubNumberOfTiles == 1 )
 			{
 				// Set flag...
 				gpWorldLevelData[ iMapIndex ].ubExtFlags[0] |= MAPELEMENT_EXT_NOBURN_STRUCT;
@@ -1313,7 +1313,7 @@ BOOLEAN InsertStructIndex( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 		{
-			if (AddStructureToWorld( (INT16) iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
+			if (AddStructureToWorld( iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct ) == FALSE)
 			{
 				MemFree( pNextStruct );
 				guiLevelNodes--;
@@ -1472,7 +1472,7 @@ BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
 	}
 
 	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
+	RemoveWorldFlagsFromNewNode( iMapIndex, usIndex );
 
 	return( FALSE );
 
@@ -1533,7 +1533,7 @@ BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 	}
 
 	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
+	RemoveWorldFlagsFromNewNode( iMapIndex, usIndex );
 
 	return( FALSE );
 
@@ -2146,7 +2146,7 @@ BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStru
 		// Set soldier's levelnode
 		pSoldier->pLevelNode	= pNextMerc;
 
-		AddMercStructureInfo( (UINT16)iMapIndex, pSoldier );
+		AddMercStructureInfo( iMapIndex, pSoldier );
 	}
 	
 	// Set head
@@ -2409,7 +2409,7 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 		{
 			if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 			{
-				if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pRoof ) == FALSE)
+				if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pRoof ) == FALSE)
 				{
 					MemFree( pRoof );
 					guiLevelNodes--;
@@ -2436,7 +2436,7 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 				{
 					if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 					{
-						if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof ) == FALSE)
+						if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof ) == FALSE)
 						{
 							MemFree( pNextRoof );
 							guiLevelNodes--;
@@ -2479,7 +2479,7 @@ BOOLEAN AddRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 		{
-			if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof ) == FALSE)
+			if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof ) == FALSE)
 			{
 				MemFree( pNextRoof );
 				guiLevelNodes--;
@@ -2767,7 +2767,7 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 		{
 			if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 			{
-				if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pOnRoof ) == FALSE)
+				if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pOnRoof ) == FALSE)
 				{
 					MemFree( pOnRoof );
 					guiLevelNodes--;
@@ -2796,7 +2796,7 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 				{
 					if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 					{
-						if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof ) == FALSE)
+						if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof ) == FALSE)
 						{
 							MemFree( pNextOnRoof );
 							guiLevelNodes--;
@@ -2836,7 +2836,7 @@ BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
 		{
-			if (AddStructureToWorld( (INT16) iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof ) == FALSE)
+			if (AddStructureToWorld( iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof ) == FALSE)
 			{
 				MemFree( pNextOnRoof );
 				guiLevelNodes--;

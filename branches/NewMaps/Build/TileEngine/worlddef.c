@@ -81,6 +81,13 @@
 	extern UINT16 gzErrorCatchString[256];
 #endif
 
+//<SB> variable map size
+INT32 guiWorldCols = 160;
+INT32 guiWorldRows = 160;
+// размеры должны быть произведением 8
+//</SB>
+
+
 // TEMP
 BOOLEAN					gfForceLoadPlayers = FALSE;
 CHAR8						gzForceLoadFile[100 ];
@@ -2537,7 +2544,7 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 	{
 		EXITGRID exitGrid;
 		INT32 loop;
-		UINT16 usMapIndex;
+		UINT32 usMapIndex;
 		BOOLEAN fExitGridFound;
 		RenderProgressBar( 0, 98 ); 
 		//RenderProgressBar( 1, 98 ); 
