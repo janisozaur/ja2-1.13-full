@@ -3309,7 +3309,7 @@ void RenderItemDescriptionBox( )
 			//LABELS
 			WSTR_SPrintf( sTempString, 128, gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
 			mprintf( gMapWeaponStats[ 0 ].sX + gsInvDescX, gMapWeaponStats[ 0 ].sY + gsInvDescY, L"%ls", sTempString );			
-			//mprintf( gMapWeaponStats[ 2 ].sX + gsInvDescX, gMapWeaponStats[ 2 ].sY + gsInvDescY, L"%s", gMapWeaponStats[ 2 ].zDesc );
+			//mprintf( gMapWeaponStats[ 2 ].sX + gsInvDescX, gMapWeaponStats[ 2 ].sY + gsInvDescY, L"%ls", gMapWeaponStats[ 2 ].zDesc );
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
 				mprintf( gMapWeaponStats[ 3 ].sX + gsInvDescX, gMapWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
@@ -3803,8 +3803,8 @@ void RenderItemDescriptionBox( )
 			//LABELS
 			WSTR_SPrintf( sTempString, 128, (wchar_t *)gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
 			mprintf( gWeaponStats[ 0 ].sX + gsInvDescX, gWeaponStats[ 0 ].sY + gsInvDescY, sTempString );
-//		mprintf( gWeaponStats[ 1 ].sX + gsInvDescX, gWeaponStats[ 1 ].sY + gsInvDescY, L"%s", gWeaponStatsDesc[ 1 ].zDesc );
-//		mprintf( gWeaponStats[ 2 ].sX + gsInvDescX, gWeaponStats[ 2 ].sY + gsInvDescY, L"%s", gWeaponStats[ 2 ].zDesc );
+//		mprintf( gWeaponStats[ 1 ].sX + gsInvDescX, gWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ].zDesc );
+//		mprintf( gWeaponStats[ 2 ].sX + gsInvDescX, gWeaponStats[ 2 ].sY + gsInvDescY, L"%ls", gWeaponStats[ 2 ].zDesc );
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
 				mprintf( gWeaponStats[ 3 ].sX + gsInvDescX, gWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
@@ -6768,11 +6768,11 @@ void RenderItemPickupMenu( )
 					InsertCommasForDollarFigure( pStr2 );
 					InsertDollarSignInToString( pStr2 );
 
-					WSTR_SPrintf( pStr, 100, L"%s (%ls)", ItemNames[ pObject->usItem ], pStr2 );
+					WSTR_SPrintf( pStr, 100, L"%ls (%ls)", ItemNames[ pObject->usItem ], pStr2 );
 				}
 				else
 				{
-					WSTR_SPrintf( pStr, 100, L"%s", ShortItemNames[ pObject->usItem ] );
+					WSTR_SPrintf( pStr, 100, L"%ls", ShortItemNames[ pObject->usItem ] );
 				}
 				VarFindFontCenterCoordinates( sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1 , ITEMDESC_FONT, &sFontX, &sFontY, pStr );
 				mprintf_buffer( pDestBuf, uiDestPitchBYTES, ITEMDESC_FONT, sFontX, sFontY, pStr );
@@ -7403,7 +7403,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 		if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 		{
 			WSTR_SPrintf(pStr, 250, L"" );
-			WSTR_SPrintf(pzStr, usMaxLen, L"%s", pStr );
+			WSTR_SPrintf(pzStr, usMaxLen, L"%ls", pStr );
 			return;
 		}
 	}
@@ -7459,7 +7459,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
-				WSTR_SPrintf( pStr, 250, L"%s (%ls)", ItemNames[ usItem ], pStr2 );
+				WSTR_SPrintf( pStr, 250, L"%ls (%ls)", ItemNames[ usItem ], pStr2 );
 			}
 			break;
 
@@ -7500,7 +7500,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 				}
 
 				//Info for weapons
-				WSTR_SPrintf( pStr, 250, L"%s (%s) [%d%%]\n%s %d\n%s %d\n%s %d (%d)\n%s %s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls (%ls) [%d%%]\n%ls %d\n%ls %d\n%ls %d (%d)\n%ls %ls\n%ls %1.1f %ls", 
 					ItemNames[ usItem ], 
 					AmmoCaliber[ Weapon[ usItem ].ubCalibre ], 
 					sValue, 
@@ -7550,7 +7550,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 				}
 
 				//Info for weapons
-				WSTR_SPrintf( pStr, 250, L"%s [%d%%]\n%s %d\n%s %d\n%s %d (%d)\n%s %s\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls [%d%%]\n%ls %d\n%ls %d\n%ls %d (%d)\n%ls %ls\n%ls %1.1f %ls", 
 					ItemNames[ usItem ], 
 					sValue, 
 					gWeaponStatsDesc[ 9 ],		//Accuracy String
@@ -7573,7 +7573,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 		case IC_THROWING_KNIFE:
 		case IC_PUNCH:
 			{
-				WSTR_SPrintf( pStr, 250, L"%s [%d%%]\n%s %d\n%s %d\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls [%d%%]\n%ls %d\n%ls %d\n%ls %1.1f %ls", 
 					ItemNames[ usItem ], 
 					sValue, 
 					gWeaponStatsDesc[ 11 ],					//Damage String
@@ -7590,7 +7590,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 		case IC_AMMO:
 			{
 				// The next is for ammunition which gets the measurement 'rnds'		
-				WSTR_SPrintf( pStr, 250, L"%s [%d rnds]\n%s %1.1f %s", 				
+				WSTR_SPrintf( pStr, 250, L"%ls [%d rnds]\n%ls %1.1f %ls", 				
 					ItemNames[ usItem ],		//Item long name
 					pObject->ubShotsLeft[0],	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
@@ -7599,7 +7599,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 					);
 
 				//Lal: do not delete, commented out for next version
-				//WSTR_SPrintf( pStr, 250, L"%s %s %s %d [%d rnds]\n%s %1.1f %s", 				
+				//WSTR_SPrintf( pStr, 250, L"%ls %ls %ls %d [%d rnds]\n%ls %1.1f %ls", 				
 				//	AmmoCaliber[ Magazine[ Item[usItem].ubClassIndex ].ubCalibre ],			//Ammo calibre
 				//	AmmoTypes[Magazine[ Item[usItem].ubClassIndex ].ubAmmoType].ammoName,	//Ammo type
 				//	MagNames[Magazine[ Item[usItem].ubClassIndex ].ubMagType],				//Magazine type
@@ -7619,7 +7619,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 				UINT16 explDamage = (UINT16)( Explosive[Item[ usItem ].ubClassIndex].ubDamage + ( (double) Explosive[Item[ usItem ].ubClassIndex].ubDamage / 100) * gGameExternalOptions.ubExplosivesDamageMultiplier );
 				UINT16 explStunDamage = (UINT16)( Explosive[Item[ usItem ].ubClassIndex].ubStunDamage + ( (double) Explosive[Item[ usItem ].ubClassIndex].ubStunDamage / 100) * gGameExternalOptions.ubExplosivesDamageMultiplier );
 
-				WSTR_SPrintf( pStr, 250, L"%s [%d%%]\n%s %d\n%s %d\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls [%d%%]\n%ls %d\n%ls %d\n%ls %1.1f %ls", 
 					ItemNames[ usItem ], 
 					sValue, 
 					gWeaponStatsDesc[ 11 ],		//Damage String
@@ -7657,7 +7657,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 					break;
 				}
 
-				WSTR_SPrintf( pStr, 250, L"%s [%d%%]\n%s %d%% (%d/%d)\n%s %d%%\n%s %1.1f %s", 				
+				WSTR_SPrintf( pStr, 250, L"%ls [%d%%]\n%ls %d%% (%d/%d)\n%ls %d%%\n%ls %1.1f %ls", 				
 					ItemNames[ usItem ],		//Item long name
 					sValue,						//Item condition
 					pInvPanelTitleStrings[ 4 ],	//Protection string
@@ -7681,7 +7681,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 		default:
 			{
 				// The final, and typical case, is that of an item with a percent status
-				WSTR_SPrintf( pStr, 250, L"%s [%d%%]\n%s %1.1f %s", 
+				WSTR_SPrintf( pStr, 250, L"%ls [%d%%]\n%ls %1.1f %ls", 
 					ItemNames[ usItem ],		//Item long name
 					sValue,						//Item condition
 					gWeaponStatsDesc[ 12 ],		//Weight String
@@ -7697,7 +7697,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 		if ( ( Item[pObject->usItem].fingerprintid ) && pObject->ubImprintID < NO_PROFILE )
 		{
 			CHAR16		pStr2[20];
-			WSTR_SPrintf( pStr2, 20, L" [%s]", gMercProfiles[ pObject->ubImprintID ].zNickname );
+			WSTR_SPrintf( pStr2, 20, L" [%ls]", gMercProfiles[ pObject->ubImprintID ].zNickname );
 			wcscat( pStr, pStr2 );
 		}
 
@@ -7734,7 +7734,7 @@ void GetHelpTextForItem( wchar_t * pzStr, UINT16 usMaxLen, OBJECTTYPE *pObject, 
 	}
 
 	// Copy over...
-	WSTR_SPrintf( pzStr, usMaxLen, L"%s", pStr );
+	WSTR_SPrintf( pzStr, usMaxLen, L"%ls", pStr );
 }
 
 

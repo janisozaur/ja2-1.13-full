@@ -1105,7 +1105,7 @@ void SaveLoadGameNumber( INT8 bSaveGameID )
 			IF YOU UNCOMMENT THIS -- LOCALIZE IT!!!
 			CHAR16	sText[512];
 
-			swprintf( sText, L"%s%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID );
+			swprintf( sText, L"%ls%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID );
 
 			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack );
 */
@@ -1337,10 +1337,10 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			CHAR16		zDifString[256];
 			
 			//Create a string for difficulty level
-			WSTR_SPrintf( zDifString, 256, L"%s %s", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
+			WSTR_SPrintf( zDifString, 256, L"%ls %ls", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
 			
 			//make a string containing the extended options
-			WSTR_SPrintf( zMouseHelpTextString, 256, L"%20s     %22s     %22s     %22s", zDifString,
+			WSTR_SPrintf( zMouseHelpTextString, 256, L"%20ls     %22ls     %22ls     %22ls", zDifString,
 						/*gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT + SaveGameHeader.sInitialGameOptions.fTurnTimeLimit + 1],*/
 //Madd
 						//SaveGameHeader.sInitialGameOptions.fIronManMode ? gzGIOScreenText[ GIO_IRON_MAN_TEXT ] : gzGIOScreenText[ GIO_SAVE_ANYWHERE_TEXT ],
@@ -1358,7 +1358,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 		else
 		{
 			//Create the string for the Data
-			WSTR_SPrintf( zDateString, 128, L"%s %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
+			WSTR_SPrintf( zDateString, 128, L"%ls %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
 
 			//Create the string for the current location
 			if( SaveGameHeader.sSectorX == -1 && SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ < 0 )
@@ -1385,12 +1385,12 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			if( SaveGameHeader.ubNumOfMercsOnPlayersTeam == 1 )
 			{
 				//use "merc"
-				WSTR_SPrintf( zNumMercsString, 128, L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
+				WSTR_SPrintf( zNumMercsString, 128, L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
 			}
 			else
 			{
 				//use "mercs"
-				WSTR_SPrintf( zNumMercsString, 128, L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
+				WSTR_SPrintf( zNumMercsString, 128, L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
 			}
 
 			//Get the current balance
@@ -1947,7 +1947,7 @@ void SetSelection( UINT8 ubNewSelection )
 		}
 	}
 
-	swprintf( zMouseHelpTextString, L"%s: %s\n%s: %s\n%s: %s\n%s: %s", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
+	swprintf( zMouseHelpTextString, L"%ls: %ls\n%ls: %ls\n%ls: %ls\n%ls: %ls", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
 		gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel + 1 ],
 
 		gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ],

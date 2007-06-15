@@ -228,7 +228,7 @@ BOOLEAN	InitializeFonts( )
   SET_WINFONT( giSubTitleWinFont ); 
   Color = FROMRGB( 255, 255, 255 );
   SetWinFontForeColor( giSubTitleWinFont, &Color );
-	PrintWinFont( FRAME_BUFFER, giSubTitleWinFont, 10, 100, L"Font %s initialized", gzFontName );
+	PrintWinFont( FRAME_BUFFER, giSubTitleWinFont, 10, 100, L"Font %ls initialized", gzFontName );
 	InvalidateScreen();
 	RefreshScreen( NULL );
   SET_USE_WINFONTS( FALSE );

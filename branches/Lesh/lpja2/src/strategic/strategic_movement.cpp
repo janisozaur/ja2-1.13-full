@@ -4500,7 +4500,7 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 	{
 		#ifdef JA2BETAVERSION
 			wchar_t str[ 100 ];
-			WSTR_SPrintf( str, 100, L"%s is supposed to have gas can in hand.  ATE:0", pSoldier->name );
+			WSTR_SPrintf( str, 100, L"%ls is supposed to have gas can in hand.  ATE:0", pSoldier->name );
 			DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 		#endif
 		return;

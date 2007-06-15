@@ -1709,7 +1709,7 @@ void DebugStructurePage1( void )
 		}
 		else if (pStructure->fFlags & STRUCTURE_WALL)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Wall with orientation %s", WallOrientationString[pStructure->ubWallOrientation] );
+			gprintf( 0, LINE_HEIGHT * 1, L"Wall with orientation %ls", WallOrientationString[pStructure->ubWallOrientation] );
 		}
 		else if (pStructure->fFlags & STRUCTURE_WALLNWINDOW)
 		{
@@ -1729,21 +1729,21 @@ void DebugStructurePage1( void )
 		}
 		else if (pStructure->fFlags & STRUCTURE_DOOR)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Door with orientation %s", WallOrientationString[pStructure->ubWallOrientation] );
+			gprintf( 0, LINE_HEIGHT * 1, L"Door with orientation %ls", WallOrientationString[pStructure->ubWallOrientation] );
 		}
 		else if (pStructure->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"%s sliding door with orientation %s", 
+			gprintf( 0, LINE_HEIGHT * 1, L"%ls sliding door with orientation %ls", 
 				(pStructure->fFlags & STRUCTURE_OPEN) ? L"Open" : L"Closed",
 				WallOrientationString[pStructure->ubWallOrientation] );
 		}
 		else if (pStructure->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"DDoorLft with orientation %s", WallOrientationString[pStructure->ubWallOrientation] );
+			gprintf( 0, LINE_HEIGHT * 1, L"DDoorLft with orientation %ls", WallOrientationString[pStructure->ubWallOrientation] );
 		}
 		else if (pStructure->fFlags & STRUCTURE_DDOOR_RIGHT)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"DDoorRt with orientation %s", WallOrientationString[pStructure->ubWallOrientation] );
+			gprintf( 0, LINE_HEIGHT * 1, L"DDoorRt with orientation %ls", WallOrientationString[pStructure->ubWallOrientation] );
 		}
 		else
 		{
@@ -1814,7 +1814,7 @@ void DebugStructurePage1( void )
 	if (guiTotalPathChecks > 0)
 	{
 		gprintf( 0, LINE_HEIGHT * 16, 
-			L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
+			L"Total %ld, %%lsucc %3ld | %%failed %3ld | %%unsucc %3ld",
 			guiTotalPathChecks,
 			100 * guiSuccessfulPathChecks / guiTotalPathChecks,
 			100 * guiFailedPathChecks / guiTotalPathChecks,

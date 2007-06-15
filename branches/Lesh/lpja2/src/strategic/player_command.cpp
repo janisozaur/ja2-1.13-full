@@ -39,7 +39,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags == 0 )
 	{
 		// none
-	  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 0 ] );
+	  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 0 ] );
 		return;
 	}
 
@@ -47,7 +47,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	// hospital
 	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_HOSPITAL )
 	{
-		WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 1 ] );
+		WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 1 ] );
 	}
 
 	// industry
@@ -55,7 +55,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 2 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 2 ] );
 		}
 		else
 		{
@@ -69,7 +69,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 3 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 3 ] );
 		}
 		else
 		{
@@ -83,7 +83,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 5 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 5 ] );
 		}
 		else
 		{
@@ -97,7 +97,7 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 	{
 		if( wcslen( sFacilitiesString ) == 0 )
 		{
-		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%s", sFacilitiesStrings[ 6 ] );
+		  WSTR_SPrintf( sFacilitiesString, usMaxLen, L"%ls", sFacilitiesStrings[ 6 ] );
 		}
 		else
 		{

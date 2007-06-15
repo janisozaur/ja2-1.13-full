@@ -2032,13 +2032,13 @@ void UpdateCharRegionHelpText( void )
 				if ( AM_A_ROBOT( MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ] ) )
 				{
 					// robot (condition only)
-					WSTR_SPrintf( sString, 128, L"%s: %d/%d",
+					WSTR_SPrintf( sString, 128, L"%ls: %d/%d",
 													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
 				}
 				else if ( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					// vehicle (condition/fuel)
-					WSTR_SPrintf( sString, 128, L"%s: %d/%d, %s: %d/%d",
+					WSTR_SPrintf( sString, 128, L"%ls: %d/%d, %ls: %d/%d",
 													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
 													pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
 				}
@@ -2046,7 +2046,7 @@ void UpdateCharRegionHelpText( void )
 				{
 					// person (health/energy/morale)
 					GetMoraleString( pSoldier, pMoraleStr );
-					WSTR_SPrintf( sString, 128, L"%s: %d/%d, %s: %d/%d, %s: %s",
+					WSTR_SPrintf( sString, 128, L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
 													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
 													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
 													pMapScreenStatusStrings[ 2 ], pMoraleStr );
@@ -2060,7 +2060,7 @@ void UpdateCharRegionHelpText( void )
 		else
 		{
 			// POW - stats unknown
-			WSTR_SPrintf( sString, 128, L"%s: ??, %s: ??, %s: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
+			WSTR_SPrintf( sString, 128, L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
 		}
 
 		SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
@@ -3730,7 +3730,7 @@ void AddStringsToMoveBox( void )
 
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, 128 );
-	WSTR_SPrintf( sString, 128, L"%s %s", pMovementMenuStrings[ 0 ], sStringB );
+	WSTR_SPrintf( sString, 128, L"%ls %ls", pMovementMenuStrings[ 0 ], sStringB );
 	AddMonoString(&hStringHandle, sString );
 
 
@@ -3744,11 +3744,11 @@ void AddStringsToMoveBox( void )
 		// add this squad, now add all the grunts in it
 		if( fSquadIsMoving[ iCount ] )
 		{
-			WSTR_SPrintf( sString, 128, L"*%s*", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
+			WSTR_SPrintf( sString, 128, L"*%ls*", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
 		}
 		else
 		{
-			WSTR_SPrintf( sString, 128, L"%s", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
+			WSTR_SPrintf( sString, 128, L"%ls", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
 		}
 		AddMonoString(&hStringHandle, sString ); 
 
@@ -3760,11 +3760,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in squads
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					WSTR_SPrintf( sString, 128, L"   *%s*", pSoldierMovingList[ iCountB ]->name );
+					WSTR_SPrintf( sString, 128, L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					WSTR_SPrintf( sString, 128, L"   %s", pSoldierMovingList[ iCountB ]->name );
+					WSTR_SPrintf( sString, 128, L"   %ls", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}
@@ -3778,11 +3778,11 @@ void AddStringsToMoveBox( void )
 		// add this vehicle
 		if( fVehicleIsMoving[ iCount ] )
 		{
-			WSTR_SPrintf( sString, 128, L"*%s*", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ] ].ubVehicleType ] );
+			WSTR_SPrintf( sString, 128, L"*%ls*", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ] ].ubVehicleType ] );
 		}
 		else
 		{
-			WSTR_SPrintf( sString, 128, L"%s", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ]  ].ubVehicleType ] );
+			WSTR_SPrintf( sString, 128, L"%ls", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ]  ].ubVehicleType ] );
 		}
 		AddMonoString(&hStringHandle, sString ); 
 
@@ -3794,11 +3794,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in vehicles
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					WSTR_SPrintf( sString, 128, L"   *%s*", pSoldierMovingList[ iCountB ]->name );
+					WSTR_SPrintf( sString, 128, L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					WSTR_SPrintf( sString, 128, L"   %s", pSoldierMovingList[ iCountB ]->name );
+					WSTR_SPrintf( sString, 128, L"   %ls", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}
@@ -3819,11 +3819,11 @@ void AddStringsToMoveBox( void )
 				// add OTHER header line
 				if( AllOtherSoldiersInListAreSelected( ) )
 				{
-					WSTR_SPrintf( sString, 128, L"*%s*", pMovementMenuStrings[ 3 ] );
+					WSTR_SPrintf( sString, 128, L"*%ls*", pMovementMenuStrings[ 3 ] );
 				}
 				else
 				{
-					WSTR_SPrintf( sString, 128, L"%s", pMovementMenuStrings[ 3 ] );
+					WSTR_SPrintf( sString, 128, L"%ls", pMovementMenuStrings[ 3 ] );
 				}
 				AddMonoString(&hStringHandle, sString );
 
@@ -3833,11 +3833,11 @@ void AddStringsToMoveBox( void )
 			// add OTHER soldiers (not on duty nor in a vehicle)
 			if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCount ] ) == TRUE )
 			{
-				WSTR_SPrintf( sString, 128, L"  *%s ( %s )*", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
+				WSTR_SPrintf( sString, 128, L"  *%ls ( %ls )*", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
 			}
 			else
 			{
-				WSTR_SPrintf( sString, 128, L"   %s ( %s )", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
+				WSTR_SPrintf( sString, 128, L"   %ls ( %ls )", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
 			}
 			AddMonoString(&hStringHandle, sString );
 		}
@@ -3851,7 +3851,7 @@ void AddStringsToMoveBox( void )
 	if ( IsAnythingSelectedForMoving() )
 	{
 		// add PLOT MOVE line
-		WSTR_SPrintf( sString, 128, L"%s", pMovementMenuStrings[ 1 ] );
+		WSTR_SPrintf( sString, 128, L"%ls", pMovementMenuStrings[ 1 ] );
 		AddMonoString(&hStringHandle, sString );
 	}
 	else
@@ -3862,7 +3862,7 @@ void AddStringsToMoveBox( void )
 	
 
 	// add cancel line
-	WSTR_SPrintf( sString, 128, L"%s", pMovementMenuStrings[ 2 ] );
+	WSTR_SPrintf( sString, 128, L"%ls", pMovementMenuStrings[ 2 ] );
 	AddMonoString(&hStringHandle, sString );
 
 	return;
@@ -5000,7 +5000,7 @@ void DisplaySoldierUpdateBox( )
 			RenderSoldierSmallFaceForUpdatePanel( iCounter, iFaceX, iFaceY );
 			
 			// display the mercs name
-			WSTR_SPrintf( sString, 32, L"%s", pUpdateSoldierBox[ iCounter ]->name );
+			WSTR_SPrintf( sString, 32, L"%ls", pUpdateSoldierBox[ iCounter ]->name );
 			DrawTextToScreen( sString, (UINT16)(iFaceX-5), (UINT16)(iFaceY + 31), 57, TINYFONT1, FONT_LTRED, FONT_BLACK, 0, CENTER_JUSTIFIED );
 		}
 	}
@@ -5196,7 +5196,7 @@ void CreateUpdateBoxStrings( void )
 	CHAR16 sString[ 64 ];
 	INT32 hStringHandle;
 
-	swprintf( sString, L"%s", pUpdateMercStrings[ iReasonForSoldierUpDate ] );
+	swprintf( sString, L"%ls", pUpdateMercStrings[ iReasonForSoldierUpDate ] );
 	AddMonoString(&hStringHandle, sString );
 
 	for( iCounter = 0; iCounter < SIZE_OF_UPDATE_BOX; iCounter++ )
@@ -5204,7 +5204,7 @@ void CreateUpdateBoxStrings( void )
 		// find valid soldier, add name
 		if( pUpdateSoldierBox[ iCounter ] )
 		{
-			swprintf( sString, L"%s", pUpdateSoldierBox[ iCounter ]->name );
+			swprintf( sString, L"%ls", pUpdateSoldierBox[ iCounter ]->name );
 			AddMonoString(&hStringHandle, sString );
 		}
 	}
@@ -6021,11 +6021,11 @@ BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber 
 			// are they male or female
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				WSTR_SPrintf( gsCustomErrorString, CUSTOM_ERROR_STR_LEN, L"%s %s", pSoldier->name ,pMapErrorString[ 6 ] );
+				WSTR_SPrintf( gsCustomErrorString, CUSTOM_ERROR_STR_LEN, L"%ls %ls", pSoldier->name ,pMapErrorString[ 6 ] );
 			}
 			else
 			{
-				WSTR_SPrintf( gsCustomErrorString, CUSTOM_ERROR_STR_LEN, L"%s %s", pSoldier->name ,pMapErrorString[ 7 ] );
+				WSTR_SPrintf( gsCustomErrorString, CUSTOM_ERROR_STR_LEN, L"%ls %ls", pSoldier->name ,pMapErrorString[ 7 ] );
 			}
 
 			*pbErrorNumber = -99;	// customized error message!

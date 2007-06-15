@@ -90,7 +90,7 @@ altSectorsStartElementHandle(void *userData, const char *name, const char **atts
 				if ( isalpha(atts[1][0]) )
 					pData->uiRowNumber = (UINT32)(atts[1][0] - 0x40);
 				else
-					pData->uiRowNumber = atol(atts[1]);
+					pData->uiRowNumber = atoi(atts[1]);
 			}
 			pData->maxReadDepth++; //we are not skipping this element
 		}

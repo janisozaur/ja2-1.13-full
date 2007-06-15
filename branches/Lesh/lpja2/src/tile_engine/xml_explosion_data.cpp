@@ -105,22 +105,22 @@ explosionDataEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "TransKeyFrame") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.ubTransKeyFrame = (UINT8) atol(pData->szCharData);
+            pData->expData.ubTransKeyFrame = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "DamageKeyFrame") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.ubDamageKeyFrame = (UINT8) atol(pData->szCharData);
+            pData->expData.ubDamageKeyFrame = (UINT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "ExplosionSoundID") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.uiExplosionSoundID = (UINT32) atol(pData->szCharData);
+            pData->expData.uiExplosionSoundID = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "AltExplosionSoundID") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.uiAltExplosionSoundID = (UINT32) atol(pData->szCharData);
+            pData->expData.uiAltExplosionSoundID = (UINT32) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "BlastFilename") == 0)
 		{
@@ -133,7 +133,7 @@ explosionDataEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "BlastSpeed") == 0)
 		{
 			pData->curElement = ELEMENT;
-            pData->expData.sBlastSpeed = (UINT8) atol(pData->szCharData);
+            pData->expData.sBlastSpeed = (UINT8) atoi(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;

@@ -1870,7 +1870,7 @@ void DisplayCurrentSector( void )
 	INT16 sX, sY;
 
 
-	WSTR_SPrintf( sString, 32, L"%s%s%s", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
+	WSTR_SPrintf( sString, 32, L"%ls%ls%ls", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
 	// set font stuff
 	SetFont( COMPFONT );

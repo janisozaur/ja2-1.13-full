@@ -1948,7 +1948,7 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 			{
 				Assert( pGroup->pEnemyGroup->ubIntention < NUM_ENEMY_INTENTIONS );
 
-				WSTR_SPrintf( wString, 120, L"Group %c: %s", 'A' + ubGroupCnt, gwGroupTypeString[ pGroup->pEnemyGroup->ubIntention ] );
+				WSTR_SPrintf( wString, 120, L"Group %c: %ls", 'A' + ubGroupCnt, gwGroupTypeString[ pGroup->pEnemyGroup->ubIntention ] );
 
 				switch ( pGroup->pEnemyGroup->ubIntention )
 				{

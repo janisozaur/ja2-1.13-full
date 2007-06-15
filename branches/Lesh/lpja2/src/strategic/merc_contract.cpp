@@ -1047,7 +1047,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString, 50 );
 
 	// Set string for generic button
-	WSTR_SPrintf( gzUserDefinedButton1, 128, L"%s", zShortTownIDString );
+	WSTR_SPrintf( gzUserDefinedButton1, 128, L"%ls", zShortTownIDString );
 
 
 	pLeaveSoldier = pSoldier;
@@ -1089,11 +1089,11 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		{
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				WSTR_SPrintf( sString, 1024, L"%s %s", pSoldier->name, pMercHeLeaveString[ 3 ] );
+				WSTR_SPrintf( sString, 1024, L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 3 ] );
 			}
 			else
 			{
-				WSTR_SPrintf( sString, 1024, L"%s %s", pSoldier->name, pMercSheLeaveString[ 3 ] );
+				WSTR_SPrintf( sString, 1024, L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 3 ] );
 			}
 			fInSector = TRUE;
 		}
@@ -1119,11 +1119,11 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		{
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				WSTR_SPrintf( sString, 1024, L"%s %s", pSoldier->name, pMercHeLeaveString[ 2 ] );
+				WSTR_SPrintf( sString, 1024, L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 2 ] );
 			}
 			else
 			{
-				WSTR_SPrintf( sString, 1024, L"%s %s", pSoldier->name, pMercSheLeaveString[ 2 ] );
+				WSTR_SPrintf( sString, 1024, L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 2 ] );
 			}
 			fInSector = TRUE;
 		}

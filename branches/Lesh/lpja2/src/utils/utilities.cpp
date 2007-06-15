@@ -249,7 +249,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, UINT16 usWidth, INT32 uiFont
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
-				WSTR_SPrintf( pStr2, 512, L"-%s", &(pStr[uiHyphenLet]) );
+				WSTR_SPrintf( pStr2, 512, L"-%ls", &(pStr[uiHyphenLet]) );
 				pStr[uiHyphenLet] = 0;
 				fLineSplit = TRUE;  //hyphen method
 				break;

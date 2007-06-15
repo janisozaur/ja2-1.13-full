@@ -383,15 +383,15 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 #ifdef TAIWANESE
-	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"%s", zQuote );
+	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"%ls", zQuote );
 #else
-	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"\"%s\"", zQuote );
+	WSTR_SPrintf( gzCivQuote, CIV_QUOTE_STR_LEN, L"\"%ls\"", zQuote );
 #endif
 
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
-		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  gzCivQuote );
+		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  gzCivQuote );
 	}
 
 	// Create video oeverlay....

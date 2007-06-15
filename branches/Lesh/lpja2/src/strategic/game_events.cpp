@@ -207,7 +207,7 @@ void AdjustClockToEventStamp( STRATEGICEVENT *pEvent, UINT32 *puiAdjustment )
 
 	#endif
 
-	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
+	WSTR_SPrintf( WORLDTIMESTR, WORLDTIMESTR_LEN, L"%ls %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
 }
 
 //If there are any events pending, they are processed, until the time limit is reached, or
@@ -363,7 +363,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 		#ifdef JA2TESTVERSION
 			//if( ubCallbackID == EVENT_PROCESS_TACTICAL_SCHEDULE )
 			{
-				ScreenMsg( FONT_RED, MSG_DEBUG, L"%s Event Rejected:  Can't post events <= time while inside an event callback.  This is a special case situation that isn't a bug.", gEventName[ ubCallbackID ] );
+				ScreenMsg( FONT_RED, MSG_DEBUG, L"%ls Event Rejected:  Can't post events <= time while inside an event callback.  This is a special case situation that isn't a bug.", gEventName[ ubCallbackID ] );
 			}
 			//else
 			//{

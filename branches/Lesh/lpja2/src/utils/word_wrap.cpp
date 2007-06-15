@@ -2029,7 +2029,7 @@ BOOLEAN ReduceStringLength( STR16 pString, UINT16 usMaxLen, UINT32 uiWidthToFitI
 
 
 	//combine the temp string and the '...' to form the finished string
-	WSTR_SPrintf( pString, usMaxLen, L"%s%s", zTemp, zStrDots );
+	WSTR_SPrintf( pString, usMaxLen, L"%ls%ls", zTemp, zStrDots );
 
 	return( TRUE );
 }

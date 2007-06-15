@@ -1918,11 +1918,11 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%s", zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%ls", zQuoteStr );
 #else
-	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%s\"", zQuoteStr );
-	WSTR_SPrintf( zText, QUOTE_STR_LEN, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%ls\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_STR_LEN, L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 #endif
 }
 
@@ -1943,11 +1943,11 @@ void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%s", zQuoteStr );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"%ls", zQuoteStr );
 #else
-	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%s\"", zQuoteStr );
-	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	WSTR_SPrintf( gTalkPanel.zQuoteStr, QUOTE_STR_LEN, L"\"%ls\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 #endif
 
 	if ( guiCurrentScreen == MAP_SCREEN )
@@ -1974,11 +1974,10 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 
 	//BUild text
 	// How do we do this with defines?
-	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 #ifdef TAIWANESE
-	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%ls", zQuoteStr );
 #else
-	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"\"%s\"", zQuoteStr );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"\"%ls\"", zQuoteStr );
 #endif
 	sLeft	= 110;
 
@@ -1989,8 +1988,8 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	ExecuteTacticalTextBox( sLeft, (STR16)zText );
 
 #ifndef TAIWANESE
-	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	WSTR_SPrintf( zText, QUOTE_MESSAGE_SIZE, L"%ls: \"%ls\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 #endif
 	
 }
@@ -2368,7 +2367,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		  //reset the font dest buffer
 		  SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT, FALSE);
 
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", pSoldier->name );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", pSoldier->name );
 			mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
 		
 			// What sector are we in, ( and is it the same as ours? )
@@ -2378,7 +2377,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 
 				ReduceStringLength( zTownIDString, 50, 64 , BLOCKFONT2 );
 
-				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", zTownIDString );
+				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", zTownIDString );
 				mprintf( sFontX, sFontY, L"%ls", zTownIDString );
 			}
 
@@ -2393,7 +2392,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		}
 		else
 		{
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
 			mprintf( sFontX, sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
 		}
 

@@ -2636,7 +2636,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg( FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %s -- substituting entrypoint.", pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", pSoldier->name );
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -2653,7 +2653,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg( FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %s -- substituting entrypoint.", pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %ls -- substituting entrypoint.", pSoldier->name );
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -2719,7 +2719,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				}
 				else 
 				{
-					ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s has NO entrypoints -- using precise center of map for %s.", szSector, pSoldier->name );
+					ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", szSector, pSoldier->name );
 					pSoldier->sInsertionGridNo = 12880;
 					AddSoldierToSector( pSoldier->ubID );
 					return;
@@ -2728,19 +2728,19 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				switch( pSoldier->ubStrategicInsertionCode )
 				{
 					case INSERTION_CODE_NORTH:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a north entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a north entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name );
 						break;
 					case INSERTION_CODE_EAST:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a east entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a east entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name );
 						break;
 					case INSERTION_CODE_SOUTH:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a south entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a south entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name );
 						break;
 					case INSERTION_CODE_WEST:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a west entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a west entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name );
 						break;
 					case INSERTION_CODE_CENTER:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a center entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a center entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name );
 						break;
 				}
 			}
@@ -2768,7 +2768,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 
 	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 )
 	{
-		//swprintf( zString, L"%s", pErrorStrings[0] );
+		//swprintf( zString, L"%ls", pErrorStrings[0] );
 	}
 	else if( bSectorZ != 0 )
 	{
@@ -2778,27 +2778,27 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
 			if( bMineIndex != -1 )
 			{
-				WSTR_SPrintf( zString, usMaxLen, L"%c%d: %s %s", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
+				WSTR_SPrintf( zString, usMaxLen, L"%c%d: %ls %ls", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
 			}
 			else switch( SECTOR( sSectorX, sSectorY ) )
 			{
 				case SEC_A10:
-					WSTR_SPrintf( zString, usMaxLen, L"A10: %s", pLandTypeStrings[ REBEL_HIDEOUT ] );
+					WSTR_SPrintf( zString, usMaxLen, L"A10: %ls", pLandTypeStrings[ REBEL_HIDEOUT ] );
 					break;
 				case SEC_J9:
-					WSTR_SPrintf( zString, usMaxLen, L"J9: %s", pLandTypeStrings[ TIXA_DUNGEON ] );
+					WSTR_SPrintf( zString, usMaxLen, L"J9: %ls", pLandTypeStrings[ TIXA_DUNGEON ] );
 					break;
 				case SEC_K4:
-					WSTR_SPrintf( zString, usMaxLen, L"K4: %s", pLandTypeStrings[ ORTA_BASEMENT ] );
+					WSTR_SPrintf( zString, usMaxLen, L"K4: %ls", pLandTypeStrings[ ORTA_BASEMENT ] );
 					break;
 				case SEC_O3:
-					WSTR_SPrintf( zString, usMaxLen, L"O3: %s", pLandTypeStrings[ TUNNEL ] );
+					WSTR_SPrintf( zString, usMaxLen, L"O3: %ls", pLandTypeStrings[ TUNNEL ] );
 					break;
 				case SEC_P3:
-					WSTR_SPrintf( zString, usMaxLen, L"P3: %s", pLandTypeStrings[ SHELTER ] );
+					WSTR_SPrintf( zString, usMaxLen, L"P3: %ls", pLandTypeStrings[ SHELTER ] );
 					break;
 				default:
-					WSTR_SPrintf( zString, usMaxLen, L"%c%d: %s", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
+					WSTR_SPrintf( zString, usMaxLen, L"%c%d: %ls", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
 					break;
 			}
 		}

@@ -648,7 +648,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Militia2");
 	}
 	else
 	{
-		WSTR_SPrintf( sString, 128, L"%s%d. %s", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
+		WSTR_SPrintf( sString, 128, L"%ls%d. %ls", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
 	}
 
 	// if we are in mapscreen, make a pop up
@@ -827,7 +827,7 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 		{
 			StopTimeCompression();
 
-			WSTR_SPrintf( sString, 128, L"%s", pMilitiaConfirmStrings[ 2 ] );
+			WSTR_SPrintf( sString, 128, L"%ls", pMilitiaConfirmStrings[ 2 ] );
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		}
 	}

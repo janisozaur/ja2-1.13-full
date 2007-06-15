@@ -1115,7 +1115,7 @@ void DisplayDestinationOfCurrentDestMerc( void )
 	SetBoxForeground(ghVehicleBox, FONT_LTGREEN);
 	SetBoxBackground(ghVehicleBox, FONT_BLACK);
 
-	WSTR_SPrintf( sString, 32, L"%s%s", pMapVertIndex[ sSector / MAP_WORLD_X ], pMapHortIndex[ sSector % MAP_WORLD_X ] );
+	WSTR_SPrintf( sString, 32, L"%ls%ls", pMapVertIndex[ sSector / MAP_WORLD_X ], pMapHortIndex[ sSector % MAP_WORLD_X ] );
 	FindFontCenterCoordinates(DEST_PLOT_X, DEST_PLOT_Y ,70 ,GetFontHeight( MAP_SCREEN_FONT ) ,sString , MAP_SCREEN_FONT, &sX, &sY);
 
 	RestoreExternBackgroundRect( DEST_PLOT_X, DEST_PLOT_Y ,70 ,GetFontHeight( MAP_SCREEN_FONT ) );
@@ -2158,7 +2158,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	// dead?
 	if( pSoldier->bLife <= 0 )
 	{
-		WSTR_SPrintf( sString, 80, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		WSTR_SPrintf( sString, 80, L"%ls", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 	}
 	// what kind of merc
 	else if(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || pSoldier->ubProfile == SLAY )
@@ -2191,7 +2191,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 				SetFontForeground(FONT_LTGREEN);
 			}
 
-			WSTR_SPrintf(sString, 80, L"%.1f%s/%d%s", dTimeLeft, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]); 
+			WSTR_SPrintf(sString, 80, L"%.1f%ls/%d%ls", dTimeLeft, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]); 
 		}
 		else
 		{
@@ -2218,18 +2218,18 @@ void DrawCharacterInfo(INT16 sCharNumber)
 				SetFontForeground(FONT_RED);
 			}
 
-		 WSTR_SPrintf(sString, 80, L"%d%s/%d%s",iTimeRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
+		 WSTR_SPrintf(sString, 80, L"%d%ls/%d%ls",iTimeRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
 		}
 	}
 	else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
 	{
 		INT32 iBeenHiredFor = ( GetWorldTotalMin( ) / NUM_MIN_IN_DAY ) - pSoldier->iStartContractTime;
 
-		WSTR_SPrintf(sString, 80, L"%d%s/%d%s",gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], iBeenHiredFor, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
+		WSTR_SPrintf(sString, 80, L"%d%ls/%d%ls",gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], iBeenHiredFor, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
 	}
 	else
 	{
-		WSTR_SPrintf( sString, 80, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		WSTR_SPrintf( sString, 80, L"%ls", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 	}
 
 
@@ -12017,9 +12017,9 @@ void ConvertMinTimeToETADayHourMinString( UINT32 uiTimeInMin, STR16 sString, UIN
 	uiMin	 = uiTimeInMin - ( ( uiDay * NUM_MIN_IN_DAY ) + ( uiHour * NUM_MIN_IN_HOUR ) );
 
 	// there ain't enough room to show both the day and ETA: and without ETA it's confused as the current time
-//	swprintf( sString, L"%s %s %d, %02d:%02d", pEtaString[ 0 ], pDayStrings[ 0 ], uiDay, uiHour, uiMin );
-//	swprintf( sString, L"%s %d, %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
-	WSTR_SPrintf( sString, usMaxLen, L"%s %02d:%02d", pEtaString[ 0 ], uiHour, uiMin );
+//	swprintf( sString, L"%ls %ls %d, %02d:%02d", pEtaString[ 0 ], pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+//	swprintf( sString, L"%ls %d, %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+	WSTR_SPrintf( sString, usMaxLen, L"%ls %02d:%02d", pEtaString[ 0 ], uiHour, uiMin );
 }
 
 
@@ -12462,12 +12462,12 @@ void DumpSectorDifficultyInfo( void )
 	// NOTE: This operates on the selected map sector!
 	CHAR16 wSectorName[ 128 ];
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %s", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel ] );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %ls", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel ] );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
 
 	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ, wSectorName, 128, TRUE );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %s", wSectorName );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %ls", wSectorName );
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );
 
@@ -12650,17 +12650,17 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], U
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
 		{
 			// POW - location unknown
-			WSTR_SPrintf( sString, usMaxLen, L"%s", pPOWStrings[ 1 ] );
+			WSTR_SPrintf( sString, usMaxLen, L"%ls", pPOWStrings[ 1 ] );
 		}
 		else
 		{
-			WSTR_SPrintf( pTempString, 32, L"%s%s%s",
+			WSTR_SPrintf( pTempString, 32, L"%ls%ls%ls",
 						pMapVertIndex[ pSoldier->sSectorY ], pMapHortIndex[ pSoldier->sSectorX ], pMapDepthIndex[ pSoldier->bSectorZ ] );
 
 			if ( pSoldier->fBetweenSectors )
 			{
 				// put brackets around it when he's between sectors!		
-				WSTR_SPrintf( sString, usMaxLen, L"(%s)", pTempString );
+				WSTR_SPrintf( sString, usMaxLen, L"(%ls)", pTempString );
 			}
 			else
 			{
@@ -12725,7 +12725,7 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[]
 	}
 
 
-	WSTR_SPrintf( sString, usMaxLen, L"%s%s", pMapVertIndex[ iSectorY ], pMapHortIndex[ iSectorX ] );
+	WSTR_SPrintf( sString, usMaxLen, L"%ls%ls", pMapVertIndex[ iSectorY ], pMapHortIndex[ iSectorX ] );
 }
 
 
@@ -12738,7 +12738,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], 
 
 	if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && pSoldier->ubProfile != SLAY ) || pSoldier->bLife == 0 )
 	{
-		WSTR_SPrintf( sString, usMaxLen, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		WSTR_SPrintf( sString, usMaxLen, L"%ls", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 	}
 	else
 	{
@@ -12761,7 +12761,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], 
 
 			*pubFontColor = FONT_LTGREEN;
 
-			WSTR_SPrintf(sString, usMaxLen, L"%d%s", iDaysRemaining, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
+			WSTR_SPrintf(sString, usMaxLen, L"%d%ls", iDaysRemaining, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] ); 
 		}
 		else	// less than 3 days
 		{
@@ -12784,7 +12784,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], 
 			 *pubFontColor = FONT_RED;
 		 }
 
-		 WSTR_SPrintf(sString, usMaxLen, L"%d%s", iHoursRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ] );
+		 WSTR_SPrintf(sString, usMaxLen, L"%d%ls", iHoursRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ] );
 		}
 	}
 }

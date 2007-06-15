@@ -191,11 +191,11 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					if ( ubTooltipDetailLevel == DL_Basic )
 					{
 						if ( gGameExternalOptions.fEnableSoldierTooltipHelmet )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[HELMETPOS].usItem ? gzTooltipStrings[STR_TT_HELMET] : L"" );
 						if ( gGameExternalOptions.fEnableSoldierTooltipVest )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[VESTPOS].usItem ? gzTooltipStrings[STR_TT_VEST] : L"" );
 						if ( gGameExternalOptions.fEnableSoldierTooltipLeggings )
-							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%s%s", pStrInfo, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
+							WSTR_SPrintf( pStrInfo, sizeof( pRegion->FastHelpText ), L"%ls%ls", pStrInfo, pSoldier->inv[LEGPOS].usItem ? gzTooltipStrings[STR_TT_LEGGINGS] : L"" );
 						wcscat( pStrInfo, L"\n" );
 					}
 					else // ubTooltipDetailLevel == DL_Limited
@@ -328,7 +328,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		pRegion->iY = gusMouseYPos;				
 
 //		if ( gGameExternalOptions.ubSoldierTooltipDetailLevel == DL_Debug )
-//			swprintf( pRegion->FastHelpText, L"%s\n|String |Length|: %d", pStrInfo, wcslen(pStrInfo) );
+//			swprintf( pRegion->FastHelpText, L"%ls\n|String |Length|: %d", pStrInfo, wcslen(pStrInfo) );
 //		else
 			wcscpy( pRegion->FastHelpText, pStrInfo );
 	}

@@ -370,9 +370,9 @@ void BringupMeanwhileBox( )
 	wchar_t zStr[256];
 
 #ifdef JA2TESTVERSION
-	WSTR_SPrintf( zStr, 256, L"Meanwhile..... ( %S : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
+	WSTR_SPrintf( zStr, 256, L"Meanwhile..... ( %hs : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[ gCurrentMeanwhileDef.ubMeanwhileID ] );
 #else
-	WSTR_SPrintf( zStr, 256, L"%s.....", pMessageStrings[ MSG_MEANWHILE ] );
+	WSTR_SPrintf( zStr, 256, L"%ls.....", pMessageStrings[ MSG_MEANWHILE ] );
 #endif
 
 #ifdef JA2TESTVERSION

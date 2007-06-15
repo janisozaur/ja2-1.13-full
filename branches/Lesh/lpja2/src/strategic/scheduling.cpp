@@ -195,7 +195,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if ( !pSoldier->bActive )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %s.", pSoldier->name );
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name );
 		#endif
 	}
 

@@ -127,7 +127,7 @@ garrisonEndElementHandle(void *userData, const char *name)
 			pData->curElement = GARRISON_ELEMENT_GARRISON;
 
 			y = (UINT8)pData->szCharData[0] & 0x1F;
-			x = (UINT8)atol(&pData->szCharData[1]);
+			x = (UINT8)atoi(&pData->szCharData[1]);
 			if ( x > 0 && x <= 16  && y > 0 && y <= 16 )
 			{
 				pData->curGarrisonInfo.fValidSector = TRUE;
@@ -141,7 +141,7 @@ garrisonEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "Composition") == 0 && pData->curElement == GARRISON_ELEMENT_COMPOSITION)
 		{
 			pData->curElement = GARRISON_ELEMENT_GARRISON;
-			pData->curGarrisonInfo.ubComposition = (UINT8) atol(pData->szCharData);
+			pData->curGarrisonInfo.ubComposition = (UINT8) atoi(pData->szCharData);
 		}
 		pData->maxReadDepth--;
 	}
@@ -378,12 +378,12 @@ patrolEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "Size") == 0 && pData->curElement == PATROL_ELEMENT_SIZE)
 		{
 			pData->curElement = PATROL_ELEMENT_PATROL;
-			pData->curPatrolInfo.bSize = (INT8) atol(pData->szCharData);
+			pData->curPatrolInfo.bSize = (INT8) atoi(pData->szCharData);
 		}
 		else if(strcmp(name, "Priority") == 0 && pData->curElement == PATROL_ELEMENT_PRIORITY)
 		{
 			pData->curElement = PATROL_ELEMENT_PATROL;
-			pData->curPatrolInfo.bPriority = (INT8) atol(pData->szCharData);
+			pData->curPatrolInfo.bPriority = (INT8) atoi(pData->szCharData);
 
 			if ( pData->curPatrolInfo.bPriority < 0 )
 				pData->curPatrolInfo.bPriority = 0;
@@ -406,7 +406,7 @@ patrolEndElementHandle(void *userData, const char *name)
 			{
 				UINT8	x, y;
 				y = (UINT8)pData->szCharData[0] & 0x1F;
-				x = (UINT8)atol(&pData->szCharData[1]);
+				x = (UINT8)atoi(&pData->szCharData[1]);
 				if ( x > 0 && x <= 16  && y > 0 && y <= 16 )
 				{
 					pData->curPatrolInfo.ubSectorID[0] = SECTOR(x,y);
@@ -429,7 +429,7 @@ patrolEndElementHandle(void *userData, const char *name)
 			{
 				UINT8	x, y;
 				y = (UINT8)pData->szCharData[0] & 0x1F;
-				x = (UINT8)atol(&pData->szCharData[1]);
+				x = (UINT8)atoi(&pData->szCharData[1]);
 				if ( x > 0 && x <= 16  && y > 0 && y <= 16 )
 				{
 					pData->curPatrolInfo.ubSectorID[1] = SECTOR(x,y);
@@ -452,7 +452,7 @@ patrolEndElementHandle(void *userData, const char *name)
 			{
 				UINT8	x, y;
 				y = (UINT8)pData->szCharData[0] & 0x1F;
-				x = (UINT8)atol(&pData->szCharData[1]);
+				x = (UINT8)atoi(&pData->szCharData[1]);
 				if ( x > 0 && x <= 16  && y > 0 && y <= 16 )
 				{
 					pData->curPatrolInfo.ubSectorID[2] = SECTOR(x,y);
@@ -475,7 +475,7 @@ patrolEndElementHandle(void *userData, const char *name)
 			{
 				UINT8	x, y;
 				y = (UINT8)pData->szCharData[0] & 0x1F;
-				x = (UINT8)atol(&pData->szCharData[1]);
+				x = (UINT8)atoi(&pData->szCharData[1]);
 				if ( x > 0 && x <= 16  && y > 0 && y <= 16 )
 				{
 					pData->curPatrolInfo.ubSectorID[3] = SECTOR(x,y);
@@ -743,7 +743,7 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "Index") == 0 && pData->curElement == COMPOSITION_ELEMENT_INDEX)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.iIndex = (INT32) atol(pData->szCharData);
+			pData->curCompositionInfo.iIndex = (INT32) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.iIndex < MAX_ARMY_COMPOSITIONS )
 			{
 				if ( pData->curCompositionInfo.iIndex > pData->iHighestIndex )
@@ -755,7 +755,7 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "Priority") == 0 && pData->curElement == COMPOSITION_ELEMENT_PRIORITY)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bPriority = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bPriority = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bPriority < 0 )
 				pData->curCompositionInfo.bPriority = 0;
 			else if ( pData->curCompositionInfo.bPriority > 100 )
@@ -764,7 +764,7 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "ElitePercentage") == 0 && pData->curElement == COMPOSITION_ELEMENT_ELITE_PERCENTAGE)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bElitePercentage = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bElitePercentage = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bElitePercentage < 0 )
 				pData->curCompositionInfo.bElitePercentage = 0;
 			else if ( pData->curCompositionInfo.bElitePercentage > 100 )
@@ -773,7 +773,7 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "TroopPercentage") == 0 && pData->curElement == COMPOSITION_ELEMENT_TROOP_PERCENTAGE)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bTroopPercentage = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bTroopPercentage = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bTroopPercentage < 0 )
 				pData->curCompositionInfo.bTroopPercentage = 0;
 			else if ( pData->curCompositionInfo.bTroopPercentage > 100 )
@@ -782,7 +782,7 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "AdminPercentage") == 0 && pData->curElement == COMPOSITION_ELEMENT_ADMIN_PERCENTAGE)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bAdminPercentage = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bAdminPercentage = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bAdminPercentage < 0 )
 				pData->curCompositionInfo.bAdminPercentage = 0;
 			else if ( pData->curCompositionInfo.bAdminPercentage > 100 )
@@ -791,14 +791,14 @@ compositionEndElementHandle(void *userData, const char *name)
 		else if(strcmp(name, "DesiredPopulation") == 0 && pData->curElement == COMPOSITION_ELEMENT_DESIRED_POPULATION)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bDesiredPopulation = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bDesiredPopulation = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bDesiredPopulation < 0 )
 				pData->curCompositionInfo.bDesiredPopulation = 1;
 		}
 		else if(strcmp(name, "StartPopulation") == 0 && pData->curElement == COMPOSITION_ELEMENT_START_POPULATION)
 		{
 			pData->curElement = COMPOSITION_ELEMENT_COMPOSITION;
-			pData->curCompositionInfo.bStartPopulation = (INT8) atol(pData->szCharData);
+			pData->curCompositionInfo.bStartPopulation = (INT8) atoi(pData->szCharData);
 			if ( pData->curCompositionInfo.bStartPopulation < 0 )
 				pData->curCompositionInfo.bStartPopulation = 1;
 		}

@@ -24,7 +24,7 @@ GENERAL INSTRUCTIONS
 - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only 
 	have one space after a period, which is different than standard typing convention.  Never modify sections 
 	of strings contain combinations of % characters.  These are special format characters and are always 
-	used in conjunction with other characters.  For example, %s means string, and is commonly used for names,
+	used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
 	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).  
 	%% is how a single % character is built.  There are countless types, but strings containing these 
 	special characters are usually commented to explain what they mean.  If it isn't commented, then 
@@ -193,30 +193,30 @@ wchar_t Message[][STRING_LENGTH] =
 {
 	L"",
 
-	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
+	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
 
-	L"%s geraakt in hoofd en verliest een intelligentiepunt!",
-	L"%s geraakt in de schouder en verliest een handigheidspunt!",
-	L"%s geraakt in de borst en verliest een krachtspunt!",
-	L"%s geraakt in het benen en verliest een beweeglijkspunt!",
-	L"%s geraakt in het hoofd en verliest %d wijsheidspunten!",
-	L"%s geraakt in de schouder en verliest %d handigheidspunten!",
-	L"%s geraakt in de borst en verliest %d krachtspunten!",
-	L"%s geraakt in de benen en verliest %d beweeglijkheidspunten!",
+	L"%ls geraakt in hoofd en verliest een intelligentiepunt!",
+	L"%ls geraakt in de schouder en verliest een handigheidspunt!",
+	L"%ls geraakt in de borst en verliest een krachtspunt!",
+	L"%ls geraakt in het benen en verliest een beweeglijkspunt!",
+	L"%ls geraakt in het hoofd en verliest %d wijsheidspunten!",
+	L"%ls geraakt in de schouder en verliest %d handigheidspunten!",
+	L"%ls geraakt in de borst en verliest %d krachtspunten!",
+	L"%ls geraakt in de benen en verliest %d beweeglijkheidspunten!",
 	L"Storing!",
 
-	// The first %s is a merc's name, the second is a string from pNoiseVolStr,
+	// The first %ls is a merc's name, the second is a string from pNoiseVolStr,
 	// the third is a string from pNoiseTypeStr, and the last is a string from pDirectionStr
 
 	L"", //OBSOLETE
 	L"Je versterkingen zijn gearriveerd!",
 
-	// In the following four lines, all %s's are merc names
+	// In the following four lines, all %ls's are merc names
 
-	L"%s herlaad.",
-	L"%s heeft niet genoeg actiepunten!",
-	L"%s verricht eerste hulp. (Druk een toets om te stoppen.)",
-	L"%s en %s verrichten eerste hulp. (Druk een toets om te stoppen.)",
+	L"%ls herlaad.",
+	L"%ls heeft niet genoeg actiepunten!",
+	L"%ls verricht eerste hulp. (Druk een toets om te stoppen.)",
+	L"%ls en %ls verrichten eerste hulp. (Druk een toets om te stoppen.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"reliable",
@@ -237,51 +237,51 @@ wchar_t Message[][STRING_LENGTH] =
 	L"large magazine",
 	L"small magazine",
 
-	// In the following two lines, all %s's are merc names
+	// In the following two lines, all %ls's are merc names
 
-	L"%s's camouflage is verdwenen.",
-	L"%s's camouflage is afgespoelt.",
+	L"%ls's camouflage is verdwenen.",
+	L"%ls's camouflage is afgespoelt.",
 
-	// The first %s is a merc name and the second %s is an item name
+	// The first %ls is a merc name and the second %ls is an item name
 
 	L"Tweede wapen is leeg!",
-	L"%s heeft %s gestolen.",
+	L"%ls heeft %ls gestolen.",
 
-	// The %s is a merc name
+	// The %ls is a merc name
 
-	L"%s's wapen vuurt geen salvo.",
+	L"%ls's wapen vuurt geen salvo.",
 
 	L"Je hebt er al één van die vastgemaakt.",
 	L"Samen voegen?",
 
-	// Both %s's are item names
+	// Both %ls's are item names
 
-	L"Je verbindt %s niet met %s.",
+	L"Je verbindt %ls niet met %ls.",
 	L"Geen",
 	L"Eject ammo",
 	L"Toebehoren",
 	
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	L"%s en %s zijn niet tegelijk te gebruiken.",
+	L"%ls en %ls zijn niet tegelijk te gebruiken.",
 
 	L"Het item dat je aanwijst, kan vastgemaakt worden aan een bepaald item door het in een van de vier uitbreidingssloten te plaatsen.",
 	L"Het item dat je aanwijst, kan vastgemaakt worden aan een bepaald item door het in een van de vier uitbreidingssloten te plaatsen. (Echter, het item is niet compatibel.)",
 	L"Er zijn nog vijanden in de sector!",
-	L"Je moet %s %s nog geven",
-	L"kogel doorboorde %s in zijn hoofd!",
+	L"Je moet %ls %ls nog geven",
+	L"kogel doorboorde %ls in zijn hoofd!",
 	L"Gevecht verlaten?",
 	L"Dit samenvoegen is permanent. Verdergaan?",
-	L"%s heeft meer energie!",
-	L"%s is uitgegleden!",
-	L"%s heeft %s niet gepakt!",
-	L"%s repareert de %s",
+	L"%ls heeft meer energie!",
+	L"%ls is uitgegleden!",
+	L"%ls heeft %ls niet gepakt!",
+	L"%ls repareert de %ls",
 	L"Stoppen voor ",
 	L"Overgeven?",
 	L"Deze persoon weigert je hulp.",
 	L"Ik denk het NIET!",
 	L"Chopper van Skyrider gebruiken? Eerst huurlingen TOEWIJZEN aan VOERTUIG/HELIKOPTER.",
-	L"%s had tijd maar EEN geweer te herladen",
+	L"%ls had tijd maar EEN geweer te herladen",
 	L"Beurt bloodcats",
 	L"automatic",
 	L"no full auto",
@@ -918,8 +918,8 @@ STR16 pLandTypeStrings[] =
 STR16 gpStrategicString[] =
 {
 	L"",	//Unused
-	L"%s zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
-	L"%s zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
+	L"%ls zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
+	L"%ls zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
 	L"Wil je een gezamenlijke aankomst coördineren?",					//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -1045,11 +1045,11 @@ STR16 gpStrategicString[] =
 	L"Beesten vallen je militie aan in sector %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Beesten vallen aan en doden %d burgers in sector %s.",
-	//%s is the sector location -- ex:  A9: Omerta
-	L"Vijand valt je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
-	//%s is the sector location -- ex:  A9: Omerta
-	L"Beesten vallen je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
+	L"Beesten vallen aan en doden %d burgers in sector %ls.",
+	//%ls is the sector location -- ex:  A9: Omerta
+	L"Vijand valt je huurlingen aan in sector %ls. Geen enkele huurling kan vechten!",
+	//%ls is the sector location -- ex:  A9: Omerta
+	L"Beesten vallen je huurlingen aan in sector %ls. Geen enkele huurling kan vechten!",
 
 };
 
@@ -1071,7 +1071,7 @@ STR16 sKeyDescriptionStrings[2] =
 
 INT16		gWeaponStatsDesc[][ 14 ] =
 {
-	L"Gewicht (%s):",
+	L"Gewicht (%ls):",
 	L"Status:",
 	L"Munitie:", 		// Number of bullets left in a magazine
 	L"Afst:",		// Range
@@ -1206,11 +1206,11 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	
 	// CAMFIELD NUKE THIS and add quote #66.
 	
-	L"%s ziet dat er items missen van de lading.",
+	L"%ls ziet dat er items missen van de lading.",
 	
-	// The %s is a string from pDoorTrapStrings
+	// The %ls is a string from pDoorTrapStrings
 	
-	L"Het slot heeft %s.",
+	L"Het slot heeft %ls.",
 	L"Er is geen slot.",
 	L"Gelukt!",
 	L"Mislukt.",
@@ -1218,8 +1218,8 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Mislukt.",
 	L"Geen boobytrap op het slot.",
 	L"Gelukt!",
-	// The %s is a merc name
-	L"%s heeft niet de juiste sleutel.",
+	// The %ls is a merc name
+	L"%ls heeft niet de juiste sleutel.",
 	L"Val weggehaald van slot.",
 	L"Slot heeft geen boobytrap.",
 	L"Op slot.",
@@ -1234,15 +1234,15 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Volgende...",
 	L"Meer...",
 
-	// In the next 2 strings, %s is an item name
+	// In the next 2 strings, %ls is an item name
 
-	L"%s is op de grond geplaatst.",
-	L"%s is gegeven aan %s.",
+	L"%ls is op de grond geplaatst.",
+	L"%ls is gegeven aan %ls.",
 
-	// In the next 2 strings, %s is a name
+	// In the next 2 strings, %ls is a name
 
-	L"%s is helemaal betaald.",
-	L"%s heeft tegoed nog %d.",
+	L"%ls is helemaal betaald.",
+	L"%ls heeft tegoed nog %d.",
 	L"Kies detonatie frequentie:",  	//in this case, frequency refers to a radio signal
 	L"Aantal beurten tot ontploffing:",	//how much time, in turns, until the bomb blows
 	L"Stel frequentie in van ontsteking:", 	//in this case, frequency refers to a radio signal
@@ -1251,53 +1251,53 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Blauwe vlag hier neerzetten?",
 	L"Laatste beurt",
 
-	// In the next string, %s is a name. Stance refers to way they are standing.
+	// In the next string, %ls is a name. Stance refers to way they are standing.
 
-	L"Zeker weten dat je %s wil aanvallen?",
+	L"Zeker weten dat je %ls wil aanvallen?",
 	L"Ah, voertuigen kunnen plaats niet veranderen.",
 	L"De robot kan niet van plaats veranderen.",
 
-	// In the next 3 strings, %s is a name
+	// In the next 3 strings, %ls is a name
 
-	L"%s kan niet naar die plaats gaan.",
-	L"%s kan hier geen EHBO krijgen.",
-	L"%s heeft geen EHBO nodig.",
+	L"%ls kan niet naar die plaats gaan.",
+	L"%ls kan hier geen EHBO krijgen.",
+	L"%ls heeft geen EHBO nodig.",
 	L"Kan daar niet heen.",
 	L"Je team is vol. Geen ruimte voor rekruut.",	//there's no room for a recruit on the player's team
 
-	// In the next string, %s is a name
+	// In the next string, %ls is a name
 
-	L"%s is gerekruteerd.",
+	L"%ls is gerekruteerd.",
 
-	// Here %s is a name and %d is a number
+	// Here %ls is a name and %d is a number
 
-	L"%s ontvangt $%d.",
+	L"%ls ontvangt $%d.",
 
-	// In the next string, %s is a name
+	// In the next string, %ls is a name
 
-	L"%s begeleiden?",
+	L"%ls begeleiden?",
 
-	// In the next string, the first %s is a name and the second %s is an amount of money (including $ sign)
+	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
 
-	L"%s inhuren voor %s per dag?",
+	L"%ls inhuren voor %ls per dag?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match. 
 
 	L"Wil je vechten?",
 
-	// In the next string, the first %s is an item name and the 
-	// second %s is an amount of money (including $ sign)
+	// In the next string, the first %ls is an item name and the 
+	// second %ls is an amount of money (including $ sign)
 
-	L"%s kopen voor %s?",
+	L"%ls kopen voor %ls?",
 
-	// In the next string, %s is a name
+	// In the next string, %ls is a name
 
-	L"%s wordt begeleid door team %d.",
+	L"%ls wordt begeleid door team %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
 	L"GEBLOKKEERD",					//weapon is jammed.
-	L"Robot heeft %s kal. munitie nodig.",		//Robot is out of ammo
+	L"Robot heeft %ls kal. munitie nodig.",		//Robot is out of ammo
 	L"Hier gooien? Kan niet.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
@@ -1317,11 +1317,11 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"|Opties",					// L"|Options",
 	L"Salvo's (|B)",				// L"|Burst Mode",
 	L"Kijk/draai (|L)",			// L"|Look/Turn",
-	L"Gezond: %d/%d\nKracht: %d/%d\nMoraal: %s",		// L"Health: %d/%d\nEnergy: %d/%d\nMorale: %s",
+	L"Gezond: %d/%d\nKracht: %d/%d\nMoraal: %ls",		// L"Health: %d/%d\nEnergy: %d/%d\nMorale: %ls",
 	L"Hé?",					//this means "what?" 
 	L"Door",					//an abbrieviation for "Continued" 
-	L"%s is praat weer.",			// L"Mute off for %s.",
-	L"%s is stil.",				// L"Mute on for %s.",
+	L"%ls is praat weer.",			// L"Mute off for %ls.",
+	L"%ls is stil.",				// L"Mute on for %ls.",
 	L"Gezond: %d/%d\nBrandst: %d/%d",	// L"Health: %d/%d\nFuel: %d/%d",
 	L"Stap uit voertuig",			// L"Exit Vehicle" ,
 	L"Wissel Team ( |S|h|i|f|t |S|p|a|c|e )",			// L"Change Squad ( |S|h|i|f|t |S|p|a|c|e )",
@@ -1335,12 +1335,12 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"(Vang)",					// L"(Catch)",
 	L"(Herlaad)",				// L"(Reload)",
 	L"(Geef)",					// L"(Give)",
-	L"%s is afgezet.",			// L"%s has been set off.",
-	L"%s is gearriveerd.",			// L"%s has arrived.",
-	L"%s heeft geen Actie Punten.",	// L"%s ran out of Action Points.",
-	L"%s is niet beschikbaar.",		// L"%s isn't available.",
-	L"%s zit onder het verband.",		// L"%s is all bandaged.",
-	L"Verband van %s is op.",		// L"%s is out of bandages.",
+	L"%ls is afgezet.",			// L"%ls has been set off.",
+	L"%ls is gearriveerd.",			// L"%ls has arrived.",
+	L"%ls heeft geen Actie Punten.",	// L"%ls ran out of Action Points.",
+	L"%ls is niet beschikbaar.",		// L"%ls isn't available.",
+	L"%ls zit onder het verband.",		// L"%ls is all bandaged.",
+	L"Verband van %ls is op.",		// L"%ls is out of bandages.",
 	L"Vijand in de sector!",		// L"Enemy in sector!",
 	L"Geen vijanden in zicht.",		// L"No enemies in sight.",
 	L"Niet genoeg Actie Punten.",		// L"Not enough Action Points.",
@@ -1358,7 +1358,7 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Naar Sector",				// L"Go to Sector",
 	L"Naar Landk.",				// L"Go to Map",
 	L"Vanaf deze kant kun je de sector niet verlaten.",	// L"You can't leave the sector from this side.",
-	L"%s is te ver weg.",			// L"%s is too far away.",
+	L"%ls is te ver weg.",			// L"%ls is too far away.",
 	L"Verwijder Boomtoppen",		// L"Removing Treetops",
 	L"Tonen Boomtoppen",			// L"Showing Treetops",
 	L"KRAAI",				//Crow, as in the large black bird
@@ -1377,8 +1377,8 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Kan daar niet heen.",				// used ( now ) for when we click on a cliff
 	L"Pad is geblokkeerd. Wil je met deze persoon van plaats wisselen?",
 	L"Persoon weigert weg te gaan.",
-	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
-	L"Ben je het eens met %s?",					// L"Do you agree to pay %s?",
+	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
+	L"Ben je het eens met %ls?",					// L"Do you agree to pay %ls?",
 	L"Wil je kostenloze medische hulp?",			// L"Accept free medical treatment?",
 	L"Wil je trouwen met Daryl?",					// L"Agree to marry Daryl?",
 	L"Slot Ring Paneel",						// L"Key Ring Panel",
@@ -1388,13 +1388,13 @@ wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Mijnwerker",							// L"Miner",
 	L"Voertuig kan alleen tussen sectors reizen",		// L"Vehicle can only travel between sectors",
 	L"Nu geen Auto-EHBO mogelijk",				// L"Can't autobandage right now",
-	L"Pad Geblokkeerd voor %s",					// L"Path Blocked for %s",
+	L"Pad Geblokkeerd voor %ls",					// L"Path Blocked for %ls",
 	L"Je huurlingen, gevangen door Deidranna's leger, zitten hier opgesloten!",
 	L"Slot geraakt",							// L"Lock hit",
 	L"Slot vernielt",							// L"Lock destroyed",
 	L"Iemand anders probeert deze deur te gebruiken.",		// L"Somebody else is trying to use this door.",
 	L"Gezondheid: %d/%d\nBrandstof: %d/%d",				//L"Health: %d/%d\nFuel: %d/%d",
-	L"%s kan %s niet zien.",					// Cannot see person trying to talk to
+	L"%ls kan %ls niet zien.",					// Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1413,15 +1413,15 @@ STR16 pExitingSectorHelpText[] =
 	L"Als de overgebleven huurlingen uit deze sector trekken,\nwordt je automatisch in het landkaartscherm geplaatst,\nrekening houdend met de reistijd van je huurlingen.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%s moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
+	L"%ls moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	L"%s kan de sector niet alleen verlaten omdat hij %s escorteert.",	//male singular
-	L"%s kan de sector niet alleen verlaten omdat zij %s escorteert.",	//female singular
-	L"%s kan de sector niet alleen verlaten omdat hij meerdere karakters escorteert.",	//male plural
-	L"%s kan de sector niet alleen verlaten omdat zij meerdere karakters escorteert.",	//female plural
+	L"%ls kan de sector niet alleen verlaten omdat hij %ls escorteert.",	//male singular
+	L"%ls kan de sector niet alleen verlaten omdat zij %ls escorteert.",	//female singular
+	L"%ls kan de sector niet alleen verlaten omdat hij meerdere karakters escorteert.",	//male plural
+	L"%ls kan de sector niet alleen verlaten omdat zij meerdere karakters escorteert.",	//female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
@@ -1430,7 +1430,7 @@ STR16 pExitingSectorHelpText[] =
 	L"", //UNUSED
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	L"Als aangekruist, dan zal %s alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
+	L"Als aangekruist, dan zal %ls alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	L"Als aangekruist, dan zal je geselecteerde\nteam verder reizen, de sector verlatend.",
@@ -1439,7 +1439,7 @@ STR16 pExitingSectorHelpText[] =
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%s wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
+	L"%ls wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
 };
 
 
@@ -1599,12 +1599,12 @@ STR16 pwMiscSectorStrings[] =
 
 STR16 pMapInventoryErrorString[] =
 {
-	L"%s is niet dichtbij genoeg.",		//Merc is in sector with item but not close enough
+	L"%ls is niet dichtbij genoeg.",		//Merc is in sector with item but not close enough
 	L"Kan huurling niet selecteren.",		//MARK CARTER
-	L"%s is niet in de sector om dat item te pakken.",
+	L"%ls is niet in de sector om dat item te pakken.",
 	L"Tijdens gevechten moet je items handmatig oppakken.",
 	L"Tijdens gevechten moet je items handmatig neerleggen.",
-	L"%s is niet in de sector om dat item neer te leggen.",
+	L"%ls is niet in de sector om dat item neer te leggen.",
 };
 
 STR16 pMapInventoryStrings[] =
@@ -1683,7 +1683,7 @@ STR16 pMapScreenBottomText[] =
 
 STR16 pMercDeadString[] =
 {
-	L"%s is dood.",
+	L"%ls is dood.",
 };
 
 
@@ -1838,36 +1838,36 @@ STR16 pTransactionText[] =
 	L"Gehuurd", 					// Merc was hired
 	L"Bobby Ray's Wapenhandel", 		// Bobby Ray is the name of an arms dealer
 	L"Rekeningen Voldaan bij M.E.R.C.",
-	L"Medische Storting voor %s", 		// medical deposit for merc
+	L"Medische Storting voor %ls", 		// medical deposit for merc
 	L"IMP Profiel Analyse", 		// IMP is the acronym for International Mercenary Profiling
-	L"Verzekering Afgesloten voor %s", 
-	L"Verzekering Verminderd voor %s",
-	L"Verzekering Verlengd voor %s", 				// johnny contract extended
-	L"Verzekering Afgebroken voor %s", 
-	L"Verzekeringsclaim voor %s", 		// insurance claim for merc
+	L"Verzekering Afgesloten voor %ls", 
+	L"Verzekering Verminderd voor %ls",
+	L"Verzekering Verlengd voor %ls", 				// johnny contract extended
+	L"Verzekering Afgebroken voor %ls", 
+	L"Verzekeringsclaim voor %ls", 		// insurance claim for merc
 	L"een dag", 				// merc's contract extended for a day
 	L"1 week", 					// merc's contract extended for a week
 	L"2 weken", 				// ... for 2 weeks
 	L"Inkomen Mijn", 
 	L"",						 //String nuked
 	L"Gekochte Bloemen",
-	L"Volledige Medische Vergoeding voor %s",
-	L"Gedeeltelijke Medische Vergoeding voor %s",
-	L"Geen Medische Vergoeding voor %s",
-	L"Betaling aan %s",				// %s is the name of the npc being paid
-	L"Maak Geld over aan %s", 		// transfer funds to a merc
-	L"Maak Geld over van %s", 		// transfer funds from a merc
-	L"Rust militie uit in %s",			// initial cost to equip a town's militia
-	L"Items gekocht van %s.",		//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	L"%s heeft geld gestort.",
+	L"Volledige Medische Vergoeding voor %ls",
+	L"Gedeeltelijke Medische Vergoeding voor %ls",
+	L"Geen Medische Vergoeding voor %ls",
+	L"Betaling aan %ls",				// %ls is the name of the npc being paid
+	L"Maak Geld over aan %ls", 		// transfer funds to a merc
+	L"Maak Geld over van %ls", 		// transfer funds from a merc
+	L"Rust militie uit in %ls",			// initial cost to equip a town's militia
+	L"Items gekocht van %ls.",		//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	L"%ls heeft geld gestort.",
 };
 
 STR16 pTransactionAlternateText[] =
 {
 	L"Verzekering voor", 				// insurance for a merc
-	L"Contract %s verl. met 1 dag.", 		// entend mercs contract by a day
-	L"Contract %s verl. met 1 week.",
-	L"Contract %s verl. met 2 weken.",
+	L"Contract %ls verl. met 1 dag.", 		// entend mercs contract by a day
+	L"Contract %ls verl. met 1 week.",
+	L"Contract %ls verl. met 2 weken.",
 };
 
 // helicopter pilot payment 
@@ -1900,8 +1900,8 @@ STR16 pMoralStrings[] =
 
 STR16 pLeftEquipmentString[] =
 { 
-	L"%s's uitrusting is nu beschikbaar in Omerta (A9).", 
-	L"%s's uitrusting is nu beschikbaar in Drassen (B13).",
+	L"%ls's uitrusting is nu beschikbaar in Omerta (A9).", 
+	L"%ls's uitrusting is nu beschikbaar in Drassen (B13).",
 };
 
 // Status that appears on the Map Screen
@@ -1954,44 +1954,44 @@ STR16 pMapErrorString[] =
 	L"",
 //11-15
 	L"Reisorders? Er is daar een gevecht gaande!",
-	L"Je bent in een hinderlaag gelokt van Bloodcats in sector %s!",
+	L"Je bent in een hinderlaag gelokt van Bloodcats in sector %ls!",
 	L"Je bent in sector I16 iets binnengelopen dat lijkt op het hol van een bloodcat!",
 	L"", 
-	L"De SAM-stelling in %s is overgenomen.",
+	L"De SAM-stelling in %ls is overgenomen.",
 //16-20
-	L"De mijn in %s is overgenomen. Je dagelijkse inkomen is gereduceerd tot %s per dag.",
-	L"De vijand heeft sector %s onbetwist overgenomen.",
+	L"De mijn in %ls is overgenomen. Je dagelijkse inkomen is gereduceerd tot %ls per dag.",
+	L"De vijand heeft sector %ls onbetwist overgenomen.",
 	L"Tenminste een van je huurlingen kan niet meedoen met deze opdracht.",
-	L"%s kon niet meedoen met %s omdat het al vol is",
-	L"%s kon niet meedoen met %s omdat het te ver weg is.",
+	L"%ls kon niet meedoen met %ls omdat het al vol is",
+	L"%ls kon niet meedoen met %ls omdat het te ver weg is.",
 //21-25
-	L"De mijn in %s is buitgemaakt door Deidranna's troepen!",
-	L"Deidranna's troepen zijn net de SAM-stelling in %s binnengevallen",
-	L"Deidranna's troepen zijn net %s binnengevallen",
-	L"Deidranna's troepen zijn gezien in %s.",
-	L"Deidranna's troepen hebben zojuist %s overgenomen.",
+	L"De mijn in %ls is buitgemaakt door Deidranna's troepen!",
+	L"Deidranna's troepen zijn net de SAM-stelling in %ls binnengevallen",
+	L"Deidranna's troepen zijn net %ls binnengevallen",
+	L"Deidranna's troepen zijn gezien in %ls.",
+	L"Deidranna's troepen hebben zojuist %ls overgenomen.",
 //26-30
 	L"Tenminste één huurling kon niet tot slapen gebracht worden.",
 	L"Tenminste één huurling kon niet wakker gemaakt worden.",
 	L"De Militie verschijnt niet totdat hun training voorbij is.",
-	L"%s kan geen reisorders gegeven worden op dit moment.",
+	L"%ls kan geen reisorders gegeven worden op dit moment.",
 	L"Milities niet binnen de stadsgrenzen kunnen niet verplaatst worden naar een andere sector.",
 //31-35
-	L"Je kunt geen militie in %s hebben.",
+	L"Je kunt geen militie in %ls hebben.",
 	L"Een voertuig kan niet leeg rijden!",
-	L"%s is te gewond om te reizen!",
+	L"%ls is te gewond om te reizen!",
 	L"Je moet het museum eerst verlaten!",
-	L"%s is dood!",
+	L"%ls is dood!",
 //36-40
-	L"%s kan niet wisselen naar %s omdat het onderweg is",
-	L"%s kan het voertuig op die manier niet in",
-	L"%s kan zich niet aansluiten bij %s",
+	L"%ls kan niet wisselen naar %ls omdat het onderweg is",
+	L"%ls kan het voertuig op die manier niet in",
+	L"%ls kan zich niet aansluiten bij %ls",
 	L"Totdat je nieuwe huurlingen in dienst neemt, kan de tijd niet versneld worden!",
 	L"Dit voertuig kan alleen over wegen rijden!",
 //41-45
 	L"Je kunt geen reizende huurlingen opnieuw toewijzen",
 	L"Voertuig zit zonder brandstof!",
-	L"%s is te moe om te reizen.",
+	L"%ls is te moe om te reizen.",
 	L"Niemand aan boord is in staat om het voertuig te besturen.",
 	L"Eén of meer teamleden kunnen zich op dit moment niet verplaatsen.",
 //46-50
@@ -2017,10 +2017,10 @@ STR16 pMapPlotStrings[] =
 STR16 pBullseyeStrings[] =
 {
 	L"Klik op de sector waar de huurlingen in plaats daarvan moeten arriveren.",
-	L"OK. Arriverende huurlingen worden afgezet in %s",
+	L"OK. Arriverende huurlingen worden afgezet in %ls",
 	L"Huurlingen kunnen hier niet ingevlogen worden, het luchtruim is onveilig!",
 	L"Afgebroken. Aankomst-sector onveranderd",
-	L"Luchtruim boven %s is niet langer veilig! Aankomst-sector is verplaatst naar %s.",
+	L"Luchtruim boven %ls is niet langer veilig! Aankomst-sector is verplaatst naar %ls.",
 };
 
 
@@ -2038,22 +2038,22 @@ STR16 pMiscMapScreenMouseRegionHelpText[] =
 // male version of where equipment is left
 STR16 pMercHeLeaveString[] =
 {
-	L"Laat %s zijn uitrusting achterlaten waar hij nu is (%s) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
-	L"Laat %s zijn uitrusting achterlaten waar hij nu is (%s) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
+	L"Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
+	L"Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
 	L"gaat binnenkort weg en laat zijn uitrusting achter in Omerta (A9).",
 	L"gaat binnenkort weg en laat zijn uitrusting achter in Drassen (B13).",
-	L"%s gaat binnenkort weg en laat zijn uitrusting achter in %s.",
+	L"%ls gaat binnenkort weg en laat zijn uitrusting achter in %ls.",
 };
 
 
 // female version
 STR16 pMercSheLeaveString[] =
 {
-	L"Laat %s haar uitrusting achterlaten waar ze nu is (%s) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
-	L"Laat %s haar uitrusting achterlaten waar ze nu is (%s) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
+	L"Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
+	L"Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
 	L"gaat binnenkort weg en laat haar uitrusting achter in Omerta (A9).",
 	L"gaat binnenkort weg en laat haar uitrusting achter in Drassen (B13).",
-	L"%s gaat binnenkort weg en laat haar uitrusting achter in %s.",
+	L"%ls gaat binnenkort weg en laat haar uitrusting achter in %ls.",
 };
 
 
@@ -2063,7 +2063,7 @@ STR16 pMercContractOverStrings[] =
 	L"'s contract is geëindigd, ze is dus naar huis.", 		// merc's contract is over and has departed
 	L"'s contract is opgezegd, hij is dus weg.", 		// merc's contract has been terminated
 	L"'s contract is opgezegd, ze is dus weg.",		// merc's contract has been terminated
-	L"M.E.R.C. krijgt nog teveel geld van je, %s is dus weggegaan.", // Your M.E.R.C. account is invalid so merc left
+	L"M.E.R.C. krijgt nog teveel geld van je, %ls is dus weggegaan.", // Your M.E.R.C. account is invalid so merc left
 };
 
 // Text used on IMP Web Pages
@@ -2167,40 +2167,40 @@ STR16 pHistoryStrings[] =
 {
 	L"",										// leave this line blank
 	//1-5
-	L"%s ingehuurd via A.I.M.",						// merc was hired from the aim site
-	L"%s ingehuurd via M.E.R.C.",						// merc was hired from the merc site
-	L"%s gedood.", 								// merc was killed
+	L"%ls ingehuurd via A.I.M.",						// merc was hired from the aim site
+	L"%ls ingehuurd via M.E.R.C.",						// merc was hired from the merc site
+	L"%ls gedood.", 								// merc was killed
 	L"Facturen betaald bij M.E.R.C.",					// paid outstanding bills at MERC
 	L"Opdracht van Enrico Chivaldori geaccepteerd.",		// ("Accepted Assignment From Enrico Chivaldori")
 	//6-10
 	L"IMP Profiel Klaar",							// ("IMP Profile Generated")
-	L"Verzekeringspolis gekocht voor %s.",				// insurance contract purchased
-	L"Verzekeringspolis afgebroken van %s.",				// insurance contract canceled
-	L"Uitbetaling Verzekeringspolis %s.",				// insurance claim payout for merc
-	L"%s's contract verlengd met 1 dag.",				// Extented "mercs name"'s for a day
+	L"Verzekeringspolis gekocht voor %ls.",				// insurance contract purchased
+	L"Verzekeringspolis afgebroken van %ls.",				// insurance contract canceled
+	L"Uitbetaling Verzekeringspolis %ls.",				// insurance claim payout for merc
+	L"%ls's contract verlengd met 1 dag.",				// Extented "mercs name"'s for a day
 	//11-15
-	L"%s's contract verlengd met 1 week.",				// Extented "mercs name"'s for a week
-	L"%s's contract verlengd met 2 weken.",				// Extented "mercs name"'s 2 weeks
-	L"%s is ontslagen.",							// "merc's name" was dismissed.
-	L"%s gestopt.",								// "merc's name" quit.
+	L"%ls's contract verlengd met 1 week.",				// Extented "mercs name"'s for a week
+	L"%ls's contract verlengd met 2 weken.",				// Extented "mercs name"'s 2 weeks
+	L"%ls is ontslagen.",							// "merc's name" was dismissed.
+	L"%ls gestopt.",								// "merc's name" quit.
 	L"zoektocht gestart.",							// a particular quest started
 	//16-20
 	L"zoektocht afgesloten.",						// ("quest completed.")
-	L"Gepraat met hoofdmijnwerker van %s",				// talked to head miner of town
-	L"%s bevrijd",								// ("Liberated %s")
+	L"Gepraat met hoofdmijnwerker van %ls",				// talked to head miner of town
+	L"%ls bevrijd",								// ("Liberated %ls")
 	L"Vals gespeeld",								// ("Cheat Used")
 	L"Voedsel zou morgen in Omerta moeten zijn",			// ("Food should be in Omerta by tomorrow")
 	//21-25
-	L"%s weggegaan, wordt Daryl Hick's vrouw",			// ("%s left team to become Daryl Hick's wife")
-	L"%s's contract afgelopen.",						// ("%s's contract expired.")
-	L"%s aangenomen.",							// ("%s was recruited.")
+	L"%ls weggegaan, wordt Daryl Hick's vrouw",			// ("%ls left team to become Daryl Hick's wife")
+	L"%ls's contract afgelopen.",						// ("%ls's contract expired.")
+	L"%ls aangenomen.",							// ("%ls was recruited.")
 	L"Enrico klaagde over de voortgang",				// ("Enrico complained about lack of progress")
 	L"Strijd gewonnen",							// ("Battle won")
 	//26-30
-	L"%s mijn raakt uitgeput",						// ("%s mine started running out of ore")
-	L"%s mijn is uitgeput",							// ("%s mine ran out of ore")
-	L"%s mijn is gesloten",							// ("%s mine was shut down")
-	L"%s mijn heropend",							// ("%s mine was reopened")
+	L"%ls mijn raakt uitgeput",						// ("%ls mine started running out of ore")
+	L"%ls mijn is uitgeput",							// ("%ls mine ran out of ore")
+	L"%ls mijn is gesloten",							// ("%ls mine was shut down")
+	L"%ls mijn heropend",							// ("%ls mine was reopened")
 	L"Info verkregen over gevangenis Tixa.",				// ("Found out about a prison called Tixa.")
 	//31-35
 	L"Van geheime wapenfabriek gehoord, Orta genaamd.",		// ("Heard about a secret weapons plant called Orta.")
@@ -2236,10 +2236,10 @@ STR16 pHistoryStrings[] =
 	L"Als Dave gas heeft, geeft hij deze weg.",			// ("If Dave has gas, he'll provide free fillups.")
 	L"Geslijmd met Pablo.",							// ("Greased Pablo's palms.")
 	L"Kingpin bewaard geld in San Mona mine.",			// ("Kingpin keeps money in San Mona mine.")
-	L"%s heeft Extreme Fighting gewonnen",				// ("%s won Extreme Fighting match")
-	L"%s heeft Extreme Fighting verloren",				// ("%s lost Extreme Fighting match")
+	L"%ls heeft Extreme Fighting gewonnen",				// ("%ls won Extreme Fighting match")
+	L"%ls heeft Extreme Fighting verloren",				// ("%ls lost Extreme Fighting match")
 	//61-65
-	L"%s gediskwalificeerd v. Extreme Fighting",			// ("%s was disqualified in Extreme Fighting")
+	L"%ls gediskwalificeerd v. Extreme Fighting",			// ("%ls was disqualified in Extreme Fighting")
 	L"Veel geld gevonden in een verlaten mijn.",			// ("Found a lot of money stashed in the abandoned mine.")
 	L"Huurmoordenaar van Kingpin ontdekt.",				// ("Encountered assassin sent by Kingpin.")
 	L"Controle over sector verloren",					//ENEMY_INVASION_CODE ("Lost control of sector")
@@ -2254,10 +2254,10 @@ STR16 pHistoryStrings[] =
 	L"Beesten vielen aan",					//CREATURE_ATTACK_CODE ("Creatures attacked")
 	L"Gedood door bloodcats",				//BLOODCAT_AMBUSH_CODE ("Killed by bloodcats")
 	L"Afgeslacht door bloodcats",				// ("Slaughtered bloodcats")
-	L"%s was gedood",						// ("%s was killed")
+	L"%ls was gedood",						// ("%ls was killed")
 	L"Carmen kop v.e. terrorist gegeven",		// ("Gave Carmen a terrorist's head")
 	L"Slay vertrok",						// ("Slay left")
-	L"%s vermoord",						// ("Killed %s")
+	L"%ls vermoord",						// ("Killed %ls")
 };
 
 STR16 pHistoryLocations[] =
@@ -2584,7 +2584,7 @@ STR16			MercAccountText[] =
 	L"Tarief",	//5
 	L"Prijs",
 	L"Totaal:",
-	L"Weet je zeker de betaling van %s te autoriseren?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
+	L"Weet je zeker de betaling van %ls te autoriseren?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
 };
 
 // WANNE 3
@@ -2779,7 +2779,7 @@ STR16			BobbyROrderFormText[] =
 {
 	L"Bestelformulier",				//Title of the page
 	L"Hvl",					// The number of items ordered
-	L"Gewicht(%s)",			// The weight of the item
+	L"Gewicht(%ls)",			// The weight of the item
 	L"Itemnaam",				// The name of the item
 	L"Prijs unit",				// the item's weight
 	L"Totaal",				//5	// The total price of all of items of the same type
@@ -2788,7 +2788,7 @@ STR16			BobbyROrderFormText[] =
 	L"Eindtotaal",			// The grand total of all item totals + the shipping and handling
 	L"Bezorglocatie",				
 	L"Verzendingssnelheid",			//10	// See below
-	L"Kosten (per %s.)",			// The cost to ship the items
+	L"Kosten (per %ls.)",			// The cost to ship the items
 	L"Nacht-Express",			// Gets deliverd the next day
 	L"2 Werkdagen",			// Gets delivered in 2 days
 	L"Standaard Service",			// Gets delivered in 3 days
@@ -2799,7 +2799,7 @@ STR16			BobbyROrderFormText[] =
 	L"* Duidt op Gebruikte Items",		// Disclaimer stating that the item is used
 	L"Je kunt dit niet betalen.",		//20	// A popup message that to warn of not enough money
 	L"<GEEN>",				// Gets displayed when there is no valid city selected
-	L"Weet je zeker dat je de bestelling wil sturen naar %s?",		// A popup that asks if the city selected is the correct one
+	L"Weet je zeker dat je de bestelling wil sturen naar %ls?",		// A popup that asks if the city selected is the correct one
 	L"Gewicht Pakket**",			// Displays the weight of the package
 	L"** Min. Gew.",				// Disclaimer states that there is a minimum weight for the package
 	L"Zendingen",	
@@ -3146,8 +3146,8 @@ STR16			AimFiText[] =
 
 	// The title of the page, the above text gets added at the end of this text
 
-	L"A.I.M. Leden Oplopend Gesorteerd op %s",
-	L"A.I.M. Leden Aflopend Gesorteerd op %s",
+	L"A.I.M. Leden Oplopend Gesorteerd op %ls",
+	L"A.I.M. Leden Aflopend Gesorteerd op %ls",
 
 	// Instructions to the players on what to do
 
@@ -3283,9 +3283,9 @@ STR16	gzSkiAtmText[] =
 
 STR16	SkiMessageBoxText[] =
 {
-	L"Wil je %s aftrekken van je hoofdrekening om het verschil op te vangen?",
-	L"Niet genoeg geld. Je komt %s tekort",
-	L"Wil je %s aftrekken van je hoofdrekening om de kosten te dekken?",
+	L"Wil je %ls aftrekken van je hoofdrekening om het verschil op te vangen?",
+	L"Niet genoeg geld. Je komt %ls tekort",
+	L"Wil je %ls aftrekken van je hoofdrekening om de kosten te dekken?",
 	L"Vraag de dealer om de transactie te starten",
 	L"Vraag de dealer om de gesel. items te repareren",
 	L"Einde conversatie",
@@ -3384,15 +3384,15 @@ STR16		zMarksMapScreenText[] =
 	L"Je hebt geen militie. Je moet stadsburgers trainen om een stadsmilitie te krijgen.",
 	L"Dagelijks Inkomen",
 	L"Huurling heeft levensverzekering",
-	L"%s is niet moe.",
-	L"%s is bezig en kan niet slapen",
-	L"%s is te moe, probeer het later nog eens.",
-	L"%s is aan het rijden.",
+	L"%ls is niet moe.",
+	L"%ls is bezig en kan niet slapen",
+	L"%ls is te moe, probeer het later nog eens.",
+	L"%ls is aan het rijden.",
 	L"Team kan niet reizen met een slapende huurling.",
 
 	// stuff for contracts	
 	L"Je kunt wel het contract betalen, maar je hebt geen geld meer om de levensverzekering van de huurling te betalen.",
-	L"%s verzekeringspremie kost %s voor %d extra dag(en). Wil je betalen?",
+	L"%ls verzekeringspremie kost %ls voor %d extra dag(en). Wil je betalen?",
 	L"Inventaris Sector",
 	L"Huurling heeft medische kosten.",
 	
@@ -3402,10 +3402,10 @@ STR16		zMarksMapScreenText[] =
 	L"OK", // Continue on with the game after autobandage is complete 
 	L"Stop", // Stop autobandaging of patients by medics now 
 	L"Sorry. Optie niet mogelijk in deze demo.", // informs player this option/button has been disabled in the demo 
-	L"%s heeft geen reparatie-kit.",
-	L"%s heeft geen medische kit.",
+	L"%ls heeft geen reparatie-kit.",
+	L"%ls heeft geen medische kit.",
 	L"Er zijn nu niet genoeg mensen die getraind willen worden.",
-	L"%s is vol met milities.",
+	L"%ls is vol met milities.",
 	L"Huurling heeft eindig contract.",
 	L"Contract Huurling is niet verzekerd",
 };
@@ -3413,7 +3413,7 @@ STR16		zMarksMapScreenText[] =
 
 STR16 pLandMarkInSectorString[] =
 {
-	L"Team %d is heeft iemand ontdekt in sector %s",
+	L"Team %d is heeft iemand ontdekt in sector %ls",
 };
 
 // confirm the player wants to pay X dollars to build a militia force in town
@@ -3422,21 +3422,21 @@ STR16 pMilitiaConfirmStrings[] =
 	L"Een stadsmilitie trainen kost $",		// telling player how much it will cost
 	L"Uitgave goedkeuren?", // asking player if they wish to pay the amount requested
 	L"je kunt dit niet betalen.", // telling the player they can't afford to train this town
-	L"Doorgaan met militie trainen %s (%s %d)?", // continue training this town?
+	L"Doorgaan met militie trainen %ls (%ls %d)?", // continue training this town?
 	L"Kosten $", // the cost in dollars to train militia
 	L"( J/N )",   // abbreviated yes/no
 	L"",	// unused
-	L"Stadsmilities trainen in %d sectors kost $ %d. %s", // cost to train sveral sectors at once
+	L"Stadsmilities trainen in %d sectors kost $ %d. %ls", // cost to train sveral sectors at once
 	L"Je kunt de $%d niet betalen om de stadsmilitie hier te trainen.",
-	L"%s heeft een loyaliteit nodig van %d procent om door te gaan met milities trainen.",
-	L"Je kunt de militie in %s niet meer trainen.",
+	L"%ls heeft een loyaliteit nodig van %d procent om door te gaan met milities trainen.",
+	L"Je kunt de militie in %ls niet meer trainen.",
 };
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 STR16	gzMoneyWithdrawMessageText[] = 
 {
 	L"Je kunt maximaal $20.000 in één keer opnemen.",
-	L"Weet je zeker dat je %s wil storten op je rekening?",
+	L"Weet je zeker dat je %ls wil storten op je rekening?",
 };
 
 STR16	gzCopyrightText[] = 
@@ -3630,7 +3630,7 @@ STR16 pIMPFinishButtonText[ 1 ]=
 
 STR16 pIMPFinishStrings[ ]=
 {
-	L"Bedankt, %s", //%s is the name of the merc
+	L"Bedankt, %ls", //%ls is the name of the merc
 };
 
 // the strings for imp voices screen
@@ -3693,18 +3693,18 @@ STR16 pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"nvt",					//Lowercase acronym for not applicable.
 	L"Intussen",		//Meanwhile
-	L"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	L"%ls is gearriveerd in sector %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	L"Versie",
 	L"Leeg SnelBewaarSlot",
 	L"Dit slot is gereserveerd voor SnelBewaren tijdens tactische en kaartoverzichten m.b.v. ALT+S.",
 	L"Geopend",
 	L"Gesloten",
-	L"Schijfruimte raakt op. Er is slects %s MB vrij en Jagged Alliance 2 heeft %s MB nodig.",
-	L"%s ingehuurd van AIM",
-	L"%s heeft %s gevangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	L"%s heeft de drug genomen.",		//'Merc name' has taken the drug
-	L"%s heeft geen medische kennis",	//'Merc name' has no medical skill.
+	L"Schijfruimte raakt op. Er is slects %ls MB vrij en Jagged Alliance 2 heeft %ls MB nodig.",
+	L"%ls ingehuurd van AIM",
+	L"%ls heeft %ls gevangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	L"%ls heeft de drug genomen.",		//'Merc name' has taken the drug
+	L"%ls heeft geen medische kennis",	//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	L"De integriteit van het spel is aangetast.",
@@ -3721,9 +3721,9 @@ STR16 pMessageStrings[] =
 	L"Gooi",
 	L"Geef",
 
-	L"%s gegeven aan %s.",	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s, otherwise,
+	L"%ls gegeven aan %ls.",	//"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
 											 //must notify SirTech.
-	L"Geen plaats om %s aan %s te geven.",	//pass "item" to "merc".  Same instructions as above.
+	L"Geen plaats om %ls aan %ls te geven.",	//pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	L" eraan vastgemaakt )",
@@ -3735,8 +3735,8 @@ STR16 pMessageStrings[] =
 	//Toggling various stealth modes
 	L"Team op sluipmodus.",
 	L"Team niet op sluipmodus.",
-	L"%s op sluipmodus.",
-	L"%s niet op sluipmodus.",
+	L"%ls op sluipmodus.",
+	L"%ls niet op sluipmodus.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in 
 	//an isometric engine.  You can toggle this mode freely in the game.
@@ -3756,13 +3756,13 @@ STR16 pMessageStrings[] =
 	L"3D Cursor UIT.",
 	L"3D Cursor AAN.",
 	L"Team %d actief.",
-	L"Je kunt %s's dagelijkse salaris van %s niet betalen",	//first %s is the mercs name, the seconds is a string containing the salary
+	L"Je kunt %ls's dagelijkse salaris van %ls niet betalen",	//first %ls is the mercs name, the seconds is a string containing the salary
 	L"Overslaan",
-	L"%s kan niet alleen weggaan.",
+	L"%ls kan niet alleen weggaan.",
 	L"Een spel is bewaard onder de naam SaveGame99.sav. Indien nodig, hernoem het naar SaveGame10 zodat je het kan aanroepen in het Laden-scherm.",
-	L"%s dronk wat %s",
+	L"%ls dronk wat %ls",
 	L"Een pakket is in Drassen gearriveerd.",
-	L"%s zou moeten arriveren op het aangewezen punt (sector %s) op dag %d, om ongeveer %s.",
+	L"%ls zou moeten arriveren op het aangewezen punt (sector %ls) op dag %d, om ongeveer %ls.",
 	L"Geschiedenisverslag bijgewerkt.",
 	L"Grenade Bursts use Targeting Cursor (Spread fire enabled)",
 	L"Grenade Bursts use Trajectory Cursor (Spread fire disabled)",
@@ -3787,7 +3787,7 @@ wchar_t ItemPickupHelpPopup[][40] =
 
 STR16 pDoctorWarningString[] =
 {
-	L"%s is niet dichtbij genoeg om te worden genezen.",
+	L"%ls is niet dichtbij genoeg om te worden genezen.",
 	L"Je medici waren niet in staat om iedereen te verbinden.",
 };
 
@@ -3861,7 +3861,7 @@ STR16 gzMiscString[] =
 	L"Je militie vecht door zonder hulp van je huurlingen...",
 	L"Het voertuig heeft geen brandstof meer nodig.",
 	L"De brandstoftank is voor %d%% gevuld.",
-	L"Het leger van Deidranna heeft totale controle verkregen over %s.",
+	L"Het leger van Deidranna heeft totale controle verkregen over %ls.",
 	L"Je hebt een tankplaats verloren.",
 };
 
@@ -3876,17 +3876,17 @@ STR16	gzIntroScreen[] =
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH." 
 STR16 pNewNoiseStr[] =
 {
-	L"%s hoort een %s geluid uit %s.",
-	L"%s hoort een %s geluid van BEWEGING uit %s.",
-	L"%s hoort een %s KRAKEND geluid uit %s.",
-	L"%s hoort een %s SPETTEREND geluid uit %s.",
-	L"%s hoort een %s INSLAG uit %s.",
-	L"%s hoort een %s EXPLOSIE naar %s.",
-	L"%s hoort een %s SCHREEUW naar %s.",
-	L"%s hoort een %s INSLAG naar %s.",
-	L"%s hoort een %s INSLAG naar %s.",
-	L"%s hoort een %s VERSPLINTEREN uit %s.",
-	L"%s hoort een %s KLAP uit %s.",
+	L"%ls hoort een %ls geluid uit %ls.",
+	L"%ls hoort een %ls geluid van BEWEGING uit %ls.",
+	L"%ls hoort een %ls KRAKEND geluid uit %ls.",
+	L"%ls hoort een %ls SPETTEREND geluid uit %ls.",
+	L"%ls hoort een %ls INSLAG uit %ls.",
+	L"%ls hoort een %ls EXPLOSIE naar %ls.",
+	L"%ls hoort een %ls SCHREEUW naar %ls.",
+	L"%ls hoort een %ls INSLAG naar %ls.",
+	L"%ls hoort een %ls INSLAG naar %ls.",
+	L"%ls hoort een %ls VERSPLINTEREN uit %ls.",
+	L"%ls hoort een %ls KLAP uit %ls.",
 };
 
 STR16 wMapScreenSortButtonHelpText[] =
@@ -3977,10 +3977,10 @@ STR16	gzCreditNameFunny[]=
 
 STR16 sRepairsDoneString[] =
 {
-	L"%s is klaar met reparatie van eigen items",
-	L"%s is klaar met reparatie van ieders wapens en bepantering",
-	L"%s is klaar met reparatie van ieders uitrusting",
-	L"%s is klaar met reparatie van ieders vervoerde items",
+	L"%ls is klaar met reparatie van eigen items",
+	L"%ls is klaar met reparatie van ieders wapens en bepantering",
+	L"%ls is klaar met reparatie van ieders uitrusting",
+	L"%ls is klaar met reparatie van ieders vervoerde items",
 };
 
 /*STR16 zGioDifConfirmText[]=
@@ -4001,7 +4001,7 @@ STR16 zGioDifConfirmText[]=
 
 STR16 gzLateLocalizedString[] =
 {
-	L"%S laadscherm-data niet gevonden...",
+	L"%hs laadscherm-data niet gevonden...",
 
 	//1-5
 	L"De robot kan de sector niet verlaten als niemand de besturing gebruikt.",
@@ -4010,13 +4010,13 @@ STR16 gzLateLocalizedString[] =
 	L"Je kan de tijd niet versnellen, Wacht op het vuurwerk!",
 
 	//'Name' refuses to move.
-	L"%s weigert zich te verplaatsen.",
+	L"%ls weigert zich te verplaatsen.",
 
-	//%s a merc name
-	L"%s heeft niet genoeg energie om standpunt te wisselen.",
+	//%ls a merc name
+	L"%ls heeft niet genoeg energie om standpunt te wisselen.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	L"%s heeft geen brandstof en is gestrand in %c%d.",
+	L"%ls heeft geen brandstof en is gestrand in %c%d.",
 
 	//6-10
 
@@ -4044,15 +4044,15 @@ STR16 gzLateLocalizedString[] =
 	//"vs." is the abbreviation of versus.
 	L"%d vs. %d",
 	
-	L"%s is vol!",  //(ex "The ice cream truck is full")
+	L"%ls is vol!",  //(ex "The ice cream truck is full")
 
-	L"%s heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
+	L"%ls heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%s is geraakt in het been en valt om!",
+	L"%ls is geraakt in het been en valt om!",
 	//Name can't speak right now.
-	L"%s kan nu niet praten.",
+	L"%ls kan nu niet praten.",
 
 	//22-24 plural versions 
 	L"%d groene milities zijn gepromoveerd tot veteranenmilitie.",
@@ -4064,11 +4064,11 @@ STR16 gzLateLocalizedString[] =
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	L"%s wordt gek!",
+	L"%ls wordt gek!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	L"Het is nu onveilig om de tijd te versnellen omdat je huurlingen hebt in sector %s.",
+	L"Het is nu onveilig om de tijd te versnellen omdat je huurlingen hebt in sector %ls.",
 	L"Het is nu onveilig om de tijd te versnellen als er huurlingen zijn in de mijnen met beesten.",
 
 	//29-31 singular versions 
@@ -4077,37 +4077,37 @@ STR16 gzLateLocalizedString[] =
 	L"1 reguliere militie is gepromoveerd tot veteranenmilitie.",
 
 	//32-34
-	L"%s zegt helemaal niets.",
+	L"%ls zegt helemaal niets.",
 	L"Naar oppervlakte reizen?",
 	L"(Team %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	L"%s heeft %s's %s gerepareerd",
+	L"%ls heeft %ls's %ls gerepareerd",
 
 	//36
 	L"BLOODCAT",
 
 	//37-38 "Name trips and falls" 
-	L"%s ups en downs",
+	L"%ls ups en downs",
 	L"Dit item kan vanaf hier niet opgepakt worden.",
 
 	//39
 	L"Geen enkele huurling van je is in staat om te vechten. De militie zal zelf tegen de beesten vechten.",
 
 	//40-43
-	//%s is the name of merc.
-	L"%s heeft geen medische kits meer!",
-	L"%s heeft geen medische kennis om iemand te verzorgen!",
-	L"%s heeft geen gereedschapkits meer!",
-	L"%s heeft geen technische kennis om iets te repareren!",
+	//%ls is the name of merc.
+	L"%ls heeft geen medische kits meer!",
+	L"%ls heeft geen medische kennis om iemand te verzorgen!",
+	L"%ls heeft geen gereedschapkits meer!",
+	L"%ls heeft geen technische kennis om iets te repareren!",
 
 	//44-45
 	L"Reparatietijd",
-	L"%s kan deze persoon niet zien.",
+	L"%ls kan deze persoon niet zien.",
 
 	//46-48
-	L"%s's pistoolloopverlenger valt eraf!",
+	L"%ls's pistoolloopverlenger valt eraf!",
 	L"Niet meer dan %d militietrainers zijn toegelaten per sector.",
 	L"Zeker weten?",
 
@@ -4120,8 +4120,8 @@ STR16 gzLateLocalizedString[] =
 	L"Stop Tijdversnelling (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11" 
-	L"%s heeft de %s gedeblokkeerd",
-	L"%s heeft %s's %s gedeblokkeerd",
+	L"%ls heeft de %ls gedeblokkeerd",
+	L"%ls heeft %ls's %ls gedeblokkeerd",
 
 	//55 
 	L"Kan tijd niet versneller tijdens bekijken van sector inventaris.",
@@ -4139,9 +4139,9 @@ STR16 gzLateLocalizedString[] =
 	
 	L"Schakelaar geactiveerd.",
 
-	L"%s's armour attachment has been smashed!",
-	L"%s fires %d more rounds than intended!",
-	L"%s fires %d more round than intended!",
+	L"%ls's armour attachment has been smashed!",
+	L"%ls fires %d more rounds than intended!",
+	L"%ls fires %d more round than intended!",
 };
 
 STR16 gzCWStrings[] = 
@@ -4153,18 +4153,18 @@ STR16 gzCWStrings[] =
 STR16 gzTooltipStrings[] =
 {
 	// Debug info
-	L"%s|Location: %d\n",
-	L"%s|Brightness: %d / %d\n",
-	L"%s|Range to |Target: %d\n",
-	L"%s|I|D: %d\n",
-	L"%s|Orders: %d\n",
-	L"%s|Attitude: %d\n",
-	L"%s|Current |A|Ps: %d\n",
-	L"%s|Current |Health: %d\n",
+	L"%ls|Location: %d\n",
+	L"%ls|Brightness: %d / %d\n",
+	L"%ls|Range to |Target: %d\n",
+	L"%ls|I|D: %d\n",
+	L"%ls|Orders: %d\n",
+	L"%ls|Attitude: %d\n",
+	L"%ls|Current |A|Ps: %d\n",
+	L"%ls|Current |Health: %d\n",
 	// Full info
-	L"%s|Helmet: %s\n",
-	L"%s|Vest: %s\n",
-	L"%s|Leggings: %s\n",
+	L"%ls|Helmet: %ls\n",
+	L"%ls|Vest: %ls\n",
+	L"%ls|Leggings: %ls\n",
 	// Limited, Basic
 	L"|Armor: ",
 	L"Helmet ",
@@ -4172,14 +4172,14 @@ STR16 gzTooltipStrings[] =
 	L"Leggings",
 	L"worn",
 	L"no Armor",
-	L"%s|N|V|G: %s\n",
+	L"%ls|N|V|G: %ls\n",
 	L"no NVG",
-	L"%s|Gas |Mask: %s\n",
+	L"%ls|Gas |Mask: %ls\n",
 	L"no Gas Mask",
-	L"%s|Head |Position |1: %s\n",
-	L"%s|Head |Position |2: %s\n",
+	L"%ls|Head |Position |1: %ls\n",
+	L"%ls|Head |Position |2: %ls\n",
 	L"\n(in Backpack) ",
-	L"%s|Weapon: %s ",
+	L"%ls|Weapon: %ls ",
 	L"no Weapon",
 	L"Handgun",
 	L"SMG",
@@ -4191,7 +4191,7 @@ STR16 gzTooltipStrings[] =
 	L"no Helmet",
 	L"no Vest",
 	L"no Leggings",
-	L"|Armor: %s\n", 
+	L"|Armor: %ls\n", 
 };
 
 

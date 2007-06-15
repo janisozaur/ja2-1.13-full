@@ -1673,7 +1673,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		else if ( pSoldier->bAssignment >= ON_DUTY )
 		{
 				SetFontForeground( FONT_YELLOW );
-				WSTR_SPrintf( NameStr, 50, L"(%s)", pAssignmentStrings[ pSoldier->bAssignment ] );
+				WSTR_SPrintf( NameStr, 50, L"(%ls)", pAssignmentStrings[ pSoldier->bAssignment ] );
 				FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 				gprintfdirty( sX, sY, NameStr );
 				mprintf( sX, sY, NameStr );
@@ -1709,14 +1709,14 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		{
 		  if ( fRaiseName )
 		  {
-			  WSTR_SPrintf( NameStr, 50, L"%s", pSoldier->name );
+			  WSTR_SPrintf( NameStr, 50, L"%ls", pSoldier->name );
 			  FindFontCenterCoordinates( sXPos, (INT16)( sYPos - 10 ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 			  gprintfdirty( sX, sY, NameStr );
 			  mprintf( sX, sY, NameStr );
 		  }
 		  else
 		  {
-			  WSTR_SPrintf( NameStr, 50, L"%s", pSoldier->name );
+			  WSTR_SPrintf( NameStr, 50, L"%ls", pSoldier->name );
 			  FindFontCenterCoordinates( sXPos, sYPos, (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 			  gprintfdirty( sX, sY, NameStr );
 			  mprintf( sX, sY, NameStr );
@@ -2249,7 +2249,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ USE_KEYRING_ICON ], AP_UNLOCK_DOOR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ USE_KEYRING_ICON ], AP_UNLOCK_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ USE_KEYRING_ICON ], zDisp );
 
@@ -2280,7 +2280,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ], AP_USE_CROWBAR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ], AP_USE_CROWBAR );
 	}
 	SetButtonFastHelpText( iActionIcons[ USE_CROWBAR_ICON ], zDisp );
 
@@ -2310,7 +2310,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ], AP_PICKLOCK );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ], AP_PICKLOCK );
 	}
 	SetButtonFastHelpText( iActionIcons[ LOCKPICK_DOOR_ICON ], zDisp );
 
@@ -2342,7 +2342,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ], AP_EXPLODE_DOOR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ], AP_EXPLODE_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ EXPLOSIVE_DOOR_ICON ], zDisp );
 
@@ -2376,7 +2376,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 		}
 		else
 		{
-			WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ], AP_OPEN_DOOR );
+			WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ], AP_OPEN_DOOR );
 		}
 	}
 	else
@@ -2387,7 +2387,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 		}
 		else
 		{
-			WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ], AP_OPEN_DOOR );
+			WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ], AP_OPEN_DOOR );
 		}
 	}
 	SetButtonFastHelpText( iActionIcons[ OPEN_DOOR_ICON ], zDisp );
@@ -2414,7 +2414,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ], AP_EXAMINE_DOOR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ], AP_EXAMINE_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ EXAMINE_DOOR_ICON ], zDisp );
 
@@ -2438,7 +2438,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ], AP_BOOT_DOOR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ], AP_BOOT_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ BOOT_DOOR_ICON ], zDisp );
 
@@ -2463,7 +2463,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		WSTR_SPrintf( zDisp, 100, L"%s ( %d )", pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ], AP_UNTRAP_DOOR );
+		WSTR_SPrintf( zDisp, 100, L"%ls ( %d )", pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ], AP_UNTRAP_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ UNTRAP_DOOR_ICON ], zDisp );
 

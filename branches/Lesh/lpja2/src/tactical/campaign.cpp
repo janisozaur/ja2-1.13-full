@@ -94,7 +94,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
-		ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %s improving stats while POW! ubStat %d", pSoldier->name, ubStat );
+		ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %ls improving stats while POW! ubStat %d", pSoldier->name, ubStat );
 		return;
 	}
 
@@ -398,7 +398,7 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 	if (sSubPointChange != 0)
 	{
 		// debug message
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s's %s changed by %d", pProfile->zNickname, wDebugStatStrings[ubStat], sSubPointChange );
+		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%ls's %ls changed by %d", pProfile->zNickname, wDebugStatStrings[ubStat], sSubPointChange );
 	}
 #endif
 
@@ -1556,7 +1556,7 @@ void BuildStatChangeString( STR16 wString, UINT16 usMaxLen, STR16 wName, BOOLEAN
 		ubStringIndex += 2;
 	}
 
-	WSTR_SPrintf( wString, usMaxLen, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ), 
+	WSTR_SPrintf( wString, usMaxLen, L"%ls %ls %d %ls %ls", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ), 
 					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
 }
 

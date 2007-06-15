@@ -921,7 +921,7 @@ ATM:
 			if(!AddVideoObject(&VObjectDesc, &guiSmallSoldiersFace[ gubNumberMercsInArray ] ))
 			{
 				#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %s", zTemp );
+						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %ls", zTemp );
 				#endif
 				return( FALSE );
 			}
@@ -3477,7 +3477,7 @@ void SetSkiFaceRegionHelpText( INVENTORY_IN_SLOT *pInv, MOUSE_REGION *pRegion, U
 	{
 		BuildItemHelpTextString( zTempText, 512, pInv, ubScreenArea );
 		// add who owns it
-		WSTR_SPrintf( zHelpText, 512, L"%s%s %s", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
+		WSTR_SPrintf( zHelpText, 512, L"%ls%ls %ls", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
 	}
 	else
 	{
@@ -4760,9 +4760,9 @@ void			InitShopKeeperSubTitledText( STR16 pString )
 	memset( gsShopKeeperTalkingText, 0, SKI_SUBTITLE_TEXT_SIZE );
 
 #ifdef TAIWANESE
-	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"%s", pString );
+	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"%ls", pString );
 #else
-	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"\"%s\"", pString );
+	WSTR_SPrintf( gsShopKeeperTalkingText, SKI_SUBTITLE_TEXT_SIZE, L"\"%ls\"", pString );
 #endif
 
 
@@ -5488,7 +5488,7 @@ void HandleCurrentModeText( UINT8 ubMode )
 			InsertCommasForDollarFigure( zMoney );
 			InsertDollarSignInToString( zMoney );
 
-			WSTR_SPrintf( zTemp, 128, L"%s: %s", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
+			WSTR_SPrintf( zTemp, 128, L"%ls: %ls", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
 			break;
 	}
 
@@ -7755,7 +7755,7 @@ void BuildDoneWhenTimeString( wchar_t sString[], UINT16 usMaxLen, UINT8 ubArmsDe
 	// only show day if it's gonna take overnight
 	if ( GetWorldDay() != uiDay )
 	{
-		WSTR_SPrintf( sString, usMaxLen, L"%s %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+		WSTR_SPrintf( sString, usMaxLen, L"%ls %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
 	}
 	else
 	{
@@ -7778,7 +7778,7 @@ void BuildItemHelpTextString( wchar_t sString[], UINT16 usMaxLen, INVENTORY_IN_S
 				 ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS ) )
 		{
 			BuildRepairTimeString( zRepairTime, 64, CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
-			WSTR_SPrintf( sString, usMaxLen, L"%s\n(%s: %s)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
+			WSTR_SPrintf( sString, usMaxLen, L"%ls\n(%ls: %ls)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
 		}
 		else
 		{

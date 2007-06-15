@@ -611,7 +611,7 @@ INT32 MineAMine( INT8 bMineIndex )
 		if( iAmtExtracted > 0 )
 		{
 			// debug message
-//			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s - Mine income from %s = $%d", WORLDTIMESTR, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], iAmtExtracted );
+//			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%ls - Mine income from %ls = $%d", WORLDTIMESTR, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], iAmtExtracted );
 
 			// check type of mine
 			bMineType = gMineStatus[ bMineIndex ].ubMineType;
@@ -955,7 +955,7 @@ void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 	if (gMercProfiles[ usHeadMinerProfileId ].bLife < OKLIFE)
 	{
 		// debug message
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%s can't talk (quote #%d)", gMercProfiles[ usHeadMinerProfileId ].zNickname, ubQuoteType);
+		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%ls can't talk (quote #%d)", gMercProfiles[ usHeadMinerProfileId ].zNickname, ubQuoteType);
 		return;
 	}
 

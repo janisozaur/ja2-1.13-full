@@ -36,14 +36,6 @@ template <typename type1, typename type2>
 inline char *strncat(type1 str1, type2 str2, size_t n)
 { return strncat((char *)str1, (const char *)str2, n); }
 
-/*
-inline char *strncat(INT8 *str1, INT8 *str2, size_t n) { return strncat((char *)str1, (const char *)str2, n); }
-inline char *strncat(char *str1, INT8 *str2, size_t n) { return strncat(str1, (const char *)str2, n); }
-inline char *strncat(INT8 *str1, const char *str2, size_t n) { return strncat((char *)str1, str2, n); }
-*/
-//inline long atol(INT8 *str) { return atol((const char *)str); }
-template <typename type1>
-inline long atol(type1 str) { return atol((const char *)str); }
 
 template <typename type1, typename type2>
 inline char *strncpy(type1 str1, type2 str2, size_t n) { return strncpy((char *)str1, (const char *)str2, n); }

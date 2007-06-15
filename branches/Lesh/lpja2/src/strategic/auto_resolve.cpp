@@ -1935,7 +1935,7 @@ void RenderAutoResolve()
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
-			WSTR_SPrintf( str, 100, L"%s:  %dm %02ds", 
+			WSTR_SPrintf( str, 100, L"%ls:  %dm %02ds", 
 				gpStrategicString[ STR_AR_TIME_ELAPSED ],
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				(gpAR->uiTotalElapsedBattleTimeInMilliseconds%60000)/1000 );

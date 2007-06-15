@@ -190,7 +190,7 @@ void MercDailyUpdate()
 		return;
 
 	// debug message
-	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s - Doing MercDailyUpdate", WORLDTIMESTR );
+	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%ls - Doing MercDailyUpdate", WORLDTIMESTR );
 
 	// if the death rate is very low (this is independent of mercs' personal deathrate tolerances)
 	if (CalcDeathRate() < 5)

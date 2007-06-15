@@ -614,7 +614,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		guiCurrentQuickSaveNumber++;
 
 		if( gfUseConsecutiveQuickSaveSlots )
-			WSTR_SPrintf( zSaveGameDesc, SIZE_OF_SAVE_GAME_DESC, L"%s%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
+			WSTR_SPrintf( zSaveGameDesc, SIZE_OF_SAVE_GAME_DESC, L"%ls%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
 		else
 #endif
 			WSTR_SPrintf( zSaveGameDesc, SIZE_OF_SAVE_GAME_DESC, pMessageStrings[ MSG_QUICKSAVE_NAME ] );

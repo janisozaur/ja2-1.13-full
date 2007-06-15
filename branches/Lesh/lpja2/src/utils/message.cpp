@@ -935,7 +935,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		WSTR_VSPrintf(DestString, 512, pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
-		WSTR_SPrintf(DestStringA, 512, L"DEBUG: %s", DestString);
+		WSTR_SPrintf(DestStringA, 512, L"DEBUG: %ls", DestString);
 
 		BeginUIMessage( DestStringA );
 		WriteMessageToFile( DestStringA );
@@ -983,7 +983,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		WSTR_SPrintf( DestString, 512, L"Debug: %s", DestStringA );
+		WSTR_SPrintf( DestString, 512, L"Debug: %ls", DestStringA );
 	}
 
 	if ( ubPriority == MSG_DIALOG )
