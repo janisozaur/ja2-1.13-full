@@ -4,6 +4,7 @@
 #include "types.h"
 #include "file_man.h"
 
+
 #define	FILENAME_SIZE					256
 
 //#define	FILENAME_SIZE				40 + PATH_SIZE
@@ -27,29 +28,6 @@
 
 
 
-typedef struct
-{
-	CHAR8 sLibraryName[ FILENAME_SIZE ];		// The name of the library file on the disk
-	BOOLEAN fOnCDrom;							// A flag specifying if its a cdrom library ( not implemented yet )
-	BOOLEAN fInitOnStart;						// Flag specifying if the library is to Initialized at the begining of the game
-
-} LibraryInitHeader;
-
-
-
-
-#ifdef JA2
-	#include "ja2_libs.h"
-#elif UTIL
-	#define NUMBER_OF_LIBRARIES 0
-	typedef	UINT32				SGP_FILETIME;
-#endif
-
-extern LibraryInitHeader gGameLibaries[];
-extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
-
-
-#define		REAL_LIBRARY_FILE	"RealFiles.slf"
 
 typedef struct	
 {
@@ -74,12 +52,18 @@ typedef struct
 	FileHeaderStruct *pFileHeader;
 } FileOpenStruct;
 
-
-
+/*
+enum
+{
+	LT_SLF = 0,
+	LT_DIR
+};
+*/
 
 typedef struct
 {
 	STR			sLibraryPath;
+//	UINT16		usLibraryType;			// slf, directory or something else (zip, for example)
 	HANDLE		hLibraryHandle;
 	UINT16		usNumberOfEntries;
 	BOOLEAN		fLibraryOpen;
@@ -119,10 +103,6 @@ typedef struct
 } DatabaseManagerHeaderStruct;
 
 
-
-
-
-//typedef UINT32	HLIBFILE;
 
 
 
@@ -178,10 +158,9 @@ extern DatabaseManagerHeaderStruct gFileDataBase;
 //Function Prototypes
 
 BOOLEAN CheckForLibraryExistence( const CHAR8 *pLibraryName );
-BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibheader, BOOLEAN fCanBeOnCDrom );
+BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibheader );
 
-BOOLEAN InitializeFileDatabase( );
-BOOLEAN ReopenCDLibraries(void);
+BOOLEAN InitializeFileDatabase( const CHAR8 *pCfgName );
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName );
 INT16 GetLibraryIDFromFileName(const CHAR8 *pFileName );

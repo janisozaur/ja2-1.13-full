@@ -112,12 +112,17 @@ sgpVFS::~sgpVFS()
 
 //===================================================================
 //
-//	AddContainerByIndex
+//	AddContainerByIndex - adds contents of slf-container to resource
+//	map using it's index.
+//
+//	in	uiContainerID: container's index
+//
+//	return: TRUE, if contents were added, otherwise FALSE
 //
 //===================================================================
 BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 {
-	UINT32	uiResCounter, uiContCounter;
+	UINT32	uiResCounter;
 	vfsString	strContainerDir, strResourceName;
 
 	// enumerate all container resources
@@ -125,17 +130,14 @@ BOOLEAN	sgpVFS::AddContainerByIndex( UINT32 uiContainerID )
 	if ( uiContainerID >= gFileDataBase.usNumberOfLibraries )
 		return FALSE;
 
-	for ( uiContCounter = 0; uiContCounter < gFileDataBase.usNumberOfLibraries; uiContCounter++ )
-	{
-		// print directory first, and it's contents then
-		strContainerDir = gFileDataBase.pLibraries[ uiContCounter ].sLibraryPath;
-		AddResourceEntry( strContainerDir, strContainerDir, TRUE, uiContCounter, FALSE );
+	// print directory first, and it's contents then
+	strContainerDir = gFileDataBase.pLibraries[ uiContainerID ].sLibraryPath;
+	AddResourceEntry( strContainerDir, strContainerDir, TRUE, uiContainerID, FALSE );
 
-		for ( uiResCounter = 0; uiResCounter < gFileDataBase.pLibraries[ uiContCounter ].usNumberOfEntries; uiResCounter++ )
-		{
-			strResourceName = strContainerDir + gFileDataBase.pLibraries[ uiContCounter ].pFileHeader[uiResCounter].pFileName;
-			AddResourceEntry( strResourceName, strResourceName, FALSE, uiContCounter, FALSE );
-		}
+	for ( uiResCounter = 0; uiResCounter < gFileDataBase.pLibraries[ uiContainerID ].usNumberOfEntries; uiResCounter++ )
+	{
+		strResourceName = strContainerDir + gFileDataBase.pLibraries[ uiContainerID ].pFileHeader[uiResCounter].pFileName;
+		AddResourceEntry( strResourceName, strResourceName, FALSE, uiContainerID, FALSE );
 	}
 
 	return TRUE;
@@ -168,6 +170,21 @@ BOOLEAN	sgpVFS::AddResourceEntry( const vfsString& ResourceName, const vfsString
 	return TRUE;
 }
 
+//===================================================================
+//
+//	AddDirectoryContents - adds contents of directory to resource
+//	map using it's index. Allows setting of writeable status and
+//	optional real directory to redirect application directory to
+//	other real directory. However, this redirection is not used
+//	in project.
+//
+//	in	pDirPath: root directory, where recursive scan for resources begins
+//	in	fWriteable: writeable status of currently adding directory
+//	in	pOptionalDirectoryName: other directory to redirect resources
+//
+//	return: TRUE, if contents were added, otherwise FALSE
+//
+//===================================================================
 BOOLEAN	sgpVFS::AddDirectoryContents( const CHAR8 *pDirPath, BOOLEAN fWriteable, const CHAR8 *pOptionalDirectoryName )
 {
 	// Theory
@@ -226,6 +243,16 @@ BOOLEAN	sgpVFS::AddDirectoryContents( const CHAR8 *pDirPath, BOOLEAN fWriteable,
 	return TRUE;
 }
 
+//===================================================================
+//
+//	GetDirectoryEntries - collect directory listing to array of strings
+//
+//	in	DirToLook: root directory, where recursive scan for entries begins
+//	out	FileList: array of resulting entries
+//
+//	return: always TRUE
+//
+//===================================================================
 BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray& FileList )
 {
 	STRING512	entry;
@@ -250,6 +277,19 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 	return TRUE;
 }
 
+//===================================================================
+//
+//	ConvertToApplicationName - convert filename or directory name to
+//	application name. Conversion produces uppercased name with '\'
+//	slashes. If supplied name is a directory name, an ending slash
+//	is added.
+//
+//	in	FileName: filename to convert
+//	in	IsDirectory: directory flag
+//
+//	return: application name
+//
+//===================================================================
 vfsString	sgpVFS::ConvertToApplicationName( const vfsString& FileName, BOOLEAN IsDirectory )
 {
 	UINT32		uiCharIndex;
@@ -360,6 +400,16 @@ BOOLEAN	sgpVFS::IsDirExist ( const CHAR8 *pDirectoryName  )
 	return TRUE;
 }
 
+//===================================================================
+//
+//	FindResource - trying to find given resource in map
+//
+//	in	pResourceName: resource name
+//	out	Entry: result of the search - an entry.
+//
+//	return:	TRUE, if found, FALSE if not
+//
+//===================================================================
 BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
 {
 	vfsFileMapIterator	FoundEntry;
@@ -374,6 +424,17 @@ BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
 	return TRUE;
 }
 
+//===================================================================
+//
+//	StartFilePatternMatch - perform searches of the application names,
+//	that match the given wildcard pattern, inside resource map.
+//	This function gathers all found names into array.
+//
+//	in	pPattern: path and pattern
+//
+//	return:	number of found names
+//
+//===================================================================
 UINT32	sgpVFS::StartFilePatternMatch( const CHAR8 *pPattern )
 {
 	vfsFileMapIterator	ResourceIterator;
@@ -391,6 +452,16 @@ UINT32	sgpVFS::StartFilePatternMatch( const CHAR8 *pPattern )
 	return( FileMatchResults.size() );
 }
 
+//===================================================================
+//
+//	GetNextMatch - give next matched name
+//
+//	out	pFilename: next name
+//	in	uiMaxLen: max size of the pFilename string
+//
+//	return:	TRUE, if name was given, FALSE if no names left
+//
+//===================================================================
 BOOLEAN	sgpVFS::GetNextMatch( CHAR8 *pFilename, UINT32 uiMaxLen )
 {
 	if ( FileMatchIndex >= FileMatchResults.size() )
@@ -400,12 +471,30 @@ BOOLEAN	sgpVFS::GetNextMatch( CHAR8 *pFilename, UINT32 uiMaxLen )
 	return TRUE;
 }
 
+//===================================================================
+//
+//	FinishFilePatternMatch - finish name searching with use of
+//	wildcard patterns
+//
+//===================================================================
 void sgpVFS::FinishFilePatternMatch( void )
 {
 	FileMatchResults.clear();
 	FileMatchIndex = 0;
 }
 
+//===================================================================
+//
+//	GetResourceFilename - give full real name of the specified
+//	application name
+//
+//	in	pResourceName: resource name
+//	out	pFilename: full real filename
+//	in	uiMaxLen: max size of the pFilename string
+//
+//	return:	TRUE, if name was given, FALSE if not
+//
+//===================================================================
 BOOLEAN	sgpVFS::GetResourceFilename( const CHAR8 *pResourceName, CHAR8 *pFilename, UINT32 uiMaxLen )
 {
 	vfsEntry	entry;

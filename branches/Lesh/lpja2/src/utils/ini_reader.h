@@ -21,6 +21,7 @@ public:
 	float ReadFloat(const char* szSection, const char* szKey, float fltDefaultValue);
 	bool ReadBoolean(const char* szSection, const char* szKey, bool bolDefaultValue);
 	const char* ReadString(const char* szSection, const char* szKey, const char* szDefaultValue);
+
 private:
 	char 		m_szFileName[MAX_PATH];
 	CFG_File	cfg;

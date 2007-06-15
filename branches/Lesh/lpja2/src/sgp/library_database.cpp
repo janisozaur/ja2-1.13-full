@@ -11,82 +11,41 @@
 	#include "video.h"
 	#include "game_settings.h"
 	#include "io_layer.h"
+	#include "ini_reader.h"
 	
+	// need string and string array types
+	#include "vfs_types.hpp"
+	#include "vfs.hpp"
+	#include "SDL_config_lib.h"
+	#include "io_layer.h"
 #endif
 
-//NUMBER_OF_LIBRARIES
-#ifdef JA2
-
-LibraryInitHeader gGameLibaries[ ] = 
-{ 
-		//Library Name					Can be	Init at start
-//													on cd
-	{ "Data.slf",							FALSE, TRUE },
-	{ "Ambient.slf",					FALSE, TRUE },
-	{ "Anims.slf",						FALSE, TRUE },
-	{ "BattleSnds.slf",				FALSE, TRUE },
-	{ "BigItems.slf",					FALSE, TRUE },
-	{ "BinaryData.slf",				FALSE, TRUE },
-	{ "Cursors.slf",					FALSE, TRUE },
-	{ "Faces.slf",						FALSE, TRUE },
-	{ "Fonts.slf",						FALSE, TRUE },
-	{ "Interface.slf",				FALSE, TRUE },
-	{ "Laptop.slf",						FALSE, TRUE },
-	{ "Maps.slf",							TRUE,  TRUE },
-	{ "MercEdt.slf",					FALSE, TRUE },
-	{ "Music.slf",						TRUE,  TRUE },
-	{ "Npc_Speech.slf",				TRUE,	 TRUE },
-	{ "NpcData.slf",					FALSE, TRUE },
-	{ "RadarMaps.slf",				FALSE, TRUE },
-	{ "Sounds.slf",						FALSE, TRUE },
-	{ "Speech.slf",						TRUE,  TRUE },
-//	{ "TileCache.slf",				FALSE, TRUE },
-	{ "TileSets.slf",					TRUE,  TRUE },
-	{ "LoadScreens.slf",			TRUE,  TRUE },
-	{ "Intro.slf",						TRUE,  TRUE },
-
-#ifdef GERMAN
-	{ "German.slf",						FALSE, TRUE },
-#endif
-
-#ifdef POLISH
-	{ "Polish.slf",						FALSE, TRUE },
-#endif
-
-#ifdef DUTCH
-	{ "Dutch.slf",						FALSE, TRUE },
-#endif
-
-#ifdef ITALIAN
-	{ "Italian.slf",					FALSE, TRUE },
-#endif
-
-#ifdef RUSSIAN
-	{ "Russian.slf",					FALSE, TRUE },
-#endif
-
-};
-
-#elif defined(UTIL)
-	LibraryInitHeader gGameLibaries[ ] = { 0 };
-#endif
-
-
-
+// This file still needs refactoring to be more understandable
+//
+// Lesh: June 2007 - customizable game resource sources
+// There is two game resource sources: standard and additional.
+// Old slf-files (only!) are standard resources, that were with this game all this time.
+// New additional game resources are all that files in Data/ and Data-1.13/ directories
+// and, maybe some new slf-files, or even zip-files (in future). Additional resources
+// override original resources of the game as well, as override themselves. Resource
+// sources are added to resource map consequently, so next added source (slf or dir)
+// can override previously added resources.
+//
+// Resource sources will be read from cfg-file.
+//
+vfsStringArray	GameSource;
+UINT16			NumberOfContainers;	// to know, how many slf-files are there
 
 //used when doing the binary search of the libraries
 INT16	gsCurrentLibrary = -1;
-
-
-//The location of the cdrom drive
-CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
-
 
 INT32		CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
 BOOLEAN		GetFileHeaderFromLibrary( INT16 sLibraryID, const CHAR8 *pstrFileName, FileHeaderStruct **pFileHeader );
 void		AddSlashToPath( STR pName );
 HWFILE		CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
 BOOLEAN 	CheckIfFileIsAlreadyOpen( const CHAR8 *pFileName, INT16 sLibraryID );
+BOOLEAN		ReadGameSources( const CHAR8 *pCfgName );
+BOOLEAN		ReadMultiValueEntry( const CHAR8 *pKey, const vfsString& DefaultPath );
 
 INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 
@@ -100,26 +59,26 @@ INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 //	will be initialized and game start.
 //
 //************************************************************************
-BOOLEAN InitializeFileDatabase( )
+BOOLEAN InitializeFileDatabase( const CHAR8 *pCfgName )
 {
-	INT16			i;
+	INT16		i, iCurrentLibIndex;
 	UINT32		uiSize;
 	BOOLEAN		fLibraryInited = FALSE;
 
 	printf("\nInitializing main libraries...\n");
 
-//#ifdef JA2
-//	GetCDLocation( );
-//#else
-	gzCdDirectory[ 0 ] = '.';
-	gzCdDirectory[ 1 ] = 0;
-//#endif
+	NumberOfContainers = 0;
+	GameSource.clear();
+	// read all game sources
+
+	if ( !ReadGameSources( pCfgName ) )
+		return FALSE;
 
 	//if all the libraries exist, set them up
-	gFileDataBase.usNumberOfLibraries = NUMBER_OF_LIBRARIES;
+	gFileDataBase.usNumberOfLibraries = NumberOfContainers;
 
 	//allocate memory for the each of the library headers
-	uiSize = NUMBER_OF_LIBRARIES * sizeof( LibraryHeaderStruct );
+	uiSize = NumberOfContainers * sizeof( LibraryHeaderStruct );
 	if( uiSize )
 	{ 
 		gFileDataBase.pLibraries = (LibraryHeaderStruct *) MemAlloc( uiSize );
@@ -127,27 +86,32 @@ BOOLEAN InitializeFileDatabase( )
 
 		//set all the memrory to 0
 		memset( gFileDataBase.pLibraries, 0, uiSize );
-
+		iCurrentLibIndex = 0;
 
 		//Load up each library
-		for( i=0; i< NUMBER_OF_LIBRARIES; i++ )
+		for( i = 0; i < GameSource.size(); i++ )
 		{
-			//if you want to init the library at the begining of the game
-			if( gGameLibaries[i].fInitOnStart )
+			if ( IO_IsDirectory( GameSource[i].c_str() ) )
 			{
-				//if the library exists
-				if( OpenLibrary( i ) )
-				{
-					fLibraryInited = TRUE;
-					printf("  + %s = '%s' ...success!\n", gGameLibaries[i].sLibraryName, gFileDataBase.pLibraries[i].sLibraryPath );
-				}
-				//else the library doesnt exist
-				else
-				{
-					printf("  + %s ...FAILED!\n", gGameLibaries[i].sLibraryName );
-					//gFileDataBase.pLibraries[ i ].fLibraryOpen = FALSE;
-					return (FALSE);
-				}
+				if ( !VFS.AddDirectoryContents(GameSource[i].c_str(), FALSE) )
+					printf("AddDirectoryContents(%s) failed!\n", GameSource[i].c_str() );
+				printf("  + %s ...success!\n", GameSource[i].c_str() );
+			}
+			//if the library exists
+			else if( OpenLibrary( iCurrentLibIndex ) )
+			{
+				fLibraryInited = TRUE;
+				if ( !VFS.AddContainerByIndex(iCurrentLibIndex) )
+					printf("AddContainer(%s) failed!\n", GameSource[i].c_str());
+				iCurrentLibIndex++;
+				printf("  + %s ...success!\n", GameSource[i].c_str() );
+			}
+			//else the library doesnt exist
+			else
+			{
+				printf("  + %s ...FAILED!\n", GameSource[i].c_str() );
+				//gFileDataBase.pLibraries[ i ].fLibraryOpen = FALSE;
+				return (FALSE);
 			}
 		}
 		//signify that the database has been initialized ( only if there was a library loaded )
@@ -171,33 +135,6 @@ BOOLEAN InitializeFileDatabase( )
 }
 
 
-//*****************************************************************************************
-// ReopenCDLibraries
-// 
-// Closes all CD libraries, then reopens them. This function needs to be called when CDs
-// are changed.
-// 
-// Returns BOOLEAN            - TRUE, always
-// 
-// Created:  3/21/00 Derek Beland
-//*****************************************************************************************
-BOOLEAN ReopenCDLibraries(void)
-{
-INT16 i;
-
-	//Load up each library
-	for(i=0; i < NUMBER_OF_LIBRARIES; i++ )
-	{
-		if(gFileDataBase.pLibraries[ i ].fLibraryOpen && gGameLibaries[i].fOnCDrom)
-			CloseLibrary(i);
-
-		if(gGameLibaries[i].fOnCDrom)
-			OpenLibrary( i );
-	}
-
-	return(TRUE);
-}
-
 //************************************************************************
 //
 //	 ShutDownFileDatabase():  Call this function to close down the file
@@ -220,30 +157,10 @@ BOOLEAN ShutDownFileDatabase( )
 		gFileDataBase.pLibraries = NULL;
 	}
 
-
 	//loop through all the 'opened files' ( there should be no files open )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg( String("ShutDownFileDatabase( ):  ERROR:  real file id still exists, wasnt closed") );
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-		CloseHandle( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-		if ( close( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle ) == -1 )
-		{
-			fprintf(stderr, "Error closing library %d: errno=%d\n",
-				gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle, errno);
-		}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 		if ( !IO_File_Close( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle ) )
 		{
 			fprintf(stderr, "Error closing library %d: errno=%d\n",
@@ -258,6 +175,8 @@ BOOLEAN ShutDownFileDatabase( )
 		gFileDataBase.RealFiles.pRealFilesOpen = NULL;
 	}
 
+	GameSource.clear();
+
 	return( TRUE );
 }
 
@@ -266,53 +185,13 @@ BOOLEAN ShutDownFileDatabase( )
 
 BOOLEAN CheckForLibraryExistence( const CHAR8 *pLibraryName )
 {
-	BOOLEAN fRetVal = FALSE;
-	HANDLE	hFile;
-
-//	BACKSLASH(pLibraryName);
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//try to opent the file, if we canm the library exists
-	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-
-	//if the file was not opened
-	if( hFile == INVALID_HANDLE_VALUE )
-	{
-
-		//the file wasnt opened
-		fRetVal = FALSE;
-	}
-	else
-	{
-		CloseHandle( hFile );
-		fRetVal = TRUE;
-	}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	// check, if it is a regular file
-	struct stat file_stat;
-
-	if ( stat( pLibraryName, &file_stat) == -1 )
-		fRetVal = FALSE;
-	else if ( S_ISREG(file_stat.st_mode) )
-		fRetVal = TRUE;
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 	return( IO_IsRegularFile( pLibraryName ) );
 }
 
 
 
 
-BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
+BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibHeader )
 {
 	HANDLE	hFile;
 	UINT16	usNumEntries=0;
@@ -323,80 +202,12 @@ BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibH
 	UINT32	uiCount=0;	
 	CHAR8		zTempPath[ SGPFILENAME_LEN ];
 
-//	BACKSLASH(pLibraryName);
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//open the library for reading ( if it exists )
-	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-	if( hFile == INVALID_HANDLE_VALUE )
-	{
-		//if it failed finding the file on the hard drive, and the file can be on the cdrom
-		if( fCanBeOnCDrom )
-		{
-			// Add the path of the cdrom to the path of the library file
-			sprintf( zTempPath, "%s%s", gzCdDirectory, pLibraryName );
-
-			//look on the cdrom
-			hFile = CreateFile( zTempPath, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-			if( hFile == INVALID_HANDLE_VALUE )
-			{
-				UINT32 uiLastError = GetLastError();
-				char zString[1024];
-				FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-
-				return( FALSE );
-			}
-			else
-				FastDebugMsg( String("CD Library %s opened.", zTempPath));
-		}
-		else
-		{
-			//error opening the library
-			return(FALSE);
-		}
-	}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	hFile = open( pLibraryName, O_RDONLY );
-	if ( hFile == -1 )
-	{
-		fprintf(stderr, "Error opening library %s: errno=%d\n", pLibraryName, errno);
-		return( FALSE );
-	}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 	hFile = IO_File_Open( pLibraryName, IO_ACCESS_READ );
 	if ( hFile == -1 )
 	{
 		fprintf(stderr, "Error opening library %s: errno=%d\n", pLibraryName, errno);
 		return( FALSE );
 	}
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( hFile, &LibFileHeader, sizeof( LIBHEADER ), (LPDWORD) &uiNumBytesRead, NULL ) )
-		return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	uiNumBytesRead = read( hFile, &LibFileHeader, sizeof( LIBHEADER ) );
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 
 	uiNumBytesRead = IO_File_Read( hFile, &LibFileHeader, sizeof( LIBHEADER ) );
 
@@ -407,28 +218,6 @@ BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibH
 		//Error Reading the file database header.
 		return( FALSE );
 	}
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	if ( lseek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), SEEK_END ) == -1 )
-	{
-		fprintf(stderr, "Error seeking library %d: errno=%d\n",
-			hFile, errno);
-		return(FALSE);
-	}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 
 	if ( !IO_File_Seek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), IO_SEEK_FROM_END ) )
 	{
@@ -442,31 +231,6 @@ BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibH
 	usNumEntries = 0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-		//read in the file header
-		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), (LPDWORD) &uiNumBytesRead, NULL ) )
-			return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-		uiNumBytesRead = read( hFile, &DirEntry, sizeof( DIRENTRY ) );
-		if( uiNumBytesRead != sizeof( DIRENTRY ) )
-		{
-			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
-				hFile, errno);
-			//Error Reading the file database header.
-			return( FALSE );
-		}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 		uiNumBytesRead = IO_File_Read( hFile, &DirEntry, sizeof( DIRENTRY ) );
 		if( uiNumBytesRead != sizeof( DIRENTRY ) )
 		{
@@ -488,28 +252,6 @@ BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibH
 		pLibHeader->uiTotalMemoryAllocatedForLibrary = sizeof( FileHeaderStruct ) * usNumEntries;
 	#endif
 
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	if ( lseek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), SEEK_END ) == -1 )
-	{
-		fprintf(stderr, "Error seeking library at 2nd time %d: errno=%d\n",
-			hFile, errno);
-		return(FALSE);
-	}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 	if ( !IO_File_Seek( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), IO_SEEK_FROM_END ) )
 	{
 		fprintf(stderr, "Error seeking library at 2nd time %d: errno=%d\n",
@@ -521,31 +263,6 @@ BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibH
 	uiCount=0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-		//read in the file header
-		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), (LPDWORD) &uiNumBytesRead, NULL ) )
-			return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-		uiNumBytesRead = read( hFile, &DirEntry, sizeof( DIRENTRY ) );
-		if( uiNumBytesRead != sizeof( DIRENTRY ) )
-		{
-			fprintf(stderr, "Error reading library entry %d: errno=%d\n",
-				hFile, errno);
-			//Error Reading the file database header.
-			return( FALSE );
-		}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 		uiNumBytesRead = IO_File_Read( hFile, &DirEntry, sizeof( DIRENTRY ) );
 		if( uiNumBytesRead != sizeof( DIRENTRY ) )
 		{
@@ -658,28 +375,6 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	hLibraryFile      = gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle;
 	uiCurPos          = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
 
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//set the file pointer to the right location
-	SetFilePointer( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), NULL, FILE_BEGIN );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	if ( lseek( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), SEEK_SET ) == -1 )
-	{
-		fprintf(stderr, "Error seeking library %d: errno=%d\n",
-			hLibraryFile, errno);
-		return(FALSE);
-	}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 	if ( !IO_File_Seek( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), IO_SEEK_FROM_START ) )
 	{
 		fprintf(stderr, "Error seeking library (load) %d: errno=%d\n",
@@ -693,24 +388,6 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 		*pBytesRead = 0;
 		return( FALSE );
 	}
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//get the data
-	if( !ReadFile( hLibraryFile, pData, uiBytesToRead, (LPDWORD) &uiNumBytesRead, NULL ) )
-		return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-		uiNumBytesRead = read( hLibraryFile, pData, uiBytesToRead );
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 
 	uiNumBytesRead = IO_File_Read( hLibraryFile, pData, uiBytesToRead );
 
@@ -922,9 +599,6 @@ HWFILE OpenFileFromLibrary(const CHAR8 *pName )
 //		if( gFileDataBase.pLibraries[ sLibraryID ].fAnotherFileAlreadyOpenedLibrary )
 		if( gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary != 0 )
 		{
-			// Temp removed
-//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open\n", pName, gGameLibaries[ sLibraryID ].sLibraryName ) );
-//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open ( file open is '%s')\n", pName, gGameLibaries[ sLibraryID ].sLibraryName, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary ].pFileHeader->pFileName ) );
 		}
 
 		//check if the file is already open
@@ -978,42 +652,6 @@ HWFILE OpenFileFromLibrary(const CHAR8 *pName )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID = hLibFile;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-			//Save the current file position in the library
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_CURRENT );
-
-			//Set the file position in the library to the begining of the 'file' in the library
-			uiNewFilePosition = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset, NULL, FILE_BEGIN );
-
-			uiNewFilePosition = GetFileSize( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, NULL );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, SEEK_CUR );
-
-//			lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset, SEEK_SET )
-
-			struct stat file_stat;
-
-			if ( fstat( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &file_stat) == -1 )
-			{
-				fprintf(stderr, "Error getting size of library %d: errno=%d\n",
-					gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
-				return 0;
-			}
-
-			uiNewFilePosition = file_stat.st_size;
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = IO_File_GetPosition( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
 
 			if ( (uiNewFilePosition = IO_File_GetSize( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle )) == -1 )
@@ -1141,23 +779,6 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
 
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-			//reset the libraries file pointer to the positon it was in prior to opening the current file
-			SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, NULL, FILE_CURRENT);
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-			lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, SEEK_SET );
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 			IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, IO_SEEK_FROM_START );
 
 			//decrement the number of files that are open
@@ -1220,7 +841,7 @@ BOOLEAN OpenLibrary( INT16 sLibraryID )
 		return( FALSE );
 
 	//if we cant open the library
-	if( !InitializeLibrary( gGameLibaries[ sLibraryID ].sLibraryName, &gFileDataBase.pLibraries[ sLibraryID ], gGameLibaries[ sLibraryID ].fOnCDrom ) )
+	if( !InitializeLibrary( GameSource.at( sLibraryID ).c_str(), &gFileDataBase.pLibraries[ sLibraryID ] ) )
 		return( FALSE );
 
 	return( TRUE );
@@ -1289,27 +910,6 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 
 	//set that the library isnt open
 	gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen = FALSE;
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//close the file ( note libraries are to be closed by the Windows close function )
-	CloseHandle( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	if ( close( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle ) == -1 )
-	{
-		fprintf(stderr, "Error closing library %d: errno=%d\n",
-			gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, errno);
-	}
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 
 	if ( !IO_File_Close( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle ) )
 	{
@@ -1384,29 +984,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	DIRENTRY *pAllEntries;
 
-
 	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_BEGIN );
-
-	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ), (LPDWORD) &uiNumBytesRead, NULL ) )
-		return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, SEEK_SET );
-	uiNumBytesRead = read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ));
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
 
 	IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, IO_SEEK_FROM_START );
 	uiNumBytesRead = IO_File_Read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ));
@@ -1429,32 +1007,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 		return( FALSE );
 	memset( pAllEntries, 0, sizeof( DIRENTRY ) );
 
-
-
 	iFilePos = -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) );
-
-/*
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	//set the file pointer to the right location
-	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, NULL, FILE_END );
-
-	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ), (LPDWORD) &uiNumBytesRead, NULL ) )
-		return( FALSE );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	lseek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, SEEK_END );
-	uiNumBytesRead = read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ));
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-*/
-
 	IO_File_Seek( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, IO_SEEK_FROM_END );
 	uiNumBytesRead = IO_File_Read( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ));
 
@@ -1465,8 +1018,6 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 		//Error Reading the file database header.
 		return( FALSE );
 	}
-
-
 
 	 /* try to find the filename using a binary search algorithm: */
 	 ppDirEntry = (DIRENTRY **) bsearch( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->pFileName, 
@@ -1513,3 +1064,117 @@ INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 )
    return _stricmp( sSearchKey, sFileNameWithPath );
 }
 
+
+//************************************************************************
+//
+//	ReadGameSources -  reads game sources names and counts number of
+//	slf-files among them.
+//
+//	in	pCfgName:	name of the config file with paths and filenames
+//					as game sources.
+//
+//	return:	TRUE, if all game sources were successfully added,
+//			FALSE, otherwise
+//
+//	Game sources config file template:
+//
+//	[StandardSources]
+//	StdBaseDir = "/usr/share/ja2/"
+//	StdSources = "data.slf", "bigitems.slf", ...
+//
+//	[AdditionalSources]
+//	AddSources = "Data/", "Data-1.13/"
+//
+//************************************************************************
+BOOLEAN		ReadGameSources( const CHAR8 *pCfgName )
+{
+	CFG_File	cfgResources;
+	vfsString	StandardSourcesDir;
+	STRING512	zGameHomeDir;
+
+	GetHomeDirectory( zGameHomeDir );
+
+	// Open config-file with name pCfgName, report if error.
+	// Then select group [StandardSources], which is describes
+	// path and filenames of the standard sources
+	if ( CFG_OpenFile( pCfgName, &cfgResources ) != CFG_OK )
+	{
+		fprintf(stderr, "ReadGameResources config: Failed to open %s\n", pCfgName);
+		return FALSE;
+	}
+	if ( CFG_SelectGroup( "StandardSources", FALSE ) != CFG_OK )
+	{
+		fprintf(stderr, "ReadGameResources config: Failed to select standard sources group\n");
+		return FALSE;
+	}
+
+	// After selecting group, if all was successful, read the path,
+	// where standard sources are exist. Then start reading sources
+	// filenames from the entry StdSources, which contains multiple
+	// string values.
+	StandardSourcesDir = CFG_ReadText( "StdBaseDir", "/usr/share/ja2/" );
+	if ( StandardSourcesDir[ StandardSourcesDir.length() -1 ] != SLASH )
+		StandardSourcesDir += SLASH;
+	ReadMultiValueEntry( "StdSources", StandardSourcesDir );
+
+	// Here the standard sources section ends and additional sources section begins
+	// Try to select group [AdditionalSources]. Do not report, if section is absent.
+	// This is not error situation (assume, that standard section has everything in
+	// order to run the game. After section selecting, read source filenames from
+	// multivalue entry AddSources.
+	if ( CFG_SelectGroup( "AdditionalSources", FALSE ) != CFG_OK )
+		return FALSE;
+	ReadMultiValueEntry( "AddSources", zGameHomeDir );
+
+	CFG_CloseFile( &cfgResources );
+}
+
+//************************************************************************
+//
+//	ReadMultiValueEntry -  reads values from a multi-value entry from
+//	config file .
+//
+//	in	pKey:			name of the multi-value entry
+//	in	DefaultPath:	if value isn't full root path, use this path
+//						to make it full
+//
+//	return:	TRUE always
+//
+//************************************************************************
+BOOLEAN		ReadMultiValueEntry( const CHAR8 *pKey, const vfsString& DefaultPath )
+{
+	vfsString	SourceName, FullSourceName;
+
+	// handle each value from multivalue entry
+	for ( CFG_StartMultiValueEntryIteration( pKey ); !CFG_IsLastMultiValueEntry(); CFG_SelectNextMultiValueEntry() )
+	{
+		SourceName = CFG_ReadText( CFG_ENTRY_ITERATION, "error" );
+
+		// Allow fully qualified path and path within specified DefaultPath directory.
+		if ( IO_IsRootPath( SourceName.c_str() ) )
+			FullSourceName = SourceName;
+		else
+			FullSourceName = DefaultPath + SourceName;
+
+		// If it is a file, consider him as container (slf, zip, etc...)
+		// and increase container counter. Remember path.
+		// If it is a directory, add slash to it's end (if needed), and
+		// remember it.
+		// If it is not a file, nor a directory, i.e. filename doesn't
+		// exist, report about it.
+		if ( CheckForLibraryExistence( FullSourceName.c_str() ) )
+		{
+			NumberOfContainers++;
+			GameSource.push_back( FullSourceName );
+		}
+		else if ( IO_IsDirectory( FullSourceName.c_str() ) )
+		{
+			if ( FullSourceName[ FullSourceName.length() -1 ] != SLASH )
+				FullSourceName += SLASH;
+			GameSource.push_back( FullSourceName );
+		}
+		else
+			fprintf(stderr, "ReadGameResources config: Detected non-existing game source %s\n", SourceName.c_str());
+	}
+	return TRUE;
+}

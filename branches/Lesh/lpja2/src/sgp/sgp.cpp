@@ -172,6 +172,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Snap: moved the following from InitJA2SplashScreen for clarity
 	STRING512			CurrentDir;
 	STRING512			DataDir;
+	STRING512			zConfigName;
 
 	InitializeJA2Clock();
 
@@ -209,15 +210,16 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
+	sprintf( zConfigName, "%s%s", CurrentDir, "resources.cfg");
 	//Initialize the file database
-	if ( !InitializeFileDatabase() )
+	if ( !InitializeFileDatabase( zConfigName ) )
 	{
 		fprintf(stderr, "Couldn't init library database\n");
 		return FALSE;
 	}
 
 	// Lesh: New VFS service (replaces custom catalogue)
-	if ( !VFS.AddContainerByIndex(0) )
+/*	if ( !VFS.AddContainerByIndex(0) )
 		printf("AddContainer failed!\n");
 
 	if ( !VFS.AddDirectoryContents("/home/lesh/ja2-1.13/Data/", FALSE) )
@@ -225,7 +227,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	if ( !VFS.AddDirectoryContents("/home/lesh/ja2-1.13/Data-1.13/", FALSE) )
 		printf("AddDirectoryContents(2) failed!\n");
-
+*/
 //	if ( !VFS.AddDirectoryContents("/home/lesh/ja2_113/Data-1.13/SavedGames", TRUE, "SAVEDGAMES") )
 //		printf("AddDirectoryContents(2) failed!\n");
 

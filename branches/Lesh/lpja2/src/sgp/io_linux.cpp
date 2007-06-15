@@ -33,7 +33,6 @@ BOOLEAN IO_IsDirectory(const CHAR8 *path)
 
     if (stat(path, &dir_stat) == -1)
 	{
-		printf("IsDirectory() fails: path %s\n", path);
 		return FALSE;
 	}
 
@@ -55,7 +54,6 @@ BOOLEAN IO_IsRegularFile(const CHAR8 *path)
 
     if (stat(path, &file_stat) == -1)
 	{
-		printf("IsRegularFile() fails: path %s\n", path);
 		return FALSE;
 	}
 
@@ -75,8 +73,6 @@ BOOLEAN IO_Dir_SetCurrentDirectory( const CHAR8 *path )
 {
 	if ( chdir( path ) == -1 )
 	{
-		fprintf(stderr, "Error setting dir %s: errno=%d\n",
-			path, errno);
 		return FALSE;
 	}
 
@@ -97,8 +93,6 @@ BOOLEAN IO_Dir_GetCurrentDirectory( CHAR8 *path, UINT16 strLen )
 {
 	if ( !getcwd( path, strLen ) )
 	{
-		fprintf(stderr, "Error getting dir %s: errno=%d\n",
-			path, errno);
 		return FALSE;
 	}
 
@@ -143,8 +137,6 @@ BOOLEAN IO_Dir_MakeDirectory( const CHAR8 *path )
 {
 	if ( mkdir(path, 0700) == -1 )
 	{
-		fprintf(stderr, "Error creating dir %s: errno=%d\n",
-			path, errno);
 		return FALSE;
 	}
 	return TRUE;
@@ -195,8 +187,6 @@ INT32 IO_File_GetSize( IOFILE file )
 
 	if ( fstat( file, &file_stat) == -1 )
 	{
-		fprintf(stderr, "Error getting size of file %d: errno=%d\n",
-			file, errno);
 		return 0;
 	}
 
@@ -218,8 +208,6 @@ INT32 IO_File_GetSize( const CHAR8 *path )
 
 	if ( stat( path, &file_stat) == -1 )
 	{
-		fprintf(stderr, "Error getting size of file %s: errno=%d\n",
-			path, errno);
 		return 0;
 	}
 	return( file_stat.st_size );
@@ -261,8 +249,6 @@ IOFILE IO_File_Open( const CHAR8 *path, UINT32 flags )
 	hFile = open( path, uiOpenFlags, S_IRWXU );
 	if ( hFile == -1 )
 	{
-		fprintf(stderr, "Error opening file %s: errno=%d\n",
-			path, errno);
 		return -1;
 	}
 	return hFile;
@@ -282,8 +268,6 @@ BOOLEAN IO_File_Close( IOFILE file )
 {
 	if ( close( file ) == -1 )
 	{
-		fprintf(stderr, "Error closing file %d: errno=%d\n",
-			file, errno);
 		return FALSE;
 	}
 	return TRUE;
@@ -306,11 +290,6 @@ INT32 IO_File_Read( IOFILE file, PTR buffer, INT32 size )
 	INT32 iBytesRead;
 
 	iBytesRead = read( file, buffer, size );
-	if ( iBytesRead == -1 || iBytesRead != size )
-	{
-		fprintf(stderr, "Error reading file %d: errno=%d\n",
-			file, errno);
-	}
 	return iBytesRead;
 }
 
@@ -331,11 +310,6 @@ INT32 IO_File_Write( IOFILE file, PTR buffer, INT32 size )
 	INT32 iBytesWritten;
 
 	iBytesWritten = write( file, buffer, size );
-	if ( iBytesWritten == -1 || iBytesWritten != size )
-	{
-		fprintf(stderr, "Error writing file %d: errno=%d\n",
-			file, errno);
-	}
 	return iBytesWritten;
 }
 
@@ -373,8 +347,6 @@ BOOLEAN IO_File_Seek( IOFILE file, INT32 distance, UINT8 method )
 
 	if ( lseek( file, distance, uiMoveMethod ) == -1 )
 	{
-		fprintf(stderr, "Error seeking file %d: errno=%d\n",
-			file, errno);
 		return(FALSE);
 	}
 	return(TRUE);
@@ -396,8 +368,6 @@ INT32 IO_File_GetPosition( IOFILE file )
 	iPositionInFile = lseek( file, 0, SEEK_CUR );
 	if( iPositionInFile == -1 )
 	{
-		fprintf(stderr, "Error getting position in file %d: errno=%d\n",
-			file, errno);
 		iPositionInFile = 0;
 	}
 	return( iPositionInFile );
@@ -423,7 +393,6 @@ BOOLEAN IO_File_GetFirst( const CHAR8 *pattern, CHAR8 *buffer, UINT16 bufferSize
 
 	if ( glob( pattern, 0, NULL, &globResult ) )
 	{
-		fprintf(stderr, "Error while trying to glob() using mask: %s, errno=%d\n", pattern, errno);
 		globfree( &globResult );
 		return FALSE;
 	}

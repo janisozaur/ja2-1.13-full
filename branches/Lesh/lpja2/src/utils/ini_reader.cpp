@@ -114,8 +114,6 @@ bool CIniReader::Open(const char* szFileName, bool bAbsolutePath)
 
 	printf("CIniReader::Open(): make proper opening\n");
 
-//	BACKSLASH( m_szFileName );
-
 	if ( CFG_OpenFile( m_szFileName, &cfg ) != CFG_OK )
 	{
 		fprintf( stderr, "INI: can't open file %s\n", m_szFileName );
@@ -130,11 +128,6 @@ void CIniReader::Close()
 {
 	if ( fIsOpen && CFG_CloseFile( &cfg ) != CFG_OK )
 	{
-		fprintf( stderr, "INI: can't close file\n" );
+		fprintf( stderr, "INI: can't close file %s\n", m_szFileName );
 	}
 }
-
-
-
-
-
