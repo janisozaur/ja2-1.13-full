@@ -239,7 +239,7 @@ LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
 BOOLEAN					gfResetUIMovementOptimization = FALSE;
 BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
 BOOLEAN					gfBeginVehicleCursor = FALSE;
-UINT32					gsOutOfRangeGridNo = NOWHERE;
+INT32					gsOutOfRangeGridNo = NOWHERE;
 UINT8						gubOutOfRangeMerc = NOBODY;
 BOOLEAN					gfOKForExchangeCursor = FALSE;
 UINT32					guiUIInterfaceSwapCursorsTime = 0;
@@ -358,7 +358,7 @@ BOOLEAN fIgnoreLeftUp		= FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-UINT32	gsUITargetShotGridNo	= NOWHERE;
+INT32	gsUITargetShotGridNo	= NOWHERE;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -410,7 +410,7 @@ INT16			gsSelectedGuy										= NO_SOLDIER;
 
 BOOLEAN		gfUIDisplayDamage								= FALSE;
 INT8			gbDamage												= 0;
-UINT32		gsDamageGridNo									= 0;
+INT32		gsDamageGridNo									= 0;
 
 BOOLEAN		gfUIRefreshArrows								= FALSE;
 

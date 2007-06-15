@@ -23,7 +23,7 @@ typedef struct
 	UINT8		ubTargetID;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;
-	UINT32	sGridNo;
+	INT32	sGridNo;
 	INT16		sUnused;
 	UINT16	usLastStructureHit;
 	FIXEDPT	qCurrX;
@@ -49,7 +49,7 @@ typedef struct
 	UINT8		ubTilesPerUpdate;
 	UINT16	usClockTicksPerUpdate;
 	SOLDIERTYPE		*pFirer;
-	UINT32	sTargetGridNo;
+	INT32	sTargetGridNo;
 	INT16		sHitBy;
 	INT32		iImpact;
 	INT32		iImpactReduction;

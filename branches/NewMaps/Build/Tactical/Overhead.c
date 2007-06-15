@@ -1782,7 +1782,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 {
 	INT16                           sAPCost;
 	INT16                           sBPCost;
-	UINT32                          usNewGridNo, sOverFenceGridNo, sMineGridNo;
+	INT32                          usNewGridNo, sOverFenceGridNo, sMineGridNo;
 
 	if (gTacticalStatus.uiFlags & INCOMBAT && fInitialMove )
 	{
@@ -2918,7 +2918,7 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 }
 
 
-void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce )
+void InternalLocateGridNo( INT32 sGridNo, BOOLEAN fForce )
 {
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
 	
@@ -2933,7 +2933,7 @@ void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce )
 	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
 }
 
-void LocateGridNo( UINT32 sGridNo )
+void LocateGridNo( INT32 sGridNo )
 {
 	InternalLocateGridNo( sGridNo, FALSE );
 }

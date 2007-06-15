@@ -203,13 +203,13 @@ UINT16		gsUIHandleShowMoveGridLocation;
 
 BOOLEAN		gfUIDisplayDamage;
 INT8			gbDamage;
-UINT32		gsDamageGridNo;
+INT32		gsDamageGridNo;
 
 BOOLEAN		gfFontPopupDo;
 
 BOOLEAN		gUITargetReady;
 BOOLEAN		gUITargetShotWaiting;
-UINT32		gsUITargetShotGridNo;
+INT32		gsUITargetShotGridNo;
 
 INT16			gzLocation[ 20 ];
 BOOLEAN		gfUIBodyHitLocation;

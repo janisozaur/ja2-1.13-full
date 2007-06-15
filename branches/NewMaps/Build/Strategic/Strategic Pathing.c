@@ -41,7 +41,7 @@ UINT16 gusMapPathingData[256];
 UINT16 gusPathDataSize;
 BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
-//UINT32 gusEndPlotGridNo;
+//INT32 gusEndPlotGridNo;
 
 
 UINT8		ubFromMapDirToInsertionCode[ ] =

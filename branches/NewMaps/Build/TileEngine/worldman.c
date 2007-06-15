@@ -47,8 +47,8 @@ static CHAR16 gzLevelString[9][15] =
 void SetIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 void RemoveIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 
-void SetWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex );
-void RemoveWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex );
+void SetWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex );
+void RemoveWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex );
 
 BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex );
 
@@ -3678,18 +3678,18 @@ UINT32 cnt;
 
 
 
-void SetWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex )
+void SetWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex )
 {
 
 }
 
-void RemoveWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex )
+void RemoveWorldFlagsFromNewNode( INT32 sGridNo, UINT16 usIndex )
 {
 
 }
 
 
-void SetWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags )
+void SetWallLevelnodeFlags( INT32 sGridNo, UINT32 uiFlags )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	
@@ -3714,7 +3714,7 @@ void SetWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags )
 	}
 }
 
-void RemoveWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags )
+void RemoveWallLevelnodeFlags( INT32 sGridNo, UINT32 uiFlags )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	

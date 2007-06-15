@@ -95,7 +95,7 @@ void						PhysicsDeleteObject( REAL_OBJECT *pObject );
 BOOLEAN					PhysicsHandleCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID, real DeltaTime );
 FLOAT						CalculateForceFromRange( INT16 sRange, FLOAT dDegrees );
 
-UINT32          RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
+INT32          RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
 
 
 void						HandleArmedObjectImpact( REAL_OBJECT *pObject );
@@ -2504,7 +2504,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 }
 
 
-UINT32 RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
+INT32 RandomGridFromRadius( INT32 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
 {
 	INT16		sX, sY;
 	INT32 sGridNo;

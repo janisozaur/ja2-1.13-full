@@ -485,7 +485,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					LightSpritePower(pSoldier->iMuzFlash, TRUE);
 					// Get one move forward
 					{
-						UINT32	usNewGridNo;
+						INT32	usNewGridNo;
 						INT16 sXPos, sYPos;
 
 						usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );

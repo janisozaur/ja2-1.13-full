@@ -242,7 +242,7 @@ void EndTacticalDemo( );
 void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
 
 
-void LocateGridNo( UINT32 sGridNo );
+void LocateGridNo( INT32 sGridNo );
 void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );

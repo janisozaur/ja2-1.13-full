@@ -49,7 +49,7 @@ INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 	SCHEDULENODE *		pSchedule;
 	INT32							iScheduleIndex;
 	UINT8							ubScheduleAction;
-	UINT32 usGridNo1, usGridNo2;
+	INT32 usGridNo1, usGridNo2;
 	INT16							sX, sY;
 	INT8							bDirection;
 	STRUCTURE *				pStructure;

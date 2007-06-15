@@ -57,7 +57,7 @@ typedef struct
 		INT32		sRequiredGridno;		// location for NPC req'd to say quote
 	};
 
-	UINT32	usGoToGridno;
+	INT32	usGoToGridno;
 
 } TempNPCQuoteInfoSave;			
 

@@ -1035,7 +1035,7 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT32 usGridNo )
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT32 usGridNo )
 {
 	INT32			sDoorGridNo;
 	DOOR *		pDoor;

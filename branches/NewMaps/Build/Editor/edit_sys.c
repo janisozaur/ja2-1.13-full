@@ -1137,7 +1137,7 @@ void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius )
 void RaiseWorldLand( )
 {
 	INT32					cnt;
-	UINT32				sTempGridNo;
+	INT32				sTempGridNo;
 	LEVELNODE			*pStruct;
 	TILE_ELEMENT	*pTileElement;
 	BOOLEAN fRaise;

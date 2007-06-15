@@ -1038,7 +1038,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	return TRUE;
 }
 
-UINT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
+INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 {
 	INT32 *psArray=NULL;
 	UINT16 usArraySize=0;

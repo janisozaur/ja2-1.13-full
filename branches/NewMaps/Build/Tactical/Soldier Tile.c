@@ -70,7 +70,7 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 	{
 		UINT32	uiLoop;
 		UINT16	usTemp;
-		UINT32	usNewGridNo;
+		INT32	usNewGridNo;
 
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 

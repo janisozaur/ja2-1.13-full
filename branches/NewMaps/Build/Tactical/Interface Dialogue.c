@@ -1341,7 +1341,7 @@ BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetAp
 }
 
 
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT32 usGridNo, UINT8 ubRecordNum )
+BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT32 usGridNo, UINT8 ubRecordNum )
 {
 	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
@@ -1597,7 +1597,7 @@ void HandleWaitTimerForNPCTrigger( )
 
 
 
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT32 usGridNo, UINT8 ubQuoteNum )
+void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT32 usGridNo, UINT8 ubQuoteNum )
 {
 	SOLDIERTYPE             *pSoldier;
 	// OK, Move to gridNo!

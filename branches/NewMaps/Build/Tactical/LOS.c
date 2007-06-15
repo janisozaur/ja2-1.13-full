@@ -41,8 +41,8 @@
 #define ALWAYS_CONSIDER_HIT (STRUCTURE_WALLSTUFF | STRUCTURE_CAVEWALL | STRUCTURE_FENCE)
 
 
-UINT32 gusLOSStartGridNo = 0;
-UINT32 gusLOSEndGridNo = 0;
+INT32 gusLOSStartGridNo = 0;
+INT32 gusLOSEndGridNo = 0;
 UINT16 gusLOSStartSoldier = NOBODY;
 UINT16 gusLOSEndSoldier = NOBODY;
 extern UINT32 guiSoldierFlags;

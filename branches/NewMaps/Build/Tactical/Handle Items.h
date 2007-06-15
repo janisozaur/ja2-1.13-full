@@ -77,7 +77,7 @@ typedef struct
 } ITEM_POOL_LOCATOR;
 
 
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT32 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
+INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo, INT8 bZLevel );
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo, INT8 bZLevel );
 void HandleFlashingItems( );

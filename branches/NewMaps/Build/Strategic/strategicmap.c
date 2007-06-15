@@ -127,7 +127,7 @@ UINT8			gubAdjacentJumpCode;
 UINT32		guiAdjacentTraverseTime;
 UINT8			gubTacticalDirection;
 INT16			gsAdditionalData;
-UINT32		gusDestExitGridNo;
+INT32		gusDestExitGridNo;
 
 BOOLEAN		fUsingEdgePointsForStrategicEntry = FALSE;
 BOOLEAN		gfInvalidTraversal = FALSE;

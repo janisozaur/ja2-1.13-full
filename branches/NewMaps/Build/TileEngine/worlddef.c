@@ -702,7 +702,7 @@ void CompileWorldTerrainIDs( void )
 	}
 }
 
-void CompileTileMovementCosts( UINT32 usGridNo )
+void CompileTileMovementCosts( INT32 usGridNo )
 {
 	UINT8						ubTerrainID;
 	TILE_ELEMENT		TileElem;
@@ -1610,7 +1610,7 @@ void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 // GLOBAL WORLD MANIPULATION FUNCTIONS
 void CompileWorldMovementCosts( )
 {
-	UINT32 usGridNo;
+	INT32 usGridNo;
 
 	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
 

@@ -211,7 +211,7 @@ BOOLEAN InitAI( void );
 void MakeClosestEnemyChosenOne();
 void ManChecksOnFriends(SOLDIERTYPE *pSoldier);
 
-void NewDest(SOLDIERTYPE *pSoldier, UINT32 sGridno);
+void NewDest(SOLDIERTYPE *pSoldier, INT32 sGridno);
 INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);

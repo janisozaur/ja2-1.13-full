@@ -8,10 +8,10 @@ typedef struct MAPEDGEPOINTINFO
 {
 	UINT8 ubNumPoints;
 	UINT8 ubStrategicInsertionCode;
-	UINT32 sGridNo[ 32 ];
+	INT32 sGridNo[ 32 ];
 }MAPEDGEPOINTINFO;
 
-UINT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
+INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
 void GenerateMapEdgepoints();
 void SaveMapEdgepoints( HWFILE fp );

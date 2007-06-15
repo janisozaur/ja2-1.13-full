@@ -46,9 +46,9 @@ INT8 gzMeanwhileStr[][30] =
 	"Balime Lib.",
 };
 
-
+//Lalien: NewMaps: needs to be externalized
 // the snap to grid nos for meanwhile scenes
-UINT32 gusMeanWhileGridNo[]=
+INT32 gusMeanWhileGridNo[]=
 {
 	12248,
 	12248,
@@ -130,7 +130,7 @@ UINT32 uiMeanWhileFlags = 0;
 #define INTERROGATION_FLAG										0x00008000								
 #define BALIME_LIBERATED_FLAG									0x00010000
 
-extern void InternalLocateGridNo( UINT32 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( INT32 sGridNo, BOOLEAN fForce );
 
 
 void ProcessImplicationsOfMeanwhile( void );

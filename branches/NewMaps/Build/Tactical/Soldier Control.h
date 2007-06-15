@@ -565,7 +565,7 @@ typedef struct
 	UINT16											usUnblitWidth, usUnblitHeight;
 
 	UINT8												ubStrategicInsertionCode;
-	UINT16											usStrategicInsertionData;
+	INT32											usStrategicInsertionData;
 
 	
 	INT32												iLight;
@@ -1012,8 +1012,8 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 BOOLEAN ChangeSoldierState( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
 void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
 void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
-void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim );
-BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
+void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, INT32 sDestGridNo, UINT16 usMovementAnim );
+BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, INT32 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
 
 void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_SetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
@@ -1092,14 +1092,14 @@ void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEn
 // WRAPPERS FOR SOLDIER EVENTS
 void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
 void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT32 usNewDestination );
-void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT32 sDestGridNo, UINT16 usMovementAnim );
+void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, INT32 sDestGridNo, UINT16 usMovementAnim );
 void SendSoldierSetDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDirection );
 void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
 void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo );
 
 void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN fRemove );
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT32 sTestGridNo, UINT16 *usFlags );
+BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sTestGridNo, UINT16 *usFlags );
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
 void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );

@@ -176,7 +176,7 @@ BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE 
 
 
 
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT32 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
+INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
 {
 	SOLDIERTYPE				*pTargetSoldier = NULL;
 	UINT16						usSoldierIndex;

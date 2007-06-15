@@ -259,7 +259,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	return TRUE;
 }
 
-UINT32 usCurrentExitGridNo = 0;
+INT32 usCurrentExitGridNo = 0;
 void LocateNextExitGrid()
 {
 	EXITGRID ExitGrid;

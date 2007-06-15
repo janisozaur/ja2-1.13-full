@@ -2421,7 +2421,7 @@ BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	 return( FALSE );
 }
 
-UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
   //SOLDIERTYPE *vicpSoldier;
 	SOLDIERTYPE * pTarget;
@@ -3035,7 +3035,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime
   return (iChance);
 }
 
-UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
 	UINT16	usTrueState;
 	UINT32	uiChance;
