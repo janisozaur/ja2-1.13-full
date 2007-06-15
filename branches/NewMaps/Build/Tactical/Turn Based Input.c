@@ -168,7 +168,7 @@ SOLDIERTYPE *gpExchangeSoldier1;
 SOLDIERTYPE *gpExchangeSoldier2;
 
 
-BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT16 usOldMapPos );
+BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT32 usOldMapPos );
 
 BOOLEAN	gfNextFireJam = FALSE;
 
@@ -4623,7 +4623,7 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT16 usOldMapPos )
+BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT32 usOldMapPos )
 {
 	// OK, most times we want to leave confirm mode if our
 	// gridno is different... but if we are in the grenade throw

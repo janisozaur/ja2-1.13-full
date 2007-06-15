@@ -1768,7 +1768,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 
 
-void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
   UINT16				usInHand;
 	INT16					sAPCosts;

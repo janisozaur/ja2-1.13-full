@@ -575,7 +575,7 @@ BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
 BOOLEAN IsGridNoInScreenRect( INT32 sGridNo, SGPRect *pRect )
 {
 	INT32 iXTrav, iYTrav;
-	INT16	sMapPos;
+	INT32	sMapPos;
 
 	// Start with top left corner
 	iXTrav = pRect->iLeft;
