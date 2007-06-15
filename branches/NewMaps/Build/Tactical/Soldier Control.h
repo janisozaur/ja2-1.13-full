@@ -476,7 +476,7 @@ typedef struct
 	INT32												sTargetGridNo;
 	INT8												bTargetLevel;
 	INT8												bTargetCubeLevel;
-	INT16												sLastTarget;
+	INT32												sLastTarget;
 	INT8												bTilesMoved;
   INT8                        bLeadership;
 	FLOAT												dNextBleed;
@@ -551,7 +551,7 @@ typedef struct
 	UINT16											usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT16											usPathDataSize;
 	UINT16											usPathIndex;	
-	INT16												sBlackList;
+	INT32												sBlackList;
 	INT8												bAimTime;
 	INT8												bShownAimTime;
 	INT8												bPathStored;	// good for AI to reduct redundancy
@@ -591,9 +591,9 @@ typedef struct
 	INT8												bOppList[MAX_NUM_SOLDIERS]; // AI knowledge database
 	INT8												bLastAction;
 	INT8												bAction;	
-	UINT16											usActionData;
+	UINT32											usActionData;
 	INT8												bNextAction;
-	UINT16											usNextActionData;
+	UINT32											usNextActionData;
 	INT8												bActionInProgress;
 	INT8												bAlertStatus;
 	INT8												bOppCnt;
@@ -624,7 +624,7 @@ typedef struct
 	UINT8												ubPendingAction;
 	UINT8												ubPendingActionAnimCount;
 	UINT32											uiPendingActionData1;
-	INT16												sPendingActionData2;
+	INT32												sPendingActionData2;
 	INT8												bPendingActionData3;
 	INT8												ubDoorHandleCode;
 	UINT32											uiPendingActionData4;
@@ -718,8 +718,8 @@ typedef struct
 	INT16												sPlannedTargetX;
 	INT16												sPlannedTargetY;
 
-	INT16											  sSpreadLocations[ 6 ];
-	BOOLEAN											fDoSpread;
+	INT32												sSpreadLocations[ 6 ];
+	BOOLEAN												fDoSpread;
 	INT32												sStartGridNo;	
 	INT32												sEndGridNo;	
 	INT32												sForcastGridno;
@@ -857,7 +857,7 @@ typedef struct
 	UINT8												ubTurnsUntilCanSayHeardNoise;
 	UINT16											usQuoteSaidExtFlags;
 
-	UINT16											sContPathLocation;	
+	UINT32											sContPathLocation;	
 	INT8												bGoodContPath;
 	UINT8												ubPendingActionInterrupted;
 	INT8												bNoiseLevel;
@@ -889,7 +889,7 @@ typedef struct
 	UINT8												ubMiscSoldierFlags;
 	UINT8												ubReasonCantFinishMove;
 
-	INT16												sLocationOfFadeStart;
+	INT32												sLocationOfFadeStart;
 	UINT8												bUseExitGridForReentryDirection;
 
 	UINT32											uiTimeSinceLastSpoke;
@@ -925,7 +925,7 @@ typedef struct
   INT32                       iTuringSoundID;
   UINT8                       ubLastDamageReason;
 	BOOLEAN											fComplainedThatTired;
-	INT16												sLastTwoLocations[2];
+	INT32												sLastTwoLocations[2];
   INT16                       bFillerDude;
   INT32                       uiTimeSinceLastBleedGrunt;
   UINT8						ubNextToPreviousAttackerID;
