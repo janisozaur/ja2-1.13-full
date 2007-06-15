@@ -742,7 +742,7 @@ void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 
 
 	//Find the base structure
-	pCurrent = FindStructure( (INT16)pMap->usGridNo, STRUCTURE_BASE_TILE );
+	pCurrent = FindStructure( pMap->usGridNo, STRUCTURE_BASE_TILE );
 
 	if( pCurrent == NULL )
 		return;

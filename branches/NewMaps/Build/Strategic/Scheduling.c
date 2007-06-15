@@ -641,7 +641,8 @@ BOOLEAN BumpAnyExistingMerc( INT32 sGridNo )
 
 void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 {
-	INT16						sCellX, sCellY, sGridNo;
+	INT16						sCellX, sCellY;
+	INT32 sGridNo;
 	INT8						bDirection;
 	SOLDIERTYPE *		pSoldier;
 

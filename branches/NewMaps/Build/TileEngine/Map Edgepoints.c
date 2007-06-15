@@ -1249,7 +1249,7 @@ void EndMapEdgepointSearch()
 
 
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
-INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
+INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT32 *psArray=NULL;
@@ -1376,7 +1376,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode 
 	return NOWHERE ;
 }
 
-INT16 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
+INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT32 *psArray=NULL;

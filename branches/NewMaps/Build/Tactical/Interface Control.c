@@ -632,7 +632,7 @@ void RenderTopmostTacticalInterface( )
 						AddVideoObject( &VObjectDesc, &uiBogTarget );
 					}
 
-					if ( GridNoOnScreen( (INT16)MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )
+					if ( GridNoOnScreen( MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )
 					{					
 						// GET SCREEN COORDINATES
 						sOffsetX = (MercPtrs[ cnt ]->sPlannedTargetX - gsRenderCenterX);

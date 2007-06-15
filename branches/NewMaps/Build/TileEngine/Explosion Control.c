@@ -63,7 +63,7 @@
 // MODULE FOR EXPLOSIONS
 
 // Spreads the effects of explosions...
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
+BOOLEAN ExpAffect( INT32 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
 
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 extern  void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
@@ -1013,11 +1013,11 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						if ( !fInRoom )
 						{
 							// try to south
-							fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( SOUTH ) ), &ubRoom );
+							fInRoom = InARoom( sGridNo + DirectionInc( SOUTH ) , &ubRoom );
 							if ( !fInRoom )
 							{
 								// try to east
-								fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( EAST ) ), &ubRoom );
+								fInRoom = InARoom( sGridNo + DirectionInc( EAST ) , &ubRoom );
 							}
 						}
 
@@ -1449,7 +1449,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 	return( fRecompileMovementCosts );
 }
 
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
+BOOLEAN ExpAffect( INT32 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
 	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
 	UINT8 ubPerson;
@@ -2157,7 +2157,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 			 //DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
        // ok, do what we do here...
-       if ( ExpAffect( sGridNo, (INT16)uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+       if ( ExpAffect( sGridNo, uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
 			 {
 					fRecompileMovement = TRUE;
 			 }
@@ -2196,7 +2196,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 							{
 								// ok, do what we do here
 								//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
-								if ( ExpAffect( sGridNo, (INT16)uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+								if ( ExpAffect( sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
 								{
 									fRecompileMovement = TRUE;
 								}
@@ -2250,7 +2250,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 		INT16 sX, sY;
 
 		// DO wireframes as well
-		ConvertGridNoToXY( (INT16)sGridNo, &sX, &sY );
+		ConvertGridNoToXY( sGridNo, &sX, &sY );
 		SetRecalculateWireFrameFlagRadius( sX, sY, ubRadius );
 		CalculateWorldWireFrameTiles( FALSE );
 	

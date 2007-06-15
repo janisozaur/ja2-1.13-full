@@ -1403,7 +1403,7 @@ vector_3 FindBestForceForTrajectory( INT32 sSrcGridNo, INT32 sGridNo,INT16 sStar
 }
 
 
-INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT32 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem )
+INT32 FindFinalGridNoGivenDirectionGridNoForceAngle( INT32 sSrcGridNo, INT32 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem )
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;

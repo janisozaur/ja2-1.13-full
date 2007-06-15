@@ -67,11 +67,11 @@ void UpdateWallsView()
 	{
 		if ( fBuildingShowWalls )
 		{
-			RemoveWallLevelnodeFlags( (INT16)cnt, LEVELNODE_HIDDEN );
+			RemoveWallLevelnodeFlags( cnt, LEVELNODE_HIDDEN );
 		}
 		else
 		{
-			SetWallLevelnodeFlags( (INT16)cnt, LEVELNODE_HIDDEN );
+			SetWallLevelnodeFlags( cnt, LEVELNODE_HIDDEN );
 		}
 	}
 	gfRenderWorld = TRUE;
@@ -175,7 +175,7 @@ void BuildLayout( INT32 iMapIndex, INT32 iOffset )
 	curr = gpBuildingLayoutList;
 	while( curr )
 	{
-		if( (INT16)iMapIndex == curr->sGridNo )
+		if( iMapIndex == curr->sGridNo )
 			return;
 		curr = curr->next;
 	}

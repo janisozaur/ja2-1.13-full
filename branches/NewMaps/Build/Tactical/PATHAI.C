@@ -613,7 +613,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	fCloseGoodEnough = ( (fFlags & PATH_CLOSE_GOOD_ENOUGH) != 0);
 	if ( fCloseGoodEnough )
 	{
-		sClosePathLimit = __min( PythSpacesAway( (INT16)s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS );
+		sClosePathLimit = __min( PythSpacesAway( s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS );
 		if ( sClosePathLimit <= 0 )
 		{
 			return( 0 );
@@ -2216,7 +2216,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
  INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
  INT32 iLastGrid, sTempGrid;
  INT32 iCnt;
- INT16 sOldGrid=0;
+ INT32 sOldGrid=0;
  INT16 sFootOrderIndex;
  INT16 sSwitchValue;
  INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART, 

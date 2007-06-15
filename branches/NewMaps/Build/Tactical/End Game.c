@@ -24,7 +24,7 @@
 INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 
 SOLDIERTYPE *gpKillerSoldier = NULL;
-INT16				 gsGridNo;
+INT32				 gsGridNo;
 INT8				 gbLevel;
 
 

@@ -1190,7 +1190,7 @@ void RaiseWorldLand( )
  
 						sTempGridNo = cnt + pTileElement->pTileLocData[ubLoop].bTileOffsetX + pTileElement->pTileLocData[ubLoop].bTileOffsetY * WORLD_COLS;
 						// Check for valid gridno
-						if ( OutOfBounds( (INT16)cnt, (INT16)sTempGridNo ) )
+						if ( OutOfBounds( cnt, sTempGridNo ) )
 						{
 							continue;
 						}

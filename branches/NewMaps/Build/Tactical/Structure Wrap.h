@@ -42,7 +42,7 @@ BOOLEAN IsRefuelableStructAtGridNo( INT32 sGridNo, UINT8 *pubID );
 
 BOOLEAN	IsRoofPresentAtGridno( INT32 sGridNo );
 
-INT16 FindDoorAtGridNoOrAdjacent( INT32 sGridNo );
+INT32 FindDoorAtGridNoOrAdjacent( INT32 sGridNo );
 
 BOOLEAN IsCorpseAtGridNo( INT32 sGridNo, UINT8 ubLevel );
 

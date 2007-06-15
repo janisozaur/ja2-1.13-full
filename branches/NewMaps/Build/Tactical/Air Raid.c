@@ -319,7 +319,7 @@ INT16 PickLocationNearAnyMercInSector( )
 	return( NOWHERE );
 }
 
-INT16 PickRandomLocationAtMinSpacesAway( INT32 sGridNo, INT16 sMinValue, INT16 sRandomVar )
+INT32 PickRandomLocationAtMinSpacesAway( INT32 sGridNo, INT16 sMinValue, INT16 sRandomVar )
 {
 	INT32 sNewGridNo = NOWHERE;
 

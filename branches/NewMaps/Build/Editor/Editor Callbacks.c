@@ -532,7 +532,7 @@ void MapInfoEntryPointsCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP) )
 	{
-		INT16 x, sGridNo;
+		INT32 x, sGridNo;
 		for( x = MAPINFO_NORTH_POINT; x <= MAPINFO_ISOLATED_POINT; x++ )
 		{
 			if( btn == ButtonList[ iEditorButton[ x ] ] )

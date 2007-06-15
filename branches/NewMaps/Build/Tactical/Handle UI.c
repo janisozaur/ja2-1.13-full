@@ -1276,7 +1276,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 	BOOLEAN						fContinue = TRUE;
 	ITEM_POOL					*pItemPool;
 
-	static INT16			sGridNoForItemsOver;
+	static INT32			sGridNoForItemsOver;
 	static INT8				bLevelForItemsOver;
 	static UINT32			uiItemsOverTimer;
 	static BOOLEAN		fOverItems;
@@ -3871,12 +3871,12 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiFlags 
 			if ( gfUIFullTargetFound )
 			{
 				 INT32		cnt;
-				 INT16		sSpot;	
+				 INT32		sSpot;	
 				 UINT8		ubGuyThere;
 
 				 for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 				 {
-						sSpot = (INT16)NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
+						sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
 
             // Make sure movement costs are OK....
             if ( gubWorldMovementCosts[ sSpot ][ cnt ][ gsInterfaceLevel ] >= TRAVELCOST_BLOCKED )

@@ -1897,7 +1897,7 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 {
  	INT32 sGridNo = sRefuelStartGridNo[ ubSite ];
 	INT16 sOStruct = 0;
-	INT16	usGridNo;
+	INT32	usGridNo;
 	INT16	sGridX, sGridY;
 	INT16	sCentreGridX, sCentreGridY;
 
@@ -1919,10 +1919,10 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 	{
 		AddHeliPeice( sGridNo, sOStruct );
 		AddHeliPeice( sGridNo, ( UINT16 )( sOStruct + 1));
-		AddHeliPeice( (INT16)( sGridNo - 800 ), ( UINT16 )( sOStruct + 2 ));
+		AddHeliPeice( sGridNo - 800, ( UINT16 )( sOStruct + 2 ));
 		AddHeliPeice( sGridNo, ( UINT16 )(sOStruct + 3 ));
 		AddHeliPeice( sGridNo, ( UINT16 )(sOStruct + 4));
-		AddHeliPeice( (INT16)( sGridNo - 800 ), ( UINT16 )(sOStruct + 5));
+		AddHeliPeice( sGridNo - 800 , ( UINT16 )(sOStruct + 5));
 
 		InvalidateWorldRedundency();
 		SetRenderFlags( RENDER_FLAG_FULL );

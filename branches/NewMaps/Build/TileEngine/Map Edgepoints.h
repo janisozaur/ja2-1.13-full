@@ -62,8 +62,8 @@ extern UINT16 gus2ndWestEdgepointMiddleIndex;
 //code shouldn't be used for enemies or anybody else.
 void BeginMapEdgepointSearch();
 void EndMapEdgepointSearch();
-INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
-INT16 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
+INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
+INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
 
 //There are two classes of edgepoints.
 //PRIMARY		: The default list of edgepoints.  This list includes edgepoints that are easily accessible from the 

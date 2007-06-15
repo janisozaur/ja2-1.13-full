@@ -263,13 +263,13 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 }
 
 
-INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
+INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT32 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
 											UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32 *iTotalScale)
 {
 	// all 32-bit integers for max. speed
 	INT32	iMyPosValue, iHisPosValue, iCoverValue;
 	INT32	iReductionFactor, iThisScale;
-	INT16	sHisGridNo, sMyRealGridNo = NOWHERE, sHisRealGridNo = NOWHERE;
+	INT32	sHisGridNo, sMyRealGridNo = NOWHERE, sHisRealGridNo = NOWHERE;
 	INT16 sTempX, sTempY;
 	FLOAT dMyX, dMyY, dHisX, dHisY;
 	INT8	bHisBestCTGT, bHisActualCTGT, bHisCTGT, bMyCTGT;

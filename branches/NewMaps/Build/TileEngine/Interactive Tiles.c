@@ -259,7 +259,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 
 
 		// LOOK for item pool here...
-		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->bLevel ) )
+		if ( GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel ) )
 		{
 			// Update visiblity....
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )

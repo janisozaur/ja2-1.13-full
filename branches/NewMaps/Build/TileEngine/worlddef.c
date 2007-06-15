@@ -2134,12 +2134,12 @@ void OptimizeMapForShadows( )
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
 		// CHECK IF WE ARE A TREE HERE
-		if ( IsTreePresentAtGridno( (INT16)cnt ) )
+		if ( IsTreePresentAtGridno( cnt ) )
 		{
 			// CHECK FOR A STRUCTURE A FOOTPRINT AWAY
 			for ( dir = 0; dir < NUM_DIR_SEARCHES; dir++ )
 			{
-				sNewGridNo = NewGridNo( (INT16)cnt, (UINT16)DirectionInc( bDirectionsForShadowSearch[ dir ] ) );
+				sNewGridNo = NewGridNo( cnt, (UINT16)DirectionInc( bDirectionsForShadowSearch[ dir ] ) );
 			
 				if ( gpWorldLevelData[ sNewGridNo ].pStructureHead == NULL )
 				{
@@ -3700,7 +3700,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 			gpWorldLevelData[ cnt ].uiFlags &= (~MAPELEMENT_RECALCULATE_WIREFRAMES );
 
 			// Remove old ones
-			RemoveWireFrameTiles( (INT16)cnt );
+			RemoveWireFrameTiles( cnt );
 
 			bNumWallsSameGridNo = 0;
 
@@ -3730,11 +3730,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 							case INSIDE_TOP_LEFT:
 
 								// Get gridno 
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+								sGridNo = NewGridNo( cnt, DirectionInc( SOUTH ) );
 
 								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
 								{
-									AddWireFrame( (INT16)cnt, WIREFRAMES4, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+									AddWireFrame( cnt, WIREFRAMES4, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 								}
 								break;
 
@@ -3742,11 +3742,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 							case INSIDE_TOP_RIGHT:
 
 								// Get gridno 
-								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+								sGridNo = NewGridNo( cnt, DirectionInc( EAST ) );
 
 								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
 								{
-									AddWireFrame( (INT16)cnt, WIREFRAMES3 , (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+									AddWireFrame( cnt, WIREFRAMES3 , (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 								}
 								break;
 
@@ -3768,11 +3768,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						  case INSIDE_TOP_LEFT:
 
 							  // Get gridno 
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+							  sGridNo = NewGridNo( cnt, DirectionInc( SOUTH ) );
 
 							  if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
 							  {
-								  AddWireFrame( (INT16)cnt, WIREFRAMES2, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+								  AddWireFrame( cnt, WIREFRAMES2, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 							  }
 							  break;
 
@@ -3780,11 +3780,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						  case INSIDE_TOP_RIGHT:
 
 							  // Get gridno 
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+							  sGridNo = NewGridNo( cnt, DirectionInc( EAST ) );
 
 							  if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
 							  {
-								  AddWireFrame( (INT16)cnt, WIREFRAMES1, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+								  AddWireFrame( cnt, WIREFRAMES1, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 							  }
 							  break;
 
@@ -3807,23 +3807,23 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						  case INSIDE_TOP_LEFT:
 
 							  // Get gridno 
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+							  sGridNo = NewGridNo( cnt, DirectionInc( SOUTH ) );
 
 							  if ( IsRoofVisibleForWireframe( sGridNo ) )
 							  {
 								   bNumWallsSameGridNo++;
 
-								   AddWireFrame( (INT16)cnt, usWireFrameIndex, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+								   AddWireFrame( cnt, usWireFrameIndex, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 
 								   // Check along our direction to see if we are a corner
-								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( WEST ) );
+								   sGridNo = NewGridNo( cnt, DirectionInc( WEST ) );
 								   sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
 								   bHiddenVal = IsHiddenTileMarkerThere( sGridNo );
 								   // If we do not exist ( -1 ) or are revealed ( 1 )
 								   if ( bHiddenVal == -1 || bHiddenVal == 1 )
 								   {
 									   // Place corner!
-									   AddWireFrame( (INT16)cnt, WIREFRAMES9, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+									   AddWireFrame( cnt, WIREFRAMES9, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 								   }
 							  }
 							  break;
@@ -3832,23 +3832,23 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 						  case INSIDE_TOP_RIGHT:
 
 							  // Get gridno 
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+							  sGridNo = NewGridNo( cnt, DirectionInc( EAST ) );
 
 							  if ( IsRoofVisibleForWireframe( sGridNo ) )
 							  {
 								   bNumWallsSameGridNo++;
 
-								   AddWireFrame( (INT16)cnt, usWireFrameIndex, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+								   AddWireFrame( cnt, usWireFrameIndex, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 
 								   // Check along our direction to see if we are a corner
-								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( NORTH ) );
+								   sGridNo = NewGridNo( cnt, DirectionInc( NORTH ) );
 								   sGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
 								   bHiddenVal = IsHiddenTileMarkerThere( sGridNo );
 								   // If we do not exist ( -1 ) or are revealed ( 1 )
 								   if ( bHiddenVal == -1 || bHiddenVal == 1 )
 								   {
 									   // Place corner!
-									   AddWireFrame( (INT16)cnt, WIREFRAMES8, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
+									   AddWireFrame( cnt, WIREFRAMES8, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 ) );
 								   }
 
 							  }
@@ -3859,9 +3859,9 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 					  // Check for both walls
 					  if ( bNumWallsSameGridNo == 2 )
 					  {
-						   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+						   sGridNo = NewGridNo( cnt, DirectionInc( EAST ) );
 						   sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-						   AddWireFrame( (INT16)cnt, WIREFRAMES7, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 )  );
+						   AddWireFrame( cnt, WIREFRAMES7, (BOOLEAN)( ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) != 0 )  );
 					  }
           }
 				}
@@ -3880,7 +3880,7 @@ void RemoveWorldWireFrameTiles( )
 	// Create world randomly from tiles
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
-		RemoveWireFrameTiles( (INT16)cnt );
+		RemoveWireFrameTiles( cnt );
 	}
 
 }

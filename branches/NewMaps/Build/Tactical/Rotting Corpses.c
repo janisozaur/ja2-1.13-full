@@ -1593,7 +1593,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 					{
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )
 						{
-							if ( OkayToAddStructureToWorld( (INT16)sGridNo, pDef->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), INVALID_STRUCTURE_ID ) )
+							if ( OkayToAddStructureToWorld( sGridNo, pDef->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), INVALID_STRUCTURE_ID ) )
 							{
 								fDirectionFound = TRUE;
 								fCanSetDirection = TRUE;

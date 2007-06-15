@@ -2119,7 +2119,7 @@ void SetMercEditability( BOOLEAN fEditable )
 //there isn't going to be any traversing to adjacent maps from that side.
 void SpecifyEntryPoint( UINT32 iMapIndex )
 {
-	INT16 *psEntryGridNo;
+	INT32 *psEntryGridNo;
 	BOOLEAN fErasing = FALSE;
 	if( iDrawMode >= DRAW_MODE_ERASE )
 	{
@@ -2143,7 +2143,7 @@ void SpecifyEntryPoint( UINT32 iMapIndex )
 			AddToUndoList( *psEntryGridNo );
 			RemoveAllTopmostsOfTypeRange( *psEntryGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
 		}
-		*psEntryGridNo = (UINT16)iMapIndex;
+		*psEntryGridNo = iMapIndex;
 		ValidateEntryPointGridNo( psEntryGridNo );
 		AddToUndoList( *psEntryGridNo );
 		AddTopmostToTail( *psEntryGridNo, FIRSTPOINTERS2 );

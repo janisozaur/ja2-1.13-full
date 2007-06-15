@@ -402,7 +402,7 @@ void HandleCrowShadowNewGridNo( SOLDIERTYPE *pSoldier )
 		{
 			if ( pSoldier->usAnimState == CROW_FLY ) 
 			{
-				AniParams.sGridNo							= (INT16)pSoldier->sGridNo;
+				AniParams.sGridNo							= pSoldier->sGridNo;
 				AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
 				AniParams.sDelay							= pSoldier->sAniDelay;
 				AniParams.sStartFrame					= 0;
@@ -10068,7 +10068,7 @@ void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGridNo
 					{
 //#if 0
 						// Get direction to face....
-						if ( ( pStructure = FindStructure( (INT16)sGridNo, ( STRUCTURE_HASITEMONTOP | STRUCTURE_OPENABLE ) ) ) != NULL )
+						if ( ( pStructure = FindStructure( sGridNo, ( STRUCTURE_HASITEMONTOP | STRUCTURE_OPENABLE ) ) ) != NULL )
 						{
 							fDoNormalPickup = FALSE;
 

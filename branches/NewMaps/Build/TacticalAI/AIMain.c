@@ -2342,7 +2342,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 
 			// turn to face trigger first
-			if ( FindStructure( (INT16)(pSoldier->sGridNo + DirectionInc( NORTH )), STRUCTURE_SWITCH ) )
+			if ( FindStructure( pSoldier->sGridNo + DirectionInc( NORTH ), STRUCTURE_SWITCH ) )
 			{
 				SendSoldierSetDesiredDirectionEvent( pSoldier, NORTH );
 			}

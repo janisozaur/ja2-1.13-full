@@ -862,7 +862,7 @@ void RenderEditorInfo( )
 {
 	wchar_t					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	INT16						iMapIndex;
+	INT32						iMapIndex;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );

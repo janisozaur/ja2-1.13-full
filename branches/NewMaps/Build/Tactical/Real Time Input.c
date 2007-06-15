@@ -71,7 +71,7 @@ extern UINT32  guiCurrentEvent;
 extern UINT32 guiCurrentUICursor;
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 extern BOOLEAN gfIgnoreOnSelectedGuy;
-extern INT16 gsOverItemsGridNo;
+extern INT32 gsOverItemsGridNo;
 extern INT16 gsOverItemsLevel;
 extern UINT32	guiUITargetSoldierId;
 extern BOOLEAN	gfUIShowExitSouth;

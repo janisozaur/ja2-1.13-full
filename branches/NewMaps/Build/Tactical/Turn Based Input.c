@@ -117,7 +117,7 @@ extern UINT32  guiCurrentEvent;
 extern UINT8	gubIntTileCheckFlags;
 extern UINT32	guiCurrentUICursor;
 extern SOLDIERTYPE *gpSMCurrentMerc;
-extern INT16 gsOverItemsGridNo;
+extern INT32 gsOverItemsGridNo;
 extern INT16 gsOverItemsLevel;
 extern BOOLEAN	gfUIShowExitSouth;
 

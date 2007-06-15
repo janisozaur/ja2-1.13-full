@@ -361,7 +361,7 @@ UINT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 					// Check each struct in each direction
 					for( cnt3 = 0; cnt3 < 8; cnt3++ )
 					{
-						if (OkayToAddStructureToWorld( (INT16)sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
+						if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
 						{
 							fDirectionFound = TRUE;
 							break;
@@ -523,7 +523,7 @@ UINT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYP
 					}
 
           // OK, check the perfered given direction first
-					if (OkayToAddStructureToWorld( (INT16)sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ bGivenDirection ]]), usOKToAddStructID ) )
+					if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ bGivenDirection ]]), usOKToAddStructID ) )
 					{
 						fDirectionFound = TRUE;
             cnt3 = bGivenDirection;
@@ -535,7 +535,7 @@ UINT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYP
 					  {
               if ( cnt3 != bGivenDirection )
               {
-						    if (OkayToAddStructureToWorld( (INT16)sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
+						    if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
 						    {
 							    fDirectionFound = TRUE;
 							    break;
@@ -685,7 +685,7 @@ UINT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, 
 						// Check each struct in each direction
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )
 						{
-							if (OkayToAddStructureToWorld( (INT16)sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
+							if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
 							{
 								fDirectionFound = TRUE;
 								break;

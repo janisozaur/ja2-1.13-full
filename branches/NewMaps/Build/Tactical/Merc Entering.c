@@ -342,7 +342,7 @@ INT8			gbNumHeliSeatsOccupied = 0;
 BOOLEAN		gfFirstGuyDown = FALSE;
 
 UINT32		uiSoundSample;
-INT16			gsGridNoSweetSpot;
+INT32			gsGridNoSweetSpot;
 INT16			gsHeliXPos;
 INT16			gsHeliYPos;
 FLOAT			gdHeliZPos;

@@ -3832,7 +3832,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = sGridNo - WORLD_COLS - 1;
 					}
 				}
 				else
@@ -3841,7 +3841,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = sGridNo + WORLD_COLS + 1;
 					}
 				}
 
@@ -3895,7 +3895,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = sGridNo - WORLD_COLS - 1;
 					}
 				}
 				else
@@ -3904,7 +3904,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = sGridNo + WORLD_COLS + 1;
 					}
 				}
 
@@ -3958,7 +3958,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = sGridNo + WORLD_COLS - 1;
 					}
 				}
 				else
@@ -3967,7 +3967,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = sGridNo - WORLD_COLS + 1;
 					}
 				}
 
@@ -4021,7 +4021,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = sGridNo + WORLD_COLS - 1;
 					}
 				}
 				else
@@ -4030,7 +4030,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = sGridNo - WORLD_COLS + 1;
 					}
 				}
 
@@ -4211,9 +4211,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 		// we find that is just on the start of visible map...
 		case INSERTION_CODE_WEST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -4254,7 +4254,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = sGridNo - WORLD_COLS - 1;
 					}
 				}
 				else
@@ -4263,7 +4263,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = sGridNo + WORLD_COLS + 1;
 					}
 				}
 
@@ -4274,9 +4274,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_EAST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the right!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -4317,7 +4317,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = sGridNo - WORLD_COLS - 1;
 					}
 				}
 				else
@@ -4326,7 +4326,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = sGridNo + WORLD_COLS + 1;
 					}
 				}
 
@@ -4337,9 +4337,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_NORTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the up!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -4380,7 +4380,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = sGridNo - WORLD_COLS + 1;
 					}
 				}
 				else
@@ -4389,7 +4389,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = sGridNo + WORLD_COLS - 1;
 					}
 				}
 
@@ -4400,9 +4400,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_SOUTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the down!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -4443,7 +4443,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = sGridNo - WORLD_COLS + 1;
 					}
 				}
 				else
@@ -4452,7 +4452,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = sGridNo + WORLD_COLS - 1;
 					}
 				}
 

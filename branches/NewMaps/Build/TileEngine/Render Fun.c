@@ -146,7 +146,7 @@ void SetGridNoRevealedFlag( UINT32 sGridNo )
 
 	// ATE: If there are any structs here, we can render them with the obscured flag!
 	// Look for anything but walls pn this gridno!
-	pStructure	=  gpWorldLevelData[ (INT16)sGridNo ].pStructureHead;
+	pStructure	=  gpWorldLevelData[ sGridNo ].pStructureHead;
 
 	while ( pStructure != NULL )
 	{
@@ -271,7 +271,7 @@ void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-			if ( GetItemPool( (INT16)cnt, &pItemPool, 0 ) )
+			if ( GetItemPool( cnt, &pItemPool, 0 ) )
 			{
 				// Set visible! ( only if invisible... )
 				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )
@@ -290,7 +290,7 @@ void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 			// OK, re-set writeframes ( in a radius )
 			// Get XY
-			ConvertGridNoToXY( (INT16)cnt, &sX, &sY );
+			ConvertGridNoToXY( cnt, &sX, &sY );
 			SetRecalculateWireFrameFlagRadius( sX, sY, 2 );
 
 		}
@@ -323,7 +323,7 @@ BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			AddObjectToHead( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			AddObjectToHead( MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
 		}
 	}
 
@@ -339,7 +339,7 @@ BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion  )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			RemoveObject( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			RemoveObject( MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
 		}
 	}
 

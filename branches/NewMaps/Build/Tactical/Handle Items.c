@@ -3946,7 +3946,7 @@ Changed because if the player gave 1 item from a pile, the rest of the items in 
 
 
 
-INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
+INT32 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	STRUCTURE		*pStructure;
 	INT16				sDesiredLevel;
@@ -3964,7 +3964,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = pSoldier->bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)sGridNo, STRUCTURE_BLOCKSMOVES );
+		pStructure = FindStructure( sGridNo, STRUCTURE_BLOCKSMOVES );
 		while( pStructure )
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
@@ -5028,8 +5028,8 @@ void ClearAllItemPools( )
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
-		RemoveItemPool( (INT16)cnt, 0 );
-		RemoveItemPool( (INT16)cnt, 1 );
+		RemoveItemPool( cnt, 0 );
+		RemoveItemPool( cnt, 1 );
 	}
 }
 

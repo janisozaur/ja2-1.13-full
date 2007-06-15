@@ -2257,7 +2257,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
     // get a new gridno based on direction it was moving.  Check to see if we're not
     // going through walls, etc by testing for a path, unless on the roof, in which case it would always
     // be legal, but the bLevel May change...
-  	sNewGridNo = NewGridNo( (INT16)pBullet->sGridNo, DirectionInc( gOppositeDirection[ SWeaponHit.usDirection ] ) );
+  	sNewGridNo = NewGridNo( pBullet->sGridNo, DirectionInc( gOppositeDirection[ SWeaponHit.usDirection ] ) );
 
     bSpewBloodLevel = MercPtrs[ SWeaponHit.usSoldierID ]->bLevel;
     fCanSpewBlood   = TRUE;
@@ -2402,7 +2402,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 
 	// ATE: Alrighty, check for shooting door locks...
 	// First check this is a type of struct that can handle locks...
-	if ( pStructure->fFlags & ( STRUCTURE_DOOR | STRUCTURE_OPENABLE ) && PythSpacesAway( (INT16) pBullet->sTargetGridNo, pStructure->sGridNo ) <= 2 )
+	if ( pStructure->fFlags & ( STRUCTURE_DOOR | STRUCTURE_OPENABLE ) && PythSpacesAway( pBullet->sTargetGridNo, pStructure->sGridNo ) <= 2 )
 	{
 		// lookup lock table to see if we have a lock,
 		// and then remove lock if enough damage done....
@@ -4344,7 +4344,7 @@ void MoveBullet( INT32 iBullet )
 												// Now that we have hit a corpse, make the bugger twich!
 												RemoveBullet( pBullet->iBullet );
 												
-												CorpseHit( (INT16)pBullet->sGridNo, pStructure->usStructureID );
+												CorpseHit( pBullet->sGridNo, pStructure->usStructureID );
 												DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CORPSE HIT") );
 
 												FreeUpAttacker( pBullet->pFirer->ubID );
@@ -4463,7 +4463,7 @@ void MoveBullet( INT32 iBullet )
 		}
 
 		// check to see if bullet is close to target
-		if ( pBullet->pFirer->ubTargetID != NOBODY && !(pBullet->pFirer->uiStatusFlags & SOLDIER_ATTACK_NOTICED) && PythSpacesAway( (INT16) pBullet->sGridNo, (INT16) pBullet->sTargetGridNo ) <= 3 )
+		if ( pBullet->pFirer->ubTargetID != NOBODY && !(pBullet->pFirer->uiStatusFlags & SOLDIER_ATTACK_NOTICED) && PythSpacesAway( pBullet->sGridNo, pBullet->sTargetGridNo ) <= 3 )
 		{
 			pBullet->pFirer->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
 		}	

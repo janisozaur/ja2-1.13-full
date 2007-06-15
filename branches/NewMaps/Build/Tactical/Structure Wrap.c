@@ -497,11 +497,11 @@ BOOLEAN IsCutWireFenceAtGridNo( INT32 sGridNo )
 
 
 
-INT16 FindDoorAtGridNoOrAdjacent( INT32 sGridNo )
+INT32 FindDoorAtGridNoOrAdjacent( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 	STRUCTURE * pBaseStructure;
-	INT16				sTestGridNo;
+	INT32				sTestGridNo;
 
 	sTestGridNo = sGridNo;
 	pStructure = FindStructure( sTestGridNo, STRUCTURE_ANYDOOR );

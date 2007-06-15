@@ -2128,7 +2128,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				}
 
 				if ( (pSoldier->bBlindedCounter > 0) && (pSoldier->usAnimState == RUNNING) && (Random( 5 ) == 0) && 
-							OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) ), pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) , pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
@@ -2141,7 +2141,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 					return( FALSE );
 				}
 				else if ( ( GetDrunkLevel( pSoldier ) == DRUNK ) && (Random( 5 ) == 0) && 
-							OKFallDirection( pSoldier, (INT16) (pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) ), pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
+							OKFallDirection( pSoldier, pSoldier->sGridNo + DirectionInc( pSoldier->bDirection ) , pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
@@ -4627,7 +4627,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 			 if ( sDistance < sClosest )
 			 {
 					sClosest                        = sDistance;
-					sCloseGridNo  = (INT16)sGridNo;
+					sCloseGridNo  = sGridNo;
 			 }
 		 }
 	 }
@@ -4854,7 +4854,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 			 if ( sDistance < sClosest )
 			 {
 					sClosest			= sDistance;
-					sCloseGridNo  = (INT16)sGridNo;
+					sCloseGridNo  = sGridNo;
 			 }
 		 }
 	 }
