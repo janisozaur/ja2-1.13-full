@@ -2089,7 +2089,7 @@ UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
 	UINT16						sAPCost = 0;
 
@@ -2114,7 +2114,7 @@ INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
 	UINT16						sAPCost = 0;
 
@@ -2131,7 +2131,7 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
 	UINT16						sAPCost = 0;
 
