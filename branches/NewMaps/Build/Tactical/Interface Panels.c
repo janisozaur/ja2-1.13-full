@@ -629,7 +629,7 @@ void CheckForDisabledForGiveItem( )
 {
 	INT16			sDist;
 	INT16			sDistVisible;
-	INT16			sDestGridNo;
+	INT32			sDestGridNo;
 	INT8			bDestLevel;
 	INT32			cnt;
 	SOLDIERTYPE	*pSoldier;

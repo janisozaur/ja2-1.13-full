@@ -178,7 +178,7 @@ INT8 gbEditingMode = EDITING_NOTHING;
 
 OBJECTTYPE	*gpItem = NULL;
 BOOLEAN			gfShowItemStatsPanel;
-INT16				gsItemGridNo;
+INT32				gsItemGridNo;
 
 ITEM_POOL		*gpEditingItemPool = NULL;
 extern ITEM_POOL *gpItemPool;

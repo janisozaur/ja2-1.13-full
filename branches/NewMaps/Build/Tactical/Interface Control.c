@@ -64,7 +64,7 @@ MOUSE_REGION		gLockPanelOverlayRegion;
 
 extern void			RenderTownIDString( );
 extern BOOLEAN	gfUIOverItemPool;
-extern INT16		gfUIOverItemPoolGridNo;
+extern INT32		gfUIOverItemPoolGridNo;
 extern BOOLEAN	gfInMovementMenu;
 extern BOOLEAN	gfInItemPickupMenu;
 extern BOOLEAN	gfInOpenDoorMenu;

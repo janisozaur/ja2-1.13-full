@@ -1306,7 +1306,7 @@ BOOLEAN AllMercsLookForDoor( INT32 sGridNo, BOOLEAN fUpdateValue )
 	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;	
 	DOOR_STATUS							 *pDoorStatus;
-	INT16											usNewGridNo;
+	INT32											usNewGridNo;
 
 	// Get door
 	pDoorStatus = GetDoorStatus( sGridNo );
@@ -1378,7 +1378,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 	INT32 sGridNo;
 	DOOR_STATUS							 *pDoorStatus;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	INT16										 usNewGridNo;
+	INT32										 usNewGridNo;
 
 
 

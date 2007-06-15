@@ -534,7 +534,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 		 if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		 {
 			 ubMovementCost = DoorTravelCost( pSoldier, marker, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );
-			 pStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
+			 pStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
 			 if ( pStructure != NULL && pStructure->fFlags & STRUCTURE_TRANSPARENT)
 			 {
 				// cell door or somehow otherwise transparent; allow merc to see through

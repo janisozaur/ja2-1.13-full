@@ -635,7 +635,7 @@ void HandleDialogue( )
 		if ( gfMikeShouldSayHi == TRUE )
 		{
 			SOLDIERTYPE * pMike;
-			INT16	sPlayerGridNo;
+			INT32	sPlayerGridNo;
 			UINT8	ubPlayerID;
 
 			pMike = FindSoldierByProfileID( MIKE, FALSE );

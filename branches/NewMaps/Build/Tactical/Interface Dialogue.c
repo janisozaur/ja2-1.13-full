@@ -66,8 +66,8 @@
 	#include "Sound Control.h"
 #endif
 
-INT16	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };
-INT16	sBasementExitGridNos[ ] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
+INT32	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };
+INT32	sBasementExitGridNos[ ] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
 
 extern	UINT8		gubWaitingForAllMercsToExitCode;
 extern BOOLEAN fFoundTixa;
@@ -144,7 +144,7 @@ BOOLEAN InternalInitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pS
 
 
 extern void EndGameMessageBoxCallBack( UINT8 ubExitValue );
-extern INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo );
+extern INT32 FindNearestOpenableNonDoor( INT32 sStartGridNo );
 extern void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier );
 
 UINT8	ubTalkMenuApproachIDs[] = 
@@ -1365,7 +1365,7 @@ BOOLEAN	NPCClosePanel( )
 
 BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 {
-	INT16		sAdjGridNo;
+	INT32		sAdjGridNo;
 
 	if ( !gpSrcSoldier )
 	{
@@ -1512,7 +1512,7 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 void HandleNPCTrigger( )
 {
 	SOLDIERTYPE *pSoldier;
-	INT16				sPlayerGridNo;
+	INT32				sPlayerGridNo;
 	UINT8				ubPlayerID;
 
 	pSoldier = FindSoldierByProfileID( gubTargetNPC, FALSE );
@@ -4817,7 +4817,7 @@ void	DoneFadeInActionLeaveBasement( )
 BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 {
 	STRUCTURE					*pStructure;
-	INT16							sStructGridNo;
+	INT32							sStructGridNo;
 	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	INT32 sGridNo;

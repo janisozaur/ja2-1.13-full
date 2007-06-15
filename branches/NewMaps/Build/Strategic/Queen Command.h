@@ -53,6 +53,6 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID );
 
 BOOLEAN OnlyHostileCivsInSector();
 
-extern INT16 gsInterrogationGridNo[3];
+extern INT32 gsInterrogationGridNo[3];
 
 #endif

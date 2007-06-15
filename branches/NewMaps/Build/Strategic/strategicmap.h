@@ -32,8 +32,8 @@ INT8			gbWorldSectorZ;
  
 
 extern INT16 pSamList[ NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoAList[ NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoBList[ NUMBER_OF_SAMS ];
+extern INT32 pSamGridNoAList[ NUMBER_OF_SAMS ];
+extern INT32 pSamGridNoBList[ NUMBER_OF_SAMS ];
 
 extern BOOLEAN fFoundOrta;
 extern BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];

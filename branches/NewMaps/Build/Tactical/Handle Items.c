@@ -104,7 +104,7 @@ BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 
 
 SOLDIERTYPE *		gpBoobyTrapSoldier;
 ITEM_POOL *			gpBoobyTrapItemPool;
-INT16						gsBoobyTrapGridNo;
+INT32						gsBoobyTrapGridNo;
 INT8            gbBoobyTrapLevel;
 BOOLEAN					gfDisarmingBuriedBomb;
 extern BOOLEAN	gfDontChargeAPsToPickup;
@@ -5043,7 +5043,7 @@ void RefreshItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 }
 
 
-INT16 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
+INT32 FindNearestAvailableGridNoForItem( INT32 sSweetGridNo, INT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

@@ -47,7 +47,7 @@ extern INT32 giGarrisonArraySize;
 extern BOOLEAN gfOverrideSector;
 #endif
 
-INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
+INT32 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 void ValidateEnemiesHaveWeapons()
 {

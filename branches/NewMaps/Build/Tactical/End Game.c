@@ -21,7 +21,7 @@
 	#include "Intro.h"
 #endif
 
-INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
+INT32 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 
 SOLDIERTYPE *gpKillerSoldier = NULL;
 INT32				 gsGridNo;

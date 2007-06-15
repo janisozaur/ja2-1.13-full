@@ -236,7 +236,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor );
 BOOLEAN fFirstTimeInGameScreen  = TRUE;
 BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
 INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
-INT16		gsCurrentSoldierGridNo	= 0;
+INT32		gsCurrentSoldierGridNo	= 0;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
 
 // LOCAL FUCTIONS
@@ -3584,7 +3584,7 @@ void CalculateAimCubeUIPhysics( )
 }
 
 
-INT16 GetInAimCubeUIGridNo( )
+INT32 GetInAimCubeUIGridNo( )
 {
 	return( gCubeUIData.sGridNo );
 }
@@ -3793,7 +3793,7 @@ void GetLaunchItemParamsFromUI( )
 
 
 static BOOLEAN gfDisplayPhysicsUI = FALSE;
-static INT16	 gsPhysicsImpactPointGridNo;
+static INT32	 gsPhysicsImpactPointGridNo;
 static INT8		 gbPhysicsImpactPointLevel;
 static BOOLEAN gfBadPhysicsCTGT = FALSE;
 
@@ -3874,7 +3874,7 @@ UINT32 CalcUIMessageDuration( STR16 wString )
 BOOLEAN   gfMultipurposeLocatorOn = FALSE;
 UINT32    guiMultiPurposeLocatorLastUpdate;
 INT8      gbMultiPurposeLocatorFrame;
-INT16     gsMultiPurposeLocatorGridNo;
+INT32     gsMultiPurposeLocatorGridNo;
 INT8      gbMultiPurposeLocatorLevel;
 INT8      gbMultiPurposeLocatorCycles;
 

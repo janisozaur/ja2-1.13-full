@@ -205,7 +205,7 @@ extern void DebugLevelNodePage( void );
 INT16							gsTreeRevealXPos, gsTreeRevealYPos;
 
 
-BOOLEAN HandleMultiSelectionMove( INT16 sDestGridNo );
+BOOLEAN HandleMultiSelectionMove( INT32 sDestGridNo );
 void ResetMultiSelection( );
 
 
@@ -387,7 +387,7 @@ UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
 UINT16		gsUIHandleShowMoveGridLocation  = NOWHERE ;
 BOOLEAN		gfUIOverItemPool								= FALSE;
-INT16			gfUIOverItemPoolGridNo					= 0;
+INT32			gfUIOverItemPoolGridNo					= 0;
 INT16			gsCurrentActionPoints						= 1;
 BOOLEAN		gfUIHandlePhysicsTrajectory			= FALSE;
 BOOLEAN		gfUIMouseOnValidCatcher					= FALSE;
@@ -696,7 +696,7 @@ void SetUIMouseCursor( )
 	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
 	BOOLEAN	fUpdateNewCursor = TRUE;
-	static INT16 sOldExitGridNo = NOWHERE;
+	static INT32 sOldExitGridNo = NOWHERE;
 	static BOOLEAN	fOkForExit = FALSE;
 
 
@@ -1770,7 +1770,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 {
 	UINT32 usMapPos;
 	SOLDIERTYPE				*pSoldier;
-	INT16							sDestGridNo;
+	INT32							sDestGridNo;
 	INT32 sActionGridNo;
 	STRUCTURE					*pStructure;
 	UINT8							ubDirection;
@@ -4956,7 +4956,7 @@ void EndRubberBanding( )
 }
 
 
-BOOLEAN HandleMultiSelectionMove( INT16 sDestGridNo )
+BOOLEAN HandleMultiSelectionMove( INT32 sDestGridNo )
 {
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
@@ -5419,7 +5419,7 @@ BOOLEAN HandleTalkInit(  )
 	SOLDIERTYPE				*pSoldier, *pTSoldier;
 	UINT32						uiRange;
 	UINT32 usMapPos;
-	INT16							sGoodGridNo;
+	INT32							sGoodGridNo;
 	UINT8							ubNewDirection;
 	UINT8							ubQuoteNum;
 	UINT8							ubDiceRoll;

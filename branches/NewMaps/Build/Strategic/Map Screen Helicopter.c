@@ -105,7 +105,7 @@ UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ] =
 };
 
 
-INT16 sRefuelStartGridNo[ NUMBER_OF_REFUEL_SITES ] ={
+INT32 sRefuelStartGridNo[ NUMBER_OF_REFUEL_SITES ] ={
 	 9001, // drassen
 	 13068, // estoni
 };

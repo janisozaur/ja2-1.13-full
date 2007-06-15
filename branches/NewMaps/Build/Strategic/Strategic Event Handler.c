@@ -36,7 +36,7 @@
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_Z		0
 
 
-extern INT16 gsRobotGridNo;
+extern INT32 gsRobotGridNo;
 
 
 UINT32 guiPabloExtraDaysBribed = 0;
@@ -396,7 +396,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 {
 	// This function moves all the items that Pablos has stolen 
 	// (or items that were delayed) to the arrival location for new shipments, 
-	INT16			sStartGridNo;
+	INT32			sStartGridNo;
 	UINT32		uiNumWorldItems, uiLoop;
 	BOOLEAN		fOk;
 	WORLDITEM * pTemp;

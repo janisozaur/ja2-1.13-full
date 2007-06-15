@@ -105,7 +105,7 @@ enum
 };
 BOOLEAN HandleDefiniteUnloadingOfWorld( UINT8 ubUnloadCode );
 
-extern INT16		gsRobotGridNo;
+extern INT32		gsRobotGridNo;
 extern BOOLEAN	gfUndergroundTacticalTraversal;
 
 extern MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES];
@@ -163,14 +163,14 @@ INT16 pSamList[ NUMBER_OF_SAMS ]={
 	SECTOR( SAM_4_X, SAM_4_Y ),
 };
 
-INT16 pSamGridNoAList[ NUMBER_OF_SAMS ]={
+INT32 pSamGridNoAList[ NUMBER_OF_SAMS ]={
 	10196,
 	11295,
 	16080,
 	11913,
 };
 
-INT16 pSamGridNoBList[ NUMBER_OF_SAMS ]={
+INT32 pSamGridNoBList[ NUMBER_OF_SAMS ]={
 	10195,
 	11135,
 	15920,
@@ -292,8 +292,8 @@ void InitializeStrategicMapSectorTownNames( void );
 void DoneFadeOutAdjacentSector( void );
 void DoneFadeOutExitGridSector( void );
 
-INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection );
-INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts );
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection );
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts );
 
 void HandleQuestCodeOnSectorExit( INT16 sOldSectorX, INT16 sOldSectorY, INT8 bOldSectorZ );
 void HandlePotentialMoraleHitForSkimmingSectors( GROUP *pGroup );
@@ -1080,7 +1080,7 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
       INT16 sWarpWorldX;
       INT16 sWarpWorldY;
       INT8  bWarpWorldZ;
-      INT16 sWarpGridNo;
+      INT32 sWarpGridNo;
 
       if ( GetWarpOutOfMineCodes( &sWarpWorldX, &sWarpWorldY, &bWarpWorldZ, &sWarpGridNo ) && gbWorldSectorZ >= 2 )
       {
@@ -2692,7 +2692,8 @@ void AllMercsHaveWalkedOffSector( )
 		// 2 ) We can move right away so do it!
 		if( guiAdjacentTraverseTime <= 5 )
 		{ 
-			INT16 sScreenX, sScreenY, sNewGridNo;
+			INT16 sScreenX, sScreenY;
+			INT32 sNewGridNo;
 			UINT32	 sWorldX, sWorldY;
 
 			//Case 2:
@@ -2836,7 +2837,8 @@ void SetupTacticalTraversalInformation()
 	SOLDIERTYPE *pSoldier;
 	PLAYERGROUP *pPlayer;
 	UINT32 sWorldX, sWorldY;
-	INT16 sScreenX, sScreenY, sNewGridNo;
+	INT16 sScreenX, sScreenY;
+	INT32 sNewGridNo;
 
 	Assert( gpAdjacentGroup );
 	pPlayer = gpAdjacentGroup->pPlayerList;
@@ -3778,7 +3780,7 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 }
 
 
-INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 {
 	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
@@ -4196,7 +4198,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT
 	}
 }
 
-INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
 {
 	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;

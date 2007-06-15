@@ -344,9 +344,9 @@ BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX
 			// if no wall of same orientation there, let bullet through
 			if ( fTopRight )
 			{
-				if (!WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo + DirectionInc( SOUTH )) ) &&
-						!WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo) ) &&
-						!OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( (INT16) (iGridNo + DirectionInc( SOUTH )) ) )
+				if (!WallOrClosedDoorExistsOfTopRightOrientation( (iGridNo + DirectionInc( SOUTH )) ) &&
+						!WallOrClosedDoorExistsOfTopLeftOrientation( (iGridNo) ) &&
+						!OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( (iGridNo + DirectionInc( SOUTH )) ) )
 				{
 					return( FALSE );
 				}
@@ -358,9 +358,9 @@ BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX
 		{
 			if ( fTopLeft )
 			{ 
-				if ( !WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo + DirectionInc( WEST )) ) &&
-						 !WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo + DirectionInc( SOUTHWEST ) ) ) &&
-	 					 !OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (INT16) (iGridNo + DirectionInc( WEST )) ) )
+				if ( !WallOrClosedDoorExistsOfTopLeftOrientation( (iGridNo + DirectionInc( WEST )) ) &&
+						 !WallOrClosedDoorExistsOfTopRightOrientation( (iGridNo + DirectionInc( SOUTHWEST ) ) ) &&
+	 					 !OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (iGridNo + DirectionInc( WEST )) ) )
 				{
 					return( FALSE );
 				}
@@ -373,9 +373,9 @@ BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX
 		{
 			if ( fTopLeft )
 			{ 
-				if ( !WallOrClosedDoorExistsOfTopLeftOrientation( (INT16) (iGridNo + DirectionInc( EAST )) ) &&
-						 !WallOrClosedDoorExistsOfTopRightOrientation( (INT16) (iGridNo) ) &&
-	 					 !OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (INT16) (iGridNo + DirectionInc( EAST )) ) )
+				if ( !WallOrClosedDoorExistsOfTopLeftOrientation( (iGridNo + DirectionInc( EAST )) ) &&
+						 !WallOrClosedDoorExistsOfTopRightOrientation( (iGridNo) ) &&
+	 					 !OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( (iGridNo + DirectionInc( EAST )) ) )
 				{
 					return( FALSE );
 				}

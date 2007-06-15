@@ -100,7 +100,7 @@ INT32 iLastInventoryPoolPage = 0;
 // total number of slots allocated
 INT32 iTotalNumberOfSlots = 0;
 
-INT16 sObjectSourceGridNo = 0;
+INT32 sObjectSourceGridNo = 0;
 
 // number of unseen items in sector
 UINT32 uiNumberOfUnSeenItems = 0;
