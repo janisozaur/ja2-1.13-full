@@ -14,14 +14,14 @@
 
 
 void SmoothAllTerrainWorld( void );
-void SmoothTerrain(int GridNo, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth  );
+void SmoothTerrain(INT32 GridNo, INT32 origType, UINT16 *piNewTile, BOOLEAN fForceSmooth  );
 
 void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth );
 void SmoothTerrainWorld( UINT32 uiCheckType );
-void SmoothWaterTerrain( int GridNo, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth );
+void SmoothWaterTerrain( INT32 GridNo, INT32 origType, UINT16 *piNewTile, BOOLEAN fForceSmooth );
 void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth );
 
-void SmoothExitGrid(int GridNo, UINT16 *piNewTile, BOOLEAN fForceSmooth );
+void SmoothExitGrid(INT32 GridNo, UINT16 *piNewTile, BOOLEAN fForceSmooth );
 void SmoothExitGridRadius( INT32 sMapIndex, UINT8 ubRadius );
 
 #endif

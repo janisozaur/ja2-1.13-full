@@ -27,7 +27,7 @@ extern INT16 DirYIncrementer[8];
 // GoAsFarAsPossibleTowards - C.O. stuff related to current animation esp first aid
 // SetCivilianDestination - C.O. stuff for if we don't control the civ
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
+BOOLEAN LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
 	BOOLEAN fSkipTilesWithMercs;
  

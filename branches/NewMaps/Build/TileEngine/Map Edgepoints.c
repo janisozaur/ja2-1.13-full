@@ -1504,7 +1504,7 @@ INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCod
 }
 
 #define EDGE_OF_MAP_SEARCH 5
-BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
+BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT32 sEdgepoint )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
@@ -1573,7 +1573,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 	return FALSE;
 }
 
-BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 )
+BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT32 sEdgepoint1, INT32 sEdgepoint2 )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;

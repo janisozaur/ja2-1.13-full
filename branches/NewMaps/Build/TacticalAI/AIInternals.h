@@ -194,7 +194,7 @@ void InitAttackType(ATTACKTYPE *pAttack);
 
 INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags );
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
+BOOLEAN LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
 INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
@@ -213,7 +213,7 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier );
 INT8	SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem );
 UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 bDesiredDirection );
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost );
-INT16 TrackScent( SOLDIERTYPE * pSoldier );
+INT32 TrackScent( SOLDIERTYPE * pSoldier );
 void RefreshAI(SOLDIERTYPE *pSoldier);
 BOOLEAN InLightAtNight( INT32 sGridNo, INT8 bLevel );
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier );

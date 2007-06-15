@@ -1454,7 +1454,7 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier)
 /*
 void RestoreMarkedMines()
 {
- int GridNo;
+ INT32 GridNo;
 
  // all tiles marked with the special NPC mine cost value must be restored
  for (GridNo = 0; GridNo < GRIDSIZE; GridNo++)
@@ -1476,7 +1476,7 @@ void RestoreMarkedMines()
 
 void MarkDetectableMines(SOLDIERTYPE *pSoldier)
 {
- int GridNo,detectLevel;
+ INT32 GridNo,detectLevel;
  GRIDINFO *gpSoldier;
 
 
