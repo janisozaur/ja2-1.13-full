@@ -1231,7 +1231,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 }
 
 
-extern BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT16 usOldMapPos );
+extern BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT32 usOldMapPos );
 
 extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
@@ -1239,7 +1239,7 @@ extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 void GetRTMousePositionInput( UINT32 *puiNewEvent )
 {
 	UINT32 usMapPos;
-	static UINT16			usOldMapPos = 0;
+	static UINT32			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 	SOLDIERTYPE								 *pSoldier;
 	static BOOLEAN		fOnValidGuy = FALSE;
