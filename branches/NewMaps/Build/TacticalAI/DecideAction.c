@@ -1108,7 +1108,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 {
  INT32 iDummy;
  UINT8 ubNoiseDir;
- INT16 sNoiseGridNo;
+ INT32 sNoiseGridNo;
  INT32 iNoiseValue;
  INT32 iChance, iSneaky;
  INT16 sClosestFriend;
@@ -1540,7 +1540,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  INT8 bActionReturned;
  INT32 iDummy;
  INT16 iChance,sClosestOpponent,sClosestFriend;
- INT16 sClosestDisturbance, sDistVisible, sCheckGridNo;
+ INT32 sClosestDisturbance, sDistVisible, sCheckGridNo;
  UINT8 ubCanMove,ubOpponentDir;
  INT8 bInWater, bInDeepWater, bInGas;
  INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0, bWatchPts = 0;
@@ -2628,7 +2628,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
  BOOLEAN fClimb;
  UINT8	ubBurstAPs;
  UINT8	ubOpponentDir;
- INT16	sCheckGridNo;
+ INT32	sCheckGridNo;
 
  BOOLEAN fAllowCoverCheck = FALSE;
 

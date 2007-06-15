@@ -164,7 +164,7 @@ INT16	gsTerroristSector[NUM_TERRORISTS][NUM_TERRORIST_POSSIBLE_LOCATIONS][2] =
 	}
 };
 
-INT16 gsRobotGridNo;
+INT32 gsRobotGridNo;
 
 #define NUM_ASSASSINS 6
 
@@ -815,7 +815,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT32									cnt;
-	INT16										sOldGridNo;
+	INT32										sOldGridNo;
 
 	UINT8										ubOldID;
 	UINT32									uiOldUniqueId;

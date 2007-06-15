@@ -51,7 +51,7 @@ typedef struct
 	FLOAT				dLifeSpan;
 	OBJECTTYPE	Obj;
 	BOOLEAN			fFirstTimeMoved;
-	INT16				sFirstGridNo;
+	INT32				sFirstGridNo;
 	UINT8				ubOwner;
 	UINT8				ubActionCode;
 	UINT32			uiActionData;
@@ -65,7 +65,7 @@ typedef struct
 	vector_3		EndedWithCollisionPosition;
 	BOOLEAN			fHaveHitGround;
   BOOLEAN     fPotentialForDebug;
-  INT16       sLevelNodeGridNo;
+  INT32       sLevelNodeGridNo;
   INT32       iSoundID;
   UINT8       ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];

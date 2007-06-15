@@ -655,7 +655,7 @@ void DestroyTileSurfaces( )
 void CompileWorldTerrainIDs( void )
 {
 	INT32 sGridNo;
-	INT16						sTempGridNo;
+	INT32						sTempGridNo;
 	LEVELNODE	*			pNode;
 	TILE_ELEMENT *	pTileElement;
 	UINT8						ubLoop;
@@ -763,7 +763,7 @@ void CompileTileMovementCosts( INT32 usGridNo )
 			TileElem = gTileDatabase[ pLand->usIndex ];
 
 			// Get terrain type
-			ubTerrainID =	gpWorldLevelData[usGridNo].ubTerrainID; // = GetTerrainType( (INT16)usGridNo );
+			ubTerrainID =	gpWorldLevelData[usGridNo].ubTerrainID; // = GetTerrainType( usGridNo );
 
 			for (ubDirLoop=0; ubDirLoop < NUM_WORLD_DIRECTIONS; ubDirLoop++)
 			{
@@ -1344,7 +1344,7 @@ void CompileTileMovementCosts( INT32 usGridNo )
 		// consider just the land
 
 		// Get terrain type
-		ubTerrainID =	gpWorldLevelData[usGridNo].ubTerrainID; // = GetTerrainType( (INT16)usGridNo );
+		ubTerrainID =	gpWorldLevelData[usGridNo].ubTerrainID; // = GetTerrainType( usGridNo );
 		for (ubDirLoop=0; ubDirLoop < 8; ubDirLoop++)
 		{
 			SET_MOVEMENTCOST( usGridNo ,ubDirLoop, 0, gTileTypeMovementCost[ ubTerrainID ] );
@@ -1359,7 +1359,7 @@ void CompileTileMovementCosts( INT32 usGridNo )
 			TileElem = gTileDatabase[ pLand->usIndex ];
 
 			// Get terrain type
-			ubTerrainID =	GetTerrainType( (INT16)usGridNo );
+			ubTerrainID =	GetTerrainType( usGridNo );
 
 			for (ubDirLoop=0; ubDirLoop < 8; ubDirLoop++)
 			{

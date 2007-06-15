@@ -1140,7 +1140,7 @@ BOOLEAN PhysicsMoveObject( REAL_OBJECT *pObject )
 				{
 					ANITILE_PARAMS	AniParams;
 
-					AniParams.sGridNo							= (INT16)sNewGridNo;
+					AniParams.sGridNo							= sNewGridNo;
 					AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 					AniParams.sDelay							= (INT16)( 100 + PreRandom( 100 ) );
 					AniParams.sStartFrame					= 0;

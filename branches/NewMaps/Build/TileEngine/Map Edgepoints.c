@@ -56,13 +56,13 @@ UINT16 gus2ndWestEdgepointMiddleIndex			= 0;
 BOOLEAN gfEdgepointsExist = FALSE;
 BOOLEAN gfGeneratingMapEdgepoints = FALSE;
 
-INT16 gsTLGridNo = 13286;
-INT16 gsTRGridNo = 1043;
-INT16 gsBLGridNo = 24878;
-INT16 gsBRGridNo = 12635;
+INT32 gsTLGridNo = 13286;
+INT32 gsTRGridNo = 1043;
+INT32 gsBLGridNo = 24878;
+INT32 gsBRGridNo = 12635;
 
-BOOLEAN VerifyEdgepoint( SOLDIERTYPE *pSoldier, INT16 sEdgepoint );
-BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 );
+BOOLEAN VerifyEdgepoint( SOLDIERTYPE *pSoldier, INT32 sEdgepoint );
+BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT32 sEdgepoint1, INT32 sEdgepoint2 );
 
 extern UINT8 gubTacticalDirection;
 
@@ -486,7 +486,7 @@ void GenerateMapEdgepoints()
 {
 	INT32 i=-1;
 	INT32 sGridNo=-1;
-	INT16 sVGridNo[400];
+	INT32 sVGridNo[400];
 	UINT8 gubSaveNPCAPBudget=0;
 	UINT8 gubSaveNPCDistLimit=0;
 

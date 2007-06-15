@@ -129,7 +129,7 @@ typedef struct
 	INT8								bConsNumTurnsNotSeen;
 	UINT8								ubArmyGuysKilled;
 
-	INT16								sPanicTriggerGridNo[ NUM_PANIC_TRIGGERS ];
+	INT32								sPanicTriggerGridNo[ NUM_PANIC_TRIGGERS ];
 	INT8								bPanicTriggerIsAlarm[ NUM_PANIC_TRIGGERS ];
 	UINT8								ubPanicTolerance[ NUM_PANIC_TRIGGERS ];
 	BOOLEAN							fAtLeastOneGuyOnMultiSelect;
@@ -224,7 +224,7 @@ BOOLEAN InitOverhead( );
 BOOLEAN ShutdownOverhead( );
 BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex );
 
-INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel );
+BOOLEAN NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT32 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel );
 
 //Simple check to see if a (one-tiled) soldier can occupy a given location on the ground or roof.
 extern BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof );

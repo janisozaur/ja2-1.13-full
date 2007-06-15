@@ -7010,7 +7010,7 @@ BOOLEAN SKITryToAddInvToMercsInventory( INVENTORY_IN_SLOT *pInv, SOLDIERTYPE *pS
 BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE *pShopkeeper;
-	INT16			sDestGridNo;
+	INT32			sDestGridNo;
 	INT8			bDestLevel;
 	INT16			sDistVisible;
 	UINT32		uiRange;

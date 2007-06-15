@@ -433,7 +433,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - heard something 
 	UINT8 ubNoiseDir;
-	INT16 sNoiseGridNo;
+	INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
 	BOOLEAN fClimb;
@@ -1658,7 +1658,7 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 
 INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 {
-	INT16 sCorpseGridNo;
+	INT32 sCorpseGridNo;
 	UINT8 ubDirection;
 	INT16 sFacingDir;
 

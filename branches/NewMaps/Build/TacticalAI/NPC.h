@@ -168,7 +168,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion );
 
 extern void TriggerFriendWithHostileQuote( UINT8 ubNPC );
 
-extern void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT32 sNewGridNo );
+extern void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT32 sOldGridNo, INT32 sNewGridNo );
 
 extern UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord );
 

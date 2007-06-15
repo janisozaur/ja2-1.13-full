@@ -46,7 +46,7 @@ typedef struct
 	INT16					sHeighestScreenY;
 	BOOLEAN				fFound;
 	LEVELNODE			*pFoundNode;
-	INT16					sFoundGridNo;
+	INT32					sFoundGridNo;
 	UINT16				usStructureID;
 	BOOLEAN				fStructure;
 

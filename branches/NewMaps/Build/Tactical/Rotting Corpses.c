@@ -451,7 +451,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	INT8						zFilename[150];
 	DB_STRUCTURE_REF	 *pDBStructureRef;
 	UINT8									ubLoop;
-	INT16							sTileGridNo;
+	INT32							sTileGridNo;
 	DB_STRUCTURE_TILE	**	ppTile;
 	UINT16						usStructIndex;	
 	UINT32						uiDirectionUseFlag;
@@ -1500,7 +1500,7 @@ void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
 	
 }
 
-INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
+INT32 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
 {
 	INT32 sSweetGridNo;
 	INT16  sTop, sBottom;
@@ -1875,7 +1875,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, U
 }
 
 
-INT16 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
+INT32 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
 {
 	INT32                    cnt;
 	ROTTING_CORPSE					 *pCorpse;

@@ -6770,7 +6770,8 @@ BOOLEAN WatchedLocLocationIsEmpty( INT32 sGridNo, INT8 bLevel, INT8 bTeam )
 {
 	// look to see if there is anyone near the watched loc who is not on this team
 	UINT8	ubID;
-	INT16	sTempGridNo, sX, sY;
+	INT32	sTempGridNo;
+	INT16	sX, sY;
 
 	for ( sY = -WATCHED_LOC_RADIUS; sY <= WATCHED_LOC_RADIUS; sY++ )
 	{

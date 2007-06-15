@@ -147,7 +147,7 @@ BOOLEAN									gfExplosionQueueActive = FALSE;
 BOOLEAN									gfExplosionQueueMayHaveChangedSight = FALSE;
 UINT8										gubPersonToSetOffExplosions = NOBODY;
 
-INT16			gsTempActionGridNo = NOWHERE;
+INT32			gsTempActionGridNo = NOWHERE;
 
 extern UINT8 gubInterruptProvoker;
 
@@ -436,7 +436,7 @@ void RemoveExplosionData( INT32 iIndex )
 }
 
 
-void HandleFencePartnerCheck( INT16 sStructGridNo )
+void HandleFencePartnerCheck( INT32 sStructGridNo )
 {
 	STRUCTURE *pFenceStructure, *pFenceBaseStructure;
 	LEVELNODE *pFenceNode;
@@ -1265,7 +1265,7 @@ void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 }
 
 
-BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem, INT16 sSubsequent )
+BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT32 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem, INT16 sSubsequent )
 {
 	 SOLDIERTYPE *pSoldier;
 	 INT16 sNewWoundAmt = 0;
@@ -1923,9 +1923,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 			 {
 				 // ATE: For windows, check to the west and north for a broken window, as movement costs
 				 // will override there...
-				 sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
+				 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( WEST ) );
 
-				 BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 				 if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				 {
 						// If open, fTravelCostObs set to false and reduce range....
@@ -1941,9 +1941,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 			 if ( fTravelCostObs )
 			 {
-				 sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
+				 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( NORTH ) );
 
-				 BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 				 if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				 {
 						// If open, fTravelCostObs set to false and reduce range....
@@ -1979,9 +1979,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 			 // ATE: For windows, check to the west and north for a broken window, as movement costs
 			 // will override there...
-			 sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
+			 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( WEST ) );
 
-			 BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , TRUE );
+			 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , TRUE );
 			 if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			 {
 				fTravelCostObs = FALSE;
@@ -1995,8 +1995,8 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 				 }
 			 }
 
-			 sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
-			 BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+			 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( NORTH ) );
+			 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 
 			 if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			 {

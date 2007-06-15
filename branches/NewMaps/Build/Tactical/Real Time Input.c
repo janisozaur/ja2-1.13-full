@@ -107,7 +107,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
-	static INT16		sMoveClickGridNo					= 0;
+	static INT32		sMoveClickGridNo					= 0;
 
 
 	// LEFT MOUSE BUTTON

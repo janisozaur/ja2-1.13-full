@@ -80,7 +80,7 @@ BOOLEAN						gfOverheadMapDirty = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
 INT16							gsStartRestrictedX, gsStartRestrictedY;
 BOOLEAN						gfOverItemPool = FALSE;
-INT16							gsOveritemPoolGridNo;
+INT32							gsOveritemPoolGridNo;
 
 
 void HandleOverheadUI( );
@@ -1505,7 +1505,7 @@ void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 
 void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
 {
-	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
+	GetWorldXYAbsoluteScreenXY( (CenterX( sGridNo ) / CELL_X_SIZE ), ( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
 	*psScreenX /= 5;
 	*psScreenY /= 5;
 

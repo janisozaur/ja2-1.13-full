@@ -156,7 +156,7 @@ INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	INT32	iNoiseValue, iBestValue = -10000;
 	INT32 sBestGridNo = NOWHERE;
 	INT8	bBestLevel = 0;
-	INT16 sClimbingGridNo;
+	INT32 sClimbingGridNo;
 	BOOLEAN fClimbingNecessary = FALSE;
 	SOLDIERTYPE * pTemp;	
 

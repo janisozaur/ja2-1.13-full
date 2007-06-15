@@ -2479,7 +2479,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				STRUCTURE *		pStructure;
 				INT8					bDirection;
-				INT16					sDoorGridNo;
+				INT32					sDoorGridNo;
 
 				bDirection = (INT8) GetDirectionFromGridNo( pSoldier->usActionData, pSoldier );
 				if (bDirection == EAST || bDirection == SOUTH)

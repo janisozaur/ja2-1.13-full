@@ -339,7 +339,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 // JA2Gold: added
 BOOLEAN CloseEnoughForGrenadeToss( INT32 sGridNo, INT32 sGridNo2 )
 {
-	INT16	sTempGridNo;
+	INT32	sTempGridNo;
 	INT8	bDirection;
 	INT16	sXPos, sYPos, sXPos2, sYPos2;
 	UINT8	ubMovementCost;

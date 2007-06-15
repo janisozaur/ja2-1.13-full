@@ -34,15 +34,15 @@ BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 	return( &(gBuildings[ gubNumberOfBuildings ]) );
 }
 
-BUILDING * GenerateBuilding( INT16 sDesiredSpot )
+BUILDING * GenerateBuilding( INT32 sDesiredSpot )
 {
 	UINT32	uiLoop;
-	INT16		sTempGridNo, sNextTempGridNo, sVeryTemporaryGridNo;
-	INT16		sStartGridNo, sCurrGridNo, sPrevGridNo = NOWHERE, sRightGridNo;
+	INT32		sTempGridNo, sNextTempGridNo, sVeryTemporaryGridNo;
+	INT32		sStartGridNo, sCurrGridNo, sPrevGridNo = NOWHERE, sRightGridNo;
 	INT8		bDirection, bTempDirection;
 	BOOLEAN	fFoundDir, fFoundWall;
 	UINT32	uiChanceIn = ROOF_LOCATION_CHANCE; // chance of a location being considered
-	INT16		sWallGridNo;
+	INT32		sWallGridNo;
 	INT8		bDesiredOrientation;
 	INT8		bSkipSpots = 0;
 	SOLDIERTYPE 	FakeSoldier;
@@ -213,11 +213,11 @@ BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 					bDesiredOrientation = OUTSIDE_TOP_LEFT;
 					break;
 				case SOUTH:
-					sWallGridNo = (INT16) ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
+					sWallGridNo = ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
 					bDesiredOrientation = OUTSIDE_TOP_RIGHT;
 					break;
 				case WEST:
-					sWallGridNo = (INT16) ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
+					sWallGridNo = ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
 					bDesiredOrientation = OUTSIDE_TOP_LEFT;
 					break;
 				default:
@@ -412,13 +412,13 @@ void GenerateBuildings( void )
 	}
 }
 
-INT16 FindClosestClimbPoint( INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
+INT32 FindClosestClimbPoint( INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp )
 {
 	BUILDING *	pBuilding;
 	UINT8				ubNumClimbSpots;
-	INT16 *			psClimbSpots;
+	INT32 *			psClimbSpots;
 	UINT8				ubLoop;
-	INT16				sDistance, sClosestDistance = 1000, sClosestSpot= NOWHERE;
+	INT32				sDistance, sClosestDistance = 1000, sClosestSpot= NOWHERE;
 
 	pBuilding = FindBuilding( sDesiredGridNo );
 	if (!pBuilding)

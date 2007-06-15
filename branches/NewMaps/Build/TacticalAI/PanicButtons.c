@@ -18,7 +18,7 @@ void MakeClosestEnemyChosenOne()
 	UINT8					ubClosestEnemy = NOBODY;
 	SOLDIERTYPE *	pSoldier;
 	INT8					bPanicTrigger;
-	INT16					sPanicTriggerGridNo;
+	INT32					sPanicTriggerGridNo;
 
 	if ( ! (gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) )
 	{
@@ -182,7 +182,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 	INT32		iAPCost, iPathCost;
 	//INT8		bOldKeys;
 	INT8		bPanicTrigger;
-	INT16		sPanicTriggerGridNo;
+	INT32		sPanicTriggerGridNo;
 	UINT32	uiPercentEnemiesKilled;
 
 	if ( ! (gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) )
@@ -248,7 +248,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 	INT8			bSlot;
 	INT32			iPathCost;
 	INT8			bPanicTrigger;
-	INT16			sPanicTriggerGridNo;
+	INT32			sPanicTriggerGridNo;
 
 	// if there are panic bombs here
 	if (gTacticalStatus.fPanicFlags & PANIC_BOMBS_HERE)

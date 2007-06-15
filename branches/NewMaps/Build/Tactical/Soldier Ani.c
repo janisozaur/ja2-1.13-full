@@ -949,7 +949,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// Set new gridno
 					{
-						INT16 sTempGridNo, sNewX, sNewY;
+						INT32 sTempGridNo;
+						INT16 sNewX, sNewY;
 
 						//Get Next GridNo;
 						sTempGridNo = NewGridNo( pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->bDirection ) ) );
@@ -3803,7 +3804,7 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8
 	if ( pStructureFileRef )
 	{
 		UINT16		usStructureID;
-		INT16			sTestGridNo;
+		INT32			sTestGridNo;
 
 		// must make sure that structure data can be added in the direction of the target
 

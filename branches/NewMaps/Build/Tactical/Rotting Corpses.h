@@ -151,7 +151,7 @@ void RebuildAllCorpseShadeTables( );
 
 UINT16				CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse );
 
-INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
+INT32 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
 
 
 void HandleRottingCorpses( );
@@ -180,7 +180,7 @@ UINT16 GetCorpseStructIndex( ROTTING_CORPSE_DEFINITION *pCorpseDef, BOOLEAN fFor
 
 void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubLevel );
 
-INT16 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID );
+INT32 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID );
 
 void DecayRottingCorpseAIWarnings( void );
 UINT8 GetNearestRottingCorpseAIWarning( INT32 sGridNo );

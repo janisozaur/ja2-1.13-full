@@ -205,7 +205,7 @@ void RemoveAllPits()
 
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT32 sGridNo, INT16 sRadius )
 {
-	INT16 x, y, sNewGridNo;
+	INT32 x, y, sNewGridNo;
 	UINT8	ubID;
 	SOLDIERTYPE *pSoldier;
 
@@ -240,7 +240,7 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 {
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 	EXITGRID ExitGrid;
-	INT16 sPitGridNo;
+	INT32 sPitGridNo;
 	// OK, get exit grid...
 	
 	sPitGridNo = (INT16)pSoldier->uiPendingActionData4;

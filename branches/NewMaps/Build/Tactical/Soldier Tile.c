@@ -102,7 +102,7 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 
 
 
-void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bValue )
+void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT32 sCauseGridNo, INT8 bValue )
 {
 	UINT8		ubPerson;
 
@@ -209,7 +209,7 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 bLevel )
 {
 	UINT8		ubPerson;
-	INT16		sTempDestGridNo;
+	INT32		sTempDestGridNo;
 	INT32 sNewGridNo;
 	BOOLEAN	fSwapInDoor = FALSE;
 
@@ -499,7 +499,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 {
 	// Buddy is waiting to continue his path
 	INT8		bBlocked, bPathBlocked;
-	INT16		sCost;
+	INT32		sCost;
 	INT32 sNewGridNo, sCheckGridNo;
 	UINT8		ubDirection, bCauseDirection;
 	UINT8		ubPerson;
@@ -598,7 +598,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 					gfPlotPathToExitGrid = TRUE;
 				}
 
-				sCost = (INT16) FindBestPath( pSoldier, sCheckGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, fFlags );
+				sCost = FindBestPath( pSoldier, sCheckGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, fFlags );
 				gfPlotPathToExitGrid = FALSE;
 				
 				// Can we get there
@@ -618,7 +618,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 							gfPlotPathToExitGrid = TRUE;
 						}
 
-						sCost = (INT16) FindBestPath( pSoldier, sCheckGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_IGNORE_PERSON_AT_DEST );
+						sCost = FindBestPath( pSoldier, sCheckGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_IGNORE_PERSON_AT_DEST );
 
 						gfPlotPathToExitGrid = FALSE;
 

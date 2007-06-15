@@ -1220,7 +1220,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					if ( fPathingForPlayer && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT )
 					{
 						// check door status
-						pDoorStatus = GetDoorStatus( (INT16) iDoorGridNo );
+						pDoorStatus = GetDoorStatus( iDoorGridNo );
 						if (pDoorStatus)
 						{
 							fDoorIsOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
@@ -1234,7 +1234,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					else
 					{
 						// check door structure
-						pDoorStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
+						pDoorStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
 						if (pDoorStructure)
 						{
 							fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
@@ -2766,7 +2766,7 @@ UINT8 InternalDoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMov
 		if ( fReturnPerceivedValue && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT )
 		{
 			// check door status
-			pDoorStatus = GetDoorStatus( (INT16) iDoorGridNo );
+			pDoorStatus = GetDoorStatus( iDoorGridNo );
 			if (pDoorStatus)
 			{
 				fDoorIsOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
@@ -2780,7 +2780,7 @@ UINT8 InternalDoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMov
 		else
 		{
 			// check door structure
-			pDoorStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
+			pDoorStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
 			if (pDoorStructure)
 			{
 				fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;

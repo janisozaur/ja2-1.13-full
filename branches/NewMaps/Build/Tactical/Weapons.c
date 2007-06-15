@@ -2267,7 +2267,7 @@ void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 {
 	STRUCTURE *			pWallAndWindow;
 	DB_STRUCTURE *	pWallAndWindowInDB;
-	INT16						sShatterGridNo;
+	INT32						sShatterGridNo;
 	UINT16					usTileIndex;
 	ANITILE *			pNode;
 	ANITILE_PARAMS	AniParams;
@@ -2391,7 +2391,7 @@ void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 
 BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
-	 INT16								sRange;	
+	 INT32								sRange;	
 	 UINT16								usInHand;
 
 	 usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -2399,7 +2399,7 @@ BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	 if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_THROWING_KNIFE  )
 	 {
 		 // Determine range
-		 sRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
+		 sRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
 		 if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
 		 {
@@ -4281,7 +4281,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTi
 	}
 
 	// calculate actual range (in world units)
-	iRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
+	iRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
 	//NumMessage("ACTUAL RANGE = ",range);
 

@@ -99,7 +99,7 @@ INT16   gsExitGUIAdditionalData;
 INT16   gsWarpWorldX;
 INT16   gsWarpWorldY;
 INT8    gbWarpWorldZ;
-INT16   gsWarpGridNo;
+INT32   gsWarpGridNo;
 
 
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct 

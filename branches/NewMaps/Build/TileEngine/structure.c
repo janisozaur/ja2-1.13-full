@@ -524,7 +524,7 @@ BOOLEAN OkayToAddStructureToTile( INT32 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 	STRUCTURE *			pOtherExistingStructure;
 	INT8						bLoop, bLoop2;
 	INT32 sGridNo;
-	INT16						sOtherGridNo;
+	INT32						sOtherGridNo;
 
 	ppTile = pDBStructureRef->ppTile;
 	sGridNo = sBaseGridNo + ppTile[ubTileIndex]->sPosRelToBase;
@@ -1057,7 +1057,7 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 	BOOLEAN								fMultiStructure;
 	BOOLEAN								fRecompileMPs;
 	BOOLEAN								fRecompileExtraRadius; // for doors... yuck
-	INT16									sCheckGridNo;
+	INT32									sCheckGridNo;
 
 	CHECKF( pStructure );
 

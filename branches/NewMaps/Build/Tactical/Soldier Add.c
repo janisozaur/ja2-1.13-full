@@ -1080,7 +1080,7 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 	UINT8					ubDirection, ubCalculatedDirection;
 	SOLDIERTYPE		*pSoldier;
 	INT32 sGridNo;
-	INT16					sExitGridNo;
+	INT32					sExitGridNo;
 
 	pSoldier = MercPtrs[ ubID ];
 	
@@ -1227,7 +1227,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
+	INT32 sGoodGridNo;
 	UINT16	usAnim = SLEEPING;
 
 	if ( !pSoldier->bInSector )
@@ -1274,7 +1274,7 @@ void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
+	INT32 sGoodGridNo;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1310,7 +1310,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
+	INT32 sGoodGridNo;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1345,7 +1345,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
+	INT32 sGoodGridNo;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1380,7 +1380,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
+	INT32 sGoodGridNo;
 
 	if ( !pSoldier->bInSector )
 	{

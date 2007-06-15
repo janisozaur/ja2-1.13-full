@@ -901,7 +901,7 @@ void SetCivilianDestination(UINT8 ubWho, INT32 sGridNo)
 
 #define RADIUS 3
 
-INT16 TrackScent( SOLDIERTYPE * pSoldier )
+INT32 TrackScent( SOLDIERTYPE * pSoldier )
 {
 	// This function returns the best gridno to go to based on the scent being followed,
 	// and the soldier (creature/animal)'s current direction (which is used to resolve
@@ -1014,8 +1014,8 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 	}
 	if (iBestGridNo != NOWHERE )
 	{
-		pSoldier->usActionData = (INT16) iBestGridNo;
-		return( (INT16) iBestGridNo );
+		pSoldier->usActionData = iBestGridNo;
+		return( iBestGridNo );
 	}
 	return( 0 );
 }
