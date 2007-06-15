@@ -79,7 +79,7 @@ BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 // Disgusting hacks: have to keep track of these values for accesses in callbacks
 static SOLDIERTYPE *	gpTempSoldier;
-static INT32					gsTempGridno;
+static INT32					gsTempGridNo;
 static INT8						bTempFrequency;
 
 void BombMessageBoxCallBack( UINT8 ubExitValue );
@@ -1790,7 +1790,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT32 sGr
 	}
 
 	gpTempSoldier = pSoldier;
-	gsTempGridno = sGridNo;
+	gsTempGridNo = sGridNo;
 	SetCustomizableTimerCallbackAndDelay( 1000, CheckForPickedOwnership, TRUE );
 }
 
@@ -2557,7 +2557,7 @@ void LoopLevelNodeForShowThroughFlag( LEVELNODE *pNode, INT32 sGridNo, UINT8 ubL
 			if ( ubLevel == 0 )
 			{
 				// If we are in a room....
-				// if ( IsRoofPresentAtGridno( sGridNo ) || gfCaves || gfBasement )
+				// if ( IsRoofPresentAtGridNo( sGridNo ) || gfCaves || gfBasement )
 				{
 					pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
 				}
@@ -4003,7 +4003,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT32 sGridNo )
 	UINT8 ubRoom;
 
 	gpTempSoldier = pSoldier;
-	gsTempGridno = sGridNo;
+	gsTempGridNo = sGridNo;
 	if (pSoldier->inv[HANDPOS].usItem == REMOTEBOMBTRIGGER)
 	{
 		DoMessageBox( MSG_BOX_BASIC_SMALL_BUTTONS, TacticalStr[ CHOOSE_BOMB_FREQUENCY_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL );
@@ -4133,7 +4133,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
 				gpTempSoldier->inv[HANDPOS].ubBombOwner = gpTempSoldier->ubID + 2;
-				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				AddItemToPool( gsTempGridNo, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
 				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
 			}
 		}
@@ -4554,7 +4554,7 @@ void SwitchMessageBoxCallBack( UINT8 ubExitValue )
 	}
 }
 
-BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT32 * psProblemGridNo )
+BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridNo, INT32 * psProblemGridNo )
 {
 	INT32						sNextGridNo;
 	// BOOLEAN fWorthChecking = FALSE, fProblemExists = FALSE, fDetectedProblem = FALSE;
@@ -4611,9 +4611,9 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN f
 	// check every tile around gridno for the presence of "nasty stuff"
 	for (ubDirection = 0; ubDirection < 8; ubDirection++)
 	{
-		if ( fCheckAroundGridno )
+		if ( fCheckAroundGridNo )
 		{
-			// get the gridno of the next spot adjacent to lastGridno in that direction
+			// get the gridno of the next spot adjacent to lastGridNo in that direction
 			sNextGridNo = NewGridNo( sGridNo, (INT16) DirectionInc( (UINT8) ubDirection ) );
 
 			// don't check directions that are impassable!
@@ -4865,7 +4865,7 @@ void CheckForPickedOwnership( void )
 	UINT8							ubLoop;
 
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	GetItemPool( gsTempGridno, &pItemPool, gpTempSoldier->bLevel );
+	GetItemPool( gsTempGridNo, &pItemPool, gpTempSoldier->bLevel );
 
 	while( pItemPool )
 	{

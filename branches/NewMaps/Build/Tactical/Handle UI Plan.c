@@ -98,7 +98,7 @@ BOOLEAN AddUIPlan( INT32 sGridNo, UINT8 ubPlanID )
 					}
 				}
 
-				// Get XY from Gridno
+				// Get XY from GridNo
 				ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
 
 				EVENT_SetSoldierPosition( pPlanSoldier, sXPos, sYPos );
@@ -144,7 +144,7 @@ BOOLEAN AddUIPlan( INT32 sGridNo, UINT8 ubPlanID )
 	{
  	  sAPCost = CalcTotalAPsToAttack( gpUIPlannedSoldier, sGridNo, TRUE, (INT8)(gpUIPlannedSoldier->bShownAimTime /2) );
 
-		// Get XY from Gridno
+		// Get XY from GridNo
 		ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
 
 

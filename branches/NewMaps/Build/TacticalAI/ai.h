@@ -141,9 +141,9 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
 INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale);
-void CallAvailableEnemiesTo(INT32 sGridno);
+void CallAvailableEnemiesTo(INT32 sGridNo);
 void CallAvailableKingpinMenTo( INT32 sGridNo );
-void CallAvailableTeamEnemiesTo( INT32 sGridno, INT8 bTeam );
+void CallAvailableTeamEnemiesTo( INT32 sGridNo, INT8 bTeam );
 void CallEldinTo( INT32 sGridNo );
 void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce);
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
@@ -169,7 +169,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
 
-INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno);
+INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo);
 INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
 INT32 FindClosestDoor( SOLDIERTYPE * pSoldier );
 INT32 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
@@ -204,14 +204,14 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);
 
 void InitPanicSystem();
-BOOLEAN InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridno);
+BOOLEAN InWaterOrGas(SOLDIERTYPE *pSoldier, INT32 sGridNo);
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
 BOOLEAN InitAI( void );
 
 void MakeClosestEnemyChosenOne();
 void ManChecksOnFriends(SOLDIERTYPE *pSoldier);
 
-void NewDest(SOLDIERTYPE *pSoldier, INT32 sGridno);
+void NewDest(SOLDIERTYPE *pSoldier, INT32 sGridNo);
 INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
@@ -219,16 +219,16 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);
 
 INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier);
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier);
-INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT32 *pFromGridno);
+INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT32 *pFromGridNo);
 
-void SetCivilianDestination(UINT8 ubWho, INT32 sGridno);
+void SetCivilianDestination(UINT8 ubWho, INT32 sGridNo);
 void SetNewSituation( SOLDIERTYPE * pSoldier );
 
 UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier );
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier);
 void StartNPCAI(SOLDIERTYPE *pSoldier);
 void TempHurt(SOLDIERTYPE *pVictim, SOLDIERTYPE *pAttacker);
-int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT32 sGridno);
+int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT32 sGridNo);
 
 BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection );
 

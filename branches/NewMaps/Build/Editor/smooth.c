@@ -96,10 +96,10 @@ INT16 gbSmoothWaterStruct[] =
 		-1
 };
 	 
-BOOLEAN HigherLevel( INT32 gridno, UINT8 NewLevel  );
-BOOLEAN ContainsWater( INT32 gridno );
+BOOLEAN HigherLevel( INT32 GridNo, UINT8 NewLevel  );
+BOOLEAN ContainsWater( INT32 GridNo );
 
-void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
+void SmoothTerrain(int GridNo, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	int temp=0,type=0;
 	int FullTile = FALSE;
@@ -118,13 +118,13 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// SmoothWaterTerrain rather than the proceeding method
 	if( origType==REGWATERTEXTURE)
 	{
-    SmoothWaterTerrain( gridno, origType, piNewTile, TRUE);
+    SmoothWaterTerrain( GridNo, origType, piNewTile, TRUE);
 		return;
 	}
 	pSmoothStruct = gbSmoothStruct;
 
 	// Get land index value for given level and adjust according to type
-	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
+	if ( TypeExistsInLandLayer( GridNo, origType, &usTileIndex ) )
 	{
 		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
 	}
@@ -147,9 +147,9 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	}
 
 	// is land height one tile above not the same type?
-	if ( (gridno- WORLD_COLS ) >= 0 )
+	if ( (GridNo - WORLD_COLS ) >= 0 )
 	{
-		if ( !TypeExistsInLandLayer( gridno - WORLD_COLS, origType, &usTempIndex ) )
+		if ( !TypeExistsInLandLayer( GridNo - WORLD_COLS, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=3;
@@ -157,9 +157,9 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	}
 	// is land height one tile to the right not the same type?
 	// (make sure there IS a tile to the right, i.e. check for border)
-	if ((gridno+1)% WORLD_COLS !=0)
+	if ((GridNo+1)% WORLD_COLS !=0)
 	{
-		if ( !TypeExistsInLandLayer( gridno+1, origType, &usTempIndex ) )
+		if ( !TypeExistsInLandLayer( GridNo+1, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=5;
@@ -167,9 +167,9 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	}
 
 	// is land height one tile down not the same type?
-	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
+	if ( (GridNo + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if ( !TypeExistsInLandLayer( gridno + WORLD_COLS, origType, &usTempIndex ) )
+		if ( !TypeExistsInLandLayer( GridNo + WORLD_COLS, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=7;
@@ -177,9 +177,9 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	}
 
 	// is land height one tile to left not the same type?
-	if (gridno % WORLD_COLS!=0)
+	if (GridNo % WORLD_COLS!=0)
 	{
-		if ( !TypeExistsInLandLayer( gridno-1, origType, &usTempIndex ) )
+		if ( !TypeExistsInLandLayer( GridNo-1, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=11;
@@ -193,7 +193,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	cnt = 0;
 	fFound = FALSE;
 
-	GetLandHeadType( gridno, &uiTopType );
+	GetLandHeadType( GridNo, &uiTopType );
 
 	while( pSmoothStruct[ cnt ] != -1 )
 	{
@@ -275,7 +275,7 @@ void SmoothExitGridRadius( INT32 sMapIndex, UINT8 ubRadius )
 	}
 }
 
-void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
+void SmoothExitGrid(int GridNo, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	int temp=0,type=0;
 	int FullTile = FALSE;
@@ -293,7 +293,7 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	pSmoothStruct = gbSmoothStruct;
 
 	// Get Object index value for given level and adjust according to type
-	if ( TypeExistsInShadowLayer( gridno, EXITTEXTURE, &usTileIndex ) )
+	if ( TypeExistsInShadowLayer( GridNo, EXITTEXTURE, &usTileIndex ) )
 	{
 		GetTypeSubIndexFromTileIndex( EXITTEXTURE, usTileIndex, &usOldIndex );
 	}
@@ -316,9 +316,9 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	}
 
 	// is Object height one tile above not the same type?
-	if ( (gridno- WORLD_COLS ) >= 0 )
+	if ( (GridNo - WORLD_COLS ) >= 0 )
 	{
-		if ( !TypeExistsInShadowLayer( gridno - WORLD_COLS, EXITTEXTURE, &usTempIndex ) )
+		if ( !TypeExistsInShadowLayer( GridNo - WORLD_COLS, EXITTEXTURE, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=3;
@@ -326,9 +326,9 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	}
 	// is Object height one tile to the right not the same type?
 	// (make sure there IS a tile to the right, i.e. check for border)
-	if ((gridno+1)% WORLD_COLS !=0)
+	if ((GridNo+1)% WORLD_COLS !=0)
 	{
-		if ( !TypeExistsInShadowLayer( gridno+1, EXITTEXTURE, &usTempIndex ) )
+		if ( !TypeExistsInShadowLayer( GridNo+1, EXITTEXTURE, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=5;
@@ -336,9 +336,9 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	}
 
 	// is Object height one tile down not the same type?
-	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
+	if ( (GridNo + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if ( !TypeExistsInShadowLayer( gridno + WORLD_COLS, EXITTEXTURE, &usTempIndex ) )
+		if ( !TypeExistsInShadowLayer( GridNo + WORLD_COLS, EXITTEXTURE, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=7;
@@ -346,9 +346,9 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	}
 
 	// is Object height one tile to left not the same type?
-	if (gridno % WORLD_COLS!=0)
+	if (GridNo % WORLD_COLS!=0)
 	{
-		if ( !TypeExistsInShadowLayer( gridno-1, EXITTEXTURE, &usTempIndex ) )
+		if ( !TypeExistsInShadowLayer( GridNo-1, EXITTEXTURE, &usTempIndex ) )
 		{
 			// no it's not
 			temp+=11;
@@ -541,7 +541,7 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 	}
 }
 
-void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
+void SmoothWaterTerrain( int GridNo, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	// This procedure will calculate the approriate smooth texture for a water texture
 	// based on the surrounding water textures. This is done via masking bits within 
@@ -561,7 +561,7 @@ void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fF
 
 	pSmoothStruct = gbSmoothWaterStruct;
 	// Get land index value for given level and adjust according to type
-	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
+	if ( TypeExistsInLandLayer( GridNo, origType, &usTileIndex ) )
 	{
 		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
 	}
@@ -582,9 +582,9 @@ void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fF
 		}
 	}
 	// Mask approriate bits in temp for the lookup in the SmoothWaterStruct list
-	if ( (gridno- WORLD_COLS ) >= 0 )
+	if ( (GridNo - WORLD_COLS ) >= 0 )
 	{
-		if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS, origType, origType, &usTempIndex ) )
+		if ( TypeRangeExistsInLandLayer( GridNo - WORLD_COLS, origType, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp|=4;
@@ -592,79 +592,79 @@ void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fF
 	}
 	// is land height one tile to the right not the same type?
 	// (make sure there IS a tile to the right, i.e. check for border)
-	if ((gridno+1)% WORLD_COLS !=0)
+	if ((GridNo+1)% WORLD_COLS !=0)
 	{
-		if ( TypeRangeExistsInLandLayer( gridno + 1, origType, origType, &usTempIndex ) )
+		if ( TypeRangeExistsInLandLayer( GridNo + 1, origType, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp|=64;
 		}
 	}
 	// is land height one tile down not the same type?
-	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
+	if ( (GridNo + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS, origType, origType, &usTempIndex ) )
+		if ( TypeRangeExistsInLandLayer( GridNo + WORLD_COLS, origType, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp|=256;
 		}
 	}
 	// is land height one tile to left not the same type?
-	if (gridno % WORLD_COLS!=0)
+	if (GridNo % WORLD_COLS!=0)
 	{
-		if ( TypeRangeExistsInLandLayer( gridno - 1, origType, origType, &usTempIndex ) )
+		if ( TypeRangeExistsInLandLayer( GridNo - 1, origType, origType, &usTempIndex ) )
 		{
 			// no it's not
 			temp|=16;
 		}
 	}
-	if ((gridno+1)% WORLD_COLS !=0)
+	if ((GridNo+1)% WORLD_COLS !=0)
 	{
 
-		if ( (gridno- WORLD_COLS ) >= 0 )
+		if ( (GridNo - WORLD_COLS ) >= 0 )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS + 1, origType, origType, &usTempIndex ) )
+			if ( TypeRangeExistsInLandLayer( GridNo - WORLD_COLS + 1, origType, origType, &usTempIndex ) )
 			{
 				// no it's not
 				temp|=8;
 			}
 		}
 	}
-	if (gridno % WORLD_COLS!=0)
+	if (GridNo % WORLD_COLS!=0)
 	{
-		if ( (gridno- WORLD_COLS ) >= 0 )
+		if ( (GridNo- WORLD_COLS ) >= 0 )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS - 1, origType, origType, &usTempIndex ) )
+			if ( TypeRangeExistsInLandLayer( GridNo - WORLD_COLS - 1, origType, origType, &usTempIndex ) )
 			{
 				// no it's not
 				temp|=2;
 			}
 		}
 	}
-	if ((gridno+1)% WORLD_COLS !=0)
+	if ((GridNo+1)% WORLD_COLS !=0)
 	{
-		if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
+		if ( (GridNo + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS + 1, origType, origType, &usTempIndex ) )
+			if ( TypeRangeExistsInLandLayer( GridNo + WORLD_COLS + 1, origType, origType, &usTempIndex ) )
 			{
 				// no it's not
 				temp|=512;
 			}
 		}
 	}
-	if (gridno % WORLD_COLS!=0)
+	if (GridNo % WORLD_COLS!=0)
 	{
-		if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
+		if ( (GridNo + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 		{
 
-			if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS - 1, origType, origType, &usTempIndex ) )
+			if ( TypeRangeExistsInLandLayer( GridNo + WORLD_COLS - 1, origType, origType, &usTempIndex ) )
 			{
 				// no it's not
 				temp|=128;
 			}
 		}
 	}
-	if ( TypeRangeExistsInLandLayer( gridno, origType, origType, &usTempIndex ) )
+	if ( TypeRangeExistsInLandLayer( GridNo, origType, origType, &usTempIndex ) )
 	{
 		// no it's not
 		temp|=32;
@@ -672,7 +672,7 @@ void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fF
 	// Loop through smooth struct
 	cnt = 0;
 	fFound = FALSE;
-	GetLandHeadType( gridno, &uiTopType );
+	GetLandHeadType( GridNo, &uiTopType );
 	// Speed up of this while loop  using double/quick search will result 
 	// in an incorrect solution due to multiple instances of bitvalues in the list of 
 	// smoothed water textures

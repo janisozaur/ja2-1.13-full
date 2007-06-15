@@ -2483,7 +2483,7 @@ void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT32 sNewGridNo, BOOLEAN fForceRe
 		pSoldier->sZLevelOverride = -1;
 		// If we are over a fence ( hopping ), make us higher!
 
-		if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
+		if ( IsJumpableFencePresentAtGridNo( sNewGridNo ) )
 		{
 			 //sX = MapX( sNewGridNo );
 			 //sY = MapY( sNewGridNo );
@@ -4731,7 +4731,7 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
 		pSoldier->bShock /= 2;
 
 		// if this person has heard a noise that hasn't been investigated
-		if (pSoldier->sNoiseGridno != NOWHERE)
+		if (pSoldier->sNoiseGridNo != NOWHERE)
 		{
 			if (pSoldier->ubNoiseVolume)	// and the noise volume is still positive
 			{
@@ -4739,7 +4739,7 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
 
 				if (!pSoldier->ubNoiseVolume)	// if the volume has reached zero
 				{
-					pSoldier->sNoiseGridno = NOWHERE;		// forget about the noise!
+					pSoldier->sNoiseGridNo = NOWHERE;		// forget about the noise!
 				}
 			}
 		}
@@ -8074,7 +8074,7 @@ LEVELNODE *GetAnimProfileFlags( INT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **pp
 }
 
 
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sTestGridNo, UINT16 *usFlags )
+BOOLEAN GetProfileFlagsFromGridNo( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sTestGridNo, UINT16 *usFlags )
 {
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;

@@ -611,7 +611,7 @@ typedef struct
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
 	INT32											  usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
-	INT32												sNoiseGridno;
+	INT32												sNoiseGridNo;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;
 	UINT8												ubXRayedBy;
@@ -722,7 +722,7 @@ typedef struct
 	BOOLEAN												fDoSpread;
 	INT32												sStartGridNo;	
 	INT32												sEndGridNo;	
-	INT32												sForcastGridno;
+	INT32												sForcastGridNo;
 	INT16												sZLevelOverride;
 	INT8												bMovedPriorToInterrupt;
 	INT32												iEndofContractTime;				// time, in global time(resolution, minutes) that merc will leave, or if its a M.E.R.C. merc it will be set to -1.  -2 for NPC and player generated
@@ -1099,7 +1099,7 @@ void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo );
 
 void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN fRemove );
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sTestGridNo, UINT16 *usFlags );
+BOOLEAN GetProfileFlagsFromGridNo( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sTestGridNo, UINT16 *usFlags );
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
 void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );

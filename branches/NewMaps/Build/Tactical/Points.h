@@ -273,7 +273,7 @@
 
 UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj );
 
-INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8 bLevel );
+INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, INT8 bLevel );
 INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode  );
 INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength );
 BOOLEAN SelectedMercCanAffordMove(  );
@@ -282,19 +282,19 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLE
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );
 INT16 AdjustBreathPts(SOLDIERTYPE *pSold, INT16 sBPCost);
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
-INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridno,INT8 bDir, UINT16 usMovementMode);
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost);
+INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridNo,INT8 bDir, UINT16 usMovementMode);
+UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost);
 INT8  MinPtsToMove(SOLDIERTYPE *pSoldier);
 INT8 MinAPsToStartMovement( SOLDIERTYPE * pSoldier, UINT16 usMovementMode );
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection );
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost );
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost );
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos );
-UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost );
-UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
+UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost );
+UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
 UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );

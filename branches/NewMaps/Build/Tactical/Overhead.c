@@ -2940,7 +2940,7 @@ void LocateGridNo( INT32 sGridNo )
 
 
 
-void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
+void SlideTo(INT32 sGridNo, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
 {
 	INT32 cnt;
 
@@ -3216,7 +3216,7 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 					if (pOther && pOther->bActive && pOther->bInSector && pOther->bLife >= OKLIFE )
 					{
 						// try to make sure he isn't cowering etc
-						pOther->sNoiseGridno = NOWHERE;
+						pOther->sNoiseGridNo = NOWHERE;
 						pOther->bAlertStatus = STATUS_GREEN;
 						TriggerNPCRecord( MANNY, 10 );
 					}
@@ -5076,7 +5076,7 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT32 usMapPos )
 	BOOLEAN fVisible;
 
 	// Check if a hidden tile exists but is not revealed
-	if ( DoesGridnoContainHiddenStruct( usMapPos, &fVisible ) )
+	if ( DoesGridNoContainHiddenStruct( usMapPos, &fVisible ) )
 	{
 		if ( !fVisible )
 		{
@@ -6150,7 +6150,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				{
 					pTeamSoldier->bAlertStatus = STATUS_GREEN;
 					CheckForChangingOrders( pTeamSoldier );
-					pTeamSoldier->sNoiseGridno = NOWHERE;
+					pTeamSoldier->sNoiseGridNo = NOWHERE;
 					pTeamSoldier->ubNoiseVolume = 0;
 					pTeamSoldier->bNewSituation = FALSE;
 					pTeamSoldier->bOrders = STATIONARY;
@@ -6169,7 +6169,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
 					pTeamSoldier->bAlertStatus = STATUS_GREEN;
-					pTeamSoldier->sNoiseGridno = NOWHERE;
+					pTeamSoldier->sNoiseGridNo = NOWHERE;
 					pTeamSoldier->ubNoiseVolume = 0;
 					pTeamSoldier->bNewSituation = FALSE;
 					CheckForChangingOrders( pTeamSoldier );

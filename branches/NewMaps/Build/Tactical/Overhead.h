@@ -89,7 +89,7 @@ typedef struct
 	INT16								sSlideReason;
 	UINT32							uiTimeSinceMercAIStart;
 	INT8								fPanicFlags;
-	INT32								sPanicTriggerGridnoUnused;
+	INT32								sPanicTriggerGridNoUnused;
 	INT16								sHandGrid;
 	UINT8								ubSpottersCalledForBy;
 	UINT8								ubTheChosenOne;
@@ -246,7 +246,7 @@ void LocateGridNo( INT32 sGridNo );
 void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
-void SlideTo(INT32 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
+void SlideTo(INT32 sGridNo, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;
 void SlideToLocation( UINT16 usReasonID, INT32 sDestGridNo );
 
 void RebuildAllSoldierShadeTables( );

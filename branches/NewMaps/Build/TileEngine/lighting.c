@@ -2310,7 +2310,7 @@ BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 		fDoLeftWalls=FALSE;
 
 	// IF A FENCE, RETURN FALSE
-	if ( IsFencePresentAtGridno( (INT16)uiTile ) )
+	if ( IsFencePresentAtGridNo( uiTile ) )
 	{
 		return( FALSE );
 	}

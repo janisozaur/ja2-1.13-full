@@ -592,7 +592,7 @@ int x,dif,absDif;
  // This function calculates the general LEFT / RIGHT direction of a gridno
  // based on the middle of your screen.
 
- x = Gridx(gridno);
+ x = Gridx(GridNo);
 
  dif = ScreenMiddleX - x;
 

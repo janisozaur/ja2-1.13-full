@@ -43,9 +43,9 @@ void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 
 
 // GRID NO MANIPULATION FUNCTIONS
-INT32 NewGridNo(INT32 sGridno, INT16 sDirInc);
+INT32 NewGridNo(INT32 sGridNo, INT16 sDirInc);
 INT16 DirectionInc(INT16 sDirection);
-INT32 OutOfBounds(INT32 sGridno, INT32 sProposedGridno);
+INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
 
  
 // Functions
@@ -99,10 +99,10 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest);
 
 
 // Returns the (center ) cell coordinates in X
-INT16 CenterX( INT32 sGridno );
+INT16 CenterX( INT32 sGridNo );
 
 // Returns the (center ) cell coordinates in Y
-INT16 CenterY( INT32 sGridno );
+INT16 CenterY( INT32 sGridNo );
 
 INT16 MapX( INT32 sGridNo );
 INT16 MapY( INT32 sGridNo );

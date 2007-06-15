@@ -115,7 +115,7 @@ void MakeClosestEnemyChosenOne()
 		
 			// if he can't get to a spot where he could get at the panic trigger
 			/*
-			if ( FindAdjacentGridEx( pSoldier, gTacticalStatus.sPanicTriggerGridno, &ubDirection, &sAdjSpot, FALSE, FALSE ) == -1 )
+			if ( FindAdjacentGridEx( pSoldier, gTacticalStatus.sPanicTriggerGridNo, &ubDirection, &sAdjSpot, FALSE, FALSE ) == -1 )
 			{
 				pSoldier->bHasKeys = bOldKeys;
 				continue;          // next merc
@@ -370,7 +370,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 
 #ifdef DEBUGDECISIONS
 							sprintf(tempstr,"%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)",
-								pSoldier->name,pSoldier->usActionData,PanicTriggerGridno);
+								pSoldier->name,pSoldier->usActionData,PanicTriggerGridNo);
 							AIPopMessage(tempstr);
 #endif
 

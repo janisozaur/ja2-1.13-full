@@ -2273,7 +2273,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
     else
     {
       // If a roof does not exist here, make level = 0
-      if ( !IsRoofPresentAtGridno( sNewGridNo ) )
+      if ( !IsRoofPresentAtGridNo( sNewGridNo ) )
       {
         bSpewBloodLevel = 0;
       }

@@ -722,7 +722,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 							// Move WEST
 							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( WEST ) );
 
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 							if ( pNewNode != NULL )
 							{
@@ -754,7 +754,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 							// Move in EAST
 							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
 
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 							if ( pNewNode != NULL )
 							{
@@ -869,7 +869,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 							// Move in NORTH
 							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
 
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 							if ( pNewNode != NULL )
 							{
@@ -900,7 +900,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 							// Move in SOUTH
 							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
 
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 							if ( pNewNode != NULL )
 							{

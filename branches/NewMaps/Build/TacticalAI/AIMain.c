@@ -858,7 +858,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 
 
-BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridno)
+BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pOurTeam;
@@ -870,7 +870,7 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridno)
 	{
 		if ( pOurTeam->bActive )
 		{
-			if (pOurTeam->sGridNo == sGridno || pOurTeam->usActionData == sGridno)
+			if (pOurTeam->sGridNo == sGridNo || pOurTeam->usActionData == sGridNo)
 				return(FALSE);
 		}
 	}
@@ -879,25 +879,25 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridno)
 }
 
 
-INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridno)
+INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	INT32 cnt;
 	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
-	INT32 sTempGridno, sCheapestDest=NOWHERE;
+	INT32 sTempGridNo, sCheapestDest=NOWHERE;
 	INT16 sCheapestCost=500, sMovementCost;
 
 	for (cnt=0; cnt < 4; cnt++)
 	{
-		sTempGridno = sGridno + mods[cnt];
-		if (!OutOfBounds(sGridno,sTempGridno))
+		sTempGridNo = sGridNo + mods[cnt];
+		if (!OutOfBounds(sGridNo,sTempGridNo))
 		{
-			if (NewOKDestination(pSoldier,sTempGridno,PEOPLETOO, pSoldier->bLevel ) && DestNotSpokenFor(pSoldier,sTempGridno))
+			if (NewOKDestination(pSoldier,sTempGridNo,PEOPLETOO, pSoldier->bLevel ) && DestNotSpokenFor(pSoldier,sTempGridNo))
 			{
-				sMovementCost = PlotPath(pSoldier,sTempGridno,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0);
+				sMovementCost = PlotPath(pSoldier,sTempGridNo,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0);
 				if (sMovementCost < sCheapestCost)
 				{
 					sCheapestCost	= sMovementCost;  
-					sCheapestDest = sTempGridno;
+					sCheapestDest = sTempGridNo;
 				}
 
 			}
@@ -1454,17 +1454,17 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier)
 /*
 void RestoreMarkedMines()
 {
- int gridno;
+ int GridNo;
 
  // all tiles marked with the special NPC mine cost value must be restored
- for (gridno = 0; gridno < GRIDSIZE; gridno++)
+ for (GridNo = 0; GridNo < GRIDSIZE; GridNo++)
   {
-   if (GridCost[gridno] == NPCMINECOST)
+   if (GridCost[GridNo] == NPCMINECOST)
     {
-     GridCost[gridno] = BackupGridCost[gridno];
+     GridCost[GridNo] = BackupGridCost[GridNo];
 
 #ifdef TESTMINEMARKING
-     fprintf(NetDebugFile,"\tRestoring marked mine at gridno %d back to gridCost %d\n",gridno,BackupGridCost[gridno]);
+     fprintf(NetDebugFile,"\tRestoring marked mine at gridno %d back to gridCost %d\n",GridNo,BackupGridCost[GridNo]);
 #endif
     }
   }
@@ -1476,7 +1476,7 @@ void RestoreMarkedMines()
 
 void MarkDetectableMines(SOLDIERTYPE *pSoldier)
 {
- int gridno,detectLevel;
+ int GridNo,detectLevel;
  GRIDINFO *gpSoldier;
 
 
@@ -1505,7 +1505,7 @@ void MarkDetectableMines(SOLDIERTYPE *pSoldier)
 
 
  // check every tile, looking for BURIED mines only
- for (gridno = 0,gpSoldier = &Grid[0]; gridno < GRIDSIZE; gridno++,gpSoldier++)
+ for (GridNo = 0,gpSoldier = &Grid[0]; GridNo < GRIDSIZE; GridNo++,gpSoldier++)
   {
    // if there's a valid object there, and it is still "buried"
    if ((gpSoldier->object < 255) &&
@@ -1516,7 +1516,7 @@ void MarkDetectableMines(SOLDIERTYPE *pSoldier)
      if (detectLevel >= ObjList[gpSoldier->object].trap)
       {
        // bingo!  Mark it as "unpassable" for the purposes of the path AI
-       GridCost[gridno] = NPCMINECOST;
+       GridCost[GridNo] = NPCMINECOST;
        MarkedNPCMines = TRUE;
 
 #ifdef TESTMINEMARKING
@@ -2362,7 +2362,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		case AI_ACTION_USE_DETONATOR: 
 			//gTacticalStatus.fPanicFlags					= 0; // turn all flags off
 			gTacticalStatus.ubTheChosenOne			= NOBODY;
-			//gTacticalStatus.sPanicTriggerGridno	= NOWHERE;
+			//gTacticalStatus.sPanicTriggerGridNo	= NOWHERE;
 
 		  // grab detonator and set off bomb(s)
 			DeductPoints( pSoldier, AP_USE_REMOTE, BP_USE_DETONATOR);// pay for it!
@@ -2745,7 +2745,7 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 					#endif
 						pSoldier->bAlertStatus = STATUS_YELLOW;    // also get suspicious
 						SetNewSituation( pSoldier );
-						pSoldier->sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
+						pSoldier->sNoiseGridNo = pFriend->sGridNo;  // pretend FRIEND made noise
 						pSoldier->ubNoiseVolume = 3;                // remember this for 3 turns
 						// keep check other friends, too, in case any are already on RED
 					}

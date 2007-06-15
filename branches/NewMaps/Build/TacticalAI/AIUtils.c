@@ -808,7 +808,7 @@ INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	#ifdef BETAVERSION
 				if ((sRandDest < 0) || (sRandDest >= GRIDSIZE))
 				{
-					NumMessage("RandDestWithinRange: ERROR - Gridno out of range! = ",sRandDest);
+					NumMessage("RandDestWithinRange: ERROR - GridNo out of range! = ",sRandDest);
 					sRandDest = random(GRIDSIZE);
 				}
 	#endif
@@ -866,7 +866,7 @@ INT32 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	*pfChangeLevel = FALSE;
 
 	pubNoiseVolume = &gubPublicNoiseVolume[pSoldier->bTeam];
-	pusNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
+	pusNoiseGridNo = &gsPublicNoiseGridNo[pSoldier->bTeam];
 	pbNoiseLevel = &gbPublicNoiseLevel[pSoldier->bTeam];
 
 	// hang pointers at start of this guy's personal and public opponent opplists
@@ -968,16 +968,16 @@ INT32 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	}
 
 	// if any "misc. noise" was also heard recently
-	if (pSoldier->sNoiseGridno != NOWHERE && pSoldier->sNoiseGridno != sClosestDisturbance)
+	if (pSoldier->sNoiseGridNo != NOWHERE && pSoldier->sNoiseGridNo != sClosestDisturbance)
 	{
 		// test this gridno, too
-		sGridNo = pSoldier->sNoiseGridno;
+		sGridNo = pSoldier->sNoiseGridNo;
 		bLevel = pSoldier->bNoiseLevel;
 
 		// if we are there (at the noise gridno)
 		if (sGridNo == pSoldier->sGridNo)
 		{
-			pSoldier->sNoiseGridno = NOWHERE;        // wipe it out, not useful anymore
+			pSoldier->sNoiseGridNo = NOWHERE;        // wipe it out, not useful anymore
 			pSoldier->ubNoiseVolume = 0;
 		}
 		else

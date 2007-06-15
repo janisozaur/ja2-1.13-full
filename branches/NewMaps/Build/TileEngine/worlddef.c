@@ -2141,7 +2141,7 @@ void OptimizeMapForShadows( )
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
 		// CHECK IF WE ARE A TREE HERE
-		if ( IsTreePresentAtGridno( cnt ) )
+		if ( IsTreePresentAtGridNo( cnt ) )
 		{
 			// CHECK FOR A STRUCTURE A FOOTPRINT AWAY
 			for ( dir = 0; dir < NUM_DIR_SEARCHES; dir++ )

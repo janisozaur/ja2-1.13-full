@@ -532,8 +532,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: End Hop Fence
 					// MOVE TO FORCASTED GRIDNO
-					sX = CenterX( pSoldier->sForcastGridno );
-					sY = CenterY( pSoldier->sForcastGridno );
+					sX = CenterX( pSoldier->sForcastGridNo );
+					sY = CenterY( pSoldier->sForcastGridNo );
 
 					EVENT_InternalSetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, FALSE, FALSE );
 					EVENT_SetSoldierDirection( pSoldier,  gTwoCDirection[ pSoldier->bDirection ] );
@@ -784,7 +784,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// MOVE TWO FACGIN GRIDNOS
 					sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 					sNewGridNo = NewGridNo( sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-					pSoldier->sForcastGridno = sNewGridNo;
+					pSoldier->sForcastGridNo = sNewGridNo;
 					break;
 
 

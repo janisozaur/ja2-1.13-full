@@ -3863,7 +3863,7 @@ BOOLEAN SaveOppListInfoToSavedGame( HWFILE hFile )
 
 	// Save the Public Last Noise Gridno
 	uiSaveSize = MAXTEAMS;
-	FileWrite( hFile, gsPublicNoiseGridno, uiSaveSize, &uiNumBytesWritten );
+	FileWrite( hFile, gsPublicNoiseGridNo, uiSaveSize, &uiNumBytesWritten );
 	if( uiNumBytesWritten != uiSaveSize )
 	{
 		return( FALSE );
@@ -3942,7 +3942,7 @@ BOOLEAN LoadOppListInfoFromSavedGame( HWFILE hFile )
 
 	// Load the Public Last Noise Gridno
 	uiLoadSize = MAXTEAMS;
-	FileRead( hFile, gsPublicNoiseGridno, uiLoadSize, &uiNumBytesRead );
+	FileRead( hFile, gsPublicNoiseGridNo, uiLoadSize, &uiNumBytesRead );
 	if( uiNumBytesRead != uiLoadSize )
 	{
 		return( FALSE );

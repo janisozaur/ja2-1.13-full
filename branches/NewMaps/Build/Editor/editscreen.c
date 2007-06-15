@@ -2992,22 +2992,22 @@ BOOLEAN CheckForSlantRoofs( void )
 void MapOptimize(void)
 {
 #if 0
-	INT32 gridno;
+	INT32 GridNo;
 	LEVELNODE *start, *head, *end, *node, *temp;
 	MAP_ELEMENT		*pMapTile;
 	BOOLEAN fFound, fChangedHead, fChangedTail;
 
-	for( gridno = 0; gridno < WORLD_MAX; gridno++ )
+	for( GridNo = 0; GridNo < WORLD_MAX; GridNo++ )
 	{
-		if ( !GridNoOnVisibleWorldTile( gridno ) )
+		if ( !GridNoOnVisibleWorldTile( GridNo ) )
 		{
 			// Tile isn't in viewable area so trash everything in it
-			TrashMapTile( gridno );
+			TrashMapTile( GridNo );
 		}
 		else
 		{
 			// Tile is in viewable area so try to optimize any extra land pieces
-			pMapTile = &gpWorldLevelData[ gridno ];
+			pMapTile = &gpWorldLevelData[ GridNo ];
 			
 			node = start = pMapTile->pLandStart;
 			head = pMapTile->pLandHead;

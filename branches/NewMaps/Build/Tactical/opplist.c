@@ -107,7 +107,7 @@ INT8 gbLastKnownOppLevel[TOTAL_SOLDIERS][TOTAL_SOLDIERS];
 INT32 gsPublicLastKnownOppLoc[MAXTEAMS][TOTAL_SOLDIERS];	// team vs. merc
 INT8 gbPublicLastKnownOppLevel[MAXTEAMS][TOTAL_SOLDIERS];
 UINT8 gubPublicNoiseVolume[MAXTEAMS];
-INT32 gsPublicNoiseGridno[MAXTEAMS];
+INT32 gsPublicNoiseGridNo[MAXTEAMS];
 INT8	gbPublicNoiseLevel[MAXTEAMS];
 
 UINT8 gubKnowledgeValue[10][10] =
@@ -1380,12 +1380,12 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
  // if a door was recently opened/closed (doesn't matter if we could see it)
  // this is done here so we can first handle everyone looking through the
  // door, and deal with the resulting opplist changes, interrupts, etc.
- if (Status.doorCreakedGridno != NOWHERE)
+ if (Status.doorCreakedGridNo != NOWHERE)
   {
    // opening/closing a door makes a bit of noise (constant volume)
-   MakeNoise(Status.doorCreakedGuynum,Status.doorCreakedGridno,TTypeList[Grid[Status.doorCreakedGridno].land],DOOR_NOISE_VOLUME,NOISE_CREAKING,EXPECTED_NOSEND);
+   MakeNoise(Status.doorCreakedGuynum,Status.doorCreakedGridNo,TTypeList[Grid[Status.doorCreakedGridNo].land],DOOR_NOISE_VOLUME,NOISE_CREAKING,EXPECTED_NOSEND);
 
-   Status.doorCreakedGridno = NOWHERE;
+   Status.doorCreakedGridNo = NOWHERE;
    Status.doorCreakedGuynum = NOBODY;
   }
 
@@ -1678,14 +1678,14 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
    // use looker's PROJECTED x,y co-ordinates (those of his next gridno)
    fromX = ptr->destx;
    fromY = ptr->desty;
-   fromGridno = ExtMen[ptr->guynum].nextGridno;
+   fromGridNo = ExtMen[ptr->guynum].nextGridNo;
   }
  else
   {
    // use looker's ACTUAL x,y co-ordinates (those of gridno he's in now)
    fromX = ptr->x;
    fromY = ptr->y;
-   fromGridno = ptr->sGridNo;
+   fromGridNo = ptr->sGridNo;
   }
 
 
@@ -1694,14 +1694,14 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
    // use target's PROJECTED x,y co-ordinates (those of his next gridno)
    toX = oppPtr->destx;
    toY = oppPtr->desty;
-   toGridno = ExtMen[oppPtr->guynum].nextGridno;
+   toGridNo = ExtMen[oppPtr->guynum].nextGridNo;
   }
  else
   {
    // use target's ACTUAL x,y co-ordinates (those of gridno he's in now)
    toX = oppPtr->x;
    toY = oppPtr->y;
-   toGridno = oppPtr->gridno;
+   toGridNo = oppPtr->GridNo;
   }
 */
 
@@ -1773,8 +1773,8 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 #ifdef RECORDOPPLIST
  fprintf(OpplistFile,"MLFM: %s by %2d(g%4d,x%3d,y%3d,%s) at %2d(g%4d,x%3d,y%3d,%s), aware %d, dA=%d,dV=%d, desDir=%d, %s\n",
 		(success) ? "SCS" : "FLR",
-		ptr->guynum,fromGridno,fromX,fromY,(ptrProjected)?"PROJ":"REG.",
-		oppPtr->guynum,toGridno,toX,toY,(oppPtrProjected)?"PROJ":"REG.",
+		ptr->guynum,fromGridNo,fromX,fromY,(ptrProjected)?"PROJ":"REG.",
+		oppPtr->guynum,toGridNo,toX,toY,(oppPtrProjected)?"PROJ":"REG.",
 		aware,distAway,distVisible,ptr->desdir,
 		LastCaller2Text[caller]);
 #endif
@@ -1815,7 +1815,7 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 
 
 
-void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2)
+void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridNo, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2)
 {
  INT8 bDoLocate = FALSE;
  BOOLEAN fNewOpponent = FALSE;
@@ -2191,7 +2191,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT32 sOppGridno,
      // if the looker hasn't seen this opponent at all earlier this turn, OR
      // if the opponent is not where the looker last thought him to be
      if ((pSoldier->bOppList[pOpponent->ubID] != SEEN_THIS_TURN) ||
-         (gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID] != sOppGridno))
+         (gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID] != sOppGridNo))
 		  {
 				SetNewSituation( pSoldier );  // force the looker to re-evaluate
 			}
@@ -2222,7 +2222,7 @@ else
 #endif
 	//bOldOppValue = pSoldier->bOppList[ pOpponent->ubID ];
  // remember that the soldier is currently seen and his new location
- UpdatePersonal(pSoldier,pOpponent->ubID,SEEN_CURRENTLY,sOppGridno,bOppLevel);
+ UpdatePersonal(pSoldier,pOpponent->ubID,SEEN_CURRENTLY,sOppGridNo,bOppLevel);
 
  if ( ubCaller2 == MANLOOKSFOROTHERTEAMS || ubCaller2 == OTHERTEAMSLOOKFORMAN || ubCaller2 == CALLER_UNKNOWN ) // unknown->hearing
  {
@@ -2632,7 +2632,7 @@ IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
 
 
 
-void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT8 bLevel)
+void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT32 sGridNo, INT8 bLevel)
 {
  INT32 cnt;
  INT8 *pbPublOL;
@@ -2656,7 +2656,7 @@ void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT
 
 
  // always update the gridno, no matter what
- gsPublicLastKnownOppLoc[ubTeam][ubID] = sGridno;
+ gsPublicLastKnownOppLoc[ubTeam][ubID] = sGridNo;
  gbPublicLastKnownOppLevel[ubTeam][ubID] = bLevel;
 
  // if team has been told about a guy the team was completely unaware of
@@ -2693,12 +2693,12 @@ void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT
 
 
 
-void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT32 sGridno, INT8 bLevel)
+void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT32 sGridNo, INT8 bLevel)
 {
 	/*
 #ifdef RECORDOPPLIST
  fprintf(OpplistFile,"UpdatePersonal - for %d about %d to %d (was %d) at g%d\n",
-		ptr->guynum,guynum,newOpplist,ptr->opplist[guynum],gridno);
+		ptr->guynum,guynum,newOpplist,ptr->opplist[guynum],GridNo);
 #endif
 
 	*/
@@ -2713,7 +2713,7 @@ void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT32 s
   }
 
  // always update the gridno, no matter what
- gsLastKnownOppLoc[pSoldier->ubID][ubID] = sGridno;
+ gsLastKnownOppLoc[pSoldier->ubID][ubID] = sGridNo;
  gbLastKnownOppLevel[pSoldier->ubID][ubID] = bLevel;
 }
 
@@ -2862,7 +2862,7 @@ void InitOpponentKnowledgeSystem(void)
 	for (iTeam=0; iTeam < MAXTEAMS; iTeam++)
 	{
 		gubPublicNoiseVolume[iTeam] = 0;
-		gsPublicNoiseGridno[iTeam] = NOWHERE;
+		gsPublicNoiseGridNo[iTeam] = NOWHERE;
 		gbPublicNoiseLevel[iTeam] = 0;
 		for (cnt = 0; cnt < MAX_NUM_SOLDIERS; cnt++)
 		{
@@ -3420,7 +3420,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
  if (pSoldier->ubNoiseVolume > gubPublicNoiseVolume[ubTeamToRadioTo])
   {
    // replace the soldier's team's public noise with his
-   gsPublicNoiseGridno[ubTeamToRadioTo] 	= pSoldier->sNoiseGridno;
+   gsPublicNoiseGridNo[ubTeamToRadioTo] 	= pSoldier->sNoiseGridNo;
 	 gbPublicNoiseLevel[ubTeamToRadioTo] 	= pSoldier->bNoiseLevel;
    gubPublicNoiseVolume[ubTeamToRadioTo] 	= pSoldier->ubNoiseVolume;
   }
@@ -4921,11 +4921,11 @@ void TheirNoise(UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bLevel, UINT8 ubTerrType
 			}
 
 			CheckForNetIncoming();
-		} while ((ExtMen[pSoldier->guynum].noiseRcvdGridno[ubNoiseType] != sGridNo) && pSoldier->in_sector);
+		} while ((ExtMen[pSoldier->guynum].noiseRcvdGridNo[ubNoiseType] != sGridNo) && pSoldier->in_sector);
 		//stopAction = FALSE;	// re-enable real-time events
 
 		// reset the gridno flag for next time
-		ExtMen[pSoldier->guynum].noiseRcvdGridno[ubNoiseType] = NOWHERE;
+		ExtMen[pSoldier->guynum].noiseRcvdGridNo[ubNoiseType] = NOWHERE;
 		*/
 	}
 	// else if noiseMaker's NOBODY, no opplist changes or interrupts are possible
@@ -5664,7 +5664,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bL
 			if (ubVolume >= pSoldier->ubNoiseVolume)
 			{
 				// yes it is, so remember this noise INSTEAD (old noise is forgotten)
-				pSoldier->sNoiseGridno = sGridNo;
+				pSoldier->sNoiseGridNo = sGridNo;
 				pSoldier->bNoiseLevel = bLevel;
 
 				// no matter how loud noise was, don't remember it for than 12 turns!
@@ -5779,7 +5779,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bL
 			if (ubVolume >= pSoldier->ubNoiseVolume)
 			{
 				// yes it is, so remember this noise INSTEAD (old noise is forgotten)
-				pSoldier->sNoiseGridno = sGridNo;
+				pSoldier->sNoiseGridNo = sGridNo;
 				pSoldier->bNoiseLevel = bLevel;
 
 				// no matter how loud noise was, don't remember it for than 12 turns!
@@ -6188,7 +6188,7 @@ void DecayPublicOpplist(INT8 bTeam)
 
 		if (gubPublicNoiseVolume[bTeam] <= 0)
 		{
-			gsPublicNoiseGridno[bTeam] = NOWHERE;
+			gsPublicNoiseGridNo[bTeam] = NOWHERE;
 		}
 	}
 

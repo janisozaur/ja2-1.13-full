@@ -1102,7 +1102,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					if ( fPathingForPlayer )
 					{
 						// Is this obstcale a hidden tile that has not been revealed yet?
-						if( DoesGridnoContainHiddenStruct( (UINT16)newLoc, &fHiddenStructVisible ) )
+						if( DoesGridNoContainHiddenStruct( (UINT16)newLoc, &fHiddenStructVisible ) )
 						{
 							// Are we not visible, if so use terrain costs!
 							if ( !fHiddenStructVisible )
@@ -2209,7 +2209,7 @@ void ErasePath(char bEraseOldOne)
 
 
 
-INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
  INT16 sTileCost,sPoints=0,sAnimCost=0;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
@@ -2226,7 +2226,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
  LEVELNODE	*pNode;
  UINT16 usMovementModeToUseForAPs;
  BOOLEAN  bIgnoreNextCost = FALSE;
- INT32    sTestGridno;
+ INT32    sTestGridNo;
 
  if ( bPlot && gusPathShown )
  {
@@ -2243,7 +2243,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
  // distance limit to reduce the cost of plotting a path to a location we can't reach
 
  // For now, use known hight adjustment
- if ( gfRecalculatingExistingPathCost || FindBestPath( pSold, sDestGridno, (INT8)pSold->bLevel, usMovementMode, bCopyRoute, 0 ) )
+ if ( gfRecalculatingExistingPathCost || FindBestPath( pSold, sDestGridNo, (INT8)pSold->bLevel, usMovementMode, bCopyRoute, 0 ) )
  {
 		 // if soldier would be STARTING to run then he pays a penalty since it takes time to 
 		 // run full speed
@@ -2258,8 +2258,8 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
 
 
      // We should reduce points for starting to run if first tile is a fence...
-		 sTestGridno  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
-     if ( gubWorldMovementCosts[ sTestGridno ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
+		 sTestGridNo  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
+     if ( gubWorldMovementCosts[ sTestGridNo ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
      {
 	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
 	    {
@@ -2594,7 +2594,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPl
 
 }
 
-INT32 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
 	// This function is specifically for UI calls to the pathing routine, to 
 	// check whether the shift key is pressed, etc.
@@ -2616,7 +2616,7 @@ INT32 UIPlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 b
 		bPlot = TRUE;
 	}
 
-	sRet = PlotPath( pSold, sDestGridno, bCopyRoute, bPlot, bStayOn, usMovementMode, bStealth, bReverse, sAPBudget);
+	sRet = PlotPath( pSold, sDestGridNo, bCopyRoute, bPlot, bStayOn, usMovementMode, bStealth, bReverse, sAPBudget);
 	gfPlotDirectPath = FALSE;
 	return( sRet );
 }
@@ -2637,7 +2637,7 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode )
 	return( sRet );
 }
 
-INT32 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT32 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
 	// This function is specifically for AI calls to estimate path cost to a location
 	// It sets stuff up to ignore all people
@@ -2645,7 +2645,7 @@ INT32 EstimatePlotPath( SOLDIERTYPE *pSold, INT32 sDestGridno, INT8 bCopyRoute, 
 
 	gfEstimatePath = TRUE;
 
-	sRet = PlotPath( pSold, sDestGridno, bCopyRoute, bPlot, bStayOn, usMovementMode, bStealth, bReverse, sAPBudget);
+	sRet = PlotPath( pSold, sDestGridNo, bCopyRoute, bPlot, bStayOn, usMovementMode, bStealth, bReverse, sAPBudget);
 
 	gfEstimatePath = FALSE;
 	

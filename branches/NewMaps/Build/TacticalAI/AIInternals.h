@@ -173,7 +173,7 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction );
 
 INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit);
 INT32 EstimateStabDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,	UINT8 ubChanceToHit, BOOLEAN fBladeAttack);
-INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT32 sGridno);
+INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT32 sGridNo);
 INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT32 * psClimbGridNo );
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
@@ -194,7 +194,7 @@ void InitAttackType(ATTACKTYPE *pAttack);
 
 INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags );
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
+int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
 INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );

@@ -490,27 +490,27 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 // UTILITY FUNTIONS
 
-INT32 OutOfBounds(INT32 sGridno, INT32 sProposedGridno)
+INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
 {
  INT16 sMod,sPropMod;
 
  // get modulas of our origin
- sMod = sGridno % MAXCOL;
+ sMod = sGridNo % MAXCOL;
 
  if (sMod != 0)  		// if we're not on leftmost grid
   if (sMod != RIGHTMOSTGRID)	// if we're not on rightmost grid
-    if (sGridno < LASTROWSTART)	// if we're above bottom row
-      if (sGridno > MAXCOL)	// if we're below top row
+    if (sGridNo < LASTROWSTART)	// if we're above bottom row
+      if (sGridNo > MAXCOL)	// if we're below top row
        // Everything's OK - we're not on the edge of the map
        return(FALSE);
 
 
   // if we've got this far, there's a potential problem - check it out!
 
- if (sProposedGridno < 0)
+ if (sProposedGridNo < 0)
     return(TRUE);
 
- sPropMod = sProposedGridno % MAXCOL;
+ sPropMod = sProposedGridNo % MAXCOL;
 
  if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
    return(TRUE);
@@ -518,7 +518,7 @@ INT32 OutOfBounds(INT32 sGridno, INT32 sProposedGridno)
   if (sMod == RIGHTMOSTGRID && sPropMod == 0)
 	return(TRUE);
  else
-  if (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE)
+  if (sGridNo >= LASTROWSTART && sProposedGridNo >= GRIDSIZE)
 	return(TRUE);
   else
        return(FALSE);
@@ -526,16 +526,16 @@ INT32 OutOfBounds(INT32 sGridno, INT32 sProposedGridno)
 
 
 
-INT32 NewGridNo(INT32 sGridno, INT16 sDirInc)
+INT32 NewGridNo(INT32 sGridNo, INT16 sDirInc)
 {
- INT32 sProposedGridno = sGridno + sDirInc;
+ INT32 sProposedGridNo = sGridNo + sDirInc;
 
  // now check for out-of-bounds 
- if (OutOfBounds(sGridno,sProposedGridno))
+ if (OutOfBounds(sGridNo,sProposedGridNo))
 		// return ORIGINAL gridno to user
-		sProposedGridno = sGridno;
+		sProposedGridNo = sGridNo;
 
- return(sProposedGridno);
+ return(sProposedGridNo);
 }
 
 
@@ -1016,7 +1016,7 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStar
 	INT8			bMinDirection = 0;
 
 	// IF there is a fence in this gridno, return false!
-	if ( IsJumpableFencePresentAtGridno( sGridNo ) )
+	if ( IsJumpableFencePresentAtGridNo( sGridNo ) )
 	{
 		return( FALSE );
 	}
@@ -1034,7 +1034,7 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStar
 
 
 			// Check if we have a fence here
-			if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
+			if ( IsJumpableFencePresentAtGridNo( sNewGridNo ) )
 			{
 				fFound = TRUE;
 

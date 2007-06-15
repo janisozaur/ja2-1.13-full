@@ -1146,7 +1146,7 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 	pSoldier->bInterruptDuelPts				= NO_INTERRUPT;
 	pSoldier->bMoved									= FALSE;
 	pSoldier->ubRobotRemoteHolderID		= NOBODY;
-	pSoldier->sNoiseGridno						= NOWHERE;
+	pSoldier->sNoiseGridNo						= NOWHERE;
 	pSoldier->ubPrevSectorID					= 255;
 	pSoldier->bNextPatrolPnt					= 1;
 	pSoldier->bCurrentCivQuote				= -1;
@@ -2011,7 +2011,7 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->sNoiseGridNo = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 	return( pSoldier );
@@ -2044,7 +2044,7 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->sNoiseGridNo = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 	return( pSoldier );
@@ -2086,7 +2086,7 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->sNoiseGridNo = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 	return( pSoldier );

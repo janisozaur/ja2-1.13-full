@@ -59,15 +59,15 @@ INT16	gsLastVisibleToSoldierGridNo=NOWHERE;
 
 //*******  Function Prototypes ***************************************
 
-INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTargetGridno, INT8 bStance );
-void	CalculateCoverInRadiusAroundGridno( INT32 sTargetGridNo, INT8	bSearchRange );
+INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, INT8 bStance );
+void	CalculateCoverInRadiusAroundGridNo( INT32 sTargetGridNo, INT8	bSearchRange );
 void	AddCoverTileToEachGridNo();
 void	AddCoverObjectToWorld( INT32 sGridNo, UINT16 usGraphic, BOOLEAN fRoof );
 void	RemoveCoverObjectFromWorld( INT32 sGridNo, UINT16 usGraphic, BOOLEAN fRoof );
 INT8	GetCurrentMercForDisplayCoverStance();
 SOLDIERTYPE *GetCurrentMercForDisplayCover();
 
-void	CalculateVisibleToSoldierAroundGridno( INT32 sGridNo, INT8 bSearchRange );
+void	CalculateVisibleToSoldierAroundGridNo( INT32 sGridNo, INT8 bSearchRange );
 void	AddVisibleToSoldierToEachGridNo();
 INT8	CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, BOOLEAN fRoof );
 BOOLEAN IsTheRoofVisible( INT32 sGridNo );
@@ -130,7 +130,7 @@ void DisplayCoverOfSelectedGridNo( )
 			gsLastSoldierGridNo = MercPtrs[ gusSelectedSoldier ]->sGridNo;
 
 			//Fill the array of gridno and cover values
-			CalculateCoverInRadiusAroundGridno( sGridNo, gGameSettings.ubSizeOfDisplayCover );
+			CalculateCoverInRadiusAroundGridNo( sGridNo, gGameSettings.ubSizeOfDisplayCover );
 
 			//Add the graphics to each gridno
 			AddCoverTileToEachGridNo();
@@ -274,7 +274,7 @@ void RemoveCoverOfSelectedGridNo()
 }
 
 
-void CalculateCoverInRadiusAroundGridno( INT32 sTargetGridNo, INT8	bSearchRange )
+void CalculateCoverInRadiusAroundGridNo( INT32 sTargetGridNo, INT8	bSearchRange )
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
@@ -391,7 +391,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTa
 {
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
-	INT8		bPercentCoverForGridno=0;
+	INT8		bPercentCoverForGridNo=0;
 	UINT32	uiLoop;
 	SOLDIERTYPE *pOpponent;
 	INT8		*pbPersOL;
@@ -475,23 +475,23 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT32 sTa
 
 	if( bNumEnemies == 0 )
 	{
-		bPercentCoverForGridno = 100;
+		bPercentCoverForGridNo = 100;
 	}
 	else
 	{
 		INT32 iTemp;
 
-		bPercentCoverForGridno = ( iTotalCoverPoints / bNumEnemies );
+		bPercentCoverForGridNo = ( iTotalCoverPoints / bNumEnemies );
 
-		iTemp = bPercentCoverForGridno - ( iHighestValue / bNumEnemies );
+		iTemp = bPercentCoverForGridNo - ( iHighestValue / bNumEnemies );
 
 		iTemp = iTemp + iHighestValue;
 
-		bPercentCoverForGridno = 100 - ( __min( iTemp, 100 ) );
+		bPercentCoverForGridNo = 100 - ( __min( iTemp, 100 ) );
 	}
 
 
-	return( bPercentCoverForGridno );
+	return( bPercentCoverForGridNo );
 }
 
 
@@ -672,7 +672,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 
 
 			//Fill the array of gridno and cover values
-			CalculateVisibleToSoldierAroundGridno( sGridNo, gGameSettings.ubSizeOfLOS );
+			CalculateVisibleToSoldierAroundGridNo( sGridNo, gGameSettings.ubSizeOfLOS );
 
 			//Add the graphics to each gridno
 			AddVisibleToSoldierToEachGridNo();
@@ -684,7 +684,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 }
 
 
-void CalculateVisibleToSoldierAroundGridno( INT32 sTargetGridNo, INT8 bSearchRange )
+void CalculateVisibleToSoldierAroundGridNo( INT32 sTargetGridNo, INT8 bSearchRange )
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;

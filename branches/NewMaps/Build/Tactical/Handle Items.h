@@ -143,7 +143,7 @@ INT8 GetZLevelOfItemPoolGivenStructure( INT32 sGridNo, UINT8 ubLevel, STRUCTURE 
 
 INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool );
 
-BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridno, INT32 * psProblemGridNo );
+BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN fCheckAroundGridNo, INT32 * psProblemGridNo );
 void MineSpottedDialogueCallBack( void );
 
 extern INT16 gsBoobyTrapGridNo;

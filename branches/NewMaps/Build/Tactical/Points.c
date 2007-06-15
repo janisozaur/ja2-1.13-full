@@ -31,7 +31,7 @@ extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
 
 INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
-INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8 bLevel )
+INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, INT8 bLevel )
 {
 		INT16	sAPCost = 0;
 	  INT16  sSwitchValue;
@@ -43,34 +43,34 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8
  if ( pSoldier->bReverse || gUIUseReverse )
      sAPCost += AP_REVERSE_MODIFIER;
 
- //if (GridCost[gridno] == NPCMINECOST)
- //   switchValue = BackupGridCost[gridno];
+ //if (GridCost[GridNo] == NPCMINECOST)
+ //   switchValue = BackupGridCost[GridNo];
  //else
 
-  sSwitchValue = gubWorldMovementCosts[sGridno][bDir][ bLevel ];
+  sSwitchValue = gubWorldMovementCosts[sGridNo][bDir][ bLevel ];
 
 	// Check reality vs what the player knows....
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Is this obstcale a hidden tile that has not been revealed yet?
-		if( DoesGridnoContainHiddenStruct( sGridno, &fHiddenStructVisible ) )
+		if( DoesGridNoContainHiddenStruct( sGridNo, &fHiddenStructVisible ) )
 		{
 			// Are we not visible, if so use terrain costs!
 			if ( !fHiddenStructVisible )
 			{
 				// Set cost of terrain!
-				sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridno ].ubTerrainID ];			
+				sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridNo ].ubTerrainID ];			
 			}
 		}
 	}
 	if ( sSwitchValue == TRAVELCOST_NOT_STANDING )
 	{
 		// use the cost of the terrain!
-		sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridno ].ubTerrainID ];
+		sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridNo ].ubTerrainID ];
 	}
 	else if (IS_TRAVELCOST_DOOR( sSwitchValue ))
 	{
-		sSwitchValue = DoorTravelCost( pSoldier, sGridno, (UINT8) sSwitchValue, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL );
+		sSwitchValue = DoorTravelCost( pSoldier, sGridNo, (UINT8) sSwitchValue, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL );
 	}
 
 	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
@@ -112,7 +112,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridno, INT8 bDir, INT8
 
    default:		
 
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calc AP: Unrecongnized MP type %d in %d, direction %d", sSwitchValue, sGridno, bDir ) );
+		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calc AP: Unrecongnized MP type %d in %d, direction %d", sSwitchValue, sGridNo, bDir ) );
 			break;
 
 
@@ -165,12 +165,12 @@ INT16 BreathPointAdjustmentForCarriedWeight( SOLDIERTYPE * pSoldier )
 }
 
 
-INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridno,INT8 bDir, UINT16 usMovementMode)
+INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridNo,INT8 bDir, UINT16 usMovementMode)
 {
  INT32 iPoints=0;
  UINT8 ubMovementCost;
 	
-	ubMovementCost = gubWorldMovementCosts[sGridno][bDir][0];
+	ubMovementCost = gubWorldMovementCosts[sGridNo][bDir][0];
 
  switch( ubMovementCost )
  {
@@ -194,7 +194,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridno,INT8 bDir, UINT1
 /*
 #ifdef TESTVERSION
      NumMessage("ERROR: TerrainBreathPoints: Unrecognized grid cost = ",
-	     						GridCost[gridno]);
+	     						GridCost[GridNo]);
 #endif
 */
 			return(0);
@@ -203,7 +203,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridno,INT8 bDir, UINT1
 	iPoints = iPoints * BreathPointAdjustmentForCarriedWeight( pSoldier ) / 100;
 
   // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	if ( gpWorldLevelData[ sGridno ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridno ].ubTerrainID == LOW_WATER )
+	if ( gpWorldLevelData[ sGridNo ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == MED_WATER || gpWorldLevelData[ sGridNo ].ubTerrainID == LOW_WATER )
   {
     usMovementMode = WALKING;
   }
@@ -997,7 +997,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 }
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCost)
+UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost)
 {
 	UINT16						sAPCost = 0;
 	UINT32						uiItemClass;
@@ -1027,15 +1027,15 @@ UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridno, UINT8 ubAddTurningCos
 	
 	if ( uiItemClass == IC_BLADE || uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER || uiItemClass == IC_TENTACLES || uiItemClass == IC_THROWING_KNIFE )
 	{
-		sAPCost = MinAPsToShootOrStab( pSoldier, sGridno, ubAddTurningCost );
+		sAPCost = MinAPsToShootOrStab( pSoldier, sGridNo, ubAddTurningCost );
 	}
 	else if ( uiItemClass & ( IC_GRENADE | IC_THROWN ) )
 	{
-		sAPCost = MinAPsToThrow( pSoldier, sGridno, ubAddTurningCost );
+		sAPCost = MinAPsToThrow( pSoldier, sGridNo, ubAddTurningCost );
 	}
 	else if ( uiItemClass == IC_PUNCH )
 	{
-		sAPCost = MinAPsToPunch( pSoldier, sGridno, ubAddTurningCost );
+		sAPCost = MinAPsToPunch( pSoldier, sGridNo, ubAddTurningCost );
 	}
 	
 	return( (UINT8)sAPCost );
@@ -1345,7 +1345,7 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
  INT32	cnt;
  INT16	sLowest=127;
  INT16	sCost;
- INT32 sGridno;
+ INT32 sGridNo;
 
  if ( TANK( pSoldier ) )
  {
@@ -1354,10 +1354,10 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 
  for (cnt=0; cnt <= 7; cnt++)
   {
-    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
-    if (sGridno != pSoldier->sGridNo)
+    sGridNo = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
+    if (sGridNo != pSoldier->sGridNo)
 		{
-       if ( (sCost=ActionPointCost( pSoldier, sGridno, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
+       if ( (sCost=ActionPointCost( pSoldier, sGridNo, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
 			 {
 					sLowest = sCost;
 			 }
@@ -1369,25 +1369,25 @@ INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
 	INT16	sCost;
-	INT32	sGridno;
+	INT32	sGridNo;
 	INT8	bOverTerrainType;
 	UINT16	usMoveModeToUse;
 
-  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc((INT16) bDirection ) );
+  sGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc((INT16) bDirection ) );
 
 	usMoveModeToUse = pSoldier->usUIMovementMode;
 
 	// ATE: Check if the new place is watter and we were tying to run....
-	bOverTerrainType = GetTerrainType( sGridno );
+	bOverTerrainType = GetTerrainType( sGridNo );
 
 	if ( bOverTerrainType == MED_WATER || bOverTerrainType == DEEP_WATER || bOverTerrainType == LOW_WATER )
 	{
 		usMoveModeToUse = WALKING;
 	}
 
-  sCost = ActionPointCost( pSoldier, sGridno, bDirection , usMoveModeToUse );
+  sCost = ActionPointCost( pSoldier, sGridNo, bDirection , usMoveModeToUse );
 
-  if ( gubWorldMovementCosts[ sGridno ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+  if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
   {
 	  if ( usMoveModeToUse == RUNNING && pSoldier->usAnimState != RUNNING )
 	  {

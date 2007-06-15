@@ -1289,7 +1289,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 				// set reachable to false so we don't investigate
 				fReachable = FALSE;
 				// forget about noise
-				pSoldier->sNoiseGridno = NOWHERE;
+				pSoldier->sNoiseGridNo = NOWHERE;
 				pSoldier->ubNoiseVolume = 0;
 			}
 	 }

@@ -1769,7 +1769,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		fIndoors = TRUE;
 	}
 
-	if ( ( IsRoofPresentAtGridno( pSoldier->sGridNo ) ) && pSoldier->bLevel == 0 )
+	if ( ( IsRoofPresentAtGridNo( pSoldier->sGridNo ) ) && pSoldier->bLevel == 0 )
 	{
 		// Adjust angle....
 		dDegrees = INDOORS_START_ANGLE;
@@ -1777,7 +1777,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 	}
 
 	// IS OUR TARGET INSIDE?
-	if ( IsRoofPresentAtGridno( sGridNo ) && ubLevel == 0 )
+	if ( IsRoofPresentAtGridNo( sGridNo ) && ubLevel == 0 )
 	{
 		// Adjust angle....
 		dDegrees = INDOORS_START_ANGLE;

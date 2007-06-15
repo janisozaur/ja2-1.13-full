@@ -775,7 +775,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 				 // CHECK FOR HIDDEN STRUCTS
 				 // IF we had a hidden struct here that is not visible ( which will still be true because
 				 // we set it revealed below...
-				if ( DoesGridnoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
+				if ( DoesGridNoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
 				{
 					if ( !fHiddenStructVisible )
 					{
