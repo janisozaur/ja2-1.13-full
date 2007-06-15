@@ -215,7 +215,7 @@ void SetMovementModeCursor( SOLDIERTYPE *pSoldier );
 void SetConfirmMovementModeCursor( SOLDIERTYPE *pSoldier, BOOLEAN fFromMove );
 void SetUIbasedOnStance( SOLDIERTYPE *pSoldier, INT8 bNewStance );
 INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT32 usMapPos, UINT32 uiFlags );
-INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles );
+INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles );
 
 extern void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState );
 
@@ -3449,7 +3449,7 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 	static  BOOLEAN fStationary = FALSE;
 	static	UINT16	usOldMouseXPos  = 32000;
 	static	UINT16	usOldMouseYPos  = 32000;
-	static	UINT16  usOldMapPos		  = 32000;
+	static	UINT32  usOldMapPos		  = 32000;
 	
 	static	UINT32  uiSameFrameCursorFlags;
 	static  UINT32	uiOldFrameNumber = 99999;
@@ -5673,7 +5673,7 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 
 
 
-INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles )
+INT8 UIHandleInteractiveTilesAndItemsOnTerrain( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles )
 {
 	ITEM_POOL					*pItemPool;
 	BOOLEAN						fSetCursor;
