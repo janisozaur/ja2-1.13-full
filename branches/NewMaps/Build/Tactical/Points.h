@@ -323,11 +323,11 @@ UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier );
 UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT32 usMapPos );
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier );
