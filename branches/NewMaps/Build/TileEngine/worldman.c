@@ -3304,7 +3304,7 @@ BOOLEAN IsLowerLevel( INT32 sGridNo )
 	return( FALSE );
 }
 
-BOOLEAN IsRoofVisible( INT16 sMapPos )
+BOOLEAN IsRoofVisible( INT32 sMapPos )
 {
 	STRUCTURE * pStructure;
 
@@ -3334,7 +3334,7 @@ BOOLEAN IsRoofVisible( INT16 sMapPos )
 	return( FALSE );
 }
 
-BOOLEAN IsRoofVisible2( INT16 sMapPos )
+BOOLEAN IsRoofVisible2( INT32 sMapPos )
 {
 	STRUCTURE * pStructure;
 

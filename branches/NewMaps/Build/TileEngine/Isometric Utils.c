@@ -431,7 +431,7 @@ void GetScreenXYWorldCell( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldCellX, 
 }
 
 
-void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos )
+void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT32	*psMapPos )
 {
 	INT16				sWorldX, sWorldY;
 

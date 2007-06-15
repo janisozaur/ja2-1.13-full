@@ -133,8 +133,8 @@ BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 BOOLEAN IsLowerLevel( INT32 sGridNo );
 BOOLEAN IsHeigherLevel( INT32 sGridNo );
-BOOLEAN IsRoofVisible( INT16 sMapPos );
-BOOLEAN IsRoofVisible2( INT16 sMapPos );
+BOOLEAN IsRoofVisible( INT32 sMapPos );
+BOOLEAN IsRoofVisible2( INT32 sMapPos );
 
 
 LEVELNODE * FindLevelNodeBasedOnStructure( INT32 sGridNo, STRUCTURE * pStructure );

@@ -119,7 +119,7 @@ BOOLEAN LoadTileSurfaces( char pTileSurfaceFilenames[][32], UINT8 ubTilesetID );
 BOOLEAN AddTileSurface( SGPFILENAME cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot );
 void DestroyTileSurfaces( void );
 void ProcessTilesetNamesForBPP(void);
-BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos );
+BOOLEAN IsRoofVisibleForWireframe( INT32 sMapPos );
 
 
 INT8 IsHiddenTileMarkerThere( INT32 sGridNo );
@@ -4133,7 +4133,7 @@ void LoadMapLights( INT8 **hBuffer )
 }
 
 
-BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos )
+BOOLEAN IsRoofVisibleForWireframe( INT32 sMapPos )
 {
 	STRUCTURE * pStructure;
 
