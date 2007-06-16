@@ -51,7 +51,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	UINT8	i,j;
 	UINT16	usItem;
 	OBJECTTYPE		Object;
-	UINT32 usMapPos, usStandardMapPos;
+	INT32 usMapPos, usStandardMapPos;
 	UINT16 usNumberOfItems;
 	BOOLEAN	fSectorLoaded = FALSE;
 	UINT16	usTotalNumberOfItemTypes;

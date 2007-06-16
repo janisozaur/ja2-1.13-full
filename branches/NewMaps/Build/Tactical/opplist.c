@@ -3465,7 +3465,7 @@ void DebugSoldierPage1( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT32 usMapPos;
+	INT32 usMapPos;
 	UINT8							ubLine=0;
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
@@ -3648,7 +3648,7 @@ void DebugSoldierPage2( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT32 usMapPos;
+	INT32 usMapPos;
   TILE_ELEMENT							 TileElem;
 	LEVELNODE					*pNode;
 	UINT8							ubLine;
@@ -3919,7 +3919,7 @@ void DebugSoldierPage3( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT32 usMapPos;
+	INT32 usMapPos;
 	UINT8							ubLine;
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )

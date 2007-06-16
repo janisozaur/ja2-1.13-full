@@ -949,7 +949,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	UINT16			usOutlineColor=0;
 
 	static			INT32				iTileMapPos[ 500 ];
-	UINT32			uiMapPosIndex;
+	INT32			uiMapPosIndex;
 	UINT8				bBlitClipVal;
 	INT8				bItemCount, bVisibleItemCount;
 	//UINT16			us16BPPIndex;

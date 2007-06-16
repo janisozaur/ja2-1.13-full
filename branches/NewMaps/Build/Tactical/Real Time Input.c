@@ -102,7 +102,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE *pSoldier;
 	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;
-	UINT32 usMapPos;
+	INT32 usMapPos;
 	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
@@ -930,7 +930,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 
 	SOLDIERTYPE *pSoldier;
-	UINT32 usMapPos;
+	INT32 usMapPos;
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -1231,15 +1231,15 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 }
 
 
-extern BOOLEAN ConfirmActionCancel( UINT32 usMapPos, UINT32 usOldMapPos );
+extern BOOLEAN ConfirmActionCancel( INT32 usMapPos, INT32 usOldMapPos );
 
 extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
 
 void GetRTMousePositionInput( UINT32 *puiNewEvent )
 {
-	UINT32 usMapPos;
-	static UINT32			usOldMapPos = 0;
+	INT32 usMapPos;
+	static INT32			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 	SOLDIERTYPE								 *pSoldier;
 	static BOOLEAN		fOnValidGuy = FALSE;

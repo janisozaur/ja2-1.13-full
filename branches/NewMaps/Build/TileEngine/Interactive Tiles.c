@@ -1094,7 +1094,7 @@ BOOLEAN ShouldCheckForMouseDetections( )
 }
 
 
-void CycleIntTileFindStack( UINT32 usMapPos )
+void CycleIntTileFindStack( INT32 usMapPos )
 {
 	gfCycleIntTile = TRUE;
 

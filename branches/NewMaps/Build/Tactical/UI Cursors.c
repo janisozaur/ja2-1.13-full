@@ -28,8 +28,8 @@
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
 UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
 UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
 UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
@@ -114,7 +114,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT32 usMapPos, BOOLEAN fActivated )
+UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, INT32 usMapPos, BOOLEAN fActivated )
 {
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiCursorFlags;
@@ -302,7 +302,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT32 usMapPo
 }
 
 
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
 {
 	 UINT8							switchVal;
 	 BOOLEAN						fEnoughPoints = TRUE;
@@ -711,7 +711,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos, BOOLE
 
 
 
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags  )
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT32 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags  )
 {
   UINT16				usInHand;
 
@@ -860,7 +860,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT32 usMapPos , B
 
 void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc )
 {
-	UINT32 usMapPos;
+	INT32 usMapPos;
 	SOLDIERTYPE				*pTargetSoldier = NULL, *pSoldier;
 	UINT16	usFlags;
 	INT16	sMouseX, sMouseY, sCellX, sCellY, sScreenX, sScreenY;

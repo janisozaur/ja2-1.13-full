@@ -620,7 +620,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 usGridNo, INT8 bLevel, UINT16 usH
 	if ( Item[ usHandItem ].usItemClass == IC_MEDKIT )
 	{	
 		// ATE: AI CANNOT GO THROUGH HERE!
-		UINT32 usMapPos;
+		INT32 usMapPos;
 		BOOLEAN	fHadToUseCursorPos = FALSE;
 
 		if (gTacticalStatus.fAutoBandageMode)
@@ -2906,7 +2906,7 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	return( TRUE );
 }
 
-BOOLEAN	GetItemPool( UINT32 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
+BOOLEAN	GetItemPool( INT32 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 {
 	LEVELNODE *pObject;
 

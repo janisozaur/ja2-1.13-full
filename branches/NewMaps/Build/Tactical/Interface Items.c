@@ -4231,7 +4231,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 
 void DrawItemTileCursor( )
 {
-	UINT32 usMapPos;
+	INT32 usMapPos;
 	UINT16						usIndex;
 	UINT8							ubSoldierID;
 	INT16							sAPCost;
@@ -4540,7 +4540,7 @@ BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 }
 
 
-BOOLEAN HandleItemPointerClick( UINT32 usMapPos )
+BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
@@ -4998,7 +4998,7 @@ BOOLEAN HandleItemPointerClick( UINT32 usMapPos )
 	return( TRUE );
 }
 
-BOOLEAN ItemCursorInLobRange( UINT32 usMapPos )
+BOOLEAN ItemCursorInLobRange( INT32 usMapPos )
 {
 	// Draw item depending on distance from buddy
 	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )

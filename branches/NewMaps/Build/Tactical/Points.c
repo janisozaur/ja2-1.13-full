@@ -1558,7 +1558,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 }
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos )
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
 	ITEM_POOL					*pItemPool;
 	UINT16						sAPCost = 0;
@@ -1591,7 +1591,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos )
 }
 
 
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT32 usMapPos )
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT32 usMapPos )
 {
 	UINT16						sAPCost = 0;
 
