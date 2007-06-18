@@ -957,7 +957,7 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 	
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1842,7 +1842,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening map modification file

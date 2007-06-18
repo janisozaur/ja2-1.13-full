@@ -52,7 +52,6 @@
 #endif
 
 BOOLEAN		gfWasInMeanwhile = FALSE;
-STRING512	gzTacticalSaveDir;
 
 
 ///////////////////////////////////////////////////////////////
@@ -85,6 +84,7 @@ typedef struct
 #define		TACTICAL_SAVE_DIR		"Temp"	
 
 STRING512	zNPCQuoteFile;
+STRING512	gzTacticalSaveDir;
 
 
 
@@ -577,7 +577,7 @@ BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT
 	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -688,7 +688,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 			UINT32		uiNumBytesWritten=0;
 
 			//If the file doesnt exists, create a file that has an initial amount of Items
-			hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+			hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 			if( hFile == 0 )
 			{
 				//Error opening item modification file
@@ -1537,7 +1537,7 @@ BOOLEAN SaveRottingCorpsesToTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -2187,7 +2187,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 	if( gpNPCQuoteInfoArray[ ubNpcId ] )
 	{
 
-		hFile = FileOpen( zNPCQuoteFile, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen( zNPCQuoteFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 		if( hFile == 0 )
 		{
 			//Error opening temp npc quote info
@@ -2362,7 +2362,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	else
 	{
 		//the file doesnt exists, create a new one
-		hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 		if( hFile == 0 )
 		{
 			//Error opening map modification file
@@ -3001,51 +3001,51 @@ void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, 
 	switch( uiType )
 	{
 		case SF_ITEM_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%si_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%si_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_ROTTING_CORPSE_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%sr_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sr_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%sm_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sm_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_DOOR_TABLE_TEMP_FILES_EXISTS:
-			sprintf( (char *)pMapName, "%sd_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sd_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_REVEALED_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%sv_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sv_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_DOOR_STATUS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%sds_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sds_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%se_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%se_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
 			// NB save game version 0 is "saving game"
 			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion != 0 && guiSaveGameVersion < 78 )
 			{
-				sprintf( (char *)pMapName, "%sc_%s", gzTacticalSaveDir, zTempName);
+				sprintf( pMapName, "%sc_%s", gzTacticalSaveDir, zTempName);
 			}
 			else
 			{
-				sprintf( (char *)pMapName, "%scc_%s", gzTacticalSaveDir, zTempName);
+				sprintf( pMapName, "%scc_%s", gzTacticalSaveDir, zTempName);
 			}
 			break;
 
 		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%ssm_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%ssm_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( (char *)pMapName, "%sl_%s", gzTacticalSaveDir, zTempName);
+			sprintf( pMapName, "%sl_%s", gzTacticalSaveDir, zTempName);
 			break;
 
 		default:

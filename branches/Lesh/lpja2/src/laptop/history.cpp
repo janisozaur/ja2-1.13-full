@@ -1566,7 +1566,7 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 	
   
 	// open file
- 	hFileHandle=FileOpen( gzHistoryDataFile, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
+ 	hFileHandle=FileOpen( gzHistoryDataFile, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)

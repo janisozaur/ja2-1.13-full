@@ -49,10 +49,24 @@
 #define     MAX_VOLUME  (127)
 
 // Initialization parameters
-#define AUDIO_BUFFER_LEN    100
-#define STREAM_BUFFER_LEN   100
+#define AUDIO_BUFFER_LEN    50
+#define STREAM_BUFFER_LEN   200
 
 // Lesh modifications
+// Sound systems, divided by operating systems
+#ifdef JA2_WIN
+
+#define NUMBER_OF_OUTPUTS	3
+UINT32	OutputTypes[] = { FSOUND_OUTPUT_DSOUND, FSOUND_OUTPUT_WINMM, FSOUND_OUTPUT_NOSOUND };
+
+#elif defined( JA2_LINUX )
+
+#define NUMBER_OF_OUTPUTS	1
+//UINT32	OutputTypes[] = { FSOUND_OUTPUT_ESD, FSOUND_OUTPUT_ALSA, FSOUND_OUTPUT_OSS, FSOUND_OUTPUT_NOSOUND };
+UINT32	OutputTypes[] = { FSOUND_OUTPUT_NOSOUND };
+
+#endif
+
 // Sound debug
 
 CHAR8 SndDebugFileName[]="sound.log";
@@ -1360,30 +1374,36 @@ UINT32 uiCount;
 BOOLEAN SoundInitHardware(void)
 {
 	UINT32 uiCaps;
+	UINT32 i;
 
     SoundLog("Init hardware...");
 
 	// Try to start up the FMOD Sound System
-    FSOUND_SetOutput(FSOUND_OUTPUT_DSOUND);
-    FSOUND_SetBufferSize(AUDIO_BUFFER_LEN);
-    SoundLog((CHAR8 *)String("  Using DirectSound driver: %s", FSOUND_GetDriverName(FSOUND_GetDriver())));
-	SoundLog("    Driver capabilities:");
-	FSOUND_GetDriverCaps( FSOUND_GetDriver(), &uiCaps );
-
-	if ( uiCaps & FSOUND_CAPS_HARDWARE )
-		SoundLog("      - supports hardware accelerated 3d sound");
-
-	if ( uiCaps & FSOUND_CAPS_EAX2 )
-		SoundLog("      - supports EAX 2 reverb");
-
-	if ( uiCaps & FSOUND_CAPS_EAX3 )
-		SoundLog("      - supports EAX 3 reverb");
-
-	if( !FSOUND_Init(44100, SOUND_MAX_CHANNELS, FSOUND_INIT_GLOBALFOCUS|FSOUND_INIT_DONTLATENCYADJUST) )
-    {
-        SoundLog((CHAR8 *)String("  ERROR in SoundInitHardware(): %s", FMOD_ErrorString(FSOUND_GetError())));
-		return(FALSE);
-    }
+	for ( i = 0; i < NUMBER_OF_OUTPUTS; i++ )
+	{
+    	FSOUND_SetOutput( OutputTypes[i] );
+    	FSOUND_SetBufferSize(AUDIO_BUFFER_LEN);
+    	SoundLog((CHAR8 *)String("  Using driver: %s", FSOUND_GetDriverName(FSOUND_GetDriver())));
+//		SoundLog("    Driver capabilities:");
+//		FSOUND_GetDriverCaps( FSOUND_GetDriver(), &uiCaps );
+//
+//		if ( uiCaps & FSOUND_CAPS_HARDWARE )
+//			SoundLog("      - supports hardware accelerated 3d sound");
+//
+//		if ( uiCaps & FSOUND_CAPS_EAX2 )
+//			SoundLog("      - supports EAX 2 reverb");
+//
+//		if ( uiCaps & FSOUND_CAPS_EAX3 )
+//			SoundLog("      - supports EAX 3 reverb");
+//
+		if( !FSOUND_Init(44100, SOUND_MAX_CHANNELS, FSOUND_INIT_GLOBALFOCUS) )
+    	{
+        	SoundLog((CHAR8 *)String("  Cannot initialize %s: %s", FSOUND_GetDriverName(FSOUND_GetDriver()), FMOD_ErrorString(FSOUND_GetError())));
+//			return(FALSE);
+    	}
+		else
+			break;
+	}
 
     SoundLog("  FMOD started");
     SoundLog((CHAR8 *)String("  Mixing rate: %d", FSOUND_GetOutputRate()));

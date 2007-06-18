@@ -4274,7 +4274,7 @@ void SaveGameFilePosition( INT32 iPos, STR pMsg )
 	sprintf( zFileName, "%sSaveGameFilePos%2d.txt", gSaveDir, gubSaveGameLoc );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -4318,7 +4318,7 @@ void LoadGameFilePosition( INT32 iPos, STR pMsg )
 	sprintf( zFileName, "%sLoadGameFilePos%2d.txt", gSaveDir, gubSaveGameLoc );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -4961,7 +4961,7 @@ void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGa
 	else
 	{
 		// create the save game file
-		hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 		if( !hFile )
 		{
 			FileClose( hFile );
@@ -4999,7 +4999,7 @@ void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFi
 	sprintf( zFileName, "%s%s.txt", gSaveDir, gzNameOfMapTempFile );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( !hFile )
 	{
 		FileClose( hFile );

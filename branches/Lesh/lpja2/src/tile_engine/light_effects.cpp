@@ -383,7 +383,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	}
 
 	//Open the file for writing
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
