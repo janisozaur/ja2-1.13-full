@@ -23,18 +23,32 @@
 UINT32 guiForceRefreshMousePositionCalculation = 0;
 
 // GLOBALS
-INT16 DirIncrementer[8] =
- {
-  -MAPWIDTH,        //N
-	1-MAPWIDTH,       //NE
-	1,                //E
-	1+MAPWIDTH,       //SE
-	MAPWIDTH,         //S
-	MAPWIDTH-1,       //SW
-	-1,               //W
-	-MAPWIDTH-1       //NW
+//INT16 DirIncrementer[8] =
+// {
+//  -MAPWIDTH,        //N
+//	1-MAPWIDTH,       //NE
+//	1,                //E
+//	1+MAPWIDTH,       //SE
+//	MAPWIDTH,         //S
+//	MAPWIDTH-1,       //SW
+//	-1,               //W
+//	-MAPWIDTH-1       //NW
+//
+// };
 
- };
+INT16 DirIncrementer[8] =
+{
+	-OLD_WORLD_COLS,        //N
+		1-OLD_WORLD_COLS,       //NE
+		1,                //E
+		1+OLD_WORLD_COLS,       //SE
+		OLD_WORLD_COLS,         //S
+		OLD_WORLD_COLS-1,       //SW
+		-1,               //W
+		-OLD_WORLD_COLS-1       //NW
+
+};
+
 
 // Opposite directions
 UINT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ] = 

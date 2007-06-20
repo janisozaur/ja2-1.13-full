@@ -385,7 +385,7 @@ BOOLEAN		gfUIHandleSelectionAboveGuy			= FALSE;
 BOOLEAN		gfUIInDeadlock									= FALSE;
 UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
-UINT16		gsUIHandleShowMoveGridLocation  = NOWHERE ;
+UINT32		gsUIHandleShowMoveGridLocation  = NOWHERE ;
 BOOLEAN		gfUIOverItemPool								= FALSE;
 INT32			gfUIOverItemPoolGridNo					= 0;
 INT16			gsCurrentActionPoints						= 1;
@@ -3864,7 +3864,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT32 usMapPos, UINT32 uiFlags )
 	}
 	else if ( uiFlags == MOVEUI_TARGET_MERCS )
 	{
-		   INT16		sGotLocation = NOWHERE;
+		   INT32		sGotLocation = NOWHERE;
 		   BOOLEAN	fGotAdjacent = FALSE;
 
 			// Check if we are on a target

@@ -247,8 +247,7 @@ BOOLEAN gfCalcTranslucency = FALSE;
 
 INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
 {
-	-1, -WORLD_COLS - 1, -WORLD_COLS
-
+	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
 };
 
 

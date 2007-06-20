@@ -134,7 +134,8 @@ void LoadMapLights( INT8 **hBuffer );
 MAP_ELEMENT			*gpWorldLevelData;
 INT32						*gpDirtyData;
 UINT32					gSurfaceMemUsage;
-UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
+//UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
+UINT8***						gubWorldMovementCosts = NULL;
 
 // set to nonzero (locs of base gridno of structure are good) to have it defined by structure code
 INT16		gsRecompileAreaTop = 0;
@@ -1653,7 +1654,13 @@ BOOLEAN SaveWorld( UINT8	*puiFilename )
 	UINT8			ubTest = 1;
 	CHAR8			aFilename[ 255 ];
 	UINT8			ubCombine;
-	UINT8			bCounts[ WORLD_MAX ][8];
+//	UINT8			bCounts[ WORLD_MAX ][8];
+	UINT8**			bCounts = NULL;
+	int i;
+
+	bCounts = (UINT8**)MemAlloc(WORLD_MAX*sizeof(UINT8*));
+	for(i = 0; i<WORLD_MAX; i++)
+		bCounts[i] = MemAlloc(8);
 
 	sprintf( aFilename, "MAPS\\%s", puiFilename );
 
@@ -1671,6 +1678,10 @@ BOOLEAN SaveWorld( UINT8	*puiFilename )
 	{
 		FileWrite( hfile, &gubMinorMapVersion, sizeof( UINT8 ), &uiBytesWritten );
 	}
+
+	//SB: save map dimensions
+	FileWrite( hfile, &WORLD_ROWS, sizeof( INT32 ), &uiBytesWritten );
+	FileWrite( hfile, &WORLD_COLS, sizeof( INT32 ), &uiBytesWritten );
 
 	// Write FLAGS FOR WORLD
 	//uiFlags = MAP_WORLDONLY_SAVED;
@@ -2120,6 +2131,10 @@ BOOLEAN SaveWorld( UINT8	*puiFilename )
 	sprintf( gubFilename, puiFilename );
 #endif //JA2EDITOR
 
+	for(i = 0; i<WORLD_MAX; i++)
+		MemFree(bCounts[i]);
+	MemFree(bCounts);
+
 	return( TRUE );
 }
 
@@ -2236,7 +2251,8 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 	INT32 i;
 	INT32 iTilesetID;
 	UINT16 str[40];
-	UINT8	bCounts[ WORLD_MAX ][8];
+//	UINT8	bCounts[ WORLD_MAX ][8];
+	UINT8	**  bCounts = NULL;
 	UINT8 ubCombine;
 	UINT8 szDirFilename[ 50 ];
 	UINT8 szFilename[ 40 ];
@@ -2311,6 +2327,10 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 
 	//skip height values
 	pBuffer += sizeof( INT16 ) * WORLD_MAX;
+
+	bCounts = (UINT8**)MemAlloc(WORLD_MAX*sizeof(UINT8*));
+	for(i = 0; i<WORLD_MAX; i++)
+		bCounts[i] = (UINT8*)MemAlloc(8);
 
 	//read layer counts
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -2616,6 +2636,11 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 
 	MemFree( pBufferHead );
 
+	for(i = 0; i<WORLD_MAX; i++)
+		MemFree(bCounts[i]);
+	MemFree(bCounts);
+
+
 	WriteSectorSummaryUpdate( szFilename, ubLevel, pSummary );
 	return TRUE;
 }
@@ -2645,11 +2670,13 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	UINT8						ubSubIndex;
 	CHAR8						aFilename[ 50 ];
 	UINT8						ubCombine;
-	UINT8							bCounts[ WORLD_MAX ][8];
+//	UINT8							bCounts[ WORLD_MAX ][8];
+	UINT8**							bCounts = NULL;
 	INT8						*pBuffer;
 	INT8						*pBufferHead;
 	BOOLEAN					fGenerateEdgePoints = FALSE;
 	UINT8						ubMinorMapVersion;
+	int i;
 #ifdef JA2TESTVERSION
 	uiLoadWorldStartTime = GetJA2Clock();
 #endif
@@ -2703,15 +2730,31 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) ); 
 
-	#ifdef RUSSIAN
-		if( dMajorMapVersion != 6.00 )
-		{
-			return FALSE;
-		}
-	#endif
+//	#ifdef RUSSIAN
+//		if( dMajorMapVersion != 6.00 )
+//		{
+//			return FALSE;
+//		}
+//	#endif
 
 	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
 	
+	if(dMajorMapVersion < 7.00)
+		// old map - always 160x160
+		SetWorldSize(OLD_WORLD_ROWS, OLD_WORLD_COLS);
+	else
+	{
+		INT32 iRowSize = 0, iColSize = 0;
+		LOADDATA( &iRowSize, pBuffer, sizeof( INT32 ) );
+		LOADDATA( &iColSize, pBuffer, sizeof( INT32 ) );
+		SetWorldSize(iRowSize, iColSize);
+	}
+	//SB
+
+	bCounts = (UINT8**)MemAlloc(WORLD_MAX*sizeof(UINT8*));
+	for(i = 0; i<WORLD_MAX; i++)
+		bCounts[i] = (UINT8*)MemAlloc(8);
+
 	// CHECK FOR NON-COMPATIBLE VERSIONS!
 	// CHECK FOR MAJOR MAP VERSION INCOMPATIBLITIES
 	//if ( dMajorMapVersion < gdMajorMapVersion )
@@ -2987,12 +3030,14 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	fp += offset;
 	offset = 0;
 
-	#ifdef RUSSIAN
+//SB: old 6.00 (Russian) version stuff
+	if( dMajorMapVersion==6.00 )
+//	#ifdef RUSSIAN
 	{
 		UINT32 uiNums[37];
 		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
 	}
-	#endif
+//	#endif
 
 	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
 	RenderProgressBar( 0, 100 );
@@ -3194,6 +3239,9 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 
 	DequeueAllKeyBoardEvents();
 
+	for(i = 0; i<WORLD_MAX; i++)
+		MemFree(bCounts[i]);
+	MemFree(bCounts);
 
 	return( TRUE );
 }
@@ -3204,7 +3252,7 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 //	Deletes everything then re-creates the world with simple ground tiles
 //
 //****************************************************************************************
-BOOLEAN NewWorld( void )
+BOOLEAN NewWorld( INT32 nMapRows,  INT32 nMapCols )
 {
 	UINT16				NewIndex;
 	INT32					cnt;
@@ -3214,6 +3262,9 @@ BOOLEAN NewWorld( void )
 	AdjustSoldierCreationStartValues( );
 
 	TrashWorld();
+
+	//SB
+	SetWorldSize(nMapRows, nMapCols);
 
 	// Create world randomly from tiles
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -4158,4 +4209,75 @@ BOOLEAN IsRoofVisibleForWireframe( INT32 sMapPos )
 	}
 
 	return( FALSE );
+}
+
+//SB: resize all service array due to tactical map size change
+extern UINT8 * gubGridNoMarkers;
+extern UINT8 * gubFOVDebugInfoInfo;
+extern INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ];
+extern INT32 dirDelta[8];
+INT16 DirIncrementer[8];
+
+void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
+{
+	int i, j;
+
+	if(gubGridNoMarkers)
+		MemFree(gubGridNoMarkers);
+	gubGridNoMarkers = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+
+	if(gsCoverValue)
+		MemFree(gsCoverValue);
+	gsCoverValue = (INT16*)MemAlloc(nWorldRows*nWorldCols*sizeof(INT16));
+
+	if(gubBuildingInfo)
+		MemFree(gubBuildingInfo);
+	gubBuildingInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	
+	if(gubWorldRoomInfo)
+		MemFree(gubWorldRoomInfo);
+	gubWorldRoomInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+
+	if(gubWorldMovementCosts)
+	{
+		for(i=0; i<WORLD_MAX; i++)
+		{
+			for(j=0; j<MAXDIR; j++)
+				MemFree(gubWorldMovementCosts[i][j]);
+			MemFree(gubWorldMovementCosts[i]);
+		}
+		MemFree(gubWorldMovementCosts);
+	}
+	gubWorldMovementCosts = (UINT8***)MemAlloc(WORLD_MAX*sizeof(UINT8**));
+	for(i=0; i<WORLD_MAX; i++)
+	{
+		gubWorldMovementCosts[i] = (UINT8**)MemAlloc(MAXDIR*sizeof(UINT8*));
+		for(j=0; j<MAXDIR; j++)
+			gubWorldMovementCosts[i][j] = (UINT8*)MemAlloc(2*sizeof(UINT8));
+	}
+
+#ifdef _DEBUG
+	if(gubFOVDebugInfoInfo)
+			MemFree(gubFOVDebugInfoInfo);
+	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+#endif
+
+	WORLD_ROWS = nWorldRows;
+	WORLD_COLS = nWorldCols;
+
+	dirDelta[0]= -WORLD_COLS;
+	dirDelta[1]= 1-WORLD_COLS;
+	dirDelta[3]= 1+WORLD_COLS;
+	dirDelta[4]= WORLD_ROWS;
+	dirDelta[5]= WORLD_ROWS-1;
+	dirDelta[7]= -WORLD_ROWS-1;
+
+	DirIncrementer[0] = -WORLD_ROWS;
+	DirIncrementer[1] = 1-WORLD_ROWS;
+	DirIncrementer[3] = 1+WORLD_ROWS;
+	DirIncrementer[4] = WORLD_ROWS;
+	DirIncrementer[5] = WORLD_ROWS-1;
+	DirIncrementer[6] = -1;
+	DirIncrementer[7] = -WORLD_ROWS-1;
+
 }

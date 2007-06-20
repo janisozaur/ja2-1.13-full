@@ -28,7 +28,7 @@
 #include "PathAIDebug.h"
 
 #ifdef _DEBUG
-	INT16 gsCoverValue[WORLD_MAX];
+	INT16 * gsCoverValue = NULL;
 	INT16	gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
 		// NB Change this to true to get visible cover debug -- CJC
@@ -1645,7 +1645,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	INT32					iSearchRange;
 	INT16					sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT32 sGridNo;
-	INT16					sBestSpot = NOWHERE;
+	INT32					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
 	ITEM_POOL *		pItemPool;
 	OBJECTTYPE *	pObj;

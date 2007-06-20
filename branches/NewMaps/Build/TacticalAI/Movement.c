@@ -227,7 +227,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 
 
 
-INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
+INT32 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 {
  // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
  if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
@@ -255,7 +255,7 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 
 INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 {
- INT16 sPatrolPoint;
+ INT32 sPatrolPoint;
  INT8  bOldOrders;
 
 

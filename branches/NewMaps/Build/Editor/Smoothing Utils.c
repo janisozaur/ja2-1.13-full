@@ -450,7 +450,7 @@ UINT16 GetWallClass( LEVELNODE *pWall )
 	return 0xffff;
 }
 
-UINT16 GetVerticalWallClass( UINT16 iMapIndex )
+UINT16 GetVerticalWallClass( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )
@@ -458,7 +458,7 @@ UINT16 GetVerticalWallClass( UINT16 iMapIndex )
 	return 0xffff;
 }
 
-UINT16 GetHorizontalWallClass( UINT16 iMapIndex )
+UINT16 GetHorizontalWallClass( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )

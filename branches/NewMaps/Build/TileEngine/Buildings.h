@@ -20,7 +20,8 @@ typedef struct BUILDING
 	UINT8			ubNumClimbSpots;
 } BUILDING;
 
-extern UINT8 gubBuildingInfo[ WORLD_MAX ];
+//extern UINT8 gubBuildingInfo[ WORLD_MAX ];
+extern UINT8 * gubBuildingInfo;
 
 BOOLEAN InBuilding( INT32 sGridNo );
 BUILDING * GenerateBuilding( INT32 sDesiredSpot );

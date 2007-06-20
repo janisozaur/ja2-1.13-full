@@ -890,8 +890,8 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent,sBestCover = NOWHERE;
- INT16		sClosestDisturbance;
+ INT32		sClosestOpponent,sBestCover = NOWHERE;
+ INT32		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
  UINT8		ubBestAttackAction;

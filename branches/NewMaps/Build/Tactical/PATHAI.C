@@ -58,7 +58,8 @@ extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 #ifdef PATHAI_VISIBLE_DEBUG
 #include "video.h"
 
-extern INT16 gsCoverValue[WORLD_MAX];
+//extern INT16 gsCoverValue[WORLD_MAX];
+extern INT16 * gsCoverValue;
 BOOLEAN gfDisplayCoverValues = TRUE;
 BOOLEAN gfDrawPathPoints = FALSE;
 #endif
@@ -406,17 +407,30 @@ static INT32 giPathDataSize;
 static INT32 giPlotCnt;
 static INT32 guiEndPlotGridNo;
 
+//static INT32 dirDelta[8]=
+//{
+//	-MAPWIDTH,        //N
+//	1-MAPWIDTH,       //NE
+//	1,                //E
+//	1+MAPWIDTH,       //SE
+//	MAPWIDTH,         //S
+//	MAPWIDTH-1,       //SW
+//	-1,               //W
+//	-MAPWIDTH-1       //NW
+//};
+
 static INT32 dirDelta[8]=
 {
-	-MAPWIDTH,        //N
-	1-MAPWIDTH,       //NE
-	1,                //E
-	1+MAPWIDTH,       //SE
-	MAPWIDTH,         //S
-	MAPWIDTH-1,       //SW
-	-1,               //W
-	-MAPWIDTH-1       //NW
+		-OLD_WORLD_COLS,        //N
+		1-OLD_WORLD_COLS,       //NE
+		1,                //E
+		1+OLD_WORLD_COLS,       //SE
+		OLD_WORLD_COLS,         //S
+		OLD_WORLD_COLS-1,       //SW
+		-1,               //W
+		-OLD_WORLD_COLS-1       //NW
 };
+
 
 #define LOOPING_CLOCKWISE 0
 #define LOOPING_COUNTERCLOCKWISE 1

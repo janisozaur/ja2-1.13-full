@@ -155,7 +155,7 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow);
 void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab );
 
 INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetLevel );
-INT32 CalcManThreatValue(SOLDIERTYPE *pSoldier, INT16 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe );
+INT32 CalcManThreatValue(SOLDIERTYPE *pSoldier, INT32 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe );
 INT8 CanNPCAttack(SOLDIERTYPE *pSoldier);
 void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow);
 BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel );

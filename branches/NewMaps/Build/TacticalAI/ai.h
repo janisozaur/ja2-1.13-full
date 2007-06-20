@@ -11,7 +11,7 @@ extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9
 
 extern BOOLEAN gfDisplayCoverValues;
-extern INT16 gsCoverValue[WORLD_MAX];
+extern INT16 * gsCoverValue;
 
 // AI actions
 
@@ -212,7 +212,7 @@ void MakeClosestEnemyChosenOne();
 void ManChecksOnFriends(SOLDIERTYPE *pSoldier);
 
 void NewDest(SOLDIERTYPE *pSoldier, INT32 sGridNo);
-INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
+INT32 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
 void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);

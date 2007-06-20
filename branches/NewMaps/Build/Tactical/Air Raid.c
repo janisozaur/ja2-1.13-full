@@ -284,7 +284,7 @@ BOOLEAN BeginAirRaid( )
 }
 
 
-INT16 PickLocationNearAnyMercInSector( )
+INT32 PickLocationNearAnyMercInSector( )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;

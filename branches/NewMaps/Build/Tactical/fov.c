@@ -39,12 +39,14 @@
 
 extern INT16 DirIncrementer[8];
 
-UINT8		gubGridNoMarkers[ WORLD_MAX ];
+//UINT8		gubGridNoMarkers[ WORLD_MAX ];
+UINT8	*	gubGridNoMarkers = NULL;
 UINT8		gubGridNoValue			= 254;
 
 
 #ifdef _DEBUG
-UINT8		gubFOVDebugInfoInfo[ WORLD_MAX ];
+//UINT8		gubFOVDebugInfoInfo[ WORLD_MAX ];
+UINT8	*	gubFOVDebugInfoInfo = NULL;
 #endif
 
 

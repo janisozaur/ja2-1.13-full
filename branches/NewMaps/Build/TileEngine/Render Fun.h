@@ -9,7 +9,8 @@
 
 
 UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
-UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+//UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+extern UINT8*						gubWorldRoomInfo;
 
 
 BOOLEAN InitRoomDatabase( );

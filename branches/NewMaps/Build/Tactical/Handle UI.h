@@ -199,7 +199,7 @@ BOOLEAN		gUIUseReverse;
 
 
 BOOLEAN		gfUIHandleShowMoveGrid;
-UINT16		gsUIHandleShowMoveGridLocation;
+UINT32		gsUIHandleShowMoveGridLocation;
 
 BOOLEAN		gfUIDisplayDamage;
 INT8			gbDamage;

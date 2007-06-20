@@ -2611,8 +2611,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 {
  INT32	iCoverPercentBetter, iOffense, iDefense, iChance;
- INT16	sClosestOpponent,sBestCover = NOWHERE;
- INT16	sClosestDisturbance;
+ INT32	sClosestOpponent,sBestCover = NOWHERE;
+ INT32	sClosestDisturbance;
  UINT8	ubMinAPCost,ubCanMove;
  INT8		bInWater,bInDeepWater,bInGas;
  INT8		bDirection;

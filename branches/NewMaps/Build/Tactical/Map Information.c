@@ -23,11 +23,14 @@
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!
-#ifdef RUSSIAN
-	#define MAJOR_MAP_VERSION		6.00
-#else
-	#define MAJOR_MAP_VERSION		5.00
-#endif
+//#ifdef RUSSIAN
+//	#define MAJOR_MAP_VERSION		6.00
+//#else
+//	#define MAJOR_MAP_VERSION		5.00
+//#endif
+
+// SB: new map version, with map dimensions added
+#define MAJOR_MAP_VERSION		7.00
 
 FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
 

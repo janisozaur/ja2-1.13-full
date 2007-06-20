@@ -15,7 +15,7 @@
 
 #define ROOF_LOCATION_CHANCE 8
 
-UINT8						gubBuildingInfo[ WORLD_MAX ];
+UINT8*					gubBuildingInfo = NULL;
 BUILDING				gBuildings[ MAX_BUILDINGS ];
 UINT8						gubNumberOfBuildings;
 

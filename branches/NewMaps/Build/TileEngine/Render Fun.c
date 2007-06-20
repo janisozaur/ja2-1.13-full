@@ -24,7 +24,7 @@
 #endif
 
 // Room Information
-UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+UINT8*						gubWorldRoomInfo = NULL;
 UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 

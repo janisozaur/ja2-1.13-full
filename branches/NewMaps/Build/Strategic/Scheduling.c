@@ -1288,7 +1288,7 @@ void ReconnectSchedules( void )
 }
 */
 
-UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
+UINT32 FindSleepSpot( SCHEDULENODE * pSchedule )
 {
 	INT8			bLoop;
 

@@ -805,7 +805,7 @@ typedef struct
 	INT32												sOffWorldGridNo;
 	struct TAG_anitile					*pAniTile;	
 	INT8												bCamo;
-	INT16												sAbsoluteFinalDestination;
+	INT32												sAbsoluteFinalDestination;
 	UINT8												ubHiResDirection;
 	UINT8												ubHiResDesiredDirection;
 	UINT8												ubLastFootPrintSound;

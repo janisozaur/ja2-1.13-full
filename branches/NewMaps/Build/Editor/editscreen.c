@@ -2287,7 +2287,9 @@ void CreateNewMap()
 		LoadMapTileset( 0 );
 
 	LightReset();
-	NewWorld( );
+
+//	NewWorld( );
+	NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
 	if( gfPendingBasement )
 	{
 		UINT32 i;

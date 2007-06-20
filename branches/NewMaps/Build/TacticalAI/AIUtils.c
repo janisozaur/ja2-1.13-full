@@ -2063,7 +2063,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
  return(bMoraleCategory);
 }
 
-INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe )
+INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT32 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe )
 {
 	INT32	iThreatValue = 0;
 	BOOLEAN fForCreature = CREATURE_OR_BLOODCAT( pMe );

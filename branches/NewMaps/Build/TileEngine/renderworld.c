@@ -707,13 +707,13 @@ void RenderRoomInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPoi
 
 #ifdef _DEBUG
 
-extern UINT8 gubFOVDebugInfoInfo[ WORLD_MAX ];
-extern UINT8 gubGridNoMarkers[ WORLD_MAX ];
+extern UINT8 * gubFOVDebugInfoInfo;
+extern UINT8 * gubGridNoMarkers;
 extern UINT8 gubGridNoValue;
 
 extern BOOLEAN gfDisplayCoverValues;
 extern BOOLEAN gfDisplayGridNoVisibleValues = 0;
-extern INT16	gsCoverValue[ WORLD_MAX ];
+extern INT16 *	gsCoverValue;
 extern INT16	gsBestCover;
 
 void RenderFOVDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS );
