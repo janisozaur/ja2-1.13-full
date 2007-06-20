@@ -124,9 +124,31 @@ void SaveMapInformation( HWFILE fp )
 	FileWrite( fp, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesWritten );
 }
 
-void LoadMapInformation( INT8 **hBuffer )
+//SB: old to new mapcreatestruct update routine
+void UpdateOldMapCreateStruct(MAPCREATE_STRUCT * pNew, _OLD_MAPCREATE_STRUCT * pOld)
 {
-	LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
+	pNew->sNorthGridNo = pOld->sNorthGridNo;
+	pNew->sEastGridNo = pOld->sEastGridNo;
+	pNew->sSouthGridNo = pOld->sSouthGridNo;
+	pNew->sWestGridNo = pOld->sWestGridNo;
+	pNew->ubNumIndividuals = pOld->ubNumIndividuals;
+	pNew->ubMapVersion = pOld->ubMapVersion;
+	pNew->ubRestrictedScrollID = pOld->ubRestrictedScrollID;
+	pNew->ubEditorSmoothingType = pOld->ubEditorSmoothingType;
+	pNew->sCenterGridNo = pOld->sCenterGridNo;
+	pNew->sIsolatedGridNo = pOld->sIsolatedGridNo;
+}
+
+void LoadMapInformation( INT8 **hBuffer, FLOAT dMajorMapVersion )
+{
+	if(dMajorMapVersion<7.0)
+	{
+		_OLD_MAPCREATE_STRUCT OldMapInformation;
+		LOADDATA( &OldMapInformation, *hBuffer, sizeof( _OLD_MAPCREATE_STRUCT ) );
+		UpdateOldMapCreateStruct(&gMapInformation, &OldMapInformation);
+	}
+	else
+		LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
 	//FileRead( hfile, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesRead);
 
 	// ATE: OK, do some handling here for basement level scroll restrictions

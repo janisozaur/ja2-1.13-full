@@ -3120,7 +3120,7 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	SetRelativeStartAndEndPercentage( 0, 85, 86, L"Loading map information..." );
 	RenderProgressBar( 0, 0 );
 
-	LoadMapInformation( &pBuffer );
+	LoadMapInformation( &pBuffer, dMajorMapVersion );
 	
 	if( uiFlags & MAP_FULLSOLDIER_SAVED )
 	{
