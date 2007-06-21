@@ -221,14 +221,16 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 	return uiId;
 }
 
-
-void GameInitHistory()
+void InitHistoryFilename()
 {
 	STR_SPrintf(gzHistoryDataFile, 512, "%s%s", gzTacticalSaveDir, HISTORY_DATA_FILE );
 	
   	if( ( FileExists( gzHistoryDataFile ) ) )
 	 	 FileDelete( gzHistoryDataFile );
+}
 
+void GameInitHistory()
+{
 	OpenAndWriteHistoryFile();
 	AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin( ), -1, -1);
 }

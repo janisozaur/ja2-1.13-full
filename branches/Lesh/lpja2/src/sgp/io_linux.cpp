@@ -242,9 +242,9 @@ IOFILE IO_File_Open( const CHAR8 *path, UINT32 flags )
 		uiOpenFlags = O_WRONLY;
 
 	if  ( flags & IO_CREATE_NEW )
-		uiOpenFlags |= O_CREAT | O_EXCL | O_TRUNC;
+		uiOpenFlags |= O_CREAT | O_EXCL;
 	else if ( flags & IO_CREATE_ALWAYS )
-		uiOpenFlags |= O_CREAT | O_TRUNC;
+		uiOpenFlags |= O_CREAT;
 
 	hFile = open( path, uiOpenFlags, S_IRWXU );
 	if ( hFile == -1 )

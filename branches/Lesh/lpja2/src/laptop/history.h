@@ -1,6 +1,7 @@
 #ifndef __HISTORY_H
 #define __HISTORY_H
 
+void InitHistoryFilename();
 void GameInitHistory();
 void EnterHistory();
 void ExitHistory();

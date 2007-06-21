@@ -216,13 +216,16 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 	return uiId;
 }
 
-void GameInitFiles( )
+void InitFilesFilename()
 {
 	STR_SPrintf(gzFilesDataFile, 512, "%s%s", gzTacticalSaveDir, FILES_DATA_FILE);
 
 	if (  (FileExists( gzFilesDataFile ) == TRUE ) )
 		 FileDelete( gzFilesDataFile );
+}
 
+void GameInitFiles( )
+{
 	ClearFilesList( );
 
 	// add background check by RIS

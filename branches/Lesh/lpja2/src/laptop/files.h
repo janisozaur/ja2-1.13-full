@@ -4,6 +4,7 @@
 
 extern STRING512 gzFilesDataFile;
 
+void InitFilesFilename();
 void GameInitFiles();
 void EnterFiles();
 void ExitFiles();

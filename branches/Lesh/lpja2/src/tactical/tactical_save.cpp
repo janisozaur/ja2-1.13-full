@@ -48,6 +48,9 @@
 	#include "animated_progressbar.h"
 	#include "platform.h"
 	#include "sgp_str.h"
+	#include "history.h"
+	#include "files.h"
+	#include "finances.h"
 	
 #endif
 
@@ -1509,6 +1512,9 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 	{
 		//Create the initial temp file for the Npc Quote Info
 		InitTempNpcQuoteInfoForNPCFromTempFile();
+		InitHistoryFilename();
+		InitFilesFilename();
+		InitFinancesFilename();
 	}
 
  	return( TRUE );

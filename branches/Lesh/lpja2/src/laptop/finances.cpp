@@ -426,7 +426,7 @@ INT32 GetConfidenceValue()
   return(( ( GetWorldMinutesInDay()*100 ) / (60*24) ));
 }
 
-void GameInitFinances()
+void InitFinancesFilename()
 {
 	// initialize finances on game start up
 	STR_SPrintf(gzFinancesDataFile, 512, "%s%s", gzTacticalSaveDir, FINANCES_DATA_FILE);
@@ -436,6 +436,10 @@ void GameInitFinances()
 	{
 		FileDelete( gzFinancesDataFile );
 	}
+}
+
+void GameInitFinances()
+{
 	WriteBalanceToDisk( );
 	GetBalanceFromDisk( );
 }

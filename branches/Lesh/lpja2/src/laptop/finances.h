@@ -1,6 +1,7 @@
 #ifndef __FINANCES_H
 #define __FINANCES_H
 
+void InitFinancesFilename();
 void GameInitFinances();
 void EnterFinances();
 void ExitFinances();
