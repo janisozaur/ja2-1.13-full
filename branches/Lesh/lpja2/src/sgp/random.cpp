@@ -61,7 +61,7 @@ BOOLEAN Chance( UINT32 uiChance )
 
 UINT32 PreRandom( UINT32 uiRange )
 {
-	UINT32 uiNum;
+	long long uiNum;
 	#ifdef JA2BETAVERSION
 		if( gfCountRandoms )
 		{
@@ -71,7 +71,7 @@ UINT32 PreRandom( UINT32 uiRange )
 	if( !uiRange )
 		return 0;
 	//Extract the current pregenerated number
-	uiNum = guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
+	uiNum = (long long)guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
 	//Replace the current pregenerated number with a new one.
 
 	//This was removed in the name of optimization.  Uncomment if you hate recycling.

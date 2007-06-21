@@ -80,19 +80,6 @@ BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 {
-
-  BOOLEAN bMercDayOne = FALSE;
-	// Kaiden: Opening the INI File
-	CIniReader iniReader;
-
-	iniReader.Open("..\\Ja2_Options.ini");
-
-	//Kaiden: Getting Value for MERC Available on Day one?
-	// for some reason, this can't be in gamesettings.cpp
-	// or it won't work. 
-	bMercDayOne = iniReader.ReadBoolean("Options","MERC_DAY_ONE",FALSE);
-	iniReader.Close();
-
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ExecuteStrategicEvent");
 
 	if( gGameExternalOptions.gfEnableEmergencyButton_SkipStrategicEvents && _KeyDown( NUM_LOCK ) )
@@ -197,10 +184,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			DailyUpdateOfMercSite( (UINT16)GetWorldDay() );
 			break;
     case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
-			if(!bMercDayOne)
-			{
-				AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ), -1 );
-			}
+			AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ), -1 );
 			break;
 		case EVENT_DAY2_ADD_EMAIL_FROM_IMP:
 			AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ), -1 );

@@ -358,6 +358,7 @@ void ShutdownStrategicLayer()
 BOOLEAN InitNewGame( BOOLEAN fReset )
 {
 	INT32		iStartingCash;
+	UINT32	uiDaysTimeMercSiteAvailable;
 
 	printf("Initializing new game\n");
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame");
@@ -470,7 +471,10 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 
 		{
-			UINT32	uiDaysTimeMercSiteAvailable = Random( 2 ) + 1;
+			if ( gGameExternalOptions.fMercDayOne )
+				uiDaysTimeMercSiteAvailable = 0;
+			else
+				uiDaysTimeMercSiteAvailable = Random( 2 ) + 1;
 
 			// schedule email for message from spec at 7am 3 days in the future
 			AddFutureDayStrategicEvent( EVENT_DAY3_ADD_EMAIL_FROM_SPECK, 60*7, 0, uiDaysTimeMercSiteAvailable );
