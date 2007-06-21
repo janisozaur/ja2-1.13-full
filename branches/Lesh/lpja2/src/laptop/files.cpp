@@ -1259,7 +1259,7 @@ void AddStringToFilesList( STR16 pString )
 	
 	
   // alloc string and copy
-	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) * 2 ) + 2 );
+	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) + 1 ) * sizeof(CHAR16) );
 	wcscpy( pFileString->pString, pString );
 	pFileString->pString[ wcslen( pString ) ] = 0;
 
