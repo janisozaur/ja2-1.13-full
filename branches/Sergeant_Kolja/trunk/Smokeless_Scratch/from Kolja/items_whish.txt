@@ -1,0 +1,254 @@
+All I need for my Smokeless Mod:
+================================
+
+
+------------------------< START >-------------------------------
+
+"Chop Knife"
+Slot:    Big Slot
+Picture: <http://www.1a-versand.de/catalog/images/Pbilder/701807_mi.jpg>
+
+"cheap, unreliable, Kitchen Knife"
+Slot:    Small Slot, 2
+Picture: grab your Cam, go into your kitchen ;-) 
+I'm joking! Take this chinese cheap clone: <http://www.kochmesser.de/250067.jpg>
+
+"Balisong" (aka Butterfly Knife)
+Slot:    Small Slot, 4
+Picture: <http://upload.wikimedia.org/wikipedia/de/thumb/6/64/Balisong_open.png/180px-Balisong_open.png>
+
+"Fist Knife"
+Slot:    Small Slot, 2
+Picture: <http://media.time4teen.de/faustmesser.jpg>
+
+"Knoechelmesser" (Knife with Dusters)
+Slot:    Small Slot, 1
+Picture: <http://www.aermeldolch.com/TRENCH.JPG>
+
+"Lead filled Glove" (internally handled as Knuckle Dusters)
+Slot:    Small Slot, 1
+Picture: <http://www.sd-pro2ls.de/shop/images/big/0210490.jpg>
+
+"long bough / branch" (I hope I found the right English word) - an Y-shaped piece of a tree, 
+3 feets long, should be used as a blunt weapon. Can also to be cut to an 8 inch long, symmetric
+Y-shaped pice, which again can be combined with rubber band to a "SlingShot".
+Slot:    Big Slot, 1
+Picture: <http://www.ak-grundschule.de/html/cd/programme/lehrer/arbeitsbl/hutschek/beispiele/ast.jpg> (okay, not the best)
+
+"short bough / branch" - need only some rubber band to have the Slingshot
+Slot:    Small Slot, 1
+Picture: <http://www.flugratten.de/images/content_ammo/zwille.jpg>
+         (please remove the sling)
+
+"slingshot" - the final device
+Slot:    Small Slot, 1
+Picture: <http://www.flugratten.de/images/content_ammo/zwille.jpg>
+
+
+"Box of Screws & Nails" - a paper box with 2 inch Screws and 6 inch Nails
+Slot:    Big Slot, 1
+Picture: (for Screw) <http://www.svh24.de/catalog/images/selle_artikel/topspax-s_i_stern.jpg> 
+         (for Nails) <http://de.wikipedia.org/wiki/Bild:Schraubnagel.JPG> 
+         (for the Box) <http://www.webermichl.de/inkscape/tut/karton/step9.png> 
+         sorry, didn't found better...
+
+"Spiked Knuckle Dusters" is a combo of Standard Dusters + "Box of Screws & Nails"
+Slot:    Small Slot, 1
+Picture: <not found any, but could be made from our ingame Dusters, yes?>
+
+"Nailed Bat" The Bat You already made for me, but now modified with "Box of Screws & Nails"
+Slot:    Big Slot, 1
+Picture: <http://www.hlportal.de/images/images/medium/1390.jpg> is not good, but shows what I mean...
+
+
+Crossbows + Bolts
+~~~~~~~~~~~~~~~~~
+I whish to have a total of 3 Crossbows and 6 Bolts:
+- one small Pistol Crossbow (onehand operated)
+  Slot:    Small Slot, 1
+- one standard sporting/hunting crossbow
+  Slot:    Big Slot, 1
+- one big sniper Crossbow (coolest picture)
+  Slot:    Big Slot, 1
+
+- long Bolt in Standard (gray)+ AP(red) + HEAT(orange) please take the same picture always, 
+  but different color for the tip & wings. Slot Graphic should be contain a number '8'
+  or a bunch of Bolt Arrows to represent a 'magazine' bundle
+  Slot:    Big Slot, 1 pack of eight
+
+- short Bolt (for Pistol Crossbow) in same Standard + AP + HEAT versions
+  Slot:    Small Slot, 2 pack of 8 (so 4 pack fit in the big slot)
+
+Pictures: I attached some preselected as ZIP File. In my eyes, the "Pistol Crossbow Mk.Viper.bmp" 
+          (I just worked out the grass & box) is not bad.
+          The standard/hunting one could be "Md.proslider Mk.794",
+	  while the Sniper device could be taken from "Md.elite Mk.634"
+
+	  Most of them are taken from
+          <http://www.arrowinapple.de/armbrust/armbrustvixen> 
+          navigate on left side menue, there are many...
+
+
+Battlefield Enlightment:
+========================
+1st) for 60mm Mortar: take normal 60mm Pictue plus a big yellow stripe
+     Slot:    small Slot, 1
+2nd) for 40mm Nato  : take normal 40mm HE Pictue plus a big yellow stripe
+     Slot:    small Slot, 2
+3rd) for 40mm WP    : take normal 40mm Jumper Pictue plus a big yellow stripe
+     Slot:    small Slot, 2
+
+4th) "L12A2" Rocket Hand Fired Para illuminating, Size: aprx. 300mm x 60mm
+     Slot:    Big Slot, 1
+     Picture: <http://www.rapp-maritim.de/de/sport/seenot/signale/rakete.gif>
+     or better, but blurred: <http://www.egun.de/market/uploaded/1293953_46028cde0c23f.jpg>
+
+5th) "P2A1" signal/illuminating gun
+     Slot:    Small Slot, 1
+     Picture: <http://www.hkpro.com/p2a1.htm>
+
+6th) "Naval signal Gun"
+     Slot:    Small Slot, 1
+     Picture: <http://julia.hanovercomputer.com/firearms/mar05/catalog/images%5C54220.jpg>
+
+New Ammo:
+=========
+26.5x80 Ammo for Signal / illuminating Guns
+     Please make a bunch of them like .12 Gauge Ammo
+     Slot:    Small Slot, 4
+Picture: <http://www.hkpro.com/p2a1.htm>
+     Or make the .12 gauge Ammo with a green Body and a bright yellow ring instead of da blue one.
+
+
+This is all I need for my smokeless mod. truly all.
+------------------------< END >-------------------------------
+
+here comes what I think we will need in the official 1.13 to fulfill our promise for the modding community:
+
+
+Classic Mods Stuff:
+===================
+"Micro Purifier" - a technical item from some chemical device in JA1.
+     Slot:    Big Slot, 1
+     Picture: -found none- SirTech used some hypothetical fantasy graphic.
+
+"Eagle Stun Bomb" - a gas can plus a stun grenade
+     Slot:    Big Slot, 1
+     Picture: should be made from original red gas can + some tape + a Grenade ontop
+
+"Eagle Tear Bomb" - a gas can plus a tear grenade
+     Slot:    Big Slot, 1
+     Picture: as above, but with tear greande
+
+"Eagle Blast Bomb" - a gas can plus a fragmentation grenade
+     Slot:    Big Slot, 1
+     Picture: as above, but with frag greande
+
+
+
+
+New Ammo for JA2 1.13 main trunk:
+=================================
+.22LR round (3x: Ball, Hollowpoint, SubSonic HP)
+     Slot:      depends on magazines
+     Magazines: Bunch of 2 for Derringer,
+                speedloader #6 for the revolvers
+                long straight clip #10 for the Ruger and Amphibian
+                long bow clip #20 for the MPi69
+     Picture: <http://upload.wikimedia.org/wikipedia/commons/thumb/6/61/.22_LR.jpg/280px-.22_LR.jpg>
+
+
+Handguns for JA2 1.13 main trunk and some Mods:
+===============================================
+
+"Nagant 1895" - one of only two silenceable Revolvers, mostly for WWI and WWII Mods
+     Mag:       Speedloader or Bunch #6 of 7.62 Tokarew Ammo (need to be painted)
+     Slot:      small Slot,1 
+     Picture: <http://www.sff.net/people/sanders/nagant.html>
+
+"Mauser C-96" - THE one of two most famous WWI guns
+     Mag:       usual small 9mm Para Clip, already done
+     Slot:      small Slot,1 
+     Pictue: <http://world.guns.ru/handguns/mauser_c96_9par.jpg>
+
+"Luger 08 Parabellum" - THE OTHER one
+     Mag:       usual small 9mm Para Clip, already done
+     Slot:      small Slot,1 
+     Pictue: <http://www.waffenhq.de/infanterie/pistole08.html>
+
+"Luger 08 Parabellum with Stock" - a combo merge with one of our stocks
+     Mag:       usual small 9mm Para Clip, already done
+     Slot:      Big Slot,1 
+     Pictue: <http://gungallery.euweb.cz/Pict/P-08%20Parabellum%20Carabine.jpg>
+
+"Derringer Mod.7" (.22LR)
+     Mag:       a bunch of two bullets
+     Slot:      small Slot,1 
+     Picture: <http://www.derringer.de/n-derr94.jpg> or <http://www.derringer.de/n-derr38.jpg>
+
+"NAA .22LR Mini-Revolver"
+     Mag:       Speedloader or Bunch #6 of .22LR Ammo (need to be painted)
+     Slot:      small Slot,1 
+     Picture: <http://www.naaminis.com/pix/lrNEW2.jpg>
+
+"AWC AMPHIBIAN" integral suppressed .22LR
+     Mag:       long straight clip #10  (need to be painted)
+     Slot:      Big Slot,1 
+     Picture: <http://www.paladinarmory.com/Photos%20for%20PA%20website/Amphibian.jpg>
+
+"Welrod MK1" integral silenced pistol (9mm Para)
+     Mag:       usual small 9mm Para Clip, already done
+     Slot:      Big Slot,1 
+     Picture: <http://www.eliteukforces.info/images/sas/welrod.gif> or <http://www.kitsune.addr.com/Firearms/Single-Shot-Pistols/Welrod.jpg>
+
+"CIA Deer Gun" as .45 because it is .45 in SOG'69 (but 9para in RL)
+     Mag:       Bunch #6 of .45ACP Ammo (need to be painted)
+     Slot:      small Slot,1 
+     Picture: <http://home.pacbell.net/rlhag65/dgun.html>
+
+"Liberator Pistol"
+     Mag:       Bunch #6 of .45ACP Ammo (need to be painted)
+     Slot:      small Slot,1 
+     Picture: <http://home.pacbell.net/rlhag65/liberator.html>
+
+"Colt Defender" - because it is so cool! With optional Teargas launcher inside (we can use it as integral 40mm Launcher and as .12 gauge)
+     Mag:       Bunch #8 of .12 Ammo (need to be painted from .12 #7 bunch?)
+     Slot:      Big Slot,1 
+     Pictures: <http://guntech.com/hillberg/>
+
+
+Rifles for JA2 1.13 main trunk and some Mods:
+=============================================
+"De Lisle .45 Carbine" 
+     Mag:       usual small .45ACP #7 Clip, already done
+     Slot:      Big Slot,1 
+     Picture: (You said, You finished it already...)
+
+"AK-101" - only a task for Martin. YES! I really want to have this, because we have *all* AK's then
+     Mag:       usual small WP #30 Clip, already done
+     Slot:      Big Slot,1 
+     Picture: done! (same as AK-103)
+
+"Ruger Mini-14/GB-F 'paramilitary'" and 
+"Ruger AC556F" because of A-Team TV series ;-)
+     Mag:       usual small 5.56mm #30 Clip, already done
+     Slot:      Big Slot,1 
+     Pictures: both on guns.ru: http://world.guns.ru/assault/as37-e.htm
+
+"KK MPi 69" (Kalashnikov looking .22LR East German Training & Assault Rifle)
+     Mag:       long bow clip #20 rounds of .22LR (need to be painted)
+     Slot:      Big Slot,1 
+     Picture: <http://www.gbverrina.net/sito/exordimages/KKMPI3.jpg> or <http://gunshowonthenet.com/Gallery/albums/OhioOrdnance/Ohio_Ord_KKMPi_69.thumb.jpg>
+
+"Ruger 10/22" (.22LR)
+     Mag:       long straight clip #10 rounds of .22LR (need to be painted)
+     Slot:      Big Slot,1 
+     Picture: <http://www.topguntours.co.uk/Resources/Ruger%2010%20-%2022.jpg>
+
+"M3 Grease Gun .45"
+     Mag:       usual .45ACP #30 Clip, already done
+     Slot:      Big Slot,1 
+     Picture: <http://www.helstongunsmiths.com/shop/images/grease-gun.jpg> or <http://www.militaryfactory.com/smallarms/imgs/grease.jpg>
+
+<all>
+
