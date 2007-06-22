@@ -15,6 +15,8 @@
 
 // #define LUACONSOLE
 
+#define ROBOT_ALWAYS_READY
+
 //#ifdef _DEBUG
 //	#ifndef JA2TESTVERSION
 //		#define JA2TESTVERSION

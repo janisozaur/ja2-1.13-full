@@ -2,6 +2,8 @@
 	#include "Tactical All.h"
 #else
 	#include "sgp.h"
+	#include "Types.h"
+	#include "timer.h"
 	#include "overhead types.h"
 	#include "Sound Control.h"
 	#include "Soldier Control.h"
@@ -315,7 +317,6 @@ AMMOTYPE AmmoTypes[MAXITEMS];
 // the amount of momentum reduction for the head, torso, and legs
 // used to determine whether the bullet will go through someone
 UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
-
 
 
 
@@ -5760,4 +5761,3 @@ INT8 GetAPsToReload( OBJECTTYPE *pObj )
 		( 100 - GetPercentReloadTimeAPReduction(pObj) ) ) / 100;
 
 }
-

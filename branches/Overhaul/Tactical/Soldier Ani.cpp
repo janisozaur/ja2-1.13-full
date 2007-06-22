@@ -1475,13 +1475,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 485:
 
 				// CODE: Try steal.....
+//				UnSetUIBusy( pSoldier->ubID);
 				UseHandToHand( pSoldier, pSoldier->sPendingActionData2, TRUE );
 				//jackaians:
 				//if we are not waiting for the pickup menu to be displayed
-				if (guiPendingOverrideEvent != G_GETTINGITEM)
-				{
-					PreventFromTheFreezingBug(pSoldier);
-				}
+//				if (guiPendingOverrideEvent != G_GETTINGITEM)
+//				{
+//					PreventFromTheFreezingBug(pSoldier);
+//				}
 				break;
 
 			case 486:
@@ -2560,7 +2561,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				break;
 
 			case 757:
-
 				// INcrement attacker busy count....
 //				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount ) );

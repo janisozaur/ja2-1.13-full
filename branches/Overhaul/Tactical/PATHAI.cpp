@@ -918,6 +918,25 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "PATHAI %d", curLoc ) );
 
+
+		// 0verhaul:  Fence jumping:  Start and end in the same direction if previous move was a fence jump
+		// This prevents the path finder from thinking it can change direction in the middle of a jump.
+		// I placed it here so that it wouldn't interfere with fContinuousTurnNeeded
+		if (prevCost == TRAVELCOST_FENCE) {
+			iLoopStart = trailTree[ sCurPathNdx ].stepDir;
+			if (bLoopState == LOOPING_CLOCKWISE) // backwards
+			{
+				iLoopEnd = gOneCCDirection[ iLoopStart ];
+			}
+			else
+			{
+				iLoopEnd = gOneCDirection[ iLoopStart ];
+			}
+		} else {
+			iLoopStart = 0;
+			iLoopEnd = 0;
+		}
+
 		if (fContinuousTurnNeeded)
 		{
 			if (trailTreeNdx < 2)
@@ -942,7 +961,6 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 		//for ( iCnt = iLoopStart; iCnt != iLoopEnd; iCnt = (iCnt + iLoopIncrement) % MAXDIR )
 		for ( iCnt = iLoopStart; ; )
 		{
-
 #ifdef VEHICLE
 			/*
 			if (fTurnSlow)

@@ -1534,6 +1534,7 @@ BOOLEAN ExecuteOverhead( )
 											if ( gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 											{
 												ActionDone( pSoldier);
+												SoldierGotoStationaryStance( pSoldier );
 												continue;
 											}
 											else

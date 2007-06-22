@@ -11043,6 +11043,7 @@ void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget )
 	{
 		// SEND PENDING ACTION
 		pSoldier->ubPendingAction = MERC_STEAL;
+		pSoldier->bTargetLevel = pTarget->bLevel; // 0verhaul:  Update the level too!
 		pSoldier->sPendingActionData2  = pTarget->sGridNo;
 		pSoldier->bPendingActionData3  = ubDirection;
 		pSoldier->ubPendingActionAnimCount = 0;

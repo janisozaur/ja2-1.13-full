@@ -451,6 +451,10 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	INT8 bAPsLeft, fPathFlags;
 	UINT8 ubRoomRequired = 0, ubTempRoom;
 
+	// 0verhaul:  Make sure to clear the stored path since this always calculates a new one.
+	// This is needed if the path cannot be found.
+	pSoldier->bPathStored = FALSE;
+
 	if ( bReserveAPs == -1 )
 	{
 		// default reserve points
@@ -495,6 +499,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// if soldier is ALREADY at the desired destination, quit right away
 	if (sDesGrid == pSoldier->sGridNo)
 	{
+		pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 		return(NOWHERE);
 	}
 
@@ -502,6 +507,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// would be too easy to throw rocks in water, etc. & distract the AI
 	if (Water(sDesGrid))
 	{
+		pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 		return(NOWHERE);
 	}
 
@@ -539,6 +545,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 		{
 			// we tried to get close, failed; abort!
+			pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 			return( NOWHERE );
 		}
 		else
@@ -593,6 +600,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 				AINumMessage("Couldn't find OK destination around grid #",sDesGrid);
 #endif
 
+				pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 				return(NOWHERE);
 			}
 
@@ -739,6 +747,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
    AIPopMessage(tempstr);
 #endif
 
+	pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
    return(NOWHERE);             // then go nowhere
   }
  else

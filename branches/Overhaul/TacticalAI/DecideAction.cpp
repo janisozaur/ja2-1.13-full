@@ -1,6 +1,5 @@
 #ifdef PRECOMPILEDHEADERS
 #include "AI All.h"
-#include "strategic status.h"
 #else
 #include "ai.h"
 #include "AIInternals.h"
@@ -2184,11 +2183,13 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		}
 		else		// toss/throw/launch not possible
 		{
+     // WDS - Fix problem when there is no "best thrown" weapon (i.e., BestThrow.bWeaponIn == NO_SLOT)
 			// if this dude has a longe-range weapon on him (longer than normal
 			// sight range), and there's at least one other team-mate around, and
 			// spotters haven't already been called for, then DO SO!
 
-			if ( ( CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
+     if ( (BestThrow.bWeaponIn != NO_SLOT) &&
+		  (CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 			{
@@ -2236,6 +2237,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: sniper shot not possible");
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("decideactionred: weapon in slot #%d",BestShot.bWeaponIn));
+		// WDS - Fix problem when there is no "best shot" weapon (i.e., BestShot.bWeaponIn == NO_SLOT)
+		if (BestShot.bWeaponIn != NO_SLOT) {
 			OBJECTTYPE * gun = &pSoldier->inv[BestShot.bWeaponIn];
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("decideactionred: men in sector %d, ubspotters called by %d, nobody %d",gTacticalStatus.Team[pSoldier->bTeam].bMenInSector,gTacticalStatus.ubSpottersCalledForBy,NOBODY ));
 			if ( ( ( IsScoped(gun) && GunRange(gun) > MaxDistanceVisible() ) || pSoldier->bOrders == SNIPER ) &&
@@ -2254,6 +2257,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				return(AI_ACTION_NONE);
 			}
 		}
+    }
 
 		//SUPPRESSION FIRE
 
@@ -4598,9 +4602,13 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 			if ( sClosestOpponent != NOWHERE )
 			{
 				// temporarily make boxer have orders of CLOSEPATROL rather than STATIONARY
+				// And make him patrol the ring, not his usual place
 				// so he has a good roaming range
+				USHORT tgrd = pSoldier->usPatrolGrid[0];
+				pSoldier->usPatrolGrid[0] = pSoldier->sGridNo;
 				pSoldier->bOrders = CLOSEPATROL;
 				pSoldier->usActionData = GoAsFarAsPossibleTowards( pSoldier, sClosestOpponent, AI_ACTION_GET_CLOSER );
+				pSoldier->usPatrolGrid[0] = tgrd;
 				pSoldier->bOrders = STATIONARY;
 				if ( pSoldier->usActionData != NOWHERE )
 				{
