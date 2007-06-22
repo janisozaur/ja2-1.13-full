@@ -1543,7 +1543,7 @@ void InitializeSAMSites( void )
 void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, UINT16 usMaxLen )
 {
 	// OK, build string id like J11
-	WSTR_SPrintf( sString, usMaxLen, L"%S%S",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
+	WSTR_SPrintf( sString, usMaxLen, L"%hs%hs",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
 
 	return;
 }

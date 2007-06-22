@@ -27,7 +27,7 @@ INT32	WSTR_SPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...)
 	va_list argptr;
 
 	va_start(argptr, pFormat);
-	iRet = vswprintf(pString, usMaxLen - 1, pFormat, argptr);
+	iRet = vswprintf(pString, usMaxLen, pFormat, argptr);
 	va_end(argptr);
 
 	return( iRet );
@@ -35,7 +35,7 @@ INT32	WSTR_SPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, ...)
 
 INT32	WSTR_VSPrintf(CHAR16 *pString, INT16 usMaxLen, const CHAR16 *pFormat, va_list arg)
 {
-	return( vswprintf(pString, usMaxLen - 1, pFormat, arg) );
+	return( vswprintf(pString, usMaxLen, pFormat, arg) );
 }
 
 INT32	UTF16toUTF32(UINT16 *pUTF16, CHAR16 *pUTF32, UINT16 usMaxLen)
@@ -63,7 +63,7 @@ INT32	STR_SPrintf(CHAR8 *pString, INT16 usMaxLen, const CHAR8 *pFormat, ...)
 	va_list argptr;
 
 	va_start(argptr, pFormat);
-	iRet = vsnprintf(pString, usMaxLen - 1, pFormat, argptr);
+	iRet = vsnprintf(pString, usMaxLen, pFormat, argptr);
 	va_end(argptr);
 
 	return( iRet );
