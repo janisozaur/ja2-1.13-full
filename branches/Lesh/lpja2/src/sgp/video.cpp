@@ -187,7 +187,7 @@ BOOLEAN InitializeVideoManager(void)
 	}
 
 	pVideoInfo = SDL_GetVideoInfo();
-
+/*
 	printf("\nVideo information\n");
 	printf("Hardware surfaces: %s\n", (pVideoInfo->hw_available) ? "yes":"no" );
 	printf("Windows manager  : %s\n", (pVideoInfo->wm_available) ? "yes":"no" );
@@ -217,7 +217,7 @@ BOOLEAN InitializeVideoManager(void)
 	printf("Gloss  = %d\n",   pVideoInfo->vfmt->Gloss );
 	printf("Bloss  = %d\n",   pVideoInfo->vfmt->Bloss );
 	printf("Aloss  = %d\n",   pVideoInfo->vfmt->Aloss );
-
+*/
 	SDL_WM_SetCaption(AppName, NULL);
 
 	// Apply SDL video flags
@@ -234,7 +234,6 @@ BOOLEAN InitializeVideoManager(void)
 	// Set the display mode
 	//
 	gpSDLPrimaryBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, gbPixelDepth, uiVideoFlags);
-	//gpSDLFrameBuffer = SDL_SetVideoMode(800, 600, 32, SDL_SWSURFACE);
 	
 	if ( !gpSDLPrimaryBuffer )
 	{
@@ -437,6 +436,7 @@ void SuspendVideoManager(void)
 
 void DoTester( )
 {
+/*
 	SDL_Rect rect;
 
 	rect.h = 40;
@@ -449,6 +449,7 @@ void DoTester( )
 	{
 		fprintf(stderr, "Couldn't fill rect\n");
 	}
+*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -463,41 +464,6 @@ BOOLEAN RestoreVideoManager(void)
 
 	if (guiVideoManagerState == VIDEO_SUSPENDED)
 	{
-		//
-		// Restore the Primary and Backbuffer
-		//
-
-		//ReturnCode = IDirectDrawSurface2_Restore( gpPrimarySurface );
-		//if (ReturnCode != DD_OK)
-		//{
-		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-		//  return FALSE;
-		//}
-
-		//ReturnCode = IDirectDrawSurface2_Restore( gpBackBuffer );
-		//if (ReturnCode != DD_OK)
-		//{
-		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-		//  return FALSE;
-		//}
-
-		//
-		// Restore the mouse surfaces and make sure to initialize the gpMouseCursor surface
-	    //
-    
-		//ReturnCode = IDirectDrawSurface2_Restore( gMouseCursorBackground[0].pSurface );
-		//if (ReturnCode != DD_OK)
-		//{
-		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-		//  return FALSE;
-		//}
-
-		//ReturnCode = IDirectDrawSurface2_Restore( gpMouseCursor );
-		//if (ReturnCode != DD_OK)
-		//{
-		//  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-		//  return FALSE;
-		//} else
 		{
 		guiMouseBufferState = BUFFER_DIRTY;
 		}
@@ -1073,37 +1039,8 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 		// BLIT NEW
 		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
 
-
-//#if 0
-//
-//		// Erase mouse from old position
-//		if (gMouseCursorBackground[ uiCurrentMouseBackbuffer ].fRestore == TRUE )
-//		{
-//
-//			do
-//			{
-//				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, usMouseXPos, usMouseYPos, gMouseCursorBackground[uiCurrentMouseBackbuffer].pSurface, (LPRECT)&MouseRegion, DDBLTFAST_NOCOLORKEY);
-//				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//				{
-//					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//					if (ReturnCode == DDERR_SURFACELOST)
-//					{
-//
-//					}
-//				}
-//			} while (ReturnCode != DD_OK);
-//		}
-//
-//#endif
-//
 	}
 
-
-	//InvalidateRegion( sLeftDraw, sTopDraw, sRightDraw, sBottomDraw );
-
-	//UpdateSaveBuffer();
-	//SaveBackgroundRects();
 }		
 
 
@@ -1122,9 +1059,8 @@ void RefreshScreen(void *DummyVariable)
 	UINT16  usScreenWidth, usScreenHeight;
 	static BOOLEAN	fShowMouse;
 	static SDL_Rect	Rect, dstRect;
-	static SGPPos	MousePos;	// to be retyped
+	static SGPPos	MousePos;
 	static BOOLEAN	fFirstTime = TRUE;
-	//UINT32			uiTime;
 
 	usScreenWidth = usScreenHeight = 0;
 
@@ -1557,27 +1493,9 @@ void RefreshScreen(void *DummyVariable)
 	SDL_BlitSurface(gpSDLBackBuffer, NULL, gpSDLPrimaryBuffer, NULL);
 	SDL_UpdateRect(gpSDLPrimaryBuffer, 0, 0, 0, 0);
 
-//
-//  do
-//  {
-//	  ReturnCode = IDirectDrawSurface_Flip(_gpPrimarySurface, NULL, gGameExternalOptions.gfVSync ? DDFLIP_WAIT : 0x00000008l );//DDFLIP_WAIT ); 
-////    if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-//    {
-//      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-//
-//      if (ReturnCode == DDERR_SURFACELOST)
-//      {
-//        goto ENDOFLOOP;
-//      }
-//    }
-//
-//  } while (ReturnCode != DD_OK);
-//
-
-  //
-  // Step (2) - Copy Primary Surface to the Back Buffer
-  //
+	//
+	// Step (2) - Copy Primary Surface to the Back Buffer
+	//
 	if ( gfRenderScroll )
 	{
 		SDL_BlitSurface(gpSDLPrimaryBuffer, NULL, gpSDLBackBuffer, NULL);
@@ -1813,14 +1731,6 @@ void UnlockMouseBuffer(void)
 
 BOOLEAN GetRGBDistribution(void)
 {
-//UINT16        usBit;
-//
-//	// ONLY DO IF WE ARE IN 16BIT MODE
-//	if ( gbPixelDepth == 8 )
-//	{
-//		return( TRUE );
-//	}
-//
 	gusRedMask    = (UINT16) gpSDLFrameBuffer->format->Rmask;
 	gusGreenMask  = (UINT16) gpSDLFrameBuffer->format->Gmask;
 	gusBlueMask   = (UINT16) gpSDLFrameBuffer->format->Bmask;
@@ -1829,7 +1739,6 @@ BOOLEAN GetRGBDistribution(void)
 	gusGreenShift = (UINT16) (gpSDLFrameBuffer->format->Gshift - gpSDLFrameBuffer->format->Gloss);
 	gusBlueShift  = (UINT16) (gpSDLFrameBuffer->format->Bshift - gpSDLFrameBuffer->format->Bloss);
 
-
 	// RGB 5,5,5
 	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
 		guiTranslucentMask=0x3def;
@@ -1837,6 +1746,13 @@ BOOLEAN GetRGBDistribution(void)
 	else if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
 		guiTranslucentMask=0x7bef;
 
+	printf("Rmask  = %04X\n", gusRedMask);
+	printf("Gmask  = %04X\n", gusGreenMask);
+	printf("Bmask  = %04X\n", gusBlueMask);
+	printf("Rshift = %d\n",   gusRedShift);
+	printf("Gshift = %d\n",   gusGreenShift);
+	printf("Bshift = %d\n",   gusBlueShift);
+	printf("Tmask  = %04X\n", guiTranslucentMask);
 
   return TRUE;
 }
