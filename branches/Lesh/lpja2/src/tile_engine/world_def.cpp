@@ -2235,25 +2235,25 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 	wchar_t str[40];
 	UINT8	bCounts[ WORLD_MAX ][8];
 	UINT8 ubCombine;
-	UINT8 szDirFilename[ 50 ];
-	UINT8 szFilename[ 40 ];
+	CHAR8 szDirFilename[ 50 ];
+	CHAR8 szFilename[ 40 ];
 	UINT8 ubMinorMapVersion;
 
 
 	//Make sure the file exists... if not, then return false
-	sprintf( (char *)szFilename, (char *)pSector );
+	sprintf( szFilename, (char *)pSector );
 	if( ubLevel % 4  )
 	{
-		UINT8 str[4];
-		sprintf( (char *)str, "_b%d", ubLevel % 4 );
-		strcat( szFilename, str );
+		CHAR8 tmpstr[4];
+		sprintf( tmpstr, "_b%d", ubLevel % 4 );
+		strcat( szFilename, tmpstr );
 	}
 	if( ubLevel >= 4 )
 	{
 		strcat( szFilename, "_a" );
 	}
 	strcat( szFilename, ".dat" );
-	sprintf( (char *)szDirFilename, "MAPS\\%s", szFilename );
+	sprintf( szDirFilename, "MAPS\\%s", szFilename );
 
 	if( gfMajorUpdate )
 	{
@@ -2263,7 +2263,7 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 		SaveWorld( szFilename );
 	}
 
-	hfile = FileOpen( (STR)szDirFilename, FILE_ACCESS_READ, FALSE );
+	hfile = FileOpen( szDirFilename, FILE_ACCESS_READ, FALSE );
 	if( !hfile )
 		return FALSE;
 	

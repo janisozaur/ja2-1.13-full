@@ -288,7 +288,13 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
-			LOADDATA( &tempDetailedPlacement, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
+			UINT16	usPersonName[10];
+
+			LOADDATA( &tempDetailedPlacement, *hBuffer, offsetof( SOLDIERCREATE_STRUCT, name ) );
+			LOADDATA( usPersonName, *hBuffer, sizeof( usPersonName) );
+			UTF16toUTF32( usPersonName, &tempDetailedPlacement.name[0], 10);
+			LOADDATA( &tempDetailedPlacement.ubSoldierClass, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) - sizeof( tempDetailedPlacement.name ) - offsetof( SOLDIERCREATE_STRUCT, name ) );
+
 			//allocate memory for new static detailed placement
 			pNode->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 			if( !pNode->pDetailedPlacement )
