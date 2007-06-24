@@ -52,6 +52,19 @@ typedef struct SCHEDULENODE
 	UINT16 usFlags;
 }SCHEDULENODE;
 
+typedef struct _OLD_SCHEDULENODE
+{
+	struct _OLD_SCHEDULENODE *next;
+	UINT16 usTime[MAX_SCHEDULE_ACTIONS];
+	UINT16 usData1[MAX_SCHEDULE_ACTIONS];
+	UINT16 usData2[MAX_SCHEDULE_ACTIONS];
+	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
+	UINT8 ubScheduleID;
+	UINT8 ubSoldierID;
+	UINT16 usFlags;
+}_OLD_SCHEDULENODE;
+
+
 extern UINT8				gubScheduleID;
 extern SCHEDULENODE *gpScheduleList;
 
@@ -67,7 +80,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID );
 
 void DeleteSchedule( UINT8 ubScheduleID );
 
-void LoadSchedules( INT8 **hBuffer );
+void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion );
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile );
 BOOLEAN SaveSchedules( HWFILE hFile );
 

@@ -419,7 +419,7 @@ static INT32 guiEndPlotGridNo;
 //	-MAPWIDTH-1       //NW
 //};
 
-static INT32 dirDelta[8]=
+/*static */INT32 dirDelta[8]=
 {
 		-OLD_WORLD_COLS,        //N
 		1-OLD_WORLD_COLS,       //NE

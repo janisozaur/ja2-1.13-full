@@ -16,7 +16,28 @@
 typedef struct
 {
 	BOOLEAN				fExists;
+	INT16 _old_sGridNo;
+	UINT8					ubLevel;
+	OBJECTTYPE		o;
+	UINT16				usFlags;
+	INT8					bRenderZHeightAboveLevel;
+
+	INT8					bVisible;
+
+	//This is the chance associated with an item or a trap not-existing in the world.  The reason why 
+	//this is reversed (10 meaning item has 90% chance of appearing, is because the order that the map 
+	//is saved, we don't know if the version is older or not until after the items are loaded and added.
+	//Because this value is zero in the saved maps, we can't change it to 100, hence the reversal method.
+	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
+	UINT8					ubNonExistChance;  
 	INT32 sGridNo;
+
+} WORLDITEM;
+
+typedef struct
+{
+	BOOLEAN				fExists;
+	INT16					sGridNo;
 	UINT8					ubLevel;
 	OBJECTTYPE		o;
 	UINT16				usFlags;
@@ -31,7 +52,7 @@ typedef struct
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8					ubNonExistChance;  
 
-} WORLDITEM;
+} _OLD_WORLDITEM;
 
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;
@@ -40,7 +61,7 @@ INT32 AddItemToWorld( INT32 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
-void LoadWorldItemsFromMap( INT8 **hBuffer );
+void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion );
 void SaveWorldItemsToMap( HWFILE fp );
 
 void TrashWorldItems();

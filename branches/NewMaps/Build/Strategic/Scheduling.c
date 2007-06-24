@@ -347,7 +347,7 @@ void PrepareSchedulesForEditorExit()
 	PostSchedules();
 }
 
-void LoadSchedules( INT8 **hBuffer )
+void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
 {
 	SCHEDULENODE *pSchedule = NULL;
 	SCHEDULENODE temp;
@@ -363,7 +363,24 @@ void LoadSchedules( INT8 **hBuffer )
 	gubScheduleID = 1;
 	while( ubNum )
 	{
-		LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
+		if(dMajorMapVersion < 7.00)
+		{
+			int i;
+			_OLD_SCHEDULENODE oldtemp;
+			LOADDATA( &oldtemp, *hBuffer, sizeof( _OLD_SCHEDULENODE ) );
+			for(i=0; i<MAX_SCHEDULE_ACTIONS; i++)
+			{
+				temp.usTime[i] = oldtemp.usTime[i];
+				temp.usData1[i] = oldtemp.usData1[i];
+				temp.usData2[i] = oldtemp.usData2[i];
+				temp.ubAction[i] = oldtemp.ubAction[i];
+			}
+			temp.ubScheduleID = oldtemp.ubScheduleID;
+			temp.ubSoldierID = oldtemp.ubSoldierID;
+			temp.usFlags = oldtemp.usFlags;
+		}
+		else
+			LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
 
 		if( gpScheduleList )
 		{

@@ -30,7 +30,7 @@ UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 BOOLEAN InitRoomDatabase( )
 {
-	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
+//	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
 	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
 	return( TRUE );
 }

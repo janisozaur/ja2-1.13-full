@@ -15,7 +15,7 @@ INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
 void GenerateMapEdgepoints();
 void SaveMapEdgepoints( HWFILE fp );
-BOOLEAN LoadMapEdgepoints( INT8 **hBuffer );
+BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion );
 void TrashMapEdgepoints();
 
 //dynamic arrays that contain the valid gridno's for each edge

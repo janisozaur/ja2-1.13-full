@@ -226,7 +226,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 
 
 
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
+BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 {
 	UINT32 i;
 	UINT16 ubNumIndividuals;
@@ -234,7 +234,6 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;
 	BOOLEAN fCowInSector = FALSE;
-
 	ubNumIndividuals = gMapInformation.ubNumIndividuals;
 
 	UseEditorAlternateList();
@@ -263,7 +262,31 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 
 	for( i=0; i < ubNumIndividuals; i++ )
 	{
-		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+		if( dMajorMapVersion < 7.00  )
+		{
+			int i;
+			_OLD_BASIC_SOLDIERCREATE_STRUCT tempOldBasicPlacement;
+			LOADDATA( &tempOldBasicPlacement, *hBuffer, sizeof( _OLD_BASIC_SOLDIERCREATE_STRUCT ) );
+			tempBasicPlacement.fDetailedPlacement = tempOldBasicPlacement.fDetailedPlacement;
+			tempBasicPlacement.usStartingGridNo = tempOldBasicPlacement.usStartingGridNo;
+			tempBasicPlacement.bTeam = tempOldBasicPlacement.bTeam;
+			tempBasicPlacement.bRelativeAttributeLevel = tempOldBasicPlacement.bRelativeAttributeLevel;
+			tempBasicPlacement.bRelativeEquipmentLevel = tempOldBasicPlacement.bRelativeEquipmentLevel;
+			tempBasicPlacement.bDirection = tempOldBasicPlacement.bDirection;
+			tempBasicPlacement.bOrders = tempOldBasicPlacement.bOrders;
+			tempBasicPlacement.bAttitude = tempOldBasicPlacement.bAttitude;
+			tempBasicPlacement.bBodyType = tempOldBasicPlacement.bBodyType;
+			for(i=0; i<MAXPATROLGRIDS; i++)
+				tempBasicPlacement.sPatrolGrid[i] = tempOldBasicPlacement.sPatrolGrid[i];
+			tempBasicPlacement.bPatrolCnt = tempOldBasicPlacement.bPatrolCnt;
+			tempBasicPlacement.fOnRoof = tempOldBasicPlacement.fOnRoof;
+			tempBasicPlacement.ubSoldierClass = tempOldBasicPlacement.ubSoldierClass;
+			tempBasicPlacement.ubCivilianGroup = tempOldBasicPlacement.ubCivilianGroup;
+			tempBasicPlacement.fPriorityExistance = tempOldBasicPlacement.fPriorityExistance;
+			tempBasicPlacement.fHasKeys = tempOldBasicPlacement.fHasKeys;
+		}
+		else
+			LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
 		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
 		pNode->ubNodeID = (UINT8)i;
 		if( !pNode )
@@ -274,7 +297,20 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
-			LOADDATA( &tempDetailedPlacement, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
+			if( dMajorMapVersion < 7.00  )
+			{
+				int i;
+				_OLD_SOLDIERCREATE_STRUCT tempOldDetailedPlacement;
+				LOADDATA( &tempOldDetailedPlacement, *hBuffer, sizeof( _OLD_SOLDIERCREATE_STRUCT ) );
+				memcpy(&tempDetailedPlacement.fStatic, &tempOldDetailedPlacement.fStatic, (size_t)((char*)&tempOldDetailedPlacement.sInsertionGridNo-(char*)&tempOldDetailedPlacement.fStatic));
+				tempDetailedPlacement.sInsertionGridNo = tempOldDetailedPlacement.sInsertionGridNo;
+				memcpy(&tempDetailedPlacement.bTeam, &tempOldDetailedPlacement.bTeam, (size_t)((char*)&tempOldDetailedPlacement.sPatrolGrid-(char*)&tempOldDetailedPlacement.bTeam));
+				for(i=0; i<MAXPATROLGRIDS; i++)
+					tempDetailedPlacement.sPatrolGrid[i] = tempOldDetailedPlacement.sPatrolGrid[i];
+				memcpy(&tempDetailedPlacement.bPatrolCnt, &tempOldDetailedPlacement.bPatrolCnt, (size_t)((char*)&tempOldDetailedPlacement.bPadding-(char*)&tempOldDetailedPlacement.bPatrolCnt));
+			}
+			else
+				LOADDATA( &tempDetailedPlacement, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
 			//allocate memory for new static detailed placement
 			pNode->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 			if( !pNode->pDetailedPlacement )

@@ -40,8 +40,8 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vtuneapi.lib mss32.lib winmm.lib smackw32.lib"
-				OutputFile="\ja2\ja2.exe"
+				AdditionalDependencies="mss32.lib winmm.lib smackw32.lib"
+				OutputFile="E:\GAMES\JA2GoldEng\ja2_lmd.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				IgnoreDefaultLibraryNames="libc"

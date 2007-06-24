@@ -374,7 +374,7 @@ void SaveWorldItemsToMap( HWFILE fp )
 }
 
 
-void LoadWorldItemsFromMap( INT8 **hBuffer )
+void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
 {
 	// Start loading itmes...
 	
@@ -399,7 +399,13 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 	else for ( i = 0; i < uiNumWorldItems; i++ )
 	{	//Add all of the items to the world indirectly through AddItemToPool, but only if the chance
 		//associated with them succeed.
-		LOADDATA( &dummyItem, *hBuffer, sizeof( WORLDITEM ) );
+		if(dMajorMapVersion < 7.00)
+		{
+			LOADDATA( &dummyItem, *hBuffer, sizeof( _OLD_WORLDITEM ) );
+			dummyItem.sGridNo = dummyItem._old_sGridNo;
+		}
+		else
+			LOADDATA( &dummyItem, *hBuffer, sizeof( WORLDITEM ) );
 		if( dummyItem.o.usItem == OWNERSHIP )
 		{
 			dummyItem.ubNonExistChance = 0;

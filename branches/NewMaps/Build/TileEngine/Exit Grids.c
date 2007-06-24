@@ -166,7 +166,7 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 	Assert( usNumExitGrids == usNumSaved );
 }
 
-void LoadExitGrids( INT8 **hBuffer )
+void LoadExitGrids( INT8 **hBuffer, FLOAT dMajorMapVersion )
 {
 	EXITGRID exitGrid;
 	UINT16 x;
@@ -174,15 +174,29 @@ void LoadExitGrids( INT8 **hBuffer )
 	UINT32 usMapIndex;
 	gfLoadingExitGrids = TRUE;
 	LOADDATA( &usNumSaved, *hBuffer, 2 );
-	//FileRead( hfile, &usNumSaved, 2, NULL);
-	for( x = 0; x < usNumSaved; x++ )
-	{
-		LOADDATA( &usMapIndex, *hBuffer, sizeof(usMapIndex) );
-		//FileRead( hfile, &usMapIndex, 2, NULL);
-		LOADDATA( &exitGrid, *hBuffer, sizeof(exitGrid) );
-		//FileRead( hfile, &exitGrid, 5, NULL);
-		AddExitGridToWorld( usMapIndex, &exitGrid );
-	}
+	if(dMajorMapVersion < 7.0)
+		for( x = 0; x < usNumSaved; x++ )
+		{
+			_OLD_EXITGRID oldExitGrid;
+			UINT16 usOldMapIndex;
+			LOADDATA( &usOldMapIndex, *hBuffer, sizeof(usOldMapIndex) );
+			usMapIndex = usOldMapIndex;
+			LOADDATA( &oldExitGrid, *hBuffer, sizeof(oldExitGrid) );
+			exitGrid.usGridNo = oldExitGrid.usGridNo;
+			exitGrid.ubGotoSectorX = oldExitGrid.ubGotoSectorX;
+			exitGrid.ubGotoSectorY = oldExitGrid.ubGotoSectorY;
+			exitGrid.ubGotoSectorZ = oldExitGrid.ubGotoSectorZ;
+			AddExitGridToWorld( usMapIndex, &exitGrid );
+		}
+	else
+		for( x = 0; x < usNumSaved; x++ )
+		{
+			LOADDATA( &usMapIndex, *hBuffer, sizeof(usMapIndex) );
+			//FileRead( hfile, &usMapIndex, 2, NULL);
+			LOADDATA( &exitGrid, *hBuffer, sizeof(exitGrid) );
+			//FileRead( hfile, &exitGrid, 5, NULL);
+			AddExitGridToWorld( usMapIndex, &exitGrid );
+		}
 	gfLoadingExitGrids = FALSE;
 }
 

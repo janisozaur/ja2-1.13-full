@@ -3073,7 +3073,7 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	{
 		// Load out item information
 		gfLoadPitsWithoutArming = TRUE;
-		LoadWorldItemsFromMap( &pBuffer );
+		LoadWorldItemsFromMap( &pBuffer, dMajorMapVersion );
 		gfLoadPitsWithoutArming = FALSE;
 	}
 
@@ -3126,25 +3126,25 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	{
 		SetRelativeStartAndEndPercentage( 0, 86, 87, L"Loading placements..." );
 		RenderProgressBar( 0, 0 );
-		LoadSoldiersFromMap( &pBuffer );
+		LoadSoldiersFromMap( &pBuffer, dMajorMapVersion  );
 	}
 	if( uiFlags & MAP_EXITGRIDS_SAVED )
 	{
 		SetRelativeStartAndEndPercentage( 0, 87, 88, L"Loading exit grids..." );
 		RenderProgressBar( 0, 0 );
-		LoadExitGrids( &pBuffer );
+		LoadExitGrids( &pBuffer, dMajorMapVersion );
 	}
 	if( uiFlags & MAP_DOORTABLE_SAVED )
 	{
 		SetRelativeStartAndEndPercentage( 0, 89, 90, L"Loading door tables..." );
 		RenderProgressBar( 0, 0 );
-		LoadDoorTableFromMap( &pBuffer );
+		LoadDoorTableFromMap( &pBuffer, dMajorMapVersion );
 	}
 	if( uiFlags & MAP_EDGEPOINTS_SAVED )
 	{
 		SetRelativeStartAndEndPercentage( 0, 90, 91, L"Loading edgepoints..." );
 		RenderProgressBar( 0, 0 );
-		if( !LoadMapEdgepoints( &pBuffer ) )
+		if( !LoadMapEdgepoints( &pBuffer, dMajorMapVersion ) )
 			fGenerateEdgePoints = TRUE; //only if the map had the older edgepoint system
 	}
 	else
@@ -3155,7 +3155,7 @@ BOOLEAN LoadWorld( UINT8	*puiFilename )
 	{
 		SetRelativeStartAndEndPercentage( 0, 91, 92, L"Loading NPC schedules..." );
 		RenderProgressBar( 0, 0 );
-		LoadSchedules( &pBuffer );
+		LoadSchedules( &pBuffer, dMajorMapVersion );
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();

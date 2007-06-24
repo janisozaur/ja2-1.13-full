@@ -476,8 +476,8 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 
 #ifdef JA2BETAVERSION
 #ifndef CRIPPLED_VERSION
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
-	AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.  DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
+//	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
+//	AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.  DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
 #endif
 #endif
 
@@ -1376,7 +1376,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 #ifdef JA2BETAVERSION
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
+//	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
 #endif
 
 	//is it a valid save number
@@ -2628,7 +2628,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
   SetFontShadow( DEFAULT_SHADOW );
 
 #ifdef JA2BETAVERSION
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
+//	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
 #endif
 
 	//if we succesfully LOADED! the game, mark this entry as the last saved game file

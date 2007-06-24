@@ -155,6 +155,90 @@ typedef struct
 } SOLDIERCREATE_STRUCT;
 
 
+typedef struct
+{
+	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
+	//Used by editor for validation purposes.
+	BOOLEAN						fStatic;  
+
+	//Profile information used for special NPCs and player mercs.
+	UINT8							ubProfile;
+	BOOLEAN						fPlayerMerc;
+	BOOLEAN						fPlayerPlan;
+	BOOLEAN						fCopyProfileItemsOver;
+
+	//Location information
+	INT16							sSectorX;
+	INT16							sSectorY;
+	INT8							bDirection;
+	INT16							sInsertionGridNo;
+
+	// Can force a team, but needs flag set
+	INT8							bTeam;
+	INT8							bBodyType;
+
+	//Orders and attitude settings
+	INT8							bAttitude;
+	INT8							bOrders;
+
+	//Attributes
+	INT8							bLifeMax;	
+	INT8							bLife;
+	INT8							bAgility;
+	INT8							bDexterity;
+	INT8							bExpLevel;
+	INT8							bMarksmanship;
+	INT8							bMedical;
+	INT8							bMechanical;
+	INT8							bExplosive;
+	INT8							bLeadership;
+	INT8							bStrength;
+	INT8							bWisdom;
+	INT8							bMorale;
+	INT8							bAIMorale;
+
+	//Inventory
+	OBJECTTYPE				Inv[ NUM_INV_SLOTS ];	
+
+	//Palette information for soldiers.
+	PaletteRepID			HeadPal;	
+	PaletteRepID			PantsPal;	
+	PaletteRepID			VestPal;	
+	PaletteRepID			SkinPal;	
+	PaletteRepID			MiscPal;
+
+	//Waypoint information for patrolling
+	INT16 sPatrolGrid[ MAXPATROLGRIDS ];
+	INT8 bPatrolCnt;
+
+	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)
+	BOOLEAN						fVisible;
+	UINT16						name[ 10 ];
+
+	UINT8							ubSoldierClass;	//army, administrator, elite
+
+	BOOLEAN						fOnRoof;
+
+	INT8							bSectorZ;
+
+	SOLDIERTYPE				*pExistingSoldier;
+	BOOLEAN						fUseExistingSoldier;
+	UINT8							ubCivilianGroup;
+
+	BOOLEAN						fKillSlotIfOwnerDies;
+	UINT8							ubScheduleID;
+
+	BOOLEAN						fUseGivenVehicle;				
+	INT8							bUseGivenVehicleID;				
+	BOOLEAN						fHasKeys;
+
+	INT8 bPadding[115];
+
+
+} _OLD_SOLDIERCREATE_STRUCT;
+
+
+
 //Original functions currently used throughout the game.
 BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex );
 BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle );

@@ -224,14 +224,18 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], sizeof( MERCPROFILESTRUCT ), &uiNumBytesRead )  != 1)
+//		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], sizeof( MERCPROFILESTRUCT ), &uiNumBytesRead )  != 1)
+		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], sizeof( _OLD_MERCPROFILESTRUCT ), &uiNumBytesRead )  != 1) //SB
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );
 			return(FALSE);
 		}
+		//<SB> convert old MERCPROFILESTRUCT to new MERCPROFILESTRUCT
+		gMercProfiles[uiLoop].sGridNo = gMercProfiles[uiLoop]._old_sGridNo;
+		gMercProfiles[uiLoop].sPreCombatGridNo = gMercProfiles[uiLoop]._old_sPreCombatGridNo;
+		//</SB>
 
-		
 		//if the Dialogue exists for the merc, allow the merc to be hired
 		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
 		{

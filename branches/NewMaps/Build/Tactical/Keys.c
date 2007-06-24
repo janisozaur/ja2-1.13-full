@@ -787,7 +787,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
-void LoadDoorTableFromMap( INT8 **hBuffer )
+void LoadDoorTableFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 {
 	INT32 cnt;
 
@@ -797,7 +797,26 @@ void LoadDoorTableFromMap( INT8 **hBuffer )
 	gubMaxDoors = gubNumDoors;
 	DoorTable = (DOOR *)MemAlloc( sizeof( DOOR ) * gubMaxDoors );
 
-	LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
+	if(dMajorMapVersion == 7.00)
+	{
+		_OLD_DOOR * OldDoorTable = NULL;
+		OldDoorTable = (_OLD_DOOR *)MemAlloc( sizeof( _OLD_DOOR ) * gubMaxDoors );
+		LOADDATA( OldDoorTable, *hBuffer, sizeof( _OLD_DOOR )*gubMaxDoors );
+		for ( cnt = 0; cnt < gubNumDoors; cnt++ )
+		{
+			DoorTable[cnt].sGridNo = OldDoorTable[cnt].sGridNo;
+			DoorTable[cnt].fLocked = OldDoorTable[cnt].fLocked;
+			DoorTable[cnt].ubTrapLevel = OldDoorTable[cnt].ubTrapLevel;
+			DoorTable[cnt].ubTrapID = OldDoorTable[cnt].ubTrapID;
+			DoorTable[cnt].ubLockID = OldDoorTable[cnt].ubLockID;
+			DoorTable[cnt].bPerceivedLocked = OldDoorTable[cnt].bPerceivedLocked;
+			DoorTable[cnt].bPerceivedTrapped = OldDoorTable[cnt].bPerceivedTrapped;
+			DoorTable[cnt].bLockDamage = OldDoorTable[cnt].bLockDamage;
+		}
+		MemFree(OldDoorTable);
+	}
+	else
+		LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
 
 	// OK, reset perceived values to nothing...
 	for ( cnt = 0; cnt < gubNumDoors; cnt++ )
