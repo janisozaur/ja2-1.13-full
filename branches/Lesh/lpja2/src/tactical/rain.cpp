@@ -181,6 +181,7 @@ void InitializeRainVideoObject( )
 	vs_desc.ubBitDepth = ubBitDepth;
 
 	AddVideoSurface( &vs_desc, &guiRainRenderSurface );
+	SetVideoSurfaceTransparency( guiRainRenderSurface, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 }
 
 void InitializeRainData()

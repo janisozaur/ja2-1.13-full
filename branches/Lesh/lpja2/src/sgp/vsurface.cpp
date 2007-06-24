@@ -1792,13 +1792,14 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		CHECKF( iDestX >= 0 );
 		CHECKF( iDestY >= 0 );
 
-		// Default flags
-		uiDDFlags = 0;
-
 		// Convert flags into DD flags, ( for transparency use, etc )
 		if ( fBltFlags & VS_BLT_USECOLORKEY )
 		{
 			SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
+		}
+		else
+		{
+			SDL_SetColorKey( hSrcVSurface->pSurface, 0, 0 );
 		}
 
 		// Convert flags into DD flags, ( for transparency use, etc )
@@ -1806,11 +1807,8 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		{
 			SDL_SetColorKey( hDestVSurface->pSurface, SDL_SRCCOLORKEY, hDestVSurface->TransparentColor );
 		}
-
-		if ( uiDDFlags == 0 )
+		else
 		{
-			// Default here is no colorkey
-			SDL_SetColorKey( hSrcVSurface->pSurface, 0, 0 );
 			SDL_SetColorKey( hDestVSurface->pSurface, 0, 0 );
 		}
 
@@ -1821,13 +1819,15 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		// Normal, specialized blit for clipping, etc
 
 		// Default flags
-		//uiDDFlags = DDBLT_WAIT;
-		uiDDFlags = 0;
 
 		// Convert flags into DD flags, ( for transparency use, etc )
 		if ( fBltFlags & VS_BLT_USECOLORKEY )
 		{
 			SDL_SetColorKey( hSrcVSurface->pSurface, SDL_SRCCOLORKEY, hSrcVSurface->TransparentColor );
+		}
+		else
+		{
+			SDL_SetColorKey( hSrcVSurface->pSurface, 0, 0 );
 		}
 
 		// Setup dest rectangle
