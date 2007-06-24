@@ -353,26 +353,23 @@ void GetRootName( CHAR8 * pDestStr, CHAR8 * pSrcStr )
 	// Remove path and extension
 	CHAR8		cTempFilename[ 120 ];
 	STR			cEndOfName;
+	STR			cFilenameWithoutSlashes, cStringToCutSlashes;
 
 	// Remove path
 	strcpy( cTempFilename, pSrcStr );
-	cEndOfName = strrchr( cTempFilename, SLASH );
-	if (cEndOfName != NULL)
+	cFilenameWithoutSlashes = cTempFilename;
+	while ( ( cStringToCutSlashes = strpbrk( cFilenameWithoutSlashes, "\\/" ) ) != NULL )
 	{
-		cEndOfName++;
-		strcpy( pDestStr, cEndOfName );
-	}
-	else
-	{
-		strcpy( pDestStr, cTempFilename );
+		cFilenameWithoutSlashes = cStringToCutSlashes + 1;
 	}
 
 	// Now remove extension...
-	cEndOfName = strchr( (char *)pDestStr, '.' );
+	cEndOfName = strchr( cFilenameWithoutSlashes, '.' );
 	if (cEndOfName != NULL)
 	{
 		*cEndOfName = '\0';
 	}
 
+	strcpy( pDestStr, cFilenameWithoutSlashes );
 }
 
