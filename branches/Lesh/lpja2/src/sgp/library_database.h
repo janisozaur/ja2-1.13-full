@@ -160,7 +160,7 @@ extern DatabaseManagerHeaderStruct gFileDataBase;
 BOOLEAN CheckForLibraryExistence( const CHAR8 *pLibraryName );
 BOOLEAN InitializeLibrary( const CHAR8 *pLibraryName, LibraryHeaderStruct *pLibheader );
 
-BOOLEAN InitializeFileDatabase( const CHAR8 *pCfgName );
+BOOLEAN InitializeFileDatabase( );
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary( const CHAR8 *pFileName );
 INT16 GetLibraryIDFromFileName(const CHAR8 *pFileName );

@@ -172,7 +172,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	// Snap: moved the following from InitJA2SplashScreen for clarity
 	STRING512			CurrentDir;
 	STRING512			DataDir;
-	STRING512			zConfigName;
 
 	InitializeJA2Clock();
 
@@ -210,9 +209,8 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	sprintf( zConfigName, "%s%s", CurrentDir, "resources.cfg");
 	//Initialize the file database
-	if ( !InitializeFileDatabase( zConfigName ) )
+	if ( !InitializeFileDatabase( ) )
 	{
 		fprintf(stderr, "Couldn't init library database\n");
 		return FALSE;

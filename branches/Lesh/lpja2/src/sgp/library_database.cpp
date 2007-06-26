@@ -59,19 +59,24 @@ INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 //	will be initialized and game start.
 //
 //************************************************************************
-BOOLEAN InitializeFileDatabase( const CHAR8 *pCfgName )
+BOOLEAN InitializeFileDatabase( )
 {
 	INT16		i, iCurrentLibIndex;
 	UINT32		uiSize;
 	BOOLEAN		fLibraryInited = FALSE;
+	STRING512	zConfigName;
+	STRING512	zGameHomeDir;
 
 	printf("\nInitializing main libraries...\n");
+
+	GetHomeDirectory( zGameHomeDir );
+	sprintf( zConfigName, "%s%s", zGameHomeDir, "resources.cfg");
 
 	NumberOfContainers = 0;
 	GameSource.clear();
 	// read all game sources
 
-	if ( !ReadGameSources( pCfgName ) )
+	if ( !ReadGameSources( zConfigName ) )
 		return FALSE;
 
 	//if all the libraries exist, set them up
