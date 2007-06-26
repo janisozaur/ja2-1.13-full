@@ -499,7 +499,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// if soldier is ALREADY at the desired destination, quit right away
 	if (sDesGrid == pSoldier->sGridNo)
 	{
-		pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 		return(NOWHERE);
 	}
 
@@ -507,7 +506,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// would be too easy to throw rocks in water, etc. & distract the AI
 	if (Water(sDesGrid))
 	{
-		pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
 		return(NOWHERE);
 	}
 

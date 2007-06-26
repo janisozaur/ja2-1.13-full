@@ -2561,6 +2561,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				break;
 
 			case 757:
+
 				// INcrement attacker busy count....
 //				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount ) );
