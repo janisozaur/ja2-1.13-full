@@ -64,10 +64,10 @@ INT32		giProfileCount;
 // they are required for the String() function, which is NOT a 
 // debug-mode only function, it's used in release-mode as well! -- DB
  
-UINT8 gubAssertString[128];
+CHAR8 gubAssertString[128];
 
 #define MAX_MSG_LENGTH2 512
-UINT8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
+CHAR8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
 UINT8		gubStringIndex = 0;
 
 #ifdef __cplusplus
@@ -353,9 +353,7 @@ void DbgClearAllTopics( void )
 //		xxnov96:HJH		-> creation
 //
 //**************************************************************************
-template void DbgMessageReal<unsigned char *>(UINT16, UINT8, UINT8, unsigned char *);
-template <typename type4>
-void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, type4 strMessage)
+void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 strMessage)
 {
 #ifndef _NO_DEBUG_TXT
   FILE      *OutFile;
@@ -502,33 +500,20 @@ extern HVOBJECT FontObjs[25];
 
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 
-#ifdef JA2_WIN
-template void _FailMessage<char *, char const *>(char *, unsigned int, char const *);
-template void _FailMessage<char const *, char const *>(char const *, unsigned int, char const *);
-//template void _FailMessage<int, char const *>(int, unsigned int, char const *);
-//template void _FailMessage<int, char *>(int, unsigned int, char *);
-template void _FailMessage<char *, char *>(char *, unsigned int, char *);
-#if _MSC_VER <= 1200
-	template void _FailMessage<char *, char *>(unsigned char *, unsigned int, char *);
-#endif	// #if _MSC_VER <= 1200
-template void _FailMessage<unsigned char *, char const *>(unsigned char *, unsigned int, char const *);
-#endif	// #ifdef JA2_WIN
-
-template <typename type1, typename type2>
-void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
+void _FailMessage( const CHAR8 *pString, UINT32 uiLineNum, const CHAR8 *pSourceFile )
 { 
-	UINT8 ubOutputString[512];
+	CHAR8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 //	MSG Message;
 	FILE *DebugFile;
 #endif	// #ifndef _NO_DEBUG_TXT
 	BOOLEAN fDone = FALSE;
 	//Build the output strings
-	sprintf( (char *)ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
+	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
 	if( pString )
-		sprintf( (char *)gubAssertString, (const char *)pString );	
+		sprintf( gubAssertString, pString );	
 	else
-		sprintf( (char *)gubAssertString, "" );
+		sprintf( gubAssertString, "" );
 
 #ifdef JA2_WIN
 	//Output to debugger
@@ -542,7 +527,7 @@ void _FailMessage( type1 pString, UINT32 uiLineNum, type2 pSourceFile )
 	{
 		if ((DebugFile = fopen( gpcDebugLogFileName, "a+t" )) != NULL)
 		{
-			fputs( (const char *)ubOutputString, DebugFile );
+			fputs( ubOutputString, DebugFile );
 			fclose( DebugFile );
 		}
 	}
@@ -642,7 +627,7 @@ void		DbgShutdown(void) {};
 
 // This is NOT a _DEBUG only function! It is also needed in
 // release mode builds. -- DB
-UINT8 *String(const char *String, ...)
+CHAR8 *String(const char *String, ...)
 {
 
   va_list  ArgPtr;
@@ -657,7 +642,7 @@ UINT8 *String(const char *String, ...)
   }
 
   va_start(ArgPtr, String);
-  vsprintf((char *) gbTmpDebugString[usIndex], String, ArgPtr);
+  vsprintf(gbTmpDebugString[usIndex], String, ArgPtr);
   va_end(ArgPtr);
 
   return gbTmpDebugString[usIndex];

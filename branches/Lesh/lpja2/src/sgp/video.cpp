@@ -1979,16 +1979,7 @@ void PrintScreen(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//Kaiden - Added for VC6 Compatibility
-#ifdef JA2_WIN
-#if _MSC_VER <= 1200
-	template void FatalError<char const *>(char *, ...);
-#endif
-#endif
- 
-template void FatalError<char const *>(char const *, ...);
-template <typename string1>
-void FatalError( string1 pError, ...)
+void FatalError( STR8 pError, ...)
 {
 	va_list argptr;
 

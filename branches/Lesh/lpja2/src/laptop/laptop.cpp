@@ -4447,12 +4447,7 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	return;
 }
 
-template BOOLEAN DoLapTopMessageBox<wchar_t *>(UINT8, wchar_t *, UINT32, UINT8, MSGBOX_CALLBACK);
-template BOOLEAN DoLapTopMessageBox<wchar_t const *>(UINT8, wchar_t const *, UINT32, UINT8, MSGBOX_CALLBACK);
-template BOOLEAN DoLapTopMessageBox<unsigned short *>(UINT8, unsigned short *, UINT32, UINT8, MSGBOX_CALLBACK);
-template BOOLEAN DoLapTopMessageBox<unsigned short const *>(UINT8, unsigned short const *, UINT32, UINT8, MSGBOX_CALLBACK);
-template <typename string2>
-BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, string2 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect pCenteringRect= {LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 

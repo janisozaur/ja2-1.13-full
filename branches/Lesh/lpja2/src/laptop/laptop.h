@@ -29,8 +29,7 @@ UINT32		DrawLapTopIcons( );
 void			LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void			HandleRightButtonUpEvent( void );
 
-template <typename string2>
-BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, string2 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
+BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
 void			GoToWebPage(INT32 iPageId);
 BOOLEAN		WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackGround);
 void			BlitTitleBarIcons( void );

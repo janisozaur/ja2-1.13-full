@@ -1526,7 +1526,7 @@ BOOLEAN InitializeSMPanel(  )
 
 BOOLEAN CreateSMPanelButtons( )
 {
-UINT8 ubString[48];
+CHAR8 ubString[48];
 
 	giSMStealthImages = -1;
 	giSMStealthButton = -1;
@@ -1557,7 +1557,7 @@ UINT8 ubString[48];
 	iBurstButtonImages[ WM_ATTACHED_GL_AUTO ]				= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES  ], -1, 17, -1, -1, -1 );
 	
 
-	FilenameForBPP("INTERFACE\\invadd-ons.sti", (STR)ubString);
+	FilenameForBPP("INTERFACE\\invadd-ons.sti", ubString);
 	// Load button Graphics
 	iSMPanelImages[ STANCE_IMAGES  ]				= LoadButtonImage(ubString,0,0,-1,2,-1 );
 
@@ -4072,7 +4072,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 BOOLEAN CreateTEAMPanelButtons( )
 {
-UINT8	ubString[48];
+CHAR8	ubString[48];
 
 	FilenameForBPP("INTERFACE\\bottom_bar_buttons.sti", (STR)ubString);
 

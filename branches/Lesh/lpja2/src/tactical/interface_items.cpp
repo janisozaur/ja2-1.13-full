@@ -2368,7 +2368,7 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {  
 	VOBJECT_DESC    VObjectDesc;
-	UINT8 ubString[48];
+	CHAR8 ubString[48];
 	INT32		cnt;
 	CHAR16		pStr[10];
 	INT16	usX, usY;
@@ -6194,7 +6194,7 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
 {
   VOBJECT_DESC    VObjectDesc;
-	UINT8						ubString[48];
+	CHAR8						ubString[48];
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
 	INT16						sCenX, sCenY, sX, sY, sCenterYVal;
@@ -7928,7 +7928,7 @@ void UpdateItemHatches()
 BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, ITEM_POOL *pItemPool, UINT8 ubCount)
 {
   VOBJECT_DESC		VObjectDesc;
-	UINT8			ubString[48];
+	CHAR8			ubString[48];
 	INT16			sCenX, sCenY, sX, sY, sCenterYVal;
 	INT8 bZLevel	=pOpponent->bLevel;
 	INT16 sGridNo	=pOpponent->sGridNo;

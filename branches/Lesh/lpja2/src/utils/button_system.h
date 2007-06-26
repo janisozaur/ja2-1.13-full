@@ -198,13 +198,11 @@ void		FreeButtonSavedRect( INT32 iButton );
 
 #endif
 
-template <typename string1>
-INT16 LoadGenericButtonIcon(string1 filename);
+INT16 LoadGenericButtonIcon(STR8 filename);
 
 BOOLEAN UnloadGenericButtonIcon(INT16 GenImg);
 
-template <typename type1>
-INT32 LoadButtonImage(type1 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
+INT32 LoadButtonImage(STR8 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 INT32 UseVObjAsButtonImage(HVOBJECT hVObject, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 void UnloadButtonImage(INT32 Index);
@@ -243,31 +241,22 @@ INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type,INT16 P
 //loading, and deleting of the image.  The size of the image determines the size of the button.  It also uses
 //the default move callback which emulates Win95.  Finally, it sets the priority to normal.  The function you
 //choose also determines the type of button (toggle, notoggle, or newtoggle)
-template <typename string3>
-INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback );
+INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
+INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
+INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback );
 
-template <typename string3>
-INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback );
-
-template <typename string3>
-INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback );
 //Same as above, but accepts specify toggle type
+INT32 CreateEasyButton( INT32 x, INT32 y, STR8 filename, INT32 Type, GUI_CALLBACK ClickCallback);
 
-template <typename string3>
-INT32 CreateEasyButton( INT32 x, INT32 y, string3 filename, INT32 Type, GUI_CALLBACK ClickCallback);
 //Same as above, but accepts priority specification.
-template <typename string3>
-INT32 CreateSimpleButton( INT32 x, INT32 y, string3 filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback );
-
-template <typename string3>
-INT32 CreateCheckBoxButton( INT16 x, INT16 y, string3 filename, INT16 Priority, GUI_CALLBACK ClickCallback );
+INT32 CreateSimpleButton  ( INT32 x, INT32 y, STR8 filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback );
+INT32 CreateCheckBoxButton( INT16 x, INT16 y, STR8 filename, INT16 Priority, GUI_CALLBACK ClickCallback );
 
 INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 yloc,INT16 w,INT16 h,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 
-INT32 CreateTextButton(wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
-template <typename string2>
-INT32 CreateIconAndTextButton( INT32 Image, string2 string, UINT32 uiFont, 
+INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
+INT32 CreateIconAndTextButton( INT32 Image, STR16 string, UINT32 uiFont, 
 															 INT16 sForeColor, INT16 sShadowColor, 
 															 INT16 sForeColorDown, INT16 sShadowColorDown, 
 															 INT8 bJustification, 

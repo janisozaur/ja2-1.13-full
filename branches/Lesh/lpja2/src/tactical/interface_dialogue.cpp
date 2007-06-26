@@ -372,7 +372,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	UINT16						usHeight;
   VOBJECT_DESC			VObjectDesc;
 	INT16							sCenterYVal, sCenterXVal;
-	UINT8							ubString[48];
+	CHAR8							ubString[48];
 
 
 	// disable scroll messages

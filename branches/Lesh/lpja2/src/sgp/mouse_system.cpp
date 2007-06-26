@@ -1226,13 +1226,7 @@ void RefreshMouseRegions( )
 
 }
 
-template void SetRegionFastHelpText<short *>(MOUSE_REGION *, short *);
-template void SetRegionFastHelpText<wchar_t *>(MOUSE_REGION *, wchar_t *);
-template void SetRegionFastHelpText<wchar_t const *>(MOUSE_REGION *, wchar_t const *);
-template void SetRegionFastHelpText<unsigned short *>(MOUSE_REGION *, unsigned short *);
-template void SetRegionFastHelpText<unsigned short const*>(MOUSE_REGION *, unsigned short const*);
-template <typename type2>
-void SetRegionFastHelpText( MOUSE_REGION *region, type2 szText )
+void SetRegionFastHelpText( MOUSE_REGION *region, STR16 szText )
 {
 	Assert( region );
 
@@ -1247,14 +1241,14 @@ void SetRegionFastHelpText( MOUSE_REGION *region, type2 szText )
 		//AssertMsg( 0, String( "Attempting to set fast help text, \"%S\" to an inactive region.", szText ) );
 	}
 
-	if( !szText || !wcslen( (wchar_t *)szText ) )
+	if( !szText || !wcslen( szText ) )
 		return; //blank (or clear)
 
 	// Allocate memory for the button's FastHelp text string...
-	region->FastHelpText = (STR16) MemAlloc( (wcslen( (wchar_t *)szText ) + 1) * sizeof(CHAR16) );
+	region->FastHelpText = (STR16) MemAlloc( (wcslen( szText ) + 1) * sizeof(CHAR16) );
 	Assert( region->FastHelpText );
 
-	wcscpy( region->FastHelpText, (wchar_t *) szText );
+	wcscpy( region->FastHelpText, szText );
 
   // ATE: We could be replacing already existing, active text
   // so let's remove the region so it be rebuilt...

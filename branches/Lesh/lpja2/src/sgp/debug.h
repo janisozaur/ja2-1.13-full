@@ -43,7 +43,7 @@ extern INT32		giProfileCount;
 														_RPT3(_CRT_WARN, "*** PROFILE REPORT: %d executions took %dms, average of %.2fms per iteration.\n", guiExecutions, guiProfileTime, (FLOAT)guiProfileTime/guiExecutions); 
 
 extern void			_Null(void);
-extern	UINT8		*String(const char *String, ...);
+extern	CHAR8		*String(const CHAR8 *String, ...);
 
 
 
@@ -64,8 +64,7 @@ extern	UINT8		*String(const char *String, ...);
 //Assert( pointer, "This pointer is null and you tried to access it in function A ");  
 //It'll make debugging a little simpler.  In anal cases, you could build the string first, then assert 
 //with it.
-template <typename type1, typename type2>
-extern void _FailMessage(type1 pString, UINT32 uiLineNum, type2 pSourceFile );
+extern void _FailMessage(const CHAR8 *pString, UINT32 uiLineNum, const CHAR8 *pSourceFile );
 
 #define Assert(a)										(a) ? _Null() : _FailMessage( NULL, __LINE__, __FILE__ )
 #define AssertMsg(a,b)							(a) ? _Null() : _FailMessage(    b, __LINE__, __FILE__ )
@@ -130,14 +129,10 @@ extern BOOLEAN		gfDebugTopics[MAX_TOPICS_ALLOTED];
 #endif
 
 // public interface to debug methods:
-template <typename type4>
-extern void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, type4 strMessage);
+extern void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 strMessage);
 
 extern	BOOLEAN	DbgSetDebugLevel(UINT16 TopicId, UINT8 uiDebugLevel);
 extern	void		DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine );
-#if _MSC_VER <= 1200
-	extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
-#endif
 extern	void		DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage );
 extern	void		DbgClearAllTopics( void );
 extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString);

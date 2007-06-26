@@ -1503,7 +1503,7 @@ typedef struct DUMPFILENAME
 }DUMPFILENAME;
 
 // **************************************************************
-void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
+void DumpVObjectInfoIntoFile( CHAR8 *filename, BOOLEAN fAppend )
 {
 	VOBJECT_NODE *curr;
 	FILE *fp;
@@ -1583,13 +1583,10 @@ void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 
 //Debug wrapper for adding vObjects
 // **************************************************************
-template BOOLEAN _AddAndRecordVObject<char const *>(VOBJECT_DESC *, UINT32 *, UINT32, char const *);
-template BOOLEAN _AddAndRecordVObject<char *>(VOBJECT_DESC *, UINT32 *, UINT32, char *);
-template <typename type4>
-BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, type4 pSourceFile )
+BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, const CHAR8 *pSourceFile )
 {
 	UINT16 usLength;
-	UINT8 str[256];
+	CHAR8 str[256];
 	if( !AddStandardVideoObject( VObjectDesc, uiIndex ) )
 	{
 		return FALSE;
@@ -1602,7 +1599,7 @@ BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32
 	strcpy( gpVObjectTail->pName, VObjectDesc->ImageFile );
 
 	//record the code location of the calling creating function.
-	sprintf( (char *)str, "%s -- line(%d)", pSourceFile, uiLineNum );
+	sprintf( str, "%s -- line(%d)", pSourceFile, uiLineNum );
 	usLength = strlen( str ) + 1;
 	gpVObjectTail->pCode = (UINT8*)MemAlloc( usLength );
 	memset( gpVObjectTail->pCode, 0, usLength );
@@ -1612,13 +1609,10 @@ BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32
 }
 
 // **************************************************************
-template void PerformVideoInfoDumpIntoFile<char *>(char *, BOOLEAN);
-template void PerformVideoInfoDumpIntoFile<char const *>(char const *, BOOLEAN);
-template <typename string1>
-void PerformVideoInfoDumpIntoFile( string1 filename, BOOLEAN fAppend )
+void PerformVideoInfoDumpIntoFile( const CHAR8 *filename, BOOLEAN fAppend )
 {
-	DumpVObjectInfoIntoFile( (UINT8 *)filename, fAppend );
-	DumpVSurfaceInfoIntoFile( (UINT8 *)filename, TRUE );
+	DumpVObjectInfoIntoFile( filename, fAppend );
+	DumpVSurfaceInfoIntoFile( filename, TRUE );
 }
 
 #endif

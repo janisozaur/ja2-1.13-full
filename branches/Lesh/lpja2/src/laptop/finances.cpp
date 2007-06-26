@@ -1932,10 +1932,7 @@ BOOLEAN LoadInRecords( UINT32 uiPage )
 	return( TRUE );
 }
 
-template void InsertCommasForDollarFigure<short *>(short *);
-template void InsertCommasForDollarFigure<wchar_t *>(wchar_t *);
-template <typename string1>
-void InsertCommasForDollarFigure( string1 pString )
+void InsertCommasForDollarFigure( STR16 pString )
 {
   INT16 sCounter =0;
   INT16 sZeroCount =0;
@@ -2001,10 +1998,7 @@ void InsertCommasForDollarFigure( string1 pString )
 
 }
 
-template void InsertDollarSignInToString<short *>(short *);
-template void InsertDollarSignInToString<wchar_t *>(wchar_t *);
-template <typename string1>
-void InsertDollarSignInToString( string1 pString )
+void InsertDollarSignInToString( STR16 pString )
 {
 	// run to end of string, copy everything in string 2 places right, insert a space at pString[ 1 ] and a L'$' at pString[ 0 ]
 	

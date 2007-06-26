@@ -2179,7 +2179,7 @@ typedef struct DUMPFILENAME
 }DUMPFILENAME;
 
 // **************************************************************
-void DumpVSurfaceInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
+void DumpVSurfaceInfoIntoFile( CHAR8 *filename, BOOLEAN fAppend )
 {
 	VSURFACE_NODE *curr;
 	FILE *fp;
@@ -2259,11 +2259,10 @@ void DumpVSurfaceInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 
 //Debug wrapper for adding vsurfaces
 // **************************************************************
-template <typename type4>
-BOOLEAN _AddAndRecordVSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, type4 pSourceFile )
+BOOLEAN _AddAndRecordVSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, const CHAR8 *pSourceFile )
 {
 	UINT16 usLength;
-	UINT8 str[256];
+	CHAR8 str[256];
 	if( !AddStandardVideoSurface( VSurfaceDesc, uiIndex ) )
 	{
 		return FALSE;
@@ -2276,7 +2275,7 @@ BOOLEAN _AddAndRecordVSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UIN
 	strcpy( gpVSurfaceTail->pName, VSurfaceDesc->ImageFile );
 
 	//record the code location of the calling creating function.
-	sprintf( (char *) str, "%s -- line(%d)", pSourceFile, uiLineNum );
+	sprintf( str, "%s -- line(%d)", pSourceFile, uiLineNum );
 	usLength = strlen( str ) + 1;
 	gpVSurfaceTail->pCode = (UINT8*)MemAlloc( usLength );
 	memset( gpVSurfaceTail->pCode, 0, usLength );

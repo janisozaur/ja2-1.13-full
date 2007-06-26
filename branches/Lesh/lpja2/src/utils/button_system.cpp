@@ -195,10 +195,7 @@ INT32 FindFreeButtonSlot(void)
 //
 //	Load images for use with QuickButtons.
 //
-template INT32 LoadButtonImage<unsigned char *>(unsigned char *, INT32, INT32, INT32, INT32, INT32);
-template INT32 LoadButtonImage<char *>(char *, INT32, INT32, INT32, INT32, INT32);
-template <typename type1>
-INT32 LoadButtonImage(type1 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+INT32 LoadButtonImage(STR8 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	VOBJECT_DESC	vo_desc;
 	UINT32			UseSlot;
@@ -868,10 +865,7 @@ INT16 FindFreeIconSlot(void)
 //
 //	Loads an image file for use as a button icon.
 //
-template INT16 LoadGenericButtonIcon<char *>(char *);
-template INT16 LoadGenericButtonIcon<char const *>(char const *);
-template <typename string1>
-INT16 LoadGenericButtonIcon(string1 filename)
+INT16 LoadGenericButtonIcon(STR8 filename)
 {
 	INT16 ImgSlot;
 	VOBJECT_DESC	vo_desc;
@@ -1664,7 +1658,7 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 }
 
 //Creates a generic button with text on it.
-INT32 CreateTextButton(wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
@@ -2055,43 +2049,29 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 //loading, and deleting of the image.  The size of the image determines the size of the button.  It also uses
 //the default move callback which emulates Win95.  Finally, it sets the priority to normal.  The function you
 //choose also determines the type of button (toggle, notoggle, or newtoggle)
-template INT32 CreateEasyNoToggleButton<char *>(INT32, INT32, char *, GUI_CALLBACK);
-template INT32 CreateEasyNoToggleButton<char const *>(INT32, INT32, char const *, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback )
+INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback )
 {
 	return CreateSimpleButton( x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
-template INT32 CreateEasyToggleButton<char *>(INT32, INT32, char *, GUI_CALLBACK);
-template INT32 CreateEasyToggleButton<char const *>(INT32, INT32, char const *, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback )
+INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback )
 {
 	return CreateSimpleButton( x, y, filename, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
-template INT32 CreateEasyNewToggleButton<char const *>(INT32, INT32, char const *, GUI_CALLBACK);
-//template INT32 CreateEasyNewToggleButton<short *>(INT32, INT32, short *, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, string3 filename, GUI_CALLBACK ClickCallback )
+INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, STR8 filename, GUI_CALLBACK ClickCallback )
 {
 	return CreateSimpleButton( x, y, filename, BUTTON_NEWTOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 //Same as above, but accepts specify toggle type
-template INT32 CreateEasyButton<const char *>(INT32, INT32, const char *, INT32, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateEasyButton( INT32 x, INT32 y, string3 filename, INT32 Type, GUI_CALLBACK ClickCallback)
+INT32 CreateEasyButton( INT32 x, INT32 y, STR8 filename, INT32 Type, GUI_CALLBACK ClickCallback)
 {
 	return CreateSimpleButton( x, y, filename, Type, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 //Same as above, but accepts priority specification.
-template INT32 CreateSimpleButton<char *>(INT32, INT32, char *, INT32, INT16, GUI_CALLBACK);
-template INT32 CreateSimpleButton<char const *>(INT32, INT32, char const *, INT32, INT16, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateSimpleButton( INT32 x, INT32 y, string3 filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback )
+INT32 CreateSimpleButton( INT32 x, INT32 y, STR8 filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback )
 {
 	INT32 ButPic,ButNum;
 
@@ -2115,13 +2095,7 @@ INT32 CreateSimpleButton( INT32 x, INT32 y, string3 filename, INT32 Type, INT16 
 	return( ButNum );
 }
 
-template INT32 CreateIconAndTextButton<wchar_t const *>(INT32, wchar_t const *, UINT32, INT16, INT16, INT16, INT16, INT8, INT16, INT16, INT32, INT16, GUI_CALLBACK, GUI_CALLBACK);
-template INT32 CreateIconAndTextButton<wchar_t *>(INT32, wchar_t *, UINT32, INT16, INT16, INT16, INT16, INT8, INT16, INT16, INT32, INT16, GUI_CALLBACK, GUI_CALLBACK);
-template INT32 CreateIconAndTextButton<unsigned short const *>(INT32, unsigned short const *, UINT32, INT16, INT16, INT16, INT16, INT8, INT16, INT16, INT32, INT16, GUI_CALLBACK, GUI_CALLBACK);
-template INT32 CreateIconAndTextButton<unsigned short *>(INT32, unsigned short *, UINT32, INT16, INT16, INT16, INT16, INT8, INT16, INT16, INT32, INT16, GUI_CALLBACK, GUI_CALLBACK);
-template INT32 CreateIconAndTextButton<short *>(INT32, short *, UINT32, INT16, INT16, INT16, INT16, INT8, INT16, INT16, INT32, INT16, GUI_CALLBACK, GUI_CALLBACK);
-template <typename string2>
-INT32 CreateIconAndTextButton( INT32 Image, string2 string, UINT32 uiFont,
+INT32 CreateIconAndTextButton( INT32 Image, STR16 string, UINT32 uiFont,
 															 INT16 sForeColor, INT16 sShadowColor,
 															 INT16 sForeColorDown, INT16 sShadowColorDown,
 															 INT8 bJustification,
@@ -4088,17 +4062,7 @@ void DrawDialogBox( INT32 iDlgBox )
 
 
 
-// Kaiden: Added for VC6 compatibility
-
-#ifdef JA2_WIN
-#if _MSC_VER <= 1200 
-	template INT32 CreateCheckBoxButton<char const *>(INT16, INT16, char *, INT16, GUI_CALLBACK);
-#endif
-#endif
-
-template INT32 CreateCheckBoxButton<char const *>(INT16, INT16, char const *, INT16, GUI_CALLBACK);
-template <typename string3>
-INT32 CreateCheckBoxButton( INT16 x, INT16 y, string3 filename, INT16 Priority, GUI_CALLBACK ClickCallback )
+INT32 CreateCheckBoxButton( INT16 x, INT16 y, STR8 filename, INT16 Priority, GUI_CALLBACK ClickCallback )
 {
 	GUI_BUTTON *b;
 	INT32 ButPic, iButtonID;
