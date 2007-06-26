@@ -1613,7 +1613,13 @@ void CompileWorldMovementCosts( )
 {
 	INT32 usGridNo;
 
-	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
+	int i, j;
+
+//	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
+
+	for(i=0; i<WORLD_MAX; i++)
+		for(j=0; j<MAXDIR; j++)
+			memset( gubWorldMovementCosts[i][j], 0, 2 );
 
 	CompileWorldTerrainIDs();
  	for( usGridNo = 0; usGridNo < WORLD_MAX; usGridNo++ )

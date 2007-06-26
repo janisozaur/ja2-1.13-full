@@ -58,7 +58,7 @@ typedef struct
 
 typedef struct
 {
-	INT32 sGridNo;
+	INT16 _old_sGridNo;
 	BOOLEAN		fLocked;							// is the door locked
 	UINT8			ubTrapLevel;					// difficulty of finding the trap, 0-10
 	UINT8			ubTrapID;							// the trap type (0 is no trap)
@@ -69,11 +69,13 @@ typedef struct
 	INT8			bPerceivedTrapped;		// See above, but with respect to traps rather than locked status
 	INT8			bLockDamage;					// Damage to the lock
 	INT8			bPadding[4];					// extra bytes
+
+	INT32 sGridNo;
 } DOOR;
 
 typedef struct
 {
-	INT32 sGridNo;
+	INT16 sGridNo;
 	BOOLEAN		fLocked;
 	UINT8			ubTrapLevel;
 	UINT8			ubTrapID;

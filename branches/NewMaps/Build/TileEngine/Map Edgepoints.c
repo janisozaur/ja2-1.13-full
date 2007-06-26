@@ -974,6 +974,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stNorthEdgepointArraySize; i++)
 				gps1stNorthEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -991,6 +992,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stEastEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stEastEdgepointArraySize; i++)
 				gps1stEastEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1008,6 +1010,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stSouthEdgepointArraySize; i++)
 				gps1stSouthEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1025,6 +1028,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stWestEdgepointArraySize; i++)
 				gps1stWestEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1043,6 +1047,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndNorthEdgepointArraySize; i++)
 				gps2ndNorthEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1060,6 +1065,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndEastEdgepointArraySize; i++)
 				gps2ndEastEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1077,6 +1083,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndSouthEdgepointArraySize; i++)
 				gps2ndSouthEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);
@@ -1094,6 +1101,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
+			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndWestEdgepointArraySize; i++)
 				gps2ndWestEdgepointArray[i] = gpsOldEdgepointArray[i];
 			MemFree(gpsOldEdgepointArray);

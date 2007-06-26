@@ -41,7 +41,9 @@ extern INT32 guiWorldRows;
 //based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.
 #include <memory.h>
-#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+//SB: fix macro syntax flaw
+//#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+#define  LOADDATA( dst, src, size ) { memcpy( dst, src, size ); src += size; }
 
 
 #define LANDHEAD							0

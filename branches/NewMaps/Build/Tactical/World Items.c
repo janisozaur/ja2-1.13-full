@@ -393,7 +393,10 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
 	{ //The sector has already been visited.  The items are saved in a different format that will be 
 		//loaded later on.  So, all we need to do is skip the data entirely.
-		*hBuffer += sizeof( WORLDITEM ) * uiNumWorldItems;
+		if( dMajorMapVersion < 7.00 )
+			*hBuffer += sizeof( _OLD_WORLDITEM ) * uiNumWorldItems;
+		else
+			*hBuffer += sizeof( WORLDITEM ) * uiNumWorldItems;
 		return;
 	}
 	else for ( i = 0; i < uiNumWorldItems; i++ )
