@@ -1919,10 +1919,6 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 		{
 			NPCDoesAct(pSoldier);
 
-			// 0verhaul:  The decideaction stage does so many path plots and overrides that 
-			// relying on a stored path from there is a bad idea.
-			pSoldier->usPathDataSize = pSoldier->usPathIndex = pSoldier->bPathStored = 0;
-
 			// perform the chosen action
 			pSoldier->bActionInProgress = ExecuteAction(pSoldier); // if started, mark us as busy
 
@@ -2043,6 +2039,10 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #endif
 
 	DebugAI( String( "%d does %s (a.d. %d) at time %ld", pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock() ) );
+
+	// 0verhaul:  The decideaction stage does so many path plots and overrides that 
+	// relying on a stored path from there is a bad idea.
+	pSoldier->usPathDataSize = pSoldier->usPathIndex = pSoldier->bPathStored = 0;
 
 	switch (pSoldier->bAction)
 	{

@@ -122,6 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".\Utils;.\TileEngine;.\TacticalAI;.\Tactical;.\Strategic;&quot;.\Standard Gaming Platform&quot;;.\Res;.\lua;.\Laptop;.\Editor;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"

@@ -2805,6 +2805,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 											action = AI_ACTION_FLANK_RIGHT ;
 										break;
 									}
+
+									if (action == AI_ACTION_SEEK_OPPONENT) {
+										return action;
+									}
 								}
 								else
 									return AI_ACTION_SEEK_OPPONENT ;

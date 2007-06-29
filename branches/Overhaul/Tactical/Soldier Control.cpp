@@ -11229,6 +11229,7 @@ void PickDropItemAnimation( SOLDIERTYPE *pSoldier )
 
 		SoldierHandleDropItem( pSoldier );
 		SoldierGotoStationaryStance( pSoldier );
+		ActionDone( pSoldier);
 		break;
 	}
 }
