@@ -1205,7 +1205,9 @@ BOOLEAN ClipMouseCursor(UINT16 x, UINT16 y)
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
-	FLOAT flNewXPos, flNewYPos;
+//	FLOAT flNewXPos, flNewYPos;
+
+	SDL_WarpMouse( (UINT16)uiNewXPos, (UINT16)uiNewYPos );
 
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
 	// mouse_event() uses your current Windows resolution to calculate the resulting x,y coordinates.  So in order to get
@@ -1218,10 +1220,10 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	// Alex Meduna, Dec. 3, 1997
 
 	// Adjust coords based on our resolution
-	flNewXPos = ( (FLOAT)uiNewXPos / SCREEN_WIDTH ) * 65536;
-	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
+//	flNewXPos = ( (FLOAT)uiNewXPos / SCREEN_WIDTH ) * 65536;
+//	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
 
-	SDL_WarpMouse( (UINT16)flNewXPos, (UINT16)flNewYPos );
+//	SDL_WarpMouse( (UINT16)flNewXPos, (UINT16)flNewYPos );
 //	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
 }
 
