@@ -841,7 +841,7 @@ TILE_ELEMENT *TileElem;
 void ConcealAllWalls(void)
 {
 LEVELNODE *pStruct;
-UINT32 uiCount;
+INT32 uiCount;
 
 	for(uiCount=0; uiCount < WORLD_MAX; uiCount++)
 	{
@@ -917,7 +917,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	INT32				iTempPosX_S, iTempPosY_S;
 	FLOAT				dOffsetX, dOffsetY;
 	FLOAT				dTempX_S, dTempY_S;
-	UINT32			uiTileIndex;
+	INT32			uiTileIndex;
 	UINT16			usImageIndex, *pShadeTable, *pDirtyBackPtr;
 	UINT32			uiBrushWidth, uiBrushHeight, uiDirtyFlags;
 	INT16				sTileHeight, sXPos, sYPos, sZLevel;
@@ -977,7 +977,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	UINT8					*pSaveBuf;
 	ITEM_POOL			*pItemPool = NULL;
 	BOOLEAN				fHiddenTile = FALSE;
-  UINT32        uiAniTileFlags = 0;
+	UINT32        uiAniTileFlags = 0;
 
 
 	//Init some variables
@@ -4285,7 +4285,7 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 
 void ClearMarkedTiles(void)
 {
-UINT32 uiCount;
+	INT32 uiCount;
 
 	for(uiCount=0; uiCount < WORLD_MAX; uiCount++)
 		gpWorldLevelData[uiCount].uiFlags&=(~MAPELEMENT_REDRAW);
@@ -4315,7 +4315,7 @@ void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius)
 
 void InvalidateWorldRedundency( )
 {
-	UINT32 uiCount;
+	INT32 uiCount;
 	
 	SetRenderFlags( RENDER_FLAG_CHECKZ );
 

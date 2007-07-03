@@ -217,7 +217,7 @@ void DOIT( )
 	//LEVELNODE *			pObject;
 	LEVELNODE	*			pStruct, *pNewStruct;
 	//LEVELNODE	*			pShadow;
-	UINT32 uiLoop;
+	INT32 uiLoop;
 
 	// first level
  	for( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
@@ -2135,11 +2135,13 @@ BOOLEAN SaveWorld( UINT8	*puiFilename )
 	FileClose( hfile );
 
 	sprintf( gubFilename, puiFilename );
-#endif //JA2EDITOR
+
 
 	for(i = 0; i<WORLD_MAX; i++)
 		MemFree(bCounts[i]);
 	MemFree(bCounts);
+
+#endif //JA2EDITOR
 
 	return( TRUE );
 }
@@ -4223,6 +4225,7 @@ extern UINT8 * gubFOVDebugInfoInfo;
 extern INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ];
 extern INT32 dirDelta[8];
 INT16 DirIncrementer[8];
+extern INT16 *	gsCoverValue;
 
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {

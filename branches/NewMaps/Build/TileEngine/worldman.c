@@ -78,7 +78,7 @@ BOOLEAN	CreateLevelNode( LEVELNODE **ppNode )
 
 void CountLevelNodes( void )
 {
-	UINT32 uiLoop, uiLoop2;
+	INT32 uiLoop, uiLoop2;
 	LEVELNODE * pLN;
 	MAP_ELEMENT * pME;
 
@@ -3617,7 +3617,7 @@ void WorldHideTrees( )
 LEVELNODE *pNode;
 BOOLEAN fRerender=FALSE;
 UINT32	fTileFlags;
-UINT32 cnt;
+INT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
@@ -3648,7 +3648,7 @@ void WorldShowTrees( )
 LEVELNODE *pNode;
 BOOLEAN fRerender=FALSE;
 UINT32	fTileFlags;
-UINT32 cnt;
+INT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{

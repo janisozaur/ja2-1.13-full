@@ -563,7 +563,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	UINT8					ubDirsLeft;
 	BOOLEAN				fDirChecked[8];
 	BOOLEAN				fRangeRestricted = FALSE, fFound = FALSE;
-	UINT32				usDest, usOrigin;
+	INT32				usDest, usOrigin;
 	SOLDIERTYPE *	pFriend;
 
 
@@ -701,7 +701,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 INT32 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 {
 	INT32 sRandDest = NOWHERE;
-	UINT32 usOrigin, usMaxDist;
+	INT32 usOrigin, usMaxDist;
 	UINT8	ubTriesLeft;
 	BOOLEAN fLimited = FALSE, fFound = FALSE;
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;

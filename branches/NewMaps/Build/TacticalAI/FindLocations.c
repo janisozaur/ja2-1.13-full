@@ -27,8 +27,10 @@
 
 #include "PathAIDebug.h"
 
+INT16 * gsCoverValue = NULL;
+
 #ifdef _DEBUG
-	INT16 * gsCoverValue = NULL;
+	
 	INT16	gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
 		// NB Change this to true to get visible cover debug -- CJC

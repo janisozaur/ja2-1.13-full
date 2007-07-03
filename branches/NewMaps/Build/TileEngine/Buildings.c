@@ -379,7 +379,7 @@ BOOLEAN InBuilding( INT32 sGridNo )
 
 void GenerateBuildings( void )
 {
-	UINT32	uiLoop;
+	INT32	uiLoop;
 
 	// init building structures and variables
 //	memset( &gubBuildingInfo, 0, WORLD_MAX * sizeof( UINT8 ) );

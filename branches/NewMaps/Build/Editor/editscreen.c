@@ -2292,7 +2292,7 @@ void CreateNewMap()
 	NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
 	if( gfPendingBasement )
 	{
-		UINT32 i;
+		INT32 i;
 		UINT16 usIndex;
 		for ( i = 0; i < WORLD_MAX; i++ )
 		{
@@ -2304,7 +2304,7 @@ void CreateNewMap()
 	}
 	else if( gfPendingCaves )
 	{
-		UINT32 i;
+		INT32 i;
 		UINT16 usIndex;
 		for ( i = 0; i < WORLD_MAX; i++ )
 		{

@@ -143,5 +143,8 @@ void StartScheduleAction();
 void InitDetailedPlacementForMerc();
 void KillDetailedPlacementForMerc();
 
+void CopyMercPlacement( INT32 iMapIndex );
+void PasteMercPlacement( INT32 iMapIndex );
+
 #endif
 #endif

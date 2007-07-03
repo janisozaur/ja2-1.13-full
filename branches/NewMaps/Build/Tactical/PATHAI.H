@@ -39,6 +39,7 @@ extern BOOLEAN gfNPCCircularDistLimit;
 extern BOOLEAN gfEstimatePath;
 extern BOOLEAN	gfPathAroundObstacles;
 extern UINT8 gubGlobalPathFlags;
+extern INT32 dirDelta[8];
 
 // Ian's terrain values for travelling speed/pathing purposes
 // Fixed by CJC March 4, 1998.  Please do not change these unless familiar

@@ -689,7 +689,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	INT16				sTempPosX_M, sTempPosY_M;
 	INT16				sTempPosX_S, sTempPosY_S;
 	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
-	UINT32			usTileIndex;
+	INT32			usTileIndex;
 	INT16				sX, sY;
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
@@ -1518,7 +1518,7 @@ void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psSc
 
 BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
@@ -1532,7 +1532,7 @@ BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 		// Adjust for height.....
 		sWorldScreenY =sWorldScreenY + gpWorldLevelData[ (*psGridNo) ].sHeight;
@@ -1540,7 +1540,7 @@ BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 
 		return( TRUE );
@@ -1554,7 +1554,7 @@ BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 
 BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo )
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
@@ -1568,7 +1568,7 @@ BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 		// Adjust for height.....
 		sWorldScreenY =sWorldScreenY + gpWorldLevelData[ (*psGridNo) ].sHeight;
@@ -1576,7 +1576,7 @@ BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 
 		return( TRUE );

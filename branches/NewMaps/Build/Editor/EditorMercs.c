@@ -304,8 +304,7 @@ INT8 gbCurrCreature = BLOODCAT;
 BOOLEAN gfSaveBuffer = FALSE;
 BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
 SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
-void CopyMercPlacement();
-void PasteMercPlacement();
+
 
 void GameInitEditorMercsInfo()
 {

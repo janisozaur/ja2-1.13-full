@@ -4944,7 +4944,7 @@ void HandleItemGlowFlag( INT32 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
 
 void ToggleItemGlow( BOOLEAN fOn )
 {
-	UINT32 cnt;
+	INT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
@@ -5024,7 +5024,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 // Well, clears all item pools
 void ClearAllItemPools( )
 {
-	UINT32 cnt;
+	INT32 cnt;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
