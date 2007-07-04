@@ -1753,6 +1753,8 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 			// Check for helicopter being on the ground in this sector...
 			HandleHelicopterOnGroundGraphic( );
 
+			// Move above enemy in sector placement!  If there are already enemies in the sector, militia cannot
+			// be moved in.  
 			ResetMilitia();
 			AllTeamsLookForAll( TRUE );
 			return( TRUE );

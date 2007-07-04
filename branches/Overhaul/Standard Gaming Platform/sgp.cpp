@@ -95,6 +95,7 @@ HINSTANCE					ghInstance;
 
 // Global Variable Declarations
 RECT				rcWindow;
+POINT               ptWindowSize;
 
 // moved from header file: 24mar98:HJH
 UINT32		giStartMem;
@@ -141,6 +142,10 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
  
 	switch(Message)
   {
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		break;
+
 		case WM_MOUSEWHEEL:
 			{
 				QueueEvent(MOUSE_WHEEL, wParam, lParam);
@@ -149,13 +154,22 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 		
 #ifdef JA2
     case WM_MOVE:
-        if( 1==iScreenMode )
-          {
+//        if( 1==iScreenMode )
+//          {
           GetClientRect(hWindow, &rcWindow);
           ClientToScreen(hWindow, (LPPOINT)&rcWindow);
           ClientToScreen(hWindow, (LPPOINT)&rcWindow+1);
-          }
+//          }
         break;
+	case WM_GETMINMAXINFO:
+		{
+			MINMAXINFO *mmi = (MINMAXINFO*)lParam;
+
+			mmi->ptMaxSize = ptWindowSize;
+			mmi->ptMaxTrackSize = mmi->ptMaxSize;
+			mmi->ptMinTrackSize = mmi->ptMaxSize;
+			break;
+		}
 #else
 		case WM_MOUSEMOVE:
 			break;
@@ -303,6 +317,17 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 		}
 		break;
 #endif
+
+	case WM_TIMER:
+#ifdef LUACONSOLE
+		PollConsole( );
+#endif
+
+      if (gfApplicationActive)
+      {
+        GameLoop();        
+      } 
+	  break;
 
     case WM_ACTIVATEAPP: 
       switch(wParam)
@@ -701,6 +726,7 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 #endif
   MSG				Message;
 	HWND			hPrevInstanceWindow;
+	UINT32          uiTimer = 0;
 
 	// Make sure that only one instance of this application is running at once
 	// // Look for prev instance by searching for the window
@@ -762,7 +788,10 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
   }
 
 #ifdef LUACONSOLE
-  CreateConsole();
+  if (1==iScreenMode)
+  {
+	  CreateConsole();
+  }
 #endif
 
 #ifdef JA2
@@ -776,12 +805,15 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 
   FastDebugMsg("Running Game");
 
+  // 0verhaul:  Roughly 60 frames per second.  The original "low cpu" code did 30, but that is really slow
+  SetTimer( ghWindow, uiTimer, 16, NULL);
+
   // At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is 
   // attend to the gaming mechanics themselves
   while (gfProgramIsRunning)
   {
-    if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
-    { // We have a message on the WIN95 queue, let's get it
+//    if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
+//    { // We have a message on the WIN95 queue, let's get it
       if (!GetMessage(&Message, NULL, 0, 0))
       { // It's quitting time
         return Message.wParam;
@@ -790,6 +822,7 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
       TranslateMessage(&Message);
       DispatchMessage(&Message);      
     }
+#if 0
     else
     { // Windows hasn't processed any messages, therefore we handle the rest
 #ifdef LUACONSOLE
@@ -809,6 +842,9 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
       }
     }
   }
+#endif
+
+  KillTimer( ghWindow, uiTimer);
 
   // This is the normal exit point
   FastDebugMsg("Exiting Game");

@@ -58,8 +58,8 @@ extern int iScreenMode;
 typedef struct
 {
   BOOLEAN                 fRestore;
-  UINT16                  usMouseXPos, usMouseYPos;
-  UINT16                  usLeft, usTop, usRight, usBottom;
+  INT16                  usMouseXPos, usMouseYPos;
+  INT16                  usLeft, usTop, usRight, usBottom;
 	RECT										Region;
   LPDIRECTDRAWSURFACE     _pSurface;
   LPDIRECTDRAWSURFACE2    pSurface;
@@ -109,7 +109,7 @@ static LPDIRECTDRAWSURFACE    _gpFrameBuffer = NULL;
 static LPDIRECTDRAWSURFACE2   gpFrameBuffer = NULL;
 static LPDIRECTDRAWSURFACE    _gpBackBuffer = NULL;
 extern RECT									  rcWindow;
-
+extern POINT                                  ptWindowSize;
 
 
 //
@@ -252,7 +252,29 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
   // Don't change this
   //
   if( 1==iScreenMode )
-    hWindow = CreateWindowEx(0, (LPCSTR) ClassName, "Windowed JA2 !!", WS_POPUP, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, NULL, NULL, hInstance, NULL);
+  {
+	RECT window;
+	DWORD style;
+	DWORD exstyle;
+
+	window.top = 0;
+	window.left = 0;
+	window.right = SCREEN_WIDTH;
+	window.bottom = SCREEN_HEIGHT;
+
+	exstyle = WS_EX_APPWINDOW;
+	style = WS_OVERLAPPEDWINDOW & (~WS_MAXIMIZEBOX);
+
+	AdjustWindowRectEx( &window, style, FALSE, exstyle);
+	OffsetRect( &window, -window.left, -window.top);
+
+	ptWindowSize.x = window.right;
+	ptWindowSize.y = window.bottom;
+
+	hWindow = CreateWindowEx(exstyle, (LPCSTR) ClassName, "Windowed JA2 !!", style, window.left, window.top, window.right, window.bottom, NULL, NULL, hInstance, NULL);
+	GetClientRect( hWindow, &window);
+	window.top = window.top;
+  }
   else
     hWindow = CreateWindowEx(WS_EX_TOPMOST, (LPCSTR) ClassName, (LPCSTR)ClassName, WS_POPUP | WS_VISIBLE, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), NULL, NULL, hInstance, NULL);
 
@@ -348,6 +370,8 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
   ZEROMEM(SurfaceDescription);
   if( 1==iScreenMode ) /* Windowed mode */
     {
+	LPDIRECTDRAWCLIPPER clip;
+
   	// Create a primary surface and a backbuffer in system memory
     SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
     SurfaceDescription.dwFlags = DDSD_CAPS;
@@ -360,6 +384,26 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
       return FALSE;
       }
 
+    ReturnCode = DirectDrawCreateClipper ( 0, &clip, NULL );
+    if (ReturnCode != DD_OK)
+      { 
+      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+      return FALSE;
+      }
+
+	ReturnCode = IDirectDrawClipper_SetHWnd( clip, 0, ghWindow);
+    if (ReturnCode != DD_OK)
+      { 
+      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+      return FALSE;
+      }
+
+	ReturnCode = IDirectDrawSurface_SetClipper( _gpPrimarySurface, clip);
+    if (ReturnCode != DD_OK)
+      { 
+      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+      return FALSE;
+      }
 
     ReturnCode = IDirectDrawSurface_QueryInterface(_gpPrimarySurface, /*&*/IID_IDirectDrawSurface2, (LPVOID *)&gpPrimarySurface); // (jonathanl)
     if (ReturnCode != DD_OK)
@@ -1515,6 +1559,7 @@ void RefreshScreen(void *DummyVariable)
   static BOOLEAN fShowMouse;
   HRESULT ReturnCode;
   static RECT    Region;  
+  static INT16   sx, sy;
   static POINT   MousePos;
 	static BOOLEAN fFirstTime = TRUE;
 	UINT32						uiTime;
@@ -1585,6 +1630,7 @@ void RefreshScreen(void *DummyVariable)
   //
 
   GetCursorPos(&MousePos);
+  ScreenToClient(ghWindow, &MousePos); // In window coords!
 
   /////////////////////////////////////////////////////////////////////////////////////////////
   // 
@@ -1678,7 +1724,6 @@ void RefreshScreen(void *DummyVariable)
 					}
 				} while (ReturnCode != DD_OK);
 
-
 			}
 			else
 			{
@@ -1738,9 +1783,7 @@ void RefreshScreen(void *DummyVariable)
 							goto ENDOFLOOP;
 						}
 					} while (ReturnCode != DD_OK);
-
 				}
-
 			}
 						
 		}
@@ -1826,7 +1869,7 @@ void RefreshScreen(void *DummyVariable)
 
     do
     {            
-      ReturnCode = IDirectDrawSurface2_SGPBltFast(pTmpBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
+      ReturnCode = IDirectDrawSurface2_SGPBltFast(pTmpBuffer, 0, 0, gpPrimarySurface, &rcWindow, DDBLTFAST_NOCOLORKEY);
 		  if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
       {
         DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -2003,7 +2046,7 @@ void RefreshScreen(void *DummyVariable)
     Region.right  = Region.left + gusMouseCursorWidth;
     Region.bottom = Region.top + gusMouseCursorHeight;        
 
-    if (Region.right > usScreenWidth)
+	if (Region.right > usScreenWidth)
     {
       Region.right = usScreenWidth;          
     }
@@ -2021,11 +2064,11 @@ void RefreshScreen(void *DummyVariable)
       //
 
       gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore    = TRUE;                    
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight     = (UINT16) Region.right - (UINT16) Region.left;
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom    = (UINT16) Region.bottom - (UINT16) Region.top;
+      gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight     = (INT16)Region.right - (INT16) Region.left;
+      gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom    = (INT16)Region.bottom - (INT16) Region.top;
       if (Region.left < 0)
       {
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = (UINT16) (0 - Region.left);
+        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = (INT16) (0 - Region.left);
         gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = 0;
         Region.left = 0;
       }
@@ -2149,6 +2192,10 @@ void RefreshScreen(void *DummyVariable)
   //
   // Step (1) - Flip pages
   //
+  Region.top = 0;
+  Region.left = 0;
+  Region.right = rcWindow.right - rcWindow.left;
+  Region.bottom = rcWindow.bottom - rcWindow.top;
   do
   {
     if( 1==iScreenMode ) /* Windowed mode */
@@ -2193,6 +2240,7 @@ void RefreshScreen(void *DummyVariable)
 		Region.right = gsVIEWPORT_END_X; //ods1 640;
 		Region.bottom = gsVIEWPORT_END_Y;
 
+		OffsetRect( &Region, rcWindow.left, rcWindow.top);
 
 		do
 		{
@@ -2229,6 +2277,8 @@ void RefreshScreen(void *DummyVariable)
 	{
 		Region = 	gMouseCursorBackground[PREVIOUS_MOUSE_DATA].Region;
 
+		OffsetRect( &Region, rcWindow.left, rcWindow.top);
+
 		do
 		{
 			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -2249,7 +2299,8 @@ void RefreshScreen(void *DummyVariable)
 	{
 		Region = 	gMouseCursorBackground[CURRENT_MOUSE_DATA].Region;
 
-		
+		OffsetRect( &Region, rcWindow.left, rcWindow.top);
+
 		do
 		{
 			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -2265,7 +2316,7 @@ void RefreshScreen(void *DummyVariable)
 		} while (ReturnCode != DD_OK);
 	}
 
-	if (gfForceFullScreenRefresh == TRUE )
+	if (gfForceFullScreenRefresh == TRUE)
 	{
 			//
 			// Method (1) - We will be refreshing the entire screen
@@ -2278,7 +2329,7 @@ void RefreshScreen(void *DummyVariable)
 
 			do
 			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
+				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpPrimarySurface, &rcWindow, DDBLTFAST_NOCOLORKEY);
 				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 				{
 					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -2304,9 +2355,10 @@ void RefreshScreen(void *DummyVariable)
 			Region.right  = gListOfDirtyRegions[uiIndex].iRight;
 			Region.bottom = gListOfDirtyRegions[uiIndex].iBottom;
 
+			OffsetRect( &Region, rcWindow.left, rcWindow.top );
 			do
 			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gListOfDirtyRegions[uiIndex].iLeft, gListOfDirtyRegions[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
 				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 				{
 					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -2332,6 +2384,8 @@ void RefreshScreen(void *DummyVariable)
 		Region.right  = gDirtyRegionsEx[uiIndex].iRight;
 		Region.bottom = gDirtyRegionsEx[uiIndex].iBottom;
 
+		OffsetRect( &Region, rcWindow.left, rcWindow.top);
+
 		if ( ( Region.top < gsVIEWPORT_WINDOW_END_Y ) && gfRenderScroll )
 		{
 			continue;
@@ -2339,7 +2393,7 @@ void RefreshScreen(void *DummyVariable)
 
 		do
 		{
-			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gDirtyRegionsEx[uiIndex].iLeft, gDirtyRegionsEx[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
 			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 			{
 				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );

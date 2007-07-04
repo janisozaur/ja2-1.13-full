@@ -67,8 +67,8 @@ UINT32		guiRightButtonRepeatTimer;
 BOOLEAN   gfTrackMousePos;			// TRUE = queue mouse movement events, FALSE = don't
 BOOLEAN   gfLeftButtonState;		// TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN   gfRightButtonState;		// TRUE = Pressed, FALSE = Not Pressed
-UINT16    gusMouseXPos;					// X position of the mouse on screen
-UINT16    gusMouseYPos;					// y position of the mouse on screen
+INT16     gusMouseXPos;					// X position of the mouse on screen
+INT16     gusMouseYPos;					// y position of the mouse on screen
 
 // The queue structures are used to track input events using queued events
 
@@ -131,6 +131,7 @@ LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
 LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
 {
   UINT32 uiParam;
+  POINT mpos;
 
 #ifndef JA2
   if((Code < 0) || (!gfApplicationActive))
@@ -145,8 +146,10 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
   {
     case WM_LBUTTONDOWN
     : // Update the current mouse position
-      gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
-      gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
+      mpos = ((MOUSEHOOKSTRUCT *)lParam)->pt;
+	  ScreenToClient( ghWindow, &mpos);
+      gusMouseXPos = (INT16)mpos.x;
+      gusMouseYPos = (INT16)mpos.y;
       uiParam = gusMouseYPos;
       uiParam = uiParam << 16;
       uiParam = uiParam | gusMouseXPos;
@@ -159,8 +162,10 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
 	    break;
     case WM_LBUTTONUP
     : // Update the current mouse position
-      gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
-      gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
+      mpos = ((MOUSEHOOKSTRUCT *)lParam)->pt;
+	  ScreenToClient( ghWindow, &mpos);
+      gusMouseXPos = (INT16)mpos.x;
+      gusMouseYPos = (INT16)mpos.y;
       uiParam = gusMouseYPos;
       uiParam = uiParam << 16;
       uiParam = uiParam | gusMouseXPos;
@@ -173,8 +178,10 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       break;
     case WM_RBUTTONDOWN
     : // Update the current mouse position
-      gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
-      gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
+      mpos = ((MOUSEHOOKSTRUCT *)lParam)->pt;
+	  ScreenToClient( ghWindow, &mpos);
+      gusMouseXPos = (INT16)mpos.x;
+      gusMouseYPos = (INT16)mpos.y;
       uiParam = gusMouseYPos;
       uiParam = uiParam << 16;
       uiParam = uiParam | gusMouseXPos;
@@ -187,8 +194,10 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       break;
     case WM_RBUTTONUP
     : // Update the current mouse position
-      gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
-      gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
+      mpos = ((MOUSEHOOKSTRUCT *)lParam)->pt;
+	  ScreenToClient( ghWindow, &mpos);
+      gusMouseXPos = (INT16)mpos.x;
+      gusMouseYPos = (INT16)mpos.y;
       uiParam = gusMouseYPos;
       uiParam = uiParam << 16;
       uiParam = uiParam | gusMouseXPos;
@@ -201,8 +210,10 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       break;
     case WM_MOUSEMOVE
     : // Update the current mouse position
-      gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
-      gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
+      mpos = ((MOUSEHOOKSTRUCT *)lParam)->pt;
+	  ScreenToClient( ghWindow, &mpos);
+      gusMouseXPos = (INT16)mpos.x;
+      gusMouseYPos = (INT16)mpos.y;
       uiParam = gusMouseYPos;
       uiParam = uiParam << 16;
       uiParam = uiParam | gusMouseXPos;
@@ -214,7 +225,16 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
 			//Set that we have input
       gfSGPInputReceived =  TRUE;
       break;
+  default:
+      return CallNextHookEx(ghMouseHook, Code, wParam, lParam);
   }
+
+//  if (gusMouseXPos < 0 || gusMouseXPos >= SCREEN_WIDTH ||
+//	  gusMouseYPos < 0 || gusMouseYPos >= SCREEN_HEIGHT)
+  {
+      return CallNextHookEx(ghMouseHook, Code, wParam, lParam);
+  }
+
   return TRUE;
 }
 
@@ -913,6 +933,8 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
   }
 
   GetCursorPos(&MousePos);
+  ScreenToClient(ghWindow, &MousePos); // In window coords!
+
   uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
 
   if (ufKeyState == TRUE)
@@ -1064,6 +1086,7 @@ void GetMousePos(SGPPoint *Point)
   POINT MousePos;
 
   GetCursorPos(&MousePos);
+  ScreenToClient(ghWindow, &MousePos); // In window coords!
 
   Point->iX = (UINT32) MousePos.x;
   Point->iY = (UINT32) MousePos.y;
@@ -1613,6 +1636,7 @@ void HandleSingleClicksAndButtonRepeats( void )
       POINT  MousePos;
 
       GetCursorPos(&MousePos);
+      ScreenToClient(ghWindow, &MousePos); // In window coords!
       uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
       QueueEvent(LEFT_BUTTON_REPEAT, 0, uiTmpLParam);
       guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
@@ -1633,6 +1657,7 @@ void HandleSingleClicksAndButtonRepeats( void )
       POINT  MousePos;
 
       GetCursorPos(&MousePos);
+      ScreenToClient(ghWindow, &MousePos); // In window coords!
       uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
       QueueEvent(RIGHT_BUTTON_REPEAT, 0, uiTmpLParam);
       guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;

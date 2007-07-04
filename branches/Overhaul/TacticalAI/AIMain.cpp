@@ -778,6 +778,7 @@ void EndAIDeadlock(void)
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 from deadlock break" ) );
 				gTacticalStatus.ubAttackBusyCount = 0;
+				OutputDebugString( "Attack busy reset due to deadlock break.\n");
 
 				EndAIGuysTurn(pSoldier);
 				bFound = TRUE;

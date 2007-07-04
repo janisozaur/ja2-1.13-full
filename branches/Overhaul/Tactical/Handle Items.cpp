@@ -230,6 +230,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 due to no combat" ) );
 		gTacticalStatus.ubAttackBusyCount = 0;
+		OutputDebugString( "Resetting attack busy due to no combat.\n");
 	}
 
 //  if ( pTargetSoldier )
