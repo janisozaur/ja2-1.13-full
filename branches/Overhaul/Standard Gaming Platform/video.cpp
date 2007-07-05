@@ -1041,6 +1041,9 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
  	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
 
+	pSource = gpFrameBuffer;
+	pDest = gpFrameBuffer;
+
 ///zmiany
 	StripRegions[ 0 ].left   = gsVIEWPORT_START_X ;
 	StripRegions[ 0 ].right  = gsVIEWPORT_END_X	;
@@ -1103,6 +1106,11 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			Region.top = gsVIEWPORT_WINDOW_START_Y;
 			Region.right = usWidth;
 			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
+
+			if (Region.left >= Region.right)
+			{
+				break;
+			}
 
 			do
 			{
@@ -1428,6 +1436,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			// Optimize Redundent tiles too!
 			//ExamineZBufferRect( (INT16)StripRegions[ cnt ].left, (INT16)StripRegions[ cnt ].top, (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom );
 
+#if 0
 			do
 			{
 				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, StripRegions[ cnt ].left, StripRegions[ cnt ].top, gpFrameBuffer, (LPRECT)&( StripRegions[ cnt ] ), DDBLTFAST_NOCOLORKEY);
@@ -1441,7 +1450,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 					break;
 				}
 			} while (ReturnCode != DD_OK);
-
+#endif
 		}
 
 		sShiftX = 0;
@@ -1699,6 +1708,13 @@ void RefreshScreen(void *DummyVariable)
 		// Either Method (1) or (2)
 		//
 		{
+			if ( gfRenderScroll )
+			{
+//				ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
+				ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpBackBuffer, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
+				gfForceFullScreenRefresh = TRUE;
+			}
+
 			if (gfForceFullScreenRefresh == TRUE)
 			{
 				//
@@ -1786,10 +1802,6 @@ void RefreshScreen(void *DummyVariable)
 				}
 			}
 						
-		}
-		if ( gfRenderScroll )
-		{
-			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 	
@@ -2058,7 +2070,8 @@ void RefreshScreen(void *DummyVariable)
 
     if ((Region.right > Region.left)&&(Region.bottom > Region.top))
     {
-      //
+#if 1
+	  //
       // Make sure the mouse background is marked for restore and coordinates are saved for the
       // future restore
       //
@@ -2088,7 +2101,11 @@ void RefreshScreen(void *DummyVariable)
         gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = (UINT16) MousePos.y - gsMouseCursorYOffset;
         gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = 0;
       }          
-
+#else
+		// Now let's try something new!
+		// We already know what's supposed to be on the back buffer:  The frame buffer, plus some animations.  So let's try
+		// not saving the back buffer and just restoring under the mouse by copying from the frame buffer.
+#endif
 			if ((Region.right > Region.left)&&(Region.bottom > Region.top))
 			{
 				// Save clipped region
@@ -2230,9 +2247,19 @@ void RefreshScreen(void *DummyVariable)
   } while (ReturnCode != DD_OK);
 
 
+#if 1
+  	gfRenderScroll = FALSE;
+	gfScrollStart  = FALSE;
+	guiDirtyRegionCount = 0; 
+	guiDirtyRegionExCount = 0; 
+	gfForceFullScreenRefresh = FALSE;
+#else
   //
   // Step (2) - Copy Primary Surface to the Back Buffer
   //
+  // 0verhaul:
+  // Why???  This seems like a huge waste of time since it just copied the back buffer into the primary surface.  Just reset the flags
+
 	if ( gfRenderScroll )
 	{
 		Region.left = 0;
@@ -2405,8 +2432,9 @@ void RefreshScreen(void *DummyVariable)
 			}
 		} while (ReturnCode != DD_OK);
 	}
+#endif
 
-	guiDirtyRegionExCount = 0;
+	guiDirtyRegionExCount = 0; 
 
 
 ENDOFLOOP:
