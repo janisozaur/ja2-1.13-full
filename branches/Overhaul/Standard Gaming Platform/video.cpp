@@ -263,7 +263,7 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
 	window.bottom = SCREEN_HEIGHT;
 
 	exstyle = WS_EX_APPWINDOW;
-	style = WS_OVERLAPPEDWINDOW & (~WS_MAXIMIZEBOX);
+	style = WS_OVERLAPPEDWINDOW & (~(WS_MAXIMIZEBOX | WS_SYSMENU));
 
 	AdjustWindowRectEx( &window, style, FALSE, exstyle);
 	OffsetRect( &window, -window.left, -window.top);
@@ -297,7 +297,7 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
   // Display our full screen window
   //
 
-  ShowCursor(FALSE);
+//  ShowCursor(FALSE);
   ShowWindow(hWindow, usCommandShow);
   UpdateWindow(hWindow);
   SetFocus(hWindow);
@@ -691,7 +691,7 @@ void DoTester( )
 {
   IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
   IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
-  ShowCursor(TRUE);
+//  ShowCursor(TRUE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

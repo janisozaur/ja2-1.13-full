@@ -318,6 +318,9 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 		}
 		break;
 #endif
+	case WM_SETCURSOR:
+		SetCursor( NULL);
+		return TRUE;
 
 	case WM_TIMER:
 #ifdef LUACONSOLE
@@ -386,7 +389,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 
     case WM_DESTROY: 
 			ShutdownStandardGamingPlatform();
-      ShowCursor(TRUE);
+//      ShowCursor(TRUE);
       PostQuitMessage(0);
       break;
 
@@ -435,6 +438,17 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 			}
 			break;
 #endif
+
+		case WM_SYSKEYUP:
+		case WM_KEYUP:
+		    KeyUp(wParam, lParam);
+			break;
+
+		case WM_SYSKEYDOWN:
+		case WM_KEYDOWN:
+		    KeyDown(wParam, lParam);
+			gfSGPInputReceived =  TRUE;
+			break;
 
 		case WM_CHAR:
 			if (wParam == '\\' &&
@@ -793,7 +807,7 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 
 #endif
 
-  ShowCursor(FALSE);
+//  ShowCursor(FALSE);
 
   // Inititialize the SGP
   if (InitializeStandardGamingPlatform(hInstance, sCommandShow) == FALSE)
@@ -904,7 +918,7 @@ void SGPExit(void)
 #endif
 
 	ShutdownStandardGamingPlatform();
-  ShowCursor(TRUE);
+//  ShowCursor(TRUE);
 	if(strlen(gzErrorMsg))
   {
 		MessageBox(NULL, gzErrorMsg, "Error", MB_OK | MB_ICONERROR  );

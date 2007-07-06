@@ -120,7 +120,7 @@ LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
   else
   { // Key was up
     KeyDown(wParam, lParam);
-		gfSGPInputReceived =  TRUE;
+	gfSGPInputReceived =  TRUE;
   }
 
   return CallNextHookEx(ghKeyboardHook, Code, wParam, lParam);
@@ -367,8 +367,8 @@ BOOLEAN InitializeInputManager(void)
   gfCurrentStringInputState = FALSE;
   gpCurrentStringDescriptor = NULL;
   // Activate the hook functions for both keyboard and Mouse
-  ghKeyboardHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC) KeyboardHandler, (HINSTANCE) 0, GetCurrentThreadId());
-  DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set keyboard hook returned %d", ghKeyboardHook));
+//  ghKeyboardHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC) KeyboardHandler, (HINSTANCE) 0, GetCurrentThreadId());
+//  DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set keyboard hook returned %d", ghKeyboardHook));
 
   ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC) MouseHandler, (HINSTANCE) 0, GetCurrentThreadId());
   DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
@@ -379,7 +379,7 @@ void ShutdownInputManager(void)
 { // There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
   // mouse hooks will be destroyed
   UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
-  UnhookWindowsHookEx(ghKeyboardHook);
+//  UnhookWindowsHookEx(ghKeyboardHook);
   UnhookWindowsHookEx(ghMouseHook);
 }
 

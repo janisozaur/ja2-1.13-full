@@ -20,7 +20,7 @@
 			OutputDirectory="C:\Program Files\Jagged Alliance 2 1.13"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets=".\ja2_2005Express.vsprops"
+			InheritedPropertySheets=".\ja2_2005Express.vsprops;.\ja2_2005ExpressDebug.vsprops"
 			UseOfMFC="0"
 			CharacterSet="0"
 			>
@@ -404,6 +404,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\Console\Console.rc"
+				>
+			</File>
 			<File
 				RelativePath=".\Res\ja2.rc"
 				>
