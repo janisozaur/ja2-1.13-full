@@ -2879,6 +2879,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #endif
 
 			case 'l':
+				if (fAlt )
+				{
+
+				}
+				else if (fCtrl)
+				{
+				}
+				else
 				/*
 				if( fAlt )
 				{

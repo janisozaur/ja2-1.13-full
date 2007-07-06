@@ -5356,7 +5356,10 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 				case '\\':
 					#ifdef JA2TESTVERSION
-						if( fCtrl )
+						if (fAlt)
+						{
+						}
+						else if( fCtrl )
 						{
 							DumpItemsList();
 						}

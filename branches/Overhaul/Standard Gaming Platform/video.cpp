@@ -2213,10 +2213,10 @@ void RefreshScreen(void *DummyVariable)
   Region.left = 0;
   Region.right = rcWindow.right - rcWindow.left;
   Region.bottom = rcWindow.bottom - rcWindow.top;
-  do
+  if( 1==iScreenMode ) /* Windowed mode */
   {
-    if( 1==iScreenMode ) /* Windowed mode */
-      {
+    do
+    {
    	  ReturnCode = IDirectDrawSurface_Blt(
                       gpPrimarySurface,       // dest surface
                       &rcWindow,              // dest rect
@@ -2224,41 +2224,47 @@ void RefreshScreen(void *DummyVariable)
                       NULL,                   // src rect (all of it)
                       DDBLT_WAIT,
                       NULL);
-      }
-    else
+      if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
       {
-	    ReturnCode = IDirectDrawSurface_Flip(
-                      _gpPrimarySurface, 
-                      NULL, 
-                      gGameExternalOptions.gfVSync ? DDFLIP_WAIT : 0x00000008l 
-                      );
-      }
+        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
 
-    if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-    {
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+        if (ReturnCode == DDERR_SURFACELOST)
+        {
+          goto ENDOFLOOP;
+        }
+	  }
+	} while (ReturnCode != DD_OK);
 
-      if (ReturnCode == DDERR_SURFACELOST)
-      {
-        goto ENDOFLOOP;
-      }
-    }
-
-  } while (ReturnCode != DD_OK);
-
-
-#if 1
   	gfRenderScroll = FALSE;
 	gfScrollStart  = FALSE;
 	guiDirtyRegionCount = 0; 
 	guiDirtyRegionExCount = 0; 
 	gfForceFullScreenRefresh = FALSE;
-#else
-  //
-  // Step (2) - Copy Primary Surface to the Back Buffer
-  //
-  // 0verhaul:
-  // Why???  This seems like a huge waste of time since it just copied the back buffer into the primary surface.  Just reset the flags
+  }
+  else
+  {
+    do
+    {
+      ReturnCode = IDirectDrawSurface_Flip(
+                      _gpPrimarySurface, 
+                      NULL, 
+                      gGameExternalOptions.gfVSync ? DDFLIP_WAIT : 0x00000008l 
+                      );
+
+      if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
+      {
+        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+
+        if (ReturnCode == DDERR_SURFACELOST)
+        {
+          goto ENDOFLOOP;
+        }
+	  }
+	} while (ReturnCode != DD_OK);
+
+    //
+    // Step (2) - Copy Primary Surface to the Back Buffer
+    //
 
 	if ( gfRenderScroll )
 	{
@@ -2266,8 +2272,6 @@ void RefreshScreen(void *DummyVariable)
 		Region.top = 0;
 		Region.right = gsVIEWPORT_END_X; //ods1 640;
 		Region.bottom = gsVIEWPORT_END_Y;
-
-		OffsetRect( &Region, rcWindow.left, rcWindow.top);
 
 		do
 		{
@@ -2304,8 +2308,6 @@ void RefreshScreen(void *DummyVariable)
 	{
 		Region = 	gMouseCursorBackground[PREVIOUS_MOUSE_DATA].Region;
 
-		OffsetRect( &Region, rcWindow.left, rcWindow.top);
-
 		do
 		{
 			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -2326,8 +2328,6 @@ void RefreshScreen(void *DummyVariable)
 	{
 		Region = 	gMouseCursorBackground[CURRENT_MOUSE_DATA].Region;
 
-		OffsetRect( &Region, rcWindow.left, rcWindow.top);
-
 		do
 		{
 			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -2345,96 +2345,91 @@ void RefreshScreen(void *DummyVariable)
 
 	if (gfForceFullScreenRefresh == TRUE)
 	{
-			//
-			// Method (1) - We will be refreshing the entire screen
-			//
-			Region.left = 0;
-			Region.top = 0;
-			Region.right = SCREEN_WIDTH;
-			Region.bottom = SCREEN_HEIGHT;
+	  //
+	  // Method (1) - We will be refreshing the entire screen
+	  //
+	  Region.left = 0;
+	  Region.top = 0;
+	  Region.right = SCREEN_WIDTH;
+	  Region.bottom = SCREEN_HEIGHT;
 
+	  do
+	  {
+		ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
+		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
+		{
+		  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+			
+		  if (ReturnCode == DDERR_SURFACELOST)
+		  {
+		    goto ENDOFLOOP;
+		  }
 
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpPrimarySurface, &rcWindow, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						goto ENDOFLOOP;
-					}
-
-				}
-			} while (ReturnCode != DD_OK);
-
-			guiDirtyRegionCount = 0; 
-			guiDirtyRegionExCount = 0; 
-			gfForceFullScreenRefresh = FALSE;
+		}
+	  } while (ReturnCode != DD_OK);
+	  
+	  guiDirtyRegionCount = 0; 
+	  guiDirtyRegionExCount = 0; 
+	  gfForceFullScreenRefresh = FALSE;
 	}
 	else
 	{
-		for (uiIndex = 0; uiIndex < guiDirtyRegionCount; uiIndex++)
+	  for (uiIndex = 0; uiIndex < guiDirtyRegionCount; uiIndex++)
+	  {
+		Region.left   = gListOfDirtyRegions[uiIndex].iLeft;
+		Region.top    = gListOfDirtyRegions[uiIndex].iTop;
+		Region.right  = gListOfDirtyRegions[uiIndex].iRight;
+		Region.bottom = gListOfDirtyRegions[uiIndex].iBottom;
+
+		do
 		{
-			Region.left   = gListOfDirtyRegions[uiIndex].iLeft;
-			Region.top    = gListOfDirtyRegions[uiIndex].iTop;
-			Region.right  = gListOfDirtyRegions[uiIndex].iRight;
-			Region.bottom = gListOfDirtyRegions[uiIndex].iBottom;
+		  ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gListOfDirtyRegions[uiIndex].iLeft, gListOfDirtyRegions[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+		  if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
+		  {
+			DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		  }
 
-			OffsetRect( &Region, rcWindow.left, rcWindow.top );
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gListOfDirtyRegions[uiIndex].iLeft, gListOfDirtyRegions[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-				}
+		  if (ReturnCode == DDERR_SURFACELOST)
+		  {
+			goto ENDOFLOOP;
+		  }
+		} while (ReturnCode != DD_OK);
+	  }
 
-				if (ReturnCode == DDERR_SURFACELOST)
-				{
-					goto ENDOFLOOP;
-				}
-			} while (ReturnCode != DD_OK);
-		}
-
-		guiDirtyRegionCount = 0;
-		gfForceFullScreenRefresh = FALSE;
+	  guiDirtyRegionCount = 0;
+	  gfForceFullScreenRefresh = FALSE;
 
 	}
 
 	// Do extended dirty regions!
 	for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
 	{
-		Region.left   = gDirtyRegionsEx[uiIndex].iLeft;
-		Region.top    = gDirtyRegionsEx[uiIndex].iTop;
-		Region.right  = gDirtyRegionsEx[uiIndex].iRight;
-		Region.bottom = gDirtyRegionsEx[uiIndex].iBottom;
+	  Region.left   = gDirtyRegionsEx[uiIndex].iLeft;
+	  Region.top    = gDirtyRegionsEx[uiIndex].iTop;
+	  Region.right  = gDirtyRegionsEx[uiIndex].iRight;
+	  Region.bottom = gDirtyRegionsEx[uiIndex].iBottom;
 
-		OffsetRect( &Region, rcWindow.left, rcWindow.top);
+	  if ( ( Region.top < gsVIEWPORT_WINDOW_END_Y ) && gfRenderScroll )
+      {
+		continue;
+	  }
 
-		if ( ( Region.top < gsVIEWPORT_WINDOW_END_Y ) && gfRenderScroll )
+	  do
+	  {
+	    ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gDirtyRegionsEx[uiIndex].iLeft, gDirtyRegionsEx[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 		{
-			continue;
+		  DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
 		}
 
-		do
+		if (ReturnCode == DDERR_SURFACELOST)
 		{
-			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gDirtyRegionsEx[uiIndex].iLeft, gDirtyRegionsEx[uiIndex].iTop, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-			{
-				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-			}
-
-			if (ReturnCode == DDERR_SURFACELOST)
-			{
-				goto ENDOFLOOP;
-			}
-		} while (ReturnCode != DD_OK);
+		  goto ENDOFLOOP;
+		}
+	  } while (ReturnCode != DD_OK);
 	}
-#endif
-
-	guiDirtyRegionExCount = 0; 
+  }
+  guiDirtyRegionExCount = 0; 
 
 
 ENDOFLOOP:
@@ -2721,6 +2716,12 @@ HRESULT       ReturnCode;
 	gusGreenMask = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
 	gusBlueMask  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
 
+	if (!gusRedMask)
+	{
+		MessageBox( NULL, "Jagged Alliance 2 windowed mode requires a color depth of 16bpp or less.", "Jagged Alliance 2", MB_ICONEXCLAMATION);
+		PostQuitMessage(1);
+		return FALSE;
+	}
 
 	// RGB 5,5,5
 	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))

@@ -123,7 +123,8 @@ LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
 		gfSGPInputReceived =  TRUE;
   }
 
-  return TRUE;
+  return CallNextHookEx(ghKeyboardHook, Code, wParam, lParam);
+//  return TRUE;
 }
 
 #ifdef JA2
@@ -1540,7 +1541,9 @@ void RestrictMouseCursor(SGPRect *pRectangle)
 {
   // Make a copy of our rect....
   memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
-  ClipCursor((RECT *)pRectangle);
+  ClientToScreen( ghWindow, (LPPOINT)&gCursorClipRect);
+  ClientToScreen( ghWindow, ((LPPOINT)&gCursorClipRect)+1);
+  ClipCursor(&gCursorClipRect);
 	fCursorWasClipped = TRUE;
 }
 
@@ -1561,6 +1564,8 @@ void RestoreCursorClipRect( void )
 void GetRestrictedClipCursor( SGPRect *pRectangle )
 {
 	GetClipCursor((RECT *) pRectangle );
+	ScreenToClient( ghWindow, (LPPOINT)pRectangle);
+	ScreenToClient( ghWindow, ((LPPOINT)pRectangle)+1);
 }
 
 BOOLEAN IsCursorRestricted( void )

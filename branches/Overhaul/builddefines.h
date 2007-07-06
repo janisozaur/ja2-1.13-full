@@ -4,16 +4,16 @@
 #include "Language Defines.h"
 
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
-// #define	JA2BETAVERSION
+#define	JA2BETAVERSION
 
 // Normal test version
-// #define JA2TESTVERSION
+#define JA2TESTVERSION
 
-// #define JA2EDITOR
+//#define JA2EDITOR
 
-// #define DEBUG_ATTACKBUSY
+#define DEBUG_ATTACKBUSY
 
-// #define LUACONSOLE
+//#define LUACONSOLE
 
 #define ROBOT_ALWAYS_READY
 
@@ -33,9 +33,9 @@
 
 #ifdef JA2BETAVERSION
 	#ifndef JA2EDITOR
-		#define SGP_DEBUG
-		#define	FORCE_ASSERTS_ON
-		#define SGP_VIDEO_DEBUGGING
+//		#define SGP_DEBUG
+//		#define	FORCE_ASSERTS_ON
+//		#define SGP_VIDEO_DEBUGGING
 	#endif
 #endif
 
