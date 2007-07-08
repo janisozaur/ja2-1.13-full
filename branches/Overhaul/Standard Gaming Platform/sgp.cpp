@@ -73,7 +73,7 @@ void						 GetRuntimeSettings( );
 
 int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow);
 
-Console *g_pConsole = NULL;
+Console g_Console("", "", "Lua Console", "no");
 
 #if !defined(JA2) && !defined(UTILS)
 void							ProcessCommandLine(CHAR8 *pCommandLine);
@@ -454,13 +454,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 			if (wParam == '\\' &&
 				lParam && KF_ALTDOWN)
 			{
-				if (!g_pConsole)
-				{
-					// create console class instance
-					g_pConsole = new Console("", "", "Lua Console", "no");
-				}
-
-				g_pConsole->Create(NULL);
+				g_Console.Create(NULL);
 			}
 			break;
     default

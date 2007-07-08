@@ -371,10 +371,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Res\resource.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SaveLoadGame.h"
 				>
 			</File>
@@ -407,6 +403,14 @@
 			<File
 				RelativePath=".\Console\Console.rc"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories=".\Res"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Res\ja2.rc"
@@ -414,6 +418,10 @@
 			</File>
 			<File
 				RelativePath=".\Res\jagged3.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Res\resource.h"
 				>
 			</File>
 		</Filter>

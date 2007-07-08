@@ -113,8 +113,8 @@ Console::Console(LPCTSTR pszConfigFile, LPCTSTR pszShellCmdLine, LPCTSTR pszCons
 , m_crFontColor(RGB(0, 0, 0))
 , m_hFont(NULL)
 , m_hFontOld(NULL)
-, m_nX(800)
-, m_nY(600)
+, m_nX(0)
+, m_nY(0)
 , m_nInsideBorder(0)
 , m_nWindowWidth(0)
 , m_nWindowHeight(0)
@@ -235,6 +235,24 @@ Console::Console(LPCTSTR pszConfigFile, LPCTSTR pszShellCmdLine, LPCTSTR pszCons
 	::ZeroMemory(&m_csbiConsole, sizeof(CONSOLE_SCREEN_BUFFER_INFO));
 
 	SetDefaultConsoleColors();
+
+	AllocateBuffer();
+
+	// Set the stdout and stderr to this window
+	HANDLE myOut;
+	::CreatePipe( &m_hStdOut, &myOut, NULL, 0);
+	::SetStdHandle( STD_OUTPUT_HANDLE, myOut);
+	::SetStdHandle( STD_ERROR_HANDLE, myOut);
+
+	int hConHandle = _open_osfhandle((long)myOut, _O_WTEXT);
+ 	FILE *fp = _fdopen( hConHandle, "w" );
+	*stdout = *fp;
+	setvbuf( stdout, NULL, _IONBF, 0 );
+	
+	// create text monitor thread
+	DWORD dwThreadID;
+	m_hMonitorThread = ::CreateThread(NULL, 0, Console::MonitorThreadStatic, this, CREATE_SUSPENDED, &dwThreadID);
+	::ResumeThread(m_hMonitorThread);
 }
 
 Console::~Console() {
@@ -266,6 +284,12 @@ Console::~Console() {
 
 BOOL Console::Create(TCHAR* pszConfigPath) {
 	
+	if (m_hWnd)
+	{
+		::ShowWindow( m_hWnd, SW_SHOW);
+		return TRUE;
+	}
+
 	if (!GetOptions()) return FALSE;
 	
 	if (!RegisterWindowClasses()) return FALSE;
@@ -291,12 +315,10 @@ BOOL Console::Create(TCHAR* pszConfigPath) {
 
 	GetTextSize();
 	GetBordersDimensions();
-	if (!StartShellProcess()) ::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-	
 	CreateCursor();
 	
 	// now we can start the monitor thread
-	::ResumeThread(m_hMonitorThread);
+	StartShellProcess();
 	
 	// set the long repaint timer
 	if (m_dwMasterRepaintInt) ::SetTimer(m_hWnd, TIMER_REPAINT_MASTER, m_dwMasterRepaintInt, NULL);
@@ -756,7 +778,7 @@ void Console::OnLButtonUp(UINT uiFlags, POINTS points) {
 
 void Console::OnLButtonDblClick(UINT uiFlags, POINTS points) {
 	
-	ToggleWindowOnTop();
+//	ToggleWindowOnTop();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -881,6 +903,59 @@ void Console::OnMouseMove(UINT uiFlags, POINTS points) {
 			}
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+void Console::OnChar(WORD myChar) {
+	wchar_t text[16];
+
+	if (myChar == 8)
+	{
+		if (Input.length() > 0)
+		{
+			wchar_t last = Input[ Input.length() - 1];
+
+			text[0] = 8;
+			text[1] = L' ';
+			text[2] = 8;
+			text[3] = 0;
+
+			Input.resize( Input.length() - 1);
+
+			if (last == '\n')
+			{
+				int cx = Input.rfind( '\n') + 1;
+				cx = Input.length() - cx;
+				SendTextToConsole( text);
+				m_csbiCursor.dwCursorPosition.X = cx;
+				
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else if (myChar == '\r')
+	{
+		text[0] = '\n';
+		text[1] = '\r';
+		text[2] = 0;
+		Input += '\n';
+	}
+	else
+	{
+		text[0] = myChar;
+		text[1] = 0;
+		Input += text;
+	}
+
+	SendTextToConsole( text);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1802,9 +1877,9 @@ BOOL Console::RegisterWindowClasses() {
 	wcx.cbClsExtra		= 0;
 	wcx.cbWndExtra		= sizeof(void*);
 	wcx.hInstance		= ghInstance;
-	wcx.hIcon			= ::LoadIcon(ghInstance, MAKEINTRESOURCE(IDI_ICON));
+	wcx.hIcon			= ::LoadIcon(ghInstance, MAKEINTRESOURCE(IDI_ICON2));
 	wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
-	wcx.hbrBackground	= ::CreateSolidBrush(RGB(255, 255, 255));
+	wcx.hbrBackground	= ::CreateSolidBrush(RGB(0, 0, 0));
 	wcx.lpszMenuName	=  NULL;
 	wcx.lpszClassName	= Console::m_szConsoleClass;
 	wcx.hIconSm			= NULL;
@@ -1845,9 +1920,9 @@ BOOL Console::SetupMenus() {
 	if ((m_hConfigFilesMenu = ::CreateMenu()) == NULL) return FALSE;
 	
 	// add stuff to the system menu
-	TCHAR*			arrMenuItems[] = {_T("Read&me"), _T("&About Console"), _T(""), _T("&Copy"), _T("&Paste"), _T(""), _T("Always on &top"), _T("&Hide console"), _T(""), _T("&Select configuration file"), _T("&Edit configuration file"), _T("&Reload settings"), _T("")};
-	DWORD			arrMenuTypes[] = {MFT_STRING, MFT_STRING, MFT_SEPARATOR, MFT_STRING, MFT_STRING, MFT_SEPARATOR, MFT_STRING, MFT_STRING, MFT_SEPARATOR, MFT_STRING, MFT_STRING, MFT_STRING, MFT_SEPARATOR};
-	DWORD			arrMenuIDs[] = {ID_SHOW_README_FILE, ID_ABOUT, 0, ID_COPY, ID_PASTE, 0, ID_TOGGLE_ONTOP, ID_HIDE_CONSOLE, 0, ID_SEL_CONFIG_FILE, ID_EDIT_CONFIG_FILE, ID_RELOAD_SETTINGS, 0};
+	TCHAR*			arrMenuItems[] = {_T("&Copy"), _T("&Paste")};
+	DWORD			arrMenuTypes[] = {MFT_STRING, MFT_STRING};
+	DWORD			arrMenuIDs[] = { ID_COPY, ID_PASTE};
 	
 	m_hSysMenu = ::GetSystemMenu(m_hWnd, FALSE);
 	
@@ -1873,8 +1948,8 @@ BOOL Console::SetupMenus() {
 	mii.fMask		= MIIM_SUBMENU;
 	mii.hSubMenu	= m_hConfigFilesMenu;
 	
-	::SetMenuItemInfo(m_hPopupMenu, ID_SEL_CONFIG_FILE, FALSE, &mii);
-	::SetMenuItemInfo(m_hSysMenu, ID_SEL_CONFIG_FILE, FALSE, &mii);
+//	::SetMenuItemInfo(m_hPopupMenu, ID_SEL_CONFIG_FILE, FALSE, &mii);
+//	::SetMenuItemInfo(m_hSysMenu, ID_SEL_CONFIG_FILE, FALSE, &mii);
 	
 	// load the initial list (so the list can be used by external programs)
 	UpdateConfigFilesSubmenu();
@@ -2661,11 +2736,11 @@ void Console::SetWindowIcons() {
 			if (hOldIcon) ::DestroyIcon(hOldIcon);
 			
 		} else {
-			m_hSmallIcon = (HICON)::LoadImage(ghInstance, MAKEINTRESOURCE(IDI_ICON), IMAGE_ICON, 16, 16, 0);
+			m_hSmallIcon = (HICON)::LoadImage(ghInstance, MAKEINTRESOURCE(IDI_ICON2), IMAGE_ICON, 16, 16, 0);
 		}
 
 	} else {
-		m_hSmallIcon = (HICON)::LoadImage(ghInstance, MAKEINTRESOURCE(IDI_ICON), IMAGE_ICON, 16, 16, 0);
+		m_hSmallIcon = (HICON)::LoadImage(ghInstance, MAKEINTRESOURCE(IDI_ICON2), IMAGE_ICON, 16, 16, 0);
 	}
 
 	hOldIcon = (HICON)::SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)m_hSmallIcon);
@@ -2888,8 +2963,6 @@ void Console::ReloadSettings() {
 
 	if (m_dwMasterRepaintInt) ::SetTimer(m_hWnd, TIMER_REPAINT_MASTER, m_dwMasterRepaintInt, NULL);
 	
-	::ResumeThread(m_hMonitorThread);
-
 	if (m_bStartMinimized) {
 		if (m_dwTaskbarButton > TASKBAR_BUTTON_NORMAL) {
 			m_bHideWindow = TRUE;
@@ -2940,16 +3013,6 @@ BOOL Console::StartShellProcess() {
 	::SetConsoleTitle(m_strWinConsoleTitle.c_str());
 #endif
 
-	HANDLE myOut;
-	::CreatePipe( &m_hStdOut, &myOut, NULL, 0);
-	::SetStdHandle( STD_OUTPUT_HANDLE, myOut);
-	::SetStdHandle( STD_ERROR_HANDLE, myOut);
-
-	int hConHandle = _open_osfhandle((long)myOut, _O_WTEXT);
- 	FILE *fp = _fdopen( hConHandle, "w" );
-	*stdout = *fp;
-	setvbuf( stdout, NULL, _IONBF, 0 );
-	
 	// this is a little hack needed to support columns greater than standard 80
 	RefreshStdOut();
 	InitConsoleWndSize(80);
@@ -2994,10 +3057,6 @@ BOOL Console::StartShellProcess() {
 	m_hConsoleProcess = pi.hProcess;
 #endif
 	
-	// create exit monitor thread
-	DWORD dwThreadID;
-	m_hMonitorThread = ::CreateThread(NULL, 0, Console::MonitorThreadStatic, this, CREATE_SUSPENDED, &dwThreadID);
-
 	return TRUE;
 }
 
@@ -3203,7 +3262,10 @@ void Console::ResizeConsoleWindow() {
 	CreateOffscreenBuffers();
 	
 //	if (m_bBitmapBackground) CreateBackgroundBitmap();
-	
+}
+
+void Console::AllocateBuffer()
+{
 	// resize screen buffer
 	delete[] m_pScreenBuffer;
 	m_pScreenBuffer = new CHAR_INFO[m_dwRows * m_dwColumns];
@@ -3777,6 +3839,7 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 	// check if it's one of the main menu commands
 	switch (dwID) {
 
+/*
 	case ID_SHOW_README_FILE:
 		ShowReadmeFile();
 		return FALSE;
@@ -3784,7 +3847,8 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 	case ID_ABOUT:
 		About();
 		return FALSE;
-		
+*/
+
 	case ID_COPY:
 		CopyTextToClipboard();
 		return FALSE;
@@ -3798,7 +3862,6 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 		m_bHideConsole = !m_bHideConsole;
 		ShowHideConsole();
 		return FALSE;
-#endif
 
 	case ID_EDIT_CONFIG_FILE:
 		EditConfigFile();
@@ -3811,6 +3874,7 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 	case ID_TOGGLE_ONTOP:
 		ToggleWindowOnTop();
 		return FALSE;
+#endif
 		
 	case ID_EXIT_CONSOLE:
 		::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
@@ -3825,7 +3889,8 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 		}
 		return TRUE;
 	}
-	
+
+#if 0
 	// check if it's one of config file submenu items
 	if ((dwID >= ID_FIRST_XML_FILE) &&
 		(dwID <= ID_LAST_XML_FILE)) {
@@ -3850,7 +3915,8 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 
 		return FALSE;
 	}
-	
+#endif
+
 	return TRUE;
 }
 
@@ -3861,8 +3927,10 @@ BOOL Console::HandleMenuCommand(DWORD dwID) {
 
 void Console::UpdateOnTopMenuItem() {
 	
+#if 0
 	::CheckMenuItem(::GetSubMenu(m_hPopupMenu, 0), ID_TOGGLE_ONTOP, MF_BYCOMMAND | ((m_dwCurrentZOrder == Z_ORDER_ONTOP) ? MF_CHECKED : MF_UNCHECKED));
 	::CheckMenuItem(m_hSysMenu, ID_TOGGLE_ONTOP, MF_BYCOMMAND | ((m_dwCurrentZOrder == Z_ORDER_ONTOP) ? MF_CHECKED : MF_UNCHECKED));
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3872,8 +3940,10 @@ void Console::UpdateOnTopMenuItem() {
 
 void Console::UpdateHideConsoleMenuItem() {
 	
+#if 0
 	::CheckMenuItem(::GetSubMenu(m_hPopupMenu, 0), ID_HIDE_CONSOLE, MF_BYCOMMAND | (m_bHideConsole ? MF_CHECKED : MF_UNCHECKED));
 	::CheckMenuItem(m_hSysMenu, ID_HIDE_CONSOLE, MF_BYCOMMAND | (m_bHideConsole ? MF_CHECKED : MF_UNCHECKED));
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3882,7 +3952,8 @@ void Console::UpdateHideConsoleMenuItem() {
 /////////////////////////////////////////////////////////////////////////////
 
 void Console::UpdateConfigFilesSubmenu() {
-	
+
+#if 0
 	// populate m_hConfigFilesMenu
 	
 	// first, delete old items
@@ -3930,7 +4001,7 @@ void Console::UpdateConfigFilesSubmenu() {
 	}
 	
 	::FindClose(hWfd);
-
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4064,6 +4135,10 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 	
 	if (!pszText || (wcslen(pszText) == 0)) return;
 
+	BOOL c_state = m_pCursor->GetState();
+	m_pCursor->SetState(FALSE);
+	DrawCursor();
+
 	int idx = m_csbiCursor.dwCursorPosition.X + m_csbiCursor.dwCursorPosition.Y * m_dwColumns;
 
 	RECT rectInval;
@@ -4097,6 +4172,7 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 		if (*pszText == 8) {
 			if (m_csbiCursor.dwCursorPosition.X) {
 				m_csbiCursor.dwCursorPosition.X--;
+				cursorX -= m_nCharWidth;
 				idx--;
 			} else if (m_csbiCursor.dwCursorPosition.Y) {
 				if (m_csbiCursor.dwCursorPosition.Y == m_csbiConsole.srWindow.Top) {
@@ -4104,6 +4180,7 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 				}
 				m_csbiCursor.dwCursorPosition.Y--;
 				m_csbiCursor.dwCursorPosition.X = m_dwColumns - 1;
+				cursorX = m_nCharWidth * m_csbiCursor.dwCursorPosition.X;
 				idx--;
 			}
 		} else if (*pszText != '\n' &&
@@ -4111,10 +4188,10 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 			m_pScreenBufferNew[ idx].Attributes = attr;
 			m_pScreenBufferNew[ idx].Char.UnicodeChar = *pszText;
 			idx++;
+			cursorX += m_nCharWidth;
+			m_csbiCursor.dwCursorPosition.X++;
 		}
 		
-		cursorX += m_nCharWidth;
-		m_csbiCursor.dwCursorPosition.X++;
 		if (m_csbiCursor.dwCursorPosition.X >= m_dwColumns || *pszText == '\r' || *pszText == '\n' ) {
 			m_csbiCursor.dwCursorPosition.X = 0;
 			cursorX = m_nInsideBorder;
@@ -4137,6 +4214,9 @@ void Console::SendTextToConsole(const wchar_t *pszText) {
 
 	::InvalidateRect( m_hWnd, &rectInval, TRUE);
 	::SetTimer(m_hWnd, TIMER_REPAINT_CHANGE, m_dwChangeRepaintInt, NULL);
+
+	m_pCursor->SetState(c_state);
+
 #if 0
 	HANDLE hStdIn = ::CreateFile(_T("CONIN$"), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 	
@@ -4340,6 +4420,10 @@ LRESULT CALLBACK Console::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 			::PostMessage(myself->m_hWndConsole, uMsg, wParam, lParam);
 			return 0;
 #endif
+
+		case WM_CHAR:
+			myself->OnChar( wParam);
+			break;
 
 		case WM_KEYDOWN:
 		case WM_KEYUP:

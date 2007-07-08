@@ -37,6 +37,8 @@ using namespace std;
 
 typedef basic_string<TCHAR>			tstring;
 
+#define WM_INPUTREADY				WM_USER + 1
+
 // tray icon message
 #define WM_TRAY_NOTIFY				WM_USER + 0x123
 
@@ -197,7 +199,11 @@ class Console {
 		
 		// handles start/stop mouse drag for window border
 		void OnSetCursor(WORD wHitTest, WORD wMouseMessage);
+
+		// handles text input
+		void OnChar(WORD mychar);
 		
+		wstring Input;
 		
 		//////////////////
 		// other messages
@@ -313,6 +319,9 @@ class Console {
 		
 		// resizes the windows console
 		void ResizeConsoleWindow();
+
+		// Allocates the screen buffer
+		void AllocateBuffer();
 		
 		
 		//////////////////////

@@ -303,10 +303,6 @@
 				RelativePath="FileStream.h"
 				>
 			</File>
-			<File
-				RelativePath="resource.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

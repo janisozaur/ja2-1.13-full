@@ -47,6 +47,7 @@ class Cursor {
 		virtual ~Cursor(){};
 
 		void SetState(BOOL bActive) {m_bActive = bActive;};
+		BOOL GetState() { return m_bActive; }
 
 		// used to draw current frame of the cursor
 		virtual void Draw(LPRECT pRect)	= 0;
