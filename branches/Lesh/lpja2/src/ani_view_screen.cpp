@@ -343,7 +343,7 @@ UINT16 GetAnimStateFromName( INT8 *zName )
 void BuildListFile( )
 {
 	FILE *infoFile;
-	char currFilename[128];
+	CHAR8 currFilename[128];
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;

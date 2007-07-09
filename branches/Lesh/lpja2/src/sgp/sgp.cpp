@@ -26,7 +26,8 @@
 	#include "library_database.h"
 	#include "vfs.hpp"
 	#include "io_layer.h"
-		
+	#include "game.h"
+	
 #endif
 
 

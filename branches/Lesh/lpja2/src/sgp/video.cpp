@@ -286,8 +286,10 @@ BOOLEAN InitializeVideoManager(void)
 	}
 
 	//
-	// Initialize the main mouse surfaces
+	// Initialize the main mouse surfaces, disable mouse system cursor
 	//
+
+	SDL_ShowCursor( SDL_DISABLE );
 
 	gpSDLMouseCursor = SDL_CreateRGBSurface(SDL_SWSURFACE,
 		MAX_CURSOR_WIDTH,
