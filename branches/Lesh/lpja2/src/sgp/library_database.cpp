@@ -1110,6 +1110,7 @@ BOOLEAN		ReadGameSources( const CHAR8 *pCfgName )
 	if ( CFG_SelectGroup( "StandardSources", FALSE ) != CFG_OK )
 	{
 		fprintf(stderr, "ReadGameResources config: Failed to select standard sources group\n");
+		CFG_CloseFile( &cfgResources );
 		return FALSE;
 	}
 
@@ -1118,7 +1119,7 @@ BOOLEAN		ReadGameSources( const CHAR8 *pCfgName )
 	// filenames from the entry StdSources, which contains multiple
 	// string values.
 	StandardSourcesDir = CFG_ReadText( "StdBaseDir", "/usr/share/ja2/" );
-	if ( StandardSourcesDir[ StandardSourcesDir.length() -1 ] != SLASH )
+	if ( StandardSourcesDir[ StandardSourcesDir.length() - 1 ] != SLASH )
 		StandardSourcesDir += SLASH;
 	ReadMultiValueEntry( "StdSources", StandardSourcesDir );
 
@@ -1127,11 +1128,13 @@ BOOLEAN		ReadGameSources( const CHAR8 *pCfgName )
 	// This is not error situation (assume, that standard section has everything in
 	// order to run the game. After section selecting, read source filenames from
 	// multivalue entry AddSources.
-	if ( CFG_SelectGroup( "AdditionalSources", FALSE ) != CFG_OK )
-		return FALSE;
-	ReadMultiValueEntry( "AddSources", zGameHomeDir );
+	if ( CFG_SelectGroup( "AdditionalSources", FALSE ) == CFG_OK )
+	{
+		ReadMultiValueEntry( "AddSources", zGameHomeDir );
+	}
 
 	CFG_CloseFile( &cfgResources );
+	return TRUE;
 }
 
 //************************************************************************
@@ -1174,7 +1177,7 @@ BOOLEAN		ReadMultiValueEntry( const CHAR8 *pKey, const vfsString& DefaultPath )
 		}
 		else if ( IO_IsDirectory( FullSourceName.c_str() ) )
 		{
-			if ( FullSourceName[ FullSourceName.length() -1 ] != SLASH )
+			if ( FullSourceName[ FullSourceName.length() - 1 ] != SLASH )
 				FullSourceName += SLASH;
 			GameSource.push_back( FullSourceName );
 		}
