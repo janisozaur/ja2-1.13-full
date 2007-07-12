@@ -1741,12 +1741,18 @@ BOOLEAN GetRGBDistribution(void)
 	gusGreenShift = (UINT16) (gpSDLFrameBuffer->format->Gshift - gpSDLFrameBuffer->format->Gloss);
 	gusBlueShift  = (UINT16) (gpSDLFrameBuffer->format->Bshift - gpSDLFrameBuffer->format->Bloss);
 
-	// RGB 5,5,5
-	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
-		guiTranslucentMask=0x3def;
-	// RGB 5,6,5
-	else if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
+//	// RGB 5,5,5
+//	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
+//		guiTranslucentMask=0x3def;
+//	// RGB 5,6,5
+//	else 
+	if((gusRedMask==0xf800) && (gusGreenMask==0x07e0) && (gusBlueMask==0x1f))
 		guiTranslucentMask=0x7bef;
+	else
+	{
+		fprintf(stderr, "Warning! Can't choose translucent mask\n");
+		guiTranslucentMask = 0;
+	}
 
 	printf("Rmask  = %04X\n", gusRedMask);
 	printf("Gmask  = %04X\n", gusGreenMask);
