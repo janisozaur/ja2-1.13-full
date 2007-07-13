@@ -32,7 +32,9 @@ BOOLEAN IO_IsDirectory(const CHAR8 *path);
 BOOLEAN IO_IsRegularFile(const CHAR8 *path);
 BOOLEAN IO_DoesFilenameMatchesPattern( const CHAR8 *pattern, const CHAR8 *filename );
 BOOLEAN IO_IsRootPath(const CHAR8 *path);
+INT32	IO_CompareTime( SGP_FILETIME *firstTime, SGP_FILETIME *secondTime );
 
+BOOLEAN IO_File_GetTime( IOFILE file, SGP_FILETIME	*creationTime, SGP_FILETIME *lastAccessedTime, SGP_FILETIME *lastWriteTime );
 BOOLEAN IO_File_Delete( const CHAR8 *path );
 INT32 	IO_File_GetSize( IOFILE file );
 INT32 	IO_File_GetSize( const CHAR8 *path );

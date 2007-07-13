@@ -38,6 +38,7 @@
 	#include "vfs.hpp"
 	#include "io_layer.h"
 	#include "sgp_str.h"
+	#include "wcheck.h"
 	
 #endif
 //**************************************************************************
@@ -47,11 +48,6 @@
 //**************************************************************************
 
 #define FILENAME_LENGTH					600
-
-#define CHECKF(exp)  if (!(exp)) { return(FALSE); }
-#define CHECKV(exp)  if (!(exp)) { return; }
-#define CHECKN(exp)  if (!(exp)) { return(NULL); }
-#define CHECKBI(exp) if (!(exp)) { return(-1); }
 
 #define PRINT_DEBUG_INFO	FileDebugPrint();
 
@@ -136,7 +132,7 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 	// data dir will be read from INI/CFG file, located in home dir
 	printf("User home is %s\n", Home);
 
-	STR_SPrintf( gzHomePath, 512, "%s%c%s%c", Home, SLASH, GAME_DIR_PREFIX, SLASH );
+	STR_SPrintf( gzHomePath, sizeof(gzHomePath), "%s%c%s%c", Home, SLASH, GAME_DIR_PREFIX, SLASH );
 	printf("Using game home dir: %s\n", gzHomePath);
 
 	if ( !IO_Dir_DirectoryExists( gzHomePath ) )
@@ -146,7 +142,7 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 			return FALSE;
 		}
 
-	STR_SPrintf( gzTempPath, 512, "/tmp/%s.%s%c", GAME_DIR_PREFIX, passwd->pw_name, SLASH );
+	STR_SPrintf( gzTempPath, sizeof(gzTempPath), "/tmp/%s.%s%c", GAME_DIR_PREFIX, passwd->pw_name, SLASH );
 	printf("Using game temp dir: %s\n", gzTempPath);
 
 	if ( !IO_Dir_DirectoryExists( gzTempPath ) )
@@ -667,7 +663,7 @@ BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
 		va_start(argptr, strFormatted);
-		vsprintf( (char *)strToSend, (char *)strFormatted, argptr );
+		vsprintf( strToSend, strFormatted, argptr );
 		va_end(argptr);
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 		IO_File_Write( hRealFile, strToSend, strlen(strToSend) );
@@ -709,7 +705,6 @@ BOOLEAN FilePrintf( HWFILE hFile, char * strFormatted, ... )
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
 	HANDLE	hRealFile;
-//	UINT32		lDistanceToMove;
 	UINT32		dwMoveMethod;
 	INT32		iDistance=0;
 
@@ -728,11 +723,7 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 		if ( uiHow == FILE_SEEK_FROM_START )
 			dwMoveMethod = IO_SEEK_FROM_START;
 		else if ( uiHow == FILE_SEEK_FROM_END )
-		{
 			dwMoveMethod = IO_SEEK_FROM_END;
-//			if( iDistance > 0 )
-//				iDistance = -(iDistance);
-		}
 		else
 			dwMoveMethod = IO_SEEK_FROM_CURRENT;
 
@@ -1485,40 +1476,10 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-		UINT32	uiOldFilePtrLoc=0;
-		UINT32	uiEndOfFilePtrLoc=0;
-		UINT32	temp=0;
-
-		//Get the current position of the file pointer
-		uiOldFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT );
-
-		//Get the end of file ptr location
-		uiEndOfFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_END );
-
-		//reset back to the original location
-		temp = SetFilePointer( hRealFile, -( (INT32)( uiEndOfFilePtrLoc - uiOldFilePtrLoc ) ), NULL, FILE_END );
-
-		//if the 2 pointers are the same, we are at the end of a file
-		if( uiEndOfFilePtrLoc <= uiOldFilePtrLoc )
-		{
-			return( 1 );
-		}
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
 		UINT32 uiFileSize = FileGetSize( hRealFile );
 		UINT32 uiFilePtr  = FileGetPos( hRealFile );
 
 		return ( uiFilePtr >= uiFileSize );
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-
 	}
 
 	//else it is a library file
@@ -1533,9 +1494,7 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 				//if the file is opened
 				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
 				{
-					UINT32	uiLength;					//uiOffsetInLibrary
-//					HANDLE	hLibraryFile;
-//					UINT32	uiNumBytesRead;
+					UINT32	uiLength;
 					UINT32	uiCurPos;
 
 					uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
@@ -1576,9 +1535,9 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 	UINT32 uiFileNum;
 
 	//Initialize the passed in variables
-	memset( pCreationTime, 0, sizeof( SGP_FILETIME ) );
+	memset( pCreationTime,     0, sizeof( SGP_FILETIME ) );
 	memset( pLastAccessedTime, 0, sizeof( SGP_FILETIME ) );
-	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
+	memset( pLastWriteTime,    0, sizeof( SGP_FILETIME ) );
 
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
@@ -1589,44 +1548,12 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-		FILETIME	sCreationUtcFileTime;
-		FILETIME	sLastAccessedUtcFileTime;
-		FILETIME	sLastWriteUtcFileTime;
-
-		//Gets the UTC file time for the 'real' file				
-		GetFileTime( hRealFile, &sCreationUtcFileTime, &sLastAccessedUtcFileTime, &sLastWriteUtcFileTime );
-
-		//converts the creation UTC file time to the current time used for the file
-		FileTimeToLocalFileTime( &sCreationUtcFileTime, pCreationTime );
-		
-		//converts the accessed UTC file time to the current time used for the file
-		FileTimeToLocalFileTime( &sLastAccessedUtcFileTime, pLastAccessedTime );
-
-		//converts the write UTC file time to the current time used for the file
-		FileTimeToLocalFileTime( &sLastWriteUtcFileTime, pLastWriteTime );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-		struct stat file_stat;
-
-		if ( fstat( hFile, &file_stat) == -1 )
+		if ( !IO_File_GetTime( hRealFile, pCreationTime, pLastAccessedTime, pLastWriteTime ) )
 		{
-			fprintf(stderr, "Error getting time of file %d: errno=%d\n",
-				hFile, errno);
-			return 0;
+			fprintf(stderr, "Error getting time: errno=%d\n",
+				errno);
+			return FALSE;
 		}
-
-		*pCreationTime     = file_stat.st_ctime;
-		*pLastAccessedTime = file_stat.st_atime;
-		*pLastWriteTime    = file_stat.st_mtime;
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
 	}
 	else
 	{
@@ -1666,19 +1593,7 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 //**************************************************************************
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime )
 {
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	return( CompareFileTime( pFirstFileTime, pSecondFileTime ) );
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	return( *pFirstFileTime - *pSecondFileTime );
-
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
+	return( IO_CompareTime( pFirstFileTime, pSecondFileTime ) );
 }
 
 //**************************************************************************
@@ -1693,40 +1608,18 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 //**************************************************************************
 UINT32 FileSize(STR strFilename)
 {
-	UINT32 uiSize;
+	vfsEntry	entry;
 
-	BACKSLASH(strFilename);
+	if ( IO_IsRootPath( strFilename ) )
+		return IO_File_GetSize( strFilename );
 
-#ifdef JA2_WIN
-// ---------------------- Windows-specific stuff ---------------------------
-
-	HWFILE hFile;
-
-	if((hFile=FileOpen(strFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE))==0)
-		return(0);
-		
-	uiSize=FileGetSize(hFile);
-	FileClose(hFile);				
-
-// ------------------- End of Windows-specific stuff -----------------------
-#elif defined(JA2_LINUX)
-// ----------------------- Linux-specific stuff ----------------------------
-
-	struct stat file_stat;
-
-	if ( stat( strFilename, &file_stat) == -1 )
-	{
-		fprintf(stderr, "Error getting size of file %s: errno=%d\n",
-			strFilename, errno);
+	if ( !VFS.FindResource( strFilename, entry ) )
 		return 0;
-	}
-	uiSize = file_stat.st_size;
 
-// -------------------- End of Linux-specific stuff ------------------------
-#endif	
-//	uiSize = IO_File_GetSize( hRealHandle );
+	if ( entry.LibraryID == LIB_REAL_FILE )
+		return IO_File_GetSize( entry.RealName.c_str() );
 
-	return(uiSize);
+	return 0;
 }
 
 

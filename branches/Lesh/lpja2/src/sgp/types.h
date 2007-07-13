@@ -139,9 +139,14 @@ typedef	VECTOR4	COLOR;			// rgba color array
 typedef UINT32 TIMER;			// timer definition
 
 #ifdef JA2_LINUX
-#include <sys/stat.h>
-typedef long long		FILETIME;
+
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF
+typedef long long		SGP_FILETIME;
+
+#elif defined( JA2_WINDOWS )
+
+typedef	FILETIME		SGP_FILETIME;
+
 #endif
 
 #endif

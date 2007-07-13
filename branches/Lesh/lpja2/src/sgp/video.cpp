@@ -1267,14 +1267,14 @@ void RefreshScreen(void *DummyVariable)
 
 	if (gfPrintFrameBuffer == TRUE)
 	{
-		UINT8					FileName[64];
+		CHAR8					FileName[64];
 		STRING512				DataDir;
-		STRING512			    ExecDir;
+		STRING512			    HomeDir;
 
 		// Snap: save current directory
 		GetFileManCurrentDirectory( DataDir );
-		GetExecutableDirectory( ExecDir );
-		SetFileManCurrentDirectory( ExecDir );
+		GetHomeDirectory( HomeDir );
+		SetFileManCurrentDirectory( HomeDir );
 
 
 		//
@@ -1283,19 +1283,16 @@ void RefreshScreen(void *DummyVariable)
 
 		do
 		{
-			sprintf((char *) FileName, "SCREEN%03d.BMP", guiPrintFrameBufferIndex++);
+			sprintf(FileName, "SCREEN%03d.BMP", guiPrintFrameBufferIndex++);
 		}
-		while( (_access( (const char *)FileName, 0 )) != -1 );
+		while( (_access( FileName, 0 )) != -1 );
 
-		SDL_SaveBMP(gpSDLPrimaryBuffer, (char *)FileName);
+		SDL_SaveBMP(gpSDLPrimaryBuffer, FileName);
 
 		gfPrintFrameBuffer = FALSE;          
 
 		// Snap: Restore the data directory once we are finished.
 		SetFileManCurrentDirectory( DataDir );
-		//strcat( ExecDir, "\\Data" );
-		//SetFileManCurrentDirectory( ExecDir );
-
 	}
 	
 	//

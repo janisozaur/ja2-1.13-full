@@ -177,7 +177,7 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	InitializeJA2Clock();
 
 	// Get Executable Directory
-	GetExecutableDirectory( CurrentDir );
+	GetHomeDirectory( CurrentDir );
 	CIniReader	customDP;
 	const CHAR8 *pCustomDir;
 	CHAR8 customDataPath[MAX_PATH];
