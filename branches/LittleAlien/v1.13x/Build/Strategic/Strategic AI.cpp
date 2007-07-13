@@ -250,7 +250,7 @@ void ValidateWeights( INT32 iID );
 void ValidateGroup( GROUP *pGroup );
 void ValidateLargeGroup( GROUP *pGroup );
 
-extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce );
+extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fForce );
 
 
 //The army composition defines attributes for the various garrisons.  The priority reflects how important the sector is

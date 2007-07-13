@@ -231,7 +231,7 @@ void Fill( INT32 x, INT32 y )
 		maxCount = count;
 	
 	iMapIndex = y * WORLD_COLS + x;
-	if( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) )
+	if( !GridNoOnVisibleWorldTile( iMapIndex ) )
 	{
 		count--;
 		return;
@@ -267,7 +267,7 @@ void TerrainFill( UINT32 iMapIndex )
 	if( guiSearchType == CurrentPaste )
 		return;
 	
-	ConvertGridNoToXY( (INT16)iMapIndex, &sX, &sY );
+	ConvertGridNoToXY( iMapIndex, &sX, &sY );
 
 	count = 0;
 		

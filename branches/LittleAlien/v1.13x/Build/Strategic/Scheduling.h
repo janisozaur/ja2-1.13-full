@@ -44,13 +44,26 @@ typedef struct SCHEDULENODE
 {
 	struct SCHEDULENODE *next;
 	UINT16 usTime[MAX_SCHEDULE_ACTIONS];	//converted to minutes 12:30PM would be 12*60 + 30 = 750
+	UINT32 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
+	UINT32 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
+	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
+	UINT8 ubScheduleID;
+	UINT8 ubSoldierID;
+	UINT16 usFlags;
+}SCHEDULENODE;
+
+typedef struct _OLD_SCHEDULENODE
+{
+	struct _OLD_SCHEDULENODE *next;
+	UINT16 usTime[MAX_SCHEDULE_ACTIONS];
 	UINT16 usData1[MAX_SCHEDULE_ACTIONS]; //typically the gridno, but depends on the action
 	UINT16 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
 	UINT8 ubScheduleID;
 	UINT8 ubSoldierID;
 	UINT16 usFlags;
-}SCHEDULENODE;
+}_OLD_SCHEDULENODE;
+
 
 extern UINT8				gubScheduleID;
 extern SCHEDULENODE *gpScheduleList;
@@ -67,7 +80,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID );
 
 void DeleteSchedule( UINT8 ubScheduleID );
 
-void LoadSchedules( INT8 **hBuffer );
+void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion );
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile );
 BOOLEAN SaveSchedules( HWFILE hFile );
 
@@ -91,16 +104,16 @@ void PrepareSchedulesForEditorExit();
 //before saving the map, as this forces the IDs to align with the SOLDIERINITNODE->ubScheduleID's.
 void OptimizeSchedules();
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usMapIndex );
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT32 usMapIndex );
 
 BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEntryTime, UINT32 * puiExitTime );
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime );
 
 void ReconnectSchedules( void );
 
-void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot );
+void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT32 usSleepSpot );
 
-BOOLEAN BumpAnyExistingMerc( INT16 sGridNo );
+BOOLEAN BumpAnyExistingMerc( INT32 sGridNo );
 
 #endif
 

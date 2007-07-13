@@ -8,7 +8,7 @@ typedef struct MAPEDGEPOINTINFO
 {
 	UINT8 ubNumPoints;
 	UINT8 ubStrategicInsertionCode;
-	UINT16 sGridNo[ 32 ];
+	UINT32 sGridNo[ 32 ];
 }MAPEDGEPOINTINFO;
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
@@ -62,8 +62,8 @@ extern UINT16 gus2ndWestEdgepointMiddleIndex;
 //code shouldn't be used for enemies or anybody else.
 void BeginMapEdgepointSearch();
 void EndMapEdgepointSearch();
-INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
-INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
+INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
+INT16 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
 
 //There are two classes of edgepoints.
 //PRIMARY		: The default list of edgepoints.  This list includes edgepoints that are easily accessible from the 
@@ -72,7 +72,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 //						to these areas is possible.  Examples would be isolated sections of Grumm or Alma, which you can't 
 //						immediately
 //		
-UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo );
+UINT8 CalcMapEdgepointClassInsertionCode( INT32 sGridNo );
 
 #ifdef JA2EDITOR
 void ShowMapEdgepoints();

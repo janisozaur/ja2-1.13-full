@@ -76,7 +76,7 @@ extern UINT32 guiCurrentUICursor;
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 extern void DetermineWhichMilitiaControlMenusCanBeShown( void );
 extern BOOLEAN gfIgnoreOnSelectedGuy;
-extern INT16 gsOverItemsGridNo;
+extern INT32 gsOverItemsGridNo;
 extern INT16 gsOverItemsLevel;
 extern UINT32	guiUITargetSoldierId;
 extern BOOLEAN	gfUIShowExitSouth;
@@ -107,12 +107,12 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE *pSoldier;
 	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;
-	UINT16	usMapPos;
+	INT32 usMapPos;
 	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
-	static INT16		sMoveClickGridNo					= 0;
+	static INT32		sMoveClickGridNo					= 0;
 
 
 	// LEFT MOUSE BUTTON
@@ -654,7 +654,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																//}/
 																//else
 																{
-																	INT16							sIntTileGridNo;
+																			  INT32 sIntTileGridNo;
 
 																	if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 																	{
@@ -935,7 +935,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 
 	SOLDIERTYPE *pSoldier;
-	UINT16	usMapPos;
+	INT32 usMapPos;
 
 	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -1240,15 +1240,15 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 }
 
 
-extern BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
+extern BOOLEAN ConfirmActionCancel( INT32 usMapPos, INT32 usOldMapPos );
 
 extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
 
 void GetRTMousePositionInput( UINT32 *puiNewEvent )
 {
-	UINT16						usMapPos;
-	static UINT16			usOldMapPos = 0;
+	INT32 usMapPos;
+	static INT32			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 	SOLDIERTYPE								 *pSoldier;
 	static BOOLEAN		fOnValidGuy = FALSE;

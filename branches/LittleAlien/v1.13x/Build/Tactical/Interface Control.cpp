@@ -60,7 +60,7 @@ SGPRect				gOldClippingRect, gOldDirtyClippingRect;
 UINT32		guiTacticalInterfaceFlags;
 
 UINT16		gusUICurIntTileEffectIndex;
-INT16			gsUICurIntTileEffectGridNo;
+INT32			gsUICurIntTileEffectGridNo;
 UINT8			gsUICurIntTileOldShade;
 
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
@@ -69,7 +69,7 @@ MOUSE_REGION		gLockPanelOverlayRegion;
 
 extern void			RenderTownIDString( );
 extern BOOLEAN	gfUIOverItemPool;
-extern INT16		gfUIOverItemPoolGridNo;
+extern INT32		gfUIOverItemPoolGridNo;
 extern BOOLEAN	gfInMovementMenu;
 extern BOOLEAN	gfInItemPickupMenu;
 extern BOOLEAN	gfInOpenDoorMenu;
@@ -562,7 +562,7 @@ void RenderTopmostTacticalInterface( )
   VOBJECT_DESC    VObjectDesc;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
-	UINT16						usMapPos;
+	INT32 usMapPos;
 	ITEM_POOL					*pItemPool;
 
 	
@@ -643,7 +643,7 @@ void RenderTopmostTacticalInterface( )
 						AddVideoObject( &VObjectDesc, &uiBogTarget );
 					}
 
-					if ( GridNoOnScreen( (INT16)MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )
+					if ( GridNoOnScreen( MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )
 					{					
 						// GET SCREEN COORDINATES
 						sOffsetX = (MercPtrs[ cnt ]->sPlannedTargetX - gsRenderCenterX);
@@ -795,9 +795,9 @@ void RenderTopmostTacticalInterface( )
 				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
 				{
 					STRUCTURE					*pStructure = NULL;
-					INT16							sIntTileGridNo;
+					INT32 sIntTileGridNo;
 					INT8							bZLevel = 0;
-					INT16							sActionGridNo = usMapPos;
+					INT32 sActionGridNo = usMapPos;
 
 					// Get interactive tile...
 					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -834,9 +834,9 @@ void RenderTopmostTacticalInterface( )
 				  if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, bCheckLevel ) )
 				  {
 					  STRUCTURE					*pStructure = NULL;
-					  INT16							sIntTileGridNo;
+					  INT32 sIntTileGridNo;
 					  INT8							bZLevel = 0;
-					  INT16							sActionGridNo = usMapPos;
+					  INT32 sActionGridNo = usMapPos;
 
 					  // Get interactive tile...
 					  if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )

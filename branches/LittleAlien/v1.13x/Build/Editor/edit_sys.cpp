@@ -36,8 +36,8 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius );
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace );
 
-void PasteTextureEx( INT16 sGridNo, UINT16 usType );
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius );
+void PasteTextureEx( INT32 sGridNo, UINT16 usType );
+void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius );
 
 
 BOOLEAN			gfWarning = FALSE;   
@@ -59,7 +59,7 @@ UINT32			gDoCliffs = NO_CLIFFS;
 //
 void QuickEraseMapTile( UINT32 iMapIndex )
 {
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return;
 	AddToUndoList( iMapIndex );
 	DeleteStuffFromMapTile( iMapIndex );
@@ -104,7 +104,7 @@ void EraseMapTile( UINT32 iMapIndex )
 {
 	INT32			iEraseMode;
 	UINT32		uiCheckType;
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return;
 
 	// Figure out what it is we are trying to erase
@@ -123,7 +123,7 @@ void EraseMapTile( UINT32 iMapIndex )
 		case DRAW_MODE_EXITGRID:
 			AddToUndoList( iMapIndex );
 			RemoveExitGridFromWorld( iMapIndex );
-			RemoveTopmost( (UINT16)iMapIndex, FIRSTPOINTERS8 );
+			RemoveTopmost( iMapIndex, FIRSTPOINTERS8 );
 			break;
 		case DRAW_MODE_GROUND:		
 			// Is there ground on this tile? if not, get out o here
@@ -232,7 +232,7 @@ void PasteDebris( UINT32 iMapIndex )
 	pSelList = SelDebris;
 	pNumSelList = &iNumDebrisSelected;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < 0x80000000 )
 	{  
 		AddToUndoList( iMapIndex );
 
@@ -352,7 +352,7 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 	UINT16				usUseObjIndex;
 	UINT16				usTempIndex;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < 0x80000000 )
 	{  
 		AddToUndoList( iMapIndex );
 
@@ -549,7 +549,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 	INT32					iRandSelIndex;
 	BOOLEAN				fOkayToAdd;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < 0x80000000 )
 	{  
 	/*
 		if ( gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
@@ -562,7 +562,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 			fDoPaste = TRUE;
 		}
 */
-		if ( /*fDoPaste &&*/ iMapIndex < 0x8000 )
+		if ( /*fDoPaste &&*/ iMapIndex < 0x80000000 )
 		{
 			iRandSelIndex = GetRandomSelection( );
 			if ( iRandSelIndex == -1 )
@@ -576,7 +576,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 			usUseObjIndex = (UINT16)pSelList[ iRandSelIndex ].uiObject;
 
 			// Check with Structure Database (aka ODB) if we can put the object here!
-			fOkayToAdd = OkayToAddStructureToWorld( (INT16)iMapIndex, 0, gTileDatabase[ (gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].pDBStructureRef, INVALID_STRUCTURE_ID );
+			fOkayToAdd = OkayToAddStructureToWorld( iMapIndex, 0, gTileDatabase[ (gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].pDBStructureRef, INVALID_STRUCTURE_ID );
 			if ( fOkayToAdd || (gTileDatabase[ (gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].pDBStructureRef == NULL) )
 			{
 				// Actual structure info is added by the functions below
@@ -588,7 +588,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 			}
 		}
 	}
-	else if ( CurrentStruct == ERASE_TILE && iMapIndex < 0x8000 )
+	else if ( CurrentStruct == ERASE_TILE && iMapIndex < 0x80000000 )
 	{
 		RemoveAllStructsOfTypeRange( iMapIndex, FIRSTOSTRUCT, LASTOSTRUCT );
 		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTSHADOW, LASTSHADOW );
@@ -614,7 +614,7 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 	usUseIndex = pSelList[ iCurBank ].usIndex;
 	usUseObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < 0x80000000 )
 	{  
 		fDoPaste = TRUE;
 
@@ -696,7 +696,7 @@ void PasteTextureCommon( UINT32 iMapIndex )
 	 UINT16					usTileIndex;
 	 //UINT16					Dummy;
    
-	 if ( CurrentPaste != NO_TILE && iMapIndex < 0x8000 )
+	 if ( CurrentPaste != NO_TILE && iMapIndex < 0x80000000 )
 	 {
 
 		 // Set undo, then set new
@@ -739,7 +739,7 @@ void PasteTextureCommon( UINT32 iMapIndex )
 		 }
 		 else
 		 {
-				PasteTextureEx( (INT16)iMapIndex, CurrentPaste );
+				PasteTextureEx( iMapIndex, CurrentPaste );
 				SmoothTerrainRadius( iMapIndex, CurrentPaste, 1, TRUE );
 		 }
 	}
@@ -772,7 +772,7 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 			//return;
 
 
-	 if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
+	 if ( iMapIndex < 0x80000000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
 	 {
 		 AddToUndoList( iMapIndex );
 
@@ -791,7 +791,7 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 		 MemFree( puiDeletedTypes );
 
 	 }
-	 else if ( iMapIndex < 0x8000 )
+	 else if ( iMapIndex < 0x80000000 )
 	 {
 			AddToUndoList( iMapIndex );
 
@@ -844,7 +844,7 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 	if ( (iYPos + (INT32)sBottom) < 0 )
 		sBottom = (INT16)(-iYPos);
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return (FALSE);
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
@@ -876,7 +876,7 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 	// - remove what was top-most
 	// - re-adjust the world to reflect missing top-most peice
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return ( FALSE );
 
 	//if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
@@ -925,7 +925,7 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return ( FALSE );
 	 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
@@ -977,7 +977,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= 0x80000000 )
 		return ( FALSE );
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
@@ -1036,7 +1036,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 
 						// If we are top-most, add to smooth list
 						sNumSmoothTiles++;
-						puiSmoothTiles = (UINT32 *) MemRealloc( puiSmoothTiles, sNumSmoothTiles * sizeof( UINT32 ) );
+						puiSmoothTiles = MemRealloc( puiSmoothTiles, sNumSmoothTiles * sizeof( UINT32 ) );
 						puiSmoothTiles[ sNumSmoothTiles-1 ] = iNewIndex;
 					}
 				}
@@ -1060,7 +1060,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 }
 
 // ATE FIXES
-void PasteTextureEx( INT16 sGridNo, UINT16 usType )
+void PasteTextureEx( INT32 sGridNo, UINT16 usType )
 {
 	UINT16 usIndex;
 	UINT8	 ubTypeLevel;
@@ -1090,7 +1090,7 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 }
 
 
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
+void PasteTextureFromRadiusEx( INT32 sGridNo, UINT16 usType, UINT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -1104,7 +1104,7 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
-	if ( sGridNo >= 0x8000 )
+	if ( sGridNo >= 0x80000000 )
 		return;
 	 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
@@ -1138,7 +1138,7 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 void RaiseWorldLand( )
 {
 	INT32					cnt;
-	UINT32				sTempGridNo;
+	INT32				sTempGridNo;
 	LEVELNODE			*pStruct;
 	TILE_ELEMENT	*pTileElement;
 	BOOLEAN fRaise;
@@ -1191,7 +1191,7 @@ void RaiseWorldLand( )
  
 						sTempGridNo = cnt + pTileElement->pTileLocData[ubLoop].bTileOffsetX + pTileElement->pTileLocData[ubLoop].bTileOffsetY * WORLD_COLS;
 						// Check for valid gridno
-						if ( OutOfBounds( (INT16)cnt, (INT16)sTempGridNo ) )
+						if ( OutOfBounds( cnt, sTempGridNo ) )
 						{
 							continue;
 						}

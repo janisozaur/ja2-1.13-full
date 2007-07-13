@@ -90,10 +90,10 @@ extern BOOLEAN	gfNextFireJam;
 
 BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj );
 
-BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseThrown( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
+BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo );
+BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo );
+BOOLEAN UseThrown( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo );
+BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo );
 
 INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BOOLEAN fBladeAttack );
 
@@ -1275,7 +1275,7 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 {
 	// ignore passed in target gridno for now
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("FireWeapon"));
@@ -1397,7 +1397,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 }
 
 
-void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT *pdXPos, FLOAT *pdYPos, FLOAT *pdZPos )
+void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, FLOAT *pdXPos, FLOAT *pdYPos, FLOAT *pdZPos )
 {
 	FLOAT								dTargetX;
 	FLOAT								dTargetY;
@@ -1505,7 +1505,7 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 }
 
 
-BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 {
 	UINT32							uiHitChance, uiDiceRoll;
 	INT16								sXMapPos, sYMapPos;	
@@ -1988,7 +1988,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	return( TRUE );
 }
 
-BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 {
 	SOLDIERTYPE *				pTargetSoldier;
 	INT32								iHitChance, iDiceRoll;
@@ -2166,7 +2166,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 }
 
 
-BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing )
+BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo, BOOLEAN fStealing )
 {
 	SOLDIERTYPE				*	pTargetSoldier;
 	INT32								iHitChance, iDiceRoll;
@@ -2504,7 +2504,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	return( TRUE );
 }
 
-BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
+BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo )
 {
 	UINT32			uiHitChance, uiDiceRoll;
 	INT8			bLoop;
@@ -2628,7 +2628,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 }
 
 
-BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
+BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo )
 {
 	UINT32			uiHitChance, uiDiceRoll;
 	INT16				sAPCost = 0;
@@ -2770,7 +2770,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	return( TRUE );
 }
 
-BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, INT32 iBullet )
+BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT32 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, INT32 iBullet )
 {
 	ANITILE_PARAMS	AniParams;
 	UINT8						ubAmmoType;
@@ -2996,7 +2996,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	ANITILE_PARAMS	AniParams;
 	UINT16					usMissTileIndex, usMissTileType;
 	STRUCTURE				*pStructure = NULL;
@@ -3297,7 +3297,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	}
 }
 
-void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce )
+void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce )
 {
 	STRUCTURE *			pWallAndWindow;
 	DB_STRUCTURE *	pWallAndWindowInDB;
@@ -3423,7 +3423,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 }
 
 
-BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	 INT16								sRange;	
 	 UINT16								usInHand;
@@ -3456,7 +3456,7 @@ BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	 return( FALSE );
 }
 
-UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
   //SOLDIERTYPE *vicpSoldier;
 	SOLDIERTYPE * pTarget;
@@ -4102,7 +4102,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
   return (iChance);
 }
 
-UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
 	UINT16	usTrueState;
 	UINT32	uiChance;
@@ -5347,7 +5347,7 @@ INT32 CalcMaxTossRange( SOLDIERTYPE * pSoldier, UINT16 usItem, BOOLEAN fArmed )
 }
 
 
-UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
 	INT32 iChance, iMaxRange, iRange;
 	UINT16	usHandItem;

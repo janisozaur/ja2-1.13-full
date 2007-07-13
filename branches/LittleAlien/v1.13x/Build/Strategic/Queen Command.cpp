@@ -68,7 +68,7 @@ extern INT32 giGarrisonArraySize;
 extern BOOLEAN gfOverrideSector;
 #endif
 
-INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
+INT32 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 
 extern void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize );
@@ -1698,11 +1698,11 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
 
+//SB: this gridnumbers must be externalized
+	static INT32 sAlmaCaptureGridNos[] = { 9208, 9688, 9215 };
+	static INT32 sAlmaCaptureItemsGridNo[] = { 12246, 12406, 13046 };
 
-	static INT16 sAlmaCaptureGridNos[] = { 9208, 9688, 9215 };
-	static INT16 sAlmaCaptureItemsGridNo[] = { 12246, 12406, 13046 };
-
-	static INT16 sInterrogationItemGridNo[] = { 12089, 12089, 12089 };
+	static INT32 sInterrogationItemGridNo[] = { 12089, 12089, 12089 };
 	
 
   // ATE: Check first if ! in player captured sequence already

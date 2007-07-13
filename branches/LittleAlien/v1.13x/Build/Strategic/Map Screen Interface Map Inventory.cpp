@@ -122,7 +122,7 @@ INT32 iLastInventoryPoolPage = 0;
 // total number of slots allocated
 INT32 iTotalNumberOfSlots = 0;
 
-INT16 sObjectSourceGridNo = 0;
+INT32 sObjectSourceGridNo = 0;
 
 // number of unseen items in sector
 UINT32 uiNumberOfUnSeenItems = 0;
@@ -808,7 +808,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	UINT16 usOldItemIndex, usNewItemIndex;
-	INT16 sGridNo = 0;
+	INT32 sGridNo = 0;
 	INT32 iOldNumberOfObjects = 0;
 	INT16 sDistanceFromObject = 0;
 	SOLDIERTYPE *pSoldier = NULL;

@@ -12,7 +12,7 @@
 	#include "Soldier macros.h"
 #endif
 
-void CallAvailableEnemiesTo( INT16 sGridNo )
+void CallAvailableEnemiesTo( INT32 sGridNo )
 {
 	INT32	iLoop;
 	INT32	iLoop2;
@@ -80,7 +80,7 @@ void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 	}
 }
 
-void CallAvailableKingpinMenTo( INT16 sGridNo )
+void CallAvailableKingpinMenTo( INT32 sGridNo )
 {
 	// like call all enemies, but only affects civgroup KINGPIN guys with 
 	// NO PROFILE
@@ -109,7 +109,7 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 	}
 }
 
-void CallEldinTo( INT16 sGridNo )
+void CallEldinTo( INT32 sGridNo )
 {
 	// like call all enemies, but only affects Eldin
 	SOLDIERTYPE * pSoldier;

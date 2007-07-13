@@ -102,7 +102,7 @@ void UpdateLightingSprite( LIGHTEFFECT *pLight )
 }
 
 
-INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
+INT32 NewLightEffect( INT32 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 {		
 	LIGHTEFFECT *pLight;
 	INT32				iLightIndex;
@@ -137,7 +137,7 @@ INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 
 
 
-void RemoveLightEffectFromTile( INT16 sGridNo )
+void RemoveLightEffectFromTile( INT32 sGridNo )
 {
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;
@@ -165,7 +165,7 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 
 }
 
-BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
+BOOLEAN IsLightEffectAtTile( INT32 sGridNo )
 {
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;

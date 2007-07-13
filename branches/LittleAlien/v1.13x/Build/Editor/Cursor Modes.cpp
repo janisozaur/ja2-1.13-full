@@ -35,7 +35,7 @@ UINT16 gusSavedSelectionType = SMALLSELECTION;
 UINT16 gusSavedBuildingSelectionType = AREASELECTION;
 extern INT16 sGridX; // symbol already declared globally in editscreen.cpp (jonathanl)
 extern INT16 sGridY; // symbol already declared globally in editscreen.cpp (jonathanl)
-INT16 sBadMarker = -1;
+INT32 sBadMarker = -1;
 
 STR16 wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", L"Width: xx", L"Area" };
 
@@ -204,12 +204,12 @@ void UpdateCursorAreas()
 					if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 					{
 						AddTopmostToTail( iMapIndex + ROOF_OFFSET, BADMARKER1 );
-						sBadMarker = (INT16)(iMapIndex + ROOF_OFFSET );
+						sBadMarker = iMapIndex + ROOF_OFFSET ;
 					}
 					else
 					{
 						AddTopmostToTail( (iMapIndex), BADMARKER1 );
-						sBadMarker = (INT16)(iMapIndex);
+						sBadMarker = iMapIndex;
 					}
 				}
 			}

@@ -68,11 +68,11 @@ void UpdateWallsView()
 	{
 		if ( fBuildingShowWalls )
 		{
-			RemoveWallLevelnodeFlags( (INT16)cnt, LEVELNODE_HIDDEN );
+			RemoveWallLevelnodeFlags( cnt, LEVELNODE_HIDDEN );
 		}
 		else
 		{
-			SetWallLevelnodeFlags( (INT16)cnt, LEVELNODE_HIDDEN );
+			SetWallLevelnodeFlags( cnt, LEVELNODE_HIDDEN );
 		}
 	}
 	gfRenderWorld = TRUE;
@@ -121,13 +121,13 @@ void KillBuilding( UINT32 iMapIndex )
 		return;
 	}
 
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex - WORLD_COLS ) ) )
+	if( GridNoOnVisibleWorldTile( iMapIndex - WORLD_COLS  ) )
 		KillBuilding( iMapIndex - WORLD_COLS );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex + WORLD_COLS ) ) )
+	if( GridNoOnVisibleWorldTile( iMapIndex + WORLD_COLS  ) )
 		KillBuilding( iMapIndex + WORLD_COLS );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex + 1 ) ) )
+	if( GridNoOnVisibleWorldTile( iMapIndex + 1  ) )
 		KillBuilding( iMapIndex + 1 );
-	if( GridNoOnVisibleWorldTile( (UINT16)( iMapIndex - 1 ) ) )
+	if( GridNoOnVisibleWorldTile( iMapIndex - 1  ) )
 		KillBuilding( iMapIndex - 1 );
 
 	if( gfBasement )
@@ -135,7 +135,7 @@ void KillBuilding( UINT32 iMapIndex )
 }
 
 BUILDINGLAYOUTNODE *gpBuildingLayoutList = NULL;
-INT16 gsBuildingLayoutAnchorGridNo = -1;
+INT32 gsBuildingLayoutAnchorGridNo = -1;
 extern void RemoveBuildingLayout();
 
 void DeleteBuildingLayout()
@@ -176,14 +176,14 @@ void BuildLayout( INT32 iMapIndex, INT32 iOffset )
 	curr = gpBuildingLayoutList;
 	while( curr )
 	{
-		if( (INT16)iMapIndex == curr->sGridNo )
+		if( iMapIndex == curr->sGridNo )
 			return;
 		curr = curr->next;
 	}
 	//Good, it hasn't, so process it and add it to the head of the list.
 	curr = (BUILDINGLAYOUTNODE*)MemAlloc( sizeof( BUILDINGLAYOUTNODE ) );
 	Assert( curr );
-	curr->sGridNo = (INT16)iMapIndex;
+	curr->sGridNo = iMapIndex;
 	curr->next = gpBuildingLayoutList;
 	gpBuildingLayoutList = curr;
 
@@ -206,11 +206,11 @@ void CopyBuilding( INT32 iMapIndex )
 	//Allocate the basic structure, then calculate the layout.  The head node is
 	gpBuildingLayoutList = (BUILDINGLAYOUTNODE*)MemAlloc( sizeof( BUILDINGLAYOUTNODE ) );
 	Assert( gpBuildingLayoutList );
-	gpBuildingLayoutList->sGridNo = (INT16)iMapIndex;
+	gpBuildingLayoutList->sGridNo = iMapIndex;
 	gpBuildingLayoutList->next = NULL;
 
 	//Set the anchor point for this building -- this is where the user clicked.
-	gsBuildingLayoutAnchorGridNo = (INT16)iMapIndex;
+	gsBuildingLayoutAnchorGridNo = iMapIndex;
 		
 	//Now, recursively expand out while adding unique gridnos to our list.  The recursion will
 	//terminate when complete.
@@ -559,7 +559,7 @@ void ExtractAndUpdateDoorInfo()
 
 	memset( &door, 0, sizeof( DOOR ) );
 
-	door.sGridNo = (INT16)iDoorMapIndex;
+	door.sGridNo = iDoorMapIndex;
 
 	num = min( GetNumericStrictValueFromField( 0 ), NUM_LOCKS-1 );
 	door.ubLockID = (UINT8)num;

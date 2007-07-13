@@ -611,7 +611,7 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 
 void RenderMapEntryPointsAndLights()
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16 sScreenX, sScreenY;
 	INT32 i;
 	if( gfSummaryWindowActive )
@@ -867,7 +867,7 @@ void RenderEditorInfo( )
 {
 	CHAR16					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	UINT16						uiMapIndex;
+	INT32						iMapIndex;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );

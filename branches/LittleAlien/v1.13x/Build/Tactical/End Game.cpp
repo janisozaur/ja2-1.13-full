@@ -44,15 +44,15 @@
 	#include "screenids.h"
 #endif
 
-INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
+INT32 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 
 SOLDIERTYPE *gpKillerSoldier = NULL;
-INT16				 gsGridNo;
+INT32				 gsGridNo;
 INT8				 gbLevel;
 
 
 // This function checks if our statue exists in the current sector at given gridno
-BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
+BOOLEAN DoesO3SectorStatueExistHere( INT32 sGridNo )
 {
 	INT32 cnt;
 	EXITGRID								ExitGrid;
@@ -138,7 +138,7 @@ void DeidrannaTimerCallback( void )
 }
 
 
-void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	gpKillerSoldier = pKillerSoldier;
 	gsGridNo = sGridNo;
@@ -155,7 +155,7 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 
 }
 
-void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -402,7 +402,7 @@ void QueenBitchTimerCallback( void )
 }
 
 
-void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -448,7 +448,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 }
 
-void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;

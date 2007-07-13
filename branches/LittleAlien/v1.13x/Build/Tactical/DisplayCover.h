@@ -4,7 +4,7 @@
 void	DisplayCoverOfSelectedGridNo( );
 void	RemoveCoverOfSelectedGridNo();
 
-void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
+void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT32 sTargetGridNo );
 
 
 void RemoveVisibleGridNoAtSelectedGridNo();

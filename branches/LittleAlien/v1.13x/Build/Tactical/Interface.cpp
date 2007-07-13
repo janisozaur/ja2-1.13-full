@@ -256,7 +256,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor );
 BOOLEAN fFirstTimeInGameScreen  = TRUE;
 BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
 INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
-INT16		gsCurrentSoldierGridNo	= 0;
+INT32		gsCurrentSoldierGridNo	= 0;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
 
 // LOCAL FUCTIONS
@@ -3628,7 +3628,7 @@ typedef struct
 {
 	INT8				bHeight;
 	INT8				bPower;
-	INT16				sGridNo;
+	INT32 sGridNo;
 	UINT8				ubLevel;
 	SOLDIERTYPE	*pSoldier;
 	BOOLEAN			fShowHeight;
@@ -3636,7 +3636,7 @@ typedef struct
 	BOOLEAN			fActiveHeightBar;
 	BOOLEAN			fActivePowerBar;
 	BOOLEAN			fAtEndHeight;
-	INT16				sTargetGridNo;
+	INT32 sTargetGridNo;
 	FLOAT				dInitialForce;
 	FLOAT				dForce;
 	FLOAT				dDegrees;
@@ -3683,7 +3683,7 @@ void CalculateAimCubeUIPhysics( )
 }
 
 
-INT16 GetInAimCubeUIGridNo( )
+INT32 GetInAimCubeUIGridNo( )
 {
 	return( gCubeUIData.sGridNo );
 }
@@ -3715,7 +3715,7 @@ BOOLEAN AimCubeUIClick( )
 	}
 }
 
-void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
+void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
 {
 	gfInAimCubeUI = TRUE;
 
@@ -3892,11 +3892,11 @@ void GetLaunchItemParamsFromUI( )
 
 
 static BOOLEAN gfDisplayPhysicsUI = FALSE;
-static INT16	 gsPhysicsImpactPointGridNo;
+static INT32	 gsPhysicsImpactPointGridNo;
 static INT8		 gbPhysicsImpactPointLevel;
 static BOOLEAN gfBadPhysicsCTGT = FALSE;
 
-void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
+void BeginPhysicsTrajectoryUI( INT32 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 {
 	gfDisplayPhysicsUI					= TRUE;
 	gsPhysicsImpactPointGridNo	= sGridNo;
@@ -3973,11 +3973,11 @@ UINT32 CalcUIMessageDuration( STR16 wString )
 BOOLEAN   gfMultipurposeLocatorOn = FALSE;
 UINT32    guiMultiPurposeLocatorLastUpdate;
 INT8      gbMultiPurposeLocatorFrame;
-INT16     gsMultiPurposeLocatorGridNo;
+INT32     gsMultiPurposeLocatorGridNo;
 INT8      gbMultiPurposeLocatorLevel;
 INT8      gbMultiPurposeLocatorCycles;
 
-void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
+void BeginMultiPurposeLocator( INT32 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 {
   guiMultiPurposeLocatorLastUpdate = 0;
   gbMultiPurposeLocatorCycles      = 0;

@@ -235,7 +235,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
 	INT32					leftmost;
@@ -359,7 +359,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
 	INT32					leftmost;

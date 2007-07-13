@@ -4434,7 +4434,7 @@ void HideItemTileCursor( )
 
 }
 
-BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
+BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT32 sSrcGridNo )
 {
 	return( TRUE );
 /*-
@@ -4477,17 +4477,17 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 
 void DrawItemTileCursor( )
 {
-	UINT16						usMapPos;
+	INT32 usMapPos;
 	UINT16						usIndex;
 	UINT8							ubSoldierID;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
 	UINT32						uiCursorFlags;
-	INT16							sFinalGridNo;
+	INT32 sFinalGridNo;
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
 	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGiveItem = FALSE;
-	INT16							sActionGridNo;
+	INT32 sActionGridNo;
 	UINT8							ubDirection;
 	static UINT32			uiOldCursorId = 0;
 	static UINT16			usOldMousePos = 0;
@@ -4786,7 +4786,7 @@ BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 }
 
 
-BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
+BOOLEAN HandleItemPointerClick( INT32 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
@@ -4799,7 +4799,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	INT16			sEndZ = 0;
 	BOOLEAN		fGiveItem = FALSE;
 	OBJECTTYPE TempObject;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	INT16			sDist;
 	INT16			sDistVisible;
 
@@ -4920,9 +4920,9 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				// Check if we can reload robot....
 				if ( IsValidAmmoToReloadRobot( MercPtrs[ ubSoldierID ], &TempObject ) )
 				{
-					 INT16	sActionGridNo;
+					 INT32 sActionGridNo;
 					 UINT8	ubDirection;
-					 INT16	sAdjustedGridNo;
+					 INT32 sAdjustedGridNo;
 						
 					 // Walk up to him and reload!
 					 // See if we can get there to stab	
@@ -5262,7 +5262,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	return( TRUE );
 }
 
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos )
+BOOLEAN ItemCursorInLobRange( INT32 usMapPos )
 {
 	// Draw item depending on distance from buddy
 	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )
@@ -6139,7 +6139,7 @@ typedef struct
 	BOOLEAN				fDirtyLevel;
 	INT32					iDirtyRect;
 	BOOLEAN				fHandled;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT8					bZLevel;
 	INT16					sButtomPanelStartY;
 	SOLDIERTYPE		*pSoldier;
@@ -6203,7 +6203,7 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 }
 
 
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
+BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
 {
   VOBJECT_DESC    VObjectDesc;
 	CHAR8						ubString[48];
@@ -7945,7 +7945,7 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
 	CHAR8			ubString[48];
 	INT16			sCenX, sCenY, sX, sY, sCenterYVal;
 	INT8 bZLevel	=pOpponent->bLevel;
-	INT16 sGridNo	=pOpponent->sGridNo;
+	INT32 sGridNo	=pOpponent->sGridNo;
 	INT32			cnt;
 	gpOpponent		=pOpponent;
 	gfStealing		=TRUE;

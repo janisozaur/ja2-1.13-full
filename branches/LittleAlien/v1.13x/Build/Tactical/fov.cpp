@@ -177,7 +177,7 @@ void BuildSightDir(UINT32 dir, UINT32 *One, UINT32 *Two, UINT32 *Three, UINT32 *
 
 typedef struct
 {
-	INT16			sGridNo;
+	INT32 sGridNo;
 	BOOLEAN		fAllocated;
 
 } SLANT_ROOF_FOV_TYPE;
@@ -231,7 +231,7 @@ void ClearSlantRoofs( void )
 	guiNumSlantRoofs = 0;
 }
 
-BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
+BOOLEAN FindSlantRoofSlot( INT32 sGridNo )
 {
 	UINT32 uiCount;
 
@@ -249,7 +249,7 @@ BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 	return( FALSE );
 }
 
-void AddSlantRoofFOVSlot( INT16 sGridNo )
+void AddSlantRoofFOVSlot( INT32 sGridNo )
 {
 	INT32									iSlantRoofSlot;
 	SLANT_ROOF_FOV_TYPE		*pSlantRoof;
@@ -537,7 +537,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 		 if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		 {
 			 ubMovementCost = DoorTravelCost( pSoldier, marker, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );
-			 pStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
+			 pStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
 			 if ( pStructure != NULL && pStructure->fFlags & STRUCTURE_TRANSPARENT)
 			 {
 				// cell door or somehow otherwise transparent; allow merc to see through
@@ -778,13 +778,13 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 				 // CHECK FOR HIDDEN STRUCTS
 				 // IF we had a hidden struct here that is not visible ( which will still be true because
 				 // we set it revealed below...
-				if ( DoesGridnoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
+				if ( DoesGridNoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
 				{
 					if ( !fHiddenStructVisible )
 					{
 						gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
 						SetRenderFlags(RENDER_FLAG_MARKED);
-						RecompileLocalMovementCosts( (UINT16)marker );
+						RecompileLocalMovementCosts( marker );
 					}
 				}
 

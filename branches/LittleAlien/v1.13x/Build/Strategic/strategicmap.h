@@ -33,8 +33,8 @@ extern UINT8	NUMBER_OF_SAMS;
 #define MAX_NUMBER_OF_SAMS	50	//4 
 
 extern INT16 pSamList[ MAX_NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoBList[ MAX_NUMBER_OF_SAMS ];
+extern INT32 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
+extern INT32 pSamGridNoBList[ MAX_NUMBER_OF_SAMS ];
 
 extern BOOLEAN fFoundOrta;
 extern BOOLEAN fSamSiteFound[ MAX_NUMBER_OF_SAMS ];
@@ -135,7 +135,7 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile );
 
 void AllMercsHaveWalkedOffSector( );
 
-void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection );
+void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT8 ubTacticalDirection );
 
 void AllMercsWalkedToExitGrid();
 UINT8 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue );

@@ -118,7 +118,7 @@ typedef	struct
 	FLOAT					dYPos;
 	INT16					sX;
 	INT16					sY;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	
 
 	UINT8					ubFiller[ 32 ];
@@ -310,7 +310,7 @@ BOOLEAN BeginAirRaid( )
 }
 
 
-INT16 PickLocationNearAnyMercInSector( )
+INT32 PickLocationNearAnyMercInSector( )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
@@ -351,11 +351,11 @@ INT16 PickLocationNearAnyMercInSector( )
 	return( NOWHERE );
 }
 
-INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 sRandomVar )
+INT32 PickRandomLocationAtMinSpacesAway( INT32 sGridNo, INT16 sMinValue, INT16 sRandomVar )
 {
-	INT16 sNewGridNo = NOWHERE;
+	INT32 sNewGridNo = NOWHERE;
 	INT16 sX, sY, sNewX, sNewY;
-	INT16 cnt = 0;
+	INT32 cnt = 0;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"PickRandomLocationAtMinSpacesAway");
 
@@ -577,7 +577,7 @@ void 	AirRaidStartEnding( )
 
 void BeginBombing( )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT32	iSoundStartDelay;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginBombing"));
@@ -634,7 +634,7 @@ void BeginBombing( )
 
 void BeginDive( )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT32	iSoundStartDelay;
 
 
@@ -713,7 +713,7 @@ void MoveDiveAirplane( FLOAT dAngle )
 void DoDive(  )
 {
 	INT16		sRange;
-	INT16		sGridNo, sOldGridNo;
+	INT32 sGridNo, sOldGridNo;
 
 	INT16		sTargetX, sTargetY;
 	INT16		sStrafeX, sStrafeY;
@@ -890,7 +890,7 @@ void DoDive(  )
 void DoBombing(  )
 {
 	INT16		sRange;
-	INT16		sGridNo, sOldGridNo, sBombGridNo;
+	INT32 sGridNo, sOldGridNo, sBombGridNo;
 
 	INT16		sTargetX, sTargetY;
 	UINT16	usItem;
@@ -1008,7 +1008,7 @@ void DoBombing(  )
 						}
 
 						// Drop bombs...
-						InternalIgniteExplosion( NOBODY, CenterX( sBombGridNo ), CenterY( sBombGridNo ), 0, sBombGridNo, usItem, fLocate , (UINT8)IsRoofPresentAtGridno( sBombGridNo ) );
+						InternalIgniteExplosion( NOBODY, CenterX( sBombGridNo ), CenterY( sBombGridNo ), 0, sBombGridNo, usItem, fLocate , (UINT8)IsRoofPresentAtGridNo( sBombGridNo ) );
 
 					}
 

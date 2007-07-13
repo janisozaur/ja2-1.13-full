@@ -7,7 +7,7 @@
 typedef struct //for exit grids (object level)
 { //if an item pool is also in same gridno, then this would be a separate levelnode
 	//in the object level list
-	UINT16 usGridNo; //sweet spot for placing mercs in new sector.
+	INT32 usGridNo; //sweet spot for placing mercs in new sector.
 	UINT8 ubGotoSectorX;
 	UINT8 ubGotoSectorY;
 	UINT8 ubGotoSectorZ;
@@ -32,6 +32,6 @@ extern BOOLEAN gfOverrideInsertionWithExitGrid;
 // valid paths, destinations, etc.
 UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
 
-UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubRadius );
+UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 ubRadius );
 
 #endif

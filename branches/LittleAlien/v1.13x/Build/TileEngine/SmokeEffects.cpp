@@ -83,7 +83,7 @@ void RecountSmokeEffects( void )
 
 
 // Returns NO_SMOKE_EFFECT if none there...
-INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
+INT8 GetSmokeEffectOnTile( INT32 sGridNo, INT8 bLevel )
 {
 	UINT16		ubExtFlags;
 
@@ -166,7 +166,7 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 
 
 
-INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
+INT32 NewSmokeEffect( INT32 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 {
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;
@@ -259,7 +259,7 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel )
+void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT32 sGridNo, INT8 bLevel )
 {
 	ANITILE_PARAMS	AniParams;
 	ANITILE					*pAniTile;
@@ -438,7 +438,7 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
+void RemoveSmokeEffectFromTile( INT32 sGridNo, INT8 bLevel )
 {
 	ANITILE *pAniTile;
 	UINT8		ubLevelID;

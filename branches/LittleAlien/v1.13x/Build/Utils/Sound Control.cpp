@@ -657,7 +657,7 @@ int x,dif,absDif;
 #endif
 
 // == Lesh slightly changed this function ============
-INT32 SoundDir( INT16 sGridNo )
+INT32 SoundDir( INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -709,7 +709,7 @@ INT32 SoundDir( INT16 sGridNo )
 }
 
 
-INT32 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
+INT32 SoundVolume( INT8 bInitialVolume, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -792,7 +792,7 @@ void DelayedSoundTimerCallback( void )
 typedef struct
 {
   UINT32        uiFlags;
-  INT16         sGridNo;
+  INT32 sGridNo;
   INT32         iSoundSampleID;
   INT32         iSoundToPlay;
   UINT32        uiData;
@@ -844,7 +844,7 @@ void RecountPositionSnds( void )
 }
 
 
-INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
+INT32 NewPositionSnd( INT32 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
 {
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;
@@ -902,7 +902,7 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
   }
 }
 
-void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
+void SetPositionSndGridNo( INT32 iPositionSndIndex, INT32 sGridNo )
 {
 	POSITIONSND *pPositionSnd;
 
@@ -968,7 +968,7 @@ void SetPositionSndsInActive( )
 }
 
 // == Lesh slightly changed this function ============
-INT32 PositionSoundDir( INT16 sGridNo )
+INT32 PositionSoundDir( INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -1022,7 +1022,7 @@ INT32 PositionSoundDir( INT16 sGridNo )
 }
 
 
-INT32 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
+INT32 PositionSoundVolume( INT8 bInitialVolume, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;

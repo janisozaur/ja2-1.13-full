@@ -106,7 +106,7 @@ enum
 typedef struct
 {
  SOLDIERTYPE *	pOpponent;
- INT16					sGridNo;
+ INT32 sGridNo;
  INT32					iValue;
  INT32					iAPs;
  INT32					iCertainty;
@@ -160,7 +160,7 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 INT32 CalcManThreatValue(SOLDIERTYPE *pSoldier, INT16 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe );
 INT8 CanNPCAttack(SOLDIERTYPE *pSoldier);
 void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow);
-BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel );
+BOOLEAN ClimbingNecessary( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel );
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel );
 INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary);
@@ -176,21 +176,21 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction );
 INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit);
 INT32 EstimateStabDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,	UINT8 ubChanceToHit, BOOLEAN fBladeAttack);
 INT32 EstimateThrowDamage(SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno);
-INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo );
+INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo );
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp );
-INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo );
+INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT32 sDestGridNo );
 INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing );
-INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
+INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT32 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
 UINT8 GetTraversalQuoteActionID( INT8 bDirection );
 INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction);
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier );
 
-BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo );
+BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 
 void InitAttackType(ATTACKTYPE *pAttack);
 
@@ -217,14 +217,14 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost );
 INT16 TrackScent( SOLDIERTYPE * pSoldier );
 void RefreshAI(SOLDIERTYPE *pSoldier);
-BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel );
+BOOLEAN InLightAtNight( INT32 sGridNo, INT8 bLevel );
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ArmySeesOpponents( void );
 
 void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN suppressionFire);
 
-INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubSearchRadius );
+INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubSearchRadius );
 
-INT8 FindDirectionForClimbing( INT16 sGridNo );
+INT8 FindDirectionForClimbing( INT32 sGridNo );
 

@@ -351,7 +351,7 @@ INT8			gbNumHeliSeatsOccupied = 0;
 BOOLEAN		gfFirstGuyDown = FALSE;
 
 UINT32		uiSoundSample;
-INT16			gsGridNoSweetSpot;
+INT32			gsGridNoSweetSpot;
 INT16			gsHeliXPos;
 INT16			gsHeliYPos;
 FLOAT			gdHeliZPos;
@@ -403,7 +403,7 @@ void AddMercToHeli( UINT8 ubID )
 }
 
 
-void StartHelicopterRun( INT16 sGridNoSweetSpot )
+void StartHelicopterRun( INT32 sGridNoSweetSpot )
 {
 	INT16 sX, sY;
 
@@ -780,7 +780,7 @@ void HandleHeliDrop( )
 }
 
 
-void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void BeginMercEntering( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	ResetHeliSeats( );
 

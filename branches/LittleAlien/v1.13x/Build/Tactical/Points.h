@@ -272,35 +272,35 @@
 
 UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj );
 
-INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel );
-INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode  );
-INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength );
+INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, INT8 bLevel );
+INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode  );
+INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength );
 BOOLEAN SelectedMercCanAffordMove(  );
 
 BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLEAN fDisplayMsg );
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLEAN fProactive = TRUE );
 INT32 AdjustBreathPts(SOLDIERTYPE *pSold, INT32 iBPCost);
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
-INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode);
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, UINT8 ubForceRaiseGunCost = 0);
+INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridNo,INT8 bDir, UINT16 usMovementMode);
+UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost);
 INT8  MinPtsToMove(SOLDIERTYPE *pSoldier);
 INT8 MinAPsToStartMovement( SOLDIERTYPE * pSoldier, UINT16 usMovementMode );
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection );
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, UINT8 ubForceRaiseGunCost = 0 );
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, UINT8 ubForceRaiseGunCost = 0 );
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
-UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost );
-UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT32 usMapPos );
+UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost );
+UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
 UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAutofire );
 UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 
 UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier );
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
 
@@ -317,22 +317,22 @@ INT8 GetAPsToBeginFirstAid( SOLDIERTYPE *pSoldier );
 INT8 GetAPsToBeginRepair( SOLDIERTYPE *pSoldier );
 INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier );
 
-INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost );
+INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost );
 
 UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier );
-UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT32 usMapPos );
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT32 usMapPos );
 INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier );
 
-void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise );
+void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise );
 
 UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot );
 INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );

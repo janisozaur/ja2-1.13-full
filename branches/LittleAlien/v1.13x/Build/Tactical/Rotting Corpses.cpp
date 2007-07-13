@@ -461,7 +461,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	CHAR8						zFilename[150];
 	DB_STRUCTURE_REF	 *pDBStructureRef;
 	UINT8									ubLoop;
-	INT16							sTileGridNo;
+	INT32							sTileGridNo;
 	DB_STRUCTURE_TILE	**	ppTile;
 	UINT16						usStructIndex;	
 	UINT32						uiDirectionUseFlag;
@@ -786,7 +786,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	INT8												bVisible = -1;
 	OBJECTTYPE									*pObj;
   UINT8                       ubNumGoo;
-  INT16                       sNewGridNo;
+  INT32 sNewGridNo;
   OBJECTTYPE                  ItemObject;
 
 
@@ -1022,7 +1022,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 {
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo = NOWHERE;
+	INT32 sLowestGridNo = NOWHERE;
 	INT32		cnt;
 	ROTTING_CORPSE		*pCorpse;
 
@@ -1057,7 +1057,7 @@ void AddCrowToCorpse( ROTTING_CORPSE *pCorpse )
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
 	UINT8										iNewIndex;
-	INT16										sGridNo;
+	INT32 sGridNo;
 	UINT8										ubDirection;
 	SOLDIERTYPE							*pSoldier;
 	UINT8										ubRoomNum;
@@ -1140,7 +1140,7 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 void HandleCrowFlyAway( SOLDIERTYPE *pSoldier )
 {
 	UINT8 ubDirection;
-	INT16	sGridNo;
+	INT32 sGridNo;
 
 	// Set desired height
 	pSoldier->sDesiredHeight			= 100;
@@ -1254,7 +1254,7 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	INT32                    cnt;
 	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 
 	// If this cump is already visible, return
 	if ( pCorpse->def.bVisible == 1 )
@@ -1300,7 +1300,7 @@ void MercLooksForCorpses( SOLDIERTYPE *pSoldier )
 {
 	INT32                    cnt;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 	ROTTING_CORPSE					 *pCorpse;
 
 	// Should we say disgust quote?
@@ -1438,7 +1438,7 @@ BOOLEAN CreateCorpseShadedPalette( ROTTING_CORPSE *pCorpse, UINT32 uiBase, SGPPa
 }
 
 
-ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT16 sGridNo, STRUCTURE *pStructure )
+ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT32 sGridNo, STRUCTURE *pStructure )
 {
 	LEVELNODE					*pLevelNode;
 	ROTTING_CORPSE		*pCorpse = NULL;
@@ -1463,12 +1463,12 @@ ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT16 sGridNo, STRUCTURE *pStructur
 }
 
 
-void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
+void CorpseHit( INT32 sGridNo, UINT16 usStructureID )
 {
 #if 0
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 	
 	pStructure = FindStructureByID( sGridNo, usStructureID );
 	
@@ -1514,11 +1514,11 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 }
 
 
-void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
+void VaporizeCorpse( INT32 sGridNo, UINT16 usStructureID )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
 	ROTTING_CORPSE	*pCorpse = NULL;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 	ANITILE_PARAMS		AniParams;
 	
 	pStructure = FindStructureByID( sGridNo, usStructureID );
@@ -1577,15 +1577,15 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 	
 }
 
-INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
+INT32 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8 ubRadius )
 {
-	INT16  sSweetGridNo;
+	INT32 sSweetGridNo;
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2, cnt3;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
+	INT32 sLowestGridNo=0;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	SOLDIERTYPE soldier;
@@ -1672,7 +1672,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 					{
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )
 						{
-							if ( OkayToAddStructureToWorld( (INT16)sGridNo, pDef->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), INVALID_STRUCTURE_ID ) )
+							if ( OkayToAddStructureToWorld( sGridNo, pDef->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), INVALID_STRUCTURE_ID ) )
 							{
 								fDirectionFound = TRUE;
 								fCanSetDirection = TRUE;
@@ -1728,10 +1728,10 @@ BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse )
 }
 
 
-ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
+ROTTING_CORPSE *GetCorpseAtGridNo( INT32 sGridNo, INT8 bLevel )
 {
 	STRUCTURE				*pStructure, *pBaseStructure;
-	INT16						sBaseGridNo;
+	INT32 sBaseGridNo;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_CORPSE );
 
@@ -1753,7 +1753,7 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 }
 
 
-void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
+void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo,  INT8 bLevel )
 {
 	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
@@ -1892,7 +1892,7 @@ void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot
 }
 
 
-void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel )
+void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubLevel )
 {
 	ROTTING_CORPSE *pCorpse;
   INT8            bToleranceThreshold = 0;
@@ -1954,7 +1954,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 }
 
 
-INT16 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
+INT32 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
 {
 	INT32                    cnt;
 	ROTTING_CORPSE					 *pCorpse;
@@ -1993,7 +1993,7 @@ void DecayRottingCorpseAIWarnings( void )
  
 }
 
-UINT8 GetNearestRottingCorpseAIWarning( INT16 sGridNo )
+UINT8 GetNearestRottingCorpseAIWarning( INT32 sGridNo )
 {
 	INT32				cnt;
 	ROTTING_CORPSE *	pCorpse;

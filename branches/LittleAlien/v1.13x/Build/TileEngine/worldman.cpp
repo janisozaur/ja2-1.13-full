@@ -48,8 +48,8 @@ static CHAR16 gzLevelString[9][15] =
 void SetIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 void RemoveIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 
-void SetWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex );
-void RemoveWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex );
+void SetWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex );
+void RemoveWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex );
 
 BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex );
 
@@ -2161,7 +2161,7 @@ BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStru
 }
 
 
-BOOLEAN AddMercStructureInfo( INT16 sGridNo, SOLDIERTYPE *pSoldier )
+BOOLEAN AddMercStructureInfo( INT32 sGridNo, SOLDIERTYPE *pSoldier )
 {
 	UINT16 usAnimSurface;
 
@@ -2174,7 +2174,7 @@ BOOLEAN AddMercStructureInfo( INT16 sGridNo, SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState )
+BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState )
 {
 	STRUCTURE_FILE_REF		*pStructureFileRef;
 	BOOLEAN								fReturn;
@@ -2592,7 +2592,7 @@ BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 
 }
 
 
-BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex )
+BOOLEAN IndexExistsInRoofLayer( INT32 sGridNo, UINT16 usIndex )
 {
 	LEVELNODE	*pRoof		 = NULL;
 	LEVELNODE	*pOldRoof	 = NULL;
@@ -3278,7 +3278,7 @@ BOOLEAN SetMapElementShadeLevel( UINT32 uiMapIndex, UINT8 ubShadeLevel )
 }
 
 
-BOOLEAN IsHeigherLevel( INT16 sGridNo )
+BOOLEAN IsHeigherLevel( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 
@@ -3292,7 +3292,7 @@ BOOLEAN IsHeigherLevel( INT16 sGridNo )
 	return( FALSE );
 }
 
-BOOLEAN IsLowerLevel( INT16 sGridNo )
+BOOLEAN IsLowerLevel( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 
@@ -3367,7 +3367,7 @@ BOOLEAN IsRoofVisible2( INT16 sMapPos )
 }
 
 
-UINT8 WhoIsThere2( INT16 sGridNo, INT8 bLevel )
+UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel )
 {
 	STRUCTURE * pStructure;
 
@@ -3402,7 +3402,7 @@ UINT8 WhoIsThere2( INT16 sGridNo, INT8 bLevel )
 	return( (UINT8)NOBODY );
 }
 
-UINT8	GetTerrainType( INT16 sGridNo )
+UINT8	GetTerrainType( INT32 sGridNo )
 {
 	return( gpWorldLevelData[sGridNo].ubTerrainID );
 /*
@@ -3427,7 +3427,7 @@ UINT8	GetTerrainType( INT16 sGridNo )
 */
 }
 
-BOOLEAN Water( INT16 sGridNo )
+BOOLEAN Water( INT32 sGridNo )
 {
 	MAP_ELEMENT *			pMapElement;
 
@@ -3448,7 +3448,7 @@ BOOLEAN Water( INT16 sGridNo )
 	}
 }
 
-BOOLEAN DeepWater( INT16 sGridNo )
+BOOLEAN DeepWater( INT32 sGridNo )
 {
 	MAP_ELEMENT *			pMapElement;
 
@@ -3464,7 +3464,7 @@ BOOLEAN DeepWater( INT16 sGridNo )
 	}
 }
 
-BOOLEAN WaterTooDeepForAttacks( INT16 sGridNo ) 
+BOOLEAN WaterTooDeepForAttacks( INT32 sGridNo ) 
 {
 	return( DeepWater( sGridNo ) );
 }
@@ -3533,7 +3533,7 @@ void RemoveStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  )
 
 }
 
-LEVELNODE * FindLevelNodeBasedOnStructure( INT16 sGridNo, STRUCTURE * pStructure )
+LEVELNODE * FindLevelNodeBasedOnStructure( INT32 sGridNo, STRUCTURE * pStructure )
 {
 	LEVELNODE *				pLevelNode;
 
@@ -3588,7 +3588,7 @@ LEVELNODE * FindLevelNodeBasedOnStructure( INT16 sGridNo, STRUCTURE * pStructure
 	return( NULL );
 }
 
-LEVELNODE * FindShadow( INT16 sGridNo, UINT16 usStructIndex )
+LEVELNODE * FindShadow( INT32 sGridNo, UINT16 usStructIndex )
 {
 	LEVELNODE *				pLevelNode;
 	UINT16						usShadowIndex;
@@ -3680,18 +3680,18 @@ UINT32 cnt;
 
 
 
-void SetWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex )
+void SetWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex )
 {
 
 }
 
-void RemoveWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex )
+void RemoveWorldFlagsFromNewNode( UINT32 sGridNo, UINT16 usIndex )
 {
 
 }
 
 
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
+void SetWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	
@@ -3716,7 +3716,7 @@ void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
 	}
 }
 
-void RemoveWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
+void RemoveWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags )
 {
 	LEVELNODE	*pStruct		 = NULL;
 	

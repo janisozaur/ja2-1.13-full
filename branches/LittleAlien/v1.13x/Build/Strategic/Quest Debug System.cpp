@@ -436,7 +436,7 @@ SCROLL_BOX	gItemListBox;				// The Npc Scroll box
 
 SCROLL_BOX	*gpActiveListBox;		// Only 1 scroll box is active at a time, this is set to it.
 
-UINT16				gusQdsEnteringGridNo	=0;
+INT32				gusQdsEnteringGridNo	=0;
 
 
 UINT8				gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
@@ -2974,7 +2974,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 	MercCreateStruct.sSectorX			= sSectorX;
 	MercCreateStruct.sSectorY			= sSectorY;
 	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-	MercCreateStruct.sInsertionGridNo		= (UINT16) iGridNo;
+	MercCreateStruct.sInsertionGridNo		= iGridNo;
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );
 
@@ -2989,7 +2989,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 	//Add all the npc in the current sectory the npc array
 	AddNPCsInSectorToArray();
 
-	gusQdsEnteringGridNo = (INT16)iGridNo;
+	gusQdsEnteringGridNo = iGridNo;
 }
 
 
@@ -2998,7 +2998,7 @@ void AddItemToGridNo( INT32 iGridNo )
 {
 	OBJECTTYPE		Object;
 
-	gusQdsEnteringGridNo = (INT16)iGridNo;
+	gusQdsEnteringGridNo = iGridNo;
 
 
 	if( Item[ gItemListBox.sCurSelectedItem ].usItemClass == IC_KEY )
@@ -3012,7 +3012,7 @@ void AddItemToGridNo( INT32 iGridNo )
 		CreateItem( gItemListBox.sCurSelectedItem, (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &Object );
 
 		//add the item to the world
-		AddItemToPool( (UINT16) iGridNo, &Object, -1, 0, 0, 0 );
+		AddItemToPool( iGridNo, &Object, -1, 0, 0, 0 );
 	}
 }
 

@@ -20,7 +20,29 @@ typedef struct
 	//sector in that direction.  The >0 value points must be validated before saving the map.  This is 
 	//done by simply checking if those points are sittable by mercs, and that you can plot a path from 
 	//these points to each other.  These values can only be set by the editor : mapinfo tab
-  INT16 sNorthGridNo;
+	INT32 sNorthGridNo;
+	INT32 sEastGridNo;
+	INT32 sSouthGridNo;
+	INT32 sWestGridNo;
+	//This contains the number of individuals in the map.
+	//Individuals include NPCs, enemy placements, creatures, civilians, rebels, and animals.
+	UINT16 ubNumIndividuals;
+	UINT8 ubMapVersion;
+	UINT8 ubRestrictedScrollID;
+	UINT8 ubEditorSmoothingType;  //normal, basement, or caves
+	INT32 sCenterGridNo;
+	INT32 sIsolatedGridNo;
+	INT8 bPadding[83];	//I'm sure lots of map info will be added
+}MAPCREATE_STRUCT; //99 bytes
+
+typedef struct
+{
+	//These are the mandatory entry points for a map.  If any of the values are -1, then that means that
+	//the point has been specifically not used and that the map is not traversable to or from an adjacent 
+	//sector in that direction.  The >0 value points must be validated before saving the map.  This is 
+	//done by simply checking if those points are sittable by mercs, and that you can plot a path from 
+	//these points to each other.  These values can only be set by the editor : mapinfo tab
+	INT16 sNorthGridNo;
 	INT16 sEastGridNo;
 	INT16 sSouthGridNo;
 	INT16 sWestGridNo;
@@ -33,14 +55,15 @@ typedef struct
 	INT16 sCenterGridNo;
 	INT16 sIsolatedGridNo;
 	INT8 bPadding[83];	//I'm sure lots of map info will be added
-}MAPCREATE_STRUCT; //99 bytes
+}_OLD_MAPCREATE_STRUCT; //99 bytes
+
 
 extern MAPCREATE_STRUCT gMapInformation;
 
 void SaveMapInformation( HWFILE fp );
-void LoadMapInformation( INT8 **hBuffer );
+void LoadMapInformation( INT8 **hBuffer, FLOAT dMajorMapVersion );
 void ValidateAndUpdateMapVersionIfNecessary();
-BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo );
+BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo );
 
 extern BOOLEAN gfWorldLoaded;
 

@@ -124,7 +124,7 @@ void ProcessTilesetNamesForBPP(void);
 BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos );
 
 
-INT8 IsHiddenTileMarkerThere( INT16 sGridNo );
+INT8 IsHiddenTileMarkerThere( INT32 sGridNo );
 extern void SetInterfaceHeightLevel( );
 extern void GetRootName( STR8 pDestStr, const STR8 pSrcStr );
 
@@ -656,7 +656,7 @@ void DestroyTileSurfaces( )
 
 void CompileWorldTerrainIDs( void )
 {
-	INT16						sGridNo;
+	INT32 sGridNo;
 	INT16						sTempGridNo;
 	LEVELNODE	*			pNode;
 	TILE_ELEMENT *	pTileElement;
@@ -704,7 +704,7 @@ void CompileWorldTerrainIDs( void )
 	}
 }
 
-void CompileTileMovementCosts( UINT16 usGridNo )
+void CompileTileMovementCosts( INT32 usGridNo )
 {
 	UINT8						ubTerrainID;
 	TILE_ELEMENT		TileElem;
@@ -1393,7 +1393,7 @@ void CompileTileMovementCosts( UINT16 usGridNo )
 
 #define LOCAL_RADIUS 4
 
-void RecompileLocalMovementCosts( INT16 sCentreGridNo )
+void RecompileLocalMovementCosts( INT32 sCentreGridNo )
 {
 	INT16		usGridNo;
 	INT16		sGridX, sGridY;
@@ -1435,7 +1435,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 }
 
 
-void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
+void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius )
 {
 	INT16		usGridNo;
 	INT16		sGridX, sGridY;
@@ -1489,7 +1489,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 	}
 }
 
-void AddTileToRecompileArea( INT16 sGridNo )
+void AddTileToRecompileArea( INT32 sGridNo )
 {
 	INT16	sCheckGridNo;
 	INT16	sCheckX;
@@ -1568,7 +1568,7 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 	}
 }
 
-void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
+void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 {
 	INT8		bDirLoop;		
 	INT16		sUp, sDown, sLeft, sRight;
@@ -1615,7 +1615,7 @@ void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
 // GLOBAL WORLD MANIPULATION FUNCTIONS
 void CompileWorldMovementCosts( )
 {
-	UINT16					usGridNo;
+	INT32 usGridNo;
 
 	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
 
@@ -3598,7 +3598,7 @@ void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoad
 }
 
 
-void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
+void AddWireFrame( INT32 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 {
 	LEVELNODE			*pTopmost, *pTopmostTail;
 
@@ -3625,7 +3625,7 @@ void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 }
 
 
-UINT16 GetWireframeGraphicNumToUseForWall( INT16 sGridNo, STRUCTURE *pStructure )
+UINT16 GetWireframeGraphicNumToUseForWall( INT32 sGridNo, STRUCTURE *pStructure )
 {
 	LEVELNODE     *pNode = NULL;
 	UINT8					ubWallOrientation;
@@ -3697,7 +3697,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 {
 	INT32					cnt;
 	STRUCTURE		 *pStructure;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	UINT8					ubWallOrientation;
 	INT8					bHiddenVal;
 	INT8					bNumWallsSameGridNo;
@@ -3903,7 +3903,7 @@ void RemoveWorldWireFrameTiles( )
 }
 
 
-void RemoveWireFrameTiles( INT16 sGridNo )
+void RemoveWireFrameTiles( INT32 sGridNo )
 {
 	LEVELNODE			*pTopmost, *pNewTopmost;
 	TILE_ELEMENT *	pTileElement;
@@ -3931,7 +3931,7 @@ void RemoveWireFrameTiles( INT16 sGridNo )
 
 
  
-INT8 IsHiddenTileMarkerThere( INT16 sGridNo )
+INT8 IsHiddenTileMarkerThere( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 

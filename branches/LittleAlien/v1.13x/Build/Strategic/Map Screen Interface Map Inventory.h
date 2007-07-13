@@ -48,7 +48,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr );
 // the current inventory item
 extern INT32 iCurrentlyHighLightedItem;
 extern BOOLEAN fFlashHighLightInventoryItemOnradarMap;
-extern INT16 sObjectSourceGridNo;
+extern INT32 sObjectSourceGridNo;
 extern WORLDITEM *pInventoryPoolList;
 extern INT32 iCurrentInventoryPoolPage;
 extern BOOLEAN fMapInventoryItemCompatable[ ];

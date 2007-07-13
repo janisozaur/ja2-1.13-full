@@ -1784,7 +1784,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 		if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '0') && ( InputEvent.usKeyState & ALT_DOWN ))
 		{
 			INT32 i = 0;
-			INT16	sGridNo;
+			INT32 sGridNo;
 			INT32 iTime = GetJA2Clock( );
 			UINT8	ubLevel;
 
@@ -2543,7 +2543,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 				{
-					UINT16 usGridNo;
+					INT32 usGridNo;
 
 					//Get the gridno the cursor is at
 					GetMouseMapPos( &usGridNo );

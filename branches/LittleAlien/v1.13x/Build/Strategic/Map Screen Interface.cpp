@@ -1484,7 +1484,7 @@ void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
 {
 	// just drop the stuff in the current sector
 	INT32 iCounter = 0;
-  INT16 sGridNo, sTempGridNo;
+  INT32 sGridNo, sTempGridNo;
 
 	if( Menptr[ uiMercId ].sSectorX != gWorldSectorX || Menptr[ uiMercId ].sSectorY != gWorldSectorY || Menptr[ uiMercId ].bSectorZ != gbWorldSectorZ )
 	{

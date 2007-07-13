@@ -19,7 +19,7 @@
 struct WORLDITEM
 {
 	BOOLEAN				fExists;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	UINT8					ubLevel;
 	OBJECTTYPE		o;
 	UINT16				usFlags;
@@ -39,7 +39,7 @@ struct WORLDITEM
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;
 
-INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible );
+INT32 AddItemToWorld( INT32 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible );
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
@@ -59,7 +59,7 @@ extern UINT32 guiNumWorldBombs;
 
 extern INT32 AddBombToWorld( INT32 iItemIndex );
 extern void FindPanicBombsAndTriggers( void );
-extern INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel);
+extern INT32 FindWorldItemForBombInGridNo( INT32 sGridNo, INT8 bLevel);
 
 void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems );
 

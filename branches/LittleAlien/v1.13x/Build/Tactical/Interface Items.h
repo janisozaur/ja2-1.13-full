@@ -39,7 +39,7 @@ typedef struct
 
 
 // Itempickup stuff
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
+BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT32 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
 void RenderItemPickupMenu( );
 void RemoveItemPickupMenu( );
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );
@@ -128,8 +128,8 @@ void DrawItemFreeCursor( );
 void DrawItemTileCursor( );
 void HideItemTileCursor( );
 void InitItemInterface( );
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos );
-BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
+BOOLEAN ItemCursorInLobRange( INT32 usMapPos );
+BOOLEAN	 HandleItemPointerClick( INT32 usMapPos );
 UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
 UINT16 GetTileGraphicForItem( INVTYPE *pItem );
 BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );

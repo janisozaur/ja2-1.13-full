@@ -104,7 +104,7 @@ INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32
  return(iPercentBetter);
 }
 
-void AICenterXY( INT16 sGridNo, FLOAT * pdX, FLOAT * pdY )
+void AICenterXY( INT32 sGridNo, FLOAT * pdX, FLOAT * pdY )
 {
 	INT16		sXPos, sYPos;
 
@@ -505,7 +505,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 }
 
 
-UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT16 sGridNo )
+UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT32 sGridNo )
 {
 	UINT8	ubLoop, ubCount, ubWhoIsThere;
 	INT16	sTempGridNo;
@@ -537,7 +537,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
 	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
-	INT16	sGridNo, sBestCover = NOWHERE;
+	INT32 sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
 	INT32	iThreatRange, iClosestThreatRange = 1500;
 //	INT16 sClosestThreatGridno = NOWHERE;
@@ -1102,7 +1102,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16 sBestSpot = NOWHERE;
 	UINT32 uiLoop;
 	INT32 iThreatRange,iClosestThreatRange = 1500, iSpotClosestThreatRange;
@@ -1390,7 +1390,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 
 INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 {
-	INT16 sGridNo,sClosestLand = NOWHERE,sPathCost,sShortestPath = 1000;
+	INT32 sGridNo,sClosestLand = NOWHERE,sPathCost,sShortestPath = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
 
@@ -1499,7 +1499,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 {
-	INT16 sGridNo, sClosestSpot = NOWHERE, sPathCost;
+	INT32 sGridNo, sClosestSpot = NOWHERE, sPathCost;
 	INT32	iSpotValue, iBestSpotValue = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
@@ -1638,7 +1638,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	INT32					iSearchRange;
 	INT16					sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT16					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
 	ITEM_POOL *		pItemPool;
@@ -1983,7 +1983,7 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	INT16		sClosestDoor = NOWHERE;
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		iDist, iClosestDist = 10;
 
 	iSearchRange = 5;
@@ -2021,7 +2021,7 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	return( sClosestDoor );
 }
 
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
+INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode )
 {
 	INT32			iLoop;
 	INT16			*psEdgepointArray;
@@ -2067,7 +2067,7 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 	return( sClosestSpot );
 }
 
-INT16 FindNearestEdgePoint( INT16 sGridNo )
+INT16 FindNearestEdgePoint( INT32 sGridNo )
 {
 	INT16			sGridX, sGridY;
 	INT16			sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
@@ -2147,7 +2147,7 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16 sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT8	bDirection, bClosestDirection;
 	INT32 iPathCost, iClosestPathCost = 1000;
 
@@ -2229,7 +2229,7 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	return( sClosestSpot );
 }
 
-INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo )
+INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT32 sDestGridNo )
 {
 	// the first thing to do is restore the soldier's gridno from the X and Y
 	// values
@@ -2252,7 +2252,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16 sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT32 iDistance, iClosestDistance = 9999;
 	UINT8	ubRoom;
 
@@ -2306,7 +2306,7 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16		sGridNo, sClosestSpot = NOWHERE;
+	INT32 sGridNo, sClosestSpot = NOWHERE;
 	INT32		iDistance, iClosestDistance = 9999;
 	STRUCTURE * pStructure;
 
@@ -2365,7 +2365,7 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 
 INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16 sBestSpot = NOWHERE;
 	INT32 iSearchRange = 4;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
@@ -2562,7 +2562,7 @@ INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction )
 
 INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp )
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT32 iSearchRange = 20;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
@@ -2658,7 +2658,7 @@ BOOLEAN CanClimbFromHere (SOLDIERTYPE * pSoldier, BOOLEAN fUp )
 	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
-	INT16 sGridNo=NOWHERE;
+	INT32 sGridNo=NOWHERE;
 	
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
@@ -2757,7 +2757,7 @@ extern BUILDING gBuildings[ MAX_BUILDINGS ];
 extern UINT8 gubNumberOfBuildings;
 
 
-INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubSearchRadius )
+INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubSearchRadius )
 {
 	INT32 iPercentBetter;
 //	INT16 sTrueGridNo;
@@ -2780,7 +2780,7 @@ INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubS
 
 }
 
-INT8 FindDirectionForClimbing( INT16 sGridNo )
+INT8 FindDirectionForClimbing( INT32 sGridNo )
 {
 	UINT16 usBuildingID;
 	UINT16 usClimbSpotIndex;

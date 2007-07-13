@@ -35,9 +35,9 @@ extern UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIO
 
 #define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) ) 
 
-void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
-void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
-void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos );
+void ConvertGridNoToXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
+void ConvertGridNoToCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
+void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 
 
 // GRID NO MANIPULATION FUNCTIONS
@@ -70,16 +70,16 @@ void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX
 void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY );
 void FloatFromScreenToCellCoordinates( FLOAT dScreenX, FLOAT dScreenY, FLOAT *pdCellX, FLOAT *pdCellY );
 
-BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo );
-BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo );
-BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection );
+BOOLEAN GridNoOnVisibleWorldTile( INT32 sGridNo );
+BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT32 sGridNo );
+BOOLEAN GridNoOnEdgeOfMap( INT32 sGridNo, INT8 * pbDirection );
 
 BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos );
 
 BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY);
 
-INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
-INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
+INT32 GetRangeFromGridNoDiff( INT32 sGridNo1, INT32 sGridNo2 );
+INT32 GetRangeInCellCoordsFromGridNoDiff( INT32 sGridNo1, INT32 sGridNo2 );
 
 BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
 BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRect, INT16 *sXRel, INT16 *sRelY );
@@ -89,8 +89,8 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 SpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
 INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 );
-BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
-BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
+BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
+BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 	
 INT16 QuickestDirection(INT16 origin, INT16 dest);
 INT16 ExtQuickestDirection(INT16 origin, INT16 dest);
@@ -102,9 +102,9 @@ INT16 CenterX( INT16 sGridno );
 // Returns the (center ) cell coordinates in Y
 INT16 CenterY( INT16 sGridno );
 
-INT16 MapX( INT16 sGridNo );
-INT16 MapY( INT16 sGridNo );
-BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
+INT16 MapX( INT32 sGridNo );
+INT16 MapY( INT32 sGridNo );
+BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo();

@@ -316,7 +316,7 @@ void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pus
 	Assert( *psArray );
 }
 
-void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo, 
+void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT32 sGridNo, 
 																	 INT16 **psArray1, UINT16 *pusMiddleIndex1, UINT16 *pusArraySize1,
 																	 INT16 **psArray2, UINT16 *pusMiddleIndex2, UINT16 *pusArraySize2 )
 {
@@ -435,7 +435,7 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 void ClassifyEdgepoints()
 {
 	SOLDIERTYPE Soldier;
-	INT16 sGridNo = -1;
+	INT32 sGridNo = -1;
 
 	// WDS - Clean up inventory handling
 //	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
@@ -491,7 +491,7 @@ void ClassifyEdgepoints()
 void GenerateMapEdgepoints()
 {
 	INT32 i=-1;
-	INT16 sGridNo=-1;
+	INT32 sGridNo=-1;
 	INT16 sVGridNo[400];
 	UINT8 gubSaveNPCAPBudget=0;
 	UINT8 gubSaveNPCDistLimit=0;
@@ -1221,7 +1221,7 @@ INT16 gsReservedIndex	= 0;
 
 void BeginMapEdgepointSearch()
 {
-	INT16 sGridNo;
+	INT32 sGridNo;
 
 	//Create the reserved list
 	AssertMsg( !gpReservedGridNos, "Attempting to BeginMapEdgepointSearch that has already been created." );
@@ -1255,7 +1255,7 @@ void EndMapEdgepointSearch()
 
 
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
-INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
+INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
@@ -1382,7 +1382,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	return NOWHERE ;
 }
 
-INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
+INT16 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode )
 {
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
@@ -1514,7 +1514,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT8		bDirection;
 
 	pSoldier->sGridNo = sEdgepoint;
@@ -1583,7 +1583,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
+	INT32 sGridNo;
 
 	pSoldier->sGridNo = sEdgepoint1;
 
@@ -1630,7 +1630,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 	return FALSE;
 }
 
-UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
+UINT8 CalcMapEdgepointClassInsertionCode( INT32 sGridNo )
 {
 	SOLDIERTYPE Soldier;
 	INT32			iLoop;

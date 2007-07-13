@@ -266,8 +266,8 @@ BOOLEAN SaveWorld( const STR8 puiFilename );
 BOOLEAN LoadWorld( const STR8 puiFilename );
 
 void CompileWorldMovementCosts( );
-void RecompileLocalMovementCosts( INT16 sCentreGridNo );
-void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
+void RecompileLocalMovementCosts( INT32 sCentreGridNo );
+void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius );
 
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID );
@@ -277,10 +277,10 @@ void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoad
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 void RemoveWorldWireFrameTiles( );
-void RemoveWireFrameTiles( INT16 sGridNo );
+void RemoveWireFrameTiles( INT32 sGridNo );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
+LEVELNODE *GetAnimProfileFlags( UINT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 void ReloadTileset( UINT8 ubID );
 
@@ -292,7 +292,7 @@ BOOLEAN GridNoIndoors( UINT32 iMapIndex );
 BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
 
 void RecompileLocalMovementCostsInAreaWithFlags( void );
-void AddTileToRecompileArea( INT16 sGridNo );
+void AddTileToRecompileArea( INT32 sGridNo );
 
 
 #endif

@@ -164,7 +164,7 @@ typedef struct TAG_STRUCTURE
 {
 	struct TAG_STRUCTURE *				pPrev;
 	struct TAG_STRUCTURE *				pNext;
-	INT16													sGridNo;
+	INT32 sGridNo;
 	UINT16												usStructureID;
 	DB_STRUCTURE_REF *						pDBStructureRef;
 	union

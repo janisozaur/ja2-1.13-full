@@ -539,7 +539,7 @@ void CheckForDisabledForGiveItem( )
 {
 	INT16			sDist;
 	INT16			sDistVisible;
-	INT16			sDestGridNo;
+	INT32 sDestGridNo;
 	INT8			bDestLevel;
 	INT32			cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -2882,7 +2882,7 @@ void MergeMessageBoxCallBack( UINT8 ubExitValue )
 void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
 	FACETYPE *pFace;
-	INT16			sGridNo;
+	INT32 sGridNo;
 
 	if ( pSoldier == NULL )
 	{

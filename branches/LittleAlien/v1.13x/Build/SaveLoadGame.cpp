@@ -277,7 +277,7 @@ typedef struct
 
 	BOOLEAN fDisableMapInterfaceDueToBattle;
 
-	INT16		sBoxerGridNo[ NUM_BOXERS ];
+	INT32 sBoxerGridNo[ NUM_BOXERS ];
 	UINT8		ubBoxerID[ NUM_BOXERS ];
 	BOOLEAN	fBoxerFought[ NUM_BOXERS ];
 

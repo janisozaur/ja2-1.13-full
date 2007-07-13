@@ -91,7 +91,7 @@ typedef struct
 {
 	UINT16	 usSoldierID;
 	UINT32	 uiUniqueId;
-	INT16		 sDestGridNo;
+	INT32 sDestGridNo;
 	UINT16		usMovementAnim;		 
 
 } EV_S_GETNEWPATH;
@@ -133,7 +133,7 @@ typedef struct
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
+	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
 } EV_S_BEGINFIREWEAPON;
@@ -143,7 +143,7 @@ typedef struct
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
+	INT32 sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
 } EV_S_FIREWEAPON;
@@ -183,7 +183,7 @@ typedef struct
 
 typedef struct
 {
-	INT16		sGridNo;
+	INT32 sGridNo;
 	UINT16	usStructureID;
 	BOOLEAN	fBlowWindowSouth;
 	BOOLEAN	fLargeForce;
@@ -197,7 +197,7 @@ typedef struct
 typedef struct
 {
 	UINT8 ubNoiseMaker;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	UINT8 bLevel;
 	UINT8 ubTerrType;
 	UINT8 ubVolume;
@@ -210,7 +210,7 @@ typedef struct
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT8		bDirection;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT16		sXPos;
 	INT16		sYPos;
 
@@ -223,7 +223,7 @@ typedef struct
 	UINT8		usSoldierID;
 	UINT32  uiUniqueId;
 	UINT8		usPathDataSize;			// Size of Path
-	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
+	INT32 sAtGridNo;					// Owner merc is at this tile when sending packet
 	UINT8		usCurrentPathIndex;	// Index the owner of the merc is at when sending packet
 	UINT8		usPathData[ NETWORK_PATH_DATA_SIZE ];		// make define  // Next X tile to go to
 	UINT8		ubNewState;			// new movment Anim
@@ -238,7 +238,7 @@ typedef struct
 {
 	UINT8		usSoldierID;	
 	UINT32  uiUniqueId;
-	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
+	INT32 sAtGridNo;					// Owner merc is at this tile when sending packet
 	INT8		bActionPoints;			// current A.P. value
 	INT8		bBreath;						// current breath value
 } EV_S_UPDATENETWORKSOLDIER;

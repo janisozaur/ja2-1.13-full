@@ -353,7 +353,7 @@ void PrepareSchedulesForEditorExit()
 	PostSchedules();
 }
 
-void LoadSchedules( INT8 **hBuffer )
+void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
 {
 	SCHEDULENODE *pSchedule = NULL;
 	SCHEDULENODE temp;
@@ -369,7 +369,24 @@ void LoadSchedules( INT8 **hBuffer )
 	gubScheduleID = 1;
 	while( ubNum )
 	{
-		LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
+		if(dMajorMapVersion < 7.00)
+		{
+			int i;
+			_OLD_SCHEDULENODE oldtemp;
+			LOADDATA( &oldtemp, *hBuffer, sizeof( _OLD_SCHEDULENODE ) );
+			for(i=0; i<MAX_SCHEDULE_ACTIONS; i++)
+			{
+				temp.usTime[i] = oldtemp.usTime[i];
+				temp.usData1[i] = oldtemp.usData1[i];
+				temp.usData2[i] = oldtemp.usData2[i];
+				temp.ubAction[i] = oldtemp.ubAction[i];
+			}
+			temp.ubScheduleID = oldtemp.ubScheduleID;
+			temp.ubSoldierID = oldtemp.ubSoldierID;
+			temp.usFlags = oldtemp.usFlags;
+		}
+		else
+			LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
 
 		if( gpScheduleList )
 		{
@@ -604,11 +621,11 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 	return fSorted;
 }
 
-BOOLEAN BumpAnyExistingMerc( INT16 sGridNo ) 
+BOOLEAN BumpAnyExistingMerc( INT32 sGridNo ) 
 {
 	UINT8						ubID;
 	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,
-	INT16						sNewGridNo;
+	INT32 sNewGridNo;
 	UINT8						ubDir;
 	INT16						sCellX, sCellY;
 
@@ -647,7 +664,8 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 
 void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 {
-	INT16						sCellX, sCellY, sGridNo;
+	INT16						sCellX, sCellY;
+	INT32 sGridNo;
 	INT8						bDirection;
 	SOLDIERTYPE *		pSoldier;
 
@@ -1040,12 +1058,12 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridNo )
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT32 usGridNo )
 {
-	INT16			sDoorGridNo;
+	INT32			sDoorGridNo;
 	DOOR *		pDoor;
 
-	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) usGridNo );
+	sDoorGridNo = FindDoorAtGridNoOrAdjacent( usGridNo );
 	if (sDoorGridNo != NOWHERE)
 	{
 		switch( ubScheduleAction )
@@ -1293,7 +1311,7 @@ void ReconnectSchedules( void )
 }
 */
 
-UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
+UINT32 FindSleepSpot( SCHEDULENODE * pSchedule )
 {
 	INT8			bLoop;
 
@@ -1323,10 +1341,10 @@ void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
 }
 
 
-void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
+void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT32 usSleepSpot )
 {
 	SOLDIERTYPE *			pSoldier2;
-	UINT16						usSleepSpot2, usNewSleepSpot;
+	UINT32						usSleepSpot2, usNewSleepSpot;
 	UINT32						uiLoop;
 	SCHEDULENODE *		pSchedule;
 	UINT8							ubDirection;
@@ -1344,7 +1362,7 @@ void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
 				if ( usSleepSpot2 == usSleepSpot )
 				{
 					// conflict!
-					//usNewSleepSpot = (INT16) FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
+					//usNewSleepSpot = FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
 					usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier2, usSleepSpot2, 3, &ubDirection );
 					if ( usNewSleepSpot != NOWHERE )
 					{

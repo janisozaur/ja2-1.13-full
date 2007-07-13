@@ -222,13 +222,13 @@ void ResetAimCubeAI( );
 void SetupAimCubeAI( );
 void IncrementAimCubeUI( );
 void EndAimCubeUI( );
-void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight );
+void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight );
 BOOLEAN AimCubeUIClick( );
 
 void ResetPhysicsTrajectoryUI( );
 void SetupPhysicsTrajectoryUI( );
 void EndPhysicsTrajectoryUI( );
-void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT );
+void BeginPhysicsTrajectoryUI( INT32 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT );
 
 void InitPlayerUIBar( BOOLEAN fInterrupt );
 
@@ -236,7 +236,7 @@ void ToggleTacticalPanels( );
 
 void DirtyTopMessage( );
 
-void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
+void BeginMultiPurposeLocator( INT32 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
 void HandleMultiPurposeLocator( );
 void RenderTopmostMultiPurposeLocator( );
 

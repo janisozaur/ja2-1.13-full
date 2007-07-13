@@ -89,7 +89,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse );
 
 void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier );
 BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier );
-BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo );
+BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT32 sNewGridNo );
 BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier );
 
 extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
@@ -119,7 +119,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	INT8					ubCurrentHeight;
 	UINT16				usOldAnimState;
 	static UINT32 uiJumpAddress = NO_JUMP;
-	INT16					sNewGridNo;
+	INT32 sNewGridNo;
 	INT16					sX, sY;
 	BOOLEAN				fStop;
 	UINT32				cnt;
@@ -555,10 +555,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				LightSpritePower(pSoldier->iMuzFlash, TRUE);
 				// Get one move forward
 				{
-					UINT16	usNewGridNo;
+						INT32	usNewGridNo;
 					INT16 sXPos, sYPos;
 
-					usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
+						usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 					ConvertGridNoToCenterCellXY( usNewGridNo, &sXPos, &sYPos );
 					LightSpritePosition( pSoldier->iMuzFlash, (INT16)(sXPos/CELL_X_SIZE), (INT16)(sYPos/CELL_Y_SIZE));
 
@@ -602,8 +602,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// CODE: End Hop Fence
 				// MOVE TO FORCASTED GRIDNO
-				sX = CenterX( pSoldier->sForcastGridno );
-				sY = CenterY( pSoldier->sForcastGridno );
+					sX = CenterX( pSoldier->sForcastGridNo );
+					sY = CenterY( pSoldier->sForcastGridNo );
 
 				EVENT_InternalSetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, FALSE, FALSE );
 				EVENT_SetSoldierDirection( pSoldier,  gTwoCDirection[ pSoldier->bDirection ] );
@@ -681,7 +681,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// TRY FORWARDS...
 					// FIRST GRIDNO
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+						sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
 					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 					{
@@ -866,9 +866,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				//CODE: BEGINHOPFENCE
 				// MOVE TWO FACGIN GRIDNOS
-				sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-				sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-				pSoldier->sForcastGridno = sNewGridNo;
+					sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+					sNewGridNo = NewGridNo( sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+					pSoldier->sForcastGridNo = sNewGridNo;
 				break;
 
 
@@ -1034,10 +1034,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// Set new gridno
 				{
-					INT16 sTempGridNo, sNewX, sNewY;
+						INT32 sTempGridNo;
+						INT16 sNewX, sNewY;
 
 					//Get Next GridNo;
-					sTempGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->bDirection ) ) );
+						sTempGridNo = NewGridNo( pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->bDirection ) ) );
 
 					// Get center XY
 					ConvertGridNoToCenterCellXY( sTempGridNo, &sNewX, &sNewY );
@@ -2653,12 +2654,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Flyback hit - do blood!
 				// PLace in existing tile and one back...
 				{
-					INT16 sNewGridNo;
+						INT32 sNewGridNo;
 
 					InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
 					// Move forward one gridno....
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ pSoldier->bDirection ] ) ) );
+						sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ pSoldier->bDirection ] ) ) );
 
 					InternalDropBlood( sNewGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
@@ -2891,7 +2892,7 @@ BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 }
 
 
-void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	INT8	bBuddyIndex[ 20 ] = { -1 };
@@ -2998,7 +2999,7 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 }
 
 
-void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT32 sGridNo, INT8 bLevel )
 {	
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -3436,7 +3437,7 @@ BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCor
 
 void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 {
-	INT16					sNewGridNo;
+	INT32					sNewGridNo;
 
 	if ( pSoldier->bLife < OKLIFE )
 	{
@@ -3520,7 +3521,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 					fForceDirection = TRUE;
 				}
 
-				sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bTestDirection ] ) );
+				sNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bTestDirection ] ) );
 
 				if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, bTestDirection, FLYBACK_HIT ) )
 				{
@@ -3752,7 +3753,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo )
+BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT32 sNewGridNo )
 {
 	if ( pSoldier->bLevel == 0 )
 	{
@@ -3856,7 +3857,7 @@ if ( pSoldier->bLife >= OKLIFE )
 				fForceDirection = TRUE;
 			}
 
-			sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( bTestDirection ) ) );
+			sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( bTestDirection ) ) );
 
 			if ( NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) && OKHeightDest( pSoldier, sNewGridNo ) )
 			{
@@ -3875,7 +3876,7 @@ if ( pSoldier->bLife >= OKLIFE )
 
 #endif
 
-BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
+BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
 {
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"OKFallDirection");
 	STRUCTURE_FILE_REF *	pStructureFileRef;
@@ -3905,7 +3906,7 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 	if ( pStructureFileRef )
 	{
 		UINT16		usStructureID;
-		INT16			sTestGridNo;
+		INT32			sTestGridNo;
 
 		// must make sure that structure data can be added in the direction of the target
 
@@ -4061,10 +4062,10 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 
 void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 {
-	INT16 sNewGridNo;
+	INT32 sNewGridNo;
 
 	// Move forward one gridno....
-	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+	sNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
 	// ATE: Make sure that the gridno is unoccupied!
 	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) )

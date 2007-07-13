@@ -125,7 +125,7 @@ enum
 };
 BOOLEAN HandleDefiniteUnloadingOfWorld( UINT8 ubUnloadCode );
 
-extern INT16		gsRobotGridNo;
+extern INT32		gsRobotGridNo;
 extern BOOLEAN	gfUndergroundTacticalTraversal;
 
 extern MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES];
@@ -147,7 +147,7 @@ UINT8			gubAdjacentJumpCode;
 UINT32		guiAdjacentTraverseTime;
 UINT8			gubTacticalDirection;
 INT16			gsAdditionalData;
-UINT16		gusDestExitGridNo;
+INT32		gusDestExitGridNo;
 
 BOOLEAN		fUsingEdgePointsForStrategicEntry = FALSE;
 BOOLEAN		gfInvalidTraversal = FALSE;
@@ -180,8 +180,8 @@ BOOLEAN fSamSiteFoundOrig[ MAX_NUMBER_OF_SAMS ];
 INT16 pSamList[ MAX_NUMBER_OF_SAMS ];
 
 // girdno's of control terminal of sam site
-INT16 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
-INT16 pSamGridNoBList[ MAX_NUMBER_OF_SAMS ];
+INT32 pSamGridNoAList[ MAX_NUMBER_OF_SAMS ];
+INT32 pSamGridNoBList[ MAX_NUMBER_OF_SAMS ];
 
 // ATE: Update this w/ graphic used 
 // Use 3 if / orientation, 4 if \ orientation
@@ -293,8 +293,8 @@ BOOLEAN ReadInStrategicMapSectorTownNames(STR fileName);
 void DoneFadeOutAdjacentSector( void );
 void DoneFadeOutExitGridSector( void );
 
-INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection );
-INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts );
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection );
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts );
 
 void HandleQuestCodeOnSectorExit( INT16 sOldSectorX, INT16 sOldSectorY, INT8 bOldSectorZ );
 void HandlePotentialMoraleHitForSkimmingSectors( GROUP *pGroup );
@@ -378,8 +378,8 @@ typedef struct
 	INT16	samSectorY;
 	BOOLEAN samHidden;
 	INT8	samOrientation;
-	INT16	samGridNoA;
-	INT16	samGridNoB;
+	INT32	samGridNoA;
+	INT32	samGridNoB;
 } samInfo;
 
 typedef struct
@@ -1914,7 +1914,7 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 				INT16 sWarpWorldX;
 				INT16 sWarpWorldY;
 				INT8  bWarpWorldZ;
-				INT16 sWarpGridNo;
+				INT32 sWarpGridNo;
 
 				if ( GetWarpOutOfMineCodes( &sWarpWorldX, &sWarpWorldY, &bWarpWorldZ, &sWarpGridNo ) && gbWorldSectorZ >= 2 )
 				{
@@ -2696,7 +2696,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				//a missing part of the map or possible fault in strategic movement costs, traversal logic, etc.
 				CHAR16 szEntry[10];
 				CHAR16 szSector[10];
-				INT16 sGridNo;
+				INT32 sGridNo;
 				GetLoadedSectorString( szSector );
 				if( gMapInformation.sNorthGridNo != -1 )
 				{
@@ -3207,7 +3207,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	if( pGroup->fPlayer )
 	{	//For player groups, update the soldier information
 		PLAYERGROUP *curr;
-		INT16				sGridNo;
+		INT32 sGridNo;
 		UINT8				ubNum = 0;
 
 		curr = pGroup->pPlayerList;
@@ -3483,7 +3483,8 @@ void AllMercsHaveWalkedOffSector( )
 		// 2 ) We can move right away so do it!
 		if( guiAdjacentTraverseTime <= 5 )
 		{ 
-			INT16 sScreenX, sScreenY, sNewGridNo;
+			INT16 sScreenX, sScreenY;
+			INT32 sNewGridNo;
 			UINT32	 sWorldX, sWorldY;
 
 			//Case 2:
@@ -3627,7 +3628,8 @@ void SetupTacticalTraversalInformation()
 	SOLDIERTYPE *pSoldier;
 	PLAYERGROUP *pPlayer;
 	UINT32 sWorldX, sWorldY;
-	INT16 sScreenX, sScreenY, sNewGridNo;
+	INT16 sScreenX, sScreenY;
+	INT32 sNewGridNo;
 
 	Assert( gpAdjacentGroup );
 	pPlayer = gpAdjacentGroup->pPlayerList;
@@ -3829,7 +3831,7 @@ void DoneFadeOutAdjacentSector( )
 		//For player groups, update the soldier information
 		PLAYERGROUP *curr;
 		UINT32 uiAttempts;
-		INT16				sGridNo, sOldGridNo;
+		INT32 sGridNo, sOldGridNo;
 		UINT8				ubNum = 0;
 		INT16 sWorldX, sWorldY;
 		curr = gpAdjacentGroup->pPlayerList;
@@ -3895,7 +3897,7 @@ BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UIN
 	INT16 sWorldX;
 	INT16 sWorldY;
 	UINT8	ubDirection;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	INT16	sAPs;
 
 	// if the soldiers gridno is not NOWHERE
@@ -4578,9 +4580,9 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 }
 
 
-INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
+INT32 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
+	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
 	UINT8			bAdjustedDist = 0;
 	UINT32		cnt;
@@ -4632,7 +4634,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = (sGridNo - WORLD_COLS - 1);
 					}
 				}
 				else
@@ -4641,7 +4643,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = (sGridNo + WORLD_COLS + 1);
 					}
 				}
 
@@ -4695,7 +4697,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = (sGridNo - WORLD_COLS - 1);
 					}
 				}
 				else
@@ -4704,7 +4706,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = (sGridNo + WORLD_COLS + 1);
 					}
 				}
 
@@ -4758,7 +4760,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = (sGridNo + WORLD_COLS - 1);
 					}
 				}
 				else
@@ -4767,7 +4769,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = (sGridNo - WORLD_COLS + 1);
 					}
 				}
 
@@ -4821,7 +4823,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = (sGridNo + WORLD_COLS - 1);
 					}
 				}
 				else
@@ -4830,7 +4832,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = (sGridNo - WORLD_COLS + 1);
 					}
 				}
 
@@ -4846,9 +4848,9 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 }
 
 
-void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection )
+void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT32 sEndGridNo, UINT8 ubTacticalDirection )
 {
-	INT16 sNewGridNo, sTempGridNo;
+	INT32 sNewGridNo, sTempGridNo;
 	INT32	iLoop;
 
 	// will this path segment actually take us to our desired destination in the first place?
@@ -4881,7 +4883,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	{
 		case EAST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sNewGridNo = NewGridNo( sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -4893,7 +4895,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sTempGridNo = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -4910,7 +4912,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case WEST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sNewGridNo = NewGridNo( sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -4922,7 +4924,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sTempGridNo = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -4938,7 +4940,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case NORTH:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
+			sNewGridNo = NewGridNo( sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -4950,7 +4952,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
+			sTempGridNo = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -4967,7 +4969,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case SOUTH:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sNewGridNo = NewGridNo( sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -4979,7 +4981,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sTempGridNo = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -4996,9 +4998,9 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	}
 }
 
-INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
+INT32 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UINT32 *puiNumAttempts )
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
+	INT32 sGridNo, sStartGridNo, sOldGridNo;
 	INT8			bOdd = 1, bOdd2 = 1;
 	UINT8			bAdjustedDist = 0;
 	UINT32		cnt;
@@ -5011,9 +5013,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 		// we find that is just on the start of visible map...
 		case INSERTION_CODE_WEST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -5054,7 +5056,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = (sGridNo - WORLD_COLS - 1);
 					}
 				}
 				else
@@ -5063,7 +5065,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = (sGridNo + WORLD_COLS + 1);
 					}
 				}
 
@@ -5074,9 +5076,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_EAST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the right!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -5117,7 +5119,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS - 1);
+						sGridNo = (sGridNo - WORLD_COLS - 1);
 					}
 				}
 				else
@@ -5126,7 +5128,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS + 1);
+						sGridNo = (sGridNo + WORLD_COLS + 1);
 					}
 				}
 
@@ -5137,9 +5139,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_NORTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the up!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -5180,7 +5182,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = (sGridNo - WORLD_COLS + 1);
 					}
 				}
 				else
@@ -5189,7 +5191,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = (sGridNo + WORLD_COLS - 1);
 					}
 				}
 
@@ -5200,9 +5202,9 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 		case INSERTION_CODE_SOUTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo				 = pSoldier->sGridNo;
+			sStartGridNo	 = pSoldier->sGridNo;
+			sOldGridNo     = pSoldier->sGridNo;
 
 			// Move directly to the down!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -5243,7 +5245,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo - WORLD_COLS + 1);
+						sGridNo = (sGridNo - WORLD_COLS + 1);
 					}
 				}
 				else
@@ -5252,7 +5254,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 
 					for ( cnt = 0; cnt < bAdjustedDist; cnt++ )
 					{
-						sGridNo = (INT16)(sGridNo + WORLD_COLS - 1);
+						sGridNo = (sGridNo + WORLD_COLS - 1);
 					}
 				}
 

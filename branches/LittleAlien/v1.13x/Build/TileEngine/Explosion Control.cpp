@@ -74,14 +74,14 @@
 // MODULE FOR EXPLOSIONS
 
 // Spreads the effects of explosions...
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
+BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
 
 // Flashbang effect on soldier
 UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOLEAN fInBuilding);
 
 extern INT8  gbSAMGraphicList[ MAX_NUMBER_OF_SAMS ];
 extern  void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
-extern void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation );
+extern void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation );
 void FatigueCharacter( SOLDIERTYPE *pSoldier );
 
 #define NO_ALT_SOUND -1
@@ -193,7 +193,7 @@ UINT32      guiNumExplosions = 0;
 INT32 GetFreeExplosion( void );
 void RecountExplosions( void );
 void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion );
-void HandleBuldingDestruction( INT16 sGridNo, UINT8 ubOwner );
+void HandleBuldingDestruction( INT32 sGridNo, UINT8 ubOwner );
 
 
 INT32 GetFreeExplosion( void )
@@ -230,7 +230,7 @@ void RecountExplosions( void )
 
 
 // GENERATE EXPLOSION
-void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel )
+void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel )
 {
 	EXPLOSION_PARAMS ExpParams ;
 
@@ -298,7 +298,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 
 
-void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel )
+void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, INT8 bLevel )
 {
 	InternalIgniteExplosion( ubOwner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel );
 }
@@ -312,7 +312,7 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 	INT16   sX;
 	INT16   sY;
 	INT16   sZ;
-	INT16   sGridNo;
+	INT32 sGridNo;
 	UINT16  usItem;
 	INT32   iIndex;
 	INT8   bLevel;
@@ -367,7 +367,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	INT16   sX;
 	INT16   sY;
 	INT16   sZ;
-	INT16   sGridNo;
+	INT32 sGridNo;
 	UINT16  usItem;
 	UINT8   ubTerrainType;
 	INT8   bLevel;
@@ -565,7 +565,7 @@ void HandleFencePartnerCheck( INT16 sStructGridNo )
 
 
 
-BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNextCurrent,  INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
+BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNextCurrent,  INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	INT16 sX, sY;
 	STRUCTURE  *pBase, *pWallStruct, *pAttached, *pAttachedBase;
@@ -1210,7 +1210,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 STRUCTURE *gStruct;
 
 // Lesh: somewhere here once I got CTD when militia stepped on mine in cambria sam
-void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
+void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	STRUCTURE   * pCurrent, *pNextCurrent, *pStructure;
 	STRUCTURE *   pBaseStructure;
@@ -1584,7 +1584,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 	return( fRecompileMovementCosts );
 }
 
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
+BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
 	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
 	UINT8 ubPerson;
@@ -2238,7 +2238,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 
 
-void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectID  )
+void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectID  )
 {
 	INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
 	INT32  uiTempRange, ubBranchRange;
@@ -2487,7 +2487,7 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 	}
 }
 
-void TogglePressureActionItemsInGridNo( INT16 sGridNo )
+void TogglePressureActionItemsInGridNo( INT32 sGridNo )
 {
 	UINT32    uiWorldBombIndex;
 	OBJECTTYPE * pObj;
@@ -2555,7 +2555,7 @@ BOOLEAN HookerInRoom( UINT8 ubRoom )
 	return( FALSE );
 }
 
-void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
+void PerformItemAction( INT32 sGridNo, OBJECTTYPE * pObj )
 {
 	STRUCTURE * pStructure;
 
@@ -2976,7 +2976,7 @@ void HandleExplosionQueue( void )
 	UINT32    uiIndex;
 	UINT32    uiWorldBombIndex;
 	UINT32    uiCurrentTime;
-	INT16     sGridNo;
+	INT32 sGridNo;
 	OBJECTTYPE * pObj;
 	UINT8         ubLevel;
 
@@ -3216,7 +3216,7 @@ void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger )
 	}
 }
 
-BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel )
+BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT32 sGridNo, BOOLEAN fAllBombs, INT8 bLevel )
 {
 	UINT32    uiWorldBombIndex;
 	UINT32    uiTimeStamp;
@@ -3283,7 +3283,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 	return( fFoundMine );
 }
 
-void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
+void ActivateSwitchInGridNo( UINT8 ubID, INT32 sGridNo )
 {
 	UINT32    uiWorldBombIndex;
 	OBJECTTYPE * pObj;
@@ -3455,7 +3455,7 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 
 
 
-BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo )
+BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT32 sGridNo )
 {
 	INT32 cnt;
 	INT16 sSectorNo;
@@ -3485,7 +3485,7 @@ BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 
 }
 
 
-void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage )
+void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT32 sGridNo, UINT8 ubDamage )
 {
 	INT16 sSectorNo;
 
@@ -3579,7 +3579,7 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 // loop through civ team and find
 // anybody who is an NPC and
 // see if they get angry
-void HandleBuldingDestruction( INT16 sGridNo, UINT8 ubOwner )
+void HandleBuldingDestruction( INT32 sGridNo, UINT8 ubOwner )
 {
 	SOLDIERTYPE *  pSoldier;
 	UINT8      cnt;

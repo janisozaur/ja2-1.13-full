@@ -39,7 +39,27 @@ using namespace std;
 typedef struct
 {
 	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
-	UINT16 usStartingGridNo;				//Where the placement position is.
+	INT32 usStartingGridNo;				//Where the placement position is.
+	INT8 bTeam;											//The team this individual is part of.
+	INT8 bRelativeAttributeLevel;		
+	INT8 bRelativeEquipmentLevel;		
+	INT8 bDirection;								//1 of 8 values (always mandatory)
+	INT8 bOrders;										
+	INT8 bAttitude;									
+	INT8 bBodyType;									//up to 128 body types, -1 means random
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
+	INT8 bPatrolCnt;
+	BOOLEAN fOnRoof;
+	UINT8	ubSoldierClass;							//army, administrator, elite
+	UINT8 ubCivilianGroup;
+	BOOLEAN fPriorityExistance;			//These slots are used first
+	BOOLEAN fHasKeys;
+	INT8 PADDINGSLOTS[ 14 ];
+} BASIC_SOLDIERCREATE_STRUCT;
+typedef struct
+{
+	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
+	INT16 usStartingGridNo;				//Where the placement position is.
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		
@@ -55,7 +75,7 @@ typedef struct
 	BOOLEAN fPriorityExistance;			//These slots are used first
 	BOOLEAN fHasKeys;
 	INT8 PADDINGSLOTS[ 14 ];
-} BASIC_SOLDIERCREATE_STRUCT; //50 bytes
+} _OLD_BASIC_SOLDIERCREATE_STRUCT; //50 bytes
 
 // WDS - Clean up inventory handling
 //typedef struct

@@ -48,7 +48,7 @@ UINT16 SearchForWallType( UINT32 iMapIndex )
 			if( abs(x) == abs(sRadius) || abs(y) == abs(sRadius) )
 			{
 				sOffset = y * WORLD_COLS + x;
-				if( !GridNoOnVisibleWorldTile( (INT16)(iMapIndex + sOffset) ) )
+				if( !GridNoOnVisibleWorldTile( iMapIndex + sOffset ) )
 				{
 					continue;
 				}
@@ -89,7 +89,7 @@ UINT16 SearchForRoofType( UINT32 iMapIndex )
 			if( abs(x) == abs(sRadius) || abs(y) == abs(sRadius) )
 			{
 				sOffset = y * WORLD_COLS + x;
-				if( !GridNoOnVisibleWorldTile( (INT16)(iMapIndex + sOffset) ) )
+				if( !GridNoOnVisibleWorldTile( iMapIndex + sOffset ) )
 				{
 					continue;
 				}
@@ -451,7 +451,7 @@ UINT16 GetWallClass( LEVELNODE *pWall )
 	return 0xffff;
 }
 
-UINT16 GetVerticalWallClass( UINT16 iMapIndex )
+UINT16 GetVerticalWallClass( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )
@@ -459,7 +459,7 @@ UINT16 GetVerticalWallClass( UINT16 iMapIndex )
 	return 0xffff;
 }
 
-UINT16 GetHorizontalWallClass( UINT16 iMapIndex )
+UINT16 GetHorizontalWallClass( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )

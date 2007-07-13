@@ -184,7 +184,7 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 	}
 }
 
-BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
+BOOLEAN CheckNPCAt( UINT8 ubNPC, INT32 sGridNo )
 {
 	SOLDIERTYPE * pNPC;
 
@@ -226,7 +226,7 @@ BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
 {
 	SOLDIERTYPE *		pNPC;
-	INT16						sGridNo;
+	INT32 sGridNo;
 
 	// no merc nearby?
 	if ( pMerc == NULL )
@@ -257,7 +257,7 @@ INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
-	INT16						sGridNo;
+	INT32 sGridNo;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
 	if (!pNPC)
@@ -288,7 +288,7 @@ INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
-	INT16						sGridNo;
+	INT32 sGridNo;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
 	if (!pNPC)
@@ -435,7 +435,7 @@ INT8 NumMalesPresent( UINT8 ubProfileID )
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
-	INT16						sGridNo;
+	INT32 sGridNo;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
 	if (!pNPC)
@@ -469,7 +469,7 @@ BOOLEAN FemalePresent( UINT8 ubProfileID )
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
-	INT16						sGridNo;
+	INT32 sGridNo;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
 	if (!pNPC)
@@ -546,7 +546,7 @@ BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 
 
 }
 
-BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
+BOOLEAN AIMMercWithin( INT32 sGridNo, INT16 sDistance )
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pSoldier;

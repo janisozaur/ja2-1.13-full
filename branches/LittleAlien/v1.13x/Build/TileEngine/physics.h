@@ -38,7 +38,7 @@ typedef struct
 	vector_3		CollisionVelocity;
 	real				CollisionElasticity;
 
-	INT16				sGridNo;
+	INT32 sGridNo;
 	INT32				iID;
 	LEVELNODE		*pNode;
 	LEVELNODE   *pShadow;
@@ -84,11 +84,11 @@ BOOLEAN		RemoveObjectSlot( INT32 iObject );
 void RemoveAllPhysicsObjects( );
 
 
-FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHeight, real dForce, OBJECTTYPE *pItem, INT16 *psGridNo );
+FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubHeight, real dForce, OBJECTTYPE *pItem, INT32 *psGridNo );
 
-BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, INT16 *psFinalGridNo, BOOLEAN fArmed, INT8 *pbLevel, BOOLEAN fFromUI );
+BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, INT32 sGridNo, UINT8 ubLevel, INT16 sEndZ, INT32 *psFinalGridNo, BOOLEAN fArmed, INT8 *pbLevel, BOOLEAN fFromUI );
 
-void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sZPos, OBJECTTYPE *pItem, INT8 bMissBy, UINT8 ubActionCode, UINT32 uiActionData );
+void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubLevel, INT16 sZPos, OBJECTTYPE *pItem, INT8 bMissBy, UINT8 ubActionCode, UINT32 uiActionData );
 
 
 

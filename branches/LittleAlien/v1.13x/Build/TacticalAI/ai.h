@@ -146,9 +146,9 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
 INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale);
 void CallAvailableEnemiesTo(INT16 sGridno);
-void CallAvailableKingpinMenTo( INT16 sGridNo );
+void CallAvailableKingpinMenTo( INT32 sGridNo );
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
-void CallEldinTo( INT16 sGridNo );
+void CallEldinTo( INT32 sGridNo );
 void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce);
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
 
@@ -177,7 +177,7 @@ INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno);
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
 INT16 FindClosestDoor( SOLDIERTYPE * pSoldier );
 INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
-INT16 FindNearestEdgePoint( INT16 sGridNo );
+INT16 FindNearestEdgePoint( INT32 sGridNo );
 
 //Kris:  Added these as I need specific searches on certain sides.
 enum
@@ -187,7 +187,7 @@ enum
 	SOUTH_EDGEPOINT_SEARCH,
 	WEST_EDGEPOINT_SEARCH,
 };
-INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode );
+INT16 FindNearestEdgepointOnSpecifiedEdge( INT32 sGridNo, INT8 bEdgeCode );
 
 INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier);
 BOOLEAN FindRoofClimbingPoints( SOLDIERTYPE * pSoldier, INT16 sDesiredSpot );

@@ -108,7 +108,7 @@ extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *p
 
 //Isometric utilities (for overhead stuff only)
 BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
+void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
 void CopyOverheadDBShadetablesFromTileset( );
 
 void RenderOverheadOverlays();
@@ -240,7 +240,7 @@ BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, 
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
@@ -289,7 +289,7 @@ BOOLEAN GetClosestMercInOverheadMap( INT16 sSweetGridNo, SOLDIERTYPE **ppReturne
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	INT16		sGridNo;
+	INT32 sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
@@ -1625,7 +1625,7 @@ void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 
 
 
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
+void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
 {
 	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
 	*psScreenX /= 5;

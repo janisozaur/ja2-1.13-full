@@ -52,18 +52,18 @@ INT8 ChanceToGetThrough( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT d
 INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT16 usHandItem, INT16 sHitBy, BOOLEAN fBuckshot, BOOLEAN fFake );
 
 INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier, UINT8 ubSightLimit, INT8 bAware );
-INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubSightLimit, INT8 bAware );
-INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubSightLimit, INT8 bAware );
-INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware );
-INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware );
+INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, UINT8 ubSightLimit, INT8 bAware );
+INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubSightLimit, INT8 bAware );
+INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware );
+INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware );
 UINT8 SoldierToSoldierChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier );
 UINT8 SoldierToSoldierBodyPartChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier, UINT8 ubAimLocation );
 UINT8 AISoldierToSoldierChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier );
-UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel );
-UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID );
-INT32 SoldierToLocationVisibleDistance( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware );
-INT16 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT16 sEndGridNo );
-INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );
+UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel );
+UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID );
+INT32 SoldierToLocationVisibleDistance( SOLDIERTYPE * pStartSoldier, INT32 sGridNo, UINT8 ubTileSightLimit, INT8 bAware );
+INT32 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT32 sEndGridNo );
+INT32 LocationToLocationLineOfSightTest( INT32 sStartGridNo, INT8 bStartLevel, INT32 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );
 
 BOOLEAN CalculateSoldierZPos( SOLDIERTYPE * pSoldier, UINT8 ubPosType, FLOAT * pdZPos );
 

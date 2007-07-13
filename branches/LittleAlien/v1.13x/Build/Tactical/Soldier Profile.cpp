@@ -174,7 +174,7 @@ INT16	gsTerroristSector[NUM_TERRORISTS][NUM_TERRORIST_POSSIBLE_LOCATIONS][2] =
 	}
 };
 
-INT16 gsRobotGridNo;
+INT32 gsRobotGridNo;
 
 #define NUM_ASSASSINS 6
 
@@ -282,6 +282,10 @@ BOOLEAN LoadMercProfiles(void)
 			FileClose( fptr );
 			return(FALSE);
 		}
+		//<SB> convert old MERCPROFILESTRUCT to new MERCPROFILESTRUCT
+		gMercProfiles[uiLoop].sGridNo = gMercProfiles[uiLoop]._old_sGridNo;
+		gMercProfiles[uiLoop].sPreCombatGridNo = gMercProfiles[uiLoop]._old_sPreCombatGridNo;
+		//</SB>
 		gMercProfiles[ uiLoop ].CopyOldInventoryToNew();
 
 		//if the Dialogue exists for the merc, allow the merc to be hired
@@ -879,7 +883,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT32									cnt;
-	INT16										sOldGridNo;
+	INT32										sOldGridNo;
 
 	UINT8										ubOldID;
 	UINT32									uiOldUniqueId;
@@ -1509,7 +1513,7 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 }
 
 
-BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
   UINT8 ubRoomInfo;
 

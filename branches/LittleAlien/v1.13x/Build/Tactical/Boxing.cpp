@@ -26,7 +26,7 @@
 	#include "message.h"
 #endif
 
-INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
+INT32	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
 UINT8 gubBoxerID[ NUM_BOXERS ] = { NOBODY, NOBODY, NOBODY };
 BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };
 BOOLEAN	gfLastBoxingMatchWonByPlayer = FALSE;

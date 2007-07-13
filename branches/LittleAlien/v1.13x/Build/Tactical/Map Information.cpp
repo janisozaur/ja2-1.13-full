@@ -28,10 +28,12 @@
 //Don't mess with this value, unless you want to force update all maps in the game!
 // Lesh: fix the sad situation with the different major map versions
 //#ifdef RUSSIAN
-	//#define MAJOR_MAP_VERSION		6.00
+//	#define MAJOR_MAP_VERSION		6.00
 //#else
-	#define MAJOR_MAP_VERSION		5.00
+//	#define MAJOR_MAP_VERSION		5.00
 //#endif
+// SB: new map version, with map dimensions added
+#define MAJOR_MAP_VERSION		7.00
 
 FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
 
@@ -81,7 +83,7 @@ Version 11 -- Kris -- obsolete May 2, 1998
 
 //EntryPoints can't be placed on the top two gridnos in a map.  So all we do in this case
 //is return the closest gridno.  Returns TRUE if the mapindex changes.
-BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
+BOOLEAN ValidateEntryPointGridNo( INT32 *sGridNo )
 {
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
@@ -125,9 +127,31 @@ void SaveMapInformation( HWFILE fp )
 	FileWrite( fp, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesWritten );
 }
 
-void LoadMapInformation( INT8 **hBuffer )
+//SB: old to new mapcreatestruct update routine
+void UpdateOldMapCreateStruct(MAPCREATE_STRUCT * pNew, _OLD_MAPCREATE_STRUCT * pOld)
 {
-	LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
+	pNew->sNorthGridNo = pOld->sNorthGridNo;
+	pNew->sEastGridNo = pOld->sEastGridNo;
+	pNew->sSouthGridNo = pOld->sSouthGridNo;
+	pNew->sWestGridNo = pOld->sWestGridNo;
+	pNew->ubNumIndividuals = pOld->ubNumIndividuals;
+	pNew->ubMapVersion = pOld->ubMapVersion;
+	pNew->ubRestrictedScrollID = pOld->ubRestrictedScrollID;
+	pNew->ubEditorSmoothingType = pOld->ubEditorSmoothingType;
+	pNew->sCenterGridNo = pOld->sCenterGridNo;
+	pNew->sIsolatedGridNo = pOld->sIsolatedGridNo;
+}
+
+void LoadMapInformation( INT8 **hBuffer, FLOAT dMajorMapVersion )
+{
+	if(dMajorMapVersion<7.0)
+	{
+		_OLD_MAPCREATE_STRUCT OldMapInformation;
+		LOADDATA( &OldMapInformation, *hBuffer, sizeof( _OLD_MAPCREATE_STRUCT ) );
+		UpdateOldMapCreateStruct(&gMapInformation, &OldMapInformation);
+	}
+	else
+		LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
 	//FileRead( hfile, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesRead);
 
 	// ATE: OK, do some handling here for basement level scroll restrictions

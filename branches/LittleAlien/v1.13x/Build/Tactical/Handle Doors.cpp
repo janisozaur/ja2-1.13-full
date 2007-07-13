@@ -39,9 +39,9 @@
 BOOLEAN gfSetPerceivedDoorState = FALSE;
 
 
-BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations );
+BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT32 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations );
 
-void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations )
+void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fNoAnimations )
 {
 	STRUCTURE *			pStructure;
 	DOOR_STATUS *		pDoorStatus;
@@ -442,7 +442,7 @@ void ProcessImplicationsOfPCMessingWithDoor( SOLDIERTYPE * pSoldier )
 
 
 
-BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *pStructure )
+BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT32 sGridNo, STRUCTURE *pStructure )
 {
 	BOOLEAN fHandleDoor = FALSE;
 	INT16		sAPCost = 0, sBPCost = 0;
@@ -953,7 +953,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 }
 
 
-BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations  )
+BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT32 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations  )
 {
 	LEVELNODE	* pShadowNode;
 	LEVELNODE * pNode;
@@ -1034,7 +1034,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 	if ( !(pStructure->fFlags & STRUCTURE_OPEN) )
 	{
 		//ATE, the last parameter is the perceived value, I dont know what it is so could you please add the value?
-		//ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPercievedOpen )
+		//ModifyDoorStatus( INT32 sGridNo, BOOLEAN fOpen, BOOLEAN fPercievedOpen )
 		if ( gfSetPerceivedDoorState )
 		{
 			ModifyDoorStatus( sGridNo, TRUE, TRUE );
@@ -1158,7 +1158,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 	else
 	{
 		//ATE, the last parameter is the perceived value, I dont know what it is so could you please add the value?
-		//ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen )
+		//ModifyDoorStatus( INT32 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen )
 
 		if ( gfSetPerceivedDoorState )
 		{
@@ -1293,7 +1293,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 	return( fDoAnimation );
 }
 
-void SetDoorString( INT16 sGridNo )
+void SetDoorString( INT32 sGridNo )
 {
 	DOOR		*pDoor;
 	DOOR_STATUS *		pDoorStatus;

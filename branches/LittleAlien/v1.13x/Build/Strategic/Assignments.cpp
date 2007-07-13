@@ -9786,7 +9786,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints)
 {
-	INT16 sGridNoA = 0, sGridNoB = 0;
+	INT32 sGridNoA = 0, sGridNoB = 0;
 	
 	// is the soldier in the sector as the SAM
 	if( SoldierInSameSectorAsSAM( pSoldier ) == FALSE )

@@ -34,20 +34,20 @@
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
 UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
-UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
-UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
+UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
 UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT8 ubCursor );
 UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor );
 UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
 UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
 UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
 UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
 UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
 
-extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel );
+extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT32 sTargetGridNo , INT8 bLevel );
 
 
 BOOLEAN gfCannotGetThrough = FALSE;
@@ -127,7 +127,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 	UINT32						uiCursorFlags;
 	BOOLEAN						fShowAPs = FALSE;
 	BOOLEAN						fRecalc = FALSE;
-	INT16							sTargetGridNo = usMapPos;
+	INT32 sTargetGridNo = usMapPos;
 	UINT8							ubCursorID=0;
 	UINT8							ubItemCursor;
 
@@ -1329,7 +1329,7 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 }
 
 
-UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	INT16							sAPCosts;
 	INT8							bFutureAim;
@@ -1457,7 +1457,7 @@ UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivat
 }
 
 
-UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	INT16							sAPCosts;
 	INT8							bFutureAim;
@@ -1583,7 +1583,7 @@ UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivat
 	}
 }
 
-UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_MERCSFORAID );
@@ -1606,13 +1606,13 @@ UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated
 	}
 }
 
-UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubItemCursor )
+UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubItemCursor )
 {
 	return( ACTION_TOSS_UICURSOR );
 }
 
 
-UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubItemCursor )
+UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubItemCursor )
 {
 	INT16 sFinalGridNo;
 	static BOOLEAN fBadCTGH = FALSE;
@@ -1755,7 +1755,7 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 }
 
 
-UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_WIREFENCE );
@@ -1770,7 +1770,7 @@ UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCu
 }
 
 
-UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REPAIR );
@@ -1784,7 +1784,7 @@ UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 	return( BAD_REPAIR_UICURSOR );
 }
 
-UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REFUEL );
@@ -1799,7 +1799,7 @@ UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 }
 
 
-UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_JAR );
@@ -1814,7 +1814,7 @@ UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFla
 }
 
 
-UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT32 uiCursorFlags )
 {
 	STRUCTURE					*pStructure;
   INT16							sIntTileGridNo;
@@ -1840,7 +1840,7 @@ UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 }
 
 
-UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	BOOLEAN						fEnoughPoints = TRUE;
 
@@ -1869,7 +1869,7 @@ UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActiva
 }
 
 
-UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT32 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	BOOLEAN						fEnoughPoints = TRUE;
 
@@ -1922,7 +1922,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
 	UINT16				usInHand;
 	UINT8					ubItemCursor;
-	UINT16					usGridNo;
+	INT32 usGridNo;
 
 	// LOOK IN GUY'S HAND TO CHECK LOCATION
 	usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -2026,7 +2026,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	INT8					bFutureAim;
 	UINT8					ubCursor;
 	SOLDIERTYPE				*pTSoldier;
-	INT16					sGridNo;
+	INT32 sGridNo;
 	INT8					bTargetLevel;
 
 

@@ -1036,7 +1036,7 @@ void SelectNextUnplacedUnit()
 void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason )
 {
 	INT32 i;
-	INT16 sGridNo;
+	INT32 sGridNo;
 	BOOLEAN fInvalidArea = FALSE;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{ //if we have a selected merc, move him to the new closest map edgepoint of his side.
@@ -1147,7 +1147,7 @@ void SetCursorMerc( INT8 bPlacementID )
 
 void PutDownMercPiece( INT32 iPlacement )
 {
-	INT16 sGridNo, sCellX, sCellY;
+	INT32 sGridNo, sCellX, sCellY;
 	UINT8 ubDirection;
 
 	SOLDIERTYPE *pSoldier;

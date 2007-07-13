@@ -23,7 +23,7 @@ typedef struct
 	INT16												sX;										// World X ( optional )
 	INT16												sY;										// World Y ( optional )
 	INT16												sZ;										// World Z ( optional )
-	INT16												sGridNo;							// World GridNo
+	INT32 sGridNo;							// World GridNo
 	BOOLEAN											fLocate;
 	INT8												bLevel;								// World level
 	UINT8												ubUnsed[1];
@@ -98,26 +98,26 @@ extern	EXPLOSIONTYPE								gExplosionData[ NUM_EXPLOSION_SLOTS ];
 extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
-void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel );
-void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel );
+void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, INT8 bLevel );
+void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT32 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel );
 
 
 void GenerateExplosion( EXPLOSION_PARAMS *pExpParams );
 
-void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
+void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
 
 void AddBombToQueue( UINT32 uiWorldBombIndex, UINT32 uiTimeStamp );
 
 void DecayBombTimers( void );
 void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency );
-BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
-void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo );
+BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT32 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
+void ActivateSwitchInGridNo( UINT8 ubID, INT32 sGridNo );
 void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger );
 
 void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame );
 void RemoveExplosionData( INT32 iIndex );
 
-void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage );
+void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT32 sGridNo, UINT8 ubDamage );
 void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  );
 
 

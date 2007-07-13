@@ -4657,7 +4657,7 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 		*/
 	/*
 		UINT32	uiLoop;
-		INT16		sGridNo;
+		INT32 sGridNo;
 		UINT32	uiStartTime, uiEndTime;
 
 		if (GetMouseMapPos( &sGridNo ))
@@ -5724,7 +5724,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 }
 
 
-BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, UINT8 ubOwner )
+BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT32 sGridNo, INT8 bLevel, INT32 iDamage, UINT8 ubOwner )
 {
 	BOOLEAN			fBlowsUp;
 

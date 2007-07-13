@@ -394,7 +394,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 }
 
 // JA2Gold: added
-BOOLEAN CloseEnoughForGrenadeToss( INT16 sGridNo, INT16 sGridNo2 )
+BOOLEAN CloseEnoughForGrenadeToss( INT32 sGridNo, INT32 sGridNo2 )
 {
 	INT16	sTempGridNo;
 	INT8	bDirection;
@@ -464,7 +464,7 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 	UINT8 ubLoop, ubLoop2;
 	INT32 iAttackValue;
 	INT32 iHitRate, iThreatValue, iTotalThreatValue,iOppThreatValue[MAXMERCS];
-	INT16 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
+	INT32 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
 	INT8	bFriendLevel[MAXMERCS], bOpponentLevel[MAXMERCS];
 	INT32 iEstDamage;
 	UINT8 ubFriendCnt = 0,ubOpponentCnt = 0, ubOpponentID[MAXMERCS];
@@ -1544,7 +1544,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 	}
 }
 
-UINT8 NumMercsCloseTo( INT16 sGridNo, UINT8 ubMaxDist )
+UINT8 NumMercsCloseTo( INT32 sGridNo, UINT8 ubMaxDist )
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;

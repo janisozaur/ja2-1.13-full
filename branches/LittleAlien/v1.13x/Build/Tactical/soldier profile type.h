@@ -309,7 +309,7 @@ public:
 	INT8		bAgility;			// agility (speed) value
 
 	BOOLEAN	fUseProfileInsertionInfo;				// Set to various flags, ( contained in TacticalSave.h )
-	INT16		sGridNo;												// The Gridno the NPC was in before leaving the sector
+	INT32 sGridNo;												// The Gridno the NPC was in before leaving the sector
 	UINT8		ubQuoteActionID;
 	INT8		bMechanical;
 

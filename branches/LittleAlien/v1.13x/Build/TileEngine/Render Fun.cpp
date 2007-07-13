@@ -40,7 +40,7 @@ void ShutdownRoomDatabase( )
 
 }
 
-void SetTileRoomNum( INT16 sGridNo, UINT8 ubRoomNum )
+void SetTileRoomNum( INT32 sGridNo, UINT8 ubRoomNum )
 {
 	// Add to global room list
 	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
@@ -60,7 +60,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 }
 
-BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InARoom( UINT32 sGridNo, UINT8 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -75,7 +75,7 @@ BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 }
 
 
-BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InAHiddenRoom( UINT32 sGridNo, UINT8 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -109,7 +109,7 @@ void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 }
 
 
-void SetGridNoRevealedFlag( UINT16 sGridNo )
+void SetGridNoRevealedFlag( UINT32 sGridNo )
 {
 //	UINT32 cnt;
 //  ITEM_POOL					*pItemPool;
@@ -194,7 +194,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 	STRUCTURE					*pStructure, *pBase;
 	UINT8							ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
-	INT16							sGridNo;
+	INT32 sGridNo;
 	UINT16						usIndex;
 	BOOLEAN						fChanged = FALSE;
 
@@ -257,7 +257,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 }
 
 
-void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
+void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	UINT32 cnt;
   ITEM_POOL					*pItemPool;

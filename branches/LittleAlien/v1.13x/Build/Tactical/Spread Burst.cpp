@@ -32,7 +32,7 @@ void ResetBurstLocations( )
 }
 
 
-void InternalAccumulateBurstLocation( INT16 sGridNo )
+void InternalAccumulateBurstLocation( INT32 sGridNo )
 {
 	INT32 cnt;
 	if ( gbNumBurstLocations < MAX_BURST_LOCATIONS )
@@ -57,7 +57,7 @@ void InternalAccumulateBurstLocation( INT16 sGridNo )
 
 //Madd: to add a bit more usefulness to spread fire, I'm making it so that 
 //it will automatically latch onto enemies within iSearchRange tiles of the mouse drag.
-void AccumulateBurstLocation( INT16 sGridNo )
+void AccumulateBurstLocation( INT32 sGridNo )
 {
 	SOLDIERTYPE* pTarget;
 	int iSearchRange = 2; // number of tiles beside the mouse drag to look at
@@ -229,7 +229,7 @@ extern HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile );
 void RenderAccumulatedBurstLocations( )
 {
 	INT32			cnt;
-	INT16			sGridNo;
+	INT32 sGridNo;
 	HVOBJECT	hVObject;
 
 	if ( !gfBeginBurstSpreadTracking )

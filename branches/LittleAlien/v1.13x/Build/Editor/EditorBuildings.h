@@ -27,11 +27,11 @@ void KillBuilding( UINT32 iMapIndex );
 typedef struct BUILDINGLAYOUTNODE
 {
 	struct BUILDINGLAYOUTNODE *next;
-	INT16 sGridNo;
+	INT32 sGridNo;
 }BUILDINGLAYOUTNODE;
 
 extern BUILDINGLAYOUTNODE *gpBuildingLayoutList;
-extern INT16 gsBuildingLayoutAnchorGridNo;
+extern INT32 gsBuildingLayoutAnchorGridNo;
 
 //The first step is copying a building.  After that, it either must be pasted or moved.
 void CopyBuilding( INT32 iMapIndex );

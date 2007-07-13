@@ -716,7 +716,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// Do explosive graphic....
 		{
 			ANITILE_PARAMS	AniParams;
-			INT16						sGridNo;
+			INT32 sGridNo;
 			INT16						sX, sY, sZ;
 
 			// Get gridno
@@ -1077,7 +1077,7 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 
 
 // fOpen is True if the door is open, false if it is closed
-BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
+BOOLEAN ModifyDoorStatus( INT32 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 {
 	UINT8	ubCnt;
 	STRUCTURE * pStructure;
@@ -1203,7 +1203,7 @@ void TrashDoorStatusArray( )
 }
 
 
-BOOLEAN	IsDoorOpen( INT16 sGridNo )
+BOOLEAN	IsDoorOpen( INT32 sGridNo )
 {
 	UINT8	ubCnt;
 	STRUCTURE * pStructure;
@@ -1253,7 +1253,7 @@ BOOLEAN	IsDoorOpen( INT16 sGridNo )
 }
 
 // Returns a doors status value, NULL if not found
-DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
+DOOR_STATUS	*GetDoorStatus( INT32 sGridNo )
 {
 	UINT8	ubCnt;
 	STRUCTURE * pStructure;
@@ -1293,14 +1293,14 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 }
 
 
-BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
+BOOLEAN AllMercsLookForDoor( INT32 sGridNo, BOOLEAN fUpdateValue )
 {
 	INT32                    cnt, cnt2;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;	
 	DOOR_STATUS							 *pDoorStatus;
-	INT16											usNewGridNo;
+	INT32											usNewGridNo;
 
 	// Get door
 	pDoorStatus = GetDoorStatus( sGridNo );
@@ -1369,10 +1369,10 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 {
 	INT32                    cnt, cnt2;
 	INT16										 sDistVisible;	
-	INT16										 sGridNo;
+	INT32 sGridNo;
 	DOOR_STATUS							 *pDoorStatus;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	INT16										 usNewGridNo;
+	INT32										 usNewGridNo;
 
 
 
@@ -1443,7 +1443,7 @@ void SyncronizeDoorStatusToStructureData( DOOR_STATUS *pDoorStatus )
 {
 	STRUCTURE *pStructure, *pBaseStructure;
 	LEVELNODE * pNode;
-	INT16 sBaseGridNo				 = NOWHERE;
+	INT32 sBaseGridNo				 = NOWHERE;
 
 	// First look for a door structure here...
 	pStructure = FindStructure( pDoorStatus->sGridNo, STRUCTURE_ANYDOOR );
@@ -1525,7 +1525,7 @@ void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUse
 	LEVELNODE * pNode;
 	BOOLEAN		fWantToBeOpen  = FALSE;
 	BOOLEAN		fDifferent     = FALSE;
-	INT16 sBaseGridNo				 = NOWHERE;
+	INT32 sBaseGridNo				 = NOWHERE;
 
 
 	// OK, look at perceived status and adjust graphic
@@ -1733,7 +1733,7 @@ void InternalUpdateDoorsPerceivedValue( DOOR_STATUS *pDoorStatus )
 	}
 }
 
-BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo )
+BOOLEAN UpdateDoorStatusPerceivedValue( INT32 sGridNo )
 {
 	DOOR_STATUS	*pDoorStatus = NULL;
 	
@@ -1746,7 +1746,7 @@ BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo )
 }
 
 
-BOOLEAN	IsDoorPerceivedOpen( INT16 sGridNo )
+BOOLEAN	IsDoorPerceivedOpen( INT32 sGridNo )
 {
 	DOOR_STATUS	* pDoorStatus;
 	
@@ -1784,7 +1784,7 @@ BOOLEAN	InternalSetDoorPerceivedOpenStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fP
 }
 
 
-BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen )
+BOOLEAN	SetDoorPerceivedOpenStatus( INT32 sGridNo, BOOLEAN fPerceivedOpen )
 {
 	DOOR_STATUS	*pDoorStatus = NULL;
 	
@@ -1797,7 +1797,7 @@ BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen )
 }
 
 
-BOOLEAN	SetDoorOpenStatus( INT16 sGridNo, BOOLEAN fOpen )
+BOOLEAN	SetDoorOpenStatus( INT32 sGridNo, BOOLEAN fOpen )
 {
 	DOOR_STATUS * pDoorStatus;
 
@@ -2129,7 +2129,7 @@ void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded( )
 }
 
 
-void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded )
+void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded )
 {
 	UINT8		    ubLoop;
   UINT8       ubItem;
