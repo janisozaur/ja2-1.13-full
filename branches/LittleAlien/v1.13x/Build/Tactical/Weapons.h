@@ -326,8 +326,8 @@ extern void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowS
 extern INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, INT16 sHitBy, UINT8 * pubSpecial );
 extern BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo );
 extern void ShotMiss( UINT8 ubAttackerID, INT32 iBullet );
-extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
-extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
+extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
+extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);
 extern UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime);
 UINT32 CalcChanceToSteal(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);

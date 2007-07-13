@@ -1445,7 +1445,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 
 BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 {
-	INT16 sOldGridNo = 0;
+	INT32 sOldGridNo = 0;
 
 	// TEST IF IT'S VALID...
 	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )

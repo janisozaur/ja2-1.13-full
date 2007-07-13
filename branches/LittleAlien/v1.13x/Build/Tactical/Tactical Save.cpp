@@ -71,10 +71,10 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+		INT32		sRequiredGridNo;		// location for NPC req'd to say quote
 	};
 
-	UINT16	usGoToGridno;
+	INT32	usGoToGridNo;
 
 } TempNPCQuoteInfoSave;			
 
@@ -1340,7 +1340,7 @@ BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiNumberOfItems=0;
 	WORLDITEM *pWorldItems = NULL;
 	UINT32	cnt;
-  INT16   sNewGridNo;
+  INT32 sNewGridNo;
 
 	//Get the number of items from the file
 	if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
@@ -2251,7 +2251,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 			{
 				TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
 				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
-				TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
+				TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridNo;
 			}
 		}
 
@@ -2299,7 +2299,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		{
 			TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
-			TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
+			TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridNo;
 		}
 
 		//Seek to the correct spot in the file
@@ -2376,7 +2376,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	{
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags					= TempNpcQuote[ ubCnt ].usFlags;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridno;
+		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridNo		= TempNpcQuote[ ubCnt ].usGoToGridNo;
 	}
 
 	FileClose( hFile );	

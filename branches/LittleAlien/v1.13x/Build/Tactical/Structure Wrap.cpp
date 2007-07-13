@@ -19,7 +19,7 @@ extern BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ,
 
 
 
-BOOLEAN	IsFencePresentAtGridno( INT32 sGridNo )
+BOOLEAN	IsFencePresentAtGridNo( INT32 sGridNo )
 {
 	if ( FindStructure( sGridNo, STRUCTURE_ANYFENCE ) != NULL )
 	{
@@ -29,7 +29,7 @@ BOOLEAN	IsFencePresentAtGridno( INT32 sGridNo )
 	return( FALSE );
 }
 
-BOOLEAN	IsRoofPresentAtGridno( INT32 sGridNo )
+BOOLEAN	IsRoofPresentAtGridNo( INT32 sGridNo )
 {
 	if ( FindStructure( sGridNo, STRUCTURE_ROOF ) != NULL )
 	{
@@ -40,7 +40,7 @@ BOOLEAN	IsRoofPresentAtGridno( INT32 sGridNo )
 }
 
 
-BOOLEAN	IsJumpableFencePresentAtGridno( INT32 sGridNo )
+BOOLEAN	IsJumpableFencePresentAtGridNo( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 
@@ -62,7 +62,7 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT32 sGridNo )
 }
 
 
-BOOLEAN	IsDoorPresentAtGridno( INT32 sGridNo )
+BOOLEAN	IsDoorPresentAtGridNo( INT32 sGridNo )
 {
 	if ( FindStructure( sGridNo, STRUCTURE_ANYDOOR ) != NULL )
 	{
@@ -73,7 +73,7 @@ BOOLEAN	IsDoorPresentAtGridno( INT32 sGridNo )
 }
 
 
-BOOLEAN	IsTreePresentAtGridno( INT32 sGridNo )
+BOOLEAN	IsTreePresentAtGridNo( INT32 sGridNo )
 {
 	if ( FindStructure( sGridNo, STRUCTURE_TREE ) != NULL )
 	{
@@ -84,7 +84,7 @@ BOOLEAN	IsTreePresentAtGridno( INT32 sGridNo )
 }
 
 
-LEVELNODE *IsWallPresentAtGridno( INT32 sGridNo )
+LEVELNODE *IsWallPresentAtGridNo( INT32 sGridNo )
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE * pStructure;
@@ -99,7 +99,7 @@ LEVELNODE *IsWallPresentAtGridno( INT32 sGridNo )
 	return( pNode );
 }
 
-LEVELNODE	*GetWallLevelNodeOfSameOrientationAtGridno( INT32 sGridNo, INT8 ubOrientation )
+LEVELNODE	*GetWallLevelNodeOfSameOrientationAtGridNo( INT32 sGridNo, INT8 ubOrientation )
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE * pStructure;
@@ -121,7 +121,7 @@ LEVELNODE	*GetWallLevelNodeOfSameOrientationAtGridno( INT32 sGridNo, INT8 ubOrie
 }
 
 
-LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT32 sGridNo, INT8 ubOrientation, STRUCTURE **ppStructure )
+LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridNo( INT32 sGridNo, INT8 ubOrientation, STRUCTURE **ppStructure )
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE * pStructure, * pBaseStructure;
@@ -153,7 +153,7 @@ LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT32 sGridNo, IN
 BOOLEAN IsDoorVisibleAtGridNo( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
-	INT16				sNewGridNo;
+	INT32 sNewGridNo;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
 
@@ -207,7 +207,7 @@ BOOLEAN IsDoorVisibleAtGridNo( INT32 sGridNo )
 }
 
 
-BOOLEAN DoesGridnoContainHiddenStruct( INT32 sGridNo, BOOLEAN *pfVisible )
+BOOLEAN DoesGridNoContainHiddenStruct( INT32 sGridNo, BOOLEAN *pfVisible )
 {
 	// ATE: These are ignored now - always return false
 
@@ -497,11 +497,11 @@ BOOLEAN IsCutWireFenceAtGridNo( INT32 sGridNo )
 
 
 
-INT16 FindDoorAtGridNoOrAdjacent( INT32 sGridNo )
+INT32 FindDoorAtGridNoOrAdjacent( INT32 sGridNo )
 {
 	STRUCTURE * pStructure;
 	STRUCTURE * pBaseStructure;
-	INT16				sTestGridNo;
+	INT32				sTestGridNo;
 
 	sTestGridNo = sGridNo;
 	pStructure = FindStructure( sTestGridNo, STRUCTURE_ANYDOOR );

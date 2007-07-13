@@ -1518,7 +1518,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 	UINT8								ubVolume;
 	CHAR8								zBurstString[512];
 	UINT8								ubDirection;
-	INT16								sNewGridNo;
+	INT32 sNewGridNo;
 	UINT8								ubMerc;
 	BOOLEAN							fGonnaHit = FALSE;
 	UINT16							usExpGain = 0;
@@ -1918,7 +1918,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT32 sTargetGridNo )
 
 		// Direction to center of explosion
 		ubDirection = gOppositeDirection[ pSoldier->bDirection ];
-		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
+		sNewGridNo  = NewGridNo( pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
 		ubMerc = WhoIsThere2( sNewGridNo, pSoldier->bLevel );
@@ -3301,7 +3301,7 @@ void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 {
 	STRUCTURE *			pWallAndWindow;
 	DB_STRUCTURE *	pWallAndWindowInDB;
-	INT16						sShatterGridNo;
+	INT32						sShatterGridNo;
 	UINT16					usTileIndex;
 	ANITILE *			pNode;
 	ANITILE_PARAMS	AniParams;
@@ -3425,7 +3425,7 @@ void WindowHit( INT32 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 
 BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
-	 INT16								sRange;	
+	 INT32								sRange;	
 	 UINT16								usInHand;
 
 	 DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("InRange"));
@@ -3434,7 +3434,7 @@ BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	 if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_THROWING_KNIFE || (Item[usInHand].rocketlauncher && !Item[usInHand].singleshotrocketlauncher))
 	 {
 		 // Determine range
-		 sRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
+		 sRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
 		 if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
 		 {
@@ -3456,7 +3456,7 @@ BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 	 return( FALSE );
 }
 
-UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
   //SOLDIERTYPE *vicpSoldier;
 	SOLDIERTYPE * pTarget;
@@ -4102,7 +4102,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime
   return (iChance);
 }
 
-UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
 	UINT16	usTrueState;
 	UINT32	uiChance;
@@ -5455,7 +5455,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAimTi
 	}
 
 	// calculate actual range (in world units)
-	iRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
+	iRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
 	//NumMessage("ACTUAL RANGE = ",range);
 

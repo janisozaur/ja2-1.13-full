@@ -110,7 +110,7 @@ INT16   gsExitGUIAdditionalData;
 INT16   gsWarpWorldX;
 INT16   gsWarpWorldY;
 INT8    gbWarpWorldZ;
-INT16   gsWarpGridNo;
+INT32   gsWarpGridNo;
 
 
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct 
@@ -122,7 +122,7 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 	INT32 i;
 	SGPRect	aRect;
 	UINT16	usTextBoxWidth, usTextBoxHeight;
-	UINT16	usMapPos = 0;
+	INT32 usMapPos = 0;
 	INT8		bExitCode = -1;
 	BOOLEAN	OkExitCode;
 
