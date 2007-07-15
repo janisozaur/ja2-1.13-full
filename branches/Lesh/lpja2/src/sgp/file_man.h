@@ -43,30 +43,6 @@
 #define FILE_SEEK_FROM_END		0x02	// keep in sync with dbman.h
 #define FILE_SEEK_FROM_CURRENT	0x04	// keep in sync with dbman.h
 
-// GetFile file attributes
-#define FILE_IS_READONLY		1
-#define FILE_IS_DIRECTORY		2
-#define FILE_IS_HIDDEN			4
-#define FILE_IS_NORMAL			8
-#define FILE_IS_ARCHIVE			16
-#define FILE_IS_SYSTEM			32
-#define FILE_IS_TEMPORARY		64
-#define FILE_IS_COMPRESSED		128
-#define FILE_IS_OFFLINE			256
-
-
-
-//File Attributes settings
-#define FILE_ATTRIBUTES_ARCHIVE				FILE_ATTRIBUTE_ARCHIVE
-#define FILE_ATTRIBUTES_HIDDEN				FILE_ATTRIBUTE_HIDDEN
-#define FILE_ATTRIBUTES_NORMAL				FILE_ATTRIBUTE_NORMAL
-#define FILE_ATTRIBUTES_OFFLINE				FILE_ATTRIBUTE_OFFLINE
-#define FILE_ATTRIBUTES_READONLY			FILE_ATTRIBUTE_READONLY
-#define FILE_ATTRIBUTES_SYSTEM				FILE_ATTRIBUTE_SYSTEM
-#define FILE_ATTRIBUTES_TEMPORARY			FILE_ATTRIBUTE_TEMPORARY
-//#define FILE_ATTRIBUTES_DIRECTORY			FILE_ATTRIBUTE_DIRECTORY
-#define FILE_ATTRIBUTES_DIRECTORY			0x00000100
-
 // Snap, Kaiden: This define duplicates a standard MFC define
 // Added to resolve some intractable issue with MSVC6
 #define INVALID_FILE_ATTRIBUTES ((UINT32)-1)
@@ -148,12 +124,6 @@ typedef struct _GETFILESTRUCT_TAG {
 BOOLEAN GetFileFirst( CHAR8 * pSpec, GETFILESTRUCT *pGFStruct );
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct );
 void GetFileClose( GETFILESTRUCT *pGFStruct );
-
-//Added by Kris Morness
-BOOLEAN FileSetAttributes( STR filename, UINT32 uiNewAttribs );
-UINT32	FileGetAttributes( STR filename );
-
-BOOLEAN FileClearAttributes( STR strFilename );
 
 //returns true if at end of file, else false
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile );

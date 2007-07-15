@@ -2259,7 +2259,6 @@ BOOLEAN EvaluateWorld( UINT8 * pSector, UINT8 ubLevel )
 	{
 		if( !LoadWorld( szFilename ) ) //error
 			return FALSE;
-		FileClearAttributes( (STR)szDirFilename );
 		SaveWorld( szFilename );
 	}
 

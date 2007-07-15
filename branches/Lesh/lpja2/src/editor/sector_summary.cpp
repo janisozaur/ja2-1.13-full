@@ -2147,7 +2147,6 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 			{
 				UINT8 filename[40];
 				sprintf( (char *)filename, "MAPS\\%S", gszDisplayName );
-				FileClearAttributes( (STR)filename );
 			}	
 			if(	ExternalSaveMap( gszDisplayName ) )
 			{

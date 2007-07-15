@@ -626,16 +626,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	else
 		wcscpy( zSaveGameDesc, pGameDesc );
 
-	//Check to see if the save directory exists
-	/*if( FileGetAttributes( (STR) saveDir ) ==  0xFFFFFFFF )
-	{
-		//ok the direcotry doesnt exist, create it
-		if( !MakeFileManDirectory( (CHAR8 *)saveDir ) ) 
-		{
-			goto FAILED_TO_SAVE;
-		}
-	}*/
-
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );
 

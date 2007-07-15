@@ -213,7 +213,6 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 			{
 				if( gfReadOnly )
 				{
-					FileClearAttributes( gszCurrFilename );
 					gfReadOnly = FALSE;
 				}
 				FileDelete( gszCurrFilename );

@@ -6232,28 +6232,24 @@ void ClearOutTempLaptopFiles( void )
 	// file file
 	if (  (FileExists( "files.dat" ) == TRUE ) )
 	{
-		 FileClearAttributes( "files.dat" );
 		 FileDelete( "files.dat" );
 	}
 
 	// finances
 	if (  (FileExists( "finances.dat" ) == TRUE ) )
 	{
-		 FileClearAttributes( "finances.dat" );
 		 FileDelete( "finances.dat" );
 	}
 
 	// email
 	if (  (FileExists( "email.dat" ) == TRUE ) )
 	{
-		 FileClearAttributes( "email.dat" );
 		 FileDelete( "email.dat" );
 	}
 
 	// history
 	if (  (FileExists( "history.dat" ) == TRUE ) )
 	{
-		 FileClearAttributes( "history.dat" );
 		 FileDelete( "history.dat" );
 	}
 
