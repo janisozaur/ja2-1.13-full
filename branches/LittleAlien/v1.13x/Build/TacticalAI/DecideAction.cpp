@@ -579,10 +579,10 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 
 INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 {
-	INT16 sDesiredMercLoc;
+	INT32 sDesiredMercLoc;
 	UINT8	ubDesiredMercDir;
 	UINT8	ubDesiredMerc;
-	INT16	sDesiredMercDist;
+	INT32	sDesiredMercDist;
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
 #endif
@@ -1282,7 +1282,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 {
 	INT32 iDummy;
 	UINT8 ubNoiseDir;
-	INT16 sNoiseGridNo;
+ INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
 	INT16 sClosestFriend;
@@ -1532,7 +1532,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 				// set reachable to false so we don't investigate
 				fReachable = FALSE;
 				// forget about noise
-				pSoldier->sNoiseGridno = NOWHERE;
+				pSoldier->sNoiseGridNo = NOWHERE;
 				pSoldier->ubNoiseVolume = 0;
 			}
 		}
@@ -1895,7 +1895,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	INT8 bActionReturned;
 	INT32 iDummy;
 	INT16 iChance,sClosestOpponent,sClosestFriend;
-	INT16 sClosestDisturbance, sDistVisible, sCheckGridNo;
+ INT32 sClosestDisturbance, sDistVisible, sCheckGridNo;
 	UINT8 ubCanMove,ubOpponentDir;
 	INT8 bInWater, bInDeepWater, bInGas;
 	INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0, bWatchPts = 0;
@@ -2150,7 +2150,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 				// Get new gridno!
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+				sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
 				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
@@ -2158,7 +2158,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 					BestThrow.ubPossible = FALSE;
 
 					// try behind us, see if there's room to move back
-					sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+					sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 					if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 					{
 						pSoldier->usActionData = sCheckGridNo;
@@ -3404,8 +3404,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 {
 	INT32	iCoverPercentBetter, iOffense, iDefense, iChance;
-	INT16	sClosestOpponent,sBestCover = NOWHERE;
-	INT16	sClosestDisturbance;
+ INT32	sClosestOpponent,sBestCover = NOWHERE;
+ INT32	sClosestDisturbance;
 	UINT8	ubMinAPCost,ubCanMove;
 	INT8		bInWater,bInDeepWater,bInGas;
 	INT8		bDirection;
@@ -3425,7 +3425,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 	BOOLEAN fClimb;
 	UINT8	ubBurstAPs;
 	UINT8	ubOpponentDir;
-	INT16	sCheckGridNo;
+ INT32	sCheckGridNo;
 
 	BOOLEAN fAllowCoverCheck = FALSE;
 
@@ -3873,7 +3873,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 				ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 				// Get new gridno!
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+				sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
 				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
@@ -3881,7 +3881,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 					BestThrow.ubPossible = FALSE;
 
 					// try behind us, see if there's room to move back
-					sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
+					sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( gOppositeDirection[ ubOpponentDir ] ) );
 					if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, gOppositeDirection[ ubOpponentDir ], pSoldier->usAnimState ) )
 					{
 						pSoldier->usActionData = sCheckGridNo;

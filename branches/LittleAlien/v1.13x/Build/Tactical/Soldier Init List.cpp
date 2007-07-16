@@ -247,10 +247,10 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 
 
 
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
+BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 {
 	UINT32 i;
-	UINT8 ubNumIndividuals;
+	UINT16 ubNumIndividuals;
 	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;
@@ -284,7 +284,31 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 
 	for( i=0; i < ubNumIndividuals; i++ )
 	{
-		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+		if( dMajorMapVersion < 7.00  )
+		{
+			int i;
+			_OLD_BASIC_SOLDIERCREATE_STRUCT tempOldBasicPlacement;
+			LOADDATA( &tempOldBasicPlacement, *hBuffer, sizeof( _OLD_BASIC_SOLDIERCREATE_STRUCT ) );
+			tempBasicPlacement.fDetailedPlacement = tempOldBasicPlacement.fDetailedPlacement;
+			tempBasicPlacement.usStartingGridNo = tempOldBasicPlacement.usStartingGridNo;
+			tempBasicPlacement.bTeam = tempOldBasicPlacement.bTeam;
+			tempBasicPlacement.bRelativeAttributeLevel = tempOldBasicPlacement.bRelativeAttributeLevel;
+			tempBasicPlacement.bRelativeEquipmentLevel = tempOldBasicPlacement.bRelativeEquipmentLevel;
+			tempBasicPlacement.bDirection = tempOldBasicPlacement.bDirection;
+			tempBasicPlacement.bOrders = tempOldBasicPlacement.bOrders;
+			tempBasicPlacement.bAttitude = tempOldBasicPlacement.bAttitude;
+			tempBasicPlacement.bBodyType = tempOldBasicPlacement.bBodyType;
+			for(i=0; i<MAXPATROLGRIDS; i++)
+				tempBasicPlacement.sPatrolGrid[i] = tempOldBasicPlacement.sPatrolGrid[i];
+			tempBasicPlacement.bPatrolCnt = tempOldBasicPlacement.bPatrolCnt;
+			tempBasicPlacement.fOnRoof = tempOldBasicPlacement.fOnRoof;
+			tempBasicPlacement.ubSoldierClass = tempOldBasicPlacement.ubSoldierClass;
+			tempBasicPlacement.ubCivilianGroup = tempOldBasicPlacement.ubCivilianGroup;
+			tempBasicPlacement.fPriorityExistance = tempOldBasicPlacement.fPriorityExistance;
+			tempBasicPlacement.fHasKeys = tempOldBasicPlacement.fHasKeys;
+		}
+		else
+			LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
 		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
 		pNode->ubNodeID = (UINT8)i;
 		if( !pNode )
@@ -297,6 +321,20 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
             // WDS - Clean up inventory handling
 			tempDetailedPlacement.initialize();
 			//read static detailed placement from file
+			if( dMajorMapVersion < 7.00  )
+			{
+				int i;
+				_OLD_SOLDIERCREATE_STRUCT tempOldDetailedPlacement;
+				LOADDATA( &tempOldDetailedPlacement, *hBuffer, sizeof( _OLD_SOLDIERCREATE_STRUCT ) );
+				memcpy(&tempDetailedPlacement.fStatic, &tempOldDetailedPlacement.fStatic, (size_t)((char*)&tempOldDetailedPlacement.sInsertionGridNo-(char*)&tempOldDetailedPlacement.fStatic));
+				tempDetailedPlacement.sInsertionGridNo = tempOldDetailedPlacement.sInsertionGridNo;
+				memcpy(&tempDetailedPlacement.bTeam, &tempOldDetailedPlacement.bTeam, (size_t)((char*)&tempOldDetailedPlacement.sPatrolGrid-(char*)&tempOldDetailedPlacement.bTeam));
+				for(i=0; i<MAXPATROLGRIDS; i++)
+					tempDetailedPlacement.sPatrolGrid[i] = tempOldDetailedPlacement.sPatrolGrid[i];
+				memcpy(&tempDetailedPlacement.bPatrolCnt, &tempOldDetailedPlacement.bPatrolCnt, (size_t)((char*)&tempOldDetailedPlacement.bPadding-(char*)&tempOldDetailedPlacement.bPatrolCnt));
+			}
+			else
+				//LOADDATA( &tempDetailedPlacement, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
 			LOADDATA( &tempDetailedPlacement, *hBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD );
 			tempDetailedPlacement.CopyOldInventoryToNew();
 			//allocate memory for new static detailed placement
@@ -2416,7 +2454,7 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			{
 				pSoldier->bOrders = ONGUARD;
 				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->sNoiseGridno = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 			
@@ -2456,7 +2494,7 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			{
 				pSoldier->bOrders = ONGUARD;
 				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->sNoiseGridno = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 
@@ -2496,7 +2534,7 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			{
 				pSoldier->bOrders = ONGUARD;
 				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->sNoiseGridno = (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
 				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 

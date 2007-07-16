@@ -396,7 +396,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 // JA2Gold: added
 BOOLEAN CloseEnoughForGrenadeToss( INT32 sGridNo, INT32 sGridNo2 )
 {
-	INT16	sTempGridNo;
+	INT32	sTempGridNo;
 	INT8	bDirection;
 	INT16	sXPos, sYPos, sXPos2, sYPos2;
 	UINT8	ubMovementCost;
@@ -1700,7 +1700,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	return( iDamage );
 }
 
-INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno )
+INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT32 sGridNo )
 {
 	UINT16	ubExplosiveIndex;
 	INT32	iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
@@ -1757,7 +1757,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	if ( Explosive[ ubExplosiveIndex ].ubType == EXPLOSV_TEARGAS || Explosive[ ubExplosiveIndex ].ubType == EXPLOSV_MUSTGAS )
 	{
 		// if target gridno is outdoors (where tear gas lasts only 1-2 turns)
-		if (gpWorldLevelData[sGridno].ubTerrainID != FLAT_FLOOR)
+		if (gpWorldLevelData[sGridNo].ubTerrainID != FLAT_FLOOR)
 			iBreathDamage /= 2;       // reduce effective breath damage by 1/2
 
 		bSlot = FindObj( pOpponent, GASMASK );

@@ -3933,7 +3933,7 @@ BOOLEAN SaveOppListInfoToSavedGame( HWFILE hFile )
 
 	// Save the Public Last Noise Gridno
 	uiSaveSize = MAXTEAMS;
-	FileWrite( hFile, gsPublicNoiseGridno, uiSaveSize, &uiNumBytesWritten );
+	FileWrite( hFile, gsPublicNoiseGridNo, uiSaveSize, &uiNumBytesWritten );
 	if( uiNumBytesWritten != uiSaveSize )
 	{
 		return( FALSE );
@@ -4012,7 +4012,7 @@ BOOLEAN LoadOppListInfoFromSavedGame( HWFILE hFile )
 
 	// Load the Public Last Noise Gridno
 	uiLoadSize = MAXTEAMS;
-	FileRead( hFile, gsPublicNoiseGridno, uiLoadSize, &uiNumBytesRead );
+	FileRead( hFile, gsPublicNoiseGridNo, uiLoadSize, &uiNumBytesRead );
 	if( uiNumBytesRead != uiLoadSize )
 	{
 		return( FALSE );
@@ -4466,7 +4466,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 	sGeneralInfo.fDisableMapInterfaceDueToBattle = fDisableMapInterfaceDueToBattle;
 
 	// Save boxing info
-	memcpy( &sGeneralInfo.sBoxerGridNo, &gsBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
+	memcpy( &sGeneralInfo.sBoxerGridNo, &gsBoxerGridNo, NUM_BOXERS * sizeof( INT32 ) );
 	memcpy( &sGeneralInfo.ubBoxerID, &gubBoxerID, NUM_BOXERS * sizeof( INT8 ) );
 	memcpy( &sGeneralInfo.fBoxerFought, &gfBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
 
@@ -4733,7 +4733,7 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 	fDisableDueToBattleRoster = sGeneralInfo.fDisableDueToBattleRoster;
 	fDisableMapInterfaceDueToBattle = sGeneralInfo.fDisableMapInterfaceDueToBattle;
 
-	memcpy( &gsBoxerGridNo, &sGeneralInfo.sBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
+	memcpy( &gsBoxerGridNo, &sGeneralInfo.sBoxerGridNo, NUM_BOXERS * sizeof( INT32 ) );
 	memcpy( &gubBoxerID, &sGeneralInfo.ubBoxerID, NUM_BOXERS * sizeof( INT8 ) );
 	memcpy( &gfBoxerFought, &sGeneralInfo.fBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
 

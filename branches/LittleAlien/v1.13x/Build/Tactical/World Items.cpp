@@ -377,15 +377,15 @@ void SaveWorldItemsToMap( HWFILE fp )
 }
 
 
-void LoadWorldItemsFromMap( INT8 **hBuffer )
+void LoadWorldItemsFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
 {
 	// Start loading itmes...
 	
 	UINT32			i;
+	UINT32			uiLevelItems = 0;
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;
-	UINT32			uiLevelItems = 0;
 		
 	//If any world items exist, we must delete them now.
 	TrashWorldItems();
@@ -396,12 +396,21 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
 	{ //The sector has already been visited.  The items are saved in a different format that will be 
 		//loaded later on.  So, all we need to do is skip the data entirely.
+		if( dMajorMapVersion < 7.00 )
+			*hBuffer += sizeof( _OLD_WORLDITEM ) * uiNumWorldItems;
+		else
 		*hBuffer += sizeof( WORLDITEM ) * uiNumWorldItems;
 		return;
 	}
 	else for ( i = 0; i < uiNumWorldItems; i++ )
 	{	//Add all of the items to the world indirectly through AddItemToPool, but only if the chance
 		//associated with them succeed.
+		if(dMajorMapVersion < 7.00)
+		{
+			LOADDATA( &dummyItem, *hBuffer, sizeof( _OLD_WORLDITEM ) );
+			dummyItem.sGridNo = dummyItem._old_sGridNo;
+		}
+		else
 		LOADDATA( &dummyItem, *hBuffer, sizeof( WORLDITEM ) );
 		if( dummyItem.o.usItem == OWNERSHIP )
 		{

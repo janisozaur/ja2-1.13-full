@@ -60,7 +60,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 }
 
-BOOLEAN InARoom( UINT32 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InARoom( INT32 sGridNo, UINT8 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -75,7 +75,7 @@ BOOLEAN InARoom( UINT32 sGridNo, UINT8 *pubRoomNo )
 }
 
 
-BOOLEAN InAHiddenRoom( UINT32 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InAHiddenRoom( INT32 sGridNo, UINT8 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
@@ -109,7 +109,7 @@ void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 }
 
 
-void SetGridNoRevealedFlag( UINT32 sGridNo )
+void SetGridNoRevealedFlag( INT32 sGridNo )
 {
 //	UINT32 cnt;
 //  ITEM_POOL					*pItemPool;
@@ -146,7 +146,7 @@ void SetGridNoRevealedFlag( UINT32 sGridNo )
 
 	// ATE: If there are any structs here, we can render them with the obscured flag!
 	// Look for anything but walls pn this gridno!
-	pStructure	=  gpWorldLevelData[ (INT16)sGridNo ].pStructureHead;
+	pStructure	=  gpWorldLevelData[ sGridNo ].pStructureHead;
 
 	while ( pStructure != NULL )
 	{
@@ -188,7 +188,7 @@ void SetGridNoRevealedFlag( UINT32 sGridNo )
 }
 
 
-void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
+void ExamineGridNoForSlantRoofExtraGraphic( INT32 sCheckGridNo )
 {
 	LEVELNODE					*pNode = NULL;
 	STRUCTURE					*pStructure, *pBase;
@@ -257,9 +257,9 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 }
 
 
-void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
+void RemoveRoomRoof( INT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
-	UINT32 cnt;
+	INT32 cnt;
   ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
 	LEVELNODE					*pNode = NULL;
@@ -278,7 +278,7 @@ void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-			if ( GetItemPool( (INT16)cnt, &pItemPool, 0 ) )
+			if ( GetItemPool( cnt, &pItemPool, 0 ) )
 			{
 				// Set visible! ( only if invisible... )
 				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )
@@ -297,7 +297,7 @@ void RemoveRoomRoof( UINT32 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 			// OK, re-set writeframes ( in a radius )
 			// Get XY
-			ConvertGridNoToXY( (INT16)cnt, &sX, &sY );
+			ConvertGridNoToXY( cnt, &sX, &sY );
 			SetRecalculateWireFrameFlagRadius( sX, sY, 2 );
 
 		}
@@ -330,7 +330,7 @@ BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			AddObjectToHead( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			AddObjectToHead( MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
 		}
 	}
 
@@ -346,7 +346,7 @@ BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion  )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			RemoveObject( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
+			RemoveObject( MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT ); 
 		}
 	}
 

@@ -67,7 +67,7 @@ enum
 UINT32 iTPButtons[ NUM_TP_BUTTONS ];
 
 extern BOOLEAN gfOverheadMapDirty;
-extern BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
+extern BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo );
 
 extern int iOffsetHorizontal;
 extern int iOffsetVertical;
@@ -1147,7 +1147,8 @@ void SetCursorMerc( INT8 bPlacementID )
 
 void PutDownMercPiece( INT32 iPlacement )
 {
-	INT32 sGridNo, sCellX, sCellY;
+	INT32 sGridNo;
+	INT16 sCellX, sCellY;
 	UINT8 ubDirection;
 
 	SOLDIERTYPE *pSoldier;

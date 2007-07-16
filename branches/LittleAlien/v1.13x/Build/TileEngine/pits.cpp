@@ -43,7 +43,7 @@ void Add3X3Pit( INT32 iMapIndex )
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
 		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
 		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
-		ExitGrid.usGridNo = (UINT16)iMapIndex;
+		ExitGrid.usGridNo = iMapIndex;
 		AddExitGridToWorld( iMapIndex + 159, &ExitGrid );
 		AddExitGridToWorld( iMapIndex -   1, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 161, &ExitGrid );
@@ -53,7 +53,7 @@ void Add3X3Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex + 161, &ExitGrid );
 		AddExitGridToWorld( iMapIndex +   1, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 159, &ExitGrid );
-		RecompileLocalMovementCostsFromRadius( (INT16)iMapIndex, 2 );
+		RecompileLocalMovementCostsFromRadius( iMapIndex, 2 );
 	}
 
 	MarkWorldDirty();
@@ -96,7 +96,7 @@ void Add5X5Pit( INT32 iMapIndex )
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
 		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
 		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
-		ExitGrid.usGridNo = (UINT16)iMapIndex;
+		ExitGrid.usGridNo = iMapIndex;
 		AddExitGridToWorld( iMapIndex + 318, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 158, &ExitGrid );
 		AddExitGridToWorld( iMapIndex -   2, &ExitGrid );
@@ -122,7 +122,7 @@ void Add5X5Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex +   2, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 158, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 318, &ExitGrid );
-		RecompileLocalMovementCostsFromRadius( (INT16)iMapIndex, 3 );
+		RecompileLocalMovementCostsFromRadius( iMapIndex, 3 );
 	}
 	MarkWorldDirty();
 	if( !gfEditMode )
@@ -205,7 +205,7 @@ void RemoveAllPits()
 
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT32 sGridNo, INT16 sRadius )
 {
-	INT16 x, y, sNewGridNo;
+	INT32 x, y, sNewGridNo;
 	UINT8	ubID;
 	SOLDIERTYPE *pSoldier;
 
@@ -240,7 +240,7 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 {
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 	EXITGRID ExitGrid;
-	INT16 sPitGridNo;
+	INT32 sPitGridNo;
 	// OK, get exit grid...
 	
 	sPitGridNo = (INT16)pSoldier->uiPendingActionData4;

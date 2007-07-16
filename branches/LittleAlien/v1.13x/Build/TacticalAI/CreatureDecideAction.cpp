@@ -438,7 +438,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - heard something 
 	UINT8 ubNoiseDir;
-	INT16 sNoiseGridNo;
+	INT32 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
 	BOOLEAN fClimb;
@@ -605,7 +605,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  //INT8 bInWater;
  INT8 bInGas;
  INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
- INT16 sAdjustedGridNo;
+ INT32 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
  // if we have absolutely no action points, we can't do a thing under RED!
@@ -902,8 +902,8 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent,sBestCover = NOWHERE;
- INT16		sClosestDisturbance;
+ INT32		sClosestOpponent,sBestCover = NOWHERE;
+ INT32		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
  UINT8		ubBestAttackAction;
@@ -1684,7 +1684,7 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 
 INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 {
-	INT16 sCorpseGridNo;
+	INT32 sCorpseGridNo;
 	UINT8 ubDirection;
 	INT16 sFacingDir;
 

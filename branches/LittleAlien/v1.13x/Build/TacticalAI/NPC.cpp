@@ -702,9 +702,9 @@ UINT8 NPCConsiderTalking( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRec
 				continue;
 			}
 		}
-		else if ( pNPCQuoteInfo->sRequiredGridno < 0 )
+		else if ( pNPCQuoteInfo->sRequiredGridNo < 0 )
 		{
-			if ( pSoldier->sGridNo != -(pNPCQuoteInfo->sRequiredGridno) )
+			if ( pSoldier->sGridNo != -(pNPCQuoteInfo->sRequiredGridNo) )
 			{
 				continue;
 			}
@@ -1445,7 +1445,7 @@ UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuo
 }
 
 
-void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGridNo, INT16 sNewGridNo )
+void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT32 sOldGridNo, INT32 sNewGridNo )
 {
 	UINT8							ubFirstQuoteRecord, ubLastQuoteRecord, ubLoop;
 	NPCQuoteInfo *		pNPCQuoteInfo;
@@ -1455,18 +1455,18 @@ void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGrid
 	for (ubLoop = ubFirstQuoteRecord; ubLoop <= ubLastQuoteRecord; ubLoop++)
 	{
 		pNPCQuoteInfo = &(pNPCQuoteInfoArray[ ubLoop ]);
-		if (sOldGridNo == -pNPCQuoteInfo->sRequiredGridno)
+		if (sOldGridNo == -pNPCQuoteInfo->sRequiredGridNo)
 		{
-			pNPCQuoteInfo->sRequiredGridno = -sNewGridNo;
+			pNPCQuoteInfo->sRequiredGridNo = -sNewGridNo;
 		}
-		if (sOldGridNo == pNPCQuoteInfo->usGoToGridno)
+		if (sOldGridNo == pNPCQuoteInfo->usGoToGridNo)
 		{
-			pNPCQuoteInfo->usGoToGridno = sNewGridNo;
+			pNPCQuoteInfo->usGoToGridNo = sNewGridNo;
 		}
 	}
 }
 
-void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16 sNewGridNo )
+void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT32 sOldGridNo, INT32 sNewGridNo )
 {
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 
@@ -2050,7 +2050,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
-				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
+				else if ( pQuotePtr->usGoToGridNo == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 					ZEROTIMECOUNTER( pSoldier->AICounter );
@@ -2063,7 +2063,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				}
 
 				// Movement?
-				if ( pQuotePtr->usGoToGridno != NO_MOVE )
+				if ( pQuotePtr->usGoToGridNo != NO_MOVE )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 
@@ -2073,7 +2073,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						// make sure he has keys
 						pSoldier->bHasKeys = TRUE;
 					}
-					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
+					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridNo )
 					{
 						// search for quotes to trigger immediately!
 						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -2092,14 +2092,14 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 
 						if (pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
 						{
-							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
-							TeleportSoldier( pSoldier, pQuotePtr->usGoToGridno, FALSE );
+							BumpAnyExistingMerc( pQuotePtr->usGoToGridNo );
+							TeleportSoldier( pSoldier, pQuotePtr->usGoToGridNo, FALSE );
 							// search for quotes to trigger immediately!
 							NPCReachedDestination( pSoldier, FALSE );
 						}
 						else
 						{
-							NPCGotoGridNo( ubNPC, pQuotePtr->usGoToGridno, ubRecordNum );
+							NPCGotoGridNo( ubNPC, pQuotePtr->usGoToGridNo, ubRecordNum );
 						}
 					}
 				}
@@ -2162,9 +2162,9 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 	}
 }
 
-INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
+INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 {
-	INT16						sMyGridNo, sDist, sDesiredMercDist = 100;
+	INT32						sMyGridNo, sDist, sDesiredMercDist = 100;
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
 	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
 	SOLDIERTYPE *		pMerc;
@@ -2335,7 +2335,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	// (indicated by a negative gridno in the has-item field)
 	// or an action to perform once we reached this gridno
 
-	if ( pNPC->sGridNo == pQuotePtr->usGoToGridno )
+	if ( pNPC->sGridNo == pQuotePtr->usGoToGridNo )
 	{
 		// check for an after-move action
 		if ( pQuotePtr->sActionData > 0)
@@ -2347,7 +2347,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
 		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
-		if ( pNPC->sGridNo == -(pQuotePtr->sRequiredGridno ) )
+		if ( pNPC->sGridNo == -(pQuotePtr->sRequiredGridNo ) )
 		{
 			if ( NPCConsiderQuote( ubNPC, 0, TRIGGER_NPC, ubLoop, 0, pNPCQuoteInfoArray ) )
 			{
@@ -2451,7 +2451,7 @@ void PCsNearNPC( UINT8 ubNPC )
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
 		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
-		if ( pSoldier->sGridNo == -(pQuotePtr->sRequiredGridno ) )
+		if ( pSoldier->sGridNo == -(pQuotePtr->sRequiredGridNo ) )
 		{
 			if ( NPCConsiderQuote( ubNPC, 0, TRIGGER_NPC, ubLoop, 0, pNPCQuoteInfoArray ) )
 			{
@@ -3320,7 +3320,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {
 	// change destination in Darrel record 10 to go to a gridno adjacent to the 
 	// soldier's gridno, and destination in record 11
-	INT16 sAdjustedGridNo;
+	INT32 sAdjustedGridNo;
 	UINT8 ubDummyDirection;
 	SOLDIERTYPE *		pDarrel;
 
@@ -3344,8 +3344,8 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 	}
 	
 	EnsureQuoteFileLoaded( DARREL );
-	gpNPCQuoteInfoArray[ DARREL ][ 10 ].usGoToGridno = sAdjustedGridNo;
-	gpNPCQuoteInfoArray[ DARREL ][ 11 ].sRequiredGridno = -(sAdjustedGridNo);
+	gpNPCQuoteInfoArray[ DARREL ][ 10 ].usGoToGridNo = sAdjustedGridNo;
+	gpNPCQuoteInfoArray[ DARREL ][ 11 ].sRequiredGridNo = -(sAdjustedGridNo);
 	gpNPCQuoteInfoArray[ DARREL ][ 11 ].ubTriggerNPC = pSoldier->ubProfile;
 }
 

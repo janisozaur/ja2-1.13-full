@@ -28,7 +28,7 @@ void CallAvailableEnemiesTo( INT32 sGridNo )
 			if (!(gTacticalStatus.Team[iLoop].bHuman) && (iLoop != CIV_TEAM))
 			{
 				// make this team (publicly) aware of the "noise"
-				gsPublicNoiseGridno[iLoop] = sGridNo;
+				gsPublicNoiseGridNo[iLoop] = sGridNo;
 				gubPublicNoiseVolume[iLoop] = MAX_MISC_NOISE_DURATION;
 
 				// new situation for everyone;
@@ -49,7 +49,7 @@ void CallAvailableEnemiesTo( INT32 sGridNo )
 	}
 }
 
-void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
+void CallAvailableTeamEnemiesTo( INT32 sGridNo, INT8 bTeam )
 {
 	INT32	iLoop2;
 	SOLDIERTYPE * pSoldier;
@@ -62,7 +62,7 @@ void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 		if (!(gTacticalStatus.Team[bTeam].bHuman) && (bTeam != CIV_TEAM))
 		{
 			// make this team (publicly) aware of the "noise"
-			gsPublicNoiseGridno[bTeam] = sGridno;
+			gsPublicNoiseGridNo[bTeam] = sGridNo;
 			gubPublicNoiseVolume[bTeam] = MAX_MISC_NOISE_DURATION;
 
 			// new situation for everyone;
@@ -93,7 +93,7 @@ void CallAvailableKingpinMenTo( INT32 sGridNo )
 	if (gTacticalStatus.Team[CIV_TEAM].bTeamActive)
 	{
 		// make this team (publicly) aware of the "noise"
-		gsPublicNoiseGridno[CIV_TEAM] = sGridNo;
+		gsPublicNoiseGridNo[CIV_TEAM] = sGridNo;
 		gubPublicNoiseVolume[CIV_TEAM] = MAX_MISC_NOISE_DURATION;
 
 		// new situation for everyone...
@@ -130,7 +130,7 @@ void CallEldinTo( INT32 sGridNo )
 			}
 			else
 			{
-				pSoldier->sNoiseGridno = sGridNo;
+				pSoldier->sNoiseGridNo = sGridNo;
 				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 				pSoldier->bAlertStatus = STATUS_RED;
 				if ( (pSoldier->bAction != AI_ACTION_GET_CLOSER) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) == FALSE )
@@ -150,24 +150,24 @@ void CallEldinTo( INT32 sGridNo )
 }
 
 
-INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
+INT32 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
 {
 	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;
-	INT16 *psLastLoc,*psNoiseGridNo;
+	INT32 *psLastLoc,*psNoiseGridNo;
 	INT8 * pbNoiseLevel;
 	INT8 *pbLastLevel;
 	UINT8 *pubNoiseVolume;
 	INT32 iDistAway;
 	INT32	iNoiseValue, iBestValue = -10000;
-	INT16 sBestGridNo = NOWHERE;
+	INT32 sBestGridNo = NOWHERE;
 	INT8	bBestLevel = 0;
-	INT16 sClimbingGridNo;
+	INT32 sClimbingGridNo;
 	BOOLEAN fClimbingNecessary = FALSE;
 	SOLDIERTYPE * pTemp;	
 
 	pubNoiseVolume = &gubPublicNoiseVolume[pSoldier->bTeam];
-	psNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
+	psNoiseGridNo = &gsPublicNoiseGridNo[pSoldier->bTeam];
 	pbNoiseLevel = &gbPublicNoiseLevel[pSoldier->bTeam];
 
 	psLastLoc = gsLastKnownOppLoc[pSoldier->ubID];
@@ -227,25 +227,25 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	}
 
 	// if any "misc. noise" was also heard recently
-	if (pSoldier->sNoiseGridno != NOWHERE)
+	if (pSoldier->sNoiseGridNo != NOWHERE)
 	{
-		if ( pSoldier->bNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->sNoiseGridno, pSoldier->bNoiseLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+		if ( pSoldier->bNoiseLevel != pSoldier->bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->sNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->sNoiseGridNo, pSoldier->bNoiseLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
 		{
 			// calculate how far this noise was, and its relative "importance"
-			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->sNoiseGridno);
+			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->sNoiseGridNo);
 			iNoiseValue = ((pSoldier->ubNoiseVolume / 2) - 6) * iDistAway;
 
 			if (iNoiseValue > iBestValue)
 			{
 				iBestValue = iNoiseValue;
-				sBestGridNo = pSoldier->sNoiseGridno;
+				sBestGridNo = pSoldier->sNoiseGridNo;
 				bBestLevel = pSoldier->bNoiseLevel;
 			}
 		}
 		else
 		{
 			// we are there or near
-			pSoldier->sNoiseGridno = NOWHERE;        // wipe it out, not useful anymore
+			pSoldier->sNoiseGridNo = NOWHERE;        // wipe it out, not useful anymore
 			pSoldier->ubNoiseVolume = 0;
 		}
 	}

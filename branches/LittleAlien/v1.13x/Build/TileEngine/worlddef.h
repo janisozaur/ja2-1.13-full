@@ -9,13 +9,30 @@
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20
-#define WORLD_COLS			160
-#define WORLD_ROWS			160
-#define WORLD_COORD_COLS			1600
-#define WORLD_COORD_ROWS			1600
-#define WORLD_MAX					25600
+//#define WORLD_COLS			160
+//#define WORLD_ROWS			160
+//#define WORLD_COORD_COLS			1600
+//#define WORLD_COORD_ROWS			1600
+//#define WORLD_MAX					25600
 #define CELL_X_SIZE					10
 #define CELL_Y_SIZE					10
+//<SB> variable map size
+extern INT32 guiWorldCols;
+extern INT32 guiWorldRows;
+
+#define OLD_WORLD_COLS			160
+#define OLD_WORLD_ROWS			160
+#define OLD_WORLD_COORD_COLS			1600
+#define OLD_WORLD_COORD_ROWS			1600
+#define OLD_WORLD_MAX					25600
+
+#define WORLD_COLS			guiWorldCols
+#define WORLD_ROWS			guiWorldRows
+#define WORLD_COORD_COLS			(WORLD_COLS*CELL_X_SIZE)
+#define WORLD_COORD_ROWS			(WORLD_ROWS*CELL_Y_SIZE)
+#define WORLD_MAX					(WORLD_COLS*WORLD_ROWS)
+//</SB>
+
 
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
@@ -24,7 +41,9 @@
 //based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.
 #include <memory.h>
-#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+//SB: fix macro syntax flaw
+//#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+#define  LOADDATA( dst, src, size ) { memcpy( dst, src, size ); src += size; }
 
 
 #define LANDHEAD							0
@@ -234,7 +253,8 @@ typedef struct
 extern MAP_ELEMENT			*gpWorldLevelData;
 
 // World Movement Costs
-extern UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
+//UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
+extern UINT8 *** gubWorldMovementCosts;
 
 
 extern UINT8		gubCurrentLevel;
@@ -260,7 +280,7 @@ void DestroyTileShadeTables( );
 
 void TrashWorld(void);
 void TrashMapTile(INT16 MapTile);
-BOOLEAN NewWorld( void );
+BOOLEAN NewWorld( INT32 nMapRows,  INT32 nMapCols );
 
 BOOLEAN SaveWorld( const STR8 puiFilename );
 BOOLEAN LoadWorld( const STR8 puiFilename );
@@ -280,7 +300,7 @@ void RemoveWorldWireFrameTiles( );
 void RemoveWireFrameTiles( INT32 sGridNo );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
+LEVELNODE *GetAnimProfileFlags( INT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 void ReloadTileset( UINT8 ubID );
 
@@ -294,5 +314,6 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
 void RecompileLocalMovementCostsInAreaWithFlags( void );
 void AddTileToRecompileArea( INT32 sGridNo );
 
+void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols);
 
 #endif

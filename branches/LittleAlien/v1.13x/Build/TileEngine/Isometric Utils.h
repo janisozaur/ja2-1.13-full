@@ -31,9 +31,11 @@ extern UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIO
 
 
 //                                                |Check for map bounds------------------------------------------|   |Invalid-|   |Valid-------------------|
-#define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xffff ) : ( (r) * WORLD_COLS + (c) ) )
+//#define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xffff ) : ( (r) * WORLD_COLS + (c) ) )
+#define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xFFFFFFFF ) : ( (INT32)(r) * WORLD_COLS + (c) ) )
 
-#define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) ) 
+//#define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) ) 
+#define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT32) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT32) ( c / CELL_Y_SIZE ) ) 
 
 void ConvertGridNoToXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 void ConvertGridNoToCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
@@ -41,16 +43,16 @@ void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 
 
 // GRID NO MANIPULATION FUNCTIONS
-INT16 NewGridNo(INT16 sGridno, INT16 sDirInc);
+INT32 NewGridNo(INT32 sGridNo, INT16 sDirInc);
 INT16 DirectionInc(INT16 sDirection);
-INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
+INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
 
  
 // Functions
 BOOLEAN GetMouseCell( INT32 *piMouseMapPos );
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
-BOOLEAN GetMouseMapPos( UINT16	*psMapPos );
+BOOLEAN GetMouseMapPos( INT32	*psMapPos );
 BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCellX, INT16 *psCellY );
 
@@ -58,7 +60,7 @@ BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCell
 
 void GetScreenXYWorldCoords( INT16 sScreenX, INT16 sScreenY, INT16 *pWorldX, INT16 *psWorldY );
 void GetScreenXYWorldCell( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldCellX, INT16 *psWorldCellY );
-void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos );
+void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT32	*psMapPos );
 void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *psWorldScreenX, INT16 *psWorldScreenY );
 void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, INT16 sWorldScreenX, INT16 sWorldScreenY );
 
@@ -74,7 +76,7 @@ BOOLEAN GridNoOnVisibleWorldTile( INT32 sGridNo );
 BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT32 sGridNo );
 BOOLEAN GridNoOnEdgeOfMap( INT32 sGridNo, INT8 * pbDirection );
 
-BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos );
+BOOLEAN ConvertMapPosToWorldTileCenter( INT32 usMapPos, INT16 *psXPos, INT16 *psYPos );
 
 BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY);
 
@@ -85,9 +87,9 @@ BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
 BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRect, INT16 *sXRel, INT16 *sRelY );
 
 
-INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest);
-INT16 SpacesAway(INT16 sOrigin, INT16 sDest);
-INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
+INT16 PythSpacesAway(INT32 sOrigin, INT32 sDest);
+INT16 SpacesAway(INT32 sOrigin, INT32 sDest);
+INT16 CardinalSpacesAway(INT32 sOrigin, INT32 sDest);
 INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 );
 BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
@@ -97,17 +99,17 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest);
 
 
 // Returns the (center ) cell coordinates in X
-INT16 CenterX( INT16 sGridno );
+INT16 CenterX( INT32 sGridNo );
 
 // Returns the (center ) cell coordinates in Y
-INT16 CenterY( INT16 sGridno );
+INT16 CenterY( INT32 sGridNo );
 
 INT16 MapX( INT32 sGridNo );
 INT16 MapY( INT32 sGridNo );
 BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bStartingDir, INT8 *pbDirection );
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
-INT16 RandomGridNo();
+INT32 RandomGridNo();
 
 extern UINT32 guiForceRefreshMousePositionCalculation;
 

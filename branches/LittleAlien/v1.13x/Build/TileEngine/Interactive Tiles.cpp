@@ -53,7 +53,7 @@ typedef struct
 	INT16					sHeighestScreenY;
 	BOOLEAN				fFound;
 	LEVELNODE			*pFoundNode;
-	INT16					sFoundGridNo;
+	INT32					sFoundGridNo;
 	UINT16				usStructureID;
 	BOOLEAN				fStructure;
 
@@ -266,7 +266,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 
 
 		// LOOK for item pool here...
-		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->bLevel ) )
+		if ( GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel ) )
 		{
 			// Update visiblity....
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
@@ -648,7 +648,7 @@ LEVELNODE *GetCurInteractiveTile( )
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
+LEVELNODE *GetCurInteractiveTileGridNo( INT32 *psGridNo )
 {
 	LEVELNODE *pNode;
 	
@@ -668,7 +668,7 @@ LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 
 
 
-LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
+LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
 {
 	LEVELNODE *pNode;
 	STRUCTURE	*pStructure;
@@ -707,7 +707,7 @@ LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, 
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure )
+LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure )
 {
 	return( ConditionalGetCurInteractiveTileGridNoAndStructure( psGridNo, ppStructure, TRUE ) );
 }
@@ -845,7 +845,7 @@ BOOLEAN RefineLogicOnStruct( INT32 sGridNo, LEVELNODE *pNode )
 			if ( pStructure->fFlags & STRUCTURE_SWITCH )
 			{
 				// Find a new gridno based on switch's orientation...
-				INT16 sNewGridNo = NOWHERE;
+				INT32 sNewGridNo = NOWHERE;
 
 				switch( pStructure->pDBStructureRef->pDBStructure->ubWallOrientation )
 				{
@@ -1101,7 +1101,7 @@ BOOLEAN ShouldCheckForMouseDetections( )
 }
 
 
-void CycleIntTileFindStack( UINT16 usMapPos )
+void CycleIntTileFindStack( INT32 usMapPos )
 {
 	gfCycleIntTile = TRUE;
 

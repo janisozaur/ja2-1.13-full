@@ -8,21 +8,21 @@ typedef struct MAPEDGEPOINTINFO
 {
 	UINT8 ubNumPoints;
 	UINT8 ubStrategicInsertionCode;
-	UINT32 sGridNo[ 32 ];
+	INT32 sGridNo[ 32 ];
 }MAPEDGEPOINTINFO;
 
-UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
+INT32 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
 void GenerateMapEdgepoints();
 void SaveMapEdgepoints( HWFILE fp );
-BOOLEAN LoadMapEdgepoints( INT8 **hBuffer );
+BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion );
 void TrashMapEdgepoints();
 
 //dynamic arrays that contain the valid gridno's for each edge
-extern INT16 *gps1stNorthEdgepointArray;
-extern INT16 *gps1stEastEdgepointArray;
-extern INT16 *gps1stSouthEdgepointArray;
-extern INT16 *gps1stWestEdgepointArray;
+extern INT32 *gps1stNorthEdgepointArray;
+extern INT32 *gps1stEastEdgepointArray;
+extern INT32 *gps1stSouthEdgepointArray;
+extern INT32 *gps1stWestEdgepointArray;
 //contains the size for each array
 extern UINT16 gus1stNorthEdgepointArraySize;
 extern UINT16 gus1stEastEdgepointArraySize;
@@ -37,10 +37,10 @@ extern UINT16 gus1stSouthEdgepointMiddleIndex;
 extern UINT16 gus1stWestEdgepointMiddleIndex;
 
 //dynamic arrays that contain the valid gridno's for each edge
-extern INT16 *gps2ndNorthEdgepointArray;
-extern INT16 *gps2ndEastEdgepointArray;
-extern INT16 *gps2ndSouthEdgepointArray;
-extern INT16 *gps2ndWestEdgepointArray;
+extern INT32 *gps2ndNorthEdgepointArray;
+extern INT32 *gps2ndEastEdgepointArray;
+extern INT32 *gps2ndSouthEdgepointArray;
+extern INT32 *gps2ndWestEdgepointArray;
 //contains the size for each array
 extern UINT16 gus2ndNorthEdgepointArraySize;
 extern UINT16 gus2ndEastEdgepointArraySize;
@@ -62,8 +62,8 @@ extern UINT16 gus2ndWestEdgepointMiddleIndex;
 //code shouldn't be used for enemies or anybody else.
 void BeginMapEdgepointSearch();
 void EndMapEdgepointSearch();
-INT16 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
-INT16 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
+INT32 SearchForClosestPrimaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
+INT32 SearchForClosestSecondaryMapEdgepoint( INT32 sGridNo, UINT8 ubInsertionCode );
 
 //There are two classes of edgepoints.
 //PRIMARY		: The default list of edgepoints.  This list includes edgepoints that are easily accessible from the 

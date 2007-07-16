@@ -152,7 +152,7 @@ void RemoveBlood( INT32 sGridNo, INT8 bLevel )
 
 void DecaySmells( void )
 {	
-	UINT32					uiLoop;
+	INT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
 	//return;
@@ -176,7 +176,7 @@ void DecaySmells( void )
 
 void DecayBlood()
 {
-	UINT32					uiLoop;
+	INT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
 	for (uiLoop = 0, pMapElement = gpWorldLevelData; uiLoop < WORLD_MAX; uiLoop++, pMapElement++)

@@ -89,7 +89,7 @@ BOOLEAN						gfOverheadMapDirty = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
 INT16							gsStartRestrictedX, gsStartRestrictedY;
 BOOLEAN						gfOverItemPool = FALSE;
-INT16							gsOveritemPoolGridNo;
+INT32							gsOveritemPoolGridNo;
 
 int iOffsetHorizontal;	// Horizontal start postion of the overview map
 int	iOffsetVertical;	// Vertical start position of the overview map	
@@ -99,7 +99,7 @@ void HandleOverheadUI( );
 void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void DeleteOverheadDB( );
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo );
+BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo );
 
 
 extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
@@ -107,7 +107,7 @@ extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *p
 
 
 //Isometric utilities (for overhead stuff only)
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
+BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo );
 void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
 void CopyOverheadDBShadetablesFromTileset( );
 
@@ -235,7 +235,7 @@ void DeleteOverheadDB( )
 }
 
 
-BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel )
+BOOLEAN GetClosestItemPool( INT32 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -284,7 +284,7 @@ BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, 
 	return( fFound );
 }
 
-BOOLEAN GetClosestMercInOverheadMap( INT16 sSweetGridNo, SOLDIERTYPE **ppReturnedSoldier, UINT8 ubRadius )
+BOOLEAN GetClosestMercInOverheadMap( INT32 sSweetGridNo, SOLDIERTYPE **ppReturnedSoldier, UINT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -454,7 +454,7 @@ void HandleOverheadMap( )
 
 	if( !gfEditMode && !gfTacticalPlacementGUIActive )
 	{
-		INT16 usMapPos;
+		INT32 usMapPos;
 		ITEM_POOL	*pItemPool;
 
 		gfUIHandleSelectionAboveGuy			= FALSE;
@@ -467,9 +467,9 @@ void HandleOverheadMap( )
 			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 0 ) )
 			{
 				STRUCTURE					*pStructure = NULL;
-				INT16							sIntTileGridNo;
+				INT32 sIntTileGridNo;
 				INT8							bZLevel = 0;
-				INT16							sActionGridNo = usMapPos;
+				INT32 sActionGridNo = usMapPos;
 
 				// Get interactive tile...
 				if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -491,7 +491,7 @@ void HandleOverheadMap( )
 			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 1 ) )
 			{
 				INT8							bZLevel = 0;
-				INT16							sActionGridNo = usMapPos;
+				INT32 sActionGridNo = usMapPos;
 
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{
@@ -639,7 +639,7 @@ void GoIntoOverheadMap( )
 void HandleOverheadUI( )
 {
   InputAtom					InputEvent;
-	INT16							sMousePos=0;
+	INT32							sMousePos=0;
 	UINT8							ubID;
 
 	// CHECK FOR MOUSE OVER REGIONS...
@@ -736,7 +736,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	INT16				sTempPosX_M, sTempPosY_M;
 	INT16				sTempPosX_S, sTempPosY_S;
 	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
-	UINT32			usTileIndex;
+	INT32			usTileIndex;
 	INT16				sX, sY;
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
@@ -1627,7 +1627,7 @@ void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 
 void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
 {
-	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
+	GetWorldXYAbsoluteScreenXY( (CenterX( sGridNo ) / CELL_X_SIZE ), ( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY ); 
 	*psScreenX /= 5;
 	*psScreenY /= 5;
 
@@ -1640,9 +1640,9 @@ void GetOverheadScreenXYFromGridNo( INT32 sGridNo, INT16 *psScreenX, INT16 *psSc
 
 // WANNE
 // Fixed bug from sir tech, which occured on smaller maps ;-)
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
+BOOLEAN GetOverheadMouseGridNo( INT32 *psGridNo )
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
@@ -1674,7 +1674,7 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( (INT32 *)&uiCellX, (INT32 *)&uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 		// Adjust for height.....
 		sWorldScreenY =sWorldScreenY + gpWorldLevelData[ (*psGridNo) ].sHeight;
@@ -1682,7 +1682,7 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( (INT32 *)&uiCellX, (INT32 *)&uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 
 		return( TRUE );
@@ -1696,9 +1696,9 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 
 // WANNE
 // Fixed bug from sir tech which occured on smaller maps ;-)
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
+BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT32 *psGridNo )
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
@@ -1730,7 +1730,7 @@ BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( (INT32 *)&uiCellX, (INT32 *)&uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 		// Adjust for height.....
 		sWorldScreenY =sWorldScreenY + gpWorldLevelData[ (*psGridNo) ].sHeight;
@@ -1738,7 +1738,7 @@ BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
 		GetFromAbsoluteScreenXYWorldXY( (INT32 *)&uiCellX, (INT32 *)&uiCellY, sWorldScreenX, sWorldScreenY );
 
 		// Get gridNo
-		(*psGridNo ) = (INT16)MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
+		(*psGridNo ) = MAPROWCOLTOPOS( ( uiCellY / CELL_Y_SIZE ), ( uiCellX / CELL_X_SIZE ) );
 
 
 		return( TRUE );

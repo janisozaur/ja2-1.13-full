@@ -881,7 +881,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 
 
-BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT16 sGridno)
+BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pOurTeam;
@@ -893,7 +893,7 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	{
 		if ( pOurTeam->bActive )
 		{
-			if (pOurTeam->sGridNo == sGridno || pOurTeam->usActionData == sGridno)
+			if (pOurTeam->sGridNo == sGridNo || pOurTeam->usActionData == sGridNo)
 				return(FALSE);
 		}
 	}
@@ -902,25 +902,25 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT16 sGridno)
 }
 
 
-INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno)
+INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	INT32 cnt;
 	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
-	INT16 sTempGridno,sCheapestCost=500,sMovementCost,sCheapestDest=NOWHERE;
-
+	INT32 sTempGridNo, sCheapestDest=NOWHERE;
+	INT16 sCheapestCost=500, sMovementCost;
 
 	for (cnt=0; cnt < 4; cnt++)
 	{
-		sTempGridno = sGridno + mods[cnt];
-		if (!OutOfBounds(sGridno,sTempGridno))
+		sTempGridNo = sGridNo + mods[cnt];
+		if (!OutOfBounds(sGridNo,sTempGridNo))
 		{
-			if (NewOKDestination(pSoldier,sTempGridno,PEOPLETOO, pSoldier->bLevel ) && DestNotSpokenFor(pSoldier,sTempGridno))
+			if (NewOKDestination(pSoldier,sTempGridNo,PEOPLETOO, pSoldier->bLevel ) && DestNotSpokenFor(pSoldier,sTempGridNo))
 			{
-				sMovementCost = PlotPath(pSoldier,sTempGridno,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0);
+				sMovementCost = PlotPath(pSoldier,sTempGridNo,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0);
 				if (sMovementCost < sCheapestCost)
 				{
 					sCheapestCost	= sMovementCost;  
-					sCheapestDest = sTempGridno;
+					sCheapestDest = sTempGridNo;
 				}
 
 			}
@@ -2406,7 +2406,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 
 		// turn to face trigger first
-		if ( FindStructure( (INT16)(pSoldier->sGridNo + DirectionInc( NORTH )), STRUCTURE_SWITCH ) )
+			if ( FindStructure( pSoldier->sGridNo + DirectionInc( NORTH ), STRUCTURE_SWITCH ) )
 		{
 			SendSoldierSetDesiredDirectionEvent( pSoldier, NORTH );
 		}
@@ -2544,7 +2544,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		{
 			STRUCTURE *		pStructure;
 			INT8					bDirection;
-			INT16					sDoorGridNo;
+				INT32					sDoorGridNo;
 
 			bDirection = (INT8) GetDirectionFromGridNo( pSoldier->usActionData, pSoldier );
 			if (bDirection == EAST || bDirection == SOUTH)
@@ -2828,7 +2828,7 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 #endif
 						pSoldier->bAlertStatus = STATUS_YELLOW;    // also get suspicious
 						SetNewSituation( pSoldier );
-						pSoldier->sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
+						pSoldier->sNoiseGridNo = pFriend->sGridNo;  // pretend FRIEND made noise
 						pSoldier->ubNoiseVolume = 3;                // remember this for 3 turns
 						// keep check other friends, too, in case any are already on RED
 					}

@@ -27,8 +27,8 @@ void AdjustAllRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff );
 void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
 void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
 BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex );
-void SetWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags );
-void RemoveWallLevelnodeFlags( UINT32 sGridNo, UINT32 uiFlags );
+void SetWallLevelnodeFlags( INT32 sGridNo, UINT32 uiFlags );
+void RemoveWallLevelnodeFlags( INT32 sGridNo, UINT32 uiFlags );
 BOOLEAN IndexExistsInRoofLayer( INT32 sGridNo, UINT16 usIndex );
 
 
@@ -133,8 +133,8 @@ BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 BOOLEAN IsLowerLevel( INT32 sGridNo );
 BOOLEAN IsHeigherLevel( INT32 sGridNo );
-BOOLEAN IsRoofVisible( INT16 sMapPos );
-BOOLEAN IsRoofVisible2( INT16 sMapPos );
+BOOLEAN IsRoofVisible( INT32 sMapPos );
+BOOLEAN IsRoofVisible2( INT32 sMapPos );
 
 
 LEVELNODE * FindLevelNodeBasedOnStructure( INT32 sGridNo, STRUCTURE * pStructure );

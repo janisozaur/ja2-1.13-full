@@ -15,18 +15,18 @@
 
 typedef struct BUILDING
 {
-	INT16			sUpClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
-	INT16 		sDownClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
+	INT32			sUpClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
+	INT32 		sDownClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
 	UINT8			ubNumClimbSpots;
 } BUILDING;
 
 extern UINT8 gubBuildingInfo[ WORLD_MAX ];
 
 BOOLEAN InBuilding( INT32 sGridNo );
-BUILDING * GenerateBuilding( INT16 sDesiredSpot );
+BUILDING * GenerateBuilding( INT32 sDesiredSpot );
 BUILDING * FindBuilding( INT32 sGridNo );
 void GenerateBuildings( void );
-INT16 FindClosestClimbPoint( INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp );
+INT32 FindClosestClimbPoint( INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp );
 BOOLEAN SameBuilding( INT32 sGridNo1, INT32 sGridNo2 );
 
 #endif

@@ -29,32 +29,32 @@ extern INT16 DirYIncrementer[8];
 // GoAsFarAsPossibleTowards - C.O. stuff related to current animation esp first aid
 // SetCivilianDestination - C.O. stuff for if we don't control the civ
 
-int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
+BOOLEAN LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
 	BOOLEAN fSkipTilesWithMercs;
  
-	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
+	if ((sGridNo < 0) || (sGridNo >= GRIDSIZE))
   {
 #ifdef RECORDNET
-   fprintf(NetDebugFile,"LegalNPC->sDestination: ERROR - rcvd invalid gridno %d",gridno);
+   fprintf(NetDebugFile,"LegalNPC->sDestination: ERROR - rcvd invalid gridno %d",GridNo);
 #endif
 
 #ifdef BETAVERSION
-   NumMessage("LegalNPC->sDestination: ERROR - rcvd invalid gridno ",gridno);
+   NumMessage("LegalNPC->sDestination: ERROR - rcvd invalid gridno ",GridNo);
 #endif
 
    return(FALSE);
   }
 
 	// return false if gridno on different level from merc
-	if ( GridNoOnVisibleWorldTile( pSoldier->sGridNo ) && gpWorldLevelData[ pSoldier->sGridNo ].sHeight != gpWorldLevelData[ sGridno ].sHeight )
+	if ( GridNoOnVisibleWorldTile( pSoldier->sGridNo ) && gpWorldLevelData[ pSoldier->sGridNo ].sHeight != gpWorldLevelData[ sGridNo ].sHeight )
 	{
 		return( FALSE );
 	}
 
 
 	// skip mercs if turnbased and adjacent AND not doing an IGNORE_PATH check (which is used almost exclusively by GoAsFarAsPossibleTowards)
-	fSkipTilesWithMercs = (gfTurnBasedAI && ubPathMode != IGNORE_PATH && SpacesAway( pSoldier->sGridNo, sGridno ) == 1 );
+	fSkipTilesWithMercs = (gfTurnBasedAI && ubPathMode != IGNORE_PATH && SpacesAway( pSoldier->sGridNo, sGridNo ) == 1 );
 
  // if this gridno is an OK destination
  // AND the gridno is NOT in a tear-gassed tile when we have no gas mask
@@ -63,10 +63,10 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
  // AND the gridno hasn't been black-listed for us
 
  // Nov 28 98: skip people in destination tile if in turnbased
- if ( ( NewOKDestination(pSoldier, sGridno, fSkipTilesWithMercs, pSoldier->bLevel ) ) &&
-				( !InGas( pSoldier, sGridno ) ) &&
-				( sGridno != pSoldier->sGridNo ) &&
-				( sGridno != pSoldier->sBlackList ) )
+ if ( ( NewOKDestination(pSoldier, sGridNo, fSkipTilesWithMercs, pSoldier->bLevel ) ) &&
+				( !InGas( pSoldier, sGridNo ) ) &&
+				( sGridNo != pSoldier->sGridNo ) &&
+				( sGridNo != pSoldier->sBlackList ) )
  /*
  if ( ( NewOKDestination(pSoldier, sGridno, FALSE, pSoldier->bLevel ) ) &&
 				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) ) &&
@@ -81,7 +81,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
    {
     
 	  // if water's a problem, and gridno is in a water tile (bridges are OK)
-		if (!ubWaterOK && Water(sGridno))
+		if (!ubWaterOK && Water(sGridNo))
 		  return(FALSE);
 
 		//Madd: added to prevent people from running into gas and fire
@@ -103,7 +103,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
       // for example), don't bother
       case IGNORE_PATH     :	return(TRUE);
 
-      case ENSURE_PATH     :	if ( FindBestPath( pSoldier, sGridno, pSoldier->bLevel, WALKING, COPYROUTE, fFlags ) )
+      case ENSURE_PATH     :	if ( FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, COPYROUTE, fFlags ) )
 															{
 			   												return(TRUE);        // legal destination
 															}
@@ -113,7 +113,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
         												return(FALSE);
 															}
 															// *** NOTE: movement mode hardcoded to WALKING !!!!!
-			case ENSURE_PATH_COST:	return(PlotPath(pSoldier,sGridno,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0));
+			case ENSURE_PATH_COST:	return(PlotPath(pSoldier,sGridNo,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0));
 
       default              :
 #ifdef BETAVERSION
@@ -129,7 +129,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 
 
-int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
+int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	UINT8 ubGottaCancel = FALSE;
 	UINT8 ubSuccess = FALSE;
@@ -137,7 +137,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 	// have to make sure the old destination is still legal (somebody may
 	// have occupied the destination gridno in the meantime!)
-	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
+	if (LegalNPCDestination(pSoldier,sGridNo,ENSURE_PATH,WATEROK,0))
 	{
 #ifdef DEBUGDECISIONS
 		STR tempstr;
@@ -148,12 +148,12 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		pSoldier->bPathStored = TRUE;	// optimization - Ian
 
 		// make him go to it (needed to continue movement across multiple turns)
-		NewDest(pSoldier,sGridno);
+		NewDest(pSoldier,sGridNo);
 
 		ubSuccess = TRUE;
 	 
 		// make sure that it worked (check that pSoldier->sDestination == pSoldier->sGridNo)
-		if (pSoldier->sDestination == sGridno)
+		if (pSoldier->sDestination == sGridNo)
 		{
 			ubSuccess = TRUE;
 		}
@@ -202,7 +202,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		{
 			// this is an escorted NPC, don't want to just completely stop
 			// moving, try to find a nearby "next best" destination if possible
-			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sGridno,pSoldier->bAction);
+			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sGridNo,pSoldier->bAction);
 
 			// if it's not possible to get any closer
 			if (pSoldier->usActionData == NOWHERE)
@@ -212,16 +212,16 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 			else
 			{
 				// change his desired destination to this new one
-				sGridno = pSoldier->usActionData;
+				sGridNo = pSoldier->usActionData;
 
 				// GoAsFar... sets pathStored TRUE only if he could go all the way
 
 				// make him go to it (needed to continue movement across multiple turns)
-				NewDest(pSoldier,sGridno);
+				NewDest(pSoldier,sGridNo);
 
 
 				// make sure that it worked (check that pSoldier->sDestination == pSoldier->sGridNo)
-				if (pSoldier->sDestination == sGridno)
+				if (pSoldier->sDestination == sGridNo)
 					ubSuccess = TRUE;
 				else
 					ubGottaCancel = TRUE;
@@ -243,7 +243,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 
 
-INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
+INT32 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 {
  // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
  if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
@@ -271,7 +271,7 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 
 INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 {
- INT16 sPatrolPoint;
+ INT32 sPatrolPoint;
  INT8  bOldOrders;
 #ifdef DEBUGDECISIONS
  STR16 tempstr;
@@ -438,14 +438,14 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 
 
-INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
+INT32 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 #ifdef DEBUGDECISIONS
  STR16 tempstr;
 #endif
 	INT16 sLoop,sAPCost;
-	INT16 sTempDest,sGoToGrid;
-	INT16 sOrigin;
+	INT32 sTempDest,sGoToGrid;
+	INT32 sOrigin;
 	UINT16 usMaxDist;
 	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
 	INT8 bAPsLeft, fPathFlags;
@@ -766,14 +766,14 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
   }
 }
 										
-INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction)
+INT32 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT32 sDesGrid, INT8 bAction)
 {
 	return( InternalGoAsFarAsPossibleTowards( pSoldier, sDesGrid, -1, bAction, 0 ) );
 }
 	
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 {
-	INT16 usNewGridNo,bAPCost;
+	INT32 usNewGridNo,bAPCost;
 
 
 	// turn off the flag now that we're going to do something about it...
@@ -823,7 +823,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 #endif
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
 	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
@@ -874,7 +874,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 	}
 }
 
-void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
+void SetCivilianDestination(UINT8 ubWho, INT32 sGridNo)
 {
  SOLDIERTYPE *pSoldier;
 
@@ -887,10 +887,10 @@ void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
   {
 */
    // if the destination is different from what he has now
-   if (pSoldier->usActionData != sGridno)
+   if (pSoldier->usActionData != sGridNo)
     {
      // store his new destination
-     pSoldier->usActionData = sGridno;
+     pSoldier->usActionData = sGridNo;
 
      // and cancel any movement in progress that he was still engaged in
      pSoldier->bAction = AI_ACTION_NONE;
@@ -925,7 +925,7 @@ void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 
 #define RADIUS 3
 
-INT16 TrackScent( SOLDIERTYPE * pSoldier )
+INT32 TrackScent( SOLDIERTYPE * pSoldier )
 {
 	// This function returns the best gridno to go to based on the scent being followed,
 	// and the soldier (creature/animal)'s current direction (which is used to resolve
@@ -1038,8 +1038,8 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 	}
 	if (iBestGridNo != NOWHERE )
 	{
-		pSoldier->usActionData = (INT16) iBestGridNo;
-		return( (INT16) iBestGridNo );
+		pSoldier->usActionData = iBestGridNo;
+		return( iBestGridNo );
 	}
 	return( 0 );
 }

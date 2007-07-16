@@ -35,13 +35,13 @@ void EndCurInteractiveTileCheck( );
 void LogMouseOverInteractiveTile( INT32 sGridNo );
 BOOLEAN ShouldCheckForMouseDetections( );
  
-void CycleIntTileFindStack( UINT16 usMapPos );
+void CycleIntTileFindStack( INT32 usMapPos );
 void SetActionModeDoorCursorText( );
 
 LEVELNODE *GetCurInteractiveTile( );
-LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo );
-LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure );
-LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems );
+LEVELNODE *GetCurInteractiveTileGridNo( INT32 *psGridNo );
+LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure );
+LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT32 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems );
 
 
 

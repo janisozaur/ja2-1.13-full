@@ -176,7 +176,7 @@ typedef struct TAG_STRUCTURE
 		};
 		struct
 		{
-			INT16											sBaseGridNo;
+			INT32 sBaseGridNo;
 		};
 	}; // 2 bytes
 	INT16													sCubeOffset;// height of bottom of object in profile "cubes"

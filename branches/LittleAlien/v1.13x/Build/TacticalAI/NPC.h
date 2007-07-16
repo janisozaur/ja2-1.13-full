@@ -46,7 +46,7 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+		INT32		sRequiredGridNo;		// location for NPC req'd to say quote
 	};
 	UINT16	usFactMustBeTrue;		// ...before saying quote
 	UINT16 	usFactMustBeFalse;	// ...before saying quote
@@ -68,7 +68,7 @@ typedef struct
 	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	usGoToGridno;
+	INT32	usGoToGridNo;
 	INT16		sActionData;		// special action value	
 
 #if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
@@ -168,7 +168,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion );
 
 extern void TriggerFriendWithHostileQuote( UINT8 ubNPC );
 
-extern void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16 sNewGridNo );
+extern void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT32 sOldGridNo, INT32 sNewGridNo );
 
 extern UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord );
 

@@ -33,7 +33,7 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
 //c an this grunt help anyone else out?
 BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 
-BOOLEAN FindAutobandageClimbPoint( INT16 sDesiredGridNo, BOOLEAN fClimbUp )
+BOOLEAN FindAutobandageClimbPoint( INT32 sDesiredGridNo, BOOLEAN fClimbUp )
 {
 	// checks for existance of location to climb up to building, not occupied by a medic
 	BUILDING *	pBuilding;
@@ -225,16 +225,16 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 {
 	UINT8						cnt, cnt2;
-	INT16						bBestPriority = 0, sBestAdjGridNo;
-	INT16						sPatientGridNo, sBestPatientGridNo;
+	INT32						bBestPriority = 0, sBestAdjGridNo;
+	INT32						sPatientGridNo, sBestPatientGridNo;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
 	SOLDIERTYPE *		pPatient;
 	SOLDIERTYPE *		pBestPatient = NULL;
 	SOLDIERTYPE *		pOtherMedic;
 	INT8						bPatientPriority;
 	UINT8						ubDirection;
-	INT16						sAdjustedGridNo, sAdjacentGridNo, sOtherAdjacentGridNo;
-	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
+	INT32 sAdjustedGridNo, sAdjacentGridNo, sOtherAdjacentGridNo;
+	INT32						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
 
 	gubGlobalPathFlags = PATH_THROUGH_PEOPLE;

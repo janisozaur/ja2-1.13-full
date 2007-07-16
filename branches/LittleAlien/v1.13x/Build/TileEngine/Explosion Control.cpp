@@ -74,7 +74,7 @@
 // MODULE FOR EXPLOSIONS
 
 // Spreads the effects of explosions...
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
+BOOLEAN ExpAffect( INT32 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID );
 
 // Flashbang effect on soldier
 UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOLEAN fInBuilding);
@@ -179,7 +179,7 @@ BOOLEAN         gfExplosionQueueActive = FALSE;
 BOOLEAN         gfExplosionQueueMayHaveChangedSight = FALSE;
 UINT8          gubPersonToSetOffExplosions = NOBODY;
 
-INT16   gsTempActionGridNo = NOWHERE;
+INT32			gsTempActionGridNo = NOWHERE;
 
 extern UINT8 gubInterruptProvoker;
 
@@ -519,7 +519,7 @@ void RemoveExplosionData( INT32 iIndex )
 }
 
 
-void HandleFencePartnerCheck( INT16 sStructGridNo )
+void HandleFencePartnerCheck( INT32 sStructGridNo )
 {
 	STRUCTURE *pFenceStructure, *pFenceBaseStructure;
 	LEVELNODE *pFenceNode;
@@ -570,7 +570,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 	INT16 sX, sY;
 	STRUCTURE  *pBase, *pWallStruct, *pAttached, *pAttachedBase;
 	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
-	INT16 sNewGridNo, sStructGridNo;
+	INT32 sNewGridNo, sStructGridNo;
 	INT16 sNewIndex, sSubIndex;
 	UINT16 usObjectIndex, usTileIndex;
 	UINT8  ubNumberOfTiles, ubLoop;
@@ -579,7 +579,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 	INT8  bDamageReturnVal;
 	BOOLEAN fContinue;
 	UINT32 uiTileType;
-	INT16  sBaseGridNo;
+	INT32 sBaseGridNo;
 	BOOLEAN fExplosive;
 
 	// ATE: Check for O3 statue for special damage..
@@ -805,7 +805,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						// Move WEST
 						sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( WEST ) );
 
-						pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 						if ( pNewNode != NULL )
 						{
@@ -821,7 +821,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
+									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -837,7 +837,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						// Move in EAST
 						sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
 
-						pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 						if ( pNewNode != NULL )
 						{
@@ -853,7 +853,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
+									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -952,7 +952,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						// Move in NORTH
 						sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
 
-						pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 						if ( pNewNode != NULL )
 						{
@@ -968,7 +968,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
+									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -983,7 +983,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						// Move in SOUTH
 						sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
 
-						pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
+							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridNo( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
 
 						if ( pNewNode != NULL )
 						{
@@ -999,7 +999,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
+									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -1096,11 +1096,11 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 						if ( !fInRoom )
 						{
 							// try to south
-							fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( SOUTH ) ), &ubRoom );
+							fInRoom = InARoom( sGridNo + DirectionInc( SOUTH ) , &ubRoom );
 							if ( !fInRoom )
 							{
 								// try to east
-								fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( EAST ) ), &ubRoom );
+								fInRoom = InARoom( sGridNo + DirectionInc( EAST ) , &ubRoom );
 							}
 						}
 
@@ -1122,13 +1122,13 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 					// Yes we are!
 					// Remove water....
 					ApplyMapChangesToMapTempFile( TRUE );
-					GetTileIndexFromTypeSubIndex( uiTileType, 1, (UINT16 *)&sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 1, &sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 2, (UINT16 *)&sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 2, &sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 3, (UINT16 *)&sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 3, &sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					ApplyMapChangesToMapTempFile( FALSE );
@@ -1217,7 +1217,7 @@ void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 	INT16    sDesiredLevel;
 	DB_STRUCTURE_TILE **ppTile;
 	UINT8    ubLoop, ubLoop2;
-	INT16    sNewGridNo, sNewGridNo2, sBaseGridNo;
+	INT32 sNewGridNo, sNewGridNo2, sBaseGridNo;
 	BOOLEAN    fToBreak = FALSE;
 	BOOLEAN    fMultiStructure = FALSE;
 	UINT8    ubNumberOfTiles;
@@ -1361,7 +1361,7 @@ void ExplosiveDamageGridNo( INT32 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 }
 
 
-BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem, INT16 sSubsequent )
+BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT32 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem, INT16 sSubsequent )
 {
 	SOLDIERTYPE *pSoldier;
 	INT16 sNewWoundAmt = 0;
@@ -1584,7 +1584,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 	return( fRecompileMovementCosts );
 }
 
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
+BOOLEAN ExpAffect( INT32 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
 	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
 	UINT8 ubPerson;
@@ -1594,10 +1594,10 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT32 sGridNo, UINT32 uiDist, UINT16 usIte
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect = FALSE;
 	BOOLEAN fStunEffect  = FALSE;
-	BOOLEAN fBlastEffect = TRUE;
-	BOOLEAN fBloodEffect = FALSE;
 	INT8 bSmokeEffectType = 0;
-	INT16 sNewGridNo;
+	BOOLEAN fBlastEffect = TRUE;
+	INT32 sNewGridNo;
+	BOOLEAN fBloodEffect = FALSE;
 	ITEM_POOL * pItemPool, * pItemPoolNext;
 	UINT32 uiRoll;
 
@@ -2006,7 +2006,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 	INT8     Blocking, BlockingTemp;
 	BOOLEAN      fTravelCostObs = FALSE;
 	UINT32       uiRangeReduce;
-	INT16        sNewGridNo;
+   INT32 sNewGridNo;
 	STRUCTURE * pBlockingStructure;
 	BOOLEAN      fBlowWindowSouth = FALSE;
 	BOOLEAN   fReduceRay = TRUE;
@@ -2083,9 +2083,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 			{
 				// ATE: For windows, check to the west and north for a broken window, as movement costs
 				// will override there...
-				sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
+				 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( WEST ) );
 
-				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 				if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				{
 					// If open, fTravelCostObs set to false and reduce range....
@@ -2101,9 +2101,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 			if ( fTravelCostObs )
 			{
-				sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
+				 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( NORTH ) );
 
-				BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+				 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 				if ( BlockingTemp == BLOCKING_TOPRIGHT_OPEN_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_OPEN_WINDOW )
 				{
 					// If open, fTravelCostObs set to false and reduce range....
@@ -2139,9 +2139,9 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 			// ATE: For windows, check to the west and north for a broken window, as movement costs
 			// will override there...
-			sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( WEST ) );
+			 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( WEST ) );
 
-			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , TRUE );
+			 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure , TRUE );
 			if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			{
 				fTravelCostObs = FALSE;
@@ -2155,8 +2155,8 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 				}
 			}
 
-			sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
-			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+			 sNewGridNo = NewGridNo( uiNewSpot, DirectionInc( NORTH ) );
+			 BlockingTemp = GetBlockingStructureInfo( sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 
 			if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
 			{
@@ -2314,7 +2314,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 				//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
 				// ok, do what we do here...
-				if ( ExpAffect( sGridNo, (INT16)uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+       if ( ExpAffect( sGridNo, uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
 				{
 					fRecompileMovement = TRUE;
 				}
@@ -2353,7 +2353,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 							{
 								// ok, do what we do here
 								//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
-								if ( ExpAffect( sGridNo, (INT16)uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+								if ( ExpAffect( sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
 								{
 									fRecompileMovement = TRUE;
 								}
@@ -2407,7 +2407,7 @@ void SpreadEffect( INT32 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 		INT16 sX, sY;
 
 		// DO wireframes as well
-		ConvertGridNoToXY( (INT16)sGridNo, &sX, &sY );
+		ConvertGridNoToXY( sGridNo, &sX, &sY );
 		SetRecalculateWireFrameFlagRadius( sX, sY, ubRadius );
 		CalculateWorldWireFrameTiles( FALSE );
 
