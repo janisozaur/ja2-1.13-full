@@ -5770,7 +5770,7 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 	INT32 iNumberOfItems = 0;
 	POINT MousePos;
 	INT16 sSizeOfEachSubRegion = 0;
-	INT32 sYPositionOnBar = 0;
+	INT16 sYPositionOnBar = 0;
 	INT16 iCurrentItemValue = 0;
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ) || ( iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ) ) 

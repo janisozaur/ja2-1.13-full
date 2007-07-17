@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="mss32.lib winmm.lib smackw32.lib"
-				OutputFile="E:\GAMES\JA2GoldEng\ja2_lmd.exe"
+				OutputFile="D:\Games\Jagged Alliance 2 v1.13\ja2_debug_BM_en.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				IgnoreDefaultLibraryNames="libc"

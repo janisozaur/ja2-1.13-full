@@ -407,9 +407,9 @@ void GenerateBuildings( void )
 
 	for ( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
 	{
-		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( (INT16) uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
+		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
 		{
-			GenerateBuilding( (INT16) uiLoop );
+			GenerateBuilding( uiLoop );
 		}
 	}
 }

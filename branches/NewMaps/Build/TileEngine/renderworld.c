@@ -1091,7 +1091,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 						{
 							if ( fCheckForMouseDetections && gpWorldLevelData[uiTileIndex].pStructHead != NULL )
 							{
-								LogMouseOverInteractiveTile( (INT16)uiTileIndex );
+								LogMouseOverInteractiveTile( uiTileIndex );
 							}
 						}
 

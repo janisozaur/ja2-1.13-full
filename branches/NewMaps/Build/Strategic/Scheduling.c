@@ -984,8 +984,8 @@ void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 	for( i = 0; i < MAX_SCHEDULE_ACTIONS; i++ )
 	{
 		gpScheduleList->usTime[i] = 0xffff;
-		gpScheduleList->usData1[i] = 0xffff;
-		gpScheduleList->usData2[i] = 0xffff;
+		gpScheduleList->usData1[i] = 0xffffffff;
+		gpScheduleList->usData2[i] = 0xffffffff;
 	}
 	//Have the default schedule enter between 7AM and 8AM
 	gpScheduleList->ubAction[0] = SCHEDULE_ACTION_ENTERSECTOR;

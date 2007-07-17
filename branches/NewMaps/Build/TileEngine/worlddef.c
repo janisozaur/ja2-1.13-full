@@ -4224,7 +4224,7 @@ extern UINT8 * gubGridNoMarkers;
 extern UINT8 * gubFOVDebugInfoInfo;
 extern INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ];
 extern INT32 dirDelta[8];
-INT16 DirIncrementer[8];
+extern INT16 DirIncrementer[8];
 extern INT16 *	gsCoverValue;
 
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
