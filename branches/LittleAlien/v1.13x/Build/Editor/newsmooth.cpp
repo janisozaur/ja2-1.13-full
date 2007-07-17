@@ -844,7 +844,9 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
-		if( uiMapIndex < NOWHERE )
+		
+		//if( uiMapIndex < NOWHERE )
+		if( uiMapIndex < (GRIDSIZE + 1) )
 		{
 			usIndex = GetCaveTileIndexFromPerimeterValue( 0xff );
 			AddToUndoList( uiMapIndex );
@@ -855,7 +857,9 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 	for( y = top - 1; y <= bottom + 1; y++ ) for( x = left - 1; x <= right + 1; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
-		if( uiMapIndex < NOWHERE )
+		
+		//if( uiMapIndex < NOWHERE )
+		if( uiMapIndex < (GRIDSIZE + 1) )
 		{
 			if( CaveAtGridNo( uiMapIndex ) )
 			{

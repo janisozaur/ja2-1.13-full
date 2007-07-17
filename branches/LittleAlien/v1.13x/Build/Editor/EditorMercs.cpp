@@ -319,8 +319,8 @@ void GameInitEditorMercsInfo()
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i] = 0xffff;
-		gCurrSchedule.usData1[i] = 0xffff;
-		gCurrSchedule.usData2[i] = 0xffff;
+		gCurrSchedule.usData1[i] = 0xffffffff;
+		gCurrSchedule.usData2[i] = 0xffffffff;
 	}
 }
 
@@ -3372,8 +3372,8 @@ void StartScheduleAction()
 			EnableTextFields( 1, 4 );
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
 			gfRenderTaskbar = TRUE;
-			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffff;
-			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
+			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffffffff;
+			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffffffff;
 			break;
 		case SCHEDULE_ACTION_LOCKDOOR:
 		case SCHEDULE_ACTION_UNLOCKDOOR:
@@ -3402,14 +3402,14 @@ void StartScheduleAction()
 			iDrawMode = DRAW_MODE_SCHEDULEACTION;
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_GRIDNO;
 			gfRenderTaskbar = TRUE;
-			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
+			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffffffff;
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 		case SCHEDULE_ACTION_STAYINSECTOR:
 			gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
 			gfRenderTaskbar = TRUE;
-			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffff;
-			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffff;
+			gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = 0xffffffff;
+			gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = 0xffffffff;
 			break;
 	}
 	MarkWorldDirty();
@@ -3475,9 +3475,9 @@ void ClearCurrentSchedule()
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], L"No action" );
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
-		gCurrSchedule.usData1[i] = 0xffff;
+		gCurrSchedule.usData1[i] = 0xffffffff;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], L"" );
-		gCurrSchedule.usData2[i] = 0xffff;
+		gCurrSchedule.usData2[i] = 0xffffffff;
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], L"" );
 	}
 	//Remove the variance stuff

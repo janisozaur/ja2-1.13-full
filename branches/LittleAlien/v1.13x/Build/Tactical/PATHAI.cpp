@@ -2168,7 +2168,8 @@ void RoofReachableTest( INT32 sStartGridNo, UINT8 ubBuildingID )
 
 	// clearing flags
 
-	for( sGridNo = 0 ; sGridNo < NOWHERE ; ++sGridNo )
+	//for( sGridNo = 0 ; sGridNo < NOWHERE ; ++sGridNo )
+	for( sGridNo = 0 ; sGridNo < (GRIDSIZE + 1) ; ++sGridNo )
 		gpWorldLevelData[ sGridNo ].uiFlags &= (~MAPELEMENT_REACHABLE);
 	
 
