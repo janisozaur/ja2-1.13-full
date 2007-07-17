@@ -32,8 +32,11 @@
 
 #include "PathAIDebug.h"
 
+	//INT16 gsCoverValue[WORLD_MAX];
+	INT16 * gsCoverValue = NULL;
+
 #ifdef _DEBUG
-	INT16 gsCoverValue[WORLD_MAX];
+
 	INT16	gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
 		// NB Change this to true to get visible cover debug -- CJC
@@ -2363,7 +2366,7 @@ INT32 FindNearestOpenableNonDoor( INT32 sStartGridNo )
 
 
 
-INT32 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction )
+INT32 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT32 sPos, INT8 bAction )
 {
 	INT32 sGridNo;
 	INT32 sBestSpot = NOWHERE;

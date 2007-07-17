@@ -26,8 +26,8 @@ extern INT32 guiWorldRows;
 #define OLD_WORLD_COORD_ROWS			1600
 #define OLD_WORLD_MAX					25600
 
-#define WORLD_COLS			guiWorldCols
-#define WORLD_ROWS			guiWorldRows
+#define WORLD_COLS			160 //guiWorldCols
+#define WORLD_ROWS			160 //guiWorldRows
 #define WORLD_COORD_COLS			(WORLD_COLS*CELL_X_SIZE)
 #define WORLD_COORD_ROWS			(WORLD_ROWS*CELL_Y_SIZE)
 #define WORLD_MAX					(WORLD_COLS*WORLD_ROWS)

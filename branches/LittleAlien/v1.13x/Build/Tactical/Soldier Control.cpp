@@ -332,8 +332,8 @@ SOLDIERTYPE::SOLDIERTYPE() {
 
 	// The following are based on the "old" SOLDIERTYPE struct
 	// Remove these later
-	Assert(SIZEOF_SOLDIERTYPE_POD == 2344);
-	Assert(offsetof( SOLDIERTYPE, bFiller ) == 2305);
+	//Assert(SIZEOF_SOLDIERTYPE_POD == 2344);
+	//Assert(offsetof( SOLDIERTYPE, bFiller ) == 2305);
 }
 
 // Copy Constructor
@@ -3968,7 +3968,7 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
-void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGrid )
+void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT32 sLocationGrid )
 {
 	UINT8		ubCombinedLoss, ubVolume, ubReason;
 //	SOLDIERTYPE * pNewSoldier;

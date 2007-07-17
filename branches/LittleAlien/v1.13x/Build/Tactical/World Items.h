@@ -15,7 +15,8 @@
 //Kaiden: This constant is to flag items that an enemy drops when they die.
 #define	WORLD_ITEM_DROPPED_FROM_ENEMY								0x0800
 
-typedef struct
+//typedef struct
+struct WORLDITEM
 {
 	BOOLEAN				fExists;
 	INT16 _old_sGridNo;
@@ -34,8 +35,10 @@ typedef struct
 	UINT8					ubNonExistChance;  
 	INT32 sGridNo;
 
-} WORLDITEM;
-typedef struct
+}; //WORLDITEM;
+
+//typedef struct
+struct _OLD_WORLDITEM
 {
 	BOOLEAN				fExists;
 	INT16					sGridNo;
@@ -53,7 +56,7 @@ typedef struct
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8					ubNonExistChance;  
 
-} _OLD_WORLDITEM;
+}; //_OLD_WORLDITEM;
 
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;

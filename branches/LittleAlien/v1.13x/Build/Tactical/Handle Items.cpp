@@ -5517,6 +5517,6 @@ void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 		DoMercBattleSound( pSoldier, BATTLE_SOUND_GOTIT );
 	}
 	gpTempSoldier = pSoldier;
-	gsTempGridno = sGridNo;
+	gsTempGridNo = sGridNo;
 	SetCustomizableTimerCallbackAndDelay( 1000, CheckForPickedOwnership, TRUE );
 }

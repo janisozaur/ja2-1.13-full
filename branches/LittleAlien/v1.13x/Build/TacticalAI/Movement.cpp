@@ -85,12 +85,12 @@ BOOLEAN LegalNPCDestination(SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubPathMo
 		  return(FALSE);
 
 		//Madd: added to prevent people from running into gas and fire
-		if ( (gpWorldLevelData[sGridno].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
+		if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
 					FindGasMask(pSoldier) == NO_SLOT  )
 		{
 			return( FALSE );
 		}
-		if ( gpWorldLevelData[sGridno].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_BURNABLEGAS )
+		if ( gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_BURNABLEGAS )
 		{
 			return( FALSE );
 		}

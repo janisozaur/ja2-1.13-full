@@ -20,7 +20,9 @@
 	#include "Smell.h"
 #endif
 
-#define			NUM_REVEALED_BYTES			3200
+//#define			NUM_REVEALED_BYTES			3200
+//SB: make size of gpRevealedMap dependable from variable tactical map dimensions
+#define			NUM_REVEALED_BYTES			(WORLD_MAX/8)
 
 extern BOOLEAN gfLoadingExitGrids;
 

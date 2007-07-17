@@ -16,7 +16,8 @@
 
 #define ROOF_LOCATION_CHANCE 8
 
-UINT8						gubBuildingInfo[ WORLD_MAX ];
+//UINT8						gubBuildingInfo[ WORLD_MAX ];
+UINT8*					gubBuildingInfo = NULL;
 BUILDING				gBuildings[ MAX_BUILDINGS ];
 UINT8						gubNumberOfBuildings;
 
@@ -433,9 +434,9 @@ void GenerateBuildings( void )
 	// for each location in a room try to find building info
 	for ( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
 	{
-		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( (INT16) uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
+		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
 		{
-			GenerateBuilding( (INT16) uiLoop );
+			GenerateBuilding( uiLoop );
 		}
 	}
 }

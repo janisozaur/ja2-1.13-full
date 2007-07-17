@@ -4239,7 +4239,7 @@ extern UINT8 * gubGridNoMarkers;
 extern UINT8 * gubFOVDebugInfoInfo;
 extern INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ];
 extern INT32 dirDelta[8];
-INT16 DirIncrementer[8];
+extern INT16 DirIncrementer[8];
 extern INT16 *	gsCoverValue;
 
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
@@ -4286,8 +4286,8 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
 #endif
 
-	WORLD_ROWS = nWorldRows;
-	WORLD_COLS = nWorldCols;
+	//WORLD_ROWS = nWorldRows;
+	//WORLD_COLS = nWorldCols;
 
 	dirDelta[0]= -WORLD_COLS;
 	dirDelta[1]= 1-WORLD_COLS;

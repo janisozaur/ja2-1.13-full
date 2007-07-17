@@ -1031,7 +1031,7 @@ void DeleteMapScreenBottomMessageScrollRegion( void )
 void MapScreenMessageScrollBarCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 {
 	POINT MousePos;
-	UINT32 ubMouseYOffset;
+	UINT8 ubMouseYOffset;
 	UINT8	ubDesiredSliderOffset;
 	UINT8 ubDesiredMessageIndex;
 	UINT8 ubNumMessages;
@@ -1774,7 +1774,7 @@ void HandleExitsFromMapScreen( void )
 					break;
 
 				case MAP_EXIT_TO_TACTICAL:
-					SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
+					SetCurrentWorldSector( sSelMapX, sSelMapY, ( INT8 )iCurrentMapSectorZ );
 					break;
 
 				case MAP_EXIT_TO_OPTIONS:

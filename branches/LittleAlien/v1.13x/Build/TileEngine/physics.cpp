@@ -752,7 +752,7 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 	// SKIP FIRST GRIDNO, WE'LL COLLIDE WITH OURSELVES....
 	if ( pObject->fTestObject != TEST_OBJECT_NO_COLLISIONS )
 	{
-		iCollisionCode = CheckForCollision( dX, dY, dZ, dDeltaX, dDeltaY, dDeltaZ, &usStructureID, &dNormalX, &dNormalY, &dNormalZ );
+		iCollisionCode = CheckForCollision( dX, dY, dZ, dDeltaX, dDeltaY, dDeltaZ, (INT16 *)&usStructureID, &dNormalX, &dNormalY, &dNormalZ );
 	}
 	else if ( pObject->fTestObject == TEST_OBJECT_NO_COLLISIONS )
 	{

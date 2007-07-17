@@ -13,7 +13,15 @@ typedef struct //for exit grids (object level)
 	UINT8 ubGotoSectorZ;
 }EXITGRID;
 
+typedef struct
+{
+	INT16 usGridNo;
+	UINT8 ubGotoSectorX;
+	UINT8 ubGotoSectorY;
 	UINT8 ubGotoSectorZ;
+}_OLD_EXITGRID;
+
+
 BOOLEAN	ExitGridAtGridNo( UINT32 usMapIndex );
 BOOLEAN	GetExitGridLevelNode( UINT32 usMapIndex, LEVELNODE **ppLevelNode );
 BOOLEAN	GetExitGrid( UINT32 usMapIndex, EXITGRID *pExitGrid );

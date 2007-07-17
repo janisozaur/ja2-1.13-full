@@ -58,7 +58,8 @@ extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 #ifdef PATHAI_VISIBLE_DEBUG
 #include "video.h"
 
-extern INT16 gsCoverValue[WORLD_MAX];
+//extern INT16 gsCoverValue[WORLD_MAX];
+extern INT16 * gsCoverValue;
 BOOLEAN gfDisplayCoverValues = TRUE;
 BOOLEAN gfDrawPathPoints = FALSE;
 #endif

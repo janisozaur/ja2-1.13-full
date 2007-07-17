@@ -1707,7 +1707,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	INT8	bSlot;
 
 
-	if( pSoldier == NULL || pOpponent == NULL || ubItemPos > NUM_INV_SLOTS || sGridno > NUMBEROFTILES )
+	if( pSoldier == NULL || pOpponent == NULL || ubItemPos > NUM_INV_SLOTS || sGridNo > NUMBEROFTILES )
 		return 0;
 
 	if( pSoldier->inv[ubItemPos].usItem == NOTHING )
@@ -1772,7 +1772,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	if ( Explosive[ ubExplosiveIndex ].ubType == EXPLOSV_BURNABLEGAS )
 	{
 		// if target gridno is outdoors (where tear gas lasts only 1-2 turns)
-		if (gpWorldLevelData[sGridno].ubTerrainID != FLAT_FLOOR)
+		if (gpWorldLevelData[sGridNo].ubTerrainID != FLAT_FLOOR)
 			iBreathDamage /= 2;       // reduce effective breath damage by 1/2
 	}
 	else if (iExplosDamage)

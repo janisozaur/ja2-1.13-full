@@ -1294,7 +1294,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 					{	
 						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->bLife >= OKLIFE) )
 						{
-							INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
+							INT32 sActionGridNo, sGridNo, sAdjustedGridNo;
 							UINT8	ubDirection;
 
 							if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
@@ -1539,7 +1539,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 				case( MILCON_MENU_ALL_COMETOME ):
 					{
 						UINT8 cnt, ubDirection;
-						INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
+						INT32 sActionGridNo, sGridNo, sAdjustedGridNo;
 						SOLDIERTYPE *pTeamSoldier;
 						
 						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;

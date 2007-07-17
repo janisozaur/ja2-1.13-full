@@ -821,7 +821,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -853,7 +853,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -968,7 +968,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -999,7 +999,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 								}
 
 								// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+								GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, (UINT16 *)&sNewIndex );
 
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -1122,13 +1122,13 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 					// Yes we are!
 					// Remove water....
 					ApplyMapChangesToMapTempFile( TRUE );
-					GetTileIndexFromTypeSubIndex( uiTileType, 1, &sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 1, (UINT16 *)&sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 2, &sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 2, (UINT16 *)&sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 3, &sNewIndex );
+					GetTileIndexFromTypeSubIndex( uiTileType, 3, (UINT16 *)&sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					ApplyMapChangesToMapTempFile( FALSE );

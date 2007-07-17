@@ -1241,7 +1241,7 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 
 	// JA2 Gold: don't place people in the water.
 	// If any of the waypoints is on a water spot, we're going to have to remove it
-	psTempArray = MemAlloc( sizeof(INT32) * usArraySize );
+	psTempArray = (INT32 *) MemAlloc( sizeof(INT16) * usArraySize );
 	memcpy(psTempArray, psArray, sizeof(INT32) * usArraySize );
 	psArray = psTempArray;
 	for (i = 0; i < usArraySize; i++)

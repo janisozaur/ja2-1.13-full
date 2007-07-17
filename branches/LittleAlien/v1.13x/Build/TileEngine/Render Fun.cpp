@@ -24,13 +24,14 @@
 #endif
 
 // Room Information
-UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+//UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+UINT8*						gubWorldRoomInfo = NULL;
 UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 
 BOOLEAN InitRoomDatabase( )
 {
-	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
+	//memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
 	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
 	return( TRUE );
 }

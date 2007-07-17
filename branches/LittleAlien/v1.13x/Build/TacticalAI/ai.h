@@ -11,7 +11,8 @@ extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9
 
 extern BOOLEAN gfDisplayCoverValues;
-extern INT16 gsCoverValue[WORLD_MAX];
+//extern INT16 gsCoverValue[WORLD_MAX];
+extern INT16 * gsCoverValue;
 
 // AI actions
 
