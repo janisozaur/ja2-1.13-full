@@ -350,8 +350,8 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 	vfsEntry	entry;
 
-//	printf("Request to open %s...\n", strFilename);
-	if ( !VFS.FindResource( strFilename, entry ) )
+	printf("Request to open %s...\n", strFilename);
+//	if ( !VFS.FindResource( strFilename, entry ) )
 	{
 		entry.LibraryID = LIB_REAL_FILE;
 		entry.IsWriteable = TRUE;
@@ -508,6 +508,10 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 		{
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 			dwNumBytesRead = IO_File_Read( hRealFile, pDest, dwNumBytesToRead);
+			
+			if ( puiBytesRead )
+				*puiBytesRead = (UINT32)dwNumBytesRead;
+
 			if ( dwNumBytesToRead != dwNumBytesRead )
 			{
 				fprintf(stderr, "Error reading file %d: errno=%d\n",
@@ -515,9 +519,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 
 				return FALSE;
 			}
-
-			if ( puiBytesRead )
-				*puiBytesRead = (UINT32)dwNumBytesRead;
 
 			fRet = TRUE;
 		}
@@ -598,16 +599,16 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 		dwNumBytesWritten = IO_File_Write( hRealFile, pDest, dwNumBytesToWrite );
+
+		if ( puiBytesWritten )
+			*puiBytesWritten = (UINT32)dwNumBytesWritten;
+
 		if ( dwNumBytesWritten != dwNumBytesToWrite )
 		{
 				fprintf(stderr, "Error writing file %d: errno=%d\n",
 					hRealFile, errno);
 			fRet = FALSE;
 		}
-
-		if ( puiBytesWritten )
-			*puiBytesWritten = (UINT32)dwNumBytesWritten;
-
 	
 	}
 	else

@@ -43,7 +43,6 @@
 extern UINT32	MemDebugCounter;
 
 
-//extern	BOOLEAN	CheckIfGameCdromIsInCDromDrive();
 extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 
 // Prototype Declarations
@@ -178,9 +177,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 
 	// Get Executable Directory
 	GetHomeDirectory( CurrentDir );
-	CIniReader	customDP;
-	const CHAR8 *pCustomDir;
-	CHAR8 customDataPath[MAX_PATH];
 	STRING512	IniName;
 
 	if ( !SetFileManCurrentDirectory( CurrentDir ) )
@@ -190,16 +186,6 @@ BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 
 	sprintf( IniName, "%s%s", CurrentDir, "Ja2.ini");
-	customDP.Open(IniName, TRUE);
-	pCustomDir = customDP.ReadString("Ja2 Settings", "CUSTOM_DATA_LOCATION", NULL);
-	if ( !pCustomDir )
-		printf("Custom dir isn't specified\n");
-	else
-	{
-		sprintf(customDataPath, "%s%s%c", CurrentDir, pCustomDir, SLASH);
-		printf("Custom dir = %s\n", customDataPath);
-	}
-	customDP.Close();
 
 	// Adjust Current Dir
 	sprintf( DataDir, "%sData%c", CurrentDir, SLASH );
