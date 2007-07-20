@@ -123,7 +123,64 @@ BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
 
 BOOLEAN GetArmsDealerShopHours( UINT8 ubArmsDealer, UINT32 *puiOpeningTime, UINT32 *puiClosingTime );
 
+BOOLEAN SPECIAL_ITEM_INFO::operator==(SPECIAL_ITEM_INFO& compare)
+{
+	if (this->bItemCondition == compare.bItemCondition && this->ubImprintID == compare.ubImprintID)
+	{
+		for (int x = 0; x < MAX_ATTACHMENTS; ++x)
+		{
+			if (this->usAttachment[x] != compare.usAttachment[x]
+			|| this->bAttachmentStatus[x] != compare.bAttachmentStatus[x])
+			{
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
 
+void SPECIAL_ITEM_INFO::initialize()
+{
+	memset(this, 0, sizeof(SPECIAL_ITEM_INFO));
+}
+
+SPECIAL_ITEM_INFO& SPECIAL_ITEM_INFO::operator=(OLD_SPECIAL_ITEM_INFO_101& src)
+{
+	//set all the new empty slots to 0
+	this->initialize();
+
+	//the size of these haven't changed
+	this->bItemCondition = src.bItemCondition;
+	this->ubImprintID = src.ubImprintID;
+
+	//it's unlikely max will get less over the versions, but still, check the min
+	for (int x = 0; x < __min(MAX_ATTACHMENTS, MAX_ATTACHMENTS_101); ++x)
+	{
+		this->usAttachment[x] = src.usAttachment[x];
+		this->bAttachmentStatus[x] = src.bAttachmentStatus[x];
+	}
+	//if max gets greater, which is likely, then data was memset to 0 in initialize
+	return *this;
+}
+
+void DEALER_SPECIAL_ITEM::initialize()
+{
+	this->fActive = 0;
+	this->ubOwnerProfileId = 0;
+	this->uiRepairDoneTime = 0;
+	this->Info.initialize();
+}
+
+DEALER_SPECIAL_ITEM& DEALER_SPECIAL_ITEM::operator=(OLD_DEALER_SPECIAL_ITEM_101& src)
+{
+	this->fActive = src.fActive;
+	this->ubOwnerProfileId = src.ubOwnerProfileId;
+	this->uiRepairDoneTime = src.uiRepairDoneTime;
+
+	this->Info = src.oldInfo;
+	return *this;
+}
 
 void InitAllArmsDealers()
 {
@@ -238,11 +295,11 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 			if ( Item[usItemIndex].usItemClass  == 0 )
 				break;
 			//if there are any special item elements allocated for this item, save them
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
+			for (int x = 0; x < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ++x)
 			{
-				if (!FileWrite( hFile, &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[0], sizeof( DEALER_SPECIAL_ITEM ) * gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced, &uiNumBytesWritten ))
+				if ( !gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[x].Save(hFile) )
 				{
-					return( FALSE );
+					return FALSE;
 				}
 			}
 		}
@@ -303,9 +360,12 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 				if ( !AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced ))
 					return(FALSE);
 
-				if (!FileRead( hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof( DEALER_SPECIAL_ITEM ) * gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced, &uiNumBytesRead ))
+				for ( int x = 0; x < gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x)
 				{
-					return( FALSE );
+					if ( !gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[x].Load(hFile) )
+					{
+						return( FALSE );
+					}
 				}
 			}
 		}
@@ -1225,15 +1285,12 @@ BOOLEAN AllocMemsetSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubEl
 	Assert(pDealerItem);
 	Assert( ubElementsNeeded > 0);
 
-	pDealerItem->SpecialItem = (DEALER_SPECIAL_ITEM *) MemAlloc( sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
+	pDealerItem->SpecialItem = new DEALER_SPECIAL_ITEM[ ubElementsNeeded ];
 	if( pDealerItem->SpecialItem == NULL )
 	{
 		Assert( 0 );
 		return(FALSE);
 	}
-
-	// zero them out (they're inactive until an item is actually added)
-	memset( pDealerItem->SpecialItem, 0, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
 
@@ -1255,19 +1312,20 @@ BOOLEAN ResizeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem, UINT8 ubElement
 	}
 
 	// already allocated, but change its size
-	pDealerItem->SpecialItem = (DEALER_SPECIAL_ITEM *) MemRealloc( pDealerItem->SpecialItem, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
-	if( pDealerItem->SpecialItem == NULL )
+	DEALER_SPECIAL_ITEM* pNew = new DEALER_SPECIAL_ITEM[ ubElementsNeeded ];
+	if( pNew == NULL )
 	{
 		Assert( 0 );
 		return(FALSE);
 	}
 
-	// if adding more elements
-	if ( ubElementsNeeded > pDealerItem->ubElementsAlloced)
+	for (int x = 0; x < __min(pDealerItem->ubElementsAlloced, ubElementsNeeded); ++x)
 	{
-		// zero them out (they're inactive until an item is actually added)
-		memset( &(pDealerItem->SpecialItem[pDealerItem->ubElementsAlloced]), 0, sizeof( DEALER_SPECIAL_ITEM ) * ( ubElementsNeeded - pDealerItem->ubElementsAlloced) );
+		pNew[x] = pDealerItem->SpecialItem[x];
 	}
+
+	delete[] pDealerItem->SpecialItem;
+	pDealerItem->SpecialItem = pNew;
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
 
@@ -1281,7 +1339,7 @@ void FreeSpecialItemArray( DEALER_ITEM_HEADER *pDealerItem)
 	// must already have a ptr allocated!
 	Assert(pDealerItem->SpecialItem);
 
-	MemFree( pDealerItem->SpecialItem );
+	delete[]( pDealerItem->SpecialItem );
 	pDealerItem->SpecialItem = NULL;
 
 	pDealerItem->ubElementsAlloced = 0;
@@ -1750,7 +1808,7 @@ void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 us
 	//Store the special values in that element, and make it active
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive = TRUE;
 
-	memcpy( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) );
+	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info = *pSpclItemInfo;
 
 	// increase the total items
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems++;
@@ -1785,7 +1843,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 			if ( pSpecialItem->fActive )
 			{
 				// and its contents are exactly what we're looking for
-				if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
+				if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info == *pSpclItemInfo )
 				{
 					// Got one!  Remove it
 					RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
@@ -1888,7 +1946,7 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == TRUE );
 
 	// wipe it out (turning off fActive)
-	memset( &( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ] ), 0, sizeof( DEALER_SPECIAL_ITEM ) );
+	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].initialize();
 
 	// one fewer item remains...
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems--;
@@ -2385,7 +2443,7 @@ void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo )
 {
 	UINT8 ubCnt;
 
-	memset( pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
+	pSpclItemInfo->initialize();
 
 	pSpclItemInfo->bItemCondition = 100;
 	pSpclItemInfo->ubImprintID = NO_PROFILE;
@@ -2402,9 +2460,7 @@ void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE 
 {
 	UINT8 ubCnt;
 
-
-	memset(pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
-
+	pSpclItemInfo->initialize();
 
 	if( Item[ pObject->usItem ].usItemClass == IC_AMMO )
 	{

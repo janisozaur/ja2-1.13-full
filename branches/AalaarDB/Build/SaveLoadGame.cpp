@@ -478,10 +478,93 @@ void	HandleOldBobbyRMailOrders();
 //
 /////////////////////////////////////////////////////
 
+BOOLEAN SPECIAL_ITEM_INFO::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	//this is just POD so far
+	if ( !FileWrite( hFile, this, sizeof( SPECIAL_ITEM_INFO ), &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN SPECIAL_ITEM_INFO::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !FileRead( hFile, this, sizeof(SPECIAL_ITEM_INFO), &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_SPECIAL_ITEM_INFO_101 oldItem;
+			if ( !FileRead( hFile, &oldItem, sizeof( OLD_SPECIAL_ITEM_INFO_101 ), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			*this = oldItem;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+		//I'm being lazy here, I know there are 6 bytes of POD here
+	if ( !FileWrite( hFile, this, 6, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->Info.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//I'm being lazy here, I know there are 6 bytes of POD here
+		if ( !FileRead( hFile, this, 6, &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if ( !this->Info.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_DEALER_SPECIAL_ITEM_101 oldItem;
+			if ( !FileRead( hFile, &oldItem, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			*this = oldItem;
+		}
+	}
+	return TRUE;
+}
+
 BOOLEAN REAL_OBJECT::Save(HWFILE hFile)
 {
 	UINT32 uiNumBytesWritten;
-	if ( !FileWrite( hFile, this, sizeof( SIZEOF_REAL_OBJECT_POD ), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_REAL_OBJECT_POD, &uiNumBytesWritten ) )
 	{
 		return FALSE;
 	}
@@ -498,7 +581,7 @@ BOOLEAN REAL_OBJECT::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !FileRead( hFile, this, sizeof( SIZEOF_REAL_OBJECT_POD ), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_REAL_OBJECT_POD, &uiNumBytesRead ) )
 		{
 			return FALSE;
 		}
@@ -525,7 +608,7 @@ BOOLEAN REAL_OBJECT::Load(HWFILE hFile)
 BOOLEAN INVENTORY_IN_SLOT::Save(HWFILE hFile)
 {
 	UINT32 uiNumBytesWritten;
-	if ( !FileWrite( hFile, this, sizeof( SIZEOF_INVENTORY_IN_SLOT_POD ), &uiNumBytesWritten ) )
+	if ( !FileWrite( hFile, this, SIZEOF_INVENTORY_IN_SLOT_POD, &uiNumBytesWritten ) )
 	{
 		return FALSE;
 	}
@@ -542,7 +625,7 @@ BOOLEAN INVENTORY_IN_SLOT::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !FileRead( hFile, this, sizeof( SIZEOF_INVENTORY_IN_SLOT_POD ), &uiNumBytesRead ) )
+		if ( !FileRead( hFile, this, SIZEOF_INVENTORY_IN_SLOT_POD, &uiNumBytesRead ) )
 		{
 			return FALSE;
 		}

@@ -165,9 +165,10 @@ typedef struct
 
 
 
-typedef struct
+class OLD_SPECIAL_ITEM_INFO_101
 {
-	UINT16	usAttachment[MAX_ATTACHMENTS];		// item index of any attachments on the item
+public:
+	UINT16	usAttachment[MAX_ATTACHMENTS_101];		// item index of any attachments on the item
 
 	INT8		bItemCondition;				// if 0, no item is stored
 																// from 1 to 100 indicates an item with that status
@@ -175,19 +176,39 @@ typedef struct
 
 	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
 
-	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
+	INT8		bAttachmentStatus[MAX_ATTACHMENTS_101];	// status of any attachments on the item
 
 	UINT8		ubPadding[2];					// filler
 
-} SPECIAL_ITEM_INFO;
+};
 
-
-typedef struct
+class SPECIAL_ITEM_INFO
 {
+public:
+	SPECIAL_ITEM_INFO() {initialize();};
+	SPECIAL_ITEM_INFO& operator=(OLD_SPECIAL_ITEM_INFO_101& src);
+	BOOLEAN operator==(SPECIAL_ITEM_INFO& compare);
+	BOOLEAN Save(HWFILE hFile);
+	BOOLEAN Load(HWFILE hFile);
+	void	initialize();
+
+	INT8		bItemCondition;				// if 0, no item is stored
+																// from 1 to 100 indicates an item with that status
+																// -1 to -100 means the item is in for repairs, flip sign for the actual status
+
+	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
+	UINT16		usAttachment[MAX_ATTACHMENTS];		// item index of any attachments on the item
+	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
+};
+
+
+class OLD_DEALER_SPECIAL_ITEM_101
+{
+public:
 	// Individual "special" items are stored here as needed, *one* per slot
 	// An item is special if it is used (status < 100), has been imprinted, or has a permanent attachment
 
-	SPECIAL_ITEM_INFO Info;
+	OLD_SPECIAL_ITEM_INFO_101 oldInfo;
 
 	UINT32  uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
 
@@ -197,8 +218,27 @@ typedef struct
 
 	UINT8		ubPadding[6];					// filler
 
-} DEALER_SPECIAL_ITEM;
+};
 
+class DEALER_SPECIAL_ITEM
+{
+public:
+	DEALER_SPECIAL_ITEM() {initialize();};
+	DEALER_SPECIAL_ITEM& operator=(OLD_DEALER_SPECIAL_ITEM_101& src);
+	BOOLEAN Save(HWFILE hFile);
+	BOOLEAN Load(HWFILE hFile);
+	void	initialize();
+
+
+	UINT32		uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
+	BOOLEAN		fActive;					// TRUE means an item is stored here (empty elements may not always be freed immediately)
+	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
+
+
+	// Individual "special" items are stored here as needed, *one* per slot
+	// An item is special if it is used (status < 100), has been imprinted, or has a permanent attachment
+	SPECIAL_ITEM_INFO Info;
+};
 
 
 typedef struct
