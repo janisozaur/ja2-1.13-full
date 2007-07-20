@@ -254,7 +254,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 	INT8			bPanicTrigger;
 	INT16			sPanicTriggerGridNo;
 	#ifdef DEBUGDECISIONS
-		STR16 tempstr;
+		std::string tempstr;
 	#endif
 
 	// if there are panic bombs here
@@ -272,7 +272,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (pSoldier->bActionPoints >= AP_USE_REMOTE)
 			{
 #ifdef TESTVERSION
-				sprintf(tempstr,"TEST MSG: %s - ACTIVATING his DETONATOR!",pSoldier->name);
+				tempstr = String("TEST MSG: %s - ACTIVATING his DETONATOR!",pSoldier->name);
 				PopMessage(tempstr);
 #endif
 				// blow up all the PANIC bombs!
@@ -298,7 +298,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (bPanicTrigger == -1)
 			{
 				// augh!
-				return( -1 );
+				return( AI_ACTION_NOT_AN_ACTION );
 			}
 			sPanicTriggerGridNo = gTacticalStatus.sPanicTriggerGridNo[ bPanicTrigger ];
 
@@ -332,7 +332,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 #endif
          gTacticalStatus.ubTheChosenOne = NOBODY;   // strip him of his Chosen One status
 	 // don't bother replacing him either, the next won't have more luck!
-         return(-1);
+         return(AI_ACTION_NOT_AN_ACTION);
 	}
 
 	*/
@@ -350,7 +350,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						pSoldier->aiData.usActionData = sPanicTriggerGridNo;
 
 #ifdef TESTVERSION
-						sprintf(tempstr,"TEST MSG: %s - PULLS PANIC TRIGGER at grid %d",
+						tempstr = String("TEST MSG: %s - PULLS PANIC TRIGGER at grid %d",
 						pSoldier->name,pSoldier->aiData.usActionData);
 						PopMessage(tempstr);
 #endif
@@ -376,8 +376,8 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 							pSoldier->pathing.bPathStored = TRUE;
 
 #ifdef DEBUGDECISIONS
-							sprintf(tempstr,"%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)", pSoldier->name,pSoldier->aiData.usActionData,sPanicTriggerGridNo);
-							AIPopMessage(tempstr);
+							tempstr = String("%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)", pSoldier->name,pSoldier->aiData.usActionData,sPanicTriggerGridNo);
+							DebugAI(tempstr);
 #endif
 
 							return(AI_ACTION_GET_CLOSER);
@@ -410,7 +410,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 	}
 
 	// no action decided
-	return(-1);
+	return(AI_ACTION_NOT_AN_ACTION);
 }
 
 void InitPanicSystem( void )

@@ -28,6 +28,7 @@
 	#include "Soldier Profile.h"
 	#include "soldier profile type.h"
 	#include "Quests.h"
+	#include "FindLocations.h"
 #endif
 
 #ifdef JA2EDITOR

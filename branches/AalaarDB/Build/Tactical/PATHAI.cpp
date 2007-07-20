@@ -44,7 +44,15 @@
 #endif
 
 #include "PathAIDebug.h"
+
+#ifdef USE_ASTAR_PATHS
 #include "BinaryHeap.hpp"
+#include "AIInternals.h"
+#include "opplist.h"
+#include "weapons.h"
+#include "FindLocations.h"
+#endif
+
 
 extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 
@@ -52,16 +60,15 @@ extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for 
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
 
-//#define PATHAI_VISIBLE_DEBUG
-
 //#define PATHAI_SKIPLIST_DEBUG
 
 #ifdef PATHAI_VISIBLE_DEBUG
-#include "video.h"
+	#include "video.h"
+	extern void RenderCoverDebug( void );
 
-extern INT16 gsCoverValue[WORLD_MAX];
-BOOLEAN gfDisplayCoverValues = TRUE;
-BOOLEAN gfDrawPathPoints = FALSE;
+	extern INT16 gsCoverValue[WORLD_MAX];
+	BOOLEAN gfDisplayCoverValues = TRUE;
+	BOOLEAN gfDrawPathPoints = TRUE;
 #endif
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
@@ -435,12 +442,34 @@ UINT32 guiUnsuccessfulPathChecks = 0;
 
 
 
+#ifdef USE_ASTAR_PATHS
 
+#define ASTAR_USING_EXTRACOVER
 
-#if 0
 using namespace std;
+using namespace ASTAR;
+
+AStarPathfinder::AStarPathfinder()
+{
+	return;
+}
+
+//init the pointer to the AStarPathfinder singleton instance
+AStarPathfinder* AStarPathfinder::pThis = NULL;
+
+AStarPathfinder& AStarPathfinder::GetInstance()
+{
+	if (pThis) {
+		return *pThis;
+	}
+	pThis = new AStarPathfinder;
+	return *pThis;
+}
+
 void AStarPathfinder::ResetAStarList()
 {
+	//only the starting node's data needs to be init,
+	//and all other data doesn't need to be at all
 	for each (GridNode node in ClosedList) {
 		SetAStarStatus(node, AStar_Init);
 		SetAStarG(node, 0);
@@ -455,94 +484,327 @@ void AStarPathfinder::ResetAStarList()
 	return;
 }//end ResetAStarList
 
-void AStarPathfinder::InitVehicle()
+void AStarPathfinder::SetLoopState(GridNode const node,
+								   int const loopState)
 {
-#ifdef VEHICLE	
-	fMultiTile = ((pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE) != 0);
-	if (fMultiTile)
+	if ( loopState == LOOPING_REVERSE ) {
+		AStarData[node.x][node.y].wasBackwards = STEP_BACKWARDS;
+	}
+	else {
+		AStarData[node.x][node.y].wasBackwards = false;
+	}
+}
+
+INT16 AStarPathfinder::PythSpacesAway(GridNode const node1,
+									  GridNode const node2)
+{
+	//should be faster than it's counterpart
+	int x = abs(node1.x - node2.x);
+	int y = abs(node1.y - node2.y);
+	return ((INT16)sqrt((double)(x * x + y * y)));
+}
+
+INT16 AStarPathfinder::SpacesAway(GridNode const node1,
+								  GridNode const node2)
+{
+	//should be faster than it's counterpart
+	return (__max(abs(node1.x - node2.x), abs(node1.y - node2.y)));
+}
+
+int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
+							 INT16 dest,
+							 INT8 ubLevel,
+							 INT16 usMovementMode,
+							 INT8 bCopy,
+							 UINT8 fFlags )
+{
+	//copy over private data that makes code more readable
+	this->pSoldier = s;
+	this->mercsMaxAPs = this->pSoldier->bActionPoints;
+	this->onRooftop = ubLevel;
+	this->movementMode = usMovementMode;
+	this->maxAPBudget = gubNPCAPBudget;
+	int start = pSoldier->sGridNo;
+	StartNode.IntToGridNode(start);
+	DestNode.IntToGridNode(dest);
+	if ( gubGlobalPathFlags ) {
+		fFlags |= gubGlobalPathFlags;	
+	}
+
+	if (start < 0 || start > WORLD_MAX) {
+		#ifdef JA2BETAVERSION
+			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from off-world gridno %d to %d", start, dest );
+		#endif
+		return( 0 );
+	}
+	else if (!GridNoOnVisibleWorldTile( (INT16) start ) ) {
+		#ifdef JA2BETAVERSION
+			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from non-visible gridno %d to %d", start, dest );
+		#endif
+		return( 0 );
+	}
+	else if (pSoldier->pathing.bLevel != onRooftop) {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, different level" ) );
+		// pathing to a different level... bzzzt!
+		return( 0 );
+	}
+
+
+	//init the starting node's data that hasn't been reset
+	SetAStarParent(StartNode, GridNode(-1,-1));
+	SetPrevCost(StartNode, 0);
+
+
+#if defined( PATHAI_VISIBLE_DEBUG )
+	if (gfDisplayCoverValues && gfDrawPathPoints)
 	{
+		memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
+	}
+	gsCoverValue[ start ] = 0;
+	PATHAI_VISIBLE_DEBUG_Counter = 1;
+#endif
+
+	//init other private data, mostly flags
+	startDir = endDir = lastDir = direction = 0;
+	pStructureFileRef = NULL;
+	bLoopState = LOOPING_CLOCKWISE;
+	fCheckedBehind = FALSE;
+	fGoingThroughDoor = FALSE;
+
+	fTurnBased = ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) );
+	fPathingForPlayer = ( (pSoldier->bTeam == gbPlayerNum) && (!gTacticalStatus.fAutoBandageMode) && !(pSoldier->flags.uiStatusFlags & SOLDIER_PCUNDERAICONTROL) );
+	fNonFenceJumper = !( IS_MERC_BODY_TYPE( pSoldier ) );
+	fNonSwimmer = !( IS_MERC_BODY_TYPE( pSoldier ) );
+	fPathAroundPeople = ( (fFlags & PATH_THROUGH_PEOPLE) == 0 );
+	fCloseGoodEnough = ( (fFlags & PATH_CLOSE_GOOD_ENOUGH) != 0);
+	fConsiderPersonAtDestAsObstacle = (BOOLEAN)( fPathingForPlayer && fPathAroundPeople && !(fFlags & PATH_IGNORE_PERSON_AT_DEST) );
+
+	if ( fNonSwimmer && Water( dest ) ) {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, water" ) );
+		return( 0 );
+	}
+	if ( fCloseGoodEnough ) {
+		sClosePathLimit = __min( PythSpacesAway( StartNode, DestNode ) - 1,  PATH_CLOSE_RADIUS );
+		if ( sClosePathLimit <= 0 ) {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, path limit" ) );
+			return( 0 );
+		}
+	}
+
+	if (bCopy >= COPYREACHABLE) {
+		fCopyReachable = TRUE;
+		fCopyPathCosts = (bCopy == COPYREACHABLE_AND_APS);
+		fVisitSpotsOnlyOnce = (bCopy == COPYREACHABLE);
+		// make sure we aren't trying to copy path costs for an area greater than the AI array...
+		if (fCopyPathCosts && gubNPCDistLimit > AI_PATHCOST_RADIUS) {
+			// oy!!!! dis no supposed to happen!
+			gubNPCDistLimit = AI_PATHCOST_RADIUS;
+		}
+	}
+	else {
+		fCopyReachable = FALSE;
+		fCopyPathCosts = FALSE;
+		fVisitSpotsOnlyOnce = FALSE;
+	}
+
+	gubNPCPathCount++;
+
+	// only allow nowhere destination if distance limit set
+	if (dest != NOWHERE) {
+		if (dest == pSoldier->sGridNo) {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, dest is start" ) );
+			return( 0 );
+		}
+
+		// the very first thing to do is make sure the destination tile is reachable
+		if (!NewOKDestination( pSoldier, dest, fConsiderPersonAtDestAsObstacle, onRooftop )) {
+			maxAPBudget = 0;
+			gubNPCDistLimit = 0;
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, not ok dest" ) );
+			return( 0 );
+		}
+	}
+
+	int startingAPCost = MinAPsToStartMovement( pSoldier, movementMode );
+	SetActionPoints(StartNode, startingAPCost);
+	if (maxAPBudget) {
+		if (startingAPCost > maxAPBudget) {
+			maxAPBudget = 0;
+			gubNPCDistLimit = 0;
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, cant start" ) );
+			return( 0 );
+		}
+		else {
+			maxAPBudget -= startingAPCost;
+		}
+	}
+
+#ifdef COUNT_PATHS
+	guiTotalPathChecks++;
+#endif
+
+#ifdef VEHICLE	
+
+	fMultiTile = ((pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE) != 0);
+	if ( fMultiTile == false) {
+		fContinuousTurnNeeded = FALSE;
+	}
+	else {
 		// Get animation surface...
 		// Chris_C... change this to use parameter.....
-		usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usMovementMode );
+		UINT16 usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, movementMode );
 		// Get structure ref...
-		pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usMovementMode );
+		pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, movementMode );
 		
-		if ( pStructureFileRef )
-		{
-			fVehicle = ( (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) != 0 );
-
+		if ( pStructureFileRef ) {
 			fContinuousTurnNeeded = ( ( pSoldier->flags.uiStatusFlags & (SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE) ) != 0 );
 
 			/*
+			//bool fVehicle = ( (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) != 0 );
 			if (fVehicle && pSoldier->bReverse)
 			{
 				fReverse = TRUE;
 			}
-			*/
-			/*
 			if (fVehicle || pSoldier->ubBodyType == COW || pSoldier->ubBodyType == BLOODCAT) // or a vehicle
 			{
 				fTurnSlow = TRUE;
 			}
 			*/
-			if ( gfEstimatePath )
-			{
-				usOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
+			if ( gfEstimatePath ) {
+				bOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
 			}
-			else if ( pSoldier->pLevelNode != NULL && pSoldier->pLevelNode->pStructureData != NULL )
-			{
-				usOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
+			else if ( pSoldier->pLevelNode != NULL && pSoldier->pLevelNode->pStructureData != NULL ) {
+				bOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
 			}
-			else
-			{
-				usOKToAddStructID = INVALID_STRUCTURE_ID;
+			else {
+				bOKToAddStructID = INVALID_STRUCTURE_ID;
 			}
-
 		}
-		else
-		{
+		else {
 			// turn off multitile pathing
 			fMultiTile = FALSE;
 			fContinuousTurnNeeded = FALSE;
 		}
-
 	}
-	else
-	{
-		fContinuousTurnNeeded = FALSE;
-	}
-
 #endif
-}
 
-int AStarPathfinder::GetPath(INT16 const StartNode,
-							 INT16 const DestNode,
-							 SOLDIERTYPE* pSoldier)
-{
-	INT8	bLoopState = LOOPING_CLOCKWISE;
-	//BOOLEAN fLoopForwards = FALSE;
-	BOOLEAN	fCheckedBehind = FALSE;
-	if (!fContinuousTurnNeeded)
-	{
-		iLoopStart = 0;
-		iLoopEnd = 0;
+	if (fContinuousTurnNeeded == false) {
 		bLoopState = LOOPING_CLOCKWISE;
 	}
-	return;
+
+	// if origin and dest is water, then user wants to stay in water!
+	// so, check and set waterToWater flag accordingly
+	if (dest == NOWHERE) {
+		bWaterToWater = false;
+	}
+	else {
+		if (ISWATER(gubWorldMovementCosts[start][0][onRooftop]) && ISWATER(gubWorldMovementCosts[dest][0][onRooftop])) {
+			bWaterToWater = true;
+		}
+		else {
+			bWaterToWater = false;
+		}
+	}
+
+	//make sure all data is init ok
+	ResetAStarList();
+
+	//Start the main loop and get a path
+	AStarHeap bestPath = AStar();
+
+	gubNPCAPBudget = 0;
+	gubNPCDistLimit = 0;
+	if (bestPath.key == -222) {
+		//error, path not found
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, path not found, size closed list %d", ClosedList.size() ) );
+		return 0;
+	}
+
+#if defined( PATHAI_VISIBLE_DEBUG )
+	if (gfDisplayCoverValues && gfDrawPathPoints) {
+		SetRenderFlags( RENDER_FLAG_FULL );
+		if ( guiCurrentScreen == GAME_SCREEN ) {
+			RenderWorld();
+			RenderCoverDebug( );
+			InvalidateScreen( );
+			EndFrameBufferRender();
+			RefreshScreen( NULL );
+		}
+	}
+#endif
+
+	std::vector<GridNode> reversePath;
+	std::vector<int> aps;
+	GridNode parent = bestPath.data;
+	unsigned int sizePath;
+	for (sizePath = 0; parent.isInWorld() && parent != StartNode; ++sizePath) {
+		reversePath.push_back(parent);
+		aps.push_back(GetActionPoints(parent));
+		parent = GetAStarParent(parent);
+	}
+
+	std::vector<GridNode> path;
+	path.resize(reversePath.size());
+	for (int x = path.size() - 1, sizePath = 0; x >= 0; ++sizePath, --x) {
+		path[sizePath] = reversePath[x];
+	}
+
+
+	// if this function was called because a solider is about to embark on an actual route
+	// (as opposed to "test" path finding (used by cursor, etc), then grab all pertinent
+	// data and copy into soldier's database
+	if (bCopy == COPYROUTE) {
+		for (sizePath = 0; sizePath < path.size() && sizePath < MAX_PATH_LIST_SIZE; ++sizePath) {
+			parent = path[sizePath];
+			pSoldier->pathing.usPathingData[sizePath] = GetDirection(parent);
+		}
+		pSoldier->pathing.usPathIndex = 0;
+		pSoldier->pathing.usPathDataSize  = (UINT16) sizePath;
+	}
+	else if (bCopy == NO_COPYROUTE) {
+		for (sizePath = 0; sizePath < path.size(); ++sizePath) {
+			parent = path[sizePath];
+			guiPathingData[ sizePath ] = GetDirection(parent);
+		}
+		giPathDataSize = (UINT16) sizePath;
+	}
+
+#if defined( PATHAI_VISIBLE_DEBUG )
+	if (gfDisplayCoverValues && gfDrawPathPoints) {
+		SetRenderFlags( RENDER_FLAG_FULL );
+		RenderWorld();
+		RenderCoverDebug( );
+		InvalidateScreen( );
+		EndFrameBufferRender();
+		RefreshScreen( NULL );
+	}
+#endif
+
+	#ifdef COUNT_PATHS
+		guiSuccessfulPathChecks++;
+	#endif
+
+	//TEMP:  This is returning zero when I am generating edgepoints, so I am force returning 1 until
+	//       this is fixed?
+	if( gfGeneratingMapEdgepoints ) {
+		return 1;
+	}
+
+
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path ok, path size %d", sizePath ) );
+	// return path length : serves as a "successful" flag and a path length counter
+	return sizePath;
 }//end GetPath
 
-AStarHeap AStarPathfinder::AStar(GridNode const start,
-								GridNode const dest)
+AStarHeap AStarPathfinder::AStar()
 {
-	StartNode = start;
-	DestNode = dest;
 	AStarHeap TopHeap(StartNode, 0);
-	CurrentNode = StartNode;
+	ParentNode = StartNode;
 	for (;;) {
-		if (CurrentNode == DestNode) {
+		if (ParentNode == DestNode) {
 			//the best path to date leads to the dest
 			//this node is neither in the open heap or the closed list, make sure it gets reset ok.
-			ClosedList.push_back(CurrentNode);
+			ClosedList.push_back(ParentNode);
 			return TopHeap;
 		}
 
@@ -555,32 +817,1004 @@ AStarHeap AStarPathfinder::AStar(GridNode const start,
 
 		//get the best point so far from the heap
 		TopHeap = OpenHeap.popTopHeap();
-		CurrentNode = TopHeap.data;
-		//ASSERT(GetAStarStatus(CurrentNode) == AStar_Open);
+		ParentNode = TopHeap.data;
+		//ASSERT(GetAStarStatus(ParentNode) == AStar_Open);
 	}
 	return TopHeap;
 }//end AStar
 
-INT16 AStarPathfinder::PythSpacesAway(GridNode const node1,
-									  GridNode const node2)
+void AStarPathfinder::IncrementLoop()
 {
-	//should be faster than it's counterpart
-	int x = abs(node1.x - node2.x);
-	int y = abs(node1.y - node2.y);
-	return ((INT16)sqrt(x * x + y * y));
+	startingLoop = false;
+	if ( fContinuousTurnNeeded && direction == gOppositeDirection[ startDir ] ) {
+		fCheckedBehind = TRUE;
+	}
+	if (bLoopState == LOOPING_CLOCKWISE) {// backwards
+		direction = gOneCCDirection[ direction ];
+	}
+	else {
+		direction = gOneCDirection[ direction ];
+	}
+	return;
 }
 
-INT16 AStarPathfinder::SpacesAway(GridNode const node1,
-								  GridNode const node2)
+void AStarPathfinder::InitLoop()
 {
-	//should be faster than it's counterpart
-	return (__max(abs(node1.x - node2.x), abs(node1.y - node2.y)));
+	startingLoop = true;
+	direction = startDir;
+	return;
 }
 
-bool AStarPathfinder::VehicleObstacleCheck(int const direction)
+bool AStarPathfinder::ContinueLoop()
 {
-	if (fMultiTile)
+	if (direction == endDir && startingLoop == false) {
+		return false;
+	}
+	return true;
+}
+
+void AStarPathfinder::ExecuteAStarLogic()
+{
+	//parent node set in AStar
+	//this node is now closed
+	SetAStarStatus(ParentNode, AStar_Closed);
+	ClosedList.push_back(ParentNode);
+	ParentNodeIndex = ParentNode.GridNodeToInt();
+
+#if defined( PATHAI_VISIBLE_DEBUG )
+	if (gfDisplayCoverValues && gfDrawPathPoints) {
+		if (gsCoverValue[ ParentNodeIndex ] > 0) {
+			gsCoverValue[ ParentNodeIndex ] *= -1;
+		}
+	}
+#endif
+
+	int prevCost;
+	int baseGCost = GetAStarG(ParentNode);
+	int baseAP = GetActionPoints(ParentNode);
+	if (fCopyReachable) {
+		if (GetPrevCost(ParentNode) != TRAVELCOST_FENCE) {
+			gpWorldLevelData[ParentNodeIndex].uiFlags |= MAPELEMENT_REACHABLE;
+			if (gubBuildingInfoToSet > 0) {
+				gubBuildingInfo[ ParentNodeIndex ] = gubBuildingInfoToSet;
+			}
+		}
+	}
+
+	if (fContinuousTurnNeeded) {
+		GridNode parent = GetAStarParent(ParentNode);
+		if (parent != GridNode(-1,-1)) {
+			lastDir = pSoldier->bDirection;
+		}
+		else if ( GetLoopState(parent) == false ) {
+			lastDir = GetDirection(parent);
+		}
+		else {
+			lastDir = gOppositeDirection[ GetDirection(parent) ];
+		}
+		startDir = lastDir;
+		endDir = lastDir;
+		bLoopState = LOOPING_CLOCKWISE;
+		fCheckedBehind = FALSE;
+	}
+	else {
+		//startDir and endDir are init to 0, and not reinit after a loop in the original code
+	}
+
+	//because startDir and endDir are set to the same thing, and to easily use
+	//continue along with the loop increment at the end of the loop, use functions
+	for (InitLoop(); ContinueLoop(); IncrementLoop()) {
+		CurrentNodeIndex = ParentNodeIndex + dirDelta[direction];
+		CurrentNode.IntToGridNode(CurrentNodeIndex);
+
+		//if the node is not in the world, or it has already been searched, continue
+		if (CurrentNode.isInWorld() == false ||
+			GetAStarStatus(CurrentNode) == AStar_Closed) {
+			continue;
+		}
+
+#ifdef VEHICLE
+		//has side effects, including setting loop counters
+		int retVal = VehicleObstacleCheck();
+		if (retVal == 1) {
+			continue;
+		}
+		else if (retVal == 2) {
+			return;
+		}
+#endif
+
+		//if the node is not traversable, continue
+		if (CanTraverse() == false) {
+			continue;
+		}
+
+		// if contemplated tile is NOT final dest and someone there, disqualify route
+		// when doing a reachable test, ignore all locations with people in them
+		if (IsSomeoneInTheWay() == true) {
+			continue;
+		}
+
+		//calc the cost to move from the current node to here
+		int terrainCost = CalcG(&prevCost);//store the prevCost (it's actually a renamed terrainCost)
+											//early in the function because terrainCost may change later inside CalcG
+		if (terrainCost == -1) {
+			//an error code like diagonal door or obstruction was returned
+			continue;
+		}
+
+		int movementG = TerrainCostToAStarG(terrainCost);
+
+		int AStarG = baseGCost + movementG;
+		//if the node is more costly in this path than in another open path, continue
+		if (GetAStarStatus(CurrentNode) == AStar_Open
+			&& AStarG >= GetAStarG(CurrentNode)) {
+			continue;
+		}
+#if defined( PATHAI_VISIBLE_DEBUG )
+		if (gfDisplayCoverValues && gfDrawPathPoints) {
+			if (gsCoverValue[CurrentNodeIndex] == 0x7F7F) {
+				gsCoverValue[CurrentNodeIndex] = PATHAI_VISIBLE_DEBUG_Counter++;
+			}
+			/*
+			else if (gsCoverValue[CurrentNodeIndex] >= 0) {
+				gsCoverValue[CurrentNodeIndex]++;
+			}
+			else {
+				gsCoverValue[CurrentNodeIndex]--;
+			}
+			*/
+		}
+#endif
+		int APCost = CalcAP(terrainCost);//cost to make this one move
+		if (APCost == -1) {
+			//error code like obstacle or crawling over fence
+			continue;
+		}
+		APCost += baseAP;//cost to move from start to here
+		if (maxAPBudget && APCost > maxAPBudget) {
+			continue;
+		}
+
+		int extraGCoverCost = 0;
+#ifdef ASTAR_USING_EXTRACOVER
+		//check if we will run out of AP while entering this node or before
+		//if we run out, the merc will stop at the parent node for a turn and be vulnerable
+		if (mercsMaxAPs && APCost > mercsMaxAPs) {
+
+			extraGCoverCost = GetExtraGCover(ParentNode);
+			//if the parent did not have the cost cached, then calc it
+			if (extraGCoverCost == -1) {
+				//use the stance and cover to see how much we really want to stop at the parent node
+				//as opposed to an equal path with different cover
+				//because other nodes further on the path will stop here too, add this value to the F cost
+				extraGCoverCost = CalcGCover(ParentNodeIndex, APCost);
+
+				//remember, we have run out of points to *enter* this node, so we are stuck at the *parent* node
+				//cache the cost to stay at the parent node
+				SetExtraGCover(ParentNode, extraGCoverCost);
+			}
+			else {
+				//the parent node is too long, all other nodes from start node
+				//will be too long too, and have the extra cost already added
+			}
+		}
+#endif
+		int AStarH = CalcH();
+		int AStarF = (AStarG + extraGCoverCost) + AStarH;
+
+		//insert this node onto the heap
+		if (GetAStarStatus(CurrentNode) == AStar_Init) {
+			OpenHeap.insertElement(CurrentNode, AStarF);
+		}
+		else {
+			OpenHeap.editElement(CurrentNode, AStarF);
+		}
+		SetAStarStatus(CurrentNode, AStar_Open);
+		SetAStarF(CurrentNode, AStarF);
+		SetAStarG(CurrentNode, AStarG);
+		SetActionPoints(CurrentNode, APCost);
+		SetAStarParent(CurrentNode, ParentNode);
+		SetLoopState(CurrentNode, bLoopState);
+		SetDirection(CurrentNode, direction);
+		SetPrevCost(CurrentNode, prevCost);
+		SetExtraGCover(CurrentNode, extraGCoverCost);
+
+		if (maxAPBudget) {
+			if (fCopyPathCosts) {
+				//dunno what this is yet
+				int iX = AI_PATHCOST_RADIUS + CurrentNode.x - StartNode.x;
+				int iY = AI_PATHCOST_RADIUS + CurrentNode.y - StartNode.y;
+				gubAIPathCosts[iX][iY] = APCost;
+			}
+		}
+	}
+
+	return;
+}//end ExecuteAStarLogic
+
+int AStarPathfinder::TerrainCostToAStarG(int const terrainCost)
+{
+	//first, a small check that doesn't belong here but where else to put it?
+	if ( fCloseGoodEnough ) {
+		if ( PythSpacesAway( CurrentNode, DestNode ) <= sClosePathLimit ) {
+			// stop the path here!
+			DestNode = CurrentNode;
+			fCloseGoodEnough = FALSE;
+		}
+	}
+
+	int movementG;
+	// NOTE: on September 24, 1997, Chris went back to a diagonal bias system
+	if (IsDiagonal(direction) == true) {
+		movementG = terrainCost * 14;
+	}
+	else {
+		movementG = terrainCost * 10;
+	}
+
+	if ( bLoopState == LOOPING_REVERSE) {
+		// penalize moving backwards to encourage turning sooner
+		movementG += 500;
+	}
+	return movementG;
+}
+
+int AStarPathfinder::CalcAP(int const terrainCost)
+{
+	// NEW Apr 21 by Ian: abort if cost exceeds budget
+	int movementAPCost;
+	switch(terrainCost) {
+		case TRAVELCOST_NONE:		movementAPCost = 0; break;
+
+		case TRAVELCOST_DIRTROAD:
+		case TRAVELCOST_FLAT:		movementAPCost = AP_MOVEMENT_FLAT; break;
+
+		//case TRAVELCOST_BUMPY:		
+		case TRAVELCOST_GRASS:		movementAPCost = AP_MOVEMENT_GRASS; break;
+
+		case TRAVELCOST_THICK:		movementAPCost = AP_MOVEMENT_BUSH; break;
+
+		case TRAVELCOST_DEBRIS:		movementAPCost = AP_MOVEMENT_RUBBLE; break;
+
+		case TRAVELCOST_SHORE:		movementAPCost = AP_MOVEMENT_SHORE; break; // wading shallow water
+
+		case TRAVELCOST_KNEEDEEP:	movementAPCost = AP_MOVEMENT_LAKE; break; // wading waist/chest deep - very slow
+
+
+		case TRAVELCOST_DEEPWATER:	movementAPCost = AP_MOVEMENT_OCEAN; break; // can swim, so it's faster than wading
+
+		//case TRAVELCOST_VEINEND:
+		//case TRAVELCOST_VEINMID:	movementAPCost = AP_MOVEMENT_FLAT; break;
+
+		//case TRAVELCOST_DOOR:		movementAPCost = AP_MOVEMENT_FLAT; break;
+
+		case TRAVELCOST_FENCE:		movementAPCost = AP_JUMPFENCE; break;
+
+		case TRAVELCOST_OBSTACLE: 
+		default:					return -1;	// Cost too much to be considered!
+	}
+
+
+	// don't make the mistake of adding directly to
+	// ubCurAPCost, that must be preserved for remaining dirs!
+	if (IsDiagonal(direction)) {
+		movementAPCost = (movementAPCost * 14) / 10;
+	}
+
+	int movementModeToUseForAPs = movementMode;
+
+	// ATE: if water, force to be walking always!
+	if ( terrainCost == TRAVELCOST_SHORE || terrainCost == TRAVELCOST_KNEEDEEP || terrainCost == TRAVELCOST_DEEPWATER ) {
+		movementModeToUseForAPs = WALKING;
+	}
+
+	// adjust AP cost for movement mode
+	switch( movementModeToUseForAPs ) {
+		case RUNNING:	
+		case ADULTMONSTER_WALKING:	
+			// save on casting
+			movementAPCost = movementAPCost * 100 / ( (UINT8) (RUNDIVISOR * 100));
+			//movementAPCost = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+			break;
+		case WALKING:
+		case ROBOT_WALK:
+			movementAPCost = (movementAPCost + WALKCOST);
+			break;
+		case SWATTING:
+			movementAPCost = (movementAPCost + SWATCOST);
+			break;
+		case CRAWLING:
+			movementAPCost = (movementAPCost + CRAWLCOST);
+			break;
+	}
+
+	if (terrainCost == TRAVELCOST_FENCE) {
+		switch( movementModeToUseForAPs ) {
+			case RUNNING:	
+			case WALKING :
+				// Here pessimistically assume the path will continue after hopping the fence
+				movementAPCost += AP_CROUCH;
+				break;
+
+			case SWATTING:	
+				// Add cost to stand once there BEFORE jumping....
+				movementAPCost += AP_CROUCH;
+				break;
+
+			case CRAWLING:	
+				// Can't do it here.....
+				return -1;
+		}
+	}
+	else if (terrainCost == TRAVELCOST_NOT_STANDING) {
+		switch(movementModeToUseForAPs) {
+			case RUNNING:	
+			case WALKING :
+				// charge crouch APs for ducking head!
+				movementAPCost += AP_CROUCH;
+				break;
+
+			default:				
+				break;
+		}
+	}
+	else if (fGoingThroughDoor) {
+		movementAPCost += AP_OPEN_DOOR;
+		fGoingThroughDoor = FALSE;
+	}
+	return movementAPCost;
+}
+
+int AStarPathfinder::CalcG(int* pPrevCost)
+{
+	//how much is admission to the next tile
+	if ( gfPathAroundObstacles == false) {
+		return TRAVELCOST_FLAT;
+	}
+
+
+	int nextCost = gubWorldMovementCosts[ CurrentNodeIndex ][ direction ][ onRooftop ];
+	*pPrevCost = nextCost;
+
+	//if we are holding down shift and finding a direct path, count non obstacles as flat terrain
+	if (gfPlotDirectPath && nextCost < NOPASS && nextCost != 0) {
+		return TRAVELCOST_FLAT;
+	}
+
+	//performance: if nextCost is low then do not do many many if == checks
+	if ( nextCost >= TRAVELCOST_FENCE ) {
+		//ATE:	Check for differences from reality 
+		// Is next cost an obstcale
+		if ( nextCost == TRAVELCOST_HIDDENOBSTACLE ) {
+			if ( fPathingForPlayer ) {
+
+				// Is this obstcale a hidden tile that has not been revealed yet?
+				BOOLEAN fHiddenStructVisible;
+				if( DoesGridnoContainHiddenStruct( CurrentNodeIndex, &fHiddenStructVisible ) ) {
+
+					// Are we not visible, if so use terrain costs!
+					if ( !fHiddenStructVisible ) {
+
+						// Set cost of terrain!
+						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+					}
+				}
+			}
+		}
+		else if ( nextCost == TRAVELCOST_NOT_STANDING ) {
+			// for path plotting purposes, use the terrain value
+			nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+		}
+		else if ( nextCost == TRAVELCOST_EXITGRID ) {
+			if (gfPlotPathToExitGrid) {
+				// replace with terrain cost so that we can plot path, otherwise is obstacle
+				nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+			}
+		}
+		else if ( nextCost == TRAVELCOST_FENCE && fNonFenceJumper ) {
+			return -1;
+		}
+		else if ( IS_TRAVELCOST_DOOR( nextCost ) ) {
+			// don't let anyone path diagonally through doors!
+			if (IsDiagonal(direction) == true) {
+				return -1;
+			}
+
+			INT16 iDoorGridNo = CurrentNodeIndex;
+			bool fDoorIsObstacleIfClosed = FALSE;
+			bool fDoorIsOpen;
+			switch( nextCost ) {
+				case TRAVELCOST_DOOR_CLOSED_HERE:
+					fDoorIsObstacleIfClosed = TRUE;
+					iDoorGridNo = CurrentNodeIndex;
+					break;
+				case TRAVELCOST_DOOR_CLOSED_N:
+					fDoorIsObstacleIfClosed = TRUE;
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTH ];
+					break;
+				case TRAVELCOST_DOOR_CLOSED_W:
+					fDoorIsObstacleIfClosed = TRUE;
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ WEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_HERE:
+					iDoorGridNo = CurrentNodeIndex;
+					break;
+				case TRAVELCOST_DOOR_OPEN_N:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTH ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_NE:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTHEAST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_E:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ EAST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_SE:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ SOUTHEAST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_S:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ SOUTH ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_SW:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ SOUTHWEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_W:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ WEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_NW:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTHWEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_N_N:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTH ] + dirDelta[ NORTH ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_NW_N:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_NE_N:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_W_W:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ WEST ] + dirDelta[ WEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_SW_W:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
+					break;
+				case TRAVELCOST_DOOR_OPEN_NW_W:
+					iDoorGridNo = CurrentNodeIndex + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
+					break;
+				default:
+					break;
+			}
+
+			if ( fPathingForPlayer && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT ) {
+				// check door status
+				DOOR_STATUS* pDoorStatus = GetDoorStatus( iDoorGridNo );
+				if (pDoorStatus) {
+					fDoorIsOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+				}
+				else {
+					// door destroyed?
+					nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+				}
+			}
+			else {
+				// check door structure
+				STRUCTURE* pDoorStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
+				if (pDoorStructure) {
+					fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
+				}
+				else {
+					// door destroyed?
+					nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+				}
+			}
+
+			// now determine movement cost... if it hasn't been changed already
+			if ( IS_TRAVELCOST_DOOR( nextCost ) ) {
+				if (fDoorIsOpen) {
+					if (fDoorIsObstacleIfClosed) {
+						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+					}
+					else {
+						nextCost = TRAVELCOST_OBSTACLE;
+					}
+				}
+				else {
+					if (fDoorIsObstacleIfClosed) {				
+						// door is closed and this should be an obstacle, EXCEPT if we are calculating
+						// a path for an enemy or NPC with keys
+						if ( fPathingForPlayer || ( pSoldier && (pSoldier->flags.uiStatusFlags & SOLDIER_MONSTER || pSoldier->flags.uiStatusFlags & SOLDIER_ANIMAL) ) ) {
+							nextCost = TRAVELCOST_OBSTACLE;
+						}
+						else {
+							// have to check if door is locked and NPC does not have keys!
+							DOOR* pDoor = FindDoorInfoAtGridNo( iDoorGridNo );
+							if (pDoor) {
+								if (!pDoor->fLocked || pSoldier->pathing.bHasKeys) {
+									// add to AP cost
+									if (maxAPBudget) {
+										fGoingThroughDoor = TRUE;
+									}
+									nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+								}
+								else {
+									nextCost = TRAVELCOST_OBSTACLE;
+								}
+							}
+							else {
+								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+							}
+						}
+					}
+					else {
+						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ CurrentNodeIndex ].ubTerrainID ];
+					}
+				}
+			}
+		}
+		else if ( fNonSwimmer && (nextCost == TRAVELCOST_SHORE || nextCost == TRAVELCOST_KNEEDEEP || nextCost == TRAVELCOST_DEEPWATER ) ) {
+			// creatures and animals can't go in water
+			nextCost = TRAVELCOST_OBSTACLE;
+		}
+	}
+
+	// Apr. '96 - moved up be ahead of AP_Budget stuff
+	if ( nextCost >= NOPASS ) // || ( nextCost == TRAVELCOST_DOOR ) )
+		return -1;
+
+
+	// make water cost attractive for water to water paths
+	if (bWaterToWater && ISWATER(nextCost) ) {
+		nextCost = EASYWATERCOST;
+	}
+
+	return nextCost;
+}//end CalcG
+
+int AStarPathfinder::CalcH()
+{
+	if ( fCopyReachable ) {
+		//if this is a reachability test, turn AStar into breadth first Djikstra
+		return 1000;
+	}
+
+//	#define ESTIMATEC ( ( (dx<dy) ? (TRAVELCOST_BUMPY * (dx * 14 + dy * 10) / 10) : ( TRAVELCOST_BUMPY * (dy * 14 + dx * 10) / 10 ) ) )
+	//the original calcH grossly overestimates,
+	//one reason is it uses BUMPY not FLAT!
+	//assuming x dist and y dist are the same, that it is totally diagonal
+	//ESTIMATEC returns the diagonal dist plus an extra straight distance!!!
+
+	//furthermore let's not lose precision by dividing by 10, as long as 10 is taken into account elsewhere
+	//this also helps with cover cost precision where it is needed more
+	int x = abs(CurrentNode.x - DestNode.x);
+	int y = abs(CurrentNode.y - DestNode.y);
+	if (x >= y) {
+		return TRAVELCOST_FLAT * (x * 10 + y * 4);
+	}
+	else {
+		return TRAVELCOST_FLAT * (y * 10 + x * 4);
+	}
+}
+
+int AStarPathfinder::CalcGCover(int const NodeIndex,
+								int const APCost)
+{
+	// There's no cover when boxing!
+	if (gTacticalStatus.bBoxingState == BOXING) {
+		return 0;
+	}
+
+	std::vector<THREATTYPE> Threats;
+	// all 32-bit integers for max. speed
+	INT32	iCurrentCoverValue;
+	INT32	iThreatCertainty;
+	INT32	iThreatRange, iClosestThreatRange = 1500;
+	INT32	iMyThreatValue;
+	INT16	sThreatLoc;
+	UINT32	uiThreatCnt = 0;
+	INT16	*		pusLastLoc;
+	INT8 *		pbPersOL;
+	INT8 *		pbPublOL;
+
+	//although we have run out of APs to get here, it could just mean we have some APs but not enough to enter
+	int APLeft = this->mercsMaxAPs - APCost;
+
+	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplists
+	pusLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
+
+	// hang a pointer into personal opplist
+	pbPersOL = &(pSoldier->aiData.bOppList[0]);
+	// hang a pointer into public opplist
+	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
+
+	// calculate OUR OWN general threat value (not from any specific location)
+	iMyThreatValue = CalcManThreatValue(pSoldier, NOWHERE, FALSE, pSoldier);
+
+	// look through all opponents for those we know of
+	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++) {
+		SOLDIERTYPE* pOpponent = MercSlots[ uiLoop ];
+
+		// if this merc is inactive, at base, on assignment, dead, unconscious
+		if (!pOpponent || pOpponent->stats.bLife < OKLIFE) {
+			continue;          // next merc
+		}
+
+		// if this man is neutral / on the same side, he's not an opponent
+ 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide)) {
+			continue;          // next merc
+		}
+
+		pbPersOL = pSoldier->aiData.bOppList + pOpponent->ubID; 
+		pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pOpponent->ubID;
+		pusLastLoc = gsLastKnownOppLoc[pSoldier->ubID] + pOpponent->ubID;
+
+		// if this opponent is unknown personally and publicly
+		if ((*pbPersOL == NOT_HEARD_OR_SEEN) && (*pbPublOL == NOT_HEARD_OR_SEEN)) {
+			continue;          // next merc
+		}
+
+		// Special stuff for Carmen the bounty hunter
+		if (pSoldier->aiData.bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != 64) {
+			continue;  // next opponent
+		}
+
+		// if personal knowledge is more up to date or at least equal
+		if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) ||
+			(*pbPersOL == *pbPublOL)) {
+
+			// using personal knowledge, obtain opponent's "best guess" gridno
+			sThreatLoc = *pusLastLoc;
+			iThreatCertainty = ThreatPercent[*pbPersOL - OLDEST_HEARD_VALUE];
+		}
+		else {
+			// using public knowledge, obtain opponent's "best guess" gridno
+			sThreatLoc = gsPublicLastKnownOppLoc[pSoldier->bTeam][pOpponent->ubID];
+			iThreatCertainty = ThreatPercent[*pbPublOL - OLDEST_HEARD_VALUE];
+		}
+
+		// calculate how far away this threat is (in adjusted pixels)
+		iThreatRange = GetRangeInCellCoordsFromGridNoDiff( NodeIndex, sThreatLoc );
+
+#ifdef DEBUGCOVER
+//		DebugAI( String( "FBNC: Opponent %d believed to be at gridno %d (mine %d, public %d)\n",iLoop,sThreatLoc,*pusLastLoc,PublicLastKnownOppLoc[pSoldier->bTeam][iLoop] ) );
+#endif
+
+		// if this opponent is believed to be too far away to really be a threat
+		if (iThreatRange > MAX_THREAT_RANGE) {
+			continue;          // check next opponent
+		}
+
+		Threats.push_back(THREATTYPE());
+		// remember this opponent as a current threat, but DON'T REDUCE FOR COVER!
+		Threats[uiThreatCnt].iValue = CalcManThreatValue(pOpponent, NodeIndex, FALSE, pSoldier);
+
+		// if the opponent is no threat at all for some reason
+		if (Threats[uiThreatCnt].iValue == -999) {
+			continue;          // check next opponent
+		}
+
+		Threats[uiThreatCnt].pOpponent		= pOpponent;
+		Threats[uiThreatCnt].sGridNo		= sThreatLoc;
+		Threats[uiThreatCnt].iCertainty		= iThreatCertainty;
+		Threats[uiThreatCnt].iOrigRange		= iThreatRange;
+
+		// calculate how many APs he will have at the start of the next turn
+		Threats[uiThreatCnt].iAPs = pOpponent->CalcActionPoints();
+
+		if (iThreatRange < iClosestThreatRange) {
+			iClosestThreatRange = iThreatRange;
+		}
+
+		uiThreatCnt++;
+	}
+
+	// if no known opponents were found to threaten us, can't worry about cover
+	if (uiThreatCnt == 0) {
+		return 0;
+	}
+
+	// calculate our current cover value in the place we are now
+	iCurrentCoverValue = 0;
+
+	// for every opponent that threatens, consider this spot's cover vs. him
+	for (UINT32 uiLoop = 0; uiLoop < uiThreatCnt; uiLoop++) {
+
+		// if this threat is CURRENTLY within 20 tiles
+		if (Threats[uiLoop].iOrigRange <= MAX_THREAT_RANGE) {
+
+			// add this opponent's cover value to our current total cover value
+			iCurrentCoverValue += CalcCoverValue(NodeIndex, iMyThreatValue, APLeft,
+				Threats[uiLoop].iOrigRange, Threats[uiLoop].sGridNo, Threats[uiLoop].pOpponent,
+				Threats[uiLoop].iValue, Threats[uiLoop].iAPs, Threats[uiLoop].iCertainty);
+		}
+	}
+
+	//body shield!
+	iCurrentCoverValue -= ( ( iCurrentCoverValue * NumberOfTeamMatesAdjacent( pSoldier, NodeIndex ) ) / 10 );
+
+	//make the cost less than one TRAVELCOST_FLAT's worth so that this cost doesn't alter the path's APs
+	return (min (iCurrentCoverValue, (TRAVELCOST_FLAT * 10 - 1)));
+}
+
+int AStarPathfinder::CalcCoverValue(INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
+									INT32 myThreatsiOrigRange, INT16 myThreatssGridNo, SOLDIERTYPE* myThreatspOpponent,
+									INT32 myThreatsiValue, INT32 myThreatsiAPs, INT32 myThreatsiCertainty)
+{
+	SOLDIERTYPE* pMe = this->pSoldier;
+	INT32	morale = pSoldier->aiData.bAIMorale;
+
+	INT32	iRange = myThreatsiOrigRange;
+	// all 32-bit integers for max. speed
+	INT16	sHisGridNo, sMyRealGridNo, sHisRealGridNo = NOWHERE;
+	INT16 sTempX, sTempY;
+	FLOAT dMyX, dMyY, dHisX, dHisY;
+	INT8	bHisBestCTGT, bHisActualCTGT, bHisCTGT, bMyCTGT;
+	SOLDIERTYPE *pHim;
+
+	dMyX = dMyY = dHisX = dHisY = -1.0;
+
+	pHim = myThreatspOpponent;
+	sHisGridNo = myThreatssGridNo;
+
+	// THE FOLLOWING STUFF IS *VEERRRY SCAARRRY*, BUT SHOULD WORK.  IF YOU REALLY
+	// HATE IT, THEN CHANGE ChanceToGetThrough() TO WORK FROM A GRIDNO TO GRIDNO
+
+	// this is theoretical, and I'm not actually at sMyGridNo right now
+	sMyRealGridNo = pMe->sGridNo;        // remember where I REALLY am
+	dMyX = pMe->dXPos;
+	dMyY = pMe->dYPos;
+
+	pMe->sGridNo = sMyGridNo;              // but pretend I'm standing at sMyGridNo
+	ConvertGridNoToCenterCellXY( sMyGridNo, &sTempX, &sTempY );
+	pMe->dXPos = (FLOAT) sTempX;
+	pMe->dYPos = (FLOAT) sTempY;
+
+	// if this is theoretical, and he's not actually at hisGrid right now
+	if (pHim->sGridNo != sHisGridNo)
 	{
+		sHisRealGridNo = pHim->sGridNo;      // remember where he REALLY is
+		dHisX = pHim->dXPos;
+		dHisY = pHim->dYPos;
+
+		pHim->sGridNo = sHisGridNo;            // but pretend he's standing at sHisGridNo
+		ConvertGridNoToCenterCellXY( sHisGridNo, &sTempX, &sTempY );
+		pHim->dXPos = (FLOAT) sTempX;
+		pHim->dYPos = (FLOAT) sTempY;
+	}
+
+
+	if (InWaterOrGas(pHim,sHisGridNo))
+	{
+		bHisActualCTGT = 0;
+	}
+	else
+	{
+		// optimistically assume we'll be behind the best cover available at this spot
+		bHisActualCTGT = CalcWorstCTGTForPosition( pHim, pMe->ubID, sMyGridNo, pMe->pathing.bLevel, iMyAPsLeft );
+	}
+
+	// normally, that will be the cover I'll use, unless worst case over-rides it
+	bHisCTGT = bHisActualCTGT;
+
+	// only calculate his best case CTGT if there is room for improvement!
+	if (bHisActualCTGT < 100)
+	{
+		// if we didn't remember his real gridno earlier up above, we got to now,
+		// because calculating worst case is about to play with it in a big way!
+		if (sHisRealGridNo == NOWHERE)
+		{
+			sHisRealGridNo = pHim->sGridNo;      // remember where he REALLY is
+			dHisX = pHim->dXPos;
+			dHisY = pHim->dYPos;
+		}
+
+		// calculate where my cover is worst if opponent moves just 1 tile over
+		bHisBestCTGT = CalcBestCTGT(pHim, pMe->ubID, sMyGridNo, pMe->pathing.bLevel, iMyAPsLeft);
+
+		// if he can actually improve his CTGT by moving to a nearby gridno
+		if (bHisBestCTGT > bHisActualCTGT)
+		{
+			// he may not take advantage of his best case, so take only 2/3 of best
+			bHisCTGT = ((2 * bHisBestCTGT) + bHisActualCTGT) / 3;
+		}
+	}
+
+	// if my intended gridno is in water or gas, I can't attack at all from there
+	// here, for smoke, consider bad
+	if (InWaterGasOrSmoke(pMe,sMyGridNo))
+	{
+		bMyCTGT = 0;
+	}
+	else
+	{
+		// put him at sHisGridNo if necessary!
+		if (pHim->sGridNo != sHisGridNo )
+		{
+			pHim->sGridNo = sHisGridNo;
+			ConvertGridNoToCenterCellXY( sHisGridNo, &sTempX, &sTempY );
+			pHim->dXPos = (FLOAT) sTempX;
+			pHim->dYPos = (FLOAT) sTempY;
+		}
+
+		// let's not assume anything about the stance the enemy might take, so take an average
+		// value... no cover give a higher value than partial cover
+		bMyCTGT = CalcAverageCTGTForPosition( pMe, pHim->ubID, sHisGridNo, pHim->pathing.bLevel, iMyAPsLeft );
+
+		// since NPCs are too dumb to shoot "blind", ie. at opponents that they
+		// themselves can't see (mercs can, using another as a spotter!), if the
+		// cover is below the "see_thru" threshold, it's equivalent to perfect cover!
+		if (bMyCTGT < SEE_THRU_COVER_THRESHOLD)
+		{
+			bMyCTGT = 0;
+		}
+	}
+
+	// UNDO ANY TEMPORARY "DAMAGE" DONE ABOVE
+	pMe->sGridNo = sMyRealGridNo;        // put me back where I belong!
+	pMe->dXPos = dMyX;                      // also change the 'x'
+	pMe->dYPos = dMyY;                      // and the 'y'
+
+	if (sHisRealGridNo != NOWHERE)
+	{
+		pHim->sGridNo = sHisRealGridNo;      // put HIM back where HE belongs!
+		pHim->dXPos = dHisX;                    // also change the 'x'
+		pHim->dYPos = dHisY;                    // and the 'y'
+	}
+
+
+	// these value should be < 1 million each
+	float HisPosValue = (float) (bHisCTGT * myThreatsiValue * myThreatsiAPs);
+	float MyPosValue =  (float) (bMyCTGT *  iMyThreat * iMyAPsLeft);
+
+	// try to account for who outnumbers who: the side with the advantage thus
+	// (hopefully) values offense more, while those in trouble will play defense
+	if (pHim->aiData.bOppCnt > 1)
+	{
+		HisPosValue /= pHim->aiData.bOppCnt;
+	}
+
+	if (pMe->aiData.bOppCnt > 1)
+	{
+		MyPosValue /= pMe->aiData.bOppCnt;
+	}
+
+
+ // if my positional value is worth something at all here
+ if (MyPosValue > 0.0)
+  {
+   // if I CAN'T crouch when I get there, that makes it significantly less
+   // appealing a spot (how much depends on range), so that's a penalty to me
+	//ADB and if I'm not already crouching
+  if (iMyAPsLeft < AP_CROUCH && movementMode != SWATTING)
+     // subtract another 1 % penalty for NOT being able to crouch per tile
+     // the farther away we are, the bigger a difference crouching will make!
+     MyPosValue -= ((MyPosValue * (AIM_PENALTY_TARGET_CROUCHED + (iRange / CELL_X_SIZE))) / 100);
+  }
+
+	// the farther apart we are, the less important the cover differences are
+	// the less certain his position, the less important cover differences are
+	float ReductionFactor = float (((MAX_THREAT_RANGE - iRange) * myThreatsiCertainty) /
+		    (MAX_THREAT_RANGE * myThreatsiCertainty));
+
+	int iCoverValue = (int) (((HisPosValue - MyPosValue) / HisPosValue) * ReductionFactor);
+
+	return( max(iCoverValue, 0) );
+}
+
+#ifdef VEHICLE	
+void AStarPathfinder::InitVehicle()
+{
+	fMultiTile = ((pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE) != 0);
+	if (fMultiTile) {
+		// Get animation surface...
+		// Chris_C... change this to use parameter.....
+		UINT16 usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, movementMode );
+		// Get structure ref...
+		pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, movementMode );
+		
+		if ( pStructureFileRef ) {
+			fContinuousTurnNeeded = ( ( pSoldier->flags.uiStatusFlags & (SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE) ) != 0 );
+
+			/*
+			//bool fVehicle = ( (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) != 0 );
+			if (fVehicle && pSoldier->bReverse)
+			{
+				fReverse = TRUE;
+			}
+			if (fVehicle || pSoldier->ubBodyType == COW || pSoldier->ubBodyType == BLOODCAT) // or a vehicle
+			{
+				fTurnSlow = TRUE;
+			}
+			*/
+			if ( gfEstimatePath ) {
+				bOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
+			}
+			else if ( pSoldier->pLevelNode != NULL && pSoldier->pLevelNode->pStructureData != NULL ) {
+				bOKToAddStructID = pSoldier->pLevelNode->pStructureData->usStructureID;
+			}
+			else {
+				bOKToAddStructID = INVALID_STRUCTURE_ID;
+			}
+
+		}
+		else {
+			// turn off multitile pathing
+			fMultiTile = FALSE;
+			fContinuousTurnNeeded = FALSE;
+		}
+	}
+	else {
+		fContinuousTurnNeeded = FALSE;
+	}
+	return;
+}
+
+int AStarPathfinder::VehicleObstacleCheck()
+{
+	/*
+	if (fTurnSlow) {
+		if (iLastDir == iPrevToLastDir) {
+			if ( iCnt != iLastDir && iCnt != gOneCDirection[ iLastDir ] && iCnt != gOneCCDirection[ iLastDir ]) {
+				goto NEXTDIR;
+			}
+		}
+		else {
+			if ( iCnt != iLastDir ) {
+				goto NEXTDIR;
+			}
+		}
+	}
+	*/
+
+	int iStructIndex;
+	if ( bLoopState == LOOPING_REVERSE ) {
+		iStructIndex = gOppositeDirection[ gOneCDirection[ direction ] ];
+	}
+	else {
+		iStructIndex = gOneCDirection[ direction ];
+	}
+
+	if (fMultiTile) {
+		if ( fContinuousTurnNeeded ) {
+			if ( direction != lastDir ) {
+				if ( !OkayToAddStructureToWorld( (INT16) CurrentNodeIndex, onRooftop, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), bOKToAddStructID ) ) {
+					// we have to abort this loop and possibly reset the loop conditions to
+					// search in the other direction (if we haven't already done the other dir)
+					if (bLoopState == LOOPING_CLOCKWISE) {
+						startDir = lastDir;
+						endDir = direction;
+						bLoopState = LOOPING_COUNTERCLOCKWISE; // backwards
+						// when we go to the bottom of the loop, iLoopIncrement will be added to iCnt
+						// which is good since it avoids duplication of effort
+						direction = startDir;
+						return 1;
+						//goto NEXTDIR;
+					}
+					else if ( bLoopState == LOOPING_COUNTERCLOCKWISE && !fCheckedBehind ) {
+						// check rear dir
+						bLoopState = LOOPING_REVERSE;
+
+						// NB we're stuck with adding 1 to the loop counter down below so configure to accomodate...
+						//iLoopStart = (iLastDir + (MAXDIR / 2) - 1) % MAXDIR;
+						startDir = gOppositeDirection[ gOneCCDirection[ lastDir ] ];
+						endDir = (startDir + 2) % MAXDIR;
+						direction = startDir;
+						fCheckedBehind = TRUE;
+						return 1;
+						//goto NEXTDIR;
+					}
+					else {
+						// done
+						//goto ENDOFLOOP;
+						return 2;
+					}
+
+				}
+			}
+		}//end fContinuousTurnNeeded
+
+		// check to make sure it's okay for us to turn to the new direction in our current tile
+
 		// vehicle test for obstacles: prevent movement to next tile if
 		// a tile covered by the vehicle in that position & direction
 		// has an obstacle in it
@@ -588,412 +1822,94 @@ bool AStarPathfinder::VehicleObstacleCheck(int const direction)
 		// because of the order in which animations are stored (dir 7 first,
 		// then 0 1 2 3 4 5 6), we must subtract 1 from the direction
 		// ATE: Send in our existing structure ID so it's ignored!
-
-		bool iStructIndex;
-		if ( bLoopState == LOOPING_REVERSE )
-		{
-			iStructIndex = gOppositeDirection[ gOneCDirection[ direction ] ];
+		if (!OkayToAddStructureToWorld( (INT16) CurrentNodeIndex, onRooftop, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), bOKToAddStructID ) ) {
+			return 1;
+			//goto NEXTDIR;
 		}
-		else
-		{
-			iStructIndex = gOneCDirection[ direction ];
-		}
-		if (!OkayToAddStructureToWorld( NextNodeIndex, onRooftop, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
-		{
-			return true;
-		}
-
 	}
-	return false;
+	return 0;
 }
+#endif
 
 bool AStarPathfinder::CanTraverse()
 {
+	if ( fVisitSpotsOnlyOnce && GetAStarStatus(CurrentNode) != AStar_Init ) {
+		// on a "reachable" test, never revisit locations, even if open!
+		return false;
+	}
+
 	//checks distance, mines, cliffs
-	if (gubNPCDistLimit)
-	{
-		if ( gfNPCCircularDistLimit )
-		{
-			if (PythSpacesAway( StartNode, NextStepNode) > gubNPCDistLimit)
-			{
+	if (gubNPCDistLimit) {
+		if ( gfNPCCircularDistLimit ) {
+			if (PythSpacesAway( StartNode, CurrentNode) > gubNPCDistLimit) {
 				return false;
 			}
 		}
-		else
-		{
-			if (SpacesAway( StartNode, NextStepNode) > gubNPCDistLimit)
-			{
+		else {
+			if (SpacesAway( StartNode, CurrentNode) > gubNPCDistLimit) {
 				return false;
 			}				
 		}
 	}
 
 	// AI check for mines
-	if ( gpWorldLevelData[NextNodeIndex].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT && pSoldier->bSide != 0)
-	{
+	if ( gpWorldLevelData[CurrentNodeIndex].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT && pSoldier->bSide != 0) {
 		return false;
 	}
 
 	// WANNE: Know mines (for enemy or player) do not explode - BEGIN
-	if ( gpWorldLevelData[NextNodeIndex].uiFlags & (MAPELEMENT_ENEMY_MINE_PRESENT | MAPELEMENT_PLAYER_MINE_PRESENT) )
-	{
+	if ( gpWorldLevelData[CurrentNodeIndex].uiFlags & (MAPELEMENT_ENEMY_MINE_PRESENT | MAPELEMENT_PLAYER_MINE_PRESENT) ) {
 		if (pSoldier->bSide == 0)
 		{
 			// For our team, skip a location with a known mines unless it is the end of our
 			// path; for others on our side, skip such locations completely;
-			if (pSoldier->bTeam != gbPlayerNum || NextStepNode != DestNode)
-			{
-				if (gpWorldLevelData[NextNodeIndex].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT)
-				{
+			if (pSoldier->bTeam != gbPlayerNum || CurrentNode != DestNode) {
+				if (gpWorldLevelData[CurrentNodeIndex].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT) {
 					return false;
 				}
 			}
 		}
-		else
-		{
+		else {
 			// For the enemy, always skip known mines
-			if (gpWorldLevelData[NextNodeIndex].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT)
-			{
+			if (gpWorldLevelData[CurrentNodeIndex].uiFlags & MAPELEMENT_ENEMY_MINE_PRESENT) {
 				return false;
 			}
 		}
 	}
 	// WANNE: - END
 
-	INT16 curNodeIndex = GridNodeToInt(CurrentNode);
 	//ATE: Movement onto cliffs? Check vs the soldier's gridno height
 	// CJC: PREVIOUS LOCATION's height
-	if ( gpWorldLevelData[ NextNodeIndex ].sHeight != gpWorldLevelData[ curNodeIndex ].sHeight )
-	{
+	if ( gpWorldLevelData[ CurrentNodeIndex ].sHeight != gpWorldLevelData[ ParentNodeIndex ].sHeight ) {
 		return false;
 	}
 
 	return true;
 }//end CanTraverse
 
-int AStarPathfinder::CalcG(int const direction)
+bool AStarPathfinder::IsSomeoneInTheWay()
 {
-	int nextCost = TRAVELCOST_FLAT;
-	//how much is admission to the next tile
-	if ( fPathAroundObstacles )
-	{
-		nextCost = gubWorldMovementCosts[ NextNodeIndex ][ direction ][ onRooftop ];
-
-		//ATE:	Check for differences from reality 
-		// Is next cost an obstcale
-		if ( nextCost == TRAVELCOST_HIDDENOBSTACLE )
-		{
-			if ( fPathingForPlayer )
-			{
-				bool fHiddenStructVisible;
-				// Is this obstcale a hidden tile that has not been revealed yet?
-				if( DoesGridnoContainHiddenStruct( NextNodeIndex, &fHiddenStructVisible ) )
-				{
-					// Are we not visible, if so use terrain costs!
-					if ( !fHiddenStructVisible )
-					{
-						// Set cost of terrain!
-						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-					}
-				}
-			}
-		}
-		else if ( nextCost == TRAVELCOST_NOT_STANDING )
-		{
-			// for path plotting purposes, use the terrain value
-			nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-		}
-		else if ( nextCost == TRAVELCOST_EXITGRID )
-		{
-			if (fPlotPathToExitGrid)
-			{
-				// replace with terrain cost so that we can plot path, otherwise is obstacle
-				nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-			}
-		}
-		else if ( nextCost == TRAVELCOST_FENCE && fNonFenceJumper )
-		{
-			return -1;
-		}
-		else if ( IS_TRAVELCOST_DOOR( nextCost ) )
-		{
-			// don't let anyone path diagonally through doors!
-			if (IsDiagonal(CurrentNode, NextStepNode) == true)
-			{
-				return -1;
-			}
-
-			INT16 iDoorGridNo = NextNodeIndex;
-			bool fDoorIsObstacleIfClosed = FALSE;
-			bool fDoorIsOpen;
-			switch( nextCost )
-			{
-				case TRAVELCOST_DOOR_CLOSED_HERE:
-					fDoorIsObstacleIfClosed = TRUE;
-					iDoorGridNo = NextNodeIndex;
-					break;
-				case TRAVELCOST_DOOR_CLOSED_N:
-					fDoorIsObstacleIfClosed = TRUE;
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTH ];
-					break;
-				case TRAVELCOST_DOOR_CLOSED_W:
-					fDoorIsObstacleIfClosed = TRUE;
-					iDoorGridNo = NextNodeIndex + dirDelta[ WEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_HERE:
-					iDoorGridNo = NextNodeIndex;
-					break;
-				case TRAVELCOST_DOOR_OPEN_N:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTH ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_NE:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTHEAST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_E:
-					iDoorGridNo = NextNodeIndex + dirDelta[ EAST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_SE:
-					iDoorGridNo = NextNodeIndex + dirDelta[ SOUTHEAST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_S:
-					iDoorGridNo = NextNodeIndex + dirDelta[ SOUTH ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_SW:
-					iDoorGridNo = NextNodeIndex + dirDelta[ SOUTHWEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_W:
-					iDoorGridNo = NextNodeIndex + dirDelta[ WEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_NW:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTHWEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_N_N:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTH ] + dirDelta[ NORTH ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_NW_N:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_NE_N:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_W_W:
-					iDoorGridNo = NextNodeIndex + dirDelta[ WEST ] + dirDelta[ WEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_SW_W:
-					iDoorGridNo = NextNodeIndex + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
-					break;
-				case TRAVELCOST_DOOR_OPEN_NW_W:
-					iDoorGridNo = NextNodeIndex + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
-					break;
-				default:
-					break;
-			}
-
-			if ( fPathingForPlayer && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT )
-			{
-				// check door status
-				DOOR_STATUS* pDoorStatus = GetDoorStatus( iDoorGridNo );
-				if (pDoorStatus)
-				{
-					fDoorIsOpen = (pDoorStatupSoldier->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
-				}
-				else
-				{
-					// door destroyed?
-					nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-				}
-			}
-			else
-			{
-				// check door structure
-				STRUCTURE* pDoorStructure = FindStructure( iDoorGridNo, STRUCTURE_ANYDOOR );
-				if (pDoorStructure)
-				{
-					fDoorIsOpen = (pDoorStructure->fFlags & STRUCTURE_OPEN) != 0;
-				}
-				else
-				{
-					// door destroyed?
-					nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-				}
-			}
-
-			// now determine movement cost... if it hasn't been changed already
-			if ( IS_TRAVELCOST_DOOR( nextCost ) )
-			{
-
-				if (fDoorIsOpen)
-				{
-					if (fDoorIsObstacleIfClosed)
-					{
-						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-					}
-					else
-					{
-						nextCost = TRAVELCOST_OBSTACLE;
-					}
-				}
-				else
-				{
-					if (fDoorIsObstacleIfClosed)
-					{				
-						// door is closed and this should be an obstacle, EXCEPT if we are calculating
-						// a path for an enemy or NPC with keys
-						if ( fPathingForPlayer || ( pSoldier && (pSoldier->flags.uiStatusFlags & SOLDIER_MONSTER || pSoldier->flags.uiStatusFlags & SOLDIER_ANIMAL) ) )
-						{
-							nextCost = TRAVELCOST_OBSTACLE;
-						}
-						else
-						{
-							// have to check if door is locked and NPC does not have keys!
-							DOOR* pDoor = FindDoorInfoAtGridNo( iDoorGridNo );
-							if (pDoor)
-							{
-								if (!pDoor->fLocked || pSoldier->pathing.bHasKeys)
-								{
-									// add to AP cost
-									if (maxAPCost)
-									{
-										fGoingThroughDoor = TRUE;
-									}
-									nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-								}
-								else
-								{
-									nextCost = TRAVELCOST_OBSTACLE;
-								}
-							}
-							else
-							{
-								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-							}
-						}
-					}
-					else
-					{
-						nextCost = gTileTypeMovementCost[ gpWorldLevelData[ NextNodeIndex ].ubTerrainID ];
-					}
-				}
-			}
-		}
-		else if ( fNonSwimmer && (nextCost == TRAVELCOST_SHORE || nextCost == TRAVELCOST_KNEEDEEP || nextCost == TRAVELCOST_DEEPWATER ) )
-		{
-			// creatures and animals can't go in water
-			nextCost = TRAVELCOST_OBSTACLE;
-		}
-	
-
-		// Apr. '96 - moved up be ahead of AP_Budget stuff
-		if ( ( nextCost >= NOPASS) ) // || ( nextCost == TRAVELCOST_DOOR ) )
-			return -1;
-	}
-	return nextCost;
-}//end CalcG
-
-
-void AStarPathfinder::ExecuteAStarLogic()
-{
-	//this node is now closed
-	SetAStarStatus(CurrentNode, AStar_Closed);
-	ClosedList.push_back(CurrentNode);
-
-
-	int baseGCost = GetAStarG(CurrentNode);
-	int baseAP = GetActionPoints(CurrentNode);
-	CurrentNodeIndex = GridNodeToInt(CurrentNode);
-
-	//for each direction
-	for (int direction = startDir; direction != endDir;) {
-		NextNodeIndex = CurrentNodeIndex + dirDelta[direction];
-		NextStepNode = IntToGridNode(NextNodeIndex);
-		//if the node is not in the world, or it has already been searched, continue
-		if (NextStepNode.isInWorld() == false ||
-			GetAStarStatus(NextStepNode) == AStar_Closed) {
-			continue;
-		}
-
-		//if the node is not traversable, continue
-		if (CanTraverse() == false) {
-			continue;
-		}
-
-
-		//calc the cost to move from the current node to here
-		int movementG = CalcG(direction);
-		if (movementG == -1) {
-			//an error code like diagonal door or obstruction was returned
-			continue;
-		}
-
-		int AStarG = baseGCost + movementG;
-		//if the node is more costly in this path than in another path, continue
-		if (GetAStarStatus(NextStepNode) == AStar_Open
-			&& AStarG >= GetAStarG(NextStepNode)) {
-			continue;
-		}
-
-#ifdef VEHICLE
-		if (VehicleObstaclCheck(direction)) {
-			continue;
-		}
-#endif
-
-
-		//check if we will run out of AP at this node or before
-		//if we run out, the merc will stop here for a turn and be vulnerable
-		int extraGCoverCost = 0;
-		if (maxAPCost && APCost > maxAPCost) {
-			if (baseAP > maxAPCost) {
-				//the start node is too long, all other nodes from start node
-				//will be too long too, and have the extra cost already added
-				extraGCoverCost = GetExtraGCover(CurrentNode);
-			}
-			else {
-				//use the stance and cover to see how much we really want to stop here as opposed to an equal path with different cover
-				//because other nodes further on the path will stop here too, add this value to the G cost
-				extraGCoverCost = CalcGCover(NextStepNode);
-			}
-		}
-
-		int AStarF = AStarG + extraGCoverCost + AStarH;
-		//insert this node onto the heap
-		if (GetAStarStatus(NextStepNode) == AStar_Init) {
-			OpenHeap.insertElement(NextStepNode, AStarF);
-		}
-		else {
-			OpenHeap.editElement(NextStepNode, AStarF);
-		}
-		SetAStarStatus(NextStepNode, AStar_Open);
-		SetAStarF(NextStepNode, AStarF);
-		SetAStarG(NextStepNode, AStarG);
-		SetExtraGCover(NextStepNode, extraGCoverCost);
-		SetAStarParent(NextStepNode, CurrentNode);
-
-		//handle the loop
-		if (bLoopState == LOOPING_CLOCKWISE) // backwards
-		{
-			direction = gOneCCDirection[ direction ];
-		}
-		else
-		{
-			direction = gOneCDirection[ direction ];
-		}
-		if ( direction == endDir )
-		{
-			break;
-		}
-		else if ( fContinuousTurnNeeded && direction == gOppositeDirection[ startDir ] )
-		{
-			fCheckedBehind = TRUE;
+	// if contemplated tile is NOT final dest and someone there, disqualify route
+	// when doing a reachable test, ignore all locations with people in them
+	if (fPathAroundPeople && ( (CurrentNode != DestNode) || fCopyReachable) ) {
+		 // ATE: ONLY cancel if they are moving.....
+		UINT8 ubMerc = WhoIsThere2( (UINT16) CurrentNodeIndex, pSoldier->pathing.bLevel);
+		if ( ubMerc < NOBODY && ubMerc != pSoldier->ubID ) {
+			// Check for movement....
+			//if ( fTurnBased || ( (Menptr[ ubMerc ].sFinalDestination == Menptr[ ubMerc ].sGridNo) || (Menptr[ ubMerc ].fDelayedMovement) ) )
+			//{
+				return true;	
+			//}
+			//	else
+			//{
+			//	nextCost += 50;
+			//}
 		}
 	}
+	return false;
+}
 
-	return;
-}//end ExecuteAStarLogic
-#endif
-
-
-
+#endif//end ifdef USE_ASTAR_PATHS
 
 INT8 RandomSkipListLevel( void )
 {
@@ -1060,6 +1976,16 @@ void RestorePathAIToDefaults( void )
 ////////////////////////////////////////////////////////////////////////
 INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags )
 {
+#ifdef USE_ASTAR_PATHS
+	int retVal = ASTAR::AStarPathfinder::GetInstance().GetPath(s, sDestination, ubLevel, usMovementMode, bCopy, fFlags);
+	if (retVal) {
+		return retVal;
+	}
+	else {
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR path failed!" ) );
+	}
+#endif
+
 	//__try
 	//{
 	INT32 iDestination = sDestination, iOrigination;

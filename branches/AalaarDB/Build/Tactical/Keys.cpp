@@ -195,7 +195,7 @@ BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 {
 	UINT8				ubLoop;
 
-	for (ubLoop = 0; ubLoop < NUM_INV_SLOTS; ubLoop++)
+	for (ubLoop = 0; ubLoop < pSoldier->inv.size(); ubLoop++)
 	{
 		if (Item[pSoldier->inv[ubLoop].usItem].usItemClass == IC_KEY)
 		{
@@ -2131,44 +2131,44 @@ void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded( )
 
 void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded )
 {
-	UINT8		    ubLoop;
-  UINT8       ubItem;
-  OBJECTTYPE  Object;
-
 	if (!(pSoldier->pKeyRing))
 	{
 		// no key ring!
 		return;
 	}
+	UINT8		ubLoop;
+	UINT8       ubItem;
+	OBJECTTYPE  Object;
+
 	for (ubLoop = 0; ubLoop < NUM_KEYS; ubLoop++)
 	{
-  	ubItem = pSoldier->pKeyRing[ ubLoop ].ubKeyID;
+  		ubItem = pSoldier->pKeyRing[ ubLoop ].ubKeyID;
 
-    if ( pSoldier->pKeyRing[ubLoop].ubNumber > 0 )
-    {
-  	  CreateKeyObject( &Object, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
+		if ( pSoldier->pKeyRing[ubLoop].ubNumber > 0 )
+		{
+  			CreateKeyObject( &Object, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
 
-      // Zero out entry
-		  pSoldier->pKeyRing[ ubLoop ].ubNumber = 0;
-		  pSoldier->pKeyRing[ ubLoop ].ubKeyID = INVALID_KEY_NUMBER;
+			// Zero out entry
+			pSoldier->pKeyRing[ ubLoop ].ubNumber = 0;
+			pSoldier->pKeyRing[ ubLoop ].ubKeyID = INVALID_KEY_NUMBER;
 
-      if ( fAddToDropList )
-      {
-        AddItemToLeaveIndex( &Object, iDropListSlot );
-      }
-      else
-      {
-	      if( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || fUseUnLoaded )
-	      {
-          // Set flag for item...
-				  AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &Object , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
-        }
-			  else
-			  {
-          // Add to pool
-          AddItemToPool( sGridNo, &Object, bVisible, bLevel, 0, 0 );
-			  }
-      }
-    }
+			if ( fAddToDropList )
+			{
+				AddItemToLeaveIndex( &Object, iDropListSlot );
+			}
+			else
+			{
+				if( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || fUseUnLoaded )
+				{
+					// Set flag for item...
+					AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &Object , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
+				}
+				else
+				{
+					// Add to pool
+					AddItemToPool( sGridNo, &Object, bVisible, bLevel, 0, 0 );
+				}
+			}
+		}
 	}
 }

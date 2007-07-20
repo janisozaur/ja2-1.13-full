@@ -9,8 +9,13 @@
 #ifndef _PATHAI_H
 #define _PATHAI_H
 #include "isometric utils.h"
-#include "BinaryHeap.hpp"
 
+#define USE_ASTAR_PATHS
+
+#ifdef USE_ASTAR_PATHS
+
+namespace ASTAR {
+#include "BinaryHeap.hpp"
 #include <vector>
 
 enum eAStar
@@ -23,15 +28,30 @@ enum eAStar
 class GridNode
 {
 public:
-	GridNode(UINT8 x, UINT8 y) {GridNode::x = x; GridNode::y = y;};
-	GridNode operator + (const GridNode& point) const {return GridNode(this->x + point.x, this->y + point.y);};
-	bool	isInWorld() {return (x < WORLD_COLS && y < WORLD_ROWS);};
-	UINT8 x;
-	UINT8 y;
+	GridNode	() {} ;
+	GridNode	(int x, int y) {GridNode::x = x; GridNode::y = y;};
+	GridNode	operator + (const GridNode& point) const {return GridNode(this->x + point.x, this->y + point.y);};
+	bool		operator == (const GridNode& point) const {return this->x == point.x && this->y == point.y;};
+	bool		operator != (const GridNode& point) const {return !(*this == point);};
+	INT16		GridNodeToInt() {return (this->x + this->y * MAPWIDTH);};
+	void		IntToGridNode(INT16 const loc) {this->x = loc % MAPWIDTH; this->y = loc / MAPWIDTH;};
+	bool		isInWorld() {return (this->x < WORLD_COLS && this->x >= 0 &&
+									this->y < WORLD_ROWS && this->y >= 0);};
+	int			x;
+	int			y;
 };
 
-struct AStar_Data
+class AStar_Data
 {
+public:
+	AStar_Data()
+	{
+		cost = f = APCost = direction = prevCost = 0;
+		extraGCoverCost = -1;//-1 means we have not stopped at this node
+		wasBackwards = false;
+		status = AStar_Init;
+		parent = GridNode(-1,-1);
+	};
 	//no H
 	int			cost;//G
 	int			f;//F
@@ -39,6 +59,9 @@ struct AStar_Data
 	int			extraGCoverCost;//an extra cost that makes stopping in midpath at a node with little cover worse
 	GridNode	parent;
 	eAStar		status;
+	int			prevCost;
+	bool		wasBackwards;
+	int			direction;
 };
 
 typedef HEAP<int, GridNode>		AStarHeap;
@@ -46,47 +69,65 @@ typedef HEAP<int, GridNode>		AStarHeap;
 class AStarPathfinder
 {
 public:
-	AStarPathfinder();
-	int				GetPath	(INT16 const StartNode,
-							INT16 const DestNode,
-							bool const waterToWater);
+	AStarPathfinder			();
+	static AStarPathfinder&	GetInstance();
+	int				GetPath	(SOLDIERTYPE *s ,
+							INT16 dest,
+							INT8 ubLevel,
+							INT16 usMovementMode,
+							INT8 bCopy,
+							UINT8 fFlags );
 
 private:
+	static	AStarPathfinder* pThis;
 	std::vector<GridNode>		ClosedList;
 	CBinaryHeap<int, GridNode>	OpenHeap;
 
+	int		direction;//current direction
+	int		startDir;
+	int		endDir;
+	int		lastDir;
+	bool	startingLoop;
+
 	SOLDIERTYPE*	pSoldier;
-	int		maxAPCost;//the merc only has so many points to move with
-	bool	onRooftop;//ubLevel
+	INT8	onRooftop;//aka ubLevel, not sure if this bool is logically reversed yet
 	bool	fNonFenceJumper;
 	bool	fNonSwimmer;
 	bool	fPathingForPlayer;
-	bool	fPathAroundObstacles;
-	bool	fPlotPathToExitGrid;
+	bool	fPathAroundPeople;
 	bool	fGoingThroughDoor;
-	bool	usOKToAddStructID;
-	bool	bLoopState;
+	int		bOKToAddStructID;
+	int		bLoopState;
+	bool	bWaterToWater;
+	bool	fVisitSpotsOnlyOnce;
+	bool	fCheckedBehind;
+	bool	fTurnBased;
+	bool	fCloseGoodEnough;
+	bool	fContinuousTurnNeeded;
+	bool	fConsiderPersonAtDestAsObstacle;
+	bool	fCopyReachable;
+	bool	fCopyPathCosts;
+
+	int		maxAPBudget;//the gubNPCAPBudget
+	int		mercsMaxAPs;//the merc only has so many points to move with
+	int		movementMode;
+	int		sClosePathLimit;
+
+	int		PATHAI_VISIBLE_DEBUG_Counter;
 
 	//vehicle defined in cpp
 	//#ifdef VEHICLE
-		//BOOLEAN fTurnSlow = FALSE;
-		//BOOLEAN fReverse = FALSE; // stuff for vehicles turning
-		BOOLEAN fMultiTile, fVehicle;
-		//INT32 iLastDir, iPrevToLastDir;
-		//INT8 bVehicleCheckDir;
-		//UINT16 adjLoc;
+		BOOLEAN fMultiTile;
 		STRUCTURE_FILE_REF * pStructureFileRef;
-		UINT16							 usAnimSurface;
-		//INT32 iCnt2, iCnt3;
 	//#endif
 
 	// member variables to prevent passing them around
 	GridNode	StartNode;
 	GridNode	DestNode;
-	GridNode	NextStepNode;
 	GridNode	CurrentNode;
+	GridNode	ParentNode;
+	INT16	ParentNodeIndex;
 	INT16	CurrentNodeIndex;
-	INT16	NextNodeIndex;
 
 	AStar_Data	AStarData[WORLD_COLS][WORLD_ROWS];
 
@@ -94,17 +135,23 @@ private:
 
 
 
-	AStarHeap		AStar	(GridNode const start,
-							GridNode const dest);
+	AStarHeap		AStar	();
 
 	void	ExecuteAStarLogic();
 
 	void	ResetAStarList	();
 
-	int		CalcG			(int const direction);
-	int		CalcAP			();
+	int		TerrainCostToAStarG(int const terrainCost);
+	int		CalcG			(int* pPrevCost);
+	int		CalcAP			(int const terrainCost);
 	int		CalcH			();
-	int		CalcGCover		(const GridNode ThisNode);
+	int		CalcGCover		(int const NodeIndex,
+							int const APCost);
+
+			//including THREATTYPE was a pain, so pass by value
+	int		CalcCoverValue	(INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
+							INT32 myThreatsiOrigRange, INT16 myThreatssGridNo, SOLDIERTYPE* myThreatspOpponent,
+							INT32 myThreatsiValue, INT32 myThreatsiAPs, INT32 myThreatsiCertainty);
 
 	eAStar	GetAStarStatus	(const GridNode node) const {return AStarData[node.x][node.y].status;};
 	GridNode	GetAStarParent	(const GridNode node) const {return AStarData[node.x][node.y].parent;};
@@ -112,26 +159,39 @@ private:
 	int		GetExtraGCover	(const GridNode node) const {return AStarData[node.x][node.y].extraGCoverCost;};
 	int		GetAStarF		(const GridNode node) const {return AStarData[node.x][node.y].f;};
 	int		GetActionPoints	(const GridNode node) const {return AStarData[node.x][node.y].APCost;};
+	bool	GetLoopState	(const GridNode node) const {return AStarData[node.x][node.y].wasBackwards;};
+	int		GetPrevCost		(const GridNode node) const {return AStarData[node.x][node.y].prevCost;};
+	int		GetDirection	(const GridNode node) const {return AStarData[node.x][node.y].direction;};
 
 	void	SetAStarStatus	(const GridNode node, const eAStar status) {AStarData[node.x][node.y].status = status;};
-	void	SetAStarParent	(const GridNode node, GridNode const parent) {AStarData[node.x][node.y].parent = parent;};
+	void	SetAStarParent	(const GridNode node, const GridNode parent) {AStarData[node.x][node.y].parent = parent;};
 	void	SetAStarG		(const GridNode node, const int cost) {AStarData[node.x][node.y].cost = cost;};
 	void	SetExtraGCover	(const GridNode node, const int extraGCoverCost) {AStarData[node.x][node.y].extraGCoverCost = extraGCoverCost;};
 	void	SetAStarF		(const GridNode node, const int f) {AStarData[node.x][node.y].f = f;};
 	void	SetActionPoints	(const GridNode node, const int APCost) {AStarData[node.x][node.y].APCost = APCost;};
+	void	SetLoopState	(const GridNode node, const int loopState);
+	void	SetPrevCost		(const GridNode node, const int prevCost) {AStarData[node.x][node.y].prevCost = prevCost;};
+	void	SetDirection	(const GridNode node, const int direction) {AStarData[node.x][node.y].direction = direction;};
 
 	INT16	PythSpacesAway	(GridNode const node1,
 							GridNode const node2);
 	INT16	SpacesAway		(GridNode const node1,
 							GridNode const node2);
-	INT16	GridNodeToInt	(GridNode const node) {return (node.x + node.y * MAPWIDTH);};
-	GridNode	IntToGridNode	(INT16 const loc) {return (GridNode(loc % MAPWIDTH, loc / MAPWIDTH));};
-	bool	IsDiagonal		(GridNode const node1,
-							GridNode const node2) {return (abs(node1.x - node2.x) && abs(node1.y - node2.y));};
-
+	//bool	IsDiagonal		(GridNode const node1,
+	//						GridNode const node2) {return (abs(node1.x - node2.x) && abs(node1.y - node2.y));};
+	bool	IsDiagonal		(int const direction) {return (direction & 1);};
 	void	InitVehicle		();
-	bool	VehicleObstacleCheck(int const direction);
+	int		VehicleObstacleCheck();
+	bool	CanTraverse		();
+	bool	IsSomeoneInTheWay();
+	void	IncrementLoop	();
+	void	InitLoop		();
+	bool	ContinueLoop	();
 };
+
+};//end namespace ASTAR
+
+#endif//end #ifdef USE_ASTAR_PATHS
 
 
 BOOLEAN InitPathAI( void );

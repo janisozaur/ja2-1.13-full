@@ -17,6 +17,7 @@
 	#include "NPC.h"
 	#include "Render Fun.h"
 	#include "Quests.h"
+	#include "DecideAction.h"
 #endif
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
@@ -33,8 +34,8 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 	}
 
 	#ifdef DEBUGDECISIONS
-		STR tempstr;
-		sprintf(tempstr,"DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData);
+		std::string tempstr;
+		tempstr = String("DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData);
 		DebugAI( tempstr );
 	#endif
 

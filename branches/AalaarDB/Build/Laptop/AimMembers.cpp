@@ -1225,7 +1225,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 
 	PosY = WEAPONBOX_Y;
 	PosX = WEAPONBOX_X+3;		// + 3 ( 1 to take care of the shadow, +2 to get past the weapon box border )
-	for(i=0; i<NUM_INV_SLOTS; i++)
+	for(i=0; i<gMercProfiles[ubMercID].inv.size(); i++)
 	{
 		usItem = gMercProfiles[ubMercID].inv[ i ];
 

@@ -8,7 +8,6 @@
 #include "Item Types.h"
 #include "soldier control.h"
 
-// WDS - Clean up inventory handling
 #include <vector>
 #include <iterator>
 

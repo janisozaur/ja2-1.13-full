@@ -13,7 +13,6 @@
 #include "Item Types.h"
 #include "worlddef.h"
 
-// WDS - Clean up inventory handling
 #include <vector>
 #include <iterator>
 
@@ -295,7 +294,6 @@ enum {
 //if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
 #define NUM_ORIGINAL_INV_SLOTS 19
 
-// WDS - Clean up inventory handling
 // NOTE NOTE NOTE!  Leave this alone until it is no longer needed.  It must match the
 // original definition so old files can be read.
 namespace OldInventory {
@@ -385,7 +383,6 @@ enum
 };
 
 
-// WDS - Clean up inventory handling
 struct LEVELNODE;
 
 //atm only used for saving and loading
@@ -428,7 +425,7 @@ public:
 	void clear();
 
 	// How any slots are there in this inventory?
-	int size() const;
+	unsigned int size() const;
 
 	//temporarily? public
 	vector<int>			bNewItemCount;
@@ -1118,9 +1115,6 @@ public:
 
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
-
-	//no need to have them match any more
-	//char ef1,ef2,ef3;	// Extra filler to get "offsetof(endOfPOD)" to match SIZEOF(oldstruct)
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 

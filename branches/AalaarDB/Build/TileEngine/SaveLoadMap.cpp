@@ -1067,7 +1067,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 		// Adjust visiblity of any item pools here....
     // ATE: Nasty bug here - use base gridno for structure for items!
     // since items always drop to base gridno in AddItemToPool
-		if ( GetItemPool( sBaseGridNo, &pItemPool, 0 ) )
+		if ( GetItemPoolFromGround( sBaseGridNo, &pItemPool ) )
 		{
 			if ( fOpened )
 			{

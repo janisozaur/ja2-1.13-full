@@ -626,6 +626,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Only in realtime...
 				//if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 				// This has to be here to make guys continue along fence path
+#if 0
 				if ( pSoldier->sGridNo == pSoldier->pathing.sFinalDestination )
 				{
 					if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != gAnimControl[ pSoldier->usUIMovementMode ].ubEndHeight )
@@ -637,13 +638,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					}
 					else
 					{
-						pSoldier->SoldierGotoStationaryStance( );
+						//pSoldier->SoldierGotoStationaryStance( );
 
 						// Set UI Busy
 						UnSetUIBusy( pSoldier->ubID );
-						return( TRUE );
+						//return( TRUE );
 					}
 				}
+#endif
 				break;
 
 			case 445:
@@ -2106,6 +2108,15 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							if ( pSoldier->pathing.usPathIndex == pSoldier->pathing.usPathDataSize )
 							{
 								// Stop, don't do anything.....
+								// 0verhaul:  Only if not at the final destination
+								// Another reason for rebuilding the animation system.  This should be part of a common
+								// path continuation code so that any other bug fixes won't need to be duplicated in other areas.
+								if ( pSoldier->sGridNo != pSoldier->pathing.sFinalDestination)
+								{
+									if ( !pSoldier->EVENT_InternalGetNewSoldierPath( pSoldier->pathing.sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
+									{
+									}
+								}
 							}
 							else
 							{

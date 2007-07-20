@@ -399,7 +399,6 @@ public:
 	//
 	// New and OO stuff goes after here.  Above this point any changes will goof up reading from files.
 	//
-	//char ef1;		// Extra filler to get "offsetof(endOfPOD)" to match SIZEOF(oldstruct)
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 

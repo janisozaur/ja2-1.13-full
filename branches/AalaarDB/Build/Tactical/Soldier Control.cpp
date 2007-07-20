@@ -261,7 +261,7 @@ Inventory::Inventory(const Inventory& src) {
 	bNewItemCycleCount = src.bNewItemCycleCount;
 }
 
-int Inventory::size() const {
+unsigned int Inventory::size() const {
 	return inv.size();
 }
 
@@ -281,11 +281,19 @@ Inventory::~Inventory() {
 };
 
 OBJECTTYPE& Inventory::operator [] (unsigned int idx) {
+	if (idx >= inv.size()) {
+		inv.resize(idx+1);
+		bNewItemCount.resize(idx+1);
+		bNewItemCycleCount.resize(idx+1);
+		int breakpoint = 0;
+	}
+	/*
 	// This IF is just from setting breakpoints when trying to figure out inventory item problems.  Remove it later
 	if ((idx < 0) ||
 		(idx >= inv.size())) {
 		int i = inv.size();  // Set BP here if following asserts throw
 	}
+	*/
 	Assert(idx >= 0);
 	Assert(idx < inv.size());
 	return inv[idx];
@@ -1183,7 +1191,7 @@ UINT32 MERCPROFILESTRUCT::GetChecksum( )
 	// put in some multipliers too!
 	uiChecksum *= (this->bExpLevel + 1);
 
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < this->inv.size(); uiLoop++ )
 	{
 		uiChecksum += this->inv[ uiLoop ];
 		uiChecksum += this->bInvNumber[ uiLoop ];
@@ -1203,14 +1211,6 @@ MERCPROFILESTRUCT::MERCPROFILESTRUCT() {
 		bInvNumber.push_back(0);
 	}
 	initialize();
-
-	Assert(inv.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-
-	// The following are based on the "old" MERCPROFILESTRUCT struct
-	// Remove these later
-	Assert(SIZEOF_MERCPROFILESTRUCT_POD == 0x2cc); //sizeof(OLD_MERCPROFILESTRUCT));
 }
 
 // Copy Constructor
@@ -1219,10 +1219,6 @@ MERCPROFILESTRUCT::MERCPROFILESTRUCT(const MERCPROFILESTRUCT& src) {
 	inv = src.inv;
 	bInvStatus = src.bInvStatus;
 	bInvNumber = src.bInvNumber;
-
-	Assert(inv.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
 }
 
 // Assignment operator
@@ -1234,9 +1230,6 @@ MERCPROFILESTRUCT& MERCPROFILESTRUCT::operator=(const MERCPROFILESTRUCT& src)
 		bInvStatus = src.bInvStatus;
 		bInvNumber = src.bInvNumber;
     }
- 	Assert(inv.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
 	return *this;
 }
 
@@ -1250,9 +1243,6 @@ MERCPROFILESTRUCT::~MERCPROFILESTRUCT() {
 void MERCPROFILESTRUCT::initialize() {
 	memset( this, 0, SIZEOF_MERCPROFILESTRUCT_POD);
 	clearInventory();
-	Assert(inv.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
 }
 
 // Initialize the soldier.  
@@ -1264,9 +1254,6 @@ void MERCPROFILESTRUCT::clearInventory() {
 		bInvStatus[idx] = 0;
 		bInvNumber[idx] = 0;
 	}
-	Assert(inv.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
-	Assert(bInvStatus.size() == NUM_INV_SLOTS);
 }
 
 // Ugly temporary solution
@@ -7712,7 +7699,17 @@ void SOLDIERTYPE::BeginSoldierClimbFence( void )
 {
 	INT8							bDirection;
 
-	if ( FindFenceJumpDirection( thisSoldier, thisSoldier->sGridNo, thisSoldier->bDirection, &bDirection ) )
+	// Make sure we hop the correct fence to follow our path!
+	if (thisSoldier->pathing.usPathIndex < thisSoldier->pathing.usPathDataSize)
+	{
+		bDirection = (INT8) thisSoldier->pathing.usPathingData[ thisSoldier->pathing.usPathIndex];
+	}
+	else
+	{
+		bDirection = thisSoldier->bDirection;
+	}
+
+	if ( FindFenceJumpDirection( thisSoldier, thisSoldier->sGridNo, bDirection, &bDirection ) )
 	{
 		thisSoldier->sTempNewGridNo = NewGridNo( (UINT16)thisSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
 		thisSoldier->flags.fDontChargeTurningAPs = TRUE;

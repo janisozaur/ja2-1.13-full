@@ -2479,7 +2479,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 		return;
 	}
 	
-	for( ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++ )
+	for( ubCounter = 0; ubCounter < pSoldier->inv.size(); ubCounter++ )
 	{
 		PosX = iScreenWidthOffset + 397 + 3;
 		PosY = iScreenHeightOffset + 200 + 8 +( ubItemCount * ( 29 ) );
@@ -2601,7 +2601,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 
 		if( ubItemCount == NUMBER_OF_INVENTORY_PERSONNEL )
 		{
-			ubCounter = NUM_INV_SLOTS;
+			break;
 		}
 	}
 	
@@ -2761,7 +2761,7 @@ INT32 GetNumberOfInventoryItemsOnCurrentMerc( void )
 
 	pSoldier = &Menptr[ iId ];
 
-	for( ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++ )
+	for( ubCounter = 0; ubCounter < pSoldier->inv.size(); ubCounter++ )
 	{
 		if( ( pSoldier->inv[ ubCounter ].ubNumberOfObjects ) && ( pSoldier->inv[ ubCounter ].usItem) )
 		{
@@ -5882,7 +5882,8 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		}
 
 		// find the x,y on the slider bar
-	  GetCursorPos(&MousePos);
+		GetCursorPos(&MousePos);
+		ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 		// get the subregion sizes
 		sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems  ) );
@@ -6434,7 +6435,7 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 	}
 
 	// run through grunts pockets and count all the spare change
-	for( iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++ )
+	for( iCurrentPocket = 0; iCurrentPocket < pSoldier->inv.size(); iCurrentPocket++ )
 	{
 		if ( Item[ pSoldier->inv[ iCurrentPocket ] .usItem ].usItemClass == IC_MONEY )
 		{
@@ -6448,11 +6449,6 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 
 BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
 {
-	INT32 iCurrentPocket = 0;
-	INT32 iAmountLeftToTake = iCurrentBalance;
-	OBJECTTYPE ObjectToRemove;
-
-
 	// move this amount of money from the grunt to the bank
 	// error check
 	if( pSoldier == NULL )
@@ -6460,8 +6456,11 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 		return FALSE;
 	}
 
+	INT32 iCurrentPocket = 0;
+	INT32 iAmountLeftToTake = iCurrentBalance;
+	OBJECTTYPE ObjectToRemove;
 	// run through grunts pockets and count all the spare change
-	for( iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++ )
+	for( iCurrentPocket = 0; iCurrentPocket < pSoldier->inv.size(); iCurrentPocket++ )
 	{
 		if ( Item[ pSoldier->inv[ iCurrentPocket ] .usItem ].usItemClass == IC_MONEY )
 		{
@@ -6500,8 +6499,6 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 
 BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
 {
-	OBJECTTYPE pMoneyObject;
-
 	// move this amount of money from the grunt to the bank
 	// error check
 	if( pSoldier == NULL )
@@ -6521,6 +6518,8 @@ BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 		iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
 	}
 
+
+	OBJECTTYPE pMoneyObject;
 
 	// set up money object
 	pMoneyObject.usItem = MONEY;
@@ -6733,6 +6732,7 @@ void HandlePersonnelKeyboard( void )
 	POINT  MousePos;
 
 	GetCursorPos(&MousePos);
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {

@@ -1132,8 +1132,9 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"QueenCommand");
 	}
 }
 
+//Well, not so rarely with mobile reinforcements!
 //Rarely, there will be more enemies than supported by the engine.  In this case, these
-//soldier's are waiting for a slot to be free so that they can enter the battle.  This
+//soldiers are waiting for a slot to be free so that they can enter the battle.  This
 //essentially allows for an infinite number of troops, though only 32 at a time can fight.
 //This is also called whenever an enemy group's reinforcements arrive because the code is
 //identical, though it is highly likely that they will all be successfully added on the first call.
@@ -1303,6 +1304,12 @@ void AddPossiblePendingEnemiesToBattle()
 				//Add the number of each type of troop and place them in the appropriate positions
 				AddEnemiesToBattle( pGroup, ubStrategicInsertionCode, ubNumAdmins, ubNumTroops, ubNumElites, FALSE );
 				gfPendingEnemies = TRUE;
+			}
+			// If there are still more to contribute, then move the remaining back to the sector they came from.
+			if (ubNumAvailable)
+			{
+				pGroup->ubSectorX = pGroup->ubPrevX;
+				pGroup->ubSectorY = pGroup->ubPrevY;
 			}
 		}
 		pGroup = pGroup->next;
@@ -1693,8 +1700,7 @@ void EndCaptureSequence( )
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
-	INT32					i;
-	WORLDITEM			WorldItem;
+	UINT32					i;
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
 
@@ -1764,6 +1770,8 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	
 	RemoveCharacterFromSquads( pSoldier );
 
+	WORLDITEM			WorldItem;
+
 	// Is this the first one..?
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED )
 	{
@@ -1776,7 +1784,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->pathing.bLevel = 0;
 
 		// OK, drop all items!
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -1787,7 +1795,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				OBJECTTYPE::CopyObject(&(WorldItem.o), &pSoldier->inv[i]);
+				WorldItem.o = pSoldier->inv[i];
 
 				AddWorldItemsToUnLoadedSector( 13, 9, 0, sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );
@@ -1810,7 +1818,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->pathing.bLevel = 0;
 
 		// OK, drop all items!
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -1821,7 +1829,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				OBJECTTYPE::CopyObject(&(WorldItem.o), &pSoldier->inv[i]);
+				WorldItem.o = pSoldier->inv[i];
 
 				AddWorldItemsToUnLoadedSector( 7, 14, 0, sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );

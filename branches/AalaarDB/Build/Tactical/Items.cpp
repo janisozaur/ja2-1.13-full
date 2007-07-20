@@ -1337,7 +1337,7 @@ INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (pSoldier->inv[bLoop].usItem == usItem)
 		{
@@ -1351,7 +1351,7 @@ INT8 FindMetalDetector( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].metaldetector )
 		{
@@ -1365,7 +1365,7 @@ INT8 FindLockBomb( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].lockbomb )
 		{
@@ -1379,7 +1379,7 @@ INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if ( pSoldier->inv[bLoop].usItem == usItem && pSoldier->inv[bLoop].status.bStatus[0] >= USABLE )
 		{
@@ -1394,7 +1394,7 @@ INT8 FindObjExcludingSlot( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bExcludeS
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if (bLoop == bExcludeSlot)
 		{
@@ -1412,9 +1412,9 @@ INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
-		if ( (pObj == &(pSoldier->inv[bLoop])) && (memcmp( &(pSoldier->inv[bLoop]), pObj, sizeof( OBJECTTYPE ) ) == 0) )
+		if ( (pObj == &(pSoldier->inv[bLoop])) && (pSoldier->inv[bLoop] == *pObj) )
 		{
 			return( bLoop );
 		}
@@ -1450,7 +1450,7 @@ INT8 FindObjInObjRange( SOLDIERTYPE * pSoldier, UINT16 usItem1, UINT16 usItem2 )
 		usItem1 = usTemp;
 	}
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		usTemp = pSoldier->inv[bLoop].usItem;
 		if ( usTemp >= usItem1 && usTemp <= usItem2 )
@@ -1467,7 +1467,7 @@ INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass)
 		{
@@ -1481,7 +1481,7 @@ INT8 FindObjClassAfterSlot( SOLDIERTYPE * pSoldier, INT8 bStartAfter, UINT32 usI
 {
 	INT8 bLoop;
 
-	for (bLoop = bStartAfter + 1; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = bStartAfter + 1; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].usItemClass == usItemClass)
 		{
@@ -1503,7 +1503,7 @@ INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 
 	// Do not consider tank cannons or rocket launchers to be "guns"
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop].status.bStatus[0] >= USABLE ) )
 		{
@@ -1583,7 +1583,7 @@ INT8 FindGLGrenade( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if (GLGrenadeInSlot( pSoldier, bLoop ))
 		{
@@ -1610,7 +1610,7 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 	if (fCheckForFlares)
 	{
 		// Do a priority check for flares first
-		for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+		for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 		{
 			if ( Item[pSoldier->inv[ bLoop ].usItem].flare )
 			{
@@ -1619,7 +1619,7 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 		}
 	}
 	
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if ( (Item[ pSoldier->inv[ bLoop ].usItem ].usItemClass & IC_GRENADE) && // Try this check instead, to avoid tossing RPG rounds     !GLGrenadeInSlot( pSoldier, bLoop ) &&
 			GetLauncherFromLaunchable( pSoldier->inv[ bLoop ].usItem) == NOTHING )
@@ -1662,7 +1662,7 @@ INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 {
 	INT8	bLoop;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FindLaunchable: weapon=%d",usWeapon));
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if ( ValidLaunchable( pSoldier->inv[ bLoop ].usItem , usWeapon ) )
 		{
@@ -1679,7 +1679,7 @@ INT8 FindNonSmokeLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 {
 	INT8	bLoop;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FindNonSmokeLaunchable: weapon=%d",usWeapon));
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if ( ValidLaunchable( pSoldier->inv[ bLoop ].usItem , usWeapon ) && Explosive[Item[pSoldier->inv[ bLoop ].usItem].ubClassIndex].ubType != EXPLOSV_SMOKE )
 		{
@@ -2212,7 +2212,7 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &usIgnoreResult2, &ubIgnoreType, &ubIgnoreAPCost ) );
 }
 
-UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
+UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	INT32 cnt;
 	UINT16 usWeight;
@@ -2238,7 +2238,11 @@ UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
 		// add in weight of ammo
 		if (Item[ pObject->usItem ].usItemClass == IC_GUN && pObject->gun.ubGunShotsLeft > 0)
 		{
-			if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
+			if( 0==pObject->gun.usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
+			{
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
+			}
+			else if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
 			{
 				//Pulmu:
 				//Temporary calculation for minWeight
@@ -2296,14 +2300,14 @@ UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
 		//Pulmu end
 	}
 
-
+/*
 	// make sure it really fits into that UINT8, in case we ever add anything real heavy with attachments/ammo
 	Assert(usWeight <= 255);
 
 	if ( usWeight > 255 )
 		usWeight = 255; //Madd: limit to 255 to prevent negative weights, at least until we can change the OBJECTTYPE structure
-
-	return( (UINT8) usWeight );
+*/
+	return( usWeight );
 }
 
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
@@ -2315,7 +2319,7 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 	UINT8		ubStrengthForCarrying;
 
 	//Pulmu: Changes for dynamic ammo weight
-	for( ubLoop = 0; ubLoop < NUM_INV_SLOTS; ubLoop++)
+	for( ubLoop = 0; ubLoop < pSoldier->inv.size(); ubLoop++)
 	{
 		usWeight = pSoldier->inv[ubLoop].ubWeight;
 		if (Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1 && (Item[ pSoldier->inv[ubLoop].usItem].usItemClass != IC_AMMO || gGameExternalOptions.fAmmoDynamicWeight == FALSE))
@@ -2351,9 +2355,7 @@ void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj )
 
 void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 {
-	OBJECTTYPE		Temp;
-
-	Temp = *pObj1;
+	OBJECTTYPE Temp (*pObj1 );
 	*pObj1 = *pObj2;
 	*pObj2 = Temp;
 /*
@@ -2435,7 +2437,7 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	}
 	if (pObj->ubNumberOfObjects == 1)
 	{
-		OBJECTTYPE::CopyObject(pDest, pObj);
+		*pDest = *pObj;
 		DeleteObj( pObj );	
 	}
 	else
@@ -2777,7 +2779,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					else
 					{
 						// copy the old ammo to the cursor
-						OBJECTTYPE::CopyObject(pAmmo, &OldAmmo);
+						*pAmmo = OldAmmo;
 					}
 				}
 				break;
@@ -2938,7 +2940,7 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bE
 	INT8				bLoop;
 	INVTYPE *		pItem;
 
-	for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = HANDPOS; bLoop < (INT8)pSoldier->inv.size(); bLoop++)
 	{
 		if (bLoop == bExcludeSlot)
 		{
@@ -3120,32 +3122,51 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
 {
 	INT8		bIndex = 0;
-	INT8		bAttachLoop, bAttachPos;
+	INT8		bAttachLoop, bAttachPos = -1;
 
-	while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
+	/* check the whole Array of possible Attachements, while there are still entries ... */
+  while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
+  {
+		/* if we found our current Object as "basic hand" item, then 
+     * we have found at least ONE entry of our item (may be there are more)
+     */
+    if ( pObj->usItem == AttachmentComboMerge[ bIndex ].usItem )
 	{
-		if ( pObj->usItem == AttachmentComboMerge[ bIndex ].usItem )
-		{
 			// search for all the appropriate attachments 
-			for ( bAttachLoop = 0; bAttachLoop < 2; bAttachLoop++ )
+      /* every ComboMerge must have at least one attachments Field */
+		for ( bAttachLoop = 0; bAttachLoop < 2; bAttachLoop++ )
 			{
-				if ( AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] == NOTHING )
-				{
+				/* if the none of both Fields contains anything, do not merge */
+        if ( AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] == NOTHING )
+		{
 					continue;
 				}
 
 				bAttachPos = FindAttachment( pObj, AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] );
+        /* 2007-05-27, Sgt_Kolja: 
+         * do not return, but break the inner loop moved away, otherwise 
+         * we can only have ONE attachmentCombo per basic item. F.I. if we want
+         * to make a Dart gun from Dart pistol by adding (a buttstock and) wheter a
+         * steel tube /or/ a Gun Barrel Extender, the old code wouldn't work for
+         * the Gun Barel Extender, since it would never been tested.
+         */
 				if ( bAttachPos == -1 )
 				{
-					// didn't find something required
-					return( -1 );
+          // didn't find something required
+					//return( -1 );
+          break;
 				}
 			}
-			// found everything required!
-			return( bIndex );
-		}
+			// found everything required?
+      /* 2007-05-27, Sgt_Kolja: Not-found-condition moved from above, otherwise we can only have ONE attachmentCombo per basic item */
+      if ( bAttachPos != -1 )
+      {
+			  return( bIndex );
+      }
+    } /* end-if-this-is-our-item */
 
-		bIndex++;
+    /* try next Attachment Order */
+	bIndex++;
 	}
 
 	return( -1 );
@@ -4282,7 +4303,7 @@ BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 	}
 	else
 	{
-		OBJECTTYPE::CopyObject(pObj, &(pSoldier->inv[bPos]));
+		*pObj = pSoldier->inv[bPos];
 		DeleteObj( &(pSoldier->inv[bPos]) );
 		return( TRUE );
 	}
@@ -5667,7 +5688,7 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 		return;
 	}
 
-	for (bSlot = 0; bSlot < NUM_INV_SLOTS; bSlot++)
+	for (bSlot = 0; bSlot < (INT8) pSoldier->inv.size(); bSlot++)
 	{
 		ubNumberOfObjects = pSoldier->inv[bSlot].ubNumberOfObjects;
 		fBlowsUp = DamageItem( &(pSoldier->inv[bSlot]), iDamage, FALSE );
@@ -5702,7 +5723,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 	UINT8				ubNumberOfObjects;
 	BOOLEAN			fPlayedGlassBreak = FALSE;
 
-	for (bSlot = 0; bSlot < NUM_INV_SLOTS; bSlot++)
+	for (bSlot = 0; bSlot < (INT8) pSoldier->inv.size(); bSlot++)
 	{
 		switch( pSoldier->inv[bSlot].usItem )
 		{
@@ -5833,7 +5854,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 
 	if ( pSoldier->bOverTerrainType == DEEP_WATER )
 	{
-		for ( bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++ )
+		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
 			// if there's an item here that can get water damaged...
 //			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].fFlags & ITEM_WATER_DAMAGES)
@@ -7254,7 +7275,7 @@ INT8 FindRocketLauncherOrCannon( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].rocketlauncher || Item[pSoldier->inv[bLoop].usItem].cannon )
 		{
@@ -7267,7 +7288,7 @@ INT8 FindRocketLauncher( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].rocketlauncher )
 		{
@@ -7280,7 +7301,7 @@ INT8 FindCannon( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if ( Item[pSoldier->inv[bLoop].usItem].cannon )
 		{
@@ -7293,7 +7314,7 @@ INT8 FindUsableCrowbar( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if ( Item[pSoldier->inv[bLoop].usItem].crowbar && pSoldier->inv[bLoop].status.bStatus[0] >= USABLE )
 		{
@@ -7319,7 +7340,7 @@ INT8 FindToolkit( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].toolkit )
 		{
@@ -7332,7 +7353,7 @@ INT8 FindMedKit( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].medicalkit  )
 		{
@@ -7345,7 +7366,7 @@ INT8 FindFirstAidKit( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].firstaidkit  )
 		{
@@ -7358,7 +7379,7 @@ INT8 FindCamoKit( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].camouflagekit   )
 		{
@@ -7371,7 +7392,7 @@ INT8 FindLocksmithKit( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].locksmithkit   )
 		{
@@ -7397,7 +7418,7 @@ INT8 FindTrigger( SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
-	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].remotetrigger   )
 		{
@@ -7694,7 +7715,7 @@ UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier)
 {
 	UINT8 aimLevels = 4;
 	float iScopeBonus = 0;
-	OBJECTTYPE obj = pSoldier->inv[pSoldier->ubAttackingHand]; 
+	OBJECTTYPE obj ( pSoldier->inv[pSoldier->ubAttackingHand] ); 
 	BOOLEAN allowed = TRUE;
 	
 	if ( gGameSettings.fOptions[TOPTION_AIM_LEVEL_RESTRICTION] && Weapon[obj.usItem].ubWeaponType != GUN_RIFLE && Weapon[obj.usItem].ubWeaponType != GUN_SN_RIFLE )

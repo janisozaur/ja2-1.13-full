@@ -78,7 +78,7 @@ BOOLEAN CheckForNewShipment( void )
 
 	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )	
 	{
-		if ( GetItemPool( BOBBYR_SHIPPING_DEST_GRIDNO, &pItemPool, 0 ) )
+		if ( GetItemPoolFromGround( BOBBYR_SHIPPING_DEST_GRIDNO, &pItemPool ) )
 		{
 			return( !( ITEMPOOL_VISIBLE( pItemPool ) ) );
 		}

@@ -1418,6 +1418,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
 	GetCursorPos(&MousePos);
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	GetMouseMapPos( &usMapPos );
 
@@ -1577,7 +1578,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 							// Decrease global busy  counter...
 							gTacticalStatus.ubAttackBusyCount = 0;
-
+#ifdef DEBUG_ATTACKBUSY
+							OutputDebugString( "Resetting attack busy due to keyboard interrupt.\n");
+#endif
 							guiPendingOverrideEvent = LU_ENDUILOCK;
 							UIHandleLUIEndLock( NULL );
 
@@ -2571,17 +2574,17 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				if ( !(gTacticalStatus.fEnemyInSector) )
 				{
 					HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+					OBJECTTYPE newObj; //Create object
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
 					{
-						if ( (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
 						{
 							if (( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
 								//Remove magazine 
 								if ( (gWorldItems[ uiLoop ].o.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft > 0) )
 								{
-									OBJECTTYPE newObj; //Create object
 									CreateItem(gWorldItems[ uiLoop ].o.gun.usGunAmmoItem, 100, &newObj);
 									newObj.shots.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft;
 									gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft = 0;
@@ -2874,6 +2877,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #endif
 
 			case 'l':
+				if (fAlt )
+				{
+
+				}
+				else if (fCtrl)
+				{
+				}
+				else
 				/*
 				if( fAlt )
 				{
@@ -2941,6 +2952,39 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) ) 
 						{
 							GoToMapScreenFromTactical();
+						}
+					}
+				}
+				break;
+
+			case 'M':
+				if( fAlt )
+				{
+
+				}
+				else if( fCtrl )
+				{
+
+				}
+				else
+				{
+					if ( !(gTacticalStatus.fEnemyInSector) )
+					{
+						HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+
+						SOLDIERTYPE *pSoldier;
+						if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+						{
+
+							for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
+							{
+								if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) && (gWorldItems[ uiLoop ].sGridNo != pSoldier->sGridNo) )//item exists and is reachable and is not already on soldiers tile
+								{									
+									MoveItemPools(gWorldItems[ uiLoop ].sGridNo, pSoldier->sGridNo, gWorldItems[ uiLoop ].ubLevel, pSoldier->pathing.bLevel);
+								}
+							}
+							
+							NotifySoldiersToLookforItems( );
 						}
 					}
 				}
@@ -3246,7 +3290,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{	
 
 							// Search for gun in soldier inventory
-							for (UINT32 bLoop2 = 0; bLoop2 < NUM_INV_SLOTS; bLoop2++)
+							for (UINT32 bLoop2 = 0; bLoop2 < pTeamSoldier->inv.size(); bLoop2++)
 							{
 								if ( (Item[pTeamSoldier->inv[bLoop2].usItem].usItemClass & IC_GUN) || (Item[pTeamSoldier->inv[bLoop2].usItem].usItemClass == IC_LAUNCHER) )
 								{	
@@ -3258,7 +3302,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										// Search for ammo in sector
 										for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 										{
-											if ( gWorldItems[ uiLoop ].fExists)  //item exists && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE)
+											if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 											{
 												if ( ( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass & IC_AMMO ) ) // the item is ammo
 												{
@@ -3311,7 +3355,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								else
 								{
 									// Search for gun in soldier inventory
-									for (UINT32 bLoop2 = 0; bLoop2 < NUM_INV_SLOTS; bLoop2++)
+									for (UINT32 bLoop2 = 0; bLoop2 < pTeamSoldier->inv.size(); bLoop2++)
 									{
 										if ( (Item[pTeamSoldier->inv[bLoop2].usItem].usItemClass & IC_GUN) || (Item[pTeamSoldier->inv[bLoop2].usItem].usItemClass == IC_LAUNCHER) )
 										{	
@@ -3321,7 +3365,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											{
 
 												// Search for ammo in soldier inventory
-												for ( UINT32 uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )												
+												for ( UINT32 uiLoop = 0; uiLoop < pTeamSoldier->inv.size(); uiLoop++ )												
 												{
 													if ( (Item[pTeamSoldier->inv[uiLoop].usItem].usItemClass & IC_AMMO ) ) // the item is ammo
 													{
@@ -3403,7 +3447,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 					{
-						if ( ( gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 						{
 							//find out how many items can be put in a big slot
 							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].o.usItem, BIGPOCK1POS );
@@ -4306,7 +4350,6 @@ void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 				case QUEENMONSTER:
 
 					pSoldier->flags.uiStatusFlags |= SOLDIER_MONSTER;
-					//memset( &(pSoldier->inv), 0, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 					AssignCreatureInventory( pSoldier );
 					CreateItem( CREATURE_YOUNG_MALE_SPIT,		100, &(pSoldier->inv[HANDPOS]) );
 
@@ -5201,7 +5244,9 @@ void EscapeUILock( )
 
 	// Decrease global busy  counter...
 	gTacticalStatus.ubAttackBusyCount = 0;
-
+#ifdef DEBUG_ATTACKBUSY
+	OutputDebugString( "Resetting attack busy due to escape of UI lock.\n");
+#endif
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 	UIHandleLUIEndLock( NULL );
 }

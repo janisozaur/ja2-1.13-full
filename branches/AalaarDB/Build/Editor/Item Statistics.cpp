@@ -1286,7 +1286,8 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					slot = FindAttachment( gpItem, usAttachment );
 					if( slot != -1 )
-						RemoveAttachment( gpItem, slot, &temp );
+						//RemoveAttachment( gpItem, slot, &temp );
+						RemoveAttachment( gpItem, slot, NULL );
 				}
 			}
 		}
@@ -1312,7 +1313,8 @@ void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			slot = FindAttachment( gpItem, CERAMIC_PLATES );
 			if( slot != -1 )
-				RemoveAttachment( gpItem, slot, &temp );
+				//RemoveAttachment( gpItem, slot, &temp );
+				RemoveAttachment( gpItem, slot, NULL );
 		}
 	}
 }
@@ -1336,7 +1338,8 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			slot = FindAttachment( gpItem, DETONATOR );
 			if( slot != -1 )
-				RemoveAttachment( gpItem, slot, &temp );
+				//RemoveAttachment( gpItem, slot, &temp );
+				RemoveAttachment( gpItem, slot, NULL );
 		}
 	}
 }

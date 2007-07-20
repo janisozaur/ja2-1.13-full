@@ -2682,7 +2682,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 	//go through and and find out how many items there are
 	uiNumberOfItems = 0;
-	for ( i = 0; i < NUM_INV_SLOTS; i++ )
+	for ( i = 0; i < pSoldier->inv.size(); i++ )
 	{ 
 		if( pSoldier->inv[ i ].usItem != 0 )
 		{
@@ -2725,7 +2725,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 		//loop through all the soldiers items and add them to the world item array
 		bCount = 0;
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for ( i = 0; i < pSoldier->inv.size(); i++ )
 		{ 
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -3165,7 +3165,7 @@ void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT
 
 	// get total number, visable and invisible
 	fReturn = GetNumberOfActiveWorldItemsFromTempFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfRealItems ) );
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfActiveWorldItemsFromTempFile failed" ) );
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfActiveWorldItemsFromTempFile failed" ) );
 	Assert( fReturn );
 
 	fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfItems ), FALSE );

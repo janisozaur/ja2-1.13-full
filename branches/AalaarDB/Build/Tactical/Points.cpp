@@ -1170,8 +1170,15 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
 	// NB need to define shots per turn for ALL Weapons then.
-	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns + GetRateOfFireBonus(pObj);
-	
+	// 0verhaul:  Do not calculate rate of fire bonus for stackable items (knives)
+	// Their info is an array of item status, not weapon info, and they don't repeat
+	// fire anyway.
+	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
+	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	{
+		rof += GetRateOfFireBonus(pObj);
+	}
+
 	//Bottom = ( ( 50 + (bAimSkill / 2) ) * rof ) / 4;
 
 	// add minimum aiming time to the overall minimum AP_cost
@@ -1180,7 +1187,15 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	//return( ( ( ( 100 * Top ) / Bottom ) + 1) / 2);
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
-	Top = 8 * bAPs * ( 100 - GetPercentAPReduction(pObj) );
+	Top = 8 * bAPs;
+	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	{
+		Top *= ( 100 - GetPercentAPReduction(pObj) );
+	}
+	else
+	{
+		Top *= 100;
+	}
 	Bottom = ( 100 + bAimSkill ) * rof;
 	// (this will round to the nearest integer)
 	return ( Top + Bottom / 2 ) / Bottom;
@@ -2061,9 +2076,14 @@ INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 		// CHECK FOR RIFLE
 		if ( Item[ usItem ].usItemClass == IC_GUN )
 		{
-			return ( Weapon[ usItem ].ubReadyTime
-				* ( 100 - GetPercentReadyTimeAPReduction(&pSoldier->inv[ HANDPOS ]) ) ) / 100;
-
+			//ADB if 0, which it normally is, avoid the function call and division
+			if (Weapon[ usItem ].ubReadyTime == 0) {
+				return 0;
+			}
+			else {
+				return ( Weapon[ usItem ].ubReadyTime
+					* ( 100 - GetPercentReadyTimeAPReduction(&pSoldier->inv[ HANDPOS ]) ) ) / 100;
+			}
 		}
 	}
 

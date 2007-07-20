@@ -33,8 +33,9 @@ class WORLDITEM
 {
 public:
 	WORLDITEM() {initialize();};
-	WORLDITEM& operator=(OLD_WORLDITEM_101& src);
-	WORLDITEM& operator=(WORLDITEM& src);
+	WORLDITEM&	operator=(OLD_WORLDITEM_101& src);
+	WORLDITEM&	operator=(const WORLDITEM& src);
+	bool		operator<(const WORLDITEM& compare);
 	BOOLEAN		Save( HWFILE hFile );
 	BOOLEAN		Load( HWFILE hFile );
 	BOOLEAN		Load( INT8** hBuffer );
@@ -65,7 +66,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
-void LoadWorldItemsFromMap( INT8 **hBuffer );
+void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorMapVersion );
 void SaveWorldItemsToMap( HWFILE fp );
 
 void TrashWorldItems();

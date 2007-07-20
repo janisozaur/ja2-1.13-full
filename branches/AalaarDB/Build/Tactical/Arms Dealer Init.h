@@ -168,7 +168,7 @@ typedef struct
 class OLD_SPECIAL_ITEM_INFO_101
 {
 public:
-	UINT16	usAttachment[MAX_ATTACHMENTS_101];		// item index of any attachments on the item
+	UINT16	usAttachment[OLD_MAX_ATTACHMENTS_101];		// item index of any attachments on the item
 
 	INT8		bItemCondition;				// if 0, no item is stored
 																// from 1 to 100 indicates an item with that status
@@ -176,7 +176,7 @@ public:
 
 	UINT8		ubImprintID;					// imprint ID for imprinted items (during repair!)
 
-	INT8		bAttachmentStatus[MAX_ATTACHMENTS_101];	// status of any attachments on the item
+	INT8		bAttachmentStatus[OLD_MAX_ATTACHMENTS_101];	// status of any attachments on the item
 
 	UINT8		ubPadding[2];					// filler
 

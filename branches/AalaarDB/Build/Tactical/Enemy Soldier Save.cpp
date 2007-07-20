@@ -278,10 +278,14 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->fPriorityExistance = TRUE;
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
-							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+							curr->pBasicPlacement->fDetailedPlacement = TRUE;
+							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement); //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 						}
-						//now replace the map pristine placement info with the temp map file version..
-						*curr->pDetailedPlacement = tempDetailedPlacement;
+						else
+						{
+							//now replace the map pristine placement info with the temp map file version..
+							*curr->pDetailedPlacement = tempDetailedPlacement;
+						}
 						
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -429,7 +433,6 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						curr->pBasicPlacement->fDetailedPlacement = TRUE;
 						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 					}
-
 					(*curr->pDetailedPlacement) = (*pSoldier);
 
 					//If the soldier has a real schedule (not a default schedule), then store it.
@@ -876,10 +879,13 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
-						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+						curr->pBasicPlacement->fDetailedPlacement = TRUE;
+						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement); //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 					}
-					//now replace the map pristine placement info with the temp map file version..
-					*curr->pDetailedPlacement = tempDetailedPlacement;
+					else
+					{
+						*curr->pDetailedPlacement = tempDetailedPlacement;
+					}
 					
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -1359,10 +1365,8 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
 							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
-
-							//copy all the relevant data over
-							*(curr->pDetailedPlacement) = *pSoldier;
+							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+							*curr->pDetailedPlacement = *pSoldier;
 
 							//we don't want the player to think that all the enemies start in the exact position when we 
 							//left the map, so randomize the start locations either current position or original position.
@@ -1746,7 +1750,6 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 			{
 				if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
 				{
-                                        // WDS - Clean up inventory handling
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement

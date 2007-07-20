@@ -12,7 +12,6 @@
 
 extern UINT8 SlotToPocket[7];
 
-// WDS - Clean up inventory handling
 class SOLDIERTYPE;
 extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
 
@@ -46,7 +45,7 @@ extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OB
 extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment );
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
-extern UINT8	CalculateObjectWeight( OBJECTTYPE *pObject );
+UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );

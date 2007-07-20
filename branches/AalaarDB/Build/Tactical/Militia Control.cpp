@@ -30,6 +30,7 @@
 	#include "Campaign.h"
 	#include "ai.h"
 	#include "Isometric Utils.h"
+	#include "FindLocations.h"
 #endif
 
 #include "MilitiaSquads.h"
@@ -121,19 +122,69 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 void ResetMilitia()
 {
 	BOOLEAN fBattleInProgress = FALSE;
+	UINT8 ubNumGreen = 0;
+	UINT8 ubNumReg = 0;
+	UINT8 ubNumVet = 0;
+	//UINT32 cnt;
 
-	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
-		fBattleInProgress = TRUE;
+//	if ( gWorldSectorX !=0 && gWorldSectorY != 0 && NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) )
+//		fBattleInProgress = TRUE;
 
-	if( ( gfStrategicMilitiaChangesMade && !fBattleInProgress ) || gTacticalStatus.uiFlags & LOADING_SAVED_GAME || gfMSResetMilitia )
+	// 0verhaul:  Instead of relying on the "changes made" flag, which isn't even saved in a saved game and therefore not
+	// reliable, we'll just do this the hard way, by taking inventory.
+//	gfStrategicMilitiaChangesMade = FALSE;
+//	for (cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++)
+//	{
+//		if (!MercPtrs[cnt]->bActive)
+//		{
+//			continue;
+//		}
+//
+//		switch (MercPtrs[cnt]->ubSoldierClass)
+//		{
+//		case SOLDIER_CLASS_GREEN_MILITIA: ubNumGreen++; break;
+//		case SOLDIER_CLASS_REG_MILITIA: ubNumReg++; break;
+//		case SOLDIER_CLASS_ELITE_MILITIA: ubNumVet++; break;
+//		default: ;
+//		}
+//	}
+//	if (MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, GREEN_MILITIA) != ubNumGreen ||
+//		MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, REGULAR_MILITIA) != ubNumReg ||
+//		MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, ELITE_MILITIA) != ubNumVet)
+//	{
+//		gfStrategicMilitiaChangesMade = TRUE;
+//	}
+//
+	if (gfStrategicMilitiaChangesMade)
 	{
+		// I truly hope that we remove such inane control methods from the soldier create code when we break the merc slot barrier
+		// Hacks like this really depress me.
+		UINT32 cs = guiCurrentScreen;
+		// Make sure we aren't on the AUTORESOLVE screen for this.  Even if we are.  We are removing and creating soldiers for 
+		// tactical here, not autoresolve.  In my opinion the CreateSoldierXXX and TacticalRemoveSoldierXXX functions should take 
+		// a flag for autoresolve if different initialization or destruction is desired.
+		guiCurrentScreen = GAME_SCREEN;
+
+		RemoveMilitiaFromTactical();
+		ubNumGreen = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, GREEN_MILITIA);
+		ubNumReg = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, REGULAR_MILITIA);
+		ubNumVet = MilitiaInSectorOfRank(gWorldSectorX, gWorldSectorY, ELITE_MILITIA);
+
+		AddSoldierInitListMilitia( ubNumGreen, ubNumReg, ubNumVet );
+		// Now restore the original screen setting so the game doesn't go wacky.
+		guiCurrentScreen = cs;
+
 		gfStrategicMilitiaChangesMade = FALSE;
-		
-		if( !gfMSResetMilitia )
-			RemoveMilitiaFromTactical();
-		PrepareMilitiaForTactical();
-		gfMSResetMilitia = FALSE;
 	}
+
+//	if( ( gfStrategicMilitiaChangesMade && !fBattleInProgress ) || gTacticalStatus.uiFlags & LOADING_SAVED_GAME || gfMSResetMilitia )
+//	if(gfMSResetMilitia )
+//	{
+//		if( !gfMSResetMilitia )
+//			RemoveMilitiaFromTactical();
+//		PrepareMilitiaForTactical();
+//		gfMSResetMilitia = FALSE;
+//	}
 }
 
 void RemoveMilitiaFromTactical()
@@ -176,23 +227,39 @@ void PrepareMilitiaForTactical()
 	ubElites = pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
 	
 	if(guiDirNumber)
+	{
 		for( x = 0 ; x < guiDirNumber ; ++x )
 		{
-//			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ld,%ld,%ld,%ld", gpAttackDirs[ x ][ 0 ], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2], gpAttackDirs[ x ][3] );
+#if 0
+			//			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ld,%ld,%ld,%ld", gpAttackDirs[ x ][ 0 ], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2], gpAttackDirs[ x ][3] );
 			if( gfMSResetMilitia )
 			{
 				if( gpAttackDirs[ x ][ 3 ] != INSERTION_CODE_CENTER )
+				{
 					AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
+					ubGreen -= gpAttackDirs[ x ][0];
+					ubRegs -= gpAttackDirs[ x ][1];
+					ubElites -= gpAttackDirs[ x ][2];
+				}
 			}
 			else
+			{
+#endif
 				if( gpAttackDirs[ x ][ 3 ] == INSERTION_CODE_CENTER )
+				{
 					AddSoldierInitListMilitia( gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
+				}
 				else
+				{
 					AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
-
+				}
+//			}
 		}
-		else AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
-	
+	}
+	else 
+	{
+		AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
+	}	
 //	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 //	{
 //		if( MercPtrs[ i ]->bInSector )
@@ -202,6 +269,7 @@ void PrepareMilitiaForTactical()
 //		}
 //	}
 	guiDirNumber = 0;
+	memset( gpAttackDirs, 0, sizeof( gpAttackDirs));
 }
 
 void HandleMilitiaPromotions( void )
@@ -256,6 +324,10 @@ void HandleMilitiaPromotions( void )
 		// CHAR16 str[ 512 ];
 		// BuildMilitiaPromotionsString( str );
 		// DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
+	}
+	if (gfStrategicMilitiaChangesMade)
+	{
+		ResetMilitia();
 	}
 }
 
@@ -1374,9 +1446,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 						if ( (pTMilitiaSoldier->bActive) && (pTMilitiaSoldier->bInSector) && (pTMilitiaSoldier->stats.bLife >= OKLIFE) )
 						{
 							INT16 sActionGridNo;
-							INT32 iDummy;						
-
-							sActionGridNo =  FindBestNearbyCover(pTMilitiaSoldier,pTMilitiaSoldier->aiData.bAIMorale,&iDummy);
+							sActionGridNo =  FindBestNearbyCover(pTMilitiaSoldier);
 
 							if ( sActionGridNo != NOWHERE )
 							{
@@ -1683,7 +1753,6 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 						//UINT8 cnt;
 						//SOLDIERTYPE *pTeamSoldier;
-						//INT32 iDummy;
 						
 						//cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
 
@@ -1691,9 +1760,9 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 						//{
 						//	if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 						//	{
-						//		pTeamSoldier->aiData.usActionData = FindBestNearbyCover(pTeamSoldier,pTeamSoldier->aiData.bAIMorale,&iDummy);
+						//		pTeamSoldier->aiData.usActionData = FindBestNearbyCover(pTeamSoldier);
 						//								
-						//		pTeamSoldier->aiData.usNextActionData = FindBestNearbyCover(pTeamSoldier,pTeamSoldier->aiData.bAIMorale,&iDummy);
+						//		pTeamSoldier->aiData.usNextActionData = FindBestNearbyCover(pTeamSoldier);
 						//		
 						//		//if ( pTeamSoldier->aiData.usNextActionData != NOWHERE )
 						//		{
@@ -1706,7 +1775,6 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						UINT8 cnt;
 						INT16 sActionGridNo;
-						INT32 iDummy;
 						SOLDIERTYPE *pTeamSoldier;
 
 						cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
@@ -1716,7 +1784,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 							if ( (pTeamSoldier->bActive) && (pTeamSoldier->bInSector) && (pTeamSoldier->stats.bLife >= OKLIFE) )
 							{
 								// See if we can get there
-								sActionGridNo =  FindBestNearbyCover(pTeamSoldier,pTeamSoldier->aiData.bAIMorale,&iDummy);
+								sActionGridNo =  FindBestNearbyCover(pTeamSoldier);
 								
 								if ( sActionGridNo != NOWHERE )
 								{

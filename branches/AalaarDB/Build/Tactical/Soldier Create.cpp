@@ -210,7 +210,6 @@ SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier
 	sprintf( this->MiscPal,		Soldier.MiscPal );
 
 	//copy soldier's inventory
-                            // WDS - Clean up inventory handling
 	this->Inv = Soldier.inv;
 	return *this;
 }
@@ -857,9 +856,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 		{
-                        // WDS - Clean up inventory handling
 			// Copy into merc struct
-			//memcpy( MercPtrs[ Soldier.ubID ], &Soldier, SIZEOF_SOLDIERTYPE );
 			*MercPtrs[ Soldier.ubID ] = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
 			CHECKF( MercPtrs[ Soldier.ubID ]->CreateSoldierCommon( Soldier.ubBodyType, Soldier.ubID, STANDING ) != FALSE );
@@ -883,9 +880,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
       Soldier.aiData.bNeutral = TRUE;
     }
 
-                // WDS - Clean up inventory handling
 		// Copy into merc struct
-		//memcpy( MercPtrs[ Soldier.ubID ], &Soldier, SIZEOF_SOLDIERTYPE );
 		*MercPtrs[ Soldier.ubID ] = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
@@ -930,10 +925,9 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		SOLDIERTYPE *pSoldier;
 		UINT8 ubSectorID;
 		ubSectorID = GetAutoResolveSectorID();
-		pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+		pSoldier = new SOLDIERTYPE(Soldier); //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 		if( !pSoldier )
 			return NULL;
-		*pSoldier = Soldier;
 		pSoldier->ubID = 255;
 		pSoldier->sSectorX = (INT16)SECTORX( ubSectorID );
 		pSoldier->sSectorY = (INT16)SECTORY( ubSectorID );
@@ -1446,9 +1440,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//Generate colors for soldier based on the body type.
 	GeneratePaletteForSoldier( pSoldier, pCreateStruct->ubSoldierClass );
 
-	// WDS - Clean up inventory handling
 	// Copy item info over
-//	memcpy( pSoldier->inv, pCreateStruct->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );	
 	pSoldier->inv = pCreateStruct->Inv;
 
 	return( TRUE );
@@ -1457,9 +1449,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 
 void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 {
-	// WDS - Clean up inventory handling
 	// Memset values
-	//memset( pSoldier, 0, SIZEOF_SOLDIERTYPE );
 	pSoldier->initialize();
 
 	// Set default values
@@ -2014,11 +2004,9 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 {
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateStaticDetailedPlacementGivenBasicPlacementInfo"));
 
-	INT32 i;
+	UINT32 i;
 	if( !spp || !bp )
 		return;
-	// WDS - Clean up inventory handling
-	//memset( spp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
 	spp->initialize();
 	spp->fStatic								= TRUE;
 	spp->ubProfile							= NO_PROFILE;
@@ -2072,7 +2060,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	memcpy( spp->sPatrolGrid, bp->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 
 	//Starts with nothing
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( i = 0; i < spp->Inv.size(); i++ )
 	{
 		spp->Inv[ i ].initialize();
 		spp->Inv[ i ].usItem = NOTHING;
@@ -2089,12 +2077,10 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo( 
 		   SOLDIERCREATE_STRUCT *pp, SOLDIERCREATE_STRUCT *spp, BASIC_SOLDIERCREATE_STRUCT *bp )
 {
-	INT32 i;
+	UINT32 i;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo"));
 
-	// WDS - Clean up inventory handling
-	//memset( pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
 	pp->initialize();
 	pp->fOnRoof = spp->fOnRoof = bp->fOnRoof;
 	pp->fStatic = FALSE;
@@ -2154,13 +2140,12 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 
 	//This isn't perfect, however, it blindly brings over the items from the static 
 	//detailed placement.  Due to the order of things, other items would 
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( i = 0; i < spp->Inv.size(); i++ )
 	{
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
 		if( spp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
 		{
 			pp->Inv[ i ] = spp->Inv[ i ];
-			//memcpy( pp->Inv, spp->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 			//return;
 		}
 	}
@@ -2246,9 +2231,7 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 
 	s->ubScheduleID		=	spp->ubScheduleID;
 
-	// WDS - Clean up inventory handling
 	//Copy over the current inventory list.
-//	memcpy( s->inv, spp->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 	s->inv = spp->Inv;
 }
 
@@ -2286,7 +2269,7 @@ void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *
 	spp->bBodyType								= pProfile->ubBodyType;
 
 	// Copy over inv if we want to
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 	{
 		CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &(spp->Inv[ cnt ]) );
 	}
@@ -2329,8 +2312,6 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 {
 	SOLDIERCREATE_STRUCT CreateStruct;
-
-	memset( &CreateStruct, 0, sizeof( CreateStruct ) );
 	CreateStruct.ubProfile = ubProfileID;
 
 
@@ -2380,12 +2361,10 @@ SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
 				//reserve this soldier
 				MercPtrs[ i ]->sGridNo = NOWHERE;
 
-                             	// WDS - Clean up inventory handling
 				//Allocate and copy the soldier
-				pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+				pSoldier = new SOLDIERTYPE(*MercPtrs[i]); //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 				if( !pSoldier )
 					return NULL;
-				*pSoldier = *MercPtrs[i];
 
 				//Assign a bogus ID, then return it
 				pSoldier->ubID = 255;
@@ -2524,12 +2503,10 @@ SOLDIERTYPE* ReserveTacticalMilitiaSoldierForAutoresolve( UINT8 ubSoldierClass )
 				//reserve this soldier
 				MercPtrs[ i ]->sGridNo = NOWHERE;
 
-                            	// WDS - Clean up inventory handling
 				//Allocate and copy the soldier
-				pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+				pSoldier = new SOLDIERTYPE(*MercPtrs[i]); //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 				if( !pSoldier )
 					return NULL;
-				*pSoldier = *MercPtrs[i];
 
 				//Assign a bogus ID, then return it
 				pSoldier->ubID = 255;
@@ -2710,7 +2687,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 			GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+			MercCreateStruct.initialize();
 			MercCreateStruct.bTeam				= bTeam;
 			MercCreateStruct.ubProfile		= ubProfileID;
 			MercCreateStruct.sSectorX			= sSectorX;
@@ -2748,18 +2725,15 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		{
 			// do some special coding to put stuff in the profile in better-looking
 			// spots
-			// WDS - Clean up inventory handling
-//			memset( pSoldier->inv, 0, NUM_INV_SLOTS * sizeof( OBJECTTYPE ) );
-			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 			{
 				if ( pProfile->inv[ cnt ] != NOTHING )
 				{
 					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &Obj );
-//					if (Item[Obj.usItem].fFlags & ITEM_ATTACHMENT)
 					if (Item[Obj.usItem].attachment )
 					{
 						// try to find the appropriate item to attach to!
-						for ( cnt2 = 0; cnt2 < NUM_INV_SLOTS; cnt2++ )
+						for ( cnt2 = 0; cnt2 < pSoldier->inv.size(); cnt2++ )
 						{
 							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( Obj.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 							{
@@ -2767,7 +2741,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								break;
 							}
 						}
-						if (cnt2 == NUM_INV_SLOTS)
+						if (cnt2 == pSoldier->inv.size())
 						{
 							// oh well, couldn't find anything to attach to!
 							AutoPlaceObject( pSoldier, &Obj, FALSE );
@@ -2784,7 +2758,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 		}
 		else
 		{
-			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
 			{
 				if ( pProfile->inv[ cnt ] != NOTHING )
 				{

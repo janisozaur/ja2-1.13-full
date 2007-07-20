@@ -193,7 +193,7 @@ void InitializeHelicopter( void )
 	fSkyRiderAvailable = FALSE;
 	fSkyRiderSetUp = FALSE;
 	pSkyRider = NULL;
-	memset ( &SoldierSkyRider, 0, sizeof( SoldierSkyRider ) );
+	SoldierSkyRider.initialize();
 
 	fHelicopterIsAirBorne = FALSE;
 	fHeliReturnStraightToBase = FALSE;

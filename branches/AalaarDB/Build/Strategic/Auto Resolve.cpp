@@ -85,7 +85,9 @@ INT32 giMaxEnemiesToRender = 40;
 INT32 giMaxMilitiaToRender = 20;//Changes depending on merc amount
 
 extern UINT8 gubReinforcementMinEnemyStaticGroupSize;
+extern BOOLEAN gfStrategicMilitiaChangesMade;
 
+extern void ResetMilitia();
 extern BOOLEAN AutoReload( SOLDIERTYPE *pSoldier );
 extern HVSURFACE ghFrameBuffer;
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -3170,7 +3172,13 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Autoresolve3");
 					}
 					break;
 				case '{':
-					if( CHEATER_CHEAT_LEVEL() )
+					if (_KeyDown( ALT) )
+					{
+					}
+					else if (_KeyDown( CTRL) )
+					{
+					}
+					else if( CHEATER_CHEAT_LEVEL() )
 					{
 						gpAR->ubMercs = 0;
 						fResetAutoResolve = TRUE;
@@ -3431,8 +3439,6 @@ void CreateTempPlayerMerc()
 	UINT8							ubID;
 
 	//Init the merc create structure with basic information
-        // WDS - Clean up inventory handling
-	//memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );	
 	MercCreateStruct.bTeam									= SOLDIER_CREATE_AUTO_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
 	MercCreateStruct.sSectorX								= gpAR->ubSectorX;
@@ -3840,7 +3846,6 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 {
 	OBJECTTYPE *pItem;
 	SOLDIERTYPE *pSoldier;
-	INT32 i;
 
 	pSoldier = pAttacker->pSoldier;
 
@@ -3850,7 +3855,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 		pAttacker->bWeaponSlot = SECONDHANDPOS;
 		return TRUE;
 	}
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( UINT32 i = 0; i < pSoldier->inv.size(); i++ )
 	{
 		pItem = &pSoldier->inv[ i ];
 
@@ -3891,8 +3896,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 
 BOOLEAN AttackerHasKnife( SOLDIERCELL *pAttacker )
 {
-	INT32 i;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( UINT32 i = 0; i < pAttacker->pSoldier->inv.size(); i++ )
 	{
 		if( Item[ pAttacker->pSoldier->inv[ i ].usItem ].usItemClass == IC_BLADE )
 		{
@@ -3906,9 +3910,8 @@ BOOLEAN AttackerHasKnife( SOLDIERCELL *pAttacker )
 
 BOOLEAN TargetHasLoadedGun( SOLDIERTYPE *pSoldier )
 {
-	INT32 i;
 	OBJECTTYPE *pItem;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	for( UINT32 i = 0; i < pSoldier->inv.size(); i++ )
 	{
 		pItem = &pSoldier->inv[ i ];
 		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
@@ -4075,11 +4078,11 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 		
 		//if( pAttacker->bWeaponSlot != HANDPOS )
 		//{ //switch items			
-		//	memcpy( &tempItem, &pAttacker->pSoldier->inv[ HANDPOS ], sizeof( OBJECTTYPE ) );			
-		//	memcpy( &pAttacker->pSoldier->inv[ HANDPOS ], &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ], sizeof( OBJECTTYPE ) ); //CTD
+		//	tempItem = pAttacker->pSoldier->inv[ HANDPOS ];			
+		//	pAttacker->pSoldier->inv[ HANDPOS ] = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ]; //CTD
 		//	iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife | fClaw) );
-		//	memcpy( &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ], &pAttacker->pSoldier->inv[ HANDPOS ], sizeof( OBJECTTYPE ) );
-		//	memcpy( &pAttacker->pSoldier->inv[ HANDPOS ], &tempItem, sizeof( OBJECTTYPE ) );
+		//	pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ] = pAttacker->pSoldier->inv[ HANDPOS ];
+		//	pAttacker->pSoldier->inv[ HANDPOS ] = tempItem;
 		//}
 		//else
 		//{

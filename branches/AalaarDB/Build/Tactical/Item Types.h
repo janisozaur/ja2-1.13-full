@@ -73,8 +73,8 @@ typedef enum
 
 
 //do not alter or saves will break, create new defines if the size changes
-#define MAX_ATTACHMENTS_101 4
-#define MAX_OBJECTS_PER_SLOT_101 8
+#define OLD_MAX_ATTACHMENTS_101 4
+#define OLD_MAX_OBJECTS_PER_SLOT_101 8
 
 namespace Version101
 {
@@ -90,21 +90,21 @@ namespace Version101
 			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 			UINT8		ubGunState; // SB manual recharge
 	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
-			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT_101 - 6];
+			UINT8		ubGunUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 6];
 		};
 		struct
 		{
-			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT_101];
+			UINT8		ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101];
 		};
 		struct
 		{
-			INT8		bStatus[MAX_OBJECTS_PER_SLOT_101];
+			INT8		bStatus[OLD_MAX_OBJECTS_PER_SLOT_101];
 		};		
 		struct
 		{
 			INT8		bMoneyStatus;
 			UINT32		uiMoneyAmount;
-			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT_101 - 5];
+			UINT8		ubMoneyUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 5];
 		};
 		struct
 		{ // this is used by placed bombs, switches, and the action item
@@ -161,8 +161,8 @@ public:
 	Version101::OLD_OBJECTTYPE_101_UNION	ugYucky;
 
   // attached objects
-	UINT16		usAttachItem[MAX_ATTACHMENTS_101];
-	INT8		bAttachStatus[MAX_ATTACHMENTS_101];
+	UINT16		usAttachItem[OLD_MAX_ATTACHMENTS_101];
+	INT8		bAttachStatus[OLD_MAX_ATTACHMENTS_101];
 
 	INT8		fFlags;
 	UINT8		ubMission;
@@ -249,11 +249,14 @@ public:
 	//  Note that the constructor does this automatically.
 	void initialize();
 
+	bool operator==(OBJECTTYPE& compare);
+
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);
-	static	void CopyObject(OBJECTTYPE* pTarget, OBJECTTYPE* pSource);
+	static	void CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource);
 
 	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer );
 	BOOLEAN	Save( HWFILE hFile );
 
 	//POD
@@ -263,7 +266,7 @@ public:
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT8		ubWeight;
+	UINT16		ubWeight;//used to be UINT8
 	UINT8		fUsed;				// flags for whether the item is used or not
 	UINT16		usAttachItem[MAX_ATTACHMENTS];
 	INT8		bAttachStatus[MAX_ATTACHMENTS];

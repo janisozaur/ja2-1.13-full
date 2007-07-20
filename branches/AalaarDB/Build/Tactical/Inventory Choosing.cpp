@@ -227,7 +227,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	BOOLEAN fGrenadeLauncher = FALSE;
 	BOOLEAN fLAW = FALSE;
 	BOOLEAN fRPG = FALSE;
-	INT32 i;
+	UINT32 i;
 	INT8 bEquipmentModifier;
 	UINT8 ubMaxSpecialWeaponRoll;
 
@@ -528,7 +528,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			break;
 	}
 
-	for ( i = 0; i < NUM_INV_SLOTS; i++ )
+	for ( i = 0; i < pp->Inv.size(); i++ )
 	{ //clear items, but only if they have write status.
 		if( !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 		{
@@ -653,7 +653,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	if( bWeaponClass < 0 && bAmmoClips )
 	{ //Linda has added a specific gun to the merc's inventory, but no ammo.  So, we 
 		//will choose ammunition that works with the gun.
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 		{
 			if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_GUN )
 			{
@@ -953,8 +953,18 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher )
 {
-	OBJECTTYPE Object;
 	INT16 sNumPoints;
+
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseGrenadesForSoldierCreateStruct");
+
+	//determine how many *points* the enemy will get to spend on grenades...
+	sNumPoints = bGrenades * bGrenadeClass;
+
+	//no points, no grenades!
+	if( !sNumPoints )
+		return;
+
+	OBJECTTYPE Object;
 	UINT16 usItem;
 	UINT8 ubBaseQuality;
 	UINT8 ubQualityVariation;
@@ -967,15 +977,6 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	UINT8 ubNumSmoke = 0;
 	UINT8 ubNumFlare = 0;
 	UINT8 count = 0;
-
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseGrenadesForSoldierCreateStruct");
-
-	//determine how many *points* the enemy will get to spend on grenades...
-	sNumPoints = bGrenades * bGrenadeClass;
-
-	//no points, no grenades!
-	if( !sNumPoints )
-		return;
 
 	// special mortar shell handling
 	if (bGrenadeClass == MORTAR_GRENADE_CLASS && itemMortar > 0 )
@@ -1830,14 +1831,14 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 	//UINT16 i;
 	//INVTYPE *pItem;
 	UINT16 usRandom;
-	UINT16 usItem = 0;
-	OBJECTTYPE Object;
 
 	//Madd: let's do this a couple times, so we can have > 1 misc item per soldier
 	usRandom = Random(3);
 
 	if ( usRandom )
 	{
+		UINT16 usItem = 0;
+		OBJECTTYPE Object;
 		for ( UINT16 i=0;i<usRandom;i++ )
 		{
 			usItem = PickARandomItem (MISCITEMS , bMiscClass, FALSE);
@@ -2046,7 +2047,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 
 void RandomlyChooseWhichItemsAreDroppable( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 {
-	INT32 i;
+	UINT32 i;
 	INT32 j;
 //	UINT16 usRandomNum;
 	UINT32 uiItemClass;
@@ -2174,7 +2175,7 @@ else
 	if ( SOLDIER_CLASS_ENEMY( bSoldierClass ) && !IsAutoResolveActive() )
 	{
 		// SPECIAL handling for weapons: we'll always drop a weapon type that has never been dropped before
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 		{
 			usItem = pp->Inv[ i ].usItem;
 //TODO: someday maybe 			pp->Inv[i].fFlags &= ~ITEM_REPAIRABLE;
@@ -2260,7 +2261,7 @@ else
 		if( fAmmo )
 		{
 			// now drops ALL ammo found, not just the first slot
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_AMMO )
@@ -2278,7 +2279,7 @@ else
 		if( fWeapon )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
@@ -2291,7 +2292,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
@@ -2311,7 +2312,7 @@ else
 		if( fArmour )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_ARMOUR )
@@ -2324,7 +2325,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_ARMOUR )
@@ -2343,7 +2344,7 @@ else
 
 		if( fKnife)
 		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				// drops FIRST knife found
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
@@ -2364,7 +2365,7 @@ else
 		if( fGrenades )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GRENADE )
@@ -2377,7 +2378,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GRENADE )
@@ -2397,7 +2398,7 @@ else
 		if( fKit )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
@@ -2410,7 +2411,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
@@ -2430,7 +2431,7 @@ else
 		if( fFace )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_FACE )
@@ -2443,7 +2444,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_FACE )
@@ -2463,7 +2464,7 @@ else
 		if( fMisc )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MISC )
@@ -2476,7 +2477,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MISC )
@@ -2497,7 +2498,7 @@ else
 	else if (gGameExternalOptions.ubEnemiesItemDrop == 1)
 	{
 		// Loop through the enemy inter
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 
@@ -2824,7 +2825,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 	OBJECTTYPE		OldObj;
 	UINT16				usItem, usNewGun, usAmmo, usNewAmmo;
 
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < pp->Inv.size(); uiLoop++ )
 	{
 		usItem = pp->Inv[ uiLoop ].usItem;
 
@@ -2866,7 +2867,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				}
 
 				// must search through inventory and replace ammo accordingly
-				for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+				for ( uiLoop2 = 0; uiLoop2 < pp->Inv.size(); uiLoop2++ )
 				{
 					usAmmo = pp->Inv[ uiLoop2 ].usItem;
 					if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )

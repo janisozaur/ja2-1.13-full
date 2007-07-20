@@ -468,6 +468,7 @@ void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 
 	// get the current curosr position, might just need it.
 	GetCursorPos(&MousePos);	 
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 	
 	// handle input events
   while( DequeueEvent(&InputEvent) )

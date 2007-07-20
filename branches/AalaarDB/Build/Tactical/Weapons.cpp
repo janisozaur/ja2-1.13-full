@@ -4307,10 +4307,10 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->status.bStatus[0]), iImpact, ubAmmoType, &plateHit );
 				if ( pArmour->status.bStatus[ 0 ] < USABLE )
 				{
+					OBJECTTYPE newObj;
 					//Madd: put any attachments that someone might have added to the armour in the merc's inventory
 					for (int bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
 					{
-						OBJECTTYPE newObj;
 						CreateItem(pArmour->usAttachItem[bLoop], pArmour->bAttachStatus[bLoop], &newObj);
 						if ( !AutoPlaceObject( pTarget, &newObj, FALSE ) )
 						{   // put it on the ground
@@ -5689,7 +5689,11 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	}
 	else
 	{
-		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact + GetDamageBonus(pObj);
+		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact;
+		if (Item[ pObj->usItem ].ubPerPocket == 0)
+		{
+			ubDamage += GetDamageBonus(pObj);
+		}
 		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier ) );
 	}
 }

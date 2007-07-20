@@ -40,7 +40,7 @@ BOOLEAN gfWorldLoaded;
 MAPCREATE_STRUCT gMapInformation;
 
 //Current minor map version updater.
-#define MINOR_MAP_VERSION		25
+#define MINOR_MAP_VERSION		26
 UINT8 gubMinorMapVersion = MINOR_MAP_VERSION;
 
 /*
@@ -292,7 +292,7 @@ void UpdateOldVersionMap()
 			//Bug #04)  Assign enemy mercs default army color code if applicable
 			if( curr->pDetailedPlacement )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
 				{ //make all items undroppable, even if it is empty.  This will allow for 
 					//random item generation, while empty, droppable slots are locked as empty
 					//during random item generation.
@@ -430,7 +430,7 @@ void UpdateOldVersionMap()
 		{
 			if( curr->pDetailedPlacement )
 			{
-				for ( i = 0; i < NUM_INV_SLOTS; i++ )
+				for ( i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
 				{
 					pItem = &curr->pDetailedPlacement->Inv[ i ];
 					if( Item[ pItem->usItem ].usItemClass & IC_AMMO )
@@ -515,8 +515,7 @@ void UpdateOldVersionMap()
 		{
 			if( curr->pDetailedPlacement )
 			{
-				INT32 i;
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( UINT32 i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
 				{
 					if( !curr->pDetailedPlacement->Inv[ i ].usItem )
 					{
@@ -568,7 +567,6 @@ void UpdateOldVersionMap()
 void AutoCalculateItemNoOverwriteStatus() 
 {
 	SOLDIERINITNODE *curr;
-	INT32 i;
 	OBJECTTYPE *pItem;
 
 	//Recalculate the "no overwrite" status flag on all items.  There are two different cases:
@@ -579,7 +577,7 @@ void AutoCalculateItemNoOverwriteStatus()
 	{
 		if( curr->pDetailedPlacement )
 		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( UINT32 i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
 			{
 				pItem = &curr->pDetailedPlacement->Inv[ i ];
 				if( pItem->usItem != NONE )

@@ -239,7 +239,7 @@ enum{
 #define FLICKER_TIME										50
 
 
-#define	NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS				18
+#define	NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS				9 // 18
 #define	LAPTOP_TITLE_BAR_WIDTH								500
 #define	LAPTOP_TITLE_BAR_HEIGHT								24
 
@@ -690,6 +690,7 @@ GetLaptopKeyboardInput()
 	POINT  MousePos;
 
 	GetCursorPos(&MousePos);
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	fTabHandled = FALSE;
 
@@ -3188,6 +3189,7 @@ CheckIfMouseLeaveScreen()
 {
  	POINT  MousePos;
   GetCursorPos(&MousePos);
+  ScreenToClient(ghWindow, &MousePos); // In window coords!
   if((MousePos.x >LAPTOP_SCREEN_LR_X )||(MousePos.x<LAPTOP_UL_X)||(MousePos.y<LAPTOP_UL_Y )||(MousePos.y >LAPTOP_SCREEN_LR_Y))
   {
    guiCurrentLapTopCursor=LAPTOP_PANEL_CURSOR;

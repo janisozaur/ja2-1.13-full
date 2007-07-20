@@ -275,7 +275,6 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-	        // WDS - Clean up inventory handling
 		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead )  != 1)
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
@@ -309,7 +308,7 @@ BOOLEAN LoadMercProfiles(void)
 		{
 
 			// CJC: replace guns in profile if they aren't available
-			for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+			for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
 			{
 				usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
 
@@ -321,7 +320,7 @@ BOOLEAN LoadMercProfiles(void)
 						gMercProfiles[uiLoop].inv[ uiLoop2 ] = usNewGun;
 
 						// must search through inventory and replace ammo accordingly
-						for ( uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; uiLoop3++ )
+						for ( uiLoop3 = 0; uiLoop3 < gMercProfiles[ uiLoop ].inv.size(); uiLoop3++ )
 						{
 							usAmmo = gMercProfiles[ uiLoop ].inv[ uiLoop3 ];
 							if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
@@ -346,7 +345,7 @@ BOOLEAN LoadMercProfiles(void)
 		gMercProfiles[uiLoop].bMainGunAttractiveness		= -1;
 		gMercProfiles[uiLoop].bArmourAttractiveness			= -1;
 
-		for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+		for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
 		{
 			usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
 
@@ -371,7 +370,7 @@ BOOLEAN LoadMercProfiles(void)
 
 		//add up the items the merc has for the usOptionalGearCost
 		gMercProfiles[ uiLoop ].usOptionalGearCost = 0;
-		for ( uiLoop2 = 0; uiLoop2< NUM_INV_SLOTS; uiLoop2++ )
+		for ( uiLoop2 = 0; uiLoop2< gMercProfiles[ uiLoop ].inv.size(); uiLoop2++ )
 		{
 			if ( gMercProfiles[ uiLoop ].inv[ uiLoop2 ] != NOTHING )
 			{
@@ -954,7 +953,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		}
 
 		// Copy over any items....
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pNewSoldier->inv.size(); cnt++ )
 		{
 			pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
 		}
@@ -1463,7 +1462,6 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	pNewProfile->bExplosivesDelta = gMercProfiles[ ubSrcProfile ].bExplosivesDelta;
 	*/
 
-	// WDS - Clean up inventory handling
 	pNewProfile->bInvStatus = gMercProfiles[ ubSrcProfile ].bInvStatus;
 	pNewProfile->bInvNumber = gMercProfiles[ ubSrcProfile ].bInvNumber;
 	pNewProfile->inv = gMercProfiles[ ubSrcProfile ].inv;

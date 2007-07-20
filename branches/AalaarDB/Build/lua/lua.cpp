@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 #include "Lua Interpreter.h"
 #include "lwstring.h"
 
@@ -169,7 +170,7 @@ void NewLuaObject( lua_State *L, STR8 ClsName, void *Ptr )
 
 static int LuaGetMercPtr( lua_State *L)
 {
-	int v = (int)lua_tointeger( L, 2 );
+	int v = lua_tointeger( L, 2 );
 	luaL_argcheck( L, (v >= 0 && v < TOTAL_SOLDIERS), 2, "The soldier index is out of range");
 	if (MercPtrs[ v ] )
 	{
@@ -247,7 +248,7 @@ int LuaSetSoldierGrid( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = (int)luaL_checkinteger( L, 3);
+	int newgrid = luaL_checkinteger( L, 3);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
 	TeleportSoldier( pSoldier, newgrid, TRUE);
 	return 0;
@@ -257,7 +258,7 @@ int LuaSoldierWalkTo( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = (int)luaL_checkinteger( L, 2);
+	int newgrid = luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
 	pSoldier->aiData.bAction = AI_ACTION_WALK;
 	pSoldier->aiData.usActionData = newgrid;
@@ -270,7 +271,7 @@ int LuaSoldierRunTo( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = (int)luaL_checkinteger( L, 2);
+	int newgrid = luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
 	pSoldier->aiData.bAction = AI_ACTION_RUN;
 	pSoldier->aiData.usActionData = newgrid;
@@ -317,14 +318,35 @@ void InitializeLua( )
 	lua_setglobal( L, "Soldiers" );
 }
 
-void EvalLua (STR8 buff) {
+int EvalLua (const wchar_t* buff) {
 	int error;
-	error = luaL_loadbuffer(L, buff, strlen(buff), "line") ||
+	int newlen;
+	STR8 newstr = NULL;
+
+	// Since we get wide chars coming in, we need to convert to UTF8
+	newlen = WideCharToMultiByte( CP_UTF8, 0, buff, -1, newstr, 0, NULL, NULL);
+	newstr = (STR8) MemAlloc( newlen);
+	WideCharToMultiByte( CP_UTF8, 0, buff, -1, newstr, newlen, NULL, NULL);
+
+	error = luaL_loadbuffer(L, newstr, newlen-1, "line") ||
 		lua_pcall(L, 0, 0, 0);
+
+	MemFree( newstr);
+
 	if (error) {
-		fprintf(stderr, "%s", lua_tostring(L, -1));
+		const char *error = lua_tostring(L, -1);
+		int len = strlen( error);
+		if (len >= 7 && !strcmp( error + len - 7, "'<eof>'"))
+		{
+			lua_pop(L, 1);  /* pop error message from the stack */
+			return FALSE;
+		}
+		cout << lua_tostring(L, -1) << endl;
 		lua_pop(L, 1);  /* pop error message from the stack */
+		return TRUE;
 	}
+
+	return TRUE;
 }
 
 void ShutdownLua( ) {

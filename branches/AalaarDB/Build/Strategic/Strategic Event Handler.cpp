@@ -471,7 +471,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 	{
 		// sector is loaded!
 		// just move the hidden item pool
-		MoveItemPools( sStartGridNo, BOBBYR_SHIPPING_DEST_GRIDNO );
+		MoveItemPools( sStartGridNo, BOBBYR_SHIPPING_DEST_GRIDNO, 0, 0 );
 	}
 	else
 	{
@@ -1043,7 +1043,7 @@ void CheckForMissingHospitalSupplies( void )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
-			GetItemPool( gWorldItems[ uiLoop ].sGridNo, &pItemPool, 0 ) ;
+			GetItemPoolFromGround( gWorldItems[ uiLoop ].sGridNo, &pItemPool ) ;
 			while( pItemPool ) 
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );

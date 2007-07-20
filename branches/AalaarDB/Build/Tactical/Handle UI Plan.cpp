@@ -72,7 +72,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 
 		if ( EnoughPoints( gpUIPlannedSoldier, sAPCost, 0, FALSE ) )
 		{
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+			MercCreateStruct.initialize();
 			MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
 			MercCreateStruct.ubProfile		= NO_PROFILE;
 			MercCreateStruct.fPlayerPlan	= TRUE;
@@ -154,7 +154,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 			// CHECK IF WE ARE A PLANNED SOLDIER OR NOT< IF SO< CREATE!
 			if ( gpUIPlannedSoldier->ubID < MAX_NUM_SOLDIERS )
 			{
-				memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+				MercCreateStruct.initialize();
 				MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
 				MercCreateStruct.ubProfile		= NO_PROFILE;
 				MercCreateStruct.fPlayerPlan	= TRUE;

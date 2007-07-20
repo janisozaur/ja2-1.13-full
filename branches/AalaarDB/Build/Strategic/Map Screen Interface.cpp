@@ -1483,7 +1483,7 @@ void GetMoraleString( SOLDIERTYPE *pSoldier, STR16 sString )
 void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
 {
 	// just drop the stuff in the current sector
-	INT32 iCounter = 0;
+	//INT32 iCounter = 0;
   INT16 sGridNo, sTempGridNo;
 
 	if( Menptr[ uiMercId ].sSectorX != gWorldSectorX || Menptr[ uiMercId ].sSectorY != gWorldSectorY || Menptr[ uiMercId ].bSectorZ != gbWorldSectorZ )
@@ -1519,7 +1519,7 @@ void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
     }
   }
 
-	for( iCounter = 0; iCounter < NUM_INV_SLOTS; iCounter++ )
+	for( UINT32 iCounter = 0; iCounter < Menptr[ uiMercId ].inv.size(); iCounter++ )
 	{
 		// slot found,		
 		// check if actual item
@@ -1777,7 +1777,6 @@ INT32 SetUpDropItemListForMerc( UINT32 uiMercId )
 {
 	// will set up a drop list for this grunt, remove items from inventory, and profile
 	INT32 iSlotIndex = -1;
-	INT32 iCounter = 0;
 
 	iSlotIndex = FindFreeSlotInLeaveList( );
 	if( iSlotIndex == -1 )
@@ -1785,7 +1784,7 @@ INT32 SetUpDropItemListForMerc( UINT32 uiMercId )
 		return( -1 );
 	}
 
-	for( iCounter = 0; iCounter < NUM_INV_SLOTS; iCounter++ )
+	for( UINT32 iCounter = 0; iCounter < Menptr[ uiMercId ].inv.size(); iCounter++ )
 	{
 		// slot found,
 		// check if actual item
@@ -1804,10 +1803,6 @@ INT32 SetUpDropItemListForMerc( UINT32 uiMercId )
   DropKeysInKeyRing( MercPtrs[ uiMercId ], NOWHERE, 0, 0, TRUE, iSlotIndex, FALSE );
 
 	// zero out profiles
-        // WDS - Clean up inventory handling
-	//memset( ( gMercProfiles[ Menptr[ uiMercId ].ubProfile ].bInvStatus ), 0, sizeof( UINT8 ) * 19 );
-	//memset( ( gMercProfiles[ Menptr[ uiMercId ].ubProfile ].bInvNumber ), 0, sizeof( UINT8 ) * 19 );
-	//memset( ( gMercProfiles[ Menptr[ uiMercId ].ubProfile ].inv ), 0, sizeof( UINT16 ) * 19 );
 	gMercProfiles[ Menptr[ uiMercId ].ubProfile ].clearInventory();
 
 	return( iSlotIndex );

@@ -140,8 +140,8 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
 	{
 #ifdef DEBUGDECISIONS
-		STR tempstr;
-		sprintf(tempstr, "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
+		std::string tempstr;
+		tempstr = String( "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
 		DebugAI( tempstr );
 #endif
 
@@ -160,7 +160,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		else
 		{
 #ifdef BETAVERSION
-			sprintf(tempstr,"TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
+			tempstr = String("TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
 
 #ifdef RECORDNET
 			fprintf(NetDebugFile,"\n\t%s\n",tempstr);
@@ -181,14 +181,14 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		// legally if another soldier gets in the way between turns
 
 #ifdef BETAVERSION
-		sprintf(tempstr,"TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
+		tempstr = String("TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
 
 #ifdef RECORDNET
 		fprintf(NetDebugFile,"\n\t%s\n",tempstr);
 #endif
 
 #ifdef DEBUGDECISIONS
-		AIPopMessage(tempstr);
+		DebugAI(tempstr);
 #endif
 
 #endif
@@ -274,7 +274,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
  INT16 sPatrolPoint;
  INT8  bOldOrders;
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 
  sPatrolPoint = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
@@ -339,8 +339,8 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
  // passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
- sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
- AIPopMessage(tempstr);
+ tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+ DebugAI(tempstr);
 #endif
 
  return(TRUE);
@@ -349,7 +349,7 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 {
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 	INT16 sPatrolPoint;
 	INT8  bOldOrders, bPatrolIndex;
@@ -429,8 +429,8 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 	// passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
-	AIPopMessage(tempstr);
+	tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+	DebugAI(tempstr);
 #endif
 
 	return(TRUE);
@@ -441,7 +441,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 	INT16 sLoop,sAPCost;
 	INT16 sTempDest,sGoToGrid;
@@ -492,8 +492,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	}
 
 #ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
-	AIPopMessage(tempstr);
+	tempstr = String("%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
+	DebugAI(tempstr);
 #endif
 
 	// if soldier is ALREADY at the desired destination, quit right away
@@ -741,8 +741,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  if (sGoToGrid == pSoldier->sGridNo)
   {
 #ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s will go NOWHERE, path doesn't meet criteria",pSoldier->name);
-   AIPopMessage(tempstr);
+   tempstr = String("%s will go NOWHERE, path doesn't meet criteria",pSoldier->name);
+   DebugAI(tempstr);
 #endif
 
 	pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize = 0;

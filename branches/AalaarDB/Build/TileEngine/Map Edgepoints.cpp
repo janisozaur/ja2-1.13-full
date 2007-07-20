@@ -17,6 +17,7 @@
 	#include "strategicmap.h"
 	#include "environment.h"
 	#include "worldman.h"
+	#include "FindLocations.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge

@@ -1695,7 +1695,6 @@ BOOLEAN SaveWorld( const STR8 puiFilename )
 	// Write tileset ID
 	FileWrite( hfile, &giCurrentTilesetID, sizeof( INT32 ), &uiBytesWritten );
 	
-	// WDS - Clean up inventory handling
 	// Write SOLDIER CONTROL SIZE
 	uiSoldierSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	FileWrite( hfile, &uiSoldierSize, sizeof( INT32 ), &uiBytesWritten );
@@ -2389,8 +2388,16 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 		{
 			pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
 		}
-		//Skip the contents of the world items.
-		pBuffer += sizeof( WORLDITEM ) * pSummary->usNumItems;
+
+		//the size of WORLDITEM has changed at 5.0.26, 25 or earlier are outdated
+		if (dMajorMapVersion >= 4.0 && ubMinorMapVersion > 25) {
+			//Skip the contents of the world items.
+			pBuffer += sizeof( WORLDITEM ) * pSummary->usNumItems;
+		}
+		else {
+			//Skip the contents of the world items.
+			pBuffer += sizeof( OLD_WORLDITEM_101 ) * pSummary->usNumItems;
+		}
 	}
 
 	if( uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED )
@@ -2741,6 +2748,7 @@ BOOLEAN LoadWorld( const STR8	puiFilename )
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
 
+	//ADB thankfully this isn't used, because the size has changed
 	// Load soldier size
 	LOADDATA( &uiSoldierSize, pBuffer, sizeof( INT32 ) );
 
@@ -3036,7 +3044,7 @@ BOOLEAN LoadWorld( const STR8	puiFilename )
 	{
 		// Load out item information
 		gfLoadPitsWithoutArming = TRUE;
-		LoadWorldItemsFromMap( &pBuffer );
+		LoadWorldItemsFromMap( &pBuffer, dMajorMapVersion, ubMinorMapVersion );
 		gfLoadPitsWithoutArming = FALSE;
 	}
 

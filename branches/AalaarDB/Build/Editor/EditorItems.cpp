@@ -86,7 +86,7 @@ void BuildItemPoolList()
 	KillItemPoolList();
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
-		if( GetItemPool( i, &temp , 0) )
+		if( GetItemPoolFromGround( i, &temp ) )
 		{
 			if( !pIPHead )
 			{
@@ -800,7 +800,7 @@ void HideItemCursor( INT32 iMapIndex )
 BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 {
 	ITEM_POOL *pItemPool;
-	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
+	if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
 	{
 		return FALSE;
 	}
@@ -946,7 +946,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 		}
 	}
 
-	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
+	if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
 		Assert( 0 );
 	while( pItemPool )
 	{
@@ -1011,10 +1011,10 @@ void HandleRightClickOnItem( INT16 sGridNo )
 		pItemPool = gpItemPool->pNext;
 		if( !pItemPool )
 		{ //currently selected item was last node, so select the head node even if it is the same.
-			GetItemPool( sGridNo, &pItemPool, 0 );
+			GetItemPoolFromGround( sGridNo, &pItemPool );
 		}
 	}
-	else if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
+	else if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
 	{
 		//possibly relocate selected item to this gridno?
 		return; 
@@ -1071,7 +1071,7 @@ void DeleteSelectedItem()
 		RemoveItemFromPool( sGridNo, gpItemPool->iItemIndex, 0 );
 		gpItemPool = NULL;
 		//determine if there are still any items at this location
-		if( !GetItemPool( sGridNo, &gpItemPool , 0 ) )
+		if( !GetItemPoolFromGround( sGridNo, &gpItemPool ) )
 		{ //no items left, so remove the node from the list.
 			IPListNode *pIPPrev, *pIPCurr;
 			pIPCurr = pIPHead;
@@ -1091,7 +1091,7 @@ void DeleteSelectedItem()
 						gpCurrItemPoolNode = pIPHead;
 					if( gpCurrItemPoolNode )
 					{
-						GetItemPool( gpCurrItemPoolNode->sGridNo, &gpItemPool, 0 );
+						GetItemPoolFromGround( gpCurrItemPoolNode->sGridNo, &gpItemPool );
 						Assert( gpItemPool );
 					}
 					//remove node
@@ -1141,7 +1141,7 @@ void SelectNextItemPool()
 	else 
 		gpCurrItemPoolNode = pIPHead;
 	//get the item pool at this node's gridno.
-	GetItemPool( gpCurrItemPoolNode->sGridNo, &gpItemPool, 0 );
+	GetItemPoolFromGround( gpCurrItemPoolNode->sGridNo, &gpItemPool );
 	MarkMapIndexDirty( gpItemPool->sGridNo );
 	SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
 	if( gsItemGridNo != -1 )
@@ -1160,7 +1160,7 @@ void SelectNextItemInPool()
 		}
 		else
 		{
-			GetItemPool( gpItemPool->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( gpItemPool->sGridNo, &gpItemPool );
 		}
 		SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
 		MarkWorldDirty();
@@ -1177,7 +1177,7 @@ void SelectPrevItemInPool()
 		}
 		else
 		{
-			GetItemPool( gpItemPool->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( gpItemPool->sGridNo, &gpItemPool );
 			while( gpItemPool->pNext )
 			{
 				gpItemPool = gpItemPool->pNext;
@@ -1253,7 +1253,7 @@ void SelectNextItemOfType( UINT16 usItem )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1271,7 +1271,7 @@ void SelectNextItemOfType( UINT16 usItem )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1317,7 +1317,7 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1335,7 +1335,7 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1381,7 +1381,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1399,7 +1399,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1445,7 +1445,7 @@ void SelectNextPressureAction()
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1463,7 +1463,7 @@ void SelectNextPressureAction()
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
+		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
@@ -1488,7 +1488,7 @@ UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
+		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == usItem )
@@ -1511,7 +1511,7 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
+		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == usItem &&
@@ -1534,7 +1534,7 @@ UINT16 CountNumberOfPressureActionsInWorld()
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
+		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == ACTION_ITEM &&
@@ -1594,7 +1594,7 @@ UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
+		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
 		while( pItemPool )
 		{
 			if( Item[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ].usItemClass == IC_KEY )

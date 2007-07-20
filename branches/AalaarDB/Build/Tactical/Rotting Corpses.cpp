@@ -778,24 +778,23 @@ BOOLEAN CreateCorpsePalette( ROTTING_CORPSE *pCorpse )
 
 BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLEAN fCheckForLOS )
 {
-	ROTTING_CORPSE_DEFINITION		Corpse;
-	UINT8												ubType;
-	INT32												cnt;
-	UINT16											usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
-	INT32												iCorpseID;
-	INT8												bVisible = -1;
-	OBJECTTYPE									*pObj;
-  UINT8                       ubNumGoo;
-  INT16                       sNewGridNo;
-  OBJECTTYPE                  ItemObject;
-
-
 	if ( pSoldier->sGridNo == NOWHERE )
 	{
 		return( FALSE );
 	}
 
-  // ATE: Change to fix crash when item in hand
+ 	ROTTING_CORPSE_DEFINITION		Corpse;
+	UINT8												ubType;
+	UINT32												cnt;
+	UINT16											usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
+	INT32												iCorpseID;
+	INT8												bVisible = -1;
+	OBJECTTYPE									*pObj;
+	  UINT8                       ubNumGoo;
+	  INT16                       sNewGridNo;
+	  OBJECTTYPE                  ItemObject;
+
+ // ATE: Change to fix crash when item in hand
   if ( gpItemPointer != NULL && gpItemPointerSoldier == pSoldier )
   {
     CancelItemPointer( );
@@ -916,7 +915,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
   else
   {
 	  // OK, Place what objects this guy was carrying on the ground!
-	  for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	  for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	  {
 		  pObj = &( pSoldier->inv[ cnt ] );
 
@@ -1864,16 +1863,15 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 
 void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot )
 {
-	OBJECTTYPE *pObj;
-
 	Assert( pSoldier );
-	Assert( ( iInvSlot >= 0 ) && ( iInvSlot < NUM_INV_SLOTS ) );
+	Assert( ( iInvSlot >= 0 ) && ( iInvSlot < (INT32)pSoldier->inv.size() ) );
 
-	pObj = &( pSoldier->inv[ iInvSlot ] );
 
 	// if not a player soldier
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
+		OBJECTTYPE *pObj = &( pSoldier->inv[ iInvSlot ] );
+
 		// if it's ammo
 		if ( Item[ pObj->usItem ].usItemClass == IC_AMMO )
 		{

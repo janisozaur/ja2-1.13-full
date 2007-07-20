@@ -1266,7 +1266,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		// if opponent doesn't see the attacker
 		if (pOpponent->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
 		{
-			fSurpriseStab = TRUE;
+			//fSurpriseStab = TRUE;
 
 			// and he's only one space away from attacker
 			if (SpacesAway(pSoldier->sGridNo,pOpponent->sGridNo) == 1)
@@ -1707,7 +1707,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	INT8	bSlot;
 
 
-	if( pSoldier == NULL || pOpponent == NULL || ubItemPos > NUM_INV_SLOTS || sGridno > NUMBEROFTILES )
+	if( pSoldier == NULL || pOpponent == NULL || ubItemPos > pSoldier->inv.size() || sGridno > NUMBEROFTILES )
 		return 0;
 
 	if( pSoldier->inv[ubItemPos].usItem == NOTHING )
@@ -1997,8 +1997,7 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 		bWeaponIn = FindAIUsableObjClass( pSoldier, IC_WEAPON );
 		if (bWeaponIn != NO_SLOT)
 		{
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"cannpcattack: swapping weapon into hand");
-			RearrangePocket( pSoldier, HANDPOS, bWeaponIn, FOREVER );
+			AssureItemIsInHandPos(pSoldier, bWeaponIn, FOREVER);
 			// look for another weapon if this one is 1-handed
 			//			if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ HANDPOS ].usItem ].fFlags & ITEM_TWO_HANDED ) )
 			if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ HANDPOS ].usItem ].twohanded ) )
@@ -2021,9 +2020,8 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 	if (bCanAttack != TRUE) // if for any reason we can't attack right now
 	{
 		//LocateMember(pSoldier->ubID,SETLOCATOR); // locate to this NPC, don't center
-		STR16 tempstr;
-		sprintf(tempstr,"%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
-		AIPopMessage(tempstr);
+		std::string tempstr = String ("%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
+		DebugAI(tempstr);
 	}
 #endif
 
@@ -2084,12 +2082,7 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 	if (pBestThrow->bWeaponIn != NO_SLOT)
 	{
 		// if it's in his holster, swap it into his hand temporarily
-		if (pBestThrow->bWeaponIn != HANDPOS)
-		{
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: swapping item into hand");
-			RearrangePocket(pSoldier, HANDPOS, pBestThrow->bWeaponIn, TEMPORARILY);
-		}
-
+		AssureItemIsInHandPos(pSoldier, pBestThrow->bWeaponIn, TEMPORARILY);
 
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: get minapstoattack");
 		// get the minimum cost to attack with this tossable item
@@ -2103,11 +2096,7 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 		}
 
 		// if it was in his holster, swap it back into his holster for now
-		if (pBestThrow->bWeaponIn != HANDPOS)
-		{
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"checkiftosspossible: swapping item into holster");
-			RearrangePocket( pSoldier, HANDPOS, pBestThrow->bWeaponIn, TEMPORARILY );
-		}
+		UndoAssureItemIsInHandPos(pSoldier, pBestThrow->bWeaponIn, TEMPORARILY);
 	}
 }
 
@@ -2463,11 +2452,7 @@ void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN s
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("CheckIfShotPossible: weapon type %d",Weapon [pObj->usItem ].ubWeaponType ));
 
 		// if it's in his holster, swap it into his hand temporarily
-		if (pBestShot->bWeaponIn != HANDPOS)
-		{
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible: Rearranging pocket");
-			RearrangePocket(pSoldier, HANDPOS, pBestShot->bWeaponIn, TEMPORARILY);
-		}
+		AssureItemIsInHandPos(pSoldier, pBestShot->bWeaponIn, TEMPORARILY);
 
 		if ( (!suppressionFire && ( (IsScoped(pObj) && GunRange(pObj) > MaxDistanceVisible() ) || pSoldier->aiData.bOrders == SNIPER ) ) ||
 			(suppressionFire  && IsGunAutofireCapable(pSoldier,pBestShot->bWeaponIn ) && GetMagSize(pObj) > 30 && pObj->gun.ubGunShotsLeft > 20 ))
@@ -2487,10 +2472,6 @@ void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN s
 			}
 		}
 		// if it was in his holster, swap it back into his holster for now
-		if (pBestShot->bWeaponIn != HANDPOS)
-		{
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible: Rearranging pocket");
-			RearrangePocket( pSoldier, HANDPOS, pBestShot->bWeaponIn, TEMPORARILY );
-		}
+		UndoAssureItemIsInHandPos(pSoldier, pBestShot->bWeaponIn, TEMPORARILY);
 	}
 }

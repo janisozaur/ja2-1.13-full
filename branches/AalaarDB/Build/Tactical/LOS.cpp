@@ -259,11 +259,12 @@ FLOAT Distance2D( FLOAT dDeltaX, FLOAT dDeltaY )
 	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY )));
 }
 
-//#define DEBUGLOS
+#define DEBUGLOS
 
 #if defined( JA2BETAVERSION ) && defined( DEBUGLOS )
 void DebugLOS( STR szOutput )
 {
+	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,szOutput);
 	FILE *		DebugFile;
 
 	if ((DebugFile = fopen( "losdebug.txt", "a+t" )) != NULL)
@@ -2725,12 +2726,12 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 		if (iCurrAboveLevelZ < 0)
 		{
 			// ground is in the way!
-			//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough done ground is in the way"));
+			DebugLOS(String("CalcChanceToGetThrough done ground in way #1"));
 			return( 0 );
 		}
 		iCurrCubesAboveLevelZ = CONVERT_HEIGHTUNITS_TO_INDEX( iCurrAboveLevelZ );
 
-		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough: while pStructure"));
+		DebugLOS(String("CalcChanceToGetThrough: while pStructure"));
 		while( pStructure )
 		{
 			if (pStructure->fFlags & ALWAYS_CONSIDER_HIT)
@@ -2781,7 +2782,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 						if ( (qLastZ > qWallHeight && pBullet->qCurrZ <= qWallHeight) || (qLastZ < qWallHeight && pBullet->qCurrZ >= qWallHeight))
 						{
 							// hit a roof
-							//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChanceChanceToGetThrough done hit a roof" ));
+							DebugLOS(String("ChanceChanceToGetThrough done hit roof #1" ));
 
 							return( 0 );
 						}
@@ -2860,7 +2861,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 		iOldTileX = pBullet->iCurrTileX;
 		iOldTileY = pBullet->iCurrTileY;
 
-		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough: checking for location within the tile"));
+		DebugLOS(String("CalcChanceToGetThrough: checking for location within the tile"));
 		do
 		{
 			// check a particular location within the tile
@@ -2870,7 +2871,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 			if (iCurrAboveLevelZ < 0)
 			{
 				// ground is in the way!
-				//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChanceOfBulletHittingStructure done ground in way"));
+				DebugLOS(String("ChanceOfBulletHittingStructure done ground in way #2"));
 
 				return( 0 );
 			}
@@ -2929,7 +2930,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 				if (pBullet->qCurrZ < qLandHeight && pBullet->iLoop < pBullet->iDistanceLimit)
 				{
 					// ground is in the way!
-					//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChanceChanceToGetThrough done ground in way" ));
+					DebugLOS(String("ChanceChanceToGetThrough done ground in way #3" ));
 					return( 0 );
 				}
 
@@ -2977,7 +2978,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 									if (fIntended)
 									{	// gotcha! ... return chance to get through
 										iChanceToGetThrough = iChanceToGetThrough * (pBullet->iImpact - pBullet->iImpactReduction) / pBullet->iImpact;
-										//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChanceChanceToGetThrough done " ));
+										DebugLOS(String("ChanceChanceToGetThrough done, hit intended, returning %d", iChanceToGetThrough ));
 										return( (UINT8) iChanceToGetThrough );
 									}
 									else
@@ -3038,7 +3039,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 							//pBullet->iImpactReduction += CTGTHandleBulletStructureInteraction( pBullet, pRoofStructure );
 							//if (pBullet->iImpactReduction >= pBullet->iImpact)
 							{
-								//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("ChanceChanceToGetThrough done hit roof" ));
+								DebugLOS(String("ChanceChanceToGetThrough done hit roof #2" ));
 								return( 0 );
 							}
 
@@ -3063,12 +3064,12 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 
 		if ( pBullet->iCurrTileX < 0 || pBullet->iCurrTileX >= WORLD_COLS || pBullet->iCurrTileY < 0 || pBullet->iCurrTileY >= WORLD_ROWS )
 		{
-			//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough done invalid position"));
+			DebugLOS(String("CalcChanceToGetThrough done invalid position"));
 
 			return( 0 );
 		}
 
-		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough check for bullet drop"));
+		DebugLOS(String("CalcChanceToGetThrough check for bullet drop"));
 		pBullet->sGridNo = MAPROWCOLTOPOS( pBullet->iCurrTileY , pBullet->iCurrTileX );
 
 		if (pBullet->iLoop > pBullet->iRange * 2)
@@ -3086,7 +3087,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 		}
 
 		// end of the tile...
-		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough end of tile"));
+		DebugLOS(String("CalcChanceToGetThrough end of tile"));
 		if (iNumLocalStructures > 0)
 		{
 			for ( iStructureLoop = 0; iStructureLoop < iNumLocalStructures; iStructureLoop++)
@@ -3105,7 +3106,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 			}
 			if (pBullet->iImpactReduction >= pBullet->iImpact)
 			{
-				//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough done impact reduced"));
+				DebugLOS(String("CalcChanceToGetThrough done impact reduced"));
 				return( 0 );
 			}
 		}
@@ -3114,7 +3115,8 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 	// fractional amount of distance remaining which is unchecked
 	// but we shouldn't(?) need to check it because the target is there!
 
-	//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough simple calc, %d * (%d - %d) / %d"));
+	DebugLOS(String("CalcChanceToGetThrough simple calc, %d * (%d - %d) / %d",
+		iChanceToGetThrough, pBullet->iImpact, pBullet->iImpactReduction, (max(pBullet->iImpact,1))));
 	// try simple chance to get through, ignoring range effects
 	iChanceToGetThrough = iChanceToGetThrough * (pBullet->iImpact - pBullet->iImpactReduction) / (max(pBullet->iImpact,1));
 
@@ -3122,7 +3124,7 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 	{
 		iChanceToGetThrough = 0;
 	}
-	//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToGetThrough done"));
+	DebugLOS(String("CalcChanceToGetThrough done, returning %d", iChanceToGetThrough));
 
 	return( (UINT8) iChanceToGetThrough );
 }

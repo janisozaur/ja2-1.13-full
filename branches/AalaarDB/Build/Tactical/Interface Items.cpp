@@ -1065,7 +1065,6 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 {
-	INT32									cnt;
 	static CHAR16					pStr[ 150 ]; 
 
 	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
@@ -1074,11 +1073,21 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 	}
 	else
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( UINT32 cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
-				GetHelpTextForItem( pStr, &( pSoldier->inv[ cnt ] ), pSoldier );
+#       if defined( _DEBUG ) /* Sergeant_Kolja, to be removed later again */
+        if( pSoldier->inv[ cnt ].gun.ubGunAmmoType >= MAXITEMS )
+        {
+         	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("pObject (%s) corrupted! GetHelpTextForItem() can crash.", (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" ));
+    	    ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"pObject (%S) corrupted! GetHelpTextForItem() can crash.",    (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" );
+          DebugBreak();
+          AssertMsg( 0, "pObject corrupted! GetHelpTextForItem() can crash." );
+        }
+#       endif
+
+		GetHelpTextForItem( pStr, &( pSoldier->inv[ cnt ] ), pSoldier );
 
 				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
 			}
@@ -1289,12 +1298,12 @@ BOOLEAN	CompatibleItemForApplyingOnMerc( OBJECTTYPE *pTestObject )
 
 BOOLEAN SoldierContainsAnyCompatibleStuff( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject )
 {
-	INT32				cnt;
+	UINT32				cnt;
 	OBJECTTYPE  *pObject;
 
 	if( ( Item [ pTestObject->usItem ].usItemClass & IC_GUN ) )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1307,7 +1316,7 @@ BOOLEAN SoldierContainsAnyCompatibleStuff( SOLDIERTYPE *pSoldier, OBJECTTYPE *pT
 
 	if( ( Item [ pTestObject->usItem ].usItemClass & IC_AMMO ) )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1357,7 +1366,7 @@ void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject,
 BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc   )
 {
 	BOOLEAN			fFound = FALSE;
-	INT32				cnt;
+	UINT32				cnt;
 	OBJECTTYPE  *pObject, *pTestObject ;
 	BOOLEAN			fFoundAttachment = FALSE;
 
@@ -1380,7 +1389,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	// ATE: If pTest object is NULL, test only for existence of syringes, etc...
 	if ( pTestObject == NULL )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1430,7 +1439,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	if ( !(Item[ pTestObject->usItem ].hiddenaddon ) )
 	{
 		// First test attachments, which almost any type of item can have....
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 
@@ -1463,7 +1472,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	
 	if ( ( Item [ pTestObject->usItem ].usItemClass & IC_GUN ) )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1482,7 +1491,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	}
 	else if( ( Item [ pTestObject->usItem ].usItemClass & IC_AMMO ) )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1609,14 +1618,14 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn  )
 {
 	BOOLEAN			fFound = FALSE;
-	INT32				cnt;
+	UINT32				cnt;
 	OBJECTTYPE  *pObject;
 	BOOLEAN			fFoundAttachment = FALSE;
 
 	// ATE: If pTest object is NULL, test only for existence of syringes, etc...
 	if ( pTestObject == NULL )
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 			
@@ -1663,7 +1672,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 	}
 
 	// First test attachments, which almost any type of item can have....
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	{
 		pObject = &(pSoldier->inv[ cnt ]);
 
@@ -1696,7 +1705,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 	//{
 		if( ( Item [ pTestObject->usItem ].usItemClass & IC_GUN ) )
 		{
-			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+			for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 			{
 				pObject = &(pSoldier->inv[ cnt ]);
 				
@@ -1716,7 +1725,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 
 		else if( ( Item [ pTestObject->usItem ].usItemClass & IC_AMMO ) )
 		{
-			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+			for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 			{
 				pObject = &(pSoldier->inv[ cnt ]);
 				
@@ -1875,18 +1884,17 @@ void GetSlotInvHeightWidth( UINT8 ubPos, INT16 *psWidth, INT16 *psHeight )
 
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 {
-	UINT32 cnt;
-	INT16  sX, sY;
-	OBJECTTYPE		*pObject;
-
-
 	// If item description up.... stop
 	if ( gfInItemDescBox )
 	{
 		return;
 	}
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	UINT32 cnt;
+	INT16  sX, sY;
+	OBJECTTYPE		*pObject;
+
+	for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	{
 		if ( pSoldier->inv.bNewItemCount[ cnt ] == -2 )
 		{
@@ -1918,10 +1926,8 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 
 void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier )
 {
-	UINT32 cnt;
-
 	// OK, l0ok for any new...
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( UINT32 cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	{
 		if ( pSoldier->inv.bNewItemCount[ cnt ] == -1 )
 		{
@@ -1951,7 +1957,7 @@ void DegradeNewlyAddedItems( )
 			{
 				pSoldier = MercPtrs[ gTeamPanel[ cnt2 ].ubID ];
 
-				for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+				for ( cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 				{
 					if ( pSoldier->inv.bNewItemCount[ cnt ] > 0 )
 					{
@@ -4271,7 +4277,7 @@ void DeleteItemDescriptionBox( )
 		if( gRemoveMoney.uiMoneyRemaining == 0 && !gfAddingMoneyToMercFromPlayersAccount )
 		{
 			//get rid of the money in the slot
-			memset( gpItemDescObject, 0, sizeof( OBJECTTYPE ) );
+			gpItemDescObject->initialize();
 			gpItemDescObject = NULL;
 		}
 	}
@@ -4787,21 +4793,6 @@ BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 {
 	// Determine what to do
-	UINT8 ubDirection;
-	UINT8	ubSoldierID;
-	UINT16	  usItem;
-	INT16			sAPCost;
-	SOLDIERTYPE		*pSoldier=NULL;
-	UINT8			ubThrowActionCode=0;
-	UINT32		uiThrowActionData=0;
-	INT16			sEndZ = 0;
-	BOOLEAN		fGiveItem = FALSE;
-	OBJECTTYPE TempObject;
-	INT16			sGridNo;
-	INT16			sDist;
-	INT16			sDistVisible;
-
-
 	if ( SelectedGuyInBusyAnimation( ) )
 	{
 		return( FALSE );
@@ -4826,6 +4817,20 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		return( FALSE );
 	}
 
+
+	UINT8 ubDirection;
+	UINT8	ubSoldierID;
+	UINT16	  usItem;
+	INT16			sAPCost;
+	SOLDIERTYPE		*pSoldier=NULL;
+	UINT8			ubThrowActionCode=0;
+	UINT32		uiThrowActionData=0;
+	INT16			sEndZ = 0;
+	BOOLEAN		fGiveItem = FALSE;
+	OBJECTTYPE TempObject;
+	INT16			sGridNo;
+	INT16			sDist;
+	INT16			sDistVisible;
 
 	if ( gfUIFullTargetFound )
 	{
@@ -4929,8 +4934,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					 if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					 {
 							// Make a temp object for ammo...
-							gpItemPointerSoldier->pTempObject	 = new OBJECTTYPE;
-							OBJECTTYPE::CopyObject( gpItemPointerSoldier->pTempObject, &TempObject);
+							OBJECTTYPE::CopyToOrCreateAt( &gpItemPointerSoldier->pTempObject, &TempObject);
 						  
 							// Remove from soldier's inv...
 							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
@@ -5028,10 +5032,9 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				{
 					case ANIM_STAND:
 
-						gpItemPointerSoldier->pTempObject = new OBJECTTYPE;
+						OBJECTTYPE::CopyToOrCreateAt( &gpItemPointerSoldier->pTempObject, gpItemPointer);
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
-							OBJECTTYPE::CopyObject( gpItemPointerSoldier->pTempObject, gpItemPointer);
 							gpItemPointerSoldier->aiData.sPendingActionData2 = usMapPos;
 
 	 						// Turn towards.....gridno	
@@ -6498,7 +6501,6 @@ void SetupPickupPage( INT8 bPage )
 		{
 			gItemPickupMenu.ItemPoolSlots[ cnt - iStart ] = pTempItemPool;
 
-			// WDS - Clean up inventory handling
 			pObject = (gfStealing)? &gpOpponent->inv[pTempItemPool->iItemIndex]
 				:&(gWorldItems[ pTempItemPool->iItemIndex ].o );
 
@@ -6676,7 +6678,6 @@ void RenderItemPickupMenu( )
 			if ( gItemPickupMenu.ItemPoolSlots[ cnt ] != NULL )
 			{
 				// Get item to render
-                                // WDS - Clean up inventory handling
 				pObject = (gfStealing)? &gpOpponent->inv[gItemPickupMenu.ItemPoolSlots[ cnt ]->iItemIndex]
 					:&(gWorldItems[ gItemPickupMenu.ItemPoolSlots[ cnt ]->iItemIndex ].o );
 				pItem = &( Item[ pObject->usItem ] );
@@ -7420,6 +7421,26 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		}
 	}
 
+/* 2007-05-27, Sergeant_Kolja: code temporarily added for tracking the 
+   6 Shuriken bug plus the 
+   SKI Tony inventory crash.
+   Remove when fixed!
+ */
+
+	//ADB how can ubGunAmmoType be >= 5001 if it's a char?
+	//what is this SKI Tony inventory crash anyways?
+# if defined( _DEBUG )
+  if ( (pObject->gun.ubGunAmmoType >= MAXITEMS) || 
+       ((usItem == 1053) && (pObject->gun.ubGunAmmoType != 0  )) /* shuriken: 1053 */
+     )
+  {
+    DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String( "corrupted pObject (%s) found in GetHelpTextForItem()", (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"corrupted pObject (%S) found in GetHelpTextForItem()"    , (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" );
+    DebugBreak();
+    AssertMsg( 0, "GetHelpTextForItem() would crash" );
+  }
+#endif
+    
 	if ( usItem != NOTHING )
 	{
 		// Retrieve the status of the items

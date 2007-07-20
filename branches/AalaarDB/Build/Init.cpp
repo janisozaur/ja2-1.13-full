@@ -67,6 +67,10 @@ extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
 
+#ifdef JA2EDITOR
+#define BUILD_AS_EDITOR_ONLY
+#endif
+
 #ifdef JA2BETAVERSION
 extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 #endif
@@ -585,6 +589,23 @@ UINT32 InitializeJA2(void)
 			gGameOptions.fAirStrikes = FALSE;
 			return( GAME_SCREEN );
 		}
+
+		#ifdef BUILD_AS_EDITOR_ONLY
+			//ADB We are building with JA2EDITOR, why force a commandline arguement???
+			//build once, rename, change the define and build again
+			//no pesky shortcuts
+			OutputDebugString( "Beginning JA2EDITOR without using a commandline argument...\n" );
+			//For editor purposes, need to know the default map file.
+			sprintf( gubFilename, "none");
+			//also set the sector
+			gWorldSectorX = 0;
+			gWorldSectorY = 0;
+			gfAutoLoadA9 = TRUE;
+			gfIntendOnEnteringEditor = TRUE;
+			gGameOptions.fGunNut = TRUE;
+			gGameOptions.fAirStrikes = FALSE;
+			return( GAME_SCREEN );
+		#endif
 	#endif
 #endif
 
@@ -712,8 +733,8 @@ void HandleLaserLockResult( BOOLEAN fSuccess )
 
 		sprintf( zString, "%S", gzLateLocalizedString[56] );
 
-    ShowCursor(TRUE);
-    ShowCursor(TRUE);
+//		ShowCursor(TRUE);
+//		ShowCursor(TRUE);
 		ShutdownWithErrorBox( zString );
 	}
 }

@@ -2284,9 +2284,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 	pSoldier->pThrowParams = (THROW_PARAMS *) MemAlloc( sizeof( THROW_PARAMS ) );
 	memset( pSoldier->pThrowParams, 0, sizeof( THROW_PARAMS ) );
 
-	pSoldier->pTempObject	 = new OBJECTTYPE;
-
-	OBJECTTYPE::CopyObject( pSoldier->pTempObject, pItem);
+	OBJECTTYPE::CopyToOrCreateAt( &pSoldier->pTempObject, pItem);
 	pSoldier->pThrowParams->dX = (float)sSrcX;
 	pSoldier->pThrowParams->dY = (float)sSrcY;
 

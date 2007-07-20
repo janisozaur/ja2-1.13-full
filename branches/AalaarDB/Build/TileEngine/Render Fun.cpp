@@ -278,7 +278,7 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-			if ( GetItemPool( (INT16)cnt, &pItemPool, 0 ) )
+			if ( GetItemPoolFromGround( (INT16)cnt, &pItemPool ) )
 			{
 				// Set visible! ( only if invisible... )
 				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )

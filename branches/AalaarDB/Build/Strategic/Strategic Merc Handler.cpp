@@ -694,7 +694,6 @@ void RPCWhineAboutNoPay( UINT8	ubID )
 // OK loop through and check!
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 {
-	INT32		cnt;
 	UINT16	usItem;
 	INT32		bBestArmour = -1;
 	INT32		bBestArmourIndex = -1;
@@ -702,7 +701,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	INT32		bBestGunIndex = -1;
 
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for ( UINT32 cnt = 0; cnt < pSoldier->inv.size(); cnt++ )
 	{
 		usItem = pSoldier->inv[ cnt ].usItem;
 

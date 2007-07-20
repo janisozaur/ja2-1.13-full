@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
+	#include "builddefines.h"
 	#include "ai.h"
 	#include "Weapons.h"
 	#include "opplist.h"
@@ -32,6 +33,11 @@
 //
 // InWaterOrGas - gas stuff
 // RoamingRange - point patrol stuff
+
+#ifdef JA2TESTVERSION
+	UINT16 gAssertCorrectItem = 0;
+	INT8 gAssertCorrectInvSlot = 0;
+#endif
 
 extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
 
@@ -507,7 +513,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			if (ptsNeeded > pSoldier->bActionPoints)
 			{
 			/*
-				sprintf(tempstr,"AI ERROR: %s has insufficient points for attack action %d at grid %d",
+				tempstr = String("AI ERROR: %s has insufficient points for attack action %d at grid %d",
 							pSoldier->name,pSoldier->aiData.bAction,pSoldier->aiData.usActionData);
 				PopMessage(tempstr);
 				*/
@@ -2100,8 +2106,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 
 
 #ifdef DEBUGDECISIONS
-		STR tempstr;
-		 sprintf( tempstr, "Morale = %d (category %d)\n",
+		std::string tempstr = String ("Morale = %d (category %d)\n",
 		pSoldier->aiData.bMorale,bMoraleCategory);
 	DebugAI (tempstr);
 #endif
@@ -2231,7 +2236,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 	// NOTE: maximum is about 200 for a healthy Mike type with a mortar!
 	if (iThreatValue > 250)
 	{
-		sprintf(tempstr,"CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
+		tempstr = String("CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
 
 #ifdef RECORDNET
 		fprintf(NetDebugFile,"\t%s\n",tempstr);
@@ -2303,7 +2308,7 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 													return(MAX_ROAMING_RANGE);
 		default:
 #ifdef BETAVERSION
-			sprintf(tempstr,"%s has invalid orders = %d",pSoldier->name,pSoldier->aiData.bOrders);
+			tempstr = String("%s has invalid orders = %d",pSoldier->name,pSoldier->aiData.bOrders);
 			PopMessage(tempstr);
 #endif
 			return(0);
@@ -2313,11 +2318,54 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent)
 {
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"RearrangePocket");
 	// NB there's no such thing as a temporary swap for now...
 	SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"RearrangePocket done");
 }
+
+void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
+{
+	if (bPermanent == false) {
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is temporarily swapped into hand, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
+	}
+	else {
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is in my hand, change is permanent, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
+	}
+
+	if (bPocketIndex != HANDPOS) {
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Moving item %d from inv slot %d to hand",
+			pSoldier->inv[bPocketIndex].usItem, bPocketIndex));
+
+#ifdef JA2TESTVERSION
+		if (bPermanent == false) {
+			gAssertCorrectItem = pSoldier->inv[bPocketIndex].usItem;
+			gAssertCorrectInvSlot = bPocketIndex;
+		}
+#endif
+
+		SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+	}
+	return;
+}
+
+void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename)
+{
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Making sure item is swapped back to its original inv slot, called at line %d in %s in %s", lineNumber, szFunctionName, szFilename));
+	if (bPocketIndex != HANDPOS) {
+		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("RearrangePocket: Moving item %d from hand back to inv slot %d",
+			pSoldier->inv[HANDPOS].usItem, bPocketIndex));
+
+#ifdef JA2TESTVERSION
+		if (gAssertCorrectInvSlot != bPocketIndex || gAssertCorrectItem != pSoldier->inv[HANDPOS].usItem) {
+			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ERROR! function call inv slot and current item at POS do not match stored inv slot and stored item" );
+		}
+#endif
+
+		SwapObjs( &(pSoldier->inv[bPocketIndex]), &(pSoldier->inv[HANDPOS]) );
+	}
+	return;
+}
+
+
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 {
@@ -2351,8 +2399,7 @@ BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 	{
 		return( FALSE );
 	}
-    DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"findbetterspotforitem: swapping items");
-	RearrangePocket(pSoldier, HANDPOS, bSlot, FOREVER );		
+	AssureItemIsInHandPos(pSoldier, bSlot, FOREVER);
 	return( TRUE );
 }
 
@@ -2531,27 +2578,25 @@ BOOLEAN ArmySeesOpponents( void )
 #ifdef DEBUGDECISIONS
 void AIPopMessage ( STR16 str )
 {
-	DebugAI(str);
+	std::string tempstr = String ("%s", str);
+	DebugAI(tempstr);
 }
 
 void AIPopMessage ( const STR8  str )
 {
-	STR tempstr;
-	sprintf( tempstr,"%s", str);
+	std::string tempstr = String ("%s", str);
 	DebugAI(tempstr);
 }
 
 void AINumMessage(const STR8  str, INT32 num)
 {
-	STR tempstr;
-	sprintf( tempstr,"%s %d", str, num);
+	std::string tempstr = String ("%s %d", str, num);
 	DebugAI(tempstr);
 }
 
 void AINameMessage(SOLDIERTYPE * pSoldier,const STR8  str,INT32 num)
 {
-	STR tempstr;
-	sprintf( tempstr,"%d %s %d",pSoldier->name , str, num);
+	std::string tempstr = String ("%d %s %d",pSoldier->name , str, num);
 	DebugAI( tempstr );
 }
 #endif

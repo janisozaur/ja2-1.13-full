@@ -1575,10 +1575,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 		pSoldier->bPendingActionData5 = bInvPos;	
 		// Copy temp object
-		OBJECTTYPE::DeleteMe(&pSoldier->pTempObject);
-		pSoldier->pTempObject = new OBJECTTYPE;
-		OBJECTTYPE::CopyObject( pSoldier->pTempObject, pObject );
-
+		OBJECTTYPE::CopyToOrCreateAt(&pSoldier->pTempObject, pObject);
 
 		pSoldier->aiData.sPendingActionData2  = pTargetSoldier->sGridNo;
 		pSoldier->aiData.bPendingActionData3  = ubDirection;
@@ -1614,14 +1611,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
-	OBJECTTYPE::DeleteMe(&pSoldier->pTempObject);
-	pSoldier->pTempObject = new OBJECTTYPE;
-	if (pSoldier->pTempObject == NULL)
-	{
-		// OUT OF MEMORY! YIKES!
-		return( FALSE );
-	}
-	OBJECTTYPE::CopyObject(pSoldier->pTempObject, pObj);
+	OBJECTTYPE::CopyToOrCreateAt(&pSoldier->pTempObject, pObj);
 	pSoldier->PickDropItemAnimation( );
 	return( TRUE );
 }
@@ -3049,18 +3039,19 @@ BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 	return( FALSE );
 }
 
-BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
+BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos, INT8 bStartLevel, INT8 bEndLevel )
 {
 	// note, only works between locations on the ground
 	ITEM_POOL		*pItemPool;
 	WORLDITEM		TempWorldItem;
 
 	// While there is an existing pool
-	while( GetItemPool( sStartPos, &pItemPool, 0 ) )
+	while( GetItemPool( sStartPos, &pItemPool, bStartLevel ) )
 	{
 		TempWorldItem = gWorldItems[ pItemPool->iItemIndex ];
-		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
-		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, bStartLevel );
+		//AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, bEndLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
 	return( TRUE );
 }
@@ -3077,9 +3068,13 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 	{
 		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
 	}
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
-
-	(*ppItemPool) = NULL;
+	//ADB: let's not make 51200 calls to FileWrite ok?
+#ifdef JA2BETAVERSION
+	if ( pObject )
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+	}
+#endif
 
 	// LOOP THORUGH OBJECT LAYER
 	while( pObject != NULL )
@@ -3098,10 +3093,44 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 		pObject = pObject->pNext;
 	}
 
+	(*ppItemPool) = NULL;
+
 	return( FALSE );	
 }
 
+BOOLEAN	GetItemPoolFromGround( UINT16 usMapPos, ITEM_POOL **ppItemPool )
+{
+	//if we know the level, we can avoid an if, and this function is called alot
+	LEVELNODE *pObject = gpWorldLevelData[ usMapPos ].pStructHead;
+	//ADB: let's not make 51200 calls to FileWrite ok?
+#ifdef JA2BETAVERSION
+	if ( pObject )
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+	}
+#endif
 
+	// LOOP THORUGH OBJECT LAYER
+	while( pObject != NULL )
+	{
+		if ( pObject->uiFlags & LEVELNODE_ITEM )
+		{
+			(*ppItemPool) = pObject->pItemPool;
+
+			//DEF added the check because pObject->pItemPool was NULL which was causing problems
+			if( *ppItemPool )
+				return( TRUE );
+			else
+				return( FALSE );
+		}
+
+		pObject = pObject->pNext;
+	}
+
+	(*ppItemPool) = NULL;
+
+	return( FALSE );	
+}
 
 void NotifySoldiersToLookforItems( )
 {
@@ -3904,7 +3933,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE *pTSoldier;
 	INT8				bInvPos;
-	OBJECTTYPE	TempObject;
 	UINT8				ubProfile;
 
 	INT16				sGridNo;
@@ -3916,7 +3944,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
-	OBJECTTYPE::CopyObject(&TempObject, pSoldier->pTempObject);
+	OBJECTTYPE	TempObject (*pSoldier->pTempObject);
 	OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 	bInvPos = pSoldier->bPendingActionData5;
@@ -4491,11 +4519,8 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32						iCheckResult;
-		OBJECTTYPE 			Object;
-
-
 		// get the item 
-		Object = gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o;
+		OBJECTTYPE 			Object ( gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o );
 
 		// Snap: make it easier to disarm our own traps.
 		// If we succede - we get exp, but if we fail - we pay fair and square!
@@ -4634,8 +4659,6 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32						iCheckResult;
-		OBJECTTYPE 			Object;
-
 		iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 0 );
 
 		if (iCheckResult >= 0)
@@ -4648,7 +4671,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 
 			// get the item 
-			Object = *gpItemPointer;
+			OBJECTTYPE		Object ( *gpItemPointer );
 
 			if (gfDisarmingBuriedBomb)
 			{	
@@ -5351,11 +5374,10 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 
 	//Create a temporary item pool, with index in Opponent's inventory as index
 	pItemPool=NULL;
-	for(i=0 ; i<NUM_INV_SLOTS; i++)
+	for(i=0 ; i<pOpponent->inv.size(); i++)
 	{
 		fStealItem = FALSE;
 
-                // WDS - Clean up inventory handling
 		pObject=&pOpponent->inv[i];
 		if (pObject->usItem!=0)
 		{

@@ -155,7 +155,7 @@ SPECIAL_ITEM_INFO& SPECIAL_ITEM_INFO::operator=(OLD_SPECIAL_ITEM_INFO_101& src)
 	this->ubImprintID = src.ubImprintID;
 
 	//it's unlikely max will get less over the versions, but still, check the min
-	for (int x = 0; x < __min(MAX_ATTACHMENTS, MAX_ATTACHMENTS_101); ++x)
+	for (int x = 0; x < __min(MAX_ATTACHMENTS, OLD_MAX_ATTACHMENTS_101); ++x)
 	{
 		this->usAttachment[x] = src.usAttachment[x];
 		this->bAttachmentStatus[x] = src.bAttachmentStatus[x];
@@ -1957,6 +1957,14 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 {
 	INT8	bArmsDealer;
+	//Get Dealer ID from from merc Id
+	bArmsDealer = GetArmsDealerIDFromMercID( ubMercID );
+	if( bArmsDealer == -1 )
+	{
+		// not a dealer, that's ok, we get called for every dude that croaks.
+		return( FALSE );
+	}
+
 	SOLDIERTYPE	*pSoldier;
 	UINT16	usItemIndex;	
 	UINT8 ubElement;
@@ -1966,16 +1974,6 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 	OBJECTTYPE TempObject;
-
-
-	//Get Dealer ID from from merc Id
-	bArmsDealer = GetArmsDealerIDFromMercID( ubMercID );
-	if( bArmsDealer == -1 )
-	{
-		// not a dealer, that's ok, we get called for every dude that croaks.
-		return( FALSE );
-	}
-
 
 	// mark the dealer as being out of business!
 	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = TRUE;

@@ -1076,9 +1076,22 @@ BOOLEAN WORLDITEM::Save(HWFILE hFile)
 
 BOOLEAN WORLDITEM::Load(INT8** hBuffer)
 {
-	OLD_WORLDITEM_101 oldWorldItem;
-	LOADDATA( &oldWorldItem, *hBuffer, sizeof( OLD_WORLDITEM_101 ) );
-	*this = oldWorldItem;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//load the POD
+		LOADDATA( this, *hBuffer, sizeof( SIZEOF_WORLDITEM_POD ) );
+
+		//now load the OO OBJECTTYPE
+		this->o.Load(hBuffer);
+	}
+	//if we need to load an older save
+	else {
+		//load the old data into a suitable structure, it's just POD
+		OLD_WORLDITEM_101 oldWorldItem;
+		LOADDATA( &oldWorldItem, *hBuffer, sizeof( OLD_WORLDITEM_101 ) );
+		*this = oldWorldItem;
+	}
 	return TRUE;
 }
 
@@ -1159,6 +1172,45 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 			{
 				return(FALSE);
 			}
+		}
+		/*
+		else if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+			(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
+		*/
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject101;
+			//OldSavedObject999 = OldSavedObject101;
+		}
+		//change this when changing the file version again
+		/*
+		if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject999;
+		}
+		*/
+	}
+	return TRUE;
+}
+
+BOOLEAN OBJECTTYPE::Load( INT8** hBuffer )
+{
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		LOADDATA(this, *hBuffer, SIZEOF_OBJECTTYPE_POD );
+		LOADDATA(&(this->gun), *hBuffer, SIZEOF_OBJECTTYPE_UNION );
+	}
+	else
+	{
+		OLD_OBJECTTYPE_101 OldSavedObject101;
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			LOADDATA( &OldSavedObject101, *hBuffer, sizeof(OLD_OBJECTTYPE_101) );
 		}
 		/*
 		else if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
@@ -2558,7 +2610,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( FINANCES_DATA_FILE, hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame FINANCES_DATA_FILE failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2581,7 +2633,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( HISTORY_DATA_FILE, hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame HISTORY_DATA_FILE failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2604,7 +2656,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( FILES_DAT_FILE, hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadFilesFromSavedGame FILES_DAT_FILE failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2624,7 +2676,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load the data for the emails
 	if( !LoadEmailFromSavedGame( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadEmailFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2645,7 +2697,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the strategic Information
 	if( !LoadStrategicInfoFromSavedFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicInfoFromSavedFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2665,7 +2717,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the underground information
 	if( !LoadUnderGroundSectorInfoFromSavedGame( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadUnderGroundSectorInfoFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2684,7 +2736,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load all the squad info from the saved game file 
 	if( !LoadSquadInfoFromSavedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSquadInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2703,7 +2755,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the group linked list
 	if( !LoadStrategicMovementGroupsFromSavedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicMovementGroupsFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2721,7 +2773,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load all the map temp files from the saved game file into the maps\temp directory
 	if( !LoadMapTempFilesFromSavedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMapTempFilesFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2741,7 +2793,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadQuestInfoFromSavedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadQuestInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2759,7 +2811,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		
 	if( !LoadOppListInfoFromSavedGame( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadOppListInfoFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2780,7 +2832,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadMapScreenMessagesFromSaveGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMapScreenMessagesFromSaveGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2800,7 +2852,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadNPCInfoFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2820,7 +2872,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadKeyTableFromSaveedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadKeyTableFromSaveedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2839,7 +2891,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadTempNpcQuoteArrayToSaveGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTempNpcQuoteArrayToSaveGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2859,7 +2911,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadPreRandomNumbersFromSaveGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadPreRandomNumbersFromSaveGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2880,7 +2932,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadSmokeEffectsFromLoadGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSmokeEffectsFromLoadGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2900,7 +2952,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadArmsDealerInventoryFromSavedGameFile( hFile, ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 54 ), ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 55 ) ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadArmsDealerInventoryFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2918,7 +2970,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadGeneralInfo( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadGeneralInfo failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2936,7 +2988,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadMineStatusFromSavedGameFile( hFile ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMineStatusFromSavedGameFile failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2960,7 +3012,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicTownLoyaltyFromSavedGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicTownLoyaltyFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2985,7 +3037,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadVehicleInformationFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadVehicleInformationFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3008,7 +3060,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadBulletStructureFromSavedGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadBulletStructureFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3033,7 +3085,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadPhysicsTableFromSavedGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadPhysicsTableFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3057,7 +3109,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadAirRaidInfoFromSaveGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadAirRaidInfoFromSaveGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3080,7 +3132,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadTeamTurnsFromTheSavedGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTeamTurnsFromTheSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3104,7 +3156,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadExplosionTableFromSavedGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadExplosionTableFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3129,7 +3181,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadCreatureDirectives( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCreatureDirectives failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3154,7 +3206,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicStatusFromSaveGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicStatusFromSaveGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3177,7 +3229,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicAI( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicAI failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3200,7 +3252,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadLightEffectsFromLoadGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLightEffectsFromLoadGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -3223,7 +3275,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !LoadWatchedLocsFromSavedGame( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadWatchedLocsFromSavedGame failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -3246,7 +3298,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !LoadItemCursorFromSavedGame( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadItemCursorFromSavedGame failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -3269,7 +3321,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadCivQuotesFromLoadGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCivQuotesFromLoadGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return FALSE;
@@ -3293,7 +3345,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadBackupNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadBackupNPCInfoFromSavedGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -3316,7 +3368,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadMeanwhileDefsFromSaveGameFile( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadMeanwhileDefsFromSaveGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -3346,7 +3398,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		DestroyAllSchedulesWithoutDestroyingEvents();
 		if ( !LoadSchedulesFromSave( hFile ) )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSchedulesFromSave failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -3371,7 +3423,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	  {
 		  if ( !LoadVehicleMovementInfoFromSavedGameFile( hFile ) )
 		  {
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadVehicleMovementInfoFromSavedGameFile failed" ) );
 			  FileClose( hFile );
 			  guiSaveGameVersion=0;
 			  return( FALSE );
@@ -3384,7 +3436,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
     {
 		  if ( !NewLoadVehicleMovementInfoFromSavedGameFile( hFile ) )
 		  {
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("NewLoadVehicleMovementInfoFromSavedGameFile failed" ) );
 			  FileClose( hFile );
 			  guiSaveGameVersion=0;
 			  return( FALSE );
@@ -3613,6 +3665,9 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 from load" ) );
+#ifdef DEBUG_ATTACKBUSY
+		OutputDebugString( "Resetting attack busy due to load game.\n");
+#endif
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 	
@@ -3737,6 +3792,9 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		// fix lingering attack busy count problem on loading saved game by resetting a.b.c
 		// if we're not in combat.
 		gTacticalStatus.ubAttackBusyCount = 0;
+#ifdef DEBUG_ATTACKBUSY
+		OutputDebugString( "Resetting attack busy due to load game.\n");
+#endif
 	}
 
 	// fix squads
@@ -3746,7 +3804,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//we must reset the values
 	HandlePlayerTogglingLightEffects( FALSE );
 
-
+	//now change the savegame format so that temp files are saved and loaded correctly
+	guiSaveGameVersion = CURRENT_SAVEGAME_DATATYPE_VERSION;
 	return( TRUE );
 }
 
@@ -3899,12 +3958,12 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 {
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
-	// WDS - Clean up inventory handling
 	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
+	SOLDIERTYPE SavedSoldierInfo;
 
 	//if we are loading from a previous save, use the right loading function
 	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
@@ -3947,7 +4006,6 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 		// else if there is a soldier 
 		else
 		{
-			SOLDIERTYPE SavedSoldierInfo;
 			//Read in the saved soldier info into a Temp structure
 			if ( !SavedSoldierInfo.Load(hFile) )
 			{

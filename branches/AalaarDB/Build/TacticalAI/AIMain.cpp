@@ -51,6 +51,7 @@
 #include "Quests.h"
 #include "Campaign Types.h"
 #include "Queen Command.h"
+#include "DecideAction.h"
 #endif
 
 extern void PauseAITemporarily( void );
@@ -106,7 +107,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 void DebugAI( STR szOutput )
 {
-//#ifdef DEBUGDECISIONS
+#ifdef DEBUGDECISIONS
 	// Send regular debug msg AND AI debug message
 	FILE *		DebugFile;
 
@@ -117,7 +118,23 @@ void DebugAI( STR szOutput )
 		fputs( "\n", DebugFile );
 		fclose( DebugFile );
 	}
-//#endif
+#endif
+}
+
+void DebugAI( std::string& szOutput )
+{
+#ifdef DEBUGDECISIONS
+	// Send regular debug msg AND AI debug message
+	FILE *		DebugFile;
+
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, (STR8)szOutput.c_str() );	
+	if ((DebugFile = fopen( "aidebug.txt", "a+t" )) != NULL)
+	{
+		fputs( szOutput.c_str(), DebugFile );
+		fputs( "\n", DebugFile );
+		fclose( DebugFile );
+	}
+#endif
 }
 
 
@@ -1305,8 +1322,7 @@ void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
 #ifdef DEBUGDECISIONS
 	if (SkipCoverCheck)
 	{
-		STR tempstr;
-		sprintf( tempstr, "CancelAIAction: SkipCoverCheck turned OFF\n",0 );
+		std::string tempstr = String ("CancelAIAction: SkipCoverCheck turned OFF\n");
 		DebugAI (tempstr);
 	}
 #endif
@@ -1771,8 +1787,7 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 
 
 #ifdef DEBUGDECISIONS
-	STR tempstr;
-	sprintf( tempstr, "HandleManAI - DECIDING for guynum %d(%s) at gridno %d, APs %d\n",
+	std::string tempstr = String ("HandleManAI - DECIDING for guynum %d(%s) at gridno %d, APs %d\n",
 		pSoldier->ubID,pSoldier->name,pSoldier->sGridNo,pSoldier->bActionPoints );
 	DebugAI ( tempstr );
 #endif
@@ -2019,6 +2034,7 @@ void AIDecideRadioAnimation( SOLDIERTYPE *pSoldier )
 
 INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
+	std::string tempstr;
 	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
 
@@ -2073,8 +2089,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-		STR tempstr;
-		sprintf( tempstr, "ExecuteAction: SkipCoverCheck ON\n" );
+		tempstr = String ("ExecuteAction: SkipCoverCheck ON\n" );
 		DebugAI (tempstr);
 #endif
 
@@ -2086,7 +2101,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		if (!StartTurn(pSoldier,pSoldier->aiData.usActionData,FASTTURN))
 		{
 		#ifdef BETAVERSION
-		sprintf(tempstr,"ERROR: %s tried TURN to direction %d, StartTurn failed, action %d CANCELED",
+		tempstr = String("ERROR: %s tried TURN to direction %d, StartTurn failed, action %d CANCELED",
 		pSoldier->name,pSoldier->aiData.usActionData,pSoldier->aiData.bAction);
 		PopMessage(tempstr);
 		#endif
@@ -2302,7 +2317,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		{
 #ifdef BETAVERSION
 			// this should NEVER happen, indicates AI picked an illegal spot!
-			sprintf(tempstr,"ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
+			tempstr = String("ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
 				pSoldier->name,pSoldier->aiData.usActionData,pSoldier->aiData.bAction);
 
 #ifdef RECORDNET
@@ -2311,7 +2326,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 			PopMessage(tempstr);
 
-			sprintf(tempstr,"BLACK-LISTING gridno %d for %s",pSoldier->aiData.usActionData,pSoldier->name);
+			tempstr = String("BLACK-LISTING gridno %d for %s",pSoldier->aiData.usActionData,pSoldier->name);
 			PopMessage(tempstr);
 
 			SaveGame(ERROR_SAVE);
@@ -2377,7 +2392,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #ifdef TESTVERSION
 		if (pSoldier->aiData.bAction == AI_ACTION_KNIFE_MOVE)
 		{
-			sprintf(tempstr,"TEST MSG: %s is about to go stab %s. MAKE SURE HE DOES!",
+			tempstr = String("TEST MSG: %s is about to go stab %s. MAKE SURE HE DOES!",
 				pSoldier->name,
 				ExtMen[WhoIsThere(pSoldier->aiData.usActionData)].name);
 
@@ -2487,7 +2502,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 		SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-		sprintf( tempstr, "ExecuteAction: SkipCoverCheck ON\n" );
+		tempstr = String("ExecuteAction: SkipCoverCheck ON\n" );
 		DebugAI (tempstr);
 #endif
 		SendChangeSoldierStanceEvent( pSoldier, (UINT8) pSoldier->aiData.usActionData );
@@ -2809,9 +2824,8 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 				if ((pFriend->aiData.bAlertStatus >= STATUS_RED) || pFriend->aiData.bUnderFire || (pFriend->stats.bLife < OKLIFE))
 				{
 #ifdef DEBUGDECISIONS
-					STR16 tempstr;
-					sprintf(tempstr,"%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
-					AIPopMessage(tempstr);
+					std::string tempstr = String ("%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
+					DebugAI(tempstr);
 #endif
 
 					pSoldier->aiData.bAlertStatus = STATUS_RED;
@@ -2827,7 +2841,7 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 						(pSoldier->aiData.bAlertStatus < STATUS_YELLOW))
 					{
 #ifdef TESTVERSION
-						sprintf(tempstr,"TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
+						tempstr = String("TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
 						PopMessage(tempstr);
 #endif
 						pSoldier->aiData.bAlertStatus = STATUS_YELLOW;    // also get suspicious

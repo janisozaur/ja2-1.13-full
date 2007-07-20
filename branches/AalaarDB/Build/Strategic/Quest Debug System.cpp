@@ -1269,6 +1269,7 @@ void		GetUserInput()
 
 
 	GetCursorPos(&MousePos);
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -3148,7 +3149,7 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 				DrawTextToScreen( gMercProfiles[ gNpcListBox.sCurSelectedItem ].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
-				for( i=0; i<NUM_INV_SLOTS; i++)
+				for( i=0; i<pSoldier->inv.size(); i++)
 				{
 //					if ( !LoadItemInfo( pSoldier->inv[ i ].usItem, zItemName, zItemDesc ) )
 //						Assert(0);
@@ -3669,7 +3670,7 @@ void RefreshAllNPCInventory()
 			if( Menptr[ usCnt ].ubProfile >= FIRST_RPC && Menptr[ usCnt ].ubProfile < GASTON )
 			{
 				//refresh the mercs inventory
-				for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
+				for ( usItemCnt = 0; usItemCnt< Menptr[ usCnt ].inv.size(); usItemCnt++ )
 				{
 					//null out the items in the npc inventory
 					Menptr[ usCnt ].inv[ usItemCnt ].initialize();

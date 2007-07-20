@@ -31,6 +31,7 @@
 #endif
 
 #include "PathAIDebug.h"
+#define DEBUGCOVER
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];
@@ -269,7 +270,7 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 
 
 INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
-											UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32 *iTotalScale)
+					UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32 *iTotalScale)
 {
 	DebugMsg(TOPIC_JA2AI,DBG_LEVEL_3,String("CalcCoverValue"));
 
@@ -327,7 +328,9 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 		// optimistically assume we'll be behind the best cover available at this spot
 
 		//bHisActualCTGT = ChanceToGetThrough(pHim,sMyGridNo,FAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS); // assume a gunshot		
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: start bHisActualCTGT = CalcWorstCTGTForPosition"));
 		bHisActualCTGT = CalcWorstCTGTForPosition( pHim, pMe->ubID, sMyGridNo, pMe->pathing.bLevel, iMyAPsLeft );
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: end bHisActualCTGT = CalcWorstCTGTForPosition"));
 	}
 
 	// normally, that will be the cover I'll use, unless worst case over-rides it
@@ -346,7 +349,9 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 		}
 
 		// calculate where my cover is worst if opponent moves just 1 tile over
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: start bHisBestCTGT = CalcBestCTGT"));
 		bHisBestCTGT = CalcBestCTGT(pHim, pMe->ubID, sMyGridNo, pMe->pathing.bLevel, iMyAPsLeft);
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: end bHisBestCTGT = CalcBestCTGT"));
 
 		// if he can actually improve his CTGT by moving to a nearby gridno
 		if (bHisBestCTGT > bHisActualCTGT)
@@ -377,7 +382,9 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 
 		// let's not assume anything about the stance the enemy might take, so take an average
 		// value... no cover give a higher value than partial cover
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: start bMyCTGT = CalcAverageCTGTForPosition"));
 		bMyCTGT = CalcAverageCTGTForPosition( pMe, pHim->ubID, sHisGridNo, pHim->pathing.bLevel, iMyAPsLeft );
+		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("LOS: end bMyCTGT = CalcAverageCTGTForPosition, %d %s", bMyCTGT, pHim->name));
 
 		// since NPCs are too dumb to shoot "blind", ie. at opponents that they
 		// themselves can't see (mercs can, using another as a spotter!), if the
@@ -526,6 +533,12 @@ UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 	}
 
 	return( ubCount );
+}
+
+INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier)
+{
+	INT32 dummy;
+	return FindBestNearbyCover(pSoldier, pSoldier->aiData.bAIMorale, &dummy);
 }
 
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentBetter)
@@ -828,8 +841,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iBestCoverValue = iCurrentCoverValue;
 
 #ifdef DEBUGDECISIONS
-	STR tempstr="";
-	sprintf( tempstr, "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
+	std::string tempstr = String("FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue );
 	DebugAI( tempstr );
 #endif
 
@@ -1033,8 +1045,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				*/
 
 #ifdef DEBUGDECISIONS
-				STR tempstr;
-				sprintf( tempstr,"FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
+				std::string tempstr = String("FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue );
 				DebugAI( tempstr );
 #endif
 				// remember it instead
@@ -1085,8 +1096,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
 #ifdef DEBUGDECISIONS
-			STR tempstr;
-			sprintf( tempstr,"Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter  );
+			std::string tempstr = String("Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter  );
 			DebugAI( tempstr );
 #endif
 
@@ -1629,8 +1639,6 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 
 	return(sClosestSpot);
 }
-
-#define MINIMUM_REQUIRED_STATUS 70
 
 INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 {

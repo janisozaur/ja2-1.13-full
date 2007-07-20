@@ -838,7 +838,7 @@ void RenderSelectedItemBlownUp()
 
 	//Count the number of items in the current pool, and display that.
 	i = 0;
-	GetItemPool( gsItemGridNo, &pItemPool, 0 );
+	GetItemPoolFromGround( gsItemGridNo, &pItemPool );
 	Assert( pItemPool );
 	while( pItemPool )
 	{

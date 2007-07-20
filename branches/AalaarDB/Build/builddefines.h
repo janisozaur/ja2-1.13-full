@@ -3,17 +3,21 @@
 
 #include "Language Defines.h"
 
+#pragma warning (disable : 4005)
+
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
 #define	JA2BETAVERSION
 
 // Normal test version
 #define JA2TESTVERSION
 
-#define JA2EDITOR
+//#define JA2EDITOR
 
 #define SGP_DEBUG
 
 #define DEBUG_ATTACKBUSY
+
+#define DEBUGDECISIONS
 
 //#define LUACONSOLE
 
@@ -52,5 +56,7 @@
 // but for now, just tell the compiler to shut up so I can see the real errors.
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
+
+#pragma warning (default : 4005)
 
 #endif

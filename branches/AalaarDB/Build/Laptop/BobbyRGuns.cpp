@@ -3301,7 +3301,7 @@ UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID( INT16 sItemID )
 		if( Menptr[ ubMercCount ].bActive )
 		{
 			//loop through all the pockets on the merc
-			for( ubPocketCount=0; ubPocketCount<NUM_INV_SLOTS; ubPocketCount++)
+			for( ubPocketCount=0; ubPocketCount<Menptr[ ubMercCount ].inv.size(); ubPocketCount++)
 			{
 				//if there is a weapon here
 				if( Item[ Menptr[ ubMercCount ].inv[ ubPocketCount ].usItem ].usItemClass == IC_GUN )

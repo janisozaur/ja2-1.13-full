@@ -1064,10 +1064,6 @@ ATM:
 		PlayersOfferArea[x].initialize();
 	}
 
-	//memset( ArmsDealerOfferArea, 0, sizeof( INVENTORY_IN_SLOT ) * SKI_NUM_TRADING_INV_SLOTS );
-	//memset( PlayersOfferArea, 0, sizeof( INVENTORY_IN_SLOT ) * SKI_NUM_TRADING_INV_SLOTS );
-
-
 	if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
 		HandlePossibleRepairDelays();
@@ -1555,6 +1551,7 @@ void		GetShopKeeperInterfaceUserInput()
 	POINT MousePos;
 
 	GetCursorPos(&MousePos);
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -4222,7 +4219,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 
 		case PLAYERS_INVENTORY:
 			// better be a valid merc pocket index, or -1
-			Assert( ( bSlotNum >= -1 ) && ( bSlotNum < NUM_INV_SLOTS ) );
+			Assert( ( bSlotNum >= -1 ) && ( bSlotNum < (INT8)gpSMCurrentMerc->inv.size() ) );
 
 			// if we're supposed to store the original pocket #, but that pocket still holds more of these
 			if ( ( bSlotNum != -1 ) && ( gpSMCurrentMerc->inv[ bSlotNum ].ubNumberOfObjects > 0 ) )
@@ -5866,7 +5863,7 @@ INT8	GetInvSlotOfUnfullMoneyInMercInventory( SOLDIERTYPE *pSoldier )
 	UINT8	ubCnt;
 
 	//loop through the soldier's inventory
-	for( ubCnt=0; ubCnt < NUM_INV_SLOTS; ubCnt++)
+	for( ubCnt=0; ubCnt < pSoldier->inv.size(); ubCnt++)
 	{
 		// Look for MONEY only, not Gold or Silver!!!  And look for a slot not already full
 		if( ( pSoldier->inv[ ubCnt ].usItem == MONEY ) && ( pSoldier->inv[ ubCnt ].money.uiMoneyAmount < MoneySlotLimit( ubCnt ) ) )
@@ -6897,12 +6894,11 @@ BOOLEAN AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, INT8
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
 BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject, BOOLEAN fNewItem )
 {
-	OBJECTTYPE CopyOfObject;
 	UINT8 ubObjectsLeftToPlace;
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
-	CopyOfObject = *pObject;
+	OBJECTTYPE CopyOfObject ( *pObject );
 
 
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
@@ -6933,12 +6929,11 @@ BOOLEAN ShopkeeperAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObject,
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
 void ShopkeeperAddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel )
 {
-	OBJECTTYPE CopyOfObject;
 	UINT8 ubObjectsLeftToPlace;
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
-	CopyOfObject = *pObject;
+	OBJECTTYPE CopyOfObject ( *pObject );
 
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
 
@@ -6964,15 +6959,16 @@ void IfMercOwnedCopyItemToMercInv( INVENTORY_IN_SLOT *pInv )
 	//if the item picked up was in a previous location, and that location is on a merc's inventory
 	if ( ( pInv->bSlotIdInOtherLocation != -1 ) && ( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE ) )
 	{
-		// then it better be a valid slot #
-		Assert( pInv->bSlotIdInOtherLocation < NUM_INV_SLOTS );
-		// and it better have a valid merc who owned it
-		Assert( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE );
-
 		// get soldier
 		sSoldierID = GetSoldierIDFromMercID( pInv->ubIdOfMercWhoOwnsTheItem );
 		Assert( sSoldierID != -1 );
 		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
+
+		// then it better be a valid slot #
+		Assert( pInv->bSlotIdInOtherLocation < (INT8)Menptr[ sSoldierID ].inv.size() );
+		// and it better have a valid merc who owned it
+		Assert( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE );
+
 
 		//Copy the object back into that merc's original inventory slot
 		CopyObj( &( pInv->ItemObject ), &( Menptr[ sSoldierID ].inv[ pInv->bSlotIdInOtherLocation ] ) );
@@ -6988,24 +6984,21 @@ void IfMercOwnedRemoveItemFromMercInv( INVENTORY_IN_SLOT *pInv )
 
 void IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, INT8 bOwnerSlotId )
 {
-	INT16 sSoldierID;
-	BOOLEAN fSuccess;
-	OBJECTTYPE ObjectToRemove;
-
 	//if this item was in a previous location, and that location is on a merc's inventory
 	if ( ( bOwnerSlotId != -1 ) && ( ubOwnerProfileId != NO_PROFILE ) )
 	{
-		// then it better be a valid slot #
-		Assert( bOwnerSlotId < NUM_INV_SLOTS );
 		// and it better have a valid merc who owned it
 		Assert( ubOwnerProfileId != NO_PROFILE );
+		INT16 sSoldierID = GetSoldierIDFromMercID( ubOwnerProfileId );
+		// then it better be a valid slot #
+		Assert( bOwnerSlotId < (INT8)Menptr[ sSoldierID ].inv.size() );
 
-		sSoldierID = GetSoldierIDFromMercID( ubOwnerProfileId );
 		Assert( sSoldierID != -1 );
 		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
 
+		OBJECTTYPE ObjectToRemove;
 		//remove the object from that merc's original inventory slot
-		fSuccess = RemoveObjectFromSlot( &Menptr[ sSoldierID ], bOwnerSlotId, &ObjectToRemove );
+		BOOLEAN fSuccess = RemoveObjectFromSlot( &Menptr[ sSoldierID ], bOwnerSlotId, &ObjectToRemove );
 		Assert(fSuccess);
 	}
 }
@@ -7165,7 +7158,7 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo )
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+	MercCreateStruct.initialize();
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= ubProfile;
 	MercCreateStruct.sSectorX			= sSectorX;
@@ -7334,8 +7327,6 @@ void ReturnItemToPlayerSomehow( INVENTORY_IN_SLOT *pInvSlot, SOLDIERTYPE *pDropS
 void GivePlayerSomeChange( UINT32 uiAmount )
 {
 	INVENTORY_IN_SLOT	MoneyInvSlot;
-
-	memset( &MoneyInvSlot, 0, sizeof ( MoneyInvSlot ) );
 
 	CreateMoney( uiAmount, &MoneyInvSlot.ItemObject );
 	MoneyInvSlot.sItemIndex = MoneyInvSlot.ItemObject.usItem;

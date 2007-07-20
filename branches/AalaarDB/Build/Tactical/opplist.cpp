@@ -4966,7 +4966,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 
 
 #ifdef BETAVERSION
-	sprintf(tempstr,"OurNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
+	tempstr = String("OurNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
 		 	NoiseTypeStr[ubNoiseType],ubNoiseMaker,ubNoiseMode,sGridNo,ubVolume);
 #ifdef RECORDNET
 	fprintf(NetDebugFile,"\t%s\n",tempstr);
@@ -5005,7 +5005,7 @@ void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType
 
 
 #ifdef BETAVERSION
-	sprintf(tempstr,"TheirNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
+	tempstr = String("TheirNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
 		 	NoiseTypeStr[ubNoiseType],ubNoiseMaker,ubNoiseMode,sGridNo,ubVolume);
 #ifdef RECORDNET
 	fprintf(NetDebugFile,"\t%s\n",tempstr);
@@ -5037,7 +5037,7 @@ void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType
 			else
 			{
 				// the gridno is added to end of the string by KeyHitReport itself...
-				sprintf(tempstr,"TheirNoise: Waiting for NOISE_INT_DONE for guynum %d, ubNoiseType %d(%s), sGridNo ",
+				tempstr = String("TheirNoise: Waiting for NOISE_INT_DONE for guynum %d, ubNoiseType %d(%s), sGridNo ",
 					pSoldier->guynum,ubNoiseType,NoiseTypeStr[ubNoiseType]);
 				KeyHitReport(tempstr,sGridNo);
 			}
@@ -6065,7 +6065,7 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	if (pSoldier->bNewOppCnt)
 	{
 #ifdef BETAVERSION
-		sprintf(tempstr,"VerifyAndDecayOpplist: WARNING - %d(%s) still has %d NEW OPPONENTS - lastCaller %s/%s",
+		tempstr = String("VerifyAndDecayOpplist: WARNING - %d(%s) still has %d NEW OPPONENTS - lastCaller %s/%s",
 			pSoldier->guynum,ExtMen[pSoldier->guynum].name,pSoldier->newOppCnt,
 			LastCallerText[ExtMen[pSoldier->guynum].lastCaller],
 			LastCaller2Text[ExtMen[pSoldier->guynum].lastCaller2]);

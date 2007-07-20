@@ -426,7 +426,9 @@ void AddPossiblePendingMilitiaToBattle()
 		ubPredefinedInsertionCode = DoReinforcementAsPendingMilitia( gWorldSectorX, gWorldSectorY, &ubPredefinedRank );
 
 		if( ubPredefinedInsertionCode != 255 )
+		{
 			AddPossiblePendingMilitiaToBattle();
+			gfStrategicMilitiaChangesMade = FALSE; // Handled them here
+		}
 	}
-
 }

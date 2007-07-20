@@ -40,7 +40,7 @@ INT32 GetTotalNumberOfItems( void );
 void HandleFlashForHighLightedItem( void );
 
 // the list for the inventory
-extern WORLDITEM *pInventoryPoolList;
+extern std::vector<WORLDITEM> pInventoryPoolList;
 
 // autoplace down object
 BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr );

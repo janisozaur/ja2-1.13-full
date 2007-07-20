@@ -45,6 +45,7 @@
 	#include "MessageBoxScreen.h"
 	#include "screenids.h"
 	#include "SaveLoadScreen.h"
+	#include "Rotting Corpses.h"
 #endif
 
 #include "Map Edgepoints.h"
@@ -236,7 +237,6 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		{
 			if( !curr->pDetailedPlacement )
 				return FALSE;
-                        // WDS - Clean up inventory handling
 			if ( !curr->pDetailedPlacement->Save(fp) )
 			{
 				return FALSE;
@@ -283,6 +283,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	//it gets built again.
 	gMapInformation.ubNumIndividuals = 0;		//MUST BE CLEARED HERE!!!
 
+	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	for( i=0; i < ubNumIndividuals; i++ )
 	{
 		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
@@ -295,21 +296,19 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		}
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
-			SOLDIERCREATE_STRUCT tempDetailedPlacement;
 			//read static detailed placement from file
 			if ( !tempDetailedPlacement.Load(hBuffer) )
 			{
 				return FALSE;
 			}
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			//copy the file information from temp var to node in list.
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement);//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
 				return FALSE;
 			}
-			//copy the file information from temp var to node in list.
-			*pNode->pDetailedPlacement = tempDetailedPlacement;
 
 			if( tempDetailedPlacement.ubProfile != NO_PROFILE )
 			{
@@ -533,10 +532,26 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld"));
 	// First check if this guy has a profile and if so check his location such that it matches!
-	// WDS - Clean up inventory handling
 	// Get profile from placement info
-	//memset( &tempDetailedPlacement, 0, SIZEOF_SOLDIERCREATE_STRUCT );
 	tempDetailedPlacement.initialize();
+
+	if (curr->pBasicPlacement->bBodyType == TANK_NW ||
+		curr->pBasicPlacement->bBodyType == TANK_NE)
+	{
+		while (1)
+		{
+			ROTTING_CORPSE *pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
+			if (pCorpse)
+			{
+				// Assume this is a dead tank and have the replacement tank haul it away
+				RemoveCorpse( pCorpse->iID);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld: decide on placement"));
 	if( curr->pDetailedPlacement )
@@ -2049,7 +2064,7 @@ void AddProfilesUsingProfileInsertionData()
 			UINT8									ubID;
 
 			//Set up the create struct so that we can properly create the profile soldier.
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+			MercCreateStruct.initialize();
 			MercCreateStruct.bTeam						= CIV_TEAM;
 			MercCreateStruct.ubProfile				= (UINT8)i;
 			MercCreateStruct.sSectorX					= gWorldSectorX;

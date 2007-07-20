@@ -5067,7 +5067,7 @@ BOOLEAN PickUpATownPersonFromSector( UINT8 ubType, INT16 sX, INT16 sY )
 		return( FALSE );
 	}
 
-	if( SECTOR( sX, sY ) == SECTOR( gWorldSectorX, gWorldSectorY ) )
+	if( sX == gWorldSectorX && sY == gWorldSectorY )
 	{
 		gfStrategicMilitiaChangesMade = TRUE;
 	}
@@ -5115,7 +5115,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Map Screen2");
 		return( FALSE );
 	}
 
-	if( SECTOR( sX, sY ) == SECTOR( gWorldSectorX, gWorldSectorY ) )
+	if( sX == gWorldSectorX && sY == gWorldSectorY )
 	{
 		gfStrategicMilitiaChangesMade = TRUE;
 	}
@@ -6119,6 +6119,11 @@ void MilitiaDoneButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			// reset fact we are in the box
 			sSelectedMilitiaTown = 0;
 			fMapPanelDirty = TRUE;
+			// Go ahead and reset the militia in the selected sector (even if we didn't change it here)
+			if (gfStrategicMilitiaChangesMade)
+			{
+				ResetMilitia();
+			}
 		}
 	}
 
