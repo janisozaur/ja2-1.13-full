@@ -57,36 +57,28 @@ typedef struct
 	INT8 PADDINGSLOTS[ 14 ];
 } BASIC_SOLDIERCREATE_STRUCT; //50 bytes
 
-// WDS - Clean up inventory handling
-//typedef struct
-class SOLDIERCREATE_STRUCT
+class OLD_SOLDIERCREATE_STRUCT_101
 {
 public:
 	// Constructor
-	SOLDIERCREATE_STRUCT();
+	OLD_SOLDIERCREATE_STRUCT_101();
 	// Copy Constructor
-	SOLDIERCREATE_STRUCT(const SOLDIERCREATE_STRUCT&);
+	OLD_SOLDIERCREATE_STRUCT_101(const OLD_SOLDIERCREATE_STRUCT_101&);
 	// Assignment operator
-    SOLDIERCREATE_STRUCT& operator=(const SOLDIERCREATE_STRUCT&);
+    OLD_SOLDIERCREATE_STRUCT_101& operator=(const OLD_SOLDIERCREATE_STRUCT_101&);
 	// Destructor
-	~SOLDIERCREATE_STRUCT();
+	~OLD_SOLDIERCREATE_STRUCT_101();
 
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset!
 	//  Note that the constructor does this automatically.
 	void initialize();
 
-	// Ugly temporary solution
-	//
 	// Note!  These two functions should ONLY be used either just before saving to a
 	// file (NewToOld) or after loading a file (OldToNew).
 	void CopyOldInventoryToNew();
 	void CopyNewInventoryToOld();
 
-	// Note: Place all non-POD items at the end (after endOfPOD)
-	// The format of this structure affects what is written into and read from various
-	// files (maps, save files, etc.).  If you change it then that code will not work 
-	// properly until it is all fixed and the files updated.
 public:
 	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
 	//Used by editor for validation purposes.
@@ -130,7 +122,7 @@ public:
 
 private:
 	//Inventory
-	OBJECTTYPE				DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];	
+	OLD_OBJECTTYPE_101				DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];	
 public:
 	
 	//Palette information for soldiers.
@@ -175,8 +167,121 @@ public:
 	char endOfPOD;	// marker for end of POD (plain old data)
 
 	Inventory				Inv;
+}; // OLD_SOLDIERCREATE_STRUCT_101;
+
+
+class SOLDIERCREATE_STRUCT
+{
+public:
+	// Constructor
+	SOLDIERCREATE_STRUCT();
+	// Copy Constructor
+	SOLDIERCREATE_STRUCT(const SOLDIERCREATE_STRUCT&);
+	// Assignment operator
+    SOLDIERCREATE_STRUCT& operator=(const SOLDIERCREATE_STRUCT&);
+	// Conversion operator from old to new
+    SOLDIERCREATE_STRUCT& operator=(const OLD_SOLDIERCREATE_STRUCT_101&);
+	// Conversion operator from SOLDIERTYPE to SOLDIERCREATE_STRUCT
+    SOLDIERCREATE_STRUCT& operator=(const SOLDIERTYPE&);
+	// Destructor
+	~SOLDIERCREATE_STRUCT();
+
+	UINT16 GetChecksum();
+
+	// Initialize the soldier.  
+	//  Use this instead of the old method of calling memset!
+	//  Note that the constructor does this automatically.
+	void initialize();
+
+	BOOLEAN Load(HWFILE hFile);
+	BOOLEAN Load(INT8 **hBuffer);
+	BOOLEAN Save(HWFILE hFile);
+
+public:
+	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
+	//Used by editor for validation purposes.
+	BOOLEAN						fStatic;  
+	
+	//Profile information used for special NPCs and player mercs.
+	UINT8							ubProfile;
+	BOOLEAN						fPlayerMerc;
+	BOOLEAN						fPlayerPlan;
+	BOOLEAN						fCopyProfileItemsOver;
+
+	//Location information
+	INT16							sSectorX;
+	INT16							sSectorY;
+	INT8							bDirection;
+	INT16							sInsertionGridNo;
+
+	// Can force a team, but needs flag set
+	INT8							bTeam;
+	INT8							bBodyType;
+
+	//Orders and attitude settings
+	INT8							bAttitude;
+	INT8							bOrders;
+
+	//Attributes
+	INT8							bLifeMax;	
+	INT8							bLife;
+	INT8							bAgility;
+	INT8							bDexterity;
+	INT8							bExpLevel;
+	INT8							bMarksmanship;
+	INT8							bMedical;
+	INT8							bMechanical;
+	INT8							bExplosive;
+	INT8							bLeadership;
+	INT8							bStrength;
+	INT8							bWisdom;
+	INT8							bMorale;
+	INT8							bAIMorale;
+
+public:
+	
+	//Palette information for soldiers.
+	PaletteRepID			HeadPal;	
+	PaletteRepID			PantsPal;	
+	PaletteRepID			VestPal;	
+	PaletteRepID			SkinPal;	
+	PaletteRepID			MiscPal;
+	
+	//Waypoint information for patrolling
+	INT16					sPatrolGrid[ MAXPATROLGRIDS ];
+	INT8					bPatrolCnt;
+	
+	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)
+	BOOLEAN						fVisible;
+	CHAR16						name[ 10 ];
+
+	UINT8						ubSoldierClass;	//army, administrator, elite
+
+	BOOLEAN						fOnRoof;
+
+	INT8						bSectorZ;
+
+	SOLDIERTYPE					*pExistingSoldier;
+	BOOLEAN						fUseExistingSoldier;
+	UINT8						ubCivilianGroup;
+
+	BOOLEAN						fKillSlotIfOwnerDies;
+	UINT8						ubScheduleID;
+
+	BOOLEAN						fUseGivenVehicle;				
+	INT8						bUseGivenVehicleID;				
+	BOOLEAN						fHasKeys;
+
+	//
+	// New and OO stuff goes after here.  Above this point any changes will goof up reading from files.
+	//
+	char endOfPOD;	// marker for end of POD (plain old data)
+
+	Inventory				Inv;
 }; // SOLDIERCREATE_STRUCT;
 
+#define SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD offsetof( OLD_SOLDIERCREATE_STRUCT_101, endOfPOD )
+#define SIZEOF_OLD_SOLDIERCREATE_STRUCT_101 sizeof( OLD_SOLDIERCREATE_STRUCT_101 )
 #define SIZEOF_SOLDIERCREATE_STRUCT_POD offsetof( SOLDIERCREATE_STRUCT, endOfPOD )
 #define SIZEOF_SOLDIERCREATE_STRUCT sizeof( SOLDIERCREATE_STRUCT )
 

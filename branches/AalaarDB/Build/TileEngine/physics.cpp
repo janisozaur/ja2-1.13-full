@@ -119,6 +119,74 @@ BOOLEAN DoCatchObject( REAL_OBJECT *pObject );
 BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID );
 
 
+void REAL_OBJECT::initialize()
+{
+	memset(this, 0, SIZEOF_REAL_OBJECT_POD);
+	this->Obj.initialize();
+}
+
+REAL_OBJECT& REAL_OBJECT::operator =(OLD_REAL_OBJECT_101 &src)
+{
+	this->Obj = src.oldObj;
+
+	this->fAllocated = src.fAllocated;
+	this->fAlive = src.fAlive;
+	this->fApplyFriction = src.fApplyFriction;
+	this->fColliding = src.fColliding;
+	this->fZOnRest = src.fZOnRest;
+	this->fVisible = src.fVisible;
+	this->fInWater = src.fInWater;
+	this->fTestObject = src.fTestObject;
+	this->fTestEndedWithCollision = src.fTestEndedWithCollision;
+	this->fTestPositionNotSet = src.fTestPositionNotSet;
+	
+	this->TestZTarget = src.TestZTarget;
+	this->OneOverMass = src.OneOverMass;
+	this->AppliedMu = src.AppliedMu;
+
+	this->Position = src.Position;
+	this->TestTargetPosition = src.TestTargetPosition;
+	this->OldPosition = src.OldPosition;
+	this->Velocity = src.Velocity;
+	this->OldVelocity = src.OldVelocity;
+	this->InitialForce = src.InitialForce;
+	this->Force = src.Force;
+	this->CollisionNormal = src.CollisionNormal;
+	this->CollisionVelocity = src.CollisionVelocity;
+	this->CollisionElasticity = src.CollisionElasticity;
+
+	this->sGridNo = src.sGridNo;
+	this->iID = src.iID;
+	this->pNode = src.pNode;
+	this->pShadow = src.pShadow;
+
+	this->sConsecutiveCollisions = src.sConsecutiveCollisions;
+	this->sConsecutiveZeroVelocityCollisions = src.sConsecutiveZeroVelocityCollisions;
+	this->iOldCollisionCode = src.iOldCollisionCode;
+
+	this->dLifeLength = src.dLifeLength;
+	this->dLifeSpan = src.dLifeSpan;
+	this->fFirstTimeMoved = src.fFirstTimeMoved;
+	this->sFirstGridNo = src.sFirstGridNo;
+	this->ubOwner = src.ubOwner;
+	this->ubActionCode = src.ubActionCode;
+	this->uiActionData = src.uiActionData;
+	this->fDropItem = src.fDropItem;
+	this->uiNumTilesMoved = src.uiNumTilesMoved;
+	this->fCatchGood = src.fCatchGood;
+	this->fAttemptedCatch = src.fAttemptedCatch;
+	this->fCatchAnimOn = src.fCatchAnimOn;
+	this->fCatchCheckDone = src.fCatchCheckDone;
+	this->fEndedWithCollisionPositionSet = src.fEndedWithCollisionPositionSet;
+	this->EndedWithCollisionPosition = src.EndedWithCollisionPosition;
+	this->fHaveHitGround = src.fHaveHitGround;
+	this->fPotentialForDebug = src.fPotentialForDebug;
+	this->sLevelNodeGridNo = src.sLevelNodeGridNo;
+	this->iSoundID = src.iSoundID;
+	this->ubLastTargetTakenDamage = src.ubLastTargetTakenDamage;
+	return *this;
+}
+
 /// OBJECT POOL FUNCTIONS
 INT32 GetFreeObjectSlot(void)
 {
@@ -165,10 +233,10 @@ INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, r
 
 	pObject = &( ObjectSlots[ iObjectIndex ] );
 
-	memset( pObject, 0, sizeof( REAL_OBJECT ) );
+	pObject->initialize();
 
 	// OK, GET OBJECT DATA AND COPY
-	memcpy( &(pObject->Obj), pGameObj, sizeof( OBJECTTYPE ) );
+	pObject->Obj = *pGameObj;
 
 	// Get mass
 	mass =  CALCULATE_OBJECT_MASS( Item[pGameObj->usItem ].ubWeight );
@@ -2216,9 +2284,9 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 	pSoldier->pThrowParams = (THROW_PARAMS *) MemAlloc( sizeof( THROW_PARAMS ) );
 	memset( pSoldier->pThrowParams, 0, sizeof( THROW_PARAMS ) );
 
-	pSoldier->pTempObject	 = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) );
+	pSoldier->pTempObject	 = new OBJECTTYPE;
 
-	memcpy( pSoldier->pTempObject, pItem, sizeof( OBJECTTYPE ) );
+	OBJECTTYPE::CopyObject( pSoldier->pTempObject, pItem);
 	pSoldier->pThrowParams->dX = (float)sSrcX;
 	pSoldier->pThrowParams->dY = (float)sSrcY;
 
@@ -2479,7 +2547,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 		if ( sZ != 0 || pObject->fInWater )
 #else
-		if ( sZ != 0 || pObject->fInWater || ( pObj->bStatus[0] >= USABLE && ( PreRandom( 100 ) < (UINT32) pObj->bStatus[0] + PreRandom( 50 ) ) ) )
+		if ( sZ != 0 || pObject->fInWater || ( pObj->status.bStatus[0] >= USABLE && ( PreRandom( 100 ) < (UINT32) pObj->status.bStatus[0] + PreRandom( 50 ) ) ) )
 #endif
 		{
 			fDoImpact = TRUE;
@@ -2489,7 +2557,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 			if ( 1 )		
 #else
-			if ( pObj->bStatus[0] >= USABLE && PreRandom(100) < (UINT32) pObj->bStatus[0] + PreRandom( 50 ) )
+			if ( pObj->status.bStatus[0] >= USABLE && PreRandom(100) < (UINT32) pObj->status.bStatus[0] + PreRandom( 50 ) )
 #endif
 			{
 				iTrapped = PreRandom( 4 ) + 2;
@@ -2500,8 +2568,8 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 				// Start timed bomb...
 				usFlags |= WORLD_ITEM_ARMED_BOMB;
 
-				pObj->bDetonatorType = BOMB_TIMED;
-				pObj->bDelay = (INT8)( 1 + PreRandom( 2 ) );
+				pObj->bombs.bDetonatorType = BOMB_TIMED;
+				pObj->bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
 			}
 
 			// ATE: If we have collided with roof last...
@@ -2603,8 +2671,7 @@ BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
 			if( ObjectSlots[ usCnt ].fAllocated )
 			{
 				//Save the the REAL_OBJECT structure
-				FileWrite( hFile, &ObjectSlots[usCnt], sizeof( REAL_OBJECT ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( REAL_OBJECT ) )
+				if ( !ObjectSlots[usCnt].Save(hFile) )
 				{
 					return( FALSE );
 				}
@@ -2622,7 +2689,10 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 	UINT16	usCnt=0;
 
 	//make sure the objects are not allocated
-	memset( ObjectSlots, 0, NUM_OBJECT_SLOTS * sizeof( REAL_OBJECT ) );
+	for (int x = 0; x < NUM_OBJECT_SLOTS; ++x)
+	{
+		ObjectSlots[x].initialize();
+	}
 
 	//Load the number of REAL_OBJECTs in the array
 	FileRead( hFile, &guiNumObjectSlots, sizeof( UINT32 ), &uiNumBytesRead );
@@ -2635,8 +2705,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 	for( usCnt=0; usCnt<guiNumObjectSlots; usCnt++ )
 	{
 		//Load the the REAL_OBJECT structure
-		FileRead( hFile, &ObjectSlots[usCnt], sizeof( REAL_OBJECT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( REAL_OBJECT ) )
+		if ( !ObjectSlots[usCnt].Load(hFile) )
 		{
 			return( FALSE );
 		}

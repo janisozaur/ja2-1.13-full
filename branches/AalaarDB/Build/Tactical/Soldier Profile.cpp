@@ -611,7 +611,7 @@ void MakeRemainingTerroristsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.status.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -745,7 +745,7 @@ void MakeRemainingAssassinsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.status.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{
@@ -905,9 +905,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	// Remove him from the game!
 	InternalTacticalRemoveSoldier( ubID, FALSE );
 
-	// WDS - Clean up inventory handling
 	// Create a new one!
-	MercCreateStruct.initialize();
 	MercCreateStruct.bTeam							= ubTeam;
 	MercCreateStruct.ubProfile					= pSoldier->ubProfile;
 	MercCreateStruct.bBodyType					= pSoldier->ubBodyType;

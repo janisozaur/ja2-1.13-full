@@ -496,14 +496,14 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"HandleItem: auto fire - Rolling dice");
 					roll = Random(diceSides);
 					//roll = rand();//Random(diceSides);
-					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rolled %d vs %d", roll, ((pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
+					//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rolled %d vs %d", roll, ((pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
 
 					misfirePenalty = misfirePenaltyConst + (Chance(misfirePenaltyRand)?1:0); //apply the base integral cost and the fractional cost (in the form of probablilite)
 
 					pSoldier->bDoAutofire += misfirePenalty;
 					sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 				}
-				while(EnoughPoints( pSoldier, sAPCost, 0, FALSE ) && roll < ((pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
+				while(EnoughPoints( pSoldier, sAPCost, 0, FALSE ) && roll < ((pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire)?chanceToMisfire:chanceToMisfireDry));
 				//note that we could misfire more bullets than we have rounds
 				//this represents the soldier running out of ammo and not noticing
 				//the max that can be lost this way is 1AP
@@ -511,17 +511,17 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				pSoldier->bDoAutofire -= misfirePenalty;
 				sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 
-				if((__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto) > 0 && pSoldier->bTeam == OUR_TEAM)
+				if((__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft) - startAuto) > 0 && pSoldier->bTeam == OUR_TEAM)
 				{
 					// More than 1 round
-					if (__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto > 1)
+					if (__min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft) - startAuto > 1)
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 62 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft) - startAuto );
 					}
 					// 1 round
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 63 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft) - startAuto );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 63 ], pSoldier->name, __min(pSoldier->bDoAutofire,pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft) - startAuto );
 					}
 				}
 
@@ -1420,7 +1420,7 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
 
 				pSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( pSoldier ) / 20) + (EffectiveExpLevel( pSoldier ) / 3) );
-				pSoldier->inv[ HANDPOS ].ubBombOwner = pSoldier->ubID + 2;
+				pSoldier->inv[ HANDPOS ].bombs.ubBombOwner = pSoldier->ubID + 2;
 
 				// we now know there is something nasty here			
 				gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
@@ -1464,8 +1464,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 		NotifySoldiersToLookforItems( );
 
-		MemFree( pSoldier->pTempObject );
-		pSoldier->pTempObject = NULL;
+		OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 	}
 }
 
@@ -1521,8 +1520,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 					AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
 					NotifySoldiersToLookforItems( );
 
-					MemFree( pSoldier->pTempObject );
-					pSoldier->pTempObject = NULL;
+					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 				}
 				break;
 			}
@@ -1538,8 +1536,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
 				NotifySoldiersToLookforItems( );
 
-				MemFree( pSoldier->pTempObject );
-				pSoldier->pTempObject = NULL;
+				OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 			}
 		}
 		else
@@ -1578,8 +1575,9 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 		pSoldier->bPendingActionData5 = bInvPos;	
 		// Copy temp object
-		pSoldier->pTempObject	= (OBJECTTYPE *)MemAlloc( sizeof( OBJECTTYPE ) );
-		memcpy( pSoldier->pTempObject, pObject, sizeof( OBJECTTYPE ) );
+		OBJECTTYPE::DeleteMe(&pSoldier->pTempObject);
+		pSoldier->pTempObject = new OBJECTTYPE;
+		OBJECTTYPE::CopyObject( pSoldier->pTempObject, pObject );
 
 
 		pSoldier->aiData.sPendingActionData2  = pTargetSoldier->sGridNo;
@@ -1616,13 +1614,14 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
-	pSoldier->pTempObject = (OBJECTTYPE *)MemAlloc( sizeof( OBJECTTYPE ) );
+	OBJECTTYPE::DeleteMe(&pSoldier->pTempObject);
+	pSoldier->pTempObject = new OBJECTTYPE;
 	if (pSoldier->pTempObject == NULL)
 	{
 		// OUT OF MEMORY! YIKES!
 		return( FALSE );
 	}
-	memcpy( pSoldier->pTempObject, pObj, sizeof( OBJECTTYPE ) );
+	OBJECTTYPE::CopyObject(pSoldier->pTempObject, pObj);
 	pSoldier->PickDropItemAnimation( );
 	return( TRUE );
 }
@@ -1742,7 +1741,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 					{
 						// Make copy of item
-						memcpy( &Object, &(gWorldItems[ pItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+						Object = gWorldItems[ pItemPool->iItemIndex ].o;
 
 						if ( ItemIsCool( &Object ) )
 						{
@@ -1752,7 +1751,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						if (Object.usItem == SWITCH)
 						{
 							// ask about activating the switch!
-							bTempFrequency = Object.bFrequency;
+							bTempFrequency = Object.bombs.bFrequency;
 							gpTempSoldier = pSoldier;
 							DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ] , GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 							pItemPool = pItemPool->pNext;
@@ -1765,7 +1764,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 								if ( Object.usItem != gWorldItems[ pItemPool->iItemIndex ].o.usItem || Object.ubNumberOfObjects != gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects )
 								{
 									// copy back because item changed, and we must make sure the item pool reflects this.
-									memcpy( &(gWorldItems[ pItemPool->iItemIndex ].o), &Object, sizeof( OBJECTTYPE ) );
+									gWorldItems[ pItemPool->iItemIndex ].o = Object;
 								}
 
 								pItemPoolToDelete = pItemPool;
@@ -1835,7 +1834,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 			{
 
 				// Make copy of item
-				memcpy( &Object, &(gWorldItems[ iItemIndex ].o), sizeof( OBJECTTYPE ) );
+				Object = gWorldItems[ iItemIndex ].o;
 
 				if ( ItemIsCool( &Object ) )
 				{
@@ -1845,7 +1844,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				if (Object.usItem == SWITCH)
 				{
 					// handle switch
-					bTempFrequency = Object.bFrequency;
+					bTempFrequency = Object.bombs.bFrequency;
 					gpTempSoldier = pSoldier;
 					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 				}
@@ -2273,22 +2272,22 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 			// and they are pressure-triggered unless there is a switch structure there
 			if (FindStructure( *psGridNo, STRUCTURE_SWITCH ) != NULL)
 			{
-				pObject->bDetonatorType = BOMB_SWITCH;
+				pObject->bombs.bDetonatorType = BOMB_SWITCH;
 			}
 			else
 			{
-				pObject->bDetonatorType = BOMB_PRESSURE;
+				pObject->bombs.bDetonatorType = BOMB_PRESSURE;
 			}
 		}
 		else
 		{
 			// else they are manually controlled
-			pObject->bDetonatorType = BOMB_SWITCH;
+			pObject->bombs.bDetonatorType = BOMB_SWITCH;
 		}
 	}
 	else if ( pObject->usItem == ACTION_ITEM )
 	{
-		switch( pObject->bActionValue )
+		switch( pObject->bombs.bActionValue )
 		{
 		case ACTION_ITEM_SMALL_PIT:
 		case ACTION_ITEM_LARGE_PIT:
@@ -2789,11 +2788,11 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == ACTION_ITEM )
 			{
 			pObj = &(gWorldItems[ pItemPoolTemp->iItemIndex ].o);
-			switch( pObj->bActionValue )
+			switch( pObj->bombs.bActionValue )
 			{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
-			if (pObj->bDetonatorType == 0)
+			if (pObj->bombs.bDetonatorType == 0)
 			{
 			// randomly set to active or destroy the item!
 			if (Random( 100 ) < 65)
@@ -3059,7 +3058,7 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	// While there is an existing pool
 	while( GetItemPool( sStartPos, &pItemPool, 0 ) )
 	{
-		memcpy( &TempWorldItem, &(gWorldItems[ pItemPool->iItemIndex ]), sizeof( WORLDITEM ) );
+		TempWorldItem = gWorldItems[ pItemPool->iItemIndex ];
 		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
 		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
@@ -3078,6 +3077,7 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 	{
 		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
 	}
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
 
 	(*ppItemPool) = NULL;
 
@@ -3891,8 +3891,7 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 				MercPtrs[ ubTargetMercID ]->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 			}
 
-			MemFree( pSoldier->pTempObject );
-			pSoldier->pTempObject = NULL;
+			OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 		}
 	}
@@ -3917,10 +3916,8 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
-	memcpy( &TempObject, pSoldier->pTempObject, sizeof( OBJECTTYPE ) );
-	MemFree( pSoldier->pTempObject );
-	pSoldier->pTempObject = NULL;
-
+	OBJECTTYPE::CopyObject(&TempObject, pSoldier->pTempObject);
+	OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 	bInvPos = pSoldier->bPendingActionData5;
 	usItemNum = TempObject.usItem;
@@ -4066,7 +4063,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 					// are we giving money to an NPC, to whom we owe money?
 					if (pTSoldier->ubProfile != NO_PROFILE && gMercProfiles[pTSoldier->ubProfile].iBalance < 0)
 					{
-						gMercProfiles[pTSoldier->ubProfile].iBalance += TempObject.uiMoneyAmount;
+						gMercProfiles[pTSoldier->ubProfile].iBalance += TempObject.money.uiMoneyAmount;
 						if (gMercProfiles[pTSoldier->ubProfile].iBalance >= 0)
 						{
 							// don't let the player accumulate credit (?)
@@ -4176,7 +4173,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 		{
 		// check to make sure the appropriate sector is loaded
 		}
-		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS].bFrequency );
+		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS].bombs.bFrequency );
 		*/
 
 		// PLay sound....
@@ -4274,7 +4271,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
-				gpTempSoldier->inv[HANDPOS].ubBombOwner = gpTempSoldier->ubID + 2;
+				gpTempSoldier->inv[HANDPOS].bombs.ubBombOwner = gpTempSoldier->ubID + 2;
 				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
 				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
 			}
@@ -4298,17 +4295,17 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 	if ( (Item[ pObj->usItem ].damageable ) && (!Item[pObj->usItem].mine ) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && !Item[pObj->usItem].gascan )
 	{
 		// if it's still usable, check whether it breaks
-		if ( pObj->bStatus[0] >= USABLE)
+		if ( pObj->status.bStatus[0] >= USABLE)
 		{
 			// if a dice roll is greater than the item's status
-			if ( (Random(80) + 20) >= (UINT32) (pObj->bStatus[0] + 50) )
+			if ( (Random(80) + 20) >= (UINT32) (pObj->status.bStatus[0] + 50) )
 			{
 				fItemJustBroke = TRUE;
 				fItemWorks = FALSE;
 
 				// item breaks, and becomes unusable...  so its status is reduced
 				// to somewhere between 1 and the 1 less than USABLE
-				pObj->bStatus[0] = (INT8) ( 1 + Random( USABLE - 1 ) );
+				pObj->status.bStatus[0] = (INT8) ( 1 + Random( USABLE - 1 ) );
 			}
 		}
 		else	// it's already unusable
@@ -4331,8 +4328,8 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 	{
 		// are we using two guns at once?
 		if ( Item[ pSoldier->inv[SECONDHANDPOS].usItem ].usItemClass == IC_GUN &&
-			pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE &&
-			pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0)
+			pSoldier->inv[SECONDHANDPOS].gun.bGunStatus >= USABLE &&
+			pSoldier->inv[SECONDHANDPOS].gun.ubGunShotsLeft > 0)
 		{
 			// check the second gun for breakage, and if IT breaks, return false
 			return( HandItemWorks( pSoldier, SECONDHANDPOS ) );
@@ -4498,7 +4495,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 
 
 		// get the item 
-		memcpy( &Object, &(gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+		Object = gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o;
 
 		// Snap: make it easier to disarm our own traps.
 		// If we succede - we get exp, but if we fail - we pay fair and square!
@@ -4506,9 +4503,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in 
 		// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
 		// owner - 2 gives the ID of the character who planted it
-		if ( Object.ubBombOwner > 1 && ( (INT32)Object.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+		if ( Object.bombs.ubBombOwner > 1 && ( (INT32)Object.bombs.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.bombs.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 		{
-			if ( Object.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+			if ( Object.bombs.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 			{
 				// my own boobytrap!
 				iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 40 );
@@ -4527,9 +4524,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		if (iCheckResult >= 0)
 		{
 
-			if ( Object.ubBombOwner > 1 && ( (INT32)Object.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+			if ( Object.bombs.ubBombOwner > 1 && ( (INT32)Object.bombs.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && Object.bombs.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 			{
-				if ( Object.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+				if ( Object.bombs.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 				{
 					// disarmed my own boobytrap!
 					StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (2 * gbTrapDifficulty), FALSE );
@@ -4556,7 +4553,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 					// give the player a remote trigger instead
 					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &Object );
 				}
-				else if (Object.usItem == ACTION_ITEM && Object.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (Object.usItem == ACTION_ITEM && Object.bombs.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
 					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &Object );
@@ -4564,7 +4561,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( Object.usBombItem, Object.bBombStatus, &Object );
+					CreateItem( Object.bombs.usBombItem, Object.bombs.bBombStatus, &Object );
 				}
 
 				// remove any blue flag graphic
@@ -4651,7 +4648,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 			gpBoobyTrapSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 
 			// get the item 
-			memcpy( &Object, gpItemPointer, sizeof( OBJECTTYPE ) );
+			Object = *gpItemPointer;
 
 			if (gfDisarmingBuriedBomb)
 			{	
@@ -4660,7 +4657,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 					// give the player a remote trigger instead
 					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &Object );
 				}
-				else if (Object.usItem == ACTION_ITEM && Object.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (Object.usItem == ACTION_ITEM && Object.bombs.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
 					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &Object );
@@ -4668,7 +4665,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( Object.usBombItem, Object.bBombStatus, &Object );
+					CreateItem( Object.bombs.usBombItem, Object.bombs.bBombStatus, &Object );
 				}
 			}
 			else
@@ -4822,7 +4819,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 			if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sNextGridNo)
 			{
 				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-				if ( pObj->bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
+				if ( pObj->bombs.bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
 				{
 					if ( fMining && pObj->bTrap <= 10 )
 					{
@@ -4863,7 +4860,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
 		if ( pObj->usItem == ACTION_ITEM && pObj->)
 		{
-		switch( pObj->bActionValue )
+		switch( pObj->bombs.bActionValue )
 		{
 		case ACTION_ITEM_BLOW_UP:
 		case ACTION_ITEM_LOCAL_ALARM:
@@ -5045,18 +5042,18 @@ void CheckForPickedOwnership( void )
 	{
 		if ( gWorldItems[ pItemPool->iItemIndex ].o.usItem == OWNERSHIP )
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile != NO_PROFILE )
+			if ( gWorldItems[ pItemPool->iItemIndex ].o.owner.ubOwnerProfile != NO_PROFILE )
 			{
-				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile;
+				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.owner.ubOwnerProfile;
 				pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
 				if ( pSoldier )
 				{
 					TestPotentialOwner( pSoldier );
 				}
 			}
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerCivGroup != NON_CIV_GROUP ) 
+			if ( gWorldItems[ pItemPool->iItemIndex ].o.owner.ubOwnerCivGroup != NON_CIV_GROUP ) 
 			{
-				ubCivGroup = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerCivGroup;
+				ubCivGroup = gWorldItems[ pItemPool->iItemIndex ].o.owner.ubOwnerCivGroup;
 				if ( ubCivGroup == HICKS_CIV_GROUP && CheckFact( FACT_HICKS_MARRIED_PLAYER_MERC, 0 ) )
 				{
 					// skip because hicks appeased
@@ -5243,9 +5240,6 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-        // WDS - Clean up inventory handling
-	//memset( &soldier, 0, SIZEOF_SOLDIERTYPE );
-	soldier.initialize();
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
@@ -5477,9 +5471,7 @@ void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 			cnt++;
 			if ( fPickup )
 			{
-                                // WDS - Clean up inventory handling
 				// Make copy of item
-//				memcpy( &Object, pOpponent->inv+pTempItemPool->iItemIndex, sizeof( OBJECTTYPE ) );
 				Object = pOpponent->inv[pTempItemPool->iItemIndex];
 				if ( ItemIsCool( &Object ) )
 				{

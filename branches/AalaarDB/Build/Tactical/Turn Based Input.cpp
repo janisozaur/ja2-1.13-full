@@ -120,7 +120,6 @@
 #include	"Quest Debug System.h"
 
 
-
 extern UIKEYBOARD_HOOK					gUIKeyboardHook;
 extern BOOLEAN	fRightButtonDown;
 extern BOOLEAN	fLeftButtonDown;
@@ -2580,13 +2579,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							if (( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
 								//Remove magazine 
-								if ( (gWorldItems[ uiLoop ].o.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.ubGunShotsLeft > 0) )
+								if ( (gWorldItems[ uiLoop ].o.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft > 0) )
 								{
 									OBJECTTYPE newObj; //Create object
-									CreateItem(gWorldItems[ uiLoop ].o.usGunAmmoItem, 100, &newObj);
-									newObj.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.ubGunShotsLeft;
-									gWorldItems[ uiLoop ].o.ubGunShotsLeft = 0;
-									gWorldItems[ uiLoop ].o.usGunAmmoItem = NONE;
+									CreateItem(gWorldItems[ uiLoop ].o.gun.usGunAmmoItem, 100, &newObj);
+									newObj.shots.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft;
+									gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft = 0;
+									gWorldItems[ uiLoop ].o.gun.usGunAmmoItem = NONE;
 
 									// put it on the ground
 									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &newObj, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
@@ -3054,10 +3053,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											tempStatus = pObj->bAttachStatus[bSlot3];
 											// Replace helmet attachment with face slot
 											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].status.bStatus[0];
 											// Replace face slot with helmet attachment from temp
 											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+											pTeamSoldier->inv[bSlot1].status.bStatus[0] = tempStatus;
 										}
 										else if ( bSlot2 != ITEM_NOT_FOUND )
 										{
@@ -3097,10 +3096,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											tempStatus = pObj->bAttachStatus[bSlot3];
 											// Replace helmet attachment with face slot
 											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].bStatus[0];
+											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].status.bStatus[0];
 											// Replace face slot with helmet attachment from temp
 											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].bStatus[0] = tempStatus;
+											pTeamSoldier->inv[bSlot1].status.bStatus[0] = tempStatus;
 										}
 										else if ( bSlot2 != ITEM_NOT_FOUND )
 										{
@@ -3253,7 +3252,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{	
 									pGun  = &(pTeamSoldier->inv[bLoop2]);
 									//if magazine is not full
-									if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+									if ( pGun->gun.ubGunShotsLeft < GetMagSize( pGun )  )
 									{
 
 										// Search for ammo in sector
@@ -3268,12 +3267,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 													if ( CompatibleAmmoForGun( pAmmo, pGun ) ) // can use the ammo with this gun
 													{
 														// same ammo type in gun and magazine   
-														if ( Magazine[Item[pGun->usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
+														if ( Magazine[Item[pGun->gun.usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
 														{
 															ReloadGun( pTeamSoldier, pGun, pAmmo );
 														}
 
-														if (pAmmo->ubShotsLeft[0] == 0)
+														if (pAmmo->shots.ubShotsLeft[0] == 0)
 														{														
 															RemoveItemFromPool( gWorldItems[ uiLoop ].sGridNo, uiLoop, gWorldItems[ uiLoop ].ubLevel );
 														}
@@ -3304,7 +3303,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									pGun  = &(pTeamSoldier->inv[HANDPOS]);
 
 									//magazine is not full
-									if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+									if ( pGun->gun.ubGunShotsLeft < GetMagSize( pGun )  )
 									{
 										AutoReload( pTeamSoldier );		
 									}
@@ -3318,7 +3317,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										{	
 											pGun  = &(pTeamSoldier->inv[bLoop2]);
 											//if magazine is not full
-											if ( pGun->ubGunShotsLeft < GetMagSize( pGun )  )
+											if ( pGun->gun.ubGunShotsLeft < GetMagSize( pGun )  )
 											{
 
 												// Search for ammo in soldier inventory
@@ -3331,7 +3330,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 														if ( CompatibleAmmoForGun( pAmmo, pGun ) ) // can use the ammo with this gun
 														{
 															// same ammo type in gun and magazine   
-															if ( Magazine[Item[pGun->usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
+															if ( Magazine[Item[pGun->gun.usGunAmmoItem].ubClassIndex].ubAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType )
 															{
 																ReloadGun( pTeamSoldier, pGun, pAmmo );
 
@@ -4307,7 +4306,7 @@ void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 				case QUEENMONSTER:
 
 					pSoldier->flags.uiStatusFlags |= SOLDIER_MONSTER;
-					memset( &(pSoldier->inv), 0, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+					//memset( &(pSoldier->inv), 0, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 					AssignCreatureInventory( pSoldier );
 					CreateItem( CREATURE_YOUNG_MALE_SPIT,		100, &(pSoldier->inv[HANDPOS]) );
 
@@ -4514,7 +4513,6 @@ void CreateNextCivType()
 	{	
 		INT8							iNewIndex;
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
 		MercCreateStruct.sSectorY			= gWorldSectorY;
@@ -4572,7 +4570,6 @@ void CreateCow()
 	{	
 		INT8							iNewIndex;
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
 		MercCreateStruct.sSectorY			= gWorldSectorY;
@@ -4604,7 +4601,6 @@ void CreatePlayerControlledCow()
 	{	
 		INT8							iNewIndex;
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= 12;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
 		MercCreateStruct.sSectorY			= gWorldSectorY;
@@ -4640,7 +4636,7 @@ void GrenadeTest1()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = MUSTARD_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.status.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -20, 20, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4654,7 +4650,7 @@ void GrenadeTest2()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.status.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, 0, -30, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4668,7 +4664,7 @@ void GrenadeTest3()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
+		Object.status.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -10, 10, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4683,8 +4679,6 @@ void CreatePlayerControlledMonster()
 		SOLDIERCREATE_STRUCT		MercCreateStruct;
 		INT8							iNewIndex;
 
-                // WDS - Clean up inventory handling
-		MercCreateStruct.initialize();
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
 		MercCreateStruct.sSectorY			= gWorldSectorY;

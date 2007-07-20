@@ -559,7 +559,7 @@ void AddMercToWorld( INT32 iMapIndex )
 				gpSelected->pBasicPlacement->fOnRoof = TRUE;
 				if( gpSelected->pDetailedPlacement )
 					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-				SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+				gpSelected->pSoldier->SetSoldierHeight( 58.0 );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )
@@ -594,20 +594,20 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 	else if( gsSelectedMercID != -1 && IsLocationSittable( iMapIndex, gfRoofPlacement ) )// We want to move the selected merc to this new location.
 	{							
 		RemoveAllObjectsOfTypeRange( gsSelectedMercGridNo, CONFIRMMOVE, CONFIRMMOVE );
-		EVENT_SetSoldierPosition( gpSelected->pSoldier, (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
+		gpSelected->pSoldier->EVENT_SetSoldierPosition( (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
 		if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 		{
 			gpSelected->pBasicPlacement->fOnRoof = TRUE;
 			if( gpSelected->pDetailedPlacement )
 				gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-			SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+			gpSelected->pSoldier->SetSoldierHeight(  58.0 );
 		}
 		else
 		{
 			gpSelected->pBasicPlacement->fOnRoof = FALSE;
 			if( gpSelected->pDetailedPlacement )
 				gpSelected->pDetailedPlacement->fOnRoof = FALSE;
-			SetSoldierHeight( gpSelected->pSoldier, 0.0 );
+			gpSelected->pSoldier->SetSoldierHeight(  0.0 );
 		}
 		gsSelectedMercGridNo = (INT16)iMapIndex;
 		gpSelected->pBasicPlacement->usStartingGridNo = gsSelectedMercGridNo;
@@ -645,7 +645,7 @@ void ResetAllMercPositions()
 		//{
 		//	EVENT_SetSoldierPosition( gpSelected->pSoldier, (FLOAT)(sCellX + 5), (FLOAT)(sCellY + 5) );
 		//	if( gpSelected->pBasicPlacement->fOnRoof )
-		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+		//		gpSelected->pSoldier->SetSoldierHeight(  58.0 );
 		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
 		//}
 		curr = curr->next;
@@ -1461,10 +1461,10 @@ void SetMercDirection( INT8 bDirection )
 	gpSelected->pBasicPlacement->bDirection = bDirection;
 
 	// ATE: Changed these to call functions....
-	EVENT_SetSoldierDirection( gpSelected->pSoldier, bDirection );
-	EVENT_SetSoldierDesiredDirection( gpSelected->pSoldier, bDirection );
+	gpSelected->pSoldier->EVENT_SetSoldierDirection( bDirection );
+	gpSelected->pSoldier->EVENT_SetSoldierDesiredDirection( bDirection );
 
-	ConvertAniCodeToAniFrame( gpSelected->pSoldier, 0 );
+	gpSelected->pSoldier->ConvertAniCodeToAniFrame( 0 );
 }
 
 void SetMercRelativeEquipment( INT8 bLevel )
@@ -1740,29 +1740,29 @@ void SetupTextInputForMercAttributes()
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bExpLevel, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExpLevel, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLife, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLife, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLifeMax, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLifeMax, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMarksmanship, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMarksmanship, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bStrength, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bStrength, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bAgility, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bAgility, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bDexterity, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bDexterity, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bWisdom, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bWisdom, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLeadership, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLeadership, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bExplosive, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExplosive, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMedical, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMedical, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMechanical, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMechanical, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMorale, 100 );
 	AddTextInputField( iScreenWidthOffset + 500, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
@@ -1795,32 +1795,32 @@ void ExtractAndUpdateMercAttributes()
 	//-1 values in the detailed placement work nicely, because that signifies that specific
 	//field isn't static.  Any other value becomes static, and static values override any
 	//generated values.
-	gpSelected->pDetailedPlacement->stats.bExpLevel			= (INT8)min( GetNumericStrictValueFromField( 0 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bLife					= (INT8)min( GetNumericStrictValueFromField( 1 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bLifeMax			= (INT8)min( GetNumericStrictValueFromField( 2 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bMarksmanship	= (INT8)min( GetNumericStrictValueFromField( 3 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bStrength			= (INT8)min( GetNumericStrictValueFromField( 4 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bAgility			= (INT8)min( GetNumericStrictValueFromField( 5 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bDexterity		= (INT8)min( GetNumericStrictValueFromField( 6 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bWisdom				= (INT8)min( GetNumericStrictValueFromField( 7 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bLeadership		= (INT8)min( GetNumericStrictValueFromField( 8 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bExplosive		= (INT8)min( GetNumericStrictValueFromField( 9 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bMedical			= (INT8)min( GetNumericStrictValueFromField( 10 ), 100 );
-	gpSelected->pDetailedPlacement->stats.bMechanical		= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
+	gpSelected->pDetailedPlacement->bExpLevel			= (INT8)min( GetNumericStrictValueFromField( 0 ), 100 );
+	gpSelected->pDetailedPlacement->bLife					= (INT8)min( GetNumericStrictValueFromField( 1 ), 100 );
+	gpSelected->pDetailedPlacement->bLifeMax			= (INT8)min( GetNumericStrictValueFromField( 2 ), 100 );
+	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)min( GetNumericStrictValueFromField( 3 ), 100 );
+	gpSelected->pDetailedPlacement->bStrength			= (INT8)min( GetNumericStrictValueFromField( 4 ), 100 );
+	gpSelected->pDetailedPlacement->bAgility			= (INT8)min( GetNumericStrictValueFromField( 5 ), 100 );
+	gpSelected->pDetailedPlacement->bDexterity		= (INT8)min( GetNumericStrictValueFromField( 6 ), 100 );
+	gpSelected->pDetailedPlacement->bWisdom				= (INT8)min( GetNumericStrictValueFromField( 7 ), 100 );
+	gpSelected->pDetailedPlacement->bLeadership		= (INT8)min( GetNumericStrictValueFromField( 8 ), 100 );
+	gpSelected->pDetailedPlacement->bExplosive		= (INT8)min( GetNumericStrictValueFromField( 9 ), 100 );
+	gpSelected->pDetailedPlacement->bMedical			= (INT8)min( GetNumericStrictValueFromField( 10 ), 100 );
+	gpSelected->pDetailedPlacement->bMechanical		= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
 	gpSelected->pDetailedPlacement->bMorale				= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
 
 	//make sure that experience level ranges between 1 and 9
-	if( gpSelected->pDetailedPlacement->stats.bExpLevel != -1 )
-		gpSelected->pDetailedPlacement->stats.bExpLevel = max( min( gpSelected->pDetailedPlacement->stats.bExpLevel , 9 ), 1 );
+	if( gpSelected->pDetailedPlacement->bExpLevel != -1 )
+		gpSelected->pDetailedPlacement->bExpLevel = max( min( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
 
 	//no such thing as a life max of 0
-	if( !gpSelected->pDetailedPlacement->stats.bLifeMax )
-		gpSelected->pDetailedPlacement->stats.bLifeMax = 1;
+	if( !gpSelected->pDetailedPlacement->bLifeMax )
+		gpSelected->pDetailedPlacement->bLifeMax = 1;
 
 	//make sure the life doesn't exceed the maxlife...
-	if( gpSelected->pDetailedPlacement->stats.bLifeMax != -1 && gpSelected->pDetailedPlacement->stats.bLife != -1 &&
-			gpSelected->pDetailedPlacement->stats.bLife > gpSelected->pDetailedPlacement->stats.bLifeMax )
-	  gpSelected->pDetailedPlacement->stats.bLife = gpSelected->pDetailedPlacement->stats.bLifeMax;
+	if( gpSelected->pDetailedPlacement->bLifeMax != -1 && gpSelected->pDetailedPlacement->bLife != -1 &&
+			gpSelected->pDetailedPlacement->bLife > gpSelected->pDetailedPlacement->bLifeMax )
+	  gpSelected->pDetailedPlacement->bLife = gpSelected->pDetailedPlacement->bLifeMax;
 
 	//update the soldier
 	UpdateSoldierWithStaticDetailedInformation( gpSelected->pSoldier, gpSelected->pDetailedPlacement );
@@ -1973,7 +1973,7 @@ void InitDetailedPlacementForMerc()
 	Assert( !gpSelected->pDetailedPlacement );
 
         // WDS - Clean up inventory handling
-	gpSelected->pDetailedPlacement = new (MemAlloc(SIZEOF_SOLDIERCREATE_STRUCT)) SOLDIERCREATE_STRUCT;
+	gpSelected->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
 	Assert( gpSelected->pDetailedPlacement );
 	
 	gpSelected->pBasicPlacement->fDetailedPlacement = TRUE;
@@ -2088,7 +2088,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 		gbCurrCreature = (INT8)iIndex;
 		AssignCreatureInventory( gpSelected->pSoldier );
 	}
-	CreateSoldierPalettes( gpSelected->pSoldier );
+	gpSelected->pSoldier->CreateSoldierPalettes(  );
 }
 
 void SetMercEditability( BOOLEAN fEditable )
@@ -2768,7 +2768,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 
 		//randomize the status on non-ammo items.
 		if( !(Item[ gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].usItem ].usItemClass & IC_AMMO) )
-			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].bStatus[0] = (INT8)(80 + Random( 21 ));
+			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].status.bStatus[0] = (INT8)(80 + Random( 21 ));
 
 		if( gusMercsNewItemIndex )
 		{
@@ -2975,7 +2975,7 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( gpSelected->pDetailedPlacement->Inv, gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			gpSelected->pDetailedPlacement->Inv = gpSelected->pSoldier->inv;
 		}
 		for( x = 0; x < 9; x++ )
 		{
@@ -3060,7 +3060,7 @@ void SetEnemyColorCode( UINT8 ubColorCode )
 		default:
 			return;
 	}
-	CreateSoldierPalettes( gpSelected->pSoldier );
+	gpSelected->pSoldier->CreateSoldierPalettes(  );
 }
 
 void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
@@ -3668,8 +3668,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		//Generate detailed placement information given the temp placement information.
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{
-                        // WDS - Clean up inventory handling
-			gTempDetailedPlacement = *gSaveBufferDetailedPlacement
+			gTempDetailedPlacement = gSaveBufferDetailedPlacement;
 		}
 		else
 		{
@@ -3707,7 +3706,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 				gTempBasicPlacement.fDetailedPlacement = TRUE;
 				gTempBasicPlacement.fPriorityExistance = gSaveBufferBasicPlacement.fPriorityExistance;
                                 // WDS - Clean up inventory handling
-				pNode->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;
+				pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
 				if( !pNode->pDetailedPlacement )
 				{
 					AssertMsg( 0, "Failed to allocate memory for new detailed placement in PasteMercPlacement." );
@@ -3728,7 +3727,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 				gpSelected->pBasicPlacement->fOnRoof = TRUE;
 				if( gpSelected->pDetailedPlacement )
 					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-				SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+				gpSelected->pSoldier->SetSoldierHeight(  58.0 );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )

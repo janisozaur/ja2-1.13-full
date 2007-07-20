@@ -161,8 +161,6 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
-// WDS - Clean up inventory handling
-//typedef struct	
 class MERCPROFILESTRUCT {
 public:
 	// Constructor
@@ -173,6 +171,10 @@ public:
     MERCPROFILESTRUCT& operator=(const MERCPROFILESTRUCT&);
 	// Destructor
 	~MERCPROFILESTRUCT();
+
+	BOOLEAN Load(HWFILE hFile);
+	BOOLEAN Save(HWFILE hFile);
+	UINT32	GetChecksum();
 
 	// Initialize the mercenary profile.  
 	//  Use this instead of the old method of calling memset.

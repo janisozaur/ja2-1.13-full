@@ -160,7 +160,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 	}
 	if( pNode->pDetailedPlacement )
 	{
-		MemFree( pNode->pDetailedPlacement );
+		delete( pNode->pDetailedPlacement );
 		pNode->pDetailedPlacement = NULL;
 	}
 	if( pNode->pSoldier )
@@ -237,8 +237,10 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 			if( !curr->pDetailedPlacement )
 				return FALSE;
                         // WDS - Clean up inventory handling
-			curr->pDetailedPlacement->CopyNewInventoryToOld();
-			FileWrite( fp, curr->pDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD /*SIZEOF_SOLDIERCREATE_STRUCT*/, &uiBytesWritten );
+			if ( !curr->pDetailedPlacement->Save(fp) )
+			{
+				return FALSE;
+			}
 		}
 		curr = curr->next;
 	}
@@ -252,7 +254,6 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	UINT32 i;
 	UINT8 ubNumIndividuals;
 	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;
 	BOOLEAN fCowInSector = FALSE;
 
@@ -294,20 +295,20 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		}
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
-            // WDS - Clean up inventory handling
-			tempDetailedPlacement.initialize();
+			SOLDIERCREATE_STRUCT tempDetailedPlacement;
 			//read static detailed placement from file
-			LOADDATA( &tempDetailedPlacement, *hBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD );
-			tempDetailedPlacement.CopyOldInventoryToNew();
+			if ( !tempDetailedPlacement.Load(hBuffer) )
+			{
+				return FALSE;
+			}
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
 				return FALSE;
 			}
 			//copy the file information from temp var to node in list.
-			//memcpy( pNode->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
 			*pNode->pDetailedPlacement = tempDetailedPlacement;
 
 			if( tempDetailedPlacement.ubProfile != NO_PROFILE )

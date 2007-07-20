@@ -254,6 +254,7 @@ void HourlyLarryUpdate( void )
 						if ( bBoozeSlot != NO_SLOT )
 						{
 							// give Larry booze here
+							(pSoldier->inv[bBoozeSlot]).initialize();
 							CreateItem( ALCOHOL, 100, &(pSoldier->inv[bBoozeSlot]) );
 						}
 						bSlot = bBoozeSlot;
@@ -285,6 +286,7 @@ void HourlyLarryUpdate( void )
 					if ( bBoozeSlot != NO_SLOT )
 					{
 						// give Larry booze here
+						(pSoldier->inv[bBoozeSlot]).initialize();
 						CreateItem( ALCOHOL, 100, &(pSoldier->inv[bBoozeSlot]) );
 					}
 					bSlot = bBoozeSlot;

@@ -941,8 +941,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 
 		Assert( iHelicopterVehicleId != -1 );
 
-                // WDS - Clean up inventory handling
-		//memset( &SoldierSkyRider, 0, SIZEOF_SOLDIERTYPE );
 		SoldierSkyRider.initialize();
 		SoldierSkyRider.ubProfile = SKYRIDER;
 		SoldierSkyRider.stats.bLife = 80;

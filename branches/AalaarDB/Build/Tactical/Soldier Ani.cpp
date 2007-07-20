@@ -1002,8 +1002,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Update UI
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
-					MemFree( pSoldier->pTempObject );
-					pSoldier->pTempObject = NULL;
+					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 
 					MemFree( pSoldier->pThrowParams );
 					pSoldier->pThrowParams = NULL;
@@ -2554,8 +2553,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							AutoPlaceObject( pSoldier, pSoldier->pTempObject, TRUE );
 						}
 
-						MemFree( pSoldier->pTempObject );
-						pSoldier->pTempObject = NULL;
+						OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 					}
 				}
 				break;
@@ -2639,8 +2637,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					AddItemToPool( pSoldier->aiData.sPendingActionData2, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 					NotifySoldiersToLookforItems( );
 
-					MemFree( pSoldier->pTempObject );
-					pSoldier->pTempObject = NULL;
+					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 				}
 				break;
 
@@ -3737,7 +3734,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 	}
 
 	// Check single hand for jammed status, ( or ammo is out.. )
-	if ( pSoldier->inv[ HANDPOS ].bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ].ubGunShotsLeft == 0 )
+	if ( pSoldier->inv[ HANDPOS ].gun.bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ].gun.ubGunShotsLeft == 0 )
 	{
 		// If we have 2 pistols, donot go back!
 		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )

@@ -231,10 +231,22 @@ enum{
 // the first vehicle slot int he list
 #define FIRST_VEHICLE 18
 
-typedef struct MERC_LEAVE_ITEM{
+class OLD_MERC_LEAVE_ITEM_101
+{
+public:
+	OLD_OBJECTTYPE_101 oldObject;
+	class MERC_LEAVE_ITEM *pNext;
+};
+
+class MERC_LEAVE_ITEM
+{
+public:
+	BOOLEAN Save( HWFILE hFile);
+	BOOLEAN Load( HWFILE hFile);
+	void initialize() {o.initialize(); pNext = NULL;};
 	OBJECTTYPE o;
-	struct MERC_LEAVE_ITEM *pNext;
-}MERC_LEAVE_ITEM;
+	class MERC_LEAVE_ITEM *pNext;
+};
 
 extern BOOLEAN fShowAssignmentMenu;
 extern BOOLEAN fShowTrainingMenu ;

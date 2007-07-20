@@ -10,8 +10,9 @@
 
 extern UINT32 guiNumObjectSlots;
 
-typedef struct
+class OLD_REAL_OBJECT_101
 {
+public:
 	BOOLEAN			fAllocated;
 	BOOLEAN			fAlive;
 	BOOLEAN			fApplyFriction;
@@ -41,7 +42,7 @@ typedef struct
 	INT16				sGridNo;
 	INT32				iID;
 	LEVELNODE		*pNode;
-	LEVELNODE   *pShadow;
+	LEVELNODE		*pShadow;
 
 	INT16				sConsecutiveCollisions;
 	INT16				sConsecutiveZeroVelocityCollisions;
@@ -49,7 +50,7 @@ typedef struct
 
 	FLOAT				dLifeLength;
 	FLOAT				dLifeSpan;
-	OBJECTTYPE	Obj;
+	OLD_OBJECTTYPE_101		oldObj;
 	BOOLEAN			fFirstTimeMoved;
 	INT16				sFirstGridNo;
 	UINT8				ubOwner;
@@ -70,7 +71,77 @@ typedef struct
   UINT8       ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];
 
-} REAL_OBJECT;	
+};
+
+class REAL_OBJECT
+{
+public:
+	REAL_OBJECT		() {initialize();};
+	REAL_OBJECT&	operator=(OLD_REAL_OBJECT_101& src);
+	BOOLEAN			Load(HWFILE hFile);
+	BOOLEAN			Save(HWFILE hFile);
+	void			initialize();
+
+	BOOLEAN			fAllocated;
+	BOOLEAN			fAlive;
+	BOOLEAN			fApplyFriction;
+	BOOLEAN			fColliding;
+	BOOLEAN			fZOnRest;
+	BOOLEAN			fVisible;
+	BOOLEAN			fInWater;
+	BOOLEAN			fTestObject;
+	BOOLEAN			fTestEndedWithCollision;
+	BOOLEAN			fTestPositionNotSet;
+	
+	real				TestZTarget;
+	real				OneOverMass;
+	real				AppliedMu;
+
+	vector_3		Position;
+	vector_3		TestTargetPosition;
+	vector_3		OldPosition;
+	vector_3		Velocity;
+	vector_3		OldVelocity;
+	vector_3		InitialForce;
+	vector_3		Force;
+	vector_3		CollisionNormal;
+	vector_3		CollisionVelocity;
+	real				CollisionElasticity;
+
+	INT16				sGridNo;
+	INT32				iID;
+	LEVELNODE		*pNode;
+	LEVELNODE		*pShadow;
+
+	INT16				sConsecutiveCollisions;
+	INT16				sConsecutiveZeroVelocityCollisions;
+	INT32				iOldCollisionCode;
+
+	FLOAT				dLifeLength;
+	FLOAT				dLifeSpan;
+	BOOLEAN			fFirstTimeMoved;
+	INT16				sFirstGridNo;
+	UINT8				ubOwner;
+	UINT8				ubActionCode;
+	UINT32			uiActionData;
+	BOOLEAN			fDropItem;
+	UINT32			uiNumTilesMoved;
+	BOOLEAN			fCatchGood;
+	BOOLEAN			fAttemptedCatch;
+	BOOLEAN			fCatchAnimOn;
+	BOOLEAN			fCatchCheckDone;
+	BOOLEAN			fEndedWithCollisionPositionSet;
+	vector_3		EndedWithCollisionPosition;
+	BOOLEAN			fHaveHitGround;
+  BOOLEAN     fPotentialForDebug;
+  INT16       sLevelNodeGridNo;
+  INT32       iSoundID;
+  UINT8       ubLastTargetTakenDamage;
+
+  char				endOfPod;
+	OBJECTTYPE		Obj;
+};
+#define SIZEOF_REAL_OBJECT_POD offsetof(REAL_OBJECT, endOfPod)
 
 
 #define					NUM_OBJECT_SLOTS	50

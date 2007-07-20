@@ -39,8 +39,8 @@
 	#include "gameloop.h"
 	#include "sysutil.h"
 	#include "tile surface.h"
+	#include <vector>
 #endif
-
 
 #ifdef JA2EDITOR
 #include "Soldier Init List.h"

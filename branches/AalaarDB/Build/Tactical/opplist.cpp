@@ -1382,7 +1382,7 @@ INT8 DecideHearing( SOLDIERTYPE * pSoldier )
 	if ( bSlot != -1 )
 	{
 		// at 81-100% adds +5, at 61-80% adds +4, at 41-60% adds +3, etc.
-		bHearing += GetHearingRangeBonus(pSoldier);  // pSoldier->inv[bSlot].bStatus[0] / 20 + 1;
+		bHearing += GetHearingRangeBonus(pSoldier);  // pSoldier->inv[bSlot].status.bStatus[0] / 20 + 1;
 	}
 
 	// adjust for dark conditions	
@@ -4390,36 +4390,36 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 			CHAR16 str[50];
 			CHAR16 temp[5];
 			UINT8 i;
-			swprintf( str, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
+			swprintf( str, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->status.bStatus[0] );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
 			{
-				swprintf( temp, L", %d", pObject->bStatus[0] );
+				swprintf( temp, L", %d", pObject->status.bStatus[0] );
 				wcscat( str, temp );
 			}
 			wcscat( str, L")" );
 			gprintf( 320, yp, str ); 
 		}
 		else
-			gprintf( 320, yp, L"%d rounds", pObject->bStatus[0] );
+			gprintf( 320, yp, L"%d rounds", pObject->status.bStatus[0] );
 		return;
 	}
 	if( pObject->ubNumberOfObjects > 1 && fAttachments )
 	{ //everything
 		gprintf( 320, yp, L"%d%%  Qty:  %d  %s", 
-			pObject->bStatus[0], pObject->ubNumberOfObjects, szAttach );
+			pObject->status.bStatus[0], pObject->ubNumberOfObjects, szAttach );
 	}
 	else if( pObject->ubNumberOfObjects > 1 )
 	{ //condition and quantity
 		gprintf( 320, yp, L"%d%%  Qty:  %d  ", 
-			pObject->bStatus[0], pObject->ubNumberOfObjects );
+			pObject->status.bStatus[0], pObject->ubNumberOfObjects );
 	}
 	else if( fAttachments )
 	{ //condition and attachments
-		gprintf( 320, yp, L"%d%%  %s", pObject->bStatus[0], szAttach );
+		gprintf( 320, yp, L"%d%%  %s", pObject->status.bStatus[0], szAttach );
 	}
 	else
 	{ //condition
-		gprintf( 320, yp, L"%d%%", pObject->bStatus[0] );
+		gprintf( 320, yp, L"%d%%", pObject->status.bStatus[0] );
 	}
 }
 

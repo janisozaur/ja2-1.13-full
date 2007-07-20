@@ -38,6 +38,39 @@ typedef struct
 } INV_REGION_DESC;
 
 
+class OLD_ITEM_CURSOR_SAVE_INFO_101
+{
+public:
+	OLD_OBJECTTYPE_101	ItemPointerInfo;
+	UINT8				ubSoldierID;
+	UINT8				ubInvSlot;
+	BOOLEAN				fCursorActive;
+	INT8				bPadding[5];
+
+};
+
+
+class ITEM_CURSOR_SAVE_INFO
+{
+public:
+	ITEM_CURSOR_SAVE_INFO& operator=(OLD_ITEM_CURSOR_SAVE_INFO_101& src)
+	{
+		this->fCursorActive = src.fCursorActive;
+		this->ItemPointerInfo = src.ItemPointerInfo;
+		this->ubInvSlot = src.ubInvSlot;
+		this->ubSoldierID = src.ubSoldierID;
+		return *this;
+	}
+	//could use a little tidying up
+	BOOLEAN Save(HWFILE hFile);
+	BOOLEAN Load(HWFILE hFile);
+
+	UINT8				ubSoldierID;
+	UINT8				ubInvSlot;
+	BOOLEAN				fCursorActive;
+	OBJECTTYPE			ItemPointerInfo;
+};
+
 // Itempickup stuff
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
 void RenderItemPickupMenu( );

@@ -476,19 +476,19 @@ void DestroySummaryWindow()
 
 	if( gpWorldItemsSummaryArray )
 	{
-		MemFree( gpWorldItemsSummaryArray );
+		delete[]( gpWorldItemsSummaryArray );
 		gpWorldItemsSummaryArray = NULL;
 		gusWorldItemsSummaryArraySize = 0;
 	}
 	if( gpPEnemyItemsSummaryArray )
 	{
-		MemFree( gpPEnemyItemsSummaryArray );
+		delete[]( gpPEnemyItemsSummaryArray );
 		gpPEnemyItemsSummaryArray = NULL;
 		gusPEnemyItemsSummaryArraySize = 0;
 	}
 	if( gpNEnemyItemsSummaryArray )
 	{
-		MemFree( gpNEnemyItemsSummaryArray );
+		delete[]( gpNEnemyItemsSummaryArray );
 		gpNEnemyItemsSummaryArray = NULL;
 		gusNEnemyItemsSummaryArraySize = 0;
 	}
@@ -716,21 +716,21 @@ void RenderItemDetails()
 								gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
 						{
 							pItem = &gpWorldItemsSummaryArray[ i ].o;
-							if( !pItem->bFrequency )
+							if( !pItem->bombs.bFrequency )
 								bFreqIndex = 7;
-							else if( pItem->bFrequency == PANIC_FREQUENCY )
+							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY )
 								bFreqIndex = 0;
-							else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
+							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY_2 )
 								bFreqIndex = 1;
-							else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
+							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY_3 )
 								bFreqIndex = 2;
-							else if( pItem->bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
+							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
 								bFreqIndex = 3;
-							else if( pItem->bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
+							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
 								bFreqIndex = 4;
-							else if( pItem->bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
+							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
 								bFreqIndex = 5;
-							else if( pItem->bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
+							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
 								bFreqIndex = 6;
 							else
 								continue;
@@ -755,7 +755,7 @@ void RenderItemDetails()
 					{
 						pItem = &gpWorldItemsSummaryArray[ i ].o;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
-						uiStatus += pItem->bStatus[0];
+						uiStatus += pItem->status.bStatus[0];
 						uiQuantity += pItem->ubNumberOfObjects;
 					}
 				}
@@ -863,7 +863,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpPEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->bStatus[0];
+					uiStatus += pItem->status.bStatus[0];
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}
@@ -936,7 +936,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpNEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->bStatus[0];
+					uiStatus += pItem->status.bStatus[0];
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}
@@ -2016,7 +2016,7 @@ void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 			}
 			if( gpWorldItemsSummaryArray )
 			{
-				MemFree( gpWorldItemsSummaryArray );
+				delete[]( gpWorldItemsSummaryArray );
 				gpWorldItemsSummaryArray = NULL;
 				gusWorldItemsSummaryArraySize = 0;
 			}
@@ -2913,19 +2913,19 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	//Clear memory for all the item summaries loaded
 	if( gpWorldItemsSummaryArray )
 	{
-		MemFree( gpWorldItemsSummaryArray );
+		delete[]( gpWorldItemsSummaryArray );
 		gpWorldItemsSummaryArray = NULL;
 		gusWorldItemsSummaryArraySize = 0;
 	}
 	if( gpPEnemyItemsSummaryArray )
 	{
-		MemFree( gpPEnemyItemsSummaryArray );
+		delete[]( gpPEnemyItemsSummaryArray );
 		gpPEnemyItemsSummaryArray = NULL;
 		gusPEnemyItemsSummaryArraySize = 0;
 	}
 	if( gpNEnemyItemsSummaryArray )
 	{
-		MemFree( gpNEnemyItemsSummaryArray );
+		delete[]( gpNEnemyItemsSummaryArray );
 		gpNEnemyItemsSummaryArray = NULL;
 		gusNEnemyItemsSummaryArraySize = 0;
 	}
@@ -2971,9 +2971,12 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	ShowButton( iSummaryButton[ SUMMARY_SCIFI ] );
 	ShowButton( iSummaryButton[ SUMMARY_REAL ] );
 	ShowButton( iSummaryButton[ SUMMARY_ENEMY ] );
-	gpWorldItemsSummaryArray = (WORLDITEM*)MemAlloc( sizeof( WORLDITEM ) * uiNumItems );
+	gpWorldItemsSummaryArray = new WORLDITEM[  uiNumItems ];
 	gusWorldItemsSummaryArraySize = gpCurrentSectorSummary->usNumItems;
-	FileRead( hfile, gpWorldItemsSummaryArray, sizeof( WORLDITEM ) * uiNumItems, &uiNumBytesRead );
+	for (unsigned int x = 0; x < uiNumItems; ++x)
+	{
+		gpWorldItemsSummaryArray[x].Load(hfile);
+	}
 
 	//NOW, do the enemy's items!
 	//We need to do two passes.  The first pass simply processes all the enemies and counts all the droppable items
@@ -2998,9 +3001,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-                        // WDS - Clean up inventory handling
-			FileRead( hfile, &priority, SIZEOF_SOLDIERCREATE_STRUCT, &uiNumBytesRead );
-			if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT )
+			if ( !priority.Load(hfile) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3036,13 +3037,11 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	//Pass 1 completed, so now allocate enough space to hold all the items
 	if( gusPEnemyItemsSummaryArraySize )
 	{
-		gpPEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
-		memset( gpPEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
+		gpPEnemyItemsSummaryArray = new OBJECTTYPE[ gusPEnemyItemsSummaryArraySize ];
 	}
 	if( gusNEnemyItemsSummaryArraySize )
 	{
-		gpNEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
-		memset( gpNEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
+		gpNEnemyItemsSummaryArray = new OBJECTTYPE[ gusNEnemyItemsSummaryArraySize ];
 	}
 
 	//PASS #2
@@ -3063,9 +3062,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-                        // WDS - Clean up inventory handling
-			FileRead( hfile, &priority, SIZEOF_SOLDIERCREATE_STRUCT, &uiNumBytesRead );
-			if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT )
+			if ( !priority.Load(hfile) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3086,12 +3083,12 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 				{
 					if( basic.fPriorityExistance )
 					{
-						memcpy( &(gpPEnemyItemsSummaryArray[ usPEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpPEnemyItemsSummaryArray[ usPEnemyIndex ] = *pItem;
 						usPEnemyIndex++;
 					}
 					else
 					{
-						memcpy( &(gpNEnemyItemsSummaryArray[ usNEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpNEnemyItemsSummaryArray[ usNEnemyIndex ] = *pItem;
 						usNEnemyIndex++;
 					}
 				}

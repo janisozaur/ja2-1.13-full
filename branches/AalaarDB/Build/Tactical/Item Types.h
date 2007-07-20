@@ -2,7 +2,7 @@
 #define ITEM_TYPES_H
 
 #include "types.h"
-#include "string.h"//for memset
+#include <vector>
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -70,13 +70,16 @@ typedef enum
 
 #define GS_CARTRIDGE_IN_CHAMBER				0x01
 
-class OBJECTTYPE
+
+
+//do not alter or saves will break, create new defines if the size changes
+#define MAX_ATTACHMENTS_101 4
+#define MAX_OBJECTS_PER_SLOT_101 8
+
+namespace Version101
 {
-public:
-	OBJECTTYPE() {memset(this, 0, sizeof(OBJECTTYPE));};
-	UINT16	usItem;
-	UINT8		ubNumberOfObjects;
-	union
+	//union was originally unnamed
+	union OLD_OBJECTTYPE_101_UNION
 	{
 		struct
 		{
@@ -86,27 +89,28 @@ public:
 			UINT16		usGunAmmoItem;	// the item # for the item table
 			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 			UINT8		ubGunState; // SB manual recharge
-			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
+	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
+			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT_101 - 6];
 		};
 		struct
 		{
-			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
+			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT_101];
 		};
 		struct
 		{
-			INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+			INT8		bStatus[MAX_OBJECTS_PER_SLOT_101];
 		};		
 		struct
 		{
 			INT8		bMoneyStatus;
-			UINT32	uiMoneyAmount;
-			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
+			UINT32		uiMoneyAmount;
+			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT_101 - 5];
 		};
 		struct
 		{ // this is used by placed bombs, switches, and the action item
 			INT8		bBombStatus;			// % status
 			INT8		bDetonatorType;		// timed, remote, or pressure-activated
-			UINT16	usBombItem;				// the usItem of the bomb.
+			UINT16		usBombItem;				// the usItem of the bomb.
 			union
 			{
 				struct
@@ -118,7 +122,7 @@ public:
 					INT8		bFrequency;		// >=0 values used only
 				};
 			};
-			UINT8 ubBombOwner; // side which placed the bomb
+			UINT8	ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
 			union
 			{
@@ -145,9 +149,20 @@ public:
 			UINT8 ubOwnershipUnused[6];
 		};
 	};
+};
+#define SIZEOF_OLD_OBJECTTYPE_101_UNION (sizeof(Version101::OLD_OBJECTTYPE_101_UNION))
+
+class OLD_OBJECTTYPE_101
+{
+public:
+	UINT16		usItem;
+	UINT8		ubNumberOfObjects;
+
+	Version101::OLD_OBJECTTYPE_101_UNION	ugYucky;
+
   // attached objects
-	UINT16	usAttachItem[MAX_ATTACHMENTS];
-	INT8		bAttachStatus[MAX_ATTACHMENTS];
+	UINT16		usAttachItem[MAX_ATTACHMENTS_101];
+	INT8		bAttachStatus[MAX_ATTACHMENTS_101];
 
 	INT8		fFlags;
 	UINT8		ubMission;
@@ -157,6 +172,126 @@ public:
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
+
+class OBJECTTYPE
+{
+public:
+	//these structs are members of the anonymous union, and need only be available within the class space
+	struct OBJECT_GUN
+	{
+		INT8		bGunStatus;			// status % of gun
+		UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
+		UINT8		ubGunShotsLeft;	// duh, amount of ammo left
+		UINT16		usGunAmmoItem;	// the item # for the item table
+		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
+		UINT8		ubGunState; // SB manual recharge
+//this unused space is the wrong size anyways, 7 bytes above, 2 in the array!!!
+		//UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
+	};
+	struct OBJECT_SHOTS
+	{
+		UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
+	};
+	struct OBJECT_STATUS
+	{
+		INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+	};
+	struct OBJECT_MONEY
+	{
+		INT8		bMoneyStatus;
+		UINT32		uiMoneyAmount;
+		//UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
+	};
+	struct OBJECT_BOMBS_AND_OTHER
+	{ // this is used by placed bombs, switches, and the action item
+		INT8		bBombStatus;			// % status
+		INT8		bDetonatorType;		// timed, remote, or pressure-activated
+		UINT16		usBombItem;				// the usItem of the bomb.
+		union
+		{
+			INT8		bDelay;				// >=0 values used only
+			INT8		bFrequency;		// >=0 values used only
+		};
+		UINT8	ubBombOwner; // side which placed the bomb
+		UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
+		union
+		{
+			UINT8 ubTolerance; // tolerance value for panic triggers
+			UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
+		};		
+	};
+	struct OBJECT_KEY
+	{
+		INT8 bKeyStatus[ 6 ];
+		UINT8 ubKeyID;
+		//UINT8 ubKeyUnused[1];
+	};
+	struct OBJECT_OWNER
+	{
+		UINT8 ubOwnerProfile;
+		UINT8 ubOwnerCivGroup;
+		//UINT8 ubOwnershipUnused[6];
+	};
+
+	// Constructor
+	OBJECTTYPE();
+	// Conversion operator
+    OBJECTTYPE& operator=(const OLD_OBJECTTYPE_101&);
+	// Copy Constructor
+	OBJECTTYPE(const OBJECTTYPE&);
+	// Assignment operator
+    OBJECTTYPE& operator=(const OBJECTTYPE&);
+	// Destructor
+	~OBJECTTYPE();
+
+	// Initialize the soldier.  
+	//  Use this instead of the old method of calling memset.
+	//  Note that the constructor does this automatically.
+	void initialize();
+
+	//see comments in .cpp
+	static	void DeleteMe(OBJECTTYPE** ppObject);
+	static	void CopyObject(OBJECTTYPE* pTarget, OBJECTTYPE* pSource);
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Save( HWFILE hFile );
+
+	//POD
+	UINT16		usItem;
+	UINT8		ubNumberOfObjects;
+	INT8		fFlags;
+	UINT8		ubMission;
+	INT8		bTrap;        // 1-10 exp_lvl to detect
+	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+	UINT8		ubWeight;
+	UINT8		fUsed;				// flags for whether the item is used or not
+	UINT16		usAttachItem[MAX_ATTACHMENTS];
+	INT8		bAttachStatus[MAX_ATTACHMENTS];
+
+	char		endOfPod;//offset to determine where pod stops and where OO data starts
+#define SIZEOF_OBJECTTYPE_POD offsetof( OBJECTTYPE, endOfPod )
+
+	union
+	{
+		OBJECT_GUN		gun;
+		OBJECT_SHOTS	shots;
+		OBJECT_STATUS	status;
+		OBJECT_MONEY	money;
+		OBJECT_BOMBS_AND_OTHER	bombs;
+		OBJECT_KEY		key;
+		OBJECT_OWNER	owner;
+	};
+	//the union doesn't have a name to reduce typing(wasn't my idea), so find it's size the hard way
+#define SIZEOF_OBJECTTYPE_UNION ( \
+	__max(sizeof(OBJECT_GUN), \
+	__max(sizeof(OBJECT_SHOTS), \
+	__max(sizeof(OBJECT_STATUS), \
+	__max(sizeof(OBJECT_MONEY), \
+	__max(sizeof(OBJECT_BOMBS_AND_OTHER), \
+	__max(sizeof(OBJECT_KEY), \
+	sizeof(OBJECT_OWNER) ))))))) \
+
+};
 /*
 typedef struct
 {

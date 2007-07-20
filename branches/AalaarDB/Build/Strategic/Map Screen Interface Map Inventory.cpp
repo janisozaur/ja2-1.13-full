@@ -38,7 +38,7 @@
 #include "ShopKeeper Interface.h"
 #include "ArmsDealerInvInit.h"
 
-extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
+extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData );
 
 // WANNE 2
 #define MAP_INV_X_OFFSET							(((SCREEN_WIDTH - 261) - 380) / 2)
@@ -155,7 +155,6 @@ UINT32 guiMapInvenButton[ 3 ];
 BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 
 
-extern UINT32	guiNumWorldItems;
 extern BOOLEAN fShowInventoryFlag;
 extern BOOLEAN fMapScreenBottomDirty;
 
@@ -211,7 +210,7 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem );
 BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem );
 void CheckGridNoOfItemsInMapScreenMapInventory();
 INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2);
-void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray );
+void SortSectorInventory( WORLDITEM* pInventory, UINT32 uiSizeOfArray );
 BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier );
 
 extern void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy );
@@ -477,7 +476,7 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 				// set text for current item
 				if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.usItem == MONEY )
 				{
-					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.uiMoneyAmount );
+					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.money.uiMoneyAmount );
 					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), pStr );
 				}
 				else
@@ -623,7 +622,7 @@ void SaveSeenAndUnseenItems( void )
 	// if there are seen items, build a temp world items list of them and save them
 	if( iTotalNumberItems > 0 )
 	{
-		pSeenItemsList = (WORLDITEM *) MemAlloc( ( sizeof( WORLDITEM ) * ( iTotalNumberItems ) )  );
+		pSeenItemsList = new WORLDITEM[ iTotalNumberItems ];
 
 		// copy
 		for( iCounter = 0; iCounter < iTotalNumberOfSlots; iCounter++ )
@@ -631,7 +630,7 @@ void SaveSeenAndUnseenItems( void )
 			if( pInventoryPoolList[ iCounter ].o.ubNumberOfObjects > 0 )
 			{
 				// copy object stuff
-				memcpy( &( pSeenItemsList[ iItemCount ] ), &( pInventoryPoolList[ iCounter ] ), sizeof( WORLDITEM ) );
+				pSeenItemsList[ iItemCount ] = pInventoryPoolList[ iCounter ];
 
 				// check if item actually lives at a gridno
 				// if not, check predicessor, iItemCount is not 0
@@ -690,14 +689,14 @@ void SaveSeenAndUnseenItems( void )
 	// now clear out seen list
 	if( pSeenItemsList != NULL )
 	{
-		MemFree( pSeenItemsList );
+		delete[]( pSeenItemsList );
 		pSeenItemsList = NULL;
 	}
 
 	// clear out unseen list
 	if( pSaveList != NULL )
 	{
-		MemFree( pSaveList );
+		delete[]( pSaveList );
 		pSaveList = NULL;
 	}
 
@@ -1050,10 +1049,13 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 
 	iTotalNumberOfSlots = iSize;
 
-	// allocate space for list
-	pInventoryPoolList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * iSize );
+	if (pInventoryPoolList)
+	{
+		delete[] pInventoryPoolList;
+	}
 
-	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iSize ); 
+	// allocate space for list
+	pInventoryPoolList = new WORLDITEM[ iTotalNumberOfSlots ];
 
 	iLastInventoryPoolPage = ( ( iTotalNumberOfSlots - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
 
@@ -1078,7 +1080,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
+				pInventoryPoolList[ uiItemCount ] = gWorldItems[ iCounter ];
 				uiItemCount++;
 			}
 		}
@@ -1090,7 +1092,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			// now allocate space for all the unseen items
 		if( guiNumWorldItems > uiItemCount )
 		{
-			pUnSeenItems = (WORLDITEM *) MemAlloc( ( guiNumWorldItems - uiItemCount ) * sizeof( WORLDITEM ) );
+			pUnSeenItems = new WORLDITEM[ guiNumWorldItems - uiItemCount ];
 
 			uiItemCount = 0;
 
@@ -1103,7 +1105,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
+					pUnSeenItems[ uiItemCount ] = gWorldItems[ iCounter ];
 
 					uiItemCount++;
 				}
@@ -1126,7 +1128,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		if( uiTotalNumberOfRealItems > 0 )
 		{
 			// allocate space for the list
-			pTotalSectorList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+			pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
 		
 			
 			// now load into mem
@@ -1157,7 +1159,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
+				pInventoryPoolList[ uiItemCount ] = pTotalSectorList[ iCounter ];
 
 				uiItemCount++;
 			}
@@ -1168,7 +1170,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		// now allocate space for all the unseen items
 		if( uiTotalNumberOfRealItems > uiItemCount )
 		{
-			pUnSeenItems = (WORLDITEM *) MemAlloc( ( uiTotalNumberOfRealItems - uiItemCount ) * sizeof( WORLDITEM ) );
+			pUnSeenItems = new WORLDITEM[ uiTotalNumberOfRealItems - uiItemCount ];
 
 			uiItemCount = 0;
 
@@ -1183,7 +1185,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
+					pUnSeenItems[ uiItemCount ] = pTotalSectorList[ iCounter ];
 
 					uiItemCount++;
 				}
@@ -1196,7 +1198,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		// if anything was alloced, then get rid of it
 		if( uiTotalNumberOfRealItems > 0 )
 		{
-				MemFree( pTotalSectorList );
+				delete[]( pTotalSectorList );
 		}
 	}
 
@@ -1231,25 +1233,19 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 	}
 
 	// allocate space for items
-	pTotalList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * iTotalNumberOfItems );
-	
-	for( iCounter = 0; iCounter < iTotalNumberOfItems; iCounter++ )
-	{
-		// clear out the structure
-		memset( &( pTotalList[ iCounter ] ), 0, sizeof( WORLDITEM ) );
-	}
+	pTotalList = new WORLDITEM[ iTotalNumberOfItems ];
 
 	// place seen items in the world
 	for( iCounter = 0; iCounter < iNumberSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[ iCurrentItem ] = pSeenItemsList[ iCounter ];
 		iCurrentItem++;
 	}
 
 	// now store the unseen item list
 	for( iCounter = 0; iCounter < iNumberUnSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pUnSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[ iCurrentItem ] = pUnSeenItemsList[ iCounter ];
 		iCurrentItem++;
 	}
 
@@ -1265,7 +1261,7 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ , uiTotalNumberOfVisibleItems );
 
 	// clear out allocated space for total list
-	MemFree( pTotalList );
+	delete[]( pTotalList );
 
 	// reset total list
 	pTotalList = NULL;
@@ -1276,7 +1272,7 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
 {
 	INT32 iSizeOfList = iTotalNumberOfSlots;
-	WORLDITEM * pOldList;
+	WORLDITEM * pNewList;
 
 	// no items added, leave
 	if( iNumberOfItems == 0 )
@@ -1284,32 +1280,22 @@ void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
 		return;
 	}
 
-	iTotalNumberOfSlots+= iNumberOfItems;
+	iTotalNumberOfSlots += iNumberOfItems;
 
-	pOldList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * iSizeOfList );
-	memset( pOldList, 0, sizeof( WORLDITEM ) * iSizeOfList );
-
-	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );
-
-	// rebuild stash 
-	pInventoryPoolList = (WORLDITEM *) MemRealloc( pInventoryPoolList, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
-	
-	// set new mem to 0
-	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
-
-	// copy old info over
-	memcpy( pInventoryPoolList, pOldList, sizeof( WORLDITEM ) * iSizeOfList );
-	
-	// free memeory
-	MemFree( pOldList );
-
+	pNewList = new WORLDITEM[ iTotalNumberOfSlots ];
+	for (int x = 0; x < __min(iSizeOfList,iTotalNumberOfSlots); ++x)
+	{
+		pNewList[x] = pInventoryPoolList[x];
+	}
+	delete[]( pInventoryPoolList );
+	pInventoryPoolList = pNewList;
 	return;
 }
 
 void DestroyStash( void )
 {
 	// clear out stash
-	MemFree( pInventoryPoolList );
+	delete[] pInventoryPoolList;
 
 }
 
@@ -1359,7 +1345,7 @@ INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCo
 		if( uiTotalNumberOfItems > 0 )
 		{
 			// allocate space for the list
-			pTotalSectorList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+			pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
 
 				// now load into mem
 			LoadWorldItemsFromTempItemFile(  sMapX,  sMapY, ( INT8 ) ( sMapZ ), pTotalSectorList );
@@ -1387,7 +1373,7 @@ INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCo
 		// if anything was alloced, then get rid of it
 		if( pTotalSectorList != NULL )
 		{
-			MemFree( pTotalSectorList );
+			delete[]( pTotalSectorList );
 			pTotalSectorList = NULL;
 
 			#ifdef JA2BETAVERSION	
@@ -1454,20 +1440,20 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 				{
 					for (INT8 bLoop = 0; bLoop < gItemPointer.ubNumberOfObjects; bLoop++)
 					{
-						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float) gpItemPointer->ubShotsLeft[bLoop] / Magazine[ Item[gpItemPointer->usItem].ubClassIndex ].ubMagSize );
+						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float) gpItemPointer->shots.ubShotsLeft[bLoop] / Magazine[ Item[gpItemPointer->usItem].ubClassIndex ].ubMagSize );
 					}					
 				}
 				else
 				{
 					for (INT8 bLoop = 0; bLoop < gItemPointer.ubNumberOfObjects; bLoop++)
 					{
-						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float)gpItemPointer->bStatus[bLoop] / 100 );
+						iPrice += (INT32)( Item[gpItemPointer->usItem].usPrice * (float)gpItemPointer->status.bStatus[bLoop] / 100 );
 					}
 				}
 			}
 			else
 			{
-				iPrice = ( Item[gpItemPointer->usItem].usPrice * gpItemPointer->bStatus[0] / 100 );
+				iPrice = ( Item[gpItemPointer->usItem].usPrice * gpItemPointer->status.bStatus[0] / 100 );
 
 				for (INT8 bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
 				{
@@ -1520,7 +1506,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 	// if there are only one item in slot, just copy
 	if (pInventorySlot->ubNumberOfObjects == 1)
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		OBJECTTYPE::CopyObject(pItemPtr, pInventorySlot);
 		DeleteObj( pInventorySlot );	
 	}
 	else
@@ -1529,7 +1515,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 		pItemPtr->usItem = pInventorySlot->usItem;
 
 		// find first unempty slot
-		pItemPtr->bStatus[0] = pInventorySlot->bStatus[0];
+		pItemPtr->status.bStatus[0] = pInventorySlot->status.bStatus[0];
 		pItemPtr->ubNumberOfObjects = 1;
 		pItemPtr->ubWeight = CalculateObjectWeight( pItemPtr );
 		RemoveObjFrom( pInventorySlot, 0 );
@@ -1552,7 +1538,7 @@ BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItem
 	}
 	else
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		OBJECTTYPE::CopyObject(pItemPtr, pInventorySlot);
 		DeleteObj( pInventorySlot );
 		return( TRUE );
 	}
@@ -1586,7 +1572,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			// in the InSlot copy, zero out all the objects we didn't drop
 			for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 			{
-				pInventorySlot->bStatus[ubLoop] = 0;
+				pInventorySlot->status.bStatus[ubLoop] = 0;
 			}
 		}
 		pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -1607,8 +1593,8 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...
-				pInventorySlot->bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->bMoneyStatus * pInventorySlot->uiMoneyAmount + (UINT32)pItemPtr->bMoneyStatus * pItemPtr->uiMoneyAmount )/ (pInventorySlot->uiMoneyAmount + pItemPtr->uiMoneyAmount) );
-				pInventorySlot->uiMoneyAmount += pItemPtr->uiMoneyAmount;
+				pInventorySlot->status.bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->money.bMoneyStatus * pInventorySlot->money.uiMoneyAmount + (UINT32)pItemPtr->money.bMoneyStatus * pItemPtr->money.uiMoneyAmount )/ (pInventorySlot->money.uiMoneyAmount + pItemPtr->money.uiMoneyAmount) );
+				pInventorySlot->money.uiMoneyAmount += pItemPtr->money.uiMoneyAmount;
 
 				DeleteObj( pItemPtr );
 			}
@@ -1660,14 +1646,14 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	memcpy( pInventorySlot, pItemPtr, sizeof( OBJECTTYPE ) );
+	*pInventorySlot = *pItemPtr;
 
 	if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
 	{
 		// in the InSlot copy, zero out all the objects we didn't drop
 		for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 		{
-			pInventorySlot->bStatus[ubLoop] = 0;
+			pInventorySlot->status.bStatus[ubLoop] = 0;
 		}
 	}
 	pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -2235,9 +2221,29 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 }
 
 
-void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray )
+void SortSectorInventory( WORLDITEM* pInventory, UINT32 uiSizeOfArray )
 {
-	qsort( (LPVOID)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
+	//ADB: I don't think qsort will work with this OO data
+	//so instead let's sort pointers
+	//qsort( (LPVOID)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
+
+	WORLDITEM** pArray = new WORLDITEM* [ uiSizeOfArray ];
+	for (unsigned int x = 0; x < uiSizeOfArray; ++x)
+	{
+		pArray[x] = &pInventory[x];
+	}
+
+	//qsort( pArray, (size_t) uiSizeOfArray, sizeof(WORLDITEM*), MapScreenSectorInventoryCompare );
+	for (unsigned int x = 0; x < uiSizeOfArray; ++x)
+	{
+		if (pArray[x] != &pInventory[x])
+		{
+			WORLDITEM temp = pInventory[x];
+			pInventory[x] = *(pArray[x]);
+			*(pArray[x]) = temp;
+		}
+	}
+	delete [] pArray;
 }
 
 
@@ -2253,8 +2259,8 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 	usItem1Index = pFirst->o.usItem;
 	usItem2Index = pSecond->o.usItem;
 
-	ubItem1Quality = pFirst->o.bStatus[ 0 ];
-	ubItem2Quality = pSecond->o.bStatus[ 0 ];
+	ubItem1Quality = pFirst->o.status.bStatus[ 0 ];
+	ubItem2Quality = pSecond->o.status.bStatus[ 0 ];
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }

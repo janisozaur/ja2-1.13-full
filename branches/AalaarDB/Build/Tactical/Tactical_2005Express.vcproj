@@ -596,6 +596,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Item Types.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Items.cpp"
 				>
 			</File>

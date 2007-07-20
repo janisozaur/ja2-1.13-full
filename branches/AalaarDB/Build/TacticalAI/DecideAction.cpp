@@ -2285,7 +2285,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[BestShot.bWeaponIn]), pSoldier->bDoAutofire );
 			}
 			while(	pSoldier->bActionPoints >= BestShot.ubAPCost + ubBurstAPs &&
-				pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire &&
+				pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 				GetAutoPenalty(&pSoldier->inv[ pSoldier->ubAttackingHand ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80 );
 
 
@@ -3788,7 +3788,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 			}
 
 			// now it better be a gun, or the guy can't shoot (but has other attack(s))
-			if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].bGunStatus >= USABLE)
+			if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].gun.bGunStatus >= USABLE)
 			{
 				// get the minimum cost to attack the same target with this gun
 				ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,ADDTURNCOST);
@@ -4308,7 +4308,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
 				!(Menptr[BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-				pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
+				pSoldier->inv[BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
 				(pSoldier->bTeam != gbPlayerNum || pSoldier->aiData.bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 			{
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO");
@@ -4336,7 +4336,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 						case ATTACKSLAYONLY:iChance += 30; break;
 						}
 
-						if ( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 50 )
+						if ( pSoldier->inv[BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
 							iChance += 20;
 
 						// increase chance based on proximity and difficulty of enemy
@@ -4371,7 +4371,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 			if (IsGunAutofireCapable( pSoldier, BestAttack.bWeaponIn ) &&
 				!(Menptr[BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-				(( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
+				(( pSoldier->inv[BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
 				BestAttack.ubAimTime != BURSTING ) || Weapon[pSoldier->inv[BestAttack.bWeaponIn].usItem].NoSemiAuto) )
 			{
 				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO AUTOFIRE, RANDOM CHANCE OF DOING SO");
@@ -4382,7 +4382,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 					ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[BestAttack.bWeaponIn]), pSoldier->bDoAutofire );
 				}
 				while(	pSoldier->bActionPoints >= BestAttack.ubAPCost + ubBurstAPs &&
-					pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft >= pSoldier->bDoAutofire &&
+					pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 					GetAutoPenalty(&pSoldier->inv[ BestAttack.bWeaponIn ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80);
 
 
@@ -4414,7 +4414,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 							}
 
 
-							if ( pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 50 )
+							if ( pSoldier->inv[BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
 								iChance += 30;
 
 							if ( bInGas )

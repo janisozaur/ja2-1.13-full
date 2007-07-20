@@ -122,10 +122,6 @@ void ValidateEdgepoints()
 	INT32 i;
 	UINT16 usValidEdgepoints;
 	SOLDIERTYPE Soldier;
-
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 
 	//north
@@ -437,9 +433,6 @@ void ClassifyEdgepoints()
 	SOLDIERTYPE Soldier;
 	INT16 sGridNo = -1;
 
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 
 	//north
@@ -1640,9 +1633,6 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 	INT16			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
 	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
 
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 	Soldier.sGridNo = sGridNo;
 

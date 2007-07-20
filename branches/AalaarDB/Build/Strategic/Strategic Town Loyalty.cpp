@@ -35,7 +35,6 @@
 	#include "Strategic Status.h"
 #endif
 
-
 // the max loyalty rating for any given town
 #define MAX_LOYALTY_VALUE 100
 
@@ -176,9 +175,6 @@ BOOLEAN gfTownUsesLoyalty[ MAX_TOWNS ];// =
 
 // location of first enocunter with enemy
 INT16 sWorldSectorLocationOfFirstBattle = 0;
-
-// number of items in currently loaded sector
-extern UINT32	guiNumWorldItems;
 
 // preprocess sector for mercs in it
 extern BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_X ][ 4 ];
@@ -1091,7 +1087,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 			return;
 		}
 
-		pItemList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
+		pItemList = new WORLDITEM[ uiNumberOfItems ];
 
 		// now load items
 		LoadWorldItemsFromTempItemFile( sSectorX, sSectorY, ( UINT8 )sSectorZ, pItemList );
@@ -1122,7 +1118,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 		}
 
 		// mem free
-		MemFree( pItemList );
+		delete[]( pItemList );
 	}
 	else	// handle a loaded sector
 	{

@@ -65,7 +65,185 @@
 #define MAX_PALACE_DISTANCE		20
 
 
-// WDS - Clean up inventory handling
+OLD_SOLDIERCREATE_STRUCT_101::OLD_SOLDIERCREATE_STRUCT_101() {
+	initialize();
+}
+
+// Copy Constructor
+OLD_SOLDIERCREATE_STRUCT_101::OLD_SOLDIERCREATE_STRUCT_101(const OLD_SOLDIERCREATE_STRUCT_101& src) {
+	memcpy(this, &src, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);
+	this->Inv = src.Inv;
+}
+
+// Assignment operator
+OLD_SOLDIERCREATE_STRUCT_101& OLD_SOLDIERCREATE_STRUCT_101::operator=(const OLD_SOLDIERCREATE_STRUCT_101& src)
+{
+    if (this != &src) {
+		memcpy(this, &src, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);
+		this->Inv = src.Inv;
+    }
+    return *this;
+}
+
+// Destructor
+OLD_SOLDIERCREATE_STRUCT_101::~OLD_SOLDIERCREATE_STRUCT_101() {
+}
+
+// Initialize the soldier.  
+//  Use this instead of the old method of calling memset!
+//  Note that the constructor does this automatically.
+void OLD_SOLDIERCREATE_STRUCT_101::initialize() {
+	memset( this, 0, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD);	
+	Inv.clear();
+}
+
+
+
+
+
+// Conversion operator from old to new
+SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const OLD_SOLDIERCREATE_STRUCT_101& src)
+{
+    if ((void*)this != (void*)&src) {
+		this->Inv = src.Inv;
+
+		memcpy( &(this->name), &(src.name), sizeof(CHAR16) * 10 );
+		memcpy( &(this->HeadPal), &(src.HeadPal), sizeof(PaletteRepID) );	// 30 
+		memcpy( &(this->PantsPal), &(src.PantsPal), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->VestPal), &(src.VestPal), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->SkinPal), &(src.SkinPal), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->MiscPal), &(src.MiscPal), sizeof(PaletteRepID) );	// 30
+		memcpy( &(this->sPatrolGrid), &(src.sPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );
+
+		this->bAgility = src.bAgility;
+		this->bAIMorale = src.bAIMorale;
+		this->bAttitude = src.bAttitude;
+		this->bBodyType = src.bBodyType;
+		this->bDexterity = src.bDexterity;
+		this->bDirection = src.bDirection;
+		this->bExpLevel = src.bExpLevel;
+		this->bExplosive = src.bExplosive;
+		this->bLeadership = src.bLeadership;
+		this->bLife = src.bLife;
+		this->bLifeMax = src.bLifeMax;
+		this->bMarksmanship = src.bMarksmanship;
+		this->bMechanical = src.bMechanical;
+		this->bMedical = src.bMedical;
+		this->bMorale = src.bMorale;
+		this->bOrders = src.bOrders;
+		this->bPatrolCnt = src.bPatrolCnt;
+		this->bSectorZ = src.bSectorZ;
+		this->bStrength = src.bStrength;
+		this->bTeam = src.bTeam;
+		this->bUseGivenVehicleID = src.bUseGivenVehicleID;
+		this->bWisdom = src.bWisdom;
+		this->fCopyProfileItemsOver = src.fCopyProfileItemsOver;
+		this->fHasKeys = src.fHasKeys;
+		this->fKillSlotIfOwnerDies = src.fKillSlotIfOwnerDies;
+		this->fOnRoof = src.fOnRoof;
+		this->fPlayerMerc = src.fPlayerMerc;
+		this->fPlayerPlan = src.fPlayerPlan;
+		this->fStatic = src.fStatic;
+		this->fUseExistingSoldier = src.fUseExistingSoldier;
+		this->fUseGivenVehicle = src.fUseGivenVehicle;
+		this->fVisible = src.fVisible;
+		this->pExistingSoldier = src.pExistingSoldier;
+		this->sInsertionGridNo = src.sInsertionGridNo;
+		this->sSectorX = src.sSectorX;
+		this->sSectorY = src.sSectorY;
+		this->ubCivilianGroup = src.ubCivilianGroup;
+		this->ubProfile = src.ubProfile;
+		this->ubScheduleID = src.ubScheduleID;
+		this->ubSoldierClass = src.ubSoldierClass;
+    }
+    return *this;
+}
+
+// Conversion operator from SOLDIERTYPE to SOLDIERCREATE_STRUCT
+SOLDIERCREATE_STRUCT& SOLDIERCREATE_STRUCT::operator=(const SOLDIERTYPE& Soldier)
+{
+	//WARNING, this may not copy all data you expect over, I'm not sure
+	//but it does copy all the data from the previous function
+	//Copy over the data of the soldier.
+	this->ubProfile							= NO_PROFILE;
+	this->bLife									= Soldier.stats.bLife;
+	this->bLifeMax  						= Soldier.stats.bLifeMax;
+	this->bAgility							= Soldier.stats.bAgility;
+	this->bDexterity						= Soldier.stats.bDexterity;
+	this->bExpLevel							= Soldier.stats.bExpLevel;
+	this->bMarksmanship					= Soldier.stats.bMarksmanship;
+	this->bMedical							= Soldier.stats.bMedical;
+	this->bMechanical						= Soldier.stats.bMechanical;
+	this->bExplosive						= Soldier.stats.bExplosive;
+	this->bLeadership						= Soldier.stats.bLeadership;
+	this->bStrength							= Soldier.stats.bStrength;
+	this->bWisdom								= Soldier.stats.bWisdom;
+	this->bAttitude							= Soldier.aiData.bAttitude;
+	this->bOrders								= Soldier.aiData.bOrders;
+	this->bMorale								= Soldier.aiData.bMorale;
+	this->bAIMorale							= Soldier.aiData.bAIMorale;
+	this->bBodyType							= Soldier.ubBodyType;
+	this->ubCivilianGroup				= Soldier.ubCivilianGroup;
+	this->ubScheduleID					= Soldier.ubScheduleID;
+	this->fHasKeys							= Soldier.pathing.bHasKeys;
+	this->sSectorX							= Soldier.sSectorX;
+	this->sSectorY							= Soldier.sSectorY;
+	this->bSectorZ							= Soldier.bSectorZ;
+	this->ubSoldierClass				= Soldier.ubSoldierClass;
+	this->bTeam									= Soldier.bTeam;
+	this->bDirection						= Soldier.bDirection;
+
+	this->fOnRoof								= Soldier.pathing.bLevel;
+	this->sInsertionGridNo			= Soldier.sGridNo;
+
+	swprintf( this->name, Soldier.name );
+
+	//Copy patrol points
+	this->bPatrolCnt						= Soldier.aiData.bPatrolCnt;
+	memcpy( this->sPatrolGrid, Soldier.aiData.usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+			
+	//copy colors for soldier based on the body type.
+	sprintf( this->HeadPal,		Soldier.HeadPal );
+	sprintf( this->VestPal,		Soldier.VestPal );
+	sprintf( this->SkinPal,		Soldier.SkinPal );
+	sprintf( this->PantsPal,  Soldier.PantsPal );
+	sprintf( this->MiscPal,		Soldier.MiscPal );
+
+	//copy soldier's inventory
+                            // WDS - Clean up inventory handling
+	this->Inv = Soldier.inv;
+	return *this;
+}
+
+UINT16 SOLDIERCREATE_STRUCT::GetChecksum()
+{
+	return (
+	this->bLife								* 7		+	 
+	this->bLifeMax  						* 8		-
+	this->bAgility							* 2		+
+	this->bDexterity						* 1		+
+	this->bExpLevel							* 5		-
+	this->bMarksmanship						* 9		+
+	this->bMedical							* 10	+
+	this->bMechanical						* 3		+
+	this->bExplosive						* 4		+
+	this->bLeadership						* 5		+
+	this->bStrength							* 7		+
+	this->bWisdom							* 11	+
+	this->bMorale							* 7		+
+	this->bAIMorale							* 3		-
+	this->bBodyType							* 7		+
+	4										* 6		+
+	this->sSectorX							* 7		-
+	this->ubSoldierClass					* 4		+
+	this->bTeam								* 7		+
+	this->bDirection						* 5		+
+	this->fOnRoof							* 17	+ 
+	this->sInsertionGridNo					* 1		+ 
+	3);
+}
+
+
 SOLDIERCREATE_STRUCT::SOLDIERCREATE_STRUCT() {
 	initialize();
 }
@@ -105,7 +283,7 @@ void SOLDIERCREATE_STRUCT::initialize() {
 // If you change names or eliminate some positions or such you need to change these.
 // Eventually the need for these functions will disappear.
 
-void SOLDIERCREATE_STRUCT::CopyOldInventoryToNew() {
+void OLD_SOLDIERCREATE_STRUCT_101::CopyOldInventoryToNew() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	Inv[HELMETPOS] = DO_NOT_USE_Inv[OldInventory::HELMETPOS];
 	Inv[VESTPOS] = DO_NOT_USE_Inv[OldInventory::VESTPOS];
@@ -127,7 +305,8 @@ void SOLDIERCREATE_STRUCT::CopyOldInventoryToNew() {
 	Inv[SMALLPOCK7POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK7POS];
 	Inv[SMALLPOCK8POS] = DO_NOT_USE_Inv[OldInventory::SMALLPOCK8POS];
 }
-void SOLDIERCREATE_STRUCT::CopyNewInventoryToOld() {
+/*
+void OLD_SOLDIERCREATE_STRUCT_101::CopyNewInventoryToOld() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	DO_NOT_USE_Inv[OldInventory::HELMETPOS] = Inv[HELMETPOS];
 	DO_NOT_USE_Inv[OldInventory::VESTPOS] = Inv[VESTPOS];
@@ -149,6 +328,7 @@ void SOLDIERCREATE_STRUCT::CopyNewInventoryToOld() {
 	DO_NOT_USE_Inv[OldInventory::SMALLPOCK7POS] = Inv[SMALLPOCK7POS];
 	DO_NOT_USE_Inv[OldInventory::SMALLPOCK8POS] = Inv[SMALLPOCK8POS];
 }
+*/
 
 
 //Private functions used within TacticalCreateStruct()
@@ -522,15 +702,15 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					if( !fSecondFaceItem )
 					{ //Don't check for compatibility...  automatically assume there are no head positions filled.
 						fSecondFaceItem = TRUE;
-						memcpy( &Soldier.inv[ HEAD1POS ], &Soldier.inv[ i ], sizeof( OBJECTTYPE ) );
-						memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
+						Soldier.inv[ HEAD1POS ] = Soldier.inv[ i ];
+						Soldier.inv[ i ].initialize();
 					}
 					else
 					{ //if there is a second item, compare it to the first one we already added.
 						if( CompatibleFaceItem( Soldier.inv[ HEAD1POS ].usItem, Soldier.inv[ i ].usItem ) )
 						{
-							memcpy( &Soldier.inv[ HEAD2POS ], &Soldier.inv[ i ], sizeof( OBJECTTYPE ) );
-							memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
+							Soldier.inv[ HEAD2POS ] = Soldier.inv[ i ];
+							Soldier.inv[ i ].initialize();
 							break;
 						}
 					}
@@ -750,11 +930,9 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		SOLDIERTYPE *pSoldier;
 		UINT8 ubSectorID;
 		ubSectorID = GetAutoResolveSectorID();
-                // WDS - Clean up inventory handling
-		pSoldier = new (MemAlloc( SIZEOF_SOLDIERTYPE )) SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+		pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 		if( !pSoldier )
 			return NULL;
-		//memcpy( pSoldier, &Soldier, SIZEOF_SOLDIERTYPE );
 		*pSoldier = Soldier;
 		pSoldier->ubID = 255;
 		pSoldier->sSectorX = (INT16)SECTORX( ubSectorID );
@@ -1210,7 +1388,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
 				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
 			{
-				memcpy( &(pCreateStruct->Inv[SECONDHANDPOS]), &(pCreateStruct->Inv[HANDPOS]), sizeof( OBJECTTYPE ) );
+				(pCreateStruct->Inv[SECONDHANDPOS]) = (pCreateStruct->Inv[HANDPOS]);
 			}
 		}
 	}
@@ -1226,7 +1404,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
 				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
 			{
-				memcpy( &(pCreateStruct->Inv[SECONDHANDPOS]), &(pCreateStruct->Inv[HANDPOS]), sizeof( OBJECTTYPE ) );
+				pCreateStruct->Inv[SECONDHANDPOS] = pCreateStruct->Inv[HANDPOS];
 			}
 		}
 	}
@@ -1896,7 +2074,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	//Starts with nothing
 	for( i = 0; i < NUM_INV_SLOTS; i++ )
 	{
-		memset( &(spp->Inv[ i ]), 0, sizeof( OBJECTTYPE ) );
+		spp->Inv[ i ].initialize();
 		spp->Inv[ i ].usItem = NOTHING;
 		spp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 	}
@@ -1981,7 +2159,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
 		if( spp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
 		{
-			memcpy( &pp->Inv[ i ], &spp->Inv[ i ], sizeof( OBJECTTYPE ) );
+			pp->Inv[ i ] = spp->Inv[ i ];
 			//memcpy( pp->Inv, spp->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 			//return;
 		}
@@ -2204,10 +2382,9 @@ SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
 
                              	// WDS - Clean up inventory handling
 				//Allocate and copy the soldier
-				pSoldier = new (MemAlloc( SIZEOF_SOLDIERTYPE )) SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+				pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 				if( !pSoldier )
 					return NULL;
-//				memcpy( pSoldier, MercPtrs[ i ], SIZEOF_SOLDIERTYPE );
 				*pSoldier = *MercPtrs[i];
 
 				//Assign a bogus ID, then return it
@@ -2234,9 +2411,6 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	// WDS - Clean up inventory handling
-	//memset( &pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-	pp.initialize();
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ADMINISTRATOR );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ADMINISTRATOR );
 	bp.bTeam = ENEMY_TEAM;
@@ -2270,9 +2444,6 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	// WDS - Clean up inventory handling
-	//memset( &pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-	pp.initialize();
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ARMY );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ARMY );
 	bp.bTeam = ENEMY_TEAM;
@@ -2307,10 +2478,6 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	// WDS - Clean up inventory handling
-	//memset( &pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-	pp.initialize();
-
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ELITE );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ELITE );
 	bp.bTeam = ENEMY_TEAM;
@@ -2359,10 +2526,9 @@ SOLDIERTYPE* ReserveTacticalMilitiaSoldierForAutoresolve( UINT8 ubSoldierClass )
 
                             	// WDS - Clean up inventory handling
 				//Allocate and copy the soldier
-				pSoldier = new (MemAlloc( SIZEOF_SOLDIERTYPE )) SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
+				pSoldier = new SOLDIERTYPE; //(SOLDIERTYPE*)MemAlloc( SIZEOF_SOLDIERTYPE );
 				if( !pSoldier )
 					return NULL;
-//				memcpy( pSoldier, MercPtrs[ i ], SIZEOF_SOLDIERTYPE );
 				*pSoldier = *MercPtrs[i];
 
 				//Assign a bogus ID, then return it
@@ -2389,10 +2555,6 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	// WDS - Clean up inventory handling
-	//memset( &pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-	pp.initialize();
-
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), ubMilitiaClass );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), ubMilitiaClass );
 	bp.bTeam = MILITIA_TEAM;
@@ -2421,10 +2583,6 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 	}
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	// WDS - Clean up inventory handling
-	//memset( &pp, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-	pp.initialize();
-
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_CREATURE );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_CREATURE );
 	bp.bTeam = CREATURE_TEAM;
@@ -2644,7 +2802,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+									pSoldier->inv[cnt].initialize();
 								}
 								break;
 							case SKIPPER:
@@ -2654,7 +2812,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+									pSoldier->inv[cnt].initialize();
 								}
 								break;
 							case DOREEN:
@@ -2664,11 +2822,11 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 								}
 								else
 								{
-									memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+									pSoldier->inv[cnt].initialize();
 								}
 								break;
 							default:
-								memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+								pSoldier->inv[cnt].initialize();
 								break;
 						}
 					}
@@ -2690,7 +2848,7 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 				}
 				else
 				{
-					memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+					pSoldier->inv[cnt].initialize();
 				}
 			}
 			if (pProfile->uiMoney > 0)
@@ -2711,12 +2869,12 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
 						// fill pocket with money
-						pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLimitInSlot;			
+						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
-						pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLeft;
+						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;
 					}

@@ -1787,7 +1787,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				memcpy( &(WorldItem.o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+				OBJECTTYPE::CopyObject(&(WorldItem.o), &pSoldier->inv[i]);
 
 				AddWorldItemsToUnLoadedSector( 13, 9, 0, sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );
@@ -1821,7 +1821,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				memcpy( &(WorldItem.o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+				OBJECTTYPE::CopyObject(&(WorldItem.o), &pSoldier->inv[i]);
 
 				AddWorldItemsToUnLoadedSector( 7, 14, 0, sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );

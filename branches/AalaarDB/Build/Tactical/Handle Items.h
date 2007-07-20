@@ -47,7 +47,7 @@ typedef void ( *ITEM_POOL_LOCATOR_HOOK )( void );
 
 
 // WDS - Clean up inventory handling
-struct WORLDITEM;
+class WORLDITEM;
 struct LEVELNODE;
 
 typedef struct TAG_ITEM_POOL

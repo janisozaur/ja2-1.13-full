@@ -1705,10 +1705,10 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	}
 
 	// allocate space
-	pItem = (MERC_LEAVE_ITEM *) MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+	pItem = new MERC_LEAVE_ITEM;
 
 	// copy object
-	memcpy( &( pItem->o ), o, sizeof( OBJECTTYPE ) );
+	pItem->o = *o;
 	
 	// nobody afterwards
 	pItem->pNext = NULL;
@@ -6347,8 +6347,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			for( uiCnt=0; uiCnt<uiCount; uiCnt++)
 			{
 				// Save the items 
-				FileWrite( hFile, pCurrentItem, sizeof( MERC_LEAVE_ITEM ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( MERC_LEAVE_ITEM ) )
+				if ( !pCurrentItem->Save(hFile) )
 				{
 					return(FALSE);
 				}
@@ -6420,28 +6419,25 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 			}
 
 			// allocate space
-			gpLeaveListHead[ iCounter ] = (MERC_LEAVE_ITEM *) MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+			gpLeaveListHead[ iCounter ] = new MERC_LEAVE_ITEM;
 			if( gpLeaveListHead[ iCounter ] == NULL )
 			{
 				return( FALSE );
 			}
-			memset( gpLeaveListHead[ iCounter ], 0, sizeof( MERC_LEAVE_ITEM ) );
 
 			pCurrentItem = gpLeaveListHead[ iCounter ];
 
 			for( uiSubItem=0; uiSubItem< uiCount; uiSubItem++ )
 			{
 				// allocate space
-				pItem = (MERC_LEAVE_ITEM *) MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+				pItem = new MERC_LEAVE_ITEM;
 				if( pItem == NULL )
 				{
 					return( FALSE );
 				}
-				memset( pItem, 0, sizeof( MERC_LEAVE_ITEM ) );
 
 				// Load the items 
-				FileRead( hFile, pItem, sizeof( MERC_LEAVE_ITEM ), &uiNumBytesRead );
-				if( uiNumBytesRead != sizeof( MERC_LEAVE_ITEM ) )
+				if ( !pItem->Load(hFile) )
 				{
 					return(FALSE);
 				}

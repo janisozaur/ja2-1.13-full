@@ -610,7 +610,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ pObject->gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (Weapon[usItem].bAccuracy >= EXCEPTIONAL_ACCURACY )
@@ -753,7 +753,7 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ pObject->gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -2072,8 +2072,8 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				sNewY = sY + sHeight - 10;
 				sNewX = sX + 1;
 
-				SetFontForeground ( AmmoTypes[pObject->ubGunAmmoType].fontColour );
-				//switch (pObject->ubGunAmmoType)
+				SetFontForeground ( AmmoTypes[pObject->gun.ubGunAmmoType].fontColour );
+				//switch (pObject->gun.ubGunAmmoType)
 				//{
 				//	case AMMO_AP:
 				//	case AMMO_SUPER_AP:
@@ -2098,7 +2098,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				//}
 	
 
-				swprintf( pStr, L"%d", pObject->ubGunShotsLeft );
+				swprintf( pStr, L"%d", pObject->gun.ubGunShotsLeft );
 				if ( uiBuffer == guiSAVEBUFFER )
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 20, 15 );
@@ -2109,7 +2109,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 				// Display 'JAMMED' if we are jammed
-				if ( pObject->bGunAmmoStatus < 0 )
+				if ( pObject->gun.bGunAmmoStatus < 0 )
 				{
 					SetFontForeground( FONT_MCOLOR_RED );
 
@@ -2423,18 +2423,18 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		if ( GetMagSize(gpItemDescObject) <= 99 )
-			swprintf( pStr, L"%d/%d", gpItemDescObject->ubGunShotsLeft, GetMagSize(gpItemDescObject));
+			swprintf( pStr, L"%d/%d", gpItemDescObject->gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
 		else
-			swprintf( pStr, L"%d", gpItemDescObject->ubGunShotsLeft );
+			swprintf( pStr, L"%d", gpItemDescObject->gun.ubGunShotsLeft );
 
 		FilenameForBPP("INTERFACE\\infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
 		// TODO: WANNE: Make own sti for the ammo types and an own for the interface
 		// For now, they are together in interface\infobox.sti
-		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[pObject->ubGunAmmoType].grayed,AmmoTypes[pObject->ubGunAmmoType].offNormal,-1,AmmoTypes[pObject->ubGunAmmoType].onNormal,-1 );
+		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[pObject->gun.ubGunAmmoType].grayed,AmmoTypes[pObject->gun.ubGunAmmoType].offNormal,-1,AmmoTypes[pObject->gun.ubGunAmmoType].onNormal,-1 );
 
-		//switch( pObject->ubGunAmmoType )
+		//switch( pObject->gun.ubGunAmmoType )
 		//{
 		//	case AMMO_AP:
 		//	case AMMO_SUPER_AP:
@@ -2619,8 +2619,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	else
 	{
 		memset( &gRemoveMoney, 0, sizeof( REMOVE_MONEY ) );
-		gRemoveMoney.uiTotalAmount = gpItemDescObject->uiMoneyAmount;
-		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->uiMoneyAmount;
+		gRemoveMoney.uiTotalAmount = gpItemDescObject->money.uiMoneyAmount;
+		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->money.uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
@@ -2910,7 +2910,7 @@ void DoAttachment( void )
 				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 				{
 					//Clear out the moving cursor
-					memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+					gMoveingItem.initialize();
 
 					//change the curosr back to the normal one
 					SetSkiCursor( CURSOR_NORMAL );
@@ -3270,12 +3270,12 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one item in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->ubShotsLeft[0];
+			UINT8 ubShotsLeftFirst = gpItemDescObject->shots.ubShotsLeft[0];
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->ubShotsLeft[0] = gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex];
+			gpItemDescObject->shots.ubShotsLeft[0] = gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->ubShotsLeft[0] = ubShotsLeftFirst;
+			gpItemDescObject->shots.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
 		}
 		//Item does not exist
@@ -3338,7 +3338,7 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 5 );
 			//Status
 			// This is gross, but to get the % to work out right...
-			swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+			swprintf( pStr, L"%2d%%", gpItemDescObject->status.bStatus[ gubItemDescStatusIndex ] );
 			FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -3510,7 +3510,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->uiMoneyAmount );
+			swprintf( pStr, L"%ld", gpItemDescObject->money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
@@ -3543,7 +3543,7 @@ void RenderItemDescriptionBox( )
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
 			{
 				// Ammo
-					swprintf( pStr, L"%d/%d", gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
+					swprintf( pStr, L"%d/%d", gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
 					uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 		//			sStrX =  gMapWeaponStats[ 0 ].sX + gsInvDescX + gMapWeaponStats[ 0 ].sValDx + ( uiRightLength - uiStringLength );
 					FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 2 ].sX + gsInvDescX + gMapWeaponStats[ 2 ].sValDx+6), (INT16)(gMapWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3552,7 +3552,7 @@ void RenderItemDescriptionBox( )
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+				swprintf( pStr, L"%2d%%", gpItemDescObject->status.bStatus[ gubItemDescStatusIndex ] );
 				uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 	//			sStrX =  gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3579,12 +3579,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -3764,12 +3764,12 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one ammo clip in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->ubShotsLeft[0];
+			UINT8 ubShotsLeftFirst = gpItemDescObject->shots.ubShotsLeft[0];
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->ubShotsLeft[0] = gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex];
+			gpItemDescObject->shots.ubShotsLeft[0] = gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->ubShotsLeft[0] = ubShotsLeftFirst;
+			gpItemDescObject->shots.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
 		}
 		//Item does not exist
@@ -3839,7 +3839,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Status
-			swprintf( pStr, L"%2d%%", gpItemDescObject->bGunStatus );
+			swprintf( pStr, L"%2d%%", gpItemDescObject->gun.bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -4007,7 +4007,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->uiMoneyAmount );
+			swprintf( pStr, L"%ld", gpItemDescObject->money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 
@@ -4043,14 +4043,14 @@ void RenderItemDescriptionBox( )
 			{
 				// Ammo - print amount
 				//Status
-				swprintf( pStr, L"%d/%d", gpItemDescObject->ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
+				swprintf( pStr, L"%d/%d", gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 2 ].sX + gsInvDescX + gWeaponStats[ 2 ].sValDx), (INT16)(gWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
+				swprintf( pStr, L"%2d%%", gpItemDescObject->status.bStatus[ gubItemDescStatusIndex ] );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				wcscat( pStr, L"%%" );
 				mprintf( usX, usY, pStr );
@@ -4068,12 +4068,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4294,7 +4294,7 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 	}
 
 	// Copy into cursor...
-	memcpy( &gItemPointer, pObject, sizeof( OBJECTTYPE ) );
+	gItemPointer = *pObject;
 
 	// Dirty interface
 	fInterfacePanelDirty = DIRTYLEVEL2;
@@ -4317,8 +4317,6 @@ void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 {
 	BOOLEAN			fOk;
 	OBJECTTYPE	pObject;
-
-	memset( &pObject, 0, sizeof( OBJECTTYPE ) );
 
 	if (_KeyDown( SHIFT ))
 	{
@@ -4400,7 +4398,7 @@ void EndItemPointer( )
 
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		{
-			memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+			gMoveingItem.initialize();
 			SetSkiCursor( CURSOR_NORMAL );
 		}
 		else
@@ -4889,7 +4887,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 		// Place it back in our hands!
 
-		memcpy( &TempObject, gpItemPointer, sizeof( OBJECTTYPE ) );
+		TempObject = *gpItemPointer;
 
 		if ( gbItemPointerSrcSlot != NO_SLOT )
 		{
@@ -4931,8 +4929,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					 if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					 {
 							// Make a temp object for ammo...
-							gpItemPointerSoldier->pTempObject	 = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) );
-							memcpy( gpItemPointerSoldier->pTempObject, &TempObject, sizeof( OBJECTTYPE ) );
+							gpItemPointerSoldier->pTempObject	 = new OBJECTTYPE;
+							OBJECTTYPE::CopyObject( gpItemPointerSoldier->pTempObject, &TempObject);
 						  
 							// Remove from soldier's inv...
 							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
@@ -5030,10 +5028,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				{
 					case ANIM_STAND:
 
-						gpItemPointerSoldier->pTempObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) );
+						gpItemPointerSoldier->pTempObject = new OBJECTTYPE;
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
-							memcpy( gpItemPointerSoldier->pTempObject, gpItemPointer, sizeof( OBJECTTYPE ) );
+							OBJECTTYPE::CopyObject( gpItemPointerSoldier->pTempObject, gpItemPointer);
 							gpItemPointerSoldier->aiData.sPendingActionData2 = usMapPos;
 
 	 						// Turn towards.....gridno	
@@ -5631,7 +5629,6 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 	UINT32								usHeight, usWidth;
 	HVOBJECT							hVObject;
 	UINT32								cnt;
-	OBJECTTYPE						pObject;
 	INT16 sKeyRingItemWidth = 0;
 	INT16 sOffSetY = 0, sOffSetX = 0;
 
@@ -5659,10 +5656,9 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 
 	}
 
-	memset( &pObject, 0, sizeof( OBJECTTYPE ) );
-
+	OBJECTTYPE						pObject;
 	pObject.usItem = KEY_1;
-	pObject.bStatus[ 0 ] = 100;
+	pObject.status.bStatus[ 0 ] = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -5987,7 +5983,7 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 						if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 						{
-							memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+							gMoveingItem.initialize();
 							SetSkiCursor( CURSOR_NORMAL );
 						}
           }
@@ -6506,7 +6502,7 @@ void SetupPickupPage( INT8 bPage )
 			pObject = (gfStealing)? &gpOpponent->inv[pTempItemPool->iItemIndex]
 				:&(gWorldItems[ pTempItemPool->iItemIndex ].o );
 
-		  sValue = pObject->bStatus[ 0 ];
+		  sValue = pObject->status.bStatus[ 0 ];
 
 	    // Adjust for ammo, other thingys..
 	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
@@ -6778,7 +6774,7 @@ void RenderItemPickupMenu( )
 				if ( Item[ pObject->usItem ].usItemClass == IC_MONEY )
 				{
 					CHAR16		pStr2[20];
-					swprintf( pStr2, L"%ld", pObject->uiMoneyAmount );
+					swprintf( pStr2, L"%ld", pObject->money.uiMoneyAmount );
 					InsertCommasForDollarFigure( pStr2 );
 					InsertDollarSignInToString( pStr2 );
 
@@ -7063,13 +7059,17 @@ void ItemPickMenuMouseMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				pTempItemPool = gItemPickupMenu.ItemPoolSlots[ gItemPickupMenu.bCurSelect - gItemPickupMenu.ubScrollAnchor ];
 
 				// Nonomori: Fix crash caused by stealing ammo in a sector with no items loaded.
-				// memcpy( &(gItemPickupMenu.CompAmmoObject), &( gWorldItems[ pTempItemPool->iItemIndex ].o ), sizeof( OBJECTTYPE ) ); 
-				OBJECTTYPE * pCompAmmoObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) );
+				// gItemPickupMenu.CompAmmoObject = gWorldItems[ pTempItemPool->iItemIndex ].o; 
 				if ( gWorldItems && gWorldItems[ pTempItemPool->iItemIndex ].fExists )
-					pCompAmmoObject = &( gWorldItems[ pTempItemPool->iItemIndex ].o );
+				{
+					gItemPickupMenu.CompAmmoObject = gWorldItems[ pTempItemPool->iItemIndex ].o ;
+				}
 				else
-					CreateItem( pTempItemPool->iItemIndex, 100, pCompAmmoObject);
-				memcpy( &(gItemPickupMenu.CompAmmoObject), pCompAmmoObject, sizeof( OBJECTTYPE ) ); 
+				{
+					OBJECTTYPE pCompAmmoObject;
+					CreateItem( pTempItemPool->iItemIndex, 100, &pCompAmmoObject);
+					gItemPickupMenu.CompAmmoObject = pCompAmmoObject; 
+				}
 
 				// Turn off first...
 				HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
@@ -7319,34 +7319,32 @@ void RemoveMoney()
 		{
 			INVENTORY_IN_SLOT InvSlot;
 
-			memset( &InvSlot, 0, sizeof(INVENTORY_IN_SLOT) );
-
 			InvSlot.fActive = TRUE;
 			InvSlot.sItemIndex = MONEY;
 			InvSlot.bSlotIdInOtherLocation = -1;
 
 			//Remove the money from the money in the pocket
-			gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+			gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 				//Create an item to get the money that is being removed
 			CreateItem( MONEY, 0, &InvSlot.ItemObject );
 
 			//Set the amount thast is being removed
-			InvSlot.ItemObject.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+			InvSlot.ItemObject.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 			InvSlot.ubIdOfMercWhoOwnsTheItem = gpItemDescSoldier->ubProfile;
 
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->money.uiMoneyAmount ) );
 			}
 
-			memcpy( &gMoveingItem, &InvSlot, sizeof( INVENTORY_IN_SLOT ) );
+			gMoveingItem = InvSlot;
 
-			memcpy( &gItemPointer, &InvSlot.ItemObject, sizeof( OBJECTTYPE ) );
+			gItemPointer = InvSlot.ItemObject;
 			gpItemPointer = &gItemPointer;
 			gpItemPointerSoldier = gpSMCurrentMerc;
 
@@ -7367,13 +7365,13 @@ void RemoveMoney()
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->money.uiMoneyAmount ) );
 			}
 			else
-				gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 
 
@@ -7426,13 +7424,13 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	{
 		// Retrieve the status of the items
 		// Find the minimum status value - not just the first one
-		INT16 sValue = pObject->bStatus[ 0 ];
+		INT16 sValue = pObject->status.bStatus[ 0 ];
 
 		for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
 		{
-			if(pObject->bStatus[ i ] < sValue)
+			if(pObject->status.bStatus[ i ] < sValue)
 			{
-				sValue = pObject->bStatus[ i ];
+				sValue = pObject->status.bStatus[ i ];
 			}
 		}
 
@@ -7458,7 +7456,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		case MONEY:
 			//Money
 			{	
-				swprintf( pStr, L"%ld", pObject->uiMoneyAmount );
+				swprintf( pStr, L"%ld", pObject->money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr );
 				InsertDollarSignInToString( pStr );
 			}
@@ -7469,7 +7467,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			//if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{ 
 				CHAR16		pStr2[20];
-				swprintf( pStr2, L"%ld", pObject->uiMoneyAmount );
+				swprintf( pStr2, L"%ld", pObject->money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
@@ -7606,7 +7604,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				// The next is for ammunition which gets the measurement 'rnds'		
 				swprintf( pStr, L"%s [%d rnds]\n%s %1.1f %s", 				
 					ItemNames[ usItem ],		//Item long name
-					pObject->ubShotsLeft[0],	//Shots left
+					pObject->shots.ubShotsLeft[0],	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
 					fWeight,					//Weight
 					GetWeightUnitString()		//Weight units
@@ -7618,7 +7616,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				//	AmmoTypes[Magazine[ Item[usItem].ubClassIndex ].ubAmmoType].ammoName,	//Ammo type
 				//	MagNames[Magazine[ Item[usItem].ubClassIndex ].ubMagType],				//Magazine type
 				//	Magazine[ Item[usItem].ubClassIndex ].ubMagSize,						//Magazine capacity
-				//	pObject->ubShotsLeft[0],	//Shots left
+				//	pObject->shots.ubShotsLeft[0],	//Shots left
 				//	gWeaponStatsDesc[ 12 ],		//Weight String
 				//	fWeight,					//Weight
 				//	GetWeightUnitString()		//Weight units
@@ -7806,18 +7804,7 @@ void CancelItemPointer( )
 		}
 		EndItemPointer( );
 	}
-}	
-
-
-typedef struct 
-{
-	OBJECTTYPE	ItemPointerInfo;
-	UINT8				ubSoldierID;
-	UINT8				ubInvSlot;
-	BOOLEAN			fCursorActive;
-	INT8				bPadding[5];
-
-} ITEM_CURSOR_SAVE_INFO;
+}
 
 
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
@@ -7827,16 +7814,14 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Load structure
-	uiLoadSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	FileRead( hFile, &SaveStruct, uiLoadSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiLoadSize )
+	if ( !SaveStruct.Load(hFile) )
 	{
 		return( FALSE );
 	}
 
 	// Now set things up.....
 	// Copy object
-	memcpy( &gItemPointer, &(SaveStruct.ItemPointerInfo), sizeof( OBJECTTYPE ) );
+	gItemPointer = (SaveStruct.ItemPointerInfo);
 	
 	// Copy soldier ID
 	if ( SaveStruct.ubSoldierID == NOBODY )
@@ -7873,8 +7858,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Setup structure;
-	memset( &SaveStruct, 0, sizeof( ITEM_CURSOR_SAVE_INFO ) );
-	memcpy( &(SaveStruct.ItemPointerInfo), &gItemPointer, sizeof( OBJECTTYPE ) );
+	SaveStruct.ItemPointerInfo = gItemPointer;
 
 	// Soldier
 	if ( gpItemPointerSoldier != NULL )
@@ -7900,9 +7884,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 	}
 
 	// save locations of watched points
-	uiSaveSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	FileWrite( hFile, &SaveStruct, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
+	if( !SaveStruct.Save(hFile) )
 	{
 		return( FALSE );
 	}

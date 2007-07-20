@@ -532,7 +532,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	{ //clear items, but only if they have write status.
 		if( !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 		{
-			memset( &(pp->Inv[ i ]), 0, sizeof( OBJECTTYPE ) );
+			pp->Inv[ i ].initialize();
 			pp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 		}
 		else
@@ -553,7 +553,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					{
 						fLAW = FALSE;
 					}
-					pItem->ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					pItem->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					break;
 				case IC_AMMO:
 					bAmmoClips = 0;
@@ -563,7 +563,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					bKnifeClass = 0;
 					break;
 				case IC_LAUNCHER:
-					pItem->ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					pItem->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					fGrenadeLauncher = FALSE;
 					if (fMortar || fRPG)
 					{
@@ -660,8 +660,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 				usGunIndex = pp->Inv[ i ].usItem;
 				ubChanceStandardAmmo = 100 - (bWeaponClass * -9);		// weapon class is negative!
 				usAmmoIndex = RandomMagazine( usGunIndex, ubChanceStandardAmmo );
-				pp->Inv[ i ].ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-				pp->Inv[ i ].usGunAmmoItem = usAmmoIndex;
+				pp->Inv[ i ].gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+				pp->Inv[ i ].gun.usGunAmmoItem = usAmmoIndex;
 
 				if ( Item[usGunIndex].fingerprintid )
 				{
@@ -903,7 +903,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Set bullets"));
 	//set bullets = to magsize including any attachments (c-mag adapters, etc)
-	pp->Inv[ HANDPOS ].ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
+	pp->Inv[ HANDPOS ].gun.ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: choose ammo"));
 	if( bAmmoClips )
@@ -929,8 +929,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		//}
 
 		usAmmoIndex = RandomMagazine( &pp->Inv[HANDPOS], ubChanceStandardAmmo );
-		pp->Inv[ HANDPOS ].ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-		pp->Inv[ HANDPOS ].usGunAmmoItem = usAmmoIndex;
+		pp->Inv[ HANDPOS ].gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+		pp->Inv[ HANDPOS ].gun.usGunAmmoItem = usAmmoIndex;
 	}
 
 	//Ammo
@@ -2014,7 +2014,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
@@ -2028,7 +2028,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
@@ -2036,7 +2036,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		{ //no space free in small pockets, so put it into a large pocket.
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
@@ -2845,7 +2845,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 			{
 				// have to replace!  but first (ugh) must store backup (b/c of attachments)
 				CopyObj( &(pp->Inv[ uiLoop ]), &OldObj );
-				CreateItem( usNewGun, OldObj.bGunStatus, &(pp->Inv[ uiLoop ]) );
+				CreateItem( usNewGun, OldObj.gun.bGunStatus, &(pp->Inv[ uiLoop ]) );
 				pp->Inv[ uiLoop ].fFlags = OldObj.fFlags;
 
 				// copy any valid attachments; for others, just drop them...

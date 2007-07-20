@@ -722,9 +722,7 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId, STR fileName )
 	}
 
 	// write out the profile itself
-        // WDS - Clean up inventory handling
-	gMercProfiles[ iProfileId ].CopyNewInventoryToOld();
-	if (!FileWrite(hFile, &gMercProfiles[ iProfileId ], SIZEOF_MERCPROFILESTRUCT_POD, &uiBytesWritten))
+	if ( !gMercProfiles[ iProfileId ].Save(hFile) )
 	{
 		if (hFile)
 			FileClose(hFile);
@@ -797,12 +795,11 @@ BOOLEAN LoadImpCharacter( STR nickName )
 
 		// read in the profile
                 // WDS - Clean up inventory handling
-		if (!FileRead(hFile, &gMercProfiles[ iProfileId ] , SIZEOF_MERCPROFILESTRUCT_POD, &uiBytesRead))
+		if ( !gMercProfiles[ iProfileId ].Load(hFile) )
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return FALSE;
 		}
-		gMercProfiles[ iProfileId ].CopyOldInventoryToNew();
 
 		// close file
 		FileClose(hFile);

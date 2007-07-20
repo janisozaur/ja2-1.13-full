@@ -2967,8 +2967,6 @@ void AddNPCToGridNo( INT32 iGridNo )
 	UINT8									ubID;
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
-
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
 	MercCreateStruct.sSectorX			= sSectorX;
@@ -3674,7 +3672,7 @@ void RefreshAllNPCInventory()
 				for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
 				{
 					//null out the items in the npc inventory
-					memset( &Menptr[ usCnt ].inv[ usItemCnt ], 0, sizeof( OBJECTTYPE ) );
+					Menptr[ usCnt ].inv[ usItemCnt ].initialize();
 
 					if ( gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ] != NOTHING )
 					{
@@ -3682,13 +3680,13 @@ void RefreshAllNPCInventory()
 						usItem = gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ];
 
 						//Create the object
+						TempObject.initialize();
 						CreateItem( usItem, 100, &TempObject );
 	
 						//copy the item into the soldiers inventory
-						memcpy( &Menptr[ usCnt ].inv[ usItemCnt ], &TempObject, sizeof( OBJECTTYPE ) );
+						Menptr[ usCnt ].inv[ usItemCnt ] = TempObject;
 					}
 				}
-
 			}
 		}
 	}

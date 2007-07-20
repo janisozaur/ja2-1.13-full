@@ -2742,7 +2742,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if( gpItemPointer == NULL )
 						{
 							// clean up
-							memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+							gMoveingItem.initialize();
 							SetSkiCursor( CURSOR_NORMAL );
 						}
 						else
@@ -5544,12 +5544,10 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			if( gMoveingItem.sItemIndex == 0 )
 			{
 				//Delete the contents of the item cursor
-				memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+				gMoveingItem.initialize();
 			}
 			else
 			{
-				memset( &InvSlot, 0, sizeof( INVENTORY_IN_SLOT ) );
-
 				// Return if empty
 				//if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 				//	return;
@@ -5558,8 +5556,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				// Fill out the inv slot for the item
 				//InvSlot.sItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 //			InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
-//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].bGunStatus;
-				//memcpy( &InvSlot.ItemObject, &gpSMCurrentMerc->inv[ uiHandPos ], sizeof( OBJECTTYPE ) );
+//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].gun.bGunStatus;
+				//InvSlot.ItemObject = gpSMCurrentMerc->inv[ uiHandPos ];
 				//InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 
 				//InvSlot.ubIdOfMercWhoOwnsTheItem = gpSMCurrentMerc->ubProfile;
@@ -5666,7 +5664,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//usOldItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 				//usNewItemIndex = gpItemPointer->usItem;
 
-				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->ubKeyID)
+				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->key.ubKeyID)
 				{
 					// Try to place here
 					if ( ( iNumberOfKeysTaken = AddKeysToSlot( gpItemPopupSoldier, ( INT8 )uiKeyRing, gpItemPointer ) ) )
@@ -5909,7 +5907,7 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		    HandleTacticalUI( );
 
-				swprintf( zMoney, L"%d", gpItemPointer->uiMoneyAmount );
+				swprintf( zMoney, L"%d", gpItemPointer->money.uiMoneyAmount );
 
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
@@ -5954,7 +5952,7 @@ void ConfirmationToDepositMoneyToPlayersAccount( UINT8 ubExitValue )
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//add the money to the players account
-		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->uiMoneyAmount );
+		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->money.uiMoneyAmount );
 
 		// dirty shopkeeper
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;

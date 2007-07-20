@@ -42,7 +42,6 @@
 
 extern INT16 gsRobotGridNo;
 
-
 UINT32 guiPabloExtraDaysBribed = 0;
 
 UINT8		gubCambriaMedicalObjects;
@@ -147,12 +146,10 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
-		pStolenObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		pObject = new OBJECTTYPE[ usNumberOfItems ];
+		pStolenObject = new OBJECTTYPE[ usNumberOfItems ];
 		if( pObject == NULL || pStolenObject == NULL)
 			return;
-		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
-		memset( pStolenObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 	// WDS - Option to turn off stealing
@@ -189,7 +186,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		{
 			// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is done for BobbyR
 			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
-			Object.ubGunShotsLeft = 0;
+			Object.gun.ubGunShotsLeft = 0;
 		}
 
 		ubItemsDelivered = 0;
@@ -220,11 +217,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
+						Object.status.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.status.bStatus[0] ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
+						if (Object.status.bStatus[0] == 0)
 						{
-							Object.bStatus[0] = 1;
+							Object.status.bStatus[0] = 1;
 						}
 						AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
 					}
@@ -239,7 +236,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			{
 				if ( j > 1 && !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + j) )
 				{
-					memcpy( &pStolenObject[ uiStolenCount ], &Object, sizeof( OBJECTTYPE ) );
+					pStolenObject[ uiStolenCount ] = Object;
 					uiStolenCount++;
 					fPablosStoleSomething = TRUE;
 					fPablosStoleLastItem = TRUE;
@@ -254,13 +251,13 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
+						Object.status.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.status.bStatus[0] ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
+						if (Object.status.bStatus[0] == 0)
 						{
-							Object.bStatus[0] = 1;
+							Object.status.bStatus[0] = 1;
 						}
-						memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+						pObject[ uiCount ] = Object;
 						uiCount++;
 					}
 					else
@@ -280,7 +277,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			}
 			else
 			{
-				memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+				pObject[ uiCount ] = Object;
 				uiCount++;
 			}
 		}
@@ -299,7 +296,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				}
 				else
 				{
-					memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+					pObject[ uiCount ] = Object;
 					uiCount++;
 				}
 
@@ -327,8 +324,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				//return;
 			}
 		}
-		MemFree( pObject );
-		MemFree( pStolenObject );
+		delete[] pObject ;
+		delete[]( pStolenObject );
 		pObject = NULL;
 		pStolenObject = NULL;
 	}
@@ -484,7 +481,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 		{
 			return;
 		}
-		pTemp = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiNumWorldItems);
+		pTemp = new WORLDITEM[  uiNumWorldItems];
 		if (!pTemp)
 		{
 			return;
@@ -503,6 +500,9 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 		}
 	}
 
+	if (pTemp) {
+		delete [] pTemp;
+	}
 
 }
 
@@ -557,7 +557,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
 		{
-			uiTotalCash += gWorldItems[uiLoop].o.uiMoneyAmount;
+			uiTotalCash += gWorldItems[uiLoop].o.money.uiMoneyAmount;
 		}
 	}
 
@@ -1041,14 +1041,14 @@ void CheckForMissingHospitalSupplies( void )
 	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
+		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
 			GetItemPool( gWorldItems[ uiLoop ].sGridNo, &pItemPool, 0 ) ;
 			while( pItemPool ) 
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
 
-				if ( pObj->bStatus[ 0 ] > 60 )
+				if ( pObj->status.bStatus[ 0 ] > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{
@@ -1136,10 +1136,9 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		pObject = new OBJECTTYPE[ usNumberOfItems ];
 		if( pObject == NULL )
 			return;
-		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 
@@ -1164,7 +1163,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 			}
 			else
 			{
-				memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+				pObject[ uiCount ] = Object;
 				uiCount++;
 			}
 
@@ -1183,7 +1182,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 			//error
 			Assert( 0 );
 		}
-		MemFree( pObject );
+		delete[]( pObject );
 		pObject = NULL;
 	}
 

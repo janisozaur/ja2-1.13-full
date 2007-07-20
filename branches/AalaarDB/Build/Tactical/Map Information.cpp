@@ -437,7 +437,7 @@ void UpdateOldVersionMap()
 					{
 						for( cnt = 0; cnt < pItem->ubNumberOfObjects; cnt++ )
 						{
-							pItem->ubShotsLeft[ cnt ] = Magazine[ Item[ pItem->usItem ].ubClassIndex ].ubMagSize;
+							pItem->shots.ubShotsLeft[ cnt ] = Magazine[ Item[ pItem->usItem ].ubClassIndex ].ubMagSize;
 						}
 					}
 				}

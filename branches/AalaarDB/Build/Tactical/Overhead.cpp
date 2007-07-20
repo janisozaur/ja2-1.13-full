@@ -116,7 +116,6 @@ extern void HandleBestSightingPositionInRealtime();
 
 extern UINT8	gubAICounter;
 
-
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 
@@ -607,8 +606,8 @@ BOOLEAN InitOverhead( )
 	UINT32	cnt;
 	UINT8		cnt2;
 
-	memset( MercSlots, 0, sizeof( MercSlots ) );
-	memset( AwaySlots, 0, sizeof( AwaySlots ) );
+	//memset( MercSlots, 0, sizeof( MercSlots ) );
+	//memset( AwaySlots, 0, sizeof( AwaySlots ) );
 
 	// Set pointers list
 	for( cnt = 0; cnt < TOTAL_SOLDIERS; cnt++ )
@@ -2098,11 +2097,11 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				INT8				bPosOfMask;
 
 				bPosOfMask = FindGasMask (pSoldier);
-				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].bStatus[0] >= GASMASK_MIN_STATUS )
+				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].status.bStatus[0] >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD1POS;
 				//}
-				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].bStatus[0] >= GASMASK_MIN_STATUS )
+				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].status.bStatus[0] >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD2POS;
 				//}

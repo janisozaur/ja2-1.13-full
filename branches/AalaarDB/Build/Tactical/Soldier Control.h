@@ -22,7 +22,7 @@ using namespace std;
 //ADB makes the code clearer, used like "thisSoldier->foo();"
 #define thisSoldier this
 
-//forward declarations for versioning
+//forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;
 
 #define PTR_CIVILIAN    (pSoldier->bTeam == CIV_TEAM)
@@ -396,6 +396,8 @@ public:
 	OBJECTTYPE	object;
 	int			bNewItemCount;
 	int			bNewItemCycleCount;
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Save( HWFILE hFile );
 };
 
 //ADB inventory needs a little work, for instance, how to get objects and counts to agree on sizes?
@@ -417,7 +419,10 @@ public:
 	~Inventory();
 
 	// Index operator
-	OBJECTTYPE& operator [] (int idx);
+	OBJECTTYPE& operator [] (unsigned int idx);
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Save( HWFILE hFile );
 
 	// Removes all items from the inventory
 	void clear();
@@ -435,7 +440,7 @@ private:
 class STRUCT_AIData//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 
 	//not yet used
 	//cached value for which ai profile this soldier should use, ie regular, sniper,  civilian, etc
@@ -504,7 +509,7 @@ public:
 class STRUCT_Flags//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 
 public:
 	// flags from before the changes to the memory structure
@@ -595,7 +600,7 @@ public:
 class STRUCT_TimeChanges//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 		// time changes...when a stat was changed according to GetJA2Clock();
 	UINT32											uiChangeLevelTime;
 	UINT32											uiChangeHealthTime;
@@ -613,7 +618,7 @@ public:
 class STRUCT_Drugs//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
   INT8			bFutureDrugEffect[2];						// value to represent effect of a needle
   INT8			bDrugEffectRate[2];							// represents rate of increase and decrease of effect  
   INT8			bDrugEffect[2];								// value that affects AP & morale calc ( -ve is poorly )
@@ -625,7 +630,7 @@ public:
 class STRUCT_TimeCounters//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 	TIMECOUNTER									UpdateCounter;
 	TIMECOUNTER									DamageCounter;
 	TIMECOUNTER									ReloadCounter;
@@ -641,19 +646,19 @@ public:
 class STRUCT_Statistics//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	INT8												bLife;				// current life (hit points or health)
+	INT8												bLifeMax;			// maximum life for this merc
+	INT8												bExpLevel;		// general experience level
 	INT8												bAgility;			// agility (speed) value
 	INT8												bStrength;
 	INT8												bMechanical;
-	INT8												bLifeMax;			// maximum life for this merc
 	INT8												bMarksmanship;
 	INT8												bExplosive;
 	UINT8												ubSkillTrait1;
 	UINT8												ubSkillTrait2;
 	INT8												bDexterity;		// dexterity (hand coord) value
 	INT8												bWisdom;
-	INT8												bLife;				// current life (hit points or health)
-	INT8												bExpLevel;		// general experience level
 	INT8												bMedical;
 	INT8												bScientific;  
   INT8                        bLeadership;
@@ -662,7 +667,7 @@ public:
 class STRUCT_Pathing//last edited at version 102
 {
 public:
-	void				LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
+	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 	// WALKING STUFF
 	INT8												bDesiredDirection;
 	INT16												sDestXPos;
@@ -700,11 +705,19 @@ public:
 	// Destructor
 	~SOLDIERTYPE();
 
+	BOOLEAN Load(HWFILE hFile);
+	BOOLEAN Save(HWFILE hFile);
+	UINT32	GetChecksum();
+
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.
 	//  Note that the constructor does this automatically.
 	void initialize();
 
+	// Note: Place all non-POD items at the end (after endOfPOD)
+	// The format of this structure affects what is written into and read from various
+	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// properly until it is all fixed and the files updated.
 public:
 	// ID
 	UINT8												ubID;
@@ -1111,6 +1124,11 @@ public:
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 
+	// Note: Place all non-POD items at the end (after endOfPOD)
+	// The format of this structure affects what is written into and read from various
+	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// properly until it is all fixed and the files updated.
+
 	Inventory inv;
 
 	//data from version 101 wrapped into structs
@@ -1382,6 +1400,7 @@ void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue );
 class OLDSOLDIERTYPE_101
 {
 public:
+	UINT32 GetChecksum();
 	OLDSOLDIERTYPE_101() {
 		bNewItemCount.reserve(inv.size());
 		bNewItemCycleCount.reserve(inv.size());
@@ -1444,7 +1463,7 @@ public:
 
 	UINT32											uiStatusFlags;
 
-	OBJECTTYPE									DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];
+	OLD_OBJECTTYPE_101									DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];
 public:
 	OBJECTTYPE									*pTempObject;
 	KEY_ON_RING									*pKeyRing;
@@ -2067,7 +2086,6 @@ public:
 	vector<int>	bNewItemCount;
 	vector<int> bNewItemCycleCount;
 }; // OLDSOLDIERTYPE_101;	
-
 
 #endif
 

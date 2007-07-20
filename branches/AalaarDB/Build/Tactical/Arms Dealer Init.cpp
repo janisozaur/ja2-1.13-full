@@ -1420,7 +1420,7 @@ UINT32 CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer )
 				}
 				else
 				{
-					// non-stacking items must be stored in one / box , because each may have unique fields besides bStatus[]
+					// non-stacking items must be stored in one / box , because each may have unique fields besides status.bStatus[]
 					// Example: guns all have ammo, ammo type, etc.  We need these uniquely represented for pricing & manipulation
 					uiNumOfItems += gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems;
 				}
@@ -1527,23 +1527,23 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
 
 			// if any GunAmmoItem is specified
-			if( pObject->usGunAmmoItem != NONE)
+			if( pObject->gun.usGunAmmoItem != NONE)
 			{
 				// if it's regular ammo
-				if( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO )
+				if( Item[ pObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 				{
 					// and there are some remaining
-					if ( pObject->ubGunShotsLeft > 0 )
+					if ( pObject->gun.ubGunShotsLeft > 0 )
 					{
 						// add the bullets of its remaining ammo
-						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usGunAmmoItem, pObject->ubGunShotsLeft );
+						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->gun.usGunAmmoItem, pObject->gun.ubGunShotsLeft );
 					}
 				}
 				else	// assume it's attached ammo (mortar shells, grenades)
 				{
 					// add the launchable item (can't be imprinted, or have attachments!)
 					SetSpecialItemInfoToDefaults( &SpclItemInfo );
-					SpclItemInfo.bItemCondition = pObject->bGunAmmoStatus;
+					SpclItemInfo.bItemCondition = pObject->gun.bGunAmmoStatus;
 
 					// if the gun it was in was jammed, get rid of the negative status now
 					if ( SpclItemInfo.bItemCondition < 0 )
@@ -1551,7 +1551,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 						SpclItemInfo.bItemCondition *= -1;
 					}
 
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usGunAmmoItem, &SpclItemInfo, 1 );
+					AddItemToArmsDealerInventory( ubArmsDealer, pObject->gun.usGunAmmoItem, &SpclItemInfo, 1 );
 				}
 			}
 			break;
@@ -1560,7 +1560,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add the contents of each magazine (multiple mags may have vastly different #bullets left)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->ubShotsLeft[ ubCnt ] );
+				AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->shots.ubShotsLeft[ ubCnt ] );
 			}
 			break;
 
@@ -1568,7 +1568,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				SpclItemInfo.bItemCondition = pObject->bStatus[ ubCnt ];
+				SpclItemInfo.bItemCondition = pObject->status.bStatus[ ubCnt ];
 				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, &SpclItemInfo, 1 );
 			}
 			break;
@@ -1595,7 +1595,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 
 
 	// nuke the original object to prevent any possible item duplication
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
+	pObject->initialize();
 }
 
 
@@ -1905,9 +1905,9 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	UINT8 ubHowManyMaxAtATime;
 	UINT8 ubLeftToDrop;
 	UINT8	ubNowDropping;
-	OBJECTTYPE TempObject;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
+	OBJECTTYPE TempObject;
 
 
 	//Get Dealer ID from from merc Id
@@ -2000,8 +2000,8 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	//if the dealer has money
 	if( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash > 0 )
 	{
+		TempObject.initialize();
 		//Create the object
-		memset( &TempObject, 0, sizeof( OBJECTTYPE ) );
 		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &TempObject ) )
 		{
 			return( FALSE );
@@ -2032,7 +2032,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 		bItemCondition *= -1;
 	}
 
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
+	pObject->initialize();
 
 	//Create the item object
 	CreateItems( usItemIndex, bItemCondition, ubHowMany, pObject );
@@ -2058,7 +2058,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 		// have to keep track of #bullets in a gun throughout dealer inventory.  Without this, players could "reload" guns
 		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!  One could repeat this
 		// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
-		pObject->ubGunShotsLeft = 0;
+		pObject->gun.ubGunShotsLeft = 0;
 	}
 }
 
@@ -2080,7 +2080,7 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	Assert( CanDealerRepairItem( ubArmsDealer, pObject->usItem ) );
 
 	//		c) Actually damaged, or a rocket rifle (being reset)
-	Assert( ( pObject->bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
+	Assert( ( pObject->status.bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 /* ARM: Can now repair with removeable attachments still attached...
 	//		d) Already stripped of all *detachable* attachments
@@ -2101,11 +2101,11 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
-		if( pObject->usGunAmmoItem != NONE)
+		if( pObject->gun.usGunAmmoItem != NONE)
 		{
 			// it better be regular ammo, and empty
-			Assert( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO );
-			Assert( pObject->ubGunShotsLeft == 0 );
+			Assert( Item[ pObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO );
+			Assert( pObject->gun.ubGunShotsLeft == 0 );
 		}
 	}
 
@@ -2228,7 +2228,7 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	UINT32 uiRepairTime;
 	UINT8 ubCnt;
 
-	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->bStatus[ 0 ] );
+	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->status.bStatus[ 0 ] );
 
 	// add time to repair any attachments on it
 	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
@@ -2312,7 +2312,7 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	UINT32 uiRepairCost;
 	UINT8 ubCnt;
 
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->bStatus[ 0 ] );
+	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->status.bStatus[ 0 ] );
 
 	// add cost of repairing any attachments on it
 	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
@@ -2413,7 +2413,7 @@ void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE 
 	}
 	else
 	{
-		pSpclItemInfo->bItemCondition = pObject->bStatus[ 0 ];
+		pSpclItemInfo->bItemCondition = pObject->status.bStatus[ 0 ];
 	}
 
 	// only guns currently have imprintID properly initialized...

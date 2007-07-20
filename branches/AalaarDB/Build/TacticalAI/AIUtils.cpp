@@ -101,7 +101,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS].ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
+		else if (pSoldier->inv[HANDPOS].gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
 		{
 			return(NOSHOOT_NOAMMO);
 		}

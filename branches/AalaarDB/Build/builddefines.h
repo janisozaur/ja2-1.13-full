@@ -9,7 +9,9 @@
 // Normal test version
 #define JA2TESTVERSION
 
-//#define JA2EDITOR
+#define JA2EDITOR
+
+#define SGP_DEBUG
 
 #define DEBUG_ATTACKBUSY
 

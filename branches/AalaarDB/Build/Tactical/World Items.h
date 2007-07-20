@@ -15,16 +15,35 @@
 //Kaiden: This constant is to flag items that an enemy drops when they die.
 #define	WORLD_ITEM_DROPPED_FROM_ENEMY								0x0800
 
-//typedef struct
-struct WORLDITEM
+class OLD_WORLDITEM_101
 {
-	BOOLEAN				fExists;
+public:
+	BOOLEAN					fExists;
 	INT16					sGridNo;
 	UINT8					ubLevel;
-	OBJECTTYPE		o;
-	UINT16				usFlags;
+	OLD_OBJECTTYPE_101		oldObject;
+	UINT16					usFlags;
 	INT8					bRenderZHeightAboveLevel;
+	INT8					bVisible;
+	UINT8					ubNonExistChance;  
+};
 
+
+class WORLDITEM
+{
+public:
+	WORLDITEM() {initialize();};
+	WORLDITEM& operator=(OLD_WORLDITEM_101& src);
+	WORLDITEM& operator=(WORLDITEM& src);
+	BOOLEAN		Save( HWFILE hFile );
+	BOOLEAN		Load( HWFILE hFile );
+	BOOLEAN		Load( INT8** hBuffer );
+	void		initialize();
+	BOOLEAN					fExists;
+	INT16					sGridNo;
+	UINT8					ubLevel;
+	UINT16					usFlags;
+	INT8					bRenderZHeightAboveLevel;
 	INT8					bVisible;
 
 	//This is the chance associated with an item or a trap not-existing in the world.  The reason why 
@@ -34,7 +53,10 @@ struct WORLDITEM
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8					ubNonExistChance;  
 
+	char					endOfPod;
+	OBJECTTYPE				o;
 }; // WORLDITEM;
+#define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
 
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;

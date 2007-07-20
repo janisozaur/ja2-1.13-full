@@ -228,11 +228,9 @@ BATTLESNDS_STRUCT	 gBattleSndsData[] =
 	"enem",			0,				1,			1,		1,		0,
 };
 
-// WDS - Clean up inventory handling
 // ----------------------------------------
 // New inventory handling code.
 // ----------------------------------------
-
 
 //ADB this produces mem leaks!
 //other functions just replaced, not commented out
@@ -282,7 +280,7 @@ Inventory::~Inventory() {
 	//vector dtor called automatically
 };
 
-OBJECTTYPE& Inventory::operator [] (int idx) {
+OBJECTTYPE& Inventory::operator [] (unsigned int idx) {
 	// This IF is just from setting breakpoints when trying to figure out inventory item problems.  Remove it later
 	if ((idx < 0) ||
 		(idx >= inv.size())) {
@@ -306,7 +304,7 @@ void Inventory::clear() {
 
 // ----------------------------------------
 
-void STRUCT_TimeCounters::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_TimeCounters::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	this->UpdateCounter = src.UpdateCounter;
 	this->DamageCounter = src.DamageCounter;
@@ -320,7 +318,7 @@ void STRUCT_TimeCounters::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->PanelAnimateCounter = src.PanelAnimateCounter;
 }
 
-void STRUCT_Drugs::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_Drugs::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	for (int x = 0; x < 2; ++x)
 	{
@@ -333,7 +331,7 @@ void STRUCT_Drugs::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	}
 }
 
-void STRUCT_TimeChanges::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_TimeChanges::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	this->uiChangeLevelTime = src.uiChangeLevelTime;
 	this->uiChangeHealthTime = src.uiChangeHealthTime;
@@ -348,7 +346,7 @@ void STRUCT_TimeChanges::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->uiChangeMechanicalTime = src.uiChangeMechanicalTime;
 }
 
-void STRUCT_Flags::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_Flags::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	this->fHitByGasFlags = src.fHitByGasFlags;						// flags 
 	this->fIsSoldierMoving = src.fIsSoldierMoving;							// ie.  Record time is on
@@ -433,7 +431,7 @@ void STRUCT_Flags::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->uiStatusFlags = src.uiStatusFlags;
 }
 
-void STRUCT_Statistics::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_Statistics::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	this->ubSkillTrait1 = src.ubSkillTrait1;
 	this->ubSkillTrait2 = src.ubSkillTrait2;
@@ -452,67 +450,67 @@ void STRUCT_Statistics::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->bExplosive = src.bExplosive;
 }
 
-void STRUCT_AIData::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_AIData::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	memcpy( &(this->bOppList), &(src.bOppList), sizeof(INT8) * MAX_NUM_SOLDIERS ); // AI knowledge database
 	memcpy( &(this->usPatrolGrid), &(src.usPatrolGrid), sizeof(INT16) * MAXPATROLGRIDS );// AI list for ptr->orders==PATROL	
-	bLastAction = src.bLastAction;
-	bAction = src.bAction;	
-	usActionData = src.usActionData;	
-	bNextAction = src.bNextAction;	
-	usNextActionData = src.usNextActionData;	
-	bActionInProgress = src.bActionInProgress;	
-	bAlertStatus = src.bAlertStatus;	
-	bOppCnt = src.bOppCnt;	
-	bNeutral = src.bNeutral;	
-	bNewSituation = src.bNewSituation;	
-	bNextTargetLevel = src.bNextTargetLevel;	
-	bOrders = src.bOrders;	
-	bAttitude = src.bAttitude;	
-	bUnderFire = src.bUnderFire;	
-	bShock = src.bShock;	
-	bUnderEscort = src.bUnderEscort;	
-	bBypassToGreen = src.bBypassToGreen;	
-	ubLastMercToRadio = src.ubLastMercToRadio;	
-	bDominantDir = src.bDominantDir;				// AI main direction to face...	
-	bPatrolCnt = src.bPatrolCnt;					// number of patrol gridnos	
-	bNextPatrolPnt = src.bNextPatrolPnt;			// index to next patrol gridno	
-	sNoiseGridno = src.sNoiseGridno;	
-	ubNoiseVolume = src.ubNoiseVolume;	
-	bLastAttackHit = src.bLastAttackHit;	
-	ubXRayedBy = src.ubXRayedBy;	
-	dHeightAdjustment = src.dHeightAdjustment;	
-	bMorale = src.bMorale;	
-	bTeamMoraleMod = src.bTeamMoraleMod;	
-	bTacticalMoraleMod = src.bTacticalMoraleMod;	
-	bStrategicMoraleMod = src.bStrategicMoraleMod;	
-	bAIMorale = src.bAIMorale;	
-	ubPendingAction = src.ubPendingAction;	
-	ubPendingActionAnimCount = src.ubPendingActionAnimCount;	
-	uiPendingActionData1 = src.uiPendingActionData1;	
-	sPendingActionData2 = src.sPendingActionData2;	
-	bPendingActionData3 = src.bPendingActionData3;	
-	ubDoorHandleCode = src.ubDoorHandleCode;	
-	uiPendingActionData4 = src.uiPendingActionData4;	
-	bInterruptDuelPts = src.bInterruptDuelPts;	
-	bPassedLastInterrupt = src.bPassedLastInterrupt;	
-	bIntStartAPs = src.bIntStartAPs;	
-	bMoved = src.bMoved;	
-	bHunting = src.bHunting;	
-	ubLastCall = src.ubLastCall;	
-	ubCaller = src.ubCaller;	
-	sCallerGridNo = src.sCallerGridNo;	
-	bCallPriority = src.bCallPriority;	
-	bCallActedUpon = src.bCallActedUpon;	
-	bFrenzied = src.bFrenzied;	
-	bNormalSmell = src.bNormalSmell;	
-	bMonsterSmell = src.bMonsterSmell;	
-	bMobility = src.bMobility;	
-	bRTPCombat = src.bRTPCombat;	
-	fAIFlags = src.fAIFlags;
+	this->bLastAction = src.bLastAction;
+	this->bAction = src.bAction;
+	this->usActionData = src.usActionData;
+	this->bNextAction = src.bNextAction;
+	this->usNextActionData = src.usNextActionData;
+	this->bActionInProgress = src.bActionInProgress;
+	this->bAlertStatus = src.bAlertStatus;
+	this->bOppCnt = src.bOppCnt;
+	this->bNeutral = src.bNeutral;
+	this->bNewSituation = src.bNewSituation;
+	this->bNextTargetLevel = src.bNextTargetLevel;
+	this->bOrders = src.bOrders;
+	this->bAttitude = src.bAttitude;
+	this->bUnderFire = src.bUnderFire;
+	this->bShock = src.bShock;
+	this->bUnderEscort = src.bUnderEscort;
+	this->bBypassToGreen = src.bBypassToGreen;	
+	this->ubLastMercToRadio = src.ubLastMercToRadio;	
+	this->bDominantDir = src.bDominantDir;				// AI main direction to face...	
+	this->bPatrolCnt = src.bPatrolCnt;					// number of patrol gridnos	
+	this->bNextPatrolPnt = src.bNextPatrolPnt;			// index to next patrol gridno	
+	this->sNoiseGridno = src.sNoiseGridno;	
+	this->ubNoiseVolume = src.ubNoiseVolume;	
+	this->bLastAttackHit = src.bLastAttackHit;	
+	this->ubXRayedBy = src.ubXRayedBy;	
+	this->dHeightAdjustment = src.dHeightAdjustment;	
+	this->bMorale = src.bMorale;	
+	this->bTeamMoraleMod = src.bTeamMoraleMod;	
+	this->bTacticalMoraleMod = src.bTacticalMoraleMod;	
+	this->bStrategicMoraleMod = src.bStrategicMoraleMod;	
+	this->bAIMorale = src.bAIMorale;	
+	this->ubPendingAction = src.ubPendingAction;	
+	this->ubPendingActionAnimCount = src.ubPendingActionAnimCount;	
+	this->uiPendingActionData1 = src.uiPendingActionData1;	
+	this->sPendingActionData2 = src.sPendingActionData2;	
+	this->bPendingActionData3 = src.bPendingActionData3;	
+	this->ubDoorHandleCode = src.ubDoorHandleCode;	
+	this->uiPendingActionData4 = src.uiPendingActionData4;	
+	this->bInterruptDuelPts = src.bInterruptDuelPts;	
+	this->bPassedLastInterrupt = src.bPassedLastInterrupt;	
+	this->bIntStartAPs = src.bIntStartAPs;	
+	this->bMoved = src.bMoved;	
+	this->bHunting = src.bHunting;	
+	this->ubLastCall = src.ubLastCall;	
+	this->ubCaller = src.ubCaller;	
+	this->sCallerGridNo = src.sCallerGridNo;	
+	this->bCallPriority = src.bCallPriority;	
+	this->bCallActedUpon = src.bCallActedUpon;	
+	this->bFrenzied = src.bFrenzied;	
+	this->bNormalSmell = src.bNormalSmell;	
+	this->bMonsterSmell = src.bMonsterSmell;	
+	this->bMobility = src.bMobility;	
+	this->bRTPCombat = src.bRTPCombat;	
+	this->fAIFlags = src.fAIFlags;
 }
 
-void STRUCT_Pathing::LoadFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
+void STRUCT_Pathing::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	memcpy( &(this->usPathingData), &(src.usPathingData), sizeof(UINT16) * MAX_PATH_LIST_SIZE );
 	this->bDesiredDirection = src.bDesiredDirection;
@@ -538,16 +536,14 @@ SOLDIERTYPE& SOLDIERTYPE::operator=(const OLDSOLDIERTYPE_101& src)
 {
     if ((void*)this != (void*)&src) {
 		//member classes
-		aiData.LoadFrom_101_To_102(src);
-		flags.LoadFrom_101_To_102(src);
-		timeChanges.LoadFrom_101_To_102(src);
-		timeCounters.LoadFrom_101_To_102(src);
-		drugs.LoadFrom_101_To_102(src);
-		stats.LoadFrom_101_To_102(src);
-		pathing.LoadFrom_101_To_102(src);
+		aiData.ConvertFrom_101_To_102(src);
+		flags.ConvertFrom_101_To_102(src);
+		timeChanges.ConvertFrom_101_To_102(src);
+		timeCounters.ConvertFrom_101_To_102(src);
+		drugs.ConvertFrom_101_To_102(src);
+		stats.ConvertFrom_101_To_102(src);
+		pathing.ConvertFrom_101_To_102(src);
 		inv = src.inv;
-		//bNewItemCount = src.bNewItemCount;
-		//bNewItemCycleCount = src.bNewItemCycleCount;
 
 		//arrays
 		memcpy( &(this->name), &(src.name), sizeof(CHAR16) * 10 );
@@ -920,29 +916,48 @@ SOLDIERTYPE& SOLDIERTYPE::operator=(const OLDSOLDIERTYPE_101& src)
     return *this;
 }
 
+SOLDIERTYPE::~SOLDIERTYPE() {}
 
 SOLDIERTYPE::SOLDIERTYPE() {
-	//this is handled by the inventory ctor
-	/*
-	bNewItemCount.reserve(inv.size());
-	bNewItemCycleCount.reserve(inv.size());
-	for (int idx=0; idx < (int)inv.size(); ++idx) {
-		bNewItemCount.push_back(0);
-		bNewItemCycleCount.push_back(0);
-	}
-	*/
 	initialize();
-
-	//Assert(bNewItemCount.size() == inv.size());
-	//Assert(bNewItemCycleCount.size() == inv.size());
 }
+
+UINT32 SOLDIERTYPE::GetChecksum( )
+{
+	UINT32	uiChecksum = 1;
+	UINT32	uiLoop;
+
+	uiChecksum += (this->stats.bLife + 1);
+	uiChecksum *= (this->stats.bLifeMax + 1);
+	uiChecksum += (this->stats.bAgility + 1);
+	uiChecksum *= (this->stats.bDexterity + 1);
+	uiChecksum += (this->stats.bStrength + 1);
+	uiChecksum *= (this->stats.bMarksmanship + 1);
+	uiChecksum += (this->stats.bMedical + 1);
+	uiChecksum *= (this->stats.bMechanical + 1);
+	uiChecksum += (this->stats.bExplosive + 1);
+
+	// put in some multipliers too!
+	uiChecksum *= (this->stats.bExpLevel + 1);
+	uiChecksum += (this->ubProfile + 1);
+
+	for ( uiLoop = 0; uiLoop < NUM_ORIGINAL_INV_SLOTS; uiLoop++ )
+	{
+		if (uiLoop < (unsigned int) this->inv.size())
+		{
+			uiChecksum += this->inv[ uiLoop ].usItem;
+			uiChecksum += this->inv[ uiLoop ].ubNumberOfObjects;
+		}
+	}
+
+	return( uiChecksum );
+}
+
 
 // Copy Constructor
 SOLDIERTYPE::SOLDIERTYPE(const SOLDIERTYPE& src) {
 	memcpy(this, &src, SIZEOF_SOLDIERTYPE_POD);
 	inv = src.inv;
-	//bNewItemCount = src.bNewItemCount;
-	//bNewItemCycleCount = src.bNewItemCycleCount;
 	aiData = src.aiData;
 	flags = src.flags;
 	timeChanges = src.timeChanges;
@@ -950,9 +965,6 @@ SOLDIERTYPE::SOLDIERTYPE(const SOLDIERTYPE& src) {
 	drugs = src.drugs;
 	stats = src.stats;
 	pathing = src.pathing;
-
-	//Assert(bNewItemCount.size() == inv.size());
-	//Assert(bNewItemCycleCount.size() == inv.size());
 }
 
 // Assignment operator
@@ -968,14 +980,8 @@ SOLDIERTYPE& SOLDIERTYPE::operator=(const SOLDIERTYPE& src)
 		stats = src.stats;
 		pathing = src.pathing;
 		inv = src.inv;
-		//bNewItemCount = src.bNewItemCount;
-		//bNewItemCycleCount = src.bNewItemCycleCount;
     }
     return *this;
-}
-
-// Destructor
-SOLDIERTYPE::~SOLDIERTYPE() {
 }
 
 // Initialize the soldier.  
@@ -984,12 +990,6 @@ SOLDIERTYPE::~SOLDIERTYPE() {
 void SOLDIERTYPE::initialize() {
 	memset( this, 0, SIZEOF_SOLDIERTYPE_POD);
 	inv.clear();
-	/*
-	for (int idx=0; idx < (int)inv.size(); ++idx) {
-		bNewItemCount[idx] = 0;
-		bNewItemCycleCount[idx] = 0;
-	}
-	*/
 
 	memset( &aiData, 0, sizeof(STRUCT_AIData) );
 	memset( &flags, 0, sizeof(STRUCT_Flags) );
@@ -998,9 +998,6 @@ void SOLDIERTYPE::initialize() {
 	memset( &drugs, 0, sizeof(STRUCT_Drugs) );
 	memset( &stats, 0, sizeof(STRUCT_Statistics) );
 	memset( &pathing, 0, sizeof(STRUCT_Pathing) );
-
-	//Assert(bNewItemCount.size() == inv.size());
-	//Assert(bNewItemCycleCount.size() == inv.size());
 }
 
 
@@ -1010,6 +1007,35 @@ void SOLDIERTYPE::initialize() {
 // These two functions map the "old" style inventory (fixed array of ) to the new (a flexibly sized vector).
 // If you change names or eliminate some positions or such you need to change these.
 // Eventually the need for these functions will disappear.
+
+UINT32 OLDSOLDIERTYPE_101::GetChecksum()
+{
+	UINT32	uiChecksum = 1;
+	UINT32	uiLoop;
+
+	uiChecksum += (this->bLife + 1);
+	uiChecksum *= (this->bLifeMax + 1);
+	uiChecksum += (this->bAgility + 1);
+	uiChecksum *= (this->bDexterity + 1);
+	uiChecksum += (this->bStrength + 1);
+	uiChecksum *= (this->bMarksmanship + 1);
+	uiChecksum += (this->bMedical + 1);
+	uiChecksum *= (this->bMechanical + 1);
+	uiChecksum += (this->bExplosive + 1);
+
+	// put in some multipliers too!
+	uiChecksum *= (this->bExpLevel + 1);
+	uiChecksum += (this->ubProfile + 1);
+
+	for ( uiLoop = 0; uiLoop < NUM_ORIGINAL_INV_SLOTS; uiLoop++ )
+	{
+		uiChecksum += this->inv[ uiLoop ].usItem;
+		uiChecksum += this->inv[ uiLoop ].ubNumberOfObjects;
+	}
+
+	return( uiChecksum );
+}
+
 
 void OLDSOLDIERTYPE_101::CopyOldInventoryToNew() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
@@ -1073,7 +1099,7 @@ void OLDSOLDIERTYPE_101::CopyOldInventoryToNew() {
 	inv.bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK7POS];
 	inv.bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK8POS];
 }
-
+/*
 void OLDSOLDIERTYPE_101::CopyNewInventoryToOld() {
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	DO_NOT_USE_Inv[OldInventory::HELMETPOS] = inv[HELMETPOS];
@@ -1136,8 +1162,36 @@ void OLDSOLDIERTYPE_101::CopyNewInventoryToOld() {
 	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = inv.bNewItemCycleCount[SMALLPOCK7POS];
 	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = inv.bNewItemCycleCount[SMALLPOCK8POS];
 }
-
+*/
 // ----------------------------------------
+
+UINT32 MERCPROFILESTRUCT::GetChecksum( )
+{
+	UINT32	uiChecksum = 1;
+	UINT32	uiLoop;
+
+	uiChecksum += (this->bLife + 1);
+	uiChecksum *= (this->bLifeMax + 1);
+	uiChecksum += (this->bAgility + 1);
+	uiChecksum *= (this->bDexterity + 1);
+	uiChecksum += (this->bStrength + 1);
+	uiChecksum *= (this->bMarksmanship + 1);
+	uiChecksum += (this->bMedical + 1);
+	uiChecksum *= (this->bMechanical + 1);
+	uiChecksum += (this->bExplosive + 1);
+
+	// put in some multipliers too!
+	uiChecksum *= (this->bExpLevel + 1);
+
+	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	{
+		uiChecksum += this->inv[ uiLoop ];
+		uiChecksum += this->bInvNumber[ uiLoop ];
+	}
+
+	return( uiChecksum );
+}
+
 
 MERCPROFILESTRUCT::MERCPROFILESTRUCT() {
 	inv.reserve(NUM_INV_SLOTS);
@@ -3876,15 +3930,15 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 			BOOLEAN fSetGassed = TRUE;
 
 			// If we have a functioning gas mask...
-			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
 			{
 				fSetGassed = FALSE;
 			}
-			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
-			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
@@ -3956,7 +4010,7 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 		int i = 0;
 	}
 
-	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunAmmoType )
+	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunAmmoType )
 	//{
 	//	case AMMO_SLEEP_DART:
 	//		thisSoldier->flags.fMuzzleFlash = FALSE;
@@ -4007,14 +4061,14 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 			// Set the TOTAL number of bullets to be fired
 			// Can't shoot more bullets than we have in our magazine!
 			if(thisSoldier->bDoAutofire)
-				thisSoldier->bBulletsLeft = __min( thisSoldier->bDoAutofire, thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunShotsLeft );
+				thisSoldier->bBulletsLeft = __min( thisSoldier->bDoAutofire, thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunShotsLeft );
 			else
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"EVENT_FireSoldierWeapon: do burst");
 				if ( thisSoldier->bWeaponMode == WM_ATTACHED_GL_BURST )
-					thisSoldier->bBulletsLeft = __min( Weapon[GetAttachedGrenadeLauncher(&thisSoldier->inv[thisSoldier->ubAttackingHand])].ubShotsPerBurst, thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunShotsLeft );
+					thisSoldier->bBulletsLeft = __min( Weapon[GetAttachedGrenadeLauncher(&thisSoldier->inv[thisSoldier->ubAttackingHand])].ubShotsPerBurst, thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunShotsLeft );
 				else
-					thisSoldier->bBulletsLeft = __min( GetShotsPerBurst(&thisSoldier->inv[ thisSoldier->ubAttackingHand ]), thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunShotsLeft );
+					thisSoldier->bBulletsLeft = __min( GetShotsPerBurst(&thisSoldier->inv[ thisSoldier->ubAttackingHand ]), thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunShotsLeft );
 			}
 		}
 		else if ( IsValidSecondHandShot( thisSoldier ) )
@@ -4027,9 +4081,9 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 			thisSoldier->bBulletsLeft = 1;
 		}
 
-		if ( AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunAmmoType].numberOfBullets > 1 )
+		if ( AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunAmmoType].numberOfBullets > 1 )
 		{
-			thisSoldier->bBulletsLeft *= AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ].ubGunAmmoType].numberOfBullets;
+			thisSoldier->bBulletsLeft *= AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunAmmoType].numberOfBullets;
 		}
 	}
 #endif
@@ -4685,7 +4739,7 @@ void SOLDIERTYPE::EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 sDamage, INT1
 	}
 	// callahan update end
 
-	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ubGunAmmoType].explosionSize <= 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].gun.ubGunAmmoType].explosionSize <= 1)
 	{	
 		if ( ubSpecial == FIRE_WEAPON_SLEEP_DART_SPECIAL )
 		{
@@ -4742,9 +4796,9 @@ void SOLDIERTYPE::EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 sDamage, INT1
 		}
 		ubReason = TAKE_DAMAGE_HANDTOHAND;
 	}
-	// marke added one 'or' for explosive ammo. variation of: AmmoTypes[thisSoldier->inv[thisSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1
+	// marke added one 'or' for explosive ammo. variation of: AmmoTypes[thisSoldier->inv[thisSoldier->ubAttackingHand ].gun.ubGunAmmoType].explosionSize > 1
 	//  extracting attacker´s ammo type
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].gun.ubGunAmmoType].explosionSize > 1)
 	{	
 		INT8 bDeafValue;
 
@@ -9809,7 +9863,7 @@ void SOLDIERTYPE::EVENT_SoldierBeginGiveItem( void )
 	{
 		UnSetEngagedInConvFromPCAction( thisSoldier );
 
-		MemFree( thisSoldier->pTempObject );
+		OBJECTTYPE::DeleteMe( &thisSoldier->pTempObject );
 	}
 }
 
@@ -10613,8 +10667,7 @@ void SOLDIERTYPE::HaultSoldierFromSighting( BOOLEAN fFromSightingEnemy )
 		//	DeductPoints( thisSoldier, -MinAPsToAttack( thisSoldier, thisSoldier->sTargetGridNo, FALSE ), 0 );
 		//}
 
-		MemFree( thisSoldier->pTempObject );
-		thisSoldier->pTempObject					= NULL;
+		OBJECTTYPE::DeleteMe( &thisSoldier->pTempObject );
 		thisSoldier->usPendingAnimation  = NO_PENDING_ANIMATION;
 		thisSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 
@@ -12322,8 +12375,8 @@ BOOLEAN SOLDIERTYPE::IsValidSecondHandShot( void )
 		!thisSoldier->bDoBurst && 
 		!Item[thisSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ thisSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		thisSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE &&
-		thisSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 )
+		thisSoldier->inv[SECONDHANDPOS].gun.bGunStatus >= USABLE &&
+		thisSoldier->inv[SECONDHANDPOS].gun.ubGunShotsLeft > 0 )
 	{
 		return( TRUE );
 	}
@@ -12339,8 +12392,8 @@ BOOLEAN SOLDIERTYPE::IsValidSecondHandShotForReloadingPurposes( void )
 		!thisSoldier->bDoBurst && 
 		!Item[thisSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ thisSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		thisSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE //&&
-		//			 thisSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 &&
+		thisSoldier->inv[SECONDHANDPOS].gun.bGunStatus >= USABLE //&&
+		//			 thisSoldier->inv[SECONDHANDPOS].gun.ubGunShotsLeft > 0 &&
 		//			 gAnimControl[ thisSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
 		)
 	{
@@ -12584,8 +12637,7 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 				{
 					// Place it back into inv....
 					AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
-					MemFree( pSoldier->pTempObject );
-					pSoldier->pTempObject					= NULL;
+					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
 					pSoldier->usPendingAnimation  = NO_PENDING_ANIMATION;
 					pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 

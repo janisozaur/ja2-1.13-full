@@ -102,6 +102,8 @@
 	#include "interface panels.h"
 	#include "interface dialogue.h"
 	#include "Assignments.h"
+	#include "Interface Items.h"
+	#include "Shopkeeper Interface.h"
 #endif
 
 #include		"BobbyR.h"
@@ -476,6 +478,755 @@ void	HandleOldBobbyRMailOrders();
 //
 /////////////////////////////////////////////////////
 
+BOOLEAN REAL_OBJECT::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	if ( !FileWrite( hFile, this, sizeof( SIZEOF_REAL_OBJECT_POD ), &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->Obj.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN REAL_OBJECT::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !FileRead( hFile, this, sizeof( SIZEOF_REAL_OBJECT_POD ), &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if ( !this->Obj.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_REAL_OBJECT_101 oldObject;
+			if ( !FileRead( hFile, &oldObject, sizeof( OLD_REAL_OBJECT_101 ), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			*this = oldObject;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN INVENTORY_IN_SLOT::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	if ( !FileWrite( hFile, this, sizeof( SIZEOF_INVENTORY_IN_SLOT_POD ), &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->ItemObject.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN INVENTORY_IN_SLOT::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !FileRead( hFile, this, sizeof( SIZEOF_INVENTORY_IN_SLOT_POD ), &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if ( !this->ItemObject.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_INVENTORY_IN_SLOT_101 oldItem;
+			if ( !FileRead( hFile, &oldItem, sizeof( OLD_INVENTORY_IN_SLOT_101 ), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			*this = oldItem;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN MERC_LEAVE_ITEM::Save(HWFILE hFile)
+{
+	if ( !this->o.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN MERC_LEAVE_ITEM::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !this->o.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_MERC_LEAVE_ITEM_101 oldItem;
+			if ( !FileRead( hFile, &oldItem, sizeof( OLD_MERC_LEAVE_ITEM_101 ), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			this->o = oldItem.oldObject;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN ITEM_CURSOR_SAVE_INFO::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//3 bytes of info, screw being neat
+		if ( !FileRead( hFile, this, 3, &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if ( !this->ItemPointerInfo.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OLD_ITEM_CURSOR_SAVE_INFO_101 oldInfo101;
+			if ( !FileRead( hFile, &oldInfo101, sizeof(OLD_ITEM_CURSOR_SAVE_INFO_101), &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+			*this = oldInfo101;
+		}
+
+	}
+	return TRUE;
+}
+
+BOOLEAN ITEM_CURSOR_SAVE_INFO::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	//3 bytes of info, screw being neat
+	if ( !FileWrite( hFile, this, 3, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->ItemPointerInfo.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+
+BOOLEAN SOLDIERCREATE_STRUCT::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	if ( !FileWrite( hFile, this, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->Inv.Save(hFile) )
+	{
+		return FALSE;
+	}
+
+	UINT16 usCheckSum = GetChecksum();
+	if ( !FileWrite( hFile, &usCheckSum, 2, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN SOLDIERCREATE_STRUCT::Load(INT8 **hBuffer)
+{
+	OLD_SOLDIERCREATE_STRUCT_101 OldSavedSoldierInfo101;
+	LOADDATA( &OldSavedSoldierInfo101, *hBuffer, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD );
+	OldSavedSoldierInfo101.CopyOldInventoryToNew();
+	*this = OldSavedSoldierInfo101;
+	return TRUE;
+}
+
+BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//the info has changed at version 102
+		//first, load the POD
+		if ( !FileRead( hFile, this, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+
+		//load the OO inventory
+		if ( !this->Inv.Load(hFile) )
+		{
+			return(FALSE);
+		}
+	}
+	else
+	{
+		OLD_SOLDIERCREATE_STRUCT_101 OldSavedSoldierInfo101;
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			if ( !FileRead( hFile, &OldSavedSoldierInfo101, SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD, &uiNumBytesRead ) )
+			{
+				return FALSE;
+			}
+		}
+		/*
+		else if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+			OldSavedSoldierInfo999.initialize();
+			FileRead( hFile, &OldSavedSoldierInfo999, SIZEOF_OLD_SOLDIERCREATE_STRUCT_999_POD, &uiNumBytesRead );
+		*/
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OldSavedSoldierInfo101.CopyOldInventoryToNew();
+			*this = OldSavedSoldierInfo101;
+			//OldSavedSoldierInfo999 = OldSavedSoldierInfo101;
+		}
+		//change this when changing the file version again
+		/*
+		if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+		{
+			*this = OldSavedSoldierInfo999;
+		}
+		*/
+	}
+
+	#ifdef JA2TESTVERSION
+		CHAR8		zReason[256];
+	#endif
+
+	UINT16 usCheckSum;
+	FileRead( hFile, &usCheckSum, 2, &uiNumBytesRead );
+	if( uiNumBytesRead != 2 )
+	{
+		#ifdef JA2TESTVERSION
+			sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.  KM"  );
+			AssertMsg( 0, zReason );
+		#endif
+		return FALSE;
+	}
+	//verify the checksum equation (anti-hack) -- see save 
+	UINT16 usFileCheckSum = GetChecksum();
+	if( usCheckSum != usFileCheckSum )
+	{	//Hacker has modified the stats on the enemy placements.
+		#ifdef JA2TESTVERSION
+			sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", usFileCheckSum );
+			AssertMsg( 0, zReason );
+		#endif
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN MERCPROFILESTRUCT::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
+
+	this->initialize();
+
+	//actually for now the code below is the same for both old and new
+
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		this->CopyOldInventoryToNew();
+	}
+	else
+	{
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			if ( !(*pLoadingFunction)( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+			this->CopyOldInventoryToNew();
+		}
+	}
+
+	if ( this->uiProfileChecksum != this->GetChecksum() )
+	{
+		return( FALSE );
+	}
+	return TRUE;
+}
+
+BOOLEAN MERCPROFILESTRUCT::Save(HWFILE hFile)
+{
+	//for now the MERCPROFILESTRUCT remains unchanged
+	//it does not have any data types that need their own saving function
+	//if that ever changes this will make updating saves easier
+	UINT32 uiNumBytesWritten;
+	this->CopyNewInventoryToOld();
+	this->uiProfileChecksum = this->GetChecksum();
+	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+
+BOOLEAN SOLDIERTYPE::Save(HWFILE hFile)
+{
+	UINT32 uiNumBytesWritten;
+	// calculate checksum for soldier
+	this->uiMercChecksum = this->GetChecksum();
+	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+
+	//save OO data like inventory
+	if ( !this->inv.Save(hFile) )
+	{
+		return(FALSE);
+	}
+
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+
+BOOLEAN SOLDIERTYPE::Load(HWFILE hFile)
+{
+	UINT32 uiNumBytesRead;
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
+
+
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//the soldier type info has changed at version 102
+		//first, load the POD
+		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_SOLDIERTYPE_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+
+		//load the OO inventory
+		if ( !this->inv.Load(hFile) )
+		{
+			return(FALSE);
+		}
+
+		//load some structs, atm just POD but could change
+		if ( !(*pLoadingFunction)( hFile, &this->aiData, sizeof(STRUCT_AIData), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->flags, sizeof(STRUCT_Flags), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->drugs, sizeof(STRUCT_Drugs), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->stats, sizeof(STRUCT_Statistics), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &this->pathing, sizeof(STRUCT_Pathing), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+	}
+	else
+	{
+		OLDSOLDIERTYPE_101 OldSavedSoldierInfo101;
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OldSavedSoldierInfo101.initialize();
+			if ( !(*pLoadingFunction)( hFile, &OldSavedSoldierInfo101, SIZEOF_OLDSOLDIERTYPE_101_POD, &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+		}
+		/*
+		else if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+			OldSavedSoldierInfo999.initialize();
+			(*pLoadingFunction)( hFile, &OldSavedSoldierInfo999, SIZEOF_OLDSOLDIERTYPE_999_POD, &uiNumBytesRead );
+		*/
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			OldSavedSoldierInfo101.CopyOldInventoryToNew();
+			(*this) = OldSavedSoldierInfo101;
+			//OldSavedSoldierInfo999 = OldSavedSoldierInfo101;
+		}
+		//change this when changing the file version again
+		/*
+		if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+		{
+			*this = OldSavedSoldierInfo999;
+		}
+		*/
+	}
+	// check checksum
+	if ( this->GetChecksum() != this->uiMercChecksum )
+	{
+		return( FALSE );
+	}
+	return TRUE;
+}
+
+BOOLEAN WORLDITEM::Save(HWFILE hFile)
+{
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("starting WORLDITEM::Save" ) );
+	//save the POD
+	UINT32 uiNumBytesWritten;
+	if ( !FileWrite( hFile, this, SIZEOF_WORLDITEM_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("starting OBJECTTYPE::Save" ) );
+	//save the OO OBJECTTYPE
+	if ( !this->o.Save(hFile) )
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOLEAN WORLDITEM::Load(INT8** hBuffer)
+{
+	OLD_WORLDITEM_101 oldWorldItem;
+	LOADDATA( &oldWorldItem, *hBuffer, sizeof( OLD_WORLDITEM_101 ) );
+	*this = oldWorldItem;
+	return TRUE;
+}
+
+BOOLEAN WORLDITEM::Load(HWFILE hFile)
+{
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		//load the POD
+		if ( !FileRead( hFile, this, SIZEOF_WORLDITEM_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+
+		//now load the OO OBJECTTYPE
+		if ( !this->o.Load(hFile) )
+		{
+			return FALSE;
+		}
+	}
+	//if we need to load an older save
+	else {
+		//load the old data into a suitable structure, it's just POD
+		OLD_WORLDITEM_101	oldWorldItem;
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			if ( !FileRead( hFile, &oldWorldItem, sizeof(OLD_WORLDITEM_101), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+		}
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		//the first conversion is simple enough that it can be done here
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			*this = oldWorldItem;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
+{
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
+
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		if ( !(*pLoadingFunction)( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+	}
+	else
+	{
+		OLD_OBJECTTYPE_101 OldSavedObject101;
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+		}
+		/*
+		else if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+			(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
+		*/
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		if ( guiSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject101;
+			//OldSavedObject999 = OldSavedObject101;
+		}
+		//change this when changing the file version again
+		/*
+		if ( guiSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject999;
+		}
+		*/
+	}
+	return TRUE;
+}
+
+BOOLEAN OBJECTTYPE::Save( HWFILE hFile )
+{
+	UINT32 uiNumBytesWritten;
+	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+
+BOOLEAN Inventory::Load( HWFILE hFile )
+{
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
+
+	UINT32 uiNumBytesRead;
+	int sizeInventory;//how many items are in the stack?
+	if ( !(*pLoadingFunction)( hFile, &sizeInventory, sizeof(int), &uiNumBytesRead ) )
+	{
+		return FALSE;
+	}
+
+	if (sizeInventory < 0 || sizeInventory > NUM_INV_SLOTS)
+	{
+		return(FALSE);
+	}
+
+	inv.resize(sizeInventory);
+	bNewItemCount.resize(sizeInventory);
+	bNewItemCycleCount.resize(sizeInventory);
+	InventoryItem item;
+	for (int x = 0; x < sizeInventory; ++x) {
+		if ( !item.Load(hFile) )
+		{
+			return (FALSE);
+		}
+		inv[x] = item.object;
+		bNewItemCount[x] = item.bNewItemCount;
+		bNewItemCycleCount[x] = item.bNewItemCycleCount;
+	}
+	return (TRUE);
+}
+
+BOOLEAN Inventory::Save( HWFILE hFile )
+{
+	UINT32 uiNumBytesWritten;
+	int sizeInventory = size();//how many items are in the stack?
+	if ( !NewJA2EncryptedFileWrite( hFile, &sizeInventory, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+
+	InventoryItem item;
+	for (int x = 0; x < sizeInventory; ++x) {
+		item.object = inv[x];
+		item.bNewItemCount = bNewItemCount[x];
+		item.bNewItemCycleCount = bNewItemCycleCount[x];
+		if ( !item.Save(hFile) )
+		{
+			return (FALSE);
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN InventoryItem::Load( HWFILE hFile )
+{
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
+
+	//load the OO OBJECTTYPE
+	if ( !object.Load(hFile) )
+	{
+		return FALSE;
+	}
+
+	UINT32 uiNumBytesRead;
+	if ( !(*pLoadingFunction)( hFile, &bNewItemCount, sizeof(int), &uiNumBytesRead ) )
+	{
+		return(FALSE);
+	}
+	if ( !(*pLoadingFunction)( hFile, &bNewItemCycleCount, sizeof(int), &uiNumBytesRead ) )
+	{
+		return(FALSE);
+	}
+	return (TRUE);
+}
+
+BOOLEAN InventoryItem::Save( HWFILE hFile )
+{
+	//save the OO OBJECTTYPE
+	if ( !object.Save(hFile) )
+	{
+		return (FALSE);
+	}
+
+	UINT32 uiNumBytesWritten;
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->bNewItemCount, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &this->bNewItemCycleCount, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	return TRUE;
+}
+
 
 // Snap: Initializes gSaveDir global, creating the save directory if necessary
 // The save directory now resides in the data directory (default or custom)
@@ -601,6 +1352,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
 
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("startinc SaveCurrentSectorsInformationToTempItemFile" ) );
 	//Save the current sectors open temp files to the disk
 	if( !SaveCurrentSectorsInformationToTempItemFile() )
 	{
@@ -1483,6 +2235,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	hFile = FileOpen( zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
 	if( !hFile )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FileOpen failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1497,6 +2250,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	FileRead( hFile, &SaveGameHeader, sizeof( SAVED_GAME_HEADER ), &uiNumBytesRead );
 	if( uiNumBytesRead != sizeof( SAVED_GAME_HEADER ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Loading Save Game Header failed" ) );
 		FileClose( hFile );
 		return(FALSE);
 	}
@@ -1542,6 +2296,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the gtactical status structure plus the current sector x,y,z
 	if( !LoadTacticalStatusFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadTacticalStatusFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1558,6 +2313,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the game clock ingo
 	if( !LoadGameClock( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadGameClock failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1635,6 +2391,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//load the game events
 	if( !LoadStrategicEventsFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadStrategicEventsFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1653,6 +2410,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadLaptopInfoFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLaptopInfoFromSavedGame failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1673,6 +2431,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadSavedMercProfiles( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSavedMercProfiles failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1694,6 +2453,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// 
 	if( !LoadSoldierStructure( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadSoldierStructure failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1715,6 +2475,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( FINANCES_DATA_FILE, hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1737,6 +2498,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( HISTORY_DATA_FILE, hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1759,6 +2521,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	if( !LoadFilesFromSavedGame( FILES_DAT_FILE, hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1778,6 +2541,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load the data for the emails
 	if( !LoadEmailFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -1798,6 +2562,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the strategic Information
 	if( !LoadStrategicInfoFromSavedFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1817,6 +2582,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the underground information
 	if( !LoadUnderGroundSectorInfoFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1835,6 +2601,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load all the squad info from the saved game file 
 	if( !LoadSquadInfoFromSavedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1853,6 +2620,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Load the group linked list
 	if( !LoadStrategicMovementGroupsFromSavedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1870,6 +2638,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Load all the map temp files from the saved game file into the maps\temp directory
 	if( !LoadMapTempFilesFromSavedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1889,6 +2658,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadQuestInfoFromSavedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1906,6 +2676,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		
 	if( !LoadOppListInfoFromSavedGame( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1926,6 +2697,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadMapScreenMessagesFromSaveGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1945,6 +2717,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1964,6 +2737,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadKeyTableFromSaveedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -1982,6 +2756,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadTempNpcQuoteArrayToSaveGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2001,6 +2776,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadPreRandomNumbersFromSaveGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2021,6 +2797,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadSmokeEffectsFromLoadGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2040,6 +2817,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadArmsDealerInventoryFromSavedGameFile( hFile, ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 54 ), ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 55 ) ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return( FALSE );
@@ -2057,6 +2835,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadGeneralInfo( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2074,6 +2853,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( !LoadMineStatusFromSavedGameFile( hFile ) )
 	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
@@ -2097,6 +2877,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicTownLoyaltyFromSavedGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2121,6 +2902,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadVehicleInformationFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2143,6 +2925,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadBulletStructureFromSavedGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2167,6 +2950,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadPhysicsTableFromSavedGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2190,6 +2974,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadAirRaidInfoFromSaveGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2212,6 +2997,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadTeamTurnsFromTheSavedGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2235,6 +3021,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadExplosionTableFromSavedGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2259,6 +3046,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadCreatureDirectives( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2283,6 +3071,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicStatusFromSaveGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2305,6 +3094,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadStrategicAI( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2327,6 +3117,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadLightEffectsFromLoadGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return(FALSE);
@@ -2349,6 +3140,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !LoadWatchedLocsFromSavedGame( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2367,11 +3159,11 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-
 	if( SaveGameHeader.uiSavedGameVersion	>= 39 )
 	{
 		if ( !LoadItemCursorFromSavedGame( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2394,6 +3186,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadCivQuotesFromLoadGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return FALSE;
@@ -2417,6 +3210,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadBackupNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2439,6 +3233,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if( !LoadMeanwhileDefsFromSaveGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2468,6 +3263,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		DestroyAllSchedulesWithoutDestroyingEvents();
 		if ( !LoadSchedulesFromSave( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2492,6 +3288,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	  {
 		  if ( !LoadVehicleMovementInfoFromSavedGameFile( hFile ) )
 		  {
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			  FileClose( hFile );
 			  guiSaveGameVersion=0;
 			  return( FALSE );
@@ -2504,6 +3301,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
     {
 		  if ( !NewLoadVehicleMovementInfoFromSavedGameFile( hFile ) )
 		  {
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(" failed" ) );
 			  FileClose( hFile );
 			  guiSaveGameVersion=0;
 			  return( FALSE );
@@ -2531,6 +3329,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !LoadContractRenewalDataFromSaveGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadContractRenewalDataFromSaveGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2545,6 +3344,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !LoadLeaveItemList( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadLeaveItemList failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2565,6 +3365,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		if ( !NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( hFile ) )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("NewWayOfLoadingBobbyRMailOrdersToSaveGameFile failed" ) );
 			FileClose( hFile );
 			guiSaveGameVersion=0;
 			return( FALSE );
@@ -2618,6 +3419,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		// Load the current sectors Information From the temporary files
 		if( !LoadCurrentSectorsInformationFromTempItemsFile() )
 		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadCurrentSectorsInformationFromTempItemsFile failed" ) );
 			InitExitGameDialogBecauseFileHackDetected();
 			guiSaveGameVersion=0;
 			return( TRUE );
@@ -2876,23 +3678,12 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 	UINT16	cnt;
 	UINT32	uiNumBytesWritten=0;
 
-	// WDS - Clean up inventory handling
 	//Loop through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
-		gMercProfiles[ cnt ].uiProfileChecksum = ProfileChecksum( &(gMercProfiles[ cnt ]) );
-		gMercProfiles[ cnt ].CopyNewInventoryToOld();
-		if ( guiSavedGameVersion < 87 )
+		if ( !gMercProfiles[ cnt ].Save(hFile) )
 		{
-			JA2EncryptedFileWrite( hFile, &gMercProfiles[cnt], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten );
-		}
-		else
-		{
-			NewJA2EncryptedFileWrite( hFile, &gMercProfiles[cnt], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesWritten );
-		}
-		if( uiNumBytesWritten != SIZEOF_MERCPROFILESTRUCT_POD )
-		{
-			return(FALSE);
+			return FALSE;
 		}
 	}
 
@@ -2906,27 +3697,12 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
 
-	// WDS - Clean up inventory handling
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
-		gMercProfiles[cnt].initialize();
-		if ( guiSaveGameVersion < 87 )
-		{
-			JA2EncryptedFileRead( hFile, &gMercProfiles[cnt], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead );
-		}
-		else
-		{
-			NewJA2EncryptedFileRead( hFile, &gMercProfiles[cnt], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead );
-		}
-		if( uiNumBytesRead != SIZEOF_MERCPROFILESTRUCT_POD )
+		if ( !gMercProfiles[cnt].Load(hFile) )
 		{
 			return(FALSE);
-		}
-		gMercProfiles[ cnt ].CopyOldInventoryToNew();
-		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
-		{
-			return( FALSE );
 		}
 	}
 
@@ -2937,24 +3713,25 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 
 
 
-		//Not saving any of these in the soldier struct
-		
-		//	struct TAG_level_node				*pLevelNode;
-		//	struct TAG_level_node				*pExternShadowLevelNode;
-		//	struct TAG_level_node				*pRoofUILevelNode;
-		//	UINT16											*pBackGround;
-		//	UINT16											*pZBackground;
-		//	UINT16											*pForcedShade;
-		//
-		// 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
-		//  THROW_PARAMS								*pThrowParams;
-		//  UINT16											*pCurrentShade;
-		//	UINT16											*pGlowShades[ 20 ]; // 
-		//	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
-		//	UINT16											*p16BPPPalette;
-		//	SGPPaletteEntry							*p8BPPPalette
-		//	OBJECTTYPE									*pTempObject;
+//Not saving any of these in the soldier struct
 
+//	struct TAG_level_node				*pLevelNode;
+//	struct TAG_level_node				*pExternShadowLevelNode;
+//	struct TAG_level_node				*pRoofUILevelNode;
+//	UINT16											*pBackGround;
+//	UINT16											*pZBackground;
+//	UINT16											*pForcedShade;
+//
+// 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
+//  THROW_PARAMS								*pThrowParams;
+//  UINT16											*pCurrentShade;
+//	UINT16											*pGlowShades[ 20 ]; // 
+//	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
+//	UINT16											*p16BPPPalette;
+//	SGPPaletteEntry							*p8BPPPalette
+//	OBJECTTYPE									*pTempObject;
+
+//Not saving any of these in the soldier struct
 
 BOOLEAN SaveSoldierStructure( HWFILE hFile )
 {
@@ -2962,19 +3739,6 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 	UINT32	uiNumBytesWritten=0;
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
-	int			totalBytesWritten;
-
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
-	functionPtr pSavingFunction;
-	
-	if ( guiSavedGameVersion < 87 )
-	{
-		pSavingFunction = &JA2EncryptedFileWrite;
-	}
-	else
-	{
-		pSavingFunction = &NewJA2EncryptedFileWrite;
-	}
 
 	//Loop through all the soldier structs to save
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
@@ -3000,96 +3764,18 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 				return(FALSE);
 			}
 
-			// calculate checksum for soldier
-			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
 			// Save the soldier structure
-
-			(*pSavingFunction)( hFile, &Menptr[ cnt ], SIZEOF_SOLDIERTYPE_POD, &uiNumBytesWritten );
-			totalBytesWritten = uiNumBytesWritten;
-			if( uiNumBytesWritten != SIZEOF_SOLDIERTYPE_POD )
+			if ( !Menptr[ cnt ].Save(hFile) )
 			{
-				return(FALSE);
+				return FALSE;
 			}
-
-			//save OO data like inventory
-			int sizeInventory = Menptr[ cnt ].inv.size();//how many inv slots are we saving?
-			(*pSavingFunction)( hFile, &sizeInventory, sizeof(int), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(int) )
-			{
-				return(FALSE);
-			}
-
-			for (int x = 0; x < sizeInventory; ++x) {
-				InventoryItem temp;
-				temp.object = Menptr[ cnt ].inv[x];
-				temp.bNewItemCount = Menptr[ cnt ].inv.bNewItemCount[x];
-				temp.bNewItemCycleCount = Menptr[ cnt ].inv.bNewItemCycleCount[x];
-				(*pSavingFunction)( hFile, &temp, sizeof(InventoryItem), &uiNumBytesWritten );
-				totalBytesWritten += uiNumBytesWritten;
-				if( uiNumBytesWritten != sizeof(InventoryItem) )
-				{
-					return(FALSE);
-				}
-			}
-
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].aiData, sizeof(STRUCT_AIData), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_AIData) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].flags, sizeof(STRUCT_Flags), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_Flags) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_TimeChanges) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_TimeCounters) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].drugs, sizeof(STRUCT_Drugs), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_Drugs) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].stats, sizeof(STRUCT_Statistics), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_Statistics) )
-			{
-				return(FALSE);
-			}
-			(*pSavingFunction)( hFile, &Menptr[ cnt ].pathing, sizeof(STRUCT_Pathing), &uiNumBytesWritten );
-			totalBytesWritten += uiNumBytesWritten;
-			if( uiNumBytesWritten != sizeof(STRUCT_Pathing) )
-			{
-				return(FALSE);
-			}
-
-
-
-
 
 			//
 			// Save all the pointer info from the structure
 			//
-
-
 			//Save the pMercPath
 			if( !SaveMercPathFromSoldierStruct( hFile, (UINT8)cnt ) )
 				return( FALSE );
-
-
 
 			//
 			//do we have a 	KEY_ON_RING									*pKeyRing;
@@ -3122,10 +3808,8 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 			}
 		}
 	}
-
 	return( TRUE );
 }
-
 
 
 BOOLEAN LoadSoldierStructure( HWFILE hFile )
@@ -3138,10 +3822,8 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
-	int		totalBytesRead;
 
-	SOLDIERCREATE_STRUCT CreateStruct;
-
+	//if we are loading from a previous save, use the right loading function
 	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 	functionPtr pLoadingFunction;
 	if ( guiSaveGameVersion < 87 )
@@ -3159,17 +3841,12 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 		TacticalRemoveSoldier( cnt );
 	}
 
-
-
 	//Loop through all the soldier structs to load
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
 	{	
-
 		//update the progress bar
 		uiPercentage = (cnt * 100) / (TOTAL_SOLDIERS-1);
-
 		RenderProgressBar( 0, uiPercentage );
-
 
 		//Read in a byte to tell us whether or not there is a soldier loaded here.
 		FileRead( hFile, &ubActive, 1, &uiNumBytesRead );
@@ -3189,121 +3866,9 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 		{
 			SOLDIERTYPE SavedSoldierInfo;
 			//Read in the saved soldier info into a Temp structure
-
-			//if we are at the most current version, then fine
-			if ( guiSaveGameVersion >= CURRENT_SOLDIERTYPE_VERSION )
+			if ( !SavedSoldierInfo.Load(hFile) )
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("version ok" ) );
-				//the soldier type info has changed at version 102
-				//first, load the POD
-				//SavedSoldierInfo.initialize();//init when created above
-				uiSaveSize = SIZEOF_SOLDIERTYPE_POD;
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
-				totalBytesRead = uiNumBytesRead;
-				if( uiNumBytesRead != uiSaveSize )
-				{
-					return(FALSE);
-				}
-
-				//now load all the OO stuff like inventory
-				int sizeInventory;//how many inv slots are we loading?
-				(*pLoadingFunction)( hFile, &sizeInventory, sizeof(int), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(int);
-
-				if (sizeInventory < 0 || sizeInventory > NUM_INV_SLOTS)
-				{
-					return(FALSE);
-				}
-
-				Inventory inv(sizeInventory);
-				for (int x = 0; x < sizeInventory; ++x) {
-					InventoryItem temp;
-					(*pLoadingFunction)( hFile, &temp, sizeof(InventoryItem), &uiNumBytesRead );
-					totalBytesRead += uiNumBytesRead;
-					uiSaveSize += sizeof(InventoryItem);
-					inv[x] = temp.object;
-					inv.bNewItemCount[x] = temp.bNewItemCount;
-					inv.bNewItemCycleCount[x] = temp.bNewItemCycleCount;
-				}
-				SavedSoldierInfo.inv = inv;
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.aiData, sizeof(STRUCT_AIData), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_AIData);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.flags, sizeof(STRUCT_Flags), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_Flags);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_TimeChanges);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_TimeCounters);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.drugs, sizeof(STRUCT_Drugs), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_Drugs);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.stats, sizeof(STRUCT_Statistics), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_Statistics);
-
-				(*pLoadingFunction)( hFile, &SavedSoldierInfo.pathing, sizeof(STRUCT_Pathing), &uiNumBytesRead );
-				totalBytesRead += uiNumBytesRead;
-				uiSaveSize += sizeof(STRUCT_Pathing);
-
-				if (totalBytesRead != uiSaveSize)
-				{
-					return(FALSE);
-				}
-			}
-			else
-			{
-				OLDSOLDIERTYPE_101 OldSavedSoldierInfo101;
-				//we are loading an older version (only load once, so use "else if")
-				//first load the data based on what version was stored
-				if ( guiSaveGameVersion < FIRST_SOLDIERTYPE_CHANGE )
-				{
-					uiSaveSize = SIZEOF_OLDSOLDIERTYPE_101_POD;
-					OldSavedSoldierInfo101.initialize();
-					(*pLoadingFunction)( hFile, &OldSavedSoldierInfo101, uiSaveSize, &uiNumBytesRead );
-				}
-				/*
-				else if ( guiSaveGameVersion < SECOND_SOLDIERTYPE_CHANGE )
-					uiSaveSize = SIZEOF_OLDSOLDIERTYPE_999_POD;
-					OldSavedSoldierInfo999.initialize();
-					(*pLoadingFunction)( hFile, &OldSavedSoldierInfo999, uiSaveSize, &uiNumBytesRead );
-				*/
-
-				if( uiNumBytesRead != uiSaveSize )
-				{
-					return(FALSE);
-				}
-
-				//now we have the data that needs to be converted (keep on converting up, so use "if")
-				if ( guiSaveGameVersion < FIRST_SOLDIERTYPE_CHANGE )
-				{
-					OldSavedSoldierInfo101.CopyOldInventoryToNew();
-					SavedSoldierInfo = OldSavedSoldierInfo101;
-					//OldSavedSoldierInfo999 = OldSavedSoldierInfo101;
-				}
-				//change this when changing the file version again
-				/*
-				if ( guiSaveGameVersion < SECOND_SOLDIERTYPE_CHANGE )
-				{
-					SavedSoldierInfo = OldSavedSoldierInfo999;
-				}
-				*/
-			}
-
-			// check checksum
-			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
-			{
-				return( FALSE );
+				return FALSE;
 			}
 
 			//Make sure all the pointer references are NULL'ed out.  
@@ -3330,10 +3895,8 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 			//	continue;
 
 
-                       	// WDS - Clean up inventory handling
 			//Create the new merc
-			//memset( &CreateStruct, 0, SIZEOF_SOLDIERCREATE_STRUCT );
-			CreateStruct.initialize();
+			SOLDIERCREATE_STRUCT CreateStruct;
 			CreateStruct.bTeam								= SavedSoldierInfo.bTeam;
 			CreateStruct.ubProfile						= SavedSoldierInfo.ubProfile;
 			CreateStruct.fUseExistingSoldier	= TRUE;
@@ -4002,14 +4565,7 @@ BOOLEAN LoadTacticalStatusFromSavedGame( HWFILE hFile )
 
 BOOLEAN CopySavedSoldierInfoToNewSoldier( SOLDIERTYPE *pDestSourceInfo, SOLDIERTYPE *pSourceInfo )
 {
-
-
-	// WDS - Clean up inventory handling
-	//Copy the old soldier information over to the new structure
-//	memcpy( pDestSourceInfo, pSourceInfo, SIZEOF_SOLDIERTYPE );
 	*pDestSourceInfo = *pSourceInfo;
-
-	
 	return( TRUE );
 }
 
