@@ -35,7 +35,7 @@
 #define AP_MOVEMENT_RUBBLE      6				
 #define AP_MOVEMENT_SHORE       7       // shallow wade
 
-#define AP_MOVEMENT_LAKE        9       // deep wade -> slowest
+#define AP_MOVEMENT_LAKE        9       // deep wade->slowest
 #define AP_MOVEMENT_OCEAN       8       // swimming is faster than deep wade
 
 #define AP_CHANGE_FACING        1       // turning to face any other direction

@@ -64,7 +64,7 @@ BUILDING * GenerateBuilding( INT16 sDesiredSpot )
 //	memset( &FakeSoldier, 0, SIZEOF_SOLDIERTYPE );
 	FakeSoldier.initialize();
 	FakeSoldier.sGridNo = sDesiredSpot;
-	FakeSoldier.bLevel = 1;
+	FakeSoldier.pathing.bLevel = 1;
 	FakeSoldier.bTeam = 1;
 
 #ifdef ROOF_DEBUG

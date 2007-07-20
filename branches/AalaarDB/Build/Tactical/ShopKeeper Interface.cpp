@@ -732,11 +732,11 @@ UINT32	ShopKeeperScreenHandle()
 
 
 	// Check for any newly added items...
-	if ( gpSMCurrentMerc->fCheckForNewlyAddedItems )
+	if ( gpSMCurrentMerc->flags.fCheckForNewlyAddedItems )
 	{
 		// Startup any newly added items....
 		CheckForAnyNewlyAddedItems( gpSMCurrentMerc );
-		gpSMCurrentMerc->fCheckForNewlyAddedItems = FALSE;
+		gpSMCurrentMerc->flags.fCheckForNewlyAddedItems = FALSE;
 	}
 	
 
@@ -902,7 +902,7 @@ ATM:
 		pSoldier = MercPtrs[ ubCnt ];
 
 		if( pSoldier->bActive && ( pSoldier->ubProfile != NO_PROFILE ) &&
-			!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+			!(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 		{
 			// remember whose face is in this slot
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
@@ -2625,7 +2625,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 
-	sCenX = usPosX + 7 + (INT16)( abs( (long) (SKI_INV_WIDTH - 3 - usWidth) ) / 2 ) - pTrav->sOffsetX;
+	sCenX = usPosX + 7 + (INT16)( abs( (long)(SKI_INV_WIDTH - 3 - usWidth) ) / 2 ) - pTrav->sOffsetX;
 	sCenY = usPosY + (INT16)( abs( (long) (SKI_INV_HEIGHT - usHeight) ) / 2 ) - pTrav->sOffsetY;
 
 
@@ -7087,16 +7087,16 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 	Assert( pShopkeeper->bActive );
 	Assert( pShopkeeper->bInSector );
 
-	if ( pShopkeeper->bLife < OKLIFE )
+	if ( pShopkeeper->stats.bLife < OKLIFE )
 	{
 		return( FALSE );
 	}
 
-	if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->bLife >= OKLIFE ) &&
-		!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+	if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->stats.bLife >= OKLIFE ) &&
+		!( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 	{
 		sDestGridNo = pShopkeeper->sGridNo;
-		bDestLevel	= pShopkeeper->bLevel;
+		bDestLevel	= pShopkeeper->pathing.bLevel;
 
 		// is he close enough to see that gridno if he turns his head?
 		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel, pSoldier );
@@ -7289,7 +7289,7 @@ void ReturnItemToPlayerSomehow( INVENTORY_IN_SLOT *pInvSlot, SOLDIERTYPE *pDropS
 		{
 			// failed to add item, inventory probably filled up or item is unowned and current merc ineligible.
 			// drop it at the specified guy's feet instead
-			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &pInvSlot->ItemObject, VISIBLE, pDropSoldier->bLevel, 0, 0 );
+			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &pInvSlot->ItemObject, VISIBLE, pDropSoldier->pathing.bLevel, 0, 0 );
 		}
 	}
 }
@@ -7517,7 +7517,7 @@ void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 //Mouse Call back for the Arms delaers face
 void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	// WANNE 2: not needed to drop the item to the ground -> on the right side of the shopkeeper screen!
+	// WANNE 2: not needed to drop the item to the ground->on the right side of the shopkeeper screen!
 	/*
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -7541,7 +7541,7 @@ void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION * pRegion, INT
 		{
 			
 			//add the item to the ground
-			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &gMoveingItem.ItemObject, VISIBLE, pDropSoldier->bLevel, 0, 0 );
+			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &gMoveingItem.ItemObject, VISIBLE, pDropSoldier->pathing.bLevel, 0, 0 );
 
 			//Reset the cursor
 			SetSkiCursor( CURSOR_NORMAL );

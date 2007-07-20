@@ -63,13 +63,13 @@ void CycleAnimations( )
 		if ( gAnimControl[ cnt ].ubHeight == ubStartHeight )
 		{
 			usStartAnim = ( UINT8) cnt;
-			EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+			pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 			return;
 		}
 	}
 
 	usStartAnim = 0;
-	EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+	pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 }
 
 
@@ -117,7 +117,7 @@ UINT32  AniEditScreenHandle(void)
 
 		gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 	
-		EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+		pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 
 		BuildListFile( );
 
@@ -237,11 +237,11 @@ UINT32  AniEditScreenHandle(void)
 						break;
 				}
 				
-				EVENT_InitNewSoldierAnim( pSoldier, usAnim, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usAnim, 0 , TRUE );
 			}
 			else
 			{
-				EVENT_InitNewSoldierAnim( pSoldier, usOldState, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usOldState, 0 , TRUE );
 			}
 
 			fToggle = !fToggle;
@@ -253,11 +253,11 @@ UINT32  AniEditScreenHandle(void)
 			{
 				usOldState = usStartAnim;
 
-				EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 			}
 			else
 			{
-				EVENT_InitNewSoldierAnim( pSoldier, usOldState, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usOldState, 0 , TRUE );
 			}
 
 			fToggle2 = !fToggle2;
@@ -275,7 +275,7 @@ UINT32  AniEditScreenHandle(void)
 						ubCurLoadedState = 0;
 					}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 
 			 }
 		}
@@ -292,7 +292,7 @@ UINT32  AniEditScreenHandle(void)
 						ubCurLoadedState = ubNumStates;
 					}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 			 }
 		}
 
@@ -300,7 +300,7 @@ UINT32  AniEditScreenHandle(void)
 		{
 			// CLEAR!
 			usStartAnim = 0;
-			EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+			pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 		}
 
 		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == ENTER ))

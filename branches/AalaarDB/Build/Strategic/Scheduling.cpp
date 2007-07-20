@@ -185,7 +185,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	//Validate the existance of the soldier.
 	pSoldier = MercPtrs[ pSchedule->ubSoldierID ];
-	if ( pSoldier->bLife < OKLIFE )
+	if ( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or dying!
 		return;
@@ -253,7 +253,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 			case 2:			pSchedule->usFlags |= SCHEDULE_FLAGS_ACTIVE3;			break;
 			case 3:			pSchedule->usFlags |= SCHEDULE_FLAGS_ACTIVE4;			break;
 		}
-		pSoldier->fAIFlags |= AI_CHECK_SCHEDULE;
+		pSoldier->aiData.fAIFlags |= AI_CHECK_SCHEDULE;
 		pSoldier->bAIScheduleProgress = 0;
 	}
 
@@ -640,7 +640,7 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 	}
 
 	ConvertGridNoToCellXY( sNewGridNo, &sCellX, &sCellY );
-	EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+	pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 
 	return( TRUE );
 }
@@ -688,7 +688,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 	#endif
 
 	// always assume the merc is going to wake, unless the event is a sleep
-	pSoldier->fAIFlags &= ~(AI_ASLEEP);
+	pSoldier->aiData.fAIFlags &= ~(AI_ASLEEP);
 
 	switch( pSchedule->ubAction[ index ] )
 	{
@@ -700,7 +700,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			BumpAnyExistingMerc( pSchedule->usData2[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData2[ index ], &sCellX, &sCellY );
 
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			if ( GridNoOnEdgeOfMap( pSchedule->usData2[ index ], &bDirection ) )
 			{
 				// civ should go off map; this tells us where the civ will return
@@ -711,15 +711,15 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			else
 			{
 				// let this person patrol from here from now on
-				pSoldier->usPatrolGrid[0] = pSchedule->usData2[ index ];
+				pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData2[ index ];
 			}
 			break;
 		case SCHEDULE_ACTION_GRIDNO:
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			// let this person patrol from here from now on
-			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_ENTERSECTOR:
 			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR )
@@ -729,37 +729,37 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 			}
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			MoveSoldierFromAwayToMercSlot( pSoldier );
 			pSoldier->bInSector = TRUE;
 			// let this person patrol from here from now on
-			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_WAKE:
 			BumpAnyExistingMerc( pSoldier->sInitialGridNo );
 			ConvertGridNoToCellXY( pSoldier->sInitialGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 			// let this person patrol from here from now on
-			pSoldier->usPatrolGrid[0] = pSoldier->sInitialGridNo;
+			pSoldier->aiData.usPatrolGrid[0] = pSoldier->sInitialGridNo;
 			break;
 		case SCHEDULE_ACTION_SLEEP:
-			pSoldier->fAIFlags |= AI_ASLEEP;
+			pSoldier->aiData.fAIFlags |= AI_ASLEEP;
 			// check for someone else in the location
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
-			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->aiData.usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 			sGridNo = FindNearestEdgePoint( pSoldier->sGridNo );
 			BumpAnyExistingMerc( sGridNo );
 			ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 
 			sGridNo = FindNearbyPointOnEdgeOfMap( pSoldier, &bDirection );
 			BumpAnyExistingMerc( sGridNo );
 			ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			pSoldier->EVENT_SetSoldierPositionForceDelete( (FLOAT)sCellX, (FLOAT)sCellY );
 
 			// ok, that tells us where the civ will return
 			pSoldier->sOffWorldGridNo = sGridNo;

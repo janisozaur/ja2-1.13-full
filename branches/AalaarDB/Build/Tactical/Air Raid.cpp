@@ -228,7 +228,7 @@ BOOLEAN BeginAirRaid( )
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
-				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->fBetweenSectors && pSoldier->bLife && pSoldier->bAssignment != IN_TRANSIT )
+				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->flags.fBetweenSectors && pSoldier->stats.bLife && pSoldier->bAssignment != IN_TRANSIT )
 				{
 					fOK = TRUE;
 					break;
@@ -291,7 +291,7 @@ BOOLEAN BeginAirRaid( )
                 // WDS - Clean up inventory handling
 		//memset( gpRaidSoldier, 0, SIZEOF_SOLDIERTYPE );
 		gpRaidSoldier->initialize();
-		gpRaidSoldier->bLevel = 0;
+		gpRaidSoldier->pathing.bLevel = 0;
 		gpRaidSoldier->bTeam = 1;
 		gpRaidSoldier->bSide = 1;
 		gpRaidSoldier->ubID	 = MAX_NUM_SOLDIERS - 1;
@@ -1075,7 +1075,7 @@ void HandleAirRaid( )
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
-				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->fBetweenSectors && pSoldier->bLife && pSoldier->bAssignment != IN_TRANSIT )
+				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->flags.fBetweenSectors && pSoldier->stats.bLife && pSoldier->bAssignment != IN_TRANSIT )
 				{
 					fOK = TRUE;
 					break;
@@ -1344,7 +1344,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 //	if( gpRaidSoldier )
 //	{
-//		sAirRaidSaveStruct.bLevel = gpRaidSoldier->bLevel;
+//		sAirRaidSaveStruct.bLevel = gpRaidSoldier->pathing.bLevel;
 //		sAirRaidSaveStruct.bTeam = gpRaidSoldier->bTeam;
 //		sAirRaidSaveStruct.bSide = gpRaidSoldier->bSide;
 //		sAirRaidSaveStruct.ubAttackerID = gpRaidSoldier->ubAttackerID;
@@ -1421,7 +1421,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 	{
 		gpRaidSoldier = &Menptr[ sAirRaidSaveStruct.sRaidSoldierID ];
 
-		gpRaidSoldier->bLevel = sAirRaidSaveStruct.bLevel;
+		gpRaidSoldier->pathing.bLevel = sAirRaidSaveStruct.bLevel;
 		gpRaidSoldier->bTeam = sAirRaidSaveStruct.bTeam;
 		gpRaidSoldier->bSide = sAirRaidSaveStruct.bSide;
 		gpRaidSoldier->ubAttackerID = sAirRaidSaveStruct.ubAttackerID;
@@ -1465,7 +1465,7 @@ void EndAirRaid( )
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
+					pTeamSoldier->aiData.bAlertStatus = STATUS_GREEN;
 				}
 			}
 			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
@@ -1476,7 +1476,7 @@ void EndAirRaid( )
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
+					pTeamSoldier->aiData.bAlertStatus = STATUS_GREEN;
 				}
 			}
 			gTacticalStatus.Team[ CIV_TEAM ].bAwareOfOpposition = FALSE;

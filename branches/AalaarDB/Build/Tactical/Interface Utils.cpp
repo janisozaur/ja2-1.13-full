@@ -124,7 +124,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -135,7 +135,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 
 
 	// FIRST DO MAX LIFE
-	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->stats.bLife / (FLOAT)100;
 	dEnd				=	dPercentage * sHeight;
 	dStart			= sYPos;
 
@@ -151,7 +151,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 	// NOW DO BANDAGE
 
 	// Calculate bandage
-	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+	bBandage = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
 	if ( bBandage )
 	{
@@ -207,7 +207,7 @@ void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -317,7 +317,7 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -328,7 +328,7 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 
 
 	// FIRST DO BREATH
-	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->aiData.bMorale / (FLOAT)100;
 	dEnd				=	dPercentage * sHeight;
 	dStart			= sYPos;
 
@@ -442,7 +442,7 @@ void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLE
 	if ( pSoldier->bActive )
 	{
 
-		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			// get the type of vehicle
 			ubVehicleType = pVehicleList[ pSoldier->bVehicleID ].ubVehicleType;

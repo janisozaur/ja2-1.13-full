@@ -711,7 +711,7 @@ void RenderTopmostTacticalInterface( )
 				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
 			}
 
-			if ( pSoldier->fDisplayDamage )
+			if ( pSoldier->flags.fDisplayDamage )
 			{
 				// Display damage
 
@@ -792,7 +792,7 @@ void RenderTopmostTacticalInterface( )
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 			{
 				// Check if we are over an item pool
-				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
+				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 				{
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
@@ -805,7 +805,7 @@ void RenderTopmostTacticalInterface( )
 						sActionGridNo = sIntTileGridNo;
 					}
 					
-					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
+					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->pathing.bLevel, pStructure );
 
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
@@ -821,7 +821,7 @@ void RenderTopmostTacticalInterface( )
           INT8 bCheckLevel;
 
           // ATE: Allow to see list if a different level....
-          if ( pSoldier->bLevel == 0 )
+          if ( pSoldier->pathing.bLevel == 0 )
           {
             bCheckLevel = 1;
           }

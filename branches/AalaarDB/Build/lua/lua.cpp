@@ -169,7 +169,7 @@ void NewLuaObject( lua_State *L, STR8 ClsName, void *Ptr )
 
 static int LuaGetMercPtr( lua_State *L)
 {
-	int v = lua_tointeger( L, 2 );
+	int v = (int)lua_tointeger( L, 2 );
 	luaL_argcheck( L, (v >= 0 && v < TOTAL_SOLDIERS), 2, "The soldier index is out of range");
 	if (MercPtrs[ v ] )
 	{
@@ -247,7 +247,7 @@ int LuaSetSoldierGrid( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = luaL_checkinteger( L, 3);
+	int newgrid = (int)luaL_checkinteger( L, 3);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
 	TeleportSoldier( pSoldier, newgrid, TRUE);
 	return 0;
@@ -257,12 +257,12 @@ int LuaSoldierWalkTo( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = luaL_checkinteger( L, 2);
+	int newgrid = (int)luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
-	pSoldier->bAction = AI_ACTION_WALK;
-	pSoldier->usActionData = newgrid;
-	pSoldier->bPathStored = FALSE;
-	pSoldier->bActionInProgress = ExecuteAction( pSoldier);
+	pSoldier->aiData.bAction = AI_ACTION_WALK;
+	pSoldier->aiData.usActionData = newgrid;
+	pSoldier->pathing.bPathStored = FALSE;
+	pSoldier->aiData.bActionInProgress = ExecuteAction( pSoldier);
 	return 0;
 }
 
@@ -270,12 +270,12 @@ int LuaSoldierRunTo( lua_State *L )
 {
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
-	int newgrid = luaL_checkinteger( L, 2);
+	int newgrid = (int)luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
-	pSoldier->bAction = AI_ACTION_RUN;
-	pSoldier->usActionData = newgrid;
-	pSoldier->bPathStored = FALSE;
-	pSoldier->bActionInProgress = ExecuteAction( pSoldier);
+	pSoldier->aiData.bAction = AI_ACTION_RUN;
+	pSoldier->aiData.usActionData = newgrid;
+	pSoldier->pathing.bPathStored = FALSE;
+	pSoldier->aiData.bActionInProgress = ExecuteAction( pSoldier);
 	return 0;
 }
 

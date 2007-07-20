@@ -2180,7 +2180,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldie
 	BOOLEAN								fReturn;
 
 	// Turn off multi tile flag...
-	pSoldier->uiStatusFlags &= ( ~SOLDIER_MULTITILE );
+	pSoldier->flags.uiStatusFlags &= ( ~SOLDIER_MULTITILE );
 
 	if ( pSoldier->pLevelNode == NULL )
 	{
@@ -2204,11 +2204,11 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldie
 		if ( pSoldier->ubBodyType == QUEENMONSTER )
 		{
 			// Queen uses onely one direction....
-			fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ 0 ] ), pSoldier->pLevelNode );
+			fReturn = AddStructureToWorld( sGridNo, pSoldier->pathing.bLevel, &( pStructureFileRef->pDBStructureRef[ 0 ] ), pSoldier->pLevelNode );
 		}
 		else
 		{
-			fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
+			fReturn = AddStructureToWorld( sGridNo, pSoldier->pathing.bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
 		}
 /*
 		if ( fReturn == FALSE )
@@ -2219,7 +2219,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldie
 			pStructureFileRef = GetDefaultStructureRef( pSoldier->ubID );
 			if ( pStructureFileRef )
 			{
-				fReturn = AddStructureToWorld( sGridNo, pSoldier->bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
+				fReturn = AddStructureToWorld( sGridNo, pSoldier->pathing.bLevel, &( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ] ), pSoldier->pLevelNode );
 			}
 		}
 		*/
@@ -2233,7 +2233,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldie
 			if ( pStructureFileRef->pDBStructureRef[ gOneCDirection[ pSoldier->bDirection ] ].pDBStructure->ubNumberOfTiles > 1 )
 			{
 				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
+				pSoldier->flags.uiStatusFlags |= SOLDIER_MULTITILE_Z;
 			}
 
 
@@ -2245,11 +2245,11 @@ BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldie
 			if ( pSoldier->pLevelNode->pStructureData->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1 )
 			{
 				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
+				pSoldier->flags.uiStatusFlags |= SOLDIER_MULTITILE_Z;
 			}
 			else
 			{
-				//pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_NZ;
+				//pSoldier->flags.uiStatusFlags |= SOLDIER_MULTITILE_NZ;
 			}
 		}
 	}
@@ -2263,7 +2263,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 	STRUCTURE_FILE_REF			*pStructFileRef;
 	UINT16 usOKToAddStructID;
 
-  //if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE )
+  //if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE )
 	{
 		// Get surface data
  		usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
@@ -2287,7 +2287,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 				usOKToAddStructID = INVALID_STRUCTURE_ID;
 			}
 
-			if ( !OkayToAddStructureToWorld( pSoldier->sGridNo, pSoldier->bLevel, &(pStructFileRef->pDBStructureRef[gOneCDirection[ bDirection ]]), usOKToAddStructID ))
+			if ( !OkayToAddStructureToWorld( pSoldier->sGridNo, pSoldier->pathing.bLevel, &(pStructFileRef->pDBStructureRef[gOneCDirection[ bDirection ]]), usOKToAddStructID ))
 			{
 				return( FALSE );
 			}

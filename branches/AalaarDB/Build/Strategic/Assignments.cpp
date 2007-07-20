@@ -486,11 +486,11 @@ void BuildSectorsWithSoldiersList( void )
 	pSoldier = MercPtrs[ 0 ];
 
 	// fills array with pressence of player controlled characters
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if(pTeamSoldier -> bActive)
+		if(pTeamSoldier->bActive)
 		{
-		  fSectorsWithSoldiers[ pTeamSoldier -> sSectorX + pTeamSoldier -> sSectorY * MAP_WORLD_X ][ pTeamSoldier -> bSectorZ ] = TRUE;
+		  fSectorsWithSoldiers[ pTeamSoldier->sSectorX + pTeamSoldier->sSectorY * MAP_WORLD_X ][ pTeamSoldier->bSectorZ ] = TRUE;
 		}
 	}
 }
@@ -504,8 +504,8 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 	pSoldier->bAssignment = bAssignment;
 /// don't kill iVehicleId, though, 'cause militia training tries to put guys back in their vehicles when it's done(!)
 
-	pSoldier->fFixingSAMSite = FALSE;
-	pSoldier->fFixingRobot = FALSE;
+	pSoldier->flags.fFixingSAMSite = FALSE;
+	pSoldier->flags.fFixingRobot = FALSE;
 	pSoldier->bVehicleUnderRepairID = -1;
 
 	if ( ( bAssignment == DOCTOR ) || ( bAssignment == PATIENT ) || ( bAssignment == ASSIGNMENT_HOSPITAL ) )
@@ -558,13 +558,13 @@ BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 			return( CanCharacterTrainMilitia( pSoldier ) );
 			break;
 		case( TRAIN_SELF ):
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, TRUE, FALSE ) );
+			return( CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, TRUE, FALSE ) );
 			break;
 		case( TRAIN_TEAMMATE ):
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, FALSE, TRUE ) );
+			return( CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, FALSE, TRUE ) );
 			break;
 		case TRAIN_BY_OTHER:
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, TRUE, FALSE ) );
+			return( CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, TRUE, FALSE ) );
 			break;
 		case( VEHICLE ):
 			return( CanCharacterVehicle( pSoldier ) );
@@ -586,14 +586,14 @@ BOOLEAN CanCharacterDoctorButDoesntHaveMedKit( SOLDIERTYPE *pSoldier )
 	}	
 
 	// make sure character is alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
 	}
 
 	// has medical skill?
-	if( pSoldier -> bMedical <= 0 )
+	if( pSoldier->stats.bMedical <= 0 )
 	{
 		// no skill whatsoever
 		return ( FALSE );
@@ -611,19 +611,19 @@ BOOLEAN CanCharacterDoctorButDoesntHaveMedKit( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		// epcs can't do this
 		return( FALSE );
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
@@ -654,7 +654,7 @@ BOOLEAN CanCharacterDoctor( SOLDIERTYPE *pSoldier )
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		// doctoring is allowed using either type of med kit (but first aid kit halves doctoring effectiveness)
-		if( IsMedicalKitItem( &( pSoldier -> inv[ bPocket ] ) ) )
+		if( IsMedicalKitItem( &( pSoldier->inv[ bPocket ] ) ) )
 		{
 			fFoundMedKit = TRUE;
 			break;
@@ -731,7 +731,7 @@ BOOLEAN HasCharacterFinishedRepairing( SOLDIERTYPE * pSoldier )
 		fCanStillRepair = CanCharacterRepairVehicle( pSoldier, pSoldier->bVehicleUnderRepairID );
 	}	
 	// check if we are repairing a robot
-	else if( pSoldier -> fFixingRobot )
+	else if( pSoldier->flags.fFixingRobot )
 	{
 		fCanStillRepair = CanCharacterRepairRobot( pSoldier );
 	}
@@ -759,13 +759,13 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 	// check for jams
 	for (bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
-		ubItemsInPocket = pSoldier -> inv[ bPocket ].ubNumberOfObjects;
+		ubItemsInPocket = pSoldier->inv[ bPocket ].ubNumberOfObjects;
 		// unjam any jammed weapons
 		// run through pocket and repair
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if ( ( Item[ pSoldier -> inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier -> inv[ bPocket ].bGunAmmoStatus < 0 ) )
+			if ( ( Item[ pSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
 			{
 				return( TRUE );
 			}
@@ -851,14 +851,14 @@ BOOLEAN BasicCanCharacterRepair( SOLDIERTYPE * pSoldier )
 	}
 
 	// make sure character is alive and oklife
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
 	}
 
 	// has repair skill?
-	if( pSoldier -> bMechanical <= 0 )
+	if( pSoldier->stats.bMechanical <= 0 )
 	{
 		// no skill whatsoever
 		return ( FALSE );
@@ -876,19 +876,19 @@ BOOLEAN BasicCanCharacterRepair( SOLDIERTYPE * pSoldier )
 		return( FALSE );
 	}
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		// epcs can't do this
 		return( FALSE );
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
@@ -960,18 +960,18 @@ BOOLEAN CanCharacterPatient( SOLDIERTYPE *pSoldier )
 	}
 
 	// Robot must be REPAIRED to be "healed", not doctored
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 	{
 		return ( FALSE );
 	}
 
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
+	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
 		return ( FALSE );
 	}
 
 	// is character alive and not in perfect health?
-	if( ( pSoldier -> bLife <= 0 ) || ( pSoldier -> bLife == pSoldier -> bLifeMax ) )
+	if( ( pSoldier->stats.bLife <= 0 ) || ( pSoldier->stats.bLife == pSoldier->stats.bLifeMax ) )
 	{
 		// dead or in perfect health
 		return ( FALSE );
@@ -990,12 +990,12 @@ BOOLEAN CanCharacterPatient( SOLDIERTYPE *pSoldier )
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
@@ -1020,14 +1020,14 @@ BOOLEAN BasicCanCharacterTrainMilitia( SOLDIERTYPE *pSoldier )
 	}
 
 	// make sure character is alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
 	}
 
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
+	if( pSoldier->bSectorZ != 0 )
 	{
 		return( FALSE ); 
 	}
@@ -1035,7 +1035,7 @@ BOOLEAN BasicCanCharacterTrainMilitia( SOLDIERTYPE *pSoldier )
 	// is there a town in the character's current sector?
 	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY ) ].bNameId == BLANK_SECTOR )
 	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
+		fSamSitePresent = IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 
 		// check if sam site
 		if( fSamSitePresent == FALSE )
@@ -1052,12 +1052,12 @@ BOOLEAN BasicCanCharacterTrainMilitia( SOLDIERTYPE *pSoldier )
 
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
@@ -1076,19 +1076,19 @@ BOOLEAN BasicCanCharacterTrainMilitia( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		// epcs can't do this
 		return( FALSE );
 	}
 
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 	{
 		return( FALSE );
 	}
 
 	// has leadership skill?
-	if( pSoldier -> bLeadership <= 0 )
+	if( pSoldier->stats.bLeadership <= 0 )
 	{
 		// no skill whatsoever
 		return ( FALSE );
@@ -1166,7 +1166,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSol
 
 
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
+	if( pSoldier->bSectorZ != 0 )
 	{
 		return( FALSE ); 
 	}
@@ -1176,7 +1176,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSol
 	// is there a town really here
 	if( bTownId == BLANK_SECTOR )
 	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
+		fSamSitePresent = IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 
 		// if there is a sam site here
 		if( fSamSitePresent )
@@ -1207,7 +1207,7 @@ INT8 CountMilitiaTrainersInSoldiersSector( SOLDIERTYPE * pSoldier )
 	for ( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
 	{
 		pOtherSoldier = MercPtrs[ bLoop ];
-		if ( pSoldier != pOtherSoldier && pOtherSoldier->bActive && pOtherSoldier->bLife >= OKLIFE && pOtherSoldier->sSectorX == pSoldier->sSectorX && pOtherSoldier->sSectorY == pSoldier->sSectorY && pSoldier->bSectorZ == pOtherSoldier->bSectorZ )
+		if ( pSoldier != pOtherSoldier && pOtherSoldier->bActive && pOtherSoldier->stats.bLife >= OKLIFE && pOtherSoldier->sSectorX == pSoldier->sSectorX && pOtherSoldier->sSectorY == pSoldier->sSectorY && pSoldier->bSectorZ == pOtherSoldier->bSectorZ )
 		{
 			if (pOtherSoldier->bAssignment == TRAIN_TOWN )
 			{
@@ -1236,7 +1236,7 @@ BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed( SOLDIERTYPE *pSoldier, INT8 i
 	// is there a town really here
 	if( bTownId == BLANK_SECTOR )
 	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
+		fSamSitePresent = IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 
 		// if there is a sam site here
 		if( fSamSitePresent )
@@ -1270,32 +1270,32 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 	}
 
 	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
 	}
 
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
+	if( pSoldier->bSectorZ != 0 )
 	{
 		return( FALSE ); 
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
 		}
 	}
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		// epcs can't do this
 		return( FALSE );
@@ -1306,39 +1306,39 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 	{
 		case ( STRENGTH ):
 			// strength
-			if ( pSoldier->bStrength < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bStrength < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bStrength < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bStrength < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bStrength >=  gGameExternalOptions.ubTrainingSkillMax ) && ( fTrainSelf ) )
+			else if( ( pSoldier->stats.bStrength >=  gGameExternalOptions.ubTrainingSkillMax ) && ( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
 		break;
 		case( DEXTERITY ):
 			// dexterity
-			if ( pSoldier->bDexterity < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bDexterity < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bDexterity < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bDexterity < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bDexterity >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bDexterity >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
 		break;
 		case( AGILITY ):
 			// agility
-			if ( pSoldier->bAgility < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bAgility < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bAgility < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bAgility < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bAgility >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bAgility >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1346,13 +1346,13 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 		break;
 		case( HEALTH ):
 			// health
-			if ( pSoldier->bLifeMax < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bLifeMax < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bLifeMax < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bLifeMax < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bLifeMax >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bLifeMax >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1360,13 +1360,13 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 		break;
 		case( MARKSMANSHIP ):
 			// marksmanship
-			if ( pSoldier->bMarksmanship < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bMarksmanship < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bMarksmanship < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bMarksmanship < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bMarksmanship >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bMarksmanship >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1374,13 +1374,13 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 		break;
 		case( MEDICAL ):
 			// medical
-			if ( pSoldier->bMedical < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bMedical < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bMedical < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bMedical < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bMedical >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bMedical >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1388,39 +1388,39 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 		break;
 		case( MECHANICAL ):
 			// mechanical
-			if ( pSoldier->bMechanical < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bMechanical < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bMechanical < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bMechanical < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bMechanical >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bMechanical >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
 		break;
 		case( LEADERSHIP ):
 			// leadership
-			if ( pSoldier->bLeadership < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bLeadership < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bLeadership < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bLeadership < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bLeadership >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bLeadership >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
 		break;
 		case( EXPLOSIVE_ASSIGN ):
 			// explosives
-			if ( pSoldier->bExplosive < gGameExternalOptions.ubTrainingSkillMin )
+			if ( pSoldier->stats.bExplosive < gGameExternalOptions.ubTrainingSkillMin )
 				return FALSE;
-			else if( ( ( pSoldier -> bExplosive < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
+			else if( ( ( pSoldier->stats.bExplosive < gGameExternalOptions.ubMinSkillToTeach ) && ( fTrainTeammate ) ) )
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier -> bExplosive >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
+			else if( ( pSoldier->stats.bExplosive >= gGameExternalOptions.ubTrainingSkillMax )&&( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1450,7 +1450,7 @@ BOOLEAN CanCharacterOnDuty( SOLDIERTYPE *pSoldier )
 
 	// only need to be alive and well to do so right now
 	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
@@ -1462,12 +1462,12 @@ BOOLEAN CanCharacterOnDuty( SOLDIERTYPE *pSoldier )
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( TRUE );
 			}
@@ -1481,17 +1481,17 @@ BOOLEAN CanCharacterOnDuty( SOLDIERTYPE *pSoldier )
 
 
 	// ARM: New rule: can't change squads or exit vehicles between sectors!
-	if( pSoldier -> fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors )
 	{
 		return ( FALSE );
 	}
 
 /*
-	if( pSoldier -> fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors )
 	{
-		if( pSoldier -> bAssignment == VEHICLE )
+		if( pSoldier->bAssignment == VEHICLE )
 		{
-			if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
+			if( GetNumberInVehicle( pSoldier->iVehicleId ) == 1 )
 			{
 				// can't change, go away
 				return( FALSE );
@@ -1516,13 +1516,13 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 
 	// only need to be alive and well to do so right now
 	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
 	}
 
-	if( pSoldier -> bSectorZ != 0 )
+	if( pSoldier->bSectorZ != 0 )
 	{
 		return( FALSE ); 
 	}
@@ -1540,19 +1540,19 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
 		}
 	}
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		// epcs can't do this
 		return( FALSE );
@@ -1615,13 +1615,13 @@ BOOLEAN CanCharacterSleep( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 	CHAR16 sString[ 128 ];
 
 	// dead or dying?
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		return( FALSE );
 	}
 
 	// vehicle or robot?
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 	{
 		return( FALSE );
 	}
@@ -1633,14 +1633,14 @@ BOOLEAN CanCharacterSleep( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 	}
 
 	// POW?
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
+	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
 		return( FALSE );
 	}
 
 
 	// traveling?
-	if ( pSoldier->fBetweenSectors )
+	if ( pSoldier->flags.fBetweenSectors )
 	{
 		// if walking
 		if ( pSoldier->bAssignment != VEHICLE )
@@ -1725,14 +1725,14 @@ BOOLEAN CanCharacterBeAwakened( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 	CHAR16 sString[ 128 ];
 
 	// if dead tired
-	if( ( pSoldier -> bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM ) && !pSoldier->fMercCollapsedFlag )
+	if( ( pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM ) && !pSoldier->flags.fMercCollapsedFlag )
 	{
 		// should be collapsed, then!
-		pSoldier->fMercCollapsedFlag = TRUE;
+		pSoldier->flags.fMercCollapsedFlag = TRUE;
 	}
 
 	// merc collapsed due to being dead tired, you can't wake him up until he recovers substantially
-	if ( pSoldier->fMercCollapsedFlag == TRUE )
+	if ( pSoldier->flags.fMercCollapsedFlag == TRUE )
 	{
 		if ( fExplainWhyNot )
 		{
@@ -1759,7 +1759,7 @@ BOOLEAN CanCharacterVehicle( SOLDIERTYPE *pSoldier )
 
 	// only need to be alive and well to do so right now
 	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( FALSE );
@@ -1784,12 +1784,12 @@ BOOLEAN CanCharacterVehicle( SOLDIERTYPE *pSoldier )
 	}
 
 	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
+	if( pSoldier->bAssignment == VEHICLE )
 	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
+		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
 		{
 			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
+			if( NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY ) > 0 )
 			{
 				return( FALSE );
 			}
@@ -1811,7 +1811,7 @@ BOOLEAN CanCharacterVehicle( SOLDIERTYPE *pSoldier )
 	// if we're in BATTLE in the current sector, disallow 
 	if ( gTacticalStatus.fEnemyInSector )
 	{
-		if ( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> sSectorY == gWorldSectorY ) && ( pSoldier -> bSectorZ == gbWorldSectorZ) )
+		if ( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ) )
 		{
 			return( FALSE );
 		}
@@ -1835,7 +1835,7 @@ INT8 CanCharacterSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 	}
 
 	// is the character alive and well?
-	if( pSoldier -> bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		// dead or unconscious...
 		return ( CHARACTER_CANT_JOIN_SQUAD );
@@ -1854,11 +1854,11 @@ INT8 CanCharacterSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 	}
 
 /* Driver can't abandon vehicle between sectors - OBSOLETE - nobody is allowed to change squads between sectors now!
-	if( pSoldier -> fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors )
 	{
-		if( pSoldier -> bAssignment == VEHICLE )
+		if( pSoldier->bAssignment == VEHICLE )
 		{
-			if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
+			if( GetNumberInVehicle( pSoldier->iVehicleId ) == 1 )
 			{
 				// can't change, go away
 				return( CHARACTER_CANT_JOIN_SQUAD );
@@ -1871,7 +1871,7 @@ INT8 CanCharacterSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 	SectorSquadIsIn( bSquadValue, &sX, &sY, &sZ );
 	
 	// check sector x y and z, if not same, cannot join squad
-	if( ( sX != pSoldier -> sSectorX ) || ( sY != pSoldier -> sSectorY ) || ( sZ != pSoldier -> bSectorZ ) )
+	if( ( sX != pSoldier->sSectorX ) || ( sY != pSoldier->sSectorY ) || ( sZ != pSoldier->bSectorZ ) )
 	{
 		// is there anyone on this squad?
 		if( NumberOfPeopleInSquad( bSquadValue ) > 0 )
@@ -1911,7 +1911,7 @@ BOOLEAN IsCharacterInTransit( SOLDIERTYPE *pSoldier )
 
 
 	// check if character is currently in transit
-	if( pSoldier -> bAssignment == IN_TRANSIT )
+	if( pSoldier->bAssignment == IN_TRANSIT )
 	{
 		// yep
 		return ( TRUE );
@@ -2026,7 +2026,7 @@ void VerifyTownTrainingIsPaidFor( void )
 		if( pSoldier->bActive && ( pSoldier->bAssignment == TRAIN_TOWN ) )
 		{
 			// make sure that sector is paid up!
-			if( SectorInfo[ SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) ].fMilitiaTrainingPaid == FALSE )
+			if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
 			{
 				// NOPE!  We've got a bug somewhere
 				StopTimeCompression();
@@ -2056,14 +2056,14 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 	pSoldier = MercPtrs[0];	
 	
 	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) &&( pTeamSoldier -> bAssignment == bAssignment ) )
+			if( ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) &&( pTeamSoldier->bAssignment == bAssignment ) )
 			{
 				// increment number of people who are on this assignment
-				if(pTeamSoldier -> bActive)
+				if(pTeamSoldier->bActive)
 					bNumberOfPeople++;
 			}
 		}
@@ -2081,9 +2081,9 @@ UINT8 GetNumberThatCanBeDoctored( SOLDIERTYPE *pDoctor, BOOLEAN fThisHour, BOOLE
 
 
 	// go through list of characters, find all who are patients/doctors healable by this doctor
-	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
 			if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, fThisHour, fSkipKitCheck, fSkipSkillCheck ) == TRUE )
 			{
@@ -2104,10 +2104,10 @@ SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThi
 
 
 	// go through list of characters, find all who are patients/doctors healable by this doctor
-	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
 		// doctor?
-		if( ( pTeamSoldier -> bActive ) && ( pTeamSoldier->bAssignment == DOCTOR ) )
+		if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->bAssignment == DOCTOR ) )
 		{
 			if( CanSoldierBeHealedByDoctor( pPatient, pTeamSoldier, FALSE, fThisHour, FALSE, FALSE ) == TRUE )
 			{
@@ -2142,7 +2142,7 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 
 	// calculate normal doctoring rate - what it would be if his stats were "normal" (ignoring drugs, fatigue, equipment condition)
 	// and equipment was not a hindrance
-	*pusMaxPts = ( pDoctor -> bMedical * (( pDoctor -> bDexterity + pDoctor -> bWisdom ) / 2 ) * (100 + ( 5 * pDoctor->bExpLevel) ) ) / gGameExternalOptions.ubDoctoringRateDivisor;
+	*pusMaxPts = ( pDoctor->stats.bMedical * (( pDoctor->stats.bDexterity + pDoctor->stats.bWisdom ) / 2 ) * (100 + ( 5 * pDoctor->stats.bExpLevel) ) ) / gGameExternalOptions.ubDoctoringRateDivisor;
 
 	// adjust for fatigue
 	ReducePointsForFatigue( pDoctor, &usHealPts );
@@ -2157,7 +2157,7 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 	}
 
 	// get the type of medkit being used
-	bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ HANDPOS ] ) );
+	bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ HANDPOS ] ) );
 
 	if( bMedFactor != 0 )
 	{
@@ -2190,7 +2190,7 @@ UINT8 CalculateRepairPointsForRepairman(SOLDIERTYPE *pSoldier, UINT16 *pusMaxPts
 	}
 
 	// can't repair at all without a toolkit
-	if (!Item[pSoldier -> inv[HANDPOS].usItem].toolkit  )
+	if (!Item[pSoldier->inv[HANDPOS].usItem].toolkit  )
 	{
 		*pusMaxPts = 0;
 		return(0);
@@ -2201,7 +2201,7 @@ UINT8 CalculateRepairPointsForRepairman(SOLDIERTYPE *pSoldier, UINT16 *pusMaxPts
 
 	// calculate normal repair rate - what it would be if his stats were "normal" (ignoring drugs, fatigue, equipment condition)
 	// and equipment was not a hindrance
-	*pusMaxPts = ( pSoldier -> bMechanical * pSoldier -> bDexterity * (100 + ( 5 * pSoldier->bExpLevel) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay );
+	*pusMaxPts = ( pSoldier->stats.bMechanical * pSoldier->stats.bDexterity * (100 + ( 5 * pSoldier->stats.bExpLevel) ) ) / ( gGameExternalOptions.ubRepairRateDivisor * gGameExternalOptions.ubAssignmentUnitsPerDay );
 
 
 	// adjust for fatigue
@@ -2243,9 +2243,9 @@ UINT16 ToolKitPoints(SOLDIERTYPE *pSoldier)
 	// add up kit points
 	for (ubPocket=HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
-		if( Item[pSoldier -> inv[ ubPocket ].usItem].toolkit )
+		if( Item[pSoldier->inv[ ubPocket ].usItem].toolkit )
     {
-			usKitpts += TotalPoints( &( pSoldier -> inv[ ubPocket ] ) );
+			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
     }
 	}
 
@@ -2262,9 +2262,9 @@ UINT16 TotalMedicalKitPoints(SOLDIERTYPE *pSoldier)
 	for (ubPocket = HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
 		// NOTE: Here, we don't care whether these are MEDICAL BAGS or FIRST AID KITS!
-    if ( IsMedicalKitItem( &( pSoldier -> inv[ ubPocket ] ) ) )
+    if ( IsMedicalKitItem( &( pSoldier->inv[ ubPocket ] ) ) )
     {
-			usKitpts += TotalPoints( &( pSoldier -> inv[ ubPocket ] ) );
+			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
     }
 	}
 
@@ -2284,13 +2284,13 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 	// will handle doctor/patient relationship in sector
 
 	// go through list of characters, find all doctors in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if(pTeamSoldier -> bActive)
+		if(pTeamSoldier->bActive)
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) && ( pTeamSoldier -> bSectorZ == bZ ) )
+			if( ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) && ( pTeamSoldier->bSectorZ == bZ ) )
 			{
-				if ( ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
+				if ( ( pTeamSoldier->bAssignment == DOCTOR ) && ( pTeamSoldier->flags.fMercAsleep == FALSE ) )
 				{
 					MakeSureMedKitIsInHand( pTeamSoldier );
 					// character is in sector, check if can doctor, if so...heal people
@@ -2300,13 +2300,13 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 					}
 				}
 				/*
-				if( ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
+				if( ( pTeamSoldier->bAssignment == DOCTOR ) && ( pTeamSoldier->flags.fMercAsleep == FALSE ) )
 				{
 					MakeSureMedKitIsInHand( pTeamSoldier );
 				}
 
 				// character is in sector, check if can doctor, if so...heal people
-				if( CanCharacterDoctor( pTeamSoldier ) && ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) && EnoughTimeOnAssignment( pTeamSoldier ) )
+				if( CanCharacterDoctor( pTeamSoldier ) && ( pTeamSoldier->bAssignment == DOCTOR ) && ( pTeamSoldier->flags.fMercAsleep == FALSE ) && EnoughTimeOnAssignment( pTeamSoldier ) )
 				{
 					HealCharacters( pTeamSoldier, sX, sY, bZ );
 				}
@@ -2328,13 +2328,13 @@ void UpdatePatientsWhoAreDoneHealing( void )
 	// set as first in list
 	pSoldier = MercPtrs[0];
 
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
 		// active soldier?
 		if( pTeamSoldier->bActive )
 		{
 			// patient who doesn't need healing
-			if( ( pTeamSoldier->bAssignment == PATIENT ) &&( pTeamSoldier->bLife == pTeamSoldier->bLifeMax ) )
+			if( ( pTeamSoldier->bAssignment == PATIENT ) &&( pTeamSoldier->stats.bLife == pTeamSoldier->stats.bLifeMax ) )
 			{
 				AssignmentDone( pTeamSoldier, TRUE, TRUE );
 			}
@@ -2372,9 +2372,9 @@ void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
 
 
 		// heal each of the healable mercs by this equal amount
-		for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+		for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 		{
-			if( pTeamSoldier -> bActive )
+			if( pTeamSoldier->bActive )
 			{
 				if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE ) == TRUE )
 				{
@@ -2394,9 +2394,9 @@ void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
 				// find the worst hurt patient
 				pWorstHurtSoldier = NULL;
 
-				for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+				for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 				{
-					if( pTeamSoldier -> bActive )
+					if( pTeamSoldier->bActive )
 					{
 						if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE ) == TRUE )
 						{
@@ -2407,7 +2407,7 @@ void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
 							else
 							{
 								// check to see if this guy is hurt worse than anyone previous?
-								if( pTeamSoldier -> bLife < pWorstHurtSoldier -> bLife )
+								if( pTeamSoldier->stats.bLife < pWorstHurtSoldier->stats.bLife )
 								{
 									// he is now the worse hurt guy
 									pWorstHurtSoldier = pTeamSoldier;
@@ -2532,19 +2532,19 @@ BOOLEAN CanSoldierBeHealedByDoctor( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pDoctor,
 	INT16 sDistance = 0;
 
 	// must be an active guy
-	if (pSoldier -> bActive == FALSE)
+	if (pSoldier->bActive == FALSE)
 	{
 		return(FALSE);
 	}
 
 	// must be a patient or a doctor
-	if( ( pSoldier -> bAssignment != PATIENT ) && ( pSoldier -> bAssignment != DOCTOR ) && ( fIgnoreAssignment == FALSE ) )
+	if( ( pSoldier->bAssignment != PATIENT ) && ( pSoldier->bAssignment != DOCTOR ) && ( fIgnoreAssignment == FALSE ) )
 	{
 		return(FALSE);
 	}
 
 	// if dead or unhurt
-	if ( (pSoldier -> bLife == 0) || (pSoldier -> bLife == pSoldier -> bLifeMax ) )
+	if ( (pSoldier->stats.bLife == 0) || (pSoldier->stats.bLife == pSoldier->stats.bLifeMax ) )
 	{
 		return(FALSE);
 	}
@@ -2556,19 +2556,19 @@ BOOLEAN CanSoldierBeHealedByDoctor( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pDoctor,
 	}
 
 	// must be in the same sector
-	if( ( pSoldier -> sSectorX != pDoctor -> sSectorX ) || ( pSoldier -> sSectorY != pDoctor -> sSectorY ) || ( pSoldier -> bSectorZ != pDoctor -> bSectorZ ) )
+	if( ( pSoldier->sSectorX != pDoctor->sSectorX ) || ( pSoldier->sSectorY != pDoctor->sSectorY ) || ( pSoldier->bSectorZ != pDoctor->bSectorZ ) )
 	{
 		return(FALSE);
 	}
 
 	// can't be between sectors (possible to get here if ignoring assignment)
-	if ( pSoldier->fBetweenSectors )
+	if ( pSoldier->flags.fBetweenSectors )
 	{
 		return(FALSE);
 	}
 
 	// if doctor's skill is unsufficient to save this guy
-	if ( !fSkipSkillCheck && ( pDoctor -> bMedical < GetMinHealingSkillNeeded( pSoldier ) ) )
+	if ( !fSkipSkillCheck && ( pDoctor->stats.bMedical < GetMinHealingSkillNeeded( pSoldier ) ) )
 	{
 		return(FALSE);
 	}
@@ -2587,10 +2587,10 @@ UINT8 GetMinHealingSkillNeeded( SOLDIERTYPE *pPatient )
 {
 	// get the minimum skill to handle a character under OKLIFE
 
-	if( pPatient -> bLife < OKLIFE )
+	if( pPatient->stats.bLife < OKLIFE )
 	{
 		// less than ok life, return skill needed
-		return( gGameExternalOptions.ubBaseMedicalSkillToDealWithEmergency + ( gGameExternalOptions.ubMultiplierForDifferenceInLifeValueForEmergency * ( OKLIFE - pPatient -> bLife ) ) );
+		return( gGameExternalOptions.ubBaseMedicalSkillToDealWithEmergency + ( gGameExternalOptions.ubMultiplierForDifferenceInLifeValueForEmergency * ( OKLIFE - pPatient->stats.bLife ) ) );
 	}
 	else
 	{
@@ -2611,7 +2611,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 	INT8 bPointsHealed = 0;
 	INT8 bPocket = 0;
 	INT8 bMedFactor;
-//	INT8 bOldPatientLife = pPatient -> bLife;
+//	INT8 bOldPatientLife = pPatient->stats.bLife;
 
 
 	pPatient->sFractLife += usHundredthsHealed;
@@ -2632,33 +2632,33 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 // using the correct kits points instead of this 1 pt. "special"
 
 	// stop all bleeding of patient..for 1 pt (it's fast).  But still use up normal kit pts to do it
-	if (pPatient -> bBleeding > 0)
+	if (pPatient->bBleeding > 0)
 	{
 		usHealingPtsLeft--;
 		usTotalFullPtsUsed++;
 
 		// get points needed to heal him to dress bleeding wounds
-		bPointsToUse = pPatient -> bBleeding;
+		bPointsToUse = pPatient->bBleeding;
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
+			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
 			if ( bMedFactor > 0 )
 			{
 				// ok, we have med kit in this pocket, use it
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
 				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
+				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
 				bPointsToUse -= bPointsHealed;
-				pPatient -> bBleeding -= bPointsHealed;
+				pPatient->bBleeding -= bPointsHealed;
 
 				// if we're done all we're supposed to, or the guy's no longer bleeding, bail
-				if ( ( bPointsToUse <= 0 ) || ( pPatient -> bBleeding == 0 ) )
+				if ( ( bPointsToUse <= 0 ) || ( pPatient->bBleeding == 0 ) )
 				{
 					break;
 				}
@@ -2668,10 +2668,10 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 */
 
 	// if below ok life, heal these first at double point cost
-	if( pPatient -> bLife < OKLIFE )
+	if( pPatient->stats.bLife < OKLIFE )
 	{
 		// get points needed to heal him to OKLIFE
-		bPointsToUse = gGameExternalOptions.ubPointCostPerHealthBelowOkLife * ( OKLIFE - pPatient -> bLife );
+		bPointsToUse = gGameExternalOptions.ubPointCostPerHealthBelowOkLife * ( OKLIFE - pPatient->stats.bLife );
 
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
@@ -2683,14 +2683,14 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
+			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
 			if ( bMedFactor > 0 )
 			{
 				// ok, we have med kit in this pocket, use it
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
 				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
+				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
 				bPointsToUse -= bPointsHealed;
@@ -2698,10 +2698,10 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 				usTotalFullPtsUsed += bPointsHealed;
 
 				// heal person the amount / POINT_COST_PER_HEALTH_BELOW_OKLIFE
-				pPatient -> bLife += (bPointsHealed / gGameExternalOptions.ubPointCostPerHealthBelowOkLife);
+				pPatient->stats.bLife += (bPointsHealed / gGameExternalOptions.ubPointCostPerHealthBelowOkLife);
 
 				// if we're done all we're supposed to, or the guy's at OKLIFE, bail
-				if ( ( bPointsToUse <= 0 ) || ( pPatient -> bLife >= OKLIFE ) )
+				if ( ( bPointsToUse <= 0 ) || ( pPatient->stats.bLife >= OKLIFE ) )
 				{
 					break;
 				}
@@ -2711,9 +2711,9 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 
 	// critical conditions handled, now apply normal healing
 
-	if (pPatient -> bLife < pPatient -> bLifeMax)
+	if (pPatient->stats.bLife < pPatient->stats.bLifeMax)
 	{
-		bPointsToUse = ( pPatient -> bLifeMax - pPatient -> bLife );
+		bPointsToUse = ( pPatient->stats.bLifeMax - pPatient->stats.bLife );
 		
 		// if guy is hurt more than points we have...heal only what we have 
 		if( bPointsToUse > usHealingPtsLeft )
@@ -2725,24 +2725,24 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
+			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
 			if ( bMedFactor > 0 )
 			{
 				// ok, we have med kit in this pocket, use it  (use only half if it's worth double)
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
 				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
+				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
 				usTotalFullPtsUsed += bPointsHealed;
 
-				pPatient -> bLife += bPointsHealed;
+				pPatient->stats.bLife += bPointsHealed;
 
 				// if we're done all we're supposed to, or the guy's fully healed, bail
-				if ( ( bPointsToUse <= 0 ) || ( pPatient -> bLife == pPatient -> bLifeMax ) )
+				if ( ( bPointsToUse <= 0 ) || ( pPatient->stats.bLife == pPatient->stats.bLifeMax ) )
 				{
 					break;
 				}
@@ -2752,7 +2752,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 
 
 	// if this patient is fully healed
-	if( pPatient->bLife == pPatient->bLifeMax )
+	if( pPatient->stats.bLife == pPatient->stats.bLifeMax )
 	{
 		// don't count unused full healing points as being used
 		usTotalHundredthsUsed -= (100 * usHealingPtsLeft);
@@ -2789,13 +2789,13 @@ void CheckForAndHandleHospitalPatients( void )
 	pSoldier = MercPtrs[0];	
 
 	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
-			if ( pTeamSoldier -> bAssignment == ASSIGNMENT_HOSPITAL )
+			if ( pTeamSoldier->bAssignment == ASSIGNMENT_HOSPITAL )
 			{
-				if ( ( pTeamSoldier -> sSectorX == HOSPITAL_SECTOR_X ) && ( pTeamSoldier -> sSectorY == HOSPITAL_SECTOR_Y ) && ( pTeamSoldier -> bSectorZ == 0 ) )
+				if ( ( pTeamSoldier->sSectorX == HOSPITAL_SECTOR_X ) && ( pTeamSoldier->sSectorY == HOSPITAL_SECTOR_Y ) && ( pTeamSoldier->bSectorZ == 0 ) )
 				{
 					// heal this character
 					HealHospitalPatient( pTeamSoldier, gGameExternalOptions.ubHospitalHealingRate );
@@ -2817,18 +2817,18 @@ void HealHospitalPatient( SOLDIERTYPE *pPatient, UINT16 usHealingPtsLeft )
 
 /*  Stopping hospital patients' bleeding must be handled immediately, not during a regular hourly check
 	// stop all bleeding of patient..for 1 pt.
-	if (pPatient -> bBleeding > 0)
+	if (pPatient->bBleeding > 0)
 	{
 		usHealingPtsLeft--;
-		pPatient -> bBleeding = 0;
+		pPatient->bBleeding = 0;
 	}
 */
 
 	// if below ok life, heal these first at double cost
-	if( pPatient -> bLife < OKLIFE )
+	if( pPatient->stats.bLife < OKLIFE )
 	{
 		// get points needed to heal him to OKLIFE
-		bPointsToUse = gGameExternalOptions.ubPointCostPerHealthBelowOkLife * ( OKLIFE - pPatient -> bLife );
+		bPointsToUse = gGameExternalOptions.ubPointCostPerHealthBelowOkLife * ( OKLIFE - pPatient->stats.bLife );
 
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
@@ -2839,14 +2839,14 @@ void HealHospitalPatient( SOLDIERTYPE *pPatient, UINT16 usHealingPtsLeft )
 		usHealingPtsLeft -= bPointsToUse;
 
 		// heal person the amount / POINT_COST_PER_HEALTH_BELOW_OKLIFE
-		pPatient -> bLife += ( bPointsToUse / gGameExternalOptions.ubPointCostPerHealthBelowOkLife );
+		pPatient->stats.bLife += ( bPointsToUse / gGameExternalOptions.ubPointCostPerHealthBelowOkLife );
 	}
 
 	// critical condition handled, now solve normal healing
 
-	if ( pPatient -> bLife < pPatient -> bLifeMax )
+	if ( pPatient->stats.bLife < pPatient->stats.bLifeMax )
 	{
-		bPointsToUse = ( pPatient -> bLifeMax - pPatient -> bLife );
+		bPointsToUse = ( pPatient->stats.bLifeMax - pPatient->stats.bLife );
 		
 		// if guy is hurt more than points we have...heal only what we have 
 		if( bPointsToUse > usHealingPtsLeft )
@@ -2857,11 +2857,11 @@ void HealHospitalPatient( SOLDIERTYPE *pPatient, UINT16 usHealingPtsLeft )
 		usHealingPtsLeft -= bPointsToUse;
 
 		// heal person the amount
-		pPatient -> bLife += bPointsToUse;
+		pPatient->stats.bLife += bPointsToUse;
 	}
 
 	// if this patient is fully healed
-	if ( pPatient -> bLife == pPatient -> bLifeMax )
+	if ( pPatient->stats.bLife == pPatient->stats.bLifeMax )
 	{
 		AssignmentDone( pPatient, TRUE, TRUE );
 	}
@@ -2880,13 +2880,13 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 	// will handle doctor/patient relationship in sector
 
 	// go through list of characters, find all doctors in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) && ( pTeamSoldier -> bSectorZ == bZ) )
+			if( ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) && ( pTeamSoldier->bSectorZ == bZ) )
 			{
-				if ( ( pTeamSoldier -> bAssignment == REPAIR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
+				if ( ( pTeamSoldier->bAssignment == REPAIR ) && ( pTeamSoldier->flags.fMercAsleep == FALSE ) )
 				{
 					MakeSureToolKitIsInHand( pTeamSoldier );
 					// character is in sector, check if can repair
@@ -2909,11 +2909,11 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 	INT8 bPtsUsed = 0;
 	INT16 sStrategicSector = 0;
 
-	if( IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == FALSE )
+	if( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == FALSE )
 	{
 		return( bPtsUsed );
 	}
-	else if( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> bSectorZ == gbWorldSectorZ )&&( pSoldier -> sSectorY == gWorldSectorY ) )
+	else if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->bSectorZ == gbWorldSectorZ )&&( pSoldier->sSectorY == gWorldSectorY ) )
 	{
 		if( CanSoldierRepairSAM( pSoldier, bPointsAvailable ) == FALSE )
 		{
@@ -2945,7 +2945,7 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 // FULL STRENGTH (condition 100), but as soon as it reaches MIN_CONDITION_TO_FIX_SAM!!!
 
 		// Bring Hit points back up to full, adjust graphic to full graphic.....
-		UpdateSAMDoneRepair( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
+		UpdateSAMDoneRepair( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 	}
 
 	if ( StrategicMap[ sStrategicSector ].bSAMCondition == 100 )
@@ -3184,7 +3184,7 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 		}
 	}	
 	// check if we are repairing a robot
-	else if( pSoldier->fFixingRobot )
+	else if( pSoldier->flags.fFixingRobot )
 	{
 		if ( CanCharacterRepairRobot( pSoldier ) )
 		{
@@ -3262,7 +3262,7 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 		if( ( Random( 100 ) ) < (UINT32) (ubRepairPtsUsed * 5) ) // CJC: added a x5 as this wasn't going down anywhere fast enough
 		{
 			// kit item damaged/depleted, burn up points of toolkit..which is in right hand
-			UseKitPoints( &( pSoldier -> inv[ HANDPOS ] ), 1, pSoldier );
+			UseKitPoints( &( pSoldier->inv[ HANDPOS ] ), 1, pSoldier );
 		}
 	}
 
@@ -3321,11 +3321,11 @@ void HandleRestAndFatigueInSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	pSoldier = MercPtrs[0];	
 	
 	// go through list of characters, find all sleepers in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( ( pTeamSoldier -> bActive ) && ( pSoldier -> bAssignment != ASSIGNMENT_POW ) )
+		if( ( pTeamSoldier->bActive ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 		{
-			if( ( pTeamSoldier -> sSectorX == sMapX ) && ( pTeamSoldier -> sSectorY == sMapY ) && ( pTeamSoldier -> bSectorZ == bMapZ ) )
+			if( ( pTeamSoldier->sSectorX == sMapX ) && ( pTeamSoldier->sSectorY == sMapY ) && ( pTeamSoldier->bSectorZ == bMapZ ) )
 			{
 			}
 		}
@@ -3342,7 +3342,7 @@ INT8 GetRegainDueToSleepNeeded( SOLDIERTYPE *pSoldier, INT32 iRateOfReGain )
 	UINT8 ubNeedForSleep = 0;
 
 	// get profile id and then grab sleep need value
-	ubNeedForSleep = gMercProfiles[ pSoldier -> ubProfile ].ubNeedForSleep;
+	ubNeedForSleep = gMercProfiles[ pSoldier->ubProfile ].ubNeedForSleep;
 	
 	bRate = ( AVG_NUMBER_OF_HOURS_OF_SLEEP_NEEDED - ( INT8 )ubNeedForSleep );
 		
@@ -3364,30 +3364,30 @@ void RestCharacter( SOLDIERTYPE *pSoldier )
 	bMaxBreathRegain = 50 / CalcSoldierNeedForSleep( pSoldier );
 
 	// if breath max is below the "really tired" threshold
-	if( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED )
+	if( pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED )
 	{
 		// real tired, rest rate is 50% higher (this is to prevent absurdly long sleep times for totally exhausted mercs)
 		bMaxBreathRegain = ( bMaxBreathRegain * 3 / 2 );
 	}
 
-	pSoldier -> bBreathMax += bMaxBreathRegain;
+	pSoldier->bBreathMax += bMaxBreathRegain;
 
 
-	if( pSoldier -> bBreathMax > 100 )
+	if( pSoldier->bBreathMax > 100 )
 	{
-		pSoldier -> bBreathMax = 100;
+		pSoldier->bBreathMax = 100;
 	}
-	else if( pSoldier -> bBreathMax < BREATHMAX_ABSOLUTE_MINIMUM )
+	else if( pSoldier->bBreathMax < BREATHMAX_ABSOLUTE_MINIMUM )
 	{
-		pSoldier -> bBreathMax = BREATHMAX_ABSOLUTE_MINIMUM;
+		pSoldier->bBreathMax = BREATHMAX_ABSOLUTE_MINIMUM;
 	}
 
-	pSoldier -> bBreath = pSoldier -> bBreathMax; 
+	pSoldier->bBreath = pSoldier->bBreathMax; 
 
 
-	if ( pSoldier-> bBreathMax >= BREATHMAX_CANCEL_TIRED )
+	if ( pSoldier->bBreathMax >= BREATHMAX_CANCEL_TIRED )
 	{
-		pSoldier->fComplainedThatTired = FALSE;
+		pSoldier->flags.fComplainedThatTired = FALSE;
 	}
 
 	return;
@@ -3403,7 +3403,7 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 
 	
 	// vehicle or robot?
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 	{
 		return;
 	}
@@ -3415,7 +3415,7 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 	}
 
 	// POW?
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
+	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
 		return;
 	}
@@ -3431,7 +3431,7 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 
 	//KM: Added encumbrance calculation to soldiers moving on foot.  Anything above 100% will increase
 	//    rate of fatigue.  200% encumbrance will cause soldiers to tire twice as quickly.
-	if( pSoldier->fBetweenSectors && pSoldier->bAssignment != VEHICLE )
+	if( pSoldier->flags.fBetweenSectors && pSoldier->bAssignment != VEHICLE )
 	{ //Soldier is on foot and travelling.  Factor encumbrance into fatigue rate.
 		iPercentEncumbrance = CalculateCarriedWeight( pSoldier );
 		if( iPercentEncumbrance > 100 )
@@ -3442,28 +3442,28 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 	}
 
 	// if breath max is below the "really tired" threshold
-	if( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED )
+	if( pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED )
 	{
 		// real tired, fatigue rate is 50% higher
 		bMaxBreathLoss = ( bMaxBreathLoss * 3 / 2 );
 	}
 
 
-	pSoldier -> bBreathMax -= bMaxBreathLoss;
+	pSoldier->bBreathMax -= bMaxBreathLoss;
 
-	if( pSoldier -> bBreathMax > 100 )
+	if( pSoldier->bBreathMax > 100 )
 	{
-		pSoldier -> bBreathMax = 100;
+		pSoldier->bBreathMax = 100;
 	}
-	else if( pSoldier -> bBreathMax < BREATHMAX_ABSOLUTE_MINIMUM )
+	else if( pSoldier->bBreathMax < BREATHMAX_ABSOLUTE_MINIMUM )
 	{
-		pSoldier -> bBreathMax = BREATHMAX_ABSOLUTE_MINIMUM;
+		pSoldier->bBreathMax = BREATHMAX_ABSOLUTE_MINIMUM;
 	}
 	
 	// current breath can't exceed maximum
-	if( pSoldier -> bBreath > pSoldier -> bBreathMax )
+	if( pSoldier->bBreath > pSoldier->bBreathMax )
 	{
-		pSoldier -> bBreath = pSoldier -> bBreathMax; 
+		pSoldier->bBreath = pSoldier->bBreathMax; 
 	}
 
 	return;
@@ -3527,12 +3527,12 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 		sBestTrainingPts = -1;
 
 		// search team for active instructors in this sector
-		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pTrainer++)
+		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0]->bTeam ].bLastID; uiCnt++, pTrainer++)
 		{
-			if( pTrainer -> bActive && ( pTrainer -> sSectorX == sMapX ) && ( pTrainer -> sSectorY == sMapY ) && ( pTrainer -> bSectorZ == bZ) )
+			if( pTrainer->bActive && ( pTrainer->sSectorX == sMapX ) && ( pTrainer->sSectorY == sMapY ) && ( pTrainer->bSectorZ == bZ) )
 			{
 				// if he's training teammates in this stat
-				if( ( pTrainer -> bAssignment == TRAIN_TEAMMATE ) && ( pTrainer -> bTrainStat == ubStat) && ( EnoughTimeOnAssignment( pTrainer ) ) && ( pTrainer->fMercAsleep == FALSE ) )
+				if( ( pTrainer->bAssignment == TRAIN_TEAMMATE ) && ( pTrainer->bTrainStat == ubStat) && ( EnoughTimeOnAssignment( pTrainer ) ) && ( pTrainer->flags.fMercAsleep == FALSE ) )
 				{
 					sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, NULL, ubStat, fAtGunRange, &usMaxPts );
 
@@ -3550,38 +3550,38 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 
 
 	// now search team for active self-trainers in this sector
-	for ( uiCnt = 0, pStudent = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pStudent++)
+	for ( uiCnt = 0, pStudent = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0]->bTeam ].bLastID; uiCnt++, pStudent++)
 	{
 		// see if this merc is active and in the same sector
-		if( ( pStudent -> bActive) && ( pStudent -> sSectorX == sMapX ) && ( pStudent -> sSectorY == sMapY ) && ( pStudent -> bSectorZ == bZ ) )
+		if( ( pStudent->bActive) && ( pStudent->sSectorX == sMapX ) && ( pStudent->sSectorY == sMapY ) && ( pStudent->bSectorZ == bZ ) )
 		{
 			// if he's training himself (alone, or by others), then he's a student
-			if ( ( pStudent -> bAssignment == TRAIN_SELF ) || ( pStudent -> bAssignment == TRAIN_BY_OTHER ) )
+			if ( ( pStudent->bAssignment == TRAIN_SELF ) || ( pStudent->bAssignment == TRAIN_BY_OTHER ) )
 			{
-				if ( EnoughTimeOnAssignment( pStudent ) && ( pStudent->fMercAsleep == FALSE ) )
+				if ( EnoughTimeOnAssignment( pStudent ) && ( pStudent->flags.fMercAsleep == FALSE ) )
 				{
 					// figure out how much the grunt can learn in one training period
-					sTotalTrainingPts = GetSoldierTrainingPts( pStudent, pStudent -> bTrainStat, fAtGunRange, &usMaxPts );
+					sTotalTrainingPts = GetSoldierTrainingPts( pStudent, pStudent->bTrainStat, fAtGunRange, &usMaxPts );
 
 					// if he's getting help
-					if ( pStudent -> bAssignment == TRAIN_BY_OTHER )
+					if ( pStudent->bAssignment == TRAIN_BY_OTHER )
 					{
 						// grab the pointer to the (potential) trainer for this stat
-						pTrainer = pStatTrainerList[ pStudent -> bTrainStat ];
+						pTrainer = pStatTrainerList[ pStudent->bTrainStat ];
 
 						// if this stat HAS a trainer in sector at all
 						if (pTrainer != NULL)
 						{
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 							// if this sector either ISN'T currently loaded, or it is but the trainer is close enough to the student
-							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent -> bSectorZ != gbWorldSectorZ ) ||
-									 ( PythSpacesAway( pStudent -> sGridNo, pTrainer -> sGridNo ) < MAX_DISTANCE_FOR_TRAINING ) && ( EnoughTimeOnAssignment( pTrainer ) ) )
+							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent->bSectorZ != gbWorldSectorZ ) ||
+									 ( PythSpacesAway( pStudent->sGridNo, pTrainer->sGridNo ) < MAX_DISTANCE_FOR_TRAINING ) && ( EnoughTimeOnAssignment( pTrainer ) ) )
 */
 							// NB this EnoughTimeOnAssignment() call is redundent since it is called up above
 							//if ( EnoughTimeOnAssignment( pTrainer ) )
 							{
 								// valid trainer is available, this gives the student a large training bonus!
-								sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, pStudent, pStudent -> bTrainStat, fAtGunRange, &usMaxPts );
+								sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, pStudent, pStudent->bTrainStat, fAtGunRange, &usMaxPts );
 
 								StatChange(pTrainer,LDRAMT,sTrainingPtsDueToInstructor,FALSE);
 								StatChange(pTrainer,WISDOMAMT,sTrainingPtsDueToInstructor,FALSE);
@@ -3608,11 +3608,11 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 		ubTownTrainers = 0;
 
 		// build list of all the town trainers in this sector and their training pts
-		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++,pTrainer++)
+		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0]->bTeam ].bLastID; uiCnt++,pTrainer++)
 		{
-			if( pTrainer -> bActive && ( pTrainer -> sSectorX == sMapX ) && ( pTrainer -> sSectorY == sMapY ) && ( pTrainer -> bSectorZ == bZ ) )
+			if( pTrainer->bActive && ( pTrainer->sSectorX == sMapX ) && ( pTrainer->sSectorY == sMapY ) && ( pTrainer->bSectorZ == bZ ) )
 			{
-				if( ( pTrainer -> bAssignment == TRAIN_TOWN ) && ( EnoughTimeOnAssignment( pTrainer ) )  && ( pTrainer->fMercAsleep == FALSE ) )
+				if( ( pTrainer->bAssignment == TRAIN_TOWN ) && ( EnoughTimeOnAssignment( pTrainer ) )  && ( pTrainer->flags.fMercAsleep == FALSE ) )
 				{
 					sTownTrainingPts = GetTownTrainPtsForCharacter( pTrainer, &usMaxPts );
 
@@ -3661,12 +3661,12 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 
 int TownTrainerQsortCompare(const void *pArg1, const void *pArg2)
 {
-  if (((TOWN_TRAINER_TYPE *)pArg1) -> sTrainingPts > ((TOWN_TRAINER_TYPE *)pArg2) -> sTrainingPts)
+  if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts > ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
   {
     return(-1);
   }
   else
-  if (((TOWN_TRAINER_TYPE *)pArg1) -> sTrainingPts < ((TOWN_TRAINER_TYPE *)pArg2) -> sTrainingPts)
+  if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts < ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
   {
     return(1);
   }
@@ -3703,39 +3703,39 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	{
 		case( STRENGTH ):
 			bTrainerEffSkill = EffectiveStrength ( pInstructor );
-			bTrainerNatSkill = pInstructor->bStrength;
+			bTrainerNatSkill = pInstructor->stats.bStrength;
 		break;
 		case( DEXTERITY ):
 			bTrainerEffSkill = EffectiveDexterity ( pInstructor );
-			bTrainerNatSkill = pInstructor->bDexterity;
+			bTrainerNatSkill = pInstructor->stats.bDexterity;
 		break;
 		case( AGILITY ):
 			bTrainerEffSkill = EffectiveAgility( pInstructor );
-			bTrainerNatSkill = pInstructor->bAgility;
+			bTrainerNatSkill = pInstructor->stats.bAgility;
 		break;
 		case( HEALTH ):
-			bTrainerEffSkill = pInstructor -> bLifeMax;
-			bTrainerNatSkill = pInstructor->bLifeMax;
+			bTrainerEffSkill = pInstructor->stats.bLifeMax;
+			bTrainerNatSkill = pInstructor->stats.bLifeMax;
 		break;
 		case( LEADERSHIP ):
 			bTrainerEffSkill = EffectiveLeadership( pInstructor );
-			bTrainerNatSkill = pInstructor->bLeadership;
+			bTrainerNatSkill = pInstructor->stats.bLeadership;
 		break;
 		case( MARKSMANSHIP ):
 			bTrainerEffSkill = EffectiveMarksmanship( pInstructor );
-			bTrainerNatSkill = pInstructor->bMarksmanship;
+			bTrainerNatSkill = pInstructor->stats.bMarksmanship;
 		break;
 		case( EXPLOSIVE_ASSIGN ):
 			bTrainerEffSkill = EffectiveExplosive( pInstructor );
-			bTrainerNatSkill = pInstructor->bExplosive;
+			bTrainerNatSkill = pInstructor->stats.bExplosive;
 		break;
 		case( MEDICAL ):
 			bTrainerEffSkill = EffectiveMedical( pInstructor );
-			bTrainerNatSkill = pInstructor->bMedical;
+			bTrainerNatSkill = pInstructor->stats.bMedical;
 		break;
 		case( MECHANICAL ):
 			bTrainerEffSkill = EffectiveMechanical( pInstructor );
-			bTrainerNatSkill = pInstructor->bMechanical;
+			bTrainerNatSkill = pInstructor->stats.bMechanical;
 		break;
 		// NOTE: Wisdom can't be trained!
 		default:
@@ -3760,37 +3760,37 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	{
 		// set student's variables
 		bTraineeEffWisdom = EffectiveWisdom ( pStudent );
-		bTraineeNatWisdom = pStudent->bWisdom;
+		bTraineeNatWisdom = pStudent->stats.bWisdom;
 		
 		// for trainee's stat skill, must use the natural value, not the effective one, to avoid drunks training beyond cap
 		switch( bTrainStat )
 		{
 			case( STRENGTH ):
-				bTraineeSkill = pStudent -> bStrength;
+				bTraineeSkill = pStudent->stats.bStrength;
 			break;
 			case( DEXTERITY ):
-				bTraineeSkill = pStudent -> bDexterity;
+				bTraineeSkill = pStudent->stats.bDexterity;
 			break;
 			case( AGILITY ):
-				bTraineeSkill = pStudent -> bAgility;
+				bTraineeSkill = pStudent->stats.bAgility;
 			break;
 			case( HEALTH ):
-				bTraineeSkill = pStudent -> bLifeMax;
+				bTraineeSkill = pStudent->stats.bLifeMax;
 			break;
 			case( LEADERSHIP ):
-				bTraineeSkill = pStudent -> bLeadership;
+				bTraineeSkill = pStudent->stats.bLeadership;
 			break;
 			case( MARKSMANSHIP ):
-				bTraineeSkill = pStudent -> bMarksmanship;
+				bTraineeSkill = pStudent->stats.bMarksmanship;
 			break;
 			case( EXPLOSIVE_ASSIGN ):
-				bTraineeSkill = pStudent -> bExplosive;
+				bTraineeSkill = pStudent->stats.bExplosive;
 			break;
 			case( MEDICAL ):
-				bTraineeSkill = pStudent -> bMedical;
+				bTraineeSkill = pStudent->stats.bMedical;
 			break;
 			case( MECHANICAL ):
-				bTraineeSkill = pStudent -> bMechanical;
+				bTraineeSkill = pStudent->stats.bMechanical;
 			break;
 			// NOTE: Wisdom can't be trained!
 			default:
@@ -3826,7 +3826,7 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	sTrainingPts = ( bTrainerEffSkill - bTraineeSkill ) * ( bTraineeEffWisdom + ( EffectiveWisdom( pInstructor ) + EffectiveLeadership( pInstructor ) ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts   = ( bTrainerNatSkill - bTraineeSkill ) * ( bTraineeNatWisdom + ( pInstructor->bWisdom + pInstructor->bLeadership ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
+	*pusMaxPts   = ( bTrainerNatSkill - bTraineeSkill ) * ( bTraineeNatWisdom + ( pInstructor->stats.bWisdom + pInstructor->stats.bLeadership ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
 
 	// put in a minimum (that can be reduced due to instructor being tired?)
 	if (*pusMaxPts == 0)
@@ -3840,11 +3840,11 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	}
 
 	// check for teaching skill bonuses
-	if( gMercProfiles[ pInstructor -> ubProfile ].bSkillTrait == TEACHING )
+	if( gMercProfiles[ pInstructor->ubProfile ].bSkillTrait == TEACHING )
 	{
 		bTrainingBonus += gGameExternalOptions.ubTeachBonusToTrain;
 	}
-	if( gMercProfiles[ pInstructor -> ubProfile ].bSkillTrait2 == TEACHING )
+	if( gMercProfiles[ pInstructor->ubProfile ].bSkillTrait2 == TEACHING )
 	{
 		bTrainingBonus += gGameExternalOptions.ubTeachBonusToTrain;
 	}
@@ -3881,31 +3881,31 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 	switch( bTrainStat )
 	{
 		case( STRENGTH ):
-			bSkill = pSoldier -> bStrength;
+			bSkill = pSoldier->stats.bStrength;
 		break;
 		case( DEXTERITY ):
-			bSkill = pSoldier -> bDexterity;
+			bSkill = pSoldier->stats.bDexterity;
 		break;
 		case( AGILITY ):
-			bSkill = pSoldier -> bAgility;
+			bSkill = pSoldier->stats.bAgility;
 		break;
 		case( HEALTH ):
-			bSkill = pSoldier -> bLifeMax;
+			bSkill = pSoldier->stats.bLifeMax;
 		break;
 		case( LEADERSHIP ):
-			bSkill = pSoldier -> bLeadership;
+			bSkill = pSoldier->stats.bLeadership;
 		break;
 		case( MARKSMANSHIP ):
-			bSkill = pSoldier -> bMarksmanship;
+			bSkill = pSoldier->stats.bMarksmanship;
 		break;
 		case( EXPLOSIVE_ASSIGN ):
-			bSkill = pSoldier -> bExplosive;
+			bSkill = pSoldier->stats.bExplosive;
 		break;
 		case( MEDICAL ):
-			bSkill = pSoldier -> bMedical;
+			bSkill = pSoldier->stats.bMedical;
 		break;
 		case( MECHANICAL ):
-			bSkill = pSoldier -> bMechanical;
+			bSkill = pSoldier->stats.bMechanical;
 		break;
 		// NOTE: Wisdom can't be trained!
 		default:
@@ -3924,7 +3924,7 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts = __max( ( ( pSoldier->bWisdom * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );	
+	*pusMaxPts = __max( ( ( pSoldier->stats.bWisdom * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );	
 
 	// calculate effective training pts
 	sTrainingPts = __max( ( ( EffectiveWisdom( pSoldier ) * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );
@@ -3962,31 +3962,31 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	switch( bTrainStat )
 	{
 		case( STRENGTH ):
-			bSkill = pSoldier -> bStrength;
+			bSkill = pSoldier->stats.bStrength;
 		break;
 		case( DEXTERITY ):
-			bSkill = pSoldier -> bDexterity;
+			bSkill = pSoldier->stats.bDexterity;
 		break;
 		case( AGILITY ):
-			bSkill = pSoldier -> bAgility;
+			bSkill = pSoldier->stats.bAgility;
 		break;
 		case( HEALTH ):
-			bSkill = pSoldier -> bLifeMax;
+			bSkill = pSoldier->stats.bLifeMax;
 		break;
 		case( LEADERSHIP ):
-			bSkill = pSoldier -> bLeadership;
+			bSkill = pSoldier->stats.bLeadership;
 		break;
 		case( MARKSMANSHIP ):
-			bSkill = pSoldier -> bMarksmanship;
+			bSkill = pSoldier->stats.bMarksmanship;
 		break;
 		case( EXPLOSIVE_ASSIGN ):
-			bSkill = pSoldier -> bExplosive;
+			bSkill = pSoldier->stats.bExplosive;
 		break;
 		case( MEDICAL ):
-			bSkill = pSoldier -> bMedical;
+			bSkill = pSoldier->stats.bMedical;
 		break;
 		case( MECHANICAL ):
-			bSkill = pSoldier -> bMechanical;
+			bSkill = pSoldier->stats.bMechanical;
 		break;
 		// NOTE: Wisdom can't be trained!
 		default:
@@ -4005,7 +4005,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts = __max( ( ( pSoldier->bWisdom * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );	
+	*pusMaxPts = __max( ( ( pSoldier->stats.bWisdom * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );	
 
 	// calculate effective training pts
 	sTrainingPts = __max( ( ( EffectiveWisdom( pSoldier ) * ( gGameExternalOptions.ubTrainingSkillMax - bSkill ) ) / gGameExternalOptions.ubSelfTrainingDivisor ), 1 );
@@ -4029,13 +4029,13 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	sBestTrainingPts = -1;
 
 	// search team for active instructors in this sector
-	for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pTrainer++)
+	for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0]->bTeam ].bLastID; uiCnt++, pTrainer++)
 	{
 		if( pTrainer->bActive && ( pTrainer->sSectorX == pSoldier->sSectorX ) && ( pTrainer->sSectorY == pSoldier->sSectorY ) && ( pTrainer->bSectorZ == pSoldier->bSectorZ) )
 		{
 			// if he's training teammates in this stat
 			// NB skip the EnoughTime requirement to display what the value should be even if haven't been training long yet...
-			if ( ( pTrainer->bAssignment == TRAIN_TEAMMATE ) && ( pTrainer->bTrainStat == bTrainStat) && ( pTrainer->fMercAsleep == FALSE ) )
+			if ( ( pTrainer->bAssignment == TRAIN_TEAMMATE ) && ( pTrainer->bTrainStat == bTrainStat) && ( pTrainer->flags.fMercAsleep == FALSE ) )
 			{
 				sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, pSoldier, bTrainStat, fAtGunRange, &usMaxTrainerPts );
 
@@ -4073,7 +4073,7 @@ void TrainSoldierWithPts( SOLDIERTYPE *pSoldier, INT16 sTrainPts )
 	
 	BOOLEAN addWis = FALSE;
 	// which stat to modify?	
-	switch( pSoldier -> bTrainStat )
+	switch( pSoldier->bTrainStat )
 	{
 		case( STRENGTH ):
 			ubChangeStat = STRAMT;
@@ -4111,7 +4111,7 @@ void TrainSoldierWithPts( SOLDIERTYPE *pSoldier, INT16 sTrainPts )
 		default:
 			// BETA message
 			#ifdef JA2BETAVERSION
-	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier -> bTrainStat);
+	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier->bTrainStat);
 			#endif
       return;
 	}
@@ -4138,7 +4138,7 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 	fSamSiteInSector = IsThisSectorASAMSector( sMapX, sMapY, 0 );
 
 	// get town index
-	ubTownId = StrategicMap[ pTrainer -> sSectorX + pTrainer -> sSectorY * MAP_WORLD_X ].bNameId;
+	ubTownId = StrategicMap[ pTrainer->sSectorX + pTrainer->sSectorY * MAP_WORLD_X ].bNameId;
 	if( fSamSiteInSector == FALSE )
 	{
 		Assert(ubTownId != BLANK_SECTOR);
@@ -4150,24 +4150,24 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 
 
 	// increase town's training completed percentage
-	pSectorInfo -> ubMilitiaTrainingPercentDone += (sTrainingPts / 100);
-	pSectorInfo -> ubMilitiaTrainingHundredths  += (sTrainingPts % 100);
+	pSectorInfo->ubMilitiaTrainingPercentDone += (sTrainingPts / 100);
+	pSectorInfo->ubMilitiaTrainingHundredths  += (sTrainingPts % 100);
 
-	if (pSectorInfo -> ubMilitiaTrainingHundredths >= 100)
+	if (pSectorInfo->ubMilitiaTrainingHundredths >= 100)
 	{
-		pSectorInfo -> ubMilitiaTrainingPercentDone++;
-		pSectorInfo -> ubMilitiaTrainingHundredths -= 100;
+		pSectorInfo->ubMilitiaTrainingPercentDone++;
+		pSectorInfo->ubMilitiaTrainingHundredths -= 100;
 	}
 
 	// NOTE: Leave this at 100, change TOWN_TRAINING_RATE if necessary.  This value gets reported to player as a %age!
-	if( pSectorInfo -> ubMilitiaTrainingPercentDone >= 100 )
+	if( pSectorInfo->ubMilitiaTrainingPercentDone >= 100 )
 	{
 		// zero out training completion - there's no carryover to the next training session
-		pSectorInfo -> ubMilitiaTrainingPercentDone = 0;
-		pSectorInfo -> ubMilitiaTrainingHundredths  = 0;
+		pSectorInfo->ubMilitiaTrainingPercentDone = 0;
+		pSectorInfo->ubMilitiaTrainingHundredths  = 0;
 
 		// make the player pay again next time he wants to train here
-		pSectorInfo -> fMilitiaTrainingPaid = FALSE;
+		pSectorInfo->fMilitiaTrainingPaid = FALSE;
 
 		TownMilitiaTrainingCompleted( pTrainer, sMapX, sMapY );
 
@@ -4189,18 +4189,18 @@ INT16 GetTownTrainPtsForCharacter( SOLDIERTYPE *pTrainer, UINT16 *pusMaxPts )
 //	UINT8 ubTownId = 0;
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts = ( pTrainer -> bWisdom + pTrainer -> bLeadership + ( 10 * pTrainer -> bExpLevel ) ) * gGameExternalOptions.ubTownMilitiaTrainingRate;
+	*pusMaxPts = ( pTrainer->stats.bWisdom + pTrainer->stats.bLeadership + ( 10 * pTrainer->stats.bExpLevel ) ) * gGameExternalOptions.ubTownMilitiaTrainingRate;
 
 	// calculate effective training points (this is hundredths of pts / hour)
 	// typical: 300/hr, maximum: 600/hr
 	sTotalTrainingPts = ( EffectiveWisdom( pTrainer ) + EffectiveLeadership ( pTrainer ) + ( 10 * EffectiveExpLevel ( pTrainer ) ) ) * gGameExternalOptions.ubTownMilitiaTrainingRate;
 
 	// check for teaching bonuses
-	if( gMercProfiles[ pTrainer -> ubProfile ].bSkillTrait == TEACHING )
+	if( gMercProfiles[ pTrainer->ubProfile ].bSkillTrait == TEACHING )
 	{
 		bTrainingBonus += gGameExternalOptions.ubTeachBonusToTrain;
 	}
-	if( gMercProfiles[ pTrainer -> ubProfile ].bSkillTrait2 == TEACHING )
+	if( gMercProfiles[ pTrainer->ubProfile ].bSkillTrait2 == TEACHING )
 	{
 		bTrainingBonus += gGameExternalOptions.ubTeachBonusToTrain;
 	}
@@ -4223,7 +4223,7 @@ INT16 GetTownTrainPtsForCharacter( SOLDIERTYPE *pTrainer, UINT16 *pusMaxPts )
 
 /* ARM: Decided this didn't make much sense - the guys I'm training damn well BETTER be loyal - and screw the rest!
 	// get town index
-	ubTownId = StrategicMap[ pTrainer -> sSectorX + pTrainer -> sSectorY * MAP_WORLD_X ].bNameId;
+	ubTownId = StrategicMap[ pTrainer->sSectorX + pTrainer->sSectorY * MAP_WORLD_X ].bNameId;
 	Assert(ubTownId != BLANK_SECTOR);
 
 	// adjust for town loyalty
@@ -4237,27 +4237,27 @@ INT16 GetTownTrainPtsForCharacter( SOLDIERTYPE *pTrainer, UINT16 *pusMaxPts )
 void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier )
 {
 	// soldier is in tactical, world loaded, he's OKLIFE
-	if( ( pSoldier -> bInSector ) && gfWorldLoaded && ( pSoldier -> bLife >= OKLIFE ) )
+	if( ( pSoldier->bInSector ) && gfWorldLoaded && ( pSoldier->stats.bLife >= OKLIFE ) )
 	{
 		// Set animation based on his assignment
-		if ( pSoldier -> bAssignment == DOCTOR )
+		if ( pSoldier->bAssignment == DOCTOR )
 		{
-			SoldierInSectorDoctor( pSoldier, pSoldier -> usStrategicInsertionData );				
+			SoldierInSectorDoctor( pSoldier, pSoldier->usStrategicInsertionData );				
 		}
-		else if ( pSoldier -> bAssignment == PATIENT )
+		else if ( pSoldier->bAssignment == PATIENT )
 		{
-			SoldierInSectorPatient( pSoldier, pSoldier -> usStrategicInsertionData );				
+			SoldierInSectorPatient( pSoldier, pSoldier->usStrategicInsertionData );				
 		}
-		else if ( pSoldier -> bAssignment == REPAIR )
+		else if ( pSoldier->bAssignment == REPAIR )
 		{
-			SoldierInSectorRepair( pSoldier, pSoldier -> usStrategicInsertionData );				
+			SoldierInSectorRepair( pSoldier, pSoldier->usStrategicInsertionData );				
 		}
 		else
 		{
       if ( pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY ) )
       {
 				// default: standing
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
       }
 		}
 	}
@@ -4283,40 +4283,40 @@ void AssignmentAborted( SOLDIERTYPE *pSoldier, UINT8 ubReason )
 
 void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 {
-	if ( ( pSoldier -> bInSector ) && ( gfWorldLoaded ) )
+	if ( ( pSoldier->bInSector ) && ( gfWorldLoaded ) )
 	{
-		if ( pSoldier -> bAssignment == DOCTOR )
+		if ( pSoldier->bAssignment == DOCTOR )
 		{
 			if ( guiCurrentScreen == GAME_SCREEN )
 			{
-				ChangeSoldierState( pSoldier, END_DOCTOR, 1, TRUE );
+				pSoldier->ChangeSoldierState( END_DOCTOR, 1, TRUE );
 			}
 			else
 			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
 			}
 
 		}
-		else if ( pSoldier -> bAssignment == REPAIR )
+		else if ( pSoldier->bAssignment == REPAIR )
 		{
 			if ( guiCurrentScreen == GAME_SCREEN )
 			{
-				ChangeSoldierState( pSoldier, END_REPAIRMAN, 1, TRUE );
+				pSoldier->ChangeSoldierState( END_REPAIRMAN, 1, TRUE );
 			}
 			else
 			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
 			}
 		}
-		else if ( pSoldier -> bAssignment == PATIENT )
+		else if ( pSoldier->bAssignment == PATIENT )
 		{
 			if ( guiCurrentScreen == GAME_SCREEN )
 			{
-				ChangeSoldierStance( pSoldier, ANIM_CROUCH );
+				pSoldier->ChangeSoldierStance( ANIM_CROUCH );
 			}
 			else
 			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
 			}
 		}
 	}
@@ -4333,7 +4333,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 		{
 			TacticalCharacterDialogue( pSoldier, QUOTE_ASSIGNMENT_COMPLETE );
 
-			if( pSoldier -> bAssignment == TRAIN_TOWN )
+			if( pSoldier->bAssignment == TRAIN_TOWN )
 			{
 				AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( pSoldier );
 			}
@@ -4377,7 +4377,7 @@ BOOLEAN CharacterIsBetweenSectors( SOLDIERTYPE *pSoldier )
 	} 
 	else
 	{
-		return( pSoldier -> fBetweenSectors );
+		return( pSoldier->flags.fBetweenSectors );
 	}
 }
 
@@ -4393,12 +4393,12 @@ void HandleNaturalHealing( void )
 	pSoldier = MercPtrs[0];	
 	
 	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
 			// mechanical members don't regenerate!
-			if( !( pTeamSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pTeamSoldier ) ) )
+			if( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pTeamSoldier ) ) )
 			{
 				HandleHealingByNaturalCauses( pTeamSoldier );
 			}
@@ -4423,19 +4423,19 @@ void HandleHealingByNaturalCauses( SOLDIERTYPE *pSoldier )
 	}
 
 	// dead
-	if( pSoldier -> bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		return;
 	}
 
 	// lost any pts?
-	if( pSoldier -> bLife == pSoldier -> bLifeMax )
+	if( pSoldier->stats.bLife == pSoldier->stats.bLifeMax )
 	{
 		return;
 	}
 
 	// any bleeding pts - can' recover if still bleeding!
-	if( pSoldier -> bBleeding != 0 )
+	if( pSoldier->bBleeding != 0 )
 	{
 		return;
 	}
@@ -4443,12 +4443,12 @@ void HandleHealingByNaturalCauses( SOLDIERTYPE *pSoldier )
 
 	// not bleeding and injured...
 
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
+	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
 		// use high activity level to simulate stress, torture, poor conditions for healing
 		bActivityLevelDivisor = gGameExternalOptions.ubHighActivityLevel;
 	}
-	if( ( pSoldier -> fMercAsleep == TRUE ) || ( pSoldier -> bAssignment == PATIENT ) || ( pSoldier -> bAssignment == ASSIGNMENT_HOSPITAL ) )
+	if( ( pSoldier->flags.fMercAsleep == TRUE ) || ( pSoldier->bAssignment == PATIENT ) || ( pSoldier->bAssignment == ASSIGNMENT_HOSPITAL ) )
 	{
 		bActivityLevelDivisor = gGameExternalOptions.ubLowActivityLevel;
 	}
@@ -4473,7 +4473,7 @@ void HandleHealingByNaturalCauses( SOLDIERTYPE *pSoldier )
 
 
 	// what percentage of health is he down to
-	uiPercentHealth = ( pSoldier->bLife * 100 ) / pSoldier->bLifeMax;
+	uiPercentHealth = ( pSoldier->stats.bLife * 100 ) / pSoldier->stats.bLifeMax;
 
 	// gain that many hundredths of life points back, divided by the activity level modifier
 	pSoldier->sFractLife += ( INT16 ) ( uiPercentHealth / bActivityLevelDivisor );
@@ -4488,17 +4488,17 @@ void HandleHealingByNaturalCauses( SOLDIERTYPE *pSoldier )
 void UpDateSoldierLife( SOLDIERTYPE *pSoldier )
 {
 	// update soldier life, make sure we don't go out of bounds
-	pSoldier -> bLife += pSoldier -> sFractLife / 100;
+	pSoldier->stats.bLife += pSoldier->sFractLife / 100;
 	
 	// keep remaining fract of life
-	pSoldier -> sFractLife %= 100;
+	pSoldier->sFractLife %= 100;
 
 	// check if we have gone too far
-	if( pSoldier -> bLife >= pSoldier -> bLifeMax )
+	if( pSoldier->stats.bLife >= pSoldier->stats.bLifeMax )
 	{
 		// reduce
-		pSoldier -> bLife = pSoldier -> bLifeMax;
-		pSoldier -> sFractLife = 0;
+		pSoldier->stats.bLife = pSoldier->stats.bLifeMax;
+		pSoldier->sFractLife = 0;
 	}
 	return;
 }
@@ -4515,19 +4515,19 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 	}
 
 	// already asleep
-	if( pSoldier -> fMercAsleep == TRUE )
+	if( pSoldier->flags.fMercAsleep == TRUE )
 	{
 		return ( FALSE );
 	}
 
-	if( pSoldier -> bBreathMax > MIN_BREATH_TO_STAY_AWAKE )
+	if( pSoldier->bBreathMax > MIN_BREATH_TO_STAY_AWAKE )
 	{
-		if( ( pSoldier -> bAssignment < ON_DUTY ) )
+		if( ( pSoldier->bAssignment < ON_DUTY ) )
 		{
 			return ( FALSE );
 		}
 
-		if( pSoldier -> bLife < OKLIFE )
+		if( pSoldier->stats.bLife < OKLIFE )
 		{
 			// can't sleep
 			return ( FALSE );
@@ -4535,30 +4535,30 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 
 
 		// if  was forced to stay awake, leave
-		if( pSoldier -> fForcedToStayAwake == TRUE )
+		if( pSoldier->fForcedToStayAwake == TRUE )
 		{
 			return( FALSE );
 		}
 	}
 	else
 	{
-	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s",  pMercFellAsleepString[ 0 ], pSoldier -> name );
+	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s",  pMercFellAsleepString[ 0 ], pSoldier->name );
 	}
 
 	
 	// store old assignment
-	pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+	pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 
-	if( pSoldier -> bAssignment < ON_DUTY )
+	if( pSoldier->bAssignment < ON_DUTY )
 	{
-		RemoveCharacterFromASquad( pSoldier, pSoldier -> bAssignment );
+		RemoveCharacterFromASquad( pSoldier, pSoldier->bAssignment );
 	}
 
 	if( SetMercAsleep( pSoldier, FALSE ) )
 	{
 		// change soldier state
-		SoldierInSectorSleep( pSoldier, pSoldier -> usStrategicInsertionData );
+		SoldierInSectorSleep( pSoldier, pSoldier->usStrategicInsertionData );
 
 		// update mapscreen 
 		fCharacterInfoPanelDirty = TRUE;
@@ -4578,14 +4578,14 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 
 void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier )
 {
-	if( pSoldier -> bAssignment == NO_ASSIGNMENT )
+	if( pSoldier->bAssignment == NO_ASSIGNMENT )
 	{
 		// unassigned
 		AddCharacterToAnySquad( pSoldier );
 		
 		if( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
 		{
-			ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+			pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
 		}
 	}
 
@@ -4621,7 +4621,7 @@ void CreateDestroyMouseRegionsForAssignmentMenu( void )
 
 			return;
 		}
-		if( ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].bLife == 0 ) || ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].bAssignment == ASSIGNMENT_POW ) )
+		if( ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].stats.bLife == 0 ) || ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].bAssignment == ASSIGNMENT_POW ) )
 		{
 			// dead guy handle menu stuff
 			fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
@@ -4645,7 +4645,7 @@ void CreateDestroyMouseRegionsForAssignmentMenu( void )
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			// grab height of font
 			iFontHeight = GetLineSpace( ghEpcBox ) + GetFontHeight( GetBoxFont( ghEpcBox ) ); 
@@ -5097,7 +5097,7 @@ void HandleShadingOfLinesForRepairMenu( void )
 
 		
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	if( ( IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) ) )
+	if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 	{
 		// handle enable disable of repair sam option
 		if( CanSoldierRepairSAM( pSoldier, SAM_SITE_REPAIR_DIVISOR ) )
@@ -5116,7 +5116,7 @@ void HandleShadingOfLinesForRepairMenu( void )
 */
 
 
-	if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) )
+	if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
 	{
 		// handle shading of repair robot option
 		if( CanCharacterRepairRobot( pSoldier ) )
@@ -5231,7 +5231,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 		// SAM site
-		if( ( IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) ) )
+		if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 		{
 			MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
 								 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
@@ -5243,7 +5243,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 
 
 		// robot
-		if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) )
+		if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
 		{
 			MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
 								 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
@@ -5337,7 +5337,7 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 			pSoldier->bOldAssignment = pSoldier->bAssignment;
 
-			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) || ( pSoldier -> fFixingSAMSite ) )
+			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier->flags.fFixingRobot ) || ( pSoldier->flags.fFixingSAMSite ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
@@ -5353,7 +5353,7 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 			ChangeSoldiersAssignment( pSoldier, REPAIR );
 
-			pSoldier -> bVehicleUnderRepairID = ( INT8 ) iRepairWhat;
+			pSoldier->bVehicleUnderRepairID = ( INT8 ) iRepairWhat;
 
 			MakeSureToolKitIsInHand( pSoldier );
 
@@ -5374,13 +5374,13 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			RemoveCharacterFromSquads( pSoldier );
 			MakeSureToolKitIsInHand( pSoldier );
 
-			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingSAMSite == FALSE ) )
+			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier->flags.fFixingSAMSite == FALSE ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
 
 			ChangeSoldiersAssignment( pSoldier, REPAIR );
-			pSoldier -> fFixingSAMSite = TRUE;
+			pSoldier->flags.fFixingSAMSite = TRUE;
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -5406,13 +5406,13 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			RemoveCharacterFromSquads( pSoldier );
 			MakeSureToolKitIsInHand( pSoldier );
 
-			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot == FALSE ) )
+			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier->flags.fFixingRobot == FALSE ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
 
 			ChangeSoldiersAssignment( pSoldier, REPAIR );
-			pSoldier->fFixingRobot = TRUE;
+			pSoldier->flags.fFixingRobot = TRUE;
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -5485,14 +5485,14 @@ void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 	INT8 bPocket = 0;
 
 	// if there isn't a toolkit in his hand
-	if( !Item[pSoldier -> inv[ HANDPOS].usItem].toolkit )
+	if( !Item[pSoldier->inv[ HANDPOS].usItem].toolkit )
 	{
 		// run through rest of inventory looking for toolkits, swap the first one into hand if found
 		for (bPocket = SECONDHANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			if( Item[pSoldier -> inv[ bPocket ].usItem].toolkit )
+			if( Item[pSoldier->inv[ bPocket ].usItem].toolkit )
 			{
-				SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
+				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
 				break;
 			}
 		}
@@ -5509,7 +5509,7 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	fTeamPanelDirty = TRUE;
 
 	// if there is a MEDICAL BAG in his hand, we're set
-	if ( Item[pSoldier -> inv[ HANDPOS ].usItem].medicalkit )
+	if ( Item[pSoldier->inv[ HANDPOS ].usItem].medicalkit )
 	{
 		return(TRUE);
 	}
@@ -5517,16 +5517,16 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
 	for (bPocket = SECONDHANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
-		if ( Item[pSoldier -> inv[ bPocket ].usItem].medicalkit )
+		if ( Item[pSoldier->inv[ bPocket ].usItem].medicalkit )
 		{
 			fCharacterInfoPanelDirty = TRUE;
-			SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
+			SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
 			return(TRUE);
 		}
 	}
 
 	// we didn't find a medical bag, so settle for a FIRST AID KIT
-	if ( Item[pSoldier -> inv[ HANDPOS ].usItem].firstaidkit )
+	if ( Item[pSoldier->inv[ HANDPOS ].usItem].firstaidkit )
 	{
 		return(TRUE);
 	}
@@ -5534,20 +5534,20 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
 	for (bPocket = SECONDHANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
-		if ( Item[pSoldier -> inv[ bPocket ].usItem].firstaidkit )
+		if ( Item[pSoldier->inv[ bPocket ].usItem].firstaidkit )
 		{
-//			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].fFlags & IF_TWOHANDED_GUN ) && ( bPocket >= SMALLPOCK1POS ) )
-			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= SMALLPOCK1POS ) )
+//			if( ( Item[ pSoldier->inv[ HANDPOS ].usItem ].fFlags & IF_TWOHANDED_GUN ) && ( bPocket >= SMALLPOCK1POS ) )
+			if( ( Item[ pSoldier->inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= SMALLPOCK1POS ) )
 			{
 				// first move from hand to second hand
-				SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ SECONDHANDPOS ] );
+				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );
 
 				// dirty mapscreen and squad panels
 				fCharacterInfoPanelDirty = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 			
-			SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
+			SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ bPocket ] );
 			
 
 			return(TRUE);
@@ -5577,7 +5577,7 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 
 	if ( pSoldier && pSoldier->bActive )
 	{
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			// patient
 			if( CanCharacterPatient( pSoldier ) )
@@ -5858,7 +5858,7 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 	CreateDestroyMouseRegionForRepairMenu(  );
 
 
-	if( ( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) ) && ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) ) )
+	if( ( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].stats.bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) ) && ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) ) )
 	{
 		// show basic assignment menu
 		ShowBox( ghRemoveMercAssignBox );
@@ -5867,7 +5867,7 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 	{
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			ShowBox( ghEpcBox );
 		}
@@ -6176,7 +6176,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 
 			return;
 		}
-		if( Menptr[gCharactersList[bSelectedContractChar].usSolID].bLife == 0 )
+		if( Menptr[gCharactersList[bSelectedContractChar].usSolID].stats.bLife == 0 )
 		{
 
 			// dead guy handle menu stuff
@@ -6722,7 +6722,7 @@ void AssignmentMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		// is the line shaded?..if so, don't highlight
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			if( GetBoxShadeFlag( ghEpcBox, iValue ) == FALSE )
 			{
@@ -6739,7 +6739,7 @@ void AssignmentMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			// unhighlight all strings in box
 			UnHighLightBox( ghEpcBox );
@@ -6920,7 +6920,7 @@ void RemoveMercMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 void BeginRemoveMercFromContract( SOLDIERTYPE *pSoldier )
 {
 	// This function will setup the quote, then start dialogue beginning the actual leave sequence
-	if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
+	if( ( pSoldier->stats.bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 	{
 		if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC ) || ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC ) )
 		{
@@ -7227,13 +7227,13 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				iOldSquadValue = SquadCharacterIsIn( pSoldier );
 
 				// grab if char was between sectors
-				fCharacterWasBetweenSectors = pSoldier -> fBetweenSectors;
+				fCharacterWasBetweenSectors = pSoldier->flags.fBetweenSectors;
 
 				if( fCharacterWasBetweenSectors )
 				{
-					if( pSoldier -> bAssignment == VEHICLE )
+					if( pSoldier->bAssignment == VEHICLE )
 					{
-						if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
+						if( GetNumberInVehicle( pSoldier->iVehicleId ) == 1 )
 						{
 							// can't change, go away
 							return;
@@ -7241,9 +7241,9 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					}
 				}
 
-				if( pSoldier -> ubGroupID )
+				if( pSoldier->ubGroupID )
 				{
-					GetGroupPosition(&ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime, pSoldier -> ubGroupID );
+					GetGroupPosition(&ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime, pSoldier->ubGroupID );
 				}
 */
 				pSoldier->bOldAssignment = pSoldier->bAssignment;
@@ -7261,8 +7261,8 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				}
 
 				//Clear any desired squad assignments -- seeing the player has physically changed it!
-				pSoldier -> ubNumTraversalsAllowedToMerge = 0;
-				pSoldier -> ubDesiredSquadAssignment = NO_ASSIGNMENT;
+				pSoldier->ubNumTraversalsAllowedToMerge = 0;
+				pSoldier->ubDesiredSquadAssignment = NO_ASSIGNMENT;
 				
 
 /* ARM: Squad menu is now disabled for anyone between sectors
@@ -7274,7 +7274,7 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						GetSquadPosition( &ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime,  ( UINT8 )iOldSquadValue );
 					}
 
-					SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, pSoldier -> ubGroupID );
+					SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, pSoldier->ubGroupID );
 				}
 */
 
@@ -7444,7 +7444,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 					// PASSED ALL THE TESTS - ALLOW SOLDIER TO TRAIN MILITIA HERE
 
-					pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+					pSoldier->bOldAssignment = pSoldier->bAssignment;
 					
 					if( ( pSoldier->bAssignment != TRAIN_TOWN ) )
 					{
@@ -7469,7 +7469,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 					// assign to a movement group
 					AssignMercToAMovementGroup( pSoldier );
-					if( SectorInfo[ SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) ].fMilitiaTrainingPaid == FALSE )
+					if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
 					{
 						// show a message to confirm player wants to charge cost
 						HandleInterfaceMessageForCostOfTrainingMilitia( pSoldier );
@@ -7573,7 +7573,7 @@ void AttributesMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			}
 
 			// set stat to train
-			pSoldier -> bTrainStat = ( INT8 )iValue;
+			pSoldier->bTrainStat = ( INT8 )iValue;
 
 			MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 
@@ -7631,7 +7631,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 		UnHighLightBox( ghAssignmentBox );
 
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			switch( iValue )
 			{
@@ -7751,7 +7751,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						giAssignHighLine = -1;
 
 						
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+						pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 						if( ( pSoldier->bAssignment != DOCTOR ) )
 						{
@@ -7804,7 +7804,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						}
 */
 
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+						pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
 						{
@@ -7862,10 +7862,10 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
 						
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+						pSoldier->bOldAssignment = pSoldier->bAssignment;
 						
 
-						if( pSoldier -> bSectorZ ==0 )
+						if( pSoldier->bSectorZ ==0 )
 						{
 							fShowRepairMenu = FALSE;
 
@@ -8159,7 +8159,7 @@ void PostContractMessage( SOLDIERTYPE *pCharacter, INT32 iContract )
 	return;
 
 	// send a message stating that offer of contract extension made
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %s's contract by another %s.", pCharacter -> name, pContractExtendStrings[ iContract ] );
+	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %s's contract by another %s.", pCharacter->name, pContractExtendStrings[ iContract ] );
 	
 	return;
 }
@@ -8171,7 +8171,7 @@ void PostTerminateMessage( SOLDIERTYPE *pCharacter )
 	return;
 	
 	// send a message stating that termination of contract done
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s's contract has been terminated.", pCharacter -> name );
+	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s's contract has been terminated.", pCharacter->name );
 	
 }
 
@@ -8278,13 +8278,13 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 			 break;
 			 case( CONTRACT_MENU_DAY ):
 				
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
 					 swprintf( sDollarString, L"%d", 0 );
 				 }
 				 else
 				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].sSalary );
+					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].sSalary );
 				 }
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
@@ -8293,13 +8293,13 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
 
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
 					 swprintf( sDollarString, L"%d", 0 );
 				 }
 				 else
 				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiWeeklySalary );
+					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiWeeklySalary );
 				 }
 
 				 InsertCommasForDollarFigure( sDollarString );
@@ -8309,13 +8309,13 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
 
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
 					 swprintf( sDollarString, L"%d", 0 );
 				 }
 				 else
 				 {
-					 swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiBiWeeklySalary );
+					 swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiBiWeeklySalary );
 				 }
 
 				
@@ -8726,7 +8726,7 @@ void DetermineBoxPositions( void )
 	pPoint.iX = gsAssignmentBoxesX;
 	pPoint.iY = gsAssignmentBoxesY;
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		SetBoxPosition( ghEpcBox, pPoint );
 		GetBoxSize( ghEpcBox, &pDimensions );
@@ -8876,7 +8876,7 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	//get the soldier
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		GetBoxSize( ghEpcBox, &pDimensions2 );
 	}
@@ -9028,7 +9028,7 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 		pPoint.iX = gsAssignmentBoxesX;
 		pPoint.iY = gsAssignmentBoxesY;
 		
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC)
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 		{
 			SetBoxPosition( ghEpcBox, pPoint );
 		}
@@ -9083,14 +9083,14 @@ void HandleRestFatigueAndSleepStatus( void )
 	{
 		pSoldier = &Menptr[ iCounter ];
 
-		if( pSoldier -> bActive )
+		if( pSoldier->bActive )
 		{
-			if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+			if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 			{
 				continue;
 			}
 
-			if( ( pSoldier -> bAssignment == ASSIGNMENT_POW ) || ( pSoldier -> bAssignment == IN_TRANSIT ) )
+			if( ( pSoldier->bAssignment == ASSIGNMENT_POW ) || ( pSoldier->bAssignment == IN_TRANSIT ) )
 			{
 				continue;
 			}
@@ -9112,13 +9112,13 @@ void HandleRestFatigueAndSleepStatus( void )
 			// CHECK FOR MERCS GOING TO SLEEP
 
 			// if awake
-			if ( !pSoldier->fMercAsleep )
+			if ( !pSoldier->flags.fMercAsleep )
 			{
 				// if dead tired
-				if( pSoldier -> bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM )
+				if( pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM )
 				{
 					// if between sectors, don't put tired mercs to sleep...  will be handled when they arrive at the next sector
-					if ( pSoldier->fBetweenSectors )
+					if ( pSoldier->flags.fBetweenSectors )
 					{
 						continue;
 					}
@@ -9126,7 +9126,7 @@ void HandleRestFatigueAndSleepStatus( void )
 					// he goes to sleep, provided it's at all possible (it still won't happen in a hostile sector, etc.)
 					if( SetMercAsleep( pSoldier, FALSE ) )
 					{
-						if( ( pSoldier -> bAssignment < ON_DUTY ) || ( pSoldier -> bAssignment == VEHICLE ) )
+						if( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
 						{
 							// on a squad/vehicle, complain, then drop
 							TacticalCharacterDialogue( pSoldier, QUOTE_NEED_SLEEP );
@@ -9135,14 +9135,14 @@ void HandleRestFatigueAndSleepStatus( void )
 						}
 
 						// guy collapses
-						pSoldier -> fMercCollapsedFlag = TRUE;
+						pSoldier->flags.fMercCollapsedFlag = TRUE;
 					}
 				}
 				// if pretty tired, and not forced to stay awake
-				else if( ( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED ) && ( pSoldier -> fForcedToStayAwake == FALSE ) )
+				else if( ( pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED ) && ( pSoldier->flags.fForcedToStayAwake == FALSE ) )
 				{
 					// if not on squad/ in vehicle
-					if( ( pSoldier -> bAssignment >= ON_DUTY ) && ( pSoldier -> bAssignment != VEHICLE ) )
+					if( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
 					{
 						// try to go to sleep on your own
 						if( SetMercAsleep( pSoldier, FALSE ) )
@@ -9164,13 +9164,13 @@ void HandleRestFatigueAndSleepStatus( void )
 							}
 
 							// seems unnecessary now?  ARM
-							pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+							pSoldier->bOldAssignment = pSoldier->bAssignment;
 						}
 					}
 					else	// tired, in a squad / vehicle
 					{
 						// if he hasn't complained yet
-						if ( !pSoldier->fComplainedThatTired )
+						if ( !pSoldier->flags.fComplainedThatTired )
 						{
 							// say quote
 							if( fMeToo == FALSE )
@@ -9183,7 +9183,7 @@ void HandleRestFatigueAndSleepStatus( void )
 								TacticalCharacterDialogue( pSoldier, QUOTE_ME_TOO );
 							}
 
-							pSoldier->fComplainedThatTired = TRUE;
+							pSoldier->flags.fComplainedThatTired = TRUE;
 						}
 					}	
 				}
@@ -9206,14 +9206,14 @@ void HandleRestFatigueAndSleepStatus( void )
 	{
 		pSoldier = &Menptr[ iCounter ];
 		
-		if( pSoldier -> bActive )
+		if( pSoldier->bActive )
 		{
-			if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+			if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 			{
 				continue;
 			}
 
-			if( ( pSoldier -> bAssignment == ASSIGNMENT_POW ) || ( pSoldier -> bAssignment == IN_TRANSIT ) )
+			if( ( pSoldier->bAssignment == ASSIGNMENT_POW ) || ( pSoldier->bAssignment == IN_TRANSIT ) )
 			{
 				continue;
 			}
@@ -9226,21 +9226,21 @@ void HandleRestFatigueAndSleepStatus( void )
 			if ( pSoldier->bBreathMax >= BREATHMAX_CANCEL_COLLAPSE ) 
 			{
 				// reset the collapsed flag well before reaching the wakeup state
-				pSoldier -> fMercCollapsedFlag = FALSE;
+				pSoldier->flags.fMercCollapsedFlag = FALSE;
 			}
 
 
 			// if asleep
-			if ( pSoldier -> fMercAsleep )
+			if ( pSoldier->flags.fMercAsleep )
 			{
 				// but has had enough rest?
-				if( pSoldier -> bBreathMax >= BREATHMAX_FULLY_RESTED )
+				if( pSoldier->bBreathMax >= BREATHMAX_FULLY_RESTED )
 				{
 					// try to wake merc up
 					if( SetMercAwake( pSoldier, FALSE, FALSE ) )
 					{
 						// if not on squad/ in vehicle, tell player about it
-						if( ( pSoldier -> bAssignment >= ON_DUTY ) && ( pSoldier -> bAssignment != VEHICLE ) )
+						if( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
 						{
 							if( gGameSettings.fOptions[ TOPTION_SLEEPWAKE_NOTIFICATION ] )
 							{
@@ -9308,7 +9308,7 @@ BOOLEAN CanCharacterRepairVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId )
 	// if currently loaded sector, are we close enough?
 	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
 	{
-		if( PythSpacesAway( pSoldier -> sGridNo, pVehicleList[ iVehicleId ].sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
+		if( PythSpacesAway( pSoldier->sGridNo, pVehicleList[ iVehicleId ].sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
 		{
 		  return( FALSE );
 		}
@@ -9328,7 +9328,7 @@ BOOLEAN IsRobotInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 	if ( pSoldier != NULL )
 	{
-		if( ( pSoldier -> sSectorX == sSectorX ) && ( pSoldier -> sSectorY == sSectorY ) && ( pSoldier -> bSectorZ == bSectorZ ) && ( pSoldier -> fBetweenSectors == FALSE ) )
+		if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == bSectorZ ) && ( pSoldier->flags.fBetweenSectors == FALSE ) )
 		{
 			return( TRUE );
 		}
@@ -9348,9 +9348,9 @@ SOLDIERTYPE * GetRobotSoldier( void )
 	pSoldier = MercPtrs[0];	
 	
 	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		if( pTeamSoldier -> bActive )
+		if( pTeamSoldier->bActive )
 		{
 			if( AM_A_ROBOT( pTeamSoldier ) )
 			{
@@ -9375,22 +9375,22 @@ BOOLEAN CanCharacterRepairRobot( SOLDIERTYPE *pSoldier )
 	}
 
 	// if robot isn't damaged at all
-	if( pRobot -> bLife == pRobot -> bLifeMax )
+	if( pRobot->stats.bLife == pRobot->stats.bLifeMax )
 	{
 		return( FALSE );
 	}
 
 	// is the robot in the same sector
-	if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == FALSE )
+	if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == FALSE )
 	{
 		return( FALSE );
 	}
 
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 	// if that sector is currently loaded, check distance to robot
-	if( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> sSectorY == gWorldSectorY ) && ( pSoldier -> bSectorZ == gbWorldSectorZ ) )
+	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
 	{
-		if( PythSpacesAway( pSoldier -> sGridNo, pRobot -> sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
+		if( PythSpacesAway( pSoldier->sGridNo, pRobot->sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
 		{
 		  return( FALSE );
 		}
@@ -9419,33 +9419,33 @@ UINT8 RepairRobot( SOLDIERTYPE *pRobot, UINT8 ubRepairPts, BOOLEAN *pfNothingLef
 
 
 	// is it "dead" ?
-	if( pRobot -> bLife == 0 )
+	if( pRobot->stats.bLife == 0 )
 	{
 		*pfNothingLeftToRepair = TRUE;
 		return( ubPointsUsed );
 	}
 	
 	// is it "unhurt" ?
-	if( pRobot -> bLife == pRobot -> bLifeMax )
+	if( pRobot->stats.bLife == pRobot->stats.bLifeMax )
 	{
 		*pfNothingLeftToRepair = TRUE;
 		return( ubPointsUsed );
 	}
 
 	// if we have enough or more than we need
-	if( pRobot -> bLife + ubRepairPts >= pRobot -> bLifeMax )
+	if( pRobot->stats.bLife + ubRepairPts >= pRobot->stats.bLifeMax )
 	{
-		ubPointsUsed = ( pRobot -> bLifeMax - pRobot -> bLife );
-		pRobot -> bLife = pRobot -> bLifeMax; 
+		ubPointsUsed = ( pRobot->stats.bLifeMax - pRobot->stats.bLife );
+		pRobot->stats.bLife = pRobot->stats.bLifeMax; 
 	}
 	else
 	{
 		// not enough, do what we can
 		ubPointsUsed = ubRepairPts;
-		pRobot -> bLife += ubRepairPts; 
+		pRobot->stats.bLife += ubRepairPts; 
 	}
 
-	if ( pRobot->bLife == pRobot->bLifeMax )
+	if ( pRobot->stats.bLife == pRobot->stats.bLifeMax )
 	{
 		*pfNothingLeftToRepair = TRUE;
 	}
@@ -9466,7 +9466,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterPatient( pSoldier ) )
 			{
 				
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 				pSoldier->bBleeding = 0;
 		
 				// set dirty flag
@@ -9508,7 +9508,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				}
 */
 
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 				
 		
 				// set dirty flag
@@ -9539,7 +9539,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterDoctor( pSoldier ) )
 			{
 			
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 				
 			
 					// set dirty flag
@@ -9571,7 +9571,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterTrainMilitia( pSoldier ) )
 			{
 				// train militia
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 			
 				// set dirty flag
 				fTeamPanelDirty = TRUE;
@@ -9595,7 +9595,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 
 				if( pMilitiaTrainerSoldier == NULL )
 				{
-					if( SectorInfo[ SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) ].fMilitiaTrainingPaid == FALSE )
+					if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
 					{
 						// show a message to confirm player wants to charge cost
 						HandleInterfaceMessageForCostOfTrainingMilitia( pSoldier );
@@ -9613,7 +9613,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, TRUE, FALSE ) )
 			{
 				// train stat
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 				// remove from squad
 				RemoveCharacterFromSquads( pSoldier );
@@ -9634,7 +9634,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				AssignMercToAMovementGroup( pSoldier );
 
 				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
+				pSoldier->bTrainStat = ( INT8 )iParam1;
 
 				// set dirty flag
 				fTeamPanelDirty = TRUE;
@@ -9646,7 +9646,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, FALSE, TRUE ) )
 			{
 
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 				// remove from squad
 				RemoveCharacterFromSquads( pSoldier );
 
@@ -9665,7 +9665,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				AssignMercToAMovementGroup( pSoldier );
 
 				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
+				pSoldier->bTrainStat = ( INT8 )iParam1;
 
 				// set dirty flag
 				fTeamPanelDirty = TRUE;
@@ -9677,7 +9677,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, TRUE, FALSE ) )
 			{
 				// train stat
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+				pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 				// remove from squad
 				RemoveCharacterFromSquads( pSoldier );
@@ -9698,7 +9698,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				AssignMercToAMovementGroup( pSoldier );
 
 				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
+				pSoldier->bTrainStat = ( INT8 )iParam1;
 
 				// set dirty flag
 				fTeamPanelDirty = TRUE;
@@ -9709,7 +9709,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 		case( REPAIR ):
 			if( CanCharacterRepair( pSoldier ) )
 			{
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;		
+				pSoldier->bOldAssignment = pSoldier->bAssignment;		
 
 				// remove from squad
 				RemoveCharacterFromSquads( pSoldier );
@@ -9720,7 +9720,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 					TakeSoldierOutOfVehicle( pSoldier );
 				}
 
-				if( ( pSoldier->bAssignment != REPAIR ) ||( pSoldier ->fFixingSAMSite != ( UINT8 )iParam1 ) || ( pSoldier ->fFixingRobot != ( UINT8 )iParam2 ) || ( pSoldier ->bVehicleUnderRepairID != ( UINT8 )iParam3 ) ) 
+				if( ( pSoldier->bAssignment != REPAIR ) ||( pSoldier->flags.fFixingSAMSite != ( UINT8 )iParam1 ) || ( pSoldier->flags.fFixingRobot != ( UINT8 )iParam2 ) || ( pSoldier->bVehicleUnderRepairID != ( UINT8 )iParam3 ) ) 
 				{
 					SetTimeOfAssignmentChangeForMerc( pSoldier );
 				}
@@ -9728,9 +9728,9 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				ChangeSoldiersAssignment( pSoldier, REPAIR );
 				MakeSureToolKitIsInHand( pSoldier );
 				AssignMercToAMovementGroup( pSoldier );
-				pSoldier -> fFixingSAMSite = ( UINT8 )iParam1;
-				pSoldier -> fFixingRobot = ( UINT8 )iParam2;
-				pSoldier -> bVehicleUnderRepairID = ( INT8 )iParam3;
+				pSoldier->flags.fFixingSAMSite = ( UINT8 )iParam1;
+				pSoldier->flags.fFixingRobot = ( UINT8 )iParam2;
+				pSoldier->bVehicleUnderRepairID = ( INT8 )iParam3;
 			}
 			break;
 		case( VEHICLE ):
@@ -9738,7 +9738,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			{
 				if ( IsEnoughSpaceInVehicle( (INT8) iParam1 ) )
 				{
-					pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+					pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 					// set dirty flag
 					fTeamPanelDirty = TRUE;
@@ -9760,12 +9760,12 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 					}
 					else
 					{
-						if( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier ->iVehicleId != ( UINT8 )iParam1 ) ) 
+						if( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != ( UINT8 )iParam1 ) ) 
 						{
 							SetTimeOfAssignmentChangeForMerc( pSoldier );
 						}
 
-						pSoldier -> iVehicleId = iParam1;
+						pSoldier->iVehicleId = iParam1;
 						ChangeSoldiersAssignment( pSoldier, VEHICLE );
 						AssignMercToAMovementGroup( pSoldier );
 					}
@@ -9801,7 +9801,7 @@ BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints)
 	}
 
 	//can it be fixed?
-	if( IsTheSAMSiteInSectorRepairable( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == FALSE )
+	if( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == FALSE )
 	{
 		return( FALSE );
 	}
@@ -9855,7 +9855,7 @@ BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier )
 	INT32 iCounter = 0;
 
 	// is the soldier on the surface?
-	if( pSoldier -> bSectorZ != 0 )
+	if( pSoldier->bSectorZ != 0 )
 	{
 		return( FALSE );
 	}
@@ -9863,7 +9863,7 @@ BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier )
 	// now check each sam site in the list
 	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
 	{
-		if( pSamList[ iCounter] == SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) )
+		if( pSamList[ iCounter] == SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) )
 		{
 			return( TRUE );
 		}
@@ -9880,10 +9880,10 @@ BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier )
 		// now check each sam site in the list
 	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
 	{
-		if( pSamList[ iCounter ] == SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) )
+		if( pSamList[ iCounter ] == SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) )
 		{
 // Assignment distance limits removed.  Sep/11/98.  ARM
-//			if( ( PythSpacesAway( pSamGridNoAList[ iCounter ], pSoldier -> sGridNo ) < MAX_DISTANCE_FOR_REPAIR )||( PythSpacesAway( pSamGridNoBList[ iCounter ], pSoldier -> sGridNo ) < MAX_DISTANCE_FOR_REPAIR ) )
+//			if( ( PythSpacesAway( pSamGridNoAList[ iCounter ], pSoldier->sGridNo ) < MAX_DISTANCE_FOR_REPAIR )||( PythSpacesAway( pSamGridNoBList[ iCounter ], pSoldier->sGridNo ) < MAX_DISTANCE_FOR_REPAIR ) )
 			{
 				return( TRUE );
 			}
@@ -9901,7 +9901,7 @@ BOOLEAN HandleAssignmentExpansionAndHighLightForAssignMenu( SOLDIERTYPE *pSoldie
 	if( fShowSquadMenu )
 	{
 		// squad menu up?..if so, highlight squad line the previous menu
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
 			 HighLightBoxLine( ghEpcBox, EPC_MENU_ON_DUTY );
 		}
@@ -10161,11 +10161,11 @@ void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSol
 	{
 		pCurSoldier = &Menptr[ iCounter ];
 		
-		if( ( pCurSoldier -> bActive ) && ( pCurSoldier -> bLife >= OKLIFE ) )
+		if( ( pCurSoldier->bActive ) && ( pCurSoldier->stats.bLife >= OKLIFE ) )
 		{
-			if( pCurSoldier -> bAssignment == TRAIN_TOWN )
+			if( pCurSoldier->bAssignment == TRAIN_TOWN )
 			{
-				if( ( pCurSoldier -> sSectorX == pSoldier -> sSectorX ) && ( pCurSoldier -> sSectorY == pSoldier -> sSectorY ) && ( pSoldier -> bSectorZ == 0 ) )
+				if( ( pCurSoldier->sSectorX == pSoldier->sSectorX ) && ( pCurSoldier->sSectorY == pSoldier->sSectorY ) && ( pSoldier->bSectorZ == 0 ) )
 				{
 					AddCharacterToAnySquad( pCurSoldier );
 				}
@@ -10191,7 +10191,7 @@ void ReportTrainersTraineesWithoutPartners( void )
 	{
 		pTeamSoldier = &Menptr[ iCounter ];
 
-		if( ( pTeamSoldier -> bAssignment == TRAIN_TEAMMATE ) && ( pTeamSoldier -> bLife > 0 ) )
+		if( ( pTeamSoldier->bAssignment == TRAIN_TEAMMATE ) && ( pTeamSoldier->stats.bLife > 0 ) )
 		{
 			if ( !ValidTrainingPartnerInSameSectorOnAssignmentFound( pTeamSoldier, TRAIN_BY_OTHER, pTeamSoldier->bTrainStat ) )
 			{
@@ -10205,7 +10205,7 @@ void ReportTrainersTraineesWithoutPartners( void )
 	{
 		pTeamSoldier = &Menptr[ iCounter ];
 
-		if( ( pTeamSoldier -> bAssignment == TRAIN_BY_OTHER ) && ( pTeamSoldier -> bLife > 0 ) )
+		if( ( pTeamSoldier->bAssignment == TRAIN_BY_OTHER ) && ( pTeamSoldier->stats.bLife > 0 ) )
 		{
 			if ( !ValidTrainingPartnerInSameSectorOnAssignmentFound( pTeamSoldier, TRAIN_TEAMMATE, pTeamSoldier->bTrainStat ) )
 			{
@@ -10239,22 +10239,22 @@ BOOLEAN SetMercAsleep( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning )
 
 BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier )
 {
-	if( pSoldier -> fMercAsleep == FALSE )
+	if( pSoldier->flags.fMercAsleep == FALSE )
 	{
 		if( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
 		{
 			if( guiCurrentScreen == GAME_SCREEN )
 			{
-				ChangeSoldierState( pSoldier, GOTO_SLEEP, 1, TRUE );
+				pSoldier->ChangeSoldierState( GOTO_SLEEP, 1, TRUE );
 			}
 			else
 			{
-				ChangeSoldierState( pSoldier, SLEEPING, 1, TRUE );
+				pSoldier->ChangeSoldierState( SLEEPING, 1, TRUE );
 			}
 		}
 
 		// set merc asleep
-		pSoldier -> fMercAsleep = TRUE;
+		pSoldier->flags.fMercAsleep = TRUE;
 
 		// refresh panels
 		fCharacterInfoPanelDirty = TRUE;
@@ -10283,22 +10283,22 @@ BOOLEAN SetMercAwake( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning, BOOLEAN fForc
 
 BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 {
-	if ( pSoldier->fMercAsleep )
+	if ( pSoldier->flags.fMercAsleep )
 	{
 		if ( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
 		{
 			if ( guiCurrentScreen == GAME_SCREEN )
 			{
-				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
+				pSoldier->ChangeSoldierState( WKAEUP_FROM_SLEEP, 1, TRUE );
 			}	
 			else
 			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
 			}
 		}
 
 		// set merc awake
-		pSoldier->fMercAsleep = FALSE;
+		pSoldier->flags.fMercAsleep = FALSE;
 
 		// refresh panels
 		fCharacterInfoPanelDirty = TRUE;
@@ -10307,11 +10307,11 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 		// determine if merc is being forced to stay awake
 		if ( pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED )
 		{
-			pSoldier->fForcedToStayAwake = TRUE;
+			pSoldier->flags.fForcedToStayAwake = TRUE;
 		}
 		else
 		{
-			pSoldier->fForcedToStayAwake = FALSE;
+			pSoldier->flags.fForcedToStayAwake = FALSE;
 		}
 	}
 
@@ -10402,7 +10402,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
 				PutMercInAsleepState( pSoldier );
 
 				// player can't wake him up right away
-				pSoldier->fMercCollapsedFlag = TRUE;
+				pSoldier->flags.fMercCollapsedFlag = TRUE;
 			}
 		}
 
@@ -10425,13 +10425,13 @@ BOOLEAN PlayerSoldierTooTiredToTravel( SOLDIERTYPE *pSoldier )
 		if ( ( pSoldier->bAssignment != VEHICLE ) || SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, TRUE ) )
 		{
 			// if awake, but so tired they can't move/drive anymore
-			if ( ( !pSoldier->fMercAsleep ) && ( pSoldier->bBreathMax < BREATHMAX_GOTTA_STOP_MOVING ) )
+			if ( ( !pSoldier->flags.fMercAsleep ) && ( pSoldier->bBreathMax < BREATHMAX_GOTTA_STOP_MOVING ) )
 			{
 				return( TRUE );
 			}
 
 			// asleep, and can't be awakened?
-			if ( ( pSoldier->fMercAsleep ) && !CanCharacterBeAwakened( pSoldier, FALSE ) )
+			if ( ( pSoldier->flags.fMercAsleep ) && !CanCharacterBeAwakened( pSoldier, FALSE ) )
 			{
 				return( TRUE );
 			}
@@ -10662,7 +10662,7 @@ void BandageBleedingDyingPatientsBeingTreated( )
 		}
 
 		// and he is bleeding or dying
-		if( ( pSoldier->bBleeding ) || ( pSoldier->bLife < OKLIFE ) )
+		if( ( pSoldier->bBleeding ) || ( pSoldier->stats.bLife < OKLIFE ) )
 		{
 			// if soldier is receiving care
 			if( ( pSoldier->bAssignment == PATIENT ) || ( pSoldier->bAssignment == ASSIGNMENT_HOSPITAL ) || ( pSoldier->bAssignment == DOCTOR ) )
@@ -10675,9 +10675,9 @@ void BandageBleedingDyingPatientsBeingTreated( )
 					// stop bleeding automatically
 					pSoldier->bBleeding = 0;
 
-					if ( pSoldier->bLife < OKLIFE )
+					if ( pSoldier->stats.bLife < OKLIFE )
 					{
-						pSoldier->bLife = OKLIFE;
+						pSoldier->stats.bLife = OKLIFE;
 					}
 				}
 				else	// assigned to DOCTOR/PATIENT
@@ -10698,7 +10698,7 @@ void BandageBleedingDyingPatientsBeingTreated( )
 								UseKitPoints( pKit, (UINT16)uiKitPtsUsed, pDoctor );
 
 								// if he is STILL bleeding or dying
-								if( ( pSoldier->bBleeding ) || ( pSoldier->bLife < OKLIFE ) )
+								if( ( pSoldier->bBleeding ) || ( pSoldier->stats.bLife < OKLIFE ) )
 								{
 									fSomeoneStillBleedingDying = TRUE;
 								}
@@ -10779,10 +10779,10 @@ void ReEvaluateEveryonesNothingToDo()
 
 
 			// if his flag is wrong
-			if ( fNothingToDo != pSoldier->fDoneAssignmentAndNothingToDoFlag )
+			if ( fNothingToDo != pSoldier->flags.fDoneAssignmentAndNothingToDoFlag )
 			{
 				// update it!
-				pSoldier->fDoneAssignmentAndNothingToDoFlag = fNothingToDo;
+				pSoldier->flags.fDoneAssignmentAndNothingToDoFlag = fNothingToDo;
 
 				// update mapscreen's character list display
 				fDrawCharacterList = TRUE;
@@ -10842,7 +10842,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 		if( ( gCharactersList[ iCounter ].fValid ) &&
 				( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) &&
 				( iCounter != bSelectedAssignChar ) &&
-				!(Menptr[ gCharactersList[ iCounter ].usSolID].uiStatusFlags & SOLDIER_VEHICLE ) )
+				!(Menptr[ gCharactersList[ iCounter ].usSolID].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
 
@@ -10891,7 +10891,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 						// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
 
 /*
-						if ( pSelectedSoldier->fFixingSAMSite )
+						if ( pSelectedSoldier->flags.fFixingSAMSite )
 						{
 							fCanFixSpecificTarget = CanSoldierRepairSAM( pSoldier, SAM_SITE_REPAIR_DIVISOR );
 						}
@@ -10901,7 +10901,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 						{
 							fCanFixSpecificTarget = CanCharacterRepairVehicle( pSoldier, pSelectedSoldier->bVehicleUnderRepairID );
 						}
-						else if( pSoldier->fFixingRobot )
+						else if( pSoldier->flags.fFixingRobot )
 						{
 							fCanFixSpecificTarget = CanCharacterRepairRobot( pSoldier );
 						}
@@ -10910,7 +10910,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 						{
 							// set as repair
 							pSoldier->bOldAssignment = pSoldier->bAssignment;
-							SetSoldierAssignment( pSoldier, REPAIR, pSelectedSoldier->fFixingSAMSite, pSelectedSoldier->fFixingRobot, pSelectedSoldier->bVehicleUnderRepairID );
+							SetSoldierAssignment( pSoldier, REPAIR, pSelectedSoldier->flags.fFixingSAMSite, pSelectedSoldier->flags.fFixingRobot, pSelectedSoldier->bVehicleUnderRepairID );
 							fItWorked = TRUE;
 						}
 					}
@@ -10981,7 +10981,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 							// is the squad between sectors
 							if( Squad[ bAssignment ][ 0 ] )
 							{
-								if( Squad[ bAssignment ][ 0 ]->fBetweenSectors )
+								if( Squad[ bAssignment ][ 0 ]->flags.fBetweenSectors )
 								{
 									// between sectors, remove from old mvt group
 									if ( pSoldier->bOldAssignment >= ON_DUTY )
@@ -11063,7 +11063,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 BOOLEAN IsCharacterAliveAndConscious( SOLDIERTYPE *pCharacter )
 {
 	// is the character alive and conscious?
-	if( pCharacter -> bLife < CONSCIOUSNESS )
+	if( pCharacter->stats.bLife < CONSCIOUSNESS )
 	{
 		return( FALSE );
 	}
@@ -11095,25 +11095,25 @@ BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound( SOLDIERTYPE *pTargetS
 			// if the guy is not the target, has the assignment we want, is training the same stat, and is in our sector, alive
 			// and is training the stat we want
 			if( ( pSoldier != pTargetSoldier ) &&
-					( pSoldier -> bAssignment == bTargetAssignment ) &&
+					( pSoldier->bAssignment == bTargetAssignment ) &&
 					// CJC: this seems incorrect in light of the check for bTargetStat and in any case would
 					// cause a problem if the trainer was assigned and we weren't!
-					//( pSoldier -> bTrainStat == pTargetSoldier -> bTrainStat ) &&
-					( pSoldier -> sSectorX == pTargetSoldier -> sSectorX ) &&
-					( pSoldier -> sSectorY == pTargetSoldier -> sSectorY ) &&
-					( pSoldier -> bSectorZ == pTargetSoldier -> bSectorZ ) &&
-					( pSoldier -> bTrainStat == bTargetStat ) &&
-					( pSoldier -> bLife > 0 ) )
+					//( pSoldier->bTrainStat == pTargetSoldier->bTrainStat ) &&
+					( pSoldier->sSectorX == pTargetSoldier->sSectorX ) &&
+					( pSoldier->sSectorY == pTargetSoldier->sSectorY ) &&
+					( pSoldier->bSectorZ == pTargetSoldier->bSectorZ ) &&
+					( pSoldier->bTrainStat == bTargetStat ) &&
+					( pSoldier->stats.bLife > 0 ) )
 			{
 				// so far so good, now let's see if the trainer can really teach the student anything new
 
 				// are we training in the sector with gun range in Alma?
-				if ( ( pSoldier -> sSectorX == GUN_RANGE_X ) && (pSoldier -> sSectorY == GUN_RANGE_Y ) && ( pSoldier -> bSectorZ == GUN_RANGE_Z ) )
+				if ( ( pSoldier->sSectorX == GUN_RANGE_X ) && (pSoldier->sSectorY == GUN_RANGE_Y ) && ( pSoldier->bSectorZ == GUN_RANGE_Z ) )
 				{
 					fAtGunRange = TRUE;
 				}
 
-				if ( pSoldier -> bAssignment == TRAIN_TEAMMATE )
+				if ( pSoldier->bAssignment == TRAIN_TEAMMATE )
 				{
 					// pSoldier is the instructor, target is the student
 					sTrainingPts = GetBonusTrainingPtsDueToInstructor( pSoldier, pTargetSoldier, bTargetStat, fAtGunRange, &usMaxPts );
@@ -11225,7 +11225,7 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 BOOLEAN CharacterIsTakingItEasy( SOLDIERTYPE *pSoldier )
 {
 	// actually asleep?
-	if ( pSoldier -> fMercAsleep == TRUE )
+	if ( pSoldier->flags.fMercAsleep == TRUE )
 	{
 		return( TRUE );
 	}
@@ -11235,19 +11235,19 @@ BOOLEAN CharacterIsTakingItEasy( SOLDIERTYPE *pSoldier )
 	{
 		// on duty, but able to catch naps (either not traveling, or not the driver of the vehicle)
 		// The actual checks for this are in the "can he sleep" check above
-		if ( ( pSoldier -> bAssignment < ON_DUTY ) || ( pSoldier -> bAssignment == VEHICLE ) )
+		if ( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
 		{
 			return( TRUE );
 		}
 
 		// and healing up?
-		if ( ( pSoldier -> bAssignment == PATIENT ) || ( pSoldier -> bAssignment == ASSIGNMENT_HOSPITAL ) )
+		if ( ( pSoldier->bAssignment == PATIENT ) || ( pSoldier->bAssignment == ASSIGNMENT_HOSPITAL ) )
 		{
 			return( TRUE );
 		}
 
 		// on a real assignment, but done with it?
-		if ( pSoldier -> fDoneAssignmentAndNothingToDoFlag )
+		if ( pSoldier->flags.fDoneAssignmentAndNothingToDoFlag )
 		{
 			return( TRUE );
 		}
@@ -11267,10 +11267,10 @@ UINT8 CalcSoldierNeedForSleep( SOLDIERTYPE *pSoldier )
 
 
 	// base comes from profile
-	ubNeedForSleep = gMercProfiles[ pSoldier -> ubProfile ].ubNeedForSleep;
+	ubNeedForSleep = gMercProfiles[ pSoldier->ubProfile ].ubNeedForSleep;
 
 
-	ubPercentHealth = pSoldier->bLife / pSoldier->bLifeMax;
+	ubPercentHealth = pSoldier->stats.bLife / pSoldier->stats.bLifeMax;
 
 	if ( ubPercentHealth < 75 )
 	{
@@ -11332,7 +11332,7 @@ BOOLEAN CanCharacterRepairAnotherSoldiersStuff( SOLDIERTYPE *pSoldier, SOLDIERTY
 	{
 		return( FALSE );
 	}
-	if ( pOtherSoldier->bLife == 0 )
+	if ( pOtherSoldier->stats.bLife == 0 )
 	{
 		return( FALSE );
 	}
@@ -11343,14 +11343,14 @@ BOOLEAN CanCharacterRepairAnotherSoldiersStuff( SOLDIERTYPE *pSoldier, SOLDIERTY
 		return( FALSE );
 	}
 
-	if ( pOtherSoldier->fBetweenSectors )
+	if ( pOtherSoldier->flags.fBetweenSectors )
 	{
 		return( FALSE );
 	}
 
 	if ( ( pOtherSoldier->bAssignment == IN_TRANSIT ) ||
 			 ( pOtherSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			 ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||
+			 ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ||
 			 ( AM_A_ROBOT( pSoldier ) ) ||
 			 ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
 			 ( pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ) )
@@ -11391,7 +11391,7 @@ SOLDIERTYPE *GetSelectedAssignSoldier( BOOLEAN fNullOK )
 	{
 		// better be an active person, not a vehicle
 		Assert( pSoldier->bActive );
-		Assert( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) );
+		Assert( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) );
 	}
 
 	return( pSoldier );
@@ -11504,7 +11504,7 @@ void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft )
 					// okay, seems like a candidate!
 					if ( FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType ) != NO_SLOT )
 					{
-						bPriority = pOtherSoldier->bExpLevel;
+						bPriority = pOtherSoldier->stats.bExpLevel;
 						if ( bPriority > bBestPriority )
 						{
 							bBestPriority = bPriority;

@@ -2013,7 +2013,7 @@ BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 				if ( pSoldier->bTeam == gbPlayerNum )
 				{
 					// Re-create soldier lights
-					ReCreateSoldierLight( pSoldier );
+					pSoldier->ReCreateSoldierLight( );
 				}
 			}
 		}

@@ -283,7 +283,7 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 	 *  the tile, it overrides dropping smells of any type
 	 */
 
-	if (pSoldier->bLevel == 0)
+	if (pSoldier->pathing.bLevel == 0)
 	{
 		pMapElement = &(gpWorldLevelData[pSoldier->sGridNo]);
 		if (pMapElement->ubBloodInfo)
@@ -292,14 +292,14 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 			return;
 		}
 
-		if (pSoldier->bNormalSmell > pSoldier->bMonsterSmell)
+		if (pSoldier->aiData.bNormalSmell > pSoldier->aiData.bMonsterSmell)
 		{
-			ubStrength = pSoldier->bNormalSmell - pSoldier->bMonsterSmell;
+			ubStrength = pSoldier->aiData.bNormalSmell - pSoldier->aiData.bMonsterSmell;
 			ubSmell = HUMAN;
 		}
 		else
 		{
-			ubStrength = pSoldier->bMonsterSmell - pSoldier->bNormalSmell;
+			ubStrength = pSoldier->aiData.bMonsterSmell - pSoldier->aiData.bNormalSmell;
 			if (ubStrength == 0)
 			{
 				// don't drop any smell
@@ -478,9 +478,9 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 	 */
 
 	// figure out the type of blood that we're dropping
-	if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_MONSTER )
 	{
-		if ( pSoldier->bLevel == 0 )
+		if ( pSoldier->pathing.bLevel == 0 )
 		{
 			ubType = CREATURE_ON_FLOOR;
 		}
@@ -495,7 +495,7 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 	}
 
 
-	InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, ubType, ubStrength, bVisible );
+	InternalDropBlood( pSoldier->sGridNo, pSoldier->pathing.bLevel, ubType, ubStrength, bVisible );
 }
 
 

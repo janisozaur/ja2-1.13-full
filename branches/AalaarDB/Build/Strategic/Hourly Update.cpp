@@ -197,7 +197,7 @@ void HourlyLarryUpdate( void )
 		{
 			return;
 		}
-		if ( pSoldier->fBetweenSectors )
+		if ( pSoldier->flags.fBetweenSectors )
 		{
 			return;
 		}
@@ -319,11 +319,11 @@ void HourlyCheckIfSlayAloneSoHeCanLeave()
 	{
 		return;
 	}
-	if( pSoldier->fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors )
 	{
 		return;
 	}
-	if( !pSoldier->bActive || !pSoldier->bLife )
+	if( !pSoldier->bActive || !pSoldier->stats.bLife )
 	{
 		return;
 	}

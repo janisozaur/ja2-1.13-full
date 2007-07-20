@@ -88,13 +88,13 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 			ubCallerType = CALLER_FEMALE;
 			break;
 	}
-	if (pCaller->bHunting) // which should only be set for females outside of the hive
+	if (pCaller->aiData.bHunting) // which should only be set for females outside of the hive
 	{
-		bFullPriority = gbHuntCallPriority[pCaller->usActionData];
+		bFullPriority = gbHuntCallPriority[pCaller->aiData.usActionData];
 	}
 	else
 	{
-		bFullPriority = gbCallPriority[pCaller->usActionData][ubCallerType];
+		bFullPriority = gbCallPriority[pCaller->aiData.usActionData][ubCallerType];
 	}
 
 	// OK, do animation based on body type...
@@ -105,12 +105,12 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 		case AM_MONSTER:
 		case YAM_MONSTER:
 
-			EVENT_InitNewSoldierAnim( pCaller, MONSTER_UP, 0 , FALSE );
+			pCaller->EVENT_InitNewSoldierAnim( MONSTER_UP, 0 , FALSE );
 			break;
 
 		case QUEENMONSTER:
 
-			EVENT_InitNewSoldierAnim( pCaller, QUEEN_CALL, 0 , FALSE );
+			pCaller->EVENT_InitNewSoldierAnim( QUEEN_CALL, 0 , FALSE );
 			break;
 	}
 
@@ -118,24 +118,24 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 	for (ubReceiver = gTacticalStatus.Team[ pCaller->bTeam ].bFirstID; ubReceiver <= gTacticalStatus.Team[ pCaller->bTeam ].bLastID; ubReceiver++)
 	{
 		pReceiver = MercPtrs[ubReceiver];
-		if (pReceiver->bActive && pReceiver->bInSector && (pReceiver->bLife >= OKLIFE) && (pReceiver != pCaller) && (pReceiver->bAlertStatus < STATUS_BLACK))
+		if (pReceiver->bActive && pReceiver->bInSector && (pReceiver->stats.bLife >= OKLIFE) && (pReceiver != pCaller) && (pReceiver->aiData.bAlertStatus < STATUS_BLACK))
 		{
 			if (pReceiver->ubBodyType != LARVAE_MONSTER && pReceiver->ubBodyType != INFANT_MONSTER && pReceiver->ubBodyType != QUEENMONSTER)
 			{
 				usDistToCaller = PythSpacesAway( pReceiver->sGridNo, pCaller->sGridNo );
 				bPriority = bFullPriority - (INT8) (usDistToCaller / PRIORITY_DECR_DISTANCE);
-				if (bPriority > pReceiver->bCallPriority)
+				if (bPriority > pReceiver->aiData.bCallPriority)
 				{
-					pReceiver->bCallPriority = bPriority;
-					pReceiver->bAlertStatus = STATUS_RED; // our status can't be more than red to begin with
-					pReceiver->ubCaller = pCaller->ubID;
-					pReceiver->sCallerGridNo = pCaller->sGridNo;
-					pReceiver->bCallActedUpon = FALSE;
+					pReceiver->aiData.bCallPriority = bPriority;
+					pReceiver->aiData.bAlertStatus = STATUS_RED; // our status can't be more than red to begin with
+					pReceiver->aiData.ubCaller = pCaller->ubID;
+					pReceiver->aiData.sCallerGridNo = pCaller->sGridNo;
+					pReceiver->aiData.bCallActedUpon = FALSE;
 					CancelAIAction(pReceiver, FORCE);
 					if ((bPriority > FRENZY_THRESHOLD) && (pReceiver->ubBodyType == ADULTFEMALEMONSTER || pReceiver->ubBodyType == YAF_MONSTER))
 					{
 						// go berzerk!
-						pReceiver->bFrenzied = TRUE;
+						pReceiver->aiData.bFrenzied = TRUE;
 					}
 				}
 			}
@@ -149,18 +149,18 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 	//INT8		bInWater;
 	INT8		bInGas;
 
-	//bInWater = MercInWater(pSoldier);
+	//bInWater = pSoldier->MercInWater();
 
 	// NB creatures would ignore smoke completely :-)
 
-	if ( pSoldier->bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
+	if ( pSoldier->aiData.bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
 	{
 		return( AI_ACTION_NONE );
 	}
 
 	bInGas = InGas( pSoldier, pSoldier->sGridNo );
 
-	if (pSoldier->bMobility == CREATURE_MOBILE)
+	if (pSoldier->aiData.bMobility == CREATURE_MOBILE)
 	{
 
 		if (TrackScent( pSoldier ))
@@ -174,30 +174,30 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 
 		// this takes priority over water/gas checks, so that point patrol WILL work
 		// from island to island, and through gas covered areas, too
-		if ((pSoldier->bOrders == POINTPATROL) && (pSoldier->bBreath >= 50))
+		if ((pSoldier->aiData.bOrders == POINTPATROL) && (pSoldier->bBreath >= 50))
 		{
 			if (PointPatrolAI(pSoldier))
 			{
 				if (!gfTurnBasedAI)
 				{
 					// pause at the end of the walk!
-					pSoldier->bNextAction = AI_ACTION_WAIT;
-					pSoldier->usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+					pSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+					pSoldier->aiData.usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
 				}
 
 				return(AI_ACTION_POINT_PATROL);
 			}
 		}
 
-		if ((pSoldier->bOrders == RNDPTPATROL) && (pSoldier->bBreath >=50))
+		if ((pSoldier->aiData.bOrders == RNDPTPATROL) && (pSoldier->bBreath >=50))
 		{
 			if (RandomPointPatrolAI(pSoldier))
 			{
 				if (!gfTurnBasedAI)
 				{
 					// pause at the end of the walk!
-					pSoldier->bNextAction = AI_ACTION_WAIT;
-					pSoldier->usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+					pSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+					pSoldier->aiData.usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
 				}
 
 				return(AI_ACTION_POINT_PATROL);
@@ -210,13 +210,13 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 
 		if ( /*bInWater || */ bInGas)
 		{
-			pSoldier->usActionData = FindNearestUngassedLand(pSoldier);
+			pSoldier->aiData.usActionData = FindNearestUngassedLand(pSoldier);
 
-			if (pSoldier->usActionData != NOWHERE)
+			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
 				STR16 tempstr;
-				sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
+				sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
 				AIPopMessage(tempstr);
 	#endif
 
@@ -233,7 +233,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 	if ((pSoldier->bBreath < 75) /*&& !bInWater*/)
 	{
 		// take a breather for gods sake!
-		pSoldier->usActionData = NOWHERE;
+		pSoldier->aiData.usActionData = NOWHERE;
 		return(AI_ACTION_NONE);
 	}
 
@@ -241,12 +241,12 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 	// RANDOM PATROL:  determine % chance to start a new patrol route
 	////////////////////////////////////////////////////////////////////////////
 
-	if (pSoldier->bMobility != CREATURE_IMMOBILE )
+	if (pSoldier->aiData.bMobility != CREATURE_IMMOBILE )
 	{
 		iChance = 25;
 
 		// set base chance according to orders
-		switch (pSoldier->bOrders)
+		switch (pSoldier->aiData.bOrders)
 		{
 			case STATIONARY:     iChance += -20;  break;
 			case ONGUARD:        iChance += -15;  break;
@@ -259,7 +259,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		}
 
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
-		switch (pSoldier->bAttitude)
+		switch (pSoldier->aiData.bAttitude)
 		{
 			case DEFENSIVE:      iChance += -10;                 break;
 			case BRAVESOLO:      iChance +=   5;                 break;
@@ -270,7 +270,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		}
 
 		// reduce chance for any injury, less likely to wander around when hurt
-		iChance -= (pSoldier->bLifeMax - pSoldier->bLife);
+		iChance -= (pSoldier->stats.bLifeMax - pSoldier->stats.bLife);
 
 		// reduce chance if breath is down, less likely to wander around when tired
 		iChance -= (100 - pSoldier->bBreath);
@@ -279,24 +279,24 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		// OR if we roll under the chance calculated
 		if ( /*bInWater ||*/ ((INT16) PreRandom(100) < iChance))
 		{
-			pSoldier->usActionData = RandDestWithinRange(pSoldier);
+			pSoldier->aiData.usActionData = RandDestWithinRange(pSoldier);
 
-			if (pSoldier->usActionData != NOWHERE)
+			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
 			STR16 tempstr;
-			sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
+			sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
 			 AIPopMessage(tempstr);
 	#endif
 
 				if (!gfTurnBasedAI)
 				{
 					// pause at the end of the walk!
-					pSoldier->bNextAction = AI_ACTION_WAIT;
-					pSoldier->usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
-					if (pSoldier->bMobility == CREATURE_CRAWLER)
+					pSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+					pSoldier->aiData.usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+					if (pSoldier->aiData.bMobility == CREATURE_CRAWLER)
 					{
-						pSoldier->usNextActionData *= 2;
+						pSoldier->aiData.usNextActionData *= 2;
 					}
 				}
 
@@ -305,7 +305,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		}
 
 		/*
-		if (pSoldier->bMobility == CREATURE_MOBILE)
+		if (pSoldier->aiData.bMobility == CREATURE_MOBILE)
 		{
 			////////////////////////////////////////////////////////////////////////////
 			// SEEK FRIEND: determine %chance for man to pay a friendly visit
@@ -313,7 +313,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 			iChance = 25;
 
 			// set base chance and maximum seeking distance according to orders
-			switch (pSoldier->bOrders)
+			switch (pSoldier->aiData.bOrders)
 			{
 				case STATIONARY:     iChance += -20; break;
 				case ONGUARD:        iChance += -15; break;
@@ -326,7 +326,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 			}
 
 			// modify for attitude
-			switch (pSoldier->bAttitude)
+			switch (pSoldier->aiData.bAttitude)
 			{
 				case DEFENSIVE:                       break;
 				case BRAVESOLO:      iChance /= 2;    break;  // loners
@@ -337,7 +337,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 			}
 
 			// reduce chance for any injury, less likely to wander around when hurt
-			iChance -= (pSoldier->bLifeMax - pSoldier->bLife);
+			iChance -= (pSoldier->stats.bLifeMax - pSoldier->stats.bLife);
 
 			// reduce chance if breath is down
 			iChance -= (100 - pSoldier->bBreath);         // very likely to wait when exhausted
@@ -347,15 +347,15 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 				if (RandomFriendWithin(pSoldier))
 				{
 		#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->usActionData);
+				 sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
 				 AIPopMessage(tempstr);
 		#endif
 
 					if (!gfTurnBasedAI)
 					{
 						// pause at the end of the walk!
-						pSoldier->bNextAction = AI_ACTION_WAIT;
-						pSoldier->usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+						pSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+						pSoldier->aiData.usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
 					}
 
 					return(AI_ACTION_SEEK_FRIEND);
@@ -369,18 +369,18 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 		////////////////////////////////////////////////////////////////////////////
 
 		// avoid 2 consecutive random turns in a row
-		if (pSoldier->bLastAction != AI_ACTION_CHANGE_FACING && (GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints))
+		if (pSoldier->aiData.bLastAction != AI_ACTION_CHANGE_FACING && (GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints))
 		{
 			iChance = 25;
 
 			// set base chance according to orders
-			if (pSoldier->bOrders == STATIONARY)
+			if (pSoldier->aiData.bOrders == STATIONARY)
 				iChance += 25;
 
-			if (pSoldier->bOrders == ONGUARD)
+			if (pSoldier->aiData.bOrders == ONGUARD)
 				iChance += 20;
 
-			if (pSoldier->bAttitude == DEFENSIVE)
+			if (pSoldier->aiData.bAttitude == DEFENSIVE)
 				iChance += 25;
 
 			if ((INT16)PreRandom(100) < iChance)
@@ -390,32 +390,32 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 				{
 					// if man has a LEGAL dominant facing, and isn't facing it, he will turn
 					// back towards that facing 50% of the time here (normally just enemies)
-					if ((pSoldier->bDominantDir >= 0) && (pSoldier->bDominantDir <= 8) &&
-						(pSoldier->bDirection != pSoldier->bDominantDir) && PreRandom(2))
+					if ((pSoldier->aiData.bDominantDir >= 0) && (pSoldier->aiData.bDominantDir <= 8) &&
+						(pSoldier->bDirection != pSoldier->aiData.bDominantDir) && PreRandom(2))
 					{
-						pSoldier->usActionData = pSoldier->bDominantDir;
+						pSoldier->aiData.usActionData = pSoldier->aiData.bDominantDir;
 					}
 					else
 					{
-						pSoldier->usActionData = (UINT16)PreRandom(8); 
+						pSoldier->aiData.usActionData = (UINT16)PreRandom(8); 
 					}
-				} while (pSoldier->usActionData == pSoldier->bDirection);
+				} while (pSoldier->aiData.usActionData == pSoldier->bDirection);
 
 	#ifdef DEBUGDECISIONS
 				STR16 tempstr;
-				sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->usActionData);
+				sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
 				AIPopMessage(tempstr);
 	#endif
 
-				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
+				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->aiData.usActionData ) )
 
-				//InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, ANIM_STAND ) )
+				//pSoldier->InternalSoldierReadyWeapon( (INT8) pSoldier->aiData.usActionData, ANIM_STAND ) )
 				{
 					if (!gfTurnBasedAI)
 					{
 						// pause at the end of the turn!
-						pSoldier->bNextAction = AI_ACTION_WAIT;
-						pSoldier->usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+						pSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+						pSoldier->aiData.usNextActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
 					}
 
 					return(AI_ACTION_CHANGE_FACING);
@@ -429,7 +429,7 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 	////////////////////////////////////////////////////////////////////////////
 
 	// by default, if everything else fails, just stands in place without turning
-	pSoldier->usActionData = NOWHERE;
+	pSoldier->aiData.usActionData = NOWHERE;
 
 	return(AI_ACTION_NONE);
 }
@@ -445,7 +445,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 	BOOLEAN fReachable;
 //	INT16 sClosestFriend;
 
-	if ( pSoldier->bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
+	if ( pSoldier->aiData.bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
 	{
 		return( AI_ACTION_NONE );
 	}
@@ -472,7 +472,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 	// LOOK AROUND TOWARD NOISE: determine %chance for man to turn towards noise
 	////////////////////////////////////////////////////////////////////////////
 
-	if (pSoldier->bMobility != CREATURE_IMMOBILE)
+	if (pSoldier->aiData.bMobility != CREATURE_IMMOBILE)
 	{
 		// determine direction from this soldier in which the noise lies
 		ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo));
@@ -482,24 +482,24 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 		if ((GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints) && (pSoldier->bDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,sNoiseGridNo) <= STRAIGHT)
 		{
 			// set base chance according to orders
-			if ((pSoldier->bOrders == STATIONARY) || (pSoldier->bOrders == ONGUARD))
+			if ((pSoldier->aiData.bOrders == STATIONARY) || (pSoldier->aiData.bOrders == ONGUARD))
 				iChance = 60;
 			else           // all other orders
 				iChance = 35;
 
-			if (pSoldier->bAttitude == DEFENSIVE)
+			if (pSoldier->aiData.bAttitude == DEFENSIVE)
 				iChance += 15;
 
 			if ((INT16)PreRandom(100) < iChance)
 			{
-				pSoldier->usActionData = ubNoiseDir;
+				pSoldier->aiData.usActionData = ubNoiseDir;
 	#ifdef DEBUGDECISIONS
 				STR16 tempstr;
-				sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->usActionData);
+				sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
 				AIPopMessage(tempstr);
 	#endif
-				//if ( InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, ANIM_STAND ) )
-				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
+				//if ( pSoldier->InternalSoldierReadyWeapon( (INT8) pSoldier->aiData.usActionData, ANIM_STAND ) )
+				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->aiData.usActionData ) )
 				{
 					return(AI_ACTION_CHANGE_FACING);
 				}
@@ -512,14 +512,14 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 	////////////////////////////////////////////////////////////////////////
 
 	// if our breath is running a bit low, and we're not in water
-	if ((pSoldier->bBreath < 25) /*&& !MercInWater(pSoldier) */ )
+	if ((pSoldier->bBreath < 25) /*&& !pSoldier->MercInWater() */ )
 	{
 		// take a breather for gods sake!
-		pSoldier->usActionData = NOWHERE;
+		pSoldier->aiData.usActionData = NOWHERE;
 		return(AI_ACTION_NONE);
 	}
 
-	if (pSoldier->bMobility != CREATURE_IMMOBILE && fReachable)
+	if (pSoldier->aiData.bMobility != CREATURE_IMMOBILE && fReachable)
 	{
 		////////////////////////////////////////////////////////////////////////////
 		// SEEK NOISE
@@ -530,7 +530,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 		iSneaky = 30;
 
 		// set base chance according to orders
-		switch (pSoldier->bOrders)
+		switch (pSoldier->aiData.bOrders)
 		{
 			case STATIONARY:     iChance += -20;  break;
 			case ONGUARD:        iChance += -15;  break;
@@ -543,7 +543,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 		}
 
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
-		switch (pSoldier->bAttitude)
+		switch (pSoldier->aiData.bAttitude)
 		{
 			case DEFENSIVE:      iChance += -10;  iSneaky +=  15;  break;
 			case BRAVESOLO:      iChance +=  10;                   break;
@@ -558,14 +558,14 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 
 		if ((INT16) PreRandom(100) < iChance)
 		{
-			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sNoiseGridNo, AI_ACTION_SEEK_NOISE);
+			pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sNoiseGridNo, AI_ACTION_SEEK_NOISE);
 
-			if (pSoldier->usActionData != NOWHERE)
+			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 	#ifdef DEBUGDECISIONS
 				STR16 tempstr;
 				sprintf(tempstr,"%s - INVESTIGATING NOISE at grid %d, moving to %d",
-					pSoldier->name,sNoiseGridNo,pSoldier->usActionData);
+					pSoldier->name,sNoiseGridNo,pSoldier->aiData.usActionData);
 				AIPopMessage(tempstr);
 	#endif
 
@@ -591,7 +591,7 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 #endif
 
 	// by default, if everything else fails, just stands in place without turning
-	pSoldier->usActionData = NOWHERE;
+	pSoldier->aiData.usActionData = NOWHERE;
 	return(AI_ACTION_NONE);
 }
 
@@ -611,21 +611,21 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  // if we have absolutely no action points, we can't do a thing under RED!
  if (!pSoldier->bActionPoints)
   {
-   pSoldier->usActionData = NOWHERE;
+   pSoldier->aiData.usActionData = NOWHERE;
    return(AI_ACTION_NONE);
   }
 
-	if ( pSoldier->bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
+	if ( pSoldier->aiData.bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
 	{
 		return( AI_ACTION_NONE );
 	}
 
 
  // can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
- ubCanMove = ((pSoldier->bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
+ ubCanMove = ((pSoldier->aiData.bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
 
  // determine if we happen to be in water (in which case we're in BIG trouble!)
- //bInWater = MercInWater(pSoldier);
+ //bInWater = pSoldier->MercInWater();
 
  // check if standing in tear gas without a gas mask on
  bInGas = InGas( pSoldier, pSoldier->sGridNo );
@@ -637,13 +637,13 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
  if (bInGas && ubCanMove)
   {
-   pSoldier->usActionData = FindNearestUngassedLand(pSoldier);
+   pSoldier->aiData.usActionData = FindNearestUngassedLand(pSoldier);
 
-   if (pSoldier->usActionData != NOWHERE)
+   if (pSoldier->aiData.usActionData != NOWHERE)
     {
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
-		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
+		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
      AIPopMessage(tempstr);
 #endif
 
@@ -658,21 +658,21 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	{
 		if ((pSoldier->bActionPoints >= AP_RADIO) && (gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1))
 		{
-			if (pSoldier->bLife < pSoldier->bOldLife)
+			if (pSoldier->stats.bLife < pSoldier->bOldLife)
 			{
 				// got injured, maybe call
-				if ((pSoldier->bOldLife == pSoldier->bLifeMax) && (pSoldier->bOldLife - pSoldier->bLife > 10))
+				if ((pSoldier->bOldLife == pSoldier->stats.bLifeMax) && (pSoldier->bOldLife - pSoldier->stats.bLife > 10))
 				{
 					// hurt for first time!
-					pSoldier->usActionData = CALL_CRIPPLED;
-					pSoldier->bOldLife = pSoldier->bLife;  // don't want to call more than once	
+					pSoldier->aiData.usActionData = CALL_CRIPPLED;
+					pSoldier->bOldLife = pSoldier->stats.bLife;  // don't want to call more than once	
 					return(AI_ACTION_CREATURE_CALL);
 				}
-				else if (pSoldier->bLifeMax / pSoldier->bLife > 2)
+				else if (pSoldier->stats.bLifeMax / pSoldier->stats.bLife > 2)
 				{
 					// crippled, 1/3 or less health!
-					pSoldier->usActionData = CALL_ATTACKED;
-					pSoldier->bOldLife = pSoldier->bLife;  // don't want to call more than once	
+					pSoldier->aiData.usActionData = CALL_ATTACKED;
+					pSoldier->bOldLife = pSoldier->stats.bLife;  // don't want to call more than once	
 					return(AI_ACTION_CREATURE_CALL);
 				}
 			}
@@ -685,7 +685,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ////////////////////////////////////////////////////////////////////////
 
  // if our breath is running a bit low, and we're not in water or under fire
- if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->bUnderFire)
+ if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->aiData.bUnderFire)
   {
 #ifdef DEBUGDECISIONS
 	STR16 tempstr;
@@ -693,7 +693,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
    AIPopMessage(tempstr);
 #endif
 
-   pSoldier->usActionData = NOWHERE;
+   pSoldier->aiData.usActionData = NOWHERE;
    return(AI_ACTION_NONE);
   }
 
@@ -723,22 +723,22 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 					#ifdef DEBUGDECISIONS
 						AINameMessage(pSoldier,"decides to call an alert!",1000);
 					#endif
-					pSoldier->usActionData = CALL_1_PREY;
+					pSoldier->aiData.usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);			
 				}
 			}
 		}
 	}
 
-	if ( pSoldier->bMobility != CREATURE_IMMOBILE )
+	if ( pSoldier->aiData.bMobility != CREATURE_IMMOBILE )
 	{
 		if ( FindAIUsableObjClass( pSoldier, IC_WEAPON ) == ITEM_NOT_FOUND )
 		{
 			// probably a baby bug... run away! run away!
 		 // look for best place to RUN AWAY to (farthest from the closest threat)
-		 pSoldier->usActionData = FindSpotMaxDistFromOpponents( pSoldier );
+		 pSoldier->aiData.usActionData = FindSpotMaxDistFromOpponents( pSoldier );
 
-		 if (pSoldier->usActionData != NOWHERE)
+		 if (pSoldier->aiData.usActionData != NOWHERE)
 		 {
 			 return(AI_ACTION_RUN_AWAY);
 		 }
@@ -750,23 +750,23 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		}
 
 		// Respond to call if any
-		if ( CAN_LISTEN_TO_CALL( pSoldier ) && pSoldier->ubCaller != NOBODY )
+		if ( CAN_LISTEN_TO_CALL( pSoldier ) && pSoldier->aiData.ubCaller != NOBODY )
 		{
-			if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->sCallerGridNo ) <= STOPSHORTDIST )
+			if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.sCallerGridNo ) <= STOPSHORTDIST )
 			{
 				// call completed... hmm, nothing found
-				pSoldier->ubCaller = NOBODY;
+				pSoldier->aiData.ubCaller = NOBODY;
 			}
 			else
 			{
-				pSoldier->usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, pSoldier->sCallerGridNo, -1, AI_ACTION_SEEK_FRIEND, FLAG_STOPSHORT);
+				pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, pSoldier->aiData.sCallerGridNo, -1, AI_ACTION_SEEK_FRIEND, FLAG_STOPSHORT);
 
-				if (pSoldier->usActionData != NOWHERE)
+				if (pSoldier->aiData.usActionData != NOWHERE)
 				{
 					#ifdef DEBUGDECISIONS
 					STR16 tempstr;
 					sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
-						pSoldier->name,sClosestFriend,pSoldier->usActionData);
+						pSoldier->name,sClosestFriend,pSoldier->aiData.usActionData);
 						AIPopMessage(tempstr);
 					#endif
 					return(AI_ACTION_SEEK_FRIEND);
@@ -784,16 +784,16 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			//////////////////////////////////////////////////////////////////////
 
 			// try to move towards him
-			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestDisturbance,AI_ACTION_SEEK_OPPONENT);
+			pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestDisturbance,AI_ACTION_SEEK_OPPONENT);
 
 			// if it's possible
-			if (pSoldier->usActionData != NOWHERE)
+			if (pSoldier->aiData.usActionData != NOWHERE)
 			{
 				#ifdef DEBUGDECISIONS
 					// do it!
 					STR16 tempstr;
 					sprintf(tempstr,"%s - SEEKING OPPONENT at grid %d, MOVING to %d",
-					pSoldier->name,sClosestDisturbance,pSoldier->usActionData);
+					pSoldier->name,sClosestDisturbance,pSoldier->aiData.usActionData);
 					AIPopMessage(tempstr);
 				#endif
 
@@ -804,19 +804,19 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	 ////////////////////////////////////////////////////////////////////////////
 	 // TAKE A BITE, PERHAPS
 	 ////////////////////////////////////////////////////////////////////////////		
-	 if (pSoldier->bHunting)
+	 if (pSoldier->aiData.bHunting)
 	 {
-	   pSoldier->usActionData = FindNearestRottingCorpse( pSoldier );
+	   pSoldier->aiData.usActionData = FindNearestRottingCorpse( pSoldier );
 		 // need smell/visibility check?
-		 if (PythSpacesAway( pSoldier->sGridNo, pSoldier->usActionData) < MAX_EAT_DIST )
+		 if (PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.usActionData) < MAX_EAT_DIST )
 		 {
 			 INT16 sGridNo;
 			 
-			 sGridNo = FindAdjacentGridEx( pSoldier, pSoldier->usActionData, &ubOpponentDir, &sAdjustedGridNo, FALSE, FALSE );
+			 sGridNo = FindAdjacentGridEx( pSoldier, pSoldier->aiData.usActionData, &ubOpponentDir, &sAdjustedGridNo, FALSE, FALSE );
 			 
 			 if ( sGridNo != -1 )
 			 {
-					pSoldier->usActionData = sGridNo;
+					pSoldier->aiData.usActionData = sGridNo;
 					return( AI_ACTION_APPROACH_MERC );
 			 }
 		 }
@@ -853,22 +853,22 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			 if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 				{
 				 // set base chance according to orders
-				 if ((pSoldier->bOrders == STATIONARY) || (pSoldier->bOrders == ONGUARD))
+				 if ((pSoldier->aiData.bOrders == STATIONARY) || (pSoldier->aiData.bOrders == ONGUARD))
 					 iChance = 50;
 				 else           // all other orders
 					 iChance = 25;
 
-				 if (pSoldier->bAttitude == DEFENSIVE)
+				 if (pSoldier->aiData.bAttitude == DEFENSIVE)
 					 iChance += 25;
 
-				 //if ( (INT16)PreRandom(100) < iChance && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_STAND ) )
+				 //if ( (INT16)PreRandom(100) < iChance && pSoldier->InternalSoldierReadyWeapon( ubOpponentDir, ANIM_STAND ) )
 				 if ( (INT16)PreRandom(100) < iChance && ValidCreatureTurn( pSoldier, ubOpponentDir ) )
 				 {
-					 pSoldier->usActionData = ubOpponentDir;
+					 pSoldier->aiData.usActionData = ubOpponentDir;
 
 		#ifdef DEBUGDECISIONS
 					STR16 tempstr;
-					 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->usActionData);
+					 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->aiData.usActionData);
 					 AIPopMessage(tempstr);
 		#endif
 
@@ -893,7 +893,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  AINameMessage(pSoldier,"- DOES NOTHING (RED)",1000);
 #endif
 
- pSoldier->usActionData = NOWHERE;
+ pSoldier->aiData.usActionData = NOWHERE;
 
  return(AI_ACTION_NONE);
 }
@@ -917,11 +917,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
  // if we have absolutely no action points, we can't do a thing under BLACK!
  if (!pSoldier->bActionPoints)
   {
-   pSoldier->usActionData = NOWHERE;
+   pSoldier->aiData.usActionData = NOWHERE;
    return(AI_ACTION_NONE);
   }
 
-	if ( pSoldier->bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
+	if ( pSoldier->aiData.bMobility == CREATURE_CRAWLER && pSoldier->bActionPoints < pSoldier->bInitialActionPoints)
 	{
 		return( AI_ACTION_NONE );
 	}
@@ -934,25 +934,25 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	{
 		if ((pSoldier->bActionPoints >= AP_RADIO) && (gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1))
 		{
-			if (pSoldier->bLife < pSoldier->bOldLife)
+			if (pSoldier->stats.bLife < pSoldier->bOldLife)
 			{
 				// got injured, maybe call
 				/*
 				// don't call when crippled and have target... save breath for attacking!
-				if ((pSoldier->bOldLife == pSoldier->bLifeMax) && (pSoldier->bOldLife - pSoldier->bLife > 10))
+				if ((pSoldier->bOldLife == pSoldier->stats.bLifeMax) && (pSoldier->bOldLife - pSoldier->stats.bLife > 10))
 				{
 					// hurt for first time!
-					pSoldier->usActionData = CALL_CRIPPLED;
-					pSoldier->bOldLife = pSoldier->bLife;  // don't want to call more than once	
+					pSoldier->aiData.usActionData = CALL_CRIPPLED;
+					pSoldier->bOldLife = pSoldier->stats.bLife;  // don't want to call more than once	
 					return(AI_ACTION_CREATURE_CALL);
 				}
 				else 
 				*/
-				if (pSoldier->bLifeMax / pSoldier->bLife > 2)
+				if (pSoldier->stats.bLifeMax / pSoldier->stats.bLife > 2)
 				{
 					// crippled, 1/3 or less health!
-					pSoldier->usActionData = CALL_ATTACKED;
-					pSoldier->bOldLife = pSoldier->bLife;  // don't want to call more than once	
+					pSoldier->aiData.usActionData = CALL_ATTACKED;
+					pSoldier->bOldLife = pSoldier->stats.bLife;  // don't want to call more than once	
 					return(AI_ACTION_CREATURE_CALL);
 				}
 			}
@@ -966,18 +966,18 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 					}
 					else
 					{
-						uiChance = 20 * pSoldier->bOppCnt;
+						uiChance = 20 * pSoldier->aiData.bOppCnt;
 					}
 					if ( Random( 100 ) < uiChance )
 					{
 						// alert! alert!
-						if (pSoldier->bOppCnt > 1)
+						if (pSoldier->aiData.bOppCnt > 1)
 						{
-							pSoldier->usActionData = CALL_MULTIPLE_PREY;
+							pSoldier->aiData.usActionData = CALL_MULTIPLE_PREY;
 						}
 						else
 						{
-							pSoldier->usActionData = CALL_1_PREY;
+							pSoldier->aiData.usActionData = CALL_1_PREY;
 						}
 						return(AI_ACTION_CREATURE_CALL);			
 					}
@@ -987,10 +987,10 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	}
 
  // can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
- ubCanMove = ((pSoldier->bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
+ ubCanMove = ((pSoldier->aiData.bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
 
  // determine if we happen to be in water (in which case we're in BIG trouble!)
- //bInWater = MercInWater(pSoldier);
+ //bInWater = pSoldier->MercInWater();
 
  // check if standing in tear gas without a gas mask on
 	bInGas = InGas( pSoldier, pSoldier->sGridNo );
@@ -1007,13 +1007,13 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
    if (ubCanMove)
     {
      // look for best place to RUN AWAY to (farthest from the closest threat)
-     pSoldier->usActionData = FindSpotMaxDistFromOpponents(pSoldier);
+     pSoldier->aiData.usActionData = FindSpotMaxDistFromOpponents(pSoldier);
 
-     if (pSoldier->usActionData != NOWHERE)
+     if (pSoldier->aiData.usActionData != NOWHERE)
       {
 #ifdef DEBUGDECISIONS
 		STR16 tempstr;
-		  sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->usActionData);
+		  sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->aiData.usActionData);
        AIPopMessage(tempstr);
 #endif
 
@@ -1031,13 +1031,13 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
  // if soldier in water/gas has enough APs left to move at least 1 square
  if ((/*bInWater ||*/ bInGas) && ubCanMove)
   {
-   pSoldier->usActionData = FindNearestUngassedLand(pSoldier);
+   pSoldier->aiData.usActionData = FindNearestUngassedLand(pSoldier);
 
-   if (pSoldier->usActionData != NOWHERE)
+   if (pSoldier->aiData.usActionData != NOWHERE)
     {
 #ifdef DEBUGDECISIONS
 		STR16 tempstr;
-		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
+		sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->aiData.usActionData);
      AIPopMessage(tempstr);
 #endif
 
@@ -1147,11 +1147,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 						// if the selected opponent is not a threat (unconscious & !serviced)
 						// (usually, this means all the guys we see our unconscious, but, on
 						//  rare occasions, we may not be able to shoot a healthy guy, too)
-						if ((Menptr[BestShot.ubOpponent].bLife < OKLIFE) &&
+						if ((Menptr[BestShot.ubOpponent].stats.bLife < OKLIFE) &&
 							!Menptr[BestShot.ubOpponent].bService)
 						{
 							// if our attitude is NOT aggressive
-							if (pSoldier->bAttitude != AGGRESSIVE)
+							if (pSoldier->aiData.bAttitude != AGGRESSIVE)
 							{
 								// get the location of the closest CONSCIOUS reachable opponent
 								sClosestDisturbance = ClosestReachableDisturbance(pSoldier,FALSE,&fChangeLevel);
@@ -1333,8 +1333,8 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		// GO AHEAD & ATTACK!
 		//////////////////////////////////////////////////////////////////////////
 
-		pSoldier->usActionData = BestAttack.sTarget;
-		pSoldier->bAimTime			= BestAttack.ubAimTime;
+		pSoldier->aiData.usActionData = BestAttack.sTarget;
+		pSoldier->pathing.bAimTime			= BestAttack.ubAimTime;
 
 		if ( ubBestAttackAction == AI_ACTION_FIRE_GUN && BestAttack.ubChanceToReallyHit > 50 )
 		{
@@ -1380,23 +1380,23 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 				{
 					if ( bSpitIn != NO_SLOT )
 					{
-						pSoldier->usActionData = AdvanceToFiringRange( pSoldier, sClosestOpponent );
-						if (pSoldier->usActionData == NOWHERE)
+						pSoldier->aiData.usActionData = AdvanceToFiringRange( pSoldier, sClosestOpponent );
+						if (pSoldier->aiData.usActionData == NOWHERE)
 						{
-							pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestOpponent,AI_ACTION_SEEK_OPPONENT);
+							pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestOpponent,AI_ACTION_SEEK_OPPONENT);
 						}
 					}
 					else
 					{
-						pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestOpponent,AI_ACTION_SEEK_OPPONENT);
+						pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sClosestOpponent,AI_ACTION_SEEK_OPPONENT);
 					}
 				}
 				else
 				{
-					pSoldier->usActionData = NOWHERE;
+					pSoldier->aiData.usActionData = NOWHERE;
 				}
 
-				if (pSoldier->usActionData != NOWHERE) // charge!
+				if (pSoldier->aiData.usActionData != NOWHERE) // charge!
 				{
 					return( AI_ACTION_SEEK_OPPONENT );
 				}
@@ -1407,11 +1407,11 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 				 // if we're not facing towards him
 				 if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )
 				 {
-					 pSoldier->usActionData = bDirection;
+					 pSoldier->aiData.usActionData = bDirection;
 
 					#ifdef DEBUGDECISIONS
 					STR16 tempstr;
-					 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
+					 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->aiData.usActionData);
 					 AIPopMessage(tempstr);
 					#endif
 
@@ -1427,10 +1427,10 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 	 if ( ubCanMove )
 	 {
 		 // look for best place to RUN AWAY to (farthest from the closest threat)
-		 //pSoldier->usActionData = RunAway( pSoldier );
-		 pSoldier->usActionData = FindSpotMaxDistFromOpponents( pSoldier );
+		 //pSoldier->aiData.usActionData = RunAway( pSoldier );
+		 pSoldier->aiData.usActionData = FindSpotMaxDistFromOpponents( pSoldier );
 
-		 if (pSoldier->usActionData != NOWHERE)
+		 if (pSoldier->aiData.usActionData != NOWHERE)
 		 {
 			 return(AI_ACTION_RUN_AWAY);
 		 }
@@ -1446,7 +1446,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 #endif
 
  // by default, if everything else fails, just stand in place and wait
- pSoldier->usActionData = NOWHERE;
+ pSoldier->aiData.usActionData = NOWHERE;
  return(AI_ACTION_NONE);
 
 }
@@ -1458,7 +1458,7 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 {
 	INT8 bAction = AI_ACTION_NONE;
 
-	switch (pSoldier->bAlertStatus)
+	switch (pSoldier->aiData.bAlertStatus)
 	{
 		case STATUS_GREEN:
 			#ifdef DEBUGDECISIONS
@@ -1491,7 +1491,7 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 
 #ifdef DEBUGDECISIONS
 	STR tempstr;
-	sprintf( tempstr, "DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->usActionData );
+	sprintf( tempstr, "DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData );
 	DebugAI(tempstr);
 #endif
 
@@ -1518,13 +1518,13 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 		case AM_MONSTER:
 		case YAM_MONSTER:
 		case INFANT_MONSTER:
-			pSoldier->bMobility = CREATURE_MOBILE;
+			pSoldier->aiData.bMobility = CREATURE_MOBILE;
 			break;
 		case QUEENMONSTER:
-			pSoldier->bMobility = CREATURE_IMMOBILE;
+			pSoldier->aiData.bMobility = CREATURE_IMMOBILE;
 			break;
 		case LARVAE_MONSTER:
-			pSoldier->bMobility = CREATURE_CRAWLER;
+			pSoldier->aiData.bMobility = CREATURE_CRAWLER;
 			break;
 	}
 
@@ -1532,15 +1532,15 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 	if (pSoldier->ubBodyType == LARVAE_MONSTER)
 	{
 		// larvae never do anything much!
-		pSoldier->bAlertStatus = STATUS_GREEN;
+		pSoldier->aiData.bAlertStatus = STATUS_GREEN;
 		return;
 	}
 
 	// save the man's previous status
-	bOldStatus = pSoldier->bAlertStatus;
+	bOldStatus = pSoldier->aiData.bAlertStatus;
 
 	// determine the current alert status for this category of man
-	if (pSoldier->bOppCnt > 0)        // opponent(s) in sight
+	if (pSoldier->aiData.bOppCnt > 0)        // opponent(s) in sight
 	{
 		// must search through list of people to see if any of them have
 		// attacked us, or do some check to see if we have been attacked
@@ -1548,11 +1548,11 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 		{
 			case STATUS_GREEN:
 			case STATUS_YELLOW:
-				pSoldier->bAlertStatus = STATUS_BLACK;
+				pSoldier->aiData.bAlertStatus = STATUS_BLACK;
 				break;
 			case STATUS_RED:
 			case STATUS_BLACK:
-				pSoldier->bAlertStatus = STATUS_BLACK;
+				pSoldier->aiData.bAlertStatus = STATUS_BLACK;
 		}
 		
 	}
@@ -1562,7 +1562,7 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 		{
 			case STATUS_BLACK:
 				// then drop back to RED status
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 				break;
 
 			case STATUS_RED:
@@ -1571,28 +1571,28 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 
 			case STATUS_YELLOW:
 				// if all enemies have been RED alerted, or we're under fire
-				if (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire)
+				if (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->aiData.bUnderFire)
 				{
-					pSoldier->bAlertStatus = STATUS_RED;
+					pSoldier->aiData.bAlertStatus = STATUS_RED;
 				}
 				else
 				{
 					// if we are NOT aware of any uninvestigated noises right now
 					// and we are not currently in the middle of an action
 					// (could still be on his way heading to investigate a noise!)
-					if ((MostImportantNoiseHeard(pSoldier,&iDummy,&fClimbDummy,&fReachableDummy) == NOWHERE) && !pSoldier->bActionInProgress)
+					if ((MostImportantNoiseHeard(pSoldier,&iDummy,&fClimbDummy,&fReachableDummy) == NOWHERE) && !pSoldier->aiData.bActionInProgress)
 					{
 						// then drop back to GREEN status
-						pSoldier->bAlertStatus = STATUS_GREEN;
+						pSoldier->aiData.bAlertStatus = STATUS_GREEN;
 					}
 				}
 				break;
 
 			case STATUS_GREEN:
 				// if all enemies have been RED alerted, or we're under fire
-				if (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire)
+				if (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->aiData.bUnderFire)
 				{
-					pSoldier->bAlertStatus = STATUS_RED;
+					pSoldier->aiData.bAlertStatus = STATUS_RED;
 				}
 				else
 				{
@@ -1600,7 +1600,7 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 					if (MostImportantNoiseHeard(pSoldier,&iDummy,&fClimbDummy,&fReachableDummy) != NOWHERE)
 					{
 						// then move up to YELLOW status
-						pSoldier->bAlertStatus = STATUS_YELLOW;
+						pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
 					}
 				}
 				break;
@@ -1609,18 +1609,18 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 	}
 
 	// if the creatures alert status has changed in any way
-	if (pSoldier->bAlertStatus != bOldStatus)
+	if (pSoldier->aiData.bAlertStatus != bOldStatus)
 	{
 		// HERE ARE TRYING TO AVOID NPCs SHUFFLING BACK & FORTH BETWEEN RED & BLACK
 		// if either status is < RED (ie. anything but RED->BLACK && BLACK->RED)
-		if ((bOldStatus < STATUS_RED) || (pSoldier->bAlertStatus < STATUS_RED))
+		if ((bOldStatus < STATUS_RED) || (pSoldier->aiData.bAlertStatus < STATUS_RED))
 		{
 			// force a NEW action decision on next pass through HandleManAI()
 			SetNewSituation( pSoldier );
 		}
 
 		// if this guy JUST discovered that there were opponents here for sure...
-		if ((bOldStatus < STATUS_RED) && (pSoldier->bAlertStatus >= STATUS_RED))
+		if ((bOldStatus < STATUS_RED) && (pSoldier->aiData.bAlertStatus >= STATUS_RED))
 		{
 			// might want to make custom to let them go anywhere
 			CheckForChangingOrders(pSoldier);
@@ -1632,7 +1632,7 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 //		{
 			STR16 tempstr;
 			sprintf(tempstr,"%s's Alert Status changed from %d to %d",
-				pSoldier->name ,bOldStatus,pSoldier->bAlertStatus);
+				pSoldier->name ,bOldStatus,pSoldier->aiData.bAlertStatus);
 			AIPopMessage(tempstr);
 //		}
 #endif
@@ -1641,21 +1641,21 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 	else   // status didn't change
 	{
 		// if a guy on status GREEN or YELLOW is running low on breath
-		if (((pSoldier->bAlertStatus == STATUS_GREEN)  && (pSoldier->bBreath < 75)) ||
-			((pSoldier->bAlertStatus == STATUS_YELLOW) && (pSoldier->bBreath < 50)))
+		if (((pSoldier->aiData.bAlertStatus == STATUS_GREEN)  && (pSoldier->bBreath < 75)) ||
+			((pSoldier->aiData.bAlertStatus == STATUS_YELLOW) && (pSoldier->bBreath < 50)))
 		{
 			// as long as he's not in water (standing on a bridge is OK)
-			if (!MercInWater(pSoldier))
+			if (!pSoldier->MercInWater())
 			{
 				// force a NEW decision so that he can get some rest
 				SetNewSituation( pSoldier );
 
 				// current action will be canceled. if noise is no longer important
-				if ((pSoldier->bAlertStatus == STATUS_YELLOW) &&
+				if ((pSoldier->aiData.bAlertStatus == STATUS_YELLOW) &&
 					(MostImportantNoiseHeard(pSoldier,&iDummy,&fClimbDummy,&fReachableDummy) == NOWHERE))
 				{
 					// then drop back to GREEN status
-					pSoldier->bAlertStatus = STATUS_GREEN;
+					pSoldier->aiData.bAlertStatus = STATUS_GREEN;
 					CheckForChangingOrders(pSoldier);
 				}
 			}
@@ -1672,7 +1672,7 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 	//HandleCrowFlyAway( pSoldier );
 	if (!gfTurnBasedAI)
 	{
-		pSoldier->usActionData = 30000;
+		pSoldier->aiData.usActionData = 30000;
 		return( AI_ACTION_WAIT );
 	}
 	else
@@ -1701,12 +1701,12 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 
 				if ( sFacingDir != pSoldier->bDirection )
 				{
-					 pSoldier->usActionData = sFacingDir;
+					 pSoldier->aiData.usActionData = sFacingDir;
 			     return(AI_ACTION_CHANGE_FACING);
 				}
 				else if (!gfTurnBasedAI)
 				{
-					pSoldier->usActionData = 30000;
+					pSoldier->aiData.usActionData = 30000;
 					return( AI_ACTION_WAIT );
 				}
 				else
@@ -1717,8 +1717,8 @@ INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
 		 else
 		 {
 			 // Walk to nearest one!
-			 pSoldier->usActionData = FindGridNoFromSweetSpot( pSoldier, sCorpseGridNo, 4, &ubDirection );
-			 if ( pSoldier->usActionData != NOWHERE )
+			 pSoldier->aiData.usActionData = FindGridNoFromSweetSpot( pSoldier, sCorpseGridNo, 4, &ubDirection );
+			 if ( pSoldier->aiData.usActionData != NOWHERE )
 			 {
 				 return( AI_ACTION_GET_CLOSER );			 
 			 }
@@ -1735,7 +1735,7 @@ INT8 CrowDecideAction( SOLDIERTYPE * pSoldier )
 		return( AI_ACTION_NONE );
 	}
 
-	switch( pSoldier->bAlertStatus )
+	switch( pSoldier->aiData.bAlertStatus )
 	{
 		case STATUS_GREEN:
 		case STATUS_YELLOW:

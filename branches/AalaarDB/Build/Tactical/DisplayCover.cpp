@@ -435,7 +435,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 		pOpponent = MercSlots[ uiLoop ];
 
 		// if this merc is inactive, at base, on assignment, dead, unconscious
-		if (!pOpponent || pOpponent->bLife < OKLIFE)
+		if (!pOpponent || pOpponent->stats.bLife < OKLIFE)
 		{
 			continue;          // next merc
 		}
@@ -446,7 +446,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			continue;          // next merc
 		}
 
-		pbPersOL = pSoldier->bOppList + pOpponent->ubID;
+		pbPersOL = pSoldier->aiData.bOppList + pOpponent->ubID;
 		pbPublOL = gbPublicOpplist[ OUR_TEAM ] + pOpponent->ubID;
 
 		// if this opponent is unknown personally and publicly
@@ -460,7 +460,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 
 		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
         // Lesh: changed 2-nd parameter in DistanceVisible function call
-		usSightLimit = DistanceVisible( pOpponent, (SoldierHasLimitedVision(pOpponent) ? pOpponent->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->bLevel, pSoldier );
+		usSightLimit = DistanceVisible( pOpponent, (SoldierHasLimitedVision(pOpponent) ? pOpponent->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->pathing.bLevel, pSoldier );
 
 
 		if( usRange > ( usSightLimit * CELL_X_SIZE ) )
@@ -469,12 +469,12 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 		}
 
 		// if actual LOS check fails, then chance to hit is 0, ignore this guy
-		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, (UINT8)usSightLimit, TRUE ) == 0 )
+		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->pathing.bLevel, bStance, (UINT8)usSightLimit, TRUE ) == 0 )
 		{
 			continue;
 		}
 
-		iGetThrough = SoldierToLocationChanceToGetThrough( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NOBODY );
+		iGetThrough = SoldierToLocationChanceToGetThrough( pOpponent, sTargetGridNo, pSoldier->pathing.bLevel, bStance, NOBODY );
 //	iBulletGetThrough = CalcChanceToHitGun( pOpponent, sTargetGridNo, AP_MAX_AIM_ATTACK, AIM_SHOT_TORSO );
 
 		if( WeaponInHand( pOpponent ) )
@@ -640,7 +640,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		//AXP 30.03.2007: Fix CtH calculation for first shot after changing aim level (roof/ground)
 		INT8 bTempTargetLevel = pSoldier->bTargetLevel;
 		pSoldier->bTargetLevel = (INT8)gsInterfaceLevel;
-		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, (INT8)(pSoldier->bShownAimTime ), pSoldier->bAimShotLocation );
+		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, (INT8)(pSoldier->pathing.bShownAimTime ), pSoldier->bAimShotLocation );
 		pSoldier->bTargetLevel = bTempTargetLevel;
 
 		swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__GUN_RANGE_AND_CTH ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, uiHitChance );
@@ -953,7 +953,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 
 	if( ubID != NOBODY )
 	{
-		pPersOL = &(pSoldier->bOppList[ubID]);
+		pPersOL = &(pSoldier->aiData.bOppList[ubID]);
 		pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][ubID]);
 
 		 // if soldier is known about (SEEN or HEARD within last few turns)
@@ -964,7 +964,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	}
 
     // Lesh: changed 2-nd parameter in DistanceVisible function call
-	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, pSoldier );
+	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, pSoldier );
 
 
 	//

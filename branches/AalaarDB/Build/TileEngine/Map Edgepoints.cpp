@@ -1548,7 +1548,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 		}
 	}
 
-	FindBestPath( pSoldier, NOWHERE, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
+	FindBestPath( pSoldier, NOWHERE, pSoldier->pathing.bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
 
 	// Turn off the "reachable" flag for the current location
 	// so we don't consider it
@@ -1623,7 +1623,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 		}
 	}
 
-	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
+	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->pathing.bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
 	{
 		return TRUE;
 	}

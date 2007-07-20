@@ -682,7 +682,7 @@ void HandleDialogue( )
 	// If we are in auto bandage, ignore any quotes!
 	if ( gTacticalStatus.fAutoBandageMode )
 	{
-		if( QItem -> fPauseTime )
+		if( QItem->fPauseTime )
 		{
 			UnLockPauseState();
 			UnPauseGame();
@@ -744,10 +744,10 @@ void HandleDialogue( )
 
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( QItem->uiSpecialEventFlag == 0 ) )
 	{
-		QItem-> fPauseTime = TRUE;
+		QItem->fPauseTime = TRUE;
 	}
 
-	if( QItem-> fPauseTime )
+	if( QItem->fPauseTime )
 	{
 		if( GamePaused( ) == FALSE )
 		{
@@ -764,9 +764,9 @@ void HandleDialogue( )
 		if( pSoldier )
 		{
 			// wake grunt up to say 
-			if( pSoldier->fMercAsleep )
+			if( pSoldier->flags.fMercAsleep )
 			{
-				pSoldier->fMercAsleep = FALSE;
+				pSoldier->flags.fMercAsleep = FALSE;
 
 				// refresh map screen
 				fCharacterInfoPanelDirty = TRUE;
@@ -878,7 +878,7 @@ void HandleDialogue( )
 			// Do battle snounds......
 			if ( pSoldier )
 			{
-				InternalDoMercBattleSound( pSoldier,  (UINT8)QItem->uiSpecialEventData, 0 );
+				pSoldier->InternalSoldierReadyWeapon(  (UINT8)QItem->uiSpecialEventData, 0 );
 			}
 		}
 
@@ -1164,11 +1164,11 @@ void HandleDialogue( )
 			// wake merc up or put them back down?
 			if( QItem->uiSpecialEventData == 1 )
 			{
-				pSoldier -> fMercAsleep = TRUE;
+				pSoldier->flags.fMercAsleep = TRUE;
 			}
 			else
 			{
-				pSoldier -> fMercAsleep = FALSE;
+				pSoldier->flags.fMercAsleep = FALSE;
 			}
 
 			// refresh map screen
@@ -1185,7 +1185,7 @@ void HandleDialogue( )
 		CheckForStopTimeQuotes( QItem->usQuoteNum );
 	}
 
-	if( QItem -> fPauseTime )
+	if( QItem->fPauseTime )
 	{
 		fWasPausedDuringDialogue = TRUE;
 	}
@@ -1204,10 +1204,10 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-  if (pSoldier->bLife < CONSCIOUSNESS )
+  if (pSoldier->stats.bLife < CONSCIOUSNESS )
    return( FALSE );
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
 
 	if ( (AM_A_ROBOT( pSoldier )) )
@@ -1215,7 +1215,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-  if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+  if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
    return( FALSE );
 
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
@@ -1236,10 +1236,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16
 
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
-		if (pSoldier->bLife < CONSCIOUSNESS )
+		if (pSoldier->stats.bLife < CONSCIOUSNESS )
 		 return( FALSE );
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 		
 	}
@@ -1256,10 +1256,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
-		if (pSoldier->bLife < CONSCIOUSNESS )
+		if (pSoldier->stats.bLife < CONSCIOUSNESS )
 		 return( FALSE );
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 
 		if ( (AM_A_ROBOT( pSoldier )) )
@@ -1267,7 +1267,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 			return( FALSE );
 		}
 
-		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+		if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 		 return( FALSE );
 
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
@@ -1293,13 +1293,13 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 		return( FALSE );
 	}
 
-  if (pSoldier->bLife < CONSCIOUSNESS )
+  if (pSoldier->stats.bLife < CONSCIOUSNESS )
    return( FALSE );
 
-  if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+  if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
    return( FALSE );
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
 
 	if ( (AM_A_ROBOT( pSoldier )) )
@@ -1321,9 +1321,9 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 
 
 	// If we are a robot, play the controller's quote!
-	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( CanRobotBeControlled( pSoldier ) )
+		if ( pSoldier->CanRobotBeControlled( ) )
 		{
 			return( TacticalCharacterDialogue( MercPtrs[ pSoldier->ubRobotRemoteHolderID ], usQuoteNum ) );
 		}
@@ -1545,12 +1545,12 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	if ( pSoldier != NULL )
 	{	
 		// Check vital stats
-		if (pSoldier->bLife < CONSCIOUSNESS )
+		if (pSoldier->stats.bLife < CONSCIOUSNESS )
 		{
 			return( FALSE );
 		}
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 
 		if ( (AM_A_ROBOT( pSoldier )) )
@@ -1558,7 +1558,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 			return( FALSE );
 		}
 
-		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+		if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 		{
 			return( FALSE );
 		}
@@ -1569,7 +1569,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 		}
 
 		// sleeping guys don't talk.. go to standby to talk
-		if( pSoldier->fMercAsleep == TRUE )
+		if( pSoldier->flags.fMercAsleep == TRUE )
 		{
 			// check if the soldier was compaining about lack of sleep and was alseep, if so, leave them alone
 			if( ( usQuoteNum == QUOTE_NEED_SLEEP ) || ( usQuoteNum == QUOTE_OUT_OF_BREATH ) )
@@ -2373,7 +2373,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 			mprintf( sFontX, sFontY, L"%s", pSoldier->name );
 		
 			// What sector are we in, ( and is it the same as ours? )
-			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
+			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->flags.fBetweenSectors )
 			{
 				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, FALSE );
 
@@ -2448,7 +2448,7 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep )
 		{
 			if ( gTacticalStatus.bNumFoughtInBattle[ ENEMY_TEAM ] == 0 )
 			{
@@ -2513,7 +2513,7 @@ void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSect
 		if ( pTeamSoldier->bActive )
 		{
 			// Add guy if he's a candidate...
-			if( pTeamSoldier->sSectorX == sSectorX && pTeamSoldier->sSectorY == sSectorY && pTeamSoldier -> bSectorZ == bSectorZ  && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
+			if( pTeamSoldier->sSectorX == sSectorX && pTeamSoldier->sSectorY == sSectorY && pTeamSoldier->bSectorZ == bSectorZ  && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep )
 			{
 				ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 				ubNumMercs++;
@@ -2563,7 +2563,7 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep && 
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep && 
 			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
 		{
 			if ( usQuoteNum == 66 && (INT8) Random( 100 ) > EffectiveWisdom( pTeamSoldier ) )
@@ -2607,7 +2607,7 @@ void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQ
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep &&
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep &&
 			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
 		{
 			// ATE: This is to check gedner for this quote...
@@ -2886,7 +2886,7 @@ void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 {
 	// wake merc up for THIS quote
-	if( pSoldier->fMercAsleep )
+	if( pSoldier->flags.fMercAsleep )
 	{
 		TacticalCharacterDialogueWithSpecialEvent( pSoldier, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0,0 );
 		TacticalCharacterDialogue( pSoldier, usQuoteNumber );

@@ -23,13 +23,13 @@ INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )
 	// Effective strength is:
 	// 1/2 full strength
 	// plus 1/2 strength scaled according to how hurt we are
-  bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+  bBandaged = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
 	// WANNE 2
-	if (pSoldier->bStrength > 0)
+	if (pSoldier->stats.bStrength > 0)
 	{
-		iEffStrength = pSoldier->bStrength / 2;
-		iEffStrength += (pSoldier->bStrength / 2) * (pSoldier->bLife + bBandaged / 2) / (pSoldier->bLifeMax);
+		iEffStrength = pSoldier->stats.bStrength / 2;
+		iEffStrength += (pSoldier->stats.bStrength / 2) * (pSoldier->stats.bLife + bBandaged / 2) / (pSoldier->stats.bLifeMax);
 	}
 	else
 	{
@@ -47,7 +47,7 @@ INT8 EffectiveWisdom( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffWisdom;
 
-	iEffWisdom = pSoldier->bWisdom;
+	iEffWisdom = pSoldier->stats.bWisdom;
 
 	iEffWisdom = EffectStatForBeingDrunk( pSoldier, iEffWisdom );
 
@@ -58,7 +58,7 @@ INT8 EffectiveAgility( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffAgility;
 
-	iEffAgility = pSoldier->bAgility;
+	iEffAgility = pSoldier->stats.bAgility;
 
 	iEffAgility = EffectStatForBeingDrunk( pSoldier, iEffAgility );
 
@@ -75,7 +75,7 @@ INT8 EffectiveMechanical( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffMechanical;
 
-	iEffMechanical = pSoldier->bMechanical;
+	iEffMechanical = pSoldier->stats.bMechanical;
 
 	iEffMechanical = EffectStatForBeingDrunk( pSoldier, iEffMechanical );
 
@@ -87,7 +87,7 @@ INT8 EffectiveExplosive( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffExplosive;
 
-	iEffExplosive = pSoldier->bExplosive;
+	iEffExplosive = pSoldier->stats.bExplosive;
 
 	iEffExplosive = EffectStatForBeingDrunk( pSoldier, iEffExplosive );
 
@@ -99,7 +99,7 @@ INT8 EffectiveMedical( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffMedical;
 
-	iEffMedical = pSoldier->bMedical;
+	iEffMedical = pSoldier->stats.bMedical;
 
 	iEffMedical = EffectStatForBeingDrunk( pSoldier, iEffMedical );
 
@@ -111,7 +111,7 @@ INT8 EffectiveLeadership( SOLDIERTYPE * pSoldier )
 	INT32	iEffLeadership;
 	INT8	bDrunkLevel;
 
-	iEffLeadership = pSoldier->bLeadership;
+	iEffLeadership = pSoldier->stats.bLeadership;
 
 	// if we are drunk, effect leader ship in a +ve way...
 	bDrunkLevel = GetDrunkLevel( pSoldier );
@@ -136,7 +136,7 @@ INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
 		 0,		// Hung
 		};
 
-	iEffExpLevel = pSoldier->bExpLevel;
+	iEffExpLevel = pSoldier->stats.bExpLevel;
 
 	bDrunkLevel = GetDrunkLevel( pSoldier );
 
@@ -166,7 +166,7 @@ INT8 EffectiveMarksmanship( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffMarksmanship;
 
-	iEffMarksmanship = pSoldier->bMarksmanship;
+	iEffMarksmanship = pSoldier->stats.bMarksmanship;
 
 	iEffMarksmanship = EffectStatForBeingDrunk( pSoldier, iEffMarksmanship );
 
@@ -177,7 +177,7 @@ INT8 EffectiveDexterity( SOLDIERTYPE * pSoldier )
 {
 	INT32	iEffDexterity;
 
-	iEffDexterity = pSoldier->bDexterity;
+	iEffDexterity = pSoldier->stats.bDexterity;
 
 	iEffDexterity = EffectStatForBeingDrunk( pSoldier, iEffDexterity );
 
@@ -451,7 +451,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 					// silent check
 					break;
 				default:
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 					break;
 			}
 		}
@@ -521,7 +521,7 @@ INT8 CalcTrapDetectLevel( SOLDIERTYPE * pSoldier, BOOLEAN fExamining )
 	}
 	
 	// if substantially bleeding, or still in serious shock, randomly lower value
-	if ((pSoldier->bBleeding > 20) || (pSoldier->bShock > 1))
+	if ((pSoldier->bBleeding > 20) || (pSoldier->aiData.bShock > 1))
 	{
 		bDetectLevel -= (INT8) PreRandom(3);
 	}

@@ -160,7 +160,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	pSoldier->ubStrategicInsertionCode = pHireMerc->ubInsertionCode;
 	pSoldier->usStrategicInsertionData = pHireMerc->usInsertionData;
 	// ATE: Copy over value for using alnding zone to soldier type
-	pSoldier->fUseLandingZoneForArrival = pHireMerc->fUseLandingZoneForArrival;
+	pSoldier->flags.fUseLandingZoneForArrival = pHireMerc->fUseLandingZoneForArrival;
 
 
 	// Set assignment
@@ -313,7 +313,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 	AddCharacterToAnySquad( pSoldier );
 
 	// ATE: Make sure we use global.....
-	if ( pSoldier->fUseLandingZoneForArrival )
+	if ( pSoldier->flags.fUseLandingZoneForArrival )
 	{
 		pSoldier->sSectorX	= gsMercArriveSectorX;
 		pSoldier->sSectorY	= gsMercArriveSectorY;
@@ -435,7 +435,7 @@ BOOLEAN IsMercDead( UINT8 ubMercID )
 
 BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 {
-	if( pSoldier->bLife >= CONSCIOUSNESS )	
+	if( pSoldier->stats.bLife >= CONSCIOUSNESS )	
 		return(TRUE);
 	else
 		return(FALSE);
@@ -455,7 +455,7 @@ UINT8	NumberOfMercsOnPlayerTeam()
   for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{	
 		//if the is active, and is not a vehicle
-		if( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if( pSoldier->bActive && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			ubCount++;
 		}
@@ -575,7 +575,7 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 		{	
 			if ( pSoldier->bAssignment == IN_TRANSIT ) 
 			{
-				if ( pSoldier->fUseLandingZoneForArrival )
+				if ( pSoldier->flags.fUseLandingZoneForArrival )
 				{
 					pSoldier->sSectorX	= gsMercArriveSectorX;
 					pSoldier->sSectorY	= gsMercArriveSectorY;

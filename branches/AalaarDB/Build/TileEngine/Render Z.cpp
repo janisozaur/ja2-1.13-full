@@ -185,7 +185,7 @@ INT16 gsRDistToCenterY, gsRDistToCenterX;
 #define SoldierZLevel( pSoldier, sMapX, sMapY )\
 {\
 \
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )\
+	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE ) )\
 	{\
 \
 		if ( pNode->pStructureData != NULL )\
@@ -202,13 +202,13 @@ INT16 gsRDistToCenterY, gsRDistToCenterX;
 		GetMapXYWorldY( sMapX, sMapY, sWorldY );\
 	}\
 \
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )\
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )\
 	{\
 		sZLevel=(sWorldY*Z_SUBLAYERS)+STRUCT_Z_LEVEL;\
 	}\
 	else\
 	{\
-		if ( pSoldier->dHeightAdjustment > 0 )\
+		if ( pSoldier->aiData.dHeightAdjustment > 0 )\
 		{\
 			sWorldY += ( WALL_HEIGHT + 20 );\
 \
@@ -216,7 +216,7 @@ INT16 gsRDistToCenterY, gsRDistToCenterX;
 		}\
 		else\
 		{\
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )\
+			if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )\
 			{\
 				sZLevel=(sWorldY*Z_SUBLAYERS)+MERC_Z_LEVEL;\
 			}\

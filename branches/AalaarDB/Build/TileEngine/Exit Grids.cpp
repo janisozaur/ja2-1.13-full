@@ -261,7 +261,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	//reachable.
 //	memset( &soldier, 0, SIZEOF_SOLDIERTYPE );
 	soldier.initialize();
-	soldier.bLevel = 0;
+	soldier.pathing.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = pSoldier->sGridNo;
 
@@ -315,7 +315,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 				// Go on sweet stop
 				// ATE: Added this check because for all intensive purposes, cavewalls will be not an OKDEST
 				// but we want thenm too...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) )
 				{
 					if ( GetExitGrid( sGridNo, &ExitGrid ) )
 					{

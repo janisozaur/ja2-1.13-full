@@ -1602,7 +1602,7 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 	// this is AI only so we can put in some customization for night
 	if (GetTimeOfDayAmbientLightLevel() == NORMAL_LIGHTLEVEL_NIGHT)
 	{
-		if (pSoldier->bLife > (pSoldier->bLifeMax / 2))
+		if (pSoldier->stats.bLife > (pSoldier->stats.bLifeMax / 2))
 		{
 			fCheckForFlares = TRUE;
 		}
@@ -2771,7 +2771,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
 						{
 							// put it on the ground
-							AddItemToPool( pSoldier->sGridNo, &OldAmmo, 1, pSoldier->bLevel, 0 , -1 );
+							AddItemToPool( pSoldier->sGridNo, &OldAmmo, 1, pSoldier->pathing.bLevel, 0 , -1 );
 						}
 						// delete the object now in the cursor
 						DeleteObj( pAmmo );
@@ -3048,7 +3048,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 
 		PlayJA2Sample( Weapon[ Item[pObj->usItem].ubClassIndex ].ManualReloadSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 
-		if ( IsValidSecondHandShot( pSoldier ) )
+		if ( pSoldier->IsValidSecondHandShot( ) )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
@@ -3063,7 +3063,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		if ( IsValidSecondHandShot( pSoldier ) )
+		if ( pSoldier->IsValidSecondHandShot( ) )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
@@ -3090,7 +3090,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 			fRet = ReloadGun( pSoldier, pObj, &(pSoldier->inv[bSlot]) );
 			// if we are valid for two-pistol shooting (reloading) and we have enough APs still
 			// then do a reload of both guns!
-			if ( (fRet == TRUE) && IsValidSecondHandShotForReloadingPurposes( pSoldier ) )
+			if ( (fRet == TRUE) && pSoldier->IsValidSecondHandShotForReloadingPurposes( ) )
 			{
 				pObj = &(pSoldier->inv[SECONDHANDPOS]);
 				bSlot = FindAmmoToReload( pSoldier, SECONDHANDPOS, NO_SLOT );
@@ -3218,7 +3218,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 
 	if ( fValidLaunchable || ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) )
 	{
-		OBJECTTYPE	TempObj = {0};
+		OBJECTTYPE	TempObj;
 
 		// find an attachment position... 
 		// second half of this 'if' is for attaching GL grenades to a gun w/attached GL
@@ -3297,7 +3297,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 						DamageObj( pTargetObj, (INT8) -iCheckResult );
 						DamageObj( pAttachment, (INT8) -iCheckResult );
 						// there should be a quote here!
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 						if ( gfInItemDescBox )
 						{
 							DeleteItemDescriptionBox();
@@ -3419,7 +3419,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 							// for now, damage both objects
 							DamageObj( pTargetObj, (INT8) -iCheckResult );
 							DamageObj( pAttachment, (INT8) -iCheckResult );
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+							pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 							return( FALSE );
 						}				
 						StatChange( pSoldier, MECHANAMT, 25, FALSE );
@@ -3441,7 +3441,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 							pTargetObj->usGunAmmoItem = NONE;
 							if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 							{   // put it on the ground
-								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 							}
 						}
 					}
@@ -3457,7 +3457,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 								RemoveAttachment(pTargetObj,bAttachPos,&newObj);
 								if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 								{   // put it on the ground
-									AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+									AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 								}
 							}
 							else
@@ -3473,7 +3473,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
 					if (pSoldier->bTeam == gbPlayerNum)
 					{
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 					}
 					ApplyEquipmentBonuses(pSoldier);
 					return TRUE;
@@ -3515,7 +3515,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				// the merge destroyed both items!
 				DeleteObj( pTargetObj );
 				DeleteObj( pAttachment );
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+				pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 				break;
 			case ELECTRONIC_MERGE:
 				if ( pSoldier ) 
@@ -3525,7 +3525,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					{
 						DamageObj( pTargetObj, (INT8) -iCheckResult );
 						DamageObj( pAttachment, (INT8) -iCheckResult );
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 						return( FALSE );
 					}
 					// grant experience!
@@ -3544,7 +3544,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 							// for now, damage both objects
 							DamageObj( pTargetObj, (INT8) -iCheckResult );
 							DamageObj( pAttachment, (INT8) -iCheckResult );
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+							pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 							return( FALSE );
 						}				
 						StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
@@ -3554,7 +3554,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				// fall through
 			default:
 				// the merge will combine the two items
-				//Madd: usResult2 only works for standard merges -> item1 + item2 = item3 + item4
+				//Madd: usResult2 only works for standard merges->item1 + item2 = item3 + item4
 
 				//Madd: unload guns after merge if ammo caliber or mag size don't match
 				if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && pTargetObj->usGunAmmoItem != NONE && pTargetObj->ubGunShotsLeft > 0 )
@@ -3568,7 +3568,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 						pTargetObj->usGunAmmoItem = NONE;
 						if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 						{   // put it on the ground
-							AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+							AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 						}
 					}
 				}
@@ -3584,7 +3584,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 							RemoveAttachment(pTargetObj,bAttachPos,&newObj);
 							if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 							{   // put it on the ground
-								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 							}
 						}
 						else
@@ -3619,7 +3619,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 							pAttachment->usGunAmmoItem = NONE;
 							if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 							{   // put it on the ground
-								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+								AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 							}
 						}
 					}
@@ -3635,7 +3635,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 								RemoveAttachment(pAttachment,bAttachPos,&newObj);
 								if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
 								{   // put it on the ground
-									AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+									AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
 								}
 							}
 							else
@@ -3660,7 +3660,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 
 				if (pSoldier && pSoldier->bTeam == gbPlayerNum)
 				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
+					pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 				}
 				break;
 			}
@@ -3829,7 +3829,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		}
 	}
 
-	if ( Item[ pObj->usItem ].usItemClass == IC_KEY && pSoldier->uiStatusFlags & SOLDIER_PC )
+	if ( Item[ pObj->usItem ].usItemClass == IC_KEY && pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 	{
 		if ( KeyTable[ pObj->ubKeyID ].usDateFound == 0 )
 		{
@@ -4035,7 +4035,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// ATE: Put this in to see if we should update the robot, if we were given a controller...
 	if ( pSoldier->bTeam == gbPlayerNum && fObjectWasRobotRemote )
 	{
-		UpdateRobotControllerGivenController( pSoldier );
+		pSoldier->UpdateRobotControllerGivenController( );
 	}
 	
 	ApplyEquipmentBonuses(pSoldier);
@@ -4367,7 +4367,7 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 {
 	UINT8 ubNumberNotAdded = 0;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_PC ) // redundant but what the hey
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_PC ) // redundant but what the hey
 	{
 		if ( KeyTable[ pObj->ubKeyID ].usDateFound == 0 )
 		{
@@ -4551,11 +4551,11 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 		{
 			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == ENEMY_TEAM )
 			{
-				if ( MercSlots[ uiLoop ]->ubSkillTrait1 == NIGHTOPS )
+				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait1 == NIGHTOPS )
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 1", MercSlots[ uiLoop ]->ubID ) );
 				}
-				if ( MercSlots[ uiLoop ]->ubSkillTrait2 == NIGHTOPS )
+				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait2 == NIGHTOPS )
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 2", MercSlots[ uiLoop ]->ubID ) );
 				}
@@ -4667,7 +4667,7 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 			uiStartTime = GetJA2Clock();
 			for (uiLoop = 0; uiLoop < 50000; uiLoop++)
 			{
-				FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, COPYROUTE );
+				FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, COPYROUTE );
 			}
 			uiEndTime = GetJA2Clock();
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "50000 path calls from %d to %d took %ld ms", pSoldier->sGridNo, sGridNo, uiEndTime - uiStartTime ) );
@@ -5320,9 +5320,9 @@ void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem )
 {
 	if( fNewItem )
 	{
-		pSoldier->bNewItemCount[ ubInvPos ]						 = -1;
-		pSoldier->bNewItemCycleCount[ ubInvPos ]			 = NEW_ITEM_CYCLE_COUNT;
-		pSoldier->fCheckForNewlyAddedItems             = TRUE;
+		pSoldier->inv.bNewItemCount[ ubInvPos ]						 = -1;
+		pSoldier->inv.bNewItemCycleCount[ ubInvPos ]			 = NEW_ITEM_CYCLE_COUNT;
+		pSoldier->flags.fCheckForNewlyAddedItems             = TRUE;
 	}
 }
 
@@ -5675,11 +5675,11 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 			// blow it up!
 			if ( gTacticalStatus.ubAttackBusyCount )
 			{
-				IgniteExplosion( pSoldier->ubAttackerID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->bLevel );
+				IgniteExplosion( pSoldier->ubAttackerID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->pathing.bLevel );
 			}
 			else
 			{
-				IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->bLevel );
+				IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->pathing.bLevel );
 			}
 
 			// Remove item!
@@ -5915,7 +5915,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		// Reload palettes....
 		if ( pSoldier->bInSector )
 		{	
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 		}
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WASHED_OFF], pSoldier->name );
 	}
@@ -5925,7 +5925,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 
 
 
-	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bMonsterSmell > 0 )
+	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->aiData.bMonsterSmell > 0 )
 	{
 		if ( pSoldier->bOverTerrainType == DEEP_WATER )
 		{
@@ -5937,7 +5937,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		}
 		if ( Random( bDieSize ) == 0 )
 		{
-			pSoldier->bMonsterSmell--;
+			pSoldier->aiData.bMonsterSmell--;
 		}		
 	}
 
@@ -6002,7 +6002,7 @@ BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAP
 	// Reload palettes....
 	if ( pSoldier->bInSector )
 	{	
-		CreateSoldierPalettes( pSoldier );
+		pSoldier->CreateSoldierPalettes( );
 	}
 
 	return( TRUE );
@@ -6084,12 +6084,12 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 
 	DeductPoints( pSoldier, AP_CAMOFLAGE, 0 );
 
-	sPointsToUse = ( MAX_HUMAN_CREATURE_SMELL - pSoldier->bMonsterSmell ) * 2;
+	sPointsToUse = ( MAX_HUMAN_CREATURE_SMELL - pSoldier->aiData.bMonsterSmell ) * 2;
 	sPointsToUse = __min( sPointsToUse, usTotalKitPoints );
 
 	UseKitPoints( pObj, sPointsToUse, pSoldier );
 
-	pSoldier->bMonsterSmell += sPointsToUse / 2;
+	pSoldier->aiData.bMonsterSmell += sPointsToUse / 2;
 
 	return( TRUE );
 }
@@ -6163,10 +6163,10 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 		pSoldier2 = MercSlots[ uiSlot ];
 		if ( pSoldier2 )
 		{
-			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->ubXRayedBy == pSoldier->ubID) )
+			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->aiData.ubXRayedBy == pSoldier->ubID) )
 			{
 				pSoldier2->ubMiscSoldierFlags &= (~SOLDIER_MISC_XRAYED);
-				pSoldier2->ubXRayedBy = NOBODY;
+				pSoldier2->aiData.ubXRayedBy = NOBODY;
 			}
 		}
 	}
@@ -6179,7 +6179,7 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 			if ( pSoldier2->bTeam != pSoldier->bTeam && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < XRAY_RANGE )
 			{
 				pSoldier2->ubMiscSoldierFlags |= SOLDIER_MISC_XRAYED;
-				pSoldier2->ubXRayedBy = pSoldier->ubID;
+				pSoldier2->aiData.ubXRayedBy = pSoldier->ubID;
 			}
 		}
 	}
@@ -6203,10 +6203,10 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 		pSoldier2 = MercSlots[ uiSlot ];
 		if ( pSoldier2 )
 		{
-			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->ubXRayedBy == pSoldier->ubID) )
+			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->aiData.ubXRayedBy == pSoldier->ubID) )
 			{
 				pSoldier2->ubMiscSoldierFlags &= (~SOLDIER_MISC_XRAYED);
-				pSoldier2->ubXRayedBy = NOBODY;
+				pSoldier2->aiData.ubXRayedBy = NOBODY;
 			}
 		}
 	}
@@ -6873,7 +6873,7 @@ INT16 GetTotalVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 
 	if ( bLightLevel > NORMAL_LIGHTLEVEL_DAY ) 
 	{
-		if ( pSoldier->bLevel == 0 ) 
+		if ( pSoldier->pathing.bLevel == 0 ) 
 		{
 			bns += GetNightVisionRangeBonus(pSoldier, bLightLevel);
 		}
@@ -7614,23 +7614,23 @@ void ApplyEquipmentBonuses(SOLDIERTYPE * pSoldier)
 
 	if ( (newCamo > oldCamo || newUrbanCamo > oldUrbanCamo || newDesertCamo > oldDesertCamo || newSnowCamo > oldSnowCamo )&& pSoldier->bTeam == OUR_TEAM )
 	{	
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
+		pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );
 		
 		// WANNE: Only call the method if oldCame != newCamo
 		if ( pSoldier->bInSector)
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 	}
 	else if ( (newCamo < oldCamo || newUrbanCamo < oldUrbanCamo || newDesertCamo < oldDesertCamo || newSnowCamo < oldSnowCamo )&& pSoldier->bTeam == OUR_TEAM )
 	{
 		// WANNE: Only call the method if oldCame != newCamo
 		if ( pSoldier->bInSector)
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 	}
 	// WANNE: IRA: Madd, I commented this, because this leads to IRAs INVISIBLE BUG!
 	// We should only call the CreateSoldierPalettes if oldCamo != newCamo. See above!
 	//Madd: do this regardless of camo.  This will need to be called to do custom part colours and new overlays anyway.
 	//if ( pSoldier->bInSector)
-	//	CreateSoldierPalettes( pSoldier );
+	//	pSoldier->CreateSoldierPalettes( );
 	
 	fInterfacePanelDirty = DIRTYLEVEL2;
 }

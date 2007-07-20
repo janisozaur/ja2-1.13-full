@@ -682,7 +682,7 @@ void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, 
 	// Are we a soldier?
 	if ( pFace->ubSoldierID != NOBODY )
 	{
-		 pFace->bOldSoldierLife = MercPtrs[ pFace->ubSoldierID ]->bLife;
+		 pFace->bOldSoldierLife = MercPtrs[ pFace->ubSoldierID ]->stats.bLife;
 	}
 }
 
@@ -794,8 +794,8 @@ void BlinkAutoFace( INT32 iFaceIndex )
 		// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
 		if ( pFace->ubSoldierID != NOBODY )
 		{
-			if ( ( MercPtrs[ pFace->ubSoldierID ]->bLife < OKLIFE ) ||
-					 ( MercPtrs[ pFace->ubSoldierID ]->fMercAsleep == TRUE ) ||
+			if ( ( MercPtrs[ pFace->ubSoldierID ]->stats.bLife < OKLIFE ) ||
+					 ( MercPtrs[ pFace->ubSoldierID ]->flags.fMercAsleep == TRUE ) ||
 					 ( MercPtrs[ pFace->ubSoldierID ]->bAssignment == ASSIGNMENT_POW ) )
 			{
 				return;
@@ -933,7 +933,7 @@ void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 s
 	    {
 		    if ( pFace->ubSoldierID != NOBODY )
 		    {
-			    if ( MercPtrs[ pFace->ubSoldierID ]->bLife >= OKLIFE )
+			    if ( MercPtrs[ pFace->ubSoldierID ]->stats.bLife >= OKLIFE )
 			    {
 				    // Lock buffer
 				    pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
@@ -1169,7 +1169,7 @@ void SetFaceShade( SOLDIERTYPE *pSoldier, FACETYPE *pFace, BOOLEAN fExternBlit )
 		}
 	}
 
-	if ( pSoldier->bLife < OKLIFE  )
+	if ( pSoldier->stats.bLife < OKLIFE  )
 	{
 		SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_DARKSHADE );
 	}
@@ -1177,7 +1177,7 @@ void SetFaceShade( SOLDIERTYPE *pSoldier, FACETYPE *pFace, BOOLEAN fExternBlit )
 	// ATE: Don't shade for damage if blitting extern face...
 	if ( !fExternBlit )
 	{
-		if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
+		if ( pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_START )
 		{
 			SetObjectHandleShade( pFace->uiVideoObject, pSoldier->bFlashPortraitFrame );
 		}
@@ -1294,7 +1294,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 	{
 		pSoldier = MercPtrs[ pFace->ubSoldierID ];
 
-		if ( ( MercPtrs[ pFace->ubSoldierID ]->bLife < CONSCIOUSNESS || MercPtrs[ pFace->ubSoldierID ]->fDeadPanel ) )
+		if ( ( MercPtrs[ pFace->ubSoldierID ]->stats.bLife < CONSCIOUSNESS || MercPtrs[ pFace->ubSoldierID ]->flags.fDeadPanel ) )
 		{
 			// Blit Closed eyes here!
 			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -1303,16 +1303,16 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 			BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 
-		if( MercPtrs[ pFace->ubSoldierID ]->fMercAsleep == TRUE )
+		if( MercPtrs[ pFace->ubSoldierID ]->flags.fMercAsleep == TRUE )
 		{
 			// blit eyes closed
 			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY, VO_BLT_SRCTRANSPARENCY, NULL );
 		}
 
-		if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+		if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
 		{
 			// IF we are in the process of doing any deal/close animations, show face, not skill...
-			if ( !pSoldier->fClosePanel && !pSoldier->fDeadPanel && !pSoldier->fUIdeadMerc && !pSoldier->fUICloseMerc )
+			if ( !pSoldier->flags.fClosePanel && !pSoldier->flags.fDeadPanel && !pSoldier->flags.fUIdeadMerc && !pSoldier->flags.fUICloseMerc )
 			{
 				// Put close panel there
 				BltVideoObjectFromIndex( uiRenderBuffer, guiDEAD, 5, sFaceX, sFaceY, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -1338,14 +1338,14 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 			HandleFaceHilights( pFace, uiRenderBuffer, sFaceX, sFaceY );
 
 #ifdef JA2BETAVERSION
-			if ( pSoldier->bOppCnt != 0 )
+			if ( pSoldier->aiData.bOppCnt != 0 )
 #else
-			if ( pSoldier->bOppCnt > 0 )
+			if ( pSoldier->aiData.bOppCnt > 0 )
 #endif
 			{
 				SetFontDestBuffer( uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, FALSE );
 
-				swprintf( sString, L"%d", pSoldier->bOppCnt );
+				swprintf( sString, L"%d", pSoldier->aiData.bOppCnt );
 
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_DKRED );
@@ -1409,9 +1409,9 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 		}
 
     // Check if a robot and is not controlled....
-	  if ( MercPtrs[ pFace->ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+	  if ( MercPtrs[ pFace->ubSoldierID ]->flags.uiStatusFlags & SOLDIER_ROBOT )
 	  {
-		  if ( !CanRobotBeControlled( MercPtrs[ pFace->ubSoldierID ] ) )
+		  if ( !MercPtrs[ pFace->ubSoldierID ]->CanRobotBeControlled(  ) )
       {
         // Not controlled robot
 			  sIconIndex = 5;
@@ -1419,7 +1419,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
       }
     }
 
-    if ( ControllingRobot( MercPtrs[ pFace->ubSoldierID ] ) )
+    if ( MercPtrs[ pFace->ubSoldierID ]->ControllingRobot(  ) )
     {
       // controlling robot
 			sIconIndex = 4;
@@ -1433,7 +1433,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
       bNumRightIcons++;
     }
 
-    if ( MercPtrs[ pFace->ubSoldierID ]->bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
+    if ( MercPtrs[ pFace->ubSoldierID ]->drugs.bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
     {
       DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 7 );
       bNumRightIcons++;
@@ -1466,8 +1466,8 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 				sIconIndex = 2;
 				fDoIcon		 = TRUE;
 				// show current health / maximum health
-				sPtsAvailable = MercPtrs[ pFace->ubSoldierID ]->bLife;
-				usMaximumPts  = MercPtrs[ pFace->ubSoldierID ]->bLifeMax;
+				sPtsAvailable = MercPtrs[ pFace->ubSoldierID ]->stats.bLife;
+				usMaximumPts  = MercPtrs[ pFace->ubSoldierID ]->stats.bLifeMax;
 				fShowNumber = TRUE;
 				fShowMaximum = TRUE;
 				break;
@@ -1838,7 +1838,7 @@ void HandleAutoFaces( )
 			{
 				 // Get Life now
 				 pSoldier  = MercPtrs[ pFace->ubSoldierID ];
-				 bLife		 = pSoldier->bLife;
+				 bLife		 = pSoldier->stats.bLife;
 				 bInSector = pSoldier->bInSector;
 				 bAPs      = pSoldier->bActionPoints;
 
@@ -1851,7 +1851,7 @@ void HandleAutoFaces( )
 					 pFace->uiFlags &= ( ~FACE_SHOW_WHITE_HILIGHT );
 				 }
 
-				 if ( pSoldier->sGridNo != pSoldier->sFinalDestination && pSoldier->sGridNo != NOWHERE )
+				 if ( pSoldier->sGridNo != pSoldier->pathing.sFinalDestination && pSoldier->sGridNo != NOWHERE )
 				 {
 					 pFace->uiFlags |= FACE_SHOW_MOVING_HILIGHT;
 				 }
@@ -1887,7 +1887,7 @@ void HandleAutoFaces( )
 					 fRerender = TRUE;
 				 }
 
-				 if ( pSoldier->bOppCnt != pFace->bOldOppCnt )
+				 if ( pSoldier->aiData.bOppCnt != pFace->bOldOppCnt )
 				 {
 					 fRerender = TRUE;
 				 }
@@ -1953,7 +1953,7 @@ void HandleAutoFaces( )
 				 pFace->bOldSoldierLife		= bLife;
 				 pFace->bOldActionPoints	= bAPs;
 				 pFace->bOldStealthMode		= pSoldier->bStealthMode;
-				 pFace->bOldOppCnt				= pSoldier->bOppCnt;
+				 pFace->bOldOppCnt				= pSoldier->aiData.bOppCnt;
 
 				 if ( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT )
 				 {
@@ -1974,33 +1974,33 @@ void HandleAutoFaces( )
 				 }
 
 
-					if ( pSoldier->fGettingHit && pSoldier->fFlashPortrait == FLASH_PORTRAIT_STOP )
+					if ( pSoldier->flags.fGettingHit && pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_STOP )
 					{
-						pSoldier->fFlashPortrait = TRUE;
+						pSoldier->flags.fFlashPortrait = TRUE;
 						pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
-						RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
+						RESETTIMECOUNTER( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 						fRerender = TRUE;					
 					}
-					if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
+					if ( pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_START )
 					{
 						// Loop through flash values
-						if ( TIMECOUNTERDONE( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY ) )
+						if ( TIMECOUNTERDONE( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY ) )
 						{					
-							RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
+							RESETTIMECOUNTER( pSoldier->timeCounters.PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 							pSoldier->bFlashPortraitFrame++;
 
 							if ( pSoldier->bFlashPortraitFrame > FLASH_PORTRAIT_ENDSHADE )
 							{
 								pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_ENDSHADE;
 
-								if ( pSoldier->fGettingHit )
+								if ( pSoldier->flags.fGettingHit )
 								{
-									pSoldier->fFlashPortrait = FLASH_PORTRAIT_WAITING;
+									pSoldier->flags.fFlashPortrait = FLASH_PORTRAIT_WAITING;
 								}
 								else
 								{
 									// Render face again!
-									pSoldier->fFlashPortrait = FLASH_PORTRAIT_STOP;
+									pSoldier->flags.fFlashPortrait = FLASH_PORTRAIT_STOP;
 								}
 
 								fRerender = TRUE;					
@@ -2008,13 +2008,13 @@ void HandleAutoFaces( )
 						}
 					}
 					// CHECK IF WE WERE WAITING FOR GETTING HIT TO FINISH!
-					if ( !pSoldier->fGettingHit && pSoldier->fFlashPortrait == FLASH_PORTRAIT_WAITING )
+					if ( !pSoldier->flags.fGettingHit && pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_WAITING )
 					{
-						pSoldier->fFlashPortrait = FALSE;
+						pSoldier->flags.fFlashPortrait = FALSE;
 						fRerender = TRUE;					
 					}
 
-					if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
+					if ( pSoldier->flags.fFlashPortrait == FLASH_PORTRAIT_START )
 					{
 						fRerender = TRUE;					
 					}

@@ -441,7 +441,7 @@ BOOLEAN IsRepairableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
 
 	if ( ubMerc != NOBODY )
 	{
-		if ( MercPtrs[ ubMerc ]->uiStatusFlags & SOLDIER_VEHICLE )
+		if ( MercPtrs[ ubMerc ]->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			return( 2 );
 		}
@@ -473,7 +473,7 @@ BOOLEAN IsRefuelableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
 
 	if ( ubMerc != NOBODY )
 	{
-		if ( MercPtrs[ ubMerc ]->uiStatusFlags & SOLDIER_VEHICLE )
+		if ( MercPtrs[ ubMerc ]->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			return( TRUE );
 		}

@@ -32,7 +32,7 @@ typedef struct
 // squad array
 SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 
-// list of dead guys for squads...in id values -> -1 means no one home 
+// list of dead guys for squads...in id values->-1 means no one home 
 INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 
 // the movement group ids
@@ -151,7 +151,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		// We're not allowing anybody to go on a vehicle if they are not passengers!
 		// NB: We obviously need to make sure that REAL passengers have their
 		// flags set before adding them to a squad!
-		if ( !( pCharacter->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER | SOLDIER_VEHICLE ) ) )
+		if ( !( pCharacter->flags.uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER | SOLDIER_VEHICLE ) ) )
 		{
 			return( FALSE );
 		}
@@ -186,14 +186,14 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
 
 				// if not same, return false
-				if( ( pCharacter->sSectorX != sX ) || ( pCharacter -> sSectorY != sY ) ||( pCharacter->bSectorZ != bZ) )
+				if( ( pCharacter->sSectorX != sX ) || ( pCharacter->sSectorY != sY ) ||( pCharacter->bSectorZ != bZ) )
 				{
 					return ( FALSE );
 				}
 				// remove them
 				RemoveCharacterFromSquads( pCharacter );
 
-//				fBetweenSectors =  Squad[ bSquadValue ][ 0 ]->fBetweenSectors;
+//				fBetweenSectors =  Squad[ bSquadValue ][ 0 ]->flags.fBetweenSectors;
 			}
 			else
 			{
@@ -204,7 +204,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 /*
 			if( fBetweenSectors == TRUE )
 			{
-				pCharacter->fBetweenSectors = TRUE;
+				pCharacter->flags.fBetweenSectors = TRUE;
 			}
 */
 
@@ -212,16 +212,16 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			CopyPathOfSquadToCharacter( pCharacter, bSquadValue );
 
 			// check if old mvt group
-			if( pCharacter -> ubGroupID != 0 )
+			if( pCharacter->ubGroupID != 0 )
 			{
 				// in valid group, remove from that group
-				RemovePlayerFromGroup(  pCharacter -> ubGroupID , pCharacter );
+				RemovePlayerFromGroup(  pCharacter->ubGroupID , pCharacter );
 
 				// character not on a reserved group
 				if( ( pCharacter->bAssignment >= ON_DUTY ) && ( pCharacter->bAssignment != VEHICLE ) )
 				{
 					// get the group from the character
-					pGroup = GetGroup( pCharacter -> ubGroupID );
+					pGroup = GetGroup( pCharacter->ubGroupID );
 					
 					// if valid group, delete it
 					if( pGroup )
@@ -235,7 +235,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			
 			
 
-			if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter->iVehicleId == iHelicopterVehicleId ) && ( pCharacter-> iVehicleId != -1 ) )
+			if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter->iVehicleId == iHelicopterVehicleId ) && ( pCharacter->iVehicleId != -1 ) )
 			{
 				// if creating a new squad from guys exiting the chopper			
 				fNewSquad = SquadIsEmpty( bSquadValue );
@@ -244,7 +244,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
+				pCharacter->ubGroupID = SquadMovementGroups[ bSquadValue ];
 
 				// if we've just started a new squad
 				if ( fNewSquad )
@@ -263,7 +263,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 					}
 				}
 			}
-			else if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter-> iVehicleId != -1 ) )
+			else if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter->iVehicleId != -1 ) )
 			{
 				fExitingVehicleToSquad = TRUE;
 				// remove from vehicle
@@ -273,13 +273,13 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
+				pCharacter->ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
 			else 
 			{
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
+				pCharacter->ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
 
 
@@ -289,7 +289,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			if( ( pCharacter->bAssignment != bSquadValue ) )
 			{
 				// check to see if we should wake them up
-				if ( pCharacter->fMercAsleep )
+				if ( pCharacter->flags.fMercAsleep )
 				{
 					// try to wake him up
 					SetMercAwake( pCharacter, FALSE, FALSE );
@@ -445,17 +445,17 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 
 				// Release memory for his personal path, BUT DON'T CLEAR HIS GROUP'S PATH/WAYPOINTS (pass in groupID -1).
 				// Just because one guy leaves a group is no reason to cancel movement for the rest of the group.
-				pCharacter -> pMercPath = ClearStrategicPathList( pCharacter -> pMercPath, -1 );
+				pCharacter->pMercPath = ClearStrategicPathList( pCharacter->pMercPath, -1 );
 
 				// remove character from mvt group
 				RemovePlayerFromGroup( SquadMovementGroups[ iCounterA ], pCharacter  );
 				
 				// reset player mvt group id value
-				pCharacter -> ubGroupID = 0;
+				pCharacter->ubGroupID = 0;
 
-				if( ( pCharacter->fBetweenSectors )&&( pCharacter-> uiStatusFlags & SOLDIER_VEHICLE ) )
+				if( ( pCharacter->flags.fBetweenSectors )&&( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
-					ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter -> sSectorX ) , ( INT8 ) ( pCharacter -> sSectorY ) );
+					ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter->sSectorX ) , ( INT8 ) ( pCharacter->sSectorY ) );
 				
 					// assign to a group
 					AddPlayerToGroup( ubGroupId, pCharacter );			
@@ -463,7 +463,7 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 			
 				RebuildSquad( ( INT8 )iCounterA );
 
-				if( pCharacter->bLife == 0 )
+				if( pCharacter->stats.bLife == 0 )
 				{
 					AddDeadCharacterToSquadDeadGuys( pCharacter, iCounterA );
 				}
@@ -504,7 +504,7 @@ BOOLEAN RemoveCharacterFromASquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			RemovePlayerFromGroup( SquadMovementGroups[ bSquadValue ], pCharacter );
 
 
-			if( pCharacter->bLife == 0 )
+			if( pCharacter->stats.bLife == 0 )
 			{
 				AddDeadCharacterToSquadDeadGuys( pCharacter, iCounterA );
 			}
@@ -650,7 +650,7 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue )
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
 		// valid slot?
-		if ( ( Squad[ bSquadValue ][ bCounter ] != NULL ) && ControllingRobot( Squad[ bSquadValue ][ bCounter ] ) )
+		if ( ( Squad[ bSquadValue ][ bCounter ] != NULL ) && Squad[ bSquadValue ][ bCounter ]->ControllingRobot( ) )
 		{
 			// yep
 			return( TRUE );
@@ -673,9 +673,9 @@ BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMa
 		// if valid soldier, get current sector and return
 		if( Squad[ bSquadValue ][ bCounter ] != NULL )
 		{
-			*sMapX = Squad[ bSquadValue ][ bCounter ] -> sSectorX;
-			*sMapY = Squad[ bSquadValue ][ bCounter ] -> sSectorY;
-			*sMapZ = ( INT16 )Squad[ bSquadValue ][ bCounter ] -> bSectorZ;
+			*sMapX = Squad[ bSquadValue ][ bCounter ]->sSectorX;
+			*sMapY = Squad[ bSquadValue ][ bCounter ]->sSectorY;
+			*sMapZ = ( INT16 )Squad[ bSquadValue ][ bCounter ]->bSectorZ;
 
 			return ( TRUE );
 		}
@@ -699,7 +699,7 @@ BOOLEAN CopyPathOfSquadToCharacter(  SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		if( ( Squad[ bSquadValue ][ bCounter ] != pCharacter ) &&( Squad[ bSquadValue ][ bCounter ] != NULL ) )
 		{
 			// valid character, copy paths
-			 pCharacter -> pMercPath = CopyPaths(  Squad[ bSquadValue ][ bCounter ] -> pMercPath, pCharacter -> pMercPath);
+			 pCharacter->pMercPath = CopyPaths(  Squad[ bSquadValue ][ bCounter ]->pMercPath, pCharacter->pMercPath);
 
 			 // return success
 			 return ( TRUE );
@@ -734,10 +734,10 @@ BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			// valid character, copy paths
 
 			// first empty path
-			Squad[ bSquadValue ][ bCounter ] -> pMercPath = ClearStrategicPathList( Squad[ bSquadValue ][ bCounter ] -> pMercPath, -1 );
+			Squad[ bSquadValue ][ bCounter ]->pMercPath = ClearStrategicPathList( Squad[ bSquadValue ][ bCounter ]->pMercPath, -1 );
 			
 			// then copy
-			Squad[ bSquadValue ][ bCounter ] -> pMercPath = CopyPaths( pCharacter -> pMercPath, Squad[ bSquadValue ][ bCounter ] -> pMercPath );
+			Squad[ bSquadValue ][ bCounter ]->pMercPath = CopyPaths( pCharacter->pMercPath, Squad[ bSquadValue ][ bCounter ]->pMercPath );
 
 			 // successful at least once
 			 fSuccess = TRUE;
@@ -901,9 +901,9 @@ void ExamineCurrentSquadLights( void )
 	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)
 	{
-		if ( MercPtrs[ ubLoop ]->bInSector && MercPtrs[ ubLoop ]->bLife >= OKLIFE )
+		if ( MercPtrs[ ubLoop ]->bInSector && MercPtrs[ ubLoop ]->stats.bLife >= OKLIFE )
 		{
-			PositionSoldierLight( MercPtrs[ ubLoop ] );			
+			MercPtrs[ ubLoop ]->PositionSoldierLight(  );			
 		}
 	}
 	
@@ -966,7 +966,7 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 		if(  Squad[ iCurrentSquad ][ iCounter ] != NULL )
 		{
 			// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-			if( ( Squad[ iCurrentSquad ][ iCounter ]->sSectorX == gWorldSectorX ) && ( Squad[ iCurrentSquad ][ iCounter ]->sSectorY == gWorldSectorY ) && Squad[ iCurrentSquad ][ iCounter ]->bSectorZ == gbWorldSectorZ && Squad[ iCurrentSquad ][ iCounter ]->fBetweenSectors != TRUE )
+			if( ( Squad[ iCurrentSquad ][ iCounter ]->sSectorX == gWorldSectorX ) && ( Squad[ iCurrentSquad ][ iCounter ]->sSectorY == gWorldSectorY ) && Squad[ iCurrentSquad ][ iCounter ]->bSectorZ == gbWorldSectorZ && Squad[ iCurrentSquad ][ iCounter ]->flags.fBetweenSectors != TRUE )
 			{
 				return( TRUE );
 			}
@@ -1194,7 +1194,7 @@ BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 	{
 		if( Squad[ bSquadValue ][ iCounter ] )
 		{
-			return( Squad[ bSquadValue ][ iCounter ]->fBetweenSectors );
+			return( Squad[ bSquadValue ][ iCounter ]->flags.fBetweenSectors );
 		}
 	}
 
@@ -1264,7 +1264,7 @@ BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad )
 		return( FALSE );
 	}
 
-	if( pSoldier->fBetweenSectors == TRUE )
+	if( pSoldier->flags.fBetweenSectors == TRUE )
 	{
 		return( FALSE );
 	}
@@ -1289,7 +1289,7 @@ BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad )
 		return( FALSE );
 	}
 
-	if( Squad[ ubSquad ][ 0 ]->fBetweenSectors == TRUE )
+	if( Squad[ ubSquad ][ 0 ]->flags.fBetweenSectors == TRUE )
 	{
 		return( FALSE );
 	}
@@ -1312,7 +1312,7 @@ BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue )
 	{
 		if( Squad[ ubSquadValue ][ iCounter ] != NULL )
 		{
-			if( Squad[ ubSquadValue ][ iCounter ]-> fMercAsleep )
+			if( Squad[ ubSquadValue ][ iCounter ]->flags.fMercAsleep )
 			{
 				return( TRUE );
 			}
@@ -1525,7 +1525,7 @@ INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 
 			//Kris:  This breaks the CLIENT of this function, tactical traversal.  Do NOT check for EPCS or ROBOT here.
 			//if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) && 
-			if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				bSquadCount++;
 			}
@@ -1558,7 +1558,7 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 			pSoldier = Squad[ bSquadValue ][ bCounter ] ;
 
 			// If we are an EPC or ROBOT, don't allow this
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				return( TRUE );
 			}

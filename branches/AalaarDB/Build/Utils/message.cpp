@@ -153,8 +153,8 @@ ScrollStringStPtr AddString(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEA
 	SetString(pStringSt, pString);
 	SetStringColor(pStringSt, usColor);
 	pStringSt->uiFont = uiFont;
-	pStringSt -> fBeginningOfNewString = fStartOfNewString; 
-	pStringSt -> uiFlags = ubPriority;
+	pStringSt->fBeginningOfNewString = fStartOfNewString; 
+	pStringSt->uiFlags = ubPriority;
  
 	SetStringNext(pStringSt, NULL);
 	SetStringPrev(pStringSt, NULL);
@@ -451,7 +451,7 @@ void ScrollString( )
 		 cnt = 0;
 		 gpDisplayList[ cnt ] = pStringS;
 		 CreateStringVideoOverlay( pStringS, X_START, iMsgYStart );
-		 if( pStringS -> fBeginningOfNewString == TRUE )
+		 if( pStringS->fBeginningOfNewString == TRUE )
 		 {
 			 iNumberOfNewStrings++;
 		 }
@@ -470,7 +470,7 @@ void ScrollString( )
 					SetStringVideoOverlayPosition( gpDisplayList[ cnt ], X_START, (INT16)( ( iMsgYStart - ( ( cnt ) * GetFontHeight( SMALLFONT1 ) ) ) - ( INT16)( WIDTH_BETWEEN_NEW_STRINGS * ( iNumberOfNewStrings ) ) ) );
 					
 					// start of new string, increment count of new strings, for spacing purposes
-					if( gpDisplayList[ cnt ] -> fBeginningOfNewString == TRUE )
+					if( gpDisplayList[ cnt ]->fBeginningOfNewString == TRUE )
 					{
 						iNumberOfNewStrings++;
 					}						
@@ -536,8 +536,8 @@ void HideMessagesDuringNPCDialogue( void )
 	{
 			if ( gpDisplayList[ cnt ] != NULL )
 			{
-				RestoreExternBackgroundRectGivenID( gVideoOverlays[ gpDisplayList[ cnt ] -> iVideoOverlay ].uiBackground );
-				UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
+				RestoreExternBackgroundRectGivenID( gVideoOverlays[ gpDisplayList[ cnt ]->iVideoOverlay ].uiBackground );
+				UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ]->iVideoOverlay, FALSE );
 			}
 	}
 
@@ -563,7 +563,7 @@ void UnHideMessagesDuringNPCDialogue( void )
 		if ( gpDisplayList[ cnt ] != NULL )
 		{
 			gpDisplayList[ cnt ]->uiTimeOfLastUpdate+= GetJA2Clock() - uiStartOfPauseTime;
-			UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
+			UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ]->iVideoOverlay, FALSE );
 		}
 	}
 
@@ -675,7 +675,7 @@ void ClearWrappedStrings( WRAPPED_STRING *pStringWrapperHead )
 		pDeleteNode = pNode;
 
 		// set current node as next node
-		pNode = pNode -> pNextWrappedString;
+		pNode = pNode->pNextWrappedString;
 
 		//delete the string
 		MemFree( pDeleteNode->sString );
@@ -1145,7 +1145,7 @@ void EnableDisableScrollStringVideoOverlay( BOOLEAN fEnable )
 		// if valid, enable/disable
 		if( gpDisplayList[ bCounter ] != NULL )
 		{
-			 EnableVideoOverlay( fEnable ,gpDisplayList[ bCounter ] -> iVideoOverlay );
+			 EnableVideoOverlay( fEnable ,gpDisplayList[ bCounter ]->iVideoOverlay );
 		}
 	}
 
@@ -1439,7 +1439,7 @@ void ClearTacticalMessageQueue( void )
 	{
 		pOtherStringSt = pStringSt;
 		pStringSt = pStringSt->pNext;
-		MemFree( pOtherStringSt-> pString16 );
+		MemFree( pOtherStringSt->pString16 );
 		MemFree( pOtherStringSt );
 	}
 
@@ -1828,7 +1828,7 @@ void DisplayLastMessage( void )
 		// check if message if dialogue
 		if( gMapScreenMessageList[ ubCounter ]->uiFlags == MSG_DIALOG )
 		{
-			if( gMapScreenMessageList[ ubCounter ]-> fBeginningOfNewString == TRUE )
+			if( gMapScreenMessageList[ ubCounter ]->fBeginningOfNewString == TRUE )
 			{
 				// yup
 				fNotDone = FALSE;
@@ -1850,7 +1850,7 @@ void DisplayLastMessage( void )
 		{
 			if( gMapScreenMessageList[ ubCounter ] )
 			{
-				if( ( fSecondNewString ) && ( gMapScreenMessageList[ ubCounter ] ->  fBeginningOfNewString ) )
+				if( ( fSecondNewString ) && ( gMapScreenMessageList[ ubCounter ]-> fBeginningOfNewString ) )
 				{
 					fNotDone = FALSE;
 				}
@@ -1860,7 +1860,7 @@ void DisplayLastMessage( void )
 					wcscat( sString, L" " );
 				}
 
-				if( ( gMapScreenMessageList[ ubCounter ] ->  fBeginningOfNewString ) )
+				if( ( gMapScreenMessageList[ ubCounter ]-> fBeginningOfNewString ) )
 				{
 					fSecondNewString = TRUE;
 				}

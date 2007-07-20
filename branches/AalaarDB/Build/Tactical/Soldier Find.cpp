@@ -144,7 +144,7 @@ UINT32 GetSoldierFindFlags( UINT16 ubID )
  }
  if ( ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
  {
-	 if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !GetNumberInVehicle( pSoldier->bVehicleID ) )
+	 if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !GetNumberInVehicle( pSoldier->bVehicleID ) )
 	 {
 		 // Don't do anything!
 	 }
@@ -162,7 +162,7 @@ UINT32 GetSoldierFindFlags( UINT16 ubID )
  else
  {
 	 // Check the side, etc
-	 if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+	 if ( !pSoldier->aiData.bNeutral && (pSoldier->bSide != gbPlayerNum ) )
 	 {
 			// It's an enemy merc
 		 MercFlags  |= ENEMY_MERC;
@@ -180,12 +180,12 @@ UINT32 GetSoldierFindFlags( UINT16 ubID )
 			MercFlags  |=	NOINTERRUPT_MERC;
 	}
 
-	if ( pSoldier->bLife < OKLIFE )
+	if ( pSoldier->stats.bLife < OKLIFE )
 	{
 		MercFlags  |=	UNCONSCIOUS_MERC;
 	}
 
-	if ( pSoldier->bLife == 0 )
+	if ( pSoldier->stats.bLife == 0 )
 	{
 		MercFlags  |=	DEAD_MERC;
 	}
@@ -244,10 +244,10 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 		if ( pSoldier != NULL )
 		{			
 
-			if ( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) && ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) ) )
+			if ( pSoldier->bActive && !( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) && ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) ) )
 			{
 				// OK, ignore if we are a passenger...
-				if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
+				if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
 				{
 					continue;
 				}
@@ -255,7 +255,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 				// If we want same level, skip if buggy's not on the same level!
 				if ( uiFlags & FIND_SOLDIER_SAMELEVEL )
 				{
-					if ( pSoldier->bLevel != (UINT8)( uiFlags >> 16 ) )
+					if ( pSoldier->pathing.bLevel != (UINT8)( uiFlags >> 16 ) )
 					{
 						continue;
 					}
@@ -343,7 +343,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 					if ( fInScreenRect || fInGridNo )
 					{
 						// Check if we are a vehicle and refine if so....
-						if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+						if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 						{
 							usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
 
@@ -557,7 +557,7 @@ BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
 	}
 
 	// CHECK IF DEAD
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		//return( FALSE );
 	}

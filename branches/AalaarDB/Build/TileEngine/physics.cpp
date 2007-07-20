@@ -493,7 +493,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 
 							pSoldier = MercPtrs[ pObject->ubLastTargetTakenDamage ];
 
-							bLevel = pSoldier->bLevel;
+							bLevel = pSoldier->pathing.bLevel;
 						}
 
 						// ATE; If an armed object, don't add....
@@ -540,13 +540,13 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 				case ANIM_STAND:
 
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-					EVENT_InitNewSoldierAnim( pSoldier, END_CATCH, 0 , FALSE );
+					pSoldier->EVENT_InitNewSoldierAnim( END_CATCH, 0 , FALSE );
 					break;
 
 				case ANIM_CROUCH:
 
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-					EVENT_InitNewSoldierAnim( pSoldier, END_CROUCH_CATCH, 0 , FALSE );
+					pSoldier->EVENT_InitNewSoldierAnim( END_CROUCH_CATCH, 0 , FALSE );
 					break;
 				}
 
@@ -1812,7 +1812,7 @@ FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHe
 
 	ConvertGridNoToCenterCellXY( pSoldier->sGridNo, &sSrcX, &sSrcY );
 
-	dAngle = FindBestAngleForTrajectory( pSoldier->sGridNo, sGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel ), ubHeight, dForce, pItem, psGridNo );
+	dAngle = FindBestAngleForTrajectory( pSoldier->sGridNo, sGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel ), ubHeight, dForce, pItem, psGridNo );
 
 	// new we have defaut angle value...
 	return( dAngle );
@@ -1836,7 +1836,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 
 	// Start with default degrees/ force
 	dDegrees = OUTDOORS_START_ANGLE;
-	sStartZ	 = GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel );
+	sStartZ	 = GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel );
 
 	// Are we armed, and are we throwing a LAUNCHABLE?
 
@@ -1845,7 +1845,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 	if ( fArmed && ( Item[usLauncher].mortar || Item[pItem->usItem].mortar ) )
 	{
 		// Start at 0....
-		sStartZ = ( pSoldier->bLevel * 256 );
+		sStartZ = ( pSoldier->pathing.bLevel * 256 );
 		fMortar = TRUE;
 		sMinRange = MIN_MORTAR_RANGE;
 		//fLauncher = TRUE;
@@ -1881,7 +1881,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		fIndoors = TRUE;
 	}
 
-	if ( ( IsRoofPresentAtGridno( pSoldier->sGridNo ) ) && pSoldier->bLevel == 0 )
+	if ( ( IsRoofPresentAtGridno( pSoldier->sGridNo ) ) && pSoldier->pathing.bLevel == 0 )
 	{
 		// Adjust angle....
 		dDegrees = INDOORS_START_ANGLE;
@@ -1960,7 +1960,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 		if ( fThroughIntermediateGridNo )
 		{
 			// Given this power, now try and go through this window....
-			dDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sInterGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
+			dDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sInterGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
 		}
 	}
 	else
@@ -1983,7 +1983,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 				dMagForce		=	(float)( dMagForce * 0.85 );
 
 				// Yep, try to get angle...
-				dNewDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
+				dNewDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
 
 				if ( dNewDegrees != 0 )
 				{
@@ -1994,7 +1994,7 @@ void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, I
 
 		if ( fThroughIntermediateGridNo )
 		{
-			dDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sInterGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
+			dDegrees = FindBestAngleForTrajectory( pSoldier->sGridNo, sInterGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel ), 150, dMagForce, pItem, psFinalGridNo );		
 		}
 	}
 
@@ -2021,7 +2021,7 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE
 	// Set position
 	vPosition.x = sSrcX;
 	vPosition.y = sSrcY;
-	vPosition.z = GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel );
+	vPosition.z = GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel );
 
 	// OK, get direction normal
 	vDirNormal.x = (float)(sDestX - sSrcX);
@@ -2223,14 +2223,14 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 	pSoldier->pThrowParams->dY = (float)sSrcY;
 
 
-	sStartZ = GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel );
+	sStartZ = GET_SOLDIER_THROW_HEIGHT( pSoldier->pathing.bLevel );
 	usLauncher = GetLauncherFromLaunchable( pItem->usItem );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("physics.cpp line 2103"));	
 
 	if ( fArmed && Item[usLauncher].mortar )
 	{
 		// Start at 0....
-		sStartZ = ( pSoldier->bLevel * 256 ) + 50;
+		sStartZ = ( pSoldier->pathing.bLevel * 256 ) + 50;
 	}
 
 	pSoldier->pThrowParams->dZ = (float)sStartZ;
@@ -2292,7 +2292,7 @@ void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
 				sDamage = 1;
 				sBreath = 0;
 
-				EVENT_SoldierGotHit( pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, 0, NOWHERE );
+				pSoldier->EVENT_SoldierGotHit( NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, 0, NOWHERE );
 
 				pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
 			}
@@ -2325,11 +2325,11 @@ BOOLEAN CheckForCatchObject( REAL_OBJECT *pObject )
 				{
 					if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND )
 					{
-						EVENT_InitNewSoldierAnim( pSoldier, CATCH_STANDING, 0 , FALSE );
+						pSoldier->EVENT_InitNewSoldierAnim( CATCH_STANDING, 0 , FALSE );
 					}	
 					else if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH )
 					{
-						EVENT_InitNewSoldierAnim( pSoldier, CATCH_CROUCHED, 0 , FALSE );
+						pSoldier->EVENT_InitNewSoldierAnim( CATCH_CROUCHED, 0 , FALSE );
 					}
 
 					pObject->fCatchAnimOn = TRUE;
@@ -2397,13 +2397,13 @@ BOOLEAN DoCatchObject( REAL_OBJECT *pObject )
 	case ANIM_STAND:
 
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-		EVENT_InitNewSoldierAnim( pSoldier, END_CATCH, 0 , FALSE );
+		pSoldier->EVENT_InitNewSoldierAnim( END_CATCH, 0 , FALSE );
 		break;
 
 	case ANIM_CROUCH:
 
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-		EVENT_InitNewSoldierAnim( pSoldier, END_CROUCH_CATCH, 0 , FALSE );
+		pSoldier->EVENT_InitNewSoldierAnim( END_CROUCH_CATCH, 0 , FALSE );
 		break;
 	}
 
@@ -2518,7 +2518,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 
 			if ( pObject->ubOwner != NOBODY )
 			{
-				DoMercBattleSound( MercPtrs[ pObject->ubOwner ], (INT8)( BATTLE_SOUND_CURSE1 ) );
+				MercPtrs[ pObject->ubOwner ]->DoMercBattleSound( (INT8)( BATTLE_SOUND_CURSE1 ) );
 			}
 		}
 	}

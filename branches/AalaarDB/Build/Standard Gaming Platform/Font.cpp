@@ -1916,7 +1916,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 // Return Value  pointer to the base structure
 //
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2080,7 +2080,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 // Return Value  Maximum font width
 //
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2114,7 +2114,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 // Return Value  pointer to the SGPPaletteEntry
 //
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2151,7 +2151,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  BOOLEAN
 //
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2177,7 +2177,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  BOOLEAN
 //
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2208,7 +2208,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2343,7 +2343,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2443,7 +2443,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 /*BOOLEAN Blt16Imageto16Dest(UINT32 uiOffStart, UINT32 uiOffEnd, UINT16 siX, UINT16 siY, UINT32 uiWidth, FontBase *pFontBase, UINT8 *pFrameBuffer, UINT16 siDestPitch, UINT16 siHeightEach)
@@ -2537,7 +2537,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : offset
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -2574,7 +2574,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : offset
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 /*UINT32 GetOffLen(FontBase *pFontBase, INT16 ssIndex)
@@ -2613,7 +2613,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Return Value  : BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
+// Nov 26th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 

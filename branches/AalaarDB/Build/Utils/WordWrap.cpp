@@ -1829,7 +1829,7 @@ RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 
 															 0, 0, 0 ) ;
 
 			// next record
-			CurrentRecord = CurrentRecord -> Next;
+			CurrentRecord = CurrentRecord->Next;
 
 			// check if we have gone too far?
 			if( CurrentRecord == NULL )
@@ -1902,7 +1902,7 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 					iCurrentPositionOnThisPage += pWidthList->iRecordHeightAdjustment;
 
 			}
-			pWidthList = pWidthList ->Next;
+			pWidthList = pWidthList->Next;
 
 		}
 

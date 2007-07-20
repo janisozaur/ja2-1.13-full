@@ -108,10 +108,10 @@ void HandleRPCDescription(  )
 			// Add guy if he's a candidate...
 			if ( RPC_RECRUITED( pTeamSoldier ) )
 			{
-				if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive && 
+				if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive && 
 						 pTeamSoldier->sSectorX == gTacticalStatus.bGuideDescriptionSectorX && pTeamSoldier->sSectorY == gTacticalStatus.bGuideDescriptionSectorY &&
 						 pTeamSoldier->bSectorZ == gbWorldSectorZ && 
-						 !pTeamSoldier->fBetweenSectors  )
+						 !pTeamSoldier->flags.fBetweenSectors  )
 				{		
 					if ( pTeamSoldier->ubProfile == IRA || 
 							 pTeamSoldier->ubProfile == MIGUEL || 
@@ -214,10 +214,10 @@ void HandleTacticalEndTurn( )
 		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 		{	
-			if ( pSoldier->bActive && pSoldier->bLife > 0 && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pSoldier ) ) )
+			if ( pSoldier->bActive && pSoldier->stats.bLife > 0 && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pSoldier ) ) )
 			{
 				// Handle everything from getting breath back, to bleeding, etc
-				EVENT_BeginMercTurn( pSoldier, TRUE, 0 );
+				pSoldier->EVENT_BeginMercTurn( TRUE, 0 );
 
 				// Handle Player services
 				HandlePlayerServices( pSoldier );
@@ -250,7 +250,7 @@ void HandleTacticalEndTurn( )
 				if ( pSoldier->bTeam != gbPlayerNum )
 				{
 					// Handle everything from getting breath back, to bleeding, etc
-					EVENT_BeginMercTurn( pSoldier, TRUE, 0 );
+					pSoldier->EVENT_BeginMercTurn( TRUE, 0 );
 					
 					// Handle Player services
 					HandlePlayerServices( pSoldier );

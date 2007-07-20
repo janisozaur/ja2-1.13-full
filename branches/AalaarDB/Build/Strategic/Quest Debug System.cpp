@@ -3265,7 +3265,7 @@ void AddNPCsInSectorToArray()
 	i=0;
 	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
 	{
-		if ( ( pSoldier != NULL ) && pSoldier -> bActive )
+		if ( ( pSoldier != NULL ) && pSoldier->bActive )
 		{
 			//if soldier is a NPC, add him to the local NPC array
 			if( ( pSoldier->ubProfile >= FIRST_RPC ) && ( pSoldier->ubProfile < GASTON ) )
@@ -4034,7 +4034,7 @@ void GetDebugLocationString( UINT16 usProfileID, STR16 pzText )
 	pSoldier = FindSoldierByProfileID( (UINT8)usProfileID, FALSE );
 
 	//if their is a soldier, the soldier is alive and the soldier is off the map
-	if( pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP )
+	if( pSoldier != NULL && pSoldier->bActive && pSoldier->flags.uiStatusFlags & SOLDIER_OFF_MAP )
 	{
 		//the soldier is on schedule
 		swprintf( pzText, L"On Schdl.");

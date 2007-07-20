@@ -578,7 +578,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->HeadPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
   }
@@ -609,7 +609,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->VestPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
   }
@@ -639,7 +639,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->PantsPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
   }
@@ -669,7 +669,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->SkinPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
   }

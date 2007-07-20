@@ -1219,11 +1219,11 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 	UINT8		ubItem1Quality;
 	UINT8		ubItem2Quality;
 
-	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 ) -> usItemIndex;
-	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 ) -> usItemIndex;
+	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 )->usItemIndex;
+	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 )->usItemIndex;
 
-	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 ) -> ubItemQuality;
-	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 ) -> ubItemQuality;
+	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 )->ubItemQuality;
+	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 )->ubItemQuality;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -1237,11 +1237,11 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 	UINT8		ubItem1Quality;
 	UINT8		ubItem2Quality;
 
-	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> sItemIndex;
-	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> sItemIndex;
+	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 )->sItemIndex;
+	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 )->sItemIndex;
 
-	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 ) -> ItemObject.bStatus[ 0 ];
-	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 ) -> ItemObject.bStatus[ 0 ];
+	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject.bStatus[ 0 ];
+	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject.bStatus[ 0 ];
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }

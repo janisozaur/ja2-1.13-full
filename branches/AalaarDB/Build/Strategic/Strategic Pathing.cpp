@@ -835,23 +835,23 @@ PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList 
 	if( pNode )
 	{
 		// move to tail of old list
-	  while( pNode -> pNext )
+	  while( pNode->pNext )
 		{
 			// next node in list
-		  pNode = pNode ->pNext;
+		  pNode = pNode->pNext;
 		}
 
 		// make sure the 2 are not the same
 
-		if( pNode -> uiSectorId == pNewSection -> uiSectorId )
+		if( pNode->uiSectorId == pNewSection->uiSectorId )
 		{
 			// are the same, remove head of new list
 			pNewSection = RemoveHeadFromStrategicPath( pNewSection );
 		}
 
 		// append onto old list
-		pNode -> pNext = pNewSection;
-		pNewSection -> pPrev = pNode;
+		pNode->pNext = pNewSection;
+		pNewSection->pPrev = pNode;
 
 	}
 	else
@@ -878,13 +878,13 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 	}
 
 	// clear list
-	while( pNode -> pNext )
+	while( pNode->pNext )
 	{
 		// set up delete node
 		pDeleteNode = pNode;
 
 		// move to next node
-		pNode = pNode -> pNext;
+		pNode = pNode->pNext;
 
 		// delete delete node
 		MemFree( pDeleteNode );
@@ -931,19 +931,19 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 	pNode = MoveToEndOfPathList( pNode );
 
 	// get current sector value
-	sCurrentSector = ( INT16 )pNode -> uiSectorId;
+	sCurrentSector = ( INT16 )pNode->uiSectorId;
 
 	// move through list
 	while( ( pNode )&&( sSector != sCurrentSector ) )
 	{
 		
 		// next value
-		pNode = pNode -> pPrev;
+		pNode = pNode->pPrev;
 
 		// get current sector value
 		if( pNode != NULL )
 		{
-	    sCurrentSector = ( INT16 )pNode -> uiSectorId;
+	    sCurrentSector = ( INT16 )pNode->uiSectorId;
 		}
 	}
 
@@ -956,7 +956,7 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 
 
 	// we want to KEEP the target sector, not delete it, so advance to the next sector
-	pNode = pNode -> pNext;
+	pNode = pNode->pNext;
 
 	// is nothing left?
 	if( pNode == NULL )
@@ -967,10 +967,10 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 
 
 	// if we're NOT about to clear the head (there's a previous entry)
-	if( pNode -> pPrev )
+	if( pNode->pPrev )
 	{
 	  // set next for tail to NULL
-	  pNode -> pPrev -> pNext = NULL;
+	  pNode->pPrev->pNext = NULL;
 	}
 	else
 	{
@@ -981,13 +981,13 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 	}
 
 	// clear list
-	while( pNode -> pNext )
+	while( pNode->pNext )
 	{
 		// set up delete node
 		pDeleteNode = pNode;
 
 		// move to next node
-		pNode = pNode -> pNext;
+		pNode = pNode->pNext;
 
 		// check if we are clearing the head of the list
 		if( pDeleteNode == pHeadOfPath )
@@ -1021,9 +1021,9 @@ PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 	}
 
 	// move to beginning of list
-	while( pList -> pPrev )
+	while( pList->pPrev )
 	{
-		pList = pList -> pPrev;
+		pList = pList->pPrev;
 	}
 
 	return ( pList );
@@ -1041,9 +1041,9 @@ PathStPtr MoveToEndOfPathList( PathStPtr pList )
 	}
 
 	// move to beginning of list
-	while( pList -> pNext )
+	while( pList->pNext )
 	{
-		pList = pList -> pNext;
+		pList = pList->pNext;
 	}
 
 	return ( pList );
@@ -1063,16 +1063,16 @@ PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList )
 		return( NULL );
 	}
 
-	while( pNode -> pNext )
+	while( pNode->pNext )
 	{
 		pLastNode = pNode;
-		pNode = pNode -> pNext;
+		pNode = pNode->pNext;
 	}
 
 	// end of list
 
 	// set next to null
-	pLastNode -> pNext = NULL;
+	pLastNode->pNext = NULL;
 
 	// now remove old last node
 	MemFree( pNode );
@@ -1097,17 +1097,17 @@ PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 	}
 
 	// move to head of list
-	while( pNode ->pPrev )
+	while( pNode->pPrev )
 	{
 		// back one node
-		pNode = pNode -> pPrev;
+		pNode = pNode->pPrev;
 	}
 
 	// set up new head
-	pNewHead = pNode -> pNext;
+	pNewHead = pNode->pNext;
 	if( pNewHead )
 	{
-		pNewHead -> pPrev = NULL;
+		pNewHead->pPrev = NULL;
 	}
 
 	// free old head
@@ -1139,7 +1139,7 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 	}
 
 	// get current sector value
-	sCurrentSector = ( INT16 )pNode -> uiSectorId;
+	sCurrentSector = ( INT16 )pNode->uiSectorId;
 
 	// move to end of list
 	pNode = MoveToEndOfPathList( pNode );
@@ -1151,10 +1151,10 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 		pPastNode = pNode;
 
 		// next value
-		pNode = pNode -> pPrev;
+		pNode = pNode->pPrev;
 
 		// get current sector value
-	  sCurrentSector = ( INT16 )pNode -> uiSectorId;
+	  sCurrentSector = ( INT16 )pNode->uiSectorId;
 	}
 
 	// no list left, sector not found
@@ -1164,13 +1164,13 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 	}
 
 	// sector found...remove it
-	pPastNode->pNext = pNode -> pNext;
+	pPastNode->pNext = pNode->pNext;
 
 	// remove node
 	MemFree( pNode );
 
 	// set up prev for next
-	pPastNode -> pNext -> pPrev = pPastNode;
+	pPastNode->pNext->pPrev = pPastNode;
 
 
 	pPastNode = MoveToBeginningOfPathList( pPastNode );
@@ -1181,15 +1181,15 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
 {
 	// will return the last sector of the current path, or the current sector if there's no path
-	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
+	INT16 sLastSector = ( pCharacter->sSectorX ) + ( pCharacter->sSectorY ) * ( MAP_WORLD_X );
 	PathStPtr pNode = NULL;
 
 	pNode = GetSoldierMercPathPtr( pCharacter );
 
 	while( pNode )
 	{
-		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
-		pNode = pNode -> pNext;
+		sLastSector = ( INT16 ) ( pNode->uiSectorId );
+		pNode = pNode->pNext;
 	}
 
 	return sLastSector;
@@ -1218,8 +1218,8 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 
 	while( pNode )
 	{
-		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
-		pNode = pNode -> pNext;
+		sLastSector = ( INT16 ) ( pNode->uiSectorId );
+		pNode = pNode->pNext;
 	}
 
 	return sLastSector;
@@ -1247,37 +1247,37 @@ PathStPtr CopyPaths( PathStPtr pSourcePath,  PathStPtr pDestPath )
 		pDestNode = (PathStPtr) MemAlloc( sizeof( PathSt ) );
 		
 		// set next and prev nodes
-		pDestNode -> pPrev = NULL;
-		pDestNode -> pNext = NULL;
+		pDestNode->pPrev = NULL;
+		pDestNode->pNext = NULL;
 
 		// copy sector value and times
-		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
-		pDestNode -> uiEta			= pCurNode -> uiEta;
-		pDestNode -> fSpeed			= pCurNode -> fSpeed;
+		pDestNode->uiSectorId	= pCurNode->uiSectorId;
+		pDestNode->uiEta			= pCurNode->uiEta;
+		pDestNode->fSpeed			= pCurNode->fSpeed;
 
-		pCurNode = pCurNode -> pNext;
+		pCurNode = pCurNode->pNext;
 	}
 
 	while( pCurNode != NULL )
 	{ 
 
-		pDestNode -> pNext = (path *) MemAlloc( sizeof( PathSt ) );
+		pDestNode->pNext = (path *) MemAlloc( sizeof( PathSt ) );
 
 		// set next's previous to current
-		pDestNode -> pNext -> pPrev = pDestNode;
+		pDestNode->pNext->pPrev = pDestNode;
 
 		// set next's next to null
-		pDestNode -> pNext -> pNext = NULL;
+		pDestNode->pNext->pNext = NULL;
 
 		// increment ptr
-		pDestNode = pDestNode -> pNext;
+		pDestNode = pDestNode->pNext;
 
 		// copy sector value and times
-		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
-		pDestNode -> uiEta			= pCurNode -> uiEta;
-		pDestNode -> fSpeed			= pCurNode -> fSpeed;
+		pDestNode->uiSectorId	= pCurNode->uiSectorId;
+		pDestNode->uiEta			= pCurNode->uiEta;
+		pDestNode->fSpeed			= pCurNode->fSpeed;
 
-		pCurNode = pCurNode -> pNext;
+		pCurNode = pCurNode->pNext;
 	}
 
 
@@ -1295,9 +1295,9 @@ INT32 GetStrategicMvtSpeed( SOLDIERTYPE *pCharacter )
 
 	// avg of strength and agility * percentage health..very simple..replace later
 
-	iSpeed = ( INT32 )( ( pCharacter -> bAgility + pCharacter -> bStrength ) / 2 ); 
-	iSpeed *= ( INT32 )(( pCharacter -> bLife ) );
-	iSpeed /= ( INT32 )pCharacter -> bLifeMax;
+	iSpeed = ( INT32 )( ( pCharacter->stats.bAgility + pCharacter->stats.bStrength ) / 2 ); 
+	iSpeed *= ( INT32 )(( pCharacter->stats.bLife ) );
+	iSpeed /= ( INT32 )pCharacter->stats.bLifeMax;
 
 	return ( iSpeed );
 }
@@ -1317,17 +1317,17 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 	}
 
 	// the rules change a little for people in vehicles
-	if( pCharacter -> bAssignment == VEHICLE )
+	if( pCharacter->bAssignment == VEHICLE )
 	{
 		fInVehicle = TRUE;
 	}
 
-	if( ( pCharacter -> pMercPath == NULL ) && ( fInVehicle == FALSE ) )
+	if( ( pCharacter->pMercPath == NULL ) && ( fInVehicle == FALSE ) )
 	{
 		return;
 	}
 
-	if( ( fInVehicle == TRUE ) && ( VehicleIdIsValid( pCharacter -> iVehicleId ) ) )
+	if( ( fInVehicle == TRUE ) && ( VehicleIdIsValid( pCharacter->iVehicleId ) ) )
 	{
 		// valid vehicle, is there a path for it?
 		if( pVehicleList[ iId ].pMercPath == NULL )
@@ -1345,14 +1345,14 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 	while( pNode )
 	{
 		// first node, set eta to current time
-		if( pNode -> pPrev == NULL )
+		if( pNode->pPrev == NULL )
 		{
-			pNode -> uiEta = GetWorldTotalMin( );
+			pNode->uiEta = GetWorldTotalMin( );
 		}
 		else
 		{
 			// get delta in sectors
-			switch( pNode -> uiSectorId - pNode -> pPrev -> uiSectorId )
+			switch( pNode->uiSectorId - pNode->pPrev->uiSectorId )
 			{
 			case( NORTH_MOVE ):
 				iMveDelta = 0;
@@ -1376,14 +1376,14 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 			else
 			{
 				// get delta..is the  sector ( mvt cost * modifier ) / ( character strategic speed * mvt speed )
-				uiDeltaEta = ( ( StrategicMap[ pNode -> uiSectorId ].uiFootEta[ iMveDelta ] * FOOT_MVT_MODIFIER ) / ( GetStrategicMvtSpeed( pCharacter ) * ( pNode -> fSpeed + 1 ) ) );
+				uiDeltaEta = ( ( StrategicMap[ pNode->uiSectorId ].uiFootEta[ iMveDelta ] * FOOT_MVT_MODIFIER ) / ( GetStrategicMvtSpeed( pCharacter ) * ( pNode->fSpeed + 1 ) ) );
 			}
 
 
 			// next sector eta
-			pNode -> uiEta = pNode -> pPrev -> uiEta + ( uiDeltaEta );
+			pNode->uiEta = pNode->pPrev->uiEta + ( uiDeltaEta );
 		}
-		pNode = pNode -> pNext;
+		pNode = pNode->pNext;
 	}
 	return;
 }
@@ -1403,36 +1403,36 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 		return;
 	}
 
-	if( pCharacter -> pMercPath == NULL )
+	if( pCharacter->pMercPath == NULL )
 	{
 		return;
 	}
 
-	if( pCharacter -> pMercPath -> pNext == NULL )
+	if( pCharacter->pMercPath->pNext == NULL )
 	{
 		// simply set eta to current time
-		pCharacter -> pMercPath -> uiEta = GetWorldTotalMin( );
+		pCharacter->pMercPath->uiEta = GetWorldTotalMin( );
 		return;
 	}
 
 	// set up node to beginning of path list
-	pNode = pCharacter -> pMercPath;
+	pNode = pCharacter->pMercPath;
 
 
 	// while there are nodes left with eta less than current time
-	while( pNode -> pNext -> uiEta < GetWorldTotalMin( ) )
+	while( pNode->pNext->uiEta < GetWorldTotalMin( ) )
 	{
 		// delete node, move on
 		pDeleteNode = pNode;
 
 		// next node
-		pNode = pNode -> pNext;
+		pNode = pNode->pNext;
 
 		// delete delete node
 		MemFree( pDeleteNode );
 
 		// set up merc path to this sector
-		pCharacter -> pMercPath = pNode;
+		pCharacter->pMercPath = pNode;
 
 		// no where left to go
 		if( pNode == NULL )
@@ -1442,16 +1442,16 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 
 		
 		// null out prev to beginning of merc path list
-		pNode -> pPrev = NULL;
+		pNode->pPrev = NULL;
 
 		// set up new location
-		pCharacter -> sSectorX = ( INT16 )( pNode -> uiSectorId ) % MAP_WORLD_X ;
-		pCharacter -> sSectorY = ( INT16 )( pNode -> uiSectorId ) / MAP_WORLD_X;
+		pCharacter->sSectorX = ( INT16 )( pNode->uiSectorId ) % MAP_WORLD_X ;
+		pCharacter->sSectorY = ( INT16 )( pNode->uiSectorId ) / MAP_WORLD_X;
 
 		// dirty map panel
 		fMapPanelDirty = TRUE;
 
-		if( pNode -> pNext == NULL )
+		if( pNode->pNext == NULL )
 		{
 			return;
 		}
@@ -1492,21 +1492,21 @@ UINT32 GetEtaGivenRoute( PathStPtr pPath )
 	{
 		return( GetWorldTotalMin( ) );
 	}
-	else if( pPath -> pNext == NULL )
+	else if( pPath->pNext == NULL )
 	{
 		return( GetWorldTotalMin( ) );
 	}
 	else
 	{
 		// there is a path
-		while( pNode -> pNext )
+		while( pNode->pNext )
 		{
 			// run through list
-			pNode = pNode -> pNext;
+			pNode = pNode->pNext;
 		}
 
 		// have last sector, therefore the eta of the path
-		return( pNode -> uiEta );
+		return( pNode->uiEta );
 	}
 
 	// error
@@ -1889,12 +1889,12 @@ PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
 		pMercPath = pVehicleList[ pSoldier->iVehicleId ].pMercPath;
 	}
 	// IS a vehicle?
-	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	else if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
     /* Sergeant_Kolja, 2007-02-20: got an pVehicleList==NULL Exception on loading an older save here... not REALY fixed! */
     if( !pVehicleList ) /*bcause we have no vehicle list at all, we act as we are a person*/
       {
-      pSoldier->uiStatusFlags &= ~SOLDIER_VEHICLE;
+      pSoldier->flags.uiStatusFlags &= ~SOLDIER_VEHICLE;
   		pMercPath = pSoldier->pMercPath;
       /* after all, create an empty Vehicle list */
 			pVehicleList = (VEHICLETYPE *) MemAlloc( sizeof( VEHICLETYPE ) );
@@ -1956,7 +1956,7 @@ UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
 		ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
 	}
 	// IS a vehicle?
-	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	else if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
 	}
@@ -2022,7 +2022,7 @@ void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
 	pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, pSoldier->ubGroupID );
 
 	// if a vehicle
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		pVehicle = &( pVehicleList[ pSoldier->bVehicleID ] );
 	}

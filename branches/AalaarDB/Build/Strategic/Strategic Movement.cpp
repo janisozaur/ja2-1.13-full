@@ -855,7 +855,7 @@ GROUP* GetGroup( UINT8 ubGroupID )
 void HandleImportantPBIQuote( SOLDIERTYPE *pSoldier, GROUP *pInitiatingBattleGroup )
 {
 	// wake merc up for THIS quote
-	if( pSoldier->fMercAsleep )
+	if( pSoldier->flags.fMercAsleep )
 	{
 		TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0,0 );
 		TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE, (UINT32)pInitiatingBattleGroup, 0 );
@@ -898,7 +898,7 @@ void PrepareForPreBattleInterface( GROUP *pPlayerDialogGroup, GROUP *pInitiating
 	{
 		pSoldier = pPlayer->pSoldier;
 
-		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+		if ( pSoldier->stats.bLife >= OKLIFE && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) &&
 					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) )
 		{
 			ubMercsInGroup[ ubNumMercs ] = pSoldier->ubID;
@@ -1038,15 +1038,15 @@ BOOLEAN CheckConditionsForBattle( GROUP *pGroup )
 						while( pPlayer )
 						{
 							pSoldier = pPlayer->pSoldier;
-							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
+							if( !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) )
 							{
 								if( !AM_A_ROBOT( pSoldier ) && 
 										!AM_AN_EPC( pSoldier ) &&
-										pSoldier->bLife >= OKLIFE )
+										pSoldier->stats.bLife >= OKLIFE )
 								{
 									fCombatAbleMerc = TRUE;
 								}
-								if( pSoldier->bLife > 0 )
+								if( pSoldier->stats.bLife > 0 )
 								{
 									fAliveMerc = TRUE;
 								}
@@ -1324,7 +1324,7 @@ BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversa
 	pPlayer = pGroup->pPlayerList;
 	while( pPlayer )
 	{
-		pPlayer->pSoldier->uiStatusFlags &= ~SOLDIER_IS_TACTICALLY_VALID;
+		pPlayer->pSoldier->flags.uiStatusFlags &= ~SOLDIER_IS_TACTICALLY_VALID;
 		pPlayer = pPlayer->next;
 	}
 
@@ -1363,9 +1363,9 @@ BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversa
 							pPlayer = curr->pPlayerList;
 							while( pPlayer )
 							{
-								if( pPlayer->pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID )
+								if( pPlayer->pSoldier->flags.uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID )
 								{
-									pPlayer->pSoldier->uiStatusFlags |= SOLDIER_IS_TACTICALLY_VALID;
+									pPlayer->pSoldier->flags.uiStatusFlags |= SOLDIER_IS_TACTICALLY_VALID;
 								}
 								pPlayer = pPlayer->next;
 							}
@@ -1420,9 +1420,9 @@ BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversa
 							//if( curr->ubSectorX
 							while( pPlayer )
 							{
-								if( pPlayer->pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID )
+								if( pPlayer->pSoldier->flags.uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID )
 								{
-									pPlayer->pSoldier->uiStatusFlags |= SOLDIER_IS_TACTICALLY_VALID;
+									pPlayer->pSoldier->flags.uiStatusFlags |= SOLDIER_IS_TACTICALLY_VALID;
 								}
 								pPlayer = pPlayer->next;
 							}
@@ -1480,26 +1480,26 @@ void AwardExperienceForTravelling( GROUP * pGroup )
 	{
 		pSoldier = pPlayerGroup->pSoldier;
 		if( pSoldier  && !AM_A_ROBOT( pSoldier ) && 
-				!AM_AN_EPC( pSoldier ) && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
+				!AM_AN_EPC( pSoldier ) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) )
 		{
-			if ( pSoldier->bLifeMax < 100 )
+			if ( pSoldier->stats.bLifeMax < 100 )
 			{
 				// award exp...
 				// amount was originally based on getting 100-bLifeMax points for 12 hours of travel (720)
 				// but changed to flat rate since StatChange makes roll vs 100-lifemax as well!
-				uiPoints = pGroup->uiTraverseTime / (450 / 100 - pSoldier->bLifeMax );
+				uiPoints = pGroup->uiTraverseTime / (450 / 100 - pSoldier->stats.bLifeMax );
 				if ( uiPoints > 0 )
 				{
 					StatChange( pSoldier, HEALTHAMT, (UINT8) uiPoints, FALSE );
 				}
 			}
 
-			if ( pSoldier->bStrength < 100 )
+			if ( pSoldier->stats.bStrength < 100 )
 			{
 				uiCarriedPercent = CalculateCarriedWeight( pSoldier );
 				if ( uiCarriedPercent > 50 )
 				{
-					uiPoints = pGroup->uiTraverseTime / (450 / (100 - pSoldier->bStrength ) );
+					uiPoints = pGroup->uiTraverseTime / (450 / (100 - pSoldier->stats.bStrength ) );
 					StatChange( pSoldier, STRAMT, ( UINT16 ) ( uiPoints * ( uiCarriedPercent - 50) / 100 ), FALSE );
 				}
 			}
@@ -1615,7 +1615,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 
 		while( curr )
 		{
-			curr->pSoldier->uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
+			curr->pSoldier->flags.uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
 			curr = curr->next;
 		}
 		
@@ -1803,7 +1803,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			curr = pGroup->pPlayerList;
 			while( curr )
 			{
-				curr->pSoldier->fBetweenSectors = FALSE;
+				curr->pSoldier->flags.fBetweenSectors = FALSE;
 				curr->pSoldier->sSectorX = pGroup->ubSectorX;
 				curr->pSoldier->sSectorY = pGroup->ubSectorY;
 				curr->pSoldier->bSectorZ = pGroup->ubSectorZ;
@@ -1876,14 +1876,14 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 				pSoldier = GetSoldierStructureForVehicle( iVehId );
 				Assert( pSoldier );
 
-				pSoldier->fBetweenSectors = FALSE;
+				pSoldier->flags.fBetweenSectors = FALSE;
 				pSoldier->sSectorX = pGroup->ubSectorX;
 				pSoldier->sSectorY = pGroup->ubSectorY;
 				pSoldier->bSectorZ = pGroup->ubSectorZ;
 				pSoldier->ubInsertionDirection = ubInsertionDirection;
 
 				// ATE: Removed, may 21 - sufficient to use insertion direction...
-				//pSoldier->bDesiredDirection = ubInsertionDirection;
+				//pSoldier->pathing.bDesiredDirection = ubInsertionDirection;
 
 				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 
@@ -1900,14 +1900,14 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 				curr = pGroup->pPlayerList;
 				while( curr )
 				{
-					curr->pSoldier->fBetweenSectors = FALSE;
+					curr->pSoldier->flags.fBetweenSectors = FALSE;
 					curr->pSoldier->sSectorX = pGroup->ubSectorX;
 					curr->pSoldier->sSectorY = pGroup->ubSectorY;
 					curr->pSoldier->bSectorZ = pGroup->ubSectorZ;
 					curr->pSoldier->ubInsertionDirection = ubInsertionDirection;
 
 					// ATE: Removed, may 21 - sufficient to use insertion direction...
-					// curr->pSoldier->bDesiredDirection = ubInsertionDirection;
+					// curr->pSoldier->pathing.bDesiredDirection = ubInsertionDirection;
 
 					curr->pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 
@@ -2183,7 +2183,7 @@ void PrepareGroupsForSimultaneousArrival()
 
 			if( pSoldier )
 			{
-				pSoldier->fBetweenSectors = TRUE;
+				pSoldier->flags.fBetweenSectors = TRUE;
 			}
 		}
 	}
@@ -2469,7 +2469,7 @@ void InitiateGroupMovementToNextSector( GROUP *pGroup )
 
 			if( pSoldier )
 			{
-				pSoldier->fBetweenSectors = TRUE;
+				pSoldier->flags.fBetweenSectors = TRUE;
 
 				// OK, Remove the guy from tactical engine!
 				RemoveSoldierFromTacticalSector( pSoldier, TRUE );
@@ -2495,7 +2495,7 @@ void InitiateGroupMovementToNextSector( GROUP *pGroup )
 		curr = pGroup->pPlayerList;
 		while( curr )
 		{
-			curr->pSoldier->fBetweenSectors = TRUE;
+			curr->pSoldier->flags.fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
 			RemoveSoldierFromTacticalSector( curr->pSoldier, TRUE );
@@ -2553,7 +2553,7 @@ void SetWayPointsAsCanceled( UINT8 ubGroupID )
 	pGroup = GetGroup( ubGroupID );
 	Assert( pGroup );
 
-	//pGroup -> fWaypointsCancelled = TRUE;
+	//pGroup->fWaypointsCancelled = TRUE;
 
 	return;
 }
@@ -2567,8 +2567,8 @@ void SetGroupPrevSectors( UINT8 ubGroupID, UINT8 ubX, UINT8 ubY )
 	Assert( pGroup );
 
 	// since we have a group, set prev sector's x and y
-	pGroup -> ubPrevX = ubX;
-	pGroup -> ubPrevY = ubY;
+	pGroup->ubPrevX = ubX;
+	pGroup->ubPrevY = ubY;
 
 }
 
@@ -2700,8 +2700,8 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 		pPlayer->pSoldier->sSectorX = sSectorX;
 		pPlayer->pSoldier->sSectorY = sSectorY;
 		pPlayer->pSoldier->bSectorZ = (UINT8)sSectorZ;
-		pPlayer->pSoldier->fBetweenSectors = FALSE;
-		pPlayer->pSoldier->uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
+		pPlayer->pSoldier->flags.fBetweenSectors = FALSE;
+		pPlayer->pSoldier->flags.uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
 		pPlayer = pPlayer->next;
 	}
 
@@ -2785,7 +2785,7 @@ INT32 CalculateTravelTimeOfGroup( GROUP *pGroup )
 	}
 
 	// set up next node
-	pNode = pGroup-> pWaypoints;
+	pNode = pGroup->pWaypoints;
 
 	// now get the delta in current sector and next sector
 	iDelta = ( INT32 )( SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) - SECTOR( pGroup->ubNextX, pGroup->ubNextY ) );
@@ -3081,7 +3081,7 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 				while( pPlayer )
 				{
 					// robots count as mercs here, because they can fight, but vehicles don't
-					if( ( pPlayer->pSoldier->bLife ) && !( pPlayer->pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+					if( ( pPlayer->pSoldier->stats.bLife ) && !( pPlayer->pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 					{
 						ubNumMercs++;
 					}
@@ -3110,7 +3110,7 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 				pPlayer = pGroup->pPlayerList;
 				while( pPlayer )
 				{
-					if( pPlayer->pSoldier->bLife )
+					if( pPlayer->pSoldier->stats.bLife )
 					{
 						ubNumGroups++;
 						break;
@@ -3148,7 +3148,7 @@ BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
 // is the player group in motion?
 BOOLEAN PlayerGroupInMotion( GROUP *pGroup )
 {
-	return( pGroup -> fBetweenSectors );
+	return( pGroup->fBetweenSectors );
 }	
 
 
@@ -3304,19 +3304,19 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 					fMayRetreatFromBattle = FALSE;
 					fRetreatingFromBattle = FALSE;
 
-					if( ( sBattleSector == sSource ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sDest ) )
+					if( ( sBattleSector == sSource ) && ( SECTOR( curr->ubSectorX, curr->ubSectorY ) == sSource ) && ( SECTOR( curr->ubPrevX, curr->ubPrevY ) == sDest ) )
 					{
 						fMayRetreatFromBattle = TRUE;
 					}
 
-					if( ( sBattleSector == sDest ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sSource ) )
+					if( ( sBattleSector == sDest ) && ( SECTOR( curr->ubSectorX, curr->ubSectorY ) == sDest ) && ( SECTOR( curr->ubPrevX, curr->ubPrevY ) == sSource ) )
 					{
 						fRetreatingFromBattle = TRUE;
 					}
 
 					ubMercsInGroup = curr->ubGroupSize;
 
-					if( ( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubNextX, curr->ubNextY ) == sDest) ) || ( fMayRetreatFromBattle == TRUE ) )
+					if( ( ( SECTOR( curr->ubSectorX, curr->ubSectorY ) == sSource ) && ( SECTOR( curr->ubNextX, curr->ubNextY ) == sDest) ) || ( fMayRetreatFromBattle == TRUE ) )
 					{
 						// if it's a valid vehicle, but not the helicopter (which can fly empty)
 						if ( curr->fVehicle && !fHelicopterGroup && ( GivenMvtGroupIdFindVehicleId( curr->ubGroupID ) != -1 ) )
@@ -3334,7 +3334,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 							*fAboutToArriveEnter = TRUE;
 						}
 					}
-					else if( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest )&&( SECTOR( curr -> ubNextX, curr->ubNextY ) == sSource) || ( fRetreatingFromBattle == TRUE ) )
+					else if( ( SECTOR( curr->ubSectorX, curr->ubSectorY ) == sDest )&&( SECTOR( curr->ubNextX, curr->ubNextY ) == sSource) || ( fRetreatingFromBattle == TRUE ) )
 					{
 						// if it's a valid vehicle, but not the helicopter (which can fly empty)
 						if ( curr->fVehicle && !fHelicopterGroup && ( GivenMvtGroupIdFindVehicleId( curr->ubGroupID ) != -1 ) )
@@ -3385,7 +3385,7 @@ void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UIN
 				pPlayer->pSoldier->sSectorX = ubSectorX;
 				pPlayer->pSoldier->sSectorY = ubSectorY;
 				pPlayer->pSoldier->bSectorZ = ubSectorZ;
-				pPlayer->pSoldier->fBetweenSectors = FALSE;
+				pPlayer->pSoldier->flags.fBetweenSectors = FALSE;
 				pPlayer = pPlayer->next;
 			}
 		}
@@ -3463,7 +3463,7 @@ void SetGroupPosition( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrev
 		pPlayer = pGroup->pPlayerList;
 		while( pPlayer )
 		{
-			pPlayer->pSoldier->fBetweenSectors = TRUE;
+			pPlayer->pSoldier->flags.fBetweenSectors = TRUE;
 			pPlayer = pPlayer->next;
 		}
 	}
@@ -3861,7 +3861,7 @@ BOOLEAN LoadEnemyGroupStructFromSavedGame( HWFILE hFile, GROUP *pGroup )
 void CheckMembersOfMvtGroupAndComplainAboutBleeding( SOLDIERTYPE *pSoldier )
 {
 	// run through members of group
-	UINT8 ubGroupId = pSoldier -> ubGroupID;
+	UINT8 ubGroupId = pSoldier->ubGroupID;
 	GROUP	*pGroup;
 	PLAYERGROUP *pPlayer=NULL;
 	SOLDIERTYPE *pCurrentSoldier=NULL;
@@ -4151,7 +4151,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 
 		while( curr )
 		{
-			curr->pSoldier->fBetweenSectors = TRUE;
+			curr->pSoldier->flags.fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
 			RemoveSoldierFromTacticalSector( curr->pSoldier, TRUE );
@@ -4474,7 +4474,7 @@ INT16 CalculateFuelCostBetweenSectors( UINT8 ubSectorID1, UINT8 ubSectorID2 )
 
 BOOLEAN VehicleHasFuel( SOLDIERTYPE *pSoldier )
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
+	Assert( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE );
 	if( pSoldier->sBreathRed )
 	{
 		return TRUE;
@@ -4484,13 +4484,13 @@ BOOLEAN VehicleHasFuel( SOLDIERTYPE *pSoldier )
 
 INT16 VehicleFuelRemaining( SOLDIERTYPE *pSoldier )
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
+	Assert( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE );
 	return pSoldier->sBreathRed;
 }
 
 BOOLEAN SpendVehicleFuel( SOLDIERTYPE* pSoldier, INT16 sFuelSpent )
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
+	Assert( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE );
 	pSoldier->sBreathRed -= sFuelSpent;
 	pSoldier->sBreathRed = (INT16)max( 0, pSoldier->sBreathRed );
 	pSoldier->bBreath = (INT8)((pSoldier->sBreathRed+99) / 100);

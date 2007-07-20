@@ -78,7 +78,7 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 		return( TRUE );
 	}
 
-	if ( pPatient->bLevel != 0 )
+	if ( pPatient->pathing.bLevel != 0 )
 	{	// look for a clear spot for jumping up 
 
 		// special "closest" search that ignores climb spots IF they are occupied by non-medics
@@ -94,7 +94,7 @@ BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
 			if ( CanCharacterAutoBandageTeammate( pSoldier ) == TRUE )
 			{
 				// can this guy path to the patient?
-				if ( pSoldier->bLevel == 0 )
+				if ( pSoldier->pathing.bLevel == 0 )
 				{
 					// do a regular path check
 					if ( FindBestPath( pSoldier, pPatient->sGridNo, 0, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
@@ -189,13 +189,13 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
 // can this soldier autobandage others in sector
 {
 	// if the soldier isn't active or in sector, we have problems..leave
-	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
 	{
 		return( FALSE );
 	}
 
 	// they must have oklife or more, not be collapsed, have some level of medical competence, and have a med kit of some sort
-	if ( (pSoldier->bLife >= OKLIFE) && !(pSoldier->bCollapsed) && (pSoldier->bMedical > 0) && (FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT) )
+	if ( (pSoldier->stats.bLife >= OKLIFE) && !(pSoldier->bCollapsed) && (pSoldier->stats.bMedical > 0) && (FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT) )
 	{
 		return( TRUE );
 	}
@@ -208,12 +208,12 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 {
 	// if the soldier isn't active or in sector, we have problems..leave
-	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
 	{
 		return( FALSE );
 	}
 
-	if ( (pSoldier->bLife > 0) && (pSoldier->bBleeding > 0) )
+	if ( (pSoldier->stats.bLife > 0) && (pSoldier->bBleeding > 0) )
 	{
 		// someone's bleeding and not being given first aid!
 		return( TRUE );
@@ -248,13 +248,13 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 			continue; // NEXT!!!
 		}
 
-		if (pPatient->bLife > 0 && pPatient->bBleeding && pPatient->ubServiceCount == 0)
+		if (pPatient->stats.bLife > 0 && pPatient->bBleeding && pPatient->ubServiceCount == 0)
 		{
-			if (pPatient->bLife < OKLIFE)
+			if (pPatient->stats.bLife < OKLIFE)
 			{
 				bPatientPriority = 3;
 			}
-			else if (pPatient->bLife < OKLIFE * 2)
+			else if (pPatient->stats.bLife < OKLIFE * 2)
 			{
 				bPatientPriority = 2;
 			}
@@ -265,7 +265,7 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 
 			if (bPatientPriority >= bBestPriority)
 			{
-				if ( !ClimbingNecessary( pSoldier, pPatient->sGridNo, pPatient->bLevel ) )
+				if ( !ClimbingNecessary( pSoldier, pPatient->sGridNo, pPatient->pathing.bLevel ) )
 				{
 
 					sPatientGridNo = pPatient->sGridNo;
@@ -276,7 +276,7 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 						for ( cnt2 = 0; cnt2 < NUM_WORLD_DIRECTIONS; cnt2++ )
 						{
 							sPatientGridNo = pPatient->sGridNo + DirectionInc( cnt2 );
-							if ( WhoIsThere2( sPatientGridNo, pPatient->bLevel ) == pPatient->ubID )
+							if ( WhoIsThere2( sPatientGridNo, pPatient->pathing.bLevel ) == pPatient->ubID )
 							{
 								// patient is also here, try this location
 								sAdjacentGridNo = FindAdjacentGridEx( pSoldier, sPatientGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );
@@ -353,7 +353,7 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 				{
 					sClimbGridNo = NOWHERE;
 					// see if guy on another building etc and we need to climb somewhere
-					sPathCost = EstimatePathCostToLocation( pSoldier, pPatient->sGridNo, pPatient->bLevel, FALSE, &fClimbingNecessary, &sClimbGridNo );
+					sPathCost = EstimatePathCostToLocation( pSoldier, pPatient->sGridNo, pPatient->pathing.bLevel, FALSE, &fClimbingNecessary, &sClimbGridNo );
 					// if we can get there
 					if ( sPathCost != 0 && fClimbingNecessary && sPathCost < sShortestClimbPath )
 					{
@@ -381,19 +381,19 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 		*pfDoClimb = FALSE;
 		if ( CardinalSpacesAway( pSoldier->sGridNo, sBestPatientGridNo ) == 1 )
 		{
-			pSoldier->usActionData = sBestPatientGridNo;
+			pSoldier->aiData.usActionData = sBestPatientGridNo;
 			return( AI_ACTION_GIVE_AID );
 		}
 		else
 		{
-			pSoldier->usActionData = sBestAdjGridNo;
+			pSoldier->aiData.usActionData = sBestAdjGridNo;
 			return( AI_ACTION_GET_CLOSER );
 		}
 	}
 	else if (sBestClimbGridNo != NOWHERE )
 	{
 		*pfDoClimb = TRUE;
-		pSoldier->usActionData = sBestClimbGridNo;
+		pSoldier->aiData.usActionData = sBestClimbGridNo;
 		return( AI_ACTION_MOVE_TO_CLIMB );
 	}
 	else
@@ -408,7 +408,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 	BOOLEAN				fDoClimb;
 
 
-	if (pSoldier->bMedical == 0 || pSoldier->ubServicePartner != NOBODY)
+	if (pSoldier->stats.bMedical == 0 || pSoldier->ubServicePartner != NOBODY)
 	{
 		// don't/can't make decision
 		return( AI_ACTION_NONE );
@@ -424,7 +424,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 	if (pSoldier->bBleeding)
 	{
 		// heal self first!
-		pSoldier->usActionData = pSoldier->sGridNo;
+		pSoldier->aiData.usActionData = pSoldier->sGridNo;
 		if (bSlot != HANDPOS)
 		{
 			pSoldier->bSlotItemTakenFrom = bSlot;
@@ -443,9 +443,9 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 		return( AI_ACTION_GIVE_AID );
 	}
 
-//	pSoldier->usActionData = FindClosestPatient( pSoldier );
-	pSoldier->bAction = FindBestPatient( pSoldier, &fDoClimb );
-	if (pSoldier->bAction != AI_ACTION_NONE)
+//	pSoldier->aiData.usActionData = FindClosestPatient( pSoldier );
+	pSoldier->aiData.bAction = FindBestPatient( pSoldier, &fDoClimb );
+	if (pSoldier->aiData.bAction != AI_ACTION_NONE)
 	{
 		pSoldier->usUIMovementMode = RUNNING;
 		if (bSlot != HANDPOS)
@@ -454,7 +454,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 
 			SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bSlot]) );
 		}
-		return( pSoldier->bAction );
+		return( pSoldier->aiData.bAction );
 	}
 
 	// do nothing

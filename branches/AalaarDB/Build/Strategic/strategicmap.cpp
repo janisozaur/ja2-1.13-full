@@ -1966,7 +1966,7 @@ void RemoveMercsInSector( )
 	{	
 		if ( pSoldier->bActive  )
 		{
-			RemoveSoldierFromGridNo( pSoldier );
+			pSoldier->RemoveSoldierFromGridNo( );
 		}
 	}
 
@@ -2497,7 +2497,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 					}
 				}
 
-				if ( pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ && !pSoldier->fBetweenSectors )
+				if ( pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ && !pSoldier->flags.fBetweenSectors )
 				{
 					gbMercIsNewInThisSector[ pSoldier->ubID ] = 1;
 
@@ -2520,7 +2520,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 								{
 									AddCharacterToUniqueSquad( pSoldier );
 									ubPOWSquad = pSoldier->bAssignment;								
-									pSoldier->bNeutral		= FALSE;
+									pSoldier->aiData.bNeutral		= FALSE;
 								}
 							}
 							else
@@ -2566,14 +2566,14 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	BOOLEAN fError = FALSE;
-	if( pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID)
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID)
 	{
 		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	}
 	// OK, determine entrence direction and get sweetspot
 	// Only if we are an OK guy to control....
 	// SOME CHECKS HERE MUST BE FLESHED OUT......
-	if ( pSoldier->bActive )		// This was in the if, removed by DEF:  pSoldier->bLife >= OKLIFE && 
+	if ( pSoldier->bActive )		// This was in the if, removed by DEF:  pSoldier->stats.bLife >= OKLIFE && 
 	{
 		// If we are not in transit...
 		if ( pSoldier->bAssignment != IN_TRANSIT )
@@ -2594,7 +2594,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE )
 			{
 				// override orders
-				pSoldier->bOrders = STATIONARY;
+				pSoldier->aiData.bOrders = STATIONARY;
 			}
 
 
@@ -2631,12 +2631,12 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					break;
 
 				case INSERTION_CODE_PRIMARY_EDGEINDEX:
-					pSoldier->sInsertionGridNo = SearchForClosestPrimaryMapEdgepoint( pSoldier->sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
+					pSoldier->sInsertionGridNo = SearchForClosestPrimaryMapEdgepoint( pSoldier->aiData.sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
 					#ifdef JA2BETAVERSION
 					{
 						CHAR8 str[256];
 						sprintf( str, "%S's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.", 
-													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
+													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->aiData.sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );	
 					}
 					#endif
@@ -2648,12 +2648,12 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					}
 					break;
 				case INSERTION_CODE_SECONDARY_EDGEINDEX:
-					pSoldier->sInsertionGridNo = SearchForClosestSecondaryMapEdgepoint( pSoldier->sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
+					pSoldier->sInsertionGridNo = SearchForClosestSecondaryMapEdgepoint( pSoldier->aiData.sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
 					#ifdef JA2BETAVERSION
 					{
 						CHAR8 str[256];
 						sprintf( str, "%S's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.", 
-													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
+													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->aiData.sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );	
 					}
 					#endif
@@ -3226,14 +3226,14 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 						// Save wait code - this will make buddy walk off screen into oblivion
 						curr->pSoldier->ubWaitActionToDo = 2;
 						// This will set the direction so we know now to move into oblivion
-						curr->pSoldier->uiPendingActionData1		 = ubTacticalDirection;
+						curr->pSoldier->aiData.uiPendingActionData1		 = ubTacticalDirection;
 					}
 					else
 					{
 						AssertMsg( 0, String( "Failed to get good exit location for adjacentmove" ) );
 					}
 
-					EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
+					curr->pSoldier->EVENT_GetNewSoldierPath( sGridNo, WALKING );
 
 				}
 				else
@@ -3257,7 +3257,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 						// Set buddy go!
 						gfPlotPathToExitGrid = TRUE;
-						EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
+						curr->pSoldier->EVENT_GetNewSoldierPath( sGridNo, WALKING );
 						gfPlotPathToExitGrid = FALSE;
 
 				}
@@ -3390,7 +3390,7 @@ void AllMercsWalkedToExitGrid()
 			pPlayer = gpAdjacentGroup->pPlayerList;
 			while( pPlayer )
 			{
-				if( pPlayer->pSoldier->bLife < OKLIFE )
+				if( pPlayer->pSoldier->stats.bLife < OKLIFE )
 				{
 					AddCharacterToUniqueSquad( pPlayer->pSoldier );
 					break;
@@ -3517,7 +3517,7 @@ void AllMercsHaveWalkedOffSector( )
 				sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
 				
 				// Save this gridNo....
-				pSoldier->sPendingActionData2				= sNewGridNo;
+				pSoldier->aiData.sPendingActionData2				= sNewGridNo;
 				// Copy CODe computed earlier into data
 				pSoldier->usStrategicInsertionData  = pSoldier->ubStrategicInsertionCode;
 				// Now use NEW code....
@@ -3660,7 +3660,7 @@ void SetupTacticalTraversalInformation()
 			sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
 			
 			// Save this gridNo....
-			pSoldier->sPendingActionData2				= sNewGridNo;
+			pSoldier->aiData.sPendingActionData2				= sNewGridNo;
 			// Copy CODe computed earlier into data
 			pSoldier->usStrategicInsertionData  = pSoldier->ubStrategicInsertionCode;
 			// Now use NEW code....
@@ -3835,7 +3835,7 @@ void DoneFadeOutAdjacentSector( )
 		curr = gpAdjacentGroup->pPlayerList;
 		while( curr )
 		{	
-			if( !(curr->pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID) )
+			if( !(curr->pSoldier->flags.uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID) )
 			{
 				if( curr->pSoldier->sGridNo != NOWHERE )
 				{
@@ -3856,10 +3856,10 @@ void DoneFadeOutAdjacentSector( )
 						sOldGridNo = curr->pSoldier->sGridNo;
 						sWorldX = CenterX( sGridNo );
 						sWorldY = CenterY( sGridNo );
-						EVENT_SetSoldierPosition( curr->pSoldier, sWorldX, sWorldY );
+						curr->pSoldier->EVENT_SetSoldierPosition( sWorldX, sWorldY );
 						if( sGridNo != sOldGridNo )
 						{
-							EVENT_GetNewSoldierPath( curr->pSoldier, sOldGridNo, WALKING );
+							curr->pSoldier->EVENT_GetNewSoldierPath( sOldGridNo, WALKING );
 						}
 						ubNum++;
 					}
@@ -3903,7 +3903,7 @@ BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UIN
 		return( FALSE );
 
 	// OK, anyone on roofs cannot!
-	if ( pSoldier->bLevel > 0 )
+	if ( pSoldier->pathing.bLevel > 0 )
 		return( FALSE );
 
 	// get world absolute XY
@@ -3960,7 +3960,7 @@ BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UIN
 			// FOR REALTIME - DO MOVEMENT BASED ON STANCE!
 			if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
-				pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
+				pSoldier->usUIMovementMode =  pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 			}
 
 			sGridNo = FindGridNoFromSweetSpotCloseToExitGrid( pSoldier, usAdditionalData, 10, &ubDirection );
@@ -4049,7 +4049,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				ubNumEPCs++;
 				//Also record the EPC's slot ID incase we later build a string using the EPC's name.
 				gbPotentiallyAbandonedEPCSlotID = (INT8)cnt;
-				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
+				if( AM_A_ROBOT( pSoldier ) && !pSoldier->CanRobotBeControlled( ) )
 				{
 					gfRobotWithoutControllerAttemptingTraversal = TRUE;
 					ubNumControllableMercs--;
@@ -4113,7 +4113,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			//exiting sector gui, we restrict it by explaining it with a message box.
 			if ( AM_AN_EPC( MercPtrs[ gusSelectedSoldier ] ) )
 			{
-				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
+				if( AM_A_ROBOT( pSoldier ) && !pSoldier->CanRobotBeControlled( ) )
 				{
 					//gfRobotWithoutControllerAttemptingTraversal = TRUE;
 					return FALSE;
@@ -4297,7 +4297,7 @@ BOOLEAN CanGoToTacticalInSector( INT16 sX, INT16 sY, UINT8 ubZ )
 	//for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
 	{
 		// ARM: now allows loading of sector with all mercs below OKLIFE as long as they're alive
-		//if( ( pSoldier->bActive && pSoldier->bLife ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+		//if( ( pSoldier->bActive && pSoldier->stats.bLife ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) &&
 		//	( pSoldier->bAssignment != IN_TRANSIT ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
 		//	( pSoldier->bAssignment != ASSIGNMENT_DEAD ) && !SoldierAboardAirborneHeli( pSoldier ) 
 		//	)
@@ -4305,7 +4305,7 @@ BOOLEAN CanGoToTacticalInSector( INT16 sX, INT16 sY, UINT8 ubZ )
 		//if( (SectorInfo[ SECTOR( gWorldSectorX,gWorldSectorY) ].uiFlags & SF_ALREADY_VISITED) )
 		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
 		{
-			//if ( !pSoldier->fBetweenSectors && pSoldier->sSectorX == sX && pSoldier->sSectorY == sY && pSoldier->bSectorZ == ubZ )
+			//if ( !pSoldier->flags.fBetweenSectors && pSoldier->sSectorX == sX && pSoldier->sSectorY == sY && pSoldier->bSectorZ == ubZ )
 			{
 				return( TRUE );
 			}
@@ -4617,7 +4617,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 			do
 			{
 				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 				{
 					return( sGridNo );
 				}
@@ -4680,7 +4680,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 			do
 			{
 				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 				{
 					return( sGridNo );
 				}
@@ -4743,7 +4743,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 			do
 			{
 				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 				{
 					return( sGridNo );
 				}
@@ -4806,7 +4806,7 @@ INT16 PickGridNoNearestEdge( SOLDIERTYPE *pSoldier, UINT8 ubTacticalDirection )
 			do
 			{
 				// OK, here we go back one, check for OK destination...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
 				{
 					return( sGridNo );
 				}
@@ -4852,14 +4852,14 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	INT32	iLoop;
 
 	// will this path segment actually take us to our desired destination in the first place?
-	if (pSoldier->usPathDataSize + 2 > MAX_PATH_LIST_SIZE)
+	if (pSoldier->pathing.usPathDataSize + 2 > MAX_PATH_LIST_SIZE)
 	{
 
 		sTempGridNo = pSoldier->sGridNo;
 
-		for (iLoop = 0; iLoop < pSoldier->usPathDataSize; iLoop++)
+		for (iLoop = 0; iLoop < pSoldier->pathing.usPathDataSize; iLoop++)
 		{
-			sTempGridNo += (INT16)DirectionInc( pSoldier->usPathingData[ iLoop ] );
+			sTempGridNo += (INT16)DirectionInc( pSoldier->pathing.usPathingData[ iLoop ] );
 		}
 
 		if (sTempGridNo == sEndGridNo)
@@ -4867,7 +4867,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			// we can make it, but there isn't enough path room for the two steps required.
 			// truncate our path so there's guaranteed the merc will have to generate another
 			// path later on...	
-			pSoldier->usPathDataSize -= 4;
+			pSoldier->pathing.usPathDataSize -= 4;
 			return;
 		}
 		else
@@ -4888,10 +4888,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = NORTHEAST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
 
@@ -4901,10 +4901,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = NORTHEAST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			break;
 
@@ -4917,10 +4917,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = SOUTHWEST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
 
@@ -4930,10 +4930,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = SOUTHWEST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 			break;
 
 		case NORTH:
@@ -4945,10 +4945,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = NORTHWEST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
 
@@ -4958,10 +4958,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = NORTHWEST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			break;
 
@@ -4974,10 +4974,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = SOUTHEAST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 
 			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
 
@@ -4987,10 +4987,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
-			pSoldier->usPathDataSize++;
-			pSoldier->sFinalDestination = sNewGridNo;
-			pSoldier->usActionData = sNewGridNo;
+			pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathDataSize ] = SOUTHEAST;
+			pSoldier->pathing.usPathDataSize++;
+			pSoldier->pathing.sFinalDestination = sNewGridNo;
+			pSoldier->aiData.usActionData = sNewGridNo;
 			break;
 
 	}
@@ -5039,7 +5039,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 			{
 				(*puiNumAttempts)++;
 				// OK, here we go back one, check for OK destination...
-				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
+				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
 				{
 					return( sGridNo );
 				}
@@ -5102,7 +5102,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 			{
 				(*puiNumAttempts)++;
 				// OK, here we go back one, check for OK destination...
-				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
+				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
 				{
 					return( sGridNo );
 				}
@@ -5165,7 +5165,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 			{
 				(*puiNumAttempts)++;
 				// OK, here we go back one, check for OK destination...
-				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
+				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
 				{
 					return( sGridNo );
 				}
@@ -5228,7 +5228,7 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 			{
 				(*puiNumAttempts)++;
 				// OK, here we go back one, check for OK destination...
-				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
+				if ( ( gTacticalStatus.uiFlags & IGNORE_ALL_OBSTACLES ) || ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) && FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) ) )
 				{
 					return( sGridNo );
 				}
@@ -5301,7 +5301,7 @@ void HandleSlayDailyEvent( void )
 	}
 
 	// valid soldier?
-	if( ( pSoldier->bActive == FALSE ) || ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+	if( ( pSoldier->bActive == FALSE ) || ( pSoldier->stats.bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 	{
 		// no
 		return;
@@ -5408,7 +5408,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 	//co-exist in the sector, then make them fight for control of the sector via autoresolve.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife )
 		{
 			if( MercPtrs[ i ]->sSectorX == gWorldSectorX && 
 					MercPtrs[ i ]->sSectorY == gWorldSectorY && 
@@ -5416,7 +5416,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 			{ //We have enemies, now look for militia!
 				for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 				{
-					if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && MercPtrs[ i ]->bSide == OUR_TEAM )
+					if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && MercPtrs[ i ]->bSide == OUR_TEAM )
 					{
 						if( MercPtrs[ i ]->sSectorX == gWorldSectorX && 
 								MercPtrs[ i ]->sSectorY == gWorldSectorY && 
@@ -5476,13 +5476,13 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 		{
 			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 			{ //If we have a live and valid soldier
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ) )
+				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !MercPtrs[ i ]->flags.fBetweenSectors && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ) )
 				{
 					if( MercPtrs[ i ]->sSectorX == gWorldSectorX && 
 							MercPtrs[ i ]->sSectorY == gWorldSectorY && 
 							MercPtrs[ i ]->bSectorZ == gbWorldSectorZ )
 					{
-						RemoveSoldierFromGridNo( MercPtrs[ i ] );
+						MercPtrs[ i ]->RemoveSoldierFromGridNo(  );
 						InitSoldierOppList( MercPtrs[ i ] );
 					}
 				}
@@ -5493,7 +5493,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	{	//Check and see if we have any live mercs in the sector.  
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{ //If we have a live and valid soldier
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ))
+			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !MercPtrs[ i ]->flags.fBetweenSectors && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ))
 			{
 				if( MercPtrs[ i ]->sSectorX == gWorldSectorX && 
 						MercPtrs[ i ]->sSectorY == gWorldSectorY && 
@@ -5626,7 +5626,7 @@ void SetupProfileInsertionDataForSoldier( SOLDIERTYPE *pSoldier )
 			}
 			else
 			{
-				if ( pSoldier->sFinalDestination == pSoldier->sGridNo )
+				if ( pSoldier->pathing.sFinalDestination == pSoldier->sGridNo )
 				{
 					gMercProfiles[ pSoldier->ubProfile ].usStrategicInsertionData = pSoldier->sGridNo;
 				}
@@ -5636,7 +5636,7 @@ void SetupProfileInsertionDataForSoldier( SOLDIERTYPE *pSoldier )
 				}
 				else
 				{
-					gMercProfiles[ pSoldier->ubProfile ].usStrategicInsertionData = pSoldier->sFinalDestination;
+					gMercProfiles[ pSoldier->ubProfile ].usStrategicInsertionData = pSoldier->pathing.sFinalDestination;
 				}			
 
 				gMercProfiles[ pSoldier->ubProfile ].fUseProfileInsertionInfo = TRUE;

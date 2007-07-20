@@ -1505,7 +1505,7 @@ void RenderHandPosItem( void )
 	}
 
 	// check if still alive?
-	if( pSoldier -> bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		return;
 	}
@@ -1558,7 +1558,7 @@ void DrawPay(INT16 sCharNumber)
 
 
 	// get merc id
-	usMercProfileID = MercPtrs[ gCharactersList[ sCharNumber ].usSolID ] -> ubProfile;
+	usMercProfileID = MercPtrs[ gCharactersList[ sCharNumber ].usSolID ]->ubProfile;
 	
 	// grab salary
 	uiSalary=( ( UINT32 ) gMercProfiles[ usMercProfileID ].sSalary );
@@ -1612,7 +1612,7 @@ void DrawCharBars( void )
 		}
 
 		// skip POWs, dead guys
-		if( ( pSoldier->bLife == 0 ) ||
+		if( ( pSoldier->stats.bLife == 0 ) ||
 				( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
 				( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 		{
@@ -1630,7 +1630,7 @@ void DrawCharBars( void )
 		}
 
 		// vehicles and robot don't have morale
-		if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+		if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 		{
 			// draw morale bar
 			DrawMoraleUIBarEx( pSoldier, BAR_INFO_X + 12, BAR_INFO_Y,3,42, TRUE, FRAME_BUFFER );
@@ -1658,9 +1658,9 @@ void DrawCharStats( INT16 sCharNum )
 	
 
 	// strength
-	swprintf( sString, L"%d", pSoldier->bStrength);
+	swprintf( sString, L"%d", pSoldier->stats.bStrength);
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeStrengthTime)&& ( pSoldier->uiChangeStrengthTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeStrengthTime)&& ( pSoldier->timeChanges.uiChangeStrengthTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & STRENGTH_INCREASE )
 		{
@@ -1681,9 +1681,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, STR_Y,CHAR_FONT );
 
 	// dexterity 
-	swprintf( sString, L"%d", pSoldier->bDexterity );
+	swprintf( sString, L"%d", pSoldier->stats.bDexterity );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeDexterityTime ) && ( pSoldier->uiChangeDexterityTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeDexterityTime ) && ( pSoldier->timeChanges.uiChangeDexterityTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & DEX_INCREASE )
 		{
@@ -1704,9 +1704,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, DEX_Y,CHAR_FONT );
 
 	// agility
-	swprintf( sString, L"%d", pSoldier->bAgility );
+	swprintf( sString, L"%d", pSoldier->stats.bAgility );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeAgilityTime)&& ( pSoldier->uiChangeAgilityTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeAgilityTime)&& ( pSoldier->timeChanges.uiChangeAgilityTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & AGIL_INCREASE )
 		{
@@ -1727,9 +1727,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, AGL_Y,CHAR_FONT );
 
 	// wisdom
-	swprintf( sString, L"%d", pSoldier->bWisdom );
+	swprintf( sString, L"%d", pSoldier->stats.bWisdom );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeWisdomTime )&&( pSoldier->uiChangeWisdomTime != 0 ))
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeWisdomTime )&&( pSoldier->timeChanges.uiChangeWisdomTime != 0 ))
 	{
 		if( pSoldier->usValueGoneUp & WIS_INCREASE )
 		{
@@ -1750,9 +1750,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, WIS_Y,CHAR_FONT );
 
 	// leadership
-	swprintf( sString, L"%d", pSoldier->bLeadership );
+	swprintf( sString, L"%d", pSoldier->stats.bLeadership );
 	
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeLeadershipTime ) && ( pSoldier->uiChangeLeadershipTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeLeadershipTime ) && ( pSoldier->timeChanges.uiChangeLeadershipTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & LDR_INCREASE )
 		{
@@ -1773,9 +1773,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, LDR_Y,CHAR_FONT );
 
 	// experience level
-	swprintf( sString, L"%d", pSoldier->bExpLevel );
+	swprintf( sString, L"%d", pSoldier->stats.bExpLevel );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeLevelTime)&&( pSoldier->uiChangeLevelTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeLevelTime)&&( pSoldier->timeChanges.uiChangeLevelTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & LVL_INCREASE )
 		{
@@ -1796,9 +1796,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, LVL_Y,CHAR_FONT ); 
 
 	// marksmanship
-	swprintf( sString, L"%d", pSoldier->bMarksmanship );
+	swprintf( sString, L"%d", pSoldier->stats.bMarksmanship );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMarksmanshipTime) && ( pSoldier->uiChangeMarksmanshipTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeMarksmanshipTime) && ( pSoldier->timeChanges.uiChangeMarksmanshipTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & MRK_INCREASE )
 		{
@@ -1819,9 +1819,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, MRK_Y,CHAR_FONT ); 
 
 	// explosives
-	swprintf( sString, L"%d", pSoldier->bExplosive );
+	swprintf( sString, L"%d", pSoldier->stats.bExplosive );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeExplosivesTime)&& ( pSoldier->uiChangeExplosivesTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeExplosivesTime)&& ( pSoldier->timeChanges.uiChangeExplosivesTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & EXP_INCREASE )
 		{
@@ -1842,9 +1842,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, EXP_Y,CHAR_FONT ); 
 	
 	// mechanical
-	swprintf( sString, L"%d", pSoldier->bMechanical );
+	swprintf( sString, L"%d", pSoldier->stats.bMechanical );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMechanicalTime )&& ( pSoldier->uiChangeMechanicalTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeMechanicalTime )&& ( pSoldier->timeChanges.uiChangeMechanicalTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & MECH_INCREASE )
 		{
@@ -1865,9 +1865,9 @@ void DrawCharStats( INT16 sCharNum )
 	DrawString(sString,usX, MEC_Y,CHAR_FONT ); 
 	
 	// medical
-	swprintf( sString, L"%d", pSoldier->bMedical );
+	swprintf( sString, L"%d", pSoldier->stats.bMedical );
 
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMedicalTime)&& ( pSoldier->uiChangeMedicalTime != 0 ) )
+	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeMedicalTime)&& ( pSoldier->timeChanges.uiChangeMedicalTime != 0 ) )
 	{
 		if( pSoldier->usValueGoneUp & MED_INCREASE )
 		{
@@ -1907,13 +1907,13 @@ void DrawCharHealth( INT16 sCharNum )
 	if( pSoldier->bAssignment != ASSIGNMENT_POW )
 	{
 		// find starting X coordinate by centering all 3 substrings together, then print them separately (different colors)!
-		swprintf( sString, L"%d/%d", pSoldier->bLife, pSoldier->bLifeMax );
+		swprintf( sString, L"%d/%d", pSoldier->stats.bLife, pSoldier->stats.bLifeMax );
 		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, sString, CHAR_FONT, &usX, &usY);
 
 
-		if ( pSoldier->bLifeMax > 0 )
+		if ( pSoldier->stats.bLifeMax > 0 )
 		{
-			uiHealthPercent = ( pSoldier->bLife * 100 ) / pSoldier->bLifeMax;
+			uiHealthPercent = ( pSoldier->stats.bLife * 100 ) / pSoldier->stats.bLifeMax;
 		}
 
 		// how is characters life?
@@ -1941,7 +1941,7 @@ void DrawCharHealth( INT16 sCharNum )
 		}
 
 		// current life
-		swprintf( sString, L"%d", pSoldier->bLife );
+		swprintf( sString, L"%d", pSoldier->stats.bLife );
 		DrawString( sString, usX, CHAR_HP_Y, CHAR_FONT );
 		usX += StringPixLength( sString, CHAR_FONT );
 
@@ -1953,7 +1953,7 @@ void DrawCharHealth( INT16 sCharNum )
 		usX += StringPixLength( sString, CHAR_FONT );
 
 
-		if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeHealthTime)&& ( pSoldier->uiChangeHealthTime != 0 ) )
+		if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->timeChanges.uiChangeHealthTime)&& ( pSoldier->timeChanges.uiChangeHealthTime != 0 ) )
 		{
 			if( pSoldier->usValueGoneUp & HEALTH_INCREASE )
 			{
@@ -1970,7 +1970,7 @@ void DrawCharHealth( INT16 sCharNum )
 		}
 
 		// maximum life
-		swprintf( sString, L"%d", pSoldier->bLifeMax );
+		swprintf( sString, L"%d", pSoldier->stats.bLifeMax );
 		DrawString( sString, usX, CHAR_HP_Y, CHAR_FONT );
 	}
 	else
@@ -2028,7 +2028,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 
 	// Nickname (beneath Picture)
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// vehicle
 		wcscpy(sString, pShortVehicleStrings[ pVehicleList[ pSoldier->bVehicleID ].ubVehicleType ]);
@@ -2044,7 +2044,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 
 	// Full name (Top Box)
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// vehicle
 		wcscpy(sString, pVehicleStrings[ pVehicleList[ pSoldier->bVehicleID ].ubVehicleType ]);
@@ -2089,13 +2089,13 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	// repairing?
 	else if( pSoldier->bAssignment == REPAIR )
 	{
-		if ( pSoldier->fFixingRobot )
+		if ( pSoldier->flags.fFixingRobot )
 		{
 			// robot
 			wcscpy( sString, pRepairStrings[ 3 ] );
 		}
 /*
-		else if ( pSoldier->fFixingSAMSite )
+		else if ( pSoldier->flags.fFixingSAMSite )
 		{
 			// SAM site
 			wcscpy( sString, pRepairStrings[ 1 ] );
@@ -2143,7 +2143,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 
 	// if a vehicle or robot
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
 	{
 		// we're done - the remainder applies only to people
 		return;
@@ -2156,7 +2156,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	// remaining contract length
 
 	// dead?
-	if( pSoldier->bLife <= 0 )
+	if( pSoldier->stats.bLife <= 0 )
 	{
 		swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 	}
@@ -2186,7 +2186,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 			// more than a day, display in green
 			iTimeRemaining /= (60*24);
-			if( pSoldier->bLife > 0 )
+			if( pSoldier->stats.bLife > 0 )
 			{
 				SetFontForeground(FONT_LTGREEN);
 			}
@@ -2213,7 +2213,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 				iTimeRemaining /= 60;
 			}
 
-			if( pSoldier->bLife > 0 )
+			if( pSoldier->stats.bLife > 0 )
 			{
 				SetFontForeground(FONT_RED);
 			}
@@ -2299,7 +2299,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	// morale
 	if( pSoldier->bAssignment != ASSIGNMENT_POW )
 	{
-		if ( pSoldier->bLife != 0 )
+		if ( pSoldier->stats.bLife != 0 )
 		{
 			GetMoraleString( MercPtrs[gCharactersList[sCharNumber].usSolID], sString );
 		}
@@ -2426,7 +2426,7 @@ INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
 				pGroup = GetGroup( ubGroupId );
 			}
 		}
-		else if( Menptr[gCharactersList[bSelectedDestChar].usSolID].uiStatusFlags & SOLDIER_VEHICLE )
+		else if( Menptr[gCharactersList[bSelectedDestChar].usSolID].flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			ubGroupId = pVehicleList[ Menptr[gCharactersList[bSelectedDestChar].usSolID].bVehicleID ].ubMovementGroup;
 			pGroup = GetGroup( ubGroupId );
@@ -2817,19 +2817,19 @@ void AddCharacter( SOLDIERTYPE *pCharacter )
 	}
 
 	// valid character?
-	if( pCharacter -> bActive == FALSE )
+	if( pCharacter->bActive == FALSE )
 	{
 		return;
 	}
 
 	// adding a vehicle?
-	if( pCharacter->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		while( usVehicleLoop < MAX_CHARACTER_COUNT )
 		{
 			if ( gCharactersList[ usVehicleLoop ].fValid )
 			{
-				if ( Menptr[ usVehicleLoop ].uiStatusFlags & SOLDIER_VEHICLE )
+				if ( Menptr[ usVehicleLoop ].flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					usVehicleCount++;
 				}
@@ -2856,7 +2856,7 @@ void AddCharacter( SOLDIERTYPE *pCharacter )
 	}
 
 	// copy over soldier id value
-	gCharactersList[usCount].usSolID = ( UINT16 )pCharacter -> ubID;	
+	gCharactersList[usCount].usSolID = ( UINT16 )pCharacter->ubID;	
 	
 	// valid character
 	gCharactersList[usCount].fValid = TRUE;
@@ -2959,7 +2959,7 @@ void DisplayCharacterList()
 				ubForegroundColor = FONT_WHITE;
 			} 
 			// check to see if character is still alive
-			else if( Menptr[gCharactersList[sCount].usSolID].bLife == 0 )
+			else if( Menptr[gCharactersList[sCount].usSolID].stats.bLife == 0 )
 			{
 				ubForegroundColor = FONT_METALGRAY;
 			}
@@ -3558,7 +3558,7 @@ UINT32 MapScreenHandle(void)
 
 
 			// make him continue talking
-			ContinueDialogue( MercPtrs[ gpCurrentTalkingFace -> ubSoldierID ], FALSE );
+			ContinueDialogue( MercPtrs[ gpCurrentTalkingFace->ubSoldierID ], FALSE );
 
 			// reset diabled flag
 			//gpCurrentTalkingFace->fDisabled = FALSE; 
@@ -4356,7 +4356,7 @@ void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 
 	if( fFlashAssignDone == TRUE )
 	{
-		if( Menptr[gCharactersList[sCharNumber].usSolID].fDoneAssignmentAndNothingToDoFlag )
+		if( Menptr[gCharactersList[sCharNumber].usSolID].flags.fDoneAssignmentAndNothingToDoFlag )
 		{
 			SetFontForeground( FONT_RED );
 		}
@@ -5537,7 +5537,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					{
 						SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
 
-						if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+						if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 						{
 							pSoldier->sBreathRed = 10000;
 							pSoldier->bBreath = 100;
@@ -7300,7 +7300,7 @@ void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo )
 	DrawString( pUpperLeftMapScreenStrings[ 0 ], (UINT16)(220 - StringPixLength( pUpperLeftMapScreenStrings[0], CHAR_FONT)/2), 6, CHAR_FONT);
 
 	// vehicles and robot don't have attributes, contracts, or morale
-	if ( ( pSoldier == NULL ) || ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) ) )
+	if ( ( pSoldier == NULL ) || ( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) ) )
 	{
 		// health
 		DrawString(pUpperLeftMapScreenStrings[ 2 ], 87, 80, CHAR_FONT);
@@ -7400,7 +7400,7 @@ void SetUpCursorForStrategicMap( void )
 			else	// yes - by character
 			{
 				// set cursor based on foot or vehicle
-				if( ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].bAssignment != VEHICLE ) && !( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].uiStatusFlags & SOLDIER_VEHICLE ) )
+				if( ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].bAssignment != VEHICLE ) && !( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
 					ChangeMapScreenMaskCursor( CURSOR_STRATEGIC_FOOT );
 				}
@@ -7802,7 +7802,7 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 			fPlotForHelicopter = FALSE;
 
 			// if not dead or POW, select his sector
-			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
+			if( ( pSoldier->stats.bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
 				ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 			}
@@ -7856,7 +7856,7 @@ void TeamListInfoRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 			fPlotForHelicopter = FALSE;
 
 			// if not dead or POW, select his sector
-			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
+			if( ( pSoldier->stats.bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
 				ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 			}
@@ -7945,7 +7945,7 @@ void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 
 			// if alive (dead guys keep going, use remove menu instead),
 			// and it's between sectors and it can be reassigned (non-vehicles)
-			if ( ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) && ( pSoldier->bLife > 0 ) && ( pSoldier->fBetweenSectors ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if ( ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) && ( pSoldier->stats.bLife > 0 ) && ( pSoldier->flags.fBetweenSectors ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				// can't reassign mercs while between sectors
 				DoScreenIndependantMessageBox( pMapErrorString[ 41 ], MSG_BOX_FLAG_OK, NULL );
@@ -7972,13 +7972,13 @@ void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 			gfRenderPBInterface = TRUE;
 
 			// if this thing can be re-assigned
-			if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				giAssignHighLine = iValue;
 
 				fShowAssignmentMenu = TRUE;
 
-				if( ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+				if( ( pSoldier->stats.bLife == 0 ) || ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 				{
 					fShowRemoveMenu = TRUE;
 				}
@@ -8025,7 +8025,7 @@ void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 		{
 			giHighLine = iValue;
 
-			if( !( Menptr[ gCharactersList[ iValue ].usSolID ].uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( !( Menptr[ gCharactersList[ iValue ].usSolID ].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				giAssignHighLine = iValue;
 			}
@@ -8056,7 +8056,7 @@ void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		if( ( gCharactersList[ iValue ].fValid == TRUE ) && 
-		   !( Menptr[ gCharactersList[ iValue ].usSolID ].uiStatusFlags & SOLDIER_VEHICLE ) )
+		   !( Menptr[ gCharactersList[ iValue ].usSolID ].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// play click
 		  PlayGlowRegionSound( );
@@ -8275,7 +8275,7 @@ void TeamListSleepRegionBtnCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 			{
 				pSoldier = &Menptr[ gCharactersList[ iValue ].usSolID ];
 
-				if( pSoldier->fMercAsleep == TRUE )
+				if( pSoldier->flags.fMercAsleep == TRUE )
 				{
 					// try to wake him up
 					if( SetMercAwake( pSoldier, TRUE, FALSE ) )
@@ -8830,7 +8830,7 @@ void DetermineIfContractMenuCanBeShown( void )
 	// determine which lines selectable
 	HandleShadingOfLinesForContractMenu( );
 
-	if( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].bLife == 0 )
+	if( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].stats.bLife == 0 )
 	{
 		// show basic assignment menu
 		ShowBox( ghRemoveMercAssignBox );
@@ -9002,7 +9002,7 @@ void HandleShadingOfLinesForContractMenu( void )
 
 
 	// is guy in AIM? and well enough to talk and make such decisions?
-	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( pSoldier->bLife >= OKLIFE ) )
+	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( pSoldier->stats.bLife >= OKLIFE ) )
 	{
 		pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
 
@@ -9185,7 +9185,7 @@ void EnableDisableTeamListRegionsAndHelpText( void )
 			MSYS_EnableRegion( &gTeamListLocationRegion[ bCharNum ] );
 
 			// valid character.  If it's a vehicle, however
-			if ( Menptr[ gCharactersList[ bCharNum ].usSolID ].uiStatusFlags & SOLDIER_VEHICLE )
+			if ( Menptr[ gCharactersList[ bCharNum ].usSolID ].flags.uiStatusFlags & SOLDIER_VEHICLE )
 			{
 				// Can't change assignment for vehicles
 				MSYS_DisableRegion( &gTeamListAssignmentRegion[ bCharNum ] );
@@ -9196,7 +9196,7 @@ void EnableDisableTeamListRegionsAndHelpText( void )
 
 				// POW or dead ?
 				if ( ( Menptr[ gCharactersList[ bCharNum ].usSolID ].bAssignment == ASSIGNMENT_POW ) ||
-						 ( Menptr[ gCharactersList[ bCharNum ].usSolID ].bLife == 0 ) )
+						 ( Menptr[ gCharactersList[ bCharNum ].usSolID ].stats.bLife == 0 ) )
 				{
 					// "Remove Merc"
 					SetRegionFastHelpText( &gTeamListAssignmentRegion[ bCharNum ], pRemoveMercStrings[ 0 ] );
@@ -9446,7 +9446,7 @@ BOOLEAN CheckIfClickOnLastSectorInPath( INT16 sX, INT16 sY )
 			// clicked on last sector, reset plotting mode
 
 			// if he's IN a vehicle or IS a vehicle
-			if( ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].bAssignment == VEHICLE ) || ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].bAssignment == VEHICLE ) || ( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				if( Menptr[gCharactersList[ bSelectedDestChar ].usSolID].bAssignment == VEHICLE )
 				{
@@ -9532,7 +9532,7 @@ void RebuildWayPointsForAllSelectedCharsGroups( void )
 
 
 			// if he's IN a vehicle or IS a vehicle
-			if( ( pSoldier->bAssignment == VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( ( pSoldier->bAssignment == VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			{
 				if( pSoldier->bAssignment == VEHICLE )
 				{
@@ -9799,7 +9799,7 @@ void UpDateStatusOfContractBox( void )
 	{
 		ForceUpDateOfBox( ghContractBox );
 
-		if( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) )
+		if( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].stats.bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) )
 		{
 			ForceUpDateOfBox( ghRemoveMercAssignBox );
 		}
@@ -9852,7 +9852,7 @@ void TrashCanBtnCallback( MOUSE_REGION *pRegion, INT32 iReason)
 		if( gpItemPointer != NULL )
 		{
 		  // set up for mapscreen
-			if( gpItemPointer -> ubMission )
+			if( gpItemPointer->ubMission )
 			{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
 			}
@@ -9939,7 +9939,7 @@ INT8 GetLastValidCharacterInTeamPanelList( void )
 	{
 		if( gCharactersList[ iCounter ].fValid == TRUE )
 		{
-			if(( Menptr[ gCharactersList[ iCounter ].usSolID ].bLife >= OKLIFE ) )
+			if(( Menptr[ gCharactersList[ iCounter ].usSolID ].stats.bLife >= OKLIFE ) )
 			{
 				if( fShowMapInventoryPool )
 				{
@@ -10691,25 +10691,25 @@ void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
 // WANNE 2 <scroll>
 //void BtnMercsUpMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 //{
-//	// WANNE 2 -> see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
+//	// WANNE 2->see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
 //	int i = 10;
 //}
 //
 //void BtnMercsDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 //{
-//	// WANNE 2 -> see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
+//	// WANNE 2->see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
 //	int i = 10;
 //}
 //
 //void BtnVehicleUpMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 //{
-//	// WANNE 2 -> see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
+//	// WANNE 2->see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
 //	int i = 10;
 //}
 //
 //void BtnVehicleDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 //{
-//	// WANNE 2 -> see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
+//	// WANNE 2->see Map Screen Interface Bottom Line 766 (BtnMessageUpMapScreenCallback)
 //	int i = 10;
 //}
 
@@ -11099,7 +11099,7 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 						break;
 					}
 
-					if( ( Menptr[ gCharactersList[ iCounterA ].usSolID ].fMercAsleep == TRUE ) && ( Menptr[ gCharactersList[ iCounter ].usSolID ].fMercAsleep == FALSE ) && ( iCounterA < iCounter ) )
+					if( ( Menptr[ gCharactersList[ iCounterA ].usSolID ].flags.fMercAsleep == TRUE ) && ( Menptr[ gCharactersList[ iCounter ].usSolID ].flags.fMercAsleep == FALSE ) && ( iCounterA < iCounter ) )
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}
@@ -11331,7 +11331,7 @@ void HandleAssignmentsDoneAndAwaitingFurtherOrders( void )
 			pSoldier = &( Menptr[ gCharactersList[ iCounter ].usSolID ] );
 
 			// toggle and redraw if flash was left ON even though the flag is OFF
-			if( pSoldier->fDoneAssignmentAndNothingToDoFlag || fFlashAssignDone )
+			if( pSoldier->flags.fDoneAssignmentAndNothingToDoFlag || fFlashAssignDone )
 			{
 				fFlashAssignDone = !fFlashAssignDone;
 				fDrawCharacterList = TRUE;
@@ -11364,7 +11364,7 @@ void DisplayIconsForMercsAsleep( void )
 		if( gCharactersList[ iCounter ].fValid == TRUE )
 		{
 			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
-			if( pSoldier->bActive && pSoldier->fMercAsleep && CanChangeSleepStatusForSoldier( pSoldier ) )
+			if( pSoldier->bActive && pSoldier->flags.fMercAsleep && CanChangeSleepStatusForSoldier( pSoldier ) )
 			{
 				// WANNE 2
 				//BltVideoObject( guiSAVEBUFFER , hHandle, 0, 125, ( INT16 )( Y_START+(iCounter * ( Y_SIZE + 2 ) ) ) , VO_BLT_SRCTRANSPARENCY,NULL );
@@ -11460,7 +11460,7 @@ BOOLEAN CanToggleSelectedCharInventory( void )
 		if ( ( pSoldier->sSectorX != sSelMapX ) ||
 				 ( pSoldier->sSectorY != sSelMapY ) ||
 				 ( pSoldier->bSectorZ != iCurrentMapSectorZ ) ||
-				 pSoldier->fBetweenSectors )
+				 pSoldier->flags.fBetweenSectors )
 		{
 			return(FALSE);
 		}
@@ -11492,12 +11492,12 @@ BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber )
 	if( ( pSoldier->bAssignment == IN_TRANSIT ) ||
 			( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
 				// Kaiden: Vehicle Inventory change - Commented the following line
-				// ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||
+				// ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ||
 				// And added this instead:
-			( (!gGameExternalOptions.fVehicleInventory) && (pSoldier->uiStatusFlags & SOLDIER_VEHICLE) ) ||
+			( (!gGameExternalOptions.fVehicleInventory) && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) ) ||
 			( AM_A_ROBOT( pSoldier ) ) ||
 			( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
-			( pSoldier->bLife < OKLIFE )
+			( pSoldier->stats.bLife < OKLIFE )
 		)
 	{
 		return(FALSE);
@@ -11633,7 +11633,7 @@ BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
 	Assert( pSoldier->bActive );
 
 	// if a vehicle, in transit, or a POW
-	if( /*( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||*/
+	if( /*( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ||*/
 			( pSoldier->bAssignment == IN_TRANSIT ) ||
 			( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 	{
@@ -11642,7 +11642,7 @@ BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
 	}
 
 	// if a vehicle has passengers
-	if (	(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) &&
+	if (	(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) &&
 			(DoesVehicleHaveAnyPassengers(pSoldier->bVehicleID) ) )
 	{
 		// then restrict contract menu
@@ -11680,7 +11680,7 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier )
 	Assert( pSoldier->bActive );
 
 	// if a vehicle, robot, in transit, or a POW
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) ||
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) ||
 			( pSoldier->bAssignment == IN_TRANSIT ) || ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 	{
 		// can't change the sleep status of such mercs
@@ -11688,7 +11688,7 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier )
 	}
 
 	// if dead
-	if( ( pSoldier->bLife <= 0 ) || ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) )
+	if( ( pSoldier->stats.bLife <= 0 ) || ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) )
 	{
 		return ( FALSE );
 	}
@@ -11938,7 +11938,7 @@ void CopyPathToAllSelectedCharacters( PathStPtr pPath )
 			// skip itself!
 			if ( GetSoldierMercPathPtr( pSoldier ) != pPath )
 			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+				if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					pVehicleList[ pSoldier->bVehicleID ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->bVehicleID ].pMercPath );
 				}
@@ -11993,7 +11993,7 @@ void CancelPathsOfAllSelectedCharacters()
 
 
 				// cancel the entire path (also clears vehicles for any passengers selected, and handles reversing directions)
-				if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+				if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					CancelPathForVehicle( &( pVehicleList[ pSoldier->bVehicleID ] ), FALSE );
 				}
@@ -12151,7 +12151,7 @@ BOOLEAN AnyMovableCharsInOrBetweenThisSector( INT16 sSectorX, INT16 sSectorY, IN
 		if ( ( pSoldier->bAssignment == IN_TRANSIT ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-				 ( pSoldier->bLife == 0 ) )
+				 ( pSoldier->stats.bLife == 0 ) )
 		{
 			continue;
 		}
@@ -12163,7 +12163,7 @@ BOOLEAN AnyMovableCharsInOrBetweenThisSector( INT16 sSectorX, INT16 sSectorY, IN
 		}
 
 		// don't count vehicles - in order for them to move, somebody must be in the sector with them
-		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			continue;
 		}
@@ -12359,8 +12359,8 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 		{
 			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
 
-			if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-						!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
+			if ( pSoldier->stats.bLife >= OKLIFE && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) &&
+						!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->flags.fMercAsleep )
 			{
 				ubSelectedMercID[ ubNumMercs ] = pSoldier->ubID;
 				ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;
@@ -12377,7 +12377,7 @@ void RandomAwakeSelectedMercConfirmsStrategicMove( void )
 		// select that merc so that when he speaks we're showing his portrait and not someone else
 		ChangeSelectedInfoChar( ubSelectedMercIndex[ ubChosenMerc ], FALSE );
 
-		DoMercBattleSound( MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ], ( UINT8 ) ( Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2 ) );
+		MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ]->DoMercBattleSound( ( UINT8 ) ( Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2 ) );
 		//TacticalCharacterDialogue( MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ], ubQuoteNum );
 	}
 }
@@ -12565,7 +12565,7 @@ void WakeUpAnySleepingSelectedMercsOnFootOrDriving( void )
 			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
 
 			// if asleep
-			if ( pSoldier->fMercAsleep )
+			if ( pSoldier->flags.fMercAsleep )
 			{
 				// and on foot or driving
 				if ( ( pSoldier->bAssignment < ON_DUTY ) ||
@@ -12656,7 +12656,7 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] )
 			swprintf( pTempString, L"%s%s%s",
 						pMapVertIndex[ pSoldier->sSectorY ], pMapHortIndex[ pSoldier->sSectorX ], pMapDepthIndex[ pSoldier->bSectorZ ] );
 
-			if ( pSoldier->fBetweenSectors )
+			if ( pSoldier->flags.fBetweenSectors )
 			{
 				// put brackets around it when he's between sectors!		
 				swprintf( sString, L"(%s)", pTempString );
@@ -12683,7 +12683,7 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] 
 	// if dead or POW - has no destination (no longer part of a group, for that matter)
 	if( ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
 			( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			( pSoldier->bLife == 0 ) )
+			( pSoldier->stats.bLife == 0 ) )
 	{
 		return;
 	}
@@ -12706,7 +12706,7 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, CHAR16 sString[] 
 		}
 		else // no movement path is set...
 		{
-			if ( pSoldier->fBetweenSectors )
+			if ( pSoldier->flags.fBetweenSectors )
 			{
 				// he must be returning to his previous (reversed so as to be the next) sector, so show that as his destination
 				// individual soldiers don't store previous/next sector coordinates, must go to his group for that
@@ -12735,7 +12735,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sString[], U
 	INT32 iHoursRemaining = 0;
 
 
-	if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && pSoldier->ubProfile != SLAY ) || pSoldier->bLife == 0 )
+	if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && pSoldier->ubProfile != SLAY ) || pSoldier->stats.bLife == 0 )
 	{
 		swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 	}
@@ -12884,7 +12884,7 @@ void RestorePreviousPaths( void )
 			{
 				pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
 
-				if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+				if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					ppMovePath = &( pVehicleList[ pSoldier->bVehicleID ].pMercPath );
 					ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;

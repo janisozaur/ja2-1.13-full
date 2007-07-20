@@ -525,7 +525,7 @@ void RenderRadarScreen( )
 				}
 
 				// Don't render guys if they are dead!
-				if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+				if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
 				{
 					continue;
 				}
@@ -568,7 +568,7 @@ void RenderRadarScreen( )
 						else
 						{
               // If on roof, make darker....
-              if ( pSoldier->bLevel > 0 )
+              if ( pSoldier->pathing.bLevel > 0 )
               {
 						    usLineColor = Get16BPPColor( FROMRGB( 150, 150, 0 ) );
               }
@@ -583,19 +583,19 @@ void RenderRadarScreen( )
 						usLineColor = Get16BPPColor( gTacticalStatus.Team[ pSoldier->bTeam ].RadarColor );
 
             // Override civ team with red if hostile...
-            if ( pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) )
+            if ( pSoldier->bTeam == CIV_TEAM && !pSoldier->aiData.bNeutral && ( pSoldier->bSide != gbPlayerNum ) )
             {
 							usLineColor = Get16BPPColor( FROMRGB( 255, 0, 0 ) );
             }
 
 						// Render different color if an enemy and he's unconscious
-						if ( pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE )
+						if ( pSoldier->bTeam != gbPlayerNum && pSoldier->stats.bLife < OKLIFE )
 						{
 							usLineColor = Get16BPPColor( FROMRGB( 128, 128, 128 ) );
 						}
 
             // If on roof, make darker....
-            if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0 )
+            if ( pSoldier->bTeam == gbPlayerNum && pSoldier->pathing.bLevel > 0 )
             {
 						  usLineColor = Get16BPPColor( FROMRGB( 150, 150, 0 ) );
             }

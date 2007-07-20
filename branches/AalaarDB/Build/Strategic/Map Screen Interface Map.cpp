@@ -1062,12 +1062,12 @@ INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 	{
 		pSoldier = MercPtrs[ gCharactersList[ ubCounter ].usSolID ];
 
-		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+		if( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) &&
 				 ( pSoldier->sSectorX == sMapX) &&
 				 ( pSoldier->sSectorY == sMapY) &&
 				 ( pSoldier->bSectorZ == iCurrentMapSectorZ ) &&
 				 ( ( pSoldier->bAssignment < ON_DUTY ) || ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId != iHelicopterVehicleId ) ) ) &&
-				 ( pSoldier->bLife > 0) &&
+				 ( pSoldier->stats.bLife > 0) &&
 				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
 		{
 			DrawMapBoxIcon( hIconHandle, SMALL_YELLOW_BOX, sMapX, sMapY, ubIconPosition );
@@ -1099,14 +1099,14 @@ INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 
     // given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
-		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+		if( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) &&
 				 ( pSoldier->sSectorX == sMapX) &&
 				 ( pSoldier->sSectorY == sMapY) &&
 				 ( pSoldier->bSectorZ == iCurrentMapSectorZ ) &&
 				 ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) &&
 				 ( pSoldier->bAssignment != IN_TRANSIT ) &&
 				 ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
-				 ( pSoldier->bLife > 0 ) &&
+				 ( pSoldier->stats.bLife > 0 ) &&
 				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
 		{
 			// skip mercs inside the helicopter if we're showing airspace level - they show up inside chopper icon instead
@@ -1720,7 +1720,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 		return;
 	}
 
-	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		SetUpMvtGroupForVehicle( pCharacter );
 	}
@@ -1736,7 +1736,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 	pCharacter->pMercPath = MoveToBeginningOfPathList( pCharacter->pMercPath );
 
 	// check if in vehicle, if so, copy path to vehicle
-	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		MoveCharactersPathToVehicle( pCharacter );	
 	}
@@ -1802,7 +1802,7 @@ UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, 
 		// be canceled.
 
 		// if a vehicle
-		if( pCharacter->uiStatusFlags & SOLDIER_VEHICLE )
+		if( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			pVehicle = &( pVehicleList[ pCharacter->bVehicleID ] );
 		}
@@ -1965,7 +1965,7 @@ void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 
 /* ARM: Hopefully no longer required once using GetSoldierMercPathPtr() ???
 	// check if in vehicle, if so, copy path to vehicle
-	if( ( pCharacter->bAssignment == VEHICLE )||( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if( ( pCharacter->bAssignment == VEHICLE )||( pCharacter->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		// get the real path from vehicle's structure and copy it into this soldier's
 		CopyVehiclePathToSoldier( pCharacter );
@@ -4998,7 +4998,7 @@ UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ )
 	// Loop through all mercs and make go
 	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bLife > 0 )
+		if ( pTeamSoldier->bActive && pTeamSoldier->stats.bLife > 0 )
 		{
 			if ( (pTeamSoldier->bSide == gbPlayerNum ) && ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) && ( pTeamSoldier->bSectorZ == bZ ) )
 			{
@@ -6536,7 +6536,7 @@ BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 		}
 
 		// vehicles can't scout!
-		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			continue;
 		}
@@ -6545,8 +6545,8 @@ BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 		if ( ( pSoldier->bAssignment == IN_TRANSIT ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-				 ( pSoldier -> fMercAsleep == TRUE ) ||
-				 ( pSoldier->bLife < OKLIFE ) )
+				 ( pSoldier->flags.fMercAsleep == TRUE ) ||
+				 ( pSoldier->stats.bLife < OKLIFE ) )
 		{
 			continue;
 		}
@@ -6558,7 +6558,7 @@ BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 		}
 
 		// mercs on the move can't scout
-		if ( pSoldier->fBetweenSectors )
+		if ( pSoldier->flags.fBetweenSectors )
 		{
 			continue;
 		}
@@ -6636,7 +6636,7 @@ UINT8 NumActiveCharactersInSector( INT16 sSectorX, INT16 sSectorY, INT16 bSector
 		{
 			pSoldier = &( Menptr[ gCharactersList[ iCounter ].usSolID ] );
 
-			if( pSoldier->bActive && ( pSoldier->bLife > 0 ) &&
+			if( pSoldier->bActive && ( pSoldier->stats.bLife > 0 ) &&
 					( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )
 			{
 				if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == bSectorZ ) )

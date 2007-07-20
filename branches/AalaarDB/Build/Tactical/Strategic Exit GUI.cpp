@@ -216,9 +216,9 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 		{
 			continue;
 		}
-		if( !pSoldier->fBetweenSectors && 
+		if( !pSoldier->flags.fBetweenSectors && 
 				pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ &&
-				pSoldier->bLife >= OKLIFE && 
+				pSoldier->stats.bLife >= OKLIFE && 
 				pSoldier->bAssignment != MercPtrs[ gusSelectedSoldier ]->bAssignment && 
 				pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_DEAD )
 		{ //KM:  We need to determine if there are more than one squad (meaning other concious mercs in a different squad or assignment)  
@@ -393,7 +393,7 @@ void DoneFadeOutWarpCallback( void )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{       
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
+		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector )
 		{
 			gfTacticalTraversal = TRUE;
 			SetGroupSectorValue( gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, pSoldier->ubGroupID );

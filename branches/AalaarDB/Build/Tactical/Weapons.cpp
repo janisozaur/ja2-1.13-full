@@ -1151,7 +1151,7 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
   INT32		iChance, iResult;
   
   // should jams apply to enemies?
-	if (pSoldier->uiStatusFlags & SOLDIER_PC)
+	if (pSoldier->flags.uiStatusFlags & SOLDIER_PC)
 	{
 		if ( Item[pSoldier->usAttackingWeapon].usItemClass == IC_GUN && !EXPLOSIVE_GUN( pSoldier->usAttackingWeapon ) )
 		{
@@ -1282,7 +1282,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// If realtime and we are reloading - do not fire until counter is done!
 	if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) && !pSoldier->bDoBurst )
 	{
-		if ( pSoldier->fReloading )
+		if ( pSoldier->flags.fReloading )
 		{
 			return( FALSE );
 		}
@@ -1314,29 +1314,29 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			else
 			{
 				// ATE: PAtch up - bookkeeping for spreading done out of whak
-				if ( pSoldier->fDoSpread && !pSoldier->bDoBurst )
+				if ( pSoldier->flags.fDoSpread && !pSoldier->bDoBurst )
 				{
-					pSoldier->fDoSpread = FALSE;
+					pSoldier->flags.fDoSpread = FALSE;
 				}
 
-				if ( pSoldier->fDoSpread >= MAX_BURST_SPREAD_TARGETS )
+				if ( pSoldier->flags.fDoSpread >= MAX_BURST_SPREAD_TARGETS )
 				{
 					//If we have more than MAX_BURST_SPREAD_TARGETS bullets, loop over and start again from the first target location
-					pSoldier->fDoSpread = 1;
+					pSoldier->flags.fDoSpread = 1;
 				}
 
 
-				if ( pSoldier->fDoSpread )
+				if ( pSoldier->flags.fDoSpread )
 				{
-					if ( pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] != 0 )
+					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
 					{
-						UseGun( pSoldier, pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] );
+						UseGun( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
 					}
 					else
 					{
 						UseGun( pSoldier, sTargetGridNo );
 					}
-					pSoldier->fDoSpread++;
+					pSoldier->flags.fDoSpread++;
 				}
 				else
 				{
@@ -1357,29 +1357,29 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				UseGun( pSoldier, sTargetGridNo );
 			else
 				// ATE: PAtch up - bookkeeping for spreading done out of whak
-				if ( pSoldier->fDoSpread && !pSoldier->bDoBurst )
+				if ( pSoldier->flags.fDoSpread && !pSoldier->bDoBurst )
 				{
-					pSoldier->fDoSpread = FALSE;
+					pSoldier->flags.fDoSpread = FALSE;
 				}
 
-				if ( pSoldier->fDoSpread >= MAX_BURST_SPREAD_TARGETS )
+				if ( pSoldier->flags.fDoSpread >= MAX_BURST_SPREAD_TARGETS )
 				{
 					//If we have more than MAX_BURST_SPREAD_TARGETS bullets, loop over and start again from the first target location
-					pSoldier->fDoSpread = 1;
+					pSoldier->flags.fDoSpread = 1;
 				}
 
 
-				if ( pSoldier->fDoSpread )
+				if ( pSoldier->flags.fDoSpread )
 				{
-					if ( pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] != 0 )
+					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
 					{
-						UseLauncher( pSoldier, pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] );
+						UseLauncher( pSoldier, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] );
 					}
 					else
 					{
 						UseLauncher( pSoldier, sTargetGridNo );
 					}
-					pSoldier->fDoSpread++;
+					pSoldier->flags.fDoSpread++;
 				}
 				else
 				{
@@ -1526,7 +1526,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("UseGun") );
 	// Deduct points!
- 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
+ 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
 
 	usItemNum = pSoldier->usAttackingWeapon;
 
@@ -1581,7 +1581,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	else
 	{
 		// ONLY DEDUCT FOR THE FIRST HAND when doing two-pistol attacks
-		if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
+		if ( pSoldier->IsValidSecondHandShot( ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
 		{
 			// only deduct APs when the main gun fires
 			if ( pSoldier->ubAttackingHand == HANDPOS )
@@ -1630,11 +1630,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// CALC CHANCE TO HIT
 	if ( Item[ usItemNum ].usItemClass == IC_THROWING_KNIFE )
 	{
-	  uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation );
+	  uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, pSoldier->bAimShotLocation );
 	}
 	else
 	{
-	  uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation );
+	  uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, pSoldier->bAimShotLocation );
 	}
 
 	//DIGICRAB: Barrel extender wear code
@@ -1670,7 +1670,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				pInHand->bAttachStatus[ bAttachPos ] = 0;
 
 				// drop it to ground
-				AddItemToPool( pSoldier->sGridNo, &Temp, 1, pSoldier->bLevel, 0, -1 );
+				AddItemToPool( pSoldier->sGridNo, &Temp, 1, pSoldier->pathing.bLevel, 0, -1 );
 
 				// big penalty to hit
 				if(uiHitChance < 30)
@@ -1681,7 +1681,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// curse!
 				if ( pSoldier->bTeam == OUR_TEAM )
 				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 46 ], pSoldier->name );
 				}
@@ -1726,7 +1726,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			pSoldier->sReloadDelay	= (INT16)( Weapon[ usItemNum ].usReloadDelay + MANDATORY_WEAPON_DELAY );
 
 			// If a bad guy, double the delay!
-			if ( (pSoldier->uiStatusFlags & SOLDIER_ENEMY ) )
+			if ( (pSoldier->flags.uiStatusFlags & SOLDIER_ENEMY ) )
 			{
 				pSoldier->sReloadDelay	= ( pSoldier->sReloadDelay * 2 );
 			}
@@ -1738,8 +1738,8 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				pSoldier->sReloadDelay *= 2;
 			}
 
-			//pSoldier->fReloading		= TRUE;
-			//RESETTIMECOUNTER( pSoldier->ReloadCounter, pSoldier->sReloadDelay );
+			//pSoldier->flags.fReloading		= TRUE;
+			//RESETTIMECOUNTER( pSoldier->timeCounters.ReloadCounter, pSoldier->sReloadDelay );
 		}
 
 		// Deduct AMMO!
@@ -1750,7 +1750,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		{
 			if ( pSoldier->bTeam == gbPlayerNum )
 			{
-				pSoldier->fSayAmmoQuotePending = TRUE;
+				pSoldier->flags.fSayAmmoQuotePending = TRUE;
 			}
 		}
 
@@ -1763,11 +1763,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - uiHitChance) / 25;
 
-				if ( pSoldier->bAimTime && !pSoldier->bDoBurst )
+				if ( pSoldier->pathing.bAimTime && !pSoldier->bDoBurst )
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the shot
-					usExpGain += __min( pSoldier->bAimTime, usExpGain );
+					usExpGain += __min( pSoldier->pathing.bAimTime, usExpGain );
 				}
 
 				// base pts extra for hitting
@@ -1777,7 +1777,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 3;
 
-			if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
+			if ( pSoldier->IsValidSecondHandShot( ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
 			{
 				// reduce exp gain for two pistol shooting since both shots give xp
 				usExpGain = (usExpGain * 2) / 3;
@@ -1787,7 +1787,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			{
 				usExpGain /= 2;
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
+			else if ( MercPtrs[ pSoldier->ubTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
 			{
 				// no exp from shooting a vehicle that you can't damage and can't move! 
 				usExpGain = 0;
@@ -1802,11 +1802,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		if (!CREATURE_OR_BLOODCAT( pSoldier ) )
 		{
 			if ( IsFlashSuppressor(&pSoldier->inv[ pSoldier->ubAttackingHand ], pSoldier ) )
-				pSoldier->fMuzzleFlash = FALSE;
+				pSoldier->flags.fMuzzleFlash = FALSE;
 			else
-				pSoldier->fMuzzleFlash = TRUE;
+				pSoldier->flags.fMuzzleFlash = TRUE;
 
-			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UseGun: Muzzle flash = %d",pSoldier->fMuzzleFlash));
+			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UseGun: Muzzle flash = %d",pSoldier->flags.fMuzzleFlash));
 
 			if ( AmmoTypes[pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunAmmoType].numberOfBullets > 1 )
 				fBuckshot = TRUE;
@@ -1817,7 +1817,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			//		fBuckshot = TRUE;
 			//		break;
 			//	case AMMO_SLEEP_DART:
-			//		pSoldier->fMuzzleFlash = FALSE;
+			//		pSoldier->flags.fMuzzleFlash = FALSE;
 			//		break;
 			//	default:
 			//		break;
@@ -1827,7 +1827,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	else	//  throwing knife
 	{
 		fBuckshot = FALSE;
-		pSoldier->fMuzzleFlash = FALSE;
+		pSoldier->flags.fMuzzleFlash = FALSE;
 
 		// Deduct knife from inv! (not here, later?)
 
@@ -1839,11 +1839,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - uiHitChance) / 10;
 
-				if (pSoldier->bAimTime)
+				if (pSoldier->pathing.bAimTime)
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the throw
-					usExpGain += ( 2 * __min( pSoldier->bAimTime, usExpGain ) );
+					usExpGain += ( 2 * __min( pSoldier->pathing.bAimTime, usExpGain ) );
 				}
 
 				// base pts extra for hitting
@@ -1857,7 +1857,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			{
 				usExpGain /= 2;
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
+			else if ( MercPtrs[ pSoldier->ubTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
 			{
 				// no exp from shooting a vehicle that you can't damage and can't move! 
 				usExpGain = 0;
@@ -1877,13 +1877,13 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		{
 			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].bStatus[ 0 ],&(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
-			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->bLevel );
+			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->pathing.bLevel );
 		}
 		else
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("StructureHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 			
-			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pSoldier->bLevel );
+			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pSoldier->pathing.bLevel );
 			pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 		}
       // Reduce again for attack end 'cause it has been incremented for a normal attack
@@ -1921,7 +1921,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
-		ubMerc = WhoIsThere2( sNewGridNo, pSoldier->bLevel );
+		ubMerc = WhoIsThere2( sNewGridNo, pSoldier->pathing.bLevel );
 
 		if ( ubMerc != NOBODY )
 		{
@@ -1932,7 +1932,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Exaust from LAW", gTacticalStatus.ubAttackBusyCount ) );
 				DebugAttackBusy( "Incrementing Attack: Exaust from LAW\n" );
 
-				EVENT_SoldierGotHit( MercPtrs[ ubMerc ], MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, 0, sNewGridNo );
+				MercPtrs[ ubMerc ]->EVENT_SoldierGotHit( MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, 0, sNewGridNo );
 			}
 		}
 	}
@@ -1950,7 +1950,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		}
 	}
 
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_GUNFIRE );
+	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->pathing.bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_GUNFIRE );
 
 	if ( pSoldier->bDoBurst )
 	{
@@ -1975,9 +1975,9 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	}
 
 	// reduce monster smell (gunpowder smell)
-	if ( pSoldier->bMonsterSmell > 0 && Random( 2 ) == 0 )
+	if ( pSoldier->aiData.bMonsterSmell > 0 && Random( 2 ) == 0 )
 	{
-		pSoldier->bMonsterSmell--;
+		pSoldier->aiData.bMonsterSmell--;
 	}
 
 //<SB> manual recharge
@@ -2002,7 +2002,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	BOOLEAN							fSurpriseAttack;
 	
 	// Deduct points!
- 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
+ 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
 
 	DeductPoints( pSoldier, sAPCost, 0 );
 	
@@ -2014,21 +2014,21 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	if ( pTargetSoldier )
 	{	
 		// set target as noticed attack
-		pSoldier->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
-		pTargetSoldier->fIntendedTarget = TRUE;
+		pSoldier->flags.uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
+		pTargetSoldier->flags.fIntendedTarget = TRUE;
 
 		// SAVE OPP ID
 		pSoldier->ubOppNum = pTargetSoldier->ubID;
 
 		// CHECK IF BUDDY KNOWS ABOUT US
-		if ( pTargetSoldier->bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN || pTargetSoldier->bLife < OKLIFE || pTargetSoldier->bCollapsed )
+		if ( pTargetSoldier->aiData.bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN || pTargetSoldier->stats.bLife < OKLIFE || pTargetSoldier->bCollapsed )
 		{
 			iHitChance = 100;
 			fSurpriseAttack = TRUE;
 		}
 		else
 		{
-			iHitChance = CalcChanceToStab( pSoldier, pTargetSoldier, pSoldier->bAimTime );
+			iHitChance = CalcChanceToStab( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
 			fSurpriseAttack = FALSE;
 		}
 
@@ -2118,11 +2118,11 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - iHitChance) / 10;
 
-				if (pSoldier->bAimTime)
+				if (pSoldier->pathing.bAimTime)
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the attack
-					usExpGain += ( 2 * __min( pSoldier->bAimTime, usExpGain ) );
+					usExpGain += ( 2 * __min( pSoldier->pathing.bAimTime, usExpGain ) );
 				}
 
 				// base pts extra for hitting
@@ -2136,7 +2136,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			{
 				usExpGain /= 2;
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
+			else if ( MercPtrs[ pSoldier->ubTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
 			{
 				// no exp from shooting a vehicle that you can't damage and can't move! 
 				usExpGain = 0;
@@ -2156,9 +2156,9 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// }
 
 	// possibly reduce monster smell
-	if ( pSoldier->bMonsterSmell > 0 && Random( 5 ) == 0 )
+	if ( pSoldier->aiData.bMonsterSmell > 0 && Random( 5 ) == 0 )
 	{
-		pSoldier->bMonsterSmell--;
+		pSoldier->aiData.bMonsterSmell--;
 	}
 
 
@@ -2187,7 +2187,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	// Punch the enemy
 	if (!fStealing)
 	{
- 		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
+ 		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
 		DeductPoints( pSoldier, sAPCost, 0 );
 	}
 	// Steal from the enemy
@@ -2201,8 +2201,8 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	if ( pTargetSoldier )
 	{	
 		// set target as noticed attack
-		pSoldier->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
-		pTargetSoldier->fIntendedTarget = TRUE;
+		pSoldier->flags.uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
+		pTargetSoldier->flags.fIntendedTarget = TRUE;
 
 		// SAVE OPP ID
 		pSoldier->ubOppNum = pTargetSoldier->ubID;
@@ -2214,30 +2214,30 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			{
 				iHitChance = 0;
 			}
-			else if ( pTargetSoldier->bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN )
+			else if ( pTargetSoldier->aiData.bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN )
 			{
 				// give bonus for surprise, but not so much as struggle would still occur
-				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->bAimTime ) + 20;
+				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime ) + 20;
 			}
-			else if ( pTargetSoldier->bLife < OKLIFE || pTargetSoldier->bCollapsed )
+			else if ( pTargetSoldier->stats.bLife < OKLIFE || pTargetSoldier->bCollapsed )
 			{
 				iHitChance = 100;
 				fSoldierCollapsed = TRUE;
 			}
 			else
 			{
-				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->bAimTime );
+				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
 			}
 		}
 		else
 		{
-			if ( pTargetSoldier->bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN || pTargetSoldier->bLife < OKLIFE || pTargetSoldier->bCollapsed )
+			if ( pTargetSoldier->aiData.bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN || pTargetSoldier->stats.bLife < OKLIFE || pTargetSoldier->bCollapsed )
 			{
 				iHitChance = 100;
 			}
 			else
 			{
-				iHitChance = CalcChanceToPunch( pSoldier, pTargetSoldier, pSoldier->bAimTime );
+				iHitChance = CalcChanceToPunch( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
 			}
 		}
 
@@ -2282,7 +2282,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 						if (!AutoPlaceObject( pSoldier, &(pTargetSoldier->inv[ubIndexRet]), TRUE ))
 						{
 							// Place the item on the ground
-							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
 						}
 						DeleteObj( &(pTargetSoldier->inv[ubIndexRet]) );
 
@@ -2292,7 +2292,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 
 						if (usOldItem != usNewItem)
 						{	
-							ReLoadSoldierAnimationDueToHandItemChange(pTargetSoldier, usOldItem, usNewItem );
+							pTargetSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, usNewItem );
 						}
 					}
 					// The enemy has no more items to steal
@@ -2308,7 +2308,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
 					if ( pSoldier->bTeam == gbPlayerNum )
 					{
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 					}
 
 					// Item dropped somewhere... roll based on the same chance to determine where!
@@ -2316,16 +2316,16 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					if (iDiceRoll < iHitChance)
 					{
 						// Drop item in the our tile
-						AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+						AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
 					}
 					else
 					{
 						// Drop item in the target's tile
-						AddItemToPool( pTargetSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+						AddItemToPool( pTargetSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
 					}
 					DeleteObj( &(pTargetSoldier->inv[HANDPOS]) );
 					// Reload buddy's animation...
-					ReLoadSoldierAnimationDueToHandItemChange( pTargetSoldier, usOldItem, NOTHING );
+					pTargetSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, NOTHING );
 				}
 				// Enemy has no item in his hand.
 				else
@@ -2333,7 +2333,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					fNoMoreItemInHand = TRUE;
 				}
 				// Reload buddy's animation...
-				//ReLoadSoldierAnimationDueToHandItemChange( pTargetSoldier, usOldItem, NOTHING );
+				//pTargetSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, NOTHING );
 			}
 			// We could not steal from the enemy, we had no luck
 			else
@@ -2353,7 +2353,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					
 					if ( pSoldier->bTeam == gbPlayerNum )
 					{
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
+						pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 					}
 				}
 				else
@@ -2377,7 +2377,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			}
 
 			// Give some experience
-			if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
+			if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
 			{
 				if (fFailure == FALSE)
 				{
@@ -2421,7 +2421,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 				{
 					ubExpGain = 8;
 
-					if ( pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
+					if ( pTargetSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
 					{
 						ubExpGain = 0;
 					}
@@ -2439,7 +2439,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 				{
 					ubExpGain = 4;
 
-					if ( pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
+					if ( pTargetSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
 					{
 						ubExpGain = 0;
 					}
@@ -2495,9 +2495,9 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	}
 
 	// possibly reduce monster smell (gunpowder smell)
-	if ( pSoldier->bMonsterSmell > 0 && Random( 5 ) == 0 )
+	if ( pSoldier->aiData.bMonsterSmell > 0 && Random( 5 ) == 0 )
 	{
-		pSoldier->bMonsterSmell--;
+		pSoldier->aiData.bMonsterSmell--;
 	}
 
 
@@ -2512,7 +2512,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	SOLDIERTYPE	*	pTargetSoldier;
 	INT16			sAPCost = 0;
 
-	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
+	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, AIM_SHOT_TORSO );
 
 	uiDiceRoll = PreRandom( 100 );
 
@@ -2614,7 +2614,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	/*
 	// Madd: Next 2 lines added: Deduct points!
 
-	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
+	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
     // Kaiden: Deducting points too early, moving the line down
 	//DeductPoints( pSoldier, sAPCost, 0 );
 
@@ -2686,7 +2686,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
     // So we still should have ABC > 0
     // Begin explosion due to failure...
-		IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel );
+		IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->pathing.bLevel );
 
     // Reduce again for attack end 'cause it has been incremented for a normal attack
     // Nope, not anymore.
@@ -2706,7 +2706,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 			PlayJA2Sample( Weapon[ usItemNum ].sSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 	}
 
-	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
+	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, AIM_SHOT_TORSO );
 
 	uiDiceRoll = PreRandom( 100 );
 
@@ -2933,7 +2933,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	// Get Target
 	pTargetSoldier	= MercPtrs[ usSoldierID ];
 
-	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
+	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->pathing.bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
@@ -2945,26 +2945,26 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 		{
 			if ( Item[usWeaponIndex].singleshotrocketlauncher )
 			{
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), C1, pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), C1, pTargetSoldier->pathing.bLevel );
 			}
 			// changed rpg type to work only with two flags matching
 			else if ( !Item[usWeaponIndex].singleshotrocketlauncher && Item[usWeaponIndex].rocketlauncher)
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("WeaponHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 				
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pTargetSoldier->pathing.bLevel );
 				pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 		    else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
 			{
 				// re-routed the Highexplosive value to define exposion type
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].highExplosive , pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].highExplosive , pTargetSoldier->pathing.bLevel );
 				// pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 		}
 		else // tank cannon
 		{
-			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), TANK_SHELL, pTargetSoldier->bLevel );
+			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), TANK_SHELL, pTargetSoldier->pathing.bLevel );
 		}
 
 		// 0verhaul:  No longer necessary
@@ -2978,9 +2978,9 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
 	// ATE: This is 'cause of that darn smoke effect that could potnetially kill
 	// the poor bastard .. so check
-	if ( !pTargetSoldier->fDoingExternalDeath )
+	if ( !pTargetSoldier->flags.fDoingExternalDeath )
 	{
-		EVENT_SoldierGotHit( pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation, 0, NOWHERE );
+		pTargetSoldier->EVENT_SoldierGotHit(	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation, 0, NOWHERE );
 	}
 	// else
 	// {
@@ -3128,7 +3128,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 				{
 					if ( Random( 40 ) == 0 )
 					{
-						DoMercBattleSound(  MercPtrs[ ubAttackerID ], BATTLE_SOUND_CURSE1 );
+						MercPtrs[ ubAttackerID ]->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 					}
 				}
 			}
@@ -3477,7 +3477,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 	 DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcChanceToHitGun"));
 
-	 if ( pSoldier->bMarksmanship == 0 )
+	 if ( pSoldier->stats.bMarksmanship == 0 )
 	{
 		// always min chance
 		return( MINCHANCETOHIT );
@@ -3508,7 +3508,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		{
 			SOLDIERTYPE * pSoldier2;
 
-			pSoldier2 = GetRobotController( pSoldier );
+			pSoldier2 = pSoldier->GetRobotController( );
 			if ( pSoldier2 )
 			{
 				iMarksmanship = __max( iMarksmanship, EffectiveMarksmanship( pSoldier2 ) );
@@ -3601,7 +3601,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 			if ( !HAS_SKILL_TRAIT( pSoldier, AMBIDEXT ) )
 			{
-				if ( IsValidSecondHandShot( pSoldier ) )
+				if ( pSoldier->IsValidSecondHandShot( ) )
 				{
 					// penalty to aim when firing two pistols
 					iChance -= AIM_PENALTY_DUAL_PISTOLS;
@@ -3660,7 +3660,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 	// best to use team knowledge as well, in case of spotting for someone else
-	if (ubTargetID != NOBODY && pSoldier->bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY)
+	if (ubTargetID != NOBODY && pSoldier->aiData.bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY)
 	{
 		iSightRange = SoldierToBodyPartLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bAimShotLocation, (UINT8) (MaxDistanceVisible() * 2), TRUE );	
 	}
@@ -3682,7 +3682,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if (iSightRange > 0 && ubAimTime && !pSoldier->bDoBurst )
 		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
 
-	if ( !(pSoldier->uiStatusFlags & SOLDIER_PC ) )	// if this is a computer AI controlled enemy
+	if ( !(pSoldier->flags.uiStatusFlags & SOLDIER_PC ) )	// if this is a computer AI controlled enemy
 	{
 		if ( gGameOptions.ubDifficultyLevel == DIF_LEVEL_EASY )
 		{
@@ -3699,7 +3699,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	}
 
 	// if shooter is being affected by gas
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 	{
 	  iChance -= AIM_PENALTY_GASSED;
 	}
@@ -3709,8 +3709,8 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	  iChance -= AIM_PENALTY_GETTINGAID;
 
 	// if shooter is still in shock
-	if (pSoldier->bShock)
-		iChance -= (pSoldier->bShock * AIM_PENALTY_PER_SHOCK);
+	if (pSoldier->aiData.bShock)
+		iChance -= (pSoldier->aiData.bShock * AIM_PENALTY_PER_SHOCK);
 
 	// WANNE NEW: Changed this, because RPGs are not in the calculation, only guns
 	//if ( Item[ usInHand ].usItemClass == IC_GUN )
@@ -3875,7 +3875,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	}
 
 	// adjust for roof/not on roof
-	if ( pSoldier->bLevel == 0 )
+	if ( pSoldier->pathing.bLevel == 0 )
 	{
 		if ( pSoldier->bTargetLevel > 0 )
 		{
@@ -3883,7 +3883,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			iChance -= AIM_PENALTY_FIRING_UP;
 		}
 	}
-	else // pSoldier->bLevel > 0 )
+	else // pSoldier->pathing.bLevel > 0 )
 	{
 		if ( pSoldier->bTargetLevel == 0 )
 		{
@@ -3972,7 +3972,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 		// if target sees us, he may have a chance to dodge before the gun goes off
 		// but ability to dodge is reduced if crouched or prone!
-		if (pTarget->bOppList[pSoldier->ubID] == SEEN_CURRENTLY && !TANK( pTarget ) && !(pSoldier->ubBodyType != QUEENMONSTER) )
+		if (pTarget->aiData.bOppList[pSoldier->ubID] == SEEN_CURRENTLY && !TANK( pTarget ) && !(pSoldier->ubBodyType != QUEENMONSTER) )
 		{
 			iPenalty = ( EffectiveAgility( pTarget ) / 5 + EffectiveExpLevel( pTarget ) * 2);
 			switch( gAnimControl[ pTarget->usAnimState ].ubHeight )
@@ -4039,14 +4039,14 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 #endif
 
 	// IF CHANCE EXISTS, BUT SHOOTER IS INJURED
-	if ((iChance > 0) && (pSoldier->bLife < pSoldier->bLifeMax))
+	if ((iChance > 0) && (pSoldier->stats.bLife < pSoldier->stats.bLifeMax))
 	{
 		// if bandaged, give 1/2 of the bandaged life points back into equation
-		bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+		bBandaged = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
 		// injury penalty is based on % damage taken (max 2/3rds chance)
-		iPenalty = (iChance * 2 * (pSoldier->bLifeMax - pSoldier->bLife + (bBandaged / 2))) /
-						(3 * pSoldier->bLifeMax);
+		iPenalty = (iChance * 2 * (pSoldier->stats.bLifeMax - pSoldier->stats.bLife + (bBandaged / 2))) /
+						(3 * pSoldier->stats.bLifeMax);
 
 		// reduce injury penalty due to merc's experience level (he can take it!)
 		iChance -= (iPenalty * (100 - (10 * ( EffectiveExpLevel( pSoldier ) - 1)))) / 100;
@@ -4240,7 +4240,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 	INT8					bPlatePos = -1;
 	BOOLEAN					plateHit = false;
 
-	if (pTarget->uiStatusFlags & SOLDIER_VEHICLE)
+	if (pTarget->flags.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		INT8 bDummyStatus = 100;
 		BOOLEAN dummyCoverage = true;
@@ -4315,7 +4315,7 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 						CreateItem(pArmour->usAttachItem[bLoop], pArmour->bAttachStatus[bLoop], &newObj);
 						if ( !AutoPlaceObject( pTarget, &newObj, FALSE ) )
 						{   // put it on the ground
-							AddItemToPool( pTarget->sGridNo, &newObj, 1, pTarget->bLevel, 0 , -1 );
+							AddItemToPool( pTarget->sGridNo, &newObj, 1, pTarget->pathing.bLevel, 0 , -1 );
 						}
 					}
 
@@ -4358,7 +4358,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 	// plus/minus up to 25% due to "random" factors (major organs hit or missed,
 	// lucky lighter in breast pocket, divine intervention on behalf of "Rev"...)
-	iFluke = PreRandom(51) - 25;		// gives (0 to 50 -25) -> -25% to +25%
+	iFluke = PreRandom(51) - 25;		// gives (0 to 50 -25)->-25% to +25%
 	//NumMessage("Fluke = ",fluke);
 
 	// up to 50% extra impact for making particularly accurate successful shots
@@ -4450,18 +4450,18 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 				// is the blow deadly enough for an instant kill?
 				if ( PythSpacesAway( pFirer->sGridNo, pTarget->sGridNo ) <= MAX_DISTANCE_FOR_MESSY_DEATH || (PythSpacesAway( pFirer->sGridNo, pTarget->sGridNo ) <= MAX_BARRETT_DISTANCE_FOR_MESSY_DEATH && pFirer->usAttackingWeapon  == BARRETT ))
 				{
-					if (iImpactForCrits > MIN_DAMAGE_FOR_INSTANT_KILL && iImpactForCrits < pTarget->bLife)
+					if (iImpactForCrits > MIN_DAMAGE_FOR_INSTANT_KILL && iImpactForCrits < pTarget->stats.bLife)
 					{
 						// blow to the head is so deadly that it causes instant death;
 						// the target has more life than iImpact so we increase it
-						iImpact = pTarget->bLife + Random( 10 );
+						iImpact = pTarget->stats.bLife + Random( 10 );
 						iImpactForCrits = iImpact;
 					}
 
 					if (pubSpecial)
 					{
 						// is the blow deadly enough to cause a head explosion?
-						if ( iImpactForCrits >= pTarget->bLife )
+						if ( iImpactForCrits >= pTarget->stats.bLife )
 						{
 							if (iImpactForCrits > MIN_DAMAGE_FOR_HEAD_EXPLOSION )
 							{
@@ -4497,24 +4497,24 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 				// since this value is much lower than the others, it only applies at short range...
 				if ( PythSpacesAway( pFirer->sGridNo, pTarget->sGridNo ) <= MAX_DISTANCE_FOR_MESSY_DEATH || (PythSpacesAway( pFirer->sGridNo, pTarget->sGridNo ) <= MAX_BARRETT_DISTANCE_FOR_MESSY_DEATH && pFirer->usAttackingWeapon  == BARRETT ))
 				{
-					if (iImpact > MIN_DAMAGE_FOR_INSTANT_KILL && iImpact < pTarget->bLife)
+					if (iImpact > MIN_DAMAGE_FOR_INSTANT_KILL && iImpact < pTarget->stats.bLife)
 					{
 						// blow to the chest is so deadly that it causes instant death;
 						// the target has more life than iImpact so we increase it
-						iImpact = pTarget->bLife + Random( 10 );
+						iImpact = pTarget->stats.bLife + Random( 10 );
 						iImpactForCrits = iImpact;
 					}
 					// special thing for hitting chest - allow cumulative damage to count
 					else if ( (iImpact + pTarget->sDamage) > (MIN_DAMAGE_FOR_BLOWN_AWAY + MIN_DAMAGE_FOR_INSTANT_KILL) )
 					{
-						iImpact = pTarget->bLife + Random( 10 );
+						iImpact = pTarget->stats.bLife + Random( 10 );
 						iImpactForCrits = iImpact;
 					}
 
 					// is the blow deadly enough to cause a chest explosion?
 					if (pubSpecial)
 					{
-						if (iImpact > MIN_DAMAGE_FOR_BLOWN_AWAY && iImpact >= pTarget->bLife)
+						if (iImpact > MIN_DAMAGE_FOR_BLOWN_AWAY && iImpact >= pTarget->stats.bLife)
 						{
 							*pubSpecial = FIRE_WEAPON_CHEST_EXPLODE_SPECIAL;
 						}
@@ -4533,46 +4533,46 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	if( !IsAutoResolveActive() )
 	{
 
-		if ( AmmoTypes[ubAmmoType].knife && pFirer->bOppList[ pTarget->ubID ] == SEEN_CURRENTLY )
+		if ( AmmoTypes[ubAmmoType].knife && pFirer->aiData.bOppList[ pTarget->ubID ] == SEEN_CURRENTLY )
 		{
 			// is this a stealth attack?
-			if ( pTarget->bOppList[ pFirer->ubID ] == NOT_HEARD_OR_SEEN && !CREATURE_OR_BLOODCAT( pTarget ) && (ubHitLocation == AIM_SHOT_HEAD || ubHitLocation == AIM_SHOT_TORSO ) )
+			if ( pTarget->aiData.bOppList[ pFirer->ubID ] == NOT_HEARD_OR_SEEN && !CREATURE_OR_BLOODCAT( pTarget ) && (ubHitLocation == AIM_SHOT_HEAD || ubHitLocation == AIM_SHOT_TORSO ) )
 			{
 				if ( PreRandom( 100 ) < (UINT32)(sHitBy + 10 * NUM_SKILL_TRAITS( pFirer, THROWING )) )
 				{
 					// instant death!					
-					iImpact = pTarget->bLife + Random( 10 );
+					iImpact = pTarget->stats.bLife + Random( 10 );
 					iImpactForCrits = iImpact;
 				}
 			}
 		}
 
-		if (iImpactForCrits > 0 && iImpactForCrits < pTarget->bLife )
+		if (iImpactForCrits > 0 && iImpactForCrits < pTarget->stats.bLife )
 		{
-			if (PreRandom( iImpactForCrits / 2 + pFirer->bAimTime * 5) + 1 > CRITICAL_HIT_THRESHOLD)
+			if (PreRandom( iImpactForCrits / 2 + pFirer->pathing.bAimTime * 5) + 1 > CRITICAL_HIT_THRESHOLD)
 			{
 				bStatLoss = (INT8) PreRandom( iImpactForCrits / 2 ) + 1;
 				switch( ubHitLocation )
 				{
 					case AIM_SHOT_HEAD:
-						if (bStatLoss >= pTarget->bWisdom)
+						if (bStatLoss >= pTarget->stats.bWisdom)
 						{
-							bStatLoss = pTarget->bWisdom - 1;
+							bStatLoss = pTarget->stats.bWisdom - 1;
 						}
 						if ( bStatLoss > 0 )
 						{
-							pTarget->bWisdom -= bStatLoss;
+							pTarget->stats.bWisdom -= bStatLoss;
 
 							if (pTarget->ubProfile != NO_PROFILE)
 							{
-								gMercProfiles[ pTarget->ubProfile ].bWisdom = pTarget->bWisdom;
+								gMercProfiles[ pTarget->ubProfile ].bWisdom = pTarget->stats.bWisdom;
 							}
 
 
 							if (pTarget->name[0] && pTarget->bVisible == TRUE)
 							{
 								// make stat RED for a while...
-								pTarget->uiChangeWisdomTime = GetJA2Clock();
+								pTarget->timeChanges.uiChangeWisdomTime = GetJA2Clock();
 								pTarget->usValueGoneUp &= ~( WIS_INCREASE );
 
 								if (bStatLoss == 1)
@@ -4591,25 +4591,25 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						}
 						break;
 					case AIM_SHOT_TORSO:
-						if (PreRandom( 1 ) == 0 && !(pTarget->uiStatusFlags & SOLDIER_MONSTER) )
+						if (PreRandom( 1 ) == 0 && !(pTarget->flags.uiStatusFlags & SOLDIER_MONSTER) )
 						{
-							if (bStatLoss >= pTarget->bDexterity)
+							if (bStatLoss >= pTarget->stats.bDexterity)
 							{
-								bStatLoss = pTarget->bDexterity - 1;
+								bStatLoss = pTarget->stats.bDexterity - 1;
 							}
 							if ( bStatLoss > 0 )
 							{
-								pTarget->bDexterity -= bStatLoss;
+								pTarget->stats.bDexterity -= bStatLoss;
 
 								if (pTarget->ubProfile != NO_PROFILE)
 								{
-									gMercProfiles[ pTarget->ubProfile ].bDexterity = pTarget->bDexterity;
+									gMercProfiles[ pTarget->ubProfile ].bDexterity = pTarget->stats.bDexterity;
 								}
 
 								if (pTarget->name[0] && pTarget->bVisible == TRUE)
 								{
 									// make stat RED for a while...
-									pTarget->uiChangeDexterityTime = GetJA2Clock();
+									pTarget->timeChanges.uiChangeDexterityTime = GetJA2Clock();
 									pTarget->usValueGoneUp &= ~( DEX_INCREASE );
 
 									if (bStatLoss == 1)
@@ -4625,23 +4625,23 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						}
 						else
 						{
-							if (bStatLoss >= pTarget->bStrength)
+							if (bStatLoss >= pTarget->stats.bStrength)
 							{
-								bStatLoss = pTarget->bStrength - 1;
+								bStatLoss = pTarget->stats.bStrength - 1;
 							}
 							if ( bStatLoss > 0 )
 							{
-								pTarget->bStrength -= bStatLoss;
+								pTarget->stats.bStrength -= bStatLoss;
 
 								if (pTarget->ubProfile != NO_PROFILE)
 								{
-									gMercProfiles[ pTarget->ubProfile ].bStrength = pTarget->bStrength;
+									gMercProfiles[ pTarget->ubProfile ].bStrength = pTarget->stats.bStrength;
 								}
 
 								if (pTarget->name[0] && pTarget->bVisible == TRUE)
 								{
 									// make stat RED for a while...
-									pTarget->uiChangeStrengthTime = GetJA2Clock();
+									pTarget->timeChanges.uiChangeStrengthTime = GetJA2Clock();
 									pTarget->usValueGoneUp &= ~( STRENGTH_INCREASE );
 
 									if (bStatLoss == 1)
@@ -4657,23 +4657,23 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 						}
 						break;
 					case AIM_SHOT_LEGS:
-						if (bStatLoss >= pTarget->bAgility)
+						if (bStatLoss >= pTarget->stats.bAgility)
 						{
-							bStatLoss = pTarget->bAgility - 1;
+							bStatLoss = pTarget->stats.bAgility - 1;
 						}	
 						if ( bStatLoss > 0 )
 						{				
-							pTarget->bAgility -= bStatLoss;
+							pTarget->stats.bAgility -= bStatLoss;
 
 							if (pTarget->ubProfile != NO_PROFILE)
 							{
-								gMercProfiles[ pTarget->ubProfile ].bAgility = pTarget->bAgility;
+								gMercProfiles[ pTarget->ubProfile ].bAgility = pTarget->stats.bAgility;
 							}
 
 							if (pTarget->name[0] && pTarget->bVisible == TRUE)
 							{
 								// make stat RED for a while...
-								pTarget->uiChangeAgilityTime = GetJA2Clock();
+								pTarget->timeChanges.uiChangeAgilityTime = GetJA2Clock();
 								pTarget->usValueGoneUp &= ~( AGIL_INCREASE );
 
 								if (bStatLoss == 1)
@@ -4804,7 +4804,7 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 			{
 				if ( Random(40) == 0 )
 				{
-					DoMercBattleSound(  MercPtrs[ ubAttackerID ], BATTLE_SOUND_CURSE1 );
+					MercPtrs[ ubAttackerID ]->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
 				}
 			}
 			fDoMissForGun = TRUE;
@@ -4851,7 +4851,7 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 
   usInHand = pAttacker->usAttackingWeapon;
 
-	if ( (usInHand != CREATURE_QUEEN_TENTACLES ) && (pDefender->bLife < OKLIFE || pDefender->bBreath < OKBREATH) )
+	if ( (usInHand != CREATURE_QUEEN_TENTACLES ) && (pDefender->stats.bLife < OKLIFE || pDefender->bBreath < OKBREATH) )
 	{
 		// there is NO way to miss
 		return( 100 ); 
@@ -4882,14 +4882,14 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 		// this is more of a brute force strength-vs-strength check
 		iAttRating = ( EffectiveDexterity( pAttacker ) + // coordination, accuracy
 				 EffectiveAgility( pAttacker ) +    // speed & reflexes
-				 3 * pAttacker->bStrength +    // physical strength (TRIPLED!)
+				 3 * pAttacker->stats.bStrength +    // physical strength (TRIPLED!)
 				 (10 * EffectiveExpLevel( pAttacker ) ) );  // experience, knowledge
 	}
 	else
 	{
 		iAttRating = (3 * EffectiveDexterity( pAttacker ) + // coordination, accuracy (TRIPLED!)
 				 EffectiveAgility( pAttacker ) +    // speed & reflexes
-				 pAttacker->bStrength +    // physical strength
+				 pAttacker->stats.bStrength +    // physical strength
 				 (10 * EffectiveExpLevel( pAttacker ) ) );  // experience, knowledge
 	}
 
@@ -4915,13 +4915,13 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
     iAttRating += ((AIM_BONUS_PER_AP * ubAimTime) / 2);    //bonus for aiming
    }
 
-  if (! (pAttacker->uiStatusFlags & SOLDIER_PC) )   // if attacker is a computer AI controlled enemy
+  if (! (pAttacker->flags.uiStatusFlags & SOLDIER_PC) )   // if attacker is a computer AI controlled enemy
 	{
     iAttRating += gbDiff[ DIFF_ENEMY_TO_HIT_MOD ][ SoldierDifficultyLevel( pAttacker ) ];
 	}
 
   // if attacker is being affected by gas
-  if ( pAttacker->uiStatusFlags & SOLDIER_GASSED )
+  if ( pAttacker->flags.uiStatusFlags & SOLDIER_GASSED )
     iAttRating -= AIM_PENALTY_GASSED;
 
   // if attacker is being bandaged at the same time, his concentration is off
@@ -4929,8 +4929,8 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 	  iAttRating -= AIM_PENALTY_GETTINGAID;
 
   // if attacker is still in shock
-  if (pAttacker->bShock)
-    iAttRating -= (pAttacker->bShock * AIM_PENALTY_PER_SHOCK);
+  if (pAttacker->aiData.bShock)
+    iAttRating -= (pAttacker->aiData.bShock * AIM_PENALTY_PER_SHOCK);
 
 /*
   // if the attacker is an A.I.M. mercenary
@@ -4939,13 +4939,13 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 */
 
   // If attacker injured, reduce chance accordingly (by up to 2/3rds)
-  if ((iAttRating > 0) && (pAttacker->bLife < pAttacker->bLifeMax))
+  if ((iAttRating > 0) && (pAttacker->stats.bLife < pAttacker->stats.bLifeMax))
    {
     // if bandaged, give 1/2 of the bandaged life points back into equation
-    ubBandaged = pAttacker->bLifeMax - pAttacker->bLife - pAttacker->bBleeding;
+    ubBandaged = pAttacker->stats.bLifeMax - pAttacker->stats.bLife - pAttacker->bBleeding;
 
-    iAttRating -= (2 * iAttRating * (pAttacker->bLifeMax - pAttacker->bLife + (ubBandaged / 2))) /
-		 (3 * pAttacker->bLifeMax);
+    iAttRating -= (2 * iAttRating * (pAttacker->stats.bLifeMax - pAttacker->stats.bLife + (ubBandaged / 2))) /
+		 (3 * pAttacker->stats.bLifeMax);
    }
 
   // If attacker tired, reduce chance accordingly (by up to 1/2)
@@ -4985,14 +4985,14 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 	{
 		iDefRating = (EffectiveAgility( pDefender )) +   // speed & reflexes
 		   EffectiveDexterity( pDefender ) +  // coordination, accuracy
-		   3 * pDefender->bStrength +    // physical strength (TRIPLED!)
+		   3 * pDefender->stats.bStrength +    // physical strength (TRIPLED!)
 	     (10 * EffectiveExpLevel( pDefender ) );  // experience, knowledge
 	}
 	else
 	{
 		iDefRating = (3 * EffectiveAgility( pDefender ) ) +   // speed & reflexes (TRIPLED!)
 		   EffectiveDexterity( pDefender ) +  // coordination, accuracy
-		   pDefender->bStrength +    // physical strength
+		   pDefender->stats.bStrength +    // physical strength
 	     (10 * EffectiveExpLevel( pDefender ) );  // experience, knowledge
 	}
   
@@ -5005,7 +5005,7 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 	iDefRating -= GetSkillCheckPenaltyForFatigue( pDefender, iDefRating );
 
   // if attacker is being affected by gas
-  if ( pDefender->uiStatusFlags & SOLDIER_GASSED )
+  if ( pDefender->flags.uiStatusFlags & SOLDIER_GASSED )
     iDefRating -= AIM_PENALTY_GASSED;
 
   // if defender is being bandaged at the same time, his concentration is off
@@ -5013,8 +5013,8 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 	  iDefRating -= AIM_PENALTY_GETTINGAID;
 
   // if defender is still in shock
-  if (pDefender->bShock)
-    iDefRating -= (pDefender->bShock * AIM_PENALTY_PER_SHOCK);
+  if (pDefender->aiData.bShock)
+    iDefRating -= (pDefender->aiData.bShock * AIM_PENALTY_PER_SHOCK);
 
 /*
   // if the defender is an A.I.M. mercenary
@@ -5023,13 +5023,13 @@ UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAi
 */
 
   // If defender injured, reduce chance accordingly (by up to 2/3rds)
-  if ((iDefRating > 0) && (pDefender->bLife < pDefender->bLifeMax))
+  if ((iDefRating > 0) && (pDefender->stats.bLife < pDefender->stats.bLifeMax))
    {
     // if bandaged, give 1/2 of the bandaged life points back into equation
-    ubBandaged = pDefender->bLifeMax - pDefender->bLife - pDefender->bBleeding;
+    ubBandaged = pDefender->stats.bLifeMax - pDefender->stats.bLife - pDefender->bBleeding;
 
-    iDefRating -= (2 * iDefRating * (pDefender->bLifeMax - pDefender->bLife + (ubBandaged / 2))) /
-		 (3 * pDefender->bLifeMax);
+    iDefRating -= (2 * iDefRating * (pDefender->stats.bLifeMax - pDefender->stats.bLife + (ubBandaged / 2))) /
+		 (3 * pDefender->stats.bLifeMax);
 
    }
 
@@ -5388,7 +5388,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	{
 
 		// MECHANICALLY FIRED arced projectile (ie. mortar), need brains & know-how
-		iChance = ( EffectiveDexterity( pSoldier ) + EffectiveMarksmanship( pSoldier ) + EffectiveWisdom( pSoldier ) + pSoldier->bExpLevel ) / 4;
+		iChance = ( EffectiveDexterity( pSoldier ) + EffectiveMarksmanship( pSoldier ) + EffectiveWisdom( pSoldier ) + pSoldier->stats.bExpLevel ) / 4;
 
 		// heavy weapons trait helps out
 		if (HAS_SKILL_TRAIT( pSoldier, HEAVY_WEAPS ))
@@ -5437,7 +5437,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 */
 
 	// if shooter is being affected by gas
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 	{
 		iChance -= AIM_PENALTY_GASSED;
 	}
@@ -5449,9 +5449,9 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	}
 
 	// if shooter is still in shock
-	if (pSoldier->bShock)
+	if (pSoldier->aiData.bShock)
 	{
-		iChance -= (pSoldier->bShock * AIM_PENALTY_PER_SHOCK);
+		iChance -= (pSoldier->aiData.bShock * AIM_PENALTY_PER_SHOCK);
 	}
 
 	// calculate actual range (in world units)
@@ -5496,14 +5496,14 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	}
 
 	// IF CHANCE EXISTS, BUT ATTACKER IS INJURED
-	if ((iChance > 0) && (pSoldier->bLife < pSoldier->bLifeMax))
+	if ((iChance > 0) && (pSoldier->stats.bLife < pSoldier->stats.bLifeMax))
 	{
 		// if bandaged, give 1/2 of the bandaged life points back into equation
-		bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+		bBandaged = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
 		// injury penalty is based on % damage taken (max 2/3rds iChance)
-		bPenalty = (2 * iChance * (pSoldier->bLifeMax - pSoldier->bLife + (bBandaged / 2))) /
-			 (3 * pSoldier->bLifeMax);
+		bPenalty = (2 * iChance * (pSoldier->stats.bLifeMax - pSoldier->stats.bLife + (bBandaged / 2))) /
+			 (3 * pSoldier->stats.bLifeMax);
 
 		// for mechanically-fired projectiles, reduce penalty in half
 		if ( Item[ usHandItem ].usItemClass == IC_LAUNCHER )
@@ -5586,7 +5586,7 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 		pSoldier->bDoAutofire = 0;	
 	}
 
-	pSoldier->fDoSpread = 0;
+	pSoldier->flags.fDoSpread = 0;
 	
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	gfUIForceReExamineCursorData = TRUE;
@@ -5615,7 +5615,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 			if ( pSoldier->ubID != pQueenSoldier->ubID )
 			{
 				// ATE: Ok, lets check for some basic things here!
-				if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+				if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
 				{
 					// Get Pyth spaces away....
 					if ( GetRangeInCellCoordsFromGridNoDiff( pQueenSoldier->sGridNo, pSoldier->sGridNo ) <= Weapon[ CREATURE_QUEEN_TENTACLES].usRange )
@@ -5626,7 +5626,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 						// 
 						for ( cnt2 = 0; cnt2 < 2; cnt2++ )
 						{
-							if ( bValidDishoutDirs[ pQueenSoldier->uiPendingActionData1 ][ cnt2 ] == bDir )
+							if ( bValidDishoutDirs[ pQueenSoldier->aiData.uiPendingActionData1 ][ cnt2 ] == bDir )
 							{
 								iChance = CalcChanceToStab( pQueenSoldier, pSoldier, 0 );
 
@@ -5637,7 +5637,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 								{
 									// Hit!
 									iImpact = HTHImpact( pQueenSoldier, pSoldier, iHitBy, TRUE );
-			 						EVENT_SoldierGotHit( pSoldier, CREATURE_QUEEN_TENTACLES, (INT16) iImpact, (INT16) iImpact, gOppositeDirection[ bDir ], 50, pQueenSoldier->ubID, 0, ANIM_CROUCH, 0, 0 );
+			 						pSoldier->EVENT_SoldierGotHit( CREATURE_QUEEN_TENTACLES, (INT16) iImpact, (INT16) iImpact, gOppositeDirection[ bDir ], 50, pQueenSoldier->ubID, 0, ANIM_CROUCH, 0, 0 );
 								}
 							}
 						}
@@ -5647,7 +5647,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 		}
 	}
 
-	pQueenSoldier->uiPendingActionData1++;
+	pQueenSoldier->aiData.uiPendingActionData1++;
 }
 
 

@@ -100,7 +100,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			else
 			{
 				// add 10% to max tooltip viewing distance per level of the merc
-				uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->bExpLevel / 10);
+				uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->stats.bExpLevel / 10);
 
 				if ( gGameExternalOptions.gfAllowLimitedVision )
 					uiMaxTooltipDistance *= 1 - (gGameExternalOptions.ubVisDistDecreasePerRainIntensity / 100);
@@ -139,7 +139,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			// Get the current selected merc
 			SOLDIERTYPE* pMerc = MercPtrs[ gusSelectedSoldier ];
 			
-			if ( pMerc->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
+			if ( pMerc->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 			{
 				// We do not see the enemy. Return and do not display the tooltip.
 				return;
@@ -159,13 +159,13 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			if ( gGameExternalOptions.fEnableSoldierTooltipID )
 				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ID], pStrInfo, pSoldier->ubID );
 			if ( gGameExternalOptions.fEnableSoldierTooltipOrders )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->bOrders );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->aiData.bOrders );
 			if ( gGameExternalOptions.fEnableSoldierTooltipAttitude )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->bAttitude );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->aiData.bAttitude );
 			if ( gGameExternalOptions.fEnableSoldierTooltipActionPoints )
 				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_APS], pStrInfo, pSoldier->bActionPoints );
 			if ( gGameExternalOptions.fEnableSoldierTooltipHealth )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->bLife );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->stats.bLife );
 		}
 
 		// armor info code block start

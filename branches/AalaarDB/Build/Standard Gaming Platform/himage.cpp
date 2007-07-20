@@ -19,7 +19,7 @@
 	#include "vobject.h"
 #endif
 
-// This is the color substituted to keep a 24bpp -> 16bpp color
+// This is the color substituted to keep a 24bpp->16bpp color
 // from going transparent (0x0000) -- DB
 
 #define BLACK_SUBSTITUTE	0x0001	
@@ -863,7 +863,7 @@ UINT32 GetRGBColor( UINT16 Value16BPP )
 // Return Value  pointer to the SGPPaletteEntry
 //               
 // Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
+// Dec 15th 1996->modified for use by Wizardry
 //
 //*****************************************************************************
 

@@ -246,7 +246,7 @@ BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 			if ( ubNPC != NO_PROFILE )
 			{
 				SOLDIERTYPE * pNull = NULL;
-				pNull->bLife = 0; // crash!
+				pNull->stats.bLife = 0; // crash!
 			}
 #else
 
@@ -270,7 +270,7 @@ BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 		{
 			// crash!
 			SOLDIERTYPE * pNull = NULL;
-			pNull->bLife = 0;
+			pNull->stats.bLife = 0;
 		}
 	}
 
@@ -1588,7 +1588,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 		}
 
 		// make sure civ is awake now
-		pNPC->fAIFlags &= (~AI_ASLEEP);
+		pNPC->aiData.fAIFlags &= (~AI_ASLEEP);
 	}
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -1875,11 +1875,11 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				if ( pQuotePtr->sActionData <= -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
@@ -2042,22 +2042,22 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				if ( pQuotePtr->sActionData < 0 && pQuotePtr->sActionData > -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
 				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) (pQuotePtr->sActionData), ubRecordNum );					
 				}
@@ -2071,7 +2071,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					if (pSoldier && ubNPC == KYLE) 
 					{
 						// make sure he has keys
-						pSoldier->bHasKeys = TRUE;
+						pSoldier->pathing.bHasKeys = TRUE;
 					}
 					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
 					{
@@ -2082,10 +2082,10 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					else
 					{
 						// turn off cowering
-						if ( pNPC->uiStatusFlags & SOLDIER_COWERING)
+						if ( pNPC->flags.uiStatusFlags & SOLDIER_COWERING)
 						{
-							//pNPC->uiStatusFlags &= ~SOLDIER_COWERING;
-							EVENT_InitNewSoldierAnim( pNPC, STANDING, 0 , FALSE );
+							//pNPC->flags.uiStatusFlags &= ~SOLDIER_COWERING;
+							pNPC->EVENT_InitNewSoldierAnim( STANDING, 0 , FALSE );
 						}
 
 						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -2201,7 +2201,7 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 			}
 
 			// if they're not visible, don't think about it
-			if (pNPC->bOppList[ubMerc] != SEEN_CURRENTLY)
+			if (pNPC->aiData.bOppList[ubMerc] != SEEN_CURRENTLY)
 			{
 				continue;
 			} 
@@ -2245,14 +2245,14 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 
 UINT8 NPCTryToInitiateConv( SOLDIERTYPE * pNPC )
 { // assumes current action is ACTION_APPROACH_MERC
-	if (pNPC->bAction != AI_ACTION_APPROACH_MERC)
+	if (pNPC->aiData.bAction != AI_ACTION_APPROACH_MERC)
 	{
 		return( AI_ACTION_NONE );
 	}
-	if (PythSpacesAway( pNPC->sGridNo, MercPtrs[pNPC->usActionData]->sGridNo ) < CONVO_DIST)
+	if (PythSpacesAway( pNPC->sGridNo, MercPtrs[pNPC->aiData.usActionData]->sGridNo ) < CONVO_DIST)
 	{
 		// initiate conversation!
-		Converse( pNPC->ubProfile, MercPtrs[pNPC->usActionData]->ubProfile, NPC_INITIATING_CONV, 0 );
+		Converse( pNPC->ubProfile, MercPtrs[pNPC->aiData.usActionData]->ubProfile, NPC_INITIATING_CONV, 0 );
 		// after talking, wait a while before moving anywhere else
 		return( AI_ACTION_WAIT );
 	}
@@ -2317,9 +2317,9 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	if (pNPC->bTeam == gbPlayerNum)
 	{
 		// the "under ai control" flag was set temporarily; better turn it off now
-		pNPC->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
+		pNPC->flags.uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
 		// make damn sure the AI_HANDLE_EVERY_FRAME flag is turned off
-		pNPC->fAIFlags &= (AI_HANDLE_EVERY_FRAME);
+		pNPC->aiData.fAIFlags &= (AI_HANDLE_EVERY_FRAME);
 	}
 
 	ubNPC = pNPC->ubProfile;
@@ -2525,7 +2525,7 @@ void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->aiData.bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
 		{
 			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 			ubNumMercs++;
@@ -3114,7 +3114,7 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( pTeamSoldier->bActive && pSoldier->bInSector && pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bBreath >= OKBREATH && pTeamSoldier->bOppCnt > 0 && pTeamSoldier->ubProfile != NO_PROFILE )
+		if ( pTeamSoldier->bActive && pSoldier->bInSector && pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bBreath >= OKBREATH && pTeamSoldier->aiData.bOppCnt > 0 && pTeamSoldier->ubProfile != NO_PROFILE )
 		{
 			if ( bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && pTeamSoldier->ubCivilianGroup != pSoldier->ubCivilianGroup )
 			{
@@ -3188,7 +3188,7 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 
 void HandleNPCChangesForTacticalTraversal( SOLDIERTYPE * pSoldier )
 {
-	if ( !pSoldier || pSoldier->ubProfile == NO_PROFILE || (pSoldier->fAIFlags & AI_CHECK_SCHEDULE) )
+	if ( !pSoldier || pSoldier->ubProfile == NO_PROFILE || (pSoldier->aiData.fAIFlags & AI_CHECK_SCHEDULE) )
 	{
 		return;
 	}

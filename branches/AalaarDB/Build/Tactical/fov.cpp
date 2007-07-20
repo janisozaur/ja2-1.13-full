@@ -313,19 +313,19 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  INT8         bStructHeight;
  INT8         bThroughWindowDirection;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_ENEMY )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ENEMY )
   {
    //pSoldier->needToLookForItems = FALSE;
    return;
   }
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
 
 	// Return if this guy has no gridno, has bad life, etc
-	if( pSoldier->sGridNo == NOWHERE || !pSoldier->bInSector || pSoldier->bLife < OKLIFE )
+	if( pSoldier->sGridNo == NOWHERE || !pSoldier->bInSector || pSoldier->stats.bLife < OKLIFE )
 	{
 	 return;
 	}
@@ -356,7 +356,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  //NumMessage("good old reveal",dir);
 
   // a gassed merc can only see 1 tile away due to blurred vision
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 	{
 		range = 1;
 	}
@@ -364,7 +364,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	{
     range = pSoldier->bViewRange;
 		// balance item viewing range between normal and the limit set by opplist-type functions -- CJC
-		range = (AdjustMaxSightRangeForEnvEffects( pSoldier, LightTrueLevel( pSoldier->sGridNo, pSoldier->bLevel), range ) + range) / 2;
+		range = (AdjustMaxSightRangeForEnvEffects( pSoldier, LightTrueLevel( pSoldier->sGridNo, pSoldier->pathing.bLevel), range ) + range) / 2;
 	}
 
 
@@ -724,7 +724,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 												// ATE: Only if in combat...
 												if ( gTacticalStatus.uiFlags & INCOMBAT )
 												{
-													HaultSoldierFromSighting( pSoldier, FALSE );
+													pSoldier->HaultSoldierFromSighting( FALSE );
 												}
                         else
                         {

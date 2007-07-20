@@ -459,7 +459,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	{
 		pSoldier = MercPtrs[ i ];
 
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife  )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife  )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -482,22 +482,22 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 					//Copy over the data of the soldier.
 					curr->pDetailedPlacement->ubProfile							= NO_PROFILE;
-					curr->pDetailedPlacement->bLife									= pSoldier->bLife;
-					curr->pDetailedPlacement->bLifeMax  						= pSoldier->bLifeMax;
-					curr->pDetailedPlacement->bAgility							= pSoldier->bAgility;
-					curr->pDetailedPlacement->bDexterity						= pSoldier->bDexterity;
-					curr->pDetailedPlacement->bExpLevel							= pSoldier->bExpLevel;
-					curr->pDetailedPlacement->bMarksmanship					= pSoldier->bMarksmanship;
-					curr->pDetailedPlacement->bMedical							= pSoldier->bMedical;
-					curr->pDetailedPlacement->bMechanical						= pSoldier->bMechanical;
-					curr->pDetailedPlacement->bExplosive						= pSoldier->bExplosive;
-					curr->pDetailedPlacement->bLeadership						= pSoldier->bLeadership;
-					curr->pDetailedPlacement->bStrength							= pSoldier->bStrength;
-					curr->pDetailedPlacement->bWisdom								= pSoldier->bWisdom;
-					curr->pDetailedPlacement->bAttitude							= pSoldier->bAttitude;
-					curr->pDetailedPlacement->bOrders								= pSoldier->bOrders;
-					curr->pDetailedPlacement->bMorale								= pSoldier->bMorale;
-					curr->pDetailedPlacement->bAIMorale							= pSoldier->bAIMorale;
+					curr->pDetailedPlacement->bLife									= pSoldier->stats.bLife;
+					curr->pDetailedPlacement->bLifeMax  						= pSoldier->stats.bLifeMax;
+					curr->pDetailedPlacement->bAgility							= pSoldier->stats.bAgility;
+					curr->pDetailedPlacement->bDexterity						= pSoldier->stats.bDexterity;
+					curr->pDetailedPlacement->bExpLevel							= pSoldier->stats.bExpLevel;
+					curr->pDetailedPlacement->bMarksmanship					= pSoldier->stats.bMarksmanship;
+					curr->pDetailedPlacement->bMedical							= pSoldier->stats.bMedical;
+					curr->pDetailedPlacement->bMechanical						= pSoldier->stats.bMechanical;
+					curr->pDetailedPlacement->bExplosive						= pSoldier->stats.bExplosive;
+					curr->pDetailedPlacement->bLeadership						= pSoldier->stats.bLeadership;
+					curr->pDetailedPlacement->bStrength							= pSoldier->stats.bStrength;
+					curr->pDetailedPlacement->bWisdom								= pSoldier->stats.bWisdom;
+					curr->pDetailedPlacement->bAttitude							= pSoldier->aiData.bAttitude;
+					curr->pDetailedPlacement->bOrders								= pSoldier->aiData.bOrders;
+					curr->pDetailedPlacement->bMorale								= pSoldier->aiData.bMorale;
+					curr->pDetailedPlacement->bAIMorale							= pSoldier->aiData.bAIMorale;
 					curr->pDetailedPlacement->bBodyType							= pSoldier->ubBodyType;
 					curr->pDetailedPlacement->ubCivilianGroup				= pSoldier->ubCivilianGroup;
 
@@ -513,7 +513,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						}
 					}
 
-					curr->pDetailedPlacement->fHasKeys							= pSoldier->bHasKeys;
+					curr->pDetailedPlacement->fHasKeys							= pSoldier->pathing.bHasKeys;
 					curr->pDetailedPlacement->sSectorX							= pSoldier->sSectorX;
 					curr->pDetailedPlacement->sSectorY							= pSoldier->sSectorY;
 					curr->pDetailedPlacement->bSectorZ							= pSoldier->bSectorZ;
@@ -525,7 +525,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					//left the map, so randomize the start locations either current position or original position.
 					if( PreRandom( 2 ) )
 					{ //use current position
-						curr->pDetailedPlacement->fOnRoof								= pSoldier->bLevel;
+						curr->pDetailedPlacement->fOnRoof								= pSoldier->pathing.bLevel;
 						curr->pDetailedPlacement->sInsertionGridNo			= pSoldier->sGridNo;
 					}
 					else
@@ -537,8 +537,8 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					swprintf( curr->pDetailedPlacement->name, pSoldier->name );
 
 					//Copy patrol points
-					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
-					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->aiData.bPatrolCnt;
+					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->aiData.usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 							
 					//copy colors for soldier based on the body type.
 					sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
@@ -692,7 +692,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	for( i = gTacticalStatus.Team[ ubFirstIdTeam ].bFirstID; i <= gTacticalStatus.Team[ ubLastIdTeam ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -1564,7 +1564,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		pSoldier = MercPtrs[ i ];
 
 		//make sure the person is active, alive, in the sector, and is not a profiled person
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife && pSoldier->ubProfile == NO_PROFILE )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife && pSoldier->ubProfile == NO_PROFILE )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -1589,26 +1589,26 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 						//Copy over the data of the soldier.
 						curr->pDetailedPlacement->ubProfile							= NO_PROFILE;
-						curr->pDetailedPlacement->bLife									= pSoldier->bLife;
-						curr->pDetailedPlacement->bLifeMax  						= pSoldier->bLifeMax;
-						curr->pDetailedPlacement->bAgility							= pSoldier->bAgility;
-						curr->pDetailedPlacement->bDexterity						= pSoldier->bDexterity;
-						curr->pDetailedPlacement->bExpLevel							= pSoldier->bExpLevel;
-						curr->pDetailedPlacement->bMarksmanship					= pSoldier->bMarksmanship;
-						curr->pDetailedPlacement->bMedical							= pSoldier->bMedical;
-						curr->pDetailedPlacement->bMechanical						= pSoldier->bMechanical;
-						curr->pDetailedPlacement->bExplosive						= pSoldier->bExplosive;
-						curr->pDetailedPlacement->bLeadership						= pSoldier->bLeadership;
-						curr->pDetailedPlacement->bStrength							= pSoldier->bStrength;
-						curr->pDetailedPlacement->bWisdom								= pSoldier->bWisdom;
-						curr->pDetailedPlacement->bAttitude							= pSoldier->bAttitude;
-						curr->pDetailedPlacement->bOrders								= pSoldier->bOrders;
-						curr->pDetailedPlacement->bMorale								= pSoldier->bMorale;
-						curr->pDetailedPlacement->bAIMorale							= pSoldier->bAIMorale;
+						curr->pDetailedPlacement->bLife									= pSoldier->stats.bLife;
+						curr->pDetailedPlacement->bLifeMax  						= pSoldier->stats.bLifeMax;
+						curr->pDetailedPlacement->bAgility							= pSoldier->stats.bAgility;
+						curr->pDetailedPlacement->bDexterity						= pSoldier->stats.bDexterity;
+						curr->pDetailedPlacement->bExpLevel							= pSoldier->stats.bExpLevel;
+						curr->pDetailedPlacement->bMarksmanship					= pSoldier->stats.bMarksmanship;
+						curr->pDetailedPlacement->bMedical							= pSoldier->stats.bMedical;
+						curr->pDetailedPlacement->bMechanical						= pSoldier->stats.bMechanical;
+						curr->pDetailedPlacement->bExplosive						= pSoldier->stats.bExplosive;
+						curr->pDetailedPlacement->bLeadership						= pSoldier->stats.bLeadership;
+						curr->pDetailedPlacement->bStrength							= pSoldier->stats.bStrength;
+						curr->pDetailedPlacement->bWisdom								= pSoldier->stats.bWisdom;
+						curr->pDetailedPlacement->bAttitude							= pSoldier->aiData.bAttitude;
+						curr->pDetailedPlacement->bOrders								= pSoldier->aiData.bOrders;
+						curr->pDetailedPlacement->bMorale								= pSoldier->aiData.bMorale;
+						curr->pDetailedPlacement->bAIMorale							= pSoldier->aiData.bAIMorale;
 						curr->pDetailedPlacement->bBodyType							= pSoldier->ubBodyType;
 						curr->pDetailedPlacement->ubCivilianGroup				= pSoldier->ubCivilianGroup;
 						curr->pDetailedPlacement->ubScheduleID					= pSoldier->ubScheduleID;
-						curr->pDetailedPlacement->fHasKeys							= pSoldier->bHasKeys;
+						curr->pDetailedPlacement->fHasKeys							= pSoldier->pathing.bHasKeys;
 						curr->pDetailedPlacement->sSectorX							= pSoldier->sSectorX;
 						curr->pDetailedPlacement->sSectorY							= pSoldier->sSectorY;
 						curr->pDetailedPlacement->bSectorZ							= pSoldier->bSectorZ;
@@ -1620,7 +1620,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						//left the map, so randomize the start locations either current position or original position.
 						if( PreRandom( 2 ) )
 						{ //use current position
-							curr->pDetailedPlacement->fOnRoof								= pSoldier->bLevel;
+							curr->pDetailedPlacement->fOnRoof								= pSoldier->pathing.bLevel;
 							curr->pDetailedPlacement->sInsertionGridNo			= pSoldier->sGridNo;
 						}
 						else
@@ -1632,8 +1632,8 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						swprintf( curr->pDetailedPlacement->name, pSoldier->name );
 
 						//Copy patrol points
-						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
-						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->aiData.bPatrolCnt;
+						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->aiData.usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 								
 						//copy colors for soldier based on the body type.
 						sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
@@ -1768,7 +1768,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	{
 		pSoldier = MercPtrs[ i ];
 		// CJC: note that bInSector is not required; the civ could be offmap!
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife )
 		{ 
 			//soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
@@ -2097,18 +2097,18 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					}
 					//verify the checksum equation (anti-hack) -- see save 
 					usFileCheckSum = 
-						curr->pDetailedPlacement->bLife									* 7		+	 
-						curr->pDetailedPlacement->bLifeMax  						* 8		-
-						curr->pDetailedPlacement->bAgility							* 2		+
-						curr->pDetailedPlacement->bDexterity						* 1		+
-						curr->pDetailedPlacement->bExpLevel							* 5		-
-						curr->pDetailedPlacement->bMarksmanship					* 9		+
-						curr->pDetailedPlacement->bMedical							* 10	+
-						curr->pDetailedPlacement->bMechanical						* 3		+
-						curr->pDetailedPlacement->bExplosive						* 4		+
-						curr->pDetailedPlacement->bLeadership						* 5		+
-						curr->pDetailedPlacement->bStrength							* 7		+
-						curr->pDetailedPlacement->bWisdom								* 11	+
+						curr->pDetailedPlacement->stats.bLife									* 7		+	 
+						curr->pDetailedPlacement->stats.bLifeMax  						* 8		-
+						curr->pDetailedPlacement->stats.bAgility							* 2		+
+						curr->pDetailedPlacement->stats.bDexterity						* 1		+
+						curr->pDetailedPlacement->stats.bExpLevel							* 5		-
+						curr->pDetailedPlacement->stats.bMarksmanship					* 9		+
+						curr->pDetailedPlacement->stats.bMedical							* 10	+
+						curr->pDetailedPlacement->stats.bMechanical						* 3		+
+						curr->pDetailedPlacement->stats.bExplosive						* 4		+
+						curr->pDetailedPlacement->stats.bLeadership						* 5		+
+						curr->pDetailedPlacement->stats.bStrength							* 7		+
+						curr->pDetailedPlacement->stats.bWisdom								* 11	+
 						curr->pDetailedPlacement->bMorale								* 7		+
 						curr->pDetailedPlacement->bAIMorale							* 3		-
 						curr->pDetailedPlacement->bBodyType							* 7		+

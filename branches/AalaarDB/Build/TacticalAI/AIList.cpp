@@ -184,7 +184,7 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 
 BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks ) 
 {
-	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
+	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) )
 	{
 		return( FALSE );
 	}
@@ -195,12 +195,12 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		return( FALSE );
 	}
 
-	if ( ! ( pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH ) )
+	if ( ! ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH ) )
 	{
 		return( FALSE );
 	}
 
-	if ( pSoldier->bMoved )
+	if ( pSoldier->aiData.bMoved )
 	{
 		if ( pSoldier->bActionPoints <= 1 && pubDoneCount )
 		{
@@ -223,9 +223,9 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		}
 
 		// if someone in a civ group is neutral but the civ group is non-neutral, should be handled all the time
-		if ( pSoldier->bNeutral && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL ) )
+		if ( pSoldier->aiData.bNeutral && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL ) )
 		{
-			if ( pSoldier->bAlertStatus < STATUS_RED )
+			if ( pSoldier->aiData.bAlertStatus < STATUS_RED )
 			{
 				// unalerted, barely handle
 				if ( fDoRandomChecks && PreRandom( 10 ) && !(pSoldier->ubQuoteRecord) )
@@ -236,7 +236,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 			else
 			{
 				// heard gunshots
-				if ( pSoldier->uiStatusFlags & SOLDIER_COWERING ) 
+				if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
 				{
 					if ( pSoldier->bVisible )
 					{
@@ -270,9 +270,9 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		// non-neutral civs should be handled all the time, right?
 		// reset last action if cowering
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_COWERING ) 
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
 		{
-			pSoldier->bLastAction = AI_ACTION_NONE;
+			pSoldier->aiData.bLastAction = AI_ACTION_NONE;
 		}
 
 	}
@@ -342,7 +342,7 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 				continue;
 			}
 
-			bPriority = pSoldier->bAlertStatus;
+			bPriority = pSoldier->aiData.bAlertStatus;
 			if ( pSoldier->bVisible == TRUE )
 			{
 				bPriority += 3;

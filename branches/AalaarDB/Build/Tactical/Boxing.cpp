@@ -56,16 +56,16 @@ void ExitBoxing( void )
 
 			if ( pSoldier != NULL )
 			{
-				if ( ( pSoldier->uiStatusFlags & SOLDIER_BOXER ) && InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING )
+				if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_BOXER ) && InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING )
 				{
-					if ( pSoldier->uiStatusFlags & SOLDIER_PC )
+					if ( pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 					{
 						if ( ubPass == 0 ) // pass 0, only handle AI
 						{
 							continue;
 						}
 						// put guy under AI control temporarily
-						pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+						pSoldier->flags.uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
 					}
 					else
 					{
@@ -78,19 +78,19 @@ void ExitBoxing( void )
 						RecalculateOppCntsDueToBecomingNeutral( pSoldier );
 					}
 					CancelAIAction( pSoldier, TRUE );
-					pSoldier->bAlertStatus = STATUS_GREEN;
-					pSoldier->bUnderFire = 0;
+					pSoldier->aiData.bAlertStatus = STATUS_GREEN;
+					pSoldier->aiData.bUnderFire = 0;
 
 					// if necessary, revive boxer so he can leave ring
-					if (pSoldier->bLife > 0 && (pSoldier->bLife < OKLIFE || pSoldier->bBreath < OKBREATH ) )
+					if (pSoldier->stats.bLife > 0 && (pSoldier->stats.bLife < OKLIFE || pSoldier->bBreath < OKBREATH ) )
 					{
-						pSoldier->bLife = __max( OKLIFE * 2, pSoldier->bLife );
+						pSoldier->stats.bLife = __max( OKLIFE * 2, pSoldier->stats.bLife );
 						if (pSoldier->bBreath < 100)
 						{
 							// deduct -ve BPs to grant some BPs back (properly)
 							DeductPoints( pSoldier, 0, (INT16) - ( (100 - pSoldier->bBreath) * 100 ) );
 						}
-						BeginSoldierGetup( pSoldier );
+						pSoldier->BeginSoldierGetup( );
 					}
 				}
 			}
@@ -133,7 +133,7 @@ void BoxingPlayerDisqualified( SOLDIERTYPE * pOffender, INT8 bReason )
 {
 	if (bReason == BOXER_OUT_OF_RING || bReason == NON_BOXER_IN_RING)
 	{
-		EVENT_StopMerc( pOffender, pOffender->sGridNo, pOffender->bDirection );
+		pOffender->EVENT_StopMerc( pOffender->sGridNo, pOffender->bDirection );
 	}
 	SetBoxingState( DISQUALIFIED );
 	TriggerNPCRecord( DARREN, 21 );
@@ -214,11 +214,11 @@ void CountPeopleInBoxingRingAndDoActions( void )
 				}
 				ubTotalInRing++;
 
-				if ( pSoldier->uiStatusFlags & SOLDIER_PC )
+				if ( pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 				{
 					ubPlayersInRing++;
 
-					if ( !pNonBoxingPlayer && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
+					if ( !pNonBoxingPlayer && !(pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) )
 					{
 						pNonBoxingPlayer = pSoldier;
 					}
@@ -265,10 +265,10 @@ void CountPeopleInBoxingRingAndDoActions( void )
 			// ladieees and gennleman, we have a fight!
 			for ( uiLoop = 0; uiLoop < 2; uiLoop++ )
 			{
-				if ( ! ( pInRing[ uiLoop ]->uiStatusFlags & SOLDIER_BOXER ) )
+				if ( ! ( pInRing[ uiLoop ]->flags.uiStatusFlags & SOLDIER_BOXER ) )
 				{
 					// set as boxer!
-					pInRing[ uiLoop ]->uiStatusFlags |= SOLDIER_BOXER;
+					pInRing[ uiLoop ]->flags.uiStatusFlags |= SOLDIER_BOXER;
 				}
 			}
 			// start match!
@@ -357,29 +357,29 @@ BOOLEAN PickABoxer( void )
 			if ( gfBoxerFought[ uiLoop ] )
 			{
 				// pathetic attempt to prevent multiple AI boxers
-				MercPtrs[ gubBoxerID[ uiLoop ] ]->uiStatusFlags &= ~SOLDIER_BOXER;
+				MercPtrs[ gubBoxerID[ uiLoop ] ]->flags.uiStatusFlags &= ~SOLDIER_BOXER;
 			}
 			else 
 			{
 				pBoxer = MercPtrs[ gubBoxerID[ uiLoop ] ];
 				// pick this boxer!
-				if ( pBoxer->bActive && pBoxer->bInSector && pBoxer->bLife >= OKLIFE )
+				if ( pBoxer->bActive && pBoxer->bInSector && pBoxer->stats.bLife >= OKLIFE )
 				{
-					pBoxer->uiStatusFlags |= SOLDIER_BOXER;
+					pBoxer->flags.uiStatusFlags |= SOLDIER_BOXER;
 					SetSoldierNonNeutral( pBoxer );
 					RecalculateOppCntsDueToNoLongerNeutral( pBoxer );
 					CancelAIAction( pBoxer, TRUE );
-					RESETTIMECOUNTER( pBoxer->AICounter, 0 ); 
+					RESETTIMECOUNTER( pBoxer->timeCounters.AICounter, 0 ); 
 					gfBoxerFought[ uiLoop ] = TRUE;
 					// improve stats based on the # of rests these guys have had
-					pBoxer->bStrength = __min( 100, pBoxer->bStrength += gubBoxersRests * 5 );
-					pBoxer->bDexterity = __min( 100, pBoxer->bDexterity + gubBoxersRests * 5 );
-					pBoxer->bAgility = __min( 100, pBoxer->bAgility + gubBoxersRests * 5 );
-					pBoxer->bLifeMax = __min( 100, pBoxer->bLifeMax + gubBoxersRests * 5 );
+					pBoxer->stats.bStrength = __min( 100, pBoxer->stats.bStrength += gubBoxersRests * 5 );
+					pBoxer->stats.bDexterity = __min( 100, pBoxer->stats.bDexterity + gubBoxersRests * 5 );
+					pBoxer->stats.bAgility = __min( 100, pBoxer->stats.bAgility + gubBoxersRests * 5 );
+					pBoxer->stats.bLifeMax = __min( 100, pBoxer->stats.bLifeMax + gubBoxersRests * 5 );
 					// give the 3rd boxer martial arts 
 					if ( (uiLoop == NUM_BOXERS - 1) && pBoxer->ubBodyType == REGMALE )
 					{
-						pBoxer->ubSkillTrait1 = MARTIALARTS;
+						pBoxer->stats.ubSkillTrait1 = MARTIALARTS;
 					}
 					return( TRUE );
 				}
@@ -451,7 +451,7 @@ BOOLEAN AnotherFightPossible( void )
 	pSoldier = MercPtrs[ ubLoop ];
 	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++,pSoldier++ )
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > (OKLIFE + 5) && !pSoldier->bCollapsed )
+		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife > (OKLIFE + 5) && !pSoldier->bCollapsed )
 		{
 			return( TRUE );
 		}
@@ -470,15 +470,15 @@ void BoxingMovementCheck( SOLDIERTYPE * pSoldier )
 		// someone moving in/into the ring
 		CountPeopleInBoxingRingAndDoActions();
 	}
-	else if ( ( gTacticalStatus.bBoxingState == BOXING ) && ( pSoldier->uiStatusFlags & SOLDIER_BOXER ) )
+	else if ( ( gTacticalStatus.bBoxingState == BOXING ) && ( pSoldier->flags.uiStatusFlags & SOLDIER_BOXER ) )
 	{
 		// boxer stepped out of the ring!
 		BoxingPlayerDisqualified( pSoldier, BOXER_OUT_OF_RING );
 		// add the history record here.
 		AddHistoryToPlayersLog( HISTORY_DISQUALIFIED_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 		// make not a boxer any more
-		pSoldier->uiStatusFlags &= ~(SOLDIER_BOXER);
-		pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
+		pSoldier->flags.uiStatusFlags &= ~(SOLDIER_BOXER);
+		pSoldier->flags.uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
 	}
 }
 
@@ -521,9 +521,9 @@ void ClearAllBoxerFlags( void )
 
 	for( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
 	{
-		if ( MercSlots[ uiSlot ] && MercSlots[ uiSlot ]->uiStatusFlags & SOLDIER_BOXER )
+		if ( MercSlots[ uiSlot ] && MercSlots[ uiSlot ]->flags.uiStatusFlags & SOLDIER_BOXER )
 		{
-			MercSlots[ uiSlot ]->uiStatusFlags &= ~(SOLDIER_BOXER);
+			MercSlots[ uiSlot ]->flags.uiStatusFlags &= ~(SOLDIER_BOXER);
 		}
 	}
 }

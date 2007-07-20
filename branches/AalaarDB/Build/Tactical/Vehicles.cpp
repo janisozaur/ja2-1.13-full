@@ -405,7 +405,7 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 	}
 
 	// if the soldier or the vehicle is between sectors
-	if( pSoldier->fBetweenSectors || pVehicleList[ iId ].fBetweenSectors )
+	if( pSoldier->flags.fBetweenSectors || pVehicleList[ iId ].fBetweenSectors )
 	{
 		return( FALSE );
 	}
@@ -533,7 +533,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 				pSoldier->ubGroupID = 0;
 			}
 
-			if( ( pSoldier->bAssignment != VEHICLE ) || ( 	pSoldier -> iVehicleId != iId ) )
+			if( ( pSoldier->bAssignment != VEHICLE ) || ( 	pSoldier->iVehicleId != iId ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
@@ -542,7 +542,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			ChangeSoldiersAssignment( pSoldier, VEHICLE );
 
 			// set vehicle id
-			pSoldier -> iVehicleId = iId;
+			pSoldier->iVehicleId = iId;
 
 			// if vehicle is part of mvt group, then add character to mvt group
 			if( pVehicleList[ iId ].ubMovementGroup != 0 )
@@ -556,7 +556,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			if ( GetNumberInVehicle(  iId ) == 1 )
 			{
 				// Set as driver...
-				pSoldier->uiStatusFlags |= SOLDIER_DRIVER;
+				pSoldier->flags.uiStatusFlags |= SOLDIER_DRIVER;
 
 				SetDriver( iId , pSoldier->ubID );
 
@@ -564,19 +564,19 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			else
 			{
 				// Set as driver...
-				pSoldier->uiStatusFlags |= SOLDIER_PASSENGER;
+				pSoldier->flags.uiStatusFlags |= SOLDIER_PASSENGER;
 			}
 
 			// Remove soldier's graphic
-			RemoveSoldierFromGridNo( pSoldier );
+			pSoldier->RemoveSoldierFromGridNo( );
 
 			if ( pVehicleSoldier )
 			{
 				// Set gridno for vehicle.....
-				EVENT_SetSoldierPosition( pSoldier, pVehicleSoldier->dXPos, pVehicleSoldier->dYPos );
+				pSoldier->EVENT_SetSoldierPosition( pVehicleSoldier->dXPos, pVehicleSoldier->dYPos );
 
 				// Stop from any movement.....
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+				pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
 
 				// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
 				if ( guiCurrentScreen == GAME_SCREEN )
@@ -646,7 +646,7 @@ BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			pVehicleList[ iId ].pPassengers[ iCounter ] = NULL;
 			
 			
-			pSoldier->uiStatusFlags &= ( ~( SOLDIER_DRIVER | SOLDIER_PASSENGER ) );
+			pSoldier->flags.uiStatusFlags &= ( ~( SOLDIER_DRIVER | SOLDIER_PASSENGER ) );
 
 			// check if anyone left in vehicle
 			fSoldierLeft = FALSE;
@@ -742,7 +742,7 @@ BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 	if ( iId == iHelicopterVehicleId )
 	{
 		// and he's alive
-		if ( pSoldier->bLife >= OKLIFE )
+		if ( pSoldier->stats.bLife >= OKLIFE )
 		{
 			// mark the sector as visited (flying around in the chopper doesn't, so this does it as soon as we get off it)
 			SetSectorFlag( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, SF_ALREADY_VISITED );
@@ -777,13 +777,13 @@ void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId )
 
 
 	// set up a mvt group for the grunt
-	pSoldier->fBetweenSectors = TRUE;
+	pSoldier->flags.fBetweenSectors = TRUE;
 
 	// ok, the guy wasn't in a squad
 	// get his mvt groups position and set the squads to this
 	GetGroupPosition(&ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime, pVehicleList[ iId ].ubMovementGroup );
 
-	ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pSoldier -> sSectorX ) , ( INT8 ) ( pSoldier -> sSectorY ) );
+	ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pSoldier->sSectorX ) , ( INT8 ) ( pSoldier->sSectorY ) );
 
 	// assign to a group
 	AddPlayerToGroup( ubGroupId, pSoldier );
@@ -847,7 +847,7 @@ void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId )
 	// calculate how much longer we have to go on foot to get there
 	uiArriveTime = ( UINT32 )( ( ( 1.0 - flTripFractionCovered ) * ( float )iCurrentCostInTime ) + GetWorldTotalMin( ) );
 
-	SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, iCurrentCostInTime, uiArriveTime, pSoldier -> ubGroupID );
+	SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, iCurrentCostInTime, uiArriveTime, pSoldier->ubGroupID );
 
 // ARM: if this is ever reactivated, there seem to be the following additional problems:
 	1) The soldier removed isn't showing any DEST.  Must set up his strategic path/destination.
@@ -869,14 +869,14 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 	}
 
 	// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
 	{
 		// now clear soldier's path
 		pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
 		return( FALSE );
 	}
 
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// grab the id the character is
 		iId = pSoldier->bVehicleID;
@@ -936,12 +936,12 @@ BOOLEAN CopyVehiclePathToSoldier( SOLDIERTYPE *pSoldier )
 	}
 
 	// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
 	{
 		return( FALSE );
 	}
 
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// grab the id the character is
 		iId = pSoldier->bVehicleID;
@@ -971,7 +971,7 @@ BOOLEAN CopyVehiclePathToSoldier( SOLDIERTYPE *pSoldier )
 
 	// reset mvt group for the grunt
 	// ATE: NOT if we are the vehicle
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		pSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
 	}
@@ -1003,12 +1003,12 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 #endif // RELEASE_WITH_DEBUG_INFO
 
 		// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
 	{
 		return( FALSE );
 	}
 
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// grab the id the character is
 		iId = pSoldier->bVehicleID;
@@ -1116,7 +1116,7 @@ void UpdatePositionOfMercsInVehicle( INT32 iId )
 		{
 			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorY = pVehicleList[ iId ].sSectorY;
 			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorX = pVehicleList[ iId ].sSectorX;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->fBetweenSectors = FALSE;
+			pVehicleList[ iId ].pPassengers[ iCounter ]->flags.fBetweenSectors = FALSE;
 		}
 	}
 
@@ -1194,22 +1194,22 @@ BOOLEAN InjurePersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier, UINT8 ubPointsO
 	}
 
 	// now check hpts of merc
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		// guy is dead, leave
 		return( FALSE );
 	}
 
 	// see if we will infact kill them
-	if( ubPointsOfDmg >= pSoldier->bLife )
+	if( ubPointsOfDmg >= pSoldier->stats.bLife )
 	{
 		return( KillPersonInVehicle( iId, pSoldier ) );
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage( pSoldier, 0, ubPointsOfDmg, ubPointsOfDmg, TAKE_DAMAGE_GUNFIRE, NOBODY, NOWHERE, 0, TRUE );
+	pSoldier->SoldierTakeDamage( 0, ubPointsOfDmg, ubPointsOfDmg, TAKE_DAMAGE_GUNFIRE, NOBODY, NOWHERE, 0, TRUE );
 
-	HandleSoldierTakeDamageFeedback( pSoldier );
+	pSoldier->HandleSoldierTakeDamageFeedback( );
 
 	return( TRUE );
 }
@@ -1229,14 +1229,14 @@ BOOLEAN KillPersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier )
 	}
 
 	// now check hpts of merc
-	if( pSoldier->bLife == 0 )
+	if( pSoldier->stats.bLife == 0 )
 	{
 		// guy is dead, leave
 		return( FALSE );
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage( pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, 0, TRUE );
+	pSoldier->SoldierTakeDamage( 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, 0, TRUE );
 
 	return( TRUE );
 }
@@ -1327,7 +1327,7 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
 	{
 		pSoldier = pVehicleList[ iId ].pPassengers[ iCounter ];
-		if ( pSoldier != NULL && ControllingRobot( pSoldier ) )
+		if ( pSoldier != NULL && pSoldier->ControllingRobot( ) )
 		{
 			return( TRUE );
 		}
@@ -1448,7 +1448,7 @@ BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 	INT16 sOldGridNo = 0;
 
 	// TEST IF IT'S VALID...
-	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pVehicle->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// Is there room...
 		if ( IsEnoughSpaceInVehicle( pVehicle->bVehicleID ) )
@@ -1480,7 +1480,7 @@ SOLDIERTYPE *GetVehicleSoldierPointerFromPassenger( SOLDIERTYPE *pSrcSoldier )
   // look for all mercs on the same team, 
   for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{       
-		if ( pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		if ( pSoldier->bActive && pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			// Check ubID....
 			if ( pSoldier->bVehicleID == pSrcSoldier->iVehicleId )
@@ -1509,7 +1509,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 	}
 
 	// TEST IF IT'S VALID...
-	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pVehicle->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 3, pVehicle );
 
@@ -1529,10 +1529,10 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 		pSoldier->iVehicleId = -1;
 
 		//AllTeamsLookForAll( FALSE );
-		pSoldier->bOppList[ pVehicle->ubID ] = 1;
+		pSoldier->aiData.bOppList[ pVehicle->ubID ] = 1;
 
 		// Add to sector....
-		EVENT_SetSoldierPosition( pSoldier, CenterX( sGridNo ), CenterY( sGridNo ) );
+		pSoldier->EVENT_SetSoldierPosition( CenterX( sGridNo ), CenterY( sGridNo ) );
 		
 		// Update visiblity.....
 		HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
@@ -1630,19 +1630,19 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 
 	pSoldier = GetSoldierStructureForVehicle( ubID );
 
-	if ( sDmg > pSoldier->bLife )
+	if ( sDmg > pSoldier->stats.bLife )
 	{
-		pSoldier->bLife = 0;	
+		pSoldier->stats.bLife = 0;	
 	}
 	else
 	{
 		// Decrease Health
-		pSoldier->bLife -= sDmg;
+		pSoldier->stats.bLife -= sDmg;
 	}
 
-	if ( pSoldier->bLife < OKLIFE )
+	if ( pSoldier->stats.bLife < OKLIFE )
 	{
-		pSoldier->bLife = 0;
+		pSoldier->stats.bLife = 0;
 	}
 
 	//Show damage
@@ -1657,7 +1657,7 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 			INT16 sMercScreenX, sMercScreenY, sOffsetX, sOffsetY;
 
 			// Set Damage display counter
-			pSoldier->fDisplayDamage = TRUE;
+			pSoldier->flags.fDisplayDamage = TRUE;
 			pSoldier->bDisplayDamageCount = 0;
 
 			GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
@@ -1667,7 +1667,7 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 		}
 	}
 
-	if ( pSoldier->bLife == 0 && !pVehicleList[ ubID ].fDestroyed )
+	if ( pSoldier->stats.bLife == 0 && !pVehicleList[ ubID ].fDestroyed )
 	{
 		pVehicleList[ ubID ].fDestroyed  = TRUE;
 
@@ -1677,7 +1677,7 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 		if ( pSoldier != NULL )
 		{
 			// Tacticlly remove soldier....
-			// EVENT_InitNewSoldierAnim( pSoldier, VEHICLE_DIE, 0, FALSE );
+			// pSoldier->EVENT_InitNewSoldierAnim( VEHICLE_DIE, 0, FALSE );
 			//TacticalRemoveSoldier( pSoldier->ubID );
 
 			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
@@ -1714,7 +1714,7 @@ BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId )
 	// get the vehicle soldiertype
 	pVehicleSoldier = GetSoldierStructureForVehicle( iVehicleId );
 
-	if ( pVehicleSoldier->bLife != pVehicleSoldier->bLifeMax )
+	if ( pVehicleSoldier->stats.bLife != pVehicleSoldier->stats.bLifeMax )
 	{
 		return( TRUE );
 	}
@@ -1751,19 +1751,19 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 		return( bRepairPtsUsed );
 	}
 
-	bOldLife = pVehicleSoldier->bLife;
+	bOldLife = pVehicleSoldier->stats.bLife;
 
 	// Repair
-	pVehicleSoldier->bLife += ( bRepairPtsLeft / VEHICLE_REPAIR_POINTS_DIVISOR );
+	pVehicleSoldier->stats.bLife += ( bRepairPtsLeft / VEHICLE_REPAIR_POINTS_DIVISOR );
 
 	// Check
-	if ( pVehicleSoldier->bLife > pVehicleSoldier->bLifeMax )
+	if ( pVehicleSoldier->stats.bLife > pVehicleSoldier->stats.bLifeMax )
 	{
-		pVehicleSoldier->bLife = pVehicleSoldier->bLifeMax;
+		pVehicleSoldier->stats.bLife = pVehicleSoldier->stats.bLifeMax;
 	}
 
 	// Calculate pts used;
-	bRepairPtsUsed = ( pVehicleSoldier->bLife - bOldLife ) * VEHICLE_REPAIR_POINTS_DIVISOR;
+	bRepairPtsUsed = ( pVehicleSoldier->stats.bLife - bOldLife ) * VEHICLE_REPAIR_POINTS_DIVISOR;
 
 	// ARM: personally, I'd love to know where in Arulco the mechanic gets the PARTS to do this stuff, but hey, it's a game!
 	(*pfNothingToRepair) = !DoesVehicleNeedAnyRepairs( iVehicleId );
@@ -1798,7 +1798,7 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 
 		if ( pSoldier->bActive )
 		{
-			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+			if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 			{
 				if( pSoldier->bVehicleID == iId )
 				{
@@ -2123,7 +2123,7 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 	SOLDIERTYPE *pPassenger;
 
 	// If not a vehicle, ignore!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		return;
 	}
@@ -2138,7 +2138,7 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 			pPassenger = pVehicleList[ iId ].pPassengers[ iCounter ];
 			
 			// Set gridno.....
-			EVENT_SetSoldierPosition( pPassenger, pSoldier->dXPos, pSoldier->dYPos );
+			pPassenger->EVENT_SetSoldierPosition( pSoldier->dXPos, pSoldier->dYPos );
 		}
 	}
 }
@@ -2336,20 +2336,20 @@ BOOLEAN CanSoldierDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN
 		return( FALSE );
 	}
 
-	if( !fIgnoreAsleep && ( pSoldier->fMercAsleep == TRUE ) )
+	if( !fIgnoreAsleep && ( pSoldier->flags.fMercAsleep == TRUE ) )
 	{
 		// asleep!
 		return( FALSE );
 	}
 
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
 	{
 		// vehicles, robot, and EPCs can't drive!
 		return (FALSE);
 	}
 
 	// too wounded to drive
-	if( pSoldier->bLife < OKLIFE )
+	if( pSoldier->stats.bLife < OKLIFE )
 	{
 		return (FALSE);
 	}
@@ -2416,7 +2416,7 @@ BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pThisSoldier, INT32 iVehicl
 			continue;
 		}
 
-		if( pSoldier -> bActive )
+		if( pSoldier->bActive )
 		{
 			// don't count mercs who are asleep here
 			if ( CanSoldierDriveVehicle( pSoldier, iVehicleId, FALSE ) )
@@ -2481,7 +2481,7 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 	INT32 iCounter, iId;
 
 	// If not a vehicle, ignore!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		return( NULL );
 	}

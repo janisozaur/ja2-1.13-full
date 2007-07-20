@@ -275,18 +275,18 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
 		if ( pCreateStruct->fPlayerMerc )
 		{
-			Soldier.uiStatusFlags |= SOLDIER_PC;
+			Soldier.flags.uiStatusFlags |= SOLDIER_PC;
 			Soldier.bTeam = gbPlayerNum;
 			Soldier.bVisible = 1;
 		}
 		else if ( pCreateStruct->fPlayerPlan )
 		{
-			Soldier.uiStatusFlags |= SOLDIER_PC;
+			Soldier.flags.uiStatusFlags |= SOLDIER_PC;
 			Soldier.bVisible = 1;
 		}
 		else
 		{
-			Soldier.uiStatusFlags |= SOLDIER_ENEMY;
+			Soldier.flags.uiStatusFlags |= SOLDIER_ENEMY;
 		}
 
 
@@ -298,7 +298,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			if ( pCreateStruct->fPlayerMerc )
 			{
 				Soldier.bTeam = OUR_TEAM;		
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 			}
 			else if ( pCreateStruct->fPlayerPlan )
 			{
@@ -407,7 +407,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		}
 
 
-		Soldier.bActionPoints					= CalcActionPoints( &Soldier );
+		Soldier.bActionPoints					= Soldier.CalcActionPoints(  );
 		Soldier.bInitialActionPoints	= Soldier.bActionPoints;
 		Soldier.bSide									= gTacticalStatus.Team[ Soldier.bTeam ].bSide;
 		Soldier.bActive								= TRUE;
@@ -415,34 +415,34 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		Soldier.sSectorY							= pCreateStruct->sSectorY;
 		Soldier.bSectorZ							= pCreateStruct->bSectorZ;
 		Soldier.ubInsertionDirection	= pCreateStruct->bDirection;
-		Soldier.bDesiredDirection			= pCreateStruct->bDirection;
-		Soldier.bDominantDir					= pCreateStruct->bDirection;
+		Soldier.pathing.bDesiredDirection			= pCreateStruct->bDirection;
+		Soldier.aiData.bDominantDir					= pCreateStruct->bDirection;
 		Soldier.bDirection						= pCreateStruct->bDirection;
 
 		Soldier.sInsertionGridNo			= pCreateStruct->sInsertionGridNo;
-		Soldier.bOldLife							= Soldier.bLifeMax;
+		Soldier.bOldLife							= Soldier.stats.bLifeMax;
 
 		// If a civvy, set neutral
 		if ( Soldier.bTeam == CIV_TEAM )		
 		{
 			if (Soldier.ubProfile == WARDEN )
 			{
-				Soldier.bNeutral = FALSE;
+				Soldier.aiData.bNeutral = FALSE;
 			}
 			else if (Soldier.ubCivilianGroup != NON_CIV_GROUP)
 			{
 				if ( gTacticalStatus.fCivGroupHostile[ Soldier.ubCivilianGroup ] == CIV_GROUP_HOSTILE )
 				{
-					Soldier.bNeutral = FALSE;
+					Soldier.aiData.bNeutral = FALSE;
 				}
 				else
 				{
-					Soldier.bNeutral = TRUE;
+					Soldier.aiData.bNeutral = TRUE;
 				}
 			}
 			else
 			{
-				Soldier.bNeutral = TRUE;
+				Soldier.aiData.bNeutral = TRUE;
 			}
 			 
 			//Weaken stats based on the bodytype of the civilian.
@@ -458,22 +458,22 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 						break;
 					case FATCIV:
 						//fat, so slower
-						Soldier.bAgility = (INT8)( 30 + Random( 26 ) ); //30 - 55
+						Soldier.stats.bAgility = (INT8)( 30 + Random( 26 ) ); //30 - 55
 						break;
 					case MANCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 35 + Random( 26 ) ); //35 - 60
+						Soldier.stats.bLife = Soldier.stats.bLifeMax = (INT8)( 35 + Random( 26 ) ); //35 - 60
 						break;
 					case MINICIV:
 					case DRESSCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 30 + Random( 16 ) ); //30 - 45
+						Soldier.stats.bLife = Soldier.stats.bLifeMax = (INT8)( 30 + Random( 16 ) ); //30 - 45
 						break;
 					case HATKIDCIV:
 					case KIDCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 20 + Random( 16 ) ); //20 - 35
+						Soldier.stats.bLife = Soldier.stats.bLifeMax = (INT8)( 20 + Random( 16 ) ); //20 - 35
 						break;
 					case CRIPPLECIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 20 + Random( 26 ) ); //20 - 45
-						Soldier.bAgility = (INT8)( 30 + Random( 16 ) ); // 30 - 45
+						Soldier.stats.bLife = Soldier.stats.bLifeMax = (INT8)( 20 + Random( 26 ) ); //20 - 45
+						Soldier.stats.bAgility = (INT8)( 30 + Random( 16 ) ); // 30 - 45
 						break;
 				}
 			}
@@ -483,7 +483,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			// bloodcats are neutral to start out
 			if ( Soldier.ubBodyType == BLOODCAT )
 			{
-				Soldier.bNeutral = TRUE;
+				Soldier.aiData.bNeutral = TRUE;
 			} // otherwise (creatures) false
 		}
 
@@ -573,13 +573,13 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			case DRESSCIV:
 
 				Soldier.ubBattleSoundID = 7 + (UINT8) Random( 2 );
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 				break;
 
 			case BLOODCAT:
 				AssignCreatureInventory( &Soldier );
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
+				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				Soldier.flags.uiStatusFlags |= SOLDIER_ANIMAL;
 				break;
 
 			case ADULTFEMALEMONSTER:
@@ -591,28 +591,28 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			case QUEENMONSTER:
 
 				AssignCreatureInventory( &Soldier );
-				Soldier.ubCaller = NOBODY;
+				Soldier.aiData.ubCaller = NOBODY;
 				if( !gfEditMode )
 				{
-					Soldier.bOrders = FARPATROL;
-					Soldier.bAttitude = AGGRESSIVE;
+					Soldier.aiData.bOrders = FARPATROL;
+					Soldier.aiData.bAttitude = AGGRESSIVE;
 				}
-				Soldier.uiStatusFlags |= SOLDIER_MONSTER;
-				Soldier.bMonsterSmell = NORMAL_CREATURE_SMELL_STRENGTH;
+				Soldier.flags.uiStatusFlags |= SOLDIER_MONSTER;
+				Soldier.aiData.bMonsterSmell = NORMAL_CREATURE_SMELL_STRENGTH;
 				break;
 
 			case COW:
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
-				Soldier.bNormalSmell = COW_SMELL_STRENGTH;
+				Soldier.flags.uiStatusFlags |= SOLDIER_ANIMAL;
+				Soldier.aiData.bNormalSmell = COW_SMELL_STRENGTH;
 				break;
 			case CROW:
 
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
+				Soldier.flags.uiStatusFlags |= SOLDIER_ANIMAL;
 				break;
 
 			case ROBOTNOWEAPON:
 
-				Soldier.uiStatusFlags |= SOLDIER_ROBOT;
+				Soldier.flags.uiStatusFlags |= SOLDIER_ROBOT;
 				break;
 
 			case HUMVEE:
@@ -622,26 +622,26 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 				case TANK_NW:
 				case TANK_NE:
 
-				Soldier.uiStatusFlags |= SOLDIER_VEHICLE;
+				Soldier.flags.uiStatusFlags |= SOLDIER_VEHICLE;
 
 				switch( Soldier.ubBodyType )
 				{
 					case HUMVEE:
 
 						ubVehicleID = HUMMER;
-            Soldier.bNeutral = TRUE;
+            Soldier.aiData.bNeutral = TRUE;
 						break;
 
 					case ELDORADO:
 
 						ubVehicleID = ELDORADO_CAR;
-            Soldier.bNeutral = TRUE;
+            Soldier.aiData.bNeutral = TRUE;
 						break;
 
 					case ICECREAMTRUCK:
 
 						ubVehicleID = ICE_CREAM_TRUCK;
-            Soldier.bNeutral = TRUE;
+            Soldier.aiData.bNeutral = TRUE;
 						break;
 
 					case JEEP:
@@ -670,7 +670,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 				break;
 			
 			default:
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				Soldier.aiData.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 				break;
 
 		}
@@ -682,7 +682,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			//memcpy( MercPtrs[ Soldier.ubID ], &Soldier, SIZEOF_SOLDIERTYPE );
 			*MercPtrs[ Soldier.ubID ] = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
-			CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, STANDING ) != FALSE );
+			CHECKF( MercPtrs[ Soldier.ubID ]->CreateSoldierCommon( Soldier.ubBodyType, Soldier.ubID, STANDING ) != FALSE );
 		}
 	}
 	else
@@ -700,7 +700,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 		if ( Soldier.ubBodyType == HUMVEE || Soldier.ubBodyType == ICECREAMTRUCK )
     {
-      Soldier.bNeutral = TRUE;
+      Soldier.aiData.bNeutral = TRUE;
     }
 
                 // WDS - Clean up inventory handling
@@ -709,7 +709,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		*MercPtrs[ Soldier.ubID ] = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
-		CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, Menptr[ Soldier.ubID ].usAnimState ) != FALSE );
+		CHECKF( MercPtrs[ Soldier.ubID ]->CreateSoldierCommon( Soldier.ubBodyType, Soldier.ubID, Menptr[ Soldier.ubID ].usAnimState ) != FALSE );
 
 		*pubID = Soldier.ubID;
 
@@ -724,7 +724,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 	{
 		if( pCreateStruct->fOnRoof && FlatRoofAboveGridNo( pCreateStruct->sInsertionGridNo ) )
 		{
-			SetSoldierHeight( MercPtrs[ Soldier.ubID ], 58.0 );
+			MercPtrs[ Soldier.ubID ]->SetSoldierHeight( 58.0 );
 		}
 
 		//if we are loading DONT add men to team, because the number is restored in gTacticalStatus
@@ -781,23 +781,23 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 	// Set profile index!
 	pSoldier->ubProfile									= ubProfileIndex;
 	pSoldier->ubScheduleID							= pCreateStruct->ubScheduleID;
-	pSoldier->bHasKeys									= pCreateStruct->fHasKeys;
+	pSoldier->pathing.bHasKeys									= pCreateStruct->fHasKeys;
 
 	wcscpy( pSoldier->name, pProfile->zNickname );
 
-	pSoldier->bLife 										= pProfile->bLife;
-	pSoldier->bLifeMax									= pProfile->bLifeMax;
-	pSoldier->bAgility									= pProfile->bAgility;
-	pSoldier->bLeadership								= pProfile->bLeadership;
-	pSoldier->bDexterity								= pProfile->bDexterity;
-	pSoldier->bStrength									= pProfile->bStrength;
-	pSoldier->bWisdom										= pProfile->bWisdom;
-	pSoldier->bExpLevel									= pProfile->bExpLevel;
-	pSoldier->bMarksmanship							= pProfile->bMarksmanship;
-	pSoldier->bMedical									= pProfile->bMedical;
-	pSoldier->bMechanical								= pProfile->bMechanical;
-	pSoldier->bExplosive								= pProfile->bExplosive;
-	pSoldier->bScientific								= pProfile->bScientific;
+	pSoldier->stats.bLife 										= pProfile->bLife;
+	pSoldier->stats.bLifeMax									= pProfile->bLifeMax;
+	pSoldier->stats.bAgility									= pProfile->bAgility;
+	pSoldier->stats.bLeadership								= pProfile->bLeadership;
+	pSoldier->stats.bDexterity								= pProfile->bDexterity;
+	pSoldier->stats.bStrength									= pProfile->bStrength;
+	pSoldier->stats.bWisdom										= pProfile->bWisdom;
+	pSoldier->stats.bExpLevel									= pProfile->bExpLevel;
+	pSoldier->stats.bMarksmanship							= pProfile->bMarksmanship;
+	pSoldier->stats.bMedical									= pProfile->bMedical;
+	pSoldier->stats.bMechanical								= pProfile->bMechanical;
+	pSoldier->stats.bExplosive								= pProfile->bExplosive;
+	pSoldier->stats.bScientific								= pProfile->bScientific;
 
 	pSoldier->bVocalVolume							= MIDVOLUME;
 	pSoldier->uiAnimSubFlags						= pProfile->uiBodyTypeSubFlags;
@@ -807,14 +807,14 @@ BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STR
 //  pSoldier->bAssignment=ON_DUTY;
 
 	pSoldier->bOldAssignment = NO_ASSIGNMENT;
-	pSoldier->ubSkillTrait1 = pProfile->bSkillTrait;
-	pSoldier->ubSkillTrait2 = pProfile->bSkillTrait2;
+	pSoldier->stats.ubSkillTrait1 = pProfile->bSkillTrait;
+	pSoldier->stats.ubSkillTrait2 = pProfile->bSkillTrait2;
 
-	pSoldier->bOrders								= pCreateStruct->bOrders;
-	pSoldier->bAttitude							= pCreateStruct->bAttitude;
+	pSoldier->aiData.bOrders								= pCreateStruct->bOrders;
+	pSoldier->aiData.bAttitude							= pCreateStruct->bAttitude;
 	pSoldier->bDirection						= pCreateStruct->bDirection;
-	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
+	memcpy( pSoldier->aiData.usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 	
 	if ( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
 	{
@@ -1104,30 +1104,30 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	pSoldier->ubProfile							= NO_PROFILE;
 
 	// Randomize attributes
-	pSoldier->bLife	  							= pCreateStruct->bLife;
-	pSoldier->bLifeMax  						= pCreateStruct->bLifeMax;
-	pSoldier->bAgility							= pCreateStruct->bAgility;
-	pSoldier->bDexterity						= pCreateStruct->bDexterity;
-	pSoldier->bExpLevel							= pCreateStruct->bExpLevel;
+	pSoldier->stats.bLife	  							= pCreateStruct->bLife;
+	pSoldier->stats.bLifeMax  						= pCreateStruct->bLifeMax;
+	pSoldier->stats.bAgility							= pCreateStruct->bAgility;
+	pSoldier->stats.bDexterity						= pCreateStruct->bDexterity;
+	pSoldier->stats.bExpLevel							= pCreateStruct->bExpLevel;
 
-	pSoldier->bMarksmanship					= pCreateStruct->bMarksmanship;
-	pSoldier->bMedical							= pCreateStruct->bMedical;
-	pSoldier->bMechanical						= pCreateStruct->bMechanical;
-	pSoldier->bExplosive						= pCreateStruct->bExplosive;
-	pSoldier->bLeadership						= pCreateStruct->bLeadership;
-	pSoldier->bStrength							= pCreateStruct->bStrength;
-	pSoldier->bWisdom								= pCreateStruct->bWisdom;
+	pSoldier->stats.bMarksmanship					= pCreateStruct->bMarksmanship;
+	pSoldier->stats.bMedical							= pCreateStruct->bMedical;
+	pSoldier->stats.bMechanical						= pCreateStruct->bMechanical;
+	pSoldier->stats.bExplosive						= pCreateStruct->bExplosive;
+	pSoldier->stats.bLeadership						= pCreateStruct->bLeadership;
+	pSoldier->stats.bStrength							= pCreateStruct->bStrength;
+	pSoldier->stats.bWisdom								= pCreateStruct->bWisdom;
 
-	pSoldier->bAttitude							= pCreateStruct->bAttitude;
-	pSoldier->bOrders								= pCreateStruct->bOrders;
-	pSoldier->bMorale								= pCreateStruct->bMorale;
-	pSoldier->bAIMorale							= pCreateStruct->bAIMorale;
+	pSoldier->aiData.bAttitude							= pCreateStruct->bAttitude;
+	pSoldier->aiData.bOrders								= pCreateStruct->bOrders;
+	pSoldier->aiData.bMorale								= pCreateStruct->bMorale;
+	pSoldier->aiData.bAIMorale							= pCreateStruct->bAIMorale;
 	pSoldier->bVocalVolume					= MIDVOLUME;
 	pSoldier->ubBodyType						= pCreateStruct->bBodyType;
 	pSoldier->ubCivilianGroup				= pCreateStruct->ubCivilianGroup;
 
 	pSoldier->ubScheduleID					= pCreateStruct->ubScheduleID;
-	pSoldier->bHasKeys							= pCreateStruct->fHasKeys;
+	pSoldier->pathing.bHasKeys							= pCreateStruct->fHasKeys;
 	pSoldier->ubSoldierClass				= pCreateStruct->ubSoldierClass;
 
 	if( pCreateStruct->fVisible )
@@ -1160,10 +1160,10 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	
 		if ( Chance( iChance ) )
 		{
-			pSoldier->ubSkillTrait1 = NIGHTOPS;
+			pSoldier->stats.ubSkillTrait1 = NIGHTOPS;
 			if ( ubProgress >= 40 && Chance( 30 ) )
 			{
-				pSoldier->ubSkillTrait2 = NIGHTOPS;
+				pSoldier->stats.ubSkillTrait2 = NIGHTOPS;
 			}
 		}
 	}
@@ -1187,10 +1187,10 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 
 		if ( Chance( iChance ) )
 		{
-			pSoldier->ubSkillTrait1 = NIGHTOPS;
+			pSoldier->stats.ubSkillTrait1 = NIGHTOPS;
 			if ( ubProgress >= 50 && Chance( 20 ) )
 			{
-				pSoldier->ubSkillTrait2 = NIGHTOPS;
+				pSoldier->stats.ubSkillTrait2 = NIGHTOPS;
 			}
 		}
 	}
@@ -1202,10 +1202,10 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	{
 		if ( Chance( 20 ) )
 		{
-			pSoldier->ubSkillTrait1 = AMBIDEXT;
+			pSoldier->stats.ubSkillTrait1 = AMBIDEXT;
 			if ( Chance( 10 ) )
 			{
-				pSoldier->ubSkillTrait2 = AMBIDEXT;
+				pSoldier->stats.ubSkillTrait2 = AMBIDEXT;
 			}
 			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
 				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
@@ -1218,10 +1218,10 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	{
 		if ( Chance( 10 ) )
 		{
-			pSoldier->ubSkillTrait1 = AMBIDEXT;
+			pSoldier->stats.ubSkillTrait1 = AMBIDEXT;
 			if ( Chance( 5 ) )
 			{
-				pSoldier->ubSkillTrait2 = AMBIDEXT;
+				pSoldier->stats.ubSkillTrait2 = AMBIDEXT;
 			}
 			if ( Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].usItemClass == IC_GUN &&
 				!Item[ pCreateStruct->Inv[ HANDPOS ].usItem ].twohanded )
@@ -1234,8 +1234,8 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//KM:  November 10, 1997
 	//Adding patrol points
 	//CAUTION:  CONVERTING SIGNED TO UNSIGNED though the values should never be negative.
-	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	pSoldier->aiData.bPatrolCnt						= pCreateStruct->bPatrolCnt;
+	memcpy( pSoldier->aiData.usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 			
 	//Kris:  November 10, 1997
 	//Expanded the default names based on team.
@@ -1289,7 +1289,7 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 	pSoldier->iFaceIndex						= -1;
 
 	// Set morale default
-	pSoldier->bMorale								= DEFAULT_MORALE;
+	pSoldier->aiData.bMorale								= DEFAULT_MORALE;
 
 	pSoldier->ubAttackerID					= NOBODY;
 	pSoldier->ubPreviousAttackerID	= NOBODY;
@@ -1311,28 +1311,28 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 	pSoldier->usPendingAnimation2		= NO_PENDING_ANIMATION;
 	pSoldier->ubPendingStanceChange	= NO_PENDING_STANCE;
 	pSoldier->ubPendingDirection		= NO_PENDING_DIRECTION;
-	pSoldier->ubPendingAction				= NO_PENDING_ACTION;
+	pSoldier->aiData.ubPendingAction				= NO_PENDING_ACTION;
 	pSoldier->bLastRenderVisibleValue	= -1;
 	pSoldier->bBreath								= 99;
 	pSoldier->bBreathMax						= 100;
 	pSoldier->bActive									= TRUE;
-	pSoldier->fShowLocator						= FALSE;
+	pSoldier->flags.fShowLocator						= FALSE;
 	pSoldier->sLastTarget							= NOWHERE;
 	pSoldier->sAbsoluteFinalDestination = NOWHERE;
 	pSoldier->sZLevelOverride					= -1;
 	pSoldier->ubServicePartner				= NOBODY;
 	pSoldier->ubAttackingHand					= HANDPOS;
 	pSoldier->usAnimState							= STANDING;
-	pSoldier->bInterruptDuelPts				= NO_INTERRUPT;
-	pSoldier->bMoved									= FALSE;
+	pSoldier->aiData.bInterruptDuelPts				= NO_INTERRUPT;
+	pSoldier->aiData.bMoved									= FALSE;
 	pSoldier->ubRobotRemoteHolderID		= NOBODY;
-	pSoldier->sNoiseGridno						= NOWHERE;
+	pSoldier->aiData.sNoiseGridno						= NOWHERE;
 	pSoldier->ubPrevSectorID					= 255;
-	pSoldier->bNextPatrolPnt					= 1;
+	pSoldier->aiData.bNextPatrolPnt					= 1;
 	pSoldier->bCurrentCivQuote				= -1;
 	pSoldier->bCurrentCivQuoteDelta		= 0;
 	pSoldier->uiBattleSoundID					= NO_SAMPLE;
-	pSoldier->ubXRayedBy							= NOBODY;
+	pSoldier->aiData.ubXRayedBy							= NOBODY;
 	pSoldier->uiXRayActivatedTime			= 0;
 	pSoldier->bBulletsLeft						= 0;
 	pSoldier->bVehicleUnderRepairID		= -1;
@@ -1378,7 +1378,7 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		DeleteSchedule( pSoldier->ubScheduleID );
 	}
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle )
 	{
 		// remove this vehicle from the list
 		RemoveVehicleFromList( pSoldier->bVehicleID );
@@ -1403,7 +1403,7 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		// Does another soldier exist here?
 		if ( pSoldier->bActive  )
 		{
-			RemoveSoldierFromGridNo( pSoldier );
+			pSoldier->RemoveSoldierFromGridNo( );
 
       // Delete shadow of crow....
 			if ( pSoldier->pAniTile != NULL )
@@ -1412,7 +1412,7 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 				pSoldier->pAniTile = NULL;
 			}
 
-			if ( ! (pSoldier->uiStatusFlags & SOLDIER_OFF_MAP) )
+			if ( ! (pSoldier->flags.uiStatusFlags & SOLDIER_OFF_MAP) )
 			{
 				// Decrement men in sector number!
 				RemoveManFromTeam( pSoldier->bTeam );
@@ -1421,14 +1421,14 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 			pSoldier->bActive = FALSE;
 
 			// Delete!
-			DeleteSoldier( pSoldier );
+			pSoldier->DeleteSoldier( );
 		}
 	}
 	else
 	{
 		if( gfPersistantPBI )
 		{
-			DeleteSoldier( pSoldier );
+			pSoldier->DeleteSoldier( );
 		}
 		MemFree( pSoldier );
 	}
@@ -1763,7 +1763,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateDetailedPlacementGivenBasicPlacementInfo: set exp. level"));
-	pp->bExpLevel = max( gGameOptions.ubDifficultyLevel, pp->bExpLevel ); //minimum exp. level of 1 -- madd -> = dif level
+	pp->bExpLevel = max( gGameOptions.ubDifficultyLevel, pp->bExpLevel ); //minimum exp. level of 1 -- madd->= dif level
 
 	if ( gGameOptions.ubDifficultyLevel == DIF_LEVEL_INSANE )
 		pp->bExpLevel = max( 6, pp->bExpLevel ); //minimum exp. level of 6 in insane - madd
@@ -1772,7 +1772,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
 
-	ubStatsLevel = max( gGameOptions.ubDifficultyLevel, ubStatsLevel );	//minimum stats level of 0 -- madd -> = dif level
+	ubStatsLevel = max( gGameOptions.ubDifficultyLevel, ubStatsLevel );	//minimum stats level of 0 -- madd->= dif level
 
 	if ( gGameOptions.ubDifficultyLevel == DIF_LEVEL_INSANE )
 		ubStatsLevel = max( 6, ubStatsLevel );	//minimum stats level of 6 in insane
@@ -2013,7 +2013,7 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 		TacticalCopySoldierFromProfile( s, spp );
 		UpdateStaticDetailedPlacementWithProfileInformation( spp, spp->ubProfile );
 		SetSoldierAnimationSurface( s, s->usAnimState );
-		CreateSoldierPalettes( s );
+		s->CreateSoldierPalettes( );
 		return;
 	}
 
@@ -2029,42 +2029,42 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 	if( spp->bExpLevel != -1 )
 	{ //We have a static experience level, so generate all of the soldier's attributes.
 		INT8 bBaseAttribute;
-		s->bExpLevel = spp->bExpLevel;
+		s->stats.bExpLevel = spp->bExpLevel;
 		//Set the minimum base attribute
-		bBaseAttribute = 49 + ( 4 * s->bExpLevel );
+		bBaseAttribute = 49 + ( 4 * s->stats.bExpLevel );
 
 		//Roll enemy's combat statistics, taking bExpLevel into account.
 		//Stat range is currently 40-99, slightly bell-curved around the bExpLevel
-		s->bLifeMax				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bLife	  			= s->bLifeMax;
-		s->bAgility				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bDexterity			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bMarksmanship	= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bMedical				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bMechanical		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bExplosive			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bLeadership		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bStrength			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-		s->bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bLifeMax				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bLife	  			= s->stats.bLifeMax;
+		s->stats.bAgility				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bDexterity			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bMarksmanship	= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bMedical				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bMechanical		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bExplosive			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bLeadership		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bStrength			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->stats.bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+		s->aiData.bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 	}
 	//Replace any soldier attributes with any static values in the detailed placement.
-	if( spp->bLife				!= -1 )			s->bLife					= spp->bLife;
-	if( spp->bLifeMax			!= -1 )			s->bLifeMax				= spp->bLifeMax;
-	if( spp->bMarksmanship!= -1 )			s->bMarksmanship	= spp->bMarksmanship;
-	if( spp->bStrength		!= -1 )			s->bStrength			= spp->bStrength;
-	if( spp->bAgility			!= -1 )			s->bAgility				= spp->bAgility;
-	if( spp->bDexterity		!= -1 )			s->bDexterity			= spp->bDexterity;
-	if( spp->bWisdom			!= -1 )			s->bWisdom				= spp->bWisdom;
-	if( spp->bLeadership	!= -1 )			s->bLeadership		= spp->bLeadership;
-	if( spp->bExplosive		!= -1 )			s->bExplosive			= spp->bExplosive;
-	if( spp->bMedical			!= -1 )			s->bMedical				= spp->bMedical;
-	if( spp->bMechanical	!= -1 )			s->bMechanical		= spp->bMechanical;
-	if( spp->bMorale			!= -1 )			s->bMorale				= spp->bMorale;
+	if( spp->bLife				!= -1 )			s->stats.bLife					= spp->bLife;
+	if( spp->bLifeMax			!= -1 )			s->stats.bLifeMax				= spp->bLifeMax;
+	if( spp->bMarksmanship!= -1 )			s->stats.bMarksmanship	= spp->bMarksmanship;
+	if( spp->bStrength		!= -1 )			s->stats.bStrength			= spp->bStrength;
+	if( spp->bAgility			!= -1 )			s->stats.bAgility				= spp->bAgility;
+	if( spp->bDexterity		!= -1 )			s->stats.bDexterity			= spp->bDexterity;
+	if( spp->bWisdom			!= -1 )			s->stats.bWisdom				= spp->bWisdom;
+	if( spp->bLeadership	!= -1 )			s->stats.bLeadership		= spp->bLeadership;
+	if( spp->bExplosive		!= -1 )			s->stats.bExplosive			= spp->bExplosive;
+	if( spp->bMedical			!= -1 )			s->stats.bMedical				= spp->bMedical;
+	if( spp->bMechanical	!= -1 )			s->stats.bMechanical		= spp->bMechanical;
+	if( spp->bMorale			!= -1 )			s->aiData.bMorale				= spp->bMorale;
 
 	//life can't exceed the life max.
-	if( s->bLife > s->bLifeMax )
-		s->bLife = s->bLifeMax;
+	if( s->stats.bLife > s->stats.bLifeMax )
+		s->stats.bLife = s->stats.bLifeMax;
 
 	s->ubScheduleID		=	spp->ubScheduleID;
 
@@ -2123,28 +2123,28 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 	// NOTE OF WARNING: THIS CURRENTLY IGNORES THE ENEMY CLASS (ADMIN/REG/ELITE) FOR CALCULATING LEVEL & ATTRIBUTES
 
 	// Rel level 0: Lvl 1, 1: Lvl 2-3, 2: Lvl 4-5, 3: Lvl 6-7, 4: Lvl 8-9
-	s->bExpLevel = (INT8)(2 * bRelativeAttributeLevel + Random(2));
+	s->stats.bExpLevel = (INT8)(2 * bRelativeAttributeLevel + Random(2));
 
-	s->bExpLevel = max( 1, s->bExpLevel ); //minimum level of 1
-	s->bExpLevel = min( 9, s->bExpLevel ); //maximum level of 9
+	s->stats.bExpLevel = max( 1, s->stats.bExpLevel ); //minimum level of 1
+	s->stats.bExpLevel = min( 9, s->stats.bExpLevel ); //maximum level of 9
 
 	//Set the minimum base attribute
-	bBaseAttribute = 49 + ( 4 * s->bExpLevel );
+	bBaseAttribute = 49 + ( 4 * s->stats.bExpLevel );
 
 	//Roll enemy's combat statistics, taking bExpLevel into account.
 	//Stat range is currently 40-99, slightly bell-curved around the bExpLevel
-	s->bLifeMax				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bLife	  			= s->bLifeMax;
-	s->bAgility				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bDexterity			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bMarksmanship	= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bMedical				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bMechanical		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bExplosive			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bLeadership		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bStrength			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
-	s->bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bLifeMax				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bLife	  			= s->stats.bLifeMax;
+	s->stats.bAgility				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bDexterity			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bMarksmanship	= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bMedical				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bMechanical		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bExplosive			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bLeadership		= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bStrength			= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->stats.bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
+	s->aiData.bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 }
 
 
@@ -2168,7 +2168,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 	SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
 
 	// Re-Create palettes
-	CreateSoldierPalettes( pSoldier );
+	pSoldier->CreateSoldierPalettes( );
 	
 }
 
@@ -2195,7 +2195,7 @@ SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
 	}
 	for( i = iStart; i <= iEnd; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife && MercPtrs[ i ]->sGridNo != NOWHERE )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->stats.bLife && MercPtrs[ i ]->sGridNo != NOWHERE )
 		{
 			if( MercPtrs[ i ]->ubSoldierClass == ubSoldierClass )
 			{
@@ -2249,8 +2249,8 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+		pSoldier->aiData.sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 	return( pSoldier );
 }
@@ -2285,8 +2285,8 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+		pSoldier->aiData.sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 
 	return( pSoldier );
@@ -2331,8 +2331,8 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+		pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+		pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 
 	return( pSoldier );
@@ -2350,7 +2350,7 @@ SOLDIERTYPE* ReserveTacticalMilitiaSoldierForAutoresolve( UINT8 ubSoldierClass )
 
 	for( i = iStart; i <= iEnd; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife && MercPtrs[ i ]->sGridNo != NOWHERE )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->stats.bLife && MercPtrs[ i ]->sGridNo != NOWHERE )
 		{
 			if( MercPtrs[ i ]->ubSoldierClass == ubSoldierClass )
 			{

@@ -1542,14 +1542,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_MERCS  )
 									{
 										// If we are multi-tiled, ignore here
-										if ( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
+										if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
 										{
 											pNode = pNode->pNext;
 											continue;
 										}
 
 										// If we are at a higher level, no not do anything unless we are at the highmerc stage
-										if ( pSoldier->bLevel > 0 )
+										if ( pSoldier->pathing.bLevel > 0 )
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -1559,14 +1559,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_HIGHMERCS  )
 									{
 										// If we are multi-tiled, ignore here
-										if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z )
+										if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE_Z )
 										{
 											pNode = pNode->pNext;
 											continue;
 										}
 
 										// If we are at a lower level, no not do anything unless we are at the highmerc stage
-										if ( pSoldier->bLevel == 0  )
+										if ( pSoldier->pathing.bLevel == 0  )
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -1577,22 +1577,22 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS )
 									{
 										// If we are not multi-tiled, ignore here
-										if ( !( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) ) )
+										if ( !( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) ) )
 										{
 											// If we are at a low level, no not do anything unless we are at the merc stage
-											if ( pSoldier->bLevel == 0  )
+											if ( pSoldier->pathing.bLevel == 0  )
 											{
 												pNode = pNode->pNext;
 												continue;
 											}
 										}
 
-										if ( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
+										if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
 										{
 											fSaveZ													= TRUE;
 											fZBlitter												= TRUE;
 
-											if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z )
+											if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE_Z )
 											{
 												fMultiTransShadowZBlitter				= TRUE;
 											// ATE: Use one direction for queen!
@@ -1647,7 +1647,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 										ubShadeLevel=__max(ubShadeLevel-2, DEFAULT_SHADE_LEVEL);
 										ubShadeLevel|=(pNode->ubShadeLevel&0x30);
 										
-										if ( pSoldier->fBeginFade )
+										if ( pSoldier->flags.fBeginFade )
 										{
 											pShadeTable = pSoldier->pCurrentShade = pSoldier->pShades[ pSoldier->ubFadeLevel ];
 										}
@@ -1678,11 +1678,11 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									sYPos -= pSoldier->sHeightAdjustment;
 
 									// Handle shade stuff....
-									if ( !pSoldier->fBeginFade )
+									if ( !pSoldier->flags.fBeginFade )
 									{
 										// Special effect - draw ghost if is seen by a guy in player's team but not current guy
 										// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
-										if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+										if ( !pSoldier->aiData.bNeutral && (pSoldier->bSide != gbPlayerNum ) )
 										{
 											if ( gusSelectedSoldier != NOBODY )
 											{
@@ -1705,7 +1705,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												
 												if ( pSelSoldier != NULL ) 
 												{
-													if ( pSelSoldier->bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY  )
+													if ( pSelSoldier->aiData.bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY  )
 													{
                             if ( pSoldier->usAnimState != CHARIOTS_OF_FIRE && pSoldier->usAnimState != BODYEXPLODING )
                             {
@@ -1715,7 +1715,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												}
 											}
 
-											if ( pSoldier->bLevel == 0 )
+											if ( pSoldier->pathing.bLevel == 0 )
 											{
 												pShadeStart = (INT16 **) &( pSoldier->pGlowShades[ 0 ] );
 											}
@@ -1750,7 +1750,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 												{
 													// Does he have baton?
-													if ( (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
+													if ( (pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 													{
 														pShadeTable = (UINT16 *) pShadeStart[ gpGlowFramePointer[ gsCurrentGlowFrame ] + bGlowShadeOffset ];
 
@@ -1776,7 +1776,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 											//	pSelSoldier = MercPtrs[ gusSelectedSoldier ];
 
 												// Shade differently depending on visiblity
-											//	if ( pSoldier->bVisible == 0 || ( pSelSoldier->bOppList[ pSoldier->ubID ] == 0  ) )
+											//	if ( pSoldier->bVisible == 0 || ( pSelSoldier->aiData.bOppList[ pSoldier->ubID ] == 0  ) )
 											//	{
 													// Shade gray
 											//		pShadeTable = pSoldier->pGlowShades[ gpGlowFramePointer[ gsCurrentGlowFrame ] + 10 ];
@@ -1790,7 +1790,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									
 									if(!(uiFlags&TILES_DIRTY))
 									{
-										if ( pSoldier->fForceShade )
+										if ( pSoldier->flags.fForceShade )
 										{
 											pShadeTable = pSoldier->pForcedShade;
 										}
@@ -7482,7 +7482,7 @@ void SetMercGlowNormal( )
 			sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
 
 
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )\
+	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE ) )\
 	{\
 		sZOffsetX = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetX;\
 		sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\

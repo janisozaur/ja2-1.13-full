@@ -92,7 +92,7 @@ BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 
 	// is the NPC is wounded at all?
 	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
-	if (pSoldier && pSoldier->bLife < pSoldier->bLifeMax)
+	if (pSoldier && pSoldier->stats.bLife < pSoldier->stats.bLifeMax)
 	{
 		if (fByPlayerOnly)
 		{
@@ -123,7 +123,7 @@ BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
 
 	// is the NPC at better than half health?
 	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
-	if (pSoldier && pSoldier->bLife > (pSoldier->bLifeMax / 2) && pSoldier->bLife > 30)
+	if (pSoldier && pSoldier->stats.bLife > (pSoldier->stats.bLifeMax / 2) && pSoldier->stats.bLife > 30)
 	{
 		return( TRUE );
 	}
@@ -139,7 +139,7 @@ BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
 
 	// the NPC is wounded...
 	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
-	if (pSoldier && pSoldier->bLife > 0 && pSoldier->bBleeding > 0)
+	if (pSoldier && pSoldier->stats.bLife > 0 && pSoldier->bBleeding > 0)
 	{
 		return( TRUE );
 	}
@@ -174,7 +174,7 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 	{
 		return( FALSE );
 	}
-	if (pNPC->bOppList[ pGuy->ubID ] == SEEN_CURRENTLY )
+	if (pNPC->aiData.bOppList[ pGuy->ubID ] == SEEN_CURRENTLY )
 	{
 		return( TRUE );
 	}
@@ -205,7 +205,7 @@ BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 	{
 		return( FALSE );
 	}
-	if (pNPC->bSide == gbPlayerNum || pNPC->bNeutral)
+	if (pNPC->bSide == gbPlayerNum || pNPC->aiData.bNeutral)
 	{
 		if (pNPC->ubCivilianGroup != NON_CIV_GROUP)
 		{
@@ -270,7 +270,7 @@ INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 	{
 		pSoldier = MercSlots[ uiLoop ];
 
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife > 0 && pSoldier->bLife < pSoldier->bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
+		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife > 0 && pSoldier->stats.bLife < pSoldier->stats.bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
 		{
 			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= HOSPITAL_PATIENT_DISTANCE)
 			{
@@ -301,7 +301,7 @@ INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 	{
 		pSoldier = MercSlots[ uiLoop ];
 
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE )
+		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife >= OKLIFE )
 		{
 			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= ubMaxDist)
 			{
@@ -388,11 +388,11 @@ BOOLEAN CheckTalkerStrong( void )
 {
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum)
 	{
-		return( gpSrcSoldier->bStrength >= 84 );
+		return( gpSrcSoldier->stats.bStrength >= 84 );
 	}
 	else if (gpDestSoldier && gpDestSoldier->bTeam == gbPlayerNum)
 	{
-		return( gpDestSoldier->bStrength >= 84 );
+		return( gpDestSoldier->stats.bStrength >= 84 );
 	}
 	return( FALSE );
 }
@@ -448,7 +448,7 @@ INT8 NumMalesPresent( UINT8 ubProfileID )
 	{
 		pSoldier = MercSlots[ uiLoop ];
 
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE)
+		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife >= OKLIFE)
 		{
 			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile].bSex == MALE )
 			{
@@ -482,7 +482,7 @@ BOOLEAN FemalePresent( UINT8 ubProfileID )
 	{
 		pSoldier = MercSlots[ uiLoop ];
 
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE)
+		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife >= OKLIFE)
 		{
 			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile].bSex == FEMALE )
 			{
@@ -507,7 +507,7 @@ BOOLEAN CheckPlayerHasHead( void )
 	{
 		pSoldier = MercPtrs[ bLoop ];
 
-		if ( pSoldier->bActive && pSoldier->bLife > 0 )
+		if ( pSoldier->bActive && pSoldier->stats.bLife > 0 )
 		{
 			if ( FindObjInObjRange( pSoldier, HEAD_2, HEAD_7 ) != NO_SLOT )
 			{			
@@ -555,7 +555,7 @@ BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
 	{
 		pSoldier = MercSlots[ uiLoop ];
 
-		if ( pSoldier && (pSoldier->bTeam == gbPlayerNum) && (pSoldier->bLife >= OKLIFE) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
+		if ( pSoldier && (pSoldier->bTeam == gbPlayerNum) && (pSoldier->stats.bLife >= OKLIFE) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
 		{
 			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= sDistance)
 			{
@@ -576,7 +576,7 @@ BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
 	{
 		return( FALSE );
 	}
-	return( ( (pNPC->uiStatusFlags & SOLDIER_COWERING) != 0) );
+	return( ( (pNPC->flags.uiStatusFlags & SOLDIER_COWERING) != 0) );
 }
 
 UINT8 CountBartenders( void )
@@ -603,7 +603,7 @@ BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
 	{
 		return( FALSE );
 	}
-	return( pNPC->bUnderFire != 0 );
+	return( pNPC->aiData.bUnderFire != 0 );
 }
 
 BOOLEAN NPCHeardShot( UINT8 ubProfileID )

@@ -1052,7 +1052,7 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 
 	// Kaiden: Vehicle Inventory change - Added IF Test, Else function call was
 	// the original statement
-	if ( (gGameExternalOptions.fVehicleInventory) && (pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
+	if ( (gGameExternalOptions.fVehicleInventory) && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) )
 	{
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiBodyInvVO[4][0], 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
 	}
@@ -1183,7 +1183,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	}
 
 	// If we have a new item and we are in the right panel...
-	if ( pSoldier->bNewItemCount[ sPocket ] > 0 && gsCurInterfacePanel == SM_PANEL && fInterfacePanelDirty != DIRTYLEVEL2 )
+	if ( pSoldier->inv.bNewItemCount[ sPocket ] > 0 && gsCurInterfacePanel == SM_PANEL && fInterfacePanelDirty != DIRTYLEVEL2 )
 	{
 		fRenderDirtyLevel = DIRTYLEVEL0;
 		//fRenderDirtyLevel = fDirtyLevel;
@@ -1888,14 +1888,14 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
-		if ( pSoldier->bNewItemCount[ cnt ] == -2 )
+		if ( pSoldier->inv.bNewItemCount[ cnt ] == -2 )
 		{
 			// Stop
 			*fDirtyLevel = DIRTYLEVEL2;
-			pSoldier->bNewItemCount[ cnt ] = 0;
+			pSoldier->inv.bNewItemCount[ cnt ] = 0;
 		}
 
-		if ( pSoldier->bNewItemCount[ cnt ] > 0 )
+		if ( pSoldier->inv.bNewItemCount[ cnt ] > 0 )
 		{
 
 			sX = gSMInvData[ cnt ].sX;
@@ -1909,7 +1909,7 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 				continue;
 			}
 
-			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ cnt ].sWidth, gSMInvData[ cnt ].sHeight, DIRTYLEVEL2, NULL, 0, TRUE, us16BPPItemCyclePlacedItemColors[ pSoldier->bNewItemCycleCount[ cnt ] ] );
+			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ cnt ].sWidth, gSMInvData[ cnt ].sHeight, DIRTYLEVEL2, NULL, 0, TRUE, us16BPPItemCyclePlacedItemColors[ pSoldier->inv.bNewItemCycleCount[ cnt ] ] );
 
 		}
 
@@ -1923,9 +1923,9 @@ void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier )
 	// OK, l0ok for any new...
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
-		if ( pSoldier->bNewItemCount[ cnt ] == -1 )
+		if ( pSoldier->inv.bNewItemCount[ cnt ] == -1 )
 		{
-			pSoldier->bNewItemCount[ cnt ]	= NEW_ITEM_CYCLES - 1;
+			pSoldier->inv.bNewItemCount[ cnt ]	= NEW_ITEM_CYCLES - 1;
 		}
 	}
 
@@ -1953,25 +1953,25 @@ void DegradeNewlyAddedItems( )
 
 				for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 				{
-					if ( pSoldier->bNewItemCount[ cnt ] > 0 )
+					if ( pSoldier->inv.bNewItemCount[ cnt ] > 0 )
 					{
 						// Decrement all the time!
-						pSoldier->bNewItemCycleCount[ cnt ]--;
+						pSoldier->inv.bNewItemCycleCount[ cnt ]--;
 
-						if ( pSoldier->bNewItemCycleCount[ cnt ] == 0 )
+						if ( pSoldier->inv.bNewItemCycleCount[ cnt ] == 0 )
 						{
 							// OK, cycle down....
-							pSoldier->bNewItemCount[ cnt ]--;
+							pSoldier->inv.bNewItemCount[ cnt ]--;
 
-							if ( pSoldier->bNewItemCount[ cnt ] == 0 )
+							if ( pSoldier->inv.bNewItemCount[ cnt ] == 0 )
 							{
 								// Stop...
-								pSoldier->bNewItemCount[ cnt ] = -2;
+								pSoldier->inv.bNewItemCount[ cnt ] = -2;
 							}
 							else
 							{
 								// Reset!
-								pSoldier->bNewItemCycleCount[ cnt ]	= NEW_ITEM_CYCLE_COUNT;
+								pSoldier->inv.bNewItemCycleCount[ cnt ]	= NEW_ITEM_CYCLE_COUNT;
 								continue;
 							}
 						}
@@ -4569,7 +4569,7 @@ void DrawItemTileCursor( )
 
 					// Are they on our team?
 					// ATE: Can't be an EPC
-					if ( pSoldier->bTeam == gbPlayerNum && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+					if ( pSoldier->bTeam == gbPlayerNum && !AM_AN_EPC( pSoldier ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 					{
 						if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE )
 						{
@@ -4621,7 +4621,7 @@ void DrawItemTileCursor( )
 				gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
 
 				// If this is a robot, change to say 'reload'
-				if ( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_ROBOT )
+				if ( MercPtrs[ gusUIFullTargetID ]->flags.uiStatusFlags & SOLDIER_ROBOT )
 				{
 					gfUIMouseOnValidCatcher = 3;
 				}
@@ -4641,7 +4641,7 @@ void DrawItemTileCursor( )
 
 
 					// Get AP cost
-					if ( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_ROBOT )
+					if ( MercPtrs[ gusUIFullTargetID ]->flags.uiStatusFlags & SOLDIER_ROBOT )
 					{
 						sAPCost = GetAPsToReloadRobot( gpItemPointerSoldier, MercPtrs[ gusUIFullTargetID ] );
 					}
@@ -4723,7 +4723,7 @@ void DrawItemTileCursor( )
 									break;
 							}
 
-							if ( MercPtrs[ gubUIValidCatcherID ]->bLevel > 0 )
+							if ( MercPtrs[ gubUIValidCatcherID ]->pathing.bLevel > 0 )
 							{
 								sEndZ = 0;
 							}
@@ -4816,7 +4816,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 
 	// Don't allow if our soldier is a # of things...
-	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
+	if ( AM_AN_EPC( gpItemPointerSoldier ) || gpItemPointerSoldier->stats.bLife < OKLIFE || gpItemPointerSoldier->bOverTerrainType == DEEP_WATER )
 	{
 		return( FALSE );
 	}
@@ -4876,7 +4876,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		usItem = gpItemPointer->usItem;
 
 		// If the target is a robot, 
-		if ( MercPtrs[ ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+		if ( MercPtrs[ ubSoldierID ]->flags.uiStatusFlags & SOLDIER_ROBOT )
 		{
 			// Charge APs to reload robot!
 			sAPCost = GetAPsToReloadRobot( gpItemPointerSoldier,  MercPtrs[ ubSoldierID ] );
@@ -4915,7 +4915,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, TRUE ) )
 		{
 			// If we are a robot, check if this is proper item to reload!
-			if ( MercPtrs[ ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+			if ( MercPtrs[ ubSoldierID ]->flags.uiStatusFlags & SOLDIER_ROBOT )
 			{
 				// Check if we can reload robot....
 				if ( IsValidAmmoToReloadRobot( MercPtrs[ ubSoldierID ], &TempObject ) )
@@ -4937,23 +4937,23 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							// Remove from soldier's inv...
 							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
 							
-							gpItemPointerSoldier->sPendingActionData2  = sAdjustedGridNo;
-							gpItemPointerSoldier->uiPendingActionData1 = gbItemPointerSrcSlot;
-							gpItemPointerSoldier->bPendingActionData3  = ubDirection;
-							gpItemPointerSoldier->ubPendingActionAnimCount = 0;
+							gpItemPointerSoldier->aiData.sPendingActionData2  = sAdjustedGridNo;
+							gpItemPointerSoldier->aiData.uiPendingActionData1 = gbItemPointerSrcSlot;
+							gpItemPointerSoldier->aiData.bPendingActionData3  = ubDirection;
+							gpItemPointerSoldier->aiData.ubPendingActionAnimCount = 0;
 
 							// CHECK IF WE ARE AT THIS GRIDNO NOW
 							if ( gpItemPointerSoldier->sGridNo != sActionGridNo )
 							{
 								// SEND PENDING ACTION
-								gpItemPointerSoldier->ubPendingAction = MERC_RELOADROBOT;
+								gpItemPointerSoldier->aiData.ubPendingAction = MERC_RELOADROBOT;
 
 								// WALK UP TO DEST FIRST
-								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );
+								gpItemPointerSoldier->EVENT_InternalGetNewSoldierPath( sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );
 							}
 							else
 							{
-								EVENT_SoldierBeginReloadRobot( gpItemPointerSoldier, sAdjustedGridNo, ubDirection, gbItemPointerSrcSlot );
+								gpItemPointerSoldier->EVENT_SoldierBeginReloadRobot( sAdjustedGridNo, ubDirection, gbItemPointerSrcSlot );
 							}
 
 							// OK, set UI
@@ -5012,7 +5012,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// Try to drop in an adjacent area....
 			// 1 ) is this not a good OK destination
 			// this will sound strange, but this is OK......
-			if ( !NewOKDestination( gpItemPointerSoldier, usMapPos, FALSE, gpItemPointerSoldier->bLevel ) || FindBestPath( gpItemPointerSoldier, usMapPos, gpItemPointerSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
+			if ( !NewOKDestination( gpItemPointerSoldier, usMapPos, FALSE, gpItemPointerSoldier->pathing.bLevel ) || FindBestPath( gpItemPointerSoldier, usMapPos, gpItemPointerSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
 			{
 				// Drop
 				if ( !gfDontChargeAPsToPickup )
@@ -5034,19 +5034,19 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
 							memcpy( gpItemPointerSoldier->pTempObject, gpItemPointer, sizeof( OBJECTTYPE ) );
-							gpItemPointerSoldier->sPendingActionData2 = usMapPos;
+							gpItemPointerSoldier->aiData.sPendingActionData2 = usMapPos;
 
 	 						// Turn towards.....gridno	
-							EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, (INT8)GetDirectionFromGridNo( usMapPos, gpItemPointerSoldier ) );							
+							gpItemPointerSoldier->EVENT_SetSoldierDesiredDirection( (INT8)GetDirectionFromGridNo( usMapPos, gpItemPointerSoldier ) );							
 
-							EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , FALSE );
+							gpItemPointerSoldier->EVENT_InitNewSoldierAnim( DROP_ADJACENT_OBJECT, 0 , FALSE );
 						}
 						break;
 				
 					case ANIM_CROUCH:
 					case ANIM_PRONE:
 
-						AddItemToPool( usMapPos, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+						AddItemToPool( usMapPos, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
 						NotifySoldiersToLookforItems( );
 						break;
 				}
@@ -5069,10 +5069,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		sGridNo = usMapPos;
 
 		// Kaiden: Vehicle Inventory change - Commented the following If test:
-		//if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) && !( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_VEHICLE ) )
+		//if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) && !( MercPtrs[ gusUIFullTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		
 		// And added this one instead:
-		if ( ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) ) && !( (!gGameExternalOptions.fVehicleInventory) && (MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_VEHICLE) ) )
+		if ( ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) ) && !( (!gGameExternalOptions.fVehicleInventory) && (MercPtrs[ gusUIFullTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE) ) )
 		{
 			// OK, do the transfer...
 			{
@@ -5089,10 +5089,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						return( FALSE );
 					}
 
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpItemPointerSoldier->sGridNo, gpItemPointerSoldier->bLevel, gpItemPointerSoldier );
+					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpItemPointerSoldier->sGridNo, gpItemPointerSoldier->pathing.bLevel, gpItemPointerSoldier );
 
 					// Check LOS....
-					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->pathing.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
 					{
 						return( FALSE );
 					}
@@ -5122,14 +5122,14 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						  ubFacingDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						  // Stop merc first....
-						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						  pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
 
 						  // WANNE: Also turn merc if he is crouched and he passes an item
-						  if ( !MercInWater( pSoldier ) )
+						  if ( !pSoldier->MercInWater( ) )
 						  {
 							  // Turn to face, then do animation....
-							  EVENT_SetSoldierDesiredDirection( pSoldier, ubFacingDirection );
-							  pSoldier->fTurningUntilDone	 = TRUE;
+							  pSoldier->EVENT_SetSoldierDesiredDirection( ubFacingDirection );
+							  pSoldier->flags.fTurningUntilDone	 = TRUE;
 
 							 if (gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
 							 {
@@ -5138,10 +5138,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						 }
 
 						  // WANNE: Also turn merc if he is crouched and he received the passed item
-						  if ( !MercInWater( gpItemPointerSoldier ) )
+						  if ( !gpItemPointerSoldier->MercInWater(  ) )
 						  {
-							  EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, gOppositeDirection[ ubFacingDirection ] );
-							  gpItemPointerSoldier->fTurningUntilDone	 = TRUE;
+							  gpItemPointerSoldier->EVENT_SetSoldierDesiredDirection( gOppositeDirection[ ubFacingDirection ] );
+							  gpItemPointerSoldier->flags.fTurningUntilDone	 = TRUE;
 
 							  if (gAnimControl[ gpItemPointerSoldier->usAnimState ].ubEndHeight == ANIM_STAND)
 							  {
@@ -5171,7 +5171,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// Deduct points
 			//DeductPoints( gpItemPointerSoldier, AP_TOSS_ITEM, 0 );
-			gpItemPointerSoldier->fDontChargeTurningAPs = TRUE;
+			gpItemPointerSoldier->flags.fDontChargeTurningAPs = TRUE;
 			// Will be dome later....	
 
 			ubThrowActionCode = NO_THROW_ACTION;
@@ -5183,10 +5183,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				pSoldier = MercPtrs[ gusUIFullTargetID ];
 
 				// Kaiden: Vehicle Inventory change - Commented the following If Test:
-				//if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+				//if ( pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 				
 				// And replaced it with this one:
-				if ( ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) ) && !( ( !gGameExternalOptions.fVehicleInventory ) &&  ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+				if ( ( pSoldier->bTeam == gbPlayerNum && pSoldier->stats.bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) ) && !( ( !gGameExternalOptions.fVehicleInventory ) &&  ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
 				{
 					// OK, on our team, 
 
@@ -5217,7 +5217,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 									break;
 						}
 
-						if ( pSoldier->bLevel > 0 )
+						if ( pSoldier->pathing.bLevel > 0 )
 						{
 							sEndZ = 0;
 						}
@@ -5226,10 +5226,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						ubDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						// ATE: Goto stationary...
-						SoldierGotoStationaryStance( pSoldier );
+						pSoldier->SoldierGotoStationaryStance( );
 
 						// Set direction to turn...
-						EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+						pSoldier->EVENT_SetSoldierDesiredDirection( ubDirection );
 
 					}			
 				}
@@ -5238,8 +5238,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// CHANGE DIRECTION AT LEAST
 			ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, gpItemPointerSoldier );
-			EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, ubDirection );
-			gpItemPointerSoldier->fTurningUntilDone = TRUE;
+			gpItemPointerSoldier->EVENT_SetSoldierDesiredDirection( ubDirection );
+			gpItemPointerSoldier->flags.fTurningUntilDone = TRUE;
 
 			// Increment attacker count...
 			// gTacticalStatus.ubAttackBusyCount++;
@@ -5248,7 +5248,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			
 			// Given our gridno, throw grenate!
-			CalculateLaunchItemParamsForThrow( gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), gpItemPointer, 0, ubThrowActionCode, uiThrowActionData );
+			CalculateLaunchItemParamsForThrow( gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->pathing.bLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), gpItemPointer, 0, ubThrowActionCode, uiThrowActionData );
 
 			// OK, goto throw animation
 			HandleSoldierThrowItem( gpItemPointerSoldier, usMapPos );
@@ -6824,7 +6824,7 @@ void RemoveItemPickupMenu( )
 		PauseTime( FALSE );
 
 		// Unfreese guy!
-		gItemPickupMenu.pSoldier->fPauseAllAnimation = FALSE;
+		gItemPickupMenu.pSoldier->flags.fPauseAllAnimation = FALSE;
 
 		// Remove graphics!
 		DeleteVideoObjectFromIndex( gItemPickupMenu.uiPanelVo );
@@ -6990,7 +6990,7 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 			SoldierStealItemFromSoldier( gItemPickupMenu.pSoldier,gpOpponent,gItemPickupMenu.pItemPool, ITEM_PICKUP_SELECTION, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel, gItemPickupMenu.pfSelectedArray );
 			DeletePool(gItemPickupMenu.pItemPool);
 			if ((gpOpponent->inv[HANDPOS].usItem == NOTHING ) && (usLastItem!=NOTHING))
-				ReLoadSoldierAnimationDueToHandItemChange( gpOpponent, usLastItem, NOTHING );
+				gpOpponent->ReLoadSoldierAnimationDueToHandItemChange( usLastItem, NOTHING );
 
 //			PreventFromTheFreezingBug(gItemPickupMenu.pSoldier);
 		}
@@ -7414,7 +7414,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 	if( pSoldier != NULL )
 	{
-		if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD )
 		{
 			swprintf( pStr, L"" );
 			swprintf( pzStr, L"%s", pStr );
@@ -7793,7 +7793,7 @@ void CancelItemPointer( )
 				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, FALSE ) )
         {
           // Alright, place of the friggen ground!
-			    AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+			    AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
 			    NotifySoldiersToLookforItems( );
         }
       }
@@ -7801,7 +7801,7 @@ void CancelItemPointer( )
 		else
 		{
 			// We drop it here.....
-			AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+			AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
 			NotifySoldiersToLookforItems( );
 		}
 		EndItemPointer( );
@@ -7944,7 +7944,7 @@ BOOLEAN InitializeStealItemPickupMenu( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOppo
   VOBJECT_DESC		VObjectDesc;
 	CHAR8			ubString[48];
 	INT16			sCenX, sCenY, sX, sY, sCenterYVal;
-	INT8 bZLevel	=pOpponent->bLevel;
+	INT8 bZLevel	=pOpponent->pathing.bLevel;
 	INT16 sGridNo	=pOpponent->sGridNo;
 	INT32			cnt;
 	gpOpponent		=pOpponent;

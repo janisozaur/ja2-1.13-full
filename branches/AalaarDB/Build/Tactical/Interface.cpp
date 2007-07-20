@@ -747,7 +747,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	//SetButtonSavedRect( iActionIcons[ RUN_ICON ] );
 	ButtonList[ iActionIcons[ RUN_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( MercInWater( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
+	if ( pSoldier->MercInWater( ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
 	{
 		DisableButton( iActionIcons[ RUN_ICON ] );
 	}
@@ -762,7 +762,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ WALK_ICON ] );
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		SetButtonFastHelpText( iActionIcons[ WALK_ICON ], TacticalStr[ DRIVE_POPUPTEXT ] );
 	}
@@ -773,9 +773,9 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	ButtonList[ iActionIcons[ WALK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( !CanRobotBeControlled( pSoldier ) )
+		if ( !pSoldier->CanRobotBeControlled( ) )
 		{
 			DisableButton( iActionIcons[ WALK_ICON ] );
 		}
@@ -831,20 +831,20 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	//SetButtonSavedRect( iActionIcons[ LOOK_ICON ] );
 	ButtonList[ iActionIcons[ LOOK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		DisableButton( iActionIcons[ LOOK_ICON ]  );
 	}
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( !CanRobotBeControlled( pSoldier ) )
+		if ( !pSoldier->CanRobotBeControlled( ) )
 		{
 			DisableButton( iActionIcons[ LOOK_ICON ] );
 		}
 	}
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// Until we get mounted weapons...
 		uiActionImages = CANCEL_IMAGES;
@@ -944,7 +944,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	SetButtonFastHelpText( iActionIcons[ TALK_ICON ], pTacticalPopupButtonStrings[ TALK_ICON ] );
 	ButtonList[ iActionIcons[ TALK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		DisableButton( iActionIcons[ TALK_ICON ]  );
 	}
@@ -962,7 +962,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	SetButtonFastHelpText( iActionIcons[ HAND_ICON ], pTacticalPopupButtonStrings[ HAND_ICON ] );
 	ButtonList[ iActionIcons[ HAND_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		DisableButton( iActionIcons[ HAND_ICON ]  );
 	}
@@ -1440,11 +1440,11 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 	//sStanceOffset -= gpWorldLevelData[ pSoldier->sGridNo ].sHeight;
 
 	// Adjust based on level
-	if ( pSoldier->bLevel == 1 && gsInterfaceLevel == 0 )
+	if ( pSoldier->pathing.bLevel == 1 && gsInterfaceLevel == 0 )
 	{
 		//sStanceOffset -= ROOF_LEVEL_HEIGHT;
 	}
-	if ( pSoldier->bLevel == 0 && gsInterfaceLevel == 1 )
+	if ( pSoldier->pathing.bLevel == 0 && gsInterfaceLevel == 1 )
 	{
 		//sStanceOffset += ROOF_LEVEL_HEIGHT;
 	}
@@ -1466,7 +1466,7 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 
 			// If not a radio position, adjust if we are getting hit, to be lower!
 			// If we are getting hit, lower them!
-			if ( pSoldier->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
+			if ( pSoldier->flags.fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
 			{
 				*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
 				*psY = sMercScreenY;
@@ -1510,21 +1510,21 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		return;
 	}
 
-	if ( pSoldier->fFlashLocator )
+	if ( pSoldier->flags.fFlashLocator )
 	{
 		if ( pSoldier->bVisible == -1 )
 		{
-			pSoldier->fFlashLocator = FALSE;
+			pSoldier->flags.fFlashLocator = FALSE;
 		}
 		else
 		{
-			if ( TIMECOUNTERDONE( pSoldier->BlinkSelCounter, 80 ) )
+			if ( TIMECOUNTERDONE( pSoldier->timeCounters.BlinkSelCounter, 80 ) )
 			{
-				RESETTIMECOUNTER( pSoldier->BlinkSelCounter, 80 );
+				RESETTIMECOUNTER( pSoldier->timeCounters.BlinkSelCounter, 80 );
 
-			//	pSoldier->fShowLocator = !pSoldier->fShowLocator;
+			//	pSoldier->flags.fShowLocator = !pSoldier->flags.fShowLocator;
 
-				pSoldier->fShowLocator = TRUE;
+				pSoldier->flags.fShowLocator = TRUE;
 
 				// Update frame
 				pSoldier->sLocatorFrame++;
@@ -1532,26 +1532,26 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 				if ( pSoldier->sLocatorFrame == 5 )
 				{
 					// Update time we do this
-					pSoldier->fFlashLocator++;
+					pSoldier->flags.fFlashLocator++;
 					pSoldier->sLocatorFrame = 0;
 				}
 			}
 
-			//if ( TIMECOUNTERDONE( pSoldier->FlashSelCounter, 5000 ) )
+			//if ( TIMECOUNTERDONE( pSoldier->timeCounters.FlashSelCounter, 5000 ) )
 			//{
-			//	RESETTIMECOUNTER( pSoldier->FlashSelCounter, 5000 );
+			//	RESETTIMECOUNTER( pSoldier->timeCounters.FlashSelCounter, 5000 );
 
-			//	pSoldier->fFlashLocator = FALSE;
-			//	pSoldier->fShowLocator = FALSE;
+			//	pSoldier->flags.fFlashLocator = FALSE;
+			//	pSoldier->flags.fShowLocator = FALSE;
 
 			//}
-			if ( pSoldier->fFlashLocator == pSoldier->ubNumLocateCycles )
+			if ( pSoldier->flags.fFlashLocator == pSoldier->ubNumLocateCycles )
 			{
-					pSoldier->fFlashLocator = FALSE;
-					pSoldier->fShowLocator = FALSE;
+					pSoldier->flags.fFlashLocator = FALSE;
+					pSoldier->flags.fShowLocator = FALSE;
 			}
 
-			//if ( pSoldier->fShowLocator )
+			//if ( pSoldier->flags.fShowLocator )
 			{
 				// Render the beastie
 				GetSoldierAboveGuyPositions( pSoldier, &sXPos, &sYPos, TRUE );
@@ -1573,7 +1573,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 					SetBackgroundRectFilled( iBack );
 				}
 
-				if ( ( !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
+				if ( ( !pSoldier->aiData.bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
 				{
 					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO2, pSoldier->sLocatorFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 				}
@@ -1591,7 +1591,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	}
 
 
-	if ( !pSoldier->fShowLocator )
+	if ( !pSoldier->flags.fShowLocator )
 	{
 		// RETURN IF MERC IS NOT SELECTED
 		if ( gfUIHandleSelectionAboveGuy && pSoldier->ubID == gsSelectedGuy && pSoldier->ubID != gusSelectedSoldier && !gfIgnoreOnSelectedGuy )
@@ -1607,7 +1607,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		//{
 
 		//}
-		else if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
+		else if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED )
 		{
 
 		}
@@ -1632,7 +1632,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	}
 
 	// Donot show if we are dead
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
 	{
 		return;
 	}
@@ -1646,7 +1646,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_MCOLOR_WHITE );
 
-	if ( pSoldier->ubProfile != NO_PROFILE || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( pSoldier->ubProfile != NO_PROFILE || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		if ( gfUIMouseOnValidCatcher == 1 && pSoldier->ubID == gubUIValidCatcherID )
 		{
@@ -1681,7 +1681,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 				mprintf( sX, sY, NameStr );
 		fRaiseName = TRUE;
 		}
-		else if ( pSoldier->bTeam == gbPlayerNum &&  pSoldier->bAssignment < ON_DUTY && pSoldier->bAssignment != CurrentSquad() && !(  pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED ) )
+		else if ( pSoldier->bTeam == gbPlayerNum &&  pSoldier->bAssignment < ON_DUTY && pSoldier->bAssignment != CurrentSquad() && !(  pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED ) )
 		{
 				swprintf( NameStr, gzLateLocalizedString[ 34 ], ( pSoldier->bAssignment + 1 ) );
 				FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
@@ -1692,7 +1692,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
 
 		// If not in a squad....
-		if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			if ( GetNumberInVehicle( pSoldier->bVehicleID ) == 0 )
 			{
@@ -1725,7 +1725,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		  }
 		}
 
-		if ( pSoldier->ubProfile < FIRST_RPC || pSoldier->ubProfile >= GASTON || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( pSoldier->ubProfile < FIRST_RPC || pSoldier->ubProfile >= GASTON || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// Adjust for bars!
 
@@ -1762,7 +1762,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 			}
 		}
 		else // ( pSoldier->ubProfile < FIRST_RPC || pSoldier->ubProfile >= GASTON || 
-		{    // RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		{    // RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			if ( gfUIMouseOnValidCatcher == 2 && pSoldier->ubID == gubUIValidCatcherID )
 			{
 				SetFont( TINYFONT1 );
@@ -1791,9 +1791,9 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 			}
 		}
 	}
-	else //pSoldier->ubProfile != NO_PROFILE || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	else //pSoldier->ubProfile != NO_PROFILE || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		if ( pSoldier->bLevel != 0 )
+		if ( pSoldier->pathing.bLevel != 0 )
 		{
 			// Display name
 			SetFont( TINYFONT1 );
@@ -1911,14 +1911,14 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, ( gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y ) );
 
 	// get amt bandaged
-	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+	bBandage = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
 	
 
 	// NOW DO BLEEDING
 	if ( pSoldier->bBleeding )
 	{
-		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (FLOAT)100;
+		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->stats.bLife + bBandage )/ (FLOAT)100;
 		dWidth			=	dPercentage * sWidth;
 		if(gbPixelDepth==16)
 		{
@@ -1936,7 +1936,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	
 	if( bBandage )
 	{
-		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
+		dPercentage = (FLOAT)( pSoldier->stats.bLife + bBandage ) / (FLOAT)100;
 		dWidth			=	dPercentage * sWidth;
 		if(gbPixelDepth==16)
 		{
@@ -1952,7 +1952,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	}
 
 
-	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->stats.bLife / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
 	if(gbPixelDepth==16)
 	{
@@ -1998,7 +1998,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 
 	/*
 	// morale
-	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->aiData.bMorale / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
 	if(gbPixelDepth==16)
 	{
@@ -2593,7 +2593,7 @@ void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 
 				if ( gOpenDoorMenu.fClosingDoor )
 				{
-					ChangeSoldierState( gOpenDoorMenu.pSoldier, GetAnimStateForInteraction( gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR ), 0 , FALSE );
+					gOpenDoorMenu.pSoldier->ChangeSoldierState( GetAnimStateForInteraction( gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR ), 0 , FALSE );
 				}
 				else
 				{
@@ -3544,7 +3544,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 			// Are we active and in sector.....
 			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 			{
-				if ( pTeamSoldier->bLife < OKLIFE )
+				if ( pTeamSoldier->stats.bLife < OKLIFE )
 				{
 					bNumNotOK++;
 				}
@@ -3604,7 +3604,7 @@ void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 STR16 GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 {
 	INT32 cnt, cntStart;
-	if( pSoldier->bLife == pSoldier->bLifeMax )
+	if( pSoldier->stats.bLife == pSoldier->stats.bLifeMax )
 	{
 		cntStart = 4;
 	}
@@ -3615,7 +3615,7 @@ STR16 GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 	//Show health on others.........
 	for ( cnt = cntStart; cnt < 6; cnt ++ )
 	{
-		if ( pSoldier->bLife < bHealthStrRanges[ cnt ] )
+		if ( pSoldier->stats.bLife < bHealthStrRanges[ cnt ] )
 		{
 			break;
 		}

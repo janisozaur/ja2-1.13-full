@@ -1037,22 +1037,22 @@ void MapScrollButtonMvtCheck( void  )
 	// run through each button's mouse region, if mouse cursor there...don't show map white sector highlight
 	fCursorIsOnMapScrollButtons = FALSE;
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 0 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 0 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 1 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 1 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 2 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 2 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 3 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 3 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}

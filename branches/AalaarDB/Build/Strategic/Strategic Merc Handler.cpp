@@ -107,13 +107,13 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 	}
  
 
-	pSoldier->uiStatusFlags |= SOLDIER_DEAD;
+	pSoldier->flags.uiStatusFlags |= SOLDIER_DEAD;
 
 	// Set breath to 0!
 	pSoldier->bBreathMax = pSoldier->bBreath = 0;
 
 	// not asleep, DEAD!
-	pSoldier->fMercAsleep = FALSE;
+	pSoldier->flags.fMercAsleep = FALSE;
 
 
 	//if the merc had life insurance
@@ -735,11 +735,11 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	// this of course assumes default morale is 50
 	if ( bBestGun != -1 )
 	{
-		bBestGun		= (bBestGun		 * (50 + pSoldier->bMorale)) / 100;
+		bBestGun		= (bBestGun		 * (50 + pSoldier->aiData.bMorale)) / 100;
 	}
 	if ( bBestArmour != -1 )
 	{
-		bBestArmour = (bBestArmour * (50 + pSoldier->bMorale)) / 100;
+		bBestArmour = (bBestArmour * (50 + pSoldier->aiData.bMorale)) / 100;
 	}
 
 	// OK, check values!
@@ -777,7 +777,7 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 
 	if ( pSoldier != NULL )
 	{
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->fMercAsleep != TRUE && pSoldier->bAssignment < ON_DUTY )
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->flags.fMercAsleep != TRUE && pSoldier->bAssignment < ON_DUTY )
 		{
 			//ATE: Double check that this problem still exists!
 			if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )
@@ -1107,7 +1107,7 @@ void HourlyCamouflageUpdate( void )
 				// Reload palettes....
 				if ( pSoldier->bInSector )
 				{	
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 				}
 
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
@@ -1116,18 +1116,18 @@ void HourlyCamouflageUpdate( void )
 			}
 
 			// if the merc has non-zero monster smell, degrade it by 1
-			if ( pSoldier->bMonsterSmell > 0 )
+			if ( pSoldier->aiData.bMonsterSmell > 0 )
 			{
-				pSoldier->bMonsterSmell--;
+				pSoldier->aiData.bMonsterSmell--;
 
 				/*
-				if (pSoldier->bMonsterSmell == 0)
+				if (pSoldier->aiData.bMonsterSmell == 0)
 				{
 					// Reload palettes....
 
 					if ( pSoldier->bInSector )
 					{	
-						CreateSoldierPalettes( pSoldier );
+						pSoldier->CreateSoldierPalettes( );
 					}
 
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );

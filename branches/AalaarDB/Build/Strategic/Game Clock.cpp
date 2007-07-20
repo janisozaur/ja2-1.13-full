@@ -1143,8 +1143,8 @@ void CreateDestroyScreenMaskForPauseGame( void )
 		fCreated = TRUE;
 
 		// get region x and y values
-		sX = ( &gClockMouseRegion ) -> RegionTopLeftX;
-		sY = ( &gClockMouseRegion ) -> RegionTopLeftY;
+		sX = ( &gClockMouseRegion )->RegionTopLeftX;
+		sY = ( &gClockMouseRegion )->RegionTopLeftY;
 	
 		//re create region on top of this
 		RemoveMouseRegionForPauseOfClock( );

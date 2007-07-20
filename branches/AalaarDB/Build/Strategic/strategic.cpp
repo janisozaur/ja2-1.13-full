@@ -47,7 +47,7 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
 	}
-	else if( ( pSoldier -> bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
+	else if( ( pSoldier->stats.bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
 	{
 		// died in mapscreen
 		
@@ -62,13 +62,13 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
 
 		//s et breath and breath max to 0
-		pSoldier -> bBreath = pSoldier->bBreathMax = 0;
+		pSoldier->bBreath = pSoldier->bBreathMax = 0;
 
 		// rebuild list
 		ReBuildCharactersList( );
 
 		// ste merc as dead
-		// pSoldier->fUIdeadMerc = TRUE;
+		// pSoldier->flags.fUIdeadMerc = TRUE;
 	
 		// attempt o remove character from squad
 		RemoveCharacterFromSquads( pSoldier );
@@ -103,7 +103,7 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 	// see if this was the friend of a living merc
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{       
-		if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
+		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 		{
 			bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
 			switch( bBuddyIndex )

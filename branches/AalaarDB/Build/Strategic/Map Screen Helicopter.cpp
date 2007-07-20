@@ -274,12 +274,12 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	pSoldier -> sSectorX = pVehicleList[ iHelicopterVehicleId ].sSectorX;
-	pSoldier -> sSectorY = pVehicleList[ iHelicopterVehicleId ].sSectorY;
-	pSoldier -> bSectorZ = 0;
+	pSoldier->sSectorX = pVehicleList[ iHelicopterVehicleId ].sSectorX;
+	pSoldier->sSectorY = pVehicleList[ iHelicopterVehicleId ].sSectorY;
+	pSoldier->bSectorZ = 0;
 
 	// reset between sectors
-	pSoldier->fBetweenSectors = FALSE;
+	pSoldier->flags.fBetweenSectors = FALSE;
 
 
 	// remove from the vehicle
@@ -546,7 +546,7 @@ void SkyriderDestroyed( void )
 
 	// kill skyrider
 	fSkyRiderAvailable = FALSE;
-	SoldierSkyRider.bLife = 0;
+	SoldierSkyRider.stats.bLife = 0;
 	gMercProfiles[ SKYRIDER ].bLife = 0;
 
 	// heli no longer available
@@ -786,10 +786,10 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 	// any path yet?
 	if( pNode != NULL )
 	{
-		while( pNode -> pNext )
+		while( pNode->pNext )
 		{
 			iLength++;
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -798,10 +798,10 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 	// any path yet?
 	if( pNode != NULL )
 	{
-		while( pNode -> pNext )
+		while( pNode->pNext )
 		{
 			iLength++;
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -945,7 +945,7 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 		//memset( &SoldierSkyRider, 0, SIZEOF_SOLDIERTYPE );
 		SoldierSkyRider.initialize();
 		SoldierSkyRider.ubProfile = SKYRIDER;
-		SoldierSkyRider.bLife = 80;
+		SoldierSkyRider.stats.bLife = 80;
 
 		pSkyRider = &( SoldierSkyRider );
 		
@@ -1350,9 +1350,9 @@ INT16 LastSectorInHelicoptersPath( void )
 	{
 		while( pNode)
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -1362,9 +1362,9 @@ INT16 LastSectorInHelicoptersPath( void )
 	{
 		while( pNode )
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -1416,23 +1416,23 @@ INT32 GetTotalCostOfHelicopterTrip( void )
 					}
 					else
 					{
-						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 					}
 				}
 				else
 				{
-					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 				}
 			}
 			else
 			{
-				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 			}
 
 			uiLength++;
 			
-			uiLastTempPathSectorId = pNode ->uiSectorId;
-			pNode = pNode ->pNext;
+			uiLastTempPathSectorId = pNode->uiSectorId;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -1464,24 +1464,24 @@ INT32 GetTotalCostOfHelicopterTrip( void )
 					}
 					else
 					{
-						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 					}
 				}
 				else
 				{
-					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 				}
 			}
 			else
 			{
-				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
 			}
 
 			uiLength++;
 
-			//uiCost += GetCostOfPassageForHelicopter( ( UINT16 ) ( pNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
-			uiLastTempPathSectorId = pNode ->uiSectorId;
-			pNode = pNode ->pNext;
+			//uiCost += GetCostOfPassageForHelicopter( ( UINT16 ) ( pNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pNode->uiSectorId / MAP_WORLD_X ) );
+			uiLastTempPathSectorId = pNode->uiSectorId;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -1517,17 +1517,17 @@ INT32 GetTotalCostOfHelicopterTrip( void )
 					}
 					else
 					{
-						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
+						uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
 					}
 				}
 				else
 				{
-					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
+					uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
 				}
 			}
 			else
 			{
-				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode -> uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
+				uiCost += GetCostOfPassageForHelicopter( ( UINT16 )( pTempNode->uiSectorId % MAP_WORLD_X ), ( UINT16 ) ( pTempNode->uiSectorId / MAP_WORLD_X ) );
 			}
 
 		uiLength++;
@@ -2059,14 +2059,14 @@ INT16 GetNumSafeSectorsInPath( void )
 
 		while( pNode)
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
       if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
       {
         uiCount++;
       }
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -2087,14 +2087,14 @@ INT16 GetNumSafeSectorsInPath( void )
 
 		while( pNode)
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
       if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
       {
         uiCount++;
       }
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -2141,14 +2141,14 @@ INT16 GetNumUnSafeSectorsInPath( void )
 
 		while( pNode)
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
       if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
       {
         uiCount++;
       }
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 
@@ -2168,14 +2168,14 @@ INT16 GetNumUnSafeSectorsInPath( void )
 
 		while( pNode)
 		{
-			uiLocation = pNode -> uiSectorId;
+			uiLocation = pNode->uiSectorId;
 
       if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
       {
         uiCount++;
       }
 
-			pNode = pNode ->pNext;
+			pNode = pNode->pNext;
 		}
 	}
 

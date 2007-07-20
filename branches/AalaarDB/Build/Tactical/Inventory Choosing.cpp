@@ -2511,7 +2511,7 @@ else
 						// Find matching weaponType in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more weapon items -> exit from loop
+							// We have no more weapon items->exit from loop
 							if (j > 0 && gEnemyWeaponDrops[j].uiIndex == 0)
 								break;
 
@@ -2552,7 +2552,7 @@ else
 						// Find matching ammo in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more ammo items -> exit from loop
+							// We have no more ammo items->exit from loop
 							if (j > 0 && gEnemyAmmoDrops[j].uiIndex == 0)
 								break;
 
@@ -2592,7 +2592,7 @@ else
 						// Find matching explosive in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more explosive items -> exit from loop
+							// We have no more explosive items->exit from loop
 							if (j > 0 && gEnemyExplosiveDrops[j].uiIndex == 0)
 								break;
 
@@ -2634,7 +2634,7 @@ else
 						// Find matching armour in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more armour items -> exit from loop
+							// We have no more armour items->exit from loop
 							if (j > 0 && gEnemyArmourDrops[j].uiIndex == 0)
 								break;
 
@@ -2679,7 +2679,7 @@ else
 						// Find matching armour in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more armour items -> exit from loop
+							// We have no more armour items->exit from loop
 							if (j > 0 && gEnemyMiscDrops[j].uiIndex == 0)
 								break;
 

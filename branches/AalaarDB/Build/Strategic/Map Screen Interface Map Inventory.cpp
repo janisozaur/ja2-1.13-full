@@ -866,7 +866,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 			if( ( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorX != sSelMapX ) ||
 					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorY != sSelMapY ) ||
 					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ != iCurrentMapSectorZ ) ||
-					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].fBetweenSectors ) )
+					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].flags.fBetweenSectors ) )
 			{
 				if ( gpItemPointer == NULL )
 				{
@@ -907,7 +907,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 				// notify
 				pSoldier = &( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] );
 
-				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier -> sGridNo);
+				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier->sGridNo);
 
 			/*	if( sDistanceFromObject > MAX_DISTANCE_TO_PICKUP_ITEM )
 				{
@@ -1546,7 +1546,7 @@ BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItem
 
 	CHECKF( pInventorySlot );
 
-	if (pInventorySlot -> ubNumberOfObjects == 0)
+	if (pInventorySlot->ubNumberOfObjects == 0)
 	{
 		return( FALSE );
 	}
@@ -1564,7 +1564,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
 
-	ubSlotLimit = Item[pItemPtr -> usItem].ubPerPocket;
+	ubSlotLimit = Item[pItemPtr->usItem].ubPerPocket;
 
 	if (pInventorySlot->ubNumberOfObjects == 0)
 	{
@@ -1620,9 +1620,9 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			else
 			{
 				// stacking
-				if( ubNumberToDrop > ubSlotLimit - pInventorySlot -> ubNumberOfObjects )
+				if( ubNumberToDrop > ubSlotLimit - pInventorySlot->ubNumberOfObjects )
 				{
-					ubNumberToDrop = ubSlotLimit - pInventorySlot -> ubNumberOfObjects;
+					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
 				}
 
 				StackObjs( pItemPtr, pInventorySlot, ubNumberToDrop );

@@ -181,7 +181,7 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 	{
 		if ( cnt != ubKillerSoldierID )
 		{
-			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
 					if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
 					{
@@ -238,7 +238,7 @@ void DoneFadeOutKilledQueen( void )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{       
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 		{
 			gfTacticalTraversal = TRUE;
 			SetGroupSectorValue( 3, MAP_ROW_P, 0, pSoldier->ubGroupID );
@@ -268,7 +268,7 @@ void DoneFadeOutKilledQueen( void )
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
-			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
+			if ( !pTeamSoldier->aiData.bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
 				ProcessQueenCmdImplicationsOfDeath( pTeamSoldier );
 			}
@@ -345,7 +345,7 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{       
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
+		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
 		{
 			TacticalCharacterDialogue( pSoldier, QUOTE_END_GAME_COMMENT );	
 		}
@@ -429,18 +429,18 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; cnt++,pTeamSoldier++)
 	{       
 		// Are we active and ALIVE and in sector.....
-		if ( pTeamSoldier->bActive && pTeamSoldier->bLife > 0 )
+		if ( pTeamSoldier->bActive && pTeamSoldier->stats.bLife > 0 )
 		{
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
 			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
-			//if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
+			//if ( !pTeamSoldier->aiData.bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
 //	    		gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Killing off a queen ally.\n");
-				EVENT_SoldierGotHit( pTeamSoldier, 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
+				pTeamSoldier->EVENT_SoldierGotHit( 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
 			}
 		}
 	}
@@ -473,7 +473,7 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 	{
 		if ( cnt != ubKillerSoldierID )
 		{
-			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
 					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
 					{

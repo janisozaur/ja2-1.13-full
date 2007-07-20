@@ -146,7 +146,7 @@ void BeginContractRenewalSequence( )
 
 			if ( pSoldier )
 			{
-				if( ( pSoldier->bActive == FALSE ) || ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+				if( ( pSoldier->bActive == FALSE ) || ( pSoldier->stats.bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 				{
 					// no
 					continue;
@@ -476,7 +476,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 		return( FALSE );
 
 	// does the merc have another contract already lined up?
-	if( pSoldier->fSignedAnotherContract )
+	if( pSoldier->flags.fSignedAnotherContract )
 	{
 		// NOTE: Having a buddy around will NOT stop a merc from leaving on another contract (IC's call)
 
@@ -596,7 +596,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 	if (!fUnhappy)
 	{
 		// check if death rate is too high
-		if( MercThinksDeathRateTooHigh( pSoldier-> ubProfile ) )
+		if( MercThinksDeathRateTooHigh( pSoldier->ubProfile ) )
 		{
 			fUnhappy = TRUE;
 			usReasonQuote = QUOTE_DEATH_RATE_RENEWAL;
@@ -717,11 +717,11 @@ void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier )
 
 void HandleSoldierLeavingForAnotherContract( SOLDIERTYPE *pSoldier )
 {
-	if (pSoldier->fSignedAnotherContract)
+	if (pSoldier->flags.fSignedAnotherContract)
 	{
 		// merc goes to work elsewhere
 		gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_WORKING_ELSEWHERE;
-		gMercProfiles[ pSoldier->ubProfile ].uiDayBecomesAvailable += 1 + Random(6 + (pSoldier->bExpLevel / 2) );		// 1-(6 to 11) days
+		gMercProfiles[ pSoldier->ubProfile ].uiDayBecomesAvailable += 1 + Random(6 + (pSoldier->stats.bExpLevel / 2) );		// 1-(6 to 11) days
 	}
 }
 
@@ -740,7 +740,7 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	
 	// type of contract the merc had
-	bTypeOfCurrentContract = pSoldier -> bTypeOfLastContract;
+	bTypeOfCurrentContract = pSoldier->bTypeOfLastContract;
 	iLeftTimeOnContract = pSoldier->iEndofContractTime - GetWorldTotalMin();
 	
 	// grab tolerance
@@ -790,7 +790,7 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
   }
 
 	// if he doesn't already have another contract
-	if (!pSoldier->fSignedAnotherContract)
+	if (!pSoldier->flags.fSignedAnotherContract)
 	{
 		// chance depends on how much time he has left in his contract, and his experience level (determines demand)
 		uiFullDaysRemaining = (pSoldier->iEndofContractTime - GetWorldTotalMin()) / (24 * 60);
@@ -820,12 +820,12 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 		}
 
 		// multiply by experience level
-		iChance *= pSoldier->bExpLevel;
+		iChance *= pSoldier->stats.bExpLevel;
 
 		if( (INT32) Random( 100 ) < iChance )
 		{
 			// B'bye!
-			pSoldier->fSignedAnotherContract = TRUE;
+			pSoldier->flags.fSignedAnotherContract = TRUE;
 		}
 	}
 }
@@ -874,7 +874,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 	ubHistoryCode = pSoldier->ubLeaveHistoryCode;
 
 	//if the soldier is DEAD
-	if( pSoldier->bLife <= 0 )
+	if( pSoldier->stats.bLife <= 0 )
 	{
 		AddCharacterToDeadList( pSoldier );
 	}
@@ -937,7 +937,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 
 	//add an entry in the history page for the firing/quiting of the merc
 	// ATE: Don't do this if they are already dead!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
 	{
 		AddHistoryToPlayersLog( ubHistoryCode, pSoldier->ubProfile, GetWorldTotalMin(), pSoldier->sSectorX, pSoldier->sSectorY );
 	}
@@ -996,7 +996,7 @@ void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 		return;
 
 	//if the merc is at full health, refund the full medical deposit
-	if( pSoldier->bLife == pSoldier->bLifeMax )
+	if( pSoldier->stats.bLife == pSoldier->stats.bLifeMax )
 	{
 		//add an entry in the finacial page for the FULL refund of the medical deposit
 		// use the medical deposit in pSoldier, not in profile, which goes up with leveling
@@ -1006,7 +1006,7 @@ void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 		AddEmailWithSpecialData( AIM_MEDICAL_DEPOSIT_REFUND, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH, AIM_SITE, GetWorldTotalMin(), pSoldier->usMedicalDeposit, pSoldier->ubProfile );
 	}
 	//else if the merc is a dead, refund NOTHING!!
-	else if( pSoldier->bLife <= 0 )
+	else if( pSoldier->stats.bLife <= 0 )
 	{
 		//add an entry in the finacial page for NO refund of the medical deposit
 		//AddTransactionToPlayersBook( NO_MEDICAL_REFUND, pSoldier->ubProfile, GetWorldTotalMin(), 0 );
@@ -1019,7 +1019,7 @@ void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 	else
 	{
 		// use the medical deposit in pSoldier, not in profile, which goes up with leveling
-		iRefundAmount = (INT32) ( ( pSoldier->bLife / ( FLOAT ) pSoldier->bLifeMax ) * pSoldier->usMedicalDeposit + 0.5 );
+		iRefundAmount = (INT32) ( ( pSoldier->stats.bLife / ( FLOAT ) pSoldier->stats.bLifeMax ) * pSoldier->usMedicalDeposit + 0.5 );
 
 		//add an entry in the finacial page for a PARTIAL refund of the medical deposit
 		AddTransactionToPlayersBook( PARTIAL_MEDICAL_REFUND, pSoldier->ubProfile, GetWorldTotalMin(), iRefundAmount );
@@ -1052,12 +1052,12 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 
 	pLeaveSoldier = pSoldier;
 
-	if( pSoldier->fSignedAnotherContract == TRUE )
+	if( pSoldier->flags.fSignedAnotherContract == TRUE )
 	{
 		fAddRehireButton = FALSE;
 	}
 
-	if( pSoldier->fSignedAnotherContract == TRUE )
+	if( pSoldier->flags.fSignedAnotherContract == TRUE )
 	{
 		fAddRehireButton = FALSE;
 	}
@@ -1170,7 +1170,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		}
 	}
 	
-	if( pSoldier->fSignedAnotherContract == TRUE )
+	if( pSoldier->flags.fSignedAnotherContract == TRUE )
 	{
 		//fCurrentMercFired = FALSE;
 	}
@@ -1337,7 +1337,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 		pSoldier = &Menptr[ iCounter ];
 		
 		// valid soldier?
-		if( ( pSoldier->bActive == FALSE ) || ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+		if( ( pSoldier->bActive == FALSE ) || ( pSoldier->stats.bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 		{
 			// no
 			continue;

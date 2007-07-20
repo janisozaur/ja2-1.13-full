@@ -5287,7 +5287,7 @@ BOOLEAN DrawDeskTopBackground( void )
 
 	 // set clipping region
 	 // WANNE (if i change this values to SCREEN_WIDTH, ... than an exception is thrown in the vobject_blitters.cpp)
-	 // -> no changes to clip structure
+	 //->no changes to clip structure
 	 clip.iLeft = 0;					
 	 clip.iRight = 506;			
 	 clip.iTop = 0;	
@@ -5383,7 +5383,7 @@ void PrintNumberOnTeam( void )
 	{
 		pTeamSoldier = MercPtrs[ cnt ];
 
-		if( ( pTeamSoldier->bActive)&&( !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+		if( ( pTeamSoldier->bActive)&&( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
 		{
 			  iCounter++;
 		}

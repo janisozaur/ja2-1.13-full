@@ -699,10 +699,10 @@ void RenderInfoInSector()
 		pSoldier = MercPtrs[ i ];
 		if( pSoldier->bActive && pSoldier->sSectorX == ubSectorX && pSoldier->sSectorY == ubSectorY && pSoldier->bSectorZ == gbViewLevel )
 		{
-			if( pSoldier->bLife )
+			if( pSoldier->stats.bLife )
 			{
 				ubMercs++;
-				if( pSoldier->bLife >= OKLIFE )
+				if( pSoldier->stats.bLife >= OKLIFE )
 				{
 					if( pSoldier->bBreath < OKBREATH )
 						ubCollapsed++;

@@ -204,16 +204,16 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
  }
  
  // set current ot head of gap list for this sound
- pCurrent = pGapList -> pHead;
+ pCurrent = pGapList->pHead;
 
  // check to see if we have fallen behind
- if( ( time > pCurrent-> uiEnd ) )
+ if( ( time > pCurrent->uiEnd ) )
  {
 	 // fallen behind
 	 // catchup
-	 while( time > pCurrent -> uiEnd )
+	 while( time > pCurrent->uiEnd )
 	 {
-		 pCurrent = pCurrent -> pNext;
+		 pCurrent = pCurrent->pNext;
 		 if( ! pCurrent )
 		 {		 
        pGapList->audio_gap_active=(FALSE);
@@ -226,7 +226,7 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
 
 
  // check to see if time is within the next AUDIO_GAPs start time
- if ( ( time > pCurrent ->uiStart ) && ( time < pCurrent->uiEnd ) )
+ if ( ( time > pCurrent->uiStart ) && ( time < pCurrent->uiEnd ) )
 			{
 	     
 	     if ((time >pCurrent->uiStart)&&(time < pCurrent->uiEnd))

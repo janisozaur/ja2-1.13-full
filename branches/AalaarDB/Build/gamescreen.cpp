@@ -255,7 +255,7 @@ void EnterTacticalScreen( )
 		}
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: who is selected? %d", gusSelectedSoldier));
 		// ATE: If the current guy is sleeping, change....
-		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->fMercAsleep )
+		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->flags.fMercAsleep )
 		{
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: SelectNextAvailSoldier, merc asleep"));
 			SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );			
@@ -553,9 +553,9 @@ UINT32  MainGameScreenHandle(void)
 			{
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{
-					AdjustNoAPToFinishMove( MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ], FALSE );
+					MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->AdjustNoAPToFinishMove( FALSE );
 				}
-				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->fPauseAllAnimation = FALSE;
+				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->flags.fPauseAllAnimation = FALSE;
 
 				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
 			}
@@ -862,7 +862,7 @@ UINT32  MainGameScreenHandle(void)
 			if ( gusSelectedSoldier != NOBODY )
 			{
 				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-					DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+					MercPtrs[ gusSelectedSoldier ]->DoMercBattleSound( BATTLE_SOUND_ATTN1 );
 			}
 		}
 

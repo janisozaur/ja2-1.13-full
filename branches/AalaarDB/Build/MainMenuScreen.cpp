@@ -32,6 +32,7 @@
 	#include "Multi Language Graphic Utils.h"
 	#include "Encrypted File.h"
 	#include "ja2 splash.h"
+	#include "GameVersion.h"
 #endif
 
 #define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"
@@ -619,7 +620,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 					if( pSoldier->bActive != TRUE )
 					{
 						//something is very wrong
-						pSoldier->bActive = pSoldier->bLife;
+						pSoldier->bActive = pSoldier->stats.bLife;
 					}
 				}
 			#endif

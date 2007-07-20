@@ -2372,7 +2372,7 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 
 	ubTotalSoldiers = ubNumGreen + ubNumReg + ubNumElites;
 
-	// WANNE: If we have no militia soldiers -> exit!
+	// WANNE: If we have no militia soldiers->exit!
 	if (ubTotalSoldiers == 0)
 		return;
 
@@ -2409,15 +2409,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//       they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 			
 			//Setup the position
@@ -2449,15 +2449,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//       they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 
 			//Setup the position
@@ -2489,15 +2489,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//       they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 
 //			if ( GetTimeOfDayAmbientLightLevel() < NORMAL_LIGHTLEVEL_DAY + 2 )

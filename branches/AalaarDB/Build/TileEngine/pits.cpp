@@ -228,9 +228,9 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 				// Set data to look for exit grid....
 				pSoldier = MercPtrs[ ubID ];
 
-				pSoldier->uiPendingActionData4 = sNewGridNo;
+				pSoldier->aiData.uiPendingActionData4 = sNewGridNo;
 
-				EVENT_InitNewSoldierAnim( pSoldier, FALL_INTO_PIT, 0 , FALSE );
+				pSoldier->EVENT_InitNewSoldierAnim( FALL_INTO_PIT, 0 , FALSE );
 			}			
 		}
 	}
@@ -243,7 +243,7 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 	INT16 sPitGridNo;
 	// OK, get exit grid...
 	
-	sPitGridNo = (INT16)pSoldier->uiPendingActionData4;
+	sPitGridNo = (INT16)pSoldier->aiData.uiPendingActionData4;
 
 	GetExitGrid( sPitGridNo, &ExitGrid );
 
@@ -260,6 +260,6 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 
 	HandleSoldierLeavingSectorByThemSelf( pSoldier );
 
-	SetSoldierHeight( pSoldier, 0 );
+	pSoldier->SetSoldierHeight( 0 );
 
 }	

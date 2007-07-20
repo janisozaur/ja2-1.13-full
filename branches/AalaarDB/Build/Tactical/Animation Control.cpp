@@ -3325,7 +3325,7 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	usAnimSurface = LoadSoldierAnimationSurface( pSoldier, usAnimState );
 
 	// Add structure info!
-	if ( pSoldier->pLevelNode != NULL && !( pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
+	if ( pSoldier->pLevelNode != NULL && !( pSoldier->flags.uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
 	{
 		AddMercStructureInfoFromAnimSurface( pSoldier->sGridNo, pSoldier, usAnimSurface, usAnimState );
 	}
@@ -3480,7 +3480,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 	// ADJUST ANIMATION SURFACE BASED ON TERRAIN
 
 	// CHECK FOR WATER
-	if ( MercInWater( pSoldier ) )
+	if ( pSoldier->MercInWater( ) )
 	{
 
 		// ADJUST BASED ON ITEM IN HAND....
@@ -3575,7 +3575,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		if ( fAdjustedForItem )
 		{
 			// If life below thresthold for being injured 
-			if ( pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
+			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
 				for ( cnt = 0; cnt < NUM_INJURED_SUBS; cnt++ )
@@ -3590,7 +3590,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		else
 		{
 			// If life below thresthold for being injured 
-			if ( pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
+			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
 				for ( cnt = 0; cnt < NUM_INJURED_SUBS; cnt++ )

@@ -549,7 +549,7 @@ void BtnOptionsFromMapScreenCallback( GUI_BUTTON *btn, INT32 reason )
 		}
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -621,7 +621,7 @@ void BtnTimeCompressMoreMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			return;
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -656,7 +656,7 @@ void BtnTimeCompressLessMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			return;
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -696,7 +696,7 @@ void BtnMessageDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -712,7 +712,7 @@ void BtnMessageDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
       btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// redraw region
-			if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+			if( btn->uiFlags & MSYS_HAS_BACKRECT )
 			{
 				fMapScreenBottomDirty = TRUE;
 			}
@@ -741,7 +741,7 @@ void BtnMessageDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -757,7 +757,7 @@ void BtnMessageDownMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
       btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// redraw region
-			if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+			if( btn->uiFlags & MSYS_HAS_BACKRECT )
 			{
 				fMapScreenBottomDirty = TRUE;
 			}
@@ -811,7 +811,7 @@ void BtnMessageUpMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 			btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// redraw region
-			if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+			if( btn->uiFlags & MSYS_HAS_BACKRECT )
 			{
 				fMapScreenBottomDirty = TRUE;
 			}
@@ -840,7 +840,7 @@ void BtnMessageUpMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 
 		// redraw region
-		if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+		if( btn->uiFlags & MSYS_HAS_BACKRECT )
 		{
 			fMapScreenBottomDirty = TRUE;
 		}
@@ -856,7 +856,7 @@ void BtnMessageUpMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
       btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// redraw region
-			if( btn ->uiFlags & MSYS_HAS_BACKRECT )
+			if( btn->uiFlags & MSYS_HAS_BACKRECT )
 			{
 				fMapScreenBottomDirty = TRUE;
 			}
@@ -1604,8 +1604,8 @@ BOOLEAN AnyUsableRealMercenariesOnTeam( void )
 	{
 		pSoldier = &Menptr[ iCounter ];
 
-		if( ( pSoldier->bActive ) && ( pSoldier->bLife > 0 ) &&
-				!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) &&
+		if( ( pSoldier->bActive ) && ( pSoldier->stats.bLife > 0 ) &&
+				!( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) &&
 				( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
 				( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&
 				( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__EPC ) )

@@ -198,7 +198,7 @@ void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 			// Are we active and in sector.....
 			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 			{
-        if ( pTeamSoldier->bLife != 0 )
+        if ( pTeamSoldier->stats.bLife != 0 )
 				{
 					EnemyCapturesPlayerSoldier( pTeamSoldier );
 
@@ -241,7 +241,7 @@ void ShutDownQuoteBox( BOOLEAN fForce )
 		gCivQuoteData.bActive = FALSE;
 
 		// do we need to do anything at the end of the civ quote?
-		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
+		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->aiData.bAction == AI_ACTION_OFFER_SURRENDER )
 		{
 			DoMessageBox( MSG_BOX_BASIC_STYLE, Message[ STR_SURRENDER ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SurrenderMessageBoxCallBack, NULL );
 		}
@@ -478,17 +478,17 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 		// Determine what type of quote to say...
 		// Are are we going to attack?
 
-		if ( pCiv->bAction == AI_ACTION_TOSS_PROJECTILE || pCiv->bAction == AI_ACTION_FIRE_GUN ||
-							pCiv->bAction == AI_ACTION_FIRE_GUN || pCiv->bAction == AI_ACTION_KNIFE_MOVE )
+		if ( pCiv->aiData.bAction == AI_ACTION_TOSS_PROJECTILE || pCiv->aiData.bAction == AI_ACTION_FIRE_GUN ||
+							pCiv->aiData.bAction == AI_ACTION_FIRE_GUN || pCiv->aiData.bAction == AI_ACTION_KNIFE_MOVE )
 		{
 			return( CIV_QUOTE_ENEMY_THREAT );
 		}
-		else if ( pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
+		else if ( pCiv->aiData.bAction == AI_ACTION_OFFER_SURRENDER )
 		{
 			return( CIV_QUOTE_ENEMY_OFFER_SURRENDER );
 		}
 		// Hurt?
-		else if ( pCiv->bLife < 30 )
+		else if ( pCiv->stats.bLife < 30 )
 		{
 			return( CIV_QUOTE_ENEMY_HURT );
 		}
@@ -520,7 +520,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	{
 		// Are they friendly?
 		//if ( gTacticalStatus.fCivGroupHostile[ HICKS_CIV_GROUP ] < CIV_GROUP_WILL_BECOME_HOSTILE )
-		if ( pCiv->bNeutral )
+		if ( pCiv->aiData.bNeutral )
 		{
 			return( CIV_QUOTE_HICKS_FRIENDLY );
 		}
@@ -535,7 +535,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	{
 		// Are they friendly?
 		//if ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] < CIV_GROUP_WILL_BECOME_HOSTILE )
-		if ( pCiv->bNeutral )
+		if ( pCiv->aiData.bNeutral )
 		{
 			return( CIV_QUOTE_GOONS_FRIENDLY );
 		}
@@ -546,7 +546,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	}
 
 	// ATE: Cowering people take precedence....
-	if ( ( pCiv->uiStatusFlags & SOLDIER_COWERING ) || ( pCiv->bTeam == CIV_TEAM && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
+	if ( ( pCiv->flags.uiStatusFlags & SOLDIER_COWERING ) || ( pCiv->bTeam == CIV_TEAM && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 	{
 		if ( ubCivType == CIV_TYPE_ADULT )
 		{

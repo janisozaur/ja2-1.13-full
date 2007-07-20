@@ -14,7 +14,7 @@ extern BOOLEAN gfTurnBasedAI;
 #define MAX_TOSS_SEARCH_DIST    1       // must throw within this of opponent
 #define NPC_TOSS_SAFETY_MARGIN  4       // all friends must be this far away
 
-#define ACTING_ON_SCHEDULE( p ) ( (p)->fAIFlags & AI_CHECK_SCHEDULE )
+#define ACTING_ON_SCHEDULE( p ) ( (p)->aiData.fAIFlags & AI_CHECK_SCHEDULE )
 
 // the AI should try to have this many APs before climbing a roof, if possible
 #define AI_AP_CLIMBROOF 15

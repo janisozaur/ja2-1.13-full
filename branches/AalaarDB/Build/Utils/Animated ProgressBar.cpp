@@ -33,7 +33,7 @@ void CreateLoadingScreenProgressBar()
 	gusLeftmostShaded = 162;
 	gfUseLoadScreenProgressBar = TRUE;
 
-	// Special case -> show small image centered
+	// Special case->show small image centered
 	if (bShowSmallImage == TRUE)
 	{
 		if (iResolution > 0)

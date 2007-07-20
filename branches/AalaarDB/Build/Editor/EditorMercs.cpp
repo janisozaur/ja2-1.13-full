@@ -382,7 +382,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->HeadPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->HeadPal, pSoldier->HeadPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 				case 1:
 					ubType = EDIT_COLOR_HEAD;
@@ -394,7 +394,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->HeadPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->HeadPal, pSoldier->HeadPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 
 				case 2:
@@ -407,7 +407,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->SkinPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->SkinPal, pSoldier->SkinPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 				case 3:
 					ubType = EDIT_COLOR_SKIN;
@@ -419,7 +419,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->SkinPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->SkinPal, pSoldier->SkinPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 
 				case 4:
@@ -432,7 +432,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->VestPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->VestPal, pSoldier->VestPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 				case 5:
 					ubType = EDIT_COLOR_VEST;
@@ -444,7 +444,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->VestPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->VestPal, pSoldier->VestPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 
 				case 6:
@@ -457,7 +457,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->PantsPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->PantsPal, pSoldier->PantsPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 				case 7:
 					ubType = EDIT_COLOR_PANTS;
@@ -469,7 +469,7 @@ void ProcessMercEditing()
 
 					SET_PALETTEREP_ID( pSoldier->PantsPal, gpPalRep[ ubPaletteRep ].ID );
 					sprintf( gpSelected->pDetailedPlacement->PantsPal, pSoldier->PantsPal );
-					CreateSoldierPalettes( pSoldier );
+					pSoldier->CreateSoldierPalettes( );
 					break;
 			}
 			iEditMercMode = EDIT_MERC_NONE;
@@ -668,22 +668,22 @@ void AddMercWaypoint( UINT32 iMapIndex )
 	if ( gsSelectedMercID == -1 || (gsSelectedMercID <= (INT32)gTacticalStatus.Team[ OUR_TEAM ].bLastID) || gsSelectedMercID >= MAXMERCS )
 		return;
 	
-	if ( iActionParam > gpSelected->pSoldier->bPatrolCnt )
+	if ( iActionParam > gpSelected->pSoldier->aiData.bPatrolCnt )
 	{
 		// Fill up missing waypoints with same value as new one
-		for(iNum = gpSelected->pSoldier->bPatrolCnt + 1; iNum <= iActionParam; iNum++)
+		for(iNum = gpSelected->pSoldier->aiData.bPatrolCnt + 1; iNum <= iActionParam; iNum++)
 		{
 			gpSelected->pBasicPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
 			if( gpSelected->pDetailedPlacement )
 				gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = (INT16)iMapIndex;
-			gpSelected->pSoldier->usPatrolGrid[iNum] = (UINT16)iMapIndex;
+			gpSelected->pSoldier->aiData.usPatrolGrid[iNum] = (UINT16)iMapIndex;
 		}
 		
 		gpSelected->pBasicPlacement->bPatrolCnt = (INT8)iActionParam;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->bPatrolCnt = (INT8)iActionParam;
-		gpSelected->pSoldier->bPatrolCnt = (INT8) iActionParam;
-		gpSelected->pSoldier->bNextPatrolPnt = 1;	
+		gpSelected->pSoldier->aiData.bPatrolCnt = (INT8) iActionParam;
+		gpSelected->pSoldier->aiData.bNextPatrolPnt = 1;	
 	}
 	else
 	{
@@ -691,7 +691,7 @@ void AddMercWaypoint( UINT32 iMapIndex )
 		gpSelected->pBasicPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sPatrolGrid[iActionParam] = (INT16)iMapIndex;
-		gpSelected->pSoldier->usPatrolGrid[iActionParam] = (UINT16)iMapIndex;
+		gpSelected->pSoldier->aiData.usPatrolGrid[iActionParam] = (UINT16)iMapIndex;
 	}
 	gfRenderWorld = TRUE;
 }
@@ -707,21 +707,21 @@ void EraseMercWaypoint()
 		return;
 
 	// Fill up missing areas
-	if ( iActionParam > gpSelected->pSoldier->bPatrolCnt )
+	if ( iActionParam > gpSelected->pSoldier->aiData.bPatrolCnt )
 		return;
 
-	for(iNum = iActionParam; iNum < gpSelected->pSoldier->bPatrolCnt; iNum++)
+	for(iNum = iActionParam; iNum < gpSelected->pSoldier->aiData.bPatrolCnt; iNum++)
 	{
 		gpSelected->pBasicPlacement->sPatrolGrid[iNum] = gpSelected->pBasicPlacement->sPatrolGrid[iNum+1];
 		if( gpSelected->pDetailedPlacement )
 			gpSelected->pDetailedPlacement->sPatrolGrid[iNum] = gpSelected->pDetailedPlacement->sPatrolGrid[iNum+1];
-		gpSelected->pSoldier->usPatrolGrid[iNum] = gpSelected->pSoldier->usPatrolGrid[iNum+1];
+		gpSelected->pSoldier->aiData.usPatrolGrid[iNum] = gpSelected->pSoldier->aiData.usPatrolGrid[iNum+1];
 	}
 
 	gpSelected->pBasicPlacement->bPatrolCnt--;
 	if( gpSelected->pDetailedPlacement )
 		gpSelected->pDetailedPlacement->bPatrolCnt--;
-	gpSelected->pSoldier->bPatrolCnt--;
+	gpSelected->pSoldier->aiData.bPatrolCnt--;
 	gfRenderWorld = TRUE;
 }
 
@@ -737,28 +737,28 @@ void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier )
 	if ( pSoldier == NULL )
 		return;
 
-	pSoldier->bLifeMax = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bLife	= pSoldier->bLifeMax;
+	pSoldier->stats.bLifeMax = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bLife	= pSoldier->stats.bLifeMax;
 
 	pSoldier->bBleeding	= 0;
 	pSoldier->bBreath	= 100;
 
-	pSoldier->bMarksmanship	= (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bMedical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bMechanical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bExplosive = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bAgility = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bDexterity = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bMarksmanship	= (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bMedical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bMechanical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bExplosive = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bAgility = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bDexterity = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
 
-	pSoldier->bStrength = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bLeadership = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bWisdom = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bScientific = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bStrength = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bLeadership = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bWisdom = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
+	pSoldier->stats.bScientific = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
 
-	pSoldier->bExpLevel = (UINT8)sBaseExpLvl[sCurBaseDiff];
+	pSoldier->stats.bExpLevel = (UINT8)sBaseExpLvl[sCurBaseDiff];
 	pSoldier->bGunType = (INT8)Random(BASE_GUNTYPE_DEVIATION);
 
-	pSoldier->bActionPoints = CalcActionPoints( pSoldier );
+	pSoldier->bActionPoints = pSoldier->CalcActionPoints( );
 }
 
 
@@ -820,30 +820,30 @@ void DisplayEditMercWindow( void )
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 51, iXPos + 128 + 104, iYPos + 51 + 19, usFillColorDark );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 104, iYPos + 52 + 19, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 103, iYPos + 52 + 18, usFillColorTextBk );
-	iXOff = (105 - StringPixLength( EditMercOrders[pSoldier->bOrders], FONT12POINT1 )) / 2;
-	gprintf( iXPos + 130 + iXOff, iYPos + 55, L"%s", EditMercOrders[pSoldier->bOrders] );
+	iXOff = (105 - StringPixLength( EditMercOrders[pSoldier->aiData.bOrders], FONT12POINT1 )) / 2;
+	gprintf( iXPos + 130 + iXOff, iYPos + 55, L"%s", EditMercOrders[pSoldier->aiData.bOrders] );
 
 	// Combat window
 	gprintf( iXPos + 128, iYPos + 73, L"Combat Attitude:" );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 86, iXPos + 128 + 104, iYPos + 86 + 19, usFillColorDark );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 104, iYPos + 87 + 19, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 103, iYPos + 87 + 18, usFillColorTextBk );
-	iXOff = (105 - StringPixLength( EditMercAttitudes[pSoldier->bAttitude], FONT12POINT1 )) / 2;
-	gprintf( iXPos + 130 + iXOff, iYPos + 90, L"%s", EditMercAttitudes[pSoldier->bAttitude] );
+	iXOff = (105 - StringPixLength( EditMercAttitudes[pSoldier->aiData.bAttitude], FONT12POINT1 )) / 2;
+	gprintf( iXPos + 130 + iXOff, iYPos + 90, L"%s", EditMercAttitudes[pSoldier->aiData.bAttitude] );
 
 	// Get stats
-	iEditStat[0] = pSoldier->bLifeMax;			  // 12 13
-	iEditStat[1] = pSoldier->bLife;						// 14 15
-	iEditStat[2] = pSoldier->bStrength;       // 16 17
-	iEditStat[3] = pSoldier->bAgility;        // 18 19
-	iEditStat[4] = pSoldier->bDexterity;      // 20 21
-	iEditStat[5] = pSoldier->bLeadership;     // 22 23
-	iEditStat[6] = pSoldier->bWisdom;         // 24 25
-	iEditStat[7] = pSoldier->bMarksmanship;   // 26 27
-	iEditStat[8] = pSoldier->bExplosive;      // 28 29
-	iEditStat[9] = pSoldier->bMedical;        // 30 31
-	iEditStat[10] = pSoldier->bScientific;    // 32 33
-	iEditStat[11] = pSoldier->bExpLevel;      // 34 35
+	iEditStat[0] = pSoldier->stats.bLifeMax;			  // 12 13
+	iEditStat[1] = pSoldier->stats.bLife;						// 14 15
+	iEditStat[2] = pSoldier->stats.bStrength;       // 16 17
+	iEditStat[3] = pSoldier->stats.bAgility;        // 18 19
+	iEditStat[4] = pSoldier->stats.bDexterity;      // 20 21
+	iEditStat[5] = pSoldier->stats.bLeadership;     // 22 23
+	iEditStat[6] = pSoldier->stats.bWisdom;         // 24 25
+	iEditStat[7] = pSoldier->stats.bMarksmanship;   // 26 27
+	iEditStat[8] = pSoldier->stats.bExplosive;      // 28 29
+	iEditStat[9] = pSoldier->stats.bMedical;        // 30 31
+	iEditStat[10] = pSoldier->stats.bScientific;    // 32 33
+	iEditStat[11] = pSoldier->stats.bExpLevel;      // 34 35
 
 	// Stat value windows
 	for ( x = 0; x < 12; x++ )
@@ -1306,10 +1306,10 @@ void DisplayWayPoints(void)
 		return;
 
 	// point 0 is not used!
-	for ( bPoint = 1; bPoint <= pSoldier->bPatrolCnt; bPoint++ )
+	for ( bPoint = 1; bPoint <= pSoldier->aiData.bPatrolCnt; bPoint++ )
 	{
 		// Get the next point
-		sGridNo = (INT16)pSoldier->usPatrolGrid[bPoint];
+		sGridNo = (INT16)pSoldier->aiData.usPatrolGrid[bPoint];
 
 		// Can we see it?
 		if ( !GridNoOnVisibleWorldTile( sGridNo ) )
@@ -1339,7 +1339,7 @@ void DisplayWayPoints(void)
 		{
 			// Shown it on screen!
 			SetFont(TINYFONT1);
-			if( pSoldier->bLevel == 1 )
+			if( pSoldier->pathing.bLevel == 1 )
 			{
 				SetFontBackground( FONT_LTBLUE );
 				sScreenY -= 68;
@@ -1436,7 +1436,7 @@ void CreateEditMercWindow( void )
 }
 void SetMercOrders( INT8 bOrders )
 {
-	gpSelected->pSoldier->bOrders = bOrders;
+	gpSelected->pSoldier->aiData.bOrders = bOrders;
 	gpSelected->pBasicPlacement->bOrders = bOrders;
 	UnclickEditorButtons( FIRST_MERCS_ORDERS_BUTTON, LAST_MERCS_ORDERS_BUTTON );
 	ClickEditorButton( FIRST_MERCS_ORDERS_BUTTON + bOrders );
@@ -1445,7 +1445,7 @@ void SetMercOrders( INT8 bOrders )
 
 void SetMercAttitude( INT8 bAttitude )
 {
-	gpSelected->pSoldier->bAttitude = bAttitude;
+	gpSelected->pSoldier->aiData.bAttitude = bAttitude;
 	gpSelected->pBasicPlacement->bAttitude = bAttitude;
 	UnclickEditorButtons( FIRST_MERCS_ATTITUDE_BUTTON, LAST_MERCS_ATTITUDE_BUTTON );
 	ClickEditorButton( FIRST_MERCS_ATTITUDE_BUTTON + bAttitude );
@@ -1681,8 +1681,8 @@ void IndicateSelectedMerc( INT16 sID )
 	gfRenderMercInfo = TRUE;
 	//These calls will set the proper button states, even though it redundantly
 	//assigns the soldier with the same orders/attitude.
-	SetMercOrders( gpSelected->pSoldier->bOrders );
-	SetMercAttitude( gpSelected->pSoldier->bAttitude );
+	SetMercOrders( gpSelected->pSoldier->aiData.bOrders );
+	SetMercAttitude( gpSelected->pSoldier->aiData.bAttitude );
 	SetMercDirection( gpSelected->pSoldier->bDirection );
 	if( gpSelected->pBasicPlacement->fPriorityExistance )
 		ClickEditorButton( MERCS_PRIORITYEXISTANCE_CHECKBOX );
@@ -1740,29 +1740,29 @@ void SetupTextInputForMercAttributes()
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExpLevel, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bExpLevel, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLife, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLife, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLifeMax, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLifeMax, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMarksmanship, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMarksmanship, 100 );
 	AddTextInputField( iScreenWidthOffset + 200, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bStrength, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bStrength, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bAgility, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bAgility, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bDexterity, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bDexterity, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bWisdom, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bWisdom, 100 );
 	AddTextInputField( iScreenWidthOffset + 300, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLeadership, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bLeadership, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExplosive, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bExplosive, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMedical, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMedical, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMechanical, 100 );
+	CalcStringForValue( str, gpSelected->pDetailedPlacement->stats.bMechanical, 100 );
 	AddTextInputField( iScreenWidthOffset + 400, 2 * iScreenHeightOffset + 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMorale, 100 );
 	AddTextInputField( iScreenWidthOffset + 500, 2 * iScreenHeightOffset + 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
@@ -1795,32 +1795,32 @@ void ExtractAndUpdateMercAttributes()
 	//-1 values in the detailed placement work nicely, because that signifies that specific
 	//field isn't static.  Any other value becomes static, and static values override any
 	//generated values.
-	gpSelected->pDetailedPlacement->bExpLevel			= (INT8)min( GetNumericStrictValueFromField( 0 ), 100 );
-	gpSelected->pDetailedPlacement->bLife					= (INT8)min( GetNumericStrictValueFromField( 1 ), 100 );
-	gpSelected->pDetailedPlacement->bLifeMax			= (INT8)min( GetNumericStrictValueFromField( 2 ), 100 );
-	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)min( GetNumericStrictValueFromField( 3 ), 100 );
-	gpSelected->pDetailedPlacement->bStrength			= (INT8)min( GetNumericStrictValueFromField( 4 ), 100 );
-	gpSelected->pDetailedPlacement->bAgility			= (INT8)min( GetNumericStrictValueFromField( 5 ), 100 );
-	gpSelected->pDetailedPlacement->bDexterity		= (INT8)min( GetNumericStrictValueFromField( 6 ), 100 );
-	gpSelected->pDetailedPlacement->bWisdom				= (INT8)min( GetNumericStrictValueFromField( 7 ), 100 );
-	gpSelected->pDetailedPlacement->bLeadership		= (INT8)min( GetNumericStrictValueFromField( 8 ), 100 );
-	gpSelected->pDetailedPlacement->bExplosive		= (INT8)min( GetNumericStrictValueFromField( 9 ), 100 );
-	gpSelected->pDetailedPlacement->bMedical			= (INT8)min( GetNumericStrictValueFromField( 10 ), 100 );
-	gpSelected->pDetailedPlacement->bMechanical		= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bExpLevel			= (INT8)min( GetNumericStrictValueFromField( 0 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bLife					= (INT8)min( GetNumericStrictValueFromField( 1 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bLifeMax			= (INT8)min( GetNumericStrictValueFromField( 2 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bMarksmanship	= (INT8)min( GetNumericStrictValueFromField( 3 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bStrength			= (INT8)min( GetNumericStrictValueFromField( 4 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bAgility			= (INT8)min( GetNumericStrictValueFromField( 5 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bDexterity		= (INT8)min( GetNumericStrictValueFromField( 6 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bWisdom				= (INT8)min( GetNumericStrictValueFromField( 7 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bLeadership		= (INT8)min( GetNumericStrictValueFromField( 8 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bExplosive		= (INT8)min( GetNumericStrictValueFromField( 9 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bMedical			= (INT8)min( GetNumericStrictValueFromField( 10 ), 100 );
+	gpSelected->pDetailedPlacement->stats.bMechanical		= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
 	gpSelected->pDetailedPlacement->bMorale				= (INT8)min( GetNumericStrictValueFromField( 11 ), 100 );
 
 	//make sure that experience level ranges between 1 and 9
-	if( gpSelected->pDetailedPlacement->bExpLevel != -1 )
-		gpSelected->pDetailedPlacement->bExpLevel = max( min( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
+	if( gpSelected->pDetailedPlacement->stats.bExpLevel != -1 )
+		gpSelected->pDetailedPlacement->stats.bExpLevel = max( min( gpSelected->pDetailedPlacement->stats.bExpLevel , 9 ), 1 );
 
 	//no such thing as a life max of 0
-	if( !gpSelected->pDetailedPlacement->bLifeMax )
-		gpSelected->pDetailedPlacement->bLifeMax = 1;
+	if( !gpSelected->pDetailedPlacement->stats.bLifeMax )
+		gpSelected->pDetailedPlacement->stats.bLifeMax = 1;
 
 	//make sure the life doesn't exceed the maxlife...
-	if( gpSelected->pDetailedPlacement->bLifeMax != -1 && gpSelected->pDetailedPlacement->bLife != -1 &&
-			gpSelected->pDetailedPlacement->bLife > gpSelected->pDetailedPlacement->bLifeMax )
-	  gpSelected->pDetailedPlacement->bLife = gpSelected->pDetailedPlacement->bLifeMax;
+	if( gpSelected->pDetailedPlacement->stats.bLifeMax != -1 && gpSelected->pDetailedPlacement->stats.bLife != -1 &&
+			gpSelected->pDetailedPlacement->stats.bLife > gpSelected->pDetailedPlacement->stats.bLifeMax )
+	  gpSelected->pDetailedPlacement->stats.bLife = gpSelected->pDetailedPlacement->stats.bLifeMax;
 
 	//update the soldier
 	UpdateSoldierWithStaticDetailedInformation( gpSelected->pSoldier, gpSelected->pDetailedPlacement );
@@ -2046,7 +2046,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 	{
 		gpSelected->pSoldier->ubBodyType = (UINT8)iIndex;
 		//Set the flags based on the bodytype
-		gpSelected->pSoldier->uiStatusFlags &= ~(SOLDIER_VEHICLE | SOLDIER_ROBOT | SOLDIER_ANIMAL | SOLDIER_MONSTER);
+		gpSelected->pSoldier->flags.uiStatusFlags &= ~(SOLDIER_VEHICLE | SOLDIER_ROBOT | SOLDIER_ANIMAL | SOLDIER_MONSTER);
 		switch( gpSelected->pSoldier->ubBodyType )
 		{
 			case ADULTFEMALEMONSTER:
@@ -2056,15 +2056,15 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 			case LARVAE_MONSTER:
 			case INFANT_MONSTER:
 			case QUEENMONSTER:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_MONSTER;
+				gpSelected->pSoldier->flags.uiStatusFlags |= SOLDIER_MONSTER;
 				break;
 			case BLOODCAT:
 			case COW:
 			case CROW:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_ANIMAL;
+				gpSelected->pSoldier->flags.uiStatusFlags |= SOLDIER_ANIMAL;
 				break;
 			case ROBOTNOWEAPON:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_ROBOT;
+				gpSelected->pSoldier->flags.uiStatusFlags |= SOLDIER_ROBOT;
 				break;
 			case HUMVEE:
 			case ELDORADO:
@@ -2072,7 +2072,7 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 			case JEEP:
 			case TANK_NW:
 			case TANK_NE:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_VEHICLE;
+				gpSelected->pSoldier->flags.uiStatusFlags |= SOLDIER_VEHICLE;
 				break;
 		}
 		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
@@ -2561,7 +2561,7 @@ void UpdateMercsInfo()
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_WHITE );
 			SetFontShadow( FONT_NEARBLACK );
-			switch( gpSelected->pSoldier->bOrders )
+			switch( gpSelected->pSoldier->aiData.bOrders )
 			{
 				case STATIONARY:	mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"STATIONARY" );			break;
 				case ONCALL:			mprintf( iScreenWidthOffset + 430, 2 * iScreenHeightOffset + 363, L"ON CALL" );				break;

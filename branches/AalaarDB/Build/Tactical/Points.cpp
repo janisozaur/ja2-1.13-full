@@ -263,10 +263,10 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 	sPoints = 0;
 
 	// get the tile cost for that tile based on WALKING
-	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->bLevel );
+	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->pathing.bLevel );
 
 	// Get switch value...
-	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->bLevel ];
+	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->pathing.bLevel ];
 
   // Tile cost should not be reduced based on movement mode...
   if ( sSwitchValue == TRAVELCOST_FENCE )
@@ -341,7 +341,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	sPoints = 0;
 
 	// get the tile cost for that tile based on WALKING
-	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->bLevel );
+	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->pathing.bLevel );
 
 	// so, then we must modify it for other movement styles and accumulate
 	if (sTileCost > 0)
@@ -376,7 +376,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 	}
 
 	// Get switch value...
-	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->bLevel ];
+	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->pathing.bLevel ];
 
 	// ATE: If we have a 'special cost, like jump fence... 
 	if ( sSwitchValue == TRAVELCOST_FENCE )
@@ -499,7 +499,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN f
 	// If this is the first time with no action points, set UI flag
 	if ( sNewAP <= 0 && pSoldier->bActionPoints > 0 )
 	{
-		pSoldier->fUIFirstTimeNOAP = TRUE;
+		pSoldier->flags.fUIFirstTimeNOAP = TRUE;
 		fInterfacePanelDirty = TRUE;
 	}
 
@@ -610,14 +610,14 @@ INT32 AdjustBreathPts(SOLDIERTYPE *pSold, INT32 iBPCost)
  sBreathFactor += (100 - pSold->bBreath);
 
  // adjust breath factor for current life deficiency (but add 1/2 bandaging)
- ubBandaged = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
- //sBreathFactor += (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2)));
- sBreathFactor += 100 * (pSold->bLifeMax - (pSold->bLife + (ubBandaged / 2))) / pSold->bLifeMax;
+ ubBandaged = pSold->stats.bLifeMax - pSold->stats.bLife - pSold->bBleeding;
+ //sBreathFactor += (pSold->stats.bLifeMax - (pSold->stats.bLife + (ubBandaged / 2)));
+ sBreathFactor += 100 * (pSold->stats.bLifeMax - (pSold->stats.bLife + (ubBandaged / 2))) / pSold->stats.bLifeMax;
 
- if ( pSold->bStrength > 80 )
+ if ( pSold->stats.bStrength > 80 )
  {
 	 // give % reduction to breath costs for high strength mercs
-	 sBreathFactor -= (pSold->bStrength - 80) / 2;
+	 sBreathFactor -= (pSold->stats.bStrength - 80) / 2;
  }
  
 /*	THIS IS OLD JAGGED ALLIANCE STUFF (left for possible future reference)
@@ -681,7 +681,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 	// If we are not in turn-based combat...
 
 
-	if ( pSold->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSold->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -757,7 +757,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 			{
 				// can't gain any breath when we've just been gassed, OR
 				// if standing in tear gas without a gas mask on
-				if ( pSold->uiStatusFlags & SOLDIER_GASSED )
+				if ( pSold->flags.uiStatusFlags & SOLDIER_GASSED )
 				{
 					return;		// can't breathe here, so get no breath back!
 				}
@@ -797,7 +797,7 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 		sBreathPerAP = BP_PER_AP_MIN_EFFORT;
 
 		// OK, check if we are in water and are waling/standing
-		if ( MercInWater( pSoldier ) )
+		if ( pSoldier->MercInWater( ) )
 		{
 			switch( usAnimState )
 			{
@@ -857,7 +857,7 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	//rain
 	// Reduce breath gain on 25%/rain intensity
-	if( sBreathPerAP < 0 && ( pSoldier->bLevel  ||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+	if( sBreathPerAP < 0 && ( pSoldier->pathing.bLevel  ||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
 	{
 		sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
 	}
@@ -972,9 +972,9 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 		if ( pSoldier->bDoBurst )
 		{
 			if(pSoldier->bDoAutofire && GetAutofireShotsPerFiveAPs(&pSoldier->inv[HANDPOS]) > 0 )
-				sAPCost += CalcAPsToAutofire( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]), pSoldier->bDoAutofire );
+				sAPCost += CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[HANDPOS]), pSoldier->bDoAutofire );
 			else
-				sAPCost += CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]) );
+				sAPCost += CalcAPsToBurst( pSoldier->CalcActionPoints( ), &(pSoldier->inv[HANDPOS]) );
 		}
 		else
 		{
@@ -1010,7 +1010,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 				BOOLEAN	fGotAdjacent = FALSE;
 				SOLDIERTYPE	*pTarget;
 
-				ubGuyThere = WhoIsThere2( sGridNo, pSoldier->bLevel );
+				ubGuyThere = WhoIsThere2( sGridNo, pSoldier->pathing.bLevel );
 
 				if ( ubGuyThere != NOBODY )
 				{
@@ -1165,7 +1165,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 	// get this man's maximum possible action points (ignoring carryovers)
 	// the 2 times is here only to allow rounding off using integer math later
-	//Top = 2 * bAPs;//CalcActionPoints( pSoldier );
+	//Top = 2 * bAPs;//pSoldier->CalcActionPoints( );
 
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
@@ -1295,7 +1295,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 	if (fAddingRaiseGunCost )
 	{
 		usRaiseGunCost = GetAPsToReadyWeapon( pSoldier, pSoldier->usAnimState );
-		pSoldier->fDontChargeReadyAPs = FALSE;
+		pSoldier->flags.fDontChargeReadyAPs = FALSE;
 	}
 
 
@@ -1320,7 +1320,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 
 	// Snap: reversed DIGICRAB's change.
 	// bFullAPs are BASE APs, which do not include APs caried over from the previous turn.
-	bFullAPs = CalcActionPoints( pSoldier );
+	bFullAPs = pSoldier->CalcActionPoints( );
 
 	// aim skill is the same whether we are using 1 or 2 guns
 	bAimSkill = CalcAimSkill( pSoldier, usItem );
@@ -1347,7 +1347,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 	  bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &GrenadeLauncher );
 		
 	}
-	else if ( IsValidSecondHandShot( pSoldier ) )
+	else if ( pSoldier->IsValidSecondHandShot( ) )
 	{
 	  // charge the maximum of the two
 	  bAPCost += __max( 
@@ -1383,7 +1383,7 @@ UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost
  UINT16 usTargID;
  UINT8	ubDirection;
 
- //  bAimSkill = ( pSoldier->bDexterity + pSoldier->bAgility) / 2;
+ //  bAimSkill = ( pSoldier->stats.bDexterity + pSoldier->stats.bAgility) / 2;
  if ( sGridNo != NOWHERE )
  {
 	 usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
@@ -1478,7 +1478,7 @@ INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 
   sCost = ActionPointCost( pSoldier, sGridno, bDirection , usMoveModeToUse );
 
-  if ( gubWorldMovementCosts[ sGridno ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+  if ( gubWorldMovementCosts[ sGridno ][ bDirection ][ pSoldier->pathing.bLevel ] != TRAVELCOST_FENCE )
   {
 	  if ( usMoveModeToUse == RUNNING && pSoldier->usAnimState != RUNNING )
 	  {
@@ -1704,7 +1704,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	INT16							sActionGridNo;
 
 	// Check if we are over an item pool
-	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->bLevel ) )
+	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->pathing.bLevel ) )
 	{
 		// If we are in the same tile, just return pickup cost
 		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, usMapPos );
@@ -1794,7 +1794,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 			bAPCost += GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
 		}
 
-		if ( IsValidSecondHandShotForReloadingPurposes( pSoldier ) )
+		if ( pSoldier->IsValidSecondHandShotForReloadingPurposes( ) )
 		{
 			pObj = &(pSoldier->inv[SECONDHANDPOS]);
 			bExcludeSlot = NO_SLOT;
@@ -1987,16 +1987,16 @@ BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	if( pSoldier->bLife >= OKLIFE )
+	if( pSoldier->stats.bLife >= OKLIFE )
 	{
-		if( pSoldier->sGridNo != pSoldier->sFinalDestination || pSoldier->bGoodContPath  )
+		if( pSoldier->sGridNo != pSoldier->pathing.sFinalDestination || pSoldier->bGoodContPath  )
 		{
 			// OK< check if we are the selected guy!
 			if ( pSoldier->ubID == gusSelectedSoldier )
 			{
 				if (SoldierOnScreen( pSoldier->ubID ) )
 				{
-					sGridNo = pSoldier->sFinalDestination;
+					sGridNo = pSoldier->pathing.sFinalDestination;
 
 					if ( pSoldier->bGoodContPath )
 					{
@@ -2006,7 +2006,7 @@ BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
 					// Do a check if we can afford move here!
 
 					// get a path to dest...
-					if ( FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) )
+					if ( FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) )
 					{
 						sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
 
@@ -2039,7 +2039,7 @@ INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	//{
 		//return( AP_READY_DUAL );
 	//}
-	if ( IsValidSecondHandShot( pSoldier ) )
+	if ( pSoldier->IsValidSecondHandShot( ) )
 	{
 		//Madd: return the greater of the two weapons + 1:
 		UINT8 rt1, rt2;
@@ -2200,7 +2200,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 	// Calculate default top & bottom of the magic "aiming" formula)
 
 	// get this man's maximum possible action points (ignoring carryovers)
-	iFullAPs = CalcActionPoints( pSoldier );
+	iFullAPs = pSoldier->CalcActionPoints( );
 
 	// the 2 times is here only to around rounding off using integer math later
 	iTop = 2 * iFullAPs;
@@ -2210,7 +2210,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 	// tosses per turn is for max dexterity, drops down to 1/2 at dexterity = 0
 	// bottom = (TOSSES_PER_10TURNS * (50 + (ptr->dexterity / 2)) / 10);
 	//else
-	iBottom = ( TOSSES_PER_10TURNS * (50 + ( pSoldier->bDexterity / 2 ) ) / 10 );
+	iBottom = ( TOSSES_PER_10TURNS * (50 + ( pSoldier->stats.bDexterity / 2 ) ) / 10 );
 
 
 	// add minimum aiming time to the overall minimum AP_cost

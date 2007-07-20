@@ -687,7 +687,7 @@ void AddCreaturesToBattle( UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8
 		pSoldier->ubInsertionDirection = bDesiredDirection;
 		//Setup the position
 		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->bHunting = TRUE;
+		pSoldier->aiData.bHunting = TRUE;
 		if( gsCreatureInsertionCode != INSERTION_CODE_GRIDNO )
 		{
 			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
@@ -1150,7 +1150,7 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCr
 	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife )
 		{
 			switch( pSoldier->ubBodyType )
 			{
@@ -1551,11 +1551,11 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{
 			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bActive && pSoldier->bLife && 
+			if( pSoldier->bActive && pSoldier->stats.bLife && 
 					pSoldier->sSectorX == sSectorX &&
 					pSoldier->sSectorY == sSectorY && 
 					pSoldier->bSectorZ == bSectorZ &&
-					!pSoldier->fBetweenSectors )
+					!pSoldier->flags.fBetweenSectors )
 			{
 				return TRUE;
 			}

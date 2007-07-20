@@ -59,7 +59,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|j|a)
+	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space->(|S|p|a|c|j|a)
 
 2) NEWLINE
   Any place you see a \n within the string, you are looking at another string that is part of the fast help
@@ -1486,7 +1486,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Niebezp.:", 			// distance to return from destination to airport
 	L"Ca³kowity koszt: ", 		// total cost of trip by helicopter
 	L"PCP:  ", 			// ETA is an acronym for "estimated time of arrival" 
-	L"Helikopter ma ma³o paliwa i musi wyl¹dowaæ na terenie wroga.",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
+	L"Helikopter ma ma³o paliwa i musi wyl¹dowaæ na terenie wroga.",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
   L"Pasa¿erowie: ",
   L"Wybór Skyridera lub pasa¿erów?",
   L"Skyrider",

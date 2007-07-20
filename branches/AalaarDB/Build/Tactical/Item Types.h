@@ -2,6 +2,7 @@
 #define ITEM_TYPES_H
 
 #include "types.h"
+#include "string.h"//for memset
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -69,8 +70,10 @@ typedef enum
 
 #define GS_CARTRIDGE_IN_CHAMBER				0x01
 
-typedef struct
+class OBJECTTYPE
 {
+public:
+	OBJECTTYPE() {memset(this, 0, sizeof(OBJECTTYPE));};
 	UINT16	usItem;
 	UINT8		ubNumberOfObjects;
 	union
@@ -152,7 +155,7 @@ typedef struct
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
 	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
-} OBJECTTYPE;
+};
 
 /*
 typedef struct

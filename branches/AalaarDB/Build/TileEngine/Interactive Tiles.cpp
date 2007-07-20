@@ -121,22 +121,22 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 	if (pStructure->fFlags & STRUCTURE_ANYDOOR)
 	{
 		// Add soldier event for opening door....
-		pSoldier->ubPendingAction = MERC_OPENDOOR;
-		pSoldier->uiPendingActionData1 = usStructureID;
-		pSoldier->sPendingActionData2  = sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
-		pSoldier->ubPendingActionAnimCount = 0;
+		pSoldier->aiData.ubPendingAction = MERC_OPENDOOR;
+		pSoldier->aiData.uiPendingActionData1 = usStructureID;
+		pSoldier->aiData.sPendingActionData2  = sGridNo;
+		pSoldier->aiData.bPendingActionData3  = ubDirection;
+		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 
 	}	
 	else
 	{
 		// Add soldier event for opening door....
-		pSoldier->ubPendingAction = MERC_OPENSTRUCT;
-		pSoldier->uiPendingActionData1 = usStructureID;
-		pSoldier->sPendingActionData2  = sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
-		pSoldier->ubPendingActionAnimCount = 0;
+		pSoldier->aiData.ubPendingAction = MERC_OPENSTRUCT;
+		pSoldier->aiData.uiPendingActionData1 = usStructureID;
+		pSoldier->aiData.sPendingActionData2  = sGridNo;
+		pSoldier->aiData.bPendingActionData3  = ubDirection;
+		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 	}
 
@@ -202,8 +202,8 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 	INT16					sGridNo;
 		
 
-	sGridNo					= pSoldier->sPendingActionData2;
-	usStructureID		= (UINT16)pSoldier->uiPendingActionData1;
+	sGridNo					= pSoldier->aiData.sPendingActionData2;
+	usStructureID		= (UINT16)pSoldier->aiData.uiPendingActionData1;
 
 	// HANDLE SOLDIER ACTIONS
 	pStructure = FindStructureByID( sGridNo, usStructureID );
@@ -266,7 +266,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 
 		// LOOK for item pool here...
-		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->bLevel ) )
+		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 		{
 			// Update visiblity....
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
@@ -523,7 +523,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 	}
 
 	// Also, don't allow for mercs who are on upper level...
-	if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->bLevel == 1 )
+	if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->pathing.bLevel == 1 )
 	{
 		return;
 	}

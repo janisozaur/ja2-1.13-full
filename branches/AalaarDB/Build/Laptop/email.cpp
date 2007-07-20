@@ -771,8 +771,8 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, 
 	// move to end of list
 	if( pEmail )
 	{
-	  while( pEmail -> Next)
-      pEmail = pEmail -> Next; 
+	  while( pEmail->Next)
+      pEmail = pEmail->Next; 
   }
 
 	// add new element onto list
@@ -863,7 +863,7 @@ void RemoveEmailMessage(INT32 iId)
 
 	// look for message
 	pEmail = GetEmailMessage( iId );
-	//while((pEmail->iId !=iId)&&(pEmail -> Next))
+	//while((pEmail->iId !=iId)&&(pEmail->Next))
 	//	pEmail=pEmail->Next;
 
 	// end of list, no mail found, leave
@@ -951,7 +951,7 @@ EmailPtr GetEmailMessage(INT32 iId)
 	while( (pEmail->iId !=iId)&&(pEmail->Next) )
 		pEmail=pEmail->Next;
 	
-	if( ( pEmail ->iId != iId ) && ( pEmail->Next == NULL ) )
+	if( ( pEmail->iId != iId ) && ( pEmail->Next == NULL ) )
 	{
 		pEmail = NULL;
 	}
@@ -1111,7 +1111,7 @@ void SortMessages(INT32 iCriteria)
 			{	
 
 				// set B to next in A
-				pB=pA -> Next;
+				pB=pA->Next;
 				while(pB)
 				{
 
@@ -1141,7 +1141,7 @@ void SortMessages(INT32 iCriteria)
 			 while(pA)
 			{
 				
-				 pB = pA ->Next;
+				 pB = pA->Next;
 				while(pB)
 				{
           // lesser string?...need sorting 
@@ -1166,7 +1166,7 @@ void SortMessages(INT32 iCriteria)
 			 while(pA)
 			{   
 
-				pB = pA ->Next;
+				pB = pA->Next;
 				while(pB)
 				{
 					// clear out control codes
@@ -1196,11 +1196,11 @@ void SortMessages(INT32 iCriteria)
 			 while(pA)
 			{   
 
-				pB = pA ->Next;
+				pB = pA->Next;
 				while(pB)
 				{
 					// one read and another not?...need sorting  
-					if( ( pA->fRead ) && ( ! ( pB -> fRead ) ) )	
+					if( ( pA->fRead ) && ( ! ( pB->fRead ) ) )	
 						SwapMessages(pA->iId, pB->iId);
           
 					// next in B's list
@@ -1272,7 +1272,7 @@ void SwapMessages(INT32 iIdA, INT32 iIdB)
  wcscpy(pB->pSubject, pTemp->pSubject);
 
  // free up memory
- MemFree(pTemp -> pSubject);
+ MemFree(pTemp->pSubject);
  MemFree( pTemp );
  return;
 }
@@ -1840,14 +1840,14 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 		
 
 			// copy over string 
-			wcscpy( pString, pTempRecord -> pRecord );
+			wcscpy( pString, pTempRecord->pRecord );
 
 			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 			iHeight += IanDisplayWrappedString(VIEWER_X + 9, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE, IAN_WRAP_NO_SHADOW);	  
 
 			
 			// increment email record ptr
-			pTempRecord = pTempRecord -> Next;
+			pTempRecord = pTempRecord->Next;
 
 			
 
@@ -1869,13 +1869,13 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 	  while( pTempRecord )
 		{
       // copy over string 
-		  wcscpy( pString, pTempRecord -> pRecord );
+		  wcscpy( pString, pTempRecord->pRecord );
 
 	    // get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 	    iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE, IAN_WRAP_NO_SHADOW);	  
 		
 			// increment email record ptr
-		  pTempRecord = pTempRecord -> Next;
+		  pTempRecord = pTempRecord->Next;
 		}
 
 		
@@ -1889,7 +1889,7 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
     while( pTempRecord )
 		{
 			// copy over string 
-		  wcscpy( pString, pTempRecord -> pRecord );
+		  wcscpy( pString, pTempRecord->pRecord );
 	    
 			if( pString[ 0 ] == 0 )
 			{
@@ -1913,7 +1913,7 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 			}
 
 
-			pTempRecord = pTempRecord ->Next;
+			pTempRecord = pTempRecord->Next;
 
 			
 			if( ( pTempRecord == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
@@ -3030,7 +3030,7 @@ void ClearOutEmailMessageRecordsList( void )
     pTempRecord = pMessageRecordList;
     
 		// next element
-		pMessageRecordList = pMessageRecordList -> Next;
+		pMessageRecordList = pMessageRecordList->Next;
 
 		MemFree( pTempRecord );
 	}
@@ -3065,23 +3065,23 @@ void AddEmailRecordToList( STR16 pString )
   else
 	{
 	  // run to end of list
-	  while(pTempRecord -> Next)
+	  while(pTempRecord->Next)
 		{
-		  pTempRecord = pTempRecord -> Next;
+		  pTempRecord = pTempRecord->Next;
 		}
 
 		// found, alloc
-		pTempRecord -> Next = (messagerecord *) MemAlloc( sizeof(Record) );
+		pTempRecord->Next = (messagerecord *) MemAlloc( sizeof(Record) );
     
 		// move to node
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
   }
 
 	// set next to null
-	pTempRecord -> Next = NULL;
+	pTempRecord->Next = NULL;
 
 	// copy in string
-  wcscpy( pTempRecord -> pRecord, pString );
+  wcscpy( pTempRecord->pRecord, pString );
 
 	// done return
 
@@ -4652,8 +4652,8 @@ void OpenMostRecentUnreadEmail( void )
 		// if date is lesser and unread , swap
 		if( ( pB->iDate < iLowestDate )&&( pB->fRead == FALSE ) )
 		{
-			iMostRecentMailId = pB -> iId;
-			iLowestDate = pB -> iDate;
+			iMostRecentMailId = pB->iId;
+			iLowestDate = pB->iDate;
 		}
 
 		// next in B's list
@@ -4815,13 +4815,13 @@ void PreProcessEmail( EmailPtr pMail )
 	{ 
     
 		// copy over string
-		wcscpy(pString, pTempRecord -> pRecord);
+		wcscpy(pString, pTempRecord->pRecord);
 
 	  // get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 		iHeight += IanWrappedStringHeight(VIEWER_X + 9, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + GetFontHeight(MESSAGE_FONT)), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE,0);
 	  
 		// next message record string
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
 		
 	}
   
@@ -4881,7 +4881,7 @@ void PreProcessEmail( EmailPtr pMail )
 			pCurrentRecord = pTempRecord;
 
 			// increment email record ptr
-		  pTempRecord = pTempRecord -> Next;
+		  pTempRecord = pTempRecord->Next;
 
 		}	
 
@@ -4934,7 +4934,7 @@ void PreProcessEmail( EmailPtr pMail )
 			while( pTempRecord )
 			{
 				// copy over string 
-				wcscpy( pString, pTempRecord -> pRecord );
+				wcscpy( pString, pTempRecord->pRecord );
 				
 				if( pString[ 0 ] == 0 )
 				{
@@ -4960,7 +4960,7 @@ void PreProcessEmail( EmailPtr pMail )
 				
 
 				pCurrentRecord = pTempRecord;
-				pTempRecord = pTempRecord ->Next;
+				pTempRecord = pTempRecord->Next;
 
 				if( fGoingOffCurrentPage == FALSE )
 				{

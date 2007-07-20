@@ -1619,10 +1619,10 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 
 	while( pList )
 	{
-		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if( ( pList->ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
 		{
 			// reset color
-			pList -> ubColor = 0;
+			pList->ubColor = 0;
 			fFound = TRUE;
 				
 			// save
@@ -1668,7 +1668,7 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 
 	while( pList )
 	{
-		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if( ( pList->ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
 		{
 			uiTime = pList->uiDate;
 			fFound = TRUE;

@@ -454,12 +454,12 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
     pFiles->uiIdNumber = uiId;
 	  pFilesListHead = pFiles;
 		pFiles->ubFormat=ubFormat;
-		pFiles -> fRead = fRead;
+		pFiles->fRead = fRead;
 	}
 
 	// null out ptr's to picture file names
-  pFiles -> pPicFileNameList[0] = NULL;
-	pFiles -> pPicFileNameList[1] = NULL;
+  pFiles->pPicFileNameList[0] = NULL;
+	pFiles->pPicFileNameList[1] = NULL;
 
 	// copy file name strings
 
@@ -468,9 +468,9 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 	{
 	  if((pFirstPicFile[0]) != 0)
 		{
-      pFiles -> pPicFileNameList[0] = (STR8) MemAlloc(strlen(pFirstPicFile) + 1 );
-	    strcpy( pFiles -> pPicFileNameList[0], pFirstPicFile);
-			pFiles -> pPicFileNameList[0][strlen(pFirstPicFile)] = 0;
+      pFiles->pPicFileNameList[0] = (STR8) MemAlloc(strlen(pFirstPicFile) + 1 );
+	    strcpy( pFiles->pPicFileNameList[0], pFirstPicFile);
+			pFiles->pPicFileNameList[0][strlen(pFirstPicFile)] = 0;
 		}
 	}
 
@@ -999,7 +999,7 @@ BOOLEAN DisplayFormattedText( void )
 			 HandleSpecialTerroristFile( pFilesList->ubCode, pFilesList->pPicFileNameList[ 0 ] );
 		 break;
 		 default:
-			 HandleSpecialFiles( pFilesList -> ubFormat );
+			 HandleSpecialFiles( pFilesList->ubFormat );
      break;
 
 	}
@@ -1161,7 +1161,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 				   fGoingOffCurrentPage = TRUE;
 				}
 
-				pTempString = pTempString ->Next;
+				pTempString = pTempString->Next;
 							
 				if( pTempString == NULL )
 				{
@@ -1252,22 +1252,22 @@ void AddStringToFilesList( STR16 pString )
 	
 	
   // alloc string and copy
-	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
+	pFileString->pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
 	wcscpy( pFileString->pString, pString );
 	pFileString->pString[ wcslen( pString ) ] = 0;
 
 	// set Next to NULL
 
-	pFileString -> Next = NULL;
+	pFileString->Next = NULL;
 	if( pFileStringList == NULL )
 	{
 		pFileStringList = pFileString;
 	}
 	else
 	{
-		while( pTempString -> Next )
+		while( pTempString->Next )
 		{
-			pTempString = pTempString -> Next;
+			pTempString = pTempString->Next;
 		}
 		pTempString->Next = pFileString;
 	}
@@ -1288,10 +1288,10 @@ void ClearFileStringList( void )
 	{
 		return;
 	}
-	while( pFileString -> Next)
+	while( pFileString->Next)
 	{
 		pDeleteFileString = pFileString;
-		pFileString = pFileString -> Next;
+		pFileString = pFileString->Next;
 		MemFree( pDeleteFileString );
 	}
 
@@ -1483,11 +1483,11 @@ FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, 
 	// how wide special records are ( ones that share space with pictures )
 	pTempRecord = (FileRecordWidthPtr) MemAlloc( sizeof( FileRecordWidth ) );
 
-	pTempRecord -> Next = NULL;
-	pTempRecord -> iRecordNumber = iRecordNumber;
-	pTempRecord -> iRecordWidth = iRecordWidth;
-	pTempRecord -> iRecordHeightAdjustment = iRecordHeightAdjustment;
-	pTempRecord -> ubFlags = ubFlags;
+	pTempRecord->Next = NULL;
+	pTempRecord->iRecordNumber = iRecordNumber;
+	pTempRecord->iRecordWidth = iRecordWidth;
+	pTempRecord->iRecordHeightAdjustment = iRecordHeightAdjustment;
+	pTempRecord->ubFlags = ubFlags;
 
 	return ( pTempRecord );
 }
@@ -1507,13 +1507,13 @@ FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 	pRecordListHead = pTempRecord;
 	
 	// next record
-//	pTempRecord -> Next = CreateRecordWidth( 43, 200,0, 0 );
-	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
+//	pTempRecord->Next = CreateRecordWidth( 43, 200,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	// and the next..
-//	pTempRecord -> Next = CreateRecordWidth( 45, 200,0, 0 );
-	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_3_WIDTH, 200,0, 0 );
+//	pTempRecord->Next = CreateRecordWidth( 45, 200,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( FILES_COUNTER_3_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	return( pRecordListHead );
@@ -1534,10 +1534,10 @@ FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 	pRecordListHead = pTempRecord;
 	
 	// next record
-	pTempRecord -> Next = CreateRecordWidth( 5, 170,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( 5, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
-	pTempRecord -> Next = CreateRecordWidth( 6, 170,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( 6, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
 	
 	
@@ -1560,13 +1560,13 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 		return;
 	}
 
-	while( pTempRecord -> Next )
+	while( pTempRecord->Next )
 	{
 		// set up delete record
 		pDeleteRecord = pTempRecord;
 
 		// move to next record
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
 
 		MemFree( pDeleteRecord );
 	}
@@ -1593,7 +1593,7 @@ void OpenFirstUnreadFile( void )
    {
 
 		 // if iCounter = iFileId, is a valid file
-     if(  pFilesList -> fRead == FALSE )
+     if(  pFilesList->fRead == FALSE )
 		 {
 			 iHighLightFileLine = iCounter;
 		 }
@@ -1622,7 +1622,7 @@ void CheckForUnreadFiles( void )
 	while( pFilesList )
   {
 		// unread?...if so, set flag
-		if( pFilesList -> fRead == FALSE )
+		if( pFilesList->fRead == FALSE )
 		{
 			fNewFilesInFileViewer = TRUE;
 		}
@@ -1684,7 +1684,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 		while( pLocatorString != pTempString )
 		{
 			iCounter++;
-			pLocatorString = pLocatorString -> Next;
+			pLocatorString = pLocatorString->Next;
 		}
 
 
@@ -1693,7 +1693,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 		{
 			uiFlags = IAN_WRAP_NO_SHADOW;
 					// copy over string 
-			wcscpy( sString, pTempString -> pString );
+			wcscpy( sString, pTempString->pString );
 			
 			if( sString[ 0 ] == 0 )
 			{
@@ -1743,7 +1743,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 				 fGoingOffCurrentPage = TRUE;
 			}
 
-			pTempString = pTempString ->Next;
+			pTempString = pTempString->Next;
 						
 			if( ( pTempString == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
 			{

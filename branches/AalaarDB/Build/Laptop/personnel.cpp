@@ -861,7 +861,7 @@ BOOLEAN RenderPersonnelPictures( void )
    cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
    for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
 	 {	
-		 if ( pSoldier->bLife >= OKLIFE && pSoldier->bActive )
+		 if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bActive )
 		 {
 			 fFound = TRUE;
 			 iStartPersonId=cnt;
@@ -894,9 +894,9 @@ BOOLEAN RenderPersonnelPictures( void )
 		cnt++;		
     for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 		{	
-		  if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
+		  if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 			{
-				if( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+				if( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					return( FALSE );
 				}
@@ -950,9 +950,9 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	if( fCurrentTeamMode == TRUE )
 	{
 	
-		if( ( 50 < 	MercPtrs[iId] -> ubProfile )&&( 57 > 	MercPtrs[iId] -> ubProfile ) )
+		if( ( 50 < 	MercPtrs[iId]->ubProfile )&&( 57 > 	MercPtrs[iId]->ubProfile ) )
 		{
-			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ MercPtrs[iId] -> ubProfile  ].ubFaceIndex );	
+			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ MercPtrs[iId]->ubProfile  ].ubFaceIndex );	
 		}
 		else
 		{
@@ -979,7 +979,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 	if( fCurrentTeamMode == TRUE )
 	{
-		if( MercPtrs[iId]->uiStatusFlags & SOLDIER_VEHICLE )
+		if( MercPtrs[iId]->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			return( TRUE );
 		}
@@ -994,7 +994,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 	if( fCurrentTeamMode == TRUE )
 	{
-		if( MercPtrs[iId]->bLife <= 0 )
+		if( MercPtrs[iId]->stats.bLife <= 0 )
 		{
 			hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
 			
@@ -1391,7 +1391,7 @@ void DisplayCharName( INT32 iId, INT32 iSlot )
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 	
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -1512,7 +1512,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 	BOOLEAN	fAmIaRobot = AM_A_ROBOT( pSoldier );
 	
 	
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -1535,7 +1535,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 			 //else
 			 //{
-				 swprintf(sString, L"%d/%d",Menptr[iId].bLife,Menptr[iId].bLifeMax);
+				 swprintf(sString, L"%d/%d",Menptr[iId].stats.bLife,Menptr[iId].stats.bLifeMax);
 			 //}
 			 }
 			 else
@@ -1558,7 +1558,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-					 swprintf(sString, L"%d",Menptr[iId].bAgility);
+					 swprintf(sString, L"%d",Menptr[iId].stats.bAgility);
 				 //}
 			 }
 			 else
@@ -1581,7 +1581,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bDexterity);
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bDexterity);
 				 //}
 			 }
 			 else
@@ -1604,7 +1604,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bStrength );
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bStrength );
 				 //}
 			 }
 			 else
@@ -1627,7 +1627,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bLeadership );
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bLeadership );
 				 //}
 			 }
 			 else
@@ -1651,7 +1651,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bWisdom );
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bWisdom );
 				 //}
 			 }
 			 else
@@ -1676,7 +1676,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bExpLevel );
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bExpLevel );
 				 //}
 			 }				
 			 else
@@ -1700,7 +1700,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bMarksmanship);
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bMarksmanship);
 				 //}
 			 }
 			 else
@@ -1725,7 +1725,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-					 swprintf(sString, L"%d",Menptr[iId].bMechanical);
+					 swprintf(sString, L"%d",Menptr[iId].stats.bMechanical);
 				 //}
 			 }
 			 else
@@ -1748,7 +1748,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bExplosive);
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bExplosive);
 				 //}
 
 			 }
@@ -1772,7 +1772,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 				 //else
 				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].bMedical);
+				 		swprintf(sString, L"%d",Menptr[iId].stats.bMedical);
 				 //}
 			 }
 			 else
@@ -1959,7 +1959,7 @@ INT32 GetLastMercId( void )
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 		{
-		 if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->bLife > 0 ) )
+		 if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->stats.bLife > 0 ) )
 			 iCounter++;
 		}
 	return iCounter;
@@ -2135,7 +2135,7 @@ INT32 GetNumberOfMercsOnPlayersTeam( void )
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pTeamSoldier++)
 	{
-		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->bLife > 0 ) )
+		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) )
 			iCounter++;
 	}
 
@@ -2160,7 +2160,7 @@ INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pTeamSoldier++)
 	{
-		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 			iCounter++;
 	}
 
@@ -2233,12 +2233,12 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 	for( iCounter = 0; iCounter < iTotalOnTeam; iCnt++ )
 	{
 
-		if( ( MercPtrs[iId + iCnt ] -> bActive == TRUE ) )
+		if( ( MercPtrs[iId + iCnt ]->bActive == TRUE ) )
 		{
 			// found the next actual guy
-			if( ( 50 < 	MercPtrs[iId + iCnt ]  -> ubProfile )&&( 57 > 	MercPtrs[iId + iCnt ] -> ubProfile ) )
+			if( ( 50 < 	MercPtrs[iId + iCnt ] ->ubProfile )&&( 57 > 	MercPtrs[iId + iCnt ]->ubProfile ) )
 			{
-				sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ MercPtrs[ iId + iCnt ] -> ubProfile  ].ubFaceIndex );	
+				sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ MercPtrs[ iId + iCnt ]->ubProfile  ].ubFaceIndex );	
 			}
 			else
 			{
@@ -2259,7 +2259,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 		//Blt face to screen to 
 		GetVideoObject(&hFaceHandle, guiFACE);
 
-		if( Menptr[ iId + iCnt ].bLife <= 0 )
+		if( Menptr[ iId + iCnt ].stats.bLife <= 0 )
 		{
 			hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
 			
@@ -2271,7 +2271,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 		
 		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT ), VO_BLT_SRCTRANSPARENCY,NULL);
 		
-		if( Menptr[ iId + iCnt ].bLife <= 0 )
+		if( Menptr[ iId + iCnt ].stats.bLife <= 0 )
 		{
 			//if the merc is dead, display it
 			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], ( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT + SMALL_PORT_HEIGHT / 2 ), SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -2898,7 +2898,7 @@ INT32 GetTotalDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];	
 
-		 if( ( pSoldier->bActive) && ( pSoldier->bLife > 0 ) )
+		 if( ( pSoldier->bActive) && ( pSoldier->stats.bLife > 0 ) )
 		 {
 			 
 			 // valid soldier, get cost
@@ -2957,7 +2957,7 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];
 
-		if( ( pSoldier->bActive ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->bLife > 0 ) )
+		if( ( pSoldier->bActive ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
 		{
 			 // valid soldier, get cost
 			 if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
@@ -3030,7 +3030,7 @@ INT32 GetHighestDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];
 
-		 if( ( pSoldier->bActive) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->bLife > 0 ) )
+		 if( ( pSoldier->bActive) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
 		 {
 			 
 			 // valid soldier, get cost
@@ -3212,92 +3212,92 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 				continue;
 			}
 
-			if( pTeamSoldier ->  bLife >= iValue )
+			if( pTeamSoldier->bLife >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bLife;
+				iValue = pTeamSoldier->bLife;
 			}
 			break;
 		  case 1:
 		  // agility
-			if( pTeamSoldier ->  bAgility >= iValue )
+			if( pTeamSoldier->bAgility >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bAgility;
+				iValue = pTeamSoldier->bAgility;
 			}
 			break;
 			case 2:
 			// dexterity
-			if( pTeamSoldier ->  bDexterity >= iValue )
+			if( pTeamSoldier->bDexterity >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bDexterity;
+					iValue = pTeamSoldier->bDexterity;
 			}
 			break;
 			case 3:
 			// strength
-      if(  pTeamSoldier -> bStrength >= iValue )
+      if(  pTeamSoldier->bStrength >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bStrength;
+				iValue = pTeamSoldier->bStrength;
 			}	 
 			break;
 			case 4:
 			// leadership
-      if(  pTeamSoldier -> bLeadership >= iValue )
+      if(  pTeamSoldier->bLeadership >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bLeadership;
+				iValue = pTeamSoldier->bLeadership;
 			}	 
 			break;
 			case 5:
 		  // wisdom
-			if(  pTeamSoldier -> bWisdom >= iValue )
+			if(  pTeamSoldier->bWisdom >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bWisdom;
+				iValue = pTeamSoldier->bWisdom;
 			}
 			break;
 			case 6:
 			// exper
-      if( pTeamSoldier -> bExpLevel >= iValue )
+      if( pTeamSoldier->bExpLevel >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bExpLevel;
+				iValue = pTeamSoldier->bExpLevel;
 			}  
 
 			break;
 			case 7:
 			//mrkmanship
-			if(  pTeamSoldier -> bMarksmanship >= iValue )
+			if(  pTeamSoldier->bMarksmanship >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bMarksmanship;
+					iValue = pTeamSoldier->bMarksmanship;
 			}
        			 
 		  break;
 			case 8:
 			// mech
-			if(  pTeamSoldier -> bMechanical >= iValue )
+			if(  pTeamSoldier->bMechanical >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bMechanical;
+				iValue = pTeamSoldier->bMechanical;
 			}
 		  break;
 			case 9:
 			// exp
-			if(pTeamSoldier -> bExplosive >= iValue )
+			if(pTeamSoldier->bExplosive >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bExplosive;
+				iValue = pTeamSoldier->bExplosive;
 			}
 			break;
 			case 10:
 			// med
-			if(  pTeamSoldier -> bMedical >= iValue )
+			if(  pTeamSoldier->bMedical >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bMedical;
+					iValue = pTeamSoldier->bMedical;
 			}
 			break;
 		}
@@ -3387,92 +3387,92 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 				continue;
 			}
 
-			if( pTeamSoldier ->  bLife < iValue )
+			if( pTeamSoldier->bLife < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bLife;
+				iValue = pTeamSoldier->bLife;
 			}
 			break;
 		  case 1:
 		  // agility
-			if( pTeamSoldier ->  bAgility < iValue )
+			if( pTeamSoldier->bAgility < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bAgility;
+				iValue = pTeamSoldier->bAgility;
 			}
 			break;
 			case 2:
 			// dexterity
-			if( pTeamSoldier ->  bDexterity < iValue )
+			if( pTeamSoldier->bDexterity < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bDexterity;
+					iValue = pTeamSoldier->bDexterity;
 			}
 			break;
 			case 3:
 			// strength
-      if(  pTeamSoldier -> bStrength < iValue )
+      if(  pTeamSoldier->bStrength < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bStrength;
+				iValue = pTeamSoldier->bStrength;
 			}	 
 			break;
 			case 4:
 			// leadership
-      if(  pTeamSoldier -> bLeadership < iValue )
+      if(  pTeamSoldier->bLeadership < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bLeadership;
+				iValue = pTeamSoldier->bLeadership;
 			}	 
 			break;
 			case 5:
 		  // wisdom
-			if(  pTeamSoldier -> bWisdom < iValue )
+			if(  pTeamSoldier->bWisdom < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bWisdom;
+				iValue = pTeamSoldier->bWisdom;
 			}
 			break;
 			case 6:
 			// exper
-      if( pTeamSoldier -> bExpLevel < iValue )
+      if( pTeamSoldier->bExpLevel < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bExpLevel;
+				iValue = pTeamSoldier->bExpLevel;
 			}  
 
 			break;
 			case 7:
 			//mrkmanship
-			if(  pTeamSoldier -> bMarksmanship < iValue )
+			if(  pTeamSoldier->bMarksmanship < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bMarksmanship;
+					iValue = pTeamSoldier->bMarksmanship;
 			}
        			 
 		  break;
 			case 8:
 			// mech
-			if(  pTeamSoldier -> bMechanical < iValue )
+			if(  pTeamSoldier->bMechanical < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bMechanical;
+				iValue = pTeamSoldier->bMechanical;
 			}
 		  break;
 			case 9:
 			// exp
-			if(pTeamSoldier -> bExplosive < iValue )
+			if(pTeamSoldier->bExplosive < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier -> bExplosive;
+				iValue = pTeamSoldier->bExplosive;
 			}
 			break;
 			case 10:
 			// med
-			if(  pTeamSoldier -> bMedical < iValue )
+			if(  pTeamSoldier->bMedical < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier -> bMedical;
+					iValue = pTeamSoldier->bMedical;
 			}
 			break;
 		}
@@ -3501,7 +3501,7 @@ INT32 GetIdOfMercWithHighestStat( INT32 iStat )
 	// run through active soldiers
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		 if( ( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		 if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
 		 {
 			 switch( iStat )
 			 {
@@ -3512,92 +3512,92 @@ INT32 GetIdOfMercWithHighestStat( INT32 iStat )
 							continue;
 						}
 
-					 if( pTeamSoldier ->  bLifeMax >= iValue )
+					 if( pTeamSoldier->stats.bLifeMax >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bLifeMax;
+						 iValue = pTeamSoldier->stats.bLifeMax;
 					 }
 				   break;
 				 case 1:
 					 // agility
-					 if( pTeamSoldier ->  bAgility >= iValue )
+					 if( pTeamSoldier->stats.bAgility >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bAgility;
+						 iValue = pTeamSoldier->stats.bAgility;
 					 }
 					 break;
 				 case 2:
 					// dexterity
-					 if( pTeamSoldier ->  bDexterity >= iValue )
+					 if( pTeamSoldier->stats.bDexterity >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bDexterity;
+						 iValue = pTeamSoldier->stats.bDexterity;
 					 }
 					break;
 				 case 3:
 				 // strength
-       		 if(  pTeamSoldier -> bStrength >= iValue )
+       		 if(  pTeamSoldier->stats.bStrength >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bStrength;
+						 iValue = pTeamSoldier->stats.bStrength;
 					 }	 
 				 break;
 				 case 4:
 					// leadership
-       		 if(  pTeamSoldier -> bLeadership >= iValue )
+       		 if(  pTeamSoldier->stats.bLeadership >= iValue )
 					 {
 						 iId = cnt;
-						  iValue = pTeamSoldier -> bLeadership;
+						  iValue = pTeamSoldier->stats.bLeadership;
 					 }	 
 				 break;
 				 case 5:
 					// wisdom
-					 if(  pTeamSoldier -> bWisdom >= iValue )
+					 if(  pTeamSoldier->stats.bWisdom >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bWisdom;
+						 iValue = pTeamSoldier->stats.bWisdom;
 					 }
 				 break;
 				 case 6:
 					// exper
-           if( pTeamSoldier -> bExpLevel >= iValue )
+           if( pTeamSoldier->stats.bExpLevel >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bExpLevel;
+						 iValue = pTeamSoldier->stats.bExpLevel;
 					 }  
 
 				 break;
 				 case 7:
 					 //mrkmanship
-					 if(  pTeamSoldier -> bMarksmanship >= iValue )
+					 if(  pTeamSoldier->stats.bMarksmanship >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMarksmanship;
+						 iValue = pTeamSoldier->stats.bMarksmanship;
 					 }
        			 
 				 break;
 				 case 8:
 					// mech
-					 if(  pTeamSoldier -> bMechanical >= iValue )
+					 if(  pTeamSoldier->stats.bMechanical >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMechanical;
+						 iValue = pTeamSoldier->stats.bMechanical;
 					 }
 				 break;
 				 case 9:
 					// exp
-					 if(pTeamSoldier -> bExplosive >= iValue )
+					 if(pTeamSoldier->stats.bExplosive >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bExplosive;
+						 iValue = pTeamSoldier->stats.bExplosive;
 					 }
 				 break;
 				 case 10:
 					 // med
-					 if(  pTeamSoldier -> bMedical >= iValue )
+					 if(  pTeamSoldier->stats.bMedical >= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMedical;
+						 iValue = pTeamSoldier->stats.bMedical;
 					 }
 				 break;
 				 }
@@ -3624,7 +3624,7 @@ INT32 GetIdOfMercWithLowestStat( INT32 iStat )
 	// run through active soldiers
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		 if(( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		 if(( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
 		 {
 
 			 switch( iStat )
@@ -3637,92 +3637,92 @@ INT32 GetIdOfMercWithLowestStat( INT32 iStat )
 						continue;
 					}
 
-					 if( pTeamSoldier -> bLifeMax <= iValue )
+					 if( pTeamSoldier->stats.bLifeMax <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bLifeMax;
+						 iValue = pTeamSoldier->stats.bLifeMax;
 					 }
 				   break;
 				 case 1:
 					 // agility
-					 if( pTeamSoldier -> bAgility <= iValue )
+					 if( pTeamSoldier->stats.bAgility <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bAgility;
+						 iValue = pTeamSoldier->stats.bAgility;
 					 }
 					 break;
 				 case 2:
 					// dexterity
-					 if(  pTeamSoldier -> bDexterity <= iValue )
+					 if(  pTeamSoldier->stats.bDexterity <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bDexterity;
+						 iValue = pTeamSoldier->stats.bDexterity;
 					 }
 					break;
 				 case 3:
 				 // strength
-       		 if(  pTeamSoldier -> bStrength <= iValue )
+       		 if(  pTeamSoldier->stats.bStrength <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bStrength;
+						 iValue = pTeamSoldier->stats.bStrength;
 					 }	 
 				 break;
 				 case 4:
 					// leadership
-       		 if( pTeamSoldier -> bLeadership <= iValue )
+       		 if( pTeamSoldier->stats.bLeadership <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bLeadership;
+						 iValue = pTeamSoldier->stats.bLeadership;
 					 }	 
 				 break;
 				 case 5:
 					// wisdom
-					 if( pTeamSoldier -> bWisdom <= iValue )
+					 if( pTeamSoldier->stats.bWisdom <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bWisdom;
+						 iValue = pTeamSoldier->stats.bWisdom;
 					 }
 				 break;
 				 case 6:
 					// exper
-           if(  pTeamSoldier -> bExpLevel <= iValue )
+           if(  pTeamSoldier->stats.bExpLevel <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bExpLevel;
+						 iValue = pTeamSoldier->stats.bExpLevel;
 					 }  
 
 				 break;
 				 case 7:
 					 //mrkmanship
-					 if(  pTeamSoldier -> bMarksmanship <= iValue )
+					 if(  pTeamSoldier->stats.bMarksmanship <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMarksmanship;
+						 iValue = pTeamSoldier->stats.bMarksmanship;
 					 }
        			 
 				 break;
 				 case 8:
 					// mech
-					 if(  pTeamSoldier -> bMechanical <= iValue )
+					 if(  pTeamSoldier->stats.bMechanical <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMechanical;
+						 iValue = pTeamSoldier->stats.bMechanical;
 					 }
 				 break;
 				 case 9:
 					// exp
-					 if(  pTeamSoldier -> bExplosive <= iValue )
+					 if(  pTeamSoldier->stats.bExplosive <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bExplosive;
+						 iValue = pTeamSoldier->stats.bExplosive;
 					 }
 				 break;
 				 case 10:
 					 // med
-					 if(  pTeamSoldier -> bMedical <= iValue )
+					 if(  pTeamSoldier->stats.bMedical <= iValue )
 					 {
 						 iId = cnt;
-						 iValue = pTeamSoldier -> bMedical;
+						 iValue = pTeamSoldier->stats.bMedical;
 					 }
 				 break;
 				 }
@@ -3752,9 +3752,9 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
 		// Only count stats of merc (not vehicles)
-		if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
-		 if(( pTeamSoldier->bActive)&&( pTeamSoldier->bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		 if(( pTeamSoldier->bActive)&&( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
 		 {
 			 switch( iStat )
 			 {
@@ -3768,60 +3768,60 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 							continue;
 						}
 
-					  iTotalStatValue += pTeamSoldier -> bLifeMax;
+					  iTotalStatValue += pTeamSoldier->stats.bLifeMax;
 					 
 				   break;
 				 case 1:
 					 // agility
-					 iTotalStatValue +=pTeamSoldier -> bAgility;
+					 iTotalStatValue +=pTeamSoldier->stats.bAgility;
 
 					 break;
 				 case 2:
 					// dexterity
-					 iTotalStatValue +=  pTeamSoldier -> bDexterity;
+					 iTotalStatValue +=  pTeamSoldier->stats.bDexterity;
 
 					break;
 				 case 3:
 				 // strength
-				 iTotalStatValue +=  pTeamSoldier -> bStrength;
+				 iTotalStatValue +=  pTeamSoldier->stats.bStrength;
 
 				 break;
 				 case 4:
 					// leadership
-					 iTotalStatValue +=  pTeamSoldier -> bLeadership;
+					 iTotalStatValue +=  pTeamSoldier->stats.bLeadership;
 
 				 break;
 				 case 5:
 					// wisdom
 					
-					 iTotalStatValue += pTeamSoldier -> bWisdom;
+					 iTotalStatValue += pTeamSoldier->stats.bWisdom;
 				 break;
 				 case 6:
 					// exper
            
-					 iTotalStatValue +=  pTeamSoldier -> bExpLevel;
+					 iTotalStatValue +=  pTeamSoldier->stats.bExpLevel;
 
 				 break;
 				 case 7:
 					 //mrkmanship
 					 
-					 iTotalStatValue +=  pTeamSoldier -> bMarksmanship;
+					 iTotalStatValue +=  pTeamSoldier->stats.bMarksmanship;
        			 
 				 break;
 				 case 8:
 					// mech
 					 
-					 iTotalStatValue +=  pTeamSoldier -> bMechanical;
+					 iTotalStatValue +=  pTeamSoldier->stats.bMechanical;
 				 break;
 				 case 9:
 					// exp
 					 
-					 iTotalStatValue +=  pTeamSoldier ->bExplosive;
+					 iTotalStatValue +=  pTeamSoldier->stats.bExplosive;
 				 break;
 				 case 10:
 					 // med
 					 
-					 iTotalStatValue +=  pTeamSoldier -> bMedical;
+					 iTotalStatValue +=  pTeamSoldier->stats.bMedical;
 				 break;
 			 }
 
@@ -3920,43 +3920,43 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			case 0:
 			// health
 			
-				iTotalStatValue += pTeamSoldier -> bLife;
+				iTotalStatValue += pTeamSoldier->bLife;
 			
 			break;
 		  case 1:
 		  // agility
 			
-				iTotalStatValue += pTeamSoldier -> bAgility;
+				iTotalStatValue += pTeamSoldier->bAgility;
 			
 			break;
 			case 2:
 			// dexterity
 			
-					iTotalStatValue += pTeamSoldier -> bDexterity;
+					iTotalStatValue += pTeamSoldier->bDexterity;
 			
 			break;
 			case 3:
 			// strength
       
-				iTotalStatValue += pTeamSoldier -> bStrength;
+				iTotalStatValue += pTeamSoldier->bStrength;
 			 
 			break;
 			case 4:
 			// leadership
       
-				iTotalStatValue += pTeamSoldier -> bLeadership;
+				iTotalStatValue += pTeamSoldier->bLeadership;
 				 
 			break;
 			case 5:
 		  // wisdom
 			
-				iTotalStatValue += pTeamSoldier -> bWisdom;
+				iTotalStatValue += pTeamSoldier->bWisdom;
 			
 			break;
 			case 6:
 			// exper
      
-				iTotalStatValue += pTeamSoldier -> bExpLevel;
+				iTotalStatValue += pTeamSoldier->bExpLevel;
 		 
 
 			break;
@@ -3964,26 +3964,26 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			//mrkmanship
 			
 					iId = cnt;
-					iTotalStatValue += pTeamSoldier -> bMarksmanship;
+					iTotalStatValue += pTeamSoldier->bMarksmanship;
 			
        			 
 		  break;
 			case 8:
 			// mech
 			
-				iTotalStatValue += pTeamSoldier -> bMechanical;
+				iTotalStatValue += pTeamSoldier->bMechanical;
 			
 		  break;
 			case 9:
 			// exp
 			
-				iTotalStatValue += pTeamSoldier -> bExplosive;
+				iTotalStatValue += pTeamSoldier->bExplosive;
 			
 			break;
 			case 10:
 			// med
 			
-				iTotalStatValue += pTeamSoldier -> bMedical;
+				iTotalStatValue += pTeamSoldier->bMedical;
 			break;
 		}
 
@@ -4133,7 +4133,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 			if( iId == -1 )
 				swprintf( sString, L"%s", pPOWStrings[1] );
 			else
-				swprintf( sString, L"%s", MercPtrs[ iId ] -> name );
+				swprintf( sString, L"%s", MercPtrs[ iId ]->name );
 		}
 		else
 		{
@@ -4152,7 +4152,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						 if( iId == -1 )
 							 iStat = -1;
 						 else
-							iStat = MercPtrs[ iId ] -> bLifeMax;
+							iStat = MercPtrs[ iId ]->stats.bLifeMax;
 					 }
 					 else
 					 {
@@ -4163,7 +4163,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						 // agility
 						 if( fCurrentTeamMode == TRUE )
 						 {
-								iStat = MercPtrs[ iId ] -> bAgility;
+								iStat = MercPtrs[ iId ]->stats.bAgility;
 						 }
 						 else
 						 {
@@ -4175,7 +4175,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bDexterity;
+							iStat = MercPtrs[ iId ]->stats.bDexterity;
 						}
 						else
 						{
@@ -4187,7 +4187,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 					 // strength
 					 if( fCurrentTeamMode == TRUE )
 					 {
-					   iStat = MercPtrs[ iId ] -> bStrength;
+					   iStat = MercPtrs[ iId ]->stats.bStrength;
 					 }
 					 else
 					 {
@@ -4199,7 +4199,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bLeadership;
+							iStat = MercPtrs[ iId ]->stats.bLeadership;
 						}
 						else
 						{
@@ -4210,7 +4210,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// wisdom
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bWisdom;
+						  iStat = MercPtrs[ iId ]->stats.bWisdom;
 						}
 						else
 						{
@@ -4221,7 +4221,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// exper
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bExpLevel;
+						  iStat = MercPtrs[ iId ]->stats.bExpLevel;
 						}
 						else
 						{
@@ -4232,7 +4232,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						 //mrkmanship
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMarksmanship;
+						  iStat = MercPtrs[ iId ]->stats.bMarksmanship;
 						}
 						else
 						{
@@ -4243,7 +4243,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// mech
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMechanical;
+						  iStat = MercPtrs[ iId ]->stats.bMechanical;
 						}
 						else
 						{
@@ -4254,18 +4254,18 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bExplosive;
+							iStat = MercPtrs[ iId ]->stats.bExplosive;
 						}
 						else
 						{
-							iStat = gMercProfiles[ iDepartedId ] . bExplosive;
+							iStat = gMercProfiles[ iDepartedId ] .bExplosive;
 						}
 					 break;
 					 case 10:
 						 // med
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMedical;
+						  iStat = MercPtrs[ iId ]->stats.bMedical;
 						}
 						else
 						{
@@ -4348,7 +4348,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 			if( iId == -1 )
 				swprintf( sString, L"%s", pPOWStrings[1] );
 			else
-				swprintf( sString, L"%s", MercPtrs[ iId ] -> name );
+				swprintf( sString, L"%s", MercPtrs[ iId ]->name );
 		}
 		else
 		{
@@ -4367,7 +4367,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						 if( iId == -1 )
 							iStat = -1;
 						 else
-							iStat = MercPtrs[ iId ] -> bLifeMax;
+							iStat = MercPtrs[ iId ]->stats.bLifeMax;
 					 }
 					 else
 					 {
@@ -4378,7 +4378,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						 // agility
 						 if( fCurrentTeamMode == TRUE )
 						 {
-								iStat = MercPtrs[ iId ] -> bAgility;
+								iStat = MercPtrs[ iId ]->stats.bAgility;
 						 }
 						 else
 						 {
@@ -4390,7 +4390,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bDexterity;
+							iStat = MercPtrs[ iId ]->stats.bDexterity;
 						}
 						else
 						{
@@ -4402,7 +4402,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 					 // strength
 					 if( fCurrentTeamMode == TRUE )
 					 {
-					   iStat = MercPtrs[ iId ] -> bStrength;
+					   iStat = MercPtrs[ iId ]->stats.bStrength;
 					 }
 					 else
 					 {
@@ -4414,7 +4414,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bLeadership;
+							iStat = MercPtrs[ iId ]->stats.bLeadership;
 						}
 						else
 						{
@@ -4425,7 +4425,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// wisdom
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bWisdom;
+						  iStat = MercPtrs[ iId ]->stats.bWisdom;
 						}
 						else
 						{
@@ -4436,7 +4436,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// exper
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bExpLevel;
+						  iStat = MercPtrs[ iId ]->stats.bExpLevel;
 						}
 						else
 						{
@@ -4447,7 +4447,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						 //mrkmanship
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMarksmanship;
+						  iStat = MercPtrs[ iId ]->stats.bMarksmanship;
 						}
 						else
 						{
@@ -4458,7 +4458,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// mech
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMechanical;
+						  iStat = MercPtrs[ iId ]->stats.bMechanical;
 						}
 						else
 						{
@@ -4469,7 +4469,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ] -> bExplosive;
+							iStat = MercPtrs[ iId ]->stats.bExplosive;
 						}
 						else
 						{
@@ -4480,7 +4480,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						 // med
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ] -> bMedical;
+						  iStat = MercPtrs[ iId ]->stats.bMedical;
 						}
 						else
 						{
@@ -5620,7 +5620,7 @@ INT32 GetIdOfFirstDisplayedMerc( )
 		//cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
     for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
 		{	
-		   if( ( pSoldier->bActive )&&( pSoldier->bLife > 0 ) )
+		   if( ( pSoldier->bActive )&&( pSoldier->stats.bLife > 0 ) )
 			 {
 				 return( 0 );
 			 }
@@ -6886,7 +6886,7 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 	UINT32 uiHits = 0;
 	
 	
-	if( Menptr[iId].uiStatusFlags & SOLDIER_VEHICLE )
+	if( Menptr[iId].flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}

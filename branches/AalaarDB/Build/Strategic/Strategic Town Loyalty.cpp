@@ -531,7 +531,7 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 	{
 		pSoldier = MercPtrs[ iCounter ];
 
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->bActive )
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bActive )
 		{
 			// if soldier is in this sector
 			if( SectorIsPartOfTown( bTownId, pSoldier->sSectorX, pSoldier->sSectorY ) == TRUE )
@@ -847,7 +847,7 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 	
 		case ENEMY_TEAM:
 			// check whose sector this is
-			if( StrategicMap[( pSoldier -> sSectorX ) + ( MAP_WORLD_X * ( pSoldier -> sSectorY ) )].fEnemyControlled == TRUE )
+			if( StrategicMap[( pSoldier->sSectorX ) + ( MAP_WORLD_X * ( pSoldier->sSectorY ) )].fEnemyControlled == TRUE )
 			{
 				// enemy soldiers... in enemy controlled sector.  Gain loyalty
 				fIncrement = TRUE;
@@ -893,7 +893,7 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 				iLoyaltyChange *= MULTIPLIER_FOR_MURDER_BY_MONSTER;
 
 				// check whose sector this is
-				if( StrategicMap[( pSoldier -> sSectorX ) + ( MAP_WORLD_X * ( pSoldier -> sSectorY ) )].fEnemyControlled == TRUE )
+				if( StrategicMap[( pSoldier->sSectorX ) + ( MAP_WORLD_X * ( pSoldier->sSectorY ) )].fEnemyControlled == TRUE )
 				{
 					// enemy controlled sector - gain loyalty
 					fIncrement = TRUE;
@@ -1624,7 +1624,7 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 	}
 
 	// determine what the base loyalty change of this event type is worth
-	// these are ->hundredths<- of loyalty points, so choose appropriate values accordingly!
+	// these are->hundredths<- of loyalty points, so choose appropriate values accordingly!
 	// the closer a town is to the event, the more pronounced the effect upon that town is
 	switch (ubEventType)
 	{
@@ -1925,10 +1925,10 @@ UINT32 PlayerStrength( void )
 		pSoldier = MercPtrs[ ubLoop ];
 		if ( pSoldier->bActive )
 		{
-			if ( pSoldier->bInSector || ( pSoldier->fBetweenSectors && ((pSoldier->ubPrevSectorID % 16) + 1) == gWorldSectorX && ((pSoldier->ubPrevSectorID / 16) + 1) == gWorldSectorY && ( pSoldier->bSectorZ == gbWorldSectorZ ) ) )
+			if ( pSoldier->bInSector || ( pSoldier->flags.fBetweenSectors && ((pSoldier->ubPrevSectorID % 16) + 1) == gWorldSectorX && ((pSoldier->ubPrevSectorID / 16) + 1) == gWorldSectorY && ( pSoldier->bSectorZ == gbWorldSectorZ ) ) )
 			{
 				// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
-				uiStrength = pSoldier->bLife * ( pSoldier->bBreathMax + 100 ) / 200;
+				uiStrength = pSoldier->stats.bLife * ( pSoldier->bBreathMax + 100 ) / 200;
 				uiTotal += uiStrength;
 			}
 		}
@@ -1945,10 +1945,10 @@ UINT32 EnemyStrength( void )
 		for ( ubLoop = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
 		{
 			pSoldier = MercPtrs[ ubLoop ];
-			if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->bNeutral )
+			if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->aiData.bNeutral )
 			{
 				// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
-				uiStrength = pSoldier->bLife * ( pSoldier->bBreathMax + 100 ) / 200;
+				uiStrength = pSoldier->stats.bLife * ( pSoldier->bBreathMax + 100 ) / 200;
 				uiTotal += uiStrength;
 			}
 		}

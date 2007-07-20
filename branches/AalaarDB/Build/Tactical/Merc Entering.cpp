@@ -600,7 +600,7 @@ void HandleHeliDrop( )
 					{
 						//sWorldX = CenterX( gsGridNoSweetSpot );
 						//sWorldY = CenterY( gsGridNoSweetSpot );
-						EVENT_InitNewSoldierAnim( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], HELIDROP, 0 , FALSE );
+						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->EVENT_InitNewSoldierAnim( HELIDROP, 0 , FALSE );
 
 						// Change insertion code
 						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->ubStrategicInsertionCode = INSERTION_CODE_NORTH;

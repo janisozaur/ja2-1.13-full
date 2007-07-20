@@ -807,7 +807,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	Corpse.sGridNo								= pSoldier->sGridNo;
 	Corpse.dXPos									= pSoldier->dXPos;
 	Corpse.dYPos									= pSoldier->dYPos;
-	Corpse.bLevel									= pSoldier->bLevel;
+	Corpse.bLevel									= pSoldier->pathing.bLevel;
 	Corpse.ubProfile							= pSoldier->ubProfile;
 
 	if ( Corpse.bLevel > 0 )
@@ -850,7 +850,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	Corpse.bDirection	= pSoldier->bDirection;
 
 	// If we are a vehicle.... only use 1 direction....
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		Corpse.usFlags |= ROTTING_CORPSE_VEHICLE;
 
@@ -910,7 +910,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
     {
 			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &ItemObject );
 
-		  AddItemToPool( sNewGridNo, &ItemObject, bVisible , pSoldier->bLevel, usItemFlags, -1 );
+		  AddItemToPool( sNewGridNo, &ItemObject, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
     }
   }
   else
@@ -944,13 +944,13 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 							}
 						}
 
-						AddItemToPool( pSoldier->sGridNo, pObj, bVisible , pSoldier->bLevel, usItemFlags, -1 );
+						AddItemToPool( pSoldier->sGridNo, pObj, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
 				  }
 			  }
 		  }
     }
 
-    DropKeysInKeyRing( pSoldier, pSoldier->sGridNo, pSoldier->bLevel, bVisible, FALSE, 0, FALSE );
+    DropKeysInKeyRing( pSoldier, pSoldier->sGridNo, pSoldier->pathing.bLevel, bVisible, FALSE, 0, FALSE );
 	}
 
 	// Make team look for items
@@ -980,7 +980,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 		}
 		else
 		{
-			RemoveSoldierFromGridNo( pSoldier );
+			pSoldier->RemoveSoldierFromGridNo( );
 		}
 	
 		if ( ubType == NO_CORPSE )
@@ -1102,11 +1102,11 @@ void AddCrowToCorpse( ROTTING_CORPSE *pCorpse )
 		  // Change to fly animation
 		  //sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 5, &ubDirection );
 		  //pSoldier->usUIMovementMode = CROW_FLY;
-		  //EVENT_GetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode );
+		  //pSoldier->EVENT_GetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode );
 
 		  // Setup action data to point back to corpse....
-		  pSoldier->uiPendingActionData1	=  pCorpse->iID;
-		  pSoldier->sPendingActionData2		=	 pCorpse->def.sGridNo;
+		  pSoldier->aiData.uiPendingActionData1	=  pCorpse->iID;
+		  pSoldier->aiData.sPendingActionData2		=	 pCorpse->def.sGridNo;
 
 		  pCorpse->def.bNumServicingCrows++;
     }
@@ -1120,10 +1120,10 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 	ROTTING_CORPSE		*pCorpse;
 
 	// Check if this crow is still referencing the same corpse...
-	pCorpse = &(gRottingCorpse[ pSoldier->uiPendingActionData1 ] );
+	pCorpse = &(gRottingCorpse[ pSoldier->aiData.uiPendingActionData1 ] );
 	
 	// Double check grindo...
-	if ( pSoldier->sPendingActionData2 == pCorpse->def.sGridNo )
+	if ( pSoldier->aiData.sPendingActionData2 == pCorpse->def.sGridNo )
 	{
 		// We have a match
 		// Adjust crow servicing count...
@@ -1184,7 +1184,7 @@ void HandleRottingCorpses( )
 
 		for (bLoop=gTacticalStatus.Team[ CIV_TEAM ].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; bLoop++, pSoldier++)
 		{
-			if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && !( pSoldier->uiStatusFlags & SOLDIER_GASSED ) )
+			if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->stats.bLife >= OKLIFE) && !( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) )
 			{
 				if ( pSoldier->ubBodyType == CROW )
 				{
@@ -1276,7 +1276,7 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pSoldier++ )
 	{ 
 			// ATE: Ok, lets check for some basic things here!
-			if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+			if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
 			{
 				// is he close enough to see that gridno if he turns his head?
 				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel, pSoldier );
@@ -1658,7 +1658,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
 			{
 				// Go on sweet stop
-				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
+				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.pathing.bLevel ) )
 				{
 					BOOLEAN fDirectionFound = FALSE;
 					BOOLEAN	fCanSetDirection   = FALSE;
@@ -1835,7 +1835,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 	OBJECTTYPE			Object;
 
 	// OK, get corpse
-	pCorpse = &( gRottingCorpse[ pSoldier->uiPendingActionData4 ] );
+	pCorpse = &( gRottingCorpse[ pSoldier->aiData.uiPendingActionData4 ] );
 
 	bObjSlot = FindObj( pSoldier, JAR );
 
@@ -1944,7 +1944,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	    for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	    { 
 			  // ATE: Ok, lets check for some basic things here!
-			  if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->sGridNo != NOWHERE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
+			  if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->sGridNo != NOWHERE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
 			  {
           pTeamSoldier->bCorpseQuoteTolerance++;
         }

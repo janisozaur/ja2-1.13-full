@@ -130,7 +130,7 @@ void			DebugPrint( void );
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
@@ -164,7 +164,7 @@ BOOLEAN InitializeMemoryManager( void )
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
@@ -183,7 +183,7 @@ void MemDebug( BOOLEAN f )
 // Return Value :
 // Modification history :
 //
-//		12sep96:HJH		-> modified for use by Wizardry
+//		12sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
@@ -324,7 +324,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 	ptrNew = _realloc_dbg( ptr, uiSize, _NORMAL_BLOCK, pcFile, iLine );
   if (ptrNew == NULL)
   {
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
+		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d->%d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
 		if ( uiSize != 0 )
 		{
 			// ptr is left untouched, so undo the math above
@@ -421,7 +421,7 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 // Return Value :
 // Modification history :
 //
-//		??sep96:HJH		-> modified for use by Wizardry
+//		??sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 
@@ -446,7 +446,7 @@ UINT32 MemGetFree( void )
 // Return Value :
 // Modification history :
 //
-//		May98:HJH		-> Carter
+//		May98:HJH		->Carter
 //
 //**************************************************************************
 
@@ -471,7 +471,7 @@ UINT32 MemGetTotalSystem( void )
 // Return Value :
 // Modification history :
 //
-//		23sep96:HJH		-> modified for use by Wizardry
+//		23sep96:HJH		->modified for use by Wizardry
 //
 //**************************************************************************
 

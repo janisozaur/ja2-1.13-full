@@ -92,7 +92,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 		return;
 
 	// ignore vehicles and robots
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
+	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
 		return;
 
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
@@ -102,7 +102,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 	}
 
 	// no points earned while somebody is unconscious (for assist XPs, and such)
-	if ( pSoldier->bLife < CONSCIOUSNESS )
+	if ( pSoldier->stats.bLife < CONSCIOUSNESS )
 		return;
 
 
@@ -525,68 +525,68 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 		switch( ubStat )
 		{
 		case HEALTHAMT:
-			pbSoldierStatPtr = &( pSoldier->bLifeMax );
-			puiStatTimerPtr = &( pSoldier->uiChangeHealthTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bLifeMax );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeHealthTime);
 			usIncreaseValue = HEALTH_INCREASE;
 			break;
 
 		case AGILAMT:
-			pbSoldierStatPtr = &( pSoldier->bAgility );
-			puiStatTimerPtr = &( pSoldier->uiChangeAgilityTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bAgility );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeAgilityTime);
 			usIncreaseValue = AGIL_INCREASE;
 			break;
 
 		case DEXTAMT:
-			pbSoldierStatPtr = &( pSoldier->bDexterity );
-			puiStatTimerPtr = &( pSoldier->uiChangeDexterityTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bDexterity );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeDexterityTime);
 			usIncreaseValue = DEX_INCREASE;
 			break;
 
 		case WISDOMAMT:
-			pbSoldierStatPtr = &( pSoldier->bWisdom );
-			puiStatTimerPtr = &( pSoldier->uiChangeWisdomTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bWisdom );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeWisdomTime);
 			usIncreaseValue = WIS_INCREASE;
 			break;
 
 		case MEDICALAMT:
-			pbSoldierStatPtr = &( pSoldier->bMedical );
-			puiStatTimerPtr = &( pSoldier->uiChangeMedicalTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bMedical );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMedicalTime);
 			usIncreaseValue = MED_INCREASE;
 			break;
 
 		case EXPLODEAMT:
-			pbSoldierStatPtr = &( pSoldier->bExplosive );
-			puiStatTimerPtr = &( pSoldier->uiChangeExplosivesTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bExplosive );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeExplosivesTime);
 			usIncreaseValue = EXP_INCREASE;
 			break;
 
 		case MECHANAMT:
-			pbSoldierStatPtr = &( pSoldier->bMechanical );
-			puiStatTimerPtr = &( pSoldier->uiChangeMechanicalTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bMechanical );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMechanicalTime);
 			usIncreaseValue = MECH_INCREASE;
 			break;
 
 		case MARKAMT:
-			pbSoldierStatPtr = &( pSoldier->bMarksmanship );
-			puiStatTimerPtr = &( pSoldier->uiChangeMarksmanshipTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bMarksmanship );
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMarksmanshipTime);
 			usIncreaseValue = MRK_INCREASE;
 			break;
 
 		case EXPERAMT:
-			pbSoldierStatPtr = &(pSoldier->bExpLevel);
-			puiStatTimerPtr = &( pSoldier->uiChangeLevelTime );
+			pbSoldierStatPtr = &(pSoldier->stats.bExpLevel);
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeLevelTime );
 			usIncreaseValue = LVL_INCREASE;
 			break;
 
 		case STRAMT:
-			pbSoldierStatPtr = &(pSoldier->bStrength);
-			puiStatTimerPtr = &( pSoldier->uiChangeStrengthTime);
+			pbSoldierStatPtr = &(pSoldier->stats.bStrength);
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeStrengthTime);
 			usIncreaseValue = STRENGTH_INCREASE;
 			break;
 
 		case LDRAMT:
-			pbSoldierStatPtr = &( pSoldier->bLeadership);
-			puiStatTimerPtr = &( pSoldier->uiChangeLeadershipTime);
+			pbSoldierStatPtr = &( pSoldier->stats.bLeadership);
+			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeLeadershipTime);
 			usIncreaseValue = LDR_INCREASE;
 			break;
 		}
@@ -681,12 +681,12 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 			if (pSoldier != NULL)
 			{
 				// adjust current health by the same amount as max health
-				pSoldier->bLife += sPtsChanged;
+				pSoldier->stats.bLife += sPtsChanged;
 
 				// don't let this kill a guy or knock him out!!!
-				if (pSoldier->bLife < OKLIFE)
+				if (pSoldier->stats.bLife < OKLIFE)
 				{
-					pSoldier->bLife = OKLIFE;
+					pSoldier->stats.bLife = OKLIFE;
 				}
 			}
 		}
@@ -702,7 +702,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 				{
 					case MERC_TYPE__AIM_MERC:
 						// A.I.M.
-						pSoldier->fContractPriceHasIncreased = TRUE;
+						pSoldier->flags.fContractPriceHasIncreased = TRUE;
 						fChangeSalary = TRUE;
 						break;
 
@@ -798,11 +798,11 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 			return;
 
 		// ignore vehicles and robots
-		if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
+		if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
 			return;
 
 		// delay increases while merc is dying
-		if (pSoldier->bLife < OKLIFE)
+		if (pSoldier->stats.bLife < OKLIFE)
 			return;
 
 		// ignore POWs - shouldn't ever be getting this far
@@ -911,47 +911,47 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 			switch( ubStat )
 			{
 				case HEALTHAMT:
-				pbSoldierStatPtr = &( pSoldier->bLifeMax );
+				pbSoldierStatPtr = &( pSoldier->stats.bLifeMax );
 				break;
 
 			case AGILAMT:
-				pbSoldierStatPtr = &( pSoldier->bAgility );
+				pbSoldierStatPtr = &( pSoldier->stats.bAgility );
 				break;
 
 			case DEXTAMT:
-				pbSoldierStatPtr = &( pSoldier->bDexterity );
+				pbSoldierStatPtr = &( pSoldier->stats.bDexterity );
 				break;
 
 			case WISDOMAMT:
-				pbSoldierStatPtr = &( pSoldier->bWisdom );
+				pbSoldierStatPtr = &( pSoldier->stats.bWisdom );
 				break;
 
 			case MEDICALAMT:
-				pbSoldierStatPtr = &( pSoldier->bMedical );
+				pbSoldierStatPtr = &( pSoldier->stats.bMedical );
 				break;
 
 			case EXPLODEAMT:
-				pbSoldierStatPtr = &( pSoldier->bExplosive );
+				pbSoldierStatPtr = &( pSoldier->stats.bExplosive );
 				break;
 
 			case MECHANAMT:
-				pbSoldierStatPtr = &( pSoldier->bMechanical );
+				pbSoldierStatPtr = &( pSoldier->stats.bMechanical );
 				break;
 
 			case MARKAMT:
-				pbSoldierStatPtr = &( pSoldier->bMarksmanship );
+				pbSoldierStatPtr = &( pSoldier->stats.bMarksmanship );
 				break;
 
 			case EXPERAMT:
-				pbSoldierStatPtr = &(pSoldier->bExpLevel);
+				pbSoldierStatPtr = &(pSoldier->stats.bExpLevel);
 				break;
 
 			case STRAMT:
-				pbSoldierStatPtr = &(pSoldier->bStrength);
+				pbSoldierStatPtr = &(pSoldier->stats.bStrength);
 				break;
 
 			case LDRAMT:
-				pbSoldierStatPtr = &( pSoldier->bLeadership);
+				pbSoldierStatPtr = &( pSoldier->stats.bLeadership);
 				break;
 			}
 		}
@@ -999,7 +999,7 @@ void HandleAnyStatChangesAfterAttack( void )
 	// must check everyone on player's team, not just the shooter
 	for ( cnt = 0, pSoldier = MercPtrs[ 0 ]; cnt <= gTacticalStatus.Team[ MercPtrs[ 0 ]->bTeam ].bLastID; cnt++,pSoldier++)
 	{
-		if (pSoldier -> bActive)
+		if (pSoldier->bActive)
 		{
 			ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
 		}
@@ -1522,8 +1522,8 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 				ubGuynum <= gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 				ubGuynum++, pSoldier++ )
 	{	
-		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->bLife >= CONSCIOUSNESS ) &&
-				 !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->stats.bLife >= CONSCIOUSNESS ) &&
+				 !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 		{
 			StatChange( pSoldier, EXPERAMT, usXPs, FALSE );
 		}

@@ -1421,7 +1421,7 @@ void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector )
 			{
 				if( ( SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) == ubSector ) && ( pSoldier->bSectorZ == 0 ) )
 				{
-					pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
+					pSoldier->flags.fDoneAssignmentAndNothingToDoFlag = FALSE;
 					pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
 				}
 			}

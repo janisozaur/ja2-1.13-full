@@ -315,7 +315,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 
 	// generate a noise for thumping on the door
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, CROWBAR_DOOR_VOLUME, NOISE_DOOR_SMASHING );
+	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->pathing.bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, CROWBAR_DOOR_VOLUME, NOISE_DOOR_SMASHING );
 
 	if ( !pDoor->fLocked )
 	{
@@ -399,7 +399,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	LOCK * pLock;
 
 	// generate a noise for thumping on the door
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, SMASHING_DOOR_VOLUME, NOISE_DOOR_SMASHING );
+	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->pathing.bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, SMASHING_DOOR_VOLUME, NOISE_DOOR_SMASHING );
 
 	if ( !pDoor->fLocked )
 	{
@@ -672,7 +672,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 		  DebugAttackBusy( "!!!!!!! Trap gone off\n" );
 
-			SoldierTakeDamage( pSoldier, 0, (UINT16) (10 + PreRandom( 10 )), (UINT16) ((3 + PreRandom( 3 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
+			pSoldier->SoldierTakeDamage( 0, (UINT16) (10 + PreRandom( 10 )), (UINT16) ((3 + PreRandom( 3 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
 			break;
 
 		case SUPER_ELECTRIC:
@@ -687,7 +687,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 		  DebugAttackBusy( "!!!!!!! Trap gone off\n" );
 
-			SoldierTakeDamage( pSoldier, 0, (UINT16) (20 + PreRandom( 20 )), (UINT16) ((6 + PreRandom( 6 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
+			pSoldier->SoldierTakeDamage( 0, (UINT16) (20 + PreRandom( 20 )), (UINT16) ((6 + PreRandom( 6 ) * 1000)), TAKE_DAMAGE_ELECTRICITY, NOBODY, pDoor->sGridNo, 0, TRUE );
 			break;
 
 
@@ -1317,7 +1317,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
 	{ 
 		// ATE: Ok, lets check for some basic things here!
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
 		{
 			// is he close enough to see that gridno if he turns his head?
 			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0, pSoldier );

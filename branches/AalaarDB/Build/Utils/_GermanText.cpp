@@ -66,7 +66,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 	EX: L"Ecran De Carte (|M)" (this is the French translation)
 
-	Other examples are used multiple times, like the Esc key or "|E|s|c" or Space -> (|S|p|a|c|e)
+	Other examples are used multiple times, like the Esc key or "|E|s|c" or Space->(|S|p|a|c|e)
 
 2) NEWLINE
 	Any place you see a \n within the string, you are looking at another string that is part of the fast help

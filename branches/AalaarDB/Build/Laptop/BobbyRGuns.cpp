@@ -1384,7 +1384,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 			continue;
 		}
 
-		// No Filter -> Take all
+		// No Filter->Take all
 		if (iFilter == -1)
 		{
 			bAddItem = TRUE;
@@ -2105,7 +2105,7 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask, INT32 iFilter )
 		{
 			if( Item[ LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex ].usItemClass & uiClassMask )
 			{
-				// No Filter -> Take all
+				// No Filter->Take all
 				if (iFilter == -1)
 				{
 					bCntNumItems = TRUE;
@@ -2201,7 +2201,7 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 		//If we have some of the inventory on hand
 		if( LaptopSaveInfo.BobbyRayUsedInventory[ i ].ubQtyOnHand != 0 )
 		{
-			// No Filter -> Take all
+			// No Filter->Take all
 			if (iFilter == -1)
 			{
 				bCntNumItems = TRUE;

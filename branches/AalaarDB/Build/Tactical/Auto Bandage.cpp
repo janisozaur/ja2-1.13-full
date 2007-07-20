@@ -108,7 +108,7 @@ void BeginAutoBandage( )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
 	{
 		// if the soldier isn't active or in sector, we have problems..leave
-		if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+		if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
 		{
 			continue;
 		}
@@ -185,9 +185,9 @@ void HandleAutoBandagePending( )
 			// Are we in sector?
 			if ( pSoldier->bActive  )
 			{
-				if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ && !pSoldier->fBetweenSectors )
+				if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ && !pSoldier->flags.fBetweenSectors )
 				{
-					if ( pSoldier->ubPendingAction != NO_PENDING_ACTION )
+					if ( pSoldier->aiData.ubPendingAction != NO_PENDING_ACTION )
 					{
 						return;
 					}
@@ -316,7 +316,7 @@ BOOLEAN CreateAutoBandageString( void )
 	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->bMedical > 0 && FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
+		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->stats.bMedical > 0 && FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
 		{
 			ubDoctor[ubDoctors] = pSoldier->ubID;
 			ubDoctors++;
@@ -468,11 +468,11 @@ void AutoBandage( BOOLEAN fStart )
 				}
 
 				// ATE: Mkae everyone stand up!
-				if ( pSoldier->bLife >= OKLIFE && !pSoldier->bCollapsed )
+				if ( pSoldier->stats.bLife >= OKLIFE && !pSoldier->bCollapsed )
 				{
 					if ( gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_STAND )
 					{
-						ChangeSoldierStance( pSoldier, ANIM_STAND );
+						pSoldier->ChangeSoldierStance( ANIM_STAND );
 					}
 				}
 
@@ -488,7 +488,7 @@ void AutoBandage( BOOLEAN fStart )
 			// If anyone is still doing aid animation, stop!
 			if ( MercPtrs[ ubLoop ]->usAnimState == GIVING_AID )
 			{
-				SoldierGotoStationaryStance( MercPtrs[ ubLoop ] );
+				MercPtrs[ ubLoop ]->SoldierGotoStationaryStance(  );
 			}
 		}
 
@@ -1179,12 +1179,12 @@ BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentX
 	}
 
 	// is the merc alive?
-	if( !pSoldier->bLife )
+	if( !pSoldier->stats.bLife )
 		return( FALSE );
 
 
 	//yellow one for bleeding
-	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bLifeMax/100;
+	iStartY = sCurrentYPosition + 29 - 27*pSoldier->stats.bLifeMax/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
 	
@@ -1194,7 +1194,7 @@ BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentX
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
 	
 	//red one for actual health
-	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bLife/100;
+	iStartY = sCurrentYPosition + 29 - 27*pSoldier->stats.bLife/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
 	
@@ -1204,7 +1204,7 @@ BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentX
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+40, iStartY, sCurrentXPosition+41, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
 	
 	//MORALE BAR
-	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bMorale/100;
+	iStartY = sCurrentYPosition + 29 - 27*pSoldier->aiData.bMorale/100;
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+42, iStartY, sCurrentXPosition+43, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+43, iStartY, sCurrentXPosition+44, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
 

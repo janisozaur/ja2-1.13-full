@@ -917,7 +917,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	MercCreateStruct.sInsertionGridNo		= pSoldier->sGridNo;
 	MercCreateStruct.bDirection					= pSoldier->bDirection;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		MercCreateStruct.ubProfile					= NO_PROFILE;
 		MercCreateStruct.fUseGivenVehicle		= TRUE;
@@ -934,19 +934,19 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		pNewSoldier = MercPtrs[ ubID ];
 
 		// Copy vital stats back!
-		pNewSoldier->bLife													= pSoldier->bLife;
-		pNewSoldier->bLifeMax												= pSoldier->bLifeMax;
-		pNewSoldier->bAgility												= pSoldier->bAgility;
-		pNewSoldier->bLeadership										= pSoldier->bLeadership;
-		pNewSoldier->bDexterity											= pSoldier->bDexterity;
-		pNewSoldier->bStrength											= pSoldier->bStrength;
-		pNewSoldier->bWisdom												= pSoldier->bWisdom;
-		pNewSoldier->bExpLevel											= pSoldier->bExpLevel;
-		pNewSoldier->bMarksmanship									= pSoldier->bMarksmanship;
-		pNewSoldier->bMedical												= pSoldier->bMedical;
-		pNewSoldier->bMechanical										= pSoldier->bMechanical;
-		pNewSoldier->bExplosive											= pSoldier->bExplosive;
-		pNewSoldier->bScientific										= pSoldier->bScientific;
+		pNewSoldier->stats.bLife													= pSoldier->stats.bLife;
+		pNewSoldier->stats.bLifeMax												= pSoldier->stats.bLifeMax;
+		pNewSoldier->stats.bAgility												= pSoldier->stats.bAgility;
+		pNewSoldier->stats.bLeadership										= pSoldier->stats.bLeadership;
+		pNewSoldier->stats.bDexterity											= pSoldier->stats.bDexterity;
+		pNewSoldier->stats.bStrength											= pSoldier->stats.bStrength;
+		pNewSoldier->stats.bWisdom												= pSoldier->stats.bWisdom;
+		pNewSoldier->stats.bExpLevel											= pSoldier->stats.bExpLevel;
+		pNewSoldier->stats.bMarksmanship									= pSoldier->stats.bMarksmanship;
+		pNewSoldier->stats.bMedical												= pSoldier->stats.bMedical;
+		pNewSoldier->stats.bMechanical										= pSoldier->stats.bMechanical;
+		pNewSoldier->stats.bExplosive											= pSoldier->stats.bExplosive;
+		pNewSoldier->stats.bScientific										= pSoldier->stats.bScientific;
 		pNewSoldier->bLastRenderVisibleValue				= pSoldier->bLastRenderVisibleValue;
 		pNewSoldier->bVisible												= pSoldier->bVisible;
 
@@ -1146,9 +1146,9 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 
 	// If we are a robot, look to update controller....
-	if ( pNewSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if ( pNewSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 	{
-		UpdateRobotControllerGivenRobot( pNewSoldier );
+		pNewSoldier->UpdateRobotControllerGivenRobot(  );
 	}
 
 	// Set whatkind of merc am i
@@ -1327,19 +1327,19 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 					pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
 
 					// Copy....
-					pProfile->bLife 										= pSoldier->bLife;
-					pProfile->bLifeMax									= pSoldier->bLifeMax;
-					pProfile->bAgility									= pSoldier->bAgility;
-					pProfile->bLeadership								= pSoldier->bLeadership;
-					pProfile->bDexterity								= pSoldier->bDexterity;
-					pProfile->bStrength									= pSoldier->bStrength;
-					pProfile->bWisdom										= pSoldier->bWisdom;
-					pProfile->bExpLevel									= pSoldier->bExpLevel;
-					pProfile->bMarksmanship							= pSoldier->bMarksmanship;
-					pProfile->bMedical									= pSoldier->bMedical;
-					pProfile->bMechanical								= pSoldier->bMechanical;
-					pProfile->bExplosive								= pSoldier->bExplosive;
-					pProfile->bScientific								= pSoldier->bScientific;
+					pProfile->bLife 										= pSoldier->stats.bLife;
+					pProfile->bLifeMax									= pSoldier->stats.bLifeMax;
+					pProfile->bAgility									= pSoldier->stats.bAgility;
+					pProfile->bLeadership								= pSoldier->stats.bLeadership;
+					pProfile->bDexterity								= pSoldier->stats.bDexterity;
+					pProfile->bStrength									= pSoldier->stats.bStrength;
+					pProfile->bWisdom										= pSoldier->stats.bWisdom;
+					pProfile->bExpLevel									= pSoldier->stats.bExpLevel;
+					pProfile->bMarksmanship							= pSoldier->stats.bMarksmanship;
+					pProfile->bMedical									= pSoldier->stats.bMedical;
+					pProfile->bMechanical								= pSoldier->stats.bMechanical;
+					pProfile->bExplosive								= pSoldier->stats.bExplosive;
+					pProfile->bScientific								= pSoldier->stats.bScientific;
 				}
 			}
 		}
@@ -1482,17 +1482,17 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	// replace profile in group
 	ReplaceSoldierProfileInPlayerGroup( pSoldier->ubGroupID, ubSrcProfile, ubDestProfile );
 
-	pSoldier->bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
-	pSoldier->bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
-	pSoldier->bAgility =			pNewProfile->bAgility + pNewProfile->bAgilityDelta;
-	pSoldier->bWisdom =				pNewProfile->bWisdom + pNewProfile->bWisdomDelta;
-	pSoldier->bExpLevel =			pNewProfile->bExpLevel + pNewProfile->bExpLevelDelta;
-	pSoldier->bLeadership =		pNewProfile->bLeadership + pNewProfile->bLeadershipDelta;
+	pSoldier->stats.bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
+	pSoldier->stats.bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
+	pSoldier->stats.bAgility =			pNewProfile->bAgility + pNewProfile->bAgilityDelta;
+	pSoldier->stats.bWisdom =				pNewProfile->bWisdom + pNewProfile->bWisdomDelta;
+	pSoldier->stats.bExpLevel =			pNewProfile->bExpLevel + pNewProfile->bExpLevelDelta;
+	pSoldier->stats.bLeadership =		pNewProfile->bLeadership + pNewProfile->bLeadershipDelta;
 
-	pSoldier->bMarksmanship =	pNewProfile->bMarksmanship + pNewProfile->bMarksmanshipDelta;
-	pSoldier->bMechanical =		pNewProfile->bMechanical + pNewProfile->bMechanicDelta;
-	pSoldier->bMedical =			pNewProfile->bMedical + pNewProfile->bMedicalDelta;
-	pSoldier->bExplosive =		pNewProfile->bExplosive + pNewProfile->bExplosivesDelta;
+	pSoldier->stats.bMarksmanship =	pNewProfile->bMarksmanship + pNewProfile->bMarksmanshipDelta;
+	pSoldier->stats.bMechanical =		pNewProfile->bMechanical + pNewProfile->bMechanicDelta;
+	pSoldier->stats.bMedical =			pNewProfile->bMedical + pNewProfile->bMedicalDelta;
+	pSoldier->stats.bExplosive =		pNewProfile->bExplosive + pNewProfile->bExplosivesDelta;
 
 	if ( pSoldier->ubProfile == LARRY_DRUNK )
 	{

@@ -1537,7 +1537,7 @@ BOOLEAN CalculateSoldierZPos( SOLDIERTYPE * pSoldier, UINT8 ubPosType, FLOAT * p
 		*pdZPos = (*pdZPos * 4) / 3;
 	}
 
-	if (pSoldier->bLevel > 0)
+	if (pSoldier->pathing.bLevel > 0)
 	{ // on a roof
 		*pdZPos += WALL_HEIGHT_UNITS;
 	}
@@ -1584,11 +1584,11 @@ INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE 
 	}
 
 
-	if (pStartSoldier->uiStatusFlags & SOLDIER_MONSTER)
+	if (pStartSoldier->flags.uiStatusFlags & SOLDIER_MONSTER)
 	{
 		// monsters use smell instead of sight!
 		dEndZPos = STANDING_LOS_POS; // should avoid low rocks etc
-		if (pEndSoldier->bLevel > 0)
+		if (pEndSoldier->pathing.bLevel > 0)
 		{ // on a roof
 			dEndZPos += WALL_HEIGHT_UNITS;
 		}
@@ -1721,7 +1721,7 @@ INT16 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT16 sEndGridNo
 
 	CHECKF( pStartSoldier );
 	dStartZPos = FixedToFloat( ((gqStandardWindowTopHeight + gqStandardWindowBottomHeight) / 2) );
-	if (pStartSoldier->bLevel > 0)
+	if (pStartSoldier->pathing.bLevel > 0)
 	{ // on a roof
 		dStartZPos += WALL_HEIGHT_UNITS;
 	}
@@ -1981,7 +1981,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 
 			CreateItem( pBullet->fromItem, (INT8) pBullet->ubItemStatus, &Object );
 
-			AddItemToPool( pTarget->sGridNo, &Object, -1 , pTarget->bLevel, 0, 0 );
+			AddItemToPool( pTarget->sGridNo, &Object, -1 , pTarget->pathing.bLevel, 0, 0 );
 
 			// Make team look for items
 			NotifySoldiersToLookforItems( );
@@ -2007,7 +2007,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	// when the bullet got near him
 	//pTarget->ubSuppressionPoints--;
 
-	if ( pTarget->uiStatusFlags & SOLDIER_VEHICLE || (pTarget->ubBodyType == COW || pTarget->ubBodyType == CROW || pTarget->ubBodyType == BLOODCAT) )
+	if ( pTarget->flags.uiStatusFlags & SOLDIER_VEHICLE || (pTarget->ubBodyType == COW || pTarget->ubBodyType == CROW || pTarget->ubBodyType == BLOODCAT) )
 	{
 		//ubHitLocation = pStructure->ubVehicleHitLocation;
 		ubHitLocation = AIM_SHOT_TORSO;
@@ -2107,7 +2107,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 			}
 		}
 
-		if ( ( AmmoTypes[ubAmmoType].monsterSpit ) && (ubHitLocation == AIM_SHOT_HEAD) && ( ! (pTarget->uiStatusFlags & SOLDIER_MONSTER) ) )
+		if ( ( AmmoTypes[ubAmmoType].monsterSpit ) && (ubHitLocation == AIM_SHOT_HEAD) && ( ! (pTarget->flags.uiStatusFlags & SOLDIER_MONSTER) ) )
 		{
 			UINT8			ubOppositeDirection;
 
@@ -2141,7 +2141,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 
 	// Determine damage, checking guy's armour, etc
 	sRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pFirer->sGridNo, pTarget->sGridNo );
-	if ( gTacticalStatus.uiFlags & GODMODE  && !(pFirer->uiStatusFlags & SOLDIER_PC))	
+	if ( gTacticalStatus.uiFlags & GODMODE  && !(pFirer->flags.uiStatusFlags & SOLDIER_PC))	
 	{
 		// in god mode, and firer is computer controlled
 		iImpact = 0;
@@ -2149,7 +2149,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	}
 	else if (fIntended)
 	{
-		if (pFirer->bOppList[pTarget->ubID] == SEEN_CURRENTLY)
+		if (pFirer->aiData.bOppList[pTarget->ubID] == SEEN_CURRENTLY)
 		{
 			sHitBy = pBullet->sHitBy;
 		}
@@ -2175,7 +2175,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		}
 
 		// intentionally shot
-		pTarget->fIntendedTarget = TRUE;
+		pTarget->flags.fIntendedTarget = TRUE;
 
 		if ( (pBullet->usFlags & BULLET_FLAG_BUCKSHOT) && ( pTarget->ubID == pFirer->ubTargetID ) )
 		{
@@ -2197,7 +2197,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		iDamage = BulletImpact( pFirer, pTarget, ubHitLocation, iImpact, sHitBy, &ubSpecial );
 
 		// accidentally shot
-		pTarget->fIntendedTarget = FALSE;
+		pTarget->flags.fIntendedTarget = FALSE;
 	}
 
 	if ( AmmoTypes[ubAmmoType].monsterSpit )
@@ -2238,7 +2238,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	}
 
 	// check to see if someone was accidentally hit when no target was specified by the player
-	if ( pFirer->bTeam == gbPlayerNum && pFirer->ubTargetID == NOBODY && pTarget->bNeutral  )
+	if ( pFirer->bTeam == gbPlayerNum && pFirer->ubTargetID == NOBODY && pTarget->aiData.bNeutral  )
 	{
 		if ( pTarget->ubCivilianGroup == KINGPIN_CIV_GROUP || pTarget->ubCivilianGroup == HICKS_CIV_GROUP )
 		{
@@ -2280,7 +2280,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	SWeaponHit.ubSpecial = ubSpecial;
 
 	// now check to see if the bullet goes THROUGH this person! (not vehicles)
-	if ( !(pTarget->uiStatusFlags & SOLDIER_VEHICLE) && (AmmoTypes[ubAmmoType].canGoThrough) && !EXPLOSIVE_GUN( pFirer->usAttackingWeapon ) )
+	if ( !(pTarget->flags.uiStatusFlags & SOLDIER_VEHICLE) && (AmmoTypes[ubAmmoType].canGoThrough) && !EXPLOSIVE_GUN( pFirer->usAttackingWeapon ) )
 	{
 		// if we do more damage than expected, then the bullet will be more likely
 		// to be lodged in the body
@@ -2336,7 +2336,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		// be legal, but the bLevel May change...
 		sNewGridNo = NewGridNo( (INT16)pBullet->sGridNo, DirectionInc( gOppositeDirection[ SWeaponHit.usDirection ] ) );
 
-		bSpewBloodLevel = MercPtrs[ SWeaponHit.usSoldierID ]->bLevel;
+		bSpewBloodLevel = MercPtrs[ SWeaponHit.usSoldierID ]->pathing.bLevel;
 		fCanSpewBlood   = TRUE;
 
 		// If on anything other than bLevel of 0, we can pretty much freely spew blood
@@ -4026,10 +4026,10 @@ void MoveBullet( INT32 iBullet )
 						gpLocalStructure[iNumLocalStructures] = pStructure;
 						iNumLocalStructures++;
 					}
-					else if ( pBullet->pFirer->uiStatusFlags & SOLDIER_MONSTER )
+					else if ( pBullet->pFirer->flags.uiStatusFlags & SOLDIER_MONSTER )
 					{
 						// monsters firing will always accidentally hit people but never accidentally hit each other.
-						if ( !(MercPtrs[ pStructure->usStructureID ]->uiStatusFlags & SOLDIER_MONSTER) )
+						if ( !(MercPtrs[ pStructure->usStructureID ]->flags.uiStatusFlags & SOLDIER_MONSTER) )
 						{
 							gpLocalStructure[iNumLocalStructures] = pStructure;
 							iNumLocalStructures++;
@@ -4049,9 +4049,9 @@ void MoveBullet( INT32 iBullet )
 					}
 
 					// this might be a close call
-					if ( MercPtrs[ pStructure->usStructureID ]->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == MercPtrs[ pStructure->usStructureID ]->bLevel )
+					if ( MercPtrs[ pStructure->usStructureID ]->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == MercPtrs[ pStructure->usStructureID ]->pathing.bLevel )
 					{
-						MercPtrs[ pStructure->usStructureID ]->fCloseCall = TRUE;							
+						MercPtrs[ pStructure->usStructureID ]->flags.fCloseCall = TRUE;							
 					}
 
 					if ( IS_MERC_BODY_TYPE( MercPtrs[pStructure->usStructureID] ) )
@@ -4186,7 +4186,7 @@ void MoveBullet( INT32 iBullet )
 								// this could be a close call
 								if ( pTarget->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum )
 								{
-								pTarget->fCloseCall = TRUE;							
+								pTarget->flags.fCloseCall = TRUE;							
 								}
 								*/
 
@@ -4610,9 +4610,9 @@ void MoveBullet( INT32 iBullet )
 		}
 
 		// check to see if bullet is close to target
-		if ( pBullet->pFirer->ubTargetID != NOBODY && !(pBullet->pFirer->uiStatusFlags & SOLDIER_ATTACK_NOTICED) && PythSpacesAway( (INT16) pBullet->sGridNo, (INT16) pBullet->sTargetGridNo ) <= 3 )
+		if ( pBullet->pFirer->ubTargetID != NOBODY && !(pBullet->pFirer->flags.uiStatusFlags & SOLDIER_ATTACK_NOTICED) && PythSpacesAway( (INT16) pBullet->sGridNo, (INT16) pBullet->sTargetGridNo ) <= 3 )
 		{
-			pBullet->pFirer->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
+			pBullet->pFirer->flags.uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
 		}	
 	} while( uiTileInc < pBullet->ubTilesPerUpdate );
 	// unless the distance is integral, after the loop there will be a
@@ -4700,7 +4700,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		dTargetY = pTarget->dYPos;
 		dTargetZMin = 0.0f;
 		CalculateSoldierZPos( pTarget, HEIGHT, &dTargetZMax );
-		if (pTarget->bLevel > 0)
+		if (pTarget->pathing.bLevel > 0)
 		{
 			// on roof
 			dTargetZMin += WALL_HEIGHT_UNITS;

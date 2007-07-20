@@ -6,6 +6,7 @@
 #include "Soldier Control.h"
 
 #define TESTAICONTROL
+#define TESTAI
 
 extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9

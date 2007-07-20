@@ -282,7 +282,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 						if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 						{
 							// Select guy
-							if ( (uiMercFlags & SELECTED_MERC) && !( uiMercFlags & UNCONSCIOUS_MERC ) && !( MercPtrs[ usSoldierIndex ]->uiStatusFlags & SOLDIER_VEHICLE ) )
+							if ( (uiMercFlags & SELECTED_MERC) && !( uiMercFlags & UNCONSCIOUS_MERC ) && !( MercPtrs[ usSoldierIndex ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 							{
 								*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
 							}
@@ -368,7 +368,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 									//if ( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY )
 									//if ( MercPtrs[ gusSelectedSoldier ]->usAnimState == WALKING )
 									{
-										MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = TRUE;
+										MercPtrs[ gusSelectedSoldier ]->flags.fUIMovementFast = TRUE;
 										*puiNewEvent = C_MOVE_MERC;
 									}
 								}	
@@ -414,7 +414,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 										if ( pSoldier->sEndGridNo != pSoldier->sStartGridNo )
 										{
-											pSoldier->fDoSpread = TRUE;
+											pSoldier->flags.fDoSpread = TRUE;
 
 											PickBurstLocations( pSoldier );
 
@@ -422,7 +422,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 										}
 										else
 										{
-											pSoldier->fDoSpread = FALSE;
+											pSoldier->flags.fDoSpread = FALSE;
 										}
 										gfRTClickLeftHoldIntercepted = TRUE;
 									}
@@ -515,7 +515,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 														}			
 														else
 														{
-															MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = 2;
+															MercPtrs[ gusSelectedSoldier ]->flags.fUIMovementFast = 2;
 															*puiNewEvent = C_MOVE_MERC;																	
 														}
 													}
@@ -562,7 +562,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																// Select guy
 																if(	GetSoldier( &pSoldier, gusUIFullTargetID ) && gpItemPointer == NULL )
 																{ 
-																	if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+																	if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 																	{
 																		PopupAssignmentMenuInTactical( pSoldier );
 																	}
@@ -575,21 +575,21 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																		}
 																		else
 																		{
-																			if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
+																			if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED )
 																			{
-																				pSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
+																				pSoldier->flags.uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
 																			}
 																			else
 																			{
-																				pSoldier->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																				pSoldier->flags.uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
 																				// Say Confimation...
 																				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-																					DoMercBattleSound( pSoldier, BATTLE_SOUND_ATTN1 );
+																					pSoldier->DoMercBattleSound( BATTLE_SOUND_ATTN1 );
 
 																				// OK, if we have a selected guy.. make him part too....
 																				if ( gusSelectedSoldier != NOBODY )
 																				{
-																					MercPtrs[ gusSelectedSoldier ]->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																					MercPtrs[ gusSelectedSoldier ]->flags.uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
 																				}
 																			}
 
@@ -609,22 +609,22 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																	}
 																	else
 																	{
-																		if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
+																		if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED )
 																		{
-																			pSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
+																			pSoldier->flags.uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
 																		}
 																		else
 																		{
-																			pSoldier->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																			pSoldier->flags.uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
 																			// Say Confimation...
 																			if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-																				DoMercBattleSound( pSoldier, BATTLE_SOUND_ATTN1 );
+																				pSoldier->DoMercBattleSound( BATTLE_SOUND_ATTN1 );
 																		}
 
 																		// OK, if we have a selected guy.. make him part too....
 																		if ( gusSelectedSoldier != NOBODY )
 																		{
-																			MercPtrs[ gusSelectedSoldier ]->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																			MercPtrs[ gusSelectedSoldier ]->flags.uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
 																		}
 
 																		gfIgnoreOnSelectedGuy = TRUE;
@@ -668,7 +668,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																		{
 																			if ( GetCurInteractiveTileGridNo( &sIntTileGridNo ) != NULL )
 																			{
-																				pSoldier->fUIMovementFast = TRUE;
+																				pSoldier->flags.fUIMovementFast = TRUE;
 																				*puiNewEvent = C_MOVE_MERC;
 																			}
 																		}
@@ -689,7 +689,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																	}
 																	else
 																	{
-																		//if ( FindBestPath( pSoldier, usMapPos, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) == 0 )
+																		//if ( FindBestPath( pSoldier, usMapPos, pSoldier->pathing.bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) == 0 )
 																		if ( gsCurrentActionPoints == 0 && !gfUIAllMoveOn && !gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 																		{
 																			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
@@ -719,12 +719,12 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																							for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++ )
 																							{
 																								// Default turn off
-																								pTeamSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
+																								pTeamSoldier->flags.uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
 
 																								// If controllable
 																								if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == MercPtrs[ gusSelectedSoldier ]->bAssignment )
 																								{
-																									pTeamSoldier->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+																									pTeamSoldier->flags.uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																								}
 																							}
 																							EndMultiSoldierSelection( FALSE );
@@ -760,7 +760,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																					}
 																					else
 																					{
-																						//if ( usMapPos != sMoveClickGridNo || pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+																						//if ( usMapPos != sMoveClickGridNo || pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 																						//{
 																						//		sMoveClickGridNo					= usMapPos;
 
@@ -801,7 +801,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 													fDone = FALSE;
 													if(	GetSoldier( &pSoldier, gusUIFullTargetID ) && gpItemPointer == NULL )
 													{
-														if( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) &&( pSoldier->bAssignment >= ON_DUTY )&&!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+														if( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) &&( pSoldier->bAssignment >= ON_DUTY )&&!( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 														{
 															fShowAssignmentMenu = TRUE;
 															gfRTClickLeftHoldIntercepted = TRUE;
@@ -919,7 +919,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 		{
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 			{
-				pSoldier->fDoSpread = FALSE;
+				pSoldier->flags.fDoSpread = FALSE;
 			}
 			gfBeginBurstSpreadTracking = FALSE;
 		}
@@ -1002,7 +1002,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 						{
 							gfBeginBurstSpreadTracking = FALSE;
 							gfRTClickLeftHoldIntercepted = TRUE;
-							MercPtrs[ gusSelectedSoldier ]->fDoSpread				 = FALSE;
+							MercPtrs[ gusSelectedSoldier ]->flags.fDoSpread				 = FALSE;
 							fClickHoldIntercepted = TRUE;
 							*puiNewEvent = A_END_ACTION;
 							gCurrentUIMode = MOVE_MODE;
@@ -1030,7 +1030,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 
 							if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 							{
-								if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?  pSoldier->uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
+								if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?  pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
 								{
 									//if( pSoldier->bAssignment >= ON_DUTY )
 									{
@@ -1499,11 +1499,11 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 
 					if ( pSoldier->sEndGridNo != pSoldier->sStartGridNo && fLeftButtonDown )
 					{
-						pSoldier->fDoSpread = TRUE;
+						pSoldier->flags.fDoSpread = TRUE;
 						gfBeginBurstSpreadTracking = TRUE;
 					}
 
-					if ( pSoldier->fDoSpread )
+					if ( pSoldier->flags.fDoSpread )
 					{
 						// Accumulate gridno
 						AccumulateBurstLocation( usMapPos );
@@ -1549,7 +1549,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 		//	if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 		//	{
 		// Change refine value back to 1
-		///		pSoldier->bShownAimTime = REFINE_AIM_1;
+		///		pSoldier->pathing.bShownAimTime = REFINE_AIM_1;
 		//	}
 		//}
 

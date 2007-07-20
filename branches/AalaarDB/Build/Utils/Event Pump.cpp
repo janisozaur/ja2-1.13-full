@@ -947,14 +947,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SChangeState.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SChangeState.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 //				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: ChangeState %S (%d)", gAnimControl[ SChangeState.ubNewState ].zAnimStr, SChangeState.usSoldierID ) );
-				EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
+				pSoldier->EVENT_InitNewSoldierAnim( SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
 				break;
 
 			case S_CHANGEDEST:
@@ -970,14 +970,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SChangeDest.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SChangeDest.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Change Dest");
-				EVENT_SetSoldierDestination( pSoldier, SChangeDest.usNewDestination );
+				pSoldier->EVENT_SetSoldierDestination( SChangeDest.usNewDestination );
 				break;
 
 			case S_SETPOSITION:
@@ -993,14 +993,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SSetPosition.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SSetPosition.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 //				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetPosition ( %f %f ) ( %d )", SSetPosition.dNewXPos, SSetPosition.dNewYPos, SSetPosition.usSoldierID ) );
-				EVENT_SetSoldierPosition( pSoldier, SSetPosition.dNewXPos, SSetPosition.dNewYPos );
+				pSoldier->EVENT_SetSoldierPosition( SSetPosition.dNewXPos, SSetPosition.dNewYPos );
 				break;
 
 			case S_GETNEWPATH:
@@ -1016,13 +1016,13 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SGetNewPath.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SGetNewPath.uiUniqueId )
 				{
 					break;
 				}
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: GetNewPath");
-				EVENT_GetNewSoldierPath( pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim );
+				pSoldier->EVENT_GetNewSoldierPath( SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim );
 				break;
 
 			case S_BEGINTURN:
@@ -1038,14 +1038,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SBeginTurn.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SBeginTurn.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: BeginTurn");
-				EVENT_BeginMercTurn( pSoldier, FALSE, 0 );
+				pSoldier->EVENT_BeginMercTurn( FALSE, 0 );
 				break;
 
 			case S_CHANGESTANCE:
@@ -1061,13 +1061,13 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SChangeStance.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SChangeStance.uiUniqueId )
 				{
 					break;
 				}
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: ChangeStance");
-				ChangeSoldierStance( pSoldier, SChangeStance.ubNewStance );
+				pSoldier->ChangeSoldierStance( SChangeStance.ubNewStance );
 				break;
 
 			case S_SETDIRECTION:
@@ -1083,14 +1083,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SSetDirection.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SSetDirection.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetDirection: Dir( %d )", SSetDirection.usNewDirection)  );
-				EVENT_SetSoldierDirection( pSoldier, SSetDirection.usNewDirection );
+				pSoldier->EVENT_SetSoldierDirection( SSetDirection.usNewDirection );
 				break;
 
 			case S_SETDESIREDDIRECTION:
@@ -1106,14 +1106,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SSetDesiredDirection.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SSetDesiredDirection.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection)  );
-				EVENT_SetSoldierDesiredDirection( pSoldier, SSetDesiredDirection.usDesiredDirection );
+				pSoldier->EVENT_SetSoldierDesiredDirection( SSetDesiredDirection.usDesiredDirection );
 				break;
 
 
@@ -1131,7 +1131,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SBeginFireWeapon.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SBeginFireWeapon.uiUniqueId )
 				{
 					break;
 				}
@@ -1141,7 +1141,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				pSoldier->sTargetGridNo = SBeginFireWeapon.sTargetGridNo;
 				pSoldier->bTargetLevel = SBeginFireWeapon.bTargetLevel;
 				pSoldier->bTargetCubeLevel = SBeginFireWeapon.bTargetCubeLevel;
-				EVENT_FireSoldierWeapon( pSoldier, SBeginFireWeapon.sTargetGridNo );
+				pSoldier->EVENT_FireSoldierWeapon( SBeginFireWeapon.sTargetGridNo );
 				break;
 
 			case S_FIREWEAPON:
@@ -1157,7 +1157,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				}
 
 					// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SFireWeapon.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SFireWeapon.uiUniqueId )
 				{
 					break;
 				}
@@ -1218,14 +1218,14 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 					 break;
 				}
 
-				if( pSoldier-> uiUniqueSoldierIdValue != SStopMerc.uiUniqueId )
+				if( pSoldier->uiUniqueSoldierIdValue != SStopMerc.uiUniqueId )
 				{
 					break;
 				}
 
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Stop Merc at Gridno %d", SStopMerc.sGridNo ));
-				EVENT_StopMerc( pSoldier, SStopMerc.sGridNo, SStopMerc.bDirection );
+				pSoldier->EVENT_StopMerc( SStopMerc.sGridNo, SStopMerc.bDirection );
 				break;
 
 

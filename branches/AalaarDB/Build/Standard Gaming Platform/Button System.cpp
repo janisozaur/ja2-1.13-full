@@ -2907,7 +2907,7 @@ void RenderButtons(void)
 //
 void MarkAButtonDirty( INT32 iButtonNum )
 {
-  // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
+  // surgical dirtying->marks a user specified button dirty, without dirty the whole lot of them
 
 
   // If the button exists, and it's not owned by another object, draw it

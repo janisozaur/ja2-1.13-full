@@ -899,7 +899,7 @@ void ValidatePlayersAreInOneGroupOnly()
 
 		pSoldier = MercPtrs[ i ];
 
-		if( !pSoldier->bActive || !pSoldier->bLife || !pSoldier->ubGroupID )
+		if( !pSoldier->bActive || !pSoldier->stats.bLife || !pSoldier->ubGroupID )
 		{ //non-existant, dead, or in no group (don't care, skip to next merc)
 			continue;
 		}

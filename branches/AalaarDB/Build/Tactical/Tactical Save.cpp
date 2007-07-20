@@ -1028,9 +1028,9 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 		for( uiCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; uiCounter < gTacticalStatus.Team[ gbPlayerNum ].bLastID; uiCounter++ )
 		{
 			pSoldier = MercPtrs[ uiCounter ];
-			if ( pSoldier && pSoldier->bActive && pSoldier->bLife > 0 && pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ )
+			if ( pSoldier && pSoldier->bActive && pSoldier->stats.bLife > 0 && pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ )
 			{
-				if ( FindBestPath( pSoldier, sGridNo2, pSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) )
+				if ( FindBestPath( pSoldier, sGridNo2, pSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, 0 ) )
 				{
 					fSecondary = TRUE;
 					break;
@@ -1931,9 +1931,9 @@ void SaveNPCInformationToProfileStruct( )
 			else
 			{
 				// If the NPC is moving, save the final destination, else save the current location
-				if ( pSoldier->sFinalDestination != pSoldier->sGridNo )
+				if ( pSoldier->pathing.sFinalDestination != pSoldier->sGridNo )
 				{
-					pProfile->usStrategicInsertionData = pSoldier->sFinalDestination;
+					pProfile->usStrategicInsertionData = pSoldier->pathing.sFinalDestination;
 				}
 				else
 				{
@@ -2039,12 +2039,12 @@ void LoadNPCInformationFromProfileStruct()
 				continue;
 
 			//If the NPC was supposed to do something when they reached their target destination
-			if( pSoldier->sGridNo == pSoldier->sFinalDestination )
+			if( pSoldier->sGridNo == pSoldier->pathing.sFinalDestination )
 			{
 				if (pSoldier->ubQuoteRecord && pSoldier->ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST )
 				{
 					//the mercs gridno has to be the same as the final destination
-					EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
+					pSoldier->EVENT_SetSoldierPosition( (FLOAT) sX, (FLOAT) sY );
 
 					NPCReachedDestination( pSoldier, FALSE );
 				}
@@ -2056,9 +2056,9 @@ void LoadNPCInformationFromProfileStruct()
 				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 				{
 					//Set the NPC's destination
-					pSoldier->sDestination = gMercProfiles[ cnt ].sGridNo;
-					pSoldier->sDestXPos = sXPos;
-					pSoldier->sDestYPos = sYPos;
+					pSoldier->pathing.sDestination = gMercProfiles[ cnt ].sGridNo;
+					pSoldier->pathing.sDestXPos = sXPos;
+					pSoldier->pathing.sDestYPos = sYPos;
 
 					// We have moved to a diferent sector and are returning to it, therefore the merc should be in the final dest
 					EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, TRUE );
@@ -2069,7 +2069,7 @@ void LoadNPCInformationFromProfileStruct()
 				{
 
 					//Set the NPC's position
-	//				EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
+	//				pSoldier->EVENT_SetSoldierPosition( (FLOAT) sX, (FLOAT) sY );
 					EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, FALSE );
 				}
 			}
@@ -2735,7 +2735,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 					pWorldItems[ bCount ].fExists = TRUE;
 					pWorldItems[ bCount ].sGridNo = sGridNo;
-					pWorldItems[ bCount ].ubLevel = (UINT8)pSoldier->bLevel;
+					pWorldItems[ bCount ].ubLevel = (UINT8)pSoldier->pathing.bLevel;
 					pWorldItems[ bCount ].usFlags = uiFlagsForWorldItems;
 					pWorldItems[ bCount ].bVisible = TRUE;
 					pWorldItems[ bCount ].bRenderZHeightAboveLevel = 0;
@@ -2755,7 +2755,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 		AddWorldItemsToUnLoadedSector( sMapX, sMapY, bMapZ, sGridNo, uiNumberOfItems, pWorldItems, FALSE );
 	}
 
-  DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->bLevel, 1, FALSE, 0, TRUE );
+  DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->pathing.bLevel, 1, FALSE, 0, TRUE );
 
 	//
 	//Convert the soldier into a rottng corpse 
@@ -2842,21 +2842,21 @@ UINT32 MercChecksum( SOLDIERTYPE * pSoldier )
 	UINT32	uiChecksum = 1;
 	UINT32	uiLoop;
 
-	uiChecksum += (pSoldier->bLife + 1);
-	uiChecksum *= (pSoldier->bLifeMax + 1);
-	uiChecksum += (pSoldier->bAgility + 1);
-	uiChecksum *= (pSoldier->bDexterity + 1);
-	uiChecksum += (pSoldier->bStrength + 1);
-	uiChecksum *= (pSoldier->bMarksmanship + 1);
-	uiChecksum += (pSoldier->bMedical + 1);
-	uiChecksum *= (pSoldier->bMechanical + 1);
-	uiChecksum += (pSoldier->bExplosive + 1);
+	uiChecksum += (pSoldier->stats.bLife + 1);
+	uiChecksum *= (pSoldier->stats.bLifeMax + 1);
+	uiChecksum += (pSoldier->stats.bAgility + 1);
+	uiChecksum *= (pSoldier->stats.bDexterity + 1);
+	uiChecksum += (pSoldier->stats.bStrength + 1);
+	uiChecksum *= (pSoldier->stats.bMarksmanship + 1);
+	uiChecksum += (pSoldier->stats.bMedical + 1);
+	uiChecksum *= (pSoldier->stats.bMechanical + 1);
+	uiChecksum += (pSoldier->stats.bExplosive + 1);
 
 	// put in some multipliers too!
-	uiChecksum *= (pSoldier->bExpLevel + 1);
+	uiChecksum *= (pSoldier->stats.bExpLevel + 1);
 	uiChecksum += (pSoldier->ubProfile + 1);
 
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < NUM_ORIGINAL_INV_SLOTS; uiLoop++ )
 	{
 		uiChecksum += pSoldier->inv[ uiLoop ].usItem;
 		uiChecksum += pSoldier->inv[ uiLoop ].ubNumberOfObjects;

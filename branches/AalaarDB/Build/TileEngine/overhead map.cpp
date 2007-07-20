@@ -794,7 +794,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 			do
 			{
-				// / 5 -> / 3
+				// / 5->/ 3
 
 				usTileIndex=FASTMAPROWCOLTOPOS( sTempPosY_M, sTempPosX_M );
 
@@ -1267,12 +1267,12 @@ void RenderOverheadOverlays()
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, sX, sY, (INT16)(sX + 3), (INT16)(sY + 9)); 
 		}
-		else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		else if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{ //vehicle
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 9 );
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-6), (INT16)(sY), (INT16)(sX + 9), (INT16)(sY + 10)); 
 		}
-		//else if( pSoldier->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER) )
+		//else if( pSoldier->flags.uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER) )
 		//{// //don't draw person, because they are inside the vehicle.
 		//	ubPassengers++;
 		//}
@@ -1281,7 +1281,7 @@ void RenderOverheadOverlays()
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 7 );
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-2), (INT16)(sY-2), (INT16)(sX + 5), (INT16)(sY + 11)); 
 		}
-		else if( gpTacticalPlacementHilightedSoldier == pSoldier && pSoldier->uiStatusFlags )
+		else if( gpTacticalPlacementHilightedSoldier == pSoldier && pSoldier->flags.uiStatusFlags )
 		{ //tactical placement hilighted merc
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 8 );
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-2), (INT16)(sY-2), (INT16)(sX + 5), (INT16)(sY + 11)); 

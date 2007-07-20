@@ -1431,7 +1431,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	{ //Blit the background image
 		GetVideoSurface( &hVSurface, uiLoadScreen );
 
-		// Special case -> show the small image centered
+		// Special case->show the small image centered
 		if (iResolution > 0 && bShowSmallImage == TRUE)
 		{
 			BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, iScreenWidthOffset, iScreenHeightOffset, 0, NULL );

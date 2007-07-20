@@ -6,16 +6,16 @@
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
-//    08Apr97:ARM   -> Assign return value from Push() calls back to HStack
+//		24sep96:HJH		->creation
+//    08Apr97:ARM  ->Assign return value from Push() calls back to HStack
 //                     handle, because it may possibly do a MemRealloc()
 //		29Dec97:Kris Morness 
-//									-> Added functionality for setting file attributes which
+//									->Added functionality for setting file attributes which
 //									   allows for read-only attribute overriding
-//									-> Also added a simple function that clears all file attributes
+//									->Also added a simple function that clears all file attributes
 //										 to normal.
 //
-//		5 Feb 98:Dave French -> extensive modification to support libraries
+//		5 Feb 98:Dave French->extensive modification to support libraries
 //
 //**************************************************************************
 
@@ -153,7 +153,7 @@ INT32		GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************
 BOOLEAN	InitializeFileManager(  STR strIndexFilename )
@@ -174,7 +174,7 @@ BOOLEAN	InitializeFileManager(  STR strIndexFilename )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -195,7 +195,7 @@ void ShutdownFileManager( void )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************
 
@@ -212,16 +212,16 @@ void FileDebug( BOOLEAN f )
 //
 // Parameter List :
 //
-//		STR	-> name of file to check existence of
+//		STR	->name of file to check existence of
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if it exists
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if it exists
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -256,16 +256,16 @@ BOOLEAN	FileExists( STR strFilename )
 //
 // Parameter List :
 //
-//		STR	-> name of file to check existence of
+//		STR	->name of file to check existence of
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if it exists
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if it exists
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //    Oct 2005: Snap - Rewrote, made to check data catalogues
 //
@@ -294,16 +294,16 @@ extern BOOLEAN	FileExistsNoDB( STR strFilename )
 //
 // Parameter List :
 //
-//		STR	-> name of file to delete
+//		STR	->name of file to delete
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************	
 BOOLEAN	FileDelete( STR strFilename )
@@ -324,17 +324,17 @@ BOOLEAN	FileDelete( STR strFilename )
 //
 // Parameter List :
 //
-//		STR	   -> filename
-//		UIN32		-> access - read or write, or both
-//		BOOLEAN	-> delete on close
+//		STR	  ->filename
+//		UIN32		->access - read or write, or both
+//		BOOLEAN	->delete on close
 //
 // Return Value :
 //
-//		HWFILE	-> handle of opened file
+//		HWFILE	->handle of opened file
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -494,12 +494,12 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 //
 // Parameter List :
 //
-//		HWFILE hFile	-> handle to file to close
+//		HWFILE hFile	->handle to file to close
 //
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -545,20 +545,20 @@ void FileClose( HWFILE hFile )
 //
 // Parameter List :
 //
-//		HWFILE		-> handle to file to read from
-//		void	*	-> source buffer
-//		UINT32	-> num bytes to read
-//		UINT32	-> num bytes read
+//		HWFILE		->handle to file to read from
+//		void	*	->source buffer
+//		UINT32	->num bytes to read
+//		UINT32	->num bytes read
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
-//		08Dec97:ARM		-> return FALSE if bytes to read != bytes read
+//		24sep96:HJH		->creation
+//		08Dec97:ARM		->return FALSE if bytes to read != bytes read
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -650,20 +650,20 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 //
 // Parameter List :
 //
-//		HWFILE		-> handle to file to write to
-//		void	*	-> destination buffer
-//		UINT32	-> num bytes to write
-//		UINT32	-> num bytes written
+//		HWFILE		->handle to file to write to
+//		void	*	->destination buffer
+//		UINT32	->num bytes to write
+//		UINT32	->num bytes written
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
-//		08Dec97:ARM		-> return FALSE if dwNumBytesToWrite != dwNumBytesWritten
+//		24sep96:HJH		->creation
+//		08Dec97:ARM		->return FALSE if dwNumBytesToWrite != dwNumBytesWritten
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -718,13 +718,13 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
-//		08Dec97:ARM		-> return FALSE if bytes to read != bytes read (CHECKF is inappropriate?)
+//		24sep96:HJH		->creation
+//		08Dec97:ARM		->return FALSE if bytes to read != bytes read (CHECKF is inappropriate?)
 //
 //**************************************************************************
 
@@ -762,17 +762,17 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 //
 // Parameter List :
 //
-//		HWFILE	-> handle to file to seek in
-//		...		-> arguments, 1st of which should be a string
+//		HWFILE	->handle to file to seek in
+//		...		->arguments, 1st of which should be a string
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -814,18 +814,18 @@ BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8  strFormatted, ... )
 //
 // Parameter List :
 //
-//		HWFILE	-> handle to file to seek in
-//		UINT32	-> distance to seek
-//		UINT8		-> how to seek
+//		HWFILE	->handle to file to seek in
+//		UINT32	->distance to seek
+//		UINT8		->how to seek
 //
 // Return Value :
 //
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
+//		BOOLEAN	->TRUE if successful
+//					->FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -885,16 +885,16 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 //
 // Parameter List :
 //
-//		HWFILE	-> handle to file
+//		HWFILE	->handle to file
 //
 // Return Value :
 //
-//		INT32		-> current offset in file if successful
-//					-> -1 if not
+//		INT32		->current offset in file if successful
+//					->-1 if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -948,16 +948,16 @@ INT32 FileGetPos( HWFILE hFile )
 //
 // Parameter List :
 //
-//		HWFILE	-> handle to file
+//		HWFILE	->handle to file
 //
 // Return Value :
 //
-//		INT32		-> file size in file if successful
-//					-> 0 if not
+//		INT32		->file size in file if successful
+//					->0 if not
 //
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -1005,7 +1005,7 @@ UINT32 FileGetSize( HWFILE hFile )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************
 
@@ -1023,7 +1023,7 @@ void FileDebugPrint( void )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
@@ -1064,7 +1064,7 @@ HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************
 /*
@@ -1127,7 +1127,7 @@ HWFILE CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		-> creation
+//		24sep96:HJH		->creation
 //
 //**************************************************************************
 /*
@@ -1153,7 +1153,7 @@ void DestroyFileHandle( HWFILE hFile )
 // Return Value :
 // Modification history :
 //
-//		??nov96:HJH		-> creation
+//		??nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -1254,7 +1254,7 @@ void BuildFileDirectory( void )
 // Return Value :
 // Modification history :
 //
-//		??nov96:HJH		-> creation
+//		??nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -1991,7 +1991,7 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 // Return Value :
 // Modification history :
 //
-//		10June98:DB		-> creation
+//		10June98:DB		->creation
 //
 //**************************************************************************
 BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory)

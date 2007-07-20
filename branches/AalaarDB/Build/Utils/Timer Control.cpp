@@ -143,8 +143,8 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 			  for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
 			  {
 				  gPSOLDIER = MercPtrs[ gCNT ];
-					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
-					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
+					UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PortraitFlashCounter );
+					UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PanelAnimateCounter );
         }
       }
       else
@@ -157,16 +157,16 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 
 				  if ( gPSOLDIER != NULL )
 				  {
-					  UPDATETIMECOUNTER( gPSOLDIER->UpdateCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->DamageCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->ReloadCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FlashSelCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->BlinkSelCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->AICounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FadeCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->NextTileCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.UpdateCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.DamageCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.ReloadCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.FlashSelCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.BlinkSelCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PortraitFlashCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.AICounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.FadeCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.NextTileCounter );
+					  UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PanelAnimateCounter );
 				  }
 			  }
       }

@@ -64,7 +64,6 @@
 	#include "Tactical Placement GUI.h"
 
 	#include "Strategic Mines.h"
-	#include "GameVersion.h"
 	#include "Strategic Town Loyalty.h"
 	#include "Vehicles.h"
 	#include "Merc Contract.h"
@@ -301,7 +300,7 @@ typedef struct
 	BOOLEAN								gfMeanwhileTryingToStart;
 	BOOLEAN								gfInMeanwhile;
 
-	// list of dead guys for squads...in id values -> -1 means no one home 
+	// list of dead guys for squads...in id values->-1 means no one home 
 	INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 
 	// levels of publicly known noises
@@ -732,7 +731,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		{
 			if( pSoldier->bActive )
 			{
-				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->fBetweenSectors)
+				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->flags.fBetweenSectors)
 				{
 					SaveGameHeader.sSectorX = pSoldier->sSectorX;
 					SaveGameHeader.sSectorY = pSoldier->sSectorY;
@@ -1423,6 +1422,9 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
   ZeroAnimSurfaceCounts( );
 
 	ShutdownNPCQuotes();
+
+	//TODO
+	//Stop the chopter sound
 
 
 #ifdef JA2BETAVERSION
@@ -2960,11 +2962,19 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 	UINT32	uiNumBytesWritten=0;
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
+	int			totalBytesWritten;
 
-	// WDS - Clean up inventory handling
-	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
-
-
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+	functionPtr pSavingFunction;
+	
+	if ( guiSavedGameVersion < 87 )
+	{
+		pSavingFunction = &JA2EncryptedFileWrite;
+	}
+	else
+	{
+		pSavingFunction = &NewJA2EncryptedFileWrite;
+	}
 
 	//Loop through all the soldier structs to save
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
@@ -2993,20 +3003,80 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 			// calculate checksum for soldier
 			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
 			// Save the soldier structure
-	                // WDS - Clean up inventory handling
-			Menptr[cnt].CopyNewInventoryToOld();
-			if ( guiSavedGameVersion < 87 )
-			{
-				JA2EncryptedFileWrite( hFile, &Menptr[ cnt ], uiSaveSize, &uiNumBytesWritten );
-			}
-			else
-			{
-				NewJA2EncryptedFileWrite( hFile, &Menptr[ cnt ], uiSaveSize, &uiNumBytesWritten );
-			}
-			if( uiNumBytesWritten != uiSaveSize )
+
+			(*pSavingFunction)( hFile, &Menptr[ cnt ], SIZEOF_SOLDIERTYPE_POD, &uiNumBytesWritten );
+			totalBytesWritten = uiNumBytesWritten;
+			if( uiNumBytesWritten != SIZEOF_SOLDIERTYPE_POD )
 			{
 				return(FALSE);
 			}
+
+			//save OO data like inventory
+			int sizeInventory = Menptr[ cnt ].inv.size();//how many inv slots are we saving?
+			(*pSavingFunction)( hFile, &sizeInventory, sizeof(int), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(int) )
+			{
+				return(FALSE);
+			}
+
+			for (int x = 0; x < sizeInventory; ++x) {
+				InventoryItem temp;
+				temp.object = Menptr[ cnt ].inv[x];
+				temp.bNewItemCount = Menptr[ cnt ].inv.bNewItemCount[x];
+				temp.bNewItemCycleCount = Menptr[ cnt ].inv.bNewItemCycleCount[x];
+				(*pSavingFunction)( hFile, &temp, sizeof(InventoryItem), &uiNumBytesWritten );
+				totalBytesWritten += uiNumBytesWritten;
+				if( uiNumBytesWritten != sizeof(InventoryItem) )
+				{
+					return(FALSE);
+				}
+			}
+
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].aiData, sizeof(STRUCT_AIData), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_AIData) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].flags, sizeof(STRUCT_Flags), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_Flags) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_TimeChanges) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_TimeCounters) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].drugs, sizeof(STRUCT_Drugs), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_Drugs) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].stats, sizeof(STRUCT_Statistics), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_Statistics) )
+			{
+				return(FALSE);
+			}
+			(*pSavingFunction)( hFile, &Menptr[ cnt ].pathing, sizeof(STRUCT_Pathing), &uiNumBytesWritten );
+			totalBytesWritten += uiNumBytesWritten;
+			if( uiNumBytesWritten != sizeof(STRUCT_Pathing) )
+			{
+				return(FALSE);
+			}
+
+
 
 
 
@@ -3062,15 +3132,26 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 {
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
-	SOLDIERTYPE SavedSoldierInfo;
 	// WDS - Clean up inventory handling
 	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
+	int		totalBytesRead;
 
 	SOLDIERCREATE_STRUCT CreateStruct;
+
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiSaveGameVersion < 87 )
+	{
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else
+	{
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
 
 	//Loop through all the soldier and delete them all
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
@@ -3106,22 +3187,119 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 		// else if there is a soldier 
 		else
 		{
+			SOLDIERTYPE SavedSoldierInfo;
 			//Read in the saved soldier info into a Temp structure
-	                // WDS - Clean up inventory handling
-			SavedSoldierInfo.initialize();
-			if ( guiSaveGameVersion < 87 )
+
+			//if we are at the most current version, then fine
+			if ( guiSaveGameVersion >= CURRENT_SOLDIERTYPE_VERSION )
 			{
-				JA2EncryptedFileRead( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("version ok" ) );
+				//the soldier type info has changed at version 102
+				//first, load the POD
+				//SavedSoldierInfo.initialize();//init when created above
+				uiSaveSize = SIZEOF_SOLDIERTYPE_POD;
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
+				totalBytesRead = uiNumBytesRead;
+				if( uiNumBytesRead != uiSaveSize )
+				{
+					return(FALSE);
+				}
+
+				//now load all the OO stuff like inventory
+				int sizeInventory;//how many inv slots are we loading?
+				(*pLoadingFunction)( hFile, &sizeInventory, sizeof(int), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(int);
+
+				if (sizeInventory < 0 || sizeInventory > NUM_INV_SLOTS)
+				{
+					return(FALSE);
+				}
+
+				Inventory inv(sizeInventory);
+				for (int x = 0; x < sizeInventory; ++x) {
+					InventoryItem temp;
+					(*pLoadingFunction)( hFile, &temp, sizeof(InventoryItem), &uiNumBytesRead );
+					totalBytesRead += uiNumBytesRead;
+					uiSaveSize += sizeof(InventoryItem);
+					inv[x] = temp.object;
+					inv.bNewItemCount[x] = temp.bNewItemCount;
+					inv.bNewItemCycleCount[x] = temp.bNewItemCycleCount;
+				}
+				SavedSoldierInfo.inv = inv;
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.aiData, sizeof(STRUCT_AIData), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_AIData);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.flags, sizeof(STRUCT_Flags), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_Flags);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.timeChanges, sizeof(STRUCT_TimeChanges), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_TimeChanges);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.timeCounters, sizeof(STRUCT_TimeCounters), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_TimeCounters);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.drugs, sizeof(STRUCT_Drugs), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_Drugs);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.stats, sizeof(STRUCT_Statistics), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_Statistics);
+
+				(*pLoadingFunction)( hFile, &SavedSoldierInfo.pathing, sizeof(STRUCT_Pathing), &uiNumBytesRead );
+				totalBytesRead += uiNumBytesRead;
+				uiSaveSize += sizeof(STRUCT_Pathing);
+
+				if (totalBytesRead != uiSaveSize)
+				{
+					return(FALSE);
+				}
 			}
 			else
 			{
-				NewJA2EncryptedFileRead( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
+				OLDSOLDIERTYPE_101 OldSavedSoldierInfo101;
+				//we are loading an older version (only load once, so use "else if")
+				//first load the data based on what version was stored
+				if ( guiSaveGameVersion < FIRST_SOLDIERTYPE_CHANGE )
+				{
+					uiSaveSize = SIZEOF_OLDSOLDIERTYPE_101_POD;
+					OldSavedSoldierInfo101.initialize();
+					(*pLoadingFunction)( hFile, &OldSavedSoldierInfo101, uiSaveSize, &uiNumBytesRead );
+				}
+				/*
+				else if ( guiSaveGameVersion < SECOND_SOLDIERTYPE_CHANGE )
+					uiSaveSize = SIZEOF_OLDSOLDIERTYPE_999_POD;
+					OldSavedSoldierInfo999.initialize();
+					(*pLoadingFunction)( hFile, &OldSavedSoldierInfo999, uiSaveSize, &uiNumBytesRead );
+				*/
+
+				if( uiNumBytesRead != uiSaveSize )
+				{
+					return(FALSE);
+				}
+
+				//now we have the data that needs to be converted (keep on converting up, so use "if")
+				if ( guiSaveGameVersion < FIRST_SOLDIERTYPE_CHANGE )
+				{
+					OldSavedSoldierInfo101.CopyOldInventoryToNew();
+					SavedSoldierInfo = OldSavedSoldierInfo101;
+					//OldSavedSoldierInfo999 = OldSavedSoldierInfo101;
+				}
+				//change this when changing the file version again
+				/*
+				if ( guiSaveGameVersion < SECOND_SOLDIERTYPE_CHANGE )
+				{
+					SavedSoldierInfo = OldSavedSoldierInfo999;
+				}
+				*/
 			}
-			SavedSoldierInfo.CopyOldInventoryToNew();
-			if( uiNumBytesRead != uiSaveSize )
-			{
-				return(FALSE);
-			}
+
 			// check checksum
 			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
 			{
@@ -3148,8 +3326,8 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 
 
 			//if the soldier wasnt active, dont add them now.  Advance to the next merc
-	//if( !SavedSoldierInfo.bActive )
-	//	continue;
+			//if( !SavedSoldierInfo.bActive )
+			//	continue;
 
 
                        	// WDS - Clean up inventory handling
@@ -3257,7 +3435,7 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 				pSoldier->inv[ VESTPOS ].usItem = SPECTRA_VEST_18;
 				pSoldier->inv[ HELMETPOS ].usItem = SPECTRA_HELMET_18;
 				pSoldier->inv[ LEGPOS ].usItem = SPECTRA_LEGGINGS_18;
-				pSoldier->bAgility = 50;
+				pSoldier->stats.bAgility = 50;
 			}
 		}
 	}
@@ -4490,7 +4668,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 	sGeneralInfo.gfInMeanwhile = gfInMeanwhile;
 
 
-	// list of dead guys for squads...in id values -> -1 means no one home 
+	// list of dead guys for squads...in id values->-1 means no one home 
 	memcpy( &sGeneralInfo.sDeadMercs, &sDeadMercs, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
 
 	// level of public noises
@@ -4757,7 +4935,7 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 	gfMeanwhileTryingToStart = sGeneralInfo.gfMeanwhileTryingToStart;
 	gfInMeanwhile = sGeneralInfo.gfInMeanwhile;
 
-	// list of dead guys for squads...in id values -> -1 means no one home 
+	// list of dead guys for squads...in id values->-1 means no one home 
 	memcpy( &sDeadMercs, &sGeneralInfo.sDeadMercs, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
 
 	// level of public noises
@@ -5070,7 +5248,7 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 		{
 			if( pSoldier->bActive )
 			{
-				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->fBetweenSectors)
+				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->flags.fBetweenSectors)
 				{
 					//we found an alive, merc that is not moving
 					*psSectorX = pSoldier->sSectorX;
