@@ -802,7 +802,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
-	UINT32	uiSizeOfString = ( wcslen( pString ) + 2 ) * 2;
+	UINT32	uiSizeOfString = ( wcslen( pString ) + 1 ) * sizeof(CHAR16);
 	UINT32	uiFontToUse;
 	UINT8		uiColorToUse;
 

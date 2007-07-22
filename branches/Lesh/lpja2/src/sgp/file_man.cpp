@@ -350,8 +350,8 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 
 	vfsEntry	entry;
 
-	printf("Request to open %s...\n", strFilename);
-//	if ( !VFS.FindResource( strFilename, entry ) )
+//	printf("Request to open %s...\n", strFilename);
+	if ( !VFS.FindResource( strFilename, entry ) )
 	{
 		entry.LibraryID = LIB_REAL_FILE;
 		entry.IsWriteable = TRUE;

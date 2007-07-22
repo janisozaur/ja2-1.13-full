@@ -112,7 +112,7 @@ BOOLEAN InitializeGame(void)
 	{
 		// Send debug message and quit
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "COULD NOT INUT FONT SYSTEM...");
-		return( ERROR_SCREEN );
+		return( FALSE );
 	}
 
 	//Deletes all the Temp files in the Maps\Temp directory
