@@ -3,8 +3,10 @@
 #
 
 program_name := ja2lp
-game_dir     := ja2-1.13
+game_dir     := ~/ja2-1.13
 shared_dir   := /usr/share/ja2
+etc_dir      := /etc/ja2-1.13
+
 source_dirso := . sgp utils tile_engine tactical_ai tactical strategic laptop editor SDL_Config SDL
 #include_dirs := ../../src ../../src/SDL ../../src/SDL_Config ../../src/sgp ../../src/utils ../../src/editor \
 #	../../src/laptop ../../src/strategic ../../src/tactical ../../src/tactical_ai ../../src/tile_engine
@@ -40,3 +42,11 @@ purge:
 
 install:
 #	if []
+
+common-dir:
+	mkdir $shared_dir
+#	mkdir $etc_dir
+
+user-dir:
+	mkdir $(game_dir)
+	cp ../files/resources.cfg $(game_dir)
