@@ -1,0 +1,42 @@
+This is a quick setup description, how to run ja2 linux port.
+
+I believe, that this package is stored in dir ~/lpja2.
+
+1. Install some libs: libexpat1, libexpat1-dev, libsdl1.2, libsdl1.2-dev (for future).
+
+2. Run in console:
+	cd ~/lpja2/project/
+	sh ./install_fmod.sh
+
+This will install libfmod to your system.
+
+3. Continue to run in console:
+	make user-dir
+
+This will create ja2-1.13 directory in your home dir and a file "resources.cfg" will be copied to this new dir.
+
+4. Continue to run in console:
+	sh ./build_release.sh
+
+Then go drink something, you'll be free for about 10 minutes. ;)
+This will compile game executable file (hopefully). It will be named as ~/lpja2/bin/release/ja2lp.
+You can copy it to another place.
+
+5. Copy Ja2.ini file and Data and Data-1.13 directories to ~/ja2-1.13.
+Note, that Ja2.ini must be named exactly Ja2.ini, not Ja2.INI, not JA2.ini or JA2.INI.
+Linux file-system is case sensitive. After that ~/ja2-1.13 must contain:
+	Data/
+	Data-1.13/
+	Ja2.ini
+	resources.cfg
+
+6. Edit resources.cfg. You'll need to specify, where is all slf-files are located.
+Edit parameter StdBaseDir. Unfortunately, ~/ja2-1.13 isn't work. You'll need to specify
+full path. Then look at parameter StdSources. Edit game filenames, if they differ.
+Or you can rename slf-files, so they match to this names in StdSources.
+
+7. Run game executable (default: ~/lpja2/bin/release/ja2lp) from console.
+
+
+NB: I cannot guarantee, that most recent revision of game directory will work with this exe.
+Personally, I am using rev.734 of game data.
