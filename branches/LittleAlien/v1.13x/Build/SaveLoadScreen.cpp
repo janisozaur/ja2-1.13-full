@@ -845,6 +845,7 @@ void		GetSaveLoadScreenUserInput()
 	static BOOLEAN	fWasCtrlHeldDownLastFrame = FALSE;
 
 	GetCursorPos(&MousePos);
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	//if we are going to be instantly leaving the screen, dont draw the numbers
 	if( gfLoadGameUponEntry )
@@ -1511,7 +1512,7 @@ BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
 	}
 	else
 	{
-		memset( &pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
+		memset( pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
 #ifdef JA2BETAVERSION
 		wcscpy( pSaveGameHeader->sSavedGameDesc, L"ERROR loading saved game header, file doesn't exist!!" );
 #endif

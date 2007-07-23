@@ -1506,7 +1506,7 @@ BOOLEAN ExecuteOverhead( )
 										if ( pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE )
 										{
 #ifdef JA2BETAVERSION
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %s ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID );
+											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %s ( %d ) did not make merc get to dest (%d spaces away).", pSoldier->name, pSoldier->ubID, PythSpacesAway( pSoldier->sFinalDestination, pSoldier->sGridNo) );
 #endif
 										}
 
@@ -1534,6 +1534,7 @@ BOOLEAN ExecuteOverhead( )
 											if ( gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 											{
 												ActionDone( pSoldier);
+												SoldierGotoStationaryStance( pSoldier );
 												continue;
 											}
 											else
@@ -2051,7 +2052,14 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
 				(*pfKeepMoving) = FALSE;
 
-				gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+				if (pSoldier->bSide != 0)
+				{
+					gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+				}
+				else
+				{
+					gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
+				}
 
 				// better stop and reconsider what to do...
 				SetNewSituation( pSoldier );
@@ -3415,8 +3423,10 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 
 		if (bMilitiaRank != -1)
 		{
+			BOOLEAN NeedReset = gfStrategicMilitiaChangesMade;
 			// remove this militia from the strategic records
 			StrategicRemoveMilitiaFromSector( gWorldSectorX, gWorldSectorY, bMilitiaRank, 1 );
+			gfStrategicMilitiaChangesMade = NeedReset;
 		}
 
 		// If the militia's killer is known

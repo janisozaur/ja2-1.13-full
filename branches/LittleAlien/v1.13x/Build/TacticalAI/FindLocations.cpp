@@ -2480,6 +2480,8 @@ INT32 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT32 sPos, INT8 bAction )
 		case AI_ACTION_WITHDRAW:
 			sDesiredDir = sDir + 4;
 			break;
+		default:
+			sDesiredDir = sDir;
 	}	
 
 	if ( sDesiredDir < 0 )

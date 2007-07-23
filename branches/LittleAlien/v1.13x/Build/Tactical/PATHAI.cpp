@@ -932,6 +932,21 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "PATHAI %d", curLoc ) );
 
+		// 0verhaul:  Cannot change direction over a fence!
+		if (prevCost == TRAVELCOST_FENCE)
+		{
+			iLoopStart = trailTree[pCurrPtr->sPathNdx].stepDir;
+			if (bLoopState == LOOPING_CLOCKWISE) {
+				iLoopEnd = gOneCCDirection[ iLoopStart];
+			} else {
+				iLoopEnd = gOneCDirection[ iLoopStart];
+			}
+		}
+		else
+		{
+			iLoopStart = iLoopEnd = 0;
+		}
+
 		if (fContinuousTurnNeeded)
 		{
 			if (trailTreeNdx < 2)

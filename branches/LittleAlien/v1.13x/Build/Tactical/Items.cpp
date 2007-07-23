@@ -2238,7 +2238,11 @@ UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
 		// add in weight of ammo
 		if (Item[ pObject->usItem ].usItemClass == IC_GUN && pObject->ubGunShotsLeft > 0)
 		{
-			if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
+      if( 0==pObject->usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
+        {
+        	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
+        }
+      else if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
 			{
 				//Pulmu:
 				//Temporary calculation for minWeight
@@ -2616,6 +2620,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	BOOLEAN			fEmptyGun;
 	INT8			bReloadType;
 	UINT16			usNewAmmoItem;
+
+	bAPs = 0;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
@@ -3120,31 +3126,50 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
 {
 	INT8		bIndex = 0;
-	INT8		bAttachLoop, bAttachPos;
+	INT8		bAttachLoop, bAttachPos = -1;
 
-	while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
+	/* check the whole Array of possible Attachements, while there are still entries ... */
+  while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
 	{
-		if ( pObj->usItem == AttachmentComboMerge[ bIndex ].usItem )
+		/* if we found our current Object as "basic hand" item, then 
+     * we have found at least ONE entry of our item (may be there are more)
+     */
+    if ( pObj->usItem == AttachmentComboMerge[ bIndex ].usItem )
 		{
 			// search for all the appropriate attachments 
+      /* every ComboMerge must have at least one attachments Field */
 			for ( bAttachLoop = 0; bAttachLoop < 2; bAttachLoop++ )
 			{
-				if ( AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] == NOTHING )
+				/* if the none of both Fields contains anything, do not merge */
+        if ( AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] == NOTHING )
 				{
 					continue;
 				}
 
 				bAttachPos = FindAttachment( pObj, AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] );
+        /* 2007-05-27, Sgt_Kolja: 
+         * do not return, but break the inner loop moved away, otherwise 
+         * we can only have ONE attachmentCombo per basic item. F.I. if we want
+         * to make a Dart gun from Dart pistol by adding (a buttstock and) wheter a
+         * steel tube /or/ a Gun Barrel Extender, the old code wouldn't work for
+         * the Gun Barel Extender, since it would never been tested.
+         */
 				if ( bAttachPos == -1 )
 				{
-					// didn't find something required
-					return( -1 );
+          // didn't find something required
+					//return( -1 );
+          break;
 				}
 			}
-			// found everything required!
-			return( bIndex );
-		}
+			// found everything required?
+      /* 2007-05-27, Sgt_Kolja: Not-found-condition moved from above, otherwise we can only have ONE attachmentCombo per basic item */
+      if ( bAttachPos != -1 )
+      {
+			  return( bIndex );
+      }
+    } /* end-if-this-is-our-item */
 
+    /* try next Attachment Order */
 		bIndex++;
 	}
 
@@ -6680,18 +6705,26 @@ INT16 GetPercentBurstFireAPReduction( OBJECTTYPE * pObj )
 INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 {
 	INT16 bns=0;
+	OBJECTTYPE *pObj;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	for (int i = HELMETPOS; i < BIGPOCK1POS; i++)
 	{
+		// Okay, it's time for some optimization here too
+		pObj = &( pSoldier->inv[i]);
+		usItem = pObj->usItem;
+		pItem = &(Item[usItem]);
+
 		// Snap (TODO): binoculars and such should not be active by default
-		if ( (i == HANDPOS || i == SECONDHANDPOS) && (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+		if ( (i == HANDPOS || i == SECONDHANDPOS) && (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
-			bns += BonusReduceMore( Item[pSoldier->inv[i].usItem].visionrangebonus,	pSoldier->inv[i].bStatus[0] );
+			bns += BonusReduceMore( pItem->visionrangebonus,	pObj->bStatus[0] );
 		}
 	}
 
@@ -6699,9 +6732,11 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 	//AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
 	if ( WeaponReady(pSoldier) || gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIRE )
 	{
+		pObj = &( pSoldier->inv[HANDPOS]);
+
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
-			bns += BonusReduceMore( Item[pSoldier->inv[HANDPOS].usAttachItem[i]].visionrangebonus, pSoldier->inv[HANDPOS].bAttachStatus[i] );
+			bns += BonusReduceMore( Item[pObj->usAttachItem[i]].visionrangebonus, pObj->bAttachStatus[i] );
 		}
 	}
 
@@ -6725,31 +6760,41 @@ INT16 NightBonusScale( INT16 bonus, UINT8 bLightLevel )
 INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 {
 	INT16 bns=0;
+	OBJECTTYPE *pObj;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	for (int i = HELMETPOS; i < BIGPOCK1POS; i++)
 	{
+		// More optimization
+		pObj = &( pSoldier->inv[i]);
+		usItem = pObj->usItem;
+		pItem = &(Item[usItem]);
+
 		// Snap (TODO): binoculars and such should not be active by default
-		if ( (i == HANDPOS || i == SECONDHANDPOS) && (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+		if ( (i == HANDPOS || i == SECONDHANDPOS) && (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
 			bns += BonusReduceMore(
-				NightBonusScale( Item[pSoldier->inv[i].usItem].nightvisionrangebonus, bLightLevel ),
-				pSoldier->inv[i].bStatus[0] );
+				NightBonusScale( pItem->nightvisionrangebonus, bLightLevel ),
+				pObj->bStatus[0] );
 		}
 	}
 
 	// Snap: check only attachments on a raised weapon!
 	if ( WeaponReady(pSoldier) )
 	{
+		pObj = &( pSoldier->inv[HANDPOS]);
+
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
 			bns += BonusReduceMore(
-				NightBonusScale( Item[pSoldier->inv[HANDPOS].usAttachItem[i]].nightvisionrangebonus, bLightLevel ),
-				pSoldier->inv[HANDPOS].bAttachStatus[i] );
+				NightBonusScale( Item[pObj->usAttachItem[i]].nightvisionrangebonus, bLightLevel ),
+				pObj->bAttachStatus[i] );
 		}
 	}
 
@@ -6759,32 +6804,42 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 {
 	INT16 bns=0;
+	OBJECTTYPE *pObj;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	for (int i = 0; i < BIGPOCK1POS; i++)
 	{
+		// More optimization
+		pObj = &( pSoldier->inv[i]);
+		usItem = pObj->usItem;
+		pItem = &(Item[usItem]);
+
 		// Snap (TODO): binoculars and such should not be active by default
 		if ( (i == HANDPOS || i == SECONDHANDPOS) && 
-			   (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+			   (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
 			bns += BonusReduceMore(
-				NightBonusScale( Item[pSoldier->inv[i].usItem].cavevisionrangebonus, bLightLevel ),
-				pSoldier->inv[i].bStatus[0] );
+				NightBonusScale( pItem->cavevisionrangebonus, bLightLevel ),
+				pObj->bStatus[0] );
 		}
 	}
 
 	// Snap: check only attachments on a raised weapon!
 	if ( WeaponReady(pSoldier) )
 	{
+		pObj = &( pSoldier->inv[HANDPOS]);
+
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
 			bns += BonusReduceMore(
-				NightBonusScale( Item[pSoldier->inv[HANDPOS].usAttachItem[i]].cavevisionrangebonus, bLightLevel ),
-				pSoldier->inv[HANDPOS].bAttachStatus[i] );
+				NightBonusScale( Item[pObj->usAttachItem[i]].cavevisionrangebonus, bLightLevel ),
+				pObj->bAttachStatus[i] );
 		}
 	}
 
@@ -6794,34 +6849,44 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 {
 	INT16 bns=0;
+	OBJECTTYPE *pObj;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	// Snap: Scale the bonus with the light level
 
 	for (int i = 0; i < BIGPOCK1POS; i++)
 	{
+		// More optimization
+		pObj = &( pSoldier->inv[i]);
+		usItem = pObj->usItem;
+		pItem = &(Item[usItem]);
+
 		// Snap (TODO): binoculars and such should not be active by default
 		if ( (i == HANDPOS || i == SECONDHANDPOS) && 
-			   (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+			   (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
-			bns += BonusReduceMore( idiv( Item[pSoldier->inv[i].usItem].dayvisionrangebonus
+			bns += BonusReduceMore( idiv( pItem->dayvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_NIGHT - bLightLevel), NORMAL_LIGHTLEVEL_NIGHT ),
-				pSoldier->inv[i].bStatus[0] );
+				pObj->bStatus[0] );
 		}
 	}
 
 	// Snap: check only attachments on a raised weapon!
 	if ( WeaponReady(pSoldier) )
 	{
+		pObj = &( pSoldier->inv[HANDPOS]);
+
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
-			bns += BonusReduceMore( idiv( Item[pSoldier->inv[HANDPOS].usAttachItem[i]].dayvisionrangebonus
+			bns += BonusReduceMore( idiv( Item[pObj->usAttachItem[i]].dayvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_NIGHT - bLightLevel), NORMAL_LIGHTLEVEL_NIGHT ),
-				pSoldier->inv[HANDPOS].bAttachStatus[i] );
+				pObj->bAttachStatus[i] );
 		}
 	}
 
@@ -6831,34 +6896,44 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 {
 	INT16 bns=0;
+	OBJECTTYPE *pObj;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	// Snap: Scale the bonus with the light level
 
 	for (int i = 0; i < BIGPOCK1POS; i++)
 	{
+		// More optimization
+		pObj = &( pSoldier->inv[i]);
+		usItem = pObj->usItem;
+		pItem = &(Item[usItem]);
+
 		// Snap (TODO): binoculars and such should not be active by default
 		if ( (i == HANDPOS || i == SECONDHANDPOS) && 
-			   (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+			   (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
-			bns += BonusReduceMore( idiv( Item[pSoldier->inv[i].usItem].brightlightvisionrangebonus
+			bns += BonusReduceMore( idiv( pItem->brightlightvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_DAY - bLightLevel), NORMAL_LIGHTLEVEL_DAY ),
-				pSoldier->inv[i].bStatus[0] );
+				pObj->bStatus[0] );
 		}
 	}
 
 	// Snap: check only attachments on a raised weapon!
 	if ( WeaponReady(pSoldier) )
 	{
+		pObj = &( pSoldier->inv[HANDPOS]);
+
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
-			bns += BonusReduceMore( idiv( Item[pSoldier->inv[HANDPOS].usAttachItem[i]].brightlightvisionrangebonus
+			bns += BonusReduceMore( idiv( Item[pObj->usAttachItem[i]].brightlightvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_DAY - bLightLevel), NORMAL_LIGHTLEVEL_DAY ),
-				pSoldier->inv[HANDPOS].bAttachStatus[i] );
+				pObj->bAttachStatus[i] );
 		}
 	}
 
@@ -6897,29 +6972,39 @@ INT16 GetTotalVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 {
 	UINT8 bns = 0;
+	UINT16 usItem;
+	INVTYPE *pItem;
 
 	for (int i = HELMETPOS; i < BIGPOCK1POS; i++)
 	{
-		if ( (i == HANDPOS || i == SECONDHANDPOS) && (Item[pSoldier->inv[i].usItem].usItemClass & IC_ARMOUR || Item[pSoldier->inv[i].usItem].usItemClass & IC_FACE ))
+		// Okay, it's time for some optimization here
+		usItem = pSoldier->inv[i].usItem;
+		pItem = &(Item[usItem]);
+
+		if ( (i == HANDPOS || i == SECONDHANDPOS) && (pItem->usItemClass & IC_ARMOUR || pItem->usItemClass & IC_FACE ))
 		{
 			continue;
 		}
 
-		if ( !IsWeapon(pSoldier->inv[i].usItem) )
+		if ( !IsWeapon(usItem) )
 		{
-			bns = __max( bns, Item[pSoldier->inv[i].usItem].percenttunnelvision );
+			bns = __max( bns, pItem->percenttunnelvision );
 		}
 	}
 
 	// Snap: check only attachments on a raised weapon!
 	if ( WeaponReady(pSoldier) )
 	{
-		if ( IsWeapon(pSoldier->inv[HANDPOS].usItem) ) //if not a weapon, then it was added already above
-			bns += Item[pSoldier->inv[HANDPOS].usItem].percenttunnelvision;
+		OBJECTTYPE *pInv = &(pSoldier->inv[HANDPOS]);
+		usItem = pInv->usItem;
+		pItem = &(Item[usItem]);
+
+		if ( IsWeapon(usItem) ) //if not a weapon, then it was added already above
+			bns += Item[usItem].percenttunnelvision;
 
 		for (int i=0; i < MAX_ATTACHMENTS; i++)
 		{
-			bns += Item[pSoldier->inv[HANDPOS].usAttachItem[i]].percenttunnelvision;
+			bns += Item[pInv->usAttachItem[i]].percenttunnelvision;
 		}
 	}
 

@@ -1419,6 +1419,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
 	GetCursorPos(&MousePos);
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	GetMouseMapPos( &usMapPos );
 
@@ -1578,6 +1579,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 							// Decrease global busy  counter...
 							gTacticalStatus.ubAttackBusyCount = 0;
+#ifdef DEBUG_ATTACKBUSY
+							OutputDebugString( "Resetting attack busy due to keyboard interrupt.\n");
+#endif
 
 							guiPendingOverrideEvent = LU_ENDUILOCK;
 							UIHandleLUIEndLock( NULL );
@@ -2575,7 +2579,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
 					{
-						if ( (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
 						{
 							if (( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
@@ -2875,6 +2879,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #endif
 
 			case 'l':
+				if (fAlt )
+				{
+
+				}
+				else if (fCtrl)
+				{
+				}
+				else
 				/*
 				if( fAlt )
 				{
@@ -2946,6 +2958,40 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 				}
 				break;
+
+			case 'M':
+				if( fAlt )
+				{
+
+				}
+				else if( fCtrl )
+				{
+
+				}
+				else
+				{
+					if ( !(gTacticalStatus.fEnemyInSector) )
+					{
+						HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+
+						SOLDIERTYPE *pSoldier;
+						if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+						{
+
+							for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ ) //for all items in sector
+							{
+								if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) && (gWorldItems[ uiLoop ].sGridNo != pSoldier->sGridNo) )//item exists and is reachable and is not already on soldiers tile
+								{									
+									MoveItemPools(gWorldItems[ uiLoop ].sGridNo, pSoldier->sGridNo, gWorldItems[ uiLoop ].ubLevel, pSoldier->bLevel);
+								}
+							}
+							
+							NotifySoldiersToLookforItems( );
+						}
+					}
+				}
+				break;
+
 
 			case PGDN:
 
@@ -3259,7 +3305,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										// Search for ammo in sector
 										for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 										{
-											if ( gWorldItems[ uiLoop ].fExists)  //item exists && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE)
+											if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 											{
 												if ( ( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass & IC_AMMO ) ) // the item is ammo
 												{
@@ -3404,7 +3450,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					for ( UINT32 uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )												
 					{
-						if ( ( gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) )//item exists and is reachable
+						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 						{
 							//find out how many items can be put in a big slot
 							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].o.usItem, BIGPOCK1POS );
@@ -5207,6 +5253,9 @@ void EscapeUILock( )
 
 	// Decrease global busy  counter...
 	gTacticalStatus.ubAttackBusyCount = 0;
+#ifdef DEBUG_ATTACKBUSY
+	OutputDebugString( "Resetting attack busy due to escape of UI lock.\n");
+#endif
 
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 	UIHandleLUIEndLock( NULL );

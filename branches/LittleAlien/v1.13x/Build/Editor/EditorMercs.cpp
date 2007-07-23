@@ -2975,7 +2975,7 @@ void UpdateMercItemSlots()
 	{
 		if( gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 		{
-			memcpy( gpSelected->pDetailedPlacement->Inv, gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+			memcpy( &gpSelected->pDetailedPlacement->Inv, &gpSelected->pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 		}
 		for( x = 0; x < 9; x++ )
 		{
@@ -3556,11 +3556,11 @@ void UpdateScheduleInfo()
 			MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], 0, pSchedule->ubAction[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
 			swprintf( str, L"" );
-			if( pSchedule->usData1[i] != 0xffff )
+			if( pSchedule->usData1[i] != 0xffffffff )
 				swprintf( str, L"%d", pSchedule->usData1[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], str );
 			swprintf( str, L"" );
-			if( pSchedule->usData2[i] != 0xffff )
+			if( pSchedule->usData2[i] != 0xffffffff )
 				swprintf( str, L"%d", pSchedule->usData2[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], str );
 			if( gubCurrMercMode == MERC_SCHEDULEMODE )
@@ -3669,7 +3669,8 @@ void PasteMercPlacement( INT32 iMapIndex )
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{
                         // WDS - Clean up inventory handling
-			gTempDetailedPlacement = *gSaveBufferDetailedPlacement
+			// WANNE: Removed the following line, didn't compile
+			//gTempDetailedPlacement = *gSaveBufferDetailedPlacement;
 		}
 		else
 		{

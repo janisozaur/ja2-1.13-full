@@ -235,7 +235,11 @@ Inventory::Inventory() {
 	slotCnt = NUM_INV_SLOTS;
 	inv.reserve(slotCnt);
 	for (int idx=0; idx < slotCnt; ++idx) {
-		OBJECTTYPE *filler = new OBJECTTYPE;	// Use MEMALLOC?
+		//OBJECTTYPE *filler = new OBJECTTYPE;	// Use MEMALLOC?
+		OBJECTTYPE *filler = NULL;
+		filler = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) );
+		memset( filler, 0, sizeof( OBJECTTYPE ) );
+
 		inv.push_back(*filler);
 	}
 	clear();
@@ -246,7 +250,11 @@ Inventory::Inventory(int slotCount) {
 	slotCnt = slotCount;
 	inv.reserve(slotCnt);
 	for (int idx=0; idx < slotCnt; ++idx) {
-		OBJECTTYPE *filler = new OBJECTTYPE;	// Use MEMALLOC?
+		//OBJECTTYPE *filler = new OBJECTTYPE;	// Use MEMALLOC?
+		OBJECTTYPE *filler = NULL;
+		filler = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) );
+		memset( filler, 0, sizeof( OBJECTTYPE ) );
+
 		inv.push_back(*filler);
 	}
 	clear();
@@ -7029,7 +7037,17 @@ void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
 {
 	INT8							bDirection;
 
-	if ( FindFenceJumpDirection( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bDirection ) )
+	// Make sure we hop the correct fence to follow our path!
+	if (pSoldier->usPathIndex < pSoldier->usPathDataSize)
+	{
+		bDirection = (INT8) pSoldier->usPathingData[ pSoldier->usPathIndex];
+	}
+	else
+	{
+		bDirection = pSoldier->bDirection;
+	}
+
+	if ( FindFenceJumpDirection( pSoldier, pSoldier->sGridNo, bDirection, &bDirection ) )
 	{
 		pSoldier->sTempNewGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
 		pSoldier->fDontChargeTurningAPs = TRUE;
@@ -11229,6 +11247,7 @@ void PickDropItemAnimation( SOLDIERTYPE *pSoldier )
 
 		SoldierHandleDropItem( pSoldier );
 		SoldierGotoStationaryStance( pSoldier );
+		ActionDone( pSoldier);
 		break;
 	}
 }
@@ -11535,6 +11554,7 @@ void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget )
 	{
 		// SEND PENDING ACTION
 		pSoldier->ubPendingAction = MERC_STEAL;
+		pSoldier->bTargetLevel = pTarget->bLevel; // 0verhaul:  Update the level too!
 		pSoldier->sPendingActionData2  = pTarget->sGridNo;
 		pSoldier->bPendingActionData3  = ubDirection;
 		pSoldier->ubPendingActionAnimCount = 0;

@@ -2152,7 +2152,23 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				// Get new gridno!
 				sCheckGridNo = NewGridNo( pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
 
-				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
+				if ( OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
+				{
+
+					// then do it!  The functions have already made sure that we have a
+					// pair of worthy opponents, etc., so we're not just wasting our time
+
+					// if necessary, swap the usItem from holster into the hand position
+					DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: if necessary, swap the usItem from holster into the hand position");
+					if (BestThrow.bWeaponIn != HANDPOS)
+						RearrangePocket(pSoldier,HANDPOS,BestThrow.bWeaponIn,FOREVER);
+
+					pSoldier->usActionData = BestThrow.sTarget;
+					pSoldier->bAimTime			= BestThrow.ubAimTime;
+
+					return(AI_ACTION_TOSS_PROJECTILE);
+				}
+				else
 				{
 					// can't fire!
 					BestThrow.ubPossible = FALSE;
@@ -2167,19 +2183,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 					}
 				}
 			}
-
-			// then do it!  The functions have already made sure that we have a
-			// pair of worthy opponents, etc., so we're not just wasting our time
-
-			// if necessary, swap the usItem from holster into the hand position
-			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"decideactionred: if necessary, swap the usItem from holster into the hand position");
-			if (BestThrow.bWeaponIn != HANDPOS)
-				RearrangePocket(pSoldier,HANDPOS,BestThrow.bWeaponIn,FOREVER);
-
-			pSoldier->usActionData = BestThrow.sTarget;
-			pSoldier->bAimTime			= BestThrow.ubAimTime;
-
-			return(AI_ACTION_TOSS_PROJECTILE);
 		}
 		else		// toss/throw/launch not possible
 		{
@@ -2804,6 +2807,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 										if ( pSoldier->bLastAction != AI_ACTION_FLANK_LEFT && pSoldier->bLastAction != AI_ACTION_FLANK_RIGHT )
 											action = AI_ACTION_FLANK_RIGHT ;
 										break;
+									}
+
+									if (action == AI_ACTION_SEEK_OPPONENT) {
+										return action;
 									}
 								}
 								else
@@ -3914,7 +3921,8 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 		bWeaponIn = FindAIUsableObjClass( pSoldier, (IC_BLADE | IC_THROWING_KNIFE) );
 
 		// if the soldier does have a usable knife somewhere
-		if (bWeaponIn != NO_SLOT)
+		// 0verhaul:  And is not a tank!
+		if (bWeaponIn != NO_SLOT && !TANK( pSoldier))
 		{
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"try to stab");
 			BestStab.bWeaponIn = bWeaponIn;
@@ -4602,9 +4610,13 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 			if ( sClosestOpponent != NOWHERE )
 			{
 				// temporarily make boxer have orders of CLOSEPATROL rather than STATIONARY
+				// And make him patrol the ring, not his usual place
 				// so he has a good roaming range
+				USHORT tgrd = pSoldier->usPatrolGrid[0];
+				pSoldier->usPatrolGrid[0] = pSoldier->sGridNo;
 				pSoldier->bOrders = CLOSEPATROL;
 				pSoldier->usActionData = GoAsFarAsPossibleTowards( pSoldier, sClosestOpponent, AI_ACTION_GET_CLOSER );
+				pSoldier->usPatrolGrid[0] = tgrd;
 				pSoldier->bOrders = STATIONARY;
 				if ( pSoldier->usActionData != NOWHERE )
 				{

@@ -5671,12 +5671,10 @@ BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj )
 
 BOOLEAN IsWeapon ( UINT16 itemIndex )
 {
-	if ( Item[itemIndex].usItemClass == IC_GUN || Item[itemIndex].usItemClass == IC_PUNCH  || Item[itemIndex].usItemClass == IC_BLADE   || 
-		Item[itemIndex].usItemClass == IC_LAUNCHER  || Item[itemIndex].usItemClass == IC_THROWING_KNIFE  || Item[itemIndex].usItemClass == IC_THROWN  ||
-		Item[itemIndex].usItemClass == IC_GRENADE  || Item[itemIndex].usItemClass == IC_TENTACLES )
-		return true;
-
-	return false;
+	UINT16 usItemClass = Item[itemIndex].usItemClass;
+	return (usItemClass == IC_GUN || usItemClass == IC_PUNCH  || usItemClass == IC_BLADE   || 
+		usItemClass == IC_LAUNCHER  || usItemClass == IC_THROWING_KNIFE  || usItemClass == IC_THROWN  ||
+		usItemClass == IC_GRENADE  || usItemClass == IC_TENTACLES);
 }
 
 UINT8 GetDamage ( OBJECTTYPE *pObj )
@@ -5690,7 +5688,11 @@ UINT8 GetDamage ( OBJECTTYPE *pObj )
 	}
 	else
 	{
-		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact + GetDamageBonus(pObj);
+		UINT8 ubDamage = Weapon[ pObj->usItem ].ubImpact;
+		if (Item[ pObj->usItem ].ubPerPocket == 0)
+		{
+			ubDamage += GetDamageBonus(pObj);
+		}
 		return min(255, (UINT8)( (ubDamage) + ( (double)ubDamage / 100) * gGameExternalOptions.ubGunDamageMultiplier ) );
 	}
 }

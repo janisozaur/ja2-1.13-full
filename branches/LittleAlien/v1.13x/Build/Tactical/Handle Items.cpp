@@ -3050,18 +3050,19 @@ BOOLEAN RemoveItemFromPool( INT32 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 	return( FALSE );
 }
 
-BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
+BOOLEAN MoveItemPools( INT32 sStartPos, INT32 sEndPos, INT8 bStartLevel, INT8 bEndLevel )
 {
 	// note, only works between locations on the ground
 	ITEM_POOL		*pItemPool;
 	WORLDITEM		TempWorldItem;
 
 	// While there is an existing pool
-	while( GetItemPool( sStartPos, &pItemPool, 0 ) )
+	while( GetItemPool( sStartPos, &pItemPool, bStartLevel ) )
 	{
 		memcpy( &TempWorldItem, &(gWorldItems[ pItemPool->iItemIndex ]), sizeof( WORLDITEM ) );
-		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
-		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, bStartLevel );
+		//AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, bEndLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
 	return( TRUE );
 }
@@ -5439,6 +5440,7 @@ UINT8 StealItems(SOLDIERTYPE* pSoldier,SOLDIERTYPE* pOpponent, UINT8* ubIndexRet
 
 	InitializeStealItemPickupMenu( pSoldier, pOpponent, pItemPool, ubCount);
 	guiPendingOverrideEvent = G_GETTINGITEM;
+	HandleTacticalUI(); // 0verhaul:  Added to keep this event from going out of style before it is acted on
 	return( ubCount );
 }
 

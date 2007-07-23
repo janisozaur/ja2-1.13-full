@@ -1069,7 +1069,7 @@ void MapscreenMarkButtonsDirty();
 extern BOOLEAN CanRedistributeMilitiaInSector( INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId );
 
 extern INT32 GetNumberOfMercsInUpdateList( void );
-
+void DeleteAllItemsInInventoryPool();
 
 #ifdef JA2TESTVERSION
 void TestDumpStatChanges( void );
@@ -4674,6 +4674,7 @@ UINT32 HandleMapUI( )
 								 sX = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) % MAP_WORLD_X );
 								 sY = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) / MAP_WORLD_X );
 								 GetCursorPos(&MousePos);
+								 ScreenToClient(ghWindow, &MousePos); // In window coords!
 								 RestoreBackgroundForMapGrid( sX, sY );
 								// fMapPanelDirty = TRUE;
 							 }
@@ -4976,6 +4977,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 //		while( DequeueSpecificEvent( &InputEvent, KEY_DOWN ) )		// doesn't work for some reason
   {
 		GetCursorPos(&MousePos);
+	    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 		// HOOK INTO MOUSE HOOKS
 		switch(InputEvent.usEvent)
@@ -5210,6 +5212,13 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case DEL:
+					// show the inventory pool?
+					if( fShowMapInventoryPool && _KeyDown( CTRL ) )
+					{
+						DeleteAllItemsInInventoryPool();
+						break;
+					}
+
 					// down one sublevel
 					GoDownOneLevelInMap( );
 					break;
@@ -5354,7 +5363,10 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 
 				case '\\':
 					#ifdef JA2TESTVERSION
-						if( fCtrl )
+						if (fAlt)
+						{
+						}
+						else if( fCtrl )
 						{
 							DumpItemsList();
 						}
@@ -6261,6 +6273,7 @@ BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
 
 
 	GetCursorPos(&MousePos);
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
   if(fZoomFlag)
 	{
@@ -8504,6 +8517,7 @@ BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBotto
 
 	// get cursor position
 	GetCursorPos(&MousePos);
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	// is it within region?
 
