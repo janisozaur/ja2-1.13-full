@@ -816,7 +816,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	}
 	else
 	{
-		if (ISWATER(gubWorldMovementCosts[iOrigination][0][ubLevel]) && ISWATER(gubWorldMovementCosts[iDestination][0][ubLevel]))
+		if (ISWATER(WORLD_MOVEMENT_COSTS(iOrigination,0,ubLevel)) && ISWATER(WORLD_MOVEMENT_COSTS(iDestination,0,ubLevel)))
 				iWaterToWater = 1;
 		else
 				iWaterToWater = 0;
@@ -868,7 +868,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 		sCurPathNdx = pCurrPtr->sPathNdx;
 
 		// remember the cost used to get here...
-		prevCost = gubWorldMovementCosts[ trailTree[ sCurPathNdx ].sGridNo ][ trailTree[ sCurPathNdx ].stepDir ][ ubLevel ]; 
+		prevCost = WORLD_MOVEMENT_COSTS( trailTree[ sCurPathNdx ].sGridNo, trailTree[ sCurPathNdx ].stepDir, ubLevel ); 
 
 #if defined( PATHAI_VISIBLE_DEBUG )
 		if (gfDisplayCoverValues && gfDrawPathPoints)
@@ -1107,7 +1107,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 			//how much is admission to the next tile
 			if ( gfPathAroundObstacles )
 			{
-				nextCost = gubWorldMovementCosts[ newLoc ][ iCnt ][ ubLevel ];
+				nextCost = WORLD_MOVEMENT_COSTS( newLoc, iCnt, ubLevel );
 
 				//ATE:	Check for differences from reality 
 				// Is next cost an obstcale
@@ -2273,7 +2273,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
 
      // We should reduce points for starting to run if first tile is a fence...
 		 sTestGridNo  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
-     if ( gubWorldMovementCosts[ sTestGridNo ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
+     if ( WORLD_MOVEMENT_COSTS( sTestGridNo, (INT8)guiPathingData[0], pSold->bLevel) == TRAVELCOST_FENCE )
      {
 	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
 	    {
@@ -2328,7 +2328,7 @@ INT32 PlotPath( SOLDIERTYPE *pSold, INT32 sDestGridNo, INT8 bCopyRoute, INT8 bPl
 			sTempGrid  = NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
 
 			// Get switch value...
-			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ (INT8)guiPathingData[iCnt] ][ pSold->bLevel];
+			sSwitchValue = WORLD_MOVEMENT_COSTS( sTempGrid, (INT8)guiPathingData[iCnt], pSold->bLevel);
 
 			// get the tile cost for that tile based on WALKING
 			sTileCost = TerrainActionPoints( pSold, sTempGrid, (INT8)guiPathingData[iCnt], pSold->bLevel );

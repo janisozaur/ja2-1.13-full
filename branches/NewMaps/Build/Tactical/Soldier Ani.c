@@ -3781,7 +3781,8 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bLevel, INT8
 	UINT16								usAnimSurface;
 
 	// How are the movement costs?
-	if ( gubWorldMovementCosts[ sGridNo ][ bTestDirection ][ bLevel ] > TRAVELCOST_SHORE )
+//	if ( gubWorldMovementCosts[ sGridNo ][ bTestDirection ][ bLevel ] > TRAVELCOST_SHORE )
+	if ( WORLD_MOVEMENT_COSTS( sGridNo, bTestDirection, bLevel ) > TRAVELCOST_SHORE )
 	{
 		return( FALSE );
 	}

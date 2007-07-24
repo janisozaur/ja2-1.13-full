@@ -47,7 +47,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, INT8
  //   switchValue = BackupGridCost[GridNo];
  //else
 
-  sSwitchValue = gubWorldMovementCosts[sGridNo][bDir][ bLevel ];
+  sSwitchValue = WORLD_MOVEMENT_COSTS(sGridNo,bDir,bLevel);
 
 	// Check reality vs what the player knows....
 	if ( pSoldier->bTeam == gbPlayerNum )
@@ -170,7 +170,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT32 sGridNo,INT8 bDir, UINT1
  INT32 iPoints=0;
  UINT8 ubMovementCost;
 	
-	ubMovementCost = gubWorldMovementCosts[sGridNo][bDir][0];
+	ubMovementCost = WORLD_MOVEMENT_COSTS(sGridNo,bDir,0);
 
  switch( ubMovementCost )
  {
@@ -254,7 +254,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, UINT16 u
 	sTileCost = TerrainActionPoints( pSoldier, sGridNo, bDir, pSoldier->bLevel );
 
 	// Get switch value...
-	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->bLevel ];
+	sSwitchValue = WORLD_MOVEMENT_COSTS(sGridNo,bDir,pSoldier->bLevel);
 
   // Tile cost should not be reduced based on movement mode...
   if ( sSwitchValue == TRAVELCOST_FENCE )
@@ -364,7 +364,8 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT8 bDir, 
 	}
 
 	// Get switch value...
-	sSwitchValue = gubWorldMovementCosts[ sGridNo ][ bDir ][ pSoldier->bLevel ];
+//	sSwitchValue = WORLD_MOVEMENT_COSTS[ sGridNo ][ bDir ][ pSoldier->bLevel ];
+	sSwitchValue = WORLD_MOVEMENT_COSTS( sGridNo, bDir, pSoldier->bLevel );
 
 	// ATE: If we have a 'special cost, like jump fence... 
 	if ( sSwitchValue == TRAVELCOST_FENCE )
@@ -1387,7 +1388,8 @@ INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 
   sCost = ActionPointCost( pSoldier, sGridNo, bDirection , usMoveModeToUse );
 
-  if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+//  if ( WORLD_MOVEMENT_COSTS[ sGridNo ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+  if ( WORLD_MOVEMENT_COSTS( sGridNo, bDirection, pSoldier->bLevel ) != TRAVELCOST_FENCE )
   {
 	  if ( usMoveModeToUse == RUNNING && pSoldier->usAnimState != RUNNING )
 	  {

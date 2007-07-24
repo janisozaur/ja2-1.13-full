@@ -272,7 +272,8 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 b
 								if ( !( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )
 								{
 									// Is the next movement cost for a door?
-									if ( DoorTravelCost( pSoldier, sGridNo, gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ], (BOOLEAN)( pSoldier->bTeam == gbPlayerNum ), NULL ) == TRAVELCOST_DOOR )
+//									if ( DoorTravelCost( pSoldier, sGridNo, gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ], (BOOLEAN)( pSoldier->bTeam == gbPlayerNum ), NULL ) == TRAVELCOST_DOOR )
+									if ( DoorTravelCost( pSoldier, sGridNo, WORLD_MOVEMENT_COSTS( sGridNo, bDirection, pSoldier->bLevel ), (BOOLEAN)( pSoldier->bTeam == gbPlayerNum ), NULL ) == TRAVELCOST_DOOR )
 									{
 										fSwapInDoor = TRUE;
 									}
@@ -332,10 +333,12 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT32 sGridNo, INT8 b
 	if ( !NewOKDestination( pSoldier, sGridNo, FALSE, pSoldier->bLevel ) )
 	{
 			// ATE: Fence cost is an exclusiuon here....
-			if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+//			if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] != TRAVELCOST_FENCE )
+			if ( WORLD_MOVEMENT_COSTS( sGridNo, bDirection, pSoldier->bLevel ) != TRAVELCOST_FENCE )
 			{
 				// ATE: HIdden structs - we do something here... reveal it!
-				if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] == TRAVELCOST_HIDDENOBSTACLE )
+//				if ( gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ] == TRAVELCOST_HIDDENOBSTACLE )
+				if ( WORLD_MOVEMENT_COSTS( sGridNo, bDirection, pSoldier->bLevel ) == TRAVELCOST_HIDDENOBSTACLE )				
 				{
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REVEALED;
 					gpWorldLevelData[ sGridNo ].uiFlags|=MAPELEMENT_REDRAW;

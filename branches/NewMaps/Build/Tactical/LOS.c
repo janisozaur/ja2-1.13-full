@@ -2266,7 +2266,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
     // If on anything other than bLevel of 0, we can pretty much freely spew blood
     if ( bSpewBloodLevel == 0 )
     {
-      if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
+      if ( WORLD_MOVEMENT_COSTS( sNewGridNo, gOppositeDirection[ SWeaponHit.usDirection ] , 0 ) >= TRAVELCOST_BLOCKED )
       {
         fCanSpewBlood = FALSE;
       }
@@ -4003,7 +4003,7 @@ void MoveBullet( INT32 iBullet )
 				{
 					iAdjGridNo = iGridNo + DirIncrementer[bDir];
 
-					if ( gubWorldMovementCosts[ iAdjGridNo ][ sDesiredLevel ][ bDir ] < TRAVELCOST_BLOCKED)
+					if ( WORLD_MOVEMENT_COSTS( iAdjGridNo , sDesiredLevel , bDir ) < TRAVELCOST_BLOCKED)
 					{
 						ubTargetID = WhoIsThere2( iAdjGridNo, (INT8) sDesiredLevel );
 						if (ubTargetID != NOBODY)

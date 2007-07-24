@@ -576,7 +576,8 @@ UINT8		ubTravelCost;
   }
 
 
-	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
+//	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
+	ubTravelCost = WORLD_MOVEMENT_COSTS( usTileNo , bDirection , 0 );
 
 	if ( ubTravelCost == TRAVELCOST_WALL  )
 	{

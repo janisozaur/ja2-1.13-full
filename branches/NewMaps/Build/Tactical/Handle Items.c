@@ -547,7 +547,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 usGridNo, INT8 bLevel, UINT16 usH
 				sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
 
         // Make sure movement costs are OK....
-        if ( gubWorldMovementCosts[ sSpot ][ sCnt ][ bLevel ] >= TRAVELCOST_BLOCKED )
+        if ( WORLD_MOVEMENT_COSTS( sSpot, sCnt, bLevel ) >= TRAVELCOST_BLOCKED )
         {
           continue;
         }
@@ -4617,7 +4617,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT32 sGridNo, BOOLEAN f
 			sNextGridNo = NewGridNo( sGridNo, (INT16) DirectionInc( (UINT8) ubDirection ) );
 
 			// don't check directions that are impassable!
-			ubMovementCost = gubWorldMovementCosts[ sNextGridNo ][ ubDirection ][ pSoldier->bLevel ];
+			ubMovementCost = WORLD_MOVEMENT_COSTS( sNextGridNo, ubDirection, pSoldier->bLevel );
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
 				ubMovementCost = DoorTravelCost( NULL, sNextGridNo, ubMovementCost, FALSE, NULL );

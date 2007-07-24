@@ -3879,7 +3879,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT32 usMapPos, UINT32 uiFlags )
 						sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
 
             // Make sure movement costs are OK....
-            if ( gubWorldMovementCosts[ sSpot ][ cnt ][ gsInterfaceLevel ] >= TRAVELCOST_BLOCKED )
+            if ( WORLD_MOVEMENT_COSTS( sSpot, cnt, gsInterfaceLevel ) >= TRAVELCOST_BLOCKED )
             {
               continue;
             }
@@ -6179,7 +6179,7 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fChec
 		sIntSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
     // ATE: Check our movement costs for going through walls!
-    ubMovementCost = gubWorldMovementCosts[ sIntSpot ][ sDirs[ cnt ] ][ pSoldier->bLevel ];
+    ubMovementCost = WORLD_MOVEMENT_COSTS( sIntSpot, sDirs[ cnt ], pSoldier->bLevel );
 	  if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
     {
 		  ubMovementCost = DoorTravelCost( pSoldier, sIntSpot, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );
