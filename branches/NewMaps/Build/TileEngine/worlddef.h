@@ -136,7 +136,9 @@ typedef struct TAG_level_node
 		STRUCTURE										*pStructureData;		// STRUCTURE DATA
 		INT32												iPhysicsObjectID;		// ID FOR PHYSICS ITEM
 		INT32												uiAPCost;						// FOR AP DISPLAY
-		INT32												iExitGridInfo;			
+//SB: change packed exitgrid for EXITGRID *
+//		INT32												iExitGridInfo;
+		void *											pExitGridInfo;
 	}; // ( 4 byte union )
 
 	union 
