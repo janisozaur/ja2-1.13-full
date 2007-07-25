@@ -783,7 +783,7 @@ UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT
 // Convert from RGB to 16 bit value
 UINT16 Get16BPPColor( UINT32 RGBValue )
 {
-	UINT16 r16, g16, b16, usColor = 0xffff;
+	UINT16 r16, g16, b16, usColor = 0;
 	UINT8  r, g, b;
 
 	r = SGPGetRValue( RGBValue );

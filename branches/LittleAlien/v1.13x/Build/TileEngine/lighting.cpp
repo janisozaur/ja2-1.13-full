@@ -1163,7 +1163,7 @@ UINT32 uiIndex;
 
 	uiIndex = MAPROWCOLTOPOS( iY, iX );
 
-	Assert(uiIndex!=0xffff);
+	Assert(uiIndex!=0xffffffff);
 
 	ubShade=__max(SHADE_MAX, ubShade);
 	ubShade=__min(SHADE_MIN, ubShade);
@@ -1252,7 +1252,7 @@ UINT32 uiTile;
 
 	uiTile = MAPROWCOLTOPOS( iY, iX );
 	
-	CHECKF(uiTile!=0xffff);
+	CHECKF(uiTile!=0xffffffff);
 
 	pLand = gpWorldLevelData[uiTile].pLandHead;		
 

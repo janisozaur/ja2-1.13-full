@@ -1346,6 +1346,7 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile )
 			//copy the string over
 			wcscpy( gMapScreenMessageList[ uiCount ]->pString16, SavedString );
 
+			memset( &StringSave, 0, sizeof( StringSaveStruct ) );
 
 			//Read the rest of the message information to the saved game file
 			FileRead( hFile, &StringSave, sizeof( StringSaveStruct ), &uiNumBytesRead );

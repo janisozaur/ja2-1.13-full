@@ -288,6 +288,8 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 		{
 			int i;
 			_OLD_BASIC_SOLDIERCREATE_STRUCT tempOldBasicPlacement;
+			
+			memset(&tempOldBasicPlacement, 0, sizeof( _OLD_BASIC_SOLDIERCREATE_STRUCT ));
 			LOADDATA( &tempOldBasicPlacement, *hBuffer, sizeof( _OLD_BASIC_SOLDIERCREATE_STRUCT ) );
 			tempBasicPlacement.fDetailedPlacement = tempOldBasicPlacement.fDetailedPlacement;
 			tempBasicPlacement.usStartingGridNo = tempOldBasicPlacement.usStartingGridNo;
@@ -309,6 +311,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 		}
 		else
 			LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+		
 		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
 		pNode->ubNodeID = (UINT8)i;
 		if( !pNode )
@@ -325,6 +328,8 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion  )
 			{
 				int i;
 				_OLD_SOLDIERCREATE_STRUCT tempOldDetailedPlacement;
+				
+				memset(&tempOldDetailedPlacement, 0, sizeof( _OLD_SOLDIERCREATE_STRUCT ));
 				LOADDATA( &tempOldDetailedPlacement, *hBuffer, sizeof( _OLD_SOLDIERCREATE_STRUCT ) );
 				memcpy(&tempDetailedPlacement.fStatic, &tempOldDetailedPlacement.fStatic, (size_t)((char*)&tempOldDetailedPlacement.sInsertionGridNo-(char*)&tempOldDetailedPlacement.fStatic));
 				tempDetailedPlacement.sInsertionGridNo = tempOldDetailedPlacement.sInsertionGridNo;

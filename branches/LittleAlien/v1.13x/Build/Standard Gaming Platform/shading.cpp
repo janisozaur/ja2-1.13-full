@@ -211,7 +211,7 @@ NotThisCol:
 void BuildShadeTable(void)
 {
 	UINT16 red, green, blue;
-	UINT16 index = 0xffff;
+	UINT16 index = 0;
 
 
 	for(red=0; red < 256; red+=4)
@@ -240,7 +240,7 @@ void BuildShadeTable(void)
 void BuildIntensityTable(void)
 {
 	UINT16 red, green, blue = 0;
-	UINT16 index = 0xffff;
+	UINT16 index = 0;
 	FLOAT  dShadedPercent = (FLOAT)0.80;
 
 

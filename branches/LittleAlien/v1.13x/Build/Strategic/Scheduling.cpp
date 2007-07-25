@@ -373,6 +373,7 @@ void LoadSchedules( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			_OLD_SCHEDULENODE oldtemp;
+			memset( &oldtemp, 0, sizeof( _OLD_SCHEDULENODE ) );
 			LOADDATA( &oldtemp, *hBuffer, sizeof( _OLD_SCHEDULENODE ) );
 			for(i=0; i<MAX_SCHEDULE_ACTIONS; i++)
 			{

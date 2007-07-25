@@ -980,6 +980,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
+			memset( gpsOldEdgepointArray, 0, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stNorthEdgepointArraySize; i++)
 				gps1stNorthEdgepointArray[i] = gpsOldEdgepointArray[i];
@@ -1016,6 +1017,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
+			memset( gpsOldEdgepointArray, 0, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stSouthEdgepointArraySize; i++)
 				gps1stSouthEdgepointArray[i] = gpsOldEdgepointArray[i];
@@ -1034,6 +1036,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+			memset( gpsOldEdgepointArray, 0, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus1stWestEdgepointArraySize; i++)
 				gps1stWestEdgepointArray[i] = gpsOldEdgepointArray[i];
@@ -1053,6 +1056,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
+			memset( gpsOldEdgepointArray, 0, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
 			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndNorthEdgepointArraySize; i++)
 				gps2ndNorthEdgepointArray[i] = gpsOldEdgepointArray[i];
@@ -1107,6 +1111,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		{
 			int i;
 			INT16 * gpsOldEdgepointArray = (INT16*)MemAlloc( gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
+			memset( gpsOldEdgepointArray, 0, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
 			LOADDATA( gpsOldEdgepointArray, *hBuffer, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
 			for(i=0; i<gus2ndWestEdgepointArraySize; i++)
 				gps2ndWestEdgepointArray[i] = gpsOldEdgepointArray[i];
@@ -1241,7 +1246,7 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 
 	// JA2 Gold: don't place people in the water.
 	// If any of the waypoints is on a water spot, we're going to have to remove it
-	psTempArray = (INT32 *) MemAlloc( sizeof(INT16) * usArraySize );
+	psTempArray = (INT32 *) MemAlloc( sizeof(INT32) * usArraySize );
 	memcpy(psTempArray, psArray, sizeof(INT32) * usArraySize );
 	psArray = psTempArray;
 	for (i = 0; i < usArraySize; i++)

@@ -138,7 +138,9 @@ struct LEVELNODE
 		STRUCTURE										*pStructureData;		// STRUCTURE DATA
 		INT32												iPhysicsObjectID;		// ID FOR PHYSICS ITEM
 		INT32												uiAPCost;						// FOR AP DISPLAY
-		INT32												iExitGridInfo;			
+//SB: change packed exitgrid for EXITGRID *
+//		INT32												iExitGridInfo;
+		void *											pExitGridInfo;
 	}; // ( 4 byte union )
 
 	union 
@@ -233,12 +235,12 @@ typedef struct
 		LEVELNODE									*pLevelNodes[ 9 ];
 	};
 
-	STRUCTURE								*pStructureHead;				
-	STRUCTURE								*pStructureTail;
+	STRUCTURE									*pStructureHead;				
+	STRUCTURE									*pStructureTail;
 
-	UINT16									uiFlags;
+	UINT16										uiFlags;
 	UINT16										ubExtFlags[2];
-	UINT16									sSumRealLights[1];
+	UINT16										sSumRealLights[1];
 	UINT8										sHeight;
 	UINT8										ubAdjacentSoldierCnt;
 	UINT8										ubTerrainID;
@@ -260,8 +262,8 @@ extern UINT8 *** gubWorldMovementCosts;
 extern UINT8		gubCurrentLevel;
 extern INT32		giCurrentTilesetID;
 
-extern HVOBJECT			hRenderVObject;
-extern UINT32				gSurfaceMemUsage;
+extern HVOBJECT		hRenderVObject;
+extern UINT32		gSurfaceMemUsage;
 
 extern CHAR8		gzLastLoadedFile[ 260 ];
 

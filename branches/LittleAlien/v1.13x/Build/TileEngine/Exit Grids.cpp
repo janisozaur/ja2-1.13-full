@@ -30,24 +30,32 @@ EXITGRID		gExitGrid	= {0,1,1,0};
 
 BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
-INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
-{
-	INT32 iExitGridInfo;
-	iExitGridInfo  = (pExitGrid->ubGotoSectorX-1)<< 28;
-	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
-	iExitGridInfo += pExitGrid->ubGotoSectorZ    << 20;
-	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
-	return iExitGridInfo;
-}
+//<SB>
 
-void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
-{
-	//convert the int into 4 unsigned bytes.
-	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
-	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
-	pExitGrid->ubGotoSectorZ		= (UINT8)((iExitGridInfo & 0x00f00000)>>20);
-	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
-}
+#define MAX_EXITGRIDS	4096
+
+EXITGRID gpExitGrids[MAX_EXITGRIDS];
+UINT guiExitGridsCount = 0;
+
+
+//INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
+//{
+//	INT32 iExitGridInfo;
+//	iExitGridInfo  = (pExitGrid->ubGotoSectorX-1)<< 28;
+//	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
+//	iExitGridInfo += pExitGrid->ubGotoSectorZ    << 20;
+//	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
+//	return iExitGridInfo;
+//}
+//
+//void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
+//{
+//	//convert the int into 4 unsigned bytes.
+//	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
+//	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
+//	pExitGrid->ubGotoSectorZ		= (UINT8)((iExitGridInfo & 0x00f00000)>>20);
+//	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
+//}
 
 BOOLEAN	GetExitGrid( UINT32 usMapIndex, EXITGRID *pExitGrid )
 {
@@ -58,7 +66,10 @@ BOOLEAN	GetExitGrid( UINT32 usMapIndex, EXITGRID *pExitGrid )
 	{
 		if ( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{
-			ConvertINT32ToExitGrid( pShadow->iExitGridInfo, pExitGrid );
+//<SB>
+//			ConvertINT32ToExitGrid( pShadow->iExitGridInfo, pExitGrid );
+			memcpy(pExitGrid, pShadow->pExitGridInfo, sizeof(EXITGRID));
+//</SB>
 			return TRUE;
 		}
 		pShadow = pShadow->pNext;
@@ -115,7 +126,12 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 		tail = pShadow;
 		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{ //we have found an existing exitgrid in this node, so replace it with the new information.
-			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
+//<SB>
+//			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
+			memcpy(gpExitGrids + guiExitGridsCount, pExitGrid, sizeof(EXITGRID));
+			pShadow->pExitGridInfo = gpExitGrids + guiExitGridsCount;
+			guiExitGridsCount++;
+//</SB>
 			//SmoothExitGridRadius( iMapIndex, 0 );
 			return;
 		}
@@ -128,7 +144,12 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
 	//fill in the information for the new exitgrid levelnode.
-	pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
+//<SB>
+//	pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
+	memcpy(gpExitGrids + guiExitGridsCount, pExitGrid, sizeof(EXITGRID));
+	pShadow->pExitGridInfo = gpExitGrids + guiExitGridsCount;
+	guiExitGridsCount++;
+//</SB>
 	pShadow->uiFlags |= ( LEVELNODE_EXITGRID | LEVELNODE_HIDDEN );
 
 	//Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
@@ -173,6 +194,12 @@ void LoadExitGrids( INT8 **hBuffer, FLOAT dMajorMapVersion )
 	UINT16 x;
 	UINT16 usNumSaved;
 	UINT32 usMapIndex;
+
+//<SB> call LoadExitGrids means what that is new world, so trash out all old EXITGRID's
+	memset(gpExitGrids, 0, sizeof(gpExitGrids));
+	guiExitGridsCount = 0;
+//</SB>
+
 	gfLoadingExitGrids = TRUE;
 	LOADDATA( &usNumSaved, *hBuffer, 2 );
 	if(dMajorMapVersion < 7.0)
