@@ -917,7 +917,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	INT32				iTempPosX_S, iTempPosY_S;
 	FLOAT				dOffsetX, dOffsetY;
 	FLOAT				dTempX_S, dTempY_S;
-	INT32			uiTileIndex;
+	UINT32			uiTileIndex;
 	UINT16			usImageIndex, *pShadeTable, *pDirtyBackPtr;
 	UINT32			uiBrushWidth, uiBrushHeight, uiDirtyFlags;
 	INT16				sTileHeight, sXPos, sYPos, sZLevel;
