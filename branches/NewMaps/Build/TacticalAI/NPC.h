@@ -46,7 +46,7 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT32		sRequiredGridNo;		// location for NPC req'd to say quote
+		INT16		_old_sRequiredGridno;		// location for NPC req'd to say quote
 	};
 	UINT16	usFactMustBeTrue;		// ...before saying quote
 	UINT16 	usFactMustBeFalse;	// ...before saying quote
@@ -68,14 +68,61 @@ typedef struct
 	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	INT32	usGoToGridNo;
+	UINT16	_old_usGoToGridno;
+	INT16		sActionData;		// special action value	
+
+#if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
+	UINT8		ubUnused[4];
+#endif
+	INT32		sRequiredGridno;		// location for NPC req'd to say quote
+	UINT32	    usGoToGridno;
+} NPCQuoteInfo;																									// 32 bytes
+
+
+typedef struct
+{
+
+#if defined( CRIPPLED_VERSION ) || defined( RUSSIAN )
+	UINT8		ubIdentifier[4];
+#endif
+
+	UINT16	fFlags;
+
+	// conditions
+	union
+	{
+		INT16		sRequiredItem;			// item NPC must have to say quote
+		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+	};
+	UINT16	usFactMustBeTrue;		// ...before saying quote
+	UINT16 	usFactMustBeFalse;	// ...before saying quote
+	UINT8		ubQuest;						// quest must be current to say quote
+	UINT8		ubFirstDay;					// first day quote can be said
+	UINT8		ubLastDay;					// last day quote can be said
+	UINT8		ubApproachRequired;	// must use this approach to generate quote
+	UINT8		ubOpinionRequired;	// opinion needed for this quote     13 bytes
+
+	// quote to say (if any)
+	UINT8		ubQuoteNum;					// this is the quote to say
+	UINT8		ubNumQuotes;				// total # of quotes to say          15 bytes
+
+	// actions
+	UINT8		ubStartQuest;
+	UINT8		ubEndQuest;
+	UINT8		ubTriggerNPC;
+	UINT8		ubTriggerNPCRec;
+	UINT8		ubFiller;				//                                       20 bytes
+	UINT16	usSetFactTrue;
+	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
+	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value	
 
 #if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
 	UINT8		ubUnused[4];
 #endif
 
-} NPCQuoteInfo;																									// 32 bytes
+} _old_NPCQuoteInfo;
+
 
 typedef enum
 {
