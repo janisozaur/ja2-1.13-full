@@ -584,7 +584,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 {
 	HANDLE	hRealFile;
 	UINT32		dwNumBytesToWrite, dwNumBytesWritten;
-	BOOLEAN	fRet;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 
@@ -607,7 +606,7 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 		{
 				fprintf(stderr, "Error writing file %d: errno=%d\n",
 					hRealFile, errno);
-			fRet = FALSE;
+			return FALSE;
 		}
 	
 	}
@@ -619,7 +618,7 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 		return(FALSE);
 	}
 
-	return(fRet);
+	return TRUE;
 }
 
 
