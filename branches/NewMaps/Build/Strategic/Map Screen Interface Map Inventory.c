@@ -2073,7 +2073,7 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 
 	for( iCnt=0; iCnt<iTotalNumberItems; iCnt++)
 	{
-		if( pInventoryPoolList[ iCnt ].sGridNo == NOWHERE && !( pInventoryPoolList[ iCnt ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
+		if( pInventoryPoolList[ iCnt ].sGridNo >= NOWHERE && !( pInventoryPoolList[ iCnt ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
 		{
 			//set the flag
 			pInventoryPoolList[ iCnt ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
@@ -2087,7 +2087,7 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 	//loop through all the UNSEEN items
 	for( iCnt=0; iCnt<(INT32)uiNumberOfUnSeenItems; iCnt++)
 	{
-		if( pUnSeenItems[ iCnt ].sGridNo == NOWHERE && !( pUnSeenItems[ iCnt ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
+		if( pUnSeenItems[ iCnt ].sGridNo >= NOWHERE && !( pUnSeenItems[ iCnt ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
 		{
 			//set the flag
 			pUnSeenItems[ iCnt ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;

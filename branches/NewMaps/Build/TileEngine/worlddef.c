@@ -4236,6 +4236,13 @@ extern INT32 dirDelta[8];
 extern INT16 DirIncrementer[8];
 extern INT16 *	gsCoverValue;
 
+extern INT32 gsTempActionGridNo;
+extern INT32 gsOverItemsGridNo;
+extern INT32 gsOutOfRangeGridNo;
+extern INT32 gsLastCoverGridNo;
+extern INT32 gsLastSoldierGridNo;
+extern INT32 gsLastVisibleToSoldierGridNo;
+
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
 	int i, j;
@@ -4284,5 +4291,23 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	DirIncrementer[5] = WORLD_ROWS-1;
 	DirIncrementer[6] = -1;
 	DirIncrementer[7] = -WORLD_ROWS-1;
+
+//	gsTempActionGridNo = NOWHERE;
+//	gsOverItemsGridNo = NOWHERE;
+//	gsOutOfRangeGridNo = NOWHERE;
+//	gsUITargetShotGridNo = NOWHERE;
+//	gsUIHandleShowMoveGridLocation = NOWHERE ;
+//	gsLastCoverGridNo=NOWHERE;
+//	gsLastSoldierGridNo=NOWHERE;
+//	gsLastVisibleToSoldierGridNo=NOWHERE;
+
+	gsTempActionGridNo = MAXLONG;
+	gsOverItemsGridNo = MAXLONG;
+	gsOutOfRangeGridNo = MAXLONG;
+	gsUITargetShotGridNo = MAXLONG;
+	gsUIHandleShowMoveGridLocation = MAXLONG ;
+	gsLastCoverGridNo=MAXLONG;
+	gsLastSoldierGridNo=MAXLONG;
+	gsLastVisibleToSoldierGridNo=MAXLONG;
 
 }

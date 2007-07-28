@@ -229,7 +229,9 @@ extern BOOLEAN gfInOpenDoorMenu;
 SOLDIERTYPE			*gpRequesterMerc = NULL;
 SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
 INT32						gsRequesterGridNo;	
-INT32						gsOverItemsGridNo = NOWHERE;
+//SB
+//INT32						gsOverItemsGridNo = NOWHERE;
+INT32						gsOverItemsGridNo = MAXLONG;
 INT16						gsOverItemsLevel	= 0;
 BOOLEAN					gfUIInterfaceSetBusy = FALSE;
 UINT32					guiUIInterfaceBusyTime = 0;
@@ -239,7 +241,9 @@ LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
 BOOLEAN					gfResetUIMovementOptimization = FALSE;
 BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
 BOOLEAN					gfBeginVehicleCursor = FALSE;
-INT32					gsOutOfRangeGridNo = NOWHERE;
+//SB
+//INT32					gsOutOfRangeGridNo = NOWHERE;
+INT32					gsOutOfRangeGridNo = MAXLONG;
 UINT8						gubOutOfRangeMerc = NOBODY;
 BOOLEAN					gfOKForExchangeCursor = FALSE;
 UINT32					guiUIInterfaceSwapCursorsTime = 0;
@@ -358,7 +362,9 @@ BOOLEAN fIgnoreLeftUp		= FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-INT32	gsUITargetShotGridNo	= NOWHERE;
+//SB
+//INT32	gsUITargetShotGridNo	= NOWHERE;
+INT32	gsUITargetShotGridNo	= MAXLONG;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -385,7 +391,9 @@ BOOLEAN		gfUIHandleSelectionAboveGuy			= FALSE;
 BOOLEAN		gfUIInDeadlock									= FALSE;
 UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
-UINT32		gsUIHandleShowMoveGridLocation  = NOWHERE ;
+//SB
+//UINT32		gsUIHandleShowMoveGridLocation  = NOWHERE ;
+UINT32		gsUIHandleShowMoveGridLocation  = MAXLONG;
 BOOLEAN		gfUIOverItemPool								= FALSE;
 INT32			gfUIOverItemPoolGridNo					= 0;
 INT16			gsCurrentActionPoints						= 1;
@@ -696,7 +704,10 @@ void SetUIMouseCursor( )
 	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
 	BOOLEAN	fUpdateNewCursor = TRUE;
-	static INT32 sOldExitGridNo = NOWHERE;
+//SB: temporary fix
+//	static INT32 sOldExitGridNo = NOWHERE;
+	static INT32 sOldExitGridNo = MAXLONG;
+//	static INT32 sOldExitGridNo = -1;
 	static BOOLEAN	fOkForExit = FALSE;
 
 

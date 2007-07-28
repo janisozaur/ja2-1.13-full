@@ -147,7 +147,9 @@ BOOLEAN									gfExplosionQueueActive = FALSE;
 BOOLEAN									gfExplosionQueueMayHaveChangedSight = FALSE;
 UINT8										gubPersonToSetOffExplosions = NOBODY;
 
-INT32			gsTempActionGridNo = NOWHERE;
+//SB
+//INT32			gsTempActionGridNo = NOWHERE;
+INT32			gsTempActionGridNo = MAXLONG;
 
 extern UINT8 gubInterruptProvoker;
 

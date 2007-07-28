@@ -31,7 +31,10 @@
 
 #define LOOSE_CURSOR_DELAY 300
 static BOOLEAN gfLooseCursorOn		 = FALSE;
-static INT32	 gsLooseCursorGridNo = NOWHERE;
+//SB: temporary fix
+//static INT32	 gsLooseCursorGridNo = NOWHERE;
+static INT32	 gsLooseCursorGridNo = MAXLONG;
+//static INT32	 gsLooseCursorGridNo = -1;
 static UINT32	 guiLooseCursorID		 = 0;
 static UINT32	 guiLooseCursorTimeOfLastUpdate = 0;
 
