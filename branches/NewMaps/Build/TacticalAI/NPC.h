@@ -35,11 +35,6 @@
 
 typedef struct
 {
-
-#if defined( CRIPPLED_VERSION ) || defined( RUSSIAN )
-	UINT8		ubIdentifier[4];
-#endif
-
 	UINT16	fFlags;
 
 	// conditions
@@ -71,9 +66,6 @@ typedef struct
 	UINT16	_old_usGoToGridno;
 	INT16		sActionData;		// special action value	
 
-#if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
-	UINT8		ubUnused[4];
-#endif
 	INT32		sRequiredGridno;		// location for NPC req'd to say quote
 	UINT32	    usGoToGridno;
 } NPCQuoteInfo;																									// 32 bytes
@@ -81,11 +73,6 @@ typedef struct
 
 typedef struct
 {
-
-#if defined( CRIPPLED_VERSION ) || defined( RUSSIAN )
-	UINT8		ubIdentifier[4];
-#endif
-
 	UINT16	fFlags;
 
 	// conditions
@@ -117,9 +104,7 @@ typedef struct
 	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value	
 
-#if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
 	UINT8		ubUnused[4];
-#endif
 
 } _old_NPCQuoteInfo;
 

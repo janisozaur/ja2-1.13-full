@@ -2089,7 +2089,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 			{
 				TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
 				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
-				TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridNo;
+				TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
 			}
 		}
 
@@ -2137,7 +2137,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		{
 			TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
-			TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridNo;
+			TempNpcQuote[ ubCnt ].usGoToGridNo	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
 		}
 
 		//Seek to the correct spot in the file
@@ -2214,7 +2214,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	{
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags					= TempNpcQuote[ ubCnt ].usFlags;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridNo		= TempNpcQuote[ ubCnt ].usGoToGridNo;
+		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridNo;
 	}
 
 	FileClose( hFile );	

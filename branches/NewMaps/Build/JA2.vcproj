@@ -528,6 +528,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib smackw32.lib mss32.lib"
+				OutputFile="$(OutDir)/ja2_release_BM_en.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
