@@ -2031,7 +2031,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 {
 	INT32 iLoop = 0;
 
-	// look for the section of the array pertaining to this attachment...
+	// look for the section of the array pertaining to item usItem1
 	while( 1 )
 	{
 		if (CompatibleFaceItems[iLoop][0] == usItem1)
@@ -2041,11 +2041,11 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 		iLoop++;
 		if (CompatibleFaceItems[iLoop][0] == 0)
 		{
-			// the proposed item cannot fit with anything!
-			return( FALSE );
+			// the proposed item usItem1 isn't in table == compatible
+			return( TRUE );
 		}
 	}
-	// now look through this section for the item in question
+	// now look through this section for the item usItem1 in question
 	while( 1 )
 	{
 		if (CompatibleFaceItems[iLoop][1] == usItem2)
@@ -2055,11 +2055,11 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 		iLoop++;
 		if (CompatibleFaceItems[iLoop][0] != usItem1)
 		{
-			// the proposed item cannot be attached to the item in question
-			return( FALSE );
+			// the proposed item usItem1 section ended without hits == compatible
+			return( TRUE );
 		}
 	}
-	return( TRUE );
+	return( FALSE );
 }
 
 
