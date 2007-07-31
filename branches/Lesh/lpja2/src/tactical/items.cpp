@@ -3261,8 +3261,11 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				//		IsAGLorRL = TRUE;
 				//	}
 				//}
-
-				pTargetObj->usGunAmmoItem = pAttachment->usItem;
+				
+				if ( fValidLaunchable )
+				{
+					pTargetObj->usGunAmmoItem = pAttachment->usItem;
+				}
 			}
 		}
 

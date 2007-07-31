@@ -443,6 +443,10 @@ BOOLEAN LoadGameExternalOptions()
 	// Soldier tool tips
 	gGameExternalOptions.gfAllowSoldierToolTips		= iniReader.ReadBoolean("JA2 Tactical Settings","ALLOW_SOLDIER_TOOL_TIPS",0);
 
+	// Unload weapons & remove attachments
+	gGameExternalOptions.gfShiftFUnloadWeapons		= iniReader.ReadBoolean("JA2 Tactical Settings","SHIFT_F_UNLOAD_WEAPONS",1);
+	gGameExternalOptions.gfShiftFRemoveAttachments	= iniReader.ReadBoolean("JA2 Tactical Settings","SHIFT_F_REMOVE_ATTACHMENTS",1);
+
 	//################# Rain Settings ##################
 	  
 	// Rain settings
