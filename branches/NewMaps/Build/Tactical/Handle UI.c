@@ -229,9 +229,7 @@ extern BOOLEAN gfInOpenDoorMenu;
 SOLDIERTYPE			*gpRequesterMerc = NULL;
 SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
 INT32						gsRequesterGridNo;	
-//SB
-//INT32						gsOverItemsGridNo = NOWHERE;
-INT32						gsOverItemsGridNo = MAXLONG;
+INT32						gsOverItemsGridNo = NOWHERE;
 INT16						gsOverItemsLevel	= 0;
 BOOLEAN					gfUIInterfaceSetBusy = FALSE;
 UINT32					guiUIInterfaceBusyTime = 0;
@@ -241,9 +239,7 @@ LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
 BOOLEAN					gfResetUIMovementOptimization = FALSE;
 BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
 BOOLEAN					gfBeginVehicleCursor = FALSE;
-//SB
-//INT32					gsOutOfRangeGridNo = NOWHERE;
-INT32					gsOutOfRangeGridNo = MAXLONG;
+INT32					gsOutOfRangeGridNo = NOWHERE;
 UINT8						gubOutOfRangeMerc = NOBODY;
 BOOLEAN					gfOKForExchangeCursor = FALSE;
 UINT32					guiUIInterfaceSwapCursorsTime = 0;
@@ -362,9 +358,7 @@ BOOLEAN fIgnoreLeftUp		= FALSE;
 
 BOOLEAN	gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-//SB
-//INT32	gsUITargetShotGridNo	= NOWHERE;
-INT32	gsUITargetShotGridNo	= MAXLONG;
+INT32	gsUITargetShotGridNo	= NOWHERE;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -391,9 +385,7 @@ BOOLEAN		gfUIHandleSelectionAboveGuy			= FALSE;
 BOOLEAN		gfUIInDeadlock									= FALSE;
 UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
-//SB
-//UINT32		gsUIHandleShowMoveGridLocation  = NOWHERE ;
-UINT32		gsUIHandleShowMoveGridLocation  = MAXLONG;
+UINT32		gsUIHandleShowMoveGridLocation  = NOWHERE ;
 BOOLEAN		gfUIOverItemPool								= FALSE;
 INT32			gfUIOverItemPoolGridNo					= 0;
 INT16			gsCurrentActionPoints						= 1;
@@ -704,10 +696,7 @@ void SetUIMouseCursor( )
 	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
 	BOOLEAN	fUpdateNewCursor = TRUE;
-//SB: temporary fix
-//	static INT32 sOldExitGridNo = NOWHERE;
-	static INT32 sOldExitGridNo = MAXLONG;
-//	static INT32 sOldExitGridNo = -1;
+	static INT32 sOldExitGridNo = NOWHERE;
 	static BOOLEAN	fOkForExit = FALSE;
 
 
@@ -3890,7 +3879,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, INT32 usMapPos, UINT32 uiFlags )
 						sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
 
             // Make sure movement costs are OK....
-            if ( WORLD_MOVEMENT_COSTS( sSpot, cnt, gsInterfaceLevel ) >= TRAVELCOST_BLOCKED )
+            if ( gubWorldMovementCosts[ sSpot ][ cnt ][ gsInterfaceLevel ] >= TRAVELCOST_BLOCKED )
             {
               continue;
             }
@@ -6190,7 +6179,7 @@ BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN fChec
 		sIntSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
     // ATE: Check our movement costs for going through walls!
-    ubMovementCost = WORLD_MOVEMENT_COSTS( sIntSpot, sDirs[ cnt ], pSoldier->bLevel );
+    ubMovementCost = gubWorldMovementCosts[ sIntSpot ][ sDirs[ cnt ] ][ pSoldier->bLevel ];
 	  if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
     {
 		  ubMovementCost = DoorTravelCost( pSoldier, sIntSpot, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );

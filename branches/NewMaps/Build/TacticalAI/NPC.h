@@ -41,7 +41,7 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		_old_sRequiredGridno;		// location for NPC req'd to say quote
+		INT16		_old_sRequiredGridNo;		// location for NPC req'd to say quote
 	};
 	UINT16	usFactMustBeTrue;		// ...before saying quote
 	UINT16 	usFactMustBeFalse;	// ...before saying quote
@@ -63,11 +63,11 @@ typedef struct
 	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	_old_usGoToGridno;
+	UINT16	_old_usGoToGridNo;
 	INT16		sActionData;		// special action value	
 
-	INT32		sRequiredGridno;		// location for NPC req'd to say quote
-	UINT32	    usGoToGridno;
+	INT32		sRequiredGridNo;		// location for NPC req'd to say quote
+	UINT32	    usGoToGridNo;
 } NPCQuoteInfo;																									// 32 bytes
 
 
@@ -79,7 +79,7 @@ typedef struct
 	union
 	{
 		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
+		INT16		sRequiredGridNo;		// location for NPC req'd to say quote
 	};
 	UINT16	usFactMustBeTrue;		// ...before saying quote
 	UINT16 	usFactMustBeFalse;	// ...before saying quote
@@ -101,7 +101,7 @@ typedef struct
 	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	usGoToGridno;
+	UINT16	usGoToGridNo;
 	INT16		sActionData;		// special action value	
 
 	UINT8		ubUnused[4];

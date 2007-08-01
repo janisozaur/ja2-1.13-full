@@ -2202,7 +2202,7 @@ void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce )
 	INT8 bDir;
 	INT32 iGridNo;
 
-	if((pSoldier->sGridNo!=NO_MAP_POS) )
+	if((pSoldier->sGridNo!=NOWHERE) )
 	{
     if ( pSoldier->bInSector || fForce )
     {
@@ -2228,7 +2228,7 @@ void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce )
 		  HandleCrowShadowRemoveGridNo( pSoldier );
 
 		  // Reset gridno...
-		  pSoldier->sGridNo = NO_MAP_POS;
+		  pSoldier->sGridNo = NOWHERE;
     }
 	}
 }

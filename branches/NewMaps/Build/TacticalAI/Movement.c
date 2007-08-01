@@ -762,7 +762,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		return;
 	}
 
-	if (pSoldier->usActionData >= NOWHERE)
+	if (pSoldier->usActionData >= MAX_MAP_POS)
 	{
 		CancelAIAction(pSoldier,DONTFORCE);	
 		return;

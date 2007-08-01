@@ -492,12 +492,12 @@ UINT16 usTileNo, usSrcTileNo;
 	usTileNo=MAPROWCOLTOPOS(iY, iX);
 	usSrcTileNo=MAPROWCOLTOPOS(iSrcY, iSrcX);
 
-	if ( usTileNo >= NOWHERE )
+	if ( usTileNo >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}
 
-	if ( usSrcTileNo >= NOWHERE )
+	if ( usSrcTileNo >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}
@@ -556,12 +556,12 @@ UINT8		ubTravelCost;
 	//	int i = 0;
 	//}
 
-	if ( usTileNo >= NOWHERE )
+	if ( usTileNo >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}
 
-	if ( usSrcTileNo >= NOWHERE )
+	if ( usSrcTileNo >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}
@@ -576,8 +576,7 @@ UINT8		ubTravelCost;
   }
 
 
-//	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
-	ubTravelCost = WORLD_MOVEMENT_COSTS( usTileNo , bDirection , 0 );
+	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
 
 	if ( ubTravelCost == TRAVELCOST_WALL  )
 	{
@@ -858,7 +857,7 @@ BOOLEAN fFake;
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= NOWHERE )
+	if ( uiTile >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}
@@ -997,7 +996,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= NOWHERE )
+	if ( uiTile >= MAX_MAP_POS )
 	{
 		return( FALSE );
 	}

@@ -60,8 +60,8 @@
 	#include "Buildings.h"
 #endif
 
-#define  SET_MOVEMENTCOST( a, b, c, d )				( ( WORLD_MOVEMENT_COSTS( a, b, c )  < d ) ? ( WORLD_MOVEMENT_COSTS( a, b, c ) = d ) : 0 );
-#define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( WORLD_MOVEMENT_COSTS( a, b, c ) = d )
+#define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
+#define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
 #define  SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b ) 
 
 #define	 TEMP_FILE_FOR_TILESET_CHANGE				"jatileS34.dat"
@@ -135,8 +135,7 @@ MAP_ELEMENT			*gpWorldLevelData;
 INT32						*gpDirtyData;
 UINT32					gSurfaceMemUsage;
 //UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
-//UINT8***						gubWorldMovementCosts = NULL;
-UINT8 * gubVariableWorldMovementCosts = NULL;
+UINT8***						gubWorldMovementCosts = NULL;
 
 // set to nonzero (locs of base gridno of structure are good) to have it defined by structure code
 INT16		gsRecompileAreaTop = 0;
@@ -858,16 +857,14 @@ void CompileTileMovementCosts( INT32 usGridNo )
 								SET_MOVEMENTCOST( usGridNo - WORLD_COLS, NORTH, 0, TRAVELCOST_OBSTACLE );
 								SET_MOVEMENTCOST( usGridNo - WORLD_COLS + 1, NORTHEAST, 0, TRAVELCOST_OBSTACLE );
 								// make sure no obstacle costs exists before changing path cost to 0
-//								if ( gubWorldMovementCosts[ usGridNo + 1 ][ EAST ][ 0 ] < TRAVELCOST_BLOCKED )
-								if ( WORLD_MOVEMENT_COSTS( usGridNo - 1 , EAST , 0 ) < TRAVELCOST_BLOCKED )
+								if ( gubWorldMovementCosts[ usGridNo + 1 ][ EAST ][ 0 ] < TRAVELCOST_BLOCKED )
 								{
 									FORCE_SET_MOVEMENTCOST( usGridNo + 1, EAST, 0, TRAVELCOST_NONE );
 								}
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS + 1, SOUTHEAST, 0, TRAVELCOST_OBSTACLE );
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS, SOUTH, 0, TRAVELCOST_OBSTACLE );
 								SET_MOVEMENTCOST( usGridNo + WORLD_COLS - 1, SOUTHWEST, 0, TRAVELCOST_OBSTACLE );
-//								if ( gubWorldMovementCosts[ usGridNo - 1 ][ WEST ][ 0 ] < TRAVELCOST_BLOCKED )
-								if ( WORLD_MOVEMENT_COSTS( usGridNo - 1 , WEST , 0 ) < TRAVELCOST_BLOCKED )
+								if ( gubWorldMovementCosts[ usGridNo - 1 ][ WEST ][ 0 ] < TRAVELCOST_BLOCKED )
 								{
 									FORCE_SET_MOVEMENTCOST( usGridNo - 1, WEST, 0, TRAVELCOST_NONE );
 								}
@@ -1410,10 +1407,8 @@ void RecompileLocalMovementCosts( INT32 sCentreGridNo )
 			{
 				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 				{
-//					gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
-//					gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
-					WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,0) = 0;
-					WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,1) = 0;
+					gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
+					gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
 				}
 			}
 		}
@@ -1448,10 +1443,8 @@ void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius )
 		// one tile check only
 		for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 		{
-//			gubWorldMovementCosts[sCentreGridNo][bDirLoop][0] = 0;
-//			gubWorldMovementCosts[sCentreGridNo][bDirLoop][1] = 0;
-			WORLD_MOVEMENT_COSTS(sCentreGridNo,bDirLoop,0) = 0;
-			WORLD_MOVEMENT_COSTS(sCentreGridNo,bDirLoop,1) = 0;
+			gubWorldMovementCosts[sCentreGridNo][bDirLoop][0] = 0;
+			gubWorldMovementCosts[sCentreGridNo][bDirLoop][1] = 0;
 		}
 		CompileTileMovementCosts( sCentreGridNo );
 	}
@@ -1468,11 +1461,8 @@ void RecompileLocalMovementCostsFromRadius( INT32 sCentreGridNo, INT8 bRadius )
 				{
 					for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 					{
-//						gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
-//						gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
-						WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,0) = 0;
-						WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,1) = 0;
-
+						gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
+						gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
 					}
 				}
 			}
@@ -1551,10 +1541,8 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 				// wipe MPs in this tile!
 				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 				{
-//					gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
-//					gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
-					WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,0) = 0;
-					WORLD_MOVEMENT_COSTS(usGridNo,bDirLoop,1) = 0;
+					gubWorldMovementCosts[usGridNo][bDirLoop][0] = 0;
+					gubWorldMovementCosts[usGridNo][bDirLoop][1] = 0;
 				}
 				// reset flag
 				gpWorldLevelData[ usGridNo ].ubExtFlags[0] &= (~MAPELEMENT_EXT_RECALCULATE_MOVEMENT); 
@@ -1609,8 +1597,8 @@ void RecompileLocalMovementCostsForWall( INT32 sGridNo, UINT8 ubOrientation )
 			sTempGridNo = sGridNo + sX + sY * WORLD_COLS;
 			for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 			{
-				WORLD_MOVEMENT_COSTS(sTempGridNo,bDirLoop,0) = 0;
-				WORLD_MOVEMENT_COSTS(sTempGridNo,bDirLoop,1) = 0;
+				gubWorldMovementCosts[sTempGridNo][bDirLoop][0] = 0;
+				gubWorldMovementCosts[sTempGridNo][bDirLoop][1] = 0;
 			}
 
 			CompileTileMovementCosts( sTempGridNo );				
@@ -1628,7 +1616,10 @@ void CompileWorldMovementCosts( )
 	int i, j;
 
 //	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
-	memset( gubVariableWorldMovementCosts, 0, WORLD_MAX*MAXDIR*2 );
+
+	for(i=0; i<WORLD_MAX; i++)
+		for(j=0; j<MAXDIR; j++)
+			memset( gubWorldMovementCosts[i][j], 0, 2 );
 
 	CompileWorldTerrainIDs();
  	for( usGridNo = 0; usGridNo < WORLD_MAX; usGridNo++ )
@@ -4263,10 +4254,23 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 		MemFree(gubWorldRoomInfo);
 	gubWorldRoomInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
 
-	if(gubVariableWorldMovementCosts)
-		MemFree(gubVariableWorldMovementCosts);
-	gubVariableWorldMovementCosts = (UINT8*)MemAlloc(WORLD_MAX*MAXDIR*2);
-
+	if(gubWorldMovementCosts)
+	{
+		for(i=0; i<WORLD_MAX; i++)
+		{
+			for(j=0; j<MAXDIR; j++)
+				MemFree(gubWorldMovementCosts[i][j]);
+			MemFree(gubWorldMovementCosts[i]);
+		}
+		MemFree(gubWorldMovementCosts);
+	}
+	gubWorldMovementCosts = (UINT8***)MemAlloc(WORLD_MAX*sizeof(UINT8**));
+	for(i=0; i<WORLD_MAX; i++)
+	{
+		gubWorldMovementCosts[i] = (UINT8**)MemAlloc(MAXDIR*sizeof(UINT8*));
+		for(j=0; j<MAXDIR; j++)
+			gubWorldMovementCosts[i][j] = (UINT8*)MemAlloc(2*sizeof(UINT8));
+	}
 
 #ifdef _DEBUG
 	if(gubFOVDebugInfoInfo)
@@ -4292,22 +4296,13 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	DirIncrementer[6] = -1;
 	DirIncrementer[7] = -WORLD_ROWS-1;
 
-//	gsTempActionGridNo = NOWHERE;
-//	gsOverItemsGridNo = NOWHERE;
-//	gsOutOfRangeGridNo = NOWHERE;
-//	gsUITargetShotGridNo = NOWHERE;
-//	gsUIHandleShowMoveGridLocation = NOWHERE ;
-//	gsLastCoverGridNo=NOWHERE;
-//	gsLastSoldierGridNo=NOWHERE;
-//	gsLastVisibleToSoldierGridNo=NOWHERE;
-
-	gsTempActionGridNo = MAXLONG;
-	gsOverItemsGridNo = MAXLONG;
-	gsOutOfRangeGridNo = MAXLONG;
-	gsUITargetShotGridNo = MAXLONG;
-	gsUIHandleShowMoveGridLocation = MAXLONG ;
-	gsLastCoverGridNo=MAXLONG;
-	gsLastSoldierGridNo=MAXLONG;
-	gsLastVisibleToSoldierGridNo=MAXLONG;
+	gsTempActionGridNo = NOWHERE;
+	gsOverItemsGridNo = NOWHERE;
+	gsOutOfRangeGridNo = NOWHERE;
+	gsUITargetShotGridNo = NOWHERE;
+	gsUIHandleShowMoveGridLocation = NOWHERE ;
+	gsLastCoverGridNo=NOWHERE;
+	gsLastSoldierGridNo=NOWHERE;
+	gsLastVisibleToSoldierGridNo=NOWHERE;
 
 }

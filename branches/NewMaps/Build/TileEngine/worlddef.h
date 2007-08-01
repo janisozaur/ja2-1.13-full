@@ -254,11 +254,7 @@ MAP_ELEMENT			*gpWorldLevelData;
 
 // World Movement Costs
 //UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
-//extern UINT8 *** gubWorldMovementCosts;
-
-extern UINT8 * gubVariableWorldMovementCosts;
-
-#define WORLD_MOVEMENT_COSTS(gridno, dir, level) gubVariableWorldMovementCosts[gridno*MAXDIR*2 + dir*2 + level]
+extern UINT8 *** gubWorldMovementCosts;
 
 
 UINT8						gubCurrentLevel;

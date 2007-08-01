@@ -525,7 +525,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 #endif
 
 		 // Check if we can get to this gridno from our direction in
-		 ubMovementCost = WORLD_MOVEMENT_COSTS( marker, Dir[ markerDir ], ubLevel );
+		 ubMovementCost = gubWorldMovementCosts[ marker ][ Dir[ markerDir ] ][ ubLevel ];
 
      // ATE: Added: If our current sector is below ground, ignore any blocks!
      if ( gfCaves && ubMovementCost != TRAVELCOST_CAVEWALL )

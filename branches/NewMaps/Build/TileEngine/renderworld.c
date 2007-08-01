@@ -917,7 +917,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	INT32				iTempPosX_S, iTempPosY_S;
 	FLOAT				dOffsetX, dOffsetY;
 	FLOAT				dTempX_S, dTempY_S;
-	UINT32			uiTileIndex;
+	INT32			uiTileIndex;
 	UINT16			usImageIndex, *pShadeTable, *pDirtyBackPtr;
 	UINT32			uiBrushWidth, uiBrushHeight, uiDirtyFlags;
 	INT16				sTileHeight, sXPos, sYPos, sZLevel;
@@ -1082,7 +1082,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 					uiMapPosIndex++;
 
 					//if ( 0 )
-					if ( uiTileIndex < GRIDSIZE	)
+					if ( ( uiTileIndex > NOWHERE )&&( uiTileIndex < GRIDSIZE ) )
 					{
 						// OK, we're sreaching through this loop anyway, might as well check for mouse position
 						// over objects...
@@ -2650,8 +2650,8 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 							{
 								if(!(uiFlags&TILES_DIRTY))
 									UnLockVideoSurface( FRAME_BUFFER );
-								ColorFillVideoSurfaceArea( FRAME_BUFFER, iTempPosX_S, iTempPosY_S, (INT16)(iTempPosX_S + 40), 
-									(INT16)( min( iTempPosY_S + 20, 360 )), Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+								ColorFillVideoSurfaceArea( FRAME_BUFFER, iTempPosX_S, iTempPosY_S, (iTempPosX_S + 40), 
+									( min( iTempPosY_S + 20, 360 )), Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 								if(!(uiFlags&TILES_DIRTY))
 									pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 							}

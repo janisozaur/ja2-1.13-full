@@ -1793,15 +1793,15 @@ void DebugStructurePage1( void )
 		}
 	#endif
 	gprintf( 0, LINE_HEIGHT * 13, L"N %d NE %d E %d SE %d",
-		WORLD_MOVEMENT_COSTS( sGridNo, NORTH, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, NORTHEAST, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, EAST, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, SOUTHEAST, gsInterfaceLevel ) );
+		gubWorldMovementCosts[ sGridNo ][ NORTH ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ NORTHEAST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ EAST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ SOUTHEAST ][ gsInterfaceLevel ] );
 	gprintf( 0, LINE_HEIGHT * 14, L"S %d SW %d W %d NW %d",
-		WORLD_MOVEMENT_COSTS( sGridNo, SOUTH, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, SOUTHWEST, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, WEST, gsInterfaceLevel ),
-		WORLD_MOVEMENT_COSTS( sGridNo, NORTHWEST, gsInterfaceLevel ) );
+		gubWorldMovementCosts[ sGridNo ][ SOUTH ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ SOUTHWEST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ WEST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ NORTHWEST ][ gsInterfaceLevel ] );
 	gprintf( 0, LINE_HEIGHT * 15, L"Ground smell %d strength %d",
 		SMELL_TYPE( gpWorldLevelData[ sGridNo ].ubSmellInfo ),
 		SMELL_STRENGTH( gpWorldLevelData[ sGridNo ].ubSmellInfo ) );

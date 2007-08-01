@@ -3785,26 +3785,15 @@ void RefreshSoldier()
 
 	}
 
-//	if ( GetMouseMapPos( &usMapPos ) )
-//		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
-//			gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
-//			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
-
 	if ( GetMouseMapPos( &usMapPos ) )
-		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", WORLD_MOVEMENT_COSTS( usMapPos, 0, 0 ),
-		WORLD_MOVEMENT_COSTS( usMapPos, 1, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 2, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 3, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 4, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 5, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 6, gsInterfaceLevel),
-		WORLD_MOVEMENT_COSTS( usMapPos, 7, gsInterfaceLevel) );
-
+		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
+			gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
 }
 
 void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )

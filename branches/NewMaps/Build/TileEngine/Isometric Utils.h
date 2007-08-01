@@ -9,10 +9,14 @@
 #define GRIDSIZE        (MAXCOL * MAXROW)
 #define RIGHTMOSTGRID   (MAXCOL - 1)
 #define LASTROWSTART    (GRIDSIZE - MAXCOL)
+
 //SB: NOWHERE must be constant
-#define NOWHERE         (GRIDSIZE + 1)
+//#define NOWHERE         (GRIDSIZE + 1)
 //#define NOWHERE         MAXLONG
-#define	NO_MAP_POS			NOWHERE
+#define NOWHERE         -1
+//#define	NO_MAP_POS			NOWHERE
+#define	MAX_MAP_POS			(GRIDSIZE)
+
 #define MAPWIDTH			(WORLD_COLS)
 #define MAPHEIGHT			(WORLD_ROWS)
 #define MAPLENGTH			(MAPHEIGHT*MAPWIDTH)

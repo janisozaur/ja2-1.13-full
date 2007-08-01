@@ -351,8 +351,7 @@ BOOLEAN CloseEnoughForGrenadeToss( INT32 sGridNo, INT32 sGridNo2 )
 		for (bDirection = 0; bDirection < NUM_WORLD_DIRECTIONS; bDirection++)
 		{
 			sTempGridNo = NewGridNo( sGridNo, DirectionInc( bDirection ) );
-//			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
-			ubMovementCost = WORLD_MOVEMENT_COSTS( sTempGridNo, bDirection, 0 );
+			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
 				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, FALSE, NULL );
@@ -386,8 +385,7 @@ BOOLEAN CloseEnoughForGrenadeToss( INT32 sGridNo, INT32 sGridNo2 )
 		do
 		{
 			sTempGridNo = NewGridNo( sTempGridNo, DirectionInc( bDirection ) );
-//			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
-			ubMovementCost = WORLD_MOVEMENT_COSTS( sTempGridNo, bDirection, 0 );			
+			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
 			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 			{
 				ubMovementCost = DoorTravelCost( NULL, sTempGridNo, ubMovementCost, FALSE, NULL );

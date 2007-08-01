@@ -49,18 +49,13 @@ enum
 
 
 BEST_COVER_STRUCT gCoverRadius[ DC_MAX_COVER_RANGE ][ DC_MAX_COVER_RANGE ];
-//SB
-//INT32	gsLastCoverGridNo=NOWHERE;
-INT32	gsLastCoverGridNo=MAXLONG;
-//INT32	gsLastSoldierGridNo=NOWHERE;
-INT32	gsLastSoldierGridNo=MAXLONG;
+INT32	gsLastCoverGridNo=NOWHERE;
+INT32	gsLastSoldierGridNo=NOWHERE;
 INT8	gbLastStance=-1;
 
 
 VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[ DC__SOLDIER_VISIBLE_RANGE ][ DC__SOLDIER_VISIBLE_RANGE ];
-//SB
-//INT32	gsLastVisibleToSoldierGridNo=NOWHERE;
-INT32	gsLastVisibleToSoldierGridNo=MAXLONG;
+INT32	gsLastVisibleToSoldierGridNo=NOWHERE;
 
 //*******  Function Prototypes ***************************************
 

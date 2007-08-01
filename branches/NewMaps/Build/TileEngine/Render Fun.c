@@ -126,12 +126,12 @@ void SetGridNoRevealedFlag( INT32 sGridNo )
 		SetStructAframeFlags(  sGridNo, LEVELNODE_HIDDEN );
 		// Find gridno one east as well...
 
-		if ( ( sGridNo + WORLD_COLS ) < NOWHERE )
+		if ( ( sGridNo + WORLD_COLS ) < MAX_MAP_POS )
 		{
 			SetStructAframeFlags(  sGridNo + WORLD_COLS, LEVELNODE_HIDDEN );
 		}
 
-		if ( ( sGridNo + 1 ) < NOWHERE )
+		if ( ( sGridNo + 1 ) < MAX_MAP_POS )
 		{
 			SetStructAframeFlags(  sGridNo + 1, LEVELNODE_HIDDEN );
 		}

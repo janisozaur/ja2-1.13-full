@@ -1009,8 +1009,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT32 sGridNo, INT8 * pbDirection )
 
 	for (bDir = NORTHEAST; bDir < NUM_WORLD_DIRECTIONS; bDir += 2 )
 	{
-//		if (gubWorldMovementCosts[ (sGridNo + DirectionInc( bDir ) ) ][ bDir ][ 0 ] == TRAVELCOST_OFF_MAP)
-		if (WORLD_MOVEMENT_COSTS( (sGridNo + DirectionInc( bDir ) ) , bDir , 0 ) == TRAVELCOST_OFF_MAP)
+		if (gubWorldMovementCosts[ (sGridNo + DirectionInc( bDir ) ) ][ bDir ][ 0 ] == TRAVELCOST_OFF_MAP)
 		//if ( !GridNoOnVisibleWorldTile( (sGridNo + DirectionInc( bDir ) ) ) )
 		{
 			*pbDirection = bDir;
