@@ -208,7 +208,7 @@ void LoadExitGrids( INT8 **hBuffer, FLOAT dMajorMapVersion )
 			UINT16 usOldMapIndex;
 			LOADDATA( &usOldMapIndex, *hBuffer, sizeof(usOldMapIndex) );
 			usMapIndex = usOldMapIndex;
-			LOADDATA( &oldExitGrid, *hBuffer, sizeof(oldExitGrid) );
+			LOADDATA( &oldExitGrid, *hBuffer, /*sizeof(oldExitGrid)*/ 5 );
 			exitGrid.usGridNo = oldExitGrid.usGridNo;
 			exitGrid.ubGotoSectorX = oldExitGrid.ubGotoSectorX;
 			exitGrid.ubGotoSectorY = oldExitGrid.ubGotoSectorY;
