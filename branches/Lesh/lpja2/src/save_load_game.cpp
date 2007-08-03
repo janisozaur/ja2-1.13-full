@@ -3592,7 +3592,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	for( cnt=0; cnt<uiNumOfEmails; cnt++)
 	{
 		//Get the strng length of the subject
-		uiStringLength = ( wcslen( pEmail->pSubject ) + 1 ) * 2;
+		uiStringLength = ( wcslen( pEmail->pSubject ) + 1 ) * sizeof(CHAR16);
 
 		//write the length of the current emails subject to the saved game file
 		FileWrite( hFile, &uiStringLength, sizeof( UINT32 ), &uiNumBytesWritten );
