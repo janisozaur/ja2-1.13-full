@@ -2031,6 +2031,12 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 {
 	INT32 iLoop = 0;
 
+	if ( usItem1 == NOTHING || usItem2 == NOTHING )
+	{
+		// every face item is compatible with nothing
+		return( TRUE );
+	}
+
 	// look for the section of the array pertaining to item usItem1
 	while( 1 )
 	{
@@ -2042,7 +2048,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 		if (CompatibleFaceItems[iLoop][0] == 0)
 		{
 			// the proposed item usItem1 isn't in table == compatible
-			return( TRUE );
+			return( FALSE );
 		}
 	}
 	// now look through this section for the item usItem1 in question
@@ -2056,10 +2062,10 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 		if (CompatibleFaceItems[iLoop][0] != usItem1)
 		{
 			// the proposed item usItem1 section ended without hits == compatible
-			return( TRUE );
+			return( FALSE );
 		}
 	}
-	return( FALSE );
+	return( TRUE );
 }
 
 
