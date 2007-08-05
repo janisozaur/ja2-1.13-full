@@ -1000,7 +1000,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			{
 //				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 				LoadBRName(pBobbyRayPurchase[i].usItemIndex,sBack);
-				WSTR_SPrintf(sText, 400, L"%ls %ls", "*", sBack);
+				WSTR_SPrintf(sText, 400, L"%hs %ls", "*", sBack);
 			}
 			else
 				LoadBRName(pBobbyRayPurchase[i].usItemIndex,sText);
