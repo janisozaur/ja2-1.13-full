@@ -4497,8 +4497,10 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
  INT32 sFourGrids[4], sDistance=0;
  INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
  INT32 cnt;
- INT32 sClosest=NOWHERE, sSpot, sOkTest;
- INT32 sCloseGridNo=NOWHERE;
+	//INT32 sClosest=NOWHERE, sSpot, sOkTest;
+	INT32 sClosest = MAX_MAP_POS, sSpot, sOkTest; //Lalien: changed to ensure compability with new definition of NOWHERE
+	//INT32 sCloseGridNo=NOWHERE;
+	INT32 sCloseGridNo = MAX_MAP_POS; //Lalien: changed to ensure compability with new definition of NOWHERE
  UINT32                                         uiMercFlags;
  UINT16                                         usSoldierIndex;
  UINT8                                          ubDir;
@@ -4713,12 +4715,13 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
      if ( sDistance < sClosest )
      {
 				sClosest                        = sDistance;
-				sCloseGridNo  = (INT16)sSpot;
+				sCloseGridNo  = sSpot;
      }
    }
  }
 
-	if (sClosest != NOWHERE)
+	//if (sClosest != NOWHERE)
+	if (  ( sClosest >= 0 ) && ( sClosest < MAX_MAP_POS ) ) //Lalien: replace this with valid check
   {
 		 // Take last direction and use opposite!
 		 // This will be usefull for ours and AI mercs
@@ -4761,7 +4764,10 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 		 //{
 		//		(*psAdjustedGridNo) = sCloseGridNo;
 		 //}
-		 if ( sCloseGridNo == NOWHERE )
+
+		//Lalien: commented out due to NOWHERE definition change 
+		//if ( sCloseGridNo == NOWHERE )
+		if ( ( sCloseGridNo < 0 ) || ( sCloseGridNo >= MAX_MAP_POS) )
 		 {
 				return( -1 );
 		 }
