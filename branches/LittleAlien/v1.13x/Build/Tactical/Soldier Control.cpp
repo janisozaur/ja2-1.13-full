@@ -768,7 +768,7 @@ BOOLEAN gfCalcTranslucency = FALSE;
 
 INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
 {
-	-1, -WORLD_COLS - 1, -WORLD_COLS
+	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
 
 };
 
@@ -1848,7 +1848,7 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"EVENT_InitNewSoldierAnim");
-	UINT16  usNewGridNo = 0;
+	INT32  usNewGridNo = 0;
 	INT16		sAPCost = 0;
 	INT16		sBPCost = 0;
 	UINT32	uiOldAnimFlags;
@@ -2839,7 +2839,7 @@ void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce )
 	INT8 bDir;
 	INT32 iGridNo;
 
-	if((pSoldier->sGridNo!=NO_MAP_POS) )
+	if((pSoldier->sGridNo!=NOWHERE) )
 	{
 		if ( pSoldier->bInSector || fForce )
 		{
@@ -2865,7 +2865,7 @@ void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce )
 			HandleCrowShadowRemoveGridNo( pSoldier );
 
 			// Reset gridno...
-			pSoldier->sGridNo = NO_MAP_POS;
+		  pSoldier->sGridNo = NOWHERE;
 		}
 	}
 }

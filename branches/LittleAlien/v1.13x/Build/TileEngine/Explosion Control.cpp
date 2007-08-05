@@ -2011,7 +2011,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 	BOOLEAN      fBlowWindowSouth = FALSE;
 	BOOLEAN   fReduceRay = TRUE;
 
-	ubMovementCost = gubWorldMovementCosts[ uiNewSpot ][ ubDir ][ bLevel ];
+	 ubMovementCost = gubWorldMovementCosts[ uiNewSpot ][ ubDir ][ bLevel ];
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 	{

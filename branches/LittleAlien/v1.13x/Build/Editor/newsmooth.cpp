@@ -33,7 +33,7 @@ BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 {
 	STRUCTURE *pStruct;
 	LEVELNODE* pLevel;
-	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
+	if( iMapIndex < 0 || iMapIndex >= MAX_MAP_POS )
 		return TRUE;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
 	while( pStruct )
@@ -261,7 +261,7 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE *pStruct;
 
-	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
+	if( iMapIndex < 0 || iMapIndex >= MAX_MAP_POS )
 		return;
 	//First toast any existing wall (caves)
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
@@ -844,9 +844,7 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 	for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
-		
-		//if( uiMapIndex < NOWHERE )
-		if( uiMapIndex < (GRIDSIZE + 1) )
+		if( uiMapIndex < MAX_MAP_POS )
 		{
 			usIndex = GetCaveTileIndexFromPerimeterValue( 0xff );
 			AddToUndoList( uiMapIndex );
@@ -857,9 +855,7 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 	for( y = top - 1; y <= bottom + 1; y++ ) for( x = left - 1; x <= right + 1; x++ )
 	{
 		uiMapIndex = y * WORLD_COLS + x;
-		
-		//if( uiMapIndex < NOWHERE )
-		if( uiMapIndex < (GRIDSIZE + 1) )
+		if( uiMapIndex < MAX_MAP_POS )
 		{
 			if( CaveAtGridNo( uiMapIndex ) )
 			{

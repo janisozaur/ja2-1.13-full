@@ -2343,7 +2343,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		// If on anything other than bLevel of 0, we can pretty much freely spew blood
 		if ( bSpewBloodLevel == 0 )
 		{
-			if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
+      if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
 			{
 				fCanSpewBlood = FALSE;
 			}

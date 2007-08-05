@@ -49,6 +49,9 @@
 	#include "Campaign Types.h"
 #endif
 
+//SB: new .npc format
+#define NPCEX_SIGNATURE 0x00070000
+
 #define NUM_CIVQUOTE_SECTORS 20
 #define MINERS_CIV_QUOTE_INDEX  16
 
@@ -127,6 +130,7 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	NPCQuoteInfo	* pFileData;
 	UINT32					uiBytesRead;
 	UINT32					uiFileSize;
+	DWORD uiSignature = 0; //SB
 
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
@@ -164,6 +168,12 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	hFile = FileOpen( zFileName, FILE_ACCESS_READ, FALSE );
 	CHECKN( hFile );
 
+	//<SB> new script format
+	if (!FileRead( hFile, &uiSignature, sizeof(uiSignature), &uiBytesRead ) || uiBytesRead != sizeof(uiSignature) )
+		return NULL;
+
+	if(uiSignature == NPCEX_SIGNATURE)//new fmt
+	{
 	uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
 	pFileData = (NPCQuoteInfo *)MemAlloc( uiFileSize );
 	if (pFileData)
@@ -176,7 +186,47 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	}
 	
 	FileClose( hFile );
+	}
+	else //old fmt - make conversion
+	{
+		int iRecord;
+		_old_NPCQuoteInfo * pFileData_old_;
+		uiFileSize = sizeof( _old_NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
+		pFileData_old_ = ( _old_NPCQuoteInfo * )MemAlloc( uiFileSize );
+		FileSeek(hFile, 0, FILE_SEEK_FROM_START);
+		if (pFileData_old_)
+		{
+			if (!FileRead( hFile, pFileData_old_, uiFileSize, &uiBytesRead ) || uiBytesRead != uiFileSize )
+			{
+				MemFree( pFileData_old_ );
+				pFileData_old_ = NULL;
+			}
+		}
+		
+		FileClose( hFile );
+		//check for Russian script & make a runtime conversion of it to International
+		if( *(DWORD*)pFileData_old_ == 0x00350039 )
+		{
+			//just offset records 4 bytes backward
+			_old_NPCQuoteInfo * pEnglishScript = ( _old_NPCQuoteInfo * )MemAlloc( uiFileSize );
+			memcpy( pEnglishScript, ((char*)pFileData_old_)+4, uiFileSize-4 );
+			MemFree( pFileData_old_ );
+			pFileData_old_ = pEnglishScript;
+		}
 
+		//now it's time to conversion
+		uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
+		pFileData = ( NPCQuoteInfo * )MemAlloc( uiFileSize );
+		for(iRecord = 0; iRecord < NUM_NPC_QUOTE_RECORDS; iRecord++)
+		{
+			memcpy(pFileData + iRecord, pFileData_old_ + iRecord, sizeof(_old_NPCQuoteInfo));
+			pFileData[iRecord].sRequiredGridNo = pFileData[iRecord]._old_sRequiredGridNo;
+			pFileData[iRecord].usGoToGridNo = pFileData[iRecord]._old_usGoToGridNo;
+		}
+		MemFree( pFileData_old_ );
+	}
+
+	//</SB> new script format
 	return( pFileData );
 }
 

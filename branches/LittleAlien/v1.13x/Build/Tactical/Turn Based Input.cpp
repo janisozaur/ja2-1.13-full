@@ -4319,13 +4319,13 @@ void RefreshSoldier()
 
 	if ( GetMouseMapPos( &usMapPos ) )
 		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
-		gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
-		gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
+			gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
+			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
 }
 
 void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )

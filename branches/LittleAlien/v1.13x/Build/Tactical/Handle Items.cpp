@@ -632,7 +632,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT32 usGridNo, INT8 bLevel, UINT16 usH
 			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
 
 			// Make sure movement costs are OK....
-			if ( gubWorldMovementCosts[ sSpot ][ sCnt ][ bLevel ] >= TRAVELCOST_BLOCKED )
+        if ( gubWorldMovementCosts[ sSpot ][ sCnt ][ bLevel ] >= TRAVELCOST_BLOCKED )
 			{
 				continue;
 			}

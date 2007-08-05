@@ -2319,7 +2319,9 @@ BOOLEAN RemoveMerc( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolde
 	LEVELNODE	*pOldMerc	 = NULL;
 	BOOLEAN		fMercFound;
 
-	if ( iMapIndex == NOWHERE )
+//SB
+//	if ( iMapIndex == NOWHERE )
+	if ( ( iMapIndex >= MAX_MAP_POS ) || ( iMapIndex < 0 ) )
 	{
 		return( FALSE );
 	}

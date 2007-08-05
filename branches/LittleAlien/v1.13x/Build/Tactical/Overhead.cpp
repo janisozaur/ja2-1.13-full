@@ -4750,7 +4750,7 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 		else
 		{
 			// this function returns original MP cost if not a door cost
-			if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
+		 if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
 		 {
 			 // obstacle or wall there!
 			 continue;
@@ -4965,7 +4965,7 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 			ubTestDirection = gOppositeDirection[ ubTestDirection ];
 		}
 
-		if ( gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED )
+	 if ( gubWorldMovementCosts[ sSpot ][ ubTestDirection ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED )
 		{
 			// obstacle or wall there!
 			continue;
@@ -5001,8 +5001,8 @@ INT32 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pub
 
 		// first tile is okay, how about the second?
 		sSpot2 = NewGridNo( sSpot, DirectionInc( sDirs[ cnt ] ) );
-		if ( gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED ||
-			DoorTravelCost( pSoldier, sSpot2, gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL ) == TRAVELCOST_DOOR ) // closed door blocks!
+	 if ( gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ] >= TRAVELCOST_BLOCKED ||
+				DoorTravelCost( pSoldier, sSpot2, gubWorldMovementCosts[ sSpot2 ][ sDirs[cnt] ][ pSoldier->bLevel ], (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL ) == TRAVELCOST_DOOR ) // closed door blocks!
 		{
 			// obstacle or wall there!
 			continue;
@@ -5140,7 +5140,7 @@ INT32 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 	{
 			sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
-		if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ cnt ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
+			if ( DoorTravelCost( pSoldier, sSpot, gubWorldMovementCosts[ sSpot ][ cnt ][ pSoldier->bLevel ], FALSE, NULL ) >= TRAVELCOST_BLOCKED )
 		{
 			// blocked!
 			continue;

@@ -39,7 +39,7 @@ using namespace std;
 typedef struct
 {
 	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
-	INT32 usStartingGridNo;				//Where the placement position is.
+	INT16 _old_usStartingGridNo;
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;		
 	INT8 bRelativeEquipmentLevel;		
@@ -47,7 +47,7 @@ typedef struct
 	INT8 bOrders;										
 	INT8 bAttitude;									
 	INT8 bBodyType;									//up to 128 body types, -1 means random
-	INT32 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
+	INT16 _old_sPatrolGrid[ MAXPATROLGRIDS ];
 	INT8 bPatrolCnt;
 	BOOLEAN fOnRoof;
 	UINT8	ubSoldierClass;							//army, administrator, elite
@@ -55,6 +55,8 @@ typedef struct
 	BOOLEAN fPriorityExistance;			//These slots are used first
 	BOOLEAN fHasKeys;
 	INT8 PADDINGSLOTS[ 14 ];
+	INT32 usStartingGridNo;				//Where the placement position is.
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
 } BASIC_SOLDIERCREATE_STRUCT;
 
 typedef struct
@@ -292,7 +294,7 @@ public:
 	INT16							sSectorX;
 	INT16							sSectorY;
 	INT8							bDirection;
-	INT32							sInsertionGridNo;
+	INT16							_old_sInsertionGridNo;
 
 	// Can force a team, but needs flag set
 	INT8							bTeam;
@@ -331,7 +333,7 @@ public:
 	PaletteRepID			MiscPal;
 	
 	//Waypoint information for patrolling
-	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
+	INT16 _old_sPatrolGrid[ MAXPATROLGRIDS ];
 	INT8 bPatrolCnt;
 	
 	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)
@@ -365,6 +367,11 @@ public:
 	char endOfPOD;	// marker for end of POD (plain old data)
 
 	Inventory				Inv;
+
+//SB: extended fields
+	INT32 sInsertionGridNo;
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
+
 }; // SOLDIERCREATE_STRUCT;
 
 #define SIZEOF_SOLDIERCREATE_STRUCT_POD offsetof( SOLDIERCREATE_STRUCT, endOfPOD )

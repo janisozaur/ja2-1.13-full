@@ -976,6 +976,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer, FLOAT dMajorMapVersion )
 	{
 		gps1stNorthEdgepointArray = (INT32*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT32 ) );
 		Assert( gps1stNorthEdgepointArray );
+		memset( gps1stNorthEdgepointArray, 0, gus1stNorthEdgepointArraySize * sizeof( INT32 ) );
 		if(dMajorMapVersion < 7.00)
 		{
 			int i;

@@ -352,9 +352,9 @@ BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 // I did that (or actually uncasted a bunch of stuff and re-typed others to correct them), so 
 // no worries
 // (jonathanl) to save me having to cast all the previous code
-BOOLEAN GetMouseMapPos( UINT16	*psMapPos )
+BOOLEAN GetMouseMapPos( UINT32	*psMapPos )
 {
-	return  GetMouseMapPos( (INT16 *)psMapPos );
+	return  GetMouseMapPos( (INT32 *)psMapPos );
 }
 #endif
 
