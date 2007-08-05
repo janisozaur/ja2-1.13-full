@@ -93,6 +93,8 @@ extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 
 extern	HINSTANCE					ghInstance;
 
+extern OBJECTTYPE GLOCK_17_ForUseWithLOS;
+
 
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
@@ -524,6 +526,11 @@ UINT32 InitializeJA2(void)
 	{
 		return( ERROR_SCREEN );
 	}
+
+	//ADB When a merc calcs CTGT for a thrown item he uses a GLOCK temp item
+	//but we don't want to recreate it every single time CTGT is called, so init the GLOCK here
+	CreateItem(GLOCK_17, 100, &GLOCK_17_ForUseWithLOS);
+
 
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR

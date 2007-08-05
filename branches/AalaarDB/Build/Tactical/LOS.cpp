@@ -65,6 +65,14 @@ static FIXEDPT gqStandardWindowTopHeight = INT32_TO_FIXEDPT( WINDOW_TOP_HEIGHT_U
 
 #define FIXEDPT_MULTIPLY( a, b ) ( (a / 256) * (b / 256) )
 
+
+
+//ADB When a merc calcs CTGT for a thrown item he uses a GLOCK temp item
+//but we don't want to recreate it every single time CTGT is called, so init the GLOCK in InitializeJA2()
+OBJECTTYPE GLOCK_17_ForUseWithLOS;
+
+
+
 UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
 {
 	PERFORMANCE_MARKER
@@ -777,12 +785,14 @@ INT32 LineOfSightTest( FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX,
 		iDistance += 1;
 	}
 
+	//ADB we don't care that we are out of visual range, calc the LOS anyways!
+	/*
 	if ( iDistance > iSightLimit)
 	{
 		// out of visual range
 		return( 0 );
 	}
-
+	*/
 	ddHorizAngle = atan2( dDeltaY, dDeltaX );
 
 #ifdef LOS_DEBUG
@@ -3838,7 +3848,8 @@ INT8 ChanceToGetThrough( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT d
 		OBJECTTYPE oldItemInHand (pFirer->inv[ HANDPOS ]);
 		UINT16 oldAttackingWeapon = pFirer->usAttackingWeapon;
 
-		CreateItem(GLOCK_17, 100, &pFirer->inv[ HANDPOS ]);
+		//GLOCK_17_ForUseWithLOS is init in InitializeJA2()
+		pFirer->inv[ HANDPOS ] = GLOCK_17_ForUseWithLOS;
 		pFirer->usAttackingWeapon = GLOCK_17;
 
 		INT8 retVal = FireBulletGivenTarget( pFirer, dEndX, dEndY, dEndZ, GLOCK_17, 0, FALSE, TRUE );

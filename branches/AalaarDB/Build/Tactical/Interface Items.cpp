@@ -7520,9 +7520,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	//ADB how can ubGunAmmoType be >= 5001 if it's a char?
 	//what is this SKI Tony inventory crash anyways?
 # if defined( _DEBUG )
-  if ( (pObject->gun.ubGunAmmoType >= MAXITEMS) || 
-       ((usItem == 1053) && (pObject->gun.ubGunAmmoType != 0  )) /* shuriken: 1053 */
-     )
+  if ( (pObject->gun.ubGunAmmoType >= MAXITEMS) )
   {
     DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String( "corrupted pObject (%s) found in GetHelpTextForItem()", (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" ));
   	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"corrupted pObject (%S) found in GetHelpTextForItem()"    , (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" );

@@ -538,7 +538,7 @@ void STRUCT_Pathing::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->sDestination = src.sDestination;
 	this->sFinalDestination = src.sFinalDestination;
 	this->bLevel = src.bLevel;
-	this->bLevel = src.bStopped;
+	this->bStopped = src.bStopped;
 	this->bNeedToLook = src.bNeedToLook;
 	this->usPathDataSize = src.usPathDataSize;
 	this->usPathIndex = src.usPathIndex;	
