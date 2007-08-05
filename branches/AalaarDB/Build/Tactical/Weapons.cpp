@@ -2920,8 +2920,11 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 
 		PlayJA2Sample( CREATURE_GAS_NOISE, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
 
-      	NewSmokeEffect( sGridNo, usItem, 0, ubAttackerID );
-  //  // Do Spread effect.......
+// WDS fix 07/25/2007
+// Don't have monsters cause explosions
+  //    	NewSmokeEffect( sGridNo, usItem, 0, ubAttackerID );
+
+	//  // Do Spread effect.......
   //  switch( usItem )
   //  {
   //		case CREATURE_YOUNG_MALE_SPIT:

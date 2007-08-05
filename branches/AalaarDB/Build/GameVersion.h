@@ -30,8 +30,6 @@ extern	CHAR16		zTrackingNumber[16];
 
 
 //#define RUSSIANGOLD
-const extern	UINT32	guiSavedGameVersion;
-
 #ifdef __cplusplus
 }
 #endif

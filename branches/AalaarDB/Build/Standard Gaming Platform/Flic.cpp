@@ -85,6 +85,7 @@ static ErrCode flic_next_frame(Flic *flic, BOOL fDecode);
 
 static void screen_put_dot(FlicScreen *s, int x, int y, Pixel color)
 {
+	PERFORMANCE_MARKER
 	// First clip it.
 	if (x < 0 || y < 0 || x >= s->width || y >= s->height)
 		return;
@@ -108,6 +109,7 @@ static void screen_put_dot(FlicScreen *s, int x, int y, Pixel color)
 
 static Boolean line_clip(FlicScreen *s, int *px, int *py, int *pwidth)
 {
+	PERFORMANCE_MARKER
 	int x = *px;
 	int y = *py;
 	int width = *pwidth;
@@ -143,6 +145,7 @@ static Boolean line_clip(FlicScreen *s, int *px, int *py, int *pwidth)
 
 static void oldscreen_copy_seg(FlicScreen *s, int x, int y, Pixel *pixels, int count)
 {
+	PERFORMANCE_MARKER
 	Pixel *pt;
 	//int xend;
 	int unclipped_x = x;
@@ -191,6 +194,7 @@ static void oldscreen_copy_seg(FlicScreen *s, int x, int y, Pixel *pixels, int c
 
 static void screen_repeat_one(FlicScreen *s, int x, int y, Pixel color, int count)
 {
+	PERFORMANCE_MARKER
 	Pixel *pt;
 
 	// First let's do some clipping.
@@ -219,6 +223,7 @@ static void screen_repeat_one(FlicScreen *s, int x, int y, Pixel color, int coun
 
 static void screen_repeat_two(FlicScreen *s, int x, int y, Pixels2 pixels2, int count)
 {
+	PERFORMANCE_MARKER
 	Pixels2 *pt;
 	int is_odd;
 
@@ -263,6 +268,7 @@ static void screen_repeat_two(FlicScreen *s, int x, int y, Pixels2 pixels2, int 
 
 static void screen_put_colors(FlicScreen *s, int start, Colour *colors, int count)
 {
+	PERFORMANCE_MARKER
 	int end = start + count;
 	int ix;
 
@@ -296,6 +302,7 @@ static void screen_put_colors(FlicScreen *s, int start, Colour *colors, int coun
 
 static void screen_put_colors_64(FlicScreen *s, int start, Colour *colors, int count)
 {
+	PERFORMANCE_MARKER
 	int end = start + count;
 	int ix;
 
@@ -327,6 +334,7 @@ static void screen_put_colors_64(FlicScreen *s, int start, Colour *colors, int c
 
 static void decode_byte_run(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	int x,y;
 	int width = flic->head.width;
 	int height = flic->head.height;
@@ -377,6 +385,7 @@ static void decode_byte_run(Uchar  *data, Flic *flic)
 
 static void decode_delta_fli(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	int xorg = flic->xoff;
 	int yorg = flic->yoff;
 	Short  *wpt = (Short  *)data;
@@ -435,6 +444,7 @@ static void decode_delta_fli(Uchar  *data, Flic *flic)
 
 static void decode_delta_flc(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	int xorg = flic->xoff;
 	int yorg = flic->yoff;
 	int width = flic->head.width;
@@ -519,6 +529,7 @@ OUTT:
 
 static void decode_black(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	Pixels2 black;
 	int i;
 	int height = flic->head.height;
@@ -554,6 +565,7 @@ static void decode_black(Uchar  *data, Flic *flic)
 
 static void decode_literal(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	int i;
 	int height = flic->head.height;
 	int width = flic->head.width;
@@ -596,6 +608,7 @@ typedef void ColorOut(FlicScreen *s, int start, Colour *colors, int count);
 
 static void decode_color(Uchar  *data, Flic *flic, ColorOut *output)
 {
+	PERFORMANCE_MARKER
 	int start = 0;
 	Uchar *cbuf = (Uchar *)data;
 	Short *wp = (Short *)cbuf;
@@ -633,6 +646,7 @@ static void decode_color(Uchar  *data, Flic *flic, ColorOut *output)
 
 static void decode_color_256(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	decode_color(data, flic, screen_put_colors);
 }
 
@@ -654,6 +668,7 @@ static void decode_color_256(Uchar  *data, Flic *flic)
 
 static void decode_color_64(Uchar  *data, Flic *flic)
 {
+	PERFORMANCE_MARKER
 	decode_color(data, flic, screen_put_colors_64);
 }
 
@@ -678,6 +693,7 @@ static void decode_color_64(Uchar  *data, Flic *flic)
 
 static ErrCode decode_frame(Flic *flic, FrameHead *frame, Uchar  *data)
 {
+	PERFORMANCE_MARKER
 	int			i;
 	ChunkHead	*chunk;
 
@@ -753,6 +769,7 @@ static ErrCode file_read_big_block(FILE *file, char *block, Ulong size)
 
 static ErrCode fill_in_frame2(Flic *flic)
 {
+	PERFORMANCE_MARKER
 	FrameHead head;
 	//ErrCode err;
 
@@ -785,6 +802,7 @@ static ErrCode fill_in_frame2(Flic *flic)
 
 static ErrCode flic_next_frame(Flic *flic, BOOL fDecode)
 {
+	PERFORMANCE_MARKER
 	FrameHead	head;
 	ErrCode		err = 0;
 	long			size;
@@ -835,6 +853,7 @@ static ErrCode flic_next_frame(Flic *flic, BOOL fDecode)
 
 static Boolean flic_check_frame(Flic *flic)
 {
+	PERFORMANCE_MARKER
   return TRUE;
 }
 
@@ -846,11 +865,13 @@ static Boolean flic_check_frame(Flic *flic)
 
 static ErrCode flic_open(Flic *flic, const char *filename)
 {
+	PERFORMANCE_MARKER
   return (flic->file = fopen(filename, "rb")) ? 0 : ErrFlicAccess;
 }
 
 static ErrCode flic_seek(Flic *flic, long offset)
 {
+	PERFORMANCE_MARKER
   return fseek(flic->file, offset, SEEK_SET) ? ErrFlicSeek : 0;
 }
 
@@ -871,6 +892,7 @@ static ErrCode flic_seek(Flic *flic, long offset)
 
 void FlicInit(Flic *flic, unsigned screen_width, unsigned screen_height, char change_palette, char *Buff)
 {
+	PERFORMANCE_MARKER
   flic->file = NULL;
   //flic->lib.names = NULL;
 
@@ -905,6 +927,7 @@ void FlicInit(Flic *flic, unsigned screen_width, unsigned screen_height, char ch
 
 ErrCode FlicOpen(Flic *flic, const char *filename)
 {
+	PERFORMANCE_MARKER
 	ErrCode err;
 
 	flic->xoff = flic->yoff = 0;
@@ -966,6 +989,7 @@ ErrCode FlicOpen(Flic *flic, const char *filename)
 
 void FlicSetOrigin(Flic *flic, unsigned x, unsigned y)
 {
+	PERFORMANCE_MARKER
   flic->xoff = x;
   flic->yoff = y;
 }
@@ -988,6 +1012,7 @@ void FlicSetOrigin(Flic *flic, unsigned x, unsigned y)
 
 void FlicClose(Flic *flic)
 {
+	PERFORMANCE_MARKER
 	if ( flic->file )
 	{
 		fclose(flic->file);
@@ -1020,6 +1045,7 @@ static volatile int timer_flag=1;
 
 static void flic_play_loop_timer()
 {
+	PERFORMANCE_MARKER
 	timer_flag = 1;
 }
 
@@ -1045,6 +1071,7 @@ static void flic_play_loop_timer()
 
 ErrCode FlicPlay(Flic *flic, Ulong max_loop)
 {
+	PERFORMANCE_MARKER
 /*
 	ErrCode err;
 	HTIMER timer;
@@ -1115,6 +1142,7 @@ ErrCode FlicPlay(Flic *flic, Ulong max_loop)
 
 void FlicSeekFirst(Flic *flic)
 {
+	PERFORMANCE_MARKER
 //	if (flic->head.oframe2 == 0)
 //		fill_in_frame2(flic);
 
@@ -1128,6 +1156,7 @@ void FlicSeekFirst(Flic *flic)
 
 int FlicAdvance(Flic *flic, BOOL fDecode)
 {
+	PERFORMANCE_MARKER
 	// Seek to second frame
 	//(*flic->seek)(flic, flic->head.oframe2);
 	// Loop from 2nd frame thru ring frame
@@ -1163,12 +1192,14 @@ static void center_flic(Flic *flic)
 
 void set_flic_origin(Flic *flic, int x, int y)
 {
+	PERFORMANCE_MARKER
   flic->xoff = x;
   flic->yoff = y;
 }
 
 int frame_check(Flic *flic)
 {
+	PERFORMANCE_MARKER
 /*  
   char key;
 
@@ -1227,6 +1258,7 @@ int frame_check(Flic *flic)
 
 int FlicStart(char *filename, int width, int height, char *buffer, Flic *flic, char usepal)
 {
+	PERFORMANCE_MARKER
 	FlicInit(flic, width, height, usepal, buffer);
 
 	if(FlicOpen(flic, filename))
@@ -1256,6 +1288,7 @@ int FlicStart(char *filename, int width, int height, char *buffer, Flic *flic, c
 
 void FlicStop(Flic *flic)
 {
+	PERFORMANCE_MARKER
 	FlicClose(flic);
 }
 
@@ -1287,6 +1320,7 @@ void FlicStop(Flic *flic)
 
 ErrCode FlicGetStats(char *filename, int width, int height, Flic *flic, int *piBufferSize, int *piColourPalSize)
 {
+	PERFORMANCE_MARKER
 	ErrCode err=0;
 	FlicInit(flic, width, height, 1, NULL);
 
@@ -1331,6 +1365,7 @@ ErrCode FlicGetStats(char *filename, int width, int height, Flic *flic, int *piB
 
 ErrCode	FlicGetColourPalette(CHAR *filename, int width, int height, CHAR **ppBuffer, INT *piNumColours)
 {
+	PERFORMANCE_MARKER
 	Flic			flic;
 	INT			iBufferSize;
 	INT			iColourPaletteSize=0;
@@ -1422,6 +1457,7 @@ ErrCode	FlicGetColourPalette(CHAR *filename, int width, int height, CHAR **ppBuf
 
 CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 {
+	PERFORMANCE_MARKER
 	FrameHead	head;
 	LONG			lSize;
 	BOOL			fFound = FALSE;
@@ -1499,6 +1535,7 @@ CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 
 INT FlicFindByteRunBeforeFrame(Flic *flic, INT iFrame)
 {
+	PERFORMANCE_MARKER
 	INT	iRet = BAD_INDEX;
   INT i;
 
@@ -1539,6 +1576,7 @@ INT FlicFindByteRunBeforeFrame(Flic *flic, INT iFrame)
 
 ErrCode FlicFillBitmapData( Flic *flic, INT iPrevFrame, INT iFrame, HBITMAP hBitmap )
 {
+	PERFORMANCE_MARKER
 	ErrCode		err = 0;
 	ChunkHead	*chunk = NULL;
 	DIBSECTION	dibSection;
@@ -1612,6 +1650,7 @@ ErrCode FlicFillFrameData(
 	INT	*piNumBytes
 	)
 {
+	PERFORMANCE_MARKER
 	ErrCode		err = 0;
 	ChunkHead	*chunk = NULL;
 	INT			i, iStart, iNumBytesInBuffer;
@@ -1681,6 +1720,7 @@ ErrCode FlicFillFrameData(
 
 void FlicClearBitmap( HBITMAP hBitmap, INT iColourIndex )
 {
+	PERFORMANCE_MARKER
 	DIBSECTION	dibSection;
 	INT			i;
 

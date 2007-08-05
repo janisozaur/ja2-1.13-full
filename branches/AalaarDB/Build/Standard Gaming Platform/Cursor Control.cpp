@@ -44,6 +44,7 @@ MOUSEBLT_HOOK				gMouseBltOverride = NULL;
 
 BOOLEAN BltToMouseCursorFromVObject( HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
 {
+	PERFORMANCE_MARKER
   BOOLEAN      ReturnValue;
 
   ReturnValue = BltVideoObject(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, usXPos, usYPos, VO_BLT_SRCTRANSPARENCY, NULL);
@@ -53,6 +54,7 @@ BOOLEAN BltToMouseCursorFromVObject( HVOBJECT hVObject, UINT16 usVideoObjectSubI
 
 BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
 {
+	PERFORMANCE_MARKER
   BOOLEAN      ReturnValue;
   ETRLEObject	 *pTrav;
 	INT16 sXPos, sYPos;
@@ -80,6 +82,7 @@ BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVide
 // THESE TWO PARAMETERS MUST POINT TO STATIC OR GLOBAL DATA, NOT AUTOMATIC VARIABLES
 void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorData, UINT16 suNumDataFiles )
 {
+	PERFORMANCE_MARKER
 	// Set global values!
 
 	gpCursorFileDatabase  = pCursorFileData;
@@ -96,6 +99,7 @@ void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorDat
 
 BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 {
+	PERFORMANCE_MARKER
 	// Load cursor data will load all data required for the cursor specified by this index
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
@@ -264,6 +268,7 @@ BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 void UnLoadCursorData(UINT32 uiCursorIndex)
 {
+	PERFORMANCE_MARKER
 	// This function will unload add data used for this cursor
 	//
 	// Ok, first we make sure that the video object file is indeed loaded. Once this is verified, we will
@@ -297,6 +302,7 @@ void UnLoadCursorData(UINT32 uiCursorIndex)
 
 void   CursorDatabaseClear(void)
 {
+	PERFORMANCE_MARKER
   UINT32   uiIndex;
 
   for (uiIndex = 0; uiIndex < gusNumDataFiles; uiIndex++)
@@ -318,6 +324,7 @@ void   CursorDatabaseClear(void)
 
 BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 {
+	PERFORMANCE_MARKER
 #ifdef JA2
 
   BOOLEAN				ReturnValue = TRUE;
@@ -593,6 +600,7 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 
 void SetMouseBltHook( MOUSEBLT_HOOK pMouseBltOverride )
 {
+	PERFORMANCE_MARKER
 	gMouseBltOverride = pMouseBltOverride;
 }
 
@@ -600,6 +608,7 @@ void SetMouseBltHook( MOUSEBLT_HOOK pMouseBltOverride )
 // Sets an external video object as cursor file data....
 void SetExternVOData( UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex )
 {
+	PERFORMANCE_MARKER
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
 	UINT32				cnt;
@@ -631,6 +640,7 @@ void SetExternVOData( UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex
 
 void RemoveExternVOData( UINT32 uiCursorIndex )
 {
+	PERFORMANCE_MARKER
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
 	UINT32				cnt;

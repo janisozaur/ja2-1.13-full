@@ -185,6 +185,7 @@ SOUNDTAG	pSoundList[SOUND_MAX_CHANNELS];
 //*******************************************************************************
 void SoundEnableSound(BOOLEAN fEnable)
 {
+	PERFORMANCE_MARKER
 	gfEnableStartup=fEnable;
 }
 
@@ -196,6 +197,7 @@ void SoundEnableSound(BOOLEAN fEnable)
 //*******************************************************************************
 void *SoundGetDriverHandle( void )
 {
+	PERFORMANCE_MARKER
     if(fSoundSystemInit)
         return(FSOUND_GetOutputHandle());
     else
@@ -212,6 +214,7 @@ void *SoundGetDriverHandle( void )
 //*******************************************************************************
 BOOLEAN InitializeSoundManager(void)
 {
+	PERFORMANCE_MARKER
     UINT32 uiCount;
 
     InitLogging();
@@ -260,6 +263,7 @@ BOOLEAN InitializeSoundManager(void)
 //*******************************************************************************
 void ShutdownSoundManager(void)
 {
+	PERFORMANCE_MARKER
     SoundLog("Closing sound system...");
 
 	SoundStopAll();
@@ -289,6 +293,7 @@ void ShutdownSoundManager(void)
 
 UINT32 SoundPlay(STR pFilename, SOUNDPARMS *pParms)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSample, uiChannel;
 
 	if( fSoundSystemInit )
@@ -329,6 +334,7 @@ UINT32 SoundPlay(STR pFilename, SOUNDPARMS *pParms)
 //*******************************************************************************
 UINT32	SoundPlayStreamedFile( STR pFilename, SOUNDPARMS *pParms )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiChannel;
 	HWFILE	hFile;
 
@@ -368,6 +374,7 @@ UINT32	SoundPlayStreamedFile( STR pFilename, SOUNDPARMS *pParms )
 //*******************************************************************************
 UINT32 SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSample;
 	
 	if(fSoundSystemInit)
@@ -447,6 +454,7 @@ UINT32 SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms)
 //*******************************************************************************
 BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound;
 
 	if(fSoundSystemInit)
@@ -474,6 +482,7 @@ UINT32 uiSound;
 //*****************************************************************************************
 BOOLEAN SoundIndexIsPlaying(UINT32 uiSound)
 {
+	PERFORMANCE_MARKER
 	if(fSoundSystemInit)
 	{
 		if( pSoundList[uiSound].hStream!=NULL )
@@ -494,6 +503,7 @@ BOOLEAN SoundIndexIsPlaying(UINT32 uiSound)
 //*******************************************************************************
 BOOLEAN SoundStop(UINT32 uiSoundID)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound;
 	
 	if(fSoundSystemInit)
@@ -526,6 +536,7 @@ UINT32 uiSound;
 //*******************************************************************************
 BOOLEAN SoundSetMemoryLimit(UINT32 uiLimit)
 {
+	PERFORMANCE_MARKER
 	if(guiSoundMemoryLimit < guiSoundMemoryUsed)
 		return(FALSE);
 
@@ -544,6 +555,7 @@ BOOLEAN SoundSetMemoryLimit(UINT32 uiLimit)
 //*******************************************************************************
 BOOLEAN SoundGetSystemInfo(void)
 {
+	PERFORMANCE_MARKER
 	return(FALSE);
 }
 
@@ -560,6 +572,7 @@ BOOLEAN SoundGetSystemInfo(void)
 //*****************************************************************************************
 void SoundSetDefaultVolume(UINT32 uiVolume)
 {
+	PERFORMANCE_MARKER
 	guiSoundDefaultVolume=__min(uiVolume, MAX_VOLUME);
 }
 	
@@ -576,6 +589,7 @@ void SoundSetDefaultVolume(UINT32 uiVolume)
 //*****************************************************************************************
 UINT32 SoundGetDefaultVolume(void)
 {
+	PERFORMANCE_MARKER
 	return(guiSoundDefaultVolume);
 }
 
@@ -589,6 +603,7 @@ UINT32 SoundGetDefaultVolume(void)
 //*******************************************************************************
 BOOLEAN SoundStopAll(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
     SoundLog("  Stopping all sounds");
@@ -614,6 +629,7 @@ UINT32 uiCount;
 //*******************************************************************************
 BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound, uiVolCap;
 
     if(fSoundSystemInit)
@@ -645,6 +661,7 @@ UINT32 uiSound, uiVolCap;
 //*****************************************************************************************
 BOOLEAN SoundSetVolumeIndex(UINT32 uiChannel, UINT32 uiVolume)
 {
+	PERFORMANCE_MARKER
 UINT32 uiVolCap;
 
 	if(fSoundSystemInit)
@@ -671,6 +688,7 @@ UINT32 uiVolCap;
 //*******************************************************************************
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound, uiPanCap;
 
 	if(fSoundSystemInit)
@@ -699,6 +717,7 @@ UINT32 uiSound, uiPanCap;
 //*******************************************************************************
 UINT32 SoundGetVolume(UINT32 uiSoundID)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound;
 
 	if(fSoundSystemInit)
@@ -724,6 +743,7 @@ UINT32 uiSound;
 //*****************************************************************************************
 UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 {
+	PERFORMANCE_MARKER
     if(fSoundSystemInit)
 	{
 		if( pSoundList[uiChannel].hStream!=NULL )
@@ -748,6 +768,7 @@ UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 //*******************************************************************************
 BOOLEAN SoundServiceRandom(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 BOOLEAN fRandomSoundWasCreated=FALSE;
 
@@ -770,6 +791,7 @@ BOOLEAN fRandomSoundWasCreated=FALSE;
 //*******************************************************************************
 BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 {
+	PERFORMANCE_MARKER
 	if(pSampleList[uiSample].uiFlags&SAMPLE_RANDOM)
 		if(pSampleList[uiSample].uiTimeNext <= GetTickCount())
 			if(pSampleList[uiSample].uiInstances < pSampleList[uiSample].uiMaxInstances)
@@ -790,6 +812,7 @@ BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 //*******************************************************************************
 UINT32 SoundStartRandom(UINT32 uiSample)
 {
+	PERFORMANCE_MARKER
 UINT32 uiChannel, uiSoundID;
 SOUNDPARMS spParms;
 
@@ -832,6 +855,7 @@ SOUNDPARMS spParms;
 //*******************************************************************************
 BOOLEAN SoundStopAllRandom(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiChannel, uiSample;
 
 	// Stop all currently playing random sounds
@@ -873,6 +897,7 @@ UINT32 uiChannel, uiSample;
 //*******************************************************************************
 BOOLEAN SoundServiceStreams(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
     if(fSoundSystemInit)
@@ -931,6 +956,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundGetPosition(UINT32 uiSoundID)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSound, uiTime, uiPosition;
 
 	if(fSoundSystemInit)
@@ -963,6 +989,7 @@ UINT32 uiSound, uiTime, uiPosition;
 //*******************************************************************************
 BOOLEAN SoundInitCache(void)
 {
+	PERFORMANCE_MARKER
     UINT32 uiCount;
 
     SoundLog("Init cache...");
@@ -986,6 +1013,7 @@ BOOLEAN SoundInitCache(void)
 //*******************************************************************************
 BOOLEAN SoundShutdownCache(void)
 {
+	PERFORMANCE_MARKER
 	SoundEmptyCache();
     SoundLog("Cache shutdown");
 	return(TRUE);
@@ -1002,6 +1030,7 @@ BOOLEAN SoundShutdownCache(void)
 //*******************************************************************************
 BOOLEAN SoundSetCacheThreshhold(UINT32 uiThreshold)
 {
+	PERFORMANCE_MARKER
 	if(uiThreshold==0)
 		guiSoundCacheThreshold=SOUND_DEFAULT_THRESH;
 	else
@@ -1020,6 +1049,7 @@ BOOLEAN SoundSetCacheThreshhold(UINT32 uiThreshold)
 //*******************************************************************************
 BOOLEAN SoundEmptyCache(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
     SoundLog("Cleaning cache");
@@ -1042,6 +1072,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundLoadSample(STR pFilename)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSample=NO_SAMPLE;
 
 	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
@@ -1062,6 +1093,7 @@ UINT32 uiSample=NO_SAMPLE;
 //*******************************************************************************
 UINT32 SoundLockSample(STR pFilename)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSample;
 
 	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
@@ -1084,6 +1116,7 @@ UINT32 uiSample;
 //*******************************************************************************
 UINT32 SoundUnlockSample(STR pFilename)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSample;
 
 	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
@@ -1106,6 +1139,7 @@ UINT32 uiSample;
 //*******************************************************************************
 UINT32 SoundFreeSample(STR pFilename)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSample;
 
 	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
@@ -1132,6 +1166,7 @@ UINT32 uiSample;
 //*******************************************************************************
 UINT32 SoundGetCached(STR pFilename)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CACHED; uiCount++)
@@ -1156,6 +1191,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundLoadDisk(STR pFilename)
 {
+	PERFORMANCE_MARKER
 HWFILE	hFile;
 UINT32	uiSize, uiSample;
 BOOLEAN fRemoved;
@@ -1232,6 +1268,7 @@ BOOLEAN fRemoved;
 //*******************************************************************************
 BOOLEAN SoundCleanCache(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount, uiLowestHits=NO_SAMPLE, uiLowestHitsCount=0;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CACHED; uiCount++)
@@ -1271,6 +1308,7 @@ UINT32 uiCount, uiLowestHits=NO_SAMPLE, uiLowestHitsCount=0;
 //*******************************************************************************
 BOOLEAN SoundSampleIsPlaying(UINT32 uiSample)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
@@ -1292,6 +1330,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundGetEmptySample(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CACHED; uiCount++)
@@ -1313,6 +1352,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 {
+	PERFORMANCE_MARKER
 	if(pSampleList[uiSample].uiFlags&SAMPLE_ALLOCATED)
 	{
 		if(pSampleList[uiSample].pData!=NULL)
@@ -1338,6 +1378,7 @@ UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 //*******************************************************************************
 UINT32 SoundGetIndexByID(UINT32 uiSoundID)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
@@ -1360,6 +1401,7 @@ UINT32 uiCount;
 //*******************************************************************************
 BOOLEAN SoundInitHardware(void)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCaps;
 
     SoundLog("Init hardware...");
@@ -1406,6 +1448,7 @@ BOOLEAN SoundInitHardware(void)
 //*******************************************************************************
 BOOLEAN SoundShutdownHardware(void)
 {
+	PERFORMANCE_MARKER
 	if(fSoundSystemInit)
 		FSOUND_Close();
     
@@ -1423,6 +1466,7 @@ BOOLEAN SoundShutdownHardware(void)
 //*******************************************************************************
 UINT32 SoundGetFreeChannel(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
@@ -1451,6 +1495,7 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, SOUNDPARMS *pParms)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSoundID;
 
     if(!fSoundSystemInit)
@@ -1550,6 +1595,7 @@ UINT32 uiSoundID;
 //*******************************************************************************
 UINT32 SoundStartStream(STR pFilename, UINT32 uiChannel, SOUNDPARMS *pParms)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSoundID;
 
 	if(!fSoundSystemInit)
@@ -1682,6 +1728,7 @@ static INT F_CALLBACKAPI SoundFileTell(void *uiHandle)
 //*******************************************************************************
 UINT32 SoundGetUniqueID(void)
 {
+	PERFORMANCE_MARKER
 static UINT32 uiNextID=0;
 
 	if(uiNextID==NO_SAMPLE)
@@ -1702,6 +1749,7 @@ static UINT32 uiNextID=0;
 //*******************************************************************************
 BOOLEAN SoundPlayStreamed(STR pFilename)
 {
+	PERFORMANCE_MARKER
 HWFILE hDisk;
 UINT32 uiFilesize;
 
@@ -1728,6 +1776,7 @@ UINT32 uiFilesize;
 //*******************************************************************************
 BOOLEAN SoundStopIndex(UINT32 uiChannel)
 {
+	PERFORMANCE_MARKER
 UINT32 uiSample;
 
 	if(fSoundSystemInit)
@@ -1764,6 +1813,7 @@ UINT32 uiSample;
 // FUNCTIONS TO SET / RESET SAMPLE FLAGS
 void SoundSetSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 {
+	PERFORMANCE_MARKER
 	// CHECK FOR VALUE SAMPLE
 	if((pSampleList[ uiSample ].uiFlags&SAMPLE_ALLOCATED) )
 	{
@@ -1774,6 +1824,7 @@ void SoundSetSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 
 void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 {
+	PERFORMANCE_MARKER
 	// CHECK FOR VALID SAMPLE
 	if((pSampleList[ uiSample ].uiFlags&SAMPLE_ALLOCATED) )
 	{
@@ -1790,6 +1841,7 @@ void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 //*******************************************************************************
 BOOLEAN SoundSampleIsInUse(UINT32 uiSample)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
@@ -1815,6 +1867,7 @@ UINT32 uiCount;
 //*****************************************************************************************
 void SoundLog(CHAR8 *strMessage)
 {
+	PERFORMANCE_MARKER
 	if ((SndDebug = fopen(SndDebugFileName, "a+t")) != NULL)
 	{ 
 	    fprintf(SndDebug, "%s\n", strMessage);
@@ -1832,6 +1885,7 @@ void SoundLog(CHAR8 *strMessage)
 //*****************************************************************************************
 void InitLogging()
 {
+	PERFORMANCE_MARKER
 	if ((SndDebug = fopen(SndDebugFileName, "wt")) != NULL)
 	{ 
 		fclose(SndDebug);

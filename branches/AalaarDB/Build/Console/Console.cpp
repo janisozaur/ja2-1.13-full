@@ -4135,7 +4135,9 @@ void Console::About()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void Console::SendTextToConsole(const wchar_t *pszText) {
+void Console::SendTextToConsole(const wchar_t *pszText)
+{
+	PERFORMANCE_MARKER
 	
 	if (!pszText || (wcslen(pszText) == 0)) return;
 
@@ -4275,6 +4277,7 @@ tstring Console::GetFullFilename(const tstring& strFilename) {
 /////////////////////////////////////////////////////////////////////////////
 
 void Console::GetDesktopRect(RECT& rectDesktop) {
+	PERFORMANCE_MARKER
 
 //	if (g_bWin2000) {
 		POINT pt;

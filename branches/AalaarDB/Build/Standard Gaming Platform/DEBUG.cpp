@@ -68,7 +68,7 @@ INT32		giProfileCount;
 // they are required for the String() function, which is NOT a 
 // debug-mode only function, it's used in release-mode as well! -- DB
  
-CHAR8 gubAssertString[128];
+CHAR8 gubAssertString[512];//for long filenames
 
 #define MAX_MSG_LENGTH2 512
 CHAR8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
@@ -515,7 +515,7 @@ void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 #endif
 	BOOLEAN fDone = FALSE;
 	//Build the output strings
-	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
+	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in \n%c %s]\n", GetTickCount(), uiLineNum, '\n', pSourceFile );
 	if( pString )
 		sprintf( gubAssertString, pString );	
 	else
@@ -555,7 +555,7 @@ void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 	//NASTY HACK, THE GAME IS GOING TO DIE ANYWAY, SO WHO CARES WHAT WE DO.
 	//This will actually bring up a screen that prints out the assert message
 	//until the user hits esc or alt-x.
-	sprintf( gubErrorText, "Assertion Failure -- Line %d in %s", uiLineNum, pSourceFile );
+	sprintf( gubErrorText, "Assertion Failure -- Line %d in %s %s", uiLineNum, std::string("\n").c_str(), pSourceFile );
 	SetPendingNewScreen( ERROR_SCREEN );
 	SetCurrentScreen( ERROR_SCREEN );
 	while (gfProgramIsRunning)

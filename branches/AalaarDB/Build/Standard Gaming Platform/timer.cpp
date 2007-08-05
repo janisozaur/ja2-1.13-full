@@ -35,6 +35,7 @@ void CALLBACK Clock( HWND hWindow, UINT uMessage, UINT idEvent, DWORD dwTime )
 
 BOOLEAN InitializeClockManager(void)
 {
+	PERFORMANCE_MARKER
 
   // Register the start time (use WIN95 API call)
   guiCurrentTime = guiStartupTime = GetTickCount();
@@ -46,6 +47,7 @@ BOOLEAN InitializeClockManager(void)
 
 void    ShutdownClockManager(void)
 {
+	PERFORMANCE_MARKER
 
   // Make sure we kill the timer
   KillTimer(ghWindow, MAIN_TIMER_ID);
@@ -54,16 +56,19 @@ void    ShutdownClockManager(void)
 
 TIMER   GetClock(void)
 {
+	PERFORMANCE_MARKER
   return guiCurrentTime;
 }
 
 TIMER   SetCountdownClock(UINT32 uiTimeToElapse)
 {
+	PERFORMANCE_MARKER
   return (guiCurrentTime + uiTimeToElapse);
 }
 
 UINT32 ClockIsTicking(TIMER uiTimer)
 {
+	PERFORMANCE_MARKER
   if (uiTimer > guiCurrentTime)
   { // Well timer still hasn't elapsed
     return (uiTimer - guiCurrentTime);

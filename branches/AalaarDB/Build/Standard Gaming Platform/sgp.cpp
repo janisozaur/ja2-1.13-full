@@ -742,7 +742,6 @@ void ShutdownStandardGamingPlatform(void)
 
 int PASCAL WinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
 {
-	PERFORMANCE_MARKER 
 
 //If we are to use exception handling
 #ifdef ENABLE_EXCEPTION_HANDLING
@@ -772,6 +771,10 @@ int PASCAL WinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommand
 
 int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
 {
+	//commented out since most time is spent idle this jacks up the function's percentage
+	//and lowers all others
+
+	//actually commenting it out doesn't change the percentage until the profiler code is changed
 	PERFORMANCE_MARKER 
 //DO NOT REMOVE, used for exception handing list above in WinMain
 #endif
@@ -799,6 +802,9 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 	//EmergencyExitButtonInit();
 	//end rain
 
+#ifdef _DEBUG
+	_CrtSetDbgFlag( _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
 
 	ghInstance = hInstance;
 

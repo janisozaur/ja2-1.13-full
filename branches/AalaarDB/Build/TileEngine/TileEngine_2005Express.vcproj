@@ -79,8 +79,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="..\Release"
+			IntermediateDirectory="..\Release"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\ja2_2005Express.vsprops"
 			>
@@ -224,6 +224,10 @@
 			</File>
 			<File
 				RelativePath=".\Render Fun.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Render Z.h"
 				>
 			</File>
 			<File
@@ -382,6 +386,10 @@
 			</File>
 			<File
 				RelativePath=".\Render Fun.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Render Z.cpp"
 				>
 			</File>
 			<File

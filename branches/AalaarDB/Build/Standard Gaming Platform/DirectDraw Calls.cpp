@@ -19,6 +19,7 @@ DDCreateSurface (	LPDIRECTDRAW2 pExistingDirectDraw,
 								LPDIRECTDRAWSURFACE *ppNewSurface1,
 								LPDIRECTDRAWSURFACE2 *ppNewSurface2 )
 {
+	PERFORMANCE_MARKER
 	Assert ( pExistingDirectDraw != NULL );
 	Assert ( pNewSurfaceDesc != NULL );
 	Assert ( ppNewSurface1 != NULL );
@@ -40,6 +41,7 @@ DDCreateSurfaceInMemory ( LPDIRECTDRAW2 pExistingDirectDraw,
 								BOOLEAN fVideoMemory, LPDIRECTDRAWSURFACE *ppNewSurface1,
 								LPDIRECTDRAWSURFACE2 *ppNewSurface2 )
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC	DDSurfaceDesc;
 	BOOLEAN			fDestination;
 
@@ -83,6 +85,7 @@ DDCreateSurfaceInMemory ( LPDIRECTDRAW2 pExistingDirectDraw,
 // Lock, unlock calls
 void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFACEDESC pSurfaceDesc, UINT32 uiFlags, HANDLE hEvent )
 {
+	PERFORMANCE_MARKER
 	HRESULT ReturnCode;
 
 	Assert( pSurface != NULL );
@@ -103,6 +106,7 @@ void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFAC
 
 void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_Unlock( pSurface, pSurfaceData ) );
@@ -112,6 +116,7 @@ void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 
 void DDGetSurfaceDescription ( LPDIRECTDRAWSURFACE2 pSurface, DDSURFACEDESC *pSurfaceDesc )
 {
+	PERFORMANCE_MARKER
 	Assert ( pSurface != NULL );
 	Assert ( pSurfaceDesc != NULL );
 
@@ -123,6 +128,7 @@ void DDGetSurfaceDescription ( LPDIRECTDRAWSURFACE2 pSurface, DDSURFACEDESC *pSu
 
 void DDGetSurfaceCaps ( LPDIRECTDRAWSURFACE2 pSurface, DDSCAPS *pSurfaceCaps )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL  );
 	Assert( pSurfaceCaps != NULL );
 
@@ -135,6 +141,7 @@ void DDCreateRasterSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHei
 									  LPDIRECTDRAWSURFACE *ppRasterSurface1,
 									  LPDIRECTDRAWSURFACE2 *ppRasterSurface2 )
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC	DDSurfaceDesc;
 
 	// validate used portions of the structure
@@ -159,6 +166,7 @@ void DDCreateZBufferSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHe
 									  LPDIRECTDRAWSURFACE *ppZBufferSurface1,
 									  LPDIRECTDRAWSURFACE2 *ppZBufferSurface2 )
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC	DDSurfaceDesc;
 
 	// validate used portions of the structure
@@ -183,6 +191,7 @@ void
 DDAddAttachedSurface (	LPDIRECTDRAWSURFACE2 pParentSurface,
 							LPDIRECTDRAWSURFACE2 pAddChildSurface )
 {
+	PERFORMANCE_MARKER
 	Assert ( pParentSurface != NULL  );
 	Assert ( pAddChildSurface != NULL );
 	
@@ -195,6 +204,7 @@ void
 DDDeleteAttachedSurface (	LPDIRECTDRAWSURFACE2 pParentSurface,
 							LPDIRECTDRAWSURFACE2 pDeleteChildSurface )
 {
+	PERFORMANCE_MARKER
 	Assert ( pParentSurface != NULL  );
 	Assert ( pDeleteChildSurface != NULL );
 
@@ -206,6 +216,7 @@ DDDeleteAttachedSurface (	LPDIRECTDRAWSURFACE2 pParentSurface,
 void
 DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppOldSurface2 )
 {
+	PERFORMANCE_MARKER
 	Assert ( ppOldSurface1 != NULL );
 	Assert ( ppOldSurface2 != NULL );
 	Assert ( *ppOldSurface1 != NULL );
@@ -220,6 +231,7 @@ DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppO
 
 void DDRestoreSurface( LPDIRECTDRAWSURFACE2 pSurface )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_Restore( pSurface ) );
@@ -229,6 +241,7 @@ void DDRestoreSurface( LPDIRECTDRAWSURFACE2 pSurface )
 void DDBltFastSurface( LPDIRECTDRAWSURFACE2 pDestSurface, UINT32 uiX, UINT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface, 
 							LPRECT pSrcRect, UINT32 uiTrans)
 {
+	PERFORMANCE_MARKER
 	HRESULT ReturnCode;
 
 	Assert( pDestSurface != NULL  );
@@ -245,6 +258,7 @@ void DDBltFastSurface( LPDIRECTDRAWSURFACE2 pDestSurface, UINT32 uiX, UINT32 uiY
 void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECTDRAWSURFACE2 pSrcSurface,
 					    LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
 {
+	PERFORMANCE_MARKER
 
 	HRESULT ReturnCode;
 
@@ -263,6 +277,7 @@ void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECT
 void DDCreatePalette( LPDIRECTDRAW2 pDirectDraw, UINT32 uiFlags, LPPALETTEENTRY pColorTable, LPDIRECTDRAWPALETTE FAR *ppDDPalette,
 								IUnknown FAR * pUnkOuter)
 {
+	PERFORMANCE_MARKER
 
 	Assert( pDirectDraw != NULL );
 
@@ -272,6 +287,7 @@ void DDCreatePalette( LPDIRECTDRAW2 pDirectDraw, UINT32 uiFlags, LPPALETTEENTRY 
 
 void DDSetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE pDDPalette )
 {
+	PERFORMANCE_MARKER
 	Assert( pDDPalette != NULL  );
 	Assert( pSurface != NULL );
 
@@ -281,6 +297,7 @@ void DDSetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE pDD
 
 void DDGetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE *ppDDPalette )
 {
+	PERFORMANCE_MARKER
 	Assert( ppDDPalette != NULL );
 	Assert( pSurface != NULL );
 
@@ -291,6 +308,7 @@ void DDGetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE *pp
 void DDSetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 uiStartingEntry,
 								UINT32 uiCount, LPPALETTEENTRY pEntries )
 {
+	PERFORMANCE_MARKER
 	Assert( pPalette != NULL );
 	Assert( pEntries != NULL );
 
@@ -301,6 +319,7 @@ void DDSetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 u
 void DDGetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 uiBase,
 								UINT32 uiNumEntries, LPPALETTEENTRY pEntries )
 {
+	PERFORMANCE_MARKER
 	Assert( pPalette != NULL );
 	Assert( pEntries != NULL );
 
@@ -310,6 +329,7 @@ void DDGetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 u
 
 void DDReleasePalette( LPDIRECTDRAWPALETTE pPalette )
 {
+	PERFORMANCE_MARKER
 	Assert( pPalette != NULL );
 
 	ATTEMPT( IDirectDrawPalette_Release( pPalette ) );
@@ -317,6 +337,7 @@ void DDReleasePalette( LPDIRECTDRAWPALETTE pPalette )
 
 void DDGetDC( LPDIRECTDRAWSURFACE2 pSurface, HDC *phDC )
 {
+	PERFORMANCE_MARKER
 
 	Assert( pSurface != NULL );
 	Assert( phDC != NULL );
@@ -327,6 +348,7 @@ void DDGetDC( LPDIRECTDRAWSURFACE2 pSurface, HDC *phDC )
 
 void DDReleaseDC( LPDIRECTDRAWSURFACE2 pSurface, HDC hDC )
 {
+	PERFORMANCE_MARKER
 
 	Assert( pSurface != NULL );
 
@@ -336,6 +358,7 @@ void DDReleaseDC( LPDIRECTDRAWSURFACE2 pSurface, HDC hDC )
 
 void DDSetSurfaceColorKey( LPDIRECTDRAWSURFACE2 pSurface, UINT32 uiFlags, LPDDCOLORKEY pDDColorKey )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL );
 	Assert( pDDColorKey != NULL );
 
@@ -345,6 +368,7 @@ void DDSetSurfaceColorKey( LPDIRECTDRAWSURFACE2 pSurface, UINT32 uiFlags, LPDDCO
 
 void DDGetDDInterface( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAW *ppDirectDraw )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL );
 	Assert( ppDirectDraw != NULL );
 
@@ -354,6 +378,7 @@ void DDGetDDInterface( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAW *ppDirectDraw
 // Clipper FUnctions
 void DDCreateClipper( LPDIRECTDRAW2 pDirectDraw, UINT32 fFlags, LPDIRECTDRAWCLIPPER *pDDClipper )
 {
+	PERFORMANCE_MARKER
 	Assert( pDirectDraw != NULL );
 	Assert( pDDClipper != NULL );
 
@@ -363,6 +388,7 @@ void DDCreateClipper( LPDIRECTDRAW2 pDirectDraw, UINT32 fFlags, LPDIRECTDRAWCLIP
 
 void DDSetClipper( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWCLIPPER pDDClipper )
 {
+	PERFORMANCE_MARKER
 	Assert( pSurface != NULL );
 	Assert( pDDClipper != NULL );
 
@@ -372,6 +398,7 @@ void DDSetClipper( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWCLIPPER pDDClipper
 
 void DDReleaseClipper( LPDIRECTDRAWCLIPPER pDDClipper )
 {
+	PERFORMANCE_MARKER
 	Assert( pDDClipper != NULL );
 
 	ATTEMPT( IDirectDrawClipper_Release( pDDClipper ) );
@@ -379,6 +406,7 @@ void DDReleaseClipper( LPDIRECTDRAWCLIPPER pDDClipper )
 
 void DDSetClipperList( LPDIRECTDRAWCLIPPER pDDClipper, LPRGNDATA pClipList, UINT32 uiFlags)
 {
+	PERFORMANCE_MARKER
 	Assert( pDDClipper != NULL );
 	Assert( pClipList != NULL );
 	
@@ -389,6 +417,7 @@ void DDSetClipperList( LPDIRECTDRAWCLIPPER pDDClipper, LPRGNDATA pClipList, UINT
 
 HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 uiX, INT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiTrans )
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;
@@ -450,6 +479,7 @@ HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 
 
 HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;

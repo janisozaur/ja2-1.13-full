@@ -131,6 +131,7 @@ private:
 	int		CalcH			();
 	int		CalcGCover		(int const NodeIndex,
 							int const APCost);
+	int		CalcStartingAP	();
 
 			//including THREATTYPE was a pain, so pass by value
 	int		CalcCoverValue	(INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,

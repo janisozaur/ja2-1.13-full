@@ -728,7 +728,7 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	BOOLEAN fMoreTroopsLeft[4] = {FALSE,FALSE,FALSE,FALSE};
 	BOOLEAN fFirstLoop = TRUE;
-	BOOLEAN fMilitiaAlreadyBeen = CountMilitia(pSectorInfo )>0 && gWorldSectorX == sMapX && gWorldSectorY == sMapY && gbWorldSectorZ == 0;
+	BOOLEAN fMilitiaMoved = FALSE;
 
 	guiDirNumber = 0;
 
@@ -752,7 +752,7 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 
 		if( fMoreTroopsLeft[ x ] )
 		{
-			if( fMilitiaAlreadyBeen )gfMSResetMilitia = TRUE;
+			fMilitiaMoved = TRUE;
 
 			gpAttackDirs[ x + 1 ][0] += pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA] - uiNumGreen;
 			gpAttackDirs[ x + 1 ][1] += pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA] - uiNumReg;
@@ -772,19 +772,18 @@ void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 		}
 	}
 
-	if (gfStrategicMilitiaChangesMade)
-	{
-		RemoveMilitiaFromTactical();
-		PrepareMilitiaForTactical();
-		gfStrategicMilitiaChangesMade = FALSE;
+	// If militia have been moved here, no reason to reset--just add them.  If militia have not moved, then no strategic
+	// changes were made.  Either case, this flag should be false.
+	gfStrategicMilitiaChangesMade = FALSE;
 	}
-}
 
 void MSCallBack( UINT8 ubResult )
 {
-	PERFORMANCE_MARKER
 	if( ubResult == MSG_BOX_RETURN_YES )
+	{
+		gTacticalStatus.uiFlags |= WANT_MILITIA_REINFORCEMENTS;
 		DoMilitiaHelpFromAdjacentSectors( sMSMapX, 	sMSMapY );
+	}
 }
 
 BOOLEAN IsThereMilitiaInAdjacentSector( INT16 sMapX, INT16 sMapY )
@@ -810,13 +809,20 @@ void MilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	PERFORMANCE_MARKER
 	sMSMapX = sMapX;
 	sMSMapY = sMapY;
+	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	if( !gGameExternalOptions.gfAllowMilitiaGroups )
 		return;
 
-	if( CountAllMilitiaInSector( sMapX, sMapY ) ) MSCallBack( MSG_BOX_RETURN_YES );
+	gTacticalStatus.uiFlags &= (~WANT_MILITIA_REINFORCEMENTS);
 
-	if( IsThereMilitiaInAdjacentSector( sMapX, sMapY ) && CountAllMilitiaInSector( sMapX, sMapY ) < gGameExternalOptions.guiMaxMilitiaSquadSizeBattle )
+	guiDirNumber = 0;
+
+//	if( CountAllMilitiaInSector( sMapX, sMapY ) ) MSCallBack( MSG_BOX_RETURN_YES );
+
+	// This is no longer a question of simply whether to have a full militia count, but also whether we want
+	// reinforcements.  So if there are any available, always ask.
+	if( IsThereMilitiaInAdjacentSector( sMapX, sMapY ) ) // && CountAllMilitiaInSector( sMapX, sMapY ) < gGameExternalOptions.guiMaxMilitiaSquadSizeBattle )
 		DoScreenIndependantMessageBox( gzCWStrings[0], MSG_BOX_FLAG_YESNO, MSCallBack );
 }
 

@@ -79,8 +79,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="..\Release"
+			IntermediateDirectory="..\Release"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\ja2_2005Express.vsprops"
 			>
@@ -421,6 +421,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Compression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Container.cpp"
 				>
 			</File>
@@ -461,6 +465,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Flic.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Font.cpp"
 				>
 			</File>
@@ -478,6 +486,10 @@
 			</File>
 			<File
 				RelativePath=".\Install.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Ja2 Libs.cpp"
 				>
 			</File>
 			<File

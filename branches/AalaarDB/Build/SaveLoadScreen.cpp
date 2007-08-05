@@ -437,7 +437,12 @@ void SetSaveLoadExitScreen( UINT32 uiScreen )
 	if( gfDoingQuickLoad )
 	{
 		fFirstTimeInGameScreen = TRUE;
+	// 0verhaul:  This is a repeat of the previous line, but with a different variable set.
+	// None of it really makes sense.  Why would a quicksave be different from a regular one?
+	// Why should ctrl+L act differently than alt+L?
+#if 0
 		SetPendingNewScreen( uiScreen );
+#endif
 	}
 
 	ExitSaveLoadScreen();
@@ -1999,7 +2004,7 @@ UINT8 CompareSaveGameVersion( INT8 bSaveGameID )
 	LoadSavedGameHeader( bSaveGameID, &SaveGameHeader );
 
 	// check to see if the saved game version in the header is the same as the current version
-	if( SaveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
+	if( SaveGameHeader.uiSavedGameVersion != SAVE_GAME_VERSION )
 	{
 		ubRetVal = SLS_SAVED_GAME_VERSION_OUT_OF_DATE;
 	}

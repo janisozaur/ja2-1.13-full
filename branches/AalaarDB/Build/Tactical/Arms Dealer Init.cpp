@@ -109,7 +109,7 @@ void		ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ub
 BOOLEAN ItemContainsLiquid( UINT16 usItemIndex );
 UINT8		DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo );
+BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex );
 
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
 
@@ -1118,7 +1118,7 @@ INT16 GetSpecialItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIn
 	UINT8 ubElement;
 
 	// this function won't find perfect items!
-	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
+	Assert( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) );
 
 	for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
 	{
@@ -1776,7 +1776,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECI
 
 
 	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo ) )
+	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
 	{
 		// Anything that's used/damaged or imprinted is store as a special item in the SpecialItem array,
 		// exactly one item per element.  We (re)allocate memory dynamically as necessary to hold the additional items.
@@ -1845,7 +1845,7 @@ void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 us
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems < 255 );
 	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == FALSE );
-	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
+	Assert( IsItemInfoSpecial( pSpclItemInfo , usItemIndex) );
 
 
 	//Store the special values in that element, and make it active
@@ -1855,6 +1855,30 @@ void AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 us
 
 	// increase the total items
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems++;
+}
+
+
+// WDS bug fix (07/24/2007) - Items with default attachments have to be handled specially
+
+BOOLEAN SpecialItemInfoIsIdentical (SPECIAL_ITEM_INFO& baseItem, SPECIAL_ITEM_INFO& actualItem, UINT16 usItemIndex)
+{
+	BOOLEAN firstAttachmentIsDefault = 
+		((actualItem.usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
+		 (actualItem.bAttachmentStatus[0] == 100));
+	for (int idx=0; idx < MAX_ATTACHMENTS; ++idx) {
+		if ((idx != 0) || (!firstAttachmentIsDefault)) {
+			if (baseItem.usAttachment[idx] != actualItem.usAttachment[idx])
+				return FALSE;
+			if (baseItem.bAttachmentStatus[idx] != actualItem.bAttachmentStatus[idx])
+				return FALSE;
+		}
+	}
+	if (baseItem.bItemCondition != actualItem.bItemCondition)
+		return FALSE;
+	if (baseItem.ubImprintID != actualItem.ubImprintID)
+		return FALSE;
+
+	return TRUE;
 }
 
 
@@ -1876,7 +1900,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 
 
 	// decide whether this item is "special" or not
-	if ( IsItemInfoSpecial( pSpclItemInfo ) )
+	if ( IsItemInfoSpecial( pSpclItemInfo, usItemIndex ) )
 	{
 		// look through the elements, trying to find special items matching the specifications
 		for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
@@ -1887,7 +1911,8 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 			if ( pSpecialItem->fActive )
 			{
 				// and its contents are exactly what we're looking for
-				if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info == *pSpclItemInfo )
+				//if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info == *pSpclItemInfo )
+				if( SpecialItemInfoIsIdentical( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info, *pSpclItemInfo, usItemIndex))
 				{
 					// Got one!  Remove it
 					RemoveSpecialItemFromArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement );
@@ -2558,7 +2583,7 @@ void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE 
 
 
 
-BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo )
+BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex )
 {
 	PERFORMANCE_MARKER
 	UINT8 ubCnt;
@@ -2577,9 +2602,23 @@ BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo )
 	}
 
 	// having an attachment makes an item special
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
+	// ...unless it is a default attachment (WDS fix 07/24/2007)
+	if ( (pSpclItemInfo->usAttachment[ 0 ] != NONE) )
 	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
+		//ADB: takes the if ubCnt != 0 out of the loop below, and only calcs firstAttachmentIsDefault sometimes,
+		//cuz ya know, performance is sooo critical here (not)
+		BOOLEAN firstAttachmentIsDefault = 
+			((pSpclItemInfo->usAttachment[ 0 ] == Item [ usItemIndex ].defaultattachment) &&
+			 (pSpclItemInfo->bAttachmentStatus[0] == 100));
+		if ( firstAttachmentIsDefault == false)
+		{
+			return(TRUE);
+		}
+	}
+
+	for ( ubCnt = 1; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
+	{
+		if ( (pSpclItemInfo->usAttachment[ ubCnt ] != NONE) )
 		{
 			return(TRUE);
 		}

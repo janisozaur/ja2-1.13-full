@@ -88,6 +88,7 @@ BOOLEAN gfIgnoreShutdownAssertions; // symbol already declared globally in mouse
 //Called immediately before assigning the button to the button list.
 void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	GUI_BUTTON *c;
 	for( x = 0; x < MAX_BUTTONS; x++ )
@@ -146,6 +147,7 @@ INT32 ButtonsInList=0;
 
 UINT16 GetWidthOfButtonPic( UINT16 usButtonPicID, INT32 iSlot )
 {
+	PERFORMANCE_MARKER
 	return ButtonPictures[ usButtonPicID ].vobj->pETRLEObject[ iSlot ].usWidth;
 }
 
@@ -180,6 +182,7 @@ extern MOUSE_REGION *MSYS_CurrRegion;
 //
 INT32 FindFreeButtonSlot(void)
 {
+	PERFORMANCE_MARKER
 	int slot;
 
 	// Are there any slots available?
@@ -205,6 +208,7 @@ INT32 FindFreeButtonSlot(void)
 //
 INT32 LoadButtonImage(const STR8 filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	vo_desc;
 	UINT32				UseSlot;
 	ETRLEObject		*pTrav;
@@ -330,6 +334,7 @@ INT32 LoadButtonImage(const STR8 filename, INT32 Grayed, INT32 OffNormal, INT32 
 //
 INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
+	PERFORMANCE_MARKER
 	UINT32				UseSlot;
 	ETRLEObject		*pTrav;
 	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
@@ -459,6 +464,7 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 //
 INT32 UseVObjAsButtonImage(HVOBJECT hVObject, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
+	PERFORMANCE_MARKER
 	UINT32				UseSlot;
 	ETRLEObject		*pTrav;
 	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
@@ -575,6 +581,7 @@ INT32 UseVObjAsButtonImage(HVOBJECT hVObject, INT32 Grayed, INT32 OffNormal, INT
 //
 BOOLEAN SetButtonDestBuffer(UINT32 DestBuffer)
 {
+	PERFORMANCE_MARKER
 	if(DestBuffer != BUTTON_USE_DEFAULT)
 		ButtonDestBuffer = DestBuffer;
 
@@ -586,6 +593,7 @@ BOOLEAN SetButtonDestBuffer(UINT32 DestBuffer)
 //Removes a QuickButton image from the system.
 void UnloadButtonImage(INT32 Index)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	BOOLEAN fDone;
 
@@ -654,6 +662,7 @@ void UnloadButtonImage(INT32 Index)
 //
 BOOLEAN EnableButton( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	UINT32 OldState;
 
@@ -692,6 +701,7 @@ BOOLEAN EnableButton( INT32 iButtonID )
 //
 BOOLEAN DisableButton(INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	UINT32 OldState;
 
@@ -727,6 +737,7 @@ BOOLEAN DisableButton(INT32 iButtonID )
 //
 BOOLEAN InitializeButtonImageManager(INT32 DefaultBuffer, INT32 DefaultPitch, INT32 DefaultBPP)
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	vo_desc;
 	UINT8 Pix;
 	int x;
@@ -833,6 +844,7 @@ BOOLEAN InitializeButtonImageManager(INT32 DefaultBuffer, INT32 DefaultPitch, IN
 //
 INT16 FindFreeGenericSlot(void)
 {
+	PERFORMANCE_MARKER
 	INT16 slot,x;
 
 	slot=BUTTON_NO_SLOT;
@@ -854,6 +866,7 @@ INT16 FindFreeGenericSlot(void)
 //
 INT16 FindFreeIconSlot(void)
 {
+	PERFORMANCE_MARKER
 	INT16 slot,x;
 
 	slot=BUTTON_NO_SLOT;
@@ -875,6 +888,7 @@ INT16 FindFreeIconSlot(void)
 //
 INT16 LoadGenericButtonIcon(const STR8 filename)
 {
+	PERFORMANCE_MARKER
 	INT16 ImgSlot;
 	VOBJECT_DESC	vo_desc;
 
@@ -908,6 +922,7 @@ INT16 LoadGenericButtonIcon(const STR8 filename)
 //
 BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 {
+	PERFORMANCE_MARKER
 	if( GenImg < 0 || GenImg >= MAX_BUTTON_ICONS  )
 	{
 		sprintf( str, "Attempting to UnloadGenericButtonIcon with out of range index %d.", GenImg );
@@ -938,6 +953,7 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 //
 BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fDeletedSomething = FALSE;
 	if( GenImg < 0 || GenImg >= MAX_GENERIC_PICS  )
 	{
@@ -1012,6 +1028,7 @@ BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 //
 INT16 LoadGenericButtonImages(STR8 GrayName,STR8 OffNormName,STR8 OffHiliteName,STR8 OnNormName,STR8 OnHiliteName, STR8 BkGrndName,INT16 Index,INT16 OffsetX, INT16 OffsetY)
 {
+	PERFORMANCE_MARKER
 	INT16 ImgSlot;
 	VOBJECT_DESC	vo_desc;
 	UINT8 Pix;
@@ -1140,6 +1157,7 @@ INT16 LoadGenericButtonImages(STR8 GrayName,STR8 OffNormName,STR8 OffHiliteName,
 //
 void ShutdownButtonImageManager(void)
 {
+	PERFORMANCE_MARKER
 	int x;
 
 	#ifdef BUTTONSYSTEM_DEBUGGING
@@ -1213,6 +1231,7 @@ void ShutdownButtonImageManager(void)
 //
 BOOLEAN InitButtonSystem(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	#ifdef BUTTONSYSTEM_DEBUGGING
@@ -1250,6 +1269,7 @@ BOOLEAN InitButtonSystem(void)
 //
 void ShutdownButtonSystem(void)
 {
+	PERFORMANCE_MARKER
 	int x;
 
 	// Kill off all buttons in the system
@@ -1266,6 +1286,7 @@ void ShutdownButtonSystem(void)
 
 void RemoveButtonsMarkedForDeletion()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_BUTTONS; i++ )
 	{
@@ -1284,6 +1305,7 @@ void RemoveButtonsMarkedForDeletion()
 //
 void RemoveButton(INT32 iButtonID)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
@@ -1356,6 +1378,7 @@ void RemoveButton(INT32 iButtonID)
 //
 INT32 GetNextButtonNumber(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	for(x=0;x<MAX_BUTTONS;x++)
@@ -1379,6 +1402,7 @@ INT32 GetNextButtonNumber(void)
 //
 void ResizeButton(INT32 iButtonID,INT16 w, INT16 h)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	xloc,yloc;
 
@@ -1438,6 +1462,7 @@ void ResizeButton(INT32 iButtonID,INT16 w, INT16 h)
 //
 void SetButtonPosition( INT32 iButtonID ,INT16 x, INT16 y)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	xloc,yloc,w,h;
 
@@ -1492,6 +1517,7 @@ void SetButtonPosition( INT32 iButtonID ,INT16 x, INT16 y)
 //
 INT32 SetButtonIcon( INT32 iButtonID, INT16 Icon, INT16 IconIndex )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
@@ -1540,6 +1566,7 @@ INT32 SetButtonIcon( INT32 iButtonID, INT16 Icon, INT16 IconIndex )
 //
 INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 yloc,INT16 w,INT16 h,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
 	INT32 BType,x;
@@ -1670,6 +1697,7 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 //Creates a generic button with text on it.
 INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
 	INT32 BType,x;
@@ -1813,6 +1841,7 @@ INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sSha
 //
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
 	INT16 BType,x;
@@ -1906,6 +1935,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 // will simply set the cursor for the mouse region the button occupies
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
+	PERFORMANCE_MARKER
   GUI_BUTTON *b;
   b = ButtonList[iBtnId];
 	if (!b)
@@ -1922,6 +1952,7 @@ BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 //
 INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
 	INT32 BType,x;
@@ -2067,28 +2098,33 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 //choose also determines the type of button (toggle, notoggle, or newtoggle)
 INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
 {
+	PERFORMANCE_MARKER
 	return CreateSimpleButton( x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
 {
+	PERFORMANCE_MARKER
 	return CreateSimpleButton( x, y, filename, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
 {
+	PERFORMANCE_MARKER
 	return CreateSimpleButton( x, y, filename, BUTTON_NEWTOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 //Same as above, but accepts specify toggle type
 INT32 CreateEasyButton( INT32 x, INT32 y, const STR8 filename, INT32 Type, GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	return CreateSimpleButton( x, y, filename, Type, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
 //Same as above, but accepts priority specification.
 INT32 CreateSimpleButton( INT32 x, INT32 y, const STR8 filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback )
 {
+	PERFORMANCE_MARKER
 	INT32 ButPic,ButNum;
 
 	if( !filename || !strlen(filename) )
@@ -2118,6 +2154,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont,
 															 INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
 															 GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	iButtonID;
 	INT32 BType,x;
@@ -2251,6 +2288,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont,
 //New functions
 void SpecifyButtonText( INT32 iButtonID, STR16 string )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -2276,6 +2314,7 @@ void SpecifyButtonText( INT32 iButtonID, STR16 string )
 
 void SpecifyButtonMultiColorFont(INT32 iButtonID, BOOLEAN fMultiColor)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2287,6 +2326,7 @@ void SpecifyButtonMultiColorFont(INT32 iButtonID, BOOLEAN fMultiColor)
 
 void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2298,6 +2338,7 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2310,6 +2351,7 @@ void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadow
 
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2322,6 +2364,7 @@ void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 s
 
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2334,6 +2377,7 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 
 void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2350,6 +2394,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFon
 																			INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2372,6 +2417,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFon
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2387,6 +2433,7 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 ui
 
 void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2400,6 +2447,7 @@ void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOf
 
 void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2414,6 +2462,7 @@ void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bText
 
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2425,6 +2474,7 @@ void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 
 void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS );
@@ -2443,6 +2493,7 @@ void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex,
 													 INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -2467,6 +2518,7 @@ BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideo
 
 void RemoveTextFromButton( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -2495,6 +2547,7 @@ void RemoveTextFromButton( INT32 iButtonID )
 
 void RemoveIconFromButton( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -2511,6 +2564,7 @@ void RemoveIconFromButton( INT32 iButtonID )
 
 void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -2528,6 +2582,7 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 //
 void SetButtonFastHelpText(INT32 iButton, STR16 Text)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	if(iButton<0 || iButton>MAX_BUTTONS)
 		return;
@@ -2538,6 +2593,7 @@ void SetButtonFastHelpText(INT32 iButton, STR16 Text)
 
 void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	if(iButton<0 || iButton>MAX_BUTTONS)
 		return;
@@ -2555,6 +2611,7 @@ void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK Callback
 //
 void QuickButtonCallbackMMove(MOUSE_REGION *reg,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32 iButtonID;
 
@@ -2658,6 +2715,7 @@ void QuickButtonCallbackMMove(MOUSE_REGION *reg,INT32 reason)
 //
 void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32		iButtonID;
 	BOOLEAN MouseBtnDown;
@@ -2840,6 +2898,7 @@ void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
 
 void RenderButtons(void)
 {
+	PERFORMANCE_MARKER
 	INT32			iButtonID;
 	BOOLEAN		fOldButtonDown, fOldEnabled;
 	GUI_BUTTON *b;
@@ -2917,6 +2976,7 @@ void RenderButtons(void)
 //
 void MarkAButtonDirty( INT32 iButtonNum )
 {
+	PERFORMANCE_MARKER
   // surgical dirtying->marks a user specified button dirty, without dirty the whole lot of them
 
 
@@ -2934,6 +2994,7 @@ void MarkAButtonDirty( INT32 iButtonNum )
 //
 void MarkButtonsDirty( void )
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	for(x=0;x<MAX_BUTTONS;x++)
 	{
@@ -2949,6 +3010,7 @@ void MarkButtonsDirty( void )
 
 void UnMarkButtonDirty( INT32 iButtonIndex )
 {
+	PERFORMANCE_MARKER
   if ( ButtonList[ iButtonIndex ] )
   {
 	  ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
@@ -2957,6 +3019,7 @@ void UnMarkButtonDirty( INT32 iButtonIndex )
 
 void UnmarkButtonsDirty( void )
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	for(x=0;x<MAX_BUTTONS;x++)
 	{
@@ -2970,6 +3033,7 @@ void UnmarkButtonsDirty( void )
 
 void ForceButtonUnDirty( INT32 iButtonIndex )
 {
+	PERFORMANCE_MARKER
 	ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
 	ButtonList[ iButtonIndex ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
@@ -2980,6 +3044,7 @@ void ForceButtonUnDirty( INT32 iButtonIndex )
 
 void PausedMarkButtonsDirty( void )
 {
+	PERFORMANCE_MARKER
 	// set flag for frame after the next rendering of buttons
 	fPausedMarkButtonsDirtyFlag = TRUE;
 
@@ -2993,6 +3058,7 @@ void PausedMarkButtonsDirty( void )
 //
 BOOLEAN DrawButton(INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	// Fail if button handle out of range
 	if( iButtonID < 0 || iButtonID > MAX_BUTTONS )
 		return FALSE;
@@ -3024,6 +3090,7 @@ BOOLEAN DrawButton(INT32 iButtonID )
 //
 void DrawButtonFromPtr(GUI_BUTTON *b)
 {
+	PERFORMANCE_MARKER
 	Assert( b );
 	// Draw the appropriate button according to button type
 	gbDisabledButtonStyle = DISABLED_STYLE_NONE;
@@ -3073,6 +3140,7 @@ void DrawButtonFromPtr(GUI_BUTTON *b)
 //
 void DrawQuickButton(GUI_BUTTON *b)
 {
+	PERFORMANCE_MARKER
 	INT32 UseImage;
 	UseImage=0;
 	// Is button Enabled, or diabled but no "Grayed" image associated with this QuickButton?
@@ -3125,6 +3193,7 @@ void DrawQuickButton(GUI_BUTTON *b)
 
 void DrawHatchOnButton( GUI_BUTTON *b )
 {
+	PERFORMANCE_MARKER
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
@@ -3139,6 +3208,7 @@ void DrawHatchOnButton( GUI_BUTTON *b )
 
 void DrawShadeOnButton( GUI_BUTTON *b )
 {
+	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
@@ -3153,6 +3223,7 @@ void DrawShadeOnButton( GUI_BUTTON *b )
 
 void DrawDefaultOnButton( GUI_BUTTON *b )
 {
+	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	pDestBuf = LockVideoSurface( ButtonDestBuffer, &uiDestPitchBYTES );
@@ -3182,6 +3253,7 @@ void DrawDefaultOnButton( GUI_BUTTON *b )
 
 void DrawCheckBoxButtonOn( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
@@ -3200,6 +3272,7 @@ void DrawCheckBoxButtonOn( INT32 iButtonID )
 
 void DrawCheckBoxButtonOff( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
@@ -3219,6 +3292,7 @@ void DrawCheckBoxButtonOff( INT32 iButtonID )
 
 void DrawCheckBoxButton( GUI_BUTTON *b )
 {
+	PERFORMANCE_MARKER
 	INT32 UseImage;
 
 	UseImage=0;
@@ -3277,6 +3351,7 @@ void DrawCheckBoxButton( GUI_BUTTON *b )
 
 void DrawIconOnButton(GUI_BUTTON *b)
 {
+	PERFORMANCE_MARKER
 	INT32 xp,yp,width,height,IconX,IconY;
 	INT32 IconW,IconH;
 	SGPRect NewClip,OldClip;
@@ -3384,6 +3459,7 @@ void DrawIconOnButton(GUI_BUTTON *b)
 //If a button has text attached to it, then it'll draw it last.
 void DrawTextOnButton(GUI_BUTTON *b)
 {
+	PERFORMANCE_MARKER
 	INT32 xp,yp,width,height,TextX,TextY;
 	SGPRect NewClip,OldClip;
 	INT16	sForeColor;
@@ -3571,6 +3647,7 @@ void DrawTextOnButton(GUI_BUTTON *b)
 //
 void DrawGenericButton(GUI_BUTTON *b)
 {
+	PERFORMANCE_MARKER
 	INT32 NumChunksWide,NumChunksHigh,cx,cy,width,height,hremain,wremain;
 	INT32 q,ImgNum,ox,oy;
 	INT32 iBorderHeight, iBorderWidth;
@@ -3935,6 +4012,7 @@ typedef struct _CreateDlgInfo {
 
 BOOLEAN SetDialogAttributes( CreateDlgInfo *pDlgInfo, INT32 iAttrib, ... )
 {
+	PERFORMANCE_MARKER
 	va_list arg;
 	INT32 iFont,iFontOptions;
 	STR16 zString;
@@ -4066,17 +4144,20 @@ BOOLEAN SetDialogAttributes( CreateDlgInfo *pDlgInfo, INT32 iAttrib, ... )
 
 INT32 CreateDialogBox( CreateDlgInfo *pDlgInfo )
 {
+	PERFORMANCE_MARKER
 	return (-1);
 }
 
 
 void RemoveDialogBox( void )
 {
+	PERFORMANCE_MARKER
 }
 
 
 void DrawDialogBox( INT32 iDlgBox )
 {
+	PERFORMANCE_MARKER
 }
 
 
@@ -4086,6 +4167,7 @@ void DrawDialogBox( INT32 iDlgBox )
 
 INT32 CreateCheckBoxButton( INT16 x, INT16 y, const STR8 filename, INT16 Priority, GUI_CALLBACK ClickCallback )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32 ButPic, iButtonID;
 	Assert( filename != NULL );
@@ -4115,6 +4197,7 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, const STR8 filename, INT16 Priorit
 // Added Oct17, 97 Carter - kind of mindless, but might as well have it
 void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 {
+	PERFORMANCE_MARKER
   GUI_BUTTON *b;
 	b=ButtonList[iButtonNum];
 	if((index < 0) || (index > 3))
@@ -4124,6 +4207,7 @@ void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 
 INT32 MSYS_GetBtnUserData(GUI_BUTTON *b,INT32 index)
 {
+	PERFORMANCE_MARKER
 	if(index < 0 || index > 3)
 		return(0);
 
@@ -4135,6 +4219,7 @@ INT32 MSYS_GetBtnUserData(GUI_BUTTON *b,INT32 index)
 //in the button region.
 void BtnGenericMouseMoveButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	//If the button isn't the anchored button, then we don't want to modify the button state.
 	if( btn != gpAnchoredButton )
 		return;
@@ -4169,6 +4254,7 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ReleaseAnchorMode()
 {
+	PERFORMANCE_MARKER
   if( !gpAnchoredButton )
 		return;
 
@@ -4196,6 +4282,7 @@ void ReleaseAnchorMode()
 // Used to setup a dirtysaved region for buttons
 BOOLEAN	SetButtonSavedRect( INT32 iButton )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	INT32	xloc,yloc,w,h;
 
@@ -4222,6 +4309,7 @@ BOOLEAN	SetButtonSavedRect( INT32 iButton )
 
 void FreeButtonSavedRect( INT32 iButton )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButton >=0 );
@@ -4242,6 +4330,7 @@ void FreeButtonSavedRect( INT32 iButton )
 //Yet new logical additions to the winbart library.
 void HideButton( INT32 iButtonNum )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonNum >= 0 );
@@ -4260,6 +4349,7 @@ void HideButton( INT32 iButtonNum )
 
 void ShowButton( INT32 iButtonNum )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 
 	Assert( iButtonNum >= 0 );
@@ -4278,16 +4368,19 @@ void ShowButton( INT32 iButtonNum )
 
 void DisableButtonHelpTextRestore( void )
 {
+	PERFORMANCE_MARKER
 	fDisableHelpTextRestoreFlag = TRUE;
 }
 
 void EnableButtonHelpTextRestore( void )
 {
+	PERFORMANCE_MARKER
 	fDisableHelpTextRestoreFlag = TRUE;
 }
 
 void GiveButtonDefaultStatus( INT32 iButtonID, INT32 iDefaultStatus )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS);
@@ -4306,6 +4399,7 @@ void GiveButtonDefaultStatus( INT32 iButtonID, INT32 iDefaultStatus )
 
 void RemoveButtonDefaultStatus( INT32 iButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
 	Assert( iButtonID >= 0 );
 	Assert( iButtonID < MAX_BUTTONS);
@@ -4321,6 +4415,7 @@ void RemoveButtonDefaultStatus( INT32 iButtonID )
 
 BOOLEAN GetButtonArea(INT32 iButtonID, SGPRect *pRect)
 {
+	PERFORMANCE_MARKER
 GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -4343,6 +4438,7 @@ GUI_BUTTON *b;
 
 INT32 GetButtonWidth(INT32 iButtonID)
 {
+	PERFORMANCE_MARKER
 GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -4359,6 +4455,7 @@ GUI_BUTTON *b;
 
 INT32 GetButtonHeight(INT32 iButtonID)
 {
+	PERFORMANCE_MARKER
 GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -4375,6 +4472,7 @@ GUI_BUTTON *b;
 
 INT32 GetButtonX(INT32 iButtonID)
 {
+	PERFORMANCE_MARKER
 GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );
@@ -4391,6 +4489,7 @@ GUI_BUTTON *b;
 
 INT32 GetButtonY(INT32 iButtonID)
 {
+	PERFORMANCE_MARKER
 GUI_BUTTON *b;
 
 	Assert( iButtonID >= 0 );

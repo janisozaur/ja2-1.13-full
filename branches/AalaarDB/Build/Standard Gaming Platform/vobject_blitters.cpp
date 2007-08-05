@@ -6941,8 +6941,12 @@ BOOLEAN Blt16BPPTo16BPP(UINT16 *pDest, UINT32 uiDestPitch, UINT16 *pSrc, UINT32 
 UINT16 *pSrcPtr, *pDestPtr;
 UINT32 uiLineSkipDest, uiLineSkipSrc;
 
+	//ADB we haven't had an assert yet, and this function is slow
+	//(not a whole lot else I can do)
+#if defined _DEBUG || defined JA2_TEST_VERSION
 	Assert(pDest!=NULL);
 	Assert(pSrc!=NULL);
+#endif
 
 	pSrcPtr=(UINT16 *)((UINT8 *)pSrc+(iSrcYPos*uiSrcPitch)+(iSrcXPos*2));
 	pDestPtr=(UINT16 *)((UINT8 *)pDest+(iDestYPos*uiDestPitch)+(iDestXPos*2));

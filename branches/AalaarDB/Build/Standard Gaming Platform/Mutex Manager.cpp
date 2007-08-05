@@ -18,6 +18,7 @@ HANDLE MutexTable[MAX_MUTEX_HANDLES];
 
 BOOLEAN InitializeMutexManager(void)
 {
+	PERFORMANCE_MARKER
   UINT32 uiIndex;
 
   //
@@ -41,6 +42,7 @@ BOOLEAN InitializeMutexManager(void)
 
 void ShutdownMutexManager(void)
 {
+	PERFORMANCE_MARKER
   UINT32 uiIndex;
 
   DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
@@ -63,6 +65,7 @@ void ShutdownMutexManager(void)
 
 BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 {
+	PERFORMANCE_MARKER
   MutexTable[uiMutexIndex] = CreateMutex(NULL, FALSE, ubMutexName);
   if (MutexTable[uiMutexIndex] == NULL)
   {
@@ -78,6 +81,7 @@ BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 
 BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 {
+	PERFORMANCE_MARKER
   if (MutexTable[uiMutexIndex] == NULL)
   {
     //
@@ -105,6 +109,7 @@ BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 
 BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   switch (WaitForSingleObject(MutexTable[uiMutexIndex], INFINITE))
   {
     case WAIT_OBJECT_0
@@ -120,6 +125,7 @@ BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 
 BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   switch (WaitForSingleObject(MutexTable[uiMutexIndex], uiTimeout))
   {
     case WAIT_OBJECT_0
@@ -134,6 +140,7 @@ BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine
 
 BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   if (ReleaseMutex(MutexTable[uiMutexIndex]) == FALSE)
   {
     DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "ERROR : Failed to leave mutex");  
@@ -153,6 +160,7 @@ CRITICAL_SECTION MutexTable[MAX_MUTEX_HANDLES];
 
 BOOLEAN InitializeMutexManager(void)
 {
+	PERFORMANCE_MARKER
   UINT32 uiIndex;
 
   //
@@ -171,6 +179,7 @@ BOOLEAN InitializeMutexManager(void)
 
 void ShutdownMutexManager(void)
 {
+	PERFORMANCE_MARKER
   UINT32 uiIndex;
 
   DbgMessage(TOPIC_MUTEX, DBG_LEVEL_0, "Shutting down the Mutex Manager");
@@ -189,6 +198,7 @@ void ShutdownMutexManager(void)
 
 BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 {
+	PERFORMANCE_MARKER
   //InitializeCriticalSection(&MutexTable[uiMutexIndex]);
 
   return TRUE;
@@ -196,6 +206,7 @@ BOOLEAN InitializeMutex(UINT32 uiMutexIndex, UINT8 *ubMutexName)
 
 BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 {
+	PERFORMANCE_MARKER
   //DeleteCriticalSection(&MutexTable[uiMutexIndex]);
     
   return TRUE;
@@ -203,18 +214,21 @@ BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 
 BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   EnterCriticalSection(&MutexTable[uiMutexIndex]);
   return TRUE;
 }
 
 BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   EnterCriticalSection(&MutexTable[uiMutexIndex]);
   return TRUE;
 }
 
 BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, STR8 szFilename)
 {
+	PERFORMANCE_MARKER
   LeaveCriticalSection(&MutexTable[uiMutexIndex]);
     
   return TRUE;

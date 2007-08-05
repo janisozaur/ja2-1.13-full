@@ -21,7 +21,7 @@
 
 //NUMBER_OF_LIBRARIES
 #ifdef JA2
-	#include	"Ja2 Libs.cpp"
+	#include	"Ja2 Libs.h"
 	#include	"GameSettings.h"
 #elif defined(UTIL)
 	LibraryInitHeader gGameLibaries[ ] = { 0 };

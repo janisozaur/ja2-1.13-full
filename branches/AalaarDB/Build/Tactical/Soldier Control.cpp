@@ -1063,7 +1063,9 @@ UINT32 OLDSOLDIERTYPE_101::GetChecksum()
 }
 
 
-void OLDSOLDIERTYPE_101::CopyOldInventoryToNew() {
+void OLDSOLDIERTYPE_101::CopyOldInventoryToNew()
+{
+	PERFORMANCE_MARKER
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	inv[HELMETPOS] = DO_NOT_USE_Inv[OldInventory::HELMETPOS];
 	inv[VESTPOS] = DO_NOT_USE_Inv[OldInventory::VESTPOS];
@@ -1125,71 +1127,6 @@ void OLDSOLDIERTYPE_101::CopyOldInventoryToNew() {
 	inv.bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK7POS];
 	inv.bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bNewItemCycleCount[SMALLPOCK8POS];
 }
-/*
-void OLDSOLDIERTYPE_101::CopyNewInventoryToOld() {
-	// Do not use a loop in case the new inventory slots are arranged differently than the old
-	DO_NOT_USE_Inv[OldInventory::HELMETPOS] = inv[HELMETPOS];
-	DO_NOT_USE_Inv[OldInventory::VESTPOS] = inv[VESTPOS];
-	DO_NOT_USE_Inv[OldInventory::LEGPOS] = inv[LEGPOS];
-	DO_NOT_USE_Inv[OldInventory::HEAD1POS] = inv[HEAD1POS];
-	DO_NOT_USE_Inv[OldInventory::HEAD2POS] = inv[HEAD2POS];
-	DO_NOT_USE_Inv[OldInventory::HANDPOS] = inv[HANDPOS];
-	DO_NOT_USE_Inv[OldInventory::SECONDHANDPOS] = inv[SECONDHANDPOS];
-	DO_NOT_USE_Inv[OldInventory::BIGPOCK1POS] = inv[BIGPOCK1POS];
-	DO_NOT_USE_Inv[OldInventory::BIGPOCK2POS] = inv[BIGPOCK2POS];
-	DO_NOT_USE_Inv[OldInventory::BIGPOCK3POS] = inv[BIGPOCK3POS];
-	DO_NOT_USE_Inv[OldInventory::BIGPOCK4POS] = inv[BIGPOCK4POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK1POS] = inv[SMALLPOCK1POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK2POS] = inv[SMALLPOCK2POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK3POS] = inv[SMALLPOCK3POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK4POS] = inv[SMALLPOCK4POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK5POS] = inv[SMALLPOCK5POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK6POS] = inv[SMALLPOCK6POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK7POS] = inv[SMALLPOCK7POS];
-	DO_NOT_USE_Inv[OldInventory::SMALLPOCK8POS] = inv[SMALLPOCK8POS];
-
-	DO_NOT_USE_bNewItemCount[OldInventory::HELMETPOS] = inv.bNewItemCount[HELMETPOS];
-	DO_NOT_USE_bNewItemCount[OldInventory::VESTPOS] = inv.bNewItemCount[VESTPOS];
-	DO_NOT_USE_bNewItemCount[OldInventory::LEGPOS] = inv.bNewItemCount[LEGPOS];
-	DO_NOT_USE_bNewItemCount[OldInventory::HEAD1POS] = inv.bNewItemCount[HEAD1POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::HEAD2POS] = inv.bNewItemCount[HEAD2POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::HANDPOS] = inv.bNewItemCount[HANDPOS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SECONDHANDPOS] = inv.bNewItemCount[SECONDHANDPOS];
-	DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK1POS] = inv.bNewItemCount[BIGPOCK1POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK2POS] = inv.bNewItemCount[BIGPOCK2POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK3POS] = inv.bNewItemCount[BIGPOCK3POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::BIGPOCK4POS] = inv.bNewItemCount[BIGPOCK4POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK1POS] = inv.bNewItemCount[SMALLPOCK1POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK2POS] = inv.bNewItemCount[SMALLPOCK2POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK3POS] = inv.bNewItemCount[SMALLPOCK3POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK4POS] = inv.bNewItemCount[SMALLPOCK4POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK5POS] = inv.bNewItemCount[SMALLPOCK5POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK6POS] = inv.bNewItemCount[SMALLPOCK6POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK7POS] = inv.bNewItemCount[SMALLPOCK7POS];
-	DO_NOT_USE_bNewItemCount[OldInventory::SMALLPOCK8POS] = inv.bNewItemCount[SMALLPOCK8POS];
-
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::HELMETPOS] = inv.bNewItemCycleCount[HELMETPOS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::VESTPOS] = inv.bNewItemCycleCount[VESTPOS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::LEGPOS] = inv.bNewItemCycleCount[LEGPOS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD1POS] = inv.bNewItemCycleCount[HEAD1POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::HEAD2POS] = inv.bNewItemCycleCount[HEAD2POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::HANDPOS] = inv.bNewItemCycleCount[HANDPOS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SECONDHANDPOS] = inv.bNewItemCycleCount[SECONDHANDPOS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK1POS] = inv.bNewItemCycleCount[BIGPOCK1POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK2POS] = inv.bNewItemCycleCount[BIGPOCK2POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK3POS] = inv.bNewItemCycleCount[BIGPOCK3POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::BIGPOCK4POS] = inv.bNewItemCycleCount[BIGPOCK4POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK1POS] = inv.bNewItemCycleCount[SMALLPOCK1POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK2POS] = inv.bNewItemCycleCount[SMALLPOCK2POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK3POS] = inv.bNewItemCycleCount[SMALLPOCK3POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK4POS] = inv.bNewItemCycleCount[SMALLPOCK4POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK5POS] = inv.bNewItemCycleCount[SMALLPOCK5POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK6POS] = inv.bNewItemCycleCount[SMALLPOCK6POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK7POS] = inv.bNewItemCycleCount[SMALLPOCK7POS];
-	DO_NOT_USE_bNewItemCycleCount[OldInventory::SMALLPOCK8POS] = inv.bNewItemCycleCount[SMALLPOCK8POS];
-}
-*/
-// ----------------------------------------
 
 UINT32 MERCPROFILESTRUCT::GetChecksum( )
 {
@@ -1220,7 +1157,9 @@ UINT32 MERCPROFILESTRUCT::GetChecksum( )
 }
 
 
-MERCPROFILESTRUCT::MERCPROFILESTRUCT() {
+MERCPROFILESTRUCT::MERCPROFILESTRUCT()
+{
+	PERFORMANCE_MARKER
 	inv.reserve(NUM_INV_SLOTS);
 	bInvStatus.reserve(NUM_INV_SLOTS);
 	bInvNumber.reserve(NUM_INV_SLOTS);
@@ -1233,7 +1172,9 @@ MERCPROFILESTRUCT::MERCPROFILESTRUCT() {
 }
 
 // Copy Constructor
-MERCPROFILESTRUCT::MERCPROFILESTRUCT(const MERCPROFILESTRUCT& src) {
+MERCPROFILESTRUCT::MERCPROFILESTRUCT(const MERCPROFILESTRUCT& src)
+{
+	PERFORMANCE_MARKER
 	memcpy(this, &src, SIZEOF_MERCPROFILESTRUCT_POD);
 	inv = src.inv;
 	bInvStatus = src.bInvStatus;
@@ -1254,13 +1195,15 @@ MERCPROFILESTRUCT& MERCPROFILESTRUCT::operator=(const MERCPROFILESTRUCT& src)
 }
 
 // Destructor
-MERCPROFILESTRUCT::~MERCPROFILESTRUCT() {
+MERCPROFILESTRUCT::~MERCPROFILESTRUCT()
+{
 }
 
 // Initialize the soldier.  
 //  Use this instead of the old method of calling memset!
 //  Note that the constructor does this automatically.
-void MERCPROFILESTRUCT::initialize() {
+void MERCPROFILESTRUCT::initialize()
+{
 	memset( this, 0, SIZEOF_MERCPROFILESTRUCT_POD);
 	clearInventory();
 }
@@ -1268,7 +1211,8 @@ void MERCPROFILESTRUCT::initialize() {
 // Initialize the soldier.  
 //  Use this instead of the old method of calling memset!
 //  Note that the constructor does this automatically.
-void MERCPROFILESTRUCT::clearInventory() {
+void MERCPROFILESTRUCT::clearInventory()
+{
 	for (int idx=0; idx < (int)inv.size(); ++idx) {
 		inv[idx] = 0;
 		bInvStatus[idx] = 0;
@@ -1282,7 +1226,9 @@ void MERCPROFILESTRUCT::clearInventory() {
 // If you change names or eliminate some positions or such you need to change these.
 // Eventually the need for these functions will disappear.
 
-void MERCPROFILESTRUCT::CopyOldInventoryToNew() {
+void MERCPROFILESTRUCT::CopyOldInventoryToNew()
+{
+	PERFORMANCE_MARKER
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	inv[HELMETPOS] = DO_NOT_USE_inv[OldInventory::HELMETPOS];
 	inv[VESTPOS] = DO_NOT_USE_inv[OldInventory::VESTPOS];
@@ -1344,7 +1290,9 @@ void MERCPROFILESTRUCT::CopyOldInventoryToNew() {
 	bInvNumber[OldInventory::SMALLPOCK7POS] = DO_NOT_USE_bInvNumber[SMALLPOCK7POS];
 	bInvNumber[OldInventory::SMALLPOCK8POS] = DO_NOT_USE_bInvNumber[SMALLPOCK8POS];
 }
-void MERCPROFILESTRUCT::CopyNewInventoryToOld() {
+void MERCPROFILESTRUCT::CopyNewInventoryToOld()
+{
+	PERFORMANCE_MARKER
 	// Do not use a loop in case the new inventory slots are arranged differently than the old
 	DO_NOT_USE_inv[OldInventory::HELMETPOS] = inv[HELMETPOS];
 	DO_NOT_USE_inv[OldInventory::VESTPOS] = inv[VESTPOS];
@@ -5790,15 +5738,18 @@ BOOLEAN SOLDIERTYPE::EVENT_InternalGetNewSoldierPath( UINT16 sDestGridNo, UINT16
 	}
 
 	// we can use the soldier's level here because we don't have pathing across levels right now...
+#if 0
+	// Uhhmmmm, the name of this function has "NEWPath" in it.
 	if (thisSoldier->pathing.bPathStored)
 	{
 		fContinue = TRUE;
 	}
 	else
 	{
+#endif
 		iDest = FindBestPath( thisSoldier, sDestGridNo, thisSoldier->pathing.bLevel, usMovementAnim, COPYROUTE, fFlags );
 		fContinue = (iDest != 0);
-	}
+//	}
 
 	// Only if we can get a path here
 	if ( fContinue )

@@ -8,6 +8,7 @@
 // Remove a slash or backslash (if any) from the end of a string
 void ChompSlash(std::string& s)
 {
+	PERFORMANCE_MARKER
 	if ( s.empty() ) return;
 
 	if ( *s.rbegin() == '\\' || *s.rbegin() == '/' ) {
@@ -19,6 +20,7 @@ void ChompSlash(std::string& s)
 // Build a new file catalogue by recursively traversing the root directory
 void TFileCat::NewCat(std::string root)
 {
+	PERFORMANCE_MARKER
 	fRootDir = root;
 	ChompSlash(fRootDir);
 
@@ -41,6 +43,7 @@ bool TFileCat::FindFile(std::string path, bool pathIncludesRoot) const
 // Unless pathIncludesRoot == true, will prepend the root directory to path
 size_t TFileCat::RemoveFile(std::string path, bool pathIncludesRoot)
 {
+	PERFORMANCE_MARKER
 	if (pathIncludesRoot) return fFileCat.erase(path);
 	else return fFileCat.erase(fRootDir + '\\' + path);
 }
@@ -50,6 +53,7 @@ size_t TFileCat::RemoveFile(std::string path, bool pathIncludesRoot)
 // Unless pathIncludesRoot == true, will prepend the root directory to path
 size_t TFileCat::RemoveDir(std::string dir, bool pathIncludesRoot)
 {
+	PERFORMANCE_MARKER
 	if ( !pathIncludesRoot ) dir = fRootDir + '\\' + dir;
 	ChompSlash(dir);
 	std::string dirlower = dir + '\\';
@@ -72,6 +76,7 @@ size_t TFileCat::RemoveDir(std::string dir, bool pathIncludesRoot)
 // Recursively traverse a directory, adding regular files to the catalogue
 void TFileCat::TraverseDir(std::string dir, int depth)
 {
+	PERFORMANCE_MARKER
 	using std::string;
 	static string dot( ".");
 	static string dotdot( "..");

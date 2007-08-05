@@ -35,6 +35,7 @@ PcxObject *LoadPcx(STR8 pFilename);
 
 BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 	PcxObject *pPcxObject;
 
 	// First Load a PCX Image
@@ -83,7 +84,7 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 
 PcxObject *LoadPcx(STR8 pFilename)
 {
-	PERFORMANCE_MARKER 
+	PERFORMANCE_MARKER
   PcxHeader  Header;
   PcxObject *pCurrentPcxObject;
   HWFILE     hFileHandle;
@@ -155,7 +156,7 @@ PcxObject *LoadPcx(STR8 pFilename)
 
 BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)
 {
-	PERFORMANCE_MARKER 
+	PERFORMANCE_MARKER
   UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
   UINT16     usMaxX, usMaxY;
@@ -358,6 +359,7 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 
 BOOLEAN SetPcxPalette( PcxObject *pCurrentPcxObject, HIMAGE hImage )
 {
+	PERFORMANCE_MARKER
 	UINT16 Index;
 	UINT8  *pubPalette;
 

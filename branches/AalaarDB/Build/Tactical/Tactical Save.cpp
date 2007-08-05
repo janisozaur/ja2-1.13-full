@@ -349,7 +349,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 
 
 	// HACK FOR GABBY
-	if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 81 )
+	if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiCurrentSaveGameVersion < 81 )
 	{
 		if ( gMercProfiles[ GABBY ].bMercStatus != MERC_IS_DEAD )
 		{
@@ -389,6 +389,14 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 
 				//sync up the temp file data to the sector structure data
 				SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( sMapX, sMapY, 0, TRUE );
+
+				if (guiCurrentSaveGameVersion != SAVE_GAME_VERSION)
+				{
+					for (int z = 0; z < 4; ++z)
+					{
+						UpdateWorldItemsTempFile(sMapX, sMapY, z);
+					}
+				}
 			}
 
 			if( SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags & SF_ROTTING_CORPSE_TEMP_FILE_EXISTS )
@@ -434,7 +442,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 				if ( !RetrieveTempFileFromSavedGame( hFile, SF_CIV_PRESERVED_TEMP_FILE_EXISTS, sMapX, sMapY, 0 ) )
 					return FALSE;
 
-				if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
+				if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiCurrentSaveGameVersion < 78 )
 				{
 					CHAR8 pMapName[ 128 ];
 
@@ -528,7 +536,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 		{
 			if ( !RetrieveTempFileFromSavedGame( hFile, SF_CIV_PRESERVED_TEMP_FILE_EXISTS, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ ) )
 				return FALSE;
-			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
+			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiCurrentSaveGameVersion < 78 )
 			{
 				CHAR8 pMapName[ 128 ];
 
@@ -559,6 +567,42 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 	}
 //ttt
 	return( TRUE );
+}
+
+
+BOOLEAN UpdateWorldItemsTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiTotalNumberOfItems=0;
+	WORLDITEM* pTotalSectorList = NULL;
+
+	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfItems ), FALSE );
+	if (fReturn == false)
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfWorldItemsFromTempItemFile failed" ) );
+		Assert( fReturn );
+	}
+
+	if( uiTotalNumberOfItems > 0 )
+	{
+		// allocate space for the list
+		pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
+
+		LoadWorldItemsFromTempItemFile( sMapX,  sMapY, bMapZ, pTotalSectorList );
+
+		SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiTotalNumberOfItems, pTotalSectorList);
+	}
+
+	
+
+	// if anything was alloced, then get rid of it
+	if( pTotalSectorList != NULL )
+	{
+		delete[]( pTotalSectorList );
+		pTotalSectorList = NULL;
+	}
+
+	return TRUE;
 }
 
 
@@ -684,7 +728,8 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 	{
 		if( fIfEmptyCreate )
 		{
-			WORLDITEM TempWorldItems[ 10 ];
+			//ADB: I don't know why we are initing 10 WORLDITEMS then saving them, but that's what the code was.
+			WORLDITEM	TempWorldItems[ 10 ];
 			UINT32		uiNumberOfItems = 10;
 			UINT32		uiNumBytesWritten=0;
 
@@ -694,12 +739,6 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 			{
 				//Error opening item modification file
 				return( FALSE );
-			}
-
-			//ADB: I don't know why we are initing 10 WORLDITEMS then saving them, but that's what the code was.
-			for (int x = 0; x < 10; ++x)
-			{
-				TempWorldItems[x].initialize();
 			}
 
 			//write the the number of item in the maps item file
@@ -1214,7 +1253,7 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 
 
 	//if the save is an older version, use theold way of oading it up
-	if( guiSavedGameVersion < 57 )
+	if( guiCurrentSaveGameVersion < 57 )
 	{
 		if( DoesTempFileExistsForMap( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 		{
@@ -3118,7 +3157,7 @@ void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, 
 
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
 			// NB save game version 0 is "saving game"
-			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion != 0 && guiSaveGameVersion < 78 )
+			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiCurrentSaveGameVersion != 0 && guiCurrentSaveGameVersion < 78 )
 			{
 				sprintf( pMapName, "%s\\c_%s", MAPS_DIR, zTempName);
 			}
@@ -3214,11 +3253,18 @@ void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT
 
 	// get total number, visable and invisible
 	fReturn = GetNumberOfActiveWorldItemsFromTempFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfRealItems ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfActiveWorldItemsFromTempFile failed" ) );
-	Assert( fReturn );
+	if (fReturn == false)
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfActiveWorldItemsFromTempFile failed" ) );
+		Assert( fReturn );
+	}
 
 	fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfItems ), FALSE );
-	Assert( fReturn );
+	if (fReturn == false)
+	{
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("GetNumberOfWorldItemsFromTempItemFile failed" ) );
+		Assert( fReturn );
+	}
 
 	if( uiTotalNumberOfItems > 0 )
 	{
@@ -3247,7 +3293,7 @@ void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT
 	}
 
 	#ifdef JA2BETAVERSION	
-	if( fLoadingGame && guiSaveGameVersion >= 86 )
+	if( fLoadingGame && guiCurrentSaveGameVersion >= 86 )
 	{
 		UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector( sMapX, sMapY, bMapZ );
 

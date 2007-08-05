@@ -325,7 +325,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 	UINT32	uiCount;
 
 	//no longer need to load Light effects.  They are now in temp files
-	if( guiSaveGameVersion < 76 )
+	if( guiCurrentSaveGameVersion < 76 )
 	{
 		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
 

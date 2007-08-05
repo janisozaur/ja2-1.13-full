@@ -47,9 +47,9 @@ RECT      gCursorClipRect;
 // The gsKeyTranslationTables basically translates scan codes to our own key value table. Please note that the table is 2 bytes
 // wide per entry. This will be used since we will use 2 byte characters for translation purposes.
 
-UINT16   gfShiftState;					// TRUE = Pressed, FALSE = Not Pressed
-UINT16   gfAltState;						// TRUE = Pressed, FALSE = Not Pressed
-UINT16   gfCtrlState;						// TRUE = Pressed, FALSE = Not Pressed
+UINT16   gfShiftState;					// SHIFT_DOWN = Pressed, FALSE = Not Pressed
+UINT16   gfAltState;						// ALT_DOWN = Pressed, FALSE = Not Pressed
+UINT16   gfCtrlState;						// CTRL_DOWN = Pressed, FALSE = Not Pressed
 
 // These data structure are used to track the mouse while polling
 
@@ -376,7 +376,8 @@ BOOLEAN InitializeInputManager(void)
 
 void ShutdownInputManager(void)
 {
-	PERFORMANCE_MARKER // There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
+	PERFORMANCE_MARKER
+	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
   // mouse hooks will be destroyed
   UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
 //  UnhookWindowsHookEx(ghKeyboardHook);
@@ -385,17 +386,17 @@ void ShutdownInputManager(void)
 
 void QueuePureEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
 {
-  UINT32 uiTimer;
-  UINT16 usKeyState;
-
-  uiTimer = GetTickCount();
-  usKeyState = gfShiftState | gfCtrlState | gfAltState;
-
   // Can we queue up one more event, if not, the event is lost forever
   if (gusQueueCount == 256)
   { // No more queue space
     return;
   }
+
+  UINT32 uiTimer;
+  UINT16 usKeyState;
+
+  uiTimer = GetTickCount();
+  usKeyState = gfShiftState | gfCtrlState | gfAltState;
 
   // Okey Dokey, we can queue up the event, so we do it
   gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
@@ -903,7 +904,8 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 
 	// Find ucChar by translating ubKey using the gsKeyTranslationTable. If the SHIFT, ALT or CTRL key are down, then
   // the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
-  if (gfShiftState == TRUE)
+//  if (gfShiftState == TRUE)
+  if (gfShiftState == SHIFT_DOWN)
   { // SHIFT is pressed, hence we add 256 to ubKey before translation to ubChar
     ubChar = gsKeyTranslationTable[ubKey+256];
   }
@@ -917,12 +919,14 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 		//
 
     if( gfAltState == TRUE )
+//    if( gfAltState == ALT_DOWN)
     { // ALT is pressed, hence ubKey is multiplied by 3 before translation to ubChar
       ubChar = gsKeyTranslationTable[ubKey+512];
     }
     else
     {
       if (gfCtrlState == TRUE)
+ //     if (gfCtrlState == CTRL_DOWN)
       { // CTRL is pressed, hence ubKey is multiplied by 4 before translation to ubChar
         ubChar = gsKeyTranslationTable[ubKey+768];
       }
@@ -976,12 +980,12 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
       QueueEvent(KEY_UP, ubChar, uiTmpLParam);
     }
 		//else if the alt tab key was pressed
-		else if( ubChar == TAB && gfAltState )
+		else if( ubChar == TAB && gfAltState == ALT_DOWN)
 		{
-			// therefore minimize the application
-			ShowWindow( ghWindow, SW_MINIMIZE ); 
       gfKeyState[ ALT ] = FALSE;
 			gfAltState = FALSE;
+			// therefore minimize the application
+			ShowWindow( ghWindow, SW_MINIMIZE ); 
 		}
   }
 }
@@ -989,24 +993,24 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 void KeyDown(UINT32 usParam, UINT32 uiParam)
 {
 	PERFORMANCE_MARKER // Are we PRESSING down one of SHIFT, ALT or CTRL ???
-  if (usParam == 16)
+  if (usParam == SHIFT)
   { // SHIFT key is PRESSED
     gfShiftState = SHIFT_DOWN;
-    gfKeyState[16] = TRUE;
+    gfKeyState[SHIFT] = TRUE;
   }
   else
   {
-    if (usParam == 17)
+    if (usParam == CTRL)
     { // CTRL key is PRESSED
       gfCtrlState = CTRL_DOWN;
-      gfKeyState[17] = TRUE;
+      gfKeyState[CTRL] = TRUE;
     }
     else
     {
-      if (usParam == 18)
+      if (usParam == ALT)
       { // ALT key is pressed
         gfAltState = ALT_DOWN;
-        gfKeyState[18] = TRUE;
+        gfKeyState[ALT] = TRUE;
       }
       else
       {
@@ -1031,24 +1035,24 @@ void KeyDown(UINT32 usParam, UINT32 uiParam)
 void KeyUp(UINT32 usParam, UINT32 uiParam)
 {
 	PERFORMANCE_MARKER // Are we RELEASING one of SHIFT, ALT or CTRL ???
-  if (usParam == 16)
+  if (usParam == SHIFT)
   { // SHIFT key is RELEASED
     gfShiftState = FALSE;
-    gfKeyState[16] = FALSE;
+    gfKeyState[SHIFT] = FALSE;
   }
   else
   {
-    if (usParam == 17)
+    if (usParam == CTRL)
     { // CTRL key is RELEASED
       gfCtrlState = FALSE;
-      gfKeyState[17] = FALSE;
+      gfKeyState[CTRL] = FALSE;
     }
     else
     {
-      if (usParam == 18)
+      if (usParam == ALT)
       { // ALT key is RELEASED
         gfAltState = FALSE;
-        gfKeyState[18] = FALSE;
+        gfKeyState[ALT] = FALSE;
       }
       else
       {
@@ -1578,6 +1582,7 @@ BOOLEAN IsCursorRestricted( void )
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
+#if 0
 	FLOAT flNewXPos, flNewYPos;
 
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
@@ -1595,6 +1600,17 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
 
 	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
+#endif
+	// 0verhaul:
+	// The above is a bad hack.  Especially in windowed mode.  We don't want coords relative to the entire screen in that case.
+	// So instead, get screen coords and then use the setcursorpos call.
+	POINT newmouse;
+	newmouse.x = uiNewXPos;
+	newmouse.y = uiNewYPos;
+	ClientToScreen( ghWindow, &newmouse);
+	SetCursorPos( newmouse.x, newmouse.y);
+
+	// Does this generate a mouse move message?  I'll first try without
 }
 
 
@@ -1617,11 +1633,17 @@ void DequeueAllKeyBoardEvents()
 
 
 	//dequeue all the events waiting in the windows queue
-	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
+	//Give them proper processing like the old window hook method used to.
+	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) )
+	{
+		TranslateMessage( &KeyMessage);
+		DispatchMessage( &KeyMessage);
+	}
 
-	//Deque all the events waiting in the SGP queue
+	//Now deque all the events waiting in the SGP queue
+	//Including those that were just posted in the code above
 	while (DequeueEvent(&InputEvent) == TRUE)
-  {
+	{
 		//dont do anything
 	}
 }

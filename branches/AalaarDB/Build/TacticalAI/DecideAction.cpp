@@ -5220,7 +5220,6 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 INT8 DecideAction(SOLDIERTYPE *pSoldier)
 {
 	PERFORMANCE_MARKER
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideAction");
 	INT8 bAction=AI_ACTION_NONE;
 #ifdef DEBUGDECISIONS
 	std::string tempstr;

@@ -280,27 +280,27 @@ INT8 gbLightSighting[1][SHADE_MIN+1] =
 
 UINT8			gubSightFlags = 0;
 
-#define DECAY_OPPLIST_VALUE( value )\
-{\
-	if ( (value) >= SEEN_THIS_TURN)\
-	{\
-		(value)++;\
-		if ( (value) > OLDEST_SEEN_VALUE )\
-		{\
-			(value) = NOT_HEARD_OR_SEEN;\
-		}\
-	}\
-	else\
-	{\
-		if ( (value) <= HEARD_THIS_TURN)\
-		{\
-			(value)--;\
-			if ( (value) < OLDEST_HEARD_VALUE)\
-			{\
-				(value) = NOT_HEARD_OR_SEEN;\
-			}\
-		}\
-	}\
+void DECAY_OPPLIST_VALUE( INT8& value )
+{
+	if ( (value) >= SEEN_THIS_TURN)
+	{
+		(value)++;
+		if ( (value) > OLDEST_SEEN_VALUE )
+		{
+			(value) = NOT_HEARD_OR_SEEN;
+		}
+	}
+	else
+	{
+		if ( (value) <= HEARD_THIS_TURN)
+		{
+			(value)--;
+			if ( (value) < OLDEST_HEARD_VALUE)
+			{
+				(value) = NOT_HEARD_OR_SEEN;
+			}
+		}
+	}
 }
 
 
@@ -1212,6 +1212,8 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("113/UC Warning! Tried to detect the light level when character %ls[%d] looks at a location outside of the valid map (gridno %d). Assigning default %d",
 				pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, ubAmbientLightLevel));
 		}
+
+		bLightLevel = ubAmbientLightLevel;
 	}
 	else
 	{

@@ -47,6 +47,7 @@ typedef union
 
 HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 	HIMAGE			hImage = NULL;
 	SGPFILENAME	Extension;
 	CHAR8				ExtensionSep[] = ".";
@@ -136,6 +137,7 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 
 BOOLEAN DestroyImage( HIMAGE hImage )
 {
+	PERFORMANCE_MARKER
 	Assert( hImage != NULL );
 
 	// First delete contents
@@ -149,6 +151,7 @@ BOOLEAN DestroyImage( HIMAGE hImage )
 
 BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 
 	Assert( hImage != NULL );
 	
@@ -200,6 +203,7 @@ BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents )
 
 BOOLEAN LoadImageData( HIMAGE hImage, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fReturnVal = FALSE;
 
 	Assert( hImage != NULL );
@@ -238,6 +242,7 @@ BOOLEAN LoadImageData( HIMAGE hImage, UINT16 fContents )
 
 BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	// Use blitter based on type of image
 	Assert( hImage != NULL );
 
@@ -297,6 +302,7 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumLines;
 	UINT32	uiLineSize;
 	UINT32		uiCnt;
@@ -378,6 +384,7 @@ BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT
 
 BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNumLines;
 	UINT32		uiLineSize;
 	UINT32		uiLine;
@@ -475,6 +482,7 @@ BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UIN
 
 BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	// 16BPP Compressed image has not been implemented yet
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
 	return( FALSE );
@@ -484,6 +492,7 @@ BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UI
 
 BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
 	UINT8 *pDest, *pSrc;
@@ -528,6 +537,7 @@ BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestW
 
 BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
 	UINT16 *pDest, *pSrc;
@@ -571,12 +581,14 @@ BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDes
 
 BOOLEAN Extract8BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf )
 {
+	PERFORMANCE_MARKER
 
 	return( FALSE );
 }
 
 BOOLEAN Extract16BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf )
 {
+	PERFORMANCE_MARKER
 
 	return( FALSE );
 }
@@ -584,6 +596,7 @@ BOOLEAN Extract16BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf )
 
 BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 rows, cols;
 	UINT8  *pSrc, *pSrcTemp;
@@ -645,6 +658,7 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 
 UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
 {
+	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt;
 	UINT8	 r,g,b;
@@ -718,6 +732,7 @@ UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
 **********************************************************************************************/
 UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono)
 {
+	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;
 	UINT32 rmod, gmod, bmod;
@@ -783,6 +798,7 @@ UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT
 // Convert from RGB to 16 bit value
 UINT16 Get16BPPColor( UINT32 RGBValue )
 {
+	PERFORMANCE_MARKER
 	UINT16 r16, g16, b16, usColor;
 	UINT8	 r,g,b;
 
@@ -827,6 +843,7 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 // Convert from 16 BPP to RGBvalue
 UINT32 GetRGBColor( UINT16 Value16BPP )
 {
+	PERFORMANCE_MARKER
 	UINT16 r16, g16, b16;
 	UINT32 r,g,b,val;
 
@@ -873,6 +890,7 @@ UINT32 GetRGBColor( UINT16 Value16BPP )
 
 SGPPaletteEntry *ConvertRGBToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPalette)
 {
+	PERFORMANCE_MARKER
 	UINT16 Index;
 	SGPPaletteEntry *pPalEntry;
 	SGPPaletteEntry *pInitEntry;
@@ -895,6 +913,7 @@ SGPPaletteEntry *ConvertRGBToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOl
 
 BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
 {
+	PERFORMANCE_MARKER
 	// Assertions
 	Assert( hImage != NULL );
 	Assert( pBuffer != NULL );
@@ -925,6 +944,7 @@ BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
 
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
+	PERFORMANCE_MARKER
 	UINT16 *	pPixel;
 	UINT32		uiLoop;
 	
@@ -953,6 +973,7 @@ void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 
 void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
+	PERFORMANCE_MARKER
 	UINT16 *	pPixel;
 	UINT32		uiLoop;
 	
@@ -980,6 +1001,7 @@ void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
+	PERFORMANCE_MARKER
 	UINT16 *	pPixel;
 	UINT32		uiLoop;
 	
@@ -1006,6 +1028,7 @@ void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
+	PERFORMANCE_MARKER
 	UINT16 *	pPixel;
 	UINT32		uiRed, uiGreen, uiBlue, uiTemp, uiLoop;
 

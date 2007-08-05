@@ -3284,6 +3284,7 @@ INT32 iSprite;
 	if((iSprite=LightSpriteGetFree())!=(-1))
 	{
 		memset(&LightSprites[iSprite], 0, sizeof(LIGHT_SPRITE));
+
 		LightSprites[iSprite].iX=WORLD_COLS+1;
 		LightSprites[iSprite].iY=WORLD_ROWS+1;
 		LightSprites[iSprite].iOldX=WORLD_COLS+1;
@@ -3309,6 +3310,11 @@ INT32 iSprite;
 BOOLEAN LightSpriteFake(INT32 iSprite)
 {
 	PERFORMANCE_MARKER
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
 	{
 		LightSprites[iSprite].uiFlags|=MERC_LIGHT;
@@ -3498,6 +3504,11 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 {
 	PERFORMANCE_MARKER
+	if ( (iSprite >= MAX_LIGHT_SPRITES ) || (iSprite < 0) )
+	{
+		return FALSE;
+	}
+
 	if(fOnRoof && (LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
 		return(FALSE);
 	

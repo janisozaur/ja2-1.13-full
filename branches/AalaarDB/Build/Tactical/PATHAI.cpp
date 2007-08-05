@@ -169,11 +169,6 @@ static INT32	iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
 //#define FARTHER(ndx,NDX) ( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
 #define FARTHER(ndx,NDX) ( ndx->ubLegDistance > NDX->ubLegDistance )
 
-#define SETLOC( str, loc ) \
-{\
-(str).iLocation = loc;\
-}
-
 static TRAILCELLTYPE * trailCost;
 static UINT8 * trailCostUsed;
 static UINT8 gubGlobalPathCount = 0;
@@ -632,19 +627,6 @@ int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
 		}
 	}
 
-	int startingAPCost = MinAPsToStartMovement( pSoldier, movementMode );
-	SetActionPoints(StartNode, startingAPCost);
-	if (maxAPBudget) {
-		if (startingAPCost > maxAPBudget) {
-			maxAPBudget = 0;
-			gubNPCDistLimit = 0;
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "ASTAR: path failed, cant start" ) );
-			return( 0 );
-		}
-		else {
-			maxAPBudget -= startingAPCost;
-		}
-	}
 
 #ifdef COUNT_PATHS
 	guiTotalPathChecks++;
@@ -740,13 +722,15 @@ int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
 	}
 #endif
 
+	if (dest == 16530 && bCopy == COPYROUTE) {
+		int breakpoint = 0;
+	}
+
 	std::vector<GridNode> reversePath;
-	std::vector<int> aps;
 	GridNode parent = bestPath.data;
 	unsigned int sizePath;
 	for (sizePath = 0; parent.isInWorld() && parent != StartNode; ++sizePath) {
 		reversePath.push_back(parent);
-		aps.push_back(GetActionPoints(parent));
 		parent = GetAStarParent(parent);
 	}
 
@@ -983,7 +967,12 @@ void AStarPathfinder::ExecuteAStarLogic()
 			//error code like obstacle or crawling over fence
 			continue;
 		}
-		APCost += baseAP;//cost to move from start to here
+		if (GetAStarParent(ParentNode) != GridNode(-1,-1)) {
+			APCost += baseAP;//cost to move from start to here
+		}
+		else {
+			APCost += CalcStartingAP();//cost to start running and to move here
+		}
 		if (maxAPBudget && APCost > maxAPBudget) {
 			continue;
 		}
@@ -1044,6 +1033,22 @@ void AStarPathfinder::ExecuteAStarLogic()
 
 	return;
 }//end ExecuteAStarLogic
+
+int AStarPathfinder::CalcStartingAP()
+{
+	// Add to points, those needed to start from different stance!
+	int startingAPCost = MinAPsToStartMovement( pSoldier, movementMode );
+
+	// We should reduce points for starting to run if first tile is a fence...
+	if ( gubWorldMovementCosts[ CurrentNodeIndex ][ direction ][ onRooftop ] == TRAVELCOST_FENCE )
+	{
+		if ( movementMode == RUNNING && pSoldier->usAnimState != RUNNING )
+		{
+			startingAPCost -= AP_START_RUN_COST;
+		}
+	}
+	return startingAPCost;
+}
 
 int AStarPathfinder::TerrainCostToAStarG(int const terrainCost)
 {
@@ -1854,6 +1859,13 @@ int AStarPathfinder::VehicleObstacleCheck()
 bool AStarPathfinder::CanTraverse()
 {
 	PERFORMANCE_MARKER
+
+	// 0verhaul:  Cannot change direction over a fence!
+	if (GetPrevCost(ParentNode) == TRAVELCOST_FENCE && GetDirection(ParentNode) != direction)
+	{
+		return false;
+	}
+
 	if ( fVisitSpotsOnlyOnce && GetAStarStatus(CurrentNode) != AStar_Init ) {
 		// on a "reachable" test, never revisit locations, even if open!
 		return false;
@@ -2332,7 +2344,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 
 	//setup Q and first path record
 
-	SETLOC( *pQueueHead, iOrigination );
+	pQueueHead->iLocation = iOrigination;
 	pQueueHead->usCostSoFar	= MAXCOST;
 	pQueueHead->bLevel			= iMaxSkipListLevel - 1;
 
@@ -2343,7 +2355,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 	iLocY = iOrigination / MAPWIDTH;
 	iLocX = iOrigination % MAPWIDTH;
 
-	SETLOC( pathQ[1], iOrigination );
+	pathQ[1].iLocation = iOrigination;
 	pathQ[1].sPathNdx						= 0;
 	pathQ[1].usCostSoFar				= 0;
 	if ( fCopyReachable )
@@ -3277,7 +3289,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 
 				iLocY = newLoc / MAPWIDTH;
 				iLocX = newLoc % MAPWIDTH;
-				SETLOC( *pNewPtr, newLoc );
+				pNewPtr->iLocation = newLoc;
 				pNewPtr->usCostSoFar		= (UINT16) newTotCost;
 				pNewPtr->usCostToGo			= (UINT16) REMAININGCOST(pNewPtr);
 				if ( fCopyReachable )
@@ -3491,6 +3503,10 @@ ENDOFLOOP:
 		// if this function was called because a solider is about to embark on an actual route
 		// (as opposed to "test" path finding (used by cursor, etc), then grab all pertinent
 		// data and copy into soldier's database
+	if (sDestination == 16530) {
+		int breakpoint = 0;
+	}
+
 		if (bCopy == COPYROUTE)
 		{
 		  z=_z;
@@ -3835,10 +3851,10 @@ INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPl
 			//													sAnimCost = AP_CROUCH;
 			//											break;
 			}
-*/
-
 		sPoints				+= sAnimCost;
 		gusAPtsToMove += sAnimCost;
+*/
+
 
 
 	

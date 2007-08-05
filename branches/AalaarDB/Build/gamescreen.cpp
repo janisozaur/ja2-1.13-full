@@ -154,11 +154,16 @@ UINT32 MainGameScreenInit(void)
 {
 	PERFORMANCE_MARKER  
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
+	UINT32			uiDestPitchBYTES;
+	UINT8				*pDestBuf=NULL;
 
 /*  If any 1 have time please calculate how big this buffer should be
  *  any questions? joker
  */
-	gpZBuffer=InitZBuffer( 2048, SCREEN_HEIGHT);
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	gpZBuffer=InitZBuffer( uiDestPitchBYTES, SCREEN_HEIGHT);
+	UnLockVideoSurface( FRAME_BUFFER);
+
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);

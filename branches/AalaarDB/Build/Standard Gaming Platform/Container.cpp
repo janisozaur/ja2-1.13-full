@@ -99,6 +99,7 @@ typedef struct OrdHeaderTag
 
 HSTACK CreateStack(UINT32 uiNum_items, UINT32 uiSiz_each)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiAmount;
 	HSTACK hStack;
 	StackHeader *pStack;
@@ -143,6 +144,7 @@ HSTACK CreateStack(UINT32 uiNum_items, UINT32 uiSiz_each)
 //*****************************************************************************
 HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiAmount;
 	HQUEUE hQueue;
 	QueueHeader *pQueue;
@@ -191,6 +193,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 //*****************************************************************************
 HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiAmount;
 	HLIST hList;
 	ListHeader *pList;
@@ -244,6 +247,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 //*****************************************************************************
 HORDLIST CreateOrdList(UINT32 uiNum_items, UINT32 uiSiz_each, INT8 (*compare)(void *, void *, UINT32))
 {
+	PERFORMANCE_MARKER
 	UINT32 uiAmount;
 	HLIST hOrdList;
 	OrdListHeader *pOrdList;
@@ -299,6 +303,7 @@ HORDLIST CreateOrdList(UINT32 uiNum_items, UINT32 uiSiz_each, INT8 (*compare)(vo
 //*****************************************************************************
 HSTACK Push(HSTACK hStack, void *pdata)
 {
+	PERFORMANCE_MARKER
 	StackHeader *pTemp_cont;
 	UINT32 uiOffset;
 	UINT32 uiNew_size;
@@ -361,6 +366,7 @@ HSTACK Push(HSTACK hStack, void *pdata)
 //*****************************************************************************
 BOOLEAN Pop(HSTACK hStack, void *pdata)
 {
+	PERFORMANCE_MARKER
 	StackHeader *pTemp_cont;
 	UINT32 uiOffset;
 	UINT32 uiSize_of_each;
@@ -415,6 +421,7 @@ BOOLEAN Pop(HSTACK hStack, void *pdata)
 //*****************************************************************************
 BOOLEAN PeekStack(HSTACK hStack, void *pdata)
 {
+	PERFORMANCE_MARKER
 	StackHeader *pTemp_cont;
 	UINT32 uiOffset;
 	UINT32 uiSize_of_each;
@@ -467,6 +474,7 @@ BOOLEAN PeekStack(HSTACK hStack, void *pdata)
 //*****************************************************************************
 BOOLEAN DeleteStack(HSTACK hStack)
 {
+	PERFORMANCE_MARKER
 	if (hStack == NULL)
 	{
 		DbgMessage(TOPIC_STACK_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the stack");
@@ -490,6 +498,7 @@ BOOLEAN DeleteStack(HSTACK hStack)
 //*****************************************************************************
 BOOLEAN DeleteQueue(HQUEUE hQueue)
 {
+	PERFORMANCE_MARKER
 	if (hQueue == NULL)
 	{
 		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
@@ -513,6 +522,7 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 //*****************************************************************************
 BOOLEAN DeleteList(HLIST hList)
 {
+	PERFORMANCE_MARKER
 	if (hList == NULL)
 	{
 		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
@@ -536,6 +546,7 @@ BOOLEAN DeleteList(HLIST hList)
 //*****************************************************************************
 BOOLEAN DeleteOrdList(HORDLIST hOrdList)
 {
+	PERFORMANCE_MARKER
 	if (hOrdList == NULL)
 	{
 		DbgMessage(TOPIC_ORDLIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the ordered list");
@@ -582,7 +593,7 @@ void InitializeContainers(void)
 
 void ShutdownContainers( void )
 {
-		UnRegisterDebugTopic(TOPIC_STACK_CONTAINERS, "Stack Container");
+	UnRegisterDebugTopic(TOPIC_STACK_CONTAINERS, "Stack Container");
 	UnRegisterDebugTopic(TOPIC_LIST_CONTAINERS, "List Container");
 	UnRegisterDebugTopic(TOPIC_QUEUE_CONTAINERS, "Queue Container");
 	UnRegisterDebugTopic(TOPIC_ORDLIST_CONTAINERS, "Ordered List Container");
@@ -605,6 +616,7 @@ void ShutdownContainers( void )
 //*****************************************************************************
 BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
 {
+	PERFORMANCE_MARKER
 	QueueHeader *pTemp_cont;
 	void *pvoid;
 	BYTE *pbyte;
@@ -658,6 +670,7 @@ BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
 //*****************************************************************************
 BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	void *pvoid;
 	UINT32 uiOffsetSrc;
@@ -725,6 +738,7 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN SwapListNode(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	BYTE *pvoid;
 	UINT32 uiOffsetSrc;
@@ -799,6 +813,7 @@ BOOLEAN SwapListNode(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN StoreListNode(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	UINT32 uiOffsetSrc;
 	BYTE *pbyte;
@@ -864,6 +879,7 @@ BOOLEAN StoreListNode(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN PeekOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	OrdListHeader *pTemp_cont;
 	void *pvoid;
 	UINT32 uiOffsetSrc;
@@ -925,6 +941,7 @@ BOOLEAN PeekOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 {
+	PERFORMANCE_MARKER
 	QueueHeader *pTemp_cont;
 	void *pvoid;
 	BYTE *pbyte;
@@ -992,6 +1009,7 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 //*****************************************************************************
 HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 {
+	PERFORMANCE_MARKER
 	QueueHeader *pTemp_cont;
 	UINT32 uiMax_size;
 	UINT32 uiSize_of_each;
@@ -1077,6 +1095,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 //*****************************************************************************
 BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
 {
+	PERFORMANCE_MARKER
 	BYTE *pOffsetSrc;
 	BYTE *pOffsetDst;
 	void *pvoid_src;
@@ -1117,6 +1136,7 @@ BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 
 //*****************************************************************************
 BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSize)
 {
+	PERFORMANCE_MARKER
 	BYTE *pOffsetSrc;
 	void *pvoid_src;
 
@@ -1152,6 +1172,7 @@ BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSiz
 //*****************************************************************************
 UINT32 StackSize(HSTACK hStack)
 {
+	PERFORMANCE_MARKER
 	StackHeader *pTemp_cont;
 	if (hStack == NULL)
 	{
@@ -1176,6 +1197,7 @@ UINT32 StackSize(HSTACK hStack)
 //*****************************************************************************
 UINT32 QueueSize(HQUEUE hQueue)
 {
+	PERFORMANCE_MARKER
 	QueueHeader *pTemp_cont;
 	if (hQueue == NULL)
 	{
@@ -1200,6 +1222,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 //*****************************************************************************
 UINT32 ListSize(HLIST hList)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	if (hList == NULL)
 	{
@@ -1224,6 +1247,7 @@ UINT32 ListSize(HLIST hList)
 //*****************************************************************************
 UINT32 OrdListSize(HORDLIST hOrdList)
 {
+	PERFORMANCE_MARKER
 	OrdListHeader *pTemp_cont;
 	if (hOrdList == NULL)
 	{
@@ -1251,6 +1275,7 @@ UINT32 OrdListSize(HORDLIST hOrdList)
 //*****************************************************************************
 HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	UINT32 uiMax_size;
 	UINT32 uiSize_of_each;
@@ -1438,6 +1463,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	ListHeader *pTemp_cont;
 	UINT32 uiMax_size;
 	UINT32 uiSize_of_each;
@@ -1586,6 +1612,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	OrdListHeader *pTemp_cont;
 	UINT32 uiMax_size;
 	UINT32 uiSize_of_each;
@@ -1744,6 +1771,7 @@ BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 {
+	PERFORMANCE_MARKER
 	OrdListHeader *pTemp_cont;
 	UINT32 uiMax_size;
 	UINT32 uiSize_of_each;
@@ -1953,6 +1981,7 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //*****************************************************************************
 HORDLIST AddtoOrdList(HORDLIST hOrdList, void *pdata)
 {
+	PERFORMANCE_MARKER
 	OrdListHeader *pOrdList;
 	void *pTemp_data;
 	UINT32 uiOffset;
@@ -2093,6 +2122,7 @@ HORDLIST AddtoOrdList(HORDLIST hOrdList, void *pdata)
 
 INT8 Compare(void *p, void *q, UINT32 size)
 {
+	PERFORMANCE_MARKER
 	TEST *temp1;
 	TEST *temp2;
 

@@ -52,7 +52,7 @@
 
 ///////////////////////////
 // C file include here
-#include "Render Z.cpp"
+#include "Render Z.h"
 ///////////////////////////
 
 extern	CHAR8	gDebugStr[128];
@@ -968,7 +968,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 					//if ( 0 )
 					if ( uiTileIndex < GRIDSIZE	)
 					{
-						// OK, we're sreaching through this loop anyway, might as well check for mouse position
+						// OK, we're searching through this loop anyway, might as well check for mouse position
 						// over objects...
 						// Experimental!
 						if ( uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE )
@@ -1423,13 +1423,13 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 							{
 								case TILES_STATIC_LAND:
 
-									LandZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = LandZLevel( iTempPosX_M, iTempPosY_M );
 									break;
 
 								case TILES_STATIC_OBJECTS:
 
 									// ATE: Modified to use constant z level, as these are same level as land items
-									ObjectZLevel( TileElem, pNode, iTempPosX_M, iTempPosY_M );
+									sZLevel = ObjectZLevel( TileElem, pNode, uiTileElemFlags, iTempPosX_M, iTempPosY_M, sWorldY );
 									break;
 
 								case TILES_STATIC_STRUCTURES:
@@ -1451,7 +1451,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 								case TILES_STATIC_ROOF:
 
-									RoofZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = RoofZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 
 									// Automatically adjust height!
 									sYPos -= WALL_HEIGHT;
@@ -1464,19 +1464,19 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									break;
 								case TILES_STATIC_ONROOF:
 
-									OnRoofZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = OnRoofZLevel( iTempPosX_M, iTempPosY_M, sWorldY, uiLevelNodeFlags );
 									// Automatically adjust height!
 									sYPos -= WALL_HEIGHT;
 									break;
 
 								case TILES_STATIC_TOPMOST:
 
-									TopmostZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = TopmostZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 									break;
 
 								case TILES_STATIC_SHADOWS:
 									
-									ShadowZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = ShadowZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 
 									if ( uiLevelNodeFlags & LEVELNODE_EXITGRID )
 									{
@@ -1487,18 +1487,18 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 								case TILES_DYNAMIC_LAND:
 
-									LandZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = LandZLevel( iTempPosX_M, iTempPosY_M );
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 								case TILES_DYNAMIC_SHADOWS:
 
-									ShadowZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = ShadowZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 									//sZLevel=SHADOW_Z_LEVEL;
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 								case TILES_DYNAMIC_OBJECTS:
 
-									ObjectZLevel( TileElem, pNode, iTempPosX_M, iTempPosY_M );
+									sZLevel = ObjectZLevel( TileElem, pNode, uiTileElemFlags, iTempPosX_M, iTempPosY_M, sWorldY );
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 
@@ -1519,7 +1519,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 									sYPos -= WALL_HEIGHT;
 
-									RoofZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = RoofZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									// For now, adjust to hieght of a wall ( 50 temp, make define )
 									//if ( TileElem->fType > FOOTPRINTS )
@@ -1530,14 +1530,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 								case TILES_DYNAMIC_ONROOF:
 
-									OnRoofZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = OnRoofZLevel( iTempPosX_M, iTempPosY_M, sWorldY, uiLevelNodeFlags );
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									// Automatically adjust height!
 									sYPos -= WALL_HEIGHT;
 									break;
 
 								case TILES_DYNAMIC_TOPMOST:
-									TopmostZLevel( iTempPosX_M, iTempPosY_M );
+									sZLevel = TopmostZLevel( iTempPosX_M, iTempPosY_M, sWorldY );
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 
@@ -2907,11 +2907,16 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 	PERFORMANCE_MARKER
 	UINT32		uiLevelFlags[10];
 	UINT16		sLevelIDs[10];
+	UINT32		uiDestPitchBYTES;
+	UINT8		*pDestBuf=NULL;
 
 	// Calculate render starting parameters
 	CalcRenderParameters( sLeft, sTop, sRight, sBottom );
 
-	memset(gpZBuffer, LAND_Z_LEVEL, 2280 * gsVIEWPORT_END_Y );
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	Assert( pDestBuf);
+	memset(gpZBuffer, LAND_Z_LEVEL, uiDestPitchBYTES * gsVIEWPORT_END_Y );
+	UnLockVideoSurface( FRAME_BUFFER);
 
 
 	// Reset layer optimizations
@@ -3008,12 +3013,17 @@ void RenderStaticWorld(  )
 	PERFORMANCE_MARKER
 	UINT32	uiLevelFlags[9];
 	UINT16	sLevelIDs[9];
+	UINT32	uiDestPitchBYTES;
+	UINT8	*pDestBuf=NULL;
 
 	// Calculate render starting parameters
 	CalcRenderParameters( gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
 
 	// Clear z-buffer
-	memset(gpZBuffer, LAND_Z_LEVEL, 2280 * gsVIEWPORT_END_Y );
+	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	Assert( pDestBuf);
+	memset(gpZBuffer, LAND_Z_LEVEL, uiDestPitchBYTES * gsVIEWPORT_END_Y );
+	UnLockVideoSurface( FRAME_BUFFER);
 
 	FreeBackgroundRectType(BGND_FLAG_ANIMATED);
 	InvalidateBackgroundRects();
@@ -6914,7 +6924,7 @@ void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, I
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 
-	// Get VObject for firt land peice!
+	// Get VObject for first land peice!
 	TileElem = &(gTileDatabase[ FIRSTTEXTURE1 ] );
 
 
@@ -6972,7 +6982,7 @@ void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, I
 						// Don't let this happen for roads!
 						pObject = gpWorldLevelData[usTileIndex ].pObjectHead;
 
-						if ( IsTileRedundent( gpZBuffer, sZLevel, TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex ) )
+						if ( IsTileRedundent( uiDestPitchBYTES, gpZBuffer, sZLevel, TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex ) )
 						{
 							// Mark in the world!
 							gpWorldLevelData[ usTileIndex ].uiFlags |= MAPELEMENT_REDUNDENT;
@@ -7393,7 +7403,7 @@ BlitDone:
 
 
 
-BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
+BOOLEAN IsTileRedundent( UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
 	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
@@ -7425,9 +7435,9 @@ BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject
 
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	ZPtr = (UINT8 *)pZBuffer + (2280*iTempY) + (iTempX*2);
+	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
-	LineSkip=(2280-(usWidth*2));
+	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 	__asm {
 
@@ -7498,13 +7508,11 @@ BlitDone:
 
 void SetMercGlowFast( )
 {
-	PERFORMANCE_MARKER
 	//gpGlowFramePointer	= gsFastGlowFrames;
 }
 
 void SetMercGlowNormal( )
 {
-	PERFORMANCE_MARKER
 	gpGlowFramePointer	= gsGlowFrames;
 }
 
@@ -7532,7 +7540,7 @@ void SetMercGlowNormal( )
 		sZOffsetX = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetX;\
 		sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
 \
-		GetMapXYWorldY( sMapX + sZOffsetX, sMapY + sZOffsetY, sWorldY );\
+		sWorldY = GetMapXYWorldY( sMapX + sZOffsetX, sMapY + sZOffsetY );\
 	}\
 	else
 

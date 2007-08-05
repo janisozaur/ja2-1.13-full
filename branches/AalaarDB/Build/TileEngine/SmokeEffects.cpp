@@ -679,7 +679,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
   INT8    bLevel;
 
 	//no longer need to load smoke effects.  They are now in temp files
-	if( guiSaveGameVersion < 75 )
+	if( guiCurrentSaveGameVersion < 75 )
 	{
 		//Clear out the old list
 		memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
@@ -692,7 +692,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		}
 
 		//This is a TEMP hack to allow us to use the saves
-		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
+		if( guiCurrentSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
 		{
 			//Load the Smoke effect Data
 			FileRead( hFile, gSmokeEffectData, sizeof( SMOKEEFFECT ), &uiNumBytesRead );
@@ -713,7 +713,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 				return( FALSE );
 			}
 			//This is a TEMP hack to allow us to use the saves
-			if( guiSaveGameVersion < 37 )
+			if( guiCurrentSaveGameVersion < 37 )
 				break;
 		}
 

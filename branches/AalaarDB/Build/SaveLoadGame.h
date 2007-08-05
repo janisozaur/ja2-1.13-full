@@ -56,7 +56,7 @@ typedef struct
 
 
 extern	UINT32		guiScreenToGotoAfterLoadingSavedGame;
-extern UINT32 guiSaveGameVersion;
+extern UINT32 guiCurrentSaveGameVersion;
 
 void			CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName );
 

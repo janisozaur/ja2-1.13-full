@@ -371,12 +371,6 @@ void SimulateObject( REAL_OBJECT *pObject, real deltaT )
 {
 	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"SimulateObject");
-	real DeltaTime	 = 0;
-	real CurrentTime = 0;
-	real TargetTime = DeltaTime;
-	INT32			iCollisionID;
-	BOOLEAN		fEndThisObject = FALSE;
-
 	if ( !PhysicsUpdateLife( pObject, (float)deltaT ) )
 	{
 		//		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"SimulateObject: don't update life, returning");
@@ -386,18 +380,20 @@ void SimulateObject( REAL_OBJECT *pObject, real deltaT )
 	//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"SimulateObject: check life");
 	if ( pObject->fAlive )
 	{
-		CurrentTime = 0;
-		TargetTime = (float)deltaT;
-
 		//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"SimulateObject: do subtime");
 		// Do subtime here....
-		DeltaTime = (float)deltaT / (float)10;
 
 		if ( !PhysicsComputeForces( pObject ) )
 		{
 			//			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"SimulateObject: couldn't compute forces");
 			return;
 		}
+
+		real CurrentTime = 0;
+		real DeltaTime = (float)deltaT / 10.0f;
+		real TargetTime = (float)deltaT;
+		INT32			iCollisionID;
+		BOOLEAN		fEndThisObject = FALSE;
 
 		while( CurrentTime < TargetTime )
 		{

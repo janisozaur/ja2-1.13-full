@@ -19,6 +19,7 @@ BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage );
 
 BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 {
+	PERFORMANCE_MARKER
 	HWFILE			hFile;
 	STCIHeader	Header;
 	UINT32			uiBytesRead;
@@ -87,6 +88,7 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 
 BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
 {
+	PERFORMANCE_MARKER
 	UINT32			uiBytesRead;
 
 	if (fContents & IMAGE_PALETTE && !(fContents & IMAGE_ALLIMAGEDATA))
@@ -164,6 +166,7 @@ BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader *
 
 BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
 {
+	PERFORMANCE_MARKER
 	UINT32			uiFileSectionSize;
 	UINT32			uiBytesRead;
 	PTR					pSTCIPalette;
@@ -348,6 +351,7 @@ BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHead
 
 BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
 {
+	PERFORMANCE_MARKER
 	UINT16								usIndex;
 	STCIPaletteElement *	pubPalette;
 
@@ -377,6 +381,7 @@ BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
 
 BOOLEAN IsSTCIETRLEFile( CHAR8 * ImageFile )
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	STCIHeader	Header;
 	UINT32		uiBytesRead;
