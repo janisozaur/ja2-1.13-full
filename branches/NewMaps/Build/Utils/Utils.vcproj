@@ -2310,7 +2310,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Quantize Wrap.cpp">
+				RelativePath="Quantize Wrap.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
 					<Tool
@@ -2385,7 +2385,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Quantize.cpp">
+				RelativePath="Quantize.c">
 				<FileConfiguration
 					Name="Demo Release with Debug Info|Win32">
 					<Tool
