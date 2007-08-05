@@ -1184,7 +1184,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 
 	// If we're about to ask for a light level for a location outside of our 
 	// valid map references then use the ambient light level instead.
-	if(0 > sSubjectGridNo || sSubjectGridNo > WORLD_MAX)
+	if( (sSubjectGridNo < 0) || (sSubjectGridNo >= MAX_MAP_POS) )
 	{
 		if(pSoldier != pOther)
 		{

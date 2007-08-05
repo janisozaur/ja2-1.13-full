@@ -1225,8 +1225,10 @@ STRUCTURE * FindStructure( INT32 sGridNo, UINT32 fFlags )
 { // finds a structure that matches any of the given flags
 	STRUCTURE * pCurrent;
 
-	if( sGridNo > WORLD_MAX-1 ) //bug fix for win98 crash when traveling between sectors
+	if( (sGridNo < 0) || (sGridNo >= MAX_MAP_POS) )  //bug fix for win98 crash when traveling between sectors
+	{
 		return( NULL );
+	}
 
 	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
 	while (pCurrent != NULL)
