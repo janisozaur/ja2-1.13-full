@@ -1730,9 +1730,11 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		// is the sector already loaded?
 		if( ( gWorldSectorX == sMapX ) && ( sMapY == gWorldSectorY) && ( bMapZ == gbWorldSectorZ) )
 		{
-			//Inserts the enemies into the newly loaded map based on the strategic information.
+			//Inserts the enemies into the already loaded map based on the strategic information.
 			//Note, the flag will return TRUE only if enemies were added.  The game may wish to
 			//do something else in a case where no enemies are present.
+
+			PrepareMilitiaForTactical( FALSE);
 
 			SetPendingNewScreen(GAME_SCREEN);
 			if( !NumEnemyInSector( ) )
@@ -2072,7 +2074,7 @@ void PrepareLoadedSector()
 
 		PrepareCreaturesForBattle();
 
-		PrepareMilitiaForTactical();
+		PrepareMilitiaForTactical(TRUE);
 
 		// OK, set varibles for entring this new sector...
 		gTacticalStatus.fVirginSector = TRUE;
