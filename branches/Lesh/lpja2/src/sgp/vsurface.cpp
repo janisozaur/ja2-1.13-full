@@ -1332,12 +1332,26 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 }
 
 // **************************************************************
-// !! need convert to SDL
+// Obtain palette of the surface
+//  [in]  hVSurface - surface
+//  [out] pPalette - palette
+//  [ret] TRUE if successful, FALSE if not
+// **************************************************************
 BOOLEAN GetVSurfacePaletteEntries( HVSURFACE hVSurface, SGPPaletteEntry *pPalette )
 {
-	//CHECKF( hVSurface->pPalette != NULL );
+	INT32	cnt;
+	SDL_Palette *palette;
 
-	//DDGetPaletteEntries( (LPDIRECTDRAWPALETTE)hVSurface->pPalette, 0, 0, 256, (PALETTEENTRY*)pPalette );
+	if ( !hVSurface->pSurface->format->palette )
+		return FALSE;
+
+	palette = hVSurface->pSurface->format->palette;
+	for (cnt=0; cnt < palette->ncolors; cnt++)
+	{
+		pPalette[cnt].peRed   = palette->colors[cnt].r;
+		pPalette[cnt].peGreen = palette->colors[cnt].g;
+		pPalette[cnt].peBlue  = palette->colors[cnt].b;
+	}
 
 	return( TRUE );
 }
