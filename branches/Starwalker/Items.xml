@@ -3071,7 +3071,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>563</ubGraphicNum>
 		<ubWeight>11</ubWeight>
-		<ItemSize>27</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<ubCoolness>2</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -20159,7 +20159,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>478</ubGraphicNum>
 		<ubWeight>10</ubWeight>
-		<ItemSize>22</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>800</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20184,7 +20184,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>479</ubGraphicNum>
 		<ubWeight>34</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20209,7 +20209,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>480</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1600</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20234,7 +20234,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>481</ubGraphicNum>
 		<ubWeight>36</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20259,7 +20259,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>482</ubGraphicNum>
 		<ubWeight>36</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20284,7 +20284,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>483</ubGraphicNum>
 		<ubWeight>29</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1800</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20309,7 +20309,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>484</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1200</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20333,7 +20333,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>485</ubGraphicNum>
 		<ubWeight>32</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20357,7 +20357,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>486</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20382,7 +20382,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>487</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20408,7 +20408,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>488</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1800</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20434,7 +20434,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>489</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20460,7 +20460,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>490</ubGraphicNum>
 		<ubWeight>26</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20485,7 +20485,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>491</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1200</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20510,7 +20510,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>492</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20535,7 +20535,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>493</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20560,7 +20560,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>494</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20585,7 +20585,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>495</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20610,7 +20610,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>496</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20636,7 +20636,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>497</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1800</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20662,7 +20662,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>498</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20688,7 +20688,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>499</ubGraphicNum>
 		<ubWeight>26</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20713,7 +20713,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>500</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1200</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20738,7 +20738,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>501</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20763,7 +20763,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>502</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20788,7 +20788,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>503</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20813,7 +20813,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>504</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20838,7 +20838,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>505</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20864,7 +20864,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>506</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1800</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20890,7 +20890,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>507</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20916,7 +20916,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>508</ubGraphicNum>
 		<ubWeight>26</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3000</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -20941,7 +20941,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>509</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1200</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -20966,7 +20966,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>510</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -20991,7 +20991,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>511</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -21016,7 +21016,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>512</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2700</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -21041,7 +21041,7 @@
 		<ubGraphicNum>465</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>15</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1500</usPrice>
 		<ubCoolness>8</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21063,7 +21063,7 @@
 		<ubGraphicNum>466</ubGraphicNum>
 		<ubWeight>40</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<ubCoolness>8</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21085,7 +21085,7 @@
 		<ubGraphicNum>467</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<ubCoolness>8</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21107,7 +21107,7 @@
 		<ubGraphicNum>468</ubGraphicNum>
 		<ubWeight>40</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>800</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21128,7 +21128,7 @@
 		<ubGraphicNum>469</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>500</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21149,7 +21149,7 @@
 		<ubGraphicNum>470</ubGraphicNum>
 		<ubWeight>40</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>600</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21170,7 +21170,7 @@
 		<ubGraphicNum>471</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>400</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21191,7 +21191,7 @@
 		<ubGraphicNum>472</ubGraphicNum>
 		<ubWeight>40</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>600</usPrice>
 		<ubCoolness>5</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21212,7 +21212,7 @@
 		<ubGraphicNum>473</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>400</usPrice>
 		<ubCoolness>5</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21233,7 +21233,7 @@
 		<ubGraphicNum>474</ubGraphicNum>
 		<ubWeight>40</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>600</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21254,7 +21254,7 @@
 		<ubGraphicNum>475</ubGraphicNum>
 		<ubWeight>30</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>23</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>400</usPrice>
 		<ubCoolness>6</ubCoolness>
 		<Damageable>1</Damageable>
@@ -25138,7 +25138,7 @@
 		<ubGraphicNum>611</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>21</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>340</usPrice>
 		<ubCoolness>2</ubCoolness>
 		<bRepairEase>2</bRepairEase>
@@ -25276,13 +25276,13 @@
 		<szItemDesc>A panel with four individual pockets to store up to four 40mm grenades.</szItemDesc>
 		<szBRName>40mm Grenade Panel</szBRName>
 		<szBRDesc>Four pockets mounted on a panel that can be clipped to your load bearing equipment. The long adjustable straps let you store 40mm grenades on any length.</szBRDesc>
-		<usItemClass>131072</usItemClass>
+		<usItemClass>268435456</usItemClass>
 		<ubClassIndex>9</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>685</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>21</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>180</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -26075,7 +26075,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>646</ubGraphicNum>
 		<ubWeight>11</ubWeight>
-		<ItemSize>22</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>900</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26099,7 +26099,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>644</ubGraphicNum>
 		<ubWeight>37</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2200</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26123,7 +26123,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>645</ubGraphicNum>
 		<ubWeight>44</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1800</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26147,7 +26147,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>640</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26171,7 +26171,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>639</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2300</usPrice>
 		<bRepairEase>-3</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26195,7 +26195,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>642</ubGraphicNum>
 		<ubWeight>32</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26220,7 +26220,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>641</ubGraphicNum>
 		<ubWeight>45</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1400</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26243,7 +26243,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>643</ubGraphicNum>
 		<ubWeight>36</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26267,7 +26267,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>633</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26291,7 +26291,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>632</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2300</usPrice>
 		<bRepairEase>-3</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26316,7 +26316,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>637</ubGraphicNum>
 		<ubWeight>34</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26342,7 +26342,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>635</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26367,7 +26367,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>630</ubGraphicNum>
 		<ubWeight>29</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26392,7 +26392,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>634</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1400</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26416,7 +26416,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>638</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26441,7 +26441,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>636</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26465,7 +26465,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>631</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26490,7 +26490,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>624</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26514,7 +26514,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>623</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2300</usPrice>
 		<bRepairEase>-3</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26539,7 +26539,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>628</ubGraphicNum>
 		<ubWeight>34</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26565,7 +26565,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>626</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26590,7 +26590,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>621</ubGraphicNum>
 		<ubWeight>29</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26615,7 +26615,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>625</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1400</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26639,7 +26639,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>620</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26664,7 +26664,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>627</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26688,7 +26688,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>622</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26713,7 +26713,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>616</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26737,7 +26737,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>614</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2300</usPrice>
 		<bRepairEase>-3</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26762,7 +26762,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>619</ubGraphicNum>
 		<ubWeight>34</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26788,7 +26788,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>617</ubGraphicNum>
 		<ubWeight>41</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26813,7 +26813,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>612</ubGraphicNum>
 		<ubWeight>29</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3200</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26838,7 +26838,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>615</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1400</usPrice>
 		<bRepairEase>-2</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26862,7 +26862,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>620</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1700</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-3</bRepairEase>
@@ -26887,7 +26887,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>618</ubGraphicNum>
 		<ubWeight>48</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bRepairEase>-4</bRepairEase>
 		<Damageable>1</Damageable>
@@ -26911,7 +26911,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>613</ubGraphicNum>
 		<ubWeight>39</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2900</usPrice>
 		<bReliability>3</bReliability>
 		<bRepairEase>-4</bRepairEase>
@@ -26936,7 +26936,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>681</ubGraphicNum>
 		<ubWeight>9</ubWeight>
-		<ItemSize>22</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1000</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -26960,7 +26960,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>679</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2400</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -26984,7 +26984,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>680</ubGraphicNum>
 		<ubWeight>36</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2000</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27008,7 +27008,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>675</ubGraphicNum>
 		<ubWeight>33</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27032,7 +27032,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>674</ubGraphicNum>
 		<ubWeight>33</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27057,7 +27057,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>677</ubGraphicNum>
 		<ubWeight>26</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2200</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27082,7 +27082,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>676</ubGraphicNum>
 		<ubWeight>38</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1600</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27105,7 +27105,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>678</ubGraphicNum>
 		<ubWeight>29</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27129,7 +27129,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>668</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27153,7 +27153,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>667</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27179,7 +27179,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>672</ubGraphicNum>
 		<ubWeight>28</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2200</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27205,7 +27205,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>670</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27231,7 +27231,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>665</ubGraphicNum>
 		<ubWeight>23</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27256,7 +27256,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>669</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1600</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27280,7 +27280,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>673</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27305,7 +27305,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>671</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27330,7 +27330,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>666</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27355,7 +27355,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>659</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27379,7 +27379,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>658</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27405,7 +27405,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>663</ubGraphicNum>
 		<ubWeight>28</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2200</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27431,7 +27431,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>661</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27457,7 +27457,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>656</ubGraphicNum>
 		<ubWeight>23</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27482,7 +27482,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>660</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1600</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27506,7 +27506,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>664</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27531,7 +27531,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>662</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27556,7 +27556,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>657</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27581,7 +27581,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>650</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27605,7 +27605,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>649</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2500</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27631,7 +27631,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>654</ubGraphicNum>
 		<ubWeight>28</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>2200</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27657,7 +27657,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>652</ubGraphicNum>
 		<ubWeight>35</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27683,7 +27683,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>647</ubGraphicNum>
 		<ubWeight>23</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3400</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27708,7 +27708,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>651</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1600</usPrice>
 		<bReliability>1</bReliability>
 		<Damageable>1</Damageable>
@@ -27732,7 +27732,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>655</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>1900</usPrice>
 		<bReliability>2</bReliability>
 		<bRepairEase>-1</bRepairEase>
@@ -27757,7 +27757,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>653</ubGraphicNum>
 		<ubWeight>40</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>1</bReliability>
 		<bRepairEase>-2</bRepairEase>
@@ -27782,7 +27782,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>648</ubGraphicNum>
 		<ubWeight>31</ubWeight>
-		<ItemSize>25</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>3100</usPrice>
 		<bReliability>4</bReliability>
 		<bRepairEase>-2</bRepairEase>
