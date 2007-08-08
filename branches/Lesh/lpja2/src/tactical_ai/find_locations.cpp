@@ -560,6 +560,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	UINT8	ubLightPercentDifference;
 	BOOLEAN		fNight;
 
+	// There's no cover when boxing!
+	if (gTacticalStatus.bBoxingState == BOXING)
+	{
+		return (NOWHERE);
+	}
+
 	if ( gbWorldSectorZ > 0 )
 	{
 		fNight = FALSE;
@@ -1643,6 +1649,12 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	iTempValue = -1;
 	iItemIndex = iBestItemIndex = -1;
+
+	// No fair picking up weapons while boxing!
+	if (gTacticalStatus.bBoxingState == BOXING)
+	{
+		return AI_ACTION_NONE;
+	}
 
 	if (pSoldier->bActionPoints < AP_PICKUP_ITEM)
 	{
