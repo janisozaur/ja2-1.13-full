@@ -7,7 +7,7 @@
 
 	#include "Render Fun.h"
 	#include "worlddef.h"
-	#include "input.h"  
+	#include "input.h"	
 	#include "sysutil.h"
 	#include "debug.h"
 	#include "wcheck.h"
@@ -58,7 +58,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 	{
 		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
 		{
-			gubWorldRoomInfo[  (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ) ] = ubRoomNum;
+			gubWorldRoomInfo[	(INT16)MAPROWCOLTOPOS( cnt1, cnt2 ) ] = ubRoomNum;
 		}
 	}
 
@@ -120,28 +120,28 @@ void SetGridNoRevealedFlag( UINT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 //	UINT32 cnt;
-//  ITEM_POOL					*pItemPool;
+//	ITEM_POOL					*pItemPool;
 //	INT16							sX, sY;
 	LEVELNODE					*pNode = NULL;
 	STRUCTURE					*pStructure, *pBase;
 
 	// Set hidden flag, for any roofs
-	SetRoofIndexFlagsFromTypeRange( sGridNo, FIRSTROOF, FOURTHROOF, LEVELNODE_HIDDEN  );
+	SetRoofIndexFlagsFromTypeRange( sGridNo, FIRSTROOF, FOURTHROOF, LEVELNODE_HIDDEN	);
 
 	// ATE: Do this only if we are in a room...
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
-		SetStructAframeFlags(  sGridNo, LEVELNODE_HIDDEN );
+		SetStructAframeFlags(	sGridNo, LEVELNODE_HIDDEN );
 		// Find gridno one east as well...
 
 		if ( ( sGridNo + WORLD_COLS ) < NOWHERE )
 		{
-			SetStructAframeFlags(  sGridNo + WORLD_COLS, LEVELNODE_HIDDEN );
+			SetStructAframeFlags(	sGridNo + WORLD_COLS, LEVELNODE_HIDDEN );
 		}
 
 		if ( ( sGridNo + 1 ) < NOWHERE )
 		{
-			SetStructAframeFlags(  sGridNo + 1, LEVELNODE_HIDDEN );
+			SetStructAframeFlags(	sGridNo + 1, LEVELNODE_HIDDEN );
 		}
 	}
 
@@ -154,7 +154,7 @@ void SetGridNoRevealedFlag( UINT16 sGridNo )
 
 	// ATE: If there are any structs here, we can render them with the obscured flag!
 	// Look for anything but walls pn this gridno!
-	pStructure	=  gpWorldLevelData[ (INT16)sGridNo ].pStructureHead;
+	pStructure	=	gpWorldLevelData[ (INT16)sGridNo ].pStructureHead;
 
 	while ( pStructure != NULL )
 	{
@@ -270,7 +270,7 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	UINT32 cnt;
-  ITEM_POOL					*pItemPool;
+	ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
 	LEVELNODE					*pNode = NULL;
 	BOOLEAN						fSaidItemSeenQuote = FALSE;
@@ -285,7 +285,7 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 			SetGridNoRevealedFlag( (UINT16)cnt );
 
-			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
+			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL	);
 
 			// Reveal any items if here!
 			if ( GetItemPoolFromGround( (INT16)cnt, &pItemPool ) )
@@ -332,7 +332,7 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 
 
-BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
+BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion	)
 {
 	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
@@ -349,7 +349,7 @@ BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
 }
 
 			
-BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion  )
+BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion	)
 {
 	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;

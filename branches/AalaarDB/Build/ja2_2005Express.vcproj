@@ -407,10 +407,6 @@
 				RelativePath=".\Sys Globals.h"
 				>
 			</File>
-			<File
-				RelativePath=".\VtuneApi.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -468,10 +464,6 @@
 		</File>
 		<File
 			RelativePath=".\SMACKW32.LIB"
-			>
-		</File>
-		<File
-			RelativePath=".\VtuneApi.lib"
 			>
 		</File>
 	</Files>

@@ -9,17 +9,17 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA	02111-1307	USA
 //
 // Send bug reports, bug fixes, enhancements, requests, flames, etc., and
-// I'll try to keep a version up to date.  I can be reached as follows:
-//    marko.bozikovic@alterbox.net
-//    bozho@kset.org
+// I'll try to keep a version up to date.	I can be reached as follows:
+//	marko.bozikovic@alterbox.net
+//	bozho@kset.org
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef UNICODE
@@ -659,8 +659,8 @@ void Console::OnVScroll(WPARAM wParam) {
 		
 		SCROLLINFO si;
 		si.cbSize = sizeof(si); 
-		si.fMask  = SIF_POS; 
-		si.nPos   = nCurrentPos; 
+		si.fMask	= SIF_POS; 
+		si.nPos	= nCurrentPos; 
 		::FlatSB_SetScrollInfo(m_hWnd, SB_VERT, &si, TRUE);
 		
 		// this seems to work/look much better than direct repainting...
@@ -1078,7 +1078,7 @@ void Console::OnTrayNotify(WPARAM wParam, LPARAM lParam) {
 			::PostMessage(m_hWnd, WM_NULL, 0, 0);
 			
 			return;
-						   }
+						}
 			
 		case WM_LBUTTONDOWN: 
 			m_bHideWindow = false;
@@ -1882,7 +1882,7 @@ BOOL Console::RegisterWindowClasses() {
 	wcx.hIcon			= ::LoadIcon(ghInstance, MAKEINTRESOURCE(IDI_ICON2));
 	wcx.hCursor			= ::LoadCursor(NULL, IDC_ARROW);
 	wcx.hbrBackground	= ::CreateSolidBrush(RGB(0, 0, 0));
-	wcx.lpszMenuName	=  NULL;
+	wcx.lpszMenuName	=	NULL;
 	wcx.lpszClassName	= Console::m_szConsoleClass;
 	wcx.hIconSm			= NULL;
 	
@@ -2234,7 +2234,7 @@ void Console::CreateBackgroundBitmap() {
 	if (m_bTintSet) {
 		
 		BYTE*	pPixels = image.accessPixels();
-		BYTE*	pPixelsEnd =  pPixels + 3*image.getWidth()*image.getHeight();
+		BYTE*	pPixelsEnd =	pPixels + 3*image.getWidth()*image.getHeight();
 		BYTE*	pPixelSubel = pPixels;
 
 		while (pPixelSubel < pPixelsEnd) {
@@ -2528,7 +2528,7 @@ void Console::CalcWindowSize() {
 			m_nWindowWidth	= m_nClientWidth + 2 * m_nXBorderSize;
 			
 			break;
-							  }
+							}
 			
 		case BORDER_THIN :
 			
@@ -2662,15 +2662,15 @@ void Console::SetWindowSizeAndPosition() {
 	
 	// set window position
 #if 0
-	DWORD   dwScreenWidth	= ::GetSystemMetrics(g_bWin2000 ? SM_CXVIRTUALSCREEN : SM_CXSCREEN);
-	DWORD   dwScreenHeight	= ::GetSystemMetrics(g_bWin2000 ? SM_CYVIRTUALSCREEN : SM_CYSCREEN);
-	DWORD   dwTop			= ::GetSystemMetrics(g_bWin2000 ? SM_YVIRTUALSCREEN : 0);
-	DWORD   dwLeft			= ::GetSystemMetrics(g_bWin2000 ? SM_XVIRTUALSCREEN : 0);
+	DWORD	dwScreenWidth	= ::GetSystemMetrics(g_bWin2000 ? SM_CXVIRTUALSCREEN : SM_CXSCREEN);
+	DWORD	dwScreenHeight	= ::GetSystemMetrics(g_bWin2000 ? SM_CYVIRTUALSCREEN : SM_CYSCREEN);
+	DWORD	dwTop			= ::GetSystemMetrics(g_bWin2000 ? SM_YVIRTUALSCREEN : 0);
+	DWORD	dwLeft			= ::GetSystemMetrics(g_bWin2000 ? SM_XVIRTUALSCREEN : 0);
 #else
-	DWORD   dwScreenWidth	= ::GetSystemMetrics(SM_CXSCREEN);
-	DWORD   dwScreenHeight	= ::GetSystemMetrics(SM_CYSCREEN);
-	DWORD   dwTop			= ::GetSystemMetrics(0);
-	DWORD   dwLeft			= ::GetSystemMetrics(0);
+	DWORD	dwScreenWidth	= ::GetSystemMetrics(SM_CXSCREEN);
+	DWORD	dwScreenHeight	= ::GetSystemMetrics(SM_CYSCREEN);
+	DWORD	dwTop			= ::GetSystemMetrics(0);
+	DWORD	dwLeft			= ::GetSystemMetrics(0);
 #endif
 
 	switch (m_dwDocked) {
@@ -3087,8 +3087,8 @@ void Console::RefreshScreenBuffer() {
 
 	SCROLLINFO si;
 	si.cbSize = sizeof(si); 
-	si.fMask  = SIF_POS; 
-	si.nPos   = (int)m_csbiConsole.srWindow.Top;
+	si.fMask	= SIF_POS; 
+	si.nPos	= (int)m_csbiConsole.srWindow.Top;
 	::FlatSB_SetScrollInfo(m_hWnd, SB_VERT, &si, TRUE);
 
 #if 0
@@ -3132,8 +3132,8 @@ void Console::RefreshScreenBuffer() {
 
 	if (m_strWinConsoleTitle.compare(0, m_strWinConsoleTitle.length(), strWinConsoleTitle, 0, m_strWinConsoleTitle.length()) == 0) {
 		// 1. Windows console title starts with the original title, just see if
-		//    windows titles differ, and if they do, update it.
-		if ((m_strWindowTitle.length() == 0)  &&
+		//	windows titles differ, and if they do, update it.
+		if ((m_strWindowTitle.length() == 0)	&&
 			(strWinConsoleTitle[m_strWinConsoleTitle.length()] == ' ') &&
 			(strWinConsoleTitle[m_strWinConsoleTitle.length()+1] == '-')) {
 
@@ -3144,8 +3144,8 @@ void Console::RefreshScreenBuffer() {
 
 	} else {
 		// 2. Windows console title is completely changed. To set Console title, 
-		//    we need to get Windows console title and concatenate it to our 
-		//    original Console title (if it changed since the last update)
+		//	we need to get Windows console title and concatenate it to our 
+		//	original Console title (if it changed since the last update)
 		if (m_strWindowTitle.length() == 0) {
 			strConsoleTitle = strWinConsoleTitle;
 		} else {
@@ -4360,7 +4360,7 @@ LRESULT CALLBACK Console::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 			
 		case WM_CLOSE:
 //			::DestroyWindow(myself->m_hWnd);
-			// Probably want to just hide the window if the X is hit.  That way it can continue
+			// Probably want to just hide the window if the X is hit.	That way it can continue
 			// to update on script output
 			ShowWindow( hwnd, FALSE);
 			return 0; 

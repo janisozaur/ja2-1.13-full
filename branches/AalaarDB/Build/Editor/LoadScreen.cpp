@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -64,7 +63,7 @@ enum{
 
 extern UINT16 Counter;
 
-//Hook into the text input code.  These callbacks help give back control, so we
+//Hook into the text input code.	These callbacks help give back control, so we
 //can use the dialog interface in conjunction with the 
 void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason );
 void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason );
@@ -110,7 +109,7 @@ BOOLEAN gfPassedSaveCheck = FALSE;
 
 MOUSE_REGION BlanketRegion;
 
-CHAR8	 gszCurrFilename[80];
+CHAR8	gszCurrFilename[80];
 
 enum{
 	IOSTATUS_NONE,
@@ -119,7 +118,7 @@ enum{
 	INITIATE_MAP_LOAD,
 	LOADING_MAP
 };
-INT8 gbCurrentFileIOStatus;  //1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
+INT8 gbCurrentFileIOStatus;	//1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 UINT32 ProcessFileIO();
 
 //BOOLEAN fSavingFile;
@@ -269,7 +268,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
 	}
 	if( gfReadOnly )
-	{ //file is readonly.  Result will determine if the file dialog stays up.
+	{ //file is readonly.	Result will determine if the file dialog stays up.
 		fEnteringLoadSaveScreen = TRUE;
 		RemoveFileDialog();
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
@@ -342,11 +341,11 @@ UINT32 LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-	  mprintf( iScreenWidthOffset + 226, iScreenHeightOffset + 126, L"NO FILES IN \\MAPS DIRECTORY" );
+	mprintf( iScreenWidthOffset + 226, iScreenHeightOffset + 126, L"NO FILES IN \\MAPS DIRECTORY" );
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
-		if( !EditingText() && x == iCurrFileShown  )
+		if( !EditingText() && x == iCurrFileShown	)
 		{
 			SetFontForeground( FONT_GRAY2 );
 			SetFontBackground( FONT_METALGRAY );
@@ -392,7 +391,7 @@ UINT32 LoadSaveScreenHandle(void)
 		case DIALOG_SAVE:
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( L" Illegal filename.	Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -409,7 +408,7 @@ UINT32 LoadSaveScreenHandle(void)
 					GetFileClose(&FileInfo);
 				}
 				if( gfReadOnly )
-					CreateMessageBox( L" File is read only!  Choose a different name? " );
+					CreateMessageBox( L" File is read only!	Choose a different name? " );
 				else
 					CreateMessageBox( L" File exists, Overwrite? " );
 				return( LOADSAVE_SCREEN );
@@ -420,7 +419,7 @@ UINT32 LoadSaveScreenHandle(void)
 		case DIALOG_LOAD:
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( L" Illegal filename.	Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -428,7 +427,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, iScreenWidthOffset + 118, iScreenHeightOffset + 183, iScreenWidthOffset + 522, iScreenHeightOffset + 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, iScreenWidthOffset + 100, iScreenHeightOffset + 155, iScreenWidthOffset + 540, iScreenHeightOffset + 235 );
-			swprintf( zOrigName, L"Loading map:  %s", gzFilename );
+			swprintf( zOrigName, L"Loading map:	%s", gzFilename );
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -464,7 +463,6 @@ void CreateFileDialog( STR16 zTitle )
 
 	//File list window
 
-	// WANNE: EDITOR?
 	iFileDlgButtons[4] = CreateHotSpot( (iScreenWidthOffset + 179+4), (iScreenHeightOffset + 69+3), (179+4+240), (69+120+3), MSYS_PRIORITY_HIGH-1, BUTTON_NO_CALLBACK, FDlgNamesCallback);	
 	//Title button
 	iFileDlgButtons[5] = CreateTextButton(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI,
@@ -498,8 +496,8 @@ void UpdateWorldInfoCallback( GUI_BUTTON *b, INT32 reason )
 		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
 }
 
-//This is a hook into the text input code.  This callback is called whenever the user is currently
-//editing text, and presses Tab to transfer to the file dialog mode.  When this happens, we set the text
+//This is a hook into the text input code.	This callback is called whenever the user is currently
+//editing text, and presses Tab to transfer to the file dialog mode.	When this happens, we set the text
 //field to the currently selected file in the list which is already know.
 void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
 {
@@ -837,7 +835,7 @@ void HandleMainKeyEvents( InputAtom *pEvent )
 	}
 }
 
-//editor doesn't care about the z value.  It uses it's own methods.
+//editor doesn't care about the z value.	It uses it's own methods.
 void SetGlobalSectorValues( STR16 szFilename )
 {
 	PERFORMANCE_MARKER
@@ -883,7 +881,7 @@ void InitErrorCatchDialog()
 
 //Because loading and saving the map takes a few seconds, we want to post a message
 //on the screen and then update it which requires passing the screen back to the main loop.
-//When we come back for the next frame, we then actually save or load the map.  So this
+//When we come back for the next frame, we then actually save or load the map.	So this
 //process takes two full screen cycles.
 UINT32 ProcessFileIO()
 {
@@ -899,7 +897,7 @@ UINT32 ProcessFileIO()
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
-			swprintf( zOrigName, L"Saving map:  %s", gzFilename );
+			swprintf( zOrigName, L"Saving map:	%s", gzFilename );
 			usStartX = iScreenWidthOffset + 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = iScreenHeightOffset + 180 - GetFontHeight( LARGEFONT1 ) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
@@ -943,7 +941,7 @@ UINT32 ProcessFileIO()
 				return EDIT_SCREEN;
 			}
 			if( gMapInformation.ubMapVersion != gubMinorMapVersion )
-				ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted!!!  What did you just do?  KM : 0" );
+				ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted!!!	What did you just do?	KM : 0" );
 			return EDIT_SCREEN;
 		case INITIATE_MAP_LOAD: //draw load message
 			SaveFontSettings();
@@ -968,7 +966,7 @@ UINT32 ProcessFileIO()
 				gfGlobalError = FALSE;
 				gfLoadError = TRUE;
 				//RemoveButton( iTempButton );
-				CreateMessageBox( L" Error loading file.  Try another filename?" );
+				CreateMessageBox( L" Error loading file.	Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
 			SetGlobalSectorValues( gzFilename );

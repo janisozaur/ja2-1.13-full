@@ -131,7 +131,6 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
 	if(!ReadInEnemyArmourDropsStats(gEnemyArmourDrops, fileName))
 		return FALSE;
-
 	// WANNE: Enemy drops - end
 	
 	// WANNE: Sector Loadscreens [2007-05-18]
@@ -172,13 +171,13 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 		return FALSE;
 
 
-    // Lesh: added this, begin
+	// Lesh: added this, begin
 	strcpy(fileName, directoryName);
 	strcat(fileName, BURSTSOUNDSFILENAME);
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
 	if(!ReadInBurstSoundArray(fileName))
 		return FALSE;
-    // Lesh: end
+	// Lesh: end
 
 	strcpy(fileName, directoryName);
 	strcat(fileName, ITEMSFILENAME);
@@ -190,7 +189,7 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 // The idea here is that we can have a separate xml file that's named differently
 // but only contains the relevant tags that need to be localized
 // then when the file is read in using the same xml reader code, it will only overwrite
-// the tags that are contained in the localized file.  This only works for items.xml 
+// the tags that are contained in the localized file.	This only works for items.xml 
 // since I tweaked the xml_items.cpp to make it work :p
 // So for instance, the german file would be called German.Items.xml and would only contain
 // the uiIndex (for reference), szItemName, szLongItemName, szItemDesc, szBRName, and szBRDesc tags
@@ -383,8 +382,8 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 		return FALSE;
 		
 	// Lesh: Strategic movement costs will be read in Strategic\Strategic Movement Costs.cpp,
-	//       function BOOLEAN InitStrategicMovementCosts();
-	//       It is called several times from various places and acts after clearing SectorInfo array
+	//		function BOOLEAN InitStrategicMovementCosts();
+	//		It is called several times from various places and acts after clearing SectorInfo array
 
 	// Lesh: load altsectors list
 	strcpy(fileName, directoryName);
@@ -416,14 +415,14 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 	strcpy(fileName, directoryName);
 	strcat(fileName, EXPLOSIONDATAFILENAME);
-    if(!ReadInExplosionDataStats(fileName))
+	if(!ReadInExplosionDataStats(fileName))
 		return FALSE;
 
 	// Kaiden: Read in Restricted Sectors for Mobile Militia
 	strcpy(fileName, directoryName);
 	strcat(fileName, ROAMINGMILITIAFILENAME);
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("LoadExternalGameplayData, fileName = %s", fileName));
-    if(!ReadInRoamingInfo(fileName))
+	if(!ReadInRoamingInfo(fileName))
 		return FALSE;
 
 	return TRUE;
@@ -438,7 +437,7 @@ UINT32 InitializeJA2(void)
 	HandleLaserLockResult( PrepareLaserLockSystem() );
 #endif
 
-  HandleJA2CDCheck( );
+	HandleJA2CDCheck( );
 
 	gfWorldLoaded = FALSE;
 
@@ -626,7 +625,7 @@ UINT32 InitializeJA2(void)
 void ShutdownJA2(void)
 {
 	PERFORMANCE_MARKER 
-  UINT32 uiIndex;
+	UINT32 uiIndex;
 
 	// Clear screen....
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -644,11 +643,11 @@ void ShutdownJA2(void)
 	// Shutdown queue system
 	ShutdownDialogueControl();
 
-  // Shutdown Screens
-  for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-  { 
-    (*(GameScreens[uiIndex].ShutdownScreen))();
-  }
+	// Shutdown Screens
+	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
+	{ 
+	(*(GameScreens[uiIndex].ShutdownScreen))();
+	}
 
 
 	// Shutdown animation system

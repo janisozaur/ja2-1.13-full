@@ -183,7 +183,7 @@ BOOLEAN gfRenderMap;
 BOOLEAN gfViewEnemies = TRUE;
 INT8		gbViewLevel = 0;
 
-UINT16 gusBlue;   
+UINT16 gusBlue;	
 UINT16 gusLtBlue; 
 UINT16 gusDkBlue; 
 
@@ -243,7 +243,7 @@ void StringFromValue( STR16 str, INT32 iValue, UINT32 uiMax )
 BOOLEAN CreateAIViewer()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	CHAR16 str[6];
 
 	//Kaiden: Loading INI file to read Values...
@@ -257,7 +257,7 @@ BOOLEAN CreateAIViewer()
 			!FileExists( "DevTools\\icons.sti" )			||
 			!FileExists( "DevTools\\SmCheckbox.sti" ) )
 	{
-		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.  Aborted." );
+		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.	Aborted." );
 		gfExitViewer = FALSE;
 		gfViewerEntry = TRUE;
 		return FALSE;
@@ -672,8 +672,8 @@ void RenderInfoInSector()
 		mprintf( 105, VIEWER_BOTTOM + 10, L"GLOBAL INFO" );
 		SetFontForeground( FONT_GRAY2 );
 		mprintf( 118, VIEWER_BOTTOM + 24, L"Strategic AI Awake" );
-		mprintf( 105, VIEWER_BOTTOM + 36, L"Total Request Points:  %d", giRequestPoints );
-		mprintf( 105, VIEWER_BOTTOM + 46, L"Total Reinforcement Points:  %d", giReinforcementPoints );
+		mprintf( 105, VIEWER_BOTTOM + 36, L"Total Request Points:	%d", giRequestPoints );
+		mprintf( 105, VIEWER_BOTTOM + 46, L"Total Reinforcement Points:	%d", giReinforcementPoints );
 		mprintf( 105, VIEWER_BOTTOM + 56, L"Progress (Current/Highest): %d%%/%d%%", CurrentPlayerProgressPercentage(), HighestPlayerProgressPercentage() );
 
 		PrintEnemyPopTable();
@@ -748,23 +748,23 @@ void RenderInfoInSector()
 			pGroup = pGroup->next;
 		}
 		ClearViewerRegion( 280, 375, 640, 480 );
-		mprintf( 280, yp, L"SECTOR INFO:  %c%d  (ID: %d)", ubSectorY + 'A' - 1, ubSectorX, SECTOR( ubSectorX, ubSectorY ) );
+		mprintf( 280, yp, L"SECTOR INFO:	%c%d	(ID: %d)", ubSectorY + 'A' - 1, ubSectorX, SECTOR( ubSectorX, ubSectorY ) );
 		yp += 10;
 		SetFontForeground( FONT_LTGREEN );
-		mprintf( 280, yp, L"%d Player Mercs:  (%d Active, %d Unconcious, %d Collapsed)",
+		mprintf( 280, yp, L"%d Player Mercs:	(%d Active, %d Unconcious, %d Collapsed)",
 			ubMercs, ubActive, ubUnconcious, ubCollapsed );
 		yp += 10;
 		SetFontForeground( FONT_LTBLUE );
-		mprintf( 280, yp, L"Militia:  (%d Green, %d Regular, %d Elite)", 
+		mprintf( 280, yp, L"Militia:	(%d Green, %d Regular, %d Elite)", 
 			pSector->ubNumberOfCivsAtLevel[0], pSector->ubNumberOfCivsAtLevel[1], pSector->ubNumberOfCivsAtLevel[2] );
 		yp += 10;
 		SetFontForeground( FONT_ORANGE );
-		mprintf( 280, yp, L"Garrison:  (%d:%d Admins, %d:%d Troops, %d:%d Elites)", 
+		mprintf( 280, yp, L"Garrison:	(%d:%d Admins, %d:%d Troops, %d:%d Elites)", 
 			pSector->ubAdminsInBattle, pSector->ubNumAdmins, 
 			pSector->ubTroopsInBattle, pSector->ubNumTroops, 
 			pSector->ubElitesInBattle, pSector->ubNumElites );
 		yp += 10;
-		mprintf( 280, yp, L"%d Groups:  (%d:%d Admins, %d:%d Troops, %d:%d Elites)", ubNumGroups,
+		mprintf( 280, yp, L"%d Groups:	(%d:%d Admins, %d:%d Troops, %d:%d Elites)", ubNumGroups,
 			ubAdminsInBattle, ubNumAdmins, 
 			ubTroopsInBattle, ubNumTroops, 
 			ubElitesInBattle, ubNumElites );
@@ -779,7 +779,7 @@ void RenderInfoInSector()
 		else
 		{
 			SetFontForeground( FONT_YELLOW );
-			mprintf( 280, yp, L"Monsters:  (%d:%d)", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
+			mprintf( 280, yp, L"Monsters:	(%d:%d)", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
 			yp += 10;
 		}
 	}
@@ -792,14 +792,14 @@ void RenderInfoInSector()
 		{
 			return;
 		}
-		mprintf( 280, yp, L"SECTOR INFO:  %c%d_b%d", ubSectorY + 'A' - 1, ubSectorX, gbViewLevel );
+		mprintf( 280, yp, L"SECTOR INFO:	%c%d_b%d", ubSectorY + 'A' - 1, ubSectorX, gbViewLevel );
 		yp += 10;
 		SetFontForeground( FONT_LTGREEN );
-		mprintf( 280, yp, L"%d Player Mercs:  (%d Active, %d Unconcious, %d Collapsed)",
+		mprintf( 280, yp, L"%d Player Mercs:	(%d Active, %d Unconcious, %d Collapsed)",
 			ubMercs, ubActive, ubUnconcious, ubCollapsed );
 		yp += 10;
 		SetFontForeground( FONT_YELLOW );
-		mprintf( 280, yp, L"Monsters:  (%d:%d)", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
+		mprintf( 280, yp, L"Monsters:	(%d:%d)", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
 		yp += 10;
 		if( pSector->uiFlags & SF_PENDING_ALTERNATE_MAP )
 		{
@@ -1136,17 +1136,17 @@ void ViewerMapClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 
 
-UINT32  AIViewerScreenInit()
+UINT32	AIViewerScreenInit()
 {
 	PERFORMANCE_MARKER
 	gfViewerEntry = TRUE;
-	gusBlue		= Get16BPPColor( FROMRGB(  65,  79,  94 ) );
+	gusBlue		= Get16BPPColor( FROMRGB(	65,	79,	94 ) );
 	gusLtBlue = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
-	gusDkBlue = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
+	gusDkBlue = Get16BPPColor( FROMRGB(	22,	55,	73 ) );
 	return TRUE;
 }
 
-UINT32  AIViewerScreenHandle()
+UINT32	AIViewerScreenHandle()
 {
 	PERFORMANCE_MARKER
 	StartFrameBufferRender();
@@ -1190,7 +1190,7 @@ UINT32  AIViewerScreenHandle()
 	return AIVIEWER_SCREEN;
 }
 
-UINT32  AIViewerScreenShutdown()
+UINT32	AIViewerScreenShutdown()
 {
 	PERFORMANCE_MARKER
 	return TRUE;
@@ -1341,7 +1341,7 @@ void StartCreatureQuestCallback( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		//Madd: wtf?  gGameOptions.ubGameStyle == STYLE_PLATINUM;
+		//Madd: wtf?	gGameOptions.ubGameStyle == STYLE_PLATINUM;
 		gfRenderMap = TRUE;
 		ClearCreatureQuest();
 		InitCreatureQuest();
@@ -1553,7 +1553,7 @@ CHAR16 EnemyTypeString[ POP_TABLE_ENEMY_TYPES ][ 10 ] =
 	L"Stag",
 	L"Rtrt",
 	L" TOT",
-	L"   %%",
+	L"	%%",
 };
 
 
@@ -1648,14 +1648,14 @@ void PrintEnemyPopTable()
 		for ( ubEnemyRank = 0; ubEnemyRank < ENEMY_RANK_PERCENT; ubEnemyRank++ )
 		{
 			usEnemyPopTable[ ubEnemyRank ][ ENEMY_TYPE_PERCENT ] = ( ( 100 * usEnemyPopTable[ ubEnemyRank ][ ENEMY_TYPE_TOTAL ] ) /
-																																 usEnemyPopTable[ ENEMY_RANK_TOTAL ][ ENEMY_TYPE_TOTAL ] );
+																																usEnemyPopTable[ ENEMY_RANK_TOTAL ][ ENEMY_TYPE_TOTAL ] );
 		}
 
 		// calculate type percentages
 		for ( ubEnemyType = 0; ubEnemyType < ENEMY_TYPE_PERCENT; ubEnemyType++ )
 		{
 			usEnemyPopTable[ ENEMY_RANK_PERCENT ][ ubEnemyType ] = ( ( 100 * usEnemyPopTable[ ENEMY_RANK_TOTAL ][ ubEnemyType ] ) /
-																																 usEnemyPopTable[ ENEMY_RANK_TOTAL ][ ENEMY_TYPE_TOTAL ] );
+																																usEnemyPopTable[ ENEMY_RANK_TOTAL ][ ENEMY_TYPE_TOTAL ] );
 		}
 	}
 
@@ -1694,7 +1694,7 @@ void PrintEnemyPopTable()
 	{
 		for ( ubEnemyType = 0; ubEnemyType < POP_TABLE_ENEMY_TYPES; ubEnemyType++ )
 		{
-			// an exclusive OR operator, how often do ya see that, huh?  :-)
+			// an exclusive OR operator, how often do ya see that, huh?	:-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubEnemyType == ENEMY_TYPE_PERCENT ) )
 			{
 				wcscpy( wPrintSpec, L"%3d%%%%" );
@@ -1731,7 +1731,7 @@ CHAR16 EnemiesKilledString[ KILLED_TABLE_ROWS ][ 10 ] =
 	L"Tact",
 	L"Auto",
 	L" TOT",
-	L"   %%",
+	L"	%%",
 };
 
 
@@ -1788,14 +1788,14 @@ void PrintEnemiesKilledTable()
 		for ( ubEnemyRank = 0; ubEnemyRank < ENEMY_RANK_PERCENT; ubEnemyRank++ )
 		{
 			usEnemiesKilledTable[ ubEnemyRank ][ ENEMIES_KILLED_PERCENT ] = ( ( 100 * usEnemiesKilledTable[ ubEnemyRank ][ ENEMIES_KILLED_TOTAL ] ) /
-																																 usEnemiesKilledTable[ ENEMY_RANK_TOTAL ][ ENEMIES_KILLED_TOTAL ] );
+																																usEnemiesKilledTable[ ENEMY_RANK_TOTAL ][ ENEMIES_KILLED_TOTAL ] );
 		}
 
 		// calculate kill type percentages
 		for ( ubKillType = 0; ubKillType < ENEMIES_KILLED_PERCENT; ubKillType++ )
 		{
 			usEnemiesKilledTable[ ENEMY_RANK_PERCENT ][ ubKillType ] = ( ( 100 * usEnemiesKilledTable[ ENEMY_RANK_TOTAL ][ ubKillType ] ) /
-																																 usEnemiesKilledTable[ ENEMY_RANK_TOTAL ][ ENEMIES_KILLED_TOTAL ] );
+																																usEnemiesKilledTable[ ENEMY_RANK_TOTAL ][ ENEMIES_KILLED_TOTAL ] );
 		}
 	}
 
@@ -1834,7 +1834,7 @@ void PrintEnemiesKilledTable()
 	{
 		for ( ubKillType = 0; ubKillType < KILLED_TABLE_ROWS; ubKillType++ )
 		{
-			// an exclusive OR operator, how often do ya see that, huh?  :-)
+			// an exclusive OR operator, how often do ya see that, huh?	:-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubKillType == ENEMIES_KILLED_PERCENT ) )
 			{
 				wcscpy( wPrintSpec, L"%3d%%%%" );
@@ -1927,12 +1927,12 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 
 
 	pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	// handle garrisoned enemies
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
-   iDesired = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
+	iDesired = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
 		iSurplus = pSector->ubNumTroops + pSector->ubNumAdmins + pSector->ubNumElites - iDesired;
 		SetFontForeground( FONT_WHITE );
 
@@ -1945,7 +1945,7 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 		}
 		else
 		{
-			swprintf( wSubString, L"%d reinforcements requested", -iSurplus  );
+			swprintf( wSubString, L"%d reinforcements requested", -iSurplus	);
 			wcscat( wString, wSubString );
 		}
 		mprintf( iScreenX, iScreenY, wString );
@@ -1960,7 +1960,7 @@ void PrintDetailedEnemiesInSectorInfo( INT32 iScreenX, INT32 iScreenY, UINT8 ubS
 																																		pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
 			}
 			else
-			{ //ERROR!  Should be a valid group...
+			{ //ERROR!	Should be a valid group...
 			}
 		}
 		else

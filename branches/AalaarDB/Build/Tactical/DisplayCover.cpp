@@ -32,7 +32,7 @@
 #include "Render Fun.h"
 #endif
 
-//*******  Local Defines **************************************************
+//*******	Local Defines **************************************************
 
 
 #define		DC_MAX_COVER_RANGE					43 //31
@@ -44,7 +44,7 @@
 typedef struct
 {
 	INT16	sGridNo;
-	INT8	bCover;				//% chance that the gridno is fully covered.  ie 100 if safe, 0  is has no cover		
+	INT8	bCover;				//% chance that the gridno is fully covered.	ie 100 if safe, 0	is has no cover		
 //	BOOLEAN fRoof;
 } BEST_COVER_STRUCT;
 
@@ -70,7 +70,7 @@ enum
 	DC__SEE_3_STANCE,
 };
 
-//******  Global Variables  *****************************************
+//******	Global Variables	*****************************************
 
 
 BEST_COVER_STRUCT gCoverRadius[ DC_MAX_COVER_RANGE ][ DC_MAX_COVER_RANGE ];
@@ -82,7 +82,7 @@ INT8	gbLastStance=-1;
 VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[ DC__SOLDIER_VISIBLE_RANGE ][ DC__SOLDIER_VISIBLE_RANGE ];
 INT16	gsLastVisibleToSoldierGridNo=NOWHERE;
 
-//*******  Function Prototypes ***************************************
+//*******	Function Prototypes ***************************************
 
 INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridno, INT8 bStance );
 void	CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange );
@@ -99,7 +99,7 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo );
 
 //ppp
 
-//*******  Functions **************************************************
+//*******	Functions **************************************************
 
 
 void DisplayCoverOfSelectedGridNo( )
@@ -329,11 +329,11 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 		bSearchRange = ( DC_MAX_COVER_RANGE / 2 );
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxLeft	= min( bSearchRange,( sTargetGridNo % MAXCOL ));
 	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxUp	= min( bSearchRange,( sTargetGridNo / MAXROW ));
 	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 
@@ -442,13 +442,13 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 		// if this merc is inactive, at base, on assignment, dead, unconscious
 		if (!pOpponent || pOpponent->stats.bLife < OKLIFE)
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		// if this man is neutral / on the same side, he's not an opponent
  		if( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		pbPersOL = pSoldier->aiData.bOppList + pOpponent->ubID;
@@ -460,11 +460,11 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 				*pbPublOL != SEEN_CURRENTLY && 
 				*pbPublOL != SEEN_THIS_TURN )
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
-        // Lesh: changed 2-nd parameter in DistanceVisible function call
+		// Lesh: changed 2-nd parameter in DistanceVisible function call
 		usSightLimit = DistanceVisible( pOpponent, (SoldierHasLimitedVision(pOpponent) ? pOpponent->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->pathing.bLevel, pSoldier );
 
 
@@ -650,7 +650,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		//AXP 30.03.2007: Fix CtH calculation for first shot after changing aim level (roof/ground)
 		INT8 bTempTargetLevel = pSoldier->bTargetLevel;
 		pSoldier->bTargetLevel = (INT8)gsInterfaceLevel;
-		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, (INT8)(pSoldier->pathing.bShownAimTime ), pSoldier->bAimShotLocation );
+		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, (INT8)(pSoldier->aiData.bShownAimTime ), pSoldier->bAimShotLocation );
 		pSoldier->bTargetLevel = bTempTargetLevel;
 
 		swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__GUN_RANGE_AND_CTH ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, uiHitChance );
@@ -662,7 +662,7 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 	//if the target is out of the mercs gun range or knife
 	if( !InRange( pSoldier, sTargetGridNo ) && 
-		( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN || Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_THROWING_KNIFE  ) )
+		( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN || Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_THROWING_KNIFE	) )
 	{
 		// Display a warning saying so
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ OUT_OF_RANGE_STRING ] );
@@ -750,11 +750,11 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxLeft	= min( bSearchRange,( sTargetGridNo % MAXCOL ));
 	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxUp	= min( bSearchRange,( sTargetGridNo / MAXROW ));
 	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 	pSoldier = GetCurrentMercForDisplayCover();
@@ -852,7 +852,7 @@ void AddVisibleToSoldierToEachGridNo()
 			fRoof = gVisibleToSoldierStruct[ uiCntX ][ uiCntY ].fRoof;
 			sGridNo = gVisibleToSoldierStruct[ uiCntX ][ uiCntY ].sGridNo;
 
-			//if the soldier can easily see this gridno.  Can see all 3 positions
+			//if the soldier can easily see this gridno.	Can see all 3 positions
 			if( bVisibleToSoldier == DC__SEE_3_STANCE )
 			{
 				AddCoverObjectToWorld( sGridNo, SPECIALTILE_COVER_5, fRoof );
@@ -953,7 +953,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
-	INT8  *pPersOL,*pbPublOL;
+	INT8	*pPersOL,*pbPublOL;
 	UINT8 ubID;
 	BOOLEAN	bAware=FALSE;
 
@@ -971,14 +971,14 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 		pPersOL = &(pSoldier->aiData.bOppList[ubID]);
 		pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][ubID]);
 
-		 // if soldier is known about (SEEN or HEARD within last few turns)
+		// if soldier is known about (SEEN or HEARD within last few turns)
 		if (*pPersOL || *pbPublOL)
 		{
-			 bAware = TRUE;
+			bAware = TRUE;
 		}
 	}
 
-    // Lesh: changed 2-nd parameter in DistanceVisible function call
+	// Lesh: changed 2-nd parameter in DistanceVisible function call
 	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, pSoldier );
 
 

@@ -48,7 +48,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 	PERFORMANCE_MARKER			
 	SGPRect		aRect;
 	extern void GetSoldierScreenRect(SOLDIERTYPE*,SGPRect*);
-	GetSoldierScreenRect( pSoldier,  &aRect );
+	GetSoldierScreenRect( pSoldier,	&aRect );
 	INT16		a1,a2;
 	BOOLEAN		fDrawTooltip = FALSE;
 
@@ -107,8 +107,8 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					uiMaxTooltipDistance *= 1 - (gGameExternalOptions.ubVisDistDecreasePerRainIntensity / 100);
 
 				if ( !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD1POS].usItem].nightvisionrangebonus > 0) &&
-					 !(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD2POS].usItem].nightvisionrangebonus > 0) &&
- 					 !DayTime() )
+					!(Item[MercPtrs[gusSelectedSoldier]->inv[HEAD2POS].usItem].nightvisionrangebonus > 0) &&
+ 					!DayTime() )
 				{
 					// if night reduce max tooltip viewing distance by a factor of 4 if merc is not wearing NVG
 					uiMaxTooltipDistance >>= 2;
@@ -286,7 +286,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 				case BIGPOCK3POS:
 					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot3 )
 						continue;
-				    break;
+				 break;
 				case BIGPOCK4POS:
 					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot4 )
 						continue;
@@ -296,12 +296,12 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			if ( Item[ pSoldier->inv[ BigSlot ].usItem ].rocketlauncher )
 				iCarriedRL = pSoldier->inv[ BigSlot ].usItem; // remember that enemy is carrying a rocket launcher when check for rocket ammo is made later on
 
-			if ( (  Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_LAUNCHER ) ||
-				 (	Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_GUN ) )
+			if ( (	Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_LAUNCHER ) ||
+				(	Item[ pSoldier->inv[ BigSlot ].usItem ].usItemClass == IC_GUN ) )
 			{
 				// it's a firearm
 				if ( (	Weapon[pSoldier->inv[ BigSlot ].usItem].ubWeaponClass != HANDGUNCLASS ) &&
-					 (	Weapon[pSoldier->inv[ BigSlot ].usItem].ubWeaponClass != SMGCLASS ) )
+					(	Weapon[pSoldier->inv[ BigSlot ].usItem].ubWeaponClass != SMGCLASS ) )
 				{
 					// it's a long gun or heavy weapon
 					fDisplayBigSlotItem = TRUE;
@@ -311,7 +311,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			{
 				// check for rocket ammo
 				if ( ( iCarriedRL != 0 ) &&												// soldier is carrying a RL ...
-					 ValidLaunchable( pSoldier->inv[ BigSlot ].usItem, iCarriedRL ) )	// this item is launchable by the RL
+					ValidLaunchable( pSoldier->inv[ BigSlot ].usItem, iCarriedRL ) )	// this item is launchable by the RL
 				{
 					fDisplayBigSlotItem = TRUE;
 				}
@@ -469,10 +469,10 @@ void DrawMouseTooltip()
 	}
 	else
 	{	//draw in panel
-		//502,485 658,596   160*110 580,540
+		//502,485 658,596	160*110 580,540
 		iX = 580 - (iW / 2);
 		iY = 540 - (iH/2);
-		if (iY + iH > SCREEN_HEIGHT)  iY = SCREEN_HEIGHT - iH - 3 ;
+		if (iY + iH > SCREEN_HEIGHT)	iY = SCREEN_HEIGHT - iH - 3 ;
 	}
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -486,7 +486,7 @@ void DrawMouseTooltip()
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 	DisplayHelpTokenizedString( mouseTT.FastHelpText ,( INT16 )( iX + 5 ), ( INT16 )( iY + 5 ) );
-	InvalidateRegion(  iX, iY, (iX + iW) , (iY + iH) );
+	InvalidateRegion(	iX, iY, (iX + iW) , (iY + iH) );
 
 	//InvalidateScreen();
 }

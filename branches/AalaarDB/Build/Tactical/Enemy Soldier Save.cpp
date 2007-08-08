@@ -83,7 +83,7 @@ void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-//OLD SAVE METHOD:  This is the old way of loading the enemies and civilians 
+//OLD SAVE METHOD:	This is the old way of loading the enemies and civilians 
 BOOLEAN LoadEnemySoldiersFromTempFile()
 {
 	PERFORMANCE_MARKER
@@ -106,7 +106,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
-	//STEP ONE:  Set up the temp file to read from.
+	//STEP ONE:	Set up the temp file to read from.
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -123,41 +123,41 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		return FALSE;
 	}
 
-	//STEP TWO:  determine whether or not we should use this data.
+	//STEP TWO:	determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	
 	LoadSoldierInitListLinks( hfile );
 	
-	//STEP THREE:  read the data
+	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -166,7 +166,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading slots.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading slots.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -175,7 +175,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -184,13 +184,13 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 
 	if( GetWorldTotalMin() > uiTimeStamp + 300 )
-	{ //the file has aged.  Use the regular method for adding soldiers.
+	{ //the file has aged.	Use the regular method for adding soldiers.
 		FileClose( hfile );
 		RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
@@ -200,13 +200,13 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( gbWorldSectorZ != bSectorZ )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 
 	if( !slots )
-	{ //no need to restore the enemy's to the map.  This means we are restoring a saved game.
+	{ //no need to restore the enemy's to the map.	This means we are restoring a saved game.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		FileClose( hfile );
 		return TRUE;
@@ -214,12 +214,12 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( slots < 0 || slots >= 64 )
 	{ //bad IO!
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- illegal slot value of %d.  KM", slots );
+			sprintf( zReason, "EnemySoldier -- illegal slot value of %d.	KM", slots );
 		#endif
 		goto FAIL_LOAD;
 	}
 
-	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
+	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.	We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
 	curr = gSoldierInitHead;
 	while( curr )
@@ -242,13 +242,13 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		if( !pSector )
 		{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
+			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)	KM", sSectorX, sSectorY, bSectorZ );
 		#endif
 			goto FAIL_LOAD;
 		}
-		ubStrategicElites		 = pSector->ubNumElites;
-		ubStrategicTroops		 = pSector->ubNumTroops;
-		ubStrategicAdmins		 = pSector->ubNumAdmins;
+		ubStrategicElites		= pSector->ubNumElites;
+		ubStrategicTroops		= pSector->ubNumTroops;
+		ubStrategicAdmins		= pSector->ubNumAdmins;
 		ubStrategicCreatures = pSector->ubNumCreatures;
 	}
 	else
@@ -264,7 +264,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		if ( !tempDetailedPlacement.Load(hfile) )
 		{
 			#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
+				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
@@ -357,14 +357,14 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -379,7 +379,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	}
 	if( ubStrategicCreatures > ubNumCreatures )
 	{
-		ubStrategicCreatures;  //not sure if this wil ever happen.  If so, needs to be handled.
+		ubStrategicCreatures;	//not sure if this wil ever happen.	If so, needs to be handled.
 	}
 
 	//successful
@@ -388,7 +388,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or 
-		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
+		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
 		#ifdef JA2TESTVERSION
@@ -397,7 +397,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		return FALSE;
 }
 
-//OLD SAVE METHOD:  This is the older way of saving the civilian and the enemies placement into a temp file
+//OLD SAVE METHOD:	This is the older way of saving the civilian and the enemies placement into a temp file
 BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8	ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile )
 {
 	PERFORMANCE_MARKER
@@ -413,14 +413,14 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
 
-	//STEP ONE:  Prep the soldiers for saving...
+	//STEP ONE:	Prep the soldiers for saving...
 
 	//modify the map's soldier init list to reflect the changes to the member's still alive...
 	for( i = gTacticalStatus.Team[ ubFirstIdTeam ].bFirstID; i <= gTacticalStatus.Team[ ubLastIdTeam ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
 
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife  )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife	)
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -428,7 +428,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.  
+			{ //found a match.	
 
 				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) )
 				{
@@ -476,7 +476,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		return TRUE;
 	}
 
-	//STEP TWO:  Set up the temp file to write to.
+	//STEP TWO:	Set up the temp file to write to.
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
@@ -499,7 +499,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	if( fAppendToFile )
 	{
 		//Open the file for writing, Create it if it doesnt exist
-		hfile = FileOpen( zMapName, FILE_ACCESS_READ	 | FILE_OPEN_ALWAYS, FALSE );
+		hfile = FileOpen( zMapName, FILE_ACCESS_READ	| FILE_OPEN_ALWAYS, FALSE );
 		if( hfile == 0 )
 		{	//Error opening map modification file
 			return FALSE;
@@ -554,7 +554,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			goto FAIL_SAVE;
 		}
 
-		//STEP THREE:  Save the data
+		//STEP THREE:	Save the data
 		SaveSoldierInitListLinks( hfile );
 
 		FileWrite( hfile, &sSectorX, 2, &uiNumBytesWritten );
@@ -563,7 +563,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			goto FAIL_SAVE;
 		}
 
-		//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only 
+		//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only 
 		//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
 		//we will need the links that are only added when the map is loaded, and are normally lost when restoring a save.
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -612,7 +612,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.  
+			{ //found a match.	
 				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
 				{
 					goto FAIL_SAVE;
@@ -664,7 +664,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
-	//STEP ONE:  Set up the temp file to read from.
+	//STEP ONE:	Set up the temp file to read from.
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -684,7 +684,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		if( !pSector )
 		{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)	KM", gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 		#endif
 
 			goto FAIL_LOAD;
@@ -727,21 +727,21 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		return FALSE;
 	}
 
-	//STEP TWO:  determine whether or not we should use this data.
+	//STEP TWO:	determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -749,20 +749,20 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 //	LoadSoldierInitListLinks( hfile );
 	NewWayOfLoadingEnemySoldierInitListLinks( hfile );
 	
-	//STEP THREE:  read the data
+	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -771,7 +771,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading slots.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading slots.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -780,7 +780,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -789,20 +789,20 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gbWorldSectorZ != bSectorZ )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 
 	if( GetWorldTotalMin() > uiTimeStamp + 300 )
-	{ //the file has aged.  Use the regular method for adding soldiers.
+	{ //the file has aged.	Use the regular method for adding soldiers.
 		FileClose( hfile );
 		RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
@@ -810,7 +810,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 
 	if( !slots )
-	{ //no need to restore the enemy's to the map.  This means we are restoring a saved game.
+	{ //no need to restore the enemy's to the map.	This means we are restoring a saved game.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		FileClose( hfile );
 		return TRUE;
@@ -820,12 +820,12 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	if( slots < 0 || slots >= 64 )
 	{ //bad IO!
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- illegal slot value of %d.  KM", slots );
+			sprintf( zReason, "EnemySoldier -- illegal slot value of %d.	KM", slots );
 		#endif
 		goto FAIL_LOAD;
 	}
 
-	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
+	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.	We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
 	curr = gSoldierInitHead;
 	while( curr )
@@ -848,13 +848,13 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		if( !pSector )
 		{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
+			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)	KM", sSectorX, sSectorY, bSectorZ );
 		#endif
 			goto FAIL_LOAD;
 		}
-		ubStrategicElites		 = pSector->ubNumElites;
-		ubStrategicTroops		 = pSector->ubNumTroops;
-		ubStrategicAdmins		 = pSector->ubNumAdmins;
+		ubStrategicElites		= pSector->ubNumElites;
+		ubStrategicTroops		= pSector->ubNumTroops;
+		ubStrategicAdmins		= pSector->ubNumAdmins;
 		ubStrategicCreatures = pSector->ubNumCreatures;
 	}
 	else
@@ -870,7 +870,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		if ( !tempDetailedPlacement.Load(hfile) )
 		{
 			#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
+				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
@@ -951,14 +951,14 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM" );
+			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.  KM" );
+			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -973,7 +973,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 	if( ubStrategicCreatures > ubNumCreatures )
 	{
-		ubStrategicCreatures;  //not sure if this wil ever happen.  If so, needs to be handled.
+		ubStrategicCreatures;	//not sure if this wil ever happen.	If so, needs to be handled.
 	}
 
 
@@ -986,7 +986,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		if( !pSector )
 		{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
+			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)	KM", sSectorX, sSectorY, bSectorZ );
 		#endif
 			goto FAIL_LOAD;
 
@@ -1019,7 +1019,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or 
-		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
+		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
 		#ifdef JA2TESTVERSION
@@ -1056,7 +1056,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	
 	gfRestoringCiviliansFromTempFile = TRUE;
 
-	//STEP ONE:  Set up the temp file to read from.
+	//STEP ONE:	Set up the temp file to read from.
 
 	//Convert the current sector location into a file name
 	//GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -1072,21 +1072,21 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		return FALSE;
 	}
 
-	//STEP TWO:  determine whether or not we should use this data.
+	//STEP TWO:	determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading sSectorY.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading sSectorY.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- sSectorY mismatch.  KM" );
+			sprintf( zReason, "Civilian -- sSectorY mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1095,19 +1095,19 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	NewWayOfLoadingCivilianInitListLinks( hfile );
 
 
-	//STEP THREE:  read the data
+	//STEP THREE:	read the data
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading sSectorX.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading sSectorX.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- sSectorX mismatch.  KM" );
+			sprintf( zReason, "Civilian -- sSectorX mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1116,7 +1116,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading slots.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading slots.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1125,7 +1125,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading uiTimeStamp.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading uiTimeStamp.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1136,21 +1136,21 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading bSectorZ.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading bSectorZ.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gbWorldSectorZ != bSectorZ )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- bSectorZ mismatch.  KM" );
+			sprintf( zReason, "Civilian -- bSectorZ mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 
 	if( !slots )
 	{
-		//no need to restore the enemy's to the map.  This means we are restoring a saved game.
+		//no need to restore the enemy's to the map.	This means we are restoring a saved game.
 		gfRestoringCiviliansFromTempFile = FALSE;
 		FileClose( hfile );
 		return TRUE;
@@ -1159,12 +1159,12 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	{
 		//bad IO!
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- illegal slot value of %d.  KM", slots );
+			sprintf( zReason, "Civilian -- illegal slot value of %d.	KM", slots );
 		#endif
 		goto FAIL_LOAD;
 	}
 
-	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
+	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.	We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
 	curr = gSoldierInitHead;
 	while( curr )
@@ -1184,7 +1184,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		if ( !tempDetailedPlacement.Load(hfile) )
 		{
 			#ifdef JA2TESTVERSION
-				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.  KM", i );
+				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
@@ -1279,7 +1279,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading ubSectorID.  KM" );
+			sprintf( zReason, "Civilian -- EOF while reading ubSectorID.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1288,7 +1288,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- ubSectorID mismatch.  KM" );
+			sprintf( zReason, "Civilian -- ubSectorID mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1300,7 +1300,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or 
-		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
+		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
 		#ifdef JA2TESTVERSION
@@ -1311,7 +1311,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 
 //If we are saving a game and we are in the sector, we will need to preserve the links between the 
-//soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
+//soldiers and the soldier init list.	Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
 {
 	PERFORMANCE_MARKER
@@ -1347,7 +1347,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 
 
-	//STEP ONE:  Prep the soldiers for saving...
+	//STEP ONE:	Prep the soldiers for saving...
 
 	//modify the map's soldier init list to reflect the changes to the member's still alive...
 	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
@@ -1363,7 +1363,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 				curr = curr->next;
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
-			{ //found a match.  
+			{ //found a match.	
 
 				if( !fValidateOnly )
 				{
@@ -1420,7 +1420,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		return( TRUE );
 	}
 
-	//STEP TWO:  Set up the temp file to write to.
+	//STEP TWO:	Set up the temp file to write to.
 
 	//Convert the current sector location into a file name
 	//GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
@@ -1451,7 +1451,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		goto FAIL_SAVE;
 	}
 
-	//STEP THREE:  Save the data
+	//STEP THREE:	Save the data
 
 	//this works for both civs and enemies
 	SaveSoldierInitListLinks( hfile );
@@ -1462,7 +1462,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		goto FAIL_SAVE;
 	}
 
-	//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only 
+	//This check may appear confusing.	It is intended to abort if the player is saving the game.	It is only 
 	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
 	//we will need the links that are only added when the map is loaded, and are normally lost when restoring a save.
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -1521,7 +1521,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{
-				//found a match.  
+				//found a match.	
 				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
 				{
 					goto FAIL_SAVE;
@@ -1588,7 +1588,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	*pubNumCreatures = 0;
 
 
-	//STEP ONE:  Set up the temp file to read from.
+	//STEP ONE:	Set up the temp file to read from.
 
 
 	//Convert the current sector location into a file name
@@ -1606,21 +1606,21 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		return FALSE;
 	}
 
-	//STEP TWO:  determine whether or not we should use this data.
+	//STEP TWO:	determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorY.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorY.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- sSectorY mismatch.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- sSectorY mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1628,20 +1628,20 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 //	LoadSoldierInitListLinks( hfile );
 	LookAtButDontProcessEnemySoldierInitListLinks( hfile );
 	
-	//STEP THREE:  read the data
+	//STEP THREE:	read the data
 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorX.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorX.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- sSectorX mismatch.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- sSectorX mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1650,7 +1650,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading slots.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading slots.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1659,7 +1659,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( uiNumBytesRead != 4 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading uiTimeStamp.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1669,7 +1669,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading bSectorZ.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading bSectorZ.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1677,14 +1677,14 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( gbWorldSectorZ != bSectorZ )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- bSectorZ mismatch.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- bSectorZ mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
 
 	if( !slots )
 	{
-		//no need to restore the enemy's to the map.  This means we are restoring a saved game.
+		//no need to restore the enemy's to the map.	This means we are restoring a saved game.
 		FileClose( hfile );
 		return TRUE;
 	}
@@ -1693,7 +1693,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( slots < 0 || slots >= 64 )
 	{ //bad IO!
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- illegal slot value of %d.  KM", slots );
+			sprintf( zReason, "Check EnemySoldier -- illegal slot value of %d.	KM", slots );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1707,13 +1707,13 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		if( !pSector )
 		{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
+			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)	KM", sSectorX, sSectorY, bSectorZ );
 		#endif
 			goto FAIL_LOAD;
 		}
-		ubStrategicElites		 = pSector->ubNumElites;
-		ubStrategicTroops		 = pSector->ubNumTroops;
-		ubStrategicAdmins		 = pSector->ubNumAdmins;
+		ubStrategicElites		= pSector->ubNumElites;
+		ubStrategicTroops		= pSector->ubNumTroops;
+		ubStrategicAdmins		= pSector->ubNumAdmins;
 		ubStrategicCreatures = pSector->ubNumCreatures;
 	}
 	else
@@ -1730,7 +1730,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		if ( !tempDetailedPlacement.Load(hfile) )
 		{
 			#ifdef JA2TESTVERSION
-				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
+				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
@@ -1826,7 +1826,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( uiNumBytesRead != 1 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading ubSectorID.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- EOF while reading ubSectorID.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1834,7 +1834,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- ubSectorID mismatch.  KM" );
+			sprintf( zReason, "Check EnemySoldier -- ubSectorID mismatch.	KM" );
 		#endif
 		goto FAIL_LOAD;
 	}
@@ -1845,7 +1845,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or 
-		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
+		//various checks failed for hacker validation.	If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
 		#ifdef JA2TESTVERSION

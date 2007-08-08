@@ -1542,7 +1542,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("UseGun") );
 	// Deduct points!
- 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
+ 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->aiData.bAimTime );
 
 	usItemNum = pSoldier->usAttackingWeapon;
 
@@ -1646,11 +1646,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// CALC CHANCE TO HIT
 	if ( Item[ usItemNum ].usItemClass == IC_THROWING_KNIFE )
 	{
-	  uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, pSoldier->bAimShotLocation );
+	  uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->aiData.bAimTime, pSoldier->bAimShotLocation );
 	}
 	else
 	{
-	  uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, pSoldier->bAimShotLocation );
+	  uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->aiData.bAimTime, pSoldier->bAimShotLocation );
 	}
 
 	//DIGICRAB: Barrel extender wear code
@@ -1779,11 +1779,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - uiHitChance) / 25;
 
-				if ( pSoldier->pathing.bAimTime && !pSoldier->bDoBurst )
+				if ( pSoldier->aiData.bAimTime && !pSoldier->bDoBurst )
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the shot
-					usExpGain += __min( pSoldier->pathing.bAimTime, usExpGain );
+					usExpGain += __min( pSoldier->aiData.bAimTime, usExpGain );
 				}
 
 				// base pts extra for hitting
@@ -1855,11 +1855,11 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - uiHitChance) / 10;
 
-				if (pSoldier->pathing.bAimTime)
+				if (pSoldier->aiData.bAimTime)
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the throw
-					usExpGain += ( 2 * __min( pSoldier->pathing.bAimTime, usExpGain ) );
+					usExpGain += ( 2 * __min( pSoldier->aiData.bAimTime, usExpGain ) );
 				}
 
 				// base pts extra for hitting
@@ -2019,7 +2019,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	BOOLEAN							fSurpriseAttack;
 	
 	// Deduct points!
- 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
+ 	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->aiData.bAimTime );
 
 	DeductPoints( pSoldier, sAPCost, 0 );
 	
@@ -2045,7 +2045,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		}
 		else
 		{
-			iHitChance = CalcChanceToStab( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
+			iHitChance = CalcChanceToStab( pSoldier, pTargetSoldier, pSoldier->aiData.bAimTime );
 			fSurpriseAttack = FALSE;
 		}
 
@@ -2135,11 +2135,11 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				// grant extra exp for hitting a difficult target
 				usExpGain += (UINT8) (100 - iHitChance) / 10;
 
-				if (pSoldier->pathing.bAimTime)
+				if (pSoldier->aiData.bAimTime)
 				{
 					// gain extra exp for aiming, up to the amount from 
 					// the difficulty of the attack
-					usExpGain += ( 2 * __min( pSoldier->pathing.bAimTime, usExpGain ) );
+					usExpGain += ( 2 * __min( pSoldier->aiData.bAimTime, usExpGain ) );
 				}
 
 				// base pts extra for hitting
@@ -2205,7 +2205,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	// Punch the enemy
 	if (!fStealing)
 	{
- 		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
+ 		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->aiData.bAimTime );
 		DeductPoints( pSoldier, sAPCost, 0 );
 	}
 	// Steal from the enemy
@@ -2235,7 +2235,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			else if ( pTargetSoldier->aiData.bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN )
 			{
 				// give bonus for surprise, but not so much as struggle would still occur
-				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime ) + 20;
+				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->aiData.bAimTime ) + 20;
 			}
 			else if ( pTargetSoldier->stats.bLife < OKLIFE || pTargetSoldier->bCollapsed )
 			{
@@ -2244,7 +2244,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			}
 			else
 			{
-				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
+				iHitChance = CalcChanceToSteal( pSoldier, pTargetSoldier, pSoldier->aiData.bAimTime );
 			}
 		}
 		else
@@ -2255,7 +2255,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			}
 			else
 			{
-				iHitChance = CalcChanceToPunch( pSoldier, pTargetSoldier, pSoldier->pathing.bAimTime );
+				iHitChance = CalcChanceToPunch( pSoldier, pTargetSoldier, pSoldier->aiData.bAimTime );
 			}
 		}
 
@@ -2304,7 +2304,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 						}
 						DeleteObj( &(pTargetSoldier->inv[ubIndexRet]) );
 
-						// WANNE: NEW
 						// The item that the enemy holds in his hand before the stealing
 						usNewItem = pTargetSoldier->inv[HANDPOS].usItem;
 
@@ -2531,7 +2530,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	SOLDIERTYPE	*	pTargetSoldier;
 	INT16			sAPCost = 0;
 
-	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, AIM_SHOT_TORSO );
+	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->aiData.bAimTime, AIM_SHOT_TORSO );
 
 	uiDiceRoll = PreRandom( 100 );
 
@@ -2633,7 +2632,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	/*
 	// Madd: Next 2 lines added: Deduct points!
 
-	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->pathing.bAimTime );
+	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->aiData.bAimTime );
     // Kaiden: Deducting points too early, moving the line down
 	//DeductPoints( pSoldier, sAPCost, 0 );
 
@@ -2726,7 +2725,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 			PlayJA2Sample( Weapon[ usItemNum ].sSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 	}
 
-	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->pathing.bAimTime, AIM_SHOT_TORSO );
+	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->aiData.bAimTime, AIM_SHOT_TORSO );
 
 	uiDiceRoll = PreRandom( 100 );
 
@@ -3741,7 +3740,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if (pSoldier->aiData.bShock)
 		iChance -= (pSoldier->aiData.bShock * AIM_PENALTY_PER_SHOCK);
 
-	// WANNE NEW: Changed this, because RPGs are not in the calculation, only guns
+	// WANNE: Changed this, because RPGs are not in the calculation, only guns
 	//if ( Item[ usInHand ].usItemClass == IC_GUN )
 	if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_LAUNCHER)
 	{
@@ -4583,7 +4582,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 		if (iImpactForCrits > 0 && iImpactForCrits < pTarget->stats.bLife )
 		{
-			if (PreRandom( iImpactForCrits / 2 + pFirer->pathing.bAimTime * 5) + 1 > CRITICAL_HIT_THRESHOLD)
+			if (PreRandom( iImpactForCrits / 2 + pFirer->aiData.bAimTime * 5) + 1 > CRITICAL_HIT_THRESHOLD)
 			{
 				bStatLoss = (INT8) PreRandom( iImpactForCrits / 2 ) + 1;
 				switch( ubHitLocation )

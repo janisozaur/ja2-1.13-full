@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "GameSettings.h"
@@ -44,51 +43,51 @@
 /*
 STRATEGIC AI -- UNDERLYING PHILOSOPHY
 The most fundamental part of the strategic AI which takes from reality and gives to gameplay is the manner
-the queen attempts to take her towns back.  Finances and owning mines are the most important way
-to win the game.  As the player takes more mines over, the queen will focus more on quality and defense.  In
-the beginning of the game, she will focus more on offense than mid-game or end-game.  
+the queen attempts to take her towns back.	Finances and owning mines are the most important way
+to win the game.	As the player takes more mines over, the queen will focus more on quality and defense.	In
+the beginning of the game, she will focus more on offense than mid-game or end-game.	
 
 REALITY
 The queen owns the entire country, and the player starts the game with a small lump of cash, enough to hire
-some mercenaries for about a week.  In that week, the queen may not notice what is going on, and the player
-would believably take over one of the towns before she could feasibly react.  As soon as her military was
+some mercenaries for about a week.	In that week, the queen may not notice what is going on, and the player
+would believably take over one of the towns before she could feasibly react.	As soon as her military was
 aware of the situation, she would likely proceed to send 300-400 troops to annihilate the opposition, and the 
-game would be over relatively quickly.  If the player was a prodigy, and managed to hold the town against such  
+game would be over relatively quickly.	If the player was a prodigy, and managed to hold the town against such	
 a major assault, he would probably lose in the long run being forced into a defensive position and running out 
-of money quickly while the queen could continue to pump out the troops.  On the other hand, if the player 
+of money quickly while the queen could continue to pump out the troops.	On the other hand, if the player 
 somehow managed to take over most of the mines, he would be able to casually walk over the queen eventually 
-just from the sheer income allowing him to purchase several of the best mercs.  That would have the effect of
+just from the sheer income allowing him to purchase several of the best mercs.	That would have the effect of
 making the game impossibly difficult in the beginning of the game, and a joke at the end (this is very much
 like Master Of Orion II on the more difficult settings )
 
 GAMEPLAY
 Because we want the game to be like a normal game and make it fun, we need to make the game easy in the 
-beginning and harder at the end.  In order to accomplish this, I feel that pure income shouldn't be the factor 
-for the queen, because she would likely crucify a would-be leader in his early days.  So, in the beginning of
+beginning and harder at the end.	In order to accomplish this, I feel that pure income shouldn't be the factor 
+for the queen, because she would likely crucify a would-be leader in his early days.	So, in the beginning of
 the game, the forces would already be situated with the majority of forces being the administrators in the towns, 
-and army troops and elites in the more important sectors.  Restricting the queen's offensive
+and army troops and elites in the more important sectors.	Restricting the queen's offensive
 abilities using a distance penalty would mean that the furthest sectors from the queen's palace would be
-much easier to defend because she would only be allowed to send x number of troops.  As you get closer to the 
-queen, she would be allowed to send larger forces to attack those towns in question.  Also, to further 
+much easier to defend because she would only be allowed to send x number of troops.	As you get closer to the 
+queen, she would be allowed to send larger forces to attack those towns in question.	Also, to further 
 increase the games difficulty as the campaign progresses in the player's favor, we could also increase the
-quality of the queen's troops based purely on the peek progress percentage.  This is calculated using a formula 
-that determines how well the player is doing by combining loyalty of towns owned, income generated, etc.  So, 
+quality of the queen's troops based purely on the peek progress percentage.	This is calculated using a formula 
+that determines how well the player is doing by combining loyalty of towns owned, income generated, etc.	So, 
 in the beginning of the game, the quality is at the worst, but once you capture your first mines/towns, it 
-permanently  increase the queen's quality rating, effectively bumping up the stakes.  By the time you capture 
+permanently	increase the queen's quality rating, effectively bumping up the stakes.	By the time you capture 
 four or five mines, the queen is going to focus more (but not completely) on quality defense as she prepares 
-for your final onslaught.  This quality rating will augment the experience level, equipment rating, and/or 
-attribute ratings of the queen's troops.  I would maintain a table of these enhancements based on the current 
+for your final onslaught.	This quality rating will augment the experience level, equipment rating, and/or 
+attribute ratings of the queen's troops.	I would maintain a table of these enhancements based on the current 
 quality rating hooking into the difficulty all along.
 
 //EXPLANATION OF THE WEIGHT SYSTEM:
-The strategic AI has two types of groups:  garrisons and patrol groups.  Each of these groups contain
-information of it's needs, mainly desired population.  If the current population is greater than the
+The strategic AI has two types of groups:	garrisons and patrol groups.	Each of these groups contain
+information of it's needs, mainly desired population.	If the current population is greater than the
 desired population, and the group will get a negative weight assigned to it, which means that it is willing
-to give up troops to areas that need them more.  On the other hand, if a group has less than the desired population, 
+to give up troops to areas that need them more.	On the other hand, if a group has less than the desired population, 
 then the weight will be positive, meaning they are requesting reinforcements.
 
-The weight generated will range between -100 and +100.  The calculated weight is modified by the priority
-of the group.  If the priority of the group is high, they 
+The weight generated will range between -100 and +100.	The calculated weight is modified by the priority
+of the group.	If the priority of the group is high, they 
 */
 
 
@@ -99,10 +98,10 @@ of the group.  If the priority of the group is high, they
 //#define BASIC_POOL_INCREMENT gGameExternalOptions.guiBaseQueenPoolIncrement
 
 //Modifies the number of troops the queen has at the beginning of the game on top
-//of all of the garrison and patrol groups.  Additionally, there are a total of 
-//16 sectors that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more
+//of all of the garrison and patrol groups.	Additionally, there are a total of 
+//16 sectors that are LEVEL 1, 2, or 3 garrison groups.	The lower the level, the more
 //troops stay in that sector, and the rest will also be used as a secondary pool when
-//the primary pool runs dry.  So basically, this number is only part of the equation.
+//the primary pool runs dry.	So basically, this number is only part of the equation.
 //#define EASY_QUEENS_POOL_OF_TROOPS					150
 //#define NORMAL_QUEENS_POOL_OF_TROOPS				200
 //#define HARD_QUEENS_POOL_OF_TROOPS					400
@@ -123,17 +122,17 @@ of the group.  If the priority of the group is high, they
 //#define HARD_MIN_ENEMY_GROUP_SIZE						6
 //#define INSANE_MIN_ENEMY_GROUP_SIZE						8
 
-//Sets the starting alert chances.  Everytime an enemy arrives in a new sector, or the player,
-//this is the chance the enemy will detect the player in adjacent sectors.  This chance is associated
-//with each side checked.  Stationary groups do this check periodically.
+//Sets the starting alert chances.	Everytime an enemy arrives in a new sector, or the player,
+//this is the chance the enemy will detect the player in adjacent sectors.	This chance is associated
+//with each side checked.	Stationary groups do this check periodically.
 //#define EASY_ENEMY_STARTING_ALERT_LEVEL			20
 //#define	NORMAL_ENEMY_STARTING_ALERT_LEVEL		50
 //#define HARD_ENEMY_STARTING_ALERT_LEVEL			70
 //#define INSANE_ENEMY_STARTING_ALERT_LEVEL		90
 
-//When an enemy spots and chases a player group, the alertness value decrements by this value.  The
-//higher the value, the less of a chance the enemy will spot and attack subsequent groups.  This 
-//minimizes the aggressiveness of the enemy.  Ranges from 1-100 (but recommend 20-60).
+//When an enemy spots and chases a player group, the alertness value decrements by this value.	The
+//higher the value, the less of a chance the enemy will spot and attack subsequent groups.	This 
+//minimizes the aggressiveness of the enemy.	Ranges from 1-100 (but recommend 20-60).
 //#define EASY_ENEMY_STARTING_ALERT_DECAY			75
 //#define	NORMAL_ENEMY_STARTING_ALERT_DECAY		50
 //#define HARD_ENEMY_STARTING_ALERT_DECAY			25
@@ -153,7 +152,7 @@ of the group.  If the priority of the group is high, they
 //#define INSANE_TIME_EVALUATE_VARIANCE				60
 
 //When a player takes control of a sector, don't allow any enemy reinforcements to enter the sector for a 
-//limited amount of time.  This essentially dumbs down the AI, making it less aggressive.
+//limited amount of time.	This essentially dumbs down the AI, making it less aggressive.
 //#define EASY_GRACE_PERIOD_IN_HOURS					144		// 6 days
 //#define NORMAL_GRACE_PERIOD_IN_HOURS				96		// 4 days
 //#define HARD_GRACE_PERIOD_IN_HOURS					48		// 2 days
@@ -165,8 +164,8 @@ of the group.  If the priority of the group is high, they
 //#define HARD_PATROL_GRACE_PERIOD_IN_DAYS		8
 //#define INSANE_PATROL_GRACE_PERIOD_IN_DAYS		2
 
-//Certain conditions can cause the queen to go into a "full alert" mode.  This means that temporarily, the queen's 
-//forces will automatically succeed adjacent checks until x number of enemy initiated battles occur.  The same variable
+//Certain conditions can cause the queen to go into a "full alert" mode.	This means that temporarily, the queen's 
+//forces will automatically succeed adjacent checks until x number of enemy initiated battles occur.	The same variable
 //is what is used to determine the free checks.
 //#define EASY_NUM_AWARE_BATTLES							1
 //#define NORMAL_NUM_AWARE_BATTLES						2
@@ -186,26 +185,26 @@ INT32	giGarrisonArraySize		= 0;
 INT32	giPatrolArraySize		= 0;
 INT32	giForcePercentage		= 0;	//Modifies the starting group sizes relative by percentage
 INT32	giArmyAlertness			= 0;	//The chance the group will spot an adjacent player/militia
-INT32   giArmyAlertnessDecay	= 0;	//How much the spotting chance decreases when spot check succeeds
-UINT8	gubNumAwareBattles		= 0;	//When non-zero, this means the queen is very aware and searching for players.  Every time
-										//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
+INT32	giArmyAlertnessDecay	= 0;	//How much the spotting chance decreases when spot check succeeds
+UINT8	gubNumAwareBattles		= 0;	//When non-zero, this means the queen is very aware and searching for players.	Every time
+										//there is an enemy initiated battle, this counter decrements until zero.	Until that point,
 										//all adjacent sector checks automatically succeed.
-BOOLEAN gfQueenAIAwake					= FALSE;	//This flag turns on/off the strategic decisions.  If it's off, no reinforcements 
-																					//or assaults will happen.  
-																					//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.  If this
-																					//action isn't called, the AI will never turn on.  It is completely dependant on this action.  It can
+BOOLEAN gfQueenAIAwake					= FALSE;	//This flag turns on/off the strategic decisions.	If it's off, no reinforcements 
+																					//or assaults will happen.	
+																					//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.	If this
+																					//action isn't called, the AI will never turn on.	It is completely dependant on this action.	It can
 																					//be toggled at will in the AIViewer for testing purposes.
-INT32		giReinforcementPool			= 0;	//How many troops the queen has in reserve in noman's land.  These guys are spawned as needed in P3.
-INT32   giReinforcementPoints		= 0;	//the entire army's capacity to provide reinforcements.
+INT32		giReinforcementPool			= 0;	//How many troops the queen has in reserve in noman's land.	These guys are spawned as needed in P3.
+INT32	giReinforcementPoints		= 0;	//the entire army's capacity to provide reinforcements.
 INT32		giRequestPoints					= 0;	//the entire army's need for reinforcements.
-UINT8   gubSAIVersion						= SAI_VERSION;	//Used for adding new features to be saved.
-UINT8		gubQueenPriorityPhase		= 0;	//Defines how far into defence the queen is -- abstractly related to defcon index ranging from 0-10.  
+UINT8	gubSAIVersion						= SAI_VERSION;	//Used for adding new features to be saved.
+UINT8		gubQueenPriorityPhase		= 0;	//Defines how far into defence the queen is -- abstractly related to defcon index ranging from 0-10.	
 
 BOOLEAN		gfUnlimitedTroops	= FALSE;
 BOOLEAN		gfAggressiveQueen	= FALSE;
 
 //10 is the most defensive
-//Used for authorizing the use of the first battle meanwhile scene AFTER the battle is complete.  This is the case used when
+//Used for authorizing the use of the first battle meanwhile scene AFTER the battle is complete.	This is the case used when
 //the player attacks a town, and is set once militia are sent to investigate.
 BOOLEAN gfFirstBattleMeanwhileScenePending = FALSE;
 
@@ -213,7 +212,7 @@ BOOLEAN gfFirstBattleMeanwhileScenePending = FALSE;
 BOOLEAN gfMassFortificationOrdered = FALSE;
 
 UINT8		gubMinEnemyGroupSize			= 0;
-UINT8		gubHoursGracePeriod      = 0;
+UINT8		gubHoursGracePeriod		= 0;
 UINT16	gusPlayerBattleVictories = 0;
 BOOLEAN gfUseAlternateQueenPosition = FALSE;
 
@@ -235,9 +234,9 @@ UINT8 NUM_ARMY_COMPOSITIONS;
 
 extern UINT8 gubNumGroupsArrivedSimultaneously;
 
-//This refers to the number of force points that are *saved* for the AI to use.  This is basically an array of each
-//group.  When the queen wants to send forces to attack a town that is defended, the initial number of forces that 
-//she would send would be considered too weak.  So, instead, she will send that force to the sector's adjacent sector,
+//This refers to the number of force points that are *saved* for the AI to use.	This is basically an array of each
+//group.	When the queen wants to send forces to attack a town that is defended, the initial number of forces that 
+//she would send would be considered too weak.	So, instead, she will send that force to the sector's adjacent sector,
 //and stage, while 
 UINT8 *gubGarrisonReinforcementsDenied = NULL; 
 UINT8 *gubPatrolReinforcementsDenied = NULL; 
@@ -253,13 +252,13 @@ void ValidateLargeGroup( GROUP *pGroup );
 extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce );
 
 
-//The army composition defines attributes for the various garrisons.  The priority reflects how important the sector is
-//to the queen, the elite/troop percentages refer to the desired composition of the group.  The admin percentage has recently been
-//changed to reflect the starting percentage of the garrison that are administrators.  Note that elite% + troop% = 100, and the admin% is
-//not related in this effect.  If the admin% is non-zero, then that garrison is assigned only x% of the force as admins, with NO troops or elites.
+//The army composition defines attributes for the various garrisons.	The priority reflects how important the sector is
+//to the queen, the elite/troop percentages refer to the desired composition of the group.	The admin percentage has recently been
+//changed to reflect the starting percentage of the garrison that are administrators.	Note that elite% + troop% = 100, and the admin% is
+//not related in this effect.	If the admin% is non-zero, then that garrison is assigned only x% of the force as admins, with NO troops or elites.
 //All reinforcements use the composition of the troop/elite for refilling.
-//@@@Alex, the send reinforcement composition isn't complete.  Either sends all troops or troops based off of the composition of the source garrison.
-//  It is my intention to add this.
+//@@@Alex, the send reinforcement composition isn't complete.	Either sends all troops or troops based off of the composition of the source garrison.
+//	It is my intention to add this.
 
 //If you change the MAX_STRATEGIC_TEAM_SIZE, then all the garrison sizes (start, desired) will have to be changed accordingly.
 
@@ -296,7 +295,7 @@ ARMY_COMPOSITION gOrigArmyComp[ MAX_ARMY_COMPOSITIONS ];// =
 //};
 
 //Patrol definitions
-//NOTE:	  A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any 
+//NOTE:	A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any 
 //				of the patrol groups, I am coding 0 to be ignored.
 //NOTE:		Must have at least two points.
 PATROL_GROUP gOrigPatrolGroup[MAX_PATROL_GROUPS];// =	
@@ -343,7 +342,7 @@ PATROL_GROUP gOrigPatrolGroup[MAX_PATROL_GROUPS];// =
 
 
 GARRISON_GROUP gOrigGarrisonGroup[MAX_GARRISON_GROUPS];// = 
-//{   //SECTOR	MILITARY						WEIGHT					UNUSED
+//{	//SECTOR	MILITARY						WEIGHT					UNUSED
 //	//			COMPOSITION						GROUP ID
 //	SEC_P3,		QUEEN_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
 //	SEC_O3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
@@ -438,19 +437,19 @@ void EliminateSurplusTroopsForGarrison( GROUP *pGroup, SECTORINFO *pSector );
 void ReinitializeUnvisitedGarrisons();
 
 //Records any decisions that I deem important enough into an automatically appending AI log file called
-//"Strategic Decisions.txt" in the JA2\Data directory.  This also records the time that each log entry 
+//"Strategic Decisions.txt" in the JA2\Data directory.	This also records the time that each log entry 
 //was made.
 #ifdef JA2BETAVERSION
 
-void LogStrategicEvent( STR8  str, ... ); //adds a timestamp.
-void LogStrategicMsg( STR8  str, ... ); //doesn't use the time stamp
+void LogStrategicEvent( STR8	str, ... ); //adds a timestamp.
+void LogStrategicMsg( STR8	str, ... ); //doesn't use the time stamp
 
 void ClearStrategicLog();
 #endif
 
-//Recalculates a group's weight based on any changes.  
-//@@@Alex, this is possibly missing in some areas.  It is hard to ensure it is 
-//everywhere with all the changes I've made.  I'm sure you could probably find some missing calls.
+//Recalculates a group's weight based on any changes.	
+//@@@Alex, this is possibly missing in some areas.	It is hard to ensure it is 
+//everywhere with all the changes I've made.	I'm sure you could probably find some missing calls.
 void RecalculatePatrolWeight( INT32 iPatrolID );
 void RecalculateGarrisonWeight( INT32 iGarrisonID );
 
@@ -469,16 +468,16 @@ void ConvertGroupTroopsToComposition( GROUP *pGroup, INT32 iCompositionID );
 void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSize );
 
 //If there are any enemy groups that will be moving through this sector due, they will have to repath which
-//will cause them to avoid the sector.  Returns the number of redirected groups.
+//will cause them to avoid the sector.	Returns the number of redirected groups.
 UINT8 RedirectEnemyGroupsMovingThroughSector( UINT8 ubSectorX, UINT8 ubSectorY );
 
 
 
-//As the player's progress changes in the game, the queen will adjust her priorities accordingly.  
+//As the player's progress changes in the game, the queen will adjust her priorities accordingly.	
 //Basically, increasing priorities and numbers for sectors she owns, and lowering them.
-//@@@Alex, this is tweakable.  My philosophies could be incorrect.  It might be better if instead of lowering 
+//@@@Alex, this is tweakable.	My philosophies could be incorrect.	It might be better if instead of lowering 
 //priorities and numbers for towns the queen has lost, to instead lower the priority but increase the numbers so 
-//she would send larger attack forces.  This is questionable.
+//she would send larger attack forces.	This is questionable.
 void EvolveQueenPriorityPhase( BOOLEAN fForceChange );
 
 extern INT16 sWorldSectorLocationOfFirstBattle;
@@ -487,7 +486,7 @@ void ReassignAIGroup( GROUP **pGroup );
 void TransferGroupToPool( GROUP **pGroup );
 void SendGroupToPool( GROUP **pGroup );
 
-//Simply orders all garrisons to take troops from the patrol groups and send the closest troops from them.  Any garrison,
+//Simply orders all garrisons to take troops from the patrol groups and send the closest troops from them.	Any garrison,
 //whom there request isn't fulfilled (due to lack of troops), will recieve their reinforcements from the queen (P3).
 void MassFortifyTowns();
 
@@ -527,26 +526,26 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
 void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize )
 {
 	PERFORMANCE_MARKER{
-  GARRISON_GROUP *pG;
+	GARRISON_GROUP *pG;
 
-  pG = *ppGarrison;
+	pG = *ppGarrison;
 
-  if( !pG )
-    {
-    //AssertMsg( 0, "invalid global Array in" __FILE__ );
-    //return;
-  	 pG = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
-    Assert( pG );
-    memcpy( pG, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
-    *pGarraySize = sizeof( gOrigGarrisonGroup ) / sizeof(GARRISON_GROUP);
-    *ppGarrison = pG;
-    }
-  return;  
+	if( !pG )
+	{
+	//AssertMsg( 0, "invalid global Array in" __FILE__ );
+	//return;
+		pG = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
+	Assert( pG );
+	memcpy( pG, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
+	*pGarraySize = sizeof( gOrigGarrisonGroup ) / sizeof(GARRISON_GROUP);
+	*ppGarrison = pG;
+	}
+	return;	
 }}
 
 
 
-//returns the number of reinforcements permitted to be sent.  Will increased if the denied counter is non-zero.
+//returns the number of reinforcements permitted to be sent.	Will increased if the denied counter is non-zero.
 INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements )
 {
 	PERFORMANCE_MARKER
@@ -556,13 +555,13 @@ INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinfor
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
  DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic1");
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
  pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iExistingForces = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 	iReinforcementsRequested = gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation - iExistingForces;
 
-	//Record how many of the reinforcements are additionally provided due to being denied in the past.  This will grow
+	//Record how many of the reinforcements are additionally provided due to being denied in the past.	This will grow
 	//until it is finally excepted or an absolute max is made.
 	*pubExtraReinforcements = (UINT8)(gubGarrisonReinforcementsDenied[ iGarrisonID ] / (6 - gGameOptions.ubDifficultyLevel));
 	//Make sure the number of extra reinforcements don't bump the force size past the max of MAX_STRATEGIC_TEAM_SIZE.
@@ -599,7 +598,7 @@ INT32 ReinforcementsAvailable( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	INT32 iReinforcementsAvailable;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
  pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iReinforcementsAvailable = pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
@@ -649,7 +648,7 @@ void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 	PERFORMANCE_MARKER
 	INT32 i;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
  for( i = 0; i < giGarrisonArraySize; i++ )
 	{
@@ -707,7 +706,7 @@ void ValidatePendingGroups()
 		INT32 i, iErrorsForInvalidPendingGroup = 0;
 		UINT8 ubGroupID;
 
-		Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+		Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 		for( i = 0; i < giPatrolArraySize; i++ )
 		{
@@ -725,21 +724,21 @@ void ValidatePendingGroups()
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
 			ubGroupID = gGarrisonGroup[ i ].ubPendingGroupID;
-  		if( ubGroupID )
-	  	{
-		  	pGroup = GetGroup( ubGroupID );
-			  if( !pGroup || pGroup->fPlayer )
+			if( ubGroupID )
+		{
+			pGroup = GetGroup( ubGroupID );
+			if( !pGroup || pGroup->fPlayer )
 				{
-  				iErrorsForInvalidPendingGroup++;
-	  			gGarrisonGroup[ i ].ubPendingGroupID = 0;
-		  	}
-		  }
+					iErrorsForInvalidPendingGroup++;
+				gGarrisonGroup[ i ].ubPendingGroupID = 0;
+			}
+		}
 		}
 		if( iErrorsForInvalidPendingGroup )
 		{
 			CHAR16 str[256];
-			swprintf( str, L"Strategic AI:  Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save."
-										 L"You can continue playing, as this has been auto-corrected.  No need to send any debug files.", iErrorsForInvalidPendingGroup );
+			swprintf( str, L"Strategic AI:	Internal error -- %d pending groups were discovered to be invalid.	Please report error and send save."
+										L"You can continue playing, as this has been auto-corrected.	No need to send any debug files.", iErrorsForInvalidPendingGroup );
 			SAIReportError( str );
 		}
 	#endif
@@ -753,9 +752,9 @@ void ValidateWeights( INT32 iID )
 		INT32 iSumRequestPoints = 0;
 		INT32 iSumReinforcementPoints = 0;
 
-   Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
  
-   for( i = 0; i < giPatrolArraySize; i++ )
+	for( i = 0; i < giPatrolArraySize; i++ )
  	{
  		iSumRequestPoints += gPatrolGroup[ i ].bWeight;
  	}
@@ -770,12 +769,12 @@ void ValidateWeights( INT32 iID )
  			iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
  		}
  	}
-   
+	
 		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
 		{
 			CHAR16 str[256];
-			swprintf( str, L"Strategic AI:  Internal error #%02d (total request/reinforcement points).  Please report error including error#.  "
-										 L"You can continue playing, as the points have been auto-corrected.  No need to send any save/debug files.", iID );
+			swprintf( str, L"Strategic AI:	Internal error #%02d (total request/reinforcement points).	Please report error including error#.	"
+										L"You can continue playing, as the points have been auto-corrected.	No need to send any save/debug files.", iID );
 			//Correct the misalignment.
 			giReinforcementPoints = iSumReinforcementPoints;
 			giRequestPoints = iSumRequestPoints;
@@ -790,8 +789,7 @@ void ValidateGroup( GROUP *pGroup )
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 
-  // WANNE 2
-  if (pGroup == NULL)
+	if (pGroup == NULL)
 	{
 		return;
 	}
@@ -803,8 +801,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 			#ifdef JA2BETAVERSION
 			{
 				CHAR16 str[256];
-				swprintf( str, L"Strategic AI:  Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Strategic Decisions.txt.",
-											 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
+				swprintf( str, L"Strategic AI:	Internal error (invalid enemy group #%d location at %c%d, destination %c%d).	Please send PRIOR save file and Strategic Decisions.txt.",
+											pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
 				SAIReportError( str );
 			}
 			#endif
@@ -816,10 +814,10 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 	if( !pGroup->ubNextX || !pGroup->ubNextY )
 	{
 		if( !pGroup->fPlayer && pGroup->pEnemyGroup->ubIntention != STAGING 
-												 && pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
+												&& pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
 		{
 			#ifdef JA2BETAVERSION
-				SAIReportError( L"Strategic AI:  Internal error (floating group).  Please send PRIOR save file and Strategic Decisions.txt." );
+				SAIReportError( L"Strategic AI:	Internal error (floating group).	Please send PRIOR save file and Strategic Decisions.txt." );
 			#endif
 			if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 			{
@@ -833,7 +831,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 		if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites != pGroup->ubGroupSize ||
 				pGroup->ubGroupSize > iMaxEnemyGroupSize )
 		{
-			SAIReportError( L"Strategic AI:  Internal error (bad group populations).  Please send PRIOR save file and Strategic Decisions.txt." );
+			SAIReportError( L"Strategic AI:	Internal error (bad group populations).	Please send PRIOR save file and Strategic Decisions.txt." );
 		}
 	#endif
 }
@@ -845,11 +843,11 @@ void ValidateLargeGroup( GROUP *pGroup )
 		if( pGroup->ubGroupSize > 25 )
 		{
 			CHAR16 str[ 512 ];
-			swprintf( str, L"Strategic AI warning:  Enemy group containing %d soldiers "
-									 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
-									 L"to evaluate a potential problems with very large enemy groups.",
-									 pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
-									 pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
+			swprintf( str, L"Strategic AI warning:	Enemy group containing %d soldiers "
+									L"(%d admins, %d troops, %d elites) in sector %c%d.	This message is a temporary test message "
+									L"to evaluate a potential problems with very large enemy groups.",
+									pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
+									pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
 			SAIReportError( str );
 		}
 	#endif
@@ -926,7 +924,7 @@ void ValidatePlayersAreInOneGroupOnly()
 		//Go through each group and determine if the player exists in multiple groups
 		//iGroups ------ counts the number of groups the merc is in.
 		//iMismatches -- counts the cases where the merc's ubGroupID doesn't match the ubGroupID of the group
-		//               the merc exists in.
+		//				the merc exists in.
 		pGroup = gpGroupList;
 		while( pGroup )
 		{
@@ -995,18 +993,18 @@ void ValidatePlayersAreInOneGroupOnly()
 					pGroup = GetGroup( pSoldier->ubGroupID );
 					Assert( pGroup );
 					Assert( pOtherGroup );
-					swprintf( str, L"%s in %c%d thinks he/she is in group %d in %c%d but isn't.  "
-												 L"Group %d in %c%d thinks %s is in the group but isn't.  %s will be assigned to a unique squad.  "
-												 L"Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, 
-												 pSoldier->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-												 pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX, pSoldier->name,
-												 pSoldier->name );
+					swprintf( str, L"%s in %c%d thinks he/she is in group %d in %c%d but isn't.	"
+												L"Group %d in %c%d thinks %s is in the group but isn't.	%s will be assigned to a unique squad.	"
+												L"Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
+												pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, 
+												pSoldier->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
+												pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX, pSoldier->name,
+												pSoldier->name );
 				}
 				else if( iGroups > 1 && iMismatches == iGroups - 1 )
-				{ //This is the error that is being targetted.  This means that the merc exists in multiple groups though the merc
-					//knows what group he is supposed to be in.  This error can be corrected, by manually removing the merc from all
-					//mismatch groups.  This is indicative of a merc being reassigned to another group without removing him first.
+				{ //This is the error that is being targetted.	This means that the merc exists in multiple groups though the merc
+					//knows what group he is supposed to be in.	This error can be corrected, by manually removing the merc from all
+					//mismatch groups.	This is indicative of a merc being reassigned to another group without removing him first.
 
 					//Get a pointer to the first mismatch group that contains the merc
 					iMismatches = 0;
@@ -1039,21 +1037,21 @@ void ValidatePlayersAreInOneGroupOnly()
 					Assert( pGroup );
 					Assert( pOtherGroup );
 					
-					swprintf( str, L"%s in %c%d has been found in multiple groups.  The group he/she is supposed "
-												 L"to be in is group %d in %c%d, but %s was also found to be in group %d in %c%d.  %s was found in %d groups "
-												 L"total.  Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, 
-												 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-												 pSoldier->name, pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX,
-												 pSoldier->name, iGroups );
+					swprintf( str, L"%s in %c%d has been found in multiple groups.	The group he/she is supposed "
+												L"to be in is group %d in %c%d, but %s was also found to be in group %d in %c%d.	%s was found in %d groups "
+												L"total.	Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
+												pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, 
+												pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
+												pSoldier->name, pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX,
+												pSoldier->name, iGroups );
 				}
 				else if( !iGroups )
-				{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his 
+				{ //The merc cannot be found in any group!	This should never happen!	We will assign the merc into his 
 					//own unique squad as a correction.
-					swprintf( str, L"%s in %c%d cannot be found in any group.  %s will be assigned to a unique group/squad.  "
-												 L"Please provide details on how you think this may have happened.  Send screenshot and PRIOR save.  Do not send a save "
-												 L"you create after this point as the info will have been corrected by then.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, pSoldier->name );
+					swprintf( str, L"%s in %c%d cannot be found in any group.	%s will be assigned to a unique group/squad.	"
+												L"Please provide details on how you think this may have happened.	Send screenshot and PRIOR save.	Do not send a save "
+												L"you create after this point as the info will have been corrected by then.",
+												pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, pSoldier->name );
 				}
 			}
 
@@ -1065,24 +1063,24 @@ void ValidatePlayersAreInOneGroupOnly()
 				AddCharacterToUniqueSquad( pSoldier );
 			}
 			else if( iGroups > 1 && iMismatches == iGroups - 1 )
-			{ //This is the error that is being targetted.  This means that the merc exists in multiple groups though the merc
-				//knows what group he is supposed to be in.  This error can be corrected, by manually removing the merc from all
-				//mismatch groups.  This is indicative of a merc being reassigned to another group without removing him first.
+			{ //This is the error that is being targetted.	This means that the merc exists in multiple groups though the merc
+				//knows what group he is supposed to be in.	This error can be corrected, by manually removing the merc from all
+				//mismatch groups.	This is indicative of a merc being reassigned to another group without removing him first.
 				RemovePlayersFromAllMismatchGroups( pSoldier );
 				pSoldier->ubGroupID = ubGroupID;
 			}
 			else if( !iGroups )
-			{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his 
+			{ //The merc cannot be found in any group!	This should never happen!	We will assign the merc into his 
 				//own unique squad as a correction.
 				AddCharacterToUniqueSquad( pSoldier );
 			}
 		}
 	}
 	if( iNumErrors )
-	{ //The first error to be detected is the one responsible for building the strings.  We will simply append another string containing
+	{ //The first error to be detected is the one responsible for building the strings.	We will simply append another string containing
 		//the total number of detected errors.
 		CHAR16 tempstr[ 128 ];
-		swprintf( tempstr, L"  A total of %d related errors have been detected.", iNumErrors );
+		swprintf( tempstr, L"	A total of %d related errors have been detected.", iNumErrors );
 		wcscat( str, tempstr );
 		SAIReportError( str );
 	}
@@ -1228,7 +1226,7 @@ void InitStrategicAI()
 		SectorInfo[ i ].ubGarrisonID = NO_GARRISON;
 	}
 
-	//copy over the original army composition as it does get modified during the campaign.  This
+	//copy over the original army composition as it does get modified during the campaign.	This
 	//bulletproofs starting the game over again.
 	memcpy( gArmyComp, gOrigArmyComp, sizeof( gArmyComp ) );
 
@@ -1242,7 +1240,7 @@ void InitStrategicAI()
 			gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
 			break;
 			// Kaiden: original Experienced troop compositions:
-		  //case DIF_LEVEL_MEDIUM:
+		//case DIF_LEVEL_MEDIUM:
 			//gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
 			//gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
 			//break;
@@ -1339,8 +1337,8 @@ void InitStrategicAI()
 			{
 				gArmyComp[ i ].bDesiredPopulation = (INT8)min( iMaxEnemyGroupSize, (gArmyComp[ i ].bDesiredPopulation * giForcePercentage / 100) );
 				if( gArmyComp[ i ].bStartPopulation != iMaxEnemyGroupSize )
-				{ //if the value is MAX_STRATEGIC_TEAM_SIZE, then that means the particular sector is a spawning location.  
-					//Don't modify the value if it is MAX_STRATEGIC_TEAM_SIZE.  Everything else is game.
+				{ //if the value is MAX_STRATEGIC_TEAM_SIZE, then that means the particular sector is a spawning location.	
+					//Don't modify the value if it is MAX_STRATEGIC_TEAM_SIZE.	Everything else is game.
 					gArmyComp[ i ].bStartPopulation = (INT8)min( iMaxEnemyGroupSize, (gArmyComp[ i ].bStartPopulation * giForcePercentage / 100) );
 				}
 			}
@@ -1442,7 +1440,7 @@ void InitStrategicAI()
 		}
 		//Calculate weight (range is -20 to +20 before multiplier).
 		//The multiplier of 3 brings it to a range of -96 to +96 which is
-		//close enough to a plus/minus 100%.  The resultant percentage is then
+		//close enough to a plus/minus 100%.	The resultant percentage is then
 		//converted based on the priority.
 		iWeight = (iDesiredPop - iStartPop) * 3;
 		if( iWeight > 0 )
@@ -1469,7 +1467,7 @@ void InitStrategicAI()
 	//Now, initialize each of the patrol groups
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{	// IGNORE COMMENT, FEATURE REMOVED!
-		//Some of the patrol groups aren't there at the beginning of the game.  This is 
+		//Some of the patrol groups aren't there at the beginning of the game.	This is 
 		//based on the difficulty settings in the above patrol table.
 		//if( gPatrolGroup[ i ].ubUNUSEDStartIfDifficulty <= gGameOptions.ubDifficultyLevel )
 		{ //Add this patrol group now.
@@ -1483,7 +1481,7 @@ void InitStrategicAI()
 			Assert( pGroup );
 
 			if( i == 3 || i == 4 )
-			{ //Special case:  Two patrol groups are administrator groups -- rest are troops
+			{ //Special case:	Two patrol groups are administrator groups -- rest are troops
 				pGroup->pEnemyGroup->ubNumAdmins = pGroup->pEnemyGroup->ubNumTroops;
 				pGroup->pEnemyGroup->ubNumTroops = 0;
 			}
@@ -1523,7 +1521,7 @@ void InitStrategicAI()
 	//SectorInfo[SEC_I8].uiFlags |= SF_SAM_SITE;
 	//SectorInfo[SEC_N4].uiFlags |= SF_SAM_SITE;
 
-	//final thing to do is choose 1 cache map out of 5 possible maps.  Simply select the sector randomly,
+	//final thing to do is choose 1 cache map out of 5 possible maps.	Simply select the sector randomly,
 	//set up the flags to use the alternate map, then place 8-12 regular troops there (no ai though).
 	//changing MAX_STRATEGIC_TEAM_SIZE may require changes to to the defending force here.
 	if ( !gGameExternalOptions.fEnableAllWeaponCaches )
@@ -1611,7 +1609,7 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 	SECTORINFO *pSector;
 	BOOLEAN fPermittedToAttack = TRUE;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
  
 	pSector = &SectorInfo[ ubSectorID ];
 	fPermittedToAttack = OkayForEnemyToMoveThroughSector( ubSectorID );
@@ -1626,7 +1624,7 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 				if( fPermittedToAttack )
 				{
 					if( GroupAtFinalDestination( *pGroup ) )
-					{ //High priority reinforcements have arrived.  This overrides most other situations.
+					{ //High priority reinforcements have arrived.	This overrides most other situations.
 						return TRUE;
 					}
 				}
@@ -1755,7 +1753,7 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 		return;
 	}
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -1779,7 +1777,7 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 			if( pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins > iMaxEnemyGroupSize )
 			{
 				#ifdef JA2BETAVERSION
-					LogStrategicEvent( "ERROR:  Sector %c%d now has %d enemies (max %d).", 
+					LogStrategicEvent( "ERROR:	Sector %c%d now has %d enemies (max %d).", 
 						gGarrisonGroup[ pSector->ubGarrisonID ].ubSectorID / 16 + 'A' , gGarrisonGroup[ pSector->ubGarrisonID ].ubSectorID % 16,
 						pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins, iMaxEnemyGroupSize );
 				#endif
@@ -1825,7 +1823,7 @@ BOOLEAN AttemptToNoticeEmptySectorSucceeds()
 {
 	PERFORMANCE_MARKER
 	if( gubNumAwareBattles || gfAutoAIAware )
-	{ //The queen is in high-alert and is searching for players.  All adjacent checks will automatically succeed.
+	{ //The queen is in high-alert and is searching for players.	All adjacent checks will automatically succeed.
 		return TRUE;
 	}
 	if( DayTime() )
@@ -1856,14 +1854,14 @@ BOOLEAN AttemptToNoticeEmptySectorSucceeds()
 }
 
 //Calling the function assumes that a player group is found to be adjacent to an enemy group.
-//This uses the alertness rating to emulate the chance that the group will notice.  If it does 
+//This uses the alertness rating to emulate the chance that the group will notice.	If it does 
 //notice, then the alertness drops accordingly to simulate a period of time where the enemy would
-//not notice as much.  If it fails, the alertness gradually increases until it succeeds.
+//not notice as much.	If it fails, the alertness gradually increases until it succeeds.
 BOOLEAN AttemptToNoticeAdjacentGroupSucceeds()
 {
 	PERFORMANCE_MARKER
 	if( gubNumAwareBattles || gfAutoAIAware )
-	{ //The queen is in high-alert and is searching for players.  All adjacent checks will automatically succeed.
+	{ //The queen is in high-alert and is searching for players.	All adjacent checks will automatically succeed.
 		return TRUE;
 	}
 	if( DayTime() )
@@ -1900,7 +1898,7 @@ BOOLEAN HandleEmptySectorNoticedByPatrolGroup( GROUP *pGroup, UINT8 ubEmptySecto
 	UINT8 ubSectorX = (UINT8)(ubEmptySectorID % 16) + 1;
 	UINT8 ubSectorY = (UINT8)(ubEmptySectorID / 16) + 1;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	ubGarrisonID = SectorInfo[ ubEmptySectorID ].ubGarrisonID;
 	if( ubGarrisonID != NO_GARRISON )
@@ -1949,7 +1947,7 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 		return;
 	}
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gGarrisonGroup[ ubDstGarrisonID ].ubPendingGroupID )
 	{ //A group is already on-route, so don't send anybody from here.
@@ -1977,7 +1975,7 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 	UINT16 usOffensePoints;
 	UINT8 ubSectorX, ubSectorY;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	ubSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
@@ -1997,7 +1995,7 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 	{
 		return TRUE;
 	}
-	//Before returning false, determine if reinforcements have been denied repeatedly.  If so, then
+	//Before returning false, determine if reinforcements have been denied repeatedly.	If so, then
 	//we might send an augmented force to take it back.
 	if( gubGarrisonReinforcementsDenied[ iGarrisonID ] + usOffensePoints > *pusDefencePoints )
 	{
@@ -2007,7 +2005,7 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 		#endif
 		return TRUE;
 	}
-	//Reinforcements will have to wait.  For now, increase the reinforcements denied.  The amount increase is 20 percent
+	//Reinforcements will have to wait.	For now, increase the reinforcements denied.	The amount increase is 20 percent
 	//of the garrison's priority.
 	gubGarrisonReinforcementsDenied[ iGarrisonID ] += (UINT8)(gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bPriority / 2);
 
@@ -2016,7 +2014,7 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 
 //if the group has arrived in a sector, and doesn't have any particular orders, then
 //send him back where they came from.
-//RETURNS TRUE if the group is deleted or told to move somewhere else.  
+//RETURNS TRUE if the group is deleted or told to move somewhere else.	
 //This is important as the calling function will need
 //to abort processing of the group for obvious reasons.
 BOOLEAN EvaluateGroupSituation( GROUP *pGroup )
@@ -2037,14 +2035,14 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 	}
 	Assert( !pGroup->fPlayer );
 	if( pGroup->pEnemyGroup->ubIntention == PURSUIT )
-	{ //Lost the player group that he was going to attack.  Return to original position.
+	{ //Lost the player group that he was going to attack.	Return to original position.
 		ReassignAIGroup( &pGroup );
 		return TRUE;
 	}
 	else if( pGroup->pEnemyGroup->ubIntention == REINFORCEMENTS )
 	{ 
-   Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
-   //The group has arrived at the location where he is supposed to reinforce.
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
+	//The group has arrived at the location where he is supposed to reinforce.
 		//Step 1 -- Check for matching garrison location
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
@@ -2073,7 +2071,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 				}
 				else
 				{ //The group was sent back to the queen's palace (probably because they couldn't be reassigned 
-					//anywhere else, but it is possible that the queen's sector is requesting the reinforcements.  In
+					//anywhere else, but it is possible that the queen's sector is requesting the reinforcements.	In
 					//any case, if the queen's sector is less than full strength, fill it up first, then
 					//simply add the rest to the global pool.
 					if( pSector->ubNumElites < iMaxEnemyGroupSize )
@@ -2087,7 +2085,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 	
 							pSector->ubNumElites = iMaxEnemyGroupSize;
 							#ifdef JA2BETAVERSION
-								LogStrategicEvent( "%d reinforcements have arrived to garrison queen's sector.  The excess troops will be relocated to the reinforcement pool.", 
+								LogStrategicEvent( "%d reinforcements have arrived to garrison queen's sector.	The excess troops will be relocated to the reinforcement pool.", 
 									pGroup->ubGroupSize );
 							#endif
 						}
@@ -2143,11 +2141,11 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 						UINT8 ubCut;
 						#ifdef JA2BETAVERSION
 						CHAR16 str[512];
-						swprintf( str, L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d."
-													 L"Please send Strategic Decisions.txt and PRIOR save.", 
-													 pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
-													 pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
-													 pPatrolGroup->ubGroupSize, iMaxEnemyGroupSize );
+						swprintf( str, L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.	Size truncated from %d to %d."
+													L"Please send Strategic Decisions.txt and PRIOR save.", 
+													pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
+													pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
+													pPatrolGroup->ubGroupSize, iMaxEnemyGroupSize );
 						SAIReportError( str );
 						#endif
 						//truncate the group size.
@@ -2234,8 +2232,8 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		if( !pGroup->fPlayer )
 		{
 			//Exception case!
-			//In the beginning of the game, a group is sent to A9 after the first battle.  If you leave A9, when they arrive,
-			//they will stay there indefinately because the AI isn't awake.  What we do, is if this is a group in A9, then
+			//In the beginning of the game, a group is sent to A9 after the first battle.	If you leave A9, when they arrive,
+			//they will stay there indefinately because the AI isn't awake.	What we do, is if this is a group in A9, then
 			//send them home.
 			if( GroupAtFinalDestination( pGroup ) )
 			{
@@ -2259,7 +2257,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 	}
 	if( !pGroup->fPlayer )
-	{	//The enemy group has arrived at a new sector and now controls it.  
+	{	//The enemy group has arrived at a new sector and now controls it.	
 		//Look in each of the four directions, and the alertness rating will
 		//determine the chance to detect any players that may exist in that sector.
 		pEnemyGroup = pGroup;
@@ -2342,13 +2340,13 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 	}
 	else 
-	{ //The player group has arrived at a new sector and now controls it.  
+	{ //The player group has arrived at a new sector and now controls it.	
 		//Look in each of the four directions, and the enemy alertness rating will
 		//determine if the enemy notices that the player is here.
 		//Additionally, there are also stationary enemy groups that may also notice the
 		//player's new presence.
-		//NOTE:  Always returns false because it is the player group that we are handling.  We
-		//       don't mess with the player group here!
+		//NOTE:	Always returns false because it is the player group that we are handling.	We
+		//		don't mess with the player group here!
 		pPlayerGroup = pGroup;
 		if( pPlayerGroup->ubSectorZ )
 			return FALSE;
@@ -2433,9 +2431,9 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 		return;
 	}
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
-  
-  //First, determine if the sector is still owned by the enemy.  
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
+	
+	//First, determine if the sector is still owned by the enemy.	
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -2559,7 +2557,7 @@ void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 	PERFORMANCE_MARKER
 	INT32 i;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
@@ -2629,7 +2627,7 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 	INT32 iWeight, iPrevWeight;
 	INT32 iDesiredPop, iCurrentPop, iPriority;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 6 );
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
@@ -2646,7 +2644,7 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 
 	//Calculate weight (range is -20 to +20 before multiplier).
 	//The multiplier of 3 brings it to a range of -96 to +96 which is
-	//close enough to a plus/minus 100%.  The resultant percentage is then
+	//close enough to a plus/minus 100%.	The resultant percentage is then
 	//converted based on the priority.
 	iWeight = (iDesiredPop - iCurrentPop) * 3;
 	if( iWeight > 0 )
@@ -2674,7 +2672,7 @@ void RecalculateSectorWeight( UINT8 ubSectorID )
 	PERFORMANCE_MARKER
 	INT32 i;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID )
@@ -2714,15 +2712,15 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
-	//Check to see if we could send reinforcements from Alma.  Only Drassen/Cambria get preferred
+	//Check to see if we could send reinforcements from Alma.	Only Drassen/Cambria get preferred
 	//service from Alma, due to it's proximity and Alma's purpose as a forward military base.
 	ubSectorID = gGarrisonGroup[ iDstGarrisonID ].ubSectorID;
 	switch( ubSectorID )
 	{
 		case SEC_B13: case SEC_C13: case SEC_D13: case SEC_D15:								//Drassen + nearby SAM site
-		case SEC_F8:  case SEC_F9:  case SEC_G8:  case SEC_G9:  case SEC_H8:	//Cambria
+		case SEC_F8:	case SEC_F9:	case SEC_G8:	case SEC_G9:	case SEC_H8:	//Cambria
 			//reinforcements will be primarily sent from Alma whenever possible.
 
 			//find which the first sector that contains Alma soldiers.
@@ -2732,7 +2730,7 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 					break;
 			}
 			iSrcGarrisonID = i;
-			//which of these 4 Alma garrisons have the most reinforcements available?  It is
+			//which of these 4 Alma garrisons have the most reinforcements available?	It is
 			//possible that none of these garrisons can provide any reinforcements.
 			bBestWeight = 0;
 			for( i = iSrcGarrisonID; i < iSrcGarrisonID + 4; i++ )
@@ -2757,7 +2755,7 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 			break;
 	}
 
-	//The Alma case either wasn't applicable or failed to have the right reinforcements.  Do a general weighted search.
+	//The Alma case either wasn't applicable or failed to have the right reinforcements.	Do a general weighted search.
 	iRandom = Random( giReinforcementPoints );
 	for( iSrcGarrisonID = 0; iSrcGarrisonID < giGarrisonArraySize; iSrcGarrisonID++ )
 	{ //go through the garrisons
@@ -2777,7 +2775,7 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 		}
 	}
 
-	//So far we have failed on all accounts.  Now, simply process all the garrisons, and return the first garrison that can 
+	//So far we have failed on all accounts.	Now, simply process all the garrisons, and return the first garrison that can 
 	//provide the reinforcements.
 	for( iSrcGarrisonID = 0; iSrcGarrisonID < giGarrisonArraySize; iSrcGarrisonID++ )
 	{ //go through the garrisons
@@ -2793,7 +2791,7 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 		}
 	}
 
-	//Well, if we get this far, the queen must be low on troops.  Send whatever we can.
+	//Well, if we get this far, the queen must be low on troops.	Send whatever we can.
 	iRandom = Random( giReinforcementPoints );
 	for( iSrcGarrisonID = 0; iSrcGarrisonID < giGarrisonArraySize; iSrcGarrisonID++ )
 	{ //go through the garrisons
@@ -2826,12 +2824,12 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 	UINT8 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 8 );
 
 	if( gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_B13 ||
-		  gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_C13 ||
-		  gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_D13 )
+		gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_C13 ||
+		gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_D13 )
 	{
 		pSector = NULL;
 	}
@@ -2980,7 +2978,7 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 				SAIReportError( L"Attempting to send reinforcements from a garrison that doesn't have any! -- KM:0 (with prior saved game and strategic decisions.txt)" );
 				return;
 			}
-			//Send the lowest of the two:  number requested or number available
+			//Send the lowest of the two:	number requested or number available
 
 			iReinforcementsApproved = min( iReinforcementsRequested, iReinforcementsAvailable );
 			if( iReinforcementsApproved > iMaxReinforcementsAllowed - ubNumExtraReinforcements )
@@ -3060,7 +3058,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ValidateWeights( 21 );
 
 	//Determine how many units the patrol group needs.
@@ -3134,7 +3132,7 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 					if( ubSrcSectorX != gWorldSectorX || ubSrcSectorY != gWorldSectorY || gbWorldSectorZ > 0 )
 					{ //The reinforcements aren't coming from the currently loaded sector!
 						iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
-						//Send the lowest of the two:  number requested or number available
+						//Send the lowest of the two:	number requested or number available
 						iReinforcementsApproved = min( iReinforcementsRequested, iReinforcementsAvailable );
 						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
 						pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
@@ -3200,7 +3198,7 @@ void EvaluateQueenSituation()
 	}
 
 	if( !giReinforcementPool )
-	{ //Queen has run out of reinforcements.  Simulate recruiting and training new troops
+	{ //Queen has run out of reinforcements.	Simulate recruiting and training new troops
 		uiOffset *= 10;
 		//Madd: don't need an unlimited troops check here, since they can never run out like this 
 		giReinforcementPool += ( gGameExternalOptions.guiBaseQueenPoolIncrement * gGameOptions.ubDifficultyLevel ) * ( 100 + CurrentPlayerProgressPercentage() ) / 100 ;
@@ -3234,7 +3232,7 @@ void EvaluateQueenSituation()
 
 	iOrigRequestPoints = giRequestPoints;	// debug only!
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//go through garrisons first
 	for( i = 0; i < giGarrisonArraySize; i++ )
@@ -3387,26 +3385,26 @@ BOOLEAN SaveStrategicAI( HWFILE hFile )
 			return FALSE;
 	}
 	//Save the garrison information!
-  /* Step 1: fill an EMPTY GARRISON for later padding */
+	/* Step 1: fill an EMPTY GARRISON for later padding */
 	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
-  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
-    {
-    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
-    }
+	if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+	{
+	giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+	}
 
-  /* Step 2: write current Garrison Block of <giGarrisonArraySize> Elements */
-  FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
+	/* Step 2: write current Garrison Block of <giGarrisonArraySize> Elements */
+	FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 	if( uiNumBytesWritten != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 		return FALSE;
 
-  /* Step 3: after doing well, calculate how many Garrisons kept empty (and therefore are not saved) 
-   * in <strategic AI.h> it is defined as MAX_GARRISON_GROUPS 100. To have the same offset for the next field
-   * every time, we have to pad the unused garrisons until we have stored 100
-   */
+	/* Step 3: after doing well, calculate how many Garrisons kept empty (and therefore are not saved) 
+	* in <strategic AI.h> it is defined as MAX_GARRISON_GROUPS 100. To have the same offset for the next field
+	* every time, we have to pad the unused garrisons until we have stored 100
+	*/
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- > 0 )
 	{
-    /* write an empty garison as a padding filling block */
+	/* write an empty garison as a padding filling block */
 		FileWrite( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
 		if( uiNumBytesWritten != sizeof( GARRISON_GROUP ) )
 			return FALSE;
@@ -3564,28 +3562,28 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		MemFree( gGarrisonGroup );
 	}
 
-  /* giGarrisonArraySize has been zero here. Found it several times when loading
-   * a differnet build of JA2.1.13. Now fixed a little bit, I hope.
-   */
-  if( giGarrisonArraySize<iOrigGarrisonArraySize || giGarrisonArraySize<1 )
-    {
-    giGarrisonArraySize = iOrigGarrisonArraySize;
-    }
-  if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
-    {
-    giGarrisonArraySize = SAVED_GARRISON_GROUPS;
-    }
+	/* giGarrisonArraySize has been zero here. Found it several times when loading
+	* a differnet build of JA2.1.13. Now fixed a little bit, I hope.
+	*/
+	if( giGarrisonArraySize<iOrigGarrisonArraySize || giGarrisonArraySize<1 )
+	{
+	giGarrisonArraySize = iOrigGarrisonArraySize;
+	}
+	if( giGarrisonArraySize > SAVED_GARRISON_GROUPS )
+	{
+	giGarrisonArraySize = SAVED_GARRISON_GROUPS;
+	}
 
-  gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
-  Assert( gGarrisonGroup );
+	gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+	Assert( gGarrisonGroup );
 	FileRead( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 	if( uiNumBytesRead != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
 	{
 		return FALSE;
 	}
-  /* if the Savegame File contains more Garrisons then our Array, toss the remaining ones into the saucer */
-  i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
-	while( i-- > 0 ) /* prevent underrun, 2007-03-03, Sgt. Kolja  */
+	/* if the Savegame File contains more Garrisons then our Array, toss the remaining ones into the saucer */
+	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
+	while( i-- > 0 ) /* prevent underrun, 2007-03-03, Sgt. Kolja	*/
 	{
 		FileRead( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesRead );
 		if( uiNumBytesRead != sizeof( GARRISON_GROUP ) )
@@ -3624,7 +3622,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		InitStrategicMovementCosts();
 	#endif
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.
@@ -3864,9 +3862,9 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	}
 	
 	//KM : August 4, 1999 patch fix
-	//     This addresses the problem of not having any soldiers in sector N7 when playing the game under easy difficulty.
-	//		 If captured and interrogated, the player would find no soldiers defending the sector.  This changes the composition
-	//     so that it will always be there, and adds the soldiers accordingly if the sector isn't loaded when the update is made.
+	//	 This addresses the problem of not having any soldiers in sector N7 when playing the game under easy difficulty.
+	//		If captured and interrogated, the player would find no soldiers defending the sector.	This changes the composition
+	//	 so that it will always be there, and adds the soldiers accordingly if the sector isn't loaded when the update is made.
 	if( ubSAIVersion < 27 )
 	{
 		if( gGameOptions.ubDifficultyLevel == DIF_LEVEL_EASY )
@@ -3951,9 +3949,9 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		InitStrategicMovementCosts();
 	}
 
-	//KM : Aug 11, 1999 -- Patch fix:  Blindly update the airspace control.  There is a bug somewhere 
-	//		 that is failing to keep this information up to date, and I failed to find it.  At least this 
-	//		 will patch saves.
+	//KM : Aug 11, 1999 -- Patch fix:	Blindly update the airspace control.	There is a bug somewhere 
+	//		that is failing to keep this information up to date, and I failed to find it.	At least this 
+	//		will patch saves.
 	UpdateAirspaceControl( );
 
 	EvolveQueenPriorityPhase( TRUE );
@@ -4017,7 +4015,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 		return;
 	}
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gubQueenPriorityPhase > ubNewPhase )
 	{
@@ -4031,19 +4029,19 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 			LogStrategicEvent( "The queen's defence priority has increased from %d0%% to %d0%%.", gubQueenPriorityPhase, ubNewPhase );
 		#endif
 	} 
-  else 
-  {
+	else 
+	{
 		#ifdef JA2BETAVERSION
 			LogStrategicEvent( "The queen's defence priority is the same (%d0%%), but has been forced to update.", gubQueenPriorityPhase );
 		#endif
-  }
+	}
 
 	gubQueenPriorityPhase = ubNewPhase;
 
-	//The phase value refers to the deviation percentage she will apply to original garrison values.  
-	//All sector values are evaluated to see how many of those sectors are enemy controlled.  If they 
-	//are controlled by her, the desired number will be increased as well as the priority.  On the other
-	//hand, if she doesn't own those sectors, the values will be decreased instead.  All values are based off of
+	//The phase value refers to the deviation percentage she will apply to original garrison values.	
+	//All sector values are evaluated to see how many of those sectors are enemy controlled.	If they 
+	//are controlled by her, the desired number will be increased as well as the priority.	On the other
+	//hand, if she doesn't own those sectors, the values will be decreased instead.	All values are based off of
 	//the originals.
 	memset( ubOwned, 0, MAX_ARMY_COMPOSITIONS );
 	memset( ubTotal, 0, MAX_ARMY_COMPOSITIONS );
@@ -4076,8 +4074,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 				//don't consider these compositions
 				continue;
 		}
-		//If the queen owns them ALL, then she gets the maximum defensive bonus.  If she owns NONE,
-		//then she gets a maximum defensive penalty.  Everything else lies in the middle.  The legal
+		//If the queen owns them ALL, then she gets the maximum defensive bonus.	If she owns NONE,
+		//then she gets a maximum defensive penalty.	Everything else lies in the middle.	The legal
 		//range is +-50.
 		if( ubTotal[ i ] )
 		{
@@ -4089,7 +4087,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 		}
 
 		if ( gfAggressiveQueen )
-			iFactor = abs(iFactor); // Madd: The Queen never gets a defensive penalty.  The range for iFactor becomes 0-50.  This should increase the priorities for sectors outside Meduna as the queen loses sectors and keep up the attacks.  This is only going to work well if the reinforcement pool is unlimited, as sectors priorities won't ever go down really low.  
+			iFactor = abs(iFactor); // Madd: The Queen never gets a defensive penalty.	The range for iFactor becomes 0-50.	This should increase the priorities for sectors outside Meduna as the queen loses sectors and keep up the attacks.	This is only going to work well if the reinforcement pool is unlimited, as sectors priorities won't ever go down really low.	
 
 		iFactor = iFactor * gubQueenPriorityPhase / 10;
 
@@ -4129,7 +4127,7 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 
 		for( i = 0; i < giGarrisonArraySize; i++ )
 		{
-			//if we are dealing with extra elites, then augment elite compositions (but only if they exist in the sector).  
+			//if we are dealing with extra elites, then augment elite compositions (but only if they exist in the sector).	
 			//If the queen still owns the town by more than 65% (iFactor >= 15), then upgrade troops to elites in those sectors.
 			index = gGarrisonGroup[ i ].ubComposition;
 			switch( index )
@@ -4218,7 +4216,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 		case STRATEGIC_AI_ACTION_KINGPIN_DEAD:
 			//Immediate send a small garrison to C5 (to discourage access to Tony the dealer)
 			/*
-     Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 * added NULL fix, 2007-03-03, Sgt. Kolja *
+	 Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	* added NULL fix, 2007-03-03, Sgt. Kolja *
 
 			for( i = 0; i < giGarrisonArraySize; i++ )
 			{
@@ -4237,7 +4235,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			break;
 
 		case NPC_ACTION_SEND_SOLDIERS_TO_DRASSEN:
-			//Send 6, 9, or 12 troops (based on difficulty) one of the Drassen sectors.  If nobody is there when they arrive,
+			//Send 6, 9, or 12 troops (based on difficulty) one of the Drassen sectors.	If nobody is there when they arrive,
 			//those troops will get reassigned.
 
 			//if( Chance( 50 ) )
@@ -4325,7 +4323,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 
 		case NPC_ACTION_SEND_SOLDIERS_TO_BATTLE_LOCATION:
-			//Send 4, 8, or 12 troops (based on difficulty) to the location of the first battle.  If nobody is there when they arrive,
+			//Send 4, 8, or 12 troops (based on difficulty) to the location of the first battle.	If nobody is there when they arrive,
 			//those troops will get reassigned.
 			ubSectorID = (UINT8)STRATEGIC_INDEX_TO_SECTOR_INFO( sWorldSectorLocationOfFirstBattle ); 
 			pSector = &SectorInfo[ ubSectorID ];
@@ -4338,8 +4336,8 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			
 			giReinforcementPool = max( giReinforcementPool, 0 );
 
-			//Determine if the battle location actually has a garrison assignment.  If so, and the following
-			//checks succeed, the enemies will be sent to attack and reinforce that sector.  Otherwise, the
+			//Determine if the battle location actually has a garrison assignment.	If so, and the following
+			//checks succeed, the enemies will be sent to attack and reinforce that sector.	Otherwise, the
 			//enemies will simply check it out, then leave.
 			if( pSector->ubGarrisonID != NO_GARRISON )
 			{ //sector has a garrison
@@ -4447,7 +4445,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 #ifdef JA2BETAVERSION
 
-void LogStrategicMsg( STR8  str, ... )
+void LogStrategicMsg( STR8	str, ... )
 {
 	PERFORMANCE_MARKER
 	va_list argptr;
@@ -4459,7 +4457,7 @@ void LogStrategicMsg( STR8  str, ... )
 	if( !fp )
 		return;
 
-	va_start(argptr, str );       	
+	va_start(argptr, str );			
 	vsprintf( string, str, argptr);				
 	va_end(argptr);
 
@@ -4477,7 +4475,7 @@ void LogStrategicMsg( STR8  str, ... )
 	fclose( fp );
 }
 
-void LogStrategicEvent( STR8  str, ... )
+void LogStrategicEvent( STR8	str, ... )
 {
 	PERFORMANCE_MARKER
 	va_list argptr;
@@ -4489,7 +4487,7 @@ void LogStrategicEvent( STR8  str, ... )
 	if( !fp )
 		return;
 
-	va_start(argptr, str );       	
+	va_start(argptr, str );			
 	vsprintf( string, str, argptr);				
 	va_end(argptr);
 
@@ -4535,14 +4533,14 @@ void InvestigateSector( UINT8 ubSectorID )
 		UINT8 ubAdmins[4], ubTroops[4], ubElites[4], ubNumToSend, ubTotal;
 
 		//Lalien: enabled again
-		//@@@ Disabled!  Also commented out the posting of the event
+		//@@@ Disabled!	Also commented out the posting of the event
 		//return;
 
 		sSectorX = (INT16)SECTORX( ubSectorID );
 		sSectorY = (INT16)SECTORY( ubSectorID );
 
 		if( guiCurrentScreen != GAME_SCREEN )
-		{ //If we aren't in tactical, then don't do this.  It is strictly added flavour and would be irritating if
+		{ //If we aren't in tactical, then don't do this.	It is strictly added flavour and would be irritating if
 			//you got the prebattle interface in mapscreen while compressing time (right after clearing it...)
 			return;
 		}
@@ -4552,7 +4550,7 @@ void InvestigateSector( UINT8 ubSectorID )
 			return;
 		}
 
-		//Now, we will investigate this sector if there are forces in adjacent towns.  For each 
+		//Now, we will investigate this sector if there are forces in adjacent towns.	For each 
 		//sector that applies, we will add 1-2 soldiers.
 
 		ubTotal = 0;
@@ -4662,7 +4660,7 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 		return;
 	}
 
-	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
 	{ 
@@ -4690,9 +4688,9 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 		//Lalien
 		if ( gGameExternalOptions.gfReassignPendingReinforcements == TRUE )
 		{
-			//check to see if there are any pending reinforcements.  If so, then cancel their orders and have them
-			//reassigned, so the player doesn't get pestered.  This is a feature that *dumbs* down the AI, and is done
-			//for the sake of gameplay.  We don't want the game to be tedious.
+			//check to see if there are any pending reinforcements.	If so, then cancel their orders and have them
+			//reassigned, so the player doesn't get pestered.	This is a feature that *dumbs* down the AI, and is done
+			//for the sake of gameplay.	We don't want the game to be tedious.
 			if( !pSector->uiTimeLastPlayerLiberated )
 			{
 				pSector->uiTimeLastPlayerLiberated = GetWorldTotalSeconds();
@@ -4718,11 +4716,11 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	}
 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
-	//will cause them to avoid the sector.  Returns the number of redirected groups.
+	//will cause them to avoid the sector.	Returns the number of redirected groups.
 	RedirectEnemyGroupsMovingThroughSector( (UINT8)sSectorX, (UINT8)sSectorY );
 
 	//For the purposes of a town being lost, we shall check to see if the queen wishes to investigate quickly after
-	//losing.  This is done in town sectors when the character first takes it.
+	//losing.	This is done in town sectors when the character first takes it.
 	switch( ubSectorID )
 	{
 		case SEC_B13:
@@ -4800,12 +4798,12 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	//Madd: tweaked to increase attacks for experienced and expert to 8 and 12, and unlimited for insane
 	if( pSector->ubInvestigativeState >= ( 4 * gGameOptions.ubDifficultyLevel ) && gGameOptions.ubDifficultyLevel < DIF_LEVEL_INSANE )
 	{ 
-		//This is the 4th time the player has conquered this sector.  We won't pester the player with probing attacks here anymore.
-		return;  
+		//This is the 4th time the player has conquered this sector.	We won't pester the player with probing attacks here anymore.
+		return;	
 	}
 
 	if( sSectorX != gWorldSectorX || sSectorY != gWorldSectorY )
-	{ //The sector isn't loaded, so don't probe attack it.  Otherwise, autoresolve would get them smoked!
+	{ //The sector isn't loaded, so don't probe attack it.	Otherwise, autoresolve would get them smoked!
 		return;
 	}
 
@@ -4856,7 +4854,7 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 	ubBestDist = 255;
 	iBestIndex = -1;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
@@ -4927,7 +4925,7 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 				}
 				else
 				{
-					AssertMsg( 0, "Strategic AI group transfer error.  KM : 0" );
+					AssertMsg( 0, "Strategic AI group transfer error.	KM : 0" );
 					return;
 				}
 			}
@@ -4943,8 +4941,8 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 			RecalculatePatrolWeight( iBestIndex );
-			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.  The movegroup functions
-			//don't work if this is the case.  Teleporting them to their previous sector is the best and easiest way to deal with this.
+			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.	The movegroup functions
+			//don't work if this is the case.	Teleporting them to their previous sector is the best and easiest way to deal with this.
 			SetEnemyGroupSector( pGroup, (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) );
 			
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iGarrisonID ].ubSectorID, EVASIVE, REINFORCEMENTS );
@@ -4952,7 +4950,7 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 		}
 	}
 	else
-	{ //There are no groups that have enough troops.  Send a new force from the palace instead.
+	{ //There are no groups that have enough troops.	Send a new force from the palace instead.
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, ubSoldiersRequested, 0 );
 		pGroup->ubMoveType = ONE_WAY;
 		pGroup->pEnemyGroup->ubIntention = REINFORCEMENTS;
@@ -4987,7 +4985,7 @@ void MassFortifyTowns()
 	//GROUP *pGroup;
 	UINT8 ubNumTroops, ubDesiredTroops;
 
-	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+	Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
@@ -4995,7 +4993,7 @@ void MassFortifyTowns()
 		ubNumTroops = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 		ubDesiredTroops = (UINT8)gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bDesiredPopulation;
 		
-		if( ubNumTroops < ubDesiredTroops  )
+		if( ubNumTroops < ubDesiredTroops	)
 		{
 			if( !gGarrisonGroup[ i ].ubPendingGroupID && 
 				gGarrisonGroup[ i ].ubComposition != ROADBLOCK &&
@@ -5026,7 +5024,7 @@ void MassFortifyTowns()
 void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 {
 	PERFORMANCE_MARKER
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{
@@ -5064,7 +5062,7 @@ void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 {
 	PERFORMANCE_MARKER
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	switch( ubSectorID )
 	{
@@ -5101,7 +5099,7 @@ BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID )
 	SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 
@@ -5130,7 +5128,7 @@ BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID )
 	INT32 iDesired;
 	SECTORINFO *pSector;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( gGarrisonGroup[ iGarrisonID ].ubPendingGroupID )
 	{
@@ -5181,7 +5179,7 @@ void EliminateSurplusTroopsForGarrison( GROUP *pGroup, SECTORINFO *pSector )
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic8");
 
 	iTotal = pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins +
-					 pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
+					pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
 	if( iTotal <= iMaxEnemyGroupSize )
 	{
 		return;
@@ -5272,8 +5270,8 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic8");
 
 
 
-// once Queen is awake, she'll gradually begin replacing admins with regular troops.  This is mainly to keep player from
-// fighting many more admins once they are no longer any challenge for him.  Eventually all admins will vanish off map.
+// once Queen is awake, she'll gradually begin replacing admins with regular troops.	This is mainly to keep player from
+// fighting many more admins once they are no longer any challenge for him.	Eventually all admins will vanish off map.
 void UpgradeAdminsToTroops()
 {
 	PERFORMANCE_MARKER
@@ -5284,8 +5282,8 @@ void UpgradeAdminsToTroops()
 	GROUP *pGroup;
 	INT16 sPatrolIndex;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
-	// on normal, AI evaluates approximately every 10 hrs.  There are about 130 administrators seeded on the map.
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
+	// on normal, AI evaluates approximately every 10 hrs.	There are about 130 administrators seeded on the map.
 	// Some of these will be killed by the player.
 
 	// check all garrisons for administrators
@@ -5427,7 +5425,7 @@ INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 {
 	PERFORMANCE_MARKER
 	INT16 sGarrisonIndex;
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	for( sGarrisonIndex = 0; sGarrisonIndex < giGarrisonArraySize; sGarrisonIndex++ )
 	{
@@ -5453,7 +5451,7 @@ void TransferGroupToPool( GROUP **pGroup )
 	*pGroup = NULL;
 }
 
-//NOTE:  Make sure you call SetEnemyGroupSector() first if the group is between sectors!!  See example in ReassignAIGroup()...
+//NOTE:	Make sure you call SetEnemyGroupSector() first if the group is between sectors!!	See example in ReassignAIGroup()...
 void SendGroupToPool( GROUP **pGroup )
 {
 	PERFORMANCE_MARKER
@@ -5481,14 +5479,14 @@ void ReassignAIGroup( GROUP **pGroup )
 
 	(*pGroup)->ubSectorIDOfLastReassignment = ubSectorID;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	ClearPreviousAIGroupAssignment( *pGroup );
 
-	//First thing to do, is teleport the group to be AT the sector he is currently moving from.  Otherwise, the 
+	//First thing to do, is teleport the group to be AT the sector he is currently moving from.	Otherwise, the 
 	//strategic pathing can break if the group is between sectors upon reassignment.
 	SetEnemyGroupSector( *pGroup, ubSectorID );
 
-	if( giRequestPoints <= 0  )
+	if( giRequestPoints <= 0	)
 	{ //we have no request for reinforcements, so send the group to Meduna for reassignment in the pool.
 		SendGroupToPool( pGroup );
 		return;
@@ -5498,8 +5496,8 @@ void ReassignAIGroup( GROUP **pGroup )
 	// giRequestPoints is the combined sum of all the individual weights of all garrisons and patrols requesting reinforcements
 	iRandom = Random( giRequestPoints );
 
-	//go through garrisons first and begin considering where the random value dictates.  If that garrison doesn't require 
-	//reinforcements, it'll continue on considering all subsequent garrisons till the end of the array.  If it fails at that
+	//go through garrisons first and begin considering where the random value dictates.	If that garrison doesn't require 
+	//reinforcements, it'll continue on considering all subsequent garrisons till the end of the array.	If it fails at that
 	//point, it'll restart the loop at zero, and consider all garrisons to the index that was first considered by the random value.
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
@@ -5525,14 +5523,14 @@ void ReassignAIGroup( GROUP **pGroup )
 					iRandom = 0;
 				}
 			}
-			//Decrease the iRandom value until it hits 0.  When that happens, all garrisons will get considered until
+			//Decrease the iRandom value until it hits 0.	When that happens, all garrisons will get considered until
 			//we either have a match or process all of the garrisons.
 			iRandom -= iWeight;
 		}
 	}
 	if( iReloopLastIndex >= 0 )
 	{ //Process the loop again to the point where the original random slot started considering, and consider
-		//all of the garrisons.  If this fails, all patrol groups will be considered next.
+		//all of the garrisons.	If this fails, all patrol groups will be considered next.
 		for( i = 0; i <= iReloopLastIndex; i++ )
 		{
 			RecalculateGarrisonWeight( i );
@@ -5645,7 +5643,7 @@ void RepollSAIGroup( GROUP *pGroup )
 	INT32 i;
 	Assert( !pGroup->fPlayer );
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	if( GroupAtFinalDestination( pGroup ) )
 	{
 		EvaluateGroupSituation( pGroup );
@@ -5663,7 +5661,7 @@ void RepollSAIGroup( GROUP *pGroup )
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		//KM : August 6, 1999 Patch fix
-		//     Ack, wasn't checking for the matching group to garrison
+		//	 Ack, wasn't checking for the matching group to garrison
 		if( gGarrisonGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
 		//end
 		{
@@ -5679,7 +5677,7 @@ void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 	PERFORMANCE_MARKER
 	INT32 i;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
@@ -5752,7 +5750,7 @@ void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSi
 	UINT8 ubOrigNumTroops;
 	UINT8 ubOrigSize;
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 	iCompositionID = gGarrisonGroup[ iGarrisonID ].ubComposition;
 
 	CalcNumTroopsBasedOnComposition( &ubNumTroops, &ubNumElites, ubSize, iCompositionID );
@@ -5779,7 +5777,7 @@ void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSi
 			ubNumElites--;
 		}
 	}
-	//No administrators are left.  
+	//No administrators are left.	
 	
 	//Eliminate the troops
 	while( ubNumTroops )
@@ -5837,7 +5835,7 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
 	(*pGroup)->ubMoveType = ONE_WAY;
 
 	if( ubIntention == PURSUIT )
-	{	//Make sure that the group isn't moving into a garrison sector.  These sectors should be using ASSAULT intentions!
+	{	//Make sure that the group isn't moving into a garrison sector.	These sectors should be using ASSAULT intentions!
 		if( SectorInfo[ ubSectorID ].ubGarrisonID != NO_GARRISON )
 		{
 			//Good place for a breakpoint.
@@ -5846,7 +5844,7 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
 	}
 
 	if( (*pGroup)->ubSectorX == ubDstSectorX && (*pGroup)->ubSectorY == ubDstSectorY )
-	{ //The destination sector is the current location.  Instead of causing code logic problems,
+	{ //The destination sector is the current location.	Instead of causing code logic problems,
 		//simply process them as if they just arrived.
 		if( EvaluateGroupSituation( *pGroup ) )
 		{ //The group was deleted.
@@ -5868,12 +5866,12 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
 			MoveGroupFromSectorToSector( (*pGroup)->ubGroupID, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY );
 			break;
 	}
-	//Make sure that the group is moving.  If this fails, then the pathing may have failed for some reason.
+	//Make sure that the group is moving.	If this fails, then the pathing may have failed for some reason.
 	ValidateGroup( *pGroup );
 }
 
 //If there are any enemy groups that will be moving through this sector due, they will have to repath which
-//will cause them to avoid the sector.  Returns the number of redirected groups.
+//will cause them to avoid the sector.	Returns the number of redirected groups.
 UINT8 RedirectEnemyGroupsMovingThroughSector( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	PERFORMANCE_MARKER
@@ -5901,7 +5899,7 @@ UINT8 RedirectEnemyGroupsMovingThroughSector( UINT8 ubSectorX, UINT8 ubSectorY )
 	}
 	if( ubNumGroupsRedirected )
 	{
-		ScreenMsg( FONT_LTBLUE, MSG_BETAVERSION, L"Test message for new feature:  %d enemy groups were redirected away from moving through sector %c%d.  Please don't report unless this number is greater than 5.",
+		ScreenMsg( FONT_LTBLUE, MSG_BETAVERSION, L"Test message for new feature:	%d enemy groups were redirected away from moving through sector %c%d.	Please don't report unless this number is greater than 5.",
 			ubNumGroupsRedirected, ubSectorY + 'A' - 1, ubSectorX );
 	}
 	return ubNumGroupsRedirected;
@@ -5920,14 +5918,14 @@ void ReinitializeUnvisitedGarrisons()
 	//Recreate the compositions
 	memcpy( gArmyComp, gOrigArmyComp, NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) );
 	EvolveQueenPriorityPhase( TRUE );
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	//Go through each unvisited sector and recreate the garrison forces based on 
 	//the desired population.
 	for( i = 0; i < giGarrisonArraySize; i++ )
 	{
 		if( gGarrisonGroup[ i ].ubComposition >= LEVEL1_DEFENCE && gGarrisonGroup[ i ].ubComposition <= LEVEL3_DEFENCE )
-		{ //These 3 compositions make up the perimeter around Meduna.  The existance of these are based on the
+		{ //These 3 compositions make up the perimeter around Meduna.	The existance of these are based on the
 			//difficulty level, and we don't want to reset these anyways, due to the fact that many of the reinforcements
 			//come from these sectors, and it could potentially add upwards of 150 extra troops which would seriously
 			//unbalance the difficulty.
@@ -5951,7 +5949,7 @@ void ReinitializeUnvisitedGarrisons()
 
 			if( gGarrisonGroup[ i ].ubPendingGroupID )
 			{ //if the garrison has reinforcements on route, then subtract the number of 
-				//reinforcements from the value we reset the size of the garrison.  This is to 
+				//reinforcements from the value we reset the size of the garrison.	This is to 
 				//prevent overfilling the group.
 				pGroup = GetGroup( gGarrisonGroup[ i ].ubPendingGroupID );
 				if( pGroup )
@@ -5989,7 +5987,7 @@ GROUP* FindPendingGroupForGarrisonSector( UINT8 ubSectorID )
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
 
- Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	 /* added NULL fix, 2007-03-03, Sgt. Kolja */
+ Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
 	{

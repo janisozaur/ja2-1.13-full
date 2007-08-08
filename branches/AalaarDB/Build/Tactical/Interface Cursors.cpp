@@ -31,10 +31,10 @@
 
 
 #define LOOSE_CURSOR_DELAY 300
-static BOOLEAN gfLooseCursorOn		 = FALSE;
-static INT16	 gsLooseCursorGridNo = NOWHERE;
-static UINT32	 guiLooseCursorID		 = 0;
-static UINT32	 guiLooseCursorTimeOfLastUpdate = 0;
+static BOOLEAN gfLooseCursorOn		= FALSE;
+static INT16	gsLooseCursorGridNo = NOWHERE;
+static UINT32	guiLooseCursorID		= 0;
+static UINT32	guiLooseCursorTimeOfLastUpdate = 0;
 
 
 void HandleLooseCursorDraw( );
@@ -209,8 +209,8 @@ UICursor	gUICursors[ NUM_UI_CURSORS ] =
 	EXCHANGE_PLACES_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_EXCHANGE_PLACES,					0,
 	JUMP_OVER_UICURSOR,									UICURSOR_FREEFLOWING,													CURSOR_JUMP_OVER,								0,
 
-	REFUEL_GREY_UICURSOR,			      		UICURSOR_FREEFLOWING,													CURSOR_FUEL,	    	  					0,
-	REFUEL_RED_UICURSOR,			      		UICURSOR_FREEFLOWING,													CURSOR_FUEL_RED,		  					0,
+	REFUEL_GREY_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_FUEL,	 						0,
+	REFUEL_RED_UICURSOR,						UICURSOR_FREEFLOWING,													CURSOR_FUEL_RED,							0,
 
 }; 
  
@@ -301,7 +301,7 @@ BOOLEAN DrawUICursor( )
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_FREEFLOWING && !( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_DONTSHOW2NDLEVEL ) )
 		{
-			gfTargetDropPos	 = TRUE;
+			gfTargetDropPos	= TRUE;
 			gusTargetDropPos = gusCurMousePos;
 
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
@@ -354,7 +354,7 @@ BOOLEAN DrawUICursor( )
 			}
 			else
 			{
-				pNode = AddTopmostToTail( gusCurMousePos,  GetSnapCursorIndex( usTileCursor ) );
+				pNode = AddTopmostToTail( gusCurMousePos,	GetSnapCursorIndex( usTileCursor ) );
 			}
 
 			pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -363,7 +363,7 @@ BOOLEAN DrawUICursor( )
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
 			{
 				// Put one on the roof as well
-				AddOnRoofToHead( gusCurMousePos,  GetSnapCursorIndex( usTileCursor ) );
+				AddOnRoofToHead( gusCurMousePos,	GetSnapCursorIndex( usTileCursor ) );
 				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 			}
@@ -385,7 +385,7 @@ BOOLEAN DrawUICursor( )
 		{
 			switch( guiCurUICursor )
 			{
-				case  MOVE_VEHICLE_UICURSOR:
+				case	MOVE_VEHICLE_UICURSOR:
 
 					// Set position for APS
 					gfUIDisplayActionPointsCenter = FALSE;
@@ -466,7 +466,7 @@ BOOLEAN HideUICursor( )
 		return( TRUE );
 	}
 
-	if ( gUICursors[ guiCurUICursor ].uiFlags & ( UICURSOR_SHOWTILE | UICURSOR_SHOWTILEAPDEPENDENT )  )
+	if ( gUICursors[ guiCurUICursor ].uiFlags & ( UICURSOR_SHOWTILE | UICURSOR_SHOWTILEAPDEPENDENT )	)
 	{
 		RemoveAllTopmostsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, FIRSTPOINTERS );
 		RemoveAllOnRoofsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, FIRSTPOINTERS );
@@ -510,7 +510,7 @@ void DrawSnappingCursor( )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE					*pNewUIElem;
-	SOLDIERTYPE								 *pSoldier;
+	SOLDIERTYPE								*pSoldier;
 	static BOOLEAN		fShowAP = TRUE;
 
 	if ( gusSelectedSoldier != NO_SOLDIER )
@@ -527,7 +527,7 @@ void DrawSnappingCursor( )
 
 		case NORMAL_SNAPUICURSOR:
 
-			AddTopmostToHead( gusCurMousePos, FIRSTPOINTERS1  );
+			AddTopmostToHead( gusCurMousePos, FIRSTPOINTERS1	);
 			gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 			break;
@@ -627,7 +627,7 @@ void DrawSnappingCursor( )
 			}
 			else
 			{
-				AddTopmostToHead( gusCurMousePos, BADMARKER1  );
+				AddTopmostToHead( gusCurMousePos, BADMARKER1	);
 				gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 				gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 

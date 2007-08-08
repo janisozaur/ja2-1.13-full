@@ -280,7 +280,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent );
 void QueryTBLeftButton( UINT32 *puiNewEvent );
 void QueryTBRightButton( UINT32 *puiNewEvent );
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
-void HandleKeyInputOnEnemyTurn(  );
+void HandleKeyInputOnEnemyTurn(	);
 
 
 void GetRTMouseButtonInput( UINT32 *puiNewEvent );
@@ -291,7 +291,7 @@ void QueryRTRightButton( UINT32 *puiNewEvent );
 void AdjustSoldierCreationStartValues( );
 
 BOOLEAN SelectedMercCanAffordAttack( );
-BOOLEAN SelectedMercCanAffordMove(  );
+BOOLEAN SelectedMercCanAffordMove(	);
 void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp );
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent );
@@ -309,7 +309,7 @@ BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
 BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
 
-BOOLEAN HandleTalkInit(  );
+BOOLEAN HandleTalkInit(	);
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustForConfirm );
 

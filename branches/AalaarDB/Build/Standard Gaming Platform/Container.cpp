@@ -12,13 +12,13 @@
 //							While the memcpy() was working in _DEBUG mode, it was failing
 //							reproducibly in RELEASE mode whenever regions overlapped!
 //							Having read the code, I strongly suggest that you DO NOT use this
-//							stuff at all and write your own instead.  Tarun was no Carmack...
+//							stuff at all and write your own instead.	Tarun was no Carmack...
 //																									- Alex Meduna
 // 1998	KM Detached all references to this file from JA2 as it caused a lot of hard to debug
-//         crashes.  The VOBJECT/VSURFACE lists are now self-maintained and no longer use the
-//				 this crap.  DON'T USE THIS -- NO MATTER WHAT!!!
+//		 crashes.	The VOBJECT/VSURFACE lists are now self-maintained and no longer use the
+//				this crap.	DON'T USE THIS -- NO MATTER WHAT!!!
 //*****************************************************************************
-          
+			
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
@@ -91,7 +91,7 @@ typedef struct OrdHeaderTag
 //									of items in stack
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
-//							 pointer to allocated memory
+//							pointer to allocated memory
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -137,7 +137,7 @@ HSTACK CreateStack(UINT32 uiNum_items, UINT32 uiSiz_each)
 //									of items in queue
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
-//							 pointer to allocated memory
+//							pointer to allocated memory
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -186,7 +186,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 //									of items in ordered list
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
-//							 pointer to allocated memory
+//							pointer to allocated memory
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -240,7 +240,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 //									of items in ordered list
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
-//							 pointer to allocated memory
+//							pointer to allocated memory
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -293,10 +293,10 @@ HORDLIST CreateOrdList(UINT32 uiNum_items, UINT32 uiSiz_each, INT8 (*compare)(vo
 // Parameter List : void * - pointer to stack 
 //									container 
 //									data - data to add to stack
-//								 
+//								
 // Return Value	BOOLEAN true if push ok
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -337,7 +337,7 @@ HSTACK Push(HSTACK hStack, void *pdata)
 		{
 			DbgMessage(TOPIC_STACK_CONTAINERS, DBG_LEVEL_0, "Could not resize stack container memory");
 			return NULL; 
-	 		}	
+			}	
 		pTemp_cont = (StackHeader *)hStack;
 	}	
 	pbyte = (BYTE *)hStack;
@@ -356,7 +356,7 @@ HSTACK Push(HSTACK hStack, void *pdata)
 // Parameter List : void * - pointer to stack 
 //									container 
 //									
-//								 
+//								
 // Return Value : void * - pointer to stack 
 //								after pushing element 
 //
@@ -412,7 +412,7 @@ BOOLEAN Pop(HSTACK hStack, void *pdata)
 //
 // Parameter List : void * - buffer to hold data
 //									
-//								 
+//								
 // Return Value : TRUE if stack not empty
 //
 // Modification History :
@@ -528,7 +528,7 @@ BOOLEAN DeleteList(HLIST hList)
 		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
 		return FALSE;
 	}
-	 // free the memory assigned to the list
+	// free the memory assigned to the list
 	MemFree(hList);
 	return TRUE;
 }
@@ -552,7 +552,7 @@ BOOLEAN DeleteOrdList(HORDLIST hOrdList)
 		DbgMessage(TOPIC_ORDLIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the ordered list");
 		return FALSE;
 	}
-	 // free the memory assigned to the list
+	// free the memory assigned to the list
 	MemFree(hOrdList);
 	return TRUE;
 }
@@ -606,10 +606,10 @@ void ShutdownContainers( void )
 // Parameter List : pvoid_queue - pointer to queue 
 //									container 
 //									data - data removed from queue
-//								 
+//								
 // Return Value	pointer to queue with data removed 
-//							 or NULL if failed
-//							 
+//							or NULL if failed
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -660,10 +660,10 @@ BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
 // Parameter List : hList - pointer to list 
 //									container 
 //									data - data where list element is stored
-//								 
+//								
 // Return Value	BOOLEAN
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -727,10 +727,10 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 // Parameter List : hList - pointer to list container 
 //									pdata - pointer to data to be swapped
 //									uiPos - List position with which to swap.
-//								 
+//								
 // Return Value	BOOLEAN - TRUE if successful, FALSE if function fails.
-//							 
-//							 
+//							
+//							
 // Modification History :
 //	Added to SGP by Bret Rowdon for use with JA2. May 1 '97.
 //		- This function was based on the PeekList function.
@@ -802,10 +802,10 @@ BOOLEAN SwapListNode(HLIST hList, void *pdata, UINT32 uiPos)
 // Parameter List : hList - pointer to list container 
 //									pdata - pointer to data to be stored
 //									uiPos - List position into which to store.
-//								 
+//								
 // Return Value	BOOLEAN - TRUE if successful, FALSE if function fails.
-//							 
-//							 
+//							
+//							
 // Modification History :
 //	Added to SGP by Alex Meduna for use with Wiz8. Oct 31 '97.
 //		- This function is nearly identical to the SwapListNode() function.
@@ -869,10 +869,10 @@ BOOLEAN StoreListNode(HLIST hList, void *pdata, UINT32 uiPos)
 // Parameter List : hList - pointer to ordered list 
 //									container 
 //									data - data where list element is stored
-//								 
+//								
 // Return Value	BOOLEAN
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -931,10 +931,10 @@ BOOLEAN PeekOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 // Parameter List : pvoid_queue - pointer to queue 
 //									container 
 //									data - data removed from queue
-//								 
+//								
 // Return Value	pointer to queue with data removed 
-//							 or NULL if failed
-//							 
+//							or NULL if failed
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -999,10 +999,10 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 // Parameter List : pvoid_queue - pointer to queue 
 //									container 
 //									pdata - pointer to data to add to queue
-//								 
+//								
 // Return Value	pointer to queue with data added
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1056,8 +1056,8 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 		pTemp_cont->uiMax_size = uiNew_size;
 		if ((hQueue = MemRealloc(hQueue, uiNew_size)) == NULL)
 		{
-		 DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
-			 return NULL; 
+		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
+			return NULL; 
 		}
 		// copy memory from beginning of container to end of container
 	// so that all the data is in one continuous block
@@ -1085,10 +1085,10 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 // do_copy
 //
 // Parameter List : pointer to mem, source offset, dest offset, size 
-//										 
+//										
 // Return Value	BOOLEAN
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1126,10 +1126,10 @@ BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 
 // do_copy_data
 //
 // Parameter List : pointer to mem, pointer to data, source offset, size 
-//										 
+//										
 // Return Value	BOOLEAN
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1162,10 +1162,10 @@ BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSiz
 // StackSize
 //
 // Parameter List : pointer to stack 
-//										 
+//										
 // Return Value	UINT32 stack size
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1187,10 +1187,10 @@ UINT32 StackSize(HSTACK hStack)
 // QueueSize
 //
 // Parameter List : pointer to queue
-//										 
+//										
 // Return Value	UINT32 queue size
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1212,10 +1212,10 @@ UINT32 QueueSize(HQUEUE hQueue)
 // ListSize
 //
 // Parameter List : pointer to queue
-//										 
+//										
 // Return Value	UINT32 list size
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1237,10 +1237,10 @@ UINT32 ListSize(HLIST hList)
 // OrdListSize
 //
 // Parameter List : pointer to list
-//										 
+//										
 // Return Value	UINT32 Ordlist size
-//							 
-//							 
+//							
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1265,10 +1265,10 @@ UINT32 OrdListSize(HORDLIST hOrdList)
 //									container 
 //									data - data to add to queue
 //									position - position after which data is to added
-//								 
+//								
 // Return Value	BOOLEAN true if push ok
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1338,8 +1338,8 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 		{
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{	
-				 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-			 return NULL;
+				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+			return NULL;
 			}
 		}
 		if (fTail_check == FALSE)
@@ -1352,15 +1352,15 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 	|| (((uiTail + uiSize_of_each) > uiMax_size) && (uiHead >= (sizeof(ListHeader) + uiSize_of_each)))) 
 	{		
 	uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-						 
+						
 		if (uiOffsetSrc >= uiMax_size)
 		{
 			uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail-uiOffsetSrc) == FALSE)
 				{	
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-					 return NULL;
+					DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					return NULL;
 				}
 			uiFinalLoc = uiOffsetSrc;
 		} else
@@ -1369,33 +1369,33 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 				{	
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-					 return NULL;
+					DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					return NULL;
 				}
 				
 			uiOffsetSrc = uiMax_size - uiSize_of_each;
 			uiOffsetDst = sizeof(ListHeader);
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each) == FALSE)
 				{	
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-					 return NULL;
+					DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					return NULL;
 				}
 				uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 				if (do_copy(hList, uiOffsetSrc, uiOffsetDst, (uiMax_size-uiSize_of_each) - uiOffsetSrc) == FALSE)
 				{	
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-					 return NULL;
+					DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					return NULL;
 				}
 		}
-				 pTemp_cont->uiTail += uiSize_of_each;
-			 uiFinalLoc = uiOffsetSrc;
+				pTemp_cont->uiTail += uiSize_of_each;
+			uiFinalLoc = uiOffsetSrc;
 	}// end if
 			
 
 
 	if ((((uiTail + uiSize_of_each) <= uiMax_size) && (uiTail == uiHead) && (uiHead >= (sizeof(ListHeader) + uiSize_of_each)))
-		 || (((uiTail + uiSize_of_each) > uiMax_size) && (uiHead == sizeof(ListHeader))))
+		|| (((uiTail + uiSize_of_each) > uiMax_size) && (uiHead == sizeof(ListHeader))))
 	{
 		// need to resize the container
 		uiNew_size = uiMax_size + (uiMax_size - sizeof(ListHeader));
@@ -1419,8 +1419,8 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 				uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{	
-				 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-			 return NULL;
+				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+			return NULL;
 			}
 				pTemp_cont->uiTail += uiSize_of_each;
 			uiFinalLoc = uiOffsetSrc;
@@ -1453,10 +1453,10 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 //									container 
 //									data - data to remove from list
 //									position - position after which data is to added
-//								 
+//								
 // Return Value	BOOLEAN true if push ok
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1511,9 +1511,9 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 
 	uiTotal				= pTemp_cont->uiTotal_items;
 	uiSize_of_each = pTemp_cont->uiSiz_of_elem;
-	uiMax_size		 = pTemp_cont->uiMax_size;
-	uiHead				 = pTemp_cont->uiHead;
-	uiTail				 = pTemp_cont->uiTail;
+	uiMax_size		= pTemp_cont->uiMax_size;
+	uiHead				= pTemp_cont->uiHead;
+	uiTail				= pTemp_cont->uiTail;
 
 	// copy appropriate blocks
 	if ((uiTail > uiHead) || ((uiTail == uiHead) && (uiHead == sizeof(ListHeader))))
@@ -1602,10 +1602,10 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 //									container 
 //									data - data to remove from ordered list
 //									position - position after which data is to added
-//								 
+//								
 // Return Value	BOOLEAN true if push ok
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1690,7 +1690,7 @@ BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 	if ((uiTail < uiHead) || ((uiTail == uiHead) && (uiHead <= (sizeof(OrdListHeader)+uiSize_of_each))))
 	{		
 		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-						 
+						
 		if (uiOffsetSrc >= uiMax_size)
 		{
 			uiOffsetSrc = sizeof(OrdListHeader) + (uiOffsetSrc - uiMax_size);
@@ -1761,10 +1761,10 @@ BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //									container 
 //									data - data to add to the ordered list
 //									position - position after which data is to added
-//								 
+//								
 // Return Value	BOOLEAN true if push ok
-//							 else	false
-//							 
+//							else	false
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 //
@@ -1812,15 +1812,15 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 	}
 
 
-	uiTotal        = pTemp_cont->uiTotal_items;
+	uiTotal		= pTemp_cont->uiTotal_items;
 	uiSize_of_each = pTemp_cont->uiSiz_of_elem;
-	uiMax_size     = pTemp_cont->uiMax_size;
-	uiHead         = pTemp_cont->uiHead;
-	uiTail         = pTemp_cont->uiTail;
-	uiOffsetSrc    = pTemp_cont->uiHead + (uiPos * pTemp_cont->uiSiz_of_elem);
+	uiMax_size	 = pTemp_cont->uiMax_size;
+	uiHead		 = pTemp_cont->uiHead;
+	uiTail		 = pTemp_cont->uiTail;
+	uiOffsetSrc	= pTemp_cont->uiHead + (uiPos * pTemp_cont->uiSiz_of_elem);
 
 
-	// this shouldn't be necessary?  position should never be outside the range?
+	// this shouldn't be necessary?	position should never be outside the range?
 	if (uiOffsetSrc >= uiMax_size)
 		uiOffsetSrc = sizeof(OrdListHeader) + (uiOffsetSrc - uiMax_size);
 
@@ -1840,8 +1840,8 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 		{
 			if (do_copy(hOrdList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{	
-			 DbgMessage(TOPIC_ORDLIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in ordered list");
-			 return NULL;
+			DbgMessage(TOPIC_ORDLIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in ordered list");
+			return NULL;
 			}
 		}
 
@@ -1856,7 +1856,7 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 			(((uiTail + uiSize_of_each) > uiMax_size) && (uiHead >= (sizeof(OrdListHeader) + uiSize_of_each)))) 
 	{		
 		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-						 
+						
 		if (uiOffsetSrc >= uiMax_size)
 		{
 			uiOffsetSrc = sizeof(OrdListHeader) + (uiOffsetSrc - uiMax_size);
@@ -1906,7 +1906,7 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 
 
 	if ((((uiTail + uiSize_of_each) <= uiMax_size) && (uiTail == uiHead) && (uiHead >= (sizeof(OrdListHeader) + uiSize_of_each)))
-	 || (((uiTail + uiSize_of_each) > uiMax_size) && (uiHead == sizeof(OrdListHeader))))
+	|| (((uiTail + uiSize_of_each) > uiMax_size) && (uiHead == sizeof(OrdListHeader))))
 	{
 		// need to resize the container
 		uiNew_size = uiMax_size + (uiMax_size - sizeof(OrdListHeader));
@@ -1971,9 +1971,9 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 // Parameter List : HORDLIST - handle to ordered list 
 //									container 
 //									data - data to add to the ordered list
-//								 
+//								
 // Return Value	BOOLEAN true if Add ok else	false
-//							 
+//							
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
 // Dec 19th 1997->verified, cleaned up, and heavily commented by AM
@@ -2062,7 +2062,7 @@ HORDLIST AddtoOrdList(HORDLIST hOrdList, void *pdata)
 			case ORDLIST_EQUAL : 
 			case ORDLIST_LEFT_LESS :
 			{
-				// found the right spot!  Insert it at the current position
+				// found the right spot!	Insert it at the current position
 				if ((hOrdList = StoreinOrdList(hOrdList, pdata, uiPosition)) == NULL)
 				{	
 					DbgMessage(TOPIC_ORDLIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data into ordered list");

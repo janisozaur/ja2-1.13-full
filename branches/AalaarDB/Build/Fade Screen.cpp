@@ -14,7 +14,7 @@
 	#include "gameloop.h"
 #endif
 
-#define  SQUARE_STEP			8
+#define	SQUARE_STEP			8
 
 extern UINT32	guiExitScreen; // symbol already declared globally in laptop.cpp (jonathanl)
 BOOLEAN	gfFadeInitialized = FALSE;
@@ -34,12 +34,12 @@ UINT32	uiOldMusicMode;
 
 FADE_FUNCTION			gFadeFunction = NULL;
 
-FADE_HOOK		gFadeInDoneCallback	 = NULL;
+FADE_HOOK		gFadeInDoneCallback	= NULL;
 FADE_HOOK		gFadeOutDoneCallback = NULL;
 
 
-void FadeFrameBufferSquare(  );
-void FadeFrameBufferVersionOne(  );
+void FadeFrameBufferSquare(	);
+void FadeFrameBufferVersionOne(	);
 void FadeFrameBufferVersionFaster( INT8 bFadeValue );
 void FadeFrameBufferSide( );
 void FadeFrameBufferRealFade( );
@@ -49,14 +49,14 @@ void FadeInBackBufferSquare( );
 void FadeInFrameBufferRealFade( );
 
 
-extern BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
+extern BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(	UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 BOOLEAN UpdateSaveBufferWithBackbuffer( void );
 
 
-BOOLEAN			gfFadeIn						 = FALSE;
-BOOLEAN			gfFadeOut            = FALSE;
-BOOLEAN			gfFadeOutDone				 = FALSE;
-BOOLEAN			gfFadeInDone				 = FALSE;
+BOOLEAN			gfFadeIn						= FALSE;
+BOOLEAN			gfFadeOut			= FALSE;
+BOOLEAN			gfFadeOutDone				= FALSE;
+BOOLEAN			gfFadeInDone				= FALSE;
 
 
 void FadeInNextFrame( )
@@ -172,7 +172,7 @@ void BeginFade( UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay
 				gsFadeRealCount = -1;
 				gsFadeLimit			= 8;
 				gFadeFunction = (FADE_FUNCTION)FadeInFrameBufferRealFade;		
-				gfFadeInVideo   = FALSE;
+				gfFadeInVideo	= FALSE;
 
 				// Copy backbuffer to savebuffer
 				UpdateSaveBufferWithBackbuffer( );
@@ -186,7 +186,7 @@ void BeginFade( UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay
 				gsFadeRealCount = -1;
 				gsFadeLimit			= 10;
 				gFadeFunction = (FADE_FUNCTION)FadeFrameBufferRealFade;		
-				gfFadeInVideo   = FALSE;
+				gfFadeInVideo	= FALSE;
 
 				// Clear framebuffer
 				//ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -333,7 +333,7 @@ UINT32	FadeScreenHandle( )
 	return( FADE_SCREEN );
 }
 
-UINT32	FadeScreenShutdown(  )
+UINT32	FadeScreenShutdown(	)
 {
 	PERFORMANCE_MARKER
 
@@ -504,7 +504,7 @@ void FadeFrameBufferVersionFaster( INT8 bFadeValue )
 }
 
 
-void FadeFrameBufferSide(  )
+void FadeFrameBufferSide(	)
 {
 	PERFORMANCE_MARKER
 	INT32 iX1, iX2;
@@ -524,7 +524,7 @@ void FadeFrameBufferSide(  )
 
 }
 
-void FadeFrameBufferSquare(  )
+void FadeFrameBufferSquare(	)
 {
 	PERFORMANCE_MARKER
 	INT32 iX1, iX2, iY1, iY2;
@@ -558,7 +558,7 @@ void FadeFrameBufferSquare(  )
 }
 
 
-void FadeInBackBufferSquare(  )
+void FadeInBackBufferSquare(	)
 {
 	PERFORMANCE_MARKER
 	INT32 iX1, iX2, iY1, iY2;
@@ -579,15 +579,15 @@ void FadeInBackBufferSquare(  )
 	iY2 = giY2 + sFadeYMove;
 
 	BltFx.SrcRect.iLeft = iX1;
-	BltFx.SrcRect.iTop  = iY1;
+	BltFx.SrcRect.iTop	= iY1;
 	BltFx.SrcRect.iRight = iX2;
 	BltFx.SrcRect.iBottom = iY2;
 
-	if ( BltFx.SrcRect.iRight != BltFx.SrcRect.iLeft  )
+	if ( BltFx.SrcRect.iRight != BltFx.SrcRect.iLeft	)
 	{
 		BltVideoSurface( BACKBUFFER, FRAME_BUFFER, 0, 
-																	 iX1, iY1, 
-																	 VS_BLT_SRCSUBRECT, &BltFx );
+																	iX1, iY1, 
+																	VS_BLT_SRCSUBRECT, &BltFx );
 	}
 
 	iX1 = giX2;
@@ -596,15 +596,15 @@ void FadeInBackBufferSquare(  )
 	iY2 = giY2 + sFadeYMove;
 
 	BltFx.SrcRect.iLeft = iX1;
-	BltFx.SrcRect.iTop  = iY1;
+	BltFx.SrcRect.iTop	= iY1;
 	BltFx.SrcRect.iRight = iX2;
 	BltFx.SrcRect.iBottom = iY2;
 
 	if ( BltFx.SrcRect.iRight != BltFx.SrcRect.iLeft )
 	{
 		BltVideoSurface( BACKBUFFER, FRAME_BUFFER, 0, 
-																	 iX1, iY1, 
-																	 VS_BLT_SRCSUBRECT, &BltFx );
+																	iX1, iY1, 
+																	VS_BLT_SRCSUBRECT, &BltFx );
 	}
 
 	iX1 = giX1;
@@ -613,15 +613,15 @@ void FadeInBackBufferSquare(  )
 	iY2 = giY1;
 
 	BltFx.SrcRect.iLeft = iX1;
-	BltFx.SrcRect.iTop  = iY1;
+	BltFx.SrcRect.iTop	= iY1;
 	BltFx.SrcRect.iRight = iX2;
 	BltFx.SrcRect.iBottom = iY2;
 
-	if (  BltFx.SrcRect.iBottom != BltFx.SrcRect.iTop )
+	if (	BltFx.SrcRect.iBottom != BltFx.SrcRect.iTop )
 	{
 		BltVideoSurface( BACKBUFFER, FRAME_BUFFER, 0, 
-																	 iX1, iY1, 
-																	 VS_BLT_SRCSUBRECT, &BltFx );
+																	iX1, iY1, 
+																	VS_BLT_SRCSUBRECT, &BltFx );
 	}
 
 	iX1 = giX1;
@@ -630,15 +630,15 @@ void FadeInBackBufferSquare(  )
 	iY2 = giY2 + sFadeYMove;
 
 	BltFx.SrcRect.iLeft = iX1;
-	BltFx.SrcRect.iTop  = iY1;
+	BltFx.SrcRect.iTop	= iY1;
 	BltFx.SrcRect.iRight = iX2;
 	BltFx.SrcRect.iBottom = iY2;
 
 	if ( BltFx.SrcRect.iBottom != BltFx.SrcRect.iTop )
 	{
 		BltVideoSurface( BACKBUFFER, FRAME_BUFFER, 0, 
-																	 iX1, iY1, 
-																	 VS_BLT_SRCSUBRECT, &BltFx );
+																	iX1, iY1, 
+																	VS_BLT_SRCSUBRECT, &BltFx );
 	}
 
 	giX1 -= sFadeXMove;
@@ -691,11 +691,11 @@ BOOLEAN UpdateSaveBufferWithBackbuffer(void)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
+	UINT8	*pDestBuf, *pSrcBuf;
 	UINT16 usWidth, usHeight;
-	UINT8  ubBitDepth;
+	UINT8	ubBitDepth;
 
-  
+	
 	// Update saved buffer - do for the viewport size ony!
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 
@@ -706,7 +706,7 @@ BOOLEAN UpdateSaveBufferWithBackbuffer(void)
 	{
 		// BLIT HERE
 		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,  
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
 					0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	}
 

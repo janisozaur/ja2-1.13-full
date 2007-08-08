@@ -19,7 +19,7 @@
 #endif
 
 //aim
-extern UINT8  gubShowActionPointsInRed;
+extern UINT8	gubShowActionPointsInRed;
 UINT8 gpShadesFromWhiteToRed[] = {FONT_MCOLOR_WHITE, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_DKRED, FONT_MCOLOR_RED };
 //aim
 
@@ -43,79 +43,79 @@ void DrawMouseText( );
 
 CursorFileData CursorFileDatabase[] =
 {
-  { "CURSORS\\cursor.sti"										 , FALSE, 0, 0, 0, NULL },
-  { "CURSORS\\cur_targ.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-  { "CURSORS\\cur_tagr.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-  { "CURSORS\\targblak.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-  { "CURSORS\\cur_bst.sti"										 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-  { "CURSORS\\cur_rbst.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-  { "CURSORS\\burstblk.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
-	{ "CURSORS\\cur_tr.sti"										 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_trw.sti"										 , FALSE, 0, 0, 0, NULL },
-  { "CURSORS\\cur_tb.sti"										 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
+	{ "CURSORS\\cursor.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_targ.sti"									, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\cur_tagr.sti"									, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\targblak.sti"									, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\cur_bst.sti"										, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\cur_rbst.sti"									, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\burstblk.sti"									, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
+	{ "CURSORS\\cur_tr.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_trw.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_tb.sti"										, FALSE, 0, ANIMATED_CURSOR,	7, NULL },
 
-  { "CURSORS\\punch.sti"										 , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
-  { "CURSORS\\punchr.sti"										 , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
-	{ "CURSORS\\cur_run.sti"										 , FALSE, 0, ANIMATED_CURSOR,   10, NULL },
-	{ "CURSORS\\cur_walk.sti"									 , FALSE, 0, ANIMATED_CURSOR,   10, NULL },
-	{ "CURSORS\\cur_swat.sti"									 , FALSE, 0, ANIMATED_CURSOR,   10, NULL },
-	{ "CURSORS\\cur_pron.sti"									 , FALSE, 0, ANIMATED_CURSOR,   10, NULL },
-	{ "CURSORS\\grabsr.sti"										 , FALSE, 0, 0,   0, NULL },
-	{ "CURSORS\\grabs.sti"										 , FALSE, 0, 0,   0, NULL },
-	{ "CURSORS\\stab.sti"											 , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
-	{ "CURSORS\\stabr.sti"										 , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
+	{ "CURSORS\\punch.sti"										, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
+	{ "CURSORS\\punchr.sti"										, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
+	{ "CURSORS\\cur_run.sti"										, FALSE, 0, ANIMATED_CURSOR,	10, NULL },
+	{ "CURSORS\\cur_walk.sti"									, FALSE, 0, ANIMATED_CURSOR,	10, NULL },
+	{ "CURSORS\\cur_swat.sti"									, FALSE, 0, ANIMATED_CURSOR,	10, NULL },
+	{ "CURSORS\\cur_pron.sti"									, FALSE, 0, ANIMATED_CURSOR,	10, NULL },
+	{ "CURSORS\\grabsr.sti"										, FALSE, 0, 0,	0, NULL },
+	{ "CURSORS\\grabs.sti"										, FALSE, 0, 0,	0, NULL },
+	{ "CURSORS\\stab.sti"											, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
+	{ "CURSORS\\stabr.sti"										, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
 
-	{ "CURSORS\\cross1.sti"										 , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
-	{ "CURSORS\\cross2.sti"									   , FALSE, 0, ANIMATED_CURSOR,   6, NULL },
-  { "LAPTOP\\FingerCursor.sti"										 , FALSE, 0, 0, 0, NULL },
-  { "LAPTOP\\LapTopCursor.sti"										 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\ibeam.sti"										 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_look.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_talk.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_talkb.sti"								 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_talkr.sti"								 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_exit.sti"									 , FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cross1.sti"										, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
+	{ "CURSORS\\cross2.sti"									, FALSE, 0, ANIMATED_CURSOR,	6, NULL },
+	{ "LAPTOP\\FingerCursor.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "LAPTOP\\LapTopCursor.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\ibeam.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_look.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_talk.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_talkb.sti"								, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_talkr.sti"								, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_exit.sti"									, FALSE, 0, 0, 0, NULL },
 
-	{ "CURSORS\\VehicleCursor.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\WalkingCursor.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\que.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\chopper.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\check.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_try.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\wirecut.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\wirecutr.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\bullet_g.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\bullet_d.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\ibeamWhite.sti"										 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\throwg.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\throwb.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\throwr.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ ""																					 , FALSE, 0, USE_EXTERN_VO_CURSOR | USE_OUTLINE_BLITTER, 0, NULL },
-	{ "CURSORS\\bombg.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\bombr.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\remoteg.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\remoter.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\steering.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_car.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_wait.sti"											 , FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\VehicleCursor.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\WalkingCursor.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\que.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\chopper.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\check.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_try.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\wirecut.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\wirecutr.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\bullet_g.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\bullet_d.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\ibeamWhite.sti"										, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\throwg.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\throwb.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\throwr.sti"												, FALSE, 0, 0, 0, NULL },
+	{ ""																					, FALSE, 0, USE_EXTERN_VO_CURSOR | USE_OUTLINE_BLITTER, 0, NULL },
+	{ "CURSORS\\bombg.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\bombr.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\remoteg.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\remoter.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\steering.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_car.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_wait.sti"											, FALSE, 0, 0, 0, NULL },
 	
 	//Tactical GUI cursors
-	{ "CURSORS\\singlecursor.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\groupcursor.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\singledcursor.sti"								 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\groupdcursor.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\repair.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\repairr.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\jar_cur.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\jar_cur_red.sti"									 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_x.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\can_01.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\can_02.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\cur_swit.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\bullseye.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\deadleap.sti"											 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\can_01.sti"												 , FALSE, 0, 0, 0, NULL },
-	{ "CURSORS\\can_02.sti"												 , FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\singlecursor.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\groupcursor.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\singledcursor.sti"								, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\groupdcursor.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\repair.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\repairr.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\jar_cur.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\jar_cur_red.sti"									, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_x.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\can_01.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\can_02.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\cur_swit.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\bullseye.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\deadleap.sti"											, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\can_01.sti"												, FALSE, 0, 0, 0, NULL },
+	{ "CURSORS\\can_02.sti"												, FALSE, 0, 0, 0, NULL },
 
 };
 
@@ -132,7 +132,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,	0, 0, 0									, 0, 0 },
 		
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 	//{ C_TRINGS,				6, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -140,7 +140,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 		// TARGET ( NORMAL W/ RINGS )
 	{ 
@@ -149,7 +149,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -157,7 +157,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				5, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -165,7 +165,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 
 	{ 
@@ -174,7 +174,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -182,7 +182,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -190,7 +190,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -198,7 +198,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				7, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -206,7 +206,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				8, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -214,7 +214,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				4, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 		// TARGET WITH WHITE RINGS
 	{ 
@@ -223,7 +223,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 
 	{ 
@@ -232,7 +232,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -240,7 +240,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -248,7 +248,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_TWRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -256,7 +256,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_TWRINGS,				4, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 		// TARGET RED CURSOR
 	{ C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -264,7 +264,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 
 		// TARGET BLACK CURSOR
@@ -273,7 +273,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 
 		// TARGET DARK BLACK CURSOR
@@ -282,7 +282,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 		// TARGET RED CURSOR
 
@@ -292,21 +292,21 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
-		5,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		5,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ C_TARGMODEBURST,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TARGMODEBURSTRED,	0, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 
 	{ C_TARGMODEBURSTBLACK,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -314,49 +314,49 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_PUNCHGRAY,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{	C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_YELLOWRINGS,	1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{	C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_YELLOWRINGS,	2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 
 	{
@@ -365,7 +365,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{	
 		C_PUNCHRED,			0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -373,7 +373,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR,		HIDE_SUBCURSOR, 
@@ -381,7 +381,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, 20  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, 20	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR,		HIDE_SUBCURSOR, 
 		C_WALK1,				0, 0, CENTER_SUBCURSOR, 0, 
@@ -395,7 +395,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, 10  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, 10	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR,		HIDE_SUBCURSOR, 
 		C_PRONE1,				0, 0, CENTER_SUBCURSOR, 0, 
@@ -405,32 +405,32 @@ CursorData CursorDatabase[] =
 		2, CENTER_CURSOR, 10 , 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				0, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
-	  C_GRAB1,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
+	C_GRAB1,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				0, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_GRAB2,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_KNIFE1,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0							, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0							, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_KNIFE2,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{	C_KNIFE2,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -479,26 +479,26 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		1, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_CROSS2,					0, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
-  { C_WWW,					0, 0, 0, 0, 
+		1, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
+	{ C_WWW,					0, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,	0, 0, 0									, 0, 0 },
 	{ C_LAPTOPSCREEN,					0, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	0,	0, 0, 0									, 0, 0 },
 	{ C_IBEAM,				0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
@@ -507,7 +507,7 @@ CursorData CursorDatabase[] =
 		1, CENTER_CURSOR, CENTER_CURSOR, 0, 0 , 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
-	  C_LOOK,					0, 0, 0, 0,
+	C_LOOK,					0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
@@ -540,111 +540,111 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	1, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	2, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	3, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	4, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	5, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	6, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	7, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	8, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, TOP_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	9, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, BOTTOM_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	10, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	RIGHT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	11, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	LEFT_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_STRATVEH	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
-	  C_STRATFOOT	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
+	C_STRATFOOT	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,					6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
-	  C_INVALIDACTION	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
+	C_INVALIDACTION	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,								0, 0, 0, 0,
 		0,								0, 0, 0, 0,
 		0,								0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 	{ C_TRINGS,					6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
-	  C_CHOPPER	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
+	C_CHOPPER	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,								0, 0, 0, 0,
 		0,								0, 0, 0, 0,
 		0,								0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_ACTIONMODE,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -652,14 +652,14 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0,  CURSOR_TO_FLASH, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0,	CURSOR_TO_FLASH, 0 },
 
 	{ C_TARGMODEBURST,									0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TARGMODEBURSTBLACK,							0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
 		0,																0, 0, 0, 0,
 		0,																0, 0, 0, 0,
 		0,																0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0,  CURSOR_TO_FLASH, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0,	CURSOR_TO_FLASH, 0 },
 
 	{ 
 		C_TALK,					0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -691,7 +691,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				5, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -699,7 +699,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -707,7 +707,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -715,7 +715,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_ACTIONMODERED,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -723,42 +723,42 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ C_EXITARROWS	,	12, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	13, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_EXITARROWS	,	14, 0, 0, 0, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		1,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_WIRECUTR	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_WIRECUT	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_ACTIONMODEBLACK,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -766,7 +766,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,							6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_FLASH, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_FLASH, 0 },
 
 	{ 
 		C_ACTIONMODEBLACK,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -774,7 +774,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_FLASH, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_FLASH, 0 },
 
 	{ C_IBEAM_WHITE,	0, 0, 0, 0,
 		0,							0, 0, 0, 0,
@@ -789,7 +789,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_THROWB,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -797,7 +797,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_THROWR,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -805,7 +805,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_THROWG,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -813,7 +813,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_FLASH, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_FLASH, 0 },
 
 
 	// THROW CURSORS W/ RINGS
@@ -823,7 +823,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -831,7 +831,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				5, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -839,7 +839,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 
 	{ 
@@ -848,7 +848,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -856,7 +856,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -864,7 +864,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -872,7 +872,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				7, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -880,7 +880,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				8, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -888,7 +888,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				4, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 		// TARGET WITH WHITE RINGS
 	{ 
@@ -897,7 +897,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 
 	{ 
@@ -906,7 +906,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -914,7 +914,7 @@ CursorData CursorDatabase[] =
 		C_TWRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -922,7 +922,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_TWRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -930,7 +930,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_TWRINGS,				4, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 		// YELLOW RINGS
 	{ 
@@ -939,7 +939,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				5, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -947,7 +947,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -955,7 +955,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				1, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -963,7 +963,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				2, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	{ 
 		C_THROWR,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -971,7 +971,7 @@ CursorData CursorDatabase[] =
 		C_YELLOWRINGS,				3, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0   , CURSOR_TO_SUB_CONDITIONALLY, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_SUB_CONDITIONALLY, 0 },
 
 	// ITEM THROW ONES...
 	{ 
@@ -980,7 +980,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				0, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_THROWB,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -988,7 +988,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_ITEMTHROW,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -996,7 +996,7 @@ CursorData CursorDatabase[] =
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		3,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ 
 		C_ITEMTHROW,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -1004,7 +1004,7 @@ CursorData CursorDatabase[] =
 		C_THROWB,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
 		C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		0,							0, 0, 0, 0,
-		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_FLASH2, 0 },
+		4,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_FLASH2, 0 },
 
 	{ 
 		C_ITEMTHROW,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
@@ -1012,42 +1012,42 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , CURSOR_TO_FLASH2, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, CURSOR_TO_FLASH2, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_BOMB_GREY,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_BOMB_RED	,		0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_REMOTE_GREY,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_REMOTE_RED	,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		2, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_ENTERV,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR,		HIDE_SUBCURSOR, 
 		C_MOVEV,				0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -1095,42 +1095,42 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_REPAIRR			,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_JAR					,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_JARRED			,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_CAN					,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_CANRED			,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{	
 		C_X,						0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -1138,7 +1138,7 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		1, CENTER_CURSOR, CENTER_CURSOR  , 0, 0									, 0, 0 },
+		1, CENTER_CURSOR, CENTER_CURSOR	, 0, 0									, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR,		HIDE_SUBCURSOR, 
 		C_WAIT,					0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
@@ -1173,14 +1173,14 @@ CursorData CursorDatabase[] =
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 	{ C_TRINGS,				6, 0, HIDE_SUBCURSOR, HIDE_SUBCURSOR, 
 		C_FUEL_RED		,	0, 0, CENTER_SUBCURSOR, CENTER_SUBCURSOR, 
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
 		0,							0, 0, 0, 0,
-		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0  , 0, 0 },
+		2,	CENTER_CURSOR, CENTER_CURSOR, 0, 0	, 0, 0 },
 
 
 };
@@ -1206,21 +1206,21 @@ void HandleAnimatedCursors( )
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			UpdateAnimatedCursorFrames( gViewportRegion.Cursor );
-			SetCurrentCursorFromDatabase(  gViewportRegion.Cursor  );
+			SetCurrentCursorFromDatabase(	gViewportRegion.Cursor	);
 		}
 
 
 		if ( gDisableRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			UpdateAnimatedCursorFrames( gDisableRegion.Cursor );
-			SetCurrentCursorFromDatabase(  gDisableRegion.Cursor  );
+			SetCurrentCursorFromDatabase(	gDisableRegion.Cursor	);
 		}
 
 
 		if ( gUserTurnRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			UpdateAnimatedCursorFrames( gUserTurnRegion.Cursor );
-			SetCurrentCursorFromDatabase(  gUserTurnRegion.Cursor  );
+			SetCurrentCursorFromDatabase(	gUserTurnRegion.Cursor	);
 		}
 
 	}
@@ -1232,7 +1232,7 @@ void HandleAnimatedCursors( )
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			UpdateFlashingCursorFrames( gViewportRegion.Cursor );
-			SetCurrentCursorFromDatabase(  gViewportRegion.Cursor  );
+			SetCurrentCursorFromDatabase(	gViewportRegion.Cursor	);
 		}
 
 	}
@@ -1240,10 +1240,10 @@ void HandleAnimatedCursors( )
 
 }
 
-/*extern INT16					 gsCurMouseOffsetX;
-extern INT16 				 gsCurMouseOffsetY;
-extern UINT16				 gsCurMouseHeight;
-extern UINT16				 gsCurMouseWidth;*/
+/*extern INT16					gsCurMouseOffsetX;
+extern INT16 				gsCurMouseOffsetY;
+extern UINT16				gsCurMouseHeight;
+extern UINT16				gsCurMouseWidth;*/
 
 void DrawMouseGraphics( )
 {
@@ -1300,7 +1300,7 @@ void DrawMouseGraphics( )
 void BltJA2CursorData( )
 {
 	PERFORMANCE_MARKER
-	if ( ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA  ) )
+	if ( ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA	) )
 	{
 		DrawMouseText();
 		DrawMouseGraphics();
@@ -1523,7 +1523,7 @@ void DrawMouseText( )
 			SetFontForeground( FONT_MCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );				
 
-			if ( !( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA  ) )
+			if ( !( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA	) )
 			{
 				mprintf( sX + 10, sY - 10, L"x%d", gpItemPointer->ubNumberOfObjects );
 			}
@@ -1579,14 +1579,14 @@ void UpdateFlashingCursorFrames( UINT32 uiCursorIndex )
 		{
 			pCurData->bFlashIndex = !pCurData->bFlashIndex;
 
-      // Should we play a sound?
-      if ( pCurData->bFlags & ( CURSOR_TO_PLAY_SOUND ) )
-      {
-         if ( pCurData->bFlashIndex )
-         {
-            PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );			              
-         }
-      }
+		// Should we play a sound?
+		if ( pCurData->bFlags & ( CURSOR_TO_PLAY_SOUND ) )
+		{
+		 if ( pCurData->bFlashIndex )
+		 {
+			PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );						
+		 }
+		}
 		}
 	}
 

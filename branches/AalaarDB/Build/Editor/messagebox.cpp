@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -77,7 +76,7 @@ void CreateMessageBox( STR16 wzString )
 BOOLEAN MessageBoxHandled()
 {
 	PERFORMANCE_MARKER
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 
 	while( DequeueEvent( &DummyEvent ) )
 	{

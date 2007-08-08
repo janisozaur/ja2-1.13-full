@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -104,9 +103,9 @@ void UpdateBuildingsInfo()
 //1) if there isn't structure info here, return.
 //2) if there is structure info here, delete it now.
 //3) KillBuilding at x-1, y.
-//4) KillBuilding at x  , y-1.
+//4) KillBuilding at x	, y-1.
 //5) KillBuilding at x+1, y.
-//6) KillBuilding at x  , y+1.
+//6) KillBuilding at x	, y+1.
 void KillBuilding( UINT32 iMapIndex )
 {
 	PERFORMANCE_MARKER
@@ -201,17 +200,17 @@ void BuildLayout( INT32 iMapIndex, INT32 iOffset )
 	BuildLayout( iMapIndex, WORLD_COLS );
 }
 
-//The first step is copying a building.  After that, it either must be pasted or moved.
+//The first step is copying a building.	After that, it either must be pasted or moved.
 void CopyBuilding( INT32 iMapIndex )
 {
 	PERFORMANCE_MARKER
-	AssertMsg( !gpBuildingLayoutList, "Error:  Attempting to copy building multiple times." );
+	AssertMsg( !gpBuildingLayoutList, "Error:	Attempting to copy building multiple times." );
 
-	//First step is to determine if we have a building in the area that we click.  If not, do nothing.
+	//First step is to determine if we have a building in the area that we click.	If not, do nothing.
 	if( !BuildingAtGridNo( iMapIndex ) )
 		return;
-	//Okay, a building does exist here to some undetermined capacity.  
-	//Allocate the basic structure, then calculate the layout.  The head node is
+	//Okay, a building does exist here to some undetermined capacity.	
+	//Allocate the basic structure, then calculate the layout.	The head node is
 	gpBuildingLayoutList = (BUILDINGLAYOUTNODE*)MemAlloc( sizeof( BUILDINGLAYOUTNODE ) );
 	Assert( gpBuildingLayoutList );
 	gpBuildingLayoutList->sGridNo = (INT16)iMapIndex;
@@ -220,15 +219,15 @@ void CopyBuilding( INT32 iMapIndex )
 	//Set the anchor point for this building -- this is where the user clicked.
 	gsBuildingLayoutAnchorGridNo = (INT16)iMapIndex;
 		
-	//Now, recursively expand out while adding unique gridnos to our list.  The recursion will
+	//Now, recursively expand out while adding unique gridnos to our list.	The recursion will
 	//terminate when complete.
 	BuildLayout( iMapIndex, -WORLD_COLS );
 	BuildLayout( iMapIndex, -1 );
 	BuildLayout( iMapIndex, 1 );
 	BuildLayout( iMapIndex, WORLD_COLS );
 
-	//We have our layout.  Now depending on the mode, we will either move the building or
-	//copy it.  The layout automatically gets deleted as soon as the user releases the mouse
+	//We have our layout.	Now depending on the mode, we will either move the building or
+	//copy it.	The layout automatically gets deleted as soon as the user releases the mouse
 	//button.
 }
 
@@ -591,7 +590,7 @@ void ExtractAndUpdateDoorInfo()
 
 	num = min( max( GetNumericStrictValueFromField( 2 ), 0 ), 20 );
 	if( door.ubTrapID && !num )
-		num = 1;  //Can't have a trap without a traplevel!
+		num = 1;	//Can't have a trap without a traplevel!
 	door.ubTrapLevel = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 2, num );
 	if( num ) 
@@ -756,7 +755,7 @@ void SetupTextInputForBuildings()
 	PERFORMANCE_MARKER
 	CHAR16 str[4];
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
+	AddUserInputField( NULL );	//just so we can use short cut keys while not typing.
 	swprintf( str, L"%d", gubMaxRoomNumber );
 	AddTextInputField( iScreenWidthOffset + 410, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }

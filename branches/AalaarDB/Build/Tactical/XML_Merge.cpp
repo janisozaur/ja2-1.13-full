@@ -111,7 +111,7 @@ mergeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -228,7 +228,7 @@ BOOLEAN ReadInMergeStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 

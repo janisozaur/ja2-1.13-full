@@ -72,15 +72,15 @@
 
 CHAR8		str[128];
 
-//Kris:  December 2, 1997
+//Kris:	December 2, 1997
 //Special internal debugging utilities that will ensure that you don't attempt to delete
-//an already deleted button, or it's images, etc.  It will also ensure that you don't create
+//an already deleted button, or it's images, etc.	It will also ensure that you don't create
 //the same button that already exists.
-//TO REMOVE ALL DEBUG FUNCTIONALITY:  simply comment out BUTTONSYSTEM_DEBUGGING definition
+//TO REMOVE ALL DEBUG FUNCTIONALITY:	simply comment out BUTTONSYSTEM_DEBUGGING definition
 #ifdef JA2
-  #ifdef _DEBUG
-	  #define BUTTONSYSTEM_DEBUGGING
-  #endif
+	#ifdef _DEBUG
+	#define BUTTONSYSTEM_DEBUGGING
+	#endif
 #endif
 
 #ifdef BUTTONSYSTEM_DEBUGGING
@@ -95,7 +95,7 @@ void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 	{
 		c = ButtonList[ x ];
 		if( !c )																													continue;
-		if( c->uiFlags									&  BUTTON_DELETION_PENDING		)   continue;
+		if( c->uiFlags									&	BUTTON_DELETION_PENDING		)	continue;
 		if( c->UserData[3]							== 0xffffffff									)		continue;
 		if( b->Area.PriorityLevel				!= c->Area.PriorityLevel			)		continue;
 		if( b->Area.RegionTopLeftX			!= c->Area.RegionTopLeftX			)		continue;
@@ -107,7 +107,7 @@ void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 		if( b->XLoc											!= c->XLoc										)		continue;
 		if( b->YLoc											!= c->YLoc										)		continue;
 		//if we get this far, it is reasonably safe to assume that the newly created
-		//button already exists.  Placing a break point on the following assert will
+		//button already exists.	Placing a break point on the following assert will
 		//allow the coder to easily isolate the case!
 		sprintf( str, "Attempting to create a button that has already been created (existing buttonID %d).", c->IDNum );
 		AssertMsg( 0, str );
@@ -119,7 +119,7 @@ void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 //These are the variables used for the anchoring of a particular button.
 //When you click on a button, it get's anchored, until you release the mouse button.
 //When you move around, you don't want to select other buttons, even when you release
-//it.  This follows the Windows 95 convention.
+//it.	This follows the Windows 95 convention.
 GUI_BUTTON *gpAnchoredButton;
 GUI_BUTTON *gpPrevAnchoredButton;
 BOOLEAN gfAnchoredState;
@@ -220,7 +220,7 @@ INT32 LoadButtonImage(const STR8 filename, INT32 Grayed, INT32 OffNormal, INT32 
 
 	// is there ANY file to open?
 	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
+		(OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for %s",filename));
 		return(-1);
@@ -356,7 +356,7 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 
 	// is there ANY file to open?
 	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
+		(OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for pre-loaded button image %d",LoadedImg));
 		return(-1);
@@ -479,7 +479,7 @@ INT32 UseVObjAsButtonImage(HVOBJECT hVObject, INT32 Grayed, INT32 OffNormal, INT
 
 	// is there ANY file to open?
 	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
+		(OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("UseVObjAsButtonImage: No button pictures indexes selected for VObject"));
 		return(-1);
@@ -923,7 +923,7 @@ INT16 LoadGenericButtonIcon(const STR8 filename)
 BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 {
 	PERFORMANCE_MARKER
-	if( GenImg < 0 || GenImg >= MAX_BUTTON_ICONS  )
+	if( GenImg < 0 || GenImg >= MAX_BUTTON_ICONS	)
 	{
 		sprintf( str, "Attempting to UnloadGenericButtonIcon with out of range index %d.", GenImg );
 		AssertMsg( 0, str );
@@ -955,7 +955,7 @@ BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fDeletedSomething = FALSE;
-	if( GenImg < 0 || GenImg >= MAX_GENERIC_PICS  )
+	if( GenImg < 0 || GenImg >= MAX_GENERIC_PICS	)
 	{
 		sprintf( str, "Attempting to UnloadGenericButtonImage with out of range index %d.", GenImg );
 		AssertMsg( 0, str );
@@ -1339,7 +1339,7 @@ void RemoveButton(INT32 iButtonID)
 	//Kris:
 	if( b->uiFlags & BUTTON_SELFDELETE_IMAGE )
 	{ //checkboxes and simple create buttons have their own graphics associated with them,
-		//and it is handled internally.  We delete it here.  This provides the advantage of less
+		//and it is handled internally.	We delete it here.	This provides the advantage of less
 		//micromanagement, but with the disadvantage of wasting more memory if you have lots of
 		//buttons using the same graphics.
 		UnloadButtonImage( b->ImageNum );
@@ -1544,8 +1544,8 @@ INT32 SetButtonIcon( INT32 iButtonID, INT16 Icon, INT16 IconIndex )
 
 	// If button isn't an icon button, ignore this call
 	if(((b->uiFlags & BUTTON_TYPES) == BUTTON_QUICK) ||
-		 ((b->uiFlags & BUTTON_TYPES) == BUTTON_HOT_SPOT) ||
-		 ((b->uiFlags & BUTTON_TYPES) == BUTTON_GENERIC))
+		((b->uiFlags & BUTTON_TYPES) == BUTTON_HOT_SPOT) ||
+		((b->uiFlags & BUTTON_TYPES) == BUTTON_GENERIC))
 	{
 		return -1;
 	}
@@ -1681,7 +1681,6 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 	b->BackRect = -1;
 #endif
 
-	// WANNE 2
 	// Add button to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound( b );
@@ -1743,7 +1742,7 @@ INT32 CreateTextButton(STR16 string, UINT32 uiFont, INT16 sForeColor, INT16 sSha
 	if ( string && wcslen( string ) )
 	{
 		b->string = (STR16) MemAlloc( (wcslen(string)+1)*sizeof(CHAR16) );
-		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateTextButton." );
+		AssertMsg( b->string, "Out of memory error:	Couldn't allocate string in CreateTextButton." );
 		wcscpy( b->string, string );
 	}
 
@@ -1936,11 +1935,11 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
 	PERFORMANCE_MARKER
-  GUI_BUTTON *b;
-  b = ButtonList[iBtnId];
+	GUI_BUTTON *b;
+	b = ButtonList[iBtnId];
 	if (!b)
 		return FALSE;
-  b->Area.Cursor = crsr;
+	b->Area.Cursor = crsr;
 	return TRUE;
 }
 
@@ -2065,7 +2064,7 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 	memset( &b->Area, 0, sizeof( MOUSE_REGION ) );
 	// Define a MOUSE_REGION for this QuickButton
 	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,
-			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
+			(UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
 				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
 				(INT8)Priority, MSYS_STARTING_CURSORVAL,
 				(MOUSE_CALLBACK)QuickButtonCallbackMMove,
@@ -2092,9 +2091,9 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 	return(ButtonNum);
 }
 
-//A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more assumptions.  It self manages the
-//loading, and deleting of the image.  The size of the image determines the size of the button.  It also uses
-//the default move callback which emulates Win95.  Finally, it sets the priority to normal.  The function you
+//A hybrid of QuickCreateButton.	Takes a lot less parameters, but makes more assumptions.	It self manages the
+//loading, and deleting of the image.	The size of the image determines the size of the button.	It also uses
+//the default move callback which emulates Win95.	Finally, it sets the priority to normal.	The function you
 //choose also determines the type of button (toggle, notoggle, or newtoggle)
 INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
 {
@@ -2102,7 +2101,7 @@ INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, const STR8 filename, GUI_CALL
 	return CreateSimpleButton( x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
-INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
+INT32 CreateEasyToggleButton	( INT32 x, INT32 y, const STR8 filename, GUI_CALLBACK ClickCallback )
 {
 	PERFORMANCE_MARKER
 	return CreateSimpleButton( x, y, filename, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
@@ -2148,11 +2147,11 @@ INT32 CreateSimpleButton( INT32 x, INT32 y, const STR8 filename, INT32 Type, INT
 }
 
 INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont,
-															 INT16 sForeColor, INT16 sShadowColor,
-															 INT16 sForeColorDown, INT16 sShadowColorDown,
-															 INT8 bJustification,
-															 INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
-															 GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
+															INT16 sForeColor, INT16 sShadowColor,
+															INT16 sForeColorDown, INT16 sShadowColorDown,
+															INT8 bJustification,
+															INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
+															GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
 	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
@@ -2211,10 +2210,10 @@ INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont,
 
 	// Allocate memory for the button's text string...
 	b->string = NULL;
-	if ( string  )
+	if ( string	)
 	{
 		b->string = (STR16) MemAlloc( (wcslen(string)+1)*sizeof(CHAR16) );
-		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateIconAndTextButton." );
+		AssertMsg( b->string, "Out of memory error:	Couldn't allocate string in CreateIconAndTextButton." );
 		wcscpy( b->string, string );
 	}
 
@@ -2257,7 +2256,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const STR16 string, UINT32 uiFont,
 
 	// Define a MOUSE_REGION for this QuickButton
 	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,
-			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
+			(UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
 				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
 				(INT8)Priority, MSYS_STARTING_CURSORVAL,
 				(MOUSE_CALLBACK)QuickButtonCallbackMMove,
@@ -2383,7 +2382,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 	Assert( iButtonID < MAX_BUTTONS );
 	b = ButtonList[ iButtonID ];
 	Assert( b );
-	//Range check:  if invalid, then set it to center justified.
+	//Range check:	if invalid, then set it to center justified.
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
 	b->bJustification = bJustification;
@@ -2407,7 +2406,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, STR16 string, INT32 uiFon
 	b->sShadowColor = sShadowColor;
 	b->sForeColorDown = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
-	//Range check:  if invalid, then set it to center justified.
+	//Range check:	if invalid, then set it to center justified.
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
 	b->bJustification = bJustification;
@@ -2487,11 +2486,11 @@ void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 }
 
 
-//Note:  Text is always on top
+//Note:	Text is always on top
 //If fShiftImage is true, then the image will shift down one pixel and right one pixel
 //just like the text does.
 BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex,
-													 INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage )
+													INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage )
 {
 	PERFORMANCE_MARKER
 	GUI_BUTTON *b;
@@ -2631,11 +2630,11 @@ void QuickButtonCallbackMMove(MOUSE_REGION *reg,INT32 reason)
 	AssertMsg( b != NULL, str );
 
 	if( !b )
-		return;  //This is getting called when Adding new regions...
+		return;	//This is getting called when Adding new regions...
 
 
 	if( b->uiFlags & BUTTON_ENABLED &&
-		  reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE) )
+		reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE) )
 	{
 		b->uiFlags |= BUTTON_DIRTY;
 	}
@@ -2776,14 +2775,14 @@ void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
 
 	//Kris:
 	//Set the anchored button incase the user moves mouse off region while still holding
-	//down the button, but only if the button is up.  In Win95, buttons that are already
+	//down the button, but only if the button is up.	In Win95, buttons that are already
 	//down, and anchored never change state, unless you release the mouse in the button area.
 
 	if( b->MoveCallback == DEFAULT_MOVE_CALLBACK && b->uiFlags & BUTTON_ENABLED )
 	{
 		if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 		{
-			gpAnchoredButton =  b;
+			gpAnchoredButton =	b;
 			gfAnchoredState = StateBefore;
 			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
@@ -2840,7 +2839,7 @@ void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
 	// If there is a callback function with this button, call it
 	if(b->uiFlags & BUTTON_CLICK_CALLBACK)
 	{
-		//Kris:  January 6, 1998
+		//Kris:	January 6, 1998
 		//Added these checks to avoid a case where it was possible to process a leftbuttonup message when
 		//the button wasn't anchored, and should have been.
 		gfDelayButtonDeletion = TRUE;
@@ -2907,7 +2906,7 @@ void RenderButtons(void)
 	for(iButtonID=0;iButtonID<MAX_BUTTONS;iButtonID++)
 	{
 		// If the button exists, and it's not owned by another object, draw it
-		//Kris:  and make sure that the button isn't hidden.
+		//Kris:	and make sure that the button isn't hidden.
 		b = ButtonList[iButtonID];
 		if( b && b->Area.uiFlags & MSYS_REGION_ENABLED )
 		{
@@ -2977,10 +2976,10 @@ void RenderButtons(void)
 void MarkAButtonDirty( INT32 iButtonNum )
 {
 	PERFORMANCE_MARKER
-  // surgical dirtying->marks a user specified button dirty, without dirty the whole lot of them
+	// surgical dirtying->marks a user specified button dirty, without dirty the whole lot of them
 
 
-  // If the button exists, and it's not owned by another object, draw it
+	// If the button exists, and it's not owned by another object, draw it
 		if( ButtonList[ iButtonNum ] )
 		{
 			// Turn on dirty flag
@@ -3011,10 +3010,10 @@ void MarkButtonsDirty( void )
 void UnMarkButtonDirty( INT32 iButtonIndex )
 {
 	PERFORMANCE_MARKER
-  if ( ButtonList[ iButtonIndex ] )
-  {
-	  ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
-  }
+	if ( ButtonList[ iButtonIndex ] )
+	{
+	ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
+	}
 }
 
 void UnmarkButtonsDirty( void )
@@ -3070,10 +3069,10 @@ BOOLEAN DrawButton(INT32 iButtonID )
 	if( ButtonList[ iButtonID ]->string )
 		SaveFontSettings();
 	// Draw this button
-  if( ButtonList[ iButtonID ]->Area.uiFlags & MSYS_REGION_ENABLED )
-  {
-	  DrawButtonFromPtr( ButtonList[ iButtonID ] );
-  }
+	if( ButtonList[ iButtonID ]->Area.uiFlags & MSYS_REGION_ENABLED )
+	{
+	DrawButtonFromPtr( ButtonList[ iButtonID ] );
+	}
 
 	if( ButtonList[ iButtonID ]->string )
 		RestoreFontSettings();
@@ -3105,7 +3104,7 @@ void DrawButtonFromPtr(GUI_BUTTON *b)
 		case BUTTON_HOT_SPOT:
 			if(b->uiFlags & BUTTON_NO_TOGGLE)
 				b->uiFlags &= (~BUTTON_CLICKED_ON);
-			return;  //hotspots don't have text, but if you want to, change this to a break!
+			return;	//hotspots don't have text, but if you want to, change this to a break!
 		case BUTTON_CHECKBOX:
 			DrawCheckBoxButton(b);
 			break;
@@ -3187,14 +3186,14 @@ void DrawQuickButton(GUI_BUTTON *b)
 
 	// Display the button image
 	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj,
-								 (UINT16)UseImage, b->XLoc, b->YLoc,
-								 VO_BLT_SRCTRANSPARENCY, NULL);
+								(UINT16)UseImage, b->XLoc, b->YLoc,
+								VO_BLT_SRCTRANSPARENCY, NULL);
 }
 
 void DrawHatchOnButton( GUI_BUTTON *b )
 {
 	PERFORMANCE_MARKER
-	UINT8	 *pDestBuf;
+	UINT8	*pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
 	ClipRect.iLeft = b->Area.RegionTopLeftX;
@@ -3314,7 +3313,7 @@ void DrawCheckBoxButton( GUI_BUTTON *b )
 		{
 			// Is the mouse over the button, and do we have hilite image?
 			if( b->Area.uiFlags & MSYS_MOUSE_IN_AREA && gfRenderHilights &&
-				  gfLeftButtonState &&
+				gfLeftButtonState &&
 					ButtonPictures[b->ImageNum].OffHilite != -1 )
 				UseImage = ButtonPictures[b->ImageNum].OffHilite;			// Use Off-Hilite image
 			else if(ButtonPictures[b->ImageNum].OffNormal != -1)
@@ -3345,8 +3344,8 @@ void DrawCheckBoxButton( GUI_BUTTON *b )
 
 	// Display the button image
 	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj,
-								 (UINT16)UseImage, b->XLoc, b->YLoc,
-								 VO_BLT_SRCTRANSPARENCY, NULL);
+								(UINT16)UseImage, b->XLoc, b->YLoc,
+								VO_BLT_SRCTRANSPARENCY, NULL);
 }
 
 void DrawIconOnButton(GUI_BUTTON *b)
@@ -3446,10 +3445,10 @@ void DrawIconOnButton(GUI_BUTTON *b)
 		// Blit the icon
 		if( b->uiFlags & BUTTON_GENERIC )
 			BltVideoObject( ButtonDestBuffer,GenericButtonIcons[b->iIconID], b->usIconIndex, (INT16)xp, (INT16)yp,
-										  VO_BLT_SRCTRANSPARENCY, NULL);
+										VO_BLT_SRCTRANSPARENCY, NULL);
 		else
 			BltVideoObject( ButtonDestBuffer, hvObject, b->usIconIndex, (INT16)xp, (INT16)yp,
-				              VO_BLT_SRCTRANSPARENCY, NULL );
+							VO_BLT_SRCTRANSPARENCY, NULL );
 		// Restore previous clip region
 		SetClippingRect(&OldClip);
 	}
@@ -3595,9 +3594,9 @@ void DrawTextOnButton(GUI_BUTTON *b)
 			{
 				//Kris:
 				//There needs to be recalculation of the start positions based on the
-				//justification and the width specified wrapped width.  I was drawing a
+				//justification and the width specified wrapped width.	I was drawing a
 				//double lined word on the right side of the button to find it drawing way
-				//over to the left.  I've added the necessary code for the right and center
+				//over to the left.	I've added the necessary code for the right and center
 				//justification.
 				yp = b->Area.RegionTopLeftY + 2;
 				
@@ -3721,10 +3720,10 @@ void DrawGenericButton(GUI_BUTTON *b)
 
 	// Fill the button's area with the button's background color
 	ColorFillVideoSurfaceArea(ButtonDestBuffer,b->Area.RegionTopLeftX,
-																						 b->Area.RegionTopLeftY,
-																						 b->Area.RegionBottomRightX,
-																						 b->Area.RegionBottomRightY,
-																						 GenericButtonFillColors[b->ImageNum]);
+																						b->Area.RegionTopLeftY,
+																						b->Area.RegionBottomRightX,
+																						b->Area.RegionBottomRightY,
+																						GenericButtonFillColors[b->ImageNum]);
 
 	// If there is a background image, fill the button's area with it
 	if(GenericButtonBackground[b->ImageNum]!=NULL)
@@ -3737,13 +3736,13 @@ void DrawGenericButton(GUI_BUTTON *b)
 
 		// Fill the area with the image, tilling it if need be.
 		ImageFillVideoSurfaceArea(ButtonDestBuffer,b->Area.RegionTopLeftX+ox,
-																							 b->Area.RegionTopLeftY+oy,
-																							 b->Area.RegionBottomRightX,
-																							 b->Area.RegionBottomRightY,
-																							 GenericButtonBackground[b->ImageNum],
-																							 GenericButtonBackgroundIndex[b->ImageNum],
-																							 GenericButtonOffsetX[b->ImageNum],
-																							 GenericButtonOffsetY[b->ImageNum]);
+																							b->Area.RegionTopLeftY+oy,
+																							b->Area.RegionBottomRightX,
+																							b->Area.RegionBottomRightY,
+																							GenericButtonBackground[b->ImageNum],
+																							GenericButtonBackgroundIndex[b->ImageNum],
+																							GenericButtonOffsetX[b->ImageNum],
+																							GenericButtonOffsetY[b->ImageNum]);
 	}
 
 	// Lock the dest buffer
@@ -4198,7 +4197,7 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, const STR8 filename, INT16 Priorit
 void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 {
 	PERFORMANCE_MARKER
-  GUI_BUTTON *b;
+	GUI_BUTTON *b;
 	b=ButtonList[iButtonNum];
 	if((index < 0) || (index > 3))
 		return;
@@ -4255,11 +4254,11 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON *btn,INT32 reason)
 void ReleaseAnchorMode()
 {
 	PERFORMANCE_MARKER
-  if( !gpAnchoredButton )
+	if( !gpAnchoredButton )
 		return;
 
 	if(	gusMouseXPos < gpAnchoredButton->Area.RegionTopLeftX ||
-		  gusMouseXPos > gpAnchoredButton->Area.RegionBottomRightX ||
+		gusMouseXPos > gpAnchoredButton->Area.RegionBottomRightX ||
 			gusMouseYPos < gpAnchoredButton->Area.RegionTopLeftY ||
 			gusMouseYPos > gpAnchoredButton->Area.RegionBottomRightY )
 	{

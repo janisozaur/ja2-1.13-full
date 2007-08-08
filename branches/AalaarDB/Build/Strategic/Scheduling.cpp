@@ -53,8 +53,8 @@ void ReverseSchedules();
 void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTime, UINT32 uiEndTime );
 
 //IMPORTANT:
-//This function adds a NEWLY allocated schedule to the list.  The pointer passed is totally
-//separate.  So make sure that you delete the pointer if you don't need it anymore.  The editor
+//This function adds a NEWLY allocated schedule to the list.	The pointer passed is totally
+//separate.	So make sure that you delete the pointer if you don't need it anymore.	The editor
 //uses a single static node to copy data from, hence this method.
 void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 {
@@ -177,7 +177,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if( !pSchedule )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Schedule ID of %d not found.", ubScheduleID ); 
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Schedule ID of %d not found.", ubScheduleID ); 
 		#endif
 		return;
 	}
@@ -185,7 +185,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if( pSchedule->ubSoldierID >= TOTAL_SOLDIERS )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Illegal soldier ID of %d.", pSchedule->ubSoldierID ); 
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Illegal soldier ID of %d.", pSchedule->ubSoldierID ); 
 		#endif
 		return;
 	}
@@ -201,7 +201,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if ( !pSoldier->bActive )
 	{
 		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %s.", pSoldier->name );
+			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:	Soldier isn't active.	Name is %s.", pSoldier->name );
 		#endif
 	}
 
@@ -238,7 +238,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if ( fAutoProcess )
 	{
 		UINT32 uiStartTime, uiEndTime;
-		//Grab the last time the eventlist was queued.  This will tell us how much time has passed since that moment,
+		//Grab the last time the eventlist was queued.	This will tell us how much time has passed since that moment,
 		//and how long we need to auto process this schedule.
 		uiStartTime = (guiTimeOfLastEventQuery / 60) % NUM_MIN_IN_DAY;
 		uiEndTime = GetWorldMinutesInDay();
@@ -266,7 +266,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 }
 
-//Called before leaving the editor, or saving the map.  This recalculates
+//Called before leaving the editor, or saving the map.	This recalculates
 //all of the schedule IDs from scratch and adjusts the effected structures accordingly.
 void OptimizeSchedules()
 {
@@ -314,13 +314,13 @@ void OptimizeSchedules()
 	}
 }
 
-//Called when transferring from the game to the editor.  
+//Called when transferring from the game to the editor.	
 void PrepareSchedulesForEditorEntry()
 {
 	PERFORMANCE_MARKER
 	SCHEDULENODE *curr, *prev, *temp;
 	
-	//Delete all schedule events.  The editor will automatically warp all civilians to their starting locations.
+	//Delete all schedule events.	The editor will automatically warp all civilians to their starting locations.
 	DeleteAllStrategicEventsOfType( EVENT_PROCESS_TACTICAL_SCHEDULE );
 
 	//Now, delete all of the temporary schedules.
@@ -356,7 +356,7 @@ void PrepareSchedulesForEditorEntry()
 	}
 }
 
-//Called when leaving the editor to enter the game.  This posts all of the events that apply.
+//Called when leaving the editor to enter the game.	This posts all of the events that apply.
 void PrepareSchedulesForEditorExit()
 {
 	PERFORMANCE_MARKER
@@ -470,7 +470,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 }
 
 
-//used to fix a bug in the editor where the schedules were reversed.  Because only
+//used to fix a bug in the editor where the schedules were reversed.	Because only
 //some maps were effected, this feature was required.
 void ReverseSchedules()
 {
@@ -585,7 +585,7 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 	UINT8 ubAction;
 	BOOLEAN fSorted = FALSE;
 
-	//Use a bubblesort method (max:  3 switches).
+	//Use a bubblesort method (max:	3 switches).
 	index = 0;
 	while( index < 3 )
 	{
@@ -670,8 +670,8 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 
 	if ( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
-		// CJC, November 28th:  when reloading a saved game we want events posted but no events autoprocessed since
-		// that could change civilian positions.  So rather than doing a bunch of checks outside of this function,
+		// CJC, November 28th:	when reloading a saved game we want events posted but no events autoprocessed since
+		// that could change civilian positions.	So rather than doing a bunch of checks outside of this function,
 		// I thought it easier to screen them out here.
 		return;
 	}
@@ -876,8 +876,8 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 	uiStartTime = uiEndTime - (NUM_MIN_IN_DAY - 1);
 	
 	/*
-	//First thing we need is to get the time that the map was last loaded.  If more than 24 hours,
-	//then process only 24 hours.  If less, then process all the schedules that would have happened within 
+	//First thing we need is to get the time that the map was last loaded.	If more than 24 hours,
+	//then process only 24 hours.	If less, then process all the schedules that would have happened within 
 	//that period of time.
 	uiEndTime = GetWorldTotalMin();
 	if( GetWorldTotalMin() - guiTimeCurrentSectorWasLastLoaded > NUM_MIN_IN_DAY )
@@ -932,7 +932,7 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 		}
 	}
 	else
-	{ //Much simpler:  start at the start and continue to the end.
+	{ //Much simpler:	start at the start and continue to the end.
 		for( i = 0; i < MAX_SCHEDULE_ACTIONS; i++ )
 		{
 			if( pSchedule->usTime[i] == 0xffff )
@@ -956,7 +956,7 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 	{
 		// reached end of schedule, post first event for soldier in the next day
 		// 0th event will be first.
-		// Feb 1:  ONLY IF THERE IS A VALID EVENT TO POST WITH A VALID TIME!
+		// Feb 1:	ONLY IF THERE IS A VALID EVENT TO POST WITH A VALID TIME!
 		if ( pSchedule->usTime[0] != 0xffff )
 		{
 			AddStrategicEvent( EVENT_PROCESS_TACTICAL_SCHEDULE, GetWorldDayInMinutes() + NUM_MIN_IN_DAY + pSchedule->usTime[0], pSchedule->ubScheduleID );
@@ -964,7 +964,7 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 	}
 }
 
-//Leave at night, come back in the morning.  The time variances are a couple hours, so
+//Leave at night, come back in the morning.	The time variances are a couple hours, so
 //the town doesn't turn into a ghost town in 5 minutes.
 void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 {
@@ -976,7 +976,7 @@ void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
 	{ //People in underground sectors don't get schedules.
 		return;
 	}
-	//Create a new node at the head of the list.  The head will become the new schedule
+	//Create a new node at the head of the list.	The head will become the new schedule
 	//we are about to add.
 	curr = gpScheduleList;
 	gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
@@ -1030,7 +1030,7 @@ void PostSchedules()
 	#endif
 	//If no way to leave the map, then don't post default schedules.
 	if( gMapInformation.sNorthGridNo != -1 || gMapInformation.sEastGridNo != -1 ||
-		  gMapInformation.sSouthGridNo != -1 || gMapInformation.sWestGridNo != -1 )
+		gMapInformation.sSouthGridNo != -1 || gMapInformation.sWestGridNo != -1 )
 	{
 		fDefaultSchedulesPossible = TRUE;
 	}
@@ -1049,9 +1049,9 @@ void PostSchedules()
 				if( curr->pSoldier->ubBodyType != COW && 
 						curr->pSoldier->ubBodyType != BLOODCAT && 
 						curr->pSoldier->ubBodyType != HUMVEE &&
-					  curr->pSoldier->ubBodyType != ELDORADO && 
-					  curr->pSoldier->ubBodyType != ICECREAMTRUCK && 
-					  curr->pSoldier->ubBodyType != JEEP )
+					curr->pSoldier->ubBodyType != ELDORADO && 
+					curr->pSoldier->ubBodyType != ICECREAMTRUCK && 
+					curr->pSoldier->ubBodyType != JEEP )
 				{
 					PostDefaultSchedule( curr->pSoldier );
 				}
@@ -1098,7 +1098,7 @@ void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridN
 	}
 }
 
-//Assumes that a schedule has just been processed.  This takes the current time, and compares it to the
+//Assumes that a schedule has just been processed.	This takes the current time, and compares it to the
 //schedule, and looks for the next schedule action that would get processed and posts it.
 void PostNextSchedule( SOLDIERTYPE *pSoldier )
 {

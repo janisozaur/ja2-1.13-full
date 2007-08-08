@@ -325,7 +325,7 @@ enum
 	STR_SURRENDER,
 	STR_REFUSE_FIRSTAID,
 	STR_REFUSE_FIRSTAID_FOR_CREATURE,
-  STR_HOW_TO_USE_SKYRIDDER,
+	STR_HOW_TO_USE_SKYRIDDER,
 	STR_RELOAD_ONLY_ONE_GUN,
 	STR_BLOODCATS_TURN,
 	STR_AUTOFIRE,
@@ -333,8 +333,8 @@ enum
 	STR_ACCURATE,
 	STR_INACCURATE,
 	STR_NO_SEMI_AUTO,
-	STR_NO_MORE_ITEMS_TO_STEAL,	// WANNE
-	STR_NO_MORE_ITEM_IN_HAND,	// WANNE
+	STR_NO_MORE_ITEMS_TO_STEAL,
+	STR_NO_MORE_ITEM_IN_HAND,
 };
 
 // WANNE: Tooltips
@@ -547,8 +547,8 @@ enum
 	LOCK_HAS_BEEN_HIT,
 	LOCK_HAS_BEEN_DESTROYED,
 	DOOR_IS_BUSY,
-  VEHICLE_VITAL_STATS_POPUPTEXT,
-  NO_LOS_TO_TALK_TARGET,
+	VEHICLE_VITAL_STATS_POPUPTEXT,
+	NO_LOS_TO_TALK_TARGET,
 	ATTACHMENT_REMOVED,
 };
 
@@ -795,7 +795,6 @@ enum
 };
 extern		STR16			BobbyROrderFormText[];
 
-// WANNE
 enum
 {
 	// Guns
@@ -878,8 +877,6 @@ enum
 };
 
 extern		STR16			BobbyRText[];
-
-// WANNE
 extern		STR16			BobbyRFilter[];
 
 
@@ -1115,11 +1112,11 @@ extern	STR16		zMarksMapScreenText[];
 
 //Weapon Name and Description size
 #define		ITEMSTRINGFILENAME				"BINARYDATA\\ITEMDESC.EDT"
-#define   SIZE_ITEM_NAME						160
-#define   SIZE_SHORT_ITEM_NAME			160
-#define   SIZE_ITEM_INFO						480
-#define   SIZE_ITEM_PROS						160
-#define   SIZE_ITEM_CONS						160
+#define	SIZE_ITEM_NAME						160
+#define	SIZE_SHORT_ITEM_NAME			160
+#define	SIZE_ITEM_INFO						480
+#define	SIZE_ITEM_PROS						160
+#define	SIZE_ITEM_CONS						160
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString );
 extern void LoadAllExternalText( void );

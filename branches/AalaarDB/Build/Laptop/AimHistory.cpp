@@ -57,7 +57,7 @@ extern UINT32	guiBottomButton2; // symbol already declared globally in AimPolici
 extern UINT32	guiContentButton; // symbol already declared globally in AimPolicies.cpp (jonathanl)
 
 extern UINT8	gubCurPageNum; // symbol already declared globally in AimPolicies.cpp (jonathanl)
-extern BOOLEAN	gfInToc =  FALSE; // symbol already declared globally in AimPolicies.cpp (jonathanl)
+extern BOOLEAN	gfInToc =	FALSE; // symbol already declared globally in AimPolicies.cpp (jonathanl)
 extern UINT8	gubAimHistoryMenuButtonDown=255; // symbol already declared globally in AimPolicies.cpp (jonathanl)
 
 BOOLEAN		gfExitingAimHistory;
@@ -69,7 +69,7 @@ void ResetAimHistoryButtons();
 void DisableAimHistoryButton();
 
 
-MOUSE_REGION    gSelectedHistoryTocMenuRegion[ NUM_AIM_HISTORY_PAGES ];
+MOUSE_REGION	gSelectedHistoryTocMenuRegion[ NUM_AIM_HISTORY_PAGES ];
 void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Bottom Menu Buttons
@@ -131,7 +131,7 @@ void EnterInitAimHistory()
 BOOLEAN EnterAimHistory()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	gfExitingAimHistory = FALSE;
 	InitAimDefaults();
@@ -237,11 +237,11 @@ void RenderAimHistory()
 			break;
 	}
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 
 	RenderWWWProgramTitleBar( );
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -250,7 +250,7 @@ void RenderAimHistory()
 BOOLEAN InitAimHistoryMenuBar(void)
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	UINT16					i, usPosX;
 
 	// load the Bottom Buttons graphic and add it
@@ -262,7 +262,7 @@ BOOLEAN InitAimHistoryMenuBar(void)
 	FilenameForBPP("LAPTOP\\BottomButton2.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBottomButton2));
 
-	guiHistoryMenuButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiHistoryMenuButtonImage =	LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
 	usPosX = AIM_HISTORY_MENU_X;
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{
@@ -273,11 +273,11 @@ BOOLEAN InitAimHistoryMenuBar(void)
 //		MSYS_SetBtnUserData( guiHistoryMenuButton[i], 0, i+1);
 
 		guiHistoryMenuButton[i] = CreateIconAndTextButton( guiHistoryMenuButtonImage, AimHistoryText[i+AIM_HISTORY_PREVIOUS], FONT10ARIAL, 
-														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 usPosX, AIM_HISTORY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
+														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														usPosX, AIM_HISTORY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
 		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiHistoryMenuButton[i], 0, i+1);
 		
@@ -422,12 +422,12 @@ BOOLEAN InitTocMenu()
 	CHAR16			sText[400];
 	UINT8				ubLocInFile[]=
 								{IN_THE_BEGINNING,
-								 THE_ISLAND_METAVIRA,
-								 GUS_TARBALLS,
-								 WORD_FROM_FOUNDER,
-								 INCORPORATION};
+								THE_ISLAND_METAVIRA,
+								GUS_TARBALLS,
+								WORD_FROM_FOUNDER,
+								INCORPORATION};
 
-  HVOBJECT		hContentButtonHandle;
+	HVOBJECT		hContentButtonHandle;
 
 	GetVideoObject(&hContentButtonHandle, guiContentButton);
 
@@ -445,12 +445,12 @@ BOOLEAN InitTocMenu()
 		{
 			//Mouse region for the history toc buttons
 			MSYS_DefineRegion( &gSelectedHistoryTocMenuRegion[i], AIM_HISTORY_TOC_X, usPosY, (UINT16)(AIM_HISTORY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
-									 CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryTocMenuRegionCallBack); 
+									CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryTocMenuRegionCallBack); 
 			MSYS_AddRegion(&gSelectedHistoryTocMenuRegion[i]); 
 			MSYS_SetRegionUserData( &gSelectedHistoryTocMenuRegion[i], 0, i+1);
 		}
 
-	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_HISTORY_TOC_X, usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_HISTORY_TOC_X, usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
 		DrawTextToScreen(sText, AIM_HISTORY_TOC_X, (UINT16)(usPosY + AIM_HISTORY_TOC_Y), AIM_CONTENTBUTTON_WIDTH, AIM_HISTORY_TOC_TEXT_FONT, AIM_HISTORY_TOC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 
@@ -480,7 +480,7 @@ BOOLEAN ExitTocMenu()
 }
 
 
-		 
+		
 void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER 
@@ -607,7 +607,7 @@ void DisableAimHistoryButton()
 	{
 		ButtonList[ guiHistoryMenuButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}
-	else if(  ( gubCurPageNum == 5) ) 
+	else if(	( gubCurPageNum == 5) ) 
 	{
 		ButtonList[ guiHistoryMenuButton[ AIM_HISTORY_MENU_BUTTON_AMOUNT-1 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}

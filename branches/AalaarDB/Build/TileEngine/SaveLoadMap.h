@@ -4,7 +4,7 @@
 #include "WorldDef.h"
 #include "Exit Grids.h"
 
-//Used for the ubType in the MODIFY_MAP struct  
+//Used for the ubType in the MODIFY_MAP struct	
 enum
 {
 	SLM_NONE,
@@ -57,7 +57,7 @@ typedef struct
 } MODIFY_MAP;
 
 
-// Call this function, to set whether the map changes will be added to the  map temp file
+// Call this function, to set whether the map changes will be added to the	map temp file
 void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap );
 
 BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
@@ -91,10 +91,10 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile();
 
 
-void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
+void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	);
+void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	);
+void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	);
+void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	);
 
 //Adds the exit grid to
 void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );

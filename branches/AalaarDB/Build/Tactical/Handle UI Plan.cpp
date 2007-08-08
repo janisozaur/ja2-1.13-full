@@ -16,9 +16,9 @@
 #endif
 
 UINT8						gubNumUIPlannedMoves			= 0;
-SOLDIERTYPE			*gpUIPlannedSoldier			  = NULL;
+SOLDIERTYPE			*gpUIPlannedSoldier			= NULL;
 SOLDIERTYPE			*gpUIStartPlannedSoldier = NULL;
-BOOLEAN					gfInUIPlanMode					  = FALSE;
+BOOLEAN					gfInUIPlanMode					= FALSE;
 
 
 void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier );
@@ -30,9 +30,9 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 	gubNumUIPlannedMoves = 0;
 	gpUIPlannedSoldier				= pSoldier;
 	gpUIStartPlannedSoldier		= pSoldier;
-	gfInUIPlanMode			 = TRUE;
+	gfInUIPlanMode			= TRUE;
 
-	gfPlotNewMovement    = TRUE;
+	gfPlotNewMovement	= TRUE;
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Entering Planning Mode" );
 
@@ -65,9 +65,9 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 	if ( ubPlanID == UIPLAN_ACTION_MOVETO )
 	{
 		// Calculate cost to move here
-		sAPCost = PlotPath( gpUIPlannedSoldier, sGridNo, COPYROUTE, NO_PLOT, TEMPORARY, (UINT16) gpUIPlannedSoldier->usUIMovementMode, NOT_STEALTH, FORWARD,  gpUIPlannedSoldier->bActionPoints );
+		sAPCost = PlotPath( gpUIPlannedSoldier, sGridNo, COPYROUTE, NO_PLOT, TEMPORARY, (UINT16) gpUIPlannedSoldier->usUIMovementMode, NOT_STEALTH, FORWARD,	gpUIPlannedSoldier->bActionPoints );
 		// Adjust for running if we are not already running
-		if (  gpUIPlannedSoldier->usUIMovementMode == RUNNING )
+		if (	gpUIPlannedSoldier->usUIMovementMode == RUNNING )
 		{
 			sAPCost += AP_START_RUN_COST;
 		}
@@ -131,7 +131,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 
 				gubNumUIPlannedMoves++;
 
-				gfPlotNewMovement    = TRUE;
+				gfPlotNewMovement	= TRUE;
 
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Adding Merc Move to Plan" );
 
@@ -144,7 +144,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 	}
 	else if ( ubPlanID == UIPLAN_ACTION_FIRE )
 	{
- 	  sAPCost = CalcTotalAPsToAttack( gpUIPlannedSoldier, sGridNo, TRUE, (INT8)(gpUIPlannedSoldier->pathing.bShownAimTime ) );
+ 	sAPCost = CalcTotalAPsToAttack( gpUIPlannedSoldier, sGridNo, TRUE, (INT8)(gpUIPlannedSoldier->aiData.bShownAimTime ) );
 
 		// Get XY from Gridno
 		ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
@@ -243,7 +243,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 }
 
 
-void EndUIPlan(  )
+void EndUIPlan(	)
 {
 	PERFORMANCE_MARKER
 	int				cnt;
@@ -265,10 +265,10 @@ void EndUIPlan(  )
 
 
 	}
-	gfInUIPlanMode			 = FALSE;
-	gusSelectedSoldier   = gpUIStartPlannedSoldier->ubID;
+	gfInUIPlanMode			= FALSE;
+	gusSelectedSoldier	= gpUIStartPlannedSoldier->ubID;
 
-	gfPlotNewMovement    = TRUE;
+	gfPlotNewMovement	= TRUE;
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Leaving Planning Mode" );
 

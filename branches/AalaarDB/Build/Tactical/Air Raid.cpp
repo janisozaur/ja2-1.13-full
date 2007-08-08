@@ -44,7 +44,7 @@
 #define		MOVE_X																5
 #define		MOVE_Y																5
 #define		STRAFE_DIST														80
-#define   BOMB_DIST															150
+#define	BOMB_DIST															150
 
 
 
@@ -226,7 +226,7 @@ BOOLEAN BeginAirRaid( )
 		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
 		{	
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: soldier id = %d, active = %d",pSoldier->ubID,pSoldier->bActive));
-			if ( pSoldier->bActive  )
+			if ( pSoldier->bActive	)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("BeginAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
@@ -294,7 +294,7 @@ BOOLEAN BeginAirRaid( )
 		gpRaidSoldier->pathing.bLevel = 0;
 		gpRaidSoldier->bTeam = 1;
 		gpRaidSoldier->bSide = 1;
-		gpRaidSoldier->ubID	 = MAX_NUM_SOLDIERS - 1;
+		gpRaidSoldier->ubID	= MAX_NUM_SOLDIERS - 1;
 		gpRaidSoldier->ubAttackerID = NOBODY;
 		gpRaidSoldier->usAttackingWeapon = HK21E;
 		gpRaidSoldier->inv[HANDPOS].usItem = HK21E;
@@ -719,7 +719,7 @@ void MoveDiveAirplane( FLOAT dAngle )
 }
 
 
-void DoDive(  )
+void DoDive(	)
 {
 	PERFORMANCE_MARKER
 	INT16		sRange;
@@ -789,10 +789,10 @@ void DoDive(  )
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"DoDive: move plane");
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos	= gsDiveX;
+			gpRaidSoldier->sX			= gsDiveX;
+			gpRaidSoldier->dYPos	= gsDiveY;
+			gpRaidSoldier->sY			= gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -851,10 +851,10 @@ void DoDive(  )
 				sX = (INT16)( gsDiveX + ( (FLOAT)sin( dAngle + ( PI/2) ) * 40 ) );
 				sY = (INT16)( gsDiveY + ( (FLOAT)cos( dAngle + ( PI/2) ) * 40 ) );
 
-				gpRaidSoldier->dXPos	 = sX;
-				gpRaidSoldier->sX			 = sX;
-				gpRaidSoldier->dYPos	 = sY;
-				gpRaidSoldier->sY			 = sY;
+				gpRaidSoldier->dXPos	= sX;
+				gpRaidSoldier->sX			= sX;
+				gpRaidSoldier->dYPos	= sY;
+				gpRaidSoldier->sY			= sY;
 				gpRaidSoldier->sGridNo = GETWORLDINDEXFROMWORLDCOORDS( sY, sX );
 
 				// Get target.....
@@ -897,7 +897,7 @@ void DoDive(  )
 }
 
 
-void DoBombing(  )
+void DoBombing(	)
 {
 	PERFORMANCE_MARKER
 	INT16		sRange;
@@ -962,10 +962,10 @@ void DoBombing(  )
 
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos	= gsDiveX;
+			gpRaidSoldier->sX			= gsDiveX;
+			gpRaidSoldier->dYPos	= gsDiveY;
+			gpRaidSoldier->sY			= gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -1083,7 +1083,7 @@ void HandleAirRaid( )
 		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
 		{	
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: soldier id = %d, active = %d",pSoldier->ubID,pSoldier->bActive));
-			if ( pSoldier->bActive  )
+			if ( pSoldier->bActive	)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: soldier sectors: x = %d, y = %d, z = %d",pSoldier->sSectorX,pSoldier->sSectorY,pSoldier->bSectorZ ));
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("HandleAirRaid: air raid sectors: x = %d, y = %d, z = %d",gAirRaidDef.sSectorX,gAirRaidDef.sSectorY,gAirRaidDef.sSectorZ ));
@@ -1104,7 +1104,7 @@ void HandleAirRaid( )
 
 		uiClock = GetJA2Clock( );
 
-		if ( ( uiClock - guiRaidLastUpdate ) >  SCRIPT_DELAY )
+		if ( ( uiClock - guiRaidLastUpdate ) >	SCRIPT_DELAY )
 		{
 			giNumFrames++;
 
@@ -1510,7 +1510,7 @@ void EndAirRaid( )
 		//pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_B9, (UINT8)(2 + Random( 2 ) + gGameOptions.ubDifficultyLevel), 0 );
 		//Move the patrol group north to attack Omerta
 		//AddWaypointToPGroup( pGroup, 9, 1 ); //A9
-		//Because we want them to arrive right away, we will toast the arrival event.  The information
+		//Because we want them to arrive right away, we will toast the arrival event.	The information
 		//is already set up though.
 		//DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 		//Simply reinsert the event, but the time is now.

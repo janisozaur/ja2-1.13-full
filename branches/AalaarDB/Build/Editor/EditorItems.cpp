@@ -1,4 +1,3 @@
-// WANNE: EDITOR?
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -50,14 +49,14 @@
 
 extern ITEM_POOL		*gpEditingItemPool;
 
-//Simply counts the number of items in the world.  This is used for display purposes.
+//Simply counts the number of items in the world.	This is used for display purposes.
 UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQuantity ); //wrapper for the next three
 UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity );
 UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency );
 UINT16 CountNumberOfPressureActionsInWorld();
 UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID );
 
-//Finds and selects the next item when right clicking on an item type.  Only works if the
+//Finds and selects the next item when right clicking on an item type.	Only works if the
 //item actually exists in the world.
 void FindNextItemOfSelectedType(); //wrapper for the next four
 void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency );
@@ -155,7 +154,7 @@ void EntryInitEditorItemsInfo()
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
 		for( i=0; i < MAXITEMS; i++ )
 		{
-			if ( Item[i].usItemClass  == 0 )
+			if ( Item[i].usItemClass	== 0 )
 				break;
 			item = &Item[i];
 			//if( Item[i].fFlags & ITEM_NOT_EDITOR )
@@ -210,12 +209,11 @@ void EntryInitEditorItemsInfo()
 	}
 }
 
-// WANNE: EDITOR?
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
 	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
-	UINT8	 *pDestBuf, *pSrcBuf;
+	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
 	SGPRect	SaveRect, NewRect;
@@ -313,9 +311,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	DetermineItemsScrolling();
 	//calculate the width of the buffer based on the number of items.
 	//every pair of items (odd rounded up) requires 60 pixels for width.
-	//the minimum buffer size is 420.  Height is always 80 pixels.
+	//the minimum buffer size is 420.	Height is always 80 pixels.
 
-	// WANNE: EDITOR?
 	eInfo.sWidth = (eInfo.sNumItems > 12) ? ((eInfo.sNumItems+1)/2)*60 : SCREEN_HEIGHT - 120;
 	eInfo.sHeight = 80;
 	// Create item buffer
@@ -325,7 +322,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	vs_desc.usHeight = eInfo.sHeight;
 	vs_desc.ubBitDepth = ubBitDepth;
 
-	//!!!Memory check.  Create the item buffer
+	//!!!Memory check.	Create the item buffer
 	if(!AddVideoSurface( &vs_desc, &eInfo.uiBuffer ))
 	{
 		eInfo.fKill = TRUE;
@@ -371,7 +368,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			SetFontDestBuffer( eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight, FALSE );
 
 			swprintf( pStr, L"%S", LockTable[ i ].ubEditorName );
-			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE,  pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE,	pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 
 			//Calculate the center position of the graphic in a 60 pixel wide area.
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -381,7 +378,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			
-			// WANNE: EDITOR?
 			if( y == 0 )
 			{
 				y = 40;
@@ -399,7 +395,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		fTypeMatch = FALSE;
 		while( usCounter<MAXITEMS && !fTypeMatch )
 		{
-			if ( Item[usCounter].usItemClass  == 0 )
+			if ( Item[usCounter].usItemClass	== 0 )
 				break;
 			item = &Item[usCounter];
 			//if( Item[usCounter].fFlags & ITEM_NOT_EDITOR )
@@ -516,7 +512,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 					}
 				}
 
-				// WANNE: EDITOR?
 				DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 
 				//Calculate the center position of the graphic in a 60 pixel wide area.
@@ -529,7 +524,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 					BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
 				}
 
-				// WANNE: EDITOR?
 				//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 				if( y == 0 )
 				{
@@ -556,7 +550,7 @@ void DetermineItemsScrolling()
 		DisableEditorButton( ITEMS_LEFTSCROLL );
 	else
 		EnableEditorButton( ITEMS_LEFTSCROLL );
-	//Right most scroll position.  Calculated by taking every pair of numItems rounded up,
+	//Right most scroll position.	Calculated by taking every pair of numItems rounded up,
 	//and subtracting 7 (because a scroll index 0 is disabled if there are <=12 items,
 	//index 1 for <=14 items, index 2 for <=16 items...
 	if( eInfo.sScrollIndex == max( ((eInfo.sNumItems+1)/2)-6, 0 ) )
@@ -568,7 +562,7 @@ void DetermineItemsScrolling()
 void RenderEditorItemsInfo()
 {
 	PERFORMANCE_MARKER
-	UINT8	 *pDestBuf, *pSrcBuf;
+	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
 	HVOBJECT hVObject;
@@ -584,7 +578,6 @@ void RenderEditorItemsInfo()
 		return;
 	}
 
-	// WANNE: EDITOR?
 	if( gusMouseXPos < (iScreenWidthOffset + 110) || gusMouseXPos > (iScreenWidthOffset + 480) || gusMouseYPos < (2 * iScreenHeightOffset + 360) || gusMouseYPos > (2 * iScreenHeightOffset + 440) )
 	{ //Mouse has moved out of the items display region -- so nothing can be highlighted.
 		eInfo.sHilitedItemIndex = -1;
@@ -598,7 +591,7 @@ void RenderEditorItemsInfo()
 	UnLockVideoSurface(eInfo.uiBuffer);
 	UnLockVideoSurface(FRAME_BUFFER);
 
-	//calculate the min and max index that is currently shown.  This determines
+	//calculate the min and max index that is currently shown.	This determines
 	//if the highlighted and/or selected items are drawn with the outlines.
 	minIndex = eInfo.sScrollIndex * 2;
 	maxIndex = minIndex + 11;
@@ -735,9 +728,8 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 	if( usScreenY >= (2 * iScreenHeightOffset + 400) )
 		sIndex++;
 	//Add the converted mouse's XPos into a relative index;
-	//Calc:  starting from 110, for every 60 pixels, add 2 to the index
+	//Calc:	starting from 110, for every 60 pixels, add 2 to the index
 	
-	// WANNE: EDITOR????
 	sIndex += ((usScreenX-110-iScreenWidthOffset)/60) * 2;
 	switch( bEvent )
 	{
@@ -978,7 +970,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 
 	//Get access to the itempool.
 	//search for a current node in list containing same mapindex
-  pIPCurr = pIPHead;
+	pIPCurr = pIPHead;
 	pIPPrev = NULL;
 	while( pIPCurr )
 	{
@@ -1019,7 +1011,7 @@ void HandleRightClickOnItem( INT16 sGridNo )
 	IPListNode *pIPCurr;
 
 	if( gsItemGridNo == sGridNo )
-	{ //Clicked on the same gridno as the selected item.  Automatically select the next
+	{ //Clicked on the same gridno as the selected item.	Automatically select the next
 		//item in the same pool.
 		pItemPool = gpItemPool->pNext;
 		if( !pItemPool )
@@ -1152,7 +1144,7 @@ void SelectNextItemPool()
 		MarkMapIndexDirty( gpItemPool->sGridNo );
 	}
 	
-	//go to the next node.  If at end of list, choose pIPHead
+	//go to the next node.	If at end of list, choose pIPHead
 	if( gpCurrItemPoolNode->next )
 		gpCurrItemPoolNode = gpCurrItemPoolNode->next;
 	else 
@@ -1541,7 +1533,7 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == usItem &&
-				  gWorldItems[ pItemPool->iItemIndex ].o.bombs.bFrequency == bFrequency )
+				gWorldItems[ pItemPool->iItemIndex ].o.bombs.bFrequency == bFrequency )
 			{
 				num++;
 			}
@@ -1565,7 +1557,7 @@ UINT16 CountNumberOfPressureActionsInWorld()
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == ACTION_ITEM &&
-				  gWorldItems[ pItemPool->iItemIndex ].o.bombs.bDetonatorType == BOMB_PRESSURE )
+				gWorldItems[ pItemPool->iItemIndex ].o.bombs.bDetonatorType == BOMB_PRESSURE )
 			{
 				num++;
 			}

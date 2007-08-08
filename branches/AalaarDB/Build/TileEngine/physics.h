@@ -65,10 +65,10 @@ public:
 	BOOLEAN			fEndedWithCollisionPositionSet;
 	vector_3		EndedWithCollisionPosition;
 	BOOLEAN			fHaveHitGround;
-  BOOLEAN     fPotentialForDebug;
-  INT16       sLevelNodeGridNo;
-  INT32       iSoundID;
-  UINT8       ubLastTargetTakenDamage;
+	BOOLEAN	 fPotentialForDebug;
+	INT16		sLevelNodeGridNo;
+	INT32		iSoundID;
+	UINT8		ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];
 
 };
@@ -133,12 +133,12 @@ public:
 	BOOLEAN			fEndedWithCollisionPositionSet;
 	vector_3		EndedWithCollisionPosition;
 	BOOLEAN			fHaveHitGround;
-  BOOLEAN     fPotentialForDebug;
-  INT16       sLevelNodeGridNo;
-  INT32       iSoundID;
-  UINT8       ubLastTargetTakenDamage;
+	BOOLEAN	 fPotentialForDebug;
+	INT16		sLevelNodeGridNo;
+	INT32		iSoundID;
+	UINT8		ubLastTargetTakenDamage;
 
-  char				endOfPod;
+	char				endOfPod;
 	OBJECTTYPE		Obj;
 };
 #define SIZEOF_REAL_OBJECT_POD offsetof(REAL_OBJECT, endOfPod)
@@ -146,7 +146,7 @@ public:
 
 #define					NUM_OBJECT_SLOTS	50
 
-extern  REAL_OBJECT			ObjectSlots[ NUM_OBJECT_SLOTS ];
+extern	REAL_OBJECT			ObjectSlots[ NUM_OBJECT_SLOTS ];
 
 
 // OBJECT LIST STUFF
@@ -166,7 +166,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 
 
 // SIMULATE WORLD
-void SimulateWorld(  );
+void SimulateWorld(	);
 
 
 BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile );

@@ -227,7 +227,7 @@ BOOLEAN DoesGridnoContainHiddenStruct( INT16 sGridNo, BOOLEAN *pfVisible )
 
 	//if ( pStructure != NULL )
 	//{
-	//	if ( !(gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS)  )
+	//	if ( !(gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS)	)
 	//	{
 	//		*pfVisible = FALSE;
 	//	}

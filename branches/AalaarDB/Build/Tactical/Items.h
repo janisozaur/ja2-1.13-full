@@ -106,15 +106,15 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 
 
 
-//Kris:  December 9, 1997
+//Kris:	December 9, 1997
 //I need a bunch of validation functions for ammo, attachments, etc., so I'll be adding them here.
-//Chris, maybe you might find these useful, or add your own.  I don't really know what I'm doing yet,
+//Chris, maybe you might find these useful, or add your own.	I don't really know what I'm doing yet,
 //so feel free to correct me...
 
 //Simple check to see if the item has any attachments
 BOOLEAN ItemHasAttachments( OBJECTTYPE *pItem );
 
-//Determine if this item can receive this attachment.  This is different, in that it may
+//Determine if this item can receive this attachment.	This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on
 //it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
 BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment );
@@ -213,7 +213,7 @@ INT16 GetPercentAutofireAPReduction( OBJECTTYPE * pObj );
 INT16 GetPercentBurstFireAPReduction( OBJECTTYPE * pObj );
 INT16 GetPercentReadyTimeAPReduction( OBJECTTYPE * pObj );
 INT16 GetPercentReloadTimeAPReduction( OBJECTTYPE * pObj );
-INT16 GetAutoToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance = FALSE  );
+INT16 GetAutoToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance = FALSE	);
 INT16 GetRateOfFireBonus( OBJECTTYPE * pObj );
 INT16 GetBurstSizeBonus( OBJECTTYPE * pObj );
 BOOLEAN HasFastBurst( OBJECTTYPE * pObj );

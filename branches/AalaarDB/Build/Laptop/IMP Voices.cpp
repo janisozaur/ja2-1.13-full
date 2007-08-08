@@ -61,7 +61,7 @@ void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason );
 void EnterIMPVoices( void )
 {
 	PERFORMANCE_MARKER
-  fVoiceAVisited = FALSE;
+	fVoiceAVisited = FALSE;
 	fVoiceBVisited = FALSE;
 	fVoiceCVisited = FALSE;
 
@@ -77,7 +77,7 @@ void EnterIMPVoices( void )
 
 	// create buttons
 	CreateIMPVoicesButtons( );
-	 
+	
 	// create mouse regions
 	CreateIMPVoiceMouseRegions( );
 
@@ -94,14 +94,14 @@ void EnterIMPVoices( void )
 void RenderIMPVoices( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 
-  // render background
+	// render background
 	RenderProfileBackGround( );
 
 	// the Voices frame
 	RenderPortraitFrame( 191, 167 );
-  
+	
 	// the sillouette
 	RenderLargeSilhouette( 200, 176 );
 
@@ -122,9 +122,9 @@ void ExitIMPVoices( void )
 {
 	PERFORMANCE_MARKER
 	// destroy buttons for IMP Voices page
-  DestroyIMPVoicesButtons( ); 
+	DestroyIMPVoicesButtons( ); 
 
-  // destroy mouse regions for this screen
+	// destroy mouse regions for this screen
 	DestroyIMPVoiceMouseRegions( );
 
 
@@ -138,7 +138,7 @@ void HandleIMPVoices( void )
 	// do we need to re write screen
 	if ( fReDrawVoicesScreenFlag == TRUE ) 
 	{
-    RenderIMPVoices( );
+	RenderIMPVoices( );
 		
 		// reset redraw flag
 		fReDrawVoicesScreenFlag = FALSE;
@@ -169,7 +169,6 @@ void FixVoiceRange()
 }
 
 
-// WANNE NEW
 void IncrementVoice( void )
 {
 	PERFORMANCE_MARKER
@@ -198,7 +197,7 @@ void IncrementVoice( void )
 void DecrementVoice( void )
 {
 	PERFORMANCE_MARKER
-  	INT32 iIMPIndex = -1;
+		INT32 iIMPIndex = -1;
 	INT32 i;
 
 	iCurrentVoice--;
@@ -223,54 +222,54 @@ void DecrementVoice( void )
 void CreateIMPVoicesButtons( void )
 {
 	PERFORMANCE_MARKER
-  // will create buttons need for the IMP Voices screen
+	// will create buttons need for the IMP Voices screen
 
 	// next button
-  giIMPVoicesButtonImage[0]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,1,-1,3,-1 );
-	/*giIMPVoicesButton[0] = QuickCreateButton( giIMPVoicesButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 184 ),
+	giIMPVoicesButtonImage[0]=	LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,1,-1,3,-1 );
+	/*giIMPVoicesButton[0] = QuickCreateButton( giIMPVoicesButtonImage[0], LAPTOP_SCREEN_UL_X +	( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 184 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesNextCallback );
-  */
+	*/
 	giIMPVoicesButton[0] = CreateIconAndTextButton( giIMPVoicesButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														  LAPTOP_SCREEN_UL_X +  ( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesNextCallback);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesNextCallback);
 
 
 	// previous button
-	giIMPVoicesButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,0,-1,2,-1 );
-/*	giIMPVoicesButton[ 1 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ),
+	giIMPVoicesButtonImage[ 1 ]=	LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,0,-1,2,-1 );
+/*	giIMPVoicesButton[ 1 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesPreviousCallback );
-  */
-  giIMPVoicesButton[ 1 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesPreviousCallback);
+	*/
+	giIMPVoicesButton[ 1 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesPreviousCallback);
 
 
 	// done button
-  giIMPVoicesButtonImage[ 2 ]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-	/* giIMPVoicesButton[ 2 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 349 ), LAPTOP_SCREEN_WEB_UL_Y + ( 220 ),
+	giIMPVoicesButtonImage[ 2 ]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	/* giIMPVoicesButton[ 2 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 349 ), LAPTOP_SCREEN_WEB_UL_Y + ( 220 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesDoneCallback );
-  */
-  giIMPVoicesButton[ 2 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesDoneCallback);
+	*/
+	giIMPVoicesButton[ 2 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesDoneCallback);
 
 
 
-   SetButtonCursor(giIMPVoicesButton[0], CURSOR_WWW);
-	 SetButtonCursor(giIMPVoicesButton[1], CURSOR_WWW);
-	 SetButtonCursor(giIMPVoicesButton[2], CURSOR_WWW);
+	SetButtonCursor(giIMPVoicesButton[0], CURSOR_WWW);
+	SetButtonCursor(giIMPVoicesButton[1], CURSOR_WWW);
+	SetButtonCursor(giIMPVoicesButton[2], CURSOR_WWW);
 }
 
 
@@ -281,18 +280,18 @@ void DestroyIMPVoicesButtons( void )
 	PERFORMANCE_MARKER
 
 	// will destroy buttons created for IMP Voices screen
-  
+	
 	// the next button
-  RemoveButton(giIMPVoicesButton[ 0 ] );
-  UnloadButtonImage(giIMPVoicesButtonImage[ 0 ] );
+	RemoveButton(giIMPVoicesButton[ 0 ] );
+	UnloadButtonImage(giIMPVoicesButtonImage[ 0 ] );
 	
 	// the previous button
-  RemoveButton(giIMPVoicesButton[ 1 ] );
-  UnloadButtonImage(giIMPVoicesButtonImage[ 1 ] );
+	RemoveButton(giIMPVoicesButton[ 1 ] );
+	UnloadButtonImage(giIMPVoicesButtonImage[ 1 ] );
 	
 	// the done button
-  RemoveButton(giIMPVoicesButton[ 2 ] );
-  UnloadButtonImage(giIMPVoicesButtonImage[ 2 ] );
+	RemoveButton(giIMPVoicesButton[ 2 ] );
+	UnloadButtonImage(giIMPVoicesButtonImage[ 2 ] );
 
 	return;
 }
@@ -308,20 +307,20 @@ void BtnIMPVoicesNextCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// next voice!!
 			IncrementVoice( );
 			// play voice
 			if( ! SoundIsPlaying( uiVocVoiceSound ) )
 			{
-				 uiVocVoiceSound = PlayVoice( );
+				uiVocVoiceSound = PlayVoice( );
 			}	
 			else
 			{
@@ -329,7 +328,7 @@ void BtnIMPVoicesNextCallback(GUI_BUTTON *btn,INT32 reason)
 				uiVocVoiceSound = PlayVoice( );
 			}
 
-      
+		
 			fReDrawVoicesScreenFlag = TRUE;
 		}
 	}	
@@ -345,20 +344,20 @@ void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// previous voice, please!!!
 			DecrementVoice( );
 			// play voice
 			if( ! SoundIsPlaying( uiVocVoiceSound ) )
 			{
-        uiVocVoiceSound = PlayVoice( );
+		uiVocVoiceSound = PlayVoice( );
 			}	
 			else
 			{
@@ -381,21 +380,21 @@ void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// go to main page
 			iCurrentImpPage = IMP_MAIN_PAGE;
 
 			// if we are already done, leave
-	    if( iCurrentProfileMode == IMP__FINISH )
+	 if( iCurrentProfileMode == IMP__FINISH )
 			{
-	      iCurrentImpPage = IMP_FINISH;
+		iCurrentImpPage = IMP_FINISH;
 			} 
 			else
 			{
@@ -410,7 +409,7 @@ void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 /*
 			// current mode now is voice
-		  else if( iCurrentProfileMode < IMP__PORTRAIT )
+		else if( iCurrentProfileMode < IMP__PORTRAIT )
 			{
 				iCurrentProfileMode = IMP__PORTRAIT;
 			}
@@ -423,12 +422,11 @@ void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 */
 			// set voice id, to grab character slot
-      
-			// WANNE 10:
+		
 			// WDS: Allow flexible numbers of IMPs of each sex
 			LaptopSaveInfo.iIMPIndex = gGameExternalOptions.iaIMPSlots[iCurrentVoice];
 
-			// set button up image  pending
+			// set button up image	pending
 			fButtonPendingFlag = TRUE;
 		}
 	}	
@@ -459,18 +457,18 @@ UINT32 PlayVoice( void )
 	Assert((iSlot >= 0) && (iSlot <= 999));
 	sprintf(caVoiceSample, caVoiceSample, iSlot);
 
-	return( PlayJA2SampleFromFile( caVoiceSample, RATE_11025, MIDVOLUME, 1 , MIDDLEPAN ) );	 
+	return( PlayJA2SampleFromFile( caVoiceSample, RATE_11025, MIDVOLUME, 1 , MIDDLEPAN ) );	
 }
 
 
 void CreateIMPVoiceMouseRegions( void )
 {
 	PERFORMANCE_MARKER
-  // will create mouse regions needed for the IMP voices page
+	// will create mouse regions needed for the IMP voices page
 	MSYS_DefineRegion( &gVoicePortraitRegion, LAPTOP_SCREEN_UL_X + 200, LAPTOP_SCREEN_WEB_UL_Y + 176 ,LAPTOP_SCREEN_UL_X + 200 + 100, LAPTOP_SCREEN_WEB_UL_Y + 176 + 100,MSYS_PRIORITY_HIGH,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback ); 
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback ); 
  
-  
+	
 	MSYS_AddRegion( &gVoicePortraitRegion );
 
 	return;
@@ -479,8 +477,8 @@ void CreateIMPVoiceMouseRegions( void )
 void DestroyIMPVoiceMouseRegions( void )
 {
 	PERFORMANCE_MARKER
-  // will destroy already created mouse reiogns for IMP voices page
-  MSYS_RemoveRegion( &gVoicePortraitRegion );
+	// will destroy already created mouse reiogns for IMP voices page
+	MSYS_RemoveRegion( &gVoicePortraitRegion );
 
 	return;
 }
@@ -491,18 +489,18 @@ void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER 	
 	// callback handler for imp portrait region button events
 
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
- 	  return;
-  }
-  if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  { 
-    if( ! SoundIsPlaying( uiVocVoiceSound ) )
+	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	{
+ 	return;
+	}
+	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{ 
+	if( ! SoundIsPlaying( uiVocVoiceSound ) )
 		{
-       uiVocVoiceSound = PlayVoice( );
+		uiVocVoiceSound = PlayVoice( );
 		}
 		
-  }
+	}
 
 	return;
 }

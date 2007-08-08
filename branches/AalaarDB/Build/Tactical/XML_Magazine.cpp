@@ -109,9 +109,9 @@ magazineCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -139,12 +139,12 @@ magazineEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curMagazine.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubCalibre") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubCalibre  = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubCalibre	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMagSize") == 0)
 		{
@@ -154,7 +154,7 @@ magazineEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "ubAmmoType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMagazine.ubAmmoType   = (UINT8) atol(pData->szCharData);
+			pData->curMagazine.ubAmmoType	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -210,7 +210,7 @@ BOOLEAN ReadInMagazineStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -251,9 +251,9 @@ BOOLEAN WriteMagazineStats()
 			FilePrintf(hFile,"\t<MAGAZINE>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<ubCalibre>%d</ubCalibre>\r\n",								Magazine[cnt].ubCalibre  );
-			FilePrintf(hFile,"\t\t<ubMagSize>%d</ubMagSize>\r\n",								Magazine[cnt].ubMagSize   );
-			FilePrintf(hFile,"\t\t<ubAmmoType>%d</ubAmmoType>\r\n",								Magazine[cnt].ubAmmoType   );
+			FilePrintf(hFile,"\t\t<ubCalibre>%d</ubCalibre>\r\n",								Magazine[cnt].ubCalibre	);
+			FilePrintf(hFile,"\t\t<ubMagSize>%d</ubMagSize>\r\n",								Magazine[cnt].ubMagSize	);
+			FilePrintf(hFile,"\t\t<ubAmmoType>%d</ubAmmoType>\r\n",								Magazine[cnt].ubAmmoType	);
 
 			FilePrintf(hFile,"\t</MAGAZINE>\r\n");
 		}

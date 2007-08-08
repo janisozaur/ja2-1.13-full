@@ -52,7 +52,7 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason);
 void EnterIMPPortraits( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 		// create buttons
 	CreateIMPPortraitButtons( );
 	
@@ -67,9 +67,9 @@ void EnterIMPPortraits( void )
 void RenderIMPPortraits( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 
-  // render background
+	// render background
 	RenderProfileBackGround( );
 
 		// the Voices frame
@@ -92,7 +92,7 @@ void ExitIMPPortraits( void )
 {
 	PERFORMANCE_MARKER
 	// destroy buttons for IMP portrait page
-  DestroyIMPPortraitButtons( ); 
+	DestroyIMPPortraitButtons( ); 
 
 	return;
 }
@@ -104,7 +104,7 @@ void HandleIMPPortraits( void )
 	// do we need to re write screen
 	if ( fReDrawPortraitScreenFlag == TRUE ) 
 	{
-    RenderIMPPortraits( );
+	RenderIMPPortraits( );
 		
 		// reset redraw flag
 		fReDrawPortraitScreenFlag = FALSE;
@@ -116,43 +116,43 @@ void HandleIMPPortraits( void )
 BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 {
 	PERFORMANCE_MARKER
-  // render the portrait of the current picture
-  VOBJECT_DESC    VObjectDesc;
+	// render the portrait of the current picture
+	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
 	UINT32 uiGraphicHandle;
 
-  if( fCharacterIsMale  )
+	if( fCharacterIsMale	)
 	{
 
 		// load it
-    VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait ] , VObjectDesc.ImageFile);
-	  CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-       
-	  // show it
-    GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait ] , VObjectDesc.ImageFile);
+	CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
+		
+	// show it
+	GetVideoObject(&hHandle, uiGraphicHandle);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
 
 
-    // and kick it's sorry ..umm never mind, outta here
-    DeleteVideoObjectFromIndex( uiGraphicHandle );
+	// and kick it's sorry ..umm never mind, outta here
+	DeleteVideoObjectFromIndex( uiGraphicHandle );
 
-	  
+	
 	}
 	else
 	{
-    	// load it
-    VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait + 8 ] , VObjectDesc.ImageFile);
-	  CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
-       
-	  // show it
-    GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
+		// load it
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait + 8 ] , VObjectDesc.ImageFile);
+	CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
+		
+	// show it
+	GetVideoObject(&hHandle, uiGraphicHandle);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
 
 
-    // and kick it's sorry ..umm never mind, outta here
-    DeleteVideoObjectFromIndex( uiGraphicHandle );
+	// and kick it's sorry ..umm never mind, outta here
+	DeleteVideoObjectFromIndex( uiGraphicHandle );
 
 	}
 
@@ -175,21 +175,21 @@ void IncrementPictureIndex( void )
 	}
 
 
-  return; 
+	return; 
 }
 
 
 void DecrementPicture( void )
 {
 	PERFORMANCE_MARKER
-  // cycle to previous picture
+	// cycle to previous picture
 	
 	iCurrentPortrait--;
 
 	// gone too far?
-  if( iCurrentPortrait < 0 )
+	if( iCurrentPortrait < 0 )
 	{
-    iCurrentPortrait = iLastPicture;
+	iCurrentPortrait = iLastPicture;
 	}
 
 	return;
@@ -199,54 +199,54 @@ void DecrementPicture( void )
 void CreateIMPPortraitButtons( void )
 {
 	PERFORMANCE_MARKER
-  // will create buttons need for the IMP portrait screen
+	// will create buttons need for the IMP portrait screen
 
 	// next button
-  giIMPPortraitButtonImage[0]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,1,-1,3,-1 );
-	/*giIMPPortraitButton[0] = QuickCreateButton( giIMPPortraitButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 184 ),
+	giIMPPortraitButtonImage[0]=	LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,1,-1,3,-1 );
+	/*giIMPPortraitButton[0] = QuickCreateButton( giIMPPortraitButtonImage[0], LAPTOP_SCREEN_UL_X +	( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 184 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitNextCallback );
-  */
+	*/
 	giIMPPortraitButton[0] = CreateIconAndTextButton( giIMPPortraitButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitNextCallback);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitNextCallback);
 
 
 	// previous button
-	giIMPPortraitButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,0,-1,2,-1 );
-/*	giIMPPortraitButton[ 1 ] = QuickCreateButton( giIMPPortraitButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ),
+	giIMPPortraitButtonImage[ 1 ]=	LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,0,-1,2,-1 );
+/*	giIMPPortraitButton[ 1 ] = QuickCreateButton( giIMPPortraitButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitPreviousCallback );
-  */
-  giIMPPortraitButton[ 1 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														  LAPTOP_SCREEN_UL_X +  ( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitPreviousCallback);
+	*/
+	giIMPPortraitButton[ 1 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitPreviousCallback);
 
 
 	// done button
-  giIMPPortraitButtonImage[ 2 ]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-	/* giIMPPortraitButton[ 2 ] = QuickCreateButton( giIMPPortraitButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 349 ), LAPTOP_SCREEN_WEB_UL_Y + ( 220 ),
+	giIMPPortraitButtonImage[ 2 ]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	/* giIMPPortraitButton[ 2 ] = QuickCreateButton( giIMPPortraitButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 349 ), LAPTOP_SCREEN_WEB_UL_Y + ( 220 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitDoneCallback );
-  */
-  giIMPPortraitButton[ 2 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitDoneCallback);
+	*/
+	giIMPPortraitButton[ 2 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPortraitDoneCallback);
 
 
 
-   SetButtonCursor(giIMPPortraitButton[0], CURSOR_WWW);
-	 SetButtonCursor(giIMPPortraitButton[1], CURSOR_WWW);
-	 SetButtonCursor(giIMPPortraitButton[2], CURSOR_WWW);
+	SetButtonCursor(giIMPPortraitButton[0], CURSOR_WWW);
+	SetButtonCursor(giIMPPortraitButton[1], CURSOR_WWW);
+	SetButtonCursor(giIMPPortraitButton[2], CURSOR_WWW);
 }
 
 
@@ -256,18 +256,18 @@ void DestroyIMPPortraitButtons( void )
 	PERFORMANCE_MARKER
 
 	// will destroy buttons created for IMP Portrait screen
-  
+	
 	// the next button
-  RemoveButton(giIMPPortraitButton[ 0 ] );
-  UnloadButtonImage(giIMPPortraitButtonImage[ 0 ] );
+	RemoveButton(giIMPPortraitButton[ 0 ] );
+	UnloadButtonImage(giIMPPortraitButtonImage[ 0 ] );
 	
 	// the previous button
-  RemoveButton(giIMPPortraitButton[ 1 ] );
-  UnloadButtonImage(giIMPPortraitButtonImage[ 1 ] );
+	RemoveButton(giIMPPortraitButton[ 1 ] );
+	UnloadButtonImage(giIMPPortraitButtonImage[ 1 ] );
 	
 	// the done button
-  RemoveButton(giIMPPortraitButton[ 2 ] );
-  UnloadButtonImage(giIMPPortraitButtonImage[ 2 ] );
+	RemoveButton(giIMPPortraitButton[ 2 ] );
+	UnloadButtonImage(giIMPPortraitButtonImage[ 2 ] );
 
 	return;
 }
@@ -283,14 +283,14 @@ void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// next picture!!
 			IncrementPictureIndex( );
 
@@ -309,14 +309,14 @@ void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// previous picture, please!!!
 			DecrementPicture( );
 
@@ -335,34 +335,34 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		
 			// go to main page
 			iCurrentImpPage = IMP_MAIN_PAGE;
 /*
 			// current mode now is voice
-		  if( iCurrentProfileMode < IMP__VOICE )
+		if( iCurrentProfileMode < IMP__VOICE )
 			{
-        iCurrentProfileMode = IMP__VOICE;
+		iCurrentProfileMode = IMP__VOICE;
 			}
 */			
 			// if we are already done, leave
-	    if( iCurrentProfileMode == IMP__FINISH )
+	 if( iCurrentProfileMode == IMP__FINISH )
 			{
-	      iCurrentImpPage = IMP_FINISH;
+		iCurrentImpPage = IMP_FINISH;
 			} 
 			else
 			{
 				if( CameBackToPortraitsPageButNotFinished() )
 				{
 //					iCurrentProfileMode = IMP__VOICE;
-		      iCurrentImpPage = IMP_MAIN_PAGE;
+			iCurrentImpPage = IMP_MAIN_PAGE;
 				}
 				else
 				{
@@ -371,14 +371,14 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 
 			// grab picture number
-			if( fCharacterIsMale  )
+			if( fCharacterIsMale	)
 			{
-        // male
+		// male
 				iPortraitNumber = iCurrentPortrait;
 			}
 			else
 			{
-        // female
+		// female
 				iPortraitNumber = iCurrentPortrait + ( 8 );
 
 			}

@@ -139,7 +139,7 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		pGroup = gpGroupList;
 		while( pGroup )
 		{
-			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
+			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY)
 			{
 				ubNumHostiles += pGroup->ubGroupSize;
 			}
@@ -550,9 +550,10 @@ BOOLEAN PrepareEnemyForSectorBattle()
 		ubTotalTroops = (UINT8)(pSector->ubNumTroops - pSector->ubTroopsInBattle);
 		ubTotalElites = (UINT8)(pSector->ubNumElites - pSector->ubElitesInBattle);
 	}
+
 	ubStationaryEnemies = (UINT8)(ubTotalAdmins + ubTotalTroops + ubTotalElites);
 
-	if( ubTotalAdmins + ubTotalTroops + ubTotalElites > 32 )
+	if( ubStationaryEnemies > 32 )
 	{
 		#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)", 
@@ -591,24 +592,20 @@ BOOLEAN PrepareEnemyForSectorBattle()
 				ubTotalAdmins, ubTotalTroops, ubTotalElites );
 		#endif
 	}
-#if 0
-	// 0verhaul:  Not here.  First this gives reinforcement groups the unfair advantage of being already placed.
-	// Second, this particular loop is also used to reset strategic player groups in the sector so that they
-	// can be given movement orders (why here though?), but would quit early if the enemy slots are filled.
 
 	//Subtract the total number of stationary enemies from the available slots, as stationary forces take
 	//precendence in combat.  The mobile forces that could also be in the same sector are considered later if
 	//all the slots fill up.
 	sNumSlots -= ubTotalAdmins + ubTotalTroops + ubTotalElites;
+
 	//Now, process all of the groups and search for both enemy and player groups in the sector.
 	//For enemy groups, we fill up the slots until we have none left or all of the groups have been 
 	//processed.
-#endif
+
 	for( pGroup = gpGroupList;
 		 pGroup;
 		 pGroup = pGroup->next)
 	{
-#if 0
 		if( !pGroup->fPlayer && !pGroup->fVehicle &&  
 				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //Process enemy group in sector.
@@ -654,7 +651,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			//NOTE:
 			//no provisions for profile troop leader or retreat groups yet.
 		}
-#endif
 
 		if( pGroup->fPlayer && !pGroup->fVehicle && !pGroup->fBetweenSectors &&
 				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
@@ -680,7 +676,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 
 	AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
 
-#if 0
 	//Now, we have to go through all of the enemies in the new map, and assign their respective groups if
 	//in a mobile group, but only for the ones that were assigned from the 
 	sNumSlots = 32 - ubStationaryEnemies;
@@ -741,7 +736,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 		}
 		pGroup = pGroup->next;
 	}
-#endif
 
 	ValidateEnemiesHaveWeapons();
 
@@ -1236,16 +1230,6 @@ void AddPossiblePendingEnemiesToBattle()
 			{
 				break;
 			}
-
-			AddEnemiesToBattle( pGroup, ubInsertionCode, 
-				pSector->ubNumAdmins - pSector->ubAdminsInBattle, 
-				pSector->ubNumTroops - pSector->ubTroopsInBattle,
-				pSector->ubNumElites - pSector->ubElitesInBattle, 
-				FALSE );
-
-			pSector->ubAdminsInBattle = pSector->ubNumAdmins;
-			pSector->ubTroopsInBattle = pSector->ubNumTroops;
-			pSector->ubElitesInBattle = pSector->ubNumElites;
 
 			// Assume we added one since there are supposedly more available and room for them
 			ubSlots--;

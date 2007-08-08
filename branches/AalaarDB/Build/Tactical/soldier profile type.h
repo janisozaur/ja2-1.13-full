@@ -59,7 +59,7 @@
 //self explanatory
 #define	MERC_IS_DEAD													-5
 
-//set when the merc is returning home.  A delay for 1,2 or 3 days
+//set when the merc is returning home.	A delay for 1,2 or 3 days
 #define	MERC_RETURNING_HOME										-6
 
 // used when merc starts game on assignment, goes on assignment later, or leaves to go on another contract
@@ -168,7 +168,7 @@ public:
 	// Copy Constructor
 	MERCPROFILESTRUCT(const MERCPROFILESTRUCT&);
 	// Assignment operator
-    MERCPROFILESTRUCT& operator=(const MERCPROFILESTRUCT&);
+	MERCPROFILESTRUCT& operator=(const MERCPROFILESTRUCT&);
 	// Destructor
 	~MERCPROFILESTRUCT();
 
@@ -176,14 +176,14 @@ public:
 	BOOLEAN Save(HWFILE hFile);
 	UINT32	GetChecksum();
 
-	// Initialize the mercenary profile.  
-	//  Use this instead of the old method of calling memset.
-	//  Note that the constructor does this automatically.
+	// Initialize the mercenary profile.	
+	//	Use this instead of the old method of calling memset.
+	//	Note that the constructor does this automatically.
 	void initialize();
 
 	// Clear out the mercenary profile's invetory
-	//  Use this instead of the old method of calling memset.
-	//  Note that the constructor does this automatically.
+	//	Use this instead of the old method of calling memset.
+	//	Note that the constructor does this automatically.
 	void clearInventory();
 
 	// Ugly temporary solution
@@ -192,7 +192,7 @@ public:
 
 	// Note: Place all non-POD items at the end (after endOfPOD)
 	// The format of this structure affects what is written into and read from various
-	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// files (maps, save files, etc.).	If you change it then that code will not work 
 	// properly until it is all fixed and the files updated.
 public:
 	CHAR16	zName[ NAME_LENGTH ];
@@ -203,7 +203,7 @@ public:
 	UINT32	uiGoodSound;
 	UINT32	uiGruntSound;
 	UINT32	uiGrunt2Sound;
-	UINT32  uiOkSound;
+	UINT32	uiOkSound;
 	UINT8		ubFaceIndex;
 	PaletteRepID		PANTS;
 	PaletteRepID		VEST;
@@ -248,7 +248,7 @@ public:
 	UINT16	sSectorX;
 	UINT16	sSectorY;
 
-	UINT32	uiDayBecomesAvailable;			//day the merc will be available.  used with the bMercStatus
+	UINT32	uiDayBecomesAvailable;			//day the merc will be available.	used with the bMercStatus
 
 	INT8		bStrength;
 
@@ -262,15 +262,15 @@ public:
 	INT8		bMedicalDelta;
 	INT8		bMechanicDelta;
 	INT8		bExplosivesDelta;
-	INT8    bStrengthDelta;
-	INT8    bLeadershipDelta;
-	UINT16  usKills;
-	UINT16  usAssists;
-	UINT16  usShotsFired;
-	UINT16  usShotsHit;
-	UINT16  usBattlesFought;
-	UINT16  usTimesWounded;
-	UINT16  usTotalDaysServed;
+	INT8	bStrengthDelta;
+	INT8	bLeadershipDelta;
+	UINT16	usKills;
+	UINT16	usAssists;
+	UINT16	usShotsFired;
+	UINT16	usShotsHit;
+	UINT16	usBattlesFought;
+	UINT16	usTimesWounded;
+	UINT16	usTotalDaysServed;
 
 	INT16		sLeadershipGain;
 	INT16		sStrengthGain;
@@ -303,7 +303,7 @@ public:
 
 private:
 	UINT8	DO_NOT_USE_bInvStatus[OldInventory::NUM_INV_SLOTS];
-	UINT8   DO_NOT_USE_bInvNumber[OldInventory::NUM_INV_SLOTS];
+	UINT8	DO_NOT_USE_bInvNumber[OldInventory::NUM_INV_SLOTS];
 public:
 	UINT16 usApproachFactor[4];
 
@@ -357,7 +357,7 @@ public:
 	UINT16 usOptionalGearCost;
 	INT8 bMercOpinion[75];
 	INT8 bApproached;
-	INT8 bMercStatus;								//The status of the merc.  If negative, see flags at the top of this file.  Positive:  The number of days the merc is away for.  0:  Not hired but ready to be.
+	INT8 bMercStatus;								//The status of the merc.	If negative, see flags at the top of this file.	Positive:	The number of days the merc is away for.	0:	Not hired but ready to be.
 	INT8 bHatedTime[5];
 	INT8 bLearnToLikeTime;
 	INT8 bLearnToHateTime;
@@ -384,7 +384,7 @@ public:
 	UINT8 ubDaysOfMoraleHangover;		// used only when merc leaves team while having poor morale
 	UINT8	ubNumTimesDrugUseInLifetime;		// The # times a drug has been used in the player's lifetime...
 
-	// Flags used for the precedent to repeating oneself in Contract negotiations.  Used for quote 80 -  ~107.  Gets reset every day
+	// Flags used for the precedent to repeating oneself in Contract negotiations.	Used for quote 80 -	~107.	Gets reset every day
 	UINT32	uiPrecedentQuoteSaid;
 	UINT32	uiProfileChecksum;
 	INT16		sPreCombatGridNo;
@@ -397,7 +397,7 @@ public:
 	UINT8		ubBuffer[4];
 
 	//
-	// New and OO stuff goes after here.  Above this point any changes will goof up reading from files.
+	// New and OO stuff goes after here.	Above this point any changes will goof up reading from files.
 	//
 
 	char endOfPOD;	// marker for end of POD (plain old data)

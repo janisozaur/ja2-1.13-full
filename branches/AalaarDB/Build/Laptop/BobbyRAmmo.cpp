@@ -28,7 +28,7 @@ void GameInitBobbyRAmmo()
 BOOLEAN EnterBobbyRAmmo()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	//gfBigImageMouseRegionCreated = FALSE;
 
@@ -65,7 +65,6 @@ void ExitBobbyRAmmo()
 	DeleteVideoObjectFromIndex(guiAmmoGrid);
 	DeleteBobbyMenuBar();
 
-	// WANNE
 	DeleteBobbyRAmmoFilter();
 
 	DeleteBobbyBrTitle();
@@ -97,13 +96,12 @@ void RenderBobbyRAmmo()
 	DisplayItemInfo(IC_AMMO, guiCurrentAmmoFilterMode);
 	UpdateButtonText(guiCurrentLaptopMode);
 	
-	// WANNE
 	UpdateAmmoFilterButtons(guiCurrentAmmoFilterMode, guiPrevAmmoFilterMode);
 
 	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-  	fReDrawScreenFlag = TRUE;
+		fReDrawScreenFlag = TRUE;
 	fPausedReDrawScreenFlag = TRUE;	
 }
 

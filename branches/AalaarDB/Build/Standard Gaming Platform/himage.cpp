@@ -29,9 +29,9 @@ UINT16 gusAlphaMask = 0;
 UINT16 gusRedMask = 0;
 UINT16 gusGreenMask = 0;
 UINT16 gusBlueMask = 0;
-INT16  gusRedShift = 0;
-INT16  gusBlueShift = 0;
-INT16  gusGreenShift = 0;
+INT16	gusRedShift = 0;
+INT16	gusBlueShift = 0;
+INT16	gusGreenShift = 0;
 
 
 // this funky union is used for fast 16-bit pixel format conversions
@@ -118,7 +118,7 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 	//hImage->fFlags = 0;
 	// Set data pointers to NULL
 	//hImage->pImageData = NULL;
-	//hImage->pPalette   = NULL;
+	//hImage->pPalette	= NULL;
 	//hImage->pui16BPPPalette = NULL;
 
 	// Set filename and loader
@@ -520,13 +520,13 @@ BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestW
 	
 	// Copy line by line
 	pDest = ( UINT8*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p8BPPData + uiSrcStart;
+	pSrc =	hImage->p8BPPData + uiSrcStart;
 
 	for( cnt = 0; cnt < uiNumLines-1; cnt++ )
 	{
 		memcpy( pDest, pSrc, uiLineSize );
 		pDest += usDestWidth;
-		pSrc  += hImage->usWidth;
+		pSrc	+= hImage->usWidth;
 	}
 	// Do last line
 	memcpy( pDest, pSrc, uiLineSize );
@@ -564,13 +564,13 @@ BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDes
 	
 	// Copy line by line
 	pDest = ( UINT16*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p16BPPData + uiSrcStart;
+	pSrc =	hImage->p16BPPData + uiSrcStart;
 
 	for( cnt = 0; cnt < uiNumLines-1; cnt++ )
 	{
 		memcpy( pDest, pSrc, uiLineSize * 2 );
 		pDest += usDestWidth;
-		pSrc  += hImage->usWidth;
+		pSrc	+= hImage->usWidth;
 	}
 	// Do last line
 	memcpy( pDest, pSrc, uiLineSize * 2 );
@@ -599,7 +599,7 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 	PERFORMANCE_MARKER
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 rows, cols;
-	UINT8  *pSrc, *pSrcTemp;
+	UINT8	*pSrc, *pSrcTemp;
 	UINT16 *pDest, *pDestTemp;
 	UINT16 *p16BPPPalette;
 
@@ -630,7 +630,7 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 	
 	// Convert to Pixel specification
 	pDest = ( UINT16*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p8BPPData + uiSrcStart;
+	pSrc =	hImage->p8BPPData + uiSrcStart;
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
 
 	// For every entry, look up into 16BPP palette
@@ -647,7 +647,7 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 		}
 
 		pDest += usDestWidth;
-		pSrc  += hImage->usWidth;
+		pSrc	+= hImage->usWidth;
 	}
 	// Do last line
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
@@ -661,7 +661,7 @@ UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
 	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt;
-	UINT8	 r,g,b;
+	UINT8	r,g,b;
 
 	Assert( pPalette != NULL );
 
@@ -714,7 +714,7 @@ UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
 	Parameters:
 		rscale, gscale, bscale: 
 				Color mode: Percentages (255=100%) of color to translate into destination palette.
-				Mono mode:  Color for monochrome palette.
+				Mono mode:	Color for monochrome palette.
 		mono:
 				TRUE or FALSE to create a monochrome palette. In mono mode, Luminance values for 
 				colors are calculated, and the RGB color is shaded according to each pixel's brightness.
@@ -736,7 +736,7 @@ UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;
 	UINT32 rmod, gmod, bmod;
-	UINT8	 r,g,b;
+	UINT8	r,g,b;
 
 	Assert( pPalette != NULL );
 
@@ -800,7 +800,7 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 {
 	PERFORMANCE_MARKER
 	UINT16 r16, g16, b16, usColor;
-	UINT8	 r,g,b;
+	UINT8	r,g,b;
 
 	r = SGPGetRValue( RGBValue );
 	g = SGPGetGValue( RGBValue );
@@ -881,8 +881,8 @@ UINT32 GetRGBColor( UINT16 Value16BPP )
 //
 // Parameter List : Converts from RGB to SGPPaletteEntry
 //
-// Return Value  pointer to the SGPPaletteEntry
-//               
+// Return Value	pointer to the SGPPaletteEntry
+//				
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
 //
@@ -898,7 +898,7 @@ SGPPaletteEntry *ConvertRGBToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOl
 	pPalEntry = (SGPPaletteEntry *)MemAlloc(sizeof(SGPPaletteEntry) * 256);
 	memset( pPalEntry, 0, sizeof(SGPPaletteEntry) * 256 );
 	pInitEntry = pPalEntry;
-	DbgMessage(TOPIC_HIMAGE, DBG_LEVEL_0, "Converting RGB palette to SGPPaletteEntry");   
+	DbgMessage(TOPIC_HIMAGE, DBG_LEVEL_0, "Converting RGB palette to SGPPaletteEntry");	
 	
 	for(Index=0; Index <= (sbEnd-sbStart);Index++)
 	{

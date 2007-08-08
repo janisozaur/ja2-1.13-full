@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -101,7 +100,7 @@ GUI_BUTTON *gpPersistantButton;
 
 // These are global variables used by the main game loop
 
-UINT32 guiSaveTacticalStatusFlags;  //saves the tactical status flags when entering the editor.
+UINT32 guiSaveTacticalStatusFlags;	//saves the tactical status flags when entering the editor.
 
 BOOLEAN			gfAutoLoadA9 = FALSE;
 //new vars added by Kris
@@ -162,7 +161,7 @@ INT16			gsCursorGridNo;
 
 INT32 giMusicID = 0;
 
-void EraseWorldData(  );
+void EraseWorldData(	);
 
 BOOLEAN EditModeInit( void );
 BOOLEAN EditModeShutdown( void );
@@ -227,7 +226,7 @@ MOUSE_REGION GotoGridNoUIRegion;
 //
 UINT32 EditScreenInit(void)
 {
-	PERFORMANCE_MARKER  
+	PERFORMANCE_MARKER	
 	gfFakeLights = FALSE;
 
 	eInfo.fGameInit = TRUE;
@@ -236,13 +235,13 @@ UINT32 EditScreenInit(void)
 
 	//Set the editor colors.
 	//gusEditorTaskbarColor = 9581;
-	//gusEditorTaskbarColor =		Get16BPPColor( FROMRGB(  72,  88, 104 ) );
+	//gusEditorTaskbarColor =		Get16BPPColor( FROMRGB(	72,	88, 104 ) );
 	//gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 136, 138, 135 ) );
-	//gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  24,  61,  81 ) );
+	//gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(	24,	61,	81 ) );
 	
-	gusEditorTaskbarColor   = Get16BPPColor( FROMRGB(  65,  79,  94 ) );
+	gusEditorTaskbarColor	= Get16BPPColor( FROMRGB(	65,	79,	94 ) );
 	gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
-	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
+	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(	22,	55,	73 ) );
 
 	InitClipboard();
 
@@ -328,7 +327,7 @@ BOOLEAN EditModeInit( void )
 
 	CreateEditorTaskbar();
 	
-	//Hide all of the buttons here.  DoTaskbar() will handle the 
+	//Hide all of the buttons here.	DoTaskbar() will handle the 
 	//showing and hiding of the buttons.
 	for( x = LAST_EDITORTAB_BUTTON+1; x < NUMBER_EDITOR_BUTTONS; x++ )
 		HideButton( iEditorButton[x] );
@@ -358,7 +357,7 @@ BOOLEAN EditModeInit( void )
 
 	gusGameLightLevel = LightGetAmbient();
 	if( !gfBasement && !gfCaves )
-		gusLightLevel =  12;//EDITOR_LIGHT_MAX - (UINT16)LightGetAmbient();
+		gusLightLevel =	12;//EDITOR_LIGHT_MAX - (UINT16)LightGetAmbient();
 	else
 		gusLightLevel = EDITOR_LIGHT_MAX - (UINT16)LightGetAmbient();
 	
@@ -664,7 +663,7 @@ BOOLEAN DrawTempMouseCursorObject(void)
 		case DRAW_MODE_ROOM:
 			pSelList = SelRoom;
 			pNumSelList = &iNumRoomsSelected;
-			return FALSE;  //a special case where we just want to get the info and not display a cursor.
+			return FALSE;	//a special case where we just want to get the info and not display a cursor.
 		case DRAW_MODE_NEWROOF:
 			pSelList = SelSingleNewRoof;
 			pNumSelList = &iNumNewRoofsSelected;
@@ -764,7 +763,7 @@ BOOLEAN DrawTempMouseCursorObject(void)
 				{
 					return FALSE;
 				}
-				if( usUseObjIndex == 0xffff ||  usUseIndex == 0xffff )
+				if( usUseObjIndex == 0xffff ||	usUseIndex == 0xffff )
 				{
 					return FALSE;
 				}
@@ -787,7 +786,6 @@ BOOLEAN DrawTempMouseCursorObject(void)
 }
 			
 
-// WANNE: EDITOR?
 //Displays the current drawing object in the small, lower left window of the editor's toolbar.
 void ShowCurrentDrawingMode( void )
 {
@@ -797,7 +795,7 @@ void ShowCurrentDrawingMode( void )
 	UINT16			usUseIndex;
 	UINT16			usObjIndex;
 	INT32				iStartX = iScreenWidthOffset + 50;
-	INT32				iStartY = 2  * iScreenHeightOffset + 440;
+	INT32				iStartY = 2	* iScreenHeightOffset + 440;
 	INT32				iPicHeight, iPicWidth;
 	INT16				sTempOffsetX;
 	INT16				sTempOffsetY;
@@ -807,7 +805,6 @@ void ShowCurrentDrawingMode( void )
 	UINT16			usFillColor;
 	INT32				iIndexToUse;
 	
-	// WANNE: EDITOR?
 	// Set up a clipping rectangle for the display window.
 	NewRect.iLeft = iScreenWidthOffset + 0;
 	NewRect.iTop = 2 * iScreenHeightOffset + 400;
@@ -1016,7 +1013,6 @@ void ShowCurrentDrawingMode( void )
 		iPicWidth = (INT32)pETRLEObject->usWidth;
 		iPicHeight = (INT32)pETRLEObject->usHeight;
 
-		// WANNE: EDITOR?
 		// Center the picture in the display window.
 		iStartX = ( 100 - iPicWidth ) / 2;
 		iStartY = ( 60 - iPicHeight ) / 2;
@@ -1029,17 +1025,15 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetX = 0;
 		pETRLEObject->sOffsetY = 0;
 
-		// WANNE: EDITOR?
 		SetObjectShade( gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, DEFAULT_SHADE_LEVEL );
 		BltVideoObject( FRAME_BUFFER, gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, 
-									 usUseIndex, (iScreenWidthOffset + 0 + iStartX), (2 * iScreenHeightOffset + 400 + iStartY), 
-									 VO_BLT_SRCTRANSPARENCY, NULL);
+									usUseIndex, (iScreenWidthOffset + 0 + iStartX), (2 * iScreenHeightOffset + 400 + iStartY), 
+									VO_BLT_SRCTRANSPARENCY, NULL);
 
 		pETRLEObject->sOffsetX = sTempOffsetX;
 		pETRLEObject->sOffsetY = sTempOffsetY;
 	}
 
-	// WANNE: EDITOR?
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
 	usFillColor = GenericButtonFillColors[0];
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -1337,7 +1331,7 @@ void HandleKeyboardShortcuts( )
 {
 	PERFORMANCE_MARKER
 	static INT32 iSavedMode;
-  static BOOLEAN fShowTrees = TRUE;
+	static BOOLEAN fShowTrees = TRUE;
 	while( DequeueEvent( &EditorInputEvent ) )
 	{
 		if( !HandleSummaryInput( &EditorInputEvent ) && !HandleTextInput( &EditorInputEvent ) && EditorInputEvent.usEvent == KEY_DOWN )
@@ -2413,10 +2407,9 @@ UINT32 ProcessEditscreenMessageBoxResponse()
 UINT32 WaitForHelpScreenResponse( void )
 {
 	PERFORMANCE_MARKER
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
 
-	// WANNE: EDITOR?
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 50, iScreenHeightOffset + 50, iScreenWidthOffset + 590, iScreenHeightOffset + 310,
 													Get16BPPColor(FROMRGB(136, 138, 135)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 51, iScreenHeightOffset + 51, iScreenWidthOffset + 590, iScreenHeightOffset + 310,
@@ -2426,67 +2419,67 @@ UINT32 WaitForHelpScreenResponse( void )
 
 	SetFont( gp12PointFont1 );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 55, L"HOME" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 55, L"HOME" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 55, L"Toggle fake editor lighting ON/OFF" );
 
 	gprintf( iScreenWidthOffset + 55, iScreenHeightOffset + 67, L"INSERT" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 67, L"Toggle fill mode ON/OFF" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 79, L"BKSPC" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 79, L"BKSPC" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 79, L"Undo last change" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 91, L"DEL" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 91, L"DEL" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 91, L"Quick erase object under mouse cursor" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 103, L"ESC" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 103, L"ESC" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 103, L"Exit editor" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 115, L"PGUP/PGDN" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 115, L"PGUP/PGDN" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 115, L"Change object to be pasted" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 127, L"F1" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 127, L"F1" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 127, L"This help screen" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 139, L"F10" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 139, L"F10" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 139, L"Save current map" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 151, L"F11" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 151, L"F11" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 151, L"Load map as current" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 163, L"+/-" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 163, L"+/-" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 163, L"Change shadow darkness by .01" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 175, L"SHFT +/-" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 175, L"SHFT +/-" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 175, L"Change shadow darkness by .05" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 187, L"0 - 9" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 187, L"0 - 9" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 187, L"Change map/tileset filename" );
 	
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 199, L"b" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 199, L"b" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 199, L"Change brush size" );
 	
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 211, L"d" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 211, L"d" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 211, L"Draw debris" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 223, L"o" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 223, L"o" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 223, L"Draw obstacle" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 235, L"r" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 235, L"r" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 235, L"Draw rocks" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 247, L"t" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 247, L"t" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 247, L"Toggle trees display ON/OFF" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 259, L"g" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 259, L"g" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 259, L"Draw ground textures" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 271, L"w" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 271, L"w" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 271, L"Draw building walls" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 283, L"e" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 283, L"e" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 283, L"Toggle erase mode ON/OFF" );
 
-	gprintf( iScreenWidthOffset + 55,  iScreenHeightOffset + 295, L"h" );
+	gprintf( iScreenWidthOffset + 55,	iScreenHeightOffset + 295, L"h" );
 	gprintf( iScreenWidthOffset + 205, iScreenHeightOffset + 295, L"Toggle roofs ON/OFF" );
 
 
@@ -2536,7 +2529,7 @@ UINT32 WaitForHelpScreenResponse( void )
 UINT32 WaitForSelectionWindowResponse( void )
 {
 	PERFORMANCE_MARKER
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 
 	while (DequeueEvent(&DummyEvent) == TRUE)
 	{
@@ -2636,7 +2629,6 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 	INT32				iWinWidth, iWinHeight;
 	blt_vs_fx		vSfx;
 
-	// WANNE: EDITOR
 	WinRect.iLeft = (iWindow == 0) ? (iScreenWidthOffset + 336) : (iScreenWidthOffset + 488);
 	WinRect.iTop = 2 * iScreenHeightOffset + 211;
 	WinRect.iRight = (iWindow == 0) ? (iScreenWidthOffset + 485) : (iScreenWidthOffset + 637);
@@ -2682,8 +2674,8 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 
 	vSfx.SrcRect = ClipRect;
 	BltVideoSurface( FRAME_BUFFER, vSurface, 0, 
-																 iStartX, iStartY, 
-																 VS_BLT_SRCSUBRECT, &vSfx );
+																iStartX, iStartY, 
+																VS_BLT_SRCSUBRECT, &vSfx );
 }
 
 
@@ -2705,7 +2697,6 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 	ETRLEObject *pETRLEObject;
 	INT32				iWinWidth, iWinHeight;
 
-	// WANNE: EDITOR?
 	NewRect.iLeft = (iWindow == 0) ? (iScreenWidthOffset + 336) : (iScreenWidthOffset + 488);
 	NewRect.iTop = 2 * iScreenHeightOffset + 211;
 	NewRect.iRight = (iWindow == 0) ? (iScreenWidthOffset + 485) : (iScreenWidthOffset + 637);
@@ -2735,7 +2726,7 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 
 	SetObjectShade( hVObj, DEFAULT_SHADE_LEVEL );
 	BltVideoObject( FRAME_BUFFER, hVObj, 0, (iStartX), (iStartY), 
-								 VO_BLT_SRCTRANSPARENCY, NULL);
+								VO_BLT_SRCTRANSPARENCY, NULL);
 
 	pETRLEObject->sOffsetX = sTempOffsetX;
 	pETRLEObject->sOffsetY = sTempOffsetY;
@@ -2872,7 +2863,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 					LightSpritePower( iCount, FALSE );
 					LightSpriteDestroy( iCount );
 					fRemovedLight = TRUE;
-	 				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
+					iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
 					RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );
 				}
 			}
@@ -2882,8 +2873,8 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	{ 
 		UINT16 usRadius;
 		//Assuming that the light naming convention doesn't change, then this following conversion 
-		//should work.  Basically, the radius values aren't stored in the lights, so I have pull
-		//the radius out of the filename.  Ex:  L-RO5.LHT
+		//should work.	Basically, the radius values aren't stored in the lights, so I have pull
+		//the radius out of the filename.	Ex:	L-RO5.LHT
 		usRadius = pLastLightName[4] - 0x30;
 		AddLightToUndoList( iMapIndex, usRadius, (UINT8)uiLastLightType );
 	}
@@ -3374,7 +3365,7 @@ void HandleMouseClicksInGameScreen()
 					ProcessAreaSelection( FALSE );
 				break;
 
-			case DRAW_MODE_SMART_WALLS:   
+			case DRAW_MODE_SMART_WALLS:	
 				EraseWalls( iMapIndex );
 				break;
 			case DRAW_MODE_SMART_BROKEN_WALLS:
@@ -3474,13 +3465,13 @@ void ShowEntryPoints()
 	PERFORMANCE_MARKER
 	//make entry points visible
 	if( gMapInformation.sNorthGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sNorthGridNo, FIRSTPOINTERS2 );
+	AddTopmostToTail( gMapInformation.sNorthGridNo, FIRSTPOINTERS2 );
 	if( gMapInformation.sEastGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sEastGridNo, FIRSTPOINTERS2 );
+	AddTopmostToTail( gMapInformation.sEastGridNo, FIRSTPOINTERS2 );
 	if( gMapInformation.sSouthGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sSouthGridNo, FIRSTPOINTERS2 );
+	AddTopmostToTail( gMapInformation.sSouthGridNo, FIRSTPOINTERS2 );
 	if( gMapInformation.sWestGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sWestGridNo, FIRSTPOINTERS2 );
+	AddTopmostToTail( gMapInformation.sWestGridNo, FIRSTPOINTERS2 );
 }
 
 void HideEntryPoints()
@@ -3562,7 +3553,7 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 		case DRAW_MODE_SLANTED_ROOF:
 			AddBuildingSectionToWorld( &gSelectRegion );
 			break;
-		case DRAW_MODE_SAW_ROOM:  
+		case DRAW_MODE_SAW_ROOM:	
 			RemoveBuildingSectionFromWorld( &gSelectRegion );	
 			break;
 		case DRAW_MODE_CAVES:
@@ -3604,7 +3595,7 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 }
 
 //For any drawing modes that support large cursors, or even area selection, this function calls the 
-//appropriate paste function for every gridno within the cursor.  This is not used for functions that
+//appropriate paste function for every gridno within the cursor.	This is not used for functions that
 //rely completely on selection areas, such as buildings.
 void DrawObjectsBasedOnSelectionRegion()
 {
@@ -3612,18 +3603,18 @@ void DrawObjectsBasedOnSelectionRegion()
 	INT32 x, y, iMapIndex;
 	BOOLEAN fSkipTest;
 
-	//Certain drawing modes are placed with 100% density.  Those cases are checked here,
+	//Certain drawing modes are placed with 100% density.	Those cases are checked here,
 	//so the density test can be skipped.
 	fSkipTest = FALSE;
 	if( gusSelectionType == SMALLSELECTION ||
-		  iDrawMode == DRAW_MODE_GROUND || 
+		iDrawMode == DRAW_MODE_GROUND || 
 			iDrawMode == DRAW_MODE_FLOORS || 
-		  iDrawMode == DRAW_MODE_ROOMNUM ||
+		iDrawMode == DRAW_MODE_ROOMNUM ||
 			iDrawMode == DRAW_MODE_EXITGRID )
 		fSkipTest = TRUE;
 
 	//The reason why I process the region from top to bottom then to the right is
-	//to even out the binary tree undo placements.  Otherwise, the placements within
+	//to even out the binary tree undo placements.	Otherwise, the placements within
 	//the undo binary tree would alway choose the right branch because the imapindex is
 	//always greater than the previously positioned one.
 	//Process the cursor area
@@ -3637,7 +3628,7 @@ void DrawObjectsBasedOnSelectionRegion()
 				iMapIndex = MAPROWCOLTOPOS( y, x );
 				switch( iDrawMode )
 				{
-					case DRAW_MODE_EXITGRID:  
+					case DRAW_MODE_EXITGRID:	
 						AddToUndoList( iMapIndex );
 						AddExitGridToWorld( iMapIndex, &gExitGrid );			
 						AddTopmostToTail( (UINT16)iMapIndex, FIRSTPOINTERS8 );
@@ -3648,7 +3639,7 @@ void DrawObjectsBasedOnSelectionRegion()
 					case DRAW_MODE_OSTRUCTS:	PasteStructure( iMapIndex );											break;
 					case DRAW_MODE_OSTRUCTS1: PasteStructure1( iMapIndex );											break;
 					case DRAW_MODE_OSTRUCTS2: PasteStructure2( iMapIndex );											break;
-					case DRAW_MODE_ROOMNUM:   PasteRoomNumber( iMapIndex, gubCurrRoomNumber );	break;
+					case DRAW_MODE_ROOMNUM:	PasteRoomNumber( iMapIndex, gubCurrRoomNumber );	break;
 					default: return; //no point in continuing...
 				}
 			}
@@ -3659,7 +3650,7 @@ void DrawObjectsBasedOnSelectionRegion()
 extern void AutoLoadMap();
 
 //The main loop of the editor.
-UINT32  EditScreenHandle( void )
+UINT32	EditScreenHandle( void )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiRetVal;
@@ -3668,7 +3659,7 @@ UINT32  EditScreenHandle( void )
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{
-		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted.	Don't save, don't quit, get Kris!	If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 		gfCorruptMap = TRUE;
 	}
 	if( gfWorldLoaded && gubScheduleID > 40 && !gfCorruptSchedules )
@@ -3676,7 +3667,7 @@ UINT32  EditScreenHandle( void )
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Schedule data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+			ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Schedule data has just been corrupted.	Don't save, don't quit, get Kris!	If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 			gfCorruptSchedules = TRUE;
 		}
 	}
@@ -3743,7 +3734,7 @@ UINT32  EditScreenHandle( void )
 		gfFirstPlacement = TRUE;
 
 	//If we are copying or moving a building, we process, then delete the building layout immediately
-	//after releasing the mouse button.  If released in the world, then the building would have been
+	//after releasing the mouse button.	If released in the world, then the building would have been
 	//processed in above function, HandleMouseClicksInGameScreen().
 	if( !_LeftButtonDown && gpBuildingLayoutList )
 		DeleteBuildingLayout();
@@ -3800,7 +3791,7 @@ UINT32  EditScreenHandle( void )
 	}
 	ExecuteVideoOverlays( );
 
-  ScrollString( );
+	ScrollString( );
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender( );
@@ -3811,7 +3802,6 @@ UINT32  EditScreenHandle( void )
 void CreateGotoGridNoUI()
 {
 	PERFORMANCE_MARKER
-	// WANNE: EDITOR
 	gfGotoGridNoUI = TRUE;
 	//Disable the rest of the editor
 	DisableEditorTaskbar();

@@ -185,7 +185,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		// if it's a gun
 		if (Item [ usItem ].usItemClass == IC_GUN )
 		{
-			// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is done for BobbyR
+			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is done for BobbyR
 			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
 			Object.gun.ubGunShotsLeft = 0;
 		}
@@ -311,7 +311,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	{
 		//add all the items from the array that was built above
 		usMapPos = PABLOS_STOLEN_DEST_GRIDNO;
-		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
+		//The item are to be added to the Top part of Drassen, grid loc's	10112, 9950
 		if( !AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
 		{
 			//Error adding the items
@@ -339,6 +339,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	{
 		SetFactFalse( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT );
 	}
+
+	SetFactFalse( FACT_PLAYER_FOUND_ITEMS_MISSING );
 
 	SetFactFalse( FACT_LARGE_SIZED_OLD_SHIPMENT_WAITING );
 
@@ -483,7 +485,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 		{
 			return;
 		}
-		pTemp = new WORLDITEM[  uiNumWorldItems];
+		pTemp = new WORLDITEM[	uiNumWorldItems];
 		if (!pTemp)
 		{
 			return;
@@ -713,7 +715,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 				}
 				break;
 			case NPC_ACTION_DELAYED_MAKE_BRENDA_LEAVE:
-				//IC:  
+				//IC:	
 				//TriggerNPCRecord( 85, 9 );
 				SetFactTrue( FACT_BRENDA_PATIENCE_TIMER_EXPIRED );
 				break;
@@ -1074,7 +1076,7 @@ void CheckForMissingHospitalSupplies( void )
 
 	if ( CheckFact( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES_AGAIN, 0 ) == TRUE )
 	{
-		// player returning stuff!  if back to full then can operate
+		// player returning stuff!	if back to full then can operate
 		if ( ubMedicalObjects >= gubCambriaMedicalObjects )
 		{
 			SetFactFalse( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES_AGAIN );
@@ -1188,7 +1190,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 	{
 		//add all the items from the array that was built above
 
-		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
+		//The item are to be added to the Top part of Drassen, grid loc's	10112, 9950
 		if( !AddItemsToUnLoadedSector( MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
 		{
 			//error

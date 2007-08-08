@@ -153,14 +153,14 @@ UINT32 guiNumUninvolved;
 //only if the PBI isn't persistant (!gfPersistantPBI).
 BOOLEAN gfPersistantPBI = FALSE;
 
-//Contains general information about the type of encounter the player is faced with.  This
-//determines whether or not you can autoresolve the battle or even retreat.  This code
+//Contains general information about the type of encounter the player is faced with.	This
+//determines whether or not you can autoresolve the battle or even retreat.	This code
 //dictates the header that is used at the top of the PBI.
 UINT8 gubEnemyEncounterCode = NO_ENCOUNTER_CODE;
 
 //The autoresolve during tactical battle option needs more detailed information than the 
-//gubEnemyEncounterCode can provide.  The explicit version contains possibly unique codes
-//for reasons not normally used in the PBI.  For example, if we were fighting the enemy
+//gubEnemyEncounterCode can provide.	The explicit version contains possibly unique codes
+//for reasons not normally used in the PBI.	For example, if we were fighting the enemy
 //in a normal situation, then shot at a civilian, the civilians associated with the victim
 //would turn hostile, which would disable the ability to autoresolve the battle.
 BOOLEAN gubExplicitEnemyEncounterCode = NO_ENCOUNTER_CODE;
@@ -227,16 +227,16 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 	if( ubInvalidGroups || pSector->ubAdminsInBattle || pSector->ubTroopsInBattle || pSector->ubElitesInBattle || pSector->ubCreaturesInBattle )
 	{
 		CHAR16 str[ 512 ];
-		swprintf( str, L"Strategic info warning:  Sector 'in battle' counters are not clear when they should be.  "
-									 L"If you can provide information on how a previous battle was resolved here or nearby patrol "
-									 L"(auto resolve, tactical battle, cheat keys, or retreat),"
-									 L"please forward that info (no data files necessary) as well as the following code (very important):  "
-									 L"G(%02d:%c%d_b%d) A(%02d:%02d) T(%02d:%02d) E(%02d:%02d) C(%02d:%02d)",
-									 ubInvalidGroups, pLocGroup->ubSectorY + 'A' - 1, pLocGroup->ubSectorX, pLocGroup->ubSectorZ,
-									 pSector->ubNumAdmins, pSector->ubAdminsInBattle,
-									 pSector->ubNumTroops, pSector->ubTroopsInBattle,
-									 pSector->ubNumElites, pSector->ubElitesInBattle,
-									 pSector->ubNumCreatures, pSector->ubCreaturesInBattle );
+		swprintf( str, L"Strategic info warning:	Sector 'in battle' counters are not clear when they should be.	"
+									L"If you can provide information on how a previous battle was resolved here or nearby patrol "
+									L"(auto resolve, tactical battle, cheat keys, or retreat),"
+									L"please forward that info (no data files necessary) as well as the following code (very important):	"
+									L"G(%02d:%c%d_b%d) A(%02d:%02d) T(%02d:%02d) E(%02d:%02d) C(%02d:%02d)",
+									ubInvalidGroups, pLocGroup->ubSectorY + 'A' - 1, pLocGroup->ubSectorX, pLocGroup->ubSectorZ,
+									pSector->ubNumAdmins, pSector->ubAdminsInBattle,
+									pSector->ubNumTroops, pSector->ubTroopsInBattle,
+									pSector->ubNumElites, pSector->ubElitesInBattle,
+									pSector->ubNumCreatures, pSector->ubCreaturesInBattle );
 		DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 		pSector->ubAdminsInBattle = 0;
 		pSector->ubTroopsInBattle = 0;
@@ -249,7 +249,7 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	INT32 i;
 	UINT8 ubGroupID = 0;
 	UINT8 ubNumStationaryEnemies = 0;
@@ -294,7 +294,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			}
 		}
 
-		//If we are currently in the AI Viewer development utility, then remove it first.  It automatically
+		//If we are currently in the AI Viewer development utility, then remove it first.	It automatically
 		//returns to the mapscreen upon removal, which is where we want to go.
 		#ifdef JA2BETAVERSION
 			if( guiCurrentScreen == AIVIEWER_SCREEN )
@@ -377,19 +377,19 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			}
 		}
 		else if( gubEnemyEncounterCode == ENTERING_ENEMY_SECTOR_CODE ||
-						 gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE || 
-						 gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || 
-						 gubEnemyEncounterCode == ENEMY_INVASION_CODE ||
-						 gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
-						 gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-						 gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
+						gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE || 
+						gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || 
+						gubEnemyEncounterCode == ENEMY_INVASION_CODE ||
+						gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
+						gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
+						gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
 		{ //use same code
 			gubExplicitEnemyEncounterCode = gubEnemyEncounterCode;
 		}
 		else 
 		{
 			#ifdef JA2BETAVERSION
-				DoScreenIndependantMessageBox( L"Can't determine valid reason for battle indicator.  Please try to provide information as to when and why this indicator first appeared and send whatever files that may help.", MSG_BOX_FLAG_OK, NULL );
+				DoScreenIndependantMessageBox( L"Can't determine valid reason for battle indicator.	Please try to provide information as to when and why this indicator first appeared and send whatever files that may help.", MSG_BOX_FLAG_OK, NULL );
 			#endif
 			gfBlitBattleSectorLocator = FALSE;
 			return;
@@ -483,8 +483,8 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			{
 				// involved
 				if( !ubGroupID )
-				{ //Record the first groupID.  If there are more than one group in this battle, we
-					//can detect it by comparing the first value with future values.  If we do, then
+				{ //Record the first groupID.	If there are more than one group in this battle, we
+					//can detect it by comparing the first value with future values.	If we do, then
 					//we set a flag which determines whether to use the singular help text or plural version
 					//for the retreat button.
 					ubGroupID = MercPtrs[ i ]->ubGroupID;
@@ -547,7 +547,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 					}
 					// Madd
 					else if( gGameOptions.ubDifficultyLevel == DIF_LEVEL_INSANE && 
-									 CurrentPlayerProgressPercentage() >= 25 )
+									CurrentPlayerProgressPercentage() >= 25 )
 					{ //if the enemy outnumbers the players, then there is a chance of the enemies ambushing the group
 						if( ubNumMobileEnemies > ubNumMercs )
 						{
@@ -569,7 +569,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 						}
 					}
 					else if( WhatPlayerKnowsAboutEnemiesInSector( gubPBSectorX, gubPBSectorY ) == KNOWS_NOTHING && 
-									 CurrentPlayerProgressPercentage() >= 30 - gGameOptions.ubDifficultyLevel * 5 )
+									CurrentPlayerProgressPercentage() >= 30 - gGameOptions.ubDifficultyLevel * 5 )
 					{ //if the enemy outnumbers the players, then there is a small chance of the enemies ambushing the group
 						if( ubNumMobileEnemies > ubNumMercs )
 						{
@@ -673,7 +673,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			SetButtonFastHelpText( iPBButton[ 0 ], gpStrategicString[ STR_PB_DISABLED_AUTORESOLVE_FASTHELP ] );
 		}
 		else if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || 
-						 gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
+						gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 		{ //Don't allow autoresolve for ambushes
 			DisableButton( iPBButton[ 0 ] );
 			SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 3 ] );
@@ -751,7 +751,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 		}
 	}
 
-	//Disable the options button when the auto resolve  screen comes up
+	//Disable the options button when the auto resolve	screen comes up
 	EnableDisAbleMapScreenOptionsButton( FALSE );
 
 	SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
@@ -797,7 +797,7 @@ void DoTransitionFromMapscreenToPreBattleInterface()
 
 	if( gfEnterAutoResolveMode )
 	{ //If we are intending on immediately entering autoresolve, change the global flag so that it will actually 
-		//render the interface once.  If gfEnterAutoResolveMode is clear, then RenderPreBattleInterface() won't do 
+		//render the interface once.	If gfEnterAutoResolveMode is clear, then RenderPreBattleInterface() won't do 
 		//anything.
 		fEnterAutoResolveMode = TRUE;
 		gfEnterAutoResolveMode = FALSE;
@@ -823,7 +823,7 @@ void DoTransitionFromMapscreenToPreBattleInterface()
 	InvalidateScreen();
 	RefreshScreen( NULL );
 
-	while( iPercentage < 100  )
+	while( iPercentage < 100	)
 	{
 		uiCurrTime = GetJA2Clock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
@@ -897,7 +897,7 @@ void KillPreBattleInterface()
 	fCharacterInfoPanelDirty = TRUE;
 	gfDisplayPotentialRetreatPaths = FALSE;
 
-	//Enable the options button when the auto resolve  screen comes up
+	//Enable the options button when the auto resolve	screen comes up
 	EnableDisAbleMapScreenOptionsButton( TRUE );
 
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 261, 359, 0 );
@@ -994,7 +994,7 @@ void RenderPreBattleInterface()
 	//PLAYERGROUP *pPlayer;
 
 	//This code determines if the cursor is inside the rectangle consisting of the 
-	//retreat button.  If it is inside, then we set up the variables so that the retreat
+	//retreat button.	If it is inside, then we set up the variables so that the retreat
 	//arrows get drawn in the mapscreen.
 	if( ButtonList[ iPBButton[ 2 ] ]->uiFlags & BUTTON_ENABLED )
 	{
@@ -1125,7 +1125,7 @@ void RenderPreBattleInterface()
 		//enemy 
 		SetFont( FONT14ARIAL );
 		if( gubEnemyEncounterCode == CREATURE_ATTACK_CODE || 
-			  gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
+			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
 				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
 				WhatPlayerKnowsAboutEnemiesInSector( gubPBSectorX, gubPBSectorY ) != KNOWS_HOW_MANY )
 		{
@@ -1157,7 +1157,7 @@ void RenderPreBattleInterface()
 		SetFontForeground( FONT_YELLOW );
 
 		//print out the participants of the battle.
-		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
+		// |	NAME	| ASSIGN |	COND	|	HP	|	BP	|
 		line = 0;
 		y = TOP_Y + 1;
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
@@ -1200,7 +1200,7 @@ void RenderPreBattleInterface()
 		}
 
 		//print out the uninvolved members of the battle
-		// |  NAME  | ASSIGN |  LOC   |  DEST  |  DEP   |  
+		// |	NAME	| ASSIGN |	LOC	|	DEST	|	DEP	|	
 		if( !guiNumUninvolved )
 		{
 			SetFontForeground( FONT_YELLOW );
@@ -1266,7 +1266,7 @@ void RenderPreBattleInterface()
 		RenderPBHeader( &x, &width ); //the text is important enough to blink.
 	}
 
-  //InvalidateRegion( 0, 0, 261, 359 );
+	//InvalidateRegion( 0, 0, 261, 359 );
 	if( gfEnterAutoResolveMode )
 	{
 		gfEnterAutoResolveMode = FALSE;
@@ -1731,7 +1731,7 @@ void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles )
 	PERFORMANCE_MARKER
 	GROUP *pGroup, *pNextGroup;
 
-	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.  Needed for
+	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.	Needed for
 	// the tactical placement interface to work in case of simultaneous multi-vehicle arrivals!
 
 	pGroup = gpGroupList;
@@ -1804,7 +1804,7 @@ void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles
 					{
 						TakeSoldierOutOfVehicle( pSoldier );
 
-						// put them on the unique squad assigned to people leaving this vehicle.  Can't add them to existing squads,
+						// put them on the unique squad assigned to people leaving this vehicle.	Can't add them to existing squads,
 						// because if this is a simultaneous group attack, the mercs could be coming from different sides, and the
 						// placement screen can't handle mercs on the same squad arriving from difference edges!
 						fSuccess = AddCharacterToSquad( pSoldier, bUniqueVehicleSquad );

@@ -43,7 +43,7 @@ typedef struct TAG_SLIDER
 
 	UINT16				usBackGroundColor;
 
-	MOUSE_REGION  ScrollAreaMouseRegion;
+	MOUSE_REGION	ScrollAreaMouseRegion;
 
 	UINT32				uiSliderBoxImage;
 	UINT16				usCurrentSliderBoxPosition;
@@ -116,7 +116,7 @@ void CalculateNewSliderIncrement( UINT32 uiSliderID, UINT16 usPosX );
 BOOLEAN InitSlider()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	
 	// load Slider Box Graphic graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
@@ -217,7 +217,7 @@ INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, U
 
 
 			MSYS_DefineRegion( &pNewSlider->ScrollAreaMouseRegion, (UINT16)(usPosX-pNewSlider->usWidth/2), usPosY, (UINT16)(usPosX+pNewSlider->usWidth/2), (UINT16)(pNewSlider->usPosY+pNewSlider->usHeight), sPriority,
-									 usCursor, SelectedSliderMovementCallBack, SelectedSliderButtonCallBack ); 
+									usCursor, SelectedSliderMovementCallBack, SelectedSliderButtonCallBack ); 
 			MSYS_SetRegionUserData( &pNewSlider->ScrollAreaMouseRegion, 1, pNewSlider->uiSliderID );
 			break;
 				
@@ -229,7 +229,7 @@ INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, U
 			pNewSlider->usHeight = DEFUALT_SLIDER_SIZE;
 
 			MSYS_DefineRegion( &pNewSlider->ScrollAreaMouseRegion, usPosX, (UINT16)(usPosY-DEFUALT_SLIDER_SIZE), (UINT16)(pNewSlider->usPosX+pNewSlider->usWidth), (UINT16)(usPosY+DEFUALT_SLIDER_SIZE), sPriority,
-									 usCursor, SelectedSliderMovementCallBack, SelectedSliderButtonCallBack ); 
+									usCursor, SelectedSliderMovementCallBack, SelectedSliderButtonCallBack ); 
 			MSYS_SetRegionUserData( &pNewSlider->ScrollAreaMouseRegion, 1, pNewSlider->uiSliderID );
 		break;
 	}
@@ -283,7 +283,7 @@ void RenderAllSliderBars()
 			usPosY = gusMouseYPos - gpCurrentSlider->usPosY;
 
 		//if the mouse 
-		CalculateNewSliderIncrement( gpCurrentSlider->uiSliderID,  usPosY );
+		CalculateNewSliderIncrement( gpCurrentSlider->uiSliderID,	usPosY );
 	}
 	else
 	{
@@ -328,7 +328,7 @@ void RenderSelectedSliderBar( SLIDER *pSlider )
 void RenderSliderBox( SLIDER *pSlider )
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 	SGPRect		SrcRect;
 	SGPRect		DestRect;
 
@@ -686,14 +686,14 @@ void CalculateNewSliderIncrement( UINT32 uiSliderID, UINT16 usPos )
 void OptDisplayLine( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, INT16 iColor )
 {
 	PERFORMANCE_MARKER
-  UINT32 uiDestPitchBYTES;
-  UINT8 *pDestBuf;
+	UINT32 uiDestPitchBYTES;
+	UINT8 *pDestBuf;
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
 
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  // draw the line 
+	// draw the line 
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, iColor, pDestBuf);
 
 	// unlock frame buffer

@@ -45,7 +45,7 @@ UINT32		guiCardBackground;
 INT8			gbCurrentlySelectedCard;
 
 //link to the card gallery
-MOUSE_REGION    gSelectedFloristCardsRegion[9];
+MOUSE_REGION	gSelectedFloristCardsRegion[9];
 void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
@@ -65,7 +65,7 @@ BOOLEAN EnterFloristCards()
 {
 	PERFORMANCE_MARKER
 	UINT16 i, j, usPosX, usPosY;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	UINT8						ubCount;
 
 	InitFloristDefaults();
@@ -83,7 +83,7 @@ BOOLEAN EnterFloristCards()
 		for(i=0; i<3; i++)
 		{
 			MSYS_DefineRegion( &gSelectedFloristCardsRegion[ubCount], usPosX, usPosY, (UINT16)(usPosX + FLORIST_CARD_CARD_WIDTH), (UINT16)(usPosY + FLORIST_CARD_CARD_HEIGHT), MSYS_PRIORITY_HIGH,
-							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristCardsRegionCallBack ); 
+							CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristCardsRegionCallBack ); 
 			MSYS_AddRegion(&gSelectedFloristCardsRegion[ubCount]); 
 			MSYS_SetRegionUserData( &gSelectedFloristCardsRegion[ubCount], 0, ubCount );	
 			ubCount++;
@@ -96,11 +96,11 @@ BOOLEAN EnterFloristCards()
 	guiFlowerCardsButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiFlowerCardsBackButton = CreateIconAndTextButton( guiFlowerCardsButtonImage, sFloristCards[FLORIST_CARDS_BACK], FLORIST_BUTTON_TEXT_FONT, 
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
-													 TEXT_CJUSTIFIED, 
-													 FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnFlowerCardsBackButtonCallback);
+													FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR, 
+													TEXT_CJUSTIFIED, 
+													FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnFlowerCardsBackButtonCallback);
 	SetButtonCursor(guiFlowerCardsBackButton, CURSOR_WWW );
 
 
@@ -140,7 +140,7 @@ void RenderFloristCards()
 	UINT16	usPosX, usPosY;
 	CHAR16		sTemp[ 640 ];
 	UINT32	uiStartLoc=0;
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 	UINT16		usHeightOffset;
 
 	DisplayFloristDefaults();
@@ -162,17 +162,17 @@ void RenderFloristCards()
 			uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * ubCount;
 			LoadEncryptedDataFromFile(FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 
-//			DisplayWrappedString((UINT16)(usPosX+7), (UINT16)(usPosY+15), FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR,  sTemp, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+//			DisplayWrappedString((UINT16)(usPosX+7), (UINT16)(usPosY+15), FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR,	sTemp, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 				usHeightOffset = IanWrappedStringHeight( (UINT16)(usPosX+7), (UINT16)(usPosY), FLORIST_CARD_TEXT_WIDTH, 2, 
-															 FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
-															 0, FALSE, 0);
+															FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
+															0, FALSE, 0);
 
 				usHeightOffset = ( FLORIST_CARD_TEXT_HEIGHT - usHeightOffset ) / 2;
 
 
 				IanDisplayWrappedString( (UINT16)(usPosX+7), (UINT16)(usPosY+10+usHeightOffset), FLORIST_CARD_TEXT_WIDTH, 2, 
-															 FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
-															 0, FALSE, 0);
+															FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 
+															0, FALSE, 0);
 
 			ubCount++;
 			usPosX += FLORIST_CARD_FIRST_OFFSET_X;
@@ -180,9 +180,9 @@ void RenderFloristCards()
 		usPosY += FLORIST_CARD_FIRST_OFFSET_Y;
 	}
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 

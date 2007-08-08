@@ -74,7 +74,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 
 	memset( pNewAniNode, 0, sizeof( ANITILE ) );
 
-	if ( (uiFlags & ANITILE_EXISTINGTILE  ) )
+	if ( (uiFlags & ANITILE_EXISTINGTILE	) )
 	{
 		pNewAniNode->pLevelNode						= pGivenNode;
 		pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
@@ -170,7 +170,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 
 		}
 		// Can't set relative X,Y,Z IF FLAGS ANITILE_CACHEDTILE set!
-		else if ( (uiFlags & ANITILE_USEABSOLUTEPOS  ) )
+		else if ( (uiFlags & ANITILE_USEABSOLUTEPOS	) )
 		{
 			pNewAniNode->pLevelNode->sRelativeX		= sX;
 			pNewAniNode->pLevelNode->sRelativeY		= sY;
@@ -286,7 +286,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	pNewAniNode->uiTimeLastUpdate = GetJA2Clock( );
 	pNewAniNode->sGridNo					= sGridNo;
 
-	pNewAniNode->sStartFrame      = sStartFrame;
+	pNewAniNode->sStartFrame		= sStartFrame;
 
 	pNewAniNode->ubKeyFrame1			= pAniParams->ubKeyFrame1;
 	pNewAniNode->uiKeyFrame1Code	= pAniParams->uiKeyFrame1Code;
@@ -351,7 +351,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 				pOldAniNode->pNext = pAniNode->pNext;
 			}
 
-			if ( !(pAniNode->uiFlags & ANITILE_EXISTINGTILE  ) )
+			if ( !(pAniNode->uiFlags & ANITILE_EXISTINGTILE	) )
 			{
 
 				// Delete memory assosiated with item
@@ -425,7 +425,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 					// First delete the bullet!
 					RemoveBullet( pAniNode->uiUserData3 );
 					
-					// 0verhaul:  Removed because it's handled by RemoveBullet.
+					// 0verhaul:	Removed because it's handled by RemoveBullet.
 					// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - miss finished animation") );
 					// FreeUpAttacker( (UINT8) pAniNode->ubAttackerMissed );					
 				}
@@ -569,7 +569,7 @@ void UpdateAniTiles( )
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
 					if ( pNode->sCurrentFrame == pNode->ubKeyFrame2 )
 					{
-						UINT16     ubExpType;
+						UINT16	 ubExpType;
 
 						switch( pNode->uiKeyFrame2Code )
 						{
@@ -577,8 +577,8 @@ void UpdateAniTiles( )
 
 							ubExpType = Explosive[ Item[ (UINT16)pNode->uiUserData ].ubClassIndex ].ubType;
 
-							//              if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS || 
-							//                   ubExpType == EXPLOSV_SMOKE )
+							//				if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS || 
+							//					ubExpType == EXPLOSV_SMOKE )
 							if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS || 
 								ubExpType == EXPLOSV_SMOKE || ubExpType == EXPLOSV_BURNABLEGAS )
 							{

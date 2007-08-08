@@ -34,9 +34,9 @@ INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 {
 	PERFORMANCE_MARKER
 	INT32 iExitGridInfo;
-	iExitGridInfo  = (pExitGrid->ubGotoSectorX-1)<< 28;
+	iExitGridInfo	= (pExitGrid->ubGotoSectorX-1)<< 28;
 	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
-	iExitGridInfo += pExitGrid->ubGotoSectorZ    << 20;
+	iExitGridInfo += pExitGrid->ubGotoSectorZ	<< 20;
 	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
 	return iExitGridInfo;
 }
@@ -243,9 +243,9 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
 	PERFORMANCE_MARKER
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
@@ -260,7 +260,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	// Turn off at end of function...
 	gfPlotPathToExitGrid = TRUE;
 
-	//Save AI pathing vars.  changing the distlimit restricts how 
+	//Save AI pathing vars.	changing the distlimit restricts how 
 	//far away the pathing will consider.
 	ubSaveNPCAPBudget = gubNPCAPBudget;
 	ubSaveNPCDistLimit = gubNPCDistLimit;
@@ -274,7 +274,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	soldier.sGridNo = pSoldier->sGridNo;
 
 	// OK, Get an exit grid ( if possible )
-  if ( !GetExitGrid( sSweetGridNo, &ExitGrid ) )
+	if ( !GetExitGrid( sSweetGridNo, &ExitGrid ) )
 	{
 		return( NOWHERE );
 	}
@@ -287,8 +287,8 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	//in the square region.
@@ -352,7 +352,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	if ( fFound )
 	{
 		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
+		*pubDirection =	(UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 		return( sLowestGridNo );
 	}
 	else
@@ -365,9 +365,9 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
 {
 	PERFORMANCE_MARKER
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
@@ -378,8 +378,8 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	uiLowestRange = 999999;	

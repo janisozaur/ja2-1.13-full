@@ -2,9 +2,9 @@
 #define __SOLDER_CONTROL_H
 
 
-//Kris:  November 10, 1997
-//Please don't change this value from 10.  It will invalidate all of the maps and soldiers.
-#define MAXPATROLGRIDS  10  // *** THIS IS A DUPLICATION - MUST BE MOVED !
+//Kris:	November 10, 1997
+//Please don't change this value from 10.	It will invalidate all of the maps and soldiers.
+#define MAXPATROLGRIDS	10	// *** THIS IS A DUPLICATION - MUST BE MOVED !
 
 #include "Animation Cache.h"
 #include "Timer Control.h"
@@ -24,10 +24,10 @@ using namespace std;
 //forward declarations for versioning, it's so long I want it at the end
 class OLDSOLDIERTYPE_101;
 
-#define PTR_CIVILIAN    (pSoldier->bTeam == CIV_TEAM)
+#define PTR_CIVILIAN	(pSoldier->bTeam == CIV_TEAM)
 #define PTR_CROUCHED	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH)
 #define PTR_STANDING	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND)
-#define PTR_PRONE	    (gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_PRONE)
+#define PTR_PRONE	 (gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_PRONE)
 
 
 // TEMP VALUES FOR NAMES
@@ -36,10 +36,10 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
  
 
 // ANDREW: these are defines for OKDestanation usage - please move to approprite file
-#define IGNOREPEOPLE    0
-#define PEOPLETOO       1
-#define ALLPEOPLE       2
-#define FALLINGTEST     3
+#define IGNOREPEOPLE	0
+#define PEOPLETOO		1
+#define ALLPEOPLE		2
+#define FALLINGTEST	 3
 
 #define	LOCKED_NO_NEWGRIDNO			2
 
@@ -57,7 +57,7 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 #define TAKE_DAMAGE_GAS						8
 #define TAKE_DAMAGE_TENTACLES			9
 #define TAKE_DAMAGE_STRUCTURE_EXPLOSION 10
-#define TAKE_DAMAGE_OBJECT        11
+#define TAKE_DAMAGE_OBJECT		11
 
 
 #define SOLDIER_UNBLIT_SIZE			(75*75*2)
@@ -159,7 +159,7 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 #define NOBLOOD											MAXBLOOD
 #define BLOODTIME										5
 #define FOOTPRINTTIME								2
-#define MIN_BLEEDING_THRESHOLD			12      // you're OK while <4 Yellow life bars
+#define MIN_BLEEDING_THRESHOLD			12		// you're OK while <4 Yellow life bars
 
 #define BANDAGED( s ) (s->stats.bLifeMax - s->stats.bLife - s->bBleeding)
 
@@ -202,7 +202,7 @@ enum
 	MERC_RELOADROBOT,
 	MERC_TAKEBLOOD,
 	MERC_ATTACH_CAN,
-  MERC_FUEL_VEHICLE,
+	MERC_FUEL_VEHICLE,
 };
 
 // ENUMERATIONS FOR THROW ACTIONS
@@ -246,10 +246,10 @@ enum
 	MERC_TYPE__NPC,
 	MERC_TYPE__EPC,
 	MERC_TYPE__NPC_WITH_UNEXTENDABLE_CONTRACT,
-  MERC_TYPE__VEHICLE,
+	MERC_TYPE__VEHICLE,
 };
 
-// I don't care if this isn't intuitive!  The hand positions go right
+// I don't care if this isn't intuitive!	The hand positions go right
 // before the big pockets so we can loop through them that way. --CJC
 #define NO_SLOT -1
 
@@ -294,7 +294,7 @@ enum {
 //if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
 #define NUM_ORIGINAL_INV_SLOTS 19
 
-// NOTE NOTE NOTE!  Leave this alone until it is no longer needed.  It must match the
+// NOTE NOTE NOTE!	Leave this alone until it is no longer needed.	It must match the
 // original definition so old files can be read.
 namespace OldInventory {
 enum {
@@ -340,7 +340,7 @@ enum
 #define SOLDIER_CLASS_MILITIA( bSoldierClass )	( ( bSoldierClass >= SOLDIER_CLASS_GREEN_MILITIA ) && ( bSoldierClass <= SOLDIER_CLASS_ELITE_MILITIA ) )
 
 // This macro should be used whenever we want to see if someone is neutral
-// IF WE ARE CONSIDERING ATTACKING THEM.  Creatures & bloodcats will attack neutrals
+// IF WE ARE CONSIDERING ATTACKING THEM.	Creatures & bloodcats will attack neutrals
 // but they can't attack empty vehicles!!
 #define CONSIDERED_NEUTRAL( me, them ) ( (them->aiData.bNeutral) && ( me->bTeam != CREATURE_TEAM || (them->flags.uiStatusFlags & SOLDIER_VEHICLE) ) )
 
@@ -411,7 +411,7 @@ public:
 	Inventory(const Inventory&);
 
 	// Assignment operator
-    Inventory& operator=(const Inventory&);
+	Inventory& operator=(const Inventory&);
 
 	// Destructor
 	~Inventory();
@@ -442,7 +442,7 @@ public:
 	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
 
 	//not yet used
-	//cached value for which ai profile this soldier should use, ie regular, sniper,  civilian, etc
+	//cached value for which ai profile this soldier should use, ie regular, sniper,	civilian, etc
 	//BOOLEAN				eSoldierProfileType;
 
 public:
@@ -469,7 +469,7 @@ public:
 	INT8												bDominantDir;				// AI main direction to face...
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
-	INT16											  usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
+	INT16											usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
 	INT16												sNoiseGridno;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;
@@ -503,6 +503,8 @@ public:
 	INT8												bMobility;
 	INT8												bRTPCombat;
 	INT8												fAIFlags;
+	INT8												bAimTime;
+	INT8												bShownAimTime;
 };
 
 class STRUCT_Flags//last edited at version 102
@@ -512,6 +514,7 @@ public:
 
 public:
 	// flags from before the changes to the memory structure
+	INT8												bHasKeys;			// allows AI controlled dudes to open locked doors
 	BOOLEAN											fDelayedMovement;
 	BOOLEAN											fTurnInProgress;
 	BOOLEAN											fBeginFade;
@@ -565,7 +568,7 @@ public:
 	BOOLEAN											fChangingStanceDueToSuppression;
 	BOOLEAN											fForcedToStayAwake;				// forced by player to stay awake, reset to false, the moment they are set to rest or sleep
 	BOOLEAN											fDoSpread;
-	BOOLEAN											fIsSoldierMoving;							// ie.  Record time is on
+	BOOLEAN											fIsSoldierMoving;							// ie.	Record time is on
 	BOOLEAN											fIsSoldierDelayed;						//Is the soldier delayed Soldier 
 	BOOLEAN											fSoldierUpdatedFromNetwork;
 	BOOLEAN											fSayAmmoQuotePending;
@@ -588,9 +591,9 @@ public:
 	INT8												fTryingToFall;
 	INT8												fPastXDest;
 	INT8												fPastYDest;
- BOOLEAN                     fFallClockwise;
-  BOOLEAN                     fDoingExternalDeath;
-  BOOLEAN					autofireLastStep;
+ BOOLEAN					 fFallClockwise;
+	BOOLEAN					 fDoingExternalDeath;
+	BOOLEAN					autofireLastStep;
 	BOOLEAN lastFlankLeft;
 	UINT32											uiStatusFlags;
 
@@ -618,12 +621,12 @@ class STRUCT_Drugs//last edited at version 102
 {
 public:
 	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
-  INT8			bFutureDrugEffect[2];						// value to represent effect of a needle
-  INT8			bDrugEffectRate[2];							// represents rate of increase and decrease of effect  
-  INT8			bDrugEffect[2];								// value that affects AP & morale calc ( -ve is poorly )
-  INT8			bDrugSideEffectRate[2];					// duration of negative AP and morale effect
-  INT8			bDrugSideEffect[2];							// duration of negative AP and morale effect
-  INT8			bTimesDrugUsedSinceSleep[2];			
+	INT8			bFutureDrugEffect[2];						// value to represent effect of a needle
+	INT8			bDrugEffectRate[2];							// represents rate of increase and decrease of effect	
+	INT8			bDrugEffect[2];								// value that affects AP & morale calc ( -ve is poorly )
+	INT8			bDrugSideEffectRate[2];					// duration of negative AP and morale effect
+	INT8			bDrugSideEffect[2];							// duration of negative AP and morale effect
+	INT8			bTimesDrugUsedSinceSleep[2];			
 };
 
 class STRUCT_TimeCounters//last edited at version 102
@@ -659,8 +662,8 @@ public:
 	INT8												bDexterity;		// dexterity (hand coord) value
 	INT8												bWisdom;
 	INT8												bMedical;
-	INT8												bScientific;  
-  INT8                        bLeadership;
+	INT8												bScientific;	
+	INT8						bLeadership;
 };
 
 class STRUCT_Pathing//last edited at version 102
@@ -682,25 +685,21 @@ public:
 	UINT16											usPathDataSize;
 	UINT16											usPathIndex;	
 	INT16												sBlackList;
-	INT8												bAimTime;
-	INT8												bShownAimTime;
 	INT8												bPathStored;	// good for AI to reduct redundancy
-	INT8												bHasKeys;			// allows AI controlled dudes to open locked doors
-
 };
 
 class SOLDIERTYPE//last edited at version 102
 {
 public:
 	// Conversion operator
-    SOLDIERTYPE& operator=(const OLDSOLDIERTYPE_101&);
+	SOLDIERTYPE& operator=(const OLDSOLDIERTYPE_101&);
 
 	// Constructor
 	SOLDIERTYPE();
 	// Copy Constructor
 	SOLDIERTYPE(const SOLDIERTYPE&);
 	// Assignment operator
-    SOLDIERTYPE& operator=(const SOLDIERTYPE&);
+	SOLDIERTYPE& operator=(const SOLDIERTYPE&);
 	// Destructor
 	~SOLDIERTYPE();
 
@@ -708,14 +707,14 @@ public:
 	BOOLEAN Save(HWFILE hFile);
 	UINT32	GetChecksum();
 
-	// Initialize the soldier.  
-	//  Use this instead of the old method of calling memset.
-	//  Note that the constructor does this automatically.
+	// Initialize the soldier.	
+	//	Use this instead of the old method of calling memset.
+	//	Note that the constructor does this automatically.
 	void initialize();
 
 	// Note: Place all non-POD items at the end (after endOfPOD)
 	// The format of this structure affects what is written into and read from various
-	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// files (maps, save files, etc.).	If you change it then that code will not work 
 	// properly until it is all fixed and the files updated.
 public:
 	// ID
@@ -741,7 +740,7 @@ public:
 	INT16												sFractLife;		// fraction of life pts (in hundreths)	
 	INT8												bBleeding;		// blood loss control variable
 	INT8												bBreath;			// current breath value
-	INT8												bBreathMax;   // max breath, affected by fatigue/sleep
+	INT8												bBreathMax;	// max breath, affected by fatigue/sleep
 	INT8												bStealthMode;
 	INT16												sBreathRed;			// current breath value
 	
@@ -764,10 +763,10 @@ public:
 
 
 	// WORLD POSITION STUFF
-	FLOAT											  dXPos;
-	FLOAT											  dYPos;
-	FLOAT											  dOldXPos;
-	FLOAT											  dOldYPos;
+	FLOAT											dXPos;
+	FLOAT											dYPos;
+	FLOAT											dOldXPos;
+	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
 	INT8												bDirection;
@@ -807,7 +806,7 @@ public:
 	
 	UINT16											usAniCode;
 	UINT16											usAniFrame;
-	INT16											  sAniDelay;
+	INT16											sAniDelay;
 
 	// MOVEMENT TO NEXT TILE HANDLING STUFF
 	UINT8												ubDelayedMovementCauseMerc;
@@ -831,7 +830,7 @@ public:
 	INT32												iFaceIndex;
 
 	// FULL 3-d TILE STUFF ( keep records of three tiles infront )
-	UINT16										  usFrontArcFullTileList[ MAX_FULLTILE_DIRECTIONS ];
+	UINT16										usFrontArcFullTileList[ MAX_FULLTILE_DIRECTIONS ];
 	INT16												usFrontArcFullTileGridNos[ MAX_FULLTILE_DIRECTIONS ];
 	
 
@@ -946,30 +945,30 @@ public:
 	INT16												sPlannedTargetX;
 	INT16												sPlannedTargetY;
 
-	INT16											  sSpreadLocations[ MAX_BURST_SPREAD_TARGETS ];
+	INT16											sSpreadLocations[ MAX_BURST_SPREAD_TARGETS ];
 	INT16												sStartGridNo;	
 	INT16												sEndGridNo;	
 	INT16												sForcastGridno;
 	INT16												sZLevelOverride;
 	INT8												bMovedPriorToInterrupt;
-	INT32												iEndofContractTime;				// time, in global time(resolution, minutes) that merc will leave, or if its a M.E.R.C. merc it will be set to -1.  -2 for NPC and player generated
+	INT32												iEndofContractTime;				// time, in global time(resolution, minutes) that merc will leave, or if its a M.E.R.C. merc it will be set to -1.	-2 for NPC and player generated
 	INT32												iStartContractTime;		
-	INT32                       iTotalContractLength;			// total time of AIM mercs contract	or the time since last paid for a M.E.R.C. merc
+	INT32						iTotalContractLength;			// total time of AIM mercs contract	or the time since last paid for a M.E.R.C. merc
 	INT32												iNextActionSpecialData;		// AI special action data record for the next action
 	UINT8												ubWhatKindOfMercAmI;			//Set to the type of character it is
-  INT8                        bAssignment;							// soldiers current assignment 
+	INT8						bAssignment;							// soldiers current assignment 
 	INT8												bOldAssignment;						// old assignment, for autosleep purposes
-	INT8                        bTrainStat;								// current stat soldier is training
-  INT16                       sSectorX;									// X position on the Stategic Map
-	INT16                       sSectorY;									// Y position on the Stategic Map
+	INT8						bTrainStat;								// current stat soldier is training
+	INT16						sSectorX;									// X position on the Stategic Map
+	INT16						sSectorY;									// Y position on the Stategic Map
 	INT8												bSectorZ;									// Z sector location
-  INT32                       iVehicleId;								// the id of the vehicle the char is in
-  PathStPtr                   pMercPath;								//Path Structure
-	UINT16											usMedicalDeposit;         // is there a medical deposit on merc 
-	UINT16											usLifeInsurance;          // is there life insurance taken out on merc  
+	INT32						iVehicleId;								// the id of the vehicle the char is in
+	PathStPtr					pMercPath;								//Path Structure
+	UINT16											usMedicalDeposit;		 // is there a medical deposit on merc 
+	UINT16											usLifeInsurance;			// is there life insurance taken out on merc	
 
 
-	//DEF:  Used for the communications
+	//DEF:	Used for the communications
 	UINT32												uiStartMovementTime;				// the time since the merc first started moving 
 	UINT32												uiOptimumMovementTime;			// everytime in ececute overhead the time for the current ani will be added to this total
 	UINT32												usLastUpdateTime ;					// The last time the soldier was in ExecuteOverhead
@@ -1037,7 +1036,7 @@ public:
 
 	UINT8												ubHoursOnAssignment;						// used for assignments handled only every X hours
 
-	UINT8												ubMercJustFired;   // the merc was just fired..there may be dialogue events occuring, this flag will prevent any interaction with contracts
+	UINT8												ubMercJustFired;	// the merc was just fired..there may be dialogue events occuring, this flag will prevent any interaction with contracts
 																								// until after the merc leaves	
 	UINT8												ubTurnsUntilCanSayHeardNoise;
 	UINT16											usQuoteSaidExtFlags;
@@ -1090,19 +1089,19 @@ public:
 	UINT32											uiTimeSoldierWillArrive;
 
 
-  INT8												bVehicleUnderRepairID;
-  INT32                       iTimeCanSignElsewhere;
+	INT8												bVehicleUnderRepairID;
+	INT32						iTimeCanSignElsewhere;
 	INT8												bHospitalPriceModifier;
 	UINT32											uiStartTimeOfInsuranceContract;
-  INT8                        bCorpseQuoteTolerance;
-  INT8                        bDeafenedCounter;
-  INT32                       iPositionSndID;  
-  INT32                       iTuringSoundID;
-  UINT8                       ubLastDamageReason;
+	INT8						bCorpseQuoteTolerance;
+	INT8						bDeafenedCounter;
+	INT32						iPositionSndID;	
+	INT32						iTuringSoundID;
+	UINT8						ubLastDamageReason;
 	INT16												sLastTwoLocations[2];
-  INT32                       uiTimeSinceLastBleedGrunt;
-  UINT8						ubNextToPreviousAttackerID;
-  UINT8						bDoAutofire;
+	INT32						uiTimeSinceLastBleedGrunt;
+	UINT8						ubNextToPreviousAttackerID;
+	UINT8						bDoAutofire;
 	INT8 numFlanks;
 	INT16 lastFlankSpot;
 	INT8 sniper;
@@ -1122,7 +1121,7 @@ public:
 
 	// Note: Place all non-POD items at the end (after endOfPOD)
 	// The format of this structure affects what is written into and read from various
-	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// files (maps, save files, etc.).	If you change it then that code will not work 
 	// properly until it is all fixed and the files updated.
 
 	Inventory inv;
@@ -1199,7 +1198,7 @@ public:
 	void MoveMerc( FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );
 	INT8 CalcActionPoints( void );
 	BOOLEAN IsActionInterruptable( void );
-	// This function is now obsolete.  Call ReduceAttackBusyCount instead.
+	// This function is now obsolete.	Call ReduceAttackBusyCount instead.
 	// void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 	BOOLEAN MercInWater( void );
 	UINT16 GetNewSoldierStateFromNewStance( UINT8 ubDesiredStance );
@@ -1353,7 +1352,7 @@ extern UINT8					bHealthStrRanges[];
 // Soldier Management functions called by Overhead.c
 void RevivePlayerTeam( );
 
-BOOLEAN ReCreateSelectedSoldierLight(  );
+BOOLEAN ReCreateSelectedSoldierLight(	);
 
 // Palette functions for soldiers
 BOOLEAN GetPaletteRepIndexFromID( PaletteRepID aPalRep, UINT8 *pubPalIndex );
@@ -1368,7 +1367,7 @@ INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
 UINT8 atan8FromAngle( DOUBLE dAngle );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
-// This function is now obsolete.  Call ReduceAttackBusyCount instead.
+// This function is now obsolete.	Call ReduceAttackBusyCount instead.
 // void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 
 
@@ -1431,9 +1430,9 @@ public:
 	~OLDSOLDIERTYPE_101() {
 	};
 
-	// Initialize the soldier.  
-	//  Use this instead of the old method of calling memset!
-	//  Note that the constructor does this automatically.
+	// Initialize the soldier.	
+	//	Use this instead of the old method of calling memset!
+	//	Note that the constructor does this automatically.
 	void initialize() {
 		memset( this, 0, SIZEOF_OLDSOLDIERTYPE_101_POD);
 		inv.clear();
@@ -1471,7 +1470,7 @@ public:
 	INT16												sFractLife;		// fraction of life pts (in hundreths)	
 	INT8												bBleeding;		// blood loss control variable
 	INT8												bBreath;			// current breath value
-	INT8												bBreathMax;   // max breath, affected by fatigue/sleep
+	INT8												bBreathMax;	// max breath, affected by fatigue/sleep
 	INT8												bStealthMode;
 	
 	INT16												sBreathRed;			// current breath value
@@ -1487,7 +1486,7 @@ public:
 	INT8												bLastRenderVisibleValue;
 	BOOLEAN											fInMissionExitNode;
 	UINT8												ubAttackingHand;
-	INT8												bScientific;  
+	INT8												bScientific;	
 	// traits	
 	INT16												sWeightCarriedAtTurnStart;
 	CHAR16											name[ 10 ];
@@ -1510,10 +1509,10 @@ public:
 	// 23 bytes so far 	
 
 	// WORLD POSITION STUFF
-	FLOAT											  dXPos;
-	FLOAT											  dYPos;
-	FLOAT											  dOldXPos;
-	FLOAT											  dOldYPos;
+	FLOAT											dXPos;
+	FLOAT											dYPos;
+	FLOAT											dOldXPos;
+	FLOAT											dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
 	INT8												bDirection;
@@ -1580,7 +1579,7 @@ public:
 	
 	UINT16											usAniCode;
 	UINT16											usAniFrame;
-	INT16											  sAniDelay;
+	INT16											sAniDelay;
 
 	// MOVEMENT TO NEXT TILE HANDLING STUFF
 	INT8												bAgility;			// agility (speed) value
@@ -1597,7 +1596,7 @@ public:
 	INT8												bTargetCubeLevel;
 	INT16												sLastTarget;
 	INT8												bTilesMoved;
-  INT8                        bLeadership;
+	INT8						bLeadership;
 	FLOAT												dNextBleed;
 	BOOLEAN											fWarnedAboutBleeding;
 	BOOLEAN											fDyingComment;
@@ -1629,7 +1628,7 @@ public:
 
 
 	// FULL 3-d TILE STUFF ( keep records of three tiles infront )
-	UINT16										  usFrontArcFullTileList[ MAX_FULLTILE_DIRECTIONS ];
+	UINT16										usFrontArcFullTileList[ MAX_FULLTILE_DIRECTIONS ];
 	INT16												usFrontArcFullTileGridNos[ MAX_FULLTILE_DIRECTIONS ];
 
 
@@ -1729,7 +1728,7 @@ public:
 	INT8												bDominantDir;				// AI main direction to face...
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
-	INT16											  usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
+	INT16											usPatrolGrid[MAXPATROLGRIDS];// AI list for ptr->orders==PATROL
 	INT16												sNoiseGridno;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;
@@ -1837,38 +1836,38 @@ public:
 	INT16												sPlannedTargetX;
 	INT16												sPlannedTargetY;
 
-	INT16											  sSpreadLocations[ MAX_BURST_SPREAD_TARGETS ];
+	INT16											sSpreadLocations[ MAX_BURST_SPREAD_TARGETS ];
 	BOOLEAN											fDoSpread;
 	INT16												sStartGridNo;	
 	INT16												sEndGridNo;	
 	INT16												sForcastGridno;
 	INT16												sZLevelOverride;
 	INT8												bMovedPriorToInterrupt;
-	INT32												iEndofContractTime;				// time, in global time(resolution, minutes) that merc will leave, or if its a M.E.R.C. merc it will be set to -1.  -2 for NPC and player generated
+	INT32												iEndofContractTime;				// time, in global time(resolution, minutes) that merc will leave, or if its a M.E.R.C. merc it will be set to -1.	-2 for NPC and player generated
 	INT32												iStartContractTime;		
-	INT32                       iTotalContractLength;			// total time of AIM mercs contract	or the time since last paid for a M.E.R.C. merc
+	INT32						iTotalContractLength;			// total time of AIM mercs contract	or the time since last paid for a M.E.R.C. merc
 	INT32												iNextActionSpecialData;		// AI special action data record for the next action
 	UINT8												ubWhatKindOfMercAmI;			//Set to the type of character it is
-  INT8                        bAssignment;							// soldiers current assignment 
+	INT8						bAssignment;							// soldiers current assignment 
 	INT8												bOldAssignment;						// old assignment, for autosleep purposes
 	BOOLEAN											fForcedToStayAwake;				// forced by player to stay awake, reset to false, the moment they are set to rest or sleep
-	INT8                        bTrainStat;								// current stat soldier is training
-  INT16                       sSectorX;									// X position on the Stategic Map
-	INT16                       sSectorY;									// Y position on the Stategic Map
+	INT8						bTrainStat;								// current stat soldier is training
+	INT16						sSectorX;									// X position on the Stategic Map
+	INT16						sSectorY;									// Y position on the Stategic Map
 	INT8												bSectorZ;									// Z sector location
-  INT32                       iVehicleId;								// the id of the vehicle the char is in
-  PathStPtr                   pMercPath;								//Path Structure
+	INT32						iVehicleId;								// the id of the vehicle the char is in
+	PathStPtr					pMercPath;								//Path Structure
 	UINT8												fHitByGasFlags;						// flags 
-	UINT16											usMedicalDeposit;         // is there a medical deposit on merc 
-	UINT16											usLifeInsurance;          // is there life insurance taken out on merc  
+	UINT16											usMedicalDeposit;		 // is there a medical deposit on merc 
+	UINT16											usLifeInsurance;			// is there life insurance taken out on merc	
 
 
-	//DEF:  Used for the communications
+	//DEF:	Used for the communications
 	UINT32												uiStartMovementTime;				// the time since the merc first started moving 
 	UINT32												uiOptimumMovementTime;			// everytime in ececute overhead the time for the current ani will be added to this total
 	UINT32												usLastUpdateTime ;					// The last time the soldier was in ExecuteOverhead
 	
-	BOOLEAN											fIsSoldierMoving;							// ie.  Record time is on
+	BOOLEAN											fIsSoldierMoving;							// ie.	Record time is on
 	BOOLEAN											fIsSoldierDelayed;						//Is the soldier delayed Soldier 
 	BOOLEAN											fSoldierUpdatedFromNetwork;
 	UINT32											uiSoldierUpdateNumber;
@@ -1958,12 +1957,12 @@ public:
 	INT8												bSleepDrugCounter;
 	UINT8												ubMilitiaKills;
 	
-  INT8												bFutureDrugEffect[2];						// value to represent effect of a needle
-  INT8												bDrugEffectRate[2];							// represents rate of increase and decrease of effect  
-  INT8												bDrugEffect[2];									// value that affects AP & morale calc ( -ve is poorly )
-  INT8												bDrugSideEffectRate[2];					// duration of negative AP and morale effect
-  INT8												bDrugSideEffect[2];							// duration of negative AP and morale effect
-  INT8												bTimesDrugUsedSinceSleep[2];			
+	INT8												bFutureDrugEffect[2];						// value to represent effect of a needle
+	INT8												bDrugEffectRate[2];							// represents rate of increase and decrease of effect	
+	INT8												bDrugEffect[2];									// value that affects AP & morale calc ( -ve is poorly )
+	INT8												bDrugSideEffectRate[2];					// duration of negative AP and morale effect
+	INT8												bDrugSideEffect[2];							// duration of negative AP and morale effect
+	INT8												bTimesDrugUsedSinceSleep[2];			
 
 	INT8												bBlindedCounter;
 	BOOLEAN											fMercCollapsedFlag;
@@ -1973,7 +1972,7 @@ public:
 
 	UINT8												ubHoursOnAssignment;						// used for assignments handled only every X hours
 
-	UINT8												ubMercJustFired;   // the merc was just fired..there may be dialogue events occuring, this flag will prevent any interaction with contracts
+	UINT8												ubMercJustFired;	// the merc was just fired..there may be dialogue events occuring, this flag will prevent any interaction with contracts
 																								// until after the merc leaves	
 	UINT8												ubTurnsUntilCanSayHeardNoise;
 	UINT16											usQuoteSaidExtFlags;
@@ -2032,26 +2031,26 @@ public:
 	UINT32											uiTimeSoldierWillArrive;
 	BOOLEAN											fDieSoundUsed;
 	BOOLEAN											fUseLandingZoneForArrival;
-  BOOLEAN                     fFallClockwise;
-  INT8												bVehicleUnderRepairID;
-  INT32                       iTimeCanSignElsewhere;
+	BOOLEAN					 fFallClockwise;
+	INT8												bVehicleUnderRepairID;
+	INT32						iTimeCanSignElsewhere;
 	INT8												bHospitalPriceModifier;
 	INT8												bFillerBytes[3];
 	UINT32											uiStartTimeOfInsuranceContract;
 	BOOLEAN											fRTInNonintAnim;
-  BOOLEAN                     fDoingExternalDeath;
-  INT8                        bCorpseQuoteTolerance;
-  INT8                        bDeafenedCounter;
-  INT32                       iPositionSndID;  
-  INT32                       iTuringSoundID;
-  UINT8                       ubLastDamageReason;
+	BOOLEAN					 fDoingExternalDeath;
+	INT8						bCorpseQuoteTolerance;
+	INT8						bDeafenedCounter;
+	INT32						iPositionSndID;	
+	INT32						iTuringSoundID;
+	UINT8						ubLastDamageReason;
 	BOOLEAN											fComplainedThatTired;
 	INT16												sLastTwoLocations[2];
-  INT16                       bFillerDude;
-  INT32                       uiTimeSinceLastBleedGrunt;
-  UINT8						ubNextToPreviousAttackerID;
-  UINT8						bDoAutofire;
-  BOOLEAN					autofireLastStep;
+	INT16						bFillerDude;
+	INT32						uiTimeSinceLastBleedGrunt;
+	UINT8						ubNextToPreviousAttackerID;
+	UINT8						bDoAutofire;
+	BOOLEAN					autofireLastStep;
 	INT8 numFlanks;
 	INT16 lastFlankSpot;
 	BOOLEAN lastFlankLeft;
@@ -2071,7 +2070,7 @@ public:
 	UINT8					bFiller[ 36 ];
 
 	//
-	// New and OO stuff goes after here.  Above this point any changes will goof up reading from files.
+	// New and OO stuff goes after here.	Above this point any changes will goof up reading from files.
 	//
 	char ef1,ef2,ef3;	// Extra filler to get "offsetof(endOfPOD)" to match SIZEOF(oldstruct)
 

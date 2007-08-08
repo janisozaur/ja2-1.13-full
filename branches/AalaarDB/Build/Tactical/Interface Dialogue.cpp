@@ -107,19 +107,19 @@ void CarmenLeavesSectorCallback( void );
 #define		TALK_PANEL_NAME_Y				114
 #define		TALK_PANEL_NAME_WIDTH		92
 #define		TALK_PANEL_NAME_HEIGHT	15
-#define   TALK_PANEL_REGION_STARTX	102
-#define   TALK_PANEL_REGION_STARTY	14
-#define   TALK_PANEL_REGION_SPACEY	16
-#define   TALK_PANEL_REGION_HEIGHT	12
-#define   TALK_PANEL_REGION_WIDTH		95
+#define	TALK_PANEL_REGION_STARTX	102
+#define	TALK_PANEL_REGION_STARTY	14
+#define	TALK_PANEL_REGION_SPACEY	16
+#define	TALK_PANEL_REGION_HEIGHT	12
+#define	TALK_PANEL_REGION_WIDTH		95
 
-#define   TALK_PANEL_MENUTEXT_STARTX	102
-#define   TALK_PANEL_MENUTEXT_STARTY	16
-#define   TALK_PANEL_MENUTEXT_SPACEY	16
-#define   TALK_PANEL_MENUTEXT_HEIGHT	13
-#define   TALK_PANEL_MENUTEXT_WIDTH		95
-#define   TALK_PANEL_BUTTON_X					112
-#define   TALK_PANEL_BUTTON_Y					114
+#define	TALK_PANEL_MENUTEXT_STARTX	102
+#define	TALK_PANEL_MENUTEXT_STARTY	16
+#define	TALK_PANEL_MENUTEXT_SPACEY	16
+#define	TALK_PANEL_MENUTEXT_HEIGHT	13
+#define	TALK_PANEL_MENUTEXT_WIDTH		95
+#define	TALK_PANEL_BUTTON_X					112
+#define	TALK_PANEL_BUTTON_Y					114
 #define		TALK_PANEL_SHADOW_AREA_X		97
 #define		TALK_PANEL_SHADOW_AREA_Y		9
 #define		TALK_PANEL_SHADOW_AREA_WIDTH	107
@@ -181,8 +181,8 @@ enum
 // GLOBAL NPC STRUCT
 NPC_DIALOGUE_TYPE		gTalkPanel;
 BOOLEAN							gfInTalkPanel = FALSE;
-SOLDIERTYPE					*gpSrcSoldier  = NULL;
-SOLDIERTYPE					*gpDestSoldier  = NULL;
+SOLDIERTYPE					*gpSrcSoldier	= NULL;
+SOLDIERTYPE					*gpDestSoldier	= NULL;
 UINT8								gubSrcSoldierProfile;
 UINT8								gubNiceNPCProfile = NO_PROFILE;
 UINT8								gubNastyNPCProfile = NO_PROFILE;
@@ -315,7 +315,7 @@ BOOLEAN InternalInitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pS
 	{
 		SetCurrentSquad( gpSrcSoldier->bAssignment, FALSE );
 
-    SelectSoldier( pSrcSoldier->ubID, FALSE, FALSE );
+	SelectSoldier( pSrcSoldier->ubID, FALSE, FALSE );
 	}
 
 	Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, uiApproachData );
@@ -376,7 +376,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	FACETYPE				*pFace;
 	UINT16						usWidth;
 	UINT16						usHeight;
-  VOBJECT_DESC			VObjectDesc;
+	VOBJECT_DESC			VObjectDesc;
 	INT16							sCenterYVal, sCenterXVal;
 	CHAR8							ubString[48];
 
@@ -407,7 +407,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	GetVideoObjectETRLESubregionProperties( gTalkPanel.uiPanelVO, 0, &usWidth, &usHeight );	
 
 	// Set values into structure
-	gTalkPanel.usWidth  = usWidth;
+	gTalkPanel.usWidth	= usWidth;
 	gTalkPanel.usHeight	= usHeight;
 
 	// Check coords
@@ -474,21 +474,21 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.ScreenRegion), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT , MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK ); 
 	// Add region
 	MSYS_AddRegion(&(gTalkPanel.ScreenRegion) );
 
 
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.BackRegion), (INT16)(gTalkPanel.sX), (INT16)(gTalkPanel.sY), (INT16)(gTalkPanel.sX + gTalkPanel.usWidth ),(INT16)( gTalkPanel.sY + gTalkPanel.usHeight ), MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TalkPanelBaseRegionClickCallback ); 
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, TalkPanelBaseRegionClickCallback ); 
 	// Add region
 	MSYS_AddRegion(&(gTalkPanel.BackRegion) );
 
 
 	//Define name region
 	MSYS_DefineRegion( &(gTalkPanel.NameRegion), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X ), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_WIDTH + TALK_PANEL_NAME_X ),(INT16)( gTalkPanel.sY + TALK_PANEL_NAME_HEIGHT + TALK_PANEL_NAME_Y ), MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, TalkPanelNameRegionMoveCallback, TalkPanelNameRegionClickCallback ); 
+						CURSOR_NORMAL, TalkPanelNameRegionMoveCallback, TalkPanelNameRegionClickCallback ); 
 	// Add region
 	MSYS_AddRegion(&(gTalkPanel.NameRegion) );
 
@@ -497,7 +497,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &(gTalkPanel.Regions[cnt]), (INT16)(sX), (INT16)(sY), (INT16)(sX + TALK_PANEL_REGION_WIDTH ),(INT16)( sY + TALK_PANEL_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, TalkPanelMoveCallback, TalkPanelClickCallback ); 
+							CURSOR_NORMAL, TalkPanelMoveCallback, TalkPanelClickCallback ); 
 		// Add region
 		MSYS_AddRegion( &(gTalkPanel.Regions[cnt]));
 		MSYS_SetRegionUserData( &(gTalkPanel.Regions[cnt]), 0, cnt );
@@ -516,7 +516,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 	// Set face to auto
 	SetAutoFaceActive( gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );
-  gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
 	sprintf( ubString, "INTERFACE\\talkbox2.sti" );
@@ -524,11 +524,11 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 
 	gTalkPanel.uiCancelButton = CreateIconAndTextButton( gTalkPanel.iButtonImages, zDialogActions[ DIALOG_DONE ], MILITARYFONT1, 
-														 33, DEFAULT_SHADOW, 
-														 33, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 (INT16)(gTalkPanel.sX + TALK_PANEL_BUTTON_X), (INT16)(gTalkPanel.sY + TALK_PANEL_BUTTON_Y), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)DoneTalkingButtonClickCallback );
+														33, DEFAULT_SHADOW, 
+														33, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														(INT16)(gTalkPanel.sX + TALK_PANEL_BUTTON_X), (INT16)(gTalkPanel.sY + TALK_PANEL_BUTTON_Y), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
+														DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)DoneTalkingButtonClickCallback );
 
 	SpecifyButtonHilitedTextColors( gTalkPanel.uiCancelButton, FONT_MCOLOR_WHITE, DEFAULT_SHADOW );
 
@@ -556,7 +556,7 @@ void DoneTalkingButtonClickCallback(GUI_BUTTON *btn, INT32 reason )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP  )
+	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP	)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
@@ -680,11 +680,11 @@ void DeleteTalkingMenu( )
 		}
 	}
 
-  if ( iInterfaceDialogueBox != -1 )
-  {
-    RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
-    iInterfaceDialogueBox = -1;
-  }
+	if ( iInterfaceDialogueBox != -1 )
+	{
+	RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
+	iInterfaceDialogueBox = -1;
+	}
 
 	// Save time for give item
 	gTacticalStatus.uiTimeCounterForGiveItemSrc = GetJA2Clock( );
@@ -738,7 +738,7 @@ void RenderTalkingMenu( )
 		pSrcBuf = LockVideoSurface( gTalkPanel.uiSaveBuffer, &uiSrcPitchBYTES);
 
 		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,  
+				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
 				(INT16)(gTalkPanel.sX + TALK_PANEL_FACE_X), (INT16)(gTalkPanel.sY + TALK_PANEL_FACE_Y), 
 				0 , 0, 
 				pFace->usFaceWidth, pFace->usFaceHeight );
@@ -781,17 +781,17 @@ void RenderTalkingMenu( )
 
 		if ( gTalkPanel.fSetupSubTitles )
 		{
-      if ( iInterfaceDialogueBox != -1 )
-      {
-        // Remove any old ones....
-        RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
-        iInterfaceDialogueBox = -1;
-      }
+		if ( iInterfaceDialogueBox != -1 )
+		{
+		// Remove any old ones....
+		RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
+		iInterfaceDialogueBox = -1;
+		}
 
-      SET_USE_WINFONTS( TRUE );
-      SET_WINFONT( giSubTitleWinFont ); 
-			iInterfaceDialogueBox = PrepareMercPopupBox( iInterfaceDialogueBox,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER,  gTalkPanel.zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight );
-      SET_USE_WINFONTS( FALSE );
+		SET_USE_WINFONTS( TRUE );
+		SET_WINFONT( giSubTitleWinFont ); 
+			iInterfaceDialogueBox = PrepareMercPopupBox( iInterfaceDialogueBox,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER,	gTalkPanel.zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight );
+		SET_USE_WINFONTS( FALSE );
 
 			gTalkPanel.fSetupSubTitles = FALSE;
 
@@ -807,7 +807,7 @@ void RenderTalkingMenu( )
 			}
 
 			MSYS_DefineRegion( &(gTalkPanel.TextRegion), gTalkPanel.sPopupX, gTalkPanel.sPopupY, (INT16)( gTalkPanel.sPopupX + usTextBoxWidth ), (INT16)( gTalkPanel.sPopupY + usTextBoxHeight ), MSYS_PRIORITY_HIGHEST,
-								 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback ); 
+								CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback ); 
 			// Add region
 			MSYS_AddRegion(&(gTalkPanel.TextRegion) );
 
@@ -817,7 +817,7 @@ void RenderTalkingMenu( )
 
 		if ( gTalkPanel.fRenderSubTitlesNow )
 		{
-			RenderMercPopUpBoxFromIndex( iInterfaceDialogueBox, gTalkPanel.sPopupX, gTalkPanel.sPopupY,  FRAME_BUFFER );
+			RenderMercPopUpBoxFromIndex( iInterfaceDialogueBox, gTalkPanel.sPopupX, gTalkPanel.sPopupY,	FRAME_BUFFER );
 		}
 	}
 
@@ -880,7 +880,7 @@ void RenderTalkingMenu( )
 							break;
 						default:
 							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
-							mprintf( sFontX, sFontY, L"%s (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
+							mprintf( sFontX, sFontY, L"%s (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )	);
 							break;
 					}
 				}
@@ -1335,13 +1335,13 @@ void CalculatePopupTextPosition( INT16 sWidth, INT16 sHeight )
 			// Set it here!
 			gTalkPanel.sPopupX = gTalkPanel.sX - sWidth;
 			// Center in height!
-			gTalkPanel.sPopupY = gTalkPanel.sY + ( gTalkPanel.usHeight / 2 ) -  ( sHeight / 2 );
+			gTalkPanel.sPopupY = gTalkPanel.sY + ( gTalkPanel.usHeight / 2 ) -	( sHeight / 2 );
 			break;
 		case TALK_PANEL_POPUP_RIGHT:
 			// Set it here!
 			gTalkPanel.sPopupX = gTalkPanel.sX + gTalkPanel.usWidth + 1;
 			// Center in height!
-			gTalkPanel.sPopupY = gTalkPanel.sY + ( gTalkPanel.usHeight / 2 ) -  ( sHeight / 2 );
+			gTalkPanel.sPopupY = gTalkPanel.sY + ( gTalkPanel.usHeight / 2 ) -	( sHeight / 2 );
 			break;
 		case TALK_PANEL_POPUP_BOTTOM:
 
@@ -1647,7 +1647,7 @@ void HandleWaitTimerForNPCTrigger( )
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 {
 	PERFORMANCE_MARKER
-	SOLDIERTYPE             *pSoldier;
+	SOLDIERTYPE			 *pSoldier;
 	// OK, Move to gridNo!
 
 	// Shotdown any panel we had up...
@@ -1699,7 +1699,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 }
 
-void HandleNPCClosePanel(  )
+void HandleNPCClosePanel(	)
 {
 	PERFORMANCE_MARKER
 	// Remove dialogue!
@@ -1788,7 +1788,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 {
 	PERFORMANCE_MARKER
 	INT32										cnt;
-	SOLDIERTYPE             *pSoldier, *pSoldier2;
+	SOLDIERTYPE			 *pSoldier, *pSoldier2;
 	INT8										bNumDone = 0;
 	INT16										sGridNo = NOWHERE, sAdjustedGridNo;
 	INT8										bItemIn;
@@ -1848,7 +1848,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// look for all mercs on the same team, 
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-				{       
+				{		
 					// Are we in this sector, On the current squad?
 					if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 					{
@@ -1915,7 +1915,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					// Look for item....
 					bInvPos = FindObj( pSoldier, 227 );
 
-					AssertMsg( bInvPos != NO_SLOT, "Interface Dialogue.C:  Gift item does not exist in NPC." );
+					AssertMsg( bInvPos != NO_SLOT, "Interface Dialogue.C:	Gift item does not exist in NPC." );
 
 					SoldierGiveItem( pSoldier, pSoldier2, &(pSoldier->inv[ bInvPos ] ), bInvPos );
 				}
@@ -1979,7 +1979,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// find where the gun is stored in the profile data and 
 						// move it to the new location
 						bOldSlot = FindObjectInSoldierProfile( ubTargetNPC, usGun );
-						if ( bOldSlot != NO_SLOT  )
+						if ( bOldSlot != NO_SLOT	)
 						{
 							// rearrange profile... NB # of guns can only be 1 so this is easy
 							gMercProfiles[ ubTargetNPC ].inv[ bOldSlot ] = NOTHING;
@@ -2068,10 +2068,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Delete menu
 				DeleteTalkingMenu( );
 
-        if ( PlayerTeamFull( ) )
-        {
+		if ( PlayerTeamFull( ) )
+		{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_RECRUIT_TEAM_FULL ] );
-        }
+		}
 				else
 				{
 					RecruitRPC( ubTargetNPC );
@@ -2129,7 +2129,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// look for all mercs on the same team, 
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-				{       
+				{		
 					// Are we in this sector, On the current squad?
 					if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector )
 					{
@@ -3355,14 +3355,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 							CancelAIAction( pSoldier, TRUE );
 						}
 
-            // change elliot portrait...
-            gMercProfiles[ ELLIOT ].bNPCData = 17;
+			// change elliot portrait...
+			gMercProfiles[ ELLIOT ].bNPCData = 17;
 					}
 				}
 				break;
 
 				//Emmons: is this line of code part of something missing
-				//or no longer necessary?  CJC
+				//or no longer necessary?	CJC
 				//if ( pSoldier->flags.uiStatusFlags & SOLDIER_NPC_SHOOTING )
 
 			case NPC_ACTION_PUNCH_FIRST_LIVING_PC:
@@ -3614,7 +3614,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					//HOSPITAL_PATIENT_DISTANCE
 					cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 					for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-					{       
+					{		
 						// Are we in this sector, On the current squad?
 						if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife > 0 && pSoldier->stats.bLife < pSoldier->stats.bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < HOSPITAL_PATIENT_DISTANCE )
 						{
@@ -3677,7 +3677,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				break;
 			case NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST:
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
+/* Delayed loyalty effects elimininated.	Sep.12/98.	ARM
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 480 + Random( 60 ), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST, 1 );
 */
 				if ( gMercProfiles[ SERGEANT ].bMercStatus != MERC_IS_DEAD )
@@ -4270,7 +4270,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if ( pSoldier )
 				{
 					pSoldier->sBreathRed = 10000;
-					pSoldier->bBreath    = 100;
+					pSoldier->bBreath	= 100;
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 50 ] );
 				}
 				break;
@@ -4404,7 +4404,7 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 {
 	PERFORMANCE_MARKER
 	UINT32					cnt, uiCount = 0;
-	SOLDIERTYPE		 *pSoldier;
+	SOLDIERTYPE		*pSoldier;
 
 	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pSoldier = MercPtrs[ cnt ]; cnt <= (UINT32)( gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2 ); cnt++, pSoldier++ )
 	{
@@ -4413,10 +4413,6 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 			uiCount++;
 		}
 	}
-
-	// WANNE
-	//if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2) - 2 )
-	//if ( uiCount <= (18 - 2) )
 
 	if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum].bLastID - 2) - 1 )
 	{
@@ -4636,7 +4632,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 
 				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
-				{       
+				{		
 					if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
 					{
 						if (!pLier || (EffectiveWisdom( pSoldier ) + EffectiveLeadership( pSoldier ) > EffectiveWisdom( pLier ) + EffectiveLeadership( pSoldier ) ) )
@@ -4684,7 +4680,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 						{
 							TriggerNPCRecord( VINCE, 26 );
 						}
-						else if(  CheckFact( FACT_ONE_WOUNDED_MERC_NEARBY, VINCE ) )
+						else if(	CheckFact( FACT_ONE_WOUNDED_MERC_NEARBY, VINCE ) )
 						{
 							TriggerNPCRecord( VINCE, 25 );
 						}
@@ -4723,7 +4719,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 						{
 							TriggerNPCRecord( STEVE, 26 );
 						}
-						else if(  CheckFact( FACT_ONE_WOUNDED_MERC_NEARBY, STEVE ) )
+						else if(	CheckFact( FACT_ONE_WOUNDED_MERC_NEARBY, STEVE ) )
 						{
 							TriggerNPCRecord( STEVE, 25 );
 						}
@@ -4831,7 +4827,7 @@ void	DoneFadeInActionBasement( )
 	// look for all mercs on the same team, 
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{       
+	{		
 		// Are we in this sector, On the current squad?
 		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 		{
@@ -4943,7 +4939,7 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 		pDoor->fLocked = FALSE;
 	}
 
-	sActionGridNo =  FindAdjacentGridEx( pSoldier, sStructGridNo, &ubDirection, NULL, FALSE, TRUE );
+	sActionGridNo =	FindAdjacentGridEx( pSoldier, sStructGridNo, &ubDirection, NULL, FALSE, TRUE );
 	if ( sActionGridNo == -1 )
 	{
 		return( FALSE );
@@ -4957,11 +4953,11 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 	// check if we are at this location
 	if ( pSoldier->sGridNo == sGridNo )
 	{
-		 InteractWithInteractiveObject( pSoldier, pStructure, ubDirection );
+		InteractWithInteractiveObject( pSoldier, pStructure, ubDirection );
 	}
 	else
 	{
-		 SendGetNewSoldierPathEvent( pSoldier, sGridNo, pSoldier->usUIMovementMode );
+		SendGetNewSoldierPathEvent( pSoldier, sGridNo, pSoldier->usUIMovementMode );
 	}
 
 	pSoldier->aiData.bAction = AI_ACTION_PENDING_ACTION;

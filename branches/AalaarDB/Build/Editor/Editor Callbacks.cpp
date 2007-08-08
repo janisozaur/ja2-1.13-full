@@ -1,4 +1,3 @@
-// WANNE: EDITOR: no changes
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -433,10 +432,10 @@ void BuildingSawRoomCallback( GUI_BUTTON *btn, INT32 reason )
 void BuildingKillBuildingCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	PERFORMANCE_MARKER
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SetEditorBuildingTaskbarMode( BUILDING_KILL_BUILDING );
-	  iDrawMode = DRAW_MODE_KILL_BUILDING;
+	iDrawMode = DRAW_MODE_KILL_BUILDING;
 	}
 }
 
@@ -463,10 +462,10 @@ void BuildingMoveBuildingCallback( GUI_BUTTON *btn, INT32 reason )
 void BuildingDrawRoomNumCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	PERFORMANCE_MARKER
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SetEditorBuildingTaskbarMode( BUILDING_DRAW_ROOMNUM );
-	  iDrawMode = DRAW_MODE_ROOMNUM;
+	iDrawMode = DRAW_MODE_ROOMNUM;
 		gubCurrRoomNumber = gubMaxRoomNumber;
 	}
 }
@@ -494,7 +493,7 @@ void BuildingToggleRoofViewCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			UnclickEditorButton( BUILDING_TOGGLE_ROOF_VIEW );
 		}
-		//Name could be a bit misleading.  It'll hide or show the roofs based on the
+		//Name could be a bit misleading.	It'll hide or show the roofs based on the
 		//fBuildingShowRoofs value.
 		UpdateRoofsView();
 	}
@@ -513,7 +512,7 @@ void BuildingToggleWallViewCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			UnclickEditorButton( BUILDING_TOGGLE_WALL_VIEW );
 		}
-		//Name could be a bit misleading.  It'll hide or show the walls based on the
+		//Name could be a bit misleading.	It'll hide or show the walls based on the
 		//fBuildingShowWalls value.
 		UpdateWallsView();
 	}

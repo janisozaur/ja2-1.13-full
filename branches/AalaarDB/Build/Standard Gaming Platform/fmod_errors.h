@@ -6,7 +6,7 @@ static STR8 FMOD_ErrorString(int errcode)
 	switch (errcode)
 	{
 		case FMOD_ERR_NONE:				return "No errors";
-		case FMOD_ERR_BUSY:				return "Cannot call this command after FSOUND_Init.  Call FSOUND_Close first.";
+		case FMOD_ERR_BUSY:				return "Cannot call this command after FSOUND_Init.	Call FSOUND_Close first.";
 		case FMOD_ERR_UNINITIALIZED:	return "This command failed because FSOUND_Init was not called";
 		case FMOD_ERR_PLAY:				return "Playing the sound failed.";
 		case FMOD_ERR_INIT:				return "Error initializing output device.";

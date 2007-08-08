@@ -16,9 +16,9 @@ extern	CHAR8		czVersionNumber[16];
 extern	CHAR16		zTrackingNumber[16];
 
 
-//ADB:  I needed these here so I moved them, and why put them in *.cpp anyways?
+//ADB:	I needed these here so I moved them, and why put them in *.cpp anyways?
 //
-//		Keeps track of the saved game version.  Increment the saved game version whenever 
+//		Keeps track of the saved game version.	Increment the saved game version whenever 
 //	you will invalidate the saved game file
 #define			SAVE_GAME_VERSION					102	//101	//100 // 99
 

@@ -14,7 +14,7 @@
 voidpf ZAlloc( voidpf opaque, uInt items, uInt size )
 {
 	PERFORMANCE_MARKER
-  return( MemAlloc( items * size ) );
+	return( MemAlloc( items * size ) );
 }
 
 void ZFree( voidpf opaque, voidpf address )

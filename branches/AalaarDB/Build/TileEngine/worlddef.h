@@ -29,7 +29,7 @@
 
 
 //ADB I'm tired of seeing a 5 digit number when looking at something's gridno.
-//I need to see an x and y.  I created this class for the AStar,
+//I need to see an x and y.	I created this class for the AStar,
 //but moved it here as you can convert a regular INT16 gridno to a GridNode then print it out for debugging.
 //Don't switch between the 2 types too often, IntToGridNode is especially slow
 class GridNode
@@ -53,10 +53,10 @@ public:
 #define WORLD_CLIFF_HEIGHT		80
  
 //A macro that actually memcpy's over data and increments the pointer automatically
-//based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
+//based on the size.	Works like a FileRead except with a buffer instead of a file pointer.
 //Used by LoadWorld() and child functions.
 #include <memory.h>
-#define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
+#define	LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
 
 
 #define LANDHEAD							0
@@ -82,7 +82,7 @@ public:
 #define LEVELNODE_DISPLAY_AP								0x00000400
 #define LEVELNODE_ANIMATION									0x00000800
 #define LEVELNODE_USEABSOLUTEPOS						0x00001000
-#define LEVELNODE_REVEAL					 					0x00002000
+#define LEVELNODE_REVEAL										0x00002000
 #define	LEVELNODE_REVEALTREES								0x00004000
 #define	LEVELNODE_USEBESTTRANSTYPE					0x00008000
 #define	LEVELNODE_USEZ											0x00010000
@@ -126,7 +126,7 @@ public:
 #define MAPELEMENT_EXT_RECALCULATE_MOVEMENT			0x0010 //0x10
 #define MAPELEMENT_EXT_NOBURN_STRUCT				0x0020 //0x20
 #define MAPELEMENT_EXT_ROOFCODE_VISITED				0x0040 //0x40
-#define MAPELEMENT_EXT_CREATUREGAS     				0x0080 //0x80
+#define MAPELEMENT_EXT_CREATUREGAS	 				0x0080 //0x80
 #define MAPELEMENT_EXT_BURNABLEGAS					0x0100 //0x60
 
 #define FIRST_LEVEL 0

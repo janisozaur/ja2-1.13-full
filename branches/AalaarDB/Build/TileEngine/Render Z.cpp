@@ -18,8 +18,8 @@ INT16 GetMapXYWorldY( INT16 sWorldCellX, INT16 sWorldCellY )
 
 INT16 GetMapXYWorldYFromCellCoords( INT16 sWorldCellX, INT16 sWorldCellY )
 {
-	gsRDistToCenterX = sWorldCellX  - gCenterWorldX;
-	gsRDistToCenterY = sWorldCellY  - gCenterWorldY;
+	gsRDistToCenterX = sWorldCellX	- gCenterWorldX;
+	gsRDistToCenterY = sWorldCellY	- gCenterWorldY;
 
 	gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;
 

@@ -47,8 +47,8 @@
 INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 
 SOLDIERTYPE *gpKillerSoldier = NULL;
-INT16				 gsGridNo;
-INT8				 gbLevel;
+INT16				gsGridNo;
+INT8				gbLevel;
 
 
 // This function checks if our statue exists in the current sector at given gridno
@@ -104,7 +104,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 		GetTileIndexFromTypeSubIndex( EIGHTOSTRUCT, (INT8)( 8 ), &usTileIndex );					
 		// Play sound...
 
-    PlayJA2Sample( OPEN_STATUE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );			              
+	PlayJA2Sample( OPEN_STATUE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );						
 
 	}
 	AddStructToHead( 13830, usTileIndex );
@@ -146,7 +146,7 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 	PERFORMANCE_MARKER
 	gpKillerSoldier = pKillerSoldier;
 	gsGridNo = sGridNo;
-	gbLevel  = bLevel;
+	gbLevel	= bLevel;
 
 	// Lock the UI.....
 	gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
@@ -193,7 +193,7 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 						// Can we see location?
 						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
 
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, 3, (UINT8) sDistVisible, TRUE ) )
 						{
 							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
 						}
@@ -243,7 +243,7 @@ void DoneFadeOutKilledQueen( void )
 
 	// look for all mercs on the same team, 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{       
+	{		
 		// Are we in this sector, On the current squad?
 		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 		{
@@ -259,7 +259,7 @@ void DoneFadeOutKilledQueen( void )
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 			pSoldier->usStrategicInsertionData = 5687;
 			// Set direction to face....
-			pSoldier->ubInsertionDirection		 = 100 + NORTHWEST;
+			pSoldier->ubInsertionDirection		= 100 + NORTHWEST;
 		}
 	}
 
@@ -268,9 +268,9 @@ void DoneFadeOutKilledQueen( void )
 
 	// look for all mercs on the same team, 
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; cnt++,pTeamSoldier++)
-	{       
+	{		
 		// Are we active and in sector.....
-		if ( pTeamSoldier->bActive  )
+		if ( pTeamSoldier->bActive	)
 		{
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
@@ -308,8 +308,8 @@ void DoneFadeOutKilledQueen( void )
 	SectorInfo[ SEC_P3 ].ubTroopsInBattle = 0;
 	SectorInfo[ SEC_P3 ].ubElitesInBattle = 0;
 
-  // ATE: GEt rid of elliot in P3...
-  gMercProfiles[ ELLIOT ].sSectorX = 1;
+	// ATE: GEt rid of elliot in P3...
+	gMercProfiles[ ELLIOT ].sSectorX = 1;
 
 	ChangeNpcToDifferentSector( DEREK, 3, MAP_ROW_P, 0 );
 	ChangeNpcToDifferentSector( OLIVER, 3, MAP_ROW_P, 0 );
@@ -345,14 +345,14 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 	SOLDIERTYPE *pSoldier;
 
 	// Start end cimimatic....
-  gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
+	gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
 
 	// first thing is to loop through team and say end quote...
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// look for all mercs on the same team, 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{       
+	{		
 		// Are we in this sector, On the current squad?
 		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
 		{
@@ -382,7 +382,7 @@ void DoneFadeOutEndCinematic( void )
 	PERFORMANCE_MARKER
 	// DAVE PUT SMAKER STUFF HERE!!!!!!!!!!!!
 	// :)
-  gTacticalStatus.uiFlags &= (~IN_ENDGAME_SEQUENCE);
+	gTacticalStatus.uiFlags &= (~IN_ENDGAME_SEQUENCE);
 
 
 	// For now, just quit the freaken game...
@@ -424,12 +424,12 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 	gpKillerSoldier = pKillerSoldier;
 	gsGridNo = sGridNo;
-	gbLevel  = bLevel;
+	gbLevel	= bLevel;
 
 	// Lock the UI.....
-	 gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
+	gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
 	// Increment refrence count...
-	 giNPCReferenceCount = 1;
+	giNPCReferenceCount = 1;
 
 	// gTacticalStatus.uiFlags |= IN_DEIDRANNA_ENDGAME;
 
@@ -441,7 +441,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 	// look for all mercs on the same team, 
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; cnt++,pTeamSoldier++)
-	{       
+	{		
 		// Are we active and ALIVE and in sector.....
 		if ( pTeamSoldier->bActive && pTeamSoldier->stats.bLife > 0 )
 		{
@@ -449,10 +449,10 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
-			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
+			// HELLO!	THESE ARE CREATURES!	THEY CAN'T BE NEUTRAL!
 			//if ( !pTeamSoldier->aiData.bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
-//	    		gTacticalStatus.ubAttackBusyCount++;
+//	 		gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Killing off a queen ally.\n");
 				pTeamSoldier->EVENT_SoldierGotHit( 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
 			}
@@ -495,7 +495,7 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 						// Can we see location?
 						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
 
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, 3, (UINT8) sDistVisible, TRUE ) )
 						{
 							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
 						}
@@ -507,15 +507,15 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 
 	// Set fact that she is dead!
 	if ( CheckFact( FACT_QUEEN_DEAD, 0 ) ) 
-  {
-     EndQueenDeathEndgameBeginEndCimenatic( );
-  }
-  else
-  {
-	  // Unset flags...
-	  gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
-	  // Increment refrence count...
-	  giNPCReferenceCount = 0;
-  }
+	{
+	 EndQueenDeathEndgameBeginEndCimenatic( );
+	}
+	else
+	{
+	// Unset flags...
+	gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
+	// Increment refrence count...
+	giNPCReferenceCount = 0;
+	}
 }
 

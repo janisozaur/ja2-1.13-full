@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
@@ -24,9 +23,8 @@ INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )
 	// Effective strength is:
 	// 1/2 full strength
 	// plus 1/2 strength scaled according to how hurt we are
-  bBandaged = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
+	bBandaged = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
 
-	// WANNE 2
 	if (pSoldier->stats.bStrength > 0)
 	{
 		iEffStrength = pSoldier->stats.bStrength / 2;
@@ -141,7 +139,7 @@ INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
 			0,	// Feeling good
 		-1,	// Borderline
 		-2,	// Drunk
-		 0,		// Hung
+		0,		// Hung
 		};
 
 	iEffExpLevel = pSoldier->stats.bExpLevel;
@@ -201,12 +199,12 @@ UINT8 GetPenaltyForFatigue( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	UINT8 ubPercentPenalty;
 
-	if			( pSoldier->bBreathMax >= 85 )	ubPercentPenalty =   0;
-	else if ( pSoldier->bBreathMax >= 70 )	ubPercentPenalty =  10;
-	else if ( pSoldier->bBreathMax >= 50 )	ubPercentPenalty =  25;
-	else if ( pSoldier->bBreathMax >= 30 )	ubPercentPenalty =  50;
-	else if ( pSoldier->bBreathMax >= 15 )	ubPercentPenalty =  75;
-	else if ( pSoldier->bBreathMax >   0 )	ubPercentPenalty =  90;
+	if			( pSoldier->bBreathMax >= 85 )	ubPercentPenalty =	0;
+	else if ( pSoldier->bBreathMax >= 70 )	ubPercentPenalty =	10;
+	else if ( pSoldier->bBreathMax >= 50 )	ubPercentPenalty =	25;
+	else if ( pSoldier->bBreathMax >= 30 )	ubPercentPenalty =	50;
+	else if ( pSoldier->bBreathMax >= 15 )	ubPercentPenalty =	75;
+	else if ( pSoldier->bBreathMax >	0 )	ubPercentPenalty =	90;
 	else																		ubPercentPenalty = 100;
 
 	return( ubPercentPenalty );
@@ -235,7 +233,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 	INT32	iLoop;
 	SOLDIERTYPE * pTeamSoldier;
 	INT8	bBuddyIndex;
-  BOOLEAN fForceDamnSound = FALSE;
+	BOOLEAN fForceDamnSound = FALSE;
 
 	iReportChance = -1;
 
@@ -244,7 +242,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		case LOCKPICKING_CHECK:
 		case ELECTRONIC_LOCKPICKING_CHECK:
 
-      fForceDamnSound = TRUE;
+		fForceDamnSound = TRUE;
 
 			iSkill = EffectiveMechanical( pSoldier );
 			if (iSkill == 0)
@@ -311,7 +309,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_TRAP_CHECK:
 
-      fForceDamnSound = TRUE;
+		fForceDamnSound = TRUE;
 
 			iSkill = EffectiveExplosive( pSoldier ) * 7;
 			if ( iSkill == 0 )
@@ -327,7 +325,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_ELECTRONIC_TRAP_CHECK:
 
-      fForceDamnSound = TRUE;
+		fForceDamnSound = TRUE;
 
 			iSkill = __max( EffectiveMechanical( pSoldier ) , EffectiveExplosive( pSoldier ) ) * 7;
 			if ( iSkill == 0 )
@@ -349,7 +347,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		case OPEN_WITH_CROWBAR:
 			// Add for crowbar...
 			iSkill = EffectiveStrength( pSoldier ) + 20;
-      fForceDamnSound = TRUE;
+		fForceDamnSound = TRUE;
 			break;
 
 		case SMASH_DOOR_CHECK:
@@ -521,8 +519,8 @@ INT8 CalcTrapDetectLevel( SOLDIERTYPE * pSoldier, BOOLEAN fExamining )
 	INT8 bDetectLevel;
 
 	// formula: 1 pt for every exp_level
-	//     plus 1 pt for every 40 explosives
-	//     less 1 pt for every 20 wisdom MISSING
+	//	 plus 1 pt for every 40 explosives
+	//	 less 1 pt for every 20 wisdom MISSING
 
 	bDetectLevel = EffectiveExpLevel( pSoldier );
 	bDetectLevel += (EffectiveExplosive( pSoldier ) / 40);

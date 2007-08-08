@@ -12,7 +12,7 @@
 
 lua_State *L;
 
-#define ARRAY_INDEX " idx"  // The space is intentional to make this an out-of-band field
+#define ARRAY_INDEX " idx"	// The space is intentional to make this an out-of-band field
 
 #define SOLDIER_CLASS "ja2_SoldierClass"
 
@@ -353,11 +353,11 @@ int EvalLua (const wchar_t* buff) {
 		int len = strlen( error);
 		if (len >= 7 && !strcmp( error + len - 7, "'<eof>'"))
 		{
-			lua_pop(L, 1);  /* pop error message from the stack */
+			lua_pop(L, 1);	/* pop error message from the stack */
 			return FALSE;
 		}
 		cout << lua_tostring(L, -1) << endl;
-		lua_pop(L, 1);  /* pop error message from the stack */
+		lua_pop(L, 1);	/* pop error message from the stack */
 		return TRUE;
 	}
 

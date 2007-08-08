@@ -363,6 +363,7 @@ void STRUCT_TimeChanges::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 void STRUCT_Flags::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
+	this->bHasKeys = src.bHasKeys;			// allows AI controlled dudes to open locked doors
 	this->fHitByGasFlags = src.fHitByGasFlags;						// flags 
 	this->fIsSoldierMoving = src.fIsSoldierMoving;							// ie.  Record time is on
 	this->fIsSoldierDelayed = src.fIsSoldierDelayed;						//Is the soldier delayed Soldier 
@@ -525,6 +526,8 @@ void STRUCT_AIData::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->bMobility = src.bMobility;	
 	this->bRTPCombat = src.bRTPCombat;	
 	this->fAIFlags = src.fAIFlags;
+	this->bAimTime = src.bAimTime;
+	this->bShownAimTime = src.bShownAimTime;
 }
 
 void STRUCT_Pathing::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
@@ -543,10 +546,7 @@ void STRUCT_Pathing::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 	this->usPathDataSize = src.usPathDataSize;
 	this->usPathIndex = src.usPathIndex;	
 	this->sBlackList = src.sBlackList;
-	this->bAimTime = src.bAimTime;
-	this->bShownAimTime = src.bShownAimTime;
 	this->bPathStored = src.bPathStored;	// good for AI to reduct redundancy
-	this->bHasKeys = src.bHasKeys;			// allows AI controlled dudes to open locked doors
 }
 
 // Conversion operator
@@ -6805,22 +6805,24 @@ void SOLDIERTYPE::TurnSoldier( void )
 	// This is needed for prone animations as well as any multi-tiled structs
 	if ( fDoDirectionChange )
 	{
+		// If the soldier is not crawling or multi-tiled, he should be allowed to turn in place.  Even if there is some
+		// obstacle he shouldn't be standing on.
 		if ( OKToAddMercToWorld( thisSoldier, (INT8)sDirection ) )
 		{
-			// Don't do this if we are walkoing off screen...
 			if ( gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALKOFF_SCREEN || gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO )
-		 {
+			{
+				// Don't do this if we are walking off screen...
 
-		 }
+			}
 			else
-		 {
-			 // ATE: We should only do this if we are STATIONARY!
-			 if ( ( gAnimControl[ thisSoldier->usAnimState ].uiFlags & ANIM_STATIONARY ) )
-			 {
-				 thisSoldier->flags.uiStatusFlags |= SOLDIER_LOOK_NEXT_TURNSOLDIER;
-			 }
-			 // otherwise, it's handled next tile...
-		 }
+			{
+				// ATE: We should only do this if we are STATIONARY!
+				if ( ( gAnimControl[ thisSoldier->usAnimState ].uiFlags & ANIM_STATIONARY ) )
+				{
+					thisSoldier->flags.uiStatusFlags |= SOLDIER_LOOK_NEXT_TURNSOLDIER;
+				}
+				// otherwise, it's handled next tile...
+			}
 
 			thisSoldier->EVENT_SetSoldierDirection( sDirection );
 
@@ -6829,21 +6831,17 @@ void SOLDIERTYPE::TurnSoldier( void )
 				PlaySoldierFootstepSound( thisSoldier );
 			}
 		}
-		else
-		{	
-			// Are we prone crawling?
-			if ( thisSoldier->usAnimState == CRAWLING )
-		 {
-			 // OK, we want to getup, turn and go prone again....
-			 SendChangeSoldierStanceEvent( thisSoldier, ANIM_CROUCH );
-			 thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
-		 }
-			// If we are a creature, or multi-tiled, cancel AI action.....?
-			else if ( thisSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE )
-		 {
-			 thisSoldier->pathing.bDesiredDirection = thisSoldier->bDirection;
-		 }
-
+		// Are we prone crawling?
+		else if ( thisSoldier->usAnimState == CRAWLING )
+		{
+			// OK, we want to getup, turn and go prone again....
+			SendChangeSoldierStanceEvent( thisSoldier, ANIM_CROUCH );
+			thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
+		}
+		// If we are a creature, or multi-tiled, cancel AI action.....?
+		else if ( thisSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE )
+		{
+			thisSoldier->pathing.bDesiredDirection = thisSoldier->bDirection;
 		}
 	} 
 }
@@ -7255,7 +7253,7 @@ void CalculateSoldierAniSpeed( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pStatsSoldier
 	case READY_RIFLE_STAND:
 
 		// Raise rifle based on aim vs non-aim.
-		if ( pSoldier->pathing.bAimTime == 0 )
+		if ( pSoldier->aiData.bAimTime == 0 )
 		{
 			// Quick shot
 			pSoldier->sAniDelay = 70;

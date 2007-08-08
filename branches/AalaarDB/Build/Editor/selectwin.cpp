@@ -49,17 +49,17 @@ SGPPoint SelWinSpacing, SelWinStartPoint, SelWinEndPoint;
 
 //These definitions help define the start and end of the various wall indices.
 //This needs to be maintained if the walls change.
-#define WALL_LAST_WALL_OFFSET						 30
-#define	WALL_FIRST_AFRAME_OFFSET				 31
-#define WALL_LAST_AFRAME_OFFSET					 34
-#define	WALL_FIRST_WINDOW_OFFSET				 35
-#define WALL_LAST_WINDOW_OFFSET					 46
-#define WALL_FIRST_BROKEN_WALL_OFFSET		 47
-#define WALL_LAST_BROKEN_WALL_OFFSET		 54
-#define WALL_FIRST_APPENDED_WALL_OFFSET	 55
-#define WALL_LAST_APPENDED_WALL_OFFSET	 56
+#define WALL_LAST_WALL_OFFSET						30
+#define	WALL_FIRST_AFRAME_OFFSET				31
+#define WALL_LAST_AFRAME_OFFSET					34
+#define	WALL_FIRST_WINDOW_OFFSET				35
+#define WALL_LAST_WINDOW_OFFSET					46
+#define WALL_FIRST_BROKEN_WALL_OFFSET		47
+#define WALL_LAST_BROKEN_WALL_OFFSET		54
+#define WALL_FIRST_APPENDED_WALL_OFFSET	55
+#define WALL_LAST_APPENDED_WALL_OFFSET	56
 #define WALL_FIRST_WEATHERED_WALL_OFFSET 57
-#define WALL_LAST_WEATHERED_WALL_OFFSET  64
+#define WALL_LAST_WEATHERED_WALL_OFFSET	64
 
 //I've added these definitions to add readability, and minimize conversion time for changes
 //incase there are new values, etc. 
@@ -87,8 +87,8 @@ SGPPoint SelWinSpacing, SelWinStartPoint, SelWinEndPoint;
 																				(LASTROOF-FIRSTROOF+1) + (2 ))
 
 
-//This is a special case for trees which may have varying numbers.  There was a problem
-//in which we loaded a new tileset which had one less tree in it.  When we called BuildSelectionWindow(),
+//This is a special case for trees which may have varying numbers.	There was a problem
+//in which we loaded a new tileset which had one less tree in it.	When we called BuildSelectionWindow(),
 //it would crash because it thought there was an extra tree which was now invalid.
 UINT16	gusNumOStructs = 0;
 
@@ -111,8 +111,8 @@ DisplaySpec SingleFloor[ SINGLEFLOOR_NUMELEMENTS ];
 DisplaySpec SingleToilet[ SINGLETOILET_NUMELEMENTS ];
 DisplaySpec Room[ ROOM_NUMELEMENTS ];
 
-//These are all of the different selection lists.  Changing the max_selections will
-//change the number of selections values you can have at a time.  This is Bret's gay code,
+//These are all of the different selection lists.	Changing the max_selections will
+//change the number of selections values you can have at a time.	This is Bret's gay code,
 //though I've cleaned it up a lot.
 Selections	SelOStructs[MAX_SELECTIONS]				=		{ {FIRSTFULLSTRUCT, 0, 1} };	// Default selections
 Selections	SelOStructs1[MAX_SELECTIONS]				=		{ {FOURTHOSTRUCT, 0, 1} };	// Default selections
@@ -123,13 +123,13 @@ Selections	SelDebris[MAX_SELECTIONS]					=		{ {DEBRISROCKS, 0, 1} };
 Selections	SelSingleWall[MAX_SELECTIONS]			=		{ {FIRSTWALL, 0, 1} };
 Selections	SelSingleDoor[MAX_SELECTIONS]			=		{ {FIRSTDOOR, 0, 1} };
 Selections	SelSingleWindow[MAX_SELECTIONS]		=		{ {FIRSTWALL, 44, 1} };
-Selections  SelSingleRoof[MAX_SELECTIONS] =				{ {FIRSTROOF, 0, 1} };
-Selections  SelSingleNewRoof[MAX_SELECTIONS] =		{ {FIRSTROOF, 0, 1} };
-Selections  SelSingleBrokenWall[MAX_SELECTIONS] = { {FIRSTDECORATIONS, 0, 1} };
+Selections	SelSingleRoof[MAX_SELECTIONS] =				{ {FIRSTROOF, 0, 1} };
+Selections	SelSingleNewRoof[MAX_SELECTIONS] =		{ {FIRSTROOF, 0, 1} };
+Selections	SelSingleBrokenWall[MAX_SELECTIONS] = { {FIRSTDECORATIONS, 0, 1} };
 Selections	SelSingleDecor[MAX_SELECTIONS]=				{ {FIRSTISTRUCT, 0, 1} };
 Selections	SelSingleDecal[MAX_SELECTIONS]	=		{ {FIRSTWALLDECAL, 0, 1} };
-Selections  SelSingleFloor[MAX_SELECTIONS] =			{ {FIRSTFLOOR, 0, 1} };
-Selections  SelSingleToilet[MAX_SELECTIONS] =			{ {FIFTHISTRUCT, 0, 1} };
+Selections	SelSingleFloor[MAX_SELECTIONS] =			{ {FIRSTFLOOR, 0, 1} };
+Selections	SelSingleToilet[MAX_SELECTIONS] =			{ {FIFTHISTRUCT, 0, 1} };
 Selections	SelRoom[MAX_SELECTIONS]			=					{ {FIRSTWALL, 0, 1} };
 
 // Number of objects currently in the selection list
@@ -147,7 +147,7 @@ INT32				iNumDecorSelected = 1;
 INT32				iNumDecalsSelected = 1;
 INT32				iNumBrokenWallsSelected = 1;
 INT32				iNumFloorsSelected = 1;
-INT32       iNumToiletsSelected = 1;
+INT32		iNumToiletsSelected = 1;
 INT32				iNumRoofsSelected = 1;
 INT32				iNumNewRoofsSelected = 1;
 INT32				iNumRoomsSelected = 1;
@@ -157,7 +157,7 @@ Selections	OldSelList[MAX_SELECTIONS];
 INT32				iOldNumSelList;
 
 // Global pointers for selection list
-Selections  *pSelList;
+Selections	*pSelList;
 INT32				*pNumSelList;
 
 // Global used to indicate which selection to use (changes with the PGUP/PGDWN keys in editor)
@@ -354,9 +354,9 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 }
 
 
-//The selection window method is initialized here.  This is where all the graphics for all
-//the categories are organized and loaded.  If you wish to move things around, then this is
-//where the initialization part is done.  I have also changed this from previously being loaded
+//The selection window method is initialized here.	This is where all the graphics for all
+//the categories are organized and loaded.	If you wish to move things around, then this is
+//where the initialization part is done.	I have also changed this from previously being loaded
 //every single time you go into a selection window which was redundant and CPU consuming.
 void InitJA2SelectionWindow( void )
 {
@@ -869,7 +869,7 @@ void RenderSelectionWindow( void )
 			return;
 		
 		if ( (abs( iStartClickX - button->Area.MouseXPos ) > 9) || 
-			   (abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY)) > 9) )
+			(abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY)) > 9) )
 		{
 //			iSX = (INT32)iStartClickX;
 //			iEX = (INT32)button->Area.MouseXPos;
@@ -1078,12 +1078,12 @@ void DisplaySelectionWindowGraphicalInformation()
 		}
 		else
 		{
-			mprintf( 2, 2, L"File:  %S, subindex:  %d (%S)", 
+			mprintf( 2, 2, L"File:	%S, subindex:	%d (%S)", 
 				gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTileSurfaceName[ pNode->uiObjIndx ] );
 		}
 	}
-	mprintf( 350, 2, L"Current Tileset:  %s",	gTilesets[ giCurrentTilesetID ].zName );
+	mprintf( 350, 2, L"Current Tileset:	%s",	gTilesets[ giCurrentTilesetID ].zName );
 }	
 
 //----------------------------------------------------------------------------------------------
@@ -1102,7 +1102,7 @@ void AddToSelectionList( DisplayList *pNode )
 	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			fDone = TRUE;
 			iUseIndex = iIndex;
@@ -1181,7 +1181,7 @@ BOOLEAN RemoveFromSelectionList( DisplayList *pNode )
 	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			fDone = TRUE;
 			iUseIndex = iIndex;
@@ -1260,7 +1260,7 @@ BOOLEAN IsInSelectionList( DisplayList *pNode )
 	for (iIndex = 0; iIndex < (*pNumSelList) && !fFound; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			fFound = TRUE;
 		}
@@ -1288,7 +1288,7 @@ INT32 FindInSelectionList( DisplayList *pNode )
 	for (iIndex = 0; iIndex < (*pNumSelList) && !fFound; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			fFound = TRUE;
 			iUseIndex = iIndex;

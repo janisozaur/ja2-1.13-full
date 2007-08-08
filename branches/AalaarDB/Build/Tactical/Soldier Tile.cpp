@@ -80,24 +80,24 @@ void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 
 		// provide more info!!
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path size %d, index %d", pSoldier->pathing.usPathDataSize, pSoldier->pathing.usPathIndex ) );
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Who is at blocked gridno: %d", WhoIsThere2( usNewGridNo, pSoldier->pathing.bLevel ) ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path size %d, index %d", pSoldier->pathing.usPathDataSize, pSoldier->pathing.usPathIndex ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Who is at blocked gridno: %d", WhoIsThere2( usNewGridNo, pSoldier->pathing.bLevel ) ) );
 
 		for ( uiLoop = 0; uiLoop < pSoldier->pathing.usPathDataSize; uiLoop++ )
 		{
 			if ( uiLoop > pSoldier->pathing.usPathIndex )
 			{					
 				usTemp = NewGridNo( usTemp, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ uiLoop ] ) );
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
 			}
 			else if ( uiLoop == pSoldier->pathing.usPathIndex )
 			{
 				usTemp = usNewGridNo;
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop], usTemp ) );
 			}
 			else
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path[%d]: %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop] ) );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("	Soldier path[%d]: %d", uiLoop, pSoldier->pathing.usPathingData[uiLoop] ) );
 			}
 		}
 
@@ -150,7 +150,7 @@ void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
 	// OK, If we were waiting for stuff, do it here...
 
 	// ATE: Disabled stuff below, made obsolete by timeout...
-	//if ( pSoldier->ubWaitActionToDo  )
+	//if ( pSoldier->ubWaitActionToDo	)
 	//{
 	//	pSoldier->ubWaitActionToDo = 0;
 	//	gbNumMercsUntilWaitingOver--;
@@ -164,10 +164,10 @@ void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
 		}
 	#endif
 
-  if ( pSoldier->bTeam == gbPlayerNum  && fGivenUp )
-  {
+	if ( pSoldier->bTeam == gbPlayerNum	&& fGivenUp )
+	{
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
-  }
+	}
 
 	pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
 
@@ -215,7 +215,7 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 	}
 }
 
-INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 bLevel )
+INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,	INT16 sGridNo, INT8 bLevel )
 {
 	PERFORMANCE_MARKER
 	UINT8		ubPerson;
@@ -246,7 +246,7 @@ INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 b
 
 				// Are we only temporarily blocked?
 				// Check if our final destination is = our gridno
-				if ( ( MercPtrs[ ubPerson ]->pathing.sFinalDestination == MercPtrs[ ubPerson ]->sGridNo )  )
+				if ( ( MercPtrs[ ubPerson ]->pathing.sFinalDestination == MercPtrs[ ubPerson ]->sGridNo )	)
 				{
 					return( MOVE_TILE_STATIONARY_BLOCKED );
 				}
@@ -512,7 +512,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 	// Buddy is waiting to continue his path
 	INT8		bBlocked, bPathBlocked;
 	INT16		sCost;
-	INT16   sNewGridNo, sCheckGridNo;
+	INT16	sNewGridNo, sCheckGridNo;
 	UINT8		ubDirection, bCauseDirection;
 	UINT8		ubPerson;
 	UINT8		fFlags = 0;
@@ -530,7 +530,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 			bBlocked = TileIsClear( pSoldier, bCauseDirection, pSoldier->sDelayedMovementCauseGridNo, pSoldier->pathing.bLevel );
 
 			// If we are waiting for a temp blockage.... continue to wait
-			if ( pSoldier->flags.fDelayedMovement >= 100 &&  bBlocked == MOVE_TILE_TEMP_BLOCKED )
+			if ( pSoldier->flags.fDelayedMovement >= 100 &&	bBlocked == MOVE_TILE_TEMP_BLOCKED )
 			{
 				// ATE: Increment 1
 				pSoldier->flags.fDelayedMovement++;
@@ -831,7 +831,7 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 	PERFORMANCE_MARKER
 	// NB checks outside of this function 
 	if ( EnoughPoints( pSoldier1, AP_EXCHANGE_PLACES, 0, fShow ) ){
-	  if ( EnoughPoints( pSoldier2, AP_EXCHANGE_PLACES, 0, fShow ) ){
+	if ( EnoughPoints( pSoldier2, AP_EXCHANGE_PLACES, 0, fShow ) ){
 		if ( ( gAnimControl[ pSoldier2->usAnimState ].uiFlags & ANIM_MOVING ) )
 			return( FALSE );
 
@@ -839,7 +839,7 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 			return( FALSE );
 
 		if ( pSoldier2->bSide == 0 )
-		  return( TRUE );
+		return( TRUE );
 
 		// hehe - don't allow animals to exchange places
 		if ( pSoldier2->flags.uiStatusFlags & ( SOLDIER_ANIMAL ) )
@@ -850,22 +850,22 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 			pSoldier2->ubCivilianGroup != HICKS_CIV_GROUP && 
 			( ( pSoldier2->aiData.bOrders != STATIONARY || pSoldier2->bTeam == MILITIA_TEAM ) || 
 			( pSoldier2->sAbsoluteFinalDestination != NOWHERE && pSoldier2->sAbsoluteFinalDestination != pSoldier2->sGridNo ) )
-		  )
+		)
 			return( TRUE );
 
 		if ( fShow ){
 			if ( pSoldier2->ubProfile == NO_PROFILE )
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ REFUSE_EXCHANGE_PLACES ] );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ REFUSE_EXCHANGE_PLACES ] );
 			else
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[3], pSoldier2->name );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[3], pSoldier2->name );
 		}
 
 		// ATE: OK, reduce this guy's next ai counter....
 		pSoldier2->uiAIDelay = 100;
 		return( FALSE );
-	  }else{
-		  return( FALSE );
-	  }
+	}else{
+		return( FALSE );
+	}
 	}
 	// if SirTech wouldn't setup your nested if statements so messily then perhaps wierd code like this
 	//	could be avoided... cleaned up the ifs too (jonathanl)

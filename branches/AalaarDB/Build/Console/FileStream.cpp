@@ -9,23 +9,23 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA	02111-1307	USA
 //
 // Send bug reports, bug fixes, enhancements, requests, flames, etc., and
-// I'll try to keep a version up to date.  I can be reached as follows:
-//    marko.bozikovic@alterbox.net
-//    bozho@kset.org
+// I'll try to keep a version up to date.	I can be reached as follows:
+//	marko.bozikovic@alterbox.net
+//	bozho@kset.org
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
 // FileStream.cpp	- implementation of IStream interface on any file 
-//					  (not strictly COM, I'm faking it here a bit :-)
+//					(not strictly COM, I'm faking it here a bit :-)
 //
 
 #undef CINTERFACE
@@ -48,14 +48,14 @@ static char THIS_FILE[] = __FILE__;
 // CreateFileStream	- opens/creates a file and returns an IStream interface
 
 HRESULT CreateFileStream(
-  LPCTSTR lpFileName,							// file name
-  DWORD dwDesiredAccess,						// access mode
-  DWORD dwShareMode,							// share mode
-  LPSECURITY_ATTRIBUTES lpSecurityAttributes,	// SD
-  DWORD dwCreationDisposition,					// how to create
-  DWORD dwFlagsAndAttributes,					// file attributes
-  HANDLE hTemplateFile,							// handle to template file
-  IStream** ppStream							// pointer to IStream interface
+	LPCTSTR lpFileName,							// file name
+	DWORD dwDesiredAccess,						// access mode
+	DWORD dwShareMode,							// share mode
+	LPSECURITY_ATTRIBUTES lpSecurityAttributes,	// SD
+	DWORD dwCreationDisposition,					// how to create
+	DWORD dwFlagsAndAttributes,					// file attributes
+	HANDLE hTemplateFile,							// handle to template file
+	IStream** ppStream							// pointer to IStream interface
 )
 {
 	PERFORMANCE_MARKER
@@ -116,7 +116,7 @@ FileStream::~FileStream()
 
 /////////////////////////////////////////////////////////////////////////////
 // Read	- reads a specified number of bytes from the stream object into memory 
-//		  starting at the current seek pointer
+//		starting at the current seek pointer
 
 STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 {
@@ -131,7 +131,7 @@ STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 
 /////////////////////////////////////////////////////////////////////////////
 // Write	- writes a specified number of bytes into the stream object starting 
-//			  at the current seek pointer
+//			at the current seek pointer
 
 STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 {
@@ -146,7 +146,7 @@ STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 
 /////////////////////////////////////////////////////////////////////////////
 // Seek	- changes the seek pointer to a new location relative to the beginning 
-//		  of the stream, to the end of the stream, or to the current seek pointer
+//		of the stream, to the end of the stream, or to the current seek pointer
 
 STDMETHODIMP FileStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
 {
@@ -190,7 +190,7 @@ STDMETHODIMP FileStream::SetSize(ULARGE_INTEGER libNewSize)
 
 /////////////////////////////////////////////////////////////////////////////
 // CopyTo	- copies a specified number of bytes from the current seek pointer 
-//			  in the stream to the current seek pointer in another stream
+//			in the stream to the current seek pointer in another stream
 
 STDMETHODIMP FileStream::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten)
 {

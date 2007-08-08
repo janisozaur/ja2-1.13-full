@@ -103,7 +103,7 @@ void HandleQuarterHourUpdate()
 	if ( DidGameJustStart() )
 		return;
 
-  DecayTacticalMoraleModifiers( );
+	DecayTacticalMoraleModifiers( );
 }
 
 
@@ -173,9 +173,9 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 {
 	// item, temptation, points to use
 	{ ADRENALINE_BOOSTER,		5, 100 },
-	{	ALCOHOL,							BAR_TEMPTATION, 25  },
-	{ MEDICKIT,							4, 10  },
-	{	WINE,									3, 50  },
+	{	ALCOHOL,							BAR_TEMPTATION, 25	},
+	{ MEDICKIT,							4, 10	},
+	{	WINE,									3, 50	},
 	{ REGEN_BOOSTER,				3, 100 },
 	{	BEER,									2, 100 },
 };

@@ -114,7 +114,7 @@ sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int le
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -145,7 +145,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curSectorLoadscreens.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curSectorLoadscreens.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "szLocation") == 0)
 		{
@@ -169,7 +169,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "RandomAltSector") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curSectorLoadscreens.RandomAltSector  = (BOOLEAN) atol(pData->szCharData);
+			pData->curSectorLoadscreens.RandomAltSector	= (BOOLEAN) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "szImageFormat") == 0)
 		{
@@ -251,7 +251,6 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT;
 			
-			// WANNE
 			if(MAX_IMAGE_PATH_CHARS >= strlen(pData->szCharData))
 				strcpy(pData->curSectorLoadscreens.szNightAlt,pData->szCharData);
 			else
@@ -321,7 +320,7 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 

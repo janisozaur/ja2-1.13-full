@@ -26,37 +26,37 @@
 	#include "GameSettings.h"
 #endif
 
-//effects whether or not time of day effects the lighting.  Underground
+//effects whether or not time of day effects the lighting.	Underground
 //maps have an ambient light level that is saved in the map, and doesn't change.
 BOOLEAN			gfBasement = FALSE;
 BOOLEAN			gfCaves = FALSE;
 
 
-#define   ENV_TOD_FLAGS_DAY										0x00000001
-#define   ENV_TOD_FLAGS_DAWN									0x00000002
-#define   ENV_TOD_FLAGS_DUSK									0x00000004
-#define   ENV_TOD_FLAGS_NIGHT									0x00000008
+#define	ENV_TOD_FLAGS_DAY										0x00000001
+#define	ENV_TOD_FLAGS_DAWN									0x00000002
+#define	ENV_TOD_FLAGS_DUSK									0x00000004
+#define	ENV_TOD_FLAGS_NIGHT									0x00000008
 
 /*
 #define		DAWNLIGHT_START											( 5 * 60 )
 #define		DAWN_START													( 6 * 60 )
-#define   DAY_START														( 8 * 60 )
+#define	DAY_START														( 8 * 60 )
 #define		TWILLIGHT_START											( 19 * 60 )
 #define		DUSK_START													( 20 * 60 )
-#define   NIGHT_START													( 22 * 60 )
+#define	NIGHT_START													( 22 * 60 )
 */
 #define		DAWN_START													( 6 * 60 + 47 )		//6:47AM
-#define   DAY_START														( 7 * 60 + 5 )		//7:05AM
+#define	DAY_START														( 7 * 60 + 5 )		//7:05AM
 #define		DUSK_START													( 20 * 60 + 57 )	//8:57PM
-#define   NIGHT_START													( 21 * 60 + 15 )	//9:15PM
+#define	NIGHT_START													( 21 * 60 + 15 )	//9:15PM
 
 #define		DAWN_TO_DAY													(DAY_START-DAWN_START)
 #define		DAY_TO_DUSK													(DUSK_START-DAY_START)
 #define		DUSK_TO_NIGHT												(NIGHT_START-DUSK_START)
 #define		NIGHT_TO_DAWN												(24*60-NIGHT_START+DAWN_START)
 
-UINT32										guiEnvWeather	 = 0;
-UINT32										guiRainLoop  = NO_SAMPLE;
+UINT32										guiEnvWeather	= 0;
+UINT32										guiRainLoop	= NO_SAMPLE;
 
 
 // frame cues for lightning
@@ -104,12 +104,12 @@ UINT8			guiTODFlags[ENV_NUM_TIMES] = {
 																			ENV_TOD_FLAGS_DAWN,			// 05
 																			ENV_TOD_FLAGS_DAWN,			// 06
 																			ENV_TOD_FLAGS_DAWN,			// 07
-																			ENV_TOD_FLAGS_DAY,		  // 08
-																			ENV_TOD_FLAGS_DAY,		  // 09
-																			ENV_TOD_FLAGS_DAY,		  // 10
-																			ENV_TOD_FLAGS_DAY,		  // 11
+																			ENV_TOD_FLAGS_DAY,		// 08
+																			ENV_TOD_FLAGS_DAY,		// 09
+																			ENV_TOD_FLAGS_DAY,		// 10
+																			ENV_TOD_FLAGS_DAY,		// 11
 																			ENV_TOD_FLAGS_DAY,			// 12
-																			ENV_TOD_FLAGS_DAY,		  // 13
+																			ENV_TOD_FLAGS_DAY,		// 13
 																			ENV_TOD_FLAGS_DAY,			// 14
 																			ENV_TOD_FLAGS_DAY,			// 15
 																			ENV_TOD_FLAGS_DAY,			// 16
@@ -154,7 +154,7 @@ BOOLEAN		fTimeOfDayControls=TRUE;
 UINT32		guiEnvTime=0;
 UINT32		guiEnvDay=0;
 UINT8			gubEnvLightValue = 0;
-BOOLEAN		gfDoLighting		 = FALSE;
+BOOLEAN		gfDoLighting		= FALSE;
 
 UINT8		gubDesertTemperature = 0;
 UINT8		gubGlobalTemperature = 0;
@@ -171,15 +171,15 @@ void EnvDoLightning(void);
 void EnvironmentController( BOOLEAN fCheckForLights )
 {
 	PERFORMANCE_MARKER
-	UINT32			 uiOldWorldHour;
-	UINT8				 ubLightAdjustFromWeather = 0;
+	UINT32			uiOldWorldHour;
+	UINT8				ubLightAdjustFromWeather = 0;
 
 
 	// do none of this stuff in the basement or caves
 	if( gfBasement || gfCaves )
 	{
-	  guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
-	  guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );
+	guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
+	guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );
 
 		if (gGameSettings.fOptions[ TOPTION_RAIN_SOUND ] == TRUE)
 		{
@@ -395,7 +395,7 @@ void ForecastDayEvents( )
 	PERFORMANCE_MARKER
 	UINT32 uiOldDay;
 	UINT32 uiStartTime, uiEndTime;
-	UINT8  ubStormIntensity;
+	UINT8	ubStormIntensity;
 //	UINT32 cnt;
 
 	// Get current day and see if different
@@ -420,7 +420,7 @@ void ForecastDayEvents( )
 			{
 				// Add rain!
 				// Between 6:00 and 10:00
-				uiStartTime = (UINT32)( Random( 1440 - 1 - gGameExternalOptions.gusRainMaxLength  ) );
+				uiStartTime = (UINT32)( Random( 1440 - 1 - gGameExternalOptions.gusRainMaxLength	) );
 				// Between 5 - 15 miniutes
 				uiEndTime		= uiStartTime + ( gGameExternalOptions.gusRainMinLength + Random( gGameExternalOptions.gusRainMaxLength - gGameExternalOptions.gusRainMinLength ) );
 
@@ -464,7 +464,7 @@ void ForecastDayEvents( )
 					ubStormIntensity = 1;
 				}
 		
-   // ATE: Disable RAIN!
+	// ATE: Disable RAIN!
 	//			AddSameDayRangedStrategicEvent( EVENT_RAINSTORM, uiStartTime, uiEndTime - uiStartTime, ubStormIntensity );
 
 				//AddSameDayStrategicEvent( EVENT_BEGINRAINSTORM, uiStartTime, ubStormIntensity );
@@ -512,7 +512,7 @@ UINT32 guiChanceToDoLightningBetweenTurns = 20;
 #define MIN_DL_INTERVAL ( 1000 * guiMinDLInterval )
 #define MAX_DL_INTERVAL ( 1000 * guiMaxDLInterval )
 
-#define EXTRA_ADD_VIS_DIST_IF_SEEN_SOMEONE ( 1000 * guiProlongLightningIfSeenSomeone  )
+#define EXTRA_ADD_VIS_DIST_IF_SEEN_SOMEONE ( 1000 * guiProlongLightningIfSeenSomeone	)
 #define CHANCE_TO_DO_LIGHTNING_BETWEEN_TURNS guiChanceToDoLightningBetweenTurns
 
 BOOLEAN gfLightningInProgress = FALSE;
@@ -526,7 +526,7 @@ BOOLEAN gfWasTurnBasedWhenLightningBegin = FALSE;
 
 UINT8 gubLastTeamLightning;
 
-#define IS_TURNBASED ( gTacticalStatus.uiFlags & TURNBASED &&  gTacticalStatus.uiFlags & INCOMBAT )
+#define IS_TURNBASED ( gTacticalStatus.uiFlags & TURNBASED &&	gTacticalStatus.uiFlags & INCOMBAT )
 
 void BeginTeamTurn( UINT8 ubTeam );
 
@@ -536,25 +536,25 @@ void BeginTeamTurn( UINT8 ubTeam );
 void EnvDoLightning(void)
 {
 	PERFORMANCE_MARKER
-  static UINT32 uiCount=10, uiIndex=0, uiStrike=0, uiFrameNext=0;
-  static UINT8 ubLevel=0, ubLastLevel=0;
-  static UINT32 uiLastUpdate = 0xFFFFFFFF;
-  static UINT32 uiTurnOffExtraVisDist = 0xFFFFFFFF;
-  static UINT32 pDelayedSounds[ MAX_DELAYED_SOUNDS ];
-  UINT32 uiDSIndex;
+	static UINT32 uiCount=10, uiIndex=0, uiStrike=0, uiFrameNext=0;
+	static UINT8 ubLevel=0, ubLastLevel=0;
+	static UINT32 uiLastUpdate = 0xFFFFFFFF;
+	static UINT32 uiTurnOffExtraVisDist = 0xFFFFFFFF;
+	static UINT32 pDelayedSounds[ MAX_DELAYED_SOUNDS ];
+	UINT32 uiDSIndex;
 
-  if( GetJA2Clock() < uiLastUpdate )
-  {
+	if( GetJA2Clock() < uiLastUpdate )
+	{
 	uiLastUpdate = 0;
 	memset( pDelayedSounds, NO_DL_SOUND, sizeof( UINT32 ) * MAX_DELAYED_SOUNDS );
-  }
+	}
 
-  if( GetJA2Clock() < uiLastUpdate + 1000 / 60 )return;
+	if( GetJA2Clock() < uiLastUpdate + 1000 / 60 )return;
 	else
 		uiLastUpdate = GetJA2Clock();
 
-  if( GetJA2Clock() > uiTurnOffExtraVisDist )
-  {
+	if( GetJA2Clock() > uiTurnOffExtraVisDist )
+	{
 	AllTeamsLookForAll( FALSE );
 	uiTurnOffExtraVisDist = 0xFFFFFFFF;
 
@@ -564,26 +564,26 @@ void EnvDoLightning(void)
 		gfTurnBasedLightningEnd = FALSE;
 	}
 
-  }
+	}
 
-  for( uiDSIndex = 0; uiDSIndex < MAX_DELAYED_SOUNDS; ++uiDSIndex )
-	  if( GetJA2Clock() > pDelayedSounds[ uiDSIndex ] )
-	  {
-		  PlayJA2Ambient(LIGHTNING_1+Random(2), HIGHVOLUME, 1);
-		  pDelayedSounds[ uiDSIndex ] = NO_DL_SOUND;
-	  }
+	for( uiDSIndex = 0; uiDSIndex < MAX_DELAYED_SOUNDS; ++uiDSIndex )
+	if( GetJA2Clock() > pDelayedSounds[ uiDSIndex ] )
+	{
+		PlayJA2Ambient(LIGHTNING_1+Random(2), HIGHVOLUME, 1);
+		pDelayedSounds[ uiDSIndex ] = NO_DL_SOUND;
+	}
 
-  if ( gfPauseDueToPlayerGamePause )
-  {
-    return;
-  }
+	if ( gfPauseDueToPlayerGamePause )
+	{
+	return;
+	}
 
-  if( IS_TURNBASED && !gfLightningInProgress )
-  {
+	if( IS_TURNBASED && !gfLightningInProgress )
+	{
 	if( !gfTurnBasedDoLightning )
 	{
 		return;
-	 }
+	}
 	else
 	{
 		gfTurnBasedDoLightning = FALSE;
@@ -591,12 +591,12 @@ void EnvDoLightning(void)
 		uiCount = 0;
 		gfTurnBasedLightningEnd = TRUE;
 	}
-  }
+	}
 
 	uiCount++;
 	if(uiCount >= (uiFrameNext+10))
 	{
-		if( gfHaveSeenSomeone && gfWasTurnBasedWhenLightningBegin  )
+		if( gfHaveSeenSomeone && gfWasTurnBasedWhenLightningBegin	)
 			uiTurnOffExtraVisDist = GetJA2Clock() + EXTRA_ADD_VIS_DIST_IF_SEEN_SOMEONE;
 		else
 			uiTurnOffExtraVisDist = GetJA2Clock();
@@ -639,30 +639,30 @@ void EnvDoLightning(void)
 		ubLastLevel=ubLevel;
 		ubLevel=min( ubRealAmbientLightLevel - 1, ubLightningTable[uiStrike][uiIndex][1] );
 
-/*    // ATE: Don't modify if scrolling!
-	  if ( gfScrollPending || gfScrollInertia )
-	  { 
-	  }
-	  else*/
-	  {
- 		  if(ubLastLevel!=ubLevel)
-		  {
-			  if(ubLevel > ubLastLevel)
-			  {
-				  LightAddBaseLevel(0, (UINT8)(ubLevel-ubLastLevel));
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  else
-			  {
-//				  LightSubtractBaseLevel(0, (UINT8)(ubLastLevel-ubLevel));
-				  LightSetBaseLevel( ubRealAmbientLightLevel - ubLevel );
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  SetRenderFlags(RENDER_FLAG_FULL);
-		  }
-    }
+/*	// ATE: Don't modify if scrolling!
+	if ( gfScrollPending || gfScrollInertia )
+	{ 
+	}
+	else*/
+	{
+ 		if(ubLastLevel!=ubLevel)
+		{
+			if(ubLevel > ubLastLevel)
+			{
+				LightAddBaseLevel(0, (UINT8)(ubLevel-ubLastLevel));
+				if(ubLevel > 0)
+					RenderSetShadows(TRUE);
+			}
+			else
+			{
+//				LightSubtractBaseLevel(0, (UINT8)(ubLastLevel-ubLevel));
+				LightSetBaseLevel( ubRealAmbientLightLevel - ubLevel );
+				if(ubLevel > 0)
+					RenderSetShadows(TRUE);
+			}
+			SetRenderFlags(RENDER_FLAG_FULL);
+		}
+	}
 
 	}
 }
@@ -679,7 +679,7 @@ BOOLEAN LightningEndOfTurn( UINT8 ubTeam )
 		gubLastTeamLightning = ubTeam;
 		EnvDoLightning();
 		return FALSE;
-	 }
+	}
 	else
 	{
 		return TRUE;
@@ -707,22 +707,22 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 	{
 		gfDoLighting = TRUE;
 
-  #ifdef JA2TESTVERSION
-	  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Rain...."  );
-  #endif
+	#ifdef JA2TESTVERSION
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Rain...."	);
+	#endif
 
-	  if ( ubIntensity == 1 )
-	  {
-		  // Turn on rain storms
-		  guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
-		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Storm started." );
-	  }
-	  else
-	  {
-		  guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
-  		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rain started." );
-	  }
-  }
+	if ( ubIntensity == 1 )
+	{
+		// Turn on rain storms
+		guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Storm started." );
+	}
+	else
+	{
+		guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rain started." );
+	}
+	}
 
 }
 
@@ -732,17 +732,17 @@ void EnvEndRainStorm( )
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Rain...."  );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Rain...."	);
 #endif
 
-	  if ( guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS )
-	  {
-		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Storm ended." );
-	  }
-	  else
-	  {
-  		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rain ended." );
-	  }
+	if ( guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS )
+	{
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Storm ended." );
+	}
+	else
+	{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Rain ended." );
+	}
 
 
 	guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
@@ -766,10 +766,10 @@ void EnvDoLightning(void)
 static UINT32 uiCount=0, uiIndex=0, uiStrike=0, uiFrameNext=1000;
 static UINT8 ubLevel=0, ubLastLevel=0;
 
-  if ( gfPauseDueToPlayerGamePause )
-  {
-    return;
-  }
+	if ( gfPauseDueToPlayerGamePause )
+	{
+	return;
+	}
 
 	uiCount++;
 	if(uiCount >= (uiFrameNext+10))
@@ -796,29 +796,29 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 		ubLastLevel=ubLevel;
 		ubLevel=ubLightningTable[uiStrike][uiIndex][1];
 
-    // ATE: Don't modify if scrolling!
-	  if ( gfScrollPending || gfScrollInertia )
-	  { 
-	  }
-	  else
-	  {
- 		  if(ubLastLevel!=ubLevel)
-		  {
-			  if(ubLevel > ubLastLevel)
-			  {
-				  LightAddBaseLevel(0, (UINT8)(ubLevel-ubLastLevel));
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  else
-			  {
-				  LightSubtractBaseLevel(0, (UINT8)(ubLastLevel-ubLevel));
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  SetRenderFlags(RENDER_FLAG_FULL);
-		  }
-    }
+	// ATE: Don't modify if scrolling!
+	if ( gfScrollPending || gfScrollInertia )
+	{ 
+	}
+	else
+	{
+ 		if(ubLastLevel!=ubLevel)
+		{
+			if(ubLevel > ubLastLevel)
+			{
+				LightAddBaseLevel(0, (UINT8)(ubLevel-ubLastLevel));
+				if(ubLevel > 0)
+					RenderSetShadows(TRUE);
+			}
+			else
+			{
+				LightSubtractBaseLevel(0, (UINT8)(ubLastLevel-ubLevel));
+				if(ubLevel > 0)
+					RenderSetShadows(TRUE);
+			}
+			SetRenderFlags(RENDER_FLAG_FULL);
+		}
+	}
 	}
 }
 
@@ -844,20 +844,20 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 	{
 		gfDoLighting = TRUE;
 
-  #ifdef JA2TESTVERSION
-	  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Rain...."  );
-  #endif
+	#ifdef JA2TESTVERSION
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Rain...."	);
+	#endif
 
-	  if ( ubIntensity == 1 )
-	  {
-		  // Turn on rain storms
-		  guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
-	  }
-	  else
-	  {
-		  guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
-	  }
-  }
+	if ( ubIntensity == 1 )
+	{
+		// Turn on rain storms
+		guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
+	}
+	else
+	{
+		guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
+	}
+	}
 
 }
 
@@ -867,7 +867,7 @@ void EnvEndRainStorm( )
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Rain...."  );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Rain...."	);
 #endif
 
 	guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
@@ -883,7 +883,7 @@ void TurnOnNightLights()
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
+			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
 				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
 		{
 			LightSpritePower( i, TRUE );
@@ -898,7 +898,7 @@ void TurnOffNightLights()
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
+			LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME && 
 				LightSprites[ i ].uiFlags & LIGHT_SPR_ON && 
 				!(LightSprites[ i ].uiFlags & MERC_LIGHT) ) 
 		{
@@ -914,7 +914,7 @@ void TurnOnPrimeLights()
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
+			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
 				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
 		{
 			LightSpritePower( i, TRUE );
@@ -929,7 +929,7 @@ void TurnOffPrimeLights()
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
+			LightSprites[ i ].uiFlags & LIGHT_PRIMETIME && 
 				LightSprites[ i ].uiFlags & LIGHT_SPR_ON && 
 				!(LightSprites[ i ].uiFlags & MERC_LIGHT) ) 
 		{

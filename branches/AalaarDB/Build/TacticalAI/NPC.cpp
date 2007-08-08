@@ -2098,7 +2098,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					if (pSoldier && ubNPC == KYLE) 
 					{
 						// make sure he has keys
-						pSoldier->pathing.bHasKeys = TRUE;
+						pSoldier->flags.bHasKeys = TRUE;
 					}
 					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
 					{

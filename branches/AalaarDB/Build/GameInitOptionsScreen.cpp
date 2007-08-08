@@ -329,7 +329,7 @@ UINT32	GameInitOptionsScreenShutdown( void )
 BOOLEAN		EnterGIOScreen()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	UINT16					cnt;
 	UINT16					usPosY;
 
@@ -359,11 +359,11 @@ BOOLEAN		EnterGIOScreen()
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE\\PreferencesButtons.sti", -1,0,-1,2,-1 );
 	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT, 
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnGIODoneCallback);
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnGIODoneCallback);
 
 	SpecifyButtonSoundScheme( guiGIODoneButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 	SpecifyDisabledButtonStyle( guiGIODoneButton, DISABLED_STYLE_NONE );
@@ -371,11 +371,11 @@ BOOLEAN		EnterGIOScreen()
 	//Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
 	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT, 
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnGIOCancelCallback );
+													OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+													OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnGIOCancelCallback );
 	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 
 
@@ -756,7 +756,7 @@ void			GetGIOScreenUserInput()
 {
 	PERFORMANCE_MARKER
 	InputAtom Event;
-//	POINT  MousePos;
+//	POINT	MousePos;
 
 //	GetCursorPos(&MousePos);
 
@@ -1307,13 +1307,13 @@ void DoneFadeInForExitGameInitOptionScreen( void )
 BOOLEAN DoGioMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	PERFORMANCE_MARKER
-  SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
-  
+	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
+	
 	// reset exit mode
 //	gfExitGioDueToMessageBox = TRUE;
 
 	// do message box and return
-  giGioMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &CenteringRect );
+	giGioMessageBox = DoMessageBox(	ubStyle,	zString,	uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),	ReturnCallback,	&CenteringRect );
 
 	// send back return state
 	return( ( giGioMessageBox != -1 ) );

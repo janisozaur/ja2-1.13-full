@@ -136,7 +136,7 @@ UINT32	guiMercBackButton;
 
 //****************************
 //
-//  Function Prototypes
+//	Function Prototypes
 //
 //****************************
 
@@ -159,7 +159,7 @@ void GameInitMercsFiles()
 BOOLEAN EnterMercsFiles()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
 
@@ -180,50 +180,50 @@ BOOLEAN EnterMercsFiles()
 
 
 	// Prev Box button
-	guiButtonImage  = LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
+	guiButtonImage	= LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiPrevButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_PREVIOUS],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercPrevButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnMercPrevButtonCallback);
 
 	SetButtonCursor(guiPrevButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiPrevButton, DISABLED_STYLE_SHADED);
 
 	//Next Button
 	guiNextButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_NEXT],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercNextButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnMercNextButtonCallback);
 
 	SetButtonCursor(guiNextButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiNextButton, DISABLED_STYLE_SHADED);
 
 	//Hire button
 	guiHireButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HIRE],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercHireButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnMercHireButtonCallback);
 	SetButtonCursor(guiHireButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiHireButton, DISABLED_STYLE_SHADED);
 
 	//Back button
 	guiMercBackButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HOME],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercFilesBackButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnMercFilesBackButtonCallback);
 	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiMercBackButton, DISABLED_STYLE_SHADED);
 
@@ -256,7 +256,7 @@ void HandleMercsFiles()
 void RenderMercsFiles()
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
 
@@ -304,9 +304,9 @@ void RenderMercsFiles()
 	//Enable or disable the buttons
 	EnableDisableMercFilesNextPreviousButton( );
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -440,17 +440,17 @@ void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hFaceHandle;
-  HVOBJECT hPortraitHandle;
+	HVOBJECT hFaceHandle;
+	HVOBJECT hPortraitHandle;
 	STR							sFaceLoc = "FACES\\BIGFACES\\";
 	char						sTemp[100];
 	MERCPROFILESTRUCT	*pMerc;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	SOLDIERTYPE			*pSoldier=NULL;
 
 	// Portrait Frame
 	GetVideoObject(&hPortraitHandle, guiPortraitBox);
-  BltVideoObject(FRAME_BUFFER, hPortraitHandle, 0,MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPortraitHandle, 0,MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	pMerc = &gMercProfiles[ ubMercID ];
 
@@ -458,14 +458,14 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	pSoldier = FindSoldierByProfileID( ubMercID, TRUE );
 
 	// load the Face graphic and add it
-  sprintf(sTemp, "%s%02d.sti", sFaceLoc, ubMercID);
+	sprintf(sTemp, "%s%02d.sti", sFaceLoc, ubMercID);
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP(sTemp, VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMercFace));
 
 	//Blt face to screen 
 	GetVideoObject(&hFaceHandle, guiMercFace);
-  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	//if the merc is dead, shadow the face red and put text over top saying the merc is dead
 	if( IsMercDead( ubMercID ) )
@@ -480,7 +480,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 		SetObjectHandleShade( guiMercFace, 0 );
 
 		//Blt face to screen 
-	  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y, VO_BLT_SRCTRANSPARENCY,NULL);
 
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y+MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_MERC_IS_DEAD], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 	}
@@ -492,7 +492,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	}
 
 	//else if the merc is currently a POW or, the merc was fired as a pow
-	else if( pMerc->bMercStatus == MERC_FIRED_AS_A_POW || ( pSoldier &&  pSoldier->bAssignment == ASSIGNMENT_POW ) )
+	else if( pMerc->bMercStatus == MERC_FIRED_AS_A_POW || ( pSoldier &&	pSoldier->bAssignment == ASSIGNMENT_POW ) )
 	{
 		ShadowVideoSurfaceRect( FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y+MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, pPOWStrings[0], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);

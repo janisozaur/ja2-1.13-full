@@ -137,7 +137,7 @@ enum
 
 
 //Toc menu mouse regions
-MOUSE_REGION    gSelectedPolicyTocMenuRegion[ NUM_AIM_POLICY_TOC_BUTTONS ];
+MOUSE_REGION	gSelectedPolicyTocMenuRegion[ NUM_AIM_POLICY_TOC_BUTTONS ];
 void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Agree/Disagree menu Buttons regions
@@ -156,7 +156,7 @@ INT32		guiPoliciesMenuButtonImage;
 UINT32		guiBottomButton;
 UINT32		guiBottomButton2;
 UINT8		gubCurPageNum;
-BOOLEAN		gfInPolicyToc =  FALSE;
+BOOLEAN		gfInPolicyToc =	FALSE;
 BOOLEAN		gfInAgreementPage = FALSE;
 BOOLEAN		gfAimPolicyMenuBarLoaded = FALSE;
 UINT32		guiContentButton;
@@ -174,8 +174,8 @@ BOOLEAN ExitAimPolicyMenuBar(void);
 BOOLEAN InitAimPolicyTocMenu(void);
 BOOLEAN ExitAimPolicyTocMenu(void);
 BOOLEAN DrawAimPolicyMenu();
-BOOLEAN  DisplayAimPolicyStatement(void);
-BOOLEAN  DisplayAimPolicyTitleText(void);
+BOOLEAN	DisplayAimPolicyStatement(void);
+BOOLEAN	DisplayAimPolicyTitleText(void);
 BOOLEAN InitAgreementRegion(void);
 BOOLEAN ExitAgreementButton(void);
 void DisableAimPolicyButton();
@@ -184,7 +184,7 @@ void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber );
 
 
 
-BOOLEAN  DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
+BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
 UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
 UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
 
@@ -206,7 +206,7 @@ void EnterInitAimPolicies()
 BOOLEAN EnterAimPolicies()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	InitAimDefaults();
 
@@ -390,11 +390,11 @@ void RenderAimPolicies()
 			break;
 	}
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 
 	RenderWWWProgramTitleBar( );
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -408,7 +408,7 @@ BOOLEAN InitAimPolicyMenuBar(void)
 		return(TRUE);
 
 	//Load graphic for buttons
-	guiPoliciesMenuButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesMenuButtonImage =	LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -421,11 +421,11 @@ BOOLEAN InitAimPolicyMenuBar(void)
 //		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
 
 		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL, 
-														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
-														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 usPosX, AIM_POLICY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
+														AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, 
+														AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														usPosX, AIM_POLICY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
 		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
 		
@@ -469,7 +469,7 @@ BOOLEAN DrawAimPolicyMenu()
 	UINT16			usHeight;
 	UINT32			uiStartLoc=0;
 	CHAR16			sText[400];
-  HVOBJECT		hContentButtonHandle;
+	HVOBJECT		hContentButtonHandle;
 	UINT8				ubLocInFile[]=		
 								{	DEFINITIONS,
 									LENGTH_OF_ENGAGEMENT,
@@ -487,7 +487,7 @@ BOOLEAN DrawAimPolicyMenu()
 	usPosY = AIM_POLICY_TOC_Y;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
 	{
-	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_POLICY_TOC_X, usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_POLICY_TOC_X, usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
 
 		uiStartLoc = AIM_POLICY_LINE_SIZE * ubLocInFile[i];
 		LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
@@ -516,7 +516,7 @@ BOOLEAN InitAimPolicyTocMenu(void)
 	{
 		//Mouse region for the toc buttons
 		MSYS_DefineRegion( &gSelectedPolicyTocMenuRegion[i], AIM_POLICY_TOC_X, usPosY, (UINT16)(AIM_POLICY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack); 
+								CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack); 
 		MSYS_AddRegion(&gSelectedPolicyTocMenuRegion[i]); 
 		MSYS_SetRegionUserData( &gSelectedPolicyTocMenuRegion[i], 0, i+2);
 
@@ -568,7 +568,7 @@ void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN  DisplayAimPolicyTitleText(void)
+BOOLEAN	DisplayAimPolicyTitleText(void)
 {
 	PERFORMANCE_MARKER
 	CHAR16	sText[400];
@@ -587,7 +587,7 @@ BOOLEAN  DisplayAimPolicyTitleText(void)
 }
 
 
-BOOLEAN  DisplayAimPolicyStatement(void)
+BOOLEAN	DisplayAimPolicyStatement(void)
 {
 	PERFORMANCE_MARKER
 	CHAR16	sText[400];
@@ -618,7 +618,7 @@ BOOLEAN InitAgreementRegion(void)
 	gfExitingPolicesAgreeButton = FALSE;
 
 	//Load graphic for buttons
-	guiPoliciesButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesButtonImage =	LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)
@@ -630,11 +630,11 @@ BOOLEAN InitAgreementRegion(void)
 //		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
 
 		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT, 
-														 AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW, 
-														 AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 usPosX, AIM_POLICY_AGREEMENT_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnPoliciesAgreeButtonCallback);
+														AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW, 
+														AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														usPosX, AIM_POLICY_AGREEMENT_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														DEFAULT_MOVE_CALLBACK, BtnPoliciesAgreeButtonCallback);
 		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
 		
@@ -656,7 +656,7 @@ BOOLEAN ExitAgreementButton(void)
 	UnloadButtonImage( guiPoliciesButtonImage);
 
 	for(i=0; i<2; i++)
-	  RemoveButton( guiPoliciesAgreeButton[ i ]);
+	RemoveButton( guiPoliciesAgreeButton[ i ]);
 
 	gfInAgreementPage = FALSE;
 
@@ -665,7 +665,7 @@ BOOLEAN ExitAgreementButton(void)
 
 
 
-BOOLEAN  DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
+BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
 	PERFORMANCE_MARKER
 	CHAR16	sText[400];
@@ -880,7 +880,7 @@ void DisableAimPolicyButton()
 		ButtonList[ guiPoliciesMenuButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 		ButtonList[ guiPoliciesMenuButton[ 2 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}
-	else if(  ( gubCurPageNum == AIM_POLICY_LAST_PAGE ) ) 
+	else if(	( gubCurPageNum == AIM_POLICY_LAST_PAGE ) ) 
 	{
 		ButtonList[ guiPoliciesMenuButton[ 3 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
 	}

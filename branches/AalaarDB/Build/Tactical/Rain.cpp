@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
@@ -57,23 +56,18 @@
 
 #include "Rain.h"
 
-// WANNE 2
 // Shop Keeper Interface
 #define SKI_X_OFFSET						(((SCREEN_WIDTH - 536) / 2))
 #define SKI_Y_OFFSET						((((SCREEN_HEIGHT - 140) - 340) / 2))
 
-// WANNE 2
 // Overhead Map
 #define OM_X_OFFSET							0
 #define OM_Y_OFFSET							0
 
-
-
-
 #define RAIN_UPDATE_RATE 60
 #define PERCENT_OF_DROPS_GOING_TO_THE_EDGE_OF_SCREEN 0.25f
 
-#define DROP_ANGLE_CHANGE_RATE  1.0f
+#define DROP_ANGLE_CHANGE_RATE	1.0f
 
 #define MIN_DROP_LENGTH 2.0f
 #define ADD_DROP_LENGTH_IF_STORM 2.0f
@@ -89,7 +83,7 @@
 UINT32 guiMaxRainDrops = 79;
 
 #define RESOLUTION_FACTOR_ON_MAXIMUM_DROPS			((FLOAT) ( SCREEN_WIDTH * SCREEN_HEIGHT ) / ((FLOAT) 640 * 480 ) ) 
-#define BASE_MAXIMUM_DROPS													 guiMaxRainDrops * RESOLUTION_FACTOR_ON_MAXIMUM_DROPS
+#define BASE_MAXIMUM_DROPS													guiMaxRainDrops * RESOLUTION_FACTOR_ON_MAXIMUM_DROPS
 
 #define DEGREE(a) ( 3.14159 / 180 * a )
 
@@ -178,7 +172,7 @@ void InitializeRainVideoObject( )
 	UINT16					usWidth;
 	UINT16					usHeight;
 	UINT8						ubBitDepth;
-      
+		
 	// Create render buffer
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -268,7 +262,7 @@ void CreateRainDrops()
 
 		if( pCurr->fAlive )continue;
 
-		uiIndRand  = (((UINT32)pCurr) / sizeof(TRainDrop) ) % 20;
+		uiIndRand	= (((UINT32)pCurr) / sizeof(TRainDrop) ) % 20;
 
 		fpDropLength = fpCurrDropLength + ( (((UINT32)pCurr) / sizeof(TRainDrop) ) % 7 ) * DROP_LENGTH_RAND / 6;
 		fpDropSpeed = fpCurrDropSpeed + ( ( ((UINT32)pCurr) / sizeof(TRainDrop) + 43 ) % 13 ) * DROP_SPEED_RAND / 12;
@@ -428,7 +422,7 @@ void RenderRainOnSurface()
 
 		if( !pCurr->fAlive )continue;
 		
-		LineDraw( TRUE, (int)pCurr->fpX, (int)pCurr->fpY, (int)pCurr->fpX + (int)pCurr->fpEndRelX, (int)(pCurr->fpY + pCurr->fpEndRelY),  sDropsColor, pDestBuf );
+		LineDraw( TRUE, (int)pCurr->fpX, (int)pCurr->fpY, (int)pCurr->fpX + (int)pCurr->fpEndRelX, (int)(pCurr->fpY + pCurr->fpEndRelY),	sDropsColor, pDestBuf );
 	}
 
 	UnLockVideoSurface( guiRainRenderSurface );
@@ -526,9 +520,9 @@ void RainClipVideoOverlay()
 		pCurr = gVideoOverlays[ uiIndex ].pBackground;
 
 		if( pCurr->sLeft < gRainRegion.right ||
-			 pCurr->sTop < gRainRegion.bottom ||
-			 pCurr->sRight >= gRainRegion.left ||
-			 pCurr->sBottom >= gRainRegion.top )
+			pCurr->sTop < gRainRegion.bottom ||
+			pCurr->sRight >= gRainRegion.left ||
+			pCurr->sBottom >= gRainRegion.top )
 				ColorFillVideoSurfaceArea( guiRainRenderSurface, pCurr->sLeft, pCurr->sTop, pCurr->sRight, pCurr->sBottom, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	}
 }
@@ -552,7 +546,6 @@ void RenderRain()
 
 	if( InOverheadMap() )
 	{
-		// WANNE 2
 		ColorFillVideoSurfaceArea( guiRainRenderSurface, OM_X_OFFSET, OM_Y_OFFSET, SCREEN_WIDTH, SCREEN_HEIGHT - 120, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 		return;
 	}

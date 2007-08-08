@@ -7,13 +7,13 @@
 // Modification history :
 //
 //		24sep96:HJH		->creation
-//    08Apr97:ARM  ->Assign return value from Push() calls back to HStack
-//                     handle, because it may possibly do a MemRealloc()
+//	08Apr97:ARM	->Assign return value from Push() calls back to HStack
+//					 handle, because it may possibly do a MemRealloc()
 //		29Dec97:Kris Morness 
 //									->Added functionality for setting file attributes which
-//									   allows for read-only attribute overriding
+//									allows for read-only attribute overriding
 //									->Also added a simple function that clears all file attributes
-//										 to normal.
+//										to normal.
 //
 //		5 Feb 98:Dave French->extensive modification to support libraries
 //
@@ -54,9 +54,9 @@
 
 #define FILENAME_LENGTH					600
 
-#define CHECKF(exp)  if (!(exp)) { return(FALSE); }
-#define CHECKV(exp)  if (!(exp)) { return; }
-#define CHECKN(exp)  if (!(exp)) { return(NULL); }
+#define CHECKF(exp)	if (!(exp)) { return(FALSE); }
+#define CHECKV(exp)	if (!(exp)) { return; }
+#define CHECKN(exp)	if (!(exp)) { return(NULL); }
 #define CHECKBI(exp) if (!(exp)) { return(-1); }
 
 #define PRINT_DEBUG_INFO	FileDebugPrint();
@@ -119,8 +119,8 @@ HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 
 // Snap: At program launch we build two directory catalogues:
 // one for the default Data directory, the other for the custom Data directory.
-TFileCat gDefaultDataCat;  // Init in InitializeStandardGamingPlatform (sgp.cpp)
-TFileCat gCustomDataCat;   // Init in InitializeStandardGamingPlatform (sgp.cpp)
+TFileCat gDefaultDataCat;	// Init in InitializeStandardGamingPlatform (sgp.cpp)
+TFileCat gCustomDataCat;	// Init in InitializeStandardGamingPlatform (sgp.cpp)
 
 //**************************************************************************
 //
@@ -156,7 +156,7 @@ INT32		GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_
 //		24sep96:HJH		->creation
 //
 //**************************************************************************
-BOOLEAN	InitializeFileManager(  STR strIndexFilename )
+BOOLEAN	InitializeFileManager(	STR strIndexFilename )
 {
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
@@ -225,14 +225,14 @@ void FileDebug( BOOLEAN f )
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
-//    Oct 2005: Snap - Rewrote, made to check data catalogues
+//	Oct 2005: Snap - Rewrote, made to check data catalogues
 //
 //**************************************************************************
 BOOLEAN	FileExists( STR strFilename )
 {
 	// First check to see if it's in a library (most files should be there)
 	if ( gFileDataBase.fInitialized &&
-		   CheckIfFileExistInLibrary(  strFilename ) ) return TRUE;
+		CheckIfFileExistInLibrary(	strFilename ) ) return TRUE;
 
 	// ... then check if it's in the custom Data directory
 	if ( gCustomDataCat.FindFile(strFilename) ) return TRUE;
@@ -267,7 +267,7 @@ BOOLEAN	FileExists( STR strFilename )
 //
 //		24sep96:HJH		->creation
 //
-//    Oct 2005: Snap - Rewrote, made to check data catalogues
+//	Oct 2005: Snap - Rewrote, made to check data catalogues
 //
 //**************************************************************************
 extern BOOLEAN	FileExistsNoDB( STR strFilename )
@@ -324,7 +324,7 @@ BOOLEAN	FileDelete( STR strFilename )
 //
 // Parameter List :
 //
-//		STR	  ->filename
+//		STR	->filename
 //		UIN32		->access - read or write, or both
 //		BOOLEAN	->delete on close
 //
@@ -338,7 +338,7 @@ BOOLEAN	FileDelete( STR strFilename )
 //
 //		9 Feb 98	DEF - modified to work with the library system
 //
-//    Oct 2005: Snap - modified to work with the custom Data directory
+//	Oct 2005: Snap - modified to work with the custom Data directory
 //
 //**************************************************************************
 HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
@@ -379,7 +379,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		filePath = gCustomDataCat.GetRootDir() + '\\';
 	}
 	filePath += strFilename;
-	// Bad cast! strFilename should have been const.  Oh well...
+	// Bad cast! strFilename should have been const.	Oh well...
 	strFilename = const_cast<STR>( filePath.c_str() );
 	// Now strFilename points either to the original file name,
 	// or to the full file path in the custom Data directory.
@@ -427,7 +427,7 @@ HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 		else
 		{
 			//If the file is in the library, get a handle to it.
-			hLibFile = OpenFileFromLibrary(  strFilename );
+			hLibFile = OpenFileFromLibrary(	strFilename );
 
 			//tried to open a file that wasnt in the database
 			if( !hLibFile )
@@ -778,11 +778,11 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 //
 //**************************************************************************
 #ifndef DIM
-# define DIM(x) (sizeof(x)/sizeof(x[0]))  /* made StringLen Save, Sergeant_Kolja, 2007-06-10 */
+# define DIM(x) (sizeof(x)/sizeof(x[0]))	/* made StringLen Save, Sergeant_Kolja, 2007-06-10 */
 #endif
 
 
-BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8  strFormatted, ... )
+BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8	strFormatted, ... )
 {
 	CHAR8		strToSend[160]; /* itemdescription of item 0 will NOT fit if only 80 Chars per Line!, Sergeant_Kolja, 2007-06-10 */
 	va_list	argptr;
@@ -798,7 +798,7 @@ BOOLEAN _cdecl FilePrintf( HWFILE hFile, STR8  strFormatted, ... )
 	{
 		va_start(argptr, strFormatted);
 		_vsnprintf( strToSend, DIM(strToSend), strFormatted, argptr ); /* made StringLen Save, Sergeant_Kolja, 2007-06-10 */
-        strToSend[ DIM(strToSend)-1 ] = 0;
+		strToSend[ DIM(strToSend)-1 ] = 0;
 		va_end(argptr);
 		
 		fRetVal = FileWrite( hFile, strToSend, strlen(strToSend), NULL );
@@ -971,7 +971,7 @@ INT32 FileGetPos( HWFILE hFile )
 
 UINT32 FileGetSize( HWFILE hFile )
 {
-	HANDLE  hRealHandle;
+	HANDLE	hRealHandle;
 	UINT32	uiFileSize = 0xFFFFFFFF;
 
 	INT16 sLibraryID;
@@ -1309,7 +1309,7 @@ INT32 GetFilesInDirectory( HCONTAINER hStack, CHAR *pcDir, HANDLE hFile, WIN32_F
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
-	 return( SetCurrentDirectory( pcDirectory ) );
+	return( SetCurrentDirectory( pcDirectory ) );
 }
 
 
@@ -1337,7 +1337,7 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 		if (uiLastError != ERROR_FILE_NOT_FOUND)
 		{
-   		FastDebugMsg(String("DirectoryExists: ERROR - GetFileAttributes failed, error #%d on file %s", uiLastError, pcDirectory));
+			FastDebugMsg(String("DirectoryExists: ERROR - GetFileAttributes failed, error #%d on file %s", uiLastError, pcDirectory));
 		}
 	}
 	else
@@ -1384,7 +1384,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 
 	//If there are files in the directory, DELETE THEM
 	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
+	if( SearchHandle !=	INVALID_HANDLE_VALUE )
 	{
 
 		fDone = FALSE;
@@ -1402,7 +1402,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 					{
 						if (!RemoveFileManDirectory(zSubdirectory, TRUE))
 						{
-				   		FastDebugMsg(String("RemoveFileManDirectory: ERROR - Recursive call on %s failed", zSubdirectory));
+						FastDebugMsg(String("RemoveFileManDirectory: ERROR - Recursive call on %s failed", zSubdirectory));
 							break;
 						}
 					}
@@ -1446,7 +1446,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Removes ALL FILES in the specified directory but leaves the directory alone.  Does not affect any subdirectories!
+// Removes ALL FILES in the specified directory but leaves the directory alone.	Does not affect any subdirectories!
 // Use RemoveFilemanDirectory() to also delete the directory itself, or to recursively delete subdirectories.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory( STRING512 pcDirectory)
@@ -1467,7 +1467,7 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 
 	//If there are files in the directory, DELETE THEM
 	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
+	if( SearchHandle !=	INVALID_HANDLE_VALUE )
 	{
 
 		fDone = FALSE;
@@ -1522,8 +1522,8 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 	{
 		if ( pcDirectory[ cnt ] == '\\' )
 		{
-			 pcDirectory[ cnt ] = '\0';
-			 break;
+			pcDirectory[ cnt ] = '\0';
+			break;
 		}
 	}
 
@@ -1662,20 +1662,20 @@ BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
 
 
 	// open source file
-  hFile = FileOpen(strSrcFile, FILE_ACCESS_READ, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Src file %s", strSrcFile));
-    return(FALSE);
-  }
+	hFile = FileOpen(strSrcFile, FILE_ACCESS_READ, FALSE);
+	if (hFile == 0)
+	{
+		FastDebugMsg(String("FileCopy: FileOpen failed on Src file %s", strSrcFile));
+	return(FALSE);
+	}
 
 	// get its size
 	uiSize = FileGetSize(hFile);
 	if (uiSize == 0)
 	{
-   	FastDebugMsg(String("FileCopy: size is 0, Src file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
+		FastDebugMsg(String("FileCopy: size is 0, Src file %s", strSrcFile));
+	FileClose(hFile);
+	return(FALSE);
 	}
 
 	// allocate a buffer big enough to hold the entire file
@@ -1683,44 +1683,44 @@ BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
 	if (pBuffer == NULL)
 	{
 		FastDebugMsg(String("FileCopy: ERROR - MemAlloc pBuffer failed, size %d", uiSize));
-    FileClose(hFile);
+	FileClose(hFile);
 		return(FALSE);
 	}
 
 	// read the file into memory
-  if (!FileRead(hFile, pBuffer, uiSize, &uiBytesRead))
-  {
-   	FastDebugMsg(String("FileCopy: FileRead failed, file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
+	if (!FileRead(hFile, pBuffer, uiSize, &uiBytesRead))
+	{
+		FastDebugMsg(String("FileCopy: FileRead failed, file %s", strSrcFile));
+	FileClose(hFile);
+	return(FALSE);
+	}
 
 	// close source file
-  FileClose(hFile);
+	FileClose(hFile);
 
 
 	// open destination file
-  hFile = FileOpen(strDstFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Dst file %s", strDstFile));
-    return(FALSE);
-  }
+	hFile = FileOpen(strDstFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
+	if (hFile == 0)
+	{
+		FastDebugMsg(String("FileCopy: FileOpen failed on Dst file %s", strDstFile));
+	return(FALSE);
+	}
 
 	// write buffer to the destination file
-  if (!FileWrite(hFile, pBuffer, uiSize, &uiBytesWritten))
-  {
-   	FastDebugMsg(String("FileCopy: FileWrite failed, file %s", strDstFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
+	if (!FileWrite(hFile, pBuffer, uiSize, &uiBytesWritten))
+	{
+		FastDebugMsg(String("FileCopy: FileWrite failed, file %s", strDstFile));
+	FileClose(hFile);
+	return(FALSE);
+	}
 
 	// close destination file
-  FileClose(hFile);
+	FileClose(hFile);
 
 
-  MemFree(pBuffer);
-  pBuffer = NULL;
+	MemFree(pBuffer);
+	pBuffer = NULL;
 	return(TRUE);
 */
 }
@@ -2059,8 +2059,8 @@ UINT32 uiPathLen;
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
-  STRING512		zExecDir;
-  STRING512		zDrive;
+	STRING512		zExecDir;
+	STRING512		zDrive;
 	STRING512		zDir;
 	STRING512		zFileName;
 	STRING512		zExt;

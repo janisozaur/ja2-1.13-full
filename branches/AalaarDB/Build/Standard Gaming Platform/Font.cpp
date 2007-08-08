@@ -30,18 +30,18 @@
 #endif
 //*******************************************************
 //
-//   Defines
+//	Defines
 //
 //*******************************************************
 
-#define PALETTE_SIZE     768
+#define PALETTE_SIZE	 768
 #define STRING_DELIMITER 0
-#define ID_BLACK         0
-#define MAX_FONTS				 25
+#define ID_BLACK		 0
+#define MAX_FONTS				25
 
 //*******************************************************
 //
-//   Typedefs
+//	Typedefs
 //
 //*******************************************************
 
@@ -196,8 +196,8 @@ UINT32 uiRed, uiGreen, uiBlue;
 }
 
 
-//Kris:  These are new counterparts to the above functions.  They won't
-//			 effect an 8BPP font, only 16.
+//Kris:	These are new counterparts to the above functions.	They won't
+//			effect an 8BPP font, only 16.
 void SetRGBFontForeground( UINT32 uiRed, UINT32 uiGreen, UINT32 uiBlue )
 {
 	PERFORMANCE_MARKER
@@ -343,8 +343,8 @@ int count;
 // LoadFontFile
 //
 //	Loads a font from an ETRLE file, and inserts it into one of the font slots.
-//  This function returns (-1) if it fails, and debug msgs for a reason.
-//  Otherwise the font number is returned.
+//	This function returns (-1) if it fails, and debug msgs for a reason.
+//	Otherwise the font number is returned.
 //*****************************************************************************
 INT32 LoadFontFile(const STR8 filename)
 {
@@ -357,7 +357,7 @@ UINT32					LoadIndex;
 
 	if((LoadIndex=FindFreeFont())==(-1))
 	{
-		  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Out of font slots (%s)", filename));
+		DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Out of font slots (%s)", filename));
 #ifdef JA2
 			FatalError( "Cannot init FONT file %s", filename );
 #endif
@@ -369,7 +369,7 @@ UINT32					LoadIndex;
 
 	if((FontObjs[LoadIndex]=CreateVideoObject(&vo_desc))==NULL)
 	{
-		  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
+		DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
 #ifdef JA2
 			FatalError( "Cannot init FONT file %s", filename );
 #endif
@@ -409,7 +409,7 @@ void UnloadFont(UINT32 FontIndex)
 UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
 	PERFORMANCE_MARKER
-  ETRLEObject *pTrav;
+	ETRLEObject *pTrav;
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
@@ -430,7 +430,7 @@ UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 //		Returns the length of a string with a variable number of arguments, in
 // pixels, using the current font. Maximum length in characters the string can
 // evaluate to is 512.
-//    'uiCharCount' specifies how many characters of the string are counted.
+//	'uiCharCount' specifies how many characters of the string are counted.
 //*****************************************************************************
 INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, STR16 pFontString, ...)
 {
@@ -440,23 +440,23 @@ CHAR16	string[512];
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
-  // make sure the character count is legal
-  if (uiCharCount > wcslen(string))
-  {
-    uiCharCount = wcslen(string);
-  }
-  else
-  {
-    if (uiCharCount < wcslen(string))
-    {
-      // less than the full string, so whack off the end of it (it's temporary anyway)
-      string[uiCharCount] = '\0';
-    }
-  }
+	// make sure the character count is legal
+	if (uiCharCount > wcslen(string))
+	{
+	uiCharCount = wcslen(string);
+	}
+	else
+	{
+	if (uiCharCount < wcslen(string))
+	{
+		// less than the full string, so whack off the end of it (it's temporary anyway)
+		string[uiCharCount] = '\0';
+	}
+	}
 
 	return(StringPixLength(string, usUseFont));
 }
@@ -466,7 +466,7 @@ CHAR16	string[512];
 //
 // Returns the length of a string with a variable number of arguments, in
 // pixels, using the current font. Maximum length in characters the string can
-// evaluate to is 512.  Because this is for fast help text, all '|' characters are ignored for the 
+// evaluate to is 512.	Because this is for fast help text, all '|' characters are ignored for the 
 // width calculation.
 // 'uiCharCount' specifies how many characters of the string are counted.
 // YOU HAVE TO PREBUILD THE FAST HELP STRING!
@@ -483,19 +483,19 @@ INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCha
 
 	wcscpy( string, pFontString );
 
-  // make sure the character count is legal
-  if (uiCharCount > wcslen(string))
-  {
-    uiCharCount = wcslen(string);
-  }
-  else
-  {
-    if (uiCharCount < wcslen(string))
-    {
-      // less than the full string, so whack off the end of it (it's temporary anyway)
-      string[uiCharCount] = '\0';
-    }
-  }
+	// make sure the character count is legal
+	if (uiCharCount > wcslen(string))
+	{
+	uiCharCount = wcslen(string);
+	}
+	else
+	{
+	if (uiCharCount < wcslen(string))
+	{
+		// less than the full string, so whack off the end of it (it's temporary anyway)
+		string[uiCharCount] = '\0';
+	}
+	}
 	//now eliminate all '|' characters from the string.
 	i = 0;
 	while( i < uiCharCount )
@@ -522,15 +522,15 @@ INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCha
 
 //*****************************************************************************************
 //
-//  StringNPixLength
+//	StringNPixLength
 //
-//  Return the length of the of the string or count characters in the 
-//  string, which ever comes first.
+//	Return the length of the of the string or count characters in the 
+//	string, which ever comes first.
 //
-//  Returns INT16
+//	Returns INT16
 //
-//  Created by:     Gilles Beauparlant
-//  Created on:     12/1/99
+//	Created by:	 Gilles Beauparlant
+//	Created on:	 12/1/99
 //
 //*****************************************************************************************
 INT16 StringNPixLength(STR16 string, UINT32 uiMaxCount, INT32 UseFont)
@@ -640,7 +640,7 @@ void RestoreFontSettings(void)
 UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
 	PERFORMANCE_MARKER
-  ETRLEObject *pTrav;
+	ETRLEObject *pTrav;
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
@@ -688,8 +688,8 @@ INT16 GetIndex(CHAR16 siChar)
 	{
 		if (siChar == *pTrav)
 		{
-      return ssCount;
-    }
+		return ssCount;
+	}
 		ssCount++;
 		pTrav++;
 	}
@@ -764,7 +764,7 @@ UINT8				*pDestBuf;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -810,7 +810,7 @@ void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 	CHAR16	string[512];
 	va_list argptr;
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -823,7 +823,7 @@ void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 
 	CHAR16	string[512];
 	va_list argptr;
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -876,7 +876,7 @@ UINT8				*pDestBuf;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -928,7 +928,7 @@ UINT8				*pDestBuf;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -996,7 +996,7 @@ CHAR16	string[512];
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -1041,7 +1041,7 @@ CHAR16	string[512];
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -1086,7 +1086,7 @@ UINT16	usOldForeColor;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -1149,7 +1149,7 @@ UINT8				*pDestBuf;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
+	va_start(argptr, pFontString);			// Set up variable argument pointer
 	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
@@ -1239,24 +1239,24 @@ UINT8 uiPixelDepth;
 	// register the appropriate debug topics
 	if(pTransTable == NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 	RegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
 
 	if ((pFManager = (FontManager *)MemAlloc(sizeof(FontManager)))==NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 
 	if((pTransTab = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable)))==NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 
 	pFManager->pTranslationTable = pTransTab;
 	pFManager->usDefaultPixelDepth = usDefaultPixelDepth;
 	pTransTab->usNumberOfSymbols = pTransTable->usNumberOfSymbols;
-  pTransTab->DynamicArrayOf16BitValues = pTransTable->DynamicArrayOf16BitValues;
+	pTransTab->DynamicArrayOf16BitValues = pTransTable->DynamicArrayOf16BitValues;
 
 	// Mark all font slots as empty
 	for(count=0; count < MAX_FONTS; count++)
@@ -1274,10 +1274,10 @@ UINT8 uiPixelDepth;
 void ShutdownFontManager(void)
 {
 	PERFORMANCE_MARKER
-  INT32 count;
+	INT32 count;
 
 	UnRegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
-  if(pFManager)
+	if(pFManager)
 		MemFree(pFManager);
 
 	for(count=0; count < MAX_FONTS; count++)
@@ -1318,14 +1318,14 @@ void DestroyEnglishTransTable( void )
 //
 // Creates the English text->font map table.
 //*****************************************************************************
-FontTranslationTable *CreateEnglishTransTable(  )
+FontTranslationTable *CreateEnglishTransTable(	)
 {
 	PERFORMANCE_MARKER
 	FontTranslationTable *pTable = NULL;
 	UINT16	*temp;
 
-  pTable = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable));
-  memset(pTable, 0, sizeof(FontTranslationTable) );
+	pTable = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable));
+	memset(pTable, 0, sizeof(FontTranslationTable) );
 
 #ifdef JA2
 		// ha ha, we have more than Wizardry now (again)
@@ -1538,7 +1538,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 	temp++;
 	*temp = 252; // "u" umlaut
 	temp++;
-	*temp = 223; // double-s that looks like a beta/B  // 100
+	*temp = 223; // double-s that looks like a beta/B	// 100
 	temp++;
 #else
 	*temp = 0; // "A" umlaut
@@ -1553,7 +1553,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 	temp++;
 	*temp = 0; // "u" umlaut
 	temp++;
-	*temp = 0; // double-s that looks like a beta/B  // 100
+	*temp = 0; // double-s that looks like a beta/B	// 100
 	temp++;
 #endif
 
@@ -1567,7 +1567,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 	temp++;
 	*temp = 196; // Å
 	temp++;
-    *temp = 197; // ¨
+	*temp = 197; // ¨
 	temp++;
 	*temp = 198; // Æ
 	temp++;
@@ -1753,7 +1753,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 	*temp = 1071;
 	temp++;
 	*temp = 1072; // Ä 
-    temp++;
+	temp++;
 	*temp = 1073; // À 
 	temp++;
 	*temp = 1074; // Á 
@@ -1948,7 +1948,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 // 154
 #endif
 
-	   return pTable;
+	return pTable;
 }
 
 //*****************************************************************************
@@ -1957,7 +1957,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 //
 // Parameter List : filename - File created by the utility tool to open
 //
-// Return Value  pointer to the base structure
+// Return Value	pointer to the base structure
 //
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
@@ -1967,130 +1967,130 @@ FontTranslationTable *CreateEnglishTransTable(  )
 /*FontBase *LoadFontFile(UINT8 *pFilename)
 {
 	PERFORMANCE_MARKER
-  HWFILE           hFileHandle;
-  UINT32           uiFileSize;
-  UINT32           uiHeightEach;
-  UINT32           uiTotalSymbol;
-  UINT32           uiNewoffst, uiOldoffst;
-  FontBase        *pFontBase;
-  SGPPaletteEntry *pNewPalette;
-  UINT8           *pPalette;
+	HWFILE			hFileHandle;
+	UINT32			uiFileSize;
+	UINT32			uiHeightEach;
+	UINT32			uiTotalSymbol;
+	UINT32			uiNewoffst, uiOldoffst;
+	FontBase		*pFontBase;
+	SGPPaletteEntry *pNewPalette;
+	UINT8			*pPalette;
 
-  if (pFManager == NULL)
-  {
-    DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Did not Initialize Font Manager");
-    return NULL;
-  }
+	if (pFManager == NULL)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Did not Initialize Font Manager");
+	return NULL;
+	}
 
-  // Open and read in the file
-  if ((hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ, FALSE)) == 0)
-  { // damn we failed to open the file
-    DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot open font file");
-    return NULL;
-  }
+	// Open and read in the file
+	if ((hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ, FALSE)) == 0)
+	{ // damn we failed to open the file
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot open font file");
+	return NULL;
+	}
 
-  uiFileSize = FileGetSize(hFileHandle);
-  if (uiFileSize == 0)
-  { // we failed to size up the file
-    DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Font file is empty");
-    FileClose(hFileHandle);
-    return NULL;
-  }
+	uiFileSize = FileGetSize(hFileHandle);
+	if (uiFileSize == 0)
+	{ // we failed to size up the file
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Font file is empty");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // Allocate memory for the font header file
-  if ((pFontBase = (FontBase *)MemAlloc(sizeof(FontBase))) == NULL)
-  {
-    DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not malloc memory");
-	  FileClose(hFileHandle);
-  }
+	// Allocate memory for the font header file
+	if ((pFontBase = (FontBase *)MemAlloc(sizeof(FontBase))) == NULL)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not malloc memory");
+	FileClose(hFileHandle);
+	}
 
-  // read in these values from the file
-  if (FileRead(hFileHandle, &uiHeightEach, sizeof(UINT32), NULL) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Height from File");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	// read in these values from the file
+	if (FileRead(hFileHandle, &uiHeightEach, sizeof(UINT32), NULL) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Height from File");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  if (FileRead(hFileHandle, &uiTotalSymbol, sizeof(UINT32), NULL) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Total Symbol from File");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	if (FileRead(hFileHandle, &uiTotalSymbol, sizeof(UINT32), NULL) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Total Symbol from File");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // Assign the proper values to the Base structure
-  pFontBase->uiHeightEach = uiHeightEach;
-  pFontBase->uiTotalElements = uiTotalSymbol;
-  pFontBase->pFontObject = (FontObject *)MemAlloc(uiTotalSymbol * sizeof(FontHeader));
-  pPalette = (UINT8 *)MemAlloc(PALETTE_SIZE);
-  uiOldoffst = (sizeof(FontHeader) + sizeof(FontObject)*pFontBase->uiTotalElements);
-  uiNewoffst = uiFileSize - uiOldoffst;
-  pFontBase->pPixData8 = (UINT8 *)MemAlloc(uiNewoffst);
+	// Assign the proper values to the Base structure
+	pFontBase->uiHeightEach = uiHeightEach;
+	pFontBase->uiTotalElements = uiTotalSymbol;
+	pFontBase->pFontObject = (FontObject *)MemAlloc(uiTotalSymbol * sizeof(FontHeader));
+	pPalette = (UINT8 *)MemAlloc(PALETTE_SIZE);
+	uiOldoffst = (sizeof(FontHeader) + sizeof(FontObject)*pFontBase->uiTotalElements);
+	uiNewoffst = uiFileSize - uiOldoffst;
+	pFontBase->pPixData8 = (UINT8 *)MemAlloc(uiNewoffst);
 
-  //seek past the FontHeader
-  if (FileSeek(hFileHandle, sizeof(FontHeader), FILE_SEEK_FROM_START) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek FileHeader");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	//seek past the FontHeader
+	if (FileSeek(hFileHandle, sizeof(FontHeader), FILE_SEEK_FROM_START) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek FileHeader");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  //read in the FontObject
-  if (FileRead(hFileHandle, pFontBase->pFontObject, (uiTotalSymbol)*sizeof(FontHeader), NULL) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Font Objects");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	//read in the FontObject
+	if (FileRead(hFileHandle, pFontBase->pFontObject, (uiTotalSymbol)*sizeof(FontHeader), NULL) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Font Objects");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  if (FileSeek(hFileHandle, uiOldoffst, FILE_SEEK_FROM_START) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Old offset");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	if (FileSeek(hFileHandle, uiOldoffst, FILE_SEEK_FROM_START) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Old offset");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // read in the Pixel data
-  if (FileRead(hFileHandle, pFontBase->pPixData8, uiNewoffst, NULL) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Pixel data");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	// read in the Pixel data
+	if (FileRead(hFileHandle, pFontBase->pPixData8, uiNewoffst, NULL) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Pixel data");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // seek proper position to read in Palette
-  if (FileSeek(hFileHandle, sizeof(UINT32)*3, FILE_SEEK_FROM_START) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Palette Start");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	// seek proper position to read in Palette
+	if (FileSeek(hFileHandle, sizeof(UINT32)*3, FILE_SEEK_FROM_START) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not seek Palette Start");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // read in Palette
-  if (FileRead(hFileHandle, pPalette, PALETTE_SIZE, NULL) == FALSE)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Palette");
-	  FileClose(hFileHandle);
-	  return NULL;
-  }
+	// read in Palette
+	if (FileRead(hFileHandle, pPalette, PALETTE_SIZE, NULL) == FALSE)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not read Palette");
+	FileClose(hFileHandle);
+	return NULL;
+	}
 
-  // set the default pixel depth
-  pFontBase->siPixelDepth = pFManager->usDefaultPixelDepth;
-  FileClose(hFileHandle);
+	// set the default pixel depth
+	pFontBase->siPixelDepth = pFManager->usDefaultPixelDepth;
+	FileClose(hFileHandle);
 
-  // convert from RGB to SGPPaletteEntry
-  pNewPalette = ConvertToPaletteEntry(0, 255, pPalette);
-  pFontBase->pPalette = pNewPalette;
+	// convert from RGB to SGPPaletteEntry
+	pNewPalette = ConvertToPaletteEntry(0, 255, pPalette);
+	pFontBase->pPalette = pNewPalette;
 
-  // create the 16BPer Pixel palette
-  if ((pFontBase->pPalet16 = Create16BPPPalette(pNewPalette)) == NULL)
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not create 16 bit palette");
-	  return NULL;
-  }
-  // return the FontBase structure
-  return pFontBase;
+	// create the 16BPer Pixel palette
+	if ((pFontBase->pPalet16 = Create16BPPPalette(pNewPalette)) == NULL)
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Could not create 16 bit palette");
+	return NULL;
+	}
+	// return the FontBase structure
+	return pFontBase;
 }	*/
 
 
@@ -2123,7 +2123,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 //
 // Parameter List : pointer to the base structure
 //
-// Return Value  Maximum font width
+// Return Value	Maximum font width
 //
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
@@ -2137,15 +2137,15 @@ FontTranslationTable *CreateEnglishTransTable(  )
 	UINT32 siBiggest = 0;
 	UINT16 siCount;
 
-  Assert(pFontBase != NULL);
+	Assert(pFontBase != NULL);
 	pWidth = pFontBase->pFontObject;
 	// traverse the FontObject structure to find the biggest width
 	for(siCount = 0; siCount < pFontBase->uiTotalElements; siCount++)
 	{
 		if( pWidth->uiFontWidth > siBiggest)
 		{
-      siBiggest = pWidth->uiFontWidth;
-    }
+		siBiggest = pWidth->uiFontWidth;
+	}
 		pWidth++;
 	}
 	// return the max width
@@ -2158,7 +2158,7 @@ FontTranslationTable *CreateEnglishTransTable(  )
 //
 // Parameter List : Converts from RGB to SGPPaletteEntry
 //
-// Return Value  pointer to the SGPPaletteEntry
+// Return Value	pointer to the SGPPaletteEntry
 //
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
@@ -2170,21 +2170,21 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 {
 	PERFORMANCE_MARKER
 	UINT16 Index;
-  SGPPaletteEntry *pPalEntry;
+	SGPPaletteEntry *pPalEntry;
 	SGPPaletteEntry *pInitEntry;
 
 	pPalEntry = (SGPPaletteEntry *)MemAlloc(sizeof(SGPPaletteEntry) * 256);
 	pInitEntry = pPalEntry;
-  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Converting RGB palette to SGPPaletteEntry");
-  for(Index=0; Index <= (sbEnd-sbStart);Index++)
-  {
-    pPalEntry->peRed = *(pOldPalette + (Index*3));
-	  pPalEntry->peGreen = *(pOldPalette + (Index*3) + 1);
- 	  pPalEntry->peBlue = *(pOldPalette + (Index*3) + 2);
-    pPalEntry->peFlags = 0;
-	  pPalEntry++;
-  }
-  return pInitEntry;
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Converting RGB palette to SGPPaletteEntry");
+	for(Index=0; Index <= (sbEnd-sbStart);Index++)
+	{
+	pPalEntry->peRed = *(pOldPalette + (Index*3));
+	pPalEntry->peGreen = *(pOldPalette + (Index*3) + 1);
+ 	pPalEntry->peBlue = *(pOldPalette + (Index*3) + 2);
+	pPalEntry->peFlags = 0;
+	pPalEntry++;
+	}
+	return pInitEntry;
 } */
 
 //*****************************************************************************
@@ -2192,11 +2192,11 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // SetFontPalette - Sets the Palette
 //
 // Parameter List : pointer to the base structure
-//                  new pixel depth
-//                  new Palette size
-//                  pointer to palette data
+//					new pixel depth
+//					new Palette size
+//					pointer to palette data
 //
-// Return Value  BOOLEAN
+// Return Value	BOOLEAN
 //
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
@@ -2221,9 +2221,9 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // SetFont16BitData - Sets the font structure to hold 16 bit data
 //
 // Parameter List : pointer to the base structure
-//                  pointer to new 16 bit data
+//					pointer to new 16 bit data
 //
-// Return Value  BOOLEAN
+// Return Value	BOOLEAN
 //
 // Modification History :
 // Dec 15th 1996->modified for use by Wizardry
@@ -2247,15 +2247,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Blt8Imageto16Dest
 //
 // Parameter List : Start offset
-//                  End Offset
-//                  Dest x, y
-//                  Font Width
-//                  Pointer to Base structure
-//                  Pointer to destination buffer
-//                  Destination Pitch
-//                  Height of Each element
+//					End Offset
+//					Dest x, y
+//					Font Width
+//					Pointer to Base structure
+//					Pointer to destination buffer
+//					Destination Pitch
+//					Height of Each element
 //
-// Return Value  : BOOLEAN
+// Return Value	: BOOLEAN
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2265,14 +2265,14 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 /*BOOLEAN Blt8Imageto16Dest(UINT32 uiOffStart, UINT32 uiOffEnd, UINT16 siX, UINT16 siY, UINT32 uiWidth, FontBase *pFontBase, UINT8 *pFrameBuffer, UINT16 siDestPitch, UINT16 siHeightEach)
 {
 	PERFORMANCE_MARKER
-	UINT8  *pTrav;
+	UINT8	*pTrav;
 	UINT16 *pFrameTrav;
 	UINT16 *p16BPPPalette;
-	UINT16  usEffectiveWidth;
-	UINT32  uiFrameCount;
-	UINT8   amount;
-	UINT32  row, count;
-    UINT16  modamount, divamount;
+	UINT16	usEffectiveWidth;
+	UINT32	uiFrameCount;
+	UINT8	amount;
+	UINT32	row, count;
+	UINT16	modamount, divamount;
 	UINT32 trace,modtrace;
 	UINT8 sub=0;
 
@@ -2280,7 +2280,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	pTrav = pFontBase->pPixData8;
 	pFrameTrav = (UINT16 *)pFrameBuffer;
 	p16BPPPalette = pFontBase->pPalet16;
-    trace = 0;
+	trace = 0;
 	modtrace = 0;
 	// effective width is pitch/2 as 16 bits per pixel
 	usEffectiveWidth = (UINT16)(siDestPitch / 2);
@@ -2295,83 +2295,83 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	amount = 0;
 	while (count < (uiOffEnd-uiOffStart))
 	{
-	  amount = 0;
-    if (*pTrav == ID_BLACK)
-	  {
-		  pTrav++;
-		  count++;
-		  amount = *pTrav;
-		  modamount = (UINT8)(amount) % (UINT8) uiWidth;
-		  divamount = (UINT8)(amount) / (UINT8) uiWidth;
-      if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
-		  {
-			  pFrameTrav += amount;
-			  trace += amount;
-	          modtrace = trace % 640;
-			  row += amount;
-			  row++;
-		  }
-		  else
-		  {
-        if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
-		    {
-                pFrameTrav -= row;
+	amount = 0;
+	if (*pTrav == ID_BLACK)
+	{
+		pTrav++;
+		count++;
+		amount = *pTrav;
+		modamount = (UINT8)(amount) % (UINT8) uiWidth;
+		divamount = (UINT8)(amount) / (UINT8) uiWidth;
+		if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
+		{
+			pFrameTrav += amount;
+			trace += amount;
+			modtrace = trace % 640;
+			row += amount;
+			row++;
+		}
+		else
+		{
+		if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
+		 {
+				pFrameTrav -= row;
 				trace -= row;
-	            modtrace = trace % 640;
-			    row = amount-((UINT16)uiWidth-row);
-			    pFrameTrav += usEffectiveWidth+row;
+			 modtrace = trace % 640;
+			 row = amount-((UINT16)uiWidth-row);
+			 pFrameTrav += usEffectiveWidth+row;
 				trace += usEffectiveWidth+row;
 				modtrace = trace % 640;
-			    row++;
-		    }
-		    else
-		    {
-			    pFrameTrav += (divamount*usEffectiveWidth);
+			 row++;
+		 }
+		 else
+		 {
+			 pFrameTrav += (divamount*usEffectiveWidth);
 				trace += (divamount*usEffectiveWidth);
 				modtrace = trace % 640;
 				if(row+modamount > uiWidth)
 				{
 					sub = (UINT8)((row+modamount) % uiWidth);
 					pFrameTrav -= row;
-			  	    trace -= row;
-				    modtrace = trace % 640;
+				 trace -= row;
+				 modtrace = trace % 640;
 					pFrameTrav += usEffectiveWidth+sub;
-				    trace += usEffectiveWidth + sub;
-				    modtrace = trace % 640;
-			        row = sub;
-			        row++;
+				 trace += usEffectiveWidth + sub;
+				 modtrace = trace % 640;
+				 row = sub;
+				 row++;
 				}else
 				{
 					pFrameTrav += modamount;
-				    trace += modamount;
-				    modtrace = trace % 640;
-			        row = modamount;
-			        row++;
+				 trace += modamount;
+				 modtrace = trace % 640;
+				 row = modamount;
+				 row++;
 				}
-		    }
-      }
-	  } else
-	  {
-		  if(row >= uiWidth)
-		  {
-            pFrameTrav += (usEffectiveWidth-uiWidth);
+		 }
+		}
+	} else
+	{
+		if(row >= uiWidth)
+		{
+			pFrameTrav += (usEffectiveWidth-uiWidth);
 			trace += (usEffectiveWidth-uiWidth);
 			modtrace = trace % 640;
-            *pFrameTrav = p16BPPPalette[*pTrav];
-		    row = 1;
-		  }
-		  else
-		  {
-            *pFrameTrav = p16BPPPalette[*pTrav];
-		    row++;
-		  }
-    }
+			*pFrameTrav = p16BPPPalette[*pTrav];
+		 row = 1;
+		}
+		else
+		{
+			*pFrameTrav = p16BPPPalette[*pTrav];
+		 row++;
+		}
+	}
 
-    pFrameTrav++;
+	pFrameTrav++;
 	trace++;
 	modtrace = trace % 640;
-    pTrav++;
-    count++;
+	pTrav++;
+	count++;
 	}
 
 	return TRUE;
@@ -2383,15 +2383,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Blt8Imageto8Dest
 //
 // Parameter List : Start offset
-//                  End Offset
-//                  Dest x, y
-//                  Font Width
-//                  Pointer to Base structure
-//                  Pointer to destination buffer
-//                  Destination Pitch
-//                  Height of Each element
+//					End Offset
+//					Dest x, y
+//					Font Width
+//					Pointer to Base structure
+//					Pointer to destination buffer
+//					Destination Pitch
+//					Height of Each element
 //
-// Return Value  : BOOLEAN
+// Return Value	: BOOLEAN
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2401,15 +2401,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 /*BOOLEAN Blt8Imageto8Dest(UINT32 uiOffStart, UINT32 uiOffEnd, UINT16 siX, UINT16 siY, UINT32 uiWidth, FontBase *pFontBase, UINT8 *pFrameBuffer, UINT16 siDestPitch, UINT16 siHeightEach)
 {
 	PERFORMANCE_MARKER
-	UINT8  *pTrav;
-	UINT32  uiFrameCount;
-	UINT8  *pFrameTrav;
-	UINT8   amount;
-	UINT32  row,count;
-  UINT16  modamount,divamount;
+	UINT8	*pTrav;
+	UINT32	uiFrameCount;
+	UINT8	*pFrameTrav;
+	UINT8	amount;
+	UINT32	row,count;
+	UINT16	modamount,divamount;
 
 	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Blitting 8 to 8");
-  Assert(pFontBase != NULL);
+	Assert(pFontBase != NULL);
 	Assert(pFrameBuffer != NULL);
 
 	// get the pointers
@@ -2419,60 +2419,60 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	uiFrameCount = siY*siDestPitch + siX;
 	pFrameTrav +=uiFrameCount;
 	pTrav += uiOffStart;
-  // perform blitting
+	// perform blitting
 
 	count=0;
 	row = 0;
 	amount = 0;
 	while (count < (uiOffEnd-uiOffStart))
 	{
-	  amount = 0;
-    if (*pTrav == ID_BLACK)
-	  {
-		  pTrav++;
-		  count++;
-		  amount = *pTrav;
-		  modamount = amount % (UINT8) uiWidth;
-		  divamount = amount / (UINT8) uiWidth;
-      if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
-		  {
-			  pFrameTrav += amount;
-			  row += amount;
-			  row++;
-		  }
-		  else
-		  {
-        if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
-		    {
-          pFrameTrav -= row;
-			    row = amount-((UINT16)uiWidth-row);
-			    pFrameTrav += siDestPitch+row;
-			    row++;
-		    }
-		    else
-		    {
-			    pFrameTrav += (divamount*siDestPitch)+modamount;
-			    row = modamount;
-			    row++;
-		    }
-      }
-	  } else
-	  {
-		  if (row >= uiWidth)
-		  {
-        pFrameTrav += (siDestPitch-uiWidth);
-       *pFrameTrav = *pTrav;
-		    row = 1;
-		  }
-		  else
-		  {
-       *pFrameTrav = *pTrav;
-		    row++;
-		  }
-    }
+	amount = 0;
+	if (*pTrav == ID_BLACK)
+	{
+		pTrav++;
+		count++;
+		amount = *pTrav;
+		modamount = amount % (UINT8) uiWidth;
+		divamount = amount / (UINT8) uiWidth;
+		if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
+		{
+			pFrameTrav += amount;
+			row += amount;
+			row++;
+		}
+		else
+		{
+		if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
+		 {
+			pFrameTrav -= row;
+			 row = amount-((UINT16)uiWidth-row);
+			 pFrameTrav += siDestPitch+row;
+			 row++;
+		 }
+		 else
+		 {
+			 pFrameTrav += (divamount*siDestPitch)+modamount;
+			 row = modamount;
+			 row++;
+		 }
+		}
+	} else
+	{
+		if (row >= uiWidth)
+		{
+		pFrameTrav += (siDestPitch-uiWidth);
+		*pFrameTrav = *pTrav;
+		 row = 1;
+		}
+		else
+		{
+		*pFrameTrav = *pTrav;
+		 row++;
+		}
+	}
 
-    pFrameTrav++;
-    pTrav++;
+	pFrameTrav++;
+	pTrav++;
 		count++;
 	}
 
@@ -2484,15 +2484,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Blt16Imageto16Dest
 //
 // Parameter List : Start offset
-//                  End Offset
-//                  Dest x, y
-//                  Font Width
-//                  Pointer to Base structure
-//                  Pointer to destination buffer
-//                  Destination Pitch
-//                  Height of Each element
+//					End Offset
+//					Dest x, y
+//					Font Width
+//					Pointer to Base structure
+//					Pointer to destination buffer
+//					Destination Pitch
+//					Height of Each element
 //
-// Return Value  : BOOLEAN
+// Return Value	: BOOLEAN
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2502,15 +2502,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 {
 	PERFORMANCE_MARKER
 	UINT16 *pTrav;
-	UINT32  uiFrameCount;
+	UINT32	uiFrameCount;
 	UINT16 *pFrameTrav;
-	UINT16  amount;
-	UINT32  row,count;
-  UINT16  modamount,divamount;
-	UINT16  usEffectiveWidth;
+	UINT16	amount;
+	UINT32	row,count;
+	UINT16	modamount,divamount;
+	UINT16	usEffectiveWidth;
 
 	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Blitting 16 to 16");
-  Assert(pFontBase != NULL);
+	Assert(pFontBase != NULL);
 	Assert(pFrameBuffer != NULL);
 
 	//get the pointers
@@ -2528,52 +2528,52 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	amount = 0;
 	while (count < (uiOffEnd-uiOffStart))
 	{
-    amount = 0;
-    if (*pTrav == ID_BLACK)
-	  {
-		  pTrav++;
-		  count++;
-		  amount = *pTrav;
-		  modamount = amount % (UINT8) uiWidth;
-		  divamount = amount / (UINT8) uiWidth;
-      if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
-		  {
-			  pFrameTrav += amount;
-			  row += amount;
-			  row++;
-		  }
-		  else
-		  {
-        if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
-		    {
-          pFrameTrav -= row;
-			    row = amount-((UINT16)uiWidth-row);
-			    pFrameTrav += usEffectiveWidth+row;
-			    row++;
-		    }
-		    else
-		    {
-			    pFrameTrav += (divamount*usEffectiveWidth)+modamount;
-			    row = modamount;
-			    row++;
-		    }
-      }
-	  } else
-	  {
-		  if(row >= uiWidth)
-		  {
-        pFrameTrav += (usEffectiveWidth-uiWidth);
-        *pFrameTrav = *pTrav;
-		    row = 1;
-		  }
-		  else
-		  {
-        *pFrameTrav = *pTrav;
-		    row++;
-		  }
-    }
+	amount = 0;
+	if (*pTrav == ID_BLACK)
+	{
+		pTrav++;
+		count++;
+		amount = *pTrav;
+		modamount = amount % (UINT8) uiWidth;
+		divamount = amount / (UINT8) uiWidth;
+		if ((divamount == 0) && ((row+amount) < (UINT16)uiWidth))
+		{
+			pFrameTrav += amount;
+			row += amount;
+			row++;
+		}
+		else
+		{
+		if (((row+amount) >= (UINT16)uiWidth) && (divamount ==0))
+		 {
+			pFrameTrav -= row;
+			 row = amount-((UINT16)uiWidth-row);
+			 pFrameTrav += usEffectiveWidth+row;
+			 row++;
+		 }
+		 else
+		 {
+			 pFrameTrav += (divamount*usEffectiveWidth)+modamount;
+			 row = modamount;
+			 row++;
+		 }
+		}
+	} else
+	{
+		if(row >= uiWidth)
+		{
+		pFrameTrav += (usEffectiveWidth-uiWidth);
+		*pFrameTrav = *pTrav;
+		 row = 1;
+		}
+		else
+		{
+		*pFrameTrav = *pTrav;
+		 row++;
+		}
+	}
 
-    pFrameTrav++;
+	pFrameTrav++;
 		pTrav++;
 		count++;
 	}
@@ -2587,7 +2587,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 //
 // Parameter List : Given the index, gets the corresponding offset
 //
-// Return Value  : offset
+// Return Value	: offset
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2597,24 +2597,24 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 /*UINT32 GetOffset(FontBase *pFontBase, INT16 ssIndex)
 {
 	PERFORMANCE_MARKER
-  FontObject *pTrav;
-  UINT16 siCount=0;
+	FontObject *pTrav;
+	UINT16 siCount=0;
 
-  Assert(pFontBase != NULL);
-  // gets the offset based on the index
-  if (((UINT32)ssIndex > pFontBase->uiTotalElements) || (ssIndex < 0))
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Incorrect index value passed");
-    return 0;
-  }
-  pTrav = pFontBase->pFontObject;
-  while (siCount != ssIndex)
-  {
-	  siCount++;
-	  pTrav++;
-  }
+	Assert(pFontBase != NULL);
+	// gets the offset based on the index
+	if (((UINT32)ssIndex > pFontBase->uiTotalElements) || (ssIndex < 0))
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Incorrect index value passed");
+	return 0;
+	}
+	pTrav = pFontBase->pFontObject;
+	while (siCount != ssIndex)
+	{
+	siCount++;
+	pTrav++;
+	}
 
-  return pTrav->uiFontOffset;
+	return pTrav->uiFontOffset;
 } */
 
 
@@ -2625,7 +2625,7 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // Parameter List : Given the index, gets the corresponding offset
 // length which is the number of compressed pixels
 //
-// Return Value  : offset
+// Return Value	: offset
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2634,24 +2634,24 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 /*UINT32 GetOffLen(FontBase *pFontBase, INT16 ssIndex)
 {
 	PERFORMANCE_MARKER
-  FontObject *pTrav;
-  UINT16 siCount=0;
+	FontObject *pTrav;
+	UINT16 siCount=0;
 
-  Assert(pFontBase != NULL);
-  // gets the offset based on the index
-  if (((UINT32)ssIndex > pFontBase->uiTotalElements) || (ssIndex < 0))
-  {
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Incorrect index value passed");
-    return 0;
-  }
-  pTrav = pFontBase->pFontObject;
-  while(siCount != ssIndex)
-  {
-	  siCount++;
-	  pTrav++;
-  }
+	Assert(pFontBase != NULL);
+	// gets the offset based on the index
+	if (((UINT32)ssIndex > pFontBase->uiTotalElements) || (ssIndex < 0))
+	{
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Incorrect index value passed");
+	return 0;
+	}
+	pTrav = pFontBase->pFontObject;
+	while(siCount != ssIndex)
+	{
+	siCount++;
+	pTrav++;
+	}
 
-  return pTrav->uiOffLen;
+	return pTrav->uiOffLen;
 } */
 
 
@@ -2660,12 +2660,12 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 // PrintFontString
 //
 // Parameter List : pointer to \0 (NULL) terminated font string
-//                  x,y,TotalWidth, TotalHeight is the bounding rectangle where
-//                  the font is to be printed
-//                  Multiline if true will print on multiple lines otherwise on 1 line
-//                  Pointer to base structure
+//					x,y,TotalWidth, TotalHeight is the bounding rectangle where
+//					the font is to be printed
+//					Multiline if true will print on multiple lines otherwise on 1 line
+//					Pointer to base structure
 //
-// Return Value  : BOOLEAN
+// Return Value	: BOOLEAN
 //
 // Modification History :
 // Nov 26th 1996->modified for use by Wizardry
@@ -2675,15 +2675,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 /*BOOLEAN PrintFontString(UINT16 *pFontString, UINT8 *pDestBuffer, UINT16 siDestWidth, UINT16 siDestPixelDepth, UINT16 siDestPitch, UINT16 siDestHeight, UINT16 siX, UINT16 siY, UINT16 siTotalWidth, UINT16 siTotalHeight, BOOLEAN fMultiLine, FontBase *pFontBase)
 {
 	PERFORMANCE_MARKER
-  UINT16  siScreenHt;
-	UINT16  siScreenWt;
-	UINT16  siChar, siHeightEach;
-	INT16   ssIndex;
-	UINT32  uiWidth, uiOffsetSt, uiOffsetEnd, uiOldoffst;
+	UINT16	siScreenHt;
+	UINT16	siScreenWt;
+	UINT16	siChar, siHeightEach;
+	INT16	ssIndex;
+	UINT32	uiWidth, uiOffsetSt, uiOffsetEnd, uiOldoffst;
 	UINT16 *pTempFStr;
-	UINT16  siNewX, siNewY;
-	UINT16  siInitX, siInitY;
-	UINT32  uiLen;
+	UINT16	siNewX, siNewY;
+	UINT16	siInitX, siInitY;
+	UINT32	uiLen;
 
 	// check for NULL pointers passed in
 	Assert(pFontBase != NULL);
@@ -2696,15 +2696,15 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	// check for invalid coordinates
 	if((siX<0) || (siX>siScreenWt) || (siY<0) || (siY>siScreenHt) || (siTotalWidth<0) || (siTotalWidth>siScreenWt) ||	(siTotalHeight<0) || (siTotalHeight>siScreenHt))
 	{
-	  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid coordinates passed in");
-    return FALSE;
-  }
+	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid coordinates passed in");
+	return FALSE;
+	}
 	pTempFStr = pFontString;
 
 	siNewX = siX;
 	siNewY = siY;
 	siInitX = siX;
-  siInitY = siY;
+	siInitY = siY;
 
 	// Get the height of each font and the offset
 	siHeightEach = GetFontHeight(pFontBase);
@@ -2713,98 +2713,98 @@ SGPPaletteEntry *ConvertToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPa
 	// calls the blt routine until the string != to \0
 	while(*pTempFStr != STRING_DELIMITER)
 	{
-	  siChar = *pTempFStr;
-	  // get the index value for the font
-	  if((ssIndex = GetIndex(siChar)) == -1)
+	siChar = *pTempFStr;
+	// get the index value for the font
+	if((ssIndex = GetIndex(siChar)) == -1)
 		{
-      return FALSE;
-    }
+		return FALSE;
+	}
 
-	  // get the width of the font
-	  uiWidth = GetWidth(pFontBase, ssIndex);
+	// get the width of the font
+	uiWidth = GetWidth(pFontBase, ssIndex);
 
-	  // get the font offset
-	  uiOffsetSt = GetOffset(pFontBase, ssIndex);
+	// get the font offset
+	uiOffsetSt = GetOffset(pFontBase, ssIndex);
 
-	  uiLen = GetOffLen(pFontBase,ssIndex);
+	uiLen = GetOffLen(pFontBase,ssIndex);
 
-	  // uiOffsetSt -= uiOldoffst;
-	  uiOffsetEnd = uiOffsetSt + uiLen;
+	// uiOffsetSt -= uiOldoffst;
+	uiOffsetEnd = uiOffsetSt + uiLen;
 
-	  // if Multiline = FALSE and reached the end of line - cannot continue
-	  if ((((siNewX+uiWidth) > siScreenWt) || ((siNewX+uiWidth) >= siTotalWidth)) && (fMultiLine == FALSE))
-	  {
-	    DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot continue writing");
-      return FALSE;
-    }
+	// if Multiline = FALSE and reached the end of line - cannot continue
+	if ((((siNewX+uiWidth) > siScreenWt) || ((siNewX+uiWidth) >= siTotalWidth)) && (fMultiLine == FALSE))
+	{
+	 DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot continue writing");
+		return FALSE;
+	}
 
-	  // check if boundary is reached
-	  if ((((siNewX+uiWidth) >= siScreenWt) || ((siNewX+uiWidth) >= siTotalWidth)) && (fMultiLine == TRUE))
-	  {
-		  if (((siInitY+siHeightEach) > siScreenHt) || ((siInitY+siHeightEach) >= siTotalHeight))
-		  {
-	      DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot continue writing");
-        return FALSE;
-      }
-		  //call the appropriate blit routines
-      siNewX = siInitX;
-		  siNewY += siHeightEach;
-		  siInitY = siNewY;
-      if ((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 16))
-	   	{
-        Blt16Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-      }
-		  else
-	    {
-        if ((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 8))
-        {
-		      Blt8Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-        }
-		    else
-	      {
-          if ((siDestPixelDepth == 8) && (pFontBase->siPixelDepth == 8))
-		      { // if(SetPalette(pFontBase->pPalette) == FALSE)
-	          //		    return FALSE;
-		        Blt8Imageto8Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-		      }
-		      else
-		      {
-	          DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid pixel depth / destination surface depth");
-            return FALSE;
-		      }
-        }
-              siNewX += (UINT16)uiWidth;
-      }
-	  } else
-	  { // if it isnt end of boundary copy at current location
-	    if((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 16))
-	    {
-        Blt16Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-      }
-		  else
-	    {
-        if((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 8))
-		    {
-          Blt8Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-        }
-	      else
-		    {
-          if ((siDestPixelDepth == 8) && (pFontBase->siPixelDepth == 8))
-		      {
-            Blt8Imageto8Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
-          }
-          else
-		      {
-	          DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid pixel depth / destination surface depth");
-            return FALSE;
-		      }
-	      }
-		  siNewX += (UINT16)uiWidth;
-	    }
-    }
-    // increment string pointer
-	  pTempFStr++;
-  }
+	// check if boundary is reached
+	if ((((siNewX+uiWidth) >= siScreenWt) || ((siNewX+uiWidth) >= siTotalWidth)) && (fMultiLine == TRUE))
+	{
+		if (((siInitY+siHeightEach) > siScreenHt) || ((siInitY+siHeightEach) >= siTotalHeight))
+		{
+		DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Cannot continue writing");
+		return FALSE;
+		}
+		//call the appropriate blit routines
+		siNewX = siInitX;
+		siNewY += siHeightEach;
+		siInitY = siNewY;
+		if ((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 16))
+		{
+		Blt16Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+		}
+		else
+	 {
+		if ((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 8))
+		{
+			Blt8Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+		}
+		 else
+		{
+			if ((siDestPixelDepth == 8) && (pFontBase->siPixelDepth == 8))
+			{ // if(SetPalette(pFontBase->pPalette) == FALSE)
+			//		 return FALSE;
+			 Blt8Imageto8Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+			}
+			else
+			{
+			DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid pixel depth / destination surface depth");
+			return FALSE;
+			}
+		}
+				siNewX += (UINT16)uiWidth;
+		}
+	} else
+	{ // if it isnt end of boundary copy at current location
+	 if((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 16))
+	 {
+		Blt16Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+		}
+		else
+	 {
+		if((siDestPixelDepth == 16) && (pFontBase->siPixelDepth == 8))
+		 {
+			Blt8Imageto16Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+		}
+		else
+		 {
+			if ((siDestPixelDepth == 8) && (pFontBase->siPixelDepth == 8))
+			{
+			Blt8Imageto8Dest(uiOffsetSt, uiOffsetEnd, siNewX, siNewY, uiWidth, pFontBase, pDestBuffer, siDestPitch, siHeightEach);
+			}
+			else
+			{
+			DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, "Invalid pixel depth / destination surface depth");
+			return FALSE;
+			}
+		}
+		siNewX += (UINT16)uiWidth;
+	 }
+	}
+	// increment string pointer
+	pTempFStr++;
+	}
 	return TRUE;
 }
 
@@ -2818,24 +2818,24 @@ FontTranslationTable *pTransTab;
 	// register the appropriate debug topics
 	if(pTransTable == NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 	RegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
 
 	if ((pFManager = (FontManager *)MemAlloc(sizeof(FontManager)))==NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 
 	if((pTransTab = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable)))==NULL)
 	{
-    return FALSE;
-  }
+	return FALSE;
+	}
 
 	pFManager->pTranslationTable = pTransTab;
 	pFManager->usDefaultPixelDepth = usDefaultPixelDepth;
 	pTransTab->usNumberOfSymbols = pTransTable->usNumberOfSymbols;
-  pTransTab->DynamicArrayOf16BitValues = pTransTable->DynamicArrayOf16BitValues;
+	pTransTab->DynamicArrayOf16BitValues = pTransTable->DynamicArrayOf16BitValues;
 
 	return TRUE;
 }	*/
@@ -2843,7 +2843,7 @@ FontTranslationTable *pTransTab;
 /*void ShutdownFontManager(void)
 {
 	PERFORMANCE_MARKER
-  UnRegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
-  MemFree(pFManager);
+	UnRegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
+	MemFree(pFManager);
 }	*/
 

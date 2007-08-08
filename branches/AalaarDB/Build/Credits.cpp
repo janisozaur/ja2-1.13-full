@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 	#include "Credits.h"
@@ -189,7 +188,7 @@ typedef struct
 
 CDRT_FACE		gCreditFaces[] = 
 {
-//  x		y				w		h			
+//	x		y				w		h			
 	298, 137,			37, 49, 310, 157,		304, 170,	2500, 0, 0,											//Camfield
 	348, 137,			43, 47, 354, 153,		354, 153,	3700, 0, 0,											//Shawn
 	407, 132,			30, 50, 408, 151,		410, 164,	3000, 0, 0,											//Kris
@@ -470,7 +469,7 @@ BOOLEAN		EnterCreditsScreen()
 {
 	PERFORMANCE_MARKER
 	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 /*
 
 	VSURFACE_DESC		vs_desc;
@@ -542,7 +541,7 @@ BOOLEAN		EnterCreditsScreen()
 	{
 		// Make a mouse region
 		MSYS_DefineRegion( &gCrdtMouseRegions[uiCnt], gCreditFaces[uiCnt].sX, gCreditFaces[uiCnt].sY, (INT16)(gCreditFaces[uiCnt].sX + gCreditFaces[uiCnt].sWidth), (INT16)(gCreditFaces[uiCnt].sY + gCreditFaces[uiCnt].sHeight), MSYS_PRIORITY_NORMAL,
-							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, SelectCreditFaceRegionCallBack );
+							CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, SelectCreditFaceRegionCallBack );
 
 		// Add region
 		MSYS_AddRegion( &gCrdtMouseRegions[uiCnt] );
@@ -649,10 +648,10 @@ BOOLEAN		RenderCreditScreen()
 {
 	PERFORMANCE_MARKER
 
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiCreditBackGroundImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
 /*
 	HVSURFACE hVSurface;
 
@@ -1091,7 +1090,6 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 		//if the surface is at the bottom of the screen
 		if( pCurrent->sOldPosY + pCurrent->sHeightOfString > CRDT_START_POS_Y )
 		{
-			// WANNE 2
 			INT16 sHeight = SCREEN_HEIGHT - pCurrent->sOldPosY;
 			//INT16	sHeight = 480 - pCurrent->sOldPosY;
 			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight );
@@ -1283,7 +1281,7 @@ BOOLEAN	GetNextCreditFromTextFile()
 			break;
 
 			case 28:
-				wcscpy(zOriginalString,  L"Starwalker");
+				wcscpy(zOriginalString,	L"Starwalker");
 			break;
 
 			case 29:
@@ -1495,7 +1493,7 @@ UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 		swscanf( &pzCode[1], L"%d%*s", &uiNewDelay );
 
 //		guiCrdtDelayBetweenNodes = uiNewDelay;
-		guiGapBetweenCreditNodes  = uiNewDelay;
+		guiGapBetweenCreditNodes	= uiNewDelay;
 
 		return( CRDT_NODE_NONE );
 	}
@@ -1712,7 +1710,7 @@ void InitCreditEyeBlinking()
 void HandleCreditEyeBlinking()
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 	UINT8 ubCnt;
 
 	GetVideoObject(&hPixHandle, guiCreditFaces );

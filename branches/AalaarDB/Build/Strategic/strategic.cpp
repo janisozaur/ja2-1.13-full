@@ -30,12 +30,12 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 	// add the guy to the dead list
 	//AddCharacterToDeadList( pSoldier );
 
-  // If in a vehicle, remove them!
+	// If in a vehicle, remove them!
 	if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId != -1 ) )
 	{
 		// remove from vehicle
 		TakeSoldierOutOfVehicle( pSoldier );
-  }
+	}
 
 	// if not in mapscreen
 	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -104,7 +104,7 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 	
 	// see if this was the friend of a living merc
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-	{       
+	{		
 		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 		{
 			bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );

@@ -89,148 +89,148 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 	{
 		case OPEN_DOOR:
 
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_OPEN_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( OPEN_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( BEGIN_OPENSTRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( BEGIN_OPENSTRUCT );
-				  }
-			  }
-      }
+		if ( pSoldier->ubBodyType == CRIPPLECIV )
+		{
+		return( CRIPPLE_OPEN_DOOR );
+		}
+		else
+		{
+			if ( fDoor )
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( OPEN_DOOR_CROUCHED );
+				}
+				else
+				{
+					return( usAnimState );
+				}
+			}
+			else
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( BEGIN_OPENSTRUCT_CROUCHED );
+				}
+				else
+				{
+					return( BEGIN_OPENSTRUCT );
+				}
+			}
+		}
 			break;
 
 		case CLOSE_DOOR:
 
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_CLOSE_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( CLOSE_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( OPEN_STRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( OPEN_STRUCT );
-				  }
-			  }
-      }
+		if ( pSoldier->ubBodyType == CRIPPLECIV )
+		{
+		return( CRIPPLE_CLOSE_DOOR );
+		}
+		else
+		{
+			if ( fDoor )
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( CLOSE_DOOR_CROUCHED );
+				}
+				else
+				{
+					return( usAnimState );
+				}
+			}
+			else
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( OPEN_STRUCT_CROUCHED );
+				}
+				else
+				{
+					return( OPEN_STRUCT );
+				}
+			}
+		}
 			break;
 
 		case END_OPEN_DOOR:
 
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_END_OPEN_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPEN_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPENSTRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPENSTRUCT );
-				  }
-			  }
-      }
+		if ( pSoldier->ubBodyType == CRIPPLECIV )
+		{
+		return( CRIPPLE_END_OPEN_DOOR );
+		}
+		else
+		{
+			if ( fDoor )
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( END_OPEN_DOOR_CROUCHED );
+				}
+				else
+				{
+					return( usAnimState );
+				}
+			}
+			else
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( END_OPENSTRUCT_CROUCHED );
+				}
+				else
+				{
+					return( END_OPENSTRUCT );
+				}
+			}
+		}
 			break;
 
 
 		case END_OPEN_LOCKED_DOOR:
 
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_END_OPEN_LOCKED_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPEN_LOCKED_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPEN_LOCKED_DOOR );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPENSTRUCT_LOCKED_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPENSTRUCT_LOCKED );
-				  }
-			  }
-      }
+		if ( pSoldier->ubBodyType == CRIPPLECIV )
+		{
+		return( CRIPPLE_END_OPEN_LOCKED_DOOR );
+		}
+		else
+		{
+			if ( fDoor )
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( END_OPEN_LOCKED_DOOR_CROUCHED );
+				}
+				else
+				{
+					return( END_OPEN_LOCKED_DOOR );
+				}
+			}
+			else
+			{
+				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
+				{
+					return( END_OPENSTRUCT_LOCKED_CROUCHED );
+				}
+				else
+				{
+					return( END_OPENSTRUCT_LOCKED );
+				}
+			}
+		}
 			break;
 
 		case PICK_LOCK:
 
 			if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
 			{
-        return( LOCKPICK_CROUCHED );
-      }
-      else
-      {
-        return( PICK_LOCK );
-      }
-      break;
+		return( LOCKPICK_CROUCHED );
+		}
+		else
+		{
+		return( PICK_LOCK );
+		}
+		break;
 
 		default:
 			// should never happen!
@@ -287,11 +287,11 @@ BOOLEAN DoTrapCheckOnStartingMenu( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
 			UpdateDoorPerceivedValue( pDoor );
 
-      return( TRUE );
+		return( TRUE );
 		}
 	}
 
-  return( FALSE );
+	return( FALSE );
 }
 
 void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor )
@@ -301,7 +301,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	BOOLEAN					fDoMenu = FALSE;
 	DOOR		*				pDoor;
 	DOOR_STATUS *		pDoorStatus;
-  BOOLEAN         fTrapsFound = FALSE;
+	BOOLEAN		 fTrapsFound = FALSE;
 
 	pBaseStructure = FindBaseStructure( pStructure );
 
@@ -318,10 +318,10 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ DOOR_IS_BUSY ] );
 			}
-      else
-      {
-    		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", pSoldier->ubID ) );
-      }
+		else
+		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", pSoldier->ubID ) );
+		}
 			return;
 		}
 	}
@@ -340,16 +340,16 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			if ( pDoor )
 			{
 				if ( DoTrapCheckOnStartingMenu( pSoldier, pDoor ) )
-        {
-          fTrapsFound = TRUE;
-        }
+		{
+			fTrapsFound = TRUE;
+		}
 			}
 
 			// Pull Up Menu
-      if ( !fTrapsFound )
-      {
-			  InitDoorOpenMenu( pSoldier, pStructure, ubDirection, TRUE );
-      }
+		if ( !fTrapsFound )
+		{
+			InitDoorOpenMenu( pSoldier, pStructure, ubDirection, TRUE );
+		}
 		}
 		else
 		{
@@ -366,15 +366,15 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 
 			if ( pDoor != NULL )
 			{
-        // Assume true
+		// Assume true
 				fDoMenu = TRUE;
 
-        // Check if it's locked.....
-        // If not locked, don't bring it up!
-        if ( !pDoor->fLocked )
-        {
-          fDoMenu = FALSE;
-        }
+		// Check if it's locked.....
+		// If not locked, don't bring it up!
+		if ( !pDoor->fLocked )
+		{
+			fDoMenu = FALSE;
+		}
 			}
 		}
 
@@ -384,19 +384,19 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			pSoldier->SoldierGotoStationaryStance( );
 
 			if ( DoTrapCheckOnStartingMenu( pSoldier, pDoor ) )
-      {
-        fTrapsFound = TRUE;
-      }
+		{
+		fTrapsFound = TRUE;
+		}
 
 			// Pull Up Menu
-      if ( !fTrapsFound )
-      {
-			  InitDoorOpenMenu( pSoldier, pStructure, ubDirection, FALSE );
-      }
-      else
-      {
-			  UnSetUIBusy( pSoldier->ubID );
-      }
+		if ( !fTrapsFound )
+		{
+			InitDoorOpenMenu( pSoldier, pStructure, ubDirection, FALSE );
+		}
+		else
+		{
+			UnSetUIBusy( pSoldier->ubID );
+		}
 		}
 		else
 		{
@@ -456,7 +456,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	DOOR		*pDoor;
 	BOOLEAN	fTrapFound = FALSE;
 	BOOLEAN	fDoAction = TRUE;
-	BOOLEAN	fDoor     = FALSE;
+	BOOLEAN	fDoor	 = FALSE;
 	INT8		bItemIn		= FALSE;
 
 	// Are we a door?
@@ -512,7 +512,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if (DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_STOPS_ACTION)
 							{
 								// trap stops person from opening door!
-								fDoAction	 = FALSE;
+								fDoAction	= FALSE;
 							}
 							if (!( DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_RECURRING ) )
 							{
@@ -543,7 +543,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								}
 
 								// Stop action this time....
-								fDoAction	 = FALSE;
+								fDoAction	= FALSE;
 
 								// report!
 								TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
@@ -555,7 +555,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								if (DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_STOPS_ACTION)
 								{
 									// trap stops person from opening door!
-									fDoAction	 = FALSE;
+									fDoAction	= FALSE;
 								}
 								if (!( DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_RECURRING ) )
 								{
@@ -960,7 +960,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 }
 
 
-BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations  )
+BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations	)
 {
 	PERFORMANCE_MARKER
 	LEVELNODE	* pShadowNode;
@@ -1084,7 +1084,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 			fDoAnimation = FALSE;
 		}
 
-		if ( fDoAnimation  )	
+		if ( fDoAnimation	)	
 		{
 			// Update perceived value
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, TRUE );
@@ -1094,7 +1094,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
+				AniParams.usTileType				= (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
@@ -1108,7 +1108,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
+				AniParams.usTileType				= (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
@@ -1144,15 +1144,15 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 					// change sound ID
 					uiSoundID = GARAGE_DOOR_OPEN;
 				}
-       	else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-	  		{
-		  		// change sound ID
-			  	uiSoundID = CURTAINS_OPEN;
-			  }
-      }
-      else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
-           pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
-           pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_HEAVY_METAL )
+			else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
+			{
+				// change sound ID
+				uiSoundID = CURTAINS_OPEN;
+			}
+		}
+		else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
+			pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
+			pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_HEAVY_METAL )
 			{
 				// change sound ID
 				uiSoundID = METAL_DOOR_OPEN;
@@ -1210,7 +1210,7 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, FALSE );
 
 			memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-      
+		
 			// ATE; Default to normal door...
 			uiSoundID = ( DRCLOSE_1 + Random( 2 ) );
 
@@ -1223,53 +1223,53 @@ BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * 
 					// change sound ID
 					uiSoundID = GARAGE_DOOR_CLOSE;
 				}
-        else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
-			  {
-				  // change sound ID
-				  uiSoundID = CURTAINS_CLOSE;
-			  }
-      }
-		  else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
-           pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
-           pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_HEAVY_METAL )
+		else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_CLOTH )
+			{
+				// change sound ID
+				uiSoundID = CURTAINS_CLOSE;
+			}
+		}
+		else if ( pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_LIGHT_METAL ||
+			pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_THICKER_METAL ||
+			pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_HEAVY_METAL )
 			{
 				// change sound ID
 				uiSoundID = METAL_DOOR_CLOSE;
 			}
 
-	    AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_DO_SOUND;
-	    AniParams.uiUserData					= uiSoundID;
-	    AniParams.uiUserData3					= sGridNo;
+	 AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_DO_SOUND;
+	 AniParams.uiUserData					= uiSoundID;
+	 AniParams.uiUserData3					= sGridNo;
 
 
 			if ( fOpenedGraphic )
 			{
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
+				AniParams.usTileType				= (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
 				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_BACKWARD | ANITILE_EXISTINGTILE;
 				AniParams.pGivenLevelNode			= pNode;
 
-  	    AniParams.ubKeyFrame1					= pNode->sCurrentFrame - 2;
-        
+		 AniParams.ubKeyFrame1					= pNode->sCurrentFrame - 2;
+		
 				CreateAnimationTile( &AniParams );
 			}
 			else
 			{			
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
+				AniParams.usTileType				= (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
 				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_FORWARD | ANITILE_EXISTINGTILE;
 				AniParams.pGivenLevelNode			= pNode;
 	
-	      AniParams.ubKeyFrame1					= pNode->sCurrentFrame + 2;
-          
+		AniParams.ubKeyFrame1					= pNode->sCurrentFrame + 2;
+			
 				CreateAnimationTile( &AniParams );
 			}
 		}

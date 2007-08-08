@@ -36,7 +36,7 @@
 
 //#define	MAX_ATTIBUTEPOINT		90
 //#define	START_ATTRIBEPOINT		55
-//#define	MIN_ATTIBUTEPOINT	    35
+//#define	MIN_ATTIBUTEPOINT	 35
 //#define MAX_ZERO_BONUS			15
 
 
@@ -64,16 +64,16 @@ enum
 // Snap: these globals will be properly initialized in SetAttributes
 
 // the skills as they stand
-INT32 iCurrentStrength    = 0;
-INT32 iCurrentAgility     = 0;
-INT32 iCurrentDexterity   = 0;
-INT32 iCurrentHealth      = 0;
-INT32 iCurrentLeaderShip  = 0;
-INT32 iCurrentWisdom      = 0;
+INT32 iCurrentStrength	= 0;
+INT32 iCurrentAgility	 = 0;
+INT32 iCurrentDexterity	= 0;
+INT32 iCurrentHealth		= 0;
+INT32 iCurrentLeaderShip	= 0;
+INT32 iCurrentWisdom		= 0;
 INT32 iCurrentMarkmanship = 0;
-INT32 iCurrentMechanical  = 0;
-INT32 iCurrentMedical     = 0;
-INT32 iCurrentExplosives  = 0;
+INT32 iCurrentMechanical	= 0;
+INT32 iCurrentMedical	 = 0;
+INT32 iCurrentExplosives	= 0;
  
 // which stat is message about stat at zero about
 INT32 iCurrentStatAtZero = 0;
@@ -125,7 +125,7 @@ void ProcessAttributes( void );
 void DestroyIMPAttributeSelectionButtons( void );
 void CreateIMPAttributeSelectionButtons( void );
 UINT8 IncrementStat( INT32 iStatToIncrement );
-UINT8 DecrementStat( INT32 iStatToDecrement  );
+UINT8 DecrementStat( INT32 iStatToDecrement	);
 BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints );
 void CreateAttributeSliderButtons( void );
 void DestroyAttributeSliderButtons( void );
@@ -152,30 +152,30 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue );
 void EnterIMPAttributeSelection( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 
 	// set attributes and skills
 	if( ( fReturnStatus == FALSE ) && ( fFirstIMPAttribTime == TRUE ) )
 	{
 		// re starting
-    SetAttributes( );
-  
+	SetAttributes( );
+	
 		gpCurrentScrollBox = NULL;
 		giCurrentlySelectedStat = -1;
 
-	  // does character have PROBLEMS!!?!?!
+	// does character have PROBLEMS!!?!?!
 		/*
-	  if( DoesCharacterHaveAnAttitude() )
+	if( DoesCharacterHaveAnAttitude() )
 		{
-      iCurrentBonusPoints+= 10;
+		iCurrentBonusPoints+= 10;
 		}
-	  if( DoesCharacterHaveAPersoanlity( ) )
+	if( DoesCharacterHaveAPersoanlity( ) )
 		{	
-		  iCurrentBonusPoints += 10;
+		iCurrentBonusPoints += 10;
 		}
 		*/
 	}
-  fReturnStatus = TRUE;
+	fReturnStatus = TRUE;
 	fFirstIMPAttribTime = FALSE;
 
 	// create done button
@@ -185,12 +185,12 @@ void EnterIMPAttributeSelection( void )
 
 	// the mouse regions
 	CreateSlideRegionMouseRegions( );
-  //CreateSliderBarMouseRegions( );
+	//CreateSliderBarMouseRegions( );
 
 	// render background
-  RenderIMPAttributeSelection( );
-  
-  
+	RenderIMPAttributeSelection( );
+	
+	
 
 	return;
 }
@@ -203,7 +203,7 @@ void RenderIMPAlteredAttribute( void )
 void RenderIMPAttributeSelection( void )
 {
 	PERFORMANCE_MARKER
-   // the background
+	// the background
 	RenderProfileBackGround( );
 
 
@@ -217,7 +217,7 @@ void RenderIMPAttributeSelection( void )
 	
 	if( fReviewStats != TRUE )
 	{
-	  RenderAttrib2IndentFrame(350, 42 );
+	RenderAttrib2IndentFrame(350, 42 );
 	}
 
 	// reset rerender flag
@@ -225,7 +225,7 @@ void RenderIMPAttributeSelection( void )
 
 	// print text for screen
 	PrintImpText( );
-  
+	
 	// amt of bonus pts
 	DrawBonusPointsRemaining( );
 
@@ -235,15 +235,15 @@ void RenderIMPAttributeSelection( void )
 void ExitIMPAttributeSelection( void )
 {
 	PERFORMANCE_MARKER
-  // get rid of slider buttons
+	// get rid of slider buttons
 	DestroyAttributeSliderButtons( );
 
 	// the mouse regions
 	DestroySlideRegionMouseRegions( );
-  //DestroySlideBarMouseRegions( );
+	//DestroySlideBarMouseRegions( );
 
 	// get rid of done buttons
-  DestroyIMPAttributeSelectionButtons( );
+	DestroyIMPAttributeSelectionButtons( );
 
 	fReturnStatus = FALSE;
 
@@ -256,7 +256,7 @@ void HandleIMPAttributeSelection( void )
 	PERFORMANCE_MARKER
 
 	// review mode, do not allow changes
-  if( fReviewStats )
+	if( fReviewStats )
 	{
 		return;
 	}
@@ -271,7 +271,7 @@ void HandleIMPAttributeSelection( void )
 		}
 
 		//else if the user is holding down the mouse button to the right of the scroll bars
-		else if( gusMouseXPos > ( LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH  ) )
+		else if( gusMouseXPos > ( LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH	) )
 		{
 			IncrementStat( giCurrentlySelectedStat );
 		}
@@ -284,21 +284,21 @@ void HandleIMPAttributeSelection( void )
 
 
 			// get old stat value
-		  iCurrentAttributeValue = GetCurrentAttributeValue( giCurrentlySelectedStat );
+		iCurrentAttributeValue = GetCurrentAttributeValue( giCurrentlySelectedStat );
 			iNewValue = DetermineNewValue( sNewX );
 
 			// chenged, move mouse region if change large enough
-      if( iCurrentAttributeValue != iNewValue )
+		if( iCurrentAttributeValue != iNewValue )
 			{
-         // update screen
-         fHasAnySlidingBarMoved = TRUE;
+		 // update screen
+		 fHasAnySlidingBarMoved = TRUE;
 			}
 
-      // change is enough
-      if ( iNewValue - iCurrentAttributeValue > 0)
+		// change is enough
+		if ( iNewValue - iCurrentAttributeValue > 0)
 			{
 				// positive, increment stat
-        iCounter = iNewValue - iCurrentAttributeValue;
+		iCounter = iNewValue - iCurrentAttributeValue;
 				for( iCounter; iCounter > 0; iCounter--)
 				{
 					IncrementStat( giCurrentlySelectedStat );
@@ -307,7 +307,7 @@ void HandleIMPAttributeSelection( void )
 			else
 			{
 				// negative, decrement stat
-        iCounter = iCurrentAttributeValue - iNewValue;
+		iCounter = iCurrentAttributeValue - iNewValue;
 				for( iCounter; iCounter > 0; iCounter--)
 				{
 					DecrementStat( giCurrentlySelectedStat );
@@ -326,7 +326,7 @@ void HandleIMPAttributeSelection( void )
 
 	// prcoess current state of attributes
 	ProcessAttributes( );
-  
+	
 	// has any bar moved?
 	if( fHasAnySlidingBarMoved )
 	{
@@ -342,7 +342,7 @@ void HandleIMPAttributeSelection( void )
 			/*
 			// print text for screen
 			PrintImpText( );
-  
+	
 			// amt of bonus pts
 			DrawBonusPointsRemaining( );
 
@@ -397,7 +397,7 @@ void ProcessAttributes( void )
 
 	}
 
-  // dex
+	// dex
 	if( iCurrentDexterity <= iMinAttribute )
 	{
 		iCurrentDexterity = iMinAttribute;
@@ -406,7 +406,7 @@ void ProcessAttributes( void )
 
 	}
 
-   // agility
+	// agility
 	if( iCurrentAgility <= iMinAttribute )
 	{
 		iCurrentAgility = iMinAttribute;
@@ -415,7 +415,7 @@ void ProcessAttributes( void )
 
 	}
 
-	 // wisdom
+	// wisdom
 	if( iCurrentWisdom <= iMinAttribute )
 	{
 		iCurrentWisdom = iMinAttribute;
@@ -424,15 +424,15 @@ void ProcessAttributes( void )
 
 	}
 
-   // Kaiden: Leadership should be zero-able
-   // LeaderShip
-   //if( iCurrentLeaderShip <= MIN_ATTIBUTEPOINT )
-   //{
-   //iCurrentLeaderShip = MIN_ATTIBUTEPOINT;
-   // disable button too
-   //}
+	// Kaiden: Leadership should be zero-able
+	// LeaderShip
+	//if( iCurrentLeaderShip <= MIN_ATTIBUTEPOINT )
+	//{
+	//iCurrentLeaderShip = MIN_ATTIBUTEPOINT;
+	// disable button too
+	//}
 
-	 // health
+	// health
 	if( iCurrentHealth <= iMinAttribute )
 	{
 		iCurrentHealth = iMinAttribute;
@@ -444,7 +444,7 @@ void ProcessAttributes( void )
 
 
 	// now check for above MAX_ATTIBUTEPOINT
-  // strength
+	// strength
 	if( iCurrentStrength >= iMaxAttribute )
 	{
 		iCurrentStrength = iMaxAttribute;
@@ -453,7 +453,7 @@ void ProcessAttributes( void )
 
 	}
 
-  // dex
+	// dex
 	if( iCurrentDexterity >= iMaxAttribute )
 	{
 		iCurrentDexterity = iMaxAttribute;
@@ -462,7 +462,7 @@ void ProcessAttributes( void )
 
 	}
 
-   // agility
+	// agility
 	if( iCurrentAgility >= iMaxAttribute )
 	{
 		iCurrentAgility = iMaxAttribute;
@@ -471,7 +471,7 @@ void ProcessAttributes( void )
 
 	}
 
-	 // wisdom
+	// wisdom
 	if( iCurrentWisdom >= iMaxAttribute )
 	{
 		iCurrentWisdom = iMaxAttribute;
@@ -480,7 +480,7 @@ void ProcessAttributes( void )
 
 	}
 
-   // LeaderShip
+	// LeaderShip
 	if( iCurrentLeaderShip >= iMaxAttribute )
 	{
 		iCurrentLeaderShip = iMaxAttribute;
@@ -489,7 +489,7 @@ void ProcessAttributes( void )
 
 	}
 
-	 // health
+	// health
 	if( iCurrentHealth >= iMaxAttribute )
 	{
 		iCurrentHealth = iMaxAttribute;
@@ -497,13 +497,13 @@ void ProcessAttributes( void )
 
 	}
 
-  return;
+	return;
 }
 
 UINT8 IncrementStat( INT32 iStatToIncrement )
 {
 	PERFORMANCE_MARKER
-  // this function is responsable for incrementing a stat
+	// this function is responsable for incrementing a stat
 
 	
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
@@ -511,7 +511,7 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 	INT32 iMaxZeroBonus = gGameExternalOptions.iMaxZeroBonus;
 
 	// review mode, do not allow changes
-  if( fReviewStats )
+	if( fReviewStats )
 	{
 		return( SLIDER_ERROR );
 	}
@@ -527,79 +527,79 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 	switch( iStatToIncrement )
 	{
 		case( STRENGTH_ATTRIBUTE ):
-		  if( iCurrentStrength > iMaxAttribute -1 )
+		if( iCurrentStrength > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				iCurrentStrength++;
-			  iCurrentBonusPoints--;
+			iCurrentBonusPoints--;
 			}
 		break;
-    case( DEXTERITY_ATTRIBUTE ):
-		  if( iCurrentDexterity > iMaxAttribute -1 )
+	case( DEXTERITY_ATTRIBUTE ):
+		if( iCurrentDexterity > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				iCurrentDexterity++;
-			  iCurrentBonusPoints--;
+			iCurrentBonusPoints--;
 			}
 		break;
 		case( AGILITY_ATTRIBUTE ):
-		  if( iCurrentAgility > iMaxAttribute -1 )
+		if( iCurrentAgility > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				iCurrentAgility++;
-			  iCurrentBonusPoints--;
+			iCurrentBonusPoints--;
 			}
 		break;
 		case( WISDOM_ATTRIBUTE ):
-		  if( iCurrentWisdom > iMaxAttribute -1 )
+		if( iCurrentWisdom > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				iCurrentWisdom++;
-			  iCurrentBonusPoints--;
+			iCurrentBonusPoints--;
 			}
 		break;
 		case( HEALTH_ATTRIBUTE ):
-		  if( iCurrentHealth > iMaxAttribute -1 )
+		if( iCurrentHealth > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				iCurrentHealth++;
-			  iCurrentBonusPoints--;
+			iCurrentBonusPoints--;
 			}
 		break;
 		case( LEADERSHIP_ATTRIBUTE ):
-		  if( iCurrentLeaderShip > iMaxAttribute -1 )
+		if( iCurrentLeaderShip > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
 			}
-		  else
+		else
 			{
 				if( iCurrentLeaderShip == 0)
 				{
 					if( DoWeHaveThisManyBonusPoints( iMaxZeroBonus ) == TRUE )
 					{
-					  iCurrentLeaderShip+=iMinAttribute;
-					  iCurrentBonusPoints-=iMaxZeroBonus;
+					iCurrentLeaderShip+=iMinAttribute;
+					iCurrentBonusPoints-=iMaxZeroBonus;
 						fSkillAtZeroWarning = FALSE;
 					}
 					else
@@ -609,25 +609,25 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 				}
 				else
 				{
-				  iCurrentLeaderShip++;
-			    iCurrentBonusPoints--;
+				iCurrentLeaderShip++;
+			 iCurrentBonusPoints--;
 				}
 			}
 		break;
 		case( MARKSMANSHIP_SKILL ):
-		  if( iCurrentMarkmanship > iMaxAttribute -1 )
+		if( iCurrentMarkmanship > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				if( iCurrentMarkmanship == 0)
 				{
 					if( DoWeHaveThisManyBonusPoints( iMaxZeroBonus ) == TRUE )
 					{
-					  iCurrentMarkmanship+=iMinAttribute;
-					  iCurrentBonusPoints-=iMaxZeroBonus;
+					iCurrentMarkmanship+=iMinAttribute;
+					iCurrentBonusPoints-=iMaxZeroBonus;
 						fSkillAtZeroWarning = FALSE;
 					}
 					else
@@ -637,25 +637,25 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 				}
 				else
 				{
-				  iCurrentMarkmanship++;
-			    iCurrentBonusPoints--;
+				iCurrentMarkmanship++;
+			 iCurrentBonusPoints--;
 				}
 			}
 		break;
 		case( MECHANICAL_SKILL ):
-		  if( iCurrentMechanical > iMaxAttribute -1 )
+		if( iCurrentMechanical > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				if( iCurrentMechanical == 0)
 				{
 					if( DoWeHaveThisManyBonusPoints( iMaxZeroBonus ) == TRUE )
 					{
-					  iCurrentMechanical+=iMinAttribute;
-					  iCurrentBonusPoints-=iMaxZeroBonus;
+					iCurrentMechanical+=iMinAttribute;
+					iCurrentBonusPoints-=iMaxZeroBonus;
 						fSkillAtZeroWarning = FALSE;
 					}
 					else
@@ -665,25 +665,25 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 				}
 				else
 				{
-				  iCurrentMechanical++;
-			    iCurrentBonusPoints--;
+				iCurrentMechanical++;
+			 iCurrentBonusPoints--;
 				}
 			}
 		break;
 		case( MEDICAL_SKILL ):
-		  if( iCurrentMedical > iMaxAttribute -1 )
+		if( iCurrentMedical > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 			if( iCurrentMedical == 0)
 				{
 					if( DoWeHaveThisManyBonusPoints( iMaxZeroBonus ) == TRUE )
 					{
-					  iCurrentMedical+=iMinAttribute;
-					  iCurrentBonusPoints-=iMaxZeroBonus;
+					iCurrentMedical+=iMinAttribute;
+					iCurrentBonusPoints-=iMaxZeroBonus;
 						fSkillAtZeroWarning = FALSE;
 					}
 					else
@@ -693,25 +693,25 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 				}
 				else
 				{
-				  iCurrentMedical++;
-			    iCurrentBonusPoints--;
+				iCurrentMedical++;
+			 iCurrentBonusPoints--;
 				}
 			}
 		break;
 		case( EXPLOSIVE_SKILL ):
-		  if( iCurrentExplosives > iMaxAttribute -1 )
+		if( iCurrentExplosives > iMaxAttribute -1 )
 			{
 				// too high, leave
 				return( SLIDER_OUT_OF_RANGE );
-      }
-		  else
+		}
+		else
 			{
 				if( iCurrentExplosives == 0)
 				{
 					if( DoWeHaveThisManyBonusPoints( iMaxZeroBonus ) == TRUE )
 					{
-					  iCurrentExplosives+=iMinAttribute;
-					  iCurrentBonusPoints-=iMaxZeroBonus;
+					iCurrentExplosives+=iMinAttribute;
+					iCurrentBonusPoints-=iMaxZeroBonus;
 						fSkillAtZeroWarning = FALSE;
 					}
 					else
@@ -721,8 +721,8 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 				}
 				else
 				{
-				  iCurrentExplosives++;
-			    iCurrentBonusPoints--;
+				iCurrentExplosives++;
+			 iCurrentBonusPoints--;
 				}
 			}
 		break;
@@ -733,7 +733,7 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 }
 
 
-UINT8 DecrementStat( INT32 iStatToDecrement  )
+UINT8 DecrementStat( INT32 iStatToDecrement	)
 {
 	PERFORMANCE_MARKER
 
@@ -742,12 +742,12 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 
 
 	// review mode, do not allow changes
-  if( fReviewStats )
+	if( fReviewStats )
 	{
 		return( SLIDER_ERROR );
 	}
 
-  // decrement a stat
+	// decrement a stat
 	// check to make sure stat isn't maxed out already
 	switch( iStatToDecrement )
 	{
@@ -756,19 +756,19 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentStrength--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else
 			{
 				return( SLIDER_OUT_OF_RANGE );
 			}
 		break;
-    case( DEXTERITY_ATTRIBUTE ):
+	case( DEXTERITY_ATTRIBUTE ):
 			if( iCurrentDexterity > iMinAttribute )
 			{
 				// ok to decrement
 				iCurrentDexterity--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else
 			{
@@ -780,19 +780,19 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentAgility--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else
 			{
 				return( SLIDER_OUT_OF_RANGE );
 			}
 		break;
-    case( WISDOM_ATTRIBUTE ):
+	case( WISDOM_ATTRIBUTE ):
 			if( iCurrentWisdom > iMinAttribute )
 			{
 				// ok to decrement
 				iCurrentWisdom--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else
 			{
@@ -804,14 +804,14 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentLeaderShip--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			//Kaiden: Leadership couldn't be set to zero fixed below:
 			else if( iCurrentLeaderShip == iMinAttribute)
 			{
-        	// ok to decrement
+			// ok to decrement
 				iCurrentLeaderShip-=iMinAttribute;
-        iCurrentBonusPoints+=iMaxZeroBonus;
+		iCurrentBonusPoints+=iMaxZeroBonus;
 				fSkillAtZeroWarning = TRUE;
 			}
 		break;
@@ -820,25 +820,25 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentHealth--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else
 			{
 				return( SLIDER_OUT_OF_RANGE );
 			}
 		break;
-    case( MARKSMANSHIP_SKILL ):
+	case( MARKSMANSHIP_SKILL ):
 			if( iCurrentMarkmanship > iMinAttribute )
 			{
 				// ok to decrement
 				iCurrentMarkmanship--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else if( iCurrentMarkmanship == iMinAttribute)
 			{
-        	// ok to decrement
+			// ok to decrement
 				iCurrentMarkmanship-=iMinAttribute;
-        iCurrentBonusPoints+=iMaxZeroBonus;
+		iCurrentBonusPoints+=iMaxZeroBonus;
 				fSkillAtZeroWarning = TRUE;
 			}
 		break;
@@ -847,13 +847,13 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentMedical--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else if( iCurrentMedical == iMinAttribute)
 			{
-        	// ok to decrement
+			// ok to decrement
 				iCurrentMedical-=iMinAttribute;
-        iCurrentBonusPoints+=iMaxZeroBonus;
+		iCurrentBonusPoints+=iMaxZeroBonus;
 				fSkillAtZeroWarning = TRUE;
 			}
 		break;
@@ -862,13 +862,13 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentMechanical--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else if( iCurrentMechanical == iMinAttribute)
 			{
-        	// ok to decrement
+			// ok to decrement
 				iCurrentMechanical-=iMinAttribute;
-        iCurrentBonusPoints+=iMaxZeroBonus;
+		iCurrentBonusPoints+=iMaxZeroBonus;
 				fSkillAtZeroWarning = TRUE;
 			}
 		break;
@@ -877,13 +877,13 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 			{
 				// ok to decrement
 				iCurrentExplosives--;
-        iCurrentBonusPoints++;
+		iCurrentBonusPoints++;
 			}
 			else if( iCurrentExplosives == iMinAttribute)
 			{
-        	// ok to decrement
+			// ok to decrement
 				iCurrentExplosives-=iMinAttribute;
-        iCurrentBonusPoints+=iMaxZeroBonus;
+		iCurrentBonusPoints+=iMaxZeroBonus;
 				fSkillAtZeroWarning = TRUE;
 			}
 		break;
@@ -924,17 +924,17 @@ void CreateIMPAttributeSelectionButtons( void )
 	PERFORMANCE_MARKER
 
 	// the finished button
-  giIMPAttributeSelectionButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
-/*	giIMPAttributeSelectionButton[0] = QuickCreateButton( giIMPAttributeSelectionButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ),
+	giIMPAttributeSelectionButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+/*	giIMPAttributeSelectionButton[0] = QuickCreateButton( giIMPAttributeSelectionButtonImage[0], LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback );
-  */
+	*/
 	giIMPAttributeSelectionButton[0] = CreateIconAndTextButton( giIMPAttributeSelectionButtonImage[0], pImpButtonText[ 11 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback);
 
 	
 	
@@ -946,10 +946,10 @@ void DestroyIMPAttributeSelectionButtons( void )
 {
 	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP attrib enter page
-  
-	// the begin  button
-  RemoveButton(giIMPAttributeSelectionButton[ 0 ] );
-  UnloadButtonImage(giIMPAttributeSelectionButtonImage[ 0 ] );
+	
+	// the begin	button
+	RemoveButton(giIMPAttributeSelectionButton[ 0 ] );
+	UnloadButtonImage(giIMPAttributeSelectionButtonImage[ 0 ] );
 
  	return;
 }
@@ -966,13 +966,13 @@ void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 			
 			//are we done diting, or just reviewing the stats?
 			if( fReviewStats == TRUE )
@@ -981,7 +981,7 @@ void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 			else
 			{
-        iCurrentImpPage = IMP_ATTRIBUTE_FINISH;
+		iCurrentImpPage = IMP_ATTRIBUTE_FINISH;
 			}
 			fButtonPendingFlag = TRUE;
 		}
@@ -997,13 +997,13 @@ void RenderAttributeBoxes( void )
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
 
-  // this function will render the boxes in the sliding attribute bar, based on position
-  INT32 iCnt=STRENGTH_ATTRIBUTE;
-  INT16 sX = 0;
-  INT16 sY = 0; 
+	// this function will render the boxes in the sliding attribute bar, based on position
+	INT32 iCnt=STRENGTH_ATTRIBUTE;
+	INT16 sX = 0;
+	INT16 sY = 0; 
 	INT16 sTempY = 0;
 	INT16 sTempX = 0;
-  CHAR16 sString[3];
+	CHAR16 sString[3];
 
 	// set last char to null
 	sString[2] = 0;
@@ -1017,7 +1017,7 @@ void RenderAttributeBoxes( void )
 	// run through and render each slider bar
 	for( iCnt = HEALTH_ATTRIBUTE; iCnt <= MECHANICAL_SKILL; iCnt++)
 	{
-		// position is  ( width *  ( stat - 35 ) ) /50]
+		// position is	( width *	( stat - 35 ) ) /50]
 		// unless 0, then it is 0 - for skills
 		
 		// get y position
@@ -1025,11 +1025,11 @@ void RenderAttributeBoxes( void )
 
 		switch( iCnt )
 		{
-		  case (STRENGTH_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  DetermineNewPosition( iCurrentStrength - iMinAttribute );
+		case (STRENGTH_ATTRIBUTE):
+		 // blt in strength slider
+				sX =	DetermineNewPosition( iCurrentStrength - iMinAttribute );
 				RenderSliderBar( sX, sY );
-        
+		
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
@@ -1038,10 +1038,10 @@ void RenderAttributeBoxes( void )
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
+		break;
 			case (DEXTERITY_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  DetermineNewPosition( iCurrentDexterity - iMinAttribute );
+		 // blt in strength slider
+				sX =	DetermineNewPosition( iCurrentDexterity - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1049,14 +1049,14 @@ void RenderAttributeBoxes( void )
 
 				// the text
 				swprintf( sString, L"%d", iCurrentDexterity );
-			  sX += LAPTOP_SCREEN_UL_X;
+			sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, sString);
 
-		  break;
+		break;
 			case (AGILITY_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  DetermineNewPosition( iCurrentAgility - iMinAttribute );
+		 // blt in strength slider
+				sX =	DetermineNewPosition( iCurrentAgility - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1068,10 +1068,10 @@ void RenderAttributeBoxes( void )
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, sString);
 
-		  break;
+		break;
 			case (WISDOM_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  DetermineNewPosition( iCurrentWisdom - iMinAttribute );
+		 // blt in strength slider
+				sX =	DetermineNewPosition( iCurrentWisdom - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1082,12 +1082,12 @@ void RenderAttributeBoxes( void )
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
-      case (LEADERSHIP_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  DetermineNewPosition( iCurrentLeaderShip - iMinAttribute );
+		break;
+		case (LEADERSHIP_ATTRIBUTE):
+		 // blt in strength slider
+				sX =	DetermineNewPosition( iCurrentLeaderShip - iMinAttribute );
 				RenderSliderBar( sX, sY );
-        // set sliderbar mouse region
+		// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 				// the text
@@ -1095,40 +1095,40 @@ void RenderAttributeBoxes( void )
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13 , sY + 3, sString);
-		  break;
+		break;
 			case (HEALTH_ATTRIBUTE):
-		    // blt in health slider
-				sX =  DetermineNewPosition( iCurrentHealth - iMinAttribute );
+		 // blt in health slider
+				sX =	DetermineNewPosition( iCurrentHealth - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
-        // set sliderbar mouse region
+		// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 				// the text
 				swprintf( sString, L"%d", iCurrentHealth );
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
+			sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
-      case (MARKSMANSHIP_SKILL):
-		    // blt in marksmanship slider
+		break;
+		case (MARKSMANSHIP_SKILL):
+		 // blt in marksmanship slider
 				
-				sX =  DetermineNewPosition( iCurrentMarkmanship - iMinAttribute );
+				sX =	DetermineNewPosition( iCurrentMarkmanship - iMinAttribute );
 				RenderSliderBar( sX, sY );
-        // set sliderbar mouse region
+		// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 
 				// the text
 				swprintf( sString, L"%d", iCurrentMarkmanship );
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
+			sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
-      case (MEDICAL_SKILL):
-		    // blt in medical slider
+		break;
+		case (MEDICAL_SKILL):
+		 // blt in medical slider
 				
-				sX =  DetermineNewPosition( iCurrentMedical - iMinAttribute );
+				sX =	DetermineNewPosition( iCurrentMedical - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1136,14 +1136,14 @@ void RenderAttributeBoxes( void )
 
 				// the text
 				swprintf( sString, L"%d", iCurrentMedical );
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
+			sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
-      case (MECHANICAL_SKILL):
-		    // blt in mech slider
+		break;
+		case (MECHANICAL_SKILL):
+		 // blt in mech slider
 				
-				sX =  DetermineNewPosition( iCurrentMechanical - iMinAttribute );
+				sX =	DetermineNewPosition( iCurrentMechanical - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1152,14 +1152,14 @@ void RenderAttributeBoxes( void )
 
 				// the text
 				swprintf( sString, L"%d", iCurrentMechanical );
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
+			sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
+		break;
 			case (EXPLOSIVE_SKILL):
-		    // blt in explosive slider
+		 // blt in explosive slider
 				
-				sX =  DetermineNewPosition( iCurrentExplosives - iMinAttribute );
+				sX =	DetermineNewPosition( iCurrentExplosives - iMinAttribute );
 				RenderSliderBar( sX, sY );
 
 				// set sliderbar mouse region
@@ -1167,10 +1167,10 @@ void RenderAttributeBoxes( void )
 
 				// the text
 				swprintf( sString, L"%d", iCurrentExplosives );
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
+			sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, sString);
-		  break;
+		break;
 
 		}
 	}
@@ -1187,24 +1187,24 @@ void CreateAttributeSliderButtons( void )
 {
 	PERFORMANCE_MARKER
 	// this function will create the buttons for the attribute slider
-  // the finished button
-  INT32 iCounter =0;
+	// the finished button
+	INT32 iCounter =0;
 	
-	giIMPAttributeSelectionSliderButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,0,-1,1,-1 );
-  giIMPAttributeSelectionSliderButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,3,-1,4,-1 );
+	giIMPAttributeSelectionSliderButtonImage[ 0 ]=	LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,0,-1,1,-1 );
+	giIMPAttributeSelectionSliderButtonImage[ 1 ]=	LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,3,-1,4,-1 );
 
 	for(iCounter = 0; iCounter < 20; iCounter+=2 )
 	{
-	  // left button - decrement stat
-	 giIMPAttributeSelectionSliderButton[ iCounter ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 0 ], LAPTOP_SCREEN_UL_X +  ( 163 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
+	// left button - decrement stat
+	giIMPAttributeSelectionSliderButton[ iCounter ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 0 ], LAPTOP_SCREEN_UL_X +	( 163 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeSliderLeftCallback );
 	
-    // right button - increment stat 
-	 giIMPAttributeSelectionSliderButton[ iCounter + 1 ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 419 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
+	// right button - increment stat 
+	giIMPAttributeSelectionSliderButton[ iCounter + 1 ] = QuickCreateButton( giIMPAttributeSelectionSliderButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +	( 419 ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + ( 99 + iCounter / 2 * 20 ) ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeSliderRightCallback );
-	  
+	
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter], CURSOR_WWW);
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter + 1 ], CURSOR_WWW);
 		// set user data
@@ -1220,18 +1220,18 @@ void CreateAttributeSliderButtons( void )
 void DestroyAttributeSliderButtons( void )
 {
 	PERFORMANCE_MARKER
-  // this function will destroy the buttons used for attribute manipulation
-  INT32 iCounter =0;
+	// this function will destroy the buttons used for attribute manipulation
+	INT32 iCounter =0;
 
-  // get rid of image
+	// get rid of image
 	UnloadButtonImage(giIMPAttributeSelectionSliderButtonImage[ 0 ] );
 	UnloadButtonImage(giIMPAttributeSelectionSliderButtonImage[ 1 ] );
 
 	for(iCounter = 0; iCounter < 20; iCounter++ )
 	{
 		// get rid of button
-     RemoveButton(giIMPAttributeSelectionSliderButton[ iCounter ] );
-     
+	 RemoveButton(giIMPAttributeSelectionSliderButton[ iCounter ] );
+	 
 	}
 
 	return;
@@ -1252,25 +1252,25 @@ void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{ 
-      DecrementStat( iValue );
+		DecrementStat( iValue );
 			// stat has changed, rerender
-      fHasAnySlidingBarMoved = TRUE;
+		fHasAnySlidingBarMoved = TRUE;
 			uiBarToReRender = iValue;		
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		
-    DecrementStat( iValue );
-		fHasAnySlidingBarMoved = TRUE;  
+	DecrementStat( iValue );
+		fHasAnySlidingBarMoved = TRUE;	
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
-    uiBarToReRender = iValue;
+	uiBarToReRender = iValue;
 	}
 
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 			
 		}
 	}
@@ -1280,7 +1280,7 @@ void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	PERFORMANCE_MARKER
-  INT32 iValue = -1;
+	INT32 iValue = -1;
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -1290,26 +1290,26 @@ void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{ 
-      IncrementStat( iValue  );
+		IncrementStat( iValue	);
 			// stat has changed, rerender
-      fHasAnySlidingBarMoved = TRUE;
+		fHasAnySlidingBarMoved = TRUE;
 			uiBarToReRender = iValue;		
 	}
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		
-    IncrementStat( iValue );
+	IncrementStat( iValue );
 		fHasAnySlidingBarMoved = TRUE;
 		uiBarToReRender = iValue;		
 		btn->uiFlags|=(BUTTON_CLICKED_ON);
-        
+		
 	}
 
 	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 			
 		}
 	}
@@ -1321,21 +1321,21 @@ void CreateSlideRegionMouseRegions( void )
 {
 	PERFORMANCE_MARKER
 	// this function will create that mouse regions on the sliding area, that, if the player clicks on, the bar will automatically jump to
-  INT32 iCounter = 0;
+	INT32 iCounter = 0;
 	
 	for( iCounter = 0; iCounter < 10; iCounter++ )
 	{
-		 // define the region
-		 MSYS_DefineRegion( &pSliderRegions[ iCounter ], ( INT16 ) ( SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) ( LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
+		// define the region
+		MSYS_DefineRegion( &pSliderRegions[ iCounter ], ( INT16 ) ( SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) ( LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
 			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback);
-	 
-		 // define user data
-		 	MSYS_SetRegionUserData(&pSliderRegions[iCounter],0,iCounter);
-		 // now add it
-		 MSYS_AddRegion(&pSliderRegions[ iCounter ]);
+	
+		// define user data
+			MSYS_SetRegionUserData(&pSliderRegions[iCounter],0,iCounter);
+		// now add it
+		MSYS_AddRegion(&pSliderRegions[ iCounter ]);
 	}
 
-  return;
+	return;
 }
 
 void CreateSliderBarMouseRegions( void )
@@ -1345,7 +1345,7 @@ void CreateSliderBarMouseRegions( void )
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
 	// this function will create that mouse regions on the sliding bars, that, if the player clicks on, the bar will automatically jump to
-  INT32 iCounter = 0;
+	INT32 iCounter = 0;
 	INT16 sX = 0;
 
 	// set the starting X
@@ -1353,30 +1353,30 @@ void CreateSliderBarMouseRegions( void )
 
 	for( iCounter = 0; iCounter < 10; iCounter++ )
 	{
-		 // define the region
-		 MSYS_DefineRegion( &pSliderBarRegions[ iCounter ], ( INT16 ) ( sX ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) (sX + SLIDER_BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
+		// define the region
+		MSYS_DefineRegion( &pSliderBarRegions[ iCounter ], ( INT16 ) ( sX ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) (sX + SLIDER_BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
 			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderBarRegionButtonCallback);
-	 
-		 // define user data
-		 	MSYS_SetRegionUserData(&pSliderBarRegions[iCounter],0,iCounter);
-		 // now add it
-		 MSYS_AddRegion(&pSliderBarRegions[ iCounter ]);
+	
+		// define user data
+			MSYS_SetRegionUserData(&pSliderBarRegions[iCounter],0,iCounter);
+		// now add it
+		MSYS_AddRegion(&pSliderBarRegions[ iCounter ]);
 	}
 
-  return;
+	return;
 }
 
 
 void DestroySlideRegionMouseRegions( void )
 {
 	PERFORMANCE_MARKER
-  // this function will destroy the regions user for the slider ' jumping' 
+	// this function will destroy the regions user for the slider ' jumping' 
 	INT32 iCounter=0;
-  
+	
 	// delete the regions
 	for( iCounter=0; iCounter < 10; iCounter++ )
 	{
-	 MSYS_RemoveRegion( &pSliderRegions[ iCounter ] );
+	MSYS_RemoveRegion( &pSliderRegions[ iCounter ] );
 	}
 
 	return;
@@ -1386,13 +1386,13 @@ void DestroySlideRegionMouseRegions( void )
 void DestroySlideBarMouseRegions( void )
 {
 	PERFORMANCE_MARKER
-  // this function will destroy the regions user for the slider ' jumping' 
+	// this function will destroy the regions user for the slider ' jumping' 
 	INT32 iCounter=0;
-  
+	
 	// delete the regions
 	for( iCounter=0; iCounter < 10; iCounter++ )
 	{
-	 MSYS_RemoveRegion( &pSliderBarRegions[ iCounter ] );
+	MSYS_RemoveRegion( &pSliderBarRegions[ iCounter ] );
 	}
 
 	return;
@@ -1406,18 +1406,18 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
 
-  INT32 iCurrentAttributeValue = 0;
-  INT32 iNewAttributeValue = 0; 
-  INT32 iAttributeDelta = 0;
-  INT32 iCounter =0; 
-  INT16 sX =0;
+	INT32 iCurrentAttributeValue = 0;
+	INT32 iNewAttributeValue = 0; 
+	INT32 iAttributeDelta = 0;
+	INT32 iCounter =0; 
+	INT16 sX =0;
 	INT16 sY = 0;
 	static INT16 sOldX = -1;
 	static INT16 sOldY = -1;
 	static INT32 iAttribute = -1;
 	INT32 iNewValue = 0;
 	INT32 iCurrentValue = 0;
-  INT16 sNewX = -1;
+	INT16 sNewX = -1;
 	
 
 	//if we already have an anchored slider bar
@@ -1425,27 +1425,27 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		return;
 
 
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
-	  return;
-  }
+	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	{
+	return;
+	}
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
-  {
+	{
 		if( fSlideIsActive == FALSE)
 		{ 
 			// not active leave
-      return;  
+		return;	
 		}
 
 
-	  // check to see if we have moved	
-	  if( MSYS_GetRegionUserData(pRegion, 0) != iAttribute )
+	// check to see if we have moved	
+	if( MSYS_GetRegionUserData(pRegion, 0) != iAttribute )
 		{
 			// different regions
 			iAttribute = MSYS_GetRegionUserData(pRegion, 0);
-		  sOldX = -1;
+		sOldX = -1;
 			sOldY = -1;
-      return;
+		return;
 		}
 
 		uiBarToReRender = iAttribute;
@@ -1453,34 +1453,34 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		giCurrentlySelectedStat = iAttribute;
 		gpCurrentScrollBox = pRegion;
 
-    // get new attribute value x
+	// get new attribute value x
 		sNewX = pRegion->MouseXPos;
-    
+	
 		// sOldX has been reset, set to sNewX
 		if( sOldX == -1)
 		{
 			sOldX = sNewX;
-		  return;
+		return;
 		}
 		// check against old x
 		if( sNewX != sOldX )
 		{
 
 			// get old stat value
-		  iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
+		iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
 			iNewValue = DetermineNewValue( sNewX );
 			// chenged, move mouse region if change large enough
-      if( iCurrentAttributeValue != iNewValue )
+		if( iCurrentAttributeValue != iNewValue )
 			{
-         // update screen
-         fHasAnySlidingBarMoved = TRUE;
+		 // update screen
+		 fHasAnySlidingBarMoved = TRUE;
 			}
 
-      // change is enough
-      if ( iNewValue - iCurrentAttributeValue > 0)
+		// change is enough
+		if ( iNewValue - iCurrentAttributeValue > 0)
 			{
 				// positive, increment stat
-        iCounter = iNewValue - iCurrentAttributeValue;
+		iCounter = iNewValue - iCurrentAttributeValue;
 				for( iCounter; iCounter > 0; iCounter--)
 				{
 					IncrementStat( iAttribute );
@@ -1489,7 +1489,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			else
 			{
 				// negative, decrement stat
-        iCounter = iCurrentAttributeValue - iNewValue;
+		iCounter = iCurrentAttributeValue - iNewValue;
 				for( iCounter; iCounter > 0; iCounter--)
 				{
 					DecrementStat( iAttribute );
@@ -1499,13 +1499,13 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			sOldX = sNewX;		
 		}
 	}
-  else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
-    
+	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+	
 		if( fSlideIsActive )
 		{
-      // reset slide is active flag
-		  fSlideIsActive = FALSE;
+		// reset slide is active flag
+		fSlideIsActive = FALSE;
 			return;
 		}
 		
@@ -1515,27 +1515,27 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		sX = pRegion->MouseXPos;
 		sY = pRegion->MouseYPos;
 
-    // which region are we in?
-    
+	// which region are we in?
+	
 		// get attribute
 		iAttribute = MSYS_GetRegionUserData(pRegion, 0);
-    uiBarToReRender = iAttribute;
+	uiBarToReRender = iAttribute;
 
 		// get value of attribute
 		iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
-    
+	
 		// set the new attribute value based on position of mouse click
 		iNewAttributeValue = DetermineNewValue( sX );
 
 		// too high, reset to MAX_ATTIBUTEPOINT
 		if( iNewAttributeValue > iMaxAttribute )
-    {
+	{
 			iNewAttributeValue = iMaxAttribute;
 		}
 			
 		// get the delta
 		iAttributeDelta = iCurrentAttributeValue - iNewAttributeValue;
-    
+	
 		// set Counter
 		iCounter = iAttributeDelta;
 
@@ -1545,32 +1545,32 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			// decrement
 			for( iCounter = 0; iCounter < iAttributeDelta; iCounter++ )
 			{
-        DecrementStat( iAttribute );
+		DecrementStat( iAttribute );
 			}
 		}
 		else
 		{
 			// increment attribute
-      for( iCounter = iAttributeDelta; iCounter < 0; iCounter++ )
+		for( iCounter = iAttributeDelta; iCounter < 0; iCounter++ )
 			{
 				if( iCurrentAttributeValue == 0)
 				{
 					iCounter = 0;
 				}
-        IncrementStat( iAttribute );
+		IncrementStat( iAttribute );
 			}
 		}
 
 		// update screen
-    fHasAnySlidingBarMoved = TRUE;
+	fHasAnySlidingBarMoved = TRUE;
 
 
-  }
-  else if ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
-  {
-  
+	}
+	else if ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
+	{
+	
 
-  }
+	}
 	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 
@@ -1580,14 +1580,14 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 		// get attribute
 		iAttribute = MSYS_GetRegionUserData(pRegion, 0);
-    uiBarToReRender = iAttribute;
+	uiBarToReRender = iAttribute;
 
 		// get value of attribute
 		iCurrentAttributeValue = GetCurrentAttributeValue( iAttribute );
-    
+	
 		// get the boxes bounding x
 		sNewX = DetermineNewPosition( iCurrentAttributeValue - iMinAttribute );
-        sNewX += LAPTOP_SCREEN_UL_X;
+		sNewX += LAPTOP_SCREEN_UL_X;
 
 		// the sNewX is below 0, reset to zero
 		if( sNewX < 0 )
@@ -1598,7 +1598,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		if( ( sX > sNewX )&&( sX < sNewX + SLIDER_BAR_WIDTH) )
 		{
 			// we are within the slide bar, set fact we want to drag and draw
-       fSlideIsActive = TRUE;
+		fSlideIsActive = TRUE;
 		}
 		else
 		{
@@ -1612,27 +1612,27 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER 
-  
+	
 
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-    fSlideIsActive = TRUE;
+	fSlideIsActive = TRUE;
 		SliderRegionButtonCallback( &pSliderRegions[ MSYS_GetRegionUserData(pRegion, 0) ], MSYS_CALLBACK_REASON_LBUTTON_REPEAT);
 	}
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		fSlideIsActive = FALSE;
 	}
-    
+	
 }
 
 INT32 GetCurrentAttributeValue( INT32 iAttribute )
 {
 	PERFORMANCE_MARKER
 	// this function will get the value of the attribute that was passed to this fucntion via iAttribute
-  INT32 iValue =0;
+	INT32 iValue =0;
 
-  switch( iAttribute )
+	switch( iAttribute )
 	{
 		case ( STRENGTH_ATTRIBUTE ):
 			iValue = iCurrentStrength;
@@ -1640,10 +1640,10 @@ INT32 GetCurrentAttributeValue( INT32 iAttribute )
 		case ( DEXTERITY_ATTRIBUTE ):
 			iValue = iCurrentDexterity;
 		break;
-    case ( AGILITY_ATTRIBUTE ):
+	case ( AGILITY_ATTRIBUTE ):
 			iValue = iCurrentAgility;
 		break;
-    case ( HEALTH_ATTRIBUTE ):
+	case ( HEALTH_ATTRIBUTE ):
 			iValue = iCurrentHealth;
 		break;
 		case ( WISDOM_ATTRIBUTE ):
@@ -1665,7 +1665,7 @@ INT32 GetCurrentAttributeValue( INT32 iAttribute )
 			iValue = iCurrentExplosives;
 		break;
 
-    
+	
 	}
 
 	return iValue;
@@ -1677,10 +1677,10 @@ void SetAttributes( void )
 	PERFORMANCE_MARKER
 	INT8	bExtraPoints;
 /*
-  // set attributes and skills based on what is in charprofile.c
-    
+	// set attributes and skills based on what is in charprofile.c
+	
 	// attributes
-	  iCurrentStrength = iStrength + iAddStrength;
+	iCurrentStrength = iStrength + iAddStrength;
 		iCurrentDexterity = iDexterity + iAddDexterity;
 		iCurrentHealth = iHealth + iAddHealth;
 		iCurrentLeaderShip = iLeadership + iAddLeadership;
@@ -1688,13 +1688,13 @@ void SetAttributes( void )
 		iCurrentAgility = iAgility + iAddAgility;
 
 	// skills
-    iCurrentMarkmanship = iMarksmanship + iAddMarksmanship;
+	iCurrentMarkmanship = iMarksmanship + iAddMarksmanship;
 		iCurrentMechanical = iMechanical + iAddMechanical;
 		iCurrentMedical = iMedical + iAddMedical;
 		iCurrentExplosives = iExplosives + iAddExplosives;
  
 		// reset bonus pts
-    iCurrentBonusPoints = 40;
+	iCurrentBonusPoints = 40;
 */
 
 	iCurrentStrength = gGameExternalOptions.iStartAttribute;
@@ -1734,21 +1734,21 @@ void SetAttributes( void )
 void DrawBonusPointsRemaining( void )
 {
 	PERFORMANCE_MARKER
-  // draws the amount of points remaining player has
+	// draws the amount of points remaining player has
 	CHAR16 sString[64];
 
 	// just reviewing, don't blit stats
 	if( fReviewStats == TRUE )
 	{
-    return;
+	return;
 	}
 	// parse amountof bns pts remaining
 	swprintf(sString, L"%d", iCurrentBonusPoints);
 
 	// set font color
 	SetFontForeground( FONT_WHITE );
-  SetFontBackground( FONT_BLACK );
-  SetFont( FONT12ARIAL );
+	SetFontBackground( FONT_BLACK );
+	SetFont( FONT12ARIAL );
 	// print string
 	mprintf( LAPTOP_SCREEN_UL_X + 425 ,LAPTOP_SCREEN_WEB_UL_Y + 51, sString );
 
@@ -1760,8 +1760,8 @@ void DrawBonusPointsRemaining( void )
 void SetGeneratedCharacterAttributes( void )
 {
 	PERFORMANCE_MARKER
-  // copies over the attributes of the player generated character
-    iStrength = iCurrentStrength  ;
+	// copies over the attributes of the player generated character
+	iStrength = iCurrentStrength	;
 		iDexterity = iCurrentDexterity;
 		iHealth = iCurrentHealth;
 		iLeadership = iCurrentLeaderShip;
@@ -1769,7 +1769,7 @@ void SetGeneratedCharacterAttributes( void )
 		iAgility = iCurrentAgility;
 
 	// skills
-    iMarksmanship = iCurrentMarkmanship;
+	iMarksmanship = iCurrentMarkmanship;
 		iMechanical = iCurrentMechanical;
 		iMedical = iCurrentMedical;
 		iExplosives = iCurrentExplosives;
@@ -1783,7 +1783,7 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue )
 {
 	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		MarkButtonsDirty();
 	}
@@ -1818,7 +1818,7 @@ INT32 DetermineNewValue( INT32 iNewX )
 
 	// too high, reset to MAX_ATTIBUTEPOINT
 	if( iNewValue > iMaxAttribute )
-  {
+	{
 		iNewValue = iMaxAttribute;
 	}
 

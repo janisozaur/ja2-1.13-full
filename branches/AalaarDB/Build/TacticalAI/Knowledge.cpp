@@ -188,11 +188,11 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 
 		// if this merc is inactive, at base, on assignment, or dead
 		if (!pTemp || !pTemp->stats.bLife)
-			continue;          // next merc
+			continue;			// next merc
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))
-			continue;          // next merc
+			continue;			// next merc
 
 		pbPersOL = pSoldier->aiData.bOppList + pTemp->ubID;
 		pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pTemp->ubID;
@@ -204,7 +204,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,*psLastLoc);
-			iNoiseValue = (*pbPersOL) * iDistAway;               // always a negative number!
+			iNoiseValue = (*pbPersOL) * iDistAway;				// always a negative number!
 
 			if (iNoiseValue > iBestValue)
 			{
@@ -219,7 +219,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,gsPublicLastKnownOppLoc[pSoldier->bTeam][pTemp->ubID]);
-			iNoiseValue = (*pbPublOL) * iDistAway;               // always a negative number!
+			iNoiseValue = (*pbPublOL) * iDistAway;				// always a negative number!
 
 			if (iNoiseValue > iBestValue)
 			{
@@ -250,7 +250,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		else
 		{
 			// we are there or near
-			pSoldier->aiData.sNoiseGridno = NOWHERE;        // wipe it out, not useful anymore
+			pSoldier->aiData.sNoiseGridno = NOWHERE;		// wipe it out, not useful anymore
 			pSoldier->aiData.ubNoiseVolume = 0;
 		}
 	}
@@ -375,13 +375,13 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 		// if this merc is inactive, at base, on assignment, or dead
 		if (!pTemp)
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		pbPersOL = pSoldier->aiData.bOppList + pTemp->ubID;

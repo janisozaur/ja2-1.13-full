@@ -51,7 +51,7 @@
 #pragma warning (default : 4005)
 
 // 0verhaul
-// These squelch warnings in VC2K5 about printf's and string operations being unsafe.  Maybe we should work on building a better
+// These squelch warnings in VC2K5 about printf's and string operations being unsafe.	Maybe we should work on building a better
 // system that gives buffer sizes for copies (which would prevent future problems like a stack corruption issue I fixed a while back),
 // but for now, just tell the compiler to shut up so I can see the real errors.
 #define _CRT_SECURE_NO_WARNINGS

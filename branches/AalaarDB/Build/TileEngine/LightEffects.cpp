@@ -124,18 +124,18 @@ INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 	pLight->uiTimeOfLastUpdate			= GetWorldTotalSeconds( );
 
 	pLight->ubDuration	= ubDuration;
-	pLight->bRadius     = ubStartRadius;
+	pLight->bRadius	 = ubStartRadius;
 	pLight->bAge				= 0;
-	pLight->fAllocated  = TRUE;
+	pLight->fAllocated	= TRUE;
 
 	UpdateLightingSprite( pLight );
 
-  // Handle sight here....
+	// Handle sight here....
 	AllTeamsLookForAll( FALSE );
 
 	//Play the breaklight sound
 //	PlayJA2Sample( BREAK_LIGHT_IGNITING, RATE_11025, SoundVolume( LOWVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
-// MAdd:  for some reason this crashes the game!
+// MAdd:	for some reason this crashes the game!
 	return( pLight->iLight );
 }
 
@@ -148,8 +148,8 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 	UINT32 cnt;
 
 	// Set to unallocated....
-  for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
-  {
+	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
+	{
 		pLight = &gLightEffectData[ cnt ];
 		
 		if ( pLight->fAllocated )
@@ -177,8 +177,8 @@ BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 	UINT32 cnt;
 
 	// Set to unallocated....
-  for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
-  {
+	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
+	{
 		pLight = &gLightEffectData[ cnt ];
 		
 		if ( pLight->fAllocated )
@@ -190,7 +190,7 @@ BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 		}
 	}
 
-  return FALSE;
+	return FALSE;
 }
 
 void DecayLightEffects( UINT32 uiTime )
@@ -198,12 +198,12 @@ void DecayLightEffects( UINT32 uiTime )
 	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt, cnt2;
-	BOOLEAN	  fDelete = FALSE;
-  UINT16    usNumUpdates = 1;
+	BOOLEAN	fDelete = FALSE;
+	UINT16	usNumUpdates = 1;
 
-  // age all active tear gas clouds, deactivate those that are just dispersing
-  for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
-  {
+	// age all active tear gas clouds, deactivate those that are just dispersing
+	for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
+	{
 		pLight = &gLightEffectData[ cnt ];
 		
 		fDelete = FALSE;
@@ -266,7 +266,7 @@ void DecayLightEffects( UINT32 uiTime )
 				AllTeamsLookForAll( FALSE );
 			}
 		}
-  }
+	}
 }
 
 
@@ -324,10 +324,10 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 
-	//no longer need to load Light effects.  They are now in temp files
+	//no longer need to load Light effects.	They are now in temp files
 	if( guiCurrentSaveGameVersion < 76 )
 	{
-		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
+		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *	NUM_LIGHT_EFFECT_SLOTS );
 
 		//Load the Number of Light Effects
 		FileRead( hFile, &guiNumLightEffects, sizeof( UINT32 ), &uiNumBytesRead );

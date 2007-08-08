@@ -51,13 +51,13 @@
 
 void DeleteStructureFromTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure );
 /*
- * NB:  STRUCTURE_SPECIAL
+ * NB:	STRUCTURE_SPECIAL
  *
  * Means different things depending on the context.
  * 
  * WALLNWINDOW SPECIAL - opaque to sight
  * MULTI SPECIAL - second level (damaged) MULTI structure, should only be deleted if 
- *    starting with the deletion of a MULTI SPECIAL structure
+ *	starting with the deletion of a MULTI SPECIAL structure
  */
 
 UINT8 AtHeight[PROFILE_Z_SIZE] = { 0x01, 0x02, 0x04, 0x08 };
@@ -106,7 +106,7 @@ INT32 guiMaterialHitSound[ NUM_MATERIAL_TYPES ] =
 
 UINT8 gubMaterialArmour[] =
 /*
-index  1-10, organics
+index	1-10, organics
 index 11-20, rocks and concretes
 index 21-30, metals
 
@@ -125,11 +125,11 @@ index 25, indestructable metal
 */
 
 { // note: must increase; r.c. should block *AP* 7.62mm rounds
-	 0,		// nothing
+	0,		// nothing
 	25,		// dry timber; wood wall +1/2
 	20,		// furniture wood (thin!) or plywood wall +1/2
 	30,		// wood (live); 1.5x timber
-	 3,		// light vegetation
+	3,		// light vegetation
 	10,		// upholstered furniture
 	47,		// porcelain
 	10,		// cactus, hay, bamboo
@@ -138,9 +138,9 @@ index 25, indestructable metal
 		0,
 	55,		// stone masonry; 3x timber
 	63,		// non-reinforced concrete; 4x timber???
-  70,		// reinforced concrete; 6x timber
-  85,		// rock? - number invented
-	 9,		// rubber - tires
+	70,		// reinforced concrete; 6x timber
+	85,		// rock? - number invented
+	9,		// rubber - tires
 	40,		// sand
 		1,	// cloth
 	40,		// sandbag
@@ -148,7 +148,7 @@ index 25, indestructable metal
 		0,
 	37,		// light metal (furniture; NB thin!)
 	57,		// thicker metal (dumpster)
-  85,		// heavy metal (vault doors) - block everything
+	85,		// heavy metal (vault doors) - block everything
 	// note that vehicle armour will probably end up in here
 	127,	// rock indestructable
 	127,	// indestructable
@@ -188,7 +188,7 @@ UINT8 FilledTilePositions( DB_STRUCTURE_TILE * pTile )
 void FreeStructureFileRef( STRUCTURE_FILE_REF * pFileRef )
 {
 	PERFORMANCE_MARKER // Frees all of the memory associated with a file reference, including
-  // the file reference structure itself
+	// the file reference structure itself
 
 	UINT16										usLoop;
 
@@ -366,7 +366,7 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 BOOLEAN CreateFileStructureArrays( STRUCTURE_FILE_REF * pFileRef, UINT32 uiDataSize )
 {
 	PERFORMANCE_MARKER // Based on a file chunk, creates all the dynamic arrays for the 
-  // structure definitions contained within
+	// structure definitions contained within
 
 	UINT8 *										pCurrent;
 	DB_STRUCTURE_REF *				pDBStructureRef;
@@ -729,13 +729,13 @@ BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 					return( FALSE );
 				}
 
-        // ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!
+		// ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!
 				if ( !( pExistingStructure->fFlags & STRUCTURE_MOBILE ) && (pExistingStructure->fFlags & STRUCTURE_PASSABLE) )
 				{
 					// Skip!
 					pExistingStructure = pExistingStructure->pNext;
 					continue;
-        }
+		}
 
 				// ATE: Added here - UNLESS this part is PASSABLE....
 				// two obstacle structures aren't allowed in the same tile at the same height
@@ -872,9 +872,9 @@ STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRU
 
 	// We go through a definition stage here and a later stage of
 	// adding everything to the world so that we don't have to untangle
-	// things if we run out of memory.  First we create an array of
+	// things if we run out of memory.	First we create an array of
 	// pointers to point to all of the STRUCTURE elements created in
-	// the first stage.  This array gets given to the base tile so
+	// the first stage.	This array gets given to the base tile so
 	// there is an easy way to remove an entire object from the world quickly
 
 	// NB we add 1 because the 0th element is in fact the reference count!
@@ -901,7 +901,7 @@ STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRU
 			#ifdef JA2EDITOR
 				//Kris: 
 				//Added this undo code if in the editor.
-				//It is important to save tiles effected by multitiles.  If the structure placement
+				//It is important to save tiles effected by multitiles.	If the structure placement
 				//fails below, it doesn't matter, because it won't hurt the undo code.
 				if( gfEditMode )
 					AddToUndoList( ppStructure[ ubLoop ]->sGridNo );
@@ -951,7 +951,7 @@ STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRU
 	}
 	else if (pLevelNode->uiFlags & LEVELNODE_ROTTINGCORPSE)
 	{
-    // ATE: Offset IDs so they don't collide with soldiers
+	// ATE: Offset IDs so they don't collide with soldiers
 		usStructureID = (UINT16)( TOTAL_SOLDIERS + pLevelNode->pAniTile->uiUserData );
 	}
 	else
@@ -1249,7 +1249,7 @@ STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags )
 	if( sGridNo > WORLD_MAX-1 ) //bug fix for win98 crash when traveling between sectors
 		return( NULL );
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
+	pCurrent =	gpWorldLevelData[sGridNo].pStructureHead;
 	while (pCurrent != NULL)
 	{
 		if ((pCurrent->fFlags & fFlags) != 0)
@@ -1284,7 +1284,7 @@ STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID )
 	PERFORMANCE_MARKER // finds a structure that matches any of the given flags
 	STRUCTURE * pCurrent;
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
+	pCurrent =	gpWorldLevelData[sGridNo].pStructureHead;
 	while (pCurrent != NULL)
 	{
 		if (pCurrent->usStructureID == usStructureID)
@@ -1642,17 +1642,17 @@ BOOLEAN DamageStructure( STRUCTURE * pStructure, UINT8 ubDamage, UINT8 ubReason,
 		}
 
 		// Make hit sound....
-    if ( pStructure->fFlags & STRUCTURE_CAVEWALL )
-    {
-			  PlayJA2Sample( S_VEG_IMPACT1, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
-    }
-    else
-    {
-		  if ( guiMaterialHitSound[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] != -1 )
-		  {
-			  PlayJA2Sample( guiMaterialHitSound[ pStructure->pDBStructureRef->pDBStructure->ubArmour ], RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
-		  }
-    }
+	if ( pStructure->fFlags & STRUCTURE_CAVEWALL )
+	{
+			PlayJA2Sample( S_VEG_IMPACT1, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+	}
+	else
+	{
+		if ( guiMaterialHitSound[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] != -1 )
+		{
+			PlayJA2Sample( guiMaterialHitSound[ pStructure->pDBStructureRef->pDBStructure->ubArmour ], RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+		}
+	}
 		// Don't update damage HPs....
 		return( TRUE );
 	}
@@ -1953,8 +1953,8 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 	}
 
 	sStructIndex = 0;
-	sNext				 = sSTIStartIndex + sSTIStep;
-	fFirstTime	 = TRUE;
+	sNext				= sSTIStartIndex + sSTIStep;
+	fFirstTime	= TRUE;
 
 	for (uiLoop = (UINT8)sSTIStartIndex; uiLoop < hVObject->usNumberOfObjects; uiLoop++ )
 	{
@@ -2001,7 +2001,7 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 					hVObject->ppZStripInfo[ uiDestVoIndex ] = (ZStripInfo *) MemAlloc( sizeof( ZStripInfo ) );
 					if (hVObject->ppZStripInfo[ uiDestVoIndex ] == NULL)
 					{
-						// augh!! out of memory!  free everything allocated and abort
+						// augh!! out of memory!	free everything allocated and abort
 						for (ubLoop2 = 0; ubLoop2 < uiLoop; ubLoop2++)
 						{
 							if (hVObject->ppZStripInfo[ubLoop2] != NULL)
@@ -2030,7 +2030,7 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 						{	
 							UINT32 i = 0;
 							// adjust for the difference between the animation and structure base tile				
-	 
+	
 							//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )
 							{
 								sOffsetX = sOffsetX + (WORLD_TILE_X / 2);
@@ -2214,12 +2214,12 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		sDesiredLevel = STRUCTURE_ON_ROOF;
 	}
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
+	pCurrent =	gpWorldLevelData[sGridNo].pStructureHead;
 
 	// If no struct, return
 	if ( pCurrent == NULL )
 	{
-    (*pStructHeight) = StructureHeight( pCurrent );
+	(*pStructHeight) = StructureHeight( pCurrent );
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}
@@ -2230,10 +2230,10 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
 			fOKStructOnLevel = TRUE;
-      pStructure       = pCurrent;
+		pStructure		= pCurrent;
 
 			// Turn off if we are on upper level!
-		  if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
+		if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
 			{
 				fOKStructOnLevel = FALSE;
 			}
@@ -2266,33 +2266,33 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 					case OUTSIDE_TOP_LEFT:
 					case INSIDE_TOP_LEFT:
 							
-            (*pStructHeight) = StructureHeight( pCurrent );
+			(*pStructHeight) = StructureHeight( pCurrent );
 						(*ppTallestStructure) = pCurrent;
 
-            if ( pCurrent->fFlags & STRUCTURE_OPEN )
-            {
-						  return( BLOCKING_TOPLEFT_OPEN_WINDOW );			
-            }
-            else
-            {
-						  return( BLOCKING_TOPLEFT_WINDOW );			
-            }
+			if ( pCurrent->fFlags & STRUCTURE_OPEN )
+			{
+						return( BLOCKING_TOPLEFT_OPEN_WINDOW );			
+			}
+			else
+			{
+						return( BLOCKING_TOPLEFT_WINDOW );			
+			}
 						break;
 
 					case OUTSIDE_TOP_RIGHT:
 					case INSIDE_TOP_RIGHT:
 
-            (*pStructHeight) = StructureHeight( pCurrent );
+			(*pStructHeight) = StructureHeight( pCurrent );
 						(*ppTallestStructure) = pCurrent;
 
-            if ( pCurrent->fFlags & STRUCTURE_OPEN )
-            {
-						  return( BLOCKING_TOPRIGHT_OPEN_WINDOW );			
-            }
-            else
-            {
-						  return( BLOCKING_TOPRIGHT_WINDOW );			
-            }
+			if ( pCurrent->fFlags & STRUCTURE_OPEN )
+			{
+						return( BLOCKING_TOPRIGHT_OPEN_WINDOW );			
+			}
+			else
+			{
+						return( BLOCKING_TOPRIGHT_WINDOW );			
+			}
 						break;
 				}
 			}
@@ -2303,7 +2303,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 				// If we are not opem, we are full blocking!
 				if ( !(pCurrent->fFlags & STRUCTURE_OPEN ) )
 				{
-          (*pStructHeight) = StructureHeight( pCurrent );
+			(*pStructHeight) = StructureHeight( pCurrent );
 					(*ppTallestStructure) = pCurrent;
 					return( FULL_BLOCKING );	
 					break;				
@@ -2315,7 +2315,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 						case OUTSIDE_TOP_LEFT:
 						case INSIDE_TOP_LEFT:
 
-              (*pStructHeight) = StructureHeight( pCurrent );    
+				(*pStructHeight) = StructureHeight( pCurrent );	
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPLEFT_DOOR );			
 							break;
@@ -2323,7 +2323,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 						case OUTSIDE_TOP_RIGHT:
 						case INSIDE_TOP_RIGHT:
 
-              (*pStructHeight) = StructureHeight( pCurrent );
+				(*pStructHeight) = StructureHeight( pCurrent );
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPRIGHT_DOOR );			
 							break;
@@ -2339,20 +2339,20 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	{
 		if ( fMinimumBlockingFound )
 		{
-      (*pStructHeight) = StructureHeight( pStructure );
+		(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_REDUCE_RANGE );
 		}
 		else
 		{
-      (*pStructHeight) = StructureHeight( pStructure );
+		(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_NEXT_TILE );
 		}
 	}
 	else
 	{
-    (*pStructHeight) = 0;
+	(*pStructHeight) = 0;
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}
@@ -2395,7 +2395,7 @@ STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallO
 
 	uiTypeFlag = StructureTypeToFlag( ubType );
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
+	pCurrent =	gpWorldLevelData[sGridNo].pStructureHead;
 	while (pCurrent != NULL)
 	{	
 		if (pCurrent->fFlags & uiTypeFlag && pCurrent->ubWallOrientation == ubWallOrientation &&
@@ -2412,31 +2412,31 @@ STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallO
 UINT32 GetStructureOpenSound( STRUCTURE * pStructure, BOOLEAN fClose )
 {
 	PERFORMANCE_MARKER
-  UINT32 uiSoundID;
+	UINT32 uiSoundID;
 
-  switch( pStructure->pDBStructureRef->pDBStructure->ubArmour )
-  {
-    case MATERIAL_LIGHT_METAL:
-    case MATERIAL_THICKER_METAL:
+	switch( pStructure->pDBStructureRef->pDBStructure->ubArmour )
+	{
+	case MATERIAL_LIGHT_METAL:
+	case MATERIAL_THICKER_METAL:
 
-      uiSoundID = OPEN_LOCKER;
-      break;
+		uiSoundID = OPEN_LOCKER;
+		break;
 
-    case MATERIAL_WOOD_WALL:
-    case MATERIAL_PLYWOOD_WALL:
-    case MATERIAL_FURNITURE:
+	case MATERIAL_WOOD_WALL:
+	case MATERIAL_PLYWOOD_WALL:
+	case MATERIAL_FURNITURE:
 
-      uiSoundID = OPEN_WOODEN_BOX;
-      break;
+		uiSoundID = OPEN_WOODEN_BOX;
+		break;
 
-    default:
-      uiSoundID = OPEN_DEFAULT_OPENABLE;
-  }
+	default:
+		uiSoundID = OPEN_DEFAULT_OPENABLE;
+	}
 
-  if ( fClose )
-  {
-    uiSoundID++;
-  }
+	if ( fClose )
+	{
+	uiSoundID++;
+	}
 
-  return( uiSoundID );
+	return( uiSoundID );
 }

@@ -71,7 +71,7 @@ void TurnOffPrimeLights();
 
 
 
-//effects whether or not time of day effects the lighting.  Underground
+//effects whether or not time of day effects the lighting.	Underground
 //maps have an ambient light level that is saved in the map, and doesn't change.
 extern BOOLEAN gfCaves;
 extern BOOLEAN gfBasement;

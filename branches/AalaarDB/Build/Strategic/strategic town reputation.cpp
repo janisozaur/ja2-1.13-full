@@ -19,7 +19,7 @@
 
 // the max and min town opinion of an individual merc can be
 #define MAX_TOWN_OPINION								50
-#define MIN_TOWN_OPINION							 -50
+#define MIN_TOWN_OPINION							-50
 
 // town reputation is currently updated 4x per day: at 9am, noon, 3pm, and 6pm
 

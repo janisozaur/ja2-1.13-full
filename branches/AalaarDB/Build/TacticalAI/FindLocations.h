@@ -32,6 +32,6 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo );
 INT16 FindFlankingSpot(SOLDIERTYPE *pSoldier, INT16 sPos, INT8 bAction );
 INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp );
 INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubSearchRadius );
-INT8  FindDirectionForClimbing( INT16 sGridNo );
+INT8	FindDirectionForClimbing( INT16 sGridNo );
 
 #endif

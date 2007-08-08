@@ -110,9 +110,9 @@ armourCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -140,12 +140,12 @@ armourEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curArmour.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubArmourClass") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubArmourClass  = (UINT8) atol(pData->szCharData);
+			pData->curArmour.ubArmourClass	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubProtection") == 0)
 		{
@@ -163,7 +163,7 @@ armourEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "ubDegradePercent") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curArmour.ubDegradePercent   = (UINT8) atol(pData->szCharData);
+			pData->curArmour.ubDegradePercent	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -219,7 +219,7 @@ BOOLEAN ReadInArmourStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -260,10 +260,10 @@ BOOLEAN WriteArmourStats()
 			FilePrintf(hFile,"\t<ARMOUR>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<ubArmourClass>%d</ubArmourClass>\r\n",								Armour[cnt].ubArmourClass  );
-			FilePrintf(hFile,"\t\t<ubProtection>%d</ubProtection>\r\n",								Armour[cnt].ubProtection   );
-			FilePrintf(hFile,"\t\t<ubCoverage>%d</ubCoverage>\r\n",								Armour[cnt].ubCoverage   );
-			FilePrintf(hFile,"\t\t<ubDegradePercent>%d</ubDegradePercent>\r\n",								Armour[cnt].ubDegradePercent   );
+			FilePrintf(hFile,"\t\t<ubArmourClass>%d</ubArmourClass>\r\n",								Armour[cnt].ubArmourClass	);
+			FilePrintf(hFile,"\t\t<ubProtection>%d</ubProtection>\r\n",								Armour[cnt].ubProtection	);
+			FilePrintf(hFile,"\t\t<ubCoverage>%d</ubCoverage>\r\n",								Armour[cnt].ubCoverage	);
+			FilePrintf(hFile,"\t\t<ubDegradePercent>%d</ubDegradePercent>\r\n",								Armour[cnt].ubDegradePercent	);
 
 			FilePrintf(hFile,"\t</ARMOUR>\r\n");
 		}

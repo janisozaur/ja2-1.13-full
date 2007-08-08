@@ -111,13 +111,13 @@ BOOLEAN fHelicopterDestroyed = FALSE;
 UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ] =
 {
 	{ 13, 2 },		// Drassen airport
-	{  6, 9 },		// Estoni
+	{	6, 9 },		// Estoni
 };
 
 
 INT16 sRefuelStartGridNo[ NUMBER_OF_REFUEL_SITES ] ={
-	 9001, // drassen
-	 13068, // estoni
+	9001, // drassen
+	13068, // estoni
 };
 
 // whether or not helicopter can refuel at this site
@@ -297,7 +297,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	UINT8 ubNumEnemies;
 
 	
-	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
+	// check for SAM attack upon the chopper.	If it's destroyed by the attack, do nothing else here
 	if( HandleSAMSiteAttackOfHelicopterInSector( sX, sY ) == TRUE )
 	{
 		// destroyed
@@ -369,12 +369,12 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 				StopTimeCompression();
 			}
 
-			// destination reached, payment due.  If player can't pay, mercs get kicked off and heli flies to base!
+			// destination reached, payment due.	If player can't pay, mercs get kicked off and heli flies to base!
 			PaySkyriderBill();
 		}
 		else
 		{
-			// Say quote: "Gonna have to abort.  Enemies below"
+			// Say quote: "Gonna have to abort.	Enemies below"
 			if(gGameSettings.fOptions[ TOPTION_SILENT_SKYRIDER ] == FALSE) HeliCharacterDialogue( pSkyRider, ARRIVED_IN_HOSTILE_SECTOR );
 			StopTimeCompression();
 		}
@@ -949,7 +949,7 @@ void UpdateRefuelSiteAvailability( void )
 			if ( !fHelicopterAvailable && !fHelicopterDestroyed && fSkyRiderAvailable && ( iHelicopterVehicleId != -1 ) )
 			{
 				if( ( pVehicleList[ iHelicopterVehicleId ].sSectorX == ubRefuelList[ iCounter ][ 0 ]) &&
-					  ( pVehicleList[ iHelicopterVehicleId ].sSectorY == ubRefuelList[ iCounter ][ 1 ]) )
+					( pVehicleList[ iHelicopterVehicleId ].sSectorY == ubRefuelList[ iCounter ][ 1 ]) )
 				{
 					// no longer grounded
 					DoScreenIndependantMessageBox( pSkyriderText[ 5 ], MSG_BOX_FLAG_OK, NULL );
@@ -1001,9 +1001,9 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 	INT8 bNewSquad;
 	BOOLEAN fAnyoneAboard = FALSE;
 	BOOLEAN fSuccess;
-  UINT8   ubInsertionCode;
-  BOOLEAN fInsertionCodeSet = FALSE;
-  UINT16  usInsertionData;
+	UINT8	ubInsertionCode;
+	BOOLEAN fInsertionCodeSet = FALSE;
+	UINT16	usInsertionData;
 
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
@@ -1032,20 +1032,20 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 
 			AddCharacterToSquad( pSoldier, bNewSquad );
 
-      // ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
-      // called when buddy is added to a squad. However, the insertion code onlt sets set for
-      // the first merc, so the rest are going to use whatever they had previously....
-      if ( !fInsertionCodeSet )
-      {
-        ubInsertionCode = pSoldier->ubStrategicInsertionCode;
-        usInsertionData = pSoldier->usStrategicInsertionData;
-        fInsertionCodeSet = TRUE;
-      }
-      else
-      {
-        pSoldier->ubStrategicInsertionCode = ubInsertionCode;
-        pSoldier->usStrategicInsertionData = usInsertionData;
-      }
+		// ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
+		// called when buddy is added to a squad. However, the insertion code onlt sets set for
+		// the first merc, so the rest are going to use whatever they had previously....
+		if ( !fInsertionCodeSet )
+		{
+		ubInsertionCode = pSoldier->ubStrategicInsertionCode;
+		usInsertionData = pSoldier->usStrategicInsertionData;
+		fInsertionCodeSet = TRUE;
+		}
+		else
+		{
+		pSoldier->ubStrategicInsertionCode = ubInsertionCode;
+		pSoldier->usStrategicInsertionData = usInsertionData;
+		}
 		}
 	}
 
@@ -1113,13 +1113,13 @@ void HandleSkyRiderMonologueAboutEstoniRefuel( UINT32 uiSpecialCode )
 		case( 0 ):
 			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1 );
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-      CharacterDialogue( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
+		CharacterDialogue( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
 
 			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2 );
 			break;
 
 		case( 1 ):
-			 // highlight Estoni
+			// highlight Estoni
 			fShowEstoniRefuelHighLight = TRUE;
 			break;
 
@@ -1162,7 +1162,7 @@ void HandleSkyRiderMonologueAboutDrassenSAMSite( UINT32 uiSpecialCode )
 			break;
 
 		case( 1 ):
-			 // highlight Drassen SAM site sector
+			// highlight Drassen SAM site sector
 			fShowDrassenSAMHighLight = TRUE;
 			SetSAMSiteAsFound( SAM_SITE_TWO );
 			break;
@@ -1354,7 +1354,7 @@ void HandleAnimationOfSectors( void )
 	{
 		switch( gubBlitSectorLocatorCode )
 		{
-			case LOCATOR_COLOR_RED:		 // normal one used for mines (will now be overriden with yellow)
+			case LOCATOR_COLOR_RED:		// normal one used for mines (will now be overriden with yellow)
 				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_RED );
 				break;
 			case LOCATOR_COLOR_YELLOW: // used for all other dialogues
@@ -1621,7 +1621,7 @@ void HandleHelicopterOnGroundGraphic( void )
 					// see if we can find him and remove him if so....
 					pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
 
-          // ATE: Don't do this if buddy is on our team!
+			// ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
 					{
 						TacticalRemoveSoldier( pSoldier->ubID );					
@@ -1678,7 +1678,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 					// see if we can find him and remove him if so....
 					pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
 
-          // ATE: Don't do this if buddy is on our team!
+			// ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
 					{
 						TacticalRemoveSoldier( pSoldier->ubID );					
@@ -1725,7 +1725,7 @@ BOOLEAN IsHelicopterOnGroundAtRefuelingSite( UINT8 ubRefuelingSite )
 
 	// on the ground, but is it at this site or at another one?
 	if ( ( ubRefuelList[ ubRefuelingSite ][ 0 ] == pVehicleList[ iHelicopterVehicleId ].sSectorX ) && 
-			 ( ubRefuelList[ ubRefuelingSite ][ 1 ] == pVehicleList[ iHelicopterVehicleId ].sSectorY ) )
+			( ubRefuelList[ ubRefuelingSite ][ 1 ] == pVehicleList[ iHelicopterVehicleId ].sSectorY ) )
 	{
 		return(TRUE);
 	}
@@ -1762,7 +1762,7 @@ BOOLEAN WillAirRaidBeStopped( INT16 sSectorX, INT16 sSectorY )
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("WillAirRaidBeStopped: enemy has no more airports"));
 		return( TRUE );
 	}
-	 
+	
 
 	// which SAM controls this sector?
 	ubSamNumber = ubSAMControlledSectors[ sSectorY ][ sSectorX ];	
@@ -1871,7 +1871,7 @@ BOOLEAN HandleSAMSiteAttackOfHelicopterInSector( INT16 sSectorX, INT16 sSectorY 
 		// another hit!
 		gubHelicopterHitsTaken++;
 
-		// Took a hit!  Pause time so player can reconsider
+		// Took a hit!	Pause time so player can reconsider
 		StopTimeCompression();
 
 		// first hit?
@@ -1895,16 +1895,16 @@ BOOLEAN HandleSAMSiteAttackOfHelicopterInSector( INT16 sSectorX, INT16 sSectorY 
 			// everyone die die die
 			// play sound
 			if ( PlayJA2StreamingSampleFromFile( "stsounds\\blah2.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback ) == SOUND_ERROR )
-      {
-        // Destroy here if we cannot play streamed sound sample....
-  			SkyriderDestroyed( );
-      }
-      else
-      {
-        // otherwise it's handled in the callback
-	      // remove any arrival events for the helicopter's group
-	      DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
-      }
+		{
+		// Destroy here if we cannot play streamed sound sample....
+				SkyriderDestroyed( );
+		}
+		else
+		{
+		// otherwise it's handled in the callback
+		// remove any arrival events for the helicopter's group
+		DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+		}
 
 			// special return code indicating heli was destroyed
 			return( TRUE );
@@ -2006,18 +2006,18 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 		InvalidateWorldRedundency();
 		SetRenderFlags( RENDER_FLAG_FULL );
 
-    // ATE: If any mercs here, bump them off!
-  	ConvertGridNoToXY( sGridNo, &sCentreGridX, &sCentreGridY );
+	// ATE: If any mercs here, bump them off!
+		ConvertGridNoToXY( sGridNo, &sCentreGridX, &sCentreGridY );
 
-	  for( sGridY = sCentreGridY - 5; sGridY < sCentreGridY + 5; sGridY++ )
-	  {
-		  for( sGridX = sCentreGridX - 5; sGridX < sCentreGridX + 5; sGridX++ )
-		  {
-			  usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
+	for( sGridY = sCentreGridY - 5; sGridY < sCentreGridY + 5; sGridY++ )
+	{
+		for( sGridX = sCentreGridX - 5; sGridX < sCentreGridX + 5; sGridX++ )
+		{
+			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 
-		    BumpAnyExistingMerc( usGridNo );
-      }
-    }
+		 BumpAnyExistingMerc( usGridNo );
+		}
+	}
 	}
 	else
 	{
@@ -2079,7 +2079,7 @@ INT16 GetNumSafeSectorsInPath( void )
 	// get the last sector value in the helictoper's path
 	PathStPtr pNode = NULL;
 	UINT32 uiLocation = 0;
-  UINT32  uiCount = 0;
+	UINT32	uiCount = 0;
 	INT32 iHeliSector = -1;
 	GROUP *pGroup;
 
@@ -2114,17 +2114,17 @@ INT16 GetNumSafeSectorsInPath( void )
 		{
 			uiLocation = pNode->uiSectorId;
 
-      if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+		if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
+		{
+		uiCount++;
+		}
 
 			pNode = pNode->pNext;
 		}
 	}
 
 
-  pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
+	pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
 	// any path yet?
 	if( pNode != NULL )
 	{
@@ -2133,7 +2133,7 @@ INT16 GetNumSafeSectorsInPath( void )
 		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
 		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
  				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
-				 ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
+				( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
 		{
 			pNode = pNode->pNext;
 		}
@@ -2142,10 +2142,10 @@ INT16 GetNumSafeSectorsInPath( void )
 		{
 			uiLocation = pNode->uiSectorId;
 
-      if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+		if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
+		{
+		uiCount++;
+		}
 
 			pNode = pNode->pNext;
 		}
@@ -2161,7 +2161,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 	// get the last sector value in the helictoper's path
 	PathStPtr pNode = NULL;
 	UINT32 uiLocation = 0;
-  UINT32  uiCount = 0;
+	UINT32	uiCount = 0;
 	INT32 iHeliSector = -1;
 	GROUP *pGroup;
 
@@ -2197,16 +2197,16 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		{
 			uiLocation = pNode->uiSectorId;
 
-      if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+		if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
+		{
+		uiCount++;
+		}
 
 			pNode = pNode->pNext;
 		}
 	}
 
-  pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
+	pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
 	// any path yet?
 	if( pNode != NULL )
 	{
@@ -2215,7 +2215,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
 		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
 				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
-				 ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
+				( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
 		{
 			pNode = pNode->pNext;
 		}
@@ -2224,10 +2224,10 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		{
 			uiLocation = pNode->uiSectorId;
 
-      if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+		if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
+		{
+		uiCount++;
+		}
 
 			pNode = pNode->pNext;
 		}

@@ -498,7 +498,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 	gWorldItems[ iItemIndex ].ubLevel										= ubLevel;
 	gWorldItems[ iItemIndex ].usFlags										= usFlags;
 	gWorldItems[ iItemIndex ].bVisible									= bVisible;
-	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel  = bRenderZHeightAboveLevel;
+	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
 
 	gWorldItems[ iItemIndex ].o = *pObject;
 
@@ -593,8 +593,8 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	LOADDATA( &uiNumWorldItems, *hBuffer, 4 );
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
-	{ //The sector has already been visited.  The items are saved in a different format that will be 
-		//loaded later on.  So, all we need to do is skip the data entirely.
+	{ //The sector has already been visited.	The items are saved in a different format that will be 
+		//loaded later on.	So, all we need to do is skip the data entirely.
 		if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
 			for (unsigned int x = 0; x < uiNumWorldItems; ++x)
 			{
@@ -622,7 +622,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 				//check for matching item existance modes and only add if there is a match!
 				//if we are in platinum mode, REALISTIC items are allowed, but not SCIFI items
 				if( dummyItem.usFlags & WORLD_ITEM_SCIFI_ONLY && !(gGameOptions.ubGameStyle == STYLE_SCIFI) ||
-					  dummyItem.usFlags & WORLD_ITEM_REALISTIC_ONLY && (gGameOptions.ubGameStyle == STYLE_SCIFI) )
+					dummyItem.usFlags & WORLD_ITEM_REALISTIC_ONLY && (gGameOptions.ubGameStyle == STYLE_SCIFI) )
 				{ //no match, so don't add item to world
 					continue;
 				}

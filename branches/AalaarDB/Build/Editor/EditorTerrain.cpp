@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -131,7 +130,7 @@ void RenderTerrainTileButtons()
 			
 			SetObjectShade( gTileDatabase[gTileTypeStartIndex[x]].hTileSurface, DEFAULT_SHADE_LEVEL );
 			BltVideoObject(ButtonDestBuffer, gTileDatabase[gTileTypeStartIndex[x]].hTileSurface, 0, (usX + 1), (usY + 1), 
-										 VO_BLT_SRCTRANSPARENCY, NULL);
+										VO_BLT_SRCTRANSPARENCY, NULL);
 
 			if( fUseTerrainWeights )
 			{
@@ -141,7 +140,7 @@ void RenderTerrainTileButtons()
 	}
 }
 
-//This callback is used for each of the terrain tile buttons.  The userData[0] field
+//This callback is used for each of the terrain tile buttons.	The userData[0] field
 //contains the terrain button's index value.
 void TerrainTileButtonRegionCallback(MOUSE_REGION *reg,INT32 reason)
 {
@@ -203,7 +202,7 @@ void ChooseWeightedTerrainTile()
 	UINT16 x, usWeight;
 	INT16 sRandomNum;
 	if(!usTotalWeight)
-	{ //Not in the weighted mode.  CurrentPaste will already contain the selected tile.
+	{ //Not in the weighted mode.	CurrentPaste will already contain the selected tile.
 		return;
 	}
 	sRandomNum = rand() % usTotalWeight;

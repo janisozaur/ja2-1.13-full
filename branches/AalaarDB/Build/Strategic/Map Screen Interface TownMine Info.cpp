@@ -99,9 +99,9 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	// set current sector
 	if( ( bCurrentTownMineSectorX != sMapX ) || ( bCurrentTownMineSectorY != sMapY ) || ( bCurrentTownMineSectorZ != bMapZ ) )
 	{
-	  bCurrentTownMineSectorX = ( INT8 )sMapX;
-	  bCurrentTownMineSectorY = ( INT8 )sMapY;
-	  bCurrentTownMineSectorZ = bMapZ;
+	bCurrentTownMineSectorX = ( INT8 )sMapX;
+	bCurrentTownMineSectorY = ( INT8 )sMapY;
+	bCurrentTownMineSectorZ = bMapZ;
 	}
 
 	//create destroy the box
@@ -163,7 +163,7 @@ void CreateDestroyTownInfoBox( void )
 
 
 		// set font type
-    SetBoxFont(ghTownMineBox, BLOCKFONT2);
+	SetBoxFont(ghTownMineBox, BLOCKFONT2);
 
 		// set highlight color
 		SetBoxHighLight(ghTownMineBox, FONT_WHITE);
@@ -333,7 +333,7 @@ void AddTextToTownBox( void )
 	// town size
 	swprintf( wString, L"%s:", pwTownInfoStrings[ 0 ] );
 	AddMonoString( &hStringHandle, wString );
-	swprintf( wString, L"%d",  GetTownSectorSize( ubTownId ) );
+	swprintf( wString, L"%d",	GetTownSectorSize( ubTownId ) );
 	AddSecondColumnMonoString( &hStringHandle, wString );
 
 	// main facilities
@@ -349,7 +349,7 @@ void AddTextToTownBox( void )
 		// town control
 		swprintf( wString, L"%s:", pwTownInfoStrings[ 2 ] );
 		AddMonoString( &hStringHandle, wString );
-		swprintf( wString, L"%d%%%%",  (GetTownSectorsUnderControl( ubTownId ) * 100) / GetTownSectorSize( ubTownId ));
+		swprintf( wString, L"%d%%%%",	(GetTownSectorsUnderControl( ubTownId ) * 100) / GetTownSectorSize( ubTownId ));
 		AddSecondColumnMonoString( &hStringHandle, wString );
 	}
 
@@ -368,9 +368,9 @@ void AddTextToTownBox( void )
 	if( sMineSector != -1 )
 	{
 		// Associated Mine: Sector
-	  swprintf( wString, L"%s:",  pwTownInfoStrings[ 4 ] );
+	swprintf( wString, L"%s:",	pwTownInfoStrings[ 4 ] );
 		AddMonoString( &hStringHandle, wString );
-	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString );
+	GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString );
 		AddSecondColumnMonoString( &hStringHandle, wString );
 	}
 }
@@ -466,7 +466,7 @@ void AddTextToMineBox( void )
 		// town control percentage
 		swprintf( wString, L"%s:", pwMineStrings[ 12 ]);
 		AddMonoString( &hStringHandle, wString );
-		swprintf( wString, L"%d%%%%", (GetTownSectorsUnderControl( gMineLocation[ ubMineIndex ].bAssociatedTown ) *  100) / GetTownSectorSize( gMineLocation[ ubMineIndex ].bAssociatedTown ));
+		swprintf( wString, L"%d%%%%", (GetTownSectorsUnderControl( gMineLocation[ ubMineIndex ].bAssociatedTown ) *	100) / GetTownSectorSize( gMineLocation[ ubMineIndex ].bAssociatedTown ));
 		AddSecondColumnMonoString( &hStringHandle, wString );
 
 		ubTown = gMineLocation[ ubMineIndex ].bAssociatedTown;
@@ -607,7 +607,7 @@ void AddCommonInfoToBox(void)
 
 
 	// in sector where militia can be trained,
-	// control of the sector matters, display who controls this sector.  Map brightness no longer gives this!
+	// control of the sector matters, display who controls this sector.	Map brightness no longer gives this!
 	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) && !fUnknownSAMSite )
 	{
 		// controlled:
@@ -627,7 +627,7 @@ void AddCommonInfoToBox(void)
 		if (ubMilitiaTotal > 0)
 		{
 			// some militia, show total & their breakdown by level
-	 		swprintf( wString, L"%d  (%d/%d/%d)", ubMilitiaTotal,
+			swprintf( wString, L"%d	(%d/%d/%d)", ubMilitiaTotal,
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
@@ -714,7 +714,7 @@ void PositionTownMineInfoBox( void )
 	INT16 sNewMargin = 0;
 
 	// position the box based on x and y of the selected sector
-  GetScreenXYFromMapXY( bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
+	GetScreenXYFromMapXY( bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
 
 	// set box position
 	pPosition.iX = sX;
@@ -731,7 +731,7 @@ void PositionTownMineInfoBox( void )
 
 	if( pDimensions.iRight < ( sTotalButtonWidth + 30 ) )
 	{
-		SpecifyBoxMinWidth( ghTownMineBox, ( sTotalButtonWidth + 30 )  );
+		SpecifyBoxMinWidth( ghTownMineBox, ( sTotalButtonWidth + 30 )	);
 		pDimensions.iRight = sTotalButtonWidth + 30;
 	}
 
@@ -753,7 +753,7 @@ void PositionTownMineInfoBox( void )
 		pPosition.iY = MapScreenRect.iTop + 5;
 	}
 
-	if(  pPosition.iY + pDimensions.iBottom > MapScreenRect.iBottom )
+	if(	pPosition.iY + pDimensions.iBottom > MapScreenRect.iBottom )
 	{
 		pPosition.iY = MapScreenRect.iBottom - pDimensions.iBottom - 8; 
 	}
@@ -800,29 +800,29 @@ void AddInventoryButtonForMapPopUpBox( void )
 	GetBoxPosition( ghTownMineBox, &pPosition );
 
 	sX = pPosition.iX + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
-	sY = pPosition.iY + pDimensions.iBottom - ( (  BOX_BUTTON_HEIGHT + 5 ) );
+	sY = pPosition.iY + pDimensions.iBottom - ( (	BOX_BUTTON_HEIGHT + 5 ) );
 
-	guiMapButtonInventoryImage[0] =  LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,0,-1,2,-1 );
+	guiMapButtonInventoryImage[0] =	LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,0,-1,2,-1 );
 
 	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2, 
-														 FONT_WHITE, FONT_BLACK, 
-														 FONT_WHITE, FONT_BLACK, 
-														 TEXT_CJUSTIFIED, 
-														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineInventoryButtonCallBack );
+														FONT_WHITE, FONT_BLACK, 
+														FONT_WHITE, FONT_BLACK, 
+														TEXT_CJUSTIFIED, 
+														(INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
+														DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineInventoryButtonCallBack );
 
 	
 	sX = sX + sWidthA + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
 	sY = pPosition.iY + pDimensions.iBottom - ( ( BOX_BUTTON_HEIGHT + 5) );
 
-	guiMapButtonInventoryImage[1] =  LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,1,-1,3,-1 );
+	guiMapButtonInventoryImage[1] =	LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,1,-1,3,-1 );
 
 	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2, 
-														 FONT_WHITE, FONT_BLACK, 
-														 FONT_WHITE, FONT_BLACK, 
-														 TEXT_CJUSTIFIED, 
-														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineExitButtonCallBack );
+														FONT_WHITE, FONT_BLACK, 
+														FONT_WHITE, FONT_BLACK, 
+														TEXT_CJUSTIFIED, 
+														(INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
+														DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineExitButtonCallBack );
 
 	// delete video object
 	DeleteVideoObjectFromIndex( uiObject );
@@ -844,10 +844,10 @@ void RemoveInventoryButtonForMapPopUpBox( void )
 
 	// get rid of button
 	RemoveButton( guiMapButtonInventory[0] );
-  UnloadButtonImage( guiMapButtonInventoryImage[0] );
+	UnloadButtonImage( guiMapButtonInventoryImage[0] );
 
 	RemoveButton( guiMapButtonInventory[1] );
-  UnloadButtonImage( guiMapButtonInventoryImage[1] );
+	UnloadButtonImage( guiMapButtonInventoryImage[1] );
 	
 	return;
 }
@@ -858,13 +858,13 @@ void MapTownMineInventoryButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
+	{
+	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// done
 			fShowMapInventoryPool = TRUE;
@@ -888,13 +888,13 @@ void MapTownMineExitButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
+	{
+	if (btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 			// done
 			fMapPanelDirty = TRUE;

@@ -23,7 +23,7 @@ void InitJA2SplashScreen()
 
 #else
 	UINT32 uiLogoID = 0;
-	HVSURFACE hVSurface; // unused jonathanl  // lalien reenabled for international versions
+	HVSURFACE hVSurface; // unused jonathanl	// lalien reenabled for international versions
 	VSURFACE_DESC VSurfaceDesc; //unused jonathanl // lalien reenabled for international versions
  #ifdef JA2TESTVERSION
 	INT32 i = 0;

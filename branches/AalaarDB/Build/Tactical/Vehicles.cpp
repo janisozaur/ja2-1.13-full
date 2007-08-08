@@ -57,13 +57,13 @@ extern INT8 SquadMovementGroups[ ];
 
 // the mvt groups associated with vehcile types
 INT32 iMvtTypes[]={
-	CAR,   // eldorado
-	CAR,   // hummer
-	CAR,   // ice cream truck
-	CAR,   // jeep
-	CAR,   // tank
+	CAR,	// eldorado
+	CAR,	// hummer
+	CAR,	// ice cream truck
+	CAR,	// jeep
+	CAR,	// tank
 
-	AIR,  // helicopter
+	AIR,	// helicopter
 
 };
 
@@ -183,7 +183,7 @@ void InitVehicles( )
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;
 
-	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
+	for( cnt = 0; cnt <	MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
 		gubVehicleMovementGroups[ cnt ] = CreateNewVehicleGroupDepartingFromSector( 1, 1, cnt );
@@ -202,11 +202,11 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
 
 	pVehicle->ubProfile = pVehicleList[ pVehicle->bVehicleID ].ubProfileID;
 
-  // Init fuel!
-  pVehicle->sBreathRed = 10000;
-  pVehicle->bBreath    = 100;
+	// Init fuel!
+	pVehicle->sBreathRed = 10000;
+	pVehicle->bBreath	= 100;
 
-  pVehicle->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
+	pVehicle->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
 }
 
 INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
@@ -232,7 +232,7 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 				iCount = iCounter;
 				iCounter = ubNumberOfVehicles;
 				fFoundEmpty = TRUE;
-			  iVehicleIdValue = iCount;
+			iVehicleIdValue = iCount;
 			}
 		}
 	}
@@ -250,7 +250,7 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 		memset( pVehicleList, 0, sizeof( VEHICLETYPE ) );
 
 		ubNumberOfVehicles = 1;
-		iVehicleIdValue		 = 0;
+		iVehicleIdValue		= 0;
 	}
 	
 
@@ -295,10 +295,10 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 	pVehicleList[ iCount ].pMercPath = NULL;
 	pVehicleList[ iCount ].fFunctional = TRUE;
 	pVehicleList[ iCount ].fDestroyed = FALSE;
-	pVehicleList[ iCount ].iMoveSound			  = iMoveVehicleSndID[ ubType ];
+	pVehicleList[ iCount ].iMoveSound			= iMoveVehicleSndID[ ubType ];
 	pVehicleList[ iCount ].iOutOfSound			= iEnterVehicleSndID[ ubType ];
 	pVehicleList[ iCount ].ubProfileID			= ubVehicleTypeProfileID[ ubType ];
-	pVehicleList[ iCount ].ubMovementGroup  = gubVehicleMovementGroups[ iCount ];
+	pVehicleList[ iCount ].ubMovementGroup	= gubVehicleMovementGroups[ iCount ];
 
 	// ATE: Add movement mask to group...
 	pGroup = GetGroup( pVehicleList[ iCount ].ubMovementGroup );
@@ -318,11 +318,11 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 
 	// ARM: setup group movement defaults
 	pGroup->ubSectorX = ( UINT8 ) sMapX;
-	pGroup->ubNextX   = ( UINT8 ) sMapX;
+	pGroup->ubNextX	= ( UINT8 ) sMapX;
 	pGroup->ubSectorY = ( UINT8 ) sMapY;
-	pGroup->ubNextY   = ( UINT8 ) sMapY;
+	pGroup->ubNextY	= ( UINT8 ) sMapY;
 	pGroup->uiTraverseTime = 0;
-	pGroup->uiArrivalTime  = 0;
+	pGroup->uiArrivalTime	= 0;
 
 	SetUpArmorForVehicle( ( UINT8 )iCount );
 
@@ -477,19 +477,19 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 
 		// ATE: OK funcky stuff here!
 		// We have now a guy on a squad group, remove him!
-		RemovePlayerFromGroup( SquadMovementGroups[ pVehicleSoldier->bAssignment ], pVehicleSoldier  );
+		RemovePlayerFromGroup( SquadMovementGroups[ pVehicleSoldier->bAssignment ], pVehicleSoldier	);
 
-    // I really have vehicles.\
-    // ONLY add to vehicle group once!
-    if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
-    {
-		  //NOW.. add guy to vehicle group....
-		  AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier  );
-    }		
-    else
-    {
-      pVehicleSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
-    }
+	// I really have vehicles.\
+	// ONLY add to vehicle group once!
+	if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
+	{
+		//NOW.. add guy to vehicle group....
+		AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier	);
+	}		
+	else
+	{
+		pVehicleSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
+	}
 	}
 
 	// check if the grunt is already here
@@ -505,7 +505,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 	if ( pVehicleSoldier )
 	{
 		// can't call SelectSoldier in mapscreen, that will initialize interface panels!!!
-	  if ( guiCurrentScreen == GAME_SCREEN )
+	if ( guiCurrentScreen == GAME_SCREEN )
 		{
 			SelectSoldier( pVehicleSoldier->ubID, FALSE, TRUE );
 		}
@@ -524,7 +524,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			if( pSoldier->bAssignment == VEHICLE )
 			{
 				TakeSoldierOutOfVehicle( pSoldier );
-				// NOTE: This will leave the soldier on a squad.  Must be done PRIOR TO and in AS WELL AS the call
+				// NOTE: This will leave the soldier on a squad.	Must be done PRIOR TO and in AS WELL AS the call
 				// to RemoveCharacterFromSquads() that's coming up, to permit direct vehicle->vehicle reassignment!
 			}
 
@@ -560,7 +560,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			}
 
 			// Are we the first?
-			if ( GetNumberInVehicle(  iId ) == 1 )
+			if ( GetNumberInVehicle(	iId ) == 1 )
 			{
 				// Set as driver...
 				pSoldier->flags.uiStatusFlags |= SOLDIER_DRIVER;
@@ -605,19 +605,19 @@ void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId )
 {
 	PERFORMANCE_MARKER
 	if ( iId == iHelicopterVehicleId && !pSoldier->bInSector )
-  {
-	  if( pSoldier->sSectorX  != BOBBYR_SHIPPING_DEST_SECTOR_X || pSoldier->sSectorY != BOBBYR_SHIPPING_DEST_SECTOR_Y || pSoldier->bSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z )
-    {
-      // Not anything different here - just use center gridno......
-		  pSoldier->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
-    }
-    else
-    {
-      // This is drassen, make insertion gridno specific...
-		  pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		  pSoldier->usStrategicInsertionData = 10125;
-    }
-  }
+	{
+	if( pSoldier->sSectorX	!= BOBBYR_SHIPPING_DEST_SECTOR_X || pSoldier->sSectorY != BOBBYR_SHIPPING_DEST_SECTOR_Y || pSoldier->bSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z )
+	{
+		// Not anything different here - just use center gridno......
+		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
+	}
+	else
+	{
+		// This is drassen, make insertion gridno specific...
+		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+		pSoldier->usStrategicInsertionData = 10125;
+	}
+	}
 }
 
 BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
@@ -720,13 +720,13 @@ BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 					TeleportVehicleToItsClosestSector( iId, pVehicleSoldier->ubGroupID );
 				}
 
-        // Remove vehicle from squad.....
-        RemoveCharacterFromSquads( pVehicleSoldier );
-        // ATE: Add him back to vehicle group!
-        if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
-        {
-    		  AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier  );
-        }
+		// Remove vehicle from squad.....
+		RemoveCharacterFromSquads( pVehicleSoldier );
+		// ATE: Add him back to vehicle group!
+		if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
+		{
+			AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier	);
+		}
 				ChangeSoldiersAssignment( pVehicleSoldier, ASSIGNMENT_EMPTY );
 
 
@@ -757,9 +757,9 @@ BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 			SetSectorFlag( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, SF_ALREADY_VISITED );
 		}
 
-    SetSoldierExitVehicleInsertionData( pSoldier, iId );
+	SetSoldierExitVehicleInsertionData( pSoldier, iId );
 
-    // Update in sector if this is the current sector.....
+	// Update in sector if this is the current sector.....
 		if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ )
 		{
 			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -860,7 +860,7 @@ void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId )
 	SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, iCurrentCostInTime, uiArriveTime, pSoldier->ubGroupID );
 
 // ARM: if this is ever reactivated, there seem to be the following additional problems:
-	1) The soldier removed isn't showing any DEST.  Must set up his strategic path/destination.
+	1) The soldier removed isn't showing any DEST.	Must set up his strategic path/destination.
 	2) The arrive time seems to be much later than it should have been, suggesting the math above is wrong somehow
 	3) Reassigning multiple mercs at once out of a vehicle onroute doesn't work 'cause the group is between sectors so only
 			the first merc gets added successfully, the others all fail.
@@ -1427,7 +1427,7 @@ BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
 
 	SOLDIERTYPE *pVehicleSoldier = NULL;
 
-	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || ( bVehicleId  == iHelicopterVehicleId ) )
+	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || ( bVehicleId	== iHelicopterVehicleId ) )
 	{
 		// add the soldier 
 		return( AddSoldierToVehicle( pSoldier, bVehicleId ) );
@@ -1505,14 +1505,14 @@ SOLDIERTYPE *GetVehicleSoldierPointerFromPassenger( SOLDIERTYPE *pSrcSoldier )
 {
 	PERFORMANCE_MARKER
 	UINT32									cnt;
-	SOLDIERTYPE             *pSoldier;
+	SOLDIERTYPE			 *pSoldier;
 
 	// End the turn of player charactors
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
-  // look for all mercs on the same team, 
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{       
+	// look for all mercs on the same team, 
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	{		
 		if ( pSoldier->bActive && pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			// Check ubID....
@@ -1575,7 +1575,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 		AddCharacterToUniqueSquad( pSoldier );
 
 		// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
-	  if ( guiCurrentScreen == GAME_SCREEN )
+	if ( guiCurrentScreen == GAME_SCREEN )
 		{
 			SetCurrentSquad( pSoldier->bAssignment, TRUE );
 
@@ -1611,10 +1611,10 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 	PERFORMANCE_MARKER
 	INT16 sOldDmgValue = 0;
 
-  if ( ubReason != TAKE_DAMAGE_GAS )
-  {
-  	PlayJA2Sample( (UINT32)( S_METAL_IMPACT3 ), RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
-  }
+	if ( ubReason != TAKE_DAMAGE_GAS )
+	{
+		PlayJA2Sample( (UINT32)( S_METAL_IMPACT3 ), RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
+	}
 
 	// check if there was in fact damage done to the vehicle
 	if( ( ubReason == TAKE_DAMAGE_HANDTOHAND ) || ( ubReason == TAKE_DAMAGE_GAS ) )
@@ -1706,7 +1706,7 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 
 	if ( pSoldier->stats.bLife == 0 && !pVehicleList[ ubID ].fDestroyed )
 	{
-		pVehicleList[ ubID ].fDestroyed  = TRUE;
+		pVehicleList[ ubID ].fDestroyed	= TRUE;
 
 		// Explode vehicle...
 		IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, GREAT_BIG_EXPLOSION, 0 );
@@ -1720,8 +1720,8 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
 		}
 
-    // Kill all in vehicle...
-    KillAllInVehicle( ubID );
+	// Kill all in vehicle...
+	KillAllInVehicle( ubID );
 
 	}
 
@@ -1950,7 +1950,7 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 			//loop through the passengers
 			for( ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)
 			{
-        TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * )NO_PROFILE;
+		TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * )NO_PROFILE;
 
 				//if there is a passenger here
 				if( pVehicleList[cnt].pPassengers[ ubPassengerCnt ] )
@@ -2062,28 +2062,28 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 				//loop through all the passengers
 				for(ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)
 				{
-          if ( uiSavedGameVersion < 86 )
-          {
-					  if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != 0 )
-					  {
-						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
-						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-  					}
-          }
-          else
-          {
-					  if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != ( SOLDIERTYPE * )NO_PROFILE )
-					  {
-						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
-						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-  					}
-            else
-            {
-              pVehicleList[cnt].pPassengers[ubPassengerCnt] = NULL;
-            }
-          }
+			if ( uiSavedGameVersion < 86 )
+			{
+					if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != 0 )
+					{
+						// ! The id of the soldier was saved in the passenger pointer.	The passenger pointer is converted back
+						// ! to a UINT8 so we can get the REAL pointer to the soldier.
+						pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+						}
+			}
+			else
+			{
+					if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != ( SOLDIERTYPE * )NO_PROFILE )
+					{
+						// ! The id of the soldier was saved in the passenger pointer.	The passenger pointer is converted back
+						// ! to a UINT8 so we can get the REAL pointer to the soldier.
+						pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+						}
+			else
+			{
+				pVehicleList[cnt].pPassengers[ubPassengerCnt] = NULL;
+			}
+			}
 				}
 
 
@@ -2223,7 +2223,7 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 		return(FALSE);
 	}
 
-	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
+	for( cnt = 5; cnt <	MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
 		gubVehicleMovementGroups[ cnt ] = CreateNewVehicleGroupDepartingFromSector( 1, 1, cnt );
@@ -2338,7 +2338,7 @@ void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID )
 	// make it arrive immediately, not eventually (it's driverless)
 	SetGroupArrivalTime( pGroup, GetWorldTotalMin() );
 
-	// change where it is and where it's going, then make it arrive there.  Don't check for battle
+	// change where it is and where it's going, then make it arrive there.	Don't check for battle
 	PlaceGroupInSector( ubGroupID, sPrevX, sPrevY, sNextX, sNextY, 0, FALSE );
 }
 
@@ -2346,25 +2346,25 @@ void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID )
 void AddVehicleFuelToSave( )
 {
 	PERFORMANCE_MARKER
-  INT32         iCounter;
-	SOLDIERTYPE   *pVehicleSoldier = NULL;
+	INT32		 iCounter;
+	SOLDIERTYPE	*pVehicleSoldier = NULL;
 
 	for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
 	{
 		// might have an empty slot
 		if( pVehicleList[ iCounter ].fValid )
-    {
-	    // get the vehicle soldiertype
-	    pVehicleSoldier = GetSoldierStructureForVehicle( iCounter );
+	{
+	 // get the vehicle soldiertype
+	 pVehicleSoldier = GetSoldierStructureForVehicle( iCounter );
 	
-	    if( pVehicleSoldier )
-      {
-        // Init fuel!
-        pVehicleSoldier->sBreathRed = 10000;
-        pVehicleSoldier->bBreath    = 100;        
-      }
-    }
-  }
+	 if( pVehicleSoldier )
+		{
+		// Init fuel!
+		pVehicleSoldier->sBreathRed = 10000;
+		pVehicleSoldier->bBreath	= 100;		
+		}
+	}
+	}
 }
 
 
@@ -2531,7 +2531,7 @@ BOOLEAN IsSoldierInThisVehicleSquad( SOLDIERTYPE *pSoldier, INT8 bSquadNumber )
 }
 
 
-SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
+SOLDIERTYPE*	PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
@@ -2562,10 +2562,10 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 		ubChosenMerc = (UINT8)Random( ubNumMercs );
 
 		// If we are air raid, AND red exists somewhere...
-    return( pVehicleList[ iId ].pPassengers[ ubChosenMerc ] );
-  }
+	return( pVehicleList[ iId ].pPassengers[ ubChosenMerc ] );
+	}
 
-  return( NULL );
+	return( NULL );
 }
 
 BOOLEAN DoesVehicleHaveAnyPassengers( INT32 iVehicleID )
@@ -2587,7 +2587,7 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 	if( iVehicleID == -1 )
 	{
 		#ifdef JA2BETAVERSION
-			AssertMsg( iVehicleID != -1, "DoesVehicleGroupHaveAnyPassengers() for vehicle group.  Invalid iVehicleID." );
+			AssertMsg( iVehicleID != -1, "DoesVehicleGroupHaveAnyPassengers() for vehicle group.	Invalid iVehicleID." );
 		#endif
 		return FALSE;
 	}

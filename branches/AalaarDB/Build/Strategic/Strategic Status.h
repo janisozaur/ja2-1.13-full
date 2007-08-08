@@ -92,9 +92,9 @@ typedef struct STRATEGIC_STATUS
 
 	UINT8			ubUnhiredMercDeaths;		// how many mercs have died while NOT working for the player
 
-	UINT16		usPlayerKills;					// kills achieved by all mercs controlled by player together.  *Excludes* militia kills!
+	UINT16		usPlayerKills;					// kills achieved by all mercs controlled by player together.	*Excludes* militia kills!
 
-	UINT16		usEnemiesKilled[NUM_WAYS_ENEMIES_KILLED][NUM_ENEMY_RANKS];	// admin/troop/elite.  Includes kills by militia, too
+	UINT16		usEnemiesKilled[NUM_WAYS_ENEMIES_KILLED][NUM_ENEMY_RANKS];	// admin/troop/elite.	Includes kills by militia, too
 	UINT16		usLastDayOfPlayerActivity;
 	UINT8			ubNumNewSectorsVisitedToday;
 	UINT8			ubNumberOfDaysOfInactivity;

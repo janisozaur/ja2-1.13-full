@@ -34,12 +34,12 @@ extern	UINT16	gusFirstMiscIndex;
 extern	UINT16	gusLastMiscIndex;
 extern	UINT8		gubNumMiscPages;
 
-extern	UINT16  gusFirstArmourIndex;
-extern	UINT16  gusLastArmourIndex;
+extern	UINT16	gusFirstArmourIndex;
+extern	UINT16	gusLastArmourIndex;
 extern	UINT8		gubNumArmourPages;
 
-extern	UINT16  gusFirstUsedIndex;
-extern	UINT16  gusLastUsedIndex;
+extern	UINT16	gusFirstUsedIndex;
+extern	UINT16	gusLastUsedIndex;
 extern	UINT8		gubNumUsedPages;
 */
 

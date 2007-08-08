@@ -67,12 +67,12 @@ MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 // this table holds mine values that never change and don't need to be saved
 MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES] =
 {
-	{		 4,		4,		SAN_MONA		},
+	{		4,		4,		SAN_MONA		},
 	{		13,		4,		DRASSEN			},
 	{		14,		9,		ALMA				},
-	{		 8,		8,		CAMBRIA			},
-	{		 2,		2,		CHITZENA		},
-	{		 3,		8,		GRUMM				},
+	{		8,		8,		CAMBRIA			},
+	{		2,		2,		CHITZENA		},
+	{		3,		8,		GRUMM				},
 };
 
 // the are not being randomized at all at this time
@@ -87,12 +87,12 @@ UINT8 gubMineTypes[]={
 
 // These values also determine the most likely ratios of mine sizes after random production increases are done
 UINT32 guiMinimumMineProduction[]={
-	    0,		// SAN MONA
-	 1000,		// DRASSEN
-	 1500,		// ALMA
-	 1500,		// CAMBRIA
-	  500,		// CHITZENA
-	 2000,		// GRUMM
+	 0,		// SAN MONA
+	1000,		// DRASSEN
+	1500,		// ALMA
+	1500,		// CAMBRIA
+	500,		// CHITZENA
+	2000,		// GRUMM
 };
 
 
@@ -160,7 +160,7 @@ void InitializeMines( void )
 		gMineStatus->fShutDownIsPermanent = FALSE;
 	}
 
-	// randomize the exact size each mine.  The total production is always the same and depends on the game difficulty,
+	// randomize the exact size each mine.	The total production is always the same and depends on the game difficulty,
 	// but some mines will produce more in one game than another, while others produce less
 
 	// adjust for game difficulty
@@ -196,7 +196,7 @@ void InitializeMines( void )
 	}
 
 
-	// choose which mine will run out of production.  This will never be the Alma mine or an empty mine (San Mona)...
+	// choose which mine will run out of production.	This will never be the Alma mine or an empty mine (San Mona)...
 	do
 	{
 		ubDepletedMineIndex = ( UINT8 ) Random(MAX_NUMBER_OF_MINES);
@@ -273,7 +273,7 @@ void HourlyMinesUpdate(void)
 					IssueHeadMinerQuote( ubMineIndex, HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE );
 				}
 
-				//Force the creatures to avoid the mine for a period of time.  This gives the 
+				//Force the creatures to avoid the mine for a period of time.	This gives the 
 				//player a chance to rest and decide how to deal with the problem.
 				ForceCreaturesToAvoidMineTemporarily( ubMineIndex );
 
@@ -314,7 +314,7 @@ void HourlyMinesUpdate(void)
 					IssueHeadMinerQuote( ubMineIndex, ubQuoteType );
 				}
 
-				// and immediately halt all work at the mine (whether it's ours or the queen's).  This is a temporary shutdown
+				// and immediately halt all work at the mine (whether it's ours or the queen's).	This is a temporary shutdown
 				ShutOffMineProduction( ubMineIndex );
 			}
 		}
@@ -445,7 +445,7 @@ UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
 		GetMineSector( bMineIndex, &sSectorX, &sSectorY );
 		StrategicHandleMineThatRanOut( ( UINT8 ) SECTOR( sSectorX, sSectorY ) );
 
-		AddHistoryToPlayersLog( HISTORY_MINE_RAN_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+		AddHistoryToPlayersLog( HISTORY_MINE_RAN_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,	gMineLocation[ bMineIndex ].sSectorY );
 	}
 	else	// still some left after this extraction
 	{
@@ -471,7 +471,7 @@ UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
 					// that mine's head miner tells player that the mine is running out
 					IssueHeadMinerQuote( bMineIndex, HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT );
 					gMineStatus[ bMineIndex ].fWarnedOfRunningOut = TRUE;
-					AddHistoryToPlayersLog( HISTORY_MINE_RUNNING_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+					AddHistoryToPlayersLog( HISTORY_MINE_RUNNING_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,	gMineLocation[ bMineIndex ].sSectorY );
 				}
 			}
 		}
@@ -544,7 +544,7 @@ INT32 GetAvailableWorkForceForMineForEnemy( INT8 bMineIndex )
 
 	bTownId = gMineLocation[ bMineIndex ].bAssociatedTown;
 
-	if( GetTownSectorSize( bTownId )  == 0 )
+	if( GetTownSectorSize( bTownId )	== 0 )
 	{
 		return 0;
 	}
@@ -612,7 +612,7 @@ INT32 MineAMine( INT8 bMineIndex )
 	}
 
 
-	// who controls the PRODUCTION in the mine ?  (Queen receives production unless player has spoken to the head miner)
+	// who controls the PRODUCTION in the mine ?	(Queen receives production unless player has spoken to the head miner)
 	if( PlayerControlsMine(bMineIndex) )
 	{
 		// player controlled
@@ -892,7 +892,7 @@ void ShutOffMineProduction( INT8 bMineIndex )
 	if ( !gMineStatus[ bMineIndex ].fShutDown )
 	{
 		gMineStatus[ bMineIndex ].fShutDown = TRUE;
-		AddHistoryToPlayersLog( HISTORY_MINE_SHUTDOWN, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+		AddHistoryToPlayersLog( HISTORY_MINE_SHUTDOWN, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,	gMineLocation[ bMineIndex ].sSectorY );
 	}
 }
 
@@ -907,7 +907,7 @@ void RestartMineProduction( INT8 bMineIndex )
 		if ( gMineStatus[ bMineIndex ].fShutDown )
 		{
 			gMineStatus[ bMineIndex ].fShutDown = FALSE;
-			AddHistoryToPlayersLog( HISTORY_MINE_REOPENED, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+			AddHistoryToPlayersLog( HISTORY_MINE_REOPENED, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,	gMineLocation[ bMineIndex ].sSectorY );
 		}
 	}
 }
@@ -1053,7 +1053,7 @@ UINT8 GetHeadMinersMineIndex( UINT8 ubMinerProfileId)
 		}
 	}
 
-	// not found!  Illegal profile id receieved or something is very wrong
+	// not found!	Illegal profile id receieved or something is very wrong
 	Assert(FALSE);
 	return( 0 );
 }
@@ -1069,7 +1069,7 @@ void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
 	// if this is our first time set a history fact 
 	if( gMineStatus[ ubMineIndex ].fSpokeToHeadMiner == FALSE )
 	{
-		AddHistoryToPlayersLog( HISTORY_TALKED_TO_MINER, gMineLocation[ ubMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ ubMineIndex ].sSectorX,  gMineLocation[ ubMineIndex ].sSectorY );
+		AddHistoryToPlayersLog( HISTORY_TALKED_TO_MINER, gMineLocation[ ubMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ ubMineIndex ].sSectorX,	gMineLocation[ ubMineIndex ].sSectorY );
 		gMineStatus[ ubMineIndex ].fSpokeToHeadMiner = TRUE;
 	}
 }
@@ -1335,10 +1335,10 @@ BOOLEAN PlayerForgotToTakeOverMine( UINT8 ubMineIndex )
 	// player hasn't spoken to the head miner, but hasn't attacked him either
 	// miner is alive
 	if ( (StrategicMap[( gMineLocation[ ubMineIndex ].sSectorX ) + ( MAP_WORLD_X * ( gMineLocation[ ubMineIndex ].sSectorY ) )].fEnemyControlled == FALSE ) &&
-		 ( !pMineStatus->fEmpty ) &&
-		 ( !pMineStatus->fSpokeToHeadMiner ) &&
-		 ( !pMineStatus->fAttackedHeadMiner ) &&
-		 ( gMercProfiles[ GetHeadMinerProfileIdForMine( ubMineIndex ) ].bLife > 0 ) )
+		( !pMineStatus->fEmpty ) &&
+		( !pMineStatus->fSpokeToHeadMiner ) &&
+		( !pMineStatus->fAttackedHeadMiner ) &&
+		( gMercProfiles[ GetHeadMinerProfileIdForMine( ubMineIndex ) ].bLife > 0 ) )
 	{
 		return( TRUE );
 	}

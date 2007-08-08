@@ -158,9 +158,9 @@ IMPitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -188,12 +188,12 @@ IMPitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curIMPItemChoices.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curIMPItemChoices.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubChoices") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curIMPItemChoices.ubChoices  = (UINT8) atol(pData->szCharData);
+			pData->curIMPItemChoices.ubChoices	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubNumItems") == 0)
 		{
@@ -504,7 +504,7 @@ BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -545,10 +545,10 @@ BOOLEAN WriteIMPItemChoicesStats()
 			FilePrintf(hFile,"\t<IMPITEMCHOICES>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<ubChoices>%d</ubChoices>\r\n",								gIMPItemChoices[cnt].ubChoices   );
-			FilePrintf(hFile,"\t\t<ubNumItems>%d</ubNumItems>\r\n",								gIMPItemChoices[cnt].ubNumItems   );
+			FilePrintf(hFile,"\t\t<ubChoices>%d</ubChoices>\r\n",								gIMPItemChoices[cnt].ubChoices	);
+			FilePrintf(hFile,"\t\t<ubNumItems>%d</ubNumItems>\r\n",								gIMPItemChoices[cnt].ubNumItems	);
 			for (int i=0;i<50;i++)
-				FilePrintf(hFile,"\t\t<bItemNo%d>%d</bItemNo%d>\r\n",i+1,gIMPItemChoices[cnt].bItemNo[i],i+1  );
+				FilePrintf(hFile,"\t\t<bItemNo%d>%d</bItemNo%d>\r\n",i+1,gIMPItemChoices[cnt].bItemNo[i],i+1	);
 
 
 			FilePrintf(hFile,"\t</IMPITEMCHOICES>\r\n");

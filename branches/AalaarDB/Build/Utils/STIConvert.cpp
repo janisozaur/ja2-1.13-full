@@ -31,11 +31,11 @@ BOOLEAN ConvertToETRLE( UINT8 ** ppDest, UINT32 * puiDestLen, UINT8 ** ppSubImag
 #define CONVERT_ETRLE_FLIC_NAME								0x0800
 #define CONVERT_TO_8_BIT											0x1000
 #define CONVERT_TO_16_BIT											0x2000
-// NB 18-bit is actually 24 bit but with only 6 bits used in each byte.  I implemented
+// NB 18-bit is actually 24 bit but with only 6 bits used in each byte.	I implemented
 // it to see how well such images would compress with ZLIB.
 #define CONVERT_TO_18_BIT											0x4000
 
-// Defines for inserting red/green/blue values into a 16-bit pixel.  
+// Defines for inserting red/green/blue values into a 16-bit pixel.	
 // MASK is the mask to use to get the proper bits out of a byte (part of a 24-bit pixel)
 // use SHIFT_RIGHT to move the masked bits to the lowest bits of the byte
 // use SHIFT_LEFT to put the bits in their proper place in the 16-bit pixel
@@ -100,7 +100,7 @@ void ConvertRGBDistribution555To565( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 	}
 }
 
-void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 sHeight,  STR cOutputName, UINT32 fFlags, UINT32 uiAppDataSize )
+void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 sHeight,	STR cOutputName, UINT32 fFlags, UINT32 uiAppDataSize )
 {
 	PERFORMANCE_MARKER
 
@@ -171,7 +171,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 	{
 		return;
 	}
-  // write header
+	// write header
 	fwrite( &Header, STCI_HEADER_SIZE, 1, pOutput );
 	// write palette and subimage structs, if any
 	if (Header.fFlags & STCI_INDEXED)
@@ -400,7 +400,7 @@ BOOLEAN ConvertToETRLE( UINT8 ** ppDest, UINT32 * puiDestLen, UINT8 ** ppSubImag
 				pCurrSubImage->uiDataOffset = (*puiDestLen - uiSpaceLeft);
 				pCurrSubImage->uiDataLength = uiSubImageCompressedSize;
 				// this is a cheap hack; the sOffsetX and sOffsetY values have been used
-				// to store the location of the subimage within the whole image.  Now
+				// to store the location of the subimage within the whole image.	Now
 				// we want the offset within the subimage, so, we subtract the coordatines
 				// for the upper-left corner of the subimage.
 				pCurrSubImage->sOffsetX -= sCurrX;
@@ -460,7 +460,7 @@ UINT32 ETRLECompressSubImage( UINT8 * pDest, UINT32 uiDestLen, UINT8 * p8BPPBuff
 UINT32 ETRLECompress( UINT8 * pDest, UINT32 uiDestLen, UINT8 * pSource, UINT32 uiSourceLen )
 {
 	PERFORMANCE_MARKER // Compress a buffer (a scanline) into ETRLE format, which is a series of runs.
-  // Each run starts with a byte whose high bit is 1 if the run is compressed, 0 otherwise.
+	// Each run starts with a byte whose high bit is 1 if the run is compressed, 0 otherwise.
 	// The lower seven bits of that byte indicate the length of the run
 	
 	// ETRLECompress returns the number of bytes used by the compressed buffer, or 0 if an error
@@ -592,7 +592,7 @@ BOOLEAN GoToNextSubImage( INT16 * psNewX, INT16 * psNewY, UINT8 * p8BPPBuffer, U
 	}
 	else 
 	{
-		// The current pixel is not a wall.  We scan right past all non-wall data to skip to
+		// The current pixel is not a wall.	We scan right past all non-wall data to skip to
 		// the right-hand end of the subimage, then right past all wall data to skip a vertical
 		// wall, and should find ourselves at another subimage.
 

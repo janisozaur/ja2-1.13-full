@@ -68,7 +68,7 @@ typedef struct VOBJECT_NODE
 {
 	HVOBJECT hVObject;
 	UINT32 uiIndex;
-  struct VOBJECT_NODE *next, *prev;
+	struct VOBJECT_NODE *next, *prev;
 
 	#ifdef SGP_VIDEO_DEBUGGING
 		STR8									pName;
@@ -77,8 +77,8 @@ typedef struct VOBJECT_NODE
 
 }VOBJECT_NODE;
 
-VOBJECT_NODE  *gpVObjectHead = NULL;
-VOBJECT_NODE  *gpVObjectTail = NULL;
+VOBJECT_NODE	*gpVObjectHead = NULL;
+VOBJECT_NODE	*gpVObjectTail = NULL;
 UINT32				guiVObjectIndex = 1;
 UINT32				guiVObjectSize = 0;
 UINT32				guiVObjectTotalAdded = 0;
@@ -111,20 +111,19 @@ void CheckValidVObjectIndex( UINT32 uiIndex );
 //
 // **************************************************************
 
-// WANNE
 int filter(unsigned int code, struct _EXCEPTION_POINTERS *ep) 
 {
-   puts("in filter.");
-   if (code == EXCEPTION_ACCESS_VIOLATION) {
-      puts("caught AV as expected.");
-      return EXCEPTION_EXECUTE_HANDLER;
-   }
+	puts("in filter.");
+	if (code == EXCEPTION_ACCESS_VIOLATION) {
+		puts("caught AV as expected.");
+		return EXCEPTION_EXECUTE_HANDLER;
+	}
 
-   else 
-   {
-      puts("didn't catch AV, unexpected.");
-      return EXCEPTION_CONTINUE_SEARCH;
-   };
+	else 
+	{
+		puts("didn't catch AV, unexpected.");
+		return EXCEPTION_CONTINUE_SEARCH;
+	};
 }
 
 BOOLEAN InitializeVideoObjectManager( )
@@ -285,7 +284,7 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, blt_fx *pBltFx )
 {
 	PERFORMANCE_MARKER
-	UINT16               *pBuffer;
+	UINT16				*pBuffer;
 	UINT32								uiPitch;
 	HVOBJECT							hSrcVObject;
 
@@ -310,7 +309,7 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 	// Now we have the video object and surface, call the VO blitter function
 	if ( !BltVideoObjectToBuffer( pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags, pBltFx ) )
 	{
-    UnLockVideoSurface( uiDestVSurface );
+	UnLockVideoSurface( uiDestVSurface );
 		// VO Blitter will set debug messages for error conditions
 		return FALSE;
 	}
@@ -320,7 +319,7 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 }
 
 
-BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
+BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject	)
 {
 	PERFORMANCE_MARKER
 	VOBJECT_NODE *curr;
@@ -356,7 +355,7 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 			{ //Make the next node point to the prev
 				curr->prev->next = curr->next;
 			}
-			//The node is now detached.  Now deallocate it.
+			//The node is now detached.	Now deallocate it.
 			#ifdef SGP_VIDEO_DEBUGGING
 				if( curr->pName )
 					MemFree( curr->pName );
@@ -385,13 +384,13 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 // Based on flags, blit accordingly
 // There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
 // clipping lists
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hSrcVObject,
-												 UINT16 usRegionIndex,
-												 INT32  iDestX,
-												 INT32  iDestY,
-												 UINT32 fBltFlags,
-												 blt_fx *pBltFx )
+BOOLEAN BltVideoObject(	UINT32	uiDestVSurface,
+												HVOBJECT hSrcVObject,
+												UINT16 usRegionIndex,
+												INT32	iDestX,
+												INT32	iDestY,
+												UINT32 fBltFlags,
+												blt_fx *pBltFx )
 {
 	PERFORMANCE_MARKER
 
@@ -518,7 +517,7 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 //	while( FALSE );
 
 	// All is well
-//  DbgMessage( TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Success in Creating Video Object" ) );
+//	DbgMessage( TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Success in Creating Video Object" ) );
 
 	return( hVObject );
 }
@@ -560,7 +559,7 @@ BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette )
 	hVObject->p16BPPPalette = Create16BPPPalette( pSrcPalette );
 	hVObject->pShadeCurrent = hVObject->p16BPPPalette;
 
-//  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Video Object Palette change successfull" ));
+//	DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Video Object Palette change successfull" ));
 	return( TRUE );
 }
 
@@ -771,7 +770,7 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 						}
 						else
 #endif
-						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
+						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY	)
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 								Blt8BPPDataTo16BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
@@ -779,7 +778,7 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 								Blt8BPPDataTo16BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
 							break;
 						}
-						else if ( fBltFlags & VO_BLT_SHADOW  )
+						else if ( fBltFlags & VO_BLT_SHADOW	)
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 								Blt8BPPDataTo16BPPBufferShadowClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
@@ -791,7 +790,7 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 					}
 					else if(gbPixelDepth==8)
 					{
-						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
+						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY	)
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 								Blt8BPPDataTo8BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
@@ -799,7 +798,7 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 								Blt8BPPDataTo8BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
 							break;
 						}
-						else if ( fBltFlags & VO_BLT_SHADOW  )
+						else if ( fBltFlags & VO_BLT_SHADOW	)
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 								Blt8BPPDataTo8BPPBufferShadowClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
@@ -824,12 +823,12 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 	}
 }
 
-BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
+BOOLEAN PixelateVideoObjectRect(	UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
 {
 	PERFORMANCE_MARKER
 	UINT16 *pBuffer;
 	UINT32 uiPitch;
-	SGPRect   area;
+	SGPRect	area;
 	UINT8 uiPattern[8][8]={	{0,1,0,1,0,1,0,1},
 													{1,0,1,0,1,0,1,0},
 													{0,1,0,1,0,1,0,1},
@@ -929,7 +928,7 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 
 	if(pObj->pShades[uiShade]==NULL)
 	{
-	  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Attempt to set shade level to NULL table"));
+	DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Attempt to set shade level to NULL table"));
 		return(FALSE);
 	}
 
@@ -947,7 +946,7 @@ UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 	#endif
 	if(!GetVideoObject(&hObj, uiHandle))
 	{
-	  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid object handle for setting shade level"));
+	DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid object handle for setting shade level"));
 		return(FALSE);
 	}
 	return(SetObjectShade(hObj, uiShade));
@@ -1288,7 +1287,7 @@ BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UI
 			pInput++;
 			//uiDataLoop++;
 			if(uiLen!=p16BPPObject->usWidth)
-		    DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_1, String( "Actual pixel width different from header width" ));
+		 DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_1, String( "Actual pixel width different from header width" ));
 			uiLen=0;
 		}
 
@@ -1326,7 +1325,7 @@ BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UI
 BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
 	PERFORMANCE_MARKER
-	UINT16               *pBuffer;
+	UINT16				*pBuffer;
 	UINT32								uiPitch;
 	HVOBJECT							hSrcVObject;
 
@@ -1346,11 +1345,11 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 
 	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect );
+		Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect );
 	}
 	else
 	{
-		 Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
+		Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
@@ -1362,7 +1361,7 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
 	PERFORMANCE_MARKER
-	UINT16               *pBuffer;
+	UINT16				*pBuffer;
 	UINT32								uiPitch;
 	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
@@ -1374,11 +1373,11 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 
 	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect );
+		Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect );
 	}
 	else
 	{
-		 Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
+		Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
@@ -1392,7 +1391,7 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
 	PERFORMANCE_MARKER
-	UINT16               *pBuffer;
+	UINT16				*pBuffer;
 	UINT32								uiPitch;
 	HVOBJECT							hSrcVObject;
 
@@ -1412,11 +1411,11 @@ BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrc
 
 	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadowClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect );
+		Blt8BPPDataTo16BPPBufferOutlineShadowClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect );
 	}
 	else
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
+		Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
@@ -1428,7 +1427,7 @@ BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrc
 BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
 	PERFORMANCE_MARKER
-	UINT16               *pBuffer;
+	UINT16				*pBuffer;
 	UINT32								uiPitch;
 	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
@@ -1440,11 +1439,11 @@ BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject,
 
 	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadowClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect );
+		Blt8BPPDataTo16BPPBufferOutlineShadowClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect );
 	}
 	else
 	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
+		Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
 	}
 
 	// Now we have the video object and surface, call the VO blitter function

@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 	#include "PreBattle Interface.h"
@@ -59,7 +58,7 @@
 #endif
 
 #define		DIALOGUESIZE					480
-#define   QUOTE_MESSAGE_SIZE		520
+#define	QUOTE_MESSAGE_SIZE		520
 
 #define		TALK_PANEL_FACE_X				6
 #define		TALK_PANEL_FACE_Y				9
@@ -137,14 +136,14 @@ UINT8							gubNumStopTimeQuotes = 2;
 #define		INITIAL_Q_SIZE				10
 HQUEUE		ghDialogueQ						= NULL;
 FACETYPE	*gpCurrentTalkingFace	= NULL;
-UINT8			gubCurrentTalkingID   = NO_PROFILE;
+UINT8			gubCurrentTalkingID	= NO_PROFILE;
 INT8			gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;
 INT32				giNPCSpecialReferenceCount = 0;
 
-INT16       gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
-INT16       gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
+INT16		gsExternPanelXPosition	 = DEFAULT_EXTERN_PANEL_X_POS;
+INT16		gsExternPanelYPosition	 = DEFAULT_EXTERN_PANEL_Y_POS;
 
 BOOLEAN			gfDialogueQueuePaused = FALSE;
 UINT16			gusSubtitleBoxWidth;
@@ -201,7 +200,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, STR16 zQuote
 void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr );
 void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex );
 
-void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr );
+void DisplayTextForExternalNPC(	UINT8 ubCharacterNum, STR16 zQuoteStr );
 void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr );
 
 
@@ -265,7 +264,7 @@ BOOLEAN InitalizeDialogueControl()
 
 void ShutdownDialogueControl() 
 {
-  if( ghDialogueQ != NULL )
+	if( ghDialogueQ != NULL )
 	{
 		// Empty
 		EmptyDialogueQueue( ); 
@@ -330,11 +329,11 @@ void EmptyDialogueQueue( )
 {
 	PERFORMANCE_MARKER
 	// If we have anything left in the queue, remove!
-  if( ghDialogueQ != NULL )
+	if( ghDialogueQ != NULL )
 	{
 /*
-DEF:  commented out because the Queue system ?? uses a contiguous memory block ??? for the queue
-	so you cant delete a single node.  The DeleteQueue, below, will free the entire memory block
+DEF:	commented out because the Queue system ?? uses a contiguous memory block ??? for the queue
+	so you cant delete a single node.	The DeleteQueue, below, will free the entire memory block
 
 		numDialogueItems = QueueSize( ghDialogueQ );
 
@@ -356,7 +355,7 @@ DEF:  commented out because the Queue system ?? uses a contiguous memory block ?
 
 	}
 
-  gfWaitingForTriggerTimer = FALSE;
+	gfWaitingForTriggerTimer = FALSE;
 }
 
 
@@ -365,7 +364,7 @@ BOOLEAN DialogueQueueIsEmpty( )
 	PERFORMANCE_MARKER
 	INT32										numDialogueItems;
 	
-  if( ghDialogueQ != NULL )
+	if( ghDialogueQ != NULL )
 	{
 		numDialogueItems = QueueSize( ghDialogueQ );
 
@@ -537,7 +536,7 @@ void HandleDialogue( )
 		if ( !gfInTalkPanel )
 		{
 			// ATE: NOT if we have a message box pending....
-			if ( guiPendingScreen != MSG_BOX_SCREEN && guiCurrentScreen != MSG_BOX_SCREEN  )
+			if ( guiPendingScreen != MSG_BOX_SCREEN && guiCurrentScreen != MSG_BOX_SCREEN	)
 			{
 				// No, so we should lock the UI!
 				guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -556,7 +555,7 @@ void HandleDialogue( )
 			//		CHANGE TO MAPSCREEN
 			//		CHANGE TO GAMESCREEN
 			//		CHANGE IN MERC STATUS TO BE IN A SQUAD
-			//    CHANGE FROM TEAM TO INV INTERFACE
+			//	CHANGE FROM TEAM TO INV INTERFACE
 
 			// Where are we and where did this face once exist?
 			if ( guiScreenIDUsedWhenUICreated == GAME_SCREEN && guiCurrentScreen == MAP_SCREEN )
@@ -589,9 +588,9 @@ void HandleDialogue( )
 					SetAutoFaceInActive( gpCurrentTalkingFace->iID );
 					HandleTacticalSpeechUI( gubCurrentTalkingID, gpCurrentTalkingFace->iID );
 
-          // ATE: Force mapscreen to set face active again.....
-        	fReDrawFace = TRUE;
-      		DrawFace( bSelectedInfoChar );
+			// ATE: Force mapscreen to set face active again.....
+			fReDrawFace = TRUE;
+				DrawFace( bSelectedInfoChar );
 
 					gfFacePanelActive = FALSE;
 				}
@@ -611,17 +610,17 @@ void HandleDialogue( )
 			// If we are done, check special face flag for trigger NPC!
 			if ( gpCurrentTalkingFace->uiFlags & FACE_PCTRIGGER_NPC )
 			{
-				 // Decrement refrence count...
-				 giNPCReferenceCount--;
+				// Decrement refrence count...
+				giNPCReferenceCount--;
 
-				 TriggerNPCRecord( (UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2 );
-				 //Reset flag!
-				 gpCurrentTalkingFace->uiFlags &= (~FACE_PCTRIGGER_NPC );
+				TriggerNPCRecord( (UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2 );
+				//Reset flag!
+				gpCurrentTalkingFace->uiFlags &= (~FACE_PCTRIGGER_NPC );
 			}
 
 			if ( gpCurrentTalkingFace->uiFlags & FACE_MODAL )
 			{
-			  gpCurrentTalkingFace->uiFlags &= (~FACE_MODAL );
+			gpCurrentTalkingFace->uiFlags &= (~FACE_MODAL );
 
 				EndModalTactical( );
 
@@ -638,7 +637,7 @@ void HandleDialogue( )
 			}
 
 			gpCurrentTalkingFace = NULL;
-			gubCurrentTalkingID	 = NO_PROFILE;
+			gubCurrentTalkingID	= NO_PROFILE;
 			gTacticalStatus.ubLastQuoteProfileNUm = NO_PROFILE;
 			fDoneTalking = TRUE;
 		}
@@ -684,8 +683,8 @@ void HandleDialogue( )
 		return;
 	}
 
-  // ATE: Remove any civ quotes....
-  // ShutDownQuoteBoxIfActive( TRUE );
+	// ATE: Remove any civ quotes....
+	// ShutDownQuoteBoxIfActive( TRUE );
 
 	// If here, pick current one from queue and play
 
@@ -795,7 +794,7 @@ void HandleDialogue( )
 		
 		// Setup face pointer
 		gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-		gubCurrentTalkingID   = QItem->ubCharacterNum;
+		gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 		ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
 
@@ -848,7 +847,7 @@ void HandleDialogue( )
 
 			// Setup face pointer
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
 
@@ -860,14 +859,14 @@ void HandleDialogue( )
 		{
 			// Setup face pointer
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
 
 			// Setup face with data!
 			gpCurrentTalkingFace->uiFlags				|= FACE_PCTRIGGER_NPC;
-			gpCurrentTalkingFace->uiUserData1		 = QItem->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2		 = QItem->uiSpecialEventData2;
+			gpCurrentTalkingFace->uiUserData1		= QItem->uiSpecialEventData;
+			gpCurrentTalkingFace->uiUserData2		= QItem->uiSpecialEventData2;
 
 		}
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU )
@@ -891,7 +890,7 @@ void HandleDialogue( )
 			// Do battle snounds......
 			if ( pSoldier )
 			{
-				pSoldier->InternalSoldierReadyWeapon(  (UINT8)QItem->uiSpecialEventData, 0 );
+				pSoldier->InternalSoldierReadyWeapon(	(UINT8)QItem->uiSpecialEventData, 0 );
 			}
 		}
 
@@ -901,10 +900,10 @@ void HandleDialogue( )
 			gTacticalStatus.fLockItemLocators = FALSE;
 
 			// Slide to location!
-			SlideToLocation( 0,  (UINT16)QItem->uiSpecialEventData );
+			SlideToLocation( 0,	(UINT16)QItem->uiSpecialEventData );
 
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
 
@@ -949,14 +948,14 @@ void HandleDialogue( )
 		{
 			// Setup face pointer
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
 
 			// Setup face with data!
 			gpCurrentTalkingFace->uiFlags				|= FACE_TRIGGER_PREBATTLE_INT;
-			gpCurrentTalkingFace->uiUserData1		 = QItem->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2		 = QItem->uiSpecialEventData2;
+			gpCurrentTalkingFace->uiUserData1		= QItem->uiSpecialEventData;
+			gpCurrentTalkingFace->uiUserData2		= QItem->uiSpecialEventData2;
 		}
 
 		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER )
@@ -970,7 +969,7 @@ void HandleDialogue( )
 				InsertDollarSignInToString( zMoney );
 			}
 
-			switch( QItem->uiSpecialEventData  )
+			switch( QItem->uiSpecialEventData	)
 			{
 				case( 0 ):
 						swprintf( zText, SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
@@ -1056,7 +1055,7 @@ void HandleDialogue( )
 		{
 			// Setup face pointer
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			// handle the monologue event
 			HandleSkyRiderMonologueEvent( QItem->uiSpecialEventData, QItem->uiSpecialEventData2 );
@@ -1066,7 +1065,7 @@ void HandleDialogue( )
 		{
 			// Setup face pointer
 			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gubCurrentTalkingID	= QItem->ubCharacterNum;
 
 			// set up the mine highlgith events
 			SetUpAnimationOfMineSectors( QItem->uiSpecialEventData );
@@ -1218,8 +1217,8 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-  if (pSoldier->stats.bLife < CONSCIOUSNESS )
-   return( FALSE );
+	if (pSoldier->stats.bLife < CONSCIOUSNESS )
+	return( FALSE );
 
 	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
@@ -1229,8 +1228,8 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-  if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-   return( FALSE );
+	if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+	return( FALSE );
 
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
@@ -1252,7 +1251,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
 		if (pSoldier->stats.bLife < CONSCIOUSNESS )
-		 return( FALSE );
+		return( FALSE );
 
 		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
@@ -1273,7 +1272,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
 		if (pSoldier->stats.bLife < CONSCIOUSNESS )
-		 return( FALSE );
+		return( FALSE );
 
 		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
@@ -1284,7 +1283,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 		}
 
 		if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-		 return( FALSE );
+		return( FALSE );
 
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
 		{
@@ -1310,11 +1309,11 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 		return( FALSE );
 	}
 
-  if (pSoldier->stats.bLife < CONSCIOUSNESS )
-   return( FALSE );
+	if (pSoldier->stats.bLife < CONSCIOUSNESS )
+	return( FALSE );
 
-  if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-   return( FALSE );
+	if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+	return( FALSE );
 
 	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
@@ -1331,7 +1330,7 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 
 	// OK, let's check if this is the exact one we just played, if so, skip.
 	if ( pSoldier->ubProfile == gTacticalStatus.ubLastQuoteProfileNUm &&
-			 usQuoteNum == gTacticalStatus.ubLastQuoteSaid )
+			usQuoteNum == gTacticalStatus.ubLastQuoteSaid )
 	{	
 		return( FALSE );
 	}
@@ -1376,7 +1375,7 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 //				FACEINDEX
 //						The face index is an index into an ACTIVE face. The face is considered to
 //						be active, and if it's not, either that has to be handled by the UI handler
-//						ir nothing will show.  What this function does is set the face to talking,
+//						ir nothing will show.	What this function does is set the face to talking,
 //						and the face sprite system should handle the rest.
 //				bUIHandlerID
 //						Because this could be used in any place, the UI handleID is used to differentiate
@@ -1476,7 +1475,7 @@ BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceI
 	// check if pause already locked, if so, then don't mess with it
 	if( gfLockPauseState == FALSE )
 	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
+		QItem->fPauseTime	 = fPausedTimeDuringQuote;
 	}
 
 	fPausedTimeDuringQuote = FALSE;
@@ -1508,7 +1507,7 @@ BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpeci
 	// if paused state not already locked
 	if( gfLockPauseState == FALSE )
 	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
+		QItem->fPauseTime	 = fPausedTimeDuringQuote;
 	}
 
 	fPausedTimeDuringQuote = FALSE;
@@ -1541,7 +1540,7 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 	// if paused state not already locked
 	if( gfLockPauseState == FALSE )
 	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
+		QItem->fPauseTime	 = fPausedTimeDuringQuote;
 	}
 
 	fPausedTimeDuringQuote = FALSE;
@@ -1610,15 +1609,15 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 		/*
 		if ( ( (usQuoteNum == QUOTE_PERSONALITY_TRAIT && 
 					(gMercProfiles[ubCharacterNum].bPersonalityTrait == FORGETFUL ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == CLAUSTROPHOBIC ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == NERVOUS ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == NONSWIMMER ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == FEAR_OF_INSECTS)) 
+					gMercProfiles[ubCharacterNum].bPersonalityTrait == CLAUSTROPHOBIC ||
+					gMercProfiles[ubCharacterNum].bPersonalityTrait == NERVOUS ||
+					gMercProfiles[ubCharacterNum].bPersonalityTrait == NONSWIMMER ||
+					gMercProfiles[ubCharacterNum].bPersonalityTrait == FEAR_OF_INSECTS)) 
 					//usQuoteNum == QUOTE_STARTING_TO_WHINE || 
 #ifdef JA2BETAVERSION
 					|| usQuoteNum == QUOTE_WHINE_EQUIPMENT) && (guiCurrentScreen != QUEST_DEBUG_SCREEN) )
 #else
-          ) )
+			) )
 #endif
 
 		{
@@ -1653,16 +1652,16 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	// Check face index
 	CHECKF( iFaceIndex != -1 );
 
-  if ( !GetDialogue( ubCharacterNum, 
-                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, &uiSoundID, zSoundString) )
-  {
-    return( FALSE );
-  }
+	if ( !GetDialogue( ubCharacterNum, 
+					usQuoteNum, DIALOGUESIZE, gzQuoteStr, &uiSoundID, zSoundString) )
+	{
+	return( FALSE );
+	}
  
 	if( bUIHandlerID == DIALOGUE_EXTERNAL_NPC_UI )
 	{
 		// external NPC
-		SetFaceTalking(  iFaceIndex , zSoundString, gzQuoteStr, RATE_11025, 30, 1, MIDDLEPAN );
+		SetFaceTalking(	iFaceIndex , zSoundString, gzQuoteStr, RATE_11025, 30, 1, MIDDLEPAN );
 	}
 	else
 	{
@@ -1686,7 +1685,7 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 	PERFORMANCE_MARKER
 
 	// Show text, if on
-  if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !gFacesData[ iFaceIndex ].fValidSpeech )
+	if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !gFacesData[ iFaceIndex ].fValidSpeech )
 	{
 		switch( bUIHandlerID )
 		{
@@ -1847,7 +1846,7 @@ CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN
 BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, STR8 *ppStr )
 {
 	PERFORMANCE_MARKER
-    STR8 pFilename;
+	STR8 pFilename;
 	
 	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, fWavFile );
 
@@ -1862,32 +1861,32 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
 	PERFORMANCE_MARKER
-  STR8 pFilename;
+	STR8 pFilename;
 
-   // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
-   //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
-   {
+	// first things first	- grab the text (if player has SUBTITLE PREFERENCE ON)
+	//if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
+	{
 			if ( DialogueDataFileExistsForProfile( ubCharacterNum, 0, FALSE, &pFilename ) )
 			{
 				LoadEncryptedDataFromFile( pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
 				if(zDialogueText[0] == 0) 
-        {
+		{
 					swprintf( zDialogueText, L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
 
 #ifndef JA2BETAVERSION
-          return( FALSE );
+			return( FALSE );
 #endif
-        }
+		}
 			} 
 			else
 			{
 				swprintf( zDialogueText, L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
 
 #ifndef JA2BETAVERSION
-          return( FALSE );
+			return( FALSE );
 #endif
 			}
-   }
+	}
 
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
@@ -1896,31 +1895,31 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 	// Copy
 	strcpy( zSoundString, pFilename );
 
-  // Double check it exists....
+	// Double check it exists....
 
 //#ifndef JA2TESTVERSION
 
 /*
-  if ( !FileExists( pFilename ) )
-  {
+	if ( !FileExists( pFilename ) )
+	{
 		CHAR8 sString[512];
 
 		sprintf( sString, "ERROR: Missing file for character # %d, quote # %d", ubCharacterNum, usQuoteNum );
-    ShowCursor(TRUE);
-    ShowCursor(TRUE);
-    ShutdownWithErrorBox( sString );
-  }
+	ShowCursor(TRUE);
+	ShowCursor(TRUE);
+	ShutdownWithErrorBox( sString );
+	}
 */
 
 //#endif
 
-  // get speech if applicable
+	// get speech if applicable
 	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
-  {
+	{
 		// Load it into memory!
-		*puiSoundID = SoundLoadSample(  pFilename );
-   	
-  }
+		*puiSoundID = SoundLoadSample(	pFilename );
+		
+	}
 
  return(TRUE);
 }
@@ -1945,13 +1944,13 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr )
 #else
 	swprintf( gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
 	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",	zText );
 #endif
 }
 
 
 // Handlers for tactical UI stuff
-void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
+void DisplayTextForExternalNPC(	UINT8 ubCharacterNum, STR16 zQuoteStr )
 {
 	PERFORMANCE_MARKER
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
@@ -1971,18 +1970,18 @@ void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr )
 #else
 	swprintf( gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
 	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",	zText );
 #endif
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
-  	sLeft			 = ( gsExternPanelXPosition + 97 );
+		sLeft			= ( gsExternPanelXPosition + 97 );
 		gsTopPosition = gsExternPanelYPosition;
 	}
-  else
-  {
-	  sLeft			 = ( 110 );
-  }
+	else
+	{
+	sLeft			= ( 110 );
+	}
 
 	ExecuteTacticalTextBox( sLeft, gTalkPanel.zQuoteStr );
 
@@ -2015,7 +2014,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, STR16 zQuote
 
 #ifndef TAIWANESE
 	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",	zText );
 #endif
 	
 }
@@ -2030,7 +2029,7 @@ void ExecuteTacticalTextBoxForLastQuote( INT16 sLeftPosition, STR16 pString )
 
 	guiDialogueLastQuoteTime = GetJA2Clock();
 
-	guiDialogueLastQuoteDelay = ( ( uiDelay < FINAL_TALKING_DURATION ) ?  FINAL_TALKING_DURATION : uiDelay );
+	guiDialogueLastQuoteDelay = ( ( uiDelay < FINAL_TALKING_DURATION ) ?	FINAL_TALKING_DURATION : uiDelay );
 	
 	// now execute box
 	ExecuteTacticalTextBox(sLeftPosition, pString );
@@ -2043,7 +2042,6 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 
 	// check if mouse region created, if so, do not recreate
 	
-	// WANNE 2
 	if( fTextBoxMouseRegionCreated == TRUE )
 	{
 		return;
@@ -2052,33 +2050,27 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 	
 	// Prepare text box
-  SET_USE_WINFONTS( TRUE );
-  SET_WINFONT( giSubTitleWinFont ); 
+	SET_USE_WINFONTS( TRUE );
+	SET_WINFONT( giSubTitleWinFont ); 
 	iDialogueBox = PrepareMercPopupBox( iDialogueBox , BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pString, DIALOGUE_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &gusSubtitleBoxWidth, &gusSubtitleBoxHeight );
-  SET_USE_WINFONTS( FALSE );
+	SET_USE_WINFONTS( FALSE );
 
 
-	VideoOverlayDesc.sLeft			 = sLeftPosition;
-	VideoOverlayDesc.sTop				 = gsTopPosition;
-	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusSubtitleBoxWidth;
-	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusSubtitleBoxHeight;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+	VideoOverlayDesc.sLeft			= sLeftPosition;
+	VideoOverlayDesc.sTop				= gsTopPosition;
+	VideoOverlayDesc.sRight			= VideoOverlayDesc.sLeft + gusSubtitleBoxWidth;
+	VideoOverlayDesc.sBottom		= VideoOverlayDesc.sTop + gusSubtitleBoxHeight;
+	VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+	VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 	VideoOverlayDesc.BltCallback = RenderSubtitleBoxOverlay;
 
-	giTextBoxOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+	giTextBoxOverlay =	RegisterVideoOverlay( 0, &VideoOverlayDesc );
 
 	gsTopPosition = 20;
 
-	// WANNE 2
-	//if( fTextBoxMouseRegionCreated == TRUE )
-	//{
-	//	return;
-	//}
-
 	//Define main region
-	MSYS_DefineRegion( &gTextBoxMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback ); 
+	MSYS_DefineRegion( &gTextBoxMouseRegion,	VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,	VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback ); 
 	// Add region
 	MSYS_AddRegion(&(gTextBoxMouseRegion) );
 
@@ -2109,29 +2101,29 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
 		// Setup video overlay!
-		VideoOverlayDesc.sLeft			 = 10;
-		VideoOverlayDesc.sTop				 = 20;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+		VideoOverlayDesc.sLeft			= 10;
+		VideoOverlayDesc.sTop				= 20;
+		VideoOverlayDesc.sRight			= VideoOverlayDesc.sLeft + 99;
+		VideoOverlayDesc.sBottom		= VideoOverlayDesc.sTop + 98;
+		VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+		VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 	}
 	else
 	{
 		// Setup video overlay!
 		
-		VideoOverlayDesc.sLeft			 = gsExternPanelXPosition;
-		VideoOverlayDesc.sTop				 = gsExternPanelYPosition;
+		VideoOverlayDesc.sLeft			= gsExternPanelXPosition;
+		VideoOverlayDesc.sTop				= gsExternPanelYPosition;
 		
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+		VideoOverlayDesc.sRight			= VideoOverlayDesc.sLeft + 99;
+		VideoOverlayDesc.sBottom		= VideoOverlayDesc.sTop + 98;
+		VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+		VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 	}
 
-	iFaceOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+	iFaceOverlay =	RegisterVideoOverlay( 0, &VideoOverlayDesc );
 	gpCurrentTalkingFace->iVideoOverlay = iFaceOverlay;
 
 	RenderAutoFace( iFaceIndex );
@@ -2142,8 +2134,8 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 		fExternFaceBoxRegionCreated = TRUE;
 
 		//Define main region
-		MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback ); 
+		MSYS_DefineRegion( &gFacePopupMouseRegion,	VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,	VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
+							CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback ); 
 		// Add region
 		MSYS_AddRegion(&(gFacePopupMouseRegion) );
 
@@ -2155,7 +2147,7 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 }
 
 
-void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
+void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex	)
 {
 	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
@@ -2169,7 +2161,7 @@ void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
 	// Try to find soldier...
 	pSoldier = FindSoldierByProfileID( ubCharacterNum, FALSE );
 
-	// PLEASE NOTE:  pSoldier may legally be NULL (e.g. Skyrider) !!!
+	// PLEASE NOTE:	pSoldier may legally be NULL (e.g. Skyrider) !!!
 
 	if ( pSoldier == NULL )
 	{
@@ -2201,15 +2193,15 @@ void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
 		}
 
 		// Setup video overlay!
-		VideoOverlayDesc.sLeft			 = 10;
-		VideoOverlayDesc.sTop				 = 20;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
+		VideoOverlayDesc.sLeft			= 10;
+		VideoOverlayDesc.sTop				= 20;
+		VideoOverlayDesc.sRight			= VideoOverlayDesc.sLeft + 99;
+		VideoOverlayDesc.sBottom		= VideoOverlayDesc.sTop + 98;
+		VideoOverlayDesc.sX					= VideoOverlayDesc.sLeft;
+		VideoOverlayDesc.sY					= VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 
-		iFaceOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+		iFaceOverlay =	RegisterVideoOverlay( 0, &VideoOverlayDesc );
 		gpCurrentTalkingFace->iVideoOverlay = iFaceOverlay;
 
 		RenderAutoFace( iFaceIndex );
@@ -2220,8 +2212,8 @@ void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
 			fExternFaceBoxRegionCreated = TRUE;
 
 			//Define main region
-			MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-								 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback ); 
+			MSYS_DefineRegion( &gFacePopupMouseRegion,	VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,	VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
+								CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback ); 
 			// Add region
 			MSYS_AddRegion(&(gFacePopupMouseRegion) );
 		}
@@ -2296,14 +2288,14 @@ void HandleDialogueEnd( FACETYPE *pFace )
 	}
 
 
-  if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !pFace->fValidSpeech )
+	if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !pFace->fValidSpeech )
 	{
 		switch( gbUIHandlerID )
 		{
 			case DIALOGUE_TACTICAL_UI:
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				// Remove if created
-				// 0verhaul:  Both of these events are more or less independent.  Most often the gTextBoxOverlay fails to init.
+				// 0verhaul:	Both of these events are more or less independent.	Most often the gTextBoxOverlay fails to init.
 				// Therefore I am removing the dependency on giTextBoxOverlay before it decides to destroy the popup box region.
 				// This should prevent blockage of buttons and also clicks on the tactical map.
 				if ( giTextBoxOverlay != -1 )
@@ -2359,10 +2351,10 @@ void HandleDialogueEnd( FACETYPE *pFace )
 		}
 	}
 
-  TurnOffSectorLocator();
+	TurnOffSectorLocator();
 
-  gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
-  gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
+	gsExternPanelXPosition	 = DEFAULT_EXTERN_PANEL_X_POS;
+	gsExternPanelYPosition	 = DEFAULT_EXTERN_PANEL_Y_POS;
 
 }
 
@@ -2372,7 +2364,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
+	UINT8	*pDestBuf, *pSrcBuf;
 	INT16 sFontX, sFontY;
 	SOLDIERTYPE *pSoldier;
 	CHAR16					zTownIDString[50];
@@ -2405,8 +2397,8 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 
 		if ( pSoldier )
 		{
-		  //reset the font dest buffer
-		  SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT, FALSE);
+		//reset the font dest buffer
+		SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT, FALSE);
 
 			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", pSoldier->name );
 			mprintf( sFontX, sFontY, L"%s", pSoldier->name );
@@ -2422,13 +2414,13 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 				mprintf( sFontX, sFontY, L"%s", zTownIDString );
 			}
 
-		  //reset the font dest buffer
-		  SetFontDestBuffer(FRAME_BUFFER, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT, FALSE);
+		//reset the font dest buffer
+		SetFontDestBuffer(FRAME_BUFFER, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT, FALSE);
 
-		  // Display bars
-		  DrawLifeUIBarEx( pSoldier, (INT16)( pBlitter->sX + 69 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
-		  DrawBreathUIBarEx( pSoldier, (INT16)( pBlitter->sX + 75 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
-		  DrawMoraleUIBarEx( pSoldier, (INT16)( pBlitter->sX + 81 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
+		// Display bars
+		DrawLifeUIBarEx( pSoldier, (INT16)( pBlitter->sX + 69 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
+		DrawBreathUIBarEx( pSoldier, (INT16)( pBlitter->sX + 75 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
+		DrawMoraleUIBarEx( pSoldier, (INT16)( pBlitter->sX + 81 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
 
 		}
 		else
@@ -2446,7 +2438,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		pSrcBuf = LockVideoSurface( gpCurrentTalkingFace->uiAutoDisplayBuffer, &uiSrcPitchBYTES);
 
 		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES, 
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,  
+					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,	
 					(INT16)( pBlitter->sX + 14 ), (INT16)( pBlitter->sY + 6 ), 
 					0 , 0, 
 					gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight );
@@ -2464,7 +2456,7 @@ void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter )
 	PERFORMANCE_MARKER
 	if ( giTextBoxOverlay != -1 )
 	{
-		RenderMercPopUpBoxFromIndex( iDialogueBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
+		RenderMercPopUpBoxFromIndex( iDialogueBox, pBlitter->sX, pBlitter->sY,	pBlitter->uiDestBuff );
 
 		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusSubtitleBoxWidth, pBlitter->sY + gusSubtitleBoxHeight );
 	}
@@ -2555,7 +2547,7 @@ void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSect
 		if ( pTeamSoldier->bActive )
 		{
 			// Add guy if he's a candidate...
-			if( pTeamSoldier->sSectorX == sSectorX && pTeamSoldier->sSectorY == sSectorY && pTeamSoldier->bSectorZ == bSectorZ  && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep )
+			if( pTeamSoldier->sSectorX == sSectorX && pTeamSoldier->sSectorY == sSectorY && pTeamSoldier->bSectorZ == bSectorZ	&& !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep )
 			{
 				ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 				ubNumMercs++;
@@ -2692,7 +2684,7 @@ void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		if(  gpCurrentTalkingFace != NULL )
+		if(	gpCurrentTalkingFace != NULL )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 
@@ -2723,7 +2715,7 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		if(  gpCurrentTalkingFace != NULL )
+		if(	gpCurrentTalkingFace != NULL )
 		{
 			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 		}
@@ -2981,6 +2973,6 @@ void UnPauseDialogueQueue( void )
 void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
 {
 	PERFORMANCE_MARKER
-  gsExternPanelXPosition     = sXPos;
-  gsExternPanelYPosition     = sYPos;
+	gsExternPanelXPosition	 = sXPos;
+	gsExternPanelYPosition	 = sYPos;
 }

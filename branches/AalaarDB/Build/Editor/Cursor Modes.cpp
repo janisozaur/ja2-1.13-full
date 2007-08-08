@@ -1,4 +1,3 @@
-// WANNE: EDITOR: no changes
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -52,7 +51,7 @@ void EnsureSelectionType();
 
 //Used for offseting cursor to show that it is on the roof rather than on the ground.
 //This can be conveniently executed by moving the cursor up and right 3 gridnos for a
-//total of -483  -(160*3)-(1*3)
+//total of -483	-(160*3)-(1*3)
 #define ROOF_OFFSET		(-483)
 BOOLEAN gfUsingOffset;
 
@@ -173,7 +172,7 @@ void UpdateCursorAreas()
 				fValidCursor = TRUE;
 				break;
 			case MEDIUMSELECTION: 
-			case LARGESELECTION:  
+			case LARGESELECTION:	
 			case XLARGESELECTION: 
 				//The mouse mode value reflects the size of the cursor.
 				gSelectRegion.iTop = sGridY - gusSelectionType;
@@ -202,7 +201,7 @@ void UpdateCursorAreas()
 		{
 			iMapIndex = gSelectRegion.iTop * WORLD_COLS + gSelectRegion.iLeft;
 			if( !IsLocationSittable( iMapIndex, gfRoofPlacement ) && iDrawMode != DRAW_MODE_SCHEDULEACTION || 
-				  !IsLocationSittableExcludingPeople( iMapIndex, gfRoofPlacement ) && iDrawMode == DRAW_MODE_SCHEDULEACTION )
+				!IsLocationSittableExcludingPeople( iMapIndex, gfRoofPlacement ) && iDrawMode == DRAW_MODE_SCHEDULEACTION )
 			{
 				if( sBadMarker != iMapIndex )
 				{
@@ -289,8 +288,8 @@ BOOLEAN HandleAreaSelection()
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
 	{
-		if( !gfLeftButtonState  && !gfCurrentSelectionWithRightButton || 
-			  !gfRightButtonState &&  gfCurrentSelectionWithRightButton )
+		if( !gfLeftButtonState	&& !gfCurrentSelectionWithRightButton || 
+			!gfRightButtonState &&	gfCurrentSelectionWithRightButton )
 		{
 			fAnchored = FALSE;
 			ProcessAreaSelection( (BOOLEAN)!gfCurrentSelectionWithRightButton );
@@ -350,10 +349,9 @@ BOOLEAN HandleAreaSelection()
 void ValidateSelectionRegionBoundaries()
 {
 	PERFORMANCE_MARKER
-	// WANNE: EDITOR?
 	gSelectRegion.iLeft		= max( min( 159, gSelectRegion.iLeft )	, 0 );
-	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop	 )	, 0 );
+	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight	), 0 );
+	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop	)	, 0 );
 	gSelectRegion.iBottom	= max( min( 159, gSelectRegion.iBottom ), 0 );
 }
 

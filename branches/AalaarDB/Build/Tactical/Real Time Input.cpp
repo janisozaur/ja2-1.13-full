@@ -17,7 +17,7 @@
 #include "cursors.h"
 #include "Handle UI.h"
 #include "Isometric Utils.h"
-#include "input.h"    
+#include "input.h"	
 #include "overhead.h"
 #include "Sys Globals.h"
 #include "screenids.h"
@@ -71,7 +71,7 @@ extern UIKEYBOARD_HOOK					gUIKeyboardHook;
 extern BOOLEAN	fRightButtonDown;
 extern BOOLEAN	fLeftButtonDown;
 extern BOOLEAN fIgnoreLeftUp;
-extern UINT32  guiCurrentEvent;
+extern UINT32	guiCurrentEvent;
 extern UINT32 guiCurrentUICursor;
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 extern void DetermineWhichMilitiaControlMenusCanBeShown( void );
@@ -82,9 +82,9 @@ extern UINT32	guiUITargetSoldierId;
 extern BOOLEAN	gfUIShowExitSouth;
 
 
-BOOLEAN	gfStartLookingForRubberBanding	 = FALSE;
-UINT16	gusRubberBandX									 = 0;
-UINT16	gusRubberBandY									 = 0;
+BOOLEAN	gfStartLookingForRubberBanding	= FALSE;
+UINT16	gusRubberBandX									= 0;
+UINT16	gusRubberBandY									= 0;
 
 
 BOOLEAN	gfBeginBurstSpreadTracking = FALSE;
@@ -113,7 +113,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
-	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
+	static BOOLEAN	fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
 
 
@@ -172,7 +172,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 										{
 											gfRTClickLeftHoldIntercepted = TRUE;
 
-											if ( UIMouseOnValidAttackLocation( pSoldier )  )
+											if ( UIMouseOnValidAttackLocation( pSoldier )	)
 											{
 												// OK< going into confirm will call a function that will automatically move
 												// us to shoot in most vases ( grenades need a confirm mode regardless )
@@ -193,7 +193,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 							if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 							{
-								if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )  )
+								if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )	)
 								{
 									// Reset , if this guy is selected merc, reset any multi selections...
 									if ( gusUIFullTargetID == gusSelectedSoldier )
@@ -238,7 +238,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 														{
 															// We're on terrain in which we can walk, walk
 															// If we're on terrain,
-															if ( !gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
+															if ( !gGameSettings.fOptions[ TOPTION_RTCONFIRM ]	)
 															{
 																*puiNewEvent = C_WAIT_FOR_CONFIRM;
 																gfPlotNewMovement = TRUE;
@@ -281,7 +281,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 					case CONFIRM_MOVE_MODE:
 
 						// First check if we clicked on a guy, if so, make selected if it's ours
-						if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+						if(	FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 						{
 							// Select guy
 							if ( (uiMercFlags & SELECTED_MERC) && !( uiMercFlags & UNCONSCIOUS_MERC ) && !( MercPtrs[ usSoldierIndex ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -291,15 +291,15 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 						}
 						else
 						{
-							//if ( COUNTERDONE( RUBBER_BAND_START_DELAY )  )
+							//if ( COUNTERDONE( RUBBER_BAND_START_DELAY )	)
 							{
 								// OK, change to rubber banding mode..
 								// Have we started this yet?
 								if ( !gfStartLookingForRubberBanding && !gRubberBandActive )
 								{
-									gfStartLookingForRubberBanding	 = TRUE;
-									gusRubberBandX									 = gusMouseXPos;
-									gusRubberBandY									 = gusMouseYPos;
+									gfStartLookingForRubberBanding	= TRUE;
+									gusRubberBandX									= gusMouseXPos;
+									gusRubberBandY									= gusMouseYPos;
 								}
 								else
 								{
@@ -321,7 +321,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 										gRubberBandActive			= TRUE;
 
 										// ATE: If we have stopped scrolling.....
-										if ( gfScrollInertia != FALSE  )
+										if ( gfScrollInertia != FALSE	)
 										{
 											SetRenderFlags( RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ );
 
@@ -347,7 +347,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 		}
 		else
 		{
-			if ( fLeftButtonDown  )
+			if ( fLeftButtonDown	)
 			{
 				if ( !fIgnoreLeftUp )
 				{
@@ -480,7 +480,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 												case IDLE_MODE:
 
 													// First check if we clicked on a guy, if so, make selected if it's ours
-													if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+													if(	FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 													{
 														// Select guy
 														if ( uiMercFlags & OWNED_MERC )
@@ -540,7 +540,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 													//		if ( !( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY ) )
 													//		{				
 
-													//gUITargetShotWaiting  = TRUE;
+													//gUITargetShotWaiting	= TRUE;
 													//gsUITargetShotGridNo	= usMapPos;
 													//		}
 													//		else
@@ -557,7 +557,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 													if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 													{
 														// First check if we clicked on a guy, if so, make selected if it's ours
-														if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )  )
+														if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )	)
 														{
 															if ( !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 															{
@@ -683,7 +683,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 																{
 																	// First check if we clicked on a guy, if so, make selected if it's ours
-																	if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) && ( uiMercFlags & OWNED_MERC ) )
+																	if(	FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) && ( uiMercFlags & OWNED_MERC ) )
 																	{
 																		// Select guy
 																		*puiNewEvent = I_SELECT_MERC;
@@ -742,7 +742,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 																					{
 																						// We're on terrain in which we can walk, walk
 																						// If we're on terrain,
-																						if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
+																						if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ]	)
 																						{
 																							*puiNewEvent = C_WAIT_FOR_CONFIRM;
 																							gfPlotNewMovement = TRUE;
@@ -768,7 +768,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 																						//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_MOVE_THERE_STR ] );
 
-																						//		*puiNewEvent					  = M_CHANGE_TO_HANDMODE;
+																						//		*puiNewEvent					= M_CHANGE_TO_HANDMODE;
 																						//		gsOverItemsGridNo				= usMapPos;
 																						//		gsOverItemsLevel				= gsInterfaceLevel;
 																						//	}
@@ -894,7 +894,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 
 				// Reset flag
 				fLeftButtonDown = FALSE;
-				fIgnoreLeftUp   = FALSE;
+				fIgnoreLeftUp	= FALSE;
 				gfRTClickLeftHoldIntercepted = FALSE;
 				fDoubleClickIntercepted = FALSE;
 				fCanCheckForSpeechAdvance = FALSE;
@@ -1005,7 +1005,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 						{
 							gfBeginBurstSpreadTracking = FALSE;
 							gfRTClickLeftHoldIntercepted = TRUE;
-							MercPtrs[ gusSelectedSoldier ]->flags.fDoSpread				 = FALSE;
+							MercPtrs[ gusSelectedSoldier ]->flags.fDoSpread				= FALSE;
 							fClickHoldIntercepted = TRUE;
 							*puiNewEvent = A_END_ACTION;
 							gCurrentUIMode = MOVE_MODE;
@@ -1033,7 +1033,7 @@ void	QueryRTRightButton( UINT32 *puiNewEvent )
 
 							if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 							{
-								if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?  pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
+								if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?	pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
 								{
 									//if( pSoldier->bAssignment >= ON_DUTY )
 									{
@@ -1254,7 +1254,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
-	SOLDIERTYPE								 *pSoldier;
+	SOLDIERTYPE								*pSoldier;
 	static BOOLEAN		fOnValidGuy = FALSE;
 
 
@@ -1394,7 +1394,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				usItem = pSoldier->inv[HANDPOS].usItem;
 
 				// get cursor for item
-				ubItemCursor  =  GetActionModeCursor( pSoldier );
+				ubItemCursor	=	GetActionModeCursor( pSoldier );
 
 				// 
 				if ( IsValidJumpLocation( pSoldier, usMapPos, TRUE ) )
@@ -1447,7 +1447,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 
 			fOnValidGuy = FALSE;
 
-			if ( gfUIFullTargetFound  )
+			if ( gfUIFullTargetFound	)
 				//if ( gfUIFullTargetFound )
 			{
 				if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) )
@@ -1553,7 +1553,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 		//	if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 		//	{
 		// Change refine value back to 1
-		///		pSoldier->pathing.bShownAimTime = REFINE_AIM_1;
+		///		pSoldier->aiData.bShownAimTime = REFINE_AIM_1;
 		//	}
 		//}
 

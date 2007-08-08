@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -419,7 +418,6 @@ void InitEditorMercsToolbar()
 		iScreenWidthOffset + 516, 2 * iScreenHeightOffset + 362, 77, 16, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, MercsScheduleClearCallback );
 	HideEditorButtons( MERCS_SCHEDULE_DATA1A, MERCS_SCHEDULE_DATA4B );
 
-	// WANNE: continue
 	iEditorButton[ MERCS_HEAD_SLOT ] = 
 		CreateCheckBoxButton(	MERCPANEL_X+61, MERCPANEL_Y+0, "EDITOR//smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
 	MSYS_SetBtnUserData( iEditorButton[ MERCS_HEAD_SLOT ], 0, HELMETPOS );
@@ -679,11 +677,11 @@ void InitEditorOptionsToolbar()
 {
 	PERFORMANCE_MARKER
 	iEditorButton[OPTIONS_NEW_MAP] = 
-		CreateEasyNoToggleButton( iScreenWidthOffset + 71,SCREEN_HEIGHT - 79,"EDITOR//new.sti",  BtnNewMapCallback);
+		CreateEasyNoToggleButton( iScreenWidthOffset + 71,SCREEN_HEIGHT - 79,"EDITOR//new.sti",	BtnNewMapCallback);
 	SetButtonFastHelpText(iEditorButton[OPTIONS_NEW_MAP],L"New map");
 
 	iEditorButton[OPTIONS_NEW_BASEMENT] = 
-		CreateEasyNoToggleButton( iScreenWidthOffset + 101,SCREEN_HEIGHT - 79,"EDITOR//new.sti",  BtnNewBasementCallback);
+		CreateEasyNoToggleButton( iScreenWidthOffset + 101,SCREEN_HEIGHT - 79,"EDITOR//new.sti",	BtnNewBasementCallback);
 	SetButtonFastHelpText(iEditorButton[OPTIONS_NEW_BASEMENT],L"New basement");
 
 	iEditorButton[OPTIONS_NEW_CAVES] = 
@@ -691,11 +689,11 @@ void InitEditorOptionsToolbar()
 	SetButtonFastHelpText(iEditorButton[OPTIONS_NEW_CAVES],L"New cave level");
 
 	iEditorButton[OPTIONS_SAVE_MAP] = 
-		CreateEasyNoToggleButton( iScreenWidthOffset + 161,SCREEN_HEIGHT - 79,"EDITOR//save.sti",  BtnSaveCallback);
+		CreateEasyNoToggleButton( iScreenWidthOffset + 161,SCREEN_HEIGHT - 79,"EDITOR//save.sti",	BtnSaveCallback);
 	SetButtonFastHelpText(iEditorButton[OPTIONS_SAVE_MAP],L"Save map");
 
 	iEditorButton[OPTIONS_LOAD_MAP] = 
-		CreateEasyNoToggleButton( iScreenWidthOffset + 191,SCREEN_HEIGHT - 79,"EDITOR//load.sti",  BtnLoadCallback);
+		CreateEasyNoToggleButton( iScreenWidthOffset + 191,SCREEN_HEIGHT - 79,"EDITOR//load.sti",	BtnLoadCallback);
 	SetButtonFastHelpText(iEditorButton[OPTIONS_LOAD_MAP],L"Load map");
 
 	iEditorButton[OPTIONS_CHANGE_TILESET] = 
@@ -776,7 +774,7 @@ void CreateEditorTaskbarInternal()
 	PERFORMANCE_MARKER
 	//Create the tabs for the editor taskbar
 	iEditorButton[ TAB_TERRAIN ] = 
-		CreateTextButton(L"Terrain",  (UINT16)SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT,
+		CreateTextButton(L"Terrain",	(UINT16)SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT,
 		iScreenWidthOffset + 100, SCREEN_HEIGHT - 20, 90, 20, BUTTON_TOGGLE,MSYS_PRIORITY_HIGH,BUTTON_NO_CALLBACK, 
 		TaskTerrainCallback);
 	SpecifyButtonDownTextColors( iEditorButton[TAB_TERRAIN], FONT_YELLOW, FONT_ORANGE );

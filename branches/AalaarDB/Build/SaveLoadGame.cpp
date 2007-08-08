@@ -377,7 +377,7 @@ typedef struct
 	INT32 iHospitalTempBalance;
 	INT32 iHospitalRefund;
 
-  INT8  fPlayerTeamSawJoey;
+	INT8	fPlayerTeamSawJoey;
 	INT8	fMikeShouldSayHi;
 
 	UINT8		ubFiller[550];		//This structure should be 1024 bytes
@@ -396,7 +396,7 @@ UINT32 guiCurrentSaveGameVersion = 0;
 
 //CHAR8		gsSaveGameNameWithPath[ 512 ];
 
-CHAR8			gSaveDir[ MAX_PATH ];  // Snap: Initilized by InitSaveDir
+CHAR8			gSaveDir[ MAX_PATH ];	// Snap: Initilized by InitSaveDir
 
 UINT8			gubSaveGameLoc=0;
 
@@ -463,7 +463,7 @@ void	HandleOldBobbyRMailOrders();
 
 	
 	void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFile );
-	void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGameID  );
+	void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGameID	);
 #endif
 
 #ifdef JA2BETAVERSION
@@ -496,7 +496,7 @@ void TruncateStrategicGroupSizes();
 //that saving and loading are logically mirrors, or when changing
 //savegame versions you'll try decrypting it differently
 
-//some class's structure have changed.  for these, there is a conversion that needs to take place
+//some class's structure have changed.	for these, there is a conversion that needs to take place
 //the savegame version is read and the data loaded accordingly, then converted
 //load once, convert as many times as necessary
 
@@ -875,7 +875,7 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile)
 	if( uiNumBytesRead != 2 )
 	{
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.  KM"  );
+			sprintf( zReason, "Load SoldierCreateStruct -- EOF while reading usCheckSum.	KM"	);
 			AssertMsg( 0, zReason );
 		#endif
 		return FALSE;
@@ -885,7 +885,7 @@ BOOLEAN SOLDIERCREATE_STRUCT::Load(HWFILE hFile)
 	if( usCheckSum != usFileCheckSum )
 	{	//Hacker has modified the stats on the enemy placements.
 		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", usFileCheckSum );
+			sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.	KM", usFileCheckSum );
 			AssertMsg( 0, zReason );
 		#endif
 		return FALSE;
@@ -1472,11 +1472,11 @@ BOOLEAN InitSaveDir()
 
 	// The locale-specific save dir location is of the form L"..\\SavedGames"
 	// This has not changed; instead, we strip the ".." at the beginning
-	sprintf(  gSaveDir, "%s%S", dataDir.c_str(), pMessageStrings[ MSG_SAVEDIRECTORY ] + 2 );
+	sprintf(	gSaveDir, "%s%S", dataDir.c_str(), pMessageStrings[ MSG_SAVEDIRECTORY ] + 2 );
 
 	// This was moved here from SaveGame
 	//Check to see if the save directory exists
-	if( FileGetAttributes( (STR) gSaveDir ) ==  0xFFFFFFFF )
+	if( FileGetAttributes( (STR) gSaveDir ) ==	0xFFFFFFFF )
 	{
 		//ok the direcotry doesnt exist, create it
 		if( !MakeFileManDirectory( (CHAR8 *)gSaveDir ) )
@@ -1505,12 +1505,12 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	BOOLEAN fWePausedIt = FALSE;
 
 
-	//sprintf(  saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
+	//sprintf(	saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
 
 #ifdef JA2BETAVERSION
 #ifndef CRIPPLED_VERSION
-	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
-	//AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.  DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
+	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.	DF 1.", uiSizeOfGeneralInfo ) );
+	//AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.	DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
 #endif
 #endif
 
@@ -1661,7 +1661,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		wcscpy( pGameDesc, pMessageStrings[ MSG_NODESC ] );
 
 	//Check to see if the save directory exists
-	/*if( FileGetAttributes( (STR) saveDir ) ==  0xFFFFFFFF )
+	/*if( FileGetAttributes( (STR) saveDir ) ==	0xFFFFFFFF )
 	{
 		//ok the direcotry doesnt exist, create it
 		if( !MakeFileManDirectory( (CHAR8 *)saveDir ) ) 
@@ -2406,7 +2406,7 @@ FAILED_TO_SAVE:
 
 	//Delete the failed attempt at saving
 #if 0
-	// 0verhaul:  Temporarily disabled to try to troubleshoot save game problems
+	// 0verhaul:	Temporarily disabled to try to troubleshoot save game problems
 	DeleteSaveGameNumber( ubSaveGameID );
 #endif
 
@@ -2459,7 +2459,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	uiRelStartPerc = uiRelEndPerc =0;
 
-  TrashAllSoldiers( );
+	TrashAllSoldiers( );
 
 	//Empty the dialogue Queue cause someone could still have a quote in waiting
 	EmptyDialogueQueue( );
@@ -2467,7 +2467,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//If there is someone talking, stop them
 	StopAnyCurrentlyTalkingSpeech( );
 
-  ZeroAnimSurfaceCounts( );
+	ZeroAnimSurfaceCounts( );
 
 	ShutdownNPCQuotes();
 
@@ -2476,7 +2476,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 #ifdef JA2BETAVERSION
-	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
+	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.	DF 1.", uiSizeOfGeneralInfo ) );
 #endif
 
 	//is it a valid save number
@@ -2508,13 +2508,13 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Set the fact that we are loading a saved game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
-	//Trash the existing world.  This is done to ensure that if we are loading a game that doesn't have 
+	//Trash the existing world.	This is done to ensure that if we are loading a game that doesn't have 
 	//a world loaded, that we trash it beforehand -- else the player could theoretically enter that sector
-	//where it would be in a pre-load state.  
+	//where it would be in a pre-load state.	
 	TrashWorld();
 
 	// Lesh: To kill memory leaks during re-loading a saved game
-	//       release strategic layer resources
+	//		release strategic layer resources
 	ShutdownStrategicLayer();
 	FreeGlobalMessageList();
 
@@ -3578,32 +3578,32 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( guiCurrentSaveGameVersion >= 61 )
 	{
-	  if( guiCurrentSaveGameVersion < 84 )
-	  {
-		  if ( !LoadVehicleMovementInfoFromSavedGameFile( hFile ) )
-		  {
+	if( guiCurrentSaveGameVersion < 84 )
+	{
+		if ( !LoadVehicleMovementInfoFromSavedGameFile( hFile ) )
+		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadVehicleMovementInfoFromSavedGameFile failed" ) );
-			  FileClose( hFile );
-			  guiCurrentSaveGameVersion=0;
-			  return( FALSE );
-		  }
-		  #ifdef JA2BETAVERSION
-			  LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
-		  #endif
-    }
-    else
-    {
-		  if ( !NewLoadVehicleMovementInfoFromSavedGameFile( hFile ) )
-		  {
+			FileClose( hFile );
+			guiCurrentSaveGameVersion=0;
+			return( FALSE );
+		}
+		#ifdef JA2BETAVERSION
+			LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
+		#endif
+	}
+	else
+	{
+		if ( !NewLoadVehicleMovementInfoFromSavedGameFile( hFile ) )
+		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("NewLoadVehicleMovementInfoFromSavedGameFile failed" ) );
-			  FileClose( hFile );
-			  guiCurrentSaveGameVersion=0;
-			  return( FALSE );
-		  }
-		  #ifdef JA2BETAVERSION
-			  LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
-		  #endif
-    }
+			FileClose( hFile );
+			guiCurrentSaveGameVersion=0;
+			return( FALSE );
+		}
+		#ifdef JA2BETAVERSION
+			LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
+		#endif
+	}
 	}
 
 	uiRelEndPerc += 1;
@@ -3650,8 +3650,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( guiCurrentSaveGameVersion <= 73 )
 	{
-    // Patch vehicle fuel
-    AddVehicleFuelToSave( );
+	// Patch vehicle fuel
+	AddVehicleFuelToSave( );
 	}
 
 
@@ -3700,8 +3700,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( guiCurrentSaveGameVersion	<= 40 )
 	{
-		// Cancel all pending purchase orders for BobbyRay's.  Starting with version 41, the BR orders events are 
-		// posted with the usItemIndex itself as the parameter, rather than the inventory slot index.  This was
+		// Cancel all pending purchase orders for BobbyRay's.	Starting with version 41, the BR orders events are 
+		// posted with the usItemIndex itself as the parameter, rather than the inventory slot index.	This was
 		// done to make it easier to modify BR's traded inventory lists later on without breaking saves.
 		CancelAllPendingBRPurchaseOrders();
 	}
@@ -3775,10 +3775,10 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	}
 
 	//Reset the shadow 
-  SetFontShadow( DEFAULT_SHADOW );
+	SetFontShadow( DEFAULT_SHADOW );
 
 #ifdef JA2BETAVERSION
-	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
+	//AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.	DF 1.", uiSizeOfGeneralInfo ) );
 #endif
 
 	//if we succesfully LOADED! the game, mark this entry as the last saved game file
@@ -3836,8 +3836,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	}
 	
 	if( guiCurrentSaveGameVersion	< 64 )
-	{ //Militia/enemies/creature team sizes have been changed from 32 to 20.  This function
-		//will simply kill off the excess.  This will allow the ability to load previous saves, though
+	{ //Militia/enemies/creature team sizes have been changed from 32 to 20.	This function
+		//will simply kill off the excess.	This will allow the ability to load previous saves, though
 		//there will still be problems, though a LOT less than there would be without this call.
 		TruncateStrategicGroupSizes();
 	}
@@ -3903,7 +3903,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	}
 
 
-	//Update the MERC merc contract lenght.  Before save version 77 the data was stored in the SOLDIERTYPE, 
+	//Update the MERC merc contract lenght.	Before save version 77 the data was stored in the SOLDIERTYPE, 
 	//after 77 the data is stored in the profile
 	if ( guiCurrentSaveGameVersion < 77 )
 	{
@@ -3914,7 +3914,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if ( guiCurrentSaveGameVersion <= 89 )
 	{
 		// ARM: A change was made in version 89 where refuel site availability now also depends on whether the player has
-		// airspace control over that sector.  To update the settings immediately, must call it here.
+		// airspace control over that sector.	To update the settings immediately, must call it here.
 		UpdateRefuelSiteAvailability();
 	}
 
@@ -4028,8 +4028,8 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 //	UINT16											*pForcedShade;
 //
 // 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
-//  THROW_PARAMS								*pThrowParams;
-//  UINT16											*pCurrentShade;
+//	THROW_PARAMS								*pThrowParams;
+//	UINT16											*pCurrentShade;
 //	UINT16											*pGlowShades[ 20 ]; // 
 //	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 //	UINT16											*p16BPPPalette;
@@ -4177,26 +4177,26 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 				return FALSE;
 			}
 
-			//Make sure all the pointer references are NULL'ed out.  
-			SavedSoldierInfo.pTempObject	 = NULL;
-			SavedSoldierInfo.pKeyRing	 = NULL;
-			SavedSoldierInfo.p8BPPPalette	 = NULL;
-			SavedSoldierInfo.p16BPPPalette	 = NULL;
+			//Make sure all the pointer references are NULL'ed out.	
+			SavedSoldierInfo.pTempObject	= NULL;
+			SavedSoldierInfo.pKeyRing	= NULL;
+			SavedSoldierInfo.p8BPPPalette	= NULL;
+			SavedSoldierInfo.p16BPPPalette	= NULL;
 			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
 			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
-			SavedSoldierInfo.pCurrentShade	 = NULL;
-			SavedSoldierInfo.pThrowParams	 = NULL;
-			SavedSoldierInfo.pLevelNode	 = NULL;
-			SavedSoldierInfo.pExternShadowLevelNode	 = NULL;
-			SavedSoldierInfo.pRoofUILevelNode	 = NULL;
-			SavedSoldierInfo.pBackGround	 = NULL;
-			SavedSoldierInfo.pZBackground	 = NULL;
-			SavedSoldierInfo.pForcedShade	 = NULL;
-			SavedSoldierInfo.pMercPath	 = NULL;
+			SavedSoldierInfo.pCurrentShade	= NULL;
+			SavedSoldierInfo.pThrowParams	= NULL;
+			SavedSoldierInfo.pLevelNode	= NULL;
+			SavedSoldierInfo.pExternShadowLevelNode	= NULL;
+			SavedSoldierInfo.pRoofUILevelNode	= NULL;
+			SavedSoldierInfo.pBackGround	= NULL;
+			SavedSoldierInfo.pZBackground	= NULL;
+			SavedSoldierInfo.pForcedShade	= NULL;
+			SavedSoldierInfo.pMercPath	= NULL;
 			memset( SavedSoldierInfo.pEffectShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_EFFECTSHADES );
 
 
-			//if the soldier wasnt active, dont add them now.  Advance to the next merc
+			//if the soldier wasnt active, dont add them now.	Advance to the next merc
 			//if( !SavedSoldierInfo.bActive )
 			//	continue;
 
@@ -4421,7 +4421,7 @@ BOOLEAN SaveFilesToSavedGame( STR pSrcFileName, HWFILE hFile )
 	}
 
 	#ifdef JA2BETAVERSION
-	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
+	guiNumberOfMapTempFiles++;		//Increment counter:	To determine where the temp files are crashing
 	#endif
 
 	
@@ -4504,7 +4504,7 @@ BOOLEAN LoadFilesFromSavedGame( STR pSrcFileName, HWFILE hFile )
 	}
 
 	#ifdef JA2BETAVERSION
-	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
+	guiNumberOfMapTempFiles++;		//Increment counter:	To determine where the temp files are crashing
 	#endif
 
 	//open the destination file to write to
@@ -4648,12 +4648,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 		SavedEmail.iFourthData = pEmail->iFourthData;
 		SavedEmail.uiFifthData = pEmail->uiFifthData;
 		SavedEmail.uiSixData = pEmail->uiSixData;
-		
-
-		// WANNE - SAVEGAME-STRUCTURE: Remove the comment, until we have bigger changes in the savegame structure
-		// BECAUSE A NEW GAME MUST BE STARTED! 
 		SavedEmail.iCurrentIMPPosition = pEmail->iCurrentIMPPosition;
-
 
 		// write the email header to the saved game file
 		FileWrite( hFile, &SavedEmail, sizeof( SavedEmailStruct ), &uiNumBytesWritten );
@@ -4755,9 +4750,6 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 		pTempEmail->iFourthData = SavedEmail.iFourthData;
 		pTempEmail->uiFifthData = SavedEmail.uiFifthData;
 		pTempEmail->uiSixData = SavedEmail.uiSixData;
-		
-		// WANNE - SAVEGAME-STRUCTURE: Remove the comment, until we have bigger changes in the savegame structure
-		// BECAUSE A NEW GAME MUST BE STARTED! 
 		pTempEmail->iCurrentIMPPosition = SavedEmail.iCurrentIMPPosition;
 
 		//add the current email in
@@ -4774,7 +4766,7 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 	//if there are emails
 	if( cnt )
 	{
-		//the first node of the LL was a dummy, node,get rid  of it
+		//the first node of the LL was a dummy, node,get rid	of it
 		pTempEmail = pEmailList;
 		pEmailList = pEmailList->Next;
 		pEmailList->Prev = NULL;
@@ -4891,8 +4883,8 @@ BOOLEAN SetMercsInsertionGridNo( )
 	PERFORMANCE_MARKER
 	UINT16 cnt=0;
 
-  // loop through all the mercs
-  for ( cnt=0; cnt < TOTAL_SOLDIERS; cnt++ )
+	// loop through all the mercs
+	for ( cnt=0; cnt < TOTAL_SOLDIERS; cnt++ )
 	{	
 		//if the soldier is active
 		if( Menptr[ cnt ].bActive )
@@ -5359,7 +5351,7 @@ void SaveGameFilePosition( INT32 iPos, STR pMsg )
 
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
-	sprintf( zTempString, "%8d     %s\n", iPos, pMsg );
+	sprintf( zTempString, "%8d	 %s\n", iPos, pMsg );
 	uiStrLen = strlen( zTempString );
 
 	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
@@ -5405,7 +5397,7 @@ void LoadGameFilePosition( INT32 iPos, STR pMsg )
 
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
-	sprintf( zTempString, "%8d     %s\n", iPos, pMsg );
+	sprintf( zTempString, "%8d	 %s\n", iPos, pMsg );
 	uiStrLen = strlen( zTempString );
 
 	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
@@ -5606,8 +5598,8 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 	sGeneralInfo.ubDesertTemperature = gubDesertTemperature;
 	sGeneralInfo.ubGlobalTemperature = gubGlobalTemperature;
 
-	sGeneralInfo.sMercArriveSectorX	 = gsMercArriveSectorX;
-	sGeneralInfo.sMercArriveSectorY	 = gsMercArriveSectorY;
+	sGeneralInfo.sMercArriveSectorX	= gsMercArriveSectorX;
+	sGeneralInfo.sMercArriveSectorY	= gsMercArriveSectorY;
 
 	sGeneralInfo.fCreatureMeanwhileScenePlayed = gfCreatureMeanwhileScenePlayed;
 
@@ -5630,7 +5622,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 	sGeneralInfo.iHospitalTempBalance						= giHospitalTempBalance;
 	sGeneralInfo.iHospitalRefund								= giHospitalRefund;
 	sGeneralInfo.bHospitalPriceModifier					= gbHospitalPriceModifier;
-  sGeneralInfo.fPlayerTeamSawJoey             = gfPlayerTeamSawJoey;
+	sGeneralInfo.fPlayerTeamSawJoey			 = gfPlayerTeamSawJoey;
 	sGeneralInfo.fMikeShouldSayHi								= gfMikeShouldSayHi;
 
 	//Setup the 
@@ -5734,7 +5726,7 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 		SoundStop( guiRainLoop );
 		guiRainLoop = NO_SAMPLE;
 	}
-    //end rain
+	//end rain
 
 	gubDefaultButton = sGeneralInfo.ubDefaultButton;
 
@@ -5903,7 +5895,7 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 	giHospitalTempBalance		= sGeneralInfo.iHospitalTempBalance;
 	giHospitalRefund				= sGeneralInfo.iHospitalRefund;
 	gbHospitalPriceModifier = sGeneralInfo.bHospitalPriceModifier;
-  gfPlayerTeamSawJoey     = sGeneralInfo.fPlayerTeamSawJoey;
+	gfPlayerTeamSawJoey	 = sGeneralInfo.fPlayerTeamSawJoey;
 	gfMikeShouldSayHi				= sGeneralInfo.fMikeShouldSayHi;
 
 	return( TRUE );
@@ -6032,7 +6024,7 @@ void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGa
 
 	if( fInit )
 	{
-		guiNumberOfMapTempFiles = 0;		//Test:  To determine where the temp files are crashing
+		guiNumberOfMapTempFiles = 0;		//Test:	To determine where the temp files are crashing
 		guiSizeOfTempFiles = 0;
 
 		if( FileExists( zFileName ) )
@@ -6052,7 +6044,7 @@ void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGa
 
 		FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
-		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
+		sprintf( zTempString, "Number Of Files: %6d.	Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
 
 		FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
@@ -6091,7 +6083,7 @@ void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFil
 
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
-	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
+	sprintf( zTempString, "%8d	%6d	%s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );
 
 	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );

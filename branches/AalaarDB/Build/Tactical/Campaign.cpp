@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
@@ -77,7 +76,6 @@ UINT16 CountSurfaceSectorsVisited( void );
 void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
 	PERFORMANCE_MARKER
-	// WANNE 2
 	if (pSoldier == NULL || pSoldier->bActive == FALSE)
 		return;	// THIS SHOULD NEVER HAPPEN
 	

@@ -99,8 +99,8 @@ UINT32	MainMenuScreenInit( )
 {
 	PERFORMANCE_MARKER
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %S", zVersionLabel ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s", czVersionNumber ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:    %S", zTrackingNumber ));
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:	 %s", czVersionNumber ));
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:	%S", zTrackingNumber ));
 
 	return( TRUE );
 }
@@ -117,7 +117,7 @@ UINT32	MainMenuScreenHandle( )
 	{
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 		SetMusicMode( MUSIC_NONE );
-		return MAINMENU_SCREEN;  //The splash screen hasn't been up long enough yet.
+		return MAINMENU_SCREEN;	//The splash screen hasn't been up long enough yet.
 	}
 	if( guiSplashFrameFade )
 	{ //Fade the splash screen.
@@ -199,7 +199,7 @@ UINT32	MainMenuScreenHandle( )
 }
 
 
-UINT32	MainMenuScreenShutdown(  )
+UINT32	MainMenuScreenShutdown(	)
 {
 	PERFORMANCE_MARKER
 	return( FALSE );
@@ -260,7 +260,7 @@ void HandleMainMenuScreen()
 BOOLEAN InitMainMenu( )
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 //	gfDoHelpScreen = 0;
 
@@ -332,8 +332,8 @@ BOOLEAN InitMainMenu( )
 void ExitMainMenu( )
 {
 	PERFORMANCE_MARKER
-//	UINT32										 uiDestPitchBYTES;
-//	UINT8											 *pDestBuf;
+//	UINT32										uiDestPitchBYTES;
+//	UINT8											*pDestBuf;
 
 //	if( !gfDoHelpScreen )
 	{
@@ -414,12 +414,12 @@ void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
 void HandleMainMenuInput()
 {
 	PERFORMANCE_MARKER
-	InputAtom  InputEvent;
+	InputAtom	InputEvent;
 
 	// Check for esc 
 	while (DequeueEvent(&InputEvent) == TRUE)
-  {
-    if( InputEvent.usEvent == KEY_UP )
+	{
+	if( InputEvent.usEvent == KEY_UP )
 		{
 			switch( InputEvent.usParam )
 			{
@@ -485,8 +485,8 @@ void HandleHelpScreenInput()
 void ClearMainMenu()
 {
 	PERFORMANCE_MARKER
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
+	UINT32										uiDestPitchBYTES;
+	UINT8											*pDestBuf;
 
 	// CLEAR THE FRAME BUFFER
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
@@ -546,7 +546,7 @@ void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 
 		// Make a mouse region
 		MSYS_DefineRegion( &(gBackRegion), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack ); 
+							CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack ); 
 		// Add region
 		MSYS_AddRegion(&(gBackRegion) );
 
@@ -624,7 +624,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 			ButtonList[ iMenuButtons[ cnt ] ]->UserData[0] = cnt;
 
 			#ifndef _DEBUG
-				//load up some info from the 'mainmenu.edt' file.  This makes sure the file is present.  The file is
+				//load up some info from the 'mainmenu.edt' file.	This makes sure the file is present.	The file is
 				// 'marked' with a code that identifies the testers
 				iStartLoc = MAINMENU_RECORD_SIZE * cnt;
 				if( !LoadEncryptedDataFromFile(MAINMENU_TEXT_FILE, zText, iStartLoc, MAINMENU_RECORD_SIZE ) )
@@ -666,16 +666,16 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 void RenderMainMenu()
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	//Get and display the background image
 	GetVideoObject(&hPixHandle, guiMainMenuBackGroundImage );
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY,NULL);
 
 	GetVideoObject(&hPixHandle, guiJa2LogoImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, iScreenWidthOffset + 188, iScreenHeightOffset + 10, VO_BLT_SRCTRANSPARENCY,NULL);
 
 
 #ifdef TESTFOREIGNFONTS

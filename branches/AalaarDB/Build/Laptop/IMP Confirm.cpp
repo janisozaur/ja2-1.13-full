@@ -149,14 +149,14 @@ void RenderIMPConfirm( void )
 {
 	PERFORMANCE_MARKER
 
-	 // the background
+	// the background
 	RenderProfileBackGround( );
 	
 		// indent
-  RenderAvgMercIndentFrame(90, 40 ); 
+	RenderAvgMercIndentFrame(90, 40 ); 
 
 	// highlight answer
-  PrintImpText( );
+	PrintImpText( );
 
 	return;
 }
@@ -166,7 +166,7 @@ void ExitIMPConfirm( void )
 	PERFORMANCE_MARKER
 
 	// destroy buttons
-  DestroyConfirmButtons( );
+	DestroyConfirmButtons( );
 	return;
 }
 
@@ -180,26 +180,26 @@ void CreateConfirmButtons( void )
 {
 	PERFORMANCE_MARKER
 	// create buttons for confirm screen
-  
-	giIMPConfirmButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+	
+	giIMPConfirmButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
 	giIMPConfirmButton[0] = CreateIconAndTextButton( giIMPConfirmButtonImage[0], pImpButtonText[ 16 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmYes);
-  
-	giIMPConfirmButtonImage[1]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmYes);
+	
+	giIMPConfirmButtonImage[1]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
 	giIMPConfirmButton[1] = CreateIconAndTextButton( giIMPConfirmButtonImage[ 1 ], pImpButtonText[ 17 ], FONT12ARIAL, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 FONT_WHITE, DEFAULT_SHADOW, 
-														 TEXT_CJUSTIFIED, 
-														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmNo);
+														FONT_WHITE, DEFAULT_SHADOW, 
+														FONT_WHITE, DEFAULT_SHADOW, 
+														TEXT_CJUSTIFIED, 
+														LAPTOP_SCREEN_UL_X +	( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPConfirmNo);
  
  SetButtonCursor(giIMPConfirmButton[ 0 ], CURSOR_WWW);
  SetButtonCursor(giIMPConfirmButton[ 1 ], CURSOR_WWW);
-    
+	
 	return;
 }
 
@@ -207,14 +207,14 @@ void CreateConfirmButtons( void )
 void DestroyConfirmButtons( void )
 {
 	PERFORMANCE_MARKER
-  // destroy buttons for confirm screen
+	// destroy buttons for confirm screen
 	
-  RemoveButton(giIMPConfirmButton[ 0 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
+	RemoveButton(giIMPConfirmButton[ 0 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
 
-  
+	
 	RemoveButton(giIMPConfirmButton[ 1 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
 	return;
 }
 
@@ -234,7 +234,6 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
 
-	// WANNE NEW: Any changes here. I don't think so
 	HireMercStruct.ubProfileID = ( UINT8 )( LaptopSaveInfo.iIMPIndex ) ;
 
 	if( fLoadingCharacterForPreviousImpProfile == FALSE )
@@ -244,8 +243,8 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 	}
 
 
-	HireMercStruct.sSectorX									 = gsMercArriveSectorX;
-	HireMercStruct.sSectorY									 = gsMercArriveSectorY;
+	HireMercStruct.sSectorX									= gsMercArriveSectorX;
+	HireMercStruct.sSectorY									= gsMercArriveSectorY;
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;
@@ -270,7 +269,7 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 }
 
 
-void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
+void	BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 {
 	PERFORMANCE_MARKER
 
@@ -280,7 +279,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -299,7 +298,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 			if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 			{
 				// not enough
-		    return;
+		 return;
 			}
 
 			// line moved by CJC Nov 28 2002 to AFTER the check for money
@@ -307,7 +306,7 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 
 			// charge the player
 			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(LaptopSaveInfo.iIMPIndex), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
-      AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
+		AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
 			AddCharacterToPlayersTeam( );
 			
 			// write the created imp merc
@@ -345,13 +344,13 @@ void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
 void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 {
 	PERFORMANCE_MARKER
-  	// btn callback for IMP Homepage About US button
+		// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -375,9 +374,9 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 				fButtonPendingFlag = TRUE;
 				iCurrentImpPage = IMP_HOME_PAGE;
 			}
-      fNoAlreadySelected = TRUE;
+		fNoAlreadySelected = TRUE;
 			*/
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		}
 	}
 }
@@ -388,13 +387,13 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 	PERFORMANCE_MARKER
 	
 
-  	// btn callback for IMP Homepage About US button
+		// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -407,8 +406,8 @@ void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
 				fButtonPendingFlag = TRUE;
 				iCurrentImpPage = IMP_HOME_PAGE;
 			}
-      fNoAlreadySelected = TRUE;
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fNoAlreadySelected = TRUE;
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		}
 	}
 }
@@ -424,7 +423,7 @@ void GiveItemsToPC( UINT8 ubProfileId )
 	MERCPROFILESTRUCT *pProfile;
 
 
-  // gives starting items to merc
+	// gives starting items to merc
 	// NOTE: Any guns should probably be from those available in regular gun set
 
 	pProfile = &(gMercProfiles[ubProfileId]);
@@ -627,9 +626,9 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
 	PERFORMANCE_MARKER
-  pProfile->inv[uiPos]				= usItem;
-  pProfile->bInvStatus[uiPos] = ubStatus;
-  pProfile->bInvNumber[uiPos] = ubHowMany;
+	pProfile->inv[uiPos]				= usItem;
+	pProfile->bInvStatus[uiPos] = ubStatus;
+	pProfile->bInvNumber[uiPos] = ubHowMany;
 }
 
 
@@ -760,7 +759,7 @@ BOOLEAN ImpExists ( STR nickName )
 	strcpy(zFileName,nickName);
 	strcat(zFileName,IMP_FILENAME_SUFFIX);
 
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",  zFileName));
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %s",	zFileName));
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ImpExists: %d", FileExistsNoDB(zFileName) ));
 
 	return FileExistsNoDB(zFileName);
@@ -852,7 +851,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		FileClose(hFile);
 
 		// WDS: Allow flexible numbers of IMPs of each sex
-		//  note: check this
+		//	note: check this
 
 		// You cannot have more than 3 I.M.P characters with the same gender on your team.
 		DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 9 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -865,18 +864,18 @@ BOOLEAN LoadImpCharacter( STR nickName )
 void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
 {
 	PERFORMANCE_MARKER
-  // ATE: Check boundary conditions!
-  if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
-  {
-    return;
-  }
+	// ATE: Check boundary conditions!
+	if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
+	{
+	return;
+	}
 
 	gMercProfiles[ ubMercProfileID ].usEyesX = uiEyeXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ];
-	gMercProfiles[ ubMercProfileID ].usEyesY = uiEyeYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
+	gMercProfiles[ ubMercProfileID ].usEyesY = uiEyeYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
 
 
-	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
-	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
+	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
+	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200	];
 }
 
 

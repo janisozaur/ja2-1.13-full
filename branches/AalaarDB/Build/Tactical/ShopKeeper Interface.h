@@ -55,7 +55,7 @@ public:
 	UINT32				uiItemPrice;			//Only used for the players item that have been evaluated
 
 	INT16				sSpecialItemElement;	// refers to which special item element an item in a dealer's inventory area
-												// occupies.  -1 Means the item is "perfect" and has no associated special item.
+												// occupies.	-1 Means the item is "perfect" and has no associated special item.
 };
 
 class INVENTORY_IN_SLOT
@@ -76,7 +76,7 @@ public:
 	UINT32			uiItemPrice;			//Only used for the players item that have been evaluated
 
 	INT16			sSpecialItemElement;	// refers to which special item element an item in a dealer's inventory area
-											// occupies.  -1 Means the item is "perfect" and has no associated special item.
+											// occupies.	-1 Means the item is "perfect" and has no associated special item.
 
 	char			endOfPod;
 	OBJECTTYPE		ItemObject;

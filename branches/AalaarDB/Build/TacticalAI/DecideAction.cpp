@@ -2195,7 +2195,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 				AssureItemIsInHandPos(pSoldier, BestThrow.bWeaponIn, FOREVER);
 
 				pSoldier->aiData.usActionData = BestThrow.sTarget;
-				pSoldier->pathing.bAimTime			= BestThrow.ubAimTime;
+				pSoldier->aiData.bAimTime			= BestThrow.ubAimTime;
 
 				return(AI_ACTION_TOSS_PROJECTILE);
 			}
@@ -2256,7 +2256,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		AssureItemIsInHandPos(pSoldier, BestShot.bWeaponIn, FOREVER);
 
 		pSoldier->aiData.usActionData = BestShot.sTarget;
-		pSoldier->pathing.bAimTime			= BestShot.ubAimTime;
+		pSoldier->aiData.bAimTime			= BestShot.ubAimTime;
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Sniper!" );
 		return(AI_ACTION_FIRE_GUN );
 	}
@@ -2306,7 +2306,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		AssureItemIsInHandPos(pSoldier, BestShot.bWeaponIn, FOREVER);
 
 		pSoldier->aiData.usActionData = BestShot.sTarget;
-		//pSoldier->pathing.bAimTime			= BestShot.ubAimTime;
+		//pSoldier->aiData.bAimTime			= BestShot.ubAimTime;
 		UINT8 ubBurstAPs = 0;
 
 		pSoldier->bDoAutofire = 0;
@@ -2329,7 +2329,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		// Hmmm, automatic suppression?  Howcome we don't get this?
 		if (pSoldier->bDoAutofire >= 10 &&  pSoldier->bActionPoints >= BestShot.ubAPCost + ubBurstAPs )
 		{
-			pSoldier->pathing.bAimTime			= 0;
+			pSoldier->aiData.bAimTime			= 0;
 			pSoldier->bDoBurst			= 1;
 
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Suppression Fire!" );
@@ -2339,7 +2339,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		}
 		else
 		{
-			pSoldier->pathing.bAimTime			= 0;
+			pSoldier->aiData.bAimTime			= 0;
 			pSoldier->bDoBurst			= 0;
 			pSoldier->bDoAutofire		= 0;
 			// not enough aps - do somthing else
@@ -4463,7 +4463,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 		}
 		else
 		{
-			pSoldier->pathing.bAimTime	= 0;
+			pSoldier->aiData.bAimTime	= 0;
 			pSoldier->bDoBurst			= 0;
 			pSoldier->bDoAutofire		= 0;
 			// not enough aps - do somthing else
@@ -4479,13 +4479,13 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 	if (flags.BestAttack.ubAimTime == BURSTING)
 	{
-		pSoldier->pathing.bAimTime	= 0;
+		pSoldier->aiData.bAimTime	= 0;
 		pSoldier->bDoBurst			= 1;
 		pSoldier->bDoAutofire		= 0;
 	}
 	else if(flags.BestAttack.ubAimTime >= AUTOFIRING)
 	{
-		pSoldier->pathing.bAimTime	= 0;
+		pSoldier->aiData.bAimTime	= 0;
 		pSoldier->bDoBurst			= 1;
 		pSoldier->bDoAutofire		= flags.BestAttack.ubAimTime-AUTOFIRING;
 
@@ -4495,7 +4495,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 	/*
 	else // defaults already set
 	{
-	pSoldier->pathing.bAimTime			= flags.BestAttack.ubAimTime;
+	pSoldier->aiData.bAimTime			= flags.BestAttack.ubAimTime;
 	pSoldier->bDoBurst			= 0;
 	}
 	*/
@@ -4992,7 +4992,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 		flags.fChangeStanceFirst = FALSE;
 
 		// default settings
-		pSoldier->pathing.bAimTime			= flags.BestAttack.ubAimTime;
+		pSoldier->aiData.bAimTime			= flags.BestAttack.ubAimTime;
 		pSoldier->bDoBurst			= 0;
 
 		if (flags.ubBestAttackAction == AI_ACTION_FIRE_GUN)

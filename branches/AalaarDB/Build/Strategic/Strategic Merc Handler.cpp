@@ -170,7 +170,7 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 }
 
 
-// MercDailyUpdate() gets called every day at midnight.  If something is to happen to a merc that day, add an event for it.
+// MercDailyUpdate() gets called every day at midnight.	If something is to happen to a merc that day, add an event for it.
 void MercDailyUpdate()
 {
 	PERFORMANCE_MARKER
@@ -216,7 +216,7 @@ void MercDailyUpdate()
 	
 	
 	//loop though all the mercs
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{
 		//if the merc is active
 		if ( ( pSoldier->bActive )&&( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )
@@ -230,13 +230,13 @@ void MercDailyUpdate()
 			// ATE; Reset found something nice flag...
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE );
 
-      // ATE: Decrement tolerance value...
-      pSoldier->bCorpseQuoteTolerance--;
+		// ATE: Decrement tolerance value...
+		pSoldier->bCorpseQuoteTolerance--;
 
-      if ( pSoldier->bCorpseQuoteTolerance < 0 )
-      {
-        pSoldier->bCorpseQuoteTolerance = 0;
-      }
+		if ( pSoldier->bCorpseQuoteTolerance < 0 )
+		{
+		pSoldier->bCorpseQuoteTolerance = 0;
+		}
 
 			// CJC: For some personalities, reset personality quote said flag
 			if ( pSoldier->ubProfile != NO_PROFILE )
@@ -274,7 +274,7 @@ void MercDailyUpdate()
 			if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
 			{
 				INT16	sSalary = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				INT32	iMoneyOwedToMerc = 0;  
+				INT32	iMoneyOwedToMerc = 0;	
 
 				//increment the number of days the mercs has been on the team
 				pSoldier->iTotalContractLength++;
@@ -355,7 +355,7 @@ void MercDailyUpdate()
 
 		// if active, here, & alive (POW is ok, don't care)
 		if( ( pSoldier->bActive ) && ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&
-																 ( pSoldier->bAssignment != IN_TRANSIT ) )
+																( pSoldier->bAssignment != IN_TRANSIT ) )
 		{
 			// increment the "man days" played counter for each such merc in the player's employment
 			gStrategicStatus.uiManDaysPlayed++;
@@ -522,7 +522,7 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList )
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
 	//loop though all the mercs
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++, iCounter++ )
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++, iCounter++ )
 	{
 		if ( pSoldier->bActive )
 		{
@@ -545,27 +545,27 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList )
 					if( IsTheSoldierAliveAndConcious( MercPtrs[ cntB ] ) )
 					{
 						// swap
-						pSoldier =  MercPtrs[ cntB ];
-						MercPtrs[ cntB ] =  MercPtrs[ cnt ];
+						pSoldier =	MercPtrs[ cntB ];
+						MercPtrs[ cntB ] =	MercPtrs[ cnt ];
 						MercPtrs[ cnt ] = pSoldier;
 					}
 				}
 			}
-			else if(  MercPtrs[ cntB ]->ubWhatKindOfMercAmI == MERC_TYPE__AIM )
+			else if(	MercPtrs[ cntB ]->ubWhatKindOfMercAmI == MERC_TYPE__AIM )
 			{
 				if( MercPtrs[ cntB ]->iEndofContractTime < MercPtrs[ cnt ]->iEndofContractTime )
 				{
 					// swap
-					pSoldier =  MercPtrs[ cntB ];
-					MercPtrs[ cntB ] =  MercPtrs[ cnt ];
+					pSoldier =	MercPtrs[ cntB ];
+					MercPtrs[ cntB ] =	MercPtrs[ cnt ];
 					MercPtrs[ cnt ] = pSoldier;
 				}
 			}
 			else
 			{
 				// not a hirable guy, move to the botton
-				pSoldier =  MercPtrs[ cnt ];
-				MercPtrs[ cnt ] =  MercPtrs[ cntB ];
+				pSoldier =	MercPtrs[ cnt ];
+				MercPtrs[ cnt ] =	MercPtrs[ cntB ];
 				MercPtrs[ cntB ] = pSoldier;
 			}
 		}
@@ -586,7 +586,7 @@ void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 		if( iCounter == 0 )
 		{
 			// first guy, if he no leave today, no one is leave, go home
-			if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__MERC ) && (  pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM ) )
+			if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__MERC ) && (	pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM ) )
 			{
 				return;
 			}
@@ -741,7 +741,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	// this of course assumes default morale is 50
 	if ( bBestGun != -1 )
 	{
-		bBestGun		= (bBestGun		 * (50 + pSoldier->aiData.bMorale)) / 100;
+		bBestGun		= (bBestGun		* (50 + pSoldier->aiData.bMorale)) / 100;
 	}
 	if ( bBestArmour != -1 )
 	{
@@ -765,7 +765,7 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
-	if ( ubProfile == LARRY_NORMAL  )
+	if ( ubProfile == LARRY_NORMAL	)
 	{
 		if ( CheckFact( FACT_LARRY_CHANGED, 0 ) )
 		{
@@ -817,7 +817,7 @@ void UpdateBuddyAndHatedCounters( void )
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
 	//loop though all the mercs
-  for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
+	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
 	{	
 		fSameGroupOnly = FALSE;
 
@@ -854,7 +854,7 @@ void UpdateBuddyAndHatedCounters( void )
 					{
 						// check to see if the location is the same
 						if (pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-							  pOtherSoldier->sSectorY != pSoldier->sSectorY ||
+							pOtherSoldier->sSectorY != pSoldier->sSectorY ||
 								pOtherSoldier->bSectorZ != pSoldier->bSectorZ)
 						{
 							continue;
@@ -1069,7 +1069,7 @@ void HourlyCamouflageUpdate( void )
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
 	// loop through all mercs
-  for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
+	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
 	{	
 		if ( pSoldier->bActive )
 		{

@@ -10,7 +10,6 @@ void NextProfilingMode( void );
 void ShadeUnSelectableButtons( void );
 BOOLEAN IsIMPSlotFree(INT32 iIMPId);
 
-// WANNE NEW
 INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId);
 
 // WDS: Allow flexible numbers of IMPs of each sex
@@ -32,7 +31,7 @@ INT32 GetFirstFemaleSlot();
 INT32 GetLastFemaleSlot();
 
 // This returns a count of how any slots along we are in the potential
-// slot list.  Usable for displaying on the "Voice" button in the interface
+// slot list.	Usable for displaying on the "Voice" button in the interface
 // and probably not much else.
 INT32 GetVoiceCountFromVoiceSlot(INT32 iSlot);
 

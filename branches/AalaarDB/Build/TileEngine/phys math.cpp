@@ -84,9 +84,9 @@ vector_3 VCrossProduct( vector_3 *a, vector_3 *b )
 	PERFORMANCE_MARKER
 	vector_3 c;
 
-	c.x = ( a->y * b->z ) - ( a->z *  b->y );
-	c.y = ( a->x * b->z ) - ( a->z *  b->x );
-	c.z = ( a->x * b->y ) - ( a->y *  b->x );
+	c.x = ( a->y * b->z ) - ( a->z *	b->y );
+	c.y = ( a->x * b->z ) - ( a->z *	b->x );
+	c.z = ( a->x * b->y ) - ( a->y *	b->x );
 
 	return( c );
 }
@@ -98,8 +98,8 @@ vector_3 VGetPerpendicular( vector_3 *a )
 	vector_3 c;
 
 	c.x = -a->y;
-	c.y =  a->x;
-	c.z =  a->z;
+	c.y =	a->x;
+	c.z =	a->z;
 
 	return( c );
 }

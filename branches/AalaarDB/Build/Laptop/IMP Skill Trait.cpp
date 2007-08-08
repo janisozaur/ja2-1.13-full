@@ -80,7 +80,7 @@ BOOLEAN	gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 INT32 giIMPSkillTraitAnswerButton[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 INT32 giIMPSkillTraitAnswerButtonImage[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 
-// this is the Done  buttons
+// this is the Done	buttons
 INT32 giIMPSkillTraitFinsihButton;
 INT32 giIMPSkillTraitFinsihButtonImage;
 
@@ -125,7 +125,7 @@ void EnterIMPSkillTrait( void )
 {
 	PERFORMANCE_MARKER
 //	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	//add the skill trait buttons
 	AddImpSkillTraitButtons();
@@ -142,13 +142,13 @@ void EnterIMPSkillTrait( void )
 
 
 
-  giIMPSkillTraitFinsihButtonImage =  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPSkillTraitFinsihButton = CreateIconAndTextButton( giIMPSkillTraitFinsihButtonImage, pImpButtonText[ 24 ], FONT12ARIAL, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 TEXT_CJUSTIFIED, 
-																 LAPTOP_SCREEN_UL_X +  ( 350 ), LAPTOP_SCREEN_WEB_UL_Y + ( 340 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 			 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPSkillTraitFinishCallback );
+	giIMPSkillTraitFinsihButtonImage =	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	giIMPSkillTraitFinsihButton = CreateIconAndTextButton( giIMPSkillTraitFinsihButtonImage, pImpButtonText[ 24 ], FONT12ARIAL, 
+																FONT_WHITE, DEFAULT_SHADOW, 
+																FONT_WHITE, DEFAULT_SHADOW, 
+																TEXT_CJUSTIFIED, 
+																LAPTOP_SCREEN_UL_X +	( 350 ), LAPTOP_SCREEN_WEB_UL_Y + ( 340 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+																BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPSkillTraitFinishCallback );
 
 
 
@@ -210,7 +210,7 @@ void HandleIMPSkillTrait( void )
 		gfIST_Redraw = FALSE;
 	}
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 void AddImpSkillTraitButtons()
@@ -248,9 +248,9 @@ void AddImpSkillTraitButtons()
 		}
 
 		if( iCnt == 0 )
-			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  LoadButtonImage( "LAPTOP\\button_6.sti", -1,0,-1,1,-1 );
+			giIMPSkillTraitAnswerButtonImage[ iCnt ] =	LoadButtonImage( "LAPTOP\\button_6.sti", -1,0,-1,1,-1 );
 		else
-			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  UseLoadedButtonImage( giIMPSkillTraitAnswerButtonImage[ 0 ], -1,0,-1,1,-1 );
+			giIMPSkillTraitAnswerButtonImage[ iCnt ] =	UseLoadedButtonImage( giIMPSkillTraitAnswerButtonImage[ 0 ], -1,0,-1,1,-1 );
 
 		giIMPSkillTraitAnswerButton[iCnt] = QuickCreateButton( giIMPSkillTraitAnswerButtonImage[ iCnt ], usPosX, usPosY,
 									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
@@ -295,7 +295,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 //		btn->uiFlags|=(BUTTON_CLICKED_ON);
 
-		INT32 iSkillTrait =  MSYS_GetBtnUserData( btn, 0 );
+		INT32 iSkillTrait =	MSYS_GetBtnUserData( btn, 0 );
 
 		HandleIMPSkillTraitAnswers( iSkillTrait, FALSE );
 	}
@@ -453,7 +453,7 @@ void IMPSkillTraitDisplaySkills()
 	UINT32 uiCnt;
 	UINT16 usPosX, usPosY;
 	UINT16 usBoxPosX, usBoxPosY;
-  HVOBJECT	hImageHandle;
+	HVOBJECT	hImageHandle;
 
 
 	//Display the title
@@ -590,7 +590,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 	{
 		//if the trait is not the ones you cant be expert in )
 		if( gfSkillTraitQuestions[ IMP_SKILL_TRAITS__ELECTRONICS ] ||
-				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__AMBIDEXTROUS  ] ||
+				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__AMBIDEXTROUS	] ||
 				gfSkillTraitQuestions[ IMP_SKILL_TRAITS__CAMO ] )
 		{
 			bExtraPoints = 5;

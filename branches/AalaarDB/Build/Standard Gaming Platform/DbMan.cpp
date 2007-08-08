@@ -44,11 +44,11 @@
 #define INITIAL_NUM_HANDLES			20
 #define NUM_FILES_TO_ADD_AT_A_TIME	20
 
-#define CHECKF(exp)  if (!(exp)) { return(FALSE); }
-#define CHECKV(exp)  if (!(exp)) { return; }
-#define CHECKN(exp)  if (!(exp)) { return(NULL); }
+#define CHECKF(exp)	if (!(exp)) { return(FALSE); }
+#define CHECKV(exp)	if (!(exp)) { return; }
+#define CHECKN(exp)	if (!(exp)) { return(NULL); }
 #define CHECKBI(exp) if (!(exp)) { return(-1); }
-#define CHECK0(exp)  if (!(exp)) { return(0); }
+#define CHECK0(exp)	if (!(exp)) { return(0); }
 
 #define PRINT_DEBUG_INFO	FileDebugPrint();
 
@@ -241,7 +241,7 @@ BOOLEAN InitializeDatabaseManager( STR strIndexFilename )
 
 	strcpy( gdb.strIndexFilename, strIndexFilename );
 
-  RegisterDebugTopic( TOPIC_DATABASE_MANAGER, "Database Manager");
+	RegisterDebugTopic( TOPIC_DATABASE_MANAGER, "Database Manager");
 
 	return(TRUE);
 }
@@ -281,7 +281,7 @@ void ShutdownDatabaseManager( void )
 	// release memory used
 	MemFree( gdb.pDBFiles );
 
-  UnRegisterDebugTopic( TOPIC_DATABASE_MANAGER, "Database Manager" );
+	UnRegisterDebugTopic( TOPIC_DATABASE_MANAGER, "Database Manager" );
 }
 
 //**************************************************************************
@@ -358,7 +358,7 @@ HDBINDEX DbOpen( STR strFilename )
 	CHAR			cShortDBName[FILENAME_LENGTH];
 	BOOLEAN		fFound;
 
-	fFound   = FALSE;
+	fFound	= FALSE;
 	hDBIndex = 0;
 
 	// first, find any already open databases, and make sure that if we're trying to
@@ -452,7 +452,7 @@ void DbClose( HDBINDEX hFile )
 //
 // Parameter List :
 //
-//		STR	  ->filename
+//		STR	->filename
 //		UIN32		->access - read or write, or both
 //		BOOLEAN	->delete on close
 //
@@ -491,7 +491,7 @@ HDBFILE DbFileOpen( STR strFilename )
 		DbFile	*pNew; 
 
 		pNew = (DbFile *) MemRealloc( gdb.pDBFiles[hDBIndex].pOpenFiles,
-								 gdb.pDBFiles[hDBIndex].uiNumFiles + NUM_FILES_TO_ADD_AT_A_TIME );
+								gdb.pDBFiles[hDBIndex].uiNumFiles + NUM_FILES_TO_ADD_AT_A_TIME );
 
 		if ( !pNew )
 		{
@@ -534,7 +534,7 @@ void DbFileClose( HDBFILE hDBFile )
 	HDBINDEX		hDBIndex;
 
 	hFileIndex = ExtractFileIndex( hDBFile );
-	hDBIndex   = ExtractDbIndex( hDBFile );
+	hDBIndex	= ExtractDbIndex( hDBFile );
 
 	if ( hDBIndex >= gdb.uiNumDBFiles )
 		return;
@@ -583,7 +583,7 @@ BOOLEAN DbFileRead(HDBFILE	hDBFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *pui
 	UINT32		uiStartPos, uiCurPos, uiBytesRead;
 
 	hFileIndex = ExtractFileIndex( hDBFile );
-	hDBIndex   = ExtractDbIndex( hDBFile );
+	hDBIndex	= ExtractDbIndex( hDBFile );
 
 	CHECKF( hDBIndex < gdb.uiNumDBFiles );
 	CHECKF( gdb.pDBFiles[hDBIndex].pOpenFiles )
@@ -674,7 +674,7 @@ BOOLEAN DbFileSeek( HDBFILE hDBFile, UINT32 uiDistance, UINT8 uiHow )
 	UINT32		uiStartPos, uiCurPos, uiSize;
 
 	hFileIndex = ExtractFileIndex( hDBFile );
-	hDBIndex   = ExtractDbIndex( hDBFile );
+	hDBIndex	= ExtractDbIndex( hDBFile );
 
 	CHECKF( hDBIndex < gdb.uiNumDBFiles );
 	CHECKF( gdb.pDBFiles[hDBIndex].pOpenFiles )
@@ -724,7 +724,7 @@ UINT32 DbFileGetPos( HDBFILE hDBFile )
 	HDBINDEX		hDBIndex;
 
 	hFileIndex = ExtractFileIndex( hDBFile );
-	hDBIndex   = ExtractDbIndex( hDBFile );
+	hDBIndex	= ExtractDbIndex( hDBFile );
 
 	CHECK0( hDBIndex < gdb.uiNumDBFiles );
 	CHECK0( gdb.pDBFiles[hDBIndex].pOpenFiles )
@@ -761,7 +761,7 @@ UINT32 DbFileGetSize( HDBFILE hDBFile )
 	HDBINDEX		hDBIndex;
 
 	hFileIndex = ExtractFileIndex( hDBFile );
-	hDBIndex   = ExtractDbIndex( hDBFile );
+	hDBIndex	= ExtractDbIndex( hDBFile );
 
 	CHECK0( hDBIndex < gdb.uiNumDBFiles );
 	CHECK0( gdb.pDBFiles[hDBIndex].pOpenFiles )

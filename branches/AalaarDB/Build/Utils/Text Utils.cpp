@@ -20,7 +20,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szLongItemName ))
 			{
-				pNameString[i] =  Item[ubIndex].szLongItemName  [j];
+				pNameString[i] =	Item[ubIndex].szLongItemName	[j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -200,7 +200,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szItemDesc ))
 			{
-				pInfoString[i] =  Item[ubIndex].szItemDesc  [j];
+				pInfoString[i] =	Item[ubIndex].szItemDesc	[j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -397,7 +397,7 @@ BOOLEAN LoadBRName(UINT16 ubIndex, STR16 pNameString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szBRName))
 			{
-				pNameString[i] =  Item[ubIndex].szBRName [j];
+				pNameString[i] =	Item[ubIndex].szBRName [j];
 
 				#ifdef GERMAN
 				// We have a german special character
@@ -582,7 +582,7 @@ BOOLEAN LoadBRDesc(UINT16 ubIndex, STR16 pDescString )
 			j++;
 			if ( j<(int)strlen(Item[ubIndex].szBRDesc))
 			{
-				pDescString[i] =  Item[ubIndex].szBRDesc [j];
+				pDescString[i] =	Item[ubIndex].szBRDesc [j];
 
 				// WANNE: German specific characters
 				#ifdef GERMAN
@@ -764,7 +764,6 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 	{
 		int j = -1;
 
-		// WANNE:
 		for (int i=0;i<80;i++)
 		{
 			j++;

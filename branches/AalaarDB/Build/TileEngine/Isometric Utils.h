@@ -6,10 +6,10 @@
 //DEFINES
 #define MAXCOL					WORLD_COLS
 #define MAXROW					WORLD_ROWS
-#define GRIDSIZE        (MAXCOL * MAXROW)
-#define RIGHTMOSTGRID   (MAXCOL - 1)
-#define LASTROWSTART    (GRIDSIZE - MAXCOL)
-#define NOWHERE         (GRIDSIZE + 1)
+#define GRIDSIZE		(MAXCOL * MAXROW)
+#define RIGHTMOSTGRID	(MAXCOL - 1)
+#define LASTROWSTART	(GRIDSIZE - MAXCOL)
+#define NOWHERE		 (GRIDSIZE + 1)
 #define	NO_MAP_POS			NOWHERE
 #define MAPWIDTH			(WORLD_COLS)
 #define MAPHEIGHT			(WORLD_ROWS)
@@ -30,7 +30,7 @@ extern UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIO
 // Macros
 
 
-//                                                |Check for map bounds------------------------------------------|   |Invalid-|   |Valid-------------------|
+//												|Check for map bounds------------------------------------------|	|Invalid-|	|Valid-------------------|
 #define MAPROWCOLTOPOS( r, c )									( ( (r < 0) || (r >= WORLD_ROWS) || (c < 0) || (c >= WORLD_COLS) ) ? ( 0xffff ) : ( (r) * WORLD_COLS + (c) ) )
 
 #define GETWORLDINDEXFROMWORLDCOORDS( r, c )		( (INT16) ( r / CELL_X_SIZE ) ) * WORLD_COLS + ( (INT16) ( c / CELL_Y_SIZE ) ) 

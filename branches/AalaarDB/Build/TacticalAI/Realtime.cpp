@@ -113,7 +113,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 #endif
 
 	if ((pSoldier->aiData.bAction != AI_ACTION_NONE) && pSoldier->aiData.bActionInProgress)
-  {
+	{
 		// if action should remain in progress
 		if (ActionInProgress(pSoldier))
 		{
@@ -122,7 +122,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 			#endif
 			// let it continue
 			return;
-    }
+	}
 	}
 
 	// if man has nothing to do
@@ -264,7 +264,7 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 			pSoldier->aiData.bAction = AI_ACTION_NONE;
 		}
 
-  }
+	}
 
 	// to get here, we MUST have an action selected, but not in progress...
 	NPCDoesAct(pSoldier);

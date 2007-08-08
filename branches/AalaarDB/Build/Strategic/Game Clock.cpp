@@ -47,9 +47,9 @@ BOOLEAN fClockMouseRegionCreated = FALSE;
 
 BOOLEAN fTimeCompressHasOccured = FALSE;
 
-//This value represents the time that the sector was loaded.  If you are in sector A9, and leave
-//the game clock at that moment will get saved into the temp file associated with it.  The next time you
-//enter A9, this value will contain that time.  Used for scheduling purposes.
+//This value represents the time that the sector was loaded.	If you are in sector A9, and leave
+//the game clock at that moment will get saved into the temp file associated with it.	The next time you
+//enter A9, this value will contain that time.	Used for scheduling purposes.
 UINT32 guiTimeCurrentSectorWasLastLoaded = 0;
 
 // did we JUST finish up a game pause by the player
@@ -77,19 +77,19 @@ INT32				giTimeCompressMode			=	TIME_COMPRESS_X0;
 UINT8				gubClockResolution			= 1;
 BOOLEAN			gfGamePaused						= TRUE;
 BOOLEAN			gfTimeInterrupt					= FALSE;
-BOOLEAN			gfTimeInterruptPause    = FALSE;
+BOOLEAN			gfTimeInterruptPause	= FALSE;
 BOOLEAN			fSuperCompression				= FALSE;
 UINT32			guiGameClock				= gGameExternalOptions.iGameStartingTime;
 UINT32			guiPreviousGameClock = 0;		// used only for error-checking purposes
 UINT32			guiGameSecondsPerRealSecond;
 UINT32			guiTimesThisSecondProcessed = 0;
-INT32			  iPausedPopUpBox = -1;
+INT32			iPausedPopUpBox = -1;
 UINT32			guiDay;
 UINT32			guiHour;
 UINT32			guiMin;
 CHAR16			gswzWorldTimeStr[20];
 INT32				giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
-UINT16      usPausedActualWidth;
+UINT16		usPausedActualWidth;
 UINT16			usPausedActualHeight;
 UINT32			guiTimeOfLastEventQuery = 0;
 BOOLEAN			gfLockPauseState = FALSE;
@@ -98,7 +98,7 @@ BOOLEAN			gfResetAllPlayerKnowsEnemiesFlags = FALSE;
 BOOLEAN			gfTimeCompressionOn = FALSE;
 UINT32			guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
-//   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
+//	more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
 #define			TIME_PADDINGBYTES		20
 UINT8				gubUnusedTimePadding[TIME_PADDINGBYTES];
 
@@ -173,7 +173,7 @@ UINT32 GetFutureDayInMinutes( UINT32 uiDay )
 	return( ( uiDay * NUM_SEC_IN_DAY ) / NUM_SEC_IN_MIN ); 
 }
 
-//this function returns the amount of minutes there has been from start of game to midnight of the uiDay.  
+//this function returns the amount of minutes there has been from start of game to midnight of the uiDay.	
 UINT32 GetMidnightOfFutureDayInMinutes( UINT32 uiDay )
 {
 	PERFORMANCE_MARKER
@@ -220,14 +220,14 @@ void AdvanceClock( UINT8 ubWarpCode )
 	if( ubWarpCode != WARPTIME_NO_PROCESSING_OF_EVENTS )
 	{
 		guiTimeOfLastEventQuery = guiGameClock;
-		//First of all, events are posted for movements, pending attacks, equipment arrivals, etc.  This time 
-		//adjustment using time compression can possibly pass one or more events in a single pass.  So, this list
+		//First of all, events are posted for movements, pending attacks, equipment arrivals, etc.	This time 
+		//adjustment using time compression can possibly pass one or more events in a single pass.	So, this list
 		//is looked at and processed in sequential order, until the uiAdjustment is fully applied.
 		if( GameEventsPending( guiGameSecondsPerRealSecond ) )
 		{
 			//If a special event, justifying the cancellation of time compression is reached, the adjustment
 			//will be shortened to the time of that event, and will stop processing events, otherwise, all
-			//of the events in the time slice will be processed.  The time is adjusted internally as events
+			//of the events in the time slice will be processed.	The time is adjusted internally as events
 			//are processed.
 			ProcessPendingGameEvents( guiGameSecondsPerRealSecond, ubWarpCode );
 		}
@@ -278,7 +278,7 @@ void AdvanceClock( UINT8 ubWarpCode )
 void AdvanceToNextDay()
 {
 	PERFORMANCE_MARKER
-	INT32	 uiDiff;
+	INT32	uiDiff;
 	UINT32 uiTomorrowTimeInSec;
 	
 	uiTomorrowTimeInSec = (guiDay+1)*NUM_SEC_IN_DAY + 8*NUM_SEC_IN_HOUR + 15*NUM_SEC_IN_MIN;
@@ -310,7 +310,7 @@ void ResetTimeCompressHasOccured( void )
 BOOLEAN HasTimeCompressOccured( void )
 {
 	PERFORMANCE_MARKER
-	return( fTimeCompressHasOccured  );
+	return( fTimeCompressHasOccured	);
 }
 
 
@@ -366,7 +366,7 @@ void ToggleSuperCompression()
 	// Display message
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Cannot toggle compression in Combat Mode."  );
+		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Cannot toggle compression in Combat Mode."	);
 		return;
 	}
 
@@ -378,14 +378,14 @@ void ToggleSuperCompression()
 		giTimeCompressMode		= TIME_SUPER_COMPRESS;
 		guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ giTimeCompressMode ] * SECONDS_PER_COMPRESSION;
 
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression ON."  );
+		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression ON."	);
 	}
 	else
 	{
 		giTimeCompressMode		= uiOldTimeCompressMode;
 		guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ giTimeCompressMode ] * SECONDS_PER_COMPRESSION;
 
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression OFF."  );
+		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression OFF."	);
 	}
 }	
 
@@ -414,7 +414,7 @@ void StopTimeCompression( void )
 void StartTimeCompression( void )
 {
 	PERFORMANCE_MARKER
-	 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartTimeCompression");
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartTimeCompression");
 
 	if ( !gfTimeCompressionOn )
 	{
@@ -679,7 +679,7 @@ BOOLEAN PauseStateLocked()
 void PauseGame()
 {
 	PERFORMANCE_MARKER
-	// always allow pausing, even if "locked".  Locking applies only to trying to compress time, not to pausing it
+	// always allow pausing, even if "locked".	Locking applies only to trying to compress time, not to pausing it
 	if( !gfGamePaused )
 	{
 		gfGamePaused = TRUE;
@@ -742,8 +742,8 @@ void PauseTimeForInterupt()
 
 //USING CLOCK RESOLUTION
 //Note, that changing the clock resolution doesn't effect the amount of game time that passes per
-//real second, but how many times per second the clock is updated.  This rate will break up the actual
-//time slices per second into smaller chunks.  This is useful for animating strategic movement under
+//real second, but how many times per second the clock is updated.	This rate will break up the actual
+//time slices per second into smaller chunks.	This is useful for animating strategic movement under
 //fast time compression, so objects don't warp around.
 void SetClockResolutionToDefault()
 {
@@ -768,11 +768,11 @@ UINT8 ClockResolution()
 
 
 //There are two factors that influence the flow of time in the game.
-//-Speed:  The speed is the amount of game time passes per real second of time.  The higher this
-//         value, the faster the game time flows.
-//-Resolution:  The higher the resolution, the more often per second the clock is actually updated.
-//				 This value doesn't affect how much game time passes per real second, but allows for
-//				 a more accurate representation of faster time flows.
+//-Speed:	The speed is the amount of game time passes per real second of time.	The higher this
+//		 value, the faster the game time flows.
+//-Resolution:	The higher the resolution, the more often per second the clock is actually updated.
+//				This value doesn't affect how much game time passes per real second, but allows for
+//				a more accurate representation of faster time flows.
 void UpdateClock()
 {
 	PERFORMANCE_MARKER
@@ -831,7 +831,7 @@ void UpdateClock()
 #endif
 
 	//Because we debug so much, breakpoints tend to break the game, and cause unnecessary headaches.
-	//This line ensures that no more than 1 real-second passes between frames.  This otherwise has
+	//This line ensures that no more than 1 real-second passes between frames.	This otherwise has
 	//no effect on anything else.
 	uiLastSecondTime = max( uiNewTime - 1000, uiLastSecondTime );
 
@@ -873,7 +873,7 @@ void UpdateClock()
 			WarpGameTime( uiNewTimeProcessed - uiLastTimeProcessed, WARPTIME_PROCESS_EVENTS_NORMALLY );
 			if( uiNewTimeProcessed < guiGameSecondsPerRealSecond )
 			{ //Processed the same real second
-				uiLastTimeProcessed =  uiNewTimeProcessed;
+				uiLastTimeProcessed =	uiNewTimeProcessed;
 			}
 			else
 			{ //We have moved into a new real second.
@@ -1072,7 +1072,7 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
 
 	if( !gfBasement && !gfCaves )
-		gfDoLighting		 = TRUE;
+		gfDoLighting		= TRUE;
 
 	return( TRUE );
 }
@@ -1085,7 +1085,7 @@ void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY )
 	{
 		// create a mouse region for pausing of game clock
 		MSYS_DefineRegion( &gClockMouseRegion, (UINT16)( sX ), (UINT16)( sY ),(UINT16)( sX + CLOCK_REGION_WIDTH ), (UINT16)( sY + CLOCK_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback );
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback );
 		
 		fClockMouseRegionCreated = TRUE;
 
@@ -1119,7 +1119,7 @@ void PauseOfClockBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		HandlePlayerPauseUnPauseOfGame(  );
+		HandlePlayerPauseUnPauseOfGame(	);
 	}
 }
 
@@ -1189,7 +1189,7 @@ void CreateDestroyScreenMaskForPauseGame( void )
 	{
 		// create a mouse region for pausing of game clock
 		MSYS_DefineRegion( &gClockScreenMaskMouseRegion, 0, 0 ,SCREEN_WIDTH, SCREEN_HEIGHT , MSYS_PRIORITY_HIGHEST,
-							 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack );
+							0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack );
 		fCreated = TRUE;
 
 		// get region x and y values
@@ -1228,7 +1228,7 @@ void RenderPausedGameBox( void )
 	if( ( gfPauseDueToPlayerGamePause == TRUE ) && ( gfGamePaused == TRUE ) && ( iPausedPopUpBox != -1 ) )
 	{
 		RenderMercPopUpBoxFromIndex( iPausedPopUpBox, ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2 ), FRAME_BUFFER );
-		InvalidateRegion( ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2  ), ( INT16 )( 320 - usPausedActualWidth / 2 + usPausedActualWidth ), ( INT16 )( 200 - usPausedActualHeight / 2 + usPausedActualHeight ) );
+		InvalidateRegion( ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2	), ( INT16 )( 320 - usPausedActualWidth / 2 + usPausedActualWidth ), ( INT16 )( 200 - usPausedActualHeight / 2 + usPausedActualHeight ) );
  	}
 
 	// reset we've just finished a pause by the player
@@ -1243,7 +1243,7 @@ BOOLEAN DayTime()
 
 BOOLEAN NightTime()
 {
-	PERFORMANCE_MARKER  //before 7AM or after 9PM
+	PERFORMANCE_MARKER	//before 7AM or after 9PM
 	return ( guiHour < 7 || guiHour >= 21 );
 }
 
@@ -1252,7 +1252,7 @@ BOOLEAN NightTime()
 void ClearTacticalStuffDueToTimeCompression( void )
 {
 	PERFORMANCE_MARKER
-	// is this test the right thing?  ARM
+	// is this test the right thing?	ARM
 	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 	{
 		// clear tactical event queue

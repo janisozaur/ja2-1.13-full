@@ -485,7 +485,7 @@ void HandleHeliDrop( )
 			// Remove heli
 			DeleteAniTile( gpHeli );
 
-      RebuildCurrentSquad( );
+		RebuildCurrentSquad( );
 
 			// Remove sound
 			if( uiSoundSample!=NO_SAMPLE )
@@ -504,7 +504,7 @@ void HandleHeliDrop( )
 			SelectSoldier( gusHeliSeats[ 0 ], FALSE, TRUE );
 
 			//guiCurrentEvent = LU_ENDUILOCK;
-			//gCurrentUIMode  = LOCKUI_MODE;
+			//gCurrentUIMode	= LOCKUI_MODE;
 			guiPendingOverrideEvent = LU_ENDUILOCK;
 			//UIHandleLUIEndLock( NULL );
 
@@ -517,7 +517,7 @@ void HandleHeliDrop( )
 
 		uiClock = GetJA2Clock( );
 		
-		if ( ( uiClock - guiHeliLastUpdate ) >  ME_SCRIPT_DELAY )
+		if ( ( uiClock - guiHeliLastUpdate ) >	ME_SCRIPT_DELAY )
 		{
 			guiHeliLastUpdate = uiClock;
 
@@ -557,7 +557,7 @@ void HandleHeliDrop( )
 						UnLockPauseState();
 						UnPauseGame();
 
-            RebuildCurrentSquad( );
+			RebuildCurrentSquad( );
 
 						HandleFirstHeliDropOfGame( );
 					}
@@ -572,7 +572,7 @@ void HandleHeliDrop( )
 					UnLockPauseState();
 					UnPauseGame();
 
-          RebuildCurrentSquad( );
+			RebuildCurrentSquad( );
 
 					HandleFirstHeliDropOfGame( );
 				}
@@ -821,7 +821,7 @@ void HandleFirstHeliDropOfGame( )
 	}
 
 	// Send message to turn on ai again....
-	CharacterDialogueWithSpecialEvent( 0, 0,   0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
+	CharacterDialogueWithSpecialEvent( 0, 0,	0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
 
 }
 

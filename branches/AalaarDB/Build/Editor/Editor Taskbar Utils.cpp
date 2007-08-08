@@ -1,4 +1,3 @@
-// WANNE: EDITOR?
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -123,7 +122,7 @@ void InitEditorRegions()
 	INT32 x;
 
 	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
-	//Any new buttons will cover this up as well.  Think of it as a barrier between the editor buttons,
+	//Any new buttons will cover this up as well.	Think of it as a barrier between the editor buttons,
 	//and the game's interface panel buttons and regions.
 	MSYS_DefineRegion( &EditorRegion, 0, SCREEN_HEIGHT - 120, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
@@ -151,7 +150,7 @@ void InitEditorRegions()
 void LoadEditorImages()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	//Set up the merc inventory panel
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -200,8 +199,8 @@ void CreateEditorBuffers()
 	UINT16					usUselessWidth, usUselessHeight;
 	UINT8						ubBitDepth;
 
-	//create buffer for the transition slot for merc items.  This slot contains the newly
-	//selected item graphic in it's inventory size version.  This buffer is then scaled down
+	//create buffer for the transition slot for merc items.	This slot contains the newly
+	//selected item graphic in it's inventory size version.	This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
 	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
@@ -441,7 +440,7 @@ void EnableEditorTaskbar(void)
 }
 
 //A specialized mprint function that'll restore the editor panel underneath the
-//string before rendering the string.  This is obviously only useful for drawing text
+//string before rendering the string.	This is obviously only useful for drawing text
 //in the editor taskbar.
 void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 {
@@ -452,7 +451,7 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 
 	Assert( pFontString != NULL );
 
-	va_start( argptr, pFontString );       	// Set up variable argument pointer
+	va_start( argptr, pFontString );			// Set up variable argument pointer
 	vswprintf( string, pFontString, argptr);	// process gprintf string (get output str)
 	va_end( argptr );
 
@@ -463,7 +462,6 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 	mprintf( x, y, string );
 }
 
-// WANNE: EDITOR continue
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
 	PERFORMANCE_MARKER
@@ -490,7 +488,7 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 
 //Kris:
 //This is a new function which duplicates the older "yellow info boxes" that
-//are common throughout the editor.  This draws the yellow box with the indentation
+//are common throughout the editor.	This draws the yellow box with the indentation
 //look.
 void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h )
 {
@@ -654,7 +652,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"North Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -663,7 +661,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"West Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -672,7 +670,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"East Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -681,7 +679,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= ( - 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= ( - 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"South Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -690,7 +688,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Center Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -699,7 +697,7 @@ void RenderMapEntryPointsAndLights()
 	if( sGridNo != -1 )
 	{
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+		if( sScreenY >= (- 20) && sScreenY < (2 * iScreenHeightOffset + 340) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 		{
 			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Isolated Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 		}
@@ -710,7 +708,7 @@ void RenderMapEntryPointsAndLights()
 	{
 		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE )
 		{
-			// Check for light out of bounds.  This actually happens in Drassen.
+			// Check for light out of bounds.	This actually happens in Drassen.
 			if (LightSprites[ i ].iY < 0 || LightSprites[ i ].iY > WORLD_ROWS ||
 				LightSprites[ i ].iX < 0 || LightSprites[ i ].iX > WORLD_COLS)
 			{
@@ -720,7 +718,7 @@ void RenderMapEntryPointsAndLights()
 
 			sGridNo = LightSprites[ i ].iY * WORLD_COLS + LightSprites[ i ].iX;
 			GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-			if( sScreenY >= (- 50) && sScreenY < (2 * iScreenHeightOffset + 300) && sScreenX >= (- 40)  && sScreenX < SCREEN_WIDTH )
+			if( sScreenY >= (- 50) && sScreenY < (2 * iScreenHeightOffset + 300) && sScreenX >= (- 40)	&& sScreenX < SCREEN_WIDTH )
 			{
 				if( LightSprites[ i ].uiFlags & LIGHT_PRIMETIME )
 					DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 50, 2, FONT10ARIAL, FONT_ORANGE, L"Prime", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
@@ -762,7 +760,6 @@ void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 	}
 }
 
-// WANNE: EDITOR?
 void RenderDoorLockInfo()
 {
 	PERFORMANCE_MARKER
@@ -815,7 +812,6 @@ void RenderDoorLockInfo()
 	}
 }
 
-	// WANNE: EDITOR?
 void RenderSelectedItemBlownUp()
 {
 	PERFORMANCE_MARKER
@@ -918,9 +914,9 @@ void RenderEditorInfo( )
 
 	//Display the mapindex position
 	if( GetMouseMapPos( &uiMapIndex ) )
-		swprintf( FPSText, L"   (%d)   ", uiMapIndex );
+		swprintf( FPSText, L"	(%d)	", uiMapIndex );
 	else
-		swprintf( FPSText, L"          " );
+		swprintf( FPSText, L"			" );
 	mprintfEditor( (UINT16)(iScreenWidthOffset + 50-StringPixLength( FPSText, FONT12POINT1 )/2), 2 * iScreenHeightOffset + 463, FPSText );
 
 	switch( iCurrentTaskbar )
@@ -929,12 +925,12 @@ void RenderEditorInfo( )
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"No map currently loaded." );
 			else
-				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:  %S, Current Tileset:  %s", 
+				mprintf( iScreenWidthOffset + 260, 2 * iScreenHeightOffset + 445, L"File:	%S, Current Tileset:	%s", 
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
 			break;
 		case TASK_TERRAIN:
 
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
 			
@@ -950,7 +946,7 @@ void RenderEditorInfo( )
 			UpdateBuildingsInfo();
 
 
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: Comment this two lines, because we always get an exception here.
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"%d", gusSelectionWidth );
 			
@@ -961,7 +957,7 @@ void RenderEditorInfo( )
 			break;
 		case TASK_MAPINFO:
 			UpdateMapInfo();
-			// WANNE: EDITOR: comment this two lines, because we always get an exception here!
+			// WANNE: EDITOR: Comment this two lines, because we always get an exception here!
 			//if( gusSelectionType == LINESELECTION )
 			//	swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
 			
@@ -970,8 +966,8 @@ void RenderEditorInfo( )
 	}
 }
 
-//This is in ButtonSystem.c as a hack.  Because we need to save the buffer whenever we do a full
-//taskbar render, we need to draw the buttons without hilites, hence this flag.  This flag is
+//This is in ButtonSystem.c as a hack.	Because we need to save the buffer whenever we do a full
+//taskbar render, we need to draw the buttons without hilites, hence this flag.	This flag is
 //always true in ButtonSystem.c, so it won't effect anything else.
 extern BOOLEAN gfGotoGridNoUI;
 
@@ -992,13 +988,13 @@ void ProcessEditorRendering()
 	}
 	if( gfRenderDrawingMode )
 	{
-	  if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS ) 
+	if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS ) 
 		{
 			ShowCurrentDrawingMode();
 			gfRenderDrawingMode = FALSE;
 		}
 	}
-	//render dynamically changed buttons only  
+	//render dynamically changed buttons only	
 	RenderButtons( );
 
 	if( gfSummaryWindowActive )
@@ -1020,19 +1016,18 @@ void ProcessEditorRendering()
 		if( iCurrentTaskbar == TASK_MAPINFO )
 			RenderMapEntryPointsAndLights();
 		if( iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS || 
-			  iDrawMode == DRAW_MODE_DOORKEYS )
+			iDrawMode == DRAW_MODE_DOORKEYS )
 			RenderDoorLockInfo();
 	}
 
 
 
 	if( fSaveBuffer )
-		// WANNE: EDITOR?
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 2 * iScreenHeightOffset + 360, SCREEN_WIDTH, 120 );
 
 	//Make sure this is TRUE at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get 
-	//rendered with hilites, in case the mouse is over one.  
+	//rendered with hilites, in case the mouse is over one.	
 	gfRenderHilights = TRUE;
 
 	RenderButtonsFastHelp();

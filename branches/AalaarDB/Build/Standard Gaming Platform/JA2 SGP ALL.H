@@ -1,7 +1,7 @@
 /*
  * ChangeLog:
- *  10.12.2005 Lesh ripped out everything that refers to MSS
- *  10.12.2005 Lesh added fmod.h
+ *	10.12.2005 Lesh ripped out everything that refers to MSS
+ *	10.12.2005 Lesh added fmod.h
  */ 
 #ifndef __JA2_SGP_ALL_H
 #define __JA2_SGP_ALL_H

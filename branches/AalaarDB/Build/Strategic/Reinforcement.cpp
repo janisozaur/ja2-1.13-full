@@ -56,7 +56,7 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
 	{
-		GetNumberOfStationaryEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),  &ubNumAdmins, &ubNumTroops, &ubNumElites );
+		GetNumberOfStationaryEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),	&ubNumAdmins, &ubNumTroops, &ubNumElites );
 
 		while( ubNumElites + ubNumTroops + ubNumAdmins > gubReinforcementMinEnemyStaticGroupSize)
 		{
@@ -76,7 +76,7 @@ void GetNumberOfEnemiesInFiveSectors( INT16 sSectorX, INT16 sSectorY, UINT8 *pub
 		}
 		
 
-		GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),  &ubNumAdmins, &ubNumTroops, &ubNumElites );
+		GetNumberOfMobileEnemiesInSectorWithoutRoadBlock( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ),	&ubNumAdmins, &ubNumTroops, &ubNumElites );
 
 		*pubNumAdmins += ubNumAdmins;
 		*pubNumTroops += ubNumTroops;
@@ -101,7 +101,7 @@ BOOLEAN IsGroupInARightSectorToReinforce( GROUP *pGroup, INT16 sSectorX, INT16 s
 	UINT8 ubDirNumber = 0, ubIndex;
 
 	if( pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
-		return TRUE;  //Well, it's in the same sector, so allow to reinforce
+		return TRUE;	//Well, it's in the same sector, so allow to reinforce
 
 	if( !gGameExternalOptions.gfAllowReinforcements )
 		return FALSE;
@@ -196,7 +196,7 @@ BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 
 	ubRandom = Random( ubDirNumber );
 
-	while( !MoveOneBestMilitiaMan( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), sMapX, sMapY )  )
+	while( !MoveOneBestMilitiaMan( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), sMapX, sMapY )	)
 		ubRandom = Random( ubDirNumber );
 	
 	return TRUE;
@@ -221,7 +221,7 @@ BOOLEAN ARRemoveMilitiaMan( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 	GenerateDirectionInfos( sMapX, sMapY, &ubDirNumber, pusMoveDir, 
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
-	for( ; ;  )
+	for( ; ;	)
 	{
 		ubRandom = Random( ubDirNumber );
 		if( MilitiaInSectorOfRank( SECTORX( pusMoveDir[ ubRandom ][ 0 ] ), SECTORY( pusMoveDir[ ubRandom ][ 0 ] ), ubRank ) )
@@ -295,6 +295,8 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 		for(;;)
 	{
 		ubIndex = Random(ubDirNumber);
+#if 0
+// This should be handled in AddPossiblePendingEnemiesToBattle
 		if( NumMobileEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) && GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) )
 		{
 			UINT8 numElite;
@@ -339,6 +341,7 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 				return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
 			}
 		}
+#endif
 
 		if( NumEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) > gubReinforcementMinEnemyStaticGroupSize )
 		{
@@ -358,6 +361,16 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 				(pSector->ubNumAdmins)--;
 			}
 
+			AddEnemiesToBattle( NULL, (UINT8)pusMoveDir[ ubIndex ][ 2 ], 
+				pThisSector->ubNumAdmins - pThisSector->ubAdminsInBattle, 
+				pThisSector->ubNumTroops - pThisSector->ubTroopsInBattle,
+				pThisSector->ubNumElites - pThisSector->ubElitesInBattle, 
+				FALSE );
+
+			pThisSector->ubAdminsInBattle = pThisSector->ubNumAdmins;
+			pThisSector->ubTroopsInBattle = pThisSector->ubNumTroops;
+			pThisSector->ubElitesInBattle = pThisSector->ubNumElites;
+
 			return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
 		}
 	}
@@ -370,7 +383,7 @@ UINT8 NumFreeMilitiaSlots()
 	UINT8 ubNumFreeSlots = 0;
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
-	//Count the number of free militia slots.  It is possible to have multiple groups exceed the maximum.
+	//Count the number of free militia slots.	It is possible to have multiple groups exceed the maximum.
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM].bLastID; i++ )
 	{
 		pSoldier = &Menptr[ i ];
@@ -451,7 +464,7 @@ void AddPossiblePendingMilitiaToBattle()
 //gGameExternalOptions.guiMaxMilitiaSquadSize - CountAllMilitiaInSector( gWorldSectorX, gWorldSectorY );
 	ubSlots = NumFreeMilitiaSlots();
 	if( !ubSlots )
-	{ //no available slots to add militia  to.  Try again later...
+	{ //no available slots to add militia	to.	Try again later...
 		return;
 	}
 	
@@ -488,7 +501,7 @@ void AddPossiblePendingMilitiaToBattle()
 
 	if( ubSlots )
 	{ //After going through the process, we have finished with some free slots and no more enemies to add.
-    //So, we can turn off the flag, as this check is no longer needed.
+	//So, we can turn off the flag, as this check is no longer needed.
 		ubPredefinedInsertionCode = DoReinforcementAsPendingMilitia( gWorldSectorX, gWorldSectorY, &ubPredefinedRank );
 
 		if( ubPredefinedInsertionCode != 255 )

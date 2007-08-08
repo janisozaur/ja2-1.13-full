@@ -5,7 +5,7 @@
 	#include "GameVersion.h"
 #endif
  
-   
+	
 //
 //	Keeps track of the game version
 //
@@ -22,7 +22,7 @@ CHAR16 zVersionLabel[256]		= { L"Beta v. 0.98" };
 
 #else
 
-	//RELEASE BUILD VERSION  
+	//RELEASE BUILD VERSION	
 	CHAR16		zVersionLabel[256]		= { L"Release v1.13.1147" };
 
 
@@ -33,7 +33,7 @@ CHAR16		zTrackingNumber[16]	= { L"Z" };
 	
 
 //
-//		Keeps track of the saved game version.  Increment the saved game version whenever 
+//		Keeps track of the saved game version.	Increment the saved game version whenever 
 //	you will invalidate the saved game file
 
 #define			SAVE_GAME_VERSION					102	//100 // 99

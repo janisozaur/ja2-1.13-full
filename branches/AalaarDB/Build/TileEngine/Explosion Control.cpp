@@ -79,8 +79,8 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 // Flashbang effect on soldier
 UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOLEAN fInBuilding);
 
-extern INT8  gbSAMGraphicList[ MAX_NUMBER_OF_SAMS ];
-extern  void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
+extern INT8	gbSAMGraphicList[ MAX_NUMBER_OF_SAMS ];
+extern	void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
 extern void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation );
 void FatigueCharacter( SOLDIERTYPE *pSoldier );
 
@@ -88,21 +88,21 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier );
 
 EXPLOSION_DATA gExpAniData[ NUM_EXP_TYPES ] = 
 {
-	//  Trans   Damage  Explosion           Alternative             Explosion                   Animation
-	//  Key     Key     Sound               Explosion               Animation                   Speed
-	//  Frame   Frame   ID                  SoundID                 Filename
-	{0,     0,      EXPLOSION_1,        EXPLOSION_ALT_BLAST_1,  "",                         0},
-	{17,    3,      EXPLOSION_1,        EXPLOSION_ALT_BLAST_1,  "TILECACHE\\ZGRAV_D.STI",   80},
-	{28,    5,      EXPLOSION_BLAST_2,  NO_ALT_SOUND,           "TILECACHE\\ZGRAV_C.STI",   80},
-	{24,    5,      EXPLOSION_BLAST_2,  NO_ALT_SOUND,           "TILECACHE\\ZGRAV_B.STI",   80},
-	{1,     5,      EXPLOSION_1,        EXPLOSION_ALT_BLAST_1,  "TILECACHE\\shckwave.STI",  20},
-	{1,     18,     AIR_ESCAPING_1,     NO_ALT_SOUND,           "TILECACHE\\WAT_EXP.STI",   80},
-	{1,     18,     AIR_ESCAPING_1,     NO_ALT_SOUND,           "TILECACHE\\TEAR_EXP.STI",  80},
-	{1,     18,     AIR_ESCAPING_1,     NO_ALT_SOUND,           "TILECACHE\\TEAR_EXP.STI",  80},
-	{1,     18,     AIR_ESCAPING_1,     NO_ALT_SOUND,           "TILECACHE\\MUST_EXP.STI",  80}
+	//	Trans	Damage	Explosion			Alternative			 Explosion					Animation
+	//	Key	 Key	 Sound				Explosion				Animation					Speed
+	//	Frame	Frame	ID					SoundID				 Filename
+	{0,	 0,		EXPLOSION_1,		EXPLOSION_ALT_BLAST_1,	"",						 0},
+	{17,	3,		EXPLOSION_1,		EXPLOSION_ALT_BLAST_1,	"TILECACHE\\ZGRAV_D.STI",	80},
+	{28,	5,		EXPLOSION_BLAST_2,	NO_ALT_SOUND,			"TILECACHE\\ZGRAV_C.STI",	80},
+	{24,	5,		EXPLOSION_BLAST_2,	NO_ALT_SOUND,			"TILECACHE\\ZGRAV_B.STI",	80},
+	{1,	 5,		EXPLOSION_1,		EXPLOSION_ALT_BLAST_1,	"TILECACHE\\shckwave.STI",	20},
+	{1,	 18,	 AIR_ESCAPING_1,	 NO_ALT_SOUND,			"TILECACHE\\WAT_EXP.STI",	80},
+	{1,	 18,	 AIR_ESCAPING_1,	 NO_ALT_SOUND,			"TILECACHE\\TEAR_EXP.STI",	80},
+	{1,	 18,	 AIR_ESCAPING_1,	 NO_ALT_SOUND,			"TILECACHE\\TEAR_EXP.STI",	80},
+	{1,	 18,	 AIR_ESCAPING_1,	 NO_ALT_SOUND,			"TILECACHE\\MUST_EXP.STI",	80}
 };
 
-//UINT8  ubTransKeyFrame[ NUM_EXP_TYPES ] =
+//UINT8	ubTransKeyFrame[ NUM_EXP_TYPES ] =
 //{
 // 0,
 // 17,
@@ -115,7 +115,7 @@ EXPLOSION_DATA gExpAniData[ NUM_EXP_TYPES ] =
 // 1,
 //};
 //
-//UINT8  ubDamageKeyFrame[ NUM_EXP_TYPES ] =
+//UINT8	ubDamageKeyFrame[ NUM_EXP_TYPES ] =
 //{
 // 0,
 // 3,
@@ -133,7 +133,7 @@ EXPLOSION_DATA gExpAniData[ NUM_EXP_TYPES ] =
 //{
 // EXPLOSION_1,
 // EXPLOSION_1,
-// EXPLOSION_BLAST_2,  //LARGE
+// EXPLOSION_BLAST_2,	//LARGE
 // EXPLOSION_BLAST_2,
 // EXPLOSION_1,
 // AIR_ESCAPING_1,
@@ -172,22 +172,22 @@ EXPLOSION_DATA gExpAniData[ NUM_EXP_TYPES ] =
 #define BOMB_QUEUE_DELAY (1000 + Random( 500 ) )
 
 #define MAX_BOMB_QUEUE 40
-ExplosionQueueElement  gExplosionQueue[MAX_BOMB_QUEUE];
-UINT8          gubElementsOnExplosionQueue = 0;
-BOOLEAN         gfExplosionQueueActive = FALSE;
+ExplosionQueueElement	gExplosionQueue[MAX_BOMB_QUEUE];
+UINT8			gubElementsOnExplosionQueue = 0;
+BOOLEAN		 gfExplosionQueueActive = FALSE;
 
-BOOLEAN         gfExplosionQueueMayHaveChangedSight = FALSE;
-UINT8          gubPersonToSetOffExplosions = NOBODY;
+BOOLEAN		 gfExplosionQueueMayHaveChangedSight = FALSE;
+UINT8			gubPersonToSetOffExplosions = NOBODY;
 
-INT16   gsTempActionGridNo = NOWHERE;
+INT16	gsTempActionGridNo = NOWHERE;
 
 extern UINT8 gubInterruptProvoker;
 
-#define  NUM_EXPLOSION_SLOTS     100
+#define	NUM_EXPLOSION_SLOTS	 100
 
 // GLOBAL FOR SMOKE LISTING
-EXPLOSIONTYPE   gExplosionData[ NUM_EXPLOSION_SLOTS ];
-UINT32      guiNumExplosions = 0;
+EXPLOSIONTYPE	gExplosionData[ NUM_EXPLOSION_SLOTS ];
+UINT32		guiNumExplosions = 0;
 
 
 INT32 GetFreeExplosion( void );
@@ -248,13 +248,13 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 	// Okay, we either got an explosive or a real attacker to check for.
 	// Let's check for the attacker first.
-	if (  ubOwner != NOBODY )
+	if (	ubOwner != NOBODY )
 	{
-		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) &&  AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].gun.ubGunAmmoType].explosionSize < 2 )
+		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) &&	AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].gun.ubGunAmmoType].explosionSize < 2 )
 		{
 			return; // no explosive and attackers gun is not fireing HE
 		}
-	}  
+	}	
 
 	// Increment attack counter...
 	if (gubElementsOnExplosionQueue == 0)
@@ -271,8 +271,8 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 
 	// OK, go on!
-	ExpParams.uiFlags   = EXPLOSION_FLAG_USEABSPOS;
-	ExpParams.ubOwner   = ubOwner;
+	ExpParams.uiFlags	= EXPLOSION_FLAG_USEABSPOS;
+	ExpParams.ubOwner	= ubOwner;
 
 	// No explosive but an attacker with HE ammo.
 	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) && ubOwner != NOBODY)
@@ -286,13 +286,13 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 	} 
 	// Callahan end
 
-	ExpParams.sX     = sX;
-	ExpParams.sY     = sY;
-	ExpParams.sZ     = sZ;
-	ExpParams.sGridNo   = sGridNo;
-	ExpParams.usItem   = usItem;
-	ExpParams.fLocate   = fLocate;
-	ExpParams.bLevel   = bLevel;
+	ExpParams.sX	 = sX;
+	ExpParams.sY	 = sY;
+	ExpParams.sZ	 = sZ;
+	ExpParams.sGridNo	= sGridNo;
+	ExpParams.usItem	= usItem;
+	ExpParams.fLocate	= fLocate;
+	ExpParams.bLevel	= bLevel;
 
 	GenerateExplosion( &ExpParams );
 }
@@ -310,28 +310,28 @@ void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo
 void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 {
 	PERFORMANCE_MARKER
-	EXPLOSIONTYPE  *pExplosion;
-	UINT32  uiFlags;
-	UINT8   ubOwner;
-	UINT8   ubTypeID;
-	INT16   sX;
-	INT16   sY;
-	INT16   sZ;
-	INT16   sGridNo;
-	UINT16  usItem;
-	INT32   iIndex;
-	INT8   bLevel;
+	EXPLOSIONTYPE	*pExplosion;
+	UINT32	uiFlags;
+	UINT8	ubOwner;
+	UINT8	ubTypeID;
+	INT16	sX;
+	INT16	sY;
+	INT16	sZ;
+	INT16	sGridNo;
+	UINT16	usItem;
+	INT32	iIndex;
+	INT8	bLevel;
 
 	// Assign param values
-	uiFlags    = pExpParams->uiFlags;
-	ubOwner    = pExpParams->ubOwner;
-	ubTypeID   = pExpParams->ubTypeID;
-	sX      = pExpParams->sX;
-	sY      = pExpParams->sY;
-	sZ      = pExpParams->sZ;
-	sGridNo    = pExpParams->sGridNo;
-	usItem    = pExpParams->usItem;
-	bLevel    = pExpParams->bLevel;
+	uiFlags	= pExpParams->uiFlags;
+	ubOwner	= pExpParams->ubOwner;
+	ubTypeID	= pExpParams->ubTypeID;
+	sX		= pExpParams->sX;
+	sY		= pExpParams->sY;
+	sZ		= pExpParams->sZ;
+	sGridNo	= pExpParams->sGridNo;
+	usItem	= pExpParams->usItem;
+	bLevel	= pExpParams->bLevel;
 
 
 	{
@@ -367,30 +367,30 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 {
 	PERFORMANCE_MARKER
-	UINT32  uiFlags;
-	UINT8   ubOwner;
-	UINT8   ubTypeID;
-	INT16   sX;
-	INT16   sY;
-	INT16   sZ;
-	INT16   sGridNo;
-	UINT16  usItem;
-	UINT8   ubTerrainType;
-	INT8   bLevel;
-	UINT32    uiSoundID;
+	UINT32	uiFlags;
+	UINT8	ubOwner;
+	UINT8	ubTypeID;
+	INT16	sX;
+	INT16	sY;
+	INT16	sZ;
+	INT16	sGridNo;
+	UINT16	usItem;
+	UINT8	ubTerrainType;
+	INT8	bLevel;
+	UINT32	uiSoundID;
 
 	ANITILE_PARAMS AniParams;
 
 	// Assign param values
-	uiFlags    = pExplosion->Params.uiFlags;
-	ubOwner    = pExplosion->Params.ubOwner;
-	ubTypeID   = pExplosion->Params.ubTypeID;
-	sX      = pExplosion->Params.sX;
-	sY      = pExplosion->Params.sY;
-	sZ      = pExplosion->Params.sZ;
-	sGridNo    = pExplosion->Params.sGridNo;
-	usItem    = pExplosion->Params.usItem;
-	bLevel    = pExplosion->Params.bLevel;
+	uiFlags	= pExplosion->Params.uiFlags;
+	ubOwner	= pExplosion->Params.ubOwner;
+	ubTypeID	= pExplosion->Params.ubTypeID;
+	sX		= pExplosion->Params.sX;
+	sY		= pExplosion->Params.sY;
+	sZ		= pExplosion->Params.sZ;
+	sGridNo	= pExplosion->Params.sGridNo;
+	usItem	= pExplosion->Params.usItem;
+	bLevel	= pExplosion->Params.bLevel;
 
 	// If Z value given is 0 and bLevel > 0, make z heigher
 	if ( sZ == 0 && bLevel > 0 )
@@ -406,11 +406,11 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 	// Setup explosion!
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
-	AniParams.sGridNo  = sGridNo;
-	AniParams.ubLevelID  = ANI_TOPMOST_LEVEL;
-	AniParams.sDelay  = gExpAniData[ ubTypeID ].sBlastSpeed; // Lesh: edit this line
+	AniParams.sGridNo	= sGridNo;
+	AniParams.ubLevelID	= ANI_TOPMOST_LEVEL;
+	AniParams.sDelay	= gExpAniData[ ubTypeID ].sBlastSpeed; // Lesh: edit this line
 	AniParams.sStartFrame = pExplosion->sCurrentFrame;
-	AniParams.uiFlags  = ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
+	AniParams.uiFlags	= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
 
 	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
 	{
@@ -427,19 +427,19 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 
 	if ( uiFlags & EXPLOSION_FLAG_USEABSPOS )
 	{
-		AniParams.sX         = sX;
-		AniParams.sY         = sY;
-		AniParams.sZ         = sZ;
+		AniParams.sX		 = sX;
+		AniParams.sY		 = sY;
+		AniParams.sZ		 = sZ;
 
-		//AniParams.uiFlags       |= ANITILE_USEABSOLUTEPOS;
+		//AniParams.uiFlags		|= ANITILE_USEABSOLUTEPOS;
 	}
 
-	AniParams.ubKeyFrame1  = gExpAniData[ ubTypeID ].ubTransKeyFrame; // Lesh: edit this line
+	AniParams.ubKeyFrame1	= gExpAniData[ ubTypeID ].ubTransKeyFrame; // Lesh: edit this line
 	AniParams.uiKeyFrame1Code = ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
 
 	if ( !( uiFlags & EXPLOSION_FLAG_DISPLAYONLY ) )
 	{
-		AniParams.ubKeyFrame2  = gExpAniData[ ubTypeID ].ubDamageKeyFrame; // Lesh: edit this line
+		AniParams.ubKeyFrame2	= gExpAniData[ ubTypeID ].ubDamageKeyFrame; // Lesh: edit this line
 		AniParams.uiKeyFrame2Code = ANI_KEYFRAME_BEGIN_DAMAGE;
 	}
 	AniParams.uiUserData = usItem;
@@ -449,15 +449,15 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 
 	strcpy( AniParams.zCachedFile, gExpAniData[ ubTypeID ].zBlastFilename ); // Lesh: edit this line
 
-	// A little safety here, for just in case.  If it fails to create an explosion tile, don't increase the attack busy count.
-	// But if it succeeds, do it here.  Don't futz with the count in other locations when it can be centralized!
+	// A little safety here, for just in case.	If it fails to create an explosion tile, don't increase the attack busy count.
+	// But if it succeeds, do it here.	Don't futz with the count in other locations when it can be centralized!
 	if (CreateAnimationTile( &AniParams ) )
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugAttackBusy( String( "Explosion started.  Incrementing attack busy, now %d\n", gTacticalStatus.ubAttackBusyCount ) );
+		DebugAttackBusy( String( "Explosion started.	Incrementing attack busy, now %d\n", gTacticalStatus.ubAttackBusyCount ) );
 	}
 
-	//  set light source for flashbangs.... or...
+	//	set light source for flashbangs.... or...
 	if ( pExplosion->Params.ubTypeID == FLASHBANG_EXP )
 	{
 		pExplosion->iLightID = LightSpriteCreate("FLSHBANG.LHT", 0 );
@@ -472,9 +472,9 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 
 		if( pExplosion->iLightID != -1 )
 		{
-			LightSpritePower     ( pExplosion->iLightID, TRUE );
+			LightSpritePower	 ( pExplosion->iLightID, TRUE );
 			LightSpriteRoofStatus( pExplosion->iLightID, pExplosion->Params.bLevel );
-			LightSpritePosition  ( pExplosion->iLightID, (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE) );
+			LightSpritePosition	( pExplosion->iLightID, (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE) );
 		}
 
 		// Lesh: sound randomization
@@ -490,7 +490,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
 		}
 		// Lesh: sound randomization ends
 
-		PlayJA2Sample( uiSoundID, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );   
+		PlayJA2Sample( uiSoundID, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );	
 
 }
 
@@ -532,7 +532,7 @@ void HandleFencePartnerCheck( INT16 sStructGridNo )
 	PERFORMANCE_MARKER
 	STRUCTURE *pFenceStructure, *pFenceBaseStructure;
 	LEVELNODE *pFenceNode;
-	INT8  bFenceDestructionPartner = -1;
+	INT8	bFenceDestructionPartner = -1;
 	UINT32 uiFenceType;
 	UINT16 usTileIndex;
 
@@ -555,7 +555,7 @@ void HandleFencePartnerCheck( INT16 sStructGridNo )
 			bFenceDestructionPartner = -1 * ( pFenceBaseStructure->pDBStructureRef->pDBStructure->bDestructionPartner );
 
 			// Get new index
-			GetTileIndexFromTypeSubIndex( uiFenceType, (INT8)( bFenceDestructionPartner ), &usTileIndex );     
+			GetTileIndexFromTypeSubIndex( uiFenceType, (INT8)( bFenceDestructionPartner ), &usTileIndex );	 
 
 			//Set a flag indicating that the following changes are to go the the maps, temp file
 			ApplyMapChangesToMapTempFile( TRUE );
@@ -574,22 +574,22 @@ void HandleFencePartnerCheck( INT16 sStructGridNo )
 
 
 
-BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNextCurrent,  INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
+BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNextCurrent,	INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	PERFORMANCE_MARKER
 	INT16 sX, sY;
-	STRUCTURE  *pBase, *pWallStruct, *pAttached, *pAttachedBase;
+	STRUCTURE	*pBase, *pWallStruct, *pAttached, *pAttachedBase;
 	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
 	INT16 sNewGridNo, sStructGridNo;
 	INT16 sNewIndex, sSubIndex;
 	UINT16 usObjectIndex, usTileIndex;
-	UINT8  ubNumberOfTiles, ubLoop;
+	UINT8	ubNumberOfTiles, ubLoop;
 	DB_STRUCTURE_TILE ** ppTile;
 	INT8 bDestructionPartner=-1;
-	INT8  bDamageReturnVal;
+	INT8	bDamageReturnVal;
 	BOOLEAN fContinue;
 	UINT32 uiTileType;
-	INT16  sBaseGridNo;
+	INT16	sBaseGridNo;
 	BOOLEAN fExplosive;
 
 	// ATE: Check for O3 statue for special damage..
@@ -702,7 +702,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 					// debris...
 					if ( bDestructionPartner > 39 )
 					{
-						GetTileIndexFromTypeSubIndex( SECONDEXPLDEBRIS, (INT8)( bDestructionPartner - 40 ), &usTileIndex );     
+						GetTileIndexFromTypeSubIndex( SECONDEXPLDEBRIS, (INT8)( bDestructionPartner - 40 ), &usTileIndex );	 
 					}
 					else
 					{
@@ -776,9 +776,9 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 					case OUTSIDE_TOP_RIGHT:
 					case INSIDE_TOP_RIGHT:
 
-						sStructGridNo  = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
+						sStructGridNo	= NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
 						HandleFencePartnerCheck( sStructGridNo );
-						sStructGridNo  = NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
+						sStructGridNo	= NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
 						HandleFencePartnerCheck( sStructGridNo );
 						break;
 
@@ -1099,8 +1099,8 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 					// CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
 					if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 )
 					{
-						UINT8   ubRoom;
-						BOOLEAN  fInRoom;
+						UINT8	ubRoom;
+						BOOLEAN	fInRoom;
 
 						fInRoom = InARoom( sGridNo, &ubRoom );
 						if ( !fInRoom )
@@ -1164,7 +1164,7 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 				{
 					// We have a levelnode...
 					// Get new index for new grpahic....
-					GetTileIndexFromTypeSubIndex( uiTileType, bDestructionPartner, &usTileIndex );     
+					GetTileIndexFromTypeSubIndex( uiTileType, bDestructionPartner, &usTileIndex );	 
 
 					ApplyMapChangesToMapTempFile( TRUE );
 
@@ -1223,22 +1223,22 @@ STRUCTURE *gStruct;
 void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN *pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel )
 {
 	PERFORMANCE_MARKER
-	STRUCTURE   * pCurrent, *pNextCurrent, *pStructure;
-	STRUCTURE *   pBaseStructure;
-	INT16    sDesiredLevel;
+	STRUCTURE	* pCurrent, *pNextCurrent, *pStructure;
+	STRUCTURE *	pBaseStructure;
+	INT16	sDesiredLevel;
 	DB_STRUCTURE_TILE **ppTile;
-	UINT8    ubLoop, ubLoop2;
-	INT16    sNewGridNo, sNewGridNo2, sBaseGridNo;
-	BOOLEAN    fToBreak = FALSE;
-	BOOLEAN    fMultiStructure = FALSE;
-	UINT8    ubNumberOfTiles;
-	BOOLEAN    fMultiStructSpecialFlag = FALSE;
-	BOOLEAN    fExplodeDamageReturn = FALSE;
+	UINT8	ubLoop, ubLoop2;
+	INT16	sNewGridNo, sNewGridNo2, sBaseGridNo;
+	BOOLEAN	fToBreak = FALSE;
+	BOOLEAN	fMultiStructure = FALSE;
+	UINT8	ubNumberOfTiles;
+	BOOLEAN	fMultiStructSpecialFlag = FALSE;
+	BOOLEAN	fExplodeDamageReturn = FALSE;
 
 	// Based on distance away, damage any struct at this gridno
 	// OK, loop through structures and damage!
-	pCurrent   = gpWorldLevelData[ sGridNo ].pStructureHead;
-	sDesiredLevel  = STRUCTURE_ON_GROUND;
+	pCurrent	= gpWorldLevelData[ sGridNo ].pStructureHead;
+	sDesiredLevel	= STRUCTURE_ON_GROUND;
 
 	// This code gets a little hairy because 
 	// (1) we might need to destroy the currently-examined structure
@@ -1280,7 +1280,7 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 		// Check level!
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
-			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo( pCurrent, &pNextCurrent,  sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, 0, ubOwner, bLevel );
+			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo( pCurrent, &pNextCurrent,	sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, 0, ubOwner, bLevel );
 
 			// Are we overwritting damage due to multi-tile...?
 			if ( fExplodeDamageReturn )
@@ -1383,7 +1383,7 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 	BOOLEAN fFlashbang = Explosive[Item[usItem].ubClassIndex].ubType == EXPLOSV_FLASHBANG;
 	UINT16 usHalfExplosionRadius;
 
-	pSoldier = MercPtrs[ ubPerson ];   // someone is here, and they're gonna get hurt
+	pSoldier = MercPtrs[ ubPerson ];	// someone is here, and they're gonna get hurt
 
 	if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->stats.bLife )
 		return( FALSE );
@@ -1407,7 +1407,7 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 	ubDirection = (UINT8)GetDirectionFromGridNo( sBombGridNo, pSoldier );
 
 	// Increment attack counter...
-	//  gTacticalStatus.ubAttackBusyCount++;
+	//	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount ) );
 	DebugAttackBusy( String("Explosion dishing out damage to %d\n", pSoldier->ubID) );
 
@@ -1438,7 +1438,7 @@ BOOLEAN DamageSoldierFromBlast( UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo
 BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, UINT8 ubOwner )
 {
 	PERFORMANCE_MARKER
-	INT8  bPosOfMask = NO_SLOT;
+	INT8	bPosOfMask = NO_SLOT;
 
 	if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->stats.bLife || AM_A_ROBOT( pSoldier ) )
 	{
@@ -1455,12 +1455,12 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 		if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_CREATUREGAS )
 		{
 			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 		}
 		if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_BURNABLEGAS )
 		{
 			// already affected by BURNABLEGAS this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 		}
 
 	}
@@ -1478,7 +1478,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 			if ( pSoldier->flags.fHitByGasFlags & HIT_BY_TEARGAS )
 			{
 				// already affected by creature gas this turn
-				return( fRecompileMovementCosts );    
+				return( fRecompileMovementCosts );	
 			}
 		}
 		else if ( pExplosive->ubType == EXPLOSV_MUSTGAS )
@@ -1491,13 +1491,13 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 			if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_MUSTARDGAS )
 			{
 				// already affected by creature gas this turn
-				return( fRecompileMovementCosts );    
+				return( fRecompileMovementCosts );	
 			}
 
 		}
 
 		bPosOfMask = FindGasMask(pSoldier);
-		if (  bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ].status.bStatus[0] < USABLE )
+		if (	bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ].status.bStatus[0] < USABLE )
 		{
 			bPosOfMask = NO_SLOT;
 		}
@@ -1510,7 +1510,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 		// bPosOfMask = HEAD2POS;
 		//}
 
-		if ( bPosOfMask != NO_SLOT  )
+		if ( bPosOfMask != NO_SLOT	)
 		{
 			if ( pSoldier->inv[ bPosOfMask ].status.bStatus[0] < GASMASK_MIN_STATUS )
 			{
@@ -1530,7 +1530,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 					if ( sWoundAmt > 1 )
 					{
 						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
-						sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+						sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
 					}
 					else if ( sWoundAmt == 1 )
 					{
@@ -1553,7 +1553,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
 					}
 				}
-				sWoundAmt = 0;     
+				sWoundAmt = 0;	 
 			}
 
 		}
@@ -1597,7 +1597,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 	return( fRecompileMovementCosts );
 }
 
-BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,  INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
+BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,	INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
 	PERFORMANCE_MARKER
 	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
@@ -1607,7 +1607,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 	INT16 sX, sY;
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect = FALSE;
-	BOOLEAN fStunEffect  = FALSE;
+	BOOLEAN fStunEffect	= FALSE;
 	BOOLEAN fBlastEffect = TRUE;
 	BOOLEAN fBloodEffect = FALSE;
 	INT8 bSmokeEffectType = 0;
@@ -1620,52 +1620,52 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 
 	if ( sSubsequent == BLOOD_SPREAD_EFFECT )
 	{
-		fSmokeEffect   = FALSE;
-		fBlastEffect   = FALSE;
-		fBloodEffect   = TRUE;
+		fSmokeEffect	= FALSE;
+		fBlastEffect	= FALSE;
+		fBloodEffect	= TRUE;
 	}
 	else
 	{
 		// Turn off blast effect if some types of items...
-		switch( Explosive[Item[usItem].ubClassIndex].ubType  )
+		switch( Explosive[Item[usItem].ubClassIndex].ubType	)
 		{
 		case EXPLOSV_MUSTGAS:
 
-			fSmokeEffect   = TRUE;
+			fSmokeEffect	= TRUE;
 			bSmokeEffectType = MUSTARDGAS_SMOKE_EFFECT; 
-			fBlastEffect   = FALSE;
+			fBlastEffect	= FALSE;
 			break;
 
 		case EXPLOSV_BURNABLEGAS:
 
-			fSmokeEffect   = TRUE;
+			fSmokeEffect	= TRUE;
 			bSmokeEffectType = BURNABLEGAS_SMOKE_EFFECT; 
-			fBlastEffect   = FALSE;
+			fBlastEffect	= FALSE;
 			break;
 
 		case EXPLOSV_TEARGAS:
 
-			fSmokeEffect   = TRUE;
+			fSmokeEffect	= TRUE;
 			bSmokeEffectType = TEARGAS_SMOKE_EFFECT; 
-			fBlastEffect   = FALSE;
+			fBlastEffect	= FALSE;
 			break;
 
 		case EXPLOSV_SMOKE:
 
-			fSmokeEffect   = TRUE;
+			fSmokeEffect	= TRUE;
 			bSmokeEffectType = NORMAL_SMOKE_EFFECT; 
-			fBlastEffect   = FALSE;
+			fBlastEffect	= FALSE;
 			break;
 
 		case EXPLOSV_STUN:
-			fStunEffect    = TRUE;
+			fStunEffect	= TRUE;
 			break;
 
 		case EXPLOSV_CREATUREGAS:
 
-			fSmokeEffect   = TRUE;
+			fSmokeEffect	= TRUE;
 			bSmokeEffectType = CREATURE_SMOKE_EFFECT; 
-			fBlastEffect   = FALSE;
+			fBlastEffect	= FALSE;
 			break;
 		}
 	}
@@ -1708,7 +1708,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 		else if (uiDist < pExplosive->ubRadius)
 		{
 			// if radius is 5, go down by 5ths ~ 20%
-			sWoundAmt -= (INT16)  (sWoundAmt * uiDist / pExplosive->ubRadius );
+			sWoundAmt -= (INT16)	(sWoundAmt * uiDist / pExplosive->ubRadius );
 			sBreathAmt -= (INT16) (sBreathAmt * uiDist / pExplosive->ubRadius );
 		}
 		else
@@ -1729,7 +1729,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 		{
 			if ( Item[ usItem ].usItemClass & IC_GRENADE )
 			{
-				sStructDmgAmt = sWoundAmt / 3;    
+				sStructDmgAmt = sWoundAmt / 3;	
 			}
 			else // most explosives
 			{
@@ -1770,7 +1770,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 		}
 
 		// NB radius can be 0 so cannot divide it by 2 here
-		if (!fStunEffect && (uiDist * 2 <= pExplosive->ubRadius)  )
+		if (!fStunEffect && (uiDist * 2 <= pExplosive->ubRadius)	)
 		{
 			GetItemPool( sGridNo, &pItemPool, bLevel );
 
@@ -1872,7 +1872,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 				return( fRecompileMovementCosts );
 			}
 
-			pSoldier = MercPtrs[ ubPerson ];   // someone is here, and they're gonna get hurt
+			pSoldier = MercPtrs[ ubPerson ];	// someone is here, and they're gonna get hurt
 
 			fRecompileMovementCosts = DishOutGasDamage( pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, ubOwner );
 			/*
@@ -1891,7 +1891,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_CREATUREGAS )
 			{
 			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 			}
 			}
 			else // no gas mask help from creature attacks
@@ -1906,7 +1906,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			if ( pSoldier->flags.fHitByGasFlags & HIT_BY_TEARGAS )
 			{
 			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 			}
 			}
 			else if ( pExplosive->ubType == EXPLOSV_MUSTGAS )
@@ -1914,7 +1914,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_MUSTARDGAS )
 			{
 			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 			}
 
 			}
@@ -1922,7 +1922,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			if ( sSubsequent && pSoldier->flags.fHitByGasFlags & HIT_BY_CREATUREGAS )
 			{
 			// already affected by creature gas this turn
-			return( fRecompileMovementCosts );    
+			return( fRecompileMovementCosts );	
 			}
 
 
@@ -1935,7 +1935,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			bPosOfMask = HEAD2POS;
 			}
 
-			if ( bPosOfMask != NO_SLOT  )
+			if ( bPosOfMask != NO_SLOT	)
 			{
 			if ( pSoldier->inv[ bPosOfMask ].status.bStatus[0] < GASMASK_MIN_STATUS )
 			{
@@ -1952,7 +1952,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			if ( sWoundAmt > 1 )
 			{
 			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
-			sWoundAmt = ( sWoundAmt * ( 100 -  pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+			sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
 			}
 			else if ( sWoundAmt == 1 )
 			{
@@ -1974,7 +1974,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
 			}
 			}
-			sWoundAmt = 0;     
+			sWoundAmt = 0;	 
 			}
 
 			}
@@ -2016,15 +2016,15 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeEffect, INT32 uiCurRange, INT32 *piMaxRange, UINT8 *pubKeepGoing )
 {
 	PERFORMANCE_MARKER
-	INT8         bStructHeight;
-	UINT8    ubMovementCost;
-	INT8     Blocking, BlockingTemp;
-	BOOLEAN      fTravelCostObs = FALSE;
-	UINT32       uiRangeReduce;
-	INT16        sNewGridNo;
+	INT8		 bStructHeight;
+	UINT8	ubMovementCost;
+	INT8	 Blocking, BlockingTemp;
+	BOOLEAN		fTravelCostObs = FALSE;
+	UINT32		uiRangeReduce;
+	INT16		sNewGridNo;
 	STRUCTURE * pBlockingStructure;
-	BOOLEAN      fBlowWindowSouth = FALSE;
-	BOOLEAN   fReduceRay = TRUE;
+	BOOLEAN		fBlowWindowSouth = FALSE;
+	BOOLEAN	fReduceRay = TRUE;
 
 	ubMovementCost = gubWorldMovementCosts[ uiNewSpot ][ ubDir ][ bLevel ];
 
@@ -2034,7 +2034,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 		// If we have hit a wall, STOP HERE
 		if (ubMovementCost >= TRAVELCOST_BLOCKED)
 		{
-			fTravelCostObs  = TRUE;
+			fTravelCostObs	= TRUE;
 		}
 	}
 	else
@@ -2066,7 +2066,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 	}
 
 	// ATE: For smoke, don't let it go over roof....
-	// 0verhaul:  Why not?
+	// 0verhaul:	Why not?
 	if ( fSmokeEffect )
 	{
 		if ( bLevel )
@@ -2219,7 +2219,7 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 						uiRangeReduce = 0;
 						break;
-					}        
+					}		
 				}
 				else
 				{
@@ -2254,18 +2254,18 @@ void GetRayStopInfo( UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN fSmokeE
 
 
 
-void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectID  )
+void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectID	)
 {
 	PERFORMANCE_MARKER
 	INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
-	INT32  uiTempRange, ubBranchRange;
-	UINT8  ubDir,ubBranchDir, ubKeepGoing;
+	INT32	uiTempRange, ubBranchRange;
+	UINT8	ubDir,ubBranchDir, ubKeepGoing;
 	INT16 sRange;
-	BOOLEAN    fRecompileMovement = FALSE;
-	BOOLEAN   fAnyMercHit = FALSE;
-	BOOLEAN      fSmokeEffect = FALSE;
+	BOOLEAN	fRecompileMovement = FALSE;
+	BOOLEAN	fAnyMercHit = FALSE;
+	BOOLEAN		fSmokeEffect = FALSE;
 
-	switch( Explosive[Item[usItem].ubClassIndex].ubType  )
+	switch( Explosive[Item[usItem].ubClassIndex].ubType	)
 	{
 
 	case EXPLOSV_MUSTGAS:
@@ -2358,7 +2358,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 					while( branchCnt <= ubBranchRange) // end of range loop
 					{
-						ubKeepGoing   = TRUE;
+						ubKeepGoing	= TRUE;
 						uiNewSpot = NewGridNo( (INT16)uiBranchSpot, DirectionInc(ubBranchDir));
 
 						if (uiNewSpot != uiBranchSpot)
@@ -2379,12 +2379,12 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 							//else
 							{
 								// check if it's ANY door, and if so, affect that spot so it's damaged
-								//   if (RealDoorAt(uiNewSpot))
-								//  {
-								//      ExpAffect(sGridNo,uiNewSpot,cnt,ubReason,fSubsequent);
-								//  }
+								//	if (RealDoorAt(uiNewSpot))
+								//	{
+								//		ExpAffect(sGridNo,uiNewSpot,cnt,ubReason,fSubsequent);
+								//	}
 								// blocked, break out of the the sub-branch loop
-								//  break;
+								//	break;
 							}
 						}
 
@@ -2401,7 +2401,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 				} // end of if a branch to do
 
 			}
-			else     // at edge, or tile blocks further spread in that direction
+			else	 // at edge, or tile blocks further spread in that direction
 			{
 				break;
 			}
@@ -2476,7 +2476,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 void ToggleActionItemsByFrequency( INT8 bFrequency )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
+	UINT32	uiWorldBombIndex;
 	OBJECTTYPE * pObj;
 
 	// Go through all the bombs in the world, and look for remote ones
@@ -2508,7 +2508,7 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 void TogglePressureActionItemsInGridNo( INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
+	UINT32	uiWorldBombIndex;
 	OBJECTTYPE * pObj;
 
 	// Go through all the bombs in the world, and look for remote ones
@@ -2558,8 +2558,8 @@ void BillyBlocksDoorCallback( void )
 BOOLEAN HookerInRoom( UINT8 ubRoom )
 {
 	PERFORMANCE_MARKER
-	UINT8      ubLoop, ubTempRoom;
-	SOLDIERTYPE *  pSoldier;
+	UINT8		ubLoop, ubTempRoom;
+	SOLDIERTYPE *	pSoldier;
 
 	for ( ubLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
 	{
@@ -2732,10 +2732,10 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 		break;
 	case ACTION_ITEM_ENTER_BROTHEL:
 		// JA2Gold: Disable brothel tracking
-		/*   
+		/*	
 		if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-		UINT8  ubID;
+		UINT8	ubID;
 
 		ubID = WhoIsThere2( sGridNo, 0 );
 		if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) )
@@ -2803,14 +2803,14 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 		}
 
 		}
-		*/   
+		*/	
 		break;
 	case ACTION_ITEM_EXIT_BROTHEL:
 		// JA2Gold: Disable brothel tracking
-		/*   
+		/*	
 		if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-		UINT8  ubID;
+		UINT8	ubID;
 
 		ubID = WhoIsThere2( sGridNo, 0 );
 		if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) && MercPtrs[ ubID ]->sOldGridNo == sGridNo + DirectionInc( NORTH ) )
@@ -2826,7 +2826,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 		SetCustomizableTimerCallbackAndDelay( 1000, DelayedBillyTriggerToBlockOnExit, TRUE );
 		}
 		}
-		*/   
+		*/	
 		break;
 	case ACTION_ITEM_KINGPIN_ALARM:
 		PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
@@ -2835,7 +2835,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 		gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_HOSTILE;
 
 		{
-			UINT8  ubID, ubID2;
+			UINT8	ubID, ubID2;
 			BOOLEAN fEnterCombat = FALSE;
 
 			for ( ubID = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubID++ )
@@ -2867,12 +2867,12 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 
 		if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			UINT8  ubID;
+			UINT8	ubID;
 			OBJECTTYPE DoorCloser;
-			INT16  sTeleportSpot;
-			INT16  sDoorSpot;
-			UINT8  ubDirection;
-			UINT8  ubRoom, ubOldRoom;
+			INT16	sTeleportSpot;
+			INT16	sDoorSpot;
+			UINT8	ubDirection;
+			UINT8	ubRoom, ubOldRoom;
 
 			ubID = WhoIsThere2( sGridNo, 0 );
 			if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) )
@@ -2948,7 +2948,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 			}
 		}
 		break;
-	case ACTION_ITEM_LOCAL_ALARM:   
+	case ACTION_ITEM_LOCAL_ALARM:	
 		MakeNoise( NOBODY, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, 30, NOISE_SILENT_ALARM );
 		break;
 	case ACTION_ITEM_GLOBAL_ALARM:
@@ -2998,12 +2998,12 @@ void AddBombToQueue( UINT32 uiWorldBombIndex, UINT32 uiTimeStamp )
 void HandleExplosionQueue( void )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiIndex;
-	UINT32    uiWorldBombIndex;
-	UINT32    uiCurrentTime;
-	INT16     sGridNo;
+	UINT32	uiIndex;
+	UINT32	uiWorldBombIndex;
+	UINT32	uiCurrentTime;
+	INT16	 sGridNo;
 	OBJECTTYPE * pObj;
-	UINT8         ubLevel;
+	UINT8		 ubLevel;
 
 	if ( !gfExplosionQueueActive )
 	{
@@ -3130,8 +3130,8 @@ void HandleExplosionQueue( void )
 void DecayBombTimers( void )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
-	UINT32    uiTimeStamp;
+	UINT32	uiWorldBombIndex;
+	UINT32	uiTimeStamp;
 	OBJECTTYPE * pObj;
 
 	uiTimeStamp = GetJA2Clock();
@@ -3173,8 +3173,8 @@ void DecayBombTimers( void )
 void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
-	UINT32    uiTimeStamp;
+	UINT32	uiWorldBombIndex;
+	UINT32	uiTimeStamp;
 	OBJECTTYPE * pObj;
 
 	uiTimeStamp = GetJA2Clock();
@@ -3219,7 +3219,7 @@ void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger )
 
 	switch( bPanicTrigger )
 	{
-	case 0:            
+	case 0:			
 		SetOffBombsByFrequency( ubID, PANIC_FREQUENCY );
 		gTacticalStatus.fPanicFlags &= ~(PANIC_BOMBS_HERE);
 		break;
@@ -3247,10 +3247,10 @@ void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger )
 BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
-	UINT32    uiTimeStamp;
+	UINT32	uiWorldBombIndex;
+	UINT32	uiTimeStamp;
 	OBJECTTYPE * pObj;
-	BOOLEAN    fFoundMine = FALSE;
+	BOOLEAN	fFoundMine = FALSE;
 
 	uiTimeStamp = GetJA2Clock();
 
@@ -3315,7 +3315,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
+	UINT32	uiWorldBombIndex;
 	OBJECTTYPE * pObj;
 
 	// Go through all the bombs in the world, and look for mines at this location
@@ -3402,7 +3402,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	for( uiCnt=0; uiCnt< NUM_EXPLOSION_SLOTS; uiCnt++)
 	{
 		if( gExplosionData[ uiCnt ].fAllocated )
-		{   
+		{	
 			FileWrite( hFile, &gExplosionData[ uiCnt ], sizeof( EXPLOSIONTYPE ), &uiNumBytesWritten );
 			if( uiNumBytesWritten != sizeof( EXPLOSIONTYPE ) )
 			{
@@ -3548,13 +3548,13 @@ void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 }
 
 
-void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
+void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ	)
 {
 	PERFORMANCE_MARKER
 	INT32 cnt;
 	INT16 sSectorNo;
-	BOOLEAN  fInSector = FALSE;
-	UINT16  usGoodGraphic, usDamagedGraphic;
+	BOOLEAN	fInSector = FALSE;
+	UINT16	usGoodGraphic, usDamagedGraphic;
 
 	// ATE: If we are below, return right away...
 	if ( sSectorZ != 0 )
@@ -3576,7 +3576,7 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 		if ( pSamList[ cnt ] == sSectorNo )
 		{
 			// get graphic.......
-			GetTileIndexFromTypeSubIndex( EIGHTISTRUCT, (UINT16)( gbSAMGraphicList[ cnt ] ), &usGoodGraphic );     
+			GetTileIndexFromTypeSubIndex( EIGHTISTRUCT, (UINT16)( gbSAMGraphicList[ cnt ] ), &usGoodGraphic );	 
 
 			// Damaged one ( current ) is 2 less...
 			usDamagedGraphic = usGoodGraphic - 2;
@@ -3617,8 +3617,8 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 void HandleBuldingDestruction( INT16 sGridNo, UINT8 ubOwner )
 {
 	PERFORMANCE_MARKER
-	SOLDIERTYPE *  pSoldier;
-	UINT8      cnt;
+	SOLDIERTYPE *	pSoldier;
+	UINT8		cnt;
 
 	if ( ubOwner == NOBODY )
 	{
@@ -3655,8 +3655,8 @@ void HandleBuldingDestruction( INT16 sGridNo, UINT8 ubOwner )
 INT32 FindActiveTimedBomb( void )
 {
 	PERFORMANCE_MARKER
-	UINT32    uiWorldBombIndex;
-	UINT32    uiTimeStamp;
+	UINT32	uiWorldBombIndex;
+	UINT32	uiTimeStamp;
 	OBJECTTYPE * pObj;
 
 	uiTimeStamp = GetJA2Clock();
@@ -3669,7 +3669,7 @@ INT32 FindActiveTimedBomb( void )
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
 			if ( pObj->bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
-				return( gWorldBombs[uiWorldBombIndex].iItemIndex );  
+				return( gWorldBombs[uiWorldBombIndex].iItemIndex );	
 			}
 		}
 	}
@@ -3712,13 +3712,13 @@ UINT8 DetermineFlashbangEffect( SOLDIERTYPE *pSoldier, INT8 ubExplosionDir, BOOL
 	INT8 bNumTurns;
 	UINT16 usHeadItem1, usHeadItem2;
 
-	bNumTurns   = FindNumTurnsBetweenDirs(pSoldier->bDirection, ubExplosionDir);
+	bNumTurns	= FindNumTurnsBetweenDirs(pSoldier->bDirection, ubExplosionDir);
 	usHeadItem1 = pSoldier->inv[ HEAD1POS ].usItem;
 	usHeadItem2 = pSoldier->inv[ HEAD2POS ].usItem;
 
 	// if soldier got in explosion area check if he is affected by flash
 	// if soldier wears sun goggles OR grenade behind him OR
-	//    (he is not underground AND it is day AND he is outdoor)
+	//	(he is not underground AND it is day AND he is outdoor)
 	if ( (usHeadItem1 == SUNGOGGLES || usHeadItem2 == SUNGOGGLES) || (bNumTurns > 1) ||
 		(!gbWorldSectorZ && !NightTime() && !fInBuilding) )
 	{

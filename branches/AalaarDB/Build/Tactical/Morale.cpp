@@ -41,7 +41,7 @@ MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 {
 	// TACTICAL = Short Term Effect, STRATEGIC = Long Term Effect
 	{	TACTICAL_MORALE_EVENT,			+4},	//	MORALE_KILLED_ENEMY
-	{ TACTICAL_MORALE_EVENT,		  -5},	//	MORALE_SQUADMATE_DIED,		// in same sector (not really squad)... IN ADDITION to strategic loss of morale
+	{ TACTICAL_MORALE_EVENT,		-5},	//	MORALE_SQUADMATE_DIED,		// in same sector (not really squad)... IN ADDITION to strategic loss of morale
 	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_SUPPRESSED,				// up to 4 times per turn
 	{ TACTICAL_MORALE_EVENT,			-2},	//	MORALE_AIRSTRIKE,
 	{ TACTICAL_MORALE_EVENT,			+2},	//	MORALE_DID_LOTS_OF_DAMAGE,
@@ -57,24 +57,24 @@ MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 	{ STRATEGIC_MORALE_EVENT,			-8},	//	MORALE_MINE_LOST,
 	{ STRATEGIC_MORALE_EVENT,			+3},	//	MORALE_SAM_SITE_LIBERATED,
 	{ STRATEGIC_MORALE_EVENT,			-3},	//	MORALE_SAM_SITE_LOST,
-	{ STRATEGIC_MORALE_EVENT,		 -15},	//	MORALE_BUDDY_DIED,
+	{ STRATEGIC_MORALE_EVENT,		-15},	//	MORALE_BUDDY_DIED,
 	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_HATED_DIED,
 	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_TEAMMATE_DIED,			// not in same sector
 	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_LOW_DEATHRATE,
 	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_HIGH_DEATHRATE,
 	{ STRATEGIC_MORALE_EVENT,			+2},	//	MORALE_GREAT_MORALE,
 	{ STRATEGIC_MORALE_EVENT,			-2},	//	MORALE_POOR_MORALE,
-	{ TACTICAL_MORALE_EVENT,		 -10},	//  MORALE_DRUGS_CRASH
-	{ TACTICAL_MORALE_EVENT,		 -10},	//  MORALE_ALCOHOL_CRASH
-	{ STRATEGIC_MORALE_EVENT,		 +15},	//  MORALE_MONSTER_QUEEN_KILLED
-	{ STRATEGIC_MORALE_EVENT,		 +25},	//  MORALE_DEIDRANNA_KILLED
+	{ TACTICAL_MORALE_EVENT,		-10},	//	MORALE_DRUGS_CRASH
+	{ TACTICAL_MORALE_EVENT,		-10},	//	MORALE_ALCOHOL_CRASH
+	{ STRATEGIC_MORALE_EVENT,		+15},	//	MORALE_MONSTER_QUEEN_KILLED
+	{ STRATEGIC_MORALE_EVENT,		+25},	//	MORALE_DEIDRANNA_KILLED
 	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_CLAUSTROPHOBE_UNDERGROUND,
 	{ TACTICAL_MORALE_EVENT,			-5},	//	MORALE_INSECT_PHOBIC_SEES_CREATURE,
 	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_NERVOUS_ALONE,
-	{	STRATEGIC_MORALE_EVENT,		  -5},	//	MORALE_MERC_CAPTURED,
+	{	STRATEGIC_MORALE_EVENT,		-5},	//	MORALE_MERC_CAPTURED,
 	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_MERC_MARRIED,
 	{ STRATEGIC_MORALE_EVENT,			+8},	//	MORALE_QUEEN_BATTLE_WON,
-	{ STRATEGIC_MORALE_EVENT,			+5},	//  MORALE_SEX,
+	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_SEX,
 };
 
 BOOLEAN gfSomeoneSaidMoraleQuote = FALSE;
@@ -293,8 +293,8 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 	iActualMorale = DEFAULT_MORALE + (INT32) pSoldier->aiData.bTeamMoraleMod + (INT32) pSoldier->aiData.bTacticalMoraleMod + (INT32) pSoldier->aiData.bStrategicMoraleMod + (INT32) (CurrentPlayerProgressPercentage() / 5);
 
 	// ATE: Modify morale based on drugs....
-	iActualMorale  += ( ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ADRENALINE ] * DRUG_EFFECT_MORALE_MOD ) / 100 );
-	iActualMorale  += ( ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ALCOHOL ] * ALCOHOL_EFFECT_MORALE_MOD ) / 100 );
+	iActualMorale	+= ( ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ADRENALINE ] * DRUG_EFFECT_MORALE_MOD ) / 100 );
+	iActualMorale	+= ( ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ALCOHOL ] * ALCOHOL_EFFECT_MORALE_MOD ) / 100 );
 
 	iActualMorale = __min( 100, iActualMorale );
 	iActualMorale = __max( 0, iActualMorale );
@@ -312,14 +312,14 @@ void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod 
 	INT32									iMoraleModTotal;
 
 	if ( !pSoldier->bActive || ( pSoldier->stats.bLife < CONSCIOUSNESS ) ||
-		 ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
+		( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
 	{
 		return;
 	}
 
 	if ( ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-			 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			 ( pSoldier->bAssignment == IN_TRANSIT ) )
+			( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
+			( pSoldier->bAssignment == IN_TRANSIT ) )
 	{
 		return;
 	}
@@ -616,7 +616,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 					{
 						if ( SOLDIER_IN_SECTOR( pTeamSoldier, sMapX, sMapY, bMapZ ) )
 						{
-							// mate died in my sector!  tactical morale mod
+							// mate died in my sector!	tactical morale mod
 							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_SQUADMATE_DIED );
 						}
 
@@ -625,7 +625,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 						if (BUDDY_MERC( pProfile, pSoldier->ubProfile ))
 						{
-							// oh no!  buddy died!
+							// oh no!	buddy died!
 							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_BUDDY_DIED );
 						}
 					}
@@ -682,7 +682,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		default:
 			// debug message
-			ScreenMsg( MSG_FONT_RED, MSG_BETAVERSION, L"Invalid morale event type = %d.  AM/CC-1", bMoraleEvent );
+			ScreenMsg( MSG_FONT_RED, MSG_BETAVERSION, L"Invalid morale event type = %d.	AM/CC-1", bMoraleEvent );
 			break;
 	}
 
@@ -763,7 +763,7 @@ void HourlyMoraleUpdate( void )
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
 	// loop through all mercs to calculate their morale
-  for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
+	for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
 	{	
 		//if the merc is active, in Arulco, and conscious, not POW
 		if ( pSoldier->bActive && pSoldier->ubProfile != NO_PROFILE && 
@@ -801,9 +801,9 @@ void HourlyMoraleUpdate( void )
 				// skip past ourselves and all inactive mercs
 				if (bOtherID != bMercID && pOtherSoldier->bActive && pOtherSoldier->ubProfile != NO_PROFILE &&
 																														!(pOtherSoldier->bAssignment == IN_TRANSIT ||
-																															 pOtherSoldier->flags.fMercAsleep == TRUE ||
-																															 pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ||
-																															 pOtherSoldier->bAssignment == ASSIGNMENT_POW))
+																															pOtherSoldier->flags.fMercAsleep == TRUE ||
+																															pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ||
+																															pOtherSoldier->bAssignment == ASSIGNMENT_POW))
 				{
 					if (fSameGroupOnly)
 					{
@@ -817,7 +817,7 @@ void HourlyMoraleUpdate( void )
 					{
 						// check to see if the location is the same
 						if (pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-							  pOtherSoldier->sSectorY != pSoldier->sSectorY ||
+							pOtherSoldier->sSectorY != pSoldier->sSectorY ||
 								pOtherSoldier->bSectorZ != pSoldier->bSectorZ)
 						{
 							continue;
@@ -843,7 +843,7 @@ void HourlyMoraleUpdate( void )
 						else 
 						{
 							// scale according to how close to we are to snapping
-							//KM : Divide by 0 error found.  Wrapped into an if statement.
+							//KM : Divide by 0 error found.	Wrapped into an if statement.
 							if( pProfile->bHatedTime[ bHated ] )
 							{
 								bOpinion = ((INT32) bOpinion) * (pProfile->bHatedTime[ bHated ] - pProfile->bHatedCount[ bHated ]) / pProfile->bHatedTime[ bHated ];
@@ -851,7 +851,7 @@ void HourlyMoraleUpdate( void )
 
 							if ( pProfile->bHatedCount[ bHated ] <= pProfile->bHatedTime[ bHated ] / 2 )
 							{
-								// Augh, we're teamed with someone we hate!  We HATE this!!  Ignore everyone else!		
+								// Augh, we're teamed with someone we hate!	We HATE this!!	Ignore everyone else!		
 								fFoundHated = TRUE;
 								break;
 							}

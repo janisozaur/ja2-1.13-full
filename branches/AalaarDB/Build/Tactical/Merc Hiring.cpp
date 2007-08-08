@@ -123,7 +123,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 
 	if ( !TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():	Failed to Add Merc");
 		return( MERC_HIRE_FAILED );
 	}
 
@@ -210,9 +210,9 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 
 
 	//if we are trying to hire a merc that should arrive later, put the merc in the queue
-	if( pHireMerc->uiTimeTillMercArrives  != 0 )
+	if( pHireMerc->uiTimeTillMercArrives	!= 0 )
 	{
-		AddStrategicEvent( EVENT_DELAYED_HIRING_OF_MERC, pHireMerc->uiTimeTillMercArrives,  pSoldier->ubID );
+		AddStrategicEvent( EVENT_DELAYED_HIRING_OF_MERC, pHireMerc->uiTimeTillMercArrives,	pSoldier->ubID );
 
 		//specify that the merc is hired but hasnt arrived yet
 		pMerc->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
@@ -230,23 +230,23 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		{
 			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].sSalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_DAY;
-      pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
+		pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
 		}
 		else if( pHireMerc->iTotalContractLength == 7 )
 		{
 			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_WEEK;
-      pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
+		pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
 		}
 		else if( pHireMerc->iTotalContractLength == 14 )
 		{
 			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_2_WEEK;
-      // These luck fellows need to stay the whole duration!
-      pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
+		// These luck fellows need to stay the whole duration!
+		pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
 		}
 
-		// remember the medical deposit we PAID.  The one in his profile can increase when he levels!
+		// remember the medical deposit we PAID.	The one in his profile can increase when he levels!
 		pSoldier->usMedicalDeposit = gMercProfiles[ pSoldier->ubProfile ].sMedicalDepositAmount;
 	}
 	//if the merc is from M.E.R.C.
@@ -291,7 +291,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 	UINT32									uiTimeOfPost;
 
 	if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
-	{ //Mercs arriving in A9.  This sector has been deemed as the always safe sector.
+	{ //Mercs arriving in A9.	This sector has been deemed as the always safe sector.
 		//Seeing we don't support entry into a hostile sector (except for the beginning),
 		//we will nuke any enemies in this sector first.
 		if( gWorldSectorX != 9 || gWorldSectorY != 1 || gbWorldSectorZ )
@@ -334,7 +334,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 			// OK, If we are in mapscreen, get out...
 			if ( guiCurrentScreen == MAP_SCREEN )
 			{
-        // ATE: Make sure the current one is selected!
+		// ATE: Make sure the current one is selected!
 				ChangeSelectedMapSector( gWorldSectorX, gWorldSectorY, 0 );
 
 				RequestTriggerExitFromMapscreen( MAP_EXIT_TO_TACTICAL );
@@ -387,7 +387,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 		if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )
 		{
 			// Randomly anytime between 9:00, and 10:00
-			uiTimeOfPost =  540 + Random( 660 );
+			uiTimeOfPost =	540 + Random( 660 );
 
 			if ( GetWorldMinutesInDay() < uiTimeOfPost )
 			{
@@ -457,7 +457,7 @@ UINT8	NumberOfMercsOnPlayerTeam()
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{	
 		//if the is active, and is not a vehicle
 		if( pSoldier->bActive && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -546,7 +546,7 @@ UINT32 GetMercArrivalTimeOfDay( )
 
 	// OK, first check if we need to advance a whole day's time...
 	// See if we have missed the last flight for the day...
-	if ( ( uiCurrHour ) > 13  ) // ( > 1:00 pm - too bad )
+	if ( ( uiCurrHour ) > 13	) // ( > 1:00 pm - too bad )
 	{
 		// 7:30 flight....
 		return( GetMidnightOfFutureDayInMinutes( 1 ) + MERC_ARRIVE_TIME_SLOT_1 );
@@ -577,8 +577,8 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
-  // look for all mercs on the same team, 
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	// look for all mercs on the same team, 
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{	
 		if ( pSoldier->bActive )
 		{	
@@ -619,13 +619,13 @@ INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 void CheckForValidArrivalSector( )
 {
 	PERFORMANCE_MARKER
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, sGoodX, sGoodY;
-	UINT8	 ubRadius = 4;
-	INT32	 leftmost;
-	INT16	 sSectorGridNo, sSectorGridNo2;
-	INT32	 uiRange, uiLowestRange = 999999;
+	INT16	sTop, sBottom;
+	INT16	sLeft, sRight;
+	INT16	cnt1, cnt2, sGoodX, sGoodY;
+	UINT8	ubRadius = 4;
+	INT32	leftmost;
+	INT16	sSectorGridNo, sSectorGridNo2;
+	INT32	uiRange, uiLowestRange = 999999;
 	BOOLEAN	fFound = FALSE;
 	CHAR16 sString[ 1024 ];
 	CHAR16 zShortTownIDString1[ 50 ];
@@ -645,8 +645,8 @@ void CheckForValidArrivalSector( )
 	// If here - we need to do a search!
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
+	sLeft	= - ubRadius;
+	sRight	= ubRadius;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -685,7 +685,7 @@ void CheckForValidArrivalSector( )
 
 		swprintf( sString, L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
 
-		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
+		DoScreenIndependantMessageBox(	sString, MSG_BOX_FLAG_OK, NULL );
 
 	}
 }

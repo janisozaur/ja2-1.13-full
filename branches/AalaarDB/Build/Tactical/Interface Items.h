@@ -103,15 +103,15 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 // uiBuffer - The Dest Video Surface - can only be FRAME_BUFFER or guiSAVEBUFFER
 // pSoldier - used for determining whether burst mode needs display
 // pObject	- Usually taken from pSoldier->inv[HANDPOS]
-// sX, sY, Width, Height,  - Will Center it in the Width
-// fDirtyLevel  if == DIRTYLEVEL2 will render everything
+// sX, sY, Width, Height,	- Will Center it in the Width
+// fDirtyLevel	if == DIRTYLEVEL2 will render everything
 //							if == DIRTYLEVEL1 will render bullets and status only
 // 
 //	pubHighlightCounter - if not null, and == 2 - will display name above item
 //											-	if == 1 will only dirty the name space and then set counter to 0
-//  Last parameter used mainly for when mouse is over item
+//	Last parameter used mainly for when mouse is over item
 
-void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor );
+void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE	*pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor );
 
 
 extern BOOLEAN		gfInItemDescBox;
@@ -162,7 +162,7 @@ void DrawItemTileCursor( );
 void HideItemTileCursor( );
 void InitItemInterface( );
 BOOLEAN ItemCursorInLobRange( UINT16 usMapPos );
-BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
+BOOLEAN	HandleItemPointerClick( UINT16 usMapPos );
 UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
 UINT16 GetTileGraphicForItem( INVTYPE *pItem );
 BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
@@ -182,7 +182,7 @@ void EnableKeyRing( BOOLEAN fEnable );
 
 // handle compatable items for merc and map inventory
 BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc );
-BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInvPos, INT32 iStartSlotNumber, BOOLEAN fOn, BOOLEAN fFromMerc  );
+BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInvPos, INT32 iStartSlotNumber, BOOLEAN fOn, BOOLEAN fFromMerc	);
 void ResetCompatibleItemArray( );
 
 void CycleItemDescriptionItem( );

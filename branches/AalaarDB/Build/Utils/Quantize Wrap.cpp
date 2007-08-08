@@ -30,7 +30,7 @@ BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, S
 
 	sNumColors = q.GetColorCount();
 
-	memset( pPalette, 0,  sizeof( SGPPaletteEntry ) * 256 );
+	memset( pPalette, 0,	sizeof( SGPPaletteEntry ) * 256 );
 
 	q.GetColorTable( (RGBQUAD*)pPalette );
 

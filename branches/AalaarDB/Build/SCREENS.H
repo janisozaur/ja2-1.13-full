@@ -10,9 +10,9 @@
 
 typedef struct Screens
 {
-  UINT32         (*InitializeScreen)(void);
-  UINT32         (*HandleScreen)(void);
-  UINT32         (*ShutdownScreen)(void);
+	UINT32		 (*InitializeScreen)(void);
+	UINT32		 (*HandleScreen)(void);
+	UINT32		 (*ShutdownScreen)(void);
 
 } Screens;
 
@@ -20,10 +20,10 @@ typedef struct Screens
 // SCR_INACTIVE->SCR_INITIALIZING->SCR_ACTIVE->SCR_SHUTTING_DOWN->SCR_INACTIVE ... Anything else
 // will cause the system to yak.
 
-#define SCR_INACTIVE         0x00
-#define SCR_INITIALIZING     0x01
-#define SCR_ACTIVE           0x02
-#define SCR_SHUTTING_DOWN    0x04
+#define SCR_INACTIVE		 0x00
+#define SCR_INITIALIZING	 0x01
+#define SCR_ACTIVE			0x02
+#define SCR_SHUTTING_DOWN	0x04
 
 // This extern is made available to make sure that external modules will have access to the screen information
 

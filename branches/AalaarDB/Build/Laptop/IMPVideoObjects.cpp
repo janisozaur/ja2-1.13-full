@@ -68,8 +68,8 @@ extern void DrawBonusPointsRemaining( void );
 BOOLEAN LoadProfileBackGround( void )
 {
 	PERFORMANCE_MARKER
-	VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	// this procedure will load in the graphics for the generic background
 
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
@@ -82,9 +82,9 @@ BOOLEAN LoadProfileBackGround( void )
 
 void RemoveProfileBackGround( void )
 {
-	PERFORMANCE_MARKER  
+	PERFORMANCE_MARKER	
 
-  // remove background
+	// remove background
 	DeleteVideoObjectFromIndex( guiBACKGROUND );
 
 	return;
@@ -96,30 +96,30 @@ void RenderProfileBackGround( void )
 	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
-  INT32 iCurrentHeight = 0;
-  INT32 iCounter = 0;
+	INT32 iCurrentHeight = 0;
+	INT32 iCounter = 0;
 
-  // this procedure will render the generic backgound to the screen
+	// this procedure will render the generic backgound to the screen
 	
 	// get the video object
-  GetVideoObject(&hHandle, guiBACKGROUND);
-  
+	GetVideoObject(&hHandle, guiBACKGROUND);
+	
 	// render each row 5 times wide, 5 tiles high
-  for(iCounter = 0; iCounter < 4; iCounter++)
+	for(iCounter = 0; iCounter < 4; iCounter++)
 	{
 
-	  // blt background to screen from left to right
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 0 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 1 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 2 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 3 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
+	// blt background to screen from left to right
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 0 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 1 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 2 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X + 3 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT, VO_BLT_SRCTRANSPARENCY,NULL);
  	} 
 
 	// dirty buttons
 	MarkButtonsDirty( );
 
 	// force refresh of screen
-  InvalidateRegion( LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT );
+	InvalidateRegion( LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	return;
 }
@@ -127,10 +127,10 @@ void RenderProfileBackGround( void )
 BOOLEAN LoadIMPSymbol( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the IMP main symbol into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	GetMLGFilename( VObjectDesc.ImageFile, MLG_IMPSYMBOL );
 	CHECKF(AddVideoObject(&VObjectDesc, &guiIMPSYMBOL));
@@ -143,7 +143,7 @@ void DeleteIMPSymbol( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove IMP symbol
+	// remove IMP symbol
 	DeleteVideoObjectFromIndex( guiIMPSYMBOL );
 
 	return;
@@ -152,12 +152,12 @@ void DeleteIMPSymbol( void )
 void RenderIMPSymbol(INT16 sX, INT16 sY)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
+	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiIMPSYMBOL);
+	// get the video object
+	GetVideoObject(&hHandle, guiIMPSYMBOL);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
 
 	return;
@@ -170,10 +170,10 @@ void RenderIMPSymbol(INT16 sX, INT16 sY)
 BOOLEAN LoadBeginIndent( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the indent main symbol into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\BeginScreenIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBEGININDENT));
@@ -186,7 +186,7 @@ void DeleteBeginIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove indent symbol
+	// remove indent symbol
 
 	DeleteVideoObjectFromIndex( guiBEGININDENT );
 
@@ -196,14 +196,14 @@ void DeleteBeginIndent( void )
 void RenderBeginIndent(INT16 sX, INT16 sY)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
+	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiBEGININDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiBEGININDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -217,10 +217,10 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadActivationIndent( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\ActivationIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiACTIVATIONINDENT));
@@ -233,7 +233,7 @@ void DeleteActivationIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiACTIVATIONINDENT );
 
 	return;
@@ -242,14 +242,14 @@ void DeleteActivationIndent( void )
 void RenderActivationIndent(INT16 sX, INT16 sY)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
+	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiACTIVATIONINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiACTIVATIONINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -259,10 +259,10 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadFrontPageIndent( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\FrontPageIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiFRONTPAGEINDENT));
@@ -275,7 +275,7 @@ void DeleteFrontPageIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFRONTPAGEINDENT );
 
 	return;
@@ -284,14 +284,14 @@ void DeleteFrontPageIndent( void )
 void RenderFrontPageIndent(INT16 sX, INT16 sY)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
+	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiFRONTPAGEINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiFRONTPAGEINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -303,10 +303,10 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadAnalyse( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\Analyze.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiANALYSE));
@@ -319,7 +319,7 @@ void DeleteAnalyse( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiANALYSE );
 
 	return;
@@ -331,12 +331,12 @@ void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiANALYSE);
+	// get the video object
+	GetVideoObject(&hHandle, guiANALYSE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -348,10 +348,10 @@ void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 BOOLEAN LoadAttributeGraph( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\Attributegraph.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiATTRIBUTEGRAPH));
@@ -364,7 +364,7 @@ void DeleteAttributeGraph( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
 
 	return;
@@ -377,12 +377,12 @@ void RenderAttributeGraph(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEGRAPH);
+	// get the video object
+	GetVideoObject(&hHandle, guiATTRIBUTEGRAPH);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -393,10 +393,10 @@ void RenderAttributeGraph(INT16 sX, INT16 sY)
 BOOLEAN LoadAttributeGraphBar( void )
 {
 	PERFORMANCE_MARKER
-  
+	
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\AttributegraphBar.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiATTRIBUTEGRAPHBAR));
@@ -409,7 +409,7 @@ void DeleteAttributeBarGraph( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPHBAR );
 
 	return;
@@ -418,14 +418,14 @@ void DeleteAttributeBarGraph( void )
 void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
+	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEGRAPHBAR);
+	// get the video object
+	GetVideoObject(&hHandle, guiATTRIBUTEGRAPHBAR);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -440,8 +440,8 @@ BOOLEAN LoadFullNameIndent( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\FullNameIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiFULLNAMEINDENT));
@@ -454,7 +454,7 @@ void DeleteFullNameIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFULLNAMEINDENT );
 
 	return;
@@ -467,12 +467,12 @@ void RenderFullNameIndent(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiFULLNAMEINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiFULLNAMEINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -483,8 +483,8 @@ BOOLEAN LoadNickNameIndent( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\NickName.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiNICKNAMEINDENT));
@@ -497,7 +497,7 @@ void DeleteNickNameIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNICKNAMEINDENT );
 
 	return;
@@ -510,12 +510,12 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiNICKNAMEINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiNICKNAMEINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -525,8 +525,8 @@ BOOLEAN LoadNameIndent( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\NameIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiNAMEINDENT));
@@ -539,7 +539,7 @@ void DeleteNameIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNAMEINDENT );
 
 	return;
@@ -552,12 +552,12 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiNAMEINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiNAMEINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -570,8 +570,8 @@ BOOLEAN LoadGenderIndent( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\GenderIndent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiGENDERINDENT));
@@ -584,7 +584,7 @@ void DeleteGenderIndent( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiGENDERINDENT );
 
 	return;
@@ -596,12 +596,12 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 	HVOBJECT hHandle;
 
 
-  // get the video object
-  GetVideoObject(&hHandle, guiGENDERINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiGENDERINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 
 	return;
 }
@@ -613,8 +613,8 @@ BOOLEAN LoadSmallFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\SmallFrame.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSMALLFRAME));
@@ -627,7 +627,7 @@ void DeleteSmallFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLFRAME );
 
 	return;
@@ -639,12 +639,12 @@ void RenderSmallFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSMALLFRAME);
+	// get the video object
+	GetVideoObject(&hHandle, guiSMALLFRAME);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -656,8 +656,8 @@ BOOLEAN LoadSmallSilhouette( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\SmallSilhouette.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSMALLSILHOUETTE));
@@ -670,7 +670,7 @@ void DeleteSmallSilhouette( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
 
 	return;
@@ -682,12 +682,12 @@ void RenderSmallSilhouette(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSMALLSILHOUETTE);
+	// get the video object
+	GetVideoObject(&hHandle, guiSMALLSILHOUETTE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -698,8 +698,8 @@ BOOLEAN LoadLargeSilhouette( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\largesilhouette.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiLARGESILHOUETTE));
@@ -712,7 +712,7 @@ void DeleteLargeSilhouette( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLARGESILHOUETTE );
 
 	return;
@@ -724,12 +724,12 @@ void RenderLargeSilhouette(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiLARGESILHOUETTE);
+	// get the video object
+	GetVideoObject(&hHandle, guiLARGESILHOUETTE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -739,8 +739,8 @@ BOOLEAN LoadAttributeFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\attributeframe.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiATTRIBUTEFRAME));
@@ -753,7 +753,7 @@ void DeleteAttributeFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEFRAME );
 
 	return;
@@ -767,12 +767,12 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 	INT32 iCounter = 0;
 	INT16 sCurrentY = 0;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
+	// get the video object
+	GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	sCurrentY += 10;
 	for( iCounter = 0; iCounter < 10; iCounter++ )
 	{
@@ -804,8 +804,8 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 
 	sCurrentY = ( INT16 )( 10 + ( iIndex * 20 ) );
 
-	 // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
+	// get the video object
+	GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
 
 	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 2, LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY, VO_BLT_SRCTRANSPARENCY,NULL);
@@ -830,8 +830,8 @@ BOOLEAN LoadSliderBar( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\attributeslider.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSLIDERBAR));
@@ -844,7 +844,7 @@ void DeleteSliderBar( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSLIDERBAR );
 
 	return;
@@ -856,12 +856,12 @@ void RenderSliderBar(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSLIDERBAR);
+	// get the video object
+	GetVideoObject(&hHandle, guiSLIDERBAR);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -873,8 +873,8 @@ BOOLEAN LoadButton2Image( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\button_2.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBUTTON2IMAGE));
@@ -887,7 +887,7 @@ void DeleteButton2Image( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON2IMAGE );
 
 	return;
@@ -899,12 +899,12 @@ void RenderButton2Image(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON2IMAGE);
+	// get the video object
+	GetVideoObject(&hHandle, guiBUTTON2IMAGE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -913,8 +913,8 @@ BOOLEAN LoadButton4Image( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\button_4.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBUTTON4IMAGE));
@@ -927,7 +927,7 @@ void DeleteButton4Image( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON4IMAGE );
 
 	return;
@@ -939,12 +939,12 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON4IMAGE);
+	// get the video object
+	GetVideoObject(&hHandle, guiBUTTON4IMAGE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -954,8 +954,8 @@ BOOLEAN LoadButton1Image( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\button_1.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBUTTON1IMAGE));
@@ -968,7 +968,7 @@ void DeleteButton1Image( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON1IMAGE );
 
 	return;
@@ -980,12 +980,12 @@ void RenderButton1Image(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON1IMAGE);
+	// get the video object
+	GetVideoObject(&hHandle, guiBUTTON1IMAGE);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -995,8 +995,8 @@ BOOLEAN LoadPortraitFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\Voice_PortraitFrame.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiPORTRAITFRAME));
@@ -1009,7 +1009,7 @@ void DeletePortraitFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiPORTRAITFRAME );
 
 	return;
@@ -1021,12 +1021,12 @@ void RenderPortraitFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiPORTRAITFRAME);
+	// get the video object
+	GetVideoObject(&hHandle, guiPORTRAITFRAME);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1037,8 +1037,8 @@ BOOLEAN LoadMainIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\mainprofilepageindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMAININDENT));
@@ -1051,7 +1051,7 @@ void DeleteMainIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiMAININDENT );
 
 	return;
@@ -1063,12 +1063,12 @@ void RenderMainIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiMAININDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiMAININDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1078,8 +1078,8 @@ BOOLEAN LoadQtnLongIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\longindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiLONGINDENT));
@@ -1092,7 +1092,7 @@ void DeleteQtnLongIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGINDENT );
 
 	return;
@@ -1104,12 +1104,12 @@ void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiLONGINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiLONGINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1118,8 +1118,8 @@ BOOLEAN LoadQtnShortIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\shortindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSHORTINDENT));
@@ -1132,7 +1132,7 @@ void DeleteQtnShortIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTINDENT );
 
 	return;
@@ -1144,12 +1144,12 @@ void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORTINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiSHORTINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1158,8 +1158,8 @@ BOOLEAN LoadQtnLongIndentHighFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\longindenthigh.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiLONGHINDENT));
@@ -1172,7 +1172,7 @@ void DeleteQtnLongIndentHighFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGHINDENT );
 
 	return;
@@ -1184,12 +1184,12 @@ void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiLONGHINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiLONGHINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1198,8 +1198,8 @@ BOOLEAN LoadQtnShortIndentHighFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\shortindenthigh.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSHORTHINDENT));
@@ -1212,7 +1212,7 @@ void DeleteQtnShortIndentHighFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTHINDENT );
 
 	return;
@@ -1224,12 +1224,12 @@ void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORTHINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiSHORTHINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1239,8 +1239,8 @@ BOOLEAN LoadQtnIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\questionindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiQINDENT));
@@ -1253,7 +1253,7 @@ void DeleteQtnIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiQINDENT );
 
 	return;
@@ -1265,12 +1265,12 @@ void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiQINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiQINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1280,8 +1280,8 @@ BOOLEAN LoadAttrib1IndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\attributescreenindent_1.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiA1INDENT));
@@ -1294,7 +1294,7 @@ void DeleteAttrib1IndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA1INDENT );
 
 	return;
@@ -1306,12 +1306,12 @@ void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiA1INDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiA1INDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1320,8 +1320,8 @@ BOOLEAN LoadAttrib2IndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\attributescreenindent_2.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiA2INDENT));
@@ -1334,7 +1334,7 @@ void DeleteAttrib2IndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA2INDENT );
 
 	return;
@@ -1346,12 +1346,12 @@ void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiA2INDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiA2INDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1360,8 +1360,8 @@ BOOLEAN LoadAvgMercIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\anaveragemercindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiAVGMERCINDENT));
@@ -1374,7 +1374,7 @@ void DeleteAvgMercIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiAVGMERCINDENT );
 
 	return;
@@ -1386,12 +1386,12 @@ void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiAVGMERCINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiAVGMERCINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1402,8 +1402,8 @@ BOOLEAN LoadAboutUsIndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\aboutusindent.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiABOUTUSINDENT));
@@ -1416,7 +1416,7 @@ void DeleteAboutUsIndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiABOUTUSINDENT );
 
 	return;
@@ -1428,12 +1428,12 @@ void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiABOUTUSINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiABOUTUSINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1443,8 +1443,8 @@ BOOLEAN LoadQtnShort2IndentFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\shortindent2.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSHORT2INDENT));
@@ -1457,7 +1457,7 @@ void DeleteQtnShort2IndentFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2INDENT );
 
 	return;
@@ -1469,12 +1469,12 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORT2INDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiSHORT2INDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 
@@ -1483,8 +1483,8 @@ BOOLEAN LoadQtnShort2IndentHighFrame( void )
 	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\shortindent2High.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSHORT2HINDENT));
@@ -1497,7 +1497,7 @@ void DeleteQtnShort2IndentHighFrame( void )
 {
 	PERFORMANCE_MARKER
 
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2HINDENT );
 
 	return;
@@ -1509,12 +1509,12 @@ void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
 
 	HVOBJECT hHandle;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORT2HINDENT);
+	// get the video object
+	GetVideoObject(&hHandle, guiSHORT2HINDENT);
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	
 	return;
 }
 

@@ -54,7 +54,7 @@
 #define TEXT_BOX_Y LAPTOP_SCREEN_UL_Y+188
 #define PAGE_BOX_X LAPTOP_SCREEN_UL_X+250 - 10
 #define PAGE_BOX_Y LAPTOP_SCREEN_UL_Y+3
-#define PAGE_BOX_WIDTH  58
+#define PAGE_BOX_WIDTH	58
 #define PAGE_BOX_HEIGHT 24
 #define MAX_SLOTS 4
 #define PERS_CURR_TEAM_X LAPTOP_SCREEN_UL_X + 39 - 15
@@ -62,7 +62,7 @@
 #define PERS_DEPART_TEAM_Y LAPTOP_SCREEN_UL_Y + 247
 
 #define BUTTON_Y LAPTOP_SCREEN_UL_Y+34
-#define LEFT_BUTTON_X  LAPTOP_SCREEN_UL_X+3 - 10
+#define LEFT_BUTTON_X	LAPTOP_SCREEN_UL_X+3 - 10
 #define RIGHT_BUTTON_X LAPTOP_SCREEN_UL_X+476 - 10
 #define PERS_COUNT 15
 #define MAX_STATS 20
@@ -80,9 +80,9 @@
 #define	FACES_DIR "FACES\\BIGFACES\\"
 #define	SMALL_FACES_DIR "FACES\\"
 
-#define NEXT_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 448 
+#define NEXT_MERC_FACE_X	LAPTOP_SCREEN_UL_X + 448 
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150 
-#define PREV_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 285 
+#define PREV_MERC_FACE_X	LAPTOP_SCREEN_UL_X + 285 
  
 #define DEPARTED_X LAPTOP_SCREEN_UL_X + 29 - 10
 #define DEPARTED_Y LAPTOP_SCREEN_UL_Y + 207
@@ -126,8 +126,8 @@
 #define PERS_TOGGLE_CUR_Y LAPTOP_SCREEN_UL_Y + 208
 #define PERS_TOGGLE_DEPART_Y LAPTOP_SCREEN_UL_Y + 238
 
-#define PERS_DEPARTED_UP_X  LAPTOP_SCREEN_UL_X + 265 - 10
-#define PERS_DEPARTED_UP_Y  LAPTOP_SCREEN_UL_Y + 210
+#define PERS_DEPARTED_UP_X	LAPTOP_SCREEN_UL_X + 265 - 10
+#define PERS_DEPARTED_UP_Y	LAPTOP_SCREEN_UL_Y + 210
 #define PERS_DEPARTED_DOWN_Y LAPTOP_SCREEN_UL_Y + 237
 
 #define PERS_TITLE_X									iScreenWidthOffset + 140
@@ -158,7 +158,7 @@ enum{
 #define ATM_DISPLAY_X									iScreenWidthOffset + 509
 #define ATM_DISPLAY_Y									iScreenHeightOffset + 58
 #define ATM_DISPLAY_HEIGHT 10
-#define ATM_DISPLAY_WIDTH  81
+#define ATM_DISPLAY_WIDTH	81
 
 
 // the number of inventory items per personnel page
@@ -283,7 +283,7 @@ POINT pPersonnelScreenPoints[]=
 	{422+PrsnlOffSetX, 445+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 380+PrsnlOffSetY}, // for contract price
 	{422+PrsnlOffSetX, 435+PrsnlOffSetY},
-	{140,33},  // Personnel Header
+	{140,33},	// Personnel Header
 	{422+PrsnlOffSetX, 330+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 340+PrsnlOffSetY},	//20
 	{422+PrsnlOffSetX, 355+PrsnlOffSetY},
@@ -445,7 +445,7 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot );
 
 
 
-// AIM merc:  Returns the amount of time left on mercs contract
+// AIM merc:	Returns the amount of time left on mercs contract
 // MERC merc: Returns the amount of time the merc has worked
 // IMP merc:	Returns the amount of time the merc has worked
 // else:			returns -1
@@ -593,7 +593,7 @@ void EnterPersonnel( void )
 	InitVariables();
 	
 	fReDrawScreenFlag=TRUE;
-  iStartPersonId=-1;
+	iStartPersonId=-1;
 
 	iCurrentPersonSelectedId = -1;
 	
@@ -604,7 +604,7 @@ void EnterPersonnel( void )
 
 	// load graphics for screen
 	LoadPersonnelGraphics( );
-  
+	
 	// show atm panel
 	fShowAtmPanelStartButton = TRUE;
 
@@ -621,7 +621,7 @@ void EnterPersonnel( void )
 	// how many people do we have?..if you have someone set default to 0
 	if( GetNumberOfMercsDeadOrAliveOnPlayersTeam() > 0 )
 	{
-	  iCurrentPersonSelectedId = GetIdOfFirstDisplayedMerc( );
+	iCurrentPersonSelectedId = GetIdOfFirstDisplayedMerc( );
 	}
 
 	fCreatePersonnelPortraitMouseRegions = TRUE;
@@ -640,7 +640,7 @@ void EnterPersonnel( void )
 	// set states of en- dis able buttons
 	SetPersonnelButtonStates( );
 	
-  return;
+	return;
 }
 
 void ExitPersonnel( void )
@@ -668,14 +668,14 @@ void ExitPersonnel( void )
 	CreateDestroyPersonnelInventoryScrollButtons( );
 
 	// get rid of graphics
-  RemovePersonnelGraphics( );
+	RemovePersonnelGraphics( );
 
-	 DeletePersonnelScreenBackgroundGraphics(  );
+	DeletePersonnelScreenBackgroundGraphics(	);
 
 	CreateDestroyButtonsForPersonnelDepartures( );
 
 	// delete buttons
-  DeletePersonnelButtons( );
+	DeletePersonnelButtons( );
 
 	fCreatePersonnelPortraitMouseRegions = FALSE;
 
@@ -694,7 +694,7 @@ void ExitPersonnel( void )
 void HandlePersonnel( void )
 {
 	PERFORMANCE_MARKER
-   //RenderButtonsFastHelp( );
+	//RenderButtonsFastHelp( );
 	CreateDestroyButtonsForPersonnelDepartures( );
 
 	// create / destroy buttons for scrolling departed list
@@ -714,24 +714,24 @@ void HandlePersonnel( void )
 	// handle timed modes for ATM
 	HandleTimedAtmModes( );
 
-	 return;
+	return;
 }
 
 BOOLEAN LoadPersonnelGraphics( void )
 {
 	PERFORMANCE_MARKER
 	// load graphics needed for personnel screen
-  VOBJECT_DESC    VObjectDesc;
-  
+	VOBJECT_DESC	VObjectDesc;
+	
 	// load graphics
 
-  // title bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	// title bar
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLE));
 
 	// the background grpahics
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\personnelwindow.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSCREEN));
 
@@ -758,20 +758,20 @@ void RemovePersonnelGraphics( void )
 void RenderPersonnel( void )
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hHandle;
-  INT32 iCounter=0;
-  // re-renders personnel screen
+	HVOBJECT hHandle;
+	INT32 iCounter=0;
+	// re-renders personnel screen
 	// render main background	
 	
-  // blit title
-  GetVideoObject(&hHandle, guiTITLE);
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2, VO_BLT_SRCTRANSPARENCY,NULL );
-  
+	// blit title
+	GetVideoObject(&hHandle, guiTITLE);
+	BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2, VO_BLT_SRCTRANSPARENCY,NULL );
+	
 	// blit screen
 	GetVideoObject(&hHandle, guiSCREEN);
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22, VO_BLT_SRCTRANSPARENCY,NULL );
+	BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22, VO_BLT_SRCTRANSPARENCY,NULL );
 
-  // render pictures of mercs on scnree
+	// render pictures of mercs on scnree
  	//RenderPersonnelPictures( );
 
 	// display header for screen
@@ -828,7 +828,7 @@ void RenderPersonnel( void )
 
 
 	// title bar
-	BlitTitleBarIcons(  );
+	BlitTitleBarIcons(	);
 
 	// show text on titlebar
 	DisplayPersonnelTextOnTitleBar( );
@@ -867,59 +867,59 @@ BOOLEAN RenderPersonnelPictures( void )
 
 	if(iStartPersonId==-1)
 	{
-   cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-   for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
-	 {	
-		 if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bActive )
-		 {
-			 fFound = TRUE;
-			 iStartPersonId=cnt;
-			 break;
-		 }
-	 }
-   if(!fFound)
+	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
+	{	
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bActive )
+		{
+			fFound = TRUE;
+			iStartPersonId=cnt;
+			break;
+		}
+	}
+	if(!fFound)
 		return (FALSE);
 	}
 	else
 	{
-   iCurrentId=iStartPersonId;
-	 fFound=TRUE;
-	 cnt=iCurrentId;
+	iCurrentId=iStartPersonId;
+	fFound=TRUE;
+	cnt=iCurrentId;
 	}
 
 
 
 	while(fFound)
 	{
-	  // the soldier's ID is found
-	  // render Face
-	  fFound=FALSE;
+	// the soldier's ID is found
+	// render Face
+	fFound=FALSE;
 		RenderPersonnelFace(iCurrentId, iSlot, FALSE, FALSE, FALSE );
 		// draw stats
-    RenderPersonnelStats(iCurrentId, iSlot);
+	RenderPersonnelStats(iCurrentId, iSlot);
 		DisplayCharName( iCurrentId, iSlot);
 		//find next guy
 		pSoldier=MercPtrs[iCurrentId];
 		cnt++;		
-    for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 		{	
-		  if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
+		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 			{
 				if( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					return( FALSE );
 				}
 
-			  fFound = TRUE;
+			fFound = TRUE;
 				iSlot++;
-			  break;
+			break;
 			}
 		}
 		if(iSlot>=MAX_SLOTS)
 			fFound=FALSE;
-    iCurrentId=cnt;
+	iCurrentId=cnt;
 	}
-  
+	
 	return(TRUE);
 }
 
@@ -943,7 +943,7 @@ void RenderPersonnelStats( INT32 iId, INT32 iSlot )
 	}
 	else if( gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN )
 	{
-		DisplayEmploymentinformation( iId, iSlot );		  
+		DisplayEmploymentinformation( iId, iSlot );		
 	}
 } 
 
@@ -952,7 +952,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	PERFORMANCE_MARKER
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	INT32 iCounter = 7;
 
 	// draw face to soldier iId in slot iSlot
@@ -963,7 +963,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	
 		if( ( 50 < 	MercPtrs[iId]->ubProfile )&&( 57 > 	MercPtrs[iId]->ubProfile ) )
 		{
-			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ MercPtrs[iId]->ubProfile  ].ubFaceIndex );	
+			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ MercPtrs[iId]->ubProfile	].ubFaceIndex );	
 		}
 		else
 		{
@@ -980,11 +980,11 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 		if( ( 50 < 	iId )&&( 57 > 	iId ) )
 		{
-			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ iId  ].ubFaceIndex );	
+			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ iId	].ubFaceIndex );	
 		}
 		else
 		{
-			sprintf(sTemp, "%s%02d.sti", FACES_DIR,	 iId );
+			sprintf(sTemp, "%s%02d.sti", FACES_DIR,	iId );
 		}
 	}
 
@@ -1025,27 +1025,27 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	}
 	
 
-  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,IMAGE_BOX_X+(iSlot*IMAGE_BOX_WIDTH), IMAGE_BOX_Y, VO_BLT_SRCTRANSPARENCY,NULL);
-  
+	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,IMAGE_BOX_X+(iSlot*IMAGE_BOX_WIDTH), IMAGE_BOX_Y, VO_BLT_SRCTRANSPARENCY,NULL);
+	
 
 	//if the merc is dead, display it
 	if( !fCurrentTeamMode )
 	{
 		INT32 iHeightOfText;
 
-		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[ iId  ].zName, 0, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT );
+		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[ iId	].zName, 0, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT );
 
 		//if the string will rap
 		if( ( iHeightOfText - 2 ) > GetFontHeight( PERS_FONT ) )
 		{
 			//raise where we display it, and rap it
-			DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight( PERS_FONT )), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[ iId  ].zName, 0, FALSE, CENTER_JUSTIFIED);
+			DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight( PERS_FONT )), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[ iId	].zName, 0, FALSE, CENTER_JUSTIFIED);
 		}
 		else
 		{
-			DrawTextToScreen( gMercProfiles[ iId  ].zName, IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, FALSE, CENTER_JUSTIFIED );
+			DrawTextToScreen( gMercProfiles[ iId	].zName, IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y+IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, FALSE, CENTER_JUSTIFIED );
 		}
-//		DrawTextToScreen(gMercProfiles[ iId  ].zName, ( INT16 ) ( IMAGE_BOX_X+(iSlot*IMAGE_BOX_WIDTH) ), ( INT16 ) ( IMAGE_BOX_Y + 107 ), IMAGE_BOX_WITH_NO_BORDERS, PERS_FONT, PERS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+//		DrawTextToScreen(gMercProfiles[ iId	].zName, ( INT16 ) ( IMAGE_BOX_X+(iSlot*IMAGE_BOX_WIDTH) ), ( INT16 ) ( IMAGE_BOX_Y + 107 ), IMAGE_BOX_WITH_NO_BORDERS, PERS_FONT, PERS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 	}
 
 /*
@@ -1118,7 +1118,7 @@ BOOLEAN NextPersonnelFace( void )
 			iCurPortraitId = 0;
 
 		}
-		else if(  iCurPortraitId == 19 ) 
+		else if(	iCurPortraitId == 19 ) 
 		{
 			giCurrentUpperLeftPortraitNumber += 20;
 			iCurPortraitId = 0;
@@ -1129,7 +1129,7 @@ BOOLEAN NextPersonnelFace( void )
 		}
 		// get of this merc in this slot
 
-		iCurrentPersonSelectedId =  iCurPortraitId;
+		iCurrentPersonSelectedId =	iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
 
@@ -1145,10 +1145,10 @@ BOOLEAN PrevPersonnelFace( void )
 		return ( TRUE );
 	}
 
-  if( fCurrentTeamMode == TRUE )
+	if( fCurrentTeamMode == TRUE )
 	{
 		// wrap around?
-		if( iCurrentPersonSelectedId == 0  )
+		if( iCurrentPersonSelectedId == 0	)
 		{
 			iCurrentPersonSelectedId = GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) - 1;
 
@@ -1164,7 +1164,7 @@ BOOLEAN PrevPersonnelFace( void )
 	}
 	else
 	{
-		if  ( ( iCurPortraitId == 0 ) && ( giCurrentUpperLeftPortraitNumber == 0 ) )
+		if	( ( iCurPortraitId == 0 ) && ( giCurrentUpperLeftPortraitNumber == 0 ) )
 		{
 			// about to go off the end
 			giCurrentUpperLeftPortraitNumber = ( GetNumberOfDeadOnPastTeam( ) + GetNumberOfLeftOnPastTeam( ) + GetNumberOfOtherOnPastTeam( ) ) - ( GetNumberOfDeadOnPastTeam( ) + GetNumberOfLeftOnPastTeam( ) + GetNumberOfOtherOnPastTeam( ) ) % 20;
@@ -1172,7 +1172,7 @@ BOOLEAN PrevPersonnelFace( void )
 			iCurPortraitId--;
 
 		}
-		else if(  iCurPortraitId == 0 ) 
+		else if(	iCurPortraitId == 0 ) 
 		{
 			giCurrentUpperLeftPortraitNumber -= 20;
 			iCurPortraitId = 19;
@@ -1183,7 +1183,7 @@ BOOLEAN PrevPersonnelFace( void )
 		}
 		// get of this merc in this slot
 
-		iCurrentPersonSelectedId =  iCurPortraitId;
+		iCurrentPersonSelectedId =	iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
 
@@ -1196,13 +1196,13 @@ void CreatePersonnelButtons( void )
 	PERFORMANCE_MARKER
 
 	// left button
-	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,0,-1,1,-1 );
+	giPersonnelButtonImage[0]=	LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,0,-1,1,-1 );
 	giPersonnelButton[0] = QuickCreateButton( giPersonnelButtonImage[0], PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftButtonCallBack);
 	
 	// right button
-	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,2,-1,3,-1 );
+	giPersonnelButtonImage[1]=	LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,2,-1,3,-1 );
 	giPersonnelButton[1] = QuickCreateButton( giPersonnelButtonImage[1], NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightButtonCallBack);
@@ -1211,29 +1211,29 @@ void CreatePersonnelButtons( void )
 	
 	/*
 	// left button
-	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
+	giPersonnelButtonImage[0]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
 	giPersonnelButton[0] = QuickCreateButton( giPersonnelButtonImage[0], LEFT_BUTTON_X, BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftButtonCallBack);
 	
 	// right button
-	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
+	giPersonnelButtonImage[1]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
 	giPersonnelButton[1] = QuickCreateButton( giPersonnelButtonImage[1], RIGHT_BUTTON_X, BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightButtonCallBack);
 	
 	// left FF button
-	giPersonnelButtonImage[2]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,3,-1,4,-1 );
+	giPersonnelButtonImage[2]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,3,-1,4,-1 );
 	giPersonnelButton[2] = QuickCreateButton( giPersonnelButtonImage[2], LEFT_BUTTON_X, BUTTON_Y + 22,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftFFButtonCallBack);
-  
+	
 	// right ff button
-	giPersonnelButtonImage[3]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,9,-1,10,-1 );
+	giPersonnelButtonImage[3]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,9,-1,10,-1 );
 	giPersonnelButton[3] = QuickCreateButton( giPersonnelButtonImage[3], RIGHT_BUTTON_X, BUTTON_Y + 22,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightFFButtonCallBack);
-  */
+	*/
 	// set up cursors
 	SetButtonCursor(giPersonnelButton[0], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giPersonnelButton[1], CURSOR_LAPTOP_SCREEN);
@@ -1248,7 +1248,7 @@ void DeletePersonnelButtons( void )
 {
 	PERFORMANCE_MARKER
 
-  RemoveButton(giPersonnelButton[0] );
+	RemoveButton(giPersonnelButton[0] );
 	UnloadButtonImage(giPersonnelButtonImage[0] );
 	RemoveButton(giPersonnelButton[1] );
 	UnloadButtonImage( giPersonnelButtonImage[1] );
@@ -1273,18 +1273,18 @@ void LeftButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if(btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-		 PrevPersonnelFace( );
-		 uiCurrentInventoryIndex = 0;
-		 guiSliderPosition = 0;
-		 
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fReDrawScreenFlag=TRUE;
+		PrevPersonnelFace( );
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
+		
 		}
 	}
 }
@@ -1301,21 +1301,21 @@ void LeftFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if(btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-		 PrevPersonnelFace( );
-     PrevPersonnelFace( );
-     PrevPersonnelFace( );
-		 PrevPersonnelFace( );
-		 
-		 // set states
-		 SetPersonnelButtonStates( );
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fReDrawScreenFlag=TRUE;
+		PrevPersonnelFace( );
+	 PrevPersonnelFace( );
+	 PrevPersonnelFace( );
+		PrevPersonnelFace( );
+		
+		// set states
+		SetPersonnelButtonStates( );
 		}
 	}
 }
@@ -1330,20 +1330,20 @@ void RightButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 	{
 		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
 		{ 
-     fReDrawScreenFlag=TRUE;
+	 fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if(btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-     NextPersonnelFace( );
-		 uiCurrentInventoryIndex = 0;
-		 guiSliderPosition = 0;
-		 
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fReDrawScreenFlag=TRUE;
+	 NextPersonnelFace( );
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
+		
 
 		}
 	}
@@ -1359,23 +1359,23 @@ void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 	{
 		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
 		{ 
-     fReDrawScreenFlag=TRUE;
+	 fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if(btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-     NextPersonnelFace( );
-     NextPersonnelFace( );
-     NextPersonnelFace( );
-     NextPersonnelFace( );
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		fReDrawScreenFlag=TRUE;
+	 NextPersonnelFace( );
+	 NextPersonnelFace( );
+	 NextPersonnelFace( );
+	 NextPersonnelFace( );
 
-		 // set states
-		 SetPersonnelButtonStates( ); 
+		// set states
+		SetPersonnelButtonStates( ); 
 		}
 	}
 }
@@ -1383,7 +1383,7 @@ void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 void DisplayHeader( void )
 {
 	PERFORMANCE_MARKER
-  SetFont(PERS_HEADER_FONT);
+	SetFont(PERS_HEADER_FONT);
 	SetFontForeground(PERS_FONT_COLOR);
 	SetFontBackground( 0 );
 
@@ -1396,19 +1396,19 @@ void DisplayHeader( void )
 void DisplayCharName( INT32 iId, INT32 iSlot )
 {
 	PERFORMANCE_MARKER
-  // get merc's nickName, assignment, and sector location info
+	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
-  SOLDIERTYPE *pSoldier;
+	SOLDIERTYPE *pSoldier;
 	CHAR16 sString[ 64 ];
 	CHAR16 sTownName[ 256 ];
-	INT8 bTownId =  -1;
+	INT8 bTownId =	-1;
 	INT32	iHeightOfText;
 
 	sTownName[0] = L'\0';
 
 	pSoldier=MercPtrs[iId];
 
-  SetFont(CHAR_NAME_FONT);
+	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 	
@@ -1424,7 +1424,7 @@ void DisplayCharName( INT32 iId, INT32 iSlot )
 	{
 	}
 	else
-  {
+	{
 		// name of town, if any
 		bTownId = GetTownIdForSector( Menptr[iId].sSectorX, Menptr[iId].sSectorY );
 
@@ -1499,14 +1499,14 @@ Moved so the name of the town will be in the same line as the name
 	if( Menptr[iId].bAssignment == ASSIGNMENT_POW )
 	{
 //		FindFontCenterCoordinates(IMAGE_BOX_X-5,0,IMAGE_BOX_WIDTH, 0,pPOWStrings[ 1 ],CHAR_NAME_FONT, &sX, &sY );
-//	  mprintf(sX+iSlot*IMAGE_BOX_WIDTH, CHAR_NAME_Y+20,pPOWStrings[ 1 ] );
+//	mprintf(sX+iSlot*IMAGE_BOX_WIDTH, CHAR_NAME_Y+20,pPOWStrings[ 1 ] );
 	}
 	else if( Menptr[iId].bAssignment == IN_TRANSIT )
 	{
 		return;
 	}
 	else
-  {
+	{
 		// name of town, if any
 		bTownId = GetTownIdForSector( Menptr[iId].sSectorX, Menptr[iId].sSectorY );
 
@@ -1517,7 +1517,7 @@ Moved so the name of the town will be in the same line as the name
 		}
 	}
 */
-  
+	
 	return;
 }
 
@@ -1544,294 +1544,294 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 	{
 		switch(iCounter)
 		{
-		 case 0:
-			 // health
-			 if( Menptr[iId].bAssignment != ASSIGNMENT_POW )
-			 {
+		case 0:
+			// health
+			if( Menptr[iId].bAssignment != ASSIGNMENT_POW )
+			{
 				if( gMercProfiles[Menptr[iId].ubProfile].bLifeDelta > 0 )
 				{
 					swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bLifeDelta);
-				  FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 	  mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			
+				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+				mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			
 				}
 
-			 //else
-			 //{
-				 swprintf(sString, L"%d/%d",Menptr[iId].stats.bLife,Menptr[iId].stats.bLifeMax);
-			 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, pPOWStrings[ 1 ] );
-			 }
+			//else
+			//{
+				swprintf(sString, L"%d/%d",Menptr[iId].stats.bLife,Menptr[iId].stats.bLifeMax);
+			//}
+			}
+			else
+			{
+				swprintf( sString, pPOWStrings[ 1 ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);		  
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-			 break;
-		 case 1:
-			 // agility
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta > 0 )
-				 {
-					 swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta);
-					 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-					 swprintf(sString, L"%d",Menptr[iId].stats.bAgility);
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
-
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		 
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-			 break;
-		 case 2:
-		  // dexterity
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta > 0 )
-				 {
-						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bDexterity);
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
-
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
 			break;
-		 case 3:
-		 // strength
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bStrengthDelta > 0 )
-				 {
+		case 1:
+			// agility
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta > 0 )
+				{
+					swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta);
+					FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+					mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+					swprintf(sString, L"%d",Menptr[iId].stats.bAgility);
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
+
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+			break;
+		case 2:
+		// dexterity
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta > 0 )
+				{
+						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta);
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bDexterity);
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
+
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+			break;
+		case 3:
+		// strength
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bStrengthDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bStrengthDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bStrength );
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bStrength );
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 4:
-		  // leadership
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bLeadershipDelta > 0 )
-				 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 4:
+		// leadership
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bLeadershipDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bLeadershipDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bLeadership );
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bLeadership );
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 5:
-		  // wisdom
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bWisdomDelta > 0 )
-				 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 5:
+		// wisdom
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bWisdomDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bWisdomDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 
-				 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bWisdom );
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			
+				}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bWisdom );
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 6:
-		  // exper
-			 if( !fAmIaRobot )
-			 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 6:
+		// exper
+			if( !fAmIaRobot )
+			{
 
-				 if( gMercProfiles[Menptr[iId].ubProfile].bExpLevelDelta > 0 )
-				 {
+				if( gMercProfiles[Menptr[iId].ubProfile].bExpLevelDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bExpLevelDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
-				 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bExpLevel );
-				 //}
-			 }				
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
+				}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bExpLevel );
+				//}
+			}				
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 7:
-			 //mrkmanship
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bMarksmanshipDelta > 0 )
-				 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 7:
+			//mrkmanship
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bMarksmanshipDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMarksmanshipDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bMarksmanship);
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bMarksmanship);
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-     case 8:
-		  // mech
-			 if( !fAmIaRobot )
-			 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+	 case 8:
+		// mech
+			if( !fAmIaRobot )
+			{
 
-				 if( gMercProfiles[Menptr[iId].ubProfile].bMechanicDelta > 0 )
-				 {
+				if( gMercProfiles[Menptr[iId].ubProfile].bMechanicDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMechanicDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-					 swprintf(sString, L"%d",Menptr[iId].stats.bMechanical);
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+					swprintf(sString, L"%d",Menptr[iId].stats.bMechanical);
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-     case 9:
-		  // exp
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bExplosivesDelta > 0 )
-				 {
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+	 case 9:
+		// exp
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bExplosivesDelta > 0 )
+				{
 						swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bExplosivesDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bExplosive);
-				 //}
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,	&sX, &sY);
+						mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bExplosive);
+				//}
 
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 10:
-       // med
-			 if( !fAmIaRobot )
-			 {
-				 if( gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta > 0 )
-				 {
-					 swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta);
-					 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
-			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
-				 //else
-				 //{
-				 		swprintf(sString, L"%d",Menptr[iId].stats.bMedical);
-				 //}
-			 }
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 10:
+		// med
+			if( !fAmIaRobot )
+			{
+				if( gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta > 0 )
+				{
+					swprintf(sString, L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta);
+					FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,	&sX, &sY);
+					mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			}
+				//else
+				//{
+						swprintf(sString, L"%d",Menptr[iId].stats.bMedical);
+				//}
+			}
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 
 
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);			
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);	
-		 break;
+			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);			
+			FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);	
+		break;
 
-		 case 14:
-		 // kills
-      mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);		 
+		case 14:
+		// kills
+		mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);		
 			swprintf(sString, L"%d",gMercProfiles[Menptr[iId].ubProfile].usKills);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[21].y,sString);
-		 break;
-		 case 15:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[21].y,sString);
+		break;
+		case 15:
 			// assists
-			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);		
 			swprintf(sString, L"%d",gMercProfiles[Menptr[iId].ubProfile].usAssists);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[22].y,sString);
-		 break;
-		  case 16:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[22].y,sString);
+		break;
+		case 16:
 			// shots/hits
-			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);		
 			uiHits = ( UINT32 )gMercProfiles[Menptr[iId].ubProfile].usShotsHit;
 			uiHits *= 100;
 			
 			// check we have shot at least once
 			if( gMercProfiles[Menptr[iId].ubProfile].usShotsFired > 0 )
 			{
-			  uiHits /= ( UINT32 )gMercProfiles[Menptr[iId].ubProfile].usShotsFired;
+			uiHits /= ( UINT32 )gMercProfiles[Menptr[iId].ubProfile].usShotsFired;
 			}
 			else
 			{
@@ -1841,24 +1841,24 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 
 			swprintf(sString, L"%d %%%%",uiHits);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      sX += StringPixLength( L"%",  PERS_FONT );
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		sX += StringPixLength( L"%",	PERS_FONT );
 			mprintf(sX,pPersonnelScreenPoints[23].y,sString);
-		 break;
-		  case 17:
+		break;
+		case 17:
 			// battles
-			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);		
 			swprintf(sString, L"%d",gMercProfiles[Menptr[iId].ubProfile].usBattlesFought);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[24].y,sString);
-		 break;
-		 case 18:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[24].y,sString);
+		break;
+		case 18:
 			// wounds
-			mprintf((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[25].y,pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[25].y,pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);		
 			swprintf(sString, L"%d",gMercProfiles[Menptr[iId].ubProfile].usTimesWounded);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[25].y,sString);
-		 break;
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[25].y,sString);
+		break;
 
 			// The Mercs Skills
 			case 19:
@@ -1871,9 +1871,9 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 				mprintf( (INT16)( pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[bScreenLocIndex].y,pPersonnelScreenStrings[ PRSNL_TXT_SKILLS ] );
 
 				//KM: April 16, 1999
-				//Added support for the German version, which has potential string overrun problems.  For example, the text "Skills:" can
-				//overlap "NightOps (Expert)" because the German strings are much longer.  In these cases, I ensure that the right 
-				//justification of the traits don't overlap.  If it would, I move it over to the right.
+				//Added support for the German version, which has potential string overrun problems.	For example, the text "Skills:" can
+				//overlap "NightOps (Expert)" because the German strings are much longer.	In these cases, I ensure that the right 
+				//justification of the traits don't overlap.	If it would, I move it over to the right.
 				iWidth = StringPixLength( pPersonnelScreenStrings[ PRSNL_TXT_SKILLS ], PERS_FONT );
 				iMinimumX = iWidth + pPersonnelScreenPoints[bScreenLocIndex].x + iSlot * TEXT_BOX_WIDTH + 2;
 
@@ -1887,13 +1887,13 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 					{
 						swprintf( sString, L"%s %s", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS] );
 
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 
 						//KM: April 16, 1999
 						//Perform the potential overrun check
 						if( sX <= iMinimumX )
 						{
-							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
+							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,	&sX, &sY);
 							sX = (INT16)max( sX, iMinimumX );
 						}
 						
@@ -1906,7 +1906,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							swprintf( sString, L"%s", gzMercSkillText[bSkill1] );
 
-							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
@@ -1922,7 +1922,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							swprintf( sString, L"%s", gzMercSkillText[bSkill2] );
 
-							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
@@ -1938,21 +1938,21 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							swprintf( sString, L"%s", pPersonnelScreenStrings[ PRSNL_TXT_NOSKILLS ] );
 
-							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 							mprintf(sX,pPersonnelScreenPoints[bScreenLocIndex].y,sString);
 						}
 					}
 				}
-			 else
-			 {
-				 swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-			 }
+			else
+			{
+				swprintf( sString, L"%s", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+			}
 			}
 			break;
 /*
-		 case 19:
-			 // total contract time served
-			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[18]);		 
+		case 19:
+			// total contract time served
+			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[18]);		
 			if( gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed > 0 )
 			{
 				swprintf(sString, L"%d %s",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed - 1, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
@@ -1961,9 +1961,9 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			{
 				swprintf(sString, L"%d %s",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 			}
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[24].y,sString);
-		 break;
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[24].y,sString);
+		break;
 */
 		}
 	}
@@ -1975,15 +1975,15 @@ INT32 GetLastMercId( void )
 {
 	PERFORMANCE_MARKER
 	// rolls through list of mercs and returns how many on team
-  SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	SOLDIERTYPE *pSoldier, *pTeamSoldier;
+	INT32 cnt=0;
 	INT32 iCounter=0;
 	pSoldier = MercPtrs[0];	
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 		{
-		 if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->stats.bLife > 0 ) )
-			 iCounter++;
+		if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->stats.bLife > 0 ) )
+			iCounter++;
 		}
 	return iCounter;
 }
@@ -1996,20 +1996,20 @@ void DrawPageNumber( void )
 	
 	CHAR16 sString[10];
 	INT16 sX, sY;
-  INT32 iPageNumber, iLastPage;
-  
+	INT32 iPageNumber, iLastPage;
+	
 	return;
 
 	// get last page number, and current page too
 	iLastPage=GetLastMercId()/MAX_SLOTS;
 	iPageNumber=iStartPersonId/MAX_SLOTS;
-  iPageNumber++;
+	iPageNumber++;
 	if(iLastPage==0)
-	 iLastPage++;
+	iLastPage++;
 
 	// get current and last pages
 	swprintf(sString, L"%d/%d", iPageNumber, iLastPage);
-  
+	
 	// set up font
 	SetFont(PERS_FONT);
 	SetFontForeground(FONT_BLACK);
@@ -2021,7 +2021,7 @@ void DrawPageNumber( void )
 	
 	// print page number
 	mprintf(sX, sY, sString);
-  
+	
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -2033,18 +2033,18 @@ void SetPersonnelButtonStates( void )
 {
 	PERFORMANCE_MARKER
 	// this function will look at what page we are viewing, enable and disable buttons as needed
-  
+	
 	if( ! PrevPersonnelFace( ) )
 	{
 		// first page, disable left buttons
-    
+	
 //		DisableButton( 	giPersonnelButton[ 2 ] );
 		DisableButton( 	giPersonnelButton[ 0 ] );
 	}
 	else
 	{
 		// enable buttons
-    NextPersonnelFace( );
+	NextPersonnelFace( );
 
 		// enable buttons
 //		EnableButton( giPersonnelButton[ 2 ] );
@@ -2053,14 +2053,14 @@ void SetPersonnelButtonStates( void )
 
 	if( ! NextPersonnelFace( ) )
 	{
-	 
+	
 //		DisableButton( 	giPersonnelButton[ 3 ] );
 		DisableButton( 	giPersonnelButton[ 1 ] );
 	}
 	else
 	{
-    // decrement page
-    PrevPersonnelFace( );
+	// decrement page
+	PrevPersonnelFace( );
 			// enable buttons
 //		EnableButton( giPersonnelButton[ 3 ] );
 		EnableButton( giPersonnelButton[ 1 ] );
@@ -2080,13 +2080,13 @@ void RenderPersonnelScreenBackground( void )
 	if( fCurrentTeamMode == TRUE )
 	{
 		// blit title
-    GetVideoObject(&hHandle, guiCURRENTTEAM);
-  
+	GetVideoObject(&hHandle, guiCURRENTTEAM);
+	
 	}
 	else
 	{
 			// blit title
-    GetVideoObject(&hHandle, guiDEPARTEDTEAM);
+	GetVideoObject(&hHandle, guiDEPARTEDTEAM);
 	}
 
 	BltVideoObject( FRAME_BUFFER, hHandle, 0,DEPARTED_X, DEPARTED_Y, VO_BLT_SRCTRANSPARENCY,NULL );
@@ -2099,15 +2099,15 @@ BOOLEAN LoadPersonnelScreenBackgroundGraphics( void )
 {
 	PERFORMANCE_MARKER
 	// will load the graphics for the personeel screen background
-	VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	
 	// departed bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\departed.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiDEPARTEDTEAM));
 
 	// current bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\CurrentTeam.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiCURRENTTEAM));
 	
@@ -2158,7 +2158,7 @@ INT32 GetNumberOfMercsOnPlayersTeam( void )
 	
 	
  
-  // grab number on team
+	// grab number on team
 	pSoldier = MercPtrs[0];	
 	
 	// no soldiers
@@ -2184,7 +2184,7 @@ INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 	
 	
  
-  // grab number on team
+	// grab number on team
 	pSoldier = MercPtrs[0];	
 	
 	// no soldiers
@@ -2198,7 +2198,7 @@ INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 	return ( iCounter );
 }
 
-void  CreateDestroyMouseRegionsForPersonnelPortraits( void )
+void	CreateDestroyMouseRegionsForPersonnelPortraits( void )
 {
 	PERFORMANCE_MARKER
 	// creates/ destroys mouse regions for portraits
@@ -2211,8 +2211,8 @@ void  CreateDestroyMouseRegionsForPersonnelPortraits( void )
 		// create regions
 		for( sCounter = 0; sCounter < PERSONNEL_PORTRAIT_NUMBER; sCounter++ )
 		{
-			MSYS_DefineRegion(&gPortraitMouseRegions[ sCounter ], ( INT16 ) ( SMALL_PORTRAIT_START_X + ( sCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y +  ( sCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT ) , ( INT16 ) ( ( SMALL_PORTRAIT_START_X ) + ( ( sCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH )  +  SMALL_PORTRAIT_WIDTH ) , ( INT16 )( SMALL_PORTRAIT_START_Y + ( sCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT + SMALL_PORTRAIT_HEIGHT ),
-		    MSYS_PRIORITY_HIGHEST,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelPortraitCallback);
+			MSYS_DefineRegion(&gPortraitMouseRegions[ sCounter ], ( INT16 ) ( SMALL_PORTRAIT_START_X + ( sCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y +	( sCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT ) , ( INT16 ) ( ( SMALL_PORTRAIT_START_X ) + ( ( sCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH )	+	SMALL_PORTRAIT_WIDTH ) , ( INT16 )( SMALL_PORTRAIT_START_Y + ( sCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT + SMALL_PORTRAIT_HEIGHT ),
+		 MSYS_PRIORITY_HIGHEST,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelPortraitCallback);
 			MSYS_SetRegionUserData( &gPortraitMouseRegions[ sCounter ] ,0 , sCounter );
 			MSYS_AddRegion( &gPortraitMouseRegions[ sCounter ] );
 		}
@@ -2225,7 +2225,7 @@ void  CreateDestroyMouseRegionsForPersonnelPortraits( void )
 		// destroy regions
 		for( sCounter = 0; sCounter < PERSONNEL_PORTRAIT_NUMBER; sCounter++ )
 		{
-		  MSYS_RemoveRegion( &gPortraitMouseRegions[ sCounter ] );
+		MSYS_RemoveRegion( &gPortraitMouseRegions[ sCounter ] );
 		}
 
 		fCreated = FALSE;
@@ -2241,7 +2241,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 	INT32 iTotalOnTeam = 0;
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	SOLDIERTYPE *pSoldier;
 	INT32 iId = 0;
 	INT32 iCnt = 0;
@@ -2262,7 +2262,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 
 	// start id
 	iId= gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-  
+	
 	for( iCounter = 0; iCounter < iTotalOnTeam; iCnt++ )
 	{
 
@@ -2271,7 +2271,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 			// found the next actual guy
 			if( ( 50 < 	MercPtrs[iId + iCnt ] ->ubProfile )&&( 57 > 	MercPtrs[iId + iCnt ]->ubProfile ) )
 			{
-				sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ MercPtrs[ iId + iCnt ]->ubProfile  ].ubFaceIndex );	
+				sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ MercPtrs[ iId + iCnt ]->ubProfile	].ubFaceIndex );	
 			}
 			else
 			{
@@ -2286,7 +2286,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 			}
 	
 		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP(sTemp, VObjectDesc.ImageFile);
+	FilenameForBPP(sTemp, VObjectDesc.ImageFile);
 		CHECKF(AddVideoObject(&VObjectDesc, &guiFACE));
 
 		//Blt face to screen to 
@@ -2331,19 +2331,19 @@ void PersonnelPortraitCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 	// callback handler for the minize region that is attatched to the laptop program icon
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		// get id of portrait
 
 		if( fCurrentTeamMode == TRUE )
 		{
-		  // valid portrait, set up id
+		// valid portrait, set up id
 			if( iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) )
 			{
-			  // not a valid id, leave
-			  return;
+			// not a valid id, leave
+			return;
 			}
 
-		  iCurrentPersonSelectedId = iPortraitId;
+		iCurrentPersonSelectedId = iPortraitId;
 			fReDrawScreenFlag = TRUE;
 		}
 		else
@@ -2374,11 +2374,11 @@ void PersonnelPortraitCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		if( fCurrentTeamMode == TRUE )
 		{
-		  // valid portrait, set up id
+		// valid portrait, set up id
 			if( iPortraitId >= GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) )
 			{
-			  // not a valid id, leave
-			  return;
+			// not a valid id, leave
+			return;
 			}
 
 			//if the user is rigt clicking on the same face
@@ -2421,8 +2421,8 @@ void DisplayFaceOfDisplayedMerc( )
 		
 		if( fCurrentTeamMode == TRUE )
 		{
-			RenderPersonnelFace(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0, FALSE, FALSE, FALSE );
-			DisplayCharName(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
+			RenderPersonnelFace(	GetIdOfThisSlot( iCurrentPersonSelectedId ), 0, FALSE, FALSE, FALSE );
+			DisplayCharName(	GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
 
 //			if( fShowInventory == TRUE )
 			if( gubPersonnelInfoState == PRSNL_INV )
@@ -2430,13 +2430,13 @@ void DisplayFaceOfDisplayedMerc( )
 				return;
 			}
 
-	    RenderPersonnelStats(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
-		  
+	 RenderPersonnelStats(	GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
+		
 		}
 		else
 		{
-			RenderPersonnelFace(  GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, IsPastMercDead( iCurrentPersonSelectedId ), IsPastMercFired( iCurrentPersonSelectedId ), IsPastMercOther( iCurrentPersonSelectedId ) );
-			DisplayDepartedCharName(  GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId  ) ) );
+			RenderPersonnelFace(	GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, IsPastMercDead( iCurrentPersonSelectedId ), IsPastMercFired( iCurrentPersonSelectedId ), IsPastMercOther( iCurrentPersonSelectedId ) );
+			DisplayDepartedCharName(	GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId	) ) );
 
 //			if( fShowInventory == TRUE )
 			if( gubPersonnelInfoState == PRSNL_INV )
@@ -2444,7 +2444,7 @@ void DisplayFaceOfDisplayedMerc( )
 				return;
 			}
 
-			DisplayDepartedCharStats( GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId  ) ) );
+			DisplayDepartedCharStats( GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId	) ) );
 
 		}
 		
@@ -2498,7 +2498,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 	INT32 iTotalAmmo = 0;
 
 	GetVideoObject(&hHandle, guiPersonnelInventory);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( iScreenWidthOffset + 397 ), ( INT16 ) ( iScreenHeightOffset + 200 ), VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( iScreenWidthOffset + 397 ), ( INT16 ) ( iScreenHeightOffset + 200 ), VO_BLT_SRCTRANSPARENCY,NULL);
 
 	if( fCurrentTeamMode == FALSE )
 	{
@@ -2544,7 +2544,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				usHeight				= (UINT32)pTrav->usHeight;
 				usWidth					= (UINT32)pTrav->usWidth;
 
-				sCenX = PosX + ( abs( 57 - usWidth ) /  2 ) - pTrav->sOffsetX;
+				sCenX = PosX + ( abs( 57 - usWidth ) /	2 ) - pTrav->sOffsetX;
 				sCenY = PosY + ( abs( 22 - usHeight ) / 2 ) - pTrav->sOffsetY;
 
 				// shadow
@@ -2607,7 +2607,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				
 				if ( Item[pSoldier->inv[ ubCounter ].usItem ].usItemClass & IC_GUN )
 				{
-					swprintf( sString, L"%s", AmmoCaliber[ Weapon[ Item[  pSoldier->inv[ ubCounter ].usItem ].ubClassIndex ].ubCalibre ]);
+					swprintf( sString, L"%s", AmmoCaliber[ Weapon[ Item[	pSoldier->inv[ ubCounter ].usItem ].ubClassIndex ].ubCalibre ]);
 					
 					// shorten if needed
 					if( StringPixLength( sString, FONT10ARIAL) > ( 171 - 75 ) )
@@ -2624,7 +2624,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				// if more than 1?
 				if( pSoldier->inv[ ubCounter ].ubNumberOfObjects > 1 )
 				{
-					swprintf( sString, L"x%d",  pSoldier->inv[ ubCounter ].ubNumberOfObjects );
+					swprintf( sString, L"x%d",	pSoldier->inv[ ubCounter ].ubNumberOfObjects );
 					FindFontRightCoordinates( ( INT16 )( PosX ), ( INT16 ) ( PosY + 15 ), ( INT16 ) ( 58 ), 
 						( INT16 )( GetFontHeight( FONT10ARIAL ) ), sString, FONT10ARIAL, &sX, &sY );
 					mprintf( sX, sY, sString );
@@ -2662,7 +2662,7 @@ void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2724,7 +2724,7 @@ void InventoryDownButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2822,19 +2822,19 @@ void CreateDestroyPersonnelInventoryScrollButtons( void )
 	if( ( gubPersonnelInfoState == PRSNL_INV ) && ( fCreated == FALSE ) )
 	{
 		// create buttons
-		giPersonnelInventoryButtonsImages[ 0 ]=  LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,1,-1,2,-1 );
-	  giPersonnelInventoryButtons[ 0 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[0], iScreenWidthOffset + 176 + 397, iScreenHeightOffset + 2 + 200,		
-	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
+		giPersonnelInventoryButtonsImages[ 0 ]=	LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,1,-1,2,-1 );
+	giPersonnelInventoryButtons[ 0 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[0], iScreenWidthOffset + 176 + 397, iScreenHeightOffset + 2 + 200,		
+					 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)InventoryUpButtonCallback);
 
-		giPersonnelInventoryButtonsImages[ 1 ]=  LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,3,-1,4,-1 );
-	  giPersonnelInventoryButtons[ 1 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[1], iScreenWidthOffset + 397 + 176, iScreenHeightOffset + 200 + 223,		
-	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
+		giPersonnelInventoryButtonsImages[ 1 ]=	LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,3,-1,4,-1 );
+	giPersonnelInventoryButtons[ 1 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[1], iScreenWidthOffset + 397 + 176, iScreenHeightOffset + 200 + 223,		
+					 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)InventoryDownButtonCallback);
 
 			// set up cursors for these buttons
 		SetButtonCursor( giPersonnelInventoryButtons[ 0 ], CURSOR_LAPTOP_SCREEN);
-	  SetButtonCursor( giPersonnelInventoryButtons[ 1 ], CURSOR_LAPTOP_SCREEN);
+	SetButtonCursor( giPersonnelInventoryButtons[ 1 ], CURSOR_LAPTOP_SCREEN);
 
 		MSYS_DefineRegion( &gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION,
 			MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback );
@@ -2846,9 +2846,9 @@ void CreateDestroyPersonnelInventoryScrollButtons( void )
 	{
 		// destroy buttons
 		RemoveButton(giPersonnelInventoryButtons[0] );
-	  UnloadButtonImage(giPersonnelInventoryButtonsImages[0] );
-	  RemoveButton(giPersonnelInventoryButtons[1] );
-	  UnloadButtonImage(giPersonnelInventoryButtonsImages[1] );
+	UnloadButtonImage(giPersonnelInventoryButtonsImages[0] );
+	RemoveButton(giPersonnelInventoryButtons[1] );
+	UnloadButtonImage(giPersonnelInventoryButtonsImages[1] );
 
 		MSYS_RemoveRegion( &gMouseScrollPersonnelINV );
 
@@ -2933,7 +2933,7 @@ INT32 GetTotalDailyCostOfCurrentTeam( void )
 	INT32 iCostOfTeam = 0;
 
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 	// not active?..return cost of zero
@@ -2943,39 +2943,39 @@ INT32 GetTotalDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];	
 
-		 if( ( pSoldier->bActive) && ( pSoldier->stats.bLife > 0 ) )
-		 {
-			 
-			 // valid soldier, get cost
-			 if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 // daily rate
-				 if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-				 {
-					 // 2 week contract
-				   iCostOfTeam += gMercProfiles[pSoldier->ubProfile].uiBiWeeklySalary / 14;
-				 }
-				 else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
-				 {
-					 // 1 week contract
-				   iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
-				 }
-				 else
-				 {
+		if( ( pSoldier->bActive) && ( pSoldier->stats.bLife > 0 ) )
+		{
+			
+			// valid soldier, get cost
+			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				// daily rate
+				if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+				{
+					// 2 week contract
+				iCostOfTeam += gMercProfiles[pSoldier->ubProfile].uiBiWeeklySalary / 14;
+				}
+				else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
+				{
+					// 1 week contract
+				iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
+				}
+				else
+				{
 
-					 iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				 }
-			 }
-			 else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-			 {
-				 // MERC Merc
-				 iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].sSalary;
-			 }
-			 else
-			 {
+					iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].sSalary;
+				}
+			}
+			else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			{
+				// MERC Merc
+				iCostOfTeam += gMercProfiles[ pSoldier->ubProfile ].sSalary;
+			}
+			else
+			{
 					// no cost
-				 iCostOfTeam += 0;
-			 }
+				iCostOfTeam += 0;
+			}
 		}
 	}
 	return iCostOfTeam;
@@ -2993,7 +2993,7 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 //	INT32 iId =0;
 	INT32 iCost = 0;
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 	// not active?..return cost of zero
@@ -3005,43 +3005,43 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 
 		if( ( pSoldier->bActive ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
 		{
-			 // valid soldier, get cost
-			 if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 // daily rate
-				 if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-				 {
-					 // 2 week contract
-				   iCost = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary / 14;
-				 }
-				 else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
-				 {
-					 // 1 week contract
-				   iCost = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
-				 }
-				 else
-				 {
+			// valid soldier, get cost
+			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				// daily rate
+				if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+				{
+					// 2 week contract
+				iCost = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary / 14;
+				}
+				else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
+				{
+					// 1 week contract
+				iCost = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
+				}
+				else
+				{
 
-					 iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				 }
-			 }
-			 else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-			 {
-				 // MERC Merc
-				 iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-			 }
-			 else
-			 {
+					iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+				}
+			}
+			else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			{
+				// MERC Merc
+				iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+			}
+			else
+			{
 					// no cost
-				 iCost = 0;
-			 }
+				iCost = 0;
+			}
 
-			 if( iCost <= iLowest )
-			 {
-				 iLowest = iCost;
-			 }
-		 }
-		 
+			if( iCost <= iLowest )
+			{
+				iLowest = iCost;
+			}
+		}
+		
 		}
 
 	// if no mercs, send 0
@@ -3067,7 +3067,7 @@ INT32 GetHighestDailyCostOfCurrentTeam( void )
 //	INT32 iId =0;
 	INT32 iCost = 0;
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 	// not active?..return cost of zero
@@ -3077,47 +3077,47 @@ INT32 GetHighestDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];
 
-		 if( ( pSoldier->bActive) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
-		 {
-			 
-			 // valid soldier, get cost
-			 if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 // daily rate
-				 if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-				 {
-					 // 2 week contract
-				   iCost = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary / 14;
-				 }
-				 else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK  )
-				 {
-					 // 1 week contract
-				   iCost = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
-				 }
-				 else
-				 {
+		if( ( pSoldier->bActive) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
+		{
+			
+			// valid soldier, get cost
+			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				// daily rate
+				if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+				{
+					// 2 week contract
+				iCost = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary / 14;
+				}
+				else if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK	)
+				{
+					// 1 week contract
+				iCost = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 ;
+				}
+				else
+				{
 
-					 iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				 }
-			 }
-			 else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-			 {
-				 // MERC Merc
-				 iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-			 }
-			 else
-			 {
+					iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+				}
+			}
+			else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			{
+				// MERC Merc
+				iCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+			}
+			else
+			{
 					// no cost
-				 iCost = 0;
-			 }
+				iCost = 0;
+			}
 
-			 
-			 if( iCost >= iHighest )
-			 {
-				 iHighest = iCost;
-			 }
-		 }
-		 
+			
+			if( iCost >= iHighest )
+			{
+				iHighest = iCost;
+			}
+		}
+		
 		}
 	return iHighest;
 }
@@ -3141,35 +3141,35 @@ void DisplayCostOfCurrentTeam( void )
 	{
 
 		// daily cost
-		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[ 2 ] );
+		mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[ 2 ] );
 
-	  swprintf( sString, L"%d", GetTotalDailyCostOfCurrentTeam( ) );
+	swprintf( sString, L"%d", GetTotalDailyCostOfCurrentTeam( ) );
 		InsertCommasForDollarFigure( sString );
 		InsertDollarSignInToString( sString );
 
-		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
 
 		mprintf( sX ,PERS_CURR_TEAM_COST_Y, sString );
 
 		// highest cost
-		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[ 3 ] );
+		mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[ 3 ] );
 
-	  swprintf( sString, L"%d", GetHighestDailyCostOfCurrentTeam( ) );
+	swprintf( sString, L"%d", GetHighestDailyCostOfCurrentTeam( ) );
 		InsertCommasForDollarFigure( sString );
 		InsertDollarSignInToString( sString );
 
-		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
 
 		mprintf( sX ,PERS_CURR_TEAM_HIGHEST_Y, sString );
 
 		// the lowest cost
-		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[ 4 ] );
+		mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[ 4 ] );
 
-	  swprintf( sString, L"%d", GetLowestDailyCostOfCurrentTeam( ) );
+	swprintf( sString, L"%d", GetLowestDailyCostOfCurrentTeam( ) );
 		InsertCommasForDollarFigure( sString );
 		InsertDollarSignInToString( sString );
 
-		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
 
 		mprintf( sX ,PERS_CURR_TEAM_LOWEST_Y, sString );
 
@@ -3186,7 +3186,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	INT32 iId = -1;
 	INT32 iValue =0;
 	MERCPROFILESTRUCT *pTeamSoldier;
@@ -3225,7 +3225,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			if( bCurrentList == 0 )
 			{
 				bCurrentList = 1;
-			  bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
+			bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
 			}
 			else if( bCurrentList == 1 )
 			{
@@ -3267,8 +3267,8 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 				iValue = pTeamSoldier->bLife;
 			}
 			break;
-		  case 1:
-		  // agility
+		case 1:
+		// agility
 			if( pTeamSoldier->bAgility >= iValue )
 			{
 				iId = cnt;
@@ -3285,23 +3285,23 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			break;
 			case 3:
 			// strength
-      if(  pTeamSoldier->bStrength >= iValue )
+		if(	pTeamSoldier->bStrength >= iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bStrength;
-			}	 
+			}	
 			break;
 			case 4:
 			// leadership
-      if(  pTeamSoldier->bLeadership >= iValue )
+		if(	pTeamSoldier->bLeadership >= iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bLeadership;
-			}	 
+			}	
 			break;
 			case 5:
-		  // wisdom
-			if(  pTeamSoldier->bWisdom >= iValue )
+		// wisdom
+			if(	pTeamSoldier->bWisdom >= iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bWisdom;
@@ -3309,30 +3309,30 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			break;
 			case 6:
 			// exper
-      if( pTeamSoldier->bExpLevel >= iValue )
+		if( pTeamSoldier->bExpLevel >= iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bExpLevel;
-			}  
+			}	
 
 			break;
 			case 7:
 			//mrkmanship
-			if(  pTeamSoldier->bMarksmanship >= iValue )
+			if(	pTeamSoldier->bMarksmanship >= iValue )
 			{
 					iId = cnt;
 					iValue = pTeamSoldier->bMarksmanship;
 			}
-       			 
-		  break;
+					
+		break;
 			case 8:
 			// mech
-			if(  pTeamSoldier->bMechanical >= iValue )
+			if(	pTeamSoldier->bMechanical >= iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bMechanical;
 			}
-		  break;
+		break;
 			case 9:
 			// exp
 			if(pTeamSoldier->bExplosive >= iValue )
@@ -3343,7 +3343,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			break;
 			case 10:
 			// med
-			if(  pTeamSoldier->bMedical >= iValue )
+			if(	pTeamSoldier->bMedical >= iValue )
 			{
 					iId = cnt;
 					iValue = pTeamSoldier->bMedical;
@@ -3363,7 +3363,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	INT32 iId = -1;
 	INT32 iValue =9999999;
 	MERCPROFILESTRUCT *pTeamSoldier;
@@ -3401,7 +3401,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			if( bCurrentList == 0 )
 			{
 				bCurrentList = 1;
-			  bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
+			bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
 			}
 			else if( bCurrentList == 1 )
 			{
@@ -3443,8 +3443,8 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 				iValue = pTeamSoldier->bLife;
 			}
 			break;
-		  case 1:
-		  // agility
+		case 1:
+		// agility
 			if( pTeamSoldier->bAgility < iValue )
 			{
 				iId = cnt;
@@ -3461,23 +3461,23 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			break;
 			case 3:
 			// strength
-      if(  pTeamSoldier->bStrength < iValue )
+		if(	pTeamSoldier->bStrength < iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bStrength;
-			}	 
+			}	
 			break;
 			case 4:
 			// leadership
-      if(  pTeamSoldier->bLeadership < iValue )
+		if(	pTeamSoldier->bLeadership < iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bLeadership;
-			}	 
+			}	
 			break;
 			case 5:
-		  // wisdom
-			if(  pTeamSoldier->bWisdom < iValue )
+		// wisdom
+			if(	pTeamSoldier->bWisdom < iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bWisdom;
@@ -3485,30 +3485,30 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			break;
 			case 6:
 			// exper
-      if( pTeamSoldier->bExpLevel < iValue )
+		if( pTeamSoldier->bExpLevel < iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bExpLevel;
-			}  
+			}	
 
 			break;
 			case 7:
 			//mrkmanship
-			if(  pTeamSoldier->bMarksmanship < iValue )
+			if(	pTeamSoldier->bMarksmanship < iValue )
 			{
 					iId = cnt;
 					iValue = pTeamSoldier->bMarksmanship;
 			}
-       			 
-		  break;
+					
+		break;
 			case 8:
 			// mech
-			if(  pTeamSoldier->bMechanical < iValue )
+			if(	pTeamSoldier->bMechanical < iValue )
 			{
 				iId = cnt;
 				iValue = pTeamSoldier->bMechanical;
 			}
-		  break;
+		break;
 			case 9:
 			// exp
 			if(pTeamSoldier->bExplosive < iValue )
@@ -3519,7 +3519,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			break;
 			case 10:
 			// med
-			if(  pTeamSoldier->bMedical < iValue )
+			if(	pTeamSoldier->bMedical < iValue )
 			{
 					iId = cnt;
 					iValue = pTeamSoldier->bMedical;
@@ -3539,120 +3539,120 @@ INT32 GetIdOfMercWithHighestStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	INT32 iId = -1;
 	INT32 iValue =0;
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
 	INT32 cnt=0;
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 
 	// run through active soldiers
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		 if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
-		 {
-			 switch( iStat )
-			 {
-				 case 0:
-			   // health
+		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		{
+			switch( iStat )
+			{
+				case 0:
+			// health
 						if( pTeamSoldier->bAssignment == ASSIGNMENT_POW )
 						{
 							continue;
 						}
 
-					 if( pTeamSoldier->stats.bLifeMax >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bLifeMax;
-					 }
-				   break;
-				 case 1:
-					 // agility
-					 if( pTeamSoldier->stats.bAgility >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bAgility;
-					 }
-					 break;
-				 case 2:
-					// dexterity
-					 if( pTeamSoldier->stats.bDexterity >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bDexterity;
-					 }
+					if( pTeamSoldier->stats.bLifeMax >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bLifeMax;
+					}
+				break;
+				case 1:
+					// agility
+					if( pTeamSoldier->stats.bAgility >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bAgility;
+					}
 					break;
-				 case 3:
-				 // strength
-       		 if(  pTeamSoldier->stats.bStrength >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bStrength;
-					 }	 
-				 break;
-				 case 4:
+				case 2:
+					// dexterity
+					if( pTeamSoldier->stats.bDexterity >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bDexterity;
+					}
+					break;
+				case 3:
+				// strength
+				if(	pTeamSoldier->stats.bStrength >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bStrength;
+					}	
+				break;
+				case 4:
 					// leadership
-       		 if(  pTeamSoldier->stats.bLeadership >= iValue )
-					 {
-						 iId = cnt;
-						  iValue = pTeamSoldier->stats.bLeadership;
-					 }	 
-				 break;
-				 case 5:
+				if(	pTeamSoldier->stats.bLeadership >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bLeadership;
+					}	
+				break;
+				case 5:
 					// wisdom
-					 if(  pTeamSoldier->stats.bWisdom >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bWisdom;
-					 }
-				 break;
-				 case 6:
+					if(	pTeamSoldier->stats.bWisdom >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bWisdom;
+					}
+				break;
+				case 6:
 					// exper
-           if( pTeamSoldier->stats.bExpLevel >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bExpLevel;
-					 }  
+			if( pTeamSoldier->stats.bExpLevel >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bExpLevel;
+					}	
 
-				 break;
-				 case 7:
-					 //mrkmanship
-					 if(  pTeamSoldier->stats.bMarksmanship >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMarksmanship;
-					 }
-       			 
-				 break;
-				 case 8:
+				break;
+				case 7:
+					//mrkmanship
+					if(	pTeamSoldier->stats.bMarksmanship >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMarksmanship;
+					}
+					
+				break;
+				case 8:
 					// mech
-					 if(  pTeamSoldier->stats.bMechanical >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMechanical;
-					 }
-				 break;
-				 case 9:
+					if(	pTeamSoldier->stats.bMechanical >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMechanical;
+					}
+				break;
+				case 9:
 					// exp
-					 if(pTeamSoldier->stats.bExplosive >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bExplosive;
-					 }
-				 break;
-				 case 10:
-					 // med
-					 if(  pTeamSoldier->stats.bMedical >= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMedical;
-					 }
-				 break;
-				 }
-		 }
+					if(pTeamSoldier->stats.bExplosive >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bExplosive;
+					}
+				break;
+				case 10:
+					// med
+					if(	pTeamSoldier->stats.bMedical >= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMedical;
+					}
+				break;
+				}
+		}
 	}	
 
 
@@ -3663,122 +3663,122 @@ INT32 GetIdOfMercWithLowestStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	INT32 iId = -1;
 	INT32 iValue =999999;
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
 	INT32 cnt=0;
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 
 	// run through active soldiers
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
-		 if(( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
-		 {
+		if(( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		{
 
-			 switch( iStat )
-			 {
-				 case 0:
-			   // health
+			switch( iStat )
+			{
+				case 0:
+			// health
 
 					if( pTeamSoldier->bAssignment == ASSIGNMENT_POW )
 					{
 						continue;
 					}
 
-					 if( pTeamSoldier->stats.bLifeMax <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bLifeMax;
-					 }
-				   break;
-				 case 1:
-					 // agility
-					 if( pTeamSoldier->stats.bAgility <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bAgility;
-					 }
-					 break;
-				 case 2:
-					// dexterity
-					 if(  pTeamSoldier->stats.bDexterity <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bDexterity;
-					 }
+					if( pTeamSoldier->stats.bLifeMax <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bLifeMax;
+					}
+				break;
+				case 1:
+					// agility
+					if( pTeamSoldier->stats.bAgility <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bAgility;
+					}
 					break;
-				 case 3:
-				 // strength
-       		 if(  pTeamSoldier->stats.bStrength <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bStrength;
-					 }	 
-				 break;
-				 case 4:
+				case 2:
+					// dexterity
+					if(	pTeamSoldier->stats.bDexterity <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bDexterity;
+					}
+					break;
+				case 3:
+				// strength
+				if(	pTeamSoldier->stats.bStrength <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bStrength;
+					}	
+				break;
+				case 4:
 					// leadership
-       		 if( pTeamSoldier->stats.bLeadership <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bLeadership;
-					 }	 
-				 break;
-				 case 5:
+				if( pTeamSoldier->stats.bLeadership <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bLeadership;
+					}	
+				break;
+				case 5:
 					// wisdom
-					 if( pTeamSoldier->stats.bWisdom <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bWisdom;
-					 }
-				 break;
-				 case 6:
+					if( pTeamSoldier->stats.bWisdom <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bWisdom;
+					}
+				break;
+				case 6:
 					// exper
-           if(  pTeamSoldier->stats.bExpLevel <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bExpLevel;
-					 }  
+			if(	pTeamSoldier->stats.bExpLevel <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bExpLevel;
+					}	
 
-				 break;
-				 case 7:
-					 //mrkmanship
-					 if(  pTeamSoldier->stats.bMarksmanship <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMarksmanship;
-					 }
-       			 
-				 break;
-				 case 8:
+				break;
+				case 7:
+					//mrkmanship
+					if(	pTeamSoldier->stats.bMarksmanship <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMarksmanship;
+					}
+					
+				break;
+				case 8:
 					// mech
-					 if(  pTeamSoldier->stats.bMechanical <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMechanical;
-					 }
-				 break;
-				 case 9:
+					if(	pTeamSoldier->stats.bMechanical <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMechanical;
+					}
+				break;
+				case 9:
 					// exp
-					 if(  pTeamSoldier->stats.bExplosive <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bExplosive;
-					 }
-				 break;
-				 case 10:
-					 // med
-					 if(  pTeamSoldier->stats.bMedical <= iValue )
-					 {
-						 iId = cnt;
-						 iValue = pTeamSoldier->stats.bMedical;
-					 }
-				 break;
-				 }
-		 }
+					if(	pTeamSoldier->stats.bExplosive <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bExplosive;
+					}
+				break;
+				case 10:
+					// med
+					if(	pTeamSoldier->stats.bMedical <= iValue )
+					{
+						iId = cnt;
+						iValue = pTeamSoldier->stats.bMedical;
+					}
+				break;
+				}
+		}
 	}	
 
 
@@ -3790,7 +3790,7 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
 	INT32 cnt=0;
 	INT32 iTotalStatValue = 0;
@@ -3798,7 +3798,7 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 	UINT8	ubNumberOfMercsInCalculation = 0;
 
 
-	 // first grunt
+	// first grunt
 	pSoldier = MercPtrs[0];	
 
 	// run through active soldiers
@@ -3807,12 +3807,12 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 		// Only count stats of merc (not vehicles)
 		if ( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
-		 if(( pTeamSoldier->bActive)&&( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
-		 {
-			 switch( iStat )
-			 {
-				 case 0:
-			   // health
+		if(( pTeamSoldier->bActive)&&( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
+		{
+			switch( iStat )
+			{
+				case 0:
+			// health
 
 						//if this is a pow, dont count his stats
 						if( pTeamSoldier->bAssignment == ASSIGNMENT_POW )
@@ -3821,65 +3821,65 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 							continue;
 						}
 
-					  iTotalStatValue += pTeamSoldier->stats.bLifeMax;
-					 
-				   break;
-				 case 1:
-					 // agility
-					 iTotalStatValue +=pTeamSoldier->stats.bAgility;
-
-					 break;
-				 case 2:
-					// dexterity
-					 iTotalStatValue +=  pTeamSoldier->stats.bDexterity;
+					iTotalStatValue += pTeamSoldier->stats.bLifeMax;
+					
+				break;
+				case 1:
+					// agility
+					iTotalStatValue +=pTeamSoldier->stats.bAgility;
 
 					break;
-				 case 3:
-				 // strength
-				 iTotalStatValue +=  pTeamSoldier->stats.bStrength;
+				case 2:
+					// dexterity
+					iTotalStatValue +=	pTeamSoldier->stats.bDexterity;
 
-				 break;
-				 case 4:
+					break;
+				case 3:
+				// strength
+				iTotalStatValue +=	pTeamSoldier->stats.bStrength;
+
+				break;
+				case 4:
 					// leadership
-					 iTotalStatValue +=  pTeamSoldier->stats.bLeadership;
+					iTotalStatValue +=	pTeamSoldier->stats.bLeadership;
 
-				 break;
-				 case 5:
+				break;
+				case 5:
 					// wisdom
 					
-					 iTotalStatValue += pTeamSoldier->stats.bWisdom;
-				 break;
-				 case 6:
+					iTotalStatValue += pTeamSoldier->stats.bWisdom;
+				break;
+				case 6:
 					// exper
-           
-					 iTotalStatValue +=  pTeamSoldier->stats.bExpLevel;
+			
+					iTotalStatValue +=	pTeamSoldier->stats.bExpLevel;
 
-				 break;
-				 case 7:
-					 //mrkmanship
-					 
-					 iTotalStatValue +=  pTeamSoldier->stats.bMarksmanship;
-       			 
-				 break;
-				 case 8:
+				break;
+				case 7:
+					//mrkmanship
+					
+					iTotalStatValue +=	pTeamSoldier->stats.bMarksmanship;
+					
+				break;
+				case 8:
 					// mech
-					 
-					 iTotalStatValue +=  pTeamSoldier->stats.bMechanical;
-				 break;
-				 case 9:
+					
+					iTotalStatValue +=	pTeamSoldier->stats.bMechanical;
+				break;
+				case 9:
 					// exp
-					 
-					 iTotalStatValue +=  pTeamSoldier->stats.bExplosive;
-				 break;
-				 case 10:
-					 // med
-					 
-					 iTotalStatValue +=  pTeamSoldier->stats.bMedical;
-				 break;
-			 }
+					
+					iTotalStatValue +=	pTeamSoldier->stats.bExplosive;
+				break;
+				case 10:
+					// med
+					
+					iTotalStatValue +=	pTeamSoldier->stats.bMedical;
+				break;
+			}
 
-			 ubNumberOfMercsInCalculation++;
-		 }
+			ubNumberOfMercsInCalculation++;
+		}
 	}	
 	}	
 
@@ -3904,7 +3904,7 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 {
 	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
-  // -1 means error
+	// -1 means error
 	INT32 cnt=0;
 	INT32 iTotalStatValue = 0;
 	INT32 iId = -1;
@@ -3943,7 +3943,7 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			if( bCurrentList == 0 )
 			{
 				bCurrentList = 1;
-			  bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
+			bCurrentListValue = LaptopSaveInfo.ubLeftCharactersList;
 			}
 			else if( bCurrentList == 1 )
 			{
@@ -3977,8 +3977,8 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 				iTotalStatValue += pTeamSoldier->bLife;
 			
 			break;
-		  case 1:
-		  // agility
+		case 1:
+		// agility
 			
 				iTotalStatValue += pTeamSoldier->bAgility;
 			
@@ -3991,27 +3991,27 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			break;
 			case 3:
 			// strength
-      
+		
 				iTotalStatValue += pTeamSoldier->bStrength;
-			 
+			
 			break;
 			case 4:
 			// leadership
-      
+		
 				iTotalStatValue += pTeamSoldier->bLeadership;
-				 
+				
 			break;
 			case 5:
-		  // wisdom
+		// wisdom
 			
 				iTotalStatValue += pTeamSoldier->bWisdom;
 			
 			break;
 			case 6:
 			// exper
-     
+	 
 				iTotalStatValue += pTeamSoldier->bExpLevel;
-		 
+		
 
 			break;
 			case 7:
@@ -4020,14 +4020,14 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 					iId = cnt;
 					iTotalStatValue += pTeamSoldier->bMarksmanship;
 			
-       			 
-		  break;
+					
+		break;
 			case 8:
 			// mech
 			
 				iTotalStatValue += pTeamSoldier->bMechanical;
 			
-		  break;
+		break;
 			case 9:
 			// exp
 			
@@ -4046,7 +4046,7 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 
 	if( GetNumberOfPastMercsOnPlayersTeam( ) > 0 )
 	{
-	  return( iTotalStatValue / GetNumberOfPastMercsOnPlayersTeam( ) );
+	return( iTotalStatValue / GetNumberOfPastMercsOnPlayersTeam( ) );
 	}
 	else
 	{
@@ -4075,13 +4075,13 @@ void DisplayAverageStatValuesForCurrentTeam( void )
 	mprintf( sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[ 1 ] );
 	
 	// nobody on team leave
-  if( ( GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) == 0 ) && (  fCurrentTeamMode == TRUE ) )
+	if( ( GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) == 0 ) && (	fCurrentTeamMode == TRUE ) )
 	{
 		return;
 	}
 
 	// check if in past team and nobody on past team
-	if( ( GetNumberOfPastMercsOnPlayersTeam( ) == 0 ) && (  fCurrentTeamMode == FALSE ) )
+	if( ( GetNumberOfPastMercsOnPlayersTeam( ) == 0 ) && (	fCurrentTeamMode == FALSE ) )
 	{
 		return;
 	}
@@ -4100,7 +4100,7 @@ void DisplayAverageStatValuesForCurrentTeam( void )
 			SetFontForeground( PERS_TEXT_FONT_COLOR );
 		}
 
-		if(  fCurrentTeamMode == TRUE )
+		if(	fCurrentTeamMode == TRUE )
 		{
 			INT32	iValue = GetAvgStatOfCurrentTeamStat( iCounter );
 
@@ -4116,9 +4116,9 @@ void DisplayAverageStatValuesForCurrentTeam( void )
 			swprintf( sString, L"%d", GetAvgStatOfPastTeamStat( iCounter ) );
 		}
 		// center
-	  FindFontCenterCoordinates( PERS_STAT_AVG_X, 0 ,PERS_STAT_AVG_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
+	FindFontCenterCoordinates( PERS_STAT_AVG_X, 0 ,PERS_STAT_AVG_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
 
-	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
+	mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
 
 	return;
@@ -4148,7 +4148,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 	mprintf( sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[ 0 ] );
 
 	// nobody on team leave
-  if( ( GetNumberOfMercsOnPlayersTeam( ) == 0 ) && ( fCurrentTeamMode == TRUE) )
+	if( ( GetNumberOfMercsOnPlayersTeam( ) == 0 ) && ( fCurrentTeamMode == TRUE) )
 	{
 		return;
 	}
@@ -4201,33 +4201,33 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 		
 		switch( iCounter )
 		{
-				 case 0:
-					 // health
-					 if( fCurrentTeamMode == TRUE )
-					 {
-						 if( iId == -1 )
-							 iStat = -1;
-						 else
+				case 0:
+					// health
+					if( fCurrentTeamMode == TRUE )
+					{
+						if( iId == -1 )
+							iStat = -1;
+						else
 							iStat = MercPtrs[ iId ]->stats.bLifeMax;
-					 }
-					 else
-					 {
-						 iStat =  gMercProfiles[ iDepartedId ] . bLife;
-					 }
-					 break;
-					 case 1:
-						 // agility
-						 if( fCurrentTeamMode == TRUE )
-						 {
+					}
+					else
+					{
+						iStat =	gMercProfiles[ iDepartedId ] . bLife;
+					}
+					break;
+					case 1:
+						// agility
+						if( fCurrentTeamMode == TRUE )
+						{
 								iStat = MercPtrs[ iId ]->stats.bAgility;
-						 }
-						 else
-						 {
-							 	iStat =  gMercProfiles[ iDepartedId ] . bAgility;
-						 }
+						}
+						else
+						{
+								iStat =	gMercProfiles[ iDepartedId ] . bAgility;
+						}
 
-						 break;
-					 case 2:
+						break;
+					case 2:
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4235,23 +4235,23 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bDexterity;
+							iStat =	gMercProfiles[ iDepartedId ] . bDexterity;
 						}
 
 						break;
-					 case 3:
-					 // strength
-					 if( fCurrentTeamMode == TRUE )
-					 {
-					   iStat = MercPtrs[ iId ]->stats.bStrength;
-					 }
-					 else
-					 {
-							iStat =  gMercProfiles[ iDepartedId ] . bStrength;
-					 }
+					case 3:
+					// strength
+					if( fCurrentTeamMode == TRUE )
+					{
+					iStat = MercPtrs[ iId ]->stats.bStrength;
+					}
+					else
+					{
+							iStat =	gMercProfiles[ iDepartedId ] . bStrength;
+					}
 
-					 break;
-					 case 4:
+					break;
+					case 4:
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4259,54 +4259,54 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bLeadership;
+							iStat =	gMercProfiles[ iDepartedId ] . bLeadership;
 						}
-					 break;
-					 case 5:
+					break;
+					case 5:
 						// wisdom
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bWisdom;
+						iStat = MercPtrs[ iId ]->stats.bWisdom;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bWisdom;
+							iStat =	gMercProfiles[ iDepartedId ] . bWisdom;
 						}
-					 break;
-					 case 6:
+					break;
+					case 6:
 						// exper
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bExpLevel;
+						iStat = MercPtrs[ iId ]->stats.bExpLevel;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bExpLevel;
+							iStat =	gMercProfiles[ iDepartedId ] . bExpLevel;
 						}
-					 break;
-					 case 7:
-						 //mrkmanship
+					break;
+					case 7:
+						//mrkmanship
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMarksmanship;
+						iStat = MercPtrs[ iId ]->stats.bMarksmanship;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bMarksmanship;
+							iStat =	gMercProfiles[ iDepartedId ] . bMarksmanship;
 						}
-					 break;
-					 case 8:
+					break;
+					case 8:
 						// mech
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMechanical;
+						iStat = MercPtrs[ iId ]->stats.bMechanical;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bMechanical;
+							iStat =	gMercProfiles[ iDepartedId ] . bMechanical;
 						}
-					 break;
-					 case 9:
+					break;
+					case 9:
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4316,18 +4316,18 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						{
 							iStat = gMercProfiles[ iDepartedId ] .bExplosive;
 						}
-					 break;
-					 case 10:
-						 // med
+					break;
+					case 10:
+						// med
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMedical;
+						iStat = MercPtrs[ iId ]->stats.bMedical;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iDepartedId ] . bMedical;
+							iStat =	gMercProfiles[ iDepartedId ] . bMedical;
 						}
-					 break;
+					break;
 			}
 
 			if( iStat == -1 )
@@ -4336,9 +4336,9 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 				swprintf( sString, L"%d", iStat );
 
 		// right justify
-	  FindFontRightCoordinates(  PERS_STAT_LOWEST_X, 0 ,PERS_STAT_LOWEST_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
+	FindFontRightCoordinates(	PERS_STAT_LOWEST_X, 0 ,PERS_STAT_LOWEST_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
 
-	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
+	mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
 
 	return;
@@ -4368,7 +4368,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 	mprintf( sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[ 2 ] );
 
 	// nobody on team leave
-  if( ( GetNumberOfMercsOnPlayersTeam( ) == 0 ) && ( fCurrentTeamMode == TRUE) )
+	if( ( GetNumberOfMercsOnPlayersTeam( ) == 0 ) && ( fCurrentTeamMode == TRUE) )
 	{
 		return;
 	}
@@ -4417,33 +4417,33 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 		
 		switch( iCounter )
 		{
-				 case 0:
-					 // health
-					 if( fCurrentTeamMode == TRUE )
-					 {
-						 if( iId == -1 )
+				case 0:
+					// health
+					if( fCurrentTeamMode == TRUE )
+					{
+						if( iId == -1 )
 							iStat = -1;
-						 else
+						else
 							iStat = MercPtrs[ iId ]->stats.bLifeMax;
-					 }
-					 else
-					 {
-						 iStat =  gMercProfiles[ iId ] . bLife;
-					 }
-					 break;
-					 case 1:
-						 // agility
-						 if( fCurrentTeamMode == TRUE )
-						 {
+					}
+					else
+					{
+						iStat =	gMercProfiles[ iId ] . bLife;
+					}
+					break;
+					case 1:
+						// agility
+						if( fCurrentTeamMode == TRUE )
+						{
 								iStat = MercPtrs[ iId ]->stats.bAgility;
-						 }
-						 else
-						 {
-							 	iStat =  gMercProfiles[ iId ] . bAgility;
-						 }
+						}
+						else
+						{
+								iStat =	gMercProfiles[ iId ] . bAgility;
+						}
 
-						 break;
-					 case 2:
+						break;
+					case 2:
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4451,23 +4451,23 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bDexterity;
+							iStat =	gMercProfiles[ iId ] . bDexterity;
 						}
 
 						break;
-					 case 3:
-					 // strength
-					 if( fCurrentTeamMode == TRUE )
-					 {
-					   iStat = MercPtrs[ iId ]->stats.bStrength;
-					 }
-					 else
-					 {
-							iStat =  gMercProfiles[ iId ] . bStrength;
-					 }
+					case 3:
+					// strength
+					if( fCurrentTeamMode == TRUE )
+					{
+					iStat = MercPtrs[ iId ]->stats.bStrength;
+					}
+					else
+					{
+							iStat =	gMercProfiles[ iId ] . bStrength;
+					}
 
-					 break;
-					 case 4:
+					break;
+					case 4:
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4475,54 +4475,54 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bLeadership;
+							iStat =	gMercProfiles[ iId ] . bLeadership;
 						}
-					 break;
-					 case 5:
+					break;
+					case 5:
 						// wisdom
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bWisdom;
+						iStat = MercPtrs[ iId ]->stats.bWisdom;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bWisdom;
+							iStat =	gMercProfiles[ iId ] . bWisdom;
 						}
-					 break;
-					 case 6:
+					break;
+					case 6:
 						// exper
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bExpLevel;
+						iStat = MercPtrs[ iId ]->stats.bExpLevel;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bExpLevel;
+							iStat =	gMercProfiles[ iId ] . bExpLevel;
 						}
-					 break;
-					 case 7:
-						 //mrkmanship
+					break;
+					case 7:
+						//mrkmanship
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMarksmanship;
+						iStat = MercPtrs[ iId ]->stats.bMarksmanship;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bMarksmanship;
+							iStat =	gMercProfiles[ iId ] . bMarksmanship;
 						}
-					 break;
-					 case 8:
+					break;
+					case 8:
 						// mech
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMechanical;
+						iStat = MercPtrs[ iId ]->stats.bMechanical;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bMechanical;
+							iStat =	gMercProfiles[ iId ] . bMechanical;
 						}
-					 break;
-					 case 9:
+					break;
+					case 9:
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
@@ -4532,18 +4532,18 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						{
 							iStat = gMercProfiles[ iId ] . bExplosive;
 						}
-					 break;
-					 case 10:
-						 // med
+					break;
+					case 10:
+						// med
 						if( fCurrentTeamMode == TRUE )
 						{
-						  iStat = MercPtrs[ iId ]->stats.bMedical;
+						iStat = MercPtrs[ iId ]->stats.bMedical;
 						}
 						else
 						{
-							iStat =  gMercProfiles[ iId ] . bMedical;
+							iStat =	gMercProfiles[ iId ] . bMedical;
 						}
-					 break;
+					break;
 			}
 		
 			if( iStat == -1 )
@@ -4552,9 +4552,9 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 				swprintf( sString, L"%d", iStat );
 
 		// right justify
-	  FindFontRightCoordinates(  PERS_STAT_HIGHEST_X, 0 ,PERS_STAT_LOWEST_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
+	FindFontRightCoordinates(	PERS_STAT_HIGHEST_X, 0 ,PERS_STAT_LOWEST_WIDTH, 0 , sString, FONT10ARIAL , &sX, &sY );
 
-	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
+	mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
 
 	return;
@@ -4705,28 +4705,28 @@ void DisplayStateOfPastTeamMembers( void )
 	{
 
 		// dead
-	   mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[ 5 ] );
-		 swprintf( sString, L"%d", GetNumberOfDeadOnPastTeam( ) );
-		 
-		 FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
-		 
-		 mprintf( sX ,PERS_CURR_TEAM_COST_Y, sString );
-		 
-		 // fired
-		 mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[ 6 ] );
-	   swprintf( sString, L"%d", GetNumberOfLeftOnPastTeam( ) );
-		 
-		 FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
-		 
-		 mprintf( sX ,PERS_CURR_TEAM_HIGHEST_Y, sString );
+	mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[ 5 ] );
+		swprintf( sString, L"%d", GetNumberOfDeadOnPastTeam( ) );
+		
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
+		
+		mprintf( sX ,PERS_CURR_TEAM_COST_Y, sString );
+		
+		// fired
+		mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[ 6 ] );
+	swprintf( sString, L"%d", GetNumberOfLeftOnPastTeam( ) );
+		
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
+		
+		mprintf( sX ,PERS_CURR_TEAM_HIGHEST_Y, sString );
 
-		 // other
-		 mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[ 7 ] );
-		 swprintf( sString, L"%d", GetNumberOfOtherOnPastTeam( ) );
-		 
-		 FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
-		 
-		 mprintf( sX ,PERS_CURR_TEAM_LOWEST_Y, sString );
+		// other
+		mprintf(	PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[ 7 ] );
+		swprintf( sString, L"%d", GetNumberOfOtherOnPastTeam( ) );
+		
+		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_DEPART_TEAM_WIDTH,0,sString, PERS_FONT,	&sX, &sY);
+		
+		mprintf( sX ,PERS_CURR_TEAM_LOWEST_Y, sString );
 	}
 	else
 	{
@@ -4750,12 +4750,12 @@ void CreateDestroyCurrentDepartedMouseRegions( void )
 	{
 		// not created, create
 		MSYS_DefineRegion(&gTogglePastCurrentTeam[ 0 ], PERS_TOGGLE_CUR_DEPART_X, PERS_TOGGLE_CUR_Y, PERS_TOGGLE_CUR_DEPART_X + PERS_TOGGLE_CUR_DEPART_WIDTH, PERS_TOGGLE_CUR_Y + PERS_TOGGLE_CUR_DEPART_HEIGHT,
-		    MSYS_PRIORITY_HIGHEST - 3 ,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelCurrentTeamCallback);
+		 MSYS_PRIORITY_HIGHEST - 3 ,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelCurrentTeamCallback);
 		
 		MSYS_AddRegion( &gTogglePastCurrentTeam[ 0 ] );
 
 		MSYS_DefineRegion(&gTogglePastCurrentTeam[ 1 ], PERS_TOGGLE_CUR_DEPART_X, PERS_TOGGLE_DEPART_Y , PERS_TOGGLE_CUR_DEPART_X + PERS_TOGGLE_CUR_DEPART_WIDTH, PERS_TOGGLE_DEPART_Y + PERS_TOGGLE_CUR_DEPART_HEIGHT,
-		    MSYS_PRIORITY_HIGHEST - 3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelDepartedTeamCallback);
+		 MSYS_PRIORITY_HIGHEST - 3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, PersonnelDepartedTeamCallback);
 
 		MSYS_AddRegion( &gTogglePastCurrentTeam[ 1 ] );
 
@@ -4780,12 +4780,12 @@ void PersonnelCurrentTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fCurrentTeamMode = TRUE;
 
 		if( fCurrentTeamMode == TRUE )
 		{
-		  iCurrentPersonSelectedId = -1;
+		iCurrentPersonSelectedId = -1;
 			
 			// how many people do we have?..if you have someone set default to 0
 			if( GetNumberOfMercsDeadOrAliveOnPlayersTeam() > 0 )
@@ -4807,13 +4807,13 @@ void PersonnelDepartedTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 
 		fCurrentTeamMode = FALSE;
 
 		if( fCurrentTeamMode == FALSE )
 		{
-		  iCurrentPersonSelectedId = -1;
+		iCurrentPersonSelectedId = -1;
 
 			// how many departed people?
 			if( GetNumberOfPastMercsOnPlayersTeam( ) > 0 )
@@ -4841,20 +4841,20 @@ void CreateDestroyButtonsForDepartedTeamList( void )
 	if( ( fCurrentTeamMode == FALSE ) && ( fCreated == FALSE ) )
 	{
 		// not created. create
-		giPersonnelButtonImage[ 4 ]=  LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,0,-1,2,-1 );
-	  giPersonnelButton[ 4 ] = QuickCreateButton( giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,		
-	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
+		giPersonnelButtonImage[ 4 ]=	LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,0,-1,2,-1 );
+	giPersonnelButton[ 4 ] = QuickCreateButton( giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,		
+					 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DepartedUpCallBack);
 		
 		// right button
-		giPersonnelButtonImage[ 5 ]=  LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,1,-1,3,-1 );
+		giPersonnelButtonImage[ 5 ]=	LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,1,-1,3,-1 );
 		giPersonnelButton[ 5 ] = QuickCreateButton( giPersonnelButtonImage[5], PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DepartedDownCallBack);
 		
 		// set up cursors for these buttons
 		SetButtonCursor( giPersonnelButton[ 4 ], CURSOR_LAPTOP_SCREEN);
-	  SetButtonCursor( giPersonnelButton[ 5 ], CURSOR_LAPTOP_SCREEN);
+	SetButtonCursor( giPersonnelButton[ 5 ], CURSOR_LAPTOP_SCREEN);
 
 
 		fCreated = TRUE;
@@ -4863,9 +4863,9 @@ void CreateDestroyButtonsForDepartedTeamList( void )
 	{
 		// created. destroy
 		RemoveButton(giPersonnelButton[4] );
-	  UnloadButtonImage(giPersonnelButtonImage[4] );
-	  RemoveButton(giPersonnelButton[5] );
-	  UnloadButtonImage(giPersonnelButtonImage[5] );
+	UnloadButtonImage(giPersonnelButtonImage[4] );
+	RemoveButton(giPersonnelButton[5] );
+	UnloadButtonImage(giPersonnelButtonImage[5] );
 		fCreated = FALSE;
 		fReDrawScreenFlag = TRUE;
 	}
@@ -4884,18 +4884,18 @@ void DepartedUpCallBack(GUI_BUTTON *btn,INT32 reason)
 		{
 			
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if(btn->uiFlags & BUTTON_CLICKED_ON)
 		{
-		  btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
-		  if(  giCurrentUpperLeftPortraitNumber - 20 >= 0 )
+		if(	giCurrentUpperLeftPortraitNumber - 20 >= 0 )
 			{
-			  giCurrentUpperLeftPortraitNumber-=20;
-			  fReDrawScreenFlag = TRUE;
+			giCurrentUpperLeftPortraitNumber-=20;
+			fReDrawScreenFlag = TRUE;
 			}
 		}
 	}
@@ -4914,7 +4914,7 @@ void DepartedDownCallBack(GUI_BUTTON *btn,INT32 reason)
 		{
 			
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -4969,7 +4969,7 @@ void DisplayPastMercsPortraits( void )
 			
 			if( iCounter < 20 )
 			{
-			  iStartArray = 0;
+			iStartArray = 0;
 			}
 			else
 			{
@@ -4993,7 +4993,7 @@ void DisplayPastMercsPortraits( void )
 			
 			if( iCounter < 20 )
 			{
-			  iStartArray = 1;
+			iStartArray = 1;
 			}
 			else
 			{
@@ -5012,8 +5012,8 @@ void DisplayPastMercsPortraits( void )
 	if( iStartArray == 0 )
 	{
 		// run through list and display
-//	  for( iCounterA ; ( ( iCounter < 20 ) && ( LaptopSaveInfo.ubDeadCharactersList[ iCounterA ] != -1 ) ); iCounter++, iCounterA++ )
-	  for( iCounterA ; iCounter < 20 && iCounterA < 256; iCounterA++ )
+//	for( iCounterA ; ( ( iCounter < 20 ) && ( LaptopSaveInfo.ubDeadCharactersList[ iCounterA ] != -1 ) ); iCounter++, iCounterA++ )
+	for( iCounterA ; iCounter < 20 && iCounterA < 256; iCounterA++ )
 		{
 			// show dead pictures
 			if( LaptopSaveInfo.ubDeadCharactersList[ iCounterA ] != -1 )
@@ -5028,8 +5028,8 @@ void DisplayPastMercsPortraits( void )
 	}
 	if( iStartArray <= 1 )
 	{
-//		for( iCounterA ; ( ( iCounter < 20 ) && ( LaptopSaveInfo.ubLeftCharactersList[ iCounterA ] != -1 ) ); iCounter++, iCounterA++  )
-		for( iCounterA ; ( iCounter < 20  && iCounterA < 256 ); iCounterA++  )
+//		for( iCounterA ; ( ( iCounter < 20 ) && ( LaptopSaveInfo.ubLeftCharactersList[ iCounterA ] != -1 ) ); iCounter++, iCounterA++	)
+		for( iCounterA ; ( iCounter < 20	&& iCounterA < 256 ); iCounterA++	)
 		{
 			// show fired pics
 			if( LaptopSaveInfo.ubLeftCharactersList[ iCounterA ] != -1 )
@@ -5045,7 +5045,7 @@ void DisplayPastMercsPortraits( void )
 	if( iStartArray <= 2 )
 	{
 //		for( iCounterA ; ( ( iCounter < 20 ) && ( LaptopSaveInfo.ubOtherCharactersList[ iCounterA ] != -1 ) ) ; iCounter++, iCounterA++ )
-		for( iCounterA ; ( iCounter < 20  && iCounterA < 256 ); iCounterA++ )
+		for( iCounterA ; ( iCounter < 20	&& iCounterA < 256 ); iCounterA++ )
 		{
 			// show other pics
 			if( LaptopSaveInfo.ubOtherCharactersList[ iCounterA ] != -1 )
@@ -5084,7 +5084,7 @@ INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 		return iCurrentPersonSelectedId;
 	}
 	// go through dead list
-	for( iCounterA = 0; ( ( iCounter ) < iSlot + giCurrentUpperLeftPortraitNumber);  iCounterA++ )
+	for( iCounterA = 0; ( ( iCounter ) < iSlot + giCurrentUpperLeftPortraitNumber);	iCounterA++ )
 	{
 		if( LaptopSaveInfo.ubDeadCharactersList[ iCounterA ] != -1 )
 			iCounter++;
@@ -5092,12 +5092,12 @@ INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 
 	if( iSlot + giCurrentUpperLeftPortraitNumber == iCounter)
 	{
-		return  ( LaptopSaveInfo.ubDeadCharactersList[ iCounterA - 1] );
+		return	( LaptopSaveInfo.ubDeadCharactersList[ iCounterA - 1] );
 	}
 
 	// now the fired list
 	iCounterA =0;
-	for( iCounterA = 0; ( ( ( iCounter  )< iSlot + giCurrentUpperLeftPortraitNumber) ); iCounterA++ )
+	for( iCounterA = 0; ( ( ( iCounter	)< iSlot + giCurrentUpperLeftPortraitNumber) ); iCounterA++ )
 	{
 		if( LaptopSaveInfo.ubLeftCharactersList[ iCounterA ] != -1 )
 			iCounter++;
@@ -5105,7 +5105,7 @@ INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 		
 	if( iSlot + giCurrentUpperLeftPortraitNumber == iCounter)
 	{
-		return  ( LaptopSaveInfo.ubLeftCharactersList[ iCounterA  - 1 ] );
+		return	( LaptopSaveInfo.ubLeftCharactersList[ iCounterA	- 1 ] );
 	}
 		
 
@@ -5117,7 +5117,7 @@ INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 			iCounter++;
 	}
 
-	return( LaptopSaveInfo.ubOtherCharactersList[ iCounterA  - 1] );
+	return( LaptopSaveInfo.ubOtherCharactersList[ iCounterA	- 1] );
 
 }
 
@@ -5132,23 +5132,23 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 	
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 	
 
 
-	if( ( 50 < 	iId   )&&( 57 > 	iId   ) )
+	if( ( 50 < 	iId	)&&( 57 > 	iId	) )
 	{
-		sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	 gMercProfiles[ iId ].ubFaceIndex );	
+		sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ iId ].ubFaceIndex );	
 	}
 	else
 	{
-		if(  iId  < 100 )
+		if(	iId	< 100 )
 		{
-			 sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId );
+			sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId );
 		}
 		else
 		{
-			sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR,	 iId  );
+			sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR,	iId	);
 		}
 	}
 
@@ -5215,122 +5215,122 @@ void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 	{
 		switch(iCounter)
 		{
-		 case 0:
-			 // health
+		case 0:
+			// health
 
-			 // dead?
-			 if( iState == 0 )
-			 {
-			   swprintf(sString, L"%d/%d",0,gMercProfiles[iId].bLife);
-			 }
-			 else
-			 {
-				 swprintf(sString, L"%d/%d",gMercProfiles[iId].bLife,gMercProfiles[iId].bLife);
-			 }
-       
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		  
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-			 break;
-		 case 1:
-			 // agility
-       swprintf(sString, L"%d",gMercProfiles[iId].bAgility);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		 
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-			 break;
-		 case 2:
-		  // dexterity
-       swprintf(sString, L"%d",gMercProfiles[iId].bDexterity);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
+			// dead?
+			if( iState == 0 )
+			{
+			swprintf(sString, L"%d/%d",0,gMercProfiles[iId].bLife);
+			}
+			else
+			{
+				swprintf(sString, L"%d/%d",gMercProfiles[iId].bLife,gMercProfiles[iId].bLife);
+			}
+		
+			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
 			break;
-		 case 3:
-		 // strength
-       swprintf(sString, L"%d",gMercProfiles[iId].bStrength);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 4:
-		  // leadership
-       swprintf(sString, L"%d",gMercProfiles[iId].bLeadership);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 5:
-		  // wisdom
-       swprintf(sString, L"%d",gMercProfiles[iId].bWisdom);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 6:
-		  // exper
-       swprintf(sString, L"%d",gMercProfiles[iId].bExpLevel);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 7:
-			 //mrkmanship
-       swprintf(sString, L"%d",gMercProfiles[iId].bMarksmanship);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-     case 8:
-		  // mech
-       swprintf(sString, L"%d",gMercProfiles[iId].bMechanical);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-     case 9:
-		  // exp
-       swprintf(sString, L"%d",gMercProfiles[iId].bExplosive);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
-		 break;
-		 case 10:
-       // med
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
-        
-       swprintf(sString, L"%d",gMercProfiles[iId].bMedical);
-			 
+		case 1:
+			// agility
+		swprintf(sString, L"%d",gMercProfiles[iId].bAgility);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+			break;
+		case 2:
+		// dexterity
+		swprintf(sString, L"%d",gMercProfiles[iId].bDexterity);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+			break;
+		case 3:
+		// strength
+		swprintf(sString, L"%d",gMercProfiles[iId].bStrength);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 4:
+		// leadership
+		swprintf(sString, L"%d",gMercProfiles[iId].bLeadership);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 5:
+		// wisdom
+		swprintf(sString, L"%d",gMercProfiles[iId].bWisdom);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 6:
+		// exper
+		swprintf(sString, L"%d",gMercProfiles[iId].bExpLevel);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 7:
+			//mrkmanship
+		swprintf(sString, L"%d",gMercProfiles[iId].bMarksmanship);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+	 case 8:
+		// mech
+		swprintf(sString, L"%d",gMercProfiles[iId].bMechanical);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+	 case 9:
+		// exp
+		swprintf(sString, L"%d",gMercProfiles[iId].bExplosive);
+		mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
+		break;
+		case 10:
+		// med
+			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);		
+		
+		swprintf(sString, L"%d",gMercProfiles[iId].bMedical);
+			
 				
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);	
-		 break;
+			FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);	
+		break;
 
 
-		 case 14:
-		 // kills
-      mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);		 
+		case 14:
+		// kills
+		mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);		
 			swprintf(sString, L"%d",gMercProfiles[iId].usKills);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[21].y,sString);
-		 break;
-		 case 15:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[21].y,sString);
+		break;
+		case 15:
 			// assists
-			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);		
 			swprintf(sString, L"%d",gMercProfiles[iId].usAssists);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[22].y,sString);
-		 break;
-		  case 16:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[22].y,sString);
+		break;
+		case 16:
 			// shots/hits
-			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);		 
+			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);		
 			uiHits = ( UINT32 )gMercProfiles[iId].usShotsHit;
 			uiHits *= 100;
 			
 			// check we have shot at least once
 			if( gMercProfiles[iId].usShotsFired > 0 )
 			{
-			  uiHits /= ( UINT32 )gMercProfiles[iId].usShotsFired;
+			uiHits /= ( UINT32 )gMercProfiles[iId].usShotsFired;
 			}
 			else
 			{
@@ -5339,24 +5339,24 @@ void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 			}
 
 			swprintf(sString, L"%d %%%%",uiHits);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      sX += StringPixLength( L"%",  PERS_FONT );
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		sX += StringPixLength( L"%",	PERS_FONT );
 			mprintf(sX,pPersonnelScreenPoints[23].y,sString);
-		 break;
-		  case 17:
+		break;
+		case 17:
 			// battles
 			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
 			swprintf(sString, L"%d",gMercProfiles[iId].usBattlesFought);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[24].y,sString);
-		 break;
-		 case 18:
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[24].y,sString);
+		break;
+		case 18:
 			// wounds
 			mprintf((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[25].y,pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 			swprintf(sString, L"%d",gMercProfiles[iId].usTimesWounded);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[25].y,sString);
-		 break;
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[25].y,sString);
+		break;
 		}
 	}
 
@@ -5384,7 +5384,7 @@ void EnableDisableDeparturesButtons( void )
 		// enable up button
 		EnableButton( giPersonnelButton[ 4 ] );
 	}
-	if( ( GetNumberOfDeadOnPastTeam( ) + GetNumberOfLeftOnPastTeam( ) + GetNumberOfOtherOnPastTeam( ) ) - giCurrentUpperLeftPortraitNumber  >= 20 )
+	if( ( GetNumberOfDeadOnPastTeam( ) + GetNumberOfLeftOnPastTeam( ) + GetNumberOfOtherOnPastTeam( ) ) - giCurrentUpperLeftPortraitNumber	>= 20 )
 	{
 		// enable down button
 		EnableButton( giPersonnelButton[ 5 ] );
@@ -5398,11 +5398,11 @@ void EnableDisableDeparturesButtons( void )
 void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 {
 	PERFORMANCE_MARKER
-  // get merc's nickName, assignment, and sector location info
+	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 	CHAR16 sString[ 32 ];
 
-  SetFont(CHAR_NAME_FONT);
+	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 	
@@ -5423,7 +5423,7 @@ void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 	}
 
 	mprintf( sX + iSlot * IMAGE_BOX_WIDTH, CHAR_NAME_Y, sString );
-  
+	
 
 	// state
 	if( gMercProfiles[ iId ].ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS )
@@ -5431,7 +5431,7 @@ void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 		//displaye 'married'
 		swprintf( sString, L"%s", pPersonnelDepartedStateStrings[ DEPARTED_MARRIED ] );
 	}
-	else if(  iState == DEPARTED_DEAD )
+	else if(	iState == DEPARTED_DEAD )
 	{
 		swprintf( sString, L"%s", pPersonnelDepartedStateStrings[ DEPARTED_DEAD ] );
 	}
@@ -5476,8 +5476,8 @@ void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 
 	mprintf( sX + iSlot * IMAGE_BOX_WIDTH, CHAR_NAME_Y + 10 , sString );
 
-  
-  
+	
+	
 	return;
 }
 
@@ -5523,13 +5523,13 @@ void DisplayPersonnelTextOnTitleBar( void )
 	// draw email screen title text
 
 	// font stuff
-  SetFont( FONT14ARIAL );
-  SetFontForeground( FONT_WHITE );
+	SetFont( FONT14ARIAL );
+	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK );
 	
 	// printf the title
 	mprintf( PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText[0] );
-  
+	
 	// reset the shadow
 	
 }
@@ -5538,10 +5538,10 @@ BOOLEAN DisplayHighLightBox( void )
 {
 	PERFORMANCE_MARKER
 	// will display highlight box around selected merc
-	 VOBJECT_DESC VObjectDesc;
-	 UINT32 uiBox = 0;
-	 HVOBJECT hHandle;
-  
+	VOBJECT_DESC VObjectDesc;
+	UINT32 uiBox = 0;
+	HVOBJECT hHandle;
+	
 	// load graphics
 
 	// is the current selected face valid?
@@ -5551,14 +5551,14 @@ BOOLEAN DisplayHighLightBox( void )
 		return ( FALSE );
 	}
 
-  // bounding
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
+	// bounding
+	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("LAPTOP\\PicBorde.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &uiBox));
 
 	// blit it
 	GetVideoObject(&hHandle, uiBox);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH - 2 ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT - 3 ), VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH - 2 ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT - 3 ), VO_BLT_SRCTRANSPARENCY,NULL);
 
 
 	// deleteit
@@ -5651,7 +5651,7 @@ void AddCharacterToOtherList( SOLDIERTYPE *pSoldier )
 
 
 // If you have hired a merc before, then the they left for whatever reason, and now you are hiring them again, 
-// we must get rid of them from the departed section in the personnel screen.  ( wouldnt make sense for them 
+// we must get rid of them from the departed section in the personnel screen.	( wouldnt make sense for them 
 //to be on your team list, and departed list )
 BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( UINT8 ubProfile )
 {
@@ -5698,16 +5698,16 @@ INT32 GetIdOfFirstDisplayedMerc( )
 	// set current soldier
 	pSoldier = MercPtrs[ cnt ];
 
-  if( fCurrentTeamMode == TRUE )
+	if( fCurrentTeamMode == TRUE )
 	{
 		// run through list of soldiers on players current team
 		//cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-    for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
 		{	
-		   if( ( pSoldier->bActive )&&( pSoldier->stats.bLife > 0 ) )
-			 {
-				 return( 0 );
-			 }
+		if( ( pSoldier->bActive )&&( pSoldier->stats.bLife > 0 ) )
+			{
+				return( 0 );
+			}
 		}
 		return( -1 );
 	}
@@ -5728,25 +5728,25 @@ INT32 GetIdOfThisSlot( INT32 iSlot )
 	// set current soldier
 	pSoldier = MercPtrs[ cnt ];
 
-  if( fCurrentTeamMode == TRUE )
+	if( fCurrentTeamMode == TRUE )
 	{
 		// run through list of soldiers on players current team
 		cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-    for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
+	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
 		{	
-		   if( ( pSoldier->bActive )  )
-			 {
-				 
+		if( ( pSoldier->bActive )	)
+			{
+				
 
-				 // same character as slot, return this value
-				 if( iCounter == iSlot )
-				 {
+				// same character as slot, return this value
+				if( iCounter == iSlot )
+				{
 						return( cnt );
-				 }
+				}
 
-				 // found another soldier
-				 iCounter++;
-			 }
+				// found another soldier
+				iCounter++;
+			}
 		}
 	}
 	else
@@ -5764,9 +5764,9 @@ BOOLEAN RenderAtmPanel( void )
 {
 	PERFORMANCE_MARKER
 
-	 VOBJECT_DESC VObjectDesc;
-	 UINT32 uiBox = 0;
-	 HVOBJECT hHandle;
+	VOBJECT_DESC VObjectDesc;
+	UINT32 uiBox = 0;
+	HVOBJECT hHandle;
 
 
 	// render the ATM panel
@@ -5843,7 +5843,7 @@ void CreateDestroyStartATMButton( void )
 
 		/*
 		// the ATM start button
-		giPersonnelATMStartButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ 0 ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ 0 ] = QuickCreateButton( giPersonnelATMStartButtonImage[ 0 ] , 519,87,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ATMStartButtonCallback );
@@ -5855,7 +5855,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ 0 ], CURSOR_LAPTOP_SCREEN);
 */
 		// the stats button
-		giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ] , iScreenWidthOffset + 519, iScreenHeightOffset + 80,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)PersonnelStatStartButtonCallback );
@@ -5867,7 +5867,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ], CURSOR_LAPTOP_SCREEN);
 
 		// the Employment selection button
-		giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ] , iScreenWidthOffset + 519, iScreenHeightOffset + 110,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)EmployementInfoButtonCallback );
@@ -5879,7 +5879,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ], CURSOR_LAPTOP_SCREEN);
 
 		// the inventory selection button
-		giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ] , iScreenWidthOffset + 519, iScreenHeightOffset + 140,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)PersonnelINVStartButtonCallback );
@@ -5932,7 +5932,7 @@ void FindPositionOfPersInvSlider( void )
 	}
 
 	// get the subregion sizes
-	sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems  ) );
+	sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems	) );
 
 	// get slider position
 	guiSliderPosition = uiCurrentInventoryIndex * sSizeOfEachSubRegion;
@@ -5951,12 +5951,12 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 	INT16 iCurrentItemValue = 0;
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ) || ( iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ) ) 
-  {
+	{
 		// find out how many there are
 		iValue = ( INT32 )( GetNumberOfInventoryItemsOnCurrentMerc( ) );
 
 		// make sure there are more than one page 
-		if( ( INT32 )uiCurrentInventoryIndex >=  iValue - NUMBER_OF_INVENTORY_PERSONNEL + 1 )
+		if( ( INT32 )uiCurrentInventoryIndex >=	iValue - NUMBER_OF_INVENTORY_PERSONNEL + 1 )
 		{
 			return;
 		}
@@ -5975,7 +5975,7 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 		// get the subregion sizes
-		sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems  ) );
+		sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems	) );
 
 		// get the cursor placement
 		sYPositionOnBar = (INT16) MousePos.y - Y_OF_PERSONNEL_SCROLL_REGION;
@@ -6069,11 +6069,11 @@ void CreateDestroyATMButton( void )
 		{
 			if( iCounter == OK_ATM )
 			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,7,-1,9,-1 );
+				giPersonnelATMSideButtonImage[ iCounter ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,7,-1,9,-1 );
 			}
 			else
 			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,10,-1,12,-1 );
+				giPersonnelATMSideButtonImage[ iCounter ]=	LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,10,-1,12,-1 );
 			}
 			
 			if( ( iCounter != DEPOSIT_ATM ) && ( iCounter != WIDTHDRAWL_ATM ) )
@@ -6113,7 +6113,7 @@ void CreateDestroyATMButton( void )
 
 		for( iCounter = OK_ATM; iCounter < NUMBER_ATM_BUTTONS ;iCounter++ )
 		{
-			RemoveButton( giPersonnelATMSideButton[ iCounter ]  );
+			RemoveButton( giPersonnelATMSideButton[ iCounter ]	);
 			UnloadButtonImage( giPersonnelATMSideButtonImage[ iCounter ] );
 		}
 
@@ -6136,7 +6136,7 @@ void ATMStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -6161,7 +6161,7 @@ void PersonnelINVStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		fReDrawScreenFlag=TRUE;
-    btn->uiFlags |= (BUTTON_CLICKED_ON);
+	btn->uiFlags |= (BUTTON_CLICKED_ON);
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
 //		fShowInventory = TRUE;
@@ -6178,7 +6178,7 @@ void PersonnelStatStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{	
 		fReDrawScreenFlag=TRUE;
-    btn->uiFlags |= BUTTON_CLICKED_ON;
+	btn->uiFlags |= BUTTON_CLICKED_ON;
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);	
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);	
 //		fShowInventory = FALSE;
@@ -6196,7 +6196,7 @@ void EmployementInfoButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{	
 		fReDrawScreenFlag=TRUE;
-    btn->uiFlags |= BUTTON_CLICKED_ON;
+	btn->uiFlags |= BUTTON_CLICKED_ON;
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);	
 		ButtonList[giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);	
 		gubPersonnelInfoState = PRSNL_EMPLOYMENT;
@@ -6224,7 +6224,7 @@ void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
+	btn->uiFlags|=(BUTTON_CLICKED_ON);
 		
 		switch( iValue )
 		{
@@ -6263,7 +6263,7 @@ void ATMOtherButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -6417,7 +6417,7 @@ void ATMNumberButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		{
 			fReDrawScreenFlag=TRUE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);   
+	btn->uiFlags|=(BUTTON_CLICKED_ON);	
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -6467,7 +6467,7 @@ void DisplayATMAmount( void )
 	// insert commas and dollar sign
 	InsertCommasForDollarFigure( sTempString );
 	InsertDollarSignInToString( sTempString );
-		 
+		
 	// set font
 	SetFont( ATM_FONT );
 
@@ -6501,7 +6501,7 @@ void HandleStateOfATMButtons( void )
 
 		for( iCounter = 0; iCounter < NUMBER_ATM_BUTTONS; iCounter++ )
 		{
-			if( ( iCounter != DEPOSIT_ATM) && ( iCounter != WIDTHDRAWL_ATM ) && ( iCounter != CANCEL_ATM )  )
+			if( ( iCounter != DEPOSIT_ATM) && ( iCounter != WIDTHDRAWL_ATM ) && ( iCounter != CANCEL_ATM )	)
 			{
 				DisableButton( giPersonnelATMSideButton[ iCounter ] );
 			}
@@ -6575,7 +6575,7 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 			}
 			else
 			{
-				iAmountLeftToTake  -= pSoldier->inv[ iCurrentPocket ].money.uiMoneyAmount;  
+				iAmountLeftToTake	-= pSoldier->inv[ iCurrentPocket ].money.uiMoneyAmount;	
 				pSoldier->inv[ iCurrentPocket ].money.uiMoneyAmount = 0;
 
 				//Remove the item out off the merc
@@ -6811,7 +6811,7 @@ void DisplayAmountOnCurrentMerc( void )
 	// insert commas and dollar sign
 	InsertCommasForDollarFigure( sString );
 	InsertDollarSignInToString( sString );
-		 
+		
 	// set font
 	SetFont( ATM_FONT );
 
@@ -6836,13 +6836,13 @@ void HandlePersonnelKeyboard( void )
 	CHAR16 sZero[ 2 ] = L"0";
 	
 	InputAtom					InputEvent;
-	POINT  MousePos;
+	POINT	MousePos;
 
 	GetCursorPos(&MousePos);
 	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
-  while (DequeueEvent(&InputEvent) == TRUE)
-  {
+	while (DequeueEvent(&InputEvent) == TRUE)
+	{
 		if ( (InputEvent.usEvent == KEY_DOWN ) && (InputEvent.usParam >= '0' ) && ( InputEvent.usParam <= '9') )
 		{
 			if( ( fShowAtmPanel ) && ( fATMFlags != 0 ) )
@@ -6871,11 +6871,11 @@ void RenderRectangleForPersonnelTransactionAmount( void )
 	PERFORMANCE_MARKER
 	INT32 iLength = 0; 
 	INT32 iHeight = GetFontHeight( ATM_FONT );
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
+	UINT32										uiDestPitchBYTES;
+	UINT8											*pDestBuf;
 	CHAR16 sTempString[ 32 ];
 	CHAR16 sZero[ 2 ] = L"0";
-	INT32	 iCounter = 0;
+	INT32	iCounter = 0;
 	
 
 	wcscpy( sTempString, sTransferString );
@@ -6904,7 +6904,7 @@ void RenderRectangleForPersonnelTransactionAmount( void )
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );			
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-	RectangleDraw( TRUE, ( ATM_DISPLAY_X + ATM_DISPLAY_WIDTH ) - iLength - 2,  ATM_DISPLAY_Y + 35, ATM_DISPLAY_X + ATM_DISPLAY_WIDTH + 1, ATM_DISPLAY_Y + iHeight + 36, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf );	
+	RectangleDraw( TRUE, ( ATM_DISPLAY_X + ATM_DISPLAY_WIDTH ) - iLength - 2,	ATM_DISPLAY_Y + 35, ATM_DISPLAY_X + ATM_DISPLAY_WIDTH + 1, ATM_DISPLAY_Y + iHeight + 36, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf );	
 	UnLockVideoSurface( FRAME_BUFFER );
 
 }
@@ -6961,7 +6961,7 @@ BOOLEAN IsPastMercDead( INT32 iId )
 BOOLEAN IsPastMercFired( INT32 iId )
 {
 	PERFORMANCE_MARKER
-	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )  ) == DEPARTED_FIRED )
+	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )	) == DEPARTED_FIRED )
 	{
 		return( TRUE );
 		}
@@ -6974,7 +6974,7 @@ BOOLEAN IsPastMercFired( INT32 iId )
 BOOLEAN IsPastMercOther( INT32 iId )
 {
 	PERFORMANCE_MARKER
-	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )  ) == DEPARTED_OTHER )
+	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )	) == DEPARTED_OTHER )
 	{
 		return( TRUE );
 		}
@@ -7007,7 +7007,7 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 		switch(iCounter)
 		{
 
-//		 case 12:
+//		case 12:
 
 		//Remaining Contract:
 		case 0:
@@ -7057,65 +7057,65 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 					mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 				}
 
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		 
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);		
 		}
 		break;
 
-//		 case 11:
-//		 case 19:
-		 case 1:
+//		case 11:
+//		case 19:
+		case 1:
 
-			 // total contract time served
-			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);		 
+			// total contract time served
+			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);		
 
 			//./DEF 2/4/99: total service days used to be calced as 'days -1'
 
 			swprintf(sString, L"%d %s",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
-		 break;
+		FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+		mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
+		break;
 
-//		 case 13:
-		 case 3:
-		   // cost (PRSNL_TXT_TOTAL_COST)
+//		case 13:
+		case 3:
+		// cost (PRSNL_TXT_TOTAL_COST)
 
 /*
-			 if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 UINT32 uiDailyCost = 0;
+			if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				UINT32 uiDailyCost = 0;
 
-				 if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-				 {
-					 // 2 week contract
-					 uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].uiBiWeeklySalary / 14;
-				 }
-				 else if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
-				 {
-					 // 1 week contract
-					 uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].uiWeeklySalary / 7;
-				 }
-				 else
-				 {
-					 uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].sSalary;
-				 }
+				if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+				{
+					// 2 week contract
+					uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].uiBiWeeklySalary / 14;
+				}
+				else if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
+				{
+					// 1 week contract
+					uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].uiWeeklySalary / 7;
+				}
+				else
+				{
+					uiDailyCost = gMercProfiles[ Menptr[ iId ].ubProfile ].sSalary;
+				}
 
-//				 swprintf( sString, L"%d",uiDailyCost * Menptr[ iId ].iTotalContractLength );
-				 swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
-			 }
-			 else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-			 {
+//				swprintf( sString, L"%d",uiDailyCost * Menptr[ iId ].iTotalContractLength );
+				swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
+			}
+			else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			{
 //					swprintf( sString, L"%d",gMercProfiles[ Menptr[ iId ].ubProfile ].sSalary * gMercProfiles[ Menptr[ iId ].ubProfile ].iMercMercContractLength );
 					swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
-			 }
-			 else
-			 {
-				 //Display a $0 amount
-//				 swprintf( sString, L"0" );
+			}
+			else
+			{
+				//Display a $0 amount
+//				swprintf( sString, L"0" );
 
-				 swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
-			 }
+				swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
+			}
 */
 				swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
 
@@ -7125,86 +7125,86 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 
 /*
 DEF:3/19/99:
-			 if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC )
-			 {
-			   swprintf( sStringA, L"%s", pPersonnelScreenStrings[ PRSNL_TXT_UNPAID_AMOUNT ] );
-			 }
-			 else
+			if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC )
+			{
+			swprintf( sStringA, L"%s", pPersonnelScreenStrings[ PRSNL_TXT_UNPAID_AMOUNT ] );
+			}
+			else
 */
-			 {
-				 swprintf( sStringA, L"%s", pPersonnelScreenStrings[ PRSNL_TXT_TOTAL_COST ]  );
-			 }
+			{
+				swprintf( sStringA, L"%s", pPersonnelScreenStrings[ PRSNL_TXT_TOTAL_COST ]	);
+			}
 
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			 mprintf( (INT16)(pPersonnelScreenPoints[iCounter].x +(iSlot*TEXT_BOX_WIDTH) ),pPersonnelScreenPoints[ iCounter ].y,sStringA);
+			FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
+			mprintf( (INT16)(pPersonnelScreenPoints[iCounter].x +(iSlot*TEXT_BOX_WIDTH) ),pPersonnelScreenPoints[ iCounter ].y,sStringA);
 
-			 // print contract cost
-			 mprintf( ( INT16 ) ( sX ) , pPersonnelScreenPoints[iCounter].y,sString);
-     	 
-			 if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 // daily rate
-				 if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-				 {
-					 // 2 week contract
-					 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiBiWeeklySalary / 14 );
-				   InsertCommasForDollarFigure( sStringA );
-					 InsertDollarSignInToString( sStringA );
-					 swprintf( sString, L"%s", sStringA );
-				 }
-				 else if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
-				 {
-					 // 1 week contract
-					 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiWeeklySalary / 7 );
-				   InsertCommasForDollarFigure( sStringA );
-					 InsertDollarSignInToString( sStringA );
-					 swprintf( sString, L"%s",  sStringA );
-				 }
-				 else
-				 {
+			// print contract cost
+			mprintf( ( INT16 ) ( sX ) , pPersonnelScreenPoints[iCounter].y,sString);
+	 	
+			if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				// daily rate
+				if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+				{
+					// 2 week contract
+					swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiBiWeeklySalary / 14 );
+				InsertCommasForDollarFigure( sStringA );
+					InsertDollarSignInToString( sStringA );
+					swprintf( sString, L"%s", sStringA );
+				}
+				else if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
+				{
+					// 1 week contract
+					swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiWeeklySalary / 7 );
+				InsertCommasForDollarFigure( sStringA );
+					InsertDollarSignInToString( sStringA );
+					swprintf( sString, L"%s",	sStringA );
+				}
+				else
+				{
 
-					 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-					 InsertCommasForDollarFigure( sStringA );
-				   InsertDollarSignInToString( sStringA );
-					 swprintf( sString,  L"%s", sStringA );
-				 }
-			 }
-			 else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-			 {
+					swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
+					InsertCommasForDollarFigure( sStringA );
+				InsertDollarSignInToString( sStringA );
+					swprintf( sString,	L"%s", sStringA );
+				}
+			}
+			else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			{
 //DEF: 99/2/7
-//				 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary * Menptr[ iId ].iTotalContractLength);
-				 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-				 InsertCommasForDollarFigure( sStringA );
-				 InsertDollarSignInToString( sStringA );
-				 swprintf( sString,   L"%s", sStringA );
-			 }
+//				swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary * Menptr[ iId ].iTotalContractLength);
+				swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
+				InsertCommasForDollarFigure( sStringA );
+				InsertDollarSignInToString( sStringA );
+				swprintf( sString,	L"%s", sStringA );
+			}
 
-			 else
-			 {
-				 //Display a $0 amount
-//				 swprintf( sString, L"0" );
-//				 InsertDollarSignInToString( sString );
-				 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-				 InsertCommasForDollarFigure( sStringA );
-				 InsertDollarSignInToString( sStringA );
-				 swprintf( sString,   L"%s", sStringA );
-			 }
+			else
+			{
+				//Display a $0 amount
+//				swprintf( sString, L"0" );
+//				InsertDollarSignInToString( sString );
+				swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
+				InsertCommasForDollarFigure( sStringA );
+				InsertDollarSignInToString( sStringA );
+				swprintf( sString,	L"%s", sStringA );
+			}
 
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+			FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 
-//			 iCounter++;
-			 iCounter++;
+//			iCounter++;
+			iCounter++;
 
-       // now print daily rate
-			 mprintf( ( INT16 )( sX ),pPersonnelScreenPoints[ iCounter+1 ].y,sString);
-			 mprintf( (INT16)(pPersonnelScreenPoints[iCounter+1].x +(iSlot*TEXT_BOX_WIDTH) ),pPersonnelScreenPoints[ iCounter +1].y, pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
+		// now print daily rate
+			mprintf( ( INT16 )( sX ),pPersonnelScreenPoints[ iCounter+1 ].y,sString);
+			mprintf( (INT16)(pPersonnelScreenPoints[iCounter+1].x +(iSlot*TEXT_BOX_WIDTH) ),pPersonnelScreenPoints[ iCounter +1].y, pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
 			
-			 break;
+			break;
 
-		 case 5:
-		   // medical deposit		 
+		case 5:
+		// medical deposit		
 
-			 //if its a merc merc, display the salary oweing
+			//if its a merc merc, display the salary oweing
 			if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC )
 			{
 				mprintf((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter-1].y,pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
@@ -7213,7 +7213,7 @@ DEF:3/19/99:
 				InsertCommasForDollarFigure( sString );
 				InsertDollarSignInToString( sString );
 
-				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}
 			else
@@ -7226,18 +7226,18 @@ DEF:3/19/99:
 				InsertCommasForDollarFigure( sString );
 				InsertDollarSignInToString( sString );
 
-				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,	&sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}
 
-				 
-		 break;
+				
+		break;
 
 		}
 	}
 }
 
-// AIM merc:  Returns the amount of time left on mercs contract
+// AIM merc:	Returns the amount of time left on mercs contract
 // MERC merc: Returns the amount of time the merc has worked
 // IMP merc:	Returns the amount of time the merc has worked
 // else:			returns -1

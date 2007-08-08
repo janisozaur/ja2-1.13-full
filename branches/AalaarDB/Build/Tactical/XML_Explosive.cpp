@@ -115,9 +115,9 @@ explosiveCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -145,12 +145,12 @@ explosiveEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curExplosive.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubType") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubType  = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubType	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubDamage") == 0)
 		{
@@ -160,37 +160,37 @@ explosiveEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "ubStunDamage") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubStunDamage   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubStunDamage	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubRadius") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubRadius   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubRadius	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubVolume") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubVolume   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubVolume	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubVolatility") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubVolatility   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubVolatility	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubAnimationID") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubAnimationID   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubAnimationID	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubStartRadius") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubStartRadius   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubStartRadius	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubDuration") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExplosive.ubDuration   = (UINT8) atol(pData->szCharData);
+			pData->curExplosive.ubDuration	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -246,7 +246,7 @@ BOOLEAN ReadInExplosiveStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -287,15 +287,15 @@ BOOLEAN WriteExplosiveStats()
 			FilePrintf(hFile,"\t<EXPLOSIVE>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<ubType>%d</ubType>\r\n",								Explosive[cnt].ubType  );
-			FilePrintf(hFile,"\t\t<ubDamage>%d</ubDamage>\r\n",								Explosive[cnt].ubDamage   );
-			FilePrintf(hFile,"\t\t<ubStunDamage>%d</ubStunDamage>\r\n",								Explosive[cnt].ubStunDamage   );
-			FilePrintf(hFile,"\t\t<ubRadius>%d</ubRadius>\r\n",								Explosive[cnt].ubRadius   );
-			FilePrintf(hFile,"\t\t<ubVolume>%d</ubVolume>\r\n",								Explosive[cnt].ubVolume   );
-			FilePrintf(hFile,"\t\t<ubVolatility>%d</ubVolatility>\r\n",								Explosive[cnt].ubVolatility   );
-			FilePrintf(hFile,"\t\t<ubAnimationID>%d</ubAnimationID>\r\n",								Explosive[cnt].ubAnimationID   );
-			FilePrintf(hFile,"\t\t<ubDuration>%d</ubDuration>\r\n",								Explosive[cnt].ubDuration   );
-			FilePrintf(hFile,"\t\t<ubStartRadius>%d</ubStartRadius>\r\n",								Explosive[cnt].ubStartRadius   );
+			FilePrintf(hFile,"\t\t<ubType>%d</ubType>\r\n",								Explosive[cnt].ubType	);
+			FilePrintf(hFile,"\t\t<ubDamage>%d</ubDamage>\r\n",								Explosive[cnt].ubDamage	);
+			FilePrintf(hFile,"\t\t<ubStunDamage>%d</ubStunDamage>\r\n",								Explosive[cnt].ubStunDamage	);
+			FilePrintf(hFile,"\t\t<ubRadius>%d</ubRadius>\r\n",								Explosive[cnt].ubRadius	);
+			FilePrintf(hFile,"\t\t<ubVolume>%d</ubVolume>\r\n",								Explosive[cnt].ubVolume	);
+			FilePrintf(hFile,"\t\t<ubVolatility>%d</ubVolatility>\r\n",								Explosive[cnt].ubVolatility	);
+			FilePrintf(hFile,"\t\t<ubAnimationID>%d</ubAnimationID>\r\n",								Explosive[cnt].ubAnimationID	);
+			FilePrintf(hFile,"\t\t<ubDuration>%d</ubDuration>\r\n",								Explosive[cnt].ubDuration	);
+			FilePrintf(hFile,"\t\t<ubStartRadius>%d</ubStartRadius>\r\n",								Explosive[cnt].ubStartRadius	);
 
 			FilePrintf(hFile,"\t</EXPLOSIVE>\r\n");
 		}

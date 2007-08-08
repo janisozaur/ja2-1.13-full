@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 	#include "GameSettings.h"
@@ -116,7 +115,7 @@ REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
 {					// pass					# choices												slots repaired in this pass
 	{ /* hands and armor */			5,	HANDPOS, SECONDHANDPOS, VESTPOS, HELMETPOS, LEGPOS, -1, -1, -1, -1, -1, -1, -1 },
 	{ /* headgear */						2,	HEAD1POS, HEAD2POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* pockets */						 12,	BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS },
+	{ /* pockets */						12,	BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS },
 };
 
 extern STR16 sRepairsDoneString[];
@@ -139,19 +138,19 @@ INT16 gsAssignmentBoxesX, gsAssignmentBoxesY;
 
 
 // assignment menu mouse regions
-MOUSE_REGION    gAssignmentMenuRegion[ MAX_ASSIGN_STRING_COUNT ];
-MOUSE_REGION    gTrainingMenuRegion[ MAX_TRAIN_STRING_COUNT ];
-MOUSE_REGION    gAttributeMenuRegion[ MAX_ATTRIBUTE_STRING_COUNT ];
-MOUSE_REGION    gSquadMenuRegion[ MAX_SQUAD_MENU_STRING_COUNT ];
-MOUSE_REGION    gContractMenuRegion[ MAX_CONTRACT_MENU_STRING_COUNT ];
-MOUSE_REGION    gRemoveMercAssignRegion[ MAX_REMOVE_MERC_COUNT ];
-MOUSE_REGION    gEpcMenuRegion[ MAX_EPC_MENU_STRING_COUNT ];
-MOUSE_REGION    gRepairMenuRegion[ 20 ];
+MOUSE_REGION	gAssignmentMenuRegion[ MAX_ASSIGN_STRING_COUNT ];
+MOUSE_REGION	gTrainingMenuRegion[ MAX_TRAIN_STRING_COUNT ];
+MOUSE_REGION	gAttributeMenuRegion[ MAX_ATTRIBUTE_STRING_COUNT ];
+MOUSE_REGION	gSquadMenuRegion[ MAX_SQUAD_MENU_STRING_COUNT ];
+MOUSE_REGION	gContractMenuRegion[ MAX_CONTRACT_MENU_STRING_COUNT ];
+MOUSE_REGION	gRemoveMercAssignRegion[ MAX_REMOVE_MERC_COUNT ];
+MOUSE_REGION	gEpcMenuRegion[ MAX_EPC_MENU_STRING_COUNT ];
+MOUSE_REGION	gRepairMenuRegion[ 20 ];
 
 // mouse region for vehicle menu
 MOUSE_REGION		gVehicleMenuRegion[ 20 ];
 
-MOUSE_REGION    gAssignmentScreenMaskRegion;
+MOUSE_REGION	gAssignmentScreenMaskRegion;
 
 BOOLEAN fShownAssignmentMenu = FALSE;
 BOOLEAN fShowVehicleMenu = FALSE;
@@ -233,7 +232,7 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 // militia training bonus for EACH level of teaching skill (percentage points)
 #define TEACH_BONUS_TO_TRAIN 30
 // militia training bonus for RPC (percentage points)
-#define RPC_BONUS_TO_TRAIN   10
+#define RPC_BONUS_TO_TRAIN	10
 
 // the bonus to training in marksmanship in the Alma gun range sector
 #define GUN_RANGE_TRAINING_BONUS	25
@@ -245,8 +244,8 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 #define MIN_RATING_TO_TEACH 25 
 
 // activity levels for natural healing ( the higher the number, the slower the natural recover rate
-#define LOW_ACTIVITY_LEVEL      1
-#define MEDIUM_ACTIVITY_LEVEL   4
+#define LOW_ACTIVITY_LEVEL		1
+#define MEDIUM_ACTIVITY_LEVEL	4
 #define HIGH_ACTIVITY_LEVEL			12
 */
 /*
@@ -257,7 +256,7 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 #define AVG_NUMBER_OF_HOURS_OF_SLEEP_NEEDED 7
 */
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 #define MAX_DISTANCE_FOR_DOCTORING	5
 #define MAX_DISTANCE_FOR_REPAIR			5
 #define MAX_DISTANCE_FOR_TRAINING		5
@@ -286,7 +285,7 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ );
 void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ );
 
 // heal characters in this sector with this doctor
-void HealCharacters( SOLDIERTYPE *pDoctor,  INT16 sX, INT16 sY, INT8 bZ );
+void HealCharacters( SOLDIERTYPE *pDoctor,	INT16 sX, INT16 sY, INT8 bZ );
 
 // update characters who might done healing but are still patients
 void UpdatePatientsWhoAreDoneHealing( void );
@@ -451,14 +450,14 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft );
 BOOLEAN UnjamGunsOnSoldier( SOLDIERTYPE *pOwnerSoldier, SOLDIERTYPE *pRepairSoldier, UINT8 *pubRepairPtsLeft );
 
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 BOOLEAN IsTheSAMSiteInSectorRepairable( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier );
 BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints );
 BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier );
 */
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient );
 */
 
@@ -483,7 +482,7 @@ void BuildSectorsWithSoldiersList( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 
 	pSoldier = MercPtrs[ 0 ];
 
@@ -492,7 +491,7 @@ void BuildSectorsWithSoldiersList( void )
 	{
 		if(pTeamSoldier->bActive)
 		{
-		  fSectorsWithSoldiers[ pTeamSoldier->sSectorX + pTeamSoldier->sSectorY * MAP_WORLD_X ][ pTeamSoldier->bSectorZ ] = TRUE;
+		fSectorsWithSoldiers[ pTeamSoldier->sSectorX + pTeamSoldier->sSectorY * MAP_WORLD_X ][ pTeamSoldier->bSectorZ ] = TRUE;
 		}
 	}
 }
@@ -500,8 +499,8 @@ void BuildSectorsWithSoldiersList( void )
 void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 {
 	PERFORMANCE_MARKER
-	// This is the most basic assignment-setting function.  It must be called before setting any subsidiary
-	// values like fFixingRobot.  It will clear all subsidiary values so we don't leave the merc in a messed 
+	// This is the most basic assignment-setting function.	It must be called before setting any subsidiary
+	// values like fFixingRobot.	It will clear all subsidiary values so we don't leave the merc in a messed 
 	// up state!
 
 	pSoldier->bAssignment = bAssignment;
@@ -824,7 +823,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
-				// okay, seems like a candidate!  Check if he has anything that needs unjamming or repairs
+				// okay, seems like a candidate!	Check if he has anything that needs unjamming or repairs
 
 				for ( bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 				{
@@ -1333,7 +1332,7 @@ BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrain
 			{
 				return ( FALSE );
 			}
-			else if( ( pSoldier->stats.bStrength >=  gGameExternalOptions.ubTrainingSkillMax ) && ( fTrainSelf ) )
+			else if( ( pSoldier->stats.bStrength >=	gGameExternalOptions.ubTrainingSkillMax ) && ( fTrainSelf ) )
 			{
 				return ( FALSE );
 			}
@@ -1606,7 +1605,7 @@ BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	// ARM: we allow this even if there are no students assigned yet.  Flashing is warning enough.
+	// ARM: we allow this even if there are no students assigned yet.	Flashing is warning enough.
 	return( TRUE );
 }
 
@@ -1628,7 +1627,7 @@ BOOLEAN CanCharacterBeTrainedByOther( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	// ARM: we now allow this even if there are no trainers assigned yet.  Flashing is warning enough.
+	// ARM: we now allow this even if there are no trainers assigned yet.	Flashing is warning enough.
 	return( TRUE );
 }
 
@@ -1961,7 +1960,7 @@ void UpdateAssignments()
 	InitSectorsWithSoldiersList( );
 
 	// build list
-	BuildSectorsWithSoldiersList(  );
+	BuildSectorsWithSoldiersList(	);
 
 	// handle natural healing
 	HandleNaturalHealing( );
@@ -1996,7 +1995,7 @@ void UpdateAssignments()
 				// handle militia squads movings and creating (not an assignment)
 				if(!bZ && sX < 17 && sY < 17 && sX > 0 && sY > 0)UpdateMilitiaSquads( sX, sY );
 				// is there anyone in this sector?
-				if( fSectorsWithSoldiers[ sX + sY * MAP_WORLD_X ][ bZ ]  == TRUE )
+				if( fSectorsWithSoldiers[ sX + sY * MAP_WORLD_X ][ bZ ]	== TRUE )
 				{
 					// handle any doctors
 					HandleDoctorsInSector( sX, sY, bZ );
@@ -2060,7 +2059,7 @@ void VerifyTownTrainingIsPaidFor( void )
 			// make sure that sector is paid up!
 			if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
 			{
-				// NOPE!  We've got a bug somewhere
+				// NOPE!	We've got a bug somewhere
 				StopTimeCompression();
 
 				// report the error
@@ -2081,7 +2080,7 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 	PERFORMANCE_MARKER
 	// run thought list of characters find number with this assignment
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 	INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 	
@@ -2218,7 +2217,7 @@ UINT8 CalculateRepairPointsForRepairman(SOLDIERTYPE *pSoldier, UINT16 *pusMaxPts
 	PERFORMANCE_MARKER
 	UINT16 usRepairPts;
 	UINT16 usKitPts;
-	UINT8  ubKitEffectiveness;
+	UINT8	ubKitEffectiveness;
 
 	// make sure toolkit in hand?
 	if( fMakeSureKitIsInHand )
@@ -2227,7 +2226,7 @@ UINT8 CalculateRepairPointsForRepairman(SOLDIERTYPE *pSoldier, UINT16 *pusMaxPts
 	}
 
 	// can't repair at all without a toolkit
-	if (!Item[pSoldier->inv[HANDPOS].usItem].toolkit  )
+	if (!Item[pSoldier->inv[HANDPOS].usItem].toolkit	)
 	{
 		*pusMaxPts = 0;
 		return(0);
@@ -2282,9 +2281,9 @@ UINT16 ToolKitPoints(SOLDIERTYPE *pSoldier)
 	for (ubPocket=HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
 		if( Item[pSoldier->inv[ ubPocket ].usItem].toolkit )
-    {
+	{
 			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
-    }
+	}
 	}
 
 	return( usKitpts );
@@ -2301,10 +2300,10 @@ UINT16 TotalMedicalKitPoints(SOLDIERTYPE *pSoldier)
 	for (ubPocket = HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
 		// NOTE: Here, we don't care whether these are MEDICAL BAGS or FIRST AID KITS!
-    if ( IsMedicalKitItem( &( pSoldier->inv[ ubPocket ] ) ) )
-    {
+	if ( IsMedicalKitItem( &( pSoldier->inv[ ubPocket ] ) ) )
+	{
 			usKitpts += TotalPoints( &( pSoldier->inv[ ubPocket ] ) );
-    }
+	}
 	}
 
 	return( usKitpts );
@@ -2315,7 +2314,7 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
@@ -2395,7 +2394,7 @@ void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
 	UINT16 usMax =0;
 	UINT8 ubTotalNumberOfPatients = 0;
 	SOLDIERTYPE *pSoldier = MercPtrs[0], *pTeamSoldier = NULL, *pWorstHurtSoldier = NULL;
-  INT32 cnt = 0;
+	INT32 cnt = 0;
 	UINT16 usOldLeftOvers = 0;
 
 
@@ -2510,7 +2509,7 @@ void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
 }
 
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient )
 {
 	PERFORMANCE_MARKER
@@ -2674,10 +2673,10 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 	}
 
 
-/* ARM - Eliminated.  We now have other methods of properly using doctors to auto-bandage bleeding,
+/* ARM - Eliminated.	We now have other methods of properly using doctors to auto-bandage bleeding,
 // using the correct kits points instead of this 1 pt. "special"
 
-	// stop all bleeding of patient..for 1 pt (it's fast).  But still use up normal kit pts to do it
+	// stop all bleeding of patient..for 1 pt (it's fast).	But still use up normal kit pts to do it
 	if (pPatient->bBleeding > 0)
 	{
 		usHealingPtsLeft--;
@@ -2696,7 +2695,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 				// ok, we have med kit in this pocket, use it
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
+				// but it does effect how fast the medkit is used up!	First aid kits disappear at double their doctoring rate!
 				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
@@ -2722,7 +2721,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
 		{
-		  bPointsToUse = ( INT8 )usHealingPtsLeft;
+		bPointsToUse = ( INT8 )usHealingPtsLeft;
 		}
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
@@ -2735,7 +2734,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 				// ok, we have med kit in this pocket, use it
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
+				// but it does effect how fast the medkit is used up!	First aid kits disappear at double their doctoring rate!
 				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
@@ -2774,10 +2773,10 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 			bMedFactor = IsMedicalKitItem( &( pDoctor->inv[ bPocket ] ) );
 			if ( bMedFactor > 0 )
 			{
-				// ok, we have med kit in this pocket, use it  (use only half if it's worth double)
+				// ok, we have med kit in this pocket, use it	(use only half if it's worth double)
 
 				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
+				// but it does effect how fast the medkit is used up!	First aid kits disappear at double their doctoring rate!
 				bPointsUsed = (INT8) UseKitPoints( &( pDoctor->inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
 				bPointsHealed = bPointsUsed / bMedFactor;
 
@@ -2807,7 +2806,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 		usTotalHundredthsUsed -= pPatient->sFractLife;
 		pPatient->sFractLife = 0;
 
-/* ARM Removed.  This is duplicating the check in UpdatePatientsWhoAreDoneHealing(), guy would show up twice!
+/* ARM Removed.	This is duplicating the check in UpdatePatientsWhoAreDoneHealing(), guy would show up twice!
 		// if it isn't the doctor himself)
 		if( ( pPatient != pDoctor )
 		{
@@ -2824,7 +2823,7 @@ void CheckForAndHandleHospitalPatients( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 
 	if( fSectorsWithSoldiers[ HOSPITAL_SECTOR_X + HOSPITAL_SECTOR_Y * MAP_WORLD_X ][ 0 ] == FALSE )
 	{
@@ -2863,7 +2862,7 @@ void HealHospitalPatient( SOLDIERTYPE *pPatient, UINT16 usHealingPtsLeft )
 		return;
 	}
 
-/*  Stopping hospital patients' bleeding must be handled immediately, not during a regular hourly check
+/*	Stopping hospital patients' bleeding must be handled immediately, not during a regular hourly check
 	// stop all bleeding of patient..for 1 pt.
 	if (pPatient->bBleeding > 0)
 	{
@@ -2881,7 +2880,7 @@ void HealHospitalPatient( SOLDIERTYPE *pPatient, UINT16 usHealingPtsLeft )
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
 		{
-		  bPointsToUse = ( INT8 )usHealingPtsLeft;
+		bPointsToUse = ( INT8 )usHealingPtsLeft;
 		}
 
 		usHealingPtsLeft -= bPointsToUse;
@@ -2920,7 +2919,7 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
@@ -2952,7 +2951,7 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 }
 
 
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEAN * pfNothingLeftToRepair )
 {
 	PERFORMANCE_MARKER
@@ -3216,13 +3215,13 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 
 
 	// grab max number of repair pts open to this soldier
-  ubRepairPtsLeft = CalculateRepairPointsForRepairman( pSoldier, &usMax, TRUE );
+	ubRepairPtsLeft = CalculateRepairPointsForRepairman( pSoldier, &usMax, TRUE );
 
 	// no points
-  if ( ubRepairPtsLeft == 0 )
+	if ( ubRepairPtsLeft == 0 )
 	{
 		AssignmentDone( pSoldier, TRUE, TRUE );
-    return;
+	return;
 	}
 
 	// remember what we've started off with
@@ -3305,12 +3304,12 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 	}
 
 	// what are the total amount of pts used by character?
-  ubRepairPtsUsed = ubInitialRepairPts - ubRepairPtsLeft;
+	ubRepairPtsUsed = ubInitialRepairPts - ubRepairPtsLeft;
 	if( ubRepairPtsUsed > 0 )
 	{
 		// improve stats
 		StatChange( pSoldier, MECHANAMT, ( UINT16 ) (ubRepairPtsUsed / 2), FALSE );
-		StatChange( pSoldier, DEXTAMT,	 ( UINT16 ) (ubRepairPtsUsed / 2), FALSE );
+		StatChange( pSoldier, DEXTAMT,	( UINT16 ) (ubRepairPtsUsed / 2), FALSE );
 
 		// check if kit damaged/depleted
 		if( ( Random( 100 ) ) < (UINT32) (ubRepairPtsUsed * 5) ) // CJC: added a x5 as this wasn't going down anywhere fast enough
@@ -3356,7 +3355,7 @@ BOOLEAN IsItemRepairable( UINT16 usItem, INT8 bStatus )
 	PERFORMANCE_MARKER
 	// check to see if item can/needs to be repaired
 //	if ( ( bStatus < 100) && ( Item[ usItem ].fFlags & ITEM_REPAIRABLE ) )
-	if ( ( bStatus < 100) && ( Item[ usItem ].repairable  ) )
+	if ( ( bStatus < 100) && ( Item[ usItem ].repairable	) )
 	{
 		// yep
 		return ( TRUE );
@@ -3372,7 +3371,7 @@ void HandleRestAndFatigueInSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	PERFORMANCE_MARKER
 	// this will handle all sleeping characters in this sector
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 
 	pSoldier = MercPtrs[0];	
 	
@@ -3488,10 +3487,10 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 		bMaxBreathLoss = 2;
 	}
 
-	//KM: Added encumbrance calculation to soldiers moving on foot.  Anything above 100% will increase
-	//    rate of fatigue.  200% encumbrance will cause soldiers to tire twice as quickly.
+	//KM: Added encumbrance calculation to soldiers moving on foot.	Anything above 100% will increase
+	//	rate of fatigue.	200% encumbrance will cause soldiers to tire twice as quickly.
 	if( pSoldier->flags.fBetweenSectors && pSoldier->bAssignment != VEHICLE )
-	{ //Soldier is on foot and travelling.  Factor encumbrance into fatigue rate.
+	{ //Soldier is on foot and travelling.	Factor encumbrance into fatigue rate.
 		iPercentEncumbrance = CalculateCarriedWeight( pSoldier );
 		if( iPercentEncumbrance > 100 )
 		{
@@ -3537,7 +3536,7 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 	SOLDIERTYPE *pStudent;
 	UINT8 ubStat;
 	BOOLEAN fAtGunRange = FALSE;
-  UINT32 uiCnt=0;
+	UINT32 uiCnt=0;
 	INT16 sTotalTrainingPts = 0;
 	INT16 sTrainingPtsDueToInstructor = 0;
 	SOLDIERTYPE *pStatTrainerList[ NUM_TRAINABLE_STATS ];		// can't have more "best" trainers than trainable stats
@@ -3562,7 +3561,7 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 	// if sector not under our control, has enemies in it, or is currently in combat mode
 	if (!SectorOursAndPeaceful( sMapX, sMapY, bZ ))
 	{
-		// then training is canceled for this hour.  
+		// then training is canceled for this hour.	
 		// This is partly logical, but largely to prevent newly trained militia from appearing in mid-battle
 		return;
 	}
@@ -3578,7 +3577,7 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 
 	// build list of teammate trainers in this sector.
 
-	// Only the trainer with the HIGHEST training ability in each stat is effective.  This is mainly to avoid having to
+	// Only the trainer with the HIGHEST training ability in each stat is effective.	This is mainly to avoid having to
 	// sort them from highest to lowest if some form of trainer degradation formula was to be used for multiple trainers.
 
 	// for each trainable stat
@@ -3632,10 +3631,10 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 						// if this stat HAS a trainer in sector at all
 						if (pTrainer != NULL)
 						{
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 							// if this sector either ISN'T currently loaded, or it is but the trainer is close enough to the student
 							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent->bSectorZ != gbWorldSectorZ ) ||
-									 ( PythSpacesAway( pStudent->sGridNo, pTrainer->sGridNo ) < MAX_DISTANCE_FOR_TRAINING ) && ( EnoughTimeOnAssignment( pTrainer ) ) )
+									( PythSpacesAway( pStudent->sGridNo, pTrainer->sGridNo ) < MAX_DISTANCE_FOR_TRAINING ) && ( EnoughTimeOnAssignment( pTrainer ) ) )
 */
 							// NB this EnoughTimeOnAssignment() call is redundent since it is called up above
 							//if ( EnoughTimeOnAssignment( pTrainer ) )
@@ -3672,7 +3671,7 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 		{
 			if( pTrainer->bActive && ( pTrainer->sSectorX == sMapX ) && ( pTrainer->sSectorY == sMapY ) && ( pTrainer->bSectorZ == bZ ) )
 			{
-				if( ( pTrainer->bAssignment == TRAIN_TOWN ) && ( EnoughTimeOnAssignment( pTrainer ) )  && ( pTrainer->flags.fMercAsleep == FALSE ) )
+				if( ( pTrainer->bAssignment == TRAIN_TOWN ) && ( EnoughTimeOnAssignment( pTrainer ) )	&& ( pTrainer->flags.fMercAsleep == FALSE ) )
 				{
 					sTownTrainingPts = GetTownTrainPtsForCharacter( pTrainer, &usMaxPts );
 
@@ -3722,19 +3721,19 @@ void HandleTrainingInSector( INT16 sMapX, INT16 sMapY, INT8 bZ )
 int TownTrainerQsortCompare(const void *pArg1, const void *pArg2)
 {
 	PERFORMANCE_MARKER
-  if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts > ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
-  {
-    return(-1);
-  }
-  else
-  if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts < ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
-  {
-    return(1);
-  }
-  else
-  {
-    return(0);
-  }
+	if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts > ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
+	{
+	return(-1);
+	}
+	else
+	if (((TOWN_TRAINER_TYPE *)pArg1)->sTrainingPts < ((TOWN_TRAINER_TYPE *)pArg2)->sTrainingPts)
+	{
+	return(1);
+	}
+	else
+	{
+	return(0);
+	}
 }
 
 
@@ -3813,9 +3812,9 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	if( pStudent == NULL )
 	{
 		// assume these default values
-	  bTraineeEffWisdom = 100;
-	  bTraineeNatWisdom = 100;
-	  bTraineeSkill = 0;
+	bTraineeEffWisdom = 100;
+	bTraineeNatWisdom = 100;
+	bTraineeSkill = 0;
 		bOpinionFactor = 0;
 	}
 	else
@@ -3872,8 +3871,8 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 		}
 
 		// factor in their mutual relationship
-		bOpinionFactor  = gMercProfiles[    pStudent->ubProfile ].bMercOpinion[ pInstructor->ubProfile ];
-		bOpinionFactor += gMercProfiles[ pInstructor->ubProfile ].bMercOpinion[    pStudent->ubProfile ] / 2;
+		bOpinionFactor	= gMercProfiles[	pStudent->ubProfile ].bMercOpinion[ pInstructor->ubProfile ];
+		bOpinionFactor += gMercProfiles[ pInstructor->ubProfile ].bMercOpinion[	pStudent->ubProfile ] / 2;
 	}
 
 
@@ -3888,7 +3887,7 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 	sTrainingPts = ( bTrainerEffSkill - bTraineeSkill ) * ( bTraineeEffWisdom + ( EffectiveWisdom( pInstructor ) + EffectiveLeadership( pInstructor ) ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts   = ( bTrainerNatSkill - bTraineeSkill ) * ( bTraineeNatWisdom + ( pInstructor->stats.bWisdom + pInstructor->stats.bLeadership ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
+	*pusMaxPts	= ( bTrainerNatSkill - bTraineeSkill ) * ( bTraineeNatWisdom + ( pInstructor->stats.bWisdom + pInstructor->stats.bLeadership ) / 2 ) / gGameExternalOptions.ubInstructedTrainingDivisor;
 
 	// put in a minimum (that can be reduced due to instructor being tired?)
 	if (*pusMaxPts == 0)
@@ -4056,9 +4055,9 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 		default:
 			// BETA message
 			#ifdef JA2BETAVERSION
-	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
+		ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
 			#endif
-      return(0);
+		return(0);
 	}
 
 	// if skill 0 or at/beyond the training cap, can't train
@@ -4176,9 +4175,9 @@ void TrainSoldierWithPts( SOLDIERTYPE *pSoldier, INT16 sTrainPts )
 		default:
 			// BETA message
 			#ifdef JA2BETAVERSION
-	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier->bTrainStat);
+		ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier->bTrainStat);
 			#endif
-      return;
+		return;
 	}
 
 	// give this merc a few chances to increase a stat (TRUE means it's training, reverse evolution doesn't apply)
@@ -4211,13 +4210,13 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 	}
 
 	// trainer gains leadership - training argument is FALSE, because the trainer is not the one training!
-	StatChange( pTrainer, LDRAMT,		 (UINT16) ( 1 + ( sTrainingPts / 200 ) ), FALSE );
+	StatChange( pTrainer, LDRAMT,		(UINT16) ( 1 + ( sTrainingPts / 200 ) ), FALSE );
 	StatChange( pTrainer, WISDOMAMT, (UINT16) ( 1 + ( sTrainingPts / 400 ) ), FALSE );
 
 
 	// increase town's training completed percentage
 	pSectorInfo->ubMilitiaTrainingPercentDone += (sTrainingPts / 100);
-	pSectorInfo->ubMilitiaTrainingHundredths  += (sTrainingPts % 100);
+	pSectorInfo->ubMilitiaTrainingHundredths	+= (sTrainingPts % 100);
 
 	if (pSectorInfo->ubMilitiaTrainingHundredths >= 100)
 	{
@@ -4225,12 +4224,12 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 		pSectorInfo->ubMilitiaTrainingHundredths -= 100;
 	}
 
-	// NOTE: Leave this at 100, change TOWN_TRAINING_RATE if necessary.  This value gets reported to player as a %age!
+	// NOTE: Leave this at 100, change TOWN_TRAINING_RATE if necessary.	This value gets reported to player as a %age!
 	if( pSectorInfo->ubMilitiaTrainingPercentDone >= 100 )
 	{
 		// zero out training completion - there's no carryover to the next training session
 		pSectorInfo->ubMilitiaTrainingPercentDone = 0;
-		pSectorInfo->ubMilitiaTrainingHundredths  = 0;
+		pSectorInfo->ubMilitiaTrainingHundredths	= 0;
 
 		// make the player pay again next time he wants to train here
 		pSectorInfo->fMilitiaTrainingPaid = FALSE;
@@ -4281,7 +4280,7 @@ INT16 GetTownTrainPtsForCharacter( SOLDIERTYPE *pTrainer, UINT16 *pusMaxPts )
 	// adjust for teaching bonus (a percentage)
 	sTotalTrainingPts += ( ( bTrainingBonus * sTotalTrainingPts ) / 100 );
 	// teach bonus is considered "normal" - it's always there
-	*pusMaxPts				+= ( ( bTrainingBonus * *pusMaxPts        ) / 100 );
+	*pusMaxPts				+= ( ( bTrainingBonus * *pusMaxPts		) / 100 );
 
 
 	// adjust for fatigue of trainer
@@ -4322,11 +4321,11 @@ void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier )
 		}
 		else
 		{
-      if ( pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY ) )
-      {
+		if ( pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY ) )
+		{
 				// default: standing
 				pSoldier->ChangeSoldierState( STANDING, 1, TRUE );
-      }
+		}
 		}
 	}
 }
@@ -4399,7 +4398,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 
 	if ( fSayQuote )
 	{
-		if ( ( fMeToo == FALSE ) && (pSoldier->bAssignment == TRAIN_TOWN  ) )
+		if ( ( fMeToo == FALSE ) && (pSoldier->bAssignment == TRAIN_TOWN	) )
 		{
 			TacticalCharacterDialogue( pSoldier, QUOTE_ASSIGNMENT_COMPLETE );
 
@@ -4418,7 +4417,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 		if ( fSayQuote )
 		{
 			if ( pSoldier->bAssignment == DOCTOR || pSoldier->bAssignment == REPAIR ||
-					 pSoldier->bAssignment == PATIENT || pSoldier->bAssignment == ASSIGNMENT_HOSPITAL )
+					pSoldier->bAssignment == PATIENT || pSoldier->bAssignment == ASSIGNMENT_HOSPITAL )
 			{
 				TacticalCharacterDialogue( pSoldier, QUOTE_ASSIGNMENT_COMPLETE );
 			}
@@ -4457,7 +4456,7 @@ void HandleNaturalHealing( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	INT32 cnt=0;
 	INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 	
@@ -4609,7 +4608,7 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 		}
 
 
-		// if  was forced to stay awake, leave
+		// if	was forced to stay awake, leave
 		if( pSoldier->fForcedToStayAwake == TRUE )
 		{
 			return( FALSE );
@@ -4617,7 +4616,7 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s",  pMercFellAsleepString[ 0 ], pSoldier->name );
+	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s",	pMercFellAsleepString[ 0 ], pSoldier->name );
 	}
 
 	
@@ -4717,7 +4716,7 @@ void CreateDestroyMouseRegionsForAssignmentMenu( void )
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghAssignmentBox, AssignmentPosition );
+		SetBoxPosition( ghAssignmentBox, AssignmentPosition );
 		}
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
@@ -4769,7 +4768,7 @@ void CreateDestroyMouseRegionsForAssignmentMenu( void )
 		{
 			// add mouse region for each line of text..and set user data
 			MSYS_DefineRegion( &gAssignmentMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback );
+							MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback );
 
 			MSYS_SetRegionUserData( &gAssignmentMenuRegion[ iCounter ], 0, iCounter );
 		}
@@ -4864,7 +4863,7 @@ void CreateDestroyMouseRegionForVehicleMenu( void )
 				{
 					// add mouse region for each accessible vehicle
 					MSYS_DefineRegion( &gVehicleMenuRegion[ uiMenuLine ],	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * uiMenuLine ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( uiMenuLine + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-									 MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback );
+									MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback );
 
 					MSYS_SetRegionUserData( &gVehicleMenuRegion[ uiMenuLine ], 0, uiMenuLine );
 					// store vehicle ID in the SECOND user data
@@ -4939,7 +4938,7 @@ void HandleShadingOfLinesForVehicleMenu( void )
 
 	// run through list of vehicles
 	for ( iVehicleId = 0; iVehicleId < ubNumberOfVehicles; iVehicleId++ )
-  { 
+	{ 
 		if ( pVehicleList[ iVehicleId ].fValid == TRUE )
 		{
 			// inaccessible vehicles aren't listed at all!
@@ -5038,7 +5037,7 @@ void VehicleMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 		else
 		{
 			// highlight cancel line
-		 HighLightBoxLine( ghVehicleBox, GetNumberOfLinesOfTextInBox( ghVehicleBox ) - 1 );
+		HighLightBoxLine( ghVehicleBox, GetNumberOfLinesOfTextInBox( ghVehicleBox ) - 1 );
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -5064,7 +5063,7 @@ BOOLEAN DisplayRepairMenu( SOLDIERTYPE *pSoldier )
 	RemoveBox(ghRepairBox);
 	ghRepairBox = -1;
 
-  CreateRepairBox();
+	CreateRepairBox();
 	SetCurrentBox(ghRepairBox);	
 
 	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
@@ -5090,7 +5089,7 @@ BOOLEAN DisplayRepairMenu( SOLDIERTYPE *pSoldier )
 	}
 
 	
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 	// is there a SAM SITE Here?
 	if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 	{
@@ -5115,17 +5114,17 @@ BOOLEAN DisplayRepairMenu( SOLDIERTYPE *pSoldier )
 	// cancel
 	AddMonoString((UINT32 *)&hStringHandle, pRepairStrings[ 2 ] );
 
-  SetBoxFont(ghRepairBox, MAP_SCREEN_FONT);
-  SetBoxHighLight(ghRepairBox, FONT_WHITE);
+	SetBoxFont(ghRepairBox, MAP_SCREEN_FONT);
+	SetBoxHighLight(ghRepairBox, FONT_WHITE);
 	SetBoxShade(ghRepairBox, FONT_GRAY7);
-  SetBoxForeground(ghRepairBox, FONT_LTGREEN);
-  SetBoxBackground(ghRepairBox, FONT_BLACK);
+	SetBoxForeground(ghRepairBox, FONT_LTGREEN);
+	SetBoxBackground(ghRepairBox, FONT_BLACK);
 
 	// resize box to text
 	ResizeBoxToText( ghRepairBox );
 
 	CheckAndUpdateTacticalAssignmentPopUpPositions( );
-  
+	
 	return TRUE;
 }
 
@@ -5152,7 +5151,7 @@ void HandleShadingOfLinesForRepairMenu( void )
 	if ( pSoldier->bSectorZ == 0 )
 	{
 		for ( iVehicleIndex = 0; iVehicleIndex < ubNumberOfVehicles; iVehicleIndex++ )
-		{	 
+		{	
 			if ( pVehicleList[ iVehicleIndex ].fValid == TRUE )
 			{
 				// don't even list the helicopter, because it's NEVER repairable...
@@ -5179,7 +5178,7 @@ void HandleShadingOfLinesForRepairMenu( void )
 	}
 
 		
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 	if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 	{
 		// handle enable disable of repair sam option
@@ -5258,7 +5257,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 
 		if( ( fShowRepairMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-	    //SetBoxPosition( ghRepairBox ,RepairPosition);
+	 //SetBoxPosition( ghRepairBox ,RepairPosition);
 		}
 
 		// grab height of font
@@ -5300,7 +5299,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 						{
 							// add mouse region for each line of text..and set user data
 							MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-										 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
+										MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
 
 							MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
 							// 2nd user data is the vehicle index, which can easily be different from the region index!
@@ -5313,12 +5312,12 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 		}
 
 
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 		// SAM site
 		if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 		{
 			MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-								 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
+								MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
 
 			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, REPAIR_MENU_SAM_SITE );
 			iCount++;
@@ -5330,7 +5329,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 		if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
 		{
 			MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-								 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
+								MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
 
 			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
 			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_ROBOT );
@@ -5340,7 +5339,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 
 		// items
 		MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-								 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
+								MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
 
 		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
 		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_ITEMS );
@@ -5349,7 +5348,7 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 
 		// cancel
 		MSYS_DefineRegion( &gRepairMenuRegion[ iCount ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCount ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCount + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
+							MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback );
 
 		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
 		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_CANCEL );
@@ -5450,7 +5449,7 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			fShowAssignmentMenu = FALSE;
 
 		}
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 		else if( iRepairWhat == REPAIR_MENU_SAM_SITE )
 		{
 			// repair SAM site
@@ -5625,7 +5624,7 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 		if ( Item[pSoldier->inv[ bPocket ].usItem].firstaidkit )
 		{
 //			if( ( Item[ pSoldier->inv[ HANDPOS ].usItem ].fFlags & IF_TWOHANDED_GUN ) && ( bPocket >= SMALLPOCK1POS ) )
-			if( ( Item[ pSoldier->inv[ HANDPOS ].usItem ].twohanded  ) && ( bPocket >= SMALLPOCK1POS ) )
+			if( ( Item[ pSoldier->inv[ HANDPOS ].usItem ].twohanded	) && ( bPocket >= SMALLPOCK1POS ) )
 			{
 				// first move from hand to second hand
 				SwapObjs( &pSoldier->inv[ HANDPOS ], &pSoldier->inv[ SECONDHANDPOS ] );
@@ -5918,11 +5917,11 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 		if( fShowContractMenu == FALSE )
 		{
 			if ( IsBoxShown( ghRemoveMercAssignBox ) )
-      {
-			  HideBox( ghRemoveMercAssignBox );
+		{
+			HideBox( ghRemoveMercAssignBox );
 				fTeamPanelDirty = TRUE;
 				gfRenderPBInterface = TRUE;
-      }
+		}
 		}
 		//HideBox( ghSquadBox );
 
@@ -5945,7 +5944,7 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 	CreateDestroyMouseRegionsForTrainingMenu( );
 	CreateDestroyMouseRegionsForAttributeMenu( );
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
-	CreateDestroyMouseRegionForRepairMenu(  );
+	CreateDestroyMouseRegionForRepairMenu(	);
 
 
 	if( ( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].stats.bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) ) && ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) ) )
@@ -6018,8 +6017,8 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 		{
 			HideBox( ghAttributeBox );
 			fTeamPanelDirty = TRUE;
-		  fMapPanelDirty = TRUE;
-		  gfRenderPBInterface = TRUE;
+		fMapPanelDirty = TRUE;
+		gfRenderPBInterface = TRUE;
 		//	SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
@@ -6036,8 +6035,8 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 		{
 			HideBox( ghVehicleBox );
 			fTeamPanelDirty = TRUE;
-		  fMapPanelDirty = TRUE;
-		  gfRenderPBInterface = TRUE;
+		fMapPanelDirty = TRUE;
+		gfRenderPBInterface = TRUE;
 		//	SetRenderFlags(RENDER_FLAG_FULL);
 		}
 	}
@@ -6060,21 +6059,21 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 	if( ( fCreated == FALSE ) && ( ( fShowAssignmentMenu == TRUE )||( fShowContractMenu == TRUE ) || ( fShowTownInfo == TRUE) ) )
 	{
 		MSYS_DefineRegion( &gAssignmentScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback );
-	  
+							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback );
+	
 		// created
 		fCreated = TRUE;
 
 		if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 		{
-			MSYS_ChangeRegionCursor(  &gAssignmentScreenMaskRegion, 0 );
+			MSYS_ChangeRegionCursor(	&gAssignmentScreenMaskRegion, 0 );
 		}
 		
 	}
-	else if( ( fCreated == TRUE ) && ( fShowAssignmentMenu == FALSE )&&( fShowContractMenu == FALSE ) && ( fShowTownInfo == FALSE )  )
+	else if( ( fCreated == TRUE ) && ( fShowAssignmentMenu == FALSE )&&( fShowContractMenu == FALSE ) && ( fShowTownInfo == FALSE )	)
 	{
 		// created, get rid of it
-		MSYS_RemoveRegion(  &gAssignmentScreenMaskRegion );
+		MSYS_RemoveRegion(	&gAssignmentScreenMaskRegion );
 
 		// not created
 		fCreated = FALSE;
@@ -6114,11 +6113,11 @@ void AssignmentScreenMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 		
 		// update mapscreen
-	  fTeamPanelDirty = TRUE;
+	fTeamPanelDirty = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 
-	  gfRenderPBInterface = TRUE;
+	gfRenderPBInterface = TRUE;
 		SetRenderFlags( RENDER_FLAG_FULL );
 
 	}
@@ -6146,7 +6145,7 @@ void ClearScreenMaskForMapScreenExit( void )
 	CreateDestroyMouseRegionsForTrainingMenu( );
 	CreateDestroyMouseRegionsForAttributeMenu( );
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
-	CreateDestroyMouseRegionForRepairMenu(  );
+	CreateDestroyMouseRegionForRepairMenu(	);
 
 	return;
 }
@@ -6201,7 +6200,7 @@ void CreateDestroyMouseRegions( void )
 
 
 			MSYS_DefineRegion( &gAssignmentMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAssignmentBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback );
+							MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback );
 
 			// set user defines
 			MSYS_SetRegionUserData( &gAssignmentMenuRegion[ iCounter ], 0, iCounter );
@@ -6261,11 +6260,11 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 		if( fShowRemoveMenu == TRUE )
 		{
 			// dead guy handle menu stuff
-			fShowRemoveMenu =  fShowContractMenu;
+			fShowRemoveMenu =	fShowContractMenu;
 
-      // ATE: Added this setting of global variable 'cause
-      // it will cause an assert failure in GetSelectedAssignSoldier()
-      bSelectedAssignChar = bSelectedContractChar;
+		// ATE: Added this setting of global variable 'cause
+		// it will cause an assert failure in GetSelectedAssignSoldier()
+		bSelectedAssignChar = bSelectedContractChar;
 
 			CreateDestroyMouseRegionsForRemoveMenu( );
 
@@ -6275,12 +6274,12 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 		{
 
 			// dead guy handle menu stuff
-			fShowRemoveMenu =  fShowContractMenu;
+			fShowRemoveMenu =	fShowContractMenu;
 
-      // ATE: Added this setting of global variable 'cause
-      // it will cause an assert failure in GetSelectedAssignSoldier()
-      bSelectedAssignChar = bSelectedContractChar;
-      
+		// ATE: Added this setting of global variable 'cause
+		// it will cause an assert failure in GetSelectedAssignSoldier()
+		bSelectedAssignChar = bSelectedContractChar;
+		
 			CreateDestroyMouseRegionsForRemoveMenu( );
 
 			return;
@@ -6297,7 +6296,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 
 		if( fShowContractMenu )
 		{
-		  SetBoxPosition( ghContractBox , ContractPosition );
+		SetBoxPosition( ghContractBox , ContractPosition );
 		}
 		// grab height of font
 		iFontHeight = GetLineSpace( ghContractBox ) + GetFontHeight( GetBoxFont( ghContractBox ) ); 
@@ -6324,7 +6323,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 		
 
 			MSYS_DefineRegion( &gContractMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghContractBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghContractBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, ContractMenuMvtCallback, ContractMenuBtnCallback );
+							MSYS_NO_CURSOR, ContractMenuMvtCallback, ContractMenuBtnCallback );
 
 			// set user defines
 			MSYS_SetRegionUserData( &gContractMenuRegion[ iCounter ], 0, iCounter );
@@ -6394,7 +6393,7 @@ void CreateDestroyMouseRegionsForTrainingMenu( void )
 
 		if( ( fShowTrainingMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghTrainingBox, TrainPosition );
+		SetBoxPosition( ghTrainingBox, TrainPosition );
 		}
 	
 		HandleShadingOfLinesForTrainingMenu( );
@@ -6427,7 +6426,7 @@ void CreateDestroyMouseRegionsForTrainingMenu( void )
 		
 
 			MSYS_DefineRegion( &gTrainingMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghTrainingBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghTrainingBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 3 ,
-							 MSYS_NO_CURSOR, TrainingMenuMvtCallBack, TrainingMenuBtnCallback );
+							MSYS_NO_CURSOR, TrainingMenuMvtCallBack, TrainingMenuBtnCallback );
 
 			// set user defines
 			MSYS_SetRegionUserData( &gTrainingMenuRegion[ iCounter ], 0, iCounter );
@@ -6488,7 +6487,7 @@ void CreateDestroyMouseRegionsForAttributeMenu( void )
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;
 
-	// will create/destroy mouse regions for the map screen attribute  menu
+	// will create/destroy mouse regions for the map screen attribute	menu
 
 
 
@@ -6497,7 +6496,7 @@ void CreateDestroyMouseRegionsForAttributeMenu( void )
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghAssignmentBox, AssignmentPosition );
+		SetBoxPosition( ghAssignmentBox, AssignmentPosition );
 		}
 
 		HandleShadingOfLinesForAttributeMenus( );
@@ -6528,7 +6527,7 @@ void CreateDestroyMouseRegionsForAttributeMenu( void )
 		
 
 			MSYS_DefineRegion( &gAttributeMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAttributeBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAttributeBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 2 ,
-							 MSYS_NO_CURSOR, AttributeMenuMvtCallBack, AttributesMenuBtnCallback );
+							MSYS_NO_CURSOR, AttributeMenuMvtCallBack, AttributesMenuBtnCallback );
 
 			// set user defines
 			MSYS_SetRegionUserData( &gAttributeMenuRegion[ iCounter ], 0, iCounter );
@@ -6550,7 +6549,7 @@ void CreateDestroyMouseRegionsForAttributeMenu( void )
 		}
 
 		// stop showing training menu
-		if( ( fShowAssignmentMenu == FALSE )||(  fShowTrainingMenu == FALSE ) || ( fShowAttributeMenu == FALSE))
+		if( ( fShowAssignmentMenu == FALSE )||(	fShowTrainingMenu == FALSE ) || ( fShowAttributeMenu == FALSE))
 		{
 			fShowAttributeMenu = FALSE;
 			gfRenderPBInterface = TRUE;
@@ -6591,13 +6590,13 @@ void CreateDestroyMouseRegionsForRemoveMenu( void )
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;
 
-	// will create/destroy mouse regions for the map screen attribute  menu
+	// will create/destroy mouse regions for the map screen attribute	menu
 	if( ( ( fShowAssignmentMenu == TRUE ) || ( fShowContractMenu == TRUE ) ) && ( fCreated == FALSE ) )
 	{
 
 		if( fShowContractMenu )
 		{
-		  SetBoxPosition( ghContractBox , ContractPosition );
+		SetBoxPosition( ghContractBox , ContractPosition );
 		}
 		else
 		{
@@ -6642,7 +6641,7 @@ void CreateDestroyMouseRegionsForRemoveMenu( void )
 		
 
 			MSYS_DefineRegion( &gRemoveMercAssignRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAttributeBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghAttributeBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 2 ,
-							 MSYS_NO_CURSOR, RemoveMercMenuMvtCallBack,  RemoveMercMenuBtnCallback );
+							MSYS_NO_CURSOR, RemoveMercMenuMvtCallBack,	RemoveMercMenuBtnCallback );
 
 			// set user defines
 			MSYS_SetRegionUserData( &gRemoveMercAssignRegion[ iCounter ], 0, iCounter );
@@ -6655,7 +6654,7 @@ void CreateDestroyMouseRegionsForRemoveMenu( void )
 		UnHighLightBox( ghRemoveMercAssignBox );
 
 	}
-	else if( ( fShowAssignmentMenu == FALSE ) && ( fCreated == TRUE ) && ( fShowContractMenu == FALSE )  )
+	else if( ( fShowAssignmentMenu == FALSE ) && ( fCreated == TRUE ) && ( fShowContractMenu == FALSE )	)
 	{
 		// destroy 
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghRemoveMercAssignBox ); iCounter++ )
@@ -6665,7 +6664,7 @@ void CreateDestroyMouseRegionsForRemoveMenu( void )
 
 		fShownContractMenu = FALSE;
 
-		// stop showing  menu
+		// stop showing	menu
 		if( fShowRemoveMenu == FALSE ) 
 		{
 			fShowAttributeMenu = FALSE;
@@ -6708,7 +6707,7 @@ void CreateDestroyMouseRegionsForSquadMenu( BOOLEAN fPositionBox )
 	SGPRect pDimensions;
 
 
-	// will create/destroy mouse regions for the map screen attribute  menu
+	// will create/destroy mouse regions for the map screen attribute	menu
 
 	if( ( fShowSquadMenu == TRUE ) && ( fCreated == FALSE ) )
 	{
@@ -6742,14 +6741,14 @@ void CreateDestroyMouseRegionsForSquadMenu( BOOLEAN fPositionBox )
 		{
 			// add mouse region for each line of text..and set user data
 			MSYS_DefineRegion( &gSquadMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghSquadBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghSquadBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 2 ,
-							 MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback );
+							MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback );
 
 			MSYS_SetRegionUserData( &gSquadMenuRegion[ iCounter ], 0, iCounter );
 		}
 
 		// now create cancel region
 		MSYS_DefineRegion( &gSquadMenuRegion[ iCounter ], ( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghSquadBox ) + ( iFontHeight ) * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + GetTopMarginSize( ghSquadBox ) + ( iFontHeight ) * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST - 2 ,
-							 MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback );
+							MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback );
 
 		MSYS_SetRegionUserData( &gSquadMenuRegion[ iCounter ], 0, SQUAD_MENU_CANCEL );
 
@@ -6933,7 +6932,7 @@ void SquadMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 		else
 		{
 			// highlight cancel line
-		 HighLightBoxLine( ghSquadBox, GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1 );
+		HighLightBoxLine( ghSquadBox, GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1 );
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -6963,7 +6962,7 @@ void RemoveMercMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		switch( iValue )
 		{
-		  case( REMOVE_MERC_CANCEL ):
+		case( REMOVE_MERC_CANCEL ):
 
 				// stop showing menus
 				fShowAssignmentMenu = FALSE;
@@ -7008,8 +7007,8 @@ void RemoveMercMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				fShowAssignmentMenu = FALSE;
 				fShowContractMenu = FALSE;
 
-				//Def: 10/13/99:  When a merc is either dead or a POW, the Remove Merc popup comes up instead of the 
-				// Assign menu popup.  When the the user removes the merc, we need to make sure the assignment menu
+				//Def: 10/13/99:	When a merc is either dead or a POW, the Remove Merc popup comes up instead of the 
+				// Assign menu popup.	When the the user removes the merc, we need to make sure the assignment menu
 				//doesnt come up ( because the both assign menu and remove menu flags are needed for the remove pop up to appear
 				//dont ask why?!! )
 				fShownContractMenu = FALSE;
@@ -7029,7 +7028,7 @@ void BeginRemoveMercFromContract( SOLDIERTYPE *pSoldier )
 	{
 		if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC ) || ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC ) )
 		{
-			HandleImportantMercQuote( pSoldier,  QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
+			HandleImportantMercQuote( pSoldier,	QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
 
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1,0 );
@@ -7061,12 +7060,12 @@ void BeginRemoveMercFromContract( SOLDIERTYPE *pSoldier )
 				// Only do this if they want to renew.....
 				if ( WillMercRenew( pSoldier, FALSE ) )
 				{
-					HandleImportantMercQuote( pSoldier,  QUOTE_DEPARTING_COMMENT_CONTRACT_NOT_RENEWED_OR_48_OR_MORE );
+					HandleImportantMercQuote( pSoldier,	QUOTE_DEPARTING_COMMENT_CONTRACT_NOT_RENEWED_OR_48_OR_MORE );
 				}
 			}
 			else if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC ) || ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC ) )
 			{
-				HandleImportantMercQuote( pSoldier,  QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
+				HandleImportantMercQuote( pSoldier,	QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
 			}
 
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
@@ -7079,7 +7078,7 @@ void BeginRemoveMercFromContract( SOLDIERTYPE *pSoldier )
 			// 3-6 days (but the first 1-2 days of that are spent "returning" home)
 			gMercProfiles[ pSoldier->ubProfile ].ubDaysOfMoraleHangover = (UINT8) (3 + Random(4));
 
-			// if it's an AIM merc, word of this gets back to AIM...  Bad rep.
+			// if it's an AIM merc, word of this gets back to AIM...	Bad rep.
 			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
 			{
 				ModifyPlayerReputation(REPUTATION_EARLY_FIRING);
@@ -7093,13 +7092,13 @@ void BeginRemoveMercFromContract( SOLDIERTYPE *pSoldier )
 void MercDismissConfirmCallBack( UINT8 bExitValue )
 {
 	PERFORMANCE_MARKER
-  if ( bExitValue == MSG_BOX_RETURN_YES )
-  {
-	  // Setup history code
-	  gpDismissSoldier->ubLeaveHistoryCode = HISTORY_MERC_FIRED;
+	if ( bExitValue == MSG_BOX_RETURN_YES )
+	{
+	// Setup history code
+	gpDismissSoldier->ubLeaveHistoryCode = HISTORY_MERC_FIRED;
 
-	  BeginRemoveMercFromContract( gpDismissSoldier );
-  }
+	BeginRemoveMercFromContract( gpDismissSoldier );
+	}
 }
 
 
@@ -7165,7 +7164,7 @@ void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 		switch( iValue )
 		{
-		  case( CONTRACT_MENU_DAY ):
+		case( CONTRACT_MENU_DAY ):
 				MercContractHandling( pSoldier, CONTRACT_EXTEND_1_DAY );
 				PostContractMessage( pSoldier, CONTRACT_EXTEND_1_DAY );
 				fOkToClose = TRUE;
@@ -7182,20 +7181,20 @@ void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			break;
 
 			case( CONTRACT_MENU_TERMINATE ):
-        gpDismissSoldier = pSoldier;
+		gpDismissSoldier = pSoldier;
 
-        // If in the renewal sequence.. do right away...
-        // else put up requester.
-	  		if ( gfInContractMenuFromRenewSequence )
-        {
-          MercDismissConfirmCallBack( MSG_BOX_RETURN_YES );
-        }
-        else
-        {
-  			  DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 48 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack );
-        }
+		// If in the renewal sequence.. do right away...
+		// else put up requester.
+			if ( gfInContractMenuFromRenewSequence )
+		{
+			MercDismissConfirmCallBack( MSG_BOX_RETURN_YES );
+		}
+		else
+		{
+				DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 48 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack );
+		}
 
-        fOkToClose = TRUE;
+		fOkToClose = TRUE;
 
 			break;
 		}
@@ -7213,11 +7212,11 @@ void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		fGlowContractRegion = FALSE;
 		fShowContractMenu = FALSE;
 
-	  // dirty region
+	// dirty region
 		fTeamPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
-	  gfRenderPBInterface = TRUE;
+	gfRenderPBInterface = TRUE;
 	}
 
 
@@ -7246,8 +7245,8 @@ void TrainingMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 		// do not highlight current balance
 		if( GetBoxShadeFlag( ghTrainingBox, iValue ) == FALSE )
 		{
-		  // get the string line handle
-		  HighLightBoxLine( ghTrainingBox, iValue );
+		// get the string line handle
+		HighLightBoxLine( ghTrainingBox, iValue );
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -7323,10 +7322,10 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			return;
 		}
 
-		bCanJoinSquad =  CanCharacterSquad( pSoldier, ( INT8 )iValue );
-		// can the character join this squad?  (If already in it, accept that as a legal choice and exit menu)
+		bCanJoinSquad =	CanCharacterSquad( pSoldier, ( INT8 )iValue );
+		// can the character join this squad?	(If already in it, accept that as a legal choice and exit menu)
 		if ( ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ) ||
-				 ( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
+				( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
 		{
 			if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 			{
@@ -7365,9 +7364,9 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 				AddCharacterToSquad( pSoldier, ( INT8 )iValue );
 
-        if( pSoldier->bOldAssignment == VEHICLE )
+		if( pSoldier->bOldAssignment == VEHICLE )
 				{
-          SetSoldierExitVehicleInsertionData( pSoldier, pSoldier->iVehicleId );
+			SetSoldierExitVehicleInsertionData( pSoldier, pSoldier->iVehicleId );
 				}
 
 				//Clear any desired squad assignments -- seeing the player has physically changed it!
@@ -7381,7 +7380,7 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					// grab location of old squad and set this value for new squad
 					if( iOldSquadValue != -1 )
 					{
-						GetSquadPosition( &ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime,  ( UINT8 )iOldSquadValue );
+						GetSquadPosition( &ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime,	( UINT8 )iOldSquadValue );
 					}
 
 					SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, pSoldier->ubGroupID );
@@ -7532,7 +7531,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA );
+							GetShortSectorString(	pSoldier->sSectorX, pSoldier->sSectorY, sStringA );
 							swprintf( sString, zMarksMapScreenText[ 21 ], sStringA );
 						}
 						else
@@ -7565,7 +7564,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 
 					// stop showing menu
-				  fShowAssignmentMenu = FALSE;
+				fShowAssignmentMenu = FALSE;
 					giAssignHighLine = -1;
 
 					// remove from squad
@@ -7574,7 +7573,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 						TakeSoldierOutOfVehicle( pSoldier );
 					}
-					RemoveCharacterFromSquads(  pSoldier );
+					RemoveCharacterFromSquads(	pSoldier );
 					
 					ChangeSoldiersAssignment( pSoldier, TRAIN_TOWN );
 
@@ -7620,14 +7619,14 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			break;
 			case( TRAIN_MENU_CANCEL ):
 				// stop showing menu
-			 fShowTrainingMenu = FALSE;
-			 	
-			 // unhighlight the assignment box
-			 UnHighLightBox( ghAssignmentBox );
+			fShowTrainingMenu = FALSE;
+				
+			// unhighlight the assignment box
+			UnHighLightBox( ghAssignmentBox );
 
-			 // reset list
-			 ResetSelectedListForMapScreen( );
-			 gfRenderPBInterface = TRUE;
+			// reset list
+			ResetSelectedListForMapScreen( );
+			gfRenderPBInterface = TRUE;
 
 			break;
 		}
@@ -7765,7 +7764,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					if( CanCharacterPatient( pSoldier ) )
 					{
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 						if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
 						{
 							return;
@@ -7795,7 +7794,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						{
 							TakeSoldierOutOfVehicle( pSoldier );
 						}
-						RemoveCharacterFromSquads(  pSoldier );
+						RemoveCharacterFromSquads(	pSoldier );
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
 						AssignMercToAMovementGroup( pSoldier );
 
@@ -7822,7 +7821,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				case( EPC_MENU_REMOVE ):
 
 					fShowAssignmentMenu = FALSE;
-          UnEscortEPC( pSoldier );
+			UnEscortEPC( pSoldier );
 				break;
 
 				case( EPC_MENU_CANCEL ):
@@ -7877,7 +7876,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						{
 							TakeSoldierOutOfVehicle( pSoldier );
 						}
-						RemoveCharacterFromSquads(  pSoldier );
+						RemoveCharacterFromSquads(	pSoldier );
 
 						ChangeSoldiersAssignment( pSoldier, DOCTOR );
 
@@ -7910,7 +7909,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					if( CanCharacterPatient( pSoldier ) )
 					{
 					
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 						if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
 						{
 							return;
@@ -7940,7 +7939,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						{
 							TakeSoldierOutOfVehicle( pSoldier );
 						}
-						RemoveCharacterFromSquads(  pSoldier );
+						RemoveCharacterFromSquads(	pSoldier );
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
 
 						AssignMercToAMovementGroup( pSoldier );
@@ -8042,7 +8041,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			gfRenderPBInterface = TRUE;
 
 			// set dirty flag
-	    fTeamPanelDirty = TRUE;
+	 fTeamPanelDirty = TRUE;
 			fMapScreenBottomDirty = TRUE;
 
 			return;
@@ -8056,11 +8055,11 @@ void RestorePopUpBoxes( void )
 {
 	PERFORMANCE_MARKER
 	ContractPosition.iX = OrigContractPosition.iX;
-  AttributePosition.iX = OrigAttributePosition.iX;
-  SquadPosition.iX = OrigSquadPosition.iX ;
-  AssignmentPosition.iX = OrigAssignmentPosition.iX ;
-  TrainPosition.iX = OrigTrainPosition.iX;
-  VehiclePosition.iX = OrigVehiclePosition.iX;
+	AttributePosition.iX = OrigAttributePosition.iX;
+	SquadPosition.iX = OrigSquadPosition.iX ;
+	AssignmentPosition.iX = OrigAssignmentPosition.iX ;
+	TrainPosition.iX = OrigTrainPosition.iX;
+	VehiclePosition.iX = OrigVehiclePosition.iX;
 
 	return;
 }
@@ -8072,8 +8071,8 @@ void CreateSquadBox( void )
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
 	SGPRect pDimensions;
-  UINT32 hStringHandle;
-  UINT32 uiCounter;
+	UINT32 hStringHandle;
+	UINT32 uiCounter;
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 	
@@ -8105,12 +8104,12 @@ void CreateSquadBox( void )
  // add strings for box
  for(uiCounter=0; uiCounter <= uiMaxSquad; uiCounter++)
  {
-	 // get info about current squad and put in  string 
-	 swprintf( sString, L"%s ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
-	 AddMonoString(&hStringHandle, sString ); 
+	// get info about current squad and put in	string 
+	swprintf( sString, L"%s ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
+	AddMonoString(&hStringHandle, sString ); 
 
-	 // make sure it is unhighlighted
-	 UnHighLightLine(hStringHandle);
+	// make sure it is unhighlighted
+	UnHighLightLine(hStringHandle);
  }
 
  // add cancel line
@@ -8156,61 +8155,61 @@ void CreateEPCBox( void )
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
 	SGPRect pDimensions;
-  UINT32 hStringHandle;
-  INT32 iCount;
+	UINT32 hStringHandle;
+	INT32 iCount;
 	
-	 // create basic box
-	 CreatePopUpBox(&ghEpcBox, SquadDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE|POPUP_BOX_FLAG_CENTER_TEXT ));
+	// create basic box
+	CreatePopUpBox(&ghEpcBox, SquadDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE|POPUP_BOX_FLAG_CENTER_TEXT ));
 
-	 // which buffer will box render to
-	 SetBoxBuffer(ghEpcBox, FRAME_BUFFER);
+	// which buffer will box render to
+	SetBoxBuffer(ghEpcBox, FRAME_BUFFER);
 
-	 // border type?
-	 SetBorderType(ghEpcBox,guiPOPUPBORDERS);
+	// border type?
+	SetBorderType(ghEpcBox,guiPOPUPBORDERS);
 
-	 // background texture
-	 SetBackGroundSurface(ghEpcBox, guiPOPUPTEX);
+	// background texture
+	SetBackGroundSurface(ghEpcBox, guiPOPUPTEX);
 
-	 // margin sizes
-	 SetMargins( ghEpcBox, 6, 6, 4, 4 );
+	// margin sizes
+	SetMargins( ghEpcBox, 6, 6, 4, 4 );
 
-	 // space between lines
-	 SetLineSpace(ghEpcBox, 2);
+	// space between lines
+	SetLineSpace(ghEpcBox, 2);
 
-	 // set current box to this one
-	 SetCurrentBox( ghEpcBox );
+	// set current box to this one
+	SetCurrentBox( ghEpcBox );
 
-	 for(iCount=0; iCount < MAX_EPC_MENU_STRING_COUNT; iCount++)
-	 {
-		 AddMonoString(&hStringHandle, pEpcMenuStrings[ iCount]); 
-	 }
+	for(iCount=0; iCount < MAX_EPC_MENU_STRING_COUNT; iCount++)
+	{
+		AddMonoString(&hStringHandle, pEpcMenuStrings[ iCount]); 
+	}
 
-	 // set font type
-	 SetBoxFont(ghEpcBox, MAP_SCREEN_FONT);
+	// set font type
+	SetBoxFont(ghEpcBox, MAP_SCREEN_FONT);
 
-	 // set highlight color
-	 SetBoxHighLight(ghEpcBox, FONT_WHITE);
+	// set highlight color
+	SetBoxHighLight(ghEpcBox, FONT_WHITE);
 
-	 // unhighlighted color
-	 SetBoxForeground(ghEpcBox, FONT_LTGREEN);
+	// unhighlighted color
+	SetBoxForeground(ghEpcBox, FONT_LTGREEN);
 
-	 // background color
-	 SetBoxBackground(ghEpcBox, FONT_BLACK);
+	// background color
+	SetBoxBackground(ghEpcBox, FONT_BLACK);
 
-	 // shaded color..for darkened text
-	 SetBoxShade( ghEpcBox, FONT_GRAY7 );
+	// shaded color..for darkened text
+	SetBoxShade( ghEpcBox, FONT_GRAY7 );
 
-	 // resize box to text
-	 ResizeBoxToText( ghEpcBox );
+	// resize box to text
+	ResizeBoxToText( ghEpcBox );
 
-	 GetBoxPosition( ghEpcBox, &pPoint);
+	GetBoxPosition( ghEpcBox, &pPoint);
 
-	 GetBoxSize( ghEpcBox, &pDimensions );
+	GetBoxSize( ghEpcBox, &pDimensions );
  
-	 if( giBoxY + pDimensions.iBottom > 479 )
-	 {
+	if( giBoxY + pDimensions.iBottom > 479 )
+	{
 			pPoint.iY = AssignmentPosition.iY = 479 - pDimensions.iBottom;
-	 }
+	}
 
 		SetBoxPosition( ghEpcBox, pPoint );
 }
@@ -8305,12 +8304,12 @@ BOOLEAN DisplayVehicleMenu( SOLDIERTYPE *pSoldier )
 	RemoveBox(ghVehicleBox);
 	ghVehicleBox = -1;
 
-  CreateVehicleBox();
+	CreateVehicleBox();
 	SetCurrentBox(ghVehicleBox);	
 
 	// run through list of vehicles in sector and add them to pop up box
 	for ( iCounter = 0; iCounter < ubNumberOfVehicles; iCounter++ )
-  { 
+	{ 
 		if ( pVehicleList[iCounter].fValid == TRUE )
 		{
 			if ( IsThisVehicleAccessibleToSoldier( pSoldier, iCounter ) )
@@ -8324,12 +8323,12 @@ BOOLEAN DisplayVehicleMenu( SOLDIERTYPE *pSoldier )
 	// cancel string (borrow the one in the squad menu)
 	AddMonoString((UINT32 *)&hStringHandle, pSquadMenuStrings[ SQUAD_MENU_CANCEL ]);
 
-  SetBoxFont(ghVehicleBox, MAP_SCREEN_FONT);
-  SetBoxHighLight(ghVehicleBox, FONT_WHITE);
-  SetBoxForeground(ghVehicleBox, FONT_LTGREEN);
-  SetBoxBackground(ghVehicleBox, FONT_BLACK);
+	SetBoxFont(ghVehicleBox, MAP_SCREEN_FONT);
+	SetBoxHighLight(ghVehicleBox, FONT_WHITE);
+	SetBoxForeground(ghVehicleBox, FONT_LTGREEN);
+	SetBoxBackground(ghVehicleBox, FONT_BLACK);
 	
-  return fVehiclePresent;
+	return fVehiclePresent;
 }
 
 void CreateVehicleBox()
@@ -8368,7 +8367,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
  if( giBoxY != 0 )
  {
-	 ContractPosition.iX = giBoxY;
+	ContractPosition.iX = giBoxY;
  }
 
  CreatePopUpBox(&ghContractBox, ContractDimensions, ContractPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE ));
@@ -8384,75 +8383,75 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
  // not null character?
  if( pCharacter != NULL )
  {
-	 for(uiCounter=0; uiCounter < MAX_CONTRACT_MENU_STRING_COUNT; uiCounter++)
-	 {
-		 switch( uiCounter )
-		 {
-			 case( CONTRACT_MENU_CURRENT_FUNDS ):
+	for(uiCounter=0; uiCounter < MAX_CONTRACT_MENU_STRING_COUNT; uiCounter++)
+	{
+		switch( uiCounter )
+		{
+			case( CONTRACT_MENU_CURRENT_FUNDS ):
 /*
 				// add current balance after title string
-				 swprintf( sDollarString, L"%d", LaptopSaveInfo.iCurrentBalance);
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s %s",  pContractStrings[uiCounter], sDollarString );
-				 AddMonoString(&hStringHandle, sString);
+				swprintf( sDollarString, L"%d", LaptopSaveInfo.iCurrentBalance);
+				InsertCommasForDollarFigure( sDollarString );
+				InsertDollarSignInToString( sDollarString );
+				swprintf( sString, L"%s %s",	pContractStrings[uiCounter], sDollarString );
+				AddMonoString(&hStringHandle, sString);
 */
-				 AddMonoString(&hStringHandle, pContractStrings[uiCounter]);
-			 break;
-			 case( CONTRACT_MENU_DAY ):
+				AddMonoString(&hStringHandle, pContractStrings[uiCounter]);
+			break;
+			case( CONTRACT_MENU_DAY ):
 				
-				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, L"%d", 0 );
-				 }
-				 else
-				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].sSalary );
-				 }
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
-				 AddMonoString(&hStringHandle, sString);
-			 break;
-			 case( CONTRACT_MENU_WEEK ):
+				if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				{
+					swprintf( sDollarString, L"%d", 0 );
+				}
+				else
+				{
+					swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].sSalary );
+				}
+				InsertCommasForDollarFigure( sDollarString );
+				InsertDollarSignInToString( sDollarString );
+				swprintf( sString, L"%s ( %s )",	pContractStrings[uiCounter], sDollarString);
+				AddMonoString(&hStringHandle, sString);
+			break;
+			case( CONTRACT_MENU_WEEK ):
 
-				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, L"%d", 0 );
-				 }
-				 else
-				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiWeeklySalary );
-				 }
+				if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				{
+					swprintf( sDollarString, L"%d", 0 );
+				}
+				else
+				{
+					swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiWeeklySalary );
+				}
 
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString );
-				 AddMonoString(&hStringHandle, sString);
-			 break;
-			 case( CONTRACT_MENU_TWO_WEEKS ):
+				InsertCommasForDollarFigure( sDollarString );
+				InsertDollarSignInToString( sDollarString );
+				swprintf( sString, L"%s ( %s )",	pContractStrings[uiCounter], sDollarString );
+				AddMonoString(&hStringHandle, sString);
+			break;
+			case( CONTRACT_MENU_TWO_WEEKS ):
 
-				 if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, L"%d", 0 );
-				 }
-				 else
-				 {
-					 swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiBiWeeklySalary );
-				 }
+				if( pCharacter->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+				{
+					swprintf( sDollarString, L"%d", 0 );
+				}
+				else
+				{
+					swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter->ubProfile ].uiBiWeeklySalary );
+				}
 
 				
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
-				 AddMonoString(&hStringHandle, sString);
-			 break;
-			 default:
-				 AddMonoString(&hStringHandle, pContractStrings[uiCounter] );
-				 break;
-		 }
-		 UnHighLightLine(hStringHandle);
-	 }
+				InsertCommasForDollarFigure( sDollarString );
+				InsertDollarSignInToString( sDollarString );
+				swprintf( sString, L"%s ( %s )",	pContractStrings[uiCounter], sDollarString);
+				AddMonoString(&hStringHandle, sString);
+			break;
+			default:
+				AddMonoString(&hStringHandle, pContractStrings[uiCounter] );
+				break;
+		}
+		UnHighLightLine(hStringHandle);
+	}
  }
 
 
@@ -8466,8 +8465,8 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
  
  if( pCharacter != NULL )
  {
-	 // now set the color for the current balance value
-	 SetBoxLineForeground( ghContractBox, 0, FONT_YELLOW );
+	// now set the color for the current balance value
+	SetBoxLineForeground( ghContractBox, 0, FONT_YELLOW );
  }
 
  // resize box to text
@@ -8488,7 +8487,7 @@ void CreateAttributeBox( void )
 
  if( giBoxY != 0 )
  {
-	 AttributePosition.iY = giBoxY;
+	AttributePosition.iY = giBoxY;
  }
 
  // update screen assignment positions
@@ -8520,8 +8519,8 @@ void CreateAttributeBox( void )
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; uiCounter++)
  {
-  AddMonoString(&hStringHandle, pAttributeMenuStrings[uiCounter]);
-  
+	AddMonoString(&hStringHandle, pAttributeMenuStrings[uiCounter]);
+	
 	// make sure it is unhighlighted
 	UnHighLightLine(hStringHandle);
  }
@@ -8559,7 +8558,7 @@ void CreateTrainingBox( void )
 
  if( giBoxY != 0 )
  {
-	 TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
+	TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
  }
 
  // create basic box
@@ -8587,8 +8586,8 @@ void CreateTrainingBox( void )
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_TRAIN_STRING_COUNT; uiCounter++)
  {
-  AddMonoString(&hStringHandle, pTrainingMenuStrings[uiCounter]);
-  
+	AddMonoString(&hStringHandle, pTrainingMenuStrings[uiCounter]);
+	
 	// make sure it is unhighlighted
 	UnHighLightLine(hStringHandle);
  }
@@ -8636,7 +8635,7 @@ void CreateAssignmentsBox( void )
 
 
 	pSoldier = GetSelectedAssignSoldier( TRUE );
-	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
+	// pSoldier NULL is legal here!	Gets called during every mapscreen initialization even when nobody is assign char
 
 	// create basic box
 	CreatePopUpBox(&ghAssignmentBox, AssignmentDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
@@ -8674,7 +8673,7 @@ void CreateAssignmentsBox( void )
 		}
 
 		AddMonoString(&hStringHandle, sString );
-  
+	
 		// make sure it is unhighlighted
 		UnHighLightLine(hStringHandle);
 	}
@@ -8695,7 +8694,7 @@ void CreateAssignmentsBox( void )
 	SetBoxShade( ghAssignmentBox, FONT_GRAY7 );
 	SetBoxSecondaryShade( ghAssignmentBox, FONT_YELLOW );
 
-	 // resize box to text
+	// resize box to text
 	ResizeBoxToText( ghAssignmentBox );
 
 	DetermineBoxPositions( );
@@ -8733,8 +8732,8 @@ void CreateMercRemoveAssignBox( void )
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_REMOVE_MERC_COUNT; uiCounter++)
  {
-  AddMonoString(&hStringHandle, pRemoveMercStrings[uiCounter]);
-  
+	AddMonoString(&hStringHandle, pRemoveMercStrings[uiCounter]);
+	
 	// make sure it is unhighlighted
 	UnHighLightLine(hStringHandle);
  }
@@ -8764,7 +8763,7 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 	PERFORMANCE_MARKER
 	static BOOLEAN fCreated= FALSE;
 	VSURFACE_DESC		vs_desc;
-  VOBJECT_DESC    VObjectDesc; 
+	VOBJECT_DESC	VObjectDesc; 
 
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fCreated == FALSE ) )
@@ -8779,7 +8778,7 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 
 		// these boxes are always created while in mapscreen...
 		CreateEPCBox( );
-		// WANNE 2 <ab>
+		
 		CreateAssignmentsBox( );
 		CreateTrainingBox( );
 		CreateAttributeBox();
@@ -8839,7 +8838,7 @@ void DetermineBoxPositions( void )
 	}
 
 	pSoldier = GetSelectedAssignSoldier( TRUE );
-	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
+	// pSoldier NULL is legal here!	Gets called during every mapscreen initialization even when nobody is assign char
 	if ( pSoldier == NULL )
 	{
 		return;
@@ -8937,8 +8936,6 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 	
 	gsAssignmentBoxesY = sY;
 
-
-	// WANNE 2
 	// ATE: Check if we are past tactical viewport....
 	// Use estimate width's/heights
 	if ( ( gsAssignmentBoxesX + 100 ) > SCREEN_WIDTH )
@@ -8947,7 +8944,6 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 		gsAssignmentBoxesX = SCREEN_WIDTH - 100;
 	}
 
-	// WANNE 2
 	if ( ( gsAssignmentBoxesY + 130 ) > (SCREEN_HEIGHT - 160) )
 	{
 		gsAssignmentBoxesY = SCREEN_HEIGHT - 290;
@@ -9021,23 +9017,21 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	{
 		GetBoxSize( ghRepairBox, &pDimensions );
 
-		// WANNE 2
 		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH )
 		{
 			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight ) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( pDimensions2.iBottom >  pDimensions.iBottom )
+		if( pDimensions2.iBottom >	pDimensions.iBottom )
 		{
-			sLongest = ( INT16 )pDimensions2.iBottom + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
+			sLongest = ( INT16 )pDimensions2.iBottom + (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
 		}
 		else
 		{
-			sLongest  = ( INT16 )pDimensions.iBottom + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
+			sLongest	= ( INT16 )pDimensions.iBottom + (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + sLongest >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( sLongest ) );
@@ -9045,7 +9039,7 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 		}
 		
 		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
-		pPoint.iY = gsAssignmentBoxesY + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
+		pPoint.iY = gsAssignmentBoxesY + (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
 			
 		SetBoxPosition( ghRepairBox, pPoint );
 	}
@@ -9060,16 +9054,15 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( pDimensions2.iBottom >  pDimensions.iBottom )
+		if( pDimensions2.iBottom >	pDimensions.iBottom )
 		{
 			sLongest = ( INT16 )pDimensions2.iBottom;
 		}
 		else
 		{
-			sLongest  = ( INT16 )pDimensions.iBottom;
+			sLongest	= ( INT16 )pDimensions.iBottom;
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + sLongest >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( sLongest ) );
@@ -9086,14 +9079,12 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 		GetBoxSize( ghTrainingBox, &pDimensions );
 		GetBoxSize( ghAttributeBox, &pDimensions3 );
 
-		// WANNE 2
 		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight >= SCREEN_WIDTH )
 		{
 			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight ) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		// WANNE 2
 		if( gsAssignmentBoxesY + pDimensions3.iBottom + ( GetFontHeight( MAP_SCREEN_FONT ) * ASSIGN_MENU_TRAIN ) >= (SCREEN_HEIGHT - 120) )
 		{
 			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions3.iBottom ) );
@@ -9103,13 +9094,13 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight;
 		pPoint.iY = gsAssignmentBoxesY;
 		
-		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
+		pPoint.iY += (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
 		SetBoxPosition( ghAttributeBox, pPoint );
 
 		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
 		pPoint.iY = gsAssignmentBoxesY;
 
-		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
+		pPoint.iY += (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
 
 		SetBoxPosition( ghTrainingBox, pPoint );
 
@@ -9119,17 +9110,15 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	{
 		GetBoxSize( ghTrainingBox, &pDimensions );
 
-		// WANNE 2
-		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight  >= SCREEN_WIDTH )
+		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight	>= SCREEN_WIDTH )
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight  ) );
+			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight + pDimensions.iRight	) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		// WANNE 2
-		if( gsAssignmentBoxesY + pDimensions2.iBottom +  ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) >= (SCREEN_HEIGHT - 120) )
+		if( gsAssignmentBoxesY + pDimensions2.iBottom +	( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) >= (SCREEN_HEIGHT - 120) )
 		{
-			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions2.iBottom ) - (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) );
+			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions2.iBottom ) - (	( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN ) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 	
@@ -9143,17 +9132,16 @@ void CheckAndUpdateTacticalAssignmentPopUpPositions( void )
 	}
 	else
 	{
-		// WANNE 2
 		// just the assignment box
-		if( gsAssignmentBoxesX + pDimensions2.iRight  >= SCREEN_WIDTH )
+		if( gsAssignmentBoxesX + pDimensions2.iRight	>= SCREEN_WIDTH )
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight  ) );
+			gsAssignmentBoxesX = ( INT16 ) ( (SCREEN_WIDTH - 1) - ( pDimensions2.iRight	) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( gsAssignmentBoxesY + pDimensions2.iBottom  >= (SCREEN_HEIGHT - 120) )
+		if( gsAssignmentBoxesY + pDimensions2.iBottom	>= (SCREEN_HEIGHT - 120) )
 		{
-			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions2.iBottom  ) );
+			gsAssignmentBoxesY = ( INT16 )( (SCREEN_HEIGHT - 121) - ( pDimensions2.iBottom	) );
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 		
@@ -9191,7 +9179,6 @@ void PositionCursorForTacticalAssignmentBox( void )
 
 	iFontHeight = GetLineSpace( ghAssignmentBox ) + GetFontHeight( GetBoxFont( ghAssignmentBox ) ); 
 
-	// WANNE 2
 	if( gGameSettings.fOptions[ TOPTION_DONT_MOVE_MOUSE ] == FALSE )
 	{
 		//SimulateMouseMovement( pPosition.iX + pDimensions.iRight - 6, pPosition.iY + ( iFontHeight / 2 ) + 2 );
@@ -9251,7 +9238,7 @@ void HandleRestFatigueAndSleepStatus( void )
 				// if dead tired
 				if( pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM )
 				{
-					// if between sectors, don't put tired mercs to sleep...  will be handled when they arrive at the next sector
+					// if between sectors, don't put tired mercs to sleep...	will be handled when they arrive at the next sector
 					if ( pSoldier->flags.fBetweenSectors )
 					{
 						continue;
@@ -9297,7 +9284,7 @@ void HandleRestFatigueAndSleepStatus( void )
 								fBoxSetUp = TRUE;
 							}
 
-							// seems unnecessary now?  ARM
+							// seems unnecessary now?	ARM
 							pSoldier->bOldAssignment = pSoldier->bAssignment;
 						}
 					}
@@ -9439,13 +9426,13 @@ BOOLEAN CanCharacterRepairVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId )
 		return( FALSE );
 	}
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 	// if currently loaded sector, are we close enough?
 	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
 	{
 		if( PythSpacesAway( pSoldier->sGridNo, pVehicleList[ iVehicleId ].sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
 		{
-		  return( FALSE );
+		return( FALSE );
 		}
 	}
 */	
@@ -9479,7 +9466,7 @@ SOLDIERTYPE * GetRobotSoldier( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL, *pTeamSoldier = NULL;
-  INT32 cnt=0;
+	INT32 cnt=0;
 
 	// set pSoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -9524,13 +9511,13 @@ BOOLEAN CanCharacterRepairRobot( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 	// if that sector is currently loaded, check distance to robot
 	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
 	{
 		if( PythSpacesAway( pSoldier->sGridNo, pRobot->sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
 		{
-		  return( FALSE );
+		return( FALSE );
 		}
 	}
 */
@@ -9552,7 +9539,7 @@ UINT8 HandleRepairOfRobotBySoldier( SOLDIERTYPE *pSoldier, UINT8 ubRepairPts, BO
 }
 
 
-UINT8 RepairRobot( SOLDIERTYPE *pRobot, UINT8 ubRepairPts, BOOLEAN *pfNothingLeftToRepair  )
+UINT8 RepairRobot( SOLDIERTYPE *pRobot, UINT8 ubRepairPts, BOOLEAN *pfNothingLeftToRepair	)
 {
 	PERFORMANCE_MARKER
 	UINT8 ubPointsUsed = 0;
@@ -9616,7 +9603,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 
 				// remove from squad
 
-				RemoveCharacterFromSquads(  pSoldier );
+				RemoveCharacterFromSquads(	pSoldier );
 
 				// remove from any vehicle
 				if( pSoldier->bOldAssignment == VEHICLE )
@@ -9642,7 +9629,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			{
 				// set as doctor
 			
-/* Assignment distance limits removed.  Sep/11/98.  ARM
+/* Assignment distance limits removed.	Sep/11/98.	ARM
 				if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
 				{
 					return;
@@ -9657,7 +9644,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				fMapScreenBottomDirty = TRUE;
 
 				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );
+				RemoveCharacterFromSquads(	pSoldier );
 
 				// remove from any vehicle
 				if( pSoldier->bOldAssignment == VEHICLE )
@@ -9689,7 +9676,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				gfRenderPBInterface = TRUE;
 
 				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );	
+				RemoveCharacterFromSquads(	pSoldier );	
 
 				// remove from any vehicle
 				if( pSoldier->bOldAssignment == VEHICLE )
@@ -9719,7 +9706,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				fMapScreenBottomDirty = TRUE;
 
 				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );	
+				RemoveCharacterFromSquads(	pSoldier );	
 
 				// remove from any vehicle
 				if( pSoldier->bOldAssignment == VEHICLE )
@@ -9924,7 +9911,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 
 
 
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+/* No point in allowing SAM site repair any more.	Jan/13/99.	ARM
 BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints)
 {
 	PERFORMANCE_MARKER
@@ -9948,7 +9935,7 @@ BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints)
 		return( FALSE );
 	}
 
-	// is he good enough?  (Because of the division of repair pts in SAM repair formula, a guy with any less that this
+	// is he good enough?	(Because of the division of repair pts in SAM repair formula, a guy with any less that this
 	// can't make any headway
 	if (bRepairPoints < SAM_SITE_REPAIR_DIVISOR )
 	{
@@ -10027,7 +10014,7 @@ BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier )
 	{
 		if( pSamList[ iCounter ] == SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) )
 		{
-// Assignment distance limits removed.  Sep/11/98.  ARM
+// Assignment distance limits removed.	Sep/11/98.	ARM
 //			if( ( PythSpacesAway( pSamGridNoAList[ iCounter ], pSoldier->sGridNo ) < MAX_DISTANCE_FOR_REPAIR )||( PythSpacesAway( pSamGridNoBList[ iCounter ], pSoldier->sGridNo ) < MAX_DISTANCE_FOR_REPAIR ) )
 			{
 				return( TRUE );
@@ -10049,10 +10036,10 @@ BOOLEAN HandleAssignmentExpansionAndHighLightForAssignMenu( SOLDIERTYPE *pSoldie
 		// squad menu up?..if so, highlight squad line the previous menu
 		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
-			 HighLightBoxLine( ghEpcBox, EPC_MENU_ON_DUTY );
+			HighLightBoxLine( ghEpcBox, EPC_MENU_ON_DUTY );
 		}
 		else
-		{			 
+		{			
 			HighLightBoxLine( ghAssignmentBox, ASSIGN_MENU_ON_DUTY );
 		}
 
@@ -10303,7 +10290,7 @@ void HandleShadingOfLinesForAttributeMenus( void )
 void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT16 sSectorX  = 0, sSectorY = 0;
+	INT16 sSectorX	= 0, sSectorY = 0;
 	INT32 iNumberOnTeam = 0, iCounter = 0;
 	SOLDIERTYPE *pCurSoldier = NULL;
 
@@ -10478,7 +10465,7 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 BOOLEAN IsThereASoldierInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	PERFORMANCE_MARKER
-	if( fSectorsWithSoldiers[  sSectorX + sSectorY * MAP_WORLD_X ][ bSectorZ ] == TRUE )
+	if( fSectorsWithSoldiers[	sSectorX + sSectorY * MAP_WORLD_X ][ bSectorZ ] == TRUE )
 	{
 		return( TRUE );
 	}
@@ -10538,7 +10525,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
 
 	while( pPlayer )
 	{
-		// if group has player list...  and a valid first soldier
+		// if group has player list...	and a valid first soldier
 		if( pPlayer && pPlayer->pSoldier )
 		{
 			pSoldier = pPlayer->pSoldier;
@@ -10799,7 +10786,6 @@ void RebuildAssignmentsBox( void )
 		ghAssignmentBox = -1;
 	}
 
-	// WANNE 2 <ab>
 	CreateAssignmentsBox( );
 }
 
@@ -10879,7 +10865,7 @@ void BandageBleedingDyingPatientsBeingTreated( )
 	}
 
 
-	// this event may be posted many times because of multiple assignment changes.  Handle it only once per minute!
+	// this event may be posted many times because of multiple assignment changes.	Handle it only once per minute!
 	DeleteAllStrategicEventsOfType( EVENT_BANDAGE_BLEEDING_MERCS );
 
 	if ( fSomeoneStillBleedingDying )
@@ -10932,12 +10918,12 @@ void ReEvaluateEveryonesNothingToDo()
 
 				case TRAIN_TEAMMATE:
 					fNothingToDo = !CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, FALSE, TRUE ) ||
-												 !ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat );
+												!ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat );
 					break;
 
 				case TRAIN_BY_OTHER:
 					fNothingToDo = !CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, TRUE, FALSE ) ||
-												 !ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat );
+												!ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat );
 					break;
 
 				case VEHICLE:
@@ -11142,7 +11128,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 
 					// if already in it, don't repor that as an error...
 					if ( ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ) ||
-							 ( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
+							( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
 					{
 						if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 						{
@@ -11312,37 +11298,37 @@ BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound( SOLDIERTYPE *pTargetS
 void UnEscortEPC( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-  if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-  {
-	  BOOLEAN fGotInfo;
-	  UINT16 usQuoteNum;
-	  UINT16 usFactToSetToTrue;
+	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+	{
+	BOOLEAN fGotInfo;
+	UINT16 usQuoteNum;
+	UINT16 usFactToSetToTrue;
 
-	  SetupProfileInsertionDataForSoldier( pSoldier );
+	SetupProfileInsertionDataForSoldier( pSoldier );
 
-	  fGotInfo = GetInfoForAbandoningEPC( pSoldier->ubProfile, &usQuoteNum, &usFactToSetToTrue );
-	  if ( fGotInfo )
-	  {
-		  // say quote usQuoteNum
-		  gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		  TacticalCharacterDialogue( pSoldier, usQuoteNum );
+	fGotInfo = GetInfoForAbandoningEPC( pSoldier->ubProfile, &usQuoteNum, &usFactToSetToTrue );
+	if ( fGotInfo )
+	{
+		// say quote usQuoteNum
+		gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
+		TacticalCharacterDialogue( pSoldier, usQuoteNum );
 			// the flag will be turned off in the remove-epc event
-		  //gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;	
-		  SetFactTrue( usFactToSetToTrue );
-	  }
-	  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0 );
+		//gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;	
+		SetFactTrue( usFactToSetToTrue );
+	}
+	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0 );
 
-	  HandleFactForNPCUnescorted( pSoldier->ubProfile );						
+	HandleFactForNPCUnescorted( pSoldier->ubProfile );						
 
-	  if ( pSoldier->ubProfile == JOHN )
-	  {
-		  SOLDIERTYPE * pSoldier2;
+	if ( pSoldier->ubProfile == JOHN )
+	{
+		SOLDIERTYPE * pSoldier2;
 
-		  // unrecruit Mary as well
-		  pSoldier2 = FindSoldierByProfileID( MARY, TRUE );
-		  if ( pSoldier2 )
-		  {
-			  SetupProfileInsertionDataForSoldier( pSoldier2 );
+		// unrecruit Mary as well
+		pSoldier2 = FindSoldierByProfileID( MARY, TRUE );
+		if ( pSoldier2 )
+		{
+			SetupProfileInsertionDataForSoldier( pSoldier2 );
 				fGotInfo = GetInfoForAbandoningEPC( MARY, &usQuoteNum, &usFactToSetToTrue );
 				if ( fGotInfo )
 				{
@@ -11354,18 +11340,18 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 					SetFactTrue( usFactToSetToTrue );
 				}
 
-			  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, MARY, 0, 0, 0, 0 );
-		  }
-	  }
-	  else if ( pSoldier->ubProfile == MARY )
-	  {
-		  SOLDIERTYPE * pSoldier2;
+			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, MARY, 0, 0, 0, 0 );
+		}
+	}
+	else if ( pSoldier->ubProfile == MARY )
+	{
+		SOLDIERTYPE * pSoldier2;
 
-		  // unrecruit John as well
-		  pSoldier2 = FindSoldierByProfileID( JOHN, TRUE );					
-		  if ( pSoldier2 )
-		  {
-			  SetupProfileInsertionDataForSoldier( pSoldier2 );
+		// unrecruit John as well
+		pSoldier2 = FindSoldierByProfileID( JOHN, TRUE );					
+		if ( pSoldier2 )
+		{
+			SetupProfileInsertionDataForSoldier( pSoldier2 );
 				fGotInfo = GetInfoForAbandoningEPC( JOHN, &usQuoteNum, &usFactToSetToTrue );
 				if ( fGotInfo )
 				{
@@ -11376,22 +11362,22 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 					//gMercProfiles[ JOHN ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;							
 					SetFactTrue( usFactToSetToTrue );
 				}
-			  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, JOHN, 0, 0, 0, 0 );
-		  }
-	  }
-	  // stop showing menu
-	  giAssignHighLine = -1;
+			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, JOHN, 0, 0, 0, 0 );
+		}
+	}
+	// stop showing menu
+	giAssignHighLine = -1;
 
-	  // set dirty flag
-	  fTeamPanelDirty = TRUE;
-	  fMapScreenBottomDirty = TRUE;
-	  fCharacterInfoPanelDirty = TRUE;
-  }
-  else
-  {
-	  // how do we handle this if it's the right sector?
-	  TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE );
-  }			
+	// set dirty flag
+	fTeamPanelDirty = TRUE;
+	fMapScreenBottomDirty = TRUE;
+	fCharacterInfoPanelDirty = TRUE;
+	}
+	else
+	{
+	// how do we handle this if it's the right sector?
+	TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE );
+	}			
 }
 
 
@@ -11514,8 +11500,8 @@ BOOLEAN CanCharacterRepairAnotherSoldiersStuff( SOLDIERTYPE *pSoldier, SOLDIERTY
 		return( FALSE );
 	}
 	if ( pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-			 pOtherSoldier->sSectorY != pSoldier->sSectorY ||
-			 pOtherSoldier->bSectorZ != pSoldier->bSectorZ )
+			pOtherSoldier->sSectorY != pSoldier->sSectorY ||
+			pOtherSoldier->bSectorZ != pSoldier->bSectorZ )
 	{
 		return( FALSE );
 	}
@@ -11526,11 +11512,11 @@ BOOLEAN CanCharacterRepairAnotherSoldiersStuff( SOLDIERTYPE *pSoldier, SOLDIERTY
 	}
 
 	if ( ( pOtherSoldier->bAssignment == IN_TRANSIT ) ||
-			 ( pOtherSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			 ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ||
-			 ( AM_A_ROBOT( pSoldier ) ) ||
-			 ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
-			 ( pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ) )
+			( pOtherSoldier->bAssignment == ASSIGNMENT_POW ) ||
+			( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ||
+			( AM_A_ROBOT( pSoldier ) ) ||
+			( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
+			( pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ) )
 	{
 		return( FALSE );
 	}

@@ -113,7 +113,7 @@ UINT32								guiOldScreen;
 NPC_SAVE_INFO					gNPCSaveData[ MAX_MEANWHILE_PROFILES ];
 UINT32								guiNumNPCSaves = 0;
 BOOLEAN								gfReloadingScreenFromMeanwhile = FALSE;
-INT16									gsOldCurInterfacePanel = 0;		 
+INT16									gsOldCurInterfacePanel = 0;		
 BOOLEAN								gfWorldWasLoaded = FALSE;
 UINT8									ubCurrentMeanWhileId = 0;
 
@@ -333,14 +333,14 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 	// Copy definiaiotn structure into position in global array....
 	memcpy( &(gMeanwhileDef[pMeanwhileDef->ubMeanwhileID]), pMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
 
-  // A meanwhile.. poor elliot!
-  // increment his slapped count...
+	// A meanwhile.. poor elliot!
+	// increment his slapped count...
 
-  // We need to do it here 'cause they may skip it...
-  if ( gMercProfiles[ ELLIOT ].bNPCData != 17 )
-  {
-    gMercProfiles[ ELLIOT ].bNPCData++;
-  }
+	// We need to do it here 'cause they may skip it...
+	if ( gMercProfiles[ ELLIOT ].bNPCData != 17 )
+	{
+	gMercProfiles[ ELLIOT ].bNPCData++;
+	}
 
 	AddStrategicEvent( EVENT_MEANWHILE, uiTime, pMeanwhileDef->ubMeanwhileID );
 }
@@ -411,25 +411,25 @@ void CheckForMeanwhileOKStart( )
 			return;
 		}
 
-	  if ( !DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
-	  {
-      return;
-    }
+	if ( !DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
+	{
+		return;
+	}
 
 		gfMeanwhileTryingToStart = FALSE;
 
 		guiOldScreen = guiCurrentScreen;
 
-    if ( guiCurrentScreen == GAME_SCREEN )
-    {
-  		LeaveTacticalScreen( GAME_SCREEN );    
-    }
+	if ( guiCurrentScreen == GAME_SCREEN )
+	{
+			LeaveTacticalScreen( GAME_SCREEN );	
+	}
 
 
 
-    // We need to make sure we have no item - at least in tactical
-    // In mapscreen, time is paused when manipulating items...
-    CancelItemPointer( );
+	// We need to make sure we have no item - at least in tactical
+	// In mapscreen, time is paused when manipulating items...
+	CancelItemPointer( );
 
 		BringupMeanwhileBox( );
 	}
@@ -473,7 +473,7 @@ void StartMeanwhile( )
 		case	ALMA_LIBERATED:
 		case	GRUMM_LIBERATED:
 		case	CHITZENA_LIBERATED:
-		case  BALIME_LIBERATED:
+		case	BALIME_LIBERATED:
 		case	NW_SAM:
 		case	NE_SAM:
 		case	CENTRAL_SAM:
@@ -489,10 +489,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ QUEEN ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ QUEEN ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ QUEEN ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ QUEEN ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( QUEEN );
@@ -505,10 +505,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ ELLIOT ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ ELLIOT ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ ELLIOT ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ ELLIOT ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( ELLIOT );
@@ -523,10 +523,10 @@ void StartMeanwhile( )
 					if ( iIndex != -1 )
 					{
 						gNPCSaveData[ iIndex ].ubProfile = JOE;
-						gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-						gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-						gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-						gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
+						gNPCSaveData[ iIndex ].sX				= gMercProfiles[ JOE ].sSectorX;
+						gNPCSaveData[ iIndex ].sY				= gMercProfiles[ JOE ].sSectorY;
+						gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ JOE ].bSectorZ;
+						gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ JOE ].sGridNo;
 
 						// Force reload of NPC files...
 						ReloadQuoteFile( JOE );
@@ -545,10 +545,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ QUEEN ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ QUEEN ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ QUEEN ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ QUEEN ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( QUEEN );
@@ -561,10 +561,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ ELLIOT ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ ELLIOT ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ ELLIOT ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ ELLIOT ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( ELLIOT );
@@ -577,10 +577,10 @@ void StartMeanwhile( )
 				if ( iIndex != -1 )
 				{
 					gNPCSaveData[ iIndex ].ubProfile = JOE;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
+					gNPCSaveData[ iIndex ].sX				= gMercProfiles[ JOE ].sSectorX;
+					gNPCSaveData[ iIndex ].sY				= gMercProfiles[ JOE ].sSectorY;
+					gNPCSaveData[ iIndex ].sZ				= gMercProfiles[ JOE ].bSectorZ;
+					gNPCSaveData[ iIndex ].sGridNo	= gMercProfiles[ JOE ].sGridNo;
 
 					// Force reload of NPC files...
 					ReloadQuoteFile( JOE );
@@ -666,8 +666,8 @@ BOOLEAN AreInMeanwhile( )
 	PERFORMANCE_MARKER
 	STRATEGICEVENT *curr;
 
-	//KM:  April 6, 1999
-	//Tactical traversal needs to take precedence over meanwhile events.  When tactically traversing, we
+	//KM:	April 6, 1999
+	//Tactical traversal needs to take precedence over meanwhile events.	When tactically traversing, we
 	//expect to make it to the other side without interruption.
 	if( gfTacticalTraversal )
 	{
@@ -678,7 +678,7 @@ BOOLEAN AreInMeanwhile( )
 	{
 		return TRUE;
 	}
-	//Check to make sure a meanwhile scene isn't in the event list occurring at the exact same time as this call.  Meanwhile
+	//Check to make sure a meanwhile scene isn't in the event list occurring at the exact same time as this call.	Meanwhile
 	//scenes have precedence over a new battle if they occur in the same second.
 	curr = gpEventList;
 	while( curr )
@@ -818,8 +818,8 @@ void EndMeanwhile( )
 	UnLockPauseState();
 	UnPauseGame();
 
-  // ATE: Make sure!
-  TurnOffSectorLocator();
+	// ATE: Make sure!
+	TurnOffSectorLocator();
 
 	if ( gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION )
 	{
@@ -837,23 +837,23 @@ void EndMeanwhile( )
 		// Set music mode to enemy present!
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-    // ATE: Restore people to saved positions...
-	  // OK, restore NPC save info...
-	  for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
-	  {
-		  ubProfile = gNPCSaveData[ cnt ].ubProfile;
+	// ATE: Restore people to saved positions...
+	// OK, restore NPC save info...
+	for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
+	{
+		ubProfile = gNPCSaveData[ cnt ].ubProfile;
 
-		  if ( ubProfile != NO_PROFILE )
-		  {
-			  gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
-			  gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
-			  gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			  gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
+		if ( ubProfile != NO_PROFILE )
+		{
+			gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
+			gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
+			gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
+			gMercProfiles[ ubProfile ].sGridNo	= (INT8)gNPCSaveData[ cnt ].sGridNo;
 
-			  // Ensure NPC files loaded...
-			  ReloadQuoteFile( ubProfile );
-		  }
-	  }
+			// Ensure NPC files loaded...
+			ReloadQuoteFile( ubProfile );
+		}
+	}
 
 	}
 
@@ -873,7 +873,7 @@ void DoneFadeOutMeanwhileOnceDone( )
 	{
 		SetCurrentWorldSector( gsOldSectorX, gsOldSectorY, (INT8)gsOldSectorZ );
 
-  	ExamineCurrentSquadLights( );
+		ExamineCurrentSquadLights( );
 	}	
 	else
 	{
@@ -898,7 +898,7 @@ void DoneFadeOutMeanwhileOnceDone( )
 			gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
 			gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
 			gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
+			gMercProfiles[ ubProfile ].sGridNo	= (INT8)gNPCSaveData[ cnt ].sGridNo;
 
 			// Ensure NPC files loaded...
 			ReloadQuoteFile( ubProfile );
@@ -1318,7 +1318,7 @@ void HandleDelayedFirstBattleVictory( void )
 
 	/*
 	//It is theoretically impossible to liberate a town within 60 minutes of the first battle (which is supposed to
-	//occur outside of a town in this scenario).  The delay is attributed to the info taking longer to reach the queen.
+	//occur outside of a town in this scenario).	The delay is attributed to the info taking longer to reach the queen.
 	uiTime = GetWorldTotalMin() + 60;
 	*/
 	uiTime = GetWorldTotalMin() + 5;
@@ -1345,7 +1345,7 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 	}
 
 	// if this is in fact a town and it is the first battle, then set gfFirstBattleMeanwhileScenePending true
-	// if  is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
+	// if	is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
 	// means player is leaving sector
 
 	// grab sector value

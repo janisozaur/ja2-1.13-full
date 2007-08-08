@@ -58,7 +58,7 @@ void GameInitMercsNoAccount()
 BOOLEAN EnterMercsNoAccount()
 {
 	PERFORMANCE_MARKER
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
 
@@ -72,23 +72,23 @@ BOOLEAN EnterMercsNoAccount()
 	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiOpenAccountBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnOpenAccountBoxButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnOpenAccountBoxButtonCallback);
 	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiOpenAccountBoxButton, DISABLED_STYLE_SHADED);
 
 
 	guiCancelBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_CANCEL],
-													 FONT12ARIAL, 
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
-													 TEXT_CJUSTIFIED, 
-													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnCancelBoxButtonCallback);
+													FONT12ARIAL, 
+													MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW, 
+													MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW, 
+													TEXT_CJUSTIFIED, 
+													MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													DEFAULT_MOVE_CALLBACK, BtnCancelBoxButtonCallback);
 	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiCancelBoxButton, DISABLED_STYLE_SHADED);
 
@@ -118,7 +118,7 @@ void HandleMercsNoAccount()
 void RenderMercsNoAccount()
 {
 	PERFORMANCE_MARKER
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
 
@@ -129,9 +129,9 @@ void RenderMercsNoAccount()
 	//Display the sentence
 	DisplayWrappedString(MERC_NA_SENTENCE_X, MERC_NA_SENTENCE_Y, MERC_NA_SENTENCE_WIDTH, 2, MERC_NA_TEXT_FONT, MERC_NA_TEXT_COLOR, MercNoAccountText[MERC_NO_ACC_NO_ACCOUNT_OPEN_ONE], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 

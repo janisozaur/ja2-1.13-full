@@ -210,7 +210,7 @@ public:
 
 	OLD_SPECIAL_ITEM_INFO_101 oldInfo;
 
-	UINT32  uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
+	UINT32	uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
 
 	BOOLEAN fActive;							// TRUE means an item is stored here (empty elements may not always be freed immediately)
 
@@ -254,7 +254,7 @@ typedef struct
 	UINT8		ubElementsAlloced;		// number of DEALER_SPECIAL_ITEM array elements alloced for the special item array
 	DEALER_SPECIAL_ITEM *SpecialItem;	// dynamic array of special items with this same item index
 
-	UINT32  uiOrderArrivalTime;		// Day the items ordered will arrive on.  It's UINT32 in case we change this to minutes.
+	UINT32	uiOrderArrivalTime;		// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
 	UINT8		ubQtyOnOrder;					// The number of items currently on order
 	BOOLEAN	fPreviouslyEligible;	// whether or not dealer has been eligible to sell this item in days prior to today
 

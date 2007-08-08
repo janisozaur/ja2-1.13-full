@@ -344,9 +344,9 @@ void LoadGameExternalOptions()
 	}
 
 	//
-	// Note: put -1 between male/female slots and -1 at end.  This allows everything to be
-	// counted dynamically quite easily.  Note that all the code assumes there is AT
-	// LEAST ONE slot for each sex.  If that changes the code will have to be updated.
+	// Note: put -1 between male/female slots and -1 at end.	This allows everything to be
+	// counted dynamically quite easily.	Note that all the code assumes there is AT
+	// LEAST ONE slot for each sex.	If that changes the code will have to be updated.
 	//
 	// Because errors in these values can really goof things up we will try to fix up bad
 	// values and use the defaults instead.
@@ -402,11 +402,11 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fAllMercsAvailable		= iniReader.ReadBoolean("JA2 Laptop Settings","ALL_MERCS_AT_MERC",FALSE);
 
 	//Merc Death Settings:
-	gGameExternalOptions.gfMercsDieOnAssignment			  = iniReader.ReadBoolean("JA2 Laptop Settings","MERCS_DIE_ON_ASSIGNMENT",TRUE);
-	gGameExternalOptions.giEasyMercDeaths		          = iniReader.ReadInteger("JA2 Laptop Settings","EASY_MERC_DEATHS",1);
-	gGameExternalOptions.giExperiencedMercDeaths	    = iniReader.ReadInteger("JA2 Laptop Settings","EXPERIENCED_MERC_DEATHS",2);
-	gGameExternalOptions.giExpertMercDeaths	          = iniReader.ReadInteger("JA2 Laptop Settings","EXPERT_MERC_DEATHS",3);
-	gGameExternalOptions.giInsaneMercDeaths	          = iniReader.ReadInteger("JA2 Laptop Settings","INSANE_MERC_DEATHS",4);
+	gGameExternalOptions.gfMercsDieOnAssignment			= iniReader.ReadBoolean("JA2 Laptop Settings","MERCS_DIE_ON_ASSIGNMENT",TRUE);
+	gGameExternalOptions.giEasyMercDeaths				= iniReader.ReadInteger("JA2 Laptop Settings","EASY_MERC_DEATHS",1);
+	gGameExternalOptions.giExperiencedMercDeaths	 = iniReader.ReadInteger("JA2 Laptop Settings","EXPERIENCED_MERC_DEATHS",2);
+	gGameExternalOptions.giExpertMercDeaths			= iniReader.ReadInteger("JA2 Laptop Settings","EXPERT_MERC_DEATHS",3);
+	gGameExternalOptions.giInsaneMercDeaths			= iniReader.ReadInteger("JA2 Laptop Settings","INSANE_MERC_DEATHS",4);
 
 	//################# System Settings #################
 	gGameExternalOptions.gubDeadLockDelay = iniReader.ReadInteger("JA2 System Settings","DEAD_LOCK_DELAY",15);
@@ -432,7 +432,7 @@ void LoadGameExternalOptions()
 
 	//################# Tactical Settings #################
 
-	gGameExternalOptions.gfRevealItems  = iniReader.ReadBoolean("JA2 Tactical Settings","REVEAL_ITEMS_AFTER_COMBAT",TRUE);
+	gGameExternalOptions.gfRevealItems	= iniReader.ReadBoolean("JA2 Tactical Settings","REVEAL_ITEMS_AFTER_COMBAT",TRUE);
 
 	// Militia Settings	
 	gGameExternalOptions.fAllowTacticalMilitiaCommand	= iniReader.ReadBoolean("JA2 Tactical Settings","ALLOW_TACTICAL_MILITIA_COMMAND",0);
@@ -487,7 +487,7 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fEnableArmorCoverage				= iniReader.ReadBoolean("JA2 Tactical Settings", "ENABLE_ARMOR_COVERAGE", FALSE); // ShadoWarrior for Captain J's armor coverage
 
 	//################# Rain Settings ##################
-	  
+	
 	// Rain settings
 	gGameExternalOptions.gfAllowRain									= iniReader.ReadBoolean("JA2 Rain Settings","ALLOW_RAIN",0);
 	gGameExternalOptions.gusRainChancePerDay							= iniReader.ReadInteger("JA2 Rain Settings","RAIN_CHANCE_PER_DAY",100);
@@ -544,15 +544,15 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.fStealingDisabled			= iniReader.ReadBoolean("JA2 Gameplay Settings","STEALING_FROM_SHIPMENTS_DISABLED",FALSE);
 
 	// WDS: Game progress 
-	gGameExternalOptions.ubGameProgressPortionKills     = iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_KILLS",25);
+	gGameExternalOptions.ubGameProgressPortionKills	 = iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_KILLS",25);
 	gGameExternalOptions.ubGameProgressPortionControl	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_CONTROL",25);
 	gGameExternalOptions.ubGameProgressPortionIncome	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_INCOME",50);
 	gGameExternalOptions.ubGameProgressPortionVisited	= iniReader.ReadInteger("JA2 Gameplay Settings","GAME_PROGRESS_VISITED",0);
-    
+	
 	// Any way to warn on this?
 	if (gGameExternalOptions.ubGameProgressPortionKills + gGameExternalOptions.ubGameProgressPortionControl + gGameExternalOptions.ubGameProgressPortionIncome + gGameExternalOptions.ubGameProgressPortionVisited != 100) 
 	{
-		gGameExternalOptions.ubGameProgressPortionKills     = 25;
+		gGameExternalOptions.ubGameProgressPortionKills	 = 25;
 		gGameExternalOptions.ubGameProgressPortionControl	= 25;
 		gGameExternalOptions.ubGameProgressPortionIncome	= 50;
 		gGameExternalOptions.ubGameProgressPortionVisited	= 0;
@@ -642,17 +642,14 @@ void LoadGameExternalOptions()
 	gGameExternalOptions.gfInvestigateSector				= iniReader.ReadBoolean("JA2 Gameplay Settings","ENEMY_INVESTIGATE_SECTOR",FALSE);
 	gGameExternalOptions.gfReassignPendingReinforcements	= iniReader.ReadBoolean("JA2 Gameplay Settings","REASSIGN_PENDING_REINFORCEMENTS",TRUE);
 
-
-	// WANNE: Drop Items
 	gGameExternalOptions.ubEnemiesItemDrop					= iniReader.ReadInteger("JA2 Gameplay Settings","ENEMIES_ITEM_DROP", 0);
 
-	// WANNE: External sector Loadscreens [2007-05-19]
-	gGameExternalOptions.gfUseExternalLoadscreens				= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_EXTERNALIZED_LOADSCREENS", FALSE);
+	gGameExternalOptions.gfUseExternalLoadscreens			= iniReader.ReadBoolean("JA2 Gameplay Settings","USE_EXTERNALIZED_LOADSCREENS", FALSE);
 
 	// Militia settings
-	gGameExternalOptions.guiAllowMilitiaGroupsDelay  = iniReader.ReadInteger("JA2 Gameplay Settings","ALLOW_MILITIA_MOBILE_DELAY",1);
-	gGameExternalOptions.guiTrainVeteranMilitiaDelay = iniReader.ReadInteger("JA2 Gameplay Settings","TRAIN_VETERAN_MILITIA_DELAY",1);
-	gGameExternalOptions.gfTrainVeteranMilitia			= iniReader.ReadBoolean("JA2 Gameplay Settings","TRAIN_VETERAN_MILITIA",FALSE);
+	gGameExternalOptions.guiAllowMilitiaGroupsDelay			= iniReader.ReadInteger("JA2 Gameplay Settings","ALLOW_MILITIA_MOBILE_DELAY",1);
+	gGameExternalOptions.guiTrainVeteranMilitiaDelay		= iniReader.ReadInteger("JA2 Gameplay Settings","TRAIN_VETERAN_MILITIA_DELAY",1);
+	gGameExternalOptions.gfTrainVeteranMilitia				= iniReader.ReadBoolean("JA2 Gameplay Settings","TRAIN_VETERAN_MILITIA",FALSE);
 	gGameExternalOptions.gfAllowMilitiaGroups				= iniReader.ReadBoolean("JA2 Gameplay Settings","ALLOW_MILITIA_MOBILE_GROUPS",FALSE);
 	gGameExternalOptions.gfmusttrainroaming					= iniReader.ReadBoolean("JA2 Gameplay Settings","MUST_TRAIN_MOBILE_MILITIA",FALSE);
 	gGameExternalOptions.gfAllowReinforcements				= iniReader.ReadBoolean("JA2 Gameplay Settings","ALLOW_REINFORCEMENTS",FALSE);
@@ -753,9 +750,9 @@ BOOLEAN GetCDLocation( )
 		}
 
 		//Now create a new file
-		 WritePrivateProfileString( "Ja2 Settings", "CD", zCdLocation, GAME_INI_FILE );
+		WritePrivateProfileString( "Ja2 Settings", "CD", zCdLocation, GAME_INI_FILE );
 
-		 GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
+		GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
 	}
 
 	uiStrngLength = strlen( zCdLocation );
@@ -907,7 +904,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 
 	if( !uiVolumeReturnValue )
 	{
-		 uiLastError = GetLastError();
+		uiLastError = GetLastError();
 	}
 
 	// OK, build filename
@@ -921,7 +918,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 			//if a game has been started, add the msg about saving the game to a different entry
 			if( gTacticalStatus.fHasAGameBeenStarted )
 			{
-				sprintf( sString, "%S  %S", pMessageStrings[ MSG_INTEGRITY_WARNING ], pMessageStrings[ MSG_CDROM_SAVE_GAME ] );
+				sprintf( sString, "%S	%S", pMessageStrings[ MSG_INTEGRITY_WARNING ], pMessageStrings[ MSG_CDROM_SAVE_GAME ] );
 
 				SaveGame( SAVE__ERROR_NUM, pMessageStrings[ MSG_CDROM_SAVE ] );
 			}
@@ -930,15 +927,15 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 				sprintf( sString, "%S", pMessageStrings[ MSG_INTEGRITY_WARNING ] );
 			}
 
-      // ATE: These are ness. due to reference counting
-      // in showcursor(). I'm not about to go digging in low level stuff at this
-      // point in the game development, so keep these here, as this works...
-//      ShowCursor(TRUE);
-//      ShowCursor(TRUE);
-      ShutdownWithErrorBox( sString );
+		// ATE: These are ness. due to reference counting
+		// in showcursor(). I'm not about to go digging in low level stuff at this
+		// point in the game development, so keep these here, as this works...
+//		ShowCursor(TRUE);
+//		ShowCursor(TRUE);
+		ShutdownWithErrorBox( sString );
 
-      //DoTester( );
-      //MessageBox(NULL, sString, "Error", MB_OK | MB_ICONERROR  );
+		//DoTester( );
+		//MessageBox(NULL, sString, "Error", MB_OK | MB_ICONERROR	);
 
 			return( FALSE );
 	}

@@ -28,14 +28,14 @@
 #define ITEMLIST_HANDLE_SELECTION	5
 
 // visibility defines
-#define ANY_VISIBILITY_VALUE  -10
+#define ANY_VISIBILITY_VALUE	-10
 #define HIDDEN_ITEM -4
 #define BURIED -3
 #define HIDDEN_IN_OBJECT -2
 #define INVISIBLE -1
 #define VISIBLE 1
 
-#define	ITEM_LOCATOR_DELAY  0x01
+#define	ITEM_LOCATOR_DELAY	0x01
 #define	ITEM_LOCATOR_LOCKED 0x02
 
 
@@ -153,7 +153,7 @@ void MineSpottedDialogueCallBack( void );
 extern INT16 gsBoobyTrapGridNo;
 extern SOLDIERTYPE * gpBoobyTrapSoldier;
 void AddBlueFlag( INT16 sGridNo, INT8 bLevel );
-void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel  );
+void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel	);
 
 // check if item is booby trapped
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );

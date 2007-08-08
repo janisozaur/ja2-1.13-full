@@ -26,7 +26,7 @@ extern BOOLEAN gfLoadingExitGrids;
 
 BOOLEAN			gfApplyChangesToTempFile = FALSE;
 
-//  There are 3200 bytes, and each bit represents the revelaed status.
+//	There are 3200 bytes, and each bit represents the revelaed status.
 //	3200 bytes * 8 bits = 25600 map elements
 UINT8				*gpRevealedMap;
 
@@ -292,7 +292,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 				break;
 
 			default:
-				AssertMsg( 0, "ERROR!  Map Type not in switch when loading map changes from temp file");
+				AssertMsg( 0, "ERROR!	Map Type not in switch when loading map changes from temp file");
 				break;
 		}
 
@@ -507,7 +507,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 		{
 			STRUCTURE * pCurrent;
 
-			pCurrent =  gpWorldLevelData[cnt].pStructureHead;
+			pCurrent =	gpWorldLevelData[cnt].pStructureHead;
 
 			pCurrent = FindStructure( cnt, STRUCTURE_BASE_TILE );
 
@@ -701,7 +701,7 @@ void SetSectorsRevealedBit( UINT16	usMapIndex )
 	UINT8		ubBitNumber;
 
 	usByteNumber = usMapIndex / 8;
-	ubBitNumber  = usMapIndex % 8;
+	ubBitNumber	= usMapIndex % 8;
 
 	gpRevealedMap[ usByteNumber ] |= 1 << ubBitNumber;
 }
@@ -716,7 +716,7 @@ void SetMapRevealedStatus()
 	UINT16	usMapIndex;
 
 	if( gpRevealedMap == NULL )
-		AssertMsg( 0, "gpRevealedMap is NULL.  DF 1" );
+		AssertMsg( 0, "gpRevealedMap is NULL.	DF 1" );
 
 
 	ClearSlantRoofs( );
@@ -786,7 +786,7 @@ void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 //////////////
 
 
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
 	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
@@ -812,7 +812,7 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
 }
 
-void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
 	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
@@ -838,7 +838,7 @@ void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 }
 
 
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
 	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
@@ -864,7 +864,7 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 }
 
 
-void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
 	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
@@ -1062,13 +1062,13 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 	STRUCTURE * pBase;
 	BOOLEAN			fStatusOnTheMap;
 	ITEM_POOL			*pItemPool;
-  INT16     sBaseGridNo = (INT16)uiMapIndex;
+	INT16	 sBaseGridNo = (INT16)uiMapIndex;
 
 	pStructure = FindStructure( (UINT16)uiMapIndex, STRUCTURE_OPENABLE );
 
 	if( pStructure == NULL )
 	{
-//		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.  DF 1.", uiMapIndex, fOpened );
+//		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.	DF 1.", uiMapIndex, fOpened );
 		return;
 	}
 
@@ -1080,10 +1080,10 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 		pBase = FindBaseStructure( pStructure );
 		
 		// Get LEVELNODE for struct and remove!
-    if ( pBase )
-    {
-		  sBaseGridNo = pBase->sGridNo;
-    }
+	if ( pBase )
+	{
+		sBaseGridNo = pBase->sGridNo;
+	}
 
 		if(SwapStructureForPartnerWithoutTriggeringSwitches( (UINT16)uiMapIndex, pStructure ) == NULL )
 		{
@@ -1092,19 +1092,19 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 
 
 		// Adjust visiblity of any item pools here....
-    // ATE: Nasty bug here - use base gridno for structure for items!
-    // since items always drop to base gridno in AddItemToPool
+	// ATE: Nasty bug here - use base gridno for structure for items!
+	// since items always drop to base gridno in AddItemToPool
 		if ( GetItemPoolFromGround( sBaseGridNo, &pItemPool ) )
 		{
 			if ( fOpened )
 			{
-				 // We are open, make un-hidden if so....
-				 SetItemPoolVisibilityOn( pItemPool, ANY_VISIBILITY_VALUE, FALSE );
+				// We are open, make un-hidden if so....
+				SetItemPoolVisibilityOn( pItemPool, ANY_VISIBILITY_VALUE, FALSE );
 			}
 			else
 			{
-				 // Make sure items are hidden...
-				 SetItemPoolVisibilityHidden( pItemPool );
+				// Make sure items are hidden...
+				SetItemPoolVisibilityHidden( pItemPool );
 			}
 
 		}

@@ -35,7 +35,7 @@ void InitStrategicStatus(void)
 BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	UINT32	 uiNumBytesWritten;
+	UINT32	uiNumBytesWritten;
 
 	//Save the Strategic Status structure to the saved game file
 	FileWrite( hFile, &gStrategicStatus, sizeof( STRATEGIC_STATUS ), &uiNumBytesWritten );
@@ -52,7 +52,7 @@ BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	UINT32	 uiNumBytesRead;
+	UINT32	uiNumBytesRead;
 
 	//Load the Strategic Status structure from the saved game file
 	FileRead( hFile, &gStrategicStatus, sizeof( STRATEGIC_STATUS ), &uiNumBytesRead );
@@ -92,7 +92,7 @@ void ModifyPlayerReputation(INT8 bRepChange)
 	iNewBadRep = (INT32) gStrategicStatus.ubBadReputation - bRepChange;
 
 	// keep within a 0-100 range (0 = Saint, 100 = Satan)
-	iNewBadRep = __max(   0, iNewBadRep );
+	iNewBadRep = __max(	0, iNewBadRep );
 	iNewBadRep = __min( 100, iNewBadRep );
 
 	gStrategicStatus.ubBadReputation = (UINT8) iNewBadRep;
@@ -251,7 +251,7 @@ void HandleEnricoEmail(void)
 
 	// test for a major setback OR a second minor setback
 	if ((((ubHighestProgress - ubCurrentProgress) >= MAJOR_SETBACK_THRESHOLD) ||
-	    (((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) && (gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_FLAG_SETBACK_OVER))) &&
+	 (((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) && (gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_FLAG_SETBACK_OVER))) &&
 			!(gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_SENT_MAJOR_SETBACK))
 	{
 		AddEmail(ENRICO_SETBACK, ENRICO_SETBACK_LENGTH, MAIL_ENRICO, GetWorldTotalMin(), -1);
@@ -260,7 +260,7 @@ void HandleEnricoEmail(void)
 	else
 	// test for a first minor setback
 	if (((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) &&
-		  !(gStrategicStatus.usEnricoEmailFlags & (ENRICO_EMAIL_SENT_MINOR_SETBACK | ENRICO_EMAIL_SENT_MAJOR_SETBACK)))
+		!(gStrategicStatus.usEnricoEmailFlags & (ENRICO_EMAIL_SENT_MINOR_SETBACK | ENRICO_EMAIL_SENT_MAJOR_SETBACK)))
 	{
 		AddEmail(ENRICO_SETBACK_2, ENRICO_SETBACK_2_LENGTH, MAIL_ENRICO, GetWorldTotalMin(), -1);
 		gStrategicStatus.usEnricoEmailFlags |= ENRICO_EMAIL_SENT_MINOR_SETBACK;

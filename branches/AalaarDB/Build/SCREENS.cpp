@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
@@ -26,17 +25,16 @@ int SCREEN_HEIGHT;
 int iScreenWidthOffset;
 int iScreenHeightOffset;
 
-// WANNE 2
 BOOLEAN fDisplayOverheadMap;
 
 Screens GameScreens[MAX_SCREENS] =
 {
-  { EditScreenInit,							EditScreenHandle,							EditScreenShutdown					}, 
-  { SavingScreenInitialize,     SavingScreenHandle,						SavingScreenShutdown				}, // Title Screen
-  { LoadingScreenInitialize,    LoadingScreenHandle,					LoadingScreenShutdown				}, // Title Screen
-  { ErrorScreenInitialize,      ErrorScreenHandle,						ErrorScreenShutdown					}, // Title Screen
-  { InitScreenInitialize,       InitScreenHandle,							InitScreenShutdown					}, // Title Screen
-  { MainGameScreenInit,					MainGameScreenHandle,					MainGameScreenShutdown			},
+	{ EditScreenInit,							EditScreenHandle,							EditScreenShutdown					}, 
+	{ SavingScreenInitialize,	 SavingScreenHandle,						SavingScreenShutdown				}, // Title Screen
+	{ LoadingScreenInitialize,	LoadingScreenHandle,					LoadingScreenShutdown				}, // Title Screen
+	{ ErrorScreenInitialize,		ErrorScreenHandle,						ErrorScreenShutdown					}, // Title Screen
+	{ InitScreenInitialize,		InitScreenHandle,							InitScreenShutdown					}, // Title Screen
+	{ MainGameScreenInit,					MainGameScreenHandle,					MainGameScreenShutdown			},
 	{ AniEditScreenInit,					AniEditScreenHandle,					AniEditScreenShutdown				},
 	{ PalEditScreenInit,					PalEditScreenHandle,					PalEditScreenShutdown				},
 	{ DebugScreenInit,						DebugScreenHandle,						DebugScreenShutdown					},

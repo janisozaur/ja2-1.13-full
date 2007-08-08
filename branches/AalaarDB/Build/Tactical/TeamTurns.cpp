@@ -71,7 +71,7 @@ void RecalculateSoldiersAniSpeed()
 		// if this merc is inactive, at base, on assignment, dead, unconscious
 		if (!pSoldier)
 		{
-			continue;          // next merc
+			continue;			// next merc
 		}
 
 		SetSoldierAniSpeed( pSoldier );
@@ -249,9 +249,9 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	// Signal UI done enemy's turn
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 
-  // ATE: Reset killed on attack variable.. this is because sometimes timing is such
-  /// that a baddie can die and still maintain it's attacker ID
-  gTacticalStatus.fKilledEnemyOnAttack = FALSE;
+	// ATE: Reset killed on attack variable.. this is because sometimes timing is such
+	/// that a baddie can die and still maintain it's attacker ID
+	gTacticalStatus.fKilledEnemyOnAttack = FALSE;
 
 	HandleTacticalUI( );
 }
@@ -285,7 +285,7 @@ void EndTurn( UINT8 ubNextTeam )
 	INT32 cnt;
 
 	//Check for enemy pooling (add enemies if there happens to be more than the max in the
-	//current battle.  If one or more slots have freed up, we can add them now.
+	//current battle.	If one or more slots have freed up, we can add them now.
 
 	EndDeadlockMsg( );
 
@@ -320,7 +320,7 @@ void EndTurn( UINT8 ubNextTeam )
 			}
 		}
 
-		gTacticalStatus.ubCurrentTeam  = ubNextTeam;
+		gTacticalStatus.ubCurrentTeam	= ubNextTeam;
 
 		BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
 
@@ -605,13 +605,13 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	}
 
 	// Enter combat mode starting with this side's turn
-	gTacticalStatus.ubCurrentTeam  = pActingSoldier->bTeam;
+	gTacticalStatus.ubCurrentTeam	= pActingSoldier->bTeam;
 
 	CommonEnterCombatModeCode( );
 
 	//JA2Gold: use function to make sure flags turned off everywhere else
 	//pActingSoldier->flags.uiStatusFlags |= SOLDIER_UNDERAICONTROL;
-	pActingSoldier->SetSoldierAsUnderAiControl(  );
+	pActingSoldier->SetSoldierAsUnderAiControl(	);
 	DebugAI( String( "Giving AI control to %d", pActingSoldier->ubID ) );
 	pActingSoldier->flags.fTurnInProgress = TRUE;
 	gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
@@ -679,7 +679,7 @@ void StartInterrupt( void )
 	// display everyone on int queue!
 	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:  Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:	Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
 	}
 
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: %d is now on top of the interrupt queue", ubFirstInterrupter ) );
@@ -740,7 +740,7 @@ void StartInterrupt( void )
 						// flush... display string, then clear it (we could have 20 names!)
 						// add comma to end, we know we have another person after this...
 						wcscat( sTemp, L", " );
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,  sTemp );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,	sTemp );
 						wcscpy( sTemp, L"" );
 						ubInterrupters = 1;
 					}
@@ -754,7 +754,7 @@ void StartInterrupt( void )
 			}
 		}
 
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,  sTemp );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,	sTemp );
 
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: starting interrupt for %d", ubFirstInterrupter ) );
 		// gusSelectedSoldier should become the topmost guy on the interrupt list
@@ -771,7 +771,7 @@ void StartInterrupt( void )
 
 		// Dirty panel interface!
 		fInterfacePanelDirty						= DIRTYLEVEL2;
-		gTacticalStatus.ubCurrentTeam   = pSoldier->bTeam;
+		gTacticalStatus.ubCurrentTeam	= pSoldier->bTeam;
 
 		// Signal UI done enemy's turn
 		guiPendingOverrideEvent = LU_ENDUILOCK;
@@ -863,7 +863,7 @@ void StartInterrupt( void )
 		}
 		// otherwise it's the AI interrupting another AI team
 
-		gTacticalStatus.ubCurrentTeam  = pSoldier->bTeam;
+		gTacticalStatus.ubCurrentTeam	= pSoldier->bTeam;
 		
 		#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Interrupt ( could be hidden )" );
@@ -896,7 +896,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 
 	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ENDINT:  Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ENDINT:	Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
 	}
 
 	// ATE: OK, now if this all happended on one frame, we may not have to stop
@@ -957,13 +957,13 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				else
 				{
 					pTempSoldier->aiData.bMoved = pTempSoldier->bMovedPriorToInterrupt;
-				}				 
+				}				
 			}
 		}
 
 
 		// change team
-		gTacticalStatus.ubCurrentTeam  = pSoldier->bTeam;
+		gTacticalStatus.ubCurrentTeam	= pSoldier->bTeam;
 		// switch appropriate messages & flags
 		if ( pSoldier->bTeam == OUR_TEAM)
 		{
@@ -1208,7 +1208,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 			return(FALSE);
 		*/
 		pOpponent = NULL;
-  }
+	}
 
 	// if interrupts have been disabled for any reason
 	if (!InterruptsAllowed)
@@ -1374,7 +1374,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 			// if pSoldier already saw the opponent last "look" or at least this turn
 			if ((bOldOppList == SEEN_CURRENTLY) || (bOldOppList == SEEN_THIS_TURN))
 			{
-				return(FALSE);     // no interrupt is possible
+				return(FALSE);	 // no interrupt is possible
 			}
 
 			// if the soldier is behind him and not very close, forget it
@@ -1398,14 +1398,14 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 				ubMinPtsNeeded = MinPtsToMove(pSoldier);
 			}
 		}
-		else   // this is a "HEARING" interrupt
+		else	// this is a "HEARING" interrupt
 		{
 			// if the opponent can't see the "interrupter" either, OR
 			// if the "interrupter" already has any opponents already in sight, OR
 			// if the "interrupter" already heard the active soldier this turn
 			if ((pOpponent->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY) || (pSoldier->aiData.bOppCnt > 0) || (bOldOppList == HEARD_THIS_TURN))
 			{
-				return(FALSE);     // no interrupt is possible
+				return(FALSE);	 // no interrupt is possible
 			}
 		}
 	}
@@ -1454,7 +1454,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 
 	// Old: BASE is one point for each experience level.
 	// Snap: Agility should be a factor, since it is a measure of
-	// a person's reactions.  We'll give more weight to experience
+	// a person's reactions.	We'll give more weight to experience
 	// though, since combat initiative is too important to be left up
 	// to an ordinary skill like agility.
 	// BASE = (2*lev + agi/10) / 3
@@ -1523,7 +1523,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	{
 		// either non-combat or the player with the current turn... i.e. active...
 		// unfortunately we can't use opplist here to record whether or not we saw this guy before, because at this point
-		// the opplist has been updated to seen.  But we can use gbSeenOpponents ...
+		// the opplist has been updated to seen.	But we can use gbSeenOpponents ...
 
 		// this soldier is moving, so give them a bonus for crawling or swatting at long distances
 		if ( !gbSeenOpponents[ ubOpponentID ][ pSoldier->ubID ] )
@@ -1577,7 +1577,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 		// check for TRUE because -1 means we JUST saw him (always so here)
 		if (gbSeenOpponents[pSoldier->ubID][ubOpponentID] == TRUE)
 		{
-			iPoints++;  // seen him before, easier to react to him
+			iPoints++;	// seen him before, easier to react to him
 		}
 	}
 	else if ( pSoldier->bTeam == ENEMY_TEAM )
@@ -1586,7 +1586,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 		// check for TRUE because -1 means we JUST saw him (always so here)
 		if (gbSeenOpponents[pSoldier->ubID][ubOpponentID] == TRUE)
 		{
-			iPoints++;  // seen him before, easier to react to him
+			iPoints++;	// seen him before, easier to react to him
 		}
 		else if (gbPublicOpplist[pSoldier->bTeam][ubOpponentID] != NOT_HEARD_OR_SEEN)
 		{
@@ -1627,7 +1627,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 	// if opponent can't currently see us and we can see them
 	if ( pSoldier->aiData.bOppList[ pOpponent->ubID ] == SEEN_CURRENTLY && pOpponent->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 	{
-		fResult = TRUE;       // we automatically interrupt
+		fResult = TRUE;		// we automatically interrupt
 		// fix up our interrupt duel pts if necessary
 		if (pSoldier->aiData.bInterruptDuelPts < pOpponent->aiData.bInterruptDuelPts)
 		{
@@ -1821,10 +1821,10 @@ void VerifyOutOfTurnOrderArray()
 	}
 
 	// Another potential problem: the player is interrupted by the enemy who is interrupted by 
-	// the militia.  In this situation the enemy should just lose their interrupt.
+	// the militia.	In this situation the enemy should just lose their interrupt.
 	// (Or, the militia is interrupted by the enemy who is interrupted by the player.)
 	
-	// Check for 3+ teams in the interrupt queue.  If three exist then abort all interrupts (return
+	// Check for 3+ teams in the interrupt queue.	If three exist then abort all interrupts (return
 	// control to the first team)
 	ubTeamsInList = 0;
 	for ( ubLoop = 0; ubLoop < MAXTEAMS; ubLoop++ )
@@ -1836,7 +1836,7 @@ void VerifyOutOfTurnOrderArray()
 	}
 	if ( ubTeamsInList >= 3 )
 	{
-		// This is bad.  Loop through everyone but the first person in the INT list and remove 'em
+		// This is bad.	Loop through everyone but the first person in the INT list and remove 'em
 		for (ubLoop = 2; ubLoop <= gubOutOfTurnPersons; )
 		{
 			if ( MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->bTeam != MercPtrs[ gubOutOfTurnOrder[ 1 ] ]->bTeam )
@@ -2008,10 +2008,10 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 		// if any interrupts are scheduled to occur (ie. I lost at least once)
 		if (ubIntCnt)
 		{
-			// First add currently active character to the interrupt queue.  This is
+			// First add currently active character to the interrupt queue.	This is
 			// USUALLY pSoldier->guynum, but NOT always, because one enemy can
 			// "interrupt" on another enemy's turn if he hears another team's wound
-			// victim's screaming...  the guy screaming is pSoldier here, it's not his turn!
+			// victim's screaming...	the guy screaming is pSoldier here, it's not his turn!
 			//AddToIntList( (UINT8) gusSelectedSoldier, FALSE, TRUE);
 
 			if ( (gTacticalStatus.ubCurrentTeam != pSoldier->bTeam) && !(gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bHuman) )
@@ -2063,7 +2063,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						return;
 					}
 
-					ubIntDiff[ubSmallestSlot] = NO_INTERRUPT;      // mark slot as been handled
+					ubIntDiff[ubSmallestSlot] = NO_INTERRUPT;		// mark slot as been handled
 				}
 			}
 

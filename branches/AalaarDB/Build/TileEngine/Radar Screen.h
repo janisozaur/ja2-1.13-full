@@ -37,6 +37,6 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void );
 void ClearOutRadarMapImage( void );
 
 // do we render the radar screen?..or the squad list?
-extern BOOLEAN   fRenderRadarScreen;
+extern BOOLEAN	fRenderRadarScreen;
 
 #endif

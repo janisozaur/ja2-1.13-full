@@ -15,7 +15,7 @@
  * using one of the two later methods will keep this SVN file unchanged for the
  * future, only Your private project files (workspace/solution) will differ 
  * from the SVN stuff.
- *                                             (2006-10-10, Sergeant_Kolja)
+ *											 (2006-10-10, Sergeant_Kolja)
  */
 
 #if !defined(ENGLISH) && !defined(GERMAN) && !defined(RUSSIAN) && !defined(DUTCH) && !defined(POLISH)

@@ -61,12 +61,12 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 {
 	PERFORMANCE_MARKER
-   if ((void*)this != (void*)&src) {
+	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;        // 1-10 exp_lvl to detect
+		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
@@ -83,12 +83,12 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 {
 	PERFORMANCE_MARKER
-   if ((void*)this != (void*)&src) {
+	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;        // 1-10 exp_lvl to detect
+		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
@@ -107,7 +107,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 {
 	PERFORMANCE_MARKER
-    if ((void*)this != (void*)&src) {
+	if ((void*)this != (void*)&src) {
 		//makes changes to size easier as we don't have to fill new arrays by hand
 		this->initialize();
 
@@ -115,7 +115,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
 		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;        // 1-10 exp_lvl to detect
+		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not

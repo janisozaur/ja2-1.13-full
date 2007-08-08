@@ -110,9 +110,9 @@ attachmentcombomergeCharacterDataHandle(void *userData, const XML_Char *str, int
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -140,12 +140,12 @@ attachmentcombomergeEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usItem") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usItem  = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usItem	= (UINT16) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usAttachment1") == 0)
 		{
@@ -160,7 +160,7 @@ attachmentcombomergeEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "usResult") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentComboMerge.usResult   = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentComboMerge.usResult	= (UINT16) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -197,7 +197,7 @@ BOOLEAN ReadInAttachmentComboMergeStats(STR fileName)
 	if ( !FileRead( hFile, lpcBuffer, uiFSize, &uiBytesRead ) )
 	{
 		MemFree(lpcBuffer);
-	  	FileClose( hFile );  /* added, Sgt. Kolja */
+		FileClose( hFile );	/* added, Sgt. Kolja */
 		return( FALSE );
 	}
 
@@ -217,7 +217,7 @@ BOOLEAN ReadInAttachmentComboMergeStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -225,7 +225,7 @@ BOOLEAN ReadInAttachmentComboMergeStats(STR fileName)
 		LiveMessage(errorBuf);
 
 		MemFree(lpcBuffer);
-	  	XML_ParserFree(parser); /* added, Sgt. Kolja */
+		XML_ParserFree(parser); /* added, Sgt. Kolja */
 		return FALSE;
 	}
 
@@ -259,10 +259,10 @@ BOOLEAN WriteAttachmentComboMergeStats()
 			FilePrintf(hFile,"\t<ATTACHMENTCOMBOMERGE>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<usItem>%d</usItem>\r\n",								AttachmentComboMerge[cnt].usItem   );
-			FilePrintf(hFile,"\t\t<usAttachment1>%d</usAttachment1>\r\n",								AttachmentComboMerge[cnt].usAttachment[0]    );
-			FilePrintf(hFile,"\t\t<usAttachment2>%d</usAttachment2>\r\n",								AttachmentComboMerge[cnt].usAttachment[1]   );
-			FilePrintf(hFile,"\t\t<usResult>%d</usResult>\r\n",								AttachmentComboMerge[cnt].usResult    );
+			FilePrintf(hFile,"\t\t<usItem>%d</usItem>\r\n",								AttachmentComboMerge[cnt].usItem	);
+			FilePrintf(hFile,"\t\t<usAttachment1>%d</usAttachment1>\r\n",								AttachmentComboMerge[cnt].usAttachment[0]	);
+			FilePrintf(hFile,"\t\t<usAttachment2>%d</usAttachment2>\r\n",								AttachmentComboMerge[cnt].usAttachment[1]	);
+			FilePrintf(hFile,"\t\t<usResult>%d</usResult>\r\n",								AttachmentComboMerge[cnt].usResult	);
 
 			FilePrintf(hFile,"\t</ATTACHMENTCOMBOMERGE>\r\n");
 		}

@@ -5,9 +5,9 @@
 //	Stolen from Nemesis by Derek Beland.
 //	Originally by Derek Beland and Bret Rowden.
 //
-//  ChangeLog:
-//      10.12.2005 Lesh ripped everything that refers to MSS
-//      15.12.2005 Lesh enabled sound in video
+//	ChangeLog:
+//		10.12.2005 Lesh ripped everything that refers to MSS
+//		15.12.2005 Lesh enabled sound in video
 //----------------------------------------------------------------------------------
 //#include "LocalCodeAll.h"
 
@@ -102,7 +102,7 @@ DDSURFACEDESC SurfaceDescription;
 				if(!SmackWait(SmkList[uiCount].SmackHandle))
 				{
 					DDLockSurface(SmkList[uiCount].lpDDS, NULL, &SurfaceDescription, 0, NULL);
-			    SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
+			 SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
 																					SmkList[uiCount].uiTop,
 																					SurfaceDescription.lPitch,
 																					SmkList[uiCount].SmackHandle->Height,
@@ -291,18 +291,18 @@ void SmkSetupVideo(void)
 	GetVideoSurface( &hVSurface, FRAME_BUFFER );
 	lpVideoPlayback2 = GetVideoSurfaceDDSurface( hVSurface );
 
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( lpVideoPlayback2, &SurfaceDescription );
-  if (ReturnCode != DD_OK)
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    return;
-  }
-  
-	usRed   = (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
+	ZEROMEM(SurfaceDescription);
+	SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
+	ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( lpVideoPlayback2, &SurfaceDescription );
+	if (ReturnCode != DD_OK)
+	{
+	DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+	return;
+	}
+	
+	usRed	= (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
 	usGreen = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
-	usBlue  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
+	usBlue	= (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
 
 	if((usRed==0xf800) && (usGreen==0x07e0) && (usBlue==0x001f))
 		guiSmackPixelFormat=SMACKBUFFER565;

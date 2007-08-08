@@ -171,10 +171,10 @@ void InitNPCs( void )
 	// use alternate map in this sector
 	//SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
 
-  gfPlayerTeamSawJoey = FALSE;
+	gfPlayerTeamSawJoey = FALSE;
 
 
-	if ( gGameOptions.ubGameStyle == STYLE_SCIFI  && gGameExternalOptions.fEnableCrepitus )
+	if ( gGameOptions.ubGameStyle == STYLE_SCIFI	&& gGameExternalOptions.fEnableCrepitus )
 	{
 		// add Bob
 		pProfile = &(gMercProfiles[BOB]);
@@ -228,9 +228,9 @@ void InitBloodCatSectors()
 {
 	PERFORMANCE_MARKER
 	INT32 i;
-	//Hard coded table of bloodcat populations.  We don't have
+	//Hard coded table of bloodcat populations.	We don't have
 	//access to the real population (if different) until we physically 
-	//load the map.  If the real population is different, then an error
+	//load the map.	If the real population is different, then an error
 	//will be reported.
 	for( i = 0; i < 255; i++ )
 	{
@@ -417,11 +417,11 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		ResetHeliSeats( );
 
 		// Setup two new messages!
-		AddPreReadEmail(OLD_ENRICO_1,OLD_ENRICO_1_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_2,OLD_ENRICO_2_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(RIS_REPORT,RIS_REPORT_LENGTH,RIS_EMAIL,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_3,OLD_ENRICO_3_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddEmail(IMP_EMAIL_INTRO,IMP_EMAIL_INTRO_LENGTH,CHAR_PROFILE_SITE,  GetWorldTotalMin(), -1);
+		AddPreReadEmail(OLD_ENRICO_1,OLD_ENRICO_1_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddPreReadEmail(OLD_ENRICO_2,OLD_ENRICO_2_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddPreReadEmail(RIS_REPORT,RIS_REPORT_LENGTH,RIS_EMAIL,	GetWorldTotalMin() );
+		AddPreReadEmail(OLD_ENRICO_3,OLD_ENRICO_3_LENGTH,MAIL_ENRICO,	GetWorldTotalMin() );
+		AddEmail(IMP_EMAIL_INTRO,IMP_EMAIL_INTRO_LENGTH,CHAR_PROFILE_SITE,	GetWorldTotalMin(), -1);
 		//AddEmail(ENRICO_CONGRATS,ENRICO_CONGRATS_LENGTH,MAIL_ENRICO, GetWorldTotalMin() );
 		if(gGameExternalOptions.fMercDayOne)
 		{
@@ -535,7 +535,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		EnterTacticalScreen( );
 
 		if( gfAtLeastOneMercWasHired == TRUE )
-		{  
+		{	
 			gubScreenCount = 3;
 		}
 		else
@@ -558,15 +558,15 @@ BOOLEAN AnyMercsHired( )
 	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE		*pTeamSoldier;
-	INT16				  bLastTeamID;
+	INT16				bLastTeamID;
 
 	// Find first guy availible in team
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
-  // look for all mercs on the same team, 
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
+	// look for all mercs on the same team, 
+	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
 	{	
 		if ( pTeamSoldier->bActive )
 		{
@@ -786,7 +786,7 @@ BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
 
 
 
-//This function is called when the game is REstarted.  Things that need to be reinited are placed in here
+//This function is called when the game is REstarted.	Things that need to be reinited are placed in here
 void ReStartingGame()
 {
 	PERFORMANCE_MARKER

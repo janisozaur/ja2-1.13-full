@@ -29,7 +29,7 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel );
 extern EXITGRID gExitGrid;
 extern BOOLEAN gfOverrideInsertionWithExitGrid;
 
-// Finds closest ExitGrid of same type as is at gridno, within a radius.  Checks
+// Finds closest ExitGrid of same type as is at gridno, within a radius.	Checks
 // valid paths, destinations, etc.
 UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
 

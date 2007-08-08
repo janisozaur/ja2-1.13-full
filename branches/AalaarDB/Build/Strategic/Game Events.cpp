@@ -239,7 +239,7 @@ void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode )
 		fDeleteEvent = FALSE;
 		//Update the time by the difference, but ONLY if the event comes after the current time.
 		//In the beginning of the game, series of events are created that are placed in the list
-		//BEFORE the start time.  Those events will be processed without influencing the actual time.
+		//BEFORE the start time.	Those events will be processed without influencing the actual time.
 		if( curr->uiTimeStamp > guiGameClock && ubWarpCode != WARPTIME_PROCESS_TARGET_TIME_FIRST )
 		{
 			AdjustClockToEventStamp( curr, &uiAdjustment );
@@ -264,15 +264,15 @@ void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode )
 			}
 			else
 			{ //We are at the current target warp time however, there are still other events following in this time cycle.
-				//We will only target the final event in this time.  NOTE:  Events are posted using a FIFO method
+				//We will only target the final event in this time.	NOTE:	Events are posted using a FIFO method
 				prev = curr;
 				curr = curr->next;
 				continue;
 			}
 		}
 		else
-		{ //We are warping time to the target time.  We haven't found the event yet,
-			//so continuing will keep processing the list until we find it.  NOTE:  Events are posted using a FIFO method
+		{ //We are warping time to the target time.	We haven't found the event yet,
+			//so continuing will keep processing the list until we find it.	NOTE:	Events are posted using a FIFO method
 			prev = curr;
 			curr = curr->next;
 			continue;
@@ -371,11 +371,11 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 		#ifdef JA2TESTVERSION
 			//if( ubCallbackID == EVENT_PROCESS_TACTICAL_SCHEDULE )
 			{
-				ScreenMsg( FONT_RED, MSG_DEBUG, L"%s Event Rejected:  Can't post events <= time while inside an event callback.  This is a special case situation that isn't a bug.", gEventName[ ubCallbackID ] );
+				ScreenMsg( FONT_RED, MSG_DEBUG, L"%s Event Rejected:	Can't post events <= time while inside an event callback.	This is a special case situation that isn't a bug.", gEventName[ ubCallbackID ] );
 			}
 			//else
 			//{
-			//	AssertMsg( 0, String( "%S Event Rejected:  Can't post events <= time while inside an event callback.", gEventName[ ubCallbackID ] ) );
+			//	AssertMsg( 0, String( "%S Event Rejected:	Can't post events <= time while inside an event callback.", gEventName[ ubCallbackID ] ) );
 			//}
 		#endif
 		return NULL;
@@ -416,7 +416,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 		if ( !pNode )
 		{
 			pPrevNode->next = pNewNode;
-			pNewNode->next  = NULL;
+			pNewNode->next	= NULL;
 		}
 		else
 		{
@@ -521,7 +521,7 @@ BOOLEAN AddEveryDayStrategicEventUsingSeconds( UINT8 ubCallbackID, UINT32 uiStar
 	return FALSE;
 }
 
-//NEW:  Period Events
+//NEW:	Period Events
 //Event will get processed automatically once every X minutes.
 BOOLEAN AddPeriodStrategicEvent( UINT8 ubCallbackID, UINT32 uiOnceEveryXMinutes, UINT32 uiParam )
 {
@@ -628,8 +628,8 @@ void DeleteAllStrategicEvents()
 	gpEventList = NULL;
 }
 
-//Searches for and removes the first event matching the supplied information.  There may very well be a need
-//for more specific event removal, so let me know (Kris), of any support needs.  Function returns FALSE if
+//Searches for and removes the first event matching the supplied information.	There may very well be a need
+//for more specific event removal, so let me know (Kris), of any support needs.	Function returns FALSE if
 //no events were found or if the event wasn't deleted due to delete lock,
 BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam )
 {

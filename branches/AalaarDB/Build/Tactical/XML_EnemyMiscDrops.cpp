@@ -110,7 +110,7 @@ miscDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
 	}
 }
@@ -140,22 +140,22 @@ miscDropEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMiscDrop.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curMiscDrop.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usItemClass") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMiscDrop.usItemClass   = (UINT32) atol(pData->szCharData);
+			pData->curMiscDrop.usItemClass	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubEnemyDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMiscDrop.ubEnemyDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curMiscDrop.ubEnemyDropRate	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubMilitiaDropRate") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curMiscDrop.ubMilitiaDropRate  = (UINT8) atol(pData->szCharData);
+			pData->curMiscDrop.ubMilitiaDropRate	= (UINT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -211,7 +211,7 @@ BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 

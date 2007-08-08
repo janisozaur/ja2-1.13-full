@@ -158,9 +158,9 @@ extendedarmygunchoicesCharacterDataHandle(void *userData, const XML_Char *str, i
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -188,12 +188,12 @@ extendedarmygunchoicesEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExtendedArmyGunChoices.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curExtendedArmyGunChoices.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "ubChoices") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curExtendedArmyGunChoices.ubChoices  = (UINT8) atol(pData->szCharData);
+			pData->curExtendedArmyGunChoices.ubChoices	= (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "bItemNo1") == 0)
 		{
@@ -499,7 +499,7 @@ BOOLEAN ReadInExtendedArmyGunChoicesStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -540,9 +540,9 @@ BOOLEAN WriteExtendedArmyGunChoicesStats()
 			FilePrintf(hFile,"\t<ENEMYGUNCHOICES>\r\n");
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
-			FilePrintf(hFile,"\t\t<ubChoices>%d</ubChoices>\r\n",								gExtendedArmyGunChoices[cnt].ubChoices   );
+			FilePrintf(hFile,"\t\t<ubChoices>%d</ubChoices>\r\n",								gExtendedArmyGunChoices[cnt].ubChoices	);
 			for (int i=0;i<50;i++)
-				FilePrintf(hFile,"\t\t<bItemNo%d>%d</bItemNo%d>\r\n",i+1,gExtendedArmyGunChoices[cnt].bItemNo[i],i+1  );
+				FilePrintf(hFile,"\t\t<bItemNo%d>%d</bItemNo%d>\r\n",i+1,gExtendedArmyGunChoices[cnt].bItemNo[i],i+1	);
 
 
 			FilePrintf(hFile,"\t</ENEMYGUNCHOICES>\r\n");

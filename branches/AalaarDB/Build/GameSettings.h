@@ -252,7 +252,7 @@ typedef struct
 
 	
 	//Sight range
-	UINT32  ubStraightSightRange;
+	UINT32	ubStraightSightRange;
 	UINT32 ubVisDistDecreasePerRainIntensity;
 	BOOLEAN gfAllowLimitedVision;
 
@@ -347,10 +347,8 @@ typedef struct
 	BOOLEAN gfInvestigateSector;
 	BOOLEAN gfReassignPendingReinforcements;
 
-	// WANNE
 	INT32 ubEnemiesItemDrop;
 
-	// WANNE: External sector loadscreens [2007-05-19]
 	BOOLEAN	gfUseExternalLoadscreens;
 
 	BOOLEAN gfUseAutoSave;
@@ -427,7 +425,7 @@ typedef struct
 
 } GAME_EXTERNAL_OPTIONS;
 
-//This structure will contain general Ja2 settings  NOT individual game settings.
+//This structure will contain general Ja2 settings	NOT individual game settings.
 extern GAME_SETTINGS		gGameSettings;
 
 //This structure will contain the Game options set at the beginning of the game.

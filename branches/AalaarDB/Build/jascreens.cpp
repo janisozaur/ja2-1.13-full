@@ -26,7 +26,7 @@
 	#include "editscreen.h"
 	#include <wchar.h>
 	#include <tchar.h>
-	#include "Timer Control.h"     
+	#include "Timer Control.h"	 
 	#include "Sys Globals.h"
 	#include "interface.h"
 	#include "overhead.h"
@@ -77,8 +77,8 @@ extern BOOLEAN			gfAmINetworked;
 
 
 // GLOBAL FOR PAL EDITOR 
-UINT8	 CurrentPalette = 0;
-UINT32  guiBackgroundRect;
+UINT8	CurrentPalette = 0;
+UINT32	guiBackgroundRect;
 BOOLEAN	gfExitPalEditScreen = FALSE;
 BOOLEAN	gfExitDebugScreen = FALSE;
 BOOLEAN gfInitRect = TRUE;
@@ -87,10 +87,10 @@ BOOLEAN	gfDoneWithSplashScreen = FALSE;
 
 
 
-void PalEditRenderHook(  );
+void PalEditRenderHook(	);
 BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent );
 
-void DebugRenderHook(  );
+void DebugRenderHook(	);
 BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent );
 INT8 gCurDebugPage = 0;
 
@@ -109,7 +109,7 @@ void DefaultDebugPage3( );
 void DefaultDebugPage4( );
 RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] = 
 { (RENDER_HOOK)DefaultDebugPage1, (RENDER_HOOK)DefaultDebugPage2, 
-  (RENDER_HOOK)DefaultDebugPage3, (RENDER_HOOK)DefaultDebugPage4 };
+	(RENDER_HOOK)DefaultDebugPage3, (RENDER_HOOK)DefaultDebugPage4 };
 
 extern HVSURFACE ghFrameBuffer;
 
@@ -154,12 +154,12 @@ void DisplayFrameRate( )
 		// FRAME RATE
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
 		swprintf( VideoOverlayDesc.pzText, L"%ld", __min( uiFPS, 1000 ) );
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
+		VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
 
 		// TIMER COUNTER		
 		swprintf( VideoOverlayDesc.pzText, L"%ld", __min( giTimerDiag, 1000 ) );
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
+		VideoOverlayDesc.uiFlags	= VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
 		
 
@@ -273,7 +273,7 @@ UINT32 ErrorScreenInitialize(void)
 UINT32 ErrorScreenHandle(void)
 {
 	PERFORMANCE_MARKER
-  InputAtom  InputEvent;
+	InputAtom	InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 #ifdef JA2BETAVERSION
 	CHAR16 str[256];
@@ -292,18 +292,18 @@ UINT32 ErrorScreenHandle(void)
 
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_YELLOW ); 
-	SetFontShadow( 60 );		 //60 is near black
+	SetFontShadow( 60 );		//60 is near black
 	mprintf( 50, 255, L"%S", gubErrorText );
 	SetFontForeground( FONT_LTRED ); 
 
 
 #ifdef JA2BETAVERSION
-  
-	  if( gubAssertString[0] )
-	  {
-		  swprintf( str, L"%S", gubAssertString );
-		  DisplayWrappedString( 50, 270, 560, 2, FONT12ARIAL, FONT_RED, str, FONT_BLACK, TRUE, LEFT_JUSTIFIED );
-	  }
+	
+	if( gubAssertString[0] )
+	{
+		swprintf( str, L"%S", gubAssertString );
+		DisplayWrappedString( 50, 270, 560, 2, FONT12ARIAL, FONT_RED, str, FONT_BLACK, TRUE, LEFT_JUSTIFIED );
+	}
 #endif
 
 	if ( !fFirstTime )
@@ -317,9 +317,9 @@ UINT32 ErrorScreenHandle(void)
 	EndFrameBufferRender( );
 
 	// Check for esc 
-  while (DequeueEvent(&InputEvent) == TRUE)
-  {
-      if( InputEvent.usEvent == KEY_DOWN )
+	while (DequeueEvent(&InputEvent) == TRUE)
+	{
+		if( InputEvent.usEvent == KEY_DOWN )
 			{
 				if( InputEvent.usParam == ESC || InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN )
 				{ // Exit the program
@@ -532,7 +532,7 @@ UINT32 PalEditScreenShutdown(void)
 }
 
 
-void PalEditRenderHook(  )
+void PalEditRenderHook(	)
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
@@ -565,14 +565,14 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 		return( FALSE );
 	}
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == ESC ))
-  { 
+	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == ESC ))
+	{ 
 		gfExitPalEditScreen = TRUE;
 		return( TRUE );
 	}
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'h' ))
-  { 
+	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'h' ))
+	{ 
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -599,11 +599,11 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
-  }
+	}
 
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'v' ))
-  { 
+	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'v' ))
+	{ 
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -630,10 +630,10 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
-  }
+	}
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'p' ))
-  { 
+	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'p' ))
+	{ 
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -660,10 +660,10 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
-  }
+	}
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 's' ))
-  { 
+	if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 's' ))
+	{ 
 			// Get Soldier
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 
@@ -690,7 +690,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
-  }
+	}
 
 	return( FALSE );
 }
@@ -774,7 +774,7 @@ UINT32 DebugScreenShutdown(void)
 }
 
 
-void DebugRenderHook(  )
+void DebugRenderHook(	)
 {
 	PERFORMANCE_MARKER
 	gDebugRenderOverride[ gCurDebugPage ]( );
@@ -783,14 +783,14 @@ void DebugRenderHook(  )
 BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 {
 	PERFORMANCE_MARKER
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
-  { 
+	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
+	{ 
 		gfExitDebugScreen = TRUE;
 		return( TRUE );
 	}
 
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGUP ))
-  { 
+	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGUP ))
+	{ 
 		// Page down
 		gCurDebugPage++;
 
@@ -802,10 +802,10 @@ BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 		FreeBackgroundRect( guiBackgroundRect );
 		gfInitRect = TRUE;
 
-  }
+	}
 
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGDN ))
-  { 
+	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGDN ))
+	{ 
 		// Page down
 		gCurDebugPage--;
 
@@ -817,7 +817,7 @@ BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 		FreeBackgroundRect( guiBackgroundRect );
 		gfInitRect = TRUE;
 
-  }
+	}
 
 	return( FALSE );
 }
@@ -871,11 +871,11 @@ UINT32 SexScreenHandle(void)
 {
 	PERFORMANCE_MARKER
 	static UINT8					ubCurrentScreen = 0;
-  VOBJECT_DESC					VObjectDesc;
+	VOBJECT_DESC					VObjectDesc;
 	static UINT32					guiSMILY;
 	static INT8						bCurFrame = 0;
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
-  ETRLEObject						*pTrav;
+	ETRLEObject						*pTrav;
 	HVOBJECT							hVObject;
 	INT16									sX, sY;
 
@@ -999,7 +999,7 @@ void DisplayTopwareGermanyAddress()
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
-  
+	
 	//bring up the Topware address screen
 	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	sprintf( vo_desc.ImageFile, "German\\topware_germany.sti" );

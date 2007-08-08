@@ -109,9 +109,9 @@ attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
 		(strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
-	  ){
+	){
 		strncat(pData->szCharData,str,__min((unsigned int)len,MAX_CHAR_DATA_LENGTH-strlen(pData->szCharData)));
-	  }
+	}
 }
 
 
@@ -139,12 +139,12 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "uiIndex") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.uiIndex   = (UINT32) atol(pData->szCharData);
+			pData->curAttachmentInfo.uiIndex	= (UINT32) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usItem") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.usItem   = (UINT16) atol(pData->szCharData);
+			pData->curAttachmentInfo.usItem	= (UINT16) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "uiItemClass") == 0)
 		{
@@ -154,12 +154,12 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 		else if(strcmp(name, "bAttachmentSkillCheck") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheck  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheck	= (INT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "bAttachmentSkillCheckMod") == 0)
 		{
 			pData->curElement = ELEMENT;
-			pData->curAttachmentInfo.bAttachmentSkillCheckMod  = (INT8) atol(pData->szCharData);
+			pData->curAttachmentInfo.bAttachmentSkillCheckMod	= (INT8) atol(pData->szCharData);
 		}
 
 		pData->maxReadDepth--;
@@ -215,7 +215,7 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 	XML_SetUserData(parser, &pData);
 
 
-    if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
+	if(!XML_Parse(parser, lpcBuffer, uiFSize, TRUE))
 	{
 		CHAR8 errorBuf[511];
 
@@ -257,9 +257,9 @@ BOOLEAN WriteAttachmentInfoStats()
 
 			FilePrintf(hFile,"\t\t<uiIndex>%d</uiIndex>\r\n",								cnt );
 			FilePrintf(hFile,"\t\t<usItem>%d</usItem>\r\n",								AttachmentInfo[cnt].usItem );
-			FilePrintf(hFile,"\t\t<uiItemClass>%d</uiItemClass>\r\n",								AttachmentInfo[cnt].uiItemClass  );
-			FilePrintf(hFile,"\t\t<bAttachmentSkillCheck>%d</bAttachmentSkillCheck>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheck  );
-			FilePrintf(hFile,"\t\t<bAttachmentSkillCheckMod>%d</bAttachmentSkillCheckMod>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheckMod   );
+			FilePrintf(hFile,"\t\t<uiItemClass>%d</uiItemClass>\r\n",								AttachmentInfo[cnt].uiItemClass	);
+			FilePrintf(hFile,"\t\t<bAttachmentSkillCheck>%d</bAttachmentSkillCheck>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheck	);
+			FilePrintf(hFile,"\t\t<bAttachmentSkillCheckMod>%d</bAttachmentSkillCheckMod>\r\n",								AttachmentInfo[cnt].bAttachmentSkillCheckMod	);
 
 			FilePrintf(hFile,"\t</ATTACHMENTINFO>\r\n");
 		}

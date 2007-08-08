@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -671,8 +670,8 @@ void SetupGunGUI()
 		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
-	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
-	//for a particular weapon.  Show only the ones that we can apply to this gun.
+	//Attachments are a dynamic part of guns.	None, some, or all attachments could be available
+	//for a particular weapon.	Show only the ones that we can apply to this gun.
 	yp = 2 * iScreenHeightOffset + 383;
 	guiAttachmentButton[ SILENCER_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( SILENCER, gpItem->usItem ) )

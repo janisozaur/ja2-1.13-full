@@ -95,7 +95,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		{
 			pSoldier->drugs.bFutureDrugEffect[ ubDrugType ]							+= ubDrugEffect[ ubDrugType ];
 		}
-		pSoldier->drugs.bDrugEffectRate[ ubDrugType ]							 	 = ubDrugTravelRate[ ubDrugType ];
+		pSoldier->drugs.bDrugEffectRate[ ubDrugType ]								= ubDrugTravelRate[ ubDrugType ];
 
 		// Increment times used during lifetime...
 		// CAP!
@@ -113,10 +113,10 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		// Increment side effects..
 		if ( ( pSoldier->drugs.bDrugSideEffect[ ubDrugType ] + ubDrugSideEffect[ ubDrugType ] ) < 127 )
 		{
-			pSoldier->drugs.bDrugSideEffect[ ubDrugType ]								 += ( ubDrugSideEffect[ ubDrugType ] );
+			pSoldier->drugs.bDrugSideEffect[ ubDrugType ]								+= ( ubDrugSideEffect[ ubDrugType ] );
 		}
 		// Stop side effects until were done....
-		pSoldier->drugs.bDrugSideEffectRate[ ubDrugType ]						 = 0;
+		pSoldier->drugs.bDrugSideEffectRate[ ubDrugType ]						= 0;
 
 		
 		if ( ubDrugType == DRUG_TYPE_ALCOHOL )
@@ -149,9 +149,9 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 				DeductPoints( pSoldier, 0, 10000 );
 
 				// Permanently lower certain stats...
-				pSoldier->stats.bWisdom	   -= 5;
+				pSoldier->stats.bWisdom	-= 5;
 				pSoldier->stats.bDexterity -= 5;
-				pSoldier->stats.bStrength  -= 5;
+				pSoldier->stats.bStrength	-= 5;
 
 				if (pSoldier->stats.bWisdom < 1)
 					pSoldier->stats.bWisdom = 1;
@@ -161,9 +161,9 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 					pSoldier->stats.bStrength = 1;
 
 				// export stat changes to profile
-				gMercProfiles[ pSoldier->ubProfile ].bWisdom    = pSoldier->stats.bWisdom;
+				gMercProfiles[ pSoldier->ubProfile ].bWisdom	= pSoldier->stats.bWisdom;
 				gMercProfiles[ pSoldier->ubProfile ].bDexterity = pSoldier->stats.bDexterity;
-				gMercProfiles[ pSoldier->ubProfile ].bStrength  = pSoldier->stats.bStrength;
+				gMercProfiles[ pSoldier->ubProfile ].bStrength	= pSoldier->stats.bStrength;
 
 				// make those stats RED for a while...
 				pSoldier->timeChanges.uiChangeWisdomTime = GetJA2Clock();
@@ -213,9 +213,9 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name );		
 	}
 
-  // Dirty panel
-  fInterfacePanelDirty = DIRTYLEVEL2;
-   
+	// Dirty panel
+	fInterfacePanelDirty = DIRTYLEVEL2;
+	
 	return( TRUE );
 }
 
@@ -252,8 +252,8 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			{
 				pSoldier->drugs.bDrugEffect[ cnt ] = 0;
 
-        // Dirty panel
-        fInterfacePanelDirty = DIRTYLEVEL2;
+		// Dirty panel
+		fInterfacePanelDirty = DIRTYLEVEL2;
 
 				// Start the bad news!
 				pSoldier->drugs.bDrugSideEffectRate[ cnt ] = ubDrugSideEffectRate[ cnt ];
@@ -273,7 +273,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 					}
 					else
 					{
-						HandleMoraleEvent( pSoldier, MORALE_DRUGS_CRASH, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ  );
+						HandleMoraleEvent( pSoldier, MORALE_DRUGS_CRASH, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ	);
 					}
 				}
 			}
@@ -321,7 +321,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 	}
 }
 
-INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType  )
+INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType	)
 {
 	PERFORMANCE_MARKER
 	return( pSoldier->drugs.bDrugEffect[ ubDrugType ] );
@@ -345,8 +345,8 @@ INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType )
 void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 {
 	PERFORMANCE_MARKER
-	INT8  bDrunkLevel;
-  INT16  sPoints = (*pubPoints);
+	INT8	bDrunkLevel;
+	INT16	sPoints = (*pubPoints);
 
 	// Are we in a side effect or good effect?
 	if ( pSoldier->drugs.bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
@@ -378,7 +378,7 @@ void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 		}
 	}
 
-  (*pubPoints) = (UINT8)sPoints;
+	(*pubPoints) = (UINT8)sPoints;
 }
 
 

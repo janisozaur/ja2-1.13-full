@@ -64,7 +64,7 @@ BOOLEAN	fEnterMapDueToContract = FALSE;
 extern BOOLEAN fOneFrame;
 extern BOOLEAN fPausedTimeDuringQuote;
 UINT8 ubQuitType = 0;
-BOOLEAN gfFirstMercSayQuote  = FALSE;
+BOOLEAN gfFirstMercSayQuote	= FALSE;
 extern BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat;
 
 extern CHAR16		gzUserDefinedButton1[ 128 ];
@@ -109,7 +109,7 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 	}
 
 
-  return( TRUE );
+	return( TRUE );
 }
 
 
@@ -130,7 +130,7 @@ BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
 		return( FALSE );
 	}
 
-  return( TRUE );
+	return( TRUE );
 }
 
 void BeginContractRenewalSequence( )
@@ -268,7 +268,7 @@ void EndCurrentContractRenewal( )
 	{
 		// OK stop this one and increment current one
 		ubCurrentContractRenewalInProgress = FALSE;
-		gfInContractMenuFromRenewSequence	 = FALSE;
+		gfInContractMenuFromRenewSequence	= FALSE;
 
 		ubCurrentContractRenewal++;
 
@@ -403,7 +403,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 	//determine the end of the contract
 	pSoldier->iEndofContractTime += ( iContractLength * 1440 );
 
-	if( ( pSoldier->usLifeInsurance ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )	//  DEF:  Removed cause they can extend a 1 day contract && ( iContractLength > 1 )
+	if( ( pSoldier->usLifeInsurance ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )	//	DEF:	Removed cause they can extend a 1 day contract && ( iContractLength > 1 )
 	{
 		// check if player can afford insurance, if not, tell them
 		iCostOfInsurance = CalculateInsuranceContractCost( iContractLength, pSoldier->ubProfile );
@@ -444,22 +444,22 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 
 
-  // ATE: Setup when they can be signed again!
-  // If they are 2-weeks this can be extended
-  // otherwise don't change from current
-  if ( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-  {
-    pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
-  }
+	// ATE: Setup when they can be signed again!
+	// If they are 2-weeks this can be extended
+	// otherwise don't change from current
+	if ( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+	{
+	pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
+	}
 
-// ARM: Do not reset because of renewal!  The quote is for early dismissal from *initial* time of hiring
+// ARM: Do not reset because of renewal!	The quote is for early dismissal from *initial* time of hiring
 //	pSoldier->uiTimeOfLastContractUpdate = GetWorldTotalMin();
 
-// ARM: Do not reset because of renewal!  The deposit in the profile goes up when merc levels, but the one in the soldier
+// ARM: Do not reset because of renewal!	The deposit in the profile goes up when merc levels, but the one in the soldier
 // structure must always reflect the deposit actually paid (which does NOT change when a merc levels).
 //	pSoldier->usMedicalDeposit = gMercProfiles[ pSoldier->ubProfile ].sMedicalDepositAmount;
 
-	//add an entry in the finacial page for the extending  of the mercs contract
+	//add an entry in the finacial page for the extending	of the mercs contract
 	AddTransactionToPlayersBook( ubFinancesContractType, pSoldier->ubProfile, GetWorldTotalMin(), -iContractCharge );
 
 	//add an entry in the history page for the extending of the merc contract
@@ -585,7 +585,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 					fUnhappy = TRUE;
 					usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
 
-        }
+		}
 				else if ( gMercProfiles[ pSoldier->ubProfile ].bLearnToHateCount <= gMercProfiles[ pSoldier->ubProfile ].bLearnToHateTime / 2 )
 				{
 					pHated = FindSoldierByProfileID( bMercID, TRUE );
@@ -650,7 +650,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 				}
 				else
 				{
-					SetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usReasonQuote ) )  );
+					SetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usReasonQuote ) )	);
 				}
 			}
 		}
@@ -796,11 +796,11 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 		return;
 
-  // ATE: check time we have and see if we can accept new contracts....
-  if ( GetWorldTotalMin() <= (UINT32) pSoldier->iTimeCanSignElsewhere )
-  {
-    return;
-  }
+	// ATE: check time we have and see if we can accept new contracts....
+	if ( GetWorldTotalMin() <= (UINT32) pSoldier->iTimeCanSignElsewhere )
+	{
+	return;
+	}
 
 	// if he doesn't already have another contract
 	if (!pSoldier->flags.fSignedAnotherContract)
@@ -844,7 +844,7 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 }
 
 
-//for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED  )
+//for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED	)
 BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
 {
 	PERFORMANCE_MARKER
@@ -855,15 +855,15 @@ BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButto
 	//if the soldier may have some special action when he/she leaves the party, handle it
 	HandleUniqueEventWhenPlayerLeavesTeam( pSoldier );		
 
-  // IF the soldier is an EPC, don't ask about equipment
-  if ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-  {
-    UnEscortEPC( pSoldier );
-  }
-  else
-  {
-	  NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( pSoldier, fAddRehireButton );
-  }
+	// IF the soldier is an EPC, don't ask about equipment
+	if ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	{
+	UnEscortEPC( pSoldier );
+	}
+	else
+	{
+	NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( pSoldier, fAddRehireButton );
+	}
 
 	return( TRUE );
 }
@@ -926,7 +926,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 			{
 				// remove him from any existing merc slot he could be in
 				RemoveMercSlot( pSoldier );
-        TakeSoldierOutOfVehicle( pSoldier );
+		TakeSoldierOutOfVehicle( pSoldier );
 			}
 		}
 
@@ -988,15 +988,15 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 	// stop time compression so player can react to the departure
 	StopTimeCompression();
 
-	// WDS: This allows for replacing dead IMP mercs.  See "BtnIMPBeginScreenDoneCallback" in "IMP Begin Screen.cpp"
+	// WDS: This allows for replacing dead IMP mercs.	See "BtnIMPBeginScreenDoneCallback" in "IMP Begin Screen.cpp"
 	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER ) &&
 		( gMercProfiles[ pSoldier->ubProfile ].bMercStatus == MERC_IS_DEAD ) ) {
 		// Replace the name with an empty string
 		wcsncpy( gMercProfiles[ pSoldier->ubProfile ].zName, L"", 1 );
 	}
 
-  // ATE: update team panels....
-  UpdateTeamPanelAssignments( );
+	// ATE: update team panels....
+	UpdateTeamPanelAssignments( );
 
 	return( TRUE );
 }
@@ -1099,7 +1099,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 	}
 
 	// check if drassen controlled
-	else if( StrategicMap[  ( AIRPORT_X + ( MAP_WORLD_X * AIRPORT_Y ) ) ].fEnemyControlled == FALSE )
+	else if( StrategicMap[	( AIRPORT_X + ( MAP_WORLD_X * AIRPORT_Y ) ) ].fEnemyControlled == FALSE )
 	{
 		
 		if( ( pSoldier->sSectorX == AIRPORT_X ) && ( pSoldier->sSectorY == AIRPORT_Y ) && ( pSoldier->bSectorZ == 0 ) )
@@ -1170,7 +1170,7 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		}
 		else
 		{
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ), MercDepartEquipmentBoxCallBack );
+			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK	) ), MercDepartEquipmentBoxCallBack );
 		}
 
 	}
@@ -1179,11 +1179,11 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 		if( fInSector == FALSE )
 		{
 			// set up for all otherscreens
-			DoMessageBox(  MSG_BOX_BASIC_STYLE, sString,  guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ),  MercDepartEquipmentBoxCallBack,  &pCenteringRect );
+			DoMessageBox(	MSG_BOX_BASIC_STYLE, sString,	guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ),	MercDepartEquipmentBoxCallBack,	&pCenteringRect );
 		}
 		else
 		{
-			DoMessageBox(  MSG_BOX_BASIC_STYLE, sString,  guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ) ,  MercDepartEquipmentBoxCallBack,  &pCenteringRect );
+			DoMessageBox(	MSG_BOX_BASIC_STYLE, sString,	guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK	) ) ,	MercDepartEquipmentBoxCallBack,	&pCenteringRect );
 		}
 	}
 	
@@ -1219,7 +1219,7 @@ void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 		HandleExtendMercsContract( pLeaveSoldier );
 		return;
 	}
-  else if( bExitValue == MSG_BOX_RETURN_YES )
+	else if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		// yep (NOTE that this passes the SOLDIER index, not the PROFILE index as the others do)
 		HandleLeavingOfEquipmentInCurrentSector( pLeaveSoldier->ubID );
@@ -1280,7 +1280,7 @@ BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
 		SET_PALETTEREP_ID ( Corpse.HeadPal,		pSoldier->HeadPal );
 		SET_PALETTEREP_ID ( Corpse.VestPal,		pSoldier->VestPal );
 		SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
-		SET_PALETTEREP_ID ( Corpse.PantsPal,   pSoldier->PantsPal );
+		SET_PALETTEREP_ID ( Corpse.PantsPal,	pSoldier->PantsPal );
 
 		Corpse.bDirection	= pSoldier->bDirection;
 
@@ -1472,7 +1472,7 @@ void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength
 void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )
 {
 	PERFORMANCE_MARKER
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		PurchaseOrExtendInsuranceForSoldier( gpInsuranceSoldier, gubContractLength );
 	}

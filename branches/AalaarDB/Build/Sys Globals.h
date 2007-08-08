@@ -25,6 +25,6 @@ extern UINT32	guiGameCycleCounter;
 extern INT32	giFPSOverlay;
 extern INT32	giCounterPeriodOverlay;
 
-extern	BOOLEAN  SET_ERROR( const STR8 String, ...);
+extern	BOOLEAN	SET_ERROR( const STR8 String, ...);
 
 #endif

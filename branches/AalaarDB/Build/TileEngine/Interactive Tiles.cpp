@@ -110,12 +110,12 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
-  // ATE: Patch fix: Don't allow if alreay in animation
-  if ( pSoldier->usAnimState == OPEN_STRUCT || pSoldier->usAnimState == OPEN_STRUCT_CROUCHED ||
-       pSoldier->usAnimState == BEGIN_OPENSTRUCT || pSoldier->usAnimState == BEGIN_OPENSTRUCT_CROUCHED )
-  {
-    return( FALSE );
-  }
+	// ATE: Patch fix: Don't allow if alreay in animation
+	if ( pSoldier->usAnimState == OPEN_STRUCT || pSoldier->usAnimState == OPEN_STRUCT_CROUCHED ||
+		pSoldier->usAnimState == BEGIN_OPENSTRUCT || pSoldier->usAnimState == BEGIN_OPENSTRUCT_CROUCHED )
+	{
+	return( FALSE );
+	}
 
 	pStructure = FindStructureByID( sGridNo, usStructureID );
 	if (pStructure == NULL)
@@ -127,8 +127,8 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 		// Add soldier event for opening door....
 		pSoldier->aiData.ubPendingAction = MERC_OPENDOOR;
 		pSoldier->aiData.uiPendingActionData1 = usStructureID;
-		pSoldier->aiData.sPendingActionData2  = sGridNo;
-		pSoldier->aiData.bPendingActionData3  = ubDirection;
+		pSoldier->aiData.sPendingActionData2	= sGridNo;
+		pSoldier->aiData.bPendingActionData3	= ubDirection;
 		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 
@@ -138,8 +138,8 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 		// Add soldier event for opening door....
 		pSoldier->aiData.ubPendingAction = MERC_OPENSTRUCT;
 		pSoldier->aiData.uiPendingActionData1 = usStructureID;
-		pSoldier->aiData.sPendingActionData2  = sGridNo;
-		pSoldier->aiData.bPendingActionData3  = ubDirection;
+		pSoldier->aiData.sPendingActionData2	= sGridNo;
+		pSoldier->aiData.bPendingActionData3	= ubDirection;
 		pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 	}
@@ -220,7 +220,7 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 	
-  return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
+	return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
 }
 
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
@@ -229,7 +229,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	STRUCTURE			*pStructure, *pNewStructure;
 	INT16					sAPCost = 0, sBPCost = 0;
 	ITEM_POOL			*pItemPool;
-  BOOLEAN       fDidMissingQuote = FALSE;
+	BOOLEAN		fDidMissingQuote = FALSE;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
 
@@ -260,8 +260,10 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		{
 			if ( sGridNo == BOBBYR_SHIPPING_DEST_GRIDNO && gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X && gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y && gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z && CheckFact( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT, 0 ) && !(CheckFact( FACT_PLAYER_FOUND_ITEMS_MISSING, 0) ) )
 			{
-				SayQuoteFromNearbyMercInSector( BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN );
-        fDidMissingQuote = TRUE;
+			SetFactFalse( 38); // Reset whether we punched Pablo lately
+			SetFactFalse( FACT_PABLO_RETURNED_GOODS);
+			SayQuoteFromNearbyMercInSector( BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN );
+		 fDidMissingQuote = TRUE;
 			}
 		}
 		else if ( pSoldier->bTeam == CIV_TEAM )
@@ -302,24 +304,24 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				//TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
 
 				// ATE: Check now many things in pool.....
-        if ( !fDidMissingQuote )
-        {
-				  if ( pItemPool->pNext != NULL )
-				  {
-					  if ( pItemPool->pNext->pNext != NULL )
-					  {
-						  fDoHumm = FALSE;
+		if ( !fDidMissingQuote )
+		{
+				if ( pItemPool->pNext != NULL )
+				{
+					if ( pItemPool->pNext->pNext != NULL )
+					{
+						fDoHumm = FALSE;
 
-						  TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_COOL1 , 500 );
+						TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_COOL1 , 500 );
 
-					  }
-				  }
+					}
+				}
 
-				  if ( fDoHumm )
-				  {
-					  TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_HUMM , 500 );
-				  }
-        }
+				if ( fDoHumm )
+				{
+					TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_HUMM , 500 );
+				}
+		}
 			}
 			else
 			{
@@ -360,9 +362,9 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 {
 	PERFORMANCE_MARKER 
-	LEVELNODE	 *pIntNode;
-	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
+	LEVELNODE	*pIntNode;
+	STRUCTURE	*pStructure;
+	INT16			sGridNo;
 
 	// OK, first see if we have an in tile...
 	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
@@ -385,11 +387,11 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 		}
 		else
 		{
-		  if( pStructure->fFlags & STRUCTURE_SWITCH )
-		  {
-			  wcscpy( gzIntTileLocation, gzLateLocalizedString[ 25 ] );
-			  gfUIIntTileLocation = TRUE;
-      }
+		if( pStructure->fFlags & STRUCTURE_SWITCH )
+		{
+			wcscpy( gzIntTileLocation, gzLateLocalizedString[ 25 ] );
+			gfUIIntTileLocation = TRUE;
+		}
 
 
 			if ( fConfirm )
@@ -410,15 +412,15 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 void SetActionModeDoorCursorText( )
 {
 	PERFORMANCE_MARKER 
-	LEVELNODE	 *pIntNode;
-	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
+	LEVELNODE	*pIntNode;
+	STRUCTURE	*pStructure;
+	INT16			sGridNo;
 
-  // If we are over a merc, don't
-  if ( gfUIFullTargetFound )
-  {
-    return;
-  }
+	// If we are over a merc, don't
+	if ( gfUIFullTargetFound )
+	{
+	return;
+	}
 
 	// OK, first see if we have an in tile...
 	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
@@ -467,7 +469,7 @@ void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT1
 			}
 			else if( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )
 			{
-				if ( pNode->sCurrentFrame != -1  )
+				if ( pNode->sCurrentFrame != -1	)
 				{
 					Assert( TileElem->pAnimData != NULL );
 					TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
@@ -769,7 +771,7 @@ void EndCurInteractiveTileCheck( )
 		}
 
 		gCurIntTile.sGridNo				= pCurIntTile->sFoundGridNo;
-		gCurIntTile.sTileIndex    = pCurIntTile->pFoundNode->usIndex;
+		gCurIntTile.sTileIndex	= pCurIntTile->pFoundNode->usIndex;
 
 		if ( pCurIntTile->pFoundNode->pStructureData != NULL )
 		{
@@ -800,7 +802,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 {
 	PERFORMANCE_MARKER
 	TILE_ELEMENT *TileElem;
-	STRUCTURE		 *pStructure;
+	STRUCTURE		*pStructure;
 				
 
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
@@ -928,7 +930,7 @@ BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY,
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
 	{
 		//Check it!
-		return ( CheckVideoObjectScreenCoordinateInData( gpTileCache[ pNode->pAniTile->sCachedTileID ].pImagery->vo, pNode->pAniTile->sCurrentFrame, (INT32)( sTestX - sSrcX  ), (INT32)( -1 * ( sTestY - sSrcY  ) ) ) );
+		return ( CheckVideoObjectScreenCoordinateInData( gpTileCache[ pNode->pAniTile->sCachedTileID ].pImagery->vo, pNode->pAniTile->sCurrentFrame, (INT32)( sTestX - sSrcX	), (INT32)( -1 * ( sTestY - sSrcY	) ) ) );
 
 	}
 	else
@@ -943,7 +945,7 @@ BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY,
 		}
 		else if( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )
 		{
-			if ( pNode->sCurrentFrame != -1  )
+			if ( pNode->sCurrentFrame != -1	)
 			{
 				Assert( TileElem->pAnimData != NULL );
 				TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
@@ -951,7 +953,7 @@ BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY,
 		}
 
 		//Check it!
-		return ( CheckVideoObjectScreenCoordinateInData( TileElem->hTileSurface, TileElem->usRegionIndex, (INT32)( sTestX - sSrcX  ), (INT32)( -1 * ( sTestY - sSrcY  ) ) ) );
+		return ( CheckVideoObjectScreenCoordinateInData( TileElem->hTileSurface, TileElem->usRegionIndex, (INT32)( sTestX - sSrcX	), (INT32)( -1 * ( sTestY - sSrcY	) ) ) );
 	}
 }
 
@@ -963,12 +965,12 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 	PERFORMANCE_MARKER
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
-	UINT8	 *SrcPtr;
+	UINT8	*SrcPtr;
 	UINT32 LineSkip;
 	ETRLEObject *pTrav;
 	BOOLEAN	fDataFound = FALSE;	
-	INT32	 iTestPos, iStartPos;	
-  
+	INT32	iTestPos, iStartPos;	
+	
 	// Assertions
 	Assert( hSrcVObject != NULL );
 
@@ -983,7 +985,7 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 	// Calculate from 0, 0 at top left!
 	iTestPos	= ( ( usHeight - iTestY ) * usWidth ) + iTestX;
 	iStartPos	= 0;
-	LineSkip  = usWidth;
+	LineSkip	= usWidth;
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
@@ -1109,7 +1111,7 @@ BOOLEAN ShouldCheckForMouseDetections( )
 	BOOLEAN fOK = FALSE;
 
 	if ( gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
-			 gusINTOldMousePosX	!= gusMouseXPos	|| gusINTOldMousePosY	!= gusMouseYPos	)
+			gusINTOldMousePosX	!= gusMouseXPos	|| gusINTOldMousePosY	!= gusMouseYPos	)
 	{	
 		fOK = TRUE;
 	}

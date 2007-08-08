@@ -2198,7 +2198,7 @@ else
 
 			if ( gGameSettings.fOptions[TOPTION_DROP_ALL]  )
 			{
-				// WANNE - "Drop all" should mean "Drop all"
+				// WANNE: "Drop all" should mean "Drop all"
 				/*
 				if ( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE )
 				{
@@ -2245,10 +2245,10 @@ else
 	// WANNE: Randomly choose which type of items should be dropped
 	if (gGameExternalOptions.ubEnemiesItemDrop == 0)
 	{
-		if( /*gGameSettings.fOptions[TOPTION_DROP_ALL] ||*/ Random(100) < ubAmmoDropRate )
+		if( Random(100) < ubAmmoDropRate )
 			fAmmo = TRUE;
 
-		if( /*gGameSettings.fOptions[TOPTION_DROP_ALL] ||*/ Random(100) < ubOtherDropRate )
+		if( Random(100) < ubOtherDropRate )
 			fWeapon = TRUE;
 
 		if( Random(100) < ubOtherDropRate )
@@ -3069,7 +3069,6 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 		}
 		usItem = gArmyItemChoices[ typeIndex ].bItemNo[ uiChoice ];
 
-		// WANNE
 		pickItem = FALSE;
 
 		if (usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem))
@@ -3100,7 +3099,6 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 		//Madd: quickfix: don't use NVGs during the day, and no sungoggles at night either
 		//if ( usItem >= 0 && Item[usItem].ubCoolness <= maxCoolness && ItemIsLegal(usItem) && (( DayTime() && Item[usItem].nightvisionrangebonus == 0 ) || ( NightTime() && Item[usItem].dayvisionrangebonus == 0 )))
 		
-		// WANNE
 		if (pickItem == TRUE)
 		{
 			// pick a default item in case we don't find anything with a matching coolness, but pick the coolest item we can find

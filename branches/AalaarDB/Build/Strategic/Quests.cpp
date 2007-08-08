@@ -984,7 +984,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			{
 				// if Skyrider, ignore low loyalty until he has monologues, and wait at least a day since the latest monologue to avoid a hot/cold attitude
 				if ( ( ubProfileID == SKYRIDER ) &&
-						 ( ( guiHelicopterSkyriderTalkState == 0 ) || ( ( GetWorldTotalMin() - guiTimeOfLastSkyriderMonologue ) < ( 24 * 60 ) ) ) )
+						( ( guiHelicopterSkyriderTalkState == 0 ) || ( ( GetWorldTotalMin() - guiTimeOfLastSkyriderMonologue ) < ( 24 * 60 ) ) ) )
 				{
 					gubFact[usFact] = FALSE;
 				}
@@ -1270,7 +1270,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 void StartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
 	PERFORMANCE_MARKER
-  InternalStartQuest( ubQuest, sSectorX, sSectorY, TRUE );
+	InternalStartQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 
@@ -1281,10 +1281,10 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 	{
 		gubQuest[ubQuest] = QUESTINPROGRESS;
 
-    if ( fUpdateHistory )
-    {
-		  SetHistoryFact( HISTORY_QUEST_STARTED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY );
-    }
+	if ( fUpdateHistory )
+	{
+		SetHistoryFact( HISTORY_QUEST_STARTED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY );
+	}
 	}
 	else
 	{
@@ -1295,7 +1295,7 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 void EndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
 	PERFORMANCE_MARKER
-  InternalEndQuest( ubQuest, sSectorX, sSectorY, TRUE );
+	InternalEndQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory )
@@ -1305,10 +1305,10 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 	{
 		gubQuest[ubQuest] = QUESTDONE;
 
-    if ( fUpdateHistory )
-    {
-		  ResetHistoryFact( ubQuest, sSectorX, sSectorY );
-    }
+	if ( fUpdateHistory )
+	{
+		ResetHistoryFact( ubQuest, sSectorX, sSectorY );
+	}
 	}
 	else
 	{
@@ -1329,7 +1329,7 @@ void InitQuestEngine()
 {
 	PERFORMANCE_MARKER
 	memset(gubQuest, 0, sizeof(gubQuest));
-	memset(gubFact,  0, sizeof(gubFact));
+	memset(gubFact,	0, sizeof(gubFact));
 
 	// semi-hack to make the letter quest start right away
 	CheckForQuests( 1 );
@@ -1360,7 +1360,7 @@ void CheckForQuests( UINT32 uiDay )
 	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Checking For Quests, Day %d", uiDay );
 #endif
 
-  // -------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------
 	// QUEST 0 : DELIVER LETTER
 	// -------------------------------------------------------------------------------
 	// The game always starts with DELIVER LETTER quest, so turn it on if it hasn't

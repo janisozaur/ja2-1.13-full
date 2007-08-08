@@ -1,4 +1,3 @@
-// WANNE: EDITOR: done
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
@@ -73,7 +72,7 @@ void SetupTextInputForMapInfo()
 	
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
-	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
+	AddUserInputField( NULL );	//just so we can use short cut keys while not typing.
 
 	//light rgb fields
 	swprintf( str, L"%d", gEditorLightColor.peRed );
@@ -233,7 +232,7 @@ void ExtractAndUpdateMapInfo()
 	if( str[0] >= 'a' && str[0] <= 'z' )
 		str[0] -= 32; //uppercase it!
 	if( str[0] >= 'A' && str[0] <= 'Z' && 
-		  str[1] >= '0' && str[1] <= '9' )
+		str[1] >= '0' && str[1] <= '9' )
 	{ //only update, if coordinate is valid.
 		gExitGrid.ubGotoSectorY = (UINT8)(str[0] - 'A' + 1);
 		gExitGrid.ubGotoSectorX = (UINT8)(str[1] - '0');
@@ -242,8 +241,8 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSectorX = (UINT8)max( min( gExitGrid.ubGotoSectorX, 16 ), 1 );
 		gExitGrid.ubGotoSectorY = (UINT8)max( min( gExitGrid.ubGotoSectorY, 16 ), 1 );
 	}
-	gExitGrid.ubGotoSectorZ    = (UINT8)max( min( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.usGridNo					 = (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.ubGotoSectorZ	= (UINT8)max( min( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
+	gExitGrid.usGridNo					= (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
 }
