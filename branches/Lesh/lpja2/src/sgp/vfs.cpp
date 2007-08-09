@@ -437,16 +437,54 @@ BOOLEAN sgpVFS::FindResource( const CHAR8 *pResourceName, vfsEntry& Entry )
 //===================================================================
 UINT32	sgpVFS::StartFilePatternMatch( const CHAR8 *pPattern )
 {
+	// 1. Extract directory name SearchDir from pattern
+	// 2. Find the element in ResourceMap with the name of SearchDir
+	// 3. Skip this element
+	// 4. While element starts with SearchDir, do
+	//    4.1. If element is file, then check him for pattern match.
+	//         Store him, if matches. Proceed to next element.
+	//    4.2. If element is directory, then remember it as SkipDir
+	//         and skip elements, that starts from SkipDir.
+
 	vfsFileMapIterator	ResourceIterator;
-	vfsString	pattern = ConvertToApplicationName( pPattern );
+	vfsStringPos		LastSlashPos;
+	vfsString			SearchDir, SkipDir;
+	vfsString			pattern = ConvertToApplicationName( pPattern );
 
 	FileMatchResults.clear();
 	FileMatchIndex = 0;
 
-	for ( ResourceIterator = ResourceMap.begin(); ResourceIterator != ResourceMap.end(); ResourceIterator++ )
+	// extract directory name SearchDir from pattern
+	LastSlashPos = pattern.rfind( "\\", pattern.size() );
+	if ( LastSlashPos == vfsString::npos )
+		SearchDir = "";
+	else
+		SearchDir = pattern.substr( 0, LastSlashPos + 1 );
+
+	// find the element in ResourceMap with the name of SearchDir
+	ResourceIterator = ResourceMap.find( SearchDir );
+	if ( ResourceIterator == ResourceMap.end() )
+		return( 0 );	// nothing was found, because directory in pattern doesn't exist
+
+	ResourceIterator++;
+
+	// while not end and element names starts from SearchDir...
+	while ( (ResourceIterator != ResourceMap.end() ) && (ResourceIterator->first.find( SearchDir, 0 ) == 0) )
 	{
-		if ( IO_DoesFilenameMatchesPattern( pattern.c_str(), ResourceIterator->first.c_str() ) )
-			FileMatchResults.push_back( ResourceIterator->first );
+		if ( !ResourceIterator->second.IsDirectory )
+		{
+			// check element name for pattern match.
+			if ( IO_DoesFilenameMatchesPattern( pattern.c_str(), ResourceIterator->first.c_str() ) )
+				FileMatchResults.push_back( ResourceIterator->first );
+			ResourceIterator++;
+		}
+		else
+		{
+			// skip elements, that starts from SkipDir.
+			SkipDir = ResourceIterator->first;
+			while ( ResourceIterator->first.find( SkipDir, 0 ) == 0 )
+				ResourceIterator++;
+		}
 	}
 
 	return( FileMatchResults.size() );
