@@ -47,6 +47,7 @@ BOOLEAN InitTileCache(  )
 	// load any we find....
 	if( GetFileFirst("TILECACHE\\*.jsd", &FileInfo) )
 	{
+		sFiles++;
 		while( GetFileNext(&FileInfo) )
 		{
 			sFiles++;
@@ -66,9 +67,29 @@ BOOLEAN InitTileCache(  )
 		// Loop through and set filenames
 		if( GetFileFirst("TILECACHE\\*.jsd", &FileInfo) )
 		{
+			strcpy( gpTileCacheStructInfo[ cnt ].Filename, FileInfo.zFileName );
+
+			// Get root name
+			GetRootName( gpTileCacheStructInfo[ cnt ].zRootName, gpTileCacheStructInfo[ cnt ].Filename );
+
+			// Load struc data....
+			gpTileCacheStructInfo[ cnt ].pStructureFileRef = LoadStructureFile( gpTileCacheStructInfo[ cnt ].Filename );
+
+#ifdef JA2TESTVERSION
+			if ( gpTileCacheStructInfo[ cnt ].pStructureFileRef == NULL )
+			{
+				SET_ERROR(  "Cannot load tilecache JSD: %s", gpTileCacheStructInfo[ cnt ].Filename );		
+			}
+#endif
+	        if ( _stricmp( gpTileCacheStructInfo[ cnt ].zRootName, "l_dead1" ) == 0 )
+	        {
+       			giDefaultStructIndex = cnt;
+       		}
+
+			cnt++;
+
 			while( GetFileNext(&FileInfo) )
 			{
-				//sprintf( gpTileCacheStructInfo[ cnt ].Filename, "TILECACHE\\%s", FileInfo.zFileName );
 				strcpy( gpTileCacheStructInfo[ cnt ].Filename, FileInfo.zFileName );
 
 				// Get root name
@@ -83,10 +104,10 @@ BOOLEAN InitTileCache(  )
 					SET_ERROR(  "Cannot load tilecache JSD: %s", gpTileCacheStructInfo[ cnt ].Filename );		
 				}
 #endif
-        if ( _stricmp( gpTileCacheStructInfo[ cnt ].zRootName, "l_dead1" ) == 0 )
-        {
-           giDefaultStructIndex = cnt;
-        }
+		        if ( _stricmp( gpTileCacheStructInfo[ cnt ].zRootName, "l_dead1" ) == 0 )
+		        {
+           			giDefaultStructIndex = cnt;
+        		}
 
 				cnt++;
 			}
