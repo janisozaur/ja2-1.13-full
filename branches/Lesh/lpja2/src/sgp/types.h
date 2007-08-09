@@ -156,6 +156,7 @@ typedef	FILETIME		SGP_FILETIME;
 #include <vector>
 
 typedef std::string							sgpString;
+typedef std::string::size_type				sgpStringPos;
 typedef std::vector <sgpString>				sgpStringArray;
 typedef std::vector <sgpString>::iterator	sgpStringArrayIterator;
 

@@ -24,6 +24,7 @@
 #include <map>
 
 typedef sgpString				vfsString;
+typedef sgpStringPos			vfsStringPos;
 typedef sgpStringArray			vfsStringArray;
 typedef sgpStringArrayIterator	vfsStringArrayIterator;
 
