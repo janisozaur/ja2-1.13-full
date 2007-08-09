@@ -1,7 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "utils_all.h"
 #else
-	#include "platform.h"
 	#include "input.h"
 	#include "font.h"
 	#include "english.h"
@@ -15,6 +14,7 @@
 	#include "font_control.h"
 	#include "sound_control.h"
 	#include "sgp_str.h"
+	#include "platform.h"
 	
 #endif
 

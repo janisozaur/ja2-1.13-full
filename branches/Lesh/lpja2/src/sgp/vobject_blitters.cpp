@@ -9,15 +9,14 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "ja2_sgp_all.h"
 #else
-	#include "platform.h"
 	#include "debug.h"
 	#include "video.h"													// JA2
 	#include "image.h"
 	#include "vobject.h"
 	#include "wcheck.h"
-	#include "vobject.h"
 	#include "vobject_blitters.h"
 	#include "shading.h"
+	#include "platform.h"
 #endif
 
 

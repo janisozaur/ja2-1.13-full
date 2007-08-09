@@ -149,4 +149,14 @@ typedef	FILETIME		SGP_FILETIME;
 
 #endif
 
+// ----------------------------------------------
+// Now declaration of system-wide STL-based types
+// ----------------------------------------------
+#include <string>
+#include <vector>
+
+typedef std::string							sgpString;
+typedef std::vector <sgpString>				sgpStringArray;
+typedef std::vector <sgpString>::iterator	sgpStringArrayIterator;
+
 #endif

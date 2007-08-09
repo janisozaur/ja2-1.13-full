@@ -97,15 +97,6 @@ enum
 
 #define SEE_THRU_COVER_THRESHOLD        5      // min chance to get through
 
-// Lesh: out because of existing in Platform.h for linux
-#ifdef JA2_WIN
-#undef min
-#define min(a,b) ((a) < (b) ? (a) : (b))
-
-#undef max
-#define max(a,b) ((a) > (b) ? (a) : (b))
-#endif
-
 typedef struct
 {
  SOLDIERTYPE *	pOpponent;

@@ -22,12 +22,10 @@
 #include "types.h"
 #include "platform.h"
 #include <map>
-#include <string>
-#include <vector>
 
-typedef std::string							vfsString;
-typedef std::vector <vfsString>				vfsStringArray;
-typedef std::vector <vfsString>::iterator	vfsStringArrayIterator;
+typedef sgpString				vfsString;
+typedef sgpStringArray			vfsStringArray;
+typedef sgpStringArrayIterator	vfsStringArrayIterator;
 
 #define	LIB_REAL_FILE	0xFFFFFFFF
 
