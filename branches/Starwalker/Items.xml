@@ -99,6 +99,7 @@
 		<DayVisionRangeBonus>0</DayVisionRangeBonus>
 		<CaveVisionRangeBonus>0</CaveVisionRangeBonus>
 		<BrightLightVisionRangeBonus>0</BrightLightVisionRangeBonus>
+		<ItemSizeBonus>0</ItemSizeBonus>
 		<PercentTunnelVision>0</PercentTunnelVision>
 		<ThermalOptics>0</ThermalOptics>
 		<GasMask>0</GasMask>
@@ -4860,6 +4861,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>75</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>208</uiIndex>
@@ -6950,6 +6952,7 @@
 		<Attachment>1</Attachment>
 		<Inseparable>1</Inseparable>
 		<RangeBonus>100</RangeBonus>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>311</uiIndex>
@@ -13087,6 +13090,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>57</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>593</uiIndex>
@@ -23132,6 +23136,7 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>977</uiIndex>
@@ -23157,6 +23162,7 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>1</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>978</uiIndex>
@@ -23182,6 +23188,7 @@
 		<Electronic>1</Electronic>
 		<BR_NewInventory>1</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>979</uiIndex>
@@ -23900,6 +23907,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
+		<ItemSizeBonus>-1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1009</uiIndex>
@@ -23927,6 +23935,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<ToHitBonus>-1</ToHitBonus>
 		<PercentReadyTimeAPReduction>30</PercentReadyTimeAPReduction>
+		<ItemSizeBonus>-1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1010</uiIndex>
@@ -24004,6 +24013,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>55</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1013</uiIndex>
@@ -24899,7 +24909,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>609</ubGraphicNum>
 		<ubWeight>2</ubWeight>
-		<ubPerPocket>6</ubPerPocket>
+		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>13</ItemSize>
 		<usPrice>75</usPrice>
 		<ubCoolness>3</ubCoolness>
@@ -25276,13 +25286,13 @@
 		<szItemDesc>A panel with four individual pockets to store up to four 40mm grenades.</szItemDesc>
 		<szBRName>40mm Grenade Panel</szBRName>
 		<szBRDesc>Four pockets mounted on a panel that can be clipped to your load bearing equipment. The long adjustable straps let you store 40mm grenades on any length.</szBRDesc>
-		<usItemClass>268435456</usItemClass>
+		<usItemClass>131072</usItemClass>
 		<ubClassIndex>9</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>685</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>99</ItemSize>
+		<ItemSize>21</ItemSize>
 		<usPrice>180</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<bRepairEase>3</bRepairEase>
