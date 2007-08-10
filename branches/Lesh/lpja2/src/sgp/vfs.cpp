@@ -260,17 +260,20 @@ BOOLEAN	sgpVFS::GetDirectoryEntries( const vfsString& DirToLook, vfsStringArray&
 
 	FileList.clear();
 
-	if ( IO_File_GetFirst( dirPattern.c_str(), entry, 512 ) )
+	if ( IO_File_GetFirst( dirPattern.c_str(), entry, sizeof(entry) ) )
 	{
 		do
 		{
 			// add filename in file list
 			// additionally, in case of directory, add an ending slash to it
-			FileList.push_back( entry );
-			if ( IO_IsDirectory( entry ) )
-				FileList.back() += "/";
+			if ( !IO_IsHiddenEntry( entry ) )
+			{
+				FileList.push_back( entry );
+				if ( IO_IsDirectory( entry ) )
+					FileList.back() += "/";
+			}
 				
-		} while ( IO_File_GetNext( entry, 512 ) );
+		} while ( IO_File_GetNext( entry, sizeof(entry) ) );
 		IO_File_GetClose();
 	}
 
