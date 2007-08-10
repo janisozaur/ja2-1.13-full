@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 #include "Tactical All.h"
 #include "Language Defines.h"
@@ -2833,7 +2832,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			case INSERT:
 
-				// WANNE 2: commented this out, because the interface panel is not correctly redrawn!
+				// WANNE: Commented this out, because the interface panel is not correctly redrawn!
 				// I do not know the bug ;(
 				//GoIntoOverheadMap();
 				break;
@@ -4323,13 +4322,13 @@ void RefreshSoldier()
 
 	if ( GetMouseMapPos( &usMapPos ) )
 		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
-			gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
+		gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
+		gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
 }
 
 void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )

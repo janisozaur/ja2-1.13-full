@@ -45,6 +45,7 @@
 	#include "MessageBoxScreen.h"
 	#include "screenids.h"
 	#include "SaveLoadScreen.h"
+	#include "Rotting Corpses.h"
 #endif
 
 #include "Map Edgepoints.h"

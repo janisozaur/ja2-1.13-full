@@ -1,4 +1,3 @@
-// WANNE 2 <changed some lines>
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
@@ -1323,7 +1322,6 @@ BOOLEAN InitializeSMPanelCoords( )
 	SM_STEALTHMODE_X		= ( 187 + INTERFACE_START_X );
 	SM_STEALTHMODE_Y		= ( 73 + INV_INTERFACE_START_Y );
 
-	// WANNE 2
 	SM_DONE_X				=  (SCREEN_WIDTH - 97);//( 543 + INTERFACE_START_X );
 	SM_DONE_Y				= ( 4 + INV_INTERFACE_START_Y );
 	SM_MAPSCREEN_X			=  (SCREEN_WIDTH - 51);//( 589 + INTERFACE_START_X );
@@ -1407,6 +1405,8 @@ BOOLEAN InitializeSMPanel(  )
  *  any questions? joker
  */
 //	InitializeSMPanelCoords( );
+
+  fDisplayOverheadMap = TRUE;
 	
 	// failing the CHECKF after this will cause you to lose your mouse
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -3496,7 +3496,6 @@ void BtnPositionShowCallback(GUI_BUTTON *btn,INT32 reason)
 
 }
 
-// WANNE 2
 BOOLEAN InitializeTEAMPanelCoords( )
 {
 
@@ -3505,7 +3504,6 @@ BOOLEAN InitializeTEAMPanelCoords( )
 	TM_APPANEL_HEIGHT	= 56;
 	TM_APPANEL_WIDTH	= 16;
 
-	// WANNE 2
 	TM_ENDTURN_X		=	(SCREEN_WIDTH - 133);		//( 507 + INTERFACE_START_X );
 	TM_ENDTURN_Y		= ( 9 + INTERFACE_START_Y );
 	TM_ROSTERMODE_X	=		(SCREEN_WIDTH - 133);		//( 507 + INTERFACE_START_X );
@@ -3618,7 +3616,6 @@ BOOLEAN InitializeTEAMPanel(  )
 	UINT32					cnt, posIndex;
 	static BOOLEAN	fFirstTime = TRUE;
 
-	// WANNE 2
 	fDisplayOverheadMap = TRUE;
 
 /*  OK i need to initialize coords here
@@ -3800,7 +3797,6 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 	SOLDIERTYPE		*pSoldier;
 	static				CHAR16		pStr[ 512 ], pMoraleStr[ 20 ];
 
-	// WANNE 2 <new>
 	if ( fDirty == DIRTYLEVEL2 )
 	{
 		MarkAButtonDirty( iTEAMPanelButtons[ TEAM_DONE_BUTTON ] );	
@@ -3812,7 +3808,6 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiTEAMPanel, 0, INTERFACE_START_X, INTERFACE_START_Y, VO_BLT_SRCTRANSPARENCY, NULL );
 		RestoreExternBackgroundRect( INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X , INTERFACE_HEIGHT );
 		
-		// WANNE 2 <new> <begin>
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		for ( cnt = 0, posIndex = 0; cnt < NUM_TEAM_SLOTS; cnt++, posIndex+= 2 )
 		{

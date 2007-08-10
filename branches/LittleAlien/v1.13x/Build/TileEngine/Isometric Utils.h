@@ -14,7 +14,7 @@
 //#define NOWHERE         MAXLONG
 #define NOWHERE         -1
 //#define	NO_MAP_POS			NOWHERE
-#define	MAX_MAP_POS			(GRIDSIZE)
+#define	MAX_MAP_POS			(GRIDSIZE)  //MAX_MAP_POS will be used only to track the changes made for the big map project, should be replaced with GRIDSIZE later
 
 #define MAPWIDTH			(WORLD_COLS)
 #define MAPHEIGHT			(WORLD_ROWS)

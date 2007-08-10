@@ -347,7 +347,6 @@ typedef struct
 	BOOLEAN gfInvestigateSector;
 	BOOLEAN gfReassignPendingReinforcements;
 
-	// WANNE
 	INT32 ubEnemiesItemDrop;
 
 	// WANNE: External sector loadscreens [2007-05-19]

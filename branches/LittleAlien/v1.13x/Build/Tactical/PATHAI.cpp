@@ -971,7 +971,6 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 		//for ( iCnt = iLoopStart; iCnt != iLoopEnd; iCnt = (iCnt + iLoopIncrement) % MAXDIR )
 		for ( iCnt = iLoopStart; ; )
 		{
-
 #ifdef VEHICLE
 			/*
 			if (fTurnSlow)
@@ -1122,7 +1121,6 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					}
 				}
 			}
-			// WANNE: - END
 
 			//how much is admission to the next tile
 			if ( gfPathAroundObstacles )
