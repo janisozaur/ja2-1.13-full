@@ -18,7 +18,7 @@
 	
 #endif
 
-UINT16 *szClipboard;
+CHAR16 *szClipboard;
 BOOLEAN gfNoScroll = FALSE;
 
 //The internal callback functions assigned to each text field.
@@ -139,7 +139,7 @@ UINT8 gubStartHilite = 0;
 UINT8 gubEndHilite = 0;
 
 //allow the user to cut, copy, and paste just like windows.
-UINT16 gszClipboardString[256];
+CHAR16 gszClipboardString[256];
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
 //initializations that contain fields that edit text.  It also verifies and clears any existing
@@ -1577,7 +1577,7 @@ void ExecuteCopyCommand()
 			ubEnd = gubStartHilite;
 		}
 		ubCount = (UINT8)(ubEnd - ubStart);
-		szClipboard = (UINT16*)MemAlloc( ( ubCount + 1 ) * 2 );
+		szClipboard = (CHAR16*)MemAlloc( ( ubCount + 1 ) * sizeof(CHAR16) );
 		Assert( szClipboard );
 		for( ubCount = ubStart; ubCount < ubEnd; ubCount++ )
 		{

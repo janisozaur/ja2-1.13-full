@@ -1517,7 +1517,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	UINT16							usItemNum;
 	BOOLEAN							fBuckshot;
 	UINT8								ubVolume;
-	INT8								zBurstString[50];
+	STRING512							zBurstString;
 	UINT8								ubDirection;
 	INT16								sNewGridNo;
 	UINT8								ubMerc;
@@ -1543,21 +1543,21 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				if( noisefactor < MAX_PERCENT_NOISE_VOLUME_FOR_SILENCED_SOUND || Weapon[ usItemNum ].ubAttackVolume <= 10 )
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( (char *)zBurstString, (const char*)gzBurstSndStrings[ Weapon[ usItemNum ].sSilencedBurstSound ], pSoldier->bBulletsLeft );
+					sprintf( zBurstString, (const char*)gzBurstSndStrings[ Weapon[ usItemNum ].sSilencedBurstSound ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( (STR8) zBurstString, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
+					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( zBurstString, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 				}
 				else
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
                     // Lesh: changed next line
-					sprintf( (char *)zBurstString, (const char*)gzBurstSndStrings[ Weapon[ usItemNum ].sBurstSound ], pSoldier->bBulletsLeft );
+					sprintf( zBurstString, (const char*)gzBurstSndStrings[ Weapon[ usItemNum ].sBurstSound ], pSoldier->bBulletsLeft );
 
 					INT8 volume = HIGHVOLUME;
 					if ( noisefactor < 100 ) volume = (volume * noisefactor) / 100;
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( (STR8) zBurstString, RATE_11025, SoundVolume( (INT8) volume, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
+					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( zBurstString, RATE_11025, SoundVolume( (INT8) volume, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 				}
 
 				/*
