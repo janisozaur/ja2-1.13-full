@@ -1305,7 +1305,11 @@ void CompileTileMovementCosts( UINT16 usGridNo )
 			{
 				if (!(pStructure->fFlags & STRUCTURE_PASSABLE || pStructure->fFlags & STRUCTURE_NORMAL_ROOF))
 				{
-					fStructuresOnRoof = TRUE;
+					// DNS:  Try a fix to prevent people from "permanently" blocking the roof
+					if (!(pStructure->fFlags & STRUCTURE_PERSON))
+					{
+						fStructuresOnRoof = TRUE;
+					}
 				}
 			}
 			pStructure = pStructure->pNext;
