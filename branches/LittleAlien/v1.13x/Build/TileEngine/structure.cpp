@@ -1225,7 +1225,8 @@ STRUCTURE * FindStructure( INT32 sGridNo, UINT32 fFlags )
 { // finds a structure that matches any of the given flags
 	STRUCTURE * pCurrent;
 
-	if( (sGridNo < 0) || (sGridNo >= MAX_MAP_POS) )  //bug fix for win98 crash when traveling between sectors
+	//if( (sGridNo < 0) || (sGridNo >= MAX_MAP_POS) )  //bug fix for win98 crash when traveling between sectors
+	if ( TileIsOutOfBounds( sGridNo ) )//bug fix for win98 crash when traveling between sectors
 	{
 		return( NULL );
 	}

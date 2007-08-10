@@ -514,38 +514,51 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 // UTILITY FUNTIONS
 
-INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
+BOOLEAN OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
 {
- INT16 sMod,sPropMod;
+	INT32 sMod,sPropMod;
 
- // get modulas of our origin
- sMod = sGridNo % MAXCOL;
+	// get modulas of our origin
+	sMod = sGridNo % MAXCOL;
 
- if (sMod != 0)  		// if we're not on leftmost grid
-  if (sMod != RIGHTMOSTGRID)	// if we're not on rightmost grid
-    if (sGridNo < LASTROWSTART)	// if we're above bottom row
-      if (sGridNo > MAXCOL)	// if we're below top row
-       // Everything's OK - we're not on the edge of the map
-       return(FALSE);
+	if (sMod != 0)  		// if we're not on leftmost grid
+		if (sMod != RIGHTMOSTGRID)	// if we're not on rightmost grid
+			if (sGridNo < LASTROWSTART)	// if we're above bottom row
+				if (sGridNo > MAXCOL)	// if we're below top row
+					// Everything's OK - we're not on the edge of the map
+					return(FALSE);
 
 
-  // if we've got this far, there's a potential problem - check it out!
+	// if we've got this far, there's a potential problem - check it out!
 
- if (sProposedGridNo < 0)
-    return(TRUE);
+	if (sProposedGridNo < 0)
+		return(TRUE);
 
- sPropMod = sProposedGridNo % MAXCOL;
+	sPropMod = sProposedGridNo % MAXCOL;
 
- if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
-   return(TRUE);
- else
-  if (sMod == RIGHTMOSTGRID && sPropMod == 0)
-	return(TRUE);
- else
-  if (sGridNo >= LASTROWSTART && sProposedGridNo >= GRIDSIZE)
-	return(TRUE);
-  else
-       return(FALSE);
+	if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
+		return(TRUE);
+	else
+		if (sMod == RIGHTMOSTGRID && sPropMod == 0)
+			return(TRUE);
+		else
+			if (sGridNo >= LASTROWSTART && sProposedGridNo >= GRIDSIZE)
+				return(TRUE);
+			else
+				return(FALSE);
+}
+
+//Lalien: This function should be used to check if the tile is not inside map array,
+//        it will return FALSE if the tile index is NOWHERE (-1) too.
+//        If the tile index has some special meaning ("-1" = does not exist) the check for NOWHERE should be used
+BOOLEAN TileIsOutOfBounds(INT32 sGridNo)
+{
+	if( (sGridNo < 0) || (sGridNo >= MAX_MAP_POS) )
+	{
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 

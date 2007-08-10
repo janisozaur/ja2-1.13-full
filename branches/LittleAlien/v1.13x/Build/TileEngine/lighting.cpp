@@ -860,7 +860,8 @@ BOOLEAN fFake;
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= MAX_MAP_POS )
+	//if ( uiTile >= MAX_MAP_POS )
+	if ( TileIsOutOfBounds( uiTile ) )
 	{
 		return( FALSE );
 	}
@@ -1002,7 +1003,8 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= MAX_MAP_POS )
+	//if ( uiTile >= MAX_MAP_POS )
+	if ( TileIsOutOfBounds( uiTile ) )
 	{
 		return( FALSE );
 	}

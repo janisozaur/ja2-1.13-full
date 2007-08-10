@@ -1722,8 +1722,8 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT32 sGridNo )
 	INT32			iLoop;
 	INT32			*psEdgepointArray1, *psEdgepointArray2;
 	INT32			iEdgepointArraySize1, iEdgepointArraySize2;
-	INT32			sClosestSpot1 = NOWHERE, sClosestDist1 = 0x7FFF, sTempDist;
-	INT32			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
+	INT32			sClosestSpot1 = NOWHERE, sClosestDist1 = 0x7FFFFFFF, sTempDist = NOWHERE;
+	INT32			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFFFFFF;
 	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
 
 	// WDS - Clean up inventory handling

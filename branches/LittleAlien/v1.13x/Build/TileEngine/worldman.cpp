@@ -2129,7 +2129,7 @@ BOOLEAN TypeExistsInShadowLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusShad
 // #################################################################
 
 
-BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo )
+BOOLEAN AddMercToHead( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo )
 {
 	LEVELNODE							 *pMerc		 = NULL;
 	LEVELNODE							 *pNextMerc		 = NULL;
@@ -2317,7 +2317,7 @@ BOOLEAN UpdateMercStructureInfo( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN RemoveMerc( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder )
+BOOLEAN RemoveMerc( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder )
 {
 	LEVELNODE	*pMerc		 = NULL;
 	LEVELNODE	*pOldMerc	 = NULL;
@@ -2325,7 +2325,8 @@ BOOLEAN RemoveMerc( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolde
 
 //SB
 //	if ( iMapIndex == NOWHERE )
-	if ( ( iMapIndex >= MAX_MAP_POS ) || ( iMapIndex < 0 ) )
+	//if ( ( iMapIndex >= MAX_MAP_POS ) || ( iMapIndex < 0 ) )
+	if ( TileIsOutOfBounds( iMapIndex ) )
 	{
 		return( FALSE );
 	}

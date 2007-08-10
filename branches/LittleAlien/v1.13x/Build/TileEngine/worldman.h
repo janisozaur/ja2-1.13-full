@@ -108,8 +108,8 @@ BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 // Merc manipulation routines
 // #################################################################
 
-BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo );
-BOOLEAN RemoveMerc( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder  );
+BOOLEAN AddMercToHead( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo );
+BOOLEAN RemoveMerc( INT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fPlaceHolder  );
 UINT8 WhoIsThere2( INT32 sGridNo, INT8 bLevel );
 BOOLEAN AddMercStructureInfo( INT32 sGridNo, SOLDIERTYPE *pSoldier );
 BOOLEAN AddMercStructureInfoFromAnimSurface( INT32 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );

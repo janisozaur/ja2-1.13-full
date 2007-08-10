@@ -50,7 +50,8 @@ void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 // GRID NO MANIPULATION FUNCTIONS
 INT32 NewGridNo(INT32 sGridNo, INT16 sDirInc);
 INT16 DirectionInc(INT16 sDirection);
-INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
+BOOLEAN OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
+BOOLEAN TileIsOutOfBounds(INT32 sGridNo);
 
  
 // Functions
