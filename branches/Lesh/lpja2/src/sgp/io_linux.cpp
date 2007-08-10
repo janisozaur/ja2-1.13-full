@@ -525,4 +525,30 @@ BOOLEAN IO_File_GetTime( IOFILE file, SGP_FILETIME	*creationTime, SGP_FILETIME *
 
 	return TRUE;
 }
+
+//===================================================================
+//
+//	IO_IsHiddenEntry - check, if file or directory has hidden-attribute
+//
+//	in	path: filesystem entry path
+//
+//	return:	TRUE, if file or directory is hidden
+//			FALSE, if not
+//	  
+//===================================================================
+BOOLEAN	IO_IsHiddenEntry(const CHAR8 *path)
+{
+	// for linux file or directory is hidden, when it's name start
+	// from dot ".". Example: ".svn/"
+	// so if the first char of path is '.' or substring "/." can
+	// be found inside path, then it is hidden.
+
+	if ( path[0] == '.' )
+		return TRUE;
+
+	if ( strstr( path, "/." ) != NULL )
+		return TRUE;
+
+	return FALSE;
+}
 #endif	//JA2_LINUX
