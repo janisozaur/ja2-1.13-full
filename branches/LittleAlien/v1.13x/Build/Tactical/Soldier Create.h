@@ -357,7 +357,11 @@ public:
 	INT8							bUseGivenVehicleID;				
 	BOOLEAN						fHasKeys;
 
-	INT8 bPadding[115];
+	INT8 bPadding[71];
+
+//SB: extended fields
+	INT32 sInsertionGridNo;
+	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
 
 	//
 	// New and OO stuff goes after here.  Above this point any changes will goof up reading from files.
@@ -367,10 +371,6 @@ public:
 	char endOfPOD;	// marker for end of POD (plain old data)
 
 	Inventory				Inv;
-
-//SB: extended fields
-	INT32 sInsertionGridNo;
-	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
 
 }; // SOLDIERCREATE_STRUCT;
 
