@@ -454,7 +454,6 @@ void LineDraw8( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Co
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
 	int ScreenWidth = giImageWidth;
-	UINT8 col2 = Color>>8;
 	UINT8 col1 = Color & 0x00FF;
 
 	if ( fClip )
@@ -657,7 +656,6 @@ void DrawHorizontalRun8(UINT8 **ScreenPtr, int XAdvance,
 	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
-	UINT8 col2 = Color>>8;
 	UINT8 col1 = Color & 0x00FF;
 
 	for (i=0; i<RunLength; i++)
@@ -678,7 +676,6 @@ void DrawVerticalRun8(UINT8 **ScreenPtr, int XAdvance,
 	PERFORMANCE_MARKER
 	int i;
 	UINT8 *WorkingScreenPtr = *ScreenPtr;
-	UINT8 col2 = Color>>8;
 	UINT8 col1 = Color & 0x00FF;
 
 	for (i=0; i<RunLength; i++)

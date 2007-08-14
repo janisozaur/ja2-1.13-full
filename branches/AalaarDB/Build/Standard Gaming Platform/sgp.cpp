@@ -919,9 +919,6 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR pC
 void SGPExit(void)
 {
 	static BOOLEAN fAlreadyExiting = FALSE;
-	BOOLEAN fUnloadScreens = TRUE;
-
-
 	// helps prevent heap crashes when multiple assertions occur and call us
 	if ( fAlreadyExiting )
 	{

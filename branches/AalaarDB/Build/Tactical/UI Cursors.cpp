@@ -1858,7 +1858,6 @@ UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN						fEnoughPoints = TRUE;
 
 	// Calculate action points
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -1888,7 +1887,6 @@ UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActiva
 UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN						fEnoughPoints = TRUE;
 
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_BOMB );

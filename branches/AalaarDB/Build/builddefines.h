@@ -4,6 +4,14 @@
 #include "Language Defines.h"
 
 #pragma warning (disable : 4005)
+#pragma warning (disable : 4512)//disables assignment operator could not be generated
+#pragma warning (disable : 4100)//disables unreferenced formal parameter
+#pragma warning (disable : 4201)//disables nonstandard extension used : nameless struct/union
+#pragma warning (disable : 4244)//disables conversion from type to type, possible loss of data
+#pragma warning (disable : 4245)//disables conversion from type to type, signed/unsigned mismatch
+#pragma warning (disable : 4127)//disables conditional expression is constant
+#pragma warning (disable : 4996)//disables unsafe functions
+//#pragma warning (disable : 4189)//disables local variable is initialized but not referenced
 
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
 #define	JA2BETAVERSION

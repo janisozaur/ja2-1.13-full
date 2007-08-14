@@ -5591,7 +5591,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	HVOBJECT		hVObject;
 	INT32				cnt;
 	UINT16			usPopupWidth, usPopupHeight;
-	UINT8				ubSlotSimilarToKeySlot = 10;
 	INT16				sKeyRingItemWidth = 0;
 	INT16				sOffSetY = 0, sOffSetX = 0;
 
@@ -7047,7 +7046,6 @@ void ItemPickupAll( GUI_BUTTON *btn, INT32 reason )
 void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 {
 	PERFORMANCE_MARKER
-	INT32 cnt = 0;
 	UINT16 usLastItem;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -7086,8 +7084,6 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason )
 {
 	PERFORMANCE_MARKER
-	INT32 cnt = 0;
-
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -7919,8 +7915,6 @@ void CancelItemPointer( )
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	UINT32	uiLoadSize=0;
-	UINT32	uiNumBytesRead=0;
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Load structure
@@ -7963,9 +7957,6 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	UINT32	uiSaveSize=0;
-	UINT32	uiNumBytesWritten=0;
-
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Setup structure;

@@ -623,7 +623,7 @@ void CreateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 	PERFORMANCE_MARKER
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
-	UINT32 iRandomRes = 0, iRandom = 0;
+	UINT32 iRandomRes = 0;
 	UINT8 x;//,y;
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	UINT8 uiMilitiaCount;
@@ -809,7 +809,6 @@ void MilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 	PERFORMANCE_MARKER
 	sMSMapX = sMapX;
 	sMSMapY = sMapY;
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	if( !gGameExternalOptions.gfAllowMilitiaGroups )
 		return;

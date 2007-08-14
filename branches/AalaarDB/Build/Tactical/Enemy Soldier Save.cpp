@@ -1050,7 +1050,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	#endif
 	INT8 bSectorZ;
 	UINT8 ubSectorID;
-	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
 	BOOLEAN fDeleted;
 //	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
 	

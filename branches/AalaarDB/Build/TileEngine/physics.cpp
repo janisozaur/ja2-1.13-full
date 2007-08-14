@@ -498,11 +498,6 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 
 	if ( !pObject->fAlive )
 	{
-		if ( !pObject->fTestObject )
-		{
-			int i = 0;
-		}
-
 		// ATE: OK, adjust gridno based on where we ended and if we hit any walls....
 		{
 			// Check for SW wall...

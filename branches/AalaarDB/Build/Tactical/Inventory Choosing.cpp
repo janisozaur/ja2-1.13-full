@@ -639,7 +639,6 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	OBJECTTYPE Object;
 	UINT16 i;
 	//UINT16 usRandom;
-	UINT16 usNumMatches = 0;
 	UINT16 usGunIndex = 0;
 	UINT16 usAmmoIndex = 0;
 	UINT16 usAttachIndex = 0;
@@ -975,13 +974,6 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	UINT8 ubBaseQuality;
 	UINT8 ubQualityVariation;
 	//numbers of each type the player will get!
-	UINT8 ubNumStun = 0;
-	UINT8 ubNumTear = 0;
-	UINT8 ubNumMustard = 0;
-	UINT8 ubNumMini = 0;
-	UINT8 ubNumReg = 0;
-	UINT8 ubNumSmoke = 0;
-	UINT8 ubNumFlare = 0;
 	UINT8 count = 0;
 
 	// special mortar shell handling
@@ -1519,7 +1511,6 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 	//UINT16 i;
 	//INVTYPE *pItem;
 	//UINT16 usRandom;
-	UINT16 usNumMatches = 0;
 	UINT16 usKnifeIndex = 0;
 	OBJECTTYPE Object;
 

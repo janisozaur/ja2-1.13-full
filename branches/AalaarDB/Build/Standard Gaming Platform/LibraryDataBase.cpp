@@ -584,7 +584,6 @@ void AddSlashToPath( STR pName )
 {
 	UINT32	uiLoop, uiCounter;
 	BOOLEAN	fDone = FALSE;
-	BOOLEAN fFound = FALSE;
 	CHAR8		sNewName[ FILENAME_SIZE ];
 
 	//find out if there is a '\' in the file name
@@ -1023,11 +1022,9 @@ BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
 {
-	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
 	DIRENTRY *pDirEntry;
 	LIBHEADER	LibFileHeader;
-	BOOLEAN fDone = FALSE;
 //	UINT32	cnt;
 	INT32	iFilePos=0;
 

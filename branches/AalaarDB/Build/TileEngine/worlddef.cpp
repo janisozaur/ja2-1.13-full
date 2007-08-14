@@ -2762,11 +2762,6 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 
 	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
 	*pMinorMapVersion = ubMinorMapVersion;
-	if (ubMinorMapVersion > 25)
-	{
-		int breakpoint = 0;
-	}
-	
 	// CHECK FOR NON-COMPATIBLE VERSIONS!
 	// CHECK FOR MAJOR MAP VERSION INCOMPATIBLITIES
 	//if ( dMajorMapVersion < gdMajorMapVersion )
@@ -3771,11 +3766,6 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 	{	
 		if ( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_RECALCULATE_WIREFRAMES || fForce )
 		{
-		if ( cnt == 8377 )
-		{
-		int i = 0;
-		}
-
 			// Turn off flag
 			gpWorldLevelData[ cnt ].uiFlags &= (~MAPELEMENT_RECALCULATE_WIREFRAMES );
 

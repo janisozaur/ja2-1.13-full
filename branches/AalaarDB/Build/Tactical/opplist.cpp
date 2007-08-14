@@ -3496,7 +3496,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 					{
 						if ( MercPtrs[0]->stats.bLife < 10 )
 						{
-							int i = 0;
+							//int breakpoint = 0;
 						}
 					}
 			}
@@ -5010,7 +5010,6 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
 {
 	PERFORMANCE_MARKER
-	INT8 bSendNoise = FALSE;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -6757,7 +6756,6 @@ BOOLEAN ArmyKnowsOfPlayersPresence( void )
 BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN					fSeesCreature = FALSE;
 	UINT8						ubID;
 
 	if (pSoldier->aiData.bOppCnt > 0)

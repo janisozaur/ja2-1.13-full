@@ -741,7 +741,7 @@ BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 
 	if ( hSrcVObject == NULL )
 	{
-		int i=0;
+		//int breakpoint=0;
 	}
 
 	Assert( hSrcVObject != NULL );

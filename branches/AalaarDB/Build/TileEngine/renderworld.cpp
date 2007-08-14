@@ -826,7 +826,6 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	INT16				sX, sY;
 	BOOLEAN			fTileInvisible = FALSE;
 	BOOLEAN			fConvertTo16=FALSE;
-	BOOLEAN			fBlit16=FALSE;
 	UINT32			cnt;
 	static			UINT8				ubLevelNodeStartIndex[ NUM_RENDER_FX_TYPES ];
 	BOOLEAN			bItemOutline;
@@ -3554,7 +3553,7 @@ void ScrollWorld( )
 {
 	PERFORMANCE_MARKER
 	UINT32		ScrollFlags = 0;
-	BOOLEAN		fDoScroll = FALSE, fMovedPos=FALSE, fAGoodMove = FALSE;
+	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
 	INT16	sTempRenderCenterX, sTempRenderCenterY;
 	INT8	bDirection;
 	INT16	sScrollXStep=-1;

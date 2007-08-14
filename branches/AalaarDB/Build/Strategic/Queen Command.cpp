@@ -358,7 +358,7 @@ void EndTacticalBattleForEnemy()
 {
 	PERFORMANCE_MARKER
 	GROUP *pGroup;
-	INT32 i, iNumMilitia = 0, iNumEnemies = 0;
+	INT32 i;
 
 	//Clear enemies in battle for all stationary groups in the sector.
 	if( gbWorldSectorZ > 0 )

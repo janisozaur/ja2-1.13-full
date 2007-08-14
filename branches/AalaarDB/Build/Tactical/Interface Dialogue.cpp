@@ -1215,7 +1215,6 @@ void HandleTalkingMenuBackspace( void )
 {
 	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
-	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
 	{

@@ -437,9 +437,6 @@ void DrawMouseTooltip()
 	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
-	UINT16 usFillColor =	Get16BPPColor(FROMRGB(250, 240, 188));
-	UINT16 usRectColor1 =	Get16BPPColor( FROMRGB( 65, 57, 15 ) );
-	UINT16 usRectColor2 =	Get16BPPColor( FROMRGB( 227, 198, 88 ) );
 	static INT32 iX, iY, iW, iH;
 	
 	extern INT16 GetWidthOfString(const STR16);

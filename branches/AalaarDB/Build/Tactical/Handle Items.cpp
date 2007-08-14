@@ -476,7 +476,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				UINT32 misfirePenaltyRand = ((GetAutofireShotsPerFiveAPs(&pSoldier->inv[HANDPOS]))%5)*20; //this is the remainder translated to a probability
 				UINT32 misfirePenalty;
 				UINT32 startAuto = pSoldier->bDoAutofire;
-				UINT32 startAPcost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
+				//UINT32 startAPcost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
 				UINT32 roll;
 
 				if((pSoldier->ubProfile != NO_PROFILE) && (gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == PSYCHO) && Random(100) < 20)
@@ -2412,7 +2412,6 @@ BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2438,7 +2437,6 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2468,7 +2466,6 @@ BOOLEAN MarblesExistAtLocation( INT16 sGridNo, UINT8 ubLevel, INT32 * piItemInde
 	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2499,7 +2496,6 @@ INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel
 	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -2525,7 +2521,6 @@ ITEM_POOL * GetItemPoolForIndex( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel 
 	PERFORMANCE_MARKER
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
 
 	// Check for an existing pool on the object layer
 	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
@@ -3319,7 +3314,6 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 	CHAR16 pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
 	INT16	sLargeLineWidth = 0, sLineWidth;
-	BOOLEAN			fRecalcNumListed = FALSE;
 	BOOLEAN			fSelectionDone = FALSE;
 
 	INT8				gbCurrentItemSel = 0;
@@ -5335,7 +5329,6 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	SOLDIERTYPE soldier;
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
-	BOOLEAN	fSetDirection	= FALSE;
 
 	cnt3 = 0;
 
@@ -5558,7 +5551,6 @@ void SoldierStealItemFromSoldier( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 	OBJECTTYPE		Object;
 	INT32			cnt = 0;
 	BOOLEAN			fPickup;
-	BOOLEAN			fFailedAutoPlace = FALSE;
 	BOOLEAN			fShouldSayCoolQuote = FALSE;
 	BOOLEAN			fDidSayCoolQuote = FALSE;
 

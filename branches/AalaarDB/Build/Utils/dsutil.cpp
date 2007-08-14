@@ -192,12 +192,13 @@ void SndObjDestroy(SNDOBJ *pSO)
 IDirectSoundBuffer *SndObjGetFreeBuffer(SNDOBJ *pSO)
 {
 	PERFORMANCE_MARKER
-	IDirectSoundBuffer *pDSB;
 
 	if (pSO == NULL)
 		return NULL;
 
-	if (pDSB = pSO->Buffers[pSO->iCurrent])
+	IDirectSoundBuffer *pDSB;
+	pDSB = pSO->Buffers[pSO->iCurrent];
+	if (pDSB)
 	{
 		HRESULT hres;
 		DWORD dwStatus;

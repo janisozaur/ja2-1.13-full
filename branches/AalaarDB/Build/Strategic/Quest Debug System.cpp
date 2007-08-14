@@ -1911,7 +1911,7 @@ BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
 void DisplaySelectedListBox( )
 {
 	PERFORMANCE_MARKER
-	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
+	//UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	UINT16	usPosX, usPosY;
 	HVOBJECT	hImageHandle;
 
@@ -2351,8 +2351,6 @@ void CalcPositionOfNewScrollBoxLocation()
 	INT16	sIncrementValue;
 	FLOAT	dValue;
 	INT16	sHeight=0;
-//	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5);
-	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
 	INT16	sStartPosOfScrollArea = gpActiveListBox->usScrollPosY + gpActiveListBox->usScrollArrowHeight;
 
 	sMouseXPos = gusMouseXPos;
@@ -2972,7 +2970,6 @@ void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 void InitQuestDebugTextInputBoxes()
 {
 	PERFORMANCE_MARKER
-	UINT32	uiStartLoc=0;
 	CHAR16	sTemp[ 640 ];
 //	CHAR16	sText[ 640 ];
 
@@ -3700,12 +3697,10 @@ void IncrementActiveDropDownBox( INT16 sIncrementValue )
 INT16	IsMercInTheSector( UINT16 usMercID )
 {
 	PERFORMANCE_MARKER
-	UINT8					cnt;
-	UINT8					ubCount=0;
-
 	if( usMercID == -1 )
 		return( FALSE );
 
+	UINT8					cnt;
 	for ( cnt=0; cnt <= TOTAL_SOLDIERS; cnt++ )
 	{	
 		//if the merc is active

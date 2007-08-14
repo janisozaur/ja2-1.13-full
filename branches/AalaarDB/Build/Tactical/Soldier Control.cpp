@@ -288,7 +288,7 @@ OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		int breakpoint = 0;
+		//int breakpoint = 0;
 	}
 	/*
 	// This IF is just from setting breakpoints when trying to figure out inventory item problems.  Remove it later
@@ -3972,7 +3972,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 	}
 	else
 	{
-		int i = 0;
+		//int breakpoint = 0;
 	}
 }
 
@@ -3989,11 +3989,6 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 	if ( thisSoldier->sGridNo == sTargetGridNo )
 	{
 		return;
-	}
-
-	if ( thisSoldier->ubID == 33 )
-	{
-		int i = 0;
 	}
 
 	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunAmmoType )
@@ -9953,7 +9948,6 @@ void SOLDIERTYPE::EVENT_SoldierBeginBladeAttack( INT16 sGridNo, UINT8 ubDirectio
 	//UINT32 uiMercFlags;
 	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
-	BOOLEAN fChangeDirection = FALSE;
 	ROTTING_CORPSE *pCorpse;
 
 	// Increment the number of people busy doing stuff because of an attack

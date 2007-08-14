@@ -793,8 +793,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
-	UINT8									ubTalkDesire, ubLoop, ubHighestOpinionRequired = 0;
-	BOOLEAN								fQuoteFound = FALSE;
+	UINT8									ubTalkDesire, ubLoop;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
 	UINT16								usItemToConsider;
 
@@ -2596,7 +2595,6 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -2753,7 +2751,6 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -3203,7 +3200,6 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 
 	if ( EnsureQuoteFileLoaded( ubNPC ) == FALSE )
 	{

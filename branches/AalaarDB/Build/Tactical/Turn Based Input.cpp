@@ -251,7 +251,6 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE								*pSoldier;
 	UINT16						usMapPos;
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
-	BOOLEAN						fOnInterTile = FALSE;
 	static BOOLEAN	fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
 
@@ -5348,7 +5347,6 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
-	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -5408,7 +5406,6 @@ void HandleStealthChangeFromUIKeys(	)
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
-	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{

@@ -52,7 +52,6 @@
 				WarningLevel="4"
 				DebugInformationFormat="4"
 				ForcedIncludeFiles="profiler.h"
-				DisableSpecificWarnings="4100"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

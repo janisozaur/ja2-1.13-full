@@ -2959,7 +2959,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->pathing.bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
 	// CALLAHAN START BUGFIX
-	if ( EXPLOSIVE_GUN( usWeaponIndex ) || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+	if ( EXPLOSIVE_GUN( usWeaponIndex ) || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].gun.ubGunAmmoType].explosionSize > 1)
 	// CALLAHAN END BUGFIX
 	{
 		// Reduce attacker count!

@@ -227,7 +227,6 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure, *pNewStructure;
-	INT16					sAPCost = 0, sBPCost = 0;
 	ITEM_POOL			*pItemPool;
 	BOOLEAN		fDidMissingQuote = FALSE;
 

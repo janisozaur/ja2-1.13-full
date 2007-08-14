@@ -19,7 +19,6 @@ void MakeClosestEnemyChosenOne()
 	PERFORMANCE_MARKER
 	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
-	INT8					bOldKeys = -1;
 	UINT8					ubClosestEnemy = NOBODY;
 	SOLDIERTYPE *	pSoldier;
 	INT8					bPanicTrigger;

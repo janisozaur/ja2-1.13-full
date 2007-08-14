@@ -1012,7 +1012,7 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 	// for pathing purposes, will be reset to zero in copying of path
 	INT32 iId = 0;
 #ifndef RELEASE_WITH_DEBUG_INFO
-	INT32 iCounter = 0;
+	//INT32 iCounter = 0;
 #endif // RELEASE_WITH_DEBUG_INFO
 
 		// check if character is in fact in a vehicle
@@ -1477,8 +1477,6 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT16 sOldGridNo = 0;
-
 	// TEST IF IT'S VALID...
 	if ( pVehicle->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
@@ -1609,8 +1607,6 @@ void AddPassangersToTeamPanel( INT32 iId )
 void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, UINT8 ubAttackerID )
 {
 	PERFORMANCE_MARKER
-	INT16 sOldDmgValue = 0;
-
 	if ( ubReason != TAKE_DAMAGE_GAS )
 	{
 		PlayJA2Sample( (UINT32)( S_METAL_IMPACT3 ), RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );			
@@ -1643,11 +1639,7 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 	PERFORMANCE_MARKER
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
-	INT16 sOrigValue = 0, sCurrValue = 0;
-	FLOAT fChance = 0.0;
-	INT32 iRand = 0, iCrit = 0;
 	SOLDIERTYPE *pSoldier;
-	BOOLEAN	fDestroyVehicle = FALSE;
 	BOOLEAN	fMadeCorpse = FALSE;
 
 #if 0
@@ -1857,8 +1849,6 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 void SetUpArmorForVehicle( UINT8 ubID )
 {
 	PERFORMANCE_MARKER
-	INT32 iCounter = 0;
-
 /*
 	// set up the internal and external armor for vehicles
 	for( iCounter = 0; iCounter < NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE; iCounter++ )
@@ -2195,8 +2185,6 @@ BOOLEAN SaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten = 0;
-	UINT32	uiSaveSize=0;
-
 	//Save all the vehicle movement id's
 	FileWrite( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * 5, &uiNumBytesWritten );
 	if( uiNumBytesWritten != sizeof( INT8 ) * 5 )
@@ -2214,8 +2202,6 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize=0;
-
 	//Load in the Squad movement id's
 	FileRead( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * 5, &uiNumBytesRead );
 	if( uiNumBytesRead != sizeof( INT8 ) * 5 )
@@ -2241,8 +2227,6 @@ BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten = 0;
-	UINT32	uiSaveSize=0;
-
 	//Save all the vehicle movement id's
 	FileWrite( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * MAX_VEHICLES, &uiNumBytesWritten );
 	if( uiNumBytesWritten != sizeof( INT8 ) * MAX_VEHICLES )
@@ -2258,8 +2242,6 @@ BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize=0;
-
 	//Load in the Squad movement id's
 	FileRead( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * MAX_VEHICLES, &uiNumBytesRead );
 	if( uiNumBytesRead != sizeof( INT8 ) * MAX_VEHICLES )

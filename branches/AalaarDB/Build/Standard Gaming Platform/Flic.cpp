@@ -1460,7 +1460,6 @@ CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 	PERFORMANCE_MARKER
 	FrameHead	head;
 	LONG			lSize;
-	BOOL			fFound = FALSE;
 	ErrCode		err=0;
 	INT		i;
 
@@ -1485,7 +1484,6 @@ CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 				}
 				if (!(err = file_read_big_block(flic->file, pcxbuf, lSize)))
 				{
-					FrameHead	*frame = &head;
 					Uchar			*data = (unsigned char *)pcxbuf;
 					int			i;
 					ChunkHead	*chunk;

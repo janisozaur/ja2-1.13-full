@@ -1688,10 +1688,7 @@ void RenderAutoResolve()
 	INT32 i;
 	HVSURFACE hVSurface;
 	INT32 xp, yp;
-	SOLDIERCELL *pCell = NULL;
-	INT32 index = 0;
 	CHAR16 str[100];
-	UINT8 bTownId = 0;
 	UINT8 ubGood, ubBad;
 	
 	if( gpAR->fExpanding )
@@ -3645,7 +3642,6 @@ void CalculateAttackValues()
 	UINT16 usBestAttack = 0xffff;
 	UINT16 usBreathStrengthPercentage;
 	//INT16 sOutnumberBonus = 0;
-	INT16 sMaxBonus = 0;
 	//PLAYER TEAM
 	gpAR->usPlayerAttack = 0;
 	gpAR->usPlayerDefence = 0;

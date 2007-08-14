@@ -1025,7 +1025,6 @@ BOOLEAN CheckConditionsForBattle( GROUP *pGroup )
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fBattlePending = FALSE;
-	BOOLEAN fPossibleQueuedBattle = FALSE;
 	BOOLEAN fAliveMerc = FALSE;
 	BOOLEAN fMilitiaPresent = FALSE;
 	BOOLEAN fCombatAbleMerc = FALSE;
@@ -1352,10 +1351,8 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversals )
 {
 	PERFORMANCE_MARKER
-	GROUP *curr = NULL;
 	SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
 	PLAYERGROUP *pPlayer = NULL;
-	BOOLEAN fSuccess = FALSE;
 	#ifdef JA2BETAVERSION
 		INT32 counter = 0;	
 	#endif
