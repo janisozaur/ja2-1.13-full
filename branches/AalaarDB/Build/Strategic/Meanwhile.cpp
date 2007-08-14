@@ -775,6 +775,7 @@ void ProcessImplicationsOfMeanwhile( void )
 				else
 				{
 					Assert( 0 );
+					return;
 				}
 				gMercProfiles[ MADLAB ].sSectorX = sSectorX;
 				gMercProfiles[ MADLAB ].sSectorY = sSectorY;

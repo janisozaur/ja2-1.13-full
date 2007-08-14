@@ -312,7 +312,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const STR8 pcFile, INT32 iLine )
 {
 	PERFORMANCE_MARKER
 	PTR	ptrNew;
-	UINT32 uiOldSize;
+	UINT32 uiOldSize = 0;
 
 
 	if ( !fMemManagerInit )

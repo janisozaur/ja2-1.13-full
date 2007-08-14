@@ -236,7 +236,7 @@ void CopyBuilding( INT32 iMapIndex )
 void SortBuildingLayout( INT32 iMapIndex )
 {
 	PERFORMANCE_MARKER
-	BUILDINGLAYOUTNODE *head, *curr, *prev, *prevBest, *best;
+	BUILDINGLAYOUTNODE *head, *curr, *prev, *prevBest = NULL, *best = NULL;
 	INT32 iBestIndex;
 	head = NULL;
 	if( iMapIndex < gsBuildingLayoutAnchorGridNo )

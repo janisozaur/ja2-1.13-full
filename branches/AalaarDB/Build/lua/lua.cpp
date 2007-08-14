@@ -53,6 +53,8 @@ static LuaAttrib* LuaCommonGetSet( lua_State *L )
 	else
 	{
 		luaL_argcheck( L, 0, 2, "Invalid index to the table" );
+		// The last function doesn't return, but gotta keep the compiler happy
+		return NULL;
 	}
 
 	for ( ; Attributes->name; Attributes++ )

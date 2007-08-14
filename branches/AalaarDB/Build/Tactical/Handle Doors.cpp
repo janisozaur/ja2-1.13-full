@@ -299,7 +299,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	PERFORMANCE_MARKER
 	STRUCTURE *			pBaseStructure;
 	BOOLEAN					fDoMenu = FALSE;
-	DOOR		*				pDoor;
+	DOOR		*				pDoor = NULL;
 	DOOR_STATUS *		pDoorStatus;
 	BOOLEAN		 fTrapsFound = FALSE;
 

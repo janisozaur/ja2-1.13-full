@@ -1356,7 +1356,9 @@ void AddPossiblePendingEnemiesToBattle()
 			else if( pGroup->ubSectorY > pGroup->ubPrevY )
 				ubInsertionCode = INSERTION_CODE_NORTH;
 			else
+			{
 				Assert(0);
+			}
 		}
 		else if( pGroup->ubNextX && pGroup->ubNextY )
 		{
@@ -1369,11 +1371,15 @@ void AddPossiblePendingEnemiesToBattle()
 			else if( pGroup->ubSectorY > pGroup->ubNextY )
 				ubInsertionCode = INSERTION_CODE_NORTH;
 			else
+			{
 				Assert(0);
+			}
 		}
 		else
+		{
 			// The group has no movement orders.  Where did it come from?
 			Assert(0);
+		}
 
 		if( pGroup->pEnemyGroup->ubElitesInBattle < pGroup->pEnemyGroup->ubNumElites )
 		{ //Add an elite troop
