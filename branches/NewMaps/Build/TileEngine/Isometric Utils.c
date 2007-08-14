@@ -504,9 +504,9 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 // UTILITY FUNTIONS
 
-INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
+BOOLEAN OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
 {
- INT16 sMod,sPropMod;
+	INT32 sMod,sPropMod;
 
  // get modulas of our origin
  sMod = sGridNo % MAXCOL;
@@ -536,6 +536,19 @@ INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo)
 	return(TRUE);
   else
        return(FALSE);
+}
+
+//Lalien: This function should be used to check if the tile is not inside map array,
+//        it will return FALSE if the tile index is NOWHERE (-1) too.
+//        If the tile index has some special meaning ("-1" = does not exist) the check for NOWHERE should be used
+BOOLEAN TileIsOutOfBounds(INT32 sGridNo)
+{
+	if( (sGridNo < 0) || (sGridNo >= MAX_MAP_POS) )
+	{
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 

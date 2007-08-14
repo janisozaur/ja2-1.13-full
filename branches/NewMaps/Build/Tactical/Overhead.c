@@ -4721,7 +4721,8 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
  }
 
 	//if (sClosest != NOWHERE)
-	if (  ( sClosest >= 0 ) && ( sClosest < MAX_MAP_POS ) ) //Lalien: replace this with valid check
+	//if (  ( sClosest >= 0 ) && ( sClosest < MAX_MAP_POS ) ) //Lalien: replace this with valid check
+	if ( !TileIsOutOfBounds( sClosest ) )
   {
 		 // Take last direction and use opposite!
 		 // This will be usefull for ours and AI mercs

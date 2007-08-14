@@ -15,7 +15,7 @@
 //#define NOWHERE         MAXLONG
 #define NOWHERE         -1
 //#define	NO_MAP_POS			NOWHERE
-#define	MAX_MAP_POS			(GRIDSIZE)
+#define	MAX_MAP_POS			(GRIDSIZE)  //MAX_MAP_POS will be used only to track the changes made for the big map project, should be replaced with GRIDSIZE later
 
 #define MAPWIDTH			(WORLD_COLS)
 #define MAPHEIGHT			(WORLD_ROWS)
@@ -51,7 +51,8 @@ void ConvertGridNoToCenterCellXY( INT32 sGridNo, INT16 *sXPos, INT16 *sYPos );
 // GRID NO MANIPULATION FUNCTIONS
 INT32 NewGridNo(INT32 sGridNo, INT16 sDirInc);
 INT16 DirectionInc(INT16 sDirection);
-INT32 OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
+BOOLEAN OutOfBounds(INT32 sGridNo, INT32 sProposedGridNo);
+BOOLEAN TileIsOutOfBounds(INT32 sGridNo);
 
  
 // Functions

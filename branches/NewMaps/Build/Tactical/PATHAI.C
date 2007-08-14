@@ -586,14 +586,15 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 	iOriginationX = iOriginationY = 0;
 	iOrigination = (INT32) s->sGridNo;
 
-	if (iOrigination < 0 || iOrigination > WORLD_MAX)
+	//if (iOrigination < 0 || iOrigination >= WORLD_MAX)
+	if ( TileIsOutOfBounds( iOrigination ) )
 	{
 		#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
 		#endif
 		return( 0 );
 	}
-	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
+	else if (!GridNoOnVisibleWorldTile( iOrigination ))
 	{
 		#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
@@ -1116,7 +1117,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 					if ( fPathingForPlayer )
 					{
 						// Is this obstcale a hidden tile that has not been revealed yet?
-						if( DoesGridNoContainHiddenStruct( (UINT16)newLoc, &fHiddenStructVisible ) )
+						if( DoesGridNoContainHiddenStruct( newLoc, &fHiddenStructVisible ) )
 						{
 							// Are we not visible, if so use terrain costs!
 							if ( !fHiddenStructVisible )
@@ -1346,7 +1347,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 			if (fPathAroundPeople && ( (newLoc != iDestination) || fCopyReachable) )
 			{
 				 // ATE: ONLY cancel if they are moving.....
-				ubMerc = WhoIsThere2( (UINT16) newLoc, s->bLevel);
+				ubMerc = WhoIsThere2( newLoc, s->bLevel);
 
 				if ( ubMerc < NOBODY && ubMerc != s->ubID )
 				{	
@@ -1373,7 +1374,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 				// then 0 1 2 3 4 5 6), we must subtract 1 from the direction
 				// ATE: Send in our existing structure ID so it's ignored!
 
-				if (!OkayToAddStructureToWorld( (INT16) newLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+				if (!OkayToAddStructureToWorld( newLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
 				{
 					goto NEXTDIR;
 				}
@@ -1601,11 +1602,11 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 
 			if ( fCloseGoodEnough )
 			{
-				if ( PythSpacesAway( (INT16)newLoc, sDestination ) <= sClosePathLimit )
+				if ( PythSpacesAway( newLoc, sDestination ) <= sClosePathLimit )
 				{
 					// stop the path here!
 					iDestination = newLoc;
-					sDestination = (INT16) newLoc;
+					sDestination = newLoc;
 					fCloseGoodEnough = FALSE;
 				}
 			}
@@ -1739,7 +1740,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 				{
 					trailTree[trailTreeNdx].fFlags = 0;
 				}
-				trailTree[trailTreeNdx].sGridNo		= (INT16) newLoc;
+				trailTree[trailTreeNdx].sGridNo		= newLoc;
 				pNewPtr->sPathNdx						= trailTreeNdx;
 				trailTreeNdx++;
 
@@ -1996,7 +1997,7 @@ ENDOFLOOP:
 			  z = trailTree[z].nextLink;
 		  }
 		  
-		  giPathDataSize = (UINT16) iCnt;
+		  giPathDataSize = iCnt;
 
 		}
 
