@@ -1351,10 +1351,9 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversals )
 {
 	PERFORMANCE_MARKER
-	SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
-	PLAYERGROUP *pPlayer = NULL;
+	//SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
 	#ifdef JA2BETAVERSION
-		INT32 counter = 0;	
+		//INT32 counter = 0;	
 	#endif
 	return FALSE;
 #if 0
@@ -1634,7 +1633,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 	BOOLEAN fExceptionQueue = FALSE;
 	BOOLEAN fFirstTimeInSector = FALSE;
 	BOOLEAN fGroupDestroyed = FALSE;
-	BOOLEAN fVehicleStranded = FALSE;
 
 	// reset
 	gfWaitingForInput = FALSE;
@@ -2637,12 +2635,6 @@ void RemoveGroup( UINT8 ubGroupID )
 	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
-
-	if ( ubGroupID == 51 )
-	{
-		int i = 0;
-	}
-
 	Assert( pGroup );
 	RemovePGroup( pGroup );
 }
@@ -2842,9 +2834,6 @@ INT32 CalculateTravelTimeOfGroup( GROUP *pGroup )
 	UINT32 uiEtaTime = 0;
 	WAYPOINT *pNode = NULL;
 	WAYPOINT pCurrent, pDest;
-	INT8 ubCurrentSector = 0;
-
-
 	// check if valid group
 	if( pGroup == NULL )
 	{
@@ -3336,7 +3325,6 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	INT16 sBattleSector = -1;
 	BOOLEAN fMayRetreatFromBattle = FALSE;
 	BOOLEAN fRetreatingFromBattle = FALSE;
-	BOOLEAN fHandleRetreats = FALSE;
 	BOOLEAN fHelicopterGroup = FALSE;
 	UINT8 ubMercsInGroup = 0;
 
@@ -3828,7 +3816,6 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 {
 	PERFORMANCE_MARKER
-	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
 	PLAYERGROUP		*pHead=NULL;
 	UINT32	uiNumberOfNodes=0;

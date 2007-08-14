@@ -185,7 +185,6 @@ UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiD
 	// adds transaction to player's book(Financial List), returns unique id number of it
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
 	
-	INT32 iCurPage = iCurrentPage;
 	UINT32 uiId=0;
 	FinanceUnitPtr pFinance=pFinanceListHead;
 
@@ -611,7 +610,6 @@ void RenderBackGround( void )
 	PERFORMANCE_MARKER
 	// render generic background for Finance system
 	HVOBJECT hHandle;
-	INT32 iCounter=0;
 	
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE); 	
@@ -662,8 +660,6 @@ void DrawAPageOfRecords( void )
 {
 	PERFORMANCE_MARKER
 	// this procedure will draw a series of financial records to the screen
-	INT32 iCurPage=1;
-	INT32 iCount=0;
 	pCurrentFinance=pFinanceListHead;
 
 	// (re-)render background
@@ -1589,7 +1585,6 @@ void DisplayFinancePageNumberAndDateRange( void )
 	PERFORMANCE_MARKER
 	// this function will go through the list of 'histories' starting at current until end or 
 	// MAX_PER_PAGE...it will get the date range and the page number
-	INT32 iLastPage=0;
 	INT32 iCounter=0;
 	UINT32 uiLastDate;
 	FinanceUnitPtr pTempFinance=pFinanceListHead;
@@ -1636,8 +1631,6 @@ BOOLEAN WriteBalanceToDisk( void )
 	PERFORMANCE_MARKER
 	// will write the current balance to disk
 	HWFILE hFileHandle;
-	INT32 iBytesWritten=0;
-	FinanceUnitPtr pFinanceList=pFinanceListHead;
 	
 	
 	// open file
@@ -1694,7 +1687,6 @@ BOOLEAN AppendFinanceToEndOfFile( FinanceUnitPtr pFinance )
 	PERFORMANCE_MARKER
 		// will write the current finance to disk
 	HWFILE hFileHandle;
-	INT32 iBytesWritten=0;
 	FinanceUnitPtr pFinanceList=pFinanceListHead;
 	
 	
@@ -1740,7 +1732,6 @@ UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber( void )
 
 	
 	HWFILE hFileHandle;
-	INT32 iBytesRead=0;
 	INT32 iFileSize = 0; 
 
 	// no file, return
@@ -1782,7 +1773,6 @@ void SetLastPageInRecords( void )
 	PERFORMANCE_MARKER
 	// grabs the size of the file and interprets number of pages it will take up
 	HWFILE hFileHandle;
-	INT32 iBytesRead=0;
 
 	// no file, return
 	if ( ! (FileExists( FINANCES_DATA_FILE ) ) )
@@ -2106,7 +2096,6 @@ INT32 GetPreviousDaysBalance( void )
 {
 	PERFORMANCE_MARKER
 	// find out what today is, then go back 2 days, get balance for that day
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2119,7 +2108,6 @@ INT32 GetPreviousDaysBalance( void )
 	INT32 iAmount;
 	INT32 iBalanceToDate = 0;
 	BOOLEAN fGoneTooFar= FALSE;
-	INT32 iFileSize = 0;
 
 	// what day is it?
 	iDateInMinutes = GetWorldTotalMin( ) - ( 60 * 24 );
@@ -2200,7 +2188,6 @@ INT32 GetTodaysBalance( void )
 {
 	PERFORMANCE_MARKER
 	// find out what today is, then go back 2 days, get balance for that day
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2283,7 +2270,6 @@ INT32 GetPreviousDaysIncome( void )
 	PERFORMANCE_MARKER
 	// will return the income from the previous day
 	// which is todays starting balance - yesterdays starting balance
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2385,7 +2371,6 @@ INT32 GetTodaysDaysIncome( void )
 	PERFORMANCE_MARKER
 	// will return the income from the previous day
 	// which is todays starting balance - yesterdays starting balance
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2519,7 +2504,6 @@ INT32 GetTodaysOtherDeposits( void )
 	PERFORMANCE_MARKER
 	// grab todays other deposits
 
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2617,8 +2601,6 @@ INT32 GetTodaysOtherDeposits( void )
 INT32 GetYesterdaysOtherDeposits( void )
 {
 	PERFORMANCE_MARKER
-
-	INT32 iPreviousDaysBalance = 0;
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 

@@ -470,10 +470,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fmod_errors.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Font.cpp"
 				>
 			</File>

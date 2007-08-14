@@ -121,7 +121,6 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 
 void ResetMilitia()
 {
-	BOOLEAN fBattleInProgress = FALSE;
 	UINT8 ubNumGreen = 0;
 	UINT8 ubNumReg = 0;
 	UINT8 ubNumVet = 0;
@@ -391,8 +390,6 @@ void MilitiaControlMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 void DetermineWhichMilitiaControlMenusCanBeShown( void )
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
-
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		if( fShowMapScreenMovementList == TRUE )
@@ -566,7 +563,6 @@ void CreateDestroyMouseRegionsForMilitiaControlMenu( void )
 	INT32 iFontHeight = 0;
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	SGPPoint pPosition;
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;

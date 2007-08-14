@@ -722,10 +722,6 @@ int AStarPathfinder::GetPath(SOLDIERTYPE *s ,
 	}
 #endif
 
-	if (dest == 16530 && bCopy == COPYROUTE) {
-		int breakpoint = 0;
-	}
-
 	std::vector<GridNode> reversePath;
 	GridNode parent = bestPath.data;
 	unsigned int sizePath;
@@ -1564,7 +1560,7 @@ int AStarPathfinder::CalcCoverValue(INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyA
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE* pMe = this->pSoldier;
-	INT32	morale = pSoldier->aiData.bAIMorale;
+	//INT32	morale = pSoldier->aiData.bAIMorale;
 
 	INT32	iRange = myThreatsiOrigRange;
 	// all 32-bit integers for max. speed
@@ -3502,10 +3498,6 @@ ENDOFLOOP:
 		// if this function was called because a solider is about to embark on an actual route
 		// (as opposed to "test" path finding (used by cursor, etc), then grab all pertinent
 		// data and copy into soldier's database
-	if (sDestination == 16530) {
-		int breakpoint = 0;
-	}
-
 		if (bCopy == COPYROUTE)
 		{
 		z=_z;
@@ -3776,7 +3768,7 @@ void ErasePath(char bEraseOldOne)
 INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
 {
 	PERFORMANCE_MARKER
- INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
+ INT16 sTileCost,sPoints=0,sTempGrid;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
  INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
  INT32 iLastGrid;

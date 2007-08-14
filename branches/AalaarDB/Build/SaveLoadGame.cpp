@@ -1496,7 +1496,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 	//UINT8		saveDir[100];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
@@ -2448,8 +2447,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	INT16 sLoadSectorY;
 	INT8 bLoadSectorZ;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
-
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
 
@@ -3980,8 +3977,6 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
-
 	//Loop through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4000,8 +3995,6 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
-
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4123,7 +4116,6 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	PERFORMANCE_MARKER
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
@@ -4588,7 +4580,6 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	UINT32	uiNumOfEmails=0;
 	UINT32		uiSizeOfEmails=0;
 	EmailPtr	pEmail = pEmailList;
-	EmailPtr pTempEmail = NULL;
 	UINT32	cnt;
 	UINT32	uiStringLength=0;
 	UINT32	uiNumBytesWritten=0;
@@ -6122,7 +6113,6 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 		INT16					sSoldierCnt;
 		SOLDIERTYPE		*pSoldier;
 		INT16					bLastTeamID;
-		INT8					bCount=0;
 		BOOLEAN				fFoundAMerc=FALSE;
 
 		// Set locator to first merc

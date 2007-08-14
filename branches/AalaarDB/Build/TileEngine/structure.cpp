@@ -2333,8 +2333,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		pCurrent = pCurrent->pNext;
 	}
 
-	Assert(pStructure);//it says potentially uninit var, make sure it is init
-
 	// OK, here, we default to we've seen a struct, reveal just this one
 	if ( fOKStructOnLevel )
 	{

@@ -821,7 +821,6 @@ void DisplayPlayerFullNameString( void )
 	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
-	INT32 iCounter=0;
 
 	// player gone too far, move back
 	if(uiFullNameCharacterPosition > MAX_FULL_NAME)
@@ -854,7 +853,6 @@ void DisplayPlayerNickNameString( void )
 	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
-	INT32 iCounter=0;
 
 	// player gone too far, move back
 	if(uiNickNameCharacterPosition > MAX_NICK_NAME)

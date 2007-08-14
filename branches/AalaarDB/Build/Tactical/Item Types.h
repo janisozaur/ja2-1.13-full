@@ -308,6 +308,8 @@ public:
 //#define SIZEOF_OBJECTTYPE_UNION offsetof(OBJECTTYPE, gun);
 
 };
+
+extern OBJECTTYPE gTempObject;
 /*
 typedef struct
 {

@@ -1322,7 +1322,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 	UINT16	i;
 	UINT8		ubCount=0;
 	UINT16	PosY, usTextPosY;
-	UINT16		ubFirstIndex=0;
 	UINT16	usItemIndex;
 	CHAR16	sDollarTemp[60];
 	CHAR16	sTemp[60];
@@ -1656,7 +1655,6 @@ BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 
 {
 	PERFORMANCE_MARKER
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -1694,7 +1692,6 @@ BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed
 {
 	PERFORMANCE_MARKER
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -1722,7 +1719,6 @@ BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16
 {
 	PERFORMANCE_MARKER
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -1786,7 +1782,6 @@ BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT
 {
 	PERFORMANCE_MARKER
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -1810,7 +1805,6 @@ BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16
 {
 	PERFORMANCE_MARKER
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -2005,10 +1999,8 @@ void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, 
 	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	CHAR16	sTemp[20];
-	UINT32	uiStartLoc=0;
 
 	UINT8	ubPurchaseNumber;
-	UINT16 usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
 		//Display Items Name
 	//uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
@@ -2116,7 +2108,6 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask, INT32 iFilter )
 	UINT16	i;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
-	UINT16	ubPages=0;
 	UINT16	ubNumItems=0;
 	UINT16	usItemIndex = 0;
 
@@ -2213,10 +2204,8 @@ void SetFirstLastPagesForUsed(INT32 iFilter)
 	UINT16 i;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
-	UINT16	ubPages=0;
 	UINT16	ubNumItems=0;
 	UINT16	usItemIndex;
-	INT32 iFilterLauncher = IC_LAUNCHER;
 
 	gubCurPage = 0;
 	BOOLEAN bCntNumItems = FALSE;

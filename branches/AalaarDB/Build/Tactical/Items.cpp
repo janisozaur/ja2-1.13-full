@@ -2245,8 +2245,6 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
 	PERFORMANCE_MARKER
 	INT32 iLoop = 0;
-	UINT16 usItem = NOTHING;
-
 	// look for the section of the array pertaining to this launchable item...
 	while( 1 )
 	{
@@ -3352,6 +3350,10 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound )
 {
 	PERFORMANCE_MARKER
+	if ( pTargetObj->ubNumberOfObjects > 1 )
+	{
+		return( FALSE );
+	}
 	INT8		bAttachPos, bSecondAttachPos;//, bAbility, bSuccess;
 	UINT16		usResult, usResult2;
 	INT8		bLoop;
@@ -3359,13 +3361,6 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 	INT32		iCheckResult;
 	INT8		bAttachInfoIndex = -1, bAttachComboMerge;
 	BOOLEAN		fValidLaunchable = FALSE;
-	BOOLEAN		IsAGLorRL = FALSE;
-
-
-	if ( pTargetObj->ubNumberOfObjects > 1 )
-	{
-		return( FALSE );
-	}
 
 	fValidLaunchable = ValidLaunchable( pAttachment->usItem, pTargetObj->usItem );
 
@@ -4573,17 +4568,14 @@ UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE 
 {
 	PERFORMANCE_MARKER
 	// swap keys in keyring slot and keys in pocket
-	UINT8 ubNumberNotAdded = 0;
-	OBJECTTYPE	TempObj;
-
 	// create temp object to hold keys currently in key ring slot
-	CreateKeyObject( &TempObj, pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber, pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID );
+	CreateKeyObject( &gTempObject, pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber, pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID );
 
 	pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = pObj->ubNumberOfObjects;
 	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->key.ubKeyID;
 	
 	// swap params?
-	CopyObj( &TempObj, pObj );
+	CopyObj( &gTempObject, pObj );
 
 	return( 1 );
 }
@@ -6173,7 +6165,7 @@ BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAP
 	}
 
 	//get total camo bonus for kit -- note that camo kits now require the camobonus tag to be set
-	int itemCamo = Item[pObj->usItem].camobonus + Item[pObj->usItem].urbanCamobonus + Item[pObj->usItem].desertCamobonus + Item[pObj->usItem].snowCamobonus;
+	//int itemCamo = Item[pObj->usItem].camobonus + Item[pObj->usItem].urbanCamobonus + Item[pObj->usItem].desertCamobonus + Item[pObj->usItem].snowCamobonus;
 
 	int totalCamo = pSoldier->bCamo + pSoldier->wornCamo + pSoldier->urbanCamo+pSoldier->wornUrbanCamo+pSoldier->desertCamo+pSoldier->wornDesertCamo+pSoldier->snowCamo+pSoldier->wornSnowCamo;
 	if ((totalCamo) >= 100)
@@ -7776,7 +7768,6 @@ UINT16 LowestLaunchableCoolness(UINT16 launcherIndex)
 UINT16 PickARandomLaunchable(UINT16 itemIndex)
 {
 	PERFORMANCE_MARKER
-	INT32 iLoop = 0;
 	UINT16 usNumMatches = 0;
 	UINT16 usRandom = 0;
 	UINT16 i = 0;

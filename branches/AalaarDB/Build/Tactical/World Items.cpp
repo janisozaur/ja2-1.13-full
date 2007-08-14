@@ -347,8 +347,6 @@ void FindPanicBombsAndTriggers( void )
 	STRUCTURE *		pSwitch;
 	INT16			sGridNo = NOWHERE;
 	INT8			bPanicIndex;
-	BOOLEAN			fPanicTriggerIsAlarm = FALSE;
-	
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
 	{
 		if (gWorldBombs[ uiBombIndex ].fExists)
@@ -584,8 +582,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;
-	UINT32			uiLevelItems = 0;
-		
 	//If any world items exist, we must delete them now.
 	TrashWorldItems();
 

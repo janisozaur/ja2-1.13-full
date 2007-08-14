@@ -1727,7 +1727,6 @@ void HandleRPCDescriptionOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSector
 BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	PERFORMANCE_MARKER
-	UNDERGROUND_SECTORINFO	*pUnderWorld=NULL;
 	BOOLEAN									fChangeMusic = TRUE;
 
 #ifdef CRIPPLED_VERSION
@@ -2013,9 +2012,7 @@ void RemoveMercsInSector( )
 void PrepareLoadedSector()
 {
 	PERFORMANCE_MARKER
-	INT32 iCounter = 0;
 	BOOLEAN fEnemyPresenceInThisSector = FALSE;
-	BOOLEAN fUsingOverride = FALSE;
 	BOOLEAN fAddCivs = TRUE;
 	INT8 bMineIndex = -1;
 

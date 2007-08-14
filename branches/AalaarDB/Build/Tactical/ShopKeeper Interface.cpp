@@ -2660,7 +2660,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
 	INT16				sCenX, sCenY;
-	UINT8				sItemCount=0;
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
@@ -2742,8 +2741,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		else // UNDER REPAIR
 		{
 			UINT8		ubElement;
-			UINT32	uiTimeInMinutesToFixItem=0;
-
 			//display the length of time needed to repair the item
 			uiItemCost = 0;
 
@@ -4058,7 +4055,6 @@ void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea( )
 	PERFORMANCE_MARKER
 	//for all items in the dealers items offer area
 	UINT32	uiCnt;
-	UINT32	uiTotal=0;
 	INT8		bSlotID=0;
 
 	//loop through all the slots in the shopkeeper's offer area
@@ -6447,7 +6443,7 @@ void HandleCheckIfEnoughOnTheTable( void )
 {
 	PERFORMANCE_MARKER
 	static INT32 iLastTime = 0;
-	INT32 iTime = 0, iDifference = 0, iRand = 0;
+	INT32 iDifference = 0, iRand = 0;
 	UINT32	uiPlayersOfferAreaValue = CalculateTotalPlayersValue();
 	UINT32	uiArmsDealersItemsCost = CalculateTotalArmsDealerCost();
 
@@ -7378,7 +7374,6 @@ void ResetAllQuoteSaidFlags()
 void DealWithItemsStillOnTheTable()
 {
 	PERFORMANCE_MARKER
-	BOOLEAN fAddedCorrectly = FALSE;
 	UINT8	ubCnt;
 	SOLDIERTYPE *pDropSoldier;
 

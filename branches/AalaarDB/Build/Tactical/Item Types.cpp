@@ -1,6 +1,7 @@
 
 #include "Item Types.h"
 #include "Debug.h"
+OBJECTTYPE gTempObject;
 
 //you may have noticed code like this:
 //pSoldier->pTempObject	= (OBJECTTYPE *)MemAlloc( sizeof( OBJECTTYPE ) );

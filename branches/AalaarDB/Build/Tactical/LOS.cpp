@@ -4699,18 +4699,12 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	MAP_ELEMENT *		pMapElement;
 	STRUCTURE *			pStructure, *pTempStructure;
 
-	BOOLEAN					fRoofPresent = FALSE;
-
 	SOLDIERTYPE *		pTarget;
 	FLOAT						dTargetX;
 	FLOAT						dTargetY;
 	FLOAT						dTargetZMin;
 	FLOAT						dTargetZMax;
 	BOOLEAN					fIntended;
-
-	UINT32					uiTileInc = 0;
-
-	//INT8						iImpactReduction;
 
 	INT16						sX, sY, sZ;
 

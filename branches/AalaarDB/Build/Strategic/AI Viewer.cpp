@@ -546,7 +546,6 @@ void RenderMovingGroupsAndMercs()
 	UINT8 ubNumTroops, ubNumAdmins, ubNumElites;
 	float ratio;
 	INT32 minX, maxX, minY, maxY;
-	INT32 iSector = 0;
 	UINT8 ubIconType;
 	UINT8 ubIconColor;
 	UINT8 ubFontColor;

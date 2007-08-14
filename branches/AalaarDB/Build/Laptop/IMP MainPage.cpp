@@ -347,8 +347,6 @@ void HandleIMPMainPage( void )
 void CreateIMPMainPageButtons( void )
 {
 	PERFORMANCE_MARKER
-	UINT16 usPosX=0;
-
 	CHAR16 sString[ 128 ];
 
 	

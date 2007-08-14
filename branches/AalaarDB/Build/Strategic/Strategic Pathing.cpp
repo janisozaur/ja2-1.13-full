@@ -205,7 +205,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	UINT16	newLoc,curLoc;
 	TRAILCELLTYPE curCost,newTotCost,nextCost;
 	INT16 sOrigination;
-	INT16 iCounter=0;
 	BOOLEAN fPlotDirectPath = FALSE;
 	static BOOLEAN fPreviousPlotDirectPath = FALSE;		// don't save
 	GROUP *pGroup;
@@ -490,9 +489,7 @@ PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEn
  INT32 iPathLength;
  INT32 iCount=0;
  PathStPtr pNode=NULL;
- PathStPtr pNewNode=NULL; 
  PathStPtr pDeleteNode=NULL;
- BOOLEAN fFlag=FALSE;
  PathStPtr pHeadOfPathList = pPath;
  INT32 iOldDelta = 0;
  iCurrentSectorNum=iStartSectorNum;
@@ -832,7 +829,6 @@ PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList 
 	// will append a new section onto the end of the head of list, then return the head of the new list
 
 	PathStPtr pNode = pHeadOfPathList;
-	PathStPtr pPastNode = NULL;
 	// move to end of original section
 	
 	if( pNewSection == NULL )
