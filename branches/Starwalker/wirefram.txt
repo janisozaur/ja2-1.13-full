@@ -1,0 +1,4 @@
+Put the wirefram.sti into the JA2/Data-1.13/tilesets/0 folder, and the building wireframes will become white in-game.
+If you want the dark wireframes back, just delete the wirefeam.sti from the folder mentioned above.
+
+The white wirefram.sti has been made by Sunshine.
