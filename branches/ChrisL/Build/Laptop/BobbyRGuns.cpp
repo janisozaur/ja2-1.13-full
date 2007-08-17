@@ -22,12 +22,6 @@
 #endif
 
 
-typedef struct
-{
-	CHAR16	Name[80];
-	int		Number;
-} POCKDEFS;
-
 #define		BOBBYR_DEFAULT_MENU_COLOR					255
 
 
@@ -1968,39 +1962,31 @@ UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 // CHRISL: New display function for LBE Gear
 UINT16 DisplayLBEInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	CHAR16	sTemp[20];
-	int		lnCnt=0, count, size;
-	UINT16	lbeIndex;
-	UINT8	pIndex=0;
-	vector<POCKDEFS>	sPockets;
-	POCKDEFS			tPocket;
+	CHAR16				sTemp[20];
+	CHAR16				pName[80];
+	int					lnCnt=0, count, size;
+	UINT16				lbeIndex;
+	UINT8				pIndex=0;
+	vector<int>			pocketNum;
 
 	size = LBEPocketType.size();
-	sPockets.reserve(LBEPocketType.size());
+	pocketNum.reserve(size);
 	lbeIndex = Item[usIndex].ubClassIndex;
 	// Determine number of each pocket definition
 	for(count = 0; count<size; count++)
 	{
-		for(int cnt=0; cnt<80; cnt++)
-		{
-			if(cnt<14)
-				tPocket.Name[cnt] = LBEPocketType[count].pName[cnt];
-			else
-				tPocket.Name[cnt] = char(0);
-		}
-		tPocket.Number = 0;
-		sPockets.push_back(tPocket);
+		pocketNum.push_back(0);
 	}
 	// Populate "Number" for each type of pocket this LBE item has
 	for(count = 0; count<12; count++)
 	{
 		pIndex = LoadBearingEquipment[lbeIndex].lbePocketIndex[count];
-		sPockets[pIndex].Number++;
+		pocketNum[pIndex]++;
 	}
 	// Go through and display the pocket type and number
 	for(count = 1; count<size; count++)
 	{
-		if(sPockets[count].Number>0)
+		if(pocketNum[count]>0)
 		{
 			if(lnCnt>4)
 			{
@@ -2011,7 +1997,9 @@ UINT16 DisplayLBEInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 			}
 			else
 			{
-				swprintf(sTemp, L"%s (x%d)", sPockets[count].Name, sPockets[count].Number );
+				mbstowcs(pName,LBEPocketType[count].pName,80);
+				pName[14] = '\0';
+				swprintf(sTemp, L"%s(x%d)", pName, pocketNum[count] );
 				DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 				usPosY += usFontHeight + 2;
 				lnCnt++;
