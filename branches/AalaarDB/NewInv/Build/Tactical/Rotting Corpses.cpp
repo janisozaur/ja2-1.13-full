@@ -801,8 +801,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	OBJECTTYPE									*pObj;
 	UINT8						ubNumGoo;
 	INT16						sNewGridNo;
-	OBJECTTYPE					ItemObject;
-
  // ATE: Change to fix crash when item in hand
 	if ( gpItemPointer != NULL && gpItemPointerSoldier == pSoldier )
 	{
@@ -916,9 +914,9 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 	for ( cnt = 0; cnt < ubNumGoo; cnt++ )
 	{
-			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &ItemObject );
+			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &gTempObject );
 
-		AddItemToPool( sNewGridNo, &ItemObject, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
+		AddItemToPool( sNewGridNo, &gTempObject, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
 	}
 	}
 	else
@@ -947,8 +945,8 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 							if ( Item[pObj->usItem].damageable && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE ) // Madd: drop crappier items from enemies on higher difficulty levels - note the quick fix for throwing knives
 							{
-								pObj->objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-								pObj->objectStatus = min(max(pObj->objectStatus,1),100); // never below 1% or above 100%
+								(*pObj)[0].data.objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+								(*pObj)[0].data.objectStatus = min(max((*pObj)[0].data.objectStatus,1),100); // never below 1% or above 100%
 							}
 						}
 
@@ -1775,7 +1773,6 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,	INT8 bLevel )
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
 	ROTTING_CORPSE_DEFINITION CorpseDef;
 	UINT16 usHeadIndex = HEAD_1;
@@ -1838,8 +1835,8 @@ void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,	INT8 bLevel )
 
 		}
 
-		CreateItem( usHeadIndex, 100, &Object );
-		AddItemToPool( sGridNo, &Object, INVISIBLE, 0, 0, 0 );
+		CreateItem( usHeadIndex, 100, &gTempObject );
+		AddItemToPool( sGridNo, &gTempObject, INVISIBLE, 0, 0, 0 );
 
 		// All teams lok for this...
 		NotifySoldiersToLookforItems( );
@@ -1853,8 +1850,6 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	ROTTING_CORPSE *pCorpse;
 	INT8						bObjSlot;
-	OBJECTTYPE			Object;
-
 	// OK, get corpse
 	pCorpse = &( gRottingCorpse[ pSoldier->aiData.uiPendingActionData4 ] );
 
@@ -1867,23 +1862,23 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 		case INFANTMONSTER_DEAD:
 
 			// Can get creature blood....
-			CreateItem( JAR_CREATURE_BLOOD, 100, &Object );
+			CreateItem( JAR_CREATURE_BLOOD, 100, &gTempObject );
 			break;
 
 	case QUEEN_MONSTER_DEAD:
-			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &Object );
+			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &gTempObject );
 			break;
 
 		default:
 
-			CreateItem( JAR_HUMAN_BLOOD, 100, &Object );
+			CreateItem( JAR_HUMAN_BLOOD, 100, &gTempObject );
 			break;
 
 	}
 
 	if ( bObjSlot != NO_SLOT )
 	{
-		SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &Object );
+		SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &gTempObject );
 	}
 }
 

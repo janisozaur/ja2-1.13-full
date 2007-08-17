@@ -85,7 +85,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		if ( gGameExternalOptions.fEnableDynamicSoldierTooltips )
 		{
 			OBJECTTYPE* pObject = &(MercPtrs[gusSelectedSoldier]->inv[HANDPOS]);
-			for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+			for (attachmentList::iterator iter = pObject->objectStack[0].attachments.begin(); iter != pObject->objectStack[0].attachments.end(); ++iter) {
 				if ( Item[iter->usItem].visionrangebonus > 0 )
 				{
 					fMercIsUsingScope = TRUE;
@@ -395,7 +395,7 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 	if ( gGameExternalOptions.ubSoldierTooltipDetailLevel >= DL_Basic )
 	{
 		// display weapon attachments
-		for (OBJECTTYPE::attachmentList::iterator iter = pSoldier->inv[ubSlot].attachments.begin(); iter != pSoldier->inv[ubSlot].attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pSoldier->inv[ubSlot].objectStack[0].attachments.begin(); iter != pSoldier->inv[ubSlot].objectStack[0].attachments.end(); ++iter) {
 			if ( ubTooltipDetailLevel == DL_Basic )
 			{
 				// display only externally-visible weapon attachments
@@ -433,9 +433,6 @@ void DrawMouseTooltip()
 	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
-	UINT16 usFillColor =	Get16BPPColor(FROMRGB(250, 240, 188));
-	UINT16 usRectColor1 =	Get16BPPColor( FROMRGB( 65, 57, 15 ) );
-	UINT16 usRectColor2 =	Get16BPPColor( FROMRGB( 227, 198, 88 ) );
 	static INT32 iX, iY, iW, iH;
 	
 	extern INT16 GetWidthOfString(const STR16);

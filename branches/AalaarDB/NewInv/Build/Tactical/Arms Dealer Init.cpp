@@ -712,9 +712,6 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 	PERFORMANCE_MARKER
 	UINT16 usItemIndex;
 	UINT8 ubChance;
-	BOOLEAN fFoundEligibleItemOfSameType = FALSE;
-	BOOLEAN fItemHasBeenAdded = FALSE;
-	BOOLEAN fFailedOnce = FALSE;
 	UINT32	uiTotalChances = 0;
 	UINT32	uiNumAvailableItems = 0, uiIndex, uiRandomChoice;
 	
@@ -1348,7 +1345,7 @@ BOOLEAN ItemContainsLiquid( UINT16 usItemIndex )
 
 bool ItemIsSpecial(DEALER_SPECIAL_ITEM& item)
 {
-	if (item.object.attachments.empty() == false) {
+	if (item.object.objectStack[0].attachments.empty() == false) {
 		//items with attachments are special
 		return true;
 	}
@@ -1478,25 +1475,25 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 		case IC_GUN:
 			// add the gun (keeps the object's status and imprintID)
 			// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
-			AddGunToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->objectStatus, 1 );
+			AddGunToArmsDealerInventory( ubArmsDealer, pObject->usItem, (*pObject)[0].data.objectStatus, 1 );
 
 			// if any GunAmmoItem is specified
-			if( pObject->gun.usGunAmmoItem != NONE)
+			if( (*pObject)[0].data.gun.usGunAmmoItem != NONE)
 			{
 				// if it's regular ammo
-				if( Item[ pObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+				if( Item[ (*pObject)[0].data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 				{
 					// and there are some remaining
-					if ( pObject->gun.ubGunShotsLeft > 0 )
+					if ( (*pObject)[0].data.gun.ubGunShotsLeft > 0 )
 					{
 						// add the bullets of its remaining ammo
-						AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->gun.usGunAmmoItem, pObject->gun.ubGunShotsLeft );
+						AddAmmoToArmsDealerInventory( ubArmsDealer, (*pObject)[0].data.gun.usGunAmmoItem, (*pObject)[0].data.gun.ubGunShotsLeft );
 					}
 				}
 				else	// assume it's attached ammo (mortar shells, grenades)
 				{
 					// add the launchable item (can't be imprinted, or have attachments!)
-					int bItemCondition = pObject->gun.bGunAmmoStatus;
+					int bItemCondition = (*pObject)[0].data.gun.bGunAmmoStatus;
 
 					// if the gun it was in was jammed, get rid of the negative status now
 					if ( bItemCondition < 0 )
@@ -1504,7 +1501,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 						bItemCondition *= -1;
 					}
 
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->gun.usGunAmmoItem, bItemCondition, 1 );
+					AddItemToArmsDealerInventory( ubArmsDealer, (*pObject)[0].data.gun.usGunAmmoItem, bItemCondition, 1 );
 				}
 			}
 			break;
@@ -1513,7 +1510,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add the contents of each magazine (multiple mags may have vastly different #bullets left)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				total += pObject->shots.ubShotsLeft[ ubCnt ];
+				total += (*pObject)[ubCnt].data.ubShotsLeft;
 			}
 			AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, total );
 			break;
@@ -1522,11 +1519,11 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 			// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
 			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 			{
-				if (pObject->status.bStatus[ ubCnt ] == 100) {
+				if ((*pObject)[ubCnt].data.objectStatus == 100) {
 					total += 1;
 				}
 				else {
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, pObject->status.bStatus[ ubCnt ], 1 );
+					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, (*pObject)[ubCnt].data.objectStatus, 1 );
 				}
 			}
 			if (total) {
@@ -1537,14 +1534,14 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 
 
 	// loop through any detachable attachments and add them as seperate items
-	for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = pObject->objectStack[0].attachments.begin(); iter != pObject->objectStack[0].attachments.end(); ++iter) {
 // ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
 		// If the attachment is detachable
 		if (! (Item[ iter->usItem ].inseparable	) )
 		{
 			// add this particular attachment (they can't be imprinted, or themselves have attachments!)
 			AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
-			iter = pObject->attachments.erase(iter);
+			iter = pObject->objectStack[0].attachments.erase(iter);
 		}
 	}
 
@@ -1769,15 +1766,14 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	//if the dealer has money
 	if( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash > 0 )
 	{
-		OBJECTTYPE TempObject;
 		//Create the object
-		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &TempObject ) )
+		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &gTempObject ) )
 		{
 			return( FALSE );
 		}
 
 		//add the money item to the dealers feet
-		AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
+		AddItemToPool( pSoldier->sInitialGridNo, &gTempObject, INVISIBLE, 0, 0, 0 );
 
 		gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash = 0;
 	}
@@ -1800,7 +1796,7 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 		bItemCondition *= -1;
 	}
 
-	pObject->objectStatus = bItemCondition;
+	(*pObject)[0].data.objectStatus = bItemCondition;
 
 	// set the ImprintID
 	pObject->ubImprintID = pSpclItemInfo->ubImprintID;
@@ -1812,7 +1808,7 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 		// have to keep track of #bullets in a gun throughout dealer inventory.	Without this, players could "reload" guns
 		// they don't have ammo for by selling them to Tony & buying them right back fully loaded!	One could repeat this
 		// ad nauseum (empty the gun between visits) as a (really expensive) way to get unlimited special ammo like rockets.
-		pObject->gun.ubGunShotsLeft = 0;
+		(*pObject)[0].data.gun.ubGunShotsLeft = 0;
 	}
 }
 
@@ -1833,7 +1829,7 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	Assert( CanDealerRepairItem( ubArmsDealer, pObject->usItem ) );
 
 	//		c) Actually damaged, or a rocket rifle (being reset)
-	Assert( ( pObject->objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
+	Assert( ( (*pObject)[0].data.objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 /* ARM: Can now repair with removeable attachments still attached...
 	//		d) Already stripped of all *detachable* attachments
@@ -1854,11 +1850,11 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
-		if( pObject->gun.usGunAmmoItem != NONE)
+		if( (*pObject)[0].data.gun.usGunAmmoItem != NONE)
 		{
 			// it better be regular ammo, and empty
-			Assert( Item[ pObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO );
-			Assert( pObject->gun.ubGunShotsLeft == 0 );
+			Assert( Item[ (*pObject)[0].data.gun.usGunAmmoItem ].usItemClass == IC_AMMO );
+			Assert( (*pObject)[0].data.gun.ubGunShotsLeft == 0 );
 		}
 	}
 
@@ -1879,8 +1875,8 @@ void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UIN
 
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
-	Assert( pObject->objectStatus > 0 );
-	Assert( ( pObject->objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
+	Assert( (*pObject)[0].data.objectStatus > 0 );
+	Assert( ( (*pObject)[0].data.objectStatus < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
 	// figure out the earliest the repairman will be free to start repairing this item
 	uiTimeWhenFreeToStartIt = WhenWillRepairmanBeAllDoneRepairing( ubArmsDealer );
@@ -1894,7 +1890,7 @@ void GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UIN
 	uiDoneWhen = uiTimeWhenFreeToStartIt + uiMinutesToFix + uiMinutesShopClosedBeforeItsDone;
 
 	// Negate the status
-	pObject->objectStatus *= -1;
+	(*pObject)[0].data.objectStatus *= -1;
 
 	gArmsDealersInventory[ ubArmsDealer ].push_back(DEALER_SPECIAL_ITEM());
 	gArmsDealersInventory[ ubArmsDealer ].back().object = *pObject;
@@ -1945,14 +1941,14 @@ UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	PERFORMANCE_MARKER
 	UINT32 uiRepairTime;
 
-	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, pItemObject->objectStatus );
+	uiRepairTime = CalculateSimpleItemRepairTime( ubArmsDealer, pItemObject->usItem, (*pItemObject)[0].data.objectStatus );
 
 	// add time to repair any attachments on it
-	for (OBJECTTYPE::attachmentList::iterator iter = pItemObject->attachments.begin(); iter != pItemObject->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = pItemObject->objectStack[0].attachments.begin(); iter != pItemObject->objectStack[0].attachments.end(); ++iter) {
 		// if damaged and repairable
-		if ( ( iter->objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
+		if ( ( (*iter)[0].data.objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
 		{
-			//uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, iter->usItem, iter->objectStatus );
+			//uiRepairTime += CalculateSimpleItemRepairTime( ubArmsDealer, iter->usItem, (*iter)[0].data.objectStatus );
 			uiRepairTime += CalculateObjectItemRepairTime( ubArmsDealer, &(*iter) );
 		}
 	}
@@ -2028,12 +2024,12 @@ UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObjec
 	PERFORMANCE_MARKER
 	UINT32 uiRepairCost;
 
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, pItemObject->objectStatus );
+	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, pItemObject->usItem, (*pItemObject)[0].data.objectStatus );
 
 	// add cost of repairing any attachments on it
-	for (OBJECTTYPE::attachmentList::iterator iter = pItemObject->attachments.begin(); iter != pItemObject->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = pItemObject->objectStack[0].attachments.begin(); iter != pItemObject->objectStack[0].attachments.end(); ++iter) {
 		// if damaged and repairable
-		if ( ( iter->objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
+		if ( ( (*iter)[0].data.objectStatus < 100 ) && CanDealerRepairItem( ubArmsDealer, iter->usItem ) )
 		{
 			uiRepairCost += CalculateObjectItemRepairCost( ubArmsDealer, &(*iter));
 		}

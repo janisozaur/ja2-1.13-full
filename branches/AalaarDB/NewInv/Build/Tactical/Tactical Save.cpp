@@ -892,11 +892,11 @@ BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sG
 			pWorldItems[ cnt ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 
 			// Display warning.....
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[ cnt ].o.usItem, ItemNames[pWorldItems[ cnt ].o.usItem] );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[ cnt ].object.usItem, ItemNames[pWorldItems[ cnt ].object.usItem] );
 		}
 
 		
-		pWorldItems[ cnt ].o = pObject[uiLoop1];
+		pWorldItems[ cnt ].object = pObject[uiLoop1];
 	}
 
 	//Save the Items to the the file
@@ -1113,7 +1113,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 		}
 
 		// if the item is trapped then flag it as unreachable, period
-		if ( gWorldItems[ uiCounter ].o.bTrap > 0 ) 
+		if ( gWorldItems[ uiCounter ].object.bTrap > 0 ) 
 		{
 			fReachable = FALSE;
 		}
@@ -1121,7 +1121,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 		{
 			fReachable = FALSE;
 		}
-		else if ( gWorldItems[ uiCounter ].o.usItem == CHALICE )
+		else if ( gWorldItems[ uiCounter ].object.usItem == CHALICE )
 		{
 			fReachable = FALSE;
 		}
@@ -1486,7 +1486,7 @@ BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 			}
 
 			//add the item to the world
-			AddItemToPool( pWorldItems[cnt].sGridNo, &pWorldItems[cnt].o, pWorldItems[cnt].bVisible, pWorldItems[cnt].ubLevel, pWorldItems[cnt].usFlags, pWorldItems[cnt].bRenderZHeightAboveLevel );
+			AddItemToPool( pWorldItems[cnt].sGridNo, &pWorldItems[cnt].object, pWorldItems[cnt].bVisible, pWorldItems[cnt].ubLevel, pWorldItems[cnt].usFlags, pWorldItems[cnt].bRenderZHeightAboveLevel );
 		}
 	}
 
@@ -1825,7 +1825,6 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 {
 	PERFORMANCE_MARKER
 	UINT32 uiLoop;
-	BOOLEAN fLoop=fOverWrite;
 	UINT32 uiLastItemPos;
 	UINT32 uiNumberOfItems;
 	WORLDITEM *pWorldItems;
@@ -1913,11 +1912,11 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 			pWorldItems[ uiLastItemPos ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 
 			// Display warning.....
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[ uiLoop ].o.usItem, ItemNames[pWorldItems[ uiLoop ].o.usItem] );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[ uiLoop ].object.usItem, ItemNames[pWorldItems[ uiLoop ].object.usItem] );
 		}
 
 		
-		pWorldItems[ uiLastItemPos ].o = pWorldItem[ uiLoop ].o;
+		pWorldItems[ uiLastItemPos ].object = pWorldItem[ uiLoop ].object;
 	}
 
 	//Save the Items to the the file
@@ -1934,7 +1933,7 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 		//If the item exists
 		if( pWorldItem[uiLoop].fExists )
 		{
-			AddItemsToUnLoadedSector( sMapX, sMapY, bMapZ, pWorldItem[uiLoop].sGridNo, 1, &pWorldItem[ uiLoop ].o, pWorldItem[ uiLoop ].ubLevel, pWorldItem[ uiLoop ].usFlags, pWorldItem[ uiLoop ].bRenderZHeightAboveLevel, pWorldItem[ uiLoop ].bVisible, fLoop );
+			AddItemsToUnLoadedSector( sMapX, sMapY, bMapZ, pWorldItem[uiLoop].sGridNo, 1, &pWorldItem[ uiLoop ].object, pWorldItem[ uiLoop ].ubLevel, pWorldItem[ uiLoop ].usFlags, pWorldItem[ uiLoop ].bRenderZHeightAboveLevel, pWorldItem[ uiLoop ].bVisible, fLoop );
 		
 			fLoop = FALSE;
 		}
@@ -2288,8 +2287,6 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
-	UINT8	ubOne=1;
-	UINT8	ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
@@ -2342,8 +2339,6 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
-	UINT8	ubOne=1;
-	UINT8	ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
@@ -2399,8 +2394,6 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT8		ubCnt;
-	UINT8		ubOne=1;
-	UINT8		ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
@@ -2730,10 +2723,6 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 																					FALLBACK_HIT_DEATH,
 																					PRONE_HIT_DEATH,
 																					FLYBACK_HIT_DEATH };
-	const UINT8				ubNumOfDeaths=4;
-
-
-
 	//setup the flags for the items and the rotting corpses
 	if( uiFlags & ADD_DEAD_SOLDIER_USE_GRIDNO )
 	{
@@ -2818,10 +2807,10 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 					if ( Item[pSoldier->inv[i].usItem].damageable ) // Madd: drop crappier items on higher difficulty levels
 					{
-						pSoldier->inv[i].objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-						pSoldier->inv[i].objectStatus = max(pSoldier->inv[i].objectStatus,1); // never below 1%
+						pSoldier->inv[i][0].data.objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+						pSoldier->inv[i][0].data.objectStatus = max(pSoldier->inv[i][0].data.objectStatus,1); // never below 1%
 					}
-					pWorldItems[ bCount ].o = pSoldier->inv[i];
+					pWorldItems[ bCount ].object = pSoldier->inv[i];
 					bCount++;
 				}
 			}
@@ -3281,7 +3270,7 @@ void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT
 		// if visible to player, then state fact
 		if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter ] ) )
 		{
-			uiItemCount += pTotalSectorList[ iCounter ].o.ubNumberOfObjects;
+			uiItemCount += pTotalSectorList[ iCounter ].object.ubNumberOfObjects;
 		}
 	}
 	
@@ -3322,7 +3311,7 @@ UINT32 UpdateLoadedSectorsItemInventory( INT16 sMapX, INT16 sMapY, INT8 bMapZ, U
 		if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ uiCounter ] ) )
 		{
 			//increment
-			uiItemCounter += gWorldItems[ uiCounter ].o.ubNumberOfObjects;
+			uiItemCounter += gWorldItems[ uiCounter ].object.ubNumberOfObjects;
 		}
 	}
 

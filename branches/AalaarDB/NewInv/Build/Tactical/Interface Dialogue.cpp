@@ -394,7 +394,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.fHandled		=		FALSE;
 	gTalkPanel.fOnName		=		FALSE;
 
-	// Load Video Object!
+	// Load Video gTempObject!
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	sprintf( VObjectDesc.ImageFile, "INTERFACE\\talkbox1.sti" );
 	// Load
@@ -1215,7 +1215,6 @@ void HandleTalkingMenuBackspace( void )
 {
 	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
-	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
 	{
@@ -2399,16 +2398,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
-					OBJECTTYPE	Object;
 					INT16				sGridNo = 14952;
 					INT32				iWorldItem;
 
 					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if (pSoldier)
 					{
-						CreateItem( MONEY, 1, &Object );
-						Object.money.uiMoneyAmount = 10000;
-						AddItemToPoolAndGetIndex( sGridNo, &Object, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
+						CreateItem( MONEY, 1, &gTempObject );
+						gTempObject.money.uiMoneyAmount = 10000;
+						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move
@@ -3146,7 +3144,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						if (bMoneySlot != NO_SLOT && bEmptySlot != NO_SLOT)
 						{
 							CreateMoney( gMercProfiles[ ubTargetNPC ].iBalance * 2, &(pSoldier->inv[ bEmptySlot ] ) );
-							pSoldier->inv[ bMoneySlot ].money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
+							pSoldier->inv[ bMoneySlot ][0].data.money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!
@@ -3633,7 +3631,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_START_DOCTORING:
 				{
 					
-					// reset fact he is expecting money fromt he player
+					// reset fact he is expecting money fromt the player
 					SetFactFalse( FACT_VINCE_EXPECTING_MONEY );
 
 					// check fact
@@ -4765,10 +4763,8 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 				pSoldier = FindSoldierByProfileID( DARYL, FALSE );
 				if ( pSoldier )
 				{
-					OBJECTTYPE Key;
-
-					CreateKeyObject( &Key, 1, 38 );
-					AutoPlaceObject( pSoldier, &Key, FALSE );
+					CreateKeyObject( &gTempObject, 1, 38 );
+					AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 				}
 				TriggerNPCRecord( DARYL, 11 );
 			}

@@ -203,7 +203,7 @@ BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 	{
 		if (Item[pSoldier->inv[ubLoop].usItem].usItemClass == IC_KEY)
 		{
-			if ( (pSoldier->inv[ubLoop].key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
+			if ( (pSoldier->inv[ubLoop][0].data.key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
 			{
 				// there's the key we want!
 				return( TRUE );
@@ -1626,7 +1626,7 @@ void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUse
 
 	// OK, we either have an opened graphic, in which case we want to switch to the closed, or a closed
 	// in which case we want to switch to opened...
-	// adjust o' graphic
+	// adjust object' graphic
 
 
 	// OK, we now need to test these things against the true structure data
@@ -2187,15 +2187,13 @@ void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 
 	}
 	UINT8		ubLoop;
 	UINT8		ubItem;
-	OBJECTTYPE	Object;
-
 	for (ubLoop = 0; ubLoop < NUM_KEYS; ubLoop++)
 	{
 			ubItem = pSoldier->pKeyRing[ ubLoop ].ubKeyID;
 
 		if ( pSoldier->pKeyRing[ubLoop].ubNumber > 0 )
 		{
-				CreateKeyObject( &Object, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
+				CreateKeyObject( &gTempObject, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
 
 			// Zero out entry
 			pSoldier->pKeyRing[ ubLoop ].ubNumber = 0;
@@ -2203,19 +2201,19 @@ void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 
 
 			if ( fAddToDropList )
 			{
-				AddItemToLeaveIndex( &Object, iDropListSlot );
+				AddItemToLeaveIndex( &gTempObject, iDropListSlot );
 			}
 			else
 			{
 				if( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || fUseUnLoaded )
 				{
 					// Set flag for item...
-					AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &Object , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
+					AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &gTempObject , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
 				}
 				else
 				{
 					// Add to pool
-					AddItemToPool( sGridNo, &Object, bVisible, bLevel, 0, 0 );
+					AddItemToPool( sGridNo, &gTempObject, bVisible, bLevel, 0, 0 );
 				}
 			}
 		}

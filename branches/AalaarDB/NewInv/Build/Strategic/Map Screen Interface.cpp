@@ -1643,11 +1643,11 @@ void HandleEquipmentLeftInOmerta( UINT32 uiSlotIndex )
 		if( gWorldSectorX	!= OMERTA_LEAVE_EQUIP_SECTOR_X || gWorldSectorY != OMERTA_LEAVE_EQUIP_SECTOR_Y || gbWorldSectorZ != OMERTA_LEAVE_EQUIP_SECTOR_Z )
 		{
 			// given this slot value, add to sector item list
-			AddItemsToUnLoadedSector( OMERTA_LEAVE_EQUIP_SECTOR_X, OMERTA_LEAVE_EQUIP_SECTOR_Y, OMERTA_LEAVE_EQUIP_SECTOR_Z, OMERTA_LEAVE_EQUIP_GRIDNO, 1, &( pItem->o ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
+			AddItemsToUnLoadedSector( OMERTA_LEAVE_EQUIP_SECTOR_X, OMERTA_LEAVE_EQUIP_SECTOR_Y, OMERTA_LEAVE_EQUIP_SECTOR_Z, OMERTA_LEAVE_EQUIP_GRIDNO, 1, &( pItem->object ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
 		}
 		else
 		{
-			AddItemToPool( OMERTA_LEAVE_EQUIP_GRIDNO, &( pItem->o ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
+			AddItemToPool( OMERTA_LEAVE_EQUIP_GRIDNO, &( pItem->object ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
 		}
 		pItem = pItem->pNext;
 	}
@@ -1687,11 +1687,11 @@ void HandleEquipmentLeftInDrassen( UINT32 uiSlotIndex )
 		if( gWorldSectorX	!= BOBBYR_SHIPPING_DEST_SECTOR_X || gWorldSectorY != BOBBYR_SHIPPING_DEST_SECTOR_Y || gbWorldSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z )
 		{
 			// given this slot value, add to sector item list
-			AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 10433, 1, &( pItem->o ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
+			AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 10433, 1, &( pItem->object ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
 		}
 		else
 		{
-			AddItemToPool( 10433, &( pItem->o ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
+			AddItemToPool( 10433, &( pItem->object ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
 		}
 		pItem = pItem->pNext;
 	}
@@ -1730,7 +1730,7 @@ void ShutDownLeaveList( void )
 }
 
 
-BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
+BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *object, UINT32 uiSlotIndex )
 {
 	PERFORMANCE_MARKER
 	MERC_LEAVE_ITEM *pItem, *pCurrentItem;
@@ -1738,7 +1738,7 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
 
 
-	if( o == NULL )
+	if( object == NULL )
 	{
 		return( FALSE );
 	}
@@ -1747,7 +1747,7 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	pItem = new MERC_LEAVE_ITEM;
 
 	// copy object
-	pItem->o = *o;
+	pItem->object = *object;
 	
 	// nobody afterwards
 	pItem->pNext = NULL;
@@ -2842,7 +2842,6 @@ void DisplayUserDefineHelpTextRegions( FASTHELPREGION *pRegion )
 	PERFORMANCE_MARKER
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
-	INT32 iNumberOfLines = 1;
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
@@ -2914,7 +2913,6 @@ void DisplaySoldierToolTip( FASTHELPREGION *pRegion )
 	PERFORMANCE_MARKER
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
-	INT32 iNumberOfLines = 1;
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
@@ -3294,7 +3292,7 @@ void DeselectSquadForMovement( INT32 iSquadNumber )
 BOOLEAN AllSoldiersInSquadSelected( INT32 iSquadNumber )
 {
 	PERFORMANCE_MARKER
-	INT32 iCounter = 0, iCount = 0;
+	INT32 iCounter = 0;
 
 	// is everyone on this squad moving?
 	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
@@ -4970,10 +4968,6 @@ void DisplaySoldierUpdateBox( )
 	HVOBJECT hBackGroundHandle;
 	INT32 iCounter = 0;
 	CHAR16 sString[ 32 ];
-	INT16 sX = 0, sY = 0;
-	INT32 iHeightOfString = 0;
-	INT32 iCounterB = 0;
-	INT32 iOrigNumberHigh = 0, iOrigY = 0;
 	INT32 iUpperLimit = 0;	
 	
 	
@@ -5975,7 +5969,6 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN fCanMove = TRUE;
 	INT16 sSector = 0;
 	BOOLEAN fProblemExists = FALSE;
 

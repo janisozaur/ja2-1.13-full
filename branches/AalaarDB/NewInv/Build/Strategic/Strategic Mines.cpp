@@ -413,7 +413,6 @@ UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
 	PERFORMANCE_MARKER
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
-	UINT32 uiOreRunningOutPoint = 0;
 	INT16 sSectorX, sSectorY;
 
 

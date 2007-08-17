@@ -774,7 +774,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if ( ( Item[ pSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier->inv[ bPocket ].gun.bGunAmmoStatus < 0 ) )
+			if ( ( Item[ pSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
 			{
 				return( TRUE );
 			}
@@ -792,16 +792,16 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( pObj->usItem, pObj->status.bStatus[ubObjectInPocketCounter] ) )
+			if ( IsItemRepairable( pObj->usItem, (*pObj)[ubObjectInPocketCounter].data.objectStatus ) )
 			{
 				return( TRUE );
 			}				
 		}
 
 		// have to check for attachments...
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( iter->usItem, iter->objectStatus ) )
+			if ( IsItemRepairable( iter->usItem, (*iter)[0].data.objectStatus ) )
 			{
 				return( TRUE );
 			}		
@@ -824,7 +824,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 				for ( bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 				{
 					// the object a weapon? and jammed?
-					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].gun.bGunAmmoStatus < 0 ) )
+					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
 					{
 						return( TRUE );
 					}
@@ -924,8 +924,6 @@ BOOLEAN CanCharacterRepairButDoesntHaveARepairkit( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterRepair( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT8 bPocket = 0;
-	BOOLEAN fToolKitFound = FALSE;
 
 	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
 	{
@@ -1583,8 +1581,6 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT32 cnt = 0;
-	SOLDIERTYPE *pTeamSoldier = NULL;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -1607,7 +1603,6 @@ BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterBeTrainedByOther( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT32 iCounter = 0;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -2075,7 +2070,6 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 	// run thought list of characters find number with this assignment
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
-	INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 	
 	// set psoldier as first in merc ptrs
@@ -2309,7 +2303,6 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
-	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -2566,7 +2559,6 @@ BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient )
 BOOLEAN CanSoldierBeHealedByDoctor( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck )
 {
 	PERFORMANCE_MARKER
-	INT16 sDistance = 0;
 
 	// must be an active guy
 	if (pSoldier->bActive == FALSE)
@@ -2914,7 +2906,6 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
-	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -3026,16 +3017,16 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 		pObj = &( pSoldier->inv[ bSlotToCheck ] );
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
-			if ( IsItemRepairable( pObj->usItem, pObj->status.bStatus[bLoop2] ) )
+			if ( IsItemRepairable( pObj->usItem, (*pObj)[bLoop2].data.objectStatus ) )
 			{
 				return( &(pSoldier->inv[ bSlotToCheck ]) );
 			}
 		}	
 
 		// have to check for attachments...
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( iter->usItem, iter->objectStatus ) ) {
+			if ( IsItemRepairable( iter->usItem, (*iter)[0].data.objectStatus ) ) {
 				return( &(*iter) );
 			}
 		}
@@ -3117,16 +3108,16 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
 	{
 		// if it's repairable and NEEDS repairing
-		if ( IsItemRepairable( pObj->usItem, pObj->status.bStatus[ubLoop] ) )
+		if ( IsItemRepairable( pObj->usItem, (*pObj)[ubLoop].data.objectStatus ) )
 		{
 			// repairable, try to repair it
 
 			//void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
-			DoActualRepair( pSoldier, pObj->usItem, &(pObj->status.bStatus[ ubLoop ]), pubRepairPtsLeft );
+			DoActualRepair( pSoldier, pObj->usItem, &((*pObj)[ubLoop].data.objectStatus), pubRepairPtsLeft );
 
 			fSomethingWasRepaired = true;
 
-			if ( pObj->status.bStatus[ ubLoop ] == 100 )
+			if ( (*pObj)[ubLoop].data.objectStatus == 100 )
 			{
 				// report it as fixed
 				if ( pSoldier == pOwner )
@@ -3149,7 +3140,7 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 	}
 
 	// now check for attachments
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
 		if ( *pubRepairPtsLeft != 0 )
 		{
 			if (RepairObject(pSoldier, pOwner, &(*iter), pubRepairPtsLeft)) {
@@ -3167,8 +3158,6 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	UINT16 usMax=0;
 	UINT8 ubRepairPtsLeft =0;
-	UINT8 ubItemsInPocket = 0;
-	UINT8 ubObjectInPocketCounter = 0;
 	UINT8 ubInitialRepairPts = 0;
 	UINT8 ubRepairPtsUsed = 0;
 	INT8 bPocket =0;
@@ -3978,7 +3967,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	INT8	bSkill = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
-	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
+	UINT16	usMaxTrainerPts, usBestMaxTrainerPts = 0;
 	UINT32	uiCnt;
 	SOLDIERTYPE * pTrainer;
 
@@ -4158,8 +4147,6 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	UINT8 ubTownId = 0;
-	INT16 sCnt = 0;
-	INT8 bChance = 0;
 	BOOLEAN fSamSiteInSector = FALSE;
 
 
@@ -4421,8 +4408,6 @@ void HandleNaturalHealing( void )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
-	INT32 iCounter=0;
-	INT8 bNumberOfPeople = 0;
 	
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -5554,7 +5539,6 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	INT8 bPocket = 0;
-	BOOLEAN fFoundOne = FALSE;
 
 
 	fTeamPanelDirty = TRUE;
@@ -8187,7 +8171,7 @@ void HandleShadingOfLinesForSquadMenu( void )
 	UINT32 uiCounter;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiMaxSquad;
-	INT8 bResult;
+	INT8 bResult = 0;
 
 
 	if ( ( fShowSquadMenu == FALSE ) || ( ghSquadBox == -1 ) )
@@ -10123,8 +10107,6 @@ void HandleShadingOfLinesForTrainingMenu( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iCounter = 0;
-
 
 	// check if valid
 	if( ( fShowTrainingMenu == FALSE ) || ( ghTrainingBox == - 1 ) )
@@ -10254,7 +10236,6 @@ void HandleShadingOfLinesForAttributeMenus( void )
 void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT16 sSectorX	= 0, sSectorY = 0;
 	INT32 iNumberOnTeam = 0, iCounter = 0;
 	SOLDIERTYPE *pCurSoldier = NULL;
 
@@ -10285,7 +10266,6 @@ void ReportTrainersTraineesWithoutPartners( void )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier = NULL;
 	INT32 iCounter = 0, iNumberOnTeam = 0;
-	BOOLEAN fFound =FALSE;
 
 
 	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
@@ -11199,7 +11179,6 @@ BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound( SOLDIERTYPE *pTargetS
 	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
-	BOOLEAN fFound = FALSE;
 	INT16 sTrainingPts = 0;
 	BOOLEAN fAtGunRange = FALSE;
 	UINT16 usMaxPts;
@@ -11690,13 +11669,13 @@ BOOLEAN UnjamGunsOnSoldier( SOLDIERTYPE *pOwnerSoldier, SOLDIERTYPE *pRepairSold
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		// the object a weapon? and jammed?
-		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ].gun.bGunAmmoStatus < 0 ) )
+		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
 		{
 			if ( *pubRepairPtsLeft >= gGameExternalOptions.ubRepairCostPerJam )
 			{
 				*pubRepairPtsLeft -= gGameExternalOptions.ubRepairCostPerJam;
 
-				pOwnerSoldier->inv [ bPocket ].gun.bGunAmmoStatus *= -1;
+				pOwnerSoldier->inv [ bPocket ][0].data.gun.bGunAmmoStatus *= -1;
 
 				// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
 				StatChange( pRepairSoldier, MECHANAMT, 5, FALSE );

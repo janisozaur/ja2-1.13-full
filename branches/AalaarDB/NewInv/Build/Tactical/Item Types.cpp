@@ -2,7 +2,6 @@
 #include "Item Types.h"
 #include "Debug.h"
 #include "Items.h"
-
 OBJECTTYPE gTempObject;
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
@@ -69,12 +68,12 @@ void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 
 OBJECTTYPE* OBJECTTYPE::GetAttachmentAtIndex(UINT8 index)
 {
-	OBJECTTYPE::attachmentList::iterator iter = attachments.begin();
-	for (int x = 0; x <= index && iter != attachments.end(); ++x) {
+	attachmentList::iterator iter = objectStack[0].attachments.begin();
+	for (int x = 0; x <= index && iter != objectStack[0].attachments.end(); ++x) {
 		++iter;
 	}
 
-	if (iter != attachments.end()) {
+	if (iter != objectStack[0].attachments.end()) {
 		return &(*iter);
 	}
 	return 0;
@@ -105,13 +104,13 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
 		if ( memcmp(&(this->pUnion), &(compare.pUnion), SIZEOF_OBJECTTYPE_UNION) == 0) {
 			if (attachments.size() == compare.attachments.size()) {
-				attachmentList::iterator iter = attachments.begin();
-				attachmentList::iterator compareIter = compare.attachments.begin();
-				while (iter != attachments.end() && *iter == *compareIter) {
+				attachmentList::iterator iter = objectStack[0].attachments.begin();
+				attachmentList::iterator compareIter = compare.objectStack[0].attachments.begin();
+				while (iter != objectStack[0].attachments.end() && *iter == *compareIter) {
 					++iter;
 					++compareIter;
 				}
-				if (iter == attachments.end()) {
+				if (iter == objectStack[0].attachments.end()) {
 					return true;
 				}
 			}
@@ -134,7 +133,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
 		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->attachments = src.attachments;
+		this->objectStack[0].attachments = src.attachments;
 	}
 }
 
@@ -152,7 +151,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
 		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->attachments = src.attachments;
+		this->objectStack[0].attachments = src.attachments;
 	}
 	return *this;
 }
@@ -178,13 +177,12 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
 		memcpy(&(this->pUnion), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
 
-		OBJECTTYPE temp;
 		//it's unlikely max will get less over the versions, but still, check the min
 		for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
 		{
 			if (src.usAttachItem[x] != NOTHING) {
-				CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &temp);
-				attachments.push_back(temp);
+				CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &gTempObject);
+				attachments.push_back(gTempObject);
 			}
 		}
 

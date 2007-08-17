@@ -189,7 +189,6 @@ void RenderInsuranceInfo()
 {
 	PERFORMANCE_MARKER
 	CHAR16		sText[800];
-	UINT16 usNewLineOffset = 0;
 	UINT16		usPosX;
 
 	DisableArrowButtonsIfOnLastOrFirstPage();

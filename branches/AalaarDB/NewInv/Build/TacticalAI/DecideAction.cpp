@@ -2316,7 +2316,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 			ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[BestShot.bWeaponIn]), pSoldier->bDoAutofire );
 		}
 		while(	pSoldier->bActionPoints >= BestShot.ubAPCost + ubBurstAPs &&
-			pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
+			pSoldier->inv[ pSoldier->ubAttackingHand ][0].data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 			GetAutoPenalty(&pSoldier->inv[ pSoldier->ubAttackingHand ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80 );
 
 
@@ -3892,7 +3892,7 @@ INT8 BlackAlert_EvaluateFiringAGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags
 		AssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
 
 		// now it better be a gun, or the guy can't shoot (but has other attack(s))
-		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].gun.bGunStatus >= USABLE)
+		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS][0].data.gun.bGunStatus >= USABLE)
 		{
 			// get the minimum cost to attack the same target with this gun
 			UINT8 ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,ADDTURNCOST);
@@ -4329,7 +4329,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 	if (IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-		pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
+		pSoldier->inv[flags.BestAttack.bWeaponIn][0].data.gun.ubGunShotsLeft > 1 &&
 		(pSoldier->bTeam != gbPlayerNum || pSoldier->aiData.bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO");
@@ -4357,7 +4357,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 				case ATTACKSLAYONLY:iChance += 30; break;
 				}
 
-				if ( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
+				if ( pSoldier->inv[flags.BestAttack.bWeaponIn][0].data.gun.ubGunShotsLeft > 50 )
 					iChance += 20;
 
 				// increase chance based on proximity and difficulty of enemy
@@ -4392,7 +4392,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 	if (IsGunAutofireCapable( pSoldier, flags.BestAttack.bWeaponIn ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-		(( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
+		(( pSoldier->inv[flags.BestAttack.bWeaponIn][0].data.gun.ubGunShotsLeft > 1 &&
 		flags.BestAttack.ubAimTime != BURSTING ) || Weapon[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].NoSemiAuto) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO AUTOFIRE, RANDOM CHANCE OF DOING SO");
@@ -4403,7 +4403,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 			ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[flags.BestAttack.bWeaponIn]), pSoldier->bDoAutofire );
 		}
 		while(	pSoldier->bActionPoints >= flags.BestAttack.ubAPCost + ubBurstAPs &&
-			pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
+			pSoldier->inv[ pSoldier->ubAttackingHand ][0].data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 			GetAutoPenalty(&pSoldier->inv[ flags.BestAttack.bWeaponIn ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80);
 
 
@@ -4435,7 +4435,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 					}
 
 
-					if ( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
+					if ( pSoldier->inv[flags.BestAttack.bWeaponIn][0].data.gun.ubGunShotsLeft > 50 )
 						iChance += 30;
 
 					if ( flags.bInGas )
@@ -4797,7 +4797,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 	BlackAlertFlags flags;
 
-	INT32	iCoverPercentBetter, iChance;
+	INT32	iCoverPercentBetter = 0, iChance;
 	INT16	sClosestOpponent,sBestCover = NOWHERE;
 	INT8	bActionReturned;
 	flags.fTryPunching = FALSE;

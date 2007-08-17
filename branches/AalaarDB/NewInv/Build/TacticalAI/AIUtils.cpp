@@ -108,7 +108,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS].gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
+		else if (pSoldier->inv[HANDPOS][0].data.gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS][0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
 		{
 			return(NOSHOOT_NOAMMO);
 		}
@@ -885,14 +885,12 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT16		sGridNo=-1;
-	INT8		bLevel, bClosestLevel;
+	INT8		bLevel, bClosestLevel = -1;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
 	UINT32	uiLoop;
-	UINT16	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
 	INT32		iShortestPath = 1000;
-	INT32		iShortestPathConscious = 1000,iShortestPathUnconscious = 1000;
 	UINT8		*pubNoiseVolume;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;

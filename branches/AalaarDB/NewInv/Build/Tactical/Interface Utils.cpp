@@ -374,7 +374,7 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 	}
 	else
 	{
-		sValue = pObject->status.bStatus[ ubStatus ];
+		sValue = (*pObject)[ ubStatus ].data.objectStatus;
 	}
 
 	// Adjust for ammo, other thingys..
@@ -446,7 +446,6 @@ void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLE
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fDoFace = FALSE;
-	INT32		iFaceIndex = -1;
 	UINT8 ubVehicleType = 0;
 
 

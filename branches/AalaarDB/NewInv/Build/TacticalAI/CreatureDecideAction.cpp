@@ -604,7 +604,6 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
- INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
  INT16 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
@@ -902,7 +901,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent,sBestCover = NOWHERE;
+ INT16		sClosestOpponent;
  INT16		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
@@ -910,7 +909,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
  INT8			bCanAttack;
  INT8			bSpitIn, bWeaponIn;
  UINT32		uiChance;
- ATTACKTYPE BestShot, BestStab, BestAttack, CurrStab;
+ ATTACKTYPE BestShot = {}, BestStab = {}, BestAttack = {}, CurrStab = {};
  BOOLEAN	fRunAway = FALSE;
  BOOLEAN	fChangeLevel;
 
@@ -1114,9 +1113,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 
 	if (bWeaponIn != NO_SLOT)
 	{
-		if (Item[pSoldier->inv[bWeaponIn].usItem].usItemClass == IC_GUN && pSoldier->inv[bWeaponIn].gun.bGunStatus >= USABLE)
+		if (Item[pSoldier->inv[bWeaponIn].usItem].usItemClass == IC_GUN && pSoldier->inv[bWeaponIn][0].data.gun.bGunStatus >= USABLE)
 		{
-			if (pSoldier->inv[bWeaponIn].gun.ubGunShotsLeft > 0)
+			if (pSoldier->inv[bWeaponIn][0].data.gun.ubGunShotsLeft > 0)
 			{
 				bSpitIn = bWeaponIn;
 				// if it's in another pocket, swap it into his hand temporarily

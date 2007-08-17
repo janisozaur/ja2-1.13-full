@@ -376,9 +376,9 @@
 */
 #if defined(LUA_USE_APICHECK)
 #include <assert.h>
-#define luai_apicheck(L,o)	{ (void)L; assert(o); }
+#define luai_apicheck(L,object)	{ (void)L; assert(object); }
 #else
-#define luai_apicheck(L,o)	{ (void)L; }
+#define luai_apicheck(L,object)	{ (void)L; }
 #endif
 
 

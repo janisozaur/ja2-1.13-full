@@ -1404,7 +1404,7 @@ INT8 DecideHearing( SOLDIERTYPE * pSoldier )
 	if ( bSlot != -1 )
 	{
 		// at 81-100% adds +5, at 61-80% adds +4, at 41-60% adds +3, etc.
-		bHearing += GetHearingRangeBonus(pSoldier);	// pSoldier->inv[bSlot].objectStatus / 20 + 1;
+		bHearing += GetHearingRangeBonus(pSoldier);	// pSoldier->inv[bSlot][0].data.objectStatus / 20 + 1;
 	}
 
 	// adjust for dark conditions	
@@ -3496,7 +3496,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 					{
 						if ( MercPtrs[0]->stats.bLife < 10 )
 						{
-							int i = 0;
+							//int breakpoint = 0;
 						}
 					}
 			}
@@ -4420,11 +4420,11 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 		return;
 	//Build attachment string
 	fAttachments = FALSE;
-	if( pObject->attachments.empty() == false )
+	if( pObject->objectStack[0].attachments.empty() == false )
 	{
 		fAttachments = TRUE;
 		swprintf( szAttach, L"(" );
-		for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pObject->objectStack[0].attachments.begin(); iter != pObject->objectStack[0].attachments.end(); ++iter) {
 			AppendAttachmentCode( iter->usItem, szAttach );
 		}
 		wcscat( szAttach, L" )" );
@@ -4437,36 +4437,36 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 			CHAR16 str[50];
 			CHAR16 temp[5];
 			UINT8 i;
-			swprintf( str, L"Clips:	%d	(%d", pObject->ubNumberOfObjects, pObject->objectStatus );
+			swprintf( str, L"Clips:	%d	(%d", pObject->ubNumberOfObjects, (*pObject)[0].data.objectStatus );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
 			{
-				swprintf( temp, L", %d", pObject->objectStatus );
+				swprintf( temp, L", %d", (*pObject)[0].data.objectStatus );
 				wcscat( str, temp );
 			}
 			wcscat( str, L")" );
 			gprintf( 320, yp, str ); 
 		}
 		else
-			gprintf( 320, yp, L"%d rounds", pObject->objectStatus );
+			gprintf( 320, yp, L"%d rounds", (*pObject)[0].data.objectStatus );
 		return;
 	}
 	if( pObject->ubNumberOfObjects > 1 && fAttachments )
 	{ //everything
 		gprintf( 320, yp, L"%d%%	Qty:	%d	%s", 
-			pObject->objectStatus, pObject->ubNumberOfObjects, szAttach );
+			(*pObject)[0].data.objectStatus, pObject->ubNumberOfObjects, szAttach );
 	}
 	else if( pObject->ubNumberOfObjects > 1 )
 	{ //condition and quantity
 		gprintf( 320, yp, L"%d%%	Qty:	%d	", 
-			pObject->objectStatus, pObject->ubNumberOfObjects );
+			(*pObject)[0].data.objectStatus, pObject->ubNumberOfObjects );
 	}
 	else if( fAttachments )
 	{ //condition and attachments
-		gprintf( 320, yp, L"%d%%	%s", pObject->objectStatus, szAttach );
+		gprintf( 320, yp, L"%d%%	%s", (*pObject)[0].data.objectStatus, szAttach );
 	}
 	else
 	{ //condition
-		gprintf( 320, yp, L"%d%%", pObject->objectStatus );
+		gprintf( 320, yp, L"%d%%", (*pObject)[0].data.objectStatus );
 	}
 }
 
@@ -5008,7 +5008,6 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
 {
 	PERFORMANCE_MARKER
-	INT8 bSendNoise = FALSE;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -5118,7 +5117,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 	INT8 bCheckTerrain = FALSE;
 	UINT8 ubSourceTerrType, ubSource;
 	INT8 bTellPlayer = FALSE, bHeard, bSeen;
-	UINT8 ubHeardLoudestBy, ubNoiseDir, ubLoudestNoiseDir;
+	UINT8 ubHeardLoudestBy = NOBODY, ubNoiseDir = 0xff, ubLoudestNoiseDir = 0xff;
 
 
 #ifdef RECORDOPPLIST
@@ -6755,7 +6754,6 @@ BOOLEAN ArmyKnowsOfPlayersPresence( void )
 BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN					fSeesCreature = FALSE;
 	UINT8						ubID;
 
 	if (pSoldier->aiData.bOppCnt > 0)

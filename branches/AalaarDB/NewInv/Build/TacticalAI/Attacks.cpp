@@ -102,12 +102,11 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("LoadWeaponIfNeeded: remove payload from its pocket, and add it as the hand weapon's first attachment"));
 	// remove payload from its pocket, and add it as the hand weapon's first attachment
 
-	OBJECTTYPE Temp;
-	CreateItem(pSoldier->inv[bPayloadPocket].usItem,pSoldier->inv[bPayloadPocket].objectStatus,&Temp);
-	AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&Temp,FALSE);
+	CreateItem(pSoldier->inv[bPayloadPocket].usItem,pSoldier->inv[bPayloadPocket][0].data.objectStatus,&gTempObject);
+	AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&gTempObject,FALSE);
 
 	//pSoldier->inv[HANDPOS].usAttachItem[0] = pSoldier->inv[bPayloadPocket].usItem;
-	//pSoldier->inv[HANDPOS].bAttachStatus[0] = pSoldier->inv[bPayloadPocket].objectStatus;
+	//pSoldier->inv[HANDPOS].bAttachStatus[0] = pSoldier->inv[bPayloadPocket][0].data.objectStatus;
 
 	if ( TANK( pSoldier ) )
 	{
@@ -1186,7 +1185,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 	UINT16 usTrueMovementMode;
@@ -1402,7 +1401,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 
@@ -1597,7 +1596,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	}
 	else
 	{
-		ubAmmoType = pSoldier->inv[pSoldier->ubAttackingHand].gun.ubGunAmmoType;
+		ubAmmoType = pSoldier->inv[pSoldier->ubAttackingHand][0].data.gun.ubGunAmmoType;
 	}
 
 	// calculate distance to target, obtain his gun's maximum range rating
@@ -1619,7 +1618,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	if (pOpponent->inv[HELMETPOS].usItem)
 	{
 		iHeadProt += (INT32) Armour[Item[pOpponent->inv[HELMETPOS].usItem].ubClassIndex].ubProtection *
-			(INT32) pOpponent->inv[HELMETPOS].objectStatus / 100;
+			(INT32) pOpponent->inv[HELMETPOS][0].data.objectStatus / 100;
 	}
 
 	// if opponent is wearing a protective vest
@@ -1629,16 +1628,16 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 		if (pOpponent->inv[VESTPOS].usItem)
 		{
 			iTorsoProt += (INT32) Armour[Item[pOpponent->inv[VESTPOS].usItem].ubClassIndex].ubProtection *
-				(INT32) pOpponent->inv[VESTPOS].objectStatus / 100;
+				(INT32) pOpponent->inv[VESTPOS][0].data.objectStatus / 100;
 		}
 	}
 
 	// check for ceramic plates; these do affect monster spit
-	for (OBJECTTYPE::attachmentList::iterator iter = pOpponent->inv[VESTPOS].attachments.begin(); iter != pOpponent->inv[VESTPOS].attachments.end(); ++iter) {
-		if (Item[iter->usItem].usItemClass == IC_ARMOUR && iter->objectStatus > 0 )
+	for (attachmentList::iterator iter = pOpponent->inv[VESTPOS].objectStack[0].attachments.begin(); iter != pOpponent->inv[VESTPOS].objectStack[0].attachments.end(); ++iter) {
+		if (Item[iter->usItem].usItemClass == IC_ARMOUR && (*iter)[0].data.objectStatus > 0 )
 		{
 			iTorsoProt += (INT32) Armour[Item[iter->usItem].ubClassIndex].ubProtection *
-				(INT32) iter->objectStatus / 100;
+				(INT32) (*iter)[0].data.objectStatus / 100;
 		}
 	}
 
@@ -1648,7 +1647,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 		if (pOpponent->inv[LEGPOS].usItem)
 		{
 			iLegProt += (INT32) Armour[Item[pOpponent->inv[LEGPOS].usItem].ubClassIndex].ubProtection *
-				(INT32) pOpponent->inv[LEGPOS].objectStatus / 100;
+				(INT32) pOpponent->inv[LEGPOS][0].data.objectStatus / 100;
 		}
 	}
 
@@ -1772,7 +1771,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 		if (bSlot == HEAD1POS || bSlot == HEAD2POS)
 		{
 			// take condition of the gas mask into account - it could be leaking
-			iBreathDamage = (iBreathDamage * (100 - pOpponent->inv[bSlot].objectStatus)) / 100;
+			iBreathDamage = (iBreathDamage * (100 - pOpponent->inv[bSlot][0].data.objectStatus)) / 100;
 			//NumMessage("damage after GAS MASK: ",iBreathDamage);
 		}
 
@@ -1811,7 +1810,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 
 	// approximate chance of the grenade going off (Ian's formulas are too funky)
 	// then use that to reduce the expected damage because thing may not blow!
-	iDamage = (iDamage * pSoldier->inv[ubItemPos].objectStatus) / 100;
+	iDamage = (iDamage * pSoldier->inv[ubItemPos][0].data.objectStatus) / 100;
 
 	// if the target gridno is in water, grenade may not blow (guess 50% of time)
 	/*
@@ -1905,9 +1904,9 @@ INT8 TryToReload( SOLDIERTYPE * pSoldier )
 	//<SB> manual recharge
 	pObj = &(pSoldier->inv[HANDPOS]);
 
-	if (pObj->gun.ubGunShotsLeft && !(pObj->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0].data.gun.ubGunShotsLeft && !((*pObj)[0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
-		pObj->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+		(*pObj)[0].data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 
 		DeductPoints(pSoldier, Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually, 0);
 
@@ -1918,9 +1917,9 @@ INT8 TryToReload( SOLDIERTYPE * pSoldier )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
-			if (pObj2->gun.ubGunShotsLeft && !(pObj2->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+			if ((*pObj2)[0].data.gun.ubGunShotsLeft && !((*pObj2)[0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 			{
-				pObj2->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+				(*pObj2)[0].data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 				PlayJA2Sample( Weapon[ Item[pObj2->usItem].ubClassIndex ].ManualReloadSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 			}
 		}
@@ -1933,9 +1932,9 @@ INT8 TryToReload( SOLDIERTYPE * pSoldier )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
-			if (pObj2->gun.ubGunShotsLeft && !(pObj2->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+			if ((*pObj2)[0].data.gun.ubGunShotsLeft && !((*pObj2)[0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 			{
-				pObj2->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+				(*pObj2)[0].data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 
 				DeductPoints(pSoldier, Weapon[Item[(pObj2)->usItem].ubClassIndex].APsToReloadManually, 0);
 
@@ -2474,7 +2473,7 @@ void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN s
 		AssureItemIsInHandPos(pSoldier, pBestShot->bWeaponIn, TEMPORARILY);
 
 		if ( (!suppressionFire && ( (IsScoped(pObj) && GunRange(pObj) > MaxDistanceVisible() ) || pSoldier->aiData.bOrders == SNIPER ) ) ||
-			(suppressionFire	&& IsGunAutofireCapable(pSoldier,pBestShot->bWeaponIn ) && GetMagSize(pObj) > 30 && pObj->gun.ubGunShotsLeft > 20 ))
+			(suppressionFire	&& IsGunAutofireCapable(pSoldier,pBestShot->bWeaponIn ) && GetMagSize(pObj) > 30 && (*pObj)[0].data.gun.ubGunShotsLeft > 20 ))
 		{
 			// get the minimum cost to attack with this item
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"CheckIfShotPossible: getting min aps");

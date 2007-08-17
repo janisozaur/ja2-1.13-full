@@ -252,7 +252,6 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE								*pSoldier;
 	UINT16						usMapPos;
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
-	BOOLEAN						fOnInterTile = FALSE;
 	static BOOLEAN	fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
 
@@ -2590,15 +2589,15 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped						
 						{
-							if (( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
+							if (( Item[ gWorldItems[ uiLoop ].object.usItem ].usItemClass == IC_GUN ) && (gGameExternalOptions.gfShiftFUnloadWeapons == TRUE) )//item is a gun and unloading is allowed
 							{										
 								//Remove magazine 
-								if ( (gWorldItems[ uiLoop ].o.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft > 0) )
+								if ( (gWorldItems[ uiLoop ].object[0].data.gun.usGunAmmoItem != NONE) && (gWorldItems[ uiLoop ].object[0].data.gun.ubGunShotsLeft > 0) )
 								{
-									CreateItem(gWorldItems[ uiLoop ].o.gun.usGunAmmoItem, 100, &newObj);
-									newObj.shots.ubShotsLeft[0] = gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft;
-									gWorldItems[ uiLoop ].o.gun.ubGunShotsLeft = 0;
-									gWorldItems[ uiLoop ].o.gun.usGunAmmoItem = NONE;
+									CreateItem(gWorldItems[ uiLoop ].object[0].data.gun.usGunAmmoItem, 100, &newObj);
+									newObj.shots.ubShotsLeft[0] = gWorldItems[ uiLoop ].object[0].data.gun.ubGunShotsLeft;
+									gWorldItems[ uiLoop ].object[0].data.gun.ubGunShotsLeft = 0;
+									gWorldItems[ uiLoop ].object[0].data.gun.usGunAmmoItem = NONE;
 
 									// put it on the ground
 									AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &newObj, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
@@ -2608,18 +2607,18 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//remove attachments
 							if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 							{
-								for (OBJECTTYPE::attachmentList::iterator iter = gWorldItems[ uiLoop ].o.attachments.begin();
-									iter != gWorldItems[ uiLoop ].o.attachments.end();) {
+								for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object.objectStack[0].attachments.begin();
+									iter != gWorldItems[ uiLoop ].object.objectStack[0].attachments.end();) {
 									if ( !Item[ iter->usItem ].inseparable )
 									{												
 										// put it on the ground
 										AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &(*iter), 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
-										if (RemoveAttachment( &(gWorldItems[ uiLoop ].o), &(*iter)))
+										if (RemoveAttachment( &(gWorldItems[ uiLoop ].object), &(*iter)))
 										{
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
 										//restart, I don't feel like manipulating iters
-										iter = gWorldItems[ uiLoop ].o.attachments.begin();
+										iter = gWorldItems[ uiLoop ].object.objectStack[0].attachments.begin();
 									}
 									else {
 										++iter;
@@ -3204,9 +3203,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										{
 											if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 											{
-												if ( ( Item[ gWorldItems[ uiLoop ].o.usItem ].usItemClass & IC_AMMO ) ) // the item is ammo
+												if ( ( Item[ gWorldItems[ uiLoop ].object.usItem ].usItemClass & IC_AMMO ) ) // the item is ammo
 												{
-													pAmmo = &( gWorldItems[ uiLoop ].o );
+													pAmmo = &( gWorldItems[ uiLoop ].object );
 
 													if ( CompatibleAmmoForGun( pAmmo, pGun ) ) // can use the ammo with this gun
 													{
@@ -3350,20 +3349,20 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( (gWorldItems[ uiLoop ].bVisible == TRUE) && (gWorldItems[ uiLoop ].fExists) && (gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_REACHABLE) && !(gWorldItems[ uiLoop ].usFlags & WORLD_ITEM_ARMED_BOMB) )//item exists, is reachable, is visible and is not trapped
 						{
 							//find out how many items can be put in a big slot
-							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].o.usItem, BIGPOCK1POS );
+							INT8 ubSlotLimit = ItemSlotLimit( gWorldItems[ uiLoop ].object.usItem, BIGPOCK1POS );
 
 							//if we still have some space
 							INT32 i = 0;
-							while ( gWorldItems[ uiLoop ].o.ubNumberOfObjects < ubSlotLimit )
+							while ( gWorldItems[ uiLoop ].object.ubNumberOfObjects < ubSlotLimit )
 							{
 								i++;
 								//if the next item is the same
-								if ( gWorldItems[ uiLoop ].o.usItem == gWorldItems[ uiLoop + i ].o.usItem )
+								if ( gWorldItems[ uiLoop ].object.usItem == gWorldItems[ uiLoop + i ].object.usItem )
 								{
-									INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].o.ubNumberOfObjects;										
-									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].o.ubNumberOfObjects );
+									INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].object.ubNumberOfObjects;										
+									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
 
-									StackObjs( &(gWorldItems[ uiLoop + i ].o), &(gWorldItems[ uiLoop ].o), bPointsToMove);
+									StackObjs( &(gWorldItems[ uiLoop + i ].object), &(gWorldItems[ uiLoop ].object), bPointsToMove);
 
 								}
 								else
@@ -4046,12 +4045,11 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 void CreateRandomItem()
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE		Object;
 	UINT16 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
 	{
-		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
-		AddItemToPool( usMapPos, &Object, -1 , 0, 0, 0 );
+		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &gTempObject );
+		AddItemToPool( usMapPos, &gTempObject, -1 , 0, 0, 0 );
 	}
 }
 
@@ -4060,12 +4058,11 @@ void MakeSelectedSoldierTired()
 	PERFORMANCE_MARKER
 	// Key to make guy get tired!
 	SOLDIERTYPE				*pSoldier;
-	OBJECTTYPE		Object;
 	UINT16 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
 	{
-		CreateItem( (UINT16)TNT, 100, &Object );
-		AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
+		CreateItem( (UINT16)TNT, 100, &gTempObject );
+		AddItemToPool( usMapPos, &gTempObject, -1, 0, 0, 0 );
 	}
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
@@ -4599,7 +4596,7 @@ void ToggleRealTimeConfirm()
 
 }				
 
-
+/*
 void GrenadeTest1()
 {
 	PERFORMANCE_MARKER
@@ -4609,7 +4606,7 @@ void GrenadeTest1()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = MUSTARD_GRENADE;
-		Object.objectStatus = 100;
+		Object[0].data.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -20, 20, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4624,7 +4621,7 @@ void GrenadeTest2()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.objectStatus = 100;
+		Object[0].data.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, 0, -30, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4639,12 +4636,12 @@ void GrenadeTest3()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.objectStatus = 100;
+		Object[0].data.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -10, 10, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
 }
-
+*/
 void CreatePlayerControlledMonster()
 {
 	PERFORMANCE_MARKER
@@ -5239,7 +5236,6 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
-	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -5299,7 +5295,6 @@ void HandleStealthChangeFromUIKeys(	)
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
-	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -5428,7 +5423,7 @@ void SwapGoggles()
 						}
 					}
 					OBJECTTYPE* pAttachment = 0;
-					for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+					for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
 						if ( Item[ iter->usItem ].nightvisionrangebonus > lastBonus && Item[ iter->usItem ].usItemClass == IC_FACE )
 						{
 							bSlot2 = ITEM_NOT_FOUND;
@@ -5442,10 +5437,10 @@ void SwapGoggles()
 						OBJECTTYPE temp(*pAttachment);
 						// Replace helmet attachment with face slot
 						pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-						pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].objectStatus;
+						pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1][0].data.objectStatus;
 						// Replace face slot with helmet attachment from temp
 						pTeamSoldier->inv[bSlot1].usItem = tempItem;
-						pTeamSoldier->inv[bSlot1].objectStatus = tempStatus;
+						pTeamSoldier->inv[bSlot1][0].data.objectStatus = tempStatus;
 					}
 					else if ( bSlot2 != ITEM_NOT_FOUND )
 					{
@@ -5485,10 +5480,10 @@ void SwapGoggles()
 							tempStatus = pObj->bAttachStatus[bSlot3];
 							// Replace helmet attachment with face slot
 							pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-							pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].objectStatus;
+							pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1][0].data.objectStatus;
 							// Replace face slot with helmet attachment from temp
 							pTeamSoldier->inv[bSlot1].usItem = tempItem;
-							pTeamSoldier->inv[bSlot1].objectStatus = tempStatus;
+							pTeamSoldier->inv[bSlot1][0].data.objectStatus = tempStatus;
 						}
 						else if ( bSlot2 != ITEM_NOT_FOUND )
 						{

@@ -2028,7 +2028,6 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 						usHeight = hVObject->pETRLEObject[uiLoop].usHeight;
 						if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE) )
 						{	
-							UINT32 i = 0;
 							// adjust for the difference between the animation and structure base tile				
 	
 							//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )
@@ -2200,7 +2199,7 @@ BOOLEAN FiniStructureDB( void )
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
 {
 	PERFORMANCE_MARKER
-	STRUCTURE * pCurrent, *pStructure;
+	STRUCTURE * pCurrent, *pStructure = 0;
 	INT16				sDesiredLevel;
 	BOOLEAN			fOKStructOnLevel = FALSE;
 	BOOLEAN			fMinimumBlockingFound = FALSE;
@@ -2230,10 +2229,10 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
 			fOKStructOnLevel = TRUE;
-		pStructure		= pCurrent;
+			pStructure		= pCurrent;
 
 			// Turn off if we are on upper level!
-		if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
+			if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
 			{
 				fOKStructOnLevel = FALSE;
 			}
@@ -2339,20 +2338,20 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	{
 		if ( fMinimumBlockingFound )
 		{
-		(*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_REDUCE_RANGE );
 		}
 		else
 		{
-		(*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_NEXT_TILE );
 		}
 	}
 	else
 	{
-	(*pStructHeight) = 0;
+		(*pStructHeight) = 0;
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}

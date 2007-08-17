@@ -479,9 +479,9 @@ void UpdateOldVersionMap()
 		gMapInformation.ubMapVersion = 18;
 		for ( i = 0; i < guiNumWorldItems; i++ )
 		{
-			if ( gWorldItems[ i ].o.usItem == JAR_ELIXIR )
+			if ( gWorldItems[ i ].object.usItem == JAR_ELIXIR )
 			{
-				gWorldItems[ i ].o.usItem = CROWBAR;
+				gWorldItems[ i ].object.usItem = CROWBAR;
 			}
 		}
 	}

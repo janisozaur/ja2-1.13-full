@@ -2747,7 +2747,6 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	PERFORMANCE_MARKER
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
-	OBJECTTYPE 						Obj;
 	UINT32								uiMoneyLeft, uiMoneyLimitInSlot;
 	INT8									bSlot;
 
@@ -2764,27 +2763,27 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			{
 				if ( pProfile->inv[ cnt ] != NOTHING )
 				{
-					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &Obj );
-					if (Item[Obj.usItem].attachment )
+					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+					if (Item[gTempObject.usItem].attachment )
 					{
 						// try to find the appropriate item to attach to!
 						for ( cnt2 = 0; cnt2 < pSoldier->inv.size(); cnt2++ )
 						{
-							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( Obj.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 							{
-								AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &Obj );
+								AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &gTempObject );
 								break;
 							}
 						}
 						if (cnt2 == pSoldier->inv.size())
 						{
 							// oh well, couldn't find anything to attach to!
-							AutoPlaceObject( pSoldier, &Obj, FALSE );
+							AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 						}
 					}
 					else
 					{
-						AutoPlaceObject( pSoldier, &Obj, FALSE );
+						AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 					}
 
 				}
@@ -2878,12 +2877,12 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
 						// fill pocket with money
-						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLimitInSlot;			
+						pSoldier->inv[ bSlot ][0].data.money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
-						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLeft;
+						pSoldier->inv[ bSlot ][0].data.money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;
 					}

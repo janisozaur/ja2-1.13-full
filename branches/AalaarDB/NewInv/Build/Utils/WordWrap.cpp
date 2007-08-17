@@ -155,7 +155,6 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 	va_list					argptr;
 	BOOLEAN					fDone = FALSE;
 	UINT16					usCurrentWidthPixels=0;
-	UINT16					usCurrentLineWidthPixels=0;
 	CHAR16					OneChar[2];
 	BOOLEAN					fNewLine=FALSE;
 	BOOLEAN					fTheStringIsToLong=FALSE;
@@ -452,7 +451,7 @@ UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
 {
 	PERFORMANCE_MARKER
-	UINT16	usPosX, usPosY;
+	UINT16	usPosX = 0, usPosY = 0;
 	UINT16	usFontHeight=0;
 	UINT16	usStringWidth=0;
 
@@ -1108,7 +1107,6 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 	UINT16	usJustification = LEFT_JUSTIFIED,usLocalPosX=usPosX;
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
-	UINT32 iTotalHeight =0;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
 	
 	usHeight = WFGetFontHeight(uiFont);
@@ -1448,7 +1446,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 	UINT16	usJustification = LEFT_JUSTIFIED,usLocalPosX=usPosX;
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
-	UINT32 iTotalHeight =0;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
 	
 	usHeight = WFGetFontHeight(uiFont);

@@ -715,27 +715,27 @@ void RenderItemDetails()
 			{
 				if( index == SWITCH || index == ACTION_ITEM )
 				{
-					if( gpWorldItemsSummaryArray[ i ].o.usItem == index )
+					if( gpWorldItemsSummaryArray[ i ].object.usItem == index )
 					{
 						if( gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY) || 
-								gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
+							gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
 						{
-							pItem = &gpWorldItemsSummaryArray[ i ].o;
-							if( !pItem->bombs.bFrequency )
+							pItem = &gpWorldItemsSummaryArray[ i ].object;
+							if( !(*pItem)[0].data.bombs.bFrequency )
 								bFreqIndex = 7;
-							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY )
+							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY )
 								bFreqIndex = 0;
-							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY_2 )
+							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY_2 )
 								bFreqIndex = 1;
-							else if( pItem->bombs.bFrequency == PANIC_FREQUENCY_3 )
+							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY_3 )
 								bFreqIndex = 2;
-							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
+							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
 								bFreqIndex = 3;
-							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
+							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
 								bFreqIndex = 4;
-							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
+							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
 								bFreqIndex = 5;
-							else if( pItem->bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
+							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
 								bFreqIndex = 6;
 							else
 								continue;
@@ -753,14 +753,14 @@ void RenderItemDetails()
 					}
 					continue;
 				}
-				if( gpWorldItemsSummaryArray[ i ].o.usItem == index )
+				if( gpWorldItemsSummaryArray[ i ].object.usItem == index )
 				{
 					if( gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY) || 
 						gubSummaryItemMode == ITEMMODE_REAL	&& !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
 					{
-						pItem = &gpWorldItemsSummaryArray[ i ].o;
+						pItem = &gpWorldItemsSummaryArray[ i ].object;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
-						uiStatus += pItem->status.bStatus[0];
+						uiStatus += pItem->objectStatus;
 						uiQuantity += pItem->ubNumberOfObjects;
 					}
 				}
@@ -868,7 +868,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpPEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->status.bStatus[0];
+					uiStatus += pItem->objectStatus;
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}
@@ -940,7 +940,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpNEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->status.bStatus[0];
+					uiStatus += pItem->objectStatus;
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}

@@ -1911,7 +1911,7 @@ BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
 void DisplaySelectedListBox( )
 {
 	PERFORMANCE_MARKER
-	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
+	//UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	UINT16	usPosX, usPosY;
 	HVOBJECT	hImageHandle;
 
@@ -2351,8 +2351,6 @@ void CalcPositionOfNewScrollBoxLocation()
 	INT16	sIncrementValue;
 	FLOAT	dValue;
 	INT16	sHeight=0;
-//	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5);
-	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
 	INT16	sStartPosOfScrollArea = gpActiveListBox->usScrollPosY + gpActiveListBox->usScrollArrowHeight;
 
 	sMouseXPos = gusMouseXPos;
@@ -2513,9 +2511,7 @@ void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		SOLDIERTYPE *pSoldier;
-		OBJECTTYPE		Object;
-
-		CreateItem( gItemListBox.sCurSelectedItem, 100, &Object );
+		CreateItem( gItemListBox.sCurSelectedItem, 100, &gTempObject );
 
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
@@ -2532,7 +2528,7 @@ void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		//Give the selected item to the selected merc
-		if( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
+		if( !AutoPlaceObject( pSoldier, &gTempObject, TRUE ) )
 		{
 			//failed to add item, put error message to screen
 		}
@@ -2972,7 +2968,6 @@ void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 void InitQuestDebugTextInputBoxes()
 {
 	PERFORMANCE_MARKER
-	UINT32	uiStartLoc=0;
 	CHAR16	sTemp[ 640 ];
 //	CHAR16	sText[ 640 ];
 
@@ -3045,8 +3040,6 @@ void AddNPCToGridNo( INT32 iGridNo )
 void AddItemToGridNo( INT32 iGridNo )
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE		Object;
-
 	gusQdsEnteringGridNo = (INT16)iGridNo;
 
 
@@ -3058,10 +3051,10 @@ void AddItemToGridNo( INT32 iGridNo )
 	}
 	else
 	{
-		CreateItem( gItemListBox.sCurSelectedItem, (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &Object );
+		CreateItem( gItemListBox.sCurSelectedItem, (UINT8)( gfDropDamagedItems ? ( 20 + Random( 60 ) ) : 100 ), &gTempObject );
 
 		//add the item to the world
-		AddItemToPool( (UINT16) iGridNo, &Object, -1, 0, 0, 0 );
+		AddItemToPool( (UINT16) iGridNo, &gTempObject, -1, 0, 0, 0 );
 	}
 }
 
@@ -3069,14 +3062,12 @@ void AddItemToGridNo( INT32 iGridNo )
 void AddKeyToGridNo( INT32 iKeyID )
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE		Object;
-
 	if( iKeyID < NUM_KEYS )
 	{
-		CreateKeyObject( &Object, 1, (UINT8)iKeyID );
+		CreateKeyObject( &gTempObject, 1, (UINT8)iKeyID );
 
 		//add the item to the world
-		AddItemToPool( gusQdsEnteringGridNo, &Object, -1, 0, 0, 0 );
+		AddItemToPool( gusQdsEnteringGridNo, &gTempObject, -1, 0, 0, 0 );
 	}
 	else
 		gfAddKeyNextPass = TRUE;
@@ -3700,12 +3691,10 @@ void IncrementActiveDropDownBox( INT16 sIncrementValue )
 INT16	IsMercInTheSector( UINT16 usMercID )
 {
 	PERFORMANCE_MARKER
-	UINT8					cnt;
-	UINT8					ubCount=0;
-
 	if( usMercID == -1 )
 		return( FALSE );
 
+	UINT8					cnt;
 	for ( cnt=0; cnt <= TOTAL_SOLDIERS; cnt++ )
 	{	
 		//if the merc is active
@@ -3725,7 +3714,6 @@ void RefreshAllNPCInventory()
 	PERFORMANCE_MARKER
 	UINT16	usCnt;
 	UINT16	usItemCnt;
-	OBJECTTYPE	TempObject;
 	UINT16		usItem;
 
 	for ( usCnt=0; usCnt < TOTAL_SOLDIERS; usCnt++ )
@@ -3748,11 +3736,11 @@ void RefreshAllNPCInventory()
 						usItem = gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ];
 
 						//Create the object
-						TempObject.initialize();
-						CreateItem( usItem, 100, &TempObject );
+						gTempObject.initialize();
+						CreateItem( usItem, 100, &gTempObject );
 	
 						//copy the item into the soldiers inventory
-						Menptr[ usCnt ].inv[ usItemCnt ] = TempObject;
+						Menptr[ usCnt ].inv[ usItemCnt ] = gTempObject;
 					}
 				}
 			}

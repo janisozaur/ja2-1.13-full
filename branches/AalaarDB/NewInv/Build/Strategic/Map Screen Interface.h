@@ -243,8 +243,8 @@ class MERC_LEAVE_ITEM
 public:
 	BOOLEAN Save( HWFILE hFile);
 	BOOLEAN Load( HWFILE hFile);
-	void initialize() {o.initialize(); pNext = NULL;};
-	OBJECTTYPE o;
+	void initialize() {object.initialize(); pNext = NULL;};
+	OBJECTTYPE object;
 	class MERC_LEAVE_ITEM *pNext;
 };
 
@@ -446,7 +446,7 @@ void InitLeaveList( void );
 void ShutDownLeaveList( void );
 
 // add item to leave equip index
-BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiIndex );
+BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *object, UINT32 uiIndex );
 
 // release memory for all items in this slot's leave item list
 void FreeLeaveListSlot( UINT32 uiSlotIndex );

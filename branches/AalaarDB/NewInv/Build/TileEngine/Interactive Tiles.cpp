@@ -227,7 +227,6 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure, *pNewStructure;
-	INT16					sAPCost = 0, sBPCost = 0;
 	ITEM_POOL			*pItemPool;
 	BOOLEAN		fDidMissingQuote = FALSE;
 
@@ -291,7 +290,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				}
 
 				// Look for ownership here....
-				if ( 	gWorldItems[ pItemPool->iItemIndex ].o.usItem == OWNERSHIP )
+				if ( 	gWorldItems[ pItemPool->iItemIndex ].object.usItem == OWNERSHIP )
 				{
 					fDoHumm			= FALSE;
 					TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_NOTHING , 500 );

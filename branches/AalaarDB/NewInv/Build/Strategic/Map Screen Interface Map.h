@@ -54,7 +54,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter );
 void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed );
 void CancelPathForGroup( GROUP *pGroup );
 
-// check if we have waited long enought o update temp path
+// check if we have waited long enought object update temp path
 void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
 
 // clear out helicopter list after this sector

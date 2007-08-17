@@ -248,13 +248,13 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 	// Okay, we either got an explosive or a real attacker to check for.
 	// Let's check for the attacker first.
-	if (	ubOwner != NOBODY )
+	if ( ubOwner != NOBODY )
 	{
-		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) &&	AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].gun.ubGunAmmoType].explosionSize < 2 )
+		if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) && AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ][0].data.gun.ubGunAmmoType].explosionSize < 2 )
 		{
 			return; // no explosive and attackers gun is not fireing HE
 		}
-	}	
+	}
 
 	// Increment attack counter...
 	if (gubElementsOnExplosionQueue == 0)
@@ -277,7 +277,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 	// No explosive but an attacker with HE ammo.
 	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) && ubOwner != NOBODY)
 	{
-		ExpParams.ubTypeID = (INT8)Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ].gun.ubGunAmmoType].highExplosive].ubAnimationID;
+		ExpParams.ubTypeID = (INT8)Explosive[AmmoTypes[MercPtrs[ubOwner]->inv[MercPtrs[ubOwner]->ubAttackingHand ][0].data.gun.ubGunAmmoType].highExplosive].ubAnimationID;
 		// return;
 	}
 	else // just normal explosives should get here
@@ -1272,6 +1272,9 @@ void ExplosiveDamageGridNo( INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLE
 		else
 		{
 			fMultiStructure = FALSE;
+			sBaseGridNo = 0;
+			ubNumberOfTiles = 0;
+			ppTile = 0;
 		}
 
 		pNextCurrent = pCurrent->pNext;
@@ -1497,25 +1500,25 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 		}
 
 		bPosOfMask = FindGasMask(pSoldier);
-		if (	bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ].status.bStatus[0] < USABLE )
+		if (	bPosOfMask == NO_SLOT || pSoldier->inv[ bPosOfMask ][0].data.objectStatus < USABLE )
 		{
 			bPosOfMask = NO_SLOT;
 		}
-		//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].status.bStatus[0] >= USABLE )
+		//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0].data.objectStatus >= USABLE )
 		//{
 		// bPosOfMask = HEAD1POS;
 		//}
-		//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].status.bStatus[0] >= USABLE )
+		//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0].data.objectStatus >= USABLE )
 		//{
 		// bPosOfMask = HEAD2POS;
 		//}
 
 		if ( bPosOfMask != NO_SLOT	)
 		{
-			if ( pSoldier->inv[ bPosOfMask ].status.bStatus[0] < GASMASK_MIN_STATUS )
+			if ( pSoldier->inv[ bPosOfMask ][0].data.objectStatus < GASMASK_MIN_STATUS )
 			{
 				// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
-				sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+				sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ][0].data.objectStatus ) ) / 100;
 				if ( sBreathAmt > 500 )
 				{
 					// if at least 500 of breath damage got through
@@ -1529,12 +1532,12 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 
 					if ( sWoundAmt > 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
-						sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+						pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 4 );
+						sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ][0].data.objectStatus ) ) / 100;
 					}
 					else if ( sWoundAmt == 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 2 );
+						pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 2 );
 					}
 				}
 			}
@@ -1545,12 +1548,12 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 				{
 					if ( sWoundAmt == 1 )
 					{
-						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 2 );
+						pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 2 );
 					}
 					else
 					{
 						// use up gas mask
-						pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
+						pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 4 );
 					}
 				}
 				sWoundAmt = 0;	 
@@ -1600,7 +1603,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner,	INT16 sSubsequent, BOOLEAN *pfMercHit, INT8 bLevel, INT32 iSmokeEffectID )
 {
 	PERFORMANCE_MARKER
-	INT16 sWoundAmt = 0,sBreathAmt = 0, sNewWoundAmt = 0, sNewBreathAmt = 0, sStructDmgAmt;
+	INT16 sWoundAmt = 0,sBreathAmt = 0, sStructDmgAmt;
 	UINT8 ubPerson;
 	SOLDIERTYPE *pSoldier;
 	EXPLOSIVETYPE *pExplosive;
@@ -1778,7 +1781,7 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			{
 				pItemPoolNext = pItemPool->pNext;
 
-				if ( DamageItemOnGround( &(gWorldItems[ pItemPool->iItemIndex ].o), sGridNo, bLevel, (INT32) (sWoundAmt * 2), ubOwner ) )
+				if ( DamageItemOnGround( &(gWorldItems[ pItemPool->iItemIndex ].object), sGridNo, bLevel, (INT32) (sWoundAmt * 2), ubOwner ) )
 				{
 					// item was destroyed
 					RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, bLevel );
@@ -1791,11 +1794,11 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			while ( ( iWorldItem = GetItemOfClassTypeInPool( sGridNo, IC_EXPLOSV, bLevel ) ) != -1 )
 			{
 			// Get usItem
-			usItem = gWorldItems[ iWorldItem ].o.usItem;
+			usItem = gWorldItems[ iWorldItem ].object.usItem;
 
 			DamageItem
 
-			if ( CheckForChainReaction( usItem, gWorldItems[ iWorldItem ].o.status.bStatus[0], sWoundAmt, TRUE ) )
+			if ( CheckForChainReaction( usItem, gWorldItems[ iWorldItem ].object[0].data.objectStatus, sWoundAmt, TRUE ) )
 			{
 			RemoveItemFromPool( sGridNo, iWorldItem, bLevel );
 
@@ -1926,21 +1929,21 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			}
 
 
-			if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].status.bStatus[0] >= USABLE )
+			if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0].data.objectStatus >= USABLE )
 			{
 			bPosOfMask = HEAD1POS;
 			}
-			else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].status.bStatus[0] >= USABLE )
+			else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0].data.objectStatus >= USABLE )
 			{
 			bPosOfMask = HEAD2POS;
 			}
 
 			if ( bPosOfMask != NO_SLOT	)
 			{
-			if ( pSoldier->inv[ bPosOfMask ].status.bStatus[0] < GASMASK_MIN_STATUS )
+			if ( pSoldier->inv[ bPosOfMask ][0].data.objectStatus < GASMASK_MIN_STATUS )
 			{
 			// GAS MASK reduces breath loss by its work% (it leaks if not at least 70%)
-			sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+			sBreathAmt = ( sBreathAmt * ( 100 - pSoldier->inv[ bPosOfMask ][0].data.objectStatus ) ) / 100;
 			if ( sBreathAmt > 500 )
 			{
 			// if at least 500 of breath damage got through
@@ -1951,12 +1954,12 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 
 			if ( sWoundAmt > 1 )
 			{
-			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
-			sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ].status.bStatus[0] ) ) / 100;
+			pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 4 );
+			sWoundAmt = ( sWoundAmt * ( 100 -	pSoldier->inv[ bPosOfMask ][0].data.objectStatus ) ) / 100;
 			}
 			else if ( sWoundAmt == 1 )
 			{
-			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 2 );
+			pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 2 );
 			}
 			}
 			else
@@ -1966,12 +1969,12 @@ BOOLEAN ExpAffect( INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usIte
 			{
 			if ( sWoundAmt == 1 )
 			{
-			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 2 );
+			pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 2 );
 			}
 			else
 			{
 			// use up gas mask
-			pSoldier->inv[ bPosOfMask ].status.bStatus[0] -= (INT8) Random( 4 );
+			pSoldier->inv[ bPosOfMask ][0].data.objectStatus -= (INT8) Random( 4 );
 			}
 			}
 			sWoundAmt = 0;	 
@@ -2484,11 +2487,11 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bombs.bDetonatorType == BOMB_REMOTE )
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+			if ( (*pObj)[0].data.bombs.bDetonatorType == BOMB_REMOTE )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if (pObj->bombs.bFrequency == bFrequency)
+				if ((*pObj)[0].data.bombs.bFrequency == bFrequency)
 				{
 					// toggle its active flag
 					if (pObj->fFlags & OBJECT_DISABLED_BOMB)
@@ -2516,8 +2519,8 @@ void TogglePressureActionItemsInGridNo( INT16 sGridNo )
 	{
 		if ( gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo )
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bombs.bDetonatorType == BOMB_PRESSURE )
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+			if ( (*pObj)[0].data.bombs.bDetonatorType == BOMB_PRESSURE )
 			{
 				// Found a pressure item
 				// toggle its active flag
@@ -2582,7 +2585,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
-	switch( pObj->bombs.bActionValue )
+	switch( (*pObj)[0].data.bombs.bActionValue )
 	{
 	case ACTION_ITEM_OPEN_DOOR:
 		pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
@@ -2912,7 +2915,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 						if ( sDoorSpot != NOWHERE && sTeleportSpot != NOWHERE )
 						{
 							// close the door... 
-							DoorCloser.bombs.bActionValue = ACTION_ITEM_CLOSE_DOOR;
+							DoorCloser[0].data.bombs.bActionValue = ACTION_ITEM_CLOSE_DOOR;
 							PerformItemAction( sDoorSpot, &DoorCloser );
 
 							// have sex
@@ -3019,21 +3022,21 @@ void HandleExplosionQueue( void )
 
 			// Preliminary assignments:
 			uiWorldBombIndex = gExplosionQueue[ uiIndex ].uiWorldBombIndex;
-			pObj = &( gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].o );
+			pObj = &( gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].object );
 			sGridNo = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].sGridNo;
 			ubLevel = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].ubLevel;
 
-			if (pObj->usItem == ACTION_ITEM && pObj->bombs.bActionValue != ACTION_ITEM_BLOW_UP)
+			if (pObj->usItem == ACTION_ITEM && (*pObj)[0].data.bombs.bActionValue != ACTION_ITEM_BLOW_UP)
 			{
 				PerformItemAction( sGridNo, pObj );
 			}
-			else if ( pObj->bombs.usBombItem == TRIP_KLAXON )
+			else if ( (*pObj)[0].data.bombs.usBombItem == TRIP_KLAXON )
 			{
 				PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
 				CallAvailableEnemiesTo( sGridNo );
 				//RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, 0 );
 			}
-			else if ( pObj->bombs.usBombItem == TRIP_FLARE )
+			else if ( (*pObj)[0].data.bombs.usBombItem == TRIP_FLARE )
 			{
 				NewLightEffect( sGridNo, (UINT8)Explosive[pObj->usItem].ubDuration, (UINT8)Explosive[pObj->usItem].ubStartRadius );
 				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
@@ -3056,14 +3059,14 @@ void HandleExplosionQueue( void )
 				// BOOM!
 
 				// bomb objects only store the SIDE who placed the bomb! :-(
-				if ( pObj->bombs.ubBombOwner > 1 )
+				if ( (*pObj)[0].data.bombs.ubBombOwner > 1 )
 				{
-					IgniteExplosion( (UINT8) (pObj->bombs.ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->bombs.usBombItem, ubLevel );
+					IgniteExplosion( (UINT8) ((*pObj)[0].data.bombs.ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0].data.bombs.usBombItem, ubLevel );
 				}
 				else
 				{
 					// pre-placed
-					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->bombs.usBombItem, ubLevel );
+					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0].data.bombs.usBombItem, ubLevel );
 				}
 			}
 
@@ -3141,26 +3144,26 @@ void DecayBombTimers( void )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+			if ( (*pObj)[0].data.bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a timed bomb, so decay its delay value and see if it goes off
-				pObj->bombs.bDelay--;
-				if (pObj->bombs.bDelay == 0)
+				(*pObj)[0].data.bombs.bDelay--;
+				if ((*pObj)[0].data.bombs.bDelay == 0)
 				{
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
 					// ATE: CC black magic....
-					if ( pObj->bombs.ubBombOwner > 1 )
+					if ( (*pObj)[0].data.bombs.ubBombOwner > 1 )
 					{
-						gubPersonToSetOffExplosions = (UINT8) (pObj->bombs.ubBombOwner - 2);
+						gubPersonToSetOffExplosions = (UINT8) ((*pObj)[0].data.bombs.ubBombOwner - 2);
 					}
 					else
 					{
 						gubPersonToSetOffExplosions = NOBODY;
 					}
 
-					if (pObj->usItem != ACTION_ITEM || pObj->bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || (*pObj)[0].data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3184,18 +3187,18 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bombs.bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+			if ( (*pObj)[0].data.bombs.bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if (pObj->bombs.bFrequency == bFrequency)
+				if ((*pObj)[0].data.bombs.bFrequency == bFrequency)
 				{
 
 					gubPersonToSetOffExplosions = ubID;
 
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-					if (pObj->usItem != ACTION_ITEM || pObj->bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || (*pObj)[0].data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3259,10 +3262,10 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].ubLevel == bLevel )
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
 			if (!(pObj->fFlags & OBJECT_DISABLED_BOMB))
 			{
-				if (fAllBombs || pObj->bombs.bDetonatorType == BOMB_PRESSURE)
+				if (fAllBombs || (*pObj)[0].data.bombs.bDetonatorType == BOMB_PRESSURE)
 				{
 					// Snap: if we do set off our own trap (e.g. by trying to disarm it), we pay!
 					/*if (!fAllBombs && MercPtrs[ ubID ]->bTeam != gbPlayerNum )
@@ -3276,7 +3279,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					}
 
 					// player and militia ignore bombs set by player
-					if ( pObj->bombs.ubBombOwner > 1 && (MercPtrs[ ubID ]->bTeam == gbPlayerNum || MercPtrs[ ubID ]->bTeam == MILITIA_TEAM) )
+					if ( (*pObj)[0].data.bombs.ubBombOwner > 1 && (MercPtrs[ ubID ]->bTeam == gbPlayerNum || MercPtrs[ ubID ]->bTeam == MILITIA_TEAM) )
 					{
 					continue;
 
@@ -3286,7 +3289,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					{
 						// send out a signal to detonate other bombs, rather than this which
 						// isn't a bomb but a trigger
-						SetOffBombsByFrequency( ubID, pObj->bombs.bFrequency );
+						SetOffBombsByFrequency( ubID, (*pObj)[0].data.bombs.bFrequency );
 					}
 					else
 					{
@@ -3294,12 +3297,12 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 
 						// put this bomb on the queue
 						AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-						if (pObj->usItem != ACTION_ITEM || pObj->bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+						if (pObj->usItem != ACTION_ITEM || (*pObj)[0].data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
 						{
 							uiTimeStamp += BOMB_QUEUE_DELAY;
 						}
 
-						if ( pObj->bombs.usBombItem != NOTHING && Item[ pObj->bombs.usBombItem ].usItemClass & IC_EXPLOSV )
+						if ( (*pObj)[0].data.bombs.usBombItem != NOTHING && Item[ (*pObj)[0].data.bombs.usBombItem ].usItemClass & IC_EXPLOSV )
 						{
 							fFoundMine = TRUE;
 						}
@@ -3323,9 +3326,9 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
 
-			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->bombs.bDetonatorType == BOMB_SWITCH)
+			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && (*pObj)[0].data.bombs.bDetonatorType == BOMB_SWITCH)
 			{
 				// send out a signal to detonate other bombs, rather than this which
 				// isn't a bomb but a trigger
@@ -3334,7 +3337,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 				// No, not a good idea.
 				// gTacticalStatus.ubAttackBusyCount = 0;
 
-				SetOffBombsByFrequency( ubID, pObj->bombs.bFrequency );
+				SetOffBombsByFrequency( ubID, (*pObj)[0].data.bombs.bFrequency );
 			}
 		}
 	}
@@ -3424,7 +3427,6 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
-	UINT32 uiExplosionCount=0;
 	UINT32 uiCnt;
 
 
@@ -3666,8 +3668,8 @@ INT32 FindActiveTimedBomb( void )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
+			if ( (*pObj)[0].data.bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				return( gWorldBombs[uiWorldBombIndex].iItemIndex );	
 			}

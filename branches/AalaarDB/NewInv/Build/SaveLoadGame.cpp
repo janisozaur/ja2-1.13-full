@@ -733,7 +733,7 @@ BOOLEAN INVENTORY_IN_SLOT::Load(HWFILE hFile)
 BOOLEAN MERC_LEAVE_ITEM::Save(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
-	if ( !this->o.Save(hFile, FALSE) )
+	if ( !this->object.Save(hFile, FALSE) )
 	{
 		return FALSE;
 	}
@@ -747,7 +747,7 @@ BOOLEAN MERC_LEAVE_ITEM::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !this->o.Load(hFile) )
+		if ( !this->object.Load(hFile) )
 		{
 			return FALSE;
 		}
@@ -761,7 +761,7 @@ BOOLEAN MERC_LEAVE_ITEM::Load(HWFILE hFile)
 			{
 				return FALSE;
 			}
-			this->o = oldItem.oldObject;
+			this->object = oldItem.oldObject;
 		}
 	}
 	return TRUE;
@@ -1166,7 +1166,7 @@ BOOLEAN WORLDITEM::Save(HWFILE hFile, bool fSavingMap)
 	}
 
 	//save the OO OBJECTTYPE
-	if ( !this->o.Save(hFile, fSavingMap) )
+	if ( !this->object.Save(hFile, fSavingMap) )
 	{
 		return FALSE;
 	}
@@ -1183,7 +1183,7 @@ BOOLEAN WORLDITEM::Load(INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMap
 		LOADDATA( this, *hBuffer, SIZEOF_WORLDITEM_POD );
 
 		//now load the OO OBJECTTYPE
-		this->o.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		this->object.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
 	}
 	//if we need to load an older save
 	else {
@@ -1209,7 +1209,7 @@ BOOLEAN WORLDITEM::Load(HWFILE hFile)
 		}
 
 		//now load the OO OBJECTTYPE
-		if ( !this->o.Load(hFile) )
+		if ( !this->object.Load(hFile) )
 		{
 			return FALSE;
 		}
@@ -1239,67 +1239,67 @@ BOOLEAN WORLDITEM::Load(HWFILE hFile)
 BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		pLoadingFunction = &JA2EncryptedFileRead;
-	}
-	else
-	{
-		pLoadingFunction = &NewJA2EncryptedFileRead;
-	}
+	//typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	//functionPtr pLoadingFunction;
+	//if ( guiCurrentSaveGameVersion < 87 )
+	//{
+	//	pLoadingFunction = &JA2EncryptedFileRead;
+	//}
+	//else
+	//{
+	//	pLoadingFunction = &NewJA2EncryptedFileRead;
+	//}
 
-	UINT32	uiNumBytesRead;
-	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
-	{
-		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-		if ( !(*pLoadingFunction)( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesRead ) )
-		{
-			return(FALSE);
-		}
-	}
-	else
-	{
-		OLD_OBJECTTYPE_101 OldSavedObject101;
-		//we are loading an older version (only load once, so use "else if")
-		//first load the data based on what version was stored
-		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
-		{
-			if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
-			{
-				return(FALSE);
-			}
-		}
-		/*
-		else if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
-			(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
-		*/
+	//UINT32	uiNumBytesRead;
+	////if we are at the most current version, then fine
+	//if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	//{
+	//	if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
+	//	{
+	//		return(FALSE);
+	//	}
+	//	if ( !(*pLoadingFunction)( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesRead ) )
+	//	{
+	//		return(FALSE);
+	//	}
+	//}
+	//else
+	//{
+	//	OLD_OBJECTTYPE_101 OldSavedObject101;
+	//	//we are loading an older version (only load once, so use "else if")
+	//	//first load the data based on what version was stored
+	//	if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+	//	{
+	//		if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
+	//		{
+	//			return(FALSE);
+	//		}
+	//	}
+	//	/*
+	//	else if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+	//		(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
+	//	*/
 
-		//now we have the data that needs to be converted (keep on converting up, so use "if")
-		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
-		{
-			(*this) = OldSavedObject101;
-			//OldSavedObject999 = OldSavedObject101;
-		}
-		//change this when changing the file version again
-		/*
-		if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
-		{
-			(*this) = OldSavedObject999;
-		}
-		*/
-	}
+	//	//now we have the data that needs to be converted (keep on converting up, so use "if")
+	//	if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+	//	{
+	//		(*this) = OldSavedObject101;
+	//		//OldSavedObject999 = OldSavedObject101;
+	//	}
+	//	//change this when changing the file version again
+	//	/*
+	//	if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+	//	{
+	//		(*this) = OldSavedObject999;
+	//	}
+	//	*/
+	//}
 	return TRUE;
 }
 
 BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
 {
-	PERFORMANCE_MARKER
+	PERFORMANCE_MARKER/*
 	//if we are at the most current MAP version, 6.27, then fine
 	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 )
 	{
@@ -1311,14 +1311,14 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 		OLD_OBJECTTYPE_101 OldSavedObject101;
 		LOADDATA( &OldSavedObject101, *hBuffer, sizeof(OLD_OBJECTTYPE_101) );
 		(*this) = OldSavedObject101;
-	}
+	}*/
 	return TRUE;
 }
 
 BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 {
 	PERFORMANCE_MARKER
-	UINT32 uiNumBytesWritten;
+	UINT32 uiNumBytesWritten;/*
 	if (fSavingMap == false) {
 		if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
 		{
@@ -1338,7 +1338,7 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 		{
 			return(FALSE);
 		}
-	}
+	}*/
 	return TRUE;
 }
 
@@ -1541,7 +1541,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 	//UINT8		saveDir[100];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
@@ -2493,8 +2492,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	INT16 sLoadSectorY;
 	INT8 bLoadSectorZ;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
-
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
 
@@ -4025,8 +4022,6 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
-
 	//Loop through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4045,8 +4040,6 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
-
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4168,7 +4161,6 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	PERFORMANCE_MARKER
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
@@ -4633,7 +4625,6 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	UINT32	uiNumOfEmails=0;
 	UINT32		uiSizeOfEmails=0;
 	EmailPtr	pEmail = pEmailList;
-	EmailPtr pTempEmail = NULL;
 	UINT32	cnt;
 	UINT32	uiStringLength=0;
 	UINT32	uiNumBytesWritten=0;
@@ -6167,7 +6158,6 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 		INT16					sSoldierCnt;
 		SOLDIERTYPE		*pSoldier;
 		INT16					bLastTeamID;
-		INT8					bCount=0;
 		BOOLEAN				fFoundAMerc=FALSE;
 
 		// Set locator to first merc

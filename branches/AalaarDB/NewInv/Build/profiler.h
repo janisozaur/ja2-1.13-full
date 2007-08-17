@@ -6,14 +6,14 @@
 
 //#define PROFILER_ENABLED
 
+#ifdef PROFILER_ENABLED
 #define STRINGIZE(x) #x
 #define NAMED_	PERFORMANCE_MARKER(x) PerfMarker x(__FILE__, STRINGIZE(x), __LINE__);
-#ifdef PROFILER_ENABLED
+#define END_NAMED_	PERFORMANCE_MARKER(x) x.endMark();
 #define PERFORMANCE_MARKER PerfMarker MARK(__FILE__, __FUNCTION__, __LINE__);
 #else
 #define PERFORMANCE_MARKER
 #endif
-#define END_NAMED_	PERFORMANCE_MARKER(x) x.endMark();
 #pragma warning (disable : 4512)//disables assignment operator could not be generated
 
 struct PerfDatum

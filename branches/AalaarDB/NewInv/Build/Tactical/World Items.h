@@ -55,7 +55,7 @@ public:
 	UINT8					ubNonExistChance;	
 
 	char					endOfPod;
-	OBJECTTYPE				o;
+	OBJECTTYPE				object;
 }; // WORLDITEM;
 #define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
 

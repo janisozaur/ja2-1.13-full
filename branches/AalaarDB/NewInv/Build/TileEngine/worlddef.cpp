@@ -2750,7 +2750,9 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) ); 
-	*pMajorMapVersion = dMajorMapVersion;
+	if ( pMajorMapVersion ) {
+		*pMajorMapVersion = dMajorMapVersion;
+	}
 
 	// Lesh: disable this because now we accept any version map
 	//#ifdef RUSSIAN
@@ -2761,12 +2763,9 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 	//#endif
 
 	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
-	*pMinorMapVersion = ubMinorMapVersion;
-	if (ubMinorMapVersion > 25)
-	{
-		int breakpoint = 0;
+	if (pMinorMapVersion) {
+		*pMinorMapVersion = ubMinorMapVersion;
 	}
-	
 	// CHECK FOR NON-COMPATIBLE VERSIONS!
 	// CHECK FOR MAJOR MAP VERSION INCOMPATIBLITIES
 	//if ( dMajorMapVersion < gdMajorMapVersion )
@@ -3771,11 +3770,6 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 	{	
 		if ( gpWorldLevelData[ cnt ].uiFlags & MAPELEMENT_RECALCULATE_WIREFRAMES || fForce )
 		{
-		if ( cnt == 8377 )
-		{
-		int i = 0;
-		}
-
 			// Turn off flag
 			gpWorldLevelData[ cnt ].uiFlags &= (~MAPELEMENT_RECALCULATE_WIREFRAMES );
 
@@ -4050,9 +4044,7 @@ void ReloadTileset( UINT8 ubID )
 	giCurrentTilesetID = iCurrTilesetID;
 
 	// Load Map with new tileset
-	float dummy;
-	UINT8 dummy2;
-	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE, &dummy, &dummy2);
+	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE);
 
 	// Delete file
 	sprintf( aFilename, "MAPS\\%s", TEMP_FILE_FOR_TILESET_CHANGE );

@@ -1074,7 +1074,7 @@ BOOLEAN ExecuteOverhead( )
 						}
 						else
 						{
-							int i = 0;
+							//int breakpoint = 0;
 						}
 						pSoldier->flags.fBeginFade	= TRUE;
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
@@ -2127,11 +2127,11 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				INT8				bPosOfMask;
 
 				bPosOfMask = FindGasMask (pSoldier);
-				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].objectStatus >= GASMASK_MIN_STATUS )
+				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD1POS;
 				//}
-				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].objectStatus >= GASMASK_MIN_STATUS )
+				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD2POS;
 				//}
@@ -3147,7 +3147,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	INT32					cnt;
-	INT32					iNewSelectedSoldier;
+	INT32					iNewSelectedSoldier = 0;
 	SOLDIERTYPE			 *pTeamSoldier;
 	BOOLEAN				 fMissionFailed = TRUE;
 	INT8										bBuddyIndex;
@@ -3245,6 +3245,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 	{
 		if ( !fMissionFailed )
 		{
+			Assert(iNewSelectedSoldier);
 			SelectSoldier( (INT16)iNewSelectedSoldier, FALSE, FALSE );
 		}
 		else
@@ -3872,7 +3873,6 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 	// change civ group side due to external event (wall blowing up)
 	INT32										cnt;
 	SOLDIERTYPE	*						pSoldier;
-	UINT8										ubFirstProfile = NO_PROFILE;
 
 	gTacticalStatus.fCivGroupHostile[ ubCivilianGroup ] = CIV_GROUP_HOSTILE;
 
@@ -6775,7 +6775,6 @@ BOOLEAN CheckForLosingEndOfBattle( )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	INT8				bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
 	BOOLEAN			fMadeCorpse;
 	BOOLEAN			fDoCapture = FALSE;
@@ -6944,7 +6943,6 @@ BOOLEAN KillIncompacitatedEnemyInSector( )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	BOOLEAN			fReturnVal = FALSE;
 
 	// Check if the battle is won!

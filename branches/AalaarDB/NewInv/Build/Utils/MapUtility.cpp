@@ -161,10 +161,8 @@ UINT32	MapUtilScreenHandle( )
 
 	sprintf( zFilename, "%s", FListNode->FileInfo.zFileName );
 
-	float dummy;
-	UINT8 dummy2;
 	// OK, load maps and do overhead shrinkage of them...
-	if ( !LoadWorld( zFilename, &dummy, &dummy2 ) )
+	if ( !LoadWorld( zFilename ) )
 	{
 		return( ERROR_SCREEN );
 	}

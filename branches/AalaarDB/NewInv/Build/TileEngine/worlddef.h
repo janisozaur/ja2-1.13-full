@@ -294,7 +294,7 @@ void TrashMapTile(INT16 MapTile);
 BOOLEAN NewWorld( void );
 
 BOOLEAN SaveWorld( const STR8 puiFilename );
-BOOLEAN LoadWorld( const STR8 puiFilename, float* pMajorMapVersion, UINT8* pMinorMapVersion );
+BOOLEAN LoadWorld( const STR8 puiFilename, float* pMajorMapVersion = NULL, UINT8* pMinorMapVersion = NULL );
 
 void CompileWorldMovementCosts( );
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );

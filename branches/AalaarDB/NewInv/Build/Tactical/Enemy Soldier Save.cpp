@@ -35,7 +35,7 @@
 	#include "Scheduling.h"
 #endif
 
-BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *pNode );
+BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *pNode, GROUP *pGroup = NULL );
 
 BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures );
 
@@ -1050,7 +1050,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	#endif
 	INT8 bSectorZ;
 	UINT8 ubSectorID;
-	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
 	BOOLEAN fDeleted;
 //	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
 	

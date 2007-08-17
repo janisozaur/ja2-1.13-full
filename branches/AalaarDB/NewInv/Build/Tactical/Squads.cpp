@@ -863,7 +863,6 @@ void RebuildCurrentSquad( void )
 	PERFORMANCE_MARKER
 	// rebuilds current squad to reset faces in tactical
 	INT32 iCounter = 0;
-	INT32 iCount = 0;
 	SOLDIERTYPE *pDeadSoldier = NULL;
 
 	// check if valid value passed
@@ -916,7 +915,6 @@ void ExamineCurrentSquadLights( void )
 {
 	PERFORMANCE_MARKER
 	// rebuilds current squad to reset faces in tactical
-	INT32 iCounter = 0;
 	UINT8	ubLoop;
 
 	// OK, we should add lights for any guy currently bInSector who is not bad OKLIFE...
@@ -1585,7 +1583,6 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT8 bCounter = 0;
-	INT8 bSquadCount = 0;
 
 	if( bSquadValue == NO_CURRENT_SQUAD )
 	{

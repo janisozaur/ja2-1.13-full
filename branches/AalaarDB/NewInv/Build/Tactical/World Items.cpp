@@ -54,8 +54,8 @@ bool WORLDITEM::operator<(const WORLDITEM& compare)
 	{
 		return true;
 	}
-	UINT8		ubItem1Category = GetDealerItemCategoryNumber( this->o.usItem );
-	UINT8		ubItem2Category = GetDealerItemCategoryNumber( compare.o.usItem );
+	UINT8		ubItem1Category = GetDealerItemCategoryNumber( this->object.usItem );
+	UINT8		ubItem2Category = GetDealerItemCategoryNumber( compare.object.usItem );
 	//UINT16	usItem1Price;
 	//UINT16	usItem2Price;
 	//UINT8		ubItem1Coolness;
@@ -153,7 +153,7 @@ bool WORLDITEM::operator<(const WORLDITEM& compare)
 			//}
 
 			//Madd: sort by name (for now at least):
-			int retVal = _stricmp(Item[this->o.usItem].szBRName,Item[compare.o.usItem].szBRName);
+			int retVal = _stricmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
 			if ( retVal < 0 )
 			{
 				return true;
@@ -167,7 +167,7 @@ bool WORLDITEM::operator<(const WORLDITEM& compare)
 				// same item type = compare item quality, then
 
 				// higher quality first
-				if ( this->o.objectStatus > compare.o.objectStatus )
+				if ( this->object[0].data.objectStatus > compare.object[0].data.objectStatus )
 				{
 					return( true );
 				}
@@ -192,7 +192,7 @@ void WORLDITEM::initialize()
 	this->bRenderZHeightAboveLevel = 0;
 	this->bVisible = 0;
 	this->ubNonExistChance = 0;
-	this->o.initialize();
+	this->object.initialize();
 }
 
 WORLDITEM& WORLDITEM::operator=(OLD_WORLDITEM_101& src)
@@ -208,7 +208,7 @@ WORLDITEM& WORLDITEM::operator=(OLD_WORLDITEM_101& src)
 	this->ubNonExistChance = src.ubNonExistChance;
 
 	//convert the OBJECTTYPE
-	this->o = src.oldObject;
+	this->object = src.oldObject;
 	return *this;
 }
 
@@ -222,7 +222,7 @@ WORLDITEM& WORLDITEM::operator=(const WORLDITEM& src)
 	this->bRenderZHeightAboveLevel = src.bRenderZHeightAboveLevel;
 	this->bVisible = src.bVisible;
 	this->ubNonExistChance = src.ubNonExistChance;
-	this->o = src.o;
+	this->object = src.object;
 	return *this;
 }
 
@@ -347,19 +347,17 @@ void FindPanicBombsAndTriggers( void )
 	STRUCTURE *		pSwitch;
 	INT16			sGridNo = NOWHERE;
 	INT8			bPanicIndex;
-	BOOLEAN			fPanicTriggerIsAlarm = FALSE;
-	
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
 	{
 		if (gWorldBombs[ uiBombIndex ].fExists)
 		{
-			pObj = &(gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].o);
-			if (pObj->bombs.bFrequency == PANIC_FREQUENCY || pObj->bombs.bFrequency == PANIC_FREQUENCY_2 || pObj->bombs.bFrequency == PANIC_FREQUENCY_3 )
+			pObj = &(gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].object);
+			if ((*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY || (*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY_2 || (*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY_3 )
 			{
 				if (pObj->usItem == SWITCH)
 				{
 					sGridNo = gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].sGridNo;
-					switch( pObj->bombs.bFrequency )
+					switch( (*pObj)[0].data.bombs.bFrequency )
 					{
 						case PANIC_FREQUENCY:
 							bPanicIndex = 0;
@@ -397,7 +395,7 @@ void FindPanicBombsAndTriggers( void )
 					}
 
 					gTacticalStatus.sPanicTriggerGridNo[ bPanicIndex ] = sGridNo;
-					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = pObj->bombs.ubTolerance;
+					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0].data.bombs.ubTolerance;
 					if (pObj->fFlags & OBJECT_ALARM_TRIGGER)
 					{
 						gTacticalStatus.bPanicTriggerIsAlarm[ bPanicIndex ] = TRUE;
@@ -500,7 +498,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 	gWorldItems[ iItemIndex ].bVisible									= bVisible;
 	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel	= bRenderZHeightAboveLevel;
 
-	gWorldItems[ iItemIndex ].o = *pObject;
+	gWorldItems[ iItemIndex ].object = *pObject;
 
 	// Add a bomb reference if needed
 	if (usFlags & WORLD_ITEM_ARMED_BOMB)
@@ -584,8 +582,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;
-	UINT32			uiLevelItems = 0;
-		
 	//If any world items exist, we must delete them now.
 	TrashWorldItems();
 
@@ -611,7 +607,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	{	//Add all of the items to the world indirectly through AddItemToPool, but only if the chance
 		//associated with them succeed.
 		dummyItem.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
-		if( dummyItem.o.usItem == OWNERSHIP )
+		if( dummyItem.object.usItem == OWNERSHIP )
 		{
 			dummyItem.ubNonExistChance = 0;
 		}
@@ -632,59 +628,59 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 					UINT16	usReplacement;
 
 					// do replacements?
-					if ( Item[ dummyItem.o.usItem ].usItemClass == IC_GUN )
+					if ( Item[ dummyItem.object.usItem ].usItemClass == IC_GUN )
 					{
 						INT8		bAmmo, bNewAmmo;
 
-						usReplacement = StandardGunListReplacement( dummyItem.o.usItem );
+						usReplacement = StandardGunListReplacement( dummyItem.object.usItem );
 						if ( usReplacement )
 						{
 							// everything else can be the same? no.
-							bAmmo = dummyItem.o.gun.ubGunShotsLeft;
-							bNewAmmo = (Weapon[ usReplacement ].ubMagSize * bAmmo) / Weapon[ dummyItem.o.usItem ].ubMagSize;
+							bAmmo = dummyItem.object[0].data.gun.ubGunShotsLeft;
+							bNewAmmo = (Weapon[ usReplacement ].ubMagSize * bAmmo) / Weapon[ dummyItem.object.usItem ].ubMagSize;
 							if ( bAmmo > 0 && bNewAmmo == 0 )
 							{
 								bNewAmmo = 1;
 							}
 
-							dummyItem.o.usItem = usReplacement;
-							dummyItem.o.gun.ubGunShotsLeft = bNewAmmo;
+							dummyItem.object.usItem = usReplacement;
+							dummyItem.object[0].data.gun.ubGunShotsLeft = bNewAmmo;
 						}
 					}
-					if ( Item[ dummyItem.o.usItem ].usItemClass == IC_AMMO )
+					if ( Item[ dummyItem.object.usItem ].usItemClass == IC_AMMO )
 					{
-						usReplacement = StandardGunListAmmoReplacement( dummyItem.o.usItem );
+						usReplacement = StandardGunListAmmoReplacement( dummyItem.object.usItem );
 						if ( usReplacement )
 						{
 							UINT8		ubLoop;
 
 							// go through status values and scale up/down
-							for ( ubLoop = 0; ubLoop < dummyItem.o.ubNumberOfObjects; ubLoop++ )
+							for ( ubLoop = 0; ubLoop < dummyItem.object.ubNumberOfObjects; ubLoop++ )
 							{
-								dummyItem.o.status.bStatus[ ubLoop ] = dummyItem.o.status.bStatus[ ubLoop ] * Magazine[ Item[ usReplacement ].ubClassIndex ].ubMagSize / Magazine[ Item[ dummyItem.o.usItem ].ubClassIndex ].ubMagSize; 
+								dummyItem.object.status.bStatus[ ubLoop ] = dummyItem.object.status.bStatus[ ubLoop ] * Magazine[ Item[ usReplacement ].ubClassIndex ].ubMagSize / Magazine[ Item[ dummyItem.object.usItem ].ubClassIndex ].ubMagSize; 
 							}
 
 							// then replace item #
-							dummyItem.o.usItem = usReplacement;
+							dummyItem.object.usItem = usReplacement;
 						}
 					}
 				}
 
 */
 			}
-			if( dummyItem.o.usItem == ACTION_ITEM && gfLoadPitsWithoutArming )
+			if( dummyItem.object.usItem == ACTION_ITEM && gfLoadPitsWithoutArming )
 			{ //if we are loading a pit, they are typically loaded without being armed.
-				if( dummyItem.o.bombs.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.o.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+				if( dummyItem.object[0].data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.object[0].data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				{
 					dummyItem.usFlags &= ~WORLD_ITEM_ARMED_BOMB;
 					dummyItem.bVisible = BURIED;
-					dummyItem.o.bombs.bDetonatorType = 0;
+					dummyItem.object[0].data.bombs.bDetonatorType = 0;
 				}
 			}
 			
-			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.o.bTrap > 0 && ( Item[dummyItem.o.usItem].mine || dummyItem.o.usItem == TRIP_FLARE || dummyItem.o.usItem == TRIP_KLAXON) )
+			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.object.bTrap > 0 && ( Item[dummyItem.object.usItem].mine || dummyItem.object.usItem == TRIP_FLARE || dummyItem.object.usItem == TRIP_KLAXON) )
 			{
-				ArmBomb( &dummyItem.o, BOMB_PRESSURE );
+				ArmBomb( &dummyItem.object, BOMB_PRESSURE );
 				dummyItem.usFlags |= WORLD_ITEM_ARMED_BOMB;
 				// this is coming from the map so the enemy must know about it.
 				gpWorldLevelData[ dummyItem.sGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
@@ -695,7 +691,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 			{ //all armed bombs are buried
 				dummyItem.bVisible = BURIED;
 			}
-			AddItemToPoolAndGetIndex( dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, &iItemIndex );
+			AddItemToPoolAndGetIndex( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, &iItemIndex );
 			gWorldItems[ iItemIndex ].ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}
@@ -725,14 +721,14 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 		{
 			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP )
+			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP )
 			{
 				// if owner is a terrorist
-				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].o.owner.ubOwnerProfile ) )
+				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ) )
 				{
 					// and they were not set in the current sector
-					if ( gMercProfiles[ gWorldItems[ uiLoop ].o.owner.ubOwnerProfile ].sSectorX != gWorldSectorX ||
-						gMercProfiles[ gWorldItems[ uiLoop ].o.owner.ubOwnerProfile ].sSectorY != gWorldSectorY )
+					if ( gMercProfiles[ gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ].sSectorX != gWorldSectorX ||
+						gMercProfiles[ gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ].sSectorY != gWorldSectorY )
 					{
 						// then all items in this location should be deleted
 						sGridNo = gWorldItems[ uiLoop ].sGridNo;
@@ -770,10 +766,10 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 		{
 			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP )
+			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP )
 			{
 				// if owner is the Queen
-				if ( gWorldItems[ uiLoop ].o.owner.ubOwnerProfile == QUEEN )
+				if ( gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile == QUEEN )
 				{
 					// then all items in this location should be deleted
 					sGridNo = gWorldItems[ uiLoop ].sGridNo;
@@ -784,7 +780,7 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 						if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
 						{
 							// upgrade equipment
-							switch ( gWorldItems[ uiLoop2 ].o.usItem )
+							switch ( gWorldItems[ uiLoop2 ].object.usItem )
 							{
 								case AUTO_ROCKET_RIFLE:
 									bSlot = FindObjectInSoldierProfile( QUEEN, ROCKET_RIFLE );
@@ -828,7 +824,7 @@ void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems
 		{
 			WORLDITEM& dummyItem = pItemList[ i ];
 
-			AddItemToPool( dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
+			AddItemToPool( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
 		}
 	}
 

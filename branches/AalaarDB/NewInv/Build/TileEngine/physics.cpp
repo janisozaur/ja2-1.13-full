@@ -54,8 +54,8 @@
 #define GET_SOLDIER_THROW_HEIGHT( l )		(INT16)( ( l * 256 ) + CROUCHED_HEIGHT )
 
 #define	GET_OBJECT_LEVEL( z )						( (INT8)( ( z + 10 ) / HEIGHT_UNITS ) )
-//#define	OBJECT_DETONATE_ON_IMPACT( o )	( ( o->Obj.usItem == MORTAR_SHELL ) ) // && ( o->ubActionCode == THROW_ARM_ITEM || pObject->fTestObject ) )
-#define	OBJECT_DETONATE_ON_IMPACT( o )	( ( Item[o->Obj.usItem].usItemClass == IC_BOMB ) ) // && ( o->ubActionCode == THROW_ARM_ITEM || pObject->fTestObject ) )
+//#define	OBJECT_DETONATE_ON_IMPACT( object )	( ( object->Obj.usItem == MORTAR_SHELL ) ) // && ( object->ubActionCode == THROW_ARM_ITEM || pObject->fTestObject ) )
+#define	OBJECT_DETONATE_ON_IMPACT( object )	( ( Item[object->Obj.usItem].usItemClass == IC_BOMB ) ) // && ( object->ubActionCode == THROW_ARM_ITEM || pObject->fTestObject ) )
 
 
 #define	MAX_INTEGRATIONS				8
@@ -498,11 +498,6 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 
 	if ( !pObject->fAlive )
 	{
-		if ( !pObject->fTestObject )
-		{
-			int i = 0;
-		}
-
 		// ATE: OK, adjust gridno based on where we ended and if we hit any walls....
 		{
 			// Check for SW wall...
@@ -806,9 +801,9 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 	INT32					iCollisionCode = COLLISION_NONE;
 	BOOLEAN				fDoCollision = FALSE;
 	FLOAT					dElasity = 1;
-	UINT16				usStructureID;
-	FLOAT					dNormalX, dNormalY, dNormalZ;
-	INT16					sGridNo;
+	UINT16				usStructureID = -1;
+	FLOAT					dNormalX = 0.0, dNormalY = 0.0, dNormalZ = 1.0;
+	INT16					sGridNo = NOWHERE;
 
 	// Checkf for collisions
 	dX = pObject->Position.x;
@@ -2155,7 +2150,6 @@ FLOAT CalculateForceFromRange( INT16 sRange, FLOAT dDegrees )
 	PERFORMANCE_MARKER
 	FLOAT				dMagForce;
 	INT16				sSrcGridNo, sDestGridNo;
-	OBJECTTYPE	Object;
 	INT16				sFinalGridNo;
 
 	// OK, use a fake gridno, find the new gridno based on range, use height of merc, end height of ground,
@@ -2164,9 +2158,9 @@ FLOAT CalculateForceFromRange( INT16 sRange, FLOAT dDegrees )
 	sDestGridNo = 4408 + ( sRange * WORLD_COLS );
 
 	// Use a grenade objecttype
-	CreateItem( HAND_GRENADE, 100, &Object );
+	CreateItem( HAND_GRENADE, 100, &gTempObject );
 
-	FindBestForceForTrajectory( sSrcGridNo, sDestGridNo, GET_SOLDIER_THROW_HEIGHT( 0 ), 0, dDegrees, &Object, &sFinalGridNo, &dMagForce );
+	FindBestForceForTrajectory( sSrcGridNo, sDestGridNo, GET_SOLDIER_THROW_HEIGHT( 0 ), 0, dDegrees, &gTempObject, &sFinalGridNo, &dMagForce );
 
 	return( dMagForce );
 }
@@ -2576,7 +2570,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 		if ( sZ != 0 || pObject->fInWater )
 #else
-		if ( sZ != 0 || pObject->fInWater || ( pObj->status.bStatus[0] >= USABLE && ( PreRandom( 100 ) < (UINT32) pObj->status.bStatus[0] + PreRandom( 50 ) ) ) )
+		if ( sZ != 0 || pObject->fInWater || ( (*pObj)[0].data.objectStatus >= USABLE && ( PreRandom( 100 ) < (UINT32) (*pObj)[0].data.objectStatus + PreRandom( 50 ) ) ) )
 #endif
 		{
 			fDoImpact = TRUE;
@@ -2586,7 +2580,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 			if ( 1 )		
 #else
-			if ( pObj->status.bStatus[0] >= USABLE && PreRandom(100) < (UINT32) pObj->status.bStatus[0] + PreRandom( 50 ) )
+			if ( (*pObj)[0].data.objectStatus >= USABLE && PreRandom(100) < (UINT32) (*pObj)[0].data.objectStatus + PreRandom( 50 ) )
 #endif
 			{
 				iTrapped = PreRandom( 4 ) + 2;
@@ -2597,8 +2591,8 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 				// Start timed bomb...
 				usFlags |= WORLD_ITEM_ARMED_BOMB;
 
-				pObj->bombs.bDetonatorType = BOMB_TIMED;
-				pObj->bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
+				(*pObj)[0].data.bombs.bDetonatorType = BOMB_TIMED;
+				(*pObj)[0].data.bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
 			}
 
 			// ATE: If we have collided with roof last...
@@ -2754,7 +2748,7 @@ UINT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRad
 {
 	PERFORMANCE_MARKER
 	INT16		sX, sY;
-	INT16		sGridNo;
+	INT16		sGridNo = NOWHERE;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	UINT32		cnt = 0;

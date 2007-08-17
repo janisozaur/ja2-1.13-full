@@ -490,7 +490,7 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN fProactive )
 {
 	PERFORMANCE_MARKER
-	INT16 sNewAP = 0, sNewBP = 0;
+	INT16 sNewAP = 0;
 	INT8	bNewBreath;
 
 
@@ -670,8 +670,6 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 {
 	PERFORMANCE_MARKER
 	INT16 sUnusedAPs, sBreathPerAP = 0, sBreathChange, sRTBreathMod;
-	BOOLEAN	fAnimTypeFound = FALSE;
-
 	// Note to Andrew (or whomever else it may concern):
 
 
@@ -956,19 +954,19 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SPRING_AND_BOLT_UPGRADE );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end()objectStack[0].attachments.end() )
 		//{	
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found rod and spring, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_SCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end()objectStack[0].attachments.end() )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex scope, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_UNSCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end() )
 		//{
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
@@ -1645,7 +1643,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 			}
 			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
 			{
-				if ( pSoldier->inv[ bInvPos ].gun.ubGunShotsLeft == 0 )
+				if ( pSoldier->inv[ bInvPos ][0].data.gun.ubGunShotsLeft == 0 )
 				{
 					if ( fDisplay )
 					{
@@ -1657,7 +1655,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 				//<SB> manual recharge
 				if( pSoldier->bTeam == OUR_TEAM )
 				{
-					if ( !(	pSoldier->inv[ bInvPos ].gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
+					if ( !(	pSoldier->inv[ bInvPos ][0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
 					{
 						return( FALSE );
 					}
@@ -1697,11 +1695,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
 				// OK, let's see, don't overrun...
-				if ( pObj->gun.ubGunShotsLeft != 0 )
+				if ( (*pObj)[0].data.gun.ubGunShotsLeft != 0 )
 				{
-					pObj->gun.ubGunShotsLeft--;
+					(*pObj)[0].data.gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->gun.ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && (*pObj)[0].data.gun.ubGunShotsLeft > 0)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
@@ -1845,7 +1843,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	pObj = &(pSoldier->inv[HANDPOS]);
 
 //<SB> manual recharge
-	if (pObj->gun.ubGunShotsLeft && !(pObj->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0].data.gun.ubGunShotsLeft && !((*pObj)[0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		return Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually;
 	}

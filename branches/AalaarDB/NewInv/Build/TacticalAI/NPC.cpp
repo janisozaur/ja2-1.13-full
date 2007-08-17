@@ -793,8 +793,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
-	UINT8									ubTalkDesire, ubLoop, ubHighestOpinionRequired = 0;
-	BOOLEAN								fQuoteFound = FALSE;
+	UINT8									ubTalkDesire, ubLoop;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
 	UINT16								usItemToConsider;
 
@@ -841,7 +840,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 		case MONEY:
 		case SILVER:
 		case GOLD:
-			if (pObj->money.uiMoneyAmount < LARGE_AMOUNT_MONEY)
+			if ((*pObj)[0].data.money.uiMoneyAmount < LARGE_AMOUNT_MONEY)
 			{
 				SetFactTrue( FACT_SMALL_AMOUNT_OF_MONEY );
 			}
@@ -859,7 +858,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 			break;
 	}
 
-	if (pObj->objectStatus < 50)
+	if ((*pObj)[0].data.objectStatus < 50)
 	{
 		SetFactTrue( FACT_ITEM_POOR_CONDITION );
 	}
@@ -883,14 +882,14 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 					case DARREN:
 						if (usItemToConsider == MONEY && pNPCQuoteInfo->sActionData == NPC_ACTION_DARREN_GIVEN_CASH)
 						{
-							if (pObj->money.uiMoneyAmount < 1000)
+							if ((*pObj)[0].data.money.uiMoneyAmount < 1000)
 							{
 								// refuse, bet too low - record 15
 								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[15];
 								(*pubQuoteNum)       = 15;
 								return( (*ppResultQuoteInfo)->ubOpinionRequired );
 							}
-							else if (pObj->money.uiMoneyAmount > 5000)
+							else if ((*pObj)[0].data.money.uiMoneyAmount > 5000)
 							{
 								// refuse, bet too high - record 16
 								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[16];
@@ -914,7 +913,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								*/
 
 								// record amount of bet
-								gMercProfiles[ DARREN ].iBalance = pObj->money.uiMoneyAmount;
+								gMercProfiles[ DARREN ].iBalance = (*pObj)[0].data.money.uiMoneyAmount;
 								SetFactFalse( FACT_DARREN_EXPECTING_MONEY );
 
 								// if never fought before, use record 17
@@ -961,14 +960,14 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 					case ANGEL: 
 						if (usItemToConsider == MONEY && pNPCQuoteInfo->sActionData == NPC_ACTION_ANGEL_GIVEN_CASH)
 						{
-							if (pObj->money.uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+							if ((*pObj)[0].data.money.uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
 							{
 								// refuse, bet too low - record 8
 								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[8];
 								(*pubQuoteNum)       = 8;
 								return( (*ppResultQuoteInfo)->ubOpinionRequired );
 							}
-							else if (pObj->money.uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+							else if ((*pObj)[0].data.money.uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
 							{
 								// refuse, bet too high - record 9
 								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[9];
@@ -994,13 +993,13 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								(*pubQuoteNum)       = 5;
 								return( (*ppResultQuoteInfo)->ubOpinionRequired );							
 							}
-							switch( pObj->money.uiMoneyAmount )
+							switch( (*pObj)[0].data.money.uiMoneyAmount )
 							{
 								case 100:
 								case 200: // Carla
 									if ( CheckFact( FACT_CARLA_AVAILABLE, 0 ) )
 									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->money.uiMoneyAmount / 100);
+										gMercProfiles[ MADAME ].bNPCData += (INT8) ((*pObj)[0].data.money.uiMoneyAmount / 100);
 										TriggerNPCRecord( MADAME, 16 );
 									}
 									else
@@ -1015,7 +1014,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								case 1000: // Cindy
 									if ( CheckFact( FACT_CINDY_AVAILABLE, 0 ) )
 									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->money.uiMoneyAmount / 500);
+										gMercProfiles[ MADAME ].bNPCData += (INT8) ((*pObj)[0].data.money.uiMoneyAmount / 500);
 										TriggerNPCRecord( MADAME, 17 );
 									}
 									else
@@ -1030,7 +1029,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								case 600: // Bambi
 									if ( CheckFact( FACT_BAMBI_AVAILABLE, 0 ) )
 									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->money.uiMoneyAmount / 300);
+										gMercProfiles[ MADAME ].bNPCData += (INT8) ((*pObj)[0].data.money.uiMoneyAmount / 300);
 										TriggerNPCRecord( MADAME, 18 );
 									}
 									else
@@ -1045,7 +1044,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								case 800: // Maria?									
 									if ( gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS )
 									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->money.uiMoneyAmount / 400);
+										gMercProfiles[ MADAME ].bNPCData += (INT8) ((*pObj)[0].data.money.uiMoneyAmount / 400);
 										TriggerNPCRecord( MADAME, 19 );
 										break;
 									}
@@ -1090,8 +1089,8 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								if ( CheckFact( FACT_VINCE_EXPECTING_MONEY, ubNPC ) == FALSE && gMercProfiles[ ubNPC ].iBalance < 0 && pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
 								{
 									// increment balance
-									gMercProfiles[ ubNPC ].iBalance += (INT32) pObj->money.uiMoneyAmount;
-									gMercProfiles[ ubNPC ].uiTotalCostToDate += pObj->money.uiMoneyAmount;
+									gMercProfiles[ ubNPC ].iBalance += (INT32) (*pObj)[0].data.money.uiMoneyAmount;
+									gMercProfiles[ ubNPC ].uiTotalCostToDate += (*pObj)[0].data.money.uiMoneyAmount;
 									if ( gMercProfiles[ ubNPC ].iBalance > 0 )
 									{
 										gMercProfiles[ ubNPC ].iBalance = 0;
@@ -1114,7 +1113,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 								else
 								{
 									// handle the player giving NPC some money
-									HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->money.uiMoneyAmount, pubQuoteNum );
+									HandleNPCBeingGivenMoneyByPlayer( ubNPC, (*pObj)[0].data.money.uiMoneyAmount, pubQuoteNum );
 									(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
 									return( (*ppResultQuoteInfo)->ubOpinionRequired );
 								}
@@ -1122,7 +1121,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 							else
 							{
 								// handle the player giving NPC some money
-								HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->money.uiMoneyAmount, pubQuoteNum );
+								HandleNPCBeingGivenMoneyByPlayer( ubNPC, (*pObj)[0].data.money.uiMoneyAmount, pubQuoteNum );
 								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
 								return( (*ppResultQuoteInfo)->ubOpinionRequired );
 							}
@@ -1131,7 +1130,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 					case KINGPIN:
 						if ( usItemToConsider == MONEY && gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS )
 						{
-							HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->money.uiMoneyAmount, pubQuoteNum );
+							HandleNPCBeingGivenMoneyByPlayer( ubNPC, (*pObj)[0].data.money.uiMoneyAmount, pubQuoteNum );
 							(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
 							return( (*ppResultQuoteInfo)->ubOpinionRequired );
 						}
@@ -1142,8 +1141,8 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 							if ( gMercProfiles[ ubNPC ].iBalance < 0 && pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
 							{
 								// increment balance
-								gMercProfiles[ ubNPC ].iBalance += (INT32) pObj->money.uiMoneyAmount;
-								gMercProfiles[ ubNPC ].uiTotalCostToDate += pObj->money.uiMoneyAmount;
+								gMercProfiles[ ubNPC ].iBalance += (INT32) (*pObj)[0].data.money.uiMoneyAmount;
+								gMercProfiles[ ubNPC ].uiTotalCostToDate += (*pObj)[0].data.money.uiMoneyAmount;
 								if ( gMercProfiles[ ubNPC ].iBalance > 0 )
 								{
 									gMercProfiles[ ubNPC ].iBalance = 0;
@@ -2196,7 +2195,7 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
 	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
 	SOLDIERTYPE *		pMerc;
-	SOLDIERTYPE *		pDesiredMerc;
+	SOLDIERTYPE *		pDesiredMerc = NULL;
 	NPCQuoteInfo *	pNPCQuoteInfoArray;
 
 	CHECKF( pubDesiredMerc );
@@ -2243,16 +2242,17 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 				{
 					ubHighestTalkDesire = ubTalkDesire;
 					ubDesiredMerc = ubMerc;
-					pDesiredMerc = MercPtrs[ubMerc];
+					pDesiredMerc = MercSlots[ubMerc];
 					sDesiredMercDist = PythSpacesAway( sMyGridNo, pDesiredMerc->sGridNo );
 				}
 				else if (ubTalkDesire == ubHighestTalkDesire)
 				{
-					sDist = PythSpacesAway( sMyGridNo, MercPtrs[ubMerc]->sGridNo );
+					sDist = PythSpacesAway( sMyGridNo, MercSlots[ubMerc]->sGridNo );
 					if (sDist < sDesiredMercDist)
 					{
 						// we can say the same thing to this merc, and they're closer!
 						ubDesiredMerc = ubMerc;
+						pDesiredMerc = MercSlots[ubMerc];
 						sDesiredMercDist = sDist;
 					}
 				}
@@ -2595,7 +2595,6 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -2752,7 +2751,6 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -3202,7 +3200,6 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
-	BOOLEAN				fDisplayDialogue = TRUE;
 
 	if ( EnsureQuoteFileLoaded( ubNPC ) == FALSE )
 	{

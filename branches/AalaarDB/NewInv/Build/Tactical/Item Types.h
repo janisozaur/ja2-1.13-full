@@ -173,26 +173,16 @@ public:
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
-class OBJECTTYPE
-{
-public:
+namespace ObjectDataStructs {
 	//these structs are members of the anonymous union, and need only be available within the class space
 	struct OBJECT_GUN
 	{
-		INT8		bGunStatus;			// status % of gun
+		INT8		bGunStatus;		// status % of gun
 		UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
 		UINT8		ubGunShotsLeft;	// duh, amount of ammo left
 		UINT16		usGunAmmoItem;	// the item # for the item table
 		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
-		UINT8		ubGunState; // SB manual recharge
-	};
-	struct OBJECT_SHOTS
-	{
-		UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
-	};
-	struct OBJECT_STATUS
-	{
-		INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+		UINT8		ubGunState;		// SB manual recharge
 	};
 	struct OBJECT_MONEY
 	{
@@ -201,20 +191,20 @@ public:
 	};
 	struct OBJECT_BOMBS_AND_OTHER
 	{ // this is used by placed bombs, switches, and the action item
-		INT8		bBombStatus;			// % status
+		INT8		bBombStatus;		// % status
 		INT8		bDetonatorType;		// timed, remote, or pressure-activated
-		UINT16		usBombItem;				// the usItem of the bomb.
+		UINT16		usBombItem;			// the usItem of the bomb.
 		union
 		{
-			INT8		bDelay;				// >=0 values used only
+			INT8		bDelay;			// >=0 values used only
 			INT8		bFrequency;		// >=0 values used only
 		};
-		UINT8	ubBombOwner; // side which placed the bomb
-		UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
+		UINT8	ubBombOwner;			// side which placed the bomb
+		UINT8	bActionValue;			// this is used by the ACTION_ITEM fake item
 		union
 		{
-			UINT8 ubTolerance; // tolerance value for panic triggers
-			UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
+			UINT8 ubTolerance;			// tolerance value for panic triggers
+			UINT8 ubLocationID;			// location value for remote non-bomb (special!) triggers
 		};	
 	};
 	struct OBJECT_KEY
@@ -227,7 +217,33 @@ public:
 		UINT8 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
 	};
+};
 
+union ObjectData
+{
+	INT8			objectStatus;//holds the same value as bStatus[0]
+	UINT8			ubShotsLeft;//holds the same value as ubShotsLeft[0]
+	ObjectDataStructs::OBJECT_GUN		gun;
+	ObjectDataStructs::OBJECT_MONEY	money;
+	ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
+	ObjectDataStructs::OBJECT_KEY		key;
+	ObjectDataStructs::OBJECT_OWNER	owner;
+};
+#define SIZEOF_OBJECTTYPE_UNION sizeof(ObjectData)
+
+
+//forward declaration
+class OBJECTTYPE;
+typedef	std::list<OBJECTTYPE>	attachmentList;
+struct StackedObjectData  {
+	attachmentList	attachments;
+	ObjectData		data;
+};
+typedef std::vector<StackedObjectData>	StackedObjects;
+
+class OBJECTTYPE
+{
+public:
 	// Constructor
 	OBJECTTYPE();
 	// Conversion operator
@@ -238,6 +254,8 @@ public:
     OBJECTTYPE& operator=(const OBJECTTYPE&);
 	// Destructor
 	~OBJECTTYPE();
+
+	StackedObjectData& operator[](const int index) {return objectStack[index];};
 
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.
@@ -266,16 +284,11 @@ public:
 	UINT8		ubNumberOfObjects;
 	INT8		fFlags;
 	UINT8		ubMission;
-	INT8		bTrap;        // 1-10 exp_lvl to detect
+	INT8		bTrap;			// 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT16		ubWeight;//used to be UINT8
-	UINT8		fUsed;				// flags for whether the item is used or not
+	UINT16		ubWeight;		//used to be UINT8
+	UINT8		fUsed;			// flags for whether the item is used or not
 
-	typedef	std::list<OBJECTTYPE>	attachmentList;
-	attachmentList					attachments;
-
-//char		endOfPod;//offset to determine where pod stops and where OO data starts
-//#define SIZEOF_OBJECTTYPE_POD offsetof( OBJECTTYPE, endOfPod )
 #define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
 								sizeof(fFlags) + \
@@ -285,31 +298,9 @@ public:
 								sizeof(ubWeight) + \
 								sizeof(fUsed)
 
-	union
-	{
-		int				pUnion;
-		INT8			objectStatus;
-		OBJECT_GUN		gun;
-		OBJECT_SHOTS	shots;
-		OBJECT_STATUS	status;
-		OBJECT_MONEY	money;
-		OBJECT_BOMBS_AND_OTHER	bombs;
-		OBJECT_KEY		key;
-		OBJECT_OWNER	owner;
-	};
-	//the union doesn't have a name to reduce typing(wasn't my idea), so find it's size the hard way
-	
-#define SIZEOF_OBJECTTYPE_UNION ( \
-	__max(sizeof(OBJECT_GUN), \
-	__max(sizeof(OBJECT_SHOTS), \
-	__max(sizeof(OBJECT_STATUS), \
-	__max(sizeof(OBJECT_MONEY), \
-	__max(sizeof(OBJECT_BOMBS_AND_OTHER), \
-	__max(sizeof(OBJECT_KEY), \
-	sizeof(OBJECT_OWNER) ))))))) \
-	
-//#define SIZEOF_OBJECTTYPE_UNION offsetof(OBJECTTYPE, gun);
 
+
+	StackedObjects		objectStack;
 };
 
 extern OBJECTTYPE gTempObject;

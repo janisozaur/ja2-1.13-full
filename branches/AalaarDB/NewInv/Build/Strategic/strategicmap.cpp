@@ -1727,7 +1727,6 @@ void HandleRPCDescriptionOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSector
 BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	PERFORMANCE_MARKER
-	UNDERGROUND_SECTORINFO	*pUnderWorld=NULL;
 	BOOLEAN									fChangeMusic = TRUE;
 
 #ifdef CRIPPLED_VERSION
@@ -2013,9 +2012,7 @@ void RemoveMercsInSector( )
 void PrepareLoadedSector()
 {
 	PERFORMANCE_MARKER
-	INT32 iCounter = 0;
 	BOOLEAN fEnemyPresenceInThisSector = FALSE;
-	BOOLEAN fUsingOverride = FALSE;
 	BOOLEAN fAddCivs = TRUE;
 	INT8 bMineIndex = -1;
 
@@ -2425,9 +2422,7 @@ BOOLEAN EnterSector( INT16 sSectorX, INT16 sSectorY , INT8 bSectorZ )
 	//	swprintf( str, L"Loading map:  %S", bFilename );
 	//	SetProgressBarTitle( 0, str, FONT12POINT1, FONT_BLACK, FONT_BLACK );
 	//#endif
-	float dummy;
-	UINT8 dummy2;
-	if( !LoadWorld(bFilename, &dummy, &dummy2) )
+	if( !LoadWorld(bFilename) )
 	{
 		return( FALSE );
 	}
@@ -3115,7 +3110,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	SOLDIERTYPE *pValidSoldier = NULL;
 	GROUP *pGroup;
 	UINT32 uiTraverseTime=0;
-	UINT8 ubDirection;
+	UINT8 ubDirection = 0xff;
 	EXITGRID ExitGrid;
 	INT8 bPrevAssignment;
 	UINT8 ubPrevGroupID;
