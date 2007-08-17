@@ -221,13 +221,18 @@ namespace ObjectDataStructs {
 
 union ObjectData
 {
-	INT8			objectStatus;//holds the same value as bStatus[0]
-	UINT8			ubShotsLeft;//holds the same value as ubShotsLeft[0]
-	ObjectDataStructs::OBJECT_GUN		gun;
-	ObjectDataStructs::OBJECT_MONEY	money;
+	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
+	ObjectData() {initialize();};
+	void	initialize() {memset(this, 0, sizeof(ObjectData));};
+
+
+	INT8										objectStatus;//holds the same value as bStatus[0]
+	UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
+	ObjectDataStructs::OBJECT_GUN				gun;
+	ObjectDataStructs::OBJECT_MONEY				money;
 	ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
-	ObjectDataStructs::OBJECT_KEY		key;
-	ObjectDataStructs::OBJECT_OWNER	owner;
+	ObjectDataStructs::OBJECT_KEY				key;
+	ObjectDataStructs::OBJECT_OWNER				owner;
 };
 #define SIZEOF_OBJECTTYPE_UNION sizeof(ObjectData)
 
@@ -235,11 +240,15 @@ union ObjectData
 //forward declaration
 class OBJECTTYPE;
 typedef	std::list<OBJECTTYPE>	attachmentList;
-struct StackedObjectData  {
+class StackedObjectData  {
+public:
+	void	initialize() {attachments.clear(); data.initialize();};
+	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
+
 	attachmentList	attachments;
 	ObjectData		data;
 };
-typedef std::vector<StackedObjectData>	StackedObjects;
+typedef std::list<StackedObjectData>	StackedObjects;
 
 class OBJECTTYPE
 {
@@ -255,7 +264,7 @@ public:
 	// Destructor
 	~OBJECTTYPE();
 
-	StackedObjectData& operator[](const int index) {return objectStack[index];};
+	StackedObjectData* operator[](const int index);
 
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.
@@ -267,13 +276,11 @@ public:
 
 	int		AddObjectsToStack(int howMany, int objectStatus);
 	int		AddObjectsToStack(OBJECTTYPE& object);
-	int		RemoveObjectsFromStack(int howMany);
+	bool	RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject = NULL);
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);
 	static	void CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource);
-
-	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
 
 	BOOLEAN	Load( HWFILE hFile );
 	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );

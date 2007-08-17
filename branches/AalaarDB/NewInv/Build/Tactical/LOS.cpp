@@ -2028,7 +2028,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	}
 	else
 	{
-		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand][0].data.gun.ubGunAmmoType;
+		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand][0]->data.gun.ubGunAmmoType;
 	}
 
 	// at least partly compensate for "near miss" increases for this guy, after all, the bullet
@@ -2148,13 +2148,13 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 			{
 				// lucky bastard was facing away!
 			}
-			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0].data.objectStatus) ) )
-			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0].data.objectStatus) ) )
+			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0]->data.objectStatus) ) )
+			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS][0]->data.objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
-			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS][0].data.objectStatus) ) )
+			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS][0]->data.objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
@@ -2234,10 +2234,10 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	{
 		if (bHeadSlot != NO_SLOT)
 		{
-			pTarget->inv[ bHeadSlot ][0].data.objectStatus -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
-			if ( pTarget->inv[ bHeadSlot ][0].data.objectStatus <= USABLE )
+			pTarget->inv[ bHeadSlot ][0]->data.objectStatus -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
+			if ( pTarget->inv[ bHeadSlot ][0]->data.objectStatus <= USABLE )
 			{
-				if ( pTarget->inv[ bHeadSlot ][0].data.objectStatus <= 0 )
+				if ( pTarget->inv[ bHeadSlot ][0]->data.objectStatus <= 0 )
 				{
 					DeleteObj( &(pTarget->inv[ bHeadSlot ]) );
 					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
@@ -2252,11 +2252,11 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		bHeadSlot = HEAD1POS + (INT8) Random( 2 );
 		if ( pTarget->inv[ bHeadSlot ].usItem != NOTHING )
 		{
-			pTarget->inv[ bHeadSlot ][0].data.objectStatus -= (INT8) ( Random( iImpact / 2 ) );
-			if ( pTarget->inv[ bHeadSlot ][0].data.objectStatus < 0 )
+			pTarget->inv[ bHeadSlot ][0]->data.objectStatus -= (INT8) ( Random( iImpact / 2 ) );
+			if ( pTarget->inv[ bHeadSlot ][0]->data.objectStatus < 0 )
 			{
 				// just break it...
-				pTarget->inv[ bHeadSlot ][0].data.objectStatus = 1;
+				pTarget->inv[ bHeadSlot ][0]->data.objectStatus = 1;
 			}
 		}
 	}
@@ -2500,7 +2500,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 	//else if ( pBullet->usFlags & BULLET_FLAG_SMALL_MISSILE )
 	//{
 	// stops if using HE ammo
-	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].antiTank )
+	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].antiTank )
 	{
 		*pfHit = TRUE;
 		return( 0 );
@@ -2516,7 +2516,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		pDoor = FindDoorInfoAtGridNo( pBullet->sGridNo );
 
 		// Does it have a lock?
-		INT16 lockBustingPower = AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].lockBustingPower;
+		INT16 lockBustingPower = AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].lockBustingPower;
 
 		// WANNE: bugfix: No door returned, so the game crashes!
 		if (pDoor)
@@ -2580,9 +2580,9 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ];
 		iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].structureImpactReductionDivisor));
+		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].structureImpactReductionDivisor));
 
-		//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType)
+		//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType)
 		//{
 		//	case AMMO_HP:
 		//		iImpactReduction = AMMO_STRUCTURE_ADJUSTMENT_HP( iImpactReduction );
@@ -2635,7 +2635,7 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 	//else if ( pBullet->usFlags & BULLET_FLAG_SMALL_MISSILE )
 	//{
 	// stops if using HE ammo
-	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].antiTank )
+	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].antiTank )
 	{
 		return( pBullet->iImpact );
 	}
@@ -2662,9 +2662,9 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 	iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] * pStructure->pDBStructureRef->pDBStructure->ubDensity / 100;
 	iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType].structureImpactReductionDivisor));
+	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType].structureImpactReductionDivisor));
 
-	//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0].data.gun.ubGunAmmoType)
+	//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ][0]->data.gun.ubGunAmmoType)
 	//{
 	//	case AMMO_HP:
 	//		iImpactReduction = AMMO_STRUCTURE_ADJUSTMENT_HP( iImpactReduction );
@@ -3653,7 +3653,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 		usBulletFlags |= BULLET_FLAG_FLAME;
 		ubSpreadIndex = 2;
 	}
-	else if ( AmmoTypes[ pFirer->inv[pFirer->ubAttackingHand][0].data.gun.ubGunAmmoType ].tracerEffect && (pFirer->bDoBurst || gGameSettings.fOptions[ TOPTION_TRACERS_FOR_SINGLE_FIRE ]) )
+	else if ( AmmoTypes[ pFirer->inv[pFirer->ubAttackingHand][0]->data.gun.ubGunAmmoType ].tracerEffect && (pFirer->bDoBurst || gGameSettings.fOptions[ TOPTION_TRACERS_FOR_SINGLE_FIRE ]) )
 	{
 		//usBulletFlags |= BULLET_FLAG_TRACER;
 		fTracer = TRUE;
@@ -3667,7 +3667,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 			// shotgun pellets fire 9 bullets doing 1/4 damage each
 			if (!fFake)
 			{
-				ubShots = AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0].data.gun.ubGunAmmoType].numberOfBullets;
+				ubShots = AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0]->data.gun.ubGunAmmoType].numberOfBullets;
 				// but you can't really aim the damn things very well!
 				if (sHitBy > 0)
 				{
@@ -3685,7 +3685,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 			}
 			//			ubImpact = AMMO_DAMAGE_ADJUSTMENT_BUCKSHOT( ubImpact );
-			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0].data.gun.ubGunAmmoType].multipleBulletDamageMultiplier / max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0].data.gun.ubGunAmmoType].multipleBulletDamageDivisor) );
+			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0]->data.gun.ubGunAmmoType].multipleBulletDamageMultiplier / max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand][0]->data.gun.ubGunAmmoType].multipleBulletDamageDivisor) );
 		}
 	}
 
@@ -3772,7 +3772,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 		if ( pBullet->usFlags & BULLET_FLAG_KNIFE )
 		{
-			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand][0].data.objectStatus;
+			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand][0]->data.objectStatus;
 		}
 
 		// apply increments for first move
@@ -3833,7 +3833,7 @@ INT8 ChanceToGetThrough( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT d
 		// if shotgun, shotgun would have to be in main hand
 		if ( pFirer->inv[ HANDPOS ].usItem == pFirer->usAttackingWeapon )
 		{
-			if ( AmmoTypes[pFirer->inv[ HANDPOS ][0].data.gun.ubGunAmmoType].numberOfBullets > 1 )
+			if ( AmmoTypes[pFirer->inv[ HANDPOS ][0]->data.gun.ubGunAmmoType].numberOfBullets > 1 )
 			{
 				fBuckShot = TRUE;
 			}

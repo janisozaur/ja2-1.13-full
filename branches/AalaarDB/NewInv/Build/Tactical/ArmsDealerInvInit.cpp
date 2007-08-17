@@ -1251,8 +1251,8 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 )->sItemIndex;
 	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 )->sItemIndex;
 
-	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject[0].data.objectStatus;
-	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject[0].data.objectStatus;
+	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject[0]->data.objectStatus;
+	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject[0]->data.objectStatus;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }

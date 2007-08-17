@@ -774,7 +774,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if ( ( Item[ pSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
+			if ( ( Item[ pSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier->inv[ bPocket ][0]->data.gun.bGunAmmoStatus < 0 ) )
 			{
 				return( TRUE );
 			}
@@ -792,19 +792,19 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( pObj->usItem, (*pObj)[ubObjectInPocketCounter].data.objectStatus ) )
+			if ( IsItemRepairable( pObj->usItem, (*pObj)[ubObjectInPocketCounter]->data.objectStatus ) )
 			{
 				return( TRUE );
-			}				
-		}
+			}
 
-		// have to check for attachments...
-		for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
-			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( iter->usItem, (*iter)[0].data.objectStatus ) )
-			{
-				return( TRUE );
-			}		
+			// have to check for attachments...
+			for (attachmentList::iterator iter = (*pObj)[ubObjectInPocketCounter]->attachments.begin(); iter != (*pObj)[ubObjectInPocketCounter]->attachments.end(); ++iter) {
+				// if it's repairable and NEEDS repairing
+				if ( IsItemRepairable( iter->usItem, (*iter)[ubObjectInPocketCounter]->data.objectStatus ) )
+				{
+					return( TRUE );
+				}		
+			}
 		}
 	}
 
@@ -824,7 +824,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 				for ( bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 				{
 					// the object a weapon? and jammed?
-					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
+					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ][0]->data.gun.bGunAmmoStatus < 0 ) )
 					{
 						return( TRUE );
 					}
@@ -3017,17 +3017,20 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 		pObj = &( pSoldier->inv[ bSlotToCheck ] );
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
-			if ( IsItemRepairable( pObj->usItem, (*pObj)[bLoop2].data.objectStatus ) )
+			if ( IsItemRepairable( pObj->usItem, (*pObj)[bLoop2]->data.objectStatus ) )
 			{
 				return( &(pSoldier->inv[ bSlotToCheck ]) );
 			}
-		}	
+		}
 
-		// have to check for attachments...
-		for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
-			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( iter->usItem, (*iter)[0].data.objectStatus ) ) {
-				return( &(*iter) );
+		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
+		{
+			// have to check for attachments after...
+			for (attachmentList::iterator iter = (*pObj)[bLoop2]->attachments.begin(); iter != (*pObj)[bLoop2]->attachments.end(); ++iter) {
+				// if it's repairable and NEEDS repairing
+				if ( IsItemRepairable( iter->usItem, (*iter)[bLoop2]->data.objectStatus ) ) {
+					return( &(*iter) );
+				}
 			}
 		}
 	}
@@ -3108,16 +3111,16 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
 	{
 		// if it's repairable and NEEDS repairing
-		if ( IsItemRepairable( pObj->usItem, (*pObj)[ubLoop].data.objectStatus ) )
+		if ( IsItemRepairable( pObj->usItem, (*pObj)[ubLoop]->data.objectStatus ) )
 		{
 			// repairable, try to repair it
 
 			//void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
-			DoActualRepair( pSoldier, pObj->usItem, &((*pObj)[ubLoop].data.objectStatus), pubRepairPtsLeft );
+			DoActualRepair( pSoldier, pObj->usItem, &((*pObj)[ubLoop]->data.objectStatus), pubRepairPtsLeft );
 
 			fSomethingWasRepaired = true;
 
-			if ( (*pObj)[ubLoop].data.objectStatus == 100 )
+			if ( (*pObj)[ubLoop]->data.objectStatus == 100 )
 			{
 				// report it as fixed
 				if ( pSoldier == pOwner )
@@ -3134,21 +3137,25 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 			if ( *pubRepairPtsLeft == 0 )
 			{
 				// we're out of points!
-				break;
-			}
-		}		
-	}
-
-	// now check for attachments
-	for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
-		if ( *pubRepairPtsLeft != 0 )
-		{
-			if (RepairObject(pSoldier, pOwner, &(*iter), pubRepairPtsLeft)) {
-				fSomethingWasRepaired = true;
+				return true;
 			}
 		}
 	}
-	
+
+	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
+	{
+		// now check for attachments after
+		for (attachmentList::iterator iter = (*pObj)[ubLoop]->attachments.begin(); iter != (*pObj)[ubLoop]->attachments.end(); ++iter) {
+			if (RepairObject(pSoldier, pOwner, &(*iter), pubRepairPtsLeft)) {
+				fSomethingWasRepaired = true;
+				if ( *pubRepairPtsLeft == 0 )
+				{
+					// we're out of points!
+					return true;
+				}
+			}
+		}
+	}
 	return( fSomethingWasRepaired );
 }
 
@@ -11669,13 +11676,13 @@ BOOLEAN UnjamGunsOnSoldier( SOLDIERTYPE *pOwnerSoldier, SOLDIERTYPE *pRepairSold
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		// the object a weapon? and jammed?
-		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ][0].data.gun.bGunAmmoStatus < 0 ) )
+		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ][0]->data.gun.bGunAmmoStatus < 0 ) )
 		{
 			if ( *pubRepairPtsLeft >= gGameExternalOptions.ubRepairCostPerJam )
 			{
 				*pubRepairPtsLeft -= gGameExternalOptions.ubRepairCostPerJam;
 
-				pOwnerSoldier->inv [ bPocket ][0].data.gun.bGunAmmoStatus *= -1;
+				pOwnerSoldier->inv [ bPocket ][0]->data.gun.bGunAmmoStatus *= -1;
 
 				// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
 				StatChange( pRepairSoldier, MECHANAMT, 5, FALSE );

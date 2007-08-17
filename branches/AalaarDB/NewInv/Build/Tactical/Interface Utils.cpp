@@ -367,14 +367,14 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 	if ( ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1 )
 	{
 		sValue = 0;
-		OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex( ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 );
+		OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex( ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 );
 		if (pAttachment) {
-			sValue = pAttachment->objectStatus;
+			sValue = (*pAttachment)[0]->data.objectStatus;
 		}
 	}
 	else
 	{
-		sValue = (*pObject)[ ubStatus ].data.objectStatus;
+		sValue = (*pObject)[ ubStatus ]->data.objectStatus;
 	}
 
 	// Adjust for ammo, other thingys..
@@ -385,8 +385,8 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 
 		if ( sValue < 0 )
 		{
-			sValue = pObject->shots.ubShotsLeft[0] * 100 / Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize;
-			DebugMsg ( TOPIC_JA2, DBG_LEVEL_3, String("Ammo status: shots left %d * 100 / Mag Size %d = value %d",pObject->shots.ubShotsLeft[0],Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize,sValue ));
+			sValue = (*pObject)[0]->data.ubShotsLeft * 100 / Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize;
+			DebugMsg ( TOPIC_JA2, DBG_LEVEL_3, String("Ammo status: shots left %d * 100 / Mag Size %d = value %d",(*pObject)[0]->data.ubShotsLeft,Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize,sValue ));
 		}
 		if ( sValue > 100 )
 		{

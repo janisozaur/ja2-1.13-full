@@ -721,21 +721,21 @@ void RenderItemDetails()
 							gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
 						{
 							pItem = &gpWorldItemsSummaryArray[ i ].object;
-							if( !(*pItem)[0].data.bombs.bFrequency )
+							if( !(*pItem)[0]->data.bombs.bFrequency )
 								bFreqIndex = 7;
-							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY )
+							else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY )
 								bFreqIndex = 0;
-							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY_2 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_2 )
 								bFreqIndex = 1;
-							else if( (*pItem)[0].data.bombs.bFrequency == PANIC_FREQUENCY_3 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_3 )
 								bFreqIndex = 2;
-							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 1 )
 								bFreqIndex = 3;
-							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 2 )
 								bFreqIndex = 4;
-							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 3 )
 								bFreqIndex = 5;
-							else if( (*pItem)[0].data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
+							else if( (*pItem)[0]->data.bombs.bFrequency == FIRST_MAP_PLACED_FREQUENCY + 4 )
 								bFreqIndex = 6;
 							else
 								continue;

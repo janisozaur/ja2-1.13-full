@@ -3917,15 +3917,15 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 			BOOLEAN fSetGassed = TRUE;
 
 			// If we have a functioning gas mask...
-			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
+			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 			{
 				fSetGassed = FALSE;
 			}
-			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
-			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
@@ -3993,7 +3993,7 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 		return;
 	}
 
-	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunAmmoType )
+	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunAmmoType )
 	//{
 	//	case AMMO_SLEEP_DART:
 	//		thisSoldier->flags.fMuzzleFlash = FALSE;
@@ -4044,14 +4044,14 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 			// Set the TOTAL number of bullets to be fired
 			// Can't shoot more bullets than we have in our magazine!
 			if(thisSoldier->bDoAutofire)
-				thisSoldier->bBulletsLeft = __min( thisSoldier->bDoAutofire, thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunShotsLeft );
+				thisSoldier->bBulletsLeft = __min( thisSoldier->bDoAutofire, thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft );
 			else
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,"EVENT_FireSoldierWeapon: do burst");
 				if ( thisSoldier->bWeaponMode == WM_ATTACHED_GL_BURST )
-					thisSoldier->bBulletsLeft = __min( Weapon[GetAttachedGrenadeLauncher(&thisSoldier->inv[thisSoldier->ubAttackingHand])].ubShotsPerBurst, thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunShotsLeft );
+					thisSoldier->bBulletsLeft = __min( Weapon[GetAttachedGrenadeLauncher(&thisSoldier->inv[thisSoldier->ubAttackingHand])].ubShotsPerBurst, thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft );
 				else
-					thisSoldier->bBulletsLeft = __min( GetShotsPerBurst(&thisSoldier->inv[ thisSoldier->ubAttackingHand ]), thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunShotsLeft );
+					thisSoldier->bBulletsLeft = __min( GetShotsPerBurst(&thisSoldier->inv[ thisSoldier->ubAttackingHand ]), thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft );
 			}
 		}
 		else if ( IsValidSecondHandShot( thisSoldier ) )
@@ -4064,9 +4064,9 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 			thisSoldier->bBulletsLeft = 1;
 		}
 
-		if ( AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunAmmoType].numberOfBullets > 1 )
+		if ( AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunAmmoType].numberOfBullets > 1 )
 		{
-			thisSoldier->bBulletsLeft *= AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ][0].data.gun.ubGunAmmoType].numberOfBullets;
+			thisSoldier->bBulletsLeft *= AmmoTypes[thisSoldier->inv[ thisSoldier->ubAttackingHand ][0]->data.gun.ubGunAmmoType].numberOfBullets;
 		}
 	}
 #endif
@@ -4730,7 +4730,7 @@ void SOLDIERTYPE::EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 sDamage, INT1
 	}
 	// callahan update end
 
-	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ][0].data.gun.ubGunAmmoType].explosionSize <= 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ][0]->data.gun.ubGunAmmoType].explosionSize <= 1)
 	{	
 		if ( ubSpecial == FIRE_WEAPON_SLEEP_DART_SPECIAL )
 		{
@@ -4787,9 +4787,9 @@ void SOLDIERTYPE::EVENT_SoldierGotHit( UINT16 usWeaponIndex, INT16 sDamage, INT1
 		}
 		ubReason = TAKE_DAMAGE_HANDTOHAND;
 	}
-	// marke added one 'or' for explosive ammo. variation of: AmmoTypes[thisSoldier->inv[thisSoldier->ubAttackingHand ][0].data.gun.ubGunAmmoType].explosionSize > 1
+	// marke added one 'or' for explosive ammo. variation of: AmmoTypes[thisSoldier->inv[thisSoldier->ubAttackingHand ][0]->data.gun.ubGunAmmoType].explosionSize > 1
 	//  extracting attacker´s ammo type
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ][0].data.gun.ubGunAmmoType].explosionSize > 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ][0]->data.gun.ubGunAmmoType].explosionSize > 1)
 	{	
 		INT8 bDeafValue;
 
@@ -12499,8 +12499,8 @@ BOOLEAN SOLDIERTYPE::IsValidSecondHandShot( void )
 		!thisSoldier->bDoBurst && 
 		!Item[thisSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ thisSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		thisSoldier->inv[SECONDHANDPOS][0].data.gun.bGunStatus >= USABLE &&
-		thisSoldier->inv[SECONDHANDPOS][0].data.gun.ubGunShotsLeft > 0 )
+		thisSoldier->inv[SECONDHANDPOS][0]->data.gun.bGunStatus >= USABLE &&
+		thisSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunShotsLeft > 0 )
 	{
 		return( TRUE );
 	}
@@ -12517,8 +12517,8 @@ BOOLEAN SOLDIERTYPE::IsValidSecondHandShotForReloadingPurposes( void )
 		!thisSoldier->bDoBurst && 
 		!Item[thisSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ thisSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		thisSoldier->inv[SECONDHANDPOS][0].data.gun.bGunStatus >= USABLE //&&
-		//			 thisSoldier->inv[SECONDHANDPOS][0].data.gun.ubGunShotsLeft > 0 &&
+		thisSoldier->inv[SECONDHANDPOS][0]->data.gun.bGunStatus >= USABLE //&&
+		//			 thisSoldier->inv[SECONDHANDPOS][0]->data.gun.ubGunShotsLeft > 0 &&
 		//			 gAnimControl[ thisSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
 		)
 	{

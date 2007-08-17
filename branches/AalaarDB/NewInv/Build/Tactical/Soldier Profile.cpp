@@ -612,7 +612,7 @@ void MakeRemainingTerroristsTougher( void )
 
 	DeleteObj( &gTempObject );
 	gTempObject.usItem = usNewItem;
-	gTempObject[0].data.objectStatus = 100;
+	gTempObject[0]->data.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -747,7 +747,7 @@ void MakeRemainingAssassinsTougher( void )
 
 	DeleteObj( &gTempObject );
 	gTempObject.usItem = usNewItem;
-	gTempObject[0].data.objectStatus = 100;
+	gTempObject[0]->data.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{

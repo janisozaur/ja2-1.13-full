@@ -24,10 +24,29 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object)
 	return ItemSlotLimit( usItem, BIGPOCK1POS ) - numToAdd;
 }
 
-int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
+bool OBJECTTYPE::RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject)
 {
-	int numToRemove = min(howMany, ubNumberOfObjects);
-	attachments.resize(attachments.size() - numToRemove);
+	if (ubNumberOfObjects == 1) {
+		return false;
+	}
+
+	if (pSecondObject) {
+		CreateItem(usItem, objectStack[0]->data.objectStatus, pSecondObject);
+		pSecondObject->objectStack.front() = objectStack.front();
+	}
+	objectStack.pop_front();
+
+	return true;
+}
+
+StackedObjectData* OBJECTTYPE::operator [](const int index)
+{
+	Assert(x < objectStack.size());
+	StackedObjects::iterator iter == objectStack.begin();
+	for (int x = 0; x < index; ++x) {
+		++iter;
+	}
+	return &(*iter);
 }
 
 
@@ -66,16 +85,17 @@ void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 	return;
 }
 
-OBJECTTYPE* OBJECTTYPE::GetAttachmentAtIndex(UINT8 index)
+OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
-	attachmentList::iterator iter = objectStack[0].attachments.begin();
-	for (int x = 0; x <= index && iter != objectStack[0].attachments.end(); ++x) {
+	attachmentList::iterator iter = attachments.begin();
+	for (int x = 0; x <= index && iter != attachments.end(); ++x) {
 		++iter;
 	}
 
-	if (iter != objectStack[0].attachments.end()) {
+	if (iter != attachments.end()) {
 		return &(*iter);
 	}
+	Assert(false);
 	return 0;
 }
 
@@ -89,8 +109,8 @@ void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	memset(&(this->pUnion), 0, SIZEOF_OBJECTTYPE_UNION);
-	attachments.clear();
+	objectStack.resize(1);
+	objectStack[0].initialize();
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)
@@ -102,18 +122,8 @@ bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 {
 	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
-		if ( memcmp(&(this->pUnion), &(compare.pUnion), SIZEOF_OBJECTTYPE_UNION) == 0) {
-			if (attachments.size() == compare.attachments.size()) {
-				attachmentList::iterator iter = objectStack[0].attachments.begin();
-				attachmentList::iterator compareIter = compare.objectStack[0].attachments.begin();
-				while (iter != objectStack[0].attachments.end() && *iter == *compareIter) {
-					++iter;
-					++compareIter;
-				}
-				if (iter == objectStack[0].attachments.end()) {
-					return true;
-				}
-			}
+		if (this->objectStack == compare.objectStack) {
+			return true;
 		}
 	}
 	return false;
@@ -132,8 +142,7 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
-		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->objectStack[0].attachments = src.attachments;
+		this->objectStack = src.objectStack;
 	}
 }
 
@@ -150,8 +159,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
-		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->objectStack[0].attachments = src.attachments;
+		this->objectStack = src.objectStack;
 	}
 	return *this;
 }
@@ -173,19 +181,35 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
 		this->fUsed = src.fUsed;				// flags for whether the item is used or not
+
+
+
+
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
-		memcpy(&(this->pUnion), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
-
-		//it's unlikely max will get less over the versions, but still, check the min
-		for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
-		{
-			if (src.usAttachItem[x] != NOTHING) {
-				CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &gTempObject);
-				attachments.push_back(gTempObject);
+		if (ubNumberOfObjects == 1) {
+			memcpy(&(objectStack[0].data), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
+			//it's unlikely max will get less over the versions, but still, check the min
+			for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
+			{
+				if (src.usAttachItem[x] != NOTHING) {
+					CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &gTempObject);
+					objectStack[0]->attachments.push_back(gTempObject);
+				}
 			}
 		}
+		else {
+			//we are loading a stack of objects, the union must either be
+			//bStatus[OLD_MAX_OBJECTS_PER_SLOT_101] or
+			//ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101]
 
+			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
+			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
+			objectStack.resize(ubNumberOfObjects);
+			for (int x = 0; x < ubNumberOfObjects; ++x) {
+				objectStack[x]->data.objectStatus = ugYucky.bStatus[x];
+			}
+		}
 	}
 	return *this;
 }
@@ -193,5 +217,5 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 OBJECTTYPE::~OBJECTTYPE()
 {
-	attachments.clear();
+	objectStack.clear();
 }

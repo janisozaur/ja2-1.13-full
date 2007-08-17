@@ -954,19 +954,19 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SPRING_AND_BOLT_UPGRADE );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end()objectStack[0].attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
 		//{	
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found rod and spring, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_SCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end()objectStack[0].attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex scope, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_UNSCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0].attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end() )
 		//{
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
@@ -1643,7 +1643,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 			}
 			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
 			{
-				if ( pSoldier->inv[ bInvPos ][0].data.gun.ubGunShotsLeft == 0 )
+				if ( pSoldier->inv[ bInvPos ][0]->data.gun.ubGunShotsLeft == 0 )
 				{
 					if ( fDisplay )
 					{
@@ -1655,7 +1655,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 				//<SB> manual recharge
 				if( pSoldier->bTeam == OUR_TEAM )
 				{
-					if ( !(	pSoldier->inv[ bInvPos ][0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
+					if ( !(	pSoldier->inv[ bInvPos ][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
 					{
 						return( FALSE );
 					}
@@ -1695,11 +1695,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
 				// OK, let's see, don't overrun...
-				if ( (*pObj)[0].data.gun.ubGunShotsLeft != 0 )
+				if ( (*pObj)[0]->data.gun.ubGunShotsLeft != 0 )
 				{
-					(*pObj)[0].data.gun.ubGunShotsLeft--;
+					(*pObj)[0]->data.gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && (*pObj)[0].data.gun.ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && (*pObj)[0]->data.gun.ubGunShotsLeft > 0)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
@@ -1724,20 +1724,20 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 				if ( Item[ pObj->usItem ].usItemClass == IC_LAUNCHER && GetMagSize(pObj) > 1 )
 				{
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor"));
-					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
+					(*pAttachment)[0]->data.objectStatus -= (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
 					{
 						RemoveAttachment( pObj, pAttachment);
 					}
 				}
 				else if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO ) && Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize > 1 )
 				{
-					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
+					(*pAttachment)[0]->data.objectStatus -= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
 					{
 						RemoveAttachment( pObj, pAttachment);
 					}
@@ -1843,7 +1843,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	pObj = &(pSoldier->inv[HANDPOS]);
 
 //<SB> manual recharge
-	if ((*pObj)[0].data.gun.ubGunShotsLeft && !((*pObj)[0].data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0]->data.gun.ubGunShotsLeft && !((*pObj)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		return Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually;
 	}

@@ -203,7 +203,7 @@ BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 	{
 		if (Item[pSoldier->inv[ubLoop].usItem].usItemClass == IC_KEY)
 		{
-			if ( (pSoldier->inv[ubLoop][0].data.key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
+			if ( (pSoldier->inv[ubLoop][0]->data.key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
 			{
 				// there's the key we want!
 				return( TRUE );

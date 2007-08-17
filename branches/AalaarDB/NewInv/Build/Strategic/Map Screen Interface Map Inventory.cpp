@@ -477,7 +477,7 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 				// set text for current item
 				if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.usItem == MONEY )
 				{
-					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object.money.uiMoneyAmount );
+					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].object[0]->data.money.uiMoneyAmount );
 					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), pStr );
 				}
 				else
@@ -1498,12 +1498,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 	else
 	{
 		// take one item
-		pItemPtr->usItem = pInventorySlot->usItem;
-
-		// find first unempty slot
-		pItemPtr->objectStatus = pInventorySlot->objectStatus;
-		pItemPtr->ubNumberOfObjects = 1;
-		pItemPtr->ubWeight = CalculateObjectWeight( pItemPtr );
+		TODO
 		RemoveObjFrom( pInventorySlot, 0 );
 		pInventorySlot->ubWeight = CalculateObjectWeight( pInventorySlot );
 
@@ -1560,7 +1555,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			// in the InSlot copy, zero out all the objects we didn't drop
 			for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 			{
-				(*pInventorySlot)[ubLoop].data.objectStatus = 0;
+				(*pInventorySlot)[ubLoop]->data.objectStatus = 0;
 			}
 		}
 		pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -1581,8 +1576,8 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...
-				pInventorySlot->objectStatus = (INT8) ( ( (UINT32)pInventorySlot->money.bMoneyStatus * pInventorySlot->money.uiMoneyAmount + (UINT32)pItemPtr->money.bMoneyStatus * pItemPtr->money.uiMoneyAmount )/ (pInventorySlot->money.uiMoneyAmount + pItemPtr->money.uiMoneyAmount) );
-				pInventorySlot->money.uiMoneyAmount += pItemPtr->money.uiMoneyAmount;
+				pInventorySlot->objectStatus = (INT8) ( ( (UINT32)(*pInventorySlot)[0]->data.money.bMoneyStatus * (*pInventorySlot)[0]->data.money.uiMoneyAmount + (UINT32)(*pItemPtr)[0]->data.money.bMoneyStatus * (*pItemPtr)[0]->data.money.uiMoneyAmount )/ ((*pInventorySlot)[0]->data.money.uiMoneyAmount + (*pItemPtr)[0]->data.money.uiMoneyAmount) );
+				(*pInventorySlot)[0]->data.money.uiMoneyAmount += (*pItemPtr)[0]->data.money.uiMoneyAmount;
 
 				DeleteObj( pItemPtr );
 			}
@@ -1598,14 +1593,12 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 				{
 					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
 				}
-
 				StackObjs( pItemPtr, pInventorySlot, ubNumberToDrop );
 			}
 		}
 		else
 		{
-			
-				SwapObjs( pItemPtr, pInventorySlot );
+			SwapObjs( pItemPtr, pInventorySlot );
 		}
 	}
 	return( TRUE );
@@ -1642,7 +1635,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 		// in the InSlot copy, zero out all the objects we didn't drop
 		for (ubLoop = ubNumberToDrop; ubLoop < pItemPtr->ubNumberOfObjects; ubLoop++)
 		{
-			(*pInventorySlot)[ubLoop].data.objectStatus = 0;
+			(*pInventorySlot)[ubLoop]->data.objectStatus = 0;
 		}
 	}
 	pInventorySlot->ubNumberOfObjects = ubNumberToDrop;
@@ -2252,8 +2245,8 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 	usItem1Index = pFirst->object.usItem;
 	usItem2Index = pSecond->object.usItem;
 
-	ubItem1Quality = pFirst->object[0].data.objectStatus;
-	ubItem2Quality = pSecond->object[0].data.objectStatus;
+	ubItem1Quality = pFirst->object[0]->data.objectStatus;
+	ubItem2Quality = pSecond->object[0]->data.objectStatus;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -2328,7 +2321,7 @@ INT32 SellItem( OBJECTTYPE& object )
 		UINT8 magSize = Magazine[ Item[ usItemType ].ubClassIndex ].ubMagSize;
 		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
 		{
-			iPrice += (INT32)( itemPrice * (float) object.shots.ubShotsLeft[bLoop] / magSize );
+			iPrice += (INT32)( itemPrice * (float) object[bLoop]->data.ubShotsLeft / magSize );
 		}
 	}
 	else
@@ -2336,12 +2329,12 @@ INT32 SellItem( OBJECTTYPE& object )
 		//we are selling a gun or something - it could be stacked or single, and if single it could have attachments
 		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
 		{
-			iPrice += ( itemPrice * object[bLoop].data.objectStatus / 100 );
+			iPrice += ( itemPrice * object[bLoop]->data.objectStatus / 100 );
+			for (attachmentList::iterator iter = object.objectStack[bLoop]->attachments.begin(); iter != object.objectStack[bLoop]->attachments.end(); ++iter) {
+				iPrice += SellItem(*iter);
+			}
 		}
 
-		for (attachmentList::iterator iter = object.objectStack[0].attachments.begin(); iter != object.objectStack[0].attachments.end(); ++iter) {
-			iPrice += SellItem(*iter);
-		}
 	}
 
 	if( iPriceModifier > 1) {

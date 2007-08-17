@@ -2473,7 +2473,7 @@ void CreateMouseRegionForBigImage( UINT16 usPosY, UINT8 ubCount, INT16 *pItemNum
 				//	AmmoTypes[Magazine[ Item[usItem].ubClassIndex ].ubAmmoType].ammoName,	//Ammo type
 				//	MagNames[Magazine[ Item[usItem].ubClassIndex ].ubMagType],				//Magazine type
 				//	Magazine[ Item[usItem].ubClassIndex ].ubMagSize,						//Magazine capacity
-				//	pObject->shots.ubShotsLeft[0],	//Shots left
+				//	(*pObject)[0]->data.ubShotsLeft,	//Shots left
 				//	gWeaponStatsDesc[ 12 ],		//Weight String
 				//	fWeight,					//Weight
 				//	GetWeightUnitString()		//Weight units

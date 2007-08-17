@@ -186,7 +186,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		{
 			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is done for BobbyR
 			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
-			gTempObject[0].data.gun.ubGunShotsLeft = 0;
+			gTempObject[0]->data.gun.ubGunShotsLeft = 0;
 		}
 
 		ubItemsDelivered = 0;
@@ -217,11 +217,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						gTempObject[0].data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0].data.objectStatus ) / 100 );
+						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (gTempObject[0].data.objectStatus == 0)
+						if (gTempObject[0]->data.objectStatus == 0)
 						{
-							gTempObject[0].data.objectStatus = 1;
+							gTempObject[0]->data.objectStatus = 1;
 						}
 						AddItemToPool( usMapPos, &gTempObject, -1, 0, 0, 0 );
 					}
@@ -251,11 +251,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						gTempObject[0].data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0].data.objectStatus ) / 100 );
+						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (gTempObject[0].data.objectStatus == 0)
+						if (gTempObject[0]->data.objectStatus == 0)
 						{
-							gTempObject[0].data.objectStatus = 1;
+							gTempObject[0]->data.objectStatus = 1;
 						}
 						pObject[ uiCount ] = gTempObject;
 						uiCount++;
@@ -562,7 +562,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == MONEY )
 		{
-			uiTotalCash += gWorldItems[uiLoop].object[0].data.money.uiMoneyAmount;
+			uiTotalCash += gWorldItems[uiLoop].object[0]->data.money.uiMoneyAmount;
 		}
 	}
 
@@ -1051,14 +1051,14 @@ void CheckForMissingHospitalSupplies( void )
 	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP && gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
+		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP && gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
 			GetItemPoolFromGround( gWorldItems[ uiLoop ].sGridNo, &pItemPool ) ;
 			while( pItemPool ) 
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
 
-				if ( (*pObj)[0].data.objectStatus > 60 )
+				if ( (*pObj)[0]->data.objectStatus > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{

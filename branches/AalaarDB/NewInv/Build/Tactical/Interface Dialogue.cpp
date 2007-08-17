@@ -2405,7 +2405,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &gTempObject );
-						gTempObject.money.uiMoneyAmount = 10000;
+						gTempObject[0]->data.money.uiMoneyAmount = 10000;
 						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything
@@ -3144,7 +3144,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						if (bMoneySlot != NO_SLOT && bEmptySlot != NO_SLOT)
 						{
 							CreateMoney( gMercProfiles[ ubTargetNPC ].iBalance * 2, &(pSoldier->inv[ bEmptySlot ] ) );
-							pSoldier->inv[ bMoneySlot ][0].data.money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
+							pSoldier->inv[ bMoneySlot ][0]->data.money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!

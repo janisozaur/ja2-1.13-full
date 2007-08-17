@@ -1404,7 +1404,7 @@ INT8 DecideHearing( SOLDIERTYPE * pSoldier )
 	if ( bSlot != -1 )
 	{
 		// at 81-100% adds +5, at 61-80% adds +4, at 41-60% adds +3, etc.
-		bHearing += GetHearingRangeBonus(pSoldier);	// pSoldier->inv[bSlot][0].data.objectStatus / 20 + 1;
+		bHearing += GetHearingRangeBonus(pSoldier);	// pSoldier->inv[bSlot][0]->data.objectStatus / 20 + 1;
 	}
 
 	// adjust for dark conditions	
@@ -4420,11 +4420,11 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 		return;
 	//Build attachment string
 	fAttachments = FALSE;
-	if( pObject->objectStack[0].attachments.empty() == false )
+	if( (*pObject)[0]->attachments.empty() == false )
 	{
 		fAttachments = TRUE;
 		swprintf( szAttach, L"(" );
-		for (attachmentList::iterator iter = pObject->objectStack[0].attachments.begin(); iter != pObject->objectStack[0].attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
 			AppendAttachmentCode( iter->usItem, szAttach );
 		}
 		wcscat( szAttach, L" )" );
@@ -4437,36 +4437,36 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 			CHAR16 str[50];
 			CHAR16 temp[5];
 			UINT8 i;
-			swprintf( str, L"Clips:	%d	(%d", pObject->ubNumberOfObjects, (*pObject)[0].data.objectStatus );
+			swprintf( str, L"Clips:	%d	(%d", pObject->ubNumberOfObjects, (*pObject)[0]->data.objectStatus );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
 			{
-				swprintf( temp, L", %d", (*pObject)[0].data.objectStatus );
+				swprintf( temp, L", %d", (*pObject)[0]->data.objectStatus );
 				wcscat( str, temp );
 			}
 			wcscat( str, L")" );
 			gprintf( 320, yp, str ); 
 		}
 		else
-			gprintf( 320, yp, L"%d rounds", (*pObject)[0].data.objectStatus );
+			gprintf( 320, yp, L"%d rounds", (*pObject)[0]->data.objectStatus );
 		return;
 	}
 	if( pObject->ubNumberOfObjects > 1 && fAttachments )
 	{ //everything
 		gprintf( 320, yp, L"%d%%	Qty:	%d	%s", 
-			(*pObject)[0].data.objectStatus, pObject->ubNumberOfObjects, szAttach );
+			(*pObject)[0]->data.objectStatus, pObject->ubNumberOfObjects, szAttach );
 	}
 	else if( pObject->ubNumberOfObjects > 1 )
 	{ //condition and quantity
 		gprintf( 320, yp, L"%d%%	Qty:	%d	", 
-			(*pObject)[0].data.objectStatus, pObject->ubNumberOfObjects );
+			(*pObject)[0]->data.objectStatus, pObject->ubNumberOfObjects );
 	}
 	else if( fAttachments )
 	{ //condition and attachments
-		gprintf( 320, yp, L"%d%%	%s", (*pObject)[0].data.objectStatus, szAttach );
+		gprintf( 320, yp, L"%d%%	%s", (*pObject)[0]->data.objectStatus, szAttach );
 	}
 	else
 	{ //condition
-		gprintf( 320, yp, L"%d%%", (*pObject)[0].data.objectStatus );
+		gprintf( 320, yp, L"%d%%", (*pObject)[0]->data.objectStatus );
 	}
 }
 

@@ -4608,17 +4608,17 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 	{ //Message for vehicle full?
 		return;
 	}
-	if( (*pItem)[0].data.objectStatus )
+	if( (*pItem)[0]->data.objectStatus )
 	{ //Fill 'er up.
 		sFuelNeeded = 10000 - pVehicle->sBreathRed;
-		sFuelAvailable = (*pItem)[0].data.objectStatus * 50;
+		sFuelAvailable = (*pItem)[0]->data.objectStatus * 50;
 		sFuelAdded = min( sFuelNeeded, sFuelAvailable );
 		//Add to vehicle
 		pVehicle->sBreathRed += sFuelAdded;
 		pVehicle->bBreath = (INT8)(pVehicle->sBreathRed / 100);
 		//Subtract from item
-		(*pItem)[0].data.objectStatus = (INT8)((*pItem)[0].data.objectStatus - sFuelAdded / 50);
-		if( !(*pItem)[0].data.objectStatus )
+		(*pItem)[0]->data.objectStatus = (INT8)((*pItem)[0]->data.objectStatus - sFuelAdded / 50);
+		if( !(*pItem)[0]->data.objectStatus )
 		{ //Gas can is empty, so toast the item.
 			DeleteObj( pItem );
 		}

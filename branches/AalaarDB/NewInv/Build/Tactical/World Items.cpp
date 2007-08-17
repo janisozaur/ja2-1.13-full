@@ -167,7 +167,7 @@ bool WORLDITEM::operator<(const WORLDITEM& compare)
 				// same item type = compare item quality, then
 
 				// higher quality first
-				if ( this->object[0].data.objectStatus > compare.object[0].data.objectStatus )
+				if ( this->object[0]->data.objectStatus > compare.object[0]->data.objectStatus )
 				{
 					return( true );
 				}
@@ -352,12 +352,12 @@ void FindPanicBombsAndTriggers( void )
 		if (gWorldBombs[ uiBombIndex ].fExists)
 		{
 			pObj = &(gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].object);
-			if ((*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY || (*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY_2 || (*pObj)[0].data.bombs.bFrequency == PANIC_FREQUENCY_3 )
+			if ((*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY || (*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_2 || (*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_3 )
 			{
 				if (pObj->usItem == SWITCH)
 				{
 					sGridNo = gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].sGridNo;
-					switch( (*pObj)[0].data.bombs.bFrequency )
+					switch( (*pObj)[0]->data.bombs.bFrequency )
 					{
 						case PANIC_FREQUENCY:
 							bPanicIndex = 0;
@@ -395,7 +395,7 @@ void FindPanicBombsAndTriggers( void )
 					}
 
 					gTacticalStatus.sPanicTriggerGridNo[ bPanicIndex ] = sGridNo;
-					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0].data.bombs.ubTolerance;
+					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0]->data.bombs.ubTolerance;
 					if (pObj->fFlags & OBJECT_ALARM_TRIGGER)
 					{
 						gTacticalStatus.bPanicTriggerIsAlarm[ bPanicIndex ] = TRUE;
@@ -636,7 +636,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 						if ( usReplacement )
 						{
 							// everything else can be the same? no.
-							bAmmo = dummyItem.object[0].data.gun.ubGunShotsLeft;
+							bAmmo = dummyItem.object[0]->data.gun.ubGunShotsLeft;
 							bNewAmmo = (Weapon[ usReplacement ].ubMagSize * bAmmo) / Weapon[ dummyItem.object.usItem ].ubMagSize;
 							if ( bAmmo > 0 && bNewAmmo == 0 )
 							{
@@ -644,7 +644,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 							}
 
 							dummyItem.object.usItem = usReplacement;
-							dummyItem.object[0].data.gun.ubGunShotsLeft = bNewAmmo;
+							dummyItem.object[0]->data.gun.ubGunShotsLeft = bNewAmmo;
 						}
 					}
 					if ( Item[ dummyItem.object.usItem ].usItemClass == IC_AMMO )
@@ -670,11 +670,11 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 			}
 			if( dummyItem.object.usItem == ACTION_ITEM && gfLoadPitsWithoutArming )
 			{ //if we are loading a pit, they are typically loaded without being armed.
-				if( dummyItem.object[0].data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.object[0].data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+				if( dummyItem.object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				{
 					dummyItem.usFlags &= ~WORLD_ITEM_ARMED_BOMB;
 					dummyItem.bVisible = BURIED;
-					dummyItem.object[0].data.bombs.bDetonatorType = 0;
+					dummyItem.object[0]->data.bombs.bDetonatorType = 0;
 				}
 			}
 			
@@ -724,11 +724,11 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP )
 			{
 				// if owner is a terrorist
-				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ) )
+				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ) )
 				{
 					// and they were not set in the current sector
-					if ( gMercProfiles[ gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ].sSectorX != gWorldSectorX ||
-						gMercProfiles[ gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile ].sSectorY != gWorldSectorY )
+					if ( gMercProfiles[ gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ].sSectorX != gWorldSectorX ||
+						gMercProfiles[ gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile ].sSectorY != gWorldSectorY )
 					{
 						// then all items in this location should be deleted
 						sGridNo = gWorldItems[ uiLoop ].sGridNo;
@@ -769,7 +769,7 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP )
 			{
 				// if owner is the Queen
-				if ( gWorldItems[ uiLoop ].object[0].data.owner.ubOwnerProfile == QUEEN )
+				if ( gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerProfile == QUEEN )
 				{
 					// then all items in this location should be deleted
 					sGridNo = gWorldItems[ uiLoop ].sGridNo;

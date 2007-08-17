@@ -3755,7 +3755,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 	}
 
 	// Check single hand for jammed status, ( or ammo is out.. )
-	if ( pSoldier->inv[ HANDPOS ][0].data.gun.bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ][0].data.gun.ubGunShotsLeft == 0 )
+	if ( pSoldier->inv[ HANDPOS ][0]->data.gun.bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ][0]->data.gun.ubGunShotsLeft == 0 )
 	{
 		// If we have 2 pistols, donot go back!
 		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )

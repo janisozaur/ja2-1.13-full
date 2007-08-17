@@ -2127,11 +2127,11 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				INT8				bPosOfMask;
 
 				bPosOfMask = FindGasMask (pSoldier);
-				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
+				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD1POS;
 				//}
-				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0].data.objectStatus >= GASMASK_MIN_STATUS )
+				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD2POS;
 				//}

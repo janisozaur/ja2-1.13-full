@@ -2570,7 +2570,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 		if ( sZ != 0 || pObject->fInWater )
 #else
-		if ( sZ != 0 || pObject->fInWater || ( (*pObj)[0].data.objectStatus >= USABLE && ( PreRandom( 100 ) < (UINT32) (*pObj)[0].data.objectStatus + PreRandom( 50 ) ) ) )
+		if ( sZ != 0 || pObject->fInWater || ( (*pObj)[0]->data.objectStatus >= USABLE && ( PreRandom( 100 ) < (UINT32) (*pObj)[0]->data.objectStatus + PreRandom( 50 ) ) ) )
 #endif
 		{
 			fDoImpact = TRUE;
@@ -2580,7 +2580,7 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 #ifdef TESTDUDEXPLOSIVES 
 			if ( 1 )		
 #else
-			if ( (*pObj)[0].data.objectStatus >= USABLE && PreRandom(100) < (UINT32) (*pObj)[0].data.objectStatus + PreRandom( 50 ) )
+			if ( (*pObj)[0]->data.objectStatus >= USABLE && PreRandom(100) < (UINT32) (*pObj)[0]->data.objectStatus + PreRandom( 50 ) )
 #endif
 			{
 				iTrapped = PreRandom( 4 ) + 2;
@@ -2591,8 +2591,8 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 				// Start timed bomb...
 				usFlags |= WORLD_ITEM_ARMED_BOMB;
 
-				(*pObj)[0].data.bombs.bDetonatorType = BOMB_TIMED;
-				(*pObj)[0].data.bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
+				(*pObj)[0]->data.bombs.bDetonatorType = BOMB_TIMED;
+				(*pObj)[0]->data.bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
 			}
 
 			// ATE: If we have collided with roof last...

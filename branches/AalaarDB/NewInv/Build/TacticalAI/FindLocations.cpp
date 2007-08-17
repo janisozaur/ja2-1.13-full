@@ -1793,16 +1793,16 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].object);
 							pItem = &(Item[pObj->usItem]);
-							if ( pItem->usItemClass == IC_GUN && (*pObj)[0].data.objectStatus >= MINIMUM_REQUIRED_STATUS )
+							if ( pItem->usItemClass == IC_GUN && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								// maybe this gun has ammo (adjust for whether it is better than ours!)
-								if ( (*pObj)[0].data.gun.bGunAmmoStatus < 0 || (*pObj)[0].data.gun.ubGunShotsLeft == 0 || (Item[pObj->usItem].fingerprintid && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) )
+								if ( (*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (Item[pObj->usItem].fingerprintid && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) )
 								{
 									iTempValue = 0;
 								}
 								else
 								{
-									iTempValue = (*pObj)[0].data.gun.ubGunShotsLeft * Weapon[pObj->usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
+									iTempValue = (*pObj)[0]->data.gun.ubGunShotsLeft * Weapon[pObj->usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
 								}
 							}
 							else if (ValidAmmoType( usItem, pObj->usItem ) )
@@ -1826,9 +1826,9 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].object);
 							pItem = &(Item[pObj->usItem]);
-							if (pItem->usItemClass & IC_WEAPON && (*pObj)[0].data.objectStatus >= MINIMUM_REQUIRED_STATUS )
+							if (pItem->usItemClass & IC_WEAPON && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
-								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0].data.gun.bGunAmmoStatus < 0 || (*pObj)[0].data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
+								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
 								{
 									// jammed or out of ammo, skip it!
 									iTempValue = 0;
@@ -1866,9 +1866,9 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].object);
 							pItem = &(Item[pObj->usItem]);
-							if ( pItem->usItemClass & IC_WEAPON && (*pObj)[0].data.objectStatus >= MINIMUM_REQUIRED_STATUS )
+							if ( pItem->usItemClass & IC_WEAPON && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
-								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0].data.gun.bGunAmmoStatus < 0 || (*pObj)[0].data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
+								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
 								{
 									// jammed or out of ammo, skip it!
 									iTempValue = 0;
@@ -1889,7 +1889,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 									iTempValue = 200 + Weapon[pObj->usItem].ubDeadliness;
 								}
 							}
-							else if	(pItem->usItemClass == IC_ARMOUR && (*pObj)[0].data.objectStatus >= MINIMUM_REQUIRED_STATUS )
+							else if	(pItem->usItemClass == IC_ARMOUR && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								switch( Armour[pItem->ubClassIndex].ubArmourClass )
 								{

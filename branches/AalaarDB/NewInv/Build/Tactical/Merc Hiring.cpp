@@ -135,7 +135,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 			// make an objecttype
 			gTempObject.usItem						= LETTER;
 			gTempObject.ubNumberOfObjects = 1;
-			gTempObject[0].data.objectStatus				= 100;
+			gTempObject[0]->data.objectStatus				= 100;
 			// Give it 
 			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &gTempObject, FALSE );
 			Assert( fReturn );

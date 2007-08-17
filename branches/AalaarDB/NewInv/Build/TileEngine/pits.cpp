@@ -185,9 +185,9 @@ void AddAllPits()
 	{
 		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
-			if( gWorldItems[ i ].object[0].data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+			if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 				Add3X3Pit( gWorldItems[ i ].sGridNo );		
-			else if( gWorldItems[ i ].object[0].data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+			else if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Add5X5Pit( gWorldItems[ i ].sGridNo );
 		}	
 	}
@@ -201,9 +201,9 @@ void RemoveAllPits()
 	{
 		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
-			if( gWorldItems[ i ].object[0].data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+			if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 				Remove3X3Pit( gWorldItems[ i ].sGridNo );		
-			else if( gWorldItems[ i ].object[0].data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+			else if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Remove5X5Pit( gWorldItems[ i ].sGridNo );
 		}	
 	}

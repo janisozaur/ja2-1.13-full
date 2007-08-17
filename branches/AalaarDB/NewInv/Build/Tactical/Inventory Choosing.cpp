@@ -557,7 +557,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					{
 						fLAW = FALSE;
 					}
-					(*pItem)[0].data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					(*pItem)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					break;
 				case IC_AMMO:
 					bAmmoClips = 0;
@@ -567,7 +567,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					bKnifeClass = 0;
 					break;
 				case IC_LAUNCHER:
-					(*pItem)[0].data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+					(*pItem)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 					fGrenadeLauncher = FALSE;
 					if (fMortar || fRPG)
 					{
@@ -663,8 +663,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 				usGunIndex = pp->Inv[ i ].usItem;
 				ubChanceStandardAmmo = 100 - (bWeaponClass * -9);		// weapon class is negative!
 				usAmmoIndex = RandomMagazine( usGunIndex, ubChanceStandardAmmo );
-				pp->Inv[ i ][0].data.gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-				pp->Inv[ i ][0].data.gun.usGunAmmoItem = usAmmoIndex;
+				pp->Inv[ i ][0]->data.gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+				pp->Inv[ i ][0]->data.gun.usGunAmmoItem = usAmmoIndex;
 
 				if ( Item[usGunIndex].fingerprintid )
 				{
@@ -906,7 +906,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Set bullets"));
 	//set bullets = to magsize including any attachments (c-mag adapters, etc)
-	pp->Inv[ HANDPOS ][0].data.gun.ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
+	pp->Inv[ HANDPOS ][0]->data.gun.ubGunShotsLeft = GetMagSize(&pp->Inv[ HANDPOS ]);
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: choose ammo"));
 	if( bAmmoClips )
@@ -932,8 +932,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		//}
 
 		usAmmoIndex = RandomMagazine( &pp->Inv[HANDPOS], ubChanceStandardAmmo );
-		pp->Inv[ HANDPOS ][0].data.gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
-		pp->Inv[ HANDPOS ][0].data.gun.usGunAmmoItem = usAmmoIndex;
+		pp->Inv[ HANDPOS ][0]->data.gun.ubGunAmmoType = Magazine[Item[usAmmoIndex].ubClassIndex].ubAmmoType;
+		pp->Inv[ HANDPOS ][0]->data.gun.usGunAmmoItem = usAmmoIndex;
 	}
 
 	//Ammo
@@ -2846,10 +2846,10 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 			{
 				//We are creating a new gun, but the new gun needs the old gun's attachments
 				OBJECTTYPE* pObj = &(pp->Inv[ uiLoop ]);
-				CreateItem( usNewGun, (*pObj)[0].data.gun.bGunStatus, &gTempObject );
+				CreateItem( usNewGun, (*pObj)[0]->data.gun.bGunStatus, &gTempObject );
 				gTempObject.fFlags = pObj->fFlags;
 
-				for (attachmentList::iterator iter = pObj->objectStack[0].attachments.begin(); iter != pObj->objectStack[0].attachments.end(); ++iter) {
+				for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 					AttachObject(0, &gTempObject, &(*iter));
 				}
 

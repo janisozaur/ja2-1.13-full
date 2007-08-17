@@ -2877,12 +2877,12 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
 						// fill pocket with money
-						pSoldier->inv[ bSlot ][0].data.money.uiMoneyAmount = uiMoneyLimitInSlot;			
+						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
-						pSoldier->inv[ bSlot ][0].data.money.uiMoneyAmount = uiMoneyLeft;
+						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;
 					}

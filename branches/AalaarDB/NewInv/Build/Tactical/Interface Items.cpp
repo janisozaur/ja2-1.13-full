@@ -611,7 +611,7 @@ void GenerateProsString( STR16 zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ (*pObject)[0].data.gun.usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (Weapon[usItem].bAccuracy >= EXCEPTIONAL_ACCURACY )
@@ -755,7 +755,7 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ (*pObject)[0].data.gun.usGunAmmoItem ].ubWeight;
+		ubWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -1088,7 +1088,7 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
 #if defined( _DEBUG ) /* Sergeant_Kolja, to be removed later again */
-				if( pSoldier->inv[ cnt ][0].data.gun.ubGunAmmoType >= MAXITEMS )
+				if( pSoldier->inv[ cnt ][0]->data.gun.ubGunAmmoType >= MAXITEMS )
 				{
          			DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("pObject (%s) corrupted! GetHelpTextForItem() can crash.", (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" ));
     				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"pObject (%S) corrupted! GetHelpTextForItem() can crash.",    (pSoldier->inv[ cnt ].usItem<MAXITEMS) ? Item[pSoldier->inv[ cnt ].usItem].szItemName : "???" );
@@ -2054,7 +2054,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 	}
 	else
 	{
-		pItem = &Item[ pObject->GetAttachmentAtIndex( ubStatusIndex - RENDER_ITEM_ATTACHMENT1 )->usItem ];
+		pItem = &Item[ (*pObject)[0]->GetAttachmentAtIndex( ubStatusIndex - RENDER_ITEM_ATTACHMENT1 )->usItem ];
 	}
 
 	if ( fDirtyLevel == DIRTYLEVEL2 )
@@ -2106,8 +2106,8 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				sNewY = sY + sHeight - 10;
 				sNewX = sX + 1;
 
-				SetFontForeground ( AmmoTypes[(*pObject)[0].data.gun.ubGunAmmoType].fontColour );
-				//switch ((*pObject)[0].data.gun.ubGunAmmoType)
+				SetFontForeground ( AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].fontColour );
+				//switch ((*pObject)[0]->data.gun.ubGunAmmoType)
 				//{
 				//	case AMMO_AP:
 				//	case AMMO_SUPER_AP:
@@ -2132,7 +2132,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				//}
 	
 
-				swprintf( pStr, L"%d", (*pObject)[0].data.gun.ubGunShotsLeft );
+				swprintf( pStr, L"%d", (*pObject)[0]->data.gun.ubGunShotsLeft );
 				if ( uiBuffer == guiSAVEBUFFER )
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 20, 15 );
@@ -2143,7 +2143,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				SetFontForeground( FONT_MCOLOR_DKGRAY );
 
 				// Display 'JAMMED' if we are jammed
-				if ( (*pObject)[0].data.gun.bGunAmmoStatus < 0 )
+				if ( (*pObject)[0]->data.gun.bGunAmmoStatus < 0 )
 				{
 					SetFontForeground( FONT_MCOLOR_RED );
 
@@ -2281,7 +2281,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			}
 			else
 			{
-				OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex(ubStatusIndex - RENDER_ITEM_ATTACHMENT1);
+				OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex(ubStatusIndex - RENDER_ITEM_ATTACHMENT1);
 				if (pAttachment) {
 					swprintf( pStr, L"%s", ShortItemNames[ pAttachment->usItem ] );
 				}
@@ -2465,16 +2465,16 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		if ( GetMagSize(gpItemDescObject) <= 99 )
-			swprintf( pStr, L"%d/%d", gpItemDescObject->gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
+			swprintf( pStr, L"%d/%d", (*gpItemDescObject)[0]->data.gun.ubGunShotsLeft, GetMagSize(gpItemDescObject));
 		else
-			swprintf( pStr, L"%d", gpItemDescObject->gun.ubGunShotsLeft );
+			swprintf( pStr, L"%d", (*gpItemDescObject)[0]->data.gun.ubGunShotsLeft );
 
 		FilenameForBPP("INTERFACE\\infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
-		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[(*pObject)[0].data.gun.ubGunAmmoType].grayed,AmmoTypes[(*pObject)[0].data.gun.ubGunAmmoType].offNormal,-1,AmmoTypes[(*pObject)[0].data.gun.ubGunAmmoType].onNormal,-1 );
+		giItemDescAmmoButtonImages	= LoadButtonImage(ubString,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].grayed,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].offNormal,-1,AmmoTypes[(*pObject)[0]->data.gun.ubGunAmmoType].onNormal,-1 );
 
-		//switch( (*pObject)[0].data.gun.ubGunAmmoType )
+		//switch( (*pObject)[0]->data.gun.ubGunAmmoType )
 		//{
 		//	case AMMO_AP:
 		//	case AMMO_SUPER_AP:
@@ -2644,7 +2644,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			MSYS_AddRegion( &gItemDescAttachmentRegions[cnt]);
 			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
 
-			OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex(cnt);
+			OBJECTTYPE* pAttachment = (*pObject)[0]->GetAttachmentAtIndex(cnt);
 			if (pAttachment) {
 				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ pAttachment->usItem ] );
 				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
@@ -2659,8 +2659,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	else
 	{
 		memset( &gRemoveMoney, 0, sizeof( REMOVE_MONEY ) );
-		gRemoveMoney.uiTotalAmount = gpItemDescObject->money.uiMoneyAmount;
-		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->money.uiMoneyAmount;
+		gRemoveMoney.uiTotalAmount = (*gpItemDescObject)[0]->data.money.uiMoneyAmount;
+		gRemoveMoney.uiMoneyRemaining = (*gpItemDescObject)[0]->data.money.uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
@@ -2749,7 +2749,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gpAttachSoldier = pSoldier;
 	}
 	// store attachments that item originally had
-	gOriginalAttachments = pObject->objectStack[0].attachments;
+	gOriginalAttachments = (*pObject)[0].attachments;
 
 	if ( (gpItemPointer != NULL) && (gfItemDescHelpTextOffset == FALSE) && (CheckFact( FACT_ATTACHED_ITEM_BEFORE, 0 ) == FALSE) )
 	{
@@ -2994,7 +2994,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-	OBJECTTYPE* pAttachment = gpItemDescObject->GetAttachmentAtIndex(uiItemPos);
+	OBJECTTYPE* pAttachment = (*gpItemDescObject)[0]->GetAttachmentAtIndex(uiItemPos);
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3163,8 +3163,8 @@ void RenderItemDescriptionBox( )
 		
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = gpItemDescObject->objectStack[0].attachments.begin();
-			iter != gpItemDescObject->objectStack[0].attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
+			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
 
 			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
@@ -3297,13 +3297,16 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one item in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->shots.ubShotsLeft[0];
+			TODO, 
+			/*
+			UINT8 ubShotsLeftFirst = (*gpItemDescObject)[0]->data.ubShotsLeft;
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->shots.ubShotsLeft[0] = gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex];
+			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = (*gpItemDescObject)[0]->data.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->shots.ubShotsLeft[0] = ubShotsLeftFirst;
+			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
+			*/
 		}
 		//Item does not exist
 		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )
@@ -3365,7 +3368,7 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 5 );
 			//Status
 			// This is gross, but to get the % to work out right...
-			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ].data.objectStatus );
+			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
 			FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -3537,7 +3540,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
@@ -3570,7 +3573,7 @@ void RenderItemDescriptionBox( )
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
 			{
 				// Ammo
-					swprintf( pStr, L"%d/%d", gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
+					swprintf( pStr, L"%d/%d", (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubShotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize ); //Pulmu: Correct # of rounds for stacked ammo.
 					uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 		//			sStrX =  gMapWeaponStats[ 0 ].sX + gsInvDescX + gMapWeaponStats[ 0 ].sValDx + ( uiRightLength - uiStringLength );
 					FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 2 ].sX + gsInvDescX + gMapWeaponStats[ 2 ].sValDx+6), (INT16)(gMapWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3579,7 +3582,7 @@ void RenderItemDescriptionBox( )
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ].data.objectStatus );
+				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
 				uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 	//			sStrX =  gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
@@ -3606,12 +3609,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -3664,8 +3667,8 @@ void RenderItemDescriptionBox( )
 
 		// Display attachments
 		cnt = 0;
-		for (attachmentList::iterator iter = gpItemDescObject->objectStack[0].attachments.begin();
-			iter != gpItemDescObject->objectStack[0].attachments.end(); ++iter, ++cnt) {
+		for (attachmentList::iterator iter = (*gpItemDescObject)[0]->attachments.begin();
+			iter != (*gpItemDescObject)[0]->attachments.end(); ++iter, ++cnt) {
 			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
 			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
@@ -3793,14 +3796,17 @@ void RenderItemDescriptionBox( )
 		//Pulmu: Changed weight calculation of single item in stack.
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
+			TODO
+				/*
 			//Get weight of one ammo clip in stack.
-			UINT8 ubShotsLeftFirst = gpItemDescObject->shots.ubShotsLeft[0];
+			UINT8 ubShotsLeftFirst = (*gpItemDescObject)[0]->data.ubShotsLeft[0];
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
 			gpItemDescObject->ubNumberOfObjects = 1;
-			gpItemDescObject->shots.ubShotsLeft[0] = gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex];
+			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = (*gpItemDescObject)[0]->data.ubShotsLeft[gubItemDescStatusIndex];
 			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			gpItemDescObject->shots.ubShotsLeft[0] = ubShotsLeftFirst;
+			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = ubShotsLeftFirst;
 			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
+			*/
 		}
 		//Item does not exist
 		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )
@@ -3869,7 +3875,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Status
-			swprintf( pStr, L"%2d%%", gpItemDescObject->gun.bGunStatus );
+			swprintf( pStr, L"%2d%%", (*gpItemDescObject)[0]->data.gun.bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			wcscat( pStr, L"%%" );
 			mprintf( usX, usY, pStr );
@@ -4037,7 +4043,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, L"%ld", gpItemDescObject->money.uiMoneyAmount );
+			swprintf( pStr, L"%ld", (*gpItemDescObject)[0]->data.money.uiMoneyAmount );
 			InsertCommasForDollarFigure( pStr );
 			InsertDollarSignInToString( pStr );
 
@@ -4073,14 +4079,14 @@ void RenderItemDescriptionBox( )
 			{
 				// Ammo - print amount
 				//Status
-				swprintf( pStr, L"%d/%d", gpItemDescObject->shots.ubShotsLeft[gubItemDescStatusIndex], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
+				swprintf( pStr, L"%d/%d", (*gpItemDescObject)[gubItemDescStatusIndex]->data.ubShotsLeft, Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );		  //Pulmu: Correct # of rounds for stacked ammo
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 2 ].sX + gsInvDescX + gWeaponStats[ 2 ].sValDx), (INT16)(gWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 			else
 			{
 				//Status
-				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ].data.objectStatus );
+				swprintf( pStr, L"%2d%%", (*gpItemDescObject)[ gubItemDescStatusIndex ]->data.objectStatus );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				wcscat( pStr, L"%%" );
 				mprintf( usX, usY, pStr );
@@ -4098,12 +4104,12 @@ void RenderItemDescriptionBox( )
 
 				
 				SetFontForeground( 5 );
-				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->key.ubKeyID ].usSectorFound ), sTempString  ); 
+				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usSectorFound ), sTempString  ); 
 				swprintf( pStr, L"%s", sTempString );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 
-				swprintf( pStr, L"%d", KeyTable[ gpItemDescObject->key.ubKeyID ].usDateFound );
+				swprintf( pStr, L"%d", KeyTable[ (*gpItemDescObject)[0]->data.key.ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
@@ -4163,13 +4169,13 @@ void DeleteItemDescriptionBox( )
 
 			// check for change in attachments
 			unsigned int originalSize = gOriginalAttachments.size();
-			unsigned int newSize = gpItemDescObject->objectStack[0].attachments.size();
+			unsigned int newSize = (*gpItemDescObject)[0]->attachments.size();
 
 			if (newSize != originalSize) {
 				attachmentList::iterator originalIter;
 				attachmentList::iterator newIter;
-				for (originalIter = gOriginalAttachments.begin(), newIter = gpItemDescObject->objectStack[0].attachments.begin();
-					originalIter != gOriginalAttachments.end() && newIter != gpItemDescObject->objectStack[0].attachments.end();
+				for (originalIter = gOriginalAttachments.begin(), newIter = (*gpItemDescObject)[0]->attachments.begin();
+					originalIter != gOriginalAttachments.end() && newIter != (*gpItemDescObject)[0]->attachments.end();
 					++originalIter, ++newIter) {
 					if (*originalIter == *newIter) {
 					}
@@ -5676,7 +5682,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 
 	}
 	gTempObject.usItem = KEY_1;
-	gTempObject[0].data.objectStatus = 100;
+	gTempObject[0]->data.objectStatus = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -6531,7 +6537,7 @@ void SetupPickupPage( INT8 bPage )
 			pObject = (gfStealing)? &gpOpponent->inv[pTempItemPool->iItemIndex]
 				:&(gWorldItems[ pTempItemPool->iItemIndex ].object );
 
-		  sValue = (*pObject)[0].data.objectStatus;
+		  sValue = (*pObject)[0]->data.objectStatus;
 
 	    // Adjust for ammo, other thingys..
 	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
@@ -6805,7 +6811,7 @@ void RenderItemPickupMenu( )
 				if ( Item[ pObject->usItem ].usItemClass == IC_MONEY )
 				{
 					CHAR16		pStr2[20];
-					swprintf( pStr2, L"%ld", pObject->money.uiMoneyAmount );
+					swprintf( pStr2, L"%ld", (*pObject)[0]->data.money.uiMoneyAmount );
 					InsertCommasForDollarFigure( pStr2 );
 					InsertDollarSignInToString( pStr2 );
 
@@ -7364,22 +7370,22 @@ void RemoveMoney()
 			InvSlot.bSlotIdInOtherLocation = -1;
 
 			//Remove the money from the money in the pocket
-			gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+			(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 				//Create an item to get the money that is being removed
 			CreateItem( MONEY, 0, &InvSlot.ItemObject );
 
 			//Set the amount thast is being removed
-			InvSlot.ItemObject.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+			InvSlot.ItemObject[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 			InvSlot.ubIdOfMercWhoOwnsTheItem = gpItemDescSoldier->ubProfile;
 
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->money.uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( (*gpItemDescObject)[0]->data.money.uiMoneyAmount ) );
 			}
 
 			gMoveingItem = InvSlot;
@@ -7405,13 +7411,13 @@ void RemoveMoney()
 			//if we are removing money from the players account
 			if( gfAddingMoneyToMercFromPlayersAccount )
 			{
-				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
+				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 
 				//take the money from the player
-				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->money.uiMoneyAmount ) );
+				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( (*gpItemDescObject)[0]->data.money.uiMoneyAmount ) );
 			}
 			else
-				gpItemDescObject->money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
+				(*gpItemDescObject)[0]->data.money.uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 
 
@@ -7469,7 +7475,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	//ADB how can ubGunAmmoType be >= 5001 if it's a char?
 	//what is this SKI Tony inventory crash anyways?
 # if defined( _DEBUG )
-  if ( ((*pObject)[0].data.gun.ubGunAmmoType >= MAXITEMS) )
+  if ( ((*pObject)[0]->data.gun.ubGunAmmoType >= MAXITEMS) )
   {
     DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String( "corrupted pObject (%s) found in GetHelpTextForItem()", (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" ));
   	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"corrupted pObject (%S) found in GetHelpTextForItem()"    , (usItem<MAXITEMS) ? Item[usItem].szItemName : "???" );
@@ -7482,13 +7488,13 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	{
 		// Retrieve the status of the items
 		// Find the minimum status value - not just the first one
-		INT16 sValue = (*pObject)[0].data.objectStatus;
+		INT16 sValue = (*pObject)[0]->data.objectStatus;
 
 		for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
 		{
-			if((*pObject)[ i ].data.objectStatus < sValue)
+			if((*pObject)[ i ]->data.objectStatus < sValue)
 			{
-				sValue = (*pObject)[ i ].data.objectStatus;
+				sValue = (*pObject)[ i ]->data.objectStatus;
 			}
 		}
 
@@ -7514,7 +7520,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 		case MONEY:
 			//Money
 			{	
-				swprintf( pStr, L"%ld", pObject->money.uiMoneyAmount );
+				swprintf( pStr, L"%ld", (*pObject)[0]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr );
 				InsertDollarSignInToString( pStr );
 			}
@@ -7525,7 +7531,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 			//if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{ 
 				CHAR16		pStr2[20];
-				swprintf( pStr2, L"%ld", pObject->money.uiMoneyAmount );
+				swprintf( pStr2, L"%ld", (*pObject)[0]->data.money.uiMoneyAmount );
 				InsertCommasForDollarFigure( pStr2 );
 				InsertDollarSignInToString( pStr2 );
 
@@ -7662,7 +7668,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				// The next is for ammunition which gets the measurement 'rnds'		
 				swprintf( pStr, L"%s [%d rnds]\n%s %1.1f %s", 				
 					ItemNames[ usItem ],		//Item long name
-					pObject->shots.ubShotsLeft[0],	//Shots left
+					(*pObject)[0]->data.ubShotsLeft,	//Shots left
 					gWeaponStatsDesc[ 12 ],		//Weight String
 					fWeight,					//Weight
 					GetWeightUnitString()		//Weight units
@@ -7674,7 +7680,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 				//	AmmoTypes[Magazine[ Item[usItem].ubClassIndex ].ubAmmoType].ammoName,	//Ammo type
 				//	MagNames[Magazine[ Item[usItem].ubClassIndex ].ubMagType],				//Magazine type
 				//	Magazine[ Item[usItem].ubClassIndex ].ubMagSize,						//Magazine capacity
-				//	pObject->shots.ubShotsLeft[0],	//Shots left
+				//	(*pObject)[0]->data.ubShotsLeft,	//Shots left
 				//	gWeaponStatsDesc[ 12 ],		//Weight String
 				//	fWeight,					//Weight
 				//	GetWeightUnitString()		//Weight units
@@ -7773,7 +7779,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		// Add attachment string....
-		for (attachmentList::iterator iter = pObject->objectStack[0].attachments.begin(); iter != pObject->objectStack[0].attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
 			iNumAttachments++;
 
 			if ( iNumAttachments == 1 )
