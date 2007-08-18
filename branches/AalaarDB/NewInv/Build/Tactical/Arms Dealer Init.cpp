@@ -1684,7 +1684,9 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 					}
 				}
 				else {
-					iter->object.RemoveObjectsFromStack(ubHowMany);
+					for (int x = 0; x < ubHowMany; ++x) {
+						iter->object.RemoveTopObjectFromStack();
+					}
 					return;
 				}
 			}

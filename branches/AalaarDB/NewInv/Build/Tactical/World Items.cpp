@@ -46,138 +46,59 @@ extern UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex );
 bool WORLDITEM::operator<(const WORLDITEM& compare)
 {
 	PERFORMANCE_MARKER
-	if ( this->fExists == false )
-	{
+	if ( this->fExists == false ) {
 		return false;
 	}
-	if ( compare.fExists == false )
-	{
+	if ( compare.fExists == false ) {
 		return true;
 	}
+
+
 	UINT8		ubItem1Category = GetDealerItemCategoryNumber( this->object.usItem );
 	UINT8		ubItem2Category = GetDealerItemCategoryNumber( compare.object.usItem );
-	//UINT16	usItem1Price;
-	//UINT16	usItem2Price;
-	//UINT8		ubItem1Coolness;
-	//UINT8		ubItem2Coolness;
-
 	// lower category first
-	if ( ubItem1Category < ubItem2Category )
-	{
+	if ( ubItem1Category < ubItem2Category ) {
 		return( true );
 	}
-	else if ( ubItem1Category > ubItem2Category )
-	{
+	else if ( ubItem1Category > ubItem2Category ) {
 		return false;
 	}
-	else
-	{
-		// the same category 
-		//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
-		//{
-			//UINT8		ubItem1Calibre;
-			//UINT8		ubItem2Calibre;
-			//UINT8		ubItem1MagSize;
-			//UINT8		ubItem2MagSize;
 
-			// AMMO is sorted by caliber first
-			//ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
-			//ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
-			//if ( ubItem1Calibre > ubItem2Calibre )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Calibre < ubItem2Calibre )
-			//{
-			//	return( 1 );
-			//}
-			//// the same caliber - compare size of magazine, then fall out of if statement
-			//ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
-			//ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
-			//if ( ubItem1MagSize > ubItem2MagSize )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1MagSize < ubItem2MagSize )
-			//{
-			//	return( 1 );
-			//}
-		//}
-		//else
-		//{
-			// items other than ammo are compared on coolness first
-			//ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
-			//ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
 
-			//// higher coolness first
-			//if ( ubItem1Coolness > ubItem2Coolness )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Coolness < ubItem2Coolness )
-			//{
-			//	return( 1 );
-			//}
-		//}
+	// the same category 
+	//Madd: sort by name (for now at least):
+	int retVal = _stricmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
+	if ( retVal < 0 ) {
+		return true;
+	}
+	else if ( retVal > 0 ) {
+		return false;
+	}
 
-		// the same coolness/caliber - compare base prices then
-		//usItem1Price = Item[ usItem1Index ].usPrice;
-		//usItem2Price = Item[ usItem2Index ].usPrice;
 
-		//// higher price first
-		//if ( usItem1Price > usItem2Price )
-		//{
-		//	return( -1 );
-		//}
-		//else
-		//if ( usItem1Price < usItem2Price )
-		//{
-		//	return( 1 );
-		//}
-		//else
-		//{
-			// the same price - compare item #s, then
+	if (this->object.ubNumberOfObjects > compare.object.ubNumberOfObjects) {
+		return true;
+	}
+	else if (this->object.ubNumberOfObjects < compare.object.ubNumberOfObjects) {
+		return false;
+	}
 
-			//// lower index first
-			//if ( usItem1Index < usItem2Index )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( usItem1Index > usItem2Index )
-			//{
-			//	return( 1 );
-			//}
+/*
+	if (this->object[0]->attachments.size() > compare.object[0]->attachments.size()) {
+		return true;
+	}
+	else if (this->object[0]->attachments.size() < compare.object[0]->attachments.size()) {
+		return false;
+	}
+*/
 
-			//Madd: sort by name (for now at least):
-			int retVal = _stricmp(Item[this->object.usItem].szBRName,Item[compare.object.usItem].szBRName);
-			if ( retVal < 0 )
-			{
-				return true;
-			}
-			else if ( retVal > 0 )
-			{
-				return false;
-			}
-			else
-			{
-				// same item type = compare item quality, then
-
-				// higher quality first
-				if ( this->object[0]->data.objectStatus > compare.object[0]->data.objectStatus )
-				{
-					return( true );
-				}
-				else
-				{
-					// identical items!
-					return( false );
-				}
-			}
-		//}
+	// higher quality first
+	if ( this->object[0]->data.objectStatus > compare.object[0]->data.objectStatus ) {
+		return( true );
+	}
+	else {
+		// identical items!
+		return( false );
 	}
 	return false;
 }

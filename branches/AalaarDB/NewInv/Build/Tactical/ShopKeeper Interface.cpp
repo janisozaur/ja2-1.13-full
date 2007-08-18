@@ -3011,7 +3011,7 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 	}
 
 	// max condition of all permanent attachments on it
-	for (attachmentList::iterator iter = RepairItem.ItemObject.objectStack[0]->attachments.begin(); iter != RepairItem.ItemObject.objectStack[0]->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = RepairItem.ItemObject[0]->attachments.begin(); iter != RepairItem.ItemObject[0]->attachments.end(); ++iter) {
 		if ( CanDealerRepairItem( gbSelectedArmsDealerID, iter->usItem ) )
 		{
 			// fix it up
@@ -3143,7 +3143,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 			{
 				// for bullets, ItemConditionModifier will convert the #ShotsLeft into a percentage
 				uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, usItemID, fDealerSelling ) *
-																	 ItemConditionModifier(usItemID, pItemObject->shots.ubShotsLeft[ubCnt]) *
+																	 ItemConditionModifier(usItemID, (*pItemObject)[ubCnt]->data.ubShotsLeft) *
 																	 dModifier );
 
 				if ( fUnitPriceOnly )
@@ -3174,7 +3174,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 			{
 				// for bullets, ItemConditionModifier will convert the #ShotsLeft into a percentage
 				uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, usItemID, fDealerSelling ) *
-																	 ItemConditionModifier(usItemID, pItemObject->status.bStatus[ ubCnt ]) *
+																	 ItemConditionModifier(usItemID, (*pItemObject)[ ubCnt ]->data.objectStatus) *
 																	 dModifier );
 
 				if ( fUnitPriceOnly )
@@ -3188,7 +3188,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 
 
 	// loop through any attachments and add in their price
-	for (attachmentList::iterator iter = pItemObject->objectStack[0]->attachments.begin(); iter != pItemObject->objectStack[0]->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pItemObject)[0]->attachments.begin(); iter != (*pItemObject)[0]->attachments.end(); ++iter) {
 		// add value of this particular attachment
 		uiUnitPrice += CalcShopKeeperItemPrice( fDealerSelling, fUnitPriceOnly, iter->usItem, dModifier, &(*iter)) ;
 	}
@@ -6676,7 +6676,7 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 		for ( ubSubObject = 0; ubSubObject < subObjects.size(); ubSubObject++ )
 		{
 			// if it's the main item itself (always in the very first subobject), and it has no other subobjects
-			if ( ( ubSubObject == 0 ) && ( ubTotalSubObjects == 1) )
+			if ( ( ubSubObject == 0 ) && ( subObjects.size() == 1) )
 			{
 				// store its owner merc as the owner, and store the correct slot
 				fSuccess = AddObjectForEvaluation( &subObjects[ ubSubObject ], ubOwnerProfileId, bOwnerSlotId, fFirstOne );

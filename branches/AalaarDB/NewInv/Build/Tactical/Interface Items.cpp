@@ -2749,7 +2749,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gpAttachSoldier = pSoldier;
 	}
 	// store attachments that item originally had
-	gOriginalAttachments = (*pObject)[0].attachments;
+	gOriginalAttachments = (*pObject)[0]->attachments;
 
 	if ( (gpItemPointer != NULL) && (gfItemDescHelpTextOffset == FALSE) && (CheckFact( FACT_ATTACHED_ITEM_BEFORE, 0 ) == FALSE) )
 	{
@@ -3297,7 +3297,7 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one item in stack.
-			TODO, 
+			TODO
 			/*
 			UINT8 ubShotsLeftFirst = (*gpItemDescObject)[0]->data.ubShotsLeft;
 			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;

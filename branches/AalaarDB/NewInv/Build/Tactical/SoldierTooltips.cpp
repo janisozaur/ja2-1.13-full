@@ -395,7 +395,7 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 	if ( gGameExternalOptions.ubSoldierTooltipDetailLevel >= DL_Basic )
 	{
 		// display weapon attachments
-		for (attachmentList::iterator iter = pSoldier->inv[ubSlot].objectStack[0]->attachments.begin(); iter != pSoldier->inv[ubSlot].objectStack[0]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pSoldier->inv[ubSlot][0]->attachments.begin(); iter != pSoldier->inv[ubSlot][0]->attachments.end(); ++iter) {
 			if ( ubTooltipDetailLevel == DL_Basic )
 			{
 				// display only externally-visible weapon attachments

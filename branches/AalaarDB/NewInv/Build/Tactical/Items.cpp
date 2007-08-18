@@ -2469,8 +2469,6 @@ void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 {
 	PERFORMANCE_MARKER
 	// remove 1 object from an OBJECTTYPE, starting at index bRemoveIndex
-	UINT8 ubLoop;
-
 	if (pObj->ubNumberOfObjects < ubRemoveIndex)
 	{
 		// invalid index!
@@ -2533,7 +2531,7 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	else
 	{
 		pDest->usItem = pObj->usItem;
-		pDest->objectStatus = (*pObj)[ubGetIndex]->data.objectStatus;
+		(*pDest)[0]->data.objectStatus = (*pObj)[ubGetIndex]->data.objectStatus;
 		pDest->ubNumberOfObjects = 1;
 		pDest->ubWeight = CalculateObjectWeight( pDest );
 		RemoveObjFrom( pObj, ubGetIndex );
@@ -2745,7 +2743,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			// record old ammo
 			OldAmmo.usItem = (*pGun)[0]->data.gun.usGunAmmoItem;
 			OldAmmo.ubNumberOfObjects = 1;
-			OldAmmo.shots.ubShotsLeft[0] = (*pGun)[0]->data.gun.ubGunShotsLeft;
+			OldAmmo[0]->data.ubShotsLeft = (*pGun)[0]->data.gun.ubGunShotsLeft;
 	
 			if (fSameMagazineSize)
 			{
@@ -2926,13 +2924,13 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	DeductPoints( pSoldier, bAPs, 0 );
 	pGun->ubWeight = CalculateObjectWeight( pGun );
 
-	if ( (*pGun)[0]->data.gunbGunAmmoStatus >= 0 )
+	if ( (*pGun)[0]->data.gun.bGunAmmoStatus >= 0 )
 	{
 		// make sure gun ammo status is 100, if gun isn't jammed
-		(*pGun)[0]->data.gunbGunAmmoStatus = 100;
+		(*pGun)[0]->data.gun.bGunAmmoStatus = 100;
 	}
 
-	(*pGun)[0]->data.gunubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
+	(*pGun)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
 
 	return( TRUE );
 }
@@ -3413,7 +3411,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				*pAttachmentPosition = *pAttachment;
 			}
 			else {
-				pTargetObj->objectStack[0]->attachments.push_back(*pAttachment);
+				(*pTargetObj)[0]->attachments.push_back(*pAttachment);
 			}
 
 //now this is as simple as replacing the old if applicable or adding an attachment!!!
@@ -3653,9 +3651,9 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					//Madd: usResult2 is what the original attachment/source item turns into
 
 					//Madd: unload guns after merge if ammo caliber or mag size don't match
-					if ( Item[pAttachment->usItem].usItemClass == IC_GUN && pAttachment->gun.usGunAmmoItem != NONE && pAttachment->gun.ubGunShotsLeft > 0 )
+					if ( Item[pAttachment->usItem].usItemClass == IC_GUN && (*pAttachment)[0]->data.gun.usGunAmmoItem != NONE && (*pAttachment)[0]->data.gun.ubGunShotsLeft > 0 )
 					{
-						if ( Item[usResult2].usItemClass != IC_GUN || Weapon[Item[usResult2].ubClassIndex].ubCalibre != Weapon[Item[pAttachment->usItem].ubClassIndex].ubCalibre || pAttachment->gun.ubGunShotsLeft > Weapon[Item[usResult2].ubClassIndex].ubMagSize )
+						if ( Item[usResult2].usItemClass != IC_GUN || Weapon[Item[usResult2].ubClassIndex].ubCalibre != Weapon[Item[pAttachment->usItem].ubClassIndex].ubCalibre || (*pAttachment)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult2].ubClassIndex].ubMagSize )
 						{ // item types/calibers/magazines don't match, spit out old ammo
 							EjectAmmoAndPlace(pSoldier, pAttachment);
 						}
@@ -3710,7 +3708,7 @@ void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj)
 {
 	CreateItem((*pObj)[0]->data.gun.usGunAmmoItem, 100, &gTempObject);
-	gTempObject.shots.ubShotsLeft[0] = (*pObj)[0]->data.gun.ubGunShotsLeft;
+	gTempObject[0]->data.ubShotsLeft = (*pObj)[0]->data.gun.ubGunShotsLeft;
 	(*pObj)[0]->data.gun.ubGunShotsLeft = 0;
 	(*pObj)[0]->data.gun.usGunAmmoItem = NONE;
 	if ( pSoldier )
@@ -3941,11 +3939,12 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 		if (ubNumberToDrop != pObj->ubNumberOfObjects)
 		{
+			TODO
 			// in the InSlot copy, zero out all the objects we didn't drop
-			for (ubLoop = ubNumberToDrop; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
-			{
-				pInSlot->status.bStatus[ubLoop] = 0;
-			}
+			//for (ubLoop = ubNumberToDrop; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
+			//{
+			//	pInSlot->status.bStatus[ubLoop] = 0;
+			//}
 		}
 		pInSlot->ubNumberOfObjects = ubNumberToDrop;
 
@@ -5101,7 +5100,7 @@ BOOLEAN CreateMagazine( UINT16 usItem, OBJECTTYPE * pObj )
 	pObj->initialize();
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	pObj->shots.ubShotsLeft[0] = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
+	(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateMagazine: done"));
 
@@ -5330,7 +5329,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 		OBJECTTYPE* pGrenade = FindAttachmentByClass( pObj, IC_GRENADE );
 		if (pGrenade)
 		{
-			pNewObj->objectStack[0]->attachments.push_back(*pGrenade);
+			(*pNewObj)[0]->attachments.push_back(*pGrenade);
 			pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
 			RemoveAttachment(pObj, pGrenade);
 		}
@@ -6184,10 +6183,10 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 
 		// use up 8-12 percent of batteries
 		if ( Item[pBatteries->usItem].percentstatusdrainreduction > 0 )
-			pBatteries->objectStatus -= (INT8)( (8 + Random( 5 )) * (100 - Item[pBatteries->objectStatus].percentstatusdrainreduction)/100 );
+			(*pBatteries)[0]->data.objectStatus -= (INT8)( (8 + Random( 5 )) * (100 - Item[(*pBatteries)[0]->data.objectStatus].percentstatusdrainreduction)/100 );
 		else
-			pBatteries->objectStatus -= (INT8)( (8 + Random( 5 )) );
-		if ( pBatteries->objectStatus <= 0 )
+			(*pBatteries)[0]->data.objectStatus -= (INT8)( (8 + Random( 5 )) );
+		if ( (*pBatteries)[0]->data.objectStatus <= 0 )
 		{
 			// destroy batteries
 			RemoveAttachment(&(pSoldier->inv[HANDPOS]), pBatteries);

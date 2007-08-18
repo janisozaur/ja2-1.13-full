@@ -1576,7 +1576,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...
-				pInventorySlot->objectStatus = (INT8) ( ( (UINT32)(*pInventorySlot)[0]->data.money.bMoneyStatus * (*pInventorySlot)[0]->data.money.uiMoneyAmount + (UINT32)(*pItemPtr)[0]->data.money.bMoneyStatus * (*pItemPtr)[0]->data.money.uiMoneyAmount )/ ((*pInventorySlot)[0]->data.money.uiMoneyAmount + (*pItemPtr)[0]->data.money.uiMoneyAmount) );
+				(*pInventorySlot)[0]->data.objectStatus = (INT8) ( ( (UINT32)(*pInventorySlot)[0]->data.money.bMoneyStatus * (*pInventorySlot)[0]->data.money.uiMoneyAmount + (UINT32)(*pItemPtr)[0]->data.money.bMoneyStatus * (*pItemPtr)[0]->data.money.uiMoneyAmount )/ ((*pInventorySlot)[0]->data.money.uiMoneyAmount + (*pItemPtr)[0]->data.money.uiMoneyAmount) );
 				(*pInventorySlot)[0]->data.money.uiMoneyAmount += (*pItemPtr)[0]->data.money.uiMoneyAmount;
 
 				DeleteObj( pItemPtr );
@@ -2330,7 +2330,7 @@ INT32 SellItem( OBJECTTYPE& object )
 		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
 		{
 			iPrice += ( itemPrice * object[bLoop]->data.objectStatus / 100 );
-			for (attachmentList::iterator iter = object.objectStack[bLoop]->attachments.begin(); iter != object.objectStack[bLoop]->attachments.end(); ++iter) {
+			for (attachmentList::iterator iter = object[bLoop]->attachments.begin(); iter != object[bLoop]->attachments.end(); ++iter) {
 				iPrice += SellItem(*iter);
 			}
 		}

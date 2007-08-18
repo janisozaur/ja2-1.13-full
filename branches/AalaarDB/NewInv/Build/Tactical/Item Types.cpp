@@ -31,7 +31,7 @@ bool OBJECTTYPE::RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject)
 	}
 
 	if (pSecondObject) {
-		CreateItem(usItem, objectStack[0]->data.objectStatus, pSecondObject);
+		CreateItem(usItem, (*this)[0]->data.objectStatus, pSecondObject);
 		pSecondObject->objectStack.front() = objectStack.front();
 	}
 	objectStack.pop_front();
@@ -39,10 +39,10 @@ bool OBJECTTYPE::RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject)
 	return true;
 }
 
-StackedObjectData* OBJECTTYPE::operator [](const int index)
+StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
-	Assert(x < objectStack.size());
-	StackedObjects::iterator iter == objectStack.begin();
+	Assert(index < objectStack.size());
+	StackedObjects::iterator iter = objectStack.begin();
 	for (int x = 0; x < index; ++x) {
 		++iter;
 	}
@@ -109,8 +109,9 @@ void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
+	ubNumberOfObjects = 1;
+	objectStack.clear();
 	objectStack.resize(1);
-	objectStack[0].initialize();
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)
@@ -188,13 +189,13 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
 		if (ubNumberOfObjects == 1) {
-			memcpy(&(objectStack[0].data), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
+			memcpy(&((*this)[0]->data), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
 			//it's unlikely max will get less over the versions, but still, check the min
 			for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
 			{
 				if (src.usAttachItem[x] != NOTHING) {
 					CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &gTempObject);
-					objectStack[0]->attachments.push_back(gTempObject);
+					(*this)[0]->attachments.push_back(gTempObject);
 				}
 			}
 		}
@@ -207,7 +208,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
 			objectStack.resize(ubNumberOfObjects);
 			for (int x = 0; x < ubNumberOfObjects; ++x) {
-				objectStack[x]->data.objectStatus = ugYucky.bStatus[x];
+				(*this)[x]->data.objectStatus = ugYucky.bStatus[x];
 			}
 		}
 	}

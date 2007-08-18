@@ -760,7 +760,7 @@ void RenderItemDetails()
 					{
 						pItem = &gpWorldItemsSummaryArray[ i ].object;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
-						uiStatus += pItem->objectStatus;
+						uiStatus += (*pItem)[0]->data.objectStatus;
 						uiQuantity += pItem->ubNumberOfObjects;
 					}
 				}
@@ -868,7 +868,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpPEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->objectStatus;
+					uiStatus += (*pItem)[0]->data.objectStatus;
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}
@@ -940,7 +940,7 @@ void RenderItemDetails()
 				{
 					pItem = &gpNEnemyItemsSummaryArray[ i ];
 					uiExistChance += 100 * pItem->ubNumberOfObjects;
-					uiStatus += pItem->objectStatus;
+					uiStatus += (*pItem)[0]->data.objectStatus;
 					uiQuantity += pItem->ubNumberOfObjects;
 				}
 			}

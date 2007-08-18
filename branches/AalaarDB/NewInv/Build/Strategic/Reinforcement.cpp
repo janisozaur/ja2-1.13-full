@@ -179,7 +179,6 @@ UINT8 MilitiaInFiveSectorsOfRank( INT16 sMapX, INT16 sMapY, UINT8 ubRank )
 BOOLEAN ARMoveBestMilitiaManFromAdjacentSector(INT16 sMapX, INT16 sMapY)
 {
 	PERFORMANCE_MARKER
-	UINT8 ubResult = 0;
 	UINT16 pusMoveDir[4][3];
 	UINT8 ubDirNumber;
 	UINT8 ubRandom;
@@ -450,7 +449,6 @@ void AddPossiblePendingMilitiaToBattle()
 
 	UINT8 ubSlots;
 	UINT8 ubNumElites, ubNumRegulars, ubNumGreens;
-	SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	static UINT8 ubPredefinedInsertionCode = 255;
 	static UINT8 ubPredefinedRank = 255;
 

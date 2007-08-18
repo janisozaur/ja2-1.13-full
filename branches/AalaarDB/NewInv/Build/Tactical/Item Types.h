@@ -264,7 +264,7 @@ public:
 	// Destructor
 	~OBJECTTYPE();
 
-	StackedObjectData* operator[](const int index);
+	StackedObjectData* operator[](const unsigned int index);
 
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.

@@ -2607,8 +2607,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//remove attachments
 							if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 							{
-								for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object.objectStack[0]->attachments.begin();
-									iter != gWorldItems[ uiLoop ].object.objectStack[0]->attachments.end();) {
+								for (attachmentList::iterator iter = gWorldItems[ uiLoop ].object[0]->attachments.begin();
+									iter != gWorldItems[ uiLoop ].object[0]->attachments.end();) {
 									if ( !Item[ iter->usItem ].inseparable )
 									{												
 										// put it on the ground
@@ -2618,7 +2618,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
 										//restart, I don't feel like manipulating iters
-										iter = gWorldItems[ uiLoop ].object.objectStack[0]->attachments.begin();
+										iter = gWorldItems[ uiLoop ].object[0]->attachments.begin();
 									}
 									else {
 										++iter;

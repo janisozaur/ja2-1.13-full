@@ -232,23 +232,6 @@ BATTLESNDS_STRUCT	 gBattleSndsData[] =
 // New inventory handling code.
 // ----------------------------------------
 
-//ADB this produces mem leaks!
-//other functions just replaced, not commented out
-Inventory::Inventory() {
-	inv.resize(NUM_INV_SLOTS);
-	bNewItemCount.resize(NUM_INV_SLOTS);
-	bNewItemCycleCount.resize(NUM_INV_SLOTS);
-	/*
-	inv.reserve(NUM_INV_SLOTS);
-	for (int idx=0; idx < NUM_INV_SLOTS; ++idx) {
-		OBJECTTYPE *filler = new OBJECTTYPE;	// Use MEMALLOC?
-		inv.push_back(*filler);
-	}
-	clear();
-	Assert (inv.size() == NUM_INV_SLOTS);
-	*/
-};
-
 Inventory::Inventory(int slotCount) {
 	inv.resize(slotCount);//calls the OBJECTTYPE constructor, will work with non POD data
 	bNewItemCount.resize(slotCount);
@@ -310,7 +293,7 @@ void Inventory::clear() {
 	bNewItemCount.clear();
 	bNewItemCycleCount.clear();
 
-	inv.resize(size);//calls the OBJECTTYPE constructor, will work with non POD data
+	inv.resize(size);
 	bNewItemCount.resize(size);
 	bNewItemCycleCount.resize(size);
 };
