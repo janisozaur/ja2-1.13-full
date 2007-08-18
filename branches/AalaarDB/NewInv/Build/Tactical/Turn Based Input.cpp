@@ -234,7 +234,6 @@ void HandleStealthChangeFromUIKeys( );
 
 UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
 
-extern void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy );
 extern BOOLEAN CompatibleAmmoForGun( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject );
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 extern void DetermineWhichMilitiaControlMenusCanBeShown( void ); //lalien
@@ -3362,7 +3361,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									INT8 ubObjCount = ubSlotLimit - gWorldItems[ uiLoop ].object.ubNumberOfObjects;										
 									INT8 bPointsToMove = __min( ubObjCount, gWorldItems[ uiLoop + i ].object.ubNumberOfObjects );
 
-									StackObjs( &(gWorldItems[ uiLoop + i ].object), &(gWorldItems[ uiLoop ].object), bPointsToMove);
+									(gWorldItems[ uiLoop ].object).AddObjectsToStack( (gWorldItems[ uiLoop + i ].object), bPointsToMove);
 
 								}
 								else

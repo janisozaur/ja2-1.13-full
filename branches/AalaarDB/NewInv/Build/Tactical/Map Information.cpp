@@ -294,7 +294,7 @@ void UpdateOldVersionMap()
 				{ //make all items undroppable, even if it is empty.	This will allow for 
 					//random item generation, while empty, droppable slots are locked as empty
 					//during random item generation.
-					curr->pDetailedPlacement->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
+					curr->pDetailedPlacement->Inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 			curr = curr->next;
@@ -517,11 +517,11 @@ void UpdateOldVersionMap()
 				{
 					if( !curr->pDetailedPlacement->Inv[ i ].usItem )
 					{
-						if( curr->pDetailedPlacement->Inv[ i ].fFlags & OBJECT_UNDROPPABLE )
+						if( curr->pDetailedPlacement->Inv[ i ][0]->data.fFlags & OBJECT_UNDROPPABLE )
 						{
-							if( curr->pDetailedPlacement->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+							if( curr->pDetailedPlacement->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							{
-								curr->pDetailedPlacement->Inv[ i ].fFlags &= ~OBJECT_NO_OVERWRITE;
+								curr->pDetailedPlacement->Inv[ i ][0]->data.fFlags &= ~OBJECT_NO_OVERWRITE;
 							}
 						}
 					}

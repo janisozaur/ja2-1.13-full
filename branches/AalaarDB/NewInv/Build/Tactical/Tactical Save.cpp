@@ -2313,7 +2313,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 		{
 			if( gpNPCQuoteInfoArray[ usCnt1 ] )
 			{
-				TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
+				TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
 				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
 				TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
 			}
@@ -2360,7 +2360,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		//Loop through and build the temp array to save
 		for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
 		{
-			TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
+			TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
 			TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
 		}
@@ -2436,7 +2436,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	//Loop through and build the temp array to save
 	for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
 	{
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags					= TempNpcQuote[ ubCnt ].usFlags;
+		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags				= TempNpcQuote[ ubCnt ].usFlags;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridno;
 	}
@@ -2757,12 +2757,12 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 				if ( Random( 100 ) < 75 )
 				{
 					// mark it undroppable...
-					pSoldier->inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
+					pSoldier->inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 
 			//if the item can be dropped
-			if( !( pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			if( !( pSoldier->inv[ i ][0]->data.fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
 			{
 
         uiNumberOfItems++;
@@ -2794,7 +2794,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
 				//if the item can be dropped
-				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
+				if( !(pSoldier->inv[ i ][0]->data.fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, i );
 

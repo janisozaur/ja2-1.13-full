@@ -79,7 +79,7 @@ DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
 
 
 void		AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft );
-void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany );
+void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID = 0 );
 void		AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement, SPECIAL_ITEM_INFO *pSpclItemInfo );
 
 void		RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
@@ -1162,7 +1162,7 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 	PERFORMANCE_MARKER
 //	UINT32 uiFlags;
 
-//	uiFlags = Item[ usItemIndex ].fFlags;
+//	uiFlags = Item[ usItemIndex ][0]->data.fFlags;
 
 	// can't repair anything that's not repairable!
 //	if ( !( uiFlags & ITEM_REPAIRABLE ) )
@@ -1296,7 +1296,7 @@ UINT8 DetermineDealerItemCondition( UINT8 ubArmsDealer, UINT16 usItemIndex )
 	UINT8 ubCondition = 100;
 
 	// if it's a damagable item, and not a liquid (those are always sold full)
-//	if ( ( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
+//	if ( ( Item[ usItemIndex ][0]->data.fFlags & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
 	if ( ( Item[ usItemIndex ].damageable ) && !ItemContainsLiquid( usItemIndex ) )
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
@@ -1465,30 +1465,31 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 	int total = 0;
 	for (UINT8 ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 	{
+		StackedObjectData* pData = (*pObject)[ubCnt];
 		switch ( Item [ pObject->usItem ].usItemClass )
 		{
 			case IC_GUN:
-				TODO add gun
 				// add the gun (keeps the object's status and imprintID)
 				// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
+				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, pData->data.objectStatus, 1, pData->data.ubImprintID );
 
 				// if any GunAmmoItem is specified
-				if( (*pObject)[ubCnt]->data.gun.usGunAmmoItem != NONE)
+				if( pData->data.gun.usGunAmmoItem != NONE)
 				{
 					// if it's regular ammo
-					if( Item[ (*pObject)[ubCnt]->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+					if( Item[ pData->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 					{
 						// and there are some remaining
-						if ( (*pObject)[ubCnt]->data.gun.ubGunShotsLeft > 0 )
+						if ( pData->data.gun.ubGunShotsLeft > 0 )
 						{
 							// add the bullets of its remaining ammo
-							total += (*pObject)[ubCnt]->data.gun.ubGunShotsLeft;
+							total += pData->data.gun.ubGunShotsLeft;
 						}
 					}
 					else	// assume it's attached ammo (mortar shells, grenades)
 					{
 						// add the launchable item (can't be imprinted, or have attachments!)
-						int bItemCondition = (*pObject)[ubCnt]->data.gun.bGunAmmoStatus;
+						int bItemCondition = pData->data.gun.bGunAmmoStatus;
 
 						// if the gun it was in was jammed, get rid of the negative status now
 						if ( bItemCondition < 0 )
@@ -1496,36 +1497,36 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 							bItemCondition *= -1;
 						}
 
-						AddItemToArmsDealerInventory( ubArmsDealer, (*pObject)[ubCnt]->data.gun.usGunAmmoItem, bItemCondition, 1 );
+						AddItemToArmsDealerInventory( ubArmsDealer, pData->data.gun.usGunAmmoItem, bItemCondition, 1 );
 					}
 				}
 				break;
 
 			case IC_AMMO:
 				// add the contents of each magazine (multiple mags may have vastly different #bullets left)
-				total += (*pObject)[ubCnt]->data.ubShotsLeft;
+				total += pData->data.ubShotsLeft;
 				break;
 
 			default:
 				// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
-				if ((*pObject)[ubCnt]->data.objectStatus == 100) {
+				if (pData->data.objectStatus == 100) {
 					total += 1;
 				}
 				else {
-					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, (*pObject)[ubCnt]->data.objectStatus, 1 );
+					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, pData->data.objectStatus, 1 );
 				}
 		}
 
 
 		// loop through any detachable attachments and add them as seperate items
-		for (attachmentList::iterator iter = (*pObject)[ubCnt]->attachments.begin(); iter != (*pObject)[ubCnt]->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pData->attachments.begin(); iter != pData->attachments.end(); ++iter) {
 	// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
 			// If the attachment is detachable
 			if (! (Item[ iter->usItem ].inseparable	) )
 			{
 				// add this particular attachment (they can't be imprinted, or themselves have attachments!)
 				AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
-				iter = (*pObject)[ubCnt]->attachments.erase(iter);
+				iter = pData->attachments.erase(iter);
 			}
 		}
 	}
@@ -1599,7 +1600,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 
 
 //Use AddObjectToArmsDealerInventory() instead of this when converting a complex item in OBJECTTYPE format.
-void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany )
+void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID )
 {
 	PERFORMANCE_MARKER
 	UINT8 ubRoomLeft;
@@ -1631,7 +1632,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 	CreateItems(usItemIndex, objectStatus, ubHowMany, &(pItem->object));
 	pItem->bItemCondition = objectStatus;
 	pItem->fActive = true;
-	pItem->ubImprintID = imprintID;
+	pItem->ubImprintID = ubImprintID;
 
 }
 
@@ -1681,9 +1682,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 					}
 				}
 				else {
-					for (int x = 0; x < ubHowMany; ++x) {
-						iter->object.RemoveTopObjectFromStack();
-					}
+					RemoveObjs(&(iter->object), ubHowMany);
 					return;
 				}
 			}
@@ -1802,7 +1801,7 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 	(*pObject)[0]->data.objectStatus = bItemCondition;
 
 	// set the ImprintID
-	pObject->ubImprintID = pSpclItemInfo->ubImprintID;
+	(*pObject)[0]->data.ubImprintID = pSpclItemInfo->ubImprintID;
 
 	// if it's a gun
 	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
@@ -1971,7 +1970,7 @@ UINT32 CalculateSimpleItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, IN
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
 	// (Mind you, current he's the ONLY one who CAN repair Electronics at all!	Oh well.)
-//	if( ( Item[ usItemIndex ].fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
+//	if( ( Item[ usItemIndex ][0]->data.fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	if( ( Item[ usItemIndex ].electronic	) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	{
 		uiTimeToRepair *= 2;

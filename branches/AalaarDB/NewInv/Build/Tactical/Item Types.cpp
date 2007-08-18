@@ -10,17 +10,23 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
 	}
 
+	ubWeight = CalculateObjectWeight(this);
 	return howMany - numToAdd;
 }
 
-int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object)
+int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object, int howMany)
 {
 	Assert(object.usItem == usItem);
 	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, object.ubNumberOfObjects);
+	if (howMany > 0) {
+		numToAdd = max(numToAdd, howMany);
+	}
 
 	for (int x = 0; x < numToAdd; ++x) {
 		
 	}
+	object.ubWeight = CalculateObjectWeight(&object);
+	ubWeight = CalculateObjectWeight(this);
 	return ItemSlotLimit( usItem, BIGPOCK1POS ) - numToAdd;
 }
 
@@ -33,8 +39,10 @@ bool OBJECTTYPE::RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject)
 	if (pSecondObject) {
 		CreateItem(usItem, (*this)[0]->data.objectStatus, pSecondObject);
 		pSecondObject->objectStack.front() = objectStack.front();
+		pSecondObject->ubWeight = CalculateObjectWeight(pSecondObject);
 	}
 	objectStack.pop_front();
+	ubWeight = CalculateObjectWeight(this);
 
 	return true;
 }
@@ -68,6 +76,7 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 	}
 	else {
 		//ADB leaving this in for a while, not sure if the code ever even reaches here and this will tell me
+		DebugBreak();
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Found mem leak, but it was corrected."));
 		**ppTarget = *pSource;
 	}
@@ -166,7 +175,6 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
 		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
@@ -183,7 +191,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
 		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
@@ -205,7 +212,6 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
 		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
 		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
 		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;

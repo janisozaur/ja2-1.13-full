@@ -1080,7 +1080,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 		bSlot = FindObjClass( pNewSoldier, IC_WEAPON );
 		if ( bSlot != NO_SLOT )
 		{
-//			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].fFlags & ITEM_TWO_HANDED )
+//			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ][0]->data.fFlags & ITEM_TWO_HANDED )
 			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].twohanded )
 			{
 				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].usItem != NOTHING )

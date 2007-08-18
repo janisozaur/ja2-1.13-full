@@ -219,8 +219,9 @@ namespace ObjectDataStructs {
 	};
 };
 
-union ObjectData
+class ObjectData
 {
+public:
 	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
 	ObjectData() {initialize();};
 	void	initialize() {memset(this, 0, sizeof(ObjectData));};
@@ -228,15 +229,20 @@ union ObjectData
 	bool operator==(const ObjectData& compare)const;
 
 
-	INT8										objectStatus;//holds the same value as bStatus[0]
-	UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
-	ObjectDataStructs::OBJECT_GUN				gun;
-	ObjectDataStructs::OBJECT_MONEY				money;
-	ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
-	ObjectDataStructs::OBJECT_KEY				key;
-	ObjectDataStructs::OBJECT_OWNER				owner;
+	union {
+		INT8										objectStatus;//holds the same value as bStatus[0]
+		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
+		ObjectDataStructs::OBJECT_GUN				gun;
+		ObjectDataStructs::OBJECT_MONEY				money;
+		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
+		ObjectDataStructs::OBJECT_KEY				key;
+		ObjectDataStructs::OBJECT_OWNER				owner;
+	};
+	INT8		bTrap;			// 1-10 exp_lvl to detect
+	UINT8		fUsed;			// flags for whether the item is used or not
+	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+	INT8		fFlags;
 };
-#define SIZEOF_OBJECTTYPE_UNION sizeof(ObjectData)
 
 
 //forward declaration
@@ -279,7 +285,7 @@ public:
 	bool operator==(const OBJECTTYPE& compare)const;
 
 	int		AddObjectsToStack(int howMany, int objectStatus);
-	int		AddObjectsToStack(OBJECTTYPE& object);
+	int		AddObjectsToStack(OBJECTTYPE& object, int howMany = -1);
 	bool	RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject = NULL);
 
 	//see comments in .cpp
@@ -293,21 +299,13 @@ public:
 	//POD
 	UINT16		usItem;
 	UINT8		ubNumberOfObjects;
-	INT8		fFlags;
-	UINT8		ubMission;
-	INT8		bTrap;			// 1-10 exp_lvl to detect
-	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
 	UINT16		ubWeight;		//used to be UINT8
-	UINT8		fUsed;			// flags for whether the item is used or not
 
 #define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
-								sizeof(fFlags) + \
 								sizeof(ubMission) + \
-								sizeof(bTrap) + \
-								sizeof(ubImprintID) + \
-								sizeof(ubWeight) + \
-								sizeof(fUsed)
+								sizeof(ubWeight)
 
 
 

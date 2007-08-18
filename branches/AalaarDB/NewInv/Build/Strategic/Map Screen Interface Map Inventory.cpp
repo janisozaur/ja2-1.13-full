@@ -207,7 +207,6 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2);
 void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArray );
 BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier );
 
-extern void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy );
 extern void MAPEndItemPointer( );
 extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ );
 
@@ -1498,10 +1497,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 	else
 	{
 		// take one item
-		TODO
-		RemoveObjFrom( pInventorySlot, 0 );
-		pInventorySlot->ubWeight = CalculateObjectWeight( pInventorySlot );
-
+		pInventorySlot->RemoveTopObjectFromStack(pItemPtr);
 	}
 
 	return ( TRUE );
@@ -1593,7 +1589,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 				{
 					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
 				}
-				StackObjs( pItemPtr, pInventorySlot, ubNumberToDrop );
+				pInventorySlot->AddObjectsToStack(*pItemPtr, ubNumberToDrop);
 			}
 		}
 		else
@@ -2157,7 +2153,7 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
 			pWorldItem->fExists && 
 			pWorldItem->object.usItem != SWITCH && 
 			pWorldItem->object.usItem != ACTION_ITEM &&
-			pWorldItem->object.bTrap <= 0 )
+			pWorldItem->object[0]->data.bTrap <= 0 )
 	{
 		return( TRUE );
 	}
@@ -2228,7 +2224,12 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort
 	std::sort(pInventory.begin(), pInventory.end());
 
-	//qsort( (LPVOID)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
+	for (std::vector<WORLDITEM>::reverse_iterator riter = pInventory.rbegin(); riter != pInventory.rend(); ++riter) {
+		if (riter->object.ubNumberOfObjects == 0) {
+			Assert(riter->fExists == false);
+			riter = pInventory.erase(riter);
+		}
+	}
 }
 
 

@@ -346,7 +346,7 @@ BOOLEAN RefreshNPCScriptRecord( UINT8 ubNPC, UINT8 ubRecord )
 
 	if ( gpNPCQuoteInfoArray[ ubNPC ] )
 	{
-		if ( CHECK_FLAG( gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ].fFlags, QUOTE_FLAG_SAID ) )
+		if ( CHECK_FLAG( gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ]fFlags, QUOTE_FLAG_SAID ) )
 		{
 			// already used so we don't have to refresh!
 			return( TRUE );

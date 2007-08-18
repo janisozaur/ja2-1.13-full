@@ -545,7 +545,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 			else
 			{
 				// If we are in water, and we are a sinkable item...
-				//				if ( !pObject->fInWater || !( Item[ pObject->Obj.usItem ].fFlags & ITEM_SINKS ) )
+				//				if ( !pObject->fInWater || !( Item[ pObject->Obj.usItem ][0]->data.fFlags & ITEM_SINKS ) )
 				if ( !pObject->fInWater || !( Item[ pObject->Obj.usItem ].sinks	) )
 				{
 					if ( pObject->fDropItem )

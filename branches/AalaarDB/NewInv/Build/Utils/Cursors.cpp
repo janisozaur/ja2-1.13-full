@@ -1642,7 +1642,7 @@ void SyncPairedCursorFrames( UINT32 uiSrcIndex, UINT32 uiDestIndex )
 	{
 		pSrcCurImage = &( pSrcCurData->Composites[ cnt ] );
 
-		if ( CursorFileDatabase[ pSrcCurImage->uiFileIndex ].fFlags & ANIMATED_CURSOR )
+		if ( CursorFileDatabase[ pSrcCurImage->uiFileIndex ][0]->data.fFlags & ANIMATED_CURSOR )
 		{
 			iCurFrame = pSrcCurImage->uiCurrentFrame;
 			break;
@@ -1660,7 +1660,7 @@ void SyncPairedCursorFrames( UINT32 uiSrcIndex, UINT32 uiDestIndex )
 	{
 		pDestCurImage = &( pDestCurData->Composites[ cnt ] );
 
-		if ( CursorFileDatabase[ pDestCurImage->uiFileIndex ].fFlags & ANIMATED_CURSOR )
+		if ( CursorFileDatabase[ pDestCurImage->uiFileIndex ][0]->data.fFlags & ANIMATED_CURSOR )
 		{
 			pDestCurImage->uiCurrentFrame = iCurFrame;
 		}

@@ -9949,14 +9949,15 @@ void TrashCanBtnCallback( MOUSE_REGION *pRegion, INT32 iReason)
 		if( gpItemPointer != NULL )
 		{
 		// set up for mapscreen
-			if( gpItemPointer->ubMission )
-			{
+			Assert(! gpItemPointer->ubMission);
+			//if( gpItemPointer->ubMission )
+			//{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
-			}
-			else
-			{
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 0 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
-			}
+			//}
+			//else
+			//{
+			//	DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 0 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
+			//}
 		}
 	}
 }

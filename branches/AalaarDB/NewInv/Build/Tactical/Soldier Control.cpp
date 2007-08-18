@@ -2630,7 +2630,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
+					//					if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
 					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
@@ -2654,7 +2654,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					// 1) We have a rifle in hand...
 					usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-					//					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
+					//					if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER && usItem != RPG7 )
 					if ( usItem != NOTHING && (Item[ usItem ].twohanded ) && !Item[usItem].rocketlauncher )
 					{
 						// Switch on height!
@@ -2752,7 +2752,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
-						//						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+						//						if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
 						if ( (Item[ usItem ].twohanded ) )
 						{
 							usNewState = BIGMERC_CROUCH_TRANS_INTO;
@@ -2772,7 +2772,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				{
 					if ( Item[ usItem ].usItemClass == IC_GUN && !Item[usItem].rocketlauncher )
 					{
-						//						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+						//						if ( (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
 						if ( (Item[ usItem ].twohanded ) )
 						{
 							usNewState = BIGMERC_CROUCH_TRANS_OUTOF;
@@ -4243,7 +4243,7 @@ UINT16 SelectFireAnimation( SOLDIERTYPE *pSoldier, UINT8 ubHeight )
 			}
 
 			// ATE: Made distence away long for psitols such that they never use this....
-			//if ( !(Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+			//if ( !(Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
 			//{
 			//	fDoLowShot = FALSE;
 			//}
@@ -8250,7 +8250,7 @@ UINT8 SOLDIERTYPE::SoldierTakeDamage( INT8 bHeight, INT16 sLifeDeduct, INT16 sBr
 		sChanceToDrop = ( __max( 0, ( sTestTwo - sTestOne ) ) );
 
 		// ATE: Increase odds of NOT dropping an UNDROPPABLE OBJECT
-		if ( ( thisSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
+		if ( ( thisSoldier->inv[ HANDPOS ][0]->data.fFlags & OBJECT_UNDROPPABLE ) )
 		{
 			sChanceToDrop -= 30;
 		}
@@ -8264,7 +8264,7 @@ UINT8 SOLDIERTYPE::SoldierTakeDamage( INT8 bHeight, INT16 sLifeDeduct, INT16 sBr
 			// OK, drop item in main hand...
 			if ( thisSoldier->inv[ HANDPOS ].usItem != NOTHING )
 			{
-				if ( !( thisSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
+				if ( !( thisSoldier->inv[ HANDPOS ][0]->data.fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					// ATE: if our guy, make visible....
 					if ( thisSoldier->bTeam == gbPlayerNum )
@@ -10941,7 +10941,7 @@ void SOLDIERTYPE::ReLoadSoldierAnimationDueToHandItemChange( UINT16 usOldItem, U
 	{
 		if ( Item[ usOldItem ].usItemClass == IC_GUN )
 		{
-			//			if ( (Item[ usOldItem ].fFlags & ITEM_TWO_HANDED) && usOldItem != ROCKET_LAUNCHER )
+			//			if ( (Item[ usOldItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usOldItem != ROCKET_LAUNCHER )
 			if ( (Item[ usOldItem ].twohanded ) && !Item[usOldItem].rocketlauncher )
 			{
 				fOldRifle = TRUE;
@@ -10953,7 +10953,7 @@ void SOLDIERTYPE::ReLoadSoldierAnimationDueToHandItemChange( UINT16 usOldItem, U
 	{
 		if ( Item[ usNewItem ].usItemClass == IC_GUN )
 		{
-			//			if ( (Item[ usNewItem ].fFlags & ITEM_TWO_HANDED) && usNewItem != ROCKET_LAUNCHER )
+			//			if ( (Item[ usNewItem ][0]->data.fFlags & ITEM_TWO_HANDED) && usNewItem != ROCKET_LAUNCHER )
 			if ( (Item[ usNewItem ].twohanded ) && !Item[usNewItem].rocketlauncher )
 			{
 				fNewRifle = TRUE;
@@ -11454,7 +11454,7 @@ BOOLEAN SOLDIERTYPE::SoldierCarriesTwoHandedWeapon( void )
 
 	usItem = thisSoldier->inv[ HANDPOS ].usItem;
 
-	//	if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+	//	if ( usItem != NOTHING && (Item[ usItem ][0]->data.fFlags & ITEM_TWO_HANDED) )
 	if ( usItem != NOTHING && (Item[ usItem ].twohanded ) )
 	{
 		return( TRUE );

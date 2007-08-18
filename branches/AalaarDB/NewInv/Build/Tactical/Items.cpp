@@ -1216,7 +1216,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 BOOLEAN ExtendedGunListGun( UINT16 usGun )
 {
 	PERFORMANCE_MARKER
-//	return( (Item[ usGun ].fFlags & ITEM_BIGGUNLIST) != 0 );
+//	return( (Item[ usGun ][0]->data.fFlags & ITEM_BIGGUNLIST) != 0 );
 	return( (Item[ usGun ].biggunlist ) != 0 );
 } 
 
@@ -1279,18 +1279,18 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	{
 		if (Item[pSoldier->inv[HANDPOS].usItem].fingerprintid )
 		{
-			if (pSoldier->inv[HANDPOS].ubImprintID != NO_PROFILE)
+			if (pSoldier->inv[HANDPOS]][0]->data.ubImprintID != NO_PROFILE)
 			{
 				if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != MADLAB )
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != pSoldier->ubProfile)
+					if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != pSoldier->ubProfile)
 					{
 						return( FALSE );
 					}
 				}
 				else
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != (NO_PROFILE + 1) )
+					if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != (NO_PROFILE + 1) )
 					{
 						return( FALSE );
 					}
@@ -1589,7 +1589,7 @@ INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 
 	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1611,7 +1611,7 @@ INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, IN
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1632,7 +1632,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 	{
 		if (pSoldier->inv[bLoop].usItem == 0)
 		{
-//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				continue;
@@ -2157,7 +2157,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 BOOLEAN TwoHandedItem( UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-//	if (Item[usItem].fFlags & ITEM_TWO_HANDED)
+//	if (Item[usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 	if (Item[usItem].twohanded )
 	{
 		return( TRUE );
@@ -2542,17 +2542,23 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 )
 {
 	PERFORMANCE_MARKER
-	INT8 bTemp;
-
-	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex1)
+	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex2)
 	{
 		return;
 	}
-	
-	TODO
-	//bTemp = (*pObj)[ubIndex1]->data.objectStatus;
-	//pObj->status.bStatus[ubIndex1] = pObj->status.bStatus[ubIndex2];
-	//pObj->status.bStatus[ubIndex2] = bTemp;
+
+	if (ubIndex1 == ubIndex2) {
+		return;
+	}
+
+	StackedObjects::iterator left = pObj->objectStack.begin(), right = pObj->objectStack.begin();
+	for (int x = 0; x < ubIndex1; ++x) {
+		++left;
+	}
+	for (int x = 0; x < ubIndex2; ++x) {
+		++right;
+	}
+	std::swap(left, right);
 }
 
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
@@ -2566,17 +2572,6 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 	{
 		(*pObj)[0]->data.objectStatus -= bAmount;
 	}
-}
-
-void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy )
-{
-	PERFORMANCE_MARKER
-	UINT8		ubLoop;
-
-	Todo
-	pTargetObj->ubNumberOfObjects += ubNumberToCopy;
-	RemoveObjs( pSourceObj, ubNumberToCopy );
-	pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
 }
 
 void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
@@ -2680,7 +2675,7 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	else
 	{
 		// add to end
-		StackObjs( pSourceObj, pTargetObj, 1 );
+		pTargetObj->AddObjectsToStack( *pSourceObj, 1 );
 		return( FALSE );
 	}
 }
@@ -2844,7 +2839,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 				if (fReloadingWithStack)
 				{
 					// add to end of stack
-					StackObjs( &OldAmmo, pAmmo, 1 );
+					pAmmo->AddObjectsToStack( OldAmmo, 1 );
 				}
 				else
 				{
@@ -3731,14 +3726,14 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
-//			if (Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+//			if (Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				return( FALSE );
 			}
 			break;
 		case HANDPOS:
-//			if (Item[ pObj->usItem ].fFlags & ITEM_TWO_HANDED)
+//			if (Item[ pObj->usItem ][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[ pObj->usItem ].twohanded )
 			{
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING && pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
@@ -3939,12 +3934,10 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 		if (ubNumberToDrop != pObj->ubNumberOfObjects)
 		{
-			TODO
 			// in the InSlot copy, zero out all the objects we didn't drop
-			//for (ubLoop = ubNumberToDrop; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
-			//{
-			//	pInSlot->status.bStatus[ubLoop] = 0;
-			//}
+			for (int x = ubNumberToDrop; x < pObj->ubNumberOfObjects; ++x) {
+				pObj->objectStack.pop_back();
+			}
 		}
 		pInSlot->ubNumberOfObjects = ubNumberToDrop;
 
@@ -3953,7 +3946,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if (pObj->ubNumberOfObjects == 0)
 		{
 			// dropped everything
-//			if (bPos == HANDPOS && Item[pInSlot->usItem].fFlags & ITEM_TWO_HANDED)
+//			if (bPos == HANDPOS && Item[pInSlot->usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (bPos == HANDPOS && Item[pInSlot->usItem].twohanded )
 			{
 				// We just performed a successful drop of a two-handed object into the
@@ -4025,7 +4018,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				{
 					ubNumberToDrop = pObj->ubNumberOfObjects;
 				}
-				StackObjs( pObj, pInSlot, ubNumberToDrop );
+				pInSlot->AddObjectsToStack( *pObj, ubNumberToDrop );
 			}
 		}
 		else
@@ -4060,7 +4053,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				break;
 			}
 
-//			if ( (Item[pObj->usItem].fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
+//			if ( (Item[pObj->usItem][0]->data.fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
 			if ( (Item[pObj->usItem].twohanded ) && (bPos == HANDPOS) )
 			{
 				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
@@ -4135,7 +4128,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 						return( TRUE );
 					}
 				}
-//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
+//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
@@ -5037,7 +5030,7 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
 	(*pObj)[0]->data.gun.bGunStatus = bStatus;
-	pObj->ubImprintID = NO_PROFILE;
+	(*pObj)[0]->data.ubImprintID = NO_PROFILE;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 
 	if (Weapon[ usItem ].ubWeaponClass == MONSTERCLASS)
@@ -5148,10 +5141,10 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	}
 	if (fRet)
 	{
-//		if (Item[ usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE)
+//		if (Item[ usItem ][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE)
 		if (Item[ usItem ].defaultundroppable )
 		{
-			pObj->fFlags |= OBJECT_UNDROPPABLE;
+			(*pObj)[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 		if (Item [ usItem ].defaultattachment > 0 )
 		{
@@ -5293,7 +5286,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		return( FALSE );
 	}
 
-	pObj->fFlags |= OBJECT_ARMED_BOMB;
+	(*pObj)[0]->data.fFlags |= OBJECT_ARMED_BOMB;
 	(*pObj)[0]->data.bombs.usBombItem = pObj->usItem;
 	return( TRUE );
 }
@@ -5308,7 +5301,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 		return( FALSE );
 	}
 
-//	if ( Item[ pObj->usAttachItem[bAttachPos] ].fFlags & ITEM_INSEPARABLE )
+//	if ( Item[ pObj->usAttachItem[bAttachPos] ][0]->data.fFlags & ITEM_INSEPARABLE )
 	if ( Item[ pAttachment->usItem ].inseparable  )
 	{
 		return( FALSE );
@@ -5548,7 +5541,7 @@ INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
 		iMaxDamage -= (iMaxDamage * Armour[Item[usItem].ubClassIndex].ubProtection) / 100;
 	}
 	// metal items are tough and will be damaged less
-//	if (Item[usItem].fFlags & ITEM_METAL)
+//	if (Item[usItem][0]->data.fFlags & ITEM_METAL)
 	if (Item[usItem].metal )
 	{
 		iMaxDamage /= 2;
@@ -5597,7 +5590,7 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 	INT8		bLoop;
 	INT8		bDamage;
 
-//	if ( (Item[pObject->usItem].fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
+//	if ( (Item[pObject->usItem][0]->data.fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	if ( (Item[pObject->usItem].damageable  || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	{
 
@@ -5866,7 +5859,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
 			// if there's an item here that can get water damaged...
-//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].fFlags & ITEM_WATER_DAMAGES)
+//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem][0]->data.fFlags & ITEM_WATER_DAMAGES)
 			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].waterdamages )
 			{
 				// roll the 'ol 100-sided dice

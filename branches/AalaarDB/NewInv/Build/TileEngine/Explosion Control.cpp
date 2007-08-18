@@ -2494,13 +2494,13 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 				if ((*pObj)[0]->data.bombs.bFrequency == bFrequency)
 				{
 					// toggle its active flag
-					if (pObj->fFlags & OBJECT_DISABLED_BOMB)
+					if ((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)
 					{
-						pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
+						(*pObj)[0]->data.fFlags &= (~OBJECT_DISABLED_BOMB);
 					}
 					else
 					{
-						pObj->fFlags |= OBJECT_DISABLED_BOMB;
+						(*pObj)[0]->data.fFlags |= OBJECT_DISABLED_BOMB;
 					}
 				}
 			}
@@ -2524,13 +2524,13 @@ void TogglePressureActionItemsInGridNo( INT16 sGridNo )
 			{
 				// Found a pressure item
 				// toggle its active flag
-				if (pObj->fFlags & OBJECT_DISABLED_BOMB)
+				if ((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)
 				{
-					pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
+					(*pObj)[0]->data.fFlags &= (~OBJECT_DISABLED_BOMB);
 				}
 				else
 				{
-					pObj->fFlags |= OBJECT_DISABLED_BOMB;
+					(*pObj)[0]->data.fFlags |= OBJECT_DISABLED_BOMB;
 				}
 			}
 		}
@@ -2863,7 +2863,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 		}
 
 		// now zap this object so it won't activate again
-		pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
+		(*pObj)[0]->data.fFlags &= (~OBJECT_DISABLED_BOMB);
 		break;
 	case ACTION_ITEM_SEX:
 		// JA2Gold: Disable brothel sex Madd: Re-enabled
@@ -3145,7 +3145,7 @@ void DecayBombTimers( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a timed bomb, so decay its delay value and see if it goes off
 				(*pObj)[0]->data.bombs.bDelay--;
@@ -3188,7 +3188,7 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_REMOTE && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
 				if ((*pObj)[0]->data.bombs.bFrequency == bFrequency)
@@ -3263,7 +3263,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 		if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].ubLevel == bLevel )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if (!(pObj->fFlags & OBJECT_DISABLED_BOMB))
+			if (!((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB))
 			{
 				if (fAllBombs || (*pObj)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE)
 				{
@@ -3328,7 +3328,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
 
-			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && (*pObj)[0]->data.bombs.bDetonatorType == BOMB_SWITCH)
+			if ( pObj->usItem == SWITCH && ( !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) ) && (*pObj)[0]->data.bombs.bDetonatorType == BOMB_SWITCH)
 			{
 				// send out a signal to detonate other bombs, rather than this which
 				// isn't a bomb but a trigger
@@ -3669,7 +3669,7 @@ INT32 FindActiveTimedBomb( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				return( gWorldBombs[uiWorldBombIndex].iItemIndex );	
 			}

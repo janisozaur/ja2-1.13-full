@@ -1796,7 +1796,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 							if ( pItem->usItemClass == IC_GUN && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								// maybe this gun has ammo (adjust for whether it is better than ours!)
-								if ( (*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (Item[pObj->usItem].fingerprintid && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) )
+								if ( (*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (Item[pObj->usItem].fingerprintid && (*pObj)[0]->data.ubImprintID != NOBODY && (*pObj)[0]->data.ubImprintID != pSoldier->ubID) )
 								{
 									iTempValue = 0;
 								}
@@ -1828,7 +1828,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 							pItem = &(Item[pObj->usItem]);
 							if (pItem->usItemClass & IC_WEAPON && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
-								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
+								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && (*pObj)[0]->data.ubImprintID != NOBODY && (*pObj)[0]->data.ubImprintID != pSoldier->ubID) ) )
 								{
 									// jammed or out of ammo, skip it!
 									iTempValue = 0;
@@ -1868,7 +1868,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 							pItem = &(Item[pObj->usItem]);
 							if ( pItem->usItemClass & IC_WEAPON && (*pObj)[0]->data.objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
-								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
+								if ( (pItem->usItemClass & IC_GUN) && ((*pObj)[0]->data.gun.bGunAmmoStatus < 0 || (*pObj)[0]->data.gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && (*pObj)[0]->data.ubImprintID != NOBODY && (*pObj)[0]->data.ubImprintID != pSoldier->ubID) ) )
 								{
 									// jammed or out of ammo, skip it!
 									iTempValue = 0;
@@ -1975,7 +1975,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 				{
 					return( AI_ACTION_NONE );
 				}
-				if (pSoldier->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
+				if (pSoldier->inv[HANDPOS][0]->data.fFlags & OBJECT_UNDROPPABLE)
 				{
 					// destroy this item!
 					DebugAI( String( "%d decides he must drop %S first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );

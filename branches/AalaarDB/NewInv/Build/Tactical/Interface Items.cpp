@@ -1185,7 +1185,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 		}
 
 		// IF it's the second hand and this hand cannot contain anything, remove the second hand position graphic
-//		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+//		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 		{
 //			if( guiCurrentScreen != MAP_SCREEN )
@@ -1452,7 +1452,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 		return( fFound );
 	}
 
-//	if ( !(Item[ pTestObject->usItem ].fFlags & ITEM_HIDDEN_ADDON) )
+//	if ( !(Item[ pTestObject->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON) )
 	if ( !(Item[ pTestObject->usItem ].hiddenaddon ) )
 	{
 		// First test attachments, which almost any type of item can have....
@@ -1460,7 +1460,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 		{
 			pObject = &(pSoldier->inv[ cnt ]);
 
-//			if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
+//			if ( Item[ pObject->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON )
 			if ( Item[ pObject->usItem ].hiddenaddon  )
 			{
 				// don't consider for UI purposes
@@ -1562,7 +1562,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 	{
 		pObject = &( pInventoryPoolList[ iStartSlotNumber + cnt ].object );
 
-//		if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
+//		if ( Item[ pObject->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON )
 		if ( Item[ pObject->usItem ].hiddenaddon  )
 		{
 			// don't consider for UI purposes
@@ -1695,7 +1695,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 	{
 		pObject = &(pSoldier->inv[ cnt ]);
 
-//		if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
+//		if ( Item[ pObject->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON )
 		if ( Item[ pObject->usItem ].hiddenaddon  )
 		{
 			// don't consider for UI purposes
@@ -2760,7 +2760,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			gItemDescHelpText.iYPosition[ cnt ] += gsInvDescY;
 		}
 
-//		if ( !(Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON) && ( ValidAttachment( gpItemPointer->usItem, pObject->usItem ) || ValidLaunchable( gpItemPointer->usItem, pObject->usItem ) || ValidMerge( gpItemPointer->usItem, pObject->usItem ) ) )
+//		if ( !(Item[ pObject->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON) && ( ValidAttachment( gpItemPointer->usItem, pObject->usItem ) || ValidLaunchable( gpItemPointer->usItem, pObject->usItem ) || ValidMerge( gpItemPointer->usItem, pObject->usItem ) ) )
 		if ( !(Item[ pObject->usItem ].hiddenaddon ) && ( ValidAttachment( gpItemPointer->usItem, pObject->usItem ) || ValidLaunchable( gpItemPointer->usItem, pObject->usItem ) || ValidMerge( gpItemPointer->usItem, pObject->usItem ) ) )
 		{
 			SetUpFastHelpListRegions( 
@@ -3011,7 +3011,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			// nb pointer could be NULL because of inventory manipulation in mapscreen from sector inv
 			if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AttachmentAPCost( gpItemPointer->usItem, gpItemDescObject->usItem ), 0, TRUE ) )
 			{
-//				if ( (Item[ gpItemPointer->usItem ].fFlags & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
+//				if ( (Item[ gpItemPointer->usItem ][0]->data.fFlags & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
 				if ( (Item[ gpItemPointer->usItem ].inseparable ) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
 				{
 					DoScreenIndependantMessageBox( Message[ STR_PERMANENT_ATTACHMENT ], ( UINT8 )MSG_BOX_FLAG_YESNO, PermanantAttachmentMessageBoxCallBack );
@@ -3150,7 +3150,7 @@ void RenderItemDescriptionBox( )
 
 		if (gpItemPointer)
 		{
-//			if ( ( Item[ gpItemPointer->usItem ].fFlags & ITEM_HIDDEN_ADDON ) ||
+//			if ( ( Item[ gpItemPointer->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON ) ||
 			if ( ( Item[ gpItemPointer->usItem ].hiddenaddon  ) ||
 
 			 ( !ValidItemAttachment( gpItemDescObject, gpItemPointer->usItem, FALSE ) &&		 
@@ -3235,10 +3235,10 @@ void RenderItemDescriptionBox( )
 		
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && gpItemDescObject->ubImprintID < NO_PROFILE )
+			if ( (Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ gpItemDescObject->ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -3654,7 +3654,7 @@ void RenderItemDescriptionBox( )
 	
 		if (gpItemPointer)
 		{
-//			if ( ( Item[ gpItemPointer->usItem ].fFlags & ITEM_HIDDEN_ADDON ) ||
+//			if ( ( Item[ gpItemPointer->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON ) ||
 			if ( ( Item[ gpItemPointer->usItem ].hiddenaddon ) ||
 
 			 ( !ValidItemAttachment( gpItemDescObject, gpItemPointer->usItem, FALSE ) &&		 
@@ -3745,10 +3745,10 @@ void RenderItemDescriptionBox( )
 
 		if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 		{
-			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && gpItemDescObject->ubImprintID < NO_PROFILE )
+			if ( ( Item[gpItemDescObject->usItem].fingerprintid ) && (*gpItemDescObject)[0]->data.ubImprintID < NO_PROFILE )
 			{
 				// add name noting imprint
-				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ gpItemDescObject->ubImprintID ].zNickname );
+				swprintf( pStr, L"%s %s (%s)", AmmoCaliber[ Weapon[ gpItemDescObject->usItem ].ubCalibre ], WeaponType[ Weapon[ gpItemDescObject->usItem ].ubWeaponType ], gMercProfiles[ (*gpItemDescObject)[0]->data.ubImprintID ].zNickname );
 			}
 			else
 			{
@@ -7770,10 +7770,10 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		// Fingerprint ID (Soldier Name)
-		if ( ( Item[pObject->usItem].fingerprintid ) && pObject->ubImprintID < NO_PROFILE )
+		if ( ( Item[pObject->usItem].fingerprintid ) && (*pObject)[0]->data.ubImprintID < NO_PROFILE )
 		{
 			CHAR16		pStr2[20];
-			swprintf( pStr2, L" [%s]", gMercProfiles[ pObject->ubImprintID ].zNickname );
+			swprintf( pStr2, L" [%s]", gMercProfiles[ (*pObject)[0]->data.ubImprintID ].zNickname );
 			wcscat( pStr, pStr2 );
 		}
 

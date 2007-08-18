@@ -929,10 +929,10 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 		if ( pObj->usItem != NOTHING )
 		{
 			// Check if it's supposed to be dropped
-			if ( !( pObj->fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			if ( !( (*pObj)[0]->data.fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
 			{
 				// and make sure that it really is a droppable item type
-//				if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
+//				if ( !(Item[ pObj->usItem ][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE) )
 				if ( !(Item[ pObj->usItem ].defaultundroppable ) )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, cnt );

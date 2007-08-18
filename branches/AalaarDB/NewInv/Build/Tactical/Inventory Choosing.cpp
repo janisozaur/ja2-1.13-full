@@ -534,10 +534,10 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 	for ( i = 0; i < pp->Inv.size(); i++ )
 	{ //clear items, but only if they have write status.
-		if( !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+		if( !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 		{
 			pp->Inv[ i ].initialize();
-			pp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
+			pp->Inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 		else
 		{ //check to see what kind of item is here.  If we find a gun, for example, it'll make the 
@@ -668,7 +668,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 				if ( Item[usGunIndex].fingerprintid )
 				{
-					pp->Inv[ i ].ubImprintID = (NO_PROFILE + 1);
+					pp->Inv[ i ][0]->data.ubImprintID = (NO_PROFILE + 1);
 				}
 
 				break;
@@ -677,7 +677,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		if( bAmmoClips && usAmmoIndex )
 		{
 			CreateItems( usAmmoIndex, 100, bAmmoClips, &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 
@@ -838,7 +838,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	}
 	//Now, we have chosen all of the correct items.  Now, we will assign them into the slots.
 	//Because we are dealing with enemies, automatically give them full ammo in their weapon.
-	if( !(pp->Inv[ HANDPOS ].fFlags & OBJECT_NO_OVERWRITE) )
+	if( !(pp->Inv[ HANDPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 	{
 		switch( pp->ubSoldierClass )
 		{
@@ -867,12 +867,12 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 
 		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
-		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
+		pp->Inv[ HANDPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 		// Rocket Rifles must come pre-imprinted, in case carrier gets killed without getting a shot off
 		if ( Item[usGunIndex].fingerprintid )
 		{
-			pp->Inv[ HANDPOS ].ubImprintID = (NO_PROFILE + 1);
+			pp->Inv[ HANDPOS ][0]->data.ubImprintID = (NO_PROFILE + 1);
 		}
 	}
 	else
@@ -886,21 +886,21 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create Scope %d",usScopeIndex));
 		CreateItem( usScopeIndex, 100, &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
 	}
 	if( usAttachIndex > 0 && ValidItemAttachment(&(pp->Inv[ HANDPOS ]),usAttachIndex,TRUE,FALSE))
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create Attachment %d",usAttachIndex));
 		CreateItem( usAttachIndex, 100, &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
 	}
 	if( usAttachIndex2 > 0 && ValidItemAttachment(&(pp->Inv[ HANDPOS ]),usAttachIndex2,TRUE,FALSE))
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("ChooseWeaponForSoldierCreateStruct: Create 2nd Attachment %d",usAttachIndex2));
 		CreateItem( usAttachIndex2, 100, &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		AttachObject( NULL, &(pp->Inv[ HANDPOS ]), &gTempObject );		
 	}
 
@@ -947,7 +947,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		}
 
 		CreateItems( usAmmoIndex, 100, bAmmoClips, &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	}
 
@@ -981,7 +981,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 		if ( usItem > 0 )
 		{
 			CreateItems( usItem, (INT8) (80 + Random(21)), bGrenades, &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 
 			return;
@@ -997,7 +997,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 			for ( int i = 0; i < bGrenades; i++ )
 			{
 				CreateItem( usItem, (INT8) (70 + Random(31)), &gTempObject ); 
-				gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+				gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 			}
 			return;
@@ -1025,7 +1025,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 			if ( usItem > 0 && count > 0 )
 			{
 				CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), count, &gTempObject );
-				gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+				gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 			}
 			bGrenades -= count;
@@ -1047,7 +1047,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 		if ( usItem > 0 && count > 0 )
 		{
 			CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), count, &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 		bGrenades -= count;
@@ -1185,7 +1185,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	//		usItem = SMOKE_GRENADE;
 	//	}
 	//	CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumSmoke, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 	//if( ubNumTear )
@@ -1199,7 +1199,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	//		usItem = TEARGAS_GRENADE;
 	//	}
 	//	CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumTear, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 	//if( ubNumStun )
@@ -1213,7 +1213,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	//		usItem = STUN_GRENADE;
 	//	}
 	//	CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumStun, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 	//if( ubNumReg )
@@ -1227,26 +1227,26 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	//		usItem = HAND_GRENADE;
 	//	}
 	//	CreateItems( usItem, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumReg, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 
 	//if( ubNumMini )
 	//{
 	//	CreateItems( MINI_GRENADE, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumMini, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 	//if( ubNumMustard )
 	//{
 	//	CreateItems( MUSTARD_GRENADE, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumMustard, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 	//if( ubNumFlare )
 	//{
 	//	CreateItems( BREAK_LIGHT, (INT8)(ubBaseQuality + Random( ubQualityVariation )), ubNumFlare, &gTempObject );
-	//	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
 
@@ -1269,10 +1269,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 	if( bHelmetClass )
 	{
 		usItem = PickARandomItem(HELMET,bHelmetClass );
-		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ HELMETPOS ].fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_HELMET )
+		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ HELMETPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_HELMET )
 		{
 			CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HELMETPOS ]) );
-			pp->Inv[ HELMETPOS ].fFlags |= OBJECT_UNDROPPABLE;
+			pp->Inv[ HELMETPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 			// roll to see if he gets an attachment, too.  Higher chance the higher his entitled helmet class is
 			if (( INT8 ) Random( 100 ) < ( 15 * ( bHelmetClass - Item[usItem].ubCoolness ) ) )
@@ -1281,7 +1281,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				if ( usAttachment > 0 )
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
-					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					AttachObject( NULL, &(pp->Inv[ HELMETPOS ]), &gTempObject );		
 				}
 			}
@@ -1323,10 +1323,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//					usRandom--;
 		//				else
 		//				{
-		//					if( !(pp->Inv[ HELMETPOS ].fFlags & OBJECT_NO_OVERWRITE) )
+		//					if( !(pp->Inv[ HELMETPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 		//					{
 		//						CreateItem( i, (INT8)(70+Random(31)), &(pp->Inv[ HELMETPOS ]) );
-		//						pp->Inv[ HELMETPOS ].fFlags |= OBJECT_UNDROPPABLE;
+		//						pp->Inv[ HELMETPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		//					}
 		//					break;
 		//				}
@@ -1340,10 +1340,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 	if( bVestClass )
 	{
 		usItem = PickARandomItem(VEST,bVestClass );
-		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ VESTPOS ].fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_VEST )
+		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ VESTPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_VEST )
 		{
 			CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ VESTPOS ]) );
-			pp->Inv[ VESTPOS ].fFlags |= OBJECT_UNDROPPABLE;
+			pp->Inv[ VESTPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 			// roll to see if he gets a CERAMIC PLATES, too.  Higher chance the higher his entitled vest class is
 			if (( INT8 ) Random( 100 ) < ( 15 * ( bVestClass - Item[usItem].ubCoolness ) ) )
@@ -1352,7 +1352,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				if ( usAttachment > 0 )
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
-					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					AttachObject( NULL, &(pp->Inv[ VESTPOS ]), &gTempObject );		
 				}
 			}
@@ -1404,10 +1404,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//					usRandom--;
 		//				else
 		//				{
-		//					if( !(pp->Inv[ VESTPOS ].fFlags & OBJECT_NO_OVERWRITE) )
+		//					if( !(pp->Inv[ VESTPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 		//					{
 		//						CreateItem( i, (INT8)(70+Random(31)), &(pp->Inv[ VESTPOS ]) );
-		//						pp->Inv[ VESTPOS ].fFlags |= OBJECT_UNDROPPABLE;
+		//						pp->Inv[ VESTPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 		//						// roll to see if he gets a CERAMIC PLATES, too.  Higher chance the higher his entitled vest class is
 		//						if (( INT8 ) Random( 100 ) < ( 15 * ( bOrigVestClass - pItem->ubCoolness ) ) )
@@ -1416,7 +1416,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//							if ( usAttachment > 0 && ValidAttachment(usAttachment, i ) )
 		//							{
 		//								CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
-		//								gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		//								gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		//								AttachObject( NULL, &(pp->Inv[ VESTPOS ]), &gTempObject );		
 		//							}
 		//						}
@@ -1432,10 +1432,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 	if( bLeggingsClass )
 	{
 		usItem = PickARandomItem(LEGS,bLeggingsClass);
-		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ LEGPOS ].fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_LEGGINGS )
+		if ( usItem > 0 && Item[usItem].usItemClass == IC_ARMOUR && !(pp->Inv[ LEGPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) && Armour[ Item[usItem].ubClassIndex ].ubArmourClass == ARMOURCLASS_LEGGINGS )
 		{
 			CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ LEGPOS ]) );
-			pp->Inv[ LEGPOS ].fFlags |= OBJECT_UNDROPPABLE;
+			pp->Inv[ LEGPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 			// roll to see if he gets an attachment, too.  Higher chance the higher his entitled Leggings class is
 			if (( INT8 ) Random( 100 ) < ( 15 * ( bLeggingsClass - Item[usItem].ubCoolness ) ) )
@@ -1444,7 +1444,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 				if ( usAttachment > 0 )
 				{
 					CreateItem( usAttachment, (INT8)(70+Random(31)), &gTempObject );
-					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					AttachObject( NULL, &(pp->Inv[ LEGPOS ]), &gTempObject );		
 				}
 			}
@@ -1487,10 +1487,10 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//					usRandom--;
 		//				else
 		//				{
-		//					if( !(pp->Inv[ LEGPOS ].fFlags & OBJECT_NO_OVERWRITE) )
+		//					if( !(pp->Inv[ LEGPOS ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 		//					{
 		//						CreateItem( i, (INT8)(70+Random(31)), &(pp->Inv[ LEGPOS ]) );
-		//						pp->Inv[ LEGPOS ].fFlags |= OBJECT_UNDROPPABLE;
+		//						pp->Inv[ LEGPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		//						break;
 		//					}
 		//				}
@@ -1560,7 +1560,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 		if( usKnifeIndex > 0 )
 		{
 			CreateItem( usKnifeIndex, (INT8)(70 + Random( 31 )), &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 	}
@@ -1587,7 +1587,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 		if ( itemGrenadeLauncher > 0 )
 		{
 			CreateItem( itemGrenadeLauncher, (INT8)(50 + Random( 51 )), &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 	}
@@ -1599,7 +1599,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 		if ( itemLAW > 0 )
 		{
 			CreateItem( itemLAW, (INT8)(50 + Random( 51 )), &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 	}
@@ -1610,7 +1610,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 		if ( itemRPG > 0 )
 		{
 			CreateItem( itemRPG, (INT8)(50 + Random( 51 )), &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 	}
@@ -1625,7 +1625,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 		if ( itemMortar > 0 )
 		{
 			CreateItem( itemMortar, (INT8)(50 + Random( 51 )), &gTempObject );
-			gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+			gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 		}
 	}
@@ -1673,7 +1673,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD1POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD1POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 				else
@@ -1682,7 +1682,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD1POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD1POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -1694,7 +1694,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD2POS ]) );
-						pp->Inv[ HEAD2POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD2POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 				else
@@ -1703,7 +1703,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD2POS ]) );
-						pp->Inv[ HEAD2POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD2POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -1718,7 +1718,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD1POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD1POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 				else
@@ -1727,7 +1727,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD2POS ].fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD2POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -1737,7 +1737,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 				if ( usItem > 0 )
 				{
 					CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD2POS ]) );
-					pp->Inv[ HEAD2POS ].fFlags |= OBJECT_UNDROPPABLE;
+					pp->Inv[ HEAD2POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 			break;
@@ -1815,7 +1815,7 @@ void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass 
 	if ( usKitItem > 0 )
 	{
 		CreateItem( usKitItem, (INT8)(80 + Random( 21 )), &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	}
 }
@@ -1845,7 +1845,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 					bStatus = 1 + Random( 20 );
 
 				CreateItem( usItem, (INT8)(bStatus), &gTempObject );
-				gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+				gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 				PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 			}
 		}
@@ -1909,7 +1909,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 	//				else
 	//				{
 	//					CreateItem( ( UINT16 ) iMiscItemsList[ i ], (INT8)(80 + Random( 21 )), &gTempObject );
-	//					gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//					gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//					PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//					break;
 	//				}
@@ -1935,7 +1935,7 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 	if ( usItem > 0 )
 	{
 		CreateItem( usItem, (INT8)(80 + Random( 21 )), &gTempObject );
-		gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	}
 
@@ -1970,7 +1970,7 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 	//			else
 	//			{
 	//				CreateItem( i, (INT8)(80 + Random( 21 )), &gTempObject );
-	//				gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	//				gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//				PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//				break;
 	//			}
@@ -2010,7 +2010,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		pObject->ubNumberOfObjects = 1;
 		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
 		{
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[ i ] = *pObject;
 				return TRUE;
@@ -2024,7 +2024,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		//try to get it into a small pocket first
 		for( i = SMALLPOCK1POS; i <= SMALLPOCK8POS; i++ )
 		{
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[ i ] = *pObject;
 				return TRUE;
@@ -2032,7 +2032,7 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 		}
 		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
 		{ //no space free in small pockets, so put it into a large pocket.
-			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
+			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
 				pp->Inv[ i ] = *pObject;
 				return TRUE;
@@ -2177,7 +2177,7 @@ else
 		for( i = 0; i < pp->Inv.size(); i++ )
 		{
 			usItem = pp->Inv[ i ].usItem;
-//TODO: someday maybe 			pp->Inv[i].fFlags &= ~ITEM_REPAIRABLE;
+//TODO: someday maybe 			pp->Inv[i][0]->data.fFlags &= ~ITEM_REPAIRABLE;
 
 			if ( gGameSettings.fOptions[TOPTION_DROP_ALL]  )
 			{
@@ -2186,12 +2186,12 @@ else
 				if ( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE )
 				{
 					if( Random(100) < ubOtherDropRate ) // way too many gas masks, nvg and extended ears getting dropped!
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE; 
+						pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE; 
 				}
 				else
 				*/
 				
-				pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+				pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 			}
 			else
 			{
@@ -2202,14 +2202,14 @@ else
 					if ((usItem > NONE) && (usItem < MAXITEMS )) // Madd -- this should be ok set to maxitems instead of max_Weapons 
 					{
 						// and we're allowed to change its flags
-						if(! (pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE ))
+						if(! (pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE ))
 						{
 							// and it's never been dropped before in this game
 							if (!gStrategicStatus.fWeaponDroppedAlready[usItem])
 							{
 								// mark it as droppable, and remember we did so.  If the player never kills this particular dude, oh well,
 								// tough luck, he missed his chance for an easy reward, he'll have to wait til next time and need some luck...
-								pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+								pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 
 								MarkAllWeaponsOfSameGunClassAsDropped( usItem );
 							}
@@ -2265,11 +2265,11 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_AMMO )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						continue;
 					else
 					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+						pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -2283,7 +2283,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2296,11 +2296,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- )  )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2316,7 +2316,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_ARMOUR )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2329,11 +2329,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_ARMOUR )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- ) )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2349,11 +2349,11 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_BLADE || uiItemClass == IC_THROWING_KNIFE )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+						pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 						break;
 					}
 				}
@@ -2369,7 +2369,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GRENADE )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2382,11 +2382,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GRENADE )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- )  )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2402,7 +2402,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2415,11 +2415,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- )  )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2435,7 +2435,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_FACE )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2448,11 +2448,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_FACE )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- ) )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2468,7 +2468,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MISC )
 				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+					if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 						break;
 					else
 						ubNumMatches++;
@@ -2481,11 +2481,11 @@ else
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MISC )
 					{
-						if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+						if( pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 							break;
 						else if( !Random( ubNumMatches-- ) )
 						{
-							pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+							pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 							break;
 						}
 					}
@@ -2502,7 +2502,7 @@ else
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 
 				// We are allowed to change the object and it is not the first (nothing) object
-				//if(! (pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE ) && pp->Inv[ i ].usItem != 0)
+				//if(! (pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE ) && pp->Inv[ i ].usItem != 0)
 				if( pp->Inv[ i ].usItem != 0)
 				{
 					// Weapon
@@ -2529,7 +2529,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyWeaponDrops[j].ubMilitiaDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 								// enemy
@@ -2538,7 +2538,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyWeaponDrops[j].ubEnemyDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 
@@ -2570,7 +2570,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyAmmoDrops[j].ubMilitiaDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 								else
@@ -2578,7 +2578,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyAmmoDrops[j].ubEnemyDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 
@@ -2610,7 +2610,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyExplosiveDrops[j].ubMilitiaDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 								// enemy
@@ -2619,7 +2619,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyExplosiveDrops[j].ubEnemyDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 
@@ -2652,7 +2652,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyArmourDrops[j].ubMilitiaDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 								// enemy
@@ -2661,7 +2661,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyArmourDrops[j].ubEnemyDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 
@@ -2697,7 +2697,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyMiscDrops[j].ubMilitiaDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 								// enemy
@@ -2706,7 +2706,7 @@ else
 									// Drop the item!
 									if (uiRandomValue <= gEnemyMiscDrops[j].ubEnemyDropRate)
 									{
-										pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
+										pp->Inv[ i ][0]->data.fFlags &= ~OBJECT_UNDROPPABLE;
 									}
 								}
 
@@ -2847,7 +2847,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				//We are creating a new gun, but the new gun needs the old gun's attachments
 				OBJECTTYPE* pObj = &(pp->Inv[ uiLoop ]);
 				CreateItem( usNewGun, (*pObj)[0]->data.gun.bGunStatus, &gTempObject );
-				gTempObject.fFlags = pObj->fFlags;
+				gTempObject[0]->data.fFlags = (*pObj)[0]->data.fFlags;
 
 				for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 					AttachObject(0, &gTempObject, &(*iter));
@@ -2970,25 +2970,25 @@ void EquipTank( SOLDIERCREATE_STRUCT *pp )
 
 	// main cannon
 	CreateItem( TANK_CANNON, ( INT8 )( 80 + Random( 21 ) ), &( pp->Inv[ HANDPOS ]) );
-	pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
+	pp->Inv[ HANDPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 	// machine gun
 	CreateItems( MINIMI, ( INT8 )( 80 + Random( 21 ) ), 1, &gTempObject );
-	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 
 	// tanks don't deplete shells or ammo...
 	CreateItems( TANK_SHELL, 100, 1, &gTempObject );
-	gTempObject.fFlags |= OBJECT_UNDROPPABLE;
+	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 
 	// armour equal to spectra all over (for vs explosives)
 	CreateItem( SPECTRA_VEST, 100, &(pp->Inv[ VESTPOS ]) );
-	pp->Inv[ VESTPOS ].fFlags |= OBJECT_UNDROPPABLE;
+	pp->Inv[ VESTPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	CreateItem( SPECTRA_HELMET, 100, &(pp->Inv[ HELMETPOS ]) );
-	pp->Inv[ HELMETPOS ].fFlags |= OBJECT_UNDROPPABLE;
+	pp->Inv[ HELMETPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	CreateItem( SPECTRA_LEGGINGS, 100, &(pp->Inv[ LEGPOS ]) );
-	pp->Inv[ LEGPOS ].fFlags |= OBJECT_UNDROPPABLE;
+	pp->Inv[ LEGPOS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 
 }
 

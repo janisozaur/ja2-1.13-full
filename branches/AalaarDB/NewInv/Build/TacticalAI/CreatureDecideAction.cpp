@@ -1058,7 +1058,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		{
 			if ( bCanAttack == NOSHOOT_NOAMMO )
 			{
-				pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
+				pSoldier->inv[HANDPOS][0]->data.fFlags |= OBJECT_AI_UNUSABLE;
 
 				// try to find a bladed weapon
 				if (pSoldier->ubBodyType == QUEENMONSTER)

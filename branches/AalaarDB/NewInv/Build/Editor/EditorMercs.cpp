@@ -2806,7 +2806,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 			return;
 		}
 		//Create the item, and set up the slot.
-		fUnDroppable = gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags & OBJECT_UNDROPPABLE ? TRUE : FALSE;
+		fUnDroppable = gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ][0]->data.fFlags & OBJECT_UNDROPPABLE ? TRUE : FALSE;
 
 		if ( Item[ gusMercsNewItemIndex ].usItemClass == IC_KEY )
 		{
@@ -2818,7 +2818,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 		}
 		if( fUnDroppable )
 		{
-			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags |= OBJECT_UNDROPPABLE;
+			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 
 		//randomize the status on non-ammo items.
@@ -2827,7 +2827,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 
 		if( gusMercsNewItemIndex )
 		{
-			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ].fFlags |= OBJECT_NO_OVERWRITE;
+			gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ gbCurrSelect ] ][0]->data.fFlags |= OBJECT_NO_OVERWRITE;
 		}
 	}
 	//allow the slot to point to the selected merc's inventory for editing/rendering purposes.
@@ -3130,16 +3130,16 @@ void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 		if( fDroppable )
 		{
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->Inv[ uiSlot ].fFlags &= (~OBJECT_UNDROPPABLE);
+				gpSelected->pDetailedPlacement->Inv[ uiSlot ][0]->data.fFlags &= (~OBJECT_UNDROPPABLE);
 			if( gpSelected->pSoldier )
-				gpSelected->pSoldier->inv[ uiSlot ].fFlags &= (~OBJECT_UNDROPPABLE);
+				gpSelected->pSoldier->inv[ uiSlot ][0]->data.fFlags &= (~OBJECT_UNDROPPABLE);
 		}
 		else
 		{
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->Inv[ uiSlot ].fFlags |= OBJECT_UNDROPPABLE;
+				gpSelected->pDetailedPlacement->Inv[ uiSlot ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 			if( gpSelected->pSoldier )
-				gpSelected->pSoldier->inv[ uiSlot ].fFlags |= OBJECT_UNDROPPABLE;
+				gpSelected->pSoldier->inv[ uiSlot ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 	}
 	if( gbCurrSelect != -1 && uiSlot == (UINT32)gbMercSlotTypes[ gbCurrSelect ] )
