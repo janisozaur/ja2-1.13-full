@@ -43,7 +43,7 @@ StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
-	for (int x = 0; x < index; ++x) {
+	for (unsigned int x = 0; x < index; ++x) {
 		++iter;
 	}
 	return &(*iter);
@@ -99,6 +99,28 @@ OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 	return 0;
 }
 
+bool StackedObjectData::operator==(StackedObjectData& compare)
+{
+	return (this->data == compare.data
+		&& this->attachments == compare.attachments);
+}
+
+bool StackedObjectData::operator==(const StackedObjectData& compare)const
+{
+	return (this->data == compare.data
+		&& this->attachments == compare.attachments);
+}
+
+bool ObjectData::operator==(ObjectData& compare)
+{
+	return (memcmp(this, &compare, sizeof(ObjectData)) == 0);
+}
+
+bool ObjectData::operator==(const ObjectData& compare)const
+{
+	return (memcmp(this, &compare, sizeof(ObjectData)) == 0);
+}
+
 // Constructor
 OBJECTTYPE::OBJECTTYPE()
 {
@@ -114,9 +136,15 @@ void OBJECTTYPE::initialize()
 	objectStack.resize(1);
 }
 
-bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)
+bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 {
-	return (*this) == const_cast<OBJECTTYPE&>(compare);
+	PERFORMANCE_MARKER
+	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
+		if (this->objectStack == compare.objectStack) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool OBJECTTYPE::operator==(OBJECTTYPE& compare)

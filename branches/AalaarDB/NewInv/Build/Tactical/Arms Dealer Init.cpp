@@ -337,8 +337,6 @@ void SimulateArmsDealerCustomer()
 	UINT8		ubArmsDealer=0;
 	UINT16	usItemIndex;
 	UINT8	ubItemsSold=0;
-	UINT8		ubElement;
-
 
 	static int numPerfectItems[MAXITEMS];
 
@@ -439,13 +437,10 @@ void DailyCheckOnItemQuantities()
 				//and today is the day the items come in
 				if( iter->uiOrderArrivalTime >= GetWorldDay() )
 				{
-					TODO
-					//forget about adding new stuff, just use the current one and put it in here!
-					ArmsDealerGetsFreshStock( ubArmsDealer, iter->object.usItem, iter->ubQtyOnOrder);
-
-					//reset order
-					iter->ubQtyOnOrder = 0;
-					iter->uiOrderArrivalTime = 0;
+					UINT16 usItem = iter->object.usItem;
+					int quantity = iter->ubQtyOnOrder;
+					iter = gArmsDealersInventory[ ubArmsDealer ].erase(iter);
+					ArmsDealerGetsFreshStock( ubArmsDealer, usItem, quantity);
 				}
 			}
 		}
@@ -687,7 +682,7 @@ void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UIN
 							// create item info describing a perfect item
 							SetSpecialItemInfoToDefaults( &SpclItemInfo );
 							// ammo will always be only condition 100, there's never any in special slots
-							RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, &SpclItemInfo, gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
+							RemoveItemFromArmsDealerInventory( ubArmsDealer, usItemIndex, gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems );
 						}
 						else
 						{
@@ -1266,7 +1261,6 @@ void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubN
 	UINT8 ubCnt;
 	UINT8 ubItemCondition;
 	UINT8 ubPerfectOnes = 0;
-	SPECIAL_ITEM_INFO SpclItemInfo;
 
 	// determine the condition of each one, counting up new ones, but adding damaged ones right away
 	for ( ubCnt = 0; ubCnt < ubNumItems; ubCnt++ )
@@ -1466,92 +1460,94 @@ UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 
 void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubCnt;
-
-	if (pObject->ubNumberOfObjects > 1) {
-		//split them up and handle each one seperately
-	}
 
 	// split up all the components of an objecttype and add them as seperate items into the dealer's inventory
 	int total = 0;
-	switch ( Item [ pObject->usItem ].usItemClass )
+	for (UINT8 ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
 	{
-		case IC_GUN:
-			// add the gun (keeps the object's status and imprintID)
-			// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
-			AddGunToArmsDealerInventory( ubArmsDealer, pObject->usItem, (*pObject)[0]->data.objectStatus, 1 );
+		switch ( Item [ pObject->usItem ].usItemClass )
+		{
+			case IC_GUN:
+				TODO add gun
+				// add the gun (keeps the object's status and imprintID)
+				// if the gun was jammed, this will forget about the jam (i.e. dealer immediately unjams anything he buys)
 
-			// if any GunAmmoItem is specified
-			if( (*pObject)[0]->data.gun.usGunAmmoItem != NONE)
-			{
-				// if it's regular ammo
-				if( Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+				// if any GunAmmoItem is specified
+				if( (*pObject)[ubCnt]->data.gun.usGunAmmoItem != NONE)
 				{
-					// and there are some remaining
-					if ( (*pObject)[0]->data.gun.ubGunShotsLeft > 0 )
+					// if it's regular ammo
+					if( Item[ (*pObject)[ubCnt]->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 					{
-						// add the bullets of its remaining ammo
-						AddAmmoToArmsDealerInventory( ubArmsDealer, (*pObject)[0]->data.gun.usGunAmmoItem, (*pObject)[0]->data.gun.ubGunShotsLeft );
+						// and there are some remaining
+						if ( (*pObject)[ubCnt]->data.gun.ubGunShotsLeft > 0 )
+						{
+							// add the bullets of its remaining ammo
+							total += (*pObject)[ubCnt]->data.gun.ubGunShotsLeft;
+						}
+					}
+					else	// assume it's attached ammo (mortar shells, grenades)
+					{
+						// add the launchable item (can't be imprinted, or have attachments!)
+						int bItemCondition = (*pObject)[ubCnt]->data.gun.bGunAmmoStatus;
+
+						// if the gun it was in was jammed, get rid of the negative status now
+						if ( bItemCondition < 0 )
+						{
+							bItemCondition *= -1;
+						}
+
+						AddItemToArmsDealerInventory( ubArmsDealer, (*pObject)[ubCnt]->data.gun.usGunAmmoItem, bItemCondition, 1 );
 					}
 				}
-				else	// assume it's attached ammo (mortar shells, grenades)
-				{
-					// add the launchable item (can't be imprinted, or have attachments!)
-					int bItemCondition = (*pObject)[0]->data.gun.bGunAmmoStatus;
+				break;
 
-					// if the gun it was in was jammed, get rid of the negative status now
-					if ( bItemCondition < 0 )
-					{
-						bItemCondition *= -1;
-					}
-
-					AddItemToArmsDealerInventory( ubArmsDealer, (*pObject)[0]->data.gun.usGunAmmoItem, bItemCondition, 1 );
-				}
-			}
-			break;
-
-		case IC_AMMO:
-			// add the contents of each magazine (multiple mags may have vastly different #bullets left)
-			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
-			{
+			case IC_AMMO:
+				// add the contents of each magazine (multiple mags may have vastly different #bullets left)
 				total += (*pObject)[ubCnt]->data.ubShotsLeft;
-			}
-			AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, total );
-			break;
+				break;
 
-		default:
-			// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
-			for ( ubCnt = 0; ubCnt < pObject->ubNumberOfObjects; ubCnt++ )
-			{
+			default:
+				// add each object seperately (multiple objects may have vastly different statuses, keep any imprintID)
 				if ((*pObject)[ubCnt]->data.objectStatus == 100) {
 					total += 1;
 				}
 				else {
 					AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, (*pObject)[ubCnt]->data.objectStatus, 1 );
 				}
+		}
+
+
+		// loop through any detachable attachments and add them as seperate items
+		for (attachmentList::iterator iter = (*pObject)[ubCnt]->attachments.begin(); iter != (*pObject)[ubCnt]->attachments.end(); ++iter) {
+	// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
+			// If the attachment is detachable
+			if (! (Item[ iter->usItem ].inseparable	) )
+			{
+				// add this particular attachment (they can't be imprinted, or themselves have attachments!)
+				AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
+				iter = (*pObject)[ubCnt]->attachments.erase(iter);
 			}
+		}
+	}
+
+	switch ( Item [ pObject->usItem ].usItemClass )
+	{
+		case IC_GUN:
+			AddAmmoToArmsDealerInventory( ubArmsDealer, (*pObject)[0]->data.gun.usGunAmmoItem, total );
+			break;
+		case IC_AMMO:
+			AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, total );
+			break;
+		default:
 			if (total) {
 				AddItemToArmsDealerInventory( ubArmsDealer, pObject->usItem, 100, total );
 			}
 			break;
 	}
 
-
-	// loop through any detachable attachments and add them as seperate items
-	for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
-// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
-		// If the attachment is detachable
-		if (! (Item[ iter->usItem ].inseparable	) )
-		{
-			// add this particular attachment (they can't be imprinted, or themselves have attachments!)
-			AddObjectToArmsDealerInventory( ubArmsDealer, &(*iter) );
-			iter = (*pObject)[0]->attachments.erase(iter);
-		}
-	}
-
-
+	//ADB not necessary any more
 	// nuke the original object to prevent any possible item duplication
-	pObject->initialize();
+	//pObject->initialize();
 }
 
 
@@ -1579,7 +1575,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
 		// add however many FULL magazines the #shot left represents	
-		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
+		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ubMagCapacity, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
 		ubShotsLeft %= ubMagCapacity;
 	}
 
@@ -1594,7 +1590,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 		// if dealer has accumulated enough stray ammo to make another full magazine, convert it!
 		if ( *pubStrayAmmo >= ubMagCapacity )
 		{
-			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
+			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ubMagCapacity, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
 			*pubStrayAmmo %= ubMagCapacity;
 		}
 		// I know, I know, this is getting pretty anal...	But what the hell, it was easy enough to do.	ARM.
@@ -1614,6 +1610,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 
 
 	Assert( ubHowMany > 0);
+	TODO handle full ammo magazines as objectStatus == 100
 	if (objectStatus == 100) {
 		//first find existing items with same perfect status, if found add to that, else create new one
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
@@ -1622,7 +1619,7 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 				iter->bItemCondition == 100) {//won't find objects in for repair
 				//make sure it's not something special, objects with default attachments aren't handled, but oh well
 				if (ItemIsSpecial(*iter) == false) {
-					iter->object.AddObjectsToStack(ubHowMany);
+					iter->object.AddObjectsToStack(ubHowMany, objectStatus);
 					return;
 				}
 			}
@@ -1839,17 +1836,6 @@ void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, U
 
 /* ARM: Can now repair with removeable attachments still attached...
 	//		d) Already stripped of all *detachable* attachments
-	for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pObject->usAttachItem[ ubCnt ] != NONE )
-		{
-			// If the attachment is detachable
-			if (! (Item[ pObject->usAttachItem[ubCnt] ].fFlags & ITEM_INSEPARABLE ) )
-			{
-				Assert( 0 );
-			}
-		}
-	}
 */
 
 	//		e) If a gun, stripped of any non-ammo-class GunAmmoItems, and bullets

@@ -224,6 +224,8 @@ union ObjectData
 	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
 	ObjectData() {initialize();};
 	void	initialize() {memset(this, 0, sizeof(ObjectData));};
+	bool operator==(ObjectData& compare);
+	bool operator==(const ObjectData& compare)const;
 
 
 	INT8										objectStatus;//holds the same value as bStatus[0]
@@ -244,6 +246,8 @@ class StackedObjectData  {
 public:
 	void	initialize() {attachments.clear(); data.initialize();};
 	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
+	bool operator==(StackedObjectData& compare);
+	bool operator==(const StackedObjectData& compare)const;
 
 	attachmentList	attachments;
 	ObjectData		data;
@@ -272,7 +276,7 @@ public:
 	void initialize();
 
 	bool operator==(OBJECTTYPE& compare);
-	bool operator==(const OBJECTTYPE& compare);
+	bool operator==(const OBJECTTYPE& compare)const;
 
 	int		AddObjectsToStack(int howMany, int objectStatus);
 	int		AddObjectsToStack(OBJECTTYPE& object);

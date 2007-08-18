@@ -549,7 +549,7 @@ void			InitializeShopKeeper( BOOLEAN fResetPage );
 void			CalculateFirstItemIndexOnPage( );
 void			DisplayArmsDealerCurrentInventoryPage( );
 BOOLEAN		DetermineArmsDealersSellingInventory( );
-void			StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
+void			StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM* pSpecial, UINT8 ubOwner );
 void			AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
 BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
@@ -4039,7 +4039,7 @@ BOOLEAN RemoveItemFromDealersInventory( INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlo
 
 	//Remove all of this item out of the specified inventory slot
 	sItemID = gpTempDealersInventory[ sInvSlot ].sItemIndex;
-	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, &SpclItemInfo, pInvSlot->ItemObject.ubNumberOfObjects );
+	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, pInvSlot->ItemObject.ubNumberOfObjects );
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );
@@ -4075,6 +4075,7 @@ void MovePlayerOfferedItemsOfValueToArmsDealersInventory()
 					{
 						// item cease to be merc-owned during this operation
 						AddObjectToArmsDealerInventory( gbSelectedArmsDealerID, &( PlayersOfferArea[ uiCnt ].ItemObject ) );
+						PlayersOfferArea[ uiCnt ].ItemObject.initialize();
 					}
 				}
 
