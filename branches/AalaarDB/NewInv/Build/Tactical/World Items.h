@@ -35,7 +35,7 @@ public:
 	WORLDITEM() {initialize();};
 	WORLDITEM&	operator=(OLD_WORLDITEM_101& src);
 	WORLDITEM&	operator=(const WORLDITEM& src);
-	bool		operator<(const WORLDITEM& compare);
+	bool		operator<(WORLDITEM& compare);
 	BOOLEAN		Save( HWFILE hFile, bool fSavingMap );
 	BOOLEAN		Load( HWFILE hFile );
 	BOOLEAN		Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );

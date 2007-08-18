@@ -2838,9 +2838,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
 	{
-		if (x == 9) {
-			int breakpoint = 0;
-		}
 		sprintf( name, "%c%d", y + 'A', x + 1 );
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
@@ -3058,7 +3055,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 			for( j = 0; j < 9; j++ )
 			{
 				pItem = &priority.Inv[ gbMercSlotTypes[ j ] ];
-				if( pItem->usItem != NOTHING && !( pItem->fFlags & OBJECT_UNDROPPABLE ) )
+				if( pItem->usItem != NOTHING && !( (*pItem)[0]->data.fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					usNumItems++;
 				}
@@ -3119,7 +3116,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 			for( j = 0; j < 9; j++ )
 			{
 				pItem = &priority.Inv[ gbMercSlotTypes[ j ] ];
-				if( pItem->usItem != NOTHING && !( pItem->fFlags & OBJECT_UNDROPPABLE ) )
+				if( pItem->usItem != NOTHING && !( (*pItem)[0]->data.fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					if( basic.fPriorityExistance )
 					{

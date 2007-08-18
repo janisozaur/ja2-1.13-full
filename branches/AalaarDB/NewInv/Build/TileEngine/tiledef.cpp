@@ -700,11 +700,11 @@ void CreateTileDatabase( )
 				
 				if (TileSurf->pAuxData != NULL)
 				{
-					if (TileSurf->pAuxData[cnt2][0]->data.fFlags & AUX_FULL_TILE)
+					if (TileSurf->pAuxData[cnt2].fFlags & AUX_FULL_TILE)
 					{
 						TileElement.ubFullTile = 1;
 					}
-					if (TileSurf->pAuxData[cnt2][0]->data.fFlags & AUX_ANIMATED_TILE)
+					if (TileSurf->pAuxData[cnt2].fFlags & AUX_ANIMATED_TILE)
 					{
 						// Allocate Animated tile data
 						AllocateAnimTileData( &TileElement, TileSurf->pAuxData[cnt2].ubNumberOfFrames );

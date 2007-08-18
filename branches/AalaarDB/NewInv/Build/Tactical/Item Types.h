@@ -286,7 +286,7 @@ public:
 
 	int		AddObjectsToStack(int howMany, int objectStatus);
 	int		AddObjectsToStack(OBJECTTYPE& object, int howMany = -1);
-	bool	RemoveTopObjectFromStack(OBJECTTYPE* pSecondObject = NULL);
+	int		RemoveObjectsFromStack(int howMany, OBJECTTYPE* pSecondObject = NULL);
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);

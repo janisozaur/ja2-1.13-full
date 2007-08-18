@@ -3297,16 +3297,9 @@ void RenderItemDescriptionBox( )
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
 			//Get weight of one item in stack.
-			TODO
-			/*
-			UINT8 ubShotsLeftFirst = (*gpItemDescObject)[0]->data.ubShotsLeft;
-			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
-			gpItemDescObject->ubNumberOfObjects = 1;
-			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = (*gpItemDescObject)[0]->data.ubShotsLeft[gubItemDescStatusIndex];
-			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = ubShotsLeftFirst;
-			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
-			*/
+			CreateItem(gpItemDescObject->usItem, 100, &gTempObject);
+			gTempObject[0]->data.ubShotsLeft = (*gpItemDescObject)[0]->data.ubShotsLeft;
+			fWeight = (float)(CalculateObjectWeight( &gTempObject )) / 10;
 		}
 		//Item does not exist
 		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )
@@ -3796,17 +3789,10 @@ void RenderItemDescriptionBox( )
 		//Pulmu: Changed weight calculation of single item in stack.
 		if( Item[gpItemDescObject->usItem].usItemClass == IC_AMMO && gpItemDescObject->ubNumberOfObjects > 1 && gubItemDescStatusIndex < gpItemDescObject->ubNumberOfObjects)
 		{
-			TODO
-				/*
 			//Get weight of one ammo clip in stack.
-			UINT8 ubShotsLeftFirst = (*gpItemDescObject)[0]->data.ubShotsLeft[0];
-			UINT8 ubNumberOfObjects = gpItemDescObject->ubNumberOfObjects;
-			gpItemDescObject->ubNumberOfObjects = 1;
-			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = (*gpItemDescObject)[0]->data.ubShotsLeft[gubItemDescStatusIndex];
-			fWeight = (float)(CalculateObjectWeight( gpItemDescObject )) / 10;
-			(*gpItemDescObject)[0]->data.ubShotsLeft[0] = ubShotsLeftFirst;
-			gpItemDescObject->ubNumberOfObjects = ubNumberOfObjects;
-			*/
+			CreateItem(gpItemDescObject->usItem, 100, &gTempObject);
+			gTempObject[0]->data.ubShotsLeft = (*gpItemDescObject)[0]->data.ubShotsLeft;
+			fWeight = (float)(CalculateObjectWeight( &gTempObject )) / 10;
 		}
 		//Item does not exist
 		else if( gubItemDescStatusIndex >= gpItemDescObject->ubNumberOfObjects )

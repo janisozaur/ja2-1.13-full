@@ -54,6 +54,7 @@
 #endif
 
 #include "BuildDefines.h"
+#include <algorithm>
 
 // temp
 struct skirgbcolor
@@ -331,7 +332,7 @@ SELECTED_ARMS_DEALERS_STATS		gSelectArmsDealerInfo;
 
 
 //This pointer is used to store the inventory the arms dealer has for sale
-INVENTORY_IN_SLOT *gpTempDealersInventory=NULL;
+std::vector<INVENTORY_IN_SLOT> gpTempDealersInventory;
 
 INVENTORY_IN_SLOT	ArmsDealerOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 INVENTORY_IN_SLOT	PlayersOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
@@ -549,7 +550,7 @@ void			InitializeShopKeeper( BOOLEAN fResetPage );
 void			CalculateFirstItemIndexOnPage( );
 void			DisplayArmsDealerCurrentInventoryPage( );
 BOOLEAN		DetermineArmsDealersSellingInventory( );
-void			StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM* pSpecial, UINT8 ubOwner );
+void			StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM* pSpecial, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner );
 void			AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
 BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
@@ -660,7 +661,7 @@ UINT32		EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot );
 
 void			BuildItemHelpTextString( CHAR16 sString[], INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea );
 void			BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem );
-void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial );
+void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN_SLOT* pObject );
 
 void DisableAllDealersInventorySlots( void );
 void EnableAllDealersInventorySlots( void );
@@ -886,7 +887,7 @@ BOOLEAN EnterShopKeeperInterface()
 	}
 
 	//Check to make sure the inventory is null ( should always be null if we are just coming in to the SKI )
-	Assert( gpTempDealersInventory == NULL );
+	Assert( gpTempDealersInventory.empty() == true );
 
 	//Reinitialize the team panel to be the SM panel
 	SetCurrentInterfacePanel( SM_PANEL );
@@ -1281,11 +1282,7 @@ BOOLEAN ExitShopKeeperInterface()
 	DestroySkiInventorySlotMouseRegions( );
 
 	//if there is a temp inventory array, destroy it
-	if( gpTempDealersInventory )
-	{
-		MemFree( gpTempDealersInventory );
-		gpTempDealersInventory = NULL;
-	}
+	gpTempDealersInventory.clear();
 
 	//Set the flag indicating that we are NOT in the shop keeper interface
 	guiTacticalInterfaceFlags &= ~INTERFACE_SHOPKEEP_INTERFACE;
@@ -1936,7 +1933,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 		UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		INT8	ubLocation;
 
-		if( gpTempDealersInventory == NULL )
+		if( gpTempDealersInventory.empty() == true )
 			return;
 
 		ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
@@ -1998,6 +1995,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 					ubNumToMove = 1;
 				}
 
+				TODO
 				//Reduce the number in dealer's inventory
 				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects -= ubNumToMove;
 				//Increase the number in dealer's offer area
@@ -2012,7 +2010,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 	{
 		UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-		if( gpTempDealersInventory == NULL )
+		if( gpTempDealersInventory.empty() == true )
 			return;
 
 		ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
@@ -2069,7 +2067,7 @@ void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 	ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
 
-	if( gpTempDealersInventory == NULL )
+	if( gpTempDealersInventory.empty() == true )
 		return;
 
 	if( ubSelectedInvSlot >= gSelectArmsDealerInfo.uiNumDistinctInventoryItems )
@@ -2529,7 +2527,7 @@ void DisplayArmsDealerCurrentInventoryPage( )
 	usPosY = SKI_ARMS_DEALERS_INV_START_Y;
 
 	//if there is any inventory
-	if( gpTempDealersInventory != NULL )
+	if( gpTempDealersInventory.empty() == false )
 	{
 		if( gubSkiDirtyLevel != SKI_DIRTY_LEVEL0 )
 		{
@@ -2741,15 +2739,11 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		}
 		else // UNDER REPAIR
 		{
-			UINT8		ubElement;
 			//display the length of time needed to repair the item
 			uiItemCost = 0;
 
 			//Get the length of time needed to fix the item
-			Assert( gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement != -1);
-			ubElement = (UINT8) gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement;
-
-			BuildDoneWhenTimeString( zTemp, gbSelectedArmsDealerID, usItemIndex, ubElement );
+			BuildDoneWhenTimeString( zTemp, gbSelectedArmsDealerID, &(gpTempDealersInventory[ ubSlotNum ]) );
 			DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 			//if the item belongs to a merc
@@ -2855,22 +2849,8 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealer") );
 
-	//if there is an old inventory, delete it
-	if( gpTempDealersInventory )
-	{
-		delete[]( gpTempDealersInventory );
-		gpTempDealersInventory = NULL;
-	}
-
 	//allocate memory to hold the inventory in memory
-	gpTempDealersInventory = new INVENTORY_IN_SLOT[ gSelectArmsDealerInfo.uiNumDistinctInventoryItems ];
-	if( gpTempDealersInventory == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
-
-
+	gpTempDealersInventory.clear();
 	guiNextFreeInvSlot = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
@@ -2879,7 +2859,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 
 		//if the object has attachments, or is damaged, or otherwise special, then it is not stacked
 		if (ItemIsSpecial(*iter) == false) {
-			StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
+			StoreObjectsInNextFreeDealerInvSlot( &(*iter), gpTempDealersInventory, gbSelectedArmsDealerID );
 		}
 		// add all active special items
 		else if ( iter->fActive)
@@ -2899,6 +2879,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 					}
 					else
 					{
+						TODO
 						gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
 					}
 				}
@@ -2923,45 +2904,31 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 					ubOwner = iter->ubOwnerProfileId;
 				}
 
-				StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
+				StoreObjectsInNextFreeDealerInvSlot( &(*iter), gpTempDealersInventory, ubOwner );
 			}
 		}
 	}
 
-	// if more than one item is in inventory
-	if ( guiNextFreeInvSlot > 1 )
+	// repairmen sort differently from merchants
+	if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
-		// repairmen sort differently from merchants
-		if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		{
-			TODO
-			// sort this list by object category, and by ascending price within each category
-			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), RepairmanItemQsortCompare );
-		}
-		else
-		{
-			TODO
-			// sort this list by object category, and by ascending price within each category
-			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), ArmsDealerItemQsortCompare );
-		}
+		// sort this list by object category, and by ascending price within each category
+		std::sort(gpTempDealersInventory);//RepairmanItemQsortCompare
 	}
-
+	else
+	{
+		// sort this list by object category, and by ascending price within each category
+		std::sort(gpTempDealersInventory);//ArmsDealerItemQsortCompare
+	}
 	return( TRUE );
 }
 
 
-void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, UINT8 ubOwner )
+void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner )
 {
 	PERFORMANCE_MARKER
-	INVENTORY_IN_SLOT *pDealerInvSlot;
-
-
-	// make sure we have the room (memory allocated for it)
-	Assert( guiNextFreeInvSlot < gSelectArmsDealerInfo.uiNumDistinctInventoryItems );
-
-	pDealerInvSlot = &(gpTempDealersInventory[ guiNextFreeInvSlot ]);
-	guiNextFreeInvSlot++;
-
+	pInventory.push_back(INVENTORY_IN_SLOT());
+	INVENTORY_IN_SLOT* pDealerInvSlot = pInventory.back();
 	pDealerInvSlot->fActive = TRUE;
 	pDealerInvSlot->sItemIndex = pSpclItemInfo->object.usItem;
 	pDealerInvSlot->sSpecialItemElement = -1;//no longer used
@@ -3023,7 +2990,7 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 	if ( ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
 	{
 		// then reset the imprinting!
-		RepairItem.ItemObject.ubImprintID = NO_PROFILE;
+		RepairItem.ItemObject[0]->data.ubImprintID = NO_PROFILE;
 	}
 
 	//try to add the item to the players offer area
@@ -7675,7 +7642,7 @@ void BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem )
 
 
 
-void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial )
+void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN_SLOT* pObject )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiDoneTime;
@@ -7684,6 +7651,19 @@ void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECI
 
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
+
+	DEALER_SPECIAL_ITEM* pSpecial = 0;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+		if (pObject->ItemObject == iter->object) {
+			if (iter->fActive && iter->bItemCondition < 0) {
+				pSpecial = &(*iter);
+				break;
+			}
+		}
+	}
+
+	Assert(pSpecial);
 	// that item must be active
 	Assert( pSpecial->fActive );
 	// that item must be in repair

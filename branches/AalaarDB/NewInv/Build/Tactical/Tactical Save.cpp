@@ -1113,7 +1113,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 		}
 
 		// if the item is trapped then flag it as unreachable, period
-		if ( gWorldItems[ uiCounter ].object.bTrap > 0 ) 
+		if ( gWorldItems[ uiCounter ].object[0]->data.bTrap > 0 ) 
 		{
 			fReachable = FALSE;
 		}

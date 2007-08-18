@@ -452,7 +452,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 			// else fall through and act as nothing
 		case IC_NONE:
 			gbEditingMode = EDITING_NOTHING;
-			if( !(gpItem->fFlags & OBJECT_UNDROPPABLE) )
+			if( !((*gpItem)[0]->data.fFlags & OBJECT_UNDROPPABLE) )
 				gbEditingMode = EDITING_DROPPABLE;
 			break;
 		default:
@@ -663,7 +663,7 @@ void SetupGunGUI()
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf( str, L"%d", (*gpItem)[0]->data.gun.ubGunShotsLeft );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -791,7 +791,7 @@ void ExtractAndUpdateGunGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
 	{
@@ -808,7 +808,7 @@ void SetupAmmoGUI()
 	CHAR16 str[20];
 	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -839,7 +839,7 @@ void ExtractAndUpdateAmmoGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -856,7 +856,7 @@ void SetupArmourGUI()
 	CHAR16 str[20];
 	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -903,7 +903,7 @@ void ExtractAndUpdateArmourGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -920,7 +920,7 @@ void SetupEquipGUI()
 	CHAR16 str[20];
 	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -950,7 +950,7 @@ void ExtractAndUpdateEquipGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -974,7 +974,7 @@ void SetupExplosivesGUI()
 	{
 		DisableTextField( 2 );
 	}
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -1035,7 +1035,7 @@ void ExtractAndUpdateExplosivesGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );	
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
 	{
@@ -1174,7 +1174,7 @@ void SetupActionItemsGUI()
 	STR16 pStr;
 	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -1202,9 +1202,9 @@ void ExtractAndUpdateActionItemsGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	if( i != gpItem->bTrap )
+	if( i != (*gpItem)[0]->data.bTrap )
 		gbDefaultBombTrapLevel = (INT8)i;
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 
 	if( gpEditingItemPool )
@@ -1232,9 +1232,9 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
-			gpItem->fFlags |= OBJECT_ALARM_TRIGGER;
+			(*gpItem)[0]->data.fFlags |= OBJECT_ALARM_TRIGGER;
 		else
-			gpItem->fFlags &= ~OBJECT_ALARM_TRIGGER;
+			(*gpItem)[0]->data.fFlags &= ~OBJECT_ALARM_TRIGGER;
 	}
 }
 
@@ -1242,7 +1242,7 @@ void SetupTriggersGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[4];
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf( str, L"%d", (*gpItem)[0]->data.bombs.ubTolerance );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
@@ -1255,7 +1255,7 @@ void SetupTriggersGUI()
 			giAlarmTriggerButton = 
 				CreateCheckBoxButton(	iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 405, "EDITOR//smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
-			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
+			if( (*gpItem)[0]->data.fFlags & OBJECT_ALARM_TRIGGER )
 				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;
 		}
 	}
@@ -1268,7 +1268,7 @@ void ExtractAndUpdateTriggersGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 1 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 
 	i = GetNumericStrictValueFromField( 2 );

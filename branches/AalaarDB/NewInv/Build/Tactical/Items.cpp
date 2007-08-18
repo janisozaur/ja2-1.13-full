@@ -1279,7 +1279,7 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	{
 		if (Item[pSoldier->inv[HANDPOS].usItem].fingerprintid )
 		{
-			if (pSoldier->inv[HANDPOS]][0]->data.ubImprintID != NO_PROFILE)
+			if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != NO_PROFILE)
 			{
 				if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != MADLAB )
 				{
@@ -4115,7 +4115,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:
-//			if (!(pItem->fFlags & ITEM_TWO_HANDED))
+//			if (!((*pItem)[0]->data.fFlags & ITEM_TWO_HANDED))
 			if (!(pItem->twohanded))
 			{
 				if (pSoldier->inv[HANDPOS].usItem == NONE)
@@ -5068,13 +5068,6 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 			(*pObj)[0]->data.gun.bGunAmmoStatus = 100;
 			(*pObj)[0]->data.gun.ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
 			(*pObj)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: new guns should have cartridge in chamber
-			/*
-			if (usItem == CAWS)
-			{
-				pObj->usAttachItem[0] = DUCKBILL;
-				pObj->bAttachStatus[0] = 100;
-			}
-			*/
 		}
 	}
 
@@ -5108,7 +5101,8 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	if (usItem >= MAXITEMS)
 	{
-		pObj->initialize();//should this really be done? I moved this here to preserve
+		DebugBreak();
+		pObj->initialize();//ADB should this really be done? I moved this here to preserve
 		//the original intent of the code while avoiding CreateGun initialize x2
 		return( FALSE );
 	}

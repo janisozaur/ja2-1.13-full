@@ -3058,7 +3058,7 @@ void SetDroppableCheckboxesBasedOnMercsInventory()
 		for( i = 0; i < 9; i++ )
 		{
 			pItem = &gpSelected->pDetailedPlacement->Inv[ gbMercSlotTypes[ i ] ];
-			if( pItem->fFlags & OBJECT_UNDROPPABLE )
+			if( (*pItem)[0]->data.fFlags & OBJECT_UNDROPPABLE )
 			{	//check box is clear
 				UnclickEditorButton( MERCS_HEAD_SLOT + i );
 			}

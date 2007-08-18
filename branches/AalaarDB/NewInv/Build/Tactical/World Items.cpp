@@ -43,7 +43,7 @@ void DeleteWorldItemsBelongingToQueenIfThere( void );
 extern UINT16 StandardGunListAmmoReplacement( UINT16 usAmmo );
 extern UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex );
 
-bool WORLDITEM::operator<(const WORLDITEM& compare)
+bool WORLDITEM::operator<(WORLDITEM& compare)
 {
 	PERFORMANCE_MARKER
 	if ( this->fExists == false ) {
@@ -599,7 +599,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 				}
 			}
 			
-			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.object.bTrap > 0 && ( Item[dummyItem.object.usItem].mine || dummyItem.object.usItem == TRIP_FLARE || dummyItem.object.usItem == TRIP_KLAXON) )
+			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.object[0]->data.bTrap > 0 && ( Item[dummyItem.object.usItem].mine || dummyItem.object.usItem == TRIP_FLARE || dummyItem.object.usItem == TRIP_KLAXON) )
 			{
 				ArmBomb( &dummyItem.object, BOMB_PRESSURE );
 				dummyItem.usFlags |= WORLD_ITEM_ARMED_BOMB;

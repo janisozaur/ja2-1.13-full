@@ -2224,10 +2224,22 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort
 	std::sort(pInventory.begin(), pInventory.end());
 
-	for (std::vector<WORLDITEM>::reverse_iterator riter = pInventory.rbegin(); riter != pInventory.rend(); ++riter) {
-		if (riter->object.ubNumberOfObjects == 0) {
-			Assert(riter->fExists == false);
-			riter = pInventory.erase(riter);
+	for (;;) {
+		if (pInventory.empty() == false && pInventory.back().object.ubNumberOfObjects == 0) {
+			Assert(pInventory.back().fExists == false);
+			pInventory.pop_back();
+		}
+		else {
+			break;
+		}
+	}
+
+	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
+		if (iter->object.ubNumberOfObjects == 0) {
+			//this shouldn't happen, it should be sorted
+			DebugBreak();
+			Assert(iter->fExists == false);
+			iter = pInventory.erase(iter);
 		}
 	}
 }

@@ -79,8 +79,7 @@ DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
 
 
 void		AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubShotsLeft );
-void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID = 0 );
-void		AddSpecialItemToArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement, SPECIAL_ITEM_INFO *pSpclItemInfo );
+void		AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID = NO_PROFILE );
 
 void		RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
 
@@ -1576,7 +1575,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
 		// add however many FULL magazines the #shot left represents	
-		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ubMagCapacity, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
+		AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, 100, ( UINT8 ) ( ubShotsLeft / ubMagCapacity ) );
 		ubShotsLeft %= ubMagCapacity;
 	}
 
@@ -1591,7 +1590,7 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 		// if dealer has accumulated enough stray ammo to make another full magazine, convert it!
 		if ( *pubStrayAmmo >= ubMagCapacity )
 		{
-			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, ubMagCapacity, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
+			AddItemToArmsDealerInventory( ubArmsDealer, usItemIndex, 100, ( UINT8 ) ( *pubStrayAmmo / ubMagCapacity ) );
 			*pubStrayAmmo %= ubMagCapacity;
 		}
 		// I know, I know, this is getting pretty anal...	But what the hell, it was easy enough to do.	ARM.
@@ -1611,7 +1610,6 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 
 
 	Assert( ubHowMany > 0);
-	TODO handle full ammo magazines as objectStatus == 100
 	if (objectStatus == 100) {
 		//first find existing items with same perfect status, if found add to that, else create new one
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
@@ -1620,20 +1618,23 @@ void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 
 				iter->bItemCondition == 100) {//won't find objects in for repair
 				//make sure it's not something special, objects with default attachments aren't handled, but oh well
 				if (ItemIsSpecial(*iter) == false) {
-					iter->object.AddObjectsToStack(ubHowMany, objectStatus);
-					return;
+					ubHowMany = iter->object.AddObjectsToStack(ubHowMany, objectStatus);
+					if (ubHowMany == 0) {
+						return;
+					}
 				}
 			}
 		}
 	}
 
-	gArmsDealersInventory[ubArmsDealer].push_back(DEALER_SPECIAL_ITEM());
-	DEALER_SPECIAL_ITEM* pItem = &(gArmsDealersInventory[ubArmsDealer].back());
-	CreateItems(usItemIndex, objectStatus, ubHowMany, &(pItem->object));
-	pItem->bItemCondition = objectStatus;
-	pItem->fActive = true;
-	pItem->ubImprintID = ubImprintID;
-
+	if (ubHowMany) {
+		gArmsDealersInventory[ubArmsDealer].push_back(DEALER_SPECIAL_ITEM());
+		DEALER_SPECIAL_ITEM* pItem = &(gArmsDealersInventory[ubArmsDealer].back());
+		CreateItems(usItemIndex, objectStatus, ubHowMany, &(pItem->object));
+		pItem->bItemCondition = objectStatus;
+		pItem->fActive = true;
+		pItem->ubImprintID = ubImprintID;
+	}
 }
 
 
