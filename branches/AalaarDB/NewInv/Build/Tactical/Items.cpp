@@ -2577,8 +2577,7 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 {
 	PERFORMANCE_MARKER
-	INT8	bLoop, bLoop2;
-	INT8	bMaxPoints, bPointsToMove;
+	INT8	bMaxPoints;
 
 	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT  || Item[pObj->usItem].canteen ) )
 	{
@@ -2596,60 +2595,56 @@ void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 
 	if ( pCursorObj && pCursorObj->usItem == pObj->usItem )
 	{
-		TODO
-			/*
-		for ( bLoop = (INT8) pCursorObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
-		{
-			if ( (*pCursorObj)[ bLoop ]->data.objectStatus > 0 )
-			{
-				// take the points here and distribute over the lower #d items
-				for ( bLoop2 = pObj->ubNumberOfObjects - 1; bLoop2 >= 0; bLoop2-- )
-				{
-					if ( (*pObj)[ bLoop2 ]->data.objectStatus < bMaxPoints )
-					{
-						bPointsToMove = bMaxPoints - pObj->status.bStatus[ bLoop2 ];
-						bPointsToMove = __min( bPointsToMove, pCursorObj->status.bStatus[ bLoop ] );
-
-						(*pObj)[ bLoop2 ]->data.objectStatus += bPointsToMove;
-
-						pCursorObj->status.bStatus[ bLoop ] -= bPointsToMove;
-						if ( pCursorObj->status.bStatus[ bLoop ] == 0 )
-						{
-							// done!
-							pCursorObj->ubNumberOfObjects--;
-							break;
-						}
-					}
-				}
-			}
-		}
+		DistributeStatus(pCursorObj, pObj, bMaxPoints);
 	}
+	DistributeStatus(pObj, pObj, bMaxPoints);
+}
 
-	for ( bLoop = (INT8) pObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
+void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8 bMaxPoints)
+{
+	INT8 bPointsToMove;
+	for ( int bLoop = pSourceObject->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
 	{
-		if ( pObj->status.bStatus[ bLoop ] > 0 )
+		StackedObjectData* pSource = (*pSourceObject)[ bLoop ];
+		if ( pSource->data.objectStatus > 0 )
 		{
 			// take the points here and distribute over the lower #d items
-			for ( bLoop2 = bLoop - 1; bLoop2 >= 0; bLoop2-- )
+			int bLoop2;
+			if (pSourceObject == pTargetObject) {
+				//we are averaging out the same object
+				bLoop2 = bLoop - 1;
+			}
+			else {
+				//we are moving from the cursor object to this one
+				bLoop2 = pTargetObject->ubNumberOfObjects - 1;
+			}
+
+			for (; bLoop2 >= 0; bLoop2-- )
 			{
-				if ( pObj->status.bStatus[ bLoop2 ] < bMaxPoints )
+				StackedObjectData* pDest = (*pTargetObject)[ bLoop ];
+				if ( pDest->data.objectStatus < bMaxPoints )
 				{
-					bPointsToMove = bMaxPoints - pObj->status.bStatus[ bLoop2 ];
-					bPointsToMove = __min( bPointsToMove, pObj->status.bStatus[ bLoop ] );
+					bPointsToMove = bMaxPoints - pDest->data.objectStatus;
+					bPointsToMove = __min( bPointsToMove, pSource->data.objectStatus );
 
-					pObj->status.bStatus[ bLoop2 ] += bPointsToMove;
+					pDest->data.objectStatus += bPointsToMove;
+					pSource->data.objectStatus -= bPointsToMove;
 
-					pObj->status.bStatus[ bLoop ] -= bPointsToMove;
-					if ( pObj->status.bStatus[ bLoop ] == 0 )
+					if ( pSource->data.objectStatus == 0 )
 					{
+						StackedObjects::iterator iter = pSourceObject->objectStack.begin();
+						for (int x = 0; x < bLoop; ++x) {
+							++iter;
+						}
+						pSourceObject->objectStack.erase(iter);
+						pSourceObject->ubNumberOfObjects--;
+						pSourceObject->ubWeight = CalculateObjectWeight(pSourceObject);
 						// done!
-						pObj->ubNumberOfObjects--;
 						break;
 					}
 				}
 			}
 		}
-*/
 	}
 }
 

@@ -284,9 +284,10 @@ public:
 	bool operator==(OBJECTTYPE& compare);
 	bool operator==(const OBJECTTYPE& compare)const;
 
-	int		AddObjectsToStack(int howMany, int objectStatus);
-	int		AddObjectsToStack(OBJECTTYPE& object, int howMany = -1);
-	int		RemoveObjectsFromStack(int howMany, OBJECTTYPE* pSecondObject = NULL);
+	int		AddObjectsToStack(int howMany, int objectStatus = 100);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
+	int		RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject = NULL);
+	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);

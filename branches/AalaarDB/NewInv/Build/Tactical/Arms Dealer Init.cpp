@@ -103,8 +103,6 @@ BOOLEAN IsItemInfoSpecial( SPECIAL_ITEM_INFO *pSpclItemInfo, UINT16 usItemIndex 
 
 BOOLEAN DoesItemAppearInDealerInventoryList( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer );
 
-//INT16 GetSpecialItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
-
 void GuaranteeMinimumAlcohol( UINT8 ubArmsDealer );
 
 BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
@@ -127,53 +125,17 @@ void ARMS_DEALER_STATUS::initialize()
 {
 	memset(this, 0, sizeof(ARMS_DEALER_STATUS));
 }
-/*
-BOOLEAN SPECIAL_ITEM_INFO::operator==(SPECIAL_ITEM_INFO& compare)
-{
-	PERFORMANCE_MARKER
-	if (this->bItemCondition == compare.bItemCondition && this->ubImprintID == compare.ubImprintID)
-	{
-		for (int x = 0; x < MAX_ATTACHMENTS; ++x)
-		{
-			if (this->usAttachment[x] != compare.usAttachment[x]
-			|| this->bAttachmentStatus[x] != compare.bAttachmentStatus[x])
-			{
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-*/
+
 void SPECIAL_ITEM_INFO::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, sizeof(SPECIAL_ITEM_INFO));
 }
-/*
-SPECIAL_ITEM_INFO& SPECIAL_ITEM_INFO::operator=(OLD_SPECIAL_ITEM_INFO_101& src)
-{
-	PERFORMANCE_MARKER
-	//set all the new empty slots to 0
-	this->initialize();
 
-	//the size of these haven't changed
-	this->bItemCondition = src.bItemCondition;
-	this->ubImprintID = src.ubImprintID;
-
-	//it's unlikely max will get less over the versions, but still, check the min
-	for (int x = 0; x < __min(MAX_ATTACHMENTS, OLD_MAX_ATTACHMENTS_101); ++x)
-	{
-		this->usAttachment[x] = src.usAttachment[x];
-		this->bAttachmentStatus[x] = src.bAttachmentStatus[x];
-	}
-	//if max gets greater, which is likely, then data was memset to 0 in initialize
-	return *this;
-}
-*/
 void DEALER_SPECIAL_ITEM::initialize()
 {
+	memset(this, 0, sizeof(DEALER_SPECIAL_ITEM) - sizeof(OBJECTTYPE));
+	object.initialize();
 	PERFORMANCE_MARKER
 }
 
@@ -181,9 +143,6 @@ void InitAllArmsDealers()
 {
 	PERFORMANCE_MARKER
 	UINT8		ubArmsDealer;
-
-	//Memset all dealers' status tables to zeroes
-	memset( gArmsDealerStatus, 0, sizeof( gArmsDealerStatus ) );
 
 	//Initialize the initial status & inventory for each of the arms dealers
 	for( ubArmsDealer = 0; ubArmsDealer < NUM_ARMS_DEALERS; ubArmsDealer++ )
@@ -409,7 +368,6 @@ void DailyCheckOnItemQuantities()
 	UINT8		ubMaxSupply;
 	UINT8		ubNumItems;
 	UINT32	uiArrivalDay;
-	BOOLEAN fPrevElig;
 	UINT8		ubReorderDays;
 
 
@@ -489,10 +447,11 @@ void DailyCheckOnItemQuantities()
 								uiArrivalDay = GetWorldDay() + ubReorderDays;	// consider changing this to minutes
 
 								// post new order
-								Todo
-								
-								//gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubQtyOnOrder = ubNumItems;
-								//gOldArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].uiOrderArrivalTime = uiArrivalDay;
+								gArmsDealersInventory[ ubArmsDealer ].push_back(DEALER_SPECIAL_ITEM());
+								DEALER_SPECIAL_ITEM* pOrder = &(gArmsDealersInventory[ ubArmsDealer ].back());
+
+								pOrder->ubQtyOnOrder = ubNumItems;
+								pOrder->uiOrderArrivalTime = uiArrivalDay;
 							}
 						}
 					}
@@ -707,7 +666,7 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 	UINT16 usItemIndex;
 	UINT8 ubChance;
 	UINT32	uiTotalChances = 0;
-	UINT32	uiNumAvailableItems = 0, uiIndex, uiRandomChoice;
+	UINT32	uiIndex, uiRandomChoice;
 	
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
@@ -1062,9 +1021,6 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 	PERFORMANCE_MARKER
 	INT8		bArmsDealer;
 	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
-	UINT8		ubElement;
-	UINT16	usItemIndex;
-
 
 	bArmsDealer = GetArmsDealerIDFromMercID( ubProfileID );
 	if( bArmsDealer == -1 )
@@ -1431,7 +1387,6 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer )
 UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 usItemIndex )
 {
 	PERFORMANCE_MARKER
-	UINT8		ubElement;
 	UINT8		ubHowManyInForRepairs = 0;
 
 	//if the dealer is not a repair dealer, no need to count, return 0
@@ -1602,13 +1557,6 @@ void AddAmmoToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8
 void AddItemToArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, INT8 objectStatus, UINT8 ubHowMany, UINT8 ubImprintID )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubRoomLeft;
-	UINT8 ubElement;
-	UINT8 ubElementsToAdd;
-	BOOLEAN fFoundOne;
-	BOOLEAN fSuccess;
-
-
 	Assert( ubHowMany > 0);
 	if (objectStatus == 100) {
 		//first find existing items with same perfect status, if found add to that, else create new one

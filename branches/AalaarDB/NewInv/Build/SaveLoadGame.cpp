@@ -617,7 +617,14 @@ BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
-	TODO
+	if ( !FileWrite( hFile, this, SIZEOF_DEALER_SPECIAL_ITEM_POD, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if ( !this->object.Save(hFile, FALSE) )
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -628,7 +635,14 @@ BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		TODO
+		if ( !FileRead( hFile, this, SIZEOF_DEALER_SPECIAL_ITEM_POD, &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if ( !this->object.Load(hFile) )
+		{
+			return FALSE;
+		}
 	}
 	else
 	{

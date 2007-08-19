@@ -289,14 +289,13 @@ public:
 
 
 	//data from OLD_DEALER_ITEM_HEADER_101
-	UINT32	uiOrderArrivalTime;				// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
+	UINT32		uiOrderArrivalTime;			// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
 	UINT8		ubQtyOnOrder;				// The number of items currently on order
 
-
-	char endOfPOD;
-
-	OBJECTTYPE object;
+	char		endOfPod;
+	OBJECTTYPE	object;
 };
+#define SIZEOF_DEALER_SPECIAL_ITEM_POD offsetof(DEALER_SPECIAL_ITEM, endOfPod)
 
 typedef std::list<DEALER_SPECIAL_ITEM> DealerItemList;
 extern DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];

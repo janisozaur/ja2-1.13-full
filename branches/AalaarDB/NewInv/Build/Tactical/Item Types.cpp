@@ -2,10 +2,12 @@
 #include "Item Types.h"
 #include "Debug.h"
 #include "Items.h"
+
 OBJECTTYPE gTempObject;
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
+	PERFORMANCE_MARKER
 	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, howMany);
 	if (numToAdd) {
 		CreateItem(usItem, objectStatus, &gTempObject);
@@ -21,23 +23,25 @@ int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 	return howMany - numToAdd;
 }
 
-int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object, int howMany)
+int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
-	Assert(object.usItem == usItem);
+	PERFORMANCE_MARKER
+	Assert(sourceObject.usItem == usItem);
 	//can't add too much, can't take too many
-	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, object.ubNumberOfObjects);
+	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, sourceObject.ubNumberOfObjects);
 	if (howMany > 0) {
 		numToAdd = max(numToAdd, howMany);
 	}
 
+	StackedObjects::iterator stopIter = sourceObject.objectStack.begin();
 	for (int x = 0; x < numToAdd; ++x) {
-		objectStack.push_front(object.objectStack.front());
-		object.objectStack.pop_front();
+		++stopIter;
 	}
+	objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
 
-	object.ubNumberOfObjects -= numToAdd;
+	sourceObject.ubNumberOfObjects -= numToAdd;
 	ubNumberOfObjects += numToAdd;
-	object.ubWeight = CalculateObjectWeight(&object);
+	sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
 	ubWeight = CalculateObjectWeight(this);
 
 	//returns how many were NOT added
@@ -45,23 +49,51 @@ int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object, int howMany)
 		return howMany - numToAdd;
 	}
 	else {
-		return object.ubNumberOfObjects;
+		//-1 means move all, if all were moved the new size should be 0
+		return sourceObject.ubNumberOfObjects;
 	}
 }
 
-int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* pSecondObject)
+void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 {
+	int numToDupe;
+	if (howMany == -1) {
+		numToDupe = sourceObject.ubNumberOfObjects;
+	}
+	else {
+		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
+	}
+
+	initialize();
+	for (int x = 0; x < numToDupe; ++x) {
+		objectStack.push_back(sourceObject.objectStack.front());		
+	}
+	ubNumberOfObjects = numToDupe;
+	ubWeight = CalculateObjectWeight(this);
+	return;
+}
+
+int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
+{
+	PERFORMANCE_MARKER
 	if (ubNumberOfObjects == 1) {
 		return howMany;
 	}
 
-	if (pSecondObject) {
-		return (AddObjectsToStack(*pSecondObject, howMany));
-	}
-
 	int numToRemove = min(ubNumberOfObjects - 1, howMany);
-	for (int x = 0; x < numToRemove; ++x) {
-		objectStack.pop_front();
+	if (destObject) {
+		StackedObjects::iterator stopIter = objectStack.begin();
+		for (int x = 0; x < numToRemove; ++x) {
+			++stopIter;
+		}
+		destObject->objectStack.splice(destObject->objectStack.begin(), objectStack, objectStack.begin(), stopIter);
+		destObject->ubNumberOfObjects += numToRemove;
+		destObject->ubWeight = CalculateObjectWeight(destObject);
+	}
+	else {
+		for (int x = 0; x < numToRemove; ++x) {
+			objectStack.pop_front();
+		}
 	}
 	ubNumberOfObjects -= numToRemove;
 	ubWeight = CalculateObjectWeight(this);
@@ -72,6 +104,7 @@ int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* pSecondObject)
 
 StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
 {
+	PERFORMANCE_MARKER
 	Assert(index < objectStack.size());
 	StackedObjects::iterator iter = objectStack.begin();
 	for (unsigned int x = 0; x < index; ++x) {
@@ -119,6 +152,7 @@ void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 
 OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
+	PERFORMANCE_MARKER
 	attachmentList::iterator iter = attachments.begin();
 	for (int x = 0; x <= index && iter != attachments.end(); ++x) {
 		++iter;
@@ -163,9 +197,9 @@ void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	ubNumberOfObjects = 1;
+	//ubNumberOfObjects = 1;
 	objectStack.clear();
-	objectStack.resize(1);
+	//objectStack.resize(1);
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
@@ -252,6 +286,7 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 			//we are loading a stack of objects, the union must either be
 			//bStatus[OLD_MAX_OBJECTS_PER_SLOT_101] or
 			//ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101]
+			//and we know it has no attachments
 
 			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
 			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));

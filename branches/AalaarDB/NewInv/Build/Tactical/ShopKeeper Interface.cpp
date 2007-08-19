@@ -1970,11 +1970,11 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 						//if the shift key is being pressed, remove them all
 						if( gfKeyState[ SHIFT ] )
 						{
-							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects = 0;
+							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.initialize();
 						}
 						else
 						{
-							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects --;
+							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.RemoveObjectsFromStack(1);
 						}
 
 						gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
@@ -1995,12 +1995,9 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 					ubNumToMove = 1;
 				}
 
-				TODO
-				//Reduce the number in dealer's inventory
-				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects -= ubNumToMove;
-				//Increase the number in dealer's offer area
-				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.ubNumberOfObjects += ubNumToMove;
-
+				//Reduce the number in dealer's inventory and Increase the number in dealer's offer area
+				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.AddObjectsToStack(
+					gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject, 1);
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
@@ -2031,8 +2028,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 		}
 
 
-
-/*
+#if 0
 		//if the item has been seleceted
 		if( gpTempDealersInventory[ ubSelectedInvSlot ].uiFlags & ARMS_INV_ITEM_SELECTED )
 		{
@@ -2055,7 +2051,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
-*/
+#endif
 	} 
 }
 
@@ -2847,7 +2843,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealer") );
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealersSellingInventory") );
 
 	//allocate memory to hold the inventory in memory
 	gpTempDealersInventory.clear();
@@ -2865,6 +2861,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 		else if ( iter->fActive)
 		{
 			bool fAddSpecialItem = true;
+			bool repaired = false;
 
 			//if the item is in for repairs
 			if( iter->bItemCondition < 0 )
@@ -2879,20 +2876,18 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 					}
 					else
 					{
-						TODO
-						gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
+						repaired = true;
 					}
 				}
 				else
 				{
-					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
+					repaired = false;
 				}
 			}
 
 			if ( fAddSpecialItem == true )
 			{
 				UINT8 ubOwner;
-
 				if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
 				{
 					// no merc is the owner
@@ -2905,6 +2900,12 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 				}
 
 				StoreObjectsInNextFreeDealerInvSlot( &(*iter), gpTempDealersInventory, ubOwner );
+				if (repaired) {
+					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
+				}
+				else {
+					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
+				}
 			}
 		}
 	}
@@ -2928,7 +2929,7 @@ void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, st
 {
 	PERFORMANCE_MARKER
 	pInventory.push_back(INVENTORY_IN_SLOT());
-	INVENTORY_IN_SLOT* pDealerInvSlot = pInventory.back();
+	INVENTORY_IN_SLOT* pDealerInvSlot = &(pInventory.back());
 	pDealerInvSlot->fActive = TRUE;
 	pDealerInvSlot->sItemIndex = pSpclItemInfo->object.usItem;
 	pDealerInvSlot->sSpecialItemElement = -1;//no longer used
@@ -3350,14 +3351,16 @@ INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOt
 		if( ArmsDealerOfferArea[bCnt].fActive == FALSE )
 		{
 			//Copy the inventory items
-			ArmsDealerOfferArea[bCnt] = *pInvSlot;
 
 			//if the shift key is being pressed, add them all
-			if( gfKeyState[ SHIFT ] )
-				ArmsDealerOfferArea[bCnt].ItemObject.ubNumberOfObjects = pInvSlot->ItemObject.ubNumberOfObjects;
+			if( gfKeyState[ SHIFT ] ) {
+				ArmsDealerOfferArea[bCnt] = *pInvSlot;
+			}
 			//If there was more then 1 item, reduce it to only 1 item moved
-			else if( pInvSlot->ItemObject.ubNumberOfObjects > 1 )
-				ArmsDealerOfferArea[bCnt].ItemObject.ubNumberOfObjects = 1;
+			else if( pInvSlot->ItemObject.ubNumberOfObjects > 1 ) {
+				//ADB should the one item be removed?
+				ArmsDealerOfferArea[bCnt].ItemObject.DuplicateObjectsInStack(pInvSlot->ItemObject, 1);
+			}
 
 			//Remember where the item came from
 			ArmsDealerOfferArea[bCnt].bSlotIdInOtherLocation = bSlotIdInOtherLocation;
@@ -6691,7 +6694,7 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 		//we need not worry about attachments!!!!
 
 		// make the main item into the very first subobject
-		if (pComplexObject->RemoveTopObjectFromStack(&gTempObject)) {
+		if (pComplexObject->RemoveObjectsFromStack(1, &gTempObject) == 0) {
 			subObjects.push_back(gTempObject);
 		}
 		else {

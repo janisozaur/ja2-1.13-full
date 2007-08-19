@@ -89,6 +89,8 @@ void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
 void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem);
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj);
 
+void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8 bMaxPoints);
+
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
 
 // create a keyobject
