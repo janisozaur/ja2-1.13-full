@@ -791,6 +791,19 @@ void LoadDoorTableFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
 	gubMaxDoors = gubNumDoors;
 	DoorTable = (DOOR *)MemAlloc( sizeof( DOOR ) * gubMaxDoors );
 
+	if(dMajorMapVersion < 7.00)
+	{
+		_OLD_DOOR * OldDoorTable = NULL;
+		OldDoorTable = (_OLD_DOOR *)MemAlloc( sizeof( _OLD_DOOR ) * gubMaxDoors );
+		LOADDATA( OldDoorTable, *hBuffer, sizeof( _OLD_DOOR )*gubMaxDoors );
+		for ( cnt = 0; cnt < gubNumDoors; cnt++ )
+		{
+			memcpy(DoorTable + cnt, OldDoorTable + cnt, sizeof(_OLD_DOOR) );
+			DoorTable[cnt].sGridNo = OldDoorTable[cnt].sGridNo;
+		}
+		MemFree(OldDoorTable);
+	}
+	else
 	LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
 
 	// OK, reset perceived values to nothing...
