@@ -616,7 +616,7 @@ void MakeRemainingTerroristsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.ItemData.Generic.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -750,7 +750,7 @@ void MakeRemainingAssassinsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	Object.ItemData.Generic.bStatus[ 0 ] = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{

@@ -267,9 +267,12 @@ Inventory::Inventory(int slotCount ) :
 };
 
 Inventory::Inventory(const Inventory& src) {
+	// 0verhaul:  I do not think the reservation is necessary or advisable.
 	//inv.reserve(slotCnt);
 	//Assert (src.inv.size() == slotCnt);
 	inv = src.inv;
+	// 0verhaul:  Must copy the new slot count or a class created with a different count assigned to this one
+	// will fail the assertion(s).
 	slotCnt = src.slotCnt;
 	Assert (inv.size() == slotCnt);
 }
@@ -613,6 +616,7 @@ void MERCPROFILESTRUCT::clearInventory() {
 		bInvStatus[idx] = 0;
 		bInvNumber[idx] = 0;
 	}
+
 	Assert(inv.size() == NUM_INV_SLOTS);
 	Assert(bInvStatus.size() == NUM_INV_SLOTS);
 	Assert(bInvStatus.size() == NUM_INV_SLOTS);
@@ -3279,7 +3283,7 @@ void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT32 sNewGridNo, BOOLEAN fForceRe
 			BOOLEAN fSetGassed = TRUE;
 
 			// If we have a functioning gas mask...
-			if ( FindGasMask ( pSoldier ) != NO_SLOT && pSoldier->inv[ HEAD1POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			if ( FindGasMask ( pSoldier ) != NO_SLOT && pSoldier->inv[ HEAD1POS ].ItemData.Generic.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
 			{
 				fSetGassed = FALSE;
 			}
@@ -4088,7 +4092,7 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 	}
 	// callahan update end
 
-	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ubGunAmmoType].explosionSize <= 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) && AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize <= 1)
 	{	
 		if ( ubSpecial == FIRE_WEAPON_SLEEP_DART_SPECIAL )
 		{
@@ -4147,7 +4151,7 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 	}
 	// marke added one 'or' for explosive ammo. variation of: AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1
 	//  extracting attacker´s ammo type
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || AmmoTypes[MercPtrs[ubAttackerID]->inv[MercPtrs[ubAttackerID]->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 	{	
 		INT8 bDeafValue;
 
@@ -11732,8 +11736,8 @@ BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier )
 		!pSoldier->bDoBurst && 
 		!Item[pSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE &&
-		pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 )
+		pSoldier->inv[SECONDHANDPOS].ItemData.Gun.bGunStatus >= USABLE &&
+		pSoldier->inv[SECONDHANDPOS].ItemData.Gun.ubGunShotsLeft > 0 )
 	{
 		return( TRUE );
 	}
@@ -11749,7 +11753,7 @@ BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier )
 		!pSoldier->bDoBurst && 
 		!Item[pSoldier->inv[ HANDPOS ].usItem].grenadelauncher &&
 		Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-		pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE //&&
+		pSoldier->inv[SECONDHANDPOS].ItemData.Gun.bGunStatus >= USABLE //&&
 		//			 pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 &&
 		//			 gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
 		)

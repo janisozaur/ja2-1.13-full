@@ -565,19 +565,21 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 	if (curr->pBasicPlacement->bBodyType == TANK_NW ||
 		curr->pBasicPlacement->bBodyType == TANK_NE)
 	{
-		while (1)
+		ROTTING_CORPSE *pCorpse;
+		//while (1)
+		do
 		{
-			ROTTING_CORPSE *pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
+			pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
 			if (pCorpse)
 			{
 				// Assume this is a dead tank and have the replacement tank haul it away
 				RemoveCorpse( pCorpse->iID);
 			}
-			else
-			{
-				break;
-			}
-		}
+			//else
+			//{
+				//break;
+			//}
+		} while (pCorpse);
 	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld: decide on placement"));
@@ -752,6 +754,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 			pSoldier->ubGroupID = pGroup->ubGroupID;
 			pSoldier->pGroup = pGroup;
 		}
+
 		AddSoldierToSectorNoCalculateDirection( ubID );
 
 		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bTeam == ENEMY_TEAM && !pSoldier->inv[ HANDPOS ].usItem )

@@ -767,6 +767,8 @@ INT32 LineOfSightTest( FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX,
 		iDistance += 1;
 	}
 
+	//ADB remove this check since I might have a scope that allows me to see past this arbitrary limit
+	//Lalien: just removing this check removes visibility limit completly
 	if ( iDistance > iSightLimit)
 	{
 		// out of visual range
@@ -1999,7 +2001,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	}
 	else
 	{
-		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType;
+		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType;
 	}
 
 	// at least partly compensate for "near miss" increases for this guy, after all, the bullet
@@ -2120,12 +2122,12 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 				// lucky bastard was facing away!
 			}
 			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].bStatus[ 0 ]) ) )
-			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].bStatus[ 0 ]) ) )
+			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].ItemData.Generic.bStatus[ 0 ]) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
-			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS].bStatus[ 0 ]) ) )
+			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS].ItemData.Generic.bStatus[ 0 ]) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
@@ -2205,10 +2207,10 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	{
 		if (bHeadSlot != NO_SLOT)
 		{
-			pTarget->inv[ bHeadSlot ].bStatus[ 0 ] -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
-			if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] <= USABLE )
+			pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
+			if ( pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] <= USABLE )
 			{
-				if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] <= 0 )
+				if ( pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] <= 0 )
 				{
 					DeleteObj( &(pTarget->inv[ bHeadSlot ]) );
 					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
@@ -2223,11 +2225,11 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		bHeadSlot = HEAD1POS + (INT8) Random( 2 );
 		if ( pTarget->inv[ bHeadSlot ].usItem != NOTHING )
 		{
-			pTarget->inv[ bHeadSlot ].bStatus[ 0 ] -= (INT8) ( Random( iImpact / 2 ) );
-			if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] < 0 )
+			pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] -= (INT8) ( Random( iImpact / 2 ) );
+			if ( pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] < 0 )
 			{
 				// just break it...
-				pTarget->inv[ bHeadSlot ].bStatus[ 0 ] = 1;
+				pTarget->inv[ bHeadSlot ].ItemData.Generic.bStatus[ 0 ] = 1;
 			}
 		}
 	}
@@ -2343,7 +2345,7 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		// If on anything other than bLevel of 0, we can pretty much freely spew blood
 		if ( bSpewBloodLevel == 0 )
 		{
-      if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
+			if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
 			{
 				fCanSpewBlood = FALSE;
 			}
@@ -2466,7 +2468,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 	//else if ( pBullet->usFlags & BULLET_FLAG_SMALL_MISSILE )
 	//{
 	// stops if using HE ammo
-	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].antiTank )
+	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].antiTank )
 	{
 		*pfHit = TRUE;
 		return( 0 );
@@ -2482,7 +2484,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		pDoor = FindDoorInfoAtGridNo( pBullet->sGridNo );
 
 		// Does it have a lock?
-		INT16 lockBustingPower = AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].lockBustingPower;
+		INT16 lockBustingPower = AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].lockBustingPower;
 
 		// WANNE: bugfix: No door returned, so the game crashes!
 		if (pDoor)
@@ -2546,7 +2548,7 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 		iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ];
 		iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
+		iImpactReduction = (INT32) (iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].structureImpactReductionDivisor));
 
 		//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType)
 		//{
@@ -2600,7 +2602,7 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 	//else if ( pBullet->usFlags & BULLET_FLAG_SMALL_MISSILE )
 	//{
 	// stops if using HE ammo
-	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].antiTank )
+	else if ( AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive && !AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].antiTank )
 	{
 		return( pBullet->iImpact );
 	}
@@ -2627,7 +2629,7 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 	iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] * pStructure->pDBStructureRef->pDBStructure->ubDensity / 100;
 	iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
 
-	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType].structureImpactReductionDivisor));
+	iImpactReduction = (INT32)(iImpactReduction * AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].structureImpactReductionMultiplier / max(1,AmmoTypes[pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].structureImpactReductionDivisor));
 
 	//switch (pBullet->pFirer->inv[ pBullet->pFirer->ubAttackingHand ].ubGunAmmoType)
 	//{
@@ -3609,7 +3611,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 		usBulletFlags |= BULLET_FLAG_FLAME;
 		ubSpreadIndex = 2;
 	}
-	else if ( AmmoTypes[ pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType ].tracerEffect && (pFirer->bDoBurst || gGameSettings.fOptions[ TOPTION_TRACERS_FOR_SINGLE_FIRE ]) )
+	else if ( AmmoTypes[ pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType ].tracerEffect && (pFirer->bDoBurst || gGameSettings.fOptions[ TOPTION_TRACERS_FOR_SINGLE_FIRE ]) )
 	{
 		//usBulletFlags |= BULLET_FLAG_TRACER;
 		fTracer = TRUE;
@@ -3623,7 +3625,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 			// shotgun pellets fire 9 bullets doing 1/4 damage each
 			if (!fFake)
 			{
-				ubShots = AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].numberOfBullets;
+				ubShots = AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType].numberOfBullets;
 				// but you can't really aim the damn things very well!
 				if (sHitBy > 0)
 				{
@@ -3641,7 +3643,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 			}
 			//			ubImpact = AMMO_DAMAGE_ADJUSTMENT_BUCKSHOT( ubImpact );
-			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageMultiplier / max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType].multipleBulletDamageDivisor) );
+			ubImpact = (UINT8) (ubImpact * AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType].multipleBulletDamageMultiplier / max(1,AmmoTypes[pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType].multipleBulletDamageDivisor) );
 		}
 	}
 
@@ -3728,7 +3730,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 		if ( pBullet->usFlags & BULLET_FLAG_KNIFE )
 		{
-			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand].bStatus[0];
+			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand].ItemData.Generic.bStatus[0];
 		}
 
 		// apply increments for first move
@@ -3788,7 +3790,7 @@ INT8 ChanceToGetThrough( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT d
 		// if shotgun, shotgun would have to be in main hand
 		if ( pFirer->inv[ HANDPOS ].usItem == pFirer->usAttackingWeapon )
 		{
-			if ( AmmoTypes[pFirer->inv[ HANDPOS ].ubGunAmmoType].numberOfBullets > 1 )
+			if ( AmmoTypes[pFirer->inv[ HANDPOS ].ItemData.Gun.ubGunAmmoType].numberOfBullets > 1 )
 			{
 				fBuckShot = TRUE;
 			}

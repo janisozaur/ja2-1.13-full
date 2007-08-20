@@ -27,7 +27,7 @@ BOOLEAN InBuilding( INT32 sGridNo );
 BUILDING * GenerateBuilding( INT32 sDesiredSpot );
 BUILDING * FindBuilding( INT32 sGridNo );
 void GenerateBuildings( void );
-INT32 FindClosestClimbPoint( INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp );
+INT32 FindClosestClimbPoint( SOLDIERTYPE *pSoldier, INT32 sStartGridNo, INT32 sDesiredGridNo, BOOLEAN fClimbUp );
 BOOLEAN SameBuilding( INT32 sGridNo1, INT32 sGridNo2 );
 
 #endif
