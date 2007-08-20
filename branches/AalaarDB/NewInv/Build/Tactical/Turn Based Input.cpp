@@ -5391,8 +5391,7 @@ void SwapGoggles()
 	*/
 	SOLDIERTYPE	*pTeamSoldier;
 	OBJECTTYPE * pObj;
-	INT8		bLoop, bSlot1, bSlot2, bSlot3, temp, tempStatus=0;
-	INT16		lastBonus=0, tempItem=0;
+	INT8		bLoop, bSlot1;
 	for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
 	{
 		if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
@@ -5402,88 +5401,49 @@ void SwapGoggles()
 			{
 				if ( Item[pTeamSoldier->inv[bSlot1].usItem].brightlightvisionrangebonus > 0	)
 				{
-					lastBonus=0;
-					bSlot2 = ITEM_NOT_FOUND;
-					bSlot3 = ITEM_NOT_FOUND;
-					temp = 0;
+					int bestBonus = 0;
+					OBJECTTYPE* pGoggles = FindNightGogglesInInv( pTeamSoldier );
+					//search for better goggles on the helmet
+					if (pGoggles) {
+						Item[pGoggles->usItem].nightvisionrangebonus;
+					}
 					pObj = &(pTeamSoldier->inv[HELMETPOS]);
-					while (temp != ITEM_NOT_FOUND)
-					{
-						temp = FindNightGoggles( pTeamSoldier, lastBonus );
-						if ( temp > ITEM_NOT_FOUND )
-						{
-							lastBonus = Item[pTeamSoldier->inv[temp].usItem].nightvisionrangebonus;
-							bSlot2 = temp;
-						}
-					}
-					OBJECTTYPE* pAttachment = 0;
 					for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
-						if ( Item[ iter->usItem ].nightvisionrangebonus > lastBonus && Item[ iter->usItem ].usItemClass == IC_FACE )
+						if ( Item[ iter->usItem ].nightvisionrangebonus > bestBonus
+							&& Item[ iter->usItem ].usItemClass == IC_FACE )
 						{
-							bSlot2 = ITEM_NOT_FOUND;
-							pAttachment = &(*iter);
-							lastBonus = Item[ iter->usItem ].nightvisionrangebonus;
+							pGoggles = &(*iter);
+							bestBonus = Item[ iter->usItem ].nightvisionrangebonus;
 						}
 					}
-					if ( pAttachment )
+					if ( pGoggles )
 					{
-						// Duplicate item in helmet attachment slot
-						OBJECTTYPE temp(*pAttachment);
-						// Replace helmet attachment with face slot
-						pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-						pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1][0]->data.objectStatus;
-						// Replace face slot with helmet attachment from temp
-						pTeamSoldier->inv[bSlot1].usItem = tempItem;
-						pTeamSoldier->inv[bSlot1][0]->data.objectStatus = tempStatus;
+						SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						break;
 					}
-					else if ( bSlot2 != ITEM_NOT_FOUND )
-					{
-						SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
-					}
-					break;
 				}
 				else if(Item[pTeamSoldier->inv[bSlot1].usItem].nightvisionrangebonus > 0)	
 				{
-					lastBonus=0;
-					bSlot2 = ITEM_NOT_FOUND;
-						bSlot3 = ITEM_NOT_FOUND;
-					temp = 0;
-						pObj = &(pTeamSoldier->inv[HELMETPOS]);
-					while (temp != ITEM_NOT_FOUND)
-					{
-						temp = FindSunGoggles( pTeamSoldier, lastBonus );
-						if ( temp > ITEM_NOT_FOUND )
+					int bestBonus = 0;
+					OBJECTTYPE* pGoggles = FindSunGogglesInInv( pTeamSoldier );
+					//search for better goggles on the helmet
+					if (pGoggles) {
+						Item[pGoggles->usItem].brightlightvisionrangebonus;
+					}
+					pObj = &(pTeamSoldier->inv[HELMETPOS]);
+					for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+						if ( Item[ iter->usItem ].brightlightvisionrangebonus > bestBonus
+							&& Item[ iter->usItem ].usItemClass == IC_FACE )
 						{
-							lastBonus = Item[pTeamSoldier->inv[temp].usItem].brightlightvisionrangebonus;
-							bSlot2 = temp;
+							pGoggles = &(*iter);
+							bestBonus = Item[ iter->usItem ].brightlightvisionrangebonus;
 						}
 					}
-						for (int i = 0; i < MAX_ATTACHMENTS; i++)
+					if ( pGoggles )
 					{
-							if ( Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
-							{
-								bSlot2 = ITEM_NOT_FOUND;
-								bSlot3 = i;
-								lastBonus = Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus;
-							}
-						}
-						if ( bSlot3 != ITEM_NOT_FOUND )
-						{
-							// Duplicate item in helmet attachment slot
-							tempItem = pObj->usAttachItem[bSlot3];
-							tempStatus = pObj->bAttachStatus[bSlot3];
-							// Replace helmet attachment with face slot
-							pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-							pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1][0]->data.objectStatus;
-							// Replace face slot with helmet attachment from temp
-							pTeamSoldier->inv[bSlot1].usItem = tempItem;
-							pTeamSoldier->inv[bSlot1][0]->data.objectStatus = tempStatus;
-						}
-						else if ( bSlot2 != ITEM_NOT_FOUND )
-						{
-						SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
+						SwapObjs( pGoggles, &(pTeamSoldier->inv[bSlot1] ) );
+						break;
 					}
-					break;
 				}
 			}
 			fCharacterInfoPanelDirty = TRUE;

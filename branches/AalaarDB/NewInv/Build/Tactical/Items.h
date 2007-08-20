@@ -294,8 +294,8 @@ INT16 GetGearAPBonus( SOLDIERTYPE * pSoldier );
 
 UINT16 GetFirstExplosiveOfType(UINT16 expType);
 
-INT8 FindSunGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat );
-INT8 FindNightGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat );
+OBJECTTYPE* FindSunGogglesInInv( SOLDIERTYPE * pSoldier );
+OBJECTTYPE* FindNightGogglesInInv( SOLDIERTYPE * pSoldier );
 
 INT16 GetMinRangeForAimBonus( OBJECTTYPE * pObj );
 UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier);

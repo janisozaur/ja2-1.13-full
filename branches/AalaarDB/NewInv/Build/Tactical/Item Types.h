@@ -228,6 +228,10 @@ public:
 	bool operator==(ObjectData& compare);
 	bool operator==(const ObjectData& compare)const;
 
+	//BOOLEAN	Load( HWFILE hFile );
+	//BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	//BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
+
 
 	union {
 		INT8										objectStatus;//holds the same value as bStatus[0]
@@ -254,6 +258,10 @@ public:
 	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
 	bool operator==(StackedObjectData& compare);
 	bool operator==(const StackedObjectData& compare)const;
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
 
 	attachmentList	attachments;
 	ObjectData		data;

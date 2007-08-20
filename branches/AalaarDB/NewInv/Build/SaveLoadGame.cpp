@@ -1257,109 +1257,209 @@ BOOLEAN WORLDITEM::Load(HWFILE hFile)
 	return TRUE;
 }
 
+BOOLEAN StackedObjectData::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
+{
+	//when this function is called, the file has been loaded into a buffer using FileRead
+	PERFORMANCE_MARKER
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		int size;
+		LOADDATA(&(this->data), *hBuffer, sizeof(ObjectData) );
+		LOADDATA(&size, *hBuffer, sizeof(int) );
+		attachments.resize(size);
+		for each (OBJECTTYPE attachment in attachments) {
+			if (! attachment.Load( hBuffer, dMajorMapVersion, ubMinorMapVersion ) ) {
+				return FALSE;
+			}
+		}
+	}
+	else {
+		//we shouldn't be loading this
+		Assert(false);
+	}
+	return TRUE;
+}
+
+BOOLEAN StackedObjectData::Load( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !NewJA2EncryptedFileRead( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		int size;
+		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		attachments.resize(size);
+		for each (OBJECTTYPE attachment in attachments) {
+			if (! attachment.Load(hFile) ) {
+				return FALSE;
+			}
+		}
+	}
+	else {
+		//we shouldn't be loading this
+		Assert(false);
+	}
+	return TRUE;
+}
+BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
+{
+	//if we are saving this to a map file it will be loaded with FileRead
+	PERFORMANCE_MARKER
+	UINT32 uiNumBytesWritten;
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+	functionPtr pSavingFunction;
+	if ( fSavingMap == false ) {
+		pSavingFunction = &NewJA2EncryptedFileWrite;
+	}
+	else {
+		pSavingFunction = &FileWrite;
+	}
+
+	int size = attachments.size();
+	if ( !(*pSavingFunction)( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for each (OBJECTTYPE attachment in attachments) {
+		if (! attachment.Save(hFile, fSavingMap)) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	//typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
-	//functionPtr pLoadingFunction;
-	//if ( guiCurrentSaveGameVersion < 87 )
-	//{
-	//	pLoadingFunction = &JA2EncryptedFileRead;
-	//}
-	//else
-	//{
-	//	pLoadingFunction = &NewJA2EncryptedFileRead;
-	//}
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+	functionPtr pLoadingFunction;
+	if ( guiCurrentSaveGameVersion < 87 ) {
+		pLoadingFunction = &JA2EncryptedFileRead;
+	}
+	else {
+		pLoadingFunction = &NewJA2EncryptedFileRead;
+	}
 
-	//UINT32	uiNumBytesRead;
-	////if we are at the most current version, then fine
-	//if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
-	//{
-	//	if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
-	//	{
-	//		return(FALSE);
-	//	}
-	//	if ( !(*pLoadingFunction)( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesRead ) )
-	//	{
-	//		return(FALSE);
-	//	}
-	//}
-	//else
-	//{
-	//	OLD_OBJECTTYPE_101 OldSavedObject101;
-	//	//we are loading an older version (only load once, so use "else if")
-	//	//first load the data based on what version was stored
-	//	if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
-	//	{
-	//		if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
-	//		{
-	//			return(FALSE);
-	//		}
-	//	}
-	//	/*
-	//	else if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
-	//		(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
-	//	*/
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !(*pLoadingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		int size;
+		if ( !(*pLoadingFunction)( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
 
-	//	//now we have the data that needs to be converted (keep on converting up, so use "if")
-	//	if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
-	//	{
-	//		(*this) = OldSavedObject101;
-	//		//OldSavedObject999 = OldSavedObject101;
-	//	}
-	//	//change this when changing the file version again
-	//	/*
-	//	if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
-	//	{
-	//		(*this) = OldSavedObject999;
-	//	}
-	//	*/
-	//}
+		objectStack.resize(size);
+		for each (StackedObjectData data in objectStack) {
+			if (! data.Load(hFile)) {
+				return FALSE;
+			}
+		}
+	}
+	else
+	{
+		OLD_OBJECTTYPE_101 OldSavedObject101;
+		//we are loading an older version (only load once, so use "else if")
+		//first load the data based on what version was stored
+		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			if ( !(*pLoadingFunction)( hFile, &OldSavedObject101, sizeof(OLD_OBJECTTYPE_101), &uiNumBytesRead ) )
+			{
+				return(FALSE);
+			}
+		}
+		/*
+		else if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+			(*pLoadingFunction)( hFile, &OldSavedObject999, sizeof(OLD_OBJECTTYPE_999), &uiNumBytesRead );
+		*/
+
+		//now we have the data that needs to be converted (keep on converting up, so use "if")
+		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject101;
+			//OldSavedObject999 = OldSavedObject101;
+		}
+		//change this when changing the file version again
+		/*
+		if ( guiCurrentSaveGameVersion < SECOND_SAVEGAME_DATATYPE_CHANGE )
+		{
+			(*this) = OldSavedObject999;
+		}
+		*/
+	}
 	return TRUE;
 }
 
 BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
 {
-	PERFORMANCE_MARKER/*
+	//when this function is called, the file has been loaded into a buffer using FileRead
+	PERFORMANCE_MARKER
 	//if we are at the most current MAP version, 6.27, then fine
 	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 )
 	{
+		int size;
 		LOADDATA(this, *hBuffer, SIZEOF_OBJECTTYPE_POD );
-		LOADDATA(&(this->gun), *hBuffer, SIZEOF_OBJECTTYPE_UNION );
+		LOADDATA(&size, *hBuffer, sizeof(int) );
+		objectStack.resize(size);
+		for each (StackedObjectData data in objectStack) {
+			data.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		}
 	}
 	else
 	{
 		OLD_OBJECTTYPE_101 OldSavedObject101;
 		LOADDATA( &OldSavedObject101, *hBuffer, sizeof(OLD_OBJECTTYPE_101) );
 		(*this) = OldSavedObject101;
-	}*/
+	}
 	return TRUE;
 }
 
 BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 {
+	//if we are saving this to a map file it will be loaded with FileRead
 	PERFORMANCE_MARKER
-	UINT32 uiNumBytesWritten;/*
-	if (fSavingMap == false) {
-		if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-		if ( !NewJA2EncryptedFileWrite( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
+	UINT32 uiNumBytesWritten;
+	int size = objectStack.size();
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+	functionPtr pSavingFunction;
+	if ( fSavingMap == false ) {
+		pSavingFunction = &NewJA2EncryptedFileWrite;
 	}
 	else {
-		if ( !FileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
+		pSavingFunction = &FileWrite;
+	}
+
+	if ( !(*pSavingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for each (StackedObjectData data in objectStack ) {
+		if (! data.Save(hFile, fSavingMap)) {
+			return FALSE;
 		}
-		if ( !FileWrite( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-	}*/
+	}
 	return TRUE;
 }
 
