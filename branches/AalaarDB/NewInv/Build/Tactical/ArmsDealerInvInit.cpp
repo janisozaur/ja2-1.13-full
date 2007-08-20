@@ -1294,6 +1294,7 @@ int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
     return( 0 );
 	}
   */
+	return 0;
 }
 
 

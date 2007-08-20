@@ -551,7 +551,6 @@ void			CalculateFirstItemIndexOnPage( );
 void			DisplayArmsDealerCurrentInventoryPage( );
 BOOLEAN		DetermineArmsDealersSellingInventory( );
 void			StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM* pSpecial, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner );
-void			AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
 BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
 UINT32		DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE	*ItemObject, BOOLEAN fHatchedOut, UINT8	ubItemArea );
@@ -2838,11 +2837,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 BOOLEAN DetermineArmsDealersSellingInventory( )
 {
 	PERFORMANCE_MARKER
-	UINT16	usItemIndex;
-	UINT8		ubElement;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
-
-
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealersSellingInventory") );
 
 	//allocate memory to hold the inventory in memory
@@ -2863,8 +2857,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 			bool fAddSpecialItem = true;
 			bool repaired = false;
 
-			//if the item is in for repairs
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				//if the repairs are done
 				if( iter->uiRepairDoneTime <= GetWorldTotalMin() )
@@ -2914,12 +2907,12 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 	if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
 		// sort this list by object category, and by ascending price within each category
-		std::sort(gpTempDealersInventory);//RepairmanItemQsortCompare
+		//std::sort(gpTempDealersInventory);//RepairmanItemQsortCompare
 	}
 	else
 	{
 		// sort this list by object category, and by ascending price within each category
-		std::sort(gpTempDealersInventory);//ArmsDealerItemQsortCompare
+		//std::sort(gpTempDealersInventory);//ArmsDealerItemQsortCompare
 	}
 	return( TRUE );
 }
@@ -6682,9 +6675,6 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 {
 	PERFORMANCE_MARKER
-	UINT8 ubNextFreeSlot = 0;
-	UINT8 ubCnt;
-
 	Assert( pComplexObject );
 	Assert( pComplexObject->ubNumberOfObjects > 0 );
 	Assert( pComplexObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT );
@@ -7378,8 +7368,7 @@ BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow( UINT32 *puiHoursSinceOldestI
 		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
 		if ( iter->fActive )
 		{
-			//if the items status is below 0, the item is being repaired
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				//if the repairs are done
 				if( iter->uiRepairDoneTime <= currentTime )
@@ -7412,10 +7401,6 @@ BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow( UINT32 *puiHoursSinceOldestI
 void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 {
 	PERFORMANCE_MARKER
-	UINT16 usItemIndex;
-	UINT8  ubElement;
-	OLD_DEALER_ITEM_HEADER_101 *pDealerItem;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
 	UINT32 uiMinutesShopClosedBeforeItsDone;
 
 
@@ -7428,8 +7413,7 @@ void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
 		if ( iter->fActive )
 		{
-			//if the items status is below 0, the item is being repaired
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				uiMinutesShopClosedBeforeItsDone = CalculateOvernightRepairDelay( gbSelectedArmsDealerID, iter->uiRepairDoneTime, uiMinutesDelayed );
 				// add this many minutes to the repair time estimate
@@ -7658,8 +7642,8 @@ void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN
 	DEALER_SPECIAL_ITEM* pSpecial = 0;
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
 		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
-		if (pObject->ItemObject == iter->object) {
-			if (iter->fActive && iter->bItemCondition < 0) {
+		if (iter->fActive && iter->IsUnderRepair()) {
+			if (pObject->ItemObject == iter->object) {
 				pSpecial = &(*iter);
 				break;
 			}
@@ -7670,7 +7654,7 @@ void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN
 	// that item must be active
 	Assert( pSpecial->fActive );
 	// that item must be in repair
-	Assert( pSpecial->bItemCondition < 0 );
+	Assert( pSpecial->IsUnderRepair() == true );
 
 	//if the item has already been repaired
 	uiDoneTime = pSpecial->uiRepairDoneTime;

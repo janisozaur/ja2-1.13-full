@@ -1482,22 +1482,15 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
 	PERFORMANCE_MARKER
-	// item ptr
-	if (!pItemPtr )
-	{
-		return( FALSE );
-	}
-
 	// if there are only one item in slot, just copy
 	if (pInventorySlot->ubNumberOfObjects == 1)
 	{
 		*pItemPtr = *pInventorySlot;
-		DeleteObj( pInventorySlot );	
 	}
 	else
 	{
 		// take one item
-		pInventorySlot->RemoveTopObjectFromStack(pItemPtr);
+		pInventorySlot->RemoveObjectsFromStack(1, pItemPtr);
 	}
 
 	return ( TRUE );

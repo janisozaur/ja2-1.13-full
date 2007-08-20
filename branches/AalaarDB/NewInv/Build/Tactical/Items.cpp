@@ -2652,8 +2652,6 @@ void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
-	INT8 bTemp;
-
 	if (pSourceObj->usItem != pTargetObj->usItem)
 	{
 		return( TRUE );
@@ -2661,10 +2659,13 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	if (ubIndex < pTargetObj->ubNumberOfObjects)
 	{
 		// swap
-		TODO
-		//bTemp = pSourceObj->objectStatus;
-		//pSourceObj->objectStatus = pTargetObj->status.bStatus[ubIndex];
-		//pTargetObj->status.bStatus[ubIndex] = bTemp;
+		gTempObject.DuplicateObjectsInStack(*pSourceObj, 1);
+
+		*((*pSourceObj)[0]) = *((*pTargetObj)[ubIndex]);
+		pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
+
+		*((*pTargetObj)[ubIndex]) = *(gTempObject[0]);
+		pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
 		return( TRUE );
 	}
 	else
@@ -3833,7 +3834,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// returns object to have in hand after placement... same as original in the
 	// case of error
 
-	UINT8					ubSlotLimit, ubNumberToDrop, ubLoop;
+	UINT8					ubSlotLimit, ubNumberToDrop;
 	OBJECTTYPE *	pInSlot;
 	BOOLEAN				fObjectWasRobotRemote = FALSE;
 

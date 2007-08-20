@@ -621,9 +621,11 @@ BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
 	{
 		return FALSE;
 	}
-	if ( !this->object.Save(hFile, FALSE) )
-	{
-		return FALSE;
+	if (this->IsBeingOrdered() == false) {
+		if ( !this->object.Save(hFile, FALSE) )
+		{
+			return FALSE;
+		}
 	}
 	return TRUE;
 }
@@ -639,9 +641,14 @@ BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
 		{
 			return FALSE;
 		}
-		if ( !this->object.Load(hFile) )
-		{
-			return FALSE;
+		if (this->IsBeingOrdered() == false) {
+			if ( !this->object.Load(hFile) )
+			{
+				return FALSE;
+			}
+		}
+		else {
+			this->object.initialize();
 		}
 	}
 	else

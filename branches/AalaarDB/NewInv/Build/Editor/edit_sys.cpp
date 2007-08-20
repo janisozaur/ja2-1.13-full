@@ -562,7 +562,6 @@ void PasteStructure2( UINT32 iMapIndex )
 void PasteStructureCommon( UINT32 iMapIndex )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN				fDoPaste = FALSE;
 	UINT32				fHeadType;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -1178,8 +1177,6 @@ void RaiseWorldLand( )
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
 	UINT16 usIndex;
-	BOOLEAN fStopRaise = FALSE;
-	INT32 iCounterA = 0, iCounterB = 0;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;

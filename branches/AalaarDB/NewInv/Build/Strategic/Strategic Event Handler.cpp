@@ -405,7 +405,7 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 	INT16			sStartGridNo;
 	UINT32		uiNumWorldItems, uiLoop;
 	BOOLEAN		fOk;
-	WORLDITEM * pTemp;
+	WORLDITEM * pTemp = 0;
 	UINT8			ubLoop;
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
 	{

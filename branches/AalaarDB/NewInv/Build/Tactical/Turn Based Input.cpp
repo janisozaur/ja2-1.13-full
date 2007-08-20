@@ -208,9 +208,6 @@ void ToggleCliffDebug();
 void CreateCow();
 void CreatePlayerControlledCow();
 void ToggleRealTimeConfirm();
-void GrenadeTest1();
-void GrenadeTest2();
-void GrenadeTest3();
 void TestMeanWhile( INT32 iID );
 void CreatePlayerControlledMonster();
 void ChangeCurrentSquad( INT32 iSquad );
@@ -2815,7 +2812,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
-							GrenadeTest1();
 						}
 					}
 				}
@@ -2823,7 +2819,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
-						GrenadeTest2();
 					}
 				}	
 				else
@@ -5404,7 +5399,7 @@ void SwapGoggles()
 		{	
 			//2 head slots
 			for (bSlot1 = HEAD1POS; bSlot1 <= HEAD2POS; bSlot1++)
-			{/*
+			{
 				if ( Item[pTeamSoldier->inv[bSlot1].usItem].brightlightvisionrangebonus > 0	)
 				{
 					lastBonus=0;
@@ -5490,7 +5485,7 @@ void SwapGoggles()
 					}
 					break;
 				}
-			*/}
+			}
 			fCharacterInfoPanelDirty = TRUE;
 			fInterfacePanelDirty = DIRTYLEVEL2;
 			pTeamSoldier->DeleteSoldierLight( );

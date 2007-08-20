@@ -274,6 +274,8 @@ public:
 	BOOLEAN Load(HWFILE hFile);
 	void	initialize();
 
+	bool	IsUnderRepair() {return bItemCondition < 0;};
+	bool	IsBeingOrdered() {return ubQtyOnOrder > 0;};
 
 	//data from SPECIAL_ITEM_INFO
 	UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)

@@ -312,7 +312,7 @@ void SimulateArmsDealerCustomer()
 
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-			if (iter->bItemCondition == 100) {
+			if (iter->bItemCondition == 100 && iter->IsBeingOrdered() == false) {
 				numPerfectItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
 			}
 		}
@@ -388,8 +388,10 @@ void DailyCheckOnItemQuantities()
 		bool itemsAreOnOrder[MAXITEMS] = { false };
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
-			if (iter->ubQtyOnOrder) {
+			if (iter->IsBeingOrdered() == false) {
+				numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+			}
+			else {
 				itemsAreOnOrder[iter->object.usItem] = true;
 				//and today is the day the items come in
 				if( iter->uiOrderArrivalTime >= GetWorldDay() )
@@ -470,7 +472,6 @@ void ConvertCreatureBloodToElixir( void )
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ARMS_DEALER_GABBY ].begin();
 		iter != gArmsDealersInventory[ ARMS_DEALER_GABBY ].end(); ++iter) {
 		if (iter->object.usItem == JAR_CREATURE_BLOOD) {
-			//should these be perfect? only perfect are deleted
 			ubBloodAvailable += iter->object.ubNumberOfObjects;
 		}
 	}
@@ -480,7 +481,6 @@ void ConvertCreatureBloodToElixir( void )
 		//ubAmountToConvert = (UINT8) __min( 5 + Random( 3 ), ubBloodAvailable );
 		ubAmountToConvert = ubBloodAvailable;
 
-		//Now remove that many NEW ones (condition 100) of that item
 		RemoveItemFromArmsDealerInventory( ARMS_DEALER_GABBY, JAR_CREATURE_BLOOD, ubAmountToConvert );
 
 		ArmsDealerGetsFreshStock( ARMS_DEALER_GABBY, JAR_ELIXIR, ubAmountToConvert );
@@ -528,16 +528,18 @@ BOOLEAN AdjustCertainDealersInventory( )
 void LimitArmsDealersInventory( UINT8 ubArmsDealer, UINT32 uiDealerItemType, UINT8 ubMaxNumberOfItemType )
 {
 	PERFORMANCE_MARKER
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
 	int numTotalItems[MAXITEMS] = { 0 };
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-		numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		if (iter->IsUnderRepair() == false) {
+			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		}
 	}
 
 	UINT32	uiTotalNumberOfItems = 0, uiRandomChoice;
@@ -668,16 +670,18 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 	UINT32	uiTotalChances = 0;
 	UINT32	uiIndex, uiRandomChoice;
 	
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
 	int numTotalItems[MAXITEMS] = { 0 };
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-		numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		if (iter->IsUnderRepair() == false) {
+			numTotalItems[iter->object.usItem] += iter->object.ubNumberOfObjects;
+		}
 	}
 
 	std::vector<UINT16> usAvailableItems;
@@ -746,16 +750,17 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
 {
 	PERFORMANCE_MARKER
-	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
 	if( gArmsDealerStatus[ ubArmsDealer ].fOutOfBusiness )
 		return;
 
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
 	int itemsIHave = 0;
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-		if (iter->object.usItem == usItemIndex) {
+		if (iter->object.usItem == usItemIndex
+			&& iter->IsUnderRepair() == false) {
 			itemsIHave += iter->object.ubNumberOfObjects;
 			//if there are any of these in stock
 			if( itemsIHave >= ubHowMany )
@@ -1038,8 +1043,7 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 		if (iter->fActive == false)
 			continue;
 
-		//if the items status is below 0, the item is being repaired
-		if( iter->bItemCondition < 0 )
+		if( iter->IsUnderRepair() == true )
 		{
 			//if the item has been repaired
 			if( iter->uiRepairDoneTime <= GetWorldTotalMin() )
@@ -1214,7 +1218,7 @@ void ArmsDealerGetsFreshStock( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubN
 {
 	PERFORMANCE_MARKER
 	UINT8 ubCnt;
-	UINT8 ubItemCondition;
+	UINT8 ubItemCondition = 0;
 	UINT8 ubPerfectOnes = 0;
 
 	// determine the condition of each one, counting up new ones, but adding damaged ones right away
@@ -1298,12 +1302,12 @@ bool ItemIsSpecial(DEALER_SPECIAL_ITEM& item)
 		//items with attachments are special
 		return true;
 	}
-	if (item.ubQtyOnOrder) {
+	if (item.IsBeingOrdered() == true) {
 		//empty item being ordered
 		return true;
 	}
-	if (item.bItemCondition < 0) {
-		//item in for repairs
+	if (item.IsUnderRepair() == true) {
+		//items in for repairs are special
 		return true;
 	}
 	return false;
@@ -1313,32 +1317,32 @@ UINT32 CountDistinctItemsInArmsDealersInventory( UINT8 ubArmsDealer )
 {
 	PERFORMANCE_MARKER
 	UINT32	uiNumOfItems=0;
-	UINT16	usItemIndex;
-
-
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
 		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
 		//if there are any items, doesn't count items on order
-		if (iter->object.ubNumberOfObjects) {
-			if (ItemIsSpecial((*iter)) == true) {
-				// if the items can be stacked
-				// NOTE: This test must match the one inside AddItemsToTempDealerInventory() exactly!
-				if ( DealerItemIsSafeToStack( iter->object.usItem ) )
-				{
-					// regardless of how many there are, they count as 1 *distinct* item!	They will all be together in one box...
+		if (iter->IsBeingOrdered() == false) {
+			if (iter->object.ubNumberOfObjects) {
+				if (ItemIsSpecial(*iter) == true) {
+					// each *active* special item counts as one additional distinct item (each one occupied a separate shopkeeper box!)
+					// NOTE: This is including items being repaired!!!
+					Assert(iter->object.ubNumberOfObjects == 1);
 					uiNumOfItems++;
 				}
-				else
-				{
-					// non-stacking items must be stored in one / box , because each may have unique fields besides status.bStatus[]
-					// Example: guns all have ammo, ammo type, etc.	We need these uniquely represented for pricing & manipulation
-					uiNumOfItems += iter->object.ubNumberOfObjects;
+				else {
+					// if the items can be stacked
+					if ( DealerItemIsSafeToStack( iter->object.usItem ) )
+					{
+						// regardless of how many there are, they count as 1 *distinct* item!	They will all be together in one box...
+						uiNumOfItems++;
+					}
+					else
+					{
+						// non-stacking items must be stored in one / box , because each may have unique fields besides status.bStatus[]
+						// Example: guns all have ammo, ammo type, etc.	We need these uniquely represented for pricing & manipulation
+						uiNumOfItems += iter->object.ubNumberOfObjects;
+					}
 				}
 			}
-
-			// each *active* special item counts as one additional distinct item (each one occupied a separate shopkeeper box!)
-			// NOTE: This is including items being repaired!!!
-			uiNumOfItems += CountActiveSpecialItemsInArmsDealersInventory( ubArmsDealer, usItemIndex);
 		}
 	}
 
@@ -1398,8 +1402,7 @@ UINT8 CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16 
 		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
 		if (iter->object.usItem == usItemIndex) {
 			if (iter->fActive) {
-				//if the item's status is below 0, the item is being repaired
-				if( iter->bItemCondition < 0 )
+				if( iter->IsUnderRepair() == true )
 				{
 					ubHowManyInForRepairs++;
 				}
@@ -1622,7 +1625,7 @@ void RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, 
 	for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 		iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
 		if (iter->object.usItem == usItemIndex) {
-			if (iter->bItemCondition > 0) {
+			if (iter->IsBeingOrdered() == false) {
 				if (ubHowMany >= iter->object.ubNumberOfObjects) {
 					ubHowMany -= iter->object.ubNumberOfObjects;
 					gArmsDealersInventory[ ubArmsDealer ].erase(iter);
@@ -1645,16 +1648,18 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 {
 	PERFORMANCE_MARKER
 
-	// not permitted for repair dealers - would take extra code to subtract items under repair from ubTotalItems!!!
-	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
-
+	//ADB, ya, a whole 1 line of extra code!
+	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
+	//Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
 	while ( ubHowMany > 0)
 	{
 		int numItems = 0;
 		std::vector<DealerItemList::iterator> foundObjects;
 		for (DealerItemList::iterator iter = gArmsDealersInventory[ ubArmsDealer ].begin();
 			iter != gArmsDealersInventory[ ubArmsDealer ].end(); ++iter) {
-			if (iter->object.usItem == usItemIndex) {
+			if (iter->object.usItem == usItemIndex
+				&& iter->IsUnderRepair() == false
+				&& iter->IsBeingOrdered() == false) {
 				foundObjects.push_back(iter);
 				numItems += iter->object.ubNumberOfObjects;
 			}
@@ -1665,7 +1670,18 @@ void RemoveRandomItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemI
 
 		// pick a random one to get rid of
 		UINT8 ubWhichOne = (UINT8)Random(numItems);
-		TODO
+		std::vector<DealerItemList::iterator>::iterator iterToRemove = foundObjects.begin();
+		for (int x = (*iterToRemove)->object.ubNumberOfObjects - 1; x < ubWhichOne;) {
+			x += (*iterToRemove)->object.ubNumberOfObjects;
+			++iterToRemove;
+		}
+		if ((*iterToRemove)->object.ubNumberOfObjects == 1) {
+			gArmsDealersInventory[ubArmsDealer].erase(*iterToRemove);
+		}
+		else {
+			//not totally random, but close enough
+			(*iterToRemove)->object.RemoveObjectsFromStack(1);
+		}
 		ubHowMany--;
 	}
 }
@@ -1684,12 +1700,6 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	}
 
 	SOLDIERTYPE	*pSoldier;
-	UINT16	usItemIndex;	
-	UINT8 ubElement;
-	UINT8 ubHowManyMaxAtATime;
-	UINT8 ubLeftToDrop;
-	UINT8	ubNowDropping;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
 
 	// mark the dealer as being out of business!
 	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = TRUE;
@@ -1736,7 +1746,6 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 {
 	PERFORMANCE_MARKER
 	INT8 bItemCondition;
-	UINT8 ubCnt;
 
 	*pObject = pSpclItemInfo->object;
 
@@ -1847,8 +1856,6 @@ UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 {
 	PERFORMANCE_MARKER
 	UINT32	uiWhenFree;
-	UINT16	usItemIndex;
-	UINT8		ubElement;
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 
@@ -1860,8 +1867,7 @@ UINT32 WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer )
 		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
 		if ( iter->fActive )
 		{
-			//if the item is in for repairs
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				// if this item will be done later than the latest we've found so far
 				if ( iter->uiRepairDoneTime > uiWhenFree )
