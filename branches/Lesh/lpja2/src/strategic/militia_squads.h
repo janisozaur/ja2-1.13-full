@@ -8,6 +8,10 @@
 
 //#define MAXIMUM_MILITIA_SQUAD_SIZE 30 
 
+// Lesh: exported for xml_roaming.cpp
+extern INT32  iRestrictedSectorArraySize;
+extern UINT32 gRestrictMilitia[256];
+
 extern UINT8 gpAttackDirs[5][4];
 extern UINT8 guiDirNumber;
 
