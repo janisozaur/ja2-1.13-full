@@ -2218,7 +2218,7 @@ INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
 	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
 	SOLDIERTYPE *		pMerc;
-	SOLDIERTYPE *		pDesiredMerc;
+	SOLDIERTYPE *		pDesiredMerc = NULL;
 	NPCQuoteInfo *	pNPCQuoteInfoArray;
 
 	CHECKF( pubDesiredMerc );
@@ -2265,16 +2265,17 @@ INT32 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 				{
 					ubHighestTalkDesire = ubTalkDesire;
 					ubDesiredMerc = ubMerc;
-					pDesiredMerc = MercPtrs[ubMerc];
+					pDesiredMerc = MercSlots[ubMerc];
 					sDesiredMercDist = PythSpacesAway( sMyGridNo, pDesiredMerc->sGridNo );
 				}
 				else if (ubTalkDesire == ubHighestTalkDesire)
 				{
-					sDist = PythSpacesAway( sMyGridNo, MercPtrs[ubMerc]->sGridNo );
+					sDist = PythSpacesAway( sMyGridNo, MercSlots[ubMerc]->sGridNo );
 					if (sDist < sDesiredMercDist)
 					{
 						// we can say the same thing to this merc, and they're closer!
 						ubDesiredMerc = ubMerc;
+						pDesiredMerc = MercSlots[ubMerc];
 						sDesiredMercDist = sDist;
 					}
 				}

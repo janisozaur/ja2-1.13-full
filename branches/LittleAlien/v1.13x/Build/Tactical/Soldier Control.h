@@ -378,8 +378,8 @@ class Inventory {
 public:
 	// Constructors
 	// Create an inventory with a fixed maximum number of slots
-	Inventory();					// Uses NUM_INV_SLOTS for slotCount
-	Inventory(int slotCount);
+	//Inventory();					// Uses NUM_INV_SLOTS for slotCount
+	Inventory(int slotCount = NUM_INV_SLOTS);
 
 	// Copy Constructor
 	Inventory(const Inventory&);
@@ -394,7 +394,7 @@ public:
 	OBJECTTYPE& operator [] (int idx);
 
 	// Removes all items from the inventory
-	void clear();
+	void initialize();
 
 	// How any slots are there in this inventory?
 	int size() const;
@@ -821,7 +821,7 @@ public:
 	INT16												sPlannedTargetX;
 	INT16												sPlannedTargetY;
 
-	INT32												sSpreadLocations[ 6 ];
+	INT32											  sSpreadLocations[ MAX_BURST_SPREAD_TARGETS ];
 	BOOLEAN											fDoSpread;
 	INT32												sStartGridNo;	
 	INT32												sEndGridNo;	

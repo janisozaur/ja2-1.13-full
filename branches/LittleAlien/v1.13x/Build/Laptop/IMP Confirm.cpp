@@ -795,7 +795,7 @@ BOOLEAN LoadImpCharacter( STR nickName )
 		LaptopSaveInfo.iIMPIndex = iProfileId;
 
 		// read in the profile
-                // WDS - Clean up inventory handling
+        // WDS - Clean up inventory handling
 		if (!FileRead(hFile, &gMercProfiles[ iProfileId ] , SIZEOF_MERCPROFILESTRUCT_POD, &uiBytesRead))
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 7 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);

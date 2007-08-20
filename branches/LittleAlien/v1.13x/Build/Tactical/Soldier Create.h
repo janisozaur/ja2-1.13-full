@@ -357,9 +357,9 @@ public:
 	INT8							bUseGivenVehicleID;				
 	BOOLEAN						fHasKeys;
 
-	INT8 bPadding[71];
+	INT8 bPadding[115];
 
-//SB: extended fields
+	//SB: extended fields
 	INT32 sInsertionGridNo;
 	INT32 sPatrolGrid[ MAXPATROLGRIDS ];
 

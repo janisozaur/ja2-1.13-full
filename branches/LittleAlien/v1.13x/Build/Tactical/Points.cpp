@@ -884,9 +884,13 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	//rain
 	// Reduce breath gain on 25%/rain intensity
-	if( sBreathPerAP < 0 && ( pSoldier->bLevel  ||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+	// Lalien: not in strategic map
+	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
-		sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
+		if( sBreathPerAP < 0 && ( pSoldier->bLevel  || !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+		{
+			sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
+		}
 	}
 	//end rain
 
@@ -1022,6 +1026,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubAddTur
 		// IF we are at this gridno, calc min APs but if not, calc cost to goto this lication
 		if ( pSoldier->sGridNo != sGridNo )
 		{
+			sAdjustedGridNo = NOWHERE;
 			// OK, in order to avoid path calculations here all the time... save and check if it's changed!
 			if ( pSoldier->sWalkToAttackGridNo == sGridNo )
 			{
@@ -1201,7 +1206,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	// Their info is an array of item status, not weapon info, and they don't repeat
 	// fire anyway.
 	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
-	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
 	{
 		rof += GetRateOfFireBonus(pObj);
 	}
@@ -1215,7 +1220,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
 	Top = 8 * bAPs;
-	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
 	{
 		Top *= ( 100 - GetPercentAPReduction(pObj) );
 	}

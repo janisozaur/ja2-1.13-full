@@ -780,10 +780,10 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 	LEVELNODE		*pNode; //, *pLand, *pStruct; //*pObject, *pTopmost, *pMerc;
 	SOLDIERTYPE	*pSoldier, *pSelSoldier;
-	HVOBJECT		hVObject;
+	HVOBJECT		hVObject = NULL;
 	ETRLEObject *pTrav;
 	TILE_ELEMENT *TileElem=NULL;
-	UINT32			uiDestPitchBYTES;
+	UINT32			uiDestPitchBYTES = 0;
 	UINT8				*pDestBuf=NULL;
 	UINT16			usAnimSurface;
 	INT8				bXOddFlag = 0;

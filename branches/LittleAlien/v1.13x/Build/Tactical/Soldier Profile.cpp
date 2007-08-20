@@ -275,8 +275,9 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-	        // WDS - Clean up inventory handling
-		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead )  != 1)
+	    // WDS - Clean up inventory handling
+		//if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], SIZEOF_MERCPROFILESTRUCT_POD, &uiNumBytesRead )  != 1)
+		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], sizeof( _OLD_MERCPROFILESTRUCT ), &uiNumBytesRead )  != 1) //SB
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );

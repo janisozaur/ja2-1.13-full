@@ -23,6 +23,7 @@
 	#include "Queen Command.h"
 	#include "GameSettings.h"
 	#include "Soldier Init List.h"
+#include "Inventory Choosing.h"
 #endif
 
 #include "Reinforcement.h"
@@ -261,77 +262,34 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 		( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ? TRUE : FALSE ), TRUE, IS_ONLY_IN_CITIES );
 
 
-#if 0
 	// Combine this with the next part so that reinforcements from enemy groups can also come in from random sides
 	for( ubIndex = 0; ubIndex < ubDirNumber; ubIndex++ )
-		if( NumMobileEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) && GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) )
 		{
-			pGroup = GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) );
-			
+		while ((pGroup = GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) ) != NULL)
+		{
 			pGroup->ubPrevX = pGroup->ubSectorX;
 			pGroup->ubPrevY = pGroup->ubSectorY;
 
 			pGroup->ubSectorX = pGroup->ubNextX = (UINT8)sMapX;
 			pGroup->ubSectorY = pGroup->ubNextY = (UINT8)sMapY;
 
-			return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
+			gfPendingEnemies = TRUE;
+			ResetMortarsOnTeamCount();
 		}
-#endif
+	}
 
-	if( NumEnemiesInFiveSectors( sMapX, sMapY ) - NumEnemiesInSector( sMapX, sMapY ) == 0 )
-	{
-		return 255;
-	}else
-		for(;;)
+	while( ubDirNumber > 0)
 	{
 		ubIndex = Random(ubDirNumber);
-#if 0
 // This should be handled in AddPossiblePendingEnemiesToBattle
-		if( NumMobileEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) && GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) )
-		{
-			UINT8 numElite;
-			UINT8 numTroop;
-			UINT8 numAdmin;
 
-			pGroup = GetEnemyGroupInSector( SECTORX( pusMoveDir[ ubIndex][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) );
-			pEnemyGroup = pGroup->pEnemyGroup;
-			numElite = pEnemyGroup->ubNumElites - pEnemyGroup->ubElitesInBattle;
-			numTroop = pEnemyGroup->ubNumTroops - pEnemyGroup->ubTroopsInBattle;
-			numAdmin = pEnemyGroup->ubNumAdmins - pEnemyGroup->ubAdminsInBattle;
 
-			if (numElite + numTroop + numAdmin <= 1)
-			{
 				// The entire group has finally moved into the sector.
-				pGroup->ubPrevX = pGroup->ubSectorX;
-				pGroup->ubPrevY = pGroup->ubSectorY;
 
-				pGroup->ubSectorX = pGroup->ubNextX = (UINT8)sMapX;
-				pGroup->ubSectorY = pGroup->ubNextY = (UINT8)sMapY;
 
-				return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
-			}
 
-			if (numAdmin + numTroop + numElite)
-			{
 				// Otherwise we move a soldier into the sector from the group
-				if( numElite )
-				{
-					(pThisSector->ubNumElites)++;
-					(pEnemyGroup->ubElitesInBattle)++;
-				}else if( numTroop )
-				{
-					(pThisSector->ubNumTroops)++;
-					(pEnemyGroup->ubTroopsInBattle)++;
-				}else if( numAdmin )
-				{
-					(pThisSector->ubNumAdmins)++;
-					(pEnemyGroup->ubAdminsInBattle)++;
-				}
 
-				return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
-			}
-		}
-#endif
 
 		if( NumEnemiesInSector( SECTORX( pusMoveDir[ ubIndex ][ 0 ] ), SECTORY( pusMoveDir[ ubIndex ][ 0 ] ) ) > gubReinforcementMinEnemyStaticGroupSize )
 		{
@@ -363,7 +321,12 @@ UINT8 DoReinforcementAsPendingEnemy( INT16 sMapX, INT16 sMapY )
 
 			return (UINT8)pusMoveDir[ ubIndex ][ 2 ];
 		}
+		else
+		{
+			memcpy( &(pusMoveDir[ubIndex][0]), &(pusMoveDir[ --ubDirNumber][0]), sizeof(pusMoveDir[0]));
+		}
 	}
+	return 255;
 }
 
 

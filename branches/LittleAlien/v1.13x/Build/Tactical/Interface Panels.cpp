@@ -1827,7 +1827,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 	INT16 sFontX, sFontY;
 	INT16	usX, usY;
 	CHAR16 sString[9];
-	UINT32	cnt;
+	UINT32	cnt = 0xff000000; // Give a value that ought to crash it if this is really undefined for the robot
 	static CHAR16 pStr[ 200 ], pMoraleStr[ 20 ];
 
 	if ( gubSelectSMPanelToMerc != NOBODY )
@@ -2889,28 +2889,28 @@ void HandleMouseOverSoldierFaceForContMove( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 		return;
 	}
 
-	if ( fOn )
+	if ( fOn && CheckForMercContMove( pSoldier ) )
 	{
 		// Check if we are waiting to continue move...
-		if ( CheckForMercContMove( pSoldier ) )
+		//if ( CheckForMercContMove( pSoldier ) )
+		//{
+		// Display 'cont' on face....
+		// Get face
+		pFace = &gFacesData[ pSoldier->iFaceIndex ];
+
+		pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
+		wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
+
+		sGridNo = pSoldier->sFinalDestination;
+
+		if ( pSoldier->bGoodContPath )
 		{
-			// Display 'cont' on face....
-			// Get face
-			pFace = &gFacesData[ pSoldier->iFaceIndex ];
-			
-			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
-			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
-
-			sGridNo = pSoldier->sFinalDestination;
-
-			if ( pSoldier->bGoodContPath )
-			{
-				sGridNo = pSoldier->sContPathLocation;
-			}
-
-			// While our mouse is here, draw a path!
-			PlotPath( pSoldier, sGridNo, NO_COPYROUTE, PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+			sGridNo = pSoldier->sContPathLocation;
 		}
+
+		// While our mouse is here, draw a path!
+		PlotPath( pSoldier, sGridNo, NO_COPYROUTE, PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+		//}
 	}
 	else
 	{

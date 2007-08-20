@@ -225,8 +225,8 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 {
 	UINT8						cnt, cnt2;
-	INT32						bBestPriority = 0, sBestAdjGridNo;
-	INT32						sPatientGridNo, sBestPatientGridNo;
+	INT32						bBestPriority = 0, sBestAdjGridNo = NOWHERE;
+	INT32						sPatientGridNo = NOWHERE, sBestPatientGridNo = NOWHERE;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
 	SOLDIERTYPE *		pPatient;
 	SOLDIERTYPE *		pBestPatient = NULL;

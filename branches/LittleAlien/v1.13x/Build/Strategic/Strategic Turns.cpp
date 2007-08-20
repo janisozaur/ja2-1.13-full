@@ -78,6 +78,7 @@ void HandleStrategicTurn( )
 		}
 		else
 		{
+			uiCheckTime = 0xffffffff;
 			if ( giTimeCompressMode == TIME_COMPRESS_X1 || giTimeCompressMode == 0 )
 			{
 				uiCheckTime = NUM_REAL_SEC_PER_TACTICAL_TURN;

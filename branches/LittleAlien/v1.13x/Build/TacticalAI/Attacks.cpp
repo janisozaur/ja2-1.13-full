@@ -251,7 +251,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 		if (pOpponent->sGridNo == pSoldier->sLastTarget)
 		{
 			// raw AP cost calculation included cost of changing target!
-			ubRawAPCost -= AP_CHANGE_TARGET;
+			//ubRawAPCost -= AP_CHANGE_TARGET;
 		}
 
 		iBestHitRate = 0;                     // reset best hit rate to minimum
@@ -309,6 +309,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN shootUns
 		{
 			ubAimTime = AP_MIN_AIM_ATTACK;
 			ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier,pOpponent->sGridNo,ubAimTime, AIM_SHOT_TORSO);
+			Assert( ubRawAPCost > 0);
 			iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);
 
 			iBestHitRate = iHitRate;
@@ -1181,7 +1182,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 	UINT16 usTrueMovementMode;
@@ -1394,7 +1395,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 

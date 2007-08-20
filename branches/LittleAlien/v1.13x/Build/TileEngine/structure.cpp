@@ -2165,7 +2165,7 @@ BOOLEAN FiniStructureDB( void )
 
 INT8 GetBlockingStructureInfo( INT32 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
 {
-	STRUCTURE * pCurrent, *pStructure;
+	STRUCTURE * pCurrent, *pStructure = NULL;
 	INT16				sDesiredLevel;
 	BOOLEAN			fOKStructOnLevel = FALSE;
 	BOOLEAN			fMinimumBlockingFound = FALSE;

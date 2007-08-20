@@ -538,7 +538,7 @@ INT32 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// all 32-bit integers for max. speed
 	UINT32 uiLoop;
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
-	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
+	INT32	iCurrentScale = -1, iCoverScale = -1, iBestCoverScale = -1;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
 	INT32 sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;

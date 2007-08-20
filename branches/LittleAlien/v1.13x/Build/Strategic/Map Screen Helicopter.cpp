@@ -971,9 +971,9 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 	INT8 bNewSquad;
 	BOOLEAN fAnyoneAboard = FALSE;
 	BOOLEAN fSuccess;
-  UINT8   ubInsertionCode;
+	UINT8   ubInsertionCode = 0;
   BOOLEAN fInsertionCodeSet = FALSE;
-  UINT16  usInsertionData;
+	UINT16  usInsertionData = 0;
 
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one

@@ -2513,7 +2513,7 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 			}
 			if( basic.fDetailedPlacement )
 			{ //skip static priority placement 
-	                        // WDS - Clean up inventory handling
+	            // WDS - Clean up inventory handling
 				LOADDATA( &priority, pBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD); //SIZEOF_SOLDIERCREATE_STRUCT );
 				priority.CopyOldInventoryToNew();
 				if( priority.ubProfile != NO_PROFILE )
