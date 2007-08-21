@@ -961,7 +961,7 @@ BOOLEAN CheckIfFileIsAlreadyOpen( const CHAR8 *pFileName, INT16 sLibraryID )
 	}
 
 	//loop through all the open files to see if 'new' file to open is already open
-	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
+	for( usLoop1=0; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
 	{
 		//check if the file is open
 		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].uiFileID != 0 )
