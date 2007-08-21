@@ -118,7 +118,8 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 		break;
 
 		// cost for jumping a fence REPLACES all other AP costs!
-	 case TRAVELCOST_FENCE		: 
+	// CHRISL: 
+	case TRAVELCOST_FENCE		: 
 		 if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
 			 return( AP_JUMPFENCEBPACK );
 		 else
@@ -293,6 +294,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case RUNNING:	
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
+				// CHRISL
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
 				else
@@ -307,6 +309,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 			case MONSTER_WALK_BACKWARDS:
       case LARVAE_WALK:
 			case WALKING :
+				// CHRISL
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (sTileCost + WALKCOSTBPACK);
 				else
@@ -315,6 +318,7 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 
 			case START_SWAT:
 			case SWAT_BACKWARDS:
+			// CHRISL
 			case SWATTING:
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (sTileCost + SWATCOSTBPACK);
@@ -376,6 +380,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case RUNNING:	
 			case ADULTMONSTER_WALKING:	
 			case BLOODCAT_RUN:
+				// CHRISL
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISORBPACK) );
 				else
@@ -388,7 +393,8 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case WALK_BACKWARDS:
 			case BLOODCAT_WALK_BACKWARDS:
 			case MONSTER_WALK_BACKWARDS:
-      case LARVAE_WALK:
+			case LARVAE_WALK:
+			// CHRISL
 			case WALKING :
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (sTileCost + WALKCOSTBPACK);
@@ -398,6 +404,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 
 			case START_SWAT:
 			case SWAT_BACKWARDS:
+			// CHRISL
 			case SWATTING:
 				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 					sPoints = (sTileCost + SWATCOSTBPACK);
@@ -1670,7 +1677,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 			}
 			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
 			{
-				if ( pSoldier->inv[ bInvPos ].ubGunShotsLeft == 0 )
+				if ( pSoldier->inv[ bInvPos ].ItemData.Gun.ubGunShotsLeft == 0 )
 				{
 					if ( fDisplay )
 					{
@@ -1682,7 +1689,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 				//<SB> manual recharge
 				if( pSoldier->bTeam == OUR_TEAM )
 				{
-					if ( !(	pSoldier->inv[ bInvPos ].ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
+					if ( !(	pSoldier->inv[ bInvPos ].ItemData.Gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
 					{
 						return( FALSE );
 					}
@@ -1721,11 +1728,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
 				// OK, let's see, don't overrun...
-				if ( pObj->ubGunShotsLeft != 0 )
+				if ( pObj->ItemData.Gun.ubGunShotsLeft != 0 )
 				{
-					pObj->ubGunShotsLeft--;
+					pObj->ItemData.Gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->ItemData.Gun.ubGunShotsLeft > 0)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
@@ -1867,7 +1874,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	pObj = &(pSoldier->inv[HANDPOS]);
 
 	//<SB> manual recharge
-	if (pObj->ubGunShotsLeft && !(pObj->ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if (pObj->ItemData.Gun.ubGunShotsLeft && !(pObj->ItemData.Gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		return Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually;
 	}

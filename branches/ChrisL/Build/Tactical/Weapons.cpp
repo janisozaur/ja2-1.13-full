@@ -961,7 +961,7 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
+	iValue = iValue * pObj->ItemData.Generic.bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 
 //	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
 	bPlate = FindFirstArmourAttachment( pObj );
@@ -1057,7 +1057,7 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
+	iValue = iValue * pObj->ItemData.Generic.bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 	if ( Item[pObj->usItem].flakjacket )
 	{
 		// increase value for flak jackets!
@@ -1156,13 +1156,13 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 		if ( Item[pSoldier->usAttackingWeapon].usItemClass == IC_GUN && !EXPLOSIVE_GUN( pSoldier->usAttackingWeapon ) )
 		{
 			pObj = &(pSoldier->inv[pSoldier->ubAttackingHand]);
-  			if (pObj->bGunAmmoStatus > 0)
+  			if (pObj->ItemData.Gun.bGunAmmoStatus > 0)
 			{
 				// gun might jam, figure out the chance
 				//iChance = (80 - pObj->bGunStatus);
 				
 				//rain
-				iChance = (80 - pObj->bGunStatus) + gGameExternalOptions.ubWeaponReliabilityReductionPerRainIntensity * gbCurrentRainIntensity;
+				iChance = (80 - pObj->ItemData.Gun.bGunStatus) + gGameExternalOptions.ubWeaponReliabilityReductionPerRainIntensity * gbCurrentRainIntensity;
 				//end rain
 
 
@@ -1198,7 +1198,7 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					gfNextFireJam = FALSE;
 
 					// jam! negate the gun ammo status.
-					pObj->bGunAmmoStatus *= -1;
+					pObj->ItemData.Gun.bGunAmmoStatus *= -1;
 
 					// Deduct AMMO!
 					DeductAmmo( pSoldier, pSoldier->ubAttackingHand );
@@ -1207,14 +1207,14 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					return( TRUE );
 				}
 			}
-			else if (pObj->bGunAmmoStatus < 0)
+			else if (pObj->ItemData.Gun.bGunAmmoStatus < 0)
 			{
 				// try to unjam gun
-				iResult = SkillCheck( pSoldier, UNJAM_GUN_CHECK, (INT8) ((Item[pObj->usItem].bReliability + Item[pObj->usGunAmmoItem].bReliability)* 4) );
+				iResult = SkillCheck( pSoldier, UNJAM_GUN_CHECK, (INT8) ((Item[pObj->usItem].bReliability + Item[pObj->ItemData.Gun.usGunAmmoItem].bReliability)* 4) );
 				if (iResult > 0)
 				{
 					// yay! unjammed the gun
-					pObj->bGunAmmoStatus *= -1;
+					pObj->ItemData.Gun.bGunAmmoStatus *= -1;
 
 					// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
 					StatChange( pSoldier, MECHANAMT, 5, FALSE );
@@ -1581,7 +1581,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	else
 	{
 		// ONLY DEDUCT FOR THE FIRST HAND when doing two-pistol attacks
-		if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
+		if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].ItemData.Gun.bGunStatus >= USABLE && pSoldier->inv[HANDPOS].ItemData.Gun.bGunAmmoStatus > 0 )
 		{
 			// only deduct APs when the main gun fires
 			if ( pSoldier->ubAttackingHand == HANDPOS )
@@ -1746,7 +1746,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		DeductAmmo( pSoldier, pSoldier->ubAttackingHand );
 
 		// ATE: Check if we should say quote...
-		if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft == 0 && !Item[pSoldier->usAttackingWeapon].rocketlauncher ) 
+		if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft == 0 && !Item[pSoldier->usAttackingWeapon].rocketlauncher ) 
 		{
 			if ( pSoldier->bTeam == gbPlayerNum )
 			{
@@ -1777,7 +1777,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 3;
 
-			if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
+			if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].ItemData.Gun.bGunStatus >= USABLE && pSoldier->inv[HANDPOS].ItemData.Gun.bGunAmmoStatus > 0 )
 			{
 				// reduce exp gain for two pistol shooting since both shots give xp
 				usExpGain = (usExpGain * 2) / 3;
@@ -1808,7 +1808,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UseGun: Muzzle flash = %d",pSoldier->fMuzzleFlash));
 
-			if ( AmmoTypes[pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunAmmoType].numberOfBullets > 1 )
+			if ( AmmoTypes[pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].numberOfBullets > 1 )
 				fBuckshot = TRUE;
 
 			//switch ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunAmmoType )
@@ -1875,7 +1875,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
     {
 		if ( Item[usItemNum].singleshotrocketlauncher  )
 		{
-			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].bStatus[ 0 ],&(pSoldier->inv[ HANDPOS ] ) );
+			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].ItemData.Generic.bStatus[ 0 ],&(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->bLevel );
 		}
@@ -1883,8 +1883,8 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("StructureHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 			
-			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pSoldier->bLevel );
-			pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
+			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pSoldier->bLevel );
+			pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 		}
       // Reduce again for attack end 'cause it has been incremented for a normal attack
       // 
@@ -1912,7 +1912,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	{
 		if ( Item[usItemNum].singleshotrocketlauncher )
 		{
-			CreateItem( Item[usItemNum].discardedlauncheritem, pSoldier->inv[ HANDPOS ].bStatus[ 0 ], &(pSoldier->inv[ HANDPOS ] ) );
+			CreateItem( Item[usItemNum].discardedlauncheritem, pSoldier->inv[ HANDPOS ].ItemData.Generic.bStatus[ 0 ], &(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 		}
 
@@ -1964,14 +1964,14 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	if ( Item[usItemNum].usItemClass == IC_GUN )
 	{
 		OBJECTTYPE *pGun = &(pSoldier->inv[pSoldier->ubAttackingHand]);
-		ammoReliability = Item[pGun->usGunAmmoItem].bReliability;		
+		ammoReliability = Item[pGun->ItemData.Gun.usGunAmmoItem].bReliability;		
 	}
 
 	uiDepreciateTest = BASIC_DEPRECIATE_CHANCE + 3 * (Item[ usItemNum ].bReliability + ammoReliability);
 
-	if ( !PreRandom( uiDepreciateTest ) && ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[0] > 1) )
+	if ( !PreRandom( uiDepreciateTest ) && ( pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Generic.bStatus[0] > 1) )
 	{
-		pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ]--;		
+		pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Generic.bStatus[ 0 ]--;		
 	}
 
 	// reduce monster smell (gunpowder smell)
@@ -1982,7 +1982,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 //<SB> manual recharge
 	if (Weapon[Item[usItemNum].ubClassIndex].APsToReloadManually > 0)
-		pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunState &= ~GS_CARTRIDGE_IN_CHAMBER;
+		pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunState &= ~GS_CARTRIDGE_IN_CHAMBER;
 //<SB>
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("UseGun: done"));
 	return( TRUE );
@@ -2046,7 +2046,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			iImpact = HTHImpact( pSoldier, pTargetSoldier, (iHitChance - iDiceRoll), TRUE );
 
 			// modify this by the knife's condition (if it's dull, not much good)
-			iImpact = ( iImpact * WEAPON_STATUS_MOD(pSoldier->inv[pSoldier->ubAttackingHand].bStatus[0]) ) / 100;
+			iImpact = ( iImpact * WEAPON_STATUS_MOD(pSoldier->inv[pSoldier->ubAttackingHand].ItemData.Generic.bStatus[0]) ) / 100;
 
 			// modify by hit location
 			AdjustImpactByHitLocation( iImpact, pSoldier->bAimShotLocation, &iImpact, &iImpactForCrits );
@@ -2063,17 +2063,17 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				iImpact = 1;
 			}
 
-			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] > USABLE )
+			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Generic.bStatus[ 0 ] > USABLE )
 			{
 				bMaxDrop = (iImpact / 20);
 
 				// the duller they get, the slower they get any worse...
-				bMaxDrop = __min( bMaxDrop, pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] / 10 );
+				bMaxDrop = __min( bMaxDrop, pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Generic.bStatus[ 0 ] / 10 );
 
 				// as long as its still > USABLE, it drops another point 1/2 the time
 				bMaxDrop = __max( bMaxDrop, 2 );
 
-				pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] -= (INT8) Random( bMaxDrop );     // 0 to (maxDrop - 1)
+				pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Generic.bStatus[ 0 ] -= (INT8) Random( bMaxDrop );     // 0 to (maxDrop - 1)
 			}
 
 			// Send event for getting hit
@@ -2775,7 +2775,7 @@ BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos,
 	UINT8						ubAmmoType;
   UINT16          usItem;
 
-	ubAmmoType = MercPtrs[ ubAttackerID ]->inv[ MercPtrs[ ubAttackerID ]->ubAttackingHand ].ubGunAmmoType;
+	ubAmmoType = MercPtrs[ ubAttackerID ]->inv[ MercPtrs[ ubAttackerID ]->ubAttackingHand ].ItemData.Gun.ubGunAmmoType;
 	usItem     = MercPtrs[ ubAttackerID ]->inv[ MercPtrs[ ubAttackerID ]->ubAttackingHand ].usItem;
 
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
@@ -2938,14 +2938,14 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
 	// CALLAHAN START BUGFIX
-	if ( EXPLOSIVE_GUN( usWeaponIndex ) || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+	if ( EXPLOSIVE_GUN( usWeaponIndex ) || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 	// CALLAHAN END BUGFIX
 	{
 		// Reduce attacker count!
 		//TODO: Madd --- I don't think this code will ever get called for the HE ammo -- the EXPLOSIVE_GUN check filters out regular guns 
 		// marke test mag ammo type: pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType
                 // 2cond 'or' added
-		if ( Item[usWeaponIndex].rocketlauncher || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1 )
+		if ( Item[usWeaponIndex].rocketlauncher || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1 )
 		{
 			if ( Item[usWeaponIndex].singleshotrocketlauncher )
 			{
@@ -2956,13 +2956,13 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("WeaponHit: RPG7 item: %d, Ammo: %d",pSoldier->inv[HANDPOS].usItem , pSoldier->inv[HANDPOS].usGunAmmoItem ) );
 				
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem, pTargetSoldier->bLevel );
-				pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem, pTargetSoldier->bLevel );
+				pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 			}
-		    else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+		    else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 			{
 				// re-routed the Highexplosive value to define exposion type
-				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].highExplosive , pTargetSoldier->bLevel );
+				IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , pTargetSoldier->bLevel );
 				// pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 		}
@@ -3064,7 +3064,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	    // Get attacker
 	    pSoldier				= MercPtrs[ ubAttackerID ];
                  // marke added one 'or' to get this working with HE ammo
-		if ( Item[usWeaponIndex].rocketlauncher || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+		if ( Item[usWeaponIndex].rocketlauncher || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 		{
 			// Reduce attacker count!
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of LAW fire") );
@@ -3077,13 +3077,13 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			else if ( !Item[usWeaponIndex].singleshotrocketlauncher && Item[usWeaponIndex].rocketlauncher)
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("StructureHit: RPG7 item: %d, Ammo: %d",pAttacker->inv[HANDPOS].usItem , pAttacker->inv[HANDPOS].usGunAmmoItem ) );
-				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, pAttacker->inv[pAttacker->ubAttackingHand ].usGunAmmoItem , (INT8)( sZPos >= WALL_HEIGHT ) );
-				pAttacker->inv[pAttacker->ubAttackingHand ].usGunAmmoItem = NONE;
+				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, pAttacker->inv[pAttacker->ubAttackingHand ].ItemData.Gun.usGunAmmoItem , (INT8)( sZPos >= WALL_HEIGHT ) );
+				pAttacker->inv[pAttacker->ubAttackingHand ].ItemData.Gun.usGunAmmoItem = NONE;
 			}
-			else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].explosionSize > 1)
+			else if ( AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].explosionSize > 1)
 			{
 				// re-routed the Highexplosive value to define exposion type
-				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ubGunAmmoType].highExplosive , (INT8)( sZPos >= WALL_HEIGHT ) );
+				IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].ItemData.Gun.ubGunAmmoType].highExplosive , (INT8)( sZPos >= WALL_HEIGHT ) );
 				// pSoldier->inv[pSoldier->ubAttackingHand ].usGunAmmoItem = NONE;
 			}
 
@@ -3492,7 +3492,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
   usInHand = pSoldier->usAttackingWeapon;
 
 	// DETERMINE BASE CHANCE OF HITTING
-	iGunCondition = WEAPON_STATUS_MOD( pInHand->bGunStatus );
+	iGunCondition = WEAPON_STATUS_MOD( pInHand->ItemData.Gun.bGunStatus );
 
 	if (Item[usInHand].rocketlauncher )
 	{
@@ -3649,11 +3649,11 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		iChance -= iPenalty;
 	}
 
-	sDistVis = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0, pSoldier );
-
-	// give some leeway to allow people to spot for each other... 
-	// use distance limitation for LOS routine of 2 x maximum distance EVER visible, so that we get accurate
-	// calculations out to around 50 tiles.  Because we multiply max distance by 2, we must divide by 2 later
+	// 0verhaul:  Changed to take expanded range from shooting at different levels into account
+	//ADB this change does nothing - either way it is random - we don't know what level we are shooting to, which is
+	//what the last parameter is, and the soldier's current level is as good a guess as ground level.
+	//so if you really want to fix this, pass in a value
+	sDistVis = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pSoldier->bTargetLevel );
 
 	// CJC August 13 2002:  Wow, this has been wrong the whole time.  bTargetCubeLevel seems to be generally set to 2 -
 	// but if a character is shooting at an enemy in a particular spot, then we should be using the target position on the body.
@@ -3662,19 +3662,20 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	// If the start soldier has a body part they are aiming at, and know about the person in the tile, then use that height instead
 	iSightRange = -1;
 
+	// give some leeway to allow people to spot for each other...
+	//so make the range to calculate the bullet at 255+
 	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 	// best to use team knowledge as well, in case of spotting for someone else
+	// 0verhaul:  Why not use the distance visible as the max for line of sight testing?
+	//ADB because A) the bullet can travel farther than I can see and B) I might have a spotter
 	if (ubTargetID != NOBODY && pSoldier->bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY)
 	{
-		iSightRange = SoldierToBodyPartLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bAimShotLocation, (UINT8) (MaxDistanceVisible() * 2), TRUE );	
+		iSightRange = SoldierToSoldierLineOfSightTest( pSoldier, MercPtrs[ubTargetID], TRUE, 255, pSoldier->bAimShotLocation );	
 	}
-	
 	if (iSightRange == -1) // didn't do a bodypart-based test
 	{
-		iSightRange = SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, (UINT8) (MaxDistanceVisible() * 2), TRUE );
+		iSightRange = SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, TRUE, 255 );
 	}
-	
-	iSightRange *= 2;
 
 	if ( iSightRange > (sDistVis * CELL_X_SIZE) )
 	{
@@ -3844,11 +3845,11 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	}
 	//iChance -= 20 * iRange / iMaxRange;
 
-	if ( TANK( pSoldier ) && ( iRange / CELL_X_SIZE < MaxDistanceVisible() ) )
+	if ( TANK( pSoldier ) && ( iRange / CELL_X_SIZE < MaxNormalDistanceVisible() ) )
 	{
 		// tank; penalize at close range!
 		// 2 percent per tile closer than max visible distance
-		iChance -= 2 * ( MaxDistanceVisible() - (iRange / CELL_X_SIZE) );
+		iChance -= 2 * ( MaxNormalDistanceVisible() - (iRange / CELL_X_SIZE) );
 	}
 
 	if (iSightRange == 0)
@@ -4309,8 +4310,8 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType, &plateHit );
-				if ( pArmour->bStatus[ 0 ] < USABLE )
+				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->ItemData.Generic.bStatus[0]), iImpact, ubAmmoType, &plateHit );
+				if ( pArmour->ItemData.Generic.bStatus[ 0 ] < USABLE )
 				{
 					//Madd: put any attachments that someone might have added to the armour in the merc's inventory
 					for (int bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
@@ -4348,7 +4349,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	}
 	else
 	{
-		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand].ubGunAmmoType;
+		ubAmmoType = pFirer->inv[pFirer->ubAttackingHand].ItemData.Gun.ubGunAmmoType;
 	}
 
 	if ( TANK( pTarget ) ) 
@@ -5198,7 +5199,7 @@ void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 
 	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
 	{
-		pSoldier->inv[ ubHandPos ].ubGunShotsLeft = GetMagSize(&pSoldier->inv[ ubHandPos ]);
+		pSoldier->inv[ ubHandPos ].ItemData.Gun.ubGunShotsLeft = GetMagSize(&pSoldier->inv[ ubHandPos ]);
 		// Dirty Bars
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL1 );
 	}
@@ -5536,7 +5537,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// if iChance exists, but it's a mechanical item being used
 	if ((iChance > 0) && (Item[ usHandItem ].usItemClass == IC_LAUNCHER ))
 		// reduce iChance to hit DIRECTLY by the item's working condition
-		iChance = (iChance * WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].bStatus[0])) / 100;
+		iChance = (iChance * WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].ItemData.Generic.bStatus[0])) / 100;
 
 	// MAKE SURE CHANCE TO HIT IS WITHIN DEFINED LIMITS
 	if (iChance < MINCHANCETOHIT)
@@ -5659,7 +5660,7 @@ BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj )
 {
   if ( pSoldier->bTeam == gbPlayerNum || pSoldier->bVisible == 1 )
   {
-    if ( (INT8)(PreRandom( 40 ) + PreRandom( 40 ) ) > pObj->bStatus[0] )
+    if ( (INT8)(PreRandom( 40 ) + PreRandom( 40 ) ) > pObj->ItemData.Generic.bStatus[0] )
     {
       // Do second dice roll
       if ( PreRandom( 2 ) == 1 )

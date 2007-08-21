@@ -222,6 +222,11 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 	if ( gWorldSectorX ==0 && gWorldSectorY == 0 )
 		return;
 
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
+
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	ubGreen = pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
 	ubRegs = pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
@@ -248,8 +253,8 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 					ubElites -= gpAttackDirs[ x ][2];
 				}
 			}
-			else
-			{
+			//else
+			//{
 #endif
 			AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
 		}
@@ -269,6 +274,11 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 ////			MercPtrs[ i ]->bAttitude = AGGRESSIVE;
 //		}
 //	}
+
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
 }
 
 void HandleMilitiaPromotions( void )
@@ -996,7 +1006,6 @@ void PositionCursorForMilitiaControlBox( void )
 void HandleShadingOfLinesForMilitiaControlMenu( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT16 sDistVisible;
 
 	// check if valid
 	if( ( fShowMilitiaControlMenu == FALSE ) || ( ghMilitiaControlBox == - 1 ) )
@@ -1006,10 +1015,8 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 	{
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->bLevel, pSoldier );
-
 		// Check LOS!
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->bLevel, 3, TRUE ) )
 		{
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ATTACK );
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_HOLD );

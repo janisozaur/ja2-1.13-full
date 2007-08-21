@@ -1402,9 +1402,9 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 	}
 
 	// pointer should always be valid anyhow
-	if ( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > MaxDistanceVisible() )
+	if( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > gpSrcSoldier->GetMaxDistanceVisible(pGiver->sGridNo, gpSrcSoldier->bLevel) )
 	{
-		return( FALSE );
+		return FALSE;
 	}
 
 	sAdjGridNo = FindAdjacentGridEx( pGiver, gpSrcSoldier->sGridNo, NULL, NULL, FALSE, FALSE );
@@ -2371,7 +2371,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &Object );
-						Object.uiMoneyAmount = 10000;
+						Object.ItemData.Money.uiMoneyAmount = 10000;
 						AddItemToPoolAndGetIndex( sGridNo, &Object, -1, pSoldier->bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything
@@ -3110,7 +3110,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						if (bMoneySlot != NO_SLOT && bEmptySlot != NO_SLOT)
 						{
 							CreateMoney( gMercProfiles[ ubTargetNPC ].iBalance * 2, &(pSoldier->inv[ bEmptySlot ] ) );
-							pSoldier->inv[ bMoneySlot ].uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
+							pSoldier->inv[ bMoneySlot ].ItemData.Money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!

@@ -449,7 +449,7 @@ public:
 private:
 	vector<OBJECTTYPE> inv;
 	int slotCnt;
-
+	// Added for new inventory system to work
 	friend BOOLEAN SaveSoldierStructure( HWFILE hFile );
 	friend BOOLEAN LoadSoldierStructure( HWFILE hFile );
 };
@@ -475,6 +475,8 @@ public:
 	// Ugly temporary solution
 	void CopyOldInventoryToNew();
 	void CopyNewInventoryToOld();
+
+	INT16	GetMaxDistanceVisible(INT16 sGridNo = -1, INT8 bLevel = -1);
 
 	// Note: Place all non-POD items at the end (after endOfPOD)
 	// The format of this structure affects what is written into and read from various

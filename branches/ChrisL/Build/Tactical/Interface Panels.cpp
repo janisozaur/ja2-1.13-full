@@ -334,6 +334,8 @@ int	LOCATION_NAME_TM_Y;
 int KEYRING_X;
 int KEYRING_Y;
 
+extern UINT32 guiCurrentItemDescriptionScreen;
+
 
 typedef enum
 {
@@ -589,7 +591,6 @@ INT8 GetUIApsToDisplay( SOLDIERTYPE *pSoldier )
 void CheckForDisabledForGiveItem( )
 {
 	INT16			sDist;
-	INT16			sDistVisible;
 	INT16			sDestGridNo;
 	INT8			bDestLevel;
 	INT32			cnt;
@@ -621,10 +622,8 @@ void CheckForDisabledForGiveItem( )
 			{
 				sDist = PythSpacesAway( gpSMCurrentMerc->sGridNo, pSoldier->sGridNo );
 
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bLevel, gpSMCurrentMerc );
-
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->bLevel, 3, TRUE ) )
 				{
 					if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
 					{
@@ -655,11 +654,8 @@ void CheckForDisabledForGiveItem( )
 				// Get distance....
 				sDist = PythSpacesAway( MercPtrs[ ubSrcSoldier ]->sGridNo, sDestGridNo );
 
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( MercPtrs[ ubSrcSoldier ], DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel, MercPtrs[ ubSrcSoldier ] );
-
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, (UINT8) sDistVisible, TRUE )  )
+				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, TRUE )  )
 				{
 					// UNCONSCIOUS GUYS ONLY 1 tile AWAY
 					if ( MercPtrs[ gusSMCurrentMerc ]->bLife < CONSCIOUSNESS )
@@ -863,7 +859,7 @@ void UpdateSMPanel( )
 		giSMStealthButton = QuickCreateButton( giSMStealthImages, SM_STEALTHMODE_X, SM_STEALTHMODE_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
 										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnStealthModeCallback );
-		RenderBackpackButtons(0);
+		RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 
 		SetButtonFastHelpText( giSMStealthButton, TacticalStr[ TOGGLE_STEALTH_MODE_POPUPTEXT ] );
 
@@ -875,7 +871,7 @@ void UpdateSMPanel( )
 			{
 					DisableButton( giSMStealthButton );
 			}
-			RenderBackpackButtons(3);
+			RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 		}
 	}
 
@@ -1052,7 +1048,7 @@ void UpdateSMPanel( )
 		{
 				DisableButton( giSMStealthButton );
 		}
-		RenderBackpackButtons(3);
+		RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 	else
 	{
@@ -1073,7 +1069,7 @@ void UpdateSMPanel( )
 		{
 				EnableButton( giSMStealthButton );
 		}
-		RenderBackpackButtons(2);
+		RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
@@ -1138,6 +1134,9 @@ void RenderBackpackButtons(int bpAction)
 {
 	// Only run function if we're using new inventory system
 	if(!gGameOptions.ubInventorySystem)
+		return;
+	// Only run this if we're not on the strategic screen
+	if(guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		return;
 	// If Merc hasn't been set, default to first merc
 	if(gpSMCurrentMerc==NULL)
@@ -1273,7 +1272,7 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 				{
 					EnableButton( giSMStealthButton );
 				}
-				RenderBackpackButtons(2);
+				RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
 
 				if ( gfDisableTacticalPanelButtons )
 				{
@@ -1316,7 +1315,7 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 			{
 					DisableButton( giSMStealthButton );
 			}
-			RenderBackpackButtons(3);
+			RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 
 			if ( !fFromItemPickup )
 			{
@@ -1955,6 +1954,7 @@ CHAR8 ubString[48];
 	iSMPanelImages[ DONE_IMAGES  ]					= LoadButtonImage(ubString,-1,1,-1,3,-1 );
 	iSMPanelImages[ MAPSCREEN_IMAGES  ]			= UseLoadedButtonImage( iSMPanelImages[ DONE_IMAGES  ] ,-1,0,-1,2,-1 );
 
+	// CHRISL: Needed for new inventory backpack buttons
 	FilenameForBPP("INTERFACE\\backpack_buttons.sti", ubString);
 	iSMPanelImages[ BACKPACK_IMAGES  ]				= LoadButtonImage(ubString,0,0,-1,2,-1 );
 
@@ -2149,13 +2149,13 @@ void    RemoveSMPanelButtons( )
 	{
 		RemoveButton( giSMStealthButton );
 	}
-	RenderBackpackButtons(1);
+	RenderBackpackButtons(1);	/* CHRISL: Needed for new inventory backpack buttons */
 
 	if ( giSMStealthImages != -1 )
 	{
 		UnloadButtonImage( giSMStealthImages );
 	}
-	RenderBackpackButtons(4);
+	RenderBackpackButtons(4);	/* CHRISL: Needed for new inventory backpack buttons */
 	
 	UnloadButtonImage( iBurstButtonImages[ WM_NORMAL ] );
 	UnloadButtonImage( iBurstButtonImages[ WM_BURST ] );
@@ -3027,7 +3027,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if(gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 						{
 							gpSMCurrentMerc->DropPackFlag = TRUE;
-							RenderBackpackButtons(0);
+							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 					}
 					MoveItemToLBEItem( gpSMCurrentMerc, uiHandPos, gpItemPointer );
@@ -3168,7 +3168,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 									return;
 							if(gpSMCurrentMerc->DropPackFlag)
 								gpSMCurrentMerc->DropPackFlag = FALSE;
-							RenderBackpackButtons(0);
+							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 						// Are we swaping LBE items?
 						if(gpSMCurrentMerc->inv[uiHandPos].usItem != NONE)	// Item already exists in this pocket
@@ -3380,8 +3380,8 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus)
-			if(gWorldItems[pSoldier->DropPackKey].o.bDetonatorType == -1)
-				if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.usBombItem].lbeIndex != NONE)
+			if(gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.bDetonatorType == -1)
+				if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.usBombItem].lbeIndex != NONE)
 					if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
 					{
 						sAPCost = 0;
@@ -3420,10 +3420,10 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	else
 	{
 		// Is the item we dropped in this sector and does it have an active LBENODE flag?
-		if(gWorldItems[pSoldier->DropPackKey].o.bDetonatorType == -1)
+		if(gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.bDetonatorType == -1)
 		{
 			// Is the LBENODE we're trying to pick up actually in use?
-			if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.usBombItem].lbeIndex != NONE)
+			if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.usBombItem].lbeIndex != NONE)
 			{
 				// Try to pickup the LBENODE
 				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].o ), TRUE ))
@@ -6369,7 +6369,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//usOldItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 				//usNewItemIndex = gpItemPointer->usItem;
 
-				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->ubKeyID)
+				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->ItemData.Key.ubKeyID)
 				{
 					// Try to place here
 					if ( ( iNumberOfKeysTaken = AddKeysToSlot( gpItemPopupSoldier, ( INT8 )uiKeyRing, gpItemPointer ) ) )
@@ -6511,7 +6511,7 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 	DisableButton( iSMPanelButtons[ MUTE_BUTTON ] );
 
 	DisableButton( giSMStealthButton );
-	RenderBackpackButtons(3);
+	RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 
 
 
@@ -6624,7 +6624,7 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		    HandleTacticalUI( );
 
-				swprintf( zMoney, L"%d", gpItemPointer->uiMoneyAmount );
+				swprintf( zMoney, L"%d", gpItemPointer->ItemData.Money.uiMoneyAmount );
 
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
@@ -6669,7 +6669,7 @@ void ConfirmationToDepositMoneyToPlayersAccount( UINT8 ubExitValue )
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//add the money to the players account
-		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->uiMoneyAmount );
+		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->ItemData.Money.uiMoneyAmount );
 
 		// dirty shopkeeper
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
@@ -6792,8 +6792,8 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	UINT16	dSize;
 	BOOLEAN	flag=FALSE;
 
-	if(pObj->bDetonatorType == ITEM_NOT_FOUND)
-		lbeIndex = pObj->usBombItem;
+	if(pObj->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
+		lbeIndex = pObj->ItemData.Trigger.usBombItem;
 	else
 		lbeIndex = GetFreeLBEPackIndex();
 
@@ -6825,8 +6825,8 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 				LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 			LBEptr[lbeIndex].inv[j] = pSoldier->inv[LBESlots[i]];
 			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
-			pObj->bDetonatorType = -1;
-			pObj->usBombItem = lbeIndex;
+			pObj->ItemData.Trigger.bDetonatorType = -1;
+			pObj->ItemData.Trigger.usBombItem = lbeIndex;
 			break;
 		}
 	}
@@ -6968,13 +6968,13 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 		LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex].lbeClass;
 		LBEptr[lbeIndex].ZipperFlag = FALSE;
 		// usBombItem can be used to track the index for LBE Items if we don't want to alter the OBJECTTYPE structure
-		pSoldier->inv[uiHandPos].usBombItem = lbeIndex;
-		pSoldier->inv[uiHandPos].bDetonatorType = -1;
+		pSoldier->inv[uiHandPos].ItemData.Trigger.usBombItem = lbeIndex;
+		pSoldier->inv[uiHandPos].ItemData.Trigger.bDetonatorType = -1;
 	}
 	else
 	{
-		pSoldier->inv[uiHandPos].usBombItem = 0;
-		pSoldier->inv[uiHandPos].bDetonatorType = 0;
+		pSoldier->inv[uiHandPos].ItemData.Trigger.usBombItem = 0;
+		pSoldier->inv[uiHandPos].ItemData.Trigger.bDetonatorType = 0;
 		return(FALSE);
 	}
 
@@ -7048,8 +7048,8 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].usItem == NOTHING)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if(pObj->bDetonatorType == -1)
-		lbeIndex = pObj->usBombItem;
+	if(pObj->ItemData.Trigger.bDetonatorType == -1)
+		lbeIndex = pObj->ItemData.Trigger.usBombItem;
 	if(lbeIndex == ITEM_NOT_FOUND)
 		return (FALSE);
 
@@ -7074,8 +7074,8 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 		for (int idx=0; idx < 12; ++idx) {
 			memset(&(LBEptr[lbeIndex].inv[idx]), 0, sizeof(OBJECTTYPE));
 		}
-		pObj->usBombItem = 0;
-		pObj->bDetonatorType = 0;
+		pObj->ItemData.Trigger.usBombItem = 0;
+		pObj->ItemData.Trigger.bDetonatorType = 0;
 	}
 
 	return (TRUE);
