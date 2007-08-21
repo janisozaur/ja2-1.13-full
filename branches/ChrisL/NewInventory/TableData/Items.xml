@@ -3067,8 +3067,7 @@
 		<szItemDesc>A buttpack for storing up to 4 different items.</szItemDesc>
 		<szBRName>A.L.I.C.E. Buttpack</szBRName>
 		<szBRDesc>Need more room to store things? This buttpack has enough pockets to carry several items</szBRDesc>
-		<usItemClass>131072</usItemClass>
-		<ubClassIndex>26</ubClassIndex>
+		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>563</ubGraphicNum>
 		<ubWeight>11</ubWeight>
@@ -3783,13 +3782,12 @@
 		<szItemDesc>Four pouches, each for a single grenade, mounted onto a modular panel that can be attached to your load bearing equipment.</szItemDesc>
 		<szBRName>Grenade Panel</szBRName>
 		<szBRDesc>No more grenades dangling from D-rings and ripping off while crawling through the underbrush. Our grenade carrier panel has four individual pouches to carry your grenades safely.</szBRDesc>
-		<usItemClass>131072</usItemClass>
-		<ubClassIndex>27</ubClassIndex>
+		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>573</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>21</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>180</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -4849,7 +4847,7 @@
 		<ubGraphicNum>52</ubGraphicNum>
 		<ubWeight>5</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
-		<ItemSize>16</ItemSize>
+		<ItemSize>12</ItemSize>
 		<usPrice>750</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -4861,6 +4859,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>75</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>208</uiIndex>
@@ -13089,6 +13088,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>57</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>593</uiIndex>
@@ -21544,7 +21544,7 @@
 		<uiIndex>903</uiIndex>
 		<szItemName>GM-94</szItemName>
 		<szLongItemName>GM-94 Grenade Launcher</szLongItemName>
-		<szItemDesc>This Russian made pump-action grenade launcher fires 43mm ordinance.</szItemDesc>
+		<szItemDesc>This Russian made pump-action grenade launcher fires 43mm ordnance.</szItemDesc>
 		<szBRName>GM-94 Grenade Launcher</szBRName>
 		<szBRDesc>Compact and light-weight, this launcher can quickly dispense a variety of deadly payloads.</szBRDesc>
 		<usItemClass>16</usItemClass>
@@ -23017,7 +23017,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>358</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>1600</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23038,7 +23038,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>355</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>4800</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23059,7 +23059,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>359</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>400</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23080,7 +23080,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>360</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>800</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23101,7 +23101,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>356</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>960</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -24011,6 +24011,7 @@
 		<BR_UsedInventory>1</BR_UsedInventory>
 		<PercentNoiseReduction>55</PercentNoiseReduction>
 		<HideMuzzleFlash>1</HideMuzzleFlash>
+		<ItemSizeBonus>1</ItemSizeBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1013</uiIndex>
@@ -24906,7 +24907,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>609</ubGraphicNum>
 		<ubWeight>2</ubWeight>
-		<ubPerPocket>6</ubPerPocket>
+		<ubPerPocket>4</ubPerPocket>
 		<ItemSize>13</ItemSize>
 		<usPrice>75</usPrice>
 		<ubCoolness>3</ubCoolness>
@@ -25139,8 +25140,7 @@
 		<szItemDesc>This kit can be used to store all kinds of medical equipment like boosters, canteen, and first aid kit.</szItemDesc>
 		<szBRName>First Response Kit</szBRName>
 		<szBRDesc>Handy compact kit for medical equipment. Comes with a regeneration booster.</szBRDesc>
-		<usItemClass>131072</usItemClass>
-		<ubClassIndex>28</ubClassIndex>
+		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>611</ubGraphicNum>
 		<ubWeight>4</ubWeight>
@@ -25284,7 +25284,6 @@
 		<szBRName>40mm Grenade Panel</szBRName>
 		<szBRDesc>Four pockets mounted on a panel that can be clipped to your load bearing equipment. The long adjustable straps let you store 40mm grenades on any length.</szBRDesc>
 		<usItemClass>268435456</usItemClass>
-		<ubClassIndex>9</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>685</ubGraphicNum>
 		<ubWeight>4</ubWeight>
@@ -25608,6 +25607,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>20</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1080</uiIndex>
@@ -25624,7 +25624,7 @@
 		<ubPerPocket>1</ubPerPocket>
 		<ItemSize>21</ItemSize>
 		<usPrice>180</usPrice>
-		<ubCoolness>6</ubCoolness>
+		<ubCoolness>5</ubCoolness>
 		<bRepairEase>3</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
@@ -25693,7 +25693,7 @@
 		<ubWeight>15</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>100</usPrice>
-		<ubCoolness>6</ubCoolness>
+		<ubCoolness>3</ubCoolness>
 		<bRepairEase>2</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
@@ -25701,6 +25701,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>10</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1084</uiIndex>
@@ -25716,7 +25717,7 @@
 		<ubWeight>14</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>135</usPrice>
-		<ubCoolness>7</ubCoolness>
+		<ubCoolness>4</ubCoolness>
 		<bRepairEase>2</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
@@ -25724,6 +25725,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>15</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1085</uiIndex>
@@ -25739,7 +25741,7 @@
 		<ubWeight>17</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>120</usPrice>
-		<ubCoolness>4</ubCoolness>
+		<ubCoolness>5</ubCoolness>
 		<bRepairEase>2</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
@@ -25747,6 +25749,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>25</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1086</uiIndex>
@@ -25770,6 +25773,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>20</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1087</uiIndex>
@@ -25793,6 +25797,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>10</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1088</uiIndex>
@@ -25816,6 +25821,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>20</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1089</uiIndex>
@@ -25839,6 +25845,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>10</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1090</uiIndex>
@@ -25862,6 +25869,7 @@
 		<BigGunList>1</BigGunList>
 		<BR_NewInventory>2</BR_NewInventory>
 		<BR_UsedInventory>1</BR_UsedInventory>
+		<CamoBonus>5</CamoBonus>
 	</ITEM>
 	<ITEM>
 		<uiIndex>1091</uiIndex>
@@ -25900,7 +25908,7 @@
 		<ubWeight>5</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>110</usPrice>
-		<ubCoolness>1</ubCoolness>
+		<ubCoolness>2</ubCoolness>
 		<bRepairEase>2</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
@@ -25992,7 +26000,7 @@
 		<ubWeight>50</ubWeight>
 		<ItemSize>27</ItemSize>
 		<usPrice>200</usPrice>
-		<ubCoolness>7</ubCoolness>
+		<ubCoolness>6</ubCoolness>
 		<bRepairEase>2</bRepairEase>
 		<Damageable>1</Damageable>
 		<Repairable>1</Repairable>
