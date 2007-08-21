@@ -3782,13 +3782,12 @@
 		<szItemDesc>Four pouches, each for a single grenade, mounted onto a modular panel that can be attached to your load bearing equipment.</szItemDesc>
 		<szBRName>Grenade Panel</szBRName>
 		<szBRDesc>No more grenades dangling from D-rings and ripping off while crawling through the underbrush. Our grenade carrier panel has four individual pouches to carry your grenades safely.</szBRDesc>
-		<usItemClass>131072</usItemClass>
-		<ubClassIndex>27</ubClassIndex>
+		<usItemClass>268435456</usItemClass>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>573</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
-		<ItemSize>21</ItemSize>
+		<ItemSize>99</ItemSize>
 		<usPrice>180</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<bRepairEase>3</bRepairEase>
@@ -4848,7 +4847,7 @@
 		<ubGraphicNum>52</ubGraphicNum>
 		<ubWeight>5</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
-		<ItemSize>16</ItemSize>
+		<ItemSize>12</ItemSize>
 		<usPrice>750</usPrice>
 		<ubCoolness>4</ubCoolness>
 		<Damageable>1</Damageable>
@@ -21545,7 +21544,7 @@
 		<uiIndex>903</uiIndex>
 		<szItemName>GM-94</szItemName>
 		<szLongItemName>GM-94 Grenade Launcher</szLongItemName>
-		<szItemDesc>This Russian made pump-action grenade launcher fires 43mm ordinance.</szItemDesc>
+		<szItemDesc>This Russian made pump-action grenade launcher fires 43mm ordnance.</szItemDesc>
 		<szBRName>GM-94 Grenade Launcher</szBRName>
 		<szBRDesc>Compact and light-weight, this launcher can quickly dispense a variety of deadly payloads.</szBRDesc>
 		<usItemClass>16</usItemClass>
@@ -23018,7 +23017,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>358</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>1600</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23039,7 +23038,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>355</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>4800</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23060,7 +23059,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>359</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>400</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23081,7 +23080,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>360</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>800</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
@@ -23102,7 +23101,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>356</ubGraphicNum>
 		<ubWeight>17</ubWeight>
-		<ItemSize>19</ItemSize>
+		<ItemSize>23</ItemSize>
 		<usPrice>960</usPrice>
 		<ubCoolness>7</ubCoolness>
 		<Metal>1</Metal>
