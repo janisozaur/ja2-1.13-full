@@ -230,7 +230,6 @@ static int LuaWStringToString( lua_State *L )
 {
 	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
-	int len = tw->len;
 	int newlen;
 	STR8 newstr = NULL;
 
@@ -245,7 +244,7 @@ static int LuaWStringToString( lua_State *L )
 static int LuaWStringIndex( lua_State *L )
 {
 	PERFORMANCE_MARKER
-	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
+	//TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	const CHAR8 *idx = luaL_checkstring( L, 2 );
 	
 	// Disqualify metafunctions

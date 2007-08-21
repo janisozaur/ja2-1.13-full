@@ -2831,7 +2831,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 				// WANNE: Commented this out, because the interface panel is not correctly redrawn!
 				// I do not know the bug ;(
-				//GoIntoOverheadMap();
+				GoIntoOverheadMap();
 				break;
 
 				// Lalien: commented out, to fix "end move & LOS bug" (same button has two different actions)
@@ -3305,7 +3305,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( INFORMATION_CHEAT_LEVEL( ) )
 						{
-							DoChrisTest( MercPtrs[ gusSelectedSoldier ] );
 						}
 					}
 					else

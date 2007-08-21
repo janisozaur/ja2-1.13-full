@@ -2912,7 +2912,6 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 	UINT8	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
-	INT16		sDistVisible = FALSE;
 	UINT16	usQuoteNum;
 
 	// Loop through all our guys and randomly say one from someone in our sector
@@ -2957,16 +2956,14 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 
 				// TO LOS check to killed
 				// Can we see location of killer?
-				sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pKillerSoldier->sGridNo, pKillerSoldier->pathing.bLevel, pKillerSoldier );
-				if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, pKillerSoldier->sGridNo,	pKillerSoldier->pathing.bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) == 0 )
+				if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, pKillerSoldier->sGridNo,  pKillerSoldier->pathing.bLevel, (UINT8)3, TRUE ) == 0 )
 				{
 					continue;
 				}
 
 
 				// Can we see location of killed?
-				sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-				if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) == 0 )
+				if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, (UINT8)3, TRUE ) == 0 )
 				{
 					continue;
 				}
@@ -3020,14 +3017,11 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 	UINT8	ubChosenMerc;
 	BOOLEAN fDoSomeoneElse = FALSE;
 	BOOLEAN	fCanWeSeeLocation = FALSE;
-	INT16		sDistVisible = FALSE;
 
 	gfLastMercTalkedAboutKillingID = pKilledSoldier->ubID;
 
 	// Can we see location?
-	sDistVisible = DistanceVisible( pKillerSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pKillerSoldier );
-
-	fCanWeSeeLocation = ( SoldierTo3DLocationLineOfSightTest( pKillerSoldier, sGridNo,	bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) != 0 );
+	fCanWeSeeLocation = ( SoldierTo3DLocationLineOfSightTest( pKillerSoldier, sGridNo,  bLevel, (UINT8)3, TRUE ) != 0 );
 
 
 	// Are we killing mike?
@@ -3088,9 +3082,7 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 						if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 						{
 							// Can we see location?
-							sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-
-							if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+							if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE ) )
 							{
 								ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 								ubNumMercs++;

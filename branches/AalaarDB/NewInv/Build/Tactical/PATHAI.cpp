@@ -3414,12 +3414,12 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
 
 						zTempString[0] = '\0';
-						bTemp = pQueueHead->bLevel;
+						bTemp = pQueueHead->pathing.bLevel;
 						pCurr = pQueueHead;
 						iLoop = 0;
 						while( pCurr )
 						{
-							bTemp = pQueueHead->bLevel;
+							bTemp = pQueueHead->pathing.bLevel;
 							while ( pCurr->pNext[ bTemp - 1 ] == NULL )
 							{
 								bTemp--;

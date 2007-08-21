@@ -589,8 +589,10 @@ BOOLEAN UpdateWorldItemsTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
 
 		LoadWorldItemsFromTempItemFile( sMapX,  sMapY, bMapZ, pTotalSectorList );
-
+		int backup = guiCurrentSaveGameVersion;
+		guiCurrentSaveGameVersion = SAVE_GAME_VERSION;
 		SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiTotalNumberOfItems, pTotalSectorList);
+		guiCurrentSaveGameVersion = backup;
 	}
 
 	

@@ -3372,7 +3372,7 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 		case JOEY:
 			// check to see if Martha can see this
 			pOther = FindSoldierByProfileID( MARTHA, FALSE );
-			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, (UINT8) MaxDistanceVisible(), TRUE ) != 0 ) ) 
+			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, TRUE ) != 0 ) ) 
 			{
 				// Martha has a heart attack and croaks
 				TriggerNPCRecord( MARTHA, 17 );
@@ -3771,8 +3771,8 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked )
 			{
 				// if in LOS of this guy's attacker
 				if ( (pAttacked->ubAttackerID != NOBODY && pSoldier->aiData.bOppList[pAttacked->ubAttackerID] == SEEN_CURRENTLY)
-					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < MaxDistanceVisible() ) 
-					|| ( pAttacked->ubAttackerID != NOBODY && PythSpacesAway( pSoldier->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->sGridNo ) < MaxDistanceVisible() ) )
+					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < pAttacked->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) ) 
+					|| ( pAttacked->ubAttackerID != NOBODY && PythSpacesAway( pSoldier->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->sGridNo ) < pAttacked->GetMaxDistanceVisible(MercPtrs[ pAttacked->ubAttackerID ]->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->pathing.bLevel) ) )
 				{
 					MakeCivHostile( pSoldier, 2 );
 					if ( pSoldier->aiData.bOppCnt > 0 )
@@ -3919,9 +3919,8 @@ void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
 	{
 		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife && pSoldier->aiData.bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP )
 		{
-			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, (UINT8) MaxDistanceVisible(), TRUE ) )
+			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, TRUE ) )
 			{
-
 				CivilianGroupMemberChangesSides( pSoldier );
 				break;
 			}

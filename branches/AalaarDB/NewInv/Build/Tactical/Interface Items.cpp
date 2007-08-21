@@ -4830,7 +4830,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	BOOLEAN		fGiveItem = FALSE;
 	INT16			sGridNo;
 	INT16			sDist;
-	INT16			sDistVisible;
 
 	if ( gfUIFullTargetFound )
 	{
@@ -5090,10 +5089,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						return( FALSE );
 					}
 
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpItemPointerSoldier->sGridNo, gpItemPointerSoldier->pathing.bLevel, gpItemPointerSoldier );
-
 					// Check LOS....
-					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->pathing.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->pathing.bLevel, 3, TRUE ) )
 					{
 						return( FALSE );
 					}

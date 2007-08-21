@@ -1268,8 +1268,8 @@ BOOLEAN StackedObjectData::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 u
 		LOADDATA(&(this->data), *hBuffer, sizeof(ObjectData) );
 		LOADDATA(&size, *hBuffer, sizeof(int) );
 		attachments.resize(size);
-		for each (OBJECTTYPE attachment in attachments) {
-			if (! attachment.Load( hBuffer, dMajorMapVersion, ubMinorMapVersion ) ) {
+		for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+			if (! iter->Load( hBuffer, dMajorMapVersion, ubMinorMapVersion ) ) {
 				return FALSE;
 			}
 		}
@@ -1298,8 +1298,8 @@ BOOLEAN StackedObjectData::Load( HWFILE hFile )
 			return(FALSE);
 		}
 		attachments.resize(size);
-		for each (OBJECTTYPE attachment in attachments) {
-			if (! attachment.Load(hFile) ) {
+		for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+			if (! iter->Load(hFile) ) {
 				return FALSE;
 			}
 		}
@@ -1333,8 +1333,8 @@ BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
 	{
 		return(FALSE);
 	}
-	for each (OBJECTTYPE attachment in attachments) {
-		if (! attachment.Save(hFile, fSavingMap)) {
+	for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+		if (! iter->Save(hFile, fSavingMap)) {
 			return FALSE;
 		}
 	}
@@ -1368,8 +1368,8 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 		}
 
 		objectStack.resize(size);
-		for each (StackedObjectData data in objectStack) {
-			if (! data.Load(hFile)) {
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+			if (! iter->Load(hFile)) {
 				return FALSE;
 			}
 		}
@@ -1419,8 +1419,8 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 		LOADDATA(this, *hBuffer, SIZEOF_OBJECTTYPE_POD );
 		LOADDATA(&size, *hBuffer, sizeof(int) );
 		objectStack.resize(size);
-		for each (StackedObjectData data in objectStack) {
-			data.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
 		}
 	}
 	else
@@ -1455,8 +1455,8 @@ BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 	{
 		return(FALSE);
 	}
-	for each (StackedObjectData data in objectStack ) {
-		if (! data.Save(hFile, fSavingMap)) {
+	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+		if (! iter->Save(hFile, fSavingMap)) {
 			return FALSE;
 		}
 	}

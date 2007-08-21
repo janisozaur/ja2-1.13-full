@@ -5113,7 +5113,7 @@ void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE )
 	{
-		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, (UINT8) DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, 0, gpTempSoldier->sGridNo, gpTempSoldier->pathing.bLevel, gpTempSoldier ), TRUE ) )
+		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, TRUE ) )
 		{
 			MakeNPCGrumpyForMinorOffense( pSoldier, gpTempSoldier );
 		}

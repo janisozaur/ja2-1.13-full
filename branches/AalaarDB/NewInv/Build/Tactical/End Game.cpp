@@ -164,7 +164,6 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
-	INT16		sDistVisible = FALSE;
 	UINT8		ubKillerSoldierID = NOBODY;
 
 	// Start victory music here...
@@ -190,10 +189,7 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 			{
 					if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
 					{
-						// Can we see location?
-						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE ) )
 						{
 							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_DEIDRANNA );	
 						}
@@ -467,7 +463,6 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
-	INT16		sDistVisible = FALSE;
 	UINT8		ubKillerSoldierID = NOBODY;
 
 	// Start victory music here...
@@ -492,10 +487,7 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 			{
 					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
 					{
-						// Can we see location?
-						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel, pTeamSoldier );
-
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,	bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE ) )
 						{
 							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );	
 						}

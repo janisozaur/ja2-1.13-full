@@ -1263,7 +1263,6 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE							*pSoldier;
-	INT16										sDistVisible;	
 	INT16										sGridNo;
 
 	// If this cump is already visible, return
@@ -1285,23 +1284,17 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	// look for all mercs on the same team, 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pSoldier++ )
 	{ 
-			// ATE: Ok, lets check for some basic things here!
-			if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		// ATE: Ok, lets check for some basic things here!
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		{
+			// and we can trace a line of sight to his x,y coordinates?
+			// (taking into account we are definitely aware of this guy now)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, TRUE ) )
 			{
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel, pSoldier );
-				
-				if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-				{
-					// and we can trace a line of sight to his x,y coordinates?
-					// (taking into account we are definitely aware of this guy now)
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-					{
-						MakeCorpseVisible( pSoldier, pCorpse );
-						return;
-					}
-				}
+				 MakeCorpseVisible( pSoldier, pCorpse );
+				 return;
 			}
+		}
 	}
 }
 
@@ -1309,73 +1302,65 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 void MercLooksForCorpses( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT32					cnt;
-	INT16										sDistVisible;	
-	INT16										sGridNo;
-	ROTTING_CORPSE					*pCorpse;
-
 	// Should we say disgust quote?
 	if ( ( pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ROTTINGCORPSE ) )
 	{
-	 return;
+		return;
 	}
 
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
-	return;
+		return;
 	}
 
 	if ( AM_AN_EPC( pSoldier ) )
 	{
-	return;
+		return;
 	}
 
 	if ( QuoteExp_HeadShotOnly[ pSoldier->ubProfile ] == 1 )
 	{
-	return;
+		return;
 	}
 
 	// Every so often... do a corpse quote...
 	if ( Random( 400 ) <= 2 )
 	{
-	// Loop through all corpses....
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
-	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
+		INT32					cnt;
+		INT16										sGridNo;
+		ROTTING_CORPSE					*pCorpse;
 
-		if ( !pCorpse->fActivated )
+		// Loop through all corpses....
+		for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
 		{
-			continue;
+			pCorpse = &(gRottingCorpse[ cnt ] );
+
+			if ( !pCorpse->fActivated )
+			{
+			  continue;
+			}
+
+			// Has this corpse rotted enough?
+			if ( pCorpse->def.ubType == ROTTING_STAGE2 )
+			{
+				sGridNo = pCorpse->def.sGridNo;
+				// and we can trace a line of sight to his x,y coordinates?
+				// (taking into account we are definitely aware of this guy now)
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, TRUE ) )
+				{
+					TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );			
+
+					pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_ROTTINGCORPSE;
+
+					BeginMultiPurposeLocator( sGridNo, pCorpse->def.bLevel, FALSE );
+
+					// Slide to...
+					SlideToLocation( 0, sGridNo );
+
+					return;
+				}
+			}
 		}
-
-		// Has this corpse rotted enough?
-	 if ( pCorpse->def.ubType == ROTTING_STAGE2 )
-	 {
-		 sGridNo = pCorpse->def.sGridNo;
-
-		 // is he close enough to see that gridno if he turns his head?
-		 sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel, pSoldier );
-		 
-		 if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-		 {
-			 // and we can trace a line of sight to his x,y coordinates?
-			 // (taking into account we are definitely aware of this guy now)
-			 if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-			 {
-				 TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );			
-
-				 pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_ROTTINGCORPSE;
-
-			BeginMultiPurposeLocator( sGridNo, pCorpse->def.bLevel, FALSE );
-
-			// Slide to...
-			SlideToLocation( 0, sGridNo );
-
-			return;
-			 }
-		}
-		}
-	}
 	}
 }
 

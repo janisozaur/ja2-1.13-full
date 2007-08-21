@@ -197,9 +197,9 @@ void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	//ubNumberOfObjects = 1;
+	ubNumberOfObjects = 1;
 	objectStack.clear();
-	//objectStack.resize(1);
+	objectStack.resize(1);
 }
 
 bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
@@ -290,8 +290,10 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
 			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
-			objectStack.resize(ubNumberOfObjects);
-			for (int x = 0; x < ubNumberOfObjects; ++x) {
+
+			//even if the ubNumberOfObjects is 0 we still need to have the data!!!
+			objectStack.resize(max(ubNumberOfObjects,1));
+			for (int x = 0; x < max(ubNumberOfObjects,1); ++x) {
 				(*this)[x]->data.objectStatus = ugYucky.bStatus[x];
 				(*this)[x]->data.fFlags = src.fFlags;
 				(*this)[x]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect

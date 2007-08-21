@@ -177,7 +177,8 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		}
 		else
 		{
-			INT8 bug = 0;
+			//bug
+			DebugBreak();
 		}
 	}
 	if( pNode == gSoldierInitHead )

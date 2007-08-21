@@ -1428,9 +1428,9 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 	}
 
 	// pointer should always be valid anyhow
-	if ( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > MaxDistanceVisible() )
+	if( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > gpSrcSoldier->GetMaxDistanceVisible(pGiver->sGridNo, gpSrcSoldier->pathing.bLevel) )
 	{
-		return( FALSE );
+		return FALSE;
 	}
 
 	sAdjGridNo = FindAdjacentGridEx( pGiver, gpSrcSoldier->sGridNo, NULL, NULL, FALSE, FALSE );

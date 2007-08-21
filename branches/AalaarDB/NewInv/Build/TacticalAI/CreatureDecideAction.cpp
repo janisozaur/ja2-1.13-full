@@ -844,10 +844,10 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// determine direction from this soldier to the closest opponent
 			ubOpponentDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
-			// if soldier is not already facing in that direction,
-			// and the opponent is close enough that he could possibly be seen
-			// note, have to change this to use the level returned from ClosestKnownOpponent
-			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0, pSoldier );
+			 // if soldier is not already facing in that direction,
+			 // and the opponent is close enough that he could possibly be seen
+			 // note, have to change this to use the level returned from ClosestKnownOpponent
+			 sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0 );
 
 			if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 				{

@@ -1091,15 +1091,28 @@ INT16 DistanceSmellable( SOLDIERTYPE *pSoldier, SOLDIERTYPE * pSubject )
 	return( sDistVisible );
 }
 
-INT16 MaxDistanceVisible( void )
+INT16 MaxNormalDistanceVisible( void )
 {
 	PERFORMANCE_MARKER
 	return( STRAIGHT * 2 );
 }
 
-INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel, SOLDIERTYPE *pOther )
+INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT16 sGridNo, INT8 bLevel)
 {
-	PERFORMANCE_MARKER
+	if (sGridNo == -1) {
+		return MaxNormalDistanceVisible();
+	}
+	if (bLevel == -1) {
+		bLevel = thisSoldier->pathing.bLevel;
+	}
+
+	return DistanceVisible( thisSoldier,
+		(SoldierHasLimitedVision(thisSoldier) ? thisSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT),
+		DIRECTION_IRRELEVANT, thisSoldier->sGridNo, thisSoldier->pathing.bLevel );
+}
+
+INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel )
+{
 	INT16	sDistVisible;
 	INT8	bLightLevel;
 	SOLDIERTYPE * pSubject;
@@ -1132,7 +1145,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 
 	if ( !TANK( pSoldier ) && ( bFacingDir == DIRECTION_IRRELEVANT || (pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT) || (pSubject && pSubject->flags.fMuzzleFlash) ) )
 	{
-		sDistVisible = MaxDistanceVisible();
+		sDistVisible = MaxNormalDistanceVisible();
 	}
 	else
 	{
@@ -1140,7 +1153,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 		if (pSoldier->sGridNo == sSubjectGridNo)
 		{
 			// looking up or down or two people accidentally in same tile... don't want it to be 0!
-			sDistVisible = MaxDistanceVisible();
+			sDistVisible = MaxNormalDistanceVisible();
 		}
 		else
 		{
@@ -1148,6 +1161,9 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 			if( SoldierHasLimitedVision(pSoldier) )
 			{
 				bSubjectDir = (INT8) GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, sSubjectGridNo );
+			}
+			if (bFacingDir == DIRECTION_IRRELEVANT) {
+				bFacingDir = pSoldier->bDirection;
 			}
 
 			sDistVisible = gbLookDistance[bFacingDir][bSubjectDir];
@@ -1181,8 +1197,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 				if ( gbLookDistance[bFacingDir][bSubjectDir] != STRAIGHT )
 				{
 					// reduce sight when we're not looking in that direction...
-					// (20%?)
-					sDistVisible = (sDistVisible * 8) / 10;
+					sDistVisible = (INT16) (sDistVisible * ANGLE_RATIO);
 				}
 			}
 		}
@@ -1202,16 +1217,8 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 	// valid map references then use the ambient light level instead.
 	if(0 > sSubjectGridNo || sSubjectGridNo > WORLD_MAX)
 	{
-		if(pSoldier != pOther)
-		{
-			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("113/UC Warning! Tried to detect the light level when character %ls[%d] at gridno %d tries to look for character %ls[%d] who outside of the valid map (gridno %d). Assigning default %d", 
-				pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, pOther->name, pOther->ubID, pOther->sGridNo, ubAmbientLightLevel));	
-		}
-		else
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("113/UC Warning! Tried to detect the light level when character %ls[%d] looks at a location outside of the valid map (gridno %d). Assigning default %d",
-				pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, ubAmbientLightLevel));
-		}
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("113/UC Warning! Tried to detect the light level when character %ls[%d] looks at a location outside of the valid map (gridno %d). Assigning default %d",
+			pSoldier->name, pSoldier->ubID, pSoldier->sGridNo, ubAmbientLightLevel));
 
 		bLightLevel = ubAmbientLightLevel;
 	}
@@ -1225,7 +1232,7 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 	//if ( pSubject && !( pSubject->flags.fMuzzleFlash && (bLightLevel > NORMAL_LIGHTLEVEL_DAY) ) )
 	if ( !( pSubject && pSubject->flags.fMuzzleFlash && (bLightLevel > NORMAL_LIGHTLEVEL_DAY) ) )
 	{
-		// ATE: Made function to adjust light distence...
+		// ATE: Made function to adjust light distance...
 		sDistVisible = AdjustMaxSightRangeForEnvEffects( pSoldier, bLightLevel, sDistVisible );
 	}
 
@@ -1258,7 +1265,13 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 	// let tanks see and be seen further (at night)
 	if ( (TANK( pSoldier ) && sDistVisible > 0) || (pSubject && TANK( pSubject ) ) )
 	{
-		sDistVisible = __max( sDistVisible + 5, MaxDistanceVisible() );
+		if ( TANK(pSoldier) && sDistVisible > 0 && pSubject)
+		{
+			sDistVisible = __max( sDistVisible + 5, pSubject->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) );
+		}
+		else {
+			sDistVisible = __max( sDistVisible + 5, pSoldier->GetMaxDistanceVisible() );
+		}
 	}
 
 	if ( gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[ bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
@@ -1310,7 +1323,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 			{
 				if ( pOtherSoldier->sGridNo != NOWHERE )
 				{	
-					if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > DistanceVisible( pOtherSoldier, (SoldierHasLimitedVision(pSoldier) ? pOtherSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->pathing.bLevel, pSoldier ) )					
+					if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > DistanceVisible( pOtherSoldier, (SoldierHasLimitedVision(pOtherSoldier) ? pOtherSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->pathing.bLevel ) )					
 					{
 						// if this guy can no longer see us, change to seen this turn
 						HandleManNoLongerSeen( pOtherSoldier, pSoldier, &(pOtherSoldier->aiData.bOppList[ pSoldier->ubID ]), &(gbPublicOpplist[ pOtherSoldier->bTeam ][ pSoldier->ubID ] ) );
@@ -1856,22 +1869,22 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 	{
 	bAware = TRUE;
 
-	// then we look for him full viewing distance in EVERY direction
-	sDistVisible = DistanceVisible(pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), 0, pOpponent->sGridNo, pOpponent->pathing.bLevel, pOpponent );
-	//if (pSoldier->ubID == 0)
-		//sprintf(gDebugStr,"ALREADY KNOW: ME %d him %d val %d",pSoldier->ubID,pOpponent->ubID,pSoldier->aiData.bOppList[pOpponent->ubID]);
-	}
- else	// soldier is not currently known about
-	{
-	// distance we "see" then depends on the direction he is located from us
-	bDir = atan8(pSoldier->sX,pSoldier->sY,pOpponent->sX,pOpponent->sY);
-	// BIG NOTE: must use desdir instead of direction, since in a projected
-	// situation, the direction may still be changing if it's one of the first
-	// few animation steps when this guy's turn to do his stepped look comes up
-	sDistVisible = DistanceVisible(pSoldier,pSoldier->pathing.bDesiredDirection,bDir, pOpponent->sGridNo, pOpponent->pathing.bLevel, pOpponent );
-	//if (pSoldier->ubID == 0)
-		//sprintf(gDebugStr,"dist visible %d: my dir %d to him %d",sDistVisible,pSoldier->pathing.bDesiredDirection,bDir);
-	}
+   // then we look for him full viewing distance in EVERY direction
+   sDistVisible = pSoldier->GetMaxDistanceVisible( pOpponent->sGridNo, pOpponent->pathing.bLevel );
+	 //if (pSoldier->ubID == 0)
+		//sprintf(gDebugStr,"ALREADY KNOW: ME %d him %d val %d",pSoldier->ubID,pOpponent->ubID,pSoldier->bOppList[pOpponent->ubID]);
+  }
+ else   // soldier is not currently known about
+  {
+   // distance we "see" then depends on the direction he is located from us
+   bDir = atan8(pSoldier->sX,pSoldier->sY,pOpponent->sX,pOpponent->sY);
+   // BIG NOTE: must use desdir instead of direction, since in a projected
+   // situation, the direction may still be changing if it's one of the first
+   // few animation steps when this guy's turn to do his stepped look comes up
+   sDistVisible = DistanceVisible(pSoldier,pSoldier->pathing.bDesiredDirection,bDir, pOpponent->sGridNo, pOpponent->pathing.bLevel );
+	 //if (pSoldier->ubID == 0)
+		 //sprintf(gDebugStr,"dist visible %d: my dir %d to him %d",sDistVisible,pSoldier->bDesiredDirection,bDir);
+  }
 
  // calculate how many spaces away soldier is (using Pythagoras' theorem)
  sDistAway = PythSpacesAway(pSoldier->sGridNo,pOpponent->sGridNo);
@@ -1882,11 +1895,11 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 
  // if we see close enough to see the soldier
  if (sDistAway <= sDistVisible)
-	{
-	// and we can trace a line of sight to his x,y coordinates
-	// must use the REAL opplist value here since we may or may not know of him
-	if (SoldierToSoldierLineOfSightTest(pSoldier,pOpponent,(UINT8)sDistVisible,bAware))
-	{
+  {
+   // and we can trace a line of sight to his x,y coordinates
+   // must use the REAL opplist value here since we may or may not know of him
+   if (SoldierToSoldierLineOfSightTest(pSoldier,pOpponent,bAware,(UINT8)sDistVisible))
+    {
 			ManSeesMan(pSoldier,pOpponent,pOpponent->sGridNo,pOpponent->pathing.bLevel,MANLOOKSFORMAN,ubCaller);
 			bSuccess = TRUE;
 	}
@@ -5729,15 +5742,15 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 			fMuzzleFlash = TRUE;
 		}
 	}
-	
-	sDistVisible = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sGridNo, bLevel, pSoldier );
+
+    sDistVisible = pSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
 
 	if ( fMuzzleFlash )
 	{
 		// turn flash on again
 		MercPtrs[ ubNoiseMaker ]->flags.fMuzzleFlash = TRUE;
 	}
-		
+
 	if (PythSpacesAway(pSoldier->sGridNo,sGridNo) <= sDistVisible )
 	{
 		// just use the XXadjustedXX center of the gridno
@@ -5759,7 +5772,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 		// skip LOS check if we had to turn and we're a tank.	sorry Mr Tank, no looking out of the sides for you!
 		if ( !( bHadToTurn && TANK( pSoldier ) ) )
 		{
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, (UINT8) sDistVisible, TRUE ) )
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, TRUE, sDistVisible ) )
 			{
 				// he can actually see the spot where the noise came from!
 				bSourceSeen = TRUE;
@@ -6547,7 +6560,6 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 {
 	PERFORMANCE_MARKER
 	INT8		bOldOppList;
-	UINT8		ubTileSightLimit;
 	BOOLEAN fSeesAttacker = FALSE;
 	INT8		bDirection;
 	BOOLEAN	fMuzzleFlash = FALSE;
@@ -6574,30 +6586,26 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 	}
 
 	bOldOppList = pDefender->aiData.bOppList[ pAttacker->ubID ];
-	if ( PythSpacesAway( pAttacker->sGridNo, pDefender->sGridNo ) <= MaxDistanceVisible() )
+	// check LOS, considering we are now aware of the attacker
+	// ignore muzzle flashes when must turning head 
+	if ( pAttacker->flags.fMuzzleFlash )
 	{
-		// check LOS, considering we are now aware of the attacker
-		// ignore muzzle flashes when must turning head 
-		if ( pAttacker->flags.fMuzzleFlash )
+		bDirection = atan8( pDefender->sX,pDefender->sY, pAttacker->sX, pAttacker->sY );
+		if ( pDefender->bDirection != bDirection && pDefender->bDirection != gOneCDirection[ bDirection ] && pDefender->bDirection != gOneCCDirection[ bDirection ] )
 		{
-			bDirection = atan8( pDefender->sX,pDefender->sY, pAttacker->sX, pAttacker->sY );
-			if ( pDefender->bDirection != bDirection && pDefender->bDirection != gOneCDirection[ bDirection ] && pDefender->bDirection != gOneCCDirection[ bDirection ] )
-			{
-				// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
-				pAttacker->flags.fMuzzleFlash = FALSE;
-				fMuzzleFlash = TRUE;
-			}
+			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
+			pAttacker->flags.fMuzzleFlash = FALSE;
+			fMuzzleFlash = TRUE;
 		}
+	}
 
-		ubTileSightLimit = (UINT8) DistanceVisible( pDefender, (SoldierHasLimitedVision(pDefender) ? pDefender->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), 0, pAttacker->sGridNo, pAttacker->pathing.bLevel, pAttacker );
-		if (SoldierToSoldierLineOfSightTest( pDefender, pAttacker, ubTileSightLimit, TRUE ) != 0)
-		{
-			fSeesAttacker = TRUE;
-		}
-		if ( fMuzzleFlash )
-		{
-			pAttacker->flags.fMuzzleFlash = TRUE;
-		}
+	if (SoldierToSoldierLineOfSightTest( pDefender, pAttacker, TRUE ) != 0)
+	{
+		fSeesAttacker = TRUE;
+	}
+	if ( fMuzzleFlash )
+	{
+		pAttacker->flags.fMuzzleFlash = TRUE;
 	}
 
 	if (fSeesAttacker)
@@ -6709,7 +6717,7 @@ void CheckForAlertWhenEnemyDies( SOLDIERTYPE * pDyingSoldier )
 
 			// distance we "see" then depends on the direction he is located from us
 			bDir = atan8(pSoldier->sX,pSoldier->sY,pDyingSoldier->sX,pDyingSoldier->sY);
-			sDistVisible = DistanceVisible( pSoldier, pSoldier->pathing.bDesiredDirection, bDir, pDyingSoldier->sGridNo, pDyingSoldier->pathing.bLevel, pDyingSoldier );
+			sDistVisible = DistanceVisible( pSoldier, pSoldier->pathing.bDesiredDirection, bDir, pDyingSoldier->sGridNo, pDyingSoldier->pathing.bLevel );
 			sDistAway = PythSpacesAway( pSoldier->sGridNo, pDyingSoldier->sGridNo );
 
 			// if we see close enough to see the soldier
@@ -6717,7 +6725,7 @@ void CheckForAlertWhenEnemyDies( SOLDIERTYPE * pDyingSoldier )
 			{
 				// and we can trace a line of sight to his x,y coordinates
 				// assume enemies are always aware of their buddies...
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pDyingSoldier->sGridNo, pDyingSoldier->pathing.bLevel, 0, (UINT8) sDistVisible, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pDyingSoldier->sGridNo, pDyingSoldier->pathing.bLevel, 0, TRUE, sDistVisible ) )
 				{
 					pSoldier->aiData.bAlertStatus = STATUS_RED;	
 					CheckForChangingOrders( pSoldier );
@@ -6856,9 +6864,9 @@ INT8 GetHighestVisibleWatchedLoc( UINT8 ubID )
 	{
 		if ( gsWatchedLoc[ ubID ][ bLoop ] != NOWHERE && gubWatchedLocPoints[ ubID ][ bLoop ] > bHighestPoints )
 		{
-			sDistVisible =	DistanceVisible( MercPtrs[ ubID ], (SoldierHasLimitedVision(MercPtrs[ ubID ]) ? MercPtrs[ ubID ]->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], MercPtrs[ubID] );
+            sDistVisible =  DistanceVisible( MercPtrs[ ubID ], (SoldierHasLimitedVision(MercPtrs[ ubID ]) ? MercPtrs[ ubID ]->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ] );
 			// look at standing height
-			if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubID ], gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], 3, (UINT8) sDistVisible, TRUE ) )
+			if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubID ], gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], 3, TRUE, sDistVisible ) )
 			{
 				bHighestLoc = bLoop;
 				bHighestPoints = gubWatchedLocPoints[ ubID ][ bLoop ];

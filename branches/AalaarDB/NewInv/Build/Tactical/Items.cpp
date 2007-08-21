@@ -2300,6 +2300,39 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &usIgnoreResult2, &ubIgnoreType, &ubIgnoreAPCost ) );
 }
 
+UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
+{
+	if( 0 == usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
+		return 0;
+	}
+
+	//Temporary calculation for minWeight. 0.2*ubWeight rounded correctly 
+	UINT32 uiMinWeight = (UINT32)((Item[usGunAmmoItem].ubWeight / 5.0) + 0.5);
+	if( uiMinWeight < 1 || uiMinWeight > Item[usGunAmmoItem].ubWeight)
+	{
+		uiMinWeight = 1;
+	}
+
+	double weight = 0.0;
+
+	if(ubShotsLeft > 0)
+	{
+		if( uiMinWeight == Item[usGunAmmoItem].ubWeight )
+		{
+			weight += (double)uiMinWeight;
+		}
+		else
+		{
+			weight += (double)uiMinWeight + (( (double)ubShotsLeft / (double)Magazine[ Item[usGunAmmoItem].ubClassIndex ].ubMagSize) * ( (double)Item[usGunAmmoItem].ubWeight - (double)uiMinWeight ));
+		}
+	}
+	weight += 0.5; //Pulmu:To round correctly
+	return (UINT16)weight;
+	//Pulmu end
+}
+
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
@@ -2311,78 +2344,41 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 
 	// Start with base weight
 	usWeight = pItem->ubWeight;
+	//multiply by the number of objects, can be 0
+	usWeight *= pObject->ubNumberOfObjects;
 
-	if ( pItem->ubPerPocket < 2 && pItem->usItemClass != IC_AMMO )
+	if ( pItem->usItemClass != IC_AMMO )
 	{
-
-		// account for any attachments
-		for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
-			usWeight += CalculateObjectWeight(&(*iter));
-		}
-
-		// add in weight of ammo
-		if (Item[ pObject->usItem ].usItemClass == IC_GUN && (*pObject)[0]->data.gun.ubGunShotsLeft > 0)
+		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
-			if( 0==(*pObject)[0]->data.gun.usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
-			}
-			else if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
-			{
-				//Pulmu:
-				//Temporary calculation for minWeight
-				UINT32 uiMinWeight = (UINT32)((Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight / 5.0) + 0.5);
-				if( uiMinWeight < 1 || uiMinWeight > Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight)
-				{
-					uiMinWeight = 1;
-				}
 
-				if( uiMinWeight == Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight )
+			// account for any attachments
+			for (attachmentList::iterator iter = (*pObject)[cnt]->attachments.begin(); iter != (*pObject)[cnt]->attachments.end(); ++iter) {
+				usWeight += CalculateObjectWeight(&(*iter));
+			}
+
+			// add in weight of ammo
+			if (Item[ pObject->usItem ].usItemClass == IC_GUN && (*pObject)[cnt]->data.gun.ubGunShotsLeft > 0)
+			{
+				if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
 				{
-					usWeight += uiMinWeight;
+					usWeight += CalculateAmmoWeight((*pObject)[cnt]->data.gun.usGunAmmoItem, (*pObject)[cnt]->data.gun.ubGunShotsLeft);
 				}
 				else
 				{
-					// WANNE: Added Pulmu's weight fix
-					double weight = (double)uiMinWeight + (( (double)(*pObject)[0]->data.gun.ubGunShotsLeft / Magazine[Item[(*pObject)[0]->data.gun.usGunAmmoItem].ubClassIndex].ubMagSize ) * ( (double)Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight - (double)uiMinWeight )) + 0.5; //Pulmu: Account for number of rounds left.
-					usWeight += (UINT16)weight;
+					usWeight += Item[ (*pObject)[cnt]->data.gun.usGunAmmoItem ].ubWeight;
 				}
-			}
-			else
-			{
-				usWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 			}
 		}
 	}
 	else if ( pItem->usItemClass == IC_AMMO && gGameExternalOptions.fAmmoDynamicWeight == TRUE )//Pulmu: added weight allowance for ammo not being full
 	{
-		usWeight = 0;
-		//Temporary calculation for minWeight. 0.2*ubWeight rounded correctly 
-		UINT32 uiMinWeight = (UINT32)((Item[pObject->usItem].ubWeight / 5.0) + 0.5);
-		if( uiMinWeight < 1 || uiMinWeight > Item[pObject->usItem].ubWeight)
-		{
-			uiMinWeight = 1;
-		}
-
-		double weight = 0.0;
-		
+		int ammoLeft = 0;
 		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
-			if((*pObject)[cnt]->data.ubShotsLeft > 0)
-			{
-				if( uiMinWeight == Item[pObject->usItem].ubWeight )
-				{
-					weight += (double)uiMinWeight;
-				}
-				else
-				{
-					weight += (double)uiMinWeight + (( (double)(*pObject)[cnt]->data.ubShotsLeft / (double)Magazine[ Item[ pObject->usItem].ubClassIndex ].ubMagSize) * ( (double)Item[pObject->usItem].ubWeight - (double)uiMinWeight ));
-				}
-			}
+			ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
 		}
-		weight += 0.5; //Pulmu:To round correctly
-		usWeight = (UINT16)weight;
-		//Pulmu end
+		usWeight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
 	}
 
 /*
@@ -4574,18 +4570,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 
 	extern BOOLEAN gfDrawPathPoints;
 
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-	//	GenerateMapEdgepoints();
-
-			//gfDrawPathPoints = !gfDrawPathPoints;
-
-		//gfDrawPathPoints = TRUE;
-		//GlobalReachableTest( pSoldier->sGridNo );
-		//gfDrawPathPoints = FALSE;
-
-	}
-
 #else
 
 	#ifdef AI_TIMING_TESTS
@@ -4595,138 +4579,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 	extern UINT32 guiRedSeekCounter, guiRedHelpCounter; guiRedHideCounter;
 	#endif
 
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-		/*
-		UINT32 uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == ENEMY_TEAM )
-			{
-				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait1 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 1", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait2 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 2", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem ] ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem ] ) );
-				}
-
-			}
-		}
-		*/
-	
-				UINT32	uiLoop;
-
-
-		for ( uiLoop = 0; uiLoop <= HISTORY_MERC_KILLED_CHARACTER; uiLoop++ )
-		{
-			switch( uiLoop ) 
-			{
-				case HISTORY_FOUND_MONEY:
-				case HISTORY_ASSASSIN:
-				case HISTORY_DISCOVERED_TIXA:
-				case HISTORY_DISCOVERED_ORTA:
-				case HISTORY_GOT_ROCKET_RIFLES:
-				case HISTORY_DEIDRANNA_DEAD_BODIES:
-				case HISTORY_BOXING_MATCHES:
-				case HISTORY_SOMETHING_IN_MINES:
-				case HISTORY_DEVIN:
-				case HISTORY_MIKE:
-				case HISTORY_TONY:
-				case HISTORY_KROTT:
-				case HISTORY_KYLE:
-				case HISTORY_MADLAB:
-				case HISTORY_GABBY:
-				case HISTORY_KEITH_OUT_OF_BUSINESS:
-				case HISTORY_HOWARD_CYANIDE:
-				case HISTORY_KEITH:
-				case HISTORY_HOWARD:
-				case HISTORY_PERKO:
-				case HISTORY_SAM:
-				case HISTORY_FRANZ:
-				case HISTORY_ARNOLD:
-				case HISTORY_FREDO:
-				case HISTORY_RICHGUY_BALIME:
-				case HISTORY_JAKE:
-				case HISTORY_BUM_KEYCARD:
-				case HISTORY_WALTER:
-				case HISTORY_DAVE:
-				case HISTORY_PABLO:
-				case HISTORY_KINGPIN_MONEY:
-				//VARIOUS BATTLE CONDITIONS
-				case HISTORY_LOSTTOWNSECTOR:
-				case HISTORY_DEFENDEDTOWNSECTOR:
-				case HISTORY_LOSTBATTLE:
-				case HISTORY_WONBATTLE:
-				case HISTORY_FATALAMBUSH:
-				case HISTORY_WIPEDOUTENEMYAMBUSH:
-				case HISTORY_UNSUCCESSFULATTACK:
-				case HISTORY_SUCCESSFULATTACK:
-				case HISTORY_CREATURESATTACKED:
-				case HISTORY_KILLEDBYBLOODCATS:
-				case HISTORY_SLAUGHTEREDBLOODCATS:
-				case HISTORY_GAVE_CARMEN_HEAD:
-				case HISTORY_SLAY_MYSTERIOUSLY_LEFT:
-					AddHistoryToPlayersLog( (UINT8) uiLoop, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-					break;
-				default:
-					break;
-			}
-			
-		}
-		
-
-		/*
-		UINT32		uiEntryTime, uiExitTime;
-		UINT32		uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == CIV_TEAM )
-			{
-				pSoldier = MercSlots[ uiLoop ];
-				if ( ExtractScheduleEntryAndExitInfo( pSoldier, &uiEntryTime, &uiExitTime ) )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Civ %d enters at %ld, exits at %ld", pSoldier->ubID, uiEntryTime, uiExitTime );	
-				}
-			}
-		}
-		*/
-/*
-		UINT32	 uiLoop;
-
-		for ( uiLoop = 0; uiLoop <= 4; uiLoop++ )
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Team %d has %d people", uiLoop, gTacticalStatus.Team[ uiLoop ].bMenInSector );
-		}
-		*/
-	/*
-		UINT32	uiLoop;
-		INT16		sGridNo;
-		UINT32	uiStartTime, uiEndTime;
-
-		if (GetMouseMapPos( &sGridNo ))
-		{
-			uiStartTime = GetJA2Clock();
-			for (uiLoop = 0; uiLoop < 50000; uiLoop++)
-			{
-				FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, COPYROUTE );
-			}
-			uiEndTime = GetJA2Clock();
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "50000 path calls from %d to %d took %ld ms", pSoldier->sGridNo, sGridNo, uiEndTime - uiStartTime ) );
-		}
-		*/
-	}
 #endif
 
 
@@ -5024,7 +4876,6 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	pObj->initialize();
 	pObj->usItem = usItem;
-	pObj->ubNumberOfObjects = 1;
 	(*pObj)[0]->data.gun.bGunStatus = bStatus;
 	(*pObj)[0]->data.ubImprintID = NO_PROFILE;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
@@ -5152,23 +5003,18 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fOk;
-	UINT8		ubLoop;
-
 	// ARM: to avoid whacking memory once Assertions are removed...  Items will be lost in this situation!
 	if ( ubNumber > MAX_OBJECTS_PER_SLOT )
 	{
+		DebugBreak();
 		ubNumber = MAX_OBJECTS_PER_SLOT;
 	}
 
 	fOk = CreateItem( usItem, bStatus, pObj );
 	if (fOk)
 	{
-		for (ubLoop = 1; ubLoop < ubNumber; ubLoop++)	
-		{
-			// we reference status[0] here because the status value might actually be a
-			// # of rounds of ammo, in which case the value won't be the bStatus value 
-			// passed in.
-			(*pObj)[ubLoop]->data.objectStatus = (*pObj)[0]->data.objectStatus;
+		for (int x = 1; x < ubNumber; ++x) {
+			pObj->objectStack.push_back(pObj->objectStack.front());
 		}
 		pObj->ubNumberOfObjects = ubNumber;
 		pObj->ubWeight *= ubNumber;

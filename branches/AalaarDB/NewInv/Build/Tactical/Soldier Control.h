@@ -721,6 +721,8 @@ public:
 	UINT8												bReserved1;
 	CHAR16											name[ 10 ];
 
+	INT16	GetMaxDistanceVisible(INT16 sGridNo = -1, INT8 bLevel = -1);
+
 	// DESCRIPTION / STATS, ETC
 	UINT8												ubBodyType;
 	INT8												bActionPoints;
