@@ -549,7 +549,14 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 	else {
 		//the format has changed and needs to be updated
 		OLD_ARMS_DEALER_STATUS_101 gOldArmsDealerStatus[NUM_ARMS_DEALERS];
-		OLD_DEALER_ITEM_HEADER_101 gOldArmsDealersInventory[NUM_ARMS_DEALERS][MAXITEMS];
+		//OLD_DEALER_ITEM_HEADER_101 gOldArmsDealersInventory[NUM_ARMS_DEALERS][MAXITEMS];
+
+		//pointer to an array of OLD_DEALER_ITEM_HEADER_101 that is sized [NUM_ARMS_DEALERS][MAXITEMS]
+		typedef OLD_DEALER_ITEM_HEADER_101(*pointerToArmsDealersInventoryArray)[NUM_ARMS_DEALERS][MAXITEMS];
+
+		pointerToArmsDealersInventoryArray pOldArmsDealersInventory
+			= (pointerToArmsDealersInventoryArray) new OLD_DEALER_ITEM_HEADER_101[NUM_ARMS_DEALERS][MAXITEMS];
+
 
 		// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
 		// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
@@ -572,7 +579,7 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		{
 			return( FALSE );
 		}
-		if (!FileRead( hFile, gOldArmsDealersInventory, uiDealersSaved * sizeof( OLD_DEALER_ITEM_HEADER_101 ) * MAXITEMS, &uiNumBytesRead ))
+		if (!FileRead( hFile, (*pOldArmsDealersInventory), uiDealersSaved * sizeof( OLD_DEALER_ITEM_HEADER_101 ) * MAXITEMS, &uiNumBytesRead ))
 		{
 			return( FALSE );
 		}
@@ -596,17 +603,18 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 				if ( Item[usItemIndex].usItemClass	== 0 )
 					break;
 				//if there are any elements allocated for this item, load them
-				for ( int x = 0; x < gOldArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
+				for ( int x = 0; x < (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
 					if (!FileRead( hFile, &oldSpecial, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ))
 					{
 						return( FALSE );
 					}
 					gArmsDealersInventory[ubArmsDealer].resize(gArmsDealersInventory[ubArmsDealer].size() + 1);
 					DEALER_SPECIAL_ITEM* pSpecial = &(gArmsDealersInventory[ubArmsDealer].back());
-					pSpecial->ConvertFrom101(gOldArmsDealersInventory[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
+					pSpecial->ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
 				}
 			}
 		}
+		delete [] pOldArmsDealersInventory;
 	}
 
 	return( TRUE );

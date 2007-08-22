@@ -263,7 +263,7 @@ void DEALER_SPECIAL_ITEM::ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD
 
 	CreateItem(usItemIndex, bItemCondition, &(this->object));
 	for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x) {
-		if (special.oldInfo.usAttachment[x]) {
+		if (special.oldInfo.usAttachment[x] && special.oldInfo.bAttachmentStatus[x] ) {
 			CreateItem(special.oldInfo.usAttachment[x], special.oldInfo.bAttachmentStatus[x], &gTempObject);
 			AttachObject(0, &(this->object), &gTempObject, FALSE);
 		}
