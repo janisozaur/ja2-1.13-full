@@ -1,0 +1,44 @@
+#ifndef __VFS_TYPES_H_
+#define __VFS_TYPES_H_
+
+// Author: Lesh		May 2007
+
+//===================================================================
+//	vfs_types.hpp - virtual file system types header
+//
+//		VFS provides unified access to file resources for the
+//	application. VFS hides real file system, where application
+//	is running, and gives to application freedom from particular
+//	file system.
+//		VFS also has such features, like:
+//	- attach a container file (file with application resources,
+//	  e.g. ".slf" or ".zip");
+//	- attach a directory on a file system as an application
+//	  resources;
+//	- replace/add some resources, using directories or containers;
+//	  
+//===================================================================
+
+#include "types.h"
+#include "platform.h"
+#include <map>
+
+typedef sgpString				vfsString;
+typedef sgpStringPos			vfsStringPos;
+typedef sgpStringArray			vfsStringArray;
+typedef sgpStringArrayIterator	vfsStringArrayIterator;
+
+#define	LIB_REAL_FILE	0xFFFFFFFF
+
+typedef struct
+{
+	vfsString	RealName;
+	BOOLEAN		IsDirectory;
+	BOOLEAN		IsWriteable;
+	UINT32		LibraryID;
+} vfsEntry;
+
+typedef std::map <vfsString, vfsEntry>				vfsFileMap;
+typedef std::map <vfsString, vfsEntry>::iterator	vfsFileMapIterator;
+
+#endif
