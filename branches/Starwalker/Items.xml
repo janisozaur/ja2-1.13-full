@@ -10653,7 +10653,7 @@
 		<ubGraphicNum>544</ubGraphicNum>
 		<ubWeight>4</ubWeight>
 		<ubPerPocket>4</ubPerPocket>
-		<ItemSize>17</ItemSize>
+		<ItemSize>21</ItemSize>
 		<usPrice>240</usPrice>
 		<ubCoolness>10</ubCoolness>
 		<Metal>1</Metal>
@@ -11162,7 +11162,7 @@
 		<ubGraphicNum>443</ubGraphicNum>
 		<ubWeight>5</ubWeight>
 		<ubPerPocket>6</ubPerPocket>
-		<ItemSize>17</ItemSize>
+		<ItemSize>21</ItemSize>
 		<usPrice>225</usPrice>
 		<ubCoolness>10</ubCoolness>
 		<Metal>1</Metal>
@@ -24024,7 +24024,7 @@
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>198</ubGraphicNum>
 		<ubWeight>3</ubWeight>
-		<ubPerPocket>4</ubPerPocket>
+		<ubPerPocket>1</ubPerPocket>
 		<ItemSize>17</ItemSize>
 		<usPrice>250</usPrice>
 		<ubCoolness>1</ubCoolness>
