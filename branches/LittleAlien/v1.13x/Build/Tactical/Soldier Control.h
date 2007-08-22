@@ -379,6 +379,7 @@ public:
 	// Constructors
 	// Create an inventory with a fixed maximum number of slots
 	//Inventory();					// Uses NUM_INV_SLOTS for slotCount
+	 // Just make NUM_INV_SLOTS the default.  That way there's one routine to control them all
 	Inventory(int slotCount = NUM_INV_SLOTS);
 
 	// Copy Constructor
@@ -393,7 +394,7 @@ public:
 	// Index operator
 	OBJECTTYPE& operator [] (int idx);
 
-	// Removes all items from the inventory
+	// Resets all items in the inventory to empty
 	void initialize();
 
 	// How any slots are there in this inventory?
@@ -425,6 +426,8 @@ public:
 	// Ugly temporary solution
 	void CopyOldInventoryToNew();
 	void CopyNewInventoryToOld();
+
+	INT16	GetMaxDistanceVisible(INT32 sGridNo = -1, INT8 bLevel = -1);
 
 	// Note: Place all non-POD items at the end (after endOfPOD)
 	// The format of this structure affects what is written into and read from various
