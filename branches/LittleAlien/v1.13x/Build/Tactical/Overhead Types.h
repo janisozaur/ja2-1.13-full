@@ -47,7 +47,7 @@
 #define			NPC_TEAM_DEAD												0x000000800
 #define			DISALLOW_SIGHT											0x000001000
 #define			CHECK_SIGHT_AT_END_OF_ATTACK				0x000002000
-#define     IN_CREATURE_LAIR                    0x000004000
+#define			IN_CREATURE_LAIR                    0x000004000
 #define			HIDE_TREES													0x000008000
 #define			NOHIDE_REDUNDENCY										0x000010000
 #define			DEBUGCLIFFS													0x000020000
