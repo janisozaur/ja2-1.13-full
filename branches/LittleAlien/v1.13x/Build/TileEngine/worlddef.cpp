@@ -3216,11 +3216,11 @@ BOOLEAN LoadWorld( const STR8	puiFilename )
 	gfForceLoad				 = FALSE;
 
 	// CHECK IF OUR SELECTED GUY IS GONE!
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		if ( MercPtrs[ gusSelectedSoldier ]->bActive == FALSE )
 		{
-			gusSelectedSoldier = NO_SOLDIER;
+			gusSelectedSoldier = NOBODY;
 		}
 	}
 
@@ -3280,7 +3280,7 @@ BOOLEAN NewWorld( INT32 nMapRows,  INT32 nMapCols )
 	UINT16				NewIndex;
 	INT32					cnt;
 
-	gusSelectedSoldier = gusOldSelectedSoldier = NO_SOLDIER;
+	gusSelectedSoldier = gusOldSelectedSoldier = NOBODY;
 
 	AdjustSoldierCreationStartValues( );
 

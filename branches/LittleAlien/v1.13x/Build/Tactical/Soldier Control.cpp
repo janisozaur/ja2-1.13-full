@@ -1698,7 +1698,7 @@ BOOLEAN ReCreateSelectedSoldierLight(  )
 {
 	SOLDIERTYPE *pSoldier;
 
-	if ( gusSelectedSoldier == NO_SOLDIER )
+	if ( gusSelectedSoldier == NOBODY )
 	{
 		return( FALSE );
 	}
