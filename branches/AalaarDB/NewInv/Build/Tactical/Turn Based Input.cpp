@@ -324,7 +324,7 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 									{
 										// We're on terrain in which we can walk, walk
 										// If we're on terrain,
-										if ( gusSelectedSoldier != NO_SOLDIER )
+										if ( gusSelectedSoldier != NOBODY )
 										{
 											INT8 bReturnVal = FALSE;
 
@@ -980,7 +980,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 	SOLDIERTYPE		*pSoldier;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
-	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
+	static UINT32			uiMoveTargetSoldierId = NOBODY;
 
 
 	if (!GetMouseMapPos( &usMapPos ) )
@@ -1045,7 +1045,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
 		case MOVE_MODE:
 
-			uiMoveTargetSoldierId = NO_SOLDIER;
+			uiMoveTargetSoldierId = NOBODY;
 
 			// Check for being on terrain
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
@@ -1657,7 +1657,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			// Cancel out of spread burst...
 			gfBeginBurstSpreadTracking = FALSE;
 			gfRTClickLeftHoldIntercepted = TRUE;
-			if ( gusSelectedSoldier != NO_SOLDIER )
+			if ( gusSelectedSoldier != NOBODY )
 			{
 				MercPtrs[ gusSelectedSoldier ]->flags.fDoSpread				= FALSE;
 			}
@@ -1694,7 +1694,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 			{
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					// If soldier is not stationary, stop
 					MercPtrs[ gusSelectedSoldier ]->StopSoldier(	);
@@ -1764,7 +1764,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					//if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
 					//	{
-					//		if ( gusSelectedSoldier != NO_SOLDIER )
+					//		if ( gusSelectedSoldier != NOBODY )
 					//		{
 					//			if ( gTacticalStatus.uiFlags & TURNBASED && !MercPtrs[ gusSelectedSoldier ]->fDontChargeReadyAPs )
 					//			{
@@ -1848,7 +1848,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							SOLDIERTYPE *pNewSoldier;
 							INT32		iCurrentSquad;
 
-							if ( gusSelectedSoldier != NO_SOLDIER )
+							if ( gusSelectedSoldier != NOBODY )
 							{ 
 								// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
 								if ( 
@@ -1873,7 +1873,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 						else
 						{
-							if ( gusSelectedSoldier != NO_SOLDIER )
+							if ( gusSelectedSoldier != NOBODY )
 							{ //Select next merc
 								UINT8 bID;
 
@@ -3292,7 +3292,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 
 			case 'r':
-				if( gusSelectedSoldier != NO_SOLDIER )
+				if( gusSelectedSoldier != NOBODY )
 				{
 					if( fAlt ) //reload selected merc's weapon
 					{
@@ -3532,7 +3532,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 				}
 
-				else if ( gusSelectedSoldier != NO_SOLDIER )
+				else if ( gusSelectedSoldier != NOBODY )
 					*puiNewEvent = M_CHANGE_TO_ACTION;
 				break;
 
@@ -3621,7 +3621,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						*puiNewEvent = I_LOSDEBUG;
 					}
 				}
-				//else if( gusSelectedSoldier != NO_SOLDIER )
+				//else if( gusSelectedSoldier != NOBODY )
 				break;
 			case 'z':
 				if( fCtrl )
@@ -4234,7 +4234,7 @@ void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
-	if( gusSelectedSoldier != NO_SOLDIER )
+	if( gusSelectedSoldier != NOBODY )
 	{
 		if( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 		{
@@ -4366,7 +4366,7 @@ void TogglePlanningMode()
 			switch( gCurrentUIMode )
 			{
 			case MOVE_MODE:
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					GetSoldier( &pSoldier, gusSelectedSoldier );
 					BeginUIPlan( pSoldier );
@@ -4374,7 +4374,7 @@ void TogglePlanningMode()
 				}
 				break;
 			case ACTION_MODE:
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					GetSoldier( &pSoldier, gusSelectedSoldier );
 					BeginUIPlan( pSoldier );
@@ -4389,7 +4389,7 @@ void TogglePlanningMode()
 void SetBurstMode()
 {
 	PERFORMANCE_MARKER
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		ChangeWeaponMode( MercPtrs[ gusSelectedSoldier ] );
 	}
@@ -5249,7 +5249,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	}
 	else
 	{
-		if( gusSelectedSoldier != NO_SOLDIER )
+		if( gusSelectedSoldier != NOBODY )
 			UIHandleSoldierStanceChange( (UINT8)gusSelectedSoldier, ubAnimHeight );
 	}
 }
@@ -5308,7 +5308,7 @@ void HandleStealthChangeFromUIKeys(	)
 	}
 	else
 	{
-		if( gusSelectedSoldier != NO_SOLDIER )
+		if( gusSelectedSoldier != NOBODY )
 		{
 			if ( !AM_A_ROBOT( MercPtrs[ gusSelectedSoldier ] ) )
 			{

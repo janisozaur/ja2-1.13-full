@@ -690,7 +690,7 @@ void INVENTORY_IN_SLOT::initialize()
 	bSlotIdInOtherLocation = 0;
 	ubIdOfMercWhoOwnsTheItem = 0;
 	uiItemPrice = 0;
-	sSpecialItemElement = 0;
+	uiRepairDoneTime = 0;
 }
 
 INVENTORY_IN_SLOT& INVENTORY_IN_SLOT::operator=(OLD_INVENTORY_IN_SLOT_101& src)
@@ -704,7 +704,7 @@ INVENTORY_IN_SLOT& INVENTORY_IN_SLOT::operator=(OLD_INVENTORY_IN_SLOT_101& src)
 	this->bSlotIdInOtherLocation = src.bSlotIdInOtherLocation;
 	this->ubIdOfMercWhoOwnsTheItem = src.ubIdOfMercWhoOwnsTheItem;
 	this->uiItemPrice = src.uiItemPrice;
-	this->sSpecialItemElement = src.sSpecialItemElement;
+	this->uiRepairDoneTime = 0;
 	return *this;
 }
 
@@ -2904,18 +2904,46 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 	}
 
 	// repairmen sort differently from merchants
+	// sort this list by object category, and by ascending price within each category
 	if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
-		// sort this list by object category, and by ascending price within each category
-		//std::sort(gpTempDealersInventory);//RepairmanItemQsortCompare
+		std::sort(gpTempDealersInventory.begin(), gpTempDealersInventory.end(), RepairmanItemQsortCompare);//RepairmanItemQsortCompare
 	}
 	else
 	{
-		// sort this list by object category, and by ascending price within each category
-		//std::sort(gpTempDealersInventory);//ArmsDealerItemQsortCompare
+		std::sort(gpTempDealersInventory.begin(), gpTempDealersInventory.end(), ArmsDealerItemQsortCompare);//ArmsDealerItemQsortCompare
 	}
 	return( TRUE );
 }
+
+
+bool ArmsDealerItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2)
+{
+	PERFORMANCE_MARKER
+	int retVal = ( CompareItemsForSorting( pInvSlot1.sItemIndex, pInvSlot2.sItemIndex,
+		pInvSlot1.ItemObject[0]->data.objectStatus, pInvSlot2.ItemObject[0]->data.objectStatus ) );
+	if (retVal == -1) {
+		return true;
+	}
+	return false;
+}
+
+
+
+bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2)
+{
+	PERFORMANCE_MARKER
+	// lower repair time first
+	if ( pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime )
+	{
+		return true;
+	}
+	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
+		DebugBreak();
+	}
+	return false;
+}
+
 
 
 void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner )
@@ -2925,7 +2953,7 @@ void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, st
 	INVENTORY_IN_SLOT* pDealerInvSlot = &(pInventory.back());
 	pDealerInvSlot->fActive = TRUE;
 	pDealerInvSlot->sItemIndex = pSpclItemInfo->object.usItem;
-	pDealerInvSlot->sSpecialItemElement = -1;//no longer used
+	pDealerInvSlot->uiRepairDoneTime = pSpclItemInfo->uiRepairDoneTime;
 	pDealerInvSlot->ubIdOfMercWhoOwnsTheItem = ubOwner;
 	pDealerInvSlot->bSlotIdInOtherLocation = -1;
 
@@ -5798,7 +5826,6 @@ void MovePlayersItemsToBeRepairedToArmsDealersInventory()
 
 			// add it to the arms dealer's inventory
 			GiveObjectToArmsDealerForRepair( gbSelectedArmsDealerID, &( ArmsDealerOfferArea[ uiCnt ].ItemObject ), ArmsDealerOfferArea[ uiCnt ].ubIdOfMercWhoOwnsTheItem );
-			ArmsDealerOfferArea[ uiCnt ].sSpecialItemElement = gubLastSpecialItemAddedAtElement;
 
 			//Remove the item from the owner merc's inventory
 			IfMercOwnedRemoveItemFromMercInv( &( ArmsDealerOfferArea[ uiCnt ]) );

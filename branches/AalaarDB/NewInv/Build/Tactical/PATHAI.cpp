@@ -2877,7 +2877,7 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 				// ATE: ONLY cancel if they are moving.....
 				ubMerc = WhoIsThere2( (UINT16) newLoc, s->pathing.bLevel);
 
-				if ( ubMerc < NOBODY && ubMerc != s->ubID )
+				if ( ubMerc < TOTAL_SOLDIERS && ubMerc != s->ubID )
 				{	
 					// Check for movement....
 					//if ( fTurnBased || ( (Menptr[ ubMerc ].sFinalDestination == Menptr[ ubMerc ].sGridNo) || (Menptr[ ubMerc ].fDelayedMovement) ) )

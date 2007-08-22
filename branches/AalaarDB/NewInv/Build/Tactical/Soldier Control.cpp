@@ -2300,7 +2300,7 @@ BOOLEAN ReCreateSelectedSoldierLight(  )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
-	if ( gusSelectedSoldier == NO_SOLDIER )
+	if ( gusSelectedSoldier == NOBODY )
 	{
 		return( FALSE );
 	}
@@ -3474,7 +3474,7 @@ void SOLDIERTYPE::InternalRemoveSoldierFromGridNo( BOOLEAN fForce )
 	INT8 bDir;
 	INT32 iGridNo;
 
-	if((thisSoldier->sGridNo!=NO_MAP_POS) )
+	if((thisSoldier->sGridNo!=NOWHERE) )
 	{
 		if ( thisSoldier->bInSector || fForce )
 		{
@@ -3500,7 +3500,7 @@ void SOLDIERTYPE::InternalRemoveSoldierFromGridNo( BOOLEAN fForce )
 			HandleCrowShadowRemoveGridNo( thisSoldier );
 
 			// Reset gridno...
-			thisSoldier->sGridNo = NO_MAP_POS;
+			thisSoldier->sGridNo = NOWHERE;
 		}
 	}
 }

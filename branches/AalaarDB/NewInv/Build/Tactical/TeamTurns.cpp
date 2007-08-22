@@ -199,7 +199,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 		// Are we in combat already?
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{		
-			if ( gusSelectedSoldier != NO_SOLDIER )
+			if ( gusSelectedSoldier != NOBODY )
 			{
 				// Check if this guy is able to be selected....
 				if ( MercPtrs[ gusSelectedSoldier ]->stats.bLife < OKLIFE )
@@ -213,7 +213,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 				}
 
 				// Slide to selected guy...
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
 
@@ -1033,7 +1033,7 @@ void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				HandleTacticalUI( );
 
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if ( gusSelectedSoldier != NOBODY )
 				{
 					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
 
@@ -1171,7 +1171,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		return( FALSE );
 	}
 
-	if (ubOpponentID < NOBODY)
+	if (ubOpponentID < TOTAL_SOLDIERS)
 	{
 		/*
 		// only the OPPONENT'S controller's decision matters
@@ -1193,7 +1193,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	else	// no opponent, so controller of 'ptr' makes the call instead
 	{
 		// ALEX
-		if (gsWhoThrewRock >= NOBODY)
+		if (gsWhoThrewRock >= TOTAL_SOLDIERS)
 		{
 #ifdef BETAVERSION
 			NumMessage("StandardInterruptConditions: ERROR - ubOpponentID is NOBODY, don't know who threw rock, guynum = ",pSoldier->guynum);
@@ -1315,7 +1315,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	ubMinPtsNeeded = AP_CHANGE_FACING;
 
 	// if the opponent is SOMEBODY
-	if (ubOpponentID < NOBODY)
+	if (ubOpponentID < TOTAL_SOLDIERS)
 	{
 		// if the soldiers are on the same side
 		if (pSoldier->bSide == pOpponent->bSide)
@@ -2052,7 +2052,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 					}
 				}
 
-				if (ubSmallestSlot < NOBODY)
+				if (ubSmallestSlot < TOTAL_SOLDIERS)
 				{
 					// add this guy to everyone's interrupt queue
 					AddToIntList(ubIntList[ubSmallestSlot],TRUE,TRUE);

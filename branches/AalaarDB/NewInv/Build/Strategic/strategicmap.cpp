@@ -2492,7 +2492,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		//DONT set these values
-		gusSelectedSoldier = NO_SOLDIER;	
+		gusSelectedSoldier = NOBODY;	
 		gfGameScreenLocateToSoldier = TRUE;
 	}
 

@@ -537,7 +537,7 @@ void PalEditRenderHook(	)
 	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		// Set to current
 		GetSoldier( &pSoldier, gusSelectedSoldier );
@@ -560,7 +560,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 	UINT8					ubStartRep = 0;
 	UINT8					ubEndRep = 0;
 
-	if ( gusSelectedSoldier == NO_SOLDIER )
+	if ( gusSelectedSoldier == NOBODY )
 	{
 		return( FALSE );
 	}

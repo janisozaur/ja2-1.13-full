@@ -1716,7 +1716,7 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 
 
  /*
- if (ptr->guynum >= NOBODY)
+ if (ptr->guynum >= TOTAL_SOLDIERS)
 	{
 #ifdef BETAVERSION
 	NumMessage("ManLooksForMan: ERROR - ptr->guynum = ",ptr->guynum);
@@ -1724,7 +1724,7 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
 	return(success);
 	}
 
- if (oppPtr->guynum >= NOBODY)
+ if (oppPtr->guynum >= TOTAL_SOLDIERS)
 	{
 #ifdef BETAVERSION
 	NumMessage("ManLooksForMan: ERROR - oppPtr->guynum = ",oppPtr->guynum);
@@ -1976,7 +1976,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno,
  INT8 bOldOppList = pSoldier->aiData.bOppList[pOpponent->ubID];
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ManSeesMan");
 
- if (pSoldier->ubID >= NOBODY)
+ if (pSoldier->ubID >= TOTAL_SOLDIERS)
 	{
 	/*
 #ifdef BETAVERSION
@@ -1986,7 +1986,7 @@ void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno,
 	return;
 	}
 
- if (pOpponent->ubID >= NOBODY)
+ if (pOpponent->ubID >= TOTAL_SOLDIERS)
 	{
 	/*
 #ifdef BETAVERSION
@@ -4956,7 +4956,7 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 	}
 	else	// EXPECTED noise
 	{
-		if (ubNoiseMaker < NOBODY)
+		if (ubNoiseMaker < TOTAL_SOLDIERS)
 		{
 			if (Menptr[ubNoiseMaker].controller == Net.pnum)
 			{
@@ -5043,7 +5043,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 	// see if anyone actually hears this noise, sees ubNoiseMaker, etc.
 	ProcessNoise(ubNoiseMaker, sGridNo, bLevel, ubTerrType,	ubVolume,	ubNoiseType);
 
-	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (ubNoiseMaker < NOBODY) && !gfDelayResolvingBestSightingDueToDoor )
+	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (ubNoiseMaker < TOTAL_SOLDIERS) && !gfDelayResolvingBestSightingDueToDoor )
 	{
 		pSoldier = MercPtrs[ubNoiseMaker];
 
@@ -5085,7 +5085,7 @@ void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType
 	ProcessNoise(ubNoiseMaker,sGridNo,bLevel,ubTerrType,ubVolume,ubNoiseType);
 
 	// if noiseMaker is SOMEBODY
-	if (ubNoiseMaker < NOBODY)
+	if (ubNoiseMaker < TOTAL_SOLDIERS)
 	{
 		/*
 		pSoldier = MercPtrs[ubNoiseMaker];
@@ -5149,7 +5149,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 	// dead noiseMaker is only used here to decide WHICH soldiers HearNoise().
 
 	// if noise is made by a person, AND it's not noise from an explosion
-	if ((ubNoiseMaker < NOBODY) && (ubNoiseType != NOISE_EXPLOSION))
+	if ((ubNoiseMaker < TOTAL_SOLDIERS) && (ubNoiseType != NOISE_EXPLOSION))
 	{
 		// inactive/not in sector/dead soldiers, shouldn't be making noise!
 		if (!Menptr[ubNoiseMaker].bActive || !Menptr[ubNoiseMaker].bInSector ||
@@ -5227,7 +5227,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 		}
 
 		// if a the noise maker is a person, not just NOBODY
-		if (ubNoiseMaker < NOBODY)
+		if (ubNoiseMaker < TOTAL_SOLDIERS)
 		{
 			// if this team is the same TEAM as the noise maker's
 			// (for now, assume we will report noises by unknown source on same SIDE)
@@ -5294,7 +5294,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 			}
 
 			// if noise was made by a person
-			if (ubNoiseMaker < NOBODY)
+			if (ubNoiseMaker < TOTAL_SOLDIERS)
 			{
 				// if noisemaker has been *PUBLICLY* SEEN OR HEARD during THIS TURN
 				if ((gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_CURRENTLY) || // seen now
@@ -5348,7 +5348,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 			}
 
 			// if a the noise maker is a person, not just NOBODY
-			if (ubNoiseMaker < NOBODY)
+			if (ubNoiseMaker < TOTAL_SOLDIERS)
 			{
 				// if this listener can see this noise maker
 				if (pSoldier->aiData.bOppList[ubNoiseMaker] == SEEN_CURRENTLY)
@@ -5497,7 +5497,7 @@ void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrTy
 		// if the listening team is human-controlled AND
 		// the noise's source is another soldier
 		// (computer-controlled teams don't radio or automatically report NOISE)
-		if (gTacticalStatus.Team[bTeam].bHuman && (ubSource < NOBODY))
+		if (gTacticalStatus.Team[bTeam].bHuman && (ubSource < TOTAL_SOLDIERS))
 		{
 			// if ubNoiseMaker was seen by at least one member of this team
 			if (bSeen)
@@ -5796,7 +5796,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 b
 	}
 
 	// if noise is made by a person
-	if (ubNoiseMaker < NOBODY)
+	if (ubNoiseMaker < TOTAL_SOLDIERS)
 	{
 		bOldOpplist = pSoldier->aiData.bOppList[ubNoiseMaker];
 

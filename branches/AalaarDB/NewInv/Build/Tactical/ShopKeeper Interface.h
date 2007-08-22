@@ -75,8 +75,7 @@ public:
 	UINT8			ubIdOfMercWhoOwnsTheItem;
 	UINT32			uiItemPrice;			//Only used for the players item that have been evaluated
 
-	INT16			sSpecialItemElement;	// refers to which special item element an item in a dealer's inventory area
-											// occupies.	-1 Means the item is "perfect" and has no associated special item.
+	UINT32			uiRepairDoneTime;		//so that we can sort repairman's inventory easily
 
 	char			endOfPod;
 	OBJECTTYPE		ItemObject;
@@ -114,6 +113,8 @@ UINT32	ShopKeeperScreenInit( void );
 UINT32	ShopKeeperScreenHandle( void );
 UINT32	ShopKeeperScreenShutdown( void );
 
+bool ArmsDealerItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2);
+bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2);
 
 
 void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );

@@ -211,7 +211,7 @@ void SetUpInterface( )
 		}
 	}
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 	}
