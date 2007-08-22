@@ -2214,9 +2214,35 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArray )
 {
 	PERFORMANCE_MARKER
-	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort
-	std::sort(pInventory.begin(), pInventory.end());
+#if 0
+	//first, compress the inventory by stacking like items that are reachable, while moving empty items towards the back
+	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
+		if (iter->object.ubNumberOfObjects > 0
+			&& iter->object.ubNumberOfObjects < ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
+			//if it is active and reachable etc
+			std::vector<WORLDITEM>::iterator second = iter;
+			for (++second; second != pInventory.end(); ++second) {
+				if (second->object.usItem == iter->object.usItem
+					&& second->object.ubNumberOfObjects > 0) {
+					iter->object.AddObjectsToStack(second->object, second->object.ubNumberOfObjects);
+					if (iter->object.ubNumberOfObjects >= ItemSlotLimit( iter->object.usItem, BIGPOCK1POS )) {
+						break;
+					}
+				}
+			}
+		}
+		else if (iter->object.ubNumberOfObjects == 0) {
+			std::vector<WORLDITEM>::iterator second = iter;
+			for (++second; second != pInventory.end(); ++second) {
+				if (second->object.ubNumberOfObjects > 0) {
+					//swap and break;
+				}
+			}
+		}
+	}
+#endif
 
+	//then compress it by removing the empty objects
 	for (;;) {
 		if (pInventory.empty() == false && pInventory.back().object.ubNumberOfObjects == 0) {
 			Assert(pInventory.back().fExists == false);
@@ -2227,14 +2253,8 @@ void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArr
 		}
 	}
 
-	for (std::vector<WORLDITEM>::iterator iter = pInventory.begin(); iter != pInventory.end(); ++iter) {
-		if (iter->object.ubNumberOfObjects == 0) {
-			//this shouldn't happen, it should be sorted
-			DebugBreak();
-			Assert(iter->fExists == false);
-			iter = pInventory.erase(iter);
-		}
-	}
+	//ADB I'm not sure qsort will work with OO data, so replace it with stl sort
+	std::sort(pInventory.begin(), pInventory.end());
 }
 
 
