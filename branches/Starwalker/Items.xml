@@ -25596,7 +25596,7 @@
 		<ubClassIndex>18</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>708</ubGraphicNum>
-		<ubWeight>18</ubWeight>
+		<ubWeight>12</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>140</usPrice>
 		<ubCoolness>2</ubCoolness>
@@ -25620,7 +25620,7 @@
 		<ubClassIndex>9</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>685</ubGraphicNum>
-		<ubWeight>5</ubWeight>
+		<ubWeight>4</ubWeight>
 		<ubPerPocket>1</ubPerPocket>
 		<ItemSize>21</ItemSize>
 		<usPrice>180</usPrice>
@@ -25667,7 +25667,7 @@
 		<ubClassIndex>10</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>706</ubGraphicNum>
-		<ubWeight>7</ubWeight>
+		<ubWeight>5</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>75</usPrice>
 		<ubCoolness>5</ubCoolness>
@@ -25714,7 +25714,7 @@
 		<ubClassIndex>14</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>704</ubGraphicNum>
-		<ubWeight>14</ubWeight>
+		<ubWeight>13</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>135</usPrice>
 		<ubCoolness>4</ubCoolness>
@@ -25738,7 +25738,7 @@
 		<ubClassIndex>13</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>703</ubGraphicNum>
-		<ubWeight>17</ubWeight>
+		<ubWeight>16</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>120</usPrice>
 		<ubCoolness>5</ubCoolness>
@@ -25762,7 +25762,7 @@
 		<ubClassIndex>15</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>702</ubGraphicNum>
-		<ubWeight>20</ubWeight>
+		<ubWeight>18</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>145</usPrice>
 		<ubCoolness>5</ubCoolness>
@@ -25786,7 +25786,7 @@
 		<ubClassIndex>16</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>701</ubGraphicNum>
-		<ubWeight>22</ubWeight>
+		<ubWeight>20</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>130</usPrice>
 		<ubCoolness>3</ubCoolness>
@@ -25810,7 +25810,7 @@
 		<ubClassIndex>17</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>700</ubGraphicNum>
-		<ubWeight>20</ubWeight>
+		<ubWeight>18</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>140</usPrice>
 		<ubCoolness>4</ubCoolness>
@@ -25825,7 +25825,7 @@
 	</ITEM>
 	<ITEM>
 		<uiIndex>1089</uiIndex>
-		<szItemName>TAC-1C Vest</szItemName>
+		<szItemName>TAC-1B Vest</szItemName>
 		<szLongItemName>TT Utility Vest</szLongItemName>
 		<szItemDesc>A vest with two larger pockets for carrying some big things.</szItemDesc>
 		<szBRName>TT Utility Vest</szBRName>
@@ -25834,7 +25834,7 @@
 		<ubClassIndex>19</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>699</ubGraphicNum>
-		<ubWeight>18</ubWeight>
+		<ubWeight>11</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>140</usPrice>
 		<ubCoolness>3</ubCoolness>
@@ -25858,7 +25858,7 @@
 		<ubClassIndex>11</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>698</ubGraphicNum>
-		<ubWeight>16</ubWeight>
+		<ubWeight>10</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>80</usPrice>
 		<ubCoolness>1</ubCoolness>
@@ -25905,7 +25905,7 @@
 		<ubClassIndex>7</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>696</ubGraphicNum>
-		<ubWeight>5</ubWeight>
+		<ubWeight>7</ubWeight>
 		<ItemSize>21</ItemSize>
 		<usPrice>110</usPrice>
 		<ubCoolness>2</ubCoolness>
@@ -25946,12 +25946,12 @@
 		<szLongItemName>TIMS Backpack</szLongItemName>
 		<szItemDesc>The backpack part of the TIMS set. You can mount the combat pack onto it in place of the flap.</szItemDesc>
 		<szBRName>TIMS Backpack</szBRName>
-		<szBRDesc>If you want to carry all sorts of big things cross-country, you'll need a backpack like this one.</szBRDesc>
+		<szBRDesc>If you want to carry all sorts of big things cross-country, you'll need a backpack like this one. Can be worn in conjunction with a TIMS combat pack.</szBRDesc>
 		<usItemClass>131072</usItemClass>
 		<ubClassIndex>23</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>686</ubGraphicNum>
-		<ubWeight>45</ubWeight>
+		<ubWeight>35</ubWeight>
 		<ItemSize>27</ItemSize>
 		<usPrice>500</usPrice>
 		<ubCoolness>4</ubCoolness>
@@ -25974,7 +25974,7 @@
 		<ubClassIndex>24</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>687</ubGraphicNum>
-		<ubWeight>48</ubWeight>
+		<ubWeight>38</ubWeight>
 		<ItemSize>27</ItemSize>
 		<usPrice>450</usPrice>
 		<ubCoolness>5</ubCoolness>
@@ -25997,7 +25997,7 @@
 		<ubClassIndex>25</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>688</ubGraphicNum>
-		<ubWeight>50</ubWeight>
+		<ubWeight>41</ubWeight>
 		<ItemSize>27</ItemSize>
 		<usPrice>200</usPrice>
 		<ubCoolness>6</ubCoolness>
@@ -26020,7 +26020,7 @@
 		<ubClassIndex>20</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>689</ubGraphicNum>
-		<ubWeight>20</ubWeight>
+		<ubWeight>13</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>300</usPrice>
 		<ubCoolness>3</ubCoolness>
@@ -26043,7 +26043,7 @@
 		<ubClassIndex>21</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>690</ubGraphicNum>
-		<ubWeight>20</ubWeight>
+		<ubWeight>13</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>150</usPrice>
 		<ubCoolness>2</ubCoolness>
@@ -26066,7 +26066,7 @@
 		<ubClassIndex>22</ubClassIndex>
 		<ubGraphicType>1</ubGraphicType>
 		<ubGraphicNum>691</ubGraphicNum>
-		<ubWeight>20</ubWeight>
+		<ubWeight>15</ubWeight>
 		<ItemSize>23</ItemSize>
 		<usPrice>200</usPrice>
 		<ubCoolness>6</ubCoolness>
