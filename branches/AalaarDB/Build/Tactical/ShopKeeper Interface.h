@@ -41,49 +41,26 @@ enum
 #define	ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED	0x00000080			// The Players item has been evaluated
 
 
-class OLD_INVENTORY_IN_SLOT_101
+typedef struct
 {
-public:
-	BOOLEAN				fActive;
+	BOOLEAN			fActive;
 	INT16				sItemIndex;
-	UINT32				uiFlags;
-	OLD_OBJECTTYPE_101	oldItemObject;
-	UINT8				ubLocationOfObject;		//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
+	UINT32			uiFlags;
+	OBJECTTYPE	ItemObject;
+	UINT8				ubLocationOfObject;					//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
 	INT8				bSlotIdInOtherLocation;
 
 	UINT8				ubIdOfMercWhoOwnsTheItem;
-	UINT32				uiItemPrice;			//Only used for the players item that have been evaluated
+	UINT32			uiItemPrice;								//Only used for the players item that have been evaluated
 
 	INT16				sSpecialItemElement;	// refers to which special item element an item in a dealer's inventory area
 												// occupies.	-1 Means the item is "perfect" and has no associated special item.
 };
 
-class INVENTORY_IN_SLOT
-{
-public:
-	BOOLEAN Save(HWFILE hFile);
-	BOOLEAN Load(HWFILE hFile);
-	INVENTORY_IN_SLOT() {initialize();};
-	INVENTORY_IN_SLOT& operator=(OLD_INVENTORY_IN_SLOT_101& src);
-	void	initialize();
-	BOOLEAN			fActive;
-	INT16			sItemIndex;
-	UINT32			uiFlags;
-	UINT8			ubLocationOfObject;		//An enum value for the location of the item ( either in the arms dealers inventory, one of the offer areas or in the users inventory)
-	INT8			bSlotIdInOtherLocation;
+} INVENTORY_IN_SLOT;
 
-	UINT8			ubIdOfMercWhoOwnsTheItem;
-	UINT32			uiItemPrice;			//Only used for the players item that have been evaluated
 
 	UINT32			uiRepairDoneTime;		//so that we can sort repairman's inventory easily
-
-	char			endOfPod;
-	OBJECTTYPE		ItemObject;
-};
-
-#define SIZEOF_INVENTORY_IN_SLOT_POD offsetof (INVENTORY_IN_SLOT, endOfPod)
-
-
 
 extern INVENTORY_IN_SLOT	PlayersOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 extern INT32	giShopKeepDialogueEventinProgress;

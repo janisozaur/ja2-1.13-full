@@ -104,7 +104,6 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo );
 
 void DisplayCoverOfSelectedGridNo( )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	INT8	bStance;
 
@@ -169,7 +168,6 @@ void DisplayCoverOfSelectedGridNo( )
 
 void AddCoverTileToEachGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
 
@@ -229,7 +227,6 @@ void AddCoverTileToEachGridNo()
 
 void RemoveCoverOfSelectedGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
 
@@ -304,7 +301,6 @@ void RemoveCoverOfSelectedGridNo()
 
 void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange )
 {
-	PERFORMANCE_MARKER
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
@@ -418,7 +414,6 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 
 INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, INT8 bStance )
 {
-	PERFORMANCE_MARKER
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
 	INT8		bPercentCoverForGridno=0;
@@ -439,7 +434,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 		pOpponent = MercSlots[ uiLoop ];
 
 		// if this merc is inactive, at base, on assignment, dead, unconscious
-		if (!pOpponent || pOpponent->stats.bLife < OKLIFE)
+		if (!pOpponent || pOpponent->bLife < OKLIFE)
 		{
 			continue;			// next merc
 		}
@@ -450,7 +445,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			continue;			// next merc
 		}
 
-		pbPersOL = pSoldier->aiData.bOppList + pOpponent->ubID;
+		pbPersOL = pSoldier->bOppList + pOpponent->ubID;
 		pbPublOL = gbPublicOpplist[ OUR_TEAM ] + pOpponent->ubID;
 
 		// if this opponent is unknown personally and publicly
@@ -468,7 +463,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			continue;
 		}
 
-		iGetThrough = SoldierToLocationChanceToGetThrough( pOpponent, sTargetGridNo, pSoldier->pathing.bLevel, bStance, NOBODY );
+		iGetThrough = SoldierToLocationChanceToGetThrough( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NOBODY );
 //	iBulletGetThrough = CalcChanceToHitGun( pOpponent, sTargetGridNo, AP_MAX_AIM_ATTACK, AIM_SHOT_TORSO );
 
 		if( WeaponInHand( pOpponent ) )
@@ -519,7 +514,6 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 
 void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if( fRoof )
@@ -545,7 +539,6 @@ void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 
 void RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	if( fRoof )
 	{
 		RemoveOnRoof( sGridNo, usGraphic );
@@ -558,7 +551,6 @@ void RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof 
 
 SOLDIERTYPE *GetCurrentMercForDisplayCover()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier=NULL;
 	//Get a soldier that is on the player team
 	if( gusSelectedSoldier != NOBODY )
@@ -574,7 +566,6 @@ SOLDIERTYPE *GetCurrentMercForDisplayCover()
 
 INT8 GetCurrentMercForDisplayCoverStance()
 {
-	PERFORMANCE_MARKER
 	INT8	bStance;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -610,7 +601,6 @@ INT8 GetCurrentMercForDisplayCoverStance()
 
 void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT16 usRange=0;
 	CHAR16	zOutputString[512];
 
@@ -666,7 +656,6 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 void DisplayGridNoVisibleToSoldierGrid( )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo;
 //	INT8	bStance;
 
@@ -725,7 +714,6 @@ void DisplayGridNoVisibleToSoldierGrid( )
 
 void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRange )
 {
-	PERFORMANCE_MARKER
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
@@ -822,7 +810,6 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 
 void AddVisibleToSoldierToEachGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	INT8	bVisibleToSoldier=0;
 	BOOLEAN fRoof;
@@ -877,7 +864,6 @@ void AddVisibleToSoldierToEachGridNo()
 
 void RemoveVisibleGridNoAtSelectedGridNo()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCntX, uiCntY;
 	INT8	bVisibleToSoldier;
 	INT16 sGridNo;
@@ -939,7 +925,6 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 
 INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof )
 {
-	PERFORMANCE_MARKER
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
@@ -958,7 +943,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 
 	if( ubID != NOBODY )
 	{
-		pPersOL = &(pSoldier->aiData.bOppList[ubID]);
+		pPersOL = &(pSoldier->bOppList[ubID]);
 		pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][ubID]);
 
 		// if soldier is known about (SEEN or HEARD within last few turns)
@@ -1004,7 +989,6 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 
 BOOLEAN IsTheRoofVisible( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRoom;
 
 	if( InARoom( sGridNo, &ubRoom ) )
@@ -1029,7 +1013,6 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo )
 /*
 void DisplayLosAndDisplayCoverUsageScreenMsg()
 {
-	PERFORMANCE_MARKER
 	CHAR16	zString[512];
 
 	swprintf( zString, L"Display Cover: %d", gJa25SaveStruct.uiDisplayCoverCounter );
@@ -1046,7 +1029,6 @@ void DisplayLosAndDisplayCoverUsageScreenMsg()
 
 void ChangeSizeOfDisplayCover( INT32 iNewSize )
 {
-	PERFORMANCE_MARKER
 	//if the new size is smaller or greater, scale it
 	if( iNewSize < DC__MIN_SIZE )
 	{
@@ -1067,7 +1049,6 @@ void ChangeSizeOfDisplayCover( INT32 iNewSize )
 
 void ChangeSizeOfLOS( INT32 iNewSize )
 {
-	PERFORMANCE_MARKER
 	//if the new size is smaller or greater, scale it
 	if( iNewSize < DC__MIN_SIZE )
 	{

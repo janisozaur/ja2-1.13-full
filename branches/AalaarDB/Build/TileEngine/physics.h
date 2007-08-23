@@ -10,9 +10,8 @@
 
 extern UINT32 guiNumObjectSlots;
 
-class OLD_REAL_OBJECT_101
+typedef struct
 {
-public:
 	BOOLEAN			fAllocated;
 	BOOLEAN			fAlive;
 	BOOLEAN			fApplyFriction;
@@ -42,7 +41,7 @@ public:
 	INT16				sGridNo;
 	INT32				iID;
 	LEVELNODE		*pNode;
-	LEVELNODE		*pShadow;
+	LEVELNODE   *pShadow;
 
 	INT16				sConsecutiveCollisions;
 	INT16				sConsecutiveZeroVelocityCollisions;
@@ -50,7 +49,7 @@ public:
 
 	FLOAT				dLifeLength;
 	FLOAT				dLifeSpan;
-	OLD_OBJECTTYPE_101		oldObj;
+	OBJECTTYPE	Obj;
 	BOOLEAN			fFirstTimeMoved;
 	INT16				sFirstGridNo;
 	UINT8				ubOwner;
@@ -71,16 +70,8 @@ public:
 	UINT8		ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];
 
-};
+} REAL_OBJECT;	
 
-class REAL_OBJECT
-{
-public:
-	REAL_OBJECT		() {initialize();};
-	REAL_OBJECT&	operator=(OLD_REAL_OBJECT_101& src);
-	BOOLEAN			Load(HWFILE hFile);
-	BOOLEAN			Save(HWFILE hFile);
-	void			initialize();
 
 	BOOLEAN			fAllocated;
 	BOOLEAN			fAlive;

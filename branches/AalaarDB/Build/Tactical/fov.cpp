@@ -113,7 +113,6 @@ UINT8	ViewPath2[MAXVIEWPATHS][VIEWPATHLENGTH]= {
 
 void BuildSightDir(UINT32 dir, UINT32 *One, UINT32 *Two, UINT32 *Three, UINT32 *Four, UINT32 *Five)
 {
-	PERFORMANCE_MARKER
  switch(dir)
  {
 	case NORTH	: *One	= NORTHWEST;
@@ -189,7 +188,6 @@ UINT32								guiNumSlantRoofs = 0;
 
 INT32 GetFreeSlantRoof( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumSlantRoofs; uiCount++)
@@ -206,7 +204,6 @@ INT32 GetFreeSlantRoof( void )
 
 void RecountSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumSlantRoofs-1; (uiCount >=0) ; uiCount--)
@@ -221,7 +218,6 @@ void RecountSlantRoofs( void )
 
 void ClearSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -237,7 +233,6 @@ void ClearSlantRoofs( void )
 
 BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -256,7 +251,6 @@ BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
 
 void AddSlantRoofFOVSlot( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT32									iSlantRoofSlot;
 	SLANT_ROOF_FOV_TYPE		*pSlantRoof;
 
@@ -278,7 +272,6 @@ void AddSlantRoofFOVSlot( INT16 sGridNo )
 
 void ExamineSlantRoofFOVSlots( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for( uiCount = 0; uiCount < guiNumSlantRoofs; uiCount++ )
@@ -295,7 +288,6 @@ void ExamineSlantRoofFOVSlots( )
 
 void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLocators, UINT8 ubLevel, BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
  INT32 Inc[6],Dir[6];
  INT8	itemVisible = FALSE;
@@ -321,19 +313,19 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  INT8		 bStructHeight;
  INT8		 bThroughWindowDirection;
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ENEMY )
+	if ( pSoldier->uiStatusFlags & SOLDIER_ENEMY )
 	{
 	//pSoldier->needToLookForItems = FALSE;
 	return;
 	}
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
 
 	// Return if this guy has no gridno, has bad life, etc
-	if( pSoldier->sGridNo == NOWHERE || !pSoldier->bInSector || pSoldier->stats.bLife < OKLIFE )
+	if( pSoldier->sGridNo == NOWHERE || !pSoldier->bInSector || pSoldier->bLife < OKLIFE )
 	{
 	return;
 	}
@@ -364,7 +356,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  //NumMessage("good old reveal",dir);
 
 	// a gassed merc can only see 1 tile away due to blurred vision
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 	{
 		range = 1;
 	}
@@ -372,7 +364,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	{
 	range = pSoldier->bViewRange;
 		// balance item viewing range between normal and the limit set by opplist-type functions -- CJC
-		range = (AdjustMaxSightRangeForEnvEffects( pSoldier, LightTrueLevel( pSoldier->sGridNo, pSoldier->pathing.bLevel), range ) + range) / 2;
+		range = (AdjustMaxSightRangeForEnvEffects( pSoldier, LightTrueLevel( pSoldier->sGridNo, pSoldier->bLevel), range ) + range) / 2;
 	}
 
 
@@ -727,7 +719,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 												// ATE: Only if in combat...
 												if ( gTacticalStatus.uiFlags & INCOMBAT )
 												{
-													pSoldier->HaultSoldierFromSighting( FALSE );
+													HaultSoldierFromSighting( pSoldier, FALSE );
 												}
 						else
 						{

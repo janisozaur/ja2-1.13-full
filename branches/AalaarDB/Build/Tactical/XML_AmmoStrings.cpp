@@ -60,7 +60,6 @@ typedef ammoParseData;
 static void XMLCALL 
 ammoStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	ammoParseData * pData = (ammoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -97,7 +96,6 @@ ammoStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 static void XMLCALL
 ammoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	ammoParseData * pData = (ammoParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -110,8 +108,7 @@ ammoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 static void XMLCALL
 ammoEndElementHandle(void *userData, const XML_Char *name)
-{
-	PERFORMANCE_MARKER	
+{	
 	char temp;
 	ammoParseData * pData = (ammoParseData *)userData;
 
@@ -165,7 +162,6 @@ ammoEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAmmoStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -227,7 +223,6 @@ BOOLEAN ReadInAmmoStats(STR fileName)
 }
 BOOLEAN WriteAmmoStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

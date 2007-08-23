@@ -30,7 +30,6 @@ UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex );
 
 BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *pStruct;
 	LEVELNODE* pLevel;
 	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
@@ -59,7 +58,6 @@ BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 
 UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 {
-	PERFORMANCE_MARKER
 	UINT16 usType = FIRSTWALL;
 	UINT16 usIndex;
 	UINT16 usTileIndex;
@@ -241,7 +239,6 @@ UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 //may not effect the look of the piece.
 UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubTotal = 0;
 	if( CaveAtGridNo( iMapIndex - WORLD_COLS ) )
 		ubTotal += 0x01;	//north
@@ -264,7 +261,6 @@ UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex )
 
 void AddCave( INT32 iMapIndex, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 
 	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
@@ -354,7 +350,6 @@ void ConsiderEffectsOfNewWallPiece( UINT32 iMapIndex, UINT8 usWallOrientation );
 
 void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usTileIndex;
 	INT32 iMapIndex;
@@ -420,7 +415,6 @@ void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT1
 
 UINT16 PickAWallPiece( UINT16 usWallPieceType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usVariants;
 	UINT16 usVariantChosen;
 	UINT16 usWallPieceChosen = 0;
@@ -445,7 +439,6 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 //	adding on to an existing building, where the type is already known.
 void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 {
-	PERFORMANCE_MARKER
 	INT16 sIndex;
 	UINT16 usTileIndex;
 	UINT16 ubWallClass;
@@ -495,6 +488,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 		case EXTERIOR_LEFT:
 			ubWallClass = EXTERIOR_R;
 			iMapIndex--;
+			iMapIndex--;
 			if( GetHorizontalWall( iMapIndex ) )
 			{	//Special case where placing the new wall will generate a corner.	This piece
 				//becomes an exterior bottomend, but nothing else is effected.
@@ -521,6 +515,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			break;
 		case INTERIOR_TOP:
 			ubWallClass = INTERIOR_L;
+			iMapIndex -= WORLD_COLS;
 			iMapIndex -= WORLD_COLS;
 			//check for a lower left corner.
 			if( pStruct = GetVerticalWall( iMapIndex + WORLD_COLS - 1 ) )
@@ -565,6 +560,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			break;
 		case INTERIOR_LEFT:
 			ubWallClass = INTERIOR_R;
+			iMapIndex--;
 			iMapIndex--;
 			if( GetHorizontalWall( iMapIndex ) )
 			{
@@ -618,7 +614,6 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 
 void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop = FALSE, fBottom = FALSE, fLeft = FALSE, fRight = FALSE;
 	if( !usRoofType )
@@ -660,7 +655,6 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 //	and use that for the new roof.	This is needed when erasing parts of multiple buildings simultaneously.
 void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop, fBottom, fLeft, fRight;
 	if( !usRoofType )
@@ -698,7 +692,6 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 
 void BulldozeNature( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTISTRUCT,LASTISTRUCT );
 	RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTCLIFFSHADOW, LASTCLIFFSHADOW );
@@ -711,7 +704,6 @@ void BulldozeNature( UINT32 iMapIndex )
 
 void EraseRoof( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );	
 	RemoveAllOnRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
@@ -720,14 +712,12 @@ void EraseRoof( UINT32 iMapIndex )
 
 void EraseFloor( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllLandsOfTypeRange( iMapIndex, FIRSTFLOOR, LASTFLOOR );
 }
 
 void EraseWalls( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	AddToUndoList( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
 	RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
@@ -740,7 +730,6 @@ void EraseWalls( UINT32 iMapIndex )
 
 void EraseBuilding( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	EraseRoof( iMapIndex );
 	EraseFloor( iMapIndex );
 	EraseWalls( iMapIndex );
@@ -751,8 +740,7 @@ void EraseBuilding( UINT32 iMapIndex )
 //and the TOP_LEFT oriented wall in the gridno up one as well as the other building information at this
 //gridno.
 void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
-{
-	PERFORMANCE_MARKER	
+{	
 	LEVELNODE	*pStruct = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -817,7 +805,6 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex );
 
 void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 {
-	PERFORMANCE_MARKER
 	UINT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usIndex;
@@ -854,7 +841,6 @@ void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 
 void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 {
-	PERFORMANCE_MARKER
 	INT32 top, left, right, bottom, x, y;
 	UINT32 uiMapIndex;
 	UINT16 usIndex;
@@ -911,7 +897,6 @@ void AddCaveSectionToWorld( SGPRect *pSelectRegion )
 //outside walls missing from the new building. 
 void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 {
-	PERFORMANCE_MARKER
 	UINT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usTileIndex;
@@ -987,7 +972,6 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 
 void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 {
-	PERFORMANCE_MARKER
 	INT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usFloorType, usWallType, usRoofType;
@@ -1183,7 +1167,6 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 
 void AnalyseCaveMapForStructureInfo()
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	INT32 iMapIndex;

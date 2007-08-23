@@ -38,39 +38,6 @@ typedef struct
 } INV_REGION_DESC;
 
 
-class OLD_ITEM_CURSOR_SAVE_INFO_101
-{
-public:
-	OLD_OBJECTTYPE_101	ItemPointerInfo;
-	UINT8				ubSoldierID;
-	UINT8				ubInvSlot;
-	BOOLEAN				fCursorActive;
-	INT8				bPadding[5];
-
-};
-
-
-class ITEM_CURSOR_SAVE_INFO
-{
-public:
-	ITEM_CURSOR_SAVE_INFO& operator=(OLD_ITEM_CURSOR_SAVE_INFO_101& src)
-	{
-		this->fCursorActive = src.fCursorActive;
-		this->ItemPointerInfo = src.ItemPointerInfo;
-		this->ubInvSlot = src.ubInvSlot;
-		this->ubSoldierID = src.ubSoldierID;
-		return *this;
-	}
-	//could use a little tidying up
-	BOOLEAN Save(HWFILE hFile);
-	BOOLEAN Load(HWFILE hFile);
-
-	UINT8				ubSoldierID;
-	UINT8				ubInvSlot;
-	BOOLEAN				fCursorActive;
-	OBJECTTYPE			ItemPointerInfo;
-};
-
 // Itempickup stuff
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
 void RenderItemPickupMenu( );
@@ -112,7 +79,18 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 //	Last parameter used mainly for when mouse is over item
 
 void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE	*pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor );
-
+// CHRISL: Add a new function that will be used to render a pocket silhouette
+void INVRenderSilhouette( UINT32 uiBugger, INT16 PocketIndex, INT16 SilIndex, INT16 sX, INT16 sY, INT16 sWideth, INT16 sHeight);
+// CHRISL: New function to handle display of inventory quantities based on item current in cursor
+void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier );
+// CHRISL: New function to display items stored in an LBENODE
+void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen );
+// CHRISL: New function to setup GSMInvData based on game options
+void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16 sWidth, INT16 sHeight, INT16 sX, INT16 sY);
+void InitInventoryOld();
+void InitInventoryNew();
+void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
+void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity);
 
 extern BOOLEAN		gfInItemDescBox;
 

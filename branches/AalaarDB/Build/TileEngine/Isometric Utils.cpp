@@ -188,7 +188,6 @@ UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ] =
 
 void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, INT16 *psScreenY )
 {
-	PERFORMANCE_MARKER
 	*psScreenX = ( 2 * sCellX ) - ( 2 * sCellY );
 	*psScreenY = sCellX + sCellY;
 
@@ -196,7 +195,6 @@ void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, 
 
 void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX, INT16 *psCellY )
 {
-	PERFORMANCE_MARKER
 	*psCellX = ( ( sScreenX + ( 2 * sScreenY ) ) / 4 ); 
 	*psCellY = ( ( 2 * sScreenY ) - sScreenX ) / 4; 
 }
@@ -207,7 +205,6 @@ void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX
 
 void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY )
 {
-	PERFORMANCE_MARKER
 	FLOAT		dScreenX, dScreenY;
 	
 	dScreenX = ( 2 * dCellX ) - ( 2 * dCellY );
@@ -219,7 +216,6 @@ void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScre
 
 void FloatFromScreenToCellCoordinates( FLOAT dScreenX, FLOAT dScreenY, FLOAT *pdCellX, FLOAT *pdCellY )
 {
-	PERFORMANCE_MARKER
 	FLOAT dCellX, dCellY;
 
 	dCellX = ( ( dScreenX + ( 2 * dScreenY ) ) / 4 ); 
@@ -232,7 +228,6 @@ void FloatFromScreenToCellCoordinates( FLOAT dScreenX, FLOAT dScreenY, FLOAT *pd
  
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 
 	if ( !GetMouseWorldCoords( &sWorldX, &sWorldY ) )
@@ -252,7 +247,6 @@ BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 
 BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCellX, INT16 *psCellY )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 
 	if ( !GetMouseWorldCoords( &sWorldX, &sWorldY ) )
@@ -274,7 +268,6 @@ BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCell
 
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 {
-	PERFORMANCE_MARKER
 	INT16 sOffsetX, sOffsetY;
 	INT16	sTempPosX_W, sTempPosY_W;
 	INT16 sStartPointX_W, sStartPointY_W;
@@ -324,7 +317,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 
 BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 {
-	PERFORMANCE_MARKER
 	INT16 sMouseX, sMouseY;
 
 	// Get grid position
@@ -348,14 +340,12 @@ BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 // (jonathanl) to save me having to cast all the previous code
 BOOLEAN GetMouseMapPos( INT16	*psMapPos )
 {
-	PERFORMANCE_MARKER
 	return	GetMouseMapPos( (INT16 *)psMapPos );
 }
 #endif
 
 BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
 {
-	PERFORMANCE_MARKER
 	INT16				sWorldX, sWorldY;
 	static				INT16	sSameCursorPos;
 	static				UINT32	uiOldFrameNumber = 99999;
@@ -395,7 +385,6 @@ BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
 
 BOOLEAN ConvertMapPosToWorldTileCenter( INT16 sMapPos, INT16 *psXPos, INT16 *psYPos )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sCellX, sCellY;
 
@@ -416,7 +405,6 @@ BOOLEAN ConvertMapPosToWorldTileCenter( INT16 sMapPos, INT16 *psXPos, INT16 *psY
 
 void GetScreenXYWorldCoords( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldX, INT16 *psWorldY )
 {
-	PERFORMANCE_MARKER
 	INT16 sOffsetX, sOffsetY;
 	INT16	sTempPosX_W, sTempPosY_W;
 	INT16 sStartPointX_W, sStartPointY_W;
@@ -442,7 +430,6 @@ void GetScreenXYWorldCoords( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldX, IN
  
 void GetScreenXYWorldCell( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldCellX, INT16 *psWorldCellY )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 
 	GetScreenXYWorldCoords( sScreenX, sScreenY, &sWorldX, &sWorldY );
@@ -456,7 +443,6 @@ void GetScreenXYWorldCell( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldCellX, 
 
 void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos )
 {
-	PERFORMANCE_MARKER
 	INT16				sWorldX, sWorldY;
 
 	GetScreenXYWorldCell( sScreenX, sScreenY, &sWorldX, &sWorldY );
@@ -467,7 +453,6 @@ void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos )
 
 void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *psWorldScreenX, INT16 *psWorldScreenY )
 {
-	PERFORMANCE_MARKER
 	INT16 sScreenCenterX, sScreenCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
 	
@@ -492,7 +477,6 @@ void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *ps
 
 void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, INT16 sWorldScreenX, INT16 sWorldScreenY )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldCenterX, sWorldCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
 	
@@ -518,7 +502,6 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 {
-	PERFORMANCE_MARKER
  INT16 sMod,sPropMod;
 
  // get modulas of our origin
@@ -555,7 +538,6 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 
 INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 {
-	PERFORMANCE_MARKER
  INT16 sProposedGridno = sGridno + sDirInc;
 
  // now check for out-of-bounds 
@@ -569,7 +551,6 @@ INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 
 INT16 DirectionInc(INT16 sDirection)
 {
-	PERFORMANCE_MARKER
  if ((sDirection < 0) || (sDirection > 7))
 	{
 
@@ -587,7 +568,6 @@ INT16 DirectionInc(INT16 sDirection)
 
 BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY)
 {
-	PERFORMANCE_MARKER
 INT16 sDeltaCellX, sDeltaCellY;
 INT16 sDeltaScreenX, sDeltaScreenY;
 
@@ -605,14 +585,12 @@ INT16 sDeltaScreenX, sDeltaScreenY;
 
 void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
-	PERFORMANCE_MARKER
 	*sYPos = sGridNo / WORLD_COLS;
 	*sXPos = ( sGridNo - ( *sYPos * WORLD_COLS ) );
 }
 
 void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
-	PERFORMANCE_MARKER
 	*sYPos = ( sGridNo / WORLD_COLS );
 	*sXPos = sGridNo - ( *sYPos * WORLD_COLS );
 
@@ -622,7 +600,6 @@ void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 
 void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {
-	PERFORMANCE_MARKER
 	*sYPos = ( sGridNo / WORLD_COLS );
 	*sXPos = ( sGridNo - ( *sYPos * WORLD_COLS ) );
 
@@ -632,7 +609,6 @@ void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 {
-	PERFORMANCE_MARKER
 	INT32					uiDist;
 	INT16					sXPos, sYPos, sXPos2, sYPos2;
 
@@ -649,7 +625,6 @@ INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 
 INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 {
-	PERFORMANCE_MARKER
 	INT16					sXPos, sYPos, sXPos2, sYPos2;
 
 	// Convert our grid-not into an XY
@@ -664,7 +639,6 @@ INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 
 BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect )
 {
-	PERFORMANCE_MARKER
 	if ( (sXPos >= pRect->iLeft) && (sXPos <= pRect->iRight) && (sYPos >= pRect->iTop) && (sYPos <= pRect->iBottom) )
 	{
 		return( TRUE );
@@ -677,7 +651,6 @@ BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect )
 
 BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRect, INT16 *sXRel, INT16 *sYRel )
 {
-	PERFORMANCE_MARKER
 	if ( (sXPos >= pRect->iLeft) && (sXPos <= pRect->iRight) && (sYPos >= pRect->iTop) && (sYPos <= pRect->iBottom) )
 	{
 		(*sXRel) = pRect->iLeft - sXPos;
@@ -694,7 +667,6 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 
 INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	PERFORMANCE_MARKER
 	INT16 sRows,sCols,sResult;
 
 	sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
@@ -711,7 +683,6 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 
 INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	PERFORMANCE_MARKER
  INT16 sRows,sCols;
 
  sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
@@ -733,7 +704,6 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 
 INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 )
 {
-	PERFORMANCE_MARKER
 	INT16 sDirection;
 	INT16 sNumTurns = 0;
 	
@@ -777,7 +747,6 @@ INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 )
 
 BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
-	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sNewGridNo;
 	BOOLEAN		fFound = FALSE;
@@ -827,7 +796,6 @@ BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDi
 
 BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
-	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sNewGridNo;
 	BOOLEAN		fFound = FALSE;
@@ -875,7 +843,6 @@ BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir,
 
 INT16 QuickestDirection(INT16 origin, INT16 dest)
 {
-	PERFORMANCE_MARKER
  INT16 v1,v2;
 
  if (origin==dest)
@@ -907,7 +874,6 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
 
 INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 {
-	PERFORMANCE_MARKER
  INT16 v1,v2;
 
  if (origin==dest)
@@ -986,7 +952,6 @@ INT16 MapY( INT16 sGridNo )
 
 BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX;
 	INT16 sWorldY;
 	INT16	sXMapPos, sYMapPos;
@@ -1012,7 +977,6 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 // mostly due to UI bar that comes down....
 BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX;
 	INT16 sWorldY;
 	INT16	sXMapPos, sYMapPos;
@@ -1035,7 +999,6 @@ BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo )
 
 BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 {
-	PERFORMANCE_MARKER
 	INT8		bDir;
 
 	// check NE, SE, SW, NW because of tilt of isometric display
@@ -1055,7 +1018,6 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 
 BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
 {
-	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;
 	BOOLEAN		fFound = FALSE;
@@ -1110,7 +1072,6 @@ BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStar
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo()
 {
-	PERFORMANCE_MARKER
 	INT32 iMapXPos, iMapYPos, iMapIndex;
 	do
 	{

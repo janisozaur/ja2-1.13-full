@@ -113,7 +113,6 @@ extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndRead
 
 BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	EV_S_FIREWEAPON			SFireWeapon;
 
 	UINT16				sNewAniFrame, anAniFrame;	
@@ -169,7 +168,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			{
 				pSoldier->bBreathCollapsed = FALSE;
 			}
-			else if ( pSoldier->stats.bLife == 0 )
+			else if ( pSoldier->bLife == 0 )
 			{
 				// Death takes precedence...
 				pSoldier->bBreathCollapsed = FALSE;
@@ -181,7 +180,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			else
 			{
 				// Wait here until we are free....
-				if ( !pSoldier->flags.fInNonintAnim )
+				if ( !pSoldier->fInNonintAnim )
 				{
 					// UNset UI
 					UnSetUIBusy( pSoldier->ubID );
@@ -201,7 +200,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 			// Adjust / set true ani frame
 			// Use -1 because ani files are 1-based, these are 0-based
-			pSoldier->ConvertAniCodeToAniFrame( (INT16)( sNewAniFrame - 1 ) );
+			ConvertAniCodeToAniFrame( pSoldier, (INT16)( sNewAniFrame - 1 ) );
 
 			// Adjust frame control pos, and try again
 			pSoldier->usAniCode++;
@@ -215,7 +214,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 402:
 
 				// DO NOT MOVE FOR THIS FRAME
-				pSoldier->flags.fPausedMove = TRUE;
+				pSoldier->fPausedMove = TRUE;
 				break;
 
 			case 403:
@@ -245,7 +244,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				}
 				else
 				{
-					pSoldier->SetSoldierHeight( (FLOAT)( pSoldier->sHeightAdjustment + 3 ) );
+					SetSoldierHeight( pSoldier, (FLOAT)( pSoldier->sHeightAdjustment + 3 ) );
 				}
 				break;
 
@@ -260,22 +259,22 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
 					ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
-					pSoldier->EVENT_SetSoldierPosition( (FLOAT)sXPos, (FLOAT)sYPos );
+					EVENT_SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 				}
 				// Move two CC directions
-				pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->bDirection ] );
+				EVENT_SetSoldierDirection( pSoldier, gTwoCCDirection[ pSoldier->bDirection ] );
 
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 				// Set desired anim height!
 				pSoldier->ubDesiredHeight = ANIM_CROUCH;
 
 				// Madd
-				usUIMovementMode = pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
+				usUIMovementMode = GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 				pSoldier->usUIMovementMode = usUIMovementMode;
 
 				// Move merc up specific height
-				pSoldier->SetSoldierHeight( (FLOAT)50 );
+				SetSoldierHeight( pSoldier, (FLOAT)50 );
 
 				// ATE: Change interface level.....
 				// CJC: only if we are a player merc
@@ -312,24 +311,24 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 409:
 
 				//CODE: MOVE DOWN
-				pSoldier->SetSoldierHeight( (FLOAT)( pSoldier->sHeightAdjustment - 2 ) );
+				SetSoldierHeight( pSoldier, (FLOAT)( pSoldier->sHeightAdjustment - 2 ) );
 				break;
 
 			case 410:
 
 				// Move merc down specific height
-				pSoldier->SetSoldierHeight( (FLOAT)0 );
+				SetSoldierHeight( pSoldier, (FLOAT)0 );
 				break;
 
 			case 411:
 
 				// CODE: SPECIALMOVE CLIMB DOWN EVENT
 				// Move two C directions
-				pSoldier->EVENT_SetSoldierDirection( gTwoCDirection[ pSoldier->bDirection ] );
+				EVENT_SetSoldierDirection( pSoldier, gTwoCDirection[ pSoldier->bDirection ] );
 
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 				// Adjust height
-				pSoldier->SetSoldierHeight( (FLOAT)gClimbDownRoofStartDist[ pSoldier->ubBodyType ] );
+				SetSoldierHeight( pSoldier, (FLOAT)gClimbDownRoofStartDist[ pSoldier->ubBodyType ] );
 				// Adjust position
 				MoveMercFacingDirection( pSoldier , TRUE, (FLOAT)3.5 );
 				break;
@@ -415,7 +414,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				//	PlayJA2Sample( (UINT8)( BULLET_IMPACT_1 + Random(3) ), RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
 
 				// PLAY RANDOM GETTING HIT SOUND
-				//	pSoldier->DoMercBattleSound( BATTLE_SOUND_HIT1 );
+				//	DoMercBattleSound( pSoldier, BATTLE_SOUND_HIT1 );
 
 				break;
 
@@ -432,7 +431,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// JUMP TO ANOTHER ANIMATION ( BLOOD ) IF WE WANT BLOOD
 				uiJumpAddress = pSoldier->usAnimState;
-				pSoldier->ChangeSoldierState( FLYBACK_HIT_BLOOD_STAND, 0, FALSE );
+				ChangeSoldierState( pSoldier, FLYBACK_HIT_BLOOD_STAND, 0, FALSE );
 				return( TRUE );
 				break;
 
@@ -459,7 +458,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( anAniFrame == 435 )
 					{
 						// START PROCESSING HERE
-						pSoldier->ChangeSoldierState( (UINT16)uiJumpAddress, pSoldier->usAniCode, FALSE );
+						ChangeSoldierState( pSoldier, (UINT16)uiJumpAddress, pSoldier->usAniCode, FALSE );
 						return( TRUE );
 					}
 					// Adjust frame control pos, and try again
@@ -472,7 +471,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( anAniFrame == 999 )
 				{
 					// Fail jump, re-load old anim
-					pSoldier->ChangeSoldierState( usOldAnimState, 0, FALSE );
+					ChangeSoldierState( pSoldier, usOldAnimState, 0, FALSE );
 					return( TRUE );
 				}
 				break;
@@ -489,19 +488,19 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				pSoldier->EVENT_SetSoldierDirection(	gOppositeDirection[ pSoldier->bDirection ] );
 				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
 
-				pSoldier->ChangeSoldierState( GETUP_FROM_ROLLOVER, 0 , FALSE );
+				ChangeSoldierState( pSoldier, GETUP_FROM_ROLLOVER, 0 , FALSE );
 				return( TRUE );
 
 			case 438:
 
 				//CODE: START HOLD FLASH 
-				pSoldier->flags.fForceShade = TRUE;
+				pSoldier->fForceShade = TRUE;
 				break;
 
 			case 439:
 
 				//CODE: END HOLD FLASH 
-				pSoldier->flags.fForceShade = FALSE;
+				pSoldier->fForceShade = FALSE;
 				break;
 
 			case 440:
@@ -513,7 +512,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->usAnimState == CHARIOTS_OF_FIRE ||
 						pSoldier->usAnimState == BODYEXPLODING )
 					{
-						SoundStop( pSoldier->aiData.uiPendingActionData1 );
+						SoundStop( pSoldier->uiPendingActionData1 );
 					}
 
 
@@ -537,7 +536,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					break;
 				}
 
-				if ( !pSoldier->flags.fMuzzleFlash )
+				if ( !pSoldier->fMuzzleFlash )
 				{
 					break;
 				}
@@ -571,7 +570,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 442:
 
 				//CODE: FOR A NON-INTERRUPTABLE SCRIPT - SIGNAL DONE
-				pSoldier->flags.fInNonintAnim = FALSE;
+				pSoldier->fInNonintAnim = FALSE;
 
 				// ATE: if it's the begin cower animation, unset ui, cause it could
 				// be from player changin stance
@@ -609,7 +608,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				pSoldier->EVENT_InternalSetSoldierPosition( (FLOAT) sX, (FLOAT) sY, FALSE, FALSE, FALSE );
 				pSoldier->EVENT_SetSoldierDirection(	gTwoCDirection[ pSoldier->bDirection ] );
 				pSoldier->sZLevelOverride = -1;
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 
 				if ( gTacticalStatus.bBoxingState == BOXING_WAITING_FOR_PLAYER || gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING )
@@ -617,9 +616,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					BoxingMovementCheck( pSoldier );
 				}
 
-				if ( SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->pathing.bLevel ))
+				if ( SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->bLevel ))
 				{
-					pSoldier->EVENT_StopMerc( pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
 					return( TRUE );	
 				}
 
@@ -628,21 +627,22 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				//if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 				// This has to be here to make guys continue along fence path
 #if 0
-				if ( pSoldier->sGridNo == pSoldier->pathing.sFinalDestination )
+				if ( pSoldier->sGridNo == pSoldier->sFinalDestination )
 				{
 					if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != gAnimControl[ pSoldier->usUIMovementMode ].ubEndHeight )
 					{
 						// Goto Stance...
-						pSoldier->flags.fDontChargeAPsForStanceChange = TRUE;
-						pSoldier->ChangeSoldierStance( gAnimControl[ pSoldier->usUIMovementMode ].ubEndHeight );
+						pSoldier->fDontChargeAPsForStanceChange = TRUE;
+						ChangeSoldierStance( pSoldier, gAnimControl[ pSoldier->usUIMovementMode ].ubEndHeight );
 						return( TRUE );
 					}
 					else
 					{
-						//pSoldier->SoldierGotoStationaryStance( );
+						//SoldierGotoStationaryStance( pSoldier );
 
 						// Set UI Busy
 						UnSetUIBusy( pSoldier->ubID );
+
 						//return( TRUE );
 					}
 				}
@@ -672,13 +672,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 446:
 
 				// CODE: Turn pause move flag on
-				pSoldier->flags.uiStatusFlags |= SOLDIER_PAUSEANIMOVE;
+				pSoldier->uiStatusFlags |= SOLDIER_PAUSEANIMOVE;
 				break;
 
 			case 447:
 
 				// TRY TO FALL!!!
-				if ( pSoldier->flags.fTryingToFall )
+				if ( pSoldier ->fTryingToFall )
 				{			
 					INT16 sLastAniFrame;
 
@@ -686,15 +686,15 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// FIRST GRIDNO
 					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
-					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
+					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 					{
 						// SECOND GRIDNO
 						// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
-						// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
+						// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 						{
 							// ALL'S OK HERE...
-							pSoldier->flags.fTryingToFall = FALSE;
+							pSoldier->fTryingToFall = FALSE;
 							break;
 						}
 					}
@@ -702,7 +702,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// IF HERE, INCREMENT DIRECTION
 					// ATE: Added Feb1 - can be either direction....
-					if ( pSoldier->flags.fFallClockwise )
+					if ( pSoldier->fFallClockwise )
 					{
 						pSoldier->EVENT_SetSoldierDirection(	gOneCDirection[ pSoldier->bDirection ] );
 					}
@@ -710,14 +710,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						pSoldier->EVENT_SetSoldierDirection(	gOneCCDirection[ pSoldier->bDirection ] );
 					}
-					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+					EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 					sLastAniFrame = gusAnimInst[ pSoldier->usAnimState ][ ( pSoldier->usAniCode - 2 ) ];
-					pSoldier->ConvertAniCodeToAniFrame( (INT16)( sLastAniFrame ) );
+					ConvertAniCodeToAniFrame( pSoldier, (INT16)( sLastAniFrame ) );
 
 					if ( pSoldier->bDirection == pSoldier->bStartFallDir )
 					{
 						// GO FORWARD HERE...
-						pSoldier->flags.fTryingToFall = FALSE;
+						pSoldier ->fTryingToFall = FALSE;
 						break;;
 					}
 					// IF HERE, RETURN SO WE DONOT INCREMENT DIR
@@ -793,13 +793,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				{
 					if(pSoldier->bDoAutofire) //reset the autofire cursor after firing
 					{
-						pSoldier->flags.autofireLastStep = FALSE;
+						pSoldier->autofireLastStep = FALSE;
 						pSoldier->bDoAutofire = 1;
 					}
 
-					pSoldier->flags.fDoSpread = FALSE;
+					pSoldier->fDoSpread = FALSE;
 					pSoldier->bDoBurst = 1;
-					// pSoldier->flags.fBurstCompleted = TRUE;
+					// pSoldier->fBurstCompleted = TRUE;
 					if ( fFreeUpAttacker )
 					{
 						// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - aborting start of attack") );
@@ -823,22 +823,22 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// we probably wouldn't need this special case code.
 					if ( AM_A_ROBOT( pSoldier ) )
 					{
-						pSoldier->ChangeSoldierState( STANDING, 0 , FALSE );
+						ChangeSoldierState( pSoldier, STANDING, 0 , FALSE );
 					}
 					else
 					{
 						switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 						{
 						case ANIM_STAND:
-							pSoldier->ChangeSoldierState( AIM_RIFLE_STAND, 0 , FALSE );
+							ChangeSoldierState( pSoldier, AIM_RIFLE_STAND, 0 , FALSE );
 							break;
 
 						case ANIM_PRONE:
-							pSoldier->ChangeSoldierState( AIM_RIFLE_PRONE, 0 , FALSE );
+							ChangeSoldierState( pSoldier, AIM_RIFLE_PRONE, 0 , FALSE );
 							break;
 
 						case ANIM_CROUCH:
-							pSoldier->ChangeSoldierState( AIM_RIFLE_CROUCH, 0 , FALSE );
+							ChangeSoldierState( pSoldier, AIM_RIFLE_CROUCH, 0 , FALSE );
 							break;
 
 						}
@@ -847,12 +847,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				}
 
 				// MOVETO CURRENT SPREAD LOCATION
-				if ( pSoldier->flags.fDoSpread )
+				if ( pSoldier->fDoSpread )
 				{
-					if ( pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] != 0 )
+					if ( pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] != 0 )
 					{
-						pSoldier->EVENT_SetSoldierDirection( (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, pSoldier->sSpreadLocations[ pSoldier->flags.fDoSpread - 1 ] ) );
-						pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+						EVENT_SetSoldierDirection( pSoldier, (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, pSoldier->sSpreadLocations[ pSoldier->fDoSpread - 1 ] ) );
+						EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 					}
 				}
 				break;
@@ -860,9 +860,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 449:
 
 				//CODE: FINISH BURST
-				pSoldier->flags.fDoSpread = FALSE;
+				pSoldier->fDoSpread = FALSE;
 				pSoldier->bDoBurst = 1;
-				//				pSoldier->flags.fBurstCompleted = TRUE;
+				//				pSoldier->fBurstCompleted = TRUE;
 				break;
 
 			case 450:
@@ -921,11 +921,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Move merc up
 				if ( pSoldier->bDirection == NORTH )
 				{
-					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
+					SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
 				else
 				{
-					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
+					SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment + gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
 				break;
 
@@ -935,7 +935,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				MoveMercFacingDirection( pSoldier, FALSE, (FLOAT)gClimbUpRoofLATDist[ pSoldier->ubBodyType ] );
 
 				// MOVE DOWN SOME VALUE TOO!
-				pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment - gClimbUpRoofDistGoingLower[ pSoldier->ubBodyType ] ) );
+				SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - gClimbUpRoofDistGoingLower[ pSoldier->ubBodyType ] ) );
 
 				break;
 
@@ -945,11 +945,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// Move merc DOWN
 				if ( pSoldier->bDirection == NORTH )
 				{
-					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
+					SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
 				else
 				{
-					pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
+					SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - gClimbUpRoofDist[ pSoldier->ubBodyType ] ) );
 				}
 				break;
 
@@ -965,7 +965,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				pSoldier->ubAttackingHand = HANDPOS;
 				pSoldier->usAttackingWeapon = pSoldier->inv[pSoldier->ubAttackingHand].usItem;
 				// Adjust fReloading to FALSE
-				pSoldier->flags.fReloading = FALSE;					
+				pSoldier->fReloading = FALSE;					
 				break;
 
 			case 458:
@@ -974,7 +974,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				pSoldier->ubAttackingHand = SECONDHANDPOS;
 				pSoldier->usAttackingWeapon = pSoldier->inv[pSoldier->ubAttackingHand].usItem;
 				// Adjust fReloading to FALSE
-				pSoldier->flags.fReloading = FALSE;
+				pSoldier->fReloading = FALSE;
 				break;
 
 			case 460:
@@ -1005,7 +1005,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Update UI
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
-					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
+					MemFree( pSoldier->pTempObject );
+					pSoldier->pTempObject = NULL;
 
 					MemFree( pSoldier->pThrowParams );
 					pSoldier->pThrowParams = NULL;
@@ -1015,8 +1016,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 462:
 
 				// CODE: MOVE UP FROM CLIFF CLIMB
-				pSoldier->aiData.dHeightAdjustment += (float)2.1;
-				pSoldier->sHeightAdjustment = (INT16)pSoldier->aiData.dHeightAdjustment;
+				pSoldier->dHeightAdjustment += (float)2.1;
+				pSoldier->sHeightAdjustment = (INT16)pSoldier->dHeightAdjustment;
 				// Move over some...
 				//MoveMercFacingDirection( pSoldier , FALSE, (FLOAT)0.5 );
 				break;
@@ -1031,8 +1032,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 464:
 
 				// CODE: END CLIFF CLIMB
-				pSoldier->aiData.dHeightAdjustment = (float)0;
-				pSoldier->sHeightAdjustment = (INT16)pSoldier->aiData.dHeightAdjustment;
+				pSoldier->dHeightAdjustment = (float)0;
+				pSoldier->sHeightAdjustment = (INT16)pSoldier->dHeightAdjustment;
 
 				// Set new gridno
 				{
@@ -1045,15 +1046,15 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					ConvertGridNoToCenterCellXY( sTempGridNo, &sNewX, &sNewY );
 
 					// Set position
-					pSoldier->EVENT_SetSoldierPosition( sNewX, sNewY );
+					EVENT_SetSoldierPosition( pSoldier, sNewX, sNewY );
 
 					// Move two CC directions
-					pSoldier->EVENT_SetSoldierDirection( gTwoCCDirection[ pSoldier->bDirection ] );
-					pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+					EVENT_SetSoldierDirection( pSoldier, gTwoCCDirection[ pSoldier->bDirection ] );
+					EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 					// Set desired anim height!
 					pSoldier->ubDesiredHeight = ANIM_CROUCH;
-					pSoldier->pathing.sFinalDestination = pSoldier->sGridNo;
+					pSoldier->sFinalDestination = pSoldier->sGridNo;
 
 				}
 				break;
@@ -1061,7 +1062,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 465:
 
 				// CODE: SET GUY TO LIFE OF 0
-				pSoldier->stats.bLife = 0;
+				pSoldier->bLife = 0;
 				break;
 
 			case 466:
@@ -1076,18 +1077,18 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( sDiff > 0 )
 						{
 							// Adjust!
-							pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment - 2 ) );
+							SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment - 2 ) );
 						}
 						else
 						{
 							// Adjust!
-							pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->aiData.dHeightAdjustment + 2 ) );
+							SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->dHeightAdjustment + 2 ) );
 						}
 					}
 					else
 					{
 						// Adjust!
-						pSoldier->SetSoldierHeight( (FLOAT)(pSoldier->sDesiredHeight) );
+						SetSoldierHeight( pSoldier, (FLOAT)(pSoldier->sDesiredHeight) );
 					}
 				}
 				else
@@ -1095,7 +1096,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Goto eating animation
 					if ( pSoldier->sDesiredHeight == 0 )
 					{
-						pSoldier->ChangeSoldierState( CROW_EAT, 0 , FALSE );							
+						ChangeSoldierState( pSoldier, CROW_EAT, 0 , FALSE );							
 					}
 					else
 					{
@@ -1110,8 +1111,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 467:
 
 				///CODE: FOR HELIDROP, SET DIRECTION
-				pSoldier->EVENT_SetSoldierDirection( EAST );
-				pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+				EVENT_SetSoldierDirection( pSoldier, EAST );
+				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 				gfIngagedInDrop = FALSE;
 
@@ -1125,7 +1126,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				HandleMercArrivesQuotes( pSoldier );
 
 				// Find a path to it!
-				pSoldier->EVENT_GetNewSoldierPath( sNewGridNo, WALKING );		
+				EVENT_GetNewSoldierPath( pSoldier, sNewGridNo, WALKING );		
 
 				return( TRUE );
 				break;
@@ -1137,15 +1138,15 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					BOOLEAN fNPCPunch = FALSE;
 
 					// ATE: Put some code in for NPC punches...
-					if ( pSoldier->flags.uiStatusFlags & SOLDIER_NPC_DOING_PUNCH )
+					if ( pSoldier->uiStatusFlags & SOLDIER_NPC_DOING_PUNCH )
 					{
 						fNPCPunch = TRUE;
 
 						// Turn off
-						pSoldier->flags.uiStatusFlags &= (~SOLDIER_NPC_DOING_PUNCH );
+						pSoldier->uiStatusFlags &= (~SOLDIER_NPC_DOING_PUNCH );
 
 						// Trigger approach...
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->aiData.uiPendingActionData4, FALSE );
+						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
 					}
 
 
@@ -1165,12 +1166,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							if ( fNPCPunch )
 							{
-								pSoldier->ChangeSoldierStance( ANIM_STAND );
+								ChangeSoldierStance( pSoldier, ANIM_STAND );
 								return( TRUE );
 							}
 							else
 							{
-								pSoldier->ChangeSoldierState( CROUCHING, 0, FALSE );
+								ChangeSoldierState( pSoldier, CROUCHING, 0, FALSE );
 								return( TRUE );
 							}
 						}
@@ -1178,12 +1179,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							if ( fMartialArtist && !AreInMeanwhile( ) )
 							{
-								pSoldier->ChangeSoldierState( NINJA_BREATH, 0, FALSE );
+								ChangeSoldierState( pSoldier, NINJA_BREATH, 0, FALSE );
 								return( TRUE );
 							}
 							else
 							{
-								pSoldier->ChangeSoldierState( PUNCH_BREATH, 0, FALSE );
+								ChangeSoldierState( pSoldier, PUNCH_BREATH, 0, FALSE );
 								return( TRUE );
 							}
 						}
@@ -1194,7 +1195,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 469:
 
 				// CODE: Begin martial artist attack
-				pSoldier->DoNinjaAttack( );
+				DoNinjaAttack( pSoldier );
 				return( TRUE );
 				break;
 
@@ -1234,7 +1235,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 471:
 
 				// CODE: Turn pause move flag off
-				pSoldier->flags.uiStatusFlags &= (~SOLDIER_PAUSEANIMOVE);
+				pSoldier->uiStatusFlags &= (~SOLDIER_PAUSEANIMOVE);
 				break;
 
 			case 472:
@@ -1244,17 +1245,17 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// Save old flag, then reset. If we do nothing special here, at least go back
 					// to aim if we were.
-					fGoBackToAimAfterHit = pSoldier->flags.fGoBackToAimAfterHit;
-					pSoldier->flags.fGoBackToAimAfterHit = FALSE;
+					fGoBackToAimAfterHit = pSoldier->fGoBackToAimAfterHit;
+					pSoldier->fGoBackToAimAfterHit = FALSE;
 
-					if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
+					if ( !( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
 					{
 						switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 						{
 						case ANIM_STAND:
 
 							// OK, we can do some cool things here - first is to make guy walkl back a bit...
-							//	pSoldier->ChangeSoldierState( STANDING_HIT_BEGINCROUCHDOWN, 0, FALSE );
+							//	ChangeSoldierState( pSoldier, STANDING_HIT_BEGINCROUCHDOWN, 0, FALSE );
 							//	return( TRUE );
 							break;
 
@@ -1264,9 +1265,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CODE: HANDLE ANY RANDOM HIT VARIATIONS WE WISH TO DO.....
 					if ( fGoBackToAimAfterHit )
 					{
-						if ( pSoldier->stats.bLife >= OKLIFE )
+						if ( pSoldier->bLife >= OKLIFE )
 						{
-							pSoldier->InternalSoldierReadyWeapon(pSoldier->bDirection, FALSE );
+							InternalSoldierReadyWeapon( pSoldier, pSoldier->bDirection, FALSE );
 						}
 						return( TRUE );
 					}
@@ -1286,14 +1287,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 474:
 
 				// CODE: GETUP FROM SLEEP
-				pSoldier->ChangeSoldierStance( ANIM_STAND );
+				ChangeSoldierStance( pSoldier, ANIM_STAND );
 				return( TRUE );
 
 			case 475:
 
 				// CODE: END CLIMB DOWN ROOF
 				pSoldier->ubDesiredHeight = ANIM_STAND;
-				pSoldier->pathing.sFinalDestination = pSoldier->sGridNo;
+				pSoldier->sFinalDestination = pSoldier->sGridNo;
 
 				// re-enable sight
 				gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
@@ -1322,7 +1323,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 476:
 
 				// CODE: GOTO PREVIOUS ANIMATION
-				pSoldier->ChangeSoldierState( ( pSoldier->aiData.sPendingActionData2 ), (UINT8)( pSoldier->aiData.uiPendingActionData1 + 1 ), FALSE );
+				ChangeSoldierState( pSoldier, ( pSoldier->sPendingActionData2 ), (UINT8)( pSoldier->uiPendingActionData1 + 1 ), FALSE );
 				return( TRUE );
 				break;
 
@@ -1355,10 +1356,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->ubBodyType <= REGFEMALE )
 					{
 						// Secondly, don't if we are going to collapse
-						if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath > 0 && pSoldier->pathing.bLevel == 0 )
+						if ( pSoldier->bLife >= OKLIFE && pSoldier->bBreath > 0 && pSoldier->bLevel == 0 )
 						{
 							// Save old direction
-							pSoldier->aiData.uiPendingActionData1 = pSoldier->bDirection;
+							pSoldier->uiPendingActionData1 = pSoldier->bDirection;
 
 							// If we got a head shot...more chance of turning...
 							if ( pSoldier->ubHitLocation != AIM_SHOT_HEAD )
@@ -1381,8 +1382,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									bNewDirection = pSoldier->bDirection;
 								}
 
-								pSoldier->EVENT_SetSoldierDirection( bNewDirection );
-								pSoldier->EVENT_SetSoldierDesiredDirection( pSoldier->bDirection );
+								EVENT_SetSoldierDirection( pSoldier, bNewDirection );
+								EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 							}
 							else
@@ -1393,7 +1394,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								if ( uiChance < 50 ) 
 								{
 									// OK, pick a larger direction to goto....
-									pSoldier->flags.uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
+									pSoldier->uiStatusFlags |= SOLDIER_TURNINGFROMHIT;
 									// This becomes an attack busy situation
 									gTacticalStatus.ubAttackBusyCount++;
 									DebugAttackBusy( String( "Soldier turning from a hit.	Increasing attack busy.	Now %d\n", gTacticalStatus.ubAttackBusyCount ) );
@@ -1412,7 +1413,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 										bNewDirection = gOneCCDirection[ bNewDirection ];
 									}
 
-									pSoldier->EVENT_SetSoldierDesiredDirection( bNewDirection );
+									EVENT_SetSoldierDesiredDirection( pSoldier, bNewDirection );
 								}						
 							}
 						}							
@@ -1426,12 +1427,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( pSoldier->ubBodyType <= REGFEMALE )
 				{
 					// Secondly, don't if we are going to collapse
-					//if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath > 0 )
+					//if ( pSoldier->bLife >= OKLIFE && pSoldier->bBreath > 0 )
 					//{
-					///	if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
+					///	if ( !( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
 					//	{
-					///		pSoldier->bDirection				= (INT8)pSoldier->aiData.uiPendingActionData1;
-					//		pSoldier->pathing.bDesiredDirection = (INT8)pSoldier->aiData.uiPendingActionData1;
+					///		pSoldier->bDirection				= (INT8)pSoldier->uiPendingActionData1;
+					//		pSoldier->bDesiredDirection = (INT8)pSoldier->uiPendingActionData1;
 					//	}
 					//}
 				}
@@ -1447,7 +1448,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				//ReleaseSoldiersAttacker( pSoldier );
 
 				//FREEUP GETTING HIT FLAG
-				//pSoldier->flags.fGettingHit = FALSE;
+				//pSoldier->fGettingHit = FALSE;
 				break;
 
 			case 481:
@@ -1465,20 +1466,20 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 483:
 
 				// CODE: HANDLE DROP BOMB...
-				HandleSoldierDropBomb( pSoldier, pSoldier->aiData.sPendingActionData2 );
+				HandleSoldierDropBomb( pSoldier, pSoldier->sPendingActionData2 );
 				break;
 
 			case 484:
 
 				// CODE: HANDLE REMOTE...
-				HandleSoldierUseRemote( pSoldier, pSoldier->aiData.sPendingActionData2 );
+				HandleSoldierUseRemote( pSoldier, pSoldier->sPendingActionData2 );
 				break;
 
 			case 485:
 
 				// CODE: Try steal.....
 //				UnSetUIBusy( pSoldier->ubID);
-				UseHandToHand( pSoldier, pSoldier->aiData.sPendingActionData2, TRUE );
+				UseHandToHand( pSoldier, pSoldier->sPendingActionData2, TRUE );
 				//jackaians:
 				//if we are not waiting for the pickup menu to be displayed
 //				if (guiPendingOverrideEvent != G_GETTINGITEM)
@@ -1507,7 +1508,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 
 				//CODE: REMOVE GUY FRMO WORLD DUE TO EXPLOSION
-				//pSoldier->ChangeSoldierState( RAISE_RIFLE, 0 , FALSE );
+				//ChangeSoldierState( pSoldier, RAISE_RIFLE, 0 , FALSE );
 				//return( TRUE );
 				//Delete guy
 				//TacticalRemoveSoldier( pSoldier->ubID );
@@ -1527,7 +1528,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubWeaponClass != HANDGUNCLASS )
 				{
 				// RAISE
-				pSoldier->ChangeSoldierState( RAISE_RIFLE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, RAISE_RIFLE, 0 , FALSE );
 				return( TRUE );
 				}
 
@@ -1540,18 +1541,18 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 491:
 
 				// CODE: HANDLE RANDOM BREATH ANIMATION
-				//if ( pSoldier->stats.bLife > INJURED_CHANGE_THREASHOLD )
-				if ( pSoldier->stats.bLife >= OKLIFE )
+				//if ( pSoldier->bLife > INJURED_CHANGE_THREASHOLD )
+				if ( pSoldier->bLife >= OKLIFE )
 				{
 					// Increment time from last update
 					pSoldier->uiTimeOfLastRandomAction++;
 
-					if ( pSoldier->uiTimeOfLastRandomAction > TIME_FOR_RANDOM_ANIM_CHECK || pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD || GetDrunkLevel( pSoldier ) >= BORDERLINE )
+					if ( pSoldier->uiTimeOfLastRandomAction > TIME_FOR_RANDOM_ANIM_CHECK || pSoldier->bLife < INJURED_CHANGE_THREASHOLD || GetDrunkLevel( pSoldier ) >= BORDERLINE )
 					{
 						pSoldier->uiTimeOfLastRandomAction = 0;
 
 						// Don't do any in water!
-						if ( !pSoldier->MercInWater( ) )
+						if ( !MercInWater( pSoldier ) )
 						{
 							// OK, make a dice roll
 							ubDiceRoll = (UINT8)Random( 100 );
@@ -1588,13 +1589,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								if ( pAnimDef->sAnimID	!= 0 )
 								{
 									// If it's an injured animation and we are not in the threashold....
-									if ( ( pAnimDef->ubFlags & RANDOM_ANIM_INJURED ) && pSoldier->stats.bLife >= INJURED_CHANGE_THREASHOLD )
+									if ( ( pAnimDef->ubFlags & RANDOM_ANIM_INJURED ) && pSoldier->bLife >= INJURED_CHANGE_THREASHOLD )
 									{
 										continue;
 									}
 
 									// If we need to do an injured one, don't do any others...
-									if ( !( pAnimDef->ubFlags & RANDOM_ANIM_INJURED ) && pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
+									if ( !( pAnimDef->ubFlags & RANDOM_ANIM_INJURED ) && pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
 									{
 										continue;
 									}
@@ -1677,7 +1678,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 											}
 											else
 											{
-												pSoldier->ChangeSoldierState( pAnimDef->sAnimID, 0 , FALSE );
+												ChangeSoldierState( pSoldier, pAnimDef->sAnimID, 0 , FALSE );
 											}
 											return( TRUE );
 										}
@@ -1695,7 +1696,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				// SIGNAL DODGE!
 				// ATE: Only do if we're not inspecial case...
-				if ( !( pSoldier->flags.uiStatusFlags & SOLDIER_NPC_DOING_PUNCH ) )
+				if ( !( pSoldier->uiStatusFlags & SOLDIER_NPC_DOING_PUNCH ) )
 				{
 					SOLDIERTYPE *pTSoldier;
 					UINT32 uiMercFlags;
@@ -1709,12 +1710,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( IS_MERC_BODY_TYPE( pTSoldier ) )
 						{
 							// ONLY DODGE IF WE ARE SEEN
-							if ( pTSoldier->aiData.bOppList[ pSoldier->ubID ] != 0 || pTSoldier->bTeam == pSoldier->bTeam )
+							if ( pTSoldier->bOppList[ pSoldier->ubID ] != 0 || pTSoldier->bTeam == pSoldier->bTeam )
 							{
 								if ( gAnimControl[ pTSoldier->usAnimState ].ubHeight == ANIM_STAND )
 								{
 									// OK, stop merc....
-									pTSoldier->EVENT_StopMerc( pTSoldier->sGridNo, pTSoldier->bDirection );
+									EVENT_StopMerc( pTSoldier, pTSoldier->sGridNo, pTSoldier->bDirection );
 
 									if ( pTSoldier->bTeam != gbPlayerNum )
 									{
@@ -1722,10 +1723,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									}
 
 									// Turn towards the person!
-									pTSoldier->EVENT_SetSoldierDesiredDirection( GetDirectionFromGridNo( pSoldier->sGridNo, pTSoldier ) );
+									EVENT_SetSoldierDesiredDirection( pTSoldier, GetDirectionFromGridNo( pSoldier->sGridNo, pTSoldier ) );
 
 									// PLAY SOLDIER'S DODGE ANIMATION
-									pTSoldier->ChangeSoldierState( DODGE_ONE, 0 , FALSE );
+									ChangeSoldierState( pTSoldier, DODGE_ONE, 0 , FALSE );
 								}
 							}
 						}
@@ -1737,10 +1738,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				//CODE: PICKUP ITEM!
 				// CHECK IF THIS EVENT HAS BEEN SETUP
-				//if ( pSoldier->aiData.ubPendingAction == MERC_PICKUPITEM )
+				//if ( pSoldier->ubPendingAction == MERC_PICKUPITEM )
 				//{
 				// DROP ITEM
-				HandleSoldierPickupItem( pSoldier, pSoldier->aiData.uiPendingActionData1, (INT16)(pSoldier->aiData.uiPendingActionData4 ), pSoldier->aiData.bPendingActionData3 );
+				HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)(pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
 				// EVENT HAS BEEN HANDLED
 				pSoldier->aiData.ubPendingAction		= NO_PENDING_ACTION;
 
@@ -1755,7 +1756,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				//CODE: OPEN STRUCT!
 				// CHECK IF THIS EVENT HAS BEEN SETUP
-				//if ( pSoldier->aiData.ubPendingAction == MERC_OPENSTRUCT )
+				//if ( pSoldier->ubPendingAction == MERC_OPENSTRUCT )
 				//{
 				SoldierHandleInteractiveObject( pSoldier );
 
@@ -1771,7 +1772,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 			case 495:
 
-				if (pSoldier->aiData.bAction == AI_ACTION_UNLOCK_DOOR || (pSoldier->aiData.bAction == AI_ACTION_LOCK_DOOR && !(pSoldier->aiData.fAIFlags & AI_LOCK_DOOR_INCLUDES_CLOSE) ) )
+				if (pSoldier->bAction == AI_ACTION_UNLOCK_DOOR || (pSoldier->bAction == AI_ACTION_LOCK_DOOR && !(pSoldier->fAIFlags & AI_LOCK_DOOR_INCLUDES_CLOSE) ) )
 				{
 					// EVENT HAS BEEN HANDLED
 					pSoldier->aiData.ubPendingAction		= NO_PENDING_ACTION;
@@ -1781,7 +1782,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				else
 				{
 
-					pSoldier->aiData.fAIFlags &= ~(AI_LOCK_DOOR_INCLUDES_CLOSE);
+					pSoldier->fAIFlags &= ~(AI_LOCK_DOOR_INCLUDES_CLOSE);
 
 					pSoldier->ubDoorOpeningNoise = DoorOpeningNoise( pSoldier );
 
@@ -1792,7 +1793,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						InitOpplistForDoorOpening();
 
-						MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->pathing.bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING );
+						MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING );
 						//	gfDelayResolvingBestSighting = FALSE;
 
 						gubInterruptProvoker = pSoldier->ubID;
@@ -1812,14 +1813,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 			case 496:
 				// CODE: GOTO PREVIOUS ANIMATION
-				pSoldier->ChangeSoldierState( pSoldier->usOldAniState, pSoldier->sOldAniCode, FALSE );					
+				ChangeSoldierState( pSoldier, pSoldier->usOldAniState, pSoldier->sOldAniCode, FALSE );					
 				return( TRUE );
 
 			case 497:
 
 				// CODE: CHECK FOR UNCONSCIOUS OR DEATH
 				// IF 496 - GOTO PREVIOUS ANIMATION, OTHERWISE PAUSE ANIMATION
-				if ( pSoldier->stats.bLife == 0 )
+				if ( pSoldier->bLife == 0 )
 				{
 
 					//HandleSoldierDeath( pSoldier );
@@ -1829,8 +1830,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{				
 						if ( pSoldier->usAnimState != JFK_HITDEATH )
 						{
-							pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
-							pSoldier->flags.fDeadSoundPlayed = TRUE;
+							DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+							pSoldier->fDeadSoundPlayed = TRUE;
 						}
 					}
 
@@ -1840,61 +1841,61 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						switch( pSoldier->usAnimState )
 						{
 						case FLYBACK_HIT:
-							pSoldier->ChangeSoldierState( FLYBACK_HIT_DEATH, 0, FALSE );
+							ChangeSoldierState( pSoldier, FLYBACK_HIT_DEATH, 0, FALSE );
 							break;
 
 						case GENERIC_HIT_DEATHTWITCHNB:
 						case FALLFORWARD_FROMHIT_STAND:
 						case ENDFALLFORWARD_FROMHIT_CROUCH:
 
-							pSoldier->ChangeSoldierState( GENERIC_HIT_DEATH, 0, FALSE );
+							ChangeSoldierState( pSoldier, GENERIC_HIT_DEATH, 0, FALSE );
 							break;
 
 						case FALLBACK_HIT_DEATHTWITCHNB:
 						case FALLBACK_HIT_STAND:
-							pSoldier->ChangeSoldierState( FALLBACK_HIT_DEATH, 0, FALSE );
+							ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATH, 0, FALSE );
 							break;
 
 						case PRONE_HIT_DEATHTWITCHNB:
 						case PRONE_LAY_FROMHIT:
 
-							pSoldier->ChangeSoldierState( PRONE_HIT_DEATH, 0, FALSE );
+							ChangeSoldierState( pSoldier, PRONE_HIT_DEATH, 0, FALSE );
 							break;
 
 						case FALLOFF:
-							pSoldier->ChangeSoldierState( FALLOFF_DEATH, 0, FALSE );
+							ChangeSoldierState( pSoldier, FALLOFF_DEATH, 0, FALSE );
 							break;
 
 						case FALLFORWARD_ROOF:
-							pSoldier->ChangeSoldierState( FALLOFF_FORWARD_DEATH, 0, FALSE);
+							ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH, 0, FALSE);
 							break;
 
 						case ADULTMONSTER_DYING:
-							pSoldier->ChangeSoldierState( ADULTMONSTER_DYING_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, ADULTMONSTER_DYING_STOP, 0, FALSE);
 							break;
 
 						case LARVAE_DIE:
-							pSoldier->ChangeSoldierState( LARVAE_DIE_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, LARVAE_DIE_STOP, 0, FALSE);
 							break;
 
 						case QUEEN_DIE:
-							pSoldier->ChangeSoldierState( QUEEN_DIE_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, QUEEN_DIE_STOP, 0, FALSE);
 							break;
 
 						case INFANT_DIE:
-							pSoldier->ChangeSoldierState( INFANT_DIE_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, INFANT_DIE_STOP, 0, FALSE);
 							break;
 
 						case CRIPPLE_DIE:
-							pSoldier->ChangeSoldierState( CRIPPLE_DIE_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, CRIPPLE_DIE_STOP, 0, FALSE);
 							break;
 
 						case ROBOTNW_DIE:
-							pSoldier->ChangeSoldierState( ROBOTNW_DIE_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, ROBOTNW_DIE_STOP, 0, FALSE);
 							break;
 
 						case CRIPPLE_DIE_FLYBACK:
-							pSoldier->ChangeSoldierState( CRIPPLE_DIE_FLYBACK_STOP, 0, FALSE);
+							ChangeSoldierState( pSoldier, CRIPPLE_DIE_FLYBACK_STOP, 0, FALSE);
 							break;
 
 						default:
@@ -1938,7 +1939,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						gfPotentialTeamChangeDuringDeath = FALSE;
 
 						// FREEUP GETTING HIT FLAG
-						pSoldier->flags.fGettingHit = FALSE;
+						pSoldier->fGettingHit = FALSE;
 					}	
 
 					HandleCheckForDeathCommonCode( pSoldier );
@@ -1953,7 +1954,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// If we have a pending animation, play it, else continue
 				if ( pSoldier->usPendingAnimation != NO_PENDING_ANIMATION )
 				{
-					pSoldier->ChangeSoldierState( pSoldier->usPendingAnimation, 0, FALSE );
+					ChangeSoldierState( pSoldier, pSoldier->usPendingAnimation, 0, FALSE );
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 					return( TRUE );
 				}
@@ -1962,23 +1963,23 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				// JUMP TO NEXT STATIONARY ANIMATION ACCORDING TO HEIGHT
 			case 499:
 
-				if (!(pSoldier->flags.uiStatusFlags & SOLDIER_PC))
+				if (!(pSoldier->uiStatusFlags & SOLDIER_PC))
 				{
-					if ( pSoldier->aiData.bAction == AI_ACTION_PULL_TRIGGER )
+					if ( pSoldier->bAction == AI_ACTION_PULL_TRIGGER )
 					{
 						if ( pSoldier->usAnimState == AI_PULL_SWITCH && gTacticalStatus.ubAttackBusyCount == 0 && gubElementsOnExplosionQueue == 0 )
 						{
 							FreeUpNPCFromPendingAction( pSoldier );
 						}
 					}
-					else if ( pSoldier->aiData.bAction == AI_ACTION_PENDING_ACTION
-						|| pSoldier->aiData.bAction == AI_ACTION_OPEN_OR_CLOSE_DOOR
-						|| pSoldier->aiData.bAction == AI_ACTION_YELLOW_ALERT
-						|| pSoldier->aiData.bAction == AI_ACTION_RED_ALERT
-						|| pSoldier->aiData.bAction == AI_ACTION_PULL_TRIGGER
-						|| pSoldier->aiData.bAction == AI_ACTION_CREATURE_CALL
-						|| pSoldier->aiData.bAction == AI_ACTION_UNLOCK_DOOR
-						|| pSoldier->aiData.bAction == AI_ACTION_LOCK_DOOR	)
+					else if ( pSoldier->bAction == AI_ACTION_PENDING_ACTION
+						|| pSoldier->bAction == AI_ACTION_OPEN_OR_CLOSE_DOOR
+						|| pSoldier->bAction == AI_ACTION_YELLOW_ALERT
+						|| pSoldier->bAction == AI_ACTION_RED_ALERT
+						|| pSoldier->bAction == AI_ACTION_PULL_TRIGGER
+						|| pSoldier->bAction == AI_ACTION_CREATURE_CALL
+						|| pSoldier->bAction == AI_ACTION_UNLOCK_DOOR
+						|| pSoldier->bAction == AI_ACTION_LOCK_DOOR	)
 					{
 						if ( pSoldier->usAnimState == PICKUP_ITEM || pSoldier->usAnimState == ADJACENT_GET_ITEM || pSoldier->usAnimState == DROP_ITEM || pSoldier->usAnimState == END_OPEN_DOOR || pSoldier->usAnimState == END_OPEN_DOOR_CROUCHED || pSoldier->usAnimState == CLOSE_DOOR || pSoldier->usAnimState == MONSTER_UP || pSoldier->usAnimState == AI_RADIO || pSoldier->usAnimState == AI_CR_RADIO || pSoldier->usAnimState == END_OPENSTRUCT || pSoldier->usAnimState == END_OPENSTRUCT_CROUCHED || pSoldier->usAnimState == QUEEN_CALL )
 						{
@@ -1993,7 +1994,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( pSoldier->ubDesiredHeight == gAnimControl[ pSoldier->usAnimState ].ubEndHeight || pSoldier->ubDesiredHeight == NO_DESIRED_HEIGHT )
 				{			
 					// Adjust movement mode......
-					if ( pSoldier->bTeam == gbPlayerNum && !pSoldier->flags.fContinueMoveAfterStanceChange )
+					if ( pSoldier->bTeam == gbPlayerNum && !pSoldier->fContinueMoveAfterStanceChange )
 					{
 						usUIMovementMode =	pSoldier->GetMoveStateBasedOnStance( gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 
@@ -2012,14 +2013,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					pSoldier->ubDesiredHeight = NO_DESIRED_HEIGHT;
 
 					// 0verhaul:	This is moved to the animation state transition code to make sure it isn't sidestepped.
-					// if (pSoldier->flags.fChangingStanceDueToSuppression)
+					// if (pSoldier->fChangingStanceDueToSuppression)
 					// {
-					//	pSoldier->flags.fChangingStanceDueToSuppression = FALSE;
+					//	pSoldier->fChangingStanceDueToSuppression = FALSE;
 					//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - end of suppression stance change") );
 					//	ReduceAttackBusyCount( pSoldier->ubSuppressorID, FALSE );
 					// }
 
-					if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->flags.fTurningFromPronePosition != 3 ) && ( pSoldier->flags.fTurningFromPronePosition != 1 ) )
+					if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->fTurningFromPronePosition != 3 ) && ( pSoldier->fTurningFromPronePosition != 1 ) )
 					{
 						if ( gTacticalStatus.ubAttackBusyCount == 0 )
 						{
@@ -2032,7 +2033,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Check to see if we have changed stance and need to update visibility
 					if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STANCECHANGEANIM)
 					{
-						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && gTacticalStatus.ubAttackBusyCount == 0 && pSoldier->flags.fTurningFromPronePosition != 3 && pSoldier->flags.fTurningFromPronePosition != 1 )
+						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && gTacticalStatus.ubAttackBusyCount == 0 && pSoldier->fTurningFromPronePosition != 3 && pSoldier->fTurningFromPronePosition != 1 )
 						{
 							HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
 						}
@@ -2066,7 +2067,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							pSoldier->bEndDoorOpenCode = 2;
 
 							// yes..
-							pSoldier->EVENT_GetNewSoldierPath( pSoldier->pathing.sFinalDestination, pSoldier->usUIMovementMode );
+							EVENT_GetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode );
 
 							if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING ) ) )
 							{
@@ -2089,42 +2090,42 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						UINT16 usPendingAnimation = pSoldier->usPendingAnimation;
 
 						pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-						pSoldier->ChangeSoldierState( usPendingAnimation, 0, FALSE );
+						ChangeSoldierState( pSoldier, usPendingAnimation, 0, FALSE );
 						return( TRUE );
 					}
 
 					// Alrighty, do we wish to continue
-					if ( pSoldier->flags.fContinueMoveAfterStanceChange )
+					if ( pSoldier->fContinueMoveAfterStanceChange )
 					{
 						// OK, if the code is == 2, get the path and try to move....
-						if ( pSoldier->flags.fContinueMoveAfterStanceChange == 2 )
+						if ( pSoldier->fContinueMoveAfterStanceChange == 2 )
 						{
-							pSoldier->pathing.usPathIndex++;
+							pSoldier->usPathIndex++;
 
-							if ( pSoldier->pathing.usPathIndex > pSoldier->pathing.usPathDataSize )
+							if ( pSoldier->usPathIndex > pSoldier->usPathDataSize )
 							{
-								pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize;
+								pSoldier->usPathIndex = pSoldier->usPathDataSize;
 							}
 
-							if ( pSoldier->pathing.usPathIndex == pSoldier->pathing.usPathDataSize )
+							if ( pSoldier->usPathIndex == pSoldier->usPathDataSize )
 							{
 								// Stop, don't do anything.....
 								// 0verhaul:	Only if not at the final destination
 								// Another reason for rebuilding the animation system.	This should be part of a common
 								// path continuation code so that any other bug fixes won't need to be duplicated in other areas.
-								if ( pSoldier->sGridNo != pSoldier->pathing.sFinalDestination)
+								if ( pSoldier->sGridNo != pSoldier->sFinalDestination)
 								{
-									if ( !pSoldier->EVENT_InternalGetNewSoldierPath( pSoldier->pathing.sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
+									if ( !EVENT_InternalGetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode, 2, FALSE ) )
 									{
 									}
 								}
 							}
 							else
 							{
-								pSoldier->EVENT_InitNewSoldierAnim( pSoldier->usUIMovementMode, 0 , FALSE );
+								EVENT_InitNewSoldierAnim( pSoldier, pSoldier->usUIMovementMode, 0 , FALSE );
 
 								// UNSET LOCK PENDING ACTION COUNTER FLAG
-								pSoldier->flags.uiStatusFlags &= ( ~SOLDIER_LOCKPENDINGACTIONCOUNTER );
+								pSoldier->uiStatusFlags &= ( ~SOLDIER_LOCKPENDINGACTIONCOUNTER );
 
 							}								
 						}
@@ -2133,10 +2134,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							SelectMoveAnimationFromStance( pSoldier );
 						}
 
-						pSoldier->flags.fContinueMoveAfterStanceChange = FALSE;
+						pSoldier->fContinueMoveAfterStanceChange = FALSE;
 						return( TRUE );
 					}
-					pSoldier->SoldierGotoStationaryStance( );
+					SoldierGotoStationaryStance( pSoldier );
 					return( TRUE );
 				}
 				else
@@ -2147,25 +2148,25 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( ubDesiredHeight == ANIM_STAND && ubCurrentHeight == ANIM_CROUCH )
 					{
 						// Return here because if now, we will skipp a few frames
-						pSoldier->ChangeSoldierState( KNEEL_UP, 0 , FALSE );
+						ChangeSoldierState( pSoldier, KNEEL_UP, 0 , FALSE );
 						return( TRUE );
 					}
 					if ( ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_STAND )
 					{
 						// Return here because if now, we will skipp a few frames
-						pSoldier->ChangeSoldierState( KNEEL_DOWN, 0 , FALSE );
+						ChangeSoldierState( pSoldier, KNEEL_DOWN, 0 , FALSE );
 						return( TRUE );
 					}
 					else if ( ubDesiredHeight == ANIM_PRONE && ubCurrentHeight == ANIM_CROUCH )
 					{
 						// Return here because if now, we will skipp a few frames
-						pSoldier->ChangeSoldierState( PRONE_DOWN, 0 , FALSE );
+						ChangeSoldierState( pSoldier, PRONE_DOWN, 0 , FALSE );
 						return( TRUE );
 					}
 					else if ( ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_PRONE )
 					{
 						// Return here because if now, we will skipp a few frames
-						pSoldier->ChangeSoldierState( PRONE_UP, 0 , FALSE );
+						ChangeSoldierState( pSoldier, PRONE_UP, 0 , FALSE );
 						return( TRUE );
 					}
 				}
@@ -2174,7 +2175,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState );
 #endif
 
-				pSoldier->SoldierGotoStationaryStance( );
+				SoldierGotoStationaryStance( pSoldier );
 				return( TRUE );
 			}
 
@@ -2191,19 +2192,19 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		else if ( sNewAniFrame > 599 && sNewAniFrame <= 699 )
 		{
 			// Jump, to animation script
-			pSoldier->EVENT_InitNewSoldierAnim( (UINT16)(sNewAniFrame - 600 ), 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, (UINT16)(sNewAniFrame - 600 ), 0 , FALSE );
 			return( TRUE );
 		}
 		else if ( sNewAniFrame > 799 && sNewAniFrame <= 899 )
 		{
 			// Jump, to animation script ( But in the 100's range )
-			pSoldier->EVENT_InitNewSoldierAnim( (UINT16)(sNewAniFrame - 700 ), 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, (UINT16)(sNewAniFrame - 700 ), 0 , FALSE );
 			return( TRUE );
 		}
 		else if ( sNewAniFrame > 899 && sNewAniFrame <= 999 )
 		{
 			// Jump, to animation script ( But in the 200's range )
-			pSoldier->EVENT_InitNewSoldierAnim( (UINT16)(sNewAniFrame - 700 ), 0 , FALSE );
+			EVENT_InitNewSoldierAnim( pSoldier, (UINT16)(sNewAniFrame - 700 ), 0 , FALSE );
 			return( TRUE );
 		}
 		else if ( sNewAniFrame > 699 && sNewAniFrame < 799 )
@@ -2331,7 +2332,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					//if ( SoldierOnScreen( pSoldier->ubID ) )
 					{
-						switch( pSoldier->aiData.usActionData )
+						switch( pSoldier->usActionData )
 						{
 						case CALL_1_PREY:
 
@@ -2487,25 +2488,25 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 732:
 
 				// Play die sound
-				pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
-				pSoldier->flags.fDeadSoundPlayed = TRUE;
+				DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+				pSoldier->fDeadSoundPlayed = TRUE;
 				break;
 
 			case 750:
 
 				// CODE: Move Vehicle UP
-				if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 				{
-					//	pSoldier->SetSoldierHeight( (FLOAT)( pSoldier->sHeightAdjustment + 1 ) );
+					//	SetSoldierHeight( pSoldier, (FLOAT)( pSoldier->sHeightAdjustment + 1 ) );
 				}
 				break;
 
 			case 751:
 
 				// CODE: Move vehicle down
-				if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 				{
-					//		pSoldier->SetSoldierHeight( (FLOAT)( pSoldier->sHeightAdjustment - 1 ) );
+					//		SetSoldierHeight( pSoldier, (FLOAT)( pSoldier->sHeightAdjustment - 1 ) );
 				}
 				break;
 
@@ -2550,9 +2551,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					SOLDIERTYPE	*pRobot;
 
 					// Get pointer...
-					ubPerson = WhoIsThere2( pSoldier->aiData.sPendingActionData2, pSoldier->pathing.bLevel );
+					ubPerson = WhoIsThere2( pSoldier->sPendingActionData2, pSoldier->bLevel );
 
-					if ( ubPerson != NOBODY && MercPtrs[ ubPerson ]->flags.uiStatusFlags & SOLDIER_ROBOT )
+					if ( ubPerson != NOBODY && MercPtrs[ ubPerson ]->uiStatusFlags & SOLDIER_ROBOT )
 					{
 						pRobot = MercPtrs[ ubPerson ];
 
@@ -2565,7 +2566,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							AutoPlaceObject( pSoldier, pSoldier->pTempObject, TRUE );
 						}
 
-						OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
+						MemFree( pSoldier->pTempObject );
+						pSoldier->pTempObject = NULL;
 					}
 				}
 				break;
@@ -2594,7 +2596,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					if ( pTarget )
 					{
-						pTarget->EVENT_InitNewSoldierAnim( SLAP_HIT, 0 , FALSE );												
+						EVENT_InitNewSoldierAnim( pTarget, SLAP_HIT, 0 , FALSE );												
 
 						// Play noise....
 						//PlaySoldierJA2Sample( pTarget->ubID, ( S_SLAP_IMPACT ), RATE_11025, SoundVolume( HIGHVOLUME, pTarget->sGridNo ), 1, SoundDir( pTarget->sGridNo ), TRUE );			
@@ -2618,7 +2620,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				{
 					// Dish out damage!
-					MercPtrs[ pSoldier->aiData.uiPendingActionData4 ]->EVENT_SoldierGotHit( TAKE_DAMAGE_BLADE, (INT16) 25, (INT16) 25, gOppositeDirection[ pSoldier->bDirection ], 50, pSoldier->ubID, 0, ANIM_PRONE, 0, 0 );
+					EVENT_SoldierGotHit( MercPtrs[ pSoldier->uiPendingActionData4 ], TAKE_DAMAGE_BLADE, (INT16) 25, (INT16) 25, gOppositeDirection[ pSoldier->bDirection ], 50, pSoldier->ubID, 0, ANIM_PRONE, 0, 0 );
 				}
 				break;
 
@@ -2646,10 +2648,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );			
 					}
 
-					AddItemToPool( pSoldier->aiData.sPendingActionData2, pSoldier->pTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
+					AddItemToPool( pSoldier->sPendingActionData2, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
 					NotifySoldiersToLookforItems( );
 
-					OBJECTTYPE::DeleteMe( &pSoldier->pTempObject );
+					MemFree( pSoldier->pTempObject );
+					pSoldier->pTempObject = NULL;
 				}
 				break;
 
@@ -2665,12 +2668,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				{
 					INT16 sNewGridNo;
 
-					InternalDropBlood( pSoldier->sGridNo, pSoldier->pathing.bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
+					InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
 					// Move forward one gridno....
 					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( gOppositeDirection[ pSoldier->bDirection ] ) ) );
 
-					InternalDropBlood( sNewGridNo, pSoldier->pathing.bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
+					InternalDropBlood( sNewGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
 
 				}
 				break;
@@ -2678,7 +2681,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 766:
 
 				// Say COOL quote
-				pSoldier->DoMercBattleSound( BATTLE_SOUND_COOL1 );					
+				DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );					
 				break;
 
 			case 767:
@@ -2693,7 +2696,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( NumCapableEnemyInSector( ) == 0 )
 				{
 					// Stand up...
-					pSoldier->ChangeSoldierStance( ANIM_STAND );
+					ChangeSoldierStance( pSoldier, ANIM_STAND );
 					return( FALSE );
 				}
 				break;
@@ -2708,7 +2711,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					SOLDIERTYPE *pVehicle;
 
 					// Get pointer to vehicle...
-					ubPerson = WhoIsThere2( pSoldier->aiData.sPendingActionData2, pSoldier->pathing.bLevel );
+					ubPerson = WhoIsThere2( pSoldier->sPendingActionData2, pSoldier->bLevel );
 					pVehicle = MercPtrs[ ubPerson ];
 
 					// this is a ubID for soldiertype....
@@ -2731,7 +2734,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			case 772:
 
 				//CODE: FOR A REALTIME NON-INTERRUPTABLE SCRIPT - SIGNAL DONE
-				pSoldier->flags.fRTInNonintAnim = FALSE;
+				pSoldier->fRTInNonintAnim = FALSE;
 				break;
 
 			case 773:
@@ -2872,7 +2875,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// How do we do this....
 
 	if ( QuoteExp_GotGunOrUsedGun[ pSoldier->ubProfile ] == QUOTE_SATISFACTION_WITH_GUN_AFTER_KILL )
@@ -2904,7 +2906,6 @@ BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 
 void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	INT8	bBuddyIndex[ 20 ] = { -1 };
 	INT8	bTempBuddyIndex;
@@ -2923,7 +2924,7 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep && pTeamSoldier->sGridNo != NOWHERE )
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep && pTeamSoldier->sGridNo != NOWHERE )
 		{
 			// Are we a buddy of killer?
 			bTempBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pKillerSoldier->ubProfile );
@@ -3008,8 +3009,7 @@ void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo,
 
 
 void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
-{
-	PERFORMANCE_MARKER	
+{	
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
@@ -3079,7 +3079,7 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 				{
 					if ( cnt != pKillerSoldier->ubID )
 					{
-						if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+						if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 						{
 							// Can we see location?
 							if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, TRUE ) )
@@ -3144,7 +3144,7 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 						if ( Random( 100 ) < 33 && pKilledSoldier->ubBodyType != BLOODCAT )
 						{
 							// If it's a creature......
-							if ( pKilledSoldier->flags.uiStatusFlags & SOLDIER_MONSTER )
+							if ( pKilledSoldier->uiStatusFlags & SOLDIER_MONSTER )
 							{
 								TacticalCharacterDialogue( pKillerSoldier, QUOTE_KILLED_A_CREATURE );	
 							}
@@ -3157,11 +3157,11 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 						{
 							if ( Random( 50 ) == 25 )
 							{
-								pKillerSoldier->DoMercBattleSound( (INT8)( BATTLE_SOUND_LAUGH1 ) );
+								DoMercBattleSound( pKillerSoldier, (INT8)( BATTLE_SOUND_LAUGH1 ) );
 							}
 							else
 							{
-								pKillerSoldier->DoMercBattleSound( (INT8)( BATTLE_SOUND_COOL1 ) );
+								DoMercBattleSound( pKillerSoldier, (INT8)( BATTLE_SOUND_COOL1 ) );
 							}
 						}
 					}
@@ -3179,7 +3179,6 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 
 BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fBuddyJustDead = FALSE;
 
 	*pfMadeCorpse = FALSE;
@@ -3187,8 +3186,8 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 	if ( pSoldier->stats.bLife == 0 && !( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD )	)
 	{
 		// Cancel services here...
-		pSoldier->ReceivingSoldierCancelServices( );
-		pSoldier->GivingSoldierCancelServices( );
+		ReceivingSoldierCancelServices( pSoldier );
+		GivingSoldierCancelServices( pSoldier );
 
 		if ( pSoldier->iMuzFlash != -1 )
 		{
@@ -3201,7 +3200,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		}
 
 		//FREEUP GETTING HIT FLAG
-		pSoldier->flags.fGettingHit = FALSE;
+		pSoldier->fGettingHit = FALSE;
 
 		// Find next closest team member!
 		if ( pSoldier->bTeam == gbPlayerNum )
@@ -3212,14 +3211,14 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			{
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
-			pSoldier->flags.fUIdeadMerc = TRUE;
+			pSoldier->fUIdeadMerc = TRUE;
 
 			if ( !gfKillingGuysForLosingBattle )
 			{
 				// ATE: THIS IS S DUPLICATE SETTING OF SOLDIER_DEAD. Is set in StrategicHandlePlayerTeamMercDeath()
 				// also, but here it's needed to tell tectical to ignore this dude...
 				// until StrategicHandlePlayerTeamMercDeath() can get called after death skull interface is done
-				pSoldier->flags.uiStatusFlags |= SOLDIER_DEAD;
+				pSoldier->uiStatusFlags |= SOLDIER_DEAD;
 
 			}
 		}
@@ -3235,7 +3234,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 					gTacticalStatus.fKilledEnemyOnAttack	= TRUE;
 					gTacticalStatus.ubEnemyKilledOnAttack = pSoldier->ubID;
 					gTacticalStatus.ubEnemyKilledOnAttackLocation = pSoldier->sGridNo;
-					gTacticalStatus.bEnemyKilledOnAttackLevel = pSoldier->pathing.bLevel;
+					gTacticalStatus.bEnemyKilledOnAttackLevel = pSoldier->bLevel;
 					gTacticalStatus.ubEnemyKilledOnAttackKiller = pSoldier->ubAttackerID;
 
 					// also check if we are in mapscreen, if so update soldier's list
@@ -3249,7 +3248,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 					// We were a visible enemy, say laugh!
 					if ( Random(3) == 0 && !CREATURE_OR_BLOODCAT( MercPtrs[ pSoldier->ubAttackerID ] ) )
 					{
-						MercPtrs[ pSoldier->ubAttackerID ]->DoMercBattleSound( BATTLE_SOUND_LAUGH1 );
+						DoMercBattleSound( MercPtrs[ pSoldier->ubAttackerID ], BATTLE_SOUND_LAUGH1 );
 					}
 				}
 			}
@@ -3329,7 +3328,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// 0verhaul: This is now handled in the death state transitions
 		// if ( pSoldier->bTeam != gbPlayerNum )
 		// {
-		//	if ( !pSoldier->flags.fDoingExternalDeath )
+		//	if ( !pSoldier->fDoingExternalDeath )
 				//	{
 		//		// Release attacker
 		//		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death") );
@@ -3344,7 +3343,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 	}
 
-	if ( pSoldier->stats.bLife > 0 )
+	if ( pSoldier->bLife > 0 )
 	{
 		// If we are here - something funny has heppende
 		// We either have played a death animation when we are not dead, or we are calling
@@ -3358,10 +3357,9 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// 0verhaul:	This is now handled in the death state transition.
 	// Release attacker
-	// if ( !pSoldier->flags.fDoingExternalDeath )
+	// if ( !pSoldier->fDoingExternalDeath )
 	// {
 	//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death") );
 	//	ReleaseSoldiersAttacker( pSoldier );
@@ -3375,7 +3373,6 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCorpse )
 {
-	PERFORMANCE_MARKER
 
 	if ( HandleSoldierDeath( pSoldier, pfMadeCorpse ) )
 	{
@@ -3383,47 +3380,47 @@ BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCor
 		switch( pSoldier->usAnimState )
 		{
 		case FLYBACK_HIT_DEATH:
-			pSoldier->ChangeSoldierState( FLYBACK_HITDEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, FLYBACK_HITDEATH_STOP, 0, FALSE );
 			break;
 
 		case GENERIC_HIT_DEATH:
-			pSoldier->ChangeSoldierState( FALLFORWARD_HITDEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, FALLFORWARD_HITDEATH_STOP, 0, FALSE );
 			break;
 
 		case FALLBACK_HIT_DEATH:
-			pSoldier->ChangeSoldierState( FALLBACK_HITDEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, FALLBACK_HITDEATH_STOP, 0, FALSE );
 			break;
 
 		case PRONE_HIT_DEATH:
-			pSoldier->ChangeSoldierState( PRONE_HITDEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, PRONE_HITDEATH_STOP, 0, FALSE );
 			break;
 
 		case JFK_HITDEATH:
-			pSoldier->ChangeSoldierState( JFK_HITDEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, JFK_HITDEATH_STOP, 0, FALSE );
 			break;
 
 		case FALLOFF_DEATH:
-			pSoldier->ChangeSoldierState( FALLOFF_DEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, FALLOFF_DEATH_STOP, 0, FALSE );
 			break;
 
 		case FALLOFF_FORWARD_DEATH:
-			pSoldier->ChangeSoldierState( FALLOFF_FORWARD_DEATH_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH_STOP, 0, FALSE );
 			break;
 
 		case WATER_DIE:
-			pSoldier->ChangeSoldierState( WATER_DIE_STOP, 0, FALSE );
+			ChangeSoldierState( pSoldier, WATER_DIE_STOP, 0, FALSE );
 			break;
 
 		case DEEP_WATER_DIE:
-			pSoldier->ChangeSoldierState( DEEP_WATER_DIE_STOPPING, 0, FALSE );
+			ChangeSoldierState( pSoldier, DEEP_WATER_DIE_STOPPING, 0, FALSE );
 			break;
 
 		case COW_DYING:
-			pSoldier->ChangeSoldierState( COW_DYING_STOP, 0, FALSE);
+			ChangeSoldierState( pSoldier, COW_DYING_STOP, 0, FALSE);
 			break;
 
 		case BLOODCAT_DYING:
-			pSoldier->ChangeSoldierState( BLOODCAT_DYING_STOP, 0, FALSE);
+			ChangeSoldierState( pSoldier, BLOODCAT_DYING_STOP, 0, FALSE);
 			break;
 
 		default:
@@ -3444,14 +3441,13 @@ BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCor
 
 void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16					sNewGridNo;
 
-	if ( pSoldier->stats.bLife < OKLIFE )
+	if ( pSoldier->bLife < OKLIFE )
 	{
 		// Cancel services here...
-		pSoldier->ReceivingSoldierCancelServices( );
-		pSoldier->GivingSoldierCancelServices( );
+		ReceivingSoldierCancelServices( pSoldier );
+		GivingSoldierCancelServices( pSoldier );
 
 
 		// If we are a monster, set life to zero ( no unconscious )
@@ -3469,7 +3465,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 		case TANK_NW:
 		case TANK_NE:
 
-			pSoldier->stats.bLife = 0;
+			pSoldier->bLife = 0;
 			break;
 		}
 
@@ -3487,7 +3483,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 		}
 
 		// We are unconscious now, play randomly, this animation continued, or a new death
-		if ( pSoldier->CheckSoldierHitRoof( ) )
+		if ( CheckSoldierHitRoof( pSoldier ) )
 		{
 			return;
 		}
@@ -3497,8 +3493,8 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 		{
 			if ( !AreInMeanwhile() )
 			{
-				pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
-				pSoldier->flags.fDeadSoundPlayed = TRUE;
+				DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+				pSoldier->fDeadSoundPlayed = TRUE;
 			}
 		}
 
@@ -3531,7 +3527,7 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 
 				sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bTestDirection ] ) );
 
-				if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->pathing.bLevel, bTestDirection, FLYBACK_HIT ) )
+				if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, bTestDirection, FLYBACK_HIT ) )
 				{
 					// CHECKED BEHIND GRIDS - OK
 					fDoFallback = TRUE;
@@ -3551,8 +3547,8 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 			{
 				// 1 ) REC DIRECTION
 				// 2 ) SET FLAG FOR STARTING TO FALL
-				pSoldier->BeginTyingToFall( );
-				pSoldier->ChangeSoldierState( FALLFORWARD_FROMHIT_STAND, 0, FALSE );
+				BeginTyingToFall( pSoldier );
+				ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
 				return;
 			}
 			else
@@ -3560,72 +3556,72 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 				// ALL'S OK HERE..... IF WE FORCED DIRECTION, SET!
 				if ( fForceDirection )
 				{
-					pSoldier->EVENT_SetSoldierDesiredDirection( bTestDirection );
-					pSoldier->EVENT_SetSoldierDirection( bTestDirection );
+					EVENT_SetSoldierDesiredDirection( pSoldier, bTestDirection );
+					EVENT_SetSoldierDirection( pSoldier, bTestDirection );
 				}
-				pSoldier->ChangeToFallbackAnimation( pSoldier->bDirection );
+				ChangeToFallbackAnimation( pSoldier, pSoldier->bDirection );
 				return;
 			}
 		}
 		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH )
 		{
-			pSoldier->ChangeSoldierState( FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
-			pSoldier->BeginTyingToFall( );
+			ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
+			BeginTyingToFall( pSoldier );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == GENERIC_HIT_PRONE )
 		{
-			pSoldier->ChangeSoldierState( PRONE_LAY_FROMHIT, 0 , FALSE );
+			ChangeSoldierState( pSoldier, PRONE_LAY_FROMHIT, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == ADULTMONSTER_HIT )
 		{
-			pSoldier->ChangeSoldierState( ADULTMONSTER_DYING, 0 , FALSE );
+			ChangeSoldierState( pSoldier, ADULTMONSTER_DYING, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == LARVAE_HIT )
 		{
-			pSoldier->ChangeSoldierState( LARVAE_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, LARVAE_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == QUEEN_HIT )
 		{
-			pSoldier->ChangeSoldierState( QUEEN_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, QUEEN_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == CRIPPLE_HIT )
 		{
-			pSoldier->ChangeSoldierState( CRIPPLE_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, CRIPPLE_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == ROBOTNW_HIT )
 		{
-			pSoldier->ChangeSoldierState( ROBOTNW_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, ROBOTNW_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == INFANT_HIT )
 		{
-			pSoldier->ChangeSoldierState( INFANT_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, INFANT_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == COW_HIT )
 		{
-			pSoldier->ChangeSoldierState( COW_DYING, 0 , FALSE );
+			ChangeSoldierState( pSoldier, COW_DYING, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == BLOODCAT_HIT )
 		{
-			pSoldier->ChangeSoldierState( BLOODCAT_DYING, 0 , FALSE );
+			ChangeSoldierState( pSoldier, BLOODCAT_DYING, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == WATER_HIT )
 		{
-			pSoldier->ChangeSoldierState( WATER_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, WATER_DIE, 0 , FALSE );
 			return;													
 		}
 		else if ( pSoldier->usAnimState == DEEP_WATER_HIT )
 		{
-			pSoldier->ChangeSoldierState( DEEP_WATER_DIE, 0 , FALSE );
+			ChangeSoldierState( pSoldier, DEEP_WATER_DIE, 0 , FALSE );
 			return;													
 		}
 		else
@@ -3640,11 +3636,10 @@ void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
-	if ( pSoldier->stats.bLife == 0 )
+	if ( pSoldier->bLife == 0 )
 	{
-		pSoldier->DoMercBattleSound( BATTLE_SOUND_DIE1 );
-		pSoldier->flags.fDeadSoundPlayed = TRUE;
+		DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+		pSoldier->fDeadSoundPlayed = TRUE;
 
 		// 0verhaul:	The bBeingAttackedCount is now obsolete.
 		// Increment	being attacked count
@@ -3655,63 +3650,63 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 			switch( pSoldier->usAnimState )
 			{
 			case FLYBACKHIT_STOP:
-				pSoldier->ChangeSoldierState( FLYBACK_HIT_DEATH, 0, FALSE );
+				ChangeSoldierState( pSoldier, FLYBACK_HIT_DEATH, 0, FALSE );
 				break;
 
 			case FALLFORWARD_FROMHIT_STAND:
 			case FALLFORWARD_FROMHIT_CROUCH:
 			case STAND_FALLFORWARD_STOP:
-				pSoldier->ChangeSoldierState( GENERIC_HIT_DEATH, 0, FALSE );
+				ChangeSoldierState( pSoldier, GENERIC_HIT_DEATH, 0, FALSE );
 				break;
 
 			case FALLBACKHIT_STOP:
-				pSoldier->ChangeSoldierState( FALLBACK_HIT_DEATH, 0, FALSE );
+				ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATH, 0, FALSE );
 				break;
 
 			case PRONE_LAYFROMHIT_STOP:
 			case PRONE_LAY_FROMHIT:
 
-				pSoldier->ChangeSoldierState( PRONE_HIT_DEATH, 0, FALSE );
+				ChangeSoldierState( pSoldier, PRONE_HIT_DEATH, 0, FALSE );
 				break;
 
 			case FALLOFF_STOP:
-				pSoldier->ChangeSoldierState( FALLOFF_DEATH, 0, FALSE );
+				ChangeSoldierState( pSoldier, FALLOFF_DEATH, 0, FALSE );
 				break;
 
 			case FALLOFF_FORWARD_STOP:
-				pSoldier->ChangeSoldierState( FALLOFF_FORWARD_DEATH, 0, FALSE);
+				ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH, 0, FALSE);
 				break;
 
 			case ADULTMONSTER_HIT:
-				pSoldier->ChangeSoldierState( ADULTMONSTER_DYING, 0 , FALSE );
+				ChangeSoldierState( pSoldier, ADULTMONSTER_DYING, 0 , FALSE );
 				break;													
 
 			case LARVAE_HIT:
-				pSoldier->ChangeSoldierState( LARVAE_DIE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, LARVAE_DIE, 0 , FALSE );
 				break;													
 
 			case QUEEN_HIT:
-				pSoldier->ChangeSoldierState( QUEEN_DIE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, QUEEN_DIE, 0 , FALSE );
 				break;													
 
 			case CRIPPLE_HIT:
-				pSoldier->ChangeSoldierState( CRIPPLE_DIE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, CRIPPLE_DIE, 0 , FALSE );
 				break;
 
 			case ROBOTNW_HIT:
-				pSoldier->ChangeSoldierState( ROBOTNW_DIE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, ROBOTNW_DIE, 0 , FALSE );
 				break;											
 
 			case INFANT_HIT:
-				pSoldier->ChangeSoldierState( INFANT_DIE, 0 , FALSE );
+				ChangeSoldierState( pSoldier, INFANT_DIE, 0 , FALSE );
 				break;			
 
 			case COW_HIT:
-				pSoldier->ChangeSoldierState( COW_DYING, 0 , FALSE );
+				ChangeSoldierState( pSoldier, COW_DYING, 0 , FALSE );
 				break;													
 
 			case BLOODCAT_HIT:
-				pSoldier->ChangeSoldierState( BLOODCAT_DYING, 0 , FALSE );
+				ChangeSoldierState( pSoldier, BLOODCAT_DYING, 0 , FALSE );
 				break;		
 
 			default:
@@ -3739,7 +3734,6 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 
 	if ( AM_A_ROBOT( pSoldier ) )
 	{
@@ -3753,7 +3747,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )
 		{
 			// OK, put gun down....
-			pSoldier->InternalSoldierReadyWeapon(pSoldier->bDirection, TRUE );
+			InternalSoldierReadyWeapon( pSoldier, pSoldier->bDirection, TRUE );
 			return( TRUE );
 		}
 	}
@@ -3765,8 +3759,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 
 BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo )
 {
-	PERFORMANCE_MARKER
-	if ( pSoldier->pathing.bLevel == 0 )
+	if ( pSoldier->bLevel == 0 )
 	{
 		return( TRUE );
 	}
@@ -3783,7 +3776,6 @@ BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo )
 
 BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// OK, play intermediate animation here..... save in pending animation data, the current
 	// code we are at!
 	pSoldier->aiData.uiPendingActionData1 = pSoldier->usAniCode;
@@ -3795,46 +3787,46 @@ BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier )
 	case STANDING_BURST:
 	case FIRE_STAND_BURST_SPREAD:
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( STANDING_SHOOT_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, STANDING_SHOOT_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case PRONE_BURST:
 	case SHOOT_RIFLE_PRONE:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( PRONE_SHOOT_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, PRONE_SHOOT_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case CROUCHED_BURST:
 	case SHOOT_RIFLE_CROUCH:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( CROUCH_SHOOT_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, CROUCH_SHOOT_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case SHOOT_DUAL_STAND:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( STANDING_SHOOT_DWEL_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, STANDING_SHOOT_DWEL_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case SHOOT_DUAL_PRONE:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( PRONE_SHOOT_DWEL_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, PRONE_SHOOT_DWEL_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case SHOOT_DUAL_CROUCH:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( CROUCH_SHOOT_DWEL_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, CROUCH_SHOOT_DWEL_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	case FIRE_LOW_STAND:
 	case FIRE_BURST_LOW_STAND:
 
 		// Normal shoot rifle.... play
-		pSoldier->ChangeSoldierState( STANDING_SHOOT_LOW_UNJAM, 0 , FALSE );
+		ChangeSoldierState( pSoldier, STANDING_SHOOT_LOW_UNJAM, 0 , FALSE );
 		return( TRUE );
 
 	}
@@ -3847,9 +3839,8 @@ BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier )
 
 #if 0
 //OK, if here, if our health is still good, but we took a lot of damage, try to fall down!
-if ( pSoldier->stats.bLife >= OKLIFE )
+if ( pSoldier->bLife >= OKLIFE )
 {
-	PERFORMANCE_MARKER
 	// Randomly fall back or forward, if we are in the standing hit animation
 	if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == RIFLE_STAND_HIT )
 	{
@@ -3872,15 +3863,15 @@ if ( pSoldier->stats.bLife >= OKLIFE )
 
 			sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( bTestDirection ) ) );
 
-			if ( NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->pathing.bLevel ) && OKHeightDest( pSoldier, sNewGridNo ) )
+			if ( NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) && OKHeightDest( pSoldier, sNewGridNo ) )
 			{
 				// ALL'S OK HERE..... IF WE FORCED DIRECTION, SET!
 				if ( fForceDirection )
 				{
-					pSoldier->EVENT_SetSoldierDirection( bTestDirection );
-					pSoldier->EVENT_SetSoldierDesiredDirection( bTestDirection );
+					EVENT_SetSoldierDirection( pSoldier, bTestDirection );
+					EVENT_SetSoldierDesiredDirection( pSoldier, bTestDirection );
 				}
-				pSoldier->ChangeSoldierState( FALLBACK_HIT_STAND, 0, FALSE );
+				ChangeSoldierState( pSoldier, FALLBACK_HIT_STAND, 0, FALSE );
 				return;
 			}
 		}
@@ -3891,7 +3882,6 @@ if ( pSoldier->stats.bLife >= OKLIFE )
 
 BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"OKFallDirection");
 	STRUCTURE_FILE_REF *	pStructureFileRef;
 	UINT16								usAnimSurface;
@@ -3944,11 +3934,10 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 
 BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Do we have a primary pending animation?
 	if ( pSoldier->usPendingAnimation2 != NO_PENDING_ANIMATION )
 	{
-		pSoldier->ChangeSoldierState( pSoldier->usPendingAnimation2, 0, FALSE );
+		ChangeSoldierState( pSoldier, pSoldier->usPendingAnimation2, 0, FALSE );
 		pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 		return( TRUE );
 	}
@@ -3956,7 +3945,7 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 	// CHECK IF WE HAVE A PENDING ANIMATION HERE
 	if ( pSoldier->usPendingAnimation != NO_PENDING_ANIMATION )
 	{
-		pSoldier->ChangeSoldierState( pSoldier->usPendingAnimation, 0, FALSE );
+		ChangeSoldierState( pSoldier, pSoldier->usPendingAnimation, 0, FALSE );
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 		return( TRUE );
 	}
@@ -3971,7 +3960,7 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 	if ( gTacticalStatus.ubCurrentTeam == pSoldier->bTeam )
 	{
 		// Try to getup...
-		pSoldier->BeginSoldierGetup( );
+		BeginSoldierGetup( pSoldier );
 
 		// Check this to see if above worked
 		if ( !pSoldier->bCollapsed )
@@ -3983,33 +3972,33 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 	switch( pSoldier->usAnimState )
 	{
 	case FLYBACK_HIT:
-		pSoldier->ChangeSoldierState( FLYBACKHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FLYBACKHIT_STOP, 0, FALSE );
 		break;
 
 	case GENERIC_HIT_DEATHTWITCHNB:
 	case FALLFORWARD_FROMHIT_STAND:
 	case ENDFALLFORWARD_FROMHIT_CROUCH:
 
-		pSoldier->ChangeSoldierState( STAND_FALLFORWARD_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, STAND_FALLFORWARD_STOP, 0, FALSE );
 		break;
 
 	case FALLBACK_HIT_DEATHTWITCHNB:
 	case FALLBACK_HIT_STAND:
-		pSoldier->ChangeSoldierState( FALLBACKHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FALLBACKHIT_STOP, 0, FALSE );
 		break;
 
 	case PRONE_HIT_DEATHTWITCHNB:
 	case PRONE_LAY_FROMHIT:
 
-		pSoldier->ChangeSoldierState( PRONE_LAYFROMHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, PRONE_LAYFROMHIT_STOP, 0, FALSE );
 		break;
 
 	case FALLOFF:
-		pSoldier->ChangeSoldierState( FALLOFF_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FALLOFF_STOP, 0, FALSE );
 		break;
 
 	case FALLFORWARD_ROOF:
-		pSoldier->ChangeSoldierState( FALLOFF_FORWARD_STOP, 0, FALSE);
+		ChangeSoldierState( pSoldier, FALLOFF_FORWARD_STOP, 0, FALSE);
 		break;
 
 	default:
@@ -4024,7 +4013,7 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 	if ( gTacticalStatus.ubCurrentTeam == pSoldier->bTeam )
 	{
 		// Try to getup...
-		pSoldier->BeginSoldierGetup( );
+		BeginSoldierGetup( pSoldier );
 
 		// Check this to see if above worked
 		if ( !pSoldier->bCollapsed )
@@ -4036,33 +4025,33 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 	switch( pSoldier->usAnimState )
 	{
 	case FLYBACK_HIT:
-		pSoldier->ChangeSoldierState( FLYBACKHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FLYBACKHIT_STOP, 0, FALSE );
 		break;
 
 	case GENERIC_HIT_DEATHTWITCHNB:
 	case FALLFORWARD_FROMHIT_STAND:
 	case ENDFALLFORWARD_FROMHIT_CROUCH:
 
-		pSoldier->ChangeSoldierState( STAND_FALLFORWARD_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, STAND_FALLFORWARD_STOP, 0, FALSE );
 		break;
 
 	case FALLBACK_HIT_DEATHTWITCHNB:
 	case FALLBACK_HIT_STAND:
-		pSoldier->ChangeSoldierState( FALLBACKHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FALLBACKHIT_STOP, 0, FALSE );
 		break;
 
 	case PRONE_HIT_DEATHTWITCHNB:
 	case PRONE_LAY_FROMHIT:
 
-		pSoldier->ChangeSoldierState( PRONE_LAYFROMHIT_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, PRONE_LAYFROMHIT_STOP, 0, FALSE );
 		break;
 
 	case FALLOFF:
-		pSoldier->ChangeSoldierState( FALLOFF_STOP, 0, FALSE );
+		ChangeSoldierState( pSoldier, FALLOFF_STOP, 0, FALSE );
 		break;
 
 	case FALLFORWARD_ROOF:
-		pSoldier->ChangeSoldierState( FALLOFF_FORWARD_STOP, 0, FALSE);
+		ChangeSoldierState( pSoldier, FALLOFF_FORWARD_STOP, 0, FALSE);
 		break;
 
 	default:
@@ -4077,28 +4066,27 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 
 void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT16 sNewGridNo;
 
 	// Move forward one gridno....
 	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
 
 	// ATE: Make sure that the gridno is unoccupied!
-	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->pathing.bLevel ) )
+	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) )
 	{
 		// We should just stay put - will look kind of funny but nothing I can do!
 		sNewGridNo = pSoldier->sGridNo;
 	}
 
-	pSoldier->EVENT_StopMerc( sNewGridNo, pSoldier->bDirection );
+	EVENT_StopMerc( pSoldier, sNewGridNo, pSoldier->bDirection );
 	pSoldier->ubBodyType = REGMALE;
-	if ( pSoldier->ubProfile == SLAY && pSoldier->bTeam == CIV_TEAM && !pSoldier->aiData.bNeutral )
+	if ( pSoldier->ubProfile == SLAY && pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral )
 	{
 		HandleNPCDoAction( pSoldier->ubProfile, NPC_ACTION_THREATENINGLY_RAISE_GUN, 0 );
 	}
 	else
 	{
-		pSoldier->EVENT_InitNewSoldierAnim( STANDING, 0 , TRUE );
+		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 0 , TRUE );
 	}
 
 	// If this person has a profile ID, set body type to regmale

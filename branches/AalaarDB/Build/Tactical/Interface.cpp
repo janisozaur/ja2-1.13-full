@@ -224,6 +224,7 @@ UINT32					guiGUNSM;
 UINT32					guiP1ITEMS;
 UINT32					guiP2ITEMS;
 UINT32					guiP3ITEMS;
+UINT32					guiSILHOUETTE;
 UINT32					guiBUTTONBORDER;
 UINT32					guiRADIO;
 UINT32					guiRADIO2;
@@ -273,24 +274,20 @@ UINT32 CalcUIMessageDuration( STR16 wString );
 
 BOOLEAN InitializeTacticalInterface(	)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC	VObjectDesc;
 
-	INTERFACE_WIDTH			= 640;
-	INTERFACE_HEIGHT		= 120;
-	INV_INTERFACE_HEIGHT	= 140;
-
-	// centering panel disabled becouse keyring squad change and radar 
-	// are not finished (no time) sorry 
-	/* 
-	if ( SCREEN_WIDTH > INTERFACE_WIDTH)
-		INTERFACE_START_X		= (SCREEN_WIDTH - INTERFACE_WIDTH) / 2;
+	// CHRISL: Setup default interface coords based on inventory system in use
+	if(gGameOptions.ubInventorySystem)
+	{
+		InitNewInventorySystem();
+		InitializeSMPanelCoordsNew();
+	}
 	else
-	*/
-		INTERFACE_START_X		= 0;
-	INTERFACE_START_Y		= ( SCREEN_HEIGHT - INTERFACE_HEIGHT );
-	INV_INTERFACE_START_Y	= ( SCREEN_HEIGHT - INV_INTERFACE_HEIGHT );
+	{
+		InitOldInventorySystem();
+		InitializeSMPanelCoordsOld();
+	}
 
 /*	OK i need to initialize coords here
  *	Isnt it cool
@@ -298,7 +295,6 @@ BOOLEAN InitializeTacticalInterface(	)
  */
 	InitializeViewPort( );
 	InitializeTEAMPanelCoords( );
-	InitializeSMPanelCoords( );
 	
 	// Load button Interfaces
 	iIconImages[ WALK_IMAGES	]			= LoadButtonImage("INTERFACE\\newicons3.sti", -1,3,4,5,-1 );
@@ -387,6 +383,13 @@ BOOLEAN InitializeTacticalInterface(	)
 	FilenameForBPP("INTERFACE\\mdp3items.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiP3ITEMS ) )
 		AssertMsg(0, "Missing INTERFACE\\mdp3items.sti" );
+
+	// CHRISL:
+	// LOAD INTERFACE POCKET SILHOUETTES
+	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+	FilenameForBPP("INTERFACE\\Silhouettes.sti", VObjectDesc.ImageFile);
+	if( !AddVideoObject( &VObjectDesc, &guiSILHOUETTE ) )
+		AssertMsg(0, "Missing INTERFACE\\Silhouettes.sti" );
 
 	// LOAD INTERFACE BUTTON BORDER
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -482,7 +485,6 @@ BOOLEAN InitializeTacticalInterface(	)
 
 BOOLEAN ShutdownTacticalInterface( )
 {
-	PERFORMANCE_MARKER
 	ShutdownCurrentPanel( );
 
 	return( TRUE );
@@ -490,7 +492,6 @@ BOOLEAN ShutdownTacticalInterface( )
 
 BOOLEAN InitializeCurrentPanel( )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		fOK = FALSE;
 
 	MoveRadarScreen( );
@@ -522,7 +523,6 @@ BOOLEAN InitializeCurrentPanel( )
 
 void ShutdownCurrentPanel( )
 {
-	PERFORMANCE_MARKER
 	if ( gfPanelAllocated )
 	{
 
@@ -549,7 +549,6 @@ void ShutdownCurrentPanel( )
 
 void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	// Disable faces
@@ -583,7 +582,6 @@ void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 
 void CreateCurrentTacticalPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	switch( gsCurInterfacePanel )
 	{
 		case SM_PANEL:
@@ -599,7 +597,6 @@ void CreateCurrentTacticalPanelButtons( )
 
 void SetCurrentInterfacePanel( UINT8 ubNewPanel )
 {
-	PERFORMANCE_MARKER
 	ShutdownCurrentPanel( );
 
 	// INit new panel
@@ -613,7 +610,6 @@ void SetCurrentInterfacePanel( UINT8 ubNewPanel )
 
 void ToggleTacticalPanels( )
 {
-	PERFORMANCE_MARKER
 	gfSwitchPanel			= TRUE;
 	gubNewPanelParam	= (UINT8)gusSelectedSoldier;
 
@@ -630,7 +626,6 @@ void ToggleTacticalPanels( )
 
 void RemoveCurrentTacticalPanelButtons( )
 {
-	PERFORMANCE_MARKER
 	switch( gsCurInterfacePanel )
 	{
 		case SM_PANEL:
@@ -646,7 +641,6 @@ void RemoveCurrentTacticalPanelButtons( )
 
 BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID )
 {
-	PERFORMANCE_MARKER
 	if ( gsCurInterfacePanel == TEAM_PANEL )
 	{
 		return( TRUE );
@@ -666,27 +660,23 @@ BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID )
 
 void HandleInterfaceBackgrounds( )
 {
-	PERFORMANCE_MARKER
 	HandleUpDownArrowBackgrounds( );
 }
 
 
 void PopupPositionMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 
 }
 
 void PopDownPositionMenu( )
 {
-	PERFORMANCE_MARKER
 
 }
 
 
 void BtnPositionCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 
 }
@@ -695,7 +685,6 @@ void BtnPositionCallback(GUI_BUTTON *btn,INT32 reason)
 
 void PopupMovementMenu( UI_EVENT *pUIEvent )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE					*pSoldier = NULL;
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	UINT32							uiActionImages;
@@ -762,7 +751,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	//SetButtonSavedRect( iActionIcons[ RUN_ICON ] );
 	ButtonList[ iActionIcons[ RUN_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( pSoldier->MercInWater( ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
+	if ( MercInWater( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
 	{
 		DisableButton( iActionIcons[ RUN_ICON ] );
 	}
@@ -777,7 +766,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ WALK_ICON ] );
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		SetButtonFastHelpText( iActionIcons[ WALK_ICON ], TacticalStr[ DRIVE_POPUPTEXT ] );
 	}
@@ -788,9 +777,9 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	ButtonList[ iActionIcons[ WALK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( !pSoldier->CanRobotBeControlled( ) )
+		if ( !CanRobotBeControlled( pSoldier ) )
 		{
 			DisableButton( iActionIcons[ WALK_ICON ] );
 		}
@@ -846,20 +835,20 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	//SetButtonSavedRect( iActionIcons[ LOOK_ICON ] );
 	ButtonList[ iActionIcons[ LOOK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		DisableButton( iActionIcons[ LOOK_ICON ]	);
 	}
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( !pSoldier->CanRobotBeControlled( ) )
+		if ( !CanRobotBeControlled( pSoldier ) )
 		{
 			DisableButton( iActionIcons[ LOOK_ICON ] );
 		}
 	}
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// Until we get mounted weapons...
 		uiActionImages = CANCEL_IMAGES;
@@ -959,7 +948,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	SetButtonFastHelpText( iActionIcons[ TALK_ICON ], pTacticalPopupButtonStrings[ TALK_ICON ] );
 	ButtonList[ iActionIcons[ TALK_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		DisableButton( iActionIcons[ TALK_ICON ]	);
 	}
@@ -977,7 +966,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	SetButtonFastHelpText( iActionIcons[ HAND_ICON ], pTacticalPopupButtonStrings[ HAND_ICON ] );
 	ButtonList[ iActionIcons[ HAND_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		DisableButton( iActionIcons[ HAND_ICON ]	);
 	}
@@ -1005,7 +994,6 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 void PopDownMovementMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInMovementMenu )
 	{
 		RemoveButton( iActionIcons[ WALK_ICON	] );
@@ -1037,7 +1025,6 @@ void PopDownMovementMenu( )
 
 void RenderMovementMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInMovementMenu )
 	{
 		BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, giMenuAnchorX, giMenuAnchorY, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -1060,7 +1047,6 @@ void RenderMovementMenu( )
 
 void CancelMovementMenu( )
 {
-	PERFORMANCE_MARKER
 	// Signal end of event
 	PopDownMovementMenu( );
 	guiPendingOverrideEvent		= A_CHANGE_TO_MOVE;	
@@ -1068,7 +1054,6 @@ void CancelMovementMenu( )
 
 void BtnMovementCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32		uiBtnID;
 	UI_EVENT	*pUIEvent;
 
@@ -1134,7 +1119,6 @@ void BtnMovementCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleUpDownArrowBackgrounds( )
 {
-	PERFORMANCE_MARKER
 	static	UINT32						uiOldShowUpDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
 	// Check for change in mode
@@ -1153,7 +1137,6 @@ void HandleUpDownArrowBackgrounds( )
 
 void RenderArrows( )
 {
-	PERFORMANCE_MARKER
 	TILE_ELEMENT							TileElem;
 
 	if ( guiShowUPDownArrows & ARROWS_HIDE_UP && guiShowUPDownArrows & ARROWS_HIDE_DOWN )
@@ -1275,7 +1258,6 @@ void RenderArrows( )
 
 void EraseRenderArrows( )
 {
-	PERFORMANCE_MARKER
 	if ( giUpArrowRect != 0 )
 	{
 		if ( giUpArrowRect != -1 )
@@ -1297,7 +1279,6 @@ void EraseRenderArrows( )
 
 void GetArrowsBackground( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE								*pSoldier;
 	INT16											sMercScreenX, sMercScreenY;
 	UINT16										sArrowHeight = ARROWS_HEIGHT, sArrowWidth = ARROWS_WIDTH;
@@ -1407,7 +1388,6 @@ void GetArrowsBackground( )
 
 void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY, BOOLEAN fRadio )
 {
-	PERFORMANCE_MARKER
 	INT16 sMercScreenX, sMercScreenY;
 	INT16 sOffsetX, sOffsetY;
 	UINT8	ubAnimUseHeight;
@@ -1463,11 +1443,11 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 	//sStanceOffset -= gpWorldLevelData[ pSoldier->sGridNo ].sHeight;
 
 	// Adjust based on level
-	if ( pSoldier->pathing.bLevel == 1 && gsInterfaceLevel == 0 )
+	if ( pSoldier->bLevel == 1 && gsInterfaceLevel == 0 )
 	{
 		//sStanceOffset -= ROOF_LEVEL_HEIGHT;
 	}
-	if ( pSoldier->pathing.bLevel == 0 && gsInterfaceLevel == 1 )
+	if ( pSoldier->bLevel == 0 && gsInterfaceLevel == 1 )
 	{
 		//sStanceOffset += ROOF_LEVEL_HEIGHT;
 	}
@@ -1489,7 +1469,7 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 
 			// If not a radio position, adjust if we are getting hit, to be lower!
 			// If we are getting hit, lower them!
-			if ( pSoldier->flags.fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
+			if ( pSoldier->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
 			{
 				*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
 				*psY = sMercScreenY;
@@ -1510,7 +1490,6 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 
 void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 	INT16			sXPos, sYPos;
 	INT16			sX, sY;
@@ -1534,21 +1513,21 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		return;
 	}
 
-	if ( pSoldier->flags.fFlashLocator )
+	if ( pSoldier->fFlashLocator )
 	{
 		if ( pSoldier->bVisible == -1 )
 		{
-			pSoldier->flags.fFlashLocator = FALSE;
+			pSoldier->fFlashLocator = FALSE;
 		}
 		else
 		{
-			if ( TIMECOUNTERDONE( pSoldier->timeCounters.BlinkSelCounter, 80 ) )
+			if ( TIMECOUNTERDONE( pSoldier->BlinkSelCounter, 80 ) )
 			{
-				RESETTIMECOUNTER( pSoldier->timeCounters.BlinkSelCounter, 80 );
+				RESETTIMECOUNTER( pSoldier->BlinkSelCounter, 80 );
 
-			//	pSoldier->flags.fShowLocator = !pSoldier->flags.fShowLocator;
+			//	pSoldier->fShowLocator = !pSoldier->fShowLocator;
 
-				pSoldier->flags.fShowLocator = TRUE;
+				pSoldier->fShowLocator = TRUE;
 
 				// Update frame
 				pSoldier->sLocatorFrame++;
@@ -1556,26 +1535,26 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 				if ( pSoldier->sLocatorFrame == 5 )
 				{
 					// Update time we do this
-					pSoldier->flags.fFlashLocator++;
+					pSoldier->fFlashLocator++;
 					pSoldier->sLocatorFrame = 0;
 				}
 			}
 
-			//if ( TIMECOUNTERDONE( pSoldier->timeCounters.FlashSelCounter, 5000 ) )
+			//if ( TIMECOUNTERDONE( pSoldier->FlashSelCounter, 5000 ) )
 			//{
-			//	RESETTIMECOUNTER( pSoldier->timeCounters.FlashSelCounter, 5000 );
+			//	RESETTIMECOUNTER( pSoldier->FlashSelCounter, 5000 );
 
-			//	pSoldier->flags.fFlashLocator = FALSE;
-			//	pSoldier->flags.fShowLocator = FALSE;
+			//	pSoldier->fFlashLocator = FALSE;
+			//	pSoldier->fShowLocator = FALSE;
 
 			//}
-			if ( pSoldier->flags.fFlashLocator == pSoldier->ubNumLocateCycles )
+			if ( pSoldier->fFlashLocator == pSoldier->ubNumLocateCycles )
 			{
-					pSoldier->flags.fFlashLocator = FALSE;
-					pSoldier->flags.fShowLocator = FALSE;
+					pSoldier->fFlashLocator = FALSE;
+					pSoldier->fShowLocator = FALSE;
 			}
 
-			//if ( pSoldier->flags.fShowLocator )
+			//if ( pSoldier->fShowLocator )
 			{
 				// Render the beastie
 				GetSoldierAboveGuyPositions( pSoldier, &sXPos, &sYPos, TRUE );
@@ -1597,7 +1576,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 					SetBackgroundRectFilled( iBack );
 				}
 
-				if ( ( !pSoldier->aiData.bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
+				if ( ( !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
 				{
 					BltVideoObjectFromIndex(	FRAME_BUFFER, guiRADIO2, pSoldier->sLocatorFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 				}
@@ -1615,7 +1594,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	}
 
 
-	if ( !pSoldier->flags.fShowLocator )
+	if ( !pSoldier->fShowLocator )
 	{
 		// RETURN IF MERC IS NOT SELECTED
 		if ( gfUIHandleSelectionAboveGuy && pSoldier->ubID == gsSelectedGuy && pSoldier->ubID != gusSelectedSoldier && !gfIgnoreOnSelectedGuy )
@@ -1631,7 +1610,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		//{
 
 		//}
-		else if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTI_SELECTED )
+		else if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
 		{
 
 		}
@@ -1656,7 +1635,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	}
 
 	// Donot show if we are dead
-	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_DEAD ) )
+	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 	{
 		return;
 	}
@@ -1670,7 +1649,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_MCOLOR_WHITE );
 
-	if ( pSoldier->ubProfile != NO_PROFILE || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+	if ( pSoldier->ubProfile != NO_PROFILE || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
 		if ( gfUIMouseOnValidCatcher == 1 && pSoldier->ubID == gubUIValidCatcherID )
 		{
@@ -1716,7 +1695,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
 
 		// If not in a squad....
-		if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			if ( GetNumberInVehicle( pSoldier->bVehicleID ) == 0 )
 			{
@@ -1749,7 +1728,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 		}
 		}
 
-		if ( pSoldier->ubProfile < FIRST_RPC || pSoldier->ubProfile >= GASTON || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( pSoldier->ubProfile < FIRST_RPC || pSoldier->ubProfile >= GASTON || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// Adjust for bars!
 
@@ -1815,9 +1794,9 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 			}
 		}
 	}
-	else //pSoldier->ubProfile != NO_PROFILE || ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	else //pSoldier->ubProfile != NO_PROFILE || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		if ( pSoldier->pathing.bLevel != 0 )
+		if ( pSoldier->bLevel != 0 )
 		{
 			// Display name
 			SetFont( TINYFONT1 );
@@ -1851,7 +1830,6 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
 void RenderOverlayMessage( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	// Override it!
 	OverrideMercPopupBox( &gpOverrideMercBox );
 
@@ -1866,7 +1844,6 @@ void RenderOverlayMessage( VIDEO_OVERLAY *pBlitter )
 
 void BeginOverlayMessage( UINT32 uiFont, STR16 pFontString, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	CHAR16	SlideString[512];
@@ -1908,7 +1885,6 @@ void BeginOverlayMessage( UINT32 uiFont, STR16 pFontString, ... )
 
 void EndOverlayMessage( )
 {
-	PERFORMANCE_MARKER
 	if ( giPopupSlideMessageOverlay != -1 )
 	{	
 
@@ -1924,7 +1900,6 @@ void EndOverlayMessage( )
 
 void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight )
 {
-	PERFORMANCE_MARKER
 	FLOAT											dWidth, dPercentage;
 	//UINT16										usLineColor;
 
@@ -1942,7 +1917,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, ( gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y ) );
 
 	// get amt bandaged
-	bBandage = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
+	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
 
 	
 
@@ -1967,7 +1942,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	
 	if( bBandage )
 	{
-		dPercentage = (FLOAT)( pSoldier->stats.bLife + bBandage ) / (FLOAT)100;
+		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
 		dWidth			=	dPercentage * sWidth;
 		if(gbPixelDepth==16)
 		{
@@ -1983,7 +1958,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	}
 
 
-	dPercentage = (FLOAT)pSoldier->stats.bLife / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
 	if(gbPixelDepth==16)
 	{
@@ -2029,7 +2004,7 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 
 	/*
 	// morale
-	dPercentage = (FLOAT)pSoldier->aiData.bMorale / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
 	if(gbPixelDepth==16)
 	{
@@ -2051,7 +2026,6 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 
 void EndDeadlockMsg( )
 {
-	PERFORMANCE_MARKER
 	// Reset gridlock
 	gfUIInDeadlock = FALSE;
 }
@@ -2059,7 +2033,6 @@ void EndDeadlockMsg( )
 
 void ClearInterface( )
 {
-	PERFORMANCE_MARKER
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		return;
@@ -2124,7 +2097,6 @@ void ClearInterface( )
 
 void RestoreInterface( )
 {
-	PERFORMANCE_MARKER
 	// Once we are done, plot path again!
 	gfPlotNewMovement = TRUE;
 
@@ -2140,7 +2112,6 @@ void RestoreInterface( )
 
 void BlitPopupText( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	UINT8	*pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
@@ -2161,7 +2132,6 @@ void BlitPopupText( VIDEO_OVERLAY *pBlitter )
 
 void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel )
 {
-	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DirtyMercPanelInterface"));
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
@@ -2191,7 +2161,6 @@ BOOLEAN				gfInOpenDoorMenu = FALSE;
 
 BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fClosingDoor )
 {
-	PERFORMANCE_MARKER
 	INT16 sHeight, sWidth;
 	INT16	sScreenX, sScreenY;
 
@@ -2254,7 +2223,6 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 
 void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 {
-	PERFORMANCE_MARKER
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	CHAR16								zDisp[ 100 ];
 
@@ -2533,7 +2501,6 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 
 void PopDownOpenDoorMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInOpenDoorMenu )
 	{
 		UnLockPauseState();
@@ -2570,7 +2537,6 @@ void PopDownOpenDoorMenu( )
 
 void RenderOpenDoorMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInOpenDoorMenu )
 	{
 		BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, gOpenDoorMenu.sX, gOpenDoorMenu.sY, VO_BLT_SRCTRANSPARENCY, NULL );
@@ -2598,14 +2564,12 @@ void RenderOpenDoorMenu( )
 
 void CancelOpenDoorMenu( )
 {
-	PERFORMANCE_MARKER
 	// Signal end of event
 	gOpenDoorMenu.fMenuHandled = 2;
 }
 
 void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32		uiBtnID;
 
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -2635,7 +2599,7 @@ void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 
 				if ( gOpenDoorMenu.fClosingDoor )
 				{
-					gOpenDoorMenu.pSoldier->ChangeSoldierState( GetAnimStateForInteraction( gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR ), 0 , FALSE );
+					ChangeSoldierState( gOpenDoorMenu.pSoldier, GetAnimStateForInteraction( gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR ), 0 , FALSE );
 				}
 				else
 				{
@@ -2776,7 +2740,6 @@ void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN HandleOpenDoorMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gOpenDoorMenu.fMenuHandled )
 	{
 		PopDownOpenDoorMenu( );
@@ -2789,7 +2752,6 @@ BOOLEAN HandleOpenDoorMenu( )
 
 void RenderUIMessage( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	// Shade area first...
 	ShadowVideoSurfaceRect( pBlitter->uiDestBuff, pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2 );
 
@@ -2801,7 +2763,6 @@ void RenderUIMessage( VIDEO_OVERLAY *pBlitter )
 
 void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, STR16 pFontString, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	CHAR16	MsgString[512];
@@ -2862,7 +2823,6 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, STR16 pFontString, ... )
 
 void BeginUIMessage( STR16 pFontString, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR16	MsgString[512];
 
@@ -2876,7 +2836,6 @@ void BeginUIMessage( STR16 pFontString, ... )
 
 void BeginMapUIMessage( UINT8 ubPosition, STR16 pFontString, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	CHAR16	MsgString[512];
@@ -2905,6 +2864,7 @@ void BeginMapUIMessage( UINT8 ubPosition, STR16 pFontString, ... )
 	{
 		// WDS - bug fix: VideoOverlayDesc must be initialized! - 07/16/2007
 		memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
+
 		// Set Overlay
 		VideoOverlayDesc.sLeft	= 20 + MAP_VIEW_START_X + ( MAP_VIEW_WIDTH - gusUIMessageWidth ) / 2;
 
@@ -2932,7 +2892,6 @@ void BeginMapUIMessage( UINT8 ubPosition, STR16 pFontString, ... )
 
 void EndUIMessage( )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiClock = GetJA2Clock();
 
 	if ( giUIMessageOverlay != -1 )
@@ -2974,7 +2933,6 @@ void EndUIMessage( )
 
 BOOLEAN AddTopMessage( UINT8 ubType, STR16 pzString )
 {
-	PERFORMANCE_MARKER
 	UINT32	cnt;
 	BOOLEAN	fFound = FALSE;
 
@@ -3012,7 +2970,6 @@ BOOLEAN AddTopMessage( UINT8 ubType, STR16 pzString )
 
 void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
 	VOBJECT_DESC	VObjectDesc;
 	INT16		sX, sY;
@@ -3029,7 +2986,7 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 
 	if (iResolution == 0)
 	{
-	FilenameForBPP("INTERFACE\\rect.sti", VObjectDesc.ImageFile);
+		FilenameForBPP("INTERFACE\\rect.sti", VObjectDesc.ImageFile);
 	}
 	else if (iResolution == 1)
 	{
@@ -3038,6 +2995,11 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\rect_1024x768.sti", VObjectDesc.ImageFile);
+	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
 	}
 
 	if( !AddVideoObject( &VObjectDesc, &uiBAR ) )
@@ -3049,40 +3011,44 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 	if (iResolution == 0)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen.sti" );
 	}
 	else if (iResolution == 1)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen_800x600.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen_800x600.sti" );
 	}
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\timebargreen_1024x768.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen_1024x768.sti" );
 	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
+	}
+
+	if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
+		AssertMsg(0, String( "Missing %s", VObjectDesc.ImageFile) );
 
 	if (iResolution == 0)
 	{
-	FilenameForBPP("INTERFACE\\timebaryellow.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-		AssertMsg(0, "Missing INTERFACE\\timebaryellow.sti" );
+		FilenameForBPP("INTERFACE\\timebaryellow.sti", VObjectDesc.ImageFile);
 	}
 	else if (iResolution == 1)
 	{
 		FilenameForBPP("INTERFACE\\timebaryellow_800x600.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebaryellow_800x600.sti" );
 	}
 	else if (iResolution == 2)
 	{
 		FilenameForBPP("INTERFACE\\timebaryellow_1024x768.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebaryellow_1024x768.sti" );
 	}
+	else
+	{
+		AssertMsg( 0, "Invalid resolution");
+		return;
+	}
+
+	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
+		AssertMsg(0, String( "Missing %s", VObjectDesc.ImageFile) );
 
 	// Change dest buffer
 	SetFontDestBuffer( uiSurface , 0, 0, SCREEN_WIDTH , 20, FALSE );
@@ -3268,14 +3234,12 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, STR16 psString )
 
 void TurnExpiredCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// End turn...
 	UIHandleEndTurn( NULL );
 }
 
 void CheckForAndHandleEndPlayerTimeLimit( )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.fInTopMessage )
 	{
 		if ( gGameOptions.fTurnTimeLimit )
@@ -3302,7 +3266,6 @@ void CheckForAndHandleEndPlayerTimeLimit( )
 
 void HandleTopMessages( )
 {
-	PERFORMANCE_MARKER
 	//UINT32		uiTime;
 	blt_vs_fx BltFx;
 
@@ -3451,7 +3414,6 @@ void HandleTopMessages( )
 
 void EndTopMessage( )
 {
-	PERFORMANCE_MARKER
 //	blt_vs_fx BltFx;
 
 
@@ -3500,7 +3462,6 @@ void EndTopMessage( )
 
 BOOLEAN InTopMessageBarAnimation( )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.fInTopMessage )
 	{
 		if ( 	gTopMessage.bAnimate != 0 )
@@ -3518,7 +3479,6 @@ BOOLEAN InTopMessageBarAnimation( )
 
 void PauseRT( BOOLEAN fPause )
 {
-	PERFORMANCE_MARKER
 	//StopMercAnimation( fPause );
 
 	if ( fPause )
@@ -3534,7 +3494,6 @@ void PauseRT( BOOLEAN fPause )
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 {
-	PERFORMANCE_MARKER
 	// OK, set value
 	gubProgNumEnemies = ubNumEnemies + ubDoneEnemies;
 	gubProgCurEnemy		= ubDoneEnemies;
@@ -3547,7 +3506,6 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 
 void UpdateEnemyUIBar( )
 {
-	PERFORMANCE_MARKER
 	// Are we active?
 	if ( gfProgBarActive )
 	{
@@ -3572,7 +3530,6 @@ void UpdateEnemyUIBar( )
 
 void InitPlayerUIBar( BOOLEAN fInterrupt )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 	INT8				bNumOK = 0, bNumNotOK = 0;
@@ -3605,7 +3562,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 			// Are we active and in sector.....
 			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 			{
-				if ( pTeamSoldier->stats.bLife < OKLIFE )
+				if ( pTeamSoldier->bLife < OKLIFE )
 				{
 					bNumNotOK++;
 				}
@@ -3648,7 +3605,6 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 
 void MovementMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CancelMovementMenu( );
@@ -3657,7 +3613,6 @@ void MovementMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CancelOpenDoorMenu( );
@@ -3666,9 +3621,8 @@ void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 STR16 GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt, cntStart;
-	if( pSoldier->stats.bLife == pSoldier->stats.bLifeMax )
+	if( pSoldier->bLife == pSoldier->bLifeMax )
 	{
 		cntStart = 4;
 	}
@@ -3679,7 +3633,7 @@ STR16 GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 	//Show health on others.........
 	for ( cnt = cntStart; cnt < 6; cnt ++ )
 	{
-		if ( pSoldier->stats.bLife < bHealthStrRanges[ cnt ] )
+		if ( pSoldier->bLife < bHealthStrRanges[ cnt ] )
 		{
 			break;
 		}
@@ -3718,7 +3672,6 @@ static AIMCUBE_UI_DATA	gCubeUIData;
 
 void CalculateAimCubeUIPhysics( )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubHeight;
 
 	ubHeight = GET_CUBES_HEIGHT_FROM_UIHEIGHT( gCubeUIData.bHeight );
@@ -3750,19 +3703,16 @@ void CalculateAimCubeUIPhysics( )
 
 INT16 GetInAimCubeUIGridNo( )
 {
-	PERFORMANCE_MARKER
 	return( gCubeUIData.sGridNo );
 }
 
 BOOLEAN InAimCubeUI( )
 {
-	PERFORMANCE_MARKER
 	return( gfInAimCubeUI );
 }
 
 BOOLEAN AimCubeUIClick( )
 {
-	PERFORMANCE_MARKER
 	if ( !gfInAimCubeUI )
 	{
 		return( FALSE );
@@ -3785,7 +3735,6 @@ BOOLEAN AimCubeUIClick( )
 
 void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
 {
-	PERFORMANCE_MARKER
 	gfInAimCubeUI = TRUE;
 
 	gCubeUIData.sGridNo			= sGridNo;
@@ -3809,13 +3758,11 @@ void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 b
 
 void EndAimCubeUI( )
 {
-	PERFORMANCE_MARKER
 	gfInAimCubeUI = FALSE;
 }
 
 void IncrementAimCubeUI( )
 {
-	PERFORMANCE_MARKER
 	if ( gCubeUIData.fActiveHeightBar )
 	{
 		// Cycle the last height yellow once
@@ -3869,7 +3816,6 @@ void IncrementAimCubeUI( )
 
 void SetupAimCubeAI( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInAimCubeUI )
 	{
 		AddTopmostToHead( gCubeUIData.sTargetGridNo, FIRSTPOINTERS2 );
@@ -3886,7 +3832,6 @@ void SetupAimCubeAI( )
 
 void ResetAimCubeAI( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInAimCubeUI )
 	{
 		RemoveTopmost( gCubeUIData.sTargetGridNo, FIRSTPOINTERS2 );
@@ -3896,7 +3841,6 @@ void ResetAimCubeAI( )
 
 void RenderAimCubeUI( )
 {
-	PERFORMANCE_MARKER
 	INT16 sScreenX, sScreenY;
 	INT32	cnt;
 	INT16	sBarHeight;
@@ -3905,13 +3849,12 @@ void RenderAimCubeUI( )
 
 	if ( gfInAimCubeUI )
 	{
+		// Determine screen location....
+		GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
 
 		// OK, given height
 		if ( gCubeUIData.fShowHeight )
 		{
-			// Determine screen location....
-			GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
-	
 			// Save background
 			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sScreenX, (INT16)(sScreenY - 70 ), (INT16)(sScreenX + 40 ), (INT16)(sScreenY + 50 ) ); 
 			if ( iBack != -1 )
@@ -3960,7 +3903,6 @@ void RenderAimCubeUI( )
 
 void GetLaunchItemParamsFromUI( )
 {
-	PERFORMANCE_MARKER
 
 
 }
@@ -3973,7 +3915,6 @@ static BOOLEAN gfBadPhysicsCTGT = FALSE;
 
 void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 {
-	PERFORMANCE_MARKER
 	gfDisplayPhysicsUI					= TRUE;
 	gsPhysicsImpactPointGridNo	= sGridNo;
 	gbPhysicsImpactPointLevel		= bLevel;
@@ -3982,14 +3923,12 @@ void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 
 void EndPhysicsTrajectoryUI( )
 {
-	PERFORMANCE_MARKER
 	gfDisplayPhysicsUI = FALSE;
 
 }
 
 void SetupPhysicsTrajectoryUI( )
 {
-	PERFORMANCE_MARKER
 	if ( gfDisplayPhysicsUI && gfUIHandlePhysicsTrajectory )
 	{
 		if ( gbPhysicsImpactPointLevel == 0 )
@@ -4024,7 +3963,6 @@ void SetupPhysicsTrajectoryUI( )
 
 void ResetPhysicsTrajectoryUI( )
 {
-	PERFORMANCE_MARKER
 	if ( gfDisplayPhysicsUI )
 	{
 		RemoveTopmost( gsPhysicsImpactPointGridNo, FIRSTPOINTERS8 );
@@ -4037,7 +3975,6 @@ void ResetPhysicsTrajectoryUI( )
 
 void DirtyTopMessage( )
 {
-	PERFORMANCE_MARKER
 	gTopMessage.fCreated	= FALSE;
 }
 
@@ -4045,7 +3982,6 @@ void DirtyTopMessage( )
 
 UINT32 CalcUIMessageDuration( STR16 wString )
 {
-	PERFORMANCE_MARKER
 	// base + X per letter
 	return( 1000 + 50 * wcslen( wString ) );
 }
@@ -4060,7 +3996,6 @@ INT8		gbMultiPurposeLocatorCycles;
 
 void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 {
-	PERFORMANCE_MARKER
 	guiMultiPurposeLocatorLastUpdate = 0;
 	gbMultiPurposeLocatorCycles		= 0;
 	gbMultiPurposeLocatorFrame		= 0;
@@ -4089,7 +4024,6 @@ void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 
 void HandleMultiPurposeLocator( )
 {
-	PERFORMANCE_MARKER
 	UINT32			uiClock;
 
 	if ( !gfMultipurposeLocatorOn )
@@ -4125,7 +4059,6 @@ void HandleMultiPurposeLocator( )
 
 void RenderTopmostMultiPurposeLocator( )
 {
-	PERFORMANCE_MARKER
 	FLOAT				dOffsetX, dOffsetY;
 	FLOAT				dTempX_S, dTempY_S;
 	INT16				sX, sY, sXPos, sYPos;
@@ -4172,4 +4105,5 @@ void RenderTopmostMultiPurposeLocator( )
 
 	BltVideoObjectFromIndex(	FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 }
+
 

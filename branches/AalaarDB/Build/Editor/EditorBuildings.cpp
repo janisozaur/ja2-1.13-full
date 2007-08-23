@@ -38,7 +38,6 @@ BOOLEAN	gfEditingDoor;
 //BEGINNNING OF BUILDING INITIALIZATION FUNCTIONS
 void GameInitEditorBuildingInfo()
 {
-	PERFORMANCE_MARKER
 	fBuildingShowRoofs = TRUE;
 	fBuildingShowWalls = TRUE;
 	fBuildingShowRoomInfo = FALSE;
@@ -49,7 +48,6 @@ void GameInitEditorBuildingInfo()
 //BEGINNING OF BUILDING UTILITY FUNCTIONS
 void UpdateRoofsView()
 {
-	PERFORMANCE_MARKER
 	INT32 x;
 	UINT16 usType;
 	for ( x = 0; x < WORLD_MAX; x++ )
@@ -64,7 +62,6 @@ void UpdateRoofsView()
 
 void UpdateWallsView()
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
@@ -82,7 +79,6 @@ void UpdateWallsView()
 
 void UpdateBuildingsInfo()
 {
-	PERFORMANCE_MARKER
 	//print the headers on top of the columns
 	SetFont( SMALLCOMPFONT );
 	SetFontForeground( FONT_RED );
@@ -108,7 +104,6 @@ void UpdateBuildingsInfo()
 //6) KillBuilding at x	, y+1.
 void KillBuilding( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fFound = FALSE;
 
 	if( !gfBasement )
@@ -144,7 +139,6 @@ extern void RemoveBuildingLayout();
 
 void DeleteBuildingLayout()
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	//Erases the cursors associated with them.
 	RemoveBuildingLayout();
@@ -160,7 +154,6 @@ void DeleteBuildingLayout()
 
 void BuildLayout( INT32 iMapIndex, INT32 iOffset )
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	//First, validate the gridno
 	iMapIndex += iOffset;
@@ -203,7 +196,6 @@ void BuildLayout( INT32 iMapIndex, INT32 iOffset )
 //The first step is copying a building.	After that, it either must be pasted or moved.
 void CopyBuilding( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	AssertMsg( !gpBuildingLayoutList, "Error:	Attempting to copy building multiple times." );
 
 	//First step is to determine if we have a building in the area that we click.	If not, do nothing.
@@ -301,7 +293,6 @@ void SortBuildingLayout( INT32 iMapIndex )
 
 void PasteMapElementToNewMapElement( INT32 iSrcGridNo, INT32 iDstGridNo )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT			*pSrcMapElement;
 	LEVELNODE				*pNode;
 	UINT16					usType;
@@ -367,7 +358,6 @@ void PasteMapElementToNewMapElement( INT32 iSrcGridNo, INT32 iDstGridNo )
 
 void MoveBuilding( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	if( !gpBuildingLayoutList )
@@ -395,7 +385,6 @@ void MoveBuilding( INT32 iMapIndex )
 
 void PasteBuilding( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	if( !gpBuildingLayoutList )
@@ -430,7 +419,6 @@ ROOFNODE *gpRoofList = NULL;
 
 void ReplaceRoof( INT32 iMapIndex, UINT16 usRoofType )
 {
-	PERFORMANCE_MARKER
 	ROOFNODE *curr;
 	//First, validate the gridno
 	if( iMapIndex < 0 && iMapIndex >= WORLD_COLS*WORLD_ROWS )
@@ -464,7 +452,6 @@ void ReplaceRoof( INT32 iMapIndex, UINT16 usRoofType )
 
 void ReplaceBuildingWithNewRoof( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 usRoofType;
 	ROOFNODE *curr;
 	//Not in normal editor mode, then can't do it.
@@ -518,7 +505,6 @@ extern BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
 
 void InitDoorEditing( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	DOOR *pDoor;
 	if( !DoorAtGridNo( iMapIndex ) && !OpenableAtGridNo( iMapIndex ) )
 		return;
@@ -565,7 +551,6 @@ void InitDoorEditing( INT32 iMapIndex )
 
 void ExtractAndUpdateDoorInfo()
 {
-	PERFORMANCE_MARKER
 	LEVELNODE* pNode;
 	INT32 num;
 	DOOR door;
@@ -634,7 +619,6 @@ void ExtractAndUpdateDoorInfo()
 
 void FindNextLockedDoor()
 {
-	PERFORMANCE_MARKER
 	DOOR *pDoor;
 	INT32 i;
 	for( i = iDoorMapIndex + 1; i < WORLD_MAX; i++ )
@@ -661,7 +645,6 @@ void FindNextLockedDoor()
 
 void RenderDoorEditingWindow()
 {
-	PERFORMANCE_MARKER
 	InvalidateRegion( iScreenWidthOffset + 200, iScreenHeightOffset + 130, iScreenWidthOffset + 440, iScreenHeightOffset + 230 );
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
@@ -678,7 +661,6 @@ void RenderDoorEditingWindow()
 
 void KillDoorEditing()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	EnableEditorTaskbar();
 	MSYS_RemoveRegion( &DoorRegion );
@@ -690,7 +672,6 @@ void KillDoorEditing()
 
 void DoorOkayCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ExtractAndUpdateDoorInfo();
@@ -700,7 +681,6 @@ void DoorOkayCallback( GUI_BUTTON *btn, INT32 reason )
 
 void DoorCancelCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		KillDoorEditing();
@@ -709,13 +689,11 @@ void DoorCancelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void DoorToggleLockedCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	//handled in ExtractAndUpdateDoorInfo();
 }
 
 void AddLockedDoorCursors()
 {
-	PERFORMANCE_MARKER
 	DOOR *pDoor;
 	INT i;
 	for( i = 0; i < gubNumDoors; i++ )
@@ -727,7 +705,6 @@ void AddLockedDoorCursors()
 
 void RemoveLockedDoorCursors()
 {
-	PERFORMANCE_MARKER
 	DOOR *pDoor;
 	INT i;
 	LEVELNODE* pNode;
@@ -752,7 +729,6 @@ void RemoveLockedDoorCursors()
 
 void SetupTextInputForBuildings()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[4];
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );	//just so we can use short cut keys while not typing.
@@ -762,7 +738,6 @@ void SetupTextInputForBuildings()
 
 void ExtractAndUpdateBuildingInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[4];
 	INT32 temp;
 	//extract light1 colors

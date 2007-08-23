@@ -79,7 +79,6 @@ extern BOOLEAN gfEnterAutoResolveMode;
 //Counts the number of live mercs in any given sector.
 BOOLEAN PlayerMercsInSector_MSE( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fDontConsiderNextSector )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
 	UINT8 ubNumMercs = 0;
@@ -96,7 +95,7 @@ BOOLEAN PlayerMercsInSector_MSE( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fDont
 				while( pPlayer )
 				{
 					// robots count as mercs here, because they can fight, but vehicles don't
-					if( ( pPlayer->pSoldier->stats.bLife ) && !( pPlayer->pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+					if( ( pPlayer->pSoldier->bLife ) && !( pPlayer->pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 					{
 						ubNumMercs++;
 					}
@@ -113,7 +112,6 @@ BOOLEAN PlayerMercsInSector_MSE( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fDont
 // get any enemy group id in the sector (if no group, will return 0 )
 UINT8 GetEnemyGroupIdInSector( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubRes = 0;
 	GROUP *curr;
 	curr = gpGroupList;
@@ -133,7 +131,6 @@ UINT8 GetEnemyGroupIdInSector( INT16 sMapX, INT16 sMapY )
 // Count all militia in the sector
 UINT8 CountMilitia(SECTORINFO *pSectorInfo)
 {
-	PERFORMANCE_MARKER
 	return pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA]+
 	pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA]+
 	pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];
@@ -142,7 +139,6 @@ UINT8 CountMilitia(SECTORINFO *pSectorInfo)
 // Creates militia at destination sector. The type and amount of militia depends on current sector's miltia type and amount
 void GenerateMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	
 	StrategicAddMilitiaToSector( sTMapX, sTMapY, GREEN_MILITIA, pSectorInfo->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] / gGameExternalOptions.guiDivOfOriginalMilitia);
@@ -152,20 +148,9 @@ void GenerateMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY )
 	pSectorInfo = &( SectorInfo[ SECTOR( sTMapX, sTMapY ) ] );
 
 	while( CountMilitia(pSectorInfo) > gGameExternalOptions.guiMaxMilitiaSquadSize )
-	{
-		if(pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA])
-		{
-			--pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];
-		}
-		else if(pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA])
-		{
-			--pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];
-		}
-		else if(pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA])
-		{
-			--pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];
-		}
-	}
+		if(pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA])--pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];else
+			if(pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA])--pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];else
+				if(pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA])--pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];
 
 	// Update the militia if the current sector is affected
 	if (gfStrategicMilitiaChangesMade)
@@ -177,7 +162,6 @@ void GenerateMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY )
 // Creates militia at destination sector and removes it from starting sector
 void MoveMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY, BOOLEAN fAlternativeMax )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	SECTORINFO *pTSectorInfo = &( SectorInfo[ SECTOR( sTMapX, sTMapY ) ] );
 	
@@ -191,23 +175,12 @@ void MoveMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY, BOOL
 
 	while( !fAlternativeMax && CountMilitia(pTSectorInfo) > gGameExternalOptions.guiMaxMilitiaSquadSize ||
 		fAlternativeMax && CountMilitia(pTSectorInfo) > gGameExternalOptions.guiMaxMilitiaSquadSizeBattle )
-	{
 		if(pTSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA])
-		{
-			--pTSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];
-			++pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];
-		}
-		else if(pTSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA])
-		{
-			--pTSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];
-			++pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];
-		}
-		else if(pTSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA])
-		{
-			--pTSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];
-			++pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];
-		}
-	}
+		{--pTSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];++pSectorInfo->ubNumberOfCivsAtLevel[GREEN_MILITIA];}else
+		if(pTSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA])
+		{--pTSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];++pSectorInfo->ubNumberOfCivsAtLevel[REGULAR_MILITIA];}else
+		if(pTSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA])
+		{--pTSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];++pSectorInfo->ubNumberOfCivsAtLevel[ELITE_MILITIA];}
 
 	if (gfStrategicMilitiaChangesMade)
 	{
@@ -217,7 +190,6 @@ void MoveMilitiaSquad(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY, BOOL
 
 BOOLEAN MoveOneBestMilitiaMan(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMapY)
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 //	SECTORINFO *pTSectorInfo = &( SectorInfo[ SECTOR( sTMapX, sTMapY ) ] );
 
@@ -245,7 +217,6 @@ BOOLEAN MoveOneBestMilitiaMan(INT16 sMapX, INT16 sMapY, INT16 sTMapX, INT16 sTMa
 // Generate rating for a direction
 UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 {
-	PERFORMANCE_MARKER
 	DOUBLE ddMinAngle, ddMaxAngle;
 	DOUBLE ddRes = 0;
 	DOUBLE pix2 = 3.1415926 * 2; // pi * 2
@@ -308,7 +279,6 @@ UINT16 CountDirectionEnemyRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 
 UINT16 CountDirectionRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 {
-	PERFORMANCE_MARKER
 	INT32 iRes = BASE_DIR_PRIORITY + CountDirectionEnemyRating( sMapX, sMapY, uiDir );
 
 	INT16 sDMapX, sDMapY;
@@ -367,7 +337,6 @@ UINT16 CountDirectionRating( INT16 sMapX, INT16 sMapY, UINT8 uiDir )
 // Standard conditions the direction should fit
 BOOLEAN CheckStandardConditionsForDirection( INT16 sSMapX, INT16 sSMapY, INT16 sMapX, INT16 sMapY, BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors )
 {
-	PERFORMANCE_MARKER
 	UINT8 uiTravab = GetTraversability( SECTOR( sSMapX , sSMapY ) , SECTOR( sMapX, sMapY ) );
 
  	if( uiTravab == GROUNDBARRIER || uiTravab == EDGEOFWORLD ) return FALSE;
@@ -382,7 +351,6 @@ BOOLEAN CheckStandardConditionsForDirection( INT16 sSMapX, INT16 sSMapY, INT16 s
 
 void GenerateDirectionInfos( INT16 sMapX, INT16 sMapY, UINT8* uiDirNumber, UINT16 pMoveDir[4][3], BOOLEAN fWithCities, BOOLEAN fForBattle, BOOLEAN fOnlyCitySectors )
 {
-	PERFORMANCE_MARKER
 	*uiDirNumber = 0;
 
 #ifdef DEBUG_SHOW_RATINGS
@@ -465,19 +433,16 @@ UINT8 uiBlockMoveListPointer;
 
 void AddToBlockMoveList(INT16 sMapX, INT16 sMapY)
 {
-	PERFORMANCE_MARKER
 	pBlockMoveList[ uiBlockMoveListPointer++ ] = SECTOR( sMapX, sMapY );
 }
 
 void ClearBlockMoveList()
 {
-	PERFORMANCE_MARKER
 	uiBlockMoveListPointer = 0;
 }
 
 BOOLEAN CheckInBlockMoveList(INT16 sMapX, INT16 sMapY)
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 	for( i = 0; i < uiBlockMoveListPointer ; ++i)
 		if( sMapX == SECTORX(pBlockMoveList[i]) && sMapY == SECTORY(pBlockMoveList[i]) )return TRUE;
@@ -487,7 +452,6 @@ BOOLEAN CheckInBlockMoveList(INT16 sMapX, INT16 sMapY)
 
 void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
 	UINT32 iRandomRes = 0, iRandom = 0;
@@ -527,6 +491,7 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 			return;
 
 		CreateMilitiaSquads( sMapX, sMapY );
+
 		if (gfStrategicMilitiaChangesMade)
 		{
 			ResetMilitia();
@@ -580,7 +545,6 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 
 					MoveMilitiaSquad( sMapX, sMapY,	SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ), FALSE );
 					AddToBlockMoveList( SECTORX( pMoveDir[ iRandomRes ][0] ), SECTORY( pMoveDir[ iRandomRes ][0] ) );
-
 					if ( gfStrategicMilitiaChangesMade)
 					{
 						ResetMilitia();
@@ -620,7 +584,6 @@ void UpdateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 	// called if there is a delay set.
 void CreateMilitiaSquads(INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
 	UINT32 iRandomRes = 0;
@@ -720,7 +683,6 @@ extern BOOLEAN gfMSResetMilitia;
 
 void DoMilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
 	UINT8 x;
@@ -788,7 +750,6 @@ void MSCallBack( UINT8 ubResult )
 
 BOOLEAN IsThereMilitiaInAdjacentSector( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	UINT16 pMoveDir[4][3];
 	UINT8 uiDirNumber = 0;
 	UINT8 x;
@@ -806,9 +767,9 @@ BOOLEAN IsThereMilitiaInAdjacentSector( INT16 sMapX, INT16 sMapY )
 
 void MilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 {
-	PERFORMANCE_MARKER
 	sMSMapX = sMapX;
 	sMSMapY = sMapY;
+	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	if( !gGameExternalOptions.gfAllowMilitiaGroups )
 		return;
@@ -827,7 +788,6 @@ void MilitiaHelpFromAdjacentSectors( INT16 sMapX, INT16 sMapY )
 
 void MilitiaFollowPlayer( INT16 sMapX, INT16 sMapY, INT16 sDMapX, INT16 sDMapY )
 {
-	PERFORMANCE_MARKER
 	if( GetTownIdForSector( sMapX, sMapY ) != BLANK_SECTOR ||
 		IsThisSectorASAMSector( sMapX, sMapY, 0 ) ||
 		PlayerMercsInSector_MSE( (UINT8)sMapX, (UINT8)sMapY, TRUE ) )return;

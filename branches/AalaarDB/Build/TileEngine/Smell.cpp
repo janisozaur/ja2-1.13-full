@@ -142,7 +142,6 @@ UINT8 ubBloodGraphicLUT [ ] = {	3, 3,	2,	2,	1,	1,	0, 0 };
 
 void RemoveBlood( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gpWorldLevelData[ sGridNo ].ubBloodInfo = 0;
 
 	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
@@ -152,8 +151,7 @@ void RemoveBlood( INT16 sGridNo, INT8 bLevel )
 
 
 void DecaySmells( void )
-{
-	PERFORMANCE_MARKER	
+{	
 	UINT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
@@ -178,7 +176,6 @@ void DecaySmells( void )
 
 void DecayBlood()
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;
 
@@ -238,7 +235,6 @@ void DecayBlood()
 
 void DecayBloodAndSmells( UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiCheckTime;
 
 	if ( !gfWorldLoaded )
@@ -276,7 +272,6 @@ void DecayBloodAndSmells( UINT32 uiTime )
 
 void DropSmell( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldSmell;
 	UINT8						ubOldStrength;
@@ -288,7 +283,7 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 	*	the tile, it overrides dropping smells of any type
 	*/
 
-	if (pSoldier->pathing.bLevel == 0)
+	if (pSoldier->bLevel == 0)
 	{
 		pMapElement = &(gpWorldLevelData[pSoldier->sGridNo]);
 		if (pMapElement->ubBloodInfo)
@@ -297,14 +292,14 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 			return;
 		}
 
-		if (pSoldier->aiData.bNormalSmell > pSoldier->aiData.bMonsterSmell)
+		if (pSoldier->bNormalSmell > pSoldier->bMonsterSmell)
 		{
-			ubStrength = pSoldier->aiData.bNormalSmell - pSoldier->aiData.bMonsterSmell;
+			ubStrength = pSoldier->bNormalSmell - pSoldier->bMonsterSmell;
 			ubSmell = HUMAN;
 		}
 		else
 		{
-			ubStrength = pSoldier->aiData.bMonsterSmell - pSoldier->aiData.bNormalSmell;
+			ubStrength = pSoldier->bMonsterSmell - pSoldier->bNormalSmell;
 			if (ubStrength == 0)
 			{
 				// don't drop any smell
@@ -361,7 +356,6 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 
 void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStrength, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldStrength=0;
 	UINT8						ubNewStrength=0;
@@ -474,7 +468,6 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 
 void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubType;
 	/*
 	* Dropping some blood;
@@ -482,9 +475,9 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 	*/
 
 	// figure out the type of blood that we're dropping
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_MONSTER )
+	if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
 	{
-		if ( pSoldier->pathing.bLevel == 0 )
+		if ( pSoldier->bLevel == 0 )
 		{
 			ubType = CREATURE_ON_FLOOR;
 		}
@@ -499,14 +492,13 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 	}
 
 
-	InternalDropBlood( pSoldier->sGridNo, pSoldier->pathing.bLevel, ubType, ubStrength, bVisible );
+	InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, ubType, ubStrength, bVisible );
 }
 
 
 
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT *		pMapElement;
 	INT8						bValue;
 	UINT16					usIndex, usNewIndex;

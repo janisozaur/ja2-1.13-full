@@ -991,8 +991,7 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 }
 
 void KeyDown(UINT32 usParam, UINT32 uiParam)
-{
-	PERFORMANCE_MARKER // Are we PRESSING down one of SHIFT, ALT or CTRL ???
+{ // Are we PRESSING down one of SHIFT, ALT or CTRL ???
 	if (usParam == SHIFT)
 	{ // SHIFT key is PRESSED
 	gfShiftState = SHIFT_DOWN;
@@ -1033,8 +1032,7 @@ void KeyDown(UINT32 usParam, UINT32 uiParam)
 }
 
 void KeyUp(UINT32 usParam, UINT32 uiParam)
-{
-	PERFORMANCE_MARKER // Are we RELEASING one of SHIFT, ALT or CTRL ???
+{ // Are we RELEASING one of SHIFT, ALT or CTRL ???
 	if (usParam == SHIFT)
 	{ // SHIFT key is RELEASED
 	gfShiftState = FALSE;
@@ -1507,8 +1505,7 @@ void RestoreString(StringInput *pStringDescriptor)
 }
 
 void EndStringInput(StringInput *pStringDescriptor)
-{
-	PERFORMANCE_MARKER // Make sure we have a valid pStringDescriptor
+{ // Make sure we have a valid pStringDescriptor
 	if (pStringDescriptor != NULL)
 	{ // make sure the gpCurrentStringDescriptor is NULL if necessary
 	if (pStringDescriptor == gpCurrentStringDescriptor)

@@ -228,7 +228,6 @@ void DrawSnappingCursor( );
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor )
 {
-	PERFORMANCE_MARKER
 	guiOldUICursor = guiCurUICursor;
 	guiCurUICursor = uiNewCursor;
 
@@ -237,7 +236,6 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 
 BOOLEAN DrawUICursor( )
 {
-	PERFORMANCE_MARKER
 	INT16						sMapPos;
 	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
@@ -446,7 +444,6 @@ BOOLEAN DrawUICursor( )
 
 BOOLEAN HideUICursor( )
 {
-	PERFORMANCE_MARKER
 	HandleLooseCursorHide( );
 
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
@@ -508,7 +505,6 @@ BOOLEAN HideUICursor( )
 
 void DrawSnappingCursor( )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNewUIElem;
 	SOLDIERTYPE								*pSoldier;
 	static BOOLEAN		fShowAP = TRUE;
@@ -684,7 +680,6 @@ void DrawSnappingCursor( )
 
 void EraseSnappingCursor( )
 {
-	PERFORMANCE_MARKER
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, MOCKFLOOR, MOCKFLOOR );
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllObjectsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
@@ -698,7 +693,6 @@ void EraseSnappingCursor( )
 
 void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
 {
-	PERFORMANCE_MARKER
 	gfLooseCursorOn		= TRUE;
 
 	guiLooseCursorID	= uiCursorID;
@@ -711,7 +705,6 @@ void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
 
 void HandleLooseCursorDraw( )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNewUIElem;
 
 	if ( ( GetJA2Clock( ) - guiLooseCursorTimeOfLastUpdate ) > LOOSE_CURSOR_DELAY )
@@ -730,7 +723,6 @@ void HandleLooseCursorDraw( )
 
 void HandleLooseCursorHide( )
 {
-	PERFORMANCE_MARKER
 	if ( gfLooseCursorOn )
 	{
 		RemoveTopmost( gsLooseCursorGridNo, FIRSTPOINTERS4 );
@@ -740,7 +732,6 @@ void HandleLooseCursorHide( )
 
 UINT16 GetSnapCursorIndex( UINT16 usAdditionalData )
 {
-	PERFORMANCE_MARKER
 	// OK, this function will get the 'true' index for drawing the cursor....
 	if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
 	{

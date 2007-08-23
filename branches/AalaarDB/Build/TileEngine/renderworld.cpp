@@ -603,7 +603,6 @@ BOOLEAN CheckRenderCenter( INT16 sNewCenterX, INT16 sNewCenterY );
 
 BOOLEAN RevealWalls(INT16 sX, INT16 sY, INT16 sRadius)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct;
 INT16 sCountX, sCountY;
 UINT32 uiTile;
@@ -656,7 +655,6 @@ TILE_ELEMENT *TileElem;
 
 BOOLEAN ConcealWalls(INT16 sX, INT16 sY, INT16 sRadius)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct;
 INT16 sCountX, sCountY;
 UINT32 uiTile;
@@ -711,7 +709,6 @@ TILE_ELEMENT *TileElem;
 
 void ConcealAllWalls(void)
 {
-	PERFORMANCE_MARKER
 LEVELNODE *pStruct;
 UINT32 uiCount;
 
@@ -729,45 +726,38 @@ UINT32 uiCount;
 
 void ResetLayerOptimizing(void)
 {
-	PERFORMANCE_MARKER
 	uiLayerUsedFlags = 0xffffffff;
 	uiAdditiveLayerUsedFlags = 0;
 }
 
 void ResetSpecificLayerOptimizing( UINT32 uiRowFlag )
 {
-	PERFORMANCE_MARKER
 	uiLayerUsedFlags |= uiRowFlag;
 }
 
 
 void SumAddiviveLayerOptimization( void )
 {
-	PERFORMANCE_MARKER
 	uiLayerUsedFlags = uiAdditiveLayerUsedFlags;
 }
 
 void SetRenderFlags(UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	gRenderFlags|=uiFlags;
 }
 
 void ClearRenderFlags(UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	gRenderFlags&=(~uiFlags);
 }
 
 UINT32 GetRenderFlags(void)
 {
-	PERFORMANCE_MARKER
 	return(gRenderFlags);
 }
 
 void RenderSetShadows(BOOLEAN fShadows)
 {
-	PERFORMANCE_MARKER
 	if(fShadows)
 	{
 		gRenderFlags|=RENDER_FLAG_SHADOWS;
@@ -782,7 +772,6 @@ void RenderSetShadows(BOOLEAN fShadows)
 
 void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT32 iStartPointX_S, INT32 iStartPointY_S, INT32 iEndXS, INT32 iEndYS, UINT8 ubNumLevels, UINT32 *puiLevels, UINT16 *psLevelIDs )
 {
-	PERFORMANCE_MARKER
 
 //#if 0
 
@@ -1552,14 +1541,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_MERCS  )
 									{
 										// If we are multi-tiled, ignore here
-										if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
+										if ( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
 										{
 											pNode = pNode->pNext;
 											continue;
 										}
 
 										// If we are at a higher level, no not do anything unless we are at the highmerc stage
-										if ( pSoldier->pathing.bLevel > 0 )
+										if ( pSoldier->bLevel > 0 )
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -1569,14 +1558,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_HIGHMERCS  )
 									{
 										// If we are multi-tiled, ignore here
-										if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE_Z )
+										if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z )
 										{
 											pNode = pNode->pNext;
 											continue;
 										}
 
 										// If we are at a lower level, no not do anything unless we are at the highmerc stage
-										if ( pSoldier->pathing.bLevel == 0  )
+										if ( pSoldier->bLevel == 0  )
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -1587,22 +1576,22 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									if ( uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS )
 									{
 										// If we are not multi-tiled, ignore here
-										if ( !( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) ) )
+										if ( !( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) ) )
 										{
 											// If we are at a low level, no not do anything unless we are at the merc stage
-											if ( pSoldier->pathing.bLevel == 0  )
+											if ( pSoldier->bLevel == 0  )
 											{
 												pNode = pNode->pNext;
 												continue;
 											}
 										}
 
-										if ( pSoldier->flags.uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
+										if ( pSoldier->uiStatusFlags & ( SOLDIER_MULTITILE_Z | SOLDIER_Z ) )
 										{
 											fSaveZ													= TRUE;
 											fZBlitter												= TRUE;
 
-											if ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE_Z )
+											if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z )
 											{
 												fMultiTransShadowZBlitter				= TRUE;
 											// ATE: Use one direction for queen!
@@ -1657,7 +1646,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 										ubShadeLevel=__max(ubShadeLevel-2, DEFAULT_SHADE_LEVEL);
 										ubShadeLevel|=(pNode->ubShadeLevel&0x30);
 										
-										if ( pSoldier->flags.fBeginFade )
+										if ( pSoldier->fBeginFade )
 										{
 											pShadeTable = pSoldier->pCurrentShade = pSoldier->pShades[ pSoldier->ubFadeLevel ];
 										}
@@ -1688,11 +1677,11 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									sYPos -= pSoldier->sHeightAdjustment;
 
 									// Handle shade stuff....
-									if ( !pSoldier->flags.fBeginFade )
+									if ( !pSoldier->fBeginFade )
 									{
 										// Special effect - draw ghost if is seen by a guy in player's team but not current guy
 										// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
-										if ( !pSoldier->aiData.bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+										if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
 										{
 											if ( gusSelectedSoldier != NOBODY )
 											{
@@ -1715,7 +1704,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												
 												if ( pSelSoldier != NULL ) 
 												{
-													if ( pSelSoldier->aiData.bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY  )
+													if ( pSelSoldier->bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY  )
 													{
                             if ( pSoldier->usAnimState != CHARIOTS_OF_FIRE && pSoldier->usAnimState != BODYEXPLODING )
                             {
@@ -1725,7 +1714,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												}
 											}
 
-											if ( pSoldier->pathing.bLevel == 0 )
+											if ( pSoldier->bLevel == 0 )
 											{
 												pShadeStart = (INT16 **) &( pSoldier->pGlowShades[ 0 ] );
 											}
@@ -1760,7 +1749,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 												{
 													// Does he have baton?
-													if ( (pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL) )
+													if ( (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 													{
 														pShadeTable = (UINT16 *) pShadeStart[ gpGlowFramePointer[ gsCurrentGlowFrame ] + bGlowShadeOffset ];
 
@@ -1786,7 +1775,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 											//	pSelSoldier = MercPtrs[ gusSelectedSoldier ];
 
 												// Shade differently depending on visiblity
-											//	if ( pSoldier->bVisible == 0 || ( pSelSoldier->aiData.bOppList[ pSoldier->ubID ] == 0  ) )
+											//	if ( pSoldier->bVisible == 0 || ( pSelSoldier->bOppList[ pSoldier->ubID ] == 0  ) )
 											//	{
 													// Shade gray
 											//		pShadeTable = pSoldier->pGlowShades[ gpGlowFramePointer[ gsCurrentGlowFrame ] + 10 ];
@@ -1800,7 +1789,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 									
 									if(!(uiFlags&TILES_DIRTY))
 									{
-										if ( pSoldier->flags.fForceShade )
+										if ( pSoldier->fForceShade )
 										{
 											pShadeTable = pSoldier->pForcedShade;
 										}
@@ -2625,7 +2614,6 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 void DeleteFromWorld( UINT16 usTileIndex, UINT32 uiRenderTiles, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 	switch( uiRenderTiles )
 	{
 		case TILES_DYNAMIC_LAND:
@@ -2664,7 +2652,6 @@ void DeleteFromWorld( UINT16 usTileIndex, UINT32 uiRenderTiles, UINT16 usIndex )
 // by the normal render cycle
 void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement )
 {
-	PERFORMANCE_MARKER
 
 	//RestoreBackgroundRects();
 
@@ -2707,7 +2694,6 @@ void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScroll
 
 void RenderWorld( )
 {
-	PERFORMANCE_MARKER
 TILE_ELEMENT					*TileElem;
 TILE_ANIMATION_DATA		*pAnimData;
 UINT32 cnt = 0;
@@ -2903,7 +2889,6 @@ UINT32 cnt = 0;
 //ok tutaj jest renderowane przy przesuwaniu
 void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, BOOLEAN fDynamicsToo )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiLevelFlags[10];
 	UINT16		sLevelIDs[10];
 	UINT32		uiDestPitchBYTES;
@@ -3009,7 +2994,6 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 // to jest wykonywane przy kazdym takcie zegara
 void RenderStaticWorld(  )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiLevelFlags[9];
 	UINT16	sLevelIDs[9];
 	UINT32	uiDestPitchBYTES;
@@ -3070,7 +3054,6 @@ void RenderStaticWorld(  )
  
 void RenderMarkedWorld(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLevelFlags[4];
 	UINT16		sLevelIDs[4];
 
@@ -3123,7 +3106,6 @@ void RenderMarkedWorld(void)
 
 void RenderDynamicWorld(  )
 {
-	PERFORMANCE_MARKER
 	UINT8		ubNumLevels;
 	UINT32	uiLevelFlags[ 10 ];
 	UINT16	sLevelIDs[ 10 ];
@@ -3239,7 +3221,6 @@ void RenderDynamicWorld(  )
 
 BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, INT16 sScrollYStep, INT16 *psTempRenderCenterX, INT16 *psTempRenderCenterY, BOOLEAN fCheckOnly )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fAGoodMove = FALSE, fMovedPos = FALSE;
 	INT16		sTempX_W, sTempY_W;
 	BOOLEAN fUpOK, fLeftOK;
@@ -3551,7 +3532,6 @@ extern BOOLEAN gfNextRefreshFullScreen;
 
 void ScrollWorld( )
 {
-	PERFORMANCE_MARKER
 	UINT32		ScrollFlags = 0;
 	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
 	INT16	sTempRenderCenterX, sTempRenderCenterY;
@@ -3849,7 +3829,6 @@ void ScrollWorld( )
 
 void InitializeViewPort()
 {
-	PERFORMANCE_MARKER
 	gsVIEWPORT_START_X			= 0;		
 	gsVIEWPORT_START_Y			= 0;
 	gsVIEWPORT_WINDOW_START_Y	= 0;
@@ -3865,7 +3844,6 @@ void InitializeViewPort()
 
 void InitRenderParams( UINT8 ubRestrictionID )
 {
-	PERFORMANCE_MARKER
 		INT16 gsTilesX, gsTilesY;
 		UINT32 cnt, cnt2;
 		DOUBLE  dWorldX, dWorldY;
@@ -3960,7 +3938,6 @@ void InitRenderParams( UINT8 ubRestrictionID )
 // Appy? HEahehahehahehae.....
 BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		fScrollGood = FALSE;
 	BOOLEAN		fOutLeft = FALSE;
 	BOOLEAN		fOutRight = FALSE;
@@ -3991,6 +3968,8 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 	INT16 sRadarBRX, sRadarBRY;
 	INT16 sRadarCX, sRadarCY;
 	INT16 sHeight, sWidth, sX, sY;
+	// CHRISL:
+	INT16			gsRadarX;
 	INT16			gsRadarY;
 	BOOLEAN			fAllowScrollingHorizontal = FALSE;
 	BOOLEAN			fAllowScrollingVertical = FALSE;
@@ -4046,21 +4025,24 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
+		gsRadarX = RADAR_WINDOW_STRAT_X;
 		gsRadarY = RADAR_WINDOW_STRAT_Y;
 	}
 	else if ( gsCurInterfacePanel == SM_PANEL )
 	{
-		gsRadarY = RADAR_WINDOW_TM_Y;
+		gsRadarX = RADAR_WINDOW_SM_X;
+		gsRadarY = RADAR_WINDOW_SM_Y;
 	}
 	else
 	{
+		gsRadarX = RADAR_WINDOW_TM_X;
 		gsRadarY = RADAR_WINDOW_TM_Y;
 	}
 
 
 	sWidth		= ( RADAR_WINDOW_WIDTH );
 	sHeight		= ( RADAR_WINDOW_HEIGHT );
-	sX				= RADAR_WINDOW_X;
+	sX				= gsRadarX;
 	sY				= gsRadarY;
 
 
@@ -4313,7 +4295,6 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 
 void ClearMarkedTiles(void)
 {
-	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < WORLD_MAX; uiCount++)
@@ -4324,7 +4305,6 @@ UINT32 uiCount;
 // @@ATECLIP TO WORLD!
 void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius)
 {
-	PERFORMANCE_MARKER
 	INT16 sCountX, sCountY;
 	UINT32 uiTile;
 
@@ -4345,7 +4325,6 @@ void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius)
 
 void InvalidateWorldRedundency( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	
 	SetRenderFlags( RENDER_FLAG_CHECKZ );
@@ -4369,7 +4348,6 @@ void InvalidateWorldRedundency( )
 **********************************************************************************************/
 BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
 {
-	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
@@ -4768,7 +4746,6 @@ BlitDone:
 **********************************************************************************************/
 BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion, INT16 usZStripIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
@@ -5170,7 +5147,6 @@ BlitDone:
 **********************************************************************************************/
 BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
 {
-	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset, uiLineFlag;
 	UINT32 usHeight, usWidth, Unblitted;
@@ -5588,7 +5564,6 @@ BlitDone:
 //
 BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion, INT16 sZIndex, UINT16 *p16BPPPalette )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOffset, uiLineFlag;
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
@@ -6011,7 +5986,6 @@ BlitDone:
 
 void CorrectRenderCenter( INT16 sRenderX, INT16 sRenderY, INT16 *pSNewX, INT16 *pSNewY )
 {
-	PERFORMANCE_MARKER
 	INT16 sScreenX, sScreenY;
 	INT16 sNumXSteps, sNumYSteps;
 
@@ -6054,7 +6028,6 @@ void CorrectRenderCenter( INT16 sRenderX, INT16 sRenderY, INT16 *pSNewX, INT16 *
 //
 BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion, INT16 sZIndex, UINT16 *p16BPPPalette )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
@@ -6455,7 +6428,6 @@ BlitDone:
 
 void RenderRoomInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
 {
-	PERFORMANCE_MARKER
 	INT8				bXOddFlag = 0;
 	INT16				sAnchorPosX_M, sAnchorPosY_M;
 	INT16				sAnchorPosX_S, sAnchorPosY_S;
@@ -6562,7 +6534,6 @@ void RenderRoomInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPoi
 
 void RenderFOVDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
 {
-	PERFORMANCE_MARKER
 	INT8				bXOddFlag = 0;
 	INT16				sAnchorPosX_M, sAnchorPosY_M;
 	INT16				sAnchorPosX_S, sAnchorPosY_S;
@@ -6672,7 +6643,6 @@ void RenderFOVDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStar
 
 void RenderCoverDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
 {
-	PERFORMANCE_MARKER
 	INT8				bXOddFlag = 0;
 	INT16				sAnchorPosX_M, sAnchorPosY_M;
 	INT16				sAnchorPosX_S, sAnchorPosY_S;
@@ -6781,7 +6751,6 @@ void RenderCoverDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 
 void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
 {
-	PERFORMANCE_MARKER
 	INT8				bXOddFlag = 0;
 	INT16				sAnchorPosX_M, sAnchorPosY_M;
 	INT16				sAnchorPosX_S, sAnchorPosY_S;
@@ -6887,7 +6856,6 @@ void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, I
 
 void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
-	PERFORMANCE_MARKER
 	CalcRenderParameters( sLeft, sTop, sRight, sBottom );
 
 	ExamineZBufferForHiddenTiles( gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS );
@@ -6897,7 +6865,6 @@ void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 
 void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
 {
-	PERFORMANCE_MARKER
 	INT8				bXOddFlag = 0;
 	INT16				sAnchorPosX_M, sAnchorPosY_M;
 	INT16				sAnchorPosX_S, sAnchorPosY_S;
@@ -7036,7 +7003,6 @@ ENDOFLOOP:
 
 void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
-	PERFORMANCE_MARKER
 	INT16 sTempPosX_W, sTempPosY_W;
 	INT16 sRenderCenterX_W, sRenderCenterY_W;
 	INT16 sOffsetX_W, sOffsetY_W, sOffsetX_S, sOffsetY_S;
@@ -7158,7 +7124,6 @@ void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 
 void ResetRenderParameters(  )
 {
-	PERFORMANCE_MARKER
 	// Restore clipping rect
 	gClippingRect =	gOldClipRect;
 }
@@ -7168,7 +7133,6 @@ void ResetRenderParameters(  )
 
 BOOLEAN Zero8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
@@ -7290,7 +7254,6 @@ BlitDone:
 
 BOOLEAN Blt8BPPDataTo16BPPBufferTransInvZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
@@ -7402,7 +7365,6 @@ BlitDone:
 
 BOOLEAN IsTileRedundent( UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
@@ -7532,7 +7494,7 @@ void SetMercGlowNormal( )
 			sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
 
 
-	if ( ( pSoldier->flags.uiStatusFlags & SOLDIER_MULTITILE ) )\
+	if ( ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )\
 	{\
 		sZOffsetX = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetX;\
 		sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
@@ -7546,7 +7508,6 @@ void SetMercGlowNormal( )
 
 void SetRenderCenter( INT16 sNewX, INT16 sNewY )
 {
-	PERFORMANCE_MARKER
 	if ( gfIgnoreScrolling == 1 )
 	{
 		return;
@@ -7584,19 +7545,16 @@ void SetRenderCenter( INT16 sNewX, INT16 sNewY )
 #ifdef _DEBUG
 void RenderFOVDebug( )
 {
-	PERFORMANCE_MARKER
 	RenderFOVDebugInfo( gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS );
 }
 
 void RenderCoverDebug( )
 {
-	PERFORMANCE_MARKER
 	RenderCoverDebugInfo( gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS );
 }
 
 void RenderGridNoVisibleDebug( )
 {
-	PERFORMANCE_MARKER
 	RenderGridNoVisibleDebugInfo( gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS );
 }
 

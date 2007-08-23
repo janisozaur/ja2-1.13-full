@@ -259,8 +259,7 @@ UINT32 EditScreenInit(void)
 //	This function is called once at shutdown of the game
 //
 UINT32 EditScreenShutdown(void)
-{
-	PERFORMANCE_MARKER 
+{ 
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
 	KillClipboard();
@@ -275,7 +274,6 @@ UINT32 EditScreenShutdown(void)
 //
 BOOLEAN EditModeInit( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 x;
 	INT32 i;
 	SGPPaletteEntry	LColors[2];
@@ -447,7 +445,6 @@ BOOLEAN EditModeInit( void )
 //	The above function's counterpart. Called when exiting the editor back to the game.
 BOOLEAN EditModeShutdown( void )
 {
-	PERFORMANCE_MARKER
 	if( gfConfirmExitFirst )
 	{
 		gfConfirmExitPending = TRUE;
@@ -569,7 +566,6 @@ BOOLEAN EditModeShutdown( void )
 //
 void SetBackgroundTexture( )
 {
-	PERFORMANCE_MARKER
 	int						cnt;
 	UINT16				usIndex, Dummy;
 
@@ -600,7 +596,6 @@ void SetBackgroundTexture( )
 //
 BOOLEAN DoWindowSelection( void )
 {
-	PERFORMANCE_MARKER
 	RenderSelectionWindow( );
 	RenderButtonsFastHelp( );
 	if ( fAllDone )
@@ -640,7 +635,6 @@ BOOLEAN DoWindowSelection( void )
 //in the world.
 void RemoveTempMouseCursorObject( void )
 {
-	PERFORMANCE_MARKER
 	if ( iCurBankMapIndex < 0x8000 )
 	{
 		ForceRemoveStructFromTail( iCurBankMapIndex );
@@ -653,7 +647,6 @@ void RemoveTempMouseCursorObject( void )
 //the mouse cursor, to indicate what is about to be drawn.
 BOOLEAN DrawTempMouseCursorObject(void)
 {
-	PERFORMANCE_MARKER
 	INT16		sMouseX_M, sMouseY_M;
 	UINT16	usUseIndex;
 	UINT16	usUseObjIndex;
@@ -789,7 +782,6 @@ BOOLEAN DrawTempMouseCursorObject(void)
 //Displays the current drawing object in the small, lower left window of the editor's toolbar.
 void ShowCurrentDrawingMode( void )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, NewRect;
 	INT32				iShowMode;
 	UINT16			usUseIndex;
@@ -1057,7 +1049,6 @@ void ShowCurrentDrawingMode( void )
 //
 void HandleJA2ToolbarSelection( void )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fPrevState;
 
 	fPrevState = gfRenderTaskbar;
@@ -1329,7 +1320,6 @@ extern INT8 gbCurrSelect;
 extern void DeleteSelectedMercsItem();
 void HandleKeyboardShortcuts( )
 {
-	PERFORMANCE_MARKER
 	static INT32 iSavedMode;
 	static BOOLEAN fShowTrees = TRUE;
 	while( DequeueEvent( &EditorInputEvent ) )
@@ -1897,7 +1887,6 @@ void HandleKeyboardShortcuts( )
 //
 UINT32 PerformSelectedAction( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRetVal;
 
 	uiRetVal = EDIT_SCREEN;
@@ -2293,7 +2282,6 @@ UINT32 PerformSelectedAction( void )
 
 void CreateNewMap()
 {
-	PERFORMANCE_MARKER
 	if( gfSummaryWindowActive )
 		DestroySummaryWindow();
 
@@ -2344,7 +2332,6 @@ void CreateNewMap()
 
 UINT32 ProcessEditscreenMessageBoxResponse()
 {
-	PERFORMANCE_MARKER
 	RemoveMessageBox();
 	gfRenderWorld = TRUE;
 	if( gfConfirmExitPending )
@@ -2406,7 +2393,6 @@ UINT32 ProcessEditscreenMessageBoxResponse()
 //
 UINT32 WaitForHelpScreenResponse( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
 
@@ -2528,7 +2514,6 @@ UINT32 WaitForHelpScreenResponse( void )
 //
 UINT32 WaitForSelectionWindowResponse( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 
 	while (DequeueEvent(&DummyEvent) == TRUE)
@@ -2597,7 +2582,6 @@ UINT32 WaitForSelectionWindowResponse( void )
 //
 void FindTilesetComments(void)
 {
-	PERFORMANCE_MARKER
 }
 
 
@@ -2608,7 +2592,6 @@ void FindTilesetComments(void)
 //
 void GetMasterList(void)
 {
-	PERFORMANCE_MARKER
 }
 
 
@@ -2620,7 +2603,6 @@ void GetMasterList(void)
 //
 void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, WinRect;
 	INT32				iStartX;
 	INT32				iStartY;
@@ -2687,7 +2669,6 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 //
 void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 {
-	PERFORMANCE_MARKER
 	SGPRect			ClipRect, NewRect;
 	INT32				iStartX;
 	INT32				iStartY;
@@ -2741,7 +2722,6 @@ void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
 //
 BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 {
-	PERFORMANCE_MARKER
 	INT32 iLightHandle;
 	UINT8 ubIntensity;
 	STRING512 Filename;
@@ -2825,7 +2805,6 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 //
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	UINT16 cnt;
 	SOLDIERTYPE *pSoldier;
@@ -2891,7 +2870,6 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 //
 void ShowLightPositionHandles( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 cnt;
@@ -2936,7 +2914,6 @@ void ShowLightPositionHandles( void )
 //
 void RemoveLightPositionHandles( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 cnt;
@@ -2987,7 +2964,6 @@ void RemoveLightPositionHandles( void )
 //
 BOOLEAN CheckForSlantRoofs( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheck;
 	
 	pSelList = SelRoom;
@@ -3017,7 +2993,6 @@ BOOLEAN CheckForSlantRoofs( void )
 // 
 void MapOptimize(void)
 {
-	PERFORMANCE_MARKER
 #if 0
 	INT16 gridno;
 	LEVELNODE *start, *head, *end, *node, *temp;
@@ -3106,7 +3081,6 @@ void MapOptimize(void)
 //
 BOOLEAN CheckForFences( void )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheck;
 	BOOLEAN fFence;
 	TILE_ELEMENT *T;
@@ -3164,7 +3138,6 @@ void EnsureStatusOfEditorButtons()
 
 void HandleMouseClicksInGameScreen()
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	BOOLEAN fPrevState;
 	if( !GetMouseXY( &sGridX, &sGridY ) )
@@ -3403,7 +3376,6 @@ void HandleMouseClicksInGameScreen()
 
 BOOLEAN DoIRenderASpecialMouseCursor()
 {
-	PERFORMANCE_MARKER
 	INT16 sMouseX_M, sMouseY_M;
 
 	// Draw basic mouse
@@ -3461,7 +3433,6 @@ extern INT32 iEditorToolbarLastWallState;
 
 void ShowEntryPoints()
 {
-	PERFORMANCE_MARKER
 	//make entry points visible
 	if( gMapInformation.sNorthGridNo != -1 )
 	AddTopmostToTail( gMapInformation.sNorthGridNo, FIRSTPOINTERS2 );
@@ -3475,7 +3446,6 @@ void ShowEntryPoints()
 
 void HideEntryPoints()
 {
-	PERFORMANCE_MARKER
 	//remove entry point indicators
 	if( gMapInformation.sNorthGridNo != -1 )
 		RemoveAllTopmostsOfTypeRange( gMapInformation.sNorthGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
@@ -3489,7 +3459,6 @@ void HideEntryPoints()
 
 void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_OPTIONS;
@@ -3498,7 +3467,6 @@ void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_TERRAIN;
@@ -3507,7 +3475,6 @@ void TaskTerrainCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_BUILDINGS;
@@ -3516,7 +3483,6 @@ void TaskBuildingCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_ITEMS;
@@ -3525,7 +3491,6 @@ void TaskItemsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_MERCS;
@@ -3534,7 +3499,6 @@ void TaskMercsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		iTaskMode = TASK_MAPINFO;
@@ -3543,7 +3507,6 @@ void TaskMapInfoCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fPrevState = gfRenderWorld;
 	gfRenderWorld = TRUE;
 	switch( iDrawMode )
@@ -3598,7 +3561,6 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 //rely completely on selection areas, such as buildings.
 void DrawObjectsBasedOnSelectionRegion()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 	BOOLEAN fSkipTest;
 
@@ -3651,7 +3613,6 @@ extern void AutoLoadMap();
 //The main loop of the editor.
 UINT32	EditScreenHandle( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiRetVal;
 	BOOLEAN fShowingCursor;
 	StartFrameBufferRender();
@@ -3820,7 +3781,6 @@ void CreateGotoGridNoUI()
 
 void RemoveGotoGridNoUI()
 {
-	PERFORMANCE_MARKER
 	INT32 iMapIndex;
 	gfGotoGridNoUI = FALSE;
 	//Enable the rest of the editor
@@ -3841,7 +3801,6 @@ void RemoveGotoGridNoUI()
 
 void UpdateLastActionBeforeLeaving()
 {
-	PERFORMANCE_MARKER
 	if( iCurrentTaskbar == TASK_MERCS )
 		IndicateSelectedMerc( SELECT_NO_MERC );
 	SpecifyItemToEdit( NULL, -1 );
@@ -3849,7 +3808,6 @@ void UpdateLastActionBeforeLeaving()
 
 void ReloadMap()
 {
-	PERFORMANCE_MARKER
 	CHAR16 szFilename[30];
 	swprintf( szFilename, L"%S", gubFilename );
 	ExternalLoadMap( szFilename );

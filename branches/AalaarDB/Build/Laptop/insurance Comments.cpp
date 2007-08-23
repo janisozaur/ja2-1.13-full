@@ -48,13 +48,11 @@ BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 
 void GameInitInsuranceComments()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterInsuranceComments()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8 i;
 	UINT16 usPosX;
@@ -87,7 +85,6 @@ BOOLEAN EnterInsuranceComments()
 
 void ExitInsuranceComments()
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 	RemoveInsuranceDefaults();
 	DeleteVideoObjectFromIndex( guiInsCmntBulletImage );
@@ -98,13 +95,11 @@ void ExitInsuranceComments()
 
 void HandleInsuranceComments()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsuranceComments()
 {
-	PERFORMANCE_MARKER
 //	HVOBJECT hPixHandle;
 	CHAR16		sText[800];
 	UINT16	usPosX, usPosY;
@@ -172,8 +167,7 @@ void RenderInsuranceComments()
 
 
 void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -196,7 +190,6 @@ void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 
 BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	HVOBJECT	hPixHandle;
 	UINT16		sNumPixels=0;

@@ -193,7 +193,6 @@ extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, CHAR16 sStri
 //The group is passed so we can extract the sector location
 void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubSectorID;
@@ -248,7 +247,6 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 
 void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	INT32 i;
 	UINT8 ubGroupID = 0;
@@ -398,7 +396,8 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 	fMapScreenBottomDirty = TRUE;
 	ChangeSelectedMapSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
-	RenderMapScreenInterfaceBottom();
+	// Headrock: Added FALSE argument, We might need TRUE but not sure. Will need to initiate battle :)
+	RenderMapScreenInterfaceBottom( FALSE );
 
 	//If we are currently in tactical, then set the flag to automatically bring up the mapscreen.
 	if( guiCurrentScreen == GAME_SCREEN )
@@ -477,7 +476,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	guiNumInvolved = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE) )
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
 		{
 			if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
 			{
@@ -490,8 +489,8 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 					ubGroupID = MercPtrs[ i ]->ubGroupID;
 					if( !gpBattleGroup )
 						gpBattleGroup = GetGroup( ubGroupID );
-					if( bBestExpLevel > MercPtrs[ i ]->stats.bExpLevel )
-						bBestExpLevel = MercPtrs[ i ]->stats.bExpLevel;
+					if( bBestExpLevel > MercPtrs[ i ]->bExpLevel )
+						bBestExpLevel = MercPtrs[ i ]->bExpLevel;
 					if( MercPtrs[ i ]->ubPrevSectorID == 255 )
 					{ //Not able to retreat (calculate it for group)
 						GROUP *pTempGroup;
@@ -761,7 +760,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 void DoTransitionFromMapscreenToPreBattleInterface()
 {
-	PERFORMANCE_MARKER
 	SGPRect DstRect, PBIRect;
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
@@ -862,7 +860,6 @@ void DoTransitionFromMapscreenToPreBattleInterface()
 
 void KillPreBattleInterface()
 {
-	PERFORMANCE_MARKER
 	if( !gfPreBattleInterfaceActive )
 		return;
 
@@ -915,13 +912,13 @@ void KillPreBattleInterface()
 	{
 		ShowButton( giCharInfoButton[ 1 ] );
 	}
+
 	gfPersistantPBI = FALSE; // If killing the PBI, it must not be persistant anymore!
 }
 
 
 void RenderPBHeader( INT32 *piX, INT32 *piWidth)
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[100];
 	INT32 x, width;
 	SetFont( FONT10ARIALBOLD );
@@ -982,7 +979,6 @@ void RenderPBHeader( INT32 *piX, INT32 *piWidth)
 
 void RenderPreBattleInterface()
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	HVOBJECT hVObject;
 	INT32 i, x, y, line, width;
@@ -1162,7 +1158,7 @@ void RenderPreBattleInterface()
 		y = TOP_Y + 1;
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE) )
+			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
 			{
 				if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
 				{ //involved
@@ -1215,7 +1211,7 @@ void RenderPreBattleInterface()
 			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
 			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 			{
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !(MercPtrs[ i ]->flags.uiStatusFlags & SOLDIER_VEHICLE) )
+				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
 				{
 					if ( !PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
 					{
@@ -1280,7 +1276,6 @@ void RenderPreBattleInterface()
 
 void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( !gfIgnoreAllInput )
 	{
 		if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1317,7 +1312,6 @@ void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason )
 
 void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( !gfIgnoreAllInput )
 	{
 		if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1390,7 +1384,6 @@ void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason )
 
 void RetreatMercsCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( !gfIgnoreAllInput )
 	{
 		if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1441,16 +1434,15 @@ enum
 
 void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *pubHPPercent, UINT8 *pubBPPercent )
 {
-	PERFORMANCE_MARKER
 	Assert( pSoldier );
-	*pubHPPercent = (UINT8)(pSoldier->stats.bLife * 100 / pSoldier->stats.bLifeMax);
+	*pubHPPercent = (UINT8)(pSoldier->bLife * 100 / pSoldier->bLifeMax);
 	*pubBPPercent = pSoldier->bBreath;
 	//Go from the worst condition to the best.
-	if( !pSoldier->stats.bLife )
+	if( !pSoldier->bLife )
 	{ //0 life
 		swprintf( szCondition, pConditionStrings[ COND_DEAD ] );
 	}
-	else if( pSoldier->stats.bLife < OKLIFE && pSoldier->bBleeding )
+	else if( pSoldier->bLife < OKLIFE && pSoldier->bBleeding )
 	{ //life less than OKLIFE and bleeding
 		swprintf( szCondition, pConditionStrings[ COND_DYING ] );
 	}
@@ -1462,7 +1454,7 @@ void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *p
 	{ //bleeding
 		swprintf( szCondition, pConditionStrings[ COND_BLEEDING ] );
 	}
-	else if( pSoldier->stats.bLife*100 < pSoldier->stats.bLifeMax*50 )
+	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*50 )
 	{ //less than 50% life
 		swprintf( szCondition, pConditionStrings[ COND_WOUNDED ] );
 	}
@@ -1470,11 +1462,11 @@ void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *p
 	{ //breath less than half
 		swprintf( szCondition, pConditionStrings[ COND_FATIGUED ] );
 	}
-	else if( pSoldier->stats.bLife*100 < pSoldier->stats.bLifeMax*67 )
+	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*67 )
 	{ //less than 67% life
 		swprintf( szCondition, pConditionStrings[ COND_FAIR ] );
 	}
-	else if( pSoldier->stats.bLife*100 < pSoldier->stats.bLifeMax*86 )
+	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*86 )
 	{ //less than 86% life
 		swprintf( szCondition, pConditionStrings[ COND_GOOD ] );
 	}
@@ -1487,7 +1479,6 @@ void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, STR16 szCondition, UINT8 *p
 /*
 void InvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	gfRenderPBInterface = TRUE;
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1500,7 +1491,6 @@ void InvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void InvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		SOLDIERTYPE *pSoldier;
@@ -1519,7 +1509,6 @@ void InvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 void UninvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	gfRenderPBInterface = TRUE;
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1532,7 +1521,6 @@ void UninvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void UninvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		SOLDIERTYPE *pSoldier;
@@ -1561,7 +1549,6 @@ void UninvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 SOLDIERTYPE* InvolvedSoldier( INT32 index )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer=NULL;
 	BOOLEAN fFound = FALSE;
@@ -1593,7 +1580,6 @@ SOLDIERTYPE* InvolvedSoldier( INT32 index )
 
 SOLDIERTYPE* UninvolvedSoldier( INT32 index )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer=NULL;
 	BOOLEAN fFound = FALSE;
@@ -1628,7 +1614,6 @@ SOLDIERTYPE* UninvolvedSoldier( INT32 index )
 
 void ActivatePreBattleAutoresolveAction()
 {
-	PERFORMANCE_MARKER
 	if( ButtonList[ iPBButton[ 0 ] ]->uiFlags & BUTTON_ENABLED )
 	{ //Feign call the autoresolve button using the callback
 		AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
@@ -1637,7 +1622,6 @@ void ActivatePreBattleAutoresolveAction()
 
 void ActivatePreBattleEnterSectorAction()
 {
-	PERFORMANCE_MARKER
 	if( ButtonList[ iPBButton[ 1 ] ]->uiFlags & BUTTON_ENABLED )
 	{ //Feign call the enter sector button using the callback
 		GoToSectorCallback( ButtonList[ iPBButton[1] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
@@ -1646,7 +1630,6 @@ void ActivatePreBattleEnterSectorAction()
 
 void ActivatePreBattleRetreatAction()
 {
-	PERFORMANCE_MARKER
 	if( ButtonList[ iPBButton[ 2 ] ]->uiFlags & BUTTON_ENABLED )
 	{ //Feign call the retreat button using the callback
 		RetreatMercsCallback( ButtonList[ iPBButton[2] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
@@ -1655,7 +1638,6 @@ void ActivatePreBattleRetreatAction()
 
 void ActivateAutomaticAutoResolveStart()
 {
-	PERFORMANCE_MARKER
 	ButtonList[ iPBButton[0] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfIgnoreAllInput = FALSE;
 	AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
@@ -1663,7 +1645,6 @@ void ActivateAutomaticAutoResolveStart()
 
 void CalculateNonPersistantPBIInfo()
 {
-	PERFORMANCE_MARKER
 	//We need to set up the non-persistant PBI
 	if( !gfBlitBattleSectorLocator || 
 			gubPBSectorX != gWorldSectorX || gubPBSectorY != gWorldSectorY || gubPBSectorZ != gbWorldSectorZ )
@@ -1720,7 +1701,6 @@ void CalculateNonPersistantPBIInfo()
 
 void ClearNonPersistantPBIInfo()
 {
-	PERFORMANCE_MARKER
 	gfBlitBattleSectorLocator = FALSE;
 }
 
@@ -1728,7 +1708,6 @@ void ClearNonPersistantPBIInfo()
 
 void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup, *pNextGroup;
 
 	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.	Needed for
@@ -1764,7 +1743,6 @@ void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles )
 
 void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles )
 {
-	PERFORMANCE_MARKER
 	PLAYERGROUP *pPlayer, *pNextPlayer;
 	SOLDIERTYPE *pSoldier;
 	INT8 bUniqueVehicleSquad = -1;
@@ -1792,7 +1770,7 @@ void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles
 		// store ptr to next soldier in group, once removed from group, his info will get memfree'd!
 		pNextPlayer = pPlayer->next;
 
-		if ( pSoldier->bActive && pSoldier->stats.bLife && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( pSoldier->bActive && pSoldier->bLife && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// if involved, but off-duty (includes mercs inside vehicles!)
 			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->bAssignment >= ON_DUTY ) )
@@ -1820,8 +1798,8 @@ void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles
 				Assert( fSuccess );
 
 				// clear any desired squad assignments
-				pSoldier->ubNumTraversalsAllowedToMerge = 0;
-				pSoldier->ubDesiredSquadAssignment = NO_ASSIGNMENT;
+				pSoldier -> ubNumTraversalsAllowedToMerge = 0;
+				pSoldier -> ubDesiredSquadAssignment = NO_ASSIGNMENT;
 
 				// stand him up
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
@@ -1835,7 +1813,6 @@ void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles
 
 void WakeUpAllMercsInSectorUnderAttack( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0, iNumberOfMercsOnTeam = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1848,10 +1825,10 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 	{
 		pSoldier = &( Menptr[ iCounter ] );
 
-		if ( pSoldier->bActive && pSoldier->stats.bLife && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( pSoldier->bActive && pSoldier->bLife && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// if involved, but asleep
-			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->flags.fMercAsleep == TRUE ) )
+			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->fMercAsleep == TRUE ) )
 			{
 				// FORCE him wake him up
 				SetMercAwake( pSoldier, FALSE, TRUE );
@@ -1864,7 +1841,6 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 // we are entering the sector, clear out all mvt orders for grunts
 void ClearMovementForAllInvolvedPlayerGroups( void )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 
 	pGroup = gpGroupList;
@@ -1881,7 +1857,6 @@ void ClearMovementForAllInvolvedPlayerGroups( void )
 
 void RetreatAllInvolvedPlayerGroups( void )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 
 
@@ -1908,15 +1883,14 @@ void RetreatAllInvolvedPlayerGroups( void )
 
 BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	Assert( pSoldier );
 	Assert( pSoldier->bActive );
 
-	if( !pSoldier->flags.fBetweenSectors && 
+	if( !pSoldier->fBetweenSectors && 
 			pSoldier->bAssignment != IN_TRANSIT &&
 			pSoldier->bAssignment != ASSIGNMENT_POW &&
 			pSoldier->bAssignment != ASSIGNMENT_DEAD &&
-			!(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) &&
+			!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) &&
 			// Robot is involved if it has a valid controller with it, uninvolved otherwise
 			( !AM_A_ROBOT( pSoldier ) || ( pSoldier->ubRobotRemoteHolderID != NOBODY ) ) &&
 			!SoldierAboardAirborneHeli( pSoldier ) )
@@ -1935,7 +1909,6 @@ BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier )
 
 BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	Assert( pGroup );
 
 	// player group, non-empty, not between sectors, in the right sector, isn't a group of in transit, dead, or POW mercs,
@@ -1959,7 +1932,6 @@ BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup )
 
 BOOLEAN CurrentBattleSectorIs( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	PERFORMANCE_MARKER
 	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
 	BOOLEAN fSuccess;
 
@@ -1982,21 +1954,20 @@ BOOLEAN CurrentBattleSectorIs( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 void CheckForRobotAndIfItsControlled( void )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
 	// search for the robot on player's team
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && AM_A_ROBOT( MercPtrs[ i ] ))
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && AM_A_ROBOT( MercPtrs[ i ] ))
 		{
 			// check whether it has a valid controller with it. This sets its ubRobotRemoteHolderID field.
-			MercPtrs[ i ]->UpdateRobotControllerGivenRobot( );
+			UpdateRobotControllerGivenRobot( MercPtrs[ i ] );
 
 			// if he has a controller, set controllers 
 			if ( MercPtrs[ i ]->ubRobotRemoteHolderID != NOBODY )
 			{
-				MercPtrs[ MercPtrs[ i ]->ubRobotRemoteHolderID ]->UpdateRobotControllerGivenController( );
+				UpdateRobotControllerGivenController( MercPtrs[ MercPtrs[ i ]->ubRobotRemoteHolderID ] );
 			}
 
 			break;
@@ -2006,7 +1977,6 @@ void CheckForRobotAndIfItsControlled( void )
 
 void LogBattleResults( UINT8 ubVictoryCode)
 {
-	PERFORMANCE_MARKER
 	INT16 sSectorX, sSectorY, sSectorZ;
 	GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
 	if( ubVictoryCode == LOG_VICTORY )
@@ -2063,7 +2033,6 @@ void LogBattleResults( UINT8 ubVictoryCode)
 
 void HandlePreBattleInterfaceStates()
 {
-	PERFORMANCE_MARKER
 	if( gfEnteringMapScreenToEnterPreBattleInterface && !gfEnteringMapScreen )
 	{
 		gfEnteringMapScreenToEnterPreBattleInterface = FALSE;

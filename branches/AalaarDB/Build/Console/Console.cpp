@@ -188,7 +188,6 @@ Console::Console(LPCTSTR pszConfigFile, LPCTSTR pszShellCmdLine, LPCTSTR pszCons
 , m_nTextColor(15)
 , m_nTextBgColor(0)
 {
-	PERFORMANCE_MARKER
 
 #if 0
 	m_strConfigFile = GetFullFilename(pszConfigFile);
@@ -1040,7 +1039,6 @@ void Console::OnDropFiles(HDROP hDrop) {
 
 BOOL Console::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	PERFORMANCE_MARKER
 	if (HIWORD(wParam) == 0) {
 		// popup menu
 		return HandleMenuCommand(LOWORD(wParam));
@@ -3271,7 +3269,6 @@ void Console::ResizeConsoleWindow() {
 
 void Console::AllocateBuffer()
 {
-	PERFORMANCE_MARKER
 	// resize screen buffer
 	delete[] m_pScreenBuffer;
 	m_pScreenBuffer = new CHAR_INFO[m_dwRows * m_dwColumns];
@@ -4128,7 +4125,6 @@ void Console::ShowReadmeFile() {
 
 void Console::About()
 {
-	PERFORMANCE_MARKER
 	CAboutDlg dlg(m_hWnd);
 	
 	dlg.DoModal();

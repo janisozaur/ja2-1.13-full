@@ -38,13 +38,13 @@
 	#include "zmouse.h"
 
 
+#include <iostream>
+
 #include "ExceptionHandling.h"
 
-#include <iostream>
-#include <fstream>
 #include "dbt.h"
 #include "INIReader.h"
-#include ".\Console\Console.h"
+#include "Console.h"
 #include "Lua Interpreter.h"
 
 #ifdef JA2
@@ -125,8 +125,7 @@ BOOLEAN	gfIgnoreMessages=FALSE;
 UINT8		gbPixelDepth = PIXEL_DEPTH;
 
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
-{
-	PERFORMANCE_MARKER 
+{ 
 	static BOOLEAN fRestore = FALSE;
 
 	if ( Message == WM_USER )
@@ -463,6 +462,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 				cout << "> ";
 			}
 			break;
+
 		case WM_INPUTREADY:
 			{
 				wstring *tstr = (wstring*) lParam;
@@ -478,7 +478,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 				cout << "> ";
 			}
 			break;
-	default
+    default
 	: return DefWindowProc(hWindow, Message, wParam, lParam);
 	}
 	return 0L;
@@ -488,7 +488,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 
 BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 {
-	PERFORMANCE_MARKER 
 	FontTranslationTable *pFontTable;
 
 	// now required by all (even JA2) in order to call ShutdownSGP
@@ -663,7 +662,6 @@ BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 
 void ShutdownStandardGamingPlatform(void)
 {
-	//PERFORMANCE_MARKER we are writing out to profiler.txt
 #ifndef JA2
 	static BOOLEAN Reenter = FALSE;
 
@@ -733,10 +731,6 @@ void ShutdownStandardGamingPlatform(void)
 	UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
 
 	ShutdownDebugManager();
-	std::ofstream myfile;
-	myfile.open("profiler.txt");
-	PerfManager::instance()->log(myfile);
-	myfile.close();
 }
 
 
@@ -958,7 +952,6 @@ void SGPExit(void)
 
 void GetRuntimeSettings( )
 {
-	PERFORMANCE_MARKER 
 	// Runtime settings - for now use INI file - later use registry
 	STRING512		INIFile;		// Path to the ini file
 	CHAR8			zScreenResolution[ 50 ];

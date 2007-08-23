@@ -6,7 +6,7 @@
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -194,7 +194,7 @@ BOOLEAN	GetShortFilename( STR strFilename, STR strPathname );
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -213,7 +213,7 @@ HDBFILE CreateDBFileHandle( HFILEINDEX high, HDBINDEX low )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -256,7 +256,7 @@ BOOLEAN InitializeDatabaseManager( STR strIndexFilename )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -294,7 +294,7 @@ void ShutdownDatabaseManager( void )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -311,16 +311,16 @@ void DbDebug( BOOLEAN fFlag )
 //
 // Parameter List :
 //
-//		STR	->name of file to check existence of
+//		STR	-> name of file to check existence of
 //
 // Return Value :
 //
-//		BOOLEAN	->TRUE if it exists
-//					->FALSE if not
+//		BOOLEAN	-> TRUE if it exists
+//					-> FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -337,16 +337,16 @@ BOOLEAN DbExists( STR strFilename )
 //
 // Parameter List :
 //
-//		STR	->filename
+//		STR	-> filename
 //
 // Return Value :
 //
-//		HDBINDEX	->handle of opened file
-//					->0 if unsuccessful
+//		HDBINDEX	-> handle of opened file
+//					-> 0 if unsuccessful
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -423,12 +423,12 @@ HDBINDEX DbOpen( STR strFilename )
 //
 // Parameter List :
 //
-//		HWFILE hFile	->handle to database file to close
+//		HWFILE hFile	-> handle to database file to close
 //
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -458,11 +458,11 @@ void DbClose( HDBINDEX hFile )
 //
 // Return Value :
 //
-//		HWFILE	->handle of opened file
+//		HWFILE	-> handle of opened file
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -519,12 +519,12 @@ HDBFILE DbFileOpen( STR strFilename )
 //
 // Parameter List :
 //
-//		HWFILE hFile	->handle to database file to close
+//		HWFILE hFile	-> handle to database file to close
 //
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -559,19 +559,19 @@ void DbFileClose( HDBFILE hDBFile )
 //
 // Parameter List :
 //
-//		HWFILE		->handle to file to read from
-//		void	*	->source buffer
-//		UINT32	->num bytes to read
-//		UINT32	->num bytes read
+//		HWFILE		-> handle to file to read from
+//		void	*	-> source buffer
+//		UINT32	-> num bytes to read
+//		UINT32	-> num bytes read
 //
 // Return Value :
 //
-//		BOOLEAN	->TRUE if successful
-//					->FALSE if not
+//		BOOLEAN	-> TRUE if successful
+//					-> FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -618,12 +618,12 @@ BOOLEAN DbFileRead(HDBFILE	hDBFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *pui
 //
 // Return Value :
 //
-//		BOOLEAN	->TRUE if successful
-//					->FALSE if not
+//		BOOLEAN	-> TRUE if successful
+//					-> FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -652,18 +652,18 @@ BOOLEAN DbFileLoad(STR filename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByt
 //
 // Parameter List :
 //
-//		HWFILE	->handle to file to seek in
-//		UINT32	->distance to seek
-//		UINT8		->how to seek
+//		HWFILE	-> handle to file to seek in
+//		UINT32	-> distance to seek
+//		UINT8		-> how to seek
 //
 // Return Value :
 //
-//		BOOLEAN	->TRUE if successful
-//					->FALSE if not
+//		BOOLEAN	-> TRUE if successful
+//					-> FALSE if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -705,16 +705,16 @@ BOOLEAN DbFileSeek( HDBFILE hDBFile, UINT32 uiDistance, UINT8 uiHow )
 //
 // Parameter List :
 //
-//		HWFILE	->handle to file
+//		HWFILE	-> handle to file
 //
 // Return Value :
 //
-//		INT32		->current offset in file if successful
-//					->-1 if not
+//		INT32		-> current offset in file if successful
+//					-> -1 if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -742,16 +742,16 @@ UINT32 DbFileGetPos( HDBFILE hDBFile )
 //
 // Parameter List :
 //
-//		HWFILE	->handle to file
+//		HWFILE	-> handle to file
 //
 // Return Value :
 //
-//		INT32		->file size in file if successful
-//					->0 if not
+//		INT32		-> file size in file if successful
+//					-> 0 if not
 //
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -781,7 +781,7 @@ UINT32 DbFileGetSize( HDBFILE hDBFile )
 // Return Value :
 // Modification history :
 //
-//		24sep96:HJH		->creation
+//		24sep96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -799,7 +799,7 @@ void DbDebugPrint( void )
 // Return Value :
 // Modification history :
 //
-//		15oct96:HJH		->creation
+//		15oct96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -842,7 +842,7 @@ BOOLEAN InitDB( DbInfo *pDBInfo, STR strFilename )
 // Return Value :
 // Modification history :
 //
-//		15oct96:HJH		->creation
+//		15oct96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -888,7 +888,7 @@ HDBINDEX OpenDatabaseContainingFile( STR strFilename )
 // Return Value :
 // Modification history :
 //
-//		15oct96:HJH		->creation
+//		15oct96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -938,7 +938,7 @@ BOOLEAN InitFile( HWFILE hDBFile, DbFile *pFileInfo, STR strFilename )
 // Return Value :
 // Modification history :
 //
-//		15oct96:HJH		->creation
+//		15oct96:HJH		-> creation
 //
 //**************************************************************************
 
@@ -1015,7 +1015,7 @@ BOOLEAN LoadBucket( CHAR cFirstLetter )
 // Return Value :
 // Modification history :
 //
-//		15oct96:HJH		->creation
+//		15oct96:HJH		-> creation
 //
 //**************************************************************************
 

@@ -63,7 +63,6 @@ typedef miscDropParseData;
 static void XMLCALL 
 miscDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -105,7 +104,6 @@ miscDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 miscDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -118,8 +116,7 @@ miscDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 static void XMLCALL
 miscDropEndElementHandle(void *userData, const XML_Char *name)
-{
-	PERFORMANCE_MARKER	
+{	
 	miscDropParseData * pData = (miscDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -169,7 +166,6 @@ miscDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -233,7 +229,6 @@ BOOLEAN ReadInEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 
 BOOLEAN WriteEnemyMiscDropsStats(MISC_DROPS *pEnemyMiscDrops, STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

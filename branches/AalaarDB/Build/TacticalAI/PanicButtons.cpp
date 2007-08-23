@@ -16,7 +16,6 @@
 
 void MakeClosestEnemyChosenOne()
 {
-	PERFORMANCE_MARKER
 	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
 	UINT8					ubClosestEnemy = NOBODY;
@@ -50,7 +49,7 @@ void MakeClosestEnemyChosenOne()
 		}
 
 		// if this merc is unconscious, or dead
-		if (pSoldier->stats.bLife < OKLIFE)
+		if (pSoldier->bLife < OKLIFE)
 		{
 			continue;	// next soldier
 		}
@@ -78,18 +77,18 @@ void MakeClosestEnemyChosenOne()
 		}
 
 		// if this guy is in battle with opponent(s)
-		if (pSoldier->aiData.bOppCnt > 0)
+		if (pSoldier->bOppCnt > 0)
 		{
 			continue;	// next soldier
 		}
 
 		// if this guy is still in serious shock
-		if (pSoldier->aiData.bShock > 2)
+		if (pSoldier->bShock > 2)
 		{
 			continue;	// next soldier
 		}
 
-		if ( pSoldier->pathing.bLevel != 0 )
+		if ( pSoldier->bLevel != 0 )
 		{
 			// screw having guys on the roof go for panic triggers!
 			continue;	// next soldier
@@ -166,9 +165,9 @@ void MakeClosestEnemyChosenOne()
 #endif
 
 		pSoldier = MercPtrs[gTacticalStatus.ubTheChosenOne];
-		if ( pSoldier->aiData.bAlertStatus < STATUS_RED )
+		if ( pSoldier->bAlertStatus < STATUS_RED )
 		{
-			pSoldier->aiData.bAlertStatus = STATUS_RED;
+			pSoldier->bAlertStatus = STATUS_RED;
 			CheckForChangingOrders( pSoldier );
 		}
 		SetNewSituation( pSoldier );	// set new situation for the chosen one
@@ -183,7 +182,6 @@ void MakeClosestEnemyChosenOne()
 
 void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32		iAPCost, iPathCost;
 	//INT8		bOldKeys;
 	INT8		bPanicTrigger;
@@ -195,7 +193,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 		return;
 	}
 
-	if ( pSoldier->pathing.bLevel != 0 )
+	if ( pSoldier->bLevel != 0 )
 	{
 		// screw having guys on the roof go for panic triggers!
 		return;
@@ -235,7 +233,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 
 	}
 
-	if ( iAPCost <= pSoldier->CalcActionPoints( ) * 2)
+	if ( iAPCost <= CalcActionPoints( pSoldier ) * 2)
 	{
 		// go!!!
 		gTacticalStatus.ubTheChosenOne = pSoldier->ubID;
@@ -249,14 +247,13 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		fFoundRoute = FALSE;
 	INT8			bSlot;
 	INT32			iPathCost;
 	INT8			bPanicTrigger;
 	INT16			sPanicTriggerGridNo;
 	#ifdef DEBUGDECISIONS
-		std::string tempstr;
+		STR16 tempstr;
 	#endif
 
 	// if there are panic bombs here
@@ -274,7 +271,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (pSoldier->bActionPoints >= AP_USE_REMOTE)
 			{
 #ifdef TESTVERSION
-				tempstr = String("TEST MSG: %s - ACTIVATING his DETONATOR!",pSoldier->name);
+				sprintf(tempstr,"TEST MSG: %s - ACTIVATING his DETONATOR!",pSoldier->name);
 				PopMessage(tempstr);
 #endif
 				// blow up all the PANIC bombs!
@@ -282,7 +279,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			}
 			else	 // otherwise, wait a turn
 			{
-				pSoldier->aiData.usActionData = NOWHERE;
+				pSoldier->usActionData = NOWHERE;
 				return(AI_ACTION_NONE);
 			}
 		}
@@ -300,7 +297,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (bPanicTrigger == -1)
 			{
 				// augh!
-				return( AI_ACTION_NOT_AN_ACTION );
+				return( -1 );
 			}
 			sPanicTriggerGridNo = gTacticalStatus.sPanicTriggerGridNo[ bPanicTrigger ];
 
@@ -349,11 +346,11 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 					if (pSoldier->bActionPoints >= AP_PULL_TRIGGER)
 					{
 						// blow up the all the PANIC bombs (or just the journal)
-						pSoldier->aiData.usActionData = sPanicTriggerGridNo;
+						pSoldier->usActionData = sPanicTriggerGridNo;
 
 #ifdef TESTVERSION
-						tempstr = String("TEST MSG: %s - PULLS PANIC TRIGGER at grid %d",
-						pSoldier->name,pSoldier->aiData.usActionData);
+						sprintf(tempstr,"TEST MSG: %s - PULLS PANIC TRIGGER at grid %d",
+						pSoldier->name,pSoldier->usActionData);
 						PopMessage(tempstr);
 #endif
 
@@ -361,7 +358,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 					}
 					else		// otherwise, wait a turn
 					{
-						pSoldier->aiData.usActionData = NOWHERE;
+						pSoldier->usActionData = NOWHERE;
 						return(AI_ACTION_NONE);
 					}
 				}
@@ -374,12 +371,12 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						// animations don't allow trigger-pulling from water, so we won't!
 						if (LegalNPCDestination(pSoldier,sPanicTriggerGridNo,ENSURE_PATH,NOWATER,0))
 						{
-							pSoldier->aiData.usActionData = sPanicTriggerGridNo;
-							pSoldier->pathing.bPathStored = TRUE;
+							pSoldier->usActionData = sPanicTriggerGridNo;
+							pSoldier->bPathStored = TRUE;
 
 #ifdef DEBUGDECISIONS
-							tempstr = String("%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)", pSoldier->name,pSoldier->aiData.usActionData,sPanicTriggerGridNo);
-							DebugAI(tempstr);
+							sprintf(tempstr,"%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)", pSoldier->name,pSoldier->usActionData,sPanicTriggerGridNo);
+							AIPopMessage(tempstr);
 #endif
 
 							return(AI_ACTION_GET_CLOSER);
@@ -395,7 +392,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 					}
 					else		 // can't move, wait 1 turn
 					{
-						pSoldier->aiData.usActionData = NOWHERE;
+						pSoldier->usActionData = NOWHERE;
 						return(AI_ACTION_NONE);
 					}
 				}
@@ -412,12 +409,11 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 	}
 
 	// no action decided
-	return(AI_ACTION_NOT_AN_ACTION);
+	return(-1);
 }
 
 void InitPanicSystem( void )
 {
-	PERFORMANCE_MARKER
 	// start by assuming there is no panic bombs or triggers here
 	gTacticalStatus.ubTheChosenOne				= NOBODY;
 	FindPanicBombsAndTriggers();
@@ -425,7 +421,6 @@ void InitPanicSystem( void )
 
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8		bLoop;
 	INT16		sDistance;
 	INT16		sClosestDistance = 1000;
@@ -475,7 +470,6 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 
 BOOLEAN NeedToRadioAboutPanicTrigger( void )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiPercentEnemiesKilled;
 	INT8			bLoop;
 
@@ -521,7 +515,6 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO * pBasementInfo;
 	
 	pBasementInfo = FindUnderGroundSector( 3, MAP_ROW_P, 1 );
@@ -538,7 +531,7 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 	{
 		if ( LegalNPCDestination( pSoldier, STAIRCASE_GRIDNO, ENSURE_PATH, WATEROK, 0 ) )
 		{
-			pSoldier->aiData.usActionData = STAIRCASE_GRIDNO;
+			pSoldier->usActionData = STAIRCASE_GRIDNO;
 			return( AI_ACTION_GET_CLOSER );
 		}
 	}

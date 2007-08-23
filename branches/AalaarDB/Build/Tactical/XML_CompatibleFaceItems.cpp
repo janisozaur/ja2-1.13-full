@@ -61,7 +61,6 @@ typedef compatiblefaceitemParseData;
 static void XMLCALL 
 compatiblefaceitemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -102,7 +101,6 @@ compatiblefaceitemStartElementHandle(void *userData, const XML_Char *name, const
 static void XMLCALL
 compatiblefaceitemCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -116,7 +114,6 @@ compatiblefaceitemCharacterDataHandle(void *userData, const XML_Char *str, int l
 static void XMLCALL
 compatiblefaceitemEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	compatiblefaceitemParseData * pData = (compatiblefaceitemParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -158,7 +155,6 @@ compatiblefaceitemEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -220,7 +216,6 @@ BOOLEAN ReadInCompatibleFaceItemStats(STR fileName)
 }
 BOOLEAN WriteCompatibleFaceItemStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

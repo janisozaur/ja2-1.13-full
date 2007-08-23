@@ -651,20 +651,17 @@ extern	void DemoHiringOfMercs( );
 
 void	SetLaptopExitScreen( UINT32 uiExitScreen )
 {
-	PERFORMANCE_MARKER
 	guiExitScreen = uiExitScreen;
 }
 
 void	SetLaptopNewGameFlag( )
 {
-	PERFORMANCE_MARKER
 	LaptopSaveInfo.gfNewGameLaptop = TRUE;
 }
 
 
 void HandleLapTopCursorUpDate()
 {
-	PERFORMANCE_MARKER
 	if(guiPreviousLapTopCursor==guiCurrentLapTopCursor)
 	return;
 	switch(guiCurrentLapTopCursor)
@@ -685,12 +682,11 @@ void HandleLapTopCursorUpDate()
 void 
 GetLaptopKeyboardInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 
 	GetCursorPos(&MousePos);
-	ScreenToClient(ghWindow, &MousePos); // In window coords!
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	fTabHandled = FALSE;
 
@@ -727,7 +723,6 @@ GetLaptopKeyboardInput()
 //This is called only once at game initialization.
 UINT32 LaptopScreenInit()
 {
-	PERFORMANCE_MARKER
 	//Memset the whole structure, to make sure of no 'JUNK'
 	memset( &LaptopSaveInfo, 0, sizeof( LaptopSaveInfoStruct ) );
 
@@ -791,7 +786,6 @@ UINT32 LaptopScreenInit()
 
 BOOLEAN InitLaptopAndLaptopScreens()
 {
-	PERFORMANCE_MARKER
 
 	GameInitFinances();
 	GameInitHistory();
@@ -809,7 +803,6 @@ BOOLEAN InitLaptopAndLaptopScreens()
 UINT32
 DrawLapTopIcons()
 {
-	PERFORMANCE_MARKER
 	
 	return (TRUE);
 }
@@ -817,7 +810,6 @@ DrawLapTopIcons()
 UINT32
 DrawLapTopText()
 {
-	PERFORMANCE_MARKER
 	
 	// show balance
 	DisplayPlayersBalanceToDate( );
@@ -829,7 +821,6 @@ DrawLapTopText()
 //This is only called once at game shutdown.
 UINT32 LaptopScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	InsuranceContractEndGameShutDown();
 	BobbyRayMailOrderEndGameShutDown();
 	ShutDownEmailList();
@@ -841,7 +832,6 @@ UINT32 LaptopScreenShutdown()
 
 INT32 EnterLaptop()
 {
-	PERFORMANCE_MARKER
 	//Create, load, initialize data -- just entered the laptop.
 	
 	VOBJECT_DESC	VObjectDesc;
@@ -1025,7 +1015,6 @@ INT32 EnterLaptop()
 
 void ExitLaptop()
 {
-	PERFORMANCE_MARKER
 
 	// exit is called due to message box, leave
 	if( fExitDueToMessageBox )
@@ -1138,7 +1127,6 @@ void ExitLaptop()
 void
 RenderLapTopImage()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hLapTopHandle;
 	
 	
@@ -1160,7 +1148,6 @@ RenderLapTopImage()
 }
 void RenderLaptop()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTempMode = 0;
 
 	if( ( fMaximizingProgram == TRUE ) ||( fMinizingProgram == TRUE) )
@@ -1331,7 +1318,6 @@ void RenderLaptop()
 
 void EnterNewLaptopMode()
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fOldLoadFlag=FALSE;
 
 		
@@ -1681,7 +1667,6 @@ void EnterNewLaptopMode()
 
 void HandleLapTopHandles()
 {
-	PERFORMANCE_MARKER
 	if(fLoadPendingFlag)
 		return;
 	
@@ -1825,7 +1810,6 @@ extern BOOLEAN gfPrintFrameBuffer;
 
 UINT32 LaptopScreenHandle()
 {
-	PERFORMANCE_MARKER
 	INT16 sYOffset = 0;
 	INT16 sXOffset = 0;
 
@@ -2172,7 +2156,6 @@ UINT32 LaptopScreenHandle()
 
 UINT32 RenderLaptopPanel()
 {
-	PERFORMANCE_MARKER
 	
 	return 0; 
 }
@@ -2180,7 +2163,6 @@ UINT32 RenderLaptopPanel()
 
 UINT32 ExitLaptopMode(UINT32 uiMode)
 {
-	PERFORMANCE_MARKER
 		//Deallocate the previous mode that you were in.
 	
 	switch( uiMode )
@@ -2319,7 +2301,6 @@ UINT32 ExitLaptopMode(UINT32 uiMode)
 UINT32
 CreateLaptopButtons()
 {
-	PERFORMANCE_MARKER
  memset( giLapTopButton, -1, sizeof( giLapTopButton ) );
  
  // the program buttons
@@ -2438,7 +2419,6 @@ CreateLaptopButtons()
 void
 DeleteLapTopButtons()
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for( cnt = 0; cnt < 7; cnt++ )
@@ -2452,7 +2432,6 @@ DeleteLapTopButtons()
 void 
 BtnOnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return; 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -2480,7 +2459,6 @@ BtnOnCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN LeaveLapTopScreen( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sYOffset = 0;
 	INT16 sXOffset = 0;
 
@@ -2616,7 +2594,6 @@ BOOLEAN LeaveLapTopScreen( void )
 
 BOOLEAN HandleExit( void )
 {
-	PERFORMANCE_MARKER
 //	static BOOLEAN fSentImpWarningAlready = FALSE;
 
 	
@@ -2658,7 +2635,6 @@ BOOLEAN HandleExit( void )
 
 void HaventMadeImpMercEmailCallBack()
 {
-	PERFORMANCE_MARKER
 	//if the player STILL hasnt made an imp merc yet
 	if( ( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) && ( LaptopSaveInfo.fSentImpWarningAlready == FALSE ) )
 	{
@@ -2671,7 +2647,6 @@ void HaventMadeImpMercEmailCallBack()
 BOOLEAN 
 CreateLapTopMouseRegions()
 {
-	PERFORMANCE_MARKER
  // define regions
 	
 
@@ -2687,7 +2662,6 @@ CreateLapTopMouseRegions()
 BOOLEAN
 DeleteLapTopMouseRegions()
 {
-	PERFORMANCE_MARKER
  
  MSYS_RemoveRegion( &gLapTopScreenRegion);
  
@@ -2696,7 +2670,6 @@ DeleteLapTopMouseRegions()
 
 void FinancialRegionButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -2731,8 +2704,7 @@ void FinancialRegionButtonCallback(GUI_BUTTON *btn,INT32 reason)
  
 
 void PersonnelRegionButtonCallback(	GUI_BUTTON *btn,INT32 reason)
-{
-	PERFORMANCE_MARKER 	
+{ 	
 	
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -3019,7 +2991,6 @@ void FilesRegionButtonCallback( GUI_BUTTON *btn,INT32 reason )
 
 void HandleLapTopScreenMouseUi()
 {
-	PERFORMANCE_MARKER
  if ( gEmailRegion.uiFlags & MSYS_MOUSE_IN_AREA )
  {
 	giHighLightRegion=EMAIL_REGION;
@@ -3052,7 +3023,6 @@ void HandleLapTopScreenMouseUi()
 void
 DrawHighLightRegionBox()
 {
-	PERFORMANCE_MARKER
 	
 	return;
 }
@@ -3060,21 +3030,18 @@ DrawHighLightRegionBox()
 void
 RestoreOldRegion(INT32 iOldRegion)
 {
-	PERFORMANCE_MARKER
  
 	return;
 }
 
 void HighLightRegion(INT32 iCurrentRegion)
 {
-	PERFORMANCE_MARKER
  
 	return;
 }
 
 void HandleAnimatedButtons()
 {
-	PERFORMANCE_MARKER
 
 	return;
 
@@ -3082,13 +3049,11 @@ void HandleAnimatedButtons()
 }
 void AnimateButton( UINT32 uiIconID, UINT16 usX, UINT16 usY )
 {
-	PERFORMANCE_MARKER
 	return;
 }
 
 void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3107,7 +3072,6 @@ void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3132,7 +3096,6 @@ void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3150,7 +3113,6 @@ void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3171,7 +3133,6 @@ void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3189,7 +3150,6 @@ void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
 	HVOBJECT hLapTopIconHandle;
@@ -3211,7 +3171,6 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 void
 CheckIfMouseLeaveScreen()
 {
-	PERFORMANCE_MARKER
  	POINT	MousePos;
 	GetCursorPos(&MousePos);
 	ScreenToClient(ghWindow, &MousePos); // In window coords!
@@ -3223,7 +3182,6 @@ CheckIfMouseLeaveScreen()
 }
 void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
@@ -3241,7 +3199,6 @@ void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void ReDrawHighLight()
 {
-	PERFORMANCE_MARKER
 	HighLightRegion(giCurrentRegion);
 	return;
 }
@@ -3249,7 +3206,6 @@ void ReDrawHighLight()
 
 void DrawButtonText()
 {
-	PERFORMANCE_MARKER
 
 	if(fErrorFlag)
 		DrawTextOnErrorButton();
@@ -3264,7 +3220,6 @@ void DrawButtonText()
 
 void InitBookMarkList()
 {
-	PERFORMANCE_MARKER
 	// sets bookmark list to -1
 	memset( LaptopSaveInfo.iBookMarkList, -1, sizeof( LaptopSaveInfo.iBookMarkList ) );
 	return;
@@ -3272,7 +3227,6 @@ void InitBookMarkList()
 
 void SetBookMark(INT32 iBookId)
 {
-	PERFORMANCE_MARKER
 	// find first empty spot, set to iBookId
 	INT32 iCounter=0;
 	if(iBookId!=-2)
@@ -3295,7 +3249,6 @@ void SetBookMark(INT32 iBookId)
 
 BOOLEAN RemoveBookMark( INT32 iBookId )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 
 	//Loop through the bookmarks to get to the desired bookmark
@@ -3322,7 +3275,6 @@ BOOLEAN RemoveBookMark( INT32 iBookId )
 
 BOOLEAN LoadBookmark()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 
@@ -3373,7 +3325,6 @@ BOOLEAN LoadBookmark()
 
 void DisplayBookMarks( void )
 {
-	PERFORMANCE_MARKER
 	// will look at bookmarklist and set accordingly
 	INT32 iCounter=1;
 	// load images
@@ -3481,7 +3432,6 @@ void DisplayBookMarks( void )
 
 void RemoveBookmark(INT32 iBookId)
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	if(iBookId==-2)
 		return;
@@ -3503,7 +3453,6 @@ void RemoveBookmark(INT32 iBookId)
 
 void DeleteBookmark()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiBOOKTOP);
 	DeleteVideoObjectFromIndex(guiBOOKMID);
 	DeleteVideoObjectFromIndex(guiBOOKHIGH);
@@ -3519,7 +3468,6 @@ void DeleteBookmark()
 
 void ScrollDisplayText(INT32 iY)
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT16 sCurX;
 
@@ -3559,7 +3507,6 @@ void ScrollDisplayText(INT32 iY)
 }
 void CreateBookMarkMouseRegions()
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	// creates regions based on number of entries
 	while( LaptopSaveInfo.iBookMarkList[iCounter] != -1 )
@@ -3586,7 +3533,6 @@ void CreateBookMarkMouseRegions()
 
 void DeleteBookmarkRegions()
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	//deletes bookmark regions
 	while( LaptopSaveInfo.iBookMarkList[iCounter] != -1 )
@@ -3604,7 +3550,6 @@ void DeleteBookmarkRegions()
 
 void CreateDestoryBookMarkRegions( void )
 {
-	PERFORMANCE_MARKER
 	// checks to see if a bookmark needs to be created or destroyed
 	static BOOLEAN fOldShowBookmarks=FALSE;
 
@@ -3627,8 +3572,7 @@ void CreateDestoryBookMarkRegions( void )
 
 
 void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
  INT32 iCount;
  
  if (iReason & MSYS_CALLBACK_REASON_INIT)
@@ -3670,8 +3614,7 @@ void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void GoToWebPage(INT32 iPageId )
-{
-	PERFORMANCE_MARKER 
+{ 
 
 	// WANNE: disabled rain sound when laptop is displayed
 	////if it is raining, popup a warning first saying connection time may be slow
@@ -3838,7 +3781,6 @@ void GoToWebPage(INT32 iPageId )
 
 void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)
 	{
 	iHighLightBookLine=MSYS_GetRegionUserData(pRegion, 0);
@@ -3852,7 +3794,6 @@ void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN LoadLoadPending( void )
 {
-	PERFORMANCE_MARKER
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
@@ -3871,7 +3812,6 @@ BOOLEAN LoadLoadPending( void )
 
 BOOLEAN DisplayLoadPending( void )
 {
-	PERFORMANCE_MARKER
 	// this function will display the load pending and return if the load is done
 	static INT32 iBaseTime=0;
 	static INT32 iTotalTime=0;
@@ -4053,7 +3993,6 @@ BOOLEAN DisplayLoadPending( void )
 
 void DeleteLoadPending( void )
 {
-	PERFORMANCE_MARKER
 	// this funtion will delete the load pending graphics
 	// reuse bookmark
 	DeleteVideoObjectFromIndex(guiGRAPHBAR);
@@ -4063,7 +4002,6 @@ void DeleteLoadPending( void )
 
 void BtnErrorCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -4086,7 +4024,6 @@ void BtnErrorCallback(GUI_BUTTON *btn,INT32 reason)
 }
 void CreateDestroyErrorButton( void )
 {
-	PERFORMANCE_MARKER
  static BOOLEAN fOldErrorFlag=FALSE; 
  if((fErrorFlag)&&(!fOldErrorFlag))
  {
@@ -4129,7 +4066,6 @@ void CreateDestroyErrorButton( void )
 
 void DisplayErrorBox( void )
 {
-	PERFORMANCE_MARKER
 	// this function will display the error graphic
 	HVOBJECT hLapTopIconHandle;
 	if(!fErrorFlag)
@@ -4181,7 +4117,6 @@ void DisplayErrorBox( void )
 
 void DrawTextOnErrorButton()
 {
-	PERFORMANCE_MARKER
 	// draws text on error button
 	SetFont(ERROR_TITLE_FONT);
 	SetFontForeground(FONT_BLACK);
@@ -4198,7 +4133,6 @@ void DrawTextOnErrorButton()
 // various init function in the laptop pages that need to be inited when the laptop is just loaded.
 void EnterLaptopInitLaptopPages()
 {
-	PERFORMANCE_MARKER
 	EnterInitAimMembers();
 	EnterInitAimArchives();
 	EnterInitAimPolicies();
@@ -4216,7 +4150,6 @@ void EnterLaptopInitLaptopPages()
 
 void CheckMarkButtonsDirtyFlag( void )
 {
-	PERFORMANCE_MARKER
 	// this function checks the fMarkButtonsDirtyFlag, if true, mark buttons dirty
 	if( fMarkButtonsDirtyFlag )
 	{
@@ -4231,7 +4164,6 @@ void CheckMarkButtonsDirtyFlag( void )
 
 void PostButtonRendering( void )
 {
-	PERFORMANCE_MARKER
 	// this function is in place to allow for post button rendering
 
 	switch( guiCurrentLaptopMode )
@@ -4250,7 +4182,6 @@ void PostButtonRendering( void )
 
 void ShouldNewMailBeDisplayed()
 {
-	PERFORMANCE_MARKER
 	
 	BOOLEAN fReDraw=FALSE;
 	switch( guiCurrentLaptopMode )
@@ -4272,7 +4203,6 @@ void ShouldNewMailBeDisplayed()
 
 void DisplayPlayersBalanceToDate( void )
 {
-	PERFORMANCE_MARKER
 	// print players balance to date
 	CHAR16 sString[ 100 ];
 	INT16 sX, sY;
@@ -4315,7 +4245,6 @@ void DisplayPlayersBalanceToDate( void )
 
 void CheckIfNewWWWW( void )
 {
-	PERFORMANCE_MARKER
 	// if no www mode, set new www flag..until new www mode that is not 0
 
 	if( guiCurrentWWWMode == LAPTOP_MODE_NONE )
@@ -4333,7 +4262,6 @@ void CheckIfNewWWWW( void )
 
 void HandleLapTopESCKey( void )
 {
-	PERFORMANCE_MARKER
 
 	// will handle esc key events, since handling depends on state of laptop
 	
@@ -4394,7 +4322,6 @@ void HandleLapTopESCKey( void )
 
 void HandleRightButtonUpEvent( void )
 {
-	PERFORMANCE_MARKER
 
 	// will handle the right button up event
 	if( fNewMailFlag )
@@ -4458,7 +4385,6 @@ void HandleRightButtonUpEvent( void )
 
 void HandleLeftButtonUpEvent( void )
 {
-	PERFORMANCE_MARKER
 
 	// will handle the left button up event
 
@@ -4479,8 +4405,7 @@ void HandleLeftButtonUpEvent( void )
 }
 
 void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
  
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -4504,7 +4429,6 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect pCenteringRect= {LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 
 	
@@ -4525,7 +4449,6 @@ BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitSc
 
 BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
-	PERFORMANCE_MARKER
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
 
@@ -4538,7 +4461,6 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, STR16 zString, UINT32 u
 
 BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {iScreenWidthOffset, iScreenHeightOffset,
 		iScreenWidthOffset + 640, INV_INTERFACE_START_Y };
 
@@ -4558,7 +4480,6 @@ BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScr
 //places a tileable pattern down
 BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackgroundIdentifier)
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -4582,7 +4503,6 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 
 BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, STR16 pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex )
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	HVOBJECT	hImageHandle;
 
@@ -4612,7 +4532,6 @@ BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, STR16 pTitle, 
 
 BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX )
 {
-	PERFORMANCE_MARKER
 	static 	INT8			ubCount;
 	INT16		sPosX, sPosY, sPosRightX, sPosBottomY, sWidth, sHeight;
 	SGPRect		SrcRect;
@@ -4749,14 +4668,12 @@ BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 u
 
 void RemoveTitleBarMaximizeGraphics()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoSurfaceFromIndex( guiTitleBarSurface );
 }
 
 
 void HandleSlidingTitleBar( void )
 {
-	PERFORMANCE_MARKER
 	if( ( fMaximizingProgram == FALSE ) && ( fMinizingProgram == FALSE ) )
 	{
 		return;
@@ -4934,7 +4851,6 @@ void HandleSlidingTitleBar( void )
 
 void ShowLights( void )
 {
-	PERFORMANCE_MARKER
 	// will show lights depending on state
 	HVOBJECT hHandle;
 
@@ -4966,7 +4882,6 @@ void ShowLights( void )
 
 void FlickerHDLight( void )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime = 0;
 	static INT32 iTotalDifference = 0;
 	INT32 iDifference = 0;
@@ -5028,7 +4943,6 @@ void FlickerHDLight( void )
 
 BOOLEAN ExitLaptopDone( void )
 {
-	PERFORMANCE_MARKER
 	// check if this is the first time, to reset counter
 
 	static BOOLEAN fOldLeaveLaptopState = FALSE;
@@ -5067,7 +4981,6 @@ BOOLEAN ExitLaptopDone( void )
 
 void CreateDestroyMinimizeButtonForCurrentMode( void )
 {
-	PERFORMANCE_MARKER
 	// will create the minimize button
 	
 	static BOOLEAN fAlreadyCreated = FALSE;
@@ -5121,7 +5034,6 @@ void CreateDestroyMinimizeButtonForCurrentMode( void )
 
 void CreateMinimizeButtonForCurrentMode( void )
 {
-	PERFORMANCE_MARKER
 	// create minimize button
 	gLaptopMinButtonImage[0]=	LoadButtonImage( "LAPTOP\\x.sti" ,-1,0,-1,1,-1 );
 	gLaptopMinButton[0] = QuickCreateButton( gLaptopMinButtonImage[0], iScreenWidthOffset + 590, iScreenHeightOffset + 30,
@@ -5134,7 +5046,6 @@ void CreateMinimizeButtonForCurrentMode( void )
 
 void DestroyMinimizeButtonForCurrentMode( void )
 {
-	PERFORMANCE_MARKER
 	// destroy minimize button
 	RemoveButton( gLaptopMinButton[ 0 ] );	
 	UnloadButtonImage( gLaptopMinButtonImage[ 0 ] );
@@ -5144,7 +5055,6 @@ void DestroyMinimizeButtonForCurrentMode( void )
 
 void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return; 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -5215,7 +5125,6 @@ void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 INT32 FindLastProgramStillOpen( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iLowestValue = 6;
 	INT32 iLowestValueProgram = 6;
 	INT32 iCounter =0;
@@ -5238,7 +5147,6 @@ INT32 FindLastProgramStillOpen( void )
 
 void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	
 	// will update queue of opened programs to show thier states
@@ -5258,7 +5166,6 @@ void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram )
 
 void InitLaptopOpenQueue( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 
@@ -5273,7 +5180,6 @@ void InitLaptopOpenQueue( void )
 
 void SetCurrentToLastProgramOpened( void )
 {
-	PERFORMANCE_MARKER
 	guiCurrentLaptopMode = LAPTOP_MODE_NONE;
 
 	switch( FindLastProgramStillOpen( ) )
@@ -5315,7 +5221,6 @@ void SetCurrentToLastProgramOpened( void )
 
 void BlitTitleBarIcons( void )
 {
-	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 	// will blit the icons for the title bar of the program we are in
@@ -5356,7 +5261,6 @@ void BlitTitleBarIcons( void )
 
 BOOLEAN DrawDeskTopBackground( void )
 {
-	PERFORMANCE_MARKER
 	HVSURFACE hSrcVSurface;
 	UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
@@ -5393,7 +5297,6 @@ BOOLEAN DrawDeskTopBackground( void )
 
 BOOLEAN LoadDesktopBackground( void )
 {
-	PERFORMANCE_MARKER
 	// load desktop background
 	VSURFACE_DESC		vs_desc;
 
@@ -5407,7 +5310,6 @@ BOOLEAN LoadDesktopBackground( void )
 
 void DeleteDesktopBackground( void )
 {
-	PERFORMANCE_MARKER
 	// delete desktop
 
 	DeleteVideoSurfaceFromIndex(guiDESKTOP);
@@ -5417,7 +5319,6 @@ void DeleteDesktopBackground( void )
 
 void PrintBalance( void )
 {
-	PERFORMANCE_MARKER
 	CHAR16 pString[ 32 ];
 //	UINT16 usX, usY;
 
@@ -5446,7 +5347,6 @@ void PrintBalance( void )
 
 void PrintNumberOnTeam( void )
 {
-	PERFORMANCE_MARKER
 	CHAR16 pString[ 32 ];
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
@@ -5466,7 +5366,7 @@ void PrintNumberOnTeam( void )
 	{
 		pTeamSoldier = MercPtrs[ cnt ];
 
-		if( ( pTeamSoldier->bActive)&&( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) ) )
+		if( ( pTeamSoldier->bActive)&&( !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
 		{
 			iCounter++;
 		}
@@ -5496,7 +5396,6 @@ void PrintNumberOnTeam( void )
 
 void PrintDate( void )
 {
-	PERFORMANCE_MARKER
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
@@ -5513,7 +5412,6 @@ void PrintDate( void )
 
 void DisplayTaskBarIcons()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiTITLEBARICONS);
@@ -5534,7 +5432,6 @@ void DisplayTaskBarIcons()
 
 void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 usKeyState )
 {
-	PERFORMANCE_MARKER
 
 	// will handle keyboard shortcuts for the laptop ... to be added to later
 
@@ -5782,7 +5679,6 @@ void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 us
 
 BOOLEAN RenderWWWProgramTitleBar( void )
 {
-	PERFORMANCE_MARKER
 	// will render the title bar for the www program
 	UINT32 uiTITLEFORWWW;
 	HVOBJECT hHandle;
@@ -5840,7 +5736,6 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 
 void HandleDefaultWebpageForLaptop( void )
 {
-	PERFORMANCE_MARKER
 
 	// go to first page in bookmark list
 	if( guiCurrentLaptopMode == LAPTOP_MODE_WWW )
@@ -5858,7 +5753,6 @@ void HandleDefaultWebpageForLaptop( void )
 
 void CreateMinimizeRegionsForLaptopProgramIcons( void )
 {
-	PERFORMANCE_MARKER
 	// will create the minizing region to lie over the icon for this particular laptop program
 
 	MSYS_DefineRegion( &gLapTopProgramMinIcon,LAPTOP_PROGRAM_ICON_X, LAPTOP_PROGRAM_ICON_Y ,LAPTOP_PROGRAM_ICON_X + LAPTOP_PROGRAM_ICON_WIDTH ,LAPTOP_PROGRAM_ICON_Y + LAPTOP_PROGRAM_ICON_HEIGHT, MSYS_PRIORITY_NORMAL+1,
@@ -5870,7 +5764,6 @@ void CreateMinimizeRegionsForLaptopProgramIcons( void )
 
 void DestroyMinimizeRegionsForLaptopProgramIcons( void )
 {
-	PERFORMANCE_MARKER
 	// will destroy the minizmize regions to be placed over the laptop icons that will be 
 	// displayed on the top of the laptop program bar
 	
@@ -5882,7 +5775,6 @@ void DestroyMinimizeRegionsForLaptopProgramIcons( void )
 
 void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	// callback handler for the minize region that is attatched to the laptop program icon
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -5943,7 +5835,6 @@ void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 {
-	PERFORMANCE_MARKER
 		// the border fot eh program
 	HVOBJECT hHandle;
 
@@ -5979,7 +5870,6 @@ void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 
 void CreateDestroyMouseRegionForNewMailIcon( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 	//. will toggle creation/destruction of the mouse regions used by the new mail icon
@@ -6006,7 +5896,6 @@ void CreateDestroyMouseRegionForNewMailIcon( void )
 
 void NewEmailIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if( fUnReadMailFlag )
@@ -6021,7 +5910,6 @@ void NewEmailIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if( fNewFilesInFileViewer )
@@ -6035,7 +5923,6 @@ void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void HandleWWWSubSites( void )
 {
-	PERFORMANCE_MARKER
 	// check to see if WW Wait is needed for a sub site within the Web Browser
 
 	if( (guiCurrentLaptopMode == guiPreviousLaptopMode )||( guiCurrentLaptopMode < LAPTOP_MODE_WWW) ||( fLoadPendingFlag == TRUE ) ||( fDoneLoadPending == TRUE ) || ( guiPreviousLaptopMode < LAPTOP_MODE_WWW ) )
@@ -6074,7 +5961,6 @@ void HandleWWWSubSites( void )
 
 void UpdateStatusOfDisplayingBookMarks( void )
 {
-	PERFORMANCE_MARKER
 	// this function will disable showing of bookmarks if in process of download or if we miniming web browser
 	if( ( fLoadPendingFlag == TRUE ) || ( guiCurrentLaptopMode < LAPTOP_MODE_WWW )	)
 	{
@@ -6087,7 +5973,6 @@ void UpdateStatusOfDisplayingBookMarks( void )
 
 void InitalizeSubSitesList( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// init all subsites list to not visited
@@ -6101,7 +5986,6 @@ void InitalizeSubSitesList( void )
 
 void SetSubSiteAsVisted( void )
 {
-	PERFORMANCE_MARKER
 	// sets a www sub site as visited
 	if( guiCurrentLaptopMode <= LAPTOP_MODE_WWW )
 	{
@@ -6117,7 +6001,6 @@ void SetSubSiteAsVisted( void )
 
 void HandleShiftAltTabKeyInLaptop( void )
 {
-	PERFORMANCE_MARKER
 	// will handle the alt tab keying in laptop
 
 	// move to next program
@@ -6160,7 +6043,6 @@ void HandleShiftAltTabKeyInLaptop( void )
 
 void HandleAltTabKeyInLaptop( void )
 {
-	PERFORMANCE_MARKER
 	// will handle the alt tab keying in laptop
 
 	// move to next program
@@ -6204,7 +6086,6 @@ void HandleAltTabKeyInLaptop( void )
 // display the 2 second book mark instruction
 void DisplayWebBookMarkNotify( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fOldShow = FALSE;
 	HVOBJECT hLapTopIconHandle;
 
@@ -6263,7 +6144,6 @@ void DisplayWebBookMarkNotify( void )
 
 void HandleWebBookMarkNotifyTimer( void )
 {
-	PERFORMANCE_MARKER
 	static INT32 iBaseTime = 0;
 	INT32 iDifference = 0;
 	static BOOLEAN fOldShowBookMarkInfo = FALSE;
@@ -6327,7 +6207,6 @@ void HandleWebBookMarkNotifyTimer( void )
 
 void ClearOutTempLaptopFiles( void )
 {
-	PERFORMANCE_MARKER
 	// clear out all temp files from laptop
 	
 	// file file
@@ -6363,7 +6242,6 @@ void ClearOutTempLaptopFiles( void )
 
 BOOLEAN SaveLaptopInfoToSavedGame( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten=0;	
 	UINT32	uiSize;
 
@@ -6412,7 +6290,6 @@ BOOLEAN SaveLaptopInfoToSavedGame( HWFILE hFile )
 
 BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead=0;	
 	UINT32	uiSize;
 	
@@ -6495,13 +6372,11 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 
 void LaptopSaveVariablesInit()
 {
-	PERFORMANCE_MARKER
 }
 
 
 INT32 WWaitDelayIncreasedIfRaining( INT32 iUnitTime )
 {
-	PERFORMANCE_MARKER
 	INT32	iRetVal = 0;
 
 	if( guiEnvWeather	& WEATHER_FORECAST_THUNDERSHOWERS )
@@ -6519,7 +6394,6 @@ INT32 WWaitDelayIncreasedIfRaining( INT32 iUnitTime )
 
 BOOLEAN IsItRaining()
 {
-	PERFORMANCE_MARKER
 	if( guiEnvWeather & WEATHER_FORECAST_SHOWERS || guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS )
 		return( TRUE );
 	else
@@ -6539,13 +6413,11 @@ void		InternetRainDelayMessageBoxCallBack( UINT8 bExitValue )
 
 void CreateBookMarkHelpText( MOUSE_REGION *pRegion, UINT32 uiBookMarkID )
 {
-	PERFORMANCE_MARKER
 	SetRegionFastHelpText( pRegion, gzLaptopHelpText[ BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + uiBookMarkID ] );
 }
 
 void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText )
 {
-	PERFORMANCE_MARKER
 	MOUSE_REGION *pRegion;
 
 	switch( uiHelpTextID )
@@ -6575,7 +6447,6 @@ void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearH
 
 void CreateLaptopButtonHelpText( INT32 iButtonIndex, UINT32 uiButtonHelpTextID )
 {
-	PERFORMANCE_MARKER
 	SetButtonFastHelpText( iButtonIndex, gzLaptopHelpText[ uiButtonHelpTextID ] );
 }
 

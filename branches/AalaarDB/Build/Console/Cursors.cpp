@@ -30,7 +30,6 @@
 #include <Windows.h>
 #include <tchar.h>
 #include "Cursors.h"
-#include "profiler.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,7 +46,6 @@ XTermCursor::XTermCursor(HWND hwndConsole, HDC hdcWindow, COLORREF crCursorColor
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 , m_hInactiveBrush(::CreateSolidBrush(crCursorColor))
 {
-	PERFORMANCE_MARKER
 }
 
 XTermCursor::~XTermCursor() {
@@ -95,7 +93,6 @@ BlockCursor::BlockCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColor)
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 , m_bVisible(TRUE)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 750, NULL);
 }
 
@@ -143,7 +140,6 @@ NBBlockCursor::NBBlockCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorCo
 : Cursor(hwndParent, hdcWindow, crCursorColor)
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 {
-	PERFORMANCE_MARKER
 }
 
 NBBlockCursor::~NBBlockCursor() {
@@ -187,7 +183,6 @@ PulseBlockCursor::PulseBlockCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCu
 , m_nMaxSize(0)
 , m_nStep(0)
 {
-	PERFORMANCE_MARKER
 	::ZeroMemory(&m_rect, sizeof(RECT));
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 100, NULL);
 }
@@ -257,7 +252,6 @@ BarCursor::BarCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColor)
 , m_hPen(::CreatePen(PS_SOLID, 1, crCursorColor))
 , m_bVisible(TRUE)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 750, NULL);
 }
 
@@ -310,7 +304,6 @@ ConsoleCursor::ConsoleCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorCo
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 , m_bVisible(TRUE)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 750, NULL);
 }
 
@@ -371,7 +364,6 @@ NBHLineCursor::NBHLineCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorCo
 : Cursor(hwndParent, hdcWindow, crCursorColor)
 , m_hPen(::CreatePen(PS_SOLID, 1, crCursorColor))
 {
-	PERFORMANCE_MARKER
 }
 
 NBHLineCursor::~NBHLineCursor() {
@@ -419,7 +411,6 @@ HLineCursor::HLineCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColor)
 , m_nPosition(0)
 , m_nStep(0)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 100, NULL);
 }
 
@@ -486,7 +477,6 @@ VLineCursor::VLineCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColor)
 , m_nPosition(0)
 , m_nStep(0)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 100, NULL);
 }
 
@@ -551,7 +541,6 @@ RectCursor::RectCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColor)
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 , m_bVisible(TRUE)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 750, NULL);
 }
 
@@ -599,7 +588,6 @@ NBRectCursor::NBRectCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCursorColo
 : Cursor(hwndParent, hdcWindow, crCursorColor)
 , m_hActiveBrush(::CreateSolidBrush(crCursorColor))
 {
-	PERFORMANCE_MARKER
 }
 
 NBRectCursor::~NBRectCursor() {
@@ -643,7 +631,6 @@ PulseRectCursor::PulseRectCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCurs
 , m_nMaxSize(0)
 , m_nStep(0)
 {
-	PERFORMANCE_MARKER
 	::ZeroMemory(&m_rect, sizeof(RECT));
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 100, NULL);
 }
@@ -717,7 +704,6 @@ FadeBlockCursor::FadeBlockCursor(HWND hwndParent, HDC hdcWindow, COLORREF crCurs
 , m_hUser32(NULL)
 , m_hMemDC(NULL)
 {
-	PERFORMANCE_MARKER
 	m_uiTimer = ::SetTimer(hwndParent, CURSOR_TIMER, 35, NULL);
 	
 #if 0

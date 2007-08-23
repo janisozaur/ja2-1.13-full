@@ -79,14 +79,13 @@ ITEM_POOL *gpItemPool = NULL;
 
 void BuildItemPoolList()
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *temp;
 	IPListNode *tail = NULL;
 	UINT16 i;
 	KillItemPoolList();
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
-		if( GetItemPoolFromGround( i, &temp ) )
+		if( GetItemPool( i, &temp , 0) )
 		{
 			if( !pIPHead )
 			{
@@ -111,7 +110,6 @@ void BuildItemPoolList()
 
 void KillItemPoolList()
 {
-	PERFORMANCE_MARKER
 	IPListNode *pIPCurr;
 	pIPCurr = pIPHead;
 	while( pIPCurr )
@@ -132,7 +130,6 @@ EditorItemsInfo eInfo;
 //isn't calculated every time a player changes categories.
 void EntryInitEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INVTYPE *item;
 	eInfo.uiBuffer = 0;
@@ -191,6 +188,7 @@ void EntryInitEditorItemsInfo()
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
+				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( eInfo.sNumEquipment1 < 30 )
@@ -211,7 +209,6 @@ void EntryInitEditorItemsInfo()
 
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
@@ -444,6 +441,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
+				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( usCounter == ACTION_ITEM || usCounter == SWITCH )
@@ -545,7 +543,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 void DetermineItemsScrolling()
 {
-	PERFORMANCE_MARKER
 	if( !eInfo.sScrollIndex )
 		DisableEditorButton( ITEMS_LEFTSCROLL );
 	else
@@ -561,7 +558,6 @@ void DetermineItemsScrolling()
 
 void RenderEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
@@ -658,7 +654,6 @@ void RenderEditorItemsInfo()
 
 void ClearEditorItemsInfo()
 {
-	PERFORMANCE_MARKER
 	if( eInfo.uiBuffer )
 	{
 		DeleteVideoSurfaceFromIndex( eInfo.uiBuffer );
@@ -719,7 +714,6 @@ void ClearEditorItemsInfo()
 
 void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 {
-	PERFORMANCE_MARKER
 	INT16 sIndex;
 	UINT16 usQuantity;
 	//Calc base index from scrolling index
@@ -781,7 +775,6 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 
 void ShowItemCursor( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	pNode = gpWorldLevelData[ iMapIndex ].pTopmostHead;
 	while( pNode )
@@ -795,15 +788,13 @@ void ShowItemCursor( INT32 iMapIndex )
 
 void HideItemCursor( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveTopmost( iMapIndex, SELRING1 );
 }
 
 BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
-	if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
+	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
 	{
 		return FALSE;
 	}
@@ -821,7 +812,6 @@ BOOLEAN TriggerAtGridNo( INT16 sGridNo )
 
 void AddSelectedItemToWorld( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	OBJECTTYPE *pObject;
 	INVTYPE		*pItem;
 	ITEM_POOL *pItemPool;
@@ -834,6 +824,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	//Extract the currently selected item.
 	SpecifyItemToEdit( NULL, -1 );
 
+	//memset( &tempObject, 0, sizeof( OBJECTTYPE ) );
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_KEYS )
 	{
 		CreateKeyObject( &gTempObject, 1, (UINT8)eInfo.sSelItemIndex );
@@ -949,7 +940,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 		}
 	}
 
-	if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
+	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
 		Assert( 0 );
 	while( pItemPool )
 	{
@@ -1005,7 +996,6 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 
 void HandleRightClickOnItem( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 
@@ -1015,10 +1005,10 @@ void HandleRightClickOnItem( INT16 sGridNo )
 		pItemPool = gpItemPool->pNext;
 		if( !pItemPool )
 		{ //currently selected item was last node, so select the head node even if it is the same.
-			GetItemPoolFromGround( sGridNo, &pItemPool );
+			GetItemPool( sGridNo, &pItemPool, 0 );
 		}
 	}
-	else if( !GetItemPoolFromGround( sGridNo, &pItemPool ) )
+	else if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
 	{
 		//possibly relocate selected item to this gridno?
 		return; 
@@ -1046,7 +1036,6 @@ extern void DeleteSelectedMercsItem();
 
 void DeleteSelectedItem()
 {
-	PERFORMANCE_MARKER
 	SpecifyItemToEdit( NULL, -1 );
 	//First, check to see if there even is a currently selected item.
 	if( iCurrentTaskbar == TASK_MERCS )
@@ -1076,7 +1065,7 @@ void DeleteSelectedItem()
 		RemoveItemFromPool( sGridNo, gpItemPool->iItemIndex, 0 );
 		gpItemPool = NULL;
 		//determine if there are still any items at this location
-		if( !GetItemPoolFromGround( sGridNo, &gpItemPool ) )
+		if( !GetItemPool( sGridNo, &gpItemPool , 0 ) )
 		{ //no items left, so remove the node from the list.
 			IPListNode *pIPPrev, *pIPCurr;
 			pIPCurr = pIPHead;
@@ -1096,7 +1085,7 @@ void DeleteSelectedItem()
 						gpCurrItemPoolNode = pIPHead;
 					if( gpCurrItemPoolNode )
 					{
-						GetItemPoolFromGround( gpCurrItemPoolNode->sGridNo, &gpItemPool );
+						GetItemPool( gpCurrItemPoolNode->sGridNo, &gpItemPool, 0 );
 						Assert( gpItemPool );
 					}
 					//remove node
@@ -1114,7 +1103,6 @@ void DeleteSelectedItem()
 
 void ShowSelectedItem()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{ 
 		gpItemPool->bVisible = INVISIBLE;
@@ -1124,7 +1112,6 @@ void ShowSelectedItem()
 
 void HideSelectedItem()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		gpItemPool->bVisible = HIDDEN_ITEM;
@@ -1134,7 +1121,6 @@ void HideSelectedItem()
 
 void SelectNextItemPool()
 {
-	PERFORMANCE_MARKER
 	if( !gpCurrItemPoolNode )
 		return;
 //remove the current hilight.
@@ -1149,7 +1135,7 @@ void SelectNextItemPool()
 	else 
 		gpCurrItemPoolNode = pIPHead;
 	//get the item pool at this node's gridno.
-	GetItemPoolFromGround( gpCurrItemPoolNode->sGridNo, &gpItemPool );
+	GetItemPool( gpCurrItemPoolNode->sGridNo, &gpItemPool, 0 );
 	MarkMapIndexDirty( gpItemPool->sGridNo );
 	SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].object, gpItemPool->sGridNo );
 	if( gsItemGridNo != -1 )
@@ -1160,7 +1146,6 @@ void SelectNextItemPool()
 
 void SelectNextItemInPool()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		if( gpItemPool->pNext )
@@ -1169,7 +1154,7 @@ void SelectNextItemInPool()
 		}
 		else
 		{
-			GetItemPoolFromGround( gpItemPool->sGridNo, &gpItemPool );
+			GetItemPool( gpItemPool->sGridNo, &gpItemPool, 0 );
 		}
 		SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].object, gpItemPool->sGridNo );
 		MarkWorldDirty();
@@ -1178,7 +1163,6 @@ void SelectNextItemInPool()
 
 void SelectPrevItemInPool()
 {
-	PERFORMANCE_MARKER
 	if( gpItemPool )
 	{
 		if( gpItemPool->pPrev )
@@ -1187,7 +1171,7 @@ void SelectPrevItemInPool()
 		}
 		else
 		{
-			GetItemPoolFromGround( gpItemPool->sGridNo, &gpItemPool );
+			GetItemPool( gpItemPool->sGridNo, &gpItemPool, 0 );
 			while( gpItemPool->pNext )
 			{
 				gpItemPool = gpItemPool->pNext;
@@ -1201,7 +1185,6 @@ void SelectPrevItemInPool()
 
 void FindNextItemOfSelectedType()
 {
-	PERFORMANCE_MARKER
 	UINT16 usItem;
 	usItem = eInfo.pusItemIndex[ eInfo.sSelItemIndex ];
 	if( usItem == ACTION_ITEM || usItem == SWITCH )
@@ -1236,7 +1219,6 @@ void FindNextItemOfSelectedType()
 
 void SelectNextItemOfType( UINT16 usItem )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1265,7 +1247,7 @@ void SelectNextItemOfType( UINT16 usItem )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1283,7 +1265,7 @@ void SelectNextItemOfType( UINT16 usItem )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1301,7 +1283,6 @@ void SelectNextItemOfType( UINT16 usItem )
 
 void SelectNextKeyOfType( UINT8 ubKeyID )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1330,7 +1311,7 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1348,7 +1329,7 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1366,7 +1347,6 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 
 void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1395,7 +1375,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1413,7 +1393,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1431,7 +1411,6 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 
 void SelectNextPressureAction()
 {
-	PERFORMANCE_MARKER
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
 	if( gpItemPool )
@@ -1460,7 +1439,7 @@ void SelectNextPressureAction()
 		}
 		while( curr )
 		{ //search to the end of the list
-			GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+			GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1478,7 +1457,7 @@ void SelectNextPressureAction()
 	curr = pIPHead;
 	while( curr )
 	{ //search to the end of the list
-		GetItemPoolFromGround( curr->sGridNo, &gpItemPool );
+		GetItemPool( curr->sGridNo, &gpItemPool, 0 );
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
@@ -1496,7 +1475,6 @@ void SelectNextPressureAction()
 
 UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	INT16 num = 0;
@@ -1504,7 +1482,7 @@ UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
+		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].object.usItem == usItem )
@@ -1521,14 +1499,13 @@ UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 
 UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	UINT16 num = 0;
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
+		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].object.usItem == usItem &&
@@ -1545,14 +1522,13 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 
 UINT16 CountNumberOfPressureActionsInWorld()
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	UINT16 num = 0;
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
+		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].object.usItem == ACTION_ITEM &&
@@ -1569,7 +1545,6 @@ UINT16 CountNumberOfPressureActionsInWorld()
 
 UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQuantity )
 {
-	PERFORMANCE_MARKER
 	UINT16 usNumPlacements;
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_TRIGGERS )
 	{	//find identical items with same frequency 
@@ -1607,14 +1582,13 @@ UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQua
 
 UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
 {
-	PERFORMANCE_MARKER
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
 	INT16 num = 0;
 	pIPCurr = pIPHead;
 	while( pIPCurr )
 	{
-		GetItemPoolFromGround( pIPCurr->sGridNo, &pItemPool );
+		GetItemPool( pIPCurr->sGridNo, &pItemPool, 0 );
 		while( pItemPool )
 		{
 			if( Item[ gWorldItems[ pItemPool->iItemIndex ].object.usItem ].usItemClass == IC_KEY )
@@ -1633,7 +1607,6 @@ UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
 
 void DisplayItemStatistics()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fUseSelectedItem;
 	INT16 usItemIndex;
 	CHAR16 pItemName[SIZE_ITEM_NAME];

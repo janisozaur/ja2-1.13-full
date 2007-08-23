@@ -245,7 +245,6 @@ extern	void ToggleItemGlow( BOOLEAN fOn );
 
 UINT32	OptionsScreenInit()
 {
-	PERFORMANCE_MARKER
 
 	//Set so next time we come in, we can set up
 	gfOptionsScreenEntry = TRUE;
@@ -256,7 +255,6 @@ UINT32	OptionsScreenInit()
 
 UINT32	OptionsScreenHandle()
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfOptionsScreenEntry )
@@ -319,7 +317,6 @@ UINT32	OptionsScreenHandle()
 
 UINT32	OptionsScreenShutdown()
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -331,7 +328,6 @@ UINT32	OptionsScreenShutdown()
 
 BOOLEAN		EnterOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16 usPosY;
 	UINT8	cnt;
@@ -599,7 +595,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 void			ExitOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	if( gfExitOptionsDueToMessageBox )
@@ -693,7 +688,6 @@ void			ExitOptionsScreen()
 
 void			HandleOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	HandleSliderBarMovementSounds();
 
 	HandleHighLightedText( TRUE );
@@ -704,7 +698,6 @@ void			HandleOptionsScreen()
 
 void			RenderOptionsScreen()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16	usPosY;
 	UINT8	cnt;
@@ -793,12 +786,11 @@ void			RenderOptionsScreen()
 
 void		GetOptionsScreenUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 	POINT	MousePos;
 
 	GetCursorPos(&MousePos);
-	ScreenToClient(ghWindow, &MousePos); // In window coords!
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -918,7 +910,6 @@ void		GetOptionsScreenUserInput()
 
 void SetOptionsExitScreen( UINT32 uiExitScreen )
 {
-	PERFORMANCE_MARKER
 	guiOptionsScreen = uiExitScreen;
 	gfOptionsScreenExit	= TRUE;
 }
@@ -926,7 +917,6 @@ void SetOptionsExitScreen( UINT32 uiExitScreen )
 
 void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -950,7 +940,6 @@ void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -975,7 +964,6 @@ void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1001,7 +989,6 @@ void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1025,7 +1012,6 @@ void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1065,7 +1051,6 @@ void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 
 void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound )
 {
-	PERFORMANCE_MARKER
 	static UINT32	uiOptionToggleSound = NO_SAMPLE;
 //	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
 
@@ -1132,7 +1117,6 @@ void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN 
 
 void SoundFXSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
 	SetSoundEffectsVolume( iNewValue );
 
 	guiSoundFxSliderMoving = GetJA2Clock();
@@ -1141,7 +1125,6 @@ void SoundFXSliderChangeCallBack( INT32 iNewValue )
 
 void SpeechSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
 	SetSpeechVolume( iNewValue );
 
 	guiSpeechSliderMoving = GetJA2Clock();
@@ -1150,13 +1133,11 @@ void SpeechSliderChangeCallBack( INT32 iNewValue )
 
 void MusicSliderChangeCallBack( INT32 iNewValue )
 {
-	PERFORMANCE_MARKER
 	MusicSetVolume( iNewValue );	
 }
 
 BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
-{
-	PERFORMANCE_MARKER	
+{	
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
@@ -1169,7 +1150,6 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const STR16 zString, UINT32 
 
 BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH-1, SCREEN_HEIGHT-1 };
 	
 	// reset exit mode
@@ -1186,7 +1166,6 @@ BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitSc
 
 void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	// yes, Quit to main menu
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -1207,7 +1186,6 @@ void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
 
 void SetOptionsScreenToggleBoxes()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
@@ -1224,7 +1202,6 @@ void SetOptionsScreenToggleBoxes()
 
 void GetOptionsScreenToggleBoxes()
 {
-	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
@@ -1238,7 +1215,6 @@ void GetOptionsScreenToggleBoxes()
 
 void HandleSliderBarMovementSounds()
 {
-	PERFORMANCE_MARKER
 	static UINT32	uiLastSoundFxTime=0;
 	static UINT32	uiLastSpeechTime=0;
 	static UINT32	uiLastPlayingSoundID = NO_SAMPLE;
@@ -1276,7 +1252,6 @@ void HandleSliderBarMovementSounds()
 
 void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubButton = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1303,7 +1278,6 @@ void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT8	bButton = (INT8)MSYS_GetRegionUserData( pRegion, 0 );
 
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -1326,7 +1300,6 @@ void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reas
 
 void HandleHighLightedText( BOOLEAN fHighLight )
 {
-	PERFORMANCE_MARKER
 	UINT16		usPosX=0;
 	UINT16		usPosY=0;
 	UINT8			ubCnt;
@@ -1424,7 +1397,6 @@ void HandleHighLightedText( BOOLEAN fHighLight )
 
 void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 	}

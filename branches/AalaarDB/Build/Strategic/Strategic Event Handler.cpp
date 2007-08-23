@@ -42,6 +42,7 @@
 
 extern INT16 gsRobotGridNo;
 
+
 UINT32 guiPabloExtraDaysBribed = 0;
 
 UINT8		gubCambriaMedicalObjects;
@@ -51,7 +52,6 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum );
 
 void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 {
-	PERFORMANCE_MARKER
 	UINT8	i,j;
 	UINT16	usItem;
 	INT16 sMapPos, sStandardMapPos;
@@ -146,10 +146,12 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = new OBJECTTYPE[ usNumberOfItems ];
-		pStolenObject = new OBJECTTYPE[ usNumberOfItems ];
+		pObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		pStolenObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
 		if( pObject == NULL || pStolenObject == NULL)
 			return;
+		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
+		memset( pStolenObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 	// WDS - Option to turn off stealing
@@ -324,8 +326,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				//return;
 			}
 		}
-		delete[] pObject ;
-		delete[]( pStolenObject );
+		MemFree( pObject );
+		MemFree( pStolenObject );
 		pObject = NULL;
 		pStolenObject = NULL;
 	}
@@ -399,7 +401,6 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 
 void HandleDelayedItemsArrival( UINT32 uiReason )
 {
-	PERFORMANCE_MARKER
 	// This function moves all the items that Pablos has stolen 
 	// (or items that were delayed) to the arrival location for new shipments, 
 	INT16			sStartGridNo;
@@ -501,15 +502,11 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 		}
 	}
 
-	if (pTemp) {
-		delete [] pTemp;
-	}
 
 }
 
 void AddSecondAirportAttendant( void )
 {
-	PERFORMANCE_MARKER
 	// add the second airport attendant to the Drassen airport...
 	gMercProfiles[99].sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
 	gMercProfiles[99].sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
@@ -518,7 +515,6 @@ void AddSecondAirportAttendant( void )
 
 void SetPabloToUnbribed( void )
 {
-	PERFORMANCE_MARKER
 	if (guiPabloExtraDaysBribed > 0)
 	{
 		// set new event for later on, because the player gave Pablo more money!
@@ -533,7 +529,6 @@ void SetPabloToUnbribed( void )
 
 void HandlePossiblyDamagedPackage( void )
 {
-	PERFORMANCE_MARKER
 	if (Random( 100 ) < 70)
 	{
 		SetFactTrue( FACT_PACKAGE_DAMAGED );
@@ -550,7 +545,6 @@ void HandlePossiblyDamagedPackage( void )
 
 void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 {
-	PERFORMANCE_MARKER
 	UINT32				uiLoop;
 	UINT32				uiTotalCash = 0;
 	BOOLEAN				fKingpinWillDiscover = FALSE, fKingpinDiscovers = FALSE;
@@ -634,7 +628,6 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 
 void HandleNPCSystemEvent( UINT32 uiEvent )
 {
-	PERFORMANCE_MARKER
 	if (uiEvent < NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS)
 	{
 		switch( uiEvent )
@@ -789,7 +782,6 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 void HandleEarlyMorningEvents( void )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt;
 	UINT32					uiAmount;
 
@@ -1022,7 +1014,6 @@ void HandleEarlyMorningEvents( void )
 
 void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 {
-	PERFORMANCE_MARKER
 	// if it's the rebels that will become hostile, reduce town loyalties NOW, not later
 	if ( ubCivGroup == REBEL_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ ubCivGroup ] == CIV_GROUP_NEUTRAL )
 	{
@@ -1034,7 +1025,6 @@ void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 
 void RemoveAssassin( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	gMercProfiles[ ubProfile ].sSectorX = 0;
 	gMercProfiles[ ubProfile ].sSectorY = 0;
 	gMercProfiles[ ubProfile ].bLife = gMercProfiles[ ubProfile ].bLifeMax;
@@ -1042,7 +1032,6 @@ void RemoveAssassin( UINT8 ubProfile )
 
 void CheckForMissingHospitalSupplies( void )
 {
-	PERFORMANCE_MARKER
 	UINT32				uiLoop;
 	ITEM_POOL *		pItemPool;
 	OBJECTTYPE *	pObj;
@@ -1053,7 +1042,7 @@ void CheckForMissingHospitalSupplies( void )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP && gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
-			GetItemPoolFromGround( gWorldItems[ uiLoop ].sGridNo, &pItemPool ) ;
+			GetItemPool( gWorldItems[ uiLoop ].sGridNo, &pItemPool, 0 ) ;
 			while( pItemPool ) 
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
@@ -1103,7 +1092,6 @@ void CheckForMissingHospitalSupplies( void )
 
 void DropOffItemsInMeduna( UINT8 ubOrderNum )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN	fSectorLoaded = FALSE;
 	UINT32	uiCount = 0;
 	OBJECTTYPE	*pObject=NULL;
@@ -1146,9 +1134,10 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = new OBJECTTYPE[ usNumberOfItems ];
+		pObject = (OBJECTTYPE *) MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
 		if( pObject == NULL )
 			return;
+		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 
@@ -1192,7 +1181,7 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 			//error
 			Assert( 0 );
 		}
-		delete[]( pObject );
+		MemFree( pObject );
 		pObject = NULL;
 	}
 

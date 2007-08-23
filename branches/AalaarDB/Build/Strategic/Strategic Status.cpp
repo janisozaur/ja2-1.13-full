@@ -23,7 +23,6 @@ STRATEGIC_STATUS	gStrategicStatus;
 
 void InitStrategicStatus(void)
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitStrategicStatus: InitArmyGunTypes");
 	memset( &gStrategicStatus, 0, sizeof( STRATEGIC_STATUS ) );
 	//Add special non-zero start conditions here...
@@ -34,7 +33,6 @@ void InitStrategicStatus(void)
 
 BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 
 	//Save the Strategic Status structure to the saved game file
@@ -51,7 +49,6 @@ BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	//Load the Strategic Status structure from the saved game file
@@ -69,7 +66,6 @@ BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
 
 UINT8 CalcDeathRate(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDeathRate = 0;
 
 	// give the player a grace period of 1 day
@@ -85,7 +81,6 @@ UINT8 CalcDeathRate(void)
 
 void ModifyPlayerReputation(INT8 bRepChange)
 {
-	PERFORMANCE_MARKER
 	INT32 iNewBadRep;
 
 	// subtract, so that a negative reputation change results in an increase in bad reputation
@@ -101,7 +96,6 @@ void ModifyPlayerReputation(INT8 bRepChange)
 
 BOOLEAN MercThinksDeathRateTooHigh( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8	bDeathRateTolerance;
 
 	bDeathRateTolerance = gMercProfiles[ ubProfileID ].bDeathRate;
@@ -128,7 +122,6 @@ BOOLEAN MercThinksDeathRateTooHigh( UINT8 ubProfileID )
 
 BOOLEAN MercThinksBadReputationTooHigh( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	INT8	bRepTolerance;
 
 	bRepTolerance = gMercProfiles[ ubProfileID ].bReputationTolerance;
@@ -156,7 +149,6 @@ BOOLEAN MercThinksBadReputationTooHigh( UINT8 ubProfileID )
 // only meaningful for already hired mercs
 BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8	bRepTolerance;
 	INT8	bMoraleTolerance;
 
@@ -174,7 +166,7 @@ BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier )
 	// above 50, morale is GOOD, never below tolerance then
 	bMoraleTolerance = (100 - bRepTolerance) / 2;
 
-	if (pSoldier->aiData.bMorale < bMoraleTolerance)
+	if (pSoldier->bMorale < bMoraleTolerance)
 	{
 		// too low - sorry
 		return(TRUE);
@@ -188,7 +180,6 @@ BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier )
 
 void UpdateLastDayOfPlayerActivity( UINT16 usDay )
 {
-	PERFORMANCE_MARKER
 	if ( usDay > gStrategicStatus.usLastDayOfPlayerActivity )
 	{
 		gStrategicStatus.usLastDayOfPlayerActivity = usDay;
@@ -198,7 +189,6 @@ void UpdateLastDayOfPlayerActivity( UINT16 usDay )
 
 UINT8 LackOfProgressTolerance( void )
 {
-	PERFORMANCE_MARKER
 	if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_HARD )
 	{
 		// give an EXTRA day over normal
@@ -215,7 +205,6 @@ UINT8 LackOfProgressTolerance( void )
 // called once per day in the morning, decides whether Enrico should send any new E-mails to the player
 void HandleEnricoEmail(void)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCurrentProgress = CurrentPlayerProgressPercentage();
 	UINT8 ubHighestProgress = HighestPlayerProgressPercentage();
 
@@ -364,7 +353,6 @@ void HandleEnricoEmail(void)
 
 void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT8 bRankIndex;
 	
 	bRankIndex = SoldierClassToRankIndex( ubSoldierClass );
@@ -387,7 +375,6 @@ void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass )
 
 INT8 SoldierClassToRankIndex( UINT8 ubSoldierClass )
 {
-	PERFORMANCE_MARKER
 	INT8 bRankIndex = -1;
 
 	// the soldier class defines are not in natural ascending order, elite comes before army!
@@ -409,7 +396,6 @@ INT8 SoldierClassToRankIndex( UINT8 ubSoldierClass )
 
 UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubSoldierClass = 0;
 
 	Assert( ubRankIndex < NUM_ENEMY_RANKS );

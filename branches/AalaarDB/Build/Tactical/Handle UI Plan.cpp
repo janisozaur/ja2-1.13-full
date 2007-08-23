@@ -26,7 +26,6 @@ void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	gubNumUIPlannedMoves = 0;
 	gpUIPlannedSoldier				= pSoldier;
 	gpUIStartPlannedSoldier		= pSoldier;
@@ -41,7 +40,6 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 
 BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pPlanSoldier;
 	INT16							sXPos, sYPos;
 	INT16							sAPCost = 0;
@@ -74,7 +72,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 		if ( EnoughPoints( gpUIPlannedSoldier, sAPCost, 0, FALSE ) )
 		{
-			MercCreateStruct.initialize();
+			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 			MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
 			MercCreateStruct.ubProfile		= NO_PROFILE;
 			MercCreateStruct.fPlayerPlan	= TRUE;
@@ -94,17 +92,17 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 				// Set ones we don't know about but do now back to old ( ie no new guys )
 				for (iLoop = 0; iLoop < MAX_NUM_SOLDIERS; iLoop++ )
 				{
-					if ( gpUIPlannedSoldier->aiData.bOppList[ iLoop ] < 0 )
+					if ( gpUIPlannedSoldier->bOppList[ iLoop ] < 0 )
 					{
-							pPlanSoldier->aiData.bOppList[ iLoop ] = gpUIPlannedSoldier->aiData.bOppList[ iLoop ];
+							pPlanSoldier->bOppList[ iLoop ] = gpUIPlannedSoldier->bOppList[ iLoop ];
 					}
 				}
 
 				// Get XY from Gridno
 				ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
 
-				pPlanSoldier->EVENT_SetSoldierPosition( sXPos, sYPos );
-				pPlanSoldier->EVENT_SetSoldierDestination( sGridNo );
+				EVENT_SetSoldierPosition( pPlanSoldier, sXPos, sYPos );
+				EVENT_SetSoldierDestination( pPlanSoldier, sGridNo );
 				pPlanSoldier->bVisible = 1;
 				pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;
 
@@ -114,14 +112,14 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 				pPlanSoldier->ubPlannedUIAPCost = (UINT8)pPlanSoldier->bActionPoints;
 
 				// Get direction
-				bDirection = (INT8)gpUIPlannedSoldier->pathing.usPathingData[ gpUIPlannedSoldier->pathing.usPathDataSize - 1 ];
+				bDirection = (INT8)gpUIPlannedSoldier->usPathingData[ gpUIPlannedSoldier->usPathDataSize - 1 ];
 
 				// Set direction
 				pPlanSoldier->bDirection = bDirection;
-				pPlanSoldier->pathing.bDesiredDirection = bDirection;
+				pPlanSoldier->bDesiredDirection = bDirection;
 
 				// Set walking animation
-				pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );	
+				ChangeSoldierState( pPlanSoldier, pPlanSoldier->usUIMovementMode, 0, FALSE );	
 				
 				// Change selected soldier
 				gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
@@ -156,7 +154,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 			// CHECK IF WE ARE A PLANNED SOLDIER OR NOT< IF SO< CREATE!
 			if ( gpUIPlannedSoldier->ubID < MAX_NUM_SOLDIERS )
 			{
-				MercCreateStruct.initialize();
+				memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 				MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
 				MercCreateStruct.ubProfile		= NO_PROFILE;
 				MercCreateStruct.fPlayerPlan	= TRUE;
@@ -176,14 +174,14 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 					// Set ones we don't know about but do now back to old ( ie no new guys )
 					for (iLoop = 0; iLoop < MAX_NUM_SOLDIERS; iLoop++ )
 					{
-						if ( gpUIPlannedSoldier->aiData.bOppList[ iLoop ] < 0 )
+						if ( gpUIPlannedSoldier->bOppList[ iLoop ] < 0 )
 						{
-								pPlanSoldier->aiData.bOppList[ iLoop ] = gpUIPlannedSoldier->aiData.bOppList[ iLoop ];
+								pPlanSoldier->bOppList[ iLoop ] = gpUIPlannedSoldier->bOppList[ iLoop ];
 						}
 					}
 
-					pPlanSoldier->EVENT_SetSoldierPosition( gpUIPlannedSoldier->dXPos, gpUIPlannedSoldier->dYPos );
-					pPlanSoldier->EVENT_SetSoldierDestination( gpUIPlannedSoldier->sGridNo );
+					EVENT_SetSoldierPosition( pPlanSoldier, gpUIPlannedSoldier->dXPos, gpUIPlannedSoldier->dYPos );
+					EVENT_SetSoldierDestination( pPlanSoldier, gpUIPlannedSoldier->sGridNo );
 					pPlanSoldier->bVisible = 1;
 					pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;
 
@@ -193,14 +191,14 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 					pPlanSoldier->ubPlannedUIAPCost = (UINT8)pPlanSoldier->bActionPoints;
 
 					// Get direction
-					bDirection = (INT8)gpUIPlannedSoldier->pathing.usPathingData[ gpUIPlannedSoldier->pathing.usPathDataSize - 1 ];
+					bDirection = (INT8)gpUIPlannedSoldier->usPathingData[ gpUIPlannedSoldier->usPathDataSize - 1 ];
 
 					// Set direction
 					pPlanSoldier->bDirection = bDirection;
-					pPlanSoldier->pathing.bDesiredDirection = bDirection;
+					pPlanSoldier->bDesiredDirection = bDirection;
 
 					// Set walking animation
-					pPlanSoldier->ChangeSoldierState( pPlanSoldier->usUIMovementMode, 0, FALSE );	
+					ChangeSoldierState( pPlanSoldier, pPlanSoldier->usUIMovementMode, 0, FALSE );	
 					
 					// Change selected soldier
 					gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
@@ -223,7 +221,7 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 			// Set direction
 			gpUIPlannedSoldier->bDirection = bDirection;
-			gpUIPlannedSoldier->pathing.bDesiredDirection = bDirection;
+			gpUIPlannedSoldier->bDesiredDirection = bDirection;
 
 			// Set to shooting animation
 			SelectPausedFireAnimation( gpUIPlannedSoldier );
@@ -245,7 +243,6 @@ BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 
 void EndUIPlan(	)
 {
-	PERFORMANCE_MARKER
 	int				cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -276,14 +273,12 @@ void EndUIPlan(	)
 
 BOOLEAN InUIPlanMode( )
 {
-	PERFORMANCE_MARKER
 	return( gfInUIPlanMode );
 }
 
 
 void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// Determine which animation to do...depending on stance and gun in hand...
 
 	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
@@ -292,20 +287,20 @@ void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier )
 
 			if ( pSoldier->bDoBurst > 0 )
 			{
-				pSoldier->ChangeSoldierState( STANDING_BURST, 2 , FALSE );
+				ChangeSoldierState( pSoldier, STANDING_BURST, 2 , FALSE );
 			}
 			else
 			{
-				pSoldier->ChangeSoldierState( SHOOT_RIFLE_STAND, 2 , FALSE );
+				ChangeSoldierState( pSoldier, SHOOT_RIFLE_STAND, 2 , FALSE );
 			}
 			break;
 
 		case ANIM_PRONE:
-			pSoldier->ChangeSoldierState( SHOOT_RIFLE_PRONE, 2 , FALSE );
+			ChangeSoldierState( pSoldier, SHOOT_RIFLE_PRONE, 2 , FALSE );
 			break;
 
 		case ANIM_CROUCH:
-			pSoldier->ChangeSoldierState( SHOOT_RIFLE_CROUCH, 2 , FALSE );
+			ChangeSoldierState( pSoldier, SHOOT_RIFLE_CROUCH, 2 , FALSE );
 			break;
 
 	}

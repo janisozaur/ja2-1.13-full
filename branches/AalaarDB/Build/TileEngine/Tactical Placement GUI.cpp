@@ -121,7 +121,6 @@ BOOLEAN gfChangedEntrySide = FALSE;
 
 void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 {
-	PERFORMANCE_MARKER
 	if( gMapInformation.sNorthGridNo == -1 &&
 			gMapInformation.sEastGridNo == -1 &&
 			gMapInformation.sSouthGridNo == -1 &&
@@ -191,7 +190,6 @@ void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 
 void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 {
-	PERFORMANCE_MARKER
 	switch( *pubStrategicInsertionCode )
 	{
 		case INSERTION_CODE_NORTH:	
@@ -218,7 +216,6 @@ void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 
 void InitTacticalPlacementGUI()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC VObjectDesc;
 	INT32 i, xp, yp;
 	UINT8 ubFaceIndex;
@@ -316,10 +313,10 @@ void InitTacticalPlacementGUI()
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
 
-		if( MercPtrs[ i ]->bActive && !MercPtrs[ i ]->flags.fBetweenSectors && 
+		if( MercPtrs[ i ]->bActive && !MercPtrs[ i ]->fBetweenSectors && 
 				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
 				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&& 
-				!( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
+				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
 				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
 				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
 				!MercPtrs[ i ]->bSectorZ )
@@ -334,17 +331,17 @@ void InitTacticalPlacementGUI()
 	giPlacements = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->stats.bLife && !MercPtrs[ i ]->flags.fBetweenSectors && 
+		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && 
 				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
 				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&& 
 				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
 				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
-				!( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
+				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
 				!MercPtrs[ i ]->bSectorZ )
 		{
 
 			// ATE: If we are in a vehicle - remove ourselves from it!
-			//if ( MercPtrs[ i ]->flags.uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
+			//if ( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
 			//{
 			//	RemoveSoldierFromVehicle( MercPtrs[ i ], MercPtrs[ i ]->bVehicleID );
 			//}
@@ -440,7 +437,6 @@ void InitTacticalPlacementGUI()
 
 void RenderTacticalPlacementGUI()
 {
-	PERFORMANCE_MARKER
 	INT32 i, xp, yp, width, height;
 	INT32 iStartY;
 	SOLDIERTYPE *pSoldier;
@@ -512,10 +508,10 @@ void RenderTacticalPlacementGUI()
 			BltVideoObjectFromIndex( FRAME_BUFFER, giMercPanelImage, 0, xp, yp, VO_BLT_SRCTRANSPARENCY, NULL );
 			BltVideoObjectFromIndex( FRAME_BUFFER, gMercPlacement[ i ].uiVObjectID, 0, xp+2, yp+2, VO_BLT_SRCTRANSPARENCY, NULL );
 			//HEALTH BAR
-			if( !pSoldier->stats.bLife )
+			if( !pSoldier->bLife )
 				continue;
 			//yellow one for bleeding
-			iStartY = yp + 29 - 27*pSoldier->stats.bLifeMax/100;
+			iStartY = yp + 29 - 27*pSoldier->bLifeMax/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
 			//pink one for bandaged.
@@ -523,7 +519,7 @@ void RenderTacticalPlacementGUI()
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
 			//red one for actual health
-			iStartY = yp + 29 - 27*pSoldier->stats.bLife/100;
+			iStartY = yp + 29 - 27*pSoldier->bLife/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
 			//BREATH BAR
@@ -531,7 +527,7 @@ void RenderTacticalPlacementGUI()
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+39, iStartY, xp+40, yp+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+40, iStartY, xp+41, yp+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
 			//MORALE BAR
-			iStartY = yp + 29 - 27*pSoldier->aiData.bMorale/100;
+			iStartY = yp + 29 - 27*pSoldier->bMorale/100;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+42, iStartY, xp+43, yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+43, iStartY, xp+44, yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
 		}
@@ -644,7 +640,6 @@ void RenderTacticalPlacementGUI()
 
 void EnsureDoneButtonStatus()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	//static BOOLEAN fInside = FALSE;
 	//BOOLEAN fChanged = FALSE;
@@ -669,7 +664,6 @@ void EnsureDoneButtonStatus()
 
 void TacticalPlacementHandle()
 {
-	PERFORMANCE_MARKER
 	InputAtom InputEvent;
 
 	EnsureDoneButtonStatus();
@@ -781,7 +775,6 @@ void TacticalPlacementHandle()
 
 void KillTacticalPlacementGUI()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
 	gbHilightedMercID = -1;
@@ -842,11 +835,10 @@ void KillTacticalPlacementGUI()
 
 void ChooseRandomEdgepoints()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < giPlacements; i++ )
 	{
-		if ( !( gMercPlacement[ i ].pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( !( gMercPlacement[ i ].pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			gMercPlacement[ i ].pSoldier->usStrategicInsertionData = ChooseMapEdgepoint( gMercPlacement[ i ].ubStrategicInsertionCode );
 			if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData != NOWHERE )
@@ -870,7 +862,6 @@ void ChooseRandomEdgepoints()
 
 void PlaceMercs()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	switch( gubDefaultButton )
 	{
@@ -895,7 +886,6 @@ void PlaceMercs()
 
 void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfKillTacticalGUI = 2;
@@ -904,7 +894,6 @@ void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gubDefaultButton = SPREAD_BUTTON;
@@ -919,7 +908,6 @@ void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
 
 void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( gubDefaultButton == GROUP_BUTTON )
@@ -942,7 +930,6 @@ void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -954,7 +941,6 @@ void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 
 void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reg->uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		INT8 i;
@@ -978,7 +964,6 @@ void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		INT8 i;
@@ -1003,7 +988,6 @@ void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 void SelectNextUnplacedUnit()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	if( gbSelectedMercID == -1 )
 		return;
@@ -1048,7 +1032,6 @@ void SelectNextUnplacedUnit()
 
 void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INT16 sGridNo;
 	BOOLEAN fInvalidArea = FALSE;
@@ -1149,7 +1132,6 @@ void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason
 
 void SetCursorMerc( INT8 bPlacementID )
 {
-	PERFORMANCE_MARKER
 	if( gbCursorMercID != bPlacementID )
 	{
 		if( gbCursorMercID == -1 || bPlacementID == -1 || 
@@ -1162,7 +1144,6 @@ void SetCursorMerc( INT8 bPlacementID )
 
 void PutDownMercPiece( INT32 iPlacement )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo, sCellX, sCellY;
 	UINT8 ubDirection;
 
@@ -1195,8 +1176,8 @@ void PutDownMercPiece( INT32 iPlacement )
 	if( sGridNo != NOWHERE )
 	{
 		ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-		pSoldier->EVENT_SetSoldierPosition( (FLOAT)sCellX, (FLOAT)sCellY );
-		pSoldier->EVENT_SetSoldierDirection( ubDirection );
+		EVENT_SetSoldierPosition( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;
 		gMercPlacement[ iPlacement ].pSoldier->bInSector = TRUE;
@@ -1205,28 +1186,24 @@ void PutDownMercPiece( INT32 iPlacement )
 
 void PickUpMercPiece( INT32 iPlacement )
 {
-	PERFORMANCE_MARKER
-	gMercPlacement[ iPlacement ].pSoldier->RemoveSoldierFromGridNo( );
+	RemoveSoldierFromGridNo( gMercPlacement[ iPlacement ].pSoldier );
 	gMercPlacement[ iPlacement ].fPlaced = FALSE;
 	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
 }
 
 void FastHelpRemovedCallback()
 {
-	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 }
 
 void FastHelpRemoved2Callback()
 {
-	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = 2; //because fast help text covers it.
 }
 
 void DialogRemoved( UINT8 ubResult )
 {
-	PERFORMANCE_MARKER
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = TRUE; 
 }

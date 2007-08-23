@@ -149,7 +149,6 @@ STEADY_STATE_AMBIENCE	gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
 
 BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 {
-	PERFORMANCE_MARKER
 	SGPFILENAME						zFilename;
 	HWFILE								hFile;
 	INT32								cnt;
@@ -191,7 +190,6 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 
 void GetAmbientDataPtr( AMBIENTDATA_STRUCT **ppAmbData, UINT16 *pusNumData )
 {
-	PERFORMANCE_MARKER
 	*ppAmbData		= gAmbData;
 	*pusNumData		= gsNumAmbData;
 }
@@ -199,13 +197,11 @@ void GetAmbientDataPtr( AMBIENTDATA_STRUCT **ppAmbData, UINT16 *pusNumData )
 
 void StopAmbients( )
 {
-	PERFORMANCE_MARKER
 	SoundStopAllRandom( );
 }
 
 void HandleNewSectorAmbience( UINT8 ubAmbientID )
 {
-	PERFORMANCE_MARKER
 	// OK, we could have just loaded a sector, erase all ambient sounds from queue, shutdown all ambient groupings
 	SoundStopAllRandom( );
 
@@ -227,7 +223,6 @@ void HandleNewSectorAmbience( UINT8 ubAmbientID )
 
 void DeleteAllAmbients()
 {
-	PERFORMANCE_MARKER
 	// JA2Gold: it seems that ambient sounds don't get unloaded when we exit a sector!?
 	SoundStopAllRandom();
 	DeleteAllStrategicEventsOfType( EVENT_AMBIENT );
@@ -235,7 +230,6 @@ void DeleteAllAmbients()
 
 UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 {
-	PERFORMANCE_MARKER
 	RANDOMPARMS rpParms;
 
 	//SoundLog((CHAR8 *)String("	SetupNewAmbientSound()1:	uiAmbientID: '%d'", uiAmbientID ) );
@@ -256,7 +250,6 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 
 UINT32 StartSteadyStateAmbient( UINT32 ubVolume, UINT32 ubLoops)
 {
-	PERFORMANCE_MARKER
 SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
@@ -272,7 +265,6 @@ SOUNDPARMS spParms;
 
 BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fInNight = FALSE;
 	INT32	 cnt;
 	UINT8	 ubNumSounds = 0;

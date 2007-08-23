@@ -18,6 +18,8 @@ typedef enum
 	MUTE_BUTTON,
 	SM_DONE_BUTTON,
 	SM_MAP_SCREEN_BUTTON,
+	BACKPACK_BUTTON,
+	ZIPPER_BUTTON,
 	NUM_SM_BUTTONS
 };
 
@@ -56,7 +58,8 @@ void EnableSMPanelButtons( BOOLEAN fEnable, BOOLEAN fFromItemPickup );
  * and when we will read all values we return TRUE if not we will retunf FALSE
  * any questions? joker
  */
-BOOLEAN InitializeSMPanelCoords( ); 
+BOOLEAN InitializeSMPanelCoordsNew();
+BOOLEAN InitializeSMPanelCoordsOld(); 
 
 BOOLEAN CreateTEAMPanelButtons( );
 void	RemoveTEAMPanelButtons( );
@@ -85,8 +88,12 @@ BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID );
 void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier );
 
 void DisableTacticalTeamPanelButtons( BOOLEAN fDisable );
-void RenderTownIDString( );
+// CHRISL: Add X,Y coords as parameters so we can control the placement of TownID string on the team and inventory panels seperately
+void RenderTownIDString( INT16 sX, INT16 sY );
 void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
+// CHRISL: New functions to handle initialization of inventory systems
+void InitNewInventorySystem( );
+void InitOldInventorySystem( );
 
 
 // ATE TO BE MOVED TO INTERFACE_ITEMS.C
@@ -124,6 +131,8 @@ void CheckForReEvaluateDisabledINVPanelButtons( );
 
 void CheckForDisabledForGiveItem( );
 void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fEnable );
+//CHRISL: New function to deal with rendering backpack buttons
+void RenderBackpackButtons(int bpAction);
 
 void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier );
 

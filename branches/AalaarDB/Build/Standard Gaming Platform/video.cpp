@@ -208,8 +208,7 @@ void RefreshMovieCache( );
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *WindowProc)
-{
-	PERFORMANCE_MARKER
+{ 
 	UINT32		uiIndex, uiPitch;
 	HRESULT		ReturnCode;
 	HWND			hWindow;
@@ -648,8 +647,7 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void ShutdownVideoManager(void)
-{
-	PERFORMANCE_MARKER
+{ 
 	//UINT32	uiRefreshThreadState;
 
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager"); 
@@ -690,14 +688,12 @@ void ShutdownVideoManager(void)
 
 void SuspendVideoManager(void)
 {
-	PERFORMANCE_MARKER
 	guiVideoManagerState = VIDEO_SUSPENDED;
 
 }
 
 void DoTester( )
 {
-	PERFORMANCE_MARKER
 	IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
 	IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
 	//	ShowCursor(TRUE);
@@ -706,8 +702,7 @@ void DoTester( )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOLEAN RestoreVideoManager(void)
-{
-	PERFORMANCE_MARKER
+{ 
 	HRESULT ReturnCode;
 
 	//
@@ -775,7 +770,6 @@ BOOLEAN RestoreVideoManager(void)
 
 void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth )
 {
-	PERFORMANCE_MARKER
 	*usWidth = (UINT16) gusScreenWidth;
 	*usHeight = (UINT16) gusScreenHeight;
 	*ubBitDepth = (UINT8) gubScreenPixelDepth;
@@ -785,7 +779,6 @@ void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDep
 
 BOOLEAN CanBlitToFrameBuffer(void)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fCanBlit;
 
 	//
@@ -805,7 +798,6 @@ BOOLEAN CanBlitToFrameBuffer(void)
 
 BOOLEAN CanBlitToMouseBuffer(void)
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fCanBlit;
 
 	//
@@ -825,7 +817,6 @@ BOOLEAN CanBlitToMouseBuffer(void)
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
-	PERFORMANCE_MARKER
 	if (gfForceFullScreenRefresh == TRUE)
 	{
 		//
@@ -885,7 +876,6 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	INT32 iOldBottom;
 
 	iOldBottom = iBottom;
@@ -912,7 +902,6 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 
 void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 
 	if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
 	{
@@ -962,7 +951,6 @@ void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 ui
 
 void InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 uiRegionCount)
 {
-	PERFORMANCE_MARKER
 	if (gfForceFullScreenRefresh == TRUE)
 	{
 		//
@@ -1001,7 +989,6 @@ void InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 uiRegionCount)
 
 void InvalidateScreen(void)
 {
-	PERFORMANCE_MARKER
 	//
 	// W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
 	//
@@ -1020,7 +1007,6 @@ void InvalidateScreen(void)
 
 void InvalidateFrameBuffer(void)
 {
-	PERFORMANCE_MARKER
 	//
 	// W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
 	//
@@ -1036,7 +1022,6 @@ void InvalidateFrameBuffer(void)
 
 void SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride)
 {
-	PERFORMANCE_MARKER
 
 	gpFrameBufferRefreshOverride = (void (__cdecl *)(void))pFrameBufferRefreshOverride;
 }
@@ -1046,7 +1031,6 @@ void SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip, UINT32 uiCurrentMouseBackbuffer )
 {
-	PERFORMANCE_MARKER
 	UINT16 usWidth, usHeight;
 	UINT8	ubBitDepth;
 	HRESULT ReturnCode;
@@ -1058,6 +1042,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 	INT16					sShiftX, sShiftY;
 	INT32					uiCountY;
 	UINT32					uiDestPitchBYTES;
+	UINT32					 uiDestPitchBYTES;
 
 
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
@@ -1583,7 +1568,6 @@ BOOLEAN gfNextRefreshFullScreen = FALSE;
 
 void RefreshScreen(void *DummyVariable)
 {
-	PERFORMANCE_MARKER
 	static UINT32	uiRefreshThreadState, uiIndex;
 	UINT16	usScreenWidth, usScreenHeight;
 	static BOOLEAN fShowMouse;
@@ -2271,6 +2255,7 @@ void RefreshScreen(void *DummyVariable)
 				{
 					return;
 				}
+
 				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
 
 				if (ReturnCode == DDERR_SURFACELOST)
@@ -2303,6 +2288,7 @@ void RefreshScreen(void *DummyVariable)
 				{
 					return;
 				}
+
 				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
 
 				if (ReturnCode == DDERR_SURFACELOST)
@@ -2497,7 +2483,6 @@ ENDOFLOOP:
 
 LPDIRECTDRAW2 GetDirectDraw2Object(void)
 {
-	PERFORMANCE_MARKER
 	Assert( gpDirectDrawObject != NULL );
 
 	return gpDirectDrawObject;
@@ -2507,7 +2492,6 @@ LPDIRECTDRAW2 GetDirectDraw2Object(void)
 
 LPDIRECTDRAWSURFACE2 GetPrimarySurfaceObject(void)
 {
-	PERFORMANCE_MARKER
 	Assert( gpPrimarySurface != NULL );
 
 	return gpPrimarySurface;
@@ -2517,7 +2501,6 @@ LPDIRECTDRAWSURFACE2 GetPrimarySurfaceObject(void)
 
 LPDIRECTDRAWSURFACE2 GetBackBufferObject(void)
 {
-	PERFORMANCE_MARKER
 	Assert( gpPrimarySurface != NULL );
 
 	return gpBackBuffer;
@@ -2527,7 +2510,6 @@ LPDIRECTDRAWSURFACE2 GetBackBufferObject(void)
 
 LPDIRECTDRAWSURFACE2 GetFrameBufferObject(void)
 {
-	PERFORMANCE_MARKER
 	Assert( gpPrimarySurface != NULL );
 
 	return gpFrameBuffer;
@@ -2537,7 +2519,6 @@ LPDIRECTDRAWSURFACE2 GetFrameBufferObject(void)
 
 LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
 {
-	PERFORMANCE_MARKER
 	Assert( gpPrimarySurface != NULL );
 
 	return gpMouseCursor;
@@ -2552,7 +2533,6 @@ LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
 
 PTR LockPrimarySurface(UINT32 *uiPitch)
 {
-	PERFORMANCE_MARKER
 	HRESULT		ReturnCode;
 	DDSURFACEDESC SurfaceDescription;
 
@@ -2580,7 +2560,6 @@ PTR LockPrimarySurface(UINT32 *uiPitch)
 
 void UnlockPrimarySurface(void)
 {
-	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT		ReturnCode;
 
@@ -2597,7 +2576,6 @@ void UnlockPrimarySurface(void)
 
 PTR LockBackBuffer(UINT32 *uiPitch)
 {
-	PERFORMANCE_MARKER
 	HRESULT		ReturnCode;
 	DDSURFACEDESC SurfaceDescription;
 
@@ -2632,7 +2610,6 @@ PTR LockBackBuffer(UINT32 *uiPitch)
 
 void UnlockBackBuffer(void)
 {
-	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT		ReturnCode;
 
@@ -2657,7 +2634,6 @@ void UnlockBackBuffer(void)
 
 PTR LockFrameBuffer(UINT32 *uiPitch)
 {
-	PERFORMANCE_MARKER
 	HRESULT		ReturnCode;
 	DDSURFACEDESC SurfaceDescription;
 
@@ -2687,7 +2663,6 @@ PTR LockFrameBuffer(UINT32 *uiPitch)
 
 void UnlockFrameBuffer(void)
 {
-	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT		ReturnCode;
 
@@ -2705,7 +2680,6 @@ void UnlockFrameBuffer(void)
 
 PTR LockMouseBuffer(UINT32 *uiPitch)
 {
-	PERFORMANCE_MARKER
 	HRESULT		ReturnCode;
 	DDSURFACEDESC SurfaceDescription;
 
@@ -2728,7 +2702,6 @@ PTR LockMouseBuffer(UINT32 *uiPitch)
 
 void UnlockMouseBuffer(void)
 {
-	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT		ReturnCode;
 
@@ -2749,7 +2722,6 @@ void UnlockMouseBuffer(void)
 
 BOOLEAN GetRGBDistribution(void)
 {
-	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	UINT16		usBit;
 	HRESULT		ReturnCode;
@@ -2826,7 +2798,6 @@ BOOLEAN GetRGBDistribution(void)
 
 BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BlueBitMask)
 {
-	PERFORMANCE_MARKER
 	*RedBitMask	= gusRedMask;
 	*GreenBitMask = gusGreenMask;
 	*BlueBitMask	= gusBlueMask;
@@ -2838,7 +2809,6 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 
 BOOLEAN SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usOffsetX, UINT16 usOffsetY )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		ReturnValue;
 	PTR			pTmpPointer;
 	UINT32		uiPitch;
@@ -2881,7 +2851,6 @@ BOOLEAN SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjec
 
 BOOLEAN EraseMouseCursor( )
 {
-	PERFORMANCE_MARKER
 	PTR			pTmpPointer;
 	UINT32		uiPitch;
 
@@ -2899,7 +2868,6 @@ BOOLEAN EraseMouseCursor( )
 
 BOOLEAN SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth )
 {
-	PERFORMANCE_MARKER
 	gsMouseCursorXOffset = sOffsetX;
 	gsMouseCursorYOffset = sOffsetY;
 	gusMouseCursorWidth	= usCursorWidth;
@@ -2909,7 +2877,6 @@ BOOLEAN SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCurso
 
 BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		ReturnValue;
 
 	ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos, VO_BLT_SRCTRANSPARENCY, NULL);
@@ -2919,13 +2886,11 @@ BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubInde
 
 void DirtyCursor( )
 {
-	PERFORMANCE_MARKER
 	guiMouseBufferState = BUFFER_DIRTY;
 }
 
 void EnableCursor( BOOLEAN fEnable )
 {
-	PERFORMANCE_MARKER
 	if ( fEnable )
 	{
 		guiMouseBufferState = BUFFER_DISABLED;
@@ -2940,7 +2905,6 @@ void EnableCursor( BOOLEAN fEnable )
 
 BOOLEAN HideMouseCursor(void)
 {
-	PERFORMANCE_MARKER
 	guiMouseBufferState = BUFFER_DISABLED;
 
 	return TRUE;
@@ -2950,7 +2914,6 @@ BOOLEAN HideMouseCursor(void)
 
 BOOLEAN LoadCursorFile(STR8 pFilename)
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC VideoObjectDescription;
 
 	//
@@ -2987,7 +2950,6 @@ BOOLEAN LoadCursorFile(STR8 pFilename)
 
 BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,	UINT16 usOffsetX, UINT16 usOffsetY )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN		ReturnValue;
 	PTR			pTmpPointer;
 	UINT32		uiPitch;
@@ -3044,7 +3006,6 @@ BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,	UINT16 usOffsetX, UINT16 
 
 void StartFrameBufferRender(void)
 {
-	PERFORMANCE_MARKER
 	return;
 }
 
@@ -3052,7 +3013,6 @@ void StartFrameBufferRender(void)
 
 void EndFrameBufferRender(void)
 {
-	PERFORMANCE_MARKER
 
 	guiFrameBufferState = BUFFER_DIRTY;
 
@@ -3064,14 +3024,12 @@ void EndFrameBufferRender(void)
 
 void PrintScreen(void)
 {
-	PERFORMANCE_MARKER
 	gfPrintFrameBuffer = TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN Set8BPPPalette(SGPPaletteEntry *pPalette)
 {
-	PERFORMANCE_MARKER
 	HRESULT		ReturnCode;
 
 	// If we are in 256 colors, then we have to initialize the palette system to 0 (faded out)
@@ -3111,7 +3069,6 @@ BOOLEAN Set8BPPPalette(SGPPaletteEntry *pPalette)
 
 void FatalError( const STR8 pError, ...)
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 
 	va_start(argptr, pError);			// Set up variable argument pointer
@@ -3170,7 +3127,6 @@ typedef struct {
 
 void SnapshotSmall(void)
 {
-	PERFORMANCE_MARKER
 	INT32 iCountX, iCountY;
 	DDSURFACEDESC SurfaceDescription;
 	UINT16 *pVideo, *pDest;
@@ -3249,7 +3205,6 @@ void SnapshotSmall(void)
 
 void VideoCaptureToggle(void)
 {
-	PERFORMANCE_MARKER
 #ifdef JA2TESTVERSION
 	VideoMovieCapture( (BOOLEAN)!gfVideoCapture);
 #endif
@@ -3257,7 +3212,6 @@ void VideoCaptureToggle(void)
 
 void VideoMovieCapture( BOOLEAN fEnable )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	gfVideoCapture=fEnable;
@@ -3289,7 +3243,6 @@ void VideoMovieCapture( BOOLEAN fEnable )
 
 void RefreshMovieCache( )
 {
-	PERFORMANCE_MARKER
 	TARGA_HEADER Header;
 	INT32 iCountX, iCountY;
 	FILE *disk;

@@ -25,12 +25,22 @@
 	#include "Animated ProgressBar.h"
 #endif
 
+//Don't mess with this value, unless you want to force update all maps in the game!
+// Lesh: fix the sad situation with the different major map versions
+//#ifdef RUSSIAN
+	//#define MAJOR_MAP_VERSION		6.00
+//#else
+	#define MAJOR_MAP_VERSION		5.00
+//#endif
+
 FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
 
 BOOLEAN gfWorldLoaded;
 
 MAPCREATE_STRUCT gMapInformation;
 
+//Current minor map version updater.
+#define MINOR_MAP_VERSION		25
 UINT8 gubMinorMapVersion = MINOR_MAP_VERSION;
 
 /*
@@ -77,7 +87,6 @@ Version 11 -- Kris -- obsolete May 2, 1998
 //is return the closest gridno.	Returns TRUE if the mapindex changes.
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
 	INT32 iNewMapX, iNewMapY;
@@ -114,7 +123,6 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 
 void SaveMapInformation( HWFILE fp )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiBytesWritten;
 
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
@@ -123,7 +131,6 @@ void SaveMapInformation( HWFILE fp )
 
 void LoadMapInformation( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
 	//FileRead( hfile, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesRead);
 
@@ -138,7 +145,6 @@ void LoadMapInformation( INT8 **hBuffer )
 //loading and won't be permanently updated until the map is saved, regardless of changes.
 void UpdateOldVersionMap()
 {
-	PERFORMANCE_MARKER
 #if 0 //This code is no longer needed since the major version update from 1.0 to 4.0
 			//However, I am keeping it in for reference.
 	SOLDIERINITNODE *curr;
@@ -290,7 +296,7 @@ void UpdateOldVersionMap()
 			//Bug #04)	Assign enemy mercs default army color code if applicable
 			if( curr->pDetailedPlacement )
 			{
-				for( i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
+				for( i = 0; i < NUM_INV_SLOTS; i++ )
 				{ //make all items undroppable, even if it is empty.	This will allow for 
 					//random item generation, while empty, droppable slots are locked as empty
 					//during random item generation.
@@ -428,14 +434,14 @@ void UpdateOldVersionMap()
 		{
 			if( curr->pDetailedPlacement )
 			{
-				for ( i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
+				for ( i = 0; i < NUM_INV_SLOTS; i++ )
 				{
 					pItem = &curr->pDetailedPlacement->Inv[ i ];
 					if( Item[ pItem->usItem ].usItemClass & IC_AMMO )
 					{
 						for( cnt = 0; cnt < pItem->ubNumberOfObjects; cnt++ )
 						{
-							pItem->shots.ubShotsLeft[ cnt ] = Magazine[ Item[ pItem->usItem ].ubClassIndex ].ubMagSize;
+							pItem->ubShotsLeft[ cnt ] = Magazine[ Item[ pItem->usItem ].ubClassIndex ].ubMagSize;
 						}
 					}
 				}
@@ -513,7 +519,8 @@ void UpdateOldVersionMap()
 		{
 			if( curr->pDetailedPlacement )
 			{
-				for( UINT32 i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
+				INT32 i;
+				for( i = 0; i < NUM_INV_SLOTS; i++ )
 				{
 					if( !curr->pDetailedPlacement->Inv[ i ].usItem )
 					{
@@ -565,6 +572,7 @@ void UpdateOldVersionMap()
 void AutoCalculateItemNoOverwriteStatus() 
 {
 	SOLDIERINITNODE *curr;
+	INT32 i;
 	OBJECTTYPE *pItem;
 
 	//Recalculate the "no overwrite" status flag on all items.	There are two different cases:
@@ -575,7 +583,7 @@ void AutoCalculateItemNoOverwriteStatus()
 	{
 		if( curr->pDetailedPlacement )
 		{
-			for( UINT32 i = 0; i < curr->pDetailedPlacement->Inv.size(); i++ )
+			for( i = 0; i < NUM_INV_SLOTS; i++ )
 			{
 				pItem = &curr->pDetailedPlacement->Inv[ i ];
 				if( pItem->usItem != NONE )
@@ -594,7 +602,6 @@ void AutoCalculateItemNoOverwriteStatus()
 
 void ValidateAndUpdateMapVersionIfNecessary()
 {
-	PERFORMANCE_MARKER
 	//Older versions of mercs may require updating due to past bug fixes, new changes, etc.
 	if( gMapInformation.ubMapVersion < MINOR_MAP_VERSION )
 	{
@@ -618,7 +625,6 @@ void ValidateAndUpdateMapVersionIfNecessary()
 //and really prevent major map updates.
 void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 {
-	PERFORMANCE_MARKER
 	if( pSummary->MapInfo.ubMapVersion == MINOR_MAP_VERSION )
 		return;
 	if( pSummary->MapInfo.ubMapVersion < 9 )

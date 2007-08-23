@@ -495,7 +495,6 @@ void HandleTimedAtmModes( void );
 
 void GameInitPersonnel( void )
 {
-	PERFORMANCE_MARKER
 	// init past characters lists
 	InitPastCharactersList( );
 
@@ -503,7 +502,6 @@ void GameInitPersonnel( void )
 
 void InitVariables(void)
 {
-	PERFORMANCE_MARKER
 	pPersonnelScreenPoints[0].x = iScreenWidthOffset + 422+PrsnlOffSetX;		//0
 	pPersonnelScreenPoints[0].y = iScreenHeightOffset + 205+PrsnlOffSetY;
 	
@@ -588,7 +586,6 @@ void InitVariables(void)
 
 void EnterPersonnel( void )
 {
-	PERFORMANCE_MARKER
 	InitVariables();
 	
 	fReDrawScreenFlag=TRUE;
@@ -644,7 +641,6 @@ void EnterPersonnel( void )
 
 void ExitPersonnel( void )
 {
-	PERFORMANCE_MARKER
 
 
 	if( fCurrentTeamMode == FALSE )
@@ -692,7 +688,6 @@ void ExitPersonnel( void )
 
 void HandlePersonnel( void )
 {
-	PERFORMANCE_MARKER
 	//RenderButtonsFastHelp( );
 	CreateDestroyButtonsForPersonnelDepartures( );
 
@@ -718,7 +713,6 @@ void HandlePersonnel( void )
 
 BOOLEAN LoadPersonnelGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// load graphics needed for personnel screen
 	VOBJECT_DESC	VObjectDesc;
 	
@@ -743,7 +737,6 @@ BOOLEAN LoadPersonnelGraphics( void )
 
 void RemovePersonnelGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// delete graphics needed for personnel screen
  
 	DeleteVideoObjectFromIndex(guiSCREEN);
@@ -756,7 +749,6 @@ void RemovePersonnelGraphics( void )
 
 void RenderPersonnel( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 	// re-renders personnel screen
 	// render main background	
@@ -848,7 +840,6 @@ void RenderPersonnel( void )
 
 BOOLEAN RenderPersonnelPictures( void )
 {
-	PERFORMANCE_MARKER
 	// will render portraits of personnel onscreen
 	// find person with iStartPersonId, unless it is -1, then find first bActive Merc on Staff
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;
@@ -902,7 +893,7 @@ BOOLEAN RenderPersonnelPictures( void )
 		{	
 		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
 			{
-				if( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+				if( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					return( FALSE );
 				}
@@ -922,7 +913,6 @@ BOOLEAN RenderPersonnelPictures( void )
 
 void RenderPersonnelStats( INT32 iId, INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 	// will render the stats of person iId in slot iSlot
 	SetFont(PERS_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
@@ -944,7 +934,6 @@ void RenderPersonnelStats( INT32 iId, INT32 iSlot )
 
 BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther )
 {
-	PERFORMANCE_MARKER
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
 	VOBJECT_DESC	VObjectDesc;
@@ -954,7 +943,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	if( fCurrentTeamMode == TRUE )
 	{
 	
-		if( ( 50 < 	MercPtrs[iId]->ubProfile )&&( 57 > 	MercPtrs[iId]->ubProfile ) )
+		if( ( 50 < 	MercPtrs[iId] -> ubProfile )&&( 57 > 	MercPtrs[iId] -> ubProfile ) )
 		{
 			sprintf( sTemp, "%s%03d.sti", FACES_DIR, 	gMercProfiles[ MercPtrs[iId]->ubProfile	].ubFaceIndex );	
 		}
@@ -983,7 +972,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 	if( fCurrentTeamMode == TRUE )
 	{
-		if( MercPtrs[iId]->flags.uiStatusFlags & SOLDIER_VEHICLE )
+		if( MercPtrs[iId]->uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			return( TRUE );
 		}
@@ -998,7 +987,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 	if( fCurrentTeamMode == TRUE )
 	{
-		if( MercPtrs[iId]->stats.bLife <= 0 )
+		if( MercPtrs[iId]->bLife <= 0 )
 		{
 			hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
 			
@@ -1082,7 +1071,6 @@ removed cause we already show this under the picture, instead display the mercs 
 
 BOOLEAN NextPersonnelFace( void )
 {
-	PERFORMANCE_MARKER
 
 	if( iCurrentPersonSelectedId == -1 )
 	{
@@ -1131,7 +1119,6 @@ BOOLEAN NextPersonnelFace( void )
 
 BOOLEAN PrevPersonnelFace( void )
 {
-	PERFORMANCE_MARKER
 	
 	if( iCurrentPersonSelectedId == -1 )
 	{
@@ -1186,7 +1173,6 @@ BOOLEAN PrevPersonnelFace( void )
 
 void CreatePersonnelButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// left button
 	giPersonnelButtonImage[0]=	LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,0,-1,1,-1 );
@@ -1239,7 +1225,6 @@ void CreatePersonnelButtons( void )
 
 void DeletePersonnelButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	RemoveButton(giPersonnelButton[0] );
 	UnloadButtonImage(giPersonnelButtonImage[0] );
@@ -1256,7 +1241,6 @@ void DeletePersonnelButtons( void )
 
 void LeftButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1284,7 +1268,6 @@ void LeftButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void LeftFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1315,7 +1298,6 @@ void LeftFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void RightButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1344,7 +1326,6 @@ void RightButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1375,7 +1356,6 @@ void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayHeader( void )
 {
-	PERFORMANCE_MARKER
 	SetFont(PERS_HEADER_FONT);
 	SetFontForeground(PERS_FONT_COLOR);
 	SetFontBackground( 0 );
@@ -1388,7 +1368,6 @@ void DisplayHeader( void )
 
 void DisplayCharName( INT32 iId, INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 	SOLDIERTYPE *pSoldier;
@@ -1405,7 +1384,7 @@ void DisplayCharName( INT32 iId, INT32 iSlot )
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 	
-	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -1517,7 +1496,6 @@ Moved so the name of the town will be in the same line as the name
 
 void DisplayCharStats(INT32 iId, INT32 iSlot)
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	CHAR16 sString[50];
 //	CHAR16 sStringA[ 50 ];
@@ -1527,7 +1505,7 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 	BOOLEAN	fAmIaRobot = AM_A_ROBOT( pSoldier );
 	
 	
-	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -1966,7 +1944,6 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 INT32 GetLastMercId( void )
 {
-	PERFORMANCE_MARKER
 	// rolls through list of mercs and returns how many on team
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
@@ -1984,7 +1961,6 @@ INT32 GetLastMercId( void )
 
 void DrawPageNumber( void )
 {
-	PERFORMANCE_MARKER
 	// draws the page number
 	
 	CHAR16 sString[10];
@@ -2024,7 +2000,6 @@ void DrawPageNumber( void )
 
 void SetPersonnelButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	// this function will look at what page we are viewing, enable and disable buttons as needed
 	
 	if( ! PrevPersonnelFace( ) )
@@ -2065,7 +2040,6 @@ void SetPersonnelButtonStates( void )
 
 void RenderPersonnelScreenBackground( void )
 {
-	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -2090,7 +2064,6 @@ void RenderPersonnelScreenBackground( void )
 
 BOOLEAN LoadPersonnelScreenBackgroundGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// will load the graphics for the personeel screen background
 	VOBJECT_DESC	VObjectDesc;
 	
@@ -2110,7 +2083,6 @@ BOOLEAN LoadPersonnelScreenBackgroundGraphics( void )
 
 void DeletePersonnelScreenBackgroundGraphics( void )
 {
-	PERFORMANCE_MARKER
 	// delete background V/O's
 
 	DeleteVideoObjectFromIndex( guiCURRENTTEAM );
@@ -2120,7 +2092,6 @@ void DeletePersonnelScreenBackgroundGraphics( void )
 
 void CreateDestroyButtonsForPersonnelDepartures( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 	// create/ destroy personnel departures buttons as needed
@@ -2142,7 +2113,6 @@ void CreateDestroyButtonsForPersonnelDepartures( void )
 
 INT32 GetNumberOfMercsOnPlayersTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
 	INT32 cnt=0;
@@ -2158,7 +2128,7 @@ INT32 GetNumberOfMercsOnPlayersTeam( void )
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pTeamSoldier++)
 	{
-		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->stats.bLife > 0 ) )
+		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pTeamSoldier->bLife > 0 ) )
 			iCounter++;
 	}
 
@@ -2168,7 +2138,6 @@ INT32 GetNumberOfMercsOnPlayersTeam( void )
 
 INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
 	INT32 cnt=0;
@@ -2184,7 +2153,7 @@ INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 	
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pTeamSoldier++)
 	{
-		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if( ( pTeamSoldier->bActive) && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 			iCounter++;
 	}
 
@@ -2193,7 +2162,6 @@ INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void )
 
 void	CreateDestroyMouseRegionsForPersonnelPortraits( void )
 {
-	PERFORMANCE_MARKER
 	// creates/ destroys mouse regions for portraits
 
 	static BOOLEAN fCreated = FALSE;
@@ -2229,7 +2197,6 @@ void	CreateDestroyMouseRegionsForPersonnelPortraits( void )
 
 BOOLEAN DisplayPicturesOfCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	INT32 iTotalOnTeam = 0;
 	char sTemp[100];
@@ -2259,10 +2226,10 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 	for( iCounter = 0; iCounter < iTotalOnTeam; iCnt++ )
 	{
 
-		if( ( MercPtrs[iId + iCnt ]->bActive == TRUE ) )
+		if( ( MercPtrs[iId + iCnt ] -> bActive == TRUE ) )
 		{
 			// found the next actual guy
-			if( ( 50 < 	MercPtrs[iId + iCnt ] ->ubProfile )&&( 57 > 	MercPtrs[iId + iCnt ]->ubProfile ) )
+			if( ( 50 < 	MercPtrs[iId + iCnt ]  -> ubProfile )&&( 57 > 	MercPtrs[iId + iCnt ] -> ubProfile ) )
 			{
 				sprintf( sTemp, "%s%03d.sti", SMALL_FACES_DIR, 	gMercProfiles[ MercPtrs[ iId + iCnt ]->ubProfile	].ubFaceIndex );	
 			}
@@ -2285,7 +2252,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 		//Blt face to screen to 
 		GetVideoObject(&hFaceHandle, guiFACE);
 
-		if( Menptr[ iId + iCnt ].stats.bLife <= 0 )
+		if( Menptr[ iId + iCnt ].bLife <= 0 )
 		{
 			hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
 			
@@ -2297,7 +2264,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 		
 		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT ), VO_BLT_SRCTRANSPARENCY,NULL);
 		
-		if( Menptr[ iId + iCnt ].stats.bLife <= 0 )
+		if( Menptr[ iId + iCnt ].bLife <= 0 )
 		{
 			//if the merc is dead, display it
 			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], ( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT + SMALL_PORT_HEIGHT / 2 ), SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -2315,7 +2282,6 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 
 void PersonnelPortraitCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iPortraitId = 0;
 	INT32 iOldPortraitId;
 
@@ -2402,7 +2368,6 @@ void PersonnelPortraitCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void DisplayFaceOfDisplayedMerc( )
 {
-	PERFORMANCE_MARKER
 	// valid person?, display
 	
 	if( iCurrentPersonSelectedId != -1 )
@@ -2449,7 +2414,6 @@ void DisplayFaceOfDisplayedMerc( )
 
 void DisplayInventoryForSelectedChar( void )
 {
-	PERFORMANCE_MARKER
 
 	// display the inventory for this merc
 //	if( fShowInventory == FALSE )
@@ -2474,7 +2438,6 @@ void DisplayInventoryForSelectedChar( void )
 
 void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCounter = 0;
 	SOLDIERTYPE *pSoldier;
 	INT16 sIndex;
@@ -2509,7 +2472,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 		return;
 	}
 	
-	for( ubCounter = 0; ubCounter < pSoldier->inv.size(); ubCounter++ )
+	for( ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++ )
 	{
 		PosX = iScreenWidthOffset + 397 + 3;
 		PosY = iScreenHeightOffset + 200 + 8 +( ubItemCount * ( 29 ) );
@@ -2623,7 +2586,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 
 		if( ubItemCount == NUMBER_OF_INVENTORY_PERSONNEL )
 		{
-			break;
+			ubCounter = NUM_INV_SLOTS;
 		}
 	}
 	
@@ -2635,7 +2598,6 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 
 void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2679,7 +2641,6 @@ void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void InventoryDownButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2726,7 +2687,6 @@ void InventoryDownButtonCallback(GUI_BUTTON *btn,INT32 reason)
 // decide which buttons can and can't be accessed based on what the current item is
 void EnableDisableInventoryScrollButtons( void )
 {
-	PERFORMANCE_MARKER
 //	if( fShowInventory == FALSE )
 	if( gubPersonnelInfoState != PRSNL_INV )
 	{
@@ -2760,7 +2720,6 @@ void EnableDisableInventoryScrollButtons( void )
 
 INT32 GetNumberOfInventoryItemsOnCurrentMerc( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iId = 0;
 	UINT8 ubCounter = 0;
 	UINT8 ubCount = 0;
@@ -2776,7 +2735,7 @@ INT32 GetNumberOfInventoryItemsOnCurrentMerc( void )
 
 	pSoldier = &Menptr[ iId ];
 
-	for( ubCounter = 0; ubCounter < pSoldier->inv.size(); ubCounter++ )
+	for( ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++ )
 	{
 		if( ( pSoldier->inv[ ubCounter ].ubNumberOfObjects ) && ( pSoldier->inv[ ubCounter ].usItem) )
 		{
@@ -2789,7 +2748,6 @@ INT32 GetNumberOfInventoryItemsOnCurrentMerc( void )
 
 void CreateDestroyPersonnelInventoryScrollButtons( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 //	if( ( fShowInventory == TRUE ) && ( fCreated == FALSE ) )
@@ -2832,7 +2790,6 @@ void CreateDestroyPersonnelInventoryScrollButtons( void )
 
 void DisplayNumberOnCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// display number on team
 	CHAR16 sString[ 32 ];
 	INT16 sX = 0, sY = 0;
@@ -2866,7 +2823,6 @@ void DisplayNumberOnCurrentTeam( void )
 
 void DisplayNumberDeparted( void )
 {
-	PERFORMANCE_MARKER
 	// display number departed from team
 	CHAR16 sString[ 32 ];
 	INT16 sX = 0, sY = 0;
@@ -2898,7 +2854,6 @@ void DisplayNumberDeparted( void )
 
 INT32 GetTotalDailyCostOfCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will return the total daily cost of the current team
 
 	SOLDIERTYPE *pSoldier;	
@@ -2956,7 +2911,6 @@ INT32 GetTotalDailyCostOfCurrentTeam( void )
 
 INT32 GetLowestDailyCostOfCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will return the lowest daily cost of the current team
 
 	SOLDIERTYPE *pSoldier;	
@@ -2975,7 +2929,7 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 	{
 		pSoldier = MercPtrs[cnt];
 
-		if( ( pSoldier->bActive ) && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->stats.bLife > 0 ) )
+		if( ( pSoldier->bActive ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && ( pSoldier->bLife > 0 ) )
 		{
 			// valid soldier, get cost
 			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
@@ -3029,7 +2983,6 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 
 INT32 GetHighestDailyCostOfCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will return the lowest daily cost of the current team
 
 	SOLDIERTYPE *pSoldier;	
@@ -3097,7 +3050,6 @@ INT32 GetHighestDailyCostOfCurrentTeam( void )
 
 void DisplayCostOfCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// display number on team
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
@@ -3155,7 +3107,6 @@ void DisplayCostOfCurrentTeam( void )
 
 INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	INT32 iId = -1;
@@ -3231,26 +3182,26 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 				continue;
 			}
 
-			if( pTeamSoldier->bLife >= iValue )
+			if( pTeamSoldier ->  bLife >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bLife;
+				iValue = pTeamSoldier -> bLife;
 			}
 			break;
 		case 1:
 		// agility
-			if( pTeamSoldier->bAgility >= iValue )
+			if( pTeamSoldier ->  bAgility >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bAgility;
+				iValue = pTeamSoldier -> bAgility;
 			}
 			break;
 			case 2:
 			// dexterity
-			if( pTeamSoldier->bDexterity >= iValue )
+			if( pTeamSoldier ->  bDexterity >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bDexterity;
+					iValue = pTeamSoldier -> bDexterity;
 			}
 			break;
 			case 3:
@@ -3258,7 +3209,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 		if(	pTeamSoldier->bStrength >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bStrength;
+				iValue = pTeamSoldier -> bStrength;
 			}	
 			break;
 			case 4:
@@ -3266,7 +3217,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 		if(	pTeamSoldier->bLeadership >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bLeadership;
+				iValue = pTeamSoldier -> bLeadership;
 			}	
 			break;
 			case 5:
@@ -3274,7 +3225,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			if(	pTeamSoldier->bWisdom >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bWisdom;
+				iValue = pTeamSoldier -> bWisdom;
 			}
 			break;
 			case 6:
@@ -3282,7 +3233,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 		if( pTeamSoldier->bExpLevel >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bExpLevel;
+				iValue = pTeamSoldier -> bExpLevel;
 			}	
 
 			break;
@@ -3291,7 +3242,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			if(	pTeamSoldier->bMarksmanship >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bMarksmanship;
+					iValue = pTeamSoldier -> bMarksmanship;
 			}
 					
 		break;
@@ -3300,15 +3251,15 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			if(	pTeamSoldier->bMechanical >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bMechanical;
+				iValue = pTeamSoldier -> bMechanical;
 			}
 		break;
 			case 9:
 			// exp
-			if(pTeamSoldier->bExplosive >= iValue )
+			if(pTeamSoldier -> bExplosive >= iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bExplosive;
+				iValue = pTeamSoldier -> bExplosive;
 			}
 			break;
 			case 10:
@@ -3316,7 +3267,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 			if(	pTeamSoldier->bMedical >= iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bMedical;
+					iValue = pTeamSoldier -> bMedical;
 			}
 			break;
 		}
@@ -3331,7 +3282,6 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 
 INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	INT32 iId = -1;
@@ -3406,26 +3356,26 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 				continue;
 			}
 
-			if( pTeamSoldier->bLife < iValue )
+			if( pTeamSoldier ->  bLife < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bLife;
+				iValue = pTeamSoldier -> bLife;
 			}
 			break;
 		case 1:
 		// agility
-			if( pTeamSoldier->bAgility < iValue )
+			if( pTeamSoldier ->  bAgility < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bAgility;
+				iValue = pTeamSoldier -> bAgility;
 			}
 			break;
 			case 2:
 			// dexterity
-			if( pTeamSoldier->bDexterity < iValue )
+			if( pTeamSoldier ->  bDexterity < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bDexterity;
+					iValue = pTeamSoldier -> bDexterity;
 			}
 			break;
 			case 3:
@@ -3433,7 +3383,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 		if(	pTeamSoldier->bStrength < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bStrength;
+				iValue = pTeamSoldier -> bStrength;
 			}	
 			break;
 			case 4:
@@ -3441,7 +3391,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 		if(	pTeamSoldier->bLeadership < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bLeadership;
+				iValue = pTeamSoldier -> bLeadership;
 			}	
 			break;
 			case 5:
@@ -3449,7 +3399,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			if(	pTeamSoldier->bWisdom < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bWisdom;
+				iValue = pTeamSoldier -> bWisdom;
 			}
 			break;
 			case 6:
@@ -3457,7 +3407,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 		if( pTeamSoldier->bExpLevel < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bExpLevel;
+				iValue = pTeamSoldier -> bExpLevel;
 			}	
 
 			break;
@@ -3466,7 +3416,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			if(	pTeamSoldier->bMarksmanship < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bMarksmanship;
+					iValue = pTeamSoldier -> bMarksmanship;
 			}
 					
 		break;
@@ -3475,15 +3425,15 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			if(	pTeamSoldier->bMechanical < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bMechanical;
+				iValue = pTeamSoldier -> bMechanical;
 			}
 		break;
 			case 9:
 			// exp
-			if(pTeamSoldier->bExplosive < iValue )
+			if(pTeamSoldier -> bExplosive < iValue )
 			{
 				iId = cnt;
-				iValue = pTeamSoldier->bExplosive;
+				iValue = pTeamSoldier -> bExplosive;
 			}
 			break;
 			case 10:
@@ -3491,7 +3441,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 			if(	pTeamSoldier->bMedical < iValue )
 			{
 					iId = cnt;
-					iValue = pTeamSoldier->bMedical;
+					iValue = pTeamSoldier -> bMedical;
 			}
 			break;
 		}
@@ -3506,7 +3456,6 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 
 INT32 GetIdOfMercWithHighestStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	INT32 iId = -1;
@@ -3630,7 +3579,6 @@ INT32 GetIdOfMercWithHighestStat( INT32 iStat )
 
 INT32 GetIdOfMercWithLowestStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	INT32 iId = -1;
@@ -3757,7 +3705,6 @@ INT32 GetIdOfMercWithLowestStat( INT32 iStat )
 
 INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;	
@@ -3774,7 +3721,7 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{
 		// Only count stats of merc (not vehicles)
-		if ( !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 		if(( pTeamSoldier->bActive)&&( pTeamSoldier->stats.bLife > 0 ) && !AM_A_ROBOT( pTeamSoldier ) )
 		{
@@ -3871,7 +3818,6 @@ INT32 GetAvgStatOfCurrentTeamStat( INT32 iStat )
 
 INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 {
-	PERFORMANCE_MARKER
 	// will return the id value of the merc on the players team with highest in this stat
 	// -1 means error
 	INT32 cnt=0;
@@ -3942,43 +3888,43 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			case 0:
 			// health
 			
-				iTotalStatValue += pTeamSoldier->bLife;
+				iTotalStatValue += pTeamSoldier -> bLife;
 			
 			break;
 		case 1:
 		// agility
 			
-				iTotalStatValue += pTeamSoldier->bAgility;
+				iTotalStatValue += pTeamSoldier -> bAgility;
 			
 			break;
 			case 2:
 			// dexterity
 			
-					iTotalStatValue += pTeamSoldier->bDexterity;
+					iTotalStatValue += pTeamSoldier -> bDexterity;
 			
 			break;
 			case 3:
 			// strength
 		
-				iTotalStatValue += pTeamSoldier->bStrength;
+				iTotalStatValue += pTeamSoldier -> bStrength;
 			
 			break;
 			case 4:
 			// leadership
 		
-				iTotalStatValue += pTeamSoldier->bLeadership;
+				iTotalStatValue += pTeamSoldier -> bLeadership;
 				
 			break;
 			case 5:
 		// wisdom
 			
-				iTotalStatValue += pTeamSoldier->bWisdom;
+				iTotalStatValue += pTeamSoldier -> bWisdom;
 			
 			break;
 			case 6:
 			// exper
 	 
-				iTotalStatValue += pTeamSoldier->bExpLevel;
+				iTotalStatValue += pTeamSoldier -> bExpLevel;
 		
 
 			break;
@@ -3986,26 +3932,26 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 			//mrkmanship
 			
 					iId = cnt;
-					iTotalStatValue += pTeamSoldier->bMarksmanship;
+					iTotalStatValue += pTeamSoldier -> bMarksmanship;
 			
 					
 		break;
 			case 8:
 			// mech
 			
-				iTotalStatValue += pTeamSoldier->bMechanical;
+				iTotalStatValue += pTeamSoldier -> bMechanical;
 			
 		break;
 			case 9:
 			// exp
 			
-				iTotalStatValue += pTeamSoldier->bExplosive;
+				iTotalStatValue += pTeamSoldier -> bExplosive;
 			
 			break;
 			case 10:
 			// med
 			
-				iTotalStatValue += pTeamSoldier->bMedical;
+				iTotalStatValue += pTeamSoldier -> bMedical;
 			break;
 		}
 
@@ -4024,7 +3970,6 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 
 void DisplayAverageStatValuesForCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will display the average values for stats for the current team
 	INT16 sX, sY;
 	INT32 iCounter = 0;
@@ -4094,7 +4039,6 @@ void DisplayAverageStatValuesForCurrentTeam( void )
 
 void DisplayLowestStatValuesForCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will display the average values for stats for the current team
 	INT16 sX, sY;
 	INT32 iCounter = 0;
@@ -4157,7 +4101,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 			if( iId == -1 )
 				swprintf( sString, L"%s", pPOWStrings[1] );
 			else
-				swprintf( sString, L"%s", MercPtrs[ iId ]->name );
+				swprintf( sString, L"%s", MercPtrs[ iId ] -> name );
 		}
 		else
 		{
@@ -4176,7 +4120,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						if( iId == -1 )
 							iStat = -1;
 						else
-							iStat = MercPtrs[ iId ]->stats.bLifeMax;
+							iStat = MercPtrs[ iId ] -> bLifeMax;
 					}
 					else
 					{
@@ -4187,7 +4131,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// agility
 						if( fCurrentTeamMode == TRUE )
 						{
-								iStat = MercPtrs[ iId ]->stats.bAgility;
+								iStat = MercPtrs[ iId ] -> bAgility;
 						}
 						else
 						{
@@ -4199,7 +4143,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bDexterity;
+							iStat = MercPtrs[ iId ] -> bDexterity;
 						}
 						else
 						{
@@ -4223,7 +4167,7 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bLeadership;
+							iStat = MercPtrs[ iId ] -> bLeadership;
 						}
 						else
 						{
@@ -4278,11 +4222,11 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bExplosive;
+							iStat = MercPtrs[ iId ] -> bExplosive;
 						}
 						else
 						{
-							iStat = gMercProfiles[ iDepartedId ] .bExplosive;
+							iStat = gMercProfiles[ iDepartedId ] . bExplosive;
 						}
 					break;
 					case 10:
@@ -4315,7 +4259,6 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 
 void DisplayHighestStatValuesForCurrentTeam( void )
 {
-	PERFORMANCE_MARKER
 	// will display the average values for stats for the current team
 	INT16 sX, sY;
 	INT32 iCounter = 0;
@@ -4373,7 +4316,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 			if( iId == -1 )
 				swprintf( sString, L"%s", pPOWStrings[1] );
 			else
-				swprintf( sString, L"%s", MercPtrs[ iId ]->name );
+				swprintf( sString, L"%s", MercPtrs[ iId ] -> name );
 		}
 		else
 		{
@@ -4392,7 +4335,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						if( iId == -1 )
 							iStat = -1;
 						else
-							iStat = MercPtrs[ iId ]->stats.bLifeMax;
+							iStat = MercPtrs[ iId ] -> bLifeMax;
 					}
 					else
 					{
@@ -4403,7 +4346,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// agility
 						if( fCurrentTeamMode == TRUE )
 						{
-								iStat = MercPtrs[ iId ]->stats.bAgility;
+								iStat = MercPtrs[ iId ] -> bAgility;
 						}
 						else
 						{
@@ -4415,7 +4358,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// dexterity
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bDexterity;
+							iStat = MercPtrs[ iId ] -> bDexterity;
 						}
 						else
 						{
@@ -4439,7 +4382,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// leadership
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bLeadership;
+							iStat = MercPtrs[ iId ] -> bLeadership;
 						}
 						else
 						{
@@ -4494,7 +4437,7 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 						// exp
 						if( fCurrentTeamMode == TRUE )
 						{
-							iStat = MercPtrs[ iId ]->stats.bExplosive;
+							iStat = MercPtrs[ iId ] -> bExplosive;
 						}
 						else
 						{
@@ -4532,7 +4475,6 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 
 void DisplayPersonnelTeamStats( void )
 {
-	PERFORMANCE_MARKER
 	// displays the stat title for each row in the team stat list
 	INT32 iCounter =0;
 
@@ -4566,7 +4508,6 @@ void DisplayPersonnelTeamStats( void )
 
 INT32 GetNumberOfPastMercsOnPlayersTeam( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iPastNumberOfMercs = 0;
 	// will run through the alist of past mercs on the players team and return thier number
 
@@ -4586,7 +4527,6 @@ INT32 GetNumberOfPastMercsOnPlayersTeam( void )
 
 void InitPastCharactersList( void )
 {
-	PERFORMANCE_MARKER
 	// inits the past characters list
 	memset( &LaptopSaveInfo.ubDeadCharactersList, -1, sizeof( LaptopSaveInfo.ubDeadCharactersList ) );
 	memset( &LaptopSaveInfo.ubLeftCharactersList, -1, sizeof( LaptopSaveInfo.ubLeftCharactersList ) );
@@ -4598,7 +4538,6 @@ void InitPastCharactersList( void )
 
 INT32 GetNumberOfDeadOnPastTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iNumberDead = 0;
 	INT32 iCounter = 0;
@@ -4618,7 +4557,6 @@ INT32 GetNumberOfDeadOnPastTeam( void )
 
 INT32 GetNumberOfLeftOnPastTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iNumberLeft = 0;
 	INT32 iCounter = 0;
@@ -4637,7 +4575,6 @@ INT32 GetNumberOfLeftOnPastTeam( void )
 
 INT32 GetNumberOfOtherOnPastTeam( void )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iNumberOther = 0;
 	INT32 iCounter = 0;
@@ -4656,7 +4593,6 @@ INT32 GetNumberOfOtherOnPastTeam( void )
 
 void DisplayStateOfPastTeamMembers( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	CHAR16 sString[ 32 ];
 
@@ -4706,7 +4642,6 @@ void DisplayStateOfPastTeamMembers( void )
 
 void CreateDestroyCurrentDepartedMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 
 	static BOOLEAN fCreated = FALSE;
 
@@ -4745,7 +4680,6 @@ void CreateDestroyCurrentDepartedMouseRegions( void )
 
 void PersonnelCurrentTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		fCurrentTeamMode = TRUE;
@@ -4772,7 +4706,6 @@ void PersonnelCurrentTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void PersonnelDepartedTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 
@@ -4801,7 +4734,6 @@ void PersonnelDepartedTeamCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void CreateDestroyButtonsForDepartedTeamList( void )
 {
-	PERFORMANCE_MARKER
 	// creates/ destroys the buttons for cdeparted team list
 	static BOOLEAN fCreated = FALSE;
 
@@ -4841,7 +4773,6 @@ void CreateDestroyButtonsForDepartedTeamList( void )
 
 void DepartedUpCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -4871,7 +4802,6 @@ void DepartedUpCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void DepartedDownCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -4899,7 +4829,6 @@ void DepartedDownCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayPastMercsPortraits( void )
 {
-	PERFORMANCE_MARKER
 	// display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber and going up 20 mercs
 	// start at dead mercs, then fired, then other
 
@@ -5032,7 +4961,6 @@ void DisplayPastMercsPortraits( void )
 
 INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter =-1;
 	INT32 iCounterA =0;
@@ -5093,7 +5021,6 @@ INT32 GetIdOfPastMercInSlot( INT32 iSlot )
 
 BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther )
 {
-	PERFORMANCE_MARKER
 
 	
 	char sTemp[100];
@@ -5165,7 +5092,6 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 
 void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	CHAR16 sString[50];
 	INT16 sX, sY;
@@ -5332,7 +5258,6 @@ void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 
 void EnableDisableDeparturesButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// will enable or disable departures buttons based on upperleft picutre index value
 	if( ( fCurrentTeamMode == TRUE )||( fNewMailFlag == TRUE ) )
@@ -5363,7 +5288,6 @@ void EnableDisableDeparturesButtons( void )
 
 void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 {
-	PERFORMANCE_MARKER
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 	CHAR16 sString[ 32 ];
@@ -5450,7 +5374,6 @@ void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 
 INT32 GetTheStateOfDepartedMerc( INT32 iId )
 {
-	PERFORMANCE_MARKER
 
 	INT32 iCounter =0;
 	// will runt hrough each list until merc is found, if not a -1 is returned
@@ -5485,7 +5408,6 @@ INT32 GetTheStateOfDepartedMerc( INT32 iId )
 
 void DisplayPersonnelTextOnTitleBar( void )
 {
-	PERFORMANCE_MARKER
 	// draw email screen title text
 
 	// font stuff
@@ -5502,7 +5424,6 @@ void DisplayPersonnelTextOnTitleBar( void )
 
 BOOLEAN DisplayHighLightBox( void )
 {
-	PERFORMANCE_MARKER
 	// will display highlight box around selected merc
 	VOBJECT_DESC VObjectDesc;
 	UINT32 uiBox = 0;
@@ -5537,7 +5458,6 @@ BOOLEAN DisplayHighLightBox( void )
 // add to dead list
 void AddCharacterToDeadList( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 
@@ -5564,7 +5484,6 @@ void AddCharacterToDeadList( SOLDIERTYPE *pSoldier )
 
 void AddCharacterToFiredList( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 
@@ -5591,7 +5510,6 @@ void AddCharacterToFiredList( SOLDIERTYPE *pSoldier )
 
 void AddCharacterToOtherList( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 
@@ -5621,7 +5539,6 @@ void AddCharacterToOtherList( SOLDIERTYPE *pSoldier )
 //to be on your team list, and departed list )
 BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( UINT8 ubProfile )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < 256; iCounter++ )
@@ -5657,7 +5574,6 @@ BOOLEAN RemoveNewlyHiredMercFromPersonnelDepartedList( UINT8 ubProfile )
 // grab the id of the first merc being displayed 
 INT32 GetIdOfFirstDisplayedMerc( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT32 cnt = 0;
 
@@ -5686,7 +5602,6 @@ INT32 GetIdOfFirstDisplayedMerc( )
 
 INT32 GetIdOfThisSlot( INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 		SOLDIERTYPE *pSoldier;
 	INT32 cnt = 0;
 	INT32 iCounter = 0;
@@ -5728,7 +5643,6 @@ INT32 GetIdOfThisSlot( INT32 iSlot )
 
 BOOLEAN RenderAtmPanel( void )
 {
-	PERFORMANCE_MARKER
 
 	VOBJECT_DESC VObjectDesc;
 	UINT32 uiBox = 0;
@@ -5798,7 +5712,6 @@ BOOLEAN RenderAtmPanel( void )
 
 void CreateDestroyStartATMButton( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 	// create/destroy atm start button as needed
 	
@@ -5879,7 +5792,6 @@ void CreateDestroyStartATMButton( void )
 
 void FindPositionOfPersInvSlider( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	INT32 iNumberOfItems = 0;
 	INT16 sSizeOfEachSubRegion = 0;
@@ -5906,7 +5818,6 @@ void FindPositionOfPersInvSlider( void )
 
 void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	INT32 iNumberOfItems = 0;
 	POINT MousePos;
@@ -5935,8 +5846,8 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		}
 
 		// find the x,y on the slider bar
-		GetCursorPos(&MousePos);
-		ScreenToClient(ghWindow, &MousePos); // In window coords!
+	  GetCursorPos(&MousePos);
+      ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 		// get the subregion sizes
 		sSizeOfEachSubRegion = ( INT16 )( ( INT32 )( Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR ) / ( INT32 )( iNumberOfItems	) );
@@ -5971,7 +5882,6 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void RenderSliderBarForPersonnelInventory( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// render slider bar for personnel
@@ -5982,7 +5892,6 @@ void RenderSliderBarForPersonnelInventory( void )
 
 void CreateDestroyATMButton( void )
 {
-	PERFORMANCE_MARKER
 	/*
 	static BOOLEAN fCreated = FALSE;
 	CHAR16 sString[ 32 ];
@@ -6090,7 +5999,6 @@ void CreateDestroyATMButton( void )
 
 void ATMStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -6118,7 +6026,6 @@ void ATMStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void PersonnelINVStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -6135,7 +6042,6 @@ void PersonnelINVStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void PersonnelStatStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -6153,7 +6059,6 @@ void PersonnelStatStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EmployementInfoButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -6170,7 +6075,6 @@ void EmployementInfoButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -6206,7 +6110,6 @@ void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ATMOtherButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	INT32 iValue = 0;
 	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
 	INT32 cnt = 0;
@@ -6361,7 +6264,6 @@ void ATMOtherButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ATMNumberButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	INT32 iValue = 0;
 	INT32 iCounter = 0;
@@ -6402,7 +6304,6 @@ void ATMNumberButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayATMAmount( void )
 {
-	PERFORMANCE_MARKER
 
 	INT16 sX = 0, sY = 0;
 	CHAR16 sTempString[ 32 ];
@@ -6448,7 +6349,6 @@ void DisplayATMAmount( void )
 
 void HandleStateOfATMButtons( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// disable buttons based on state
@@ -6484,9 +6384,8 @@ void HandleStateOfATMButtons( void )
 
 INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iCurrentAmount = 0;
-	UINT32 iCurrentPocket = 0;
+	INT32 iCurrentPocket = 0;
 	// run through mercs pockets, if any money in them, add to total
 
 	// error check
@@ -6496,7 +6395,7 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 	}
 
 	// run through grunts pockets and count all the spare change
-	for( iCurrentPocket = 0; iCurrentPocket < pSoldier->inv.size(); iCurrentPocket++ )
+	for( iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++ )
 	{
 		if ( Item[ pSoldier->inv[ iCurrentPocket ] .usItem ].usItemClass == IC_MONEY )
 		{
@@ -6510,7 +6409,11 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 
 BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
 {
-	PERFORMANCE_MARKER
+	INT32 iCurrentPocket = 0;
+	INT32 iAmountLeftToTake = iCurrentBalance;
+	OBJECTTYPE ObjectToRemove;
+
+
 	// move this amount of money from the grunt to the bank
 	// error check
 	if( pSoldier == NULL )
@@ -6521,7 +6424,7 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 	UINT32 iCurrentPocket = 0;
 	INT32 iAmountLeftToTake = iCurrentBalance;
 	// run through grunts pockets and count all the spare change
-	for( iCurrentPocket = 0; iCurrentPocket < pSoldier->inv.size(); iCurrentPocket++ )
+	for( iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++ )
 	{
 		if ( Item[ pSoldier->inv[ iCurrentPocket ] .usItem ].usItemClass == IC_MONEY )
 		{
@@ -6560,7 +6463,8 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 
 BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
 {
-	PERFORMANCE_MARKER
+	OBJECTTYPE pMoneyObject;
+
 	// move this amount of money from the grunt to the bank
 	// error check
 	if( pSoldier == NULL )
@@ -6605,7 +6509,6 @@ BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 
 void DisplayATMStrings( void )
 {
-	PERFORMANCE_MARKER
 	// display strings for ATM
 	switch( fATMFlags )
 	{
@@ -6650,7 +6553,6 @@ void DisplayATMStrings( void )
 
 void UpDateStateOfStartButton( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iId = 0;
 
 	// start button being shown?
@@ -6741,7 +6643,6 @@ void UpDateStateOfStartButton( void )
 
 void DisplayAmountOnCurrentMerc( void )
 {
-	PERFORMANCE_MARKER
 	// will display the amount that the merc is carrying on him or herself
 	INT32 iId;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -6787,7 +6688,6 @@ void DisplayAmountOnCurrentMerc( void )
 
 void HandlePersonnelKeyboard( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	INT32 iValue = 0;
 	CHAR16 sZero[ 2 ] = L"0";
@@ -6796,7 +6696,7 @@ void HandlePersonnelKeyboard( void )
 	POINT	MousePos;
 
 	GetCursorPos(&MousePos);
-	ScreenToClient(ghWindow, &MousePos); // In window coords!
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while (DequeueEvent(&InputEvent) == TRUE)
 	{
@@ -6825,7 +6725,6 @@ void HandlePersonnelKeyboard( void )
 
 void RenderRectangleForPersonnelTransactionAmount( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iLength = 0; 
 	INT32 iHeight = GetFontHeight( ATM_FONT );
 	UINT32										uiDestPitchBYTES;
@@ -6867,7 +6766,6 @@ void RenderRectangleForPersonnelTransactionAmount( void )
 
 void HandleTimedAtmModes( void )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fOldAtmMode = 0;
 	static UINT32 uiBaseTime = 0;
 
@@ -6901,7 +6799,6 @@ void HandleTimedAtmModes( void )
 
 BOOLEAN IsPastMercDead( INT32 iId )
 {
-	PERFORMANCE_MARKER
 	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId ) ) == DEPARTED_DEAD )
 	{
 		return( TRUE );
@@ -6916,7 +6813,6 @@ BOOLEAN IsPastMercDead( INT32 iId )
 
 BOOLEAN IsPastMercFired( INT32 iId )
 {
-	PERFORMANCE_MARKER
 	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )	) == DEPARTED_FIRED )
 	{
 		return( TRUE );
@@ -6929,7 +6825,6 @@ BOOLEAN IsPastMercFired( INT32 iId )
 
 BOOLEAN IsPastMercOther( INT32 iId )
 {
-	PERFORMANCE_MARKER
 	if( GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iId )	) == DEPARTED_OTHER )
 	{
 		return( TRUE );
@@ -6944,14 +6839,13 @@ BOOLEAN IsPastMercOther( INT32 iId )
 
 void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	CHAR16 sString[50];
 	CHAR16 sStringA[ 50 ];
 	INT16 sX, sY;
 	
 	
-	if( Menptr[iId].flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if( Menptr[iId].uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		return;
 	}
@@ -7198,7 +7092,6 @@ DEF:3/19/99:
 // else:			returns -1
 INT32 CalcTimeLeftOnMercContract( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 iTimeLeftOnContract = -1;
 
 	if(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)

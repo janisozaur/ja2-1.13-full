@@ -26,7 +26,6 @@ extern BOOLEAN fReDrawFace;
 
 BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// add the guy to the dead list
 	//AddCharacterToDeadList( pSoldier );
 
@@ -48,7 +47,7 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
 	}
-	else if( ( pSoldier->stats.bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
+	else if( ( pSoldier -> bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
 	{
 		// died in mapscreen
 		
@@ -63,13 +62,13 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
 
 		//s et breath and breath max to 0
-		pSoldier->bBreath = pSoldier->bBreathMax = 0;
+		pSoldier -> bBreath = pSoldier->bBreathMax = 0;
 
 		// rebuild list
 		ReBuildCharactersList( );
 
 		// ste merc as dead
-		// pSoldier->flags.fUIdeadMerc = TRUE;
+		// pSoldier->fUIdeadMerc = TRUE;
 	
 		// attempt to remove character from squad
 		RemoveCharacterFromSquads( pSoldier );
@@ -93,7 +92,6 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 	SOLDIERTYPE *pTeamSoldier;
 	INT8 bBuddyIndex;
@@ -105,7 +103,7 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 	// see if this was the friend of a living merc
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
 	{		
-		if ( pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bActive )
+		if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
 		{
 			bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
 			switch( bBuddyIndex )

@@ -63,7 +63,6 @@ typedef extendedarmygunchoicesParseData;
 static void XMLCALL 
 extendedarmygunchoicesStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	extendedarmygunchoicesParseData * pData = (extendedarmygunchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -153,7 +152,6 @@ extendedarmygunchoicesStartElementHandle(void *userData, const XML_Char *name, c
 static void XMLCALL
 extendedarmygunchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	extendedarmygunchoicesParseData * pData = (extendedarmygunchoicesParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -167,7 +165,6 @@ extendedarmygunchoicesCharacterDataHandle(void *userData, const XML_Char *str, i
 static void XMLCALL
 extendedarmygunchoicesEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	extendedarmygunchoicesParseData * pData = (extendedarmygunchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -457,7 +454,6 @@ extendedarmygunchoicesEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInExtendedArmyGunChoicesStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -520,7 +516,6 @@ BOOLEAN ReadInExtendedArmyGunChoicesStats(STR fileName)
 }
 BOOLEAN WriteExtendedArmyGunChoicesStats()
 {
-	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeextendedarmygunchoicesstats");
 	HWFILE		hFile;
 

@@ -111,7 +111,6 @@ INT8	gbNewTileSurfaceLoaded[ NUMBEROFTILETYPES ];
 
 void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 {
-	PERFORMANCE_MARKER
 	memset( gbNewTileSurfaceLoaded, fNew, sizeof( gbNewTileSurfaceLoaded ) );
 }
 
@@ -159,7 +158,6 @@ INT16		gsRecompileAreaBottom = 0;
 
 BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
 	while( pStruct )
@@ -173,7 +171,6 @@ BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
 
 BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
 	while( pStruct )
@@ -187,7 +184,6 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
 
 BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	*pLand;
 	UINT32 uiTileType;
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
@@ -209,7 +205,6 @@ BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 
 BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	if( gfBasement || gfCaves )
 		return TRUE;
 	if( FloorAtGridNo( iMapIndex ) )
@@ -219,7 +214,6 @@ BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 
 void DOIT( )
 {
-	PERFORMANCE_MARKER
 //	LEVELNODE *			pLand;
 	//LEVELNODE *			pObject;
 	LEVELNODE	*			pStruct, *pNewStruct;
@@ -254,7 +248,6 @@ void DOIT( )
 
 BOOLEAN InitializeWorld( )
 {
-	PERFORMANCE_MARKER
 
 	gTileDatabaseSize = 0;
 	gSurfaceMemUsage = 0;
@@ -305,7 +298,6 @@ BOOLEAN InitializeWorld( )
 
 void DeinitializeWorld( )
 {
-	PERFORMANCE_MARKER
 	TrashWorld();
 
 	if ( gpWorldLevelData != NULL )
@@ -330,14 +322,12 @@ void DeinitializeWorld( )
 
 BOOLEAN ReloadTilesetSlot( INT32 iSlot )
 {
-	PERFORMANCE_MARKER
 	return(TRUE);
 }
 
 
 BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 {
-	PERFORMANCE_MARKER
 	SGPFILENAME			cTemp;
 	UINT32					uiLoop;
 
@@ -468,7 +458,6 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 
 BOOLEAN AddTileSurface( STR8	cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot )
 {
-	PERFORMANCE_MARKER
 	// Add tile surface
 	PTILE_IMAGERY	TileSurf;	
 	CHAR8	cFileBPP[128];
@@ -527,7 +516,6 @@ extern BOOLEAN gfLoadShadeTablesFromTextFile;
 
 void BuildTileShadeTables(	)
 {
-	PERFORMANCE_MARKER
 	HWFILE				hfile;
 	STRING512			DataDir;
 	STRING512			ShadeTableDir;
@@ -630,7 +618,6 @@ void BuildTileShadeTables(	)
 
 void DestroyTileShadeTables( )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 
 	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
@@ -655,7 +642,6 @@ void DestroyTileShadeTables( )
 
 void DestroyTileSurfaces( )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 
 	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
@@ -670,7 +656,6 @@ void DestroyTileSurfaces( )
 
 void CompileWorldTerrainIDs( void )
 {
-	PERFORMANCE_MARKER
 	INT16						sGridNo;
 	INT16						sTempGridNo;
 	LEVELNODE	*			pNode;
@@ -721,7 +706,6 @@ void CompileWorldTerrainIDs( void )
 
 void CompileTileMovementCosts( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	UINT8						ubTerrainID;
 	TILE_ELEMENT		TileElem;
 	LEVELNODE *			pLand;
@@ -1411,7 +1395,6 @@ void CompileTileMovementCosts( INT16 sGridNo )
 
 void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16		sGridNo;
 	INT16		sGridX, sGridY;
 	INT16		sCentreGridX, sCentreGridY;
@@ -1454,7 +1437,6 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 {
-	PERFORMANCE_MARKER
 	INT16		sGridNo;
 	INT16		sGridX, sGridY;
 	INT16		sCentreGridX, sCentreGridY;
@@ -1509,7 +1491,6 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 
 void AddTileToRecompileArea( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT16	sCheckGridNo;
 	INT16	sCheckX;
 	INT16 sCheckY;
@@ -1551,7 +1532,6 @@ void AddTileToRecompileArea( INT16 sGridNo )
 
 void RecompileLocalMovementCostsInAreaWithFlags( void )
 {
-	PERFORMANCE_MARKER
 	INT16		sGridNo;
 	INT16		sGridX, sGridY;
 	INT8		bDirLoop;		
@@ -1590,7 +1570,6 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 
 void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
 {
-	PERFORMANCE_MARKER
 	INT8		bDirLoop;		
 	INT16		sUp, sDown, sLeft, sRight;
 	INT16		sX, sY, sTempGridNo;
@@ -1636,7 +1615,6 @@ void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation )
 // GLOBAL WORLD MANIPULATION FUNCTIONS
 void CompileWorldMovementCosts( )
 {
-	PERFORMANCE_MARKER
 	INT16					sGridNo;
 
 	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
@@ -1652,7 +1630,6 @@ void CompileWorldMovementCosts( )
 // SAVING CODE
 BOOLEAN SaveWorld( const STR8 puiFilename )
 {
-	PERFORMANCE_MARKER
 #ifdef JA2EDITOR
 	INT32			cnt;
 	UINT32		uiSoldierSize;
@@ -1718,6 +1695,7 @@ BOOLEAN SaveWorld( const STR8 puiFilename )
 	// Write tileset ID
 	FileWrite( hfile, &giCurrentTilesetID, sizeof( INT32 ), &uiBytesWritten );
 	
+	// WDS - Clean up inventory handling
 	// Write SOLDIER CONTROL SIZE
 	uiSoldierSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	FileWrite( hfile, &uiSoldierSize, sizeof( INT32 ), &uiBytesWritten );
@@ -2164,7 +2142,6 @@ INT8	bDirectionsForShadowSearch[ NUM_DIR_SEARCHES ] =
 
 void OptimizeMapForShadows( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt, dir;
 	INT16 sNewGridNo;
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -2195,7 +2172,6 @@ void OptimizeMapForShadows( )
 
 void SetBlueFlagFlags( void )
 {
-	PERFORMANCE_MARKER
 	INT32		cnt;
 	LEVELNODE * pNode;
 
@@ -2216,7 +2192,6 @@ void SetBlueFlagFlags( void )
 
 void InitLoadedWorld( )
 {
-	PERFORMANCE_MARKER
 	//if the current sector is not valid, dont init the world
 	if( gWorldSectorX == 0 || gWorldSectorY == 0 )
 	{
@@ -2255,7 +2230,6 @@ extern BOOLEAN gfUpdatingNow;
 
 BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 {
-	PERFORMANCE_MARKER
 	FLOAT	dMajorMapVersion;
 	SUMMARYFILE *pSummary;
 	HWFILE	hfile;
@@ -2273,9 +2247,6 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 	CHAR8 szDirFilename[ 50 ];
 	CHAR8 szFilename[ 40 ];
 	UINT8 ubMinorMapVersion;
-
-	float oldMajorMapVersion;
-	UINT8 oldMinorMapVersion;
 
 
 	//Make sure the file exists... if not, then return false
@@ -2295,7 +2266,7 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 
 	if( gfMajorUpdate )
 	{
-		if( !LoadWorld( szFilename, &oldMajorMapVersion, &oldMinorMapVersion ) ) //error
+		if( !LoadWorld( szFilename ) ) //error
 			return FALSE;
 		FileClearAttributes( szDirFilename );
 		SaveWorld( szFilename );
@@ -2418,20 +2389,8 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 		{
 			pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
 		}
-
-		//the size of WORLDITEM has changed at 6.27, 5.26 or earlier are outdated
-		if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26) {
-			//Skip the contents of the world items.
-			WORLDITEM dummyItem;
-			for (int x = 0; x < pSummary->usNumItems; ++x) {
-				dummyItem.Load(&pBuffer, dMajorMapVersion, ubMinorMapVersion);
-			}
-		}
-		else {
-			//ADB Shouldn't happen, we just saved as newest version
-			//Skip the contents of the world items.
-			pBuffer += sizeof( OLD_WORLDITEM_101 ) * pSummary->usNumItems;
-		}
+		//Skip the contents of the world items.
+		pBuffer += sizeof( WORLDITEM ) * pSummary->usNumItems;
 	}
 
 	if( uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED )
@@ -2519,7 +2478,9 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 			}
 			if( basic.fDetailedPlacement )
 			{ //skip static priority placement 
-				priority.Load(&pBuffer, dMajorMapVersion, ubMinorMapVersion);
+	                        // WDS - Clean up inventory handling
+				LOADDATA( &priority, pBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD); //SIZEOF_SOLDIERCREATE_STRUCT );
+				priority.CopyOldInventoryToNew();
 				if( priority.ubProfile != NO_PROFILE )
 					pTeam->ubProfile++;
 				else
@@ -2671,11 +2632,10 @@ BOOLEAN EvaluateWorld( STR8 pSector, UINT8 ubLevel )
 extern UINT8 GetCurrentSummaryVersion();
 extern void LoadShadeTablesFromTextFile();
 
-BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMinorMapVersion)
+BOOLEAN LoadWorld( const STR8	puiFilename )
 {
-	PERFORMANCE_MARKER
 	HWFILE					hfile;
-	FLOAT					dMajorMapVersion;
+	FLOAT						dMajorMapVersion;
 	UINT32					uiFlags;
 	UINT32					uiBytesRead;
 	UINT32					uiSoldierSize;
@@ -2788,7 +2748,6 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
 
-	//ADB thankfully this isn't used, because the size has changed
 	// Load soldier size
 	LOADDATA( &uiSoldierSize, pBuffer, sizeof( INT32 ) );
 
@@ -2900,7 +2859,6 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 			// Set objects
 			if( bCounts[ cnt ][ 1 ] > 10 )
 			{
-				//ADB what's this?
 				cnt = cnt;
 			}
 			for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 1 ]; cnt2++ )
@@ -3044,18 +3002,12 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 	offset = 0;
 
 	// Lesh: read additional bytes for map major version 6.00
-
-	//ADB Russian version of the game has some maps at version 6.0 while all others are 5.0
-	//so let's update!
-	//if we are loading a 5.26 map (6.26 Russian) AND we are currently at 6.27
-	//( what would be 7.27 Russian except that we are about to fix this)
-	//then read the data.
-	if( dMajorMapVersion == 6.00 && ubMinorMapVersion < 27 && MAJOR_MAP_VERSION == 6.00)
+	if( dMajorMapVersion == 6.00 )
 	{
 		UINT32 uiNums[37];
-		LOADDATA( uiNums, pBuffer, 37 * sizeof( UINT32 ) );
+		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
+		dMajorMapVersion = 5.00;
 	}
-	//now the data is discarded and when saved, as 6.27, you won't have this problem!
 
 	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
 	RenderProgressBar( 0, 100 );
@@ -3091,7 +3043,7 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 	{
 		// Load out item information
 		gfLoadPitsWithoutArming = TRUE;
-		LoadWorldItemsFromMap( &pBuffer, dMajorMapVersion, ubMinorMapVersion );
+		LoadWorldItemsFromMap( &pBuffer );
 		gfLoadPitsWithoutArming = FALSE;
 	}
 
@@ -3269,7 +3221,6 @@ BOOLEAN LoadWorld( const STR8	puiFilename, float* pMajorMapVersion, UINT8* pMino
 //****************************************************************************************
 BOOLEAN NewWorld( void )
 {
-	PERFORMANCE_MARKER
 	UINT16				NewIndex;
 	INT32					cnt;
 
@@ -3298,7 +3249,6 @@ BOOLEAN NewWorld( void )
 
 void TrashWorld( void )
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT		*pMapTile;
 	LEVELNODE			*pLandNode;
 	LEVELNODE			*pObjectNode;
@@ -3471,7 +3421,6 @@ void TrashWorld( void )
 
 void TrashMapTile(INT16 MapTile)
 {
-	PERFORMANCE_MARKER
 	MAP_ELEMENT		*pMapTile;
 	LEVELNODE			*pLandNode;
 	LEVELNODE			*pObjectNode;
@@ -3568,7 +3517,6 @@ void TrashMapTile(INT16 MapTile)
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID )
 {
-	PERFORMANCE_MARKER
 
 	if ( iTilesetID >= gubNumSets )
 	{
@@ -3614,7 +3562,6 @@ BOOLEAN LoadMapTileset( INT32 iTilesetID )
 
 BOOLEAN SaveMapTileset( INT32 iTilesetID )
 {
-	PERFORMANCE_MARKER
 //	FILE *hTSet;
 	HWFILE hTSet;
 	char zTilesetName[65];
@@ -3646,7 +3593,6 @@ BOOLEAN SaveMapTileset( INT32 iTilesetID )
 
 void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoadName )
 {
-	PERFORMANCE_MARKER
 	gfForceLoadPlayers = fForceLoad;
 	gfForceLoad				= fForceFile;
 
@@ -3659,7 +3605,6 @@ void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoad
 
 void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE			*pTopmost, *pTopmostTail;
 
 
@@ -3687,7 +3632,6 @@ void AddWireFrame( INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced )
 
 UINT16 GetWireframeGraphicNumToUseForWall( INT16 sGridNo, STRUCTURE *pStructure )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	 *pNode = NULL;
 	UINT8					ubWallOrientation;
 	UINT16		usValue = 0;
@@ -3756,7 +3700,6 @@ UINT16 GetWireframeGraphicNumToUseForWall( INT16 sGridNo, STRUCTURE *pStructure 
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 	INT32					cnt;
 	STRUCTURE		*pStructure;
 	INT16					sGridNo;
@@ -3949,7 +3892,6 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 
 void RemoveWorldWireFrameTiles( )
 {
-	PERFORMANCE_MARKER
 	INT32					cnt;
 
 	// Create world randomly from tiles
@@ -3963,7 +3905,6 @@ void RemoveWorldWireFrameTiles( )
 
 void RemoveWireFrameTiles( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE			*pTopmost, *pNewTopmost;
 	TILE_ELEMENT *	pTileElement;
 
@@ -3992,7 +3933,6 @@ void RemoveWireFrameTiles( INT16 sGridNo )
  
 INT8 IsHiddenTileMarkerThere( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
 	if ( !gfBasement )
@@ -4029,7 +3969,6 @@ INT8 IsHiddenTileMarkerThere( INT16 sGridNo )
 
 void ReloadTileset( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	CHAR8	aFilename[ 255 ];
 	INT32 iCurrTilesetID = giCurrentTilesetID;
 
@@ -4056,7 +3995,6 @@ void ReloadTileset( UINT8 ubID )
 
 void SaveMapLights( HWFILE hfile )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
@@ -4124,7 +4062,6 @@ void SaveMapLights( HWFILE hfile )
 
 void LoadMapLights( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
 	UINT16 usNumLights;
@@ -4208,7 +4145,6 @@ void LoadMapLights( INT8 **hBuffer )
 
 BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos )
 {
-	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
 	if ( !gfBasement )

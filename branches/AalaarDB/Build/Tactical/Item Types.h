@@ -5,6 +5,8 @@
 #include <vector>
 #include <list>
 
+using namespace std;
+
 #define INVALIDCURS 0
 #define QUESTCURS 1
 #define PUNCHCURS 2
@@ -71,16 +73,11 @@ typedef enum
 
 #define GS_CARTRIDGE_IN_CHAMBER				0x01
 
-
-
-//do not alter or saves will break, create new defines if the size changes
-#define OLD_MAX_ATTACHMENTS_101 4
-#define OLD_MAX_OBJECTS_PER_SLOT_101 8
-
-namespace Version101
+typedef struct
 {
-	//union was originally unnamed
-	union OLD_OBJECTTYPE_101_UNION
+	UINT16	usItem;
+	UINT8		ubNumberOfObjects;
+	union
 	{
 		struct
 		{
@@ -90,88 +87,76 @@ namespace Version101
 			UINT16		usGunAmmoItem;	// the item # for the item table
 			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 			UINT8		ubGunState; // SB manual recharge
-	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
-			UINT8		ubGunUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 6];
-		};
+			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
+		} Gun;
 		struct
 		{
-			UINT8		ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101];
-		};
+			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
+		} Ammo;
 		struct
 		{
-			INT8		bStatus[OLD_MAX_OBJECTS_PER_SLOT_101];
-		};		
+			INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+		} Generic;		
 		struct
 		{
 			INT8		bMoneyStatus;
-			UINT32		uiMoneyAmount;
-			UINT8		ubMoneyUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 5];
-		};
+			UINT32	uiMoneyAmount;
+			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
+		} Money;
 		struct
 		{ // this is used by placed bombs, switches, and the action item
 			INT8		bBombStatus;			// % status
 			INT8		bDetonatorType;		// timed, remote, or pressure-activated
-			UINT16		usBombItem;				// the usItem of the bomb.
+			UINT16	usBombItem;				// the usItem of the bomb.
 			union
 			{
-				struct
-				{
+				//struct
+				//{
 					INT8		bDelay;				// >=0 values used only
-				};
-				struct
-				{
+				//};
+				//struct
+				//{
 					INT8		bFrequency;		// >=0 values used only
-				};
-			};
-			UINT8	ubBombOwner; // side which placed the bomb
+				//};
+			} BombTrigger;
+			UINT8 ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
 			union
 			{
-				struct
-				{
+				//struct
+				//{
 					UINT8 ubTolerance; // tolerance value for panic triggers
-				};
-				struct 
-				{
+				//};
+				//struct 
+				//{
 					UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-				};
-			};		
-		};
+				//};
+			} Area;
+		} Trigger;
 		struct
 		{
 			INT8 bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
 			UINT8 ubKeyUnused[1];
-		};
+		} Key;
 		struct
 		{
 			UINT8 ubOwnerProfile;
 			UINT8 ubOwnerCivGroup;
 			UINT8 ubOwnershipUnused[6];
-		};
-	};
-};
-#define SIZEOF_OLD_OBJECTTYPE_101_UNION (sizeof(Version101::OLD_OBJECTTYPE_101_UNION))
-
-class OLD_OBJECTTYPE_101
-{
-public:
-	UINT16		usItem;
-	UINT8		ubNumberOfObjects;
-
-	Version101::OLD_OBJECTTYPE_101_UNION	ugYucky;
-
+		} Owner;
+	} ItemData;
   // attached objects
-	UINT16		usAttachItem[OLD_MAX_ATTACHMENTS_101];
-	INT8		bAttachStatus[OLD_MAX_ATTACHMENTS_101];
+	UINT16	usAttachItem[MAX_ATTACHMENTS];
+	INT8		bAttachStatus[MAX_ATTACHMENTS];
 
 	INT8		fFlags;
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT8		ubWeight;
+	UINT16		ubWeight;	// CHRISL:
 	UINT8		fUsed;				// flags for whether the item is used or not
-};
+} OBJECTTYPE;
 
 namespace ObjectDataStructs {
 	//these structs are members of the anonymous union, and need only be available within the class space
@@ -372,6 +357,7 @@ typedef struct
 #define IC_FACE           0x00008000
 
 #define IC_KEY						0x00010000
+#define IC_LBEGEAR					0x00020000	// Added for LBE items as part of the new inventory system
 
 #define IC_MISC						0x10000000
 #define IC_MONEY					0x20000000
@@ -381,7 +367,7 @@ typedef struct
 #define IC_EXPLOSV				( IC_GRENADE | IC_BOMB )
 
 #define IC_BOBBY_GUN			( IC_GUN | IC_LAUNCHER )
-#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE )
+#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE | IC_LBEGEAR )
 
 
 // replaces candamage
@@ -438,6 +424,7 @@ typedef struct
 	UINT16			ubGraphicNum;
 	UINT8			ubWeight; //2 units per kilogram; roughly 1 unit per pound
 	UINT8			ubPerPocket;
+	UINT8			ItemSize;
 	UINT16		usPrice;
 	UINT8			ubCoolness;
 	INT8			bReliability;
@@ -509,6 +496,7 @@ typedef struct
 	INT16	dayvisionrangebonus;
 	INT16	cavevisionrangebonus;
 	INT16	brightlightvisionrangebonus;
+	INT16	itemsizebonus;
 	BOOLEAN leatherjacket;
 	BOOLEAN batteries;
 	BOOLEAN needsbatteries;
@@ -561,6 +549,50 @@ typedef struct
 
 	UINT16 defaultattachment;
 } INVTYPE;
+
+// CHRISL: Added new structures to handle LBE gear and the two new XML files that will be needed to deal
+// with the IC pockets and the new inventory system.
+class LBETYPE{
+public:
+	LBETYPE();
+	LBETYPE(const LBETYPE&);
+	LBETYPE& operator=(const LBETYPE&);
+	~LBETYPE();
+	UINT16			lbeIndex;
+	UINT32			lbeClass;
+	UINT8			lbeCombo;
+	char			POD;
+	vector<UINT8>	lbePocketIndex;
+};
+#define SIZEOF_LBETYPE offsetof( LBETYPE, POD )
+extern vector<LBETYPE> LoadBearingEquipment;
+
+class POCKETTYPE{
+public:
+	POCKETTYPE();
+	POCKETTYPE(const POCKETTYPE&);
+	POCKETTYPE& operator=(const POCKETTYPE&);
+	~POCKETTYPE();
+	UINT16			pIndex;
+	CHAR8			pName[80];
+	UINT8			pSilhouette;
+	UINT16			pType;
+	UINT32			pRestriction;
+	char			POD;
+	vector<UINT8>	ItemCapacityPerSize;
+};
+#define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
+extern vector<POCKETTYPE> LBEPocketType;
+
+enum	// Designation of lbeClass
+{
+	THIGH_PACK=1,
+	VEST_PACK,
+	COMBAT_PACK,
+	BACKPACK,
+	LBE_POCKET,
+	OTHER_POCKET
+};
 
 #define FIRST_WEAPON 1
 #define FIRST_AMMO 71

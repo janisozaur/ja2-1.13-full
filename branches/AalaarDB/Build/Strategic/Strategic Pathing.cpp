@@ -198,7 +198,6 @@ extern UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector );
 
 INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal )
 {
-	PERFORMANCE_MARKER
 	INT32 iCnt,ndx,insertNdx,qNewNdx;
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
 	INT16 sSectorX, sSectorY;
@@ -482,7 +481,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 
 PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ )
 {
-	PERFORMANCE_MARKER
 
  INT32 iCurrentSectorNum;
  INT32 iDelta=0;
@@ -620,7 +618,6 @@ PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEn
 
 BOOLEAN AddSectorToPathList( PathStPtr pPath ,UINT16 uiSectorNum )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode=NULL;	
 	PathStPtr pTempNode=NULL;
 	PathStPtr pHeadOfList = pPath;
@@ -685,7 +682,6 @@ BOOLEAN AddSectorToPathList( PathStPtr pPath ,UINT16 uiSectorNum )
 /*
 BOOLEAN TravelBetweenSectorsIsBlockedFromVehicle( UINT16 sSourceSector, UINT16 sDestSector )
 {
-	PERFORMANCE_MARKER
 	INT16 sDelta;
 	
 	sDelta = sDestSector - sSourceSector;
@@ -716,7 +712,6 @@ BOOLEAN TravelBetweenSectorsIsBlockedFromVehicle( UINT16 sSourceSector, UINT16 s
 
 BOOLEAN SectorIsBlockedFromVehicleExit( UINT16 sSourceSector, INT8 bToDirection	)
 {
-	PERFORMANCE_MARKER
 
 	if( StrategicMap[ sSourceSector ].uiBadVehicleSector[ bToDirection ] )
 	{
@@ -733,7 +728,6 @@ BOOLEAN SectorIsBlockedFromVehicleExit( UINT16 sSourceSector, INT8 bToDirection	
 
 BOOLEAN TravelBetweenSectorsIsBlockedFromFoot( UINT16 sSourceSector, UINT16 sDestSector )
 {
-	PERFORMANCE_MARKER
 	INT16 sDelta;
 	
 	sDelta = sDestSector - sSourceSector;
@@ -763,7 +757,6 @@ BOOLEAN TravelBetweenSectorsIsBlockedFromFoot( UINT16 sSourceSector, UINT16 sDes
 
 BOOLEAN SectorIsBlockedFromFootExit( UINT16 sSourceSector, INT8 bToDirection )
 {
-	PERFORMANCE_MARKER
 	if( StrategicMap[ sSourceSector ].uiBadFootSector[ bToDirection ]	)
 	{
 		return ( TRUE );
@@ -779,7 +772,6 @@ BOOLEAN SectorIsBlockedFromFootExit( UINT16 sSourceSector, INT8 bToDirection )
 
 BOOLEAN CanThisMercMoveToThisSector( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	// this fucntion will return if this merc ( pSoldier ), can move to sector sX, sY
 	BOOLEAN fOkToMoveFlag = FALSE;
 
@@ -791,7 +783,6 @@ BOOLEAN CanThisMercMoveToThisSector( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY )
 
 void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY, UINT8 ubFromDirection )
 {
-	PERFORMANCE_MARKER
 	// will move a merc ( pSoldier )to a sector sX, sY
 	
 	// Ok, update soldier control pointer values
@@ -825,7 +816,6 @@ void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 s
 
 PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList )
 {
-	PERFORMANCE_MARKER
 	// will append a new section onto the end of the head of list, then return the head of the new list
 
 	PathStPtr pNode = pHeadOfPathList;
@@ -849,15 +839,15 @@ PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList 
 
 		// make sure the 2 are not the same
 
-		if( pNode->uiSectorId == pNewSection->uiSectorId )
+		if( pNode -> uiSectorId == pNewSection -> uiSectorId )
 		{
 			// are the same, remove head of new list
 			pNewSection = RemoveHeadFromStrategicPath( pNewSection );
 		}
 
 		// append onto old list
-		pNode->pNext = pNewSection;
-		pNewSection->pPrev = pNode;
+		pNode -> pNext = pNewSection;
+		pNewSection -> pPrev = pNode;
 
 	}
 	else
@@ -872,7 +862,6 @@ PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList 
 
 PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 {
-	PERFORMANCE_MARKER
 	// will clear out a strategic path and return head of list as NULL
 	PathStPtr pNode = pHeadOfPath;
 	PathStPtr pDeleteNode = pHeadOfPath;
@@ -885,13 +874,13 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 	}
 
 	// clear list
-	while( pNode->pNext )
+	while( pNode -> pNext )
 	{
 		// set up delete node
 		pDeleteNode = pNode;
 
 		// move to next node
-		pNode = pNode->pNext;
+		pNode = pNode -> pNext;
 
 		// delete delete node
 		MemFree( pDeleteNode );
@@ -915,7 +904,6 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 
 PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup )
 {
-	PERFORMANCE_MARKER
 	// will clear out a strategic path and return head of list as NULL
 	PathStPtr pNode = pHeadOfPath;
 	PathStPtr pDeleteNode = pHeadOfPath;
@@ -939,14 +927,14 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 	pNode = MoveToEndOfPathList( pNode );
 
 	// get current sector value
-	sCurrentSector = ( INT16 )pNode->uiSectorId;
+	sCurrentSector = ( INT16 )pNode -> uiSectorId;
 
 	// move through list
 	while( ( pNode )&&( sSector != sCurrentSector ) )
 	{
 		
 		// next value
-		pNode = pNode->pPrev;
+		pNode = pNode -> pPrev;
 
 		// get current sector value
 		if( pNode != NULL )
@@ -964,7 +952,7 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 
 
 	// we want to KEEP the target sector, not delete it, so advance to the next sector
-	pNode = pNode->pNext;
+	pNode = pNode -> pNext;
 
 	// is nothing left?
 	if( pNode == NULL )
@@ -975,7 +963,7 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 
 
 	// if we're NOT about to clear the head (there's a previous entry)
-	if( pNode->pPrev )
+	if( pNode -> pPrev )
 	{
 	// set next for tail to NULL
 	pNode->pPrev->pNext = NULL;
@@ -989,13 +977,13 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 	}
 
 	// clear list
-	while( pNode->pNext )
+	while( pNode -> pNext )
 	{
 		// set up delete node
 		pDeleteNode = pNode;
 
 		// move to next node
-		pNode = pNode->pNext;
+		pNode = pNode -> pNext;
 
 		// check if we are clearing the head of the list
 		if( pDeleteNode == pHeadOfPath )
@@ -1019,7 +1007,6 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 
 PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 {
-	PERFORMANCE_MARKER
 
 	// move to beginning of this list
 
@@ -1030,9 +1017,9 @@ PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 	}
 
 	// move to beginning of list
-	while( pList->pPrev )
+	while( pList -> pPrev )
 	{
-		pList = pList->pPrev;
+		pList = pList -> pPrev;
 	}
 
 	return ( pList );
@@ -1041,7 +1028,6 @@ PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 
 PathStPtr MoveToEndOfPathList( PathStPtr pList )
 {
-	PERFORMANCE_MARKER
 	// move to end of list
 
 	// no list, return
@@ -1051,9 +1037,9 @@ PathStPtr MoveToEndOfPathList( PathStPtr pList )
 	}
 
 	// move to beginning of list
-	while( pList->pNext )
+	while( pList -> pNext )
 	{
-		pList = pList->pNext;
+		pList = pList -> pNext;
 	}
 
 	return ( pList );
@@ -1063,7 +1049,6 @@ PathStPtr MoveToEndOfPathList( PathStPtr pList )
 
 PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList )
 {
-	PERFORMANCE_MARKER
 	// remove the tail section from the strategic path
 	PathStPtr pNode = pHeadOfList;
 	PathStPtr pLastNode = pHeadOfList;
@@ -1074,16 +1059,16 @@ PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList )
 		return( NULL );
 	}
 
-	while( pNode->pNext )
+	while( pNode -> pNext )
 	{
 		pLastNode = pNode;
-		pNode = pNode->pNext;
+		pNode = pNode -> pNext;
 	}
 
 	// end of list
 
 	// set next to null
-	pLastNode->pNext = NULL;
+	pLastNode -> pNext = NULL;
 
 	// now remove old last node
 	MemFree( pNode );
@@ -1096,7 +1081,6 @@ PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList )
 
 PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 {
-	PERFORMANCE_MARKER
 	// move to head of list
 	PathStPtr pNode = pList;
 	PathStPtr pNewHead = pList;
@@ -1109,17 +1093,17 @@ PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 	}
 
 	// move to head of list
-	while( pNode->pPrev )
+	while( pNode ->pPrev )
 	{
 		// back one node
-		pNode = pNode->pPrev;
+		pNode = pNode -> pPrev;
 	}
 
 	// set up new head
-	pNewHead = pNode->pNext;
+	pNewHead = pNode -> pNext;
 	if( pNewHead )
 	{
-		pNewHead->pPrev = NULL;
+		pNewHead -> pPrev = NULL;
 	}
 
 	// free old head
@@ -1135,7 +1119,6 @@ PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 
 PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	// find sector sX, sY ...then remove it
 	INT16 sSector = 0;
 	INT16 sCurrentSector = -1;
@@ -1152,7 +1135,7 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 	}
 
 	// get current sector value
-	sCurrentSector = ( INT16 )pNode->uiSectorId;
+	sCurrentSector = ( INT16 )pNode -> uiSectorId;
 
 	// move to end of list
 	pNode = MoveToEndOfPathList( pNode );
@@ -1164,7 +1147,7 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 		pPastNode = pNode;
 
 		// next value
-		pNode = pNode->pPrev;
+		pNode = pNode -> pPrev;
 
 		// get current sector value
 	sCurrentSector = ( INT16 )pNode->uiSectorId;
@@ -1177,13 +1160,13 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 	}
 
 	// sector found...remove it
-	pPastNode->pNext = pNode->pNext;
+	pPastNode->pNext = pNode -> pNext;
 
 	// remove node
 	MemFree( pNode );
 
 	// set up prev for next
-	pPastNode->pNext->pPrev = pPastNode;
+	pPastNode -> pNext -> pPrev = pPastNode;
 
 
 	pPastNode = MoveToBeginningOfPathList( pPastNode );
@@ -1193,17 +1176,16 @@ PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 s
 
 INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	// will return the last sector of the current path, or the current sector if there's no path
-	INT16 sLastSector = ( pCharacter->sSectorX ) + ( pCharacter->sSectorY ) * ( MAP_WORLD_X );
+	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
 	PathStPtr pNode = NULL;
 
 	pNode = GetSoldierMercPathPtr( pCharacter );
 
 	while( pNode )
 	{
-		sLastSector = ( INT16 ) ( pNode->uiSectorId );
-		pNode = pNode->pNext;
+		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
+		pNode = pNode -> pNext;
 	}
 
 	return sLastSector;
@@ -1212,7 +1194,6 @@ INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
 // get id of last sector in vehicle path list
 INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 {
-	PERFORMANCE_MARKER
 	INT16 sLastSector = -1;
 	PathStPtr pNode = NULL;
 
@@ -1233,8 +1214,8 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 
 	while( pNode )
 	{
-		sLastSector = ( INT16 ) ( pNode->uiSectorId );
-		pNode = pNode->pNext;
+		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
+		pNode = pNode -> pNext;
 	}
 
 	return sLastSector;
@@ -1246,7 +1227,6 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 
 PathStPtr CopyPaths( PathStPtr pSourcePath,	PathStPtr pDestPath )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pDestNode = pDestPath;
 	PathStPtr pCurNode = pSourcePath;
 	// copies path from source to dest
@@ -1263,37 +1243,37 @@ PathStPtr CopyPaths( PathStPtr pSourcePath,	PathStPtr pDestPath )
 		pDestNode = (PathStPtr) MemAlloc( sizeof( PathSt ) );
 		
 		// set next and prev nodes
-		pDestNode->pPrev = NULL;
-		pDestNode->pNext = NULL;
+		pDestNode -> pPrev = NULL;
+		pDestNode -> pNext = NULL;
 
 		// copy sector value and times
-		pDestNode->uiSectorId	= pCurNode->uiSectorId;
-		pDestNode->uiEta			= pCurNode->uiEta;
-		pDestNode->fSpeed			= pCurNode->fSpeed;
+		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
+		pDestNode -> uiEta			= pCurNode -> uiEta;
+		pDestNode -> fSpeed			= pCurNode -> fSpeed;
 
-		pCurNode = pCurNode->pNext;
+		pCurNode = pCurNode -> pNext;
 	}
 
 	while( pCurNode != NULL )
 	{ 
 
-		pDestNode->pNext = (path *) MemAlloc( sizeof( PathSt ) );
+		pDestNode -> pNext = (path *) MemAlloc( sizeof( PathSt ) );
 
 		// set next's previous to current
-		pDestNode->pNext->pPrev = pDestNode;
+		pDestNode -> pNext -> pPrev = pDestNode;
 
 		// set next's next to null
-		pDestNode->pNext->pNext = NULL;
+		pDestNode -> pNext -> pNext = NULL;
 
 		// increment ptr
-		pDestNode = pDestNode->pNext;
+		pDestNode = pDestNode -> pNext;
 
 		// copy sector value and times
-		pDestNode->uiSectorId	= pCurNode->uiSectorId;
-		pDestNode->uiEta			= pCurNode->uiEta;
-		pDestNode->fSpeed			= pCurNode->fSpeed;
+		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
+		pDestNode -> uiEta			= pCurNode -> uiEta;
+		pDestNode -> fSpeed			= pCurNode -> fSpeed;
 
-		pCurNode = pCurNode->pNext;
+		pCurNode = pCurNode -> pNext;
 	}
 
 
@@ -1306,15 +1286,14 @@ PathStPtr CopyPaths( PathStPtr pSourcePath,	PathStPtr pDestPath )
 
 INT32 GetStrategicMvtSpeed( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	// will return the strategic speed of the character
 	INT32 iSpeed;
 
 	// avg of strength and agility * percentage health..very simple..replace later
 
-	iSpeed = ( INT32 )( ( pCharacter->stats.bAgility + pCharacter->stats.bStrength ) / 2 ); 
-	iSpeed *= ( INT32 )(( pCharacter->stats.bLife ) );
-	iSpeed /= ( INT32 )pCharacter->stats.bLifeMax;
+	iSpeed = ( INT32 )( ( pCharacter -> bAgility + pCharacter -> bStrength ) / 2 ); 
+	iSpeed *= ( INT32 )(( pCharacter -> bLife ) );
+	iSpeed /= ( INT32 )pCharacter -> bLifeMax;
 
 	return ( iSpeed );
 }
@@ -1322,7 +1301,6 @@ INT32 GetStrategicMvtSpeed( SOLDIERTYPE *pCharacter )
 /*
 void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 	UINT32 uiDeltaEta =0;
 	INT32 iMveDelta = 0;
@@ -1335,17 +1313,17 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 	}
 
 	// the rules change a little for people in vehicles
-	if( pCharacter->bAssignment == VEHICLE )
+	if( pCharacter -> bAssignment == VEHICLE )
 	{
 		fInVehicle = TRUE;
 	}
 
-	if( ( pCharacter->pMercPath == NULL ) && ( fInVehicle == FALSE ) )
+	if( ( pCharacter -> pMercPath == NULL ) && ( fInVehicle == FALSE ) )
 	{
 		return;
 	}
 
-	if( ( fInVehicle == TRUE ) && ( VehicleIdIsValid( pCharacter->iVehicleId ) ) )
+	if( ( fInVehicle == TRUE ) && ( VehicleIdIsValid( pCharacter -> iVehicleId ) ) )
 	{
 		// valid vehicle, is there a path for it?
 		if( pVehicleList[ iId ].pMercPath == NULL )
@@ -1363,14 +1341,14 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 	while( pNode )
 	{
 		// first node, set eta to current time
-		if( pNode->pPrev == NULL )
+		if( pNode -> pPrev == NULL )
 		{
-			pNode->uiEta = GetWorldTotalMin( );
+			pNode -> uiEta = GetWorldTotalMin( );
 		}
 		else
 		{
 			// get delta in sectors
-			switch( pNode->uiSectorId - pNode->pPrev->uiSectorId )
+			switch( pNode -> uiSectorId - pNode -> pPrev -> uiSectorId )
 			{
 			case( NORTH_MOVE ):
 				iMveDelta = 0;
@@ -1394,14 +1372,14 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 			else
 			{
 				// get delta..is the	sector ( mvt cost * modifier ) / ( character strategic speed * mvt speed )
-				uiDeltaEta = ( ( StrategicMap[ pNode->uiSectorId ].uiFootEta[ iMveDelta ] * FOOT_MVT_MODIFIER ) / ( GetStrategicMvtSpeed( pCharacter ) * ( pNode->fSpeed + 1 ) ) );
+				uiDeltaEta = ( ( StrategicMap[ pNode -> uiSectorId ].uiFootEta[ iMveDelta ] * FOOT_MVT_MODIFIER ) / ( GetStrategicMvtSpeed( pCharacter ) * ( pNode -> fSpeed + 1 ) ) );
 			}
 
 
 			// next sector eta
-			pNode->uiEta = pNode->pPrev->uiEta + ( uiDeltaEta );
+			pNode -> uiEta = pNode -> pPrev -> uiEta + ( uiDeltaEta );
 		}
-		pNode = pNode->pNext;
+		pNode = pNode -> pNext;
 	}
 	return;
 }
@@ -1410,7 +1388,6 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 /*
 void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 {
-	PERFORMANCE_MARKER
 	// will move a character along a merc path
 	PathStPtr pNode = NULL;
 	PathStPtr pDeleteNode = NULL;
@@ -1422,36 +1399,36 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 		return;
 	}
 
-	if( pCharacter->pMercPath == NULL )
+	if( pCharacter -> pMercPath == NULL )
 	{
 		return;
 	}
 
-	if( pCharacter->pMercPath->pNext == NULL )
+	if( pCharacter -> pMercPath -> pNext == NULL )
 	{
 		// simply set eta to current time
-		pCharacter->pMercPath->uiEta = GetWorldTotalMin( );
+		pCharacter -> pMercPath -> uiEta = GetWorldTotalMin( );
 		return;
 	}
 
 	// set up node to beginning of path list
-	pNode = pCharacter->pMercPath;
+	pNode = pCharacter -> pMercPath;
 
 
 	// while there are nodes left with eta less than current time
-	while( pNode->pNext->uiEta < GetWorldTotalMin( ) )
+	while( pNode -> pNext -> uiEta < GetWorldTotalMin( ) )
 	{
 		// delete node, move on
 		pDeleteNode = pNode;
 
 		// next node
-		pNode = pNode->pNext;
+		pNode = pNode -> pNext;
 
 		// delete delete node
 		MemFree( pDeleteNode );
 
 		// set up merc path to this sector
-		pCharacter->pMercPath = pNode;
+		pCharacter -> pMercPath = pNode;
 
 		// no where left to go
 		if( pNode == NULL )
@@ -1461,16 +1438,16 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 
 		
 		// null out prev to beginning of merc path list
-		pNode->pPrev = NULL;
+		pNode -> pPrev = NULL;
 
 		// set up new location
-		pCharacter->sSectorX = ( INT16 )( pNode->uiSectorId ) % MAP_WORLD_X ;
-		pCharacter->sSectorY = ( INT16 )( pNode->uiSectorId ) / MAP_WORLD_X;
+		pCharacter -> sSectorX = ( INT16 )( pNode -> uiSectorId ) % MAP_WORLD_X ;
+		pCharacter -> sSectorY = ( INT16 )( pNode -> uiSectorId ) / MAP_WORLD_X;
 
 		// dirty map panel
 		fMapPanelDirty = TRUE;
 
-		if( pNode->pNext == NULL )
+		if( pNode -> pNext == NULL )
 		{
 			return;
 		}
@@ -1480,7 +1457,6 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 
 void MoveTeamOnFoot( void )
 {
-	PERFORMANCE_MARKER
 	// run through list of characters on player team, if on foot, move them
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
@@ -1505,7 +1481,6 @@ void MoveTeamOnFoot( void )
 /*
 UINT32 GetEtaGivenRoute( PathStPtr pPath )
 {
-	PERFORMANCE_MARKER
 	// will return the eta of a passed path in global time units, in minutes
 	PathStPtr pNode = pPath;
 
@@ -1513,21 +1488,21 @@ UINT32 GetEtaGivenRoute( PathStPtr pPath )
 	{
 		return( GetWorldTotalMin( ) );
 	}
-	else if( pPath->pNext == NULL )
+	else if( pPath -> pNext == NULL )
 	{
 		return( GetWorldTotalMin( ) );
 	}
 	else
 	{
 		// there is a path
-		while( pNode->pNext )
+		while( pNode -> pNext )
 		{
 			// run through list
-			pNode = pNode->pNext;
+			pNode = pNode -> pNext;
 		}
 
 		// have last sector, therefore the eta of the path
-		return( pNode->uiEta );
+		return( pNode -> uiEta );
 	}
 
 	// error
@@ -1539,7 +1514,6 @@ UINT32 GetEtaGivenRoute( PathStPtr pPath )
 #ifdef BETA_VERSION
 void VerifyAllMercsInGroupAreOnSameSquad( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	INT8 bSquad = -1;
@@ -1575,7 +1549,6 @@ void VerifyAllMercsInGroupAreOnSameSquad( GROUP *pGroup )
 
 void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 iDelta = 0;
 	INT32 iOldDelta = 0;
 	BOOLEAN fFirstNode = TRUE;
@@ -1687,7 +1660,6 @@ void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup = NULL;
 
 
@@ -1705,7 +1677,6 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 
 	// build the path
@@ -1730,7 +1701,6 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 
 	// build the path
@@ -1757,7 +1727,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( UINT8 ubGroupID, INT16 sS
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 
 	// init sectors with soldiers in them
@@ -1800,7 +1769,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 
 	// init sectors with soldiers in them
@@ -1848,7 +1816,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 /*
 BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	UINT8 ubDestX, ubDestY;
 	pGroup = GetGroup( ubGroupID );
@@ -1863,7 +1830,6 @@ BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID )
 
 INT32 GetLengthOfPath( PathStPtr pHeadPath )
 {
-	PERFORMANCE_MARKER
 	INT32 iLength = 0;
 	PathStPtr pNode = pHeadPath;
 
@@ -1878,7 +1844,6 @@ INT32 GetLengthOfPath( PathStPtr pHeadPath )
 
 INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 	INT32 iLength = 0;
 
@@ -1890,7 +1855,6 @@ INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CheckIfPathIsEmpty( PathStPtr pHeadPath )
 {
-	PERFORMANCE_MARKER
 	// no path
 	if( pHeadPath == NULL )
 	{
@@ -1910,7 +1874,6 @@ BOOLEAN CheckIfPathIsEmpty( PathStPtr pHeadPath )
 
 PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pMercPath = NULL;
 
 
@@ -1922,7 +1885,7 @@ PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
 		pMercPath = pVehicleList[ pSoldier->iVehicleId ].pMercPath;
 	}
 	// IS a vehicle?
-	else if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 	/* Sergeant_Kolja, 2007-02-20: got an pVehicleList==NULL Exception on loading an older save here... not REALY fixed! */
 	if( !pVehicleList ) /*bcause we have no vehicle list at all, we act as we are a person*/
@@ -1949,7 +1912,6 @@ PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
 
 PathStPtr GetGroupMercPathPtr( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pMercPath = NULL;
 	INT32 iVehicledId = -1;
 
@@ -1982,7 +1944,6 @@ PathStPtr GetGroupMercPathPtr( GROUP *pGroup )
 
 UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubGroupId = 0;
 
 	// IN a vehicle?
@@ -1991,7 +1952,7 @@ UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
 		ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
 	}
 	// IS a vehicle?
-	else if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
 	}
@@ -2008,7 +1969,6 @@ UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	PLAYERGROUP *pPlayer = NULL;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -2051,7 +2011,6 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 // clears the contents of the soldier's mercpPath, as well as his vehicle path if he is a / or is in a vehicle
 void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	VEHICLETYPE *pVehicle = NULL;
 
 
@@ -2059,7 +2018,7 @@ void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
 	pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, pSoldier->ubGroupID );
 
 	// if a vehicle
-	if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		pVehicle = &( pVehicleList[ pSoldier->bVehicleID ] );
 	}
@@ -2081,7 +2040,6 @@ void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	PERFORMANCE_MARKER
 	PLAYERGROUP *pPlayer = NULL;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -2118,7 +2076,6 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 
 void AddSectorToFrontOfMercPath( PathStPtr *ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	PERFORMANCE_MARKER
 	PathStPtr pNode = NULL;
 
 

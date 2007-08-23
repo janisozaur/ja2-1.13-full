@@ -204,7 +204,6 @@ BOOLEAN		fFirstTimeIn=TRUE;
 
 void GameInitAIM()
 {
-	PERFORMANCE_MARKER
 	LaptopInitAim();
 }
 
@@ -212,7 +211,6 @@ void GameInitAIM()
 
 BOOLEAN EnterAIM()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	gubWarningTimer = 0;
@@ -313,13 +311,11 @@ BOOLEAN EnterAIM()
 
 void LaptopInitAim()
 {
-	PERFORMANCE_MARKER
 	gfInitAdArea = TRUE;
 }
 
 void ExitAIM()
 {
-	PERFORMANCE_MARKER
 	RemoveAimDefaults();
 
 	DeleteVideoObjectFromIndex(guiMemberCard);
@@ -344,14 +340,12 @@ void ExitAIM()
 
 void HandleAIM()
 {
-	PERFORMANCE_MARKER
 	HandleAdAndWarningArea( gfInitAdArea, FALSE );
 	gfInitAdArea = FALSE;
 }
 
 void RenderAIM()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hMemberCardHandle;
 	HVOBJECT hPoliciesHandle;
 	HVOBJECT hLinksHandle;
@@ -401,8 +395,7 @@ void RenderAIM()
 
 
 void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -419,8 +412,7 @@ void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -436,8 +428,7 @@ void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -454,8 +445,7 @@ void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -472,7 +462,6 @@ void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN InitAimDefaults()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Rust bacground graphic and add it
@@ -496,7 +485,6 @@ BOOLEAN InitAimDefaults()
 
 BOOLEAN RemoveAimDefaults()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiRustBackGround);
 	DeleteVideoObjectFromIndex(guiAimSymbol);
 	MSYS_RemoveRegion( &gSelectedAimLogo);
@@ -506,7 +494,6 @@ BOOLEAN RemoveAimDefaults()
 
 BOOLEAN DrawAimDefaults()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hRustBackGroundHandle;
 	HVOBJECT hAimSymbolHandle;
 	UINT16	x,y, uiPosX, uiPosY;
@@ -535,8 +522,7 @@ BOOLEAN DrawAimDefaults()
 
 
 void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -554,7 +540,6 @@ void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayAimSlogan()
 {
-	PERFORMANCE_MARKER
 	CHAR16	sSlogan[400];
 
 	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, 0, AIM_HISTORY_LINE_SIZE);
@@ -568,7 +553,6 @@ BOOLEAN DisplayAimSlogan()
 
 BOOLEAN DisplayAimCopyright()
 {
-	PERFORMANCE_MARKER
 	CHAR16	sSlogan[400];
 	UINT32	uiStartLoc=0;
 
@@ -593,7 +577,6 @@ BOOLEAN DisplayAimCopyright()
 // Buttons
 BOOLEAN InitAimMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT16	usPosX;
 
@@ -620,7 +603,6 @@ BOOLEAN InitAimMenuBar(void)
 }
 BOOLEAN ExitAimMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 
 	UnloadButtonImage( guiBottomButtonImage );
@@ -635,7 +617,6 @@ BOOLEAN ExitAimMenuBar(void)
 
 void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT32		bNewValue;
 
 	bNewValue = MSYS_GetBtnUserData( btn, 0 );
@@ -669,7 +650,6 @@ void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for ( cnt = 0; cnt < uNumberOfButtons; cnt++ )
@@ -680,7 +660,6 @@ void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
 
 void DisableAimButton()
 {
-	PERFORMANCE_MARKER
 	int i=0;
 
 	for(i=0; i<NUM_AIM_BOTTOMBUTTONS; i++)
@@ -692,7 +671,6 @@ void DisableAimButton()
 
 void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT8 ubPreviousAdvertisment;
 
 	if( fInit )
@@ -799,7 +777,6 @@ void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 
 BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubCount=0;
@@ -870,7 +847,6 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	UINT32 uiCurTime = GetJA2Clock();
@@ -912,8 +888,7 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 }
 
 void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -940,7 +915,6 @@ void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubCount=0;
@@ -1030,7 +1004,6 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 
 void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 {
-	PERFORMANCE_MARKER
 	switch( gubCurrentAdvertisment )
 	{
 		case 	AIM_AD_WARNING_BOX:
@@ -1084,7 +1057,6 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 
 BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
 	static UINT8	ubDuckCount=0;
@@ -1246,7 +1218,6 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 UINT8 GetNextAimAd( UINT8 ubCurrentAd )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNextAd;
 	UINT32	uiDay = GetWorldDay();
 	if( ubCurrentAd == AIM_AD_WARNING_BOX )

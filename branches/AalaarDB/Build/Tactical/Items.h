@@ -12,13 +12,12 @@
 
 extern UINT8 SlotToPocket[7];
 
+// WDS - Clean up inventory handling
 class SOLDIERTYPE;
 extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
 
 extern INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
-
-INT8 FindBestWeaponIfCurrentIsOutOfRange(SOLDIERTYPE * pSoldier, INT8 bCurrentWeaponIndex, UINT16 bWantedRange);
 
 OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
 extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
@@ -46,8 +45,10 @@ extern void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest 
 BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);
 BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj = NULL);
 
-UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
+extern UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
+// CHRISL:
+extern UINT16 CalculateItemSize( OBJECTTYPE *pObject );
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
@@ -60,8 +61,11 @@ extern UINT16 DefaultMagazine( UINT16 usItem );
 UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard );
 UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
+extern BOOLEAN UnloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun); 
 
-UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot );
+UINT8 ItemSlotLimit( UINT16 usItem, INT16 bSlot );
+// CHRISL: Add new inventory version of ItemSlotLimit function
+extern UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier );
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!
@@ -310,4 +314,5 @@ INT16 GetSnowCamoBonus( OBJECTTYPE * pObj );
 
 
 #endif
+
 

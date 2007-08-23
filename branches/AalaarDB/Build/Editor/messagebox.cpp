@@ -30,7 +30,6 @@ void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason );
 
 void CreateMessageBox( STR16 wzString )
 {
-	PERFORMANCE_MARKER
 	INT16 sPixLen;
 	INT16 sStartX, sStartY;
 
@@ -75,7 +74,6 @@ void CreateMessageBox( STR16 wzString )
 
 BOOLEAN MessageBoxHandled()
 {
-	PERFORMANCE_MARKER
 	InputAtom DummyEvent;
 
 	while( DequeueEvent( &DummyEvent ) )
@@ -115,7 +113,6 @@ BOOLEAN MessageBoxHandled()
 
 void RemoveMessageBox( )
 {
-	PERFORMANCE_MARKER
 	FreeMouseCursor( );
 	RemoveButton( iMsgBoxCancel );
 	RemoveButton( iMsgBoxOk );
@@ -132,7 +129,6 @@ void RemoveMessageBox( )
 
 void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		butn->uiFlags |= BUTTON_CLICKED_ON;
@@ -146,7 +142,6 @@ void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
 
 void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		butn->uiFlags |= BUTTON_CLICKED_ON;

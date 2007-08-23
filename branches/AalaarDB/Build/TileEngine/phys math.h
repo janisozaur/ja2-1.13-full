@@ -5,7 +5,6 @@
 // explicit dependencies
 #include <math.h>		// for sqrt
 #include <float.h>
-#include "profiler.h"
 
 typedef float real;
 

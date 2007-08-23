@@ -13,6 +13,7 @@
 #include "Item Types.h"
 #include "worlddef.h"
 
+// WDS - Clean up inventory handling
 #include <vector>
 #include <iterator>
 
@@ -113,8 +114,8 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 #define	SOLDIER_TRAIT_MARTIALARTS		0x0800
 #define	SOLDIER_TRAIT_KNIFING				0x1000
 */
-#define HAS_SKILL_TRAIT( s, t ) (s->stats.ubSkillTrait1 == t || s->stats.ubSkillTrait2 == t)
-#define NUM_SKILL_TRAITS( s, t ) ( (s->stats.ubSkillTrait1 == t) ? ( (s->stats.ubSkillTrait2 == t) ? 2 : 1 ) : ( (s->stats.ubSkillTrait2 == t) ? 1 : 0 ) )
+#define HAS_SKILL_TRAIT( s, t ) (s->ubSkillTrait1 == t || s->ubSkillTrait2 == t)
+#define NUM_SKILL_TRAITS( s, t ) ( (s->ubSkillTrait1 == t) ? ( (s->ubSkillTrait2 == t) ? 2 : 1 ) : ( (s->ubSkillTrait2 == t) ? 1 : 0 ) )
 
 #define	SOLDIER_QUOTE_SAID_IN_SHIT										0x0001
 #define	SOLDIER_QUOTE_SAID_LOW_BREATH									0x0002
@@ -161,7 +162,7 @@ extern UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 #define FOOTPRINTTIME								2
 #define MIN_BLEEDING_THRESHOLD			12		// you're OK while <4 Yellow life bars
 
-#define BANDAGED( s ) (s->stats.bLifeMax - s->stats.bLife - s->bBleeding)
+#define BANDAGED( s ) (s->bLifeMax - s->bLife - s->bBleeding)
 
 // amount of time a stats is to be displayed differently, due to change
 #define CHANGE_STAT_RECENTLY_DURATION		60000
@@ -267,7 +268,9 @@ struct path
 
 typedef struct path PathSt;
 typedef PathSt *PathStPtr;
-enum {
+/* CHRISL: Added listings for each of the new inventory pockets.  Also split the enum so we could include
+endpoint markers for each type (big, med, sml) of pocket. */
+enum INVENTORY{
 	HELMETPOS = 0,
 	VESTPOS,
 	LEGPOS,
@@ -275,51 +278,93 @@ enum {
 	HEAD2POS,
 	HANDPOS,
 	SECONDHANDPOS,
-	BIGPOCK1POS,
+	VESTPOCKPOS,
+	LTHIGHPOCKPOS,
+	RTHIGHPOCKPOS,
+	CPACKPOCKPOS,
+	BPACKPOCKPOS,
+	GUNSLINGPOCKPOS,
+	KNIFEPOCKPOS,
+	BODYPOSFINAL,
+	BIGPOCK1POS = BODYPOSFINAL,
 	BIGPOCK2POS,
 	BIGPOCK3POS,
 	BIGPOCK4POS,
-	SMALLPOCK1POS,
+	BIGPOCK5POS,
+	BIGPOCK6POS,
+	BIGPOCK7POS,
+	BIGPOCKFINAL,
+	MEDPOCK1POS = BIGPOCKFINAL,
+	MEDPOCK2POS,
+	MEDPOCK3POS,
+	MEDPOCK4POS,
+	MEDPOCKFINAL,
+	SMALLPOCK1POS = MEDPOCKFINAL,
 	SMALLPOCK2POS,
 	SMALLPOCK3POS,
 	SMALLPOCK4POS,
 	SMALLPOCK5POS,
 	SMALLPOCK6POS,
 	SMALLPOCK7POS,
-	SMALLPOCK8POS, // = 18, so 19 pockets needed
-
-	NUM_INV_SLOTS,
+	SMALLPOCK8POS,
+	SMALLPOCK9POS,
+	SMALLPOCK10POS,
+	SMALLPOCK11POS,
+	SMALLPOCK12POS,
+	SMALLPOCK13POS,
+	SMALLPOCK14POS,
+	SMALLPOCK15POS,
+	SMALLPOCK16POS,
+	SMALLPOCK17POS,
+	SMALLPOCK18POS,
+	SMALLPOCK19POS,
+	SMALLPOCK20POS,
+	SMALLPOCK21POS,
+	SMALLPOCK22POS,
+	SMALLPOCK23POS,
+	SMALLPOCK24POS,
+	SMALLPOCK25POS,
+	SMALLPOCK26POS,
+	SMALLPOCK27POS,
+	SMALLPOCK28POS,
+	SMALLPOCK29POS,
+	SMALLPOCK30POS,
+	NUM_INV_SLOTS
 };
+// CHRISL: Arrays to track ic group information
+//							{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54}
+const INT8	icLBE[55] =		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,10,10,11,11,11,11, 7, 7, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,10,10,10,10,11,11,11,11,11,11,11,11};
+const INT8	icClass[55] =	{-1,-1,-1,-1,-1,-1,-1, 5, 5, 5, 5, 5, 6, 6, 3, 3, 3, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+const INT8	icPocket[55] =	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 4, 5, 6, 8, 9,10,11,10,11, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7};
+const INT8	oldInv[55] =	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const INT8	vehicleInv[55]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
 
-//if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
-#define NUM_ORIGINAL_INV_SLOTS 19
-
+// WDS - Clean up inventory handling
 // NOTE NOTE NOTE!	Leave this alone until it is no longer needed.	It must match the
 // original definition so old files can be read.
 namespace OldInventory {
-enum {
-	HELMETPOS = 0,
-	VESTPOS,
-	LEGPOS,
-	HEAD1POS,
-	HEAD2POS,
-	HANDPOS,
-	SECONDHANDPOS,
-	BIGPOCK1POS,
-	BIGPOCK2POS,
-	BIGPOCK3POS,
-	BIGPOCK4POS,
-	SMALLPOCK1POS,
-	SMALLPOCK2POS,
-	SMALLPOCK3POS,
-	SMALLPOCK4POS,
-	SMALLPOCK5POS,
-	SMALLPOCK6POS,
-	SMALLPOCK7POS,
-	SMALLPOCK8POS, // = 18, so 19 pockets needed
-
-	NUM_INV_SLOTS,
-};
+	enum {
+		HELMETPOS = 0,
+		VESTPOS,
+		LEGPOS,
+		HEAD1POS,
+		HEAD2POS,
+		HANDPOS,
+		SECONDHANDPOS,
+		BIGPOCK1POS,
+		BIGPOCK2POS,
+		BIGPOCK3POS,
+		BIGPOCK4POS,
+		SMALLPOCK1POS,
+		SMALLPOCK2POS,
+		SMALLPOCK3POS,
+		SMALLPOCK4POS,
+		SMALLPOCK5POS,
+		SMALLPOCK6POS,
+		SMALLPOCK7POS,
+		SMALLPOCK8POS, // = 18, so 19 pockets needed
+		NUM_INV_SLOTS,
+	};
 };
 
 //used for color codes, but also shows the enemy type for debugging purposes
@@ -342,7 +387,7 @@ enum
 // This macro should be used whenever we want to see if someone is neutral
 // IF WE ARE CONSIDERING ATTACKING THEM.	Creatures & bloodcats will attack neutrals
 // but they can't attack empty vehicles!!
-#define CONSIDERED_NEUTRAL( me, them ) ( (them->aiData.bNeutral) && ( me->bTeam != CREATURE_TEAM || (them->flags.uiStatusFlags & SOLDIER_VEHICLE) ) )
+#define CONSIDERED_NEUTRAL( me, them ) ( (them->bNeutral) && ( me->bTeam != CREATURE_TEAM || (them->uiStatusFlags & SOLDIER_VEHICLE) ) )
 
 typedef struct
 {
@@ -383,23 +428,9 @@ enum
 };
 
 
+// WDS - Clean up inventory handling
 struct LEVELNODE;
 
-//atm only used for saving and loading
-//many changes needed if inventory is going to use a vector of these
-class InventoryItem
-{
-public:
-	OBJECTTYPE	object;
-	int			bNewItemCount;
-	int			bNewItemCycleCount;
-	BOOLEAN	Load( HWFILE hFile );
-	BOOLEAN	Load( INT8 ** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
-	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
-};
-
-//ADB inventory needs a little work, for instance, how to get objects and counts to agree on sizes?
-//also makes things more bloated when saving
 class Inventory {
 public:
 	// Constructors
@@ -416,26 +447,24 @@ public:
 	~Inventory();
 
 	// Index operator
-	OBJECTTYPE& operator [] (unsigned int idx);
+	OBJECTTYPE& operator [] (int idx);
 
-	BOOLEAN	Load( HWFILE hFile );
-	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion);
-	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
-
-	// Removes all items from the inventory
-	void clear();
+	// Resets all items in the inventory to empty
+	void initialize();
 
 	// How any slots are there in this inventory?
-	unsigned int size() const;
+	int size() const;
 
-	//temporarily? public
-	vector<int>			bNewItemCount;
-	vector<int>			bNewItemCycleCount;
 private:
-	vector<OBJECTTYPE>	inv;
+	vector<OBJECTTYPE> inv;
+	int slotCnt;
+	// Added for new inventory system to work
+	friend BOOLEAN SaveSoldierStructure( HWFILE hFile );
+	friend BOOLEAN LoadSoldierStructure( HWFILE hFile );
 };
 
-class STRUCT_AIData//last edited at version 102
+//typedef struct
+class SOLDIERTYPE
 {
 public:
 	void				ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src);
@@ -701,10 +730,6 @@ public:
 	SOLDIERTYPE& operator=(const SOLDIERTYPE&);
 	// Destructor
 	~SOLDIERTYPE();
-
-	BOOLEAN Load(HWFILE hFile);
-	BOOLEAN Save(HWFILE hFile);
-	UINT32	GetChecksum();
 
 	// Initialize the soldier.	
 	//	Use this instead of the old method of calling memset.
@@ -1124,20 +1149,6 @@ public:
 	// The format of this structure affects what is written into and read from various
 	// files (maps, save files, etc.).	If you change it then that code will not work 
 	// properly until it is all fixed and the files updated.
-
-	Inventory inv;
-
-	//data from version 101 wrapped into structs
-	STRUCT_AIData									aiData;
-	STRUCT_Flags									flags;
-	STRUCT_TimeChanges								timeChanges;
-	STRUCT_TimeCounters								timeCounters;
-	STRUCT_Drugs									drugs;
-	STRUCT_Statistics								stats;
-	STRUCT_Pathing									pathing;
-
-
-
 public:
 	// CREATION FUNCTIONS
 	BOOLEAN DeleteSoldier( void );
@@ -1459,7 +1470,8 @@ public:
 
 	UINT32											uiStatusFlags;
 
-	OLD_OBJECTTYPE_101									DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];
+private:
+	OBJECTTYPE									DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];
 public:
 	OBJECTTYPE									*pTempObject;
 	KEY_ON_RING									*pKeyRing;
@@ -1907,7 +1919,7 @@ public:
 	UINT32											uiUniqueSoldierIdValue; // the unique value every instance of a soldier gets - 1 is the first valid value
 	INT8											UNUSED1; // This is unused at present and can be used for something else
 
-//private:
+private:
 	INT8											DO_NOT_USE_bNewItemCount[ OldInventory::NUM_INV_SLOTS ];
 	INT8											DO_NOT_USE_bNewItemCycleCount[ OldInventory::NUM_INV_SLOTS ];
 public:
@@ -2068,7 +2080,12 @@ public:
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
 
-	UINT8					bFiller[ 36 ];
+	INT16	DropPackKey;
+	BOOLEAN	DropPackFlag;
+	BOOLEAN	ZipperFlag;
+
+//	UINT8					bFiller[ 36 ];
+	UINT8					bFiller[ 31 ];
 
 	//
 	// New and OO stuff goes after here.	Above this point any changes will goof up reading from files.
@@ -2081,7 +2098,270 @@ public:
 
 	vector<int>	bNewItemCount;
 	vector<int> bNewItemCycleCount;
-}; // OLDSOLDIERTYPE_101;	
+}; // SOLDIERTYPE;	
+
+#define SIZEOF_SOLDIERTYPE_POD offsetof( SOLDIERTYPE, endOfPOD )
+#define SIZEOF_SOLDIERTYPE sizeof( SOLDIERTYPE )
+
+#define HEALTH_INCREASE			0x0001
+#define STRENGTH_INCREASE		0x0002
+#define	DEX_INCREASE				0x0004
+#define AGIL_INCREASE				0x0008
+#define WIS_INCREASE				0x0010
+#define LDR_INCREASE				0x0020
+
+#define MRK_INCREASE				0x0040
+#define MED_INCREASE				0x0080
+#define EXP_INCREASE				0x0100
+#define MECH_INCREASE				0x0200
+
+#define LVL_INCREASE				0x0400
+
+
+enum WeaponModes
+{
+	WM_NORMAL = 0,
+	WM_BURST,
+	WM_AUTOFIRE,
+	WM_ATTACHED_GL,
+	WM_ATTACHED_GL_BURST,
+	WM_ATTACHED_GL_AUTO,
+	NUM_WEAPON_MODES
+} ;
+
+// TYPEDEFS FOR ANIMATION PROFILES
+typedef struct
+{
+	UINT16	usTileFlags;
+	INT8		bTileX;
+	INT8		bTileY;
+
+} ANIM_PROF_TILE;
+
+typedef struct
+{
+	UINT8							ubNumTiles;
+	ANIM_PROF_TILE		*pTiles;
+
+}	ANIM_PROF_DIR;
+
+typedef struct ANIM_PROF
+{
+	
+	ANIM_PROF_DIR		Dirs[8];
+
+} ANIM_PROF;
+
+
+
+// Globals
+//////////
+
+// VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
+extern UINT32					guiNumPaletteSubRanges;
+extern UINT8					*gubpNumReplacementsPerRange;
+extern PaletteSubRangeType		*gpPaletteSubRanges;
+extern UINT32					guiNumReplacements;
+extern PaletteReplacementType	*gpPalRep;
+
+extern UINT8					bHealthStrRanges[];
+
+
+// Functions
+////////////
+
+// CREATION FUNCTIONS
+BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );
+BOOLEAN CreateSoldierLight( SOLDIERTYPE *pSoldier );
+BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier );
+
+BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usSoldierID, UINT16 usState );
+
+
+// Soldier Management functions, called by Event Pump.c
+BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
+
+BOOLEAN ChangeSoldierState( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
+void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
+void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
+void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
+BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
+
+void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
+void EVENT_SetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
+void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
+void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 ubDamage, INT16 sBreathLoss, UINT16 bDirection , UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGridNo );
+void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection );
+void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+
+
+
+BOOLEAN SoldierReadyWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetXPos, INT16 sTargetYPos, BOOLEAN fEndReady );
+void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight );
+void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
+void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
+void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier );
+void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove );
+
+BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier );
+void BeginSoldierGetup( SOLDIERTYPE *pSoldier );
+BOOLEAN ReCreateSelectedSoldierLight(  );
+
+// Soldier Management functions called by Overhead.c
+BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame );
+void TurnSoldier( SOLDIERTYPE *pSold);
+void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iRealTimeCounter );
+void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
+void ModifySoldierAniSpeed( SOLDIERTYPE *pSoldier );
+void StopSoldier( SOLDIERTYPE *pSoldier );
+UINT8 SoldierTakeDamage( SOLDIERTYPE *pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathDeduct, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, INT16 sSubsequent, BOOLEAN fShowDamage );
+void RevivePlayerTeam( );
+void ReviveSoldier( SOLDIERTYPE *pSoldier );
+
+
+// Palette functions for soldiers
+BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
+BOOLEAN GetPaletteRepIndexFromID( PaletteRepID aPalRep, UINT8 *pubPalIndex );
+BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
+BOOLEAN LoadPaletteData( );
+BOOLEAN DeletePaletteData( );
+
+// UTILITY FUNCTUIONS
+void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );
+void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMovementDist );
+INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
+INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
+UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
+UINT8 atan8FromAngle( DOUBLE dAngle );
+INT8 CalcActionPoints(SOLDIERTYPE *pSold );
+BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier );
+INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
+// This function is now obsolete.  Call ReduceAttackBusyCount instead.
+// void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
+BOOLEAN MercInWater( SOLDIERTYPE *pSoldier );
+UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
+UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );
+void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
+BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier );
+
+
+BOOLEAN DoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID );
+BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID, INT8 bSpecialCode );
+
+
+UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKitPts, INT16 sStatus );
+void ReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier );
+void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier );
+void InternalReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim );
+void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim );
+
+
+
+// WRAPPERS FOR SOLDIER EVENTS
+void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
+void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination );
+void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
+void SendSoldierSetDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDirection );
+void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
+void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );
+void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
+
+void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN fRemove );
+BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16 *usFlags );
+
+void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
+void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );
+
+BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier );
+
+BOOLEAN PreloadSoldierBattleSounds( SOLDIERTYPE *pSoldier, BOOLEAN fRemove );
+
+#define PTR_CIVILIAN    (pSoldier->bTeam == CIV_TEAM)
+#define PTR_CROUCHED	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH)
+#define PTR_STANDING	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND)
+#define PTR_PRONE	    (gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_PRONE)
+
+
+void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier );
+
+void	DoNinjaAttack( SOLDIERTYPE *pSoldier );
+
+BOOLEAN SoldierCarriesTwoHandedWeapon( SOLDIERTYPE *pSoldier );
+BOOLEAN InternalSoldierReadyWeapon( SOLDIERTYPE *pSoldier, UINT8 sFacingDir, BOOLEAN fEndReady );
+
+void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier );
+
+void PositionSoldierLight( SOLDIERTYPE *pSoldier );
+
+void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier );
+
+void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
+
+void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
+void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
+
+//reset soldier timers
+void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier );
+
+void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginUseDetonator( SOLDIERTYPE *pSoldier );
+void EVENT_SoldierBeginDropBomb( SOLDIERTYPE *pSoldier );
+void EVENT_SoldierEnterVehicle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+
+
+void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
+
+BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate );
+
+void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceDelete );
+
+void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce );
+
+void EVENT_SetSoldierPositionAndMaybeFinalDest( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest );
+
+void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
+
+void CalcNewActionPoints( SOLDIERTYPE *pSoldier );
+
+BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance );
+
+void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
+
+
+void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier );
+void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pSoldier );
+SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier );
+BOOLEAN CanRobotBeControlled( SOLDIERTYPE *pSoldier );
+BOOLEAN ControllingRobot( SOLDIERTYPE *pSoldier );
+
+void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, UINT8 ubMercSlot );
+
+void EVENT_SoldierBeginTakeBlood( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+
+void EVENT_SoldierBeginAttachCan( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+
+void HandleSoldierTakeDamageFeedback( SOLDIERTYPE *pSoldier );
+
+void PickDropItemAnimation( SOLDIERTYPE *pSoldier );
+
+BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
+BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier );
+
+void CrowsFlyAway( UINT8 ubTeam );
+
+void DebugValidateSoldierData( );
+
+void BeginTyingToFall( SOLDIERTYPE *pSoldier );
+
+void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldier );
+void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue );
+BOOLEAN SoldierReadyWeapon( SOLDIERTYPE *pSoldier );
 
 #endif
+
 

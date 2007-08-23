@@ -519,7 +519,7 @@ void MSYS_DeleteRegionFromList(MOUSE_REGION *region)
 	{
 		if(region->prev)
 			region->prev->next = region->next;
-		// If not last node in list, adjust following node's->prev entry.
+		// If not last node in list, adjust following node's ->prev entry.
 		if( region->next )
 			region->next->prev = region->prev;
 		region->prev = region->next = NULL;
@@ -555,7 +555,7 @@ void MSYS_DeleteRegionFromList(MOUSE_REGION *region)
 //======================================================================================================
 //	MSYS_UpdateMouseRegion
 //
-//	Searches the list for the highest priority region and updates it's info. It also dispatches
+//	Searches the list for the highest priority region and updates its info. It also dispatches
 //	the callback functions
 //
 void MSYS_UpdateMouseRegion(void)
@@ -1192,8 +1192,8 @@ void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
 
 
 	// move top left
-	region->RegionTopLeftX = sX;
-	region->RegionTopLeftY = sY;
+	region -> RegionTopLeftX = sX;
+	region -> RegionTopLeftY = sY;
 
 	// now move bottom right based on topleft + width or height
 	region->RegionBottomRightX = sX + sWidth;
@@ -1213,8 +1213,8 @@ void MSYS_MoveMouseRegionBy( MOUSE_REGION *region, INT16 sDeltaX, INT16 sDeltaY)
 {
 
 	// move top left
-	region->RegionTopLeftX = region->RegionTopLeftX + sDeltaX;
-	region->RegionTopLeftY = region->RegionTopLeftY + sDeltaY;
+	region -> RegionTopLeftX = region -> RegionTopLeftX + sDeltaX;
+	region -> RegionTopLeftY = region -> RegionTopLeftY + sDeltaY;
 
 	// now move bottom right
 	region->RegionBottomRightX = region->RegionBottomRightX + sDeltaX;
@@ -1654,7 +1654,7 @@ void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBAC
 	}
 
 	// now set the region help text
-	region->HelpDoneCallback = CallbackFxn;
+	region-> HelpDoneCallback = CallbackFxn;
 
 	return;
 }

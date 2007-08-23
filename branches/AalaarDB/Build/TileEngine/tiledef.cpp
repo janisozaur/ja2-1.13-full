@@ -623,7 +623,6 @@ UINT8		gTileTypeMovementCost[ NUM_TERRAIN_TYPES ] =
 
 void CreateTileDatabase( )
 {
-	PERFORMANCE_MARKER
 	UINT32					cnt1, cnt2;
 	UINT8						ubLoop;
 	UINT32					NumRegions;
@@ -790,7 +789,6 @@ void CreateTileDatabase( )
 
 void DeallocateTileDatabase( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt; 
 
 	for( cnt = 0; cnt < NUMBEROFTILES; cnt++ )
@@ -811,7 +809,6 @@ void DeallocateTileDatabase( )
 
 BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 {
-	PERFORMANCE_MARKER
  UINT16					usIndex;
 
  Assert( puiType != NULL );
@@ -828,7 +825,6 @@ BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 
 BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN fDelete )
 {
-	PERFORMANCE_MARKER
 	UINT16	usTempIndex;
 	UINT8		ubLastHighLevel=0;
 
@@ -873,7 +869,6 @@ BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN
 
 BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
 {
-	PERFORMANCE_MARKER
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
 	INT16					sLeft, sRight;
@@ -933,7 +928,6 @@ BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewTyp
 
 BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 {
-	PERFORMANCE_MARKER
 	UINT8					level = 0;
 	LEVELNODE			*pLand;
 	UINT32				fTileType=0;
@@ -966,7 +960,6 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 
 UINT8		GetLandLevelDepth( UINT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT8					level = 0;
 	LEVELNODE		*pLand;
 
@@ -984,7 +977,6 @@ UINT8		GetLandLevelDepth( UINT32 iMapIndex )
 
 BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiType=0;
 	*pusSubIndex = 0xffff;
 
@@ -998,7 +990,6 @@ BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 
 BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16 *pusSubIndex )
 {
-	PERFORMANCE_MARKER
 
 	// Tile database is zero-based, Type indecies are 1-based!
 
@@ -1013,7 +1004,6 @@ BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16
 
 BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pubSubIndex )
 {
-	PERFORMANCE_MARKER
    *pubSubIndex = 0xff;
 
 	// Tile database is zero-based, Type indecies are 1-based!
@@ -1027,7 +1017,6 @@ BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UI
 	
 BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UINT16 *pusTileIndex )
 {
-	PERFORMANCE_MARKER
 	// Tile database is zero-based, Type indecies are 1-based!
 
 	*pusTileIndex = 0xffff;
@@ -1044,7 +1033,6 @@ BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UIN
 
 BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
 {
-	PERFORMANCE_MARKER
 
 	// Remove, then add again
 	RemoveLand( iMapIndex, usIndex );
@@ -1058,7 +1046,6 @@ BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
 // Database access functions
 BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
 	*puiType = 0xffffffff;
@@ -1076,7 +1063,6 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 
 BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
   *puiFlags = 0;
@@ -1094,7 +1080,6 @@ BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 
 BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
 {
-	PERFORMANCE_MARKER
 	*pubLogHeight = gTileTypeLogicalHeight[ fType ];
 
 	return( TRUE );
@@ -1104,7 +1089,6 @@ BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
 
 BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 {
-	PERFORMANCE_MARKER
   UINT8					ubDestLogHeight;
   UINT8					ubSrcLogHeight;
 
@@ -1119,7 +1103,6 @@ BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE		*pLand		= NULL;
   UINT8					ubSrcLogHeight=0;
 	UINT32				fTileType=0;
@@ -1168,7 +1151,6 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE		*pLand		= NULL;
   UINT8					ubSrcLogHeight;
 	UINT32				fTileType=0;
@@ -1220,7 +1202,6 @@ BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 
 BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 {
-	PERFORMANCE_MARKER
   TILE_ELEMENT		TileElem;
 
   	*pusWallOrientation = 0xffff;
@@ -1238,7 +1219,6 @@ BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 
 BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8 *pubLevel )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE	*pStruct = NULL;
 	UINT8					level = 0;
 	UINT16				usCheckWallOrient=0;
@@ -1276,7 +1256,6 @@ BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOr
 //first wall encountered -- not that there should be duplicate walls...
 UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	UINT16 usCheckWallOrientation=0;
 	LEVELNODE *pStruct = NULL;
 	UINT8 ubFinalWallOrientation = NO_ORIENTATION;
@@ -1319,7 +1298,6 @@ UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex )
 
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 {
-	PERFORMANCE_MARKER
 	pTileElem->pAnimData = (TILE_ANIMATION_DATA *)MemAlloc( sizeof( TILE_ANIMATION_DATA ) );
 
 	CHECKF( pTileElem->pAnimData != NULL );
@@ -1336,7 +1314,6 @@ BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 
 void FreeAnimTileData( TILE_ELEMENT *pTileElem )
 {
-	PERFORMANCE_MARKER
 	if ( pTileElem->pAnimData != NULL )
 	{
 		// Free frames list

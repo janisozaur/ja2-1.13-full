@@ -30,7 +30,6 @@ UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 BOOLEAN InitRoomDatabase( )
 {
-	PERFORMANCE_MARKER
 	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
 	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
 	return( TRUE );
@@ -38,20 +37,17 @@ BOOLEAN InitRoomDatabase( )
 
 void ShutdownRoomDatabase( )
 {
-	PERFORMANCE_MARKER
 
 }
 
 void SetTileRoomNum( INT16 sGridNo, UINT8 ubRoomNum )
 {
-	PERFORMANCE_MARKER
 	// Add to global room list
 	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
 }
 
 void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
@@ -66,7 +62,6 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 BOOLEAN InARoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
-	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
 		if ( pubRoomNo )
@@ -82,7 +77,6 @@ BOOLEAN InARoom( INT16 sGridNo, UINT8 *pubRoomNo )
 
 BOOLEAN InAHiddenRoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
-	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
 	{
 		if ( (gubWorldRoomHidden[ gubWorldRoomInfo[ sGridNo ] ] ) )
@@ -99,7 +93,6 @@ BOOLEAN InAHiddenRoom( INT16 sGridNo, UINT8 *pubRoomNo )
 // @@ATECLIP TO WORLD!
 void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 {
-	PERFORMANCE_MARKER
 	INT16 sCountX, sCountY;
 	UINT32 uiTile;
 
@@ -118,7 +111,6 @@ void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 
 void SetGridNoRevealedFlag( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 //	UINT32 cnt;
 //	ITEM_POOL					*pItemPool;
 //	INT16							sX, sY;
@@ -198,7 +190,6 @@ void SetGridNoRevealedFlag( INT16 sGridNo )
 
 void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE					*pNode = NULL;
 	STRUCTURE					*pStructure, *pBase;
 	UINT8							ubLoop;
@@ -268,7 +259,6 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 
 void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 	ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
@@ -287,7 +277,7 @@ void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL	);
 
 			// Reveal any items if here!
-			if ( GetItemPoolFromGround( (INT16)cnt, &pItemPool ) )
+			if ( GetItemPool( (INT16)cnt, &pItemPool, 0 ) )
 			{
 				// Set visible! ( only if invisible... )
 				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )
@@ -333,7 +323,6 @@ void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion	)
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
@@ -350,7 +339,6 @@ BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion	)
 			
 BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion	)
 {
-	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )

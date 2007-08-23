@@ -4,7 +4,7 @@
 #include "Overhead.h"
 #include "random.h"
 #include "Points.h"
-#include "FindLocations.h"
+
 
 extern BOOLEAN gfTurnBasedAI;
 
@@ -14,7 +14,7 @@ extern BOOLEAN gfTurnBasedAI;
 #define MAX_TOSS_SEARCH_DIST	1		// must throw within this of opponent
 #define NPC_TOSS_SAFETY_MARGIN	4		// all friends must be this far away
 
-#define ACTING_ON_SCHEDULE( p ) ( (p)->aiData.fAIFlags & AI_CHECK_SCHEDULE )
+#define ACTING_ON_SCHEDULE( p ) ( (p)->fAIFlags & AI_CHECK_SCHEDULE )
 
 // the AI should try to have this many APs before climbing a roof, if possible
 #define AI_AP_CLIMBROOF 15
@@ -169,6 +169,7 @@ void CreatureCall( SOLDIERTYPE * pCaller );
 INT8 CreatureDecideAction( SOLDIERTYPE * pCreature );
 void CreatureDecideAlertStatus( SOLDIERTYPE *pCreature );
 INT8 CrowDecideAction( SOLDIERTYPE * pSoldier );
+void DecideAlertStatus( SOLDIERTYPE *pSoldier );
 INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier );
 UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction );
 
@@ -179,6 +180,8 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 
 BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot );
 INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp );
+INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo );
+INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing );
 INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN * pfClimbingNecessary );
 UINT8 GetTraversalQuoteActionID( INT8 bDirection );
 INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction);
@@ -206,25 +209,22 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier );
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier);
 INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier );
 UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier );
-
-
-//ADB if I had better control over the scoping, I could temporarily rearrange pockets when swapping weapons
-// with a local object with ctor and dtor, but I don't, so settle for 2 wrappers around RearrangePocket that have some safety checks
-#define AssureItemIsInHandPos(a,b,c) (Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
-#define UndoAssureItemIsInHandPos(a,b,c) (Undo_Assure_Item_Is_In_HandPos_WithLineNumber((a),(b),(c),__LINE__,__FUNCTION__,__FILE__))
-
-void Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename );
-void Undo_Assure_Item_Is_In_HandPos_WithLineNumber(SOLDIERTYPE *pSoldier, INT8 bPocketIndex, UINT8 bPermanent, INT32 lineNumber, STR8 szFunctionName, STR8 szFilename );
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent);
-
 void RTHandleAI( SOLDIERTYPE * pSoldier );
 UINT16 RunAway( SOLDIERTYPE * pSoldier );
+INT8	SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem );
 UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 bDesiredDirection );
 UINT8 StanceChange( SOLDIERTYPE * pSoldier, UINT8 ubAttackAPCost );
 INT16 TrackScent( SOLDIERTYPE * pSoldier );
 void RefreshAI(SOLDIERTYPE *pSoldier);
 BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel );
+INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ArmySeesOpponents( void );
 
 void CheckIfShotPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot, BOOLEAN suppressionFire);
+
+INT16 FindBestCoverNearTheGridNo(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubSearchRadius );
+
+INT8 FindDirectionForClimbing( INT16 sGridNo );
+

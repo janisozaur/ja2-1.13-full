@@ -17,12 +17,10 @@
 	#include "NPC.h"
 	#include "Render Fun.h"
 	#include "Quests.h"
-	#include "DecideAction.h"
 #endif
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8 bAction=AI_ACTION_NONE;
 
 	if (gTacticalStatus.fAutoBandageMode)
@@ -35,8 +33,8 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 	}
 
 	#ifdef DEBUGDECISIONS
-		std::string tempstr;
-		tempstr = String("DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->aiData.usActionData);
+		STR tempstr;
+		sprintf(tempstr,"DecideAction: selected action %d, actionData %d\n\n",bAction,pSoldier->usActionData);
 		DebugAI( tempstr );
 	#endif
 
@@ -45,7 +43,6 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 
 INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
 {
-	PERFORMANCE_MARKER
 	if (CREATURE_OR_BLOODCAT( pSoldier ) )
 	{
 		return( CreatureDecideAction( pSoldier ) );
@@ -67,7 +64,7 @@ INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
 			gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 &= (~PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL);
 			pSoldier->ubQuoteActionID = 0;
 			// wait a tiny bit
-			pSoldier->aiData.usActionData = 100;
+			pSoldier->usActionData = 100;
 			return( AI_ACTION_WAIT );
 		}
 
@@ -77,12 +74,11 @@ INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
 
 UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )			
 	{
 		return( (UINT16) REALTIME_CIV_AI_DELAY );
 	}
-	else if ( CREATURE_OR_BLOODCAT( pSoldier ) && !( pSoldier->aiData.bHunting ) )
+	else if ( CREATURE_OR_BLOODCAT( pSoldier ) && !( pSoldier->bHunting ) )
 	{
 		return( (UINT16) REALTIME_CREATURE_AI_DELAY );
 	}
@@ -107,12 +103,11 @@ UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier )
 
 void RTHandleAI( SOLDIERTYPE * pSoldier )
 {
-	PERFORMANCE_MARKER
 #ifdef AI_PROFILING
 	INT32 iLoop;
 #endif
 
-	if ((pSoldier->aiData.bAction != AI_ACTION_NONE) && pSoldier->aiData.bActionInProgress)
+	if ((pSoldier->bAction != AI_ACTION_NONE) && pSoldier->bActionInProgress)
 	{
 		// if action should remain in progress
 		if (ActionInProgress(pSoldier))
@@ -126,12 +121,12 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 	}
 
 	// if man has nothing to do
-	if (pSoldier->aiData.bAction == AI_ACTION_NONE)
+	if (pSoldier->bAction == AI_ACTION_NONE)
 	{
-		if (pSoldier->aiData.bNextAction == AI_ACTION_NONE)
+		if (pSoldier->bNextAction == AI_ACTION_NONE)
 		{
 			// make sure this flag is turned off (it already should be!)
-			pSoldier->aiData.bActionInProgress = FALSE;
+			pSoldier->bActionInProgress = FALSE;
 
 			// truly nothing to do!
 			RefreshAI( pSoldier );
@@ -152,116 +147,116 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		// The only reason we would NEED to reinitialize it here is if I've
 		// incorrectly set pathStored to TRUE in a process that doesn't end up
 		// calling NewDest()
-		pSoldier->pathing.bPathStored = FALSE;
+		pSoldier->bPathStored = FALSE;
 
 		// decide on the next action
 #ifdef AI_PROFILING
 		for (iLoop = 0; iLoop < 1000; iLoop++)
 #endif
 		{
-			if (pSoldier->aiData.bNextAction != AI_ACTION_NONE)
+			if (pSoldier->bNextAction != AI_ACTION_NONE)
 			{
-				if ( pSoldier->aiData.bNextAction == AI_ACTION_END_COWER_AND_MOVE )
+				if ( pSoldier->bNextAction == AI_ACTION_END_COWER_AND_MOVE )
 				{
-					if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING )
+					if ( pSoldier->uiStatusFlags & SOLDIER_COWERING )
 					{
-						pSoldier->aiData.bAction = AI_ACTION_STOP_COWERING;
-						pSoldier->aiData.usActionData = ANIM_STAND;
+						pSoldier->bAction = AI_ACTION_STOP_COWERING;
+						pSoldier->usActionData = ANIM_STAND;
 					}
 					else if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight < ANIM_STAND )
 					{
 						// stand up!
-						pSoldier->aiData.bAction = AI_ACTION_CHANGE_STANCE;
-						pSoldier->aiData.usActionData = ANIM_STAND;
+						pSoldier->bAction = AI_ACTION_CHANGE_STANCE;
+						pSoldier->usActionData = ANIM_STAND;
 					}
 					else
 					{
-						pSoldier->aiData.bAction = AI_ACTION_NONE;
+						pSoldier->bAction = AI_ACTION_NONE;
 					}
-					if ( pSoldier->sGridNo == pSoldier->aiData.usNextActionData )
+					if ( pSoldier->sGridNo == pSoldier->usNextActionData )
 					{
 						// no need to walk after this
-						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
-						pSoldier->aiData.usNextActionData = NOWHERE;
+						pSoldier->bNextAction = AI_ACTION_NONE;
+						pSoldier->usNextActionData = NOWHERE;
 					}
 					else
 					{
-						pSoldier->aiData.bNextAction = AI_ACTION_WALK;				
+						pSoldier->bNextAction = AI_ACTION_WALK;				
 						// leave next-action-data as is since that's where we want to go
 					}
 				}
 				else
 				{
 					// do the next thing we have to do...
-					pSoldier->aiData.bAction = pSoldier->aiData.bNextAction;
-					pSoldier->aiData.usActionData = pSoldier->aiData.usNextActionData;
-					pSoldier->bTargetLevel = pSoldier->aiData.bNextTargetLevel;
-					pSoldier->aiData.bNextAction = AI_ACTION_NONE;
-					pSoldier->aiData.usNextActionData = 0;
-					pSoldier->aiData.bNextTargetLevel = 0;
+					pSoldier->bAction = pSoldier->bNextAction;
+					pSoldier->usActionData = pSoldier->usNextActionData;
+					pSoldier->bTargetLevel = pSoldier->bNextTargetLevel;
+					pSoldier->bNextAction = AI_ACTION_NONE;
+					pSoldier->usNextActionData = 0;
+					pSoldier->bNextTargetLevel = 0;
 				}
-				if (pSoldier->aiData.bAction == AI_ACTION_PICKUP_ITEM)
+				if (pSoldier->bAction == AI_ACTION_PICKUP_ITEM)
 				{
 					// the item pool index was stored in the special data field
-					pSoldier->aiData.uiPendingActionData1 = pSoldier->iNextActionSpecialData;
+					pSoldier->uiPendingActionData1 = pSoldier->iNextActionSpecialData;
 				}
 			}
 			else if ( pSoldier->sAbsoluteFinalDestination != NOWHERE )
 			{
 				if ( ACTING_ON_SCHEDULE( pSoldier ) )
 				{
-					pSoldier->aiData.bAction = AI_ACTION_SCHEDULE_MOVE;
+					pSoldier->bAction = AI_ACTION_SCHEDULE_MOVE;
 				}
 				else
 				{
-					pSoldier->aiData.bAction = AI_ACTION_WALK;
+					pSoldier->bAction = AI_ACTION_WALK;
 				}
-				pSoldier->aiData.usActionData = pSoldier->sAbsoluteFinalDestination;
+				pSoldier->usActionData = pSoldier->sAbsoluteFinalDestination;
 			}
 			else
 			{
 				if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 				{
-					pSoldier->aiData.bAction = RTDecideAction( pSoldier );
+					pSoldier->bAction = RTDecideAction( pSoldier );
 				}
 			}
 		}
 		// if he chose to continue doing nothing
-		if (pSoldier->aiData.bAction == AI_ACTION_NONE)
+		if (pSoldier->bAction == AI_ACTION_NONE)
 		{
 			#ifdef RECORDNET
 				fprintf(NetDebugFile,"\tMOVED BECOMING TRUE: Chose to do nothing, guynum %d\n",pSoldier->ubID);
 			#endif
 
 			// do a standard wait before doing anything else!
-			pSoldier->aiData.bAction = AI_ACTION_WAIT;
-			//if (PTR_CIVILIAN && pSoldier->aiData.bAlertStatus != STATUS_BLACK)
+			pSoldier->bAction = AI_ACTION_WAIT;
+			//if (PTR_CIVILIAN && pSoldier->bAlertStatus != STATUS_BLACK)
 			if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )			
 			{
-				pSoldier->aiData.usActionData = (UINT16) REALTIME_CIV_AI_DELAY;
+				pSoldier->usActionData = (UINT16) REALTIME_CIV_AI_DELAY;
 			}
-			else if ( CREATURE_OR_BLOODCAT( pSoldier ) && !( pSoldier->aiData.bHunting ) )
+			else if ( CREATURE_OR_BLOODCAT( pSoldier ) && !( pSoldier->bHunting ) )
 			{
-				pSoldier->aiData.usActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
+				pSoldier->usActionData = (UINT16) REALTIME_CREATURE_AI_DELAY;
 			}
 			else
 			{
-				pSoldier->aiData.usActionData = (UINT16) REALTIME_AI_DELAY;
+				pSoldier->usActionData = (UINT16) REALTIME_AI_DELAY;
 				if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP )
 				{
 					UINT8		ubRoom;
 
 					if ( InARoom( pSoldier->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) )
 					{
-						pSoldier->aiData.usActionData /= 3;
+						pSoldier->usActionData /= 3;
 					}
 
 				}
 			}
 		}
-		else if (pSoldier->aiData.bAction == AI_ACTION_ABSOLUTELY_NONE)
+		else if (pSoldier->bAction == AI_ACTION_ABSOLUTELY_NONE)
 		{
-			pSoldier->aiData.bAction = AI_ACTION_NONE;
+			pSoldier->bAction = AI_ACTION_NONE;
 		}
 
 	}
@@ -270,5 +265,5 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 	NPCDoesAct(pSoldier);
 
 	// perform the chosen action
-	pSoldier->aiData.bActionInProgress = ExecuteAction(pSoldier); // if started, mark us as busy
+	pSoldier->bActionInProgress = ExecuteAction(pSoldier); // if started, mark us as busy
 }

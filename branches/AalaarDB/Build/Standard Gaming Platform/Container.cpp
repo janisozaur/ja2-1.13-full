@@ -93,7 +93,7 @@ typedef struct OrdHeaderTag
 // Return Value	NULL if unsuccesful
 //							pointer to allocated memory
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -139,7 +139,7 @@ HSTACK CreateStack(UINT32 uiNum_items, UINT32 uiSiz_each)
 // Return Value	NULL if unsuccesful
 //							pointer to allocated memory
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
@@ -188,7 +188,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 // Return Value	NULL if unsuccesful
 //							pointer to allocated memory
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
@@ -242,7 +242,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 // Return Value	NULL if unsuccesful
 //							pointer to allocated memory
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HORDLIST CreateOrdList(UINT32 uiNum_items, UINT32 uiSiz_each, INT8 (*compare)(void *, void *, UINT32))
@@ -298,7 +298,7 @@ HORDLIST CreateOrdList(UINT32 uiNum_items, UINT32 uiSiz_each, INT8 (*compare)(vo
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HSTACK Push(HSTACK hStack, void *pdata)
@@ -361,7 +361,7 @@ HSTACK Push(HSTACK hStack, void *pdata)
 //								after pushing element 
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN Pop(HSTACK hStack, void *pdata)
@@ -416,7 +416,7 @@ BOOLEAN Pop(HSTACK hStack, void *pdata)
 // Return Value : TRUE if stack not empty
 //
 // Modification History :
-// Apr 14 2000 SCT->Created
+// Apr 14 2000 SCT -> Created
 //
 //*****************************************************************************
 BOOLEAN PeekStack(HSTACK hStack, void *pdata)
@@ -469,7 +469,7 @@ BOOLEAN PeekStack(HSTACK hStack, void *pdata)
 // Return Value	: BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN DeleteStack(HSTACK hStack)
@@ -493,7 +493,7 @@ BOOLEAN DeleteStack(HSTACK hStack)
 // Return Value	: BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN DeleteQueue(HQUEUE hQueue)
@@ -517,7 +517,7 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 // Return Value	: BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN DeleteList(HLIST hList)
@@ -541,7 +541,7 @@ BOOLEAN DeleteList(HLIST hList)
 // Return Value	: BOOLEAN
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN DeleteOrdList(HORDLIST hOrdList)
@@ -565,7 +565,7 @@ BOOLEAN DeleteOrdList(HORDLIST hOrdList)
 // Return Value	: void
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -587,7 +587,7 @@ void InitializeContainers(void)
 // Return Value	: void
 //
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 
@@ -611,7 +611,7 @@ void ShutdownContainers( void )
 //							or NULL if failed
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
@@ -665,7 +665,7 @@ BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
@@ -874,7 +874,7 @@ BOOLEAN StoreListNode(HLIST hList, void *pdata, UINT32 uiPos)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN PeekOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
@@ -936,7 +936,7 @@ BOOLEAN PeekOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //							or NULL if failed
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
@@ -1004,7 +1004,7 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
@@ -1090,7 +1090,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
@@ -1131,7 +1131,7 @@ BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSize)
@@ -1167,7 +1167,7 @@ BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSiz
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 UINT32 StackSize(HSTACK hStack)
@@ -1192,7 +1192,7 @@ UINT32 StackSize(HSTACK hStack)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 UINT32 QueueSize(HQUEUE hQueue)
@@ -1217,7 +1217,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 UINT32 ListSize(HLIST hList)
@@ -1242,7 +1242,7 @@ UINT32 ListSize(HLIST hList)
 //							
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 UINT32 OrdListSize(HORDLIST hOrdList)
@@ -1270,7 +1270,7 @@ UINT32 OrdListSize(HORDLIST hOrdList)
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
@@ -1458,7 +1458,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
@@ -1605,7 +1605,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
@@ -1764,7 +1764,7 @@ BOOLEAN RemfromOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 //							else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
+// Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
 HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
@@ -1973,8 +1973,8 @@ HORDLIST StoreinOrdList(HORDLIST hOrdList, void *pdata, UINT32 uiPos)
 // Return Value	BOOLEAN true if Add ok else	false
 //							
 // Modification History :
-// Nov 26th 1996->modified for use by Wizardry
-// Dec 19th 1997->verified, cleaned up, and heavily commented by AM
+// Nov 26th 1996 -> modified for use by Wizardry
+// Dec 19th 1997 -> verified, cleaned up, and heavily commented by AM
 //
 //*****************************************************************************
 HORDLIST AddtoOrdList(HORDLIST hOrdList, void *pdata)

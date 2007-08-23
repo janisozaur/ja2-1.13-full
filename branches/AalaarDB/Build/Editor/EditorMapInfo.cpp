@@ -67,7 +67,6 @@ BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
 
 void SetupTextInputForMapInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
@@ -105,7 +104,6 @@ void SetupTextInputForMapInfo()
 
 void UpdateMapInfo()
 {
-	PERFORMANCE_MARKER
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 
@@ -150,7 +148,6 @@ void UpdateMapInfo()
 
 void UpdateMapInfoFields()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	//Update the text fields to reflect the validated values.
 	//light rgb fields
@@ -177,7 +174,6 @@ void UpdateMapInfoFields()
 
 void ExtractAndUpdateMapInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
@@ -249,7 +245,6 @@ void ExtractAndUpdateMapInfo()
 
 BOOLEAN ApplyNewExitGridValuesToTextFields()
 {
-	PERFORMANCE_MARKER
 	CHAR16 str[10];
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
@@ -267,7 +262,6 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 UINT16 usCurrentExitGridNo = 0;
 void LocateNextExitGrid()
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	UINT16 i;
 	for( i = usCurrentExitGridNo + 1; i < WORLD_MAX; i++ )
@@ -292,7 +286,6 @@ void LocateNextExitGrid()
 
 void ChangeLightDefault( INT8 bLightType )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButton( MAPINFO_PRIMETIME_LIGHT + gbDefaultLightType );
 	gbDefaultLightType = bLightType;
 	ClickEditorButton( MAPINFO_PRIMETIME_LIGHT + gbDefaultLightType );

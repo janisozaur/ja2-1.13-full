@@ -29,7 +29,6 @@ BOOLEAN gfShowExitGrids = FALSE;
 
 void SetEditorItemsTaskbarMode( UINT16 usNewMode )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButtons( ITEMS_WEAPONS, ITEMS_KEYS );
 	switch( usNewMode )
 	{
@@ -76,7 +75,6 @@ void SetEditorItemsTaskbarMode( UINT16 usNewMode )
 
 void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fNewRoofs, fNewWalls, fNewRoomInfo;
 	if( usNewMode == usCurrentMode )
 	{
@@ -190,7 +188,6 @@ void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 
 void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButton( TERRAIN_FGROUND_TEXTURES );
 	UnclickEditorButton( TERRAIN_BGROUND_TEXTURES );
 	UnclickEditorButton( TERRAIN_PLACE_CLIFFS );
@@ -254,7 +251,6 @@ void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 
 void ShowExitGrids()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 	LEVELNODE *pLevelNode;
 	if( gfShowExitGrids )
@@ -271,7 +267,6 @@ void ShowExitGrids()
 
 void HideExitGrids()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 	LEVELNODE *pLevelNode;
 	if( !gfShowExitGrids )
@@ -297,7 +292,6 @@ void HideExitGrids()
 
 void SetEditorMapInfoTaskbarMode( UINT16 usNewMode )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fShowExitGrids = FALSE;
 	UnclickEditorButton( MAPINFO_ADD_LIGHT1_SOURCE );
 	UnclickEditorButton( MAPINFO_DRAW_EXITGRIDS );
@@ -362,7 +356,6 @@ void SetEditorMapInfoTaskbarMode( UINT16 usNewMode )
 
 void SetEditorSmoothingMode( UINT8 ubNewMode )
 {
-	PERFORMANCE_MARKER
 	UnclickEditorButtons( MAPINFO_RADIO_NORMAL, MAPINFO_RADIO_CAVES );
 	if( iCurrentTaskbar == TASK_BUILDINGS )
 		HideEditorButtons( BUILDING_NEW_ROOM, BUILDING_CAVE_DRAWING );

@@ -54,13 +54,11 @@ typedef struct
 
 UINT32	MapUtilScreenInit( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32	MapUtilScreenHandle( )
 {
-	PERFORMANCE_MARKER
 	static INT16		fNewMap = TRUE;
 	static INT16		sFileNum = 0;
 	InputAtom	InputEvent;
@@ -347,7 +345,6 @@ UINT32	MapUtilScreenHandle( )
 
 UINT32 MapUtilScreenShutdown( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -358,20 +355,17 @@ UINT32 MapUtilScreenShutdown( )
 
 UINT32	MapUtilScreenInit( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32	MapUtilScreenHandle( )
 {
-	PERFORMANCE_MARKER
 	//If this screen ever gets set, then this is a bad thing -- endless loop
 	return( ERROR_SCREEN );
 }
 
 UINT32 MapUtilScreenShutdown( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 

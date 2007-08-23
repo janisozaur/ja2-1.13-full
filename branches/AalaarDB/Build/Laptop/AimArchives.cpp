@@ -145,13 +145,11 @@ void ChangingAimArchiveSubPage( UINT8 ubSubPageNumber );
 
 void GameInitAimArchives()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void EnterInitAimArchives()
 {
-	PERFORMANCE_MARKER
 	gfDrawPopUpBox=FALSE;
 	gfDestroyPopUpBox = FALSE;
 
@@ -162,7 +160,6 @@ void EnterInitAimArchives()
 
 BOOLEAN EnterAimArchives()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16	usPosX, i;
 
@@ -234,7 +231,6 @@ BOOLEAN EnterAimArchives()
 
 void ExitAimArchives()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 
 	gfExitingAimArchives = TRUE;
@@ -263,7 +259,6 @@ void ExitAimArchives()
 
 void HandleAimArchives()
 {
-	PERFORMANCE_MARKER
 	if( gfReDrawScreen )
 	{
 //		RenderAimArchives();
@@ -283,7 +278,6 @@ void HandleAimArchives()
 
 void RenderAimArchives()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT	hFrameHandle;
 	HVOBJECT	hFaceHandle;
 //	HVOBJECT	hBottomButtonHandle;
@@ -389,7 +383,6 @@ void RenderAimArchives()
 
 void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -408,7 +401,6 @@ void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void BtnAlumniPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -454,7 +446,6 @@ void BtnAlumniPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ResetAimArchiveButtons()
 {
-	PERFORMANCE_MARKER
 	int i=0;
 
 	for(i=0; i<3; i++)
@@ -466,7 +457,6 @@ void ResetAimArchiveButtons()
 
 void DisableAimArchiveButton()
 {
-	PERFORMANCE_MARKER
 	if( gfExitingAimArchives == TRUE)
 		return;
 
@@ -487,7 +477,6 @@ void DisableAimArchiveButton()
 
 void DisplayAlumniOldMercPopUp()
 {
-	PERFORMANCE_MARKER
 	UINT8			i,ubNumLines=11; //17
 	UINT16		usPosY, usTextPosY;
 	UINT8			ubFontHeight, ubNumDescLines;
@@ -559,7 +548,6 @@ void DisplayAlumniOldMercPopUp()
 
 void DestroyPopUpBox()
 {
-	PERFORMANCE_MARKER
 	gfDestroyPopUpBox = FALSE;
 	RenderAimArchives();
 }
@@ -568,7 +556,6 @@ void DestroyPopUpBox()
 
 void InitAlumniFaceRegions()
 {
-	PERFORMANCE_MARKER
 	UINT16	usPosX, usPosY,i,x,y, usNumRows;
 
 	if(gfFaceMouseRegionsActive)
@@ -617,7 +604,6 @@ void InitAlumniFaceRegions()
 
 void RemoveAimAlumniFaceRegion()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 	UINT16 usNumber=0;
 
@@ -651,7 +637,6 @@ void RemoveAimAlumniFaceRegion()
 
 void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN DoneRegionCreated=FALSE;
 
 	if( ( !DoneRegionCreated ) && ( usPosY != 0) )
@@ -675,7 +660,6 @@ void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 
 void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -692,7 +676,6 @@ void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void ChangingAimArchiveSubPage( UINT8 ubSubPageNumber )
 {
-	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	if( AimArchivesSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )

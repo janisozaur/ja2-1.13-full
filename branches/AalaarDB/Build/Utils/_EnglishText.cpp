@@ -1502,7 +1502,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Unsafe:", 			// distance to return from destination to airport
 	L"Total Cost: ", 		// total cost of trip by helicopter
 	L"ETA:	", 			// ETA is an acronym for "estimated time of arrival" 
-	L"Helicopter is low on fuel and must land in hostile territory!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"Helicopter is low on fuel and must land in hostile territory!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
 	L"Passengers: ",
 	L"Select Skyrider or the Arrivals Drop-off?",
 	L"Skyrider",
@@ -2861,6 +2861,7 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
+	L"LBE Gear",
 	L"Misc.",
 };
 
@@ -3605,6 +3606,9 @@ STR16	gzGIOScreenText[] =
 	L"Great",
 	L"Excellent",
 	L"Awesome",
+	L"Inventory System",
+	L"Old",
+	L"New",
 };
 
 STR16 pDeliveryLocationStrings[] =

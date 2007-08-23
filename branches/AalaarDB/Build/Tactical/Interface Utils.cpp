@@ -72,7 +72,6 @@ STR pbCarPortraitFileNames[ ]={
 // load int he portraits for the car faces that will be use in mapscreen
 BOOLEAN LoadCarPortraitValues( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	VOBJECT_DESC	 VObjectDesc;
 
@@ -92,7 +91,6 @@ BOOLEAN LoadCarPortraitValues( void )
 // get rid of the images we loaded for the mapscreen car portraits
 void UnLoadCarPortraits( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// car protraits loaded?
@@ -112,7 +110,6 @@ void UnLoadCarPortraits( void )
 
 void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 	FLOAT											dStart, dEnd, dPercentage;
 	//UINT16										usLineColor;
 
@@ -127,7 +124,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->stats.bLife == 0 )
+	if( pSoldier->bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -138,7 +135,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 
 
 	// FIRST DO MAX LIFE
-	dPercentage = (FLOAT)pSoldier->stats.bLife / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
 	dEnd				=	dPercentage * sHeight;
 	dStart			= sYPos;
 
@@ -154,7 +151,7 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 	// NOW DO BANDAGE
 
 	// Calculate bandage
-	bBandage = pSoldier->stats.bLifeMax - pSoldier->stats.bLife - pSoldier->bBleeding;
+	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
 
 	if ( bBandage )
 	{
@@ -196,7 +193,6 @@ void DrawLifeUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWi
 
 void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 	FLOAT											dStart, dEnd, dPercentage;
 	//UINT16										usLineColor;
 
@@ -211,7 +207,7 @@ void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->stats.bLife == 0 )
+	if( pSoldier->bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -308,7 +304,6 @@ void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 
 void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 	FLOAT											dStart, dEnd, dPercentage;
 	//UINT16										usLineColor;
 
@@ -322,7 +317,7 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
 	}
 
-	if( pSoldier->stats.bLife == 0 )
+	if( pSoldier->bLife == 0 )
 	{
 		// are they dead?
 		return;
@@ -333,7 +328,7 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 
 
 	// FIRST DO BREATH
-	dPercentage = (FLOAT)pSoldier->aiData.bMorale / (FLOAT)100;
+	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
 	dEnd				=	dPercentage * sHeight;
 	dStart			= sYPos;
 
@@ -354,7 +349,6 @@ void DrawMoraleUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 
 void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, UINT32 uiBuffer )
 {
-	PERFORMANCE_MARKER
 	FLOAT											dStart, dEnd, dPercentage;
 	//UINT16										usLineColor;
 
@@ -444,7 +438,6 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 
 void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLEAN fAutoFace )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fDoFace = FALSE;
 	UINT8 ubVehicleType = 0;
 
@@ -452,7 +445,7 @@ void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLE
 	if ( pSoldier->bActive )
 	{
 
-		if( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
+		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{
 			// get the type of vehicle
 			ubVehicleType = pVehicleList[ pSoldier->bVehicleID ].ubVehicleType;

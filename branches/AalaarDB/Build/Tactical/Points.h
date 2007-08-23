@@ -109,6 +109,7 @@
 #define	AP_CLIMBROOF						10			// APs to climb roof
 #define	AP_CLIMBOFFROOF					6				// APs to climb off roof
 #define AP_JUMPFENCE						6				// time to jump over a fence
+#define AP_JUMPFENCEBPACK						10				// time to jump over a fence
 
 
 #define AP_OPEN_SAFE			8		// time to use combination
@@ -190,6 +191,7 @@
 #define	BP_CLIMBROOF						500			// BPs to climb roof
 #define	BP_CLIMBOFFROOF					250			// BPs to climb off roof
 #define	BP_JUMPFENCE						200			// BPs to jump fence
+#define	BP_JUMPFENCEBPACK						500			// BPs to jump fence
 
 
 /*

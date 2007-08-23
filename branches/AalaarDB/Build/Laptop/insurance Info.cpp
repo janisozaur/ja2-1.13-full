@@ -92,20 +92,17 @@ void DisplayInfoTocPage();
 
 void GameInitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void EnterInitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	memset( &InsuranceInfoSubPagesVisitedFlag, 0, INS_INFO_LAST_PAGE-1);
 
 }
 
 BOOLEAN EnterInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX;
 
@@ -163,7 +160,6 @@ BOOLEAN EnterInsuranceInfo()
 
 void ExitInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	RemoveInsuranceDefaults();
 
 
@@ -181,13 +177,11 @@ void ExitInsuranceInfo()
 
 void HandleInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsuranceInfo()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16		usPosX;
 
@@ -249,7 +243,6 @@ void RenderInsuranceInfo()
 
 void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -279,7 +272,6 @@ void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -309,8 +301,7 @@ void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 } 
 
 void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -324,8 +315,7 @@ void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -341,7 +331,6 @@ void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRe
 
 void DisplaySubmitClaimPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	UINT16	usPosX;
@@ -381,7 +370,6 @@ void DisplaySubmitClaimPage()
 
 void DisplayPremiumPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	HVOBJECT hPixHandle;
@@ -428,7 +416,6 @@ void DisplayPremiumPage()
 
 void DisplayRenewingPremiumPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 //	HVOBJECT hPixHandle;
@@ -468,7 +455,6 @@ void DisplayRenewingPremiumPage()
 
 void DisplayCancelationPagePage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 
@@ -493,7 +479,6 @@ void DisplayCancelationPagePage()
 
 void DisableArrowButtonsIfOnLastOrFirstPage()
 {
-	PERFORMANCE_MARKER
 	if( gubCurrentInsInfoSubPage == INS_INFO_INFO_TOC) 
 		DisableButton( guiInsPrevBackButton);
 	else
@@ -509,7 +494,6 @@ void DisableArrowButtonsIfOnLastOrFirstPage()
 
 void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 {
-	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	if( InsuranceInfoSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
@@ -528,7 +512,6 @@ void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 
 void DisplayInfoTocPage()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	UINT16 usNewLineOffset = 0;
 	HVOBJECT hPixHandle;

@@ -215,7 +215,6 @@ extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScre
 
 void UnPauseGameDuringNextQuote( void )
 {
-	PERFORMANCE_MARKER
 	fPausedTimeDuringQuote = FALSE;
 	
 	return;
@@ -224,7 +223,6 @@ void UnPauseGameDuringNextQuote( void )
 
 void PauseTimeDuringNextQuote( void )
 {
-	PERFORMANCE_MARKER
 	fPausedTimeDuringQuote = TRUE;
 	
 	return;
@@ -232,7 +230,6 @@ void PauseTimeDuringNextQuote( void )
 
 BOOLEAN DialogueActive( )
 {
-	PERFORMANCE_MARKER
 	if ( gpCurrentTalkingFace != NULL )
 	{
 		return( TRUE );
@@ -243,7 +240,6 @@ BOOLEAN DialogueActive( )
 
 BOOLEAN InitalizeDialogueControl()
 {
-	PERFORMANCE_MARKER
 	ghDialogueQ = CreateQueue( INITIAL_Q_SIZE, sizeof( DIALOGUE_Q_STRUCT_PTR ) );
 
 	// Initalize subtitle popup box
@@ -286,7 +282,6 @@ void ShutdownDialogueControl()
 
 void InitalizeStaticExternalNPCFaces( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 	
@@ -307,7 +302,6 @@ void InitalizeStaticExternalNPCFaces( void )
 
 void ShutdownStaticExternalNPCFaces( void )
 {
-	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	if( fExternFacesLoaded == FALSE )
@@ -327,7 +321,6 @@ void ShutdownStaticExternalNPCFaces( void )
 
 void EmptyDialogueQueue( )
 {
-	PERFORMANCE_MARKER
 	// If we have anything left in the queue, remove!
 	if( ghDialogueQ != NULL )
 	{
@@ -361,7 +354,6 @@ DEF:	commented out because the Queue system ?? uses a contiguous memory block ??
 
 BOOLEAN DialogueQueueIsEmpty( )
 {
-	PERFORMANCE_MARKER
 	INT32										numDialogueItems;
 	
 	if( ghDialogueQ != NULL )
@@ -380,7 +372,6 @@ BOOLEAN DialogueQueueIsEmpty( )
 
 BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
 {
-	PERFORMANCE_MARKER
 	if ( gpCurrentTalkingFace != NULL )
 	{
 		return( FALSE );
@@ -396,7 +387,6 @@ BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
 
 void DialogueAdvanceSpeech( )
 {
-	PERFORMANCE_MARKER
 	// Shut them up!
 	InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
 }
@@ -404,7 +394,6 @@ void DialogueAdvanceSpeech( )
 
 void StopAnyCurrentlyTalkingSpeech( )
 {
-	PERFORMANCE_MARKER
 	// ATE; Make sure guys stop talking....
 	if ( gpCurrentTalkingFace != NULL )
 	{
@@ -417,7 +406,6 @@ void StopAnyCurrentlyTalkingSpeech( )
 // 'external' to on the team panel...
 void HandleDialogueUIAdjustments( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE							*pSoldier;
 
 	// OK, check if we are still taking
@@ -466,7 +454,6 @@ void HandleDialogueUIAdjustments( )
 
 void HandleDialogue( )
 {
-	PERFORMANCE_MARKER
 	INT32 iQSize;
 	DIALOGUE_Q_STRUCT				*QItem;
 	static BOOLEAN					fOldEngagedInConvFlagOn = FALSE;
@@ -694,7 +681,7 @@ void HandleDialogue( )
 	// If we are in auto bandage, ignore any quotes!
 	if ( gTacticalStatus.fAutoBandageMode )
 	{
-		if( QItem->fPauseTime )
+		if( QItem -> fPauseTime )
 		{
 			UnLockPauseState();
 			UnPauseGame();
@@ -756,10 +743,10 @@ void HandleDialogue( )
 
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( QItem->uiSpecialEventFlag == 0 ) )
 	{
-		QItem->fPauseTime = TRUE;
+		QItem-> fPauseTime = TRUE;
 	}
 
-	if( QItem->fPauseTime )
+	if( QItem-> fPauseTime )
 	{
 		if( GamePaused( ) == FALSE )
 		{
@@ -776,9 +763,9 @@ void HandleDialogue( )
 		if( pSoldier )
 		{
 			// wake grunt up to say 
-			if( pSoldier->flags.fMercAsleep )
+			if( pSoldier->fMercAsleep )
 			{
-				pSoldier->flags.fMercAsleep = FALSE;
+				pSoldier->fMercAsleep = FALSE;
 
 				// refresh map screen
 				fCharacterInfoPanelDirty = TRUE;
@@ -1176,11 +1163,11 @@ void HandleDialogue( )
 			// wake merc up or put them back down?
 			if( QItem->uiSpecialEventData == 1 )
 			{
-				pSoldier->flags.fMercAsleep = TRUE;
+				pSoldier -> fMercAsleep = TRUE;
 			}
 			else
 			{
-				pSoldier->flags.fMercAsleep = FALSE;
+				pSoldier -> fMercAsleep = FALSE;
 			}
 
 			// refresh map screen
@@ -1197,7 +1184,7 @@ void HandleDialogue( )
 		CheckForStopTimeQuotes( QItem->usQuoteNum );
 	}
 
-	if( QItem->fPauseTime )
+	if( QItem -> fPauseTime )
 	{
 		fWasPausedDuringDialogue = TRUE;
 	}
@@ -1211,7 +1198,6 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return( FALSE );
@@ -1220,7 +1206,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 	if (pSoldier->stats.bLife < CONSCIOUSNESS )
 	return( FALSE );
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
 
 	if ( (AM_A_ROBOT( pSoldier )) )
@@ -1242,7 +1228,6 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 
 BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2 )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return( FALSE );
@@ -1250,10 +1235,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16
 
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
-		if (pSoldier->stats.bLife < CONSCIOUSNESS )
+		if (pSoldier->bLife < CONSCIOUSNESS )
 		return( FALSE );
 
-		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 		
 	}
@@ -1263,7 +1248,6 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16
 
 BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return( FALSE );
@@ -1271,10 +1255,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
 	{
-		if (pSoldier->stats.bLife < CONSCIOUSNESS )
+		if (pSoldier->bLife < CONSCIOUSNESS )
 		return( FALSE );
 
-		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 
 		if ( (AM_A_ROBOT( pSoldier )) )
@@ -1282,7 +1266,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 			return( FALSE );
 		}
 
-		if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 		return( FALSE );
 
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
@@ -1298,7 +1282,6 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
 		return( FALSE );
@@ -1315,7 +1298,7 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 	if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 	return( FALSE );
 
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
 
 	if ( (AM_A_ROBOT( pSoldier )) )
@@ -1337,9 +1320,9 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 
 
 	// If we are a robot, play the controller's quote!
-	if ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
+	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( pSoldier->CanRobotBeControlled( ) )
+		if ( CanRobotBeControlled( pSoldier ) )
 		{
 			return( TacticalCharacterDialogue( MercPtrs[ pSoldier->ubRobotRemoteHolderID ], usQuoteNum ) );
 		}
@@ -1387,7 +1370,6 @@ BOOLEAN TacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 
 BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2 )
 {
-	PERFORMANCE_MARKER
 	DIALOGUE_Q_STRUCT				*QItem;
 
 	// Allocate new item
@@ -1421,7 +1403,6 @@ BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteN
 
 BOOLEAN CharacterDialogueWithSpecialEventEx( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
 {
-	PERFORMANCE_MARKER
 	DIALOGUE_Q_STRUCT				*QItem;
 
 	// Allocate new item
@@ -1457,7 +1438,6 @@ BOOLEAN CharacterDialogueWithSpecialEventEx( UINT8 ubCharacterNum, UINT16 usQuot
 
 BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed )
 {
-	PERFORMANCE_MARKER
 	DIALOGUE_Q_STRUCT				*QItem;
 
 	// Allocate new item
@@ -1489,7 +1469,6 @@ BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceI
 
 BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, INT32 iFaceIndex, UINT8 bUIHandlerID )
 {
-	PERFORMANCE_MARKER
 	DIALOGUE_Q_STRUCT				*QItem;
 
 	// Allocate new item
@@ -1521,7 +1500,6 @@ BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpeci
 
 BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, INT32 iFaceIndex, UINT8 bUIHandlerID )
 {
-	PERFORMANCE_MARKER
 	DIALOGUE_Q_STRUCT				*QItem;
 
 	// Allocate new item
@@ -1554,7 +1532,6 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 
 BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
 {
-	PERFORMANCE_MARKER
 	CHAR8		zSoundString[ 164 ];
 	UINT32	uiSoundID;
 	SOLDIERTYPE *pSoldier;
@@ -1567,12 +1544,12 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	if ( pSoldier != NULL )
 	{	
 		// Check vital stats
-		if (pSoldier->stats.bLife < CONSCIOUSNESS )
+		if (pSoldier->bLife < CONSCIOUSNESS )
 		{
 			return( FALSE );
 		}
 
-		if ( pSoldier->flags.uiStatusFlags & SOLDIER_GASSED )
+		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 			return( FALSE );
 
 		if ( (AM_A_ROBOT( pSoldier )) )
@@ -1580,7 +1557,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 			return( FALSE );
 		}
 
-		if (pSoldier->stats.bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
+		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
 		{
 			return( FALSE );
 		}
@@ -1591,7 +1568,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 		}
 
 		// sleeping guys don't talk.. go to standby to talk
-		if( pSoldier->flags.fMercAsleep == TRUE )
+		if( pSoldier->fMercAsleep == TRUE )
 		{
 			// check if the soldier was compaining about lack of sleep and was alseep, if so, leave them alone
 			if( ( usQuoteNum == QUOTE_NEED_SLEEP ) || ( usQuoteNum == QUOTE_OUT_OF_BREATH ) )
@@ -1682,7 +1659,6 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 
 void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, STR16 zQuoteStr )
 {
-	PERFORMANCE_MARKER
 
 	// Show text, if on
 	if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !gFacesData[ iFaceIndex ].fValidSpeech )
@@ -1741,7 +1717,6 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 
 CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
 {
-	PERFORMANCE_MARKER
 	static CHAR8 zFileName[164];
 	UINT8		ubFileNumID;
 
@@ -1845,7 +1820,6 @@ CHAR8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN
 // Used to see if the dialog text file exists
 BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, STR8 *ppStr )
 {
-	PERFORMANCE_MARKER
 	STR8 pFilename;
 	
 	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, fWavFile );
@@ -1860,7 +1834,6 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 
 BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, STR16 zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
-	PERFORMANCE_MARKER
 	STR8 pFilename;
 
 	// first things first	- grab the text (if player has SUBTITLE PREFERENCE ON)
@@ -1928,7 +1901,6 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 // Handlers for tactical UI stuff
 void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr )
 {
-	PERFORMANCE_MARKER
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 
 	// Setup dialogue text box
@@ -1952,7 +1924,6 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, STR16 zQuoteStr )
 // Handlers for tactical UI stuff
 void DisplayTextForExternalNPC(	UINT8 ubCharacterNum, STR16 zQuoteStr )
 {
-	PERFORMANCE_MARKER
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
 
@@ -1992,7 +1963,6 @@ void DisplayTextForExternalNPC(	UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, STR16 zQuoteStr )
 {
-	PERFORMANCE_MARKER
 	CHAR16									zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
 
@@ -2022,7 +1992,6 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, STR16 zQuote
 
 void ExecuteTacticalTextBoxForLastQuote( INT16 sLeftPosition, STR16 pString )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDelay = FindDelayForString( pString );
 
 	fDialogueBoxDueToLastMessage = TRUE;
@@ -2037,7 +2006,6 @@ void ExecuteTacticalTextBoxForLastQuote( INT16 sLeftPosition, STR16 pString )
 
 void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 {
-	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
 	// check if mouse region created, if so, do not recreate
@@ -2080,7 +2048,6 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 
 void HandleExternNPCSpeechFace( INT32 iIndex )
 {
-	PERFORMANCE_MARKER
 	INT32 iFaceIndex;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	INT32									iFaceOverlay;
@@ -2149,7 +2116,6 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 
 void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex	)
 {
-	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	INT32									iFaceOverlay;
 	SOLDIERTYPE						*pSoldier;
@@ -2236,7 +2202,6 @@ void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex	)
 
 void HandleDialogueEnd( FACETYPE *pFace )
 {
-	PERFORMANCE_MARKER
 	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
 	{
 
@@ -2362,7 +2327,6 @@ void HandleDialogueEnd( FACETYPE *pFace )
 
 void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
 	INT16 sFontX, sFontY;
@@ -2404,7 +2368,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 			mprintf( sFontX, sFontY, L"%s", pSoldier->name );
 		
 			// What sector are we in, ( and is it the same as ours? )
-			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->flags.fBetweenSectors )
+			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
 			{
 				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, FALSE );
 
@@ -2453,7 +2417,6 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 
 void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	if ( giTextBoxOverlay != -1 )
 	{
 		RenderMercPopUpBoxFromIndex( iDialogueBox, pBlitter->sX, pBlitter->sY,	pBlitter->uiDestBuff );
@@ -2465,7 +2428,6 @@ void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter )
 
 void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -2481,7 +2443,7 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->flags.fMercAsleep )
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
 		{
 			if ( gTacticalStatus.bNumFoughtInBattle[ ENEMY_TEAM ] == 0 )
 			{
@@ -2529,7 +2491,6 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 
 void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -2582,7 +2543,6 @@ void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSect
 
 void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -2627,7 +2587,6 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 
 void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum, INT8 bSex )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -2674,7 +2633,6 @@ void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQ
 
 void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -2705,7 +2663,6 @@ void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -2729,7 +2686,6 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void ShutDownLastQuoteTacticalTextBox( void )
 {
-	PERFORMANCE_MARKER
 	if( fDialogueBoxDueToLastMessage )
 	{
 		RemoveVideoOverlay( giTextBoxOverlay );
@@ -2747,20 +2703,17 @@ void ShutDownLastQuoteTacticalTextBox( void )
 
 UINT32 FindDelayForString( STR16 sString )
 {
-	PERFORMANCE_MARKER
 	return( wcslen( sString ) * TEXT_DELAY_MODIFIER );
 }
 
 void BeginLoggingForBleedMeToos( BOOLEAN fStart )
 {
-	PERFORMANCE_MARKER
 	gubLogForMeTooBleeds = fStart;
 }
 
 
 void SetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// OK, If a good give, set engaged in conv...
 	gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
 	gTacticalStatus.ubEngagedInConvFromActionMercID = pSoldier->ubID;
@@ -2768,7 +2721,6 @@ void SetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 
 void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	if ( gTacticalStatus.ubEngagedInConvFromActionMercID == pSoldier->ubID )
 	{
 		// OK, If a good give, set engaged in conv...
@@ -2779,7 +2731,6 @@ void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 
 BOOLEAN IsStopTimeQuote( UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < gubNumStopTimeQuotes; cnt++ )
@@ -2796,7 +2747,6 @@ BOOLEAN IsStopTimeQuote( UINT16 usQuoteNum )
 
 void CheckForStopTimeQuotes( UINT16 usQuoteNum )
 {
-	PERFORMANCE_MARKER
 	if ( IsStopTimeQuote( usQuoteNum ) )
 	{
 		// Stop Time, game
@@ -2811,14 +2761,12 @@ void CheckForStopTimeQuotes( UINT16 usQuoteNum )
 
 void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack )
 {
-	PERFORMANCE_MARKER
 	gModalDoneCallback = pCallBack;
 }
 
 
 BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
 {
-	PERFORMANCE_MARKER
 	if ( gpCurrentTalkingFace != NULL && gubCurrentTalkingID == ubProfileID )
 	{
 		return( TRUE );
@@ -2832,7 +2780,6 @@ BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
 
 BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( UINT8 ubMercID, UINT32 uiQuoteID )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubQuoteBit=0;
 
 	//If the quote is not in the array
@@ -2861,7 +2808,6 @@ BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( UINT8 ubMercID, UINT32 uiQuoteID 
 
 BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
 {
-	PERFORMANCE_MARKER
 	if( gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid & ( 1 << ( ubQuoteBit - 1 ) ) )
 		return( TRUE );
 	else
@@ -2870,7 +2816,6 @@ BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
 
 BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
 {
-	PERFORMANCE_MARKER
 	//Set the bit
 	gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid |= 1 << ( ubBitToSet - 1 );
 
@@ -2881,7 +2826,6 @@ BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
 
 BOOLEAN IsQuoteInPrecedentArray( UINT32 uiQuoteID )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubCnt;
 
 	//If the quote id is above or below the ones in the array
@@ -2908,7 +2852,6 @@ BOOLEAN IsQuoteInPrecedentArray( UINT32 uiQuoteID )
 
 UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 
 	//loop through all the quotes
@@ -2925,7 +2868,6 @@ UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID )
 
 void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 {
-	PERFORMANCE_MARKER
 	
 	if ( ( fExternFaceBoxRegionCreated ) && ( gpCurrentTalkingFace) )
 	{
@@ -2938,9 +2880,8 @@ void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 {
-	PERFORMANCE_MARKER
 	// wake merc up for THIS quote
-	if( pSoldier->flags.fMercAsleep )
+	if( pSoldier->fMercAsleep )
 	{
 		TacticalCharacterDialogueWithSpecialEvent( pSoldier, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0,0 );
 		TacticalCharacterDialogue( pSoldier, usQuoteNumber );
@@ -2956,7 +2897,6 @@ void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 // handle pausing of the dialogue queue
 void PauseDialogueQueue( void )
 {
-	PERFORMANCE_MARKER
 	gfDialogueQueuePaused = TRUE;
 	return;
 }
@@ -2964,7 +2904,6 @@ void PauseDialogueQueue( void )
 // unpause the dialogue queue
 void UnPauseDialogueQueue( void )
 {
-	PERFORMANCE_MARKER
 	gfDialogueQueuePaused = FALSE;
 	return;
 }
@@ -2972,7 +2911,6 @@ void UnPauseDialogueQueue( void )
 
 void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
 {
-	PERFORMANCE_MARKER
 	gsExternPanelXPosition	 = sXPos;
 	gsExternPanelYPosition	 = sYPos;
 }

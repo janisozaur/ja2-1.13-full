@@ -51,13 +51,11 @@ UINT32	guiCancelBoxButton;
 
 void GameInitMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
@@ -99,7 +97,6 @@ BOOLEAN EnterMercsNoAccount()
 
 void ExitMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiNoAccountImage);
 
 	UnloadButtonImage( guiOpenAccountBoxButtonImage );
@@ -111,13 +108,11 @@ void ExitMercsNoAccount()
 
 void HandleMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderMercsNoAccount()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -137,7 +132,6 @@ void RenderMercsNoAccount()
 
 void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -174,7 +168,6 @@ void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnCancelBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;

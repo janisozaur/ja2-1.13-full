@@ -59,7 +59,6 @@ BOOLEAN gfUsingOffset;
 //randomly choose TRUE or FALSE to reflect the *odds*.
 BOOLEAN PerformDensityTest()
 {
-	PERFORMANCE_MARKER
 	if( Random(100) < gusSelectionDensity )
 		return TRUE;
 	return FALSE;
@@ -67,7 +66,6 @@ BOOLEAN PerformDensityTest()
 
 void IncreaseSelectionDensity()
 {
-	PERFORMANCE_MARKER
 	if( gusSelectionDensity == 100 )
 		gusSelectionDensity = 2;
 	else if( gusSelectionDensity == 2 )
@@ -80,7 +78,6 @@ void IncreaseSelectionDensity()
 
 void DecreaseSelectionDensity()
 {
-	PERFORMANCE_MARKER
 	if( gusSelectionDensity == 10 )
 		gusSelectionDensity = 5;
 	else if( gusSelectionDensity == 5 )
@@ -93,7 +90,6 @@ void DecreaseSelectionDensity()
 
 void RemoveCursors()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 	if( gpBuildingLayoutList )
 	{
@@ -127,7 +123,6 @@ void RemoveCursors()
 
 void RemoveBadMarker()
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	if( sBadMarker < 0 )
 		return;
@@ -146,7 +141,6 @@ void RemoveBadMarker()
 
 void UpdateCursorAreas()
 {
-	PERFORMANCE_MARKER
 	INT32 x, y, iMapIndex;
 
 	RemoveCursors();
@@ -243,7 +237,6 @@ void UpdateCursorAreas()
 
 void ForceAreaSelectionWidth()
 {
-	PERFORMANCE_MARKER
 	UINT16 gusDecSelWidth;
 	
 	//If the anchor isn't set, we don't want to force the size yet.
@@ -284,7 +277,6 @@ void ForceAreaSelectionWidth()
 
 BOOLEAN HandleAreaSelection()
 {
-	PERFORMANCE_MARKER
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
 	{
@@ -357,7 +349,6 @@ void ValidateSelectionRegionBoundaries()
 
 void EnsureSelectionType()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fPrevBrushEnabledState = gfBrushEnabled;
 
 	//At time of writing, the only drawing mode supporting right mouse button 
@@ -425,7 +416,6 @@ void EnsureSelectionType()
 
 void DrawBuildingLayout( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	LEVELNODE* pNode;
@@ -457,7 +447,6 @@ void DrawBuildingLayout( INT32 iMapIndex )
 
 void RemoveBuildingLayout()
 {
-	PERFORMANCE_MARKER
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;
 	INT32 iMapIndex;

@@ -70,7 +70,6 @@ typedef struct
 static void XMLCALL
 altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -102,7 +101,6 @@ altSectorsStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -113,7 +111,6 @@ altSectorsCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 altSectorsEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	altSectorsParseData * pData = (altSectorsParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -150,7 +147,6 @@ altSectorsEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAltSectors(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -207,7 +203,6 @@ BOOLEAN ReadInAltSectors(STR fileName)
 
 BOOLEAN WriteInAltSectors(STR fileName)
 {
-	PERFORMANCE_MARKER
 	// Lets output the current Strategic map format using the XML structure I've devised.
 	FILE *outfile = fopen(fileName, "wt");
 
@@ -232,7 +227,6 @@ BOOLEAN WriteInAltSectors(STR fileName)
 
 UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );	
 	AssertMsg( curr, "Failed to create an underground sector info node." );
@@ -258,7 +252,6 @@ UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UI
 // setup which know facilities are in which cities
 void InitKnowFacilitiesFlags( )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	// Cambria hospital
@@ -297,7 +290,6 @@ void InitKnowFacilitiesFlags( )
 
 void InitMiningLocations()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	//Set up mining sites
 	
@@ -330,7 +322,6 @@ void InitMiningLocations()
 //Mobile groups are handled separately from sectors, because they are on the move.	
 void GeneratePatrolGroups()
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	UINT8 ubNumTroops;
 	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
@@ -377,7 +368,6 @@ void GeneratePatrolGroups()
 
 void TrashUndergroundSectorInfo()
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 	while( gpUndergroundSectorInfoHead )
 	{
@@ -395,7 +385,6 @@ void TrashUndergroundSectorInfo()
 //changes to the maps, require changes accordingly.
 void BuildUndergroundSectorInfoList()
 {
-	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
 
 	TrashUndergroundSectorInfo();
@@ -563,7 +552,6 @@ void BuildUndergroundSectorInfoList()
 //		randomization of individual sectors can be switched off via array RandomSector[]
 void InitWorld()
 {
-	PERFORMANCE_MARKER
 	INT16	sSectorCounter;
 
 	for (sSectorCounter = 0; sSectorCounter < 256; sSectorCounter++)
@@ -581,7 +569,6 @@ void InitWorld()
 //This is also highly effected by the game's difficulty setting.
 void InitNewCampaign()
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewCampaign");
 	//First clear all the sector information of all enemy existance.	Conveniently, the
 	//ubGroupType is also cleared, which is perceived to be an empty group.

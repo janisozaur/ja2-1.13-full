@@ -52,13 +52,11 @@ extern HINSTANCE ghInstance;
 CAboutDlg::CAboutDlg(HWND hwndParent)
 	: m_hWndParent(hwndParent)
 {
-	PERFORMANCE_MARKER
 }
 
 
 CAboutDlg::~CAboutDlg()
 {
-	PERFORMANCE_MARKER
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -72,7 +70,6 @@ CAboutDlg::~CAboutDlg()
 
 BOOL CAboutDlg::DoModal()
 {
-	PERFORMANCE_MARKER
 	::DialogBox(
 		ghInstance,
 		MAKEINTRESOURCE(IDD_ABOUT), 

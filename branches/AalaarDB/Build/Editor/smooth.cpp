@@ -101,7 +101,6 @@ BOOLEAN ContainsWater( UINT32 gridno );
 
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
-	PERFORMANCE_MARKER
 	int temp=0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
@@ -248,7 +247,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 
 void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE* pShadow;
 	INT16 x, y;
 	INT16 centerX, centerY;
@@ -279,7 +277,6 @@ void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius )
 
 void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
-	PERFORMANCE_MARKER
 	int temp=0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
@@ -417,7 +414,6 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 
 void SmoothTerrainWorld( UINT32 uiCheckType )
 {
-	PERFORMANCE_MARKER
 	int						cnt;
 	UINT16					usIndex;
 	UINT16					NewTile;
@@ -440,7 +436,6 @@ void SmoothTerrainWorld( UINT32 uiCheckType )
 
 void SmoothAllTerrainWorld( void )
 {
-	PERFORMANCE_MARKER
 	int						cnt;
 	UINT16				usIndex;
 	UINT16				NewTile;
@@ -466,7 +461,6 @@ void SmoothAllTerrainWorld( void )
 
 void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -509,7 +503,6 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 
 void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2, cnt3;
@@ -550,7 +543,6 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 
 void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
-	PERFORMANCE_MARKER
 	// This procedure will calculate the approriate smooth texture for a water texture
 	// based on the surrounding water textures. This is done via masking bits within 
 	// a temp variable, then searching for the right texture and inserting it

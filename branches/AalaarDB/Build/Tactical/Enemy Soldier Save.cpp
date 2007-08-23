@@ -46,7 +46,6 @@ void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS ) )
 	{ 
@@ -66,7 +65,6 @@ void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	//CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS ) )
@@ -86,7 +84,6 @@ void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 //OLD SAVE METHOD:	This is the old way of loading the enemies and civilians 
 BOOLEAN LoadEnemySoldiersFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -95,6 +92,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
+	UINT16 usCheckSum, usFileCheckSum;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -261,13 +259,16 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+                // WDS - Clean up inventory handling
+		FileRead( hfile, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead );
+		if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT_POD)
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
+		tempDetailedPlacement.CopyOldInventoryToNew();
 
 		curr = gSoldierInitHead;
 		while( curr )
@@ -281,14 +282,11 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->fPriorityExistance = TRUE;
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
-							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement); //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+							curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 						}
-						else
-						{
-							//now replace the map pristine placement info with the temp map file version..
-							*curr->pDetailedPlacement = tempDetailedPlacement;
-						}
+						//now replace the map pristine placement info with the temp map file version..
+						//memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
+						*curr->pDetailedPlacement = tempDetailedPlacement;
 						
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -304,6 +302,47 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+
+						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
+						if( uiNumBytesRead != 2 )
+						{
+							#ifdef JA2TESTVERSION
+								sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
+							#endif
+							goto FAIL_LOAD;
+						}
+						//verify the checksum equation (anti-hack) -- see save 
+						usFileCheckSum = 
+							curr->pDetailedPlacement->bLife									* 7		+	 
+							curr->pDetailedPlacement->bLifeMax  						* 8		-
+							curr->pDetailedPlacement->bAgility							* 2		+
+							curr->pDetailedPlacement->bDexterity						* 1		+
+							curr->pDetailedPlacement->bExpLevel							* 5		-
+							curr->pDetailedPlacement->bMarksmanship					* 9		+
+							curr->pDetailedPlacement->bMedical							* 10	+
+							curr->pDetailedPlacement->bMechanical						* 3		+
+							curr->pDetailedPlacement->bExplosive						* 4		+
+							curr->pDetailedPlacement->bLeadership						* 5		+
+							curr->pDetailedPlacement->bStrength							* 7		+
+							curr->pDetailedPlacement->bWisdom								* 11	+
+							curr->pDetailedPlacement->bMorale								* 7		+
+							curr->pDetailedPlacement->bAIMorale							* 3		-
+							curr->pDetailedPlacement->bBodyType							* 7		+
+							4																								* 6		+
+							curr->pDetailedPlacement->sSectorX							* 7		-
+							curr->pDetailedPlacement->ubSoldierClass				* 4		+
+							curr->pDetailedPlacement->bTeam									* 7		+
+							curr->pDetailedPlacement->bDirection						* 5		+
+							curr->pDetailedPlacement->fOnRoof								* 17	+ 
+							curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+							3;
+						if( usCheckSum != usFileCheckSum )
+						{	//Hacker has modified the stats on the enemy placements.
+							#ifdef JA2TESTVERSION
+								sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", i );
+							#endif
+							goto FAIL_LOAD;
+						}
 
 						if( curr->pBasicPlacement->bTeam == CIV_TEAM )
 						{
@@ -400,7 +439,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 //OLD SAVE METHOD:	This is the older way of saving the civilian and the enemies placement into a temp file
 BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8	ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
@@ -410,6 +448,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	SCHEDULENODE *pSchedule;
+	UINT16 usCheckSum;
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
 
@@ -435,9 +474,32 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
 						curr->pBasicPlacement->fDetailedPlacement = TRUE;
-						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+                                                // WDS - Clean up inventory handling
+						curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+						//memset( curr->pDetailedPlacement, 0, SIZEOF_SOLDIERCREATE_STRUCT );
+						curr->pDetailedPlacement->initialize();
 					}
-					(*curr->pDetailedPlacement) = (*pSoldier);
+
+					//Copy over the data of the soldier.
+					curr->pDetailedPlacement->ubProfile							= NO_PROFILE;
+					curr->pDetailedPlacement->bLife									= pSoldier->bLife;
+					curr->pDetailedPlacement->bLifeMax  						= pSoldier->bLifeMax;
+					curr->pDetailedPlacement->bAgility							= pSoldier->bAgility;
+					curr->pDetailedPlacement->bDexterity						= pSoldier->bDexterity;
+					curr->pDetailedPlacement->bExpLevel							= pSoldier->bExpLevel;
+					curr->pDetailedPlacement->bMarksmanship					= pSoldier->bMarksmanship;
+					curr->pDetailedPlacement->bMedical							= pSoldier->bMedical;
+					curr->pDetailedPlacement->bMechanical						= pSoldier->bMechanical;
+					curr->pDetailedPlacement->bExplosive						= pSoldier->bExplosive;
+					curr->pDetailedPlacement->bLeadership						= pSoldier->bLeadership;
+					curr->pDetailedPlacement->bStrength							= pSoldier->bStrength;
+					curr->pDetailedPlacement->bWisdom								= pSoldier->bWisdom;
+					curr->pDetailedPlacement->bAttitude							= pSoldier->bAttitude;
+					curr->pDetailedPlacement->bOrders								= pSoldier->bOrders;
+					curr->pDetailedPlacement->bMorale								= pSoldier->bMorale;
+					curr->pDetailedPlacement->bAIMorale							= pSoldier->bAIMorale;
+					curr->pDetailedPlacement->bBodyType							= pSoldier->ubBodyType;
+					curr->pDetailedPlacement->ubCivilianGroup				= pSoldier->ubCivilianGroup;
 
 					//If the soldier has a real schedule (not a default schedule), then store it.
 					//All other cases should be 0.
@@ -451,11 +513,19 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						}
 					}
 
+					curr->pDetailedPlacement->fHasKeys							= pSoldier->bHasKeys;
+					curr->pDetailedPlacement->sSectorX							= pSoldier->sSectorX;
+					curr->pDetailedPlacement->sSectorY							= pSoldier->sSectorY;
+					curr->pDetailedPlacement->bSectorZ							= pSoldier->bSectorZ;
+					curr->pDetailedPlacement->ubSoldierClass				= pSoldier->ubSoldierClass;
+					curr->pDetailedPlacement->bTeam									= pSoldier->bTeam;
+					curr->pDetailedPlacement->bDirection						= pSoldier->bDirection;
+
 					//we don't want the player to think that all the enemies start in the exact position when we 
 					//left the map, so randomize the start locations either current position or original position.
 					if( PreRandom( 2 ) )
 					{ //use current position
-						curr->pDetailedPlacement->fOnRoof								= pSoldier->pathing.bLevel;
+						curr->pDetailedPlacement->fOnRoof								= pSoldier->bLevel;
 						curr->pDetailedPlacement->sInsertionGridNo			= pSoldier->sGridNo;
 					}
 					else
@@ -463,6 +533,24 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						curr->pDetailedPlacement->fOnRoof								= curr->pBasicPlacement->fOnRoof;
 						curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
 					}
+
+					swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+
+					//Copy patrol points
+					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
+					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+							
+					//copy colors for soldier based on the body type.
+					sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
+					sprintf( curr->pDetailedPlacement->VestPal,		pSoldier->VestPal );
+					sprintf( curr->pDetailedPlacement->SkinPal,		pSoldier->SkinPal );
+					sprintf( curr->pDetailedPlacement->PantsPal,  pSoldier->PantsPal );
+					sprintf( curr->pDetailedPlacement->MiscPal,		pSoldier->MiscPal );
+
+					//copy soldier's inventory
+                                        // WDS - Clean up inventory handling
+					//memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );	
+					curr->pDetailedPlacement->Inv = pSoldier->inv;	
 				}
 
 				//DONE, now increment the counter, so we know how many there are.
@@ -604,7 +692,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	for( i = gTacticalStatus.Team[ ubFirstIdTeam ].bFirstID; i <= gTacticalStatus.Team[ ubLastIdTeam ].bLastID; i++ )
 	{
 		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -613,9 +701,43 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{ //found a match.	
-				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
+                                // WDS - Clean up inventory handling
+				curr->pDetailedPlacement->CopyNewInventoryToOld();
+				FileWrite( hfile, curr->pDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesWritten );
+				if( uiNumBytesWritten != SIZEOF_SOLDIERCREATE_STRUCT_POD)
 				{
 					goto FAIL_SAVE;
+				}
+				//insert a checksum equation (anti-hack)
+				usCheckSum = 
+					curr->pDetailedPlacement->bLife									* 7		+	 
+					curr->pDetailedPlacement->bLifeMax  						* 8		-
+					curr->pDetailedPlacement->bAgility							* 2		+
+					curr->pDetailedPlacement->bDexterity						* 1		+
+					curr->pDetailedPlacement->bExpLevel							* 5		-
+					curr->pDetailedPlacement->bMarksmanship					* 9		+
+					curr->pDetailedPlacement->bMedical							* 10	+
+					curr->pDetailedPlacement->bMechanical						* 3		+
+					curr->pDetailedPlacement->bExplosive						* 4		+
+					curr->pDetailedPlacement->bLeadership						* 5		+
+					curr->pDetailedPlacement->bStrength							* 7		+
+					curr->pDetailedPlacement->bWisdom								* 11	+
+					curr->pDetailedPlacement->bMorale								* 7		+
+					curr->pDetailedPlacement->bAIMorale							* 3		-
+					curr->pDetailedPlacement->bBodyType							* 7		+
+					4																								* 6		+
+					curr->pDetailedPlacement->sSectorX							* 7		-
+					curr->pDetailedPlacement->ubSoldierClass				* 4		+
+					curr->pDetailedPlacement->bTeam									* 7		+
+					curr->pDetailedPlacement->bDirection						* 5		+
+					curr->pDetailedPlacement->fOnRoof								* 17	+ 
+					curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+					3;
+				FileWrite( hfile, &usCheckSum, 2, &uiNumBytesWritten );
+				if( uiNumBytesWritten != 2 )
+				{
+					goto FAIL_SAVE;
+
 				}
 			}
 		}
@@ -644,7 +766,6 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -653,6 +774,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
+	UINT16 usCheckSum, usFileCheckSum;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -867,13 +989,16 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+                // WDS - Clean up inventory handling
+		FileRead( hfile, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead );
+		if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT_POD)
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
+		tempDetailedPlacement.CopyOldInventoryToNew();
 		curr = gSoldierInitHead;
 		while( curr )
 		{	
@@ -884,13 +1009,11 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
-						curr->pBasicPlacement->fDetailedPlacement = TRUE;
-						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement); //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+						curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 					}
-					else
-					{
-						*curr->pDetailedPlacement = tempDetailedPlacement;
-					}
+					//now replace the map pristine placement info with the temp map file version..
+					//memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
+					*curr->pDetailedPlacement = tempDetailedPlacement;
 					
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -906,6 +1029,47 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
+
+					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
+					if( uiNumBytesRead != 2 )
+					{
+						#ifdef JA2TESTVERSION
+							sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
+						#endif
+						goto FAIL_LOAD;
+					}
+					//verify the checksum equation (anti-hack) -- see save 
+					usFileCheckSum = 
+						curr->pDetailedPlacement->bLife									* 7		+	 
+						curr->pDetailedPlacement->bLifeMax  						* 8		-
+						curr->pDetailedPlacement->bAgility							* 2		+
+						curr->pDetailedPlacement->bDexterity						* 1		+
+						curr->pDetailedPlacement->bExpLevel							* 5		-
+						curr->pDetailedPlacement->bMarksmanship					* 9		+
+						curr->pDetailedPlacement->bMedical							* 10	+
+						curr->pDetailedPlacement->bMechanical						* 3		+
+						curr->pDetailedPlacement->bExplosive						* 4		+
+						curr->pDetailedPlacement->bLeadership						* 5		+
+						curr->pDetailedPlacement->bStrength							* 7		+
+						curr->pDetailedPlacement->bWisdom								* 11	+
+						curr->pDetailedPlacement->bMorale								* 7		+
+						curr->pDetailedPlacement->bAIMorale							* 3		-
+						curr->pDetailedPlacement->bBodyType							* 7		+
+						4																								* 6		+
+						curr->pDetailedPlacement->sSectorX							* 7		-
+						curr->pDetailedPlacement->ubSoldierClass				* 4		+
+						curr->pDetailedPlacement->bTeam									* 7		+
+						curr->pDetailedPlacement->bDirection						* 5		+
+						curr->pDetailedPlacement->fOnRoof								* 17	+ 
+						curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+						3;
+					if( usCheckSum != usFileCheckSum )
+					{	//Hacker has modified the stats on the enemy placements.
+						#ifdef JA2TESTVERSION
+							sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", i );
+						#endif
+						goto FAIL_LOAD;
+					}
 
 
 					//Add preserved placements as long as they don't exceed the actual population.
@@ -1033,7 +1197,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr, *temp;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -1043,6 +1206,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	UINT32 uiTimeSinceLastLoaded;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
+	UINT16 usCheckSum, usFileCheckSum;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
@@ -1180,13 +1344,16 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+                // WDS - Clean up inventory handling
+		FileRead( hfile, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead );
+		if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT_POD)
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
+		tempDetailedPlacement.CopyOldInventoryToNew();
 		curr = gSoldierInitHead;
 		while( curr )
 		{	
@@ -1201,9 +1368,10 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						if( !curr->pDetailedPlacement )
 						{
 							//need to upgrade the placement to detailed placement
-							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
+							curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;
 						}
 						//now replace the map pristine placement info with the temp map file version..
+						//memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
 						*curr->pDetailedPlacement = tempDetailedPlacement;
 						
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
@@ -1221,6 +1389,47 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
+						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
+						if( uiNumBytesRead != 2 )
+						{
+							#ifdef JA2TESTVERSION
+								sprintf( zReason, "Civilian -- EOF while reading usCheckSum %d.  KM", i );
+							#endif
+							goto FAIL_LOAD;
+						}
+						//verify the checksum equation (anti-hack) -- see save 
+						usFileCheckSum = 
+							curr->pDetailedPlacement->bLife									* 7		+	 
+							curr->pDetailedPlacement->bLifeMax  						* 8		-
+							curr->pDetailedPlacement->bAgility							* 2		+
+							curr->pDetailedPlacement->bDexterity						* 1		+
+							curr->pDetailedPlacement->bExpLevel							* 5		-
+							curr->pDetailedPlacement->bMarksmanship					* 9		+
+							curr->pDetailedPlacement->bMedical							* 10	+
+							curr->pDetailedPlacement->bMechanical						* 3		+
+							curr->pDetailedPlacement->bExplosive						* 4		+
+							curr->pDetailedPlacement->bLeadership						* 5		+
+							curr->pDetailedPlacement->bStrength							* 7		+
+							curr->pDetailedPlacement->bWisdom								* 11	+
+							curr->pDetailedPlacement->bMorale								* 7		+
+							curr->pDetailedPlacement->bAIMorale							* 3		-
+							curr->pDetailedPlacement->bBodyType							* 7		+
+							4																								* 6		+
+							curr->pDetailedPlacement->sSectorX							* 7		-
+							curr->pDetailedPlacement->ubSoldierClass				* 4		+
+							curr->pDetailedPlacement->bTeam									* 7		+
+							curr->pDetailedPlacement->bDirection						* 5		+
+							curr->pDetailedPlacement->fOnRoof								* 17	+ 
+							curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+							3;
+						if( usCheckSum != usFileCheckSum )
+						{	
+							//Hacker has modified the stats on the enemy placements.
+							#ifdef JA2TESTVERSION
+								sprintf( zReason, "Civilian -- checksum for placement %d failed.  KM", i );
+							#endif
+							goto FAIL_LOAD;
+						}
 						
 						if( curr->pDetailedPlacement->bLife < curr->pDetailedPlacement->bLifeMax )
 						{ //Add 4 life for every hour that passes.
@@ -1313,7 +1522,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 //soldiers and the soldier init list.	Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
 {
-	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
@@ -1324,6 +1532,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
+	UINT16 usCheckSum;
 
 	UINT8	ubStartID=0;
 	UINT8	ubEndID = 0;
@@ -1354,7 +1563,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		pSoldier = MercPtrs[ i ];
 
 		//make sure the person is active, alive, in the sector, and is not a profiled person
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife && pSoldier->ubProfile == NO_PROFILE )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife && pSoldier->ubProfile == NO_PROFILE )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
 			while( curr && curr->pSoldier != pSoldier )
@@ -1371,23 +1580,71 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
 							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT; //(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
-							*curr->pDetailedPlacement = *pSoldier;
-
-							//we don't want the player to think that all the enemies start in the exact position when we 
-							//left the map, so randomize the start locations either current position or original position.
-							if( PreRandom( 2 ) )
-							{
-								//use current position, which is already copied over
-							}
-							else
-							{
-								//use original position
-								curr->pDetailedPlacement->fOnRoof				= curr->pBasicPlacement->fOnRoof;
-								curr->pDetailedPlacement->sInsertionGridNo		= curr->pBasicPlacement->usStartingGridNo;
-							}
+                                                        // WDS - Clean up inventory handling
+							curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;
+							curr->pDetailedPlacement->initialize();
+							//memset( curr->pDetailedPlacement, 0, SIZEOF_SOLDIERCREATE_STRUCT );
 						}
 
+						//Copy over the data of the soldier.
+						curr->pDetailedPlacement->ubProfile							= NO_PROFILE;
+						curr->pDetailedPlacement->bLife									= pSoldier->bLife;
+						curr->pDetailedPlacement->bLifeMax  						= pSoldier->bLifeMax;
+						curr->pDetailedPlacement->bAgility							= pSoldier->bAgility;
+						curr->pDetailedPlacement->bDexterity						= pSoldier->bDexterity;
+						curr->pDetailedPlacement->bExpLevel							= pSoldier->bExpLevel;
+						curr->pDetailedPlacement->bMarksmanship					= pSoldier->bMarksmanship;
+						curr->pDetailedPlacement->bMedical							= pSoldier->bMedical;
+						curr->pDetailedPlacement->bMechanical						= pSoldier->bMechanical;
+						curr->pDetailedPlacement->bExplosive						= pSoldier->bExplosive;
+						curr->pDetailedPlacement->bLeadership						= pSoldier->bLeadership;
+						curr->pDetailedPlacement->bStrength							= pSoldier->bStrength;
+						curr->pDetailedPlacement->bWisdom								= pSoldier->bWisdom;
+						curr->pDetailedPlacement->bAttitude							= pSoldier->bAttitude;
+						curr->pDetailedPlacement->bOrders								= pSoldier->bOrders;
+						curr->pDetailedPlacement->bMorale								= pSoldier->bMorale;
+						curr->pDetailedPlacement->bAIMorale							= pSoldier->bAIMorale;
+						curr->pDetailedPlacement->bBodyType							= pSoldier->ubBodyType;
+						curr->pDetailedPlacement->ubCivilianGroup				= pSoldier->ubCivilianGroup;
+						curr->pDetailedPlacement->ubScheduleID					= pSoldier->ubScheduleID;
+						curr->pDetailedPlacement->fHasKeys							= pSoldier->bHasKeys;
+						curr->pDetailedPlacement->sSectorX							= pSoldier->sSectorX;
+						curr->pDetailedPlacement->sSectorY							= pSoldier->sSectorY;
+						curr->pDetailedPlacement->bSectorZ							= pSoldier->bSectorZ;
+						curr->pDetailedPlacement->ubSoldierClass				= pSoldier->ubSoldierClass;
+						curr->pDetailedPlacement->bTeam									= pSoldier->bTeam;
+						curr->pDetailedPlacement->bDirection						= pSoldier->bDirection;
+
+						//we don't want the player to think that all the enemies start in the exact position when we 
+						//left the map, so randomize the start locations either current position or original position.
+						if( PreRandom( 2 ) )
+						{ //use current position
+							curr->pDetailedPlacement->fOnRoof								= pSoldier->bLevel;
+							curr->pDetailedPlacement->sInsertionGridNo			= pSoldier->sGridNo;
+						}
+						else
+						{ //use original position
+							curr->pDetailedPlacement->fOnRoof								= curr->pBasicPlacement->fOnRoof;
+							curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
+						}
+
+						swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+
+						//Copy patrol points
+						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
+						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+								
+						//copy colors for soldier based on the body type.
+						sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
+						sprintf( curr->pDetailedPlacement->VestPal,		pSoldier->VestPal );
+						sprintf( curr->pDetailedPlacement->SkinPal,		pSoldier->SkinPal );
+						sprintf( curr->pDetailedPlacement->PantsPal,  pSoldier->PantsPal );
+						sprintf( curr->pDetailedPlacement->MiscPal,		pSoldier->MiscPal );
+
+						//copy soldier's inventory
+                                                // WDS - Clean up inventory handling
+						//memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );	
+						curr->pDetailedPlacement->Inv = pSoldier->inv;	
 					}
 				}
 
@@ -1510,7 +1767,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	{
 		pSoldier = MercPtrs[ i ];
 		// CJC: note that bInSector is not required; the civ could be offmap!
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->stats.bLife )
+		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
 		{ 
 			//soldier is valid, so find the matching soldier init list entry for modification.
 			curr = gSoldierInitHead;
@@ -1521,9 +1778,43 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{
 				//found a match.	
-				if ( !curr->pDetailedPlacement->Save(hfile, FALSE) )
+                                // WDS - Clean up inventory handling
+				curr->pDetailedPlacement->CopyNewInventoryToOld();
+				FileWrite( hfile, curr->pDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesWritten );
+				if( uiNumBytesWritten != SIZEOF_SOLDIERCREATE_STRUCT_POD )
 				{
 					goto FAIL_SAVE;
+				}
+				//insert a checksum equation (anti-hack)
+				usCheckSum = 
+					curr->pDetailedPlacement->bLife									* 7		+	 
+					curr->pDetailedPlacement->bLifeMax  						* 8		-
+					curr->pDetailedPlacement->bAgility							* 2		+
+					curr->pDetailedPlacement->bDexterity						* 1		+
+					curr->pDetailedPlacement->bExpLevel							* 5		-
+					curr->pDetailedPlacement->bMarksmanship					* 9		+
+					curr->pDetailedPlacement->bMedical							* 10	+
+					curr->pDetailedPlacement->bMechanical						* 3		+
+					curr->pDetailedPlacement->bExplosive						* 4		+
+					curr->pDetailedPlacement->bLeadership						* 5		+
+					curr->pDetailedPlacement->bStrength							* 7		+
+					curr->pDetailedPlacement->bWisdom								* 11	+
+					curr->pDetailedPlacement->bMorale								* 7		+
+					curr->pDetailedPlacement->bAIMorale							* 3		-
+					curr->pDetailedPlacement->bBodyType							* 7		+
+					4																								* 6		+
+					curr->pDetailedPlacement->sSectorX							* 7		-
+					curr->pDetailedPlacement->ubSoldierClass				* 4		+
+					curr->pDetailedPlacement->bTeam									* 7		+
+					curr->pDetailedPlacement->bDirection						* 5		+
+					curr->pDetailedPlacement->fOnRoof								* 17	+ 
+					curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+					3;
+				FileWrite( hfile, &usCheckSum, 2, &uiNumBytesWritten );
+				if( uiNumBytesWritten != 2 )
+				{
+					goto FAIL_SAVE;
+
 				}
 			}
 		}
@@ -1560,7 +1851,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures )
 {
-	PERFORMANCE_MARKER
 //	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
@@ -1569,6 +1859,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
+	UINT16 usCheckSum;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -1726,13 +2017,16 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	for( i = 0; i < slots; i++ )
 	{
-		if ( !tempDetailedPlacement.Load(hfile) )
+                // WDS - Clean up inventory handling
+		FileRead( hfile, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD, &uiNumBytesRead );
+		if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT_POD)
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.	KM", i );
 			#endif
 			goto FAIL_LOAD;
 		}
+		tempDetailedPlacement.CopyOldInventoryToNew();
 
 		//increment the current type of soldier
 		switch( tempDetailedPlacement.ubSoldierClass )
@@ -1750,6 +2044,16 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 				(*pubNumCreatures)++;
 				break;
 		}
+
+
+		FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
+		if( uiNumBytesRead != 2 )
+		{
+			#ifdef JA2TESTVERSION
+				sprintf( zReason, "Check EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
+			#endif
+			goto FAIL_LOAD;
+		}
 /*
 		while( curr )
 		{	
@@ -1757,12 +2061,14 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 			{
 				if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
 				{
+                                        // WDS - Clean up inventory handling
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
-						curr->pDetailedPlacement = new SOLDIERCREATE_STRUCT;
+						curr->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;
 					}
 					//now replace the map pristine placement info with the temp map file version..
+//					memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
 					*curr->pDetailedPlacement = tempDetailedPlacement;
 					
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
@@ -1780,6 +2086,46 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid, 
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
+					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
+					if( uiNumBytesRead != 2 )
+					{
+						#ifdef JA2TESTVERSION
+							sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
+						#endif
+						goto FAIL_LOAD;
+					}
+					//verify the checksum equation (anti-hack) -- see save 
+					usFileCheckSum = 
+						curr->pDetailedPlacement->bLife									* 7		+	 
+						curr->pDetailedPlacement->bLifeMax  						* 8		-
+						curr->pDetailedPlacement->bAgility							* 2		+
+						curr->pDetailedPlacement->bDexterity						* 1		+
+						curr->pDetailedPlacement->bExpLevel							* 5		-
+						curr->pDetailedPlacement->bMarksmanship					* 9		+
+						curr->pDetailedPlacement->bMedical							* 10	+
+						curr->pDetailedPlacement->bMechanical						* 3		+
+						curr->pDetailedPlacement->bExplosive						* 4		+
+						curr->pDetailedPlacement->bLeadership						* 5		+
+						curr->pDetailedPlacement->bStrength							* 7		+
+						curr->pDetailedPlacement->bWisdom								* 11	+
+						curr->pDetailedPlacement->bMorale								* 7		+
+						curr->pDetailedPlacement->bAIMorale							* 3		-
+						curr->pDetailedPlacement->bBodyType							* 7		+
+						4																								* 6		+
+						curr->pDetailedPlacement->sSectorX							* 7		-
+						curr->pDetailedPlacement->ubSoldierClass				* 4		+
+						curr->pDetailedPlacement->bTeam									* 7		+
+						curr->pDetailedPlacement->bDirection						* 5		+
+						curr->pDetailedPlacement->fOnRoof								* 17	+ 
+						curr->pDetailedPlacement->sInsertionGridNo			* 1		+ 
+						3;
+					if( usCheckSum != usFileCheckSum )
+					{	//Hacker has modified the stats on the enemy placements.
+						#ifdef JA2TESTVERSION
+							sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", i );
+						#endif
+						goto FAIL_LOAD;
+					}
 
 					//Add preserved placements as long as they don't exceed the actual population.
 					switch( curr->pBasicPlacement->ubSoldierClass )

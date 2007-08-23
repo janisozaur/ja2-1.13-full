@@ -51,7 +51,6 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 	
 		// create buttons
 	CreateIMPPortraitButtons( );
@@ -66,7 +65,6 @@ void EnterIMPPortraits( void )
 
 void RenderIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 	
 
 	// render background
@@ -90,7 +88,6 @@ void RenderIMPPortraits( void )
 
 void ExitIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 	// destroy buttons for IMP portrait page
 	DestroyIMPPortraitButtons( ); 
 
@@ -99,7 +96,6 @@ void ExitIMPPortraits( void )
 
 void HandleIMPPortraits( void )
 {
-	PERFORMANCE_MARKER
 
 	// do we need to re write screen
 	if ( fReDrawPortraitScreenFlag == TRUE ) 
@@ -115,7 +111,6 @@ void HandleIMPPortraits( void )
 
 BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	// render the portrait of the current picture
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
@@ -163,7 +158,6 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 
 void IncrementPictureIndex( void )
 {
-	PERFORMANCE_MARKER
 	// cycle to next picture
 	
 	iCurrentPortrait++;
@@ -181,7 +175,6 @@ void IncrementPictureIndex( void )
 
 void DecrementPicture( void )
 {
-	PERFORMANCE_MARKER
 	// cycle to previous picture
 	
 	iCurrentPortrait--;
@@ -198,7 +191,6 @@ void DecrementPicture( void )
 
 void CreateIMPPortraitButtons( void )
 {
-	PERFORMANCE_MARKER
 	// will create buttons need for the IMP portrait screen
 
 	// next button
@@ -253,7 +245,6 @@ void CreateIMPPortraitButtons( void )
 
 void DestroyIMPPortraitButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// will destroy buttons created for IMP Portrait screen
 	
@@ -275,7 +266,6 @@ void DestroyIMPPortraitButtons( void )
 
 void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -301,7 +291,6 @@ void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -327,7 +316,6 @@ void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -391,7 +379,6 @@ void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToPortraitsPageButNotFinished()
 {
-	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__ATTRIBUTES ||

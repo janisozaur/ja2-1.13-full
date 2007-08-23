@@ -1502,7 +1502,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Onveilig:", 			// distance to return from destination to airport
 	L"Totale Kosten: ", 		// total cost of trip by helicopter
 	L"Aank: ", 				// ETA is an acronym for "estimated time of arrival" 
-	L"Helikopter heeft weinig brandstof en moet landen in vijandelijk gebied!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"Helikopter heeft weinig brandstof en moet landen in vijandelijk gebied!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
 	L"Passagiers: ",
 	L"Selecteer Skyrider of Aanvoer Drop-plaats?",			// L"Select Skyrider or the Arrivals Drop-off?",
 	L"Skyrider",
@@ -2860,6 +2860,7 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
+	L"LBE Gear",
 	L"Misc.",
 };
 

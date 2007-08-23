@@ -93,7 +93,6 @@ void MinWidthOfTownMineInfoBox( void );
 
 void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	// will display town info for a particular town
 
 	// set current sector
@@ -111,7 +110,6 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void CreateDestroyTownInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// create destroy pop up box for town/mine info
 	static BOOLEAN fCreated = FALSE;
 	SGPRect pDimensions;
@@ -245,7 +243,6 @@ void CreateDestroyTownInfoBox( void )
 
 void CreateTownInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// create basic box
  CreatePopUpBox(&ghTownMineBox, TownMineDimensions, TownMinePosition, (POPUP_BOX_FLAG_CLIP_TEXT ));
  
@@ -274,7 +271,6 @@ void CreateTownInfoBox( void )
 // adds text to town info box
 void AddTextToTownBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 hStringHandle = 0;
 	CHAR16 wString[ 64 ];
 	UINT8 ubTownId = 0;
@@ -378,7 +374,6 @@ void AddTextToTownBox( void )
 // adds text to mine info box
 void AddTextToMineBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
 	UINT32 hStringHandle;
@@ -509,7 +504,6 @@ void AddTextToMineBox( void )
 
 void AddTextToBlankSectorBox( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 hStringHandle;
 	UINT16 usSectorValue = 0;
 
@@ -554,7 +548,6 @@ void AddTextToBlankSectorBox( void )
 
 void AddSectorToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
 	UINT32 hStringHandle = 0;
@@ -577,7 +570,6 @@ void AddSectorToBox(void)
 
 void AddCommonInfoToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
 	BOOLEAN fUnknownSAMSite = FALSE;
@@ -688,7 +680,6 @@ void AddCommonInfoToBox(void)
 
 void AddItemsInSectorToBox(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
 
@@ -705,7 +696,6 @@ void AddItemsInSectorToBox(void)
 
 void PositionTownMineInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	// position town mine info box
 	SGPRect pDimensions;
 	SGPPoint pPosition;
@@ -767,7 +757,6 @@ void PositionTownMineInfoBox( void )
 
 void AddInventoryButtonForMapPopUpBox( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
@@ -838,7 +827,6 @@ void AddInventoryButtonForMapPopUpBox( void )
 
 void RemoveInventoryButtonForMapPopUpBox( void )
 {
-	PERFORMANCE_MARKER
 
 	// get rid of button
 	RemoveButton( guiMapButtonInventory[0] );
@@ -853,7 +841,6 @@ void RemoveInventoryButtonForMapPopUpBox( void )
 
 void MapTownMineInventoryButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	btn->uiFlags|=(BUTTON_CLICKED_ON);	
@@ -883,7 +870,6 @@ void MapTownMineInventoryButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 
 void MapTownMineExitButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	btn->uiFlags|=(BUTTON_CLICKED_ON);	
@@ -907,7 +893,6 @@ void MapTownMineExitButtonCallBack( GUI_BUTTON *btn, INT32 reason )
 // get the min width of the town mine info pop up box
 void MinWidthOfTownMineInfoBox( void )
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 	VOBJECT_DESC VObjectDesc;
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;

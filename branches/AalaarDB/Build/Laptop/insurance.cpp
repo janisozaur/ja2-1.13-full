@@ -86,13 +86,11 @@ void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void GameInitInsurance()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterInsurance()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX, i;
 
@@ -131,7 +129,6 @@ BOOLEAN EnterInsurance()
 
 void ExitInsurance()
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 
 	RemoveInsuranceDefaults();
@@ -146,13 +143,11 @@ void ExitInsurance()
 
 void HandleInsurance()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void RenderInsurance()
 {
-	PERFORMANCE_MARKER
 	CHAR16		sText[800];
 	HVOBJECT hPixHandle;
 
@@ -226,7 +221,6 @@ void RenderInsurance()
 
 BOOLEAN InitInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Flower Account Box graphic and add it
@@ -263,7 +257,6 @@ BOOLEAN InitInsuranceDefaults()
 
 void DisplayInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT8	i;
 	UINT16	usPosY;
@@ -312,7 +305,6 @@ void DisplayInsuranceDefaults()
 
 void RemoveInsuranceDefaults()
 {
-	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex( guiInsuranceBackGround );
 	DeleteVideoObjectFromIndex( guiInsuranceRedBarImage );
 	DeleteVideoObjectFromIndex( guiInsuranceBigRedLineImage );
@@ -328,7 +320,6 @@ void RemoveInsuranceDefaults()
 
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8 *pDestBuf;
 
@@ -348,7 +339,6 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 
 void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiStartLoc=0;
 
 	if( ubNumber < INS_MULTI_LINE_BEGINS )
@@ -367,8 +357,7 @@ void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 
 
 void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -389,8 +378,7 @@ void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}

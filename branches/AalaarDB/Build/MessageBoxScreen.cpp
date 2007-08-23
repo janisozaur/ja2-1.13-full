@@ -77,7 +77,6 @@ CHAR16		gzUserDefinedButton2[ 128 ];
 
 INT32 DoMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	UINT16	usTextBoxWidth;
 	UINT16	usTextBoxHeight;
@@ -650,7 +649,6 @@ INT32 DoMessageBox( UINT8 ubStyle, const STR16 zString, UINT32 uiExitScreen, UIN
 
 void MsgBoxClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	///if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	//{
 	//	gMsgBox.bHandled = MSG_BOX_RETURN_NO;
@@ -660,7 +658,6 @@ void MsgBoxClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void OKMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -685,7 +682,6 @@ void OKMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 void YESMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -708,7 +704,6 @@ void YESMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 void NOMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -732,7 +727,6 @@ void NOMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 void ContractMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -755,7 +749,6 @@ void ContractMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 void LieMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -779,7 +772,6 @@ void LieMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 void NumberedMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -796,7 +788,6 @@ void NumberedMsgBoxCallback(GUI_BUTTON *btn, INT32 reason )
 
 UINT32	ExitMsgBox( INT8 ubExitCode )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
 	SGPPoint pPosition;
@@ -966,14 +957,12 @@ UINT32	ExitMsgBox( INT8 ubExitCode )
 
 UINT32	MessageBoxScreenInit( )
 {
-	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 
 UINT32	MessageBoxScreenHandle( )
 {
-	PERFORMANCE_MARKER
 	InputAtom	InputEvent;
 
 	if ( gfNewMessageBox )
@@ -1200,7 +1189,6 @@ UINT32	MessageBoxScreenHandle( )
 
 UINT32	MessageBoxScreenShutdown(	)
 {
-	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
@@ -1208,7 +1196,6 @@ UINT32	MessageBoxScreenShutdown(	)
 // a basic box that don't care what screen we came from
 void DoScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect(	zString, usFlags, ReturnCallback, &CenteringRect );
 }
@@ -1216,7 +1203,6 @@ void DoScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_
 // a basic box that don't care what screen we came from
 void DoUpperScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
@@ -1224,7 +1210,6 @@ void DoUpperScreenIndependantMessageBox( const STR16 zString, UINT16 usFlags, MS
 // a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox( STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
@@ -1232,7 +1217,6 @@ void DoLowerScreenIndependantMessageBox( STR16 zString, UINT16 usFlags, MSGBOX_C
 
 void DoScreenIndependantMessageBoxWithRect( const STR16 zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
-	PERFORMANCE_MARKER
 
 	/// which screen are we in?
 
@@ -1284,6 +1268,5 @@ void DoScreenIndependantMessageBoxWithRect( const STR16 zString, UINT16 usFlags,
 
 UINT16 GetMSgBoxButtonWidth( INT32 iButtonImage )
 {
-	PERFORMANCE_MARKER
 	return( GetWidthOfButtonPic( (UINT16)iButtonImage, ButtonPictures[iButtonImage].OnNormal ) );
 }

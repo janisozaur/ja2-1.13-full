@@ -9,11 +9,9 @@
 #endif
 
 #include "Language Defines.h"
-#include "profiler.h"
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {
-	PERFORMANCE_MARKER
 	#if defined( ENGLISH ) || defined( TAIWANESE ) || defined( FRENCH )
 		switch( usMLGGraphicID )
 		{

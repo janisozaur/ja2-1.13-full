@@ -524,8 +524,7 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
  
 /* PUBLIC */
 void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySize )
-{
-	PERFORMANCE_MARKER{
+{{
 	GARRISON_GROUP *pG;
 
 	pG = *ppGarrison;
@@ -548,7 +547,6 @@ void Ensure_RepairedGarrisonGroup( GARRISON_GROUP **ppGarrison, INT32 *pGarraySi
 //returns the number of reinforcements permitted to be sent.	Will increased if the denied counter is non-zero.
 INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinforcements )
 {
-	PERFORMANCE_MARKER
 	INT32 iReinforcementsRequested;
 	INT32 iExistingForces;
 	SECTORINFO *pSector;
@@ -579,7 +577,6 @@ INT32 GarrisonReinforcementsRequested( INT32 iGarrisonID, UINT8 *pubExtraReinfor
 
 INT32 PatrolReinforcementsRequested( INT32 iPatrolID )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	pGroup = GetGroup( gPatrolGroup[ iPatrolID ].ubGroupID );
 	if( !pGroup )
@@ -594,7 +591,6 @@ INT32 PatrolReinforcementsRequested( INT32 iPatrolID )
 
 INT32 ReinforcementsAvailable( INT32 iGarrisonID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	INT32 iReinforcementsAvailable;
 
@@ -624,7 +620,6 @@ INT32 ReinforcementsAvailable( INT32 iGarrisonID )
 //
 BOOLEAN PlayerForceTooStrong( UINT8 ubSectorID, UINT16 usOffensePoints, UINT16 *pusDefencePoints )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
 
@@ -645,7 +640,6 @@ BOOLEAN PlayerForceTooStrong( UINT8 ubSectorID, UINT16 usOffensePoints, UINT16 *
 
 void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
@@ -668,7 +662,6 @@ void RequestAttackOnSector( UINT8 ubSectorID, UINT16 usDefencePoints )
 
 BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	
 	switch( ubSectorID )
@@ -700,7 +693,6 @@ BOOLEAN AdjacentSectorIsImportantAndUndefended( UINT8 ubSectorID )
 
 void ValidatePendingGroups()
 {
-	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		GROUP *pGroup;
 		INT32 i, iErrorsForInvalidPendingGroup = 0;
@@ -746,7 +738,6 @@ void ValidatePendingGroups()
 
 void ValidateWeights( INT32 iID )
 {
-	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		INT32 i;
 		INT32 iSumRequestPoints = 0;
@@ -785,7 +776,6 @@ void ValidateWeights( INT32 iID )
 
 void ValidateGroup( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 
@@ -838,7 +828,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic2");
 
 void ValidateLargeGroup( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	#ifdef JA2BETAVERSION
 		if( pGroup->ubGroupSize > 25 )
 		{
@@ -856,7 +845,6 @@ void ValidateLargeGroup( GROUP *pGroup )
 #ifdef JA2BETAVERSION
 void RemovePlayersFromAllMismatchGroups( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup, *pTempGroup = NULL;
 	PLAYERGROUP *pPlayer;
 	BOOLEAN fRemoveSoldierFromThisGroup = FALSE;
@@ -893,7 +881,6 @@ void RemovePlayersFromAllMismatchGroups( SOLDIERTYPE *pSoldier )
 #ifdef JA2BETAVERSION
 void ValidatePlayersAreInOneGroupOnly()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iGroups;
 	INT32 iMismatches;
@@ -910,7 +897,7 @@ void ValidatePlayersAreInOneGroupOnly()
 
 		pSoldier = MercPtrs[ i ];
 
-		if( !pSoldier->bActive || !pSoldier->stats.bLife || !pSoldier->ubGroupID )
+		if( !pSoldier->bActive || !pSoldier->bLife || !pSoldier->ubGroupID )
 		{ //non-existant, dead, or in no group (don't care, skip to next merc)
 			continue;
 		}
@@ -1090,7 +1077,6 @@ void ValidatePlayersAreInOneGroupOnly()
 #ifdef JA2BETAVERSION
 void SAIReportError( STR16 wErrorString )
 {
-	PERFORMANCE_MARKER
 	// runtime static only, don't save
 	#ifdef JA2TESTVERSION
 		static BOOLEAN fReportedAlready = FALSE;
@@ -1128,7 +1114,6 @@ void SAIReportError( STR16 wErrorString )
 
 void InitStrategicAI()
 {
-	PERFORMANCE_MARKER
 	INT32 i, cnt, iRandom;
 	INT32 iEliteChance, iTroopChance, iAdminChance;
 	INT32 iWeight;
@@ -1565,7 +1550,6 @@ void InitStrategicAI()
 
 void KillStrategicAI()
 {
-	PERFORMANCE_MARKER
 	if( gPatrolGroup )
 	{
 		MemFree( gPatrolGroup );
@@ -1593,7 +1577,6 @@ void KillStrategicAI()
 
 BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->uiTimeLastPlayerLiberated && pSector->uiTimeLastPlayerLiberated + (gubHoursGracePeriod * 3600) > GetWorldTotalSeconds() )
@@ -1605,7 +1588,6 @@ BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID )
 
 BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	BOOLEAN fPermittedToAttack = TRUE;
 
@@ -1687,7 +1669,6 @@ BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID )
 
 BOOLEAN HandlePlayerGroupNoticedByPatrolGroup( GROUP *pPlayerGroup, GROUP *pEnemyGroup )
 {
-	PERFORMANCE_MARKER
 	UINT16 usDefencePoints;
 	UINT16 usOffensePoints;
 	UINT8 ubSectorID;
@@ -1729,7 +1710,6 @@ BOOLEAN HandlePlayerGroupNoticedByPatrolGroup( GROUP *pPlayerGroup, GROUP *pEnem
 
 void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	INT32 iReinforcementsApproved;
@@ -1795,7 +1775,6 @@ void HandlePlayerGroupNoticedByGarrison( GROUP *pPlayerGroup, UINT8 ubSectorID )
 
 BOOLEAN HandleMilitiaNoticedByPatrolGroup( UINT8 ubSectorID, GROUP *pEnemyGroup )
 {
-	PERFORMANCE_MARKER
 	//For now, automatically attack.
 	UINT16 usOffensePoints, usDefencePoints;
 	UINT8 ubSectorX = (UINT8)(ubSectorID % 16) + 1;
@@ -1821,7 +1800,6 @@ BOOLEAN HandleMilitiaNoticedByPatrolGroup( UINT8 ubSectorID, GROUP *pEnemyGroup 
 
 BOOLEAN AttemptToNoticeEmptySectorSucceeds()
 {
-	PERFORMANCE_MARKER
 	if( gubNumAwareBattles || gfAutoAIAware )
 	{ //The queen is in high-alert and is searching for players.	All adjacent checks will automatically succeed.
 		return TRUE;
@@ -1859,7 +1837,6 @@ BOOLEAN AttemptToNoticeEmptySectorSucceeds()
 //not notice as much.	If it fails, the alertness gradually increases until it succeeds.
 BOOLEAN AttemptToNoticeAdjacentGroupSucceeds()
 {
-	PERFORMANCE_MARKER
 	if( gubNumAwareBattles || gfAutoAIAware )
 	{ //The queen is in high-alert and is searching for players.	All adjacent checks will automatically succeed.
 		return TRUE;
@@ -1893,7 +1870,6 @@ BOOLEAN AttemptToNoticeAdjacentGroupSucceeds()
 
 BOOLEAN HandleEmptySectorNoticedByPatrolGroup( GROUP *pGroup, UINT8 ubEmptySectorID )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubGarrisonID;
 	UINT8 ubSectorX = (UINT8)(ubEmptySectorID % 16) + 1;
 	UINT8 ubSectorY = (UINT8)(ubEmptySectorID / 16) + 1;
@@ -1930,7 +1906,6 @@ BOOLEAN HandleEmptySectorNoticedByPatrolGroup( GROUP *pGroup, UINT8 ubEmptySecto
 
 void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmptySectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pGroup;
 	UINT8 ubAvailableTroops;
@@ -1970,7 +1945,6 @@ void HandleEmptySectorNoticedByGarrison( UINT8 ubGarrisonSectorID, UINT8 ubEmpty
 
 BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT16 usOffensePoints;
 	UINT8 ubSectorX, ubSectorY;
@@ -2019,7 +1993,6 @@ BOOLEAN ReinforcementsApproved( INT32 iGarrisonID, UINT16 *pusDefencePoints )
 //to abort processing of the group for obvious reasons.
 BOOLEAN EvaluateGroupSituation( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pPatrolGroup;
 	INT32 i;
@@ -2221,7 +2194,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic5");
 //returns TRUE if the group was deleted.
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	GROUP *pEnemyGroup, *pPlayerGroup;
 	UINT8 ubNumEnemies;
@@ -2423,7 +2395,6 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 //This is called periodically for each enemy occupied sector containing garrisons.
 void CheckEnemyControlledSector( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
 	if( !gfQueenAIAwake )
@@ -2554,7 +2525,6 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 
 void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
@@ -2585,7 +2555,6 @@ void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 
 void RecalculatePatrolWeight( INT32 iPatrolID )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	INT32 iWeight, iPrevWeight;
 	INT32 iNeedPopulation;
@@ -2622,7 +2591,6 @@ void RecalculatePatrolWeight( INT32 iPatrolID )
 
 void RecalculateGarrisonWeight( INT32 iGarrisonID )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	INT32 iWeight, iPrevWeight;
 	INT32 iDesiredPop, iCurrentPop, iPriority;
@@ -2669,7 +2637,6 @@ void RecalculateGarrisonWeight( INT32 iGarrisonID )
 
 void RecalculateSectorWeight( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
@@ -2685,7 +2652,6 @@ void RecalculateSectorWeight( UINT8 ubSectorID )
 
 void RecalculateGroupWeight( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
@@ -2705,7 +2671,6 @@ void RecalculateGroupWeight( GROUP *pGroup )
 
 INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32 iReinforcementsRequested )
 {
-	PERFORMANCE_MARKER
 	INT32 iSrcGarrisonID, iBestGarrisonID = NO_GARRISON;
 	INT32 iReinforcementsAvailable;
 	INT32 i, iRandom, iWeight;
@@ -2814,7 +2779,6 @@ INT32 ChooseSuitableGarrisonToProvideReinforcements( INT32 iDstGarrisonID, INT32
 
 void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints, GROUP **pOptionalGroup )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	INT32 iChance, iRandom, iSrcGarrisonID;
 	INT32 iMaxReinforcementsAllowed, iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
@@ -3052,7 +3016,6 @@ void SendReinforcementsForGarrison( INT32 iDstGarrisonID, UINT16 usDefencePoints
 
 void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	INT32 iRandom, iSrcGarrisonID, iWeight;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
@@ -3165,7 +3128,6 @@ void SendReinforcementsForPatrol( INT32 iPatrolID, GROUP **pOptionalGroup )
 //reinforcements, new patrol groups, planned assaults, etc.
 void EvaluateQueenSituation()
 {
-	PERFORMANCE_MARKER
 	INT32 i, iRandom;
 	INT32 iWeight;
 	UINT32 uiOffset;
@@ -3289,7 +3251,6 @@ void EvaluateQueenSituation()
 
 BOOLEAN SaveStrategicAI( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
 	ARMY_COMPOSITION gTempArmyComp;
@@ -3431,7 +3392,6 @@ BOOLEAN SaveStrategicAI( HWFILE hFile )
 
 BOOLEAN LoadStrategicAI( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup, *next;
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
@@ -3999,7 +3959,6 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 
 void EvolveQueenPriorityPhase( BOOLEAN fForceChange )
 {
-	PERFORMANCE_MARKER
 	INT32 i, index, num, iFactor;
 	INT32 iChange, iNew, iNumSoldiers, iNumPromotions;
 	SECTORINFO *pSector;
@@ -4195,7 +4154,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic7");
 
 void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup, *pGroup0, *pGroup1, *pGroup2, *pGroup3, *pPendingGroup = NULL;
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
@@ -4447,7 +4405,6 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 void LogStrategicMsg( STR8	str, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR8	string[512];
 
@@ -4477,7 +4434,6 @@ void LogStrategicMsg( STR8	str, ... )
 
 void LogStrategicEvent( STR8	str, ... )
 {
-	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR8	string[512];
 
@@ -4509,7 +4465,6 @@ void LogStrategicEvent( STR8	str, ... )
 
 void ClearStrategicLog()
 {
-	PERFORMANCE_MARKER
 	FILE *fp;
 	fp = fopen( "Strategic Decisions.txt", "w" );
 	if( !fp )
@@ -4523,7 +4478,6 @@ void ClearStrategicLog()
 
 void InvestigateSector( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	//Lalien: enabled
 	if ( gGameExternalOptions.gfInvestigateSector == TRUE )
 	{
@@ -4652,7 +4606,6 @@ void InvestigateSector( UINT8 ubSectorID )
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
 	if( sSectorZ )
@@ -4818,7 +4771,6 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 
 void RequestHighPriorityStagingGroupReinforcements( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 //	GROUP *pClosestGroup;
 	if( !pGroup->pEnemyGroup->ubPendingReinforcements )
 	{
@@ -4830,7 +4782,6 @@ void RequestHighPriorityStagingGroupReinforcements( GROUP *pGroup )
 
 UINT8 SectorDistance( UINT8 ubSectorID1, UINT8 ubSectorID2 )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubSectorX1, ubSectorX2, ubSectorY1, ubSectorY2;
 	UINT8 ubDist;
 	ubSectorX1 = (UINT8)SECTORX( ubSectorID1 );
@@ -4845,7 +4796,6 @@ UINT8 SectorDistance( UINT8 ubSectorID1, UINT8 ubSectorID2 )
 
 void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldiersRequested )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iBestIndex;
 	GROUP *pGroup;
 	UINT8 ubBestDist, ubDist;
@@ -4968,7 +4918,6 @@ void RequestHighPriorityGarrisonReinforcements( INT32 iGarrisonID, UINT8 ubSoldi
 
 void WakeUpQueen()
 {
-	PERFORMANCE_MARKER
 	gfQueenAIAwake = TRUE;
 	if( !gfMassFortificationOrdered )
 	{
@@ -4979,7 +4928,6 @@ void WakeUpQueen()
 
 void MassFortifyTowns()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	SECTORINFO *pSector;
 	//GROUP *pGroup;
@@ -5023,7 +4971,6 @@ void MassFortifyTowns()
 
 void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 {
-	PERFORMANCE_MARKER
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	if( pSector->ubGarrisonID != NO_GARRISON )
@@ -5061,7 +5008,6 @@ void RenderAIViewerGarrisonInfo( INT32 x, INT32 y, SECTORINFO *pSector )
 
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
 	switch( ubSectorID )
@@ -5093,7 +5039,6 @@ void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 
 BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID )
 {
-	PERFORMANCE_MARKER
 	INT32 iAvailable;
 	INT32 iDesired;
 	SECTORINFO *pSector;
@@ -5123,7 +5068,6 @@ BOOLEAN GarrisonCanProvideMinimumReinforcements( INT32 iGarrisonID )
 
 BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID )
 {
-	PERFORMANCE_MARKER
 	INT32 iAvailable;
 	INT32 iDesired;
 	SECTORINFO *pSector;
@@ -5148,7 +5092,6 @@ BOOLEAN GarrisonRequestingMinimumReinforcements( INT32 iGarrisonID )
 
 BOOLEAN PatrolRequestingMinimumReinforcements( INT32 iPatrolID )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 
 	if( gPatrolGroup[ iPatrolID ].ubPendingGroupID )
@@ -5173,7 +5116,6 @@ BOOLEAN PatrolRequestingMinimumReinforcements( INT32 iPatrolID )
 
 void EliminateSurplusTroopsForGarrison( GROUP *pGroup, SECTORINFO *pSector )
 {
-	PERFORMANCE_MARKER
 	INT32 iTotal;
 	INT32 iMaxEnemyGroupSize = gGameExternalOptions.iMaxEnemyGroupSize;
 DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic8");
@@ -5274,7 +5216,6 @@ DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"Strategic8");
 // fighting many more admins once they are no longer any challenge for him.	Eventually all admins will vanish off map.
 void UpgradeAdminsToTroops()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	SECTORINFO *pSector;
 	INT8 bPriority;
@@ -5385,7 +5326,6 @@ void UpgradeAdminsToTroops()
 
 INT16 FindPatrolGroupIndexForGroupID( UINT8 ubGroupID )
 {
-	PERFORMANCE_MARKER
 	INT16 sPatrolIndex;
 
 	for( sPatrolIndex = 0; sPatrolIndex < giPatrolArraySize; sPatrolIndex++ )
@@ -5404,7 +5344,6 @@ INT16 FindPatrolGroupIndexForGroupID( UINT8 ubGroupID )
 
 INT16 FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID )
 {
-	PERFORMANCE_MARKER
 	INT16 sPatrolIndex;
 
 	for( sPatrolIndex = 0; sPatrolIndex < giPatrolArraySize; sPatrolIndex++ )
@@ -5423,7 +5362,6 @@ INT16 FindPatrolGroupIndexForGroupIDPending( UINT8 ubGroupID )
 
 INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 {
-	PERFORMANCE_MARKER
 	INT16 sGarrisonIndex;
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
 
@@ -5442,7 +5380,6 @@ INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 
 void TransferGroupToPool( GROUP **pGroup )
 {
-	PERFORMANCE_MARKER
 	//Madd: unlimited reinforcements?
 	if ( !gfUnlimitedTroops )
 		giReinforcementPool += (*pGroup)->ubGroupSize;
@@ -5454,7 +5391,6 @@ void TransferGroupToPool( GROUP **pGroup )
 //NOTE:	Make sure you call SetEnemyGroupSector() first if the group is between sectors!!	See example in ReassignAIGroup()...
 void SendGroupToPool( GROUP **pGroup )
 {
-	PERFORMANCE_MARKER
 	if( (*pGroup)->ubSectorX == 3 && (*pGroup)->ubSectorY == 16 )
 	{
 		TransferGroupToPool( pGroup );
@@ -5468,7 +5404,6 @@ void SendGroupToPool( GROUP **pGroup )
 
 void ReassignAIGroup( GROUP **pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 i, iRandom;
 	INT32 iWeight;
 	UINT16 usDefencePoints;
@@ -5601,7 +5536,6 @@ void ReassignAIGroup( GROUP **pGroup )
 //group isn't allowed to be filled for several days.
 void TagSAIGroupWithGracePeriod( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 iPatrolID;
 	if( pGroup )
 	{
@@ -5629,7 +5563,6 @@ void TagSAIGroupWithGracePeriod( GROUP *pGroup )
 
 BOOLEAN PermittedToFillPatrolGroup( INT32 iPatrolID )
 {
-	PERFORMANCE_MARKER
 	INT32 iDay;
 	INT32 iDayAllowed;
 	iDay = GetWorldDay();
@@ -5639,7 +5572,6 @@ BOOLEAN PermittedToFillPatrolGroup( INT32 iPatrolID )
 
 void RepollSAIGroup( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	Assert( !pGroup->fPlayer );
 
@@ -5674,7 +5606,6 @@ void RepollSAIGroup( GROUP *pGroup )
 
 void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 
  Ensure_RepairedGarrisonGroup( &gGarrisonGroup, &giGarrisonArraySize );	/* added NULL fix, 2007-03-03, Sgt. Kolja */
@@ -5705,7 +5636,6 @@ void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 
 void CalcNumTroopsBasedOnComposition( UINT8 *pubNumTroops, UINT8 *pubNumElites, UINT8 ubTotal, INT32 iCompositionID )
 {
-	PERFORMANCE_MARKER
 	*pubNumTroops = gArmyComp[ iCompositionID ].bTroopPercentage * ubTotal / 100;
 	*pubNumElites = gArmyComp[ iCompositionID ].bElitePercentage * ubTotal / 100;
 
@@ -5726,7 +5656,6 @@ void CalcNumTroopsBasedOnComposition( UINT8 *pubNumTroops, UINT8 *pubNumElites, 
 
 void ConvertGroupTroopsToComposition( GROUP *pGroup, INT32 iCompositionID )
 {
-	PERFORMANCE_MARKER
 	Assert( pGroup );
 	Assert( !pGroup->fPlayer );
 	CalcNumTroopsBasedOnComposition( &pGroup->pEnemyGroup->ubNumTroops, &pGroup->pEnemyGroup->ubNumElites, pGroup->ubGroupSize, iCompositionID );
@@ -5737,7 +5666,6 @@ void ConvertGroupTroopsToComposition( GROUP *pGroup, INT32 iCompositionID )
 
 void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSize )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	INT32 iCompositionID;
 	UINT8 ubNumTroops, ubNumElites;
@@ -5820,7 +5748,6 @@ void RemoveSoldiersFromGarrisonBasedOnComposition( INT32 iGarrisonID, UINT8 ubSi
 
 void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubDstSectorX, ubDstSectorY;
 
 	ubDstSectorX = (UINT8)SECTORX( ubSectorID );
@@ -5874,7 +5801,6 @@ void MoveSAIGroupToSector( GROUP **pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, 
 //will cause them to avoid the sector.	Returns the number of redirected groups.
 UINT8 RedirectEnemyGroupsMovingThroughSector( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	UINT8 ubNumGroupsRedirected = 0;
 	WAYPOINT *pWaypoint;
@@ -5909,7 +5835,6 @@ UINT8 RedirectEnemyGroupsMovingThroughSector( UINT8 ubSectorX, UINT8 ubSectorY )
 //to reflect the changes of the compositions to the sector that haven't been visited yet.
 void ReinitializeUnvisitedGarrisons()
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	ARMY_COMPOSITION *pArmyComp;
 	GROUP *pGroup;
@@ -5982,7 +5907,6 @@ void ReinitializeUnvisitedGarrisons()
 
 GROUP* FindPendingGroupForGarrisonSector( UINT8 ubSectorID )
 {
-	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];

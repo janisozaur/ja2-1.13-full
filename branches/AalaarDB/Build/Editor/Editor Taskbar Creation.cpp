@@ -34,7 +34,6 @@ void InitEditorItemStatsButtons();
 
 void InitEditorItemStatsButtons()
 {
-	PERFORMANCE_MARKER
 	iEditorButton[ ITEMSTATS_PANEL ] = 
 		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, iScreenWidthOffset + 480, 2 * iScreenHeightOffset + 361, 160, 99, BUTTON_TOGGLE, 
 		MSYS_PRIORITY_NORMAL, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );
@@ -49,7 +48,6 @@ void InitEditorItemStatsButtons()
 
 void InitEditorMercsToolbar()
 {
-	PERFORMANCE_MARKER
 	CHAR16 TempString[30];
 	STR16 FaceDirs[8] = {L"north",L"northeast",L"east",L"southeast",L"south",L"southwest",L"west",L"northwest"};
 	INT32 x;
@@ -449,7 +447,6 @@ void InitEditorMercsToolbar()
 
 void InitEditorBuildingsToolbar()
 {
-	PERFORMANCE_MARKER
 	iEditorButton[BUILDING_TOGGLE_ROOF_VIEW] =
 		CreateTextButton(L"ROOFS",(UINT16)SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 		iScreenWidthOffset + 110, 2 * iScreenHeightOffset + 400, 50, 15, BUTTON_TOGGLE,MSYS_PRIORITY_NORMAL,BUTTON_NO_CALLBACK, 
@@ -555,7 +552,6 @@ void InitEditorBuildingsToolbar()
 
 void InitEditorItemsToolbar()
 {
-	PERFORMANCE_MARKER
 	SetFontForeground( FONT_MCOLOR_LTRED );
 	iEditorButton[ITEMS_WEAPONS] = 
 		CreateTextButton(L"Weapons",(UINT16)BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -603,7 +599,6 @@ void InitEditorItemsToolbar()
 			
 void InitEditorMapInfoToolbar()
 {
-	PERFORMANCE_MARKER
 	iEditorButton[MAPINFO_ADD_LIGHT1_SOURCE] = 
 		CreateEasyToggleButton( iScreenWidthOffset + 10, SCREEN_HEIGHT - 118, "EDITOR//light.sti", BtnDrawLightsCallback );
 	SetButtonFastHelpText(iEditorButton[MAPINFO_ADD_LIGHT1_SOURCE],L"Add ambient light source");
@@ -675,7 +670,6 @@ void InitEditorMapInfoToolbar()
 
 void InitEditorOptionsToolbar()
 {
-	PERFORMANCE_MARKER
 	iEditorButton[OPTIONS_NEW_MAP] = 
 		CreateEasyNoToggleButton( iScreenWidthOffset + 71,SCREEN_HEIGHT - 79,"EDITOR//new.sti",	BtnNewMapCallback);
 	SetButtonFastHelpText(iEditorButton[OPTIONS_NEW_MAP],L"New map");
@@ -711,7 +705,6 @@ void InitEditorOptionsToolbar()
 
 void InitEditorTerrainToolbar()
 {
-	PERFORMANCE_MARKER
 	iEditorButton[TERRAIN_FGROUND_TEXTURES] = 
 		CreateEasyToggleButton( iScreenWidthOffset + 100,SCREEN_HEIGHT - 80,"EDITOR//downgrid.sti", BtnFgGrndCallback);
 	SetButtonFastHelpText(iEditorButton[TERRAIN_FGROUND_TEXTURES],L"Draw ground textures");
@@ -771,7 +764,6 @@ void InitEditorTerrainToolbar()
 
 void CreateEditorTaskbarInternal()
 {
-	PERFORMANCE_MARKER
 	//Create the tabs for the editor taskbar
 	iEditorButton[ TAB_TERRAIN ] = 
 		CreateTextButton(L"Terrain",	(UINT16)SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT,

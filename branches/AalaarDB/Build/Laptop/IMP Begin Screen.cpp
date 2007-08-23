@@ -126,7 +126,6 @@ void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 void EnterIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 
 	// reset all variables
 	
@@ -188,7 +187,6 @@ void EnterIMPBeginScreen( void )
 
 void RenderIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -230,7 +228,6 @@ void RenderIMPBeginScreen( void )
 
 void ExitIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 	
 	// remove buttons
 	RemoveIMPBeginScreenButtons( );
@@ -259,7 +256,6 @@ void ExitIMPBeginScreen( void )
 
 void HandleIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 
 	GetPlayerKeyBoardInputForIMPBeginScreen( );
 
@@ -302,7 +298,6 @@ void HandleIMPBeginScreen( void )
 
 void CreateIMPBeginScreenButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will create the buttons needed for the IMP BeginScreen
 
 	// ths done button
@@ -328,7 +323,6 @@ void CreateIMPBeginScreenButtons( void )
 
 void RemoveIMPBeginScreenButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will destroy the already created buttosn for the IMP BeginScreen
 
 	// the done button
@@ -342,7 +336,6 @@ void RemoveIMPBeginScreenButtons( void )
 
 void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// easter egg check
 	BOOLEAN fEggOnYouFace = FALSE;
@@ -452,14 +445,13 @@ void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 
 	// get the current curosr position, might just need it.
 	GetCursorPos(&MousePos);	
-	ScreenToClient(ghWindow, &MousePos); // In window coords!
-	
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
+
 	// handle input events
 	while( DequeueEvent(&InputEvent) )
 	{ 
@@ -544,7 +536,6 @@ void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 
 void HandleBeginScreenTextEvent( UINT32 uiKey )
 {
-	PERFORMANCE_MARKER
 	// this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	// or delete it
 
@@ -694,7 +685,6 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 
 void DisplayFullNameStringCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -756,7 +746,6 @@ void DisplayFullNameStringCursor( void )
 
 void DisplayNickNameStringCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -818,7 +807,6 @@ void DisplayNickNameStringCursor( void )
 
 void DisplayPlayerFullNameString( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -850,7 +838,6 @@ void DisplayPlayerFullNameString( void )
 
 void DisplayPlayerNickNameString( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -882,7 +869,6 @@ void DisplayPlayerNickNameString( void )
 
 void DisplayMaleGlowCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -944,7 +930,6 @@ void DisplayMaleGlowCursor( void )
 
 void DisplayFemaleGlowCursor( void )
 {
-	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -1005,7 +990,6 @@ void DisplayFemaleGlowCursor( void )
 
 void CopyFirstNameIntoNickName( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will copy the characters first name in to the nickname for the character
 	UINT32 iCounter=0;
 	while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < 20) && ( pFullNameString[ iCounter ] != 0 ) )
@@ -1021,7 +1005,6 @@ void CopyFirstNameIntoNickName( void )
 
 void IncrementTextEnterMode( void )
 {
-	PERFORMANCE_MARKER
 	// this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
 	
 	// if at IMP_FEMALE gender selection, reset to full name
@@ -1039,7 +1022,6 @@ void IncrementTextEnterMode( void )
 
 void DecrementTextEnterMode( void )
 {
-	PERFORMANCE_MARKER
 	// this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
 	
 	// if at IMP_FEMALE gender selection, reset to full name
@@ -1057,7 +1039,6 @@ void DecrementTextEnterMode( void )
 
 void RenderMaleGenderIcon( void )
 {
-	PERFORMANCE_MARKER
 	// this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
 	
 	// re render indent
@@ -1074,7 +1055,6 @@ void RenderMaleGenderIcon( void )
 
 void RenderFemaleGenderIcon( void )
 {
-	PERFORMANCE_MARKER
 	// this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
 	
 	// re render indent
@@ -1094,7 +1074,6 @@ void RenderFemaleGenderIcon( void )
 
 void CreateIMPBeginScreenMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	// this function creates the IMP mouse regions
 	
 	// are we only reviewing text?.. if so, do not create regions
@@ -1130,7 +1109,6 @@ void CreateIMPBeginScreenMouseRegions( void )
 
 void DestroyIMPBeginScreenMouseRegions( void )
 {
-	PERFORMANCE_MARKER
 	// this function destroys the IMP mouse regions
 
 	// are we only reviewing text?.. if so, do not remove regions
@@ -1149,8 +1127,7 @@ void DestroyIMPBeginScreenMouseRegions( void )
 
 
 void SelectFullNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1169,8 +1146,7 @@ void SelectFullNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1188,8 +1164,7 @@ void SelectNickNameRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1208,8 +1183,7 @@ void SelectMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -1228,8 +1202,7 @@ void SelectFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		//fNewCharInString = TRUE;
@@ -1243,8 +1216,7 @@ void MvtOnFemaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{	
 		//fNewCharInString = TRUE;
@@ -1258,7 +1230,6 @@ void MvtOnMaleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void RenderGender( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will render the gender of the character int he appropriate box
 
 	// check to see if gender has been in fact set
@@ -1284,7 +1255,6 @@ void RenderGender( void )
 
 void Print8CharacterOnlyString( void )
 {
-	PERFORMANCE_MARKER
 
 	SetFontBackground( FONT_BLACK );
 	SetFontForeground( FONT_BLACK );
@@ -1301,7 +1271,6 @@ void Print8CharacterOnlyString( void )
 
 BOOLEAN CheckCharacterInputForEgg( void )
 {
-	PERFORMANCE_MARKER
 #ifndef JA2BETAVERSION
 	return( FALSE );
 #else

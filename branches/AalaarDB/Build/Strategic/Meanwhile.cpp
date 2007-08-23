@@ -153,7 +153,6 @@ void ProcessImplicationsOfMeanwhile( void );
 // set flag for this event
 void SetMeanWhileFlag( UINT8 ubMeanwhileID )
 {
-	PERFORMANCE_MARKER
 	switch( ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:
@@ -213,7 +212,6 @@ void SetMeanWhileFlag( UINT8 ubMeanwhileID )
 // is this flag set?
 BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTrue = FALSE;
 	switch( ubMeanwhileID )
 	{
@@ -283,7 +281,6 @@ BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
 
 INT32 GetFreeNPCSave( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumNPCSaves; uiCount++)
@@ -300,7 +297,6 @@ INT32 GetFreeNPCSave( void )
 
 void RecountNPCSaves( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumNPCSaves-1; (uiCount >=0) ; uiCount--)
@@ -317,7 +313,6 @@ void RecountNPCSaves( void )
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	// event scheduled to happen before, ignore
 	if( GetMeanWhileFlag( pMeanwhileDef->ubMeanwhileID )== TRUE )
 	{
@@ -348,7 +343,6 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 
 BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// copy meanwhile data from array to structure for current
@@ -371,7 +365,6 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 
 void BringupMeanwhileBox( )
 {
-	PERFORMANCE_MARKER
 	CHAR16 zStr[256];
 
 #ifdef JA2TESTVERSION
@@ -397,7 +390,6 @@ void BringupMeanwhileBox( )
 
 void CheckForMeanwhileOKStart( )
 {
-	PERFORMANCE_MARKER
 	if ( gfMeanwhileTryingToStart )
 	{
 		// Are we in prebattle interface?
@@ -437,7 +429,6 @@ void CheckForMeanwhileOKStart( )
 
 void StartMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	INT32 iIndex;
 
 	// OK, save old position...
@@ -604,7 +595,6 @@ void StartMeanwhile( )
 
 void DoneFadeOutMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	// OK, insertion data found, enter sector!
 	
 	SetCurrentWorldSector( gCurrentMeanwhileDef.sSectorX, gCurrentMeanwhileDef.sSectorY, 0 );
@@ -620,7 +610,6 @@ void DoneFadeOutMeanwhile( )
 
 void DoneFadeInMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	// ATE: double check that we are in meanwhile
 	// this is if we cancel right away.....
 	if ( gfInMeanwhile )
@@ -641,7 +630,6 @@ void DoneFadeInMeanwhile( )
 
 void BeginMeanwhileCallBack( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if ( bExitValue == MSG_BOX_RETURN_OK || bExitValue == MSG_BOX_RETURN_YES )
 	{
 		gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
@@ -662,7 +650,6 @@ void BeginMeanwhileCallBack( UINT8 bExitValue )
 
 BOOLEAN AreInMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	STRATEGICEVENT *curr;
 
 	//KM:	April 6, 1999
@@ -701,7 +688,6 @@ BOOLEAN AreInMeanwhile( )
 
 void ProcessImplicationsOfMeanwhile( void )
 {
-	PERFORMANCE_MARKER
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:
@@ -802,7 +788,6 @@ void ProcessImplicationsOfMeanwhile( void )
 
 void EndMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	UINT32		cnt;
 	UINT8		ubProfile;
 
@@ -861,7 +846,6 @@ void EndMeanwhile( )
 
 void DoneFadeOutMeanwhileOnceDone( )
 {
-	PERFORMANCE_MARKER
 	UINT32		cnt;
 	UINT8		ubProfile;
 
@@ -927,13 +911,11 @@ void DoneFadeOutMeanwhileOnceDone( )
 
 void DoneFadeInMeanwhileOnceDone( )
 {
-	PERFORMANCE_MARKER
 	
 }
 
 void LocateMeanWhileGrid( void )
 {
-	PERFORMANCE_MARKER
 	INT16 sGridNo = 0;
 
 	// go to the approp. gridno
@@ -946,7 +928,6 @@ void LocateMeanWhileGrid( void )
 
 void LocateToMeanwhileCharacter( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	if ( gfInMeanwhile )
@@ -963,20 +944,17 @@ void LocateToMeanwhileCharacter( )
 
 BOOLEAN AreReloadingFromMeanwhile( )
 {
-	PERFORMANCE_MARKER
 	return( gfReloadingScreenFromMeanwhile );
 }
 
 UINT8 GetMeanwhileID( )
 {
-	PERFORMANCE_MARKER
 	return( gCurrentMeanwhileDef.ubMeanwhileID );
 }
 
 
 void HandleCreatureRelease( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	
@@ -996,7 +974,6 @@ void HandleCreatureRelease( void )
 
 void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 {
-	PERFORMANCE_MARKER
 	// post event for meanwhile whithin the next 6 hours if it still will be daylight, otherwise the next morning
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
@@ -1049,8 +1026,7 @@ void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 }	
 
 void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId )
-{
-	PERFORMANCE_MARKER	
+{	
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 
@@ -1075,7 +1051,6 @@ void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId )
 
 void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1132,7 +1107,6 @@ void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 
 void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	// make sure scene hasn't been used before
@@ -1166,7 +1140,6 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 
 void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	// make sure scene hasn't been used before
@@ -1190,7 +1163,6 @@ void HandleOutskirtsOfMedunaMeanwhileScene( void )
 
 void HandleKillChopperMeanwhileScene( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	// make sure scene hasn't been used before
@@ -1214,7 +1186,6 @@ void HandleKillChopperMeanwhileScene( void )
 
 void HandleScientistAWOLMeanwhileScene( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	// make sure scene hasn't been used before
@@ -1238,7 +1209,6 @@ void HandleScientistAWOLMeanwhileScene( void )
 
 void HandleInterrogationMeanwhileScene( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	// make sure scene hasn't been used before
@@ -1262,7 +1232,6 @@ void HandleInterrogationMeanwhileScene( void )
 
 void HandleFirstBattleVictory( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1291,7 +1260,6 @@ void HandleFirstBattleVictory( void )
 
 void HandleDelayedFirstBattleVictory( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
 	UINT8 ubId = 0;
@@ -1325,7 +1293,6 @@ void HandleDelayedFirstBattleVictory( void )
 
 void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve )
 {
-	PERFORMANCE_MARKER
 	INT8 bTownId = 0;
 	INT16 sSector = 0;
 
@@ -1366,7 +1333,6 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 
 void HandleFirstMeanWhileSetUpWithTrashWorld( void )
 {
-	PERFORMANCE_MARKER
 
 	// exiting sector after first battle fought
 	if( gfFirstBattleMeanwhileScenePending )

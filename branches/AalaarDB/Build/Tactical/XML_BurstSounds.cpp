@@ -60,7 +60,6 @@ typedef burstSoundParseData;
 static void XMLCALL 
 burstSoundStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	burstSoundParseData * pData = (burstSoundParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -89,7 +88,6 @@ burstSoundStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 burstSoundCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	burstSoundParseData * pData = (burstSoundParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -103,7 +101,6 @@ burstSoundCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 burstSoundEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	burstSoundParseData * pData = (burstSoundParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -138,7 +135,6 @@ burstSoundEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInBurstSoundArray(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -200,7 +196,6 @@ BOOLEAN ReadInBurstSoundArray(STR fileName)
 }
 BOOLEAN WriteBurstSoundArray()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WriteSoundArray"));
 	//Debug code; make sure that what we got from the file is the same as what's there

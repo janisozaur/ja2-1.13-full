@@ -50,7 +50,9 @@ typedef struct
 
 	UINT32	uiRandom;
 
-	UINT8		ubFiller[110];
+	UINT8	ubInventorySystem;
+
+	UINT8		ubFiller[109];
 
 } SAVED_GAME_HEADER;
 

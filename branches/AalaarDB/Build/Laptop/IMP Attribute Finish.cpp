@@ -38,7 +38,6 @@ void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason);
  
 void EnterIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// create the needed buttons
 	CreateAttributeFinishButtons( );
 
@@ -52,7 +51,6 @@ void EnterIMPAttributeFinish( void )
 
 void RenderIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// render background
 		RenderProfileBackGround( );
  
@@ -65,7 +63,6 @@ void RenderIMPAttributeFinish( void )
 
 void ExitIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 	// destroy the buttons for this screen
 	DestroyAttributeFinishButtons( );
 
@@ -74,7 +71,6 @@ void ExitIMPAttributeFinish( void )
 
 void HandleIMPAttributeFinish( void )
 {
-	PERFORMANCE_MARKER
 
 	return;
 }
@@ -83,7 +79,6 @@ void HandleIMPAttributeFinish( void )
 
 void CreateAttributeFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// this procedure will create the buttons needed for the attribute finish screen
 		
@@ -126,7 +121,6 @@ void CreateAttributeFinishButtons( void )
 
 void DestroyAttributeFinishButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// this procedure will destroy the buttons for the attribute finish screen
 
@@ -144,7 +138,6 @@ void DestroyAttributeFinishButtons( void )
 
 void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -181,7 +174,6 @@ void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToAttributesPageButNotFinished()
 {
-	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__VOICE )
@@ -196,7 +188,6 @@ BOOLEAN CameBackToAttributesPageButNotFinished()
 
 void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

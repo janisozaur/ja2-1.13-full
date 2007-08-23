@@ -138,7 +138,6 @@ void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason);
 
 UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
@@ -184,7 +183,6 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 
 UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
 {
-	PERFORMANCE_MARKER
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
@@ -221,7 +219,6 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 
 void GameInitHistory()
 {
-	PERFORMANCE_MARKER
 	if( ( FileExists( HISTORY_DATA_FILE ) ) )
 	{
 	// unlink history file
@@ -235,7 +232,6 @@ void GameInitHistory()
 
 void EnterHistory()
 {
-	PERFORMANCE_MARKER
 
 	// load the graphics
 	LoadHistory( );
@@ -274,7 +270,6 @@ void EnterHistory()
 
 void ExitHistory()
 {
-	PERFORMANCE_MARKER
 	LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
 
 	// not in History system anymore
@@ -306,7 +301,6 @@ void HandleHistory()
 
 void RenderHistory( void )
 {
-	PERFORMANCE_MARKER
 	//render the background to the display
 	RenderHistoryBackGround( );
 	
@@ -334,7 +328,6 @@ void RenderHistory( void )
 
 BOOLEAN LoadHistory( void )
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load History video objects into memory
 
@@ -371,7 +364,6 @@ Not being used???	DF commented out
 
 void RemoveHistory( void )
 {
-	PERFORMANCE_MARKER
 
 	// delete history video objects from memory
 	DeleteVideoObjectFromIndex(guiLONGLINE); 
@@ -385,7 +377,6 @@ void RemoveHistory( void )
 
 void RenderHistoryBackGround( void )
 {
-	PERFORMANCE_MARKER
 	// render generic background for history system
 	HVOBJECT hHandle;
 	
@@ -407,7 +398,6 @@ void RenderHistoryBackGround( void )
 
 void DrawHistoryTitleText( void )
 {
-	PERFORMANCE_MARKER
 	// setup the font stuff
 	SetFont(HISTORY_HEADER_FONT);
 	SetFontForeground(FONT_WHITE);
@@ -422,7 +412,6 @@ void DrawHistoryTitleText( void )
 
 void CreateHistoryButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// the prev page button
 	giHistoryButtonImage[PREV_PAGE_BUTTON]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
@@ -447,7 +436,6 @@ void CreateHistoryButtons( void )
 
 void DestroyHistoryButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// remove History buttons and images from memory
 	
@@ -464,7 +452,6 @@ void DestroyHistoryButtons( void )
 
 void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	// force redraw
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -495,7 +482,6 @@ void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -520,7 +506,6 @@ void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 {
-	PERFORMANCE_MARKER
 	// run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
@@ -588,7 +573,6 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 
 UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiId=0;
 	HistoryUnitPtr pHistory=pHistoryListHead;
 
@@ -643,7 +627,6 @@ UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecon
 
 void OpenAndReadHistoryFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and read in data to the History list
 	
 	HWFILE hFileHandle;
@@ -710,7 +693,6 @@ void OpenAndReadHistoryFile( void )
 
 BOOLEAN OpenAndWriteHistoryFile( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will open and write out data from the History list
  
 	HWFILE hFileHandle;
@@ -759,7 +741,6 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 
 void ClearHistoryList( void )
 {
-	PERFORMANCE_MARKER
 	// remove each element from list of transactions
 	
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
@@ -784,7 +765,6 @@ void ClearHistoryList( void )
 
 void DisplayHistoryListHeaders( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will display the headers to each column in History
 	INT16 usX, usY;
 
@@ -813,7 +793,6 @@ void DisplayHistoryListHeaders( void )
 
 void DisplayHistoryListBackground( void )
 {
-	PERFORMANCE_MARKER
 	// this function will display the History list display background
 	HVOBJECT hHandle;
 	INT32 iCounter=0;
@@ -839,7 +818,6 @@ void DisplayHistoryListBackground( void )
 
 void DrawHistoryRecordsText( void )
 {
-	PERFORMANCE_MARKER
 	// draws the text of the records
 	HistoryUnitPtr pCurHistory=pHistoryListHead;
 	CHAR16 sString[512];
@@ -922,7 +900,6 @@ void DrawHistoryRecordsText( void )
 
 void DrawAPageofHistoryRecords( void )
 {
-	PERFORMANCE_MARKER
 	// this procedure will draw a series of history records to the screen
 	pCurrentHistory=pHistoryListHead;
 
@@ -956,7 +933,6 @@ void DrawAPageofHistoryRecords( void )
 
 void DisplayPageNumberAndDateRange( void )
 {
-	PERFORMANCE_MARKER
 	// this function will go through the list of 'histories' starting at current until end or 
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iLastPage=0;
@@ -1038,7 +1014,6 @@ void DisplayPageNumberAndDateRange( void )
 
 void ProcessHistoryTransactionString(STR16 pString, HistoryUnitPtr pHistory)
 {
-	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	switch( pHistory->ubCode)
@@ -1208,7 +1183,6 @@ void ProcessHistoryTransactionString(STR16 pString, HistoryUnitPtr pHistory)
 
 void DrawHistoryLocation( INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	// will draw the location of the history event 
 
 	
@@ -1218,7 +1192,6 @@ void DrawHistoryLocation( INT16 sSectorX, INT16 sSectorY )
 
 void SetHistoryButtonStates( void )
 {
-	PERFORMANCE_MARKER
 	// this function will look at what page we are viewing, enable and disable buttons as needed
 	
 	if( iCurrentHistoryPage == 1 )
@@ -1253,7 +1226,6 @@ void SetHistoryButtonStates( void )
 
 BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 {
-	PERFORMANCE_MARKER
 	// loads in records belogning, to page uiPage
 	// no file, return
 	BOOLEAN fOkToContinue=TRUE;
@@ -1357,7 +1329,6 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 
 BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 {
-	PERFORMANCE_MARKER
 	// loads in records belogning, to page uiPage
 	// no file, return
 	BOOLEAN fOkToContinue=TRUE;
@@ -1449,7 +1420,6 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 
 BOOLEAN LoadNextHistoryPage( void )
 {
-	PERFORMANCE_MARKER
 	
 	// clear out old list of records, and load in previous page worth of records
 	ClearHistoryList( );
@@ -1473,7 +1443,6 @@ BOOLEAN LoadNextHistoryPage( void )
 
 BOOLEAN LoadPreviousHistoryPage( void )
 {
-	PERFORMANCE_MARKER
 	
 	// clear out old list of records, and load in previous page worth of records
 	ClearHistoryList( );
@@ -1500,7 +1469,6 @@ BOOLEAN LoadPreviousHistoryPage( void )
 
 void SetLastPageInHistoryRecords( void )
 {
-	PERFORMANCE_MARKER
 	// grabs the size of the file and interprets number of pages it will take up
 	HWFILE hFileHandle;
 
@@ -1537,7 +1505,6 @@ void SetLastPageInHistoryRecords( void )
 
 UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 {
-	PERFORMANCE_MARKER
 	// this function will read in the last unit in the history list, to grab it's id number
 
 	
@@ -1578,7 +1545,6 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 
 BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 {
-	PERFORMANCE_MARKER
 		// will write the current finance to disk
 	HWFILE hFileHandle;
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
@@ -1625,7 +1591,6 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 
 void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 {
-	PERFORMANCE_MARKER
 	// run through history list
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
@@ -1641,10 +1606,10 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 
 	while( pList )
 	{
-		if( ( pList->ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
 		{
 			// reset color
-			pList->ubColor = 0;
+			pList -> ubColor = 0;
 			fFound = TRUE;
 				
 			// save
@@ -1673,7 +1638,6 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 
 UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 {
-	PERFORMANCE_MARKER
 	// run through history list
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
@@ -1690,7 +1654,7 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 
 	while( pList )
 	{
-		if( ( pList->ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
 		{
 			uiTime = pList->uiDate;
 			fFound = TRUE;
@@ -1717,7 +1681,6 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 
 void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
-	PERFORMANCE_MARKER
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ubQuestValue * 2	), 160 );
 }
@@ -1725,7 +1688,6 @@ void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
 
 void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
-	PERFORMANCE_MARKER
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ( ubQuestValue	* 2 ) + 1), 160 );
 }
@@ -1734,7 +1696,6 @@ void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 #ifdef JA2TESTVERSION
 void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	CHAR	zString[512];
 
 	if( sSectorX > 16 || sSectorY > 16 || bSectorZ > 3 || sSectorX < -1 || sSectorY < -1 || bSectorZ < 0 )
@@ -1747,7 +1708,6 @@ void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSec
 
 INT32 GetNumberOfHistoryPages()
 {
-	PERFORMANCE_MARKER
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
 	UINT32	uiSizeOfRecordsOnEachPage = 0;

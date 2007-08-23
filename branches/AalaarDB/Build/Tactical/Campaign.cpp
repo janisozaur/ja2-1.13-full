@@ -91,7 +91,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 		return;
 
 	// ignore vehicles and robots
-	if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
+	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
 		return;
 
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
@@ -101,7 +101,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 	}
 
 	// no points earned while somebody is unconscious (for assist XPs, and such)
-	if ( pSoldier->stats.bLife < CONSCIOUSNESS )
+	if ( pSoldier->bLife < CONSCIOUSNESS )
 		return;
 
 
@@ -123,7 +123,6 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 // give pProfile usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
 void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
-	PERFORMANCE_MARKER
 	// dead guys don't do nuthin' !
 	if ( pProfile->bMercStatus == MERC_IS_DEAD )
 		return;
@@ -140,7 +139,6 @@ void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 
 void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
-	PERFORMANCE_MARKER
   UINT32 uiCnt,uiEffLevel;
   INT16 sSubPointChange = 0;
 	UINT16 usChance=0;
@@ -420,7 +418,6 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 // convert hired mercs' stats subpoint changes into actual point changes where warranted
 void UpdateStats( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
 }
 
@@ -428,14 +425,12 @@ void UpdateStats( SOLDIERTYPE *pSoldier )
 // UpdateStats version for mercs not currently on player's team
 void ProfileUpdateStats( MERCPROFILESTRUCT *pProfile )
 {
-	PERFORMANCE_MARKER
 	ProcessUpdateStats( pProfile, NULL );
 }
 
 
 void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubStat, INT16 sPtsChanged )
 {
-	PERFORMANCE_MARKER
 	// this function changes the stat a given amount...
 	INT16 *psStatGainPtr = NULL; 
 	INT8 *pbStatPtr = NULL;
@@ -529,68 +524,68 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 		switch( ubStat )
 		{
 		case HEALTHAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bLifeMax );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeHealthTime);
+			pbSoldierStatPtr = &( pSoldier->bLifeMax );
+			puiStatTimerPtr = &( pSoldier->uiChangeHealthTime);
 			usIncreaseValue = HEALTH_INCREASE;
 			break;
 
 		case AGILAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bAgility );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeAgilityTime);
+			pbSoldierStatPtr = &( pSoldier->bAgility );
+			puiStatTimerPtr = &( pSoldier->uiChangeAgilityTime);
 			usIncreaseValue = AGIL_INCREASE;
 			break;
 
 		case DEXTAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bDexterity );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeDexterityTime);
+			pbSoldierStatPtr = &( pSoldier->bDexterity );
+			puiStatTimerPtr = &( pSoldier->uiChangeDexterityTime);
 			usIncreaseValue = DEX_INCREASE;
 			break;
 
 		case WISDOMAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bWisdom );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeWisdomTime);
+			pbSoldierStatPtr = &( pSoldier->bWisdom );
+			puiStatTimerPtr = &( pSoldier->uiChangeWisdomTime);
 			usIncreaseValue = WIS_INCREASE;
 			break;
 
 		case MEDICALAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bMedical );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMedicalTime);
+			pbSoldierStatPtr = &( pSoldier->bMedical );
+			puiStatTimerPtr = &( pSoldier->uiChangeMedicalTime);
 			usIncreaseValue = MED_INCREASE;
 			break;
 
 		case EXPLODEAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bExplosive );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeExplosivesTime);
+			pbSoldierStatPtr = &( pSoldier->bExplosive );
+			puiStatTimerPtr = &( pSoldier->uiChangeExplosivesTime);
 			usIncreaseValue = EXP_INCREASE;
 			break;
 
 		case MECHANAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bMechanical );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMechanicalTime);
+			pbSoldierStatPtr = &( pSoldier->bMechanical );
+			puiStatTimerPtr = &( pSoldier->uiChangeMechanicalTime);
 			usIncreaseValue = MECH_INCREASE;
 			break;
 
 		case MARKAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bMarksmanship );
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeMarksmanshipTime);
+			pbSoldierStatPtr = &( pSoldier->bMarksmanship );
+			puiStatTimerPtr = &( pSoldier->uiChangeMarksmanshipTime);
 			usIncreaseValue = MRK_INCREASE;
 			break;
 
 		case EXPERAMT:
-			pbSoldierStatPtr = &(pSoldier->stats.bExpLevel);
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeLevelTime );
+			pbSoldierStatPtr = &(pSoldier->bExpLevel);
+			puiStatTimerPtr = &( pSoldier->uiChangeLevelTime );
 			usIncreaseValue = LVL_INCREASE;
 			break;
 
 		case STRAMT:
-			pbSoldierStatPtr = &(pSoldier->stats.bStrength);
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeStrengthTime);
+			pbSoldierStatPtr = &(pSoldier->bStrength);
+			puiStatTimerPtr = &( pSoldier->uiChangeStrengthTime);
 			usIncreaseValue = STRENGTH_INCREASE;
 			break;
 
 		case LDRAMT:
-			pbSoldierStatPtr = &( pSoldier->stats.bLeadership);
-			puiStatTimerPtr = &( pSoldier->timeChanges.uiChangeLeadershipTime);
+			pbSoldierStatPtr = &( pSoldier->bLeadership);
+			puiStatTimerPtr = &( pSoldier->uiChangeLeadershipTime);
 			usIncreaseValue = LDR_INCREASE;
 			break;
 		}
@@ -685,12 +680,12 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 			if (pSoldier != NULL)
 			{
 				// adjust current health by the same amount as max health
-				pSoldier->stats.bLife += sPtsChanged;
+				pSoldier->bLife += sPtsChanged;
 
 				// don't let this kill a guy or knock him out!!!
-				if (pSoldier->stats.bLife < OKLIFE)
+				if (pSoldier->bLife < OKLIFE)
 				{
-					pSoldier->stats.bLife = OKLIFE;
+					pSoldier->bLife = OKLIFE;
 				}
 			}
 		}
@@ -706,7 +701,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 				{
 					case MERC_TYPE__AIM_MERC:
 						// A.I.M.
-						pSoldier->flags.fContractPriceHasIncreased = TRUE;
+						pSoldier->fContractPriceHasIncreased = TRUE;
 						fChangeSalary = TRUE;
 						break;
 
@@ -774,7 +769,6 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 // pSoldier may be NULL!
 void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	// this function will run through the soldier's profile and update their stats based on any accumulated gain pts.
 	UINT8 ubStat = 0;
 	INT16 *psStatGainPtr = NULL; 
@@ -802,11 +796,11 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 			return;
 
 		// ignore vehicles and robots
-		if( ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->flags.uiStatusFlags & SOLDIER_ROBOT ) )
+		if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
 			return;
 
 		// delay increases while merc is dying
-		if (pSoldier->stats.bLife < OKLIFE)
+		if (pSoldier->bLife < OKLIFE)
 			return;
 
 		// ignore POWs - shouldn't ever be getting this far
@@ -915,47 +909,47 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 			switch( ubStat )
 			{
 				case HEALTHAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bLifeMax );
+				pbSoldierStatPtr = &( pSoldier->bLifeMax );
 				break;
 
 			case AGILAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bAgility );
+				pbSoldierStatPtr = &( pSoldier->bAgility );
 				break;
 
 			case DEXTAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bDexterity );
+				pbSoldierStatPtr = &( pSoldier->bDexterity );
 				break;
 
 			case WISDOMAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bWisdom );
+				pbSoldierStatPtr = &( pSoldier->bWisdom );
 				break;
 
 			case MEDICALAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bMedical );
+				pbSoldierStatPtr = &( pSoldier->bMedical );
 				break;
 
 			case EXPLODEAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bExplosive );
+				pbSoldierStatPtr = &( pSoldier->bExplosive );
 				break;
 
 			case MECHANAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bMechanical );
+				pbSoldierStatPtr = &( pSoldier->bMechanical );
 				break;
 
 			case MARKAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bMarksmanship );
+				pbSoldierStatPtr = &( pSoldier->bMarksmanship );
 				break;
 
 			case EXPERAMT:
-				pbSoldierStatPtr = &(pSoldier->stats.bExpLevel);
+				pbSoldierStatPtr = &(pSoldier->bExpLevel);
 				break;
 
 			case STRAMT:
-				pbSoldierStatPtr = &(pSoldier->stats.bStrength);
+				pbSoldierStatPtr = &(pSoldier->bStrength);
 				break;
 
 			case LDRAMT:
-				pbSoldierStatPtr = &( pSoldier->stats.bLeadership);
+				pbSoldierStatPtr = &( pSoldier->bLeadership);
 				break;
 			}
 		}
@@ -997,14 +991,13 @@ void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
 
 void HandleAnyStatChangesAfterAttack( void )
 {
-	PERFORMANCE_MARKER
   INT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
 	// must check everyone on player's team, not just the shooter
 	for ( cnt = 0, pSoldier = MercPtrs[ 0 ]; cnt <= gTacticalStatus.Team[ MercPtrs[ 0 ]->bTeam ].bLastID; cnt++,pSoldier++)
 	{
-		if (pSoldier->bActive)
+		if (pSoldier -> bActive)
 		{
 			ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
 		}
@@ -1014,7 +1007,6 @@ void HandleAnyStatChangesAfterAttack( void )
 
 UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 {
-	PERFORMANCE_MARKER
   UINT32 uiNewSalary;
 
 	// if he was working for free, it's still free!
@@ -1049,7 +1041,6 @@ UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 
 UINT32 RoundOffSalary(UINT32 uiSalary)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiMultiple;
 
 
@@ -1079,7 +1070,6 @@ UINT32 RoundOffSalary(UINT32 uiSalary)
 
 UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 {
-	PERFORMANCE_MARKER
 	UINT16 usSubpointsPerPoint;
 
 	// figure out how many subpoints this type of stat needs to change
@@ -1120,7 +1110,6 @@ UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 // handles stat changes for mercs not currently working for the player
 void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubNumStats;
 	UINT8 ubStat;
 	UINT16 usNumChances;
@@ -1179,7 +1168,6 @@ void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile )
 // handles possible death of mercs not currently working for the player
 void HandleUnhiredMercDeaths( INT32 iProfileID )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMaxDeaths;
 	INT16 sChance;
 	MERCPROFILESTRUCT *pProfile = &(gMercProfiles[ iProfileID ]);
@@ -1273,7 +1261,6 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 // returns a number between 0-100, this is an estimate of how far a player has progressed through the game
 UINT8 CurrentPlayerProgressPercentage(void)
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCurrentIncome;
 	UINT32 uiPossibleIncome;
 	UINT8 ubCurrentProgress;
@@ -1363,7 +1350,6 @@ UINT8 CurrentPlayerProgressPercentage(void)
 
 UINT8 HighestPlayerProgressPercentage(void)
 {
-	PERFORMANCE_MARKER
 	if( gfEditMode )
 		return 0;
 
@@ -1375,7 +1361,6 @@ UINT8 HighestPlayerProgressPercentage(void)
 // as opposed to his immediate situation (which may be worse if he's suffered a setback).
 void HourlyProgressUpdate(void)
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCurrentProgress;
 
 	ubCurrentProgress = CurrentPlayerProgressPercentage();
@@ -1416,7 +1401,6 @@ void HourlyProgressUpdate(void)
 #ifdef JA2TESTVERSION
 void TestDumpStatChanges(void)
 {
-	PERFORMANCE_MARKER
   UINT32 uiProfileId;
 	UINT8 ubStat;
   CHAR8 zPrintFileName[60];
@@ -1515,7 +1499,6 @@ void TestDumpStatChanges(void)
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 {
-	PERFORMANCE_MARKER
 	UINT16 usXPs = 0;
 	UINT8 ubGuynum;
 	SOLDIERTYPE *pSoldier;
@@ -1537,8 +1520,8 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 				ubGuynum <= gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 				ubGuynum++, pSoldier++ )
 	{	
-		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->stats.bLife >= CONSCIOUSNESS ) &&
-				 !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->bLife >= CONSCIOUSNESS ) &&
+				 !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
 		{
 			StatChange( pSoldier, EXPERAMT, usXPs, FALSE );
 		}
@@ -1549,7 +1532,6 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 
 void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubStringIndex;
 
 
@@ -1583,7 +1565,6 @@ void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16
 
 UINT8 CalcImportantSectorControl( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMapX, ubMapY;
 	UINT8	ubSectorControlPts = 0;
 
@@ -1618,7 +1599,6 @@ UINT8 CalcImportantSectorControl( void )
 // Count how many surface sectors the player has visited
 UINT16 CountSurfaceSectorsVisited( void )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubMapX, ubMapY;
 	UINT16	ubSectorsVisited = 0;
 
@@ -1637,7 +1617,6 @@ UINT16 CountSurfaceSectorsVisited( void )
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubEmailOffset = 0;
 
 	ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue ); 

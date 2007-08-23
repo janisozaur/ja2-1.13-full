@@ -51,7 +51,6 @@ void RecountSmokeEffects( void );
 
 INT32 GetFreeSmokeEffect( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
@@ -68,7 +67,6 @@ INT32 GetFreeSmokeEffect( void )
 
 void RecountSmokeEffects( void )
 {
-	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumSmokeEffects-1; (uiCount >=0) ; uiCount--)
@@ -87,7 +85,6 @@ void RecountSmokeEffects( void )
 // Returns NO_SMOKE_EFFECT if none there...
 INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT16		ubExtFlags;
 
 	ubExtFlags = gpWorldLevelData[ sGridNo ].ubExtFlags[ bLevel ];
@@ -105,7 +102,6 @@ INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 
 INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 {
-	PERFORMANCE_MARKER
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
 		return( NORMAL_SMOKE_EFFECT );
@@ -135,7 +131,6 @@ INT8 FromWorldFlagsToSmokeType( UINT16 ubWorldFlags )
 
 UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 {
-	PERFORMANCE_MARKER
 	switch( bType )
 	{
 		case NORMAL_SMOKE_EFFECT:
@@ -173,7 +168,6 @@ UINT16 FromSmokeTypeToWorldFlags( INT8 bType )
 
 INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 {
-	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;
 	INT8				bSmokeEffectType=0;
@@ -268,7 +262,6 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 // ( Replacement algorithm uses distance away )
 void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	ANITILE_PARAMS	AniParams;
 	ANITILE					*pAniTile;
 	SMOKEEFFECT	 *pSmoke;
@@ -448,7 +441,6 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	ANITILE *pAniTile;
 	UINT8		ubLevelID;
 
@@ -482,7 +474,6 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmokeEffects( UINT32 uiTime )
 {
-	PERFORMANCE_MARKER
 	SMOKEEFFECT *pSmoke;
 	UINT32	cnt, cnt2;
 	BOOLEAN fUpdate = FALSE;
@@ -495,7 +486,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		if ( MercSlots[ cnt ] )
 		{
 			// reset 'hit by gas' flags
-			MercSlots[ cnt ]->flags.fHitByGasFlags = 0;
+			MercSlots[ cnt ]->fHitByGasFlags = 0;
 		}
 	}
 
@@ -625,7 +616,6 @@ void DecaySmokeEffects( UINT32 uiTime )
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 /*
 	UINT32	uiNumBytesWritten;
 	UINT32	uiCnt=0;
@@ -672,7 +662,6 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -744,7 +733,6 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumSmokeEffects=0;
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -823,7 +811,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -893,7 +880,6 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void ResetSmokeEffects()
 {
-	PERFORMANCE_MARKER
 	//Clear out the old list
 	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
 	guiNumSmokeEffects = 0;
@@ -902,7 +888,6 @@ void ResetSmokeEffects()
 
 void UpdateSmokeEffectGraphics( )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiCnt;
 	SMOKEEFFECT *pSmoke;
 	INT8		bLevel;

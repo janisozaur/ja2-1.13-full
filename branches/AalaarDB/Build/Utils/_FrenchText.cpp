@@ -1492,7 +1492,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Retour : ", 			// distance to return from destination to airport
 	L"Coût : ", 		// total cost of trip by helicopter
 	L"AHP :	", 			// ETA is an acronym for "estimated time of arrival" 
-	L"L'hélicoptère n'a plus de carburant et doit se poser en terrain ennemi !",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"L'hélicoptère n'a plus de carburant et doit se poser en terrain ennemi !",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
 	L"Passagers : ",
 	L"Sélectionner Skyrider ou l'aire d'atterrissage ?",
 	L"Skyrider",
@@ -2849,6 +2849,7 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
+	L"LBE Gear",
 	L"Misc.",
 };
 

@@ -101,7 +101,6 @@ BOOLEAN PerformTimeLimitedCheck();
 //#define	TIME_LIMITED_VERSION
 void FilenameForBPP(STR pFilename, STR pDestination)
 {
-	PERFORMANCE_MARKER
 CHAR8 Drive[128], Dir[128], Name[128], Ext[128];
 
 	if(GETPIXELDEPTH()==16)
@@ -126,7 +125,6 @@ CHAR8 Drive[128], Dir[128], Name[128], Ext[128];
 
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
 {
-	PERFORMANCE_MARKER
 	HWFILE	 hFileHandle;
 	BYTE			bColHeader[ 8 ];
 	UINT32		cnt;
@@ -166,7 +164,6 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 
 BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UINT32 uiDestSurface )
 {
-	PERFORMANCE_MARKER
 	UINT16										us16BPPColor;
 	UINT32										cnt1;
 	UINT8											ubSize, ubType;
@@ -202,7 +199,6 @@ BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UIN
 
 BOOLEAN	WrapString( STR16 pStr, STR16 pStr2, UINT16 usWidth, INT32 uiFont )
 {
-	PERFORMANCE_MARKER
 	UINT32 Cur, uiLet, uiNewLet, uiHyphenLet;
 	STR16 curletter;
 	INT16 transletter;
@@ -272,7 +268,6 @@ BOOLEAN	WrapString( STR16 pStr, STR16 pStr2, UINT16 usWidth, INT32 uiFont )
 
 BOOLEAN IfWinNT(void)
 {
-	PERFORMANCE_MARKER
 	OSVERSIONINFO OsVerInfo;
 
 	OsVerInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -287,7 +282,6 @@ BOOLEAN IfWinNT(void)
 
 BOOLEAN IfWin95(void)
 {
-	PERFORMANCE_MARKER
 	OSVERSIONINFO OsVerInfo;
 
 	OsVerInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -303,7 +297,6 @@ BOOLEAN IfWin95(void)
 
 void HandleLimitedNumExecutions( )
 {
-	PERFORMANCE_MARKER
 	// Get system directory
 	HWFILE	 hFileHandle;
 	CHAR8	ubSysDir[ 512 ];
@@ -391,7 +384,6 @@ UINT32 gCheckFileMinSizes[] =
 
 BOOLEAN HandleJA2CDCheck( )
 {
-	PERFORMANCE_MARKER
 #ifdef	TIME_LIMITED_VERSION
 	if( !PerformTimeLimitedCheck() )
 	{
@@ -469,7 +461,6 @@ BOOLEAN HandleJA2CDCheck( )
 
 BOOLEAN HandleJA2CDCheckTwo( )
 {
-	PERFORMANCE_MARKER
 #ifdef NOCDCHECK
 
 	return( TRUE );
@@ -516,7 +507,6 @@ BOOLEAN HandleJA2CDCheckTwo( )
 
 BOOLEAN PerformTimeLimitedCheck()
 {
-	PERFORMANCE_MARKER
 #ifndef TIME_LIMITED_VERSION
 		return( TRUE );
 
@@ -540,7 +530,6 @@ BOOLEAN PerformTimeLimitedCheck()
 
 BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fFailed = FALSE;
 	CHAR8		zCdFile[ SGPFILENAME_LEN ];
 	INT32	cnt;

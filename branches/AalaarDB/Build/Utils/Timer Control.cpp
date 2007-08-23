@@ -143,8 +143,8 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 			for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
 			{
 				gPSOLDIER = MercPtrs[ gCNT ];
-					UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PortraitFlashCounter );
-					UPDATETIMECOUNTER( gPSOLDIER->timeCounters.PanelAnimateCounter );
+					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
+					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
 		}
 		}
 		else
@@ -183,7 +183,6 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 
 BOOLEAN InitializeJA2Clock(void)
 {
-	PERFORMANCE_MARKER
 
 #ifdef CALLBACKTIMER
 
@@ -222,7 +221,6 @@ BOOLEAN InitializeJA2Clock(void)
 
 void	ShutdownJA2Clock(void)
 {
-	PERFORMANCE_MARKER
 	// Make sure we kill the timer
 #ifdef CALLBACKTIMER
 
@@ -234,7 +232,6 @@ void	ShutdownJA2Clock(void)
 
 UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UINT32 uiUser )
 {
-	PERFORMANCE_MARKER
 	MMRESULT	mmResult;
 	TIMECAPS	tc;
 	MMRESULT	TimerID;
@@ -262,14 +259,12 @@ UINT32 InitializeJA2TimerCallback( UINT32 uiDelay, LPTIMECALLBACK TimerProc, UIN
 
 void RemoveJA2TimerCallback( UINT32 uiTimer )
 {
-	PERFORMANCE_MARKER
 	timeKillEvent( uiTimer );
 }
 
 
 UINT32 InitializeJA2TimerID( UINT32 uiDelay, UINT32 uiCallbackID, UINT32 uiUser )
 {
-	PERFORMANCE_MARKER
 	switch( uiCallbackID )
 	{
 		case ITEM_LOCATOR_CALLBACK:
@@ -296,13 +291,11 @@ void CALLBACK FlashItem( UINT uiID, UINT uiMsg, DWORD uiUser, DWORD uiDw1, DWORD
 
 void PauseTime( BOOLEAN fPaused )
 {
-	PERFORMANCE_MARKER
 	gfPauseClock = fPaused;
 }
 
 void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALLBACK pCallback, BOOLEAN fReplace )
 {
-	PERFORMANCE_MARKER
 	if ( gpCustomizableTimerCallback )
 	{
 		if ( !fReplace )
@@ -318,7 +311,6 @@ void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALL
 
 void CheckCustomizableTimer( void )
 {
-	PERFORMANCE_MARKER
 	if ( gpCustomizableTimerCallback )
 	{
 		if ( TIMECOUNTERDONE( giTimerCustomizable, 0 ) )
@@ -339,7 +331,6 @@ void CheckCustomizableTimer( void )
 
 void ResetJA2ClockGlobalTimers( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCurrentTime = GetJA2Clock();
 
 

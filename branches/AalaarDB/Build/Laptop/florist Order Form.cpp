@@ -271,13 +271,11 @@ void FlowerOrderUserTextFieldCallBack( UINT8 ubID, BOOLEAN fEntering);
 
 void GameInitFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8	i;
 	char sTemp[40];
@@ -444,7 +442,6 @@ BOOLEAN EnterFloristOrderForm()
 
 void InitFloristOrderFormVariables()
 {
-	PERFORMANCE_MARKER
 	guiFlowerPrice = 0;
 	gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_NO_ACTION;
 	gubCurrentlySelectedFlowerLocation = 0;
@@ -453,7 +450,6 @@ void InitFloristOrderFormVariables()
 
 void ExitFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 	RemoveFloristDefaults();
 
@@ -501,7 +497,6 @@ void ExitFloristOrderForm()
 
 void HandleFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 	if( gubFlowerDestDropDownMode != FLOWER_ORDER_DROP_DOWN_NO_ACTION )
 	{
 		CreateDestroyFlowerOrderDestDropDown( gubFlowerDestDropDownMode );
@@ -513,7 +508,6 @@ void HandleFloristOrderForm()
 
 void RenderFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16 usPosX;
 	CHAR16		sTemp[ 640 ];
@@ -617,7 +611,6 @@ void RenderFloristOrderForm()
 
 void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -643,7 +636,6 @@ void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -689,7 +681,6 @@ void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -716,7 +707,6 @@ void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -745,8 +735,7 @@ void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 
 void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -817,7 +806,6 @@ void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void DisplayFloristCheckBox()
 {
-	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	//check box
@@ -869,8 +857,7 @@ void DisplayFloristCheckBox()
 
 
 void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -887,7 +874,6 @@ void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iR
 //display the things that change on the screen
 void DisplayFlowerDynamicItems()
 {
-	PERFORMANCE_MARKER
 	UINT32	uiStartLoc=0;
 	UINT16	usPosX;
 	CHAR16	sTemp[ 640 ];
@@ -949,8 +935,7 @@ void DisplayFlowerDynamicItems()
 
 
 void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -965,8 +950,7 @@ void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 
 void SelectFloristDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -977,8 +961,7 @@ void SelectFloristDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -990,8 +973,7 @@ void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iR
 
 
 void SelectFlowerDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1005,7 +987,6 @@ void SelectFlowerDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectFlowerDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -1027,7 +1008,6 @@ void SelectFlowerDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 {
-	PERFORMANCE_MARKER
 	static UINT16 usHeight;
 	static BOOLEAN fMouseRegionsCreated=FALSE;
 
@@ -1193,7 +1173,6 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 
 void FlowerOrderDrawSelectedCity( UINT8 ubNumber )
 {
-	PERFORMANCE_MARKER
 	UINT16 usPosY;
 	UINT16 usFontHeight = GetFontHeight( FLOWER_ORDEER_DROP_DOWN_FONT );
 
@@ -1214,7 +1193,6 @@ void FlowerOrderDrawSelectedCity( UINT8 ubNumber )
 
 void FlowerOrderDisplayShippingLocationCity()
 {
-	PERFORMANCE_MARKER
 	//display the name on the title bar
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X+3, FLOWER_ORDER_DELIVERY_LOCATION_Y+3, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DELIVERY_LOCATION_Y+FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	DrawTextToScreen( *(FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].psCityLoc), FLOWER_ORDER_DELIVERY_LOCATION_X+5, FLOWER_ORDER_DELIVERY_LOCATION_Y+5, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
@@ -1223,7 +1201,6 @@ void FlowerOrderDisplayShippingLocationCity()
 
 void InitFlowerOrderTextInputBoxes()
 {
-	PERFORMANCE_MARKER
 	UINT32	uiStartLoc=0;
 	CHAR16	sTemp[ 640 ];
 	CHAR16	sText[ 640 ];
@@ -1268,14 +1245,12 @@ void InitFlowerOrderTextInputBoxes()
 
 void DestroyFlowerOrderTextInputBoxes()
 {
-	PERFORMANCE_MARKER
 	KillTextInputMode();
 }
 
 
 void HandleFloristOrderKeyBoardInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 
 	while (DequeueEvent(&InputEvent) == TRUE)
@@ -1319,7 +1294,6 @@ void HandleFloristOrderKeyBoardInput()
 
 void FlowerOrderUserTextFieldCallBack( UINT8 ubID, BOOLEAN fEntering )
 {
-	PERFORMANCE_MARKER
 	if( fEntering )
 	{
 //		SetActiveField(1);
@@ -1330,7 +1304,6 @@ void FlowerOrderUserTextFieldCallBack( UINT8 ubID, BOOLEAN fEntering )
 //Initialize the Florsit Order Page (reset some variables)
 void InitFloristOrderForm()
 {
-	PERFORMANCE_MARKER
 	gsSentimentTextField[0] = 0;
 
 	gfFLoristCheckBox0Down = FALSE;			// next day delviery

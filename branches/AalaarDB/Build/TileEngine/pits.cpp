@@ -26,7 +26,6 @@ BOOLEAN gfLoadPitsWithoutArming = FALSE;
 
 void Add3X3Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	if( !gfEditMode )
 		ApplyMapChangesToMapTempFile( TRUE );
@@ -64,7 +63,6 @@ void Add3X3Pit( INT32 iMapIndex )
 
 void Add5X5Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	EXITGRID ExitGrid;
 	if( !gfEditMode )
 		ApplyMapChangesToMapTempFile( TRUE );
@@ -133,7 +131,6 @@ void Add5X5Pit( INT32 iMapIndex )
 
 void Remove3X3Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveAllObjectsOfTypeRange( iMapIndex + 159, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex -	1,	REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex - 161, REGWATERTEXTURE, REGWATERTEXTURE );
@@ -148,7 +145,6 @@ void Remove3X3Pit( INT32 iMapIndex )
 
 void Remove5X5Pit( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	RemoveAllObjectsOfTypeRange( iMapIndex + 318, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex + 158, REGWATERTEXTURE, REGWATERTEXTURE );
 	RemoveAllObjectsOfTypeRange( iMapIndex -	2, REGWATERTEXTURE, REGWATERTEXTURE );
@@ -179,7 +175,6 @@ void Remove5X5Pit( INT32 iMapIndex )
 
 void AddAllPits()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
@@ -195,7 +190,6 @@ void AddAllPits()
 
 void RemoveAllPits()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
@@ -211,7 +205,6 @@ void RemoveAllPits()
 
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 sRadius )
 {
-	PERFORMANCE_MARKER
 	INT16 x, y, sNewGridNo;
 	UINT8	ubID;
 	SOLDIERTYPE *pSoldier;
@@ -235,9 +228,9 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 				// Set data to look for exit grid....
 				pSoldier = MercPtrs[ ubID ];
 
-				pSoldier->aiData.uiPendingActionData4 = sNewGridNo;
+				pSoldier->uiPendingActionData4 = sNewGridNo;
 
-				pSoldier->EVENT_InitNewSoldierAnim( FALL_INTO_PIT, 0 , FALSE );
+				EVENT_InitNewSoldierAnim( pSoldier, FALL_INTO_PIT, 0 , FALSE );
 			}			
 		}
 	}
@@ -245,13 +238,12 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 
 void HandleFallIntoPitFromAnimation( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
 	EXITGRID ExitGrid;
 	INT16 sPitGridNo;
 	// OK, get exit grid...
 	
-	sPitGridNo = (INT16)pSoldier->aiData.uiPendingActionData4;
+	sPitGridNo = (INT16)pSoldier->uiPendingActionData4;
 
 	GetExitGrid( sPitGridNo, &ExitGrid );
 
@@ -268,6 +260,6 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 
 	HandleSoldierLeavingSectorByThemSelf( pSoldier );
 
-	pSoldier->SetSoldierHeight( 0 );
+	SetSoldierHeight( pSoldier, 0 );
 
 }	

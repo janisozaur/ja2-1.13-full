@@ -8,14 +8,12 @@
 
 void MarkMapIndexDirty( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	gpWorldLevelData[ iMapIndex ].uiFlags |= MAPELEMENT_REDRAW;
 	SetRenderFlags( RENDER_FLAG_MARKED );
 }
 
 void CenterScreenAtMapIndex( INT32 iMapIndex )
 {
-	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sCellX, sCellY;
 
@@ -36,6 +34,5 @@ void CenterScreenAtMapIndex( INT32 iMapIndex )
 
 void MarkWorldDirty()
 {
-	PERFORMANCE_MARKER
 	SetRenderFlags( RENDER_FLAG_FULL );
 }

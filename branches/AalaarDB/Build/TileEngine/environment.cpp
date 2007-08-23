@@ -170,7 +170,6 @@ void EnvDoLightning(void);
 // polled by the game to handle time/atmosphere changes from gamescreen
 void EnvironmentController( BOOLEAN fCheckForLights )
 {
-	PERFORMANCE_MARKER
 	UINT32			uiOldWorldHour;
 	UINT8				ubLightAdjustFromWeather = 0;
 
@@ -288,7 +287,6 @@ void EnvironmentController( BOOLEAN fCheckForLights )
 
 void BuildDayLightLevels()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLoop, uiHour;
 
 	/*
@@ -349,7 +347,6 @@ void BuildDayLightLevels()
 
 void BuildDayAmbientSounds( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt;
 
 	// Add events!
@@ -392,7 +389,6 @@ void BuildDayAmbientSounds( )
 
 void ForecastDayEvents( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiOldDay;
 	UINT32 uiStartTime, uiEndTime;
 	UINT8	ubStormIntensity;
@@ -478,13 +474,11 @@ void ForecastDayEvents( )
 
 void EnvEnableTOD(void)
 {
-	PERFORMANCE_MARKER
 	fTimeOfDayControls=TRUE;
 }
 
 void EnvDisableTOD(void)
 {
-	PERFORMANCE_MARKER
 	fTimeOfDayControls=FALSE;
 }
 
@@ -535,7 +529,6 @@ void BeginTeamTurn( UINT8 ubTeam );
 
 void EnvDoLightning(void)
 {
-	PERFORMANCE_MARKER
 	static UINT32 uiCount=10, uiIndex=0, uiStrike=0, uiFrameNext=0;
 	static UINT8 ubLevel=0, ubLastLevel=0;
 	static UINT32 uiLastUpdate = 0xFFFFFFFF;
@@ -669,7 +662,6 @@ void EnvDoLightning(void)
 
 BOOLEAN LightningEndOfTurn( UINT8 ubTeam )
 {
-	PERFORMANCE_MARKER
 	if( !(guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS) )return TRUE;
 	if( Random(100) >= CHANCE_TO_DO_LIGHTNING_BETWEEN_TURNS ) return TRUE;
 
@@ -688,7 +680,6 @@ BOOLEAN LightningEndOfTurn( UINT8 ubTeam )
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {
-	PERFORMANCE_MARKER
 	if ( SectorTemperature( GetWorldMinutesInDay(), gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) == HOT )
 	{
 		return( HOT_DAY_LIGHTLEVEL );
@@ -702,7 +693,6 @@ UINT8 GetTimeOfDayAmbientLightLevel()
 
 void EnvBeginRainStorm( UINT8 ubIntensity )
 {
-	PERFORMANCE_MARKER
 	if( !gfBasement && !gfCaves )
 	{
 		gfDoLighting = TRUE;
@@ -728,7 +718,6 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 
 void EnvEndRainStorm( )
 {
-	PERFORMANCE_MARKER
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
@@ -762,7 +751,6 @@ void EnvEndRainStorm( )
 /*
 void EnvDoLightning(void)
 {
-	PERFORMANCE_MARKER
 static UINT32 uiCount=0, uiIndex=0, uiStrike=0, uiFrameNext=1000;
 static UINT8 ubLevel=0, ubLastLevel=0;
 
@@ -825,7 +813,6 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {
-	PERFORMANCE_MARKER
 	if ( SectorTemperature( GetWorldMinutesInDay(), gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) == HOT )
 	{
 		return( HOT_DAY_LIGHTLEVEL );
@@ -839,7 +826,6 @@ UINT8 GetTimeOfDayAmbientLightLevel()
 
 void EnvBeginRainStorm( UINT8 ubIntensity )
 {
-	PERFORMANCE_MARKER
 	if( !gfBasement && !gfCaves )
 	{
 		gfDoLighting = TRUE;
@@ -863,7 +849,6 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 
 void EnvEndRainStorm( )
 {
-	PERFORMANCE_MARKER
 	gfDoLighting = TRUE;
 
 #ifdef JA2TESTVERSION
@@ -878,7 +863,6 @@ void EnvEndRainStorm( )
 
 void TurnOnNightLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
@@ -893,7 +877,6 @@ void TurnOnNightLights()
 
 void TurnOffNightLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
@@ -909,7 +892,6 @@ void TurnOffNightLights()
 
 void TurnOnPrimeLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
@@ -924,7 +906,6 @@ void TurnOnPrimeLights()
 
 void TurnOffPrimeLights()
 {
-	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
@@ -940,7 +921,6 @@ void TurnOffPrimeLights()
 
 void UpdateTemperature( UINT8 ubTemperatureCode )
 {
-	PERFORMANCE_MARKER
 	switch( ubTemperatureCode )
 	{
 		case TEMPERATURE_DESERT_COOL:
@@ -967,7 +947,6 @@ void UpdateTemperature( UINT8 ubTemperatureCode )
 
 INT8 SectorTemperature( UINT32 uiTime, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	if (bSectorZ > 0)
 	{
 		// cool underground

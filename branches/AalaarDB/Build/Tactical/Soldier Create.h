@@ -8,6 +8,7 @@
 #include "Item Types.h"
 #include "soldier control.h"
 
+// WDS - Clean up inventory handling
 #include <vector>
 #include <iterator>
 
@@ -56,17 +57,19 @@ typedef struct
 	INT8 PADDINGSLOTS[ 14 ];
 } BASIC_SOLDIERCREATE_STRUCT; //50 bytes
 
-class OLD_SOLDIERCREATE_STRUCT_101
+// WDS - Clean up inventory handling
+//typedef struct
+class SOLDIERCREATE_STRUCT
 {
 public:
 	// Constructor
-	OLD_SOLDIERCREATE_STRUCT_101();
+	SOLDIERCREATE_STRUCT();
 	// Copy Constructor
-	OLD_SOLDIERCREATE_STRUCT_101(const OLD_SOLDIERCREATE_STRUCT_101&);
+	SOLDIERCREATE_STRUCT(const SOLDIERCREATE_STRUCT&);
 	// Assignment operator
 	OLD_SOLDIERCREATE_STRUCT_101& operator=(const OLD_SOLDIERCREATE_STRUCT_101&);
 	// Destructor
-	~OLD_SOLDIERCREATE_STRUCT_101();
+	~SOLDIERCREATE_STRUCT();
 
 	// Initialize the soldier.	
 	//	Use this instead of the old method of calling memset!
@@ -78,6 +81,10 @@ public:
 	void CopyOldInventoryToNew();
 	void CopyNewInventoryToOld();
 
+	// Note: Place all non-POD items at the end (after endOfPOD)
+	// The format of this structure affects what is written into and read from various
+	// files (maps, save files, etc.).  If you change it then that code will not work 
+	// properly until it is all fixed and the files updated.
 public:
 	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
 	//Used by editor for validation purposes.
@@ -121,7 +128,7 @@ public:
 
 private:
 	//Inventory
-	OLD_OBJECTTYPE_101				DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];	
+	OBJECTTYPE				DO_NOT_USE_Inv[ OldInventory::NUM_INV_SLOTS ];	
 public:
 	
 	//Palette information for soldiers.
@@ -279,8 +286,6 @@ public:
 	Inventory				Inv;
 }; // SOLDIERCREATE_STRUCT;
 
-#define SIZEOF_OLD_SOLDIERCREATE_STRUCT_101_POD offsetof( OLD_SOLDIERCREATE_STRUCT_101, endOfPOD )
-#define SIZEOF_OLD_SOLDIERCREATE_STRUCT_101 sizeof( OLD_SOLDIERCREATE_STRUCT_101 )
 #define SIZEOF_SOLDIERCREATE_STRUCT_POD offsetof( SOLDIERCREATE_STRUCT, endOfPOD )
 #define SIZEOF_SOLDIERCREATE_STRUCT sizeof( SOLDIERCREATE_STRUCT )
 

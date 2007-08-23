@@ -54,7 +54,6 @@ INT8				gbLevel;
 // This function checks if our statue exists in the current sector at given gridno
 BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	EXITGRID								ExitGrid;
 
@@ -81,7 +80,6 @@ BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 // This function changes the graphic of the statue and adds the exit grid...
 void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 {
-	PERFORMANCE_MARKER
 	EXITGRID								ExitGrid;
 	UINT16									usTileIndex;
 	INT16 sX, sY;
@@ -136,14 +134,12 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 
 void DeidrannaTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	HandleDeidrannaDeath( gpKillerSoldier, gsGridNo, gbLevel );
 }
 
 
 void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gpKillerSoldier = pKillerSoldier;
 	gsGridNo = sGridNo;
 	gbLevel	= bLevel;
@@ -161,7 +157,6 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 
 void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	UINT8		ubKillerSoldierID = NOBODY;
@@ -185,7 +180,7 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 	{
 		if ( cnt != ubKillerSoldierID )
 		{
-			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
 					if ( QuoteExp_WitnessDeidrannaDeath[ pTeamSoldier->ubProfile ] )
 					{
@@ -210,7 +205,6 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 
 void DoneFadeInKilledQueen( void )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pNPCSoldier;
 
 	// Locate gridno.....
@@ -230,7 +224,6 @@ void DoneFadeInKilledQueen( void )
 
 void DoneFadeOutKilledQueen( void )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 
@@ -241,7 +234,7 @@ void DoneFadeOutKilledQueen( void )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{		
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 		{
 			gfTacticalTraversal = TRUE;
 			SetGroupSectorValue( 3, MAP_ROW_P, 0, pSoldier->ubGroupID );
@@ -271,7 +264,7 @@ void DoneFadeOutKilledQueen( void )
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
-			if ( !pTeamSoldier->aiData.bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
+			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
 				ProcessQueenCmdImplicationsOfDeath( pTeamSoldier );
 			}
@@ -327,7 +320,6 @@ void DoneFadeOutKilledQueen( void )
 // Called after all player quotes are done....
 void HandleDoneLastKilledQueenQuote( )
 {
-	PERFORMANCE_MARKER
 	gFadeOutDoneCallback = DoneFadeOutKilledQueen;
 
 	FadeOutGameScreen( );	
@@ -336,7 +328,6 @@ void HandleDoneLastKilledQueenQuote( )
 
 void EndQueenDeathEndgameBeginEndCimenatic( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -350,7 +341,7 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{		
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
+		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
 		{
 			TacticalCharacterDialogue( pSoldier, QUOTE_END_GAME_COMMENT );	
 		}
@@ -363,7 +354,6 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 
 void EndQueenDeathEndgame( )
 {
-	PERFORMANCE_MARKER
 	// Unset flags...
 	gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
 	// Increment refrence count...
@@ -375,7 +365,6 @@ void EndQueenDeathEndgame( )
 
 void DoneFadeOutEndCinematic( void )
 {
-	PERFORMANCE_MARKER
 	// DAVE PUT SMAKER STUFF HERE!!!!!!!!!!!!
 	// :)
 	gTacticalStatus.uiFlags &= (~IN_ENDGAME_SEQUENCE);
@@ -394,7 +383,6 @@ void DoneFadeOutEndCinematic( void )
 // OK, end death UI - fade to smaker....
 void HandleDoneLastEndGameQuote( )
 {
-	PERFORMANCE_MARKER
 	EndQueenDeathEndgame( );
 
 	gFadeOutDoneCallback = DoneFadeOutEndCinematic;
@@ -406,14 +394,12 @@ void HandleDoneLastEndGameQuote( )
 
 void QueenBitchTimerCallback( void )
 {
-	PERFORMANCE_MARKER
 	HandleQueenBitchDeath( gpKillerSoldier, gsGridNo, gbLevel );
 }
 
 
 void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 
@@ -439,18 +425,18 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; cnt++,pTeamSoldier++)
 	{		
 		// Are we active and ALIVE and in sector.....
-		if ( pTeamSoldier->bActive && pTeamSoldier->stats.bLife > 0 )
+		if ( pTeamSoldier->bActive && pTeamSoldier->bLife > 0 )
 		{
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
 			// HELLO!	THESE ARE CREATURES!	THEY CAN'T BE NEUTRAL!
-			//if ( !pTeamSoldier->aiData.bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
+			//if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
 //	 		gTacticalStatus.ubAttackBusyCount++;
 				DebugAttackBusy( "Killing off a queen ally.\n");
-				pTeamSoldier->EVENT_SoldierGotHit( 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
+				EVENT_SoldierGotHit( pTeamSoldier, 0, 10000, 0, pTeamSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, 0, NOWHERE );
 			}
 		}
 	}
@@ -460,7 +446,6 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	UINT8		ubKillerSoldierID = NOBODY;
@@ -483,7 +468,7 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 	{
 		if ( cnt != ubKillerSoldierID )
 		{
-			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->flags.uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
 			{
 					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
 					{

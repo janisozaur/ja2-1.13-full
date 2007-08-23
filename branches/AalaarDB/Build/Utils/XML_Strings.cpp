@@ -58,7 +58,6 @@ typedef stringParseData;
 static void XMLCALL 
 stringStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -87,7 +86,6 @@ stringStartElementHandle(void *userData, const XML_Char *name, const XML_Char **
 static void XMLCALL
 stringCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -101,7 +99,6 @@ stringCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 stringEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	stringParseData * pData = (stringParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -131,7 +128,6 @@ stringEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInStringArray()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -193,7 +189,6 @@ BOOLEAN ReadInStringArray()
 }
 BOOLEAN WriteStringArray()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WriteStringArray"));
 	//Debug code; make sure that what we got from the file is the same as what's there

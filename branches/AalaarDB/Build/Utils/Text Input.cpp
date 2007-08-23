@@ -105,7 +105,6 @@ UINT16 gusTextInputCursor = CURSOR_IBEAM;
 //one.
 void PushTextInputLevel()
 {
-	PERFORMANCE_MARKER
 	STACKTEXTINPUTNODE *pNewLevel;
 	pNewLevel = (STACKTEXTINPUTNODE*)MemAlloc( sizeof( STACKTEXTINPUTNODE ) );
 	Assert( pNewLevel );
@@ -121,7 +120,6 @@ void PushTextInputLevel()
 //happy with killing non-existant text input modes.
 void PopTextInputLevel()
 {
-	PERFORMANCE_MARKER
 	STACKTEXTINPUTNODE *pLevel;
 	gpTextInputHead = pInputStack->head;
 	pColors = pInputStack->pColors;
@@ -154,7 +152,6 @@ CHAR16 gszClipboardString[256];
 //and special fields can be defined which will call a void functionName( UINT16 usFieldNum ) 
 void InitTextInputMode()
 {
-	PERFORMANCE_MARKER
 	if( gpTextInputHead )
 	{
 		//Instead of killing all of the currently existing text input fields, they will now (Jan16 '97)
@@ -177,7 +174,6 @@ void InitTextInputMode()
 //feel free to add new schemes.
 void InitTextInputModeWithScheme( UINT8 ubSchemeID )
 {
-	PERFORMANCE_MARKER
 	InitTextInputMode();
 	switch( ubSchemeID )
 	{
@@ -194,7 +190,6 @@ void InitTextInputModeWithScheme( UINT8 ubSchemeID )
 //Clears any existing fields, and ends text input mode.
 void KillTextInputMode()
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	if( !gpTextInputHead )
 //		AssertMsg( 0, "Called KillTextInputMode() without any text input mode defined.");
@@ -236,7 +231,6 @@ void KillTextInputMode()
 //just uses for it :(
 void KillAllTextInputModes()
 {
-	PERFORMANCE_MARKER
 	while( gpTextInputHead )
 		KillTextInputMode();
 }
@@ -247,7 +241,6 @@ void KillAllTextInputModes()
 void AddTextInputField( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, 
 											STR16 szInitText, UINT8 ubMaxChars, UINT16 usInputType )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *pNode;
 	pNode = (TEXTINPUTNODE*)MemAlloc(sizeof(TEXTINPUTNODE));
 	Assert(pNode);
@@ -314,7 +307,6 @@ void AddTextInputField( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, IN
 //externally, except for the TAB keys.
 void AddUserInputField( INPUT_CALLBACK userFunction )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *pNode;
 	pNode = (TEXTINPUTNODE*)MemAlloc(sizeof(TEXTINPUTNODE));
 	Assert(pNode);
@@ -346,7 +338,6 @@ void AddUserInputField( INPUT_CALLBACK userFunction )
 //assertion failure.
 void RemoveTextInputField( UINT8 ubField )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -385,7 +376,6 @@ void RemoveTextInputField( UINT8 ubField )
 //Returns the gpActive field ID number.	It'll return -1 if no field is active.
 INT16 GetActiveFieldID()
 {
-	PERFORMANCE_MARKER
 	if( gpActive )
 		return gpActive->ubID;
 	return -1;
@@ -396,7 +386,6 @@ INT16 GetActiveFieldID()
 //the arrows, or even using alpha chars to jump to the appropriate filename.
 void SetInputFieldStringWith16BitString( UINT8 ubField, const STR16 szNewText )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -426,7 +415,6 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const STR16 szNewText )
 
 void SetInputFieldStringWith8BitString( UINT8 ubField, const STR8 szNewText )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -457,7 +445,6 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, const STR8 szNewText )
 //Allows external functions to access the strings within the fields at anytime.
 void Get8BitStringFromField( UINT8 ubField, STR8 szString )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -474,7 +461,6 @@ void Get8BitStringFromField( UINT8 ubField, STR8 szString )
 
 void Get16BitStringFromField( UINT8 ubField, STR16 szString )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -493,7 +479,6 @@ void Get16BitStringFromField( UINT8 ubField, STR16 szString )
 //returns -1 if blank or invalid.	Only works for positive numbers.
 INT32 GetNumericStrictValueFromField( UINT8 ubField )
 {
-	PERFORMANCE_MARKER
 	STR16 ptr;
 	CHAR16 str[20];
 	INT32 total;
@@ -522,7 +507,6 @@ INT32 GetNumericStrictValueFromField( UINT8 ubField )
 //field will be blank.
 void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -551,7 +535,6 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 //Sets the active field to the specified ID passed.
 void SetActiveField( UINT8 ubField )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -582,7 +565,6 @@ void SetActiveField( UINT8 ubField )
 
 void SelectNextField()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fDone = FALSE;
 	TEXTINPUTNODE *pStart;
 
@@ -627,7 +609,6 @@ void SelectNextField()
 
 void SelectPrevField()
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fDone = FALSE;
 	TEXTINPUTNODE *pStart;
 
@@ -676,26 +657,22 @@ void SelectPrevField()
 //but will effect all of the colors.
 void SetTextInputFont( UINT16 usFont )
 {
-	PERFORMANCE_MARKER
 	pColors->usFont = usFont;
 }
 
 void Set16BPPTextFieldColor( UINT16 usTextFieldColor )
 {
-	PERFORMANCE_MARKER
 	pColors->usTextFieldColor = usTextFieldColor;
 }
 
 void SetTextInputRegularColors( UINT8 ubForeColor, UINT8 ubShadowColor )
 {
-	PERFORMANCE_MARKER
 	pColors->ubForeColor = ubForeColor;
 	pColors->ubShadowColor = ubShadowColor;
 }
 
 void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ubBackColor )
 {
-	PERFORMANCE_MARKER
 	pColors->ubHiForeColor = ubForeColor;
 	pColors->ubHiShadowColor = ubShadowColor;
 	pColors->ubHiBackColor = ubBackColor;
@@ -703,7 +680,6 @@ void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ub
 
 void SetDisabledTextFieldColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 usTextFieldColor )
 {
-	PERFORMANCE_MARKER
 	pColors->fUseDisabledAutoShade = FALSE;
 	pColors->ubDisabledForeColor = ubForeColor;
 	pColors->ubDisabledShadowColor = ubShadowColor;
@@ -712,7 +688,6 @@ void SetDisabledTextFieldColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 
 
 void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor )
 {
-	PERFORMANCE_MARKER
 	pColors->fBevelling = TRUE;
 	pColors->usBrighterColor = usBrighterColor;
 	pColors->usDarkerColor = usDarkerColor;
@@ -720,7 +695,6 @@ void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor )
 
 void SetCursorColor( UINT16 usCursorColor )
 {
-	PERFORMANCE_MARKER
 	pColors->usCursorColor = usCursorColor;
 }
 
@@ -741,7 +715,6 @@ void SetCursorColor( UINT16 usCursorColor )
 //It is only necessary for event loops that contain text input fields.
 BOOLEAN HandleTextInput( InputAtom *Event )
 {
-	PERFORMANCE_MARKER
 	//Check the multitude of terminating conditions...
 
 	//not in text input mode
@@ -993,7 +966,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 
 void HandleExclusiveInput( UINT32 uiKey )
 {
-	PERFORMANCE_MARKER
 	switch( gpActive->usInputType )
 	{
 		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: //dos file names
@@ -1068,7 +1040,6 @@ void HandleExclusiveInput( UINT32 uiKey )
 
 void AddChar( UINT32 uiKey )
 {
-	PERFORMANCE_MARKER
 	PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
 	if( gpActive->ubStrLen >= gpActive->ubMaxChars )
 	{	//max length reached.	Just replace the last character with new one.
@@ -1101,7 +1072,6 @@ void AddChar( UINT32 uiKey )
 
 void DeleteHilitedText()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
 	gfHiliteMode = FALSE;
@@ -1130,7 +1100,6 @@ void DeleteHilitedText()
 
 void RemoveChar( UINT8 ubArrayIndex )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fDeleting = FALSE;
 	while( ubArrayIndex < gpActive->ubStrLen )
 	{
@@ -1146,7 +1115,6 @@ void RemoveChar( UINT8 ubArrayIndex )
 //Internally used to continue highlighting text
 void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	if( gfLeftButtonState )
 	{
@@ -1208,7 +1176,6 @@ void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 //Internally used to calculate where to place the cursor.
 void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1251,7 +1218,6 @@ void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 
 void RenderBackgroundField( TEXTINPUTNODE *pNode )
 {
-	PERFORMANCE_MARKER
 	UINT16 usColor;
 	if( pColors->fBevelling )
 	{
@@ -1275,7 +1241,6 @@ void RenderBackgroundField( TEXTINPUTNODE *pNode )
 
 void RenderActiveTextField()
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCursorXPos;
 	UINT16 usOffset;
 	CHAR16 str[ 256 ];
@@ -1354,7 +1319,6 @@ void RenderActiveTextField()
 
 void RenderInactiveTextField( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	UINT16 usOffset;
 	TEXTINPUTNODE* pNode, *curr;
 	CHAR16 str[ 256 ];
@@ -1384,7 +1348,6 @@ void RenderInactiveTextField( UINT8 ubID )
 
 void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
 {
-	PERFORMANCE_MARKER
 	UINT16 usOffset;
 	CHAR16 str[ 256 ];
 	if( !pNode || !pNode->szString )
@@ -1425,7 +1388,6 @@ void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
 //Use when you do a full interface update.
 void RenderAllTextFields()
 {
-	PERFORMANCE_MARKER
 	STACKTEXTINPUTNODE *stackCurr;
 	TEXTINPUTNODE *curr;
 	//Render all of the other text input levels first,
@@ -1455,7 +1417,6 @@ void RenderAllTextFields()
 
 void EnableTextField( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1478,7 +1439,6 @@ void EnableTextField( UINT8 ubID )
 
 void DisableTextField( UINT8 ubID )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1501,7 +1461,6 @@ void DisableTextField( UINT8 ubID )
 
 void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1522,7 +1481,6 @@ void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 
 void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1543,7 +1501,6 @@ void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 
 void EnableAllTextFields()
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1561,7 +1518,6 @@ void EnableAllTextFields()
 
 void DisableAllTextFields()
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
 	while( curr )
@@ -1578,13 +1534,11 @@ void DisableAllTextFields()
 
 BOOLEAN EditingText()
 {
-	PERFORMANCE_MARKER
 	return gfEditingText;
 }
 
 BOOLEAN TextInputMode()
 {
-	PERFORMANCE_MARKER
 	return gfTextInputMode;
 }
 
@@ -1592,13 +1546,11 @@ BOOLEAN TextInputMode()
 //copy, cut, and paste hilighted text code
 void InitClipboard()
 {
-	PERFORMANCE_MARKER
 	szClipboard = NULL;
 }
 
 void KillClipboard()
 {
-	PERFORMANCE_MARKER
 	if( szClipboard )
 	{
 		MemFree( szClipboard );
@@ -1608,7 +1560,6 @@ void KillClipboard()
 
 void ExecuteCopyCommand()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
 	if( !gpActive || !gpActive->szString )
@@ -1641,7 +1592,6 @@ void ExecuteCopyCommand()
 
 void ExecutePasteCommand()
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCount;
 	if( !gpActive || !szClipboard )
 		return;
@@ -1657,7 +1607,6 @@ void ExecutePasteCommand()
 
 void ExecuteCutCommand()
 {
-	PERFORMANCE_MARKER
 	ExecuteCopyCommand();
 	DeleteHilitedText();
 }
@@ -1667,7 +1616,6 @@ void ExecuteCutCommand()
 //calls.
 void SaveAndRemoveCurrentTextInputMode()
 {
-	PERFORMANCE_MARKER
 	if( pSavedHead )
 		AssertMsg( 0, "Attempting to save text input stack head, when one already exists.");
 	pSavedHead = gpTextInputHead;
@@ -1686,7 +1634,6 @@ void SaveAndRemoveCurrentTextInputMode()
 
 void RestoreSavedTextInputMode()
 {
-	PERFORMANCE_MARKER
 	if( !pSavedHead )
 		AssertMsg( 0, "Attempting to restore saved text input stack head, when one doesn't exist.");
 	gpTextInputHead = pSavedHead;
@@ -1697,13 +1644,11 @@ void RestoreSavedTextInputMode()
 
 UINT16 GetTextInputCursor()
 {
-	PERFORMANCE_MARKER
 	return gusTextInputCursor;	
 }
 
 void SetTextInputCursor( UINT16 usNewCursor )
 {
-	PERFORMANCE_MARKER
 	STACKTEXTINPUTNODE *stackCurr;
 	TEXTINPUTNODE *curr;
 	if(	gusTextInputCursor == usNewCursor )
@@ -1736,7 +1681,6 @@ void SetTextInputCursor( UINT16 usNewCursor )
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	UINT16 usTime;
 	curr = gpTextInputHead;
@@ -1776,7 +1720,6 @@ UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
 void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 {
-	PERFORMANCE_MARKER
 	TEXTINPUTNODE *curr;
 	//First make sure the time is a valid time.	If not, then use 23:59
 	if( usTime == 0xffff )
@@ -1807,7 +1750,6 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 
 void DoublePercentileCharacterFromStringIntoString( STR16 pSrcString, STR16 pDstString )
 {
-	PERFORMANCE_MARKER
 	INT32 iSrcIndex = 0, iDstIndex = 0;
 	while( pSrcString[ iSrcIndex ] != 0 )
 	{

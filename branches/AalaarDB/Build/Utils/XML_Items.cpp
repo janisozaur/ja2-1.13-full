@@ -65,7 +65,6 @@ BOOLEAN localizedTextOnly;
 static void XMLCALL 
 itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	itemParseData * pData = (itemParseData *)userData;
 
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("itemStartElementHandle: at element (%d), name = %s, depth = %d, maxdepth = %d, jar? = %d",pData->curElement,name,pData->currentDepth,pData->maxReadDepth,strcmp(name, "Jar") ) );
@@ -104,6 +103,7 @@ itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 				strcmp(name, "ubGraphicNum") == 0 ||
 				strcmp(name, "ubWeight") == 0 ||
 				strcmp(name, "ubPerPocket") == 0 ||
+				strcmp(name, "ItemSize") == 0 ||
 				strcmp(name, "usPrice") == 0 ||
 				strcmp(name, "ubCoolness") == 0 ||
 				strcmp(name, "bReliability") == 0 ||
@@ -163,6 +163,7 @@ itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 				strcmp(name, "DayVisionRangeBonus") == 0 ||
 				strcmp(name, "CaveVisionRangeBonus") == 0 ||
 				strcmp(name, "BrightLightVisionRangeBonus") == 0 ||
+				strcmp(name, "ItemSizeBonus") == 0 ||
 				strcmp(name, "LeatherJacket") == 0 ||
 				strcmp(name, "NeedsBatteries") == 0 ||
 				strcmp(name, "Batteries") == 0 ||
@@ -229,7 +230,6 @@ itemStartElementHandle(void *userData, const XML_Char *name, const XML_Char **at
 static void XMLCALL
 itemCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	itemParseData * pData = (itemParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -243,7 +243,6 @@ itemCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 itemEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	itemParseData * pData = (itemParseData *)userData;
 	char temp;
 
@@ -434,6 +433,11 @@ itemEndElementHandle(void *userData, const XML_Char *name)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.ubPerPocket = (UINT8) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "ItemSize") == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.ItemSize = (UINT8) atol(pData->szCharData);
 		}
 		else if(strcmp(name, "usPrice") == 0)
 		{
@@ -852,7 +856,12 @@ itemEndElementHandle(void *userData, const XML_Char *name)
 			pData->curElement = ELEMENT;
 			pData->curItem.brightlightvisionrangebonus	= (INT16) atol(pData->szCharData);
 		}
-		else if(strcmp(name, "LeatherJacket")	== 0)
+		if(strcmp(name, "ItemSizeBonus")	 == 0)
+		{
+			pData->curElement = ELEMENT;
+			pData->curItem.itemsizebonus    = (INT16) atol(pData->szCharData);
+		}
+		else if(strcmp(name, "LeatherJacket")	 == 0)
 		{
 			pData->curElement = ELEMENT;
 			pData->curItem.leatherjacket	= (BOOLEAN) atol(pData->szCharData);
@@ -989,7 +998,6 @@ itemEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion )
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -1063,7 +1071,6 @@ BOOLEAN ReadInItemStats(STR fileName, BOOLEAN localizedVersion )
 }
 BOOLEAN WriteItemStats()
 {
-	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeitemstats");
 	HWFILE		hFile;
 
@@ -1378,6 +1385,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<ubGraphicNum>%d</ubGraphicNum>\r\n",						Item[cnt].ubGraphicNum);
 			FilePrintf(hFile,"\t\t<ubWeight>%d</ubWeight>\r\n",						Item[cnt].ubWeight);
 			FilePrintf(hFile,"\t\t<ubPerPocket>%d</ubPerPocket>\r\n",									Item[cnt].ubPerPocket);
+			FilePrintf(hFile,"\t\t<ItemSize>%d</ItemSize>\r\n",									Item[cnt].ItemSize);
 			FilePrintf(hFile,"\t\t<usPrice>%d</usPrice>\r\n",							Item[cnt].usPrice);
 			FilePrintf(hFile,"\t\t<ubCoolness>%d</ubCoolness>\r\n",								Item[cnt].ubCoolness);
 			FilePrintf(hFile,"\t\t<bReliability>%d</bReliability>\r\n",								Item[cnt].bReliability);
@@ -1488,6 +1496,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<DayVisionRangeBonus>%d</DayVisionRangeBonus>\r\n",						Item[cnt].dayvisionrangebonus	);
 			FilePrintf(hFile,"\t\t<CaveVisionRangeBonus>%d</CaveVisionRangeBonus>\r\n",						Item[cnt].cavevisionrangebonus	);
 			FilePrintf(hFile,"\t\t<BrightLightVisionRangeBonus>%d</BrightLightVisionRangeBonus>\r\n",						Item[cnt].brightlightvisionrangebonus	);
+			FilePrintf(hFile,"\t\t<ItemSizeBonus>%d</ItemSizeBonus>\r\n",						Item[cnt].itemsizebonus  );
 			FilePrintf(hFile,"\t\t<PercentTunnelVision>%d</PercentTunnelVision>\r\n",						Item[cnt].percenttunnelvision );
 			FilePrintf(hFile,"\t\t<ThermalOptics>%d</ThermalOptics>\r\n",						Item[cnt].thermaloptics );
 			FilePrintf(hFile,"\t\t<GasMask>%d</GasMask>\r\n",						Item[cnt].gasmask );

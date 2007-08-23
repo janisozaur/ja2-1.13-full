@@ -44,8 +44,7 @@ void DrawMouseTooltip(void);
 #define MAX(a, b) (a > b ? a : b)
 
 void SoldierTooltip( SOLDIERTYPE* pSoldier )
-{
-	PERFORMANCE_MARKER			
+{			
 	SGPRect		aRect;
 	extern void GetSoldierScreenRect(SOLDIERTYPE*,SGPRect*);
 	GetSoldierScreenRect( pSoldier,	&aRect );
@@ -101,7 +100,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			else
 			{
 				// add 10% to max tooltip viewing distance per level of the merc
-				uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->stats.bExpLevel / 10);
+				uiMaxTooltipDistance *= 1 + (MercPtrs[ gusSelectedSoldier ]->bExpLevel / 10);
 
 				if ( gGameExternalOptions.gfAllowLimitedVision )
 					uiMaxTooltipDistance *= 1 - (gGameExternalOptions.ubVisDistDecreasePerRainIntensity / 100);
@@ -140,7 +139,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			// Get the current selected merc
 			SOLDIERTYPE* pMerc = MercPtrs[ gusSelectedSoldier ];
 			
-			if ( pMerc->aiData.bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
+			if ( pMerc->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 			{
 				// We do not see the enemy. Return and do not display the tooltip.
 				return;
@@ -160,13 +159,13 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 			if ( gGameExternalOptions.fEnableSoldierTooltipID )
 				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ID], pStrInfo, pSoldier->ubID );
 			if ( gGameExternalOptions.fEnableSoldierTooltipOrders )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->aiData.bOrders );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ORDERS], pStrInfo, pSoldier->bOrders );
 			if ( gGameExternalOptions.fEnableSoldierTooltipAttitude )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->aiData.bAttitude );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_ATTITUDE], pStrInfo, pSoldier->bAttitude );
 			if ( gGameExternalOptions.fEnableSoldierTooltipActionPoints )
 				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_APS], pStrInfo, pSoldier->bActionPoints );
 			if ( gGameExternalOptions.fEnableSoldierTooltipHealth )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->stats.bLife );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_CURRENT_HEALTH], pStrInfo, pSoldier->bLife );
 		}
 
 		// armor info code block start
@@ -267,7 +266,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		// weapon in off hand info code block end
 
 		// large objects in big inventory slots info code block start
-		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot <= BIGPOCK4POS; BigSlot++ )
+		for ( UINT8 BigSlot = BIGPOCK1POS; BigSlot < BIGPOCKFINAL; BigSlot++ )
 		{
 			if ( pSoldier->inv[ BigSlot ].usItem == 0 )
 				continue; // slot is empty, move on to the next slot
@@ -291,6 +290,19 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot4 )
 						continue;
 					break;
+// CHRISL: Added new large pockets introduced by new inventory system
+				case BIGPOCK5POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot5 )
+						continue;
+					break;
+				case BIGPOCK6POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot6 )
+						continue;
+					break;
+				case BIGPOCK7POS:
+					if ( !gGameExternalOptions.fEnableSoldierTooltipBigSlot7 )
+						continue;
+				    break;
 			}
 
 			if ( Item[ pSoldier->inv[ BigSlot ].usItem ].rocketlauncher )
@@ -344,7 +356,6 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 
 void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, UINT8 ubTooltipDetailLevel )
 {
-	PERFORMANCE_MARKER
 	INT32		iNumAttachments		= 0;
 	BOOLEAN		fDisplayAttachment	= FALSE;
 
@@ -430,7 +441,6 @@ BOOL mouseTTrender, mouseTTdone;
 
 void DrawMouseTooltip()
 {
-	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	static INT32 iX, iY, iW, iH;

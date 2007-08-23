@@ -51,7 +51,6 @@ SECTOR_LOADSCREENS gSectorLoadscreens[MAX_SECTOR_LOADSCREENS];
 //returns the UINT8 ID for the specified sector.
 UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
 	BOOLEAN fNight = FALSE;
@@ -575,7 +574,6 @@ extern BOOLEAN gfSchedulesHosed;
 //and refreshing the screen with it.
 void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 {
-	PERFORMANCE_MARKER
 	VSURFACE_DESC		vs_desc;
 	HVSURFACE			hVSurface;
 	UINT32				uiLoadScreen;
@@ -1438,7 +1436,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	{ //Blit the background image
 		GetVideoSurface( &hVSurface, uiLoadScreen );
 
-		// Special case->show the small image centered
+		// Special case -> show the small image centered
 		if (iResolution > 0 && bShowSmallImage == TRUE)
 		{
 			BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, iScreenWidthOffset, iScreenHeightOffset, 0, NULL );

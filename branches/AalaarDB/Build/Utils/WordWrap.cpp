@@ -19,14 +19,12 @@ BOOLEAN	gfUseSingleCharWordsForWordWrap = FALSE;
 
 void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords )
 {
-	PERFORMANCE_MARKER
 	gfUseSingleCharWordsForWordWrap = fUseSingleCharWords;
 }
 
 
 WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
 	CHAR16					TempString[1024];
@@ -144,7 +142,6 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
 	CHAR16					TempString[1024];
@@ -374,7 +371,6 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 //
 UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, STR16 pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
@@ -418,7 +414,6 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 
 UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 {
-	PERFORMANCE_MARKER
 	WRAPPED_STRING *pTempWrappedString;
 	UINT16	uiCounter=0;
 
@@ -545,7 +540,6 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
@@ -1006,7 +1000,6 @@ DEF: commented out for Beta.	Nov 30
 
 void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 {
-	PERFORMANCE_MARKER
 	INT32		iSourceCounter=0;
 	INT32		iDestCounter=0;
 
@@ -1099,7 +1092,6 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags, BOOLEAN *fOnLastPageFlag)
 {
-	PERFORMANCE_MARKER
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
@@ -1438,7 +1430,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 															UINT32 uiFont, UINT8 ubColor, STR16 pString, 
 															UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	PERFORMANCE_MARKER
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
@@ -1742,7 +1733,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap, INT32 iPage )
 {
-	PERFORMANCE_MARKER
 	BOOLEAN fGetCutOff = FALSE;
 	INT32 iHeight;
 	// Will return if this string will get cut off
@@ -1762,7 +1752,6 @@ BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT
 
 BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
 {
-	PERFORMANCE_MARKER
 	// check to see if the current string will appear on the current page
 	BOOLEAN fBeforeCurrentPage = FALSE;
 	
@@ -1782,7 +1771,6 @@ BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize
 
 INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
 {
-	PERFORMANCE_MARKER
 	INT32 iNewYPosition = 0;
 	// will returnt he new total y value of this string
 
@@ -1795,7 +1783,6 @@ INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, 
 
 void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiLength = StringPixLength( pString, uiFont);
 	UINT16 usFontHeight = WFGetFontHeight( uiFont );
 
@@ -1806,7 +1793,6 @@ void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPo
 // for email
 RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize )
 {
-	PERFORMANCE_MARKER
 	// get the first record on this page - build pages up until this point
 
 	RecordPtr CurrentRecord = NULL;
@@ -1841,7 +1827,7 @@ RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 
 															0, 0, 0 ) ;
 
 			// next record
-			CurrentRecord = CurrentRecord->Next;
+			CurrentRecord = CurrentRecord -> Next;
 
 			// check if we have gone too far?
 			if( CurrentRecord == NULL )
@@ -1865,7 +1851,6 @@ RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 
 // for file viewer
 FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidthPtr WidthList )
 {
-	PERFORMANCE_MARKER
 	// get the first record on this page - build pages up until this point
 
 	FileStringPtr CurrentRecord = NULL;
@@ -1915,7 +1900,7 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 					iCurrentPositionOnThisPage += pWidthList->iRecordHeightAdjustment;
 
 			}
-			pWidthList = pWidthList->Next;
+			pWidthList = pWidthList ->Next;
 
 		}
 
@@ -1977,7 +1962,6 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 
 BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont )
 {
-	PERFORMANCE_MARKER
 	CHAR16			OneChar[2];
 	CHAR16			zTemp[ 1024 ];
 	CHAR16			zStrDots[16];

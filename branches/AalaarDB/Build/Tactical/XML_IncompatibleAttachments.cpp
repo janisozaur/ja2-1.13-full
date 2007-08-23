@@ -61,7 +61,6 @@ typedef incompatibleattachmentParseData;
 static void XMLCALL 
 incompatibleattachmentStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-	PERFORMANCE_MARKER
 	incompatibleattachmentParseData * pData = (incompatibleattachmentParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -102,7 +101,6 @@ incompatibleattachmentStartElementHandle(void *userData, const XML_Char *name, c
 static void XMLCALL
 incompatibleattachmentCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
-	PERFORMANCE_MARKER
 	incompatibleattachmentParseData * pData = (incompatibleattachmentParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -116,7 +114,6 @@ incompatibleattachmentCharacterDataHandle(void *userData, const XML_Char *str, i
 static void XMLCALL
 incompatibleattachmentEndElementHandle(void *userData, const XML_Char *name)
 {
-	PERFORMANCE_MARKER
 	incompatibleattachmentParseData * pData = (incompatibleattachmentParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -158,7 +155,6 @@ incompatibleattachmentEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInIncompatibleAttachmentStats(STR fileName)
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -220,7 +216,6 @@ BOOLEAN ReadInIncompatibleAttachmentStats(STR fileName)
 }
 BOOLEAN WriteIncompatibleAttachmentStats()
 {
-	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

@@ -134,7 +134,6 @@ UINT16	gusCivQuoteBoxHeight;
 
 void CopyNumEntriesIntoQuoteStruct( )
 {
-	PERFORMANCE_MARKER
 	INT32	cnt;
 
 	for ( cnt = 0; cnt < NUM_CIV_QUOTES; cnt++ )
@@ -147,7 +146,6 @@ void CopyNumEntriesIntoQuoteStruct( )
 
 BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, STR16 zQuote )
 {
-	PERFORMANCE_MARKER
 	CHAR8 zFileName[164];
 
 	// Build filename....
@@ -183,7 +181,6 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, STR16 zQuote )
 
 void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
 
@@ -224,7 +221,6 @@ void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 
 void ShutDownQuoteBox( BOOLEAN fForce )
 {
-	PERFORMANCE_MARKER
 	if ( !gCivQuoteData.bActive )
 	{
 		return;
@@ -244,7 +240,7 @@ void ShutDownQuoteBox( BOOLEAN fForce )
 		gCivQuoteData.bActive = FALSE;
 
 		// do we need to do anything at the end of the civ quote?
-		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->aiData.bAction == AI_ACTION_OFFER_SURRENDER )
+		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
 		{
 			DoMessageBox( MSG_BOX_BASIC_STYLE, Message[ STR_SURRENDER ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SurrenderMessageBoxCallBack, NULL );
 		}
@@ -253,7 +249,6 @@ void ShutDownQuoteBox( BOOLEAN fForce )
 
 BOOLEAN ShutDownQuoteBoxIfActive( )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.bActive )
 	{
 		ShutDownQuoteBox( TRUE );
@@ -267,7 +262,6 @@ BOOLEAN ShutDownQuoteBoxIfActive( )
 
 INT8 GetCivType( SOLDIERTYPE *pCiv )
 {
-	PERFORMANCE_MARKER
 	if ( pCiv->ubProfile != NO_PROFILE )
 	{
 		return( CIV_TYPE_NA );
@@ -337,7 +331,6 @@ INT8 GetCivType( SOLDIERTYPE *pCiv )
 
 void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.iVideoOverlay != -1 )
 	{
 		RenderMercPopUpBoxFromIndex( gCivQuoteData.iDialogueBox, pBlitter->sX, pBlitter->sY,	pBlitter->uiDestBuff );
@@ -349,7 +342,6 @@ void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
 
 void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -371,7 +363,6 @@ void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY )
 {
-	PERFORMANCE_MARKER
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	CHAR16									zQuote[ 320 ];
 
@@ -469,7 +460,6 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 
 UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN fCanUseHints )
 {
-	PERFORMANCE_MARKER
 	UINT8	ubCivType;
 	INT8	bTownId;
 	BOOLEAN	bCivLowLoyalty = FALSE;
@@ -487,17 +477,17 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 		// Determine what type of quote to say...
 		// Are are we going to attack?
 
-		if ( pCiv->aiData.bAction == AI_ACTION_TOSS_PROJECTILE || pCiv->aiData.bAction == AI_ACTION_FIRE_GUN ||
-							pCiv->aiData.bAction == AI_ACTION_FIRE_GUN || pCiv->aiData.bAction == AI_ACTION_KNIFE_MOVE )
+		if ( pCiv->bAction == AI_ACTION_TOSS_PROJECTILE || pCiv->bAction == AI_ACTION_FIRE_GUN ||
+							pCiv->bAction == AI_ACTION_FIRE_GUN || pCiv->bAction == AI_ACTION_KNIFE_MOVE )
 		{
 			return( CIV_QUOTE_ENEMY_THREAT );
 		}
-		else if ( pCiv->aiData.bAction == AI_ACTION_OFFER_SURRENDER )
+		else if ( pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
 		{
 			return( CIV_QUOTE_ENEMY_OFFER_SURRENDER );
 		}
 		// Hurt?
-		else if ( pCiv->stats.bLife < 30 )
+		else if ( pCiv->bLife < 30 )
 		{
 			return( CIV_QUOTE_ENEMY_HURT );
 		}
@@ -529,7 +519,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	{
 		// Are they friendly?
 		//if ( gTacticalStatus.fCivGroupHostile[ HICKS_CIV_GROUP ] < CIV_GROUP_WILL_BECOME_HOSTILE )
-		if ( pCiv->aiData.bNeutral )
+		if ( pCiv->bNeutral )
 		{
 			return( CIV_QUOTE_HICKS_FRIENDLY );
 		}
@@ -544,7 +534,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	{
 		// Are they friendly?
 		//if ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] < CIV_GROUP_WILL_BECOME_HOSTILE )
-		if ( pCiv->aiData.bNeutral )
+		if ( pCiv->bNeutral )
 		{
 			return( CIV_QUOTE_GOONS_FRIENDLY );
 		}
@@ -555,7 +545,7 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 	}
 
 	// ATE: Cowering people take precedence....
-	if ( ( pCiv->flags.uiStatusFlags & SOLDIER_COWERING ) || ( pCiv->bTeam == CIV_TEAM && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
+	if ( ( pCiv->uiStatusFlags & SOLDIER_COWERING ) || ( pCiv->bTeam == CIV_TEAM && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 	{
 		if ( ubCivType == CIV_TYPE_ADULT )
 		{
@@ -764,7 +754,6 @@ UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN
 
 void HandleCivQuote( )
 {
-	PERFORMANCE_MARKER
 	if ( gCivQuoteData.bActive )
 	{
 		// Check for min time....
@@ -778,7 +767,6 @@ void HandleCivQuote( )
 
 void StartCivQuote( SOLDIERTYPE *pCiv )
 {
-	PERFORMANCE_MARKER
 	UINT8 ubCivQuoteID;
 	INT16	sX, sY;
 	UINT8	ubEntryID = 0;
@@ -848,7 +836,6 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 
 void InitCivQuoteSystem( )
 {
-	PERFORMANCE_MARKER
 	memset( &gCivQuotes, 0, sizeof( gCivQuotes ) );
 	CopyNumEntriesIntoQuoteStruct( );
 
@@ -861,7 +848,6 @@ void InitCivQuoteSystem( )
 
 BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 
 	FileWrite( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesWritten );
@@ -876,7 +862,6 @@ BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	FileRead( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesRead );

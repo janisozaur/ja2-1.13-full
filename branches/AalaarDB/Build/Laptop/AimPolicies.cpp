@@ -192,20 +192,17 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 
 void GameInitAimPolicies()
 {
-	PERFORMANCE_MARKER
 
 }
 
 void EnterInitAimPolicies()
 {
-	PERFORMANCE_MARKER
 	memset( &AimPoliciesSubPagesVisitedFlag, 0, NUM_AIM_POLICY_PAGES);
 }
 
 
 BOOLEAN EnterAimPolicies()
 {
-	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitAimDefaults();
@@ -243,7 +240,6 @@ BOOLEAN EnterAimPolicies()
 
 void ExitAimPolicies()
 {
-	PERFORMANCE_MARKER
 	gfExitingAimPolicy = TRUE;
 
 	DeleteVideoObjectFromIndex(guiBottomButton);
@@ -266,7 +262,6 @@ void ExitAimPolicies()
 
 void HandleAimPolicies()
 {
-	PERFORMANCE_MARKER
 	if( (gfAimPolicyMenuBarLoaded != TRUE) && gubCurPageNum != 0)
 	{
 		InitAimPolicyMenuBar();
@@ -278,7 +273,6 @@ void HandleAimPolicies()
 
 void RenderAimPolicies()
 {
-	PERFORMANCE_MARKER
 	UINT16	usNumPixles;
 
 	DrawAimDefaults();
@@ -401,7 +395,6 @@ void RenderAimPolicies()
 
 BOOLEAN InitAimPolicyMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	UINT16					i, usPosX;
 
 	if(gfAimPolicyMenuBarLoaded)
@@ -444,7 +437,6 @@ BOOLEAN InitAimPolicyMenuBar(void)
 
 BOOLEAN ExitAimPolicyMenuBar(void)
 {
-	PERFORMANCE_MARKER
 	int i;
 
 	if( !gfAimPolicyMenuBarLoaded ) 
@@ -464,7 +456,6 @@ BOOLEAN ExitAimPolicyMenuBar(void)
 
 BOOLEAN DrawAimPolicyMenu()
 {
-	PERFORMANCE_MARKER
 	UINT16			i, usPosY;
 	UINT16			usHeight;
 	UINT32			uiStartLoc=0;
@@ -502,7 +493,6 @@ BOOLEAN DrawAimPolicyMenu()
 
 BOOLEAN InitAimPolicyTocMenu(void)
 {
-	PERFORMANCE_MARKER
 	UINT16			i, usPosY;
 	UINT16			usHeight;
 	if(gfInPolicyToc)
@@ -529,7 +519,6 @@ BOOLEAN InitAimPolicyTocMenu(void)
 
 BOOLEAN ExitAimPolicyTocMenu()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 
 	gfInPolicyToc = FALSE;
@@ -542,8 +531,7 @@ BOOLEAN ExitAimPolicyTocMenu()
 
 
 void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if(gfInPolicyToc)
 	{
 		if (iReason & MSYS_CALLBACK_REASON_INIT)
@@ -568,7 +556,6 @@ void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN	DisplayAimPolicyTitleText(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -587,7 +574,6 @@ BOOLEAN	DisplayAimPolicyTitleText(void)
 
 BOOLEAN	DisplayAimPolicyStatement(void)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 	UINT16	usNumPixels;
@@ -610,7 +596,6 @@ BOOLEAN	DisplayAimPolicyStatement(void)
 
 BOOLEAN InitAgreementRegion(void)
 {
-	PERFORMANCE_MARKER
 	UINT16	usPosX,i;
 
 	gfExitingPolicesAgreeButton = FALSE;
@@ -646,7 +631,6 @@ BOOLEAN InitAgreementRegion(void)
 
 BOOLEAN ExitAgreementButton(void)
 {
-	PERFORMANCE_MARKER
 	UINT8 i;
 
 	gfExitingPolicesAgreeButton = TRUE;
@@ -665,7 +649,6 @@ BOOLEAN ExitAgreementButton(void)
 
 BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -680,7 +663,6 @@ BOOLEAN	DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 
 UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	CHAR16	sTemp[20];
 	UINT32	uiStartLoc=0;
@@ -704,7 +686,6 @@ UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 
 UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 {
-	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	CHAR16	sTemp[20];
 	UINT32	uiStartLoc=0;
@@ -728,7 +709,6 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 
 void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT8	ubRetValue;
 	static BOOLEAN fOnPage=TRUE;
 	if(fOnPage)
@@ -776,7 +756,6 @@ void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	UINT8	ubRetValue;
 	static BOOLEAN fOnPage=TRUE;
 	if(fOnPage)
@@ -857,7 +836,6 @@ void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ResetAimPolicyButtons()
 {
-	PERFORMANCE_MARKER
 	int i=0;
 
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -869,7 +847,6 @@ void ResetAimPolicyButtons()
 
 void DisableAimPolicyButton()
 {
-	PERFORMANCE_MARKER
 	if( gfExitingAimPolicy == TRUE || gfAimPolicyMenuBarLoaded == FALSE )
 		return;
 
@@ -887,7 +864,6 @@ void DisableAimPolicyButton()
 
 void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber )
 {
-	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	if( AimPoliciesSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )

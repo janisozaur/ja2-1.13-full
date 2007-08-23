@@ -27,7 +27,6 @@ void BtnIMPBackCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPAboutUs( void )
 {
-	PERFORMANCE_MARKER
 
 	// create buttons
 	CreateIMPAboutUsButtons( );
@@ -41,7 +40,6 @@ void EnterIMPAboutUs( void )
 
 void ExitIMPAboutUs( void )
 {
-	PERFORMANCE_MARKER
 	// exit from IMP About us page
 	
 	// delete Buttons
@@ -53,7 +51,6 @@ void ExitIMPAboutUs( void )
 
 void RenderIMPAboutUs( void )
 {
-	PERFORMANCE_MARKER
 	// rneders the IMP about us page
 	
 	// the background
@@ -73,7 +70,6 @@ void RenderIMPAboutUs( void )
 
 void HandleIMPAboutUs( void )
 {
-	PERFORMANCE_MARKER
 	// handles the IMP about us page
 
 	return;
@@ -82,7 +78,6 @@ void HandleIMPAboutUs( void )
 
 void CreateIMPAboutUsButtons( void )
 {
-	PERFORMANCE_MARKER
 
 	// this function will create the buttons needed for th IMP about us page
 	// the back button button
@@ -106,7 +101,6 @@ void CreateIMPAboutUsButtons( void )
 
 void DeleteIMPAboutUsButtons( void )
 {
-	PERFORMANCE_MARKER
 	// this function destroys the buttons needed for the IMP about Us Page
 
 	// the about back button
@@ -119,7 +113,6 @@ void DeleteIMPAboutUsButtons( void )
 
 void BtnIMPBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

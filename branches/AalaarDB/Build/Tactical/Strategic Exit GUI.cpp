@@ -117,7 +117,6 @@ INT16	gsWarpGridNo;
 //		and calculated upon entry to this function instead of passing in multiple arguments and calculating it prior.
 BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiTraverseTimeInMinutes;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
@@ -217,9 +216,9 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 		{
 			continue;
 		}
-		if( !pSoldier->flags.fBetweenSectors && 
+		if( !pSoldier->fBetweenSectors && 
 				pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ &&
-				pSoldier->stats.bLife >= OKLIFE && 
+				pSoldier->bLife >= OKLIFE && 
 				pSoldier->bAssignment != MercPtrs[ gusSelectedSoldier ]->bAssignment && 
 				pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_DEAD )
 		{ //KM:	We need to determine if there are more than one squad (meaning other concious mercs in a different squad or assignment)	
@@ -376,14 +375,12 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 
 void DoneFadeInWarp( void )
 {
-	PERFORMANCE_MARKER
 
 }
 
 
 void DoneFadeOutWarpCallback( void )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier;
 
@@ -396,7 +393,7 @@ void DoneFadeOutWarpCallback( void )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{		
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector )
+		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
 		{
 			gfTacticalTraversal = TRUE;
 			SetGroupSectorValue( gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, pSoldier->ubGroupID );
@@ -431,7 +428,6 @@ void DoneFadeOutWarpCallback( void )
 
 void WarpToSurfaceCallback( UINT8 bExitValue )
 {
-	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 	gFadeOutDoneCallback = DoneFadeOutWarpCallback;
@@ -447,7 +443,6 @@ void WarpToSurfaceCallback( UINT8 bExitValue )
 
 BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 {
-	PERFORMANCE_MARKER
 	gubExitGUIDirection	 = ubDirection;
 	gsExitGUIAdditionalData = sAdditionalData;
 
@@ -468,7 +463,6 @@ BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 
 void UpdateSectorExitMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gExitDialog.fGotoSector )
 	{
 		ButtonList[ gExitDialog.uiLoadCheckButton ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -613,7 +607,6 @@ void UpdateSectorExitMenu( )
 
 void RenderSectorExitMenu( )
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 
 	RestoreBackgroundRects();
@@ -711,13 +704,11 @@ void RenderSectorExitMenu( )
 
 BOOLEAN HandleSectorExitMenu( )
 {
-	PERFORMANCE_MARKER
 	return( FALSE ); //Why???
 }
 
 void RemoveSectorExitMenu( BOOLEAN fOk )
 {
-	PERFORMANCE_MARKER
 	CHAR16		Str[ 50 ];
 
 	if ( gfInSectorExitMenu )
@@ -809,7 +800,6 @@ void RemoveSectorExitMenu( BOOLEAN fOk )
 
 void CheckLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
@@ -818,7 +808,6 @@ void CheckLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SingleMoveAction()
 {
-	PERFORMANCE_MARKER
 	//KM: New logic Mar2 '99
 	if( !gExitDialog.fMultipleSquadsInSector )
 	{
@@ -850,7 +839,6 @@ void SingleMoveAction()
 
 void AllMoveAction()
 {
-	PERFORMANCE_MARKER
 	//KM: New logic Mar2 '99
 	if( !gExitDialog.fMultipleSquadsInSector )
 	{
@@ -870,7 +858,6 @@ void AllMoveAction()
 
 void SingleMoveCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		SingleMoveAction();
@@ -880,7 +867,6 @@ void SingleMoveCallback(GUI_BUTTON *btn, INT32 reason )
 
 void AllMoveCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		AllMoveAction();
@@ -890,7 +876,6 @@ void AllMoveCallback(GUI_BUTTON *btn, INT32 reason )
 
 void OKCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -908,7 +893,6 @@ void OKCallback(GUI_BUTTON *btn, INT32 reason )
 
 void CancelCallback(GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -926,7 +910,6 @@ void CancelCallback(GUI_BUTTON *btn, INT32 reason )
 
 void SectorExitBackgroundCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		//gMsgBox.bHandled = MSG_BOX_RETURN_NO;
@@ -935,7 +918,6 @@ void SectorExitBackgroundCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void SingleRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SingleMoveAction();
@@ -944,7 +926,6 @@ void SingleRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void AllRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		AllMoveAction();
@@ -953,7 +934,6 @@ void AllRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void LoadRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gExitDialog.fGotoSector =!gExitDialog.fGotoSector;
@@ -964,7 +944,6 @@ void LoadRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void SingleRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
 		gExitDialog.fSingleMoveHilighted = TRUE;
@@ -977,7 +956,6 @@ void SingleRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void AllRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
 		gExitDialog.fAllMoveHilighted = TRUE;
@@ -990,7 +968,6 @@ void AllRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void LoadRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
-	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
 		gExitDialog.fGotoSectorHilighted = TRUE;

@@ -655,7 +655,6 @@ void			GetDebugLocationString( UINT16 usProfileID, STR16 pzText );
 
 UINT32	QuestDebugScreenInit()
 {
-	PERFORMANCE_MARKER
 	UINT16	usListBoxFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
 	//Set so next time we come in, we can set up
@@ -735,7 +734,6 @@ UINT32	QuestDebugScreenInit()
 
 UINT32	QuestDebugScreenHandle()
 {
-	PERFORMANCE_MARKER
 	StartFrameBufferRender();
 
 	if( gfQuestDebugEntry )
@@ -824,7 +822,6 @@ UINT32	QuestDebugScreenHandle()
 
 UINT32	QuestDebugScreenShutdown()
 {
-	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -841,7 +838,6 @@ UINT32	QuestDebugScreenShutdown()
 
 BOOLEAN	EnterQuestDebugSystem()
 {
-	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT16 usPosX, usPosY;
 	CHAR16	zName[ 128 ];
@@ -1080,7 +1076,6 @@ BOOLEAN	EnterQuestDebugSystem()
 
 void		ExitQuestDebugSystem()
 {
-	PERFORMANCE_MARKER
 	UINT16 i;
 
 	if( gfExitQdsDueToMessageBox )
@@ -1147,7 +1142,6 @@ void		ExitQuestDebugSystem()
 
 void		HandleQuestDebugSystem()
 {
-	PERFORMANCE_MARKER
 	CHAR16	zTemp[512];
 
 	//hhh
@@ -1195,7 +1189,6 @@ void		HandleQuestDebugSystem()
 
 void		RenderQuestDebugSystem()
 {
-	PERFORMANCE_MARKER
 	ColorFillQuestDebugScreenScreen( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	//display the title	
@@ -1255,7 +1248,6 @@ void		RenderQuestDebugSystem()
 
 void DisplayCurrentGridNo()
 {
-	PERFORMANCE_MARKER
 	if( gsQdsEnteringGridNo != 0 )
 	{
 		CHAR16	zTemp[512];
@@ -1270,14 +1262,13 @@ void DisplayCurrentGridNo()
 
 void		GetUserInput()
 {
-	PERFORMANCE_MARKER
 	InputAtom Event;
 	POINT	MousePos;
 	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse( /*giSelectedMercCurrentQuote*/ ); // doesn't take parameters (jonathanl)
 
 
 	GetCursorPos(&MousePos);
-	ScreenToClient(ghWindow, &MousePos); // In window coords!
+    ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -1481,19 +1472,16 @@ void		GetUserInput()
 
 void ColorFillQuestDebugScreenScreen( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
-	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusQuestDebugBlue );
 }
 
 
 void QuestDebug_ExitTactical()
 {
-	PERFORMANCE_MARKER
 }
 
 void QuestDebug_EnterTactical()
 {
-	PERFORMANCE_MARKER
 	EnterTacticalScreen( );
 }
 
@@ -1501,7 +1489,6 @@ void QuestDebug_EnterTactical()
 
 void DisplaySectionLine( )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8 *pDestBuf;
 	UINT16 usStartX;
@@ -1540,7 +1527,6 @@ void DisplaySectionLine( )
 
 void DisplayQuestInformation()
 {
-	PERFORMANCE_MARKER
 	//Display Quests
 	DisplayWrappedString( 0, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_FIRST_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_QUESTS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 
@@ -1558,7 +1544,6 @@ void DisplayQuestInformation()
 
 void DisplayFactInformation()
 {
-	PERFORMANCE_MARKER
 	//Display Fact
 	DisplayWrappedString( QUEST_DBS_FIRST_SECTION_WIDTH, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_SECOND_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_FACTS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 
@@ -1575,7 +1560,6 @@ void DisplayFactInformation()
 
 void BtnQuestDebugExitButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1597,7 +1581,6 @@ void BtnQuestDebugExitButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayQuestList()
 {
-	PERFORMANCE_MARKER
 	UINT16	usLoop1, usCount;
 	UINT16	usTextHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
 	CHAR16	sTemp[15];
@@ -1627,7 +1610,6 @@ void DisplayQuestList()
 
 void DisplayFactList()
 {
-	PERFORMANCE_MARKER
 	UINT16	usLoop1, usCount;
 	UINT16	usTextHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
 	CHAR16	sTemp[512];
@@ -1675,7 +1657,6 @@ void DisplayFactList()
 
 void BtnQuestDebugCurNPCButtonCallback (GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1707,7 +1688,6 @@ void BtnQuestDebugCurNPCButtonCallback (GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1742,7 +1722,6 @@ void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayNPCInfo()
 {
-	PERFORMANCE_MARKER
 	//display section title
 	DisplayWrappedString( QUEST_DBS_THIRD_COL_TITLE_X, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_THIRD_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_NPC_INFO ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 
@@ -1753,7 +1732,6 @@ void DisplayNPCInfo()
 
 BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
 {
-	PERFORMANCE_MARKER
 	static	BOOLEAN fMouseRegionsCreated=FALSE;
 	UINT16	i;
 	UINT16	usPosX, usPosY;
@@ -1910,7 +1888,6 @@ BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
 
 void DisplaySelectedListBox( )
 {
-	PERFORMANCE_MARKER
 	//UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	UINT16	usPosX, usPosY;
 	HVOBJECT	hImageHandle;
@@ -1976,7 +1953,6 @@ void DisplaySelectedListBox( )
 
 void DisplaySelectedNPC()
 {
-	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usPosX, usPosY;
 	INT16	usLocationX = 0, usLocationY = 0;
@@ -2069,7 +2045,6 @@ void DisplaySelectedNPC()
 
 void DisplaySelectedItem()
 {
-	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
@@ -2129,8 +2104,7 @@ void DisplaySelectedItem()
 
 
 void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2153,7 +2127,6 @@ void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectNpcListMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -2201,7 +2174,6 @@ void SelectNpcListMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 void DrawQdsScrollRectangle( ) //INT16 sSelectedEntry, UINT16 usStartPosX, UINT16 usStartPosY, UINT16 usScrollAreaHeight, UINT16 usNumEntries )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8	*pDestBuf;
 	UINT16 usWidth, usTempPosY;
@@ -2253,8 +2225,7 @@ void DrawQdsScrollRectangle( ) //INT16 sSelectedEntry, UINT16 usStartPosX, UINT1
 
 
 void ScrollArrowsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2292,8 +2263,7 @@ void ScrollArrowsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void ScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2317,7 +2287,6 @@ void ScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void ScrollAreaMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -2346,7 +2315,6 @@ void ScrollAreaMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 void CalcPositionOfNewScrollBoxLocation()
 {
-	PERFORMANCE_MARKER
 	INT16 sMouseXPos, sMouseYPos;
 	INT16	sIncrementValue;
 	FLOAT	dValue;
@@ -2442,7 +2410,6 @@ void CalcPositionOfNewScrollBoxLocation()
 
 void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2469,7 +2436,6 @@ void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2502,7 +2468,6 @@ void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2546,7 +2511,6 @@ void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2575,7 +2539,6 @@ void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2599,7 +2562,6 @@ void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2623,7 +2585,6 @@ void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
@@ -2662,7 +2623,6 @@ void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2716,7 +2676,6 @@ void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2746,7 +2705,6 @@ void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 rea
 
 BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, STR16 pString, TEXT_ENTRY_CALLBACK EntryCallBack )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	static CHAR16	zString[ 256 ];
 	static TEXT_ENTRY_CALLBACK TextEntryCallback;
@@ -2859,8 +2817,7 @@ BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, STR16 pString, TEXT_EN
 
 
 void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2881,7 +2838,6 @@ void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION * pRegion, INT3
 
 void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2905,7 +2861,6 @@ void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void TextEntryBox( STR16 pString, TEXT_ENTRY_CALLBACK TextEntryCallBack )
 {
-	PERFORMANCE_MARKER
 	CreateDestroyDisplayTextEntryBox( QD_DROP_DOWN_CREATE, pString, TextEntryCallBack );
 	gubTextEntryAction = QD_DROP_DOWN_DISPLAY;
 }
@@ -2913,8 +2868,7 @@ void TextEntryBox( STR16 pString, TEXT_ENTRY_CALLBACK TextEntryCallBack )
 
 
 void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2938,8 +2892,7 @@ void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	PERFORMANCE_MARKER 
+{ 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2967,7 +2920,6 @@ void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void InitQuestDebugTextInputBoxes()
 {
-	PERFORMANCE_MARKER
 	CHAR16	sTemp[ 640 ];
 //	CHAR16	sText[ 640 ];
 
@@ -2998,7 +2950,6 @@ void InitQuestDebugTextInputBoxes()
 
 void DestroyQuestDebugTextInputBoxes()
 {
-	PERFORMANCE_MARKER
 	KillTextInputMode();
 }
 
@@ -3006,12 +2957,13 @@ void DestroyQuestDebugTextInputBoxes()
 
 void AddNPCToGridNo( INT32 iGridNo )
 {
-	PERFORMANCE_MARKER
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;
 	UINT8									ubID;
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
+
+	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
 	MercCreateStruct.sSectorX			= sSectorX;
@@ -3039,7 +2991,6 @@ void AddNPCToGridNo( INT32 iGridNo )
 
 void AddItemToGridNo( INT32 iGridNo )
 {
-	PERFORMANCE_MARKER
 	gsQdsEnteringGridNo = (INT16)iGridNo;
 
 
@@ -3061,7 +3012,6 @@ void AddItemToGridNo( INT32 iGridNo )
 
 void AddKeyToGridNo( INT32 iKeyID )
 {
-	PERFORMANCE_MARKER
 	if( iKeyID < NUM_KEYS )
 	{
 		CreateKeyObject( &gTempObject, 1, (UINT8)iKeyID );
@@ -3077,7 +3027,6 @@ void AddKeyToGridNo( INT32 iKeyID )
 
 void ChangeDayNumber( INT32 iDayToChangeTo )
 {
-	PERFORMANCE_MARKER
 	INT32	uiDiff;
 	UINT32 uiNewDayTimeInSec;
 
@@ -3101,7 +3050,6 @@ void ChangeDayNumber( INT32 iDayToChangeTo )
 
 void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	UINT16	usPosY, i;
 	SOLDIERTYPE *pSoldier;
@@ -3193,7 +3141,7 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 				DrawTextToScreen( gMercProfiles[ gNpcListBox.sCurSelectedItem ].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
-				for( i=0; i<pSoldier->inv.size(); i++)
+				for( i=0; i<NUM_INV_SLOTS; i++)
 				{
 //					if ( !LoadItemInfo( pSoldier->inv[ i ].usItem, zItemName, zItemDesc ) )
 //						Assert(0);
@@ -3218,7 +3166,6 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 
 void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -3242,7 +3189,6 @@ void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQuestDebugAllOrSectorNPCToggleCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( gfUseLocalNPCs )
@@ -3303,7 +3249,6 @@ void BtnQuestDebugAllOrSectorNPCToggleCallback( GUI_BUTTON *btn, INT32 reason )
 
 void AddNPCsInSectorToArray()
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	UINT16 cnt,i;
 
@@ -3311,7 +3256,7 @@ void AddNPCsInSectorToArray()
 	i=0;
 	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
 	{
-		if ( ( pSoldier != NULL ) && pSoldier->bActive )
+		if ( ( pSoldier != NULL ) && pSoldier -> bActive )
 		{
 			//if soldier is a NPC, add him to the local NPC array
 			if( ( pSoldier->ubProfile >= FIRST_RPC ) && ( pSoldier->ubProfile < GASTON ) )
@@ -3328,7 +3273,6 @@ void AddNPCsInSectorToArray()
 
 void ChangeQuestState( INT32 iNumber )
 {
-	PERFORMANCE_MARKER
 	if( ( iNumber >= 0 ) && ( iNumber <= 2 ) )
 	{
 		gubQuest[ gubCurQuestSelected ] = (UINT8) iNumber;
@@ -3338,7 +3282,6 @@ void ChangeQuestState( INT32 iNumber )
 
 void ChangeFactState( INT32 iNumber )
 {
-	PERFORMANCE_MARKER
 	if( ( iNumber >= 0 ) && ( iNumber <= 1 ) )
 	{
 		gubFact[ gusCurFactSelected ] = (UINT8) iNumber;
@@ -3349,7 +3292,6 @@ void ChangeFactState( INT32 iNumber )
 
 void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -3380,7 +3322,6 @@ void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -3411,7 +3352,6 @@ void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach )
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fFirstTimeIn = TRUE;
 
 	HWFILE		hFile;
@@ -3495,7 +3435,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 
 void NpcRecordLogging( UINT8 ubApproach, STR pStringA, ...)
 {
-	PERFORMANCE_MARKER
 	static BOOLEAN	fFirstTimeIn = TRUE;
 //	static UINT32		uiLineNumber = 1;
 //	static UINT32		uiRecordNumber = 1;
@@ -3555,7 +3494,6 @@ void NpcRecordLogging( UINT8 ubApproach, STR pStringA, ...)
 
 void EnableQDSButtons()
 {
-	PERFORMANCE_MARKER
 	if( gNpcListBox.sCurSelectedItem != -1 )
 	{
 		EnableButton( guiQuestDebugAddNpcToLocationButton );
@@ -3623,7 +3561,6 @@ void EnableQDSButtons()
 
 BOOLEAN		DoQDSMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	PERFORMANCE_MARKER
 	SGPRect pCenteringRect= {0, 0, 639, 479 };
 	
 	// reset exit mode
@@ -3639,7 +3576,6 @@ BOOLEAN		DoQDSMessageBox( UINT8 ubStyle, STR16 zString, UINT32 uiExitScreen, UIN
 
 void IncrementActiveDropDownBox( INT16 sIncrementValue )
 {
-	PERFORMANCE_MARKER
 	if( sIncrementValue < 0 )
 		sIncrementValue = 0;
 
@@ -3690,7 +3626,6 @@ void IncrementActiveDropDownBox( INT16 sIncrementValue )
 
 INT16	IsMercInTheSector( UINT16 usMercID )
 {
-	PERFORMANCE_MARKER
 	if( usMercID == -1 )
 		return( FALSE );
 
@@ -3711,7 +3646,6 @@ INT16	IsMercInTheSector( UINT16 usMercID )
 
 void RefreshAllNPCInventory()
 {
-	PERFORMANCE_MARKER
 	UINT16	usCnt;
 	UINT16	usItemCnt;
 	UINT16		usItem;
@@ -3725,10 +3659,10 @@ void RefreshAllNPCInventory()
 			if( Menptr[ usCnt ].ubProfile >= FIRST_RPC && Menptr[ usCnt ].ubProfile < GASTON )
 			{
 				//refresh the mercs inventory
-				for ( usItemCnt = 0; usItemCnt< Menptr[ usCnt ].inv.size(); usItemCnt++ )
+				for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
 				{
 					//null out the items in the npc inventory
-					Menptr[ usCnt ].inv[ usItemCnt ].initialize();
+					memset( &Menptr[ usCnt ].inv[ usItemCnt ], 0, sizeof( OBJECTTYPE ) );
 
 					if ( gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ] != NOTHING )
 					{
@@ -3743,6 +3677,7 @@ void RefreshAllNPCInventory()
 						Menptr[ usCnt ].inv[ usItemCnt ] = gTempObject;
 					}
 				}
+
 			}
 		}
 	}
@@ -3751,7 +3686,6 @@ void RefreshAllNPCInventory()
 
 void StartMercTalkingFromQuoteNum( INT32 iQuoteToStartTalkingFrom )
 {
-	PERFORMANCE_MARKER
 	CHAR16	zTemp[512];
 	INT32		uiMaxNumberOfQuotes = GetMaxNumberOfQuotesToPlay( );
 
@@ -3787,7 +3721,6 @@ void StartMercTalkingFromQuoteNum( INT32 iQuoteToStartTalkingFrom )
 
 void EndMercTalking()
 {
-	PERFORMANCE_MARKER
 	//remove the talking dialogue
 	if( gfNpcPanelIsUsedForTalkingMerc )
 		DeleteTalkingMenu( );
@@ -3813,7 +3746,6 @@ void EndMercTalking()
 
 void HandleQDSTalkingMerc()
 {
-	PERFORMANCE_MARKER
 //	static BOOLEAN	fWas
 	BOOLEAN fIsTheMercTalking=FALSE;
 	UINT8		ubPanelMercShouldUse;
@@ -3888,7 +3820,6 @@ void HandleQDSTalkingMerc()
 
 void SetTalkingMercPauseState( BOOLEAN fState )
 {
-	PERFORMANCE_MARKER
 	if( fState )
 	{
 		gfPauseTalkingMercPopup = TRUE;
@@ -3909,7 +3840,6 @@ void SetTalkingMercPauseState( BOOLEAN fState )
 
 void SetQDSMercProfile()
 {
-	PERFORMANCE_MARKER
 	// Get selected soldier
 	if	( GetSoldier( &gTalkingMercSoldier, gusSelectedSoldier ) )
 	{
@@ -3945,7 +3875,6 @@ void SetQDSMercProfile()
 
 void DisplayQDSCurrentlyQuoteNum( )
 {
-	PERFORMANCE_MARKER
 	CHAR16	zTemp[512];
 	UINT16	usPosY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_TEXT_ENTRY ) + 2;
@@ -3985,7 +3914,6 @@ void DisplayQDSCurrentlyQuoteNum( )
 
 void BtnQuestDebugAddNpcToTeamToggleCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( gfAddNpcToTeam )
@@ -3999,7 +3927,6 @@ void BtnQuestDebugAddNpcToTeamToggleCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BtnQuestDebugRPCSaySectorDescToggleCallback( GUI_BUTTON *btn, INT32 reason )
 {
-	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( gfRpcToSaySectorDesc )
@@ -4012,7 +3939,6 @@ void BtnQuestDebugRPCSaySectorDescToggleCallback( GUI_BUTTON *btn, INT32 reason 
 
 UINT8	WhichPanelShouldTalkingMercUse( )
 {
-	PERFORMANCE_MARKER
 	if ( gTalkingMercSoldier == NULL )
 	{
 		return( QDS_NO_PANEL );
@@ -4031,7 +3957,6 @@ UINT8	WhichPanelShouldTalkingMercUse( )
 
 void DisableFactMouseRegions()
 {
-	PERFORMANCE_MARKER
 	UINT	i;
 
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
@@ -4042,7 +3967,6 @@ void DisableFactMouseRegions()
 
 void EnableFactMouseRegions()
 {
-	PERFORMANCE_MARKER
 	UINT	i;
 
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
@@ -4054,7 +3978,6 @@ void EnableFactMouseRegions()
 
 INT32	GetMaxNumberOfQuotesToPlay( )
 {
-	PERFORMANCE_MARKER
 	INT32	iNumberOfQuotes = 0;
 	UINT8	ubProfileID =(UINT8)gNpcListBox.sCurSelectedItem;
 
@@ -4094,14 +4017,13 @@ INT32	GetMaxNumberOfQuotesToPlay( )
 
 void GetDebugLocationString( UINT16 usProfileID, STR16 pzText )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 		//Get a soldier pointer
 	pSoldier = FindSoldierByProfileID( (UINT8)usProfileID, FALSE );
 
 	//if their is a soldier, the soldier is alive and the soldier is off the map
-	if( pSoldier != NULL && pSoldier->bActive && pSoldier->flags.uiStatusFlags & SOLDIER_OFF_MAP )
+	if( pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP )
 	{
 		//the soldier is on schedule
 		swprintf( pzText, L"On Schdl.");

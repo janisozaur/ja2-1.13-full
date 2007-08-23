@@ -67,7 +67,8 @@ BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
 MOUSE_REGION		gLockPanelOverlayRegion;
 
-extern void			RenderTownIDString( );
+// CHRISL: Change function definition to allow passing of X,Y coords to control placement of TownID string
+extern void			RenderTownIDString( INT16 sX, INT16 sY );
 extern BOOLEAN	gfUIOverItemPool;
 extern INT16		gfUIOverItemPoolGridNo;
 extern BOOLEAN	gfInMovementMenu;
@@ -88,13 +89,11 @@ extern BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags )
 {
-	PERFORMANCE_MARKER
 	guiTacticalInterfaceFlags = uiFlags;
 }
 
 void HandleTacticalPanelSwitch( )
 {
-	PERFORMANCE_MARKER
 	if ( gfSwitchPanel )
 	{
 		SetCurrentInterfacePanel( gbNewPanel );
@@ -110,7 +109,6 @@ void HandleTacticalPanelSwitch( )
 
 void RenderTacticalInterface( )
 {
-	PERFORMANCE_MARKER
 
 	// handle paused render of tactical
 	HandlePausedTacticalRender( );
@@ -146,7 +144,6 @@ void RenderTacticalInterface( )
 
 void HandlePausedTacticalRender( void )
 {
-	PERFORMANCE_MARKER
 
 	// for a one frame paused render of tactical
 	if( gfPausedTacticalRenderFlags )
@@ -168,7 +165,6 @@ void HandlePausedTacticalRender( void )
 
 void RenderTacticalInterfaceWhileScrolling( )
 {
-	PERFORMANCE_MARKER
 	RenderButtons( );
 
 	switch( gsCurInterfacePanel )
@@ -189,7 +185,6 @@ void RenderTacticalInterfaceWhileScrolling( )
 
 void SetUpInterface( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE								*pSoldier;
 	LEVELNODE									*pIntTile;
 
@@ -346,7 +341,6 @@ void SetUpInterface( )
 
 void ResetInterface( )
 {
-	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 
 	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -444,7 +438,6 @@ UINT32	guiColors[ 12 ] =
 
 void RenderRubberBanding( )
 {
-	PERFORMANCE_MARKER
 	UINT16										usLineColor;
 	UINT32										uiDestPitchBYTES;
 	UINT8											*pDestBuf;
@@ -564,7 +557,6 @@ void RenderRubberBanding( )
 
 void RenderTopmostTacticalInterface( )
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE								*pSoldier;
 	UINT32											cnt;
 	static UINT32				uiBogTarget = 0;
@@ -720,7 +712,7 @@ void RenderTopmostTacticalInterface( )
 				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
 			}
 
-			if ( pSoldier->flags.fDisplayDamage )
+			if ( pSoldier->fDisplayDamage )
 			{
 				// Display damage
 
@@ -801,7 +793,7 @@ void RenderTopmostTacticalInterface( )
 			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
 			{
 				// Check if we are over an item pool
-				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
+				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
 				{
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
@@ -814,7 +806,7 @@ void RenderTopmostTacticalInterface( )
 						sActionGridNo = sIntTileGridNo;
 					}
 					
-					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->pathing.bLevel, pStructure );
+					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
 
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
@@ -939,7 +931,6 @@ void RenderTopmostTacticalInterface( )
 
 void StartViewportOverlays( )
 {
-	PERFORMANCE_MARKER
 	
 	// Set Clipping Rect to be the viewscreen
 	// Save old one
@@ -967,7 +958,6 @@ void StartViewportOverlays( )
 
 void EndViewportOverlays( )
 {
-	PERFORMANCE_MARKER
 	// Reset clipping rect
 	memcpy( &ClippingRect, &gOldClippingRect, sizeof( gOldClippingRect ) );
 	memcpy( &gDirtyClipRect, &gOldDirtyClippingRect, sizeof( gOldDirtyClippingRect ) );
@@ -977,7 +967,6 @@ void EndViewportOverlays( )
 
 void LockTacticalInterface( )
 {
-	PERFORMANCE_MARKER
 	// OK, check and see if we are not locked, if so
 	// 1) create a mouse region over the entrie interface panel
 	// 2) set flag for use in tactical to indicate we are locked
@@ -995,7 +984,6 @@ void LockTacticalInterface( )
 
 void UnLockTacticalInterface( )
 {
-	PERFORMANCE_MARKER
 	if ( (guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
 	{
 		// Remove region
@@ -1008,7 +996,6 @@ void UnLockTacticalInterface( )
 
 void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 {
-	PERFORMANCE_MARKER
 	// ATE: If we are currently talking, setup this flag so that the
 	// automatic handler in handledialogue doesn't adjust the UI setting
 	if ( ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) && fIgnoreUIUnLock )
@@ -1028,7 +1015,6 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 
 BOOLEAN AreWeInAUIMenu( )
 {
-	PERFORMANCE_MARKER
 	if ( gfInMovementMenu || gfInOpenDoorMenu || gfInItemPickupMenu || gfInSectorExitMenu || gfInTalkPanel )
 	{
 		return( TRUE );
@@ -1042,7 +1028,6 @@ BOOLEAN AreWeInAUIMenu( )
 
 void ResetInterfaceAndUI( )
 {
-	PERFORMANCE_MARKER
 	// Erase menus
 	EraseInterfaceMenus( FALSE );
 
@@ -1065,7 +1050,6 @@ void ResetInterfaceAndUI( )
 
 BOOLEAN InterfaceOKForMeanwhilePopup()
 {
-	PERFORMANCE_MARKER
 	if ( gfSwitchPanel )
 	{
 		return( FALSE );

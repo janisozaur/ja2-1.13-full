@@ -1499,7 +1499,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Опасно:", 			// distance to return from destination to airport
 	L"Общ.цена: ", 		// total cost of trip by helicopter
 	L"УВП:	", 			// ETA is an acronym for "estimated time of arrival" 
-	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
+	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
 	L"Пассажиры: ",
 	L"Выбрать высадку Всадника или Прибывающих?",
 	L"Всадник",
@@ -2857,6 +2857,7 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
+	L"LBE Gear",
 	L"Misc.",
 };
 

@@ -81,7 +81,6 @@ void CheckForValidArrivalSector( );
 
 INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 {
-	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier;
 	UINT8		iNewIndex;
 	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
@@ -111,7 +110,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	}
 
 	// BUILD STRUCTURES
-	MercCreateStruct.initialize();
+	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.ubProfile						= ubCurrentSoldier;
 	MercCreateStruct.fPlayerMerc					= TRUE;
 	MercCreateStruct.sSectorX							= pHireMerc->sSectorX;
@@ -138,6 +137,12 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 			gTempObject[0]->data.objectStatus				= 100;
 			// Give it 
 			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &gTempObject, FALSE );
+			// CHRISL: This condition should resolve the issue of the letter not being issued to the first merc
+			if(!fReturn && gGameOptions.ubInventorySystem)
+			{
+				memcpy( &(MercPtrs[iNewIndex]->inv[NUM_INV_SLOTS-1]), &Object, sizeof( OBJECTTYPE ) );
+				fReturn=TRUE;
+			}
 			Assert( fReturn );
 		}
 
@@ -157,7 +162,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	pSoldier->ubStrategicInsertionCode = pHireMerc->ubInsertionCode;
 	pSoldier->usStrategicInsertionData = pHireMerc->usInsertionData;
 	// ATE: Copy over value for using alnding zone to soldier type
-	pSoldier->flags.fUseLandingZoneForArrival = pHireMerc->fUseLandingZoneForArrival;
+	pSoldier->fUseLandingZoneForArrival = pHireMerc->fUseLandingZoneForArrival;
 
 
 	// Set assignment
@@ -282,7 +287,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 
 void MercArrivesCallback(	UINT8	ubSoldierID )
 {
-	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT				*pMerc;
 	SOLDIERTYPE							*pSoldier;
 	UINT32									uiTimeOfPost;
@@ -311,7 +315,7 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 	AddCharacterToAnySquad( pSoldier );
 
 	// ATE: Make sure we use global.....
-	if ( pSoldier->flags.fUseLandingZoneForArrival )
+	if ( pSoldier->fUseLandingZoneForArrival )
 	{
 		pSoldier->sSectorX	= gsMercArriveSectorX;
 		pSoldier->sSectorY	= gsMercArriveSectorY;
@@ -409,7 +413,6 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 
 BOOLEAN IsMercHireable( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	//If the merc has an .EDT file, is not away on assignment, and isnt already hired (but not arrived yet), he is not DEAD and he isnt returning home
 	if( ( gMercProfiles[ ubMercID ].bMercStatus == MERC_HAS_NO_TEXT_FILE ) || 
 			( gMercProfiles[ ubMercID ].bMercStatus > 0 ) || 
@@ -426,7 +429,6 @@ BOOLEAN IsMercHireable( UINT8 ubMercID )
 
 BOOLEAN IsMercDead( UINT8 ubMercID )
 {
-	PERFORMANCE_MARKER
 	if( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD )
 		return(TRUE);
 	else
@@ -435,8 +437,7 @@ BOOLEAN IsMercDead( UINT8 ubMercID )
 
 BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 {
-	PERFORMANCE_MARKER
-	if( pSoldier->stats.bLife >= CONSCIOUSNESS )	
+	if( pSoldier->bLife >= CONSCIOUSNESS )	
 		return(TRUE);
 	else
 		return(FALSE);
@@ -444,7 +445,6 @@ BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 
 UINT8	NumberOfMercsOnPlayerTeam()
 {
-	PERFORMANCE_MARKER
 	INT8					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -457,7 +457,7 @@ UINT8	NumberOfMercsOnPlayerTeam()
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
 	{	
 		//if the is active, and is not a vehicle
-		if( pSoldier->bActive && !( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
+		if( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			ubCount++;
 		}
@@ -469,7 +469,6 @@ UINT8	NumberOfMercsOnPlayerTeam()
 
 void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 {
-	PERFORMANCE_MARKER
 	INT8										cnt, bHated, bLastTeamID;
 	SOLDIERTYPE							*pTeamSoldier;
  
@@ -521,7 +520,6 @@ void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 #ifdef JA2TESTVERSION
 void SetFlagToForceHireMerc( BOOLEAN fForceHire )
 {
-	PERFORMANCE_MARKER
 	gForceHireMerc = fForceHire;
 }
 #endif
@@ -529,7 +527,6 @@ void SetFlagToForceHireMerc( BOOLEAN fForceHire )
 
 UINT32 GetMercArrivalTimeOfDay( )
 {
-	PERFORMANCE_MARKER
 	UINT32		uiCurrHour;
 	UINT32		uiMinHour; 
 
@@ -568,7 +565,6 @@ UINT32 GetMercArrivalTimeOfDay( )
 
 void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE		*pSoldier;
 
@@ -581,7 +577,7 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 		{	
 			if ( pSoldier->bAssignment == IN_TRANSIT ) 
 			{
-				if ( pSoldier->flags.fUseLandingZoneForArrival )
+				if ( pSoldier->fUseLandingZoneForArrival )
 				{
 					pSoldier->sSectorX	= gsMercArriveSectorX;
 					pSoldier->sSectorY	= gsMercArriveSectorY;
@@ -594,7 +590,6 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 
 INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	PERFORMANCE_MARKER
 	INT16 sRows,sCols,sResult;
 
 	sRows = abs((sOrigin / MAP_WORLD_X) - (sDest / MAP_WORLD_X));
@@ -615,7 +610,6 @@ INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 // if so, search around for nearest non-occupied sector.
 void CheckForValidArrivalSector( )
 {
-	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2, sGoodX, sGoodY;

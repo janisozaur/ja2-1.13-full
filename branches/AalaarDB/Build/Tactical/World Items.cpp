@@ -41,7 +41,6 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void );
 void DeleteWorldItemsBelongingToQueenIfThere( void );
 
 extern UINT16 StandardGunListAmmoReplacement( UINT16 usAmmo );
-extern UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex );
 
 bool WORLDITEM::operator<(WORLDITEM& compare)
 {
@@ -150,7 +149,6 @@ WORLDITEM& WORLDITEM::operator=(const WORLDITEM& src)
 
 INT32 GetFreeWorldBombIndex( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	WORLDBOMB *newWorldBombs;
 	UINT32	uiOldNumWorldBombs;
@@ -182,7 +180,6 @@ INT32 GetFreeWorldBombIndex( void )
 
 UINT32 GetNumUsedWorldBombs( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
 
@@ -206,7 +203,6 @@ UINT32 GetNumUsedWorldBombs( void )
 
 INT32 AddBombToWorld( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	UINT32	iBombIndex;
 
 	iBombIndex = GetFreeWorldBombIndex( );
@@ -220,14 +216,12 @@ INT32 AddBombToWorld( INT32 iItemIndex )
 
 void RemoveBombFromWorld( INT32 iBombIndex )
 {
-	PERFORMANCE_MARKER
 	//Remove the world bomb from the table.
 	gWorldBombs[ iBombIndex ].fExists										= FALSE;
 }
 
 void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	// Find the world bomb which corresponds with a particular world item, then
 	// remove the world bomb from the table.
 	UINT32	uiBombIndex;
@@ -244,7 +238,6 @@ void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
 
 INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	UINT32					uiBombIndex;
 
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
@@ -260,7 +253,6 @@ INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel )
 
 void FindPanicBombsAndTriggers( void )
 {
-	PERFORMANCE_MARKER
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 
 	UINT32			uiBombIndex;
@@ -339,7 +331,6 @@ void FindPanicBombsAndTriggers( void )
 
 INT32 GetFreeWorldItemIndex( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	WORLDITEM *newWorldItems;
 	UINT32	uiOldNumWorldItems;
@@ -353,20 +344,15 @@ INT32 GetFreeWorldItemIndex( void )
 	uiOldNumWorldItems = guiNumWorldItems;
 	guiNumWorldItems += 10;
 	//Allocate new table with max+10 items.
-	newWorldItems = new WORLDITEM [ guiNumWorldItems ];
+	newWorldItems = (WORLDITEM*)MemRealloc( gWorldItems, sizeof( WORLDITEM ) * guiNumWorldItems );
 	if (newWorldItems == NULL)
 	{
 		return( -1 );
 	}
 
-	if (gWorldItems)
-	{
-		for (unsigned int x = 0; x < uiOldNumWorldItems; ++x)
-		{
-			newWorldItems[x] = gWorldItems[x];
-		}
-		delete[] gWorldItems;
-	}
+	//Clear the rest of the new array
+	memset( &newWorldItems[ uiOldNumWorldItems ], 0, 
+		sizeof( WORLDITEM ) * ( guiNumWorldItems - uiOldNumWorldItems ) );
 	gWorldItems = newWorldItems;
 
 	// Return uiCount.....
@@ -376,9 +362,13 @@ INT32 GetFreeWorldItemIndex( void )
 
 UINT32 GetNumUsedWorldItems( void )
 {
-	PERFORMANCE_MARKER
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
+
+	if ( guiNumWorldItems == 0 )
+	{
+		return( 0 );
+	}
 
 	for( uiCount = 0; uiCount < guiNumWorldItems; uiCount++ )
 	{
@@ -395,7 +385,6 @@ UINT32 GetNumUsedWorldItems( void )
 
 INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
 {
-	PERFORMANCE_MARKER
 	UINT32	iItemIndex;
 	INT32		iReturn;
 
@@ -436,7 +425,6 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 
 void RemoveItemFromWorld( INT32 iItemIndex )
 {
-	PERFORMANCE_MARKER
 	// Ensure the item still exists, then if it's a bomb,
 	// remove the appropriate entry from the bomb table
 	if (gWorldItems[ iItemIndex ].fExists)
@@ -451,7 +439,6 @@ void RemoveItemFromWorld( INT32 iItemIndex )
 
 void TrashWorldItems()
 {
-	PERFORMANCE_MARKER
 	UINT32 i;
 	if( gWorldItems )
 	{
@@ -462,7 +449,7 @@ void TrashWorldItems()
 				RemoveItemFromPool( gWorldItems[ i ].sGridNo, i, gWorldItems[ i ].ubLevel );
 			}
 		}
-		delete[] gWorldItems;
+		MemFree( gWorldItems );
 		gWorldItems = NULL;
 		guiNumWorldItems = 0;
 	}
@@ -477,7 +464,6 @@ void TrashWorldItems()
 
 void SaveWorldItemsToMap( HWFILE fp )
 {
-	PERFORMANCE_MARKER
 	UINT32 i, uiBytesWritten;
 	UINT32		uiActualNumWorldItems;
 
@@ -489,14 +475,13 @@ void SaveWorldItemsToMap( HWFILE fp )
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
 		if( gWorldItems[ i ].fExists )
-			gWorldItems[ i ].Save(fp, TRUE);
+			FileWrite( fp, &gWorldItems[ i ], sizeof( WORLDITEM ), &uiBytesWritten );
 	}
 }
 
 
-void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorMapVersion )
+void LoadWorldItemsFromMap( INT8 **hBuffer )
 {
-	PERFORMANCE_MARKER
 	// Start loading itmes...
 	
 	UINT32			i;
@@ -512,22 +497,13 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
 	{ //The sector has already been visited.	The items are saved in a different format that will be 
 		//loaded later on.	So, all we need to do is skip the data entirely.
-		if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 ) {
-			for (unsigned int x = 0; x < uiNumWorldItems; ++x)
-			{
-				//ADB WORLDITEM's size on disk is unknown
-				dummyItem.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
-			}
-		}
-		else {
-			*hBuffer += sizeof ( OLD_WORLDITEM_101 ) * uiNumWorldItems;
-		}
+		*hBuffer += sizeof( WORLDITEM ) * uiNumWorldItems;
 		return;
 	}
 	else for ( i = 0; i < uiNumWorldItems; i++ )
 	{	//Add all of the items to the world indirectly through AddItemToPool, but only if the chance
 		//associated with them succeed.
-		dummyItem.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		LOADDATA( &dummyItem, *hBuffer, sizeof( WORLDITEM ) );
 		if( dummyItem.object.usItem == OWNERSHIP )
 		{
 			dummyItem.ubNonExistChance = 0;
@@ -629,7 +605,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 
 void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
 	INT16		sGridNo;
@@ -672,7 +647,6 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 
 void DeleteWorldItemsBelongingToQueenIfThere( void )
 {
-	PERFORMANCE_MARKER
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
 	INT16		sGridNo;
@@ -736,14 +710,14 @@ void DeleteWorldItemsBelongingToQueenIfThere( void )
 // Refresh item pools
 void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
 {
-	PERFORMANCE_MARKER
 	INT32			i;
+	WORLDITEM		dummyItem;
 
 	for ( i = 0; i < iNumberOfItems; i++ )
 	{	
 		if( pItemList[ i ].fExists )
 		{
-			WORLDITEM& dummyItem = pItemList[ i ];
+			memcpy( &dummyItem, &( pItemList[ i ] ), sizeof( WORLDITEM ) );
 
 			AddItemToPool( dummyItem.sGridNo, &dummyItem.object, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
 		}

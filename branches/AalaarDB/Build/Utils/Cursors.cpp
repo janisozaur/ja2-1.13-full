@@ -121,7 +121,6 @@ CursorFileData CursorFileDatabase[] =
 
 void RaiseMouseToLevel( INT8 bLevel )
 {
-	PERFORMANCE_MARKER
 	gsGlobalCursorYOffset = gsMouseGlobalYOffsets[ bLevel ];
 }
 
@@ -1188,7 +1187,6 @@ CursorData CursorDatabase[] =
 
 void InitCursors( )
 {
-	PERFORMANCE_MARKER
 		InitCursorDatabase( CursorFileDatabase, CursorDatabase, NUM_CURSOR_FILES );
 
 		SetMouseBltHook( (MOUSEBLT_HOOK)BltJA2CursorData );
@@ -1197,7 +1195,6 @@ void InitCursors( )
 
 void HandleAnimatedCursors( )
 {
-	PERFORMANCE_MARKER
 
 	if ( COUNTERDONE( CURSORCOUNTER ) )
 	{
@@ -1247,7 +1244,6 @@ extern UINT16				gsCurMouseWidth;*/
 
 void DrawMouseGraphics( )
 {
-	PERFORMANCE_MARKER
 	UINT16 * ptrBuf;
 	UINT32 uiPitch;
 	UINT32 cnt;
@@ -1299,7 +1295,6 @@ void DrawMouseGraphics( )
 
 void BltJA2CursorData( )
 {
-	PERFORMANCE_MARKER
 	if ( ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA	) )
 	{
 		DrawMouseText();
@@ -1310,7 +1305,6 @@ void BltJA2CursorData( )
 
 void DrawMouseText( )
 {
-	PERFORMANCE_MARKER
 	CHAR16 pStr[ 512 ];
 	INT16 sX, sY;
 	static BOOLEAN fShow = FALSE;
@@ -1537,7 +1531,6 @@ void DrawMouseText( )
 
 void UpdateAnimatedCursorFrames( UINT32 uiCursorIndex )
 {
-	PERFORMANCE_MARKER
 	CursorData		*pCurData;
 	CursorImage		*pCurImage;
 	UINT32				cnt;
@@ -1568,7 +1561,6 @@ void UpdateAnimatedCursorFrames( UINT32 uiCursorIndex )
 
 void UpdateFlashingCursorFrames( UINT32 uiCursorIndex )
 {
-	PERFORMANCE_MARKER
 	CursorData		*pCurData;
 
 	if ( uiCursorIndex != VIDEO_NO_CURSOR )
@@ -1595,34 +1587,29 @@ void UpdateFlashingCursorFrames( UINT32 uiCursorIndex )
 
 void SetCursorSpecialFrame( UINT32 uiCursor, UINT8 ubFrame )
 {
-	PERFORMANCE_MARKER
 	CursorDatabase[ uiCursor ].bFlashIndex = ubFrame;
 }
 
 void SetCursorFlags( UINT32 uiCursor, UINT8 ubFlags )
 {
-	PERFORMANCE_MARKER
 	CursorDatabase[ uiCursor ].bFlags |= ubFlags;
 }
 
 
 void RemoveCursorFlags( UINT32 uiCursor, UINT8 ubFlags )
 {
-	PERFORMANCE_MARKER
 	CursorDatabase[ uiCursor ].bFlags &= ( ~ubFlags );
 }
 
 
 HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile )
 {
-	PERFORMANCE_MARKER
 	return( CursorFileDatabase[ uiCursorFile ].hVObject );
 }
 
 
 void SyncPairedCursorFrames( UINT32 uiSrcIndex, UINT32 uiDestIndex )
 {
-	PERFORMANCE_MARKER
 #if 0
 	CursorData		*pSrcCurData, *pDestCurData;
 	CursorImage		*pSrcCurImage, *pDestCurImage;

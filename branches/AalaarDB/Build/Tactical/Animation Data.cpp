@@ -709,7 +709,6 @@ AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS 
 
 BOOLEAN InitAnimationSystem( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt1, cnt2;
 	CHAR8									sFilename[50];
 	STRUCTURE_FILE_REF		*pStructureFileRef;
@@ -747,7 +746,6 @@ BOOLEAN InitAnimationSystem( )
 
 BOOLEAN DeInitAnimationSystem( )
 {
-	PERFORMANCE_MARKER
 	INT32									cnt1, cnt2;
 
 	for ( cnt1 = 0; cnt1 < NUMANIMATIONSURFACETYPES; cnt1++ )
@@ -782,7 +780,6 @@ BOOLEAN DeInitAnimationSystem( )
 
 STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute )
 {
-	PERFORMANCE_MARKER
 	INT8	bStructDataType;
 
 	if ( usSurfaceIndex == INVALID_ANIMATION_SURFACE )
@@ -812,21 +809,18 @@ STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16
 
 STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	return( InternalGetAnimationStructureRef( usSoldierID, usSurfaceIndex, usAnimState, FALSE ) );
 }
 
 
 STRUCTURE_FILE_REF	*GetDefaultStructureRef( UINT16 usSoldierID )
 {
-	PERFORMANCE_MARKER
 	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ DEFAULT_STRUCT ].pStructureFileRef );
 }
 
 // Surface mamagement functions
 BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
-	PERFORMANCE_MARKER
 	AuxObjectData *pAuxData;
 
 	if (usSurfaceIndex == 251)
@@ -954,7 +948,6 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 {
-	PERFORMANCE_MARKER
 
 	if (usSurfaceIndex == 251)
 	{
@@ -1007,7 +1000,6 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 {
-	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	for( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
@@ -1019,7 +1011,6 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 
 BOOLEAN LoadAnimationProfiles( )
 {
-	PERFORMANCE_MARKER
 //	FILE *			pInput;
 	HWFILE			pInput;
 	INT32				iProfileCount, iDirectionCount, iTileCount;
@@ -1102,7 +1093,6 @@ BOOLEAN LoadAnimationProfiles( )
 
 void DeleteAnimationProfiles( )
 {
-	PERFORMANCE_MARKER
 	INT32				iProfileCount, iDirectionCount;
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;
@@ -1133,7 +1123,6 @@ void DeleteAnimationProfiles( )
 
 void ZeroAnimSurfaceCounts( )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
