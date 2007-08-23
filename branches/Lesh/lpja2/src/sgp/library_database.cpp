@@ -949,15 +949,15 @@ BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 BOOLEAN CheckIfFileIsAlreadyOpen( const CHAR8 *pFileName, INT16 sLibraryID )
 {
 	UINT16 usLoop1=0;
-	CHAR8 *pName;
+	CHAR8 *pTempName;
 	CHAR8 *pFilenameWithoutPath;
 
 	pFilenameWithoutPath = (CHAR8*) pFileName;
-	pName = (CHAR8*) pFileName;
+	pTempName = (CHAR8*) pFileName;
 
-	while ((pFilenameWithoutPath = strpbrk(pName, "/\\")) != NULL)
+	while ((pTempName = strpbrk(pFilenameWithoutPath, "/\\")) != NULL)
 	{
-		pName = pFilenameWithoutPath + 1;
+		pFilenameWithoutPath = pTempName + 1;
 	}
 
 	//loop through all the open files to see if 'new' file to open is already open
