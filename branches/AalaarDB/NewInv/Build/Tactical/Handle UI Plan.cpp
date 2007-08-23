@@ -39,7 +39,7 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 	return( TRUE );
 }
 
-BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
+BOOLEAN AddUIPlan( INT16 sGridNo, UINT8 ubPlanID )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pPlanSoldier;

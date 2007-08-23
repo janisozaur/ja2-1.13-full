@@ -4480,7 +4480,7 @@ BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
 void DrawItemTileCursor( )
 {
 	PERFORMANCE_MARKER
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	UINT16						usIndex;
 	UINT8							ubSoldierID;
 	INT16							sAPCost;
@@ -4498,15 +4498,15 @@ void DrawItemTileCursor( )
 	INT16							sDist;
 	INT8							bLevel;	
 
-	if (GetMouseMapPos( &usMapPos) )
+	if (GetMouseMapPos( &sMapPos) )
 	{
 		if ( gfUIFullTargetFound )
 		{
 			// Force mouse position to guy...
-			usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
+			sMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 		}
 
-		gusCurMousePos = usMapPos;
+		gusCurMousePos = sMapPos;
 
 		if( gusCurMousePos != usOldMousePos )
 		{
@@ -4562,7 +4562,7 @@ void DrawItemTileCursor( )
 
 		if ( !fGiveItem )
 		{		
-			if ( UIHandleOnMerc( FALSE ) && usMapPos != gpItemPointerSoldier->sGridNo )
+			if ( UIHandleOnMerc( FALSE ) && sMapPos != gpItemPointerSoldier->sGridNo )
 			{
 				// We are on a guy.. check if they can catch or not....
 				if ( gfUIFullTargetFound )
@@ -4684,7 +4684,7 @@ void DrawItemTileCursor( )
 			}
 			else
 			{
-				if ( usMapPos == gpItemPointerSoldier->sGridNo )
+				if ( sMapPos == gpItemPointerSoldier->sGridNo )
 				{
 					EndPhysicsTrajectoryUI( );
 				}
@@ -4704,7 +4704,7 @@ void DrawItemTileCursor( )
 
 					gfUIHandlePhysicsTrajectory = TRUE;
 
-					if ( fRecalc && usMapPos != gpItemPointerSoldier->sGridNo )
+					if ( fRecalc && sMapPos != gpItemPointerSoldier->sGridNo )
 					{
 						if ( gfUIMouseOnValidCatcher )
 						{
@@ -4733,7 +4733,7 @@ void DrawItemTileCursor( )
 						}
 
 						// Calculate chance to throw here.....
-						if ( !CalculateLaunchItemChanceToGetThrough( gpItemPointerSoldier, gpItemPointer, usMapPos, (INT8)gsInterfaceLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), &sFinalGridNo, FALSE, &bLevel, TRUE ) )
+						if ( !CalculateLaunchItemChanceToGetThrough( gpItemPointerSoldier, gpItemPointer, sMapPos, (INT8)gsInterfaceLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), &sFinalGridNo, FALSE, &bLevel, TRUE ) )
 						{
 							gfBadThrowItemCTGH = TRUE;
 						}
@@ -4790,7 +4790,7 @@ BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 }
 
 
-BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
+BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	// Determine what to do
@@ -4834,7 +4834,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	if ( gfUIFullTargetFound )
 	{
 		// Force mouse position to guy...
-		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
+		sMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 
 		if ( gAnimControl[ MercPtrs[ gusUIFullTargetID ]->usAnimState ].uiFlags & ANIM_MOVING )
 		{
@@ -4886,7 +4886,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		else
 		{
 			// Calculate action point costs!
-			sAPCost = GetAPsToGiveItem( gpItemPointerSoldier, usMapPos );
+			sAPCost = GetAPsToGiveItem( gpItemPointerSoldier, sMapPos );
 		}
 
 		// Place it back in our hands!
@@ -4997,7 +4997,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	{
 		// Check some things here....
 		// 1 ) are we at the exact gridno that we stand on?
-		if ( usMapPos == gpItemPointerSoldier->sGridNo )
+		if ( sMapPos == gpItemPointerSoldier->sGridNo )
 		{
 			// Drop
 			if ( !gfDontChargeAPsToPickup )
@@ -5013,7 +5013,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// Try to drop in an adjacent area....
 			// 1 ) is this not a good OK destination
 			// this will sound strange, but this is OK......
-			if ( !NewOKDestination( gpItemPointerSoldier, usMapPos, FALSE, gpItemPointerSoldier->pathing.bLevel ) || FindBestPath( gpItemPointerSoldier, usMapPos, gpItemPointerSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
+			if ( !NewOKDestination( gpItemPointerSoldier, sMapPos, FALSE, gpItemPointerSoldier->pathing.bLevel ) || FindBestPath( gpItemPointerSoldier, sMapPos, gpItemPointerSoldier->pathing.bLevel, WALKING, NO_COPYROUTE, 0 ) == 1 )
 			{
 				// Drop
 				if ( !gfDontChargeAPsToPickup )
@@ -5034,10 +5034,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						OBJECTTYPE::CopyToOrCreateAt( &gpItemPointerSoldier->pTempObject, gpItemPointer);
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
-							gpItemPointerSoldier->aiData.sPendingActionData2 = usMapPos;
+							gpItemPointerSoldier->aiData.sPendingActionData2 = sMapPos;
 
 	 						// Turn towards.....gridno	
-							gpItemPointerSoldier->EVENT_SetSoldierDesiredDirection( (INT8)GetDirectionFromGridNo( usMapPos, gpItemPointerSoldier ) );							
+							gpItemPointerSoldier->EVENT_SetSoldierDesiredDirection( (INT8)GetDirectionFromGridNo( sMapPos, gpItemPointerSoldier ) );							
 
 							gpItemPointerSoldier->EVENT_InitNewSoldierAnim( DROP_ADJACENT_OBJECT, 0 , FALSE );
 						}
@@ -5046,7 +5046,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					case ANIM_CROUCH:
 					case ANIM_PRONE:
 
-						AddItemToPool( usMapPos, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
+						AddItemToPool( sMapPos, gpItemPointer, 1, gpItemPointerSoldier->pathing.bLevel, 0 , -1 );
 						NotifySoldiersToLookforItems( );
 						break;
 				}
@@ -5066,7 +5066,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 	else
 	{
-		sGridNo = usMapPos;
+		sGridNo = sMapPos;
 
 		// Kaiden: Vehicle Inventory change - Commented the following If test:
 		//if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) && !( MercPtrs[ gusUIFullTargetID ]->flags.uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -5249,7 +5249,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			CalculateLaunchItemParamsForThrow( gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->pathing.bLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), gpItemPointer, 0, ubThrowActionCode, uiThrowActionData );
 
 			// OK, goto throw animation
-			HandleSoldierThrowItem( gpItemPointerSoldier, usMapPos );
+			HandleSoldierThrowItem( gpItemPointerSoldier, sMapPos );
 		}
 	}
 
@@ -5260,11 +5260,11 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	return( TRUE );
 }
 
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos )
+BOOLEAN ItemCursorInLobRange( INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	// Draw item depending on distance from buddy
-	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )
+	if ( GetRangeFromGridNoDiff( sMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )
 	{
 		return( FALSE );
 	}

@@ -1479,9 +1479,9 @@ void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGrid
 		{
 			pNPCQuoteInfo->sRequiredGridno = -sNewGridNo;
 		}
-		if (sOldGridNo == pNPCQuoteInfo->usGoToGridno)
+		if (sOldGridNo == pNPCQuoteInfo->sGoToGridno)
 		{
-			pNPCQuoteInfo->usGoToGridno = sNewGridNo;
+			pNPCQuoteInfo->sGoToGridno = sNewGridNo;
 		}
 	}
 }
@@ -2076,7 +2076,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
-				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
+				else if ( pQuotePtr->sGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
@@ -2089,7 +2089,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				}
 
 				// Movement?
-				if ( pQuotePtr->usGoToGridno != NO_MOVE )
+				if ( pQuotePtr->sGoToGridno != NO_MOVE )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
 
@@ -2099,7 +2099,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						// make sure he has keys
 						pSoldier->flags.bHasKeys = TRUE;
 					}
-					if (pSoldier && pSoldier->sGridNo == pQuotePtr->usGoToGridno )
+					if (pSoldier && pSoldier->sGridNo == pQuotePtr->sGoToGridno )
 					{
 						// search for quotes to trigger immediately!
 						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -2118,14 +2118,14 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 
 						if (pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
 						{
-							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
-							TeleportSoldier( pSoldier, pQuotePtr->usGoToGridno, FALSE );
+							BumpAnyExistingMerc( pQuotePtr->sGoToGridno );
+							TeleportSoldier( pSoldier, pQuotePtr->sGoToGridno, FALSE );
 							// search for quotes to trigger immediately!
 							NPCReachedDestination( pSoldier, FALSE );
 						}
 						else
 						{
-							NPCGotoGridNo( ubNPC, pQuotePtr->usGoToGridno, ubRecordNum );
+							NPCGotoGridNo( ubNPC, pQuotePtr->sGoToGridno, ubRecordNum );
 						}
 					}
 				}
@@ -2366,7 +2366,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	// (indicated by a negative gridno in the has-item field)
 	// or an action to perform once we reached this gridno
 
-	if ( pNPC->sGridNo == pQuotePtr->usGoToGridno )
+	if ( pNPC->sGridNo == pQuotePtr->sGoToGridno )
 	{
 		// check for an after-move action
 		if ( pQuotePtr->sActionData > 0)
@@ -3394,7 +3394,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 	}
 	
 	EnsureQuoteFileLoaded( DARREL );
-	gpNPCQuoteInfoArray[ DARREL ][ 10 ].usGoToGridno = sAdjustedGridNo;
+	gpNPCQuoteInfoArray[ DARREL ][ 10 ].sGoToGridno = sAdjustedGridNo;
 	gpNPCQuoteInfoArray[ DARREL ][ 11 ].sRequiredGridno = -(sAdjustedGridNo);
 	gpNPCQuoteInfoArray[ DARREL ][ 11 ].ubTriggerNPC = pSoldier->ubProfile;
 }

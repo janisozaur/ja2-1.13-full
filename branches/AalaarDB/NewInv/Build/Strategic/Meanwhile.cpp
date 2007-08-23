@@ -145,7 +145,7 @@ UINT32 uiMeanWhileFlags = 0;
 #define INTERROGATION_FLAG										0x00008000								
 #define BALIME_LIBERATED_FLAG									0x00010000
 
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce );
 
 
 void ProcessImplicationsOfMeanwhile( void );

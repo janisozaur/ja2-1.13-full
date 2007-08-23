@@ -118,7 +118,7 @@ void DisplayFrameRate( )
 	PERFORMANCE_MARKER
 	static UINT32		uiFPS = 0;
 	static UINT32		uiFrameCount = 0;	
-	UINT16 usMapPos;
+	INT16 sMapPos;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
 	// Increment frame count
@@ -163,10 +163,10 @@ void DisplayFrameRate( )
 		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
 		
 
-		if( GetMouseMapPos( &usMapPos) )
+		if( GetMouseMapPos( &sMapPos) )
 		{
-			//gprintfdirty( 0, 315, L"(%d)",usMapPos);		
-			//mprintf( 0,315,L"(%d)",usMapPos);		
+			//gprintfdirty( 0, 315, L"(%d)",sMapPos);		
+			//mprintf( 0,315,L"(%d)",sMapPos);		
 		}
 		else
 		{

@@ -2533,7 +2533,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 					else if( gfOverrideInsertionWithExitGrid )
 					{
 						pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-						pSoldier->usStrategicInsertionData = gExitGrid.usGridNo;
+						pSoldier->usStrategicInsertionData = gExitGrid.sGridNo;
 					}
 				}
 
@@ -2985,7 +2985,7 @@ UINT8 SetInsertionDataFromAdjacentMoveDirection( SOLDIERTYPE *pSoldier, UINT8 ub
 			}
 			ubDirection = 255;
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			pSoldier->usStrategicInsertionData = ExitGrid.usGridNo;
+			pSoldier->usStrategicInsertionData = ExitGrid.sGridNo;
 			pSoldier->bUseExitGridForReentryDirection = TRUE;
 			break;		
 
@@ -3246,7 +3246,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		gsAdjacentSectorX				= ExitGrid.ubGotoSectorX;
 		gsAdjacentSectorY				= ExitGrid.ubGotoSectorY;
 		gbAdjacentSectorZ				= ExitGrid.ubGotoSectorZ;
-		gusDestExitGridNo				= ExitGrid.usGridNo;
+		gusDestExitGridNo				= ExitGrid.sGridNo;
 	}
 
 	// Give guy(s) orders to walk off sector...

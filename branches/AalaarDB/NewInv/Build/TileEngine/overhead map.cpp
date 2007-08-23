@@ -460,22 +460,22 @@ void HandleOverheadMap( )
 
 	if( !gfEditMode && !gfTacticalPlacementGUIActive )
 	{
-		INT16 usMapPos;
+		INT16 sMapPos;
 		ITEM_POOL	*pItemPool;
 
 		gfUIHandleSelectionAboveGuy			= FALSE;
 
 		HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
 
-		if ( GetOverheadMouseGridNo( &usMapPos ) )
+		if ( GetOverheadMouseGridNo( &sMapPos ) )
 		{
 			// ATE: Find the closest item pool within 5 tiles....
-			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 0 ) )
+			if ( GetClosestItemPool( sMapPos, &pItemPool, 1, 0 ) )
 			{
 				STRUCTURE					*pStructure = NULL;
 				INT16							sIntTileGridNo;
 				INT8							bZLevel = 0;
-				INT16							sActionGridNo = usMapPos;
+				INT16							sActionGridNo = sMapPos;
 
 				// Get interactive tile...
 				if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -487,20 +487,20 @@ void HandleOverheadMap( )
 
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{
-					DrawItemPoolList( pItemPool, usMapPos	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
+					DrawItemPoolList( pItemPool, sMapPos	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
 
 					gfOverItemPool = TRUE;
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}
 
-			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 1 ) )
+			if ( GetClosestItemPool( sMapPos, &pItemPool, 1, 1 ) )
 			{
 				INT8							bZLevel = 0;
 
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{
-					DrawItemPoolList( pItemPool, usMapPos	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, (UINT16)( gusMouseYPos - 5 ) );
+					DrawItemPoolList( pItemPool, sMapPos	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, (UINT16)( gusMouseYPos - 5 ) );
 
 					gfOverItemPool = TRUE;
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
@@ -509,9 +509,9 @@ void HandleOverheadMap( )
 
 	}
 
-	if ( GetOverheadMouseGridNoForFullSoldiersGridNo( &usMapPos ) )
+	if ( GetOverheadMouseGridNoForFullSoldiersGridNo( &sMapPos ) )
 	{
-			if ( GetClosestMercInOverheadMap( usMapPos, &pSoldier, 1 ) )
+			if ( GetClosestMercInOverheadMap( sMapPos, &pSoldier, 1 ) )
 			{
 		if ( pSoldier->bTeam == gbPlayerNum )
 		{

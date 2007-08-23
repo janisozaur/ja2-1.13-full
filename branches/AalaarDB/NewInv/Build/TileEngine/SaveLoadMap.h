@@ -47,7 +47,7 @@ enum
 
 typedef struct
 {
-	UINT16	usGridNo;				//The gridno the graphic will be applied to
+	UINT16	sGridNo;				//The gridno the graphic will be applied to
 	UINT16	usImageType;			//graphic index
 	UINT16	usSubImageIndex;		//
 //	UINT16	usIndex;
@@ -97,7 +97,7 @@ void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	);
 
 //Adds the exit grid to
-void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
+void AddExitGridToMapTempFile( INT16 sGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
 
 
 //This function removes a struct with the same MapIndex and graphic index from the given sectors temp file
@@ -109,7 +109,7 @@ void AddOpenableStructStatusToMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened );
 
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex );
 
-BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen );
+BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, INT16 sGridNo, BOOLEAN fChangeToOpen );
 
 
 #endif

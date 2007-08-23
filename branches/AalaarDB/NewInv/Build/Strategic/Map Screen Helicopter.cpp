@@ -1977,7 +1977,6 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 	PERFORMANCE_MARKER
  	INT16 sGridNo = sRefuelStartGridNo[ ubSite ];
 	INT16 sOStruct = 0;
-	INT16	usGridNo;
 	INT16	sGridX, sGridY;
 	INT16	sCentreGridX, sCentreGridY;
 
@@ -2014,9 +2013,9 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 	{
 		for( sGridX = sCentreGridX - 5; sGridX < sCentreGridX + 5; sGridX++ )
 		{
-			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
+			sGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 
-		 BumpAnyExistingMerc( usGridNo );
+		 BumpAnyExistingMerc( sGridNo );
 		}
 	}
 	}

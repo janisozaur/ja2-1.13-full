@@ -182,7 +182,7 @@ BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE 
 
 
 
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
+INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pTargetSoldier = NULL;
@@ -197,7 +197,6 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	BOOLEAN						fAddingRaiseGunCost = FALSE;
 	LEVELNODE					*pIntNode;
 	STRUCTURE					*pStructure;
-	INT16							sGridNo;
 
 
 	// Remove any previous actions
@@ -377,7 +376,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 		else
 		{
-			sTargetGridNo	= usGridNo;
+			sTargetGridNo	= sGridNo;
 		}
 
 		// If it's a player guy, check ChanceToGetThrough to play quote
@@ -655,7 +654,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		if ( sGotLocation == NOWHERE )
 		{
 			// See if we can get there to punch	
-			sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 			if ( sActionGridNo != -1 )
 			{
 				// OK, we've got somebody...
@@ -668,9 +667,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		// Did we get a loaction?
 		if ( sGotLocation != NOWHERE )
 		{
-			pSoldier->sTargetGridNo = usGridNo;
+			pSoldier->sTargetGridNo = sGridNo;
 
-			pSoldier->aiData.usActionData	= usGridNo;
+			pSoldier->aiData.usActionData	= sGridNo;
 			// CHECK IF WE ARE AT THIS GRIDNO NOW
 			if ( pSoldier->sGridNo != sGotLocation && fGotAdjacent )
 			{
@@ -706,24 +705,24 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	if ( Item[ usHandItem ].usItemClass == IC_MEDKIT )
 	{	
 		// ATE: AI CANNOT GO THROUGH HERE!
-		UINT16 usMapPos;
+		INT16 sMapPos;
 		BOOLEAN	fHadToUseCursorPos = FALSE;
 
 		if (gTacticalStatus.fAutoBandageMode)
 		{
-			usMapPos = usGridNo;
+			sMapPos = sGridNo;
 		}
 		else
 		{
-			GetMouseMapPos( &usMapPos );
+			GetMouseMapPos( &sMapPos );
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo == -1 )
 		{
 			// Try another location...
-			sActionGridNo =	FindAdjacentGridEx( pSoldier, usMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 			if ( sActionGridNo == -1 )
 			{
@@ -753,7 +752,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 				if ( fHadToUseCursorPos )
 				{
-					pSoldier->aiData.sPendingActionData2	= usMapPos;
+					pSoldier->aiData.sPendingActionData2	= sMapPos;
 				}
 				else
 				{
@@ -763,7 +762,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 					else
 					{
-						pSoldier->aiData.sPendingActionData2	= usGridNo;
+						pSoldier->aiData.sPendingActionData2	= sGridNo;
 					}
 				}
 				pSoldier->aiData.bPendingActionData3	= ubDirection;
@@ -793,7 +792,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	if ( Item[usHandItem].wirecutters && pTargetSoldier == NULL ) // Madd: quick fix to allow wirecutter/knives
 	{
 		// See if we can get there to stab	
-		sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo != -1 )
 		{
 			// Calculate AP costs...
@@ -848,7 +847,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		INT16		sVehicleGridNo=-1;
 
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		if ( IsRepairableStructAtGridNo( usGridNo, &ubMercID ) == 2 )
+		if ( IsRepairableStructAtGridNo( sGridNo, &ubMercID ) == 2 )
 		{
 			INT16 sNewGridNo;
 			UINT8	ubDirection;
@@ -857,7 +856,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 			if ( sNewGridNo != NOWHERE )
 			{
-				usGridNo = sNewGridNo;
+				sGridNo = sNewGridNo;
 
 				sVehicleGridNo = MercPtrs[ ubMercID ]->sGridNo;
 
@@ -866,7 +865,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -926,7 +925,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		INT16		sVehicleGridNo=-1;
 
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		if ( IsRefuelableStructAtGridNo( usGridNo, &ubMercID ) )
+		if ( IsRefuelableStructAtGridNo( sGridNo, &ubMercID ) )
 		{
 			INT16 sNewGridNo;
 			UINT8	ubDirection;
@@ -935,7 +934,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 			if ( sNewGridNo != NOWHERE )
 			{
-				usGridNo = sNewGridNo;
+				sGridNo = sNewGridNo;
 
 				sVehicleGridNo = MercPtrs[ ubMercID ]->sGridNo;
 
@@ -943,7 +942,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 
 		// See if we can get there to stab	
-		sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -996,7 +995,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 	if ( Item[usHandItem].jar )
 	{
-		sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
 		if ( sActionGridNo != -1 )
 		{
@@ -1050,12 +1049,12 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		LEVELNODE					*pIntTile;
 
 		// Get structure info for in tile!
-		pIntTile = GetCurInteractiveTileGridNoAndStructure( (INT16 *)&usGridNo, &pStructure );
+		pIntTile = GetCurInteractiveTileGridNoAndStructure( (INT16 *)&sGridNo, &pStructure );
 
 		// We should not have null here if we are given this flag...
 		if ( pIntTile != NULL )
 		{
-			sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE );
 
 			if ( sActionGridNo != -1 )
 			{
@@ -1070,7 +1069,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					{
 						// SEND PENDING ACTION
 						pSoldier->aiData.ubPendingAction = MERC_ATTACH_CAN;
-						pSoldier->aiData.sPendingActionData2	= usGridNo;
+						pSoldier->aiData.sPendingActionData2	= sGridNo;
 						pSoldier->aiData.bPendingActionData3	= ubDirection;
 						pSoldier->aiData.ubPendingActionAnimCount = 0;
 
@@ -1079,7 +1078,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 					else
 					{
-						pSoldier->EVENT_SoldierBeginTakeBlood( usGridNo, ubDirection );
+						pSoldier->EVENT_SoldierBeginTakeBlood( sGridNo, ubDirection );
 					}
 
 					// OK, set UI
@@ -1126,7 +1125,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			else // detonator
 			{
 				// Save gridno....
-				pSoldier->aiData.sPendingActionData2	= usGridNo;
+				pSoldier->aiData.sPendingActionData2	= sGridNo;
 
 				pSoldier->EVENT_SoldierBeginUseDetonator( );			
 
@@ -1165,16 +1164,16 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	if ( fDropBomb )
 	{
 		// Save gridno....
-		pSoldier->aiData.sPendingActionData2	= usGridNo;
+		pSoldier->aiData.sPendingActionData2	= sGridNo;
 
-		if ( pSoldier->sGridNo != usGridNo )
+		if ( pSoldier->sGridNo != sGridNo )
 		{
 			// SEND PENDING ACTION
 			pSoldier->aiData.ubPendingAction = MERC_DROPBOMB;
 			pSoldier->aiData.ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
-			pSoldier->EVENT_InternalGetNewSoldierPath( usGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+			pSoldier->EVENT_InternalGetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
 		}
 		else
 		{
@@ -1198,19 +1197,19 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		// See if we can get there to stab	
 		if ( pSoldier->ubBodyType == BLOODCAT )
 		{
-			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
+			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
 		}
-		else if ( CREATURE_OR_BLOODCAT( pSoldier ) && PythSpacesAway( pSoldier->sGridNo, usGridNo ) > 1 )
+		else if ( CREATURE_OR_BLOODCAT( pSoldier ) && PythSpacesAway( pSoldier->sGridNo, sGridNo ) > 1 )
 		{
-			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
+			sActionGridNo =	FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );	
 			if (sActionGridNo == -1)
 			{
-				sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+				sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 			}
 		}
 		else
 		{
-			sActionGridNo =	FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+			sActionGridNo =	FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		}
 
 		if ( sActionGridNo != -1 )
@@ -1291,7 +1290,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 		else
 		{
-			sTargetGridNo	= usGridNo;
+			sTargetGridNo	= sGridNo;
 		}
 
 		sAPCost = MinAPsToAttack( pSoldier, sTargetGridNo, TRUE );
@@ -1385,7 +1384,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		// Found detonator...
 		if ( IsDetonatorAttached ( &(pSoldier->inv[ usHandItem ] ) )	|| IsRemoteDetonatorAttached( &(pSoldier->inv[ usHandItem ] ) ) )
 		{
-			StartBombMessageBox( pSoldier, usGridNo );
+			StartBombMessageBox( pSoldier, sGridNo );
 
 			if ( fFromUI )
 			{
@@ -3087,24 +3086,24 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos, INT8 bStartLevel, INT8 bE
 	return( TRUE );
 }
 
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
+BOOLEAN	GetItemPool( INT16 sMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE *pObject;
 
 	if ( ubLevel == 0 )
 	{
-		pObject = gpWorldLevelData[ usMapPos ].pStructHead;
+		pObject = gpWorldLevelData[ sMapPos ].pStructHead;
 	}
 	else
 	{
-		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
+		pObject = gpWorldLevelData[ sMapPos ].pOnRoofHead;
 	}
 	//ADB: let's not make 51200 calls to FileWrite ok?
 #ifdef JA2BETAVERSION
 	if ( pObject )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, sMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
 	}
 #endif
 
@@ -3130,16 +3129,16 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 	return( FALSE );	
 }
 
-BOOLEAN	GetItemPoolFromGround( UINT16 usMapPos, ITEM_POOL **ppItemPool )
+BOOLEAN	GetItemPoolFromGround( INT16 sMapPos, ITEM_POOL **ppItemPool )
 {
 	PERFORMANCE_MARKER
 	//if we know the level, we can avoid an if, and this function is called alot
-	LEVELNODE *pObject = gpWorldLevelData[ usMapPos ].pStructHead;
+	LEVELNODE *pObject = gpWorldLevelData[ sMapPos ].pStructHead;
 	//ADB: let's not make 51200 calls to FileWrite ok?
 #ifdef JA2BETAVERSION
 	if ( pObject )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, usMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("gpWorldLevelData, %d %d %d", pObject, sMapPos, (&gpWorldLevelData[25600-1]) + sizeof(MAP_ELEMENT) ) );
 	}
 #endif
 

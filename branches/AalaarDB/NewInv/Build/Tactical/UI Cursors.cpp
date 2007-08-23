@@ -32,20 +32,20 @@
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
-UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
-UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT8 ubCursor );
-UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor );
-UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
-UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
-UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags );
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags );
+UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl );
+UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT8 ubCursor );
+UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor );
+UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiCursorFlags );
+UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiCursorFlags );
+UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiCursorFlags );
+UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags );
+UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiCursorFlags );
+UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, UINT32 uiCursorFlags );
 
 extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel );
 
@@ -122,14 +122,14 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated )
+UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, INT16 sMapPos, BOOLEAN fActivated )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiCursorFlags;
 	BOOLEAN						fShowAPs = FALSE;
 	BOOLEAN						fRecalc = FALSE;
-	INT16							sTargetGridNo = usMapPos;
+	INT16							sTargetGridNo = sMapPos;
 	UINT8							ubCursorID=0;
 	UINT8							ubItemCursor;
 
@@ -152,7 +152,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 	}
 	else
 	{
-		sTargetGridNo = usMapPos;
+		sTargetGridNo = sMapPos;
 	}
 
 
@@ -178,7 +178,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 
 		case AIDCURS:
 
-			ubCursorID =	HandleAidCursor( pSoldier, usMapPos, fActivated, uiCursorFlags );
+			ubCursorID =	HandleAidCursor( pSoldier, sMapPos, fActivated, uiCursorFlags );
 			break;
 
 		case TARGETCURS:
@@ -317,7 +317,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 
 
 // WANNE: Shows the target cursor over the enemy soldier
-UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
+UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	UINT8							switchVal;
@@ -348,7 +348,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 					}
 				}
 
-				//SoldierFollowGridNo( pSoldier, usMapPos );
+				//SoldierFollowGridNo( pSoldier, sMapPos );
 			}
 
 			// Check if we are reloading
@@ -377,12 +377,12 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 				{
 					INT16 sCurAPCosts, sAPCosts;
 
-					sCurAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+					sCurAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 
 					do
 					{
 						pSoldier->bDoAutofire++;
-						sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+						sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 					}
 					while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && sAPCosts == sCurAPCosts && pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire);
 					pSoldier->bDoAutofire--;
@@ -401,7 +401,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 			else
 				gfUIAutofireBulletCount = FALSE;
 
-			gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
+			gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
 			gfUIDisplayActionPoints = TRUE;
 			gfUIDisplayActionPointsCenter = TRUE;
 
@@ -409,7 +409,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 			while(!EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) && pSoldier->bDoAutofire > 1) //oops, we don't have enough points if we are in auto-fire try to decrease bulletcount
 			{
 				pSoldier->bDoAutofire--;
-				gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
+				gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
 			}
 
 			// If we don't have any points and we are at the first refine, do nothing but warn!
@@ -429,7 +429,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 					if (reverse == 0)
 					{
 						// WANNE: Current AP costs for targeting
-						sAPCosts = MinAPsToAttack( pSoldier, usMapPos, TRUE ) + ( bFutureAim	);
+						sAPCosts = MinAPsToAttack( pSoldier, sMapPos, TRUE ) + ( bFutureAim	);
 
 						//gsCurrentActionPoints = sAPCosts;
 
@@ -441,11 +441,11 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 					}
 					else
 					{
-						sAPCosts = MinAPsToAttack( pSoldier, usMapPos, TRUE ) + maxAimLevels - (bFutureAim + 1);
+						sAPCosts = MinAPsToAttack( pSoldier, sMapPos, TRUE ) + maxAimLevels - (bFutureAim + 1);
 
 						gsCurrentActionPoints = sAPCosts;
 
-						sAPCostsMin = MinAPsToAttack( pSoldier, usMapPos, TRUE );
+						sAPCostsMin = MinAPsToAttack( pSoldier, sMapPos, TRUE );
 						if (sAPCosts < sAPCostsMin)
 						{
 							fEnoughPoints = FALSE;
@@ -511,7 +511,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 			}
 			else
 			{
-				if ( SoldierToLocationChanceToGetThrough( pSoldier, usMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY ) < OK_CHANCE_TO_GET_THROUGH )
+				if ( SoldierToLocationChanceToGetThrough( pSoldier, sMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY ) < OK_CHANCE_TO_GET_THROUGH )
 				{
 					gfCannotGetThrough = TRUE;
 				}
@@ -579,7 +579,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 					pSoldier->bTargetLevel = (INT8) gsInterfaceLevel;
 
 					UINT32 uiHitChance;
-					uiHitChance = CalcChanceToHitGun( pSoldier, usMapPos, 0, pSoldier->bAimShotLocation );
+					uiHitChance = CalcChanceToHitGun( pSoldier, sMapPos, 0, pSoldier->bAimShotLocation );
 
 					pSoldier->bTargetLevel = bTempTargetLevel;
 
@@ -599,7 +599,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 				pSoldier->bTargetLevel = (INT8) gsInterfaceLevel;
 
 				UINT32 uiHitChance;
-				uiHitChance = CalcChanceToHitGun( pSoldier, usMapPos, (INT8)(pSoldier->aiData.bShownAimTime ), pSoldier->bAimShotLocation );
+				uiHitChance = CalcChanceToHitGun( pSoldier, sMapPos, (INT8)(pSoldier->aiData.bShownAimTime ), pSoldier->bAimShotLocation );
 
 				pSoldier->bTargetLevel = bTempTargetLevel;
 				
@@ -937,7 +937,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 			}
 			else
 			{
-				if ( !InRange( pSoldier, usMapPos ) )
+				if ( !InRange( pSoldier, sMapPos ) )
 				{
 					// OK, make buddy flash!
 					SetCursorFlags( gUICursors[ usCursor ].usFreeCursorName, CURSOR_TO_FLASH );
@@ -955,7 +955,7 @@ UINT8 HandleActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLE
 
 
 // WANNE: Shows the target cursor if we are not hovering over an enemy soldier
-UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags	)
+UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags	)
 {
 	PERFORMANCE_MARKER
 	UINT16				usInHand;
@@ -1003,7 +1003,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , B
 	{
 		DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, fShowAPs, fRecalc );
 
-		gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
+		gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(pSoldier->aiData.bShownAimTime ) );
 
 		gfUIDisplayActionPoints = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
@@ -1037,7 +1037,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , B
 	{
 		if ( fRecalc )
 		{
-			if ( SoldierToLocationChanceToGetThrough( pSoldier, usMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY	) < OK_CHANCE_TO_GET_THROUGH )
+			if ( SoldierToLocationChanceToGetThrough( pSoldier, sMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY	) < OK_CHANCE_TO_GET_THROUGH )
 			{
 				gfCannotGetThrough = TRUE;
 			}
@@ -1071,7 +1071,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , B
 	}
 
 	// Determine if good range
-	if ( !InRange( pSoldier, usMapPos ) )
+	if ( !InRange( pSoldier, sMapPos ) )
 	{
 		// Flash cursor!
 		// Check if we're in burst mode!
@@ -1116,7 +1116,7 @@ UINT8 HandleNonActivatedTargetCursor( SOLDIERTYPE *pSoldier, UINT16 usMapPos , B
 void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc )
 {
 	PERFORMANCE_MARKER
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	SOLDIERTYPE				*pTargetSoldier = NULL, *pSoldier;
 	UINT16	usFlags;
 	INT16	sMouseX, sMouseY, sCellX, sCellY, sScreenX, sScreenY;
@@ -1137,13 +1137,13 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 		// ALWAYS SET AIM LOCATION TO NOTHING
 		pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		if( !GetMouseMapPos( &usMapPos) )
+		if( !GetMouseMapPos( &sMapPos) )
 		{
 			return;
 		}
 
 		// Determine which body part it's on
-		pNode = GetAnimProfileFlags( usMapPos, &usFlags, &pTargetSoldier, NULL );
+		pNode = GetAnimProfileFlags( sMapPos, &usFlags, &pTargetSoldier, NULL );
 
 		while( pNode != NULL )
 		{
@@ -1240,7 +1240,7 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 			if ( fOnGuy )
 				break;
 
-			pNode = GetAnimProfileFlags( usMapPos, &usFlags, &pTargetSoldier, pNode );
+			pNode = GetAnimProfileFlags( sMapPos, &usFlags, &pTargetSoldier, pNode );
 
 		}
 
@@ -1334,7 +1334,7 @@ void DetermineCursorBodyLocation( UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN f
 }
 
 
-UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	INT16							sAPCosts;
@@ -1463,7 +1463,7 @@ UINT8 HandleKnifeCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivat
 }
 
 
-UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	INT16							sAPCosts;
@@ -1590,7 +1590,7 @@ UINT8 HandlePunchCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivat
 	}
 }
 
-UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	// DRAW PATH TO GUY
@@ -1614,14 +1614,14 @@ UINT8 HandleAidCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated
 	}
 }
 
-UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubItemCursor )
+UINT8 HandleActivatedTossCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubItemCursor )
 {
 	PERFORMANCE_MARKER
 	return( ACTION_TOSS_UICURSOR );
 }
 
 
-UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubItemCursor )
+UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubItemCursor )
 {
 	PERFORMANCE_MARKER
 	INT16 sFinalGridNo;
@@ -1750,7 +1750,7 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 }
 
 
-UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	// DRAW PATH TO GUY
@@ -1766,7 +1766,7 @@ UINT8 HandleWirecutterCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCu
 }
 
 
-UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	// DRAW PATH TO GUY
@@ -1781,7 +1781,7 @@ UINT8 HandleRepairCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 	return( BAD_REPAIR_UICURSOR );
 }
 
-UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	// DRAW PATH TO GUY
@@ -1797,7 +1797,7 @@ UINT8 HandleRefuelCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 }
 
 
-UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	// DRAW PATH TO GUY
@@ -1813,7 +1813,7 @@ UINT8 HandleJarCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFla
 }
 
 
-UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursorFlags )
+UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 	STRUCTURE					*pStructure;
@@ -1840,7 +1840,7 @@ UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 }
 
 
-UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 
@@ -1869,7 +1869,7 @@ UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActiva
 }
 
 
-UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
+UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
 
@@ -1924,7 +1924,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	UINT16				usInHand;
 	UINT8					ubItemCursor;
-	UINT16					usGridNo;
+	INT16					sGridNo;
 
 	// LOOK IN GUY'S HAND TO CHECK LOCATION
 	usInHand = pSoldier->inv[HANDPOS].usItem;
@@ -1943,7 +1943,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if (!GetMouseMapPos( &usGridNo ) )
+	if (!GetMouseMapPos( &sGridNo ) )
 	{
 		return;
 	}
@@ -2007,7 +2007,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 		case TOSSCURS:
 
-			//BeginAimCubeUI( pSoldier, usGridNo, (INT8)gsInterfaceLevel, 0, 0 );
+			//BeginAimCubeUI( pSoldier, sGridNo, (INT8)gsInterfaceLevel, 0, 0 );
 			//break;
 
 		default:
@@ -2021,7 +2021,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 
 
-void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16					usInHand;
@@ -2042,7 +2042,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	// 'snap' cursor to target tile....
 	if ( gfUIFullTargetFound )
 	{
-		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
+		sMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 	}
 
 
@@ -2071,11 +2071,11 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 				if(pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft > pSoldier->bDoAutofire )
 				{
 					//Calculate how many bullets we need to fire to add at least one more AP
-					sAPCosts = sCurAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+					sAPCosts = sCurAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 					while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && sAPCosts <= sCurAPCosts && pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft > pSoldier->bDoAutofire)	//Increment the bullet count until we run out of APs or we spend the whole AP
 					{
 						pSoldier->bDoAutofire++;
-						sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+						sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 					}
 
 					//we've stepped over the border and used up one more ap, now let's make sure that it is spent to maximize the bullets
@@ -2085,12 +2085,12 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 					do
 					{
 						pSoldier->bDoAutofire++;
-						sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+						sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 					}
 					while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && sAPCosts == sCurAPCosts && pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire);
 					pSoldier->bDoAutofire--;
 
-					sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, 0);
+					sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, 0);
 
 					if(!EnoughPoints( pSoldier, sAPCosts, 0, FALSE ))		//We've not enough points to fire those bullets
 					{
@@ -2107,7 +2107,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 			}
 			else
 			{
-				sGridNo					= usMapPos;
+				sGridNo					= sMapPos;
 				bTargetLevel	= (INT8)gsInterfaceLevel;
 
 				// Look for a target here...
@@ -2128,7 +2128,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 				if ( bFutureAim <= maxAimLevels )
 				{
-					sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim ) );
+					sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(bFutureAim ) );
 
 					// Determine if we can afford!
 					if ( EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
@@ -2175,7 +2175,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 			if ( bFutureAim <= REFINE_PUNCH_2 )
 			{
-				sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim / 2) );
+				sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(bFutureAim / 2) );
 
 				// Determine if we can afford!
 				if ( EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
@@ -2222,7 +2222,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 			if ( bFutureAim <= REFINE_KNIFE_2 )
 			{
-				sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim / 2) );
+				sAPCosts = CalcTotalAPsToAttack( pSoldier, sMapPos, TRUE, (INT8)(bFutureAim / 2) );
 
 				// Determine if we can afford!
 				if ( EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )

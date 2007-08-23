@@ -64,7 +64,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType );
 void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType);
 UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
-void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 *ubSeen);
+void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 *ubSeen);
 void TellPlayerAboutNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir );
 void OurTeamSeesSomeone( SOLDIERTYPE * pSoldier, INT8 bNumReRevealed, INT8 bNumNewEnemies );
 
@@ -3642,7 +3642,7 @@ void DebugSoldierPage1( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	UINT8							ubLine=0;
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
@@ -3802,7 +3802,7 @@ void DebugSoldierPage1( )
 		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->flags.bHasKeys );
 		ubLine++;
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else if ( GetMouseMapPos( &sMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE ONE" );
@@ -3826,7 +3826,7 @@ void DebugSoldierPage2( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	TILE_ELEMENT							TileElem;
 	LEVELNODE					*pNode;
 	UINT8							ubLine;
@@ -3962,17 +3962,17 @@ void DebugSoldierPage2( )
 		gprintf( 150, LINE_HEIGHT * ubLine, L"%s", ShortItemNames[pSoldier->inv[SECONDHANDPOS].usItem] );
 		ubLine++;
 
-		if ( GetMouseMapPos( &usMapPos ) )
+		if ( GetMouseMapPos( &sMapPos ) )
 		{
 			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 			gprintf( 0, LINE_HEIGHT * ubLine, L"CurrGridNo:");
 			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			gprintf( 150, LINE_HEIGHT * ubLine, L"%d", usMapPos );
+			gprintf( 150, LINE_HEIGHT * ubLine, L"%d", sMapPos );
 			ubLine++;
 		}
 
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else if ( GetMouseMapPos( &sMapPos ) )
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE TWO" );
@@ -3983,24 +3983,24 @@ void DebugSoldierPage2( )
 		SetFontColors(COLOR1);
 		mprintf( 0, LINE_HEIGHT * ubLine, L"Land Raised:");
 		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].sHeight );
+		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ sMapPos ].sHeight );
 		ubLine++;
 
 		SetFontColors(COLOR1);
 		mprintf( 0, LINE_HEIGHT * ubLine, L"Land Node:");
 		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandHead );
+		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ sMapPos ].pLandHead );
 		ubLine++;
 
-		if ( gpWorldLevelData[ usMapPos ].pLandHead != NULL )
+		if ( gpWorldLevelData[ sMapPos ].pLandHead != NULL )
 		{
 			SetFontColors(COLOR1);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Land Node:");
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].pLandHead->usIndex );
+			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ sMapPos ].pLandHead->usIndex );
 			ubLine++;
 
-			TileElem = gTileDatabase[ gpWorldLevelData[ usMapPos ].pLandHead->usIndex	];
+			TileElem = gTileDatabase[ gpWorldLevelData[ sMapPos ].pLandHead->usIndex	];
 
 			// Check for full tile
 			SetFontColors(COLOR1);
@@ -4013,19 +4013,19 @@ void DebugSoldierPage2( )
 		SetFontColors(COLOR1);
 		mprintf( 0, LINE_HEIGHT * ubLine, L"Land St Node:");
 		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandStart );
+		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ sMapPos ].pLandStart );
 		ubLine++;
 
 		SetFontColors(COLOR1);
 		mprintf( 0, LINE_HEIGHT * ubLine, L"GRIDNO:");
 		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", usMapPos );
+		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", sMapPos );
 		ubLine++;
 
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_MOVEMENT_RESERVED )
+		if ( gpWorldLevelData[ sMapPos ].uiFlags & MAPELEMENT_MOVEMENT_RESERVED )
 		{
 			SetFontColors(COLOR2);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Merc: %d",	gpWorldLevelData[ usMapPos ].ubReservedSoldierID );			
+			mprintf( 0, LINE_HEIGHT * ubLine, L"Merc: %d",	gpWorldLevelData[ sMapPos ].ubReservedSoldierID );			
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"RESERVED MOVEMENT FLAG ON:" );			
 			ubLine++;
@@ -4044,43 +4044,43 @@ void DebugSoldierPage2( )
 		}
 
 
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_REVEALED )
+		if ( gpWorldLevelData[ sMapPos ].uiFlags & MAPELEMENT_REVEALED )
 		{
 			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ usMapPos ].ubReservedSoldierID );			
+			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ sMapPos ].ubReservedSoldierID );			
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"REVEALED" );			
 			ubLine++;
 		}
 
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_START )
+		if ( gpWorldLevelData[ sMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_START )
 		{
 			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ usMapPos ].ubReservedSoldierID );			
+			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ sMapPos ].ubReservedSoldierID );			
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"Land Raise Start" );			
 			ubLine++;
 		}
 
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_END )
+		if ( gpWorldLevelData[ sMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_END )
 		{
 			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ usMapPos ].ubReservedSoldierID );			
+			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",	gpWorldLevelData[ sMapPos ].ubReservedSoldierID );			
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"Raise Land End" );			
 			ubLine++;
 		}
 
-		if (gubWorldRoomInfo[ usMapPos ] != NO_ROOM )
+		if (gubWorldRoomInfo[ sMapPos ] != NO_ROOM )
 		{
 			SetFontColors(COLOR2);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Room Number" );			
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gubWorldRoomInfo[ usMapPos ] );			
+			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gubWorldRoomInfo[ sMapPos ] );			
 			ubLine++;
 		}
 
-		if ( gpWorldLevelData[ usMapPos ].ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT )
+		if ( gpWorldLevelData[ sMapPos ].ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT )
 		{
 			SetFontColors(COLOR2);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Don't Use Burn Through For Soldier" );			
@@ -4098,7 +4098,7 @@ void DebugSoldierPage3( )
 	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	UINT8							ubLine;
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
@@ -4304,7 +4304,7 @@ void DebugSoldierPage3( )
 		}
 
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else if ( GetMouseMapPos( &sMapPos ) )
 	{
 		DOOR_STATUS	*pDoorStatus;
 		STRUCTURE *pStructure;
@@ -4314,7 +4314,7 @@ void DebugSoldierPage3( )
 		SetFont( LARGEFONT1 );
 
 		// OK, display door information here.....
-		pDoorStatus = GetDoorStatus( usMapPos );
+		pDoorStatus = GetDoorStatus( sMapPos );
 
 		ubLine = 1;
 
@@ -4331,7 +4331,7 @@ void DebugSoldierPage3( )
 			SetFontColors(COLOR1);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Door Status Found:");
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L" %d", usMapPos );
+			mprintf( 150, LINE_HEIGHT * ubLine, L" %d", sMapPos );
 			ubLine++;
 
 			SetFontColors(COLOR1);
@@ -4372,7 +4372,7 @@ void DebugSoldierPage3( )
 		}
 
 		//Find struct data and se what it says......
-		pStructure = FindStructure( usMapPos, STRUCTURE_ANYDOOR );
+		pStructure = FindStructure( sMapPos, STRUCTURE_ANYDOOR );
 
 		if ( pStructure == NULL )
 		{
@@ -5698,7 +5698,7 @@ UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubN
 
 
 
-void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume,
+void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume,
 		UINT8 ubNoiseType, UINT8 *ubSeen)
 {
 	PERFORMANCE_MARKER

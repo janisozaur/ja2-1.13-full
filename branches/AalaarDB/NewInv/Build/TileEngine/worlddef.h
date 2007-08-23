@@ -311,7 +311,7 @@ void RemoveWorldWireFrameTiles( );
 void RemoveWireFrameTiles( INT16 sGridNo );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
+LEVELNODE *GetAnimProfileFlags( INT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 void ReloadTileset( UINT8 ubID );
 

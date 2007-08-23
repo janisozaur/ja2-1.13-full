@@ -1379,10 +1379,10 @@ BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetAp
 }
 
 
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum )
+BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubRecordNum )
 {
 	PERFORMANCE_MARKER
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
+	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, sGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
 }
@@ -1643,7 +1643,7 @@ void HandleWaitTimerForNPCTrigger( )
 
 
 
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
+void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubQuoteNum )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE			 *pSoldier;
@@ -1677,7 +1677,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	pSoldier->aiData.bNextAction = AI_ACTION_WALK;
 
 	// Set dest!
-	pSoldier->aiData.usNextActionData = usGridNo;
+	pSoldier->aiData.usNextActionData = sGridNo;
 
 	// UNless he's has a pending action, delete what he was doing!
 	// Cancel anything he was doing
@@ -1692,7 +1692,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	pSoldier->ubQuoteActionID = ActionIDForMovementRecord( ubTargetNPC, ubQuoteNum );
 	
 	// Set absolute dest
-	pSoldier->sAbsoluteFinalDestination = usGridNo;
+	pSoldier->sAbsoluteFinalDestination = sGridNo;
 
 	// handle this guy's AI right away so that we can get him moving
 	pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
@@ -1833,7 +1833,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ExitGrid.ubGotoSectorX = 10;
 				ExitGrid.ubGotoSectorY = 1;
 				ExitGrid.ubGotoSectorZ = 1;
-				ExitGrid.usGridNo = 12722;
+				ExitGrid.sGridNo = 12722;
 	
 				ApplyMapChangesToMapTempFile( TRUE );
 				AddExitGridToWorld( 7887, &ExitGrid );

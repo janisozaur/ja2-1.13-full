@@ -2713,11 +2713,11 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
 	UINT8									ubID;
-	UINT16 usMapPos;
+	INT16 sMapPos;
 
 	if ( GetMouseXY( &sGridX, &sGridY ) )
 	{
-		usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
+		sMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
 		// Get Grid Coordinates of mouse
 		if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) )
 		{		
@@ -2730,7 +2730,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 			MercCreateStruct.sSectorX			= sSectorX;
 			MercCreateStruct.sSectorY			= sSectorY;
 			MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-			MercCreateStruct.sInsertionGridNo		= usMapPos;
+			MercCreateStruct.sInsertionGridNo		= sMapPos;
 
 			RandomizeNewSoldierStats( &MercCreateStruct );
 

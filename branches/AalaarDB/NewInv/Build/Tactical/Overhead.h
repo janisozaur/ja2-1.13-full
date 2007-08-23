@@ -246,7 +246,7 @@ void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceRese
 //Kaiden: Function declaration from UB to reveal all items after combat.
 void RevealAllDroppedEnemyItems();
 
-void LocateGridNo( UINT16 sGridNo );
+void LocateGridNo( INT16 sGridNo );
 void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
@@ -268,7 +268,7 @@ void StopMercAnimation( BOOLEAN fStop );
 
 UINT32 EnterTacticalDemoMode();
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT16 sMapPos );
 
 INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
 INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );

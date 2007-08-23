@@ -3037,7 +3037,7 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 }
 
 
-void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
+void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce )
 {
 	PERFORMANCE_MARKER
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
@@ -3053,7 +3053,7 @@ void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
 	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
 }
 
-void LocateGridNo( UINT16 sGridNo )
+void LocateGridNo( INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	InternalLocateGridNo( sGridNo, FALSE );
@@ -5229,13 +5229,13 @@ INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 }
 
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fVisible;
 
 	// Check if a hidden tile exists but is not revealed
-	if ( DoesGridnoContainHiddenStruct( usMapPos, &fVisible ) )
+	if ( DoesGridnoContainHiddenStruct( sMapPos, &fVisible ) )
 	{
 		if ( !fVisible )
 		{
@@ -5245,7 +5245,7 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	}
 
 
-	if ( !NewOKDestination( pSoldier, usMapPos, FALSE, (INT8) gsInterfaceLevel ) )
+	if ( !NewOKDestination( pSoldier, sMapPos, FALSE, (INT8) gsInterfaceLevel ) )
 	{
 		return( FALSE );
 	}
@@ -5261,7 +5261,7 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	}
 
 	// ATE: Experiment.. take out
-	//else if ( IsRoofVisible( usMapPos ) && gsInterfaceLevel == 0 )
+	//else if ( IsRoofVisible( sMapPos ) && gsInterfaceLevel == 0 )
 	//{
 	//	return( FALSE );
 	//}

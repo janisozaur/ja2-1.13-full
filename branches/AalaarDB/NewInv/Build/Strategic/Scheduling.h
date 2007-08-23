@@ -91,7 +91,7 @@ void PrepareSchedulesForEditorExit();
 //before saving the map, as this forces the IDs to align with the SOLDIERINITNODE->ubScheduleID's.
 void OptimizeSchedules();
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usMapIndex );
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT16 sMapIndex );
 
 BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEntryTime, UINT32 * puiExitTime );
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime );

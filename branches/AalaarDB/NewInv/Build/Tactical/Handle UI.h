@@ -301,7 +301,7 @@ void ToggleLookCursorMode( UINT32 *puiNewEvent );
 void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance );
 void GetCursorMovementFlags( UINT32 *puiCursorFlags );
 
-BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags );
+BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, INT16 sMapPos, UINT32 uiFlags );
 BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
@@ -320,8 +320,8 @@ UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent );
 
 void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay );
 
-void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
-INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent );
+void HandleHandCursorClick( INT16 sMapPos, UINT32 *puiNewEvent );
+INT8 HandleMoveModeInteractiveClick( INT16 sMapPos, UINT32 *puiNewEvent );
 
 BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
 

@@ -54,7 +54,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	PERFORMANCE_MARKER
 	UINT8	i,j;
 	UINT16	usItem;
-	UINT16 usMapPos, usStandardMapPos;
+	INT16 sMapPos, sStandardMapPos;
 	UINT16 usNumberOfItems;
 	BOOLEAN	fSectorLoaded = FALSE;
 	UINT16	usTotalNumberOfItemTypes;
@@ -70,7 +70,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	UINT8		ubTempNumItems;
 	UINT8		ubItemsPurchased;
 
-	usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+	sStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
 
 	// if the delivery is for meduna, drop the items off there instead
 	if( gpNewBobbyrShipments[ ubOrderID ].fActive && gpNewBobbyrShipments[ ubOrderID ].ubDeliveryLoc == BR_MEDUNA )
@@ -96,7 +96,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		// shipment went to wrong airport... reroute all items to a temporary
 		// gridno to represent the other airport (and damage them)
 		SetFactTrue( FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT );	
-		usStandardMapPos = LOST_SHIPMENT_GRIDNO;
+		sStandardMapPos = LOST_SHIPMENT_GRIDNO;
 		SetFactFalse( FACT_NEXT_PACKAGE_CAN_BE_DELAYED );
 	}
 	else if ( (gTownLoyalty[ DRASSEN ].ubRating < 20) || StrategicMap[ CALCULATE_STRATEGIC_INDEX( 13, MAP_ROW_B ) ].fEnemyControlled )
@@ -205,16 +205,16 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				if ( !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + ubItemsPurchased) )
 				{
 					uiStolenCount++;
-					usMapPos = PABLOS_STOLEN_DEST_GRIDNO; // off screen!
+					sMapPos = PABLOS_STOLEN_DEST_GRIDNO; // off screen!
 					fPablosStoleSomething = TRUE;
 					fPablosStoleLastItem = TRUE;
 				}
 				else
 				{
-					usMapPos = usStandardMapPos;
+					sMapPos = sStandardMapPos;
 					fPablosStoleLastItem = FALSE;
 
-					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
+					if (sStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
 						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
@@ -223,7 +223,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 						{
 							gTempObject[0]->data.objectStatus = 1;
 						}
-						AddItemToPool( usMapPos, &gTempObject, -1, 0, 0, 0 );
+						AddItemToPool( sMapPos, &gTempObject, -1, 0, 0, 0 );
 					}
 					else
 					{
@@ -248,7 +248,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					//else we are not currently in the sector, so we build an array of items to add in one lump
 					//add the item to the item array
 
-					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
+					if (sStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
 						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
@@ -273,7 +273,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			// the item in gTempObject will be the item to deliver
 			if( fSectorLoaded )
 			{
-				AddItemToPool( usStandardMapPos, &gTempObject, -1, 0, 0, 0 );
+				AddItemToPool( sStandardMapPos, &gTempObject, -1, 0, 0, 0 );
 			}
 			else
 			{
@@ -292,7 +292,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				// stack as many as possible
 				if( fSectorLoaded )
 				{
-					AddItemToPool( usStandardMapPos, &gTempObject, -1, 0, 0, 0 );
+					AddItemToPool( sStandardMapPos, &gTempObject, -1, 0, 0, 0 );
 				}
 				else
 				{
@@ -309,9 +309,9 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//add all the items from the array that was built above
-		usMapPos = PABLOS_STOLEN_DEST_GRIDNO;
+		sMapPos = PABLOS_STOLEN_DEST_GRIDNO;
 		//The item are to be added to the Top part of Drassen, grid loc's	10112, 9950
-		if( !AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
+		if( !AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, sStandardMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
 		{
 			//Error adding the items
 			//return;

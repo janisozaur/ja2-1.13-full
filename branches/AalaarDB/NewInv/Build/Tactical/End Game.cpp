@@ -113,7 +113,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 	ExitGrid.ubGotoSectorX = 3;
 	ExitGrid.ubGotoSectorY = MAP_ROW_O;
 	ExitGrid.ubGotoSectorZ = 1;
-	ExitGrid.usGridNo = 13037;
+	ExitGrid.sGridNo = 13037;
 
 	AddExitGridToWorld( 13669, &ExitGrid );
 	gpWorldLevelData[ 13669 ].uiFlags |= MAPELEMENT_REVEALED;

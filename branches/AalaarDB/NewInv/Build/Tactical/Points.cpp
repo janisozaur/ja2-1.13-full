@@ -1762,7 +1762,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 }
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	ITEM_POOL					*pItemPool;
@@ -1770,10 +1770,10 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	INT16							sActionGridNo;
 
 	// Check if we are over an item pool
-	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->pathing.bLevel ) )
+	if ( GetItemPool( sMapPos, &pItemPool, pSoldier->pathing.bLevel ) )
 	{
 		// If we are in the same tile, just return pickup cost
-		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, usMapPos );
+		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sMapPos );
 
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
@@ -1796,15 +1796,15 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 }
 
 
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
-	if ( sAPCost != 0 || pSoldier->sGridNo == usMapPos )
+	if ( sAPCost != 0 || pSoldier->sGridNo == sMapPos )
 	{
 		// ADD APS TO PICKUP
 		sAPCost += AP_GIVE_ITEM;
@@ -2348,14 +2348,14 @@ UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	if (usMapPos != -1)
+	if (sMapPos != -1)
 	{
-		sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+		sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 	}
 
 	// ADD APS TO PICKUP
@@ -2378,12 +2378,12 @@ INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )
@@ -2396,12 +2396,12 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )

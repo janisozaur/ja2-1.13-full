@@ -373,11 +373,11 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 	}
 }
 
-void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
+void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 {
 	PERFORMANCE_MARKER
 	// ATE: Setting sDestination? Tis does not make sense...
-	//pSoldier->pathing.sDestination = usGridNo;
+	//pSoldier->pathing.sDestination = sGridNo;
 	BOOLEAN fSet = FALSE;
 	
 	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->aiData.bAction == AI_ACTION_TAKE_COVER && (pSoldier->aiData.bOrders == DEFENSIVE || pSoldier->aiData.bOrders == CUNNINGSOLO || pSoldier->aiData.bOrders == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
@@ -451,7 +451,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	// ATE: Using this more versitile version
 	// Last paramater says whether to re-start the soldier's animation
 	// This should be done if buddy was paused for fNoApstofinishMove...
-	pSoldier->EVENT_InternalGetNewSoldierPath( usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
+	pSoldier->EVENT_InternalGetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
 
 }
 

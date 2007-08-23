@@ -713,7 +713,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 		case SCHEDULE_ACTION_UNLOCKDOOR:
 		case SCHEDULE_ACTION_OPENDOOR:
 		case SCHEDULE_ACTION_CLOSEDOOR:
-			PerformActionOnDoorAdjacentToGridNo( pSchedule->ubAction[ index ], pSchedule->usData1[ index ] );
+			PerformActionOnDoorAdjacentToGridNo( pSchedule->ubAction[ index ], (INT16)pSchedule->usData1[ index ] );
 			BumpAnyExistingMerc( pSchedule->usData2[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData2[ index ], &sCellX, &sCellY );
 
@@ -1061,13 +1061,13 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridNo )
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	INT16			sDoorGridNo;
 	DOOR *		pDoor;
 
-	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) usGridNo );
+	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) sGridNo );
 	if (sDoorGridNo != NOWHERE)
 	{
 		switch( ubScheduleAction )

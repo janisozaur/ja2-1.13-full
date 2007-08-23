@@ -37,7 +37,7 @@ INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 	iExitGridInfo	= (pExitGrid->ubGotoSectorX-1)<< 28;
 	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
 	iExitGridInfo += pExitGrid->ubGotoSectorZ	<< 20;
-	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
+	iExitGridInfo += pExitGrid->sGridNo & 0x0000ffff;
 	return iExitGridInfo;
 }
 
@@ -48,7 +48,7 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
 	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
 	pExitGrid->ubGotoSectorZ		= (UINT8)((iExitGridInfo & 0x00f00000)>>20);
-	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
+	pExitGrid->sGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
 }
 
 BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
@@ -69,7 +69,7 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 	pExitGrid->ubGotoSectorX = 0;
 	pExitGrid->ubGotoSectorY = 0;
 	pExitGrid->ubGotoSectorZ = 0;
-	pExitGrid->usGridNo = 0;
+	pExitGrid->sGridNo = 0;
 	return FALSE;	
 }
 

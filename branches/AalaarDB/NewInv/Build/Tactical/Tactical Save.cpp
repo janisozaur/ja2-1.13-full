@@ -73,7 +73,7 @@ typedef struct
 		INT16		sRequiredGridno;		// location for NPC req'd to say quote
 	};
 
-	UINT16	usGoToGridno;
+	INT16	sGoToGridno;
 
 } TempNPCQuoteInfoSave;			
 
@@ -2317,7 +2317,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 			{
 				TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
 				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
-				TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
+				TempNpcQuote[ ubCnt ].sGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sGoToGridno;
 			}
 		}
 
@@ -2364,7 +2364,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 		{
 			TempNpcQuote[ ubCnt ].usFlags		= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
 			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
-			TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
+			TempNpcQuote[ ubCnt ].sGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sGoToGridno;
 		}
 
 		//Seek to the correct spot in the file
@@ -2440,7 +2440,7 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	{
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags				= TempNpcQuote[ ubCnt ].usFlags;
 		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridno;
+		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sGoToGridno		= TempNpcQuote[ ubCnt ].sGoToGridno;
 	}
 
 	FileClose( hFile );	

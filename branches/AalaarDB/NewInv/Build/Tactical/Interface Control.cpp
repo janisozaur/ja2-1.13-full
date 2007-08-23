@@ -571,7 +571,7 @@ void RenderTopmostTacticalInterface( )
 	VOBJECT_DESC	VObjectDesc;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	ITEM_POOL					*pItemPool;
 
 	
@@ -794,7 +794,7 @@ void RenderTopmostTacticalInterface( )
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
-	if( GetMouseMapPos( &usMapPos) )
+	if( GetMouseMapPos( &sMapPos) )
 	{
 		if ( gfUIOverItemPool )
 		{
@@ -806,7 +806,7 @@ void RenderTopmostTacticalInterface( )
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
 					INT8							bZLevel = 0;
-					INT16							sActionGridNo = usMapPos;
+					INT16							sActionGridNo = sMapPos;
 
 					// Get interactive tile...
 					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
@@ -845,7 +845,7 @@ void RenderTopmostTacticalInterface( )
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
 					INT8							bZLevel = 0;
-					INT16							sActionGridNo = usMapPos;
+					INT16							sActionGridNo = sMapPos;
 
 					// Get interactive tile...
 					if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
