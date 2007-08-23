@@ -971,6 +971,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 void HandleCreditNodes()
 {
 	PERFORMANCE_MARKER
+	UINT32	uiCurrentTime =GetJA2Clock();
 	CRDT_NODE	*pCurrent=NULL;
 	CRDT_NODE	*pTemp=NULL;
 
@@ -1030,6 +1031,8 @@ void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 void HandleNode_Default( CRDT_NODE	*pCurrent )
 {
 	PERFORMANCE_MARKER
+	UINT32	uiCurrentTime =GetJA2Clock();
+
 	//if it is time to update the current node
 //	if( ( uiCurrentTime - pCurrent->uiLastTime ) > guiCrdtNodeScrollSpeed )
 	{
@@ -1117,10 +1120,13 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 BOOLEAN	GetNextCreditFromTextFile()
 {
 	PERFORMANCE_MARKER
+	BOOLEAN	fDone = FALSE;
+	UINT32	uiStringWidth = 20;
 	CHAR16	zOriginalString[512];
 	CHAR16	zString[512];
 	CHAR16	zCodes[512];
 	STR16		pzNewCode=NULL;
+	UINT32	uiCodeType = 0;
 	UINT32	uiNodeType = 0;
 	UINT32	uiStartLoc = 0;
 	UINT32	uiFlags=0;

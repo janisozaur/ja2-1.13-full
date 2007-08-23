@@ -505,6 +505,8 @@ BOOLEAN InitAimPolicyTocMenu(void)
 	PERFORMANCE_MARKER
 	UINT16			i, usPosY;
 	UINT16			usHeight;
+	UINT32			uiStartLoc=0;
+
 	if(gfInPolicyToc)
 		return(TRUE);
 

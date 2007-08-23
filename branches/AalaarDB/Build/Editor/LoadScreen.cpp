@@ -63,7 +63,7 @@ enum{
 
 extern UINT16 Counter;
 
-//Hook into the text input code.  These callbacks help give back control, so we
+//Hook into the text input code.	These callbacks help give back control, so we
 //can use the dialog interface in conjunction with the 
 void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason );
 void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason );
@@ -109,7 +109,7 @@ BOOLEAN gfPassedSaveCheck = FALSE;
 
 MOUSE_REGION BlanketRegion;
 
-CHAR8	 gszCurrFilename[80];
+CHAR8	gszCurrFilename[80];
 
 enum{
 	IOSTATUS_NONE,
@@ -118,13 +118,14 @@ enum{
 	INITIATE_MAP_LOAD,
 	LOADING_MAP
 };
-INT8 gbCurrentFileIOStatus;  //1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
+INT8 gbCurrentFileIOStatus;	//1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 UINT32 ProcessFileIO();
 
 //BOOLEAN fSavingFile;
 extern UINT16 gusLightLevel, gusSavedLightLevel;
 UINT32 LoadSaveScreenInit(void)
 {
+	PERFORMANCE_MARKER
 	gfUpdateSummaryInfo = TRUE;
 	fEnteringLoadSaveScreen = TRUE;
 	return TRUE;
@@ -132,11 +133,13 @@ UINT32 LoadSaveScreenInit(void)
 
 UINT32 LoadSaveScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
  return TRUE;
 }
 
 void LoadSaveScreenEntry()
 {
+	PERFORMANCE_MARKER
 	fEnteringLoadSaveScreen = FALSE;
 	gbCurrentFileIOStatus	= IOSTATUS_NONE;
 
@@ -189,6 +192,7 @@ void LoadSaveScreenEntry()
 
 UINT32 ProcessLoadSaveScreenMessageBoxResult()
 {
+	PERFORMANCE_MARKER
 	FDLG_LIST *curr, *temp;
 	gfRenderWorld = TRUE;
 	RemoveMessageBox();
@@ -264,7 +268,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
 	}
 	if( gfReadOnly )
-	{ //file is readonly.  Result will determine if the file dialog stays up.
+	{ //file is readonly.	Result will determine if the file dialog stays up.
 		fEnteringLoadSaveScreen = TRUE;
 		RemoveFileDialog();
 		return gfMessageBoxResult ? LOADSAVE_SCREEN : EDIT_SCREEN;
@@ -287,6 +291,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 
 UINT32 LoadSaveScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	FDLG_LIST *FListNode;
 	INT32 x;
 	InputAtom DialogEvent;
@@ -336,11 +341,11 @@ UINT32 LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-	  mprintf( iScreenWidthOffset + 226, iScreenHeightOffset + 126, L"NO FILES IN \\MAPS DIRECTORY" );
+	mprintf( iScreenWidthOffset + 226, iScreenHeightOffset + 126, L"NO FILES IN \\MAPS DIRECTORY" );
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
-		if( !EditingText() && x == iCurrFileShown  )
+		if( !EditingText() && x == iCurrFileShown	)
 		{
 			SetFontForeground( FONT_GRAY2 );
 			SetFontBackground( FONT_METALGRAY );
@@ -386,7 +391,7 @@ UINT32 LoadSaveScreenHandle(void)
 		case DIALOG_SAVE:
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( L" Illegal filename.	Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -403,7 +408,7 @@ UINT32 LoadSaveScreenHandle(void)
 					GetFileClose(&FileInfo);
 				}
 				if( gfReadOnly )
-					CreateMessageBox( L" File is read only!  Choose a different name? " );
+					CreateMessageBox( L" File is read only!	Choose a different name? " );
 				else
 					CreateMessageBox( L" File exists, Overwrite? " );
 				return( LOADSAVE_SCREEN );
@@ -414,7 +419,7 @@ UINT32 LoadSaveScreenHandle(void)
 		case DIALOG_LOAD:
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( L" Illegal filename.	Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -422,7 +427,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, iScreenWidthOffset + 118, iScreenHeightOffset + 183, iScreenWidthOffset + 522, iScreenHeightOffset + 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, iScreenWidthOffset + 100, iScreenHeightOffset + 155, iScreenWidthOffset + 540, iScreenHeightOffset + 235 );
-			swprintf( zOrigName, L"Loading map:  %s", gzFilename );
+			swprintf( zOrigName, L"Loading map:	%s", gzFilename );
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -436,6 +441,7 @@ UINT32 LoadSaveScreenHandle(void)
 
 void CreateFileDialog( STR16 zTitle )
 {
+	PERFORMANCE_MARKER
 
 	iFDlgState = DIALOG_NONE;
 
@@ -485,15 +491,17 @@ void CreateFileDialog( STR16 zTitle )
 
 void UpdateWorldInfoCallback( GUI_BUTTON *b, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
 }
 
-//This is a hook into the text input code.  This callback is called whenever the user is currently
-//editing text, and presses Tab to transfer to the file dialog mode.  When this happens, we set the text
+//This is a hook into the text input code.	This callback is called whenever the user is currently
+//editing text, and presses Tab to transfer to the file dialog mode.	When this happens, we set the text
 //field to the currently selected file in the list which is already know.
 void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	FDLG_LIST *FListNode;
 	if( fEntering )
@@ -520,6 +528,7 @@ void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
 
 void RemoveFileDialog(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	MSYS_RemoveRegion( &BlanketRegion );
@@ -548,6 +557,7 @@ void RemoveFileDialog(void)
 
 void DrawFileDialog(void)
 {
+	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 179, iScreenHeightOffset + 69, (iScreenWidthOffset + 179+281), iScreenHeightOffset + 261, Get16BPPColor(FROMRGB(136, 138, 135)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 180, 70, (iScreenWidthOffset + 179+281), iScreenHeightOffset + 261, Get16BPPColor(FROMRGB(24, 61, 81)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	iScreenWidthOffset + 180, 70, (iScreenWidthOffset + 179+280), iScreenHeightOffset + 260, Get16BPPColor(FROMRGB(65, 79, 94)) );
@@ -576,6 +586,7 @@ void DrawFileDialog(void)
 //the user clicked on the hot spot.
 void SelectFileDialogYPos( UINT16 usRelativeYPos )
 {
+	PERFORMANCE_MARKER
 	INT16 sSelName;
 	INT32 x;
 	FDLG_LIST *FListNode;
@@ -628,6 +639,7 @@ void SelectFileDialogYPos( UINT16 usRelativeYPos )
 
 FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 {
+	PERFORMANCE_MARKER
 	FDLG_LIST *pNode;
 
 	// Add to start of list
@@ -660,6 +672,7 @@ FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 
 BOOLEAN RemoveFromFDlgList( FDLG_LIST **head, FDLG_LIST *node )
 {
+	PERFORMANCE_MARKER
 	FDLG_LIST *curr;
 	curr = *head;
 	while( curr )
@@ -683,6 +696,7 @@ BOOLEAN RemoveFromFDlgList( FDLG_LIST **head, FDLG_LIST *node )
 
 void TrashFDlgList(FDLG_LIST *pList)
 {
+	PERFORMANCE_MARKER
 	FDLG_LIST *pNode;
 
 	while(pList != NULL)
@@ -695,6 +709,7 @@ void TrashFDlgList(FDLG_LIST *pList)
 
 void SetTopFileToLetter( UINT16 usLetter )
 {
+	PERFORMANCE_MARKER
 	UINT32 x;
 	FDLG_LIST *curr;
 	FDLG_LIST *prev;
@@ -726,6 +741,7 @@ void SetTopFileToLetter( UINT16 usLetter )
 
 void HandleMainKeyEvents( InputAtom *pEvent )
 {
+	PERFORMANCE_MARKER
 	INT32 iPrevFileShown = iCurrFileShown;
 	//Replace Alt-x press with ESC.
 	if( pEvent->usKeyState & ALT_DOWN && pEvent->usParam == 'x' )
@@ -819,9 +835,10 @@ void HandleMainKeyEvents( InputAtom *pEvent )
 	}
 }
 
-//editor doesn't care about the z value.  It uses it's own methods.
+//editor doesn't care about the z value.	It uses it's own methods.
 void SetGlobalSectorValues( STR16 szFilename )
 {
+	PERFORMANCE_MARKER
 	STR16 pStr;
 	if( ValidCoordinate() )
 	{
@@ -853,6 +870,7 @@ void SetGlobalSectorValues( STR16 szFilename )
 
 void InitErrorCatchDialog()
 {
+	PERFORMANCE_MARKER
 	SGPRect CenteringRect= {0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 
 	// do message box and return
@@ -863,10 +881,11 @@ void InitErrorCatchDialog()
 
 //Because loading and saving the map takes a few seconds, we want to post a message
 //on the screen and then update it which requires passing the screen back to the main loop.
-//When we come back for the next frame, we then actually save or load the map.  So this
+//When we come back for the next frame, we then actually save or load the map.	So this
 //process takes two full screen cycles.
 UINT32 ProcessFileIO()
 {
+	PERFORMANCE_MARKER
 	INT16 usStartX, usStartY;
 	CHAR8 ubNewFilename[50];
 	switch( gbCurrentFileIOStatus )
@@ -878,7 +897,7 @@ UINT32 ProcessFileIO()
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
-			swprintf( zOrigName, L"Saving map:  %s", gzFilename );
+			swprintf( zOrigName, L"Saving map:	%s", gzFilename );
 			usStartX = iScreenWidthOffset + 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = iScreenHeightOffset + 180 - GetFontHeight( LARGEFONT1 ) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
@@ -922,7 +941,7 @@ UINT32 ProcessFileIO()
 				return EDIT_SCREEN;
 			}
 			if( gMapInformation.ubMapVersion != gubMinorMapVersion )
-				ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted!!!  What did you just do?  KM : 0" );
+				ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted!!!	What did you just do?	KM : 0" );
 			return EDIT_SCREEN;
 		case INITIATE_MAP_LOAD: //draw load message
 			SaveFontSettings();
@@ -937,7 +956,9 @@ UINT32 ProcessFileIO()
 			
 			RemoveMercsInSector( );
 
-			if( !LoadWorld( ubNewFilename ) )
+			float dummy;
+			UINT8 dummy2;
+			if( !LoadWorld( ubNewFilename, &dummy, &dummy2 ) )
 			{ //Want to override crash, so user can do something else.
 				EnableUndo();
 				SetPendingNewScreen( LOADSAVE_SCREEN );
@@ -945,7 +966,7 @@ UINT32 ProcessFileIO()
 				gfGlobalError = FALSE;
 				gfLoadError = TRUE;
 				//RemoveButton( iTempButton );
-				CreateMessageBox( L" Error loading file.  Try another filename?" );
+				CreateMessageBox( L" Error loading file.	Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
 			SetGlobalSectorValues( gzFilename );
@@ -1016,6 +1037,7 @@ UINT32 ProcessFileIO()
 //LOADSCREEN
 void FDlgNamesCallback( GUI_BUTTON *butn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
 		SelectFileDialogYPos( butn->Area.RelativeYPos );
@@ -1025,6 +1047,7 @@ void FDlgNamesCallback( GUI_BUTTON *butn, INT32 reason )
 
 void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
 		gfDestroyFDlg = TRUE;
@@ -1034,6 +1057,7 @@ void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason )
 
 void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
 		gfDestroyFDlg = TRUE;
@@ -1043,6 +1067,7 @@ void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason )
 
 void FDlgUpCallback( GUI_BUTTON *butn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
 		if(iTopFileShown > 0)
@@ -1052,6 +1077,7 @@ void FDlgUpCallback( GUI_BUTTON *butn, INT32 reason )
 
 void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
 		if( (iTopFileShown+7) < iTotalFiles )
@@ -1061,23 +1087,44 @@ void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason )
 
 BOOLEAN ExtractFilenameFromFields()
 {
+	PERFORMANCE_MARKER
 	Get16BitStringFromField( 0, gzFilename );
 	return ValidFilename();
 }
 
 BOOLEAN ValidCoordinate()
 {
-    CHAR16 sectorY = 0; 
-	UINT16 sectorX = 0;
-	swscanf( gzFilename, L"%c%2hd", &sectorY, &sectorX);
-
-	sectorY = towupper( sectorY);
-	return ( sectorY >= 'A' && sectorY <= 'P' &&
-		sectorX >= 1 && sectorX <= 16);
+	PERFORMANCE_MARKER
+	if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' ||
+		gzFilename[0] >= 'a' && gzFilename[0] <='p' )
+	{
+		UINT16 usTotal;
+		if( gzFilename[1] == '1' && gzFilename[2] >= '0' && gzFilename[2] <= '6' )
+		{
+			usTotal = ( gzFilename[1] - 0x30 ) * 10 + ( gzFilename[2] - 0x30 );
+		}
+		else if( gzFilename[1] >= '1' && gzFilename[1] <= '9')
+		{
+			if( gzFilename[2] < '0' || gzFilename[2] > '9' )
+			{
+				usTotal = ( gzFilename[1] - 0x30 );
+			}
+			else
+			{
+				return FALSE;
+			}
+		}
+		if( usTotal >= 1 && usTotal <= 16 )
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 BOOLEAN ValidFilename()
 {
+	PERFORMANCE_MARKER
 	STR16 pDest;
 	if( gzFilename[0] != '\0' )// ; <----- I really think they didn't mean this!! (jonathanl)
 	{
@@ -1092,6 +1139,7 @@ BOOLEAN ValidFilename()
 
 BOOLEAN ExternalLoadMap( STR16 szFilename )
 {
+	PERFORMANCE_MARKER
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )
 		return FALSE;
@@ -1110,6 +1158,7 @@ BOOLEAN ExternalLoadMap( STR16 szFilename )
 
 BOOLEAN ExternalSaveMap( STR16 szFilename )
 {
+	PERFORMANCE_MARKER
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )
 		return FALSE;

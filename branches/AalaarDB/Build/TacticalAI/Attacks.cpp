@@ -68,7 +68,7 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 	else if (Item[usInHand].grenadelauncher )
 	{
 		bPayloadPocket = FindGLGrenade( pSoldier );
-		if (bPayloadPocket == NO_SLOT || FindNonSmokeLaunchableAttachment( &pSoldier->inv[HANDPOS],usInHand ) != ITEM_NOT_FOUND )
+		if (bPayloadPocket == NO_SLOT || FindNonSmokeLaunchableAttachment( &pSoldier->inv[HANDPOS],usInHand ) != 0 )
 		{
 #ifdef BETAVERSION
 			NumMessage("LoadWeaponIfNeeded: ERROR - no grenades found to load GLAUNCHER!	Guynum",pSoldier->ubID);
@@ -103,11 +103,11 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 	// remove payload from its pocket, and add it as the hand weapon's first attachment
 
 	OBJECTTYPE Temp;
-	CreateItem(pSoldier->inv[bPayloadPocket].usItem,pSoldier->inv[bPayloadPocket].status.bStatus[0],&Temp);
+	CreateItem(pSoldier->inv[bPayloadPocket].usItem,pSoldier->inv[bPayloadPocket].objectStatus,&Temp);
 	AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&Temp,FALSE);
 
 	//pSoldier->inv[HANDPOS].usAttachItem[0] = pSoldier->inv[bPayloadPocket].usItem;
-	//pSoldier->inv[HANDPOS].bAttachStatus[0] = pSoldier->inv[bPayloadPocket].status.bStatus[0];
+	//pSoldier->inv[HANDPOS].bAttachStatus[0] = pSoldier->inv[bPayloadPocket].objectStatus;
 
 	if ( TANK( pSoldier ) )
 	{
@@ -1186,7 +1186,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 	UINT16 usTrueMovementMode;
@@ -1402,7 +1402,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 	INT32 iAttackValue;
 	INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
 	BOOLEAN fSurpriseStab;
-	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime = 0;
+	UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
 	UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
 	SOLDIERTYPE *pOpponent;
 
@@ -1581,7 +1581,6 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	UINT8 ubBonus;
 	INT32 iHeadProt = 0, iTorsoProt = 0, iLegProt = 0;
 	INT32 iTotalProt;
-	INT8 bPlatePos;
 	UINT8	ubAmmoType;
 
 	/*
@@ -1620,7 +1619,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 	if (pOpponent->inv[HELMETPOS].usItem)
 	{
 		iHeadProt += (INT32) Armour[Item[pOpponent->inv[HELMETPOS].usItem].ubClassIndex].ubProtection *
-			(INT32) pOpponent->inv[HELMETPOS].status.bStatus[0] / 100;
+			(INT32) pOpponent->inv[HELMETPOS].objectStatus / 100;
 	}
 
 	// if opponent is wearing a protective vest
@@ -1630,18 +1629,18 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 		if (pOpponent->inv[VESTPOS].usItem)
 		{
 			iTorsoProt += (INT32) Armour[Item[pOpponent->inv[VESTPOS].usItem].ubClassIndex].ubProtection *
-				(INT32) pOpponent->inv[VESTPOS].status.bStatus[0] / 100;
+				(INT32) pOpponent->inv[VESTPOS].objectStatus / 100;
 		}
 	}
 
 	// check for ceramic plates; these do affect monster spit
-	bPlatePos = FindFirstArmourAttachment( &(pOpponent->inv[VESTPOS]) );
-	if (bPlatePos != -1)
-	{
-		iTorsoProt += (INT32) Armour[Item[pOpponent->inv[VESTPOS].usAttachItem[bPlatePos]].ubClassIndex].ubProtection *
-			(INT32) pOpponent->inv[VESTPOS].bAttachStatus[bPlatePos] / 100;
+	for (OBJECTTYPE::attachmentList::iterator iter = pOpponent->inv[VESTPOS].attachments.begin(); iter != pOpponent->inv[VESTPOS].attachments.end(); ++iter) {
+		if (Item[iter->usItem].usItemClass == IC_ARMOUR && iter->objectStatus > 0 )
+		{
+			iTorsoProt += (INT32) Armour[Item[iter->usItem].ubClassIndex].ubProtection *
+				(INT32) iter->objectStatus / 100;
+		}
 	}
-
 
 	// if opponent is wearing armoured leggings (LEGPOS)
 	if ( !AmmoTypes[ubAmmoType].ignoreArmour )
@@ -1649,7 +1648,7 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
 		if (pOpponent->inv[LEGPOS].usItem)
 		{
 			iLegProt += (INT32) Armour[Item[pOpponent->inv[LEGPOS].usItem].ubClassIndex].ubProtection *
-				(INT32) pOpponent->inv[LEGPOS].status.bStatus[0] / 100;
+				(INT32) pOpponent->inv[LEGPOS].objectStatus / 100;
 		}
 	}
 
@@ -1740,9 +1739,9 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 		ubExplosiveIndex = Item[ C1 ].ubClassIndex;
 	else if ( Item[pSoldier->inv[ ubItemPos ].usItem].rocketlauncher || Item[pSoldier->inv[ ubItemPos ].usItem].grenadelauncher || Item[pSoldier->inv[ ubItemPos ].usItem].mortar )
 	{
-		bSlot = FindLaunchableAttachment(&pSoldier->inv[ ubItemPos ],pSoldier->inv[ ubItemPos ].usItem ) ;
-		if ( bSlot != ITEM_NOT_FOUND )
-			ubExplosiveIndex = Item[pSoldier->inv[ bSlot ].usItem].ubClassIndex;
+		OBJECTTYPE* pAttachment = FindLaunchableAttachment(&pSoldier->inv[ ubItemPos ],pSoldier->inv[ ubItemPos ].usItem ) ;
+		if ( pAttachment )
+			ubExplosiveIndex = Item[pAttachment->usItem].ubClassIndex;
 		else
 			return 0;
 	}
@@ -1773,7 +1772,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 		if (bSlot == HEAD1POS || bSlot == HEAD2POS)
 		{
 			// take condition of the gas mask into account - it could be leaking
-			iBreathDamage = (iBreathDamage * (100 - pOpponent->inv[bSlot].status.bStatus[0])) / 100;
+			iBreathDamage = (iBreathDamage * (100 - pOpponent->inv[bSlot].objectStatus)) / 100;
 			//NumMessage("damage after GAS MASK: ",iBreathDamage);
 		}
 
@@ -1812,7 +1811,7 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 
 	// approximate chance of the grenade going off (Ian's formulas are too funky)
 	// then use that to reduce the expected damage because thing may not blow!
-	iDamage = (iDamage * pSoldier->inv[ubItemPos].status.bStatus[0]) / 100;
+	iDamage = (iDamage * pSoldier->inv[ubItemPos].objectStatus) / 100;
 
 	// if the target gridno is in water, grenade may not blow (guess 50% of time)
 	/*

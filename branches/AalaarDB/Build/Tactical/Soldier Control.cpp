@@ -278,7 +278,9 @@ Inventory& Inventory::operator=(const Inventory& src)
 }
 
 Inventory::~Inventory() {
-	//vector dtor called automatically
+	inv.clear();
+	bNewItemCount.clear();
+	bNewItemCycleCount.clear();
 };
 
 OBJECTTYPE& Inventory::operator [] (unsigned int idx)
@@ -288,7 +290,7 @@ OBJECTTYPE& Inventory::operator [] (unsigned int idx)
 		inv.resize(idx+1);
 		bNewItemCount.resize(idx+1);
 		bNewItemCycleCount.resize(idx+1);
-		//int breakpoint = 0;
+		int breakpoint = 0;
 	}
 	/*
 	// This IF is just from setting breakpoints when trying to figure out inventory item problems.  Remove it later
@@ -3915,15 +3917,15 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 			BOOLEAN fSetGassed = TRUE;
 
 			// If we have a functioning gas mask...
-			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			if ( FindGasMask ( thisSoldier ) != NO_SLOT && thisSoldier->inv[ HEAD1POS ].objectStatus >= GASMASK_MIN_STATUS )
 			{
 				fSetGassed = FALSE;
 			}
-			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD1POS ].usItem == GASMASK && thisSoldier->inv[ HEAD1POS ].objectStatus >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
-			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ].status.bStatus[ 0 ] >= GASMASK_MIN_STATUS )
+			//   if ( thisSoldier->inv[ HEAD2POS ].usItem == GASMASK && thisSoldier->inv[ HEAD2POS ].objectStatus >= GASMASK_MIN_STATUS )
 			//{
 			//	fSetGassed = FALSE;
 			//}
@@ -3972,7 +3974,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 	}
 	else
 	{
-		//int breakpoint = 0;
+		int i = 0;
 	}
 }
 
@@ -3989,6 +3991,11 @@ void SOLDIERTYPE::EVENT_FireSoldierWeapon( INT16 sTargetGridNo )
 	if ( thisSoldier->sGridNo == sTargetGridNo )
 	{
 		return;
+	}
+
+	if ( thisSoldier->ubID == 33 )
+	{
+		int i = 0;
 	}
 
 	//switch ( thisSoldier->inv[ thisSoldier->ubAttackingHand ].gun.ubGunAmmoType )
@@ -9948,6 +9955,7 @@ void SOLDIERTYPE::EVENT_SoldierBeginBladeAttack( INT16 sGridNo, UINT8 ubDirectio
 	//UINT32 uiMercFlags;
 	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
+	BOOLEAN fChangeDirection = FALSE;
 	ROTTING_CORPSE *pCorpse;
 
 	// Increment the number of people busy doing stuff because of an attack

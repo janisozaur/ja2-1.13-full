@@ -758,6 +758,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 	INT16		sSoldierID, i;
 	UINT8		ubMercID;
 	INT32		iNumDays;
+	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
 
 	//if its the first day, leave
 	if( usDate == 1 )
@@ -1635,6 +1636,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 {
 	PERFORMANCE_MARKER
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
+	UINT8	ubRandom=0;
 	UINT8	ubCnt;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
 	BOOLEAN fCanUseIdleTag = FALSE;
@@ -1725,6 +1727,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 
 		else
 		{
+			UINT8	ubNumMercsDead = NumberOfMercMercsDead();
 			UINT8	ubRandom = ( UINT8 ) Random( 100 );
 
 			//if business is good

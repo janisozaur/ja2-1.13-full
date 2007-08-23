@@ -812,6 +812,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	UINT16 usOldItemIndex, usNewItemIndex;
+	INT16 sGridNo = 0;
 	INT32 iOldNumberOfObjects = 0;
 	INT16 sDistanceFromObject = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -1037,6 +1038,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 {
 	PERFORMANCE_MARKER
 	INT32 iSize = 0;
+	OBJECTTYPE *pTempList = NULL;
 	UINT32 uiItemCount = 0;
 	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
 	WORLDITEM * pTotalSectorList = NULL;
@@ -1389,6 +1391,7 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 	PERFORMANCE_MARKER
 	BOOLEAN fOk = FALSE;
 	BOOLEAN fSELLALL = gGameExternalOptions.fSellAll;
+	INT16 iPriceModifier = gGameExternalOptions.iPriceModifier;
 
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -1501,7 +1504,7 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 		pItemPtr->usItem = pInventorySlot->usItem;
 
 		// find first unempty slot
-		pItemPtr->status.bStatus[0] = pInventorySlot->status.bStatus[0];
+		pItemPtr->objectStatus = pInventorySlot->objectStatus;
 		pItemPtr->ubNumberOfObjects = 1;
 		pItemPtr->ubWeight = CalculateObjectWeight( pItemPtr );
 		RemoveObjFrom( pInventorySlot, 0 );
@@ -1581,7 +1584,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...
-				pInventorySlot->status.bStatus[0] = (INT8) ( ( (UINT32)pInventorySlot->money.bMoneyStatus * pInventorySlot->money.uiMoneyAmount + (UINT32)pItemPtr->money.bMoneyStatus * pItemPtr->money.uiMoneyAmount )/ (pInventorySlot->money.uiMoneyAmount + pItemPtr->money.uiMoneyAmount) );
+				pInventorySlot->objectStatus = (INT8) ( ( (UINT32)pInventorySlot->money.bMoneyStatus * pInventorySlot->money.uiMoneyAmount + (UINT32)pItemPtr->money.bMoneyStatus * pItemPtr->money.uiMoneyAmount )/ (pInventorySlot->money.uiMoneyAmount + pItemPtr->money.uiMoneyAmount) );
 				pInventorySlot->money.uiMoneyAmount += pItemPtr->money.uiMoneyAmount;
 
 				DeleteObj( pItemPtr );
@@ -2252,8 +2255,8 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 	usItem1Index = pFirst->o.usItem;
 	usItem2Index = pSecond->o.usItem;
 
-	ubItem1Quality = pFirst->o.status.bStatus[ 0 ];
-	ubItem2Quality = pSecond->o.status.bStatus[ 0 ];
+	ubItem1Quality = pFirst->o.objectStatus;
+	ubItem2Quality = pSecond->o.objectStatus;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -2333,16 +2336,15 @@ INT32 SellItem( OBJECTTYPE& object )
 	}
 	else
 	{
-		//we are selling a gun or something - it could be stacked or single, and each one could have attachments
+		//we are selling a gun or something - it could be stacked or single, and if single it could have attachments
 		for (INT8 bLoop = 0; bLoop < object.ubNumberOfObjects; bLoop++)
 		{
 			iPrice += ( itemPrice * object.status.bStatus[bLoop] / 100 );
+		}
 
-			for (INT8 numAttachments = 0; numAttachments < MAX_ATTACHMENTS; numAttachments++)
-			{
-				iPrice += (INT32) ( Item[object.usAttachItem[numAttachments]].usPrice * (float)object.bAttachStatus[numAttachments] / 100);
-			}
-		}					
+		for (OBJECTTYPE::attachmentList::iterator iter = object.attachments.begin(); iter != object.attachments.end(); ++iter) {
+			iPrice += SellItem(*iter);
+		}
 	}
 
 	if( iPriceModifier > 1) {

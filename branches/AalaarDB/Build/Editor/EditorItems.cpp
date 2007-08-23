@@ -81,7 +81,7 @@ void BuildItemPoolList()
 {
 	PERFORMANCE_MARKER
 	ITEM_POOL *temp;
-	IPListNode *tail = NULL;
+	IPListNode *tail;
 	UINT16 i;
 	KillItemPoolList();
 	for( i = 0; i < WORLD_MAX; i++ )

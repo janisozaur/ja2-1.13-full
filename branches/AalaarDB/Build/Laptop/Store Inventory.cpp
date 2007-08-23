@@ -883,9 +883,6 @@ STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID )
 		return( LaptopSaveInfo.BobbyRayUsedInventory );
 	else
 		Assert( 0 );
-//	else
-//		return( gArmsDealersInventory[ ubDealerID - TONYS_ITEMS ] );
-
 
 	return( NULL );
 }

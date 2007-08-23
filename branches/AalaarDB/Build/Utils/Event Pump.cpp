@@ -889,6 +889,7 @@ BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute )
 {
 	PERFORMANCE_MARKER
 	EVENT					*pEvent;
+	BOOLEAN				fCompleteLoop = FALSE;
 
 	// Dequeue all events on the demand queue (only)
 	

@@ -110,6 +110,7 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;
 	UINT16	usMapPos;
+	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 	static BOOLEAN	fCanCheckForSpeechAdvance = FALSE;

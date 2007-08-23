@@ -947,8 +947,8 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 							if ( Item[pObj->usItem].damageable && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE ) // Madd: drop crappier items from enemies on higher difficulty levels - note the quick fix for throwing knives
 							{
-								pObj->status.bStatus[0] -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-								pObj->status.bStatus[0] = min(max(pObj->status.bStatus[0],1),100); // never below 1% or above 100%
+								pObj->objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+								pObj->objectStatus = min(max(pObj->objectStatus,1),100); // never below 1% or above 100%
 							}
 						}
 

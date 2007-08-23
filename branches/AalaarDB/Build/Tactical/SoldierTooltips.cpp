@@ -83,10 +83,10 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		}
 
 		if ( gGameExternalOptions.fEnableDynamicSoldierTooltips )
-		{			
-			for ( INT32 cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-			{
-				if ( Item[MercPtrs[gusSelectedSoldier]->inv[HANDPOS].usAttachItem[cnt]].visionrangebonus > 0 )
+		{
+			OBJECTTYPE* pObject = &(MercPtrs[gusSelectedSoldier]->inv[HANDPOS]);
+			for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+				if ( Item[iter->usItem].visionrangebonus > 0 )
 				{
 					fMercIsUsingScope = TRUE;
 					break;
@@ -395,34 +395,30 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 	if ( gGameExternalOptions.ubSoldierTooltipDetailLevel >= DL_Basic )
 	{
 		// display weapon attachments
-		for ( INT32 cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-		{
-			if ( pSoldier->inv[ubSlot].usAttachItem[ cnt ] != NOTHING )
-			{	
-				if ( ubTooltipDetailLevel == DL_Basic )
+		for (OBJECTTYPE::attachmentList::iterator iter = pSoldier->inv[ubSlot].attachments.begin(); iter != pSoldier->inv[ubSlot].attachments.end(); ++iter) {
+			if ( ubTooltipDetailLevel == DL_Basic )
+			{
+				// display only externally-visible weapon attachments
+				if ( !Item[iter->usItem].hiddenattachment )
 				{
-					// display only externally-visible weapon attachments
-					if ( !Item[pSoldier->inv[ubSlot].usAttachItem[ cnt ]].hiddenattachment )
-						{
-							fDisplayAttachment = TRUE;
-					}
+						fDisplayAttachment = TRUE;
 				}
+			}
+			else
+			{
+				// display all weapon attachments
+				fDisplayAttachment = TRUE;
+			}
+			if ( fDisplayAttachment )
+			{
+				iNumAttachments++;
+				if ( iNumAttachments == 1 )
+					wcscat( pStrInfo, L"\n[" );
 				else
-				{
-					// display all weapon attachments
-					fDisplayAttachment = TRUE;
-				}
-				if ( fDisplayAttachment )
-				{
-					iNumAttachments++;
-					if ( iNumAttachments == 1 )
-						wcscat( pStrInfo, L"\n[" );
-					else
-						wcscat( pStrInfo, L", " );
-					wcscat( pStrInfo, ItemNames[ pSoldier->inv[ubSlot].usAttachItem[ cnt ] ] );
-					fDisplayAttachment = FALSE; // clear flag for next loop iteration
-				}
-			} // pSoldier->inv[HANDPOS].usAttachItem[ cnt ] != NOTHING
+					wcscat( pStrInfo, L", " );
+				wcscat( pStrInfo, ItemNames[ iter->usItem ] );
+				fDisplayAttachment = FALSE; // clear flag for next loop iteration
+			}
 		} // for
 		if ( iNumAttachments > 0 )
 			wcscat( pStrInfo, pMessageStrings[ MSG_END_ATTACHMENT_LIST ] ); // append ' attached]' to end of string
@@ -437,6 +433,9 @@ void DrawMouseTooltip()
 	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
+	UINT16 usFillColor =	Get16BPPColor(FROMRGB(250, 240, 188));
+	UINT16 usRectColor1 =	Get16BPPColor( FROMRGB( 65, 57, 15 ) );
+	UINT16 usRectColor2 =	Get16BPPColor( FROMRGB( 227, 198, 88 ) );
 	static INT32 iX, iY, iW, iH;
 	
 	extern INT16 GetWidthOfString(const STR16);

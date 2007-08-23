@@ -1911,7 +1911,7 @@ BOOLEAN DisplayMercsVideoFace()
 {
 	PERFORMANCE_MARKER
 	HVOBJECT	hTerminalHandle;
-	//STR				sFaceLoc = "FACES\\";
+	STR				sFaceLoc = "FACES\\";
 
 	// Get and Blt Terminal Frame
 	GetVideoObject(&hTerminalHandle, guiVideoConfTerminal);

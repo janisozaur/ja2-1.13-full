@@ -493,6 +493,8 @@ void GenerateMapEdgepoints()
 	INT32 i=-1;
 	INT16 sGridNo=-1;
 	INT16 sVGridNo[400];
+	UINT8 gubSaveNPCAPBudget=0;
+	UINT8 gubSaveNPCDistLimit=0;
 
 	//Get rid of the current edgepoint lists.
 	TrashMapEdgepoints();

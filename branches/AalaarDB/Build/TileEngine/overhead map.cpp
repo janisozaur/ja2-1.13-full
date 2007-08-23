@@ -497,6 +497,7 @@ void HandleOverheadMap( )
 			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 1 ) )
 			{
 				INT8							bZLevel = 0;
+				INT16							sActionGridNo = usMapPos;
 
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{

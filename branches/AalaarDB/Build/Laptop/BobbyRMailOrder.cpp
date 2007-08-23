@@ -1408,6 +1408,7 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 		{
 			UINT8 i;
 			UINT16 usPosY, usPosX;
+			UINT16 usFontHeight = GetFontHeight( BOBBYR_DROPDOWN_FONT );
 		HVOBJECT	hImageHandle;
 		HVOBJECT	hArrowHandle;
 

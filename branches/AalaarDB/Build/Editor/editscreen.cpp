@@ -2831,9 +2831,9 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 	BOOLEAN fRemovedLight;
-	INT32 iMapIndex = 0;
-	UINT32 uiLastLightType = 0;
-	UINT8	*pLastLightName = NULL;
+	INT32 iMapIndex;
+	UINT32 uiLastLightType;
+	UINT8	*pLastLightName;
 
 	fRemovedLight = FALSE;
 

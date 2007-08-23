@@ -1134,7 +1134,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 		}
 		else
 		{
-			gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].fPreviouslyEligible = TRUE;
+			gArmsDealerStatus[ bArmsDealer ].fPreviouslyEligible[ usItemIndex ] = TRUE;
 		}
 	}
 
@@ -1251,8 +1251,8 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 )->sItemIndex;
 	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 )->sItemIndex;
 
-	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject.status.bStatus[ 0 ];
-	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject.status.bStatus[ 0 ];
+	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject.objectStatus;
+	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject.objectStatus;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -1261,21 +1261,22 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 
 int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
 {
+	/*
 	PERFORMANCE_MARKER
-	INVENTORY_IN_SLOT* pInvSlot1;
-	INVENTORY_IN_SLOT* pInvSlot2;
+	OBJECTTYPE* pRepairItem1;
+	OBJECTTYPE* pRepairItem2;
 	UINT32	uiRepairTime1;
 	UINT32	uiRepairTime2;
 
 
-	pInvSlot1 = ( INVENTORY_IN_SLOT * ) pArg1;
-	pInvSlot2 = ( INVENTORY_IN_SLOT * ) pArg2;
+	pRepairItem1 = ( OBJECTTYPE * ) pArg1;
+	pRepairItem2 = ( OBJECTTYPE * ) pArg2;
 
 	Assert( pInvSlot1->sSpecialItemElement != -1);
 	Assert( pInvSlot2->sSpecialItemElement != -1);
 
-	uiRepairTime1 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot1->sItemIndex ].SpecialItem[ pInvSlot1->sSpecialItemElement ].uiRepairDoneTime;
-	uiRepairTime2 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot2->sItemIndex ].SpecialItem[ pInvSlot2->sSpecialItemElement ].uiRepairDoneTime;
+	uiRepairTime1 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pRepairItem1->sItemIndex ].uiRepairDoneTime;
+	uiRepairTime2 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pRepairItem2->sItemIndex ].uiRepairDoneTime;
 
 
 	// lower reapir time first
@@ -1292,6 +1293,7 @@ int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
   {
     return( 0 );
 	}
+  */
 }
 
 

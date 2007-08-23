@@ -388,6 +388,7 @@ void RenderHistoryBackGround( void )
 	PERFORMANCE_MARKER
 	// render generic background for history system
 	HVOBJECT hHandle;
+	INT32 iCounter=0;
 	
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE); 
@@ -522,6 +523,9 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 {
 	PERFORMANCE_MARKER
 	// run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
+	HistoryUnitPtr pTempHistory=pCurrentHistory;
+	BOOLEAN fOkToIncrementPage=FALSE;
+	INT32 iCounter=0;
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
 	UINT32	uiSizeOfRecordsOnEachPage = 0;
@@ -714,6 +718,7 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 	// this procedure will open and write out data from the History list
  
 	HWFILE hFileHandle;
+	INT32 iBytesWritten=0;
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
 	
 	
@@ -842,9 +847,11 @@ void DrawHistoryRecordsText( void )
 	PERFORMANCE_MARKER
 	// draws the text of the records
 	HistoryUnitPtr pCurHistory=pHistoryListHead;
+	HistoryUnitPtr pTempHistory=pHistoryListHead;
 	CHAR16 sString[512];
 	INT32 iCounter=0;
 	INT16 usX, usY;
+	INT32 iBalance=0;
 	INT16 sX =0, sY =0;
 
 	// setup the font stuff
@@ -924,6 +931,8 @@ void DrawAPageofHistoryRecords( void )
 {
 	PERFORMANCE_MARKER
 	// this procedure will draw a series of history records to the screen
+	INT32 iCurPage=1;
+	INT32 iCount=0;
 	pCurrentHistory=pHistoryListHead;
 
 	// (re-)render background
@@ -1364,6 +1373,7 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 	INT32 iCount =0;
 	HWFILE hFileHandle;
 	HistoryUnitPtr pList;
+	INT32 iBytesRead=0;
 	UINT32 uiByteCount=0;
  
 	// check if bad page
@@ -1503,6 +1513,7 @@ void SetLastPageInHistoryRecords( void )
 	PERFORMANCE_MARKER
 	// grabs the size of the file and interprets number of pages it will take up
 	HWFILE hFileHandle;
+	INT32 iBytesRead=0;
 
 	// no file, return
 	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
@@ -1542,6 +1553,7 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 
 	
 	HWFILE hFileHandle;
+	INT32 iBytesRead=0;
 	INT32 iFileSize = 0; 
 
 	// no file, return
@@ -1581,6 +1593,7 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 	PERFORMANCE_MARKER
 		// will write the current finance to disk
 	HWFILE hFileHandle;
+	INT32 iBytesWritten=0;
 	HistoryUnitPtr pHistoryList=pHistoryListHead;
 	
 	
@@ -1627,6 +1640,7 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 {
 	PERFORMANCE_MARKER
 	// run through history list
+	INT32 iOldHistoryPage = iCurrentHistoryPage;
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 
@@ -1675,6 +1689,7 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 {
 	PERFORMANCE_MARKER
 	// run through history list
+	INT32 iOldHistoryPage = iCurrentHistoryPage;
 	HistoryUnitPtr pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 	UINT32 uiTime = 0;

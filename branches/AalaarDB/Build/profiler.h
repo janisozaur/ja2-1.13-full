@@ -14,6 +14,7 @@
 #define PERFORMANCE_MARKER
 #endif
 #define END_NAMED_	PERFORMANCE_MARKER(x) x.endMark();
+#pragma warning (disable : 4512)//disables assignment operator could not be generated
 
 struct PerfDatum
 {
@@ -28,6 +29,7 @@ struct PerfDatum
 	__int64			 _cycles;		//Number of CPU cycles used
 	__int64			 _calls;		 //Number of calls to this function
 };
+#pragma warning (default : 4512)//disables assignment operator could not be generated
 
 class PerfSort
 {

@@ -347,6 +347,8 @@ void HandleIMPMainPage( void )
 void CreateIMPMainPageButtons( void )
 {
 	PERFORMANCE_MARKER
+	UINT16 usPosX=0;
+
 	CHAR16 sString[ 128 ];
 
 	
@@ -1103,11 +1105,6 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 		{
 			iStart = GetFirstMaleSlot();
 			iEnd = GetLastMaleSlot();
-		}
-		else
-		{
-			AssertMsg( 0, "Merc neither male nor female");
-			return -1;
 		}
 
 		// Find a free imp slot

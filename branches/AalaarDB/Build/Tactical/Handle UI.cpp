@@ -1342,6 +1342,7 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 	LEVELNODE					*pIntNode;
 	EXITGRID					ExitGrid;
 	INT16							sIntTileGridNo;
+	BOOLEAN						fContinue = TRUE;
 	ITEM_POOL					*pItemPool;
 
 	static INT16			sGridNoForItemsOver;
@@ -1415,6 +1416,12 @@ UINT32 UIHandleMOnTerrain( UI_EVENT *pUIEvent )
 
 		if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
 		{
+
+			if ( pSoldier->sGridNo == NOWHERE )
+			{
+				int i = 0;
+			}
+
 			if ( GetExitGrid( usMapPos, &ExitGrid ) && pSoldier->pathing.bLevel == 0 )
 			{
 				gfUIShowExitExitGrid = TRUE;
@@ -2124,6 +2131,7 @@ UINT32 UIHandleMAdjustStanceMode( UI_EVENT *pUIEvent )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
+	BOOLEAN						fCheck = FALSE;
 	INT32							iPosDiff;
 	static UINT16			gusAnchorMouseY;
 	static UINT16			usOldMouseY;
@@ -2709,6 +2717,7 @@ UINT32 UIHandlePADJAdjustStance( UI_EVENT *pUIEvent )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT8							ubNewStance;
+	BOOLEAN						fChangeStance = FALSE;
 
 	guiShowUPDownArrows					= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
@@ -2888,6 +2897,7 @@ BOOLEAN SelectedMercCanAffordAttack( )
 	SOLDIERTYPE				*pTargetSoldier;
 	UINT16						usMapPos;
 	INT16							sTargetGridNo;
+	BOOLEAN						fEnoughPoints = TRUE;
 	INT16							sAPCost;
 	UINT8							ubItemCursor;
 	UINT16						usInHand;
@@ -2969,6 +2979,7 @@ BOOLEAN SelectedMercCanAffordMove(	)
 	PERFORMANCE_MARKER
 	SOLDIERTYPE				*pSoldier;
 	UINT16						sAPCost = 0;
+	INT16							sBPCost = 0;
 	UINT16						usMapPos;
 	LEVELNODE					*pIntTile;
 
@@ -3612,9 +3623,11 @@ BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, UIN
 {
 	PERFORMANCE_MARKER
 	BOOLEAN						fSetCursor = FALSE;
+	BOOLEAN						fCalculated = FALSE;
 	static						UINT16 usTargetID = NOBODY;
 	static						BOOLEAN	fTargetFound = FALSE;
 	BOOLEAN						fTargetFoundAndLookingForOne = FALSE;
+	BOOLEAN						fIntTileFoundAndLookingForOne = FALSE;
 
 	// Determine if we can afford!
 	if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
@@ -3795,6 +3808,7 @@ INT8 DrawUIMovementPath( SOLDIERTYPE *pSoldier, UINT16 usMapPos, UINT32 uiFlags 
 	INT16							sAPCost, sBPCost;
 	INT16							sActionGridNo;
 	STRUCTURE					*pStructure;
+	BOOLEAN						fOnInterTile = FALSE;
 	UINT8							ubDirection;
 	//	ITEM_POOL					*pItemPool;
 	INT16							sAdjustedGridNo = -1;
@@ -4765,6 +4779,9 @@ UINT32 UIHandleLCLook( UI_EVENT *pUIEvent )
 	INT16							sXPos, sYPos;
 	SOLDIERTYPE				*pSoldier;
 	INT32						cnt;
+	SOLDIERTYPE			*pFirstSoldier = NULL;
+
+
 	if ( !GetMouseXY( &sXPos, &sYPos ) )
 	{
 		return( GAME_SCREEN );
@@ -5139,12 +5156,15 @@ void EndMultiSoldierSelection( BOOLEAN fAcknowledge )
 void StopRubberBandedMercFromMoving( )
 {
 	PERFORMANCE_MARKER
+	SOLDIERTYPE *		pSoldier;
+	INT32						cnt;
+	SOLDIERTYPE			*pFirstSoldier = NULL;
+
+
 	if ( !gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
 		return;
 	}
-	SOLDIERTYPE *		pSoldier;
-	INT32						cnt;
 
 	// OK, loop through all guys who are 'multi-selected' and
 	// check if our currently selected guy is amoung the
@@ -6429,7 +6449,7 @@ BOOLEAN ValidQuickExchangePosition( )
 BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath )
 {
 	PERFORMANCE_MARKER
-	INT16 sFourGrids[4], sSpot, sIntSpot;
+	INT16 sFourGrids[4], sDistance=0, sSpot, sIntSpot;
 	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	INT32 cnt;
 	UINT8	ubGuyThere;

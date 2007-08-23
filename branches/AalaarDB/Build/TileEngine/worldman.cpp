@@ -2672,6 +2672,7 @@ BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE	*pRoof		= NULL;
+	LEVELNODE	*pOldRoof	= NULL;
 
 	pRoof = gpWorldLevelData[ sGridNo ].pRoofHead;
 

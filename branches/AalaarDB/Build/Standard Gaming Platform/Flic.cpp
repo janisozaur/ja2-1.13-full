@@ -766,7 +766,7 @@ static ErrCode file_read_big_block(FILE *file, char *block, Ulong size)
 // Modification history :
 //
 //**************************************************************************
-/*
+
 static ErrCode fill_in_frame2(Flic *flic)
 {
 	PERFORMANCE_MARKER
@@ -784,7 +784,7 @@ static ErrCode fill_in_frame2(Flic *flic)
 
 	return 0;
 }
-*/
+
 //**************************************************************************
 //
 // flic_next_frame
@@ -1042,13 +1042,13 @@ void FlicClose(Flic *flic)
 #endif
 
 static volatile int timer_flag=1;
-/*
+
 static void flic_play_loop_timer()
 {
 	PERFORMANCE_MARKER
 	timer_flag = 1;
 }
-*/
+
 #ifdef DEBUG
 #pragma on	(check_stack)
 #endif
@@ -1181,15 +1181,15 @@ int FlicAdvance(Flic *flic, BOOL fDecode)
 	//	if (flic->check_frame && !(*flic->check_frame)(flic))
 	//		return 0;
 }
-/*
+
 static void center_flic(Flic *flic)
-	//Set flic.xoff and flic.yoff so flic plays centered rather
-	//* than in upper left corner of display.
+	/* Set flic.xoff and flic.yoff so flic plays centered rather
+	* than in upper left corner of display. */
 {
 	flic->xoff = (flic->screen.width - (signed)flic->head.width)/2;
 	flic->yoff = (flic->screen.height - (signed)flic->head.height)/2;
 }
-*/
+
 void set_flic_origin(Flic *flic, int x, int y)
 {
 	PERFORMANCE_MARKER
@@ -1460,6 +1460,7 @@ CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 	PERFORMANCE_MARKER
 	FrameHead	head;
 	LONG			lSize;
+	BOOL			fFound = FALSE;
 	ErrCode		err=0;
 	INT		i;
 
@@ -1484,6 +1485,7 @@ CHAR *FlicSeekChunk(Flic *flic, INT iFrame, ChunkTypes eType, INT *piChunkSize)
 				}
 				if (!(err = file_read_big_block(flic->file, pcxbuf, lSize)))
 				{
+					FrameHead	*frame = &head;
 					Uchar			*data = (unsigned char *)pcxbuf;
 					int			i;
 					ChunkHead	*chunk;

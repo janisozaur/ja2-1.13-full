@@ -1215,6 +1215,7 @@ void HandleTalkingMenuBackspace( void )
 {
 	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
+	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
 	{
@@ -3632,7 +3633,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_START_DOCTORING:
 				{
 					
-					// reset fact he is expecting money fromt the player
+					// reset fact he is expecting money fromt he player
 					SetFactFalse( FACT_VINCE_EXPECTING_MONEY );
 
 					// check fact

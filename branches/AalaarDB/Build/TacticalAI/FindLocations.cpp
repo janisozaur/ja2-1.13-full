@@ -560,7 +560,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// all 32-bit integers for max. speed
 	UINT32 uiLoop;
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
-	INT32	iCurrentScale = -1, iCoverScale = -1, iBestCoverScale = -1;
+	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
 	INT16	sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
@@ -1793,7 +1793,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
 							pItem = &(Item[pObj->usItem]);
-							if ( pItem->usItemClass == IC_GUN && pObj->status.bStatus[0] >= MINIMUM_REQUIRED_STATUS )
+							if ( pItem->usItemClass == IC_GUN && pObj->objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								// maybe this gun has ammo (adjust for whether it is better than ours!)
 								if ( pObj->gun.bGunAmmoStatus < 0 || pObj->gun.ubGunShotsLeft == 0 || (Item[pObj->usItem].fingerprintid && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) )
@@ -1826,7 +1826,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
 							pItem = &(Item[pObj->usItem]);
-							if (pItem->usItemClass & IC_WEAPON && pObj->status.bStatus[0] >= MINIMUM_REQUIRED_STATUS )
+							if (pItem->usItemClass & IC_WEAPON && pObj->objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								if ( (pItem->usItemClass & IC_GUN) && (pObj->gun.bGunAmmoStatus < 0 || pObj->gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
 								{
@@ -1866,7 +1866,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
 							pItem = &(Item[pObj->usItem]);
-							if ( pItem->usItemClass & IC_WEAPON && pObj->status.bStatus[0] >= MINIMUM_REQUIRED_STATUS )
+							if ( pItem->usItemClass & IC_WEAPON && pObj->objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								if ( (pItem->usItemClass & IC_GUN) && (pObj->gun.bGunAmmoStatus < 0 || pObj->gun.ubGunShotsLeft == 0 || (( Item[pObj->usItem].fingerprintid ) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
 								{
@@ -1889,7 +1889,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 									iTempValue = 200 + Weapon[pObj->usItem].ubDeadliness;
 								}
 							}
-							else if	(pItem->usItemClass == IC_ARMOUR && pObj->status.bStatus[0] >= MINIMUM_REQUIRED_STATUS )
+							else if	(pItem->usItemClass == IC_ARMOUR && pObj->objectStatus >= MINIMUM_REQUIRED_STATUS )
 							{
 								switch( Armour[pItem->ubClassIndex].ubArmourClass )
 								{

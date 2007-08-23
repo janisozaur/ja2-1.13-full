@@ -366,7 +366,11 @@ void DrawItemUIBarEx( OBJECTTYPE *pObject, UINT8 ubStatus, INT16 sXPos, INT16 sY
 	
 	if ( ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1 )
 	{
-		sValue = pObject->bAttachStatus[ ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 ];
+		sValue = 0;
+		OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex( ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 );
+		if (pAttachment) {
+			sValue = pAttachment->objectStatus;
+		}
 	}
 	else
 	{
@@ -442,6 +446,7 @@ void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLE
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fDoFace = FALSE;
+	INT32		iFaceIndex = -1;
 	UINT8 ubVehicleType = 0;
 
 

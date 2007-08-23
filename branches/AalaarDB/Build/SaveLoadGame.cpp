@@ -505,59 +505,119 @@ void TruncateStrategicGroupSizes();
 
 //if all that sounds compilcated, it is
 
-
-BOOLEAN SPECIAL_ITEM_INFO::Save(HWFILE hFile)
+BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
-	UINT32 uiNumBytesWritten;
-	//this is just POD so far
-	if ( !FileWrite( hFile, this, sizeof( SPECIAL_ITEM_INFO ), &uiNumBytesWritten ) )
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
+	UINT32	uiNumBytesRead;
+	UINT8	ubArmsDealer;
+	UINT16	usItemIndex;
 
-BOOLEAN SPECIAL_ITEM_INFO::Load(HWFILE hFile)
-{
-	PERFORMANCE_MARKER
-	UINT32 uiNumBytesRead;
-	//if we are at the most current version, then fine
-	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
-	{
-		if ( !FileRead( hFile, this, sizeof(SPECIAL_ITEM_INFO), &uiNumBytesRead ) )
+	//Free all the dealers special inventory arrays
+	ShutDownArmsDealers();
+
+	if (guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE) {
+		int dealers;
+		if (!FileRead( hFile, &dealers, sizeof( int ), &uiNumBytesRead ))
 		{
-			return FALSE;
+			return( FALSE );
 		}
-	}
-	else
-	{
-		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
+
+		if (!FileRead( hFile, gArmsDealerStatus, sizeof( gArmsDealerStatus ), &uiNumBytesRead ))
 		{
-			OLD_SPECIAL_ITEM_INFO_101 oldItem;
-			if ( !FileRead( hFile, &oldItem, sizeof( OLD_SPECIAL_ITEM_INFO_101 ), &uiNumBytesRead ) )
+			return( FALSE );
+		}
+
+		//loop through all the dealers inventories
+		for( ubArmsDealer=0; ubArmsDealer<dealers; ubArmsDealer++ )
+		{
+			int size;
+			if (!FileRead( hFile, &size, sizeof( int ), &uiNumBytesRead ))
 			{
-				return FALSE;
+				return( FALSE );
 			}
-			*this = oldItem;
+			gArmsDealersInventory[ubArmsDealer].resize(size);
+
+			//loop through this dealer's individual items
+			for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+				iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+				if (! iter->Load(hFile) ) {
+					return FALSE;
+				}
+			}
 		}
 	}
-	return TRUE;
+	else {
+		//the format has changed and needs to be updated
+		OLD_ARMS_DEALER_STATUS_101 gOldArmsDealerStatus[NUM_ARMS_DEALERS];
+		OLD_DEALER_ITEM_HEADER_101 gOldArmsDealersInventory[NUM_ARMS_DEALERS][MAXITEMS];
+
+		// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
+		// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
+		bool fIncludesElgin = guiCurrentSaveGameVersion >= 54;
+		bool fIncludesManny = guiCurrentSaveGameVersion >= 55;
+		UINT32	uiDealersSaved;
+		if (fIncludesElgin && fIncludesManny ){
+			uiDealersSaved = NUM_ARMS_DEALERS;
+		}
+		else if ( !fIncludesElgin ) {
+			// read 2 fewer element without Elgin or Manny in there...
+			uiDealersSaved = NUM_ARMS_DEALERS - 2;
+		}
+		else {
+			// read one fewer element without Elgin in there...
+			uiDealersSaved = NUM_ARMS_DEALERS - 1;
+		}
+
+		if (!FileRead( hFile, gOldArmsDealerStatus, uiDealersSaved * sizeof( OLD_ARMS_DEALER_STATUS_101 ), &uiNumBytesRead ))
+		{
+			return( FALSE );
+		}
+		if (!FileRead( hFile, gOldArmsDealersInventory, uiDealersSaved * sizeof( OLD_DEALER_ITEM_HEADER_101 ) * MAXITEMS, &uiNumBytesRead ))
+		{
+			return( FALSE );
+		}
+
+		if ( !fIncludesElgin ) {
+			// initialize Elgin now...
+			InitializeOneArmsDealer( ARMS_DEALER_ELGIN );
+		}
+		if ( !fIncludesManny ) {
+			// initialize Manny now...
+			InitializeOneArmsDealer( ARMS_DEALER_MANNY );
+		}
+
+		OLD_DEALER_SPECIAL_ITEM_101 oldSpecial;
+		//loop through all the dealers inventories
+		for( ubArmsDealer=0; ubArmsDealer<uiDealersSaved; ubArmsDealer++ )
+		{
+			//loop through this dealer's individual items
+			for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+			{
+				if ( Item[usItemIndex].usItemClass	== 0 )
+					break;
+				//if there are any elements allocated for this item, load them
+				for ( int x = 0; x < gOldArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
+					if (!FileRead( hFile, &oldSpecial, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ))
+					{
+						return( FALSE );
+					}
+					gArmsDealersInventory[ubArmsDealer].resize(gArmsDealersInventory[ubArmsDealer].size() + 1);
+					DEALER_SPECIAL_ITEM* pSpecial = &(gArmsDealersInventory[ubArmsDealer].back());
+					pSpecial->ConvertFrom101(gOldArmsDealersInventory[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
+				}
+			}
+		}
+	}
+
+	return( TRUE );
 }
+
 
 BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
-		//I'm being lazy here, I know there are 6 bytes of POD here
-	if ( !FileWrite( hFile, this, 6, &uiNumBytesWritten ) )
-	{
-		return FALSE;
-	}
-	if ( !this->Info.Save(hFile) )
-	{
-		return FALSE;
-	}
+	TODO
 	return TRUE;
 }
 
@@ -568,27 +628,12 @@ BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		//I'm being lazy here, I know there are 6 bytes of POD here
-		if ( !FileRead( hFile, this, 6, &uiNumBytesRead ) )
-		{
-			return FALSE;
-		}
-		if ( !this->Info.Load(hFile) )
-		{
-			return FALSE;
-		}
+		TODO
 	}
 	else
 	{
-		if ( guiCurrentSaveGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE )
-		{
-			OLD_DEALER_SPECIAL_ITEM_101 oldItem;
-			if ( !FileRead( hFile, &oldItem, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ) )
-			{
-				return FALSE;
-			}
-			*this = oldItem;
-		}
+		//this will never be loaded from sometime before the first change
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE);
 	}
 	return TRUE;
 }
@@ -1496,6 +1541,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ MAX_PATH ];
+	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 	//UINT8		saveDir[100];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
@@ -2447,6 +2493,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	INT16 sLoadSectorY;
 	INT8 bLoadSectorZ;
 	CHAR8		zSaveGameName[ MAX_PATH ];
+	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
+
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
 
@@ -3106,7 +3154,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadArmsDealerInventoryFromSavedGameFile( hFile, ( BOOLEAN )( guiCurrentSaveGameVersion >= 54 ), ( BOOLEAN )( guiCurrentSaveGameVersion >= 55 ) ) )
+	if( !LoadArmsDealerInventoryFromSavedGameFile( hFile ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("LoadArmsDealerInventoryFromSavedGameFile failed" ) );
 		FileClose( hFile );
@@ -3977,6 +4025,8 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
+	UINT32	uiNumBytesWritten=0;
+
 	//Loop through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -3995,6 +4045,8 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
+	UINT32	uiNumBytesRead=0;
+
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4116,6 +4168,7 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	PERFORMANCE_MARKER
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
+	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
@@ -4580,6 +4633,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	UINT32	uiNumOfEmails=0;
 	UINT32		uiSizeOfEmails=0;
 	EmailPtr	pEmail = pEmailList;
+	EmailPtr pTempEmail = NULL;
 	UINT32	cnt;
 	UINT32	uiStringLength=0;
 	UINT32	uiNumBytesWritten=0;
@@ -6113,6 +6167,7 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 		INT16					sSoldierCnt;
 		SOLDIERTYPE		*pSoldier;
 		INT16					bLastTeamID;
+		INT8					bCount=0;
 		BOOLEAN				fFoundAMerc=FALSE;
 
 		// Set locator to first merc

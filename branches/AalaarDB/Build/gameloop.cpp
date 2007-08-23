@@ -190,7 +190,7 @@ void GameLoop(void)
 	InputAtom	InputEvent;
 	POINT		MousePos;
 	UINT32		uiOldScreen=guiCurrentScreen;
-	//clock_t		startTime = clock(); // decrease CPU load patch from defrog
+	clock_t		startTime = clock(); // decrease CPU load patch from defrog
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
 	GetCursorPos(&MousePos);

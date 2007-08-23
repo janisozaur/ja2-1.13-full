@@ -961,25 +961,24 @@ INT32 EffectiveArmour( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	INT32		iValue;
-	INT8		bPlate;
 
 	if (pObj == NULL || Item[pObj->usItem].usItemClass != IC_ARMOUR)
 	{
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->status.bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
+	iValue = iValue * pObj->objectStatus * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 
-//	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
-	bPlate = FindFirstArmourAttachment( pObj );
-	if ( bPlate != ITEM_NOT_FOUND )
-	{
-		INT32 iValue2;
+	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		if (Item[iter->usItem].usItemClass == IC_ARMOUR && iter->objectStatus > 0 )
+		{
+			INT32 iValue2;
 
-		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
+			iValue2 = Armour[ Item[ iter->usItem ].ubClassIndex ].ubProtection;
+			iValue2 *= iter->objectStatus * Armour[ Item[ iter->usItem ].ubClassIndex ].ubCoverage / 10000;
 
-		iValue += iValue2;
+			iValue += iValue2;
+		}
 	}
 	return( max(iValue,1) );
 }
@@ -1059,29 +1058,29 @@ INT32 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	INT32		iValue;
-	INT8		bPlate;
 
 	if (pObj == NULL || Item[pObj->usItem].usItemClass != IC_ARMOUR)
 	{
 		return( 0 );
 	}
 	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->status.bStatus[0] * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
+	iValue = iValue * pObj->objectStatus * Armour[ Item[pObj->usItem].ubClassIndex ].ubCoverage / 10000;
 	if ( Item[pObj->usItem].flakjacket )
 	{
 		// increase value for flak jackets!
 		iValue *= 3;
 	}
 
-	bPlate = FindFirstArmourAttachment( pObj );
-	if ( bPlate != ITEM_NOT_FOUND )
-	{
-		INT32 iValue2;
+	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		if (Item[iter->usItem].usItemClass == IC_ARMOUR && iter->objectStatus > 0 )
+		{
+			INT32 iValue2;
 
-		iValue2 = Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] * Armour[ Item[ pObj->usAttachItem[bPlate] ].ubClassIndex ].ubCoverage / 10000;
+			iValue2 = Armour[ Item[ iter->usItem ].ubClassIndex ].ubProtection;
+			iValue2 *= iter->objectStatus * Armour[ Item[ iter->usItem ].ubClassIndex ].ubCoverage / 10000;
 
-		iValue += iValue2;
+			iValue += iValue2;
+		}
 	}
 	return( max(iValue,1) );
 }
@@ -1657,36 +1656,26 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// Relocated from CalcChanceToHitGun
 	if ( Item[ usItemNum ].usItemClass == IC_GUN )
 	{
-		INT8 bAttachPos;
-		OBJECTTYPE * pInHand;
-		pInHand = &(pSoldier->inv[pSoldier->ubAttackingHand]);
-		UINT32 item;
-		//item = FindRangeBonusAttachment(pInHand);
-		//bAttachPos = FindAttachment( pInHand, item );
+		OBJECTTYPE * pInHand = &(pSoldier->inv[pSoldier->ubAttackingHand]);
 
 		// lalien: search for barrel extender not for any item with range bonus. (else barrel extender will fall off even when none is attached)
-		bAttachPos = FindAttachment( pInHand, GUN_BARREL_EXTENDER );
+		OBJECTTYPE* pAttachment = FindAttachment( pInHand, GUN_BARREL_EXTENDER );
 
-		if ( bAttachPos != ITEM_NOT_FOUND )
+		if ( pAttachment )
 		{
-			item = Item[pInHand->usAttachItem[bAttachPos]].uiIndex;
-
 			// reduce status and see if it falls off
-			pInHand->bAttachStatus[ bAttachPos ] -= (INT8) Random( 2 );
+			pAttachment->objectStatus -= (INT8) Random( 2 );
 
-			if ( pInHand->bAttachStatus[ bAttachPos ] - Random( 35 ) - Random( 35 ) < USABLE )
+			if ( pAttachment->objectStatus - Random( 35 ) - Random( 35 ) < USABLE )
 			{
 				// barrel extender falls off!
-				OBJECTTYPE Temp;
+				// drop it to ground
+				AddItemToPool( pSoldier->sGridNo, pAttachment, 1, pSoldier->pathing.bLevel, 0, -1 );
 
 				// since barrel extenders are not removable we cannot call RemoveAttachment here
 				// and must create the item by hand
-				CreateItem( item, pInHand->bAttachStatus[ bAttachPos ], &Temp );
-				pInHand->usAttachItem[ bAttachPos ] = NOTHING;
-				pInHand->bAttachStatus[ bAttachPos ] = 0;
-
-				// drop it to ground
-				AddItemToPool( pSoldier->sGridNo, &Temp, 1, pSoldier->pathing.bLevel, 0, -1 );
+				pInHand->attachments.remove(*pAttachment);
+				pInHand->ubWeight = CalculateObjectWeight( pInHand );
 
 				// big penalty to hit
 				if(uiHitChance < 30)
@@ -1891,7 +1880,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
     {
 		if ( Item[usItemNum].singleshotrocketlauncher  )
 		{
-			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].status.bStatus[ 0 ],&(pSoldier->inv[ HANDPOS ] ) );
+			CreateItem( Item[usItemNum].discardedlauncheritem , pSoldier->inv[ HANDPOS ].objectStatus,&(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->pathing.bLevel );
 		}
@@ -1928,7 +1917,7 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	{
 		if ( Item[usItemNum].singleshotrocketlauncher )
 		{
-			CreateItem( Item[usItemNum].discardedlauncheritem, pSoldier->inv[ HANDPOS ].status.bStatus[ 0 ], &(pSoldier->inv[ HANDPOS ] ) );
+			CreateItem( Item[usItemNum].discardedlauncheritem, pSoldier->inv[ HANDPOS ].objectStatus, &(pSoldier->inv[ HANDPOS ] ) );
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 		}
 
@@ -1985,9 +1974,9 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 
 	uiDepreciateTest = BASIC_DEPRECIATE_CHANCE + 3 * (Item[ usItemNum ].bReliability + ammoReliability);
 
-	if ( !PreRandom( uiDepreciateTest ) && ( pSoldier->inv[ pSoldier->ubAttackingHand ].status.bStatus[0] > 1) )
+	if ( !PreRandom( uiDepreciateTest ) && ( pSoldier->inv[ pSoldier->ubAttackingHand ].objectStatus > 1) )
 	{
-		pSoldier->inv[ pSoldier->ubAttackingHand ].status.bStatus[ 0 ]--;		
+		pSoldier->inv[ pSoldier->ubAttackingHand ].objectStatus--;		
 	}
 
 	// reduce monster smell (gunpowder smell)
@@ -2063,7 +2052,7 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 			iImpact = HTHImpact( pSoldier, pTargetSoldier, (iHitChance - iDiceRoll), TRUE );
 
 			// modify this by the knife's condition (if it's dull, not much good)
-			iImpact = ( iImpact * WEAPON_STATUS_MOD(pSoldier->inv[pSoldier->ubAttackingHand].status.bStatus[0]) ) / 100;
+			iImpact = ( iImpact * WEAPON_STATUS_MOD(pSoldier->inv[pSoldier->ubAttackingHand].objectStatus) ) / 100;
 
 			// modify by hit location
 			AdjustImpactByHitLocation( iImpact, pSoldier->bAimShotLocation, &iImpact, &iImpactForCrits );
@@ -2080,17 +2069,17 @@ BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 				iImpact = 1;
 			}
 
-			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].status.bStatus[ 0 ] > USABLE )
+			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].objectStatus > USABLE )
 			{
 				bMaxDrop = (iImpact / 20);
 
 				// the duller they get, the slower they get any worse...
-				bMaxDrop = __min( bMaxDrop, pSoldier->inv[ pSoldier->ubAttackingHand ].status.bStatus[ 0 ] / 10 );
+				bMaxDrop = __min( bMaxDrop, pSoldier->inv[ pSoldier->ubAttackingHand ].objectStatus / 10 );
 
 				// as long as its still > USABLE, it drops another point 1/2 the time
 				bMaxDrop = __max( bMaxDrop, 2 );
 
-				pSoldier->inv[ pSoldier->ubAttackingHand ].status.bStatus[ 0 ] -= (INT8) Random( bMaxDrop );     // 0 to (maxDrop - 1)
+				pSoldier->inv[ pSoldier->ubAttackingHand ].objectStatus -= (INT8) Random( bMaxDrop );     // 0 to (maxDrop - 1)
 			}
 
 			// Send event for getting hit
@@ -2651,7 +2640,6 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	PERFORMANCE_MARKER
 	UINT32			uiHitChance, uiDiceRoll;
 	INT16				sAPCost = 0;
-	INT8				bAttachPos;
 	OBJECTTYPE	Launchable;
 	OBJECTTYPE * pObj;
 	UINT16			usItemNum;
@@ -2666,27 +2654,24 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		return( FALSE );
 	}
 
-	pObj = &(pSoldier->inv[HANDPOS]); 
-	for (bAttachPos = 0; bAttachPos < MAX_ATTACHMENTS; bAttachPos++)
-	{
-		if (pObj->usAttachItem[ bAttachPos ] != NOTHING)
+	pObj = &(pSoldier->inv[HANDPOS]);
+	OBJECTTYPE::attachmentList::iterator iter;
+	for (iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		if ( Item[ iter->usItem ].usItemClass & IC_EXPLOSV )
 		{
-			if ( Item[ pObj->usAttachItem[ bAttachPos ] ].usItemClass & IC_EXPLOSV )
-			{
-				break;
-			}
+			break;
 		}
 	}
-	if (bAttachPos == MAX_ATTACHMENTS)
+	if (iter == pObj->attachments.end())
 	{
 		// this should not happen!!
 		return( FALSE );
 	}
 
 	if ( Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize > 1 || ( Item[pObj->usItem].grenadelauncher && GetMagSize(pObj) > 1 ))
-		CreateItem( pObj->usAttachItem[ bAttachPos ], 100, &Launchable );
+		CreateItem( iter->usItem, 100, &Launchable );
 	else
-		CreateItem( pObj->usAttachItem[ bAttachPos ], pObj->bAttachStatus[ bAttachPos ], &Launchable );
+		CreateItem( iter->usItem, iter->objectStatus, &Launchable );
 	//if ( pSoldier->usAttackingWeapon == pObj->usItem )
 	//{
 		DeductAmmo( pSoldier, HANDPOS );
@@ -2695,7 +2680,7 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//{
 	//	// Firing an attached grenade launcher... the attachment we found above
 	//	// is the one to remove!
-	//	RemoveAttachment( pObj, bAttachPos, NULL );
+	//	RemoveAttachment( pObj, bAttachPos);
 	//}
 
   // ATE: Check here if the launcher should fail 'cause of bad status.....
@@ -2958,9 +2943,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 
 	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->pathing.bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
-	// CALLAHAN START BUGFIX
-	if ( EXPLOSIVE_GUN( usWeaponIndex ) || AmmoTypes[pSoldier->inv[pSoldier->ubAttackingHand ].gun.ubGunAmmoType].explosionSize > 1)
-	// CALLAHAN END BUGFIX
+	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
 		// Reduce attacker count!
 		//TODO: Madd --- I don't think this code will ever get called for the HE ammo -- the EXPLOSIVE_GUN check filters out regular guns 
@@ -3029,7 +3012,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	UINT32					uiMissVolume = MIDVOLUME;
 	BOOLEAN					fHitSameStructureAsBefore;
 	BULLET *				pBullet;
-	SOLDIERTYPE *		pAttacker = NULL;
+	SOLDIERTYPE *		pAttacker;
 	
 	pBullet = GetBulletPtr( iBullet );
 
@@ -4309,47 +4292,40 @@ INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 u
 		pArmour = &(pTarget->inv[ iSlot ]);
 		if (pArmour->usItem != NOTHING)
 		{
-			// check plates first
-			//if ( iSlot == VESTPOS )
-			//{
-//				bPlatePos = FindAttachment( pArmour, CERAMIC_PLATES );
-				bPlatePos = FindFirstArmourAttachment( pArmour);
-				if (bPlatePos != -1)
+			for (OBJECTTYPE::attachmentList::iterator iter = pArmour->attachments.begin(); iter != pArmour->attachments.end(); ++iter) {
+				if (Item[iter->usItem].usItemClass == IC_ARMOUR && iter->objectStatus > 0 )
 				{
 					// bullet got through jacket; apply ceramic plate armour
-					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType, &plateHit );
-					if ( pArmour->bAttachStatus[bPlatePos] < USABLE )
+					iTotalProtection += ArmourProtection( pTarget, Item[iter->usItem].ubClassIndex, &(iter->objectStatus), iImpact, ubAmmoType, &plateHit );
+					if ( iter->objectStatus < USABLE )
 					{
 						// destroy plates!
-						pArmour->usAttachItem[ bPlatePos ] = NOTHING;
-						pArmour->bAttachStatus[ bPlatePos ] = 0;
+						RemoveAttachment(pArmour, &(*iter));
 						DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
-#ifdef ENGLISH
+//#ifdef ENGLISH
 						if ( pTarget->bTeam == gbPlayerNum )
 						{
 							// report plates destroyed!
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[61], pTarget->name );
 						}
-#endif
+//#endif
 					}
+					break;//original code only used the first ceramic plate
 				}
-			//}
+			}
 
 
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->status.bStatus[0]), iImpact, ubAmmoType, &plateHit );
-				if ( pArmour->status.bStatus[ 0 ] < USABLE )
+				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->objectStatus), iImpact, ubAmmoType, &plateHit );
+				if ( pArmour->objectStatus < USABLE )
 				{
-					OBJECTTYPE newObj;
 					//Madd: put any attachments that someone might have added to the armour in the merc's inventory
-					for (int bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
-					{
-						CreateItem(pArmour->usAttachItem[bLoop], pArmour->bAttachStatus[bLoop], &newObj);
-						if ( !AutoPlaceObject( pTarget, &newObj, FALSE ) )
+					for (OBJECTTYPE::attachmentList::iterator iter = pArmour->attachments.begin(); iter != pArmour->attachments.end(); ++iter) {
+						if ( !AutoPlaceObject( pTarget, &(*iter), FALSE ) )
 						{   // put it on the ground
-							AddItemToPool( pTarget->sGridNo, &newObj, 1, pTarget->pathing.bLevel, 0 , -1 );
+							AddItemToPool( pTarget->sGridNo, &(*iter), 1, pTarget->pathing.bLevel, 0 , -1 );
 						}
 					}
 
@@ -5261,12 +5237,12 @@ BOOLEAN IsGunWeaponModeCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , UINT8 b
 		return ((IsGunAutofireCapable(pSoldier, ubHandPos) || Weapon[ pSoldier->inv[ ubHandPos ].usItem ].NoSemiAuto )&& !Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher );
 
 		case WM_ATTACHED_GL:
-//		return (FindAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != ITEM_NOT_FOUND && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != ITEM_NOT_FOUND );
+//		return (FindAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), UNDER_GLAUNCHER ) != 0 );
 		
-		return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher &&  IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]) )) != ITEM_NOT_FOUND );
+		return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher &&  IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]) )) != 0 );
 	
 		case WM_ATTACHED_GL_BURST:
-			return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher && IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[ubHandPos])].ubShotsPerBurst > 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]))) != ITEM_NOT_FOUND );
+			return (!Item[pSoldier->inv[ubHandPos].usItem].grenadelauncher && IsGrenadeLauncherAttached( &(pSoldier->inv[ubHandPos]) ) && Weapon[GetAttachedGrenadeLauncher(&pSoldier->inv[ubHandPos])].ubShotsPerBurst > 0 && FindLaunchableAttachment( &(pSoldier->inv[ubHandPos]), GetAttachedGrenadeLauncher( &(pSoldier->inv[ubHandPos]))) != 0 );
 
 		case WM_ATTACHED_GL_AUTO:
 			return FALSE;
@@ -5579,7 +5555,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// if iChance exists, but it's a mechanical item being used
 	if ((iChance > 0) && (Item[ usHandItem ].usItemClass == IC_LAUNCHER ))
 		// reduce iChance to hit DIRECTLY by the item's working condition
-		iChance = (iChance * WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].status.bStatus[0])) / 100;
+		iChance = (iChance * WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].objectStatus)) / 100;
 
 	// MAKE SURE CHANCE TO HIT IS WITHIN DEFINED LIMITS
 	if (iChance < MINCHANCETOHIT)
@@ -5705,7 +5681,7 @@ BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj )
 	PERFORMANCE_MARKER
   if ( pSoldier->bTeam == gbPlayerNum || pSoldier->bVisible == 1 )
   {
-    if ( (INT8)(PreRandom( 40 ) + PreRandom( 40 ) ) > pObj->status.bStatus[0] )
+    if ( (INT8)(PreRandom( 40 ) + PreRandom( 40 ) ) > pObj->objectStatus )
     {
       // Do second dice roll
       if ( PreRandom( 2 ) == 1 )

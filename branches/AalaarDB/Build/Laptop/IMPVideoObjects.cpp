@@ -96,6 +96,7 @@ void RenderProfileBackGround( void )
 	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
+	INT32 iCurrentHeight = 0;
 	INT32 iCounter = 0;
 
 	// this procedure will render the generic backgound to the screen

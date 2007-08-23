@@ -1312,6 +1312,7 @@ void DisplayFastHelp( MOUSE_REGION *region )
 {
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
+	INT32 iNumberOfLines = 1;
 
 	if ( region->uiFlags & MSYS_FASTHELP )
 	{

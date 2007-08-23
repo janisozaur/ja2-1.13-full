@@ -116,6 +116,7 @@ void CreateDestroyTownInfoBox( void )
 	static BOOLEAN fCreated = FALSE;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
+	INT16 sButtonX = 0, sButtonY = 0;
 	INT8 bTownId = 0;
 
 	if( ( fCreated == FALSE ) && ( fShowTownInfo == TRUE ) )
@@ -710,6 +711,7 @@ void PositionTownMineInfoBox( void )
 	SGPRect pDimensions;
 	SGPPoint pPosition;
 	INT16 sX =0, sY = 0;
+	INT16 sNewMargin = 0;
 
 	// position the box based on x and y of the selected sector
 	GetScreenXYFromMapXY( bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);

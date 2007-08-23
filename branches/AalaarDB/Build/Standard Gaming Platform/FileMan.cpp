@@ -1813,6 +1813,7 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 	UINT32 uiFileNum;
 	HANDLE	hRealFile;
 //	UINT8		Data;
+	UINT32	uiNumberOfBytesRead=0;
 	UINT32	uiOldFilePtrLoc=0;
 	UINT32	uiEndOfFilePtrLoc=0;
 	UINT32	temp=0;

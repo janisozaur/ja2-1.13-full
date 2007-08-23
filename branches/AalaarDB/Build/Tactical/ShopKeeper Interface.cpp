@@ -550,7 +550,7 @@ void			DisplayArmsDealerCurrentInventoryPage( );
 BOOLEAN		DetermineArmsDealersSellingInventory( );
 void			StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
 void			AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
-BOOLEAN		RepairIsDone(UINT16 usItemIndex, UINT8 ubElement);
+BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
 UINT32		DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE	*ItemObject, BOOLEAN fHatchedOut, UINT8	ubItemArea );
 void			DisplayArmsDealerOfferArea();
@@ -659,7 +659,7 @@ UINT32		EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot );
 
 void			BuildItemHelpTextString( CHAR16 sString[], INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea );
 void			BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem );
-void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
+void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial );
 
 void DisableAllDealersInventorySlots( void );
 void EnableAllDealersInventorySlots( void );
@@ -2660,6 +2660,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
 	INT16				sCenX, sCenY;
+	UINT8				sItemCount=0;
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
@@ -2741,6 +2742,8 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		else // UNDER REPAIR
 		{
 			UINT8		ubElement;
+			UINT32	uiTimeInMinutesToFixItem=0;
+
 			//display the length of time needed to repair the item
 			uiItemCost = 0;
 
@@ -2850,8 +2853,6 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 	UINT16	usItemIndex;
 	UINT8		ubElement;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
-	BOOLEAN fAddSpecialItem;
-	SPECIAL_ITEM_INFO SpclItemInfo;
 
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealer") );
@@ -2875,73 +2876,56 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 	guiNextFreeInvSlot = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
-	for( usItemIndex=1; usItemIndex<MAXITEMS; usItemIndex++)
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ gbSelectedArmsDealerID ].begin();
+		iter != gArmsDealersInventory[ gbSelectedArmsDealerID ].end(); ++iter) {
 
-		//if the arms dealer has some of the inventory
-		if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubTotalItems > 0)
+		//if the object has attachments, or is damaged, or otherwise special, then it is not stacked
+		if (ItemIsSpecial(*iter) == false) {
+			StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
+		}
+		// add all active special items
+		else if ( iter->fActive)
 		{
-			// if there are any items in perfect condition
-			if( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems > 0 )
-			{
-				// create just ONE dealer inventory box for them all.
-				// create item info describing a perfect item
-				SetSpecialItemInfoToDefaults( &SpclItemInfo );
-				// no special element index - it's "perfect"
-				AddItemsToTempDealerInventory(usItemIndex, &SpclItemInfo, -1, gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubPerfectItems, NO_PROFILE );
-			}
+			bool fAddSpecialItem = true;
 
-			// add all active special items
-			for( ubElement=0; ubElement< gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			//if the item is in for repairs
+			if( iter->bItemCondition < 0 )
 			{
-				pSpecialItem = &(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ]);
-
-				if ( pSpecialItem->fActive )
+				//if the repairs are done
+				if( iter->uiRepairDoneTime <= GetWorldTotalMin() )
 				{
-					fAddSpecialItem = TRUE;
-
-					//if the item is in for repairs
-					if( pSpecialItem->Info.bItemCondition < 0 )
+					if (RepairIsDone( &(*iter) ))
 					{
-						//if the repairs are done
-						if( pSpecialItem->uiRepairDoneTime <= GetWorldTotalMin() )
-						{
-							if (RepairIsDone( usItemIndex, ubElement ))
-							{
-								// don't add it here, it was put in the player's area
-								fAddSpecialItem = FALSE;
-							}
-							else
-							{
-								gpTempDealersInventory[ guiNextFreeInvSlot ].uiFlags |= ARMS_INV_ITEM_REPAIRED;
-							}
-						}
-						else
-						{
-							gpTempDealersInventory[ guiNextFreeInvSlot ].uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
-						}
+						// don't add it here, it was put in the player's area
+						fAddSpecialItem = false;
 					}
-
-					if ( fAddSpecialItem )
+					else
 					{
-						UINT8 ubOwner;
-
-						if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
-						{
-							// no merc is the owner
-							ubOwner = NO_PROFILE;
-						}
-						else
-						{
-							// retain owner so we can display this
-							ubOwner = pSpecialItem->ubOwnerProfileId;
-						}
-
-						AddItemsToTempDealerInventory( usItemIndex, &(pSpecialItem->Info), ubElement, 1, ubOwner );
+						gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
 					}
 				}
+				else
+				{
+					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
+				}
+			}
+
+			if ( fAddSpecialItem == true )
+			{
+				UINT8 ubOwner;
+
+				if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
+				{
+					// no merc is the owner
+					ubOwner = NO_PROFILE;
+				}
+				else
+				{
+					// retain owner so we can display this
+					ubOwner = iter->ubOwnerProfileId;
+				}
+
+				StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
 			}
 		}
 	}
@@ -2952,11 +2936,13 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 		// repairmen sort differently from merchants
 		if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
+			TODO
 			// sort this list by object category, and by ascending price within each category
 			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), RepairmanItemQsortCompare );
 		}
 		else
 		{
+			TODO
 			// sort this list by object category, and by ascending price within each category
 			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), ArmsDealerItemQsortCompare );
 		}
@@ -2966,47 +2952,7 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 }
 
 
-
-void AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner )
-{
-	PERFORMANCE_MARKER
-	UINT8 ubCnt;
-
-
-	Assert( ubHowMany > 0 );
-	Assert( pSpclItemInfo != NULL );
-
-
-	// if there's just one of them
-	if ( ubHowMany == 1 )
-	{
-		// it gets its own box, obviously
-		StoreObjectsInNextFreeDealerInvSlot( usItemIndex, pSpclItemInfo, sSpecialItemElement, 1, ubOwner );
-	}
-	else	// more than one
-	{
-		// if the items can be stacked
-		// NOTE: This test must match the one inside CountDistinctItemsInArmsDealersInventory() exactly!
-		if ( DealerItemIsSafeToStack( usItemIndex ) )
-		{
-			// then we can store them all together in the same box safely, even if there's more than MAX_OBJECTS_PER_SLOT
-			StoreObjectsInNextFreeDealerInvSlot( usItemIndex, pSpclItemInfo, sSpecialItemElement, ubHowMany, ubOwner );
-		}
-		else
-		{
-			// non-stacking items must be stored in one / box , because each may have unique fields besides status.bStatus[]
-			// Example: guns all have ammo, ammo type, etc.  We need these uniquely represented for pricing & manipulation
-			for ( ubCnt = 0; ubCnt < ubHowMany; ubCnt++ )
-			{
-				StoreObjectsInNextFreeDealerInvSlot( usItemIndex, pSpclItemInfo, sSpecialItemElement, 1, ubOwner );
-			}
-		}
-	}
-}
-
-
-
-void StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner )
+void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, UINT8 ubOwner )
 {
 	PERFORMANCE_MARKER
 	INVENTORY_IN_SLOT *pDealerInvSlot;
@@ -3019,15 +2965,16 @@ void StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO 
 	guiNextFreeInvSlot++;
 
 	pDealerInvSlot->fActive = TRUE;
-	pDealerInvSlot->sItemIndex = usItemIndex;
-	pDealerInvSlot->sSpecialItemElement = sSpecialItemElement;
+	pDealerInvSlot->sItemIndex = pSpclItemInfo->object.usItem;
+	pDealerInvSlot->sSpecialItemElement = -1;//no longer used
 	pDealerInvSlot->ubIdOfMercWhoOwnsTheItem = ubOwner;
 	pDealerInvSlot->bSlotIdInOtherLocation = -1;
 
 	// Create the item object ( with no more than MAX_OBJECTS_PER_SLOT )
 	// can't use the real #, because CreateItems() will blindly set the bStatus for however many we tell it, beyond 8
-	MakeObjectOutOfDealerItems( usItemIndex, pSpclItemInfo, &(pDealerInvSlot->ItemObject), ( UINT8 ) min( ubHowMany, MAX_OBJECTS_PER_SLOT ) );
+	MakeObjectOutOfDealerItems( pSpclItemInfo, &(pDealerInvSlot->ItemObject) );
 
+	/*
 	if ( ubHowMany > MAX_OBJECTS_PER_SLOT )
 	{
 		// HACK:  Override ItemObject->ubNumberOfObjects (1-8) with the REAL # of items in this box.
@@ -3037,62 +2984,52 @@ void StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO 
 		// pass them off the most functions in Items.C(), use ShopkeeperAutoPlaceObject() and ShopkeeperAddItemToPool() instead.
 		pDealerInvSlot->ItemObject.ubNumberOfObjects = ubHowMany;
 	}
+	*/
 }
 
 
 
-BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
+BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 {
 	PERFORMANCE_MARKER
-	INVENTORY_IN_SLOT	RepairItem;
-	INT8		bSlotNum;
-	UINT8		ubCnt;
-
 
 	// make a new shopkeeper invslot item out of it
+	INVENTORY_IN_SLOT	RepairItem;
 
 	RepairItem.fActive = TRUE;
-	RepairItem.sItemIndex = usItemIndex;
+	RepairItem.sItemIndex = pSpecial->object.usItem;
 
 	// set the owner of the item.  Slot is always -1 of course.
-	RepairItem.ubIdOfMercWhoOwnsTheItem = gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].ubOwnerProfileId;
+	RepairItem.ubIdOfMercWhoOwnsTheItem = pSpecial->ubOwnerProfileId;
 	RepairItem.bSlotIdInOtherLocation = -1;
 
 	// Create the item object
-	MakeObjectOutOfDealerItems( usItemIndex, &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info ), &RepairItem.ItemObject, 1 );
+	MakeObjectOutOfDealerItems( pSpecial, &RepairItem.ItemObject );
 
 	if ( CanDealerRepairItem( gbSelectedArmsDealerID, RepairItem.ItemObject.usItem ) )
 	{
 		// make its condition 100%
-		RepairItem.ItemObject.status.bStatus[ 0 ] = 100;
+		RepairItem.ItemObject.objectStatus = 100;
 	}
 
 	// max condition of all permanent attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( RepairItem.ItemObject.usAttachItem[ ubCnt ] != NONE )
+	for (OBJECTTYPE::attachmentList::iterator iter = RepairItem.ItemObject.attachments.begin(); iter != RepairItem.ItemObject.attachments.end(); ++iter) {
+		if ( CanDealerRepairItem( gbSelectedArmsDealerID, iter->usItem ) )
 		{
-/* ARM: Can now repair with removeable attachments still attached...
-			// If the attachment is a permanent one
-			if ( Item[ RepairItem.ItemObject.usAttachItem[ ubCnt ] ].fFlags & ITEM_INSEPARABLE )
-*/
-			if ( CanDealerRepairItem( gbSelectedArmsDealerID, RepairItem.ItemObject.usAttachItem[ ubCnt ] ) )
-			{
-				// fix it up
-				RepairItem.ItemObject.bAttachStatus[ ubCnt ] = 100;
-			}
+			// fix it up
+			iter->objectStatus = 100;
 		}
 	}
 
 	// if the item is imprinted (by anyone, even player's mercs), and it's Fredo repairing it
-	if ( /*( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info.ubImprintID == (NO_PROFILE + 1) ) && */
-		 ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
+	if ( ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
 	{
 		// then reset the imprinting!
 		RepairItem.ItemObject.ubImprintID = NO_PROFILE;
 	}
 
 	//try to add the item to the players offer area
+	INT8		bSlotNum;
 	bSlotNum = AddItemToPlayersOfferArea( RepairItem.ubIdOfMercWhoOwnsTheItem, &RepairItem, -1 );
 	// if there wasn't room for it
 	if( bSlotNum == -1 )
@@ -3104,7 +3041,6 @@ BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 	PlayersOfferArea[ bSlotNum ].uiFlags |= ARMS_INV_ITEM_REPAIRED;
 
 	// Remove the repaired item from the dealer's permanent inventory list
-	RemoveSpecialItemFromArmsDealerInventoryAtElement( gbSelectedArmsDealerID, usItemIndex, ubElement );
 
 	// one less slot is needed.  Don't bother ReMemAllocating, though
 	gSelectArmsDealerInfo.uiNumDistinctInventoryItems--;
@@ -3254,15 +3190,9 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 
 
 	// loop through any attachments and add in their price
-	for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++)
-	{
-		if( pItemObject->usAttachItem[ ubCnt ] != NONE )
-		{
-			// add value of this particular attachment
-			uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, pItemObject->usAttachItem[ ubCnt ], fDealerSelling ) *
-																ItemConditionModifier(pItemObject->usAttachItem[ ubCnt ], pItemObject->bAttachStatus[ ubCnt ]) *
-																dModifier );
-		}
+	for (OBJECTTYPE::attachmentList::iterator iter = pItemObject->attachments.begin(); iter != pItemObject->attachments.end(); ++iter) {
+		// add value of this particular attachment
+		uiUnitPrice += CalcShopKeeperItemPrice( fDealerSelling, fUnitPriceOnly, iter->usItem, dModifier, &(*iter)) ;
 	}
 
 
@@ -4055,6 +3985,7 @@ void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea( )
 	PERFORMANCE_MARKER
 	//for all items in the dealers items offer area
 	UINT32	uiCnt;
+	UINT32	uiTotal=0;
 	INT8		bSlotID=0;
 
 	//loop through all the slots in the shopkeeper's offer area
@@ -4111,7 +4042,6 @@ BOOLEAN RemoveItemFromDealersInventory( INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlo
 
 	//Remove all of this item out of the specified inventory slot
 	sItemID = gpTempDealersInventory[ sInvSlot ].sItemIndex;
-	SetSpecialItemInfoFromObject( &SpclItemInfo, &(pInvSlot->ItemObject) );
 	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, &SpclItemInfo, pInvSlot->ItemObject.ubNumberOfObjects );
 
 	gfResetShopKeepIdleQuote = TRUE;
@@ -6059,7 +5989,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 
 
 			//if the item is damaged, or is a rocket rifle (which always "need repairing" even at 100%, to reset imprinting)
-			if( ( PlayersOfferArea[ bSlotID ].ItemObject.status.bStatus[ 0 ] < 100 ) || fRocketRifleWasEvaluated )
+			if( ( PlayersOfferArea[ bSlotID ].ItemObject.objectStatus < 100 ) || fRocketRifleWasEvaluated )
 			{
 				INT8	bSlotAddedTo;
 
@@ -6085,7 +6015,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 					// check if the item is really badly damaged
 					if( Item[ ArmsDealerOfferArea[ bSlotAddedTo ].sItemIndex ].usItemClass != IC_AMMO )
 					{
-						if( ArmsDealerOfferArea[ bSlotAddedTo ].ItemObject.status.bStatus[ 0 ] < REALLY_BADLY_DAMAGED_THRESHOLD )
+						if( ArmsDealerOfferArea[ bSlotAddedTo ].ItemObject.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
 						{
 							uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
 						}
@@ -6443,7 +6373,7 @@ void HandleCheckIfEnoughOnTheTable( void )
 {
 	PERFORMANCE_MARKER
 	static INT32 iLastTime = 0;
-	INT32 iDifference = 0, iRand = 0;
+	INT32 iTime = 0, iDifference = 0, iRand = 0;
 	UINT32	uiPlayersOfferAreaValue = CalculateTotalPlayersValue();
 	UINT32	uiArmsDealersItemsCost = CalculateTotalArmsDealerCost();
 
@@ -6866,7 +6796,7 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 						// make the bullets into another subobject
 						CreateItem( pComplexObject->gun.usGunAmmoItem, 100, pNextObj );
 						// set how many are left
-						pNextObj->status.bStatus[ 0 ] = pComplexObject->gun.ubGunShotsLeft;
+						pNextObj->objectStatus = pComplexObject->gun.ubGunShotsLeft;
 
 						pNextObj = &gSubObject[ ++ubNextFreeSlot ];
 					}
@@ -6878,9 +6808,9 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 					CreateItem( pComplexObject->gun.usGunAmmoItem, pComplexObject->gun.bGunAmmoStatus, pNextObj );
 
 					// if the gun was jammed, fix up the payload's status
-					if ( pNextObj->status.bStatus[ 0 ] < 0 )
+					if ( pNextObj->objectStatus < 0 )
 					{
-						pNextObj->status.bStatus[ 0 ] *= -1;
+						pNextObj->objectStatus *= -1;
 					}
 
 					pNextObj = &gSubObject[ ++ubNextFreeSlot ];
@@ -6911,10 +6841,7 @@ void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 		// these can't be guns, can't have any attachments, can't be imprinted, etc.
 		Assert ( Item [ pComplexObject->usItem ].usItemClass != IC_GUN );
 
-		for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-		{
-			Assert( pComplexObject->usAttachItem[ ubCnt ] == NONE );
-		}
+		Assert( pComplexObject->attachments.empty() == true );
 
 		// make each item in the stack into a separate subobject
 		for( ubCnt = 0; ubCnt < pComplexObject->ubNumberOfObjects; ubCnt++ )
@@ -6950,7 +6877,7 @@ void CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubTotalSubObje
 
 			// is it in need of fixing, and also repairable by this dealer?
 			// A jammed gun with a 100% status is NOT repairable - shouldn't ever happen
-			if ( ( gSubObject[ ubSubObject ].status.bStatus[ 0 ] != 100 ) &&
+			if ( ( gSubObject[ ubSubObject ].objectStatus != 100 ) &&
 					 CanDealerRepairItem( gbSelectedArmsDealerID, gSubObject[ ubSubObject ].usItem ) )
 
 			{
@@ -7374,6 +7301,7 @@ void ResetAllQuoteSaidFlags()
 void DealWithItemsStillOnTheTable()
 {
 	PERFORMANCE_MARKER
+	BOOLEAN fAddedCorrectly = FALSE;
 	UINT8	ubCnt;
 	SOLDIERTYPE *pDropSoldier;
 
@@ -7548,61 +7476,42 @@ void HandlePossibleRepairDelays()
 BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow( UINT32 *puiHoursSinceOldestItemRepaired )
 {
 	PERFORMANCE_MARKER
-	UINT16 usItemIndex;
-	UINT8  ubElement;
-	DEALER_ITEM_HEADER *pDealerItem;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
+	//if the dealer is not a repair dealer, return
+	if( !DoesDealerDoRepairs( gbSelectedArmsDealerID ) )
+		return( FALSE );
+
 	BOOLEAN fFoundOne = FALSE;
 	UINT32 uiMinutesSinceItWasDone;
 	UINT32 uiMinutesShopClosedSinceItWasDone;
 	UINT32 uiWorkingHoursSinceThisItemRepaired;
 
-
-	//if the dealer is not a repair dealer, return
-	if( !DoesDealerDoRepairs( gbSelectedArmsDealerID ) )
-		return( FALSE );
-
 	*puiHoursSinceOldestItemRepaired = 0;
 
+	UINT32 currentTime = GetWorldTotalMin();
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			break;
-
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
-
-		//if there is some items in stock
-		if( pDealerItem->ubTotalItems )
+	for (DealerItemList::iterator iter = gArmsDealersInventory[gbSelectedArmsDealerID].begin();
+		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
+		if ( iter->fActive )
 		{
-			//loop through the array of items
-			for( ubElement=0; ubElement< pDealerItem->ubElementsAlloced; ubElement++ )
+			//if the items status is below 0, the item is being repaired
+			if( iter->bItemCondition < 0 )
 			{
-				pSpecialItem = &( pDealerItem->SpecialItem[ ubElement ] );
-
-				if ( pSpecialItem->fActive )
+				//if the repairs are done
+				if( iter->uiRepairDoneTime <= currentTime )
 				{
-					//if the items status is below 0, the item is being repaired
-					if( pSpecialItem->Info.bItemCondition < 0 )
+					// at least one item is supposed to be done by now
+					fFoundOne = TRUE;
+
+					uiMinutesSinceItWasDone = currentTime - iter->uiRepairDoneTime;
+					uiMinutesShopClosedSinceItWasDone = CalculateMinutesClosedBetween( gbSelectedArmsDealerID, iter->uiRepairDoneTime, currentTime );
+
+					// calculate how many WORKING hours since this item's been repaired
+					uiWorkingHoursSinceThisItemRepaired = ( uiMinutesSinceItWasDone - uiMinutesShopClosedSinceItWasDone ) / 60;
+
+					// we need to determine how long it's been since the item that's been repaired for the longest time was done
+					if ( uiWorkingHoursSinceThisItemRepaired > *puiHoursSinceOldestItemRepaired )
 					{
-						//if the repairs are done
-						if( pSpecialItem->uiRepairDoneTime <= GetWorldTotalMin() )
-						{
-							// at least one item is supposed to be done by now
-							fFoundOne = TRUE;
-
-							uiMinutesSinceItWasDone = GetWorldTotalMin() - pSpecialItem->uiRepairDoneTime;
-							uiMinutesShopClosedSinceItWasDone = CalculateMinutesClosedBetween( gbSelectedArmsDealerID, pSpecialItem->uiRepairDoneTime, GetWorldTotalMin() );
-
-							// calculate how many WORKING hours since this item's been repaired
-							uiWorkingHoursSinceThisItemRepaired = ( uiMinutesSinceItWasDone - uiMinutesShopClosedSinceItWasDone ) / 60;
-
-							// we need to determine how long it's been since the item that's been repaired for the longest time was done
-							if ( uiWorkingHoursSinceThisItemRepaired > *puiHoursSinceOldestItemRepaired )
-							{
-								*puiHoursSinceOldestItemRepaired = uiWorkingHoursSinceThisItemRepaired;
-							}
-						}
+						*puiHoursSinceOldestItemRepaired = uiWorkingHoursSinceThisItemRepaired;
 					}
 				}
 			}
@@ -7620,7 +7529,7 @@ void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 	PERFORMANCE_MARKER
 	UINT16 usItemIndex;
 	UINT8  ubElement;
-	DEALER_ITEM_HEADER *pDealerItem;
+	OLD_DEALER_ITEM_HEADER_101 *pDealerItem;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	UINT32 uiMinutesShopClosedBeforeItsDone;
 
@@ -7630,32 +7539,16 @@ void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 		return;
 
 	//loop through the dealers inventory and check if there are only unrepaired items
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		if ( Item[usItemIndex].usItemClass  == 0 )
-			return;
-
-		pDealerItem = &( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ] );
-
-		//if there is some items in stock
-		if( pDealerItem->ubTotalItems )
+	for (DealerItemList::iterator iter = gArmsDealersInventory[gbSelectedArmsDealerID].begin();
+		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
+		if ( iter->fActive )
 		{
-			//loop through the array of items
-			for( ubElement=0; ubElement< pDealerItem->ubElementsAlloced; ubElement++ )
+			//if the items status is below 0, the item is being repaired
+			if( iter->bItemCondition < 0 )
 			{
-				pSpecialItem = &( pDealerItem->SpecialItem[ ubElement ] );
-
-				if ( pSpecialItem->fActive )
-				{
-					//if the items status is below 0, the item is being repaired
-					if( pSpecialItem->Info.bItemCondition < 0 )
-					{
-						uiMinutesShopClosedBeforeItsDone = CalculateOvernightRepairDelay( gbSelectedArmsDealerID, pSpecialItem->uiRepairDoneTime, uiMinutesDelayed );
-
-						// add this many minutes to the repair time estimate
-						pSpecialItem->uiRepairDoneTime += ( uiMinutesShopClosedBeforeItsDone + uiMinutesDelayed );
-					}
-				}
+				uiMinutesShopClosedBeforeItsDone = CalculateOvernightRepairDelay( gbSelectedArmsDealerID, iter->uiRepairDoneTime, uiMinutesDelayed );
+				// add this many minutes to the repair time estimate
+				iter->uiRepairDoneTime += ( uiMinutesShopClosedBeforeItsDone + uiMinutesDelayed );
 			}
 		}
 	}
@@ -7794,7 +7687,7 @@ UINT32 EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot )
 		// check if the item is really badly damaged
 		if( Item[ pInvSlot->sItemIndex ].usItemClass != IC_AMMO )
 		{
-			if( pInvSlot->ItemObject.status.bStatus[ 0 ] < REALLY_BADLY_DAMAGED_THRESHOLD )
+			if( pInvSlot->ItemObject.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
 			{
 				uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
 			}
@@ -7867,7 +7760,7 @@ void BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem )
 
 
 
-void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement )
+void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiDoneTime;
@@ -7876,21 +7769,19 @@ void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, UINT16 usIte
 
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
-	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
 	// that item must be active
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
+	Assert( pSpecial->fActive );
 	// that item must be in repair
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
+	Assert( pSpecial->bItemCondition < 0 );
 
 	//if the item has already been repaired
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
+	uiDoneTime = pSpecial->uiRepairDoneTime;
+	if( uiDoneTime <= GetWorldTotalMin() )
 	{
 		wcscpy( sString, L"" );
 		return;
 	}
 
-	uiDoneTime = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime;
 
 	// round off to next higher 15 minutes
 	if ( ( uiDoneTime % REPAIR_MINUTES_INTERVAL ) > 0 )

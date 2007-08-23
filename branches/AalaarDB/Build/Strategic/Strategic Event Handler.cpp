@@ -218,11 +218,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.status.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.status.bStatus[0] ) / 100 );
+						Object.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.status.bStatus[0] == 0)
+						if (Object.objectStatus == 0)
 						{
-							Object.status.bStatus[0] = 1;
+							Object.objectStatus = 1;
 						}
 						AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
 					}
@@ -252,11 +252,11 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.status.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.status.bStatus[0] ) / 100 );
+						Object.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.status.bStatus[0] == 0)
+						if (Object.objectStatus == 0)
 						{
-							Object.status.bStatus[0] = 1;
+							Object.objectStatus = 1;
 						}
 						pObject[ uiCount ] = Object;
 						uiCount++;
@@ -1061,7 +1061,7 @@ void CheckForMissingHospitalSupplies( void )
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
 
-				if ( pObj->status.bStatus[ 0 ] > 60 )
+				if ( pObj->objectStatus > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{

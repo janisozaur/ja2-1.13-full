@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include <vector>
+#include <list>
 
 #define INVALIDCURS 0
 #define QUESTCURS 1
@@ -172,7 +173,6 @@ public:
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
-
 class OBJECTTYPE
 {
 public:
@@ -185,8 +185,6 @@ public:
 		UINT16		usGunAmmoItem;	// the item # for the item table
 		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
 		UINT8		ubGunState; // SB manual recharge
-//this unused space is the wrong size anyways, 7 bytes above, 2 in the array!!!
-		//UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
 	};
 	struct OBJECT_SHOTS
 	{
@@ -200,7 +198,6 @@ public:
 	{
 		INT8		bMoneyStatus;
 		UINT32		uiMoneyAmount;
-		//UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
 	};
 	struct OBJECT_BOMBS_AND_OTHER
 	{ // this is used by placed bombs, switches, and the action item
@@ -218,19 +215,17 @@ public:
 		{
 			UINT8 ubTolerance; // tolerance value for panic triggers
 			UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-		};		
+		};	
 	};
 	struct OBJECT_KEY
 	{
 		INT8 bKeyStatus[ 6 ];
 		UINT8 ubKeyID;
-		//UINT8 ubKeyUnused[1];
 	};
 	struct OBJECT_OWNER
 	{
 		UINT8 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
-		//UINT8 ubOwnershipUnused[6];
 	};
 
 	// Constructor
@@ -250,10 +245,17 @@ public:
 	void initialize();
 
 	bool operator==(OBJECTTYPE& compare);
+	bool operator==(const OBJECTTYPE& compare);
+
+	int		AddObjectsToStack(int howMany, int objectStatus);
+	int		AddObjectsToStack(OBJECTTYPE& object);
+	int		RemoveObjectsFromStack(int howMany);
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);
 	static	void CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource);
+
+	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
 
 	BOOLEAN	Load( HWFILE hFile );
 	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
@@ -268,10 +270,11 @@ public:
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
 	UINT16		ubWeight;//used to be UINT8
 	UINT8		fUsed;				// flags for whether the item is used or not
-	UINT16		usAttachItem[MAX_ATTACHMENTS];
-	INT8		bAttachStatus[MAX_ATTACHMENTS];
 
-	char		endOfPod;//offset to determine where pod stops and where OO data starts
+	typedef	std::list<OBJECTTYPE>	attachmentList;
+	attachmentList					attachments;
+
+//char		endOfPod;//offset to determine where pod stops and where OO data starts
 //#define SIZEOF_OBJECTTYPE_POD offsetof( OBJECTTYPE, endOfPod )
 #define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
@@ -280,12 +283,12 @@ public:
 								sizeof(bTrap) + \
 								sizeof(ubImprintID) + \
 								sizeof(ubWeight) + \
-								sizeof(fUsed) + \
-								sizeof(usAttachItem) + \
-								sizeof(bAttachStatus)
+								sizeof(fUsed)
 
 	union
 	{
+		int				pUnion;
+		INT8			objectStatus;
 		OBJECT_GUN		gun;
 		OBJECT_SHOTS	shots;
 		OBJECT_STATUS	status;

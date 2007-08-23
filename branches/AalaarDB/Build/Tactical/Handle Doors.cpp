@@ -299,7 +299,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	PERFORMANCE_MARKER
 	STRUCTURE *			pBaseStructure;
 	BOOLEAN					fDoMenu = FALSE;
-	DOOR		*				pDoor = NULL;
+	DOOR		*				pDoor;
 	DOOR_STATUS *		pDoorStatus;
 	BOOLEAN		 fTrapsFound = FALSE;
 
@@ -457,6 +457,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	BOOLEAN	fTrapFound = FALSE;
 	BOOLEAN	fDoAction = TRUE;
 	BOOLEAN	fDoor	 = FALSE;
+	INT8		bItemIn		= FALSE;
 
 	// Are we a door?
 	if (pStructure->fFlags & STRUCTURE_ANYDOOR)

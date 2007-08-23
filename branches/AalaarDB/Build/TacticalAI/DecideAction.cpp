@@ -4797,7 +4797,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 	BlackAlertFlags flags;
 
-	INT32	iCoverPercentBetter = 0, iChance;
+	INT32	iCoverPercentBetter, iChance;
 	INT16	sClosestOpponent,sBestCover = NOWHERE;
 	INT8	bActionReturned;
 	flags.fTryPunching = FALSE;

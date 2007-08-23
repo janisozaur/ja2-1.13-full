@@ -476,6 +476,9 @@ void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
 {
 	PERFORMANCE_MARKER
 	UINT8						ubType;
+	UINT8						ubOldStrength=0;
+	UINT8						ubNewStrength=0;
+		
 	/*
 	* Dropping some blood;
 	* We can check the type of blood by consulting the type in the smell byte

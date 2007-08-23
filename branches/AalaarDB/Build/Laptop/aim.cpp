@@ -880,7 +880,7 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 	{
 		CHAR16			sText[400];
 		UINT32	uiStartLoc=0;
-		//UINT16	usLocY = AIM_WARNING_TEXT_Y + (GetFontHeight(AIM_WARNING_FONT) + 2) * 2;
+		UINT16	usLocY = AIM_WARNING_TEXT_Y + (GetFontHeight(AIM_WARNING_FONT) + 2) * 2;
 		HVOBJECT hWarningHandle;
 
 		//Warning
@@ -1249,6 +1249,8 @@ UINT8 GetNextAimAd( UINT8 ubCurrentAd )
 	PERFORMANCE_MARKER
 	UINT8 ubNextAd;
 	UINT32	uiDay = GetWorldDay();
+	BOOLEAN	fSkip=FALSE;
+
 	if( ubCurrentAd == AIM_AD_WARNING_BOX )
 	{
 		if( uiDay < AIM_AD_BOBBYR_AD_STARTS )

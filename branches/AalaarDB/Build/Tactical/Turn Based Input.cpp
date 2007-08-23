@@ -184,6 +184,7 @@ BOOLEAN	gfNextFireJam = FALSE;
 
 
 //Little functions called by keyboard input
+void SwapGoggles();
 void CreateRandomItem();
 void MakeSelectedSoldierTired();
 void ToggleRealTime( UINT32 *puiNewEvent );
@@ -251,6 +252,7 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 	SOLDIERTYPE								*pSoldier;
 	UINT16						usMapPos;
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
+	BOOLEAN						fOnInterTile = FALSE;
 	static BOOLEAN	fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
 
@@ -2606,25 +2608,24 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//remove attachments
 							if ( gGameExternalOptions.gfShiftFRemoveAttachments == TRUE )
 							{
-								for (int bAttachPos = MAX_ATTACHMENTS-1; bAttachPos >= 0; bAttachPos--)
-								{
-									if (gWorldItems[ uiLoop ].o.usAttachItem[ bAttachPos ] != NOTHING)
-									{
-										if ( !Item[ gWorldItems[ uiLoop ].o.usAttachItem[ bAttachPos ] ].inseparable )
-										{												
-											OBJECTTYPE newObj;
-											if (RemoveAttachment( &(gWorldItems[ uiLoop ].o), bAttachPos, &newObj ))
-											{
-												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
-											}
-											// put it on the ground
-											AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &newObj, 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+								for (OBJECTTYPE::attachmentList::iterator iter = gWorldItems[ uiLoop ].o.attachments.begin();
+									iter != gWorldItems[ uiLoop ].o.attachments.end();) {
+									if ( !Item[ iter->usItem ].inseparable )
+									{												
+										// put it on the ground
+										AddItemToPool( gWorldItems[ uiLoop ].sGridNo, &(*iter), 1, gWorldItems[ uiLoop ].ubLevel, 0 , -1 );
+										if (RemoveAttachment( &(gWorldItems[ uiLoop ].o), &(*iter)))
+										{
+											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ATTACHMENT_REMOVED ] );
 										}
+										//restart, I don't feel like manipulating iters
+										iter = gWorldItems[ uiLoop ].o.attachments.begin();
+									}
+									else {
+										++iter;
 									}
 								}
 							}
-
-
 						}
 					}
 				}
@@ -3059,116 +3060,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				// swap sungoggles and nightgoggles
 			case 'N':
 				{
-						/* CHRISL - Adjusted this option to allow the game to search through Helmet attachments
-							as well as inventory positions.
-						*/
-					SOLDIERTYPE	*pTeamSoldier;
-						OBJECTTYPE * pObj;
-						INT8		bLoop, bSlot1, bSlot2, bSlot3, temp, tempStatus=0;
-						INT16		lastBonus=0, tempItem=0;
-					for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
-					{
-						if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
-						{	
-							//2 head slots
-							for (bSlot1 = HEAD1POS; bSlot1 <= HEAD2POS; bSlot1++)
-							{
-								if ( Item[pTeamSoldier->inv[bSlot1].usItem].brightlightvisionrangebonus > 0	)
-								{
-									lastBonus=0;
-									bSlot2 = ITEM_NOT_FOUND;
-										bSlot3 = ITEM_NOT_FOUND;
-									temp = 0;
-										pObj = &(pTeamSoldier->inv[HELMETPOS]);
-									while (temp != ITEM_NOT_FOUND)
-									{
-										temp = FindNightGoggles( pTeamSoldier, lastBonus );
-										if ( temp > ITEM_NOT_FOUND )
-										{
-											lastBonus = Item[pTeamSoldier->inv[temp].usItem].nightvisionrangebonus;
-											bSlot2 = temp;
-										}
-									}
-										for (int i = 0; i < MAX_ATTACHMENTS; i++)
-									{
-											if ( Item[ pObj->usAttachItem[i] ].nightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
-											{
-												bSlot2 = ITEM_NOT_FOUND;
-												bSlot3 = i;
-												lastBonus = Item[ pObj->usAttachItem[i] ].nightvisionrangebonus;
-											}
-										}
-										if ( bSlot3 != ITEM_NOT_FOUND )
-										{
-											// Duplicate item in helmet attachment slot
-											tempItem = pObj->usAttachItem[bSlot3];
-											tempStatus = pObj->bAttachStatus[bSlot3];
-											// Replace helmet attachment with face slot
-											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].status.bStatus[0];
-											// Replace face slot with helmet attachment from temp
-											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].status.bStatus[0] = tempStatus;
-										}
-										else if ( bSlot2 != ITEM_NOT_FOUND )
-										{
-										SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
-									}
-									break;
-								}
-								else if(Item[pTeamSoldier->inv[bSlot1].usItem].nightvisionrangebonus > 0)	
-								{
-									lastBonus=0;
-									bSlot2 = ITEM_NOT_FOUND;
-										bSlot3 = ITEM_NOT_FOUND;
-									temp = 0;
-										pObj = &(pTeamSoldier->inv[HELMETPOS]);
-									while (temp != ITEM_NOT_FOUND)
-									{
-										temp = FindSunGoggles( pTeamSoldier, lastBonus );
-										if ( temp > ITEM_NOT_FOUND )
-										{
-											lastBonus = Item[pTeamSoldier->inv[temp].usItem].brightlightvisionrangebonus;
-											bSlot2 = temp;
-										}
-									}
-										for (int i = 0; i < MAX_ATTACHMENTS; i++)
-									{
-											if ( Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
-											{
-												bSlot2 = ITEM_NOT_FOUND;
-												bSlot3 = i;
-												lastBonus = Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus;
-											}
-										}
-										if ( bSlot3 != ITEM_NOT_FOUND )
-										{
-											// Duplicate item in helmet attachment slot
-											tempItem = pObj->usAttachItem[bSlot3];
-											tempStatus = pObj->bAttachStatus[bSlot3];
-											// Replace helmet attachment with face slot
-											pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
-											pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].status.bStatus[0];
-											// Replace face slot with helmet attachment from temp
-											pTeamSoldier->inv[bSlot1].usItem = tempItem;
-											pTeamSoldier->inv[bSlot1].status.bStatus[0] = tempStatus;
-										}
-										else if ( bSlot2 != ITEM_NOT_FOUND )
-										{
-										SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
-									}
-									break;
-								}
-							}
-							fCharacterInfoPanelDirty = TRUE;
-							fInterfacePanelDirty = DIRTYLEVEL2;
-							pTeamSoldier->DeleteSoldierLight( );
-							pTeamSoldier->PositionSoldierLight( );
-						}
-					}
-						/* CHRISL - Adjusted this option to allow the game to search through Helmet attachments
-							as well as inventory positions.
-						*/
+					SwapGoggles();
 				}
 				break;
 
@@ -4717,7 +4609,7 @@ void GrenadeTest1()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = MUSTARD_GRENADE;
-		Object.status.bStatus[ 0 ] = 100;
+		Object.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -20, 20, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4732,7 +4624,7 @@ void GrenadeTest2()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.status.bStatus[ 0 ] = 100;
+		Object.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, 0, -30, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -4747,7 +4639,7 @@ void GrenadeTest3()
 	{
 		OBJECTTYPE		Object;
 		Object.usItem = HAND_GRENADE;
-		Object.status.bStatus[ 0 ] = 100;
+		Object.objectStatus = 100;
 		Object.ubNumberOfObjects = 1;
 		CreatePhysicalObject( &Object, 60,	(FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -10, 10, 158, NOBODY, THROW_ARM_ITEM, 0, FALSE );
 	}
@@ -5347,6 +5239,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
+	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -5406,6 +5299,7 @@ void HandleStealthChangeFromUIKeys(	)
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
 	INT32						cnt;
+	SOLDIERTYPE			*pFirstSoldier = NULL;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -5498,4 +5392,115 @@ void PopupMilitiaControlMenu( SOLDIERTYPE *pSoldier )
 	DetermineWhichMilitiaControlMenusCanBeShown( );
 	fFirstClickInMilitiaControlScreenMask = TRUE;
 	gfIgnoreScrolling = TRUE;
+}
+
+
+void SwapGoggles()
+{
+	/* CHRISL - Adjusted this option to allow the game to search through Helmet attachments
+		as well as inventory positions.
+	*/
+	SOLDIERTYPE	*pTeamSoldier;
+	OBJECTTYPE * pObj;
+	INT8		bLoop, bSlot1, bSlot2, bSlot3, temp, tempStatus=0;
+	INT16		lastBonus=0, tempItem=0;
+	for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
+	{
+		if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
+		{	
+			//2 head slots
+			for (bSlot1 = HEAD1POS; bSlot1 <= HEAD2POS; bSlot1++)
+			{/*
+				if ( Item[pTeamSoldier->inv[bSlot1].usItem].brightlightvisionrangebonus > 0	)
+				{
+					lastBonus=0;
+					bSlot2 = ITEM_NOT_FOUND;
+					bSlot3 = ITEM_NOT_FOUND;
+					temp = 0;
+					pObj = &(pTeamSoldier->inv[HELMETPOS]);
+					while (temp != ITEM_NOT_FOUND)
+					{
+						temp = FindNightGoggles( pTeamSoldier, lastBonus );
+						if ( temp > ITEM_NOT_FOUND )
+						{
+							lastBonus = Item[pTeamSoldier->inv[temp].usItem].nightvisionrangebonus;
+							bSlot2 = temp;
+						}
+					}
+					OBJECTTYPE* pAttachment = 0;
+					for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+						if ( Item[ iter->usItem ].nightvisionrangebonus > lastBonus && Item[ iter->usItem ].usItemClass == IC_FACE )
+						{
+							bSlot2 = ITEM_NOT_FOUND;
+							pAttachment = &(*iter);
+							lastBonus = Item[ iter->usItem ].nightvisionrangebonus;
+						}
+					}
+					if ( pAttachment )
+					{
+						// Duplicate item in helmet attachment slot
+						OBJECTTYPE temp(*pAttachment);
+						// Replace helmet attachment with face slot
+						pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
+						pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].objectStatus;
+						// Replace face slot with helmet attachment from temp
+						pTeamSoldier->inv[bSlot1].usItem = tempItem;
+						pTeamSoldier->inv[bSlot1].objectStatus = tempStatus;
+					}
+					else if ( bSlot2 != ITEM_NOT_FOUND )
+					{
+						SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
+					}
+					break;
+				}
+				else if(Item[pTeamSoldier->inv[bSlot1].usItem].nightvisionrangebonus > 0)	
+				{
+					lastBonus=0;
+					bSlot2 = ITEM_NOT_FOUND;
+						bSlot3 = ITEM_NOT_FOUND;
+					temp = 0;
+						pObj = &(pTeamSoldier->inv[HELMETPOS]);
+					while (temp != ITEM_NOT_FOUND)
+					{
+						temp = FindSunGoggles( pTeamSoldier, lastBonus );
+						if ( temp > ITEM_NOT_FOUND )
+						{
+							lastBonus = Item[pTeamSoldier->inv[temp].usItem].brightlightvisionrangebonus;
+							bSlot2 = temp;
+						}
+					}
+						for (int i = 0; i < MAX_ATTACHMENTS; i++)
+					{
+							if ( Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus > lastBonus && Item[ pObj->usAttachItem[i] ].usItemClass == IC_FACE )
+							{
+								bSlot2 = ITEM_NOT_FOUND;
+								bSlot3 = i;
+								lastBonus = Item[ pObj->usAttachItem[i] ].brightlightvisionrangebonus;
+							}
+						}
+						if ( bSlot3 != ITEM_NOT_FOUND )
+						{
+							// Duplicate item in helmet attachment slot
+							tempItem = pObj->usAttachItem[bSlot3];
+							tempStatus = pObj->bAttachStatus[bSlot3];
+							// Replace helmet attachment with face slot
+							pObj->usAttachItem[bSlot3] = pTeamSoldier->inv[bSlot1].usItem;
+							pObj->bAttachStatus[bSlot3] = pTeamSoldier->inv[bSlot1].objectStatus;
+							// Replace face slot with helmet attachment from temp
+							pTeamSoldier->inv[bSlot1].usItem = tempItem;
+							pTeamSoldier->inv[bSlot1].objectStatus = tempStatus;
+						}
+						else if ( bSlot2 != ITEM_NOT_FOUND )
+						{
+						SwapObjs( &(pTeamSoldier->inv[bSlot1]), &(pTeamSoldier->inv[bSlot2] ) );
+					}
+					break;
+				}
+			*/}
+			fCharacterInfoPanelDirty = TRUE;
+			fInterfacePanelDirty = DIRTYLEVEL2;
+			pTeamSoldier->DeleteSoldierLight( );
+			pTeamSoldier->PositionSoldierLight( );
+		}
+	}
 }

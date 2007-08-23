@@ -1825,6 +1825,7 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 {
 	PERFORMANCE_MARKER
 	UINT32 uiLoop;
+	BOOLEAN fLoop=fOverWrite;
 	UINT32 uiLastItemPos;
 	UINT32 uiNumberOfItems;
 	WORLDITEM *pWorldItems;
@@ -2287,6 +2288,8 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
+	UINT8	ubOne=1;
+	UINT8	ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
@@ -2339,6 +2342,8 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
+	UINT8	ubOne=1;
+	UINT8	ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
@@ -2394,6 +2399,8 @@ BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
 	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT8		ubCnt;
+	UINT8		ubOne=1;
+	UINT8		ubZero=0;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
@@ -2723,6 +2730,10 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 																					FALLBACK_HIT_DEATH,
 																					PRONE_HIT_DEATH,
 																					FLYBACK_HIT_DEATH };
+	const UINT8				ubNumOfDeaths=4;
+
+
+
 	//setup the flags for the items and the rotting corpses
 	if( uiFlags & ADD_DEAD_SOLDIER_USE_GRIDNO )
 	{
@@ -2807,8 +2818,8 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 					if ( Item[pSoldier->inv[i].usItem].damageable ) // Madd: drop crappier items on higher difficulty levels
 					{
-						pSoldier->inv[i].status.bStatus[0] -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-						pSoldier->inv[i].status.bStatus[0] = max(pSoldier->inv[i].status.bStatus[0],1); // never below 1%
+						pSoldier->inv[i].objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+						pSoldier->inv[i].objectStatus = max(pSoldier->inv[i].objectStatus,1); // never below 1%
 					}
 					pWorldItems[ bCount ].o = pSoldier->inv[i];
 					bCount++;

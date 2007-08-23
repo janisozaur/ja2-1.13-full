@@ -300,7 +300,7 @@ UINT16 HealPatient( SOLDIERTYPE *pPatient, SOLDIERTYPE * pDoctor, UINT16 usHundr
 BOOLEAN IsItemRepairable( UINT16 usItem, INT8 bStatus );
 
 // does another merc have a repairable item on them?
-INT8 FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType );
+OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType );
 
 // repair stuff
 void HandleRepairBySoldier( SOLDIERTYPE *pSoldier );
@@ -799,16 +799,12 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 		}
 
 		// have to check for attachments...
-		for ( bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++ )
-		{
-			if ( pObj->usAttachItem[ bLoop ] != NOTHING )
+		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+			// if it's repairable and NEEDS repairing
+			if ( IsItemRepairable( iter->usItem, iter->objectStatus ) )
 			{
-				// if it's repairable and NEEDS repairing
-				if ( IsItemRepairable( pObj->usAttachItem[ bLoop ], pObj->bAttachStatus[ bLoop ] ) )
-				{
-					return( TRUE );
-				}		
-			}
+				return( TRUE );
+			}		
 		}
 	}
 
@@ -837,9 +833,7 @@ BOOLEAN DoesCharacterHaveAnyItemsToRepair( SOLDIERTYPE *pSoldier, INT8 bHighestP
 				// repair everyone's hands and armor slots first, then headgear, and pockets last
 				for ( ubPassType = REPAIR_HANDS_AND_ARMOR; ubPassType <= ( UINT8 ) bHighestPass; ubPassType++ )
 				{
-					bPocket = FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType );
-					if ( bPocket != NO_SLOT )
-					{
+					if (FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType )) {
 						return( TRUE );
 					}
 				}
@@ -930,6 +924,8 @@ BOOLEAN CanCharacterRepairButDoesntHaveARepairkit( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterRepair( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
+	INT8 bPocket = 0;
+	BOOLEAN fToolKitFound = FALSE;
 
 	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
 	{
@@ -1587,6 +1583,8 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
+	INT32 cnt = 0;
+	SOLDIERTYPE *pTeamSoldier = NULL;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -1609,6 +1607,7 @@ BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 BOOLEAN CanCharacterBeTrainedByOther( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
+	INT32 iCounter = 0;
 
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
@@ -2076,6 +2075,7 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 	// run thought list of characters find number with this assignment
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 	
 	// set psoldier as first in merc ptrs
@@ -2309,6 +2309,7 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -2565,6 +2566,7 @@ BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient )
 BOOLEAN CanSoldierBeHealedByDoctor( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck )
 {
 	PERFORMANCE_MARKER
+	INT16 sDistance = 0;
 
 	// must be an active guy
 	if (pSoldier->bActive == FALSE)
@@ -2912,6 +2914,7 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -3002,7 +3005,7 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 
 
 
-INT8 FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType )
+OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType )
 {
 	PERFORMANCE_MARKER
 	INT8 bLoop, bLoop2;
@@ -3025,24 +3028,20 @@ INT8 FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPassType 
 		{
 			if ( IsItemRepairable( pObj->usItem, pObj->status.bStatus[bLoop2] ) )
 			{
-				return( bSlotToCheck );
+				return( &(pSoldier->inv[ bSlotToCheck ]) );
 			}
 		}	
 
 		// have to check for attachments...
-		for ( bLoop2 = 0; bLoop2 < MAX_ATTACHMENTS; bLoop2++ )
-		{
-			if ( pObj->usAttachItem[ bLoop2 ] != NOTHING )
-			{
-				if ( IsItemRepairable( pObj->usAttachItem[ bLoop2 ], pObj->bAttachStatus[ bLoop2 ] ) )
-				{
-					return( bSlotToCheck );
-				}		
+		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+			// if it's repairable and NEEDS repairing
+			if ( IsItemRepairable( iter->usItem, iter->objectStatus ) ) {
+				return( &(*iter) );
 			}
 		}
 	}
 
-	return( NO_SLOT );
+	return( 0 );
 }
 
 
@@ -3125,7 +3124,7 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 			//void DoActualRepair( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 * pbStatus, UINT8 * pubRepairPtsLeft )
 			DoActualRepair( pSoldier, pObj->usItem, &(pObj->status.bStatus[ ubLoop ]), pubRepairPtsLeft );
 
-			fSomethingWasRepaired = TRUE;
+			fSomethingWasRepaired = true;
 
 			if ( pObj->status.bStatus[ ubLoop ] == 100 )
 			{
@@ -3150,38 +3149,12 @@ BOOLEAN RepairObject( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOwner, OBJECTTYPE *
 	}
 
 	// now check for attachments
-	for ( ubLoop = 0; ubLoop < MAX_ATTACHMENTS; ubLoop++ )
-	{
-		if ( pObj->usAttachItem[ ubLoop ] != NOTHING )
+	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		if ( *pubRepairPtsLeft != 0 )
 		{
-			if ( IsItemRepairable( pObj->usAttachItem[ ubLoop ], pObj->bAttachStatus[ ubLoop ] ) )
-			{
-				// repairable, try to repair it
-
-				DoActualRepair( pSoldier, pObj->usAttachItem[ ubLoop ], &(pObj->bAttachStatus[ ubLoop ]), pubRepairPtsLeft );
-
-				fSomethingWasRepaired = TRUE;
-
-				if ( pObj->bAttachStatus[ ubLoop ] == 100 )
-				{
-					// report it as fixed
-					if ( pSoldier == pOwner )
-					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_REPAIRED ], pSoldier->name, ItemNames[ pObj->usAttachItem[ ubLoop ] ] );
-					}
-					else
-					{
-						// NOTE: may need to be changed for localized versions
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 35 ], pSoldier->name, pOwner->name, ItemNames[ pObj->usAttachItem[ ubLoop ] ] );
-					}
-				}
-
-				if ( *pubRepairPtsLeft == 0 )
-				{
-					// we're out of points!
-					break;
-				}
-			}		
+			if (RepairObject(pSoldier, pOwner, &(*iter), pubRepairPtsLeft)) {
+				fSomethingWasRepaired = true;
+			}
 		}
 	}
 	
@@ -3194,6 +3167,8 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	UINT16 usMax=0;
 	UINT8 ubRepairPtsLeft =0;
+	UINT8 ubItemsInPocket = 0;
+	UINT8 ubObjectInPocketCounter = 0;
 	UINT8 ubInitialRepairPts = 0;
 	UINT8 ubRepairPtsUsed = 0;
 	INT8 bPocket =0;
@@ -4003,7 +3978,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	INT8	bSkill = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
-	UINT16	usMaxTrainerPts, usBestMaxTrainerPts = 0;
+	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
 	UINT32	uiCnt;
 	SOLDIERTYPE * pTrainer;
 
@@ -4183,6 +4158,8 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 	PERFORMANCE_MARKER
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	UINT8 ubTownId = 0;
+	INT16 sCnt = 0;
+	INT8 bChance = 0;
 	BOOLEAN fSamSiteInSector = FALSE;
 
 
@@ -4444,6 +4421,8 @@ void HandleNaturalHealing( void )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter=0;
+	INT8 bNumberOfPeople = 0;
 	
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];	
@@ -5575,6 +5554,7 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	INT8 bPocket = 0;
+	BOOLEAN fFoundOne = FALSE;
 
 
 	fTeamPanelDirty = TRUE;
@@ -8207,7 +8187,7 @@ void HandleShadingOfLinesForSquadMenu( void )
 	UINT32 uiCounter;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiMaxSquad;
-	INT8 bResult = 0;
+	INT8 bResult;
 
 
 	if ( ( fShowSquadMenu == FALSE ) || ( ghSquadBox == -1 ) )
@@ -10143,6 +10123,8 @@ void HandleShadingOfLinesForTrainingMenu( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
+	INT32 iCounter = 0;
+
 
 	// check if valid
 	if( ( fShowTrainingMenu == FALSE ) || ( ghTrainingBox == - 1 ) )
@@ -10272,6 +10254,7 @@ void HandleShadingOfLinesForAttributeMenus( void )
 void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
+	INT16 sSectorX	= 0, sSectorY = 0;
 	INT32 iNumberOnTeam = 0, iCounter = 0;
 	SOLDIERTYPE *pCurSoldier = NULL;
 
@@ -10302,6 +10285,7 @@ void ReportTrainersTraineesWithoutPartners( void )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier = NULL;
 	INT32 iCounter = 0, iNumberOnTeam = 0;
+	BOOLEAN fFound =FALSE;
 
 
 	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
@@ -11215,6 +11199,7 @@ BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound( SOLDIERTYPE *pTargetS
 	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
+	BOOLEAN fFound = FALSE;
 	INT16 sTrainingPts = 0;
 	BOOLEAN fAtGunRange = FALSE;
 	UINT16 usMaxPts;
@@ -11604,7 +11589,6 @@ void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft )
 	PERFORMANCE_MARKER
 	UINT8 ubPassType;
 	INT8 bLoop;
-	INT8 bPocket;
 	SOLDIERTYPE * pOtherSoldier;
 	SOLDIERTYPE * pBestOtherSoldier;
 	INT8 bPriority, bBestPriority = -1;
@@ -11647,7 +11631,7 @@ void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft )
 				if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 				{
 					// okay, seems like a candidate!
-					if ( FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType ) != NO_SLOT )
+					if ( FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType ) != 0 )
 					{
 						bPriority = pOtherSoldier->stats.bExpLevel;
 						if ( bPriority > bBestPriority )
@@ -11663,18 +11647,19 @@ void RepairItemsOnOthers( SOLDIERTYPE *pSoldier, UINT8 *pubRepairPtsLeft )
 			if ( pBestOtherSoldier != NULL )
 			{
 				// yes, repair all items (for this pass type!) on this soldier that need repair
+				OBJECTTYPE * pObjectToRepair;
 				do
 				{
-					bPocket = FindRepairableItemOnOtherSoldier( pBestOtherSoldier, ubPassType );
-					if ( bPocket != NO_SLOT )
+					pObjectToRepair = FindRepairableItemOnOtherSoldier( pBestOtherSoldier, ubPassType );
+					if ( pObjectToRepair )
 					{
-						if ( RepairObject( pSoldier, pBestOtherSoldier, &(pBestOtherSoldier->inv[ bPocket ]), pubRepairPtsLeft ) )
+						if ( RepairObject( pSoldier, pBestOtherSoldier, pObjectToRepair, pubRepairPtsLeft ) )
 						{
 							fSomethingWasRepairedThisPass = TRUE;
 						}
 					}
 				}
-				while ( bPocket != NO_SLOT && *pubRepairPtsLeft > 0 );
+				while ( pObjectToRepair && *pubRepairPtsLeft > 0 );
 			}
 			else
 			{

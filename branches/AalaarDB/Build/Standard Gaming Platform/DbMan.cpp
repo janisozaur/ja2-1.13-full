@@ -469,7 +469,7 @@ void DbClose( HDBINDEX hFile )
 HDBFILE DbFileOpen( STR strFilename )
 {
 	HDBFILE		hFile;
-	HFILEINDEX	hFileIndex = 0xffff;
+	HFILEINDEX	hFileIndex;
 	HDBINDEX		hDBIndex;
 	UINT16		i;
 

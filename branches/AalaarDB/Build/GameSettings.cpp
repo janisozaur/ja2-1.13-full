@@ -719,6 +719,7 @@ BOOLEAN GetCDLocation( )
 	PERFORMANCE_MARKER
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
+	UINT32	uiDriveType=0;
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -892,6 +893,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 	CHAR8		zCdFile[ SGPFILENAME_LEN ];
 
 	CHAR8		zCdromRootDrive[512];
+	BOOLEAN	fFailed = FALSE;
 	UINT32	uiVolumeReturnValue;
 	UINT32	uiLastError = ERROR_SUCCESS;
 

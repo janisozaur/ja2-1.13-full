@@ -613,7 +613,7 @@ void MakeRemainingTerroristsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.status.bStatus[ 0 ] = 100;
+	Object.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -749,7 +749,7 @@ void MakeRemainingAssassinsTougher( void )
 
 	DeleteObj( &Object );
 	Object.usItem = usNewItem;
-	Object.status.bStatus[ 0 ] = 100;
+	Object.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{

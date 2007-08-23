@@ -639,6 +639,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	OBJECTTYPE Object;
 	UINT16 i;
 	//UINT16 usRandom;
+	UINT16 usNumMatches = 0;
 	UINT16 usGunIndex = 0;
 	UINT16 usAmmoIndex = 0;
 	UINT16 usAttachIndex = 0;
@@ -974,6 +975,13 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	UINT8 ubBaseQuality;
 	UINT8 ubQualityVariation;
 	//numbers of each type the player will get!
+	UINT8 ubNumStun = 0;
+	UINT8 ubNumTear = 0;
+	UINT8 ubNumMustard = 0;
+	UINT8 ubNumMini = 0;
+	UINT8 ubNumReg = 0;
+	UINT8 ubNumSmoke = 0;
+	UINT8 ubNumFlare = 0;
 	UINT8 count = 0;
 
 	// special mortar shell handling
@@ -1511,6 +1519,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 	//UINT16 i;
 	//INVTYPE *pItem;
 	//UINT16 usRandom;
+	UINT16 usNumMatches = 0;
 	UINT16 usKnifeIndex = 0;
 	OBJECTTYPE Object;
 
@@ -2829,9 +2838,9 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 {
 	PERFORMANCE_MARKER
-	UINT32				uiLoop, uiLoop2, uiAttachDestIndex;
+	UINT32				uiLoop, uiLoop2;
 	INT8					bWeaponClass;
-	OBJECTTYPE		OldObj;
+	OBJECTTYPE		newGun;
 	UINT16				usItem, usNewGun, usAmmo, usNewAmmo;
 
 	for ( uiLoop = 0; uiLoop < pp->Inv.size(); uiLoop++ )
@@ -2853,27 +2862,21 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 
 			if ( usNewGun != NOTHING )
 			{
-				// have to replace!  but first (ugh) must store backup (b/c of attachments)
-				CopyObj( &(pp->Inv[ uiLoop ]), &OldObj );
-				CreateItem( usNewGun, OldObj.gun.bGunStatus, &(pp->Inv[ uiLoop ]) );
-				pp->Inv[ uiLoop ].fFlags = OldObj.fFlags;
+				//We are creating a new gun, but the new gun needs the old gun's attachments
+				OBJECTTYPE* pObj = &(pp->Inv[ uiLoop ]);
+				CreateItem( usNewGun, pObj->gun.bGunStatus, &newGun );
+				newGun.fFlags = pObj->fFlags;
 
-				// copy any valid attachments; for others, just drop them...
-				if ( ItemHasAttachments( &OldObj ) )
-				{
-					// we're going to copy into the first attachment position first :-)
-					uiAttachDestIndex = 0;
-					// loop!
-					for ( uiLoop2 = 0; uiLoop2 < MAX_ATTACHMENTS; uiLoop2++ )
-					{
-						if ( ( OldObj.usAttachItem[ uiLoop2 ] != NOTHING ) && ValidAttachment( OldObj.usAttachItem[ uiLoop2 ], usNewGun ) )
-						{
-							pp->Inv[ uiLoop ].usAttachItem[ uiAttachDestIndex ] = OldObj.usAttachItem[ uiLoop2 ];
-							pp->Inv[ uiLoop ].bAttachStatus[ uiAttachDestIndex ] = OldObj.bAttachStatus[ uiLoop2 ];
-							uiAttachDestIndex++;
-						}
-					}
+				for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+					AttachObject(0, &newGun, &(*iter));
 				}
+
+				//for any old attachments that don't fit on the new gun, place or drop them
+				RemoveProhibitedAttachments(0, &newGun, usNewGun);
+
+				//copy it over
+				*pObj = newGun;
+
 
 				// must search through inventory and replace ammo accordingly
 				for ( uiLoop2 = 0; uiLoop2 < pp->Inv.size(); uiLoop2++ )
@@ -2891,7 +2894,6 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				}
 			}
 		}
-
 	}
 }
 

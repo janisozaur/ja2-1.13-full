@@ -490,7 +490,7 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN fProactive )
 {
 	PERFORMANCE_MARKER
-	INT16 sNewAP = 0;
+	INT16 sNewAP = 0, sNewBP = 0;
 	INT8	bNewBreath;
 
 
@@ -670,6 +670,8 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 {
 	PERFORMANCE_MARKER
 	INT16 sUnusedAPs, sBreathPerAP = 0, sBreathChange, sRTBreathMod;
+	BOOLEAN	fAnimTypeFound = FALSE;
+
 	// Note to Andrew (or whomever else it may concern):
 
 
@@ -954,19 +956,19 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SPRING_AND_BOLT_UPGRADE );
-		//if ( bAttachPos != -1 )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
 		//{	
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found rod and spring, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_SCOPED );
-		//if ( bAttachPos != -1 )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex scope, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_UNSCOPED );
-		//if ( bAttachPos != -1 )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end() )
 		//{
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
@@ -1607,11 +1609,9 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 		if ( pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )
 		{
 			UINT16 glItem = GetAttachedGrenadeLauncher( &(pSoldier->inv[bInvPos]));
-			INT8 bAttachSlot = FindLaunchableAttachment( &(pSoldier->inv[bInvPos]), glItem);
-			if ( bAttachSlot != ITEM_NOT_FOUND )
-			{
+			OBJECTTYPE* pAttachment = FindLaunchableAttachment( &(pSoldier->inv[bInvPos]), glItem);
+			if ( pAttachment )
 				return TRUE;
-			}
 			else
 				return FALSE;
 		}
@@ -1625,13 +1625,13 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 
 			if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_LAUNCHER || Item[pSoldier->inv[ bInvPos ].usItem].cannon )
 			{
-				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_GRENADE ) != ITEM_NOT_FOUND )
+				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_GRENADE ) != 0 )
 				{
 					return( TRUE );
 				} 
 
 				// ATE: Did an else if here...
-				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_BOMB ) != ITEM_NOT_FOUND )
+				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_BOMB ) != 0 )
 				{
 					return( TRUE );
 				} 
@@ -1714,42 +1714,40 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 		}
 		else if ( Item[ pObj->usItem ].usItemClass == IC_LAUNCHER || Item[pObj->usItem].cannon || pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )
 		{
-			INT8 bAttachPos;
-
-			bAttachPos = FindAttachmentByClass( pObj, IC_GRENADE );
-			if (bAttachPos == ITEM_NOT_FOUND )
+			OBJECTTYPE* pAttachment = FindAttachmentByClass( pObj, IC_GRENADE );
+			if ( pAttachment == 0 )
 			{
-				bAttachPos = FindAttachmentByClass( pObj, IC_BOMB );
+				pAttachment = FindAttachmentByClass( pObj, IC_BOMB );
 			}
 			
-			if (bAttachPos != ITEM_NOT_FOUND)
+			if (pAttachment)
 			{
 				DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for GL: found attachment, about to decide whether to remove it"));
 				if ( Item[ pObj->usItem ].usItemClass == IC_LAUNCHER && GetMagSize(pObj) > 1 )
 				{
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor"));
-					pObj->bAttachStatus[bAttachPos] = pObj->bAttachStatus[bAttachPos] - (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
+					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",pObj->bAttachStatus[bAttachPos],(pObj->bAttachStatus[bAttachPos] <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pObj->bAttachStatus[bAttachPos] <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
 					{
-						RemoveAttachment( pObj, bAttachPos, NULL );
+						RemoveAttachment( pObj, pAttachment);
 					}
 				}
 				else if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO ) && Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize > 1 )
 				{
-					pObj->bAttachStatus[bAttachPos] = pObj->bAttachStatus[bAttachPos] - (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
+					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",pObj->bAttachStatus[bAttachPos],(pObj->bAttachStatus[bAttachPos] <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pObj->bAttachStatus[bAttachPos] <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
 					{
-						RemoveAttachment( pObj, bAttachPos, NULL );
+						RemoveAttachment( pObj, pAttachment);
 					}
 				}
 				else
 				{
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for GL: removing attachment"));
-					RemoveAttachment( pObj, bAttachPos, NULL );
+					RemoveAttachment( pObj, pAttachment);
 				}
 			}
 		}

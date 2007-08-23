@@ -1409,9 +1409,10 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 {
 	PERFORMANCE_MARKER
 	INT16 sMercScreenX, sMercScreenY;
-	INT16 sOffsetX, sOffsetY;
+	INT16 sOffsetX, sOffsetY, sAddXOffset = 0;
 	UINT8	ubAnimUseHeight;
 	INT16		sStanceOffset = 0;
+	INT16		sBarBodyTypeYOffset = 55;
 	INT16		sTextBodyTypeYOffset = 62;
 
 	// Find XY, dims, offsets

@@ -1629,10 +1629,7 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 	BOOLEAN fArmed = FALSE;
 	INT8		bLevel;
 	OBJECTTYPE	TempObject;
-	INT8		bSlot;
 	OBJECTTYPE * pObj;
-	INT8				bAttachPos;
-
 
 	// Check for enough ammo...
 	if ( ubItemCursor == TRAJECTORYCURS )
@@ -1702,36 +1699,14 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 		}
 		else
 		{
-		// ATE: Find the object to use...
-		TempObject = pSoldier->inv[ HANDPOS ];
-
-		// Do we have a launcable?
-	 pObj = &(pSoldier->inv[HANDPOS]); 
-	 for (bAttachPos = 0; bAttachPos < MAX_ATTACHMENTS; bAttachPos++)
-	 {
-		 if (pObj->usAttachItem[ bAttachPos ] != NOTHING)
-		 {
-			 if ( Item[ pObj->usAttachItem[ bAttachPos ] ].usItemClass & IC_EXPLOSV )
-			 {
-				 break;
-			 }
-		 }
-	 }
-	 if (bAttachPos != MAX_ATTACHMENTS)
-	 {
-			CreateItem( pObj->usAttachItem[ bAttachPos ],	pObj->bAttachStatus[ bAttachPos ], &TempObject );
-	 }
-
 			UINT16 glItem = GetAttachedGrenadeLauncher( &(pSoldier->inv[HANDPOS]));
 			if ((pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO )&& glItem != NONE )
 			{
-				bSlot = FindAttachment( &(pSoldier->inv[HANDPOS]), glItem );
+				OBJECTTYPE* pAttachment = FindAttachment( &(pSoldier->inv[HANDPOS]), glItem );
 
-				if ( bSlot != NO_SLOT )
+				if ( pAttachment )
 				{
-					CreateItem( glItem, pSoldier->inv[HANDPOS].bAttachStatus[ bSlot ], &TempObject );
-
-					if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, &TempObject, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
+					if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, pAttachment, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
 					{
 						fBadCTGH = TRUE;
 					}
@@ -1739,12 +1714,23 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 					{
 						fBadCTGH = FALSE;
 					}
-				BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
+					BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
 				}
 			}
 			else
 			{
-				if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, &TempObject, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
+				OBJECTTYPE* pObject = &(pSoldier->inv[HANDPOS]);
+				// Do we have a launcable?
+				pObj = &(pSoldier->inv[HANDPOS]); 
+				for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+					if ( Item[ iter->usItem ].usItemClass & IC_EXPLOSV )
+					{
+						pObject = &(*iter);
+						break;
+					}
+				}
+
+				if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, pObject, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
 				{
 					fBadCTGH = TRUE;
 				}
@@ -1752,7 +1738,7 @@ UINT8 HandleNonActivatedTossCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLE
 				{
 					fBadCTGH = FALSE;
 				}
-			BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
+				BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
 			}
 		}
 	}
@@ -1858,6 +1844,7 @@ UINT8 HandleTinCanCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT32 uiCursor
 UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
+	BOOLEAN						fEnoughPoints = TRUE;
 
 	// Calculate action points
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -1887,6 +1874,7 @@ UINT8 HandleRemoteCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActiva
 UINT8 HandleBombCursor( SOLDIERTYPE *pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags )
 {
 	PERFORMANCE_MARKER
+	BOOLEAN						fEnoughPoints = TRUE;
 
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_BOMB );

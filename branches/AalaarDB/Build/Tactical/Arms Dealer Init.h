@@ -148,20 +148,42 @@ typedef struct
 
 
 // THIS STRUCTURE GETS SAVED/RESTORED/RESET
-typedef struct
+class OLD_ARMS_DEALER_STATUS_101
 {
+public:
 	UINT32	uiArmsDealersCash;			// How much money the arms dealer currently has
 
-	UINT8		ubSpecificDealerFlags;	// Misc state flags for specific dealers
-	BOOLEAN fOutOfBusiness;					// Set when a dealer has been killed, etc.
+	UINT8	ubSpecificDealerFlags;		// Misc state flags for specific dealers
+	BOOLEAN fOutOfBusiness;				// Set when a dealer has been killed, etc.
 	BOOLEAN fRepairDelayBeenUsed;		// Set when a repairman has missed his repair time estimate & given his excuse for it
 	BOOLEAN	fUnusedKnowsPlayer;			// Set if the shopkeeper has met with the player before [UNUSED]
 
-	UINT32	uiTimePlayerLastInSKI;	// game time (in total world minutes) when player last talked to this dealer in SKI
+	UINT32	uiTimePlayerLastInSKI;		// game time (in total world minutes) when player last talked to this dealer in SKI
 
 	UINT8		ubPadding[ 8 ];
 
-} ARMS_DEALER_STATUS;
+};
+
+// THIS STRUCTURE GETS SAVED/RESTORED/RESET
+class ARMS_DEALER_STATUS
+{
+public:
+	ARMS_DEALER_STATUS() {initialize();};
+    ARMS_DEALER_STATUS& operator=(const OLD_ARMS_DEALER_STATUS_101& status);
+	void	initialize();
+	BOOLEAN Save(HWFILE hFile);
+	BOOLEAN Load(HWFILE hFile);
+
+	UINT32	uiArmsDealersCash;			// How much money the arms dealer currently has
+	UINT8	ubSpecificDealerFlags;		// Misc state flags for specific dealers
+	BOOLEAN fOutOfBusiness;				// Set when a dealer has been killed, etc.
+	BOOLEAN fRepairDelayBeenUsed;		// Set when a repairman has missed his repair time estimate & given his excuse for it
+	BOOLEAN	fUnusedKnowsPlayer;			// Set if the shopkeeper has met with the player before [UNUSED]
+	UINT32	uiTimePlayerLastInSKI;		// game time (in total world minutes) when player last talked to this dealer in SKI
+
+	UINT8	ubStrayAmmo[MAXITEMS];			// partially-depleted ammo mags are stored here as #bullets, and can be converted to full packs
+	BOOLEAN	fPreviouslyEligible[MAXITEMS];	// whether or not dealer has been eligible to sell this item in days prior to today
+};
 
 
 
@@ -186,10 +208,10 @@ class SPECIAL_ITEM_INFO
 {
 public:
 	SPECIAL_ITEM_INFO() {initialize();};
-	SPECIAL_ITEM_INFO& operator=(OLD_SPECIAL_ITEM_INFO_101& src);
-	BOOLEAN operator==(SPECIAL_ITEM_INFO& compare);
-	BOOLEAN Save(HWFILE hFile);
-	BOOLEAN Load(HWFILE hFile);
+	//SPECIAL_ITEM_INFO& operator=(OLD_SPECIAL_ITEM_INFO_101& src);
+	//BOOLEAN operator==(SPECIAL_ITEM_INFO& compare);
+	//BOOLEAN Save(HWFILE hFile);
+	//BOOLEAN Load(HWFILE hFile);
 	void	initialize();
 
 	INT8		bItemCondition;				// if 0, no item is stored
@@ -220,29 +242,9 @@ public:
 
 };
 
-class DEALER_SPECIAL_ITEM
+class OLD_DEALER_ITEM_HEADER_101
 {
 public:
-	DEALER_SPECIAL_ITEM() {initialize();};
-	DEALER_SPECIAL_ITEM& operator=(OLD_DEALER_SPECIAL_ITEM_101& src);
-	BOOLEAN Save(HWFILE hFile);
-	BOOLEAN Load(HWFILE hFile);
-	void	initialize();
-
-
-	UINT32		uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
-	BOOLEAN		fActive;					// TRUE means an item is stored here (empty elements may not always be freed immediately)
-	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
-
-
-	// Individual "special" items are stored here as needed, *one* per slot
-	// An item is special if it is used (status < 100), has been imprinted, or has a permanent attachment
-	SPECIAL_ITEM_INFO Info;
-};
-
-
-typedef struct
-{
 	// Non-special items are all the identical and are totaled inside ubPerfectItems.
 	// Items being repaired are also stored here, with a negative condition.
 	// NOTE: special item elements may remain allocated long after item has been removed, to reduce memory fragmentation!!!
@@ -252,7 +254,7 @@ typedef struct
 	UINT8		ubStrayAmmo;					// partially-depleted ammo mags are stored here as #bullets, and can be converted to full packs
 
 	UINT8		ubElementsAlloced;		// number of DEALER_SPECIAL_ITEM array elements alloced for the special item array
-	DEALER_SPECIAL_ITEM *SpecialItem;	// dynamic array of special items with this same item index
+	OLD_DEALER_SPECIAL_ITEM_101 *SpecialItem;	// dynamic array of special items with this same item index
 
 	UINT32	uiOrderArrivalTime;		// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
 	UINT8		ubQtyOnOrder;					// The number of items currently on order
@@ -260,12 +262,47 @@ typedef struct
 
 	UINT8		ubPadding[2];					// filler
 
-} DEALER_ITEM_HEADER;
+};
 
+
+class DEALER_SPECIAL_ITEM
+{
+public:
+	DEALER_SPECIAL_ITEM() {initialize();};
+	void ConvertFrom101(OLD_DEALER_ITEM_HEADER_101& header, OLD_DEALER_SPECIAL_ITEM_101& special, int usItemIndex);
+	BOOLEAN Save(HWFILE hFile);
+	BOOLEAN Load(HWFILE hFile);
+	void	initialize();
+
+
+	//data from SPECIAL_ITEM_INFO
+	UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)
+	INT8		bItemCondition;				// if 0, no item is stored
+											// from 1 to 100 indicates an item with that status
+											// -1 to -100 means the item is in for repairs, flip sign for the actual status
+
+
+	//data from OLD_DEALER_SPECIAL_ITEM_101
+	UINT32		uiRepairDoneTime;			// If the item is in for repairs, this holds the time when it will be repaired (in min)
+	BOOLEAN		fActive;					// TRUE means an item is stored here (empty elements may not always be freed immediately)
+	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
+
+
+	//data from OLD_DEALER_ITEM_HEADER_101
+	UINT32	uiOrderArrivalTime;				// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
+	UINT8		ubQtyOnOrder;				// The number of items currently on order
+
+
+	char endOfPOD;
+
+	OBJECTTYPE object;
+};
+
+typedef std::list<DEALER_SPECIAL_ITEM> DealerItemList;
+extern DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
 
 extern ARMS_DEALER_INFO			ArmsDealerInfo[ NUM_ARMS_DEALERS ];
 extern ARMS_DEALER_STATUS		gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-extern DEALER_ITEM_HEADER		gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 
 
 
@@ -274,7 +311,9 @@ extern DEALER_ITEM_HEADER		gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ]
 
 void		InitAllArmsDealers();
 void		ShutDownArmsDealers();
+void		InitializeOneArmsDealer( UINT8 ubArmsDealer );
 
+bool	ItemIsSpecial(DEALER_SPECIAL_ITEM& item);
 UINT32	GetArmsDealerItemTypeFromItemNumber( UINT16 usItem );
 
 //Count every single item the dealer has in stock
@@ -288,13 +327,11 @@ UINT8		CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16
 void		AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject );
 
 void		RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany );
-void		RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement );
 
 BOOLEAN IsMercADealer( UINT8 ubMercID );
 INT8		GetArmsDealerIDFromMercID( UINT8 ubMercID );
 
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny );
 
 void		DailyUpdateOfArmsDealersInventory();
 
@@ -310,10 +347,10 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex );
 
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID );
 
-void		MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
+void		MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE *pObject );
 
 void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId );
-void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubOwnerProfileId );
+void		GiveItemToArmsDealerforRepair( UINT8 ubArmsDealer, OBJECTTYPE* pObject, UINT8 ubOwnerProfileId );
 UINT32	WhenWillRepairmanBeAllDoneRepairing( UINT8 ubArmsDealer );
 
 UINT32 CalculateSpecialItemRepairTime( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo );
@@ -326,7 +363,6 @@ UINT32 CalculateSimpleItemRepairCost( UINT8 ubArmsDealer, UINT16	usItemIndex, IN
 
 
 void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo );
-void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject );
 
 UINT16	CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling );
 

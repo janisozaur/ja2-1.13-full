@@ -680,7 +680,7 @@ void SetupGunGUI()
 			CreateTextButton( L"SILENCER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, SILENCER ) != -1 )
+		if( FindAttachment( gpItem, SILENCER ) )
 		{
 			ButtonList[ guiAttachmentButton[ SILENCER_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[0] = TRUE;
@@ -693,7 +693,7 @@ void SetupGunGUI()
 			CreateTextButton( L"SNIPERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, SNIPERSCOPE ) != -1 )
+		if( FindAttachment( gpItem, SNIPERSCOPE ) )
 		{
 			ButtonList[ guiAttachmentButton[ SNIPERSCOPE_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[1] = TRUE;
@@ -706,7 +706,7 @@ void SetupGunGUI()
 			CreateTextButton( L"LASERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, LASERSCOPE ) != -1 )
+		if( FindAttachment( gpItem, LASERSCOPE ) )
 		{
 			ButtonList[ guiAttachmentButton[ LASERSCOPE_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[2] = TRUE;
@@ -719,7 +719,7 @@ void SetupGunGUI()
 			CreateTextButton( L"BIPOD", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, BIPOD ) != -1 )
+		if( FindAttachment( gpItem, BIPOD ) )
 		{
 			ButtonList[ guiAttachmentButton[ BIPOD_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[3] = TRUE;
@@ -732,7 +732,7 @@ void SetupGunGUI()
 			CreateTextButton( L"DUCKBILL", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, DUCKBILL ) != -1 )
+		if( FindAttachment( gpItem, DUCKBILL ) )
 		{
 			ButtonList[ guiAttachmentButton[ DUCKBILL_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[4] = TRUE;
@@ -745,7 +745,7 @@ void SetupGunGUI()
 			CreateTextButton( L"G-LAUNCHER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment );
 		yp += 14;
-		if( FindAttachment( gpItem, UNDER_GLAUNCHER ) != -1 )
+		if( FindAttachment( gpItem, UNDER_GLAUNCHER ) )
 		{
 			ButtonList[ guiAttachmentButton[ GLAUNCHER_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfAttachment[5] = TRUE;
@@ -870,7 +870,7 @@ void SetupArmourGUI()
 		guiCeramicPlatesButton = 
 			CreateTextButton( L"CERAMIC PLATES", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 558, 2 * iScreenHeightOffset + 375, 72, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleCeramicPlates );
-		if( FindAttachment( gpItem, CERAMIC_PLATES ) != -1 )
+		if( FindAttachment( gpItem, CERAMIC_PLATES ) )
 		{
 			ButtonList[ guiCeramicPlatesButton ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfCeramicPlates = TRUE;
@@ -990,7 +990,7 @@ void SetupExplosivesGUI()
 			CreateTextButton( L"DETONATOR", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 			iScreenWidthOffset + 570, yp, 60, 12, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleDetonator );
 		yp += 14;
-		if( FindAttachment( gpItem, DETONATOR ) != -1 )
+		if( FindAttachment( gpItem, DETONATOR ) )
 		{
 			ButtonList[ guiDetonatorButton ]->uiFlags |= BUTTON_CLICKED_ON;
 			gfDetonator = TRUE;
@@ -1304,7 +1304,7 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 i;
-		UINT16 usAttachment = 0;
+		UINT16 usAttachment;
 		OBJECTTYPE temp;
 		for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 		{	//Loop through and find the button that was just modified
@@ -1316,7 +1316,6 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
-				default: Assert(0); continue;
 			}
 			if( guiAttachmentButton[ i ] != -1 && btn == ButtonList[ guiAttachmentButton[ i ] ] )
 			{	//Found it, now check the state of the button.
@@ -1329,13 +1328,11 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 				}
 				else
 				{ //Button is out, so remove the attachment
-					INT8 slot;
 					gfAttachment[ i ] = FALSE;
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
-					slot = FindAttachment( gpItem, usAttachment );
-					if( slot != -1 )
-						//RemoveAttachment( gpItem, slot, &temp );
-						RemoveAttachment( gpItem, slot, NULL );
+					OBJECTTYPE* pAttachment = FindAttachment( gpItem, usAttachment );
+					if( pAttachment )
+						RemoveAttachment( gpItem, pAttachment );
 				}
 			}
 		}
@@ -1358,12 +1355,10 @@ void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
 		}
 		else
 		{
-			INT8 slot;
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			slot = FindAttachment( gpItem, CERAMIC_PLATES );
-			if( slot != -1 )
-				//RemoveAttachment( gpItem, slot, &temp );
-				RemoveAttachment( gpItem, slot, NULL );
+			OBJECTTYPE* pAttachment = FindAttachment( gpItem, CERAMIC_PLATES );
+			if( pAttachment )
+				RemoveAttachment( gpItem, pAttachment );
 		}
 	}
 }
@@ -1383,13 +1378,11 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 		}
 		else
 		{ //Button is out, so remove the attachment
-			INT8 slot;
 			gfDetonator = FALSE;
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			slot = FindAttachment( gpItem, DETONATOR );
-			if( slot != -1 )
-				//RemoveAttachment( gpItem, slot, &temp );
-				RemoveAttachment( gpItem, slot, NULL );
+			OBJECTTYPE* pAttachment = FindAttachment( gpItem, DETONATOR );
+			if( pAttachment )
+				RemoveAttachment( gpItem, pAttachment );
 		}
 	}
 }
@@ -1573,7 +1566,7 @@ void ReEvaluateAttachmentStatii()
 {
 	PERFORMANCE_MARKER
 	INT32 i;
-	UINT16 usAttachment = 0;
+	UINT16 usAttachment;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
 		if( guiAttachmentButton[ i ] != -1 && !( ButtonList[ guiAttachmentButton[ i ] ]->uiFlags & BUTTON_CLICKED_ON ) )
@@ -1586,7 +1579,6 @@ void ReEvaluateAttachmentStatii()
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
-				default: Assert(0); continue;
 			}
 			if( ValidItemAttachment( gpItem, usAttachment, TRUE ) )
 				EnableButton( guiAttachmentButton[ i ] );

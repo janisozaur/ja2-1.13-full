@@ -2149,13 +2149,13 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 			{
 				// lucky bastard was facing away!
 			}
-			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].status.bStatus[ 0 ]) ) )
-			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].status.bStatus[ 0 ]) ) )
+			//			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].objectStatus) ) )
+			else if ( ( (pTarget->inv[HEAD1POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
-			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS].status.bStatus[ 0 ]) ) )
+			else if ( ( (pTarget->inv[HEAD2POS].usItem != NONE) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS].objectStatus) ) )
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
@@ -2235,10 +2235,10 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	{
 		if (bHeadSlot != NO_SLOT)
 		{
-			pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
-			if ( pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] <= USABLE )
+			pTarget->inv[ bHeadSlot ].objectStatus -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
+			if ( pTarget->inv[ bHeadSlot ].objectStatus <= USABLE )
 			{
-				if ( pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] <= 0 )
+				if ( pTarget->inv[ bHeadSlot ].objectStatus <= 0 )
 				{
 					DeleteObj( &(pTarget->inv[ bHeadSlot ]) );
 					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
@@ -2253,11 +2253,11 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 		bHeadSlot = HEAD1POS + (INT8) Random( 2 );
 		if ( pTarget->inv[ bHeadSlot ].usItem != NOTHING )
 		{
-			pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] -= (INT8) ( Random( iImpact / 2 ) );
-			if ( pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] < 0 )
+			pTarget->inv[ bHeadSlot ].objectStatus -= (INT8) ( Random( iImpact / 2 ) );
+			if ( pTarget->inv[ bHeadSlot ].objectStatus < 0 )
 			{
 				// just break it...
-				pTarget->inv[ bHeadSlot ].status.bStatus[ 0 ] = 1;
+				pTarget->inv[ bHeadSlot ].objectStatus = 1;
 			}
 		}
 	}
@@ -3622,8 +3622,6 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 	ddOrigHorizAngle = atan2( dDeltaY, dDeltaX );	
 	ddOrigVerticAngle = atan2( dDeltaZ, (d2DDistance * 2.56f) );
-	ddAdjustedHorizAngle = ddOrigHorizAngle;
-	ddAdjustedVerticAngle = ddOrigVerticAngle;
 
 	ubShots = 1;
 	fTracer = FALSE;
@@ -3773,7 +3771,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 
 		if ( pBullet->usFlags & BULLET_FLAG_KNIFE )
 		{
-			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand].status.bStatus[0];
+			pBullet->ubItemStatus = pFirer->inv[pFirer->ubAttackingHand].objectStatus;
 		}
 
 		// apply increments for first move
@@ -4699,12 +4697,18 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	MAP_ELEMENT *		pMapElement;
 	STRUCTURE *			pStructure, *pTempStructure;
 
+	BOOLEAN					fRoofPresent = FALSE;
+
 	SOLDIERTYPE *		pTarget;
 	FLOAT						dTargetX;
 	FLOAT						dTargetY;
 	FLOAT						dTargetZMin;
 	FLOAT						dTargetZMax;
 	BOOLEAN					fIntended;
+
+	UINT32					uiTileInc = 0;
+
+	//INT8						iImpactReduction;
 
 	INT16						sX, sY, sZ;
 

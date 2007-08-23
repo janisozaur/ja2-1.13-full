@@ -20,7 +20,7 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bE
 
 INT8 FindBestWeaponIfCurrentIsOutOfRange(SOLDIERTYPE * pSoldier, INT8 bCurrentWeaponIndex, UINT16 bWantedRange);
 
-extern INT8 FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
+OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
 extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindObjClassAfterSlot( SOLDIERTYPE * pSoldier, INT8 bStart, UINT32 usItemClass );
 extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
@@ -43,9 +43,8 @@ extern void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex );
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
 extern void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest );
 
-extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound );
-extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment );
-extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
+BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound = TRUE);
+BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE * pNewObj = NULL);
 
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
@@ -54,9 +53,9 @@ extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo );
-extern BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj );
-extern BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj );
-extern BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj );
+BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj );
+BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj );
+BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj );
 extern UINT16 DefaultMagazine( UINT16 usItem );
 UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard );
 UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard );
@@ -87,6 +86,8 @@ BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNew
 BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 
 void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
+void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem);
+void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj);
 
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
 
@@ -151,7 +152,7 @@ INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot
 void SwapOutHandItem( SOLDIERTYPE * pSoldier );
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 
-INT8 FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
+OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
 void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
 
 void WaterDamage( SOLDIERTYPE *pSoldier );
@@ -189,7 +190,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );
 
 extern void ActivateXRayDevice( SOLDIERTYPE * pSoldier );
 extern void TurnOffXRayEffects( SOLDIERTYPE * pSoldier );
-extern INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
+OBJECTTYPE* FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
 
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount );
 
@@ -197,7 +198,7 @@ UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex);
 
 // Item property-related stuff added by Madd Mugsy
 
-BOOLEAN IsScoped( const OBJECTTYPE * pObj );
+BOOLEAN IsScoped( OBJECTTYPE * pObj );
 INT16 GetAimBonus( OBJECTTYPE * pObj, INT32 iRange, UINT8 ubAimTime );
 INT16 GetMinAimBonusRange( OBJECTTYPE * pObj );
 INT16 GetToHitBonus( OBJECTTYPE * pObj, INT32 iRange, UINT8 bLightLevel, BOOLEAN fProneStance = FALSE );
@@ -242,12 +243,12 @@ INT16 GetHearingRangeBonus( SOLDIERTYPE * pSoldier );
 INT8 IsGrenadeLauncher( OBJECTTYPE * pObj );
 INT8 GetGrenadeLauncherStatus( OBJECTTYPE * pObj );
 BOOLEAN IsGrenadeLauncherAttached( OBJECTTYPE * pObj );
-INT8 FindAttachment_GrenadeLauncher( OBJECTTYPE * pObj );
+OBJECTTYPE* FindAttachment_GrenadeLauncher( OBJECTTYPE * pObj );
 UINT16 GetAttachedGrenadeLauncher( OBJECTTYPE * pObj );
 INT8 FindRocketLauncher( SOLDIERTYPE * pSoldier );
 INT8 FindRocketLauncherOrCannon( SOLDIERTYPE * pSoldier );
 INT8 FindNonSmokeLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
-INT8 FindNonSmokeLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
+OBJECTTYPE* FindNonSmokeLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
 UINT16 PickARandomLaunchable(UINT16 itemIndex);
 
 BOOLEAN IsFlashSuppressor( OBJECTTYPE * pObj, SOLDIERTYPE * pSoldier );
@@ -260,7 +261,6 @@ BOOLEAN IsDuckbill( OBJECTTYPE * pObj );
 // Noise volume is then calculated as volume * GetPercentNoiseVolume / 100
 UINT16 GetPercentNoiseVolume( OBJECTTYPE * pObj );
 
-INT8 FindFirstArmourAttachment( OBJECTTYPE * pObj );
 INT16 GetAttachedArmourBonus( OBJECTTYPE * pObj );
 INT16 GetBulletSpeedBonus( OBJECTTYPE * pObj );
 INT8 FindGasMask( SOLDIERTYPE * pSoldier );
@@ -271,7 +271,7 @@ INT8 FindUsableCrowbar( SOLDIERTYPE * pSoldier );
 INT8 FindToolkit( SOLDIERTYPE * pSoldier );
 BOOLEAN IsDetonatorAttached( OBJECTTYPE * pObj );
 BOOLEAN IsRemoteDetonatorAttached( OBJECTTYPE * pObj );
-INT8 FindAttachedBatteries( OBJECTTYPE * pObj );
+OBJECTTYPE* FindAttachedBatteries( OBJECTTYPE * pObj );
 INT8 FindMedKit( SOLDIERTYPE * pSoldier );
 INT8 FindFirstAidKit( SOLDIERTYPE * pSoldier );
 INT8 FindLocksmithKit( SOLDIERTYPE * pSoldier );

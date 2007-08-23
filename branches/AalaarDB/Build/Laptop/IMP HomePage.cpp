@@ -166,6 +166,7 @@ void DisplayPlayerActivationString( void )
 	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
+	INT32 iCounter=0;
 
 	// player gone too far, move back
 	if(iStringPos > 64)

@@ -416,7 +416,7 @@ UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 
 	if ( ssIndex < 0 || ssIndex > 92 )
 	{
-		//int breakpoint=0;
+		int i=0;
 	}
 
 	// Get Offsets from Index into structure

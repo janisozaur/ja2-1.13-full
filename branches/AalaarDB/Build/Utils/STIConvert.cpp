@@ -117,7 +117,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 	SGPPaletteEntry *		pSGPPaletteEntry;
 	STCIPaletteElement	STCIPaletteEntry;
 
-	STCISubImage *			pSubImageBuffer = NULL;
+	STCISubImage *			pSubImageBuffer;
 	UINT16							usNumberOfSubImages;
 	UINT32							uiSubImageBufferSize=0;
 
@@ -264,6 +264,7 @@ BOOLEAN ConvertToETRLE( UINT8 ** ppDest, UINT32 * puiDestLen, UINT8 ** ppSubImag
 	BOOLEAN					fNextExists;
 	STCISubImage *	pCurrSubImage;
 	STCISubImage		TempSubImage;
+	UINT32					uiCompressedSize = 0;
 	UINT32					uiSubImageCompressedSize;
 	UINT32					uiSpaceLeft;
 

@@ -497,6 +497,7 @@ void GameInitPersonnel( void )
 {
 	PERFORMANCE_MARKER
 	// init past characters lists
+	INT32 iCounter =0;
 	InitPastCharactersList( );
 
 }
@@ -758,6 +759,7 @@ void RenderPersonnel( void )
 {
 	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
+	INT32 iCounter=0;
 	// re-renders personnel screen
 	// render main background	
 	
@@ -853,6 +855,7 @@ BOOLEAN RenderPersonnelPictures( void )
 	// find person with iStartPersonId, unless it is -1, then find first bActive Merc on Staff
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;
 	BOOLEAN fFound=FALSE;
+	INT32 iCounter=0;
 	INT32 iSlot=0;
 	INT32 cnt=0;
 	INT32 iCurrentId = 0;
@@ -923,6 +926,8 @@ BOOLEAN RenderPersonnelPictures( void )
 void RenderPersonnelStats( INT32 iId, INT32 iSlot )
 {
 	PERFORMANCE_MARKER
+
+	INT32 iCounter=0;
 	// will render the stats of person iId in slot iSlot
 	SetFont(PERS_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
@@ -948,6 +953,8 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
 	VOBJECT_DESC	VObjectDesc;
+	INT32 iCounter = 7;
+
 	// draw face to soldier iId in slot iSlot
 	
 	// special case?..player generated merc
@@ -2587,7 +2594,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				}
 				else
 				{
-						swprintf( sString, L"%2d%%%%", pSoldier->inv[ ubCounter ].status.bStatus[0] );
+						swprintf( sString, L"%2d%%%%", pSoldier->inv[ ubCounter ].objectStatus );
 						FindFontRightCoordinates( ( INT16 )( PosX + 65 ), ( INT16 ) ( PosY + 15 ), ( INT16 ) ( 171 - 75 ), 
 							( INT16 )( GetFontHeight( FONT10ARIAL ) ), sString, FONT10ARIAL, &sX, &sY );
 						
@@ -2644,6 +2651,11 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	PERFORMANCE_MARKER
+	INT32 iValue = 0;
+	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
+	INT32 cnt = 0;
+	INT32 iId = 0;
+
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2688,8 +2700,14 @@ void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 void InventoryDownButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	PERFORMANCE_MARKER
+	INT32 iValue = 0;
+	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
+	INT32 cnt = 0;
+	INT32 iId = 0;
+
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
+
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
@@ -2911,6 +2929,7 @@ INT32 GetTotalDailyCostOfCurrentTeam( void )
 
 	SOLDIERTYPE *pSoldier;	
 	INT32 cnt=0;
+	INT32 iCounter = 0;
 	INT32 iCostOfTeam = 0;
 
 
@@ -2969,6 +2988,7 @@ INT32 GetLowestDailyCostOfCurrentTeam( void )
 
 	SOLDIERTYPE *pSoldier;	
 	INT32 cnt=0;
+	INT32 iCounter = 0;
 	INT32 iLowest = 999999;
 //	INT32 iId =0;
 	INT32 iCost = 0;
@@ -3042,6 +3062,7 @@ INT32 GetHighestDailyCostOfCurrentTeam( void )
 
 	SOLDIERTYPE *pSoldier;	
 	INT32 cnt=0;
+	INT32 iCounter = 0;
 	INT32 iHighest = 0;
 //	INT32 iId =0;
 	INT32 iCost = 0;
@@ -3170,6 +3191,7 @@ INT32 GetIdOfDepartedMercWithHighestStat( INT32 iStat )
 	INT32 iValue =0;
 	MERCPROFILESTRUCT *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter =0;
 	INT8 bCurrentList = 0;
 	INT16 *bCurrentListValue = LaptopSaveInfo.ubDeadCharactersList;
 	BOOLEAN fNotDone = TRUE;
@@ -3346,6 +3368,7 @@ INT32 GetIdOfDepartedMercWithLowestStat( INT32 iStat )
 	INT32 iValue =9999999;
 	MERCPROFILESTRUCT *pTeamSoldier;
 	INT32 cnt=0;
+	INT32 iCounter =0;
 	INT8 bCurrentList = 0;
 	INT16 *bCurrentListValue = LaptopSaveInfo.ubDeadCharactersList;
 	BOOLEAN fNotDone = TRUE;
@@ -3886,6 +3909,7 @@ INT32 GetAvgStatOfPastTeamStat( INT32 iStat )
 	INT32 iTotalStatValue = 0;
 	INT32 iId = -1;
 	MERCPROFILESTRUCT *pTeamSoldier;
+	INT32 iCounter =0;
 	INT8 bCurrentList = 0;
 	INT16 *bCurrentListValue = LaptopSaveInfo.ubDeadCharactersList;
 	BOOLEAN fNotDone = TRUE;
@@ -4576,6 +4600,7 @@ INT32 GetNumberOfPastMercsOnPlayersTeam( void )
 {
 	PERFORMANCE_MARKER
 	INT32 iPastNumberOfMercs = 0;
+	INT32 iCounter = 0;
 	// will run through the alist of past mercs on the players team and return thier number
 
 	// dead
@@ -4914,6 +4939,7 @@ void DisplayPastMercsPortraits( void )
 	INT32 iCounter = 0;
 	INT32 iCounterA = 0;
 	INT32 iStartArray = 0; // 0 = dead list, 1 = fired list, 2 = other list
+	BOOLEAN fFound = FALSE;
 
 	// not time to display
 	if( fCurrentTeamMode == TRUE )
@@ -5667,7 +5693,7 @@ INT32 GetIdOfFirstDisplayedMerc( )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
-	INT32 cnt = 0;
+	INT32 cnt = 0, iCounter = 0;
 
 	// set current soldier
 	pSoldier = MercPtrs[ cnt ];
@@ -5891,6 +5917,8 @@ void FindPositionOfPersInvSlider( void )
 	INT32 iValue = 0;
 	INT32 iNumberOfItems = 0;
 	INT16 sSizeOfEachSubRegion = 0;
+	INT16 sYPositionOnBar = 0;
+	INT16 iCurrentItemValue = 0;
 
 	// find out how many there are
 	iValue = ( INT32 )( GetNumberOfInventoryItemsOnCurrentMerc( ) );
@@ -6180,6 +6208,9 @@ void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
 	PERFORMANCE_MARKER
 	INT32 iValue = 0;
+	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
+	INT32 cnt = 0;
+	INT32 iId = 0;
 
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -6414,6 +6445,7 @@ void DisplayATMAmount( void )
 
 	INT16 sX = 0, sY = 0;
 	CHAR16 sTempString[ 32 ];
+	CHAR16 sZero[ 2 ] = L"0";
 	INT32 iCounter = 0;
 
 	if( fShowAtmPanel == FALSE )
@@ -6596,7 +6628,7 @@ BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 	pMoneyObject.usItem = MONEY;
 	pMoneyObject.ubNumberOfObjects = 1;
 	pMoneyObject.money.bMoneyStatus = 100;
-	pMoneyObject.	status.bStatus[0] = 100;	
+	pMoneyObject.	objectStatus = 100;	
 	pMoneyObject.money.uiMoneyAmount = iCurrentBalance;
 	
 
@@ -6842,6 +6874,7 @@ void RenderRectangleForPersonnelTransactionAmount( void )
 	UINT32										uiDestPitchBYTES;
 	UINT8											*pDestBuf;
 	CHAR16 sTempString[ 32 ];
+	CHAR16 sZero[ 2 ] = L"0";
 	INT32	iCounter = 0;
 	
 
@@ -6960,6 +6993,7 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 	CHAR16 sString[50];
 	CHAR16 sStringA[ 50 ];
 	INT16 sX, sY;
+	UINT32 uiHits = 0;
 	
 	
 	if( Menptr[iId].flags.uiStatusFlags & SOLDIER_VEHICLE )
@@ -6978,8 +7012,8 @@ void DisplayEmploymentinformation( INT32 iId, INT32 iSlot )
 		//Remaining Contract:
 		case 0:
 		{
-			//UINT32 uiTimeUnderThisDisplayAsHours = 24*60;
-			static const UINT32 uiMinutesInDay = 24 * 60;
+			UINT32 uiTimeUnderThisDisplayAsHours = 24*60;
+			UINT32 uiMinutesInDay = 24 * 60;
 
 				if(Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || Menptr[iId].ubProfile == SLAY )
 				{

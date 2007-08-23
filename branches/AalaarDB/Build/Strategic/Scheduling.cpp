@@ -1236,6 +1236,8 @@ BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTi
 {
 	PERFORMANCE_MARKER
 	INT32			iLoop;
+	BOOLEAN		fFoundTime = FALSE;
+
 	*puiTime = 100000;
 
 	for ( iLoop = 0; iLoop < MAX_SCHEDULE_ACTIONS; iLoop++ )

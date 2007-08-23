@@ -167,7 +167,7 @@ bool WORLDITEM::operator<(const WORLDITEM& compare)
 				// same item type = compare item quality, then
 
 				// higher quality first
-				if ( this->o.status.bStatus[ 0 ] > compare.o.status.bStatus[ 0 ] )
+				if ( this->o.objectStatus > compare.o.objectStatus )
 				{
 					return( true );
 				}
@@ -347,6 +347,8 @@ void FindPanicBombsAndTriggers( void )
 	STRUCTURE *		pSwitch;
 	INT16			sGridNo = NOWHERE;
 	INT8			bPanicIndex;
+	BOOLEAN			fPanicTriggerIsAlarm = FALSE;
+	
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
 	{
 		if (gWorldBombs[ uiBombIndex ].fExists)
@@ -582,6 +584,8 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;
+	UINT32			uiLevelItems = 0;
+		
 	//If any world items exist, we must delete them now.
 	TrashWorldItems();
 

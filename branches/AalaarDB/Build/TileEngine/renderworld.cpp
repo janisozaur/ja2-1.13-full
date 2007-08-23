@@ -788,10 +788,10 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 
 	LEVELNODE		*pNode; //, *pLand, *pStruct; //*pObject, *pTopmost, *pMerc;
 	SOLDIERTYPE	*pSoldier, *pSelSoldier;
-	HVOBJECT		hVObject = NULL;
+	HVOBJECT		hVObject;
 	ETRLEObject *pTrav;
 	TILE_ELEMENT *TileElem=NULL;
-	UINT32			uiDestPitchBYTES = 0;
+	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf=NULL;
 	UINT16			usAnimSurface;
 	INT8				bXOddFlag = 0;
@@ -826,6 +826,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 	INT16				sX, sY;
 	BOOLEAN			fTileInvisible = FALSE;
 	BOOLEAN			fConvertTo16=FALSE;
+	BOOLEAN			fBlit16=FALSE;
 	UINT32			cnt;
 	static			UINT8				ubLevelNodeStartIndex[ NUM_RENDER_FX_TYPES ];
 	BOOLEAN			bItemOutline;
@@ -1244,7 +1245,7 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 											usImageIndex = pNode->pAniTile->sCurrentFrame;
                       uiAniTileFlags = pNode->pAniTile->uiFlags;
 
-											// Position corpse based on its float position
+											// Position corpse based on it's float position
 											if ( ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) )
 											{
 												pCorpse = &( gRottingCorpse[ pNode->pAniTile->uiUserData ] );
@@ -3553,7 +3554,7 @@ void ScrollWorld( )
 {
 	PERFORMANCE_MARKER
 	UINT32		ScrollFlags = 0;
-	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
+	BOOLEAN		fDoScroll = FALSE, fMovedPos=FALSE, fAGoodMove = FALSE;
 	INT16	sTempRenderCenterX, sTempRenderCenterY;
 	INT8	bDirection;
 	INT16	sScrollXStep=-1;

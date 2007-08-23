@@ -570,6 +570,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 	INT32 cnt;
 	SGPFILENAME filename;
 	INT16 sSlot;
+	INT32	iStartLoc=0;
 #ifndef _DEBUG
 	CHAR16	zText[512];
 #endif

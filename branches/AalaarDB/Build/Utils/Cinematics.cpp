@@ -199,16 +199,14 @@ SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 	HANDLE	hFile;
 
 	// Get an available flic slot from the list
-	pSmack=SmkGetFreeFlic();
-	if(! pSmack)
+	if(!(pSmack=SmkGetFreeFlic()))
 	{
 		ErrorMsg("SMK ERROR: Out of flic slots, cannot open another");
 		return(NULL);
 	}
 
 	// Attempt opening the filename
-	pSmack->hFileHandle=FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
-	if(! pSmack->hFileHandle)
+	if(!(pSmack->hFileHandle=FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE)))
 	{
 		ErrorMsg("SMK ERROR: Can't open the SMK file");
 		return(NULL);
@@ -218,15 +216,13 @@ SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 	hFile = GetRealFileHandleFromFileManFileHandle( pSmack->hFileHandle );
 
 	// Allocate a Smacker buffer for video decompression
-	pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,SCREEN_WIDTH,SCREEN_HEIGHT,0,0);
-	if(! pSmack->SmackBuffer)
+	if(!(pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,SCREEN_WIDTH,SCREEN_HEIGHT,0,0)))
 	{
 		ErrorMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		return(NULL);
 	}
 
-	pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
-	if(! pSmack->SmackHandle)
+	if(!(pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA)))
 //	if(!(pSmack->SmackHandle=SmackOpen(cFilename, SMACKTRACKS, SMACKAUTOEXTRA)))
 	{
 		ErrorMsg("SMK ERROR: Smacker won't open the SMK file");

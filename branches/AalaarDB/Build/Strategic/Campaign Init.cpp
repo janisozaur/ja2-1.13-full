@@ -397,6 +397,7 @@ void BuildUndergroundSectorInfoList()
 {
 	PERFORMANCE_MARKER
 	UNDERGROUND_SECTORINFO *curr;
+	SECTORINFO			*pSector = NULL;
 
 	TrashUndergroundSectorInfo();
 

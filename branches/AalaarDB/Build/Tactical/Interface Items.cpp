@@ -289,8 +289,7 @@ UINT32			guiMoneyButtonBtn[MAX_ATTACHMENTS];
 INT32				guiMoneyButtonImage;
 INT32				guiMoneyDoneButtonImage;
 
-UINT16		gusOriginalAttachItem[ MAX_ATTACHMENTS ];
-UINT8			gbOriginalAttachStatus[ MAX_ATTACHMENTS ];
+OBJECTTYPE::attachmentList	gOriginalAttachments;
 SOLDIERTYPE * gpAttachSoldier;
 extern BOOLEAN	gfSMDisableForItems;
 
@@ -2055,7 +2054,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 	}
 	else
 	{
-		pItem = &Item[ pObject->usAttachItem[ ubStatusIndex - RENDER_ITEM_ATTACHMENT1 ] ];
+		pItem = &Item[ pObject->GetAttachmentAtIndex( ubStatusIndex - RENDER_ITEM_ATTACHMENT1 )->usItem ];
 	}
 
 	if ( fDirtyLevel == DIRTYLEVEL2 )
@@ -2282,7 +2281,10 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			}
 			else
 			{
-				swprintf( pStr, L"%s", ShortItemNames[ pObject->usAttachItem[ ubStatusIndex - RENDER_ITEM_ATTACHMENT1 ] ] );
+				OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex(ubStatusIndex - RENDER_ITEM_ATTACHMENT1);
+				if (pAttachment) {
+					swprintf( pStr, L"%s", ShortItemNames[ pAttachment->usItem ] );
+				}
 			}
 
 			fLineSplit = WrapString( pStr, pStr2, WORD_WRAP_INV_WIDTH, ITEM_FONT );
@@ -2642,9 +2644,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			MSYS_AddRegion( &gItemDescAttachmentRegions[cnt]);
 			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
 
-			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
-			{
-				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ gpItemDescObject->usAttachItem[ cnt ] ] );
+			OBJECTTYPE* pAttachment = pObject->GetAttachmentAtIndex(cnt);
+			if (pAttachment) {
+				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ pAttachment->usItem ] );
 				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
 			}
 			else
@@ -2747,12 +2749,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gpAttachSoldier = pSoldier;
 	}
 	// store attachments that item originally had
-	for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-	{
-		gusOriginalAttachItem[ cnt ] = pObject->usAttachItem[ cnt ];
-		gbOriginalAttachStatus[ cnt ] = pObject->bAttachStatus[ cnt ];
-	}
-
+	gOriginalAttachments = pObject->attachments;
 
 	if ( (gpItemPointer != NULL) && (gfItemDescHelpTextOffset == FALSE) && (CheckFact( FACT_ATTACHED_ITEM_BEFORE, 0 ) == FALSE) )
 	{
@@ -2997,6 +2994,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
+	OBJECTTYPE* pAttachment = gpItemDescObject->GetAttachmentAtIndex(uiItemPos);
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3025,17 +3023,16 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		}
 		else
 		{
-      // ATE: Make sure we have enough AP's to drop it if we pick it up!
-			if ( EnoughPoints( gpItemDescSoldier, ( AttachmentAPCost( gpItemDescObject->usAttachItem[uiItemPos], gpItemDescObject->usItem ) + AP_PICKUP_ITEM ), 0, TRUE ) )
+			// ATE: Make sure we have enough AP's to drop it if we pick it up!
+			if ( pAttachment && EnoughPoints( gpItemDescSoldier, ( AttachmentAPCost( pAttachment->usItem, gpItemDescObject->usItem ) + AP_PICKUP_ITEM ), 0, TRUE ) )
 			{
 				// Get attachment if there is one
 				// The follwing function will handle if no attachment is here
-				if ( RemoveAttachment( gpItemDescObject, (UINT8)uiItemPos, &gItemPointer ) )
+				if ( RemoveAttachment( gpItemDescObject, pAttachment, &gItemPointer ) )
 				{
 					gpItemPointer = &gItemPointer;
 					gpItemPointerSoldier = gpItemDescSoldier;
 
-	//				if( guiCurrentScreen == MAP_SCREEN )
 					if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 					{
 						// Set mouse
@@ -3072,12 +3069,12 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP && fRightDown )
 	{
-		static OBJECTTYPE Object2;
-
 		fRightDown = FALSE;
 
-		if ( gpItemDescObject->usAttachItem[ uiItemPos ] != NOTHING )
+		if ( pAttachment )
 		{
+			static OBJECTTYPE Object2;
+
 			BOOLEAN fShopkeeperItem = FALSE;
 
 			// remember if this is a shopkeeper's item we're viewing ( pShopKeeperItemDescObject will get nuked on deletion )
@@ -3088,16 +3085,14 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 			DeleteItemDescriptionBox( );
 
-			if ( CreateItem( gpItemDescObject->usAttachItem[ uiItemPos ], gpItemDescObject->bAttachStatus[ uiItemPos ], &Object2 ) )
-			{
-				gfItemDescObjectIsAttachment = TRUE;
-				InternalInitItemDescriptionBox( &Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier );
+			Object2 = *pAttachment;
+			gfItemDescObjectIsAttachment = TRUE;
+			InternalInitItemDescriptionBox( &Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier );
 
-				if ( fShopkeeperItem )
-				{
-					pShopKeeperItemDescObject = &Object2;
-					StartSKIDescriptionBox( );
-				}
+			if ( fShopkeeperItem )
+			{
+				pShopKeeperItemDescObject = &Object2;
+				StartSKIDescriptionBox( );
 			}
 		}
 	}
@@ -3167,44 +3162,32 @@ void RenderItemDescriptionBox( )
 		}
 		
 		// Display attachments
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-		{
-			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
+		cnt = 0;
+		for (OBJECTTYPE::attachmentList::iterator iter = gpItemDescObject->attachments.begin();
+			iter != gpItemDescObject->attachments.end(); ++iter, ++cnt) {
+
+			sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
+			sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
+			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
+			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
+			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+			//this code was the same inside both branches of the if below!
+#if 0
+			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 			{
-				
-//        if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-				if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
-				{
-         sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
-				 sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
- 
-				 INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
-
-				 sCenX = sCenX - gMapItemDescAttachmentsXY[cnt].sBarDx;
-				 sCenY = sCenY + gMapItemDescAttachmentsXY[cnt].sBarDy;
-				 DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
-
-				}
-				else
-				{
-				 sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
-				 sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
- 
-				 INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
-
-				 sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
-				 sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-				 DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
-
-
-				}
 			}
-
+			else
+			{
+			}
+#endif
+		}
+		for (cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
+		{
 			if (fHatchOutAttachments )
 			{
 				DrawHatchOnInventory( guiSAVEBUFFER, (INT16) (gsInvDescX + gMapItemDescAttachmentsXY[ cnt ].sX), (INT16) (gsInvDescY + gMapItemDescAttachmentsXY[ cnt ].sY - 2), (INT16)(gMapItemDescAttachmentsXY[ cnt ].sWidth + gMapItemDescAttachmentsXY[ cnt ].sBarDx), (INT16) (gMapItemDescAttachmentsXY[ cnt ].sHeight + 2) );
 			}
-
 		}
 
 		if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_GUN || Item[ gpItemDescObject->usItem ].usItemClass & IC_LAUNCHER )
@@ -3680,27 +3663,30 @@ void RenderItemDescriptionBox( )
 		}
 
 		// Display attachments
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+		cnt = 0;
+		for (OBJECTTYPE::attachmentList::iterator iter = gpItemDescObject->attachments.begin();
+			iter != gpItemDescObject->attachments.end(); ++iter, ++cnt) {
+			sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
+			sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
+
+			INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+
+			sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
+			sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
+			DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
+
+			SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ iter->usItem ] );
+			SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
+		}
+		for (; cnt < MAX_ATTACHMENTS; ++cnt)
 		{
-			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
-			{
-        sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
-				sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
-
-				INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
-
-				sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
-				sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
-				DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
-
-			  SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ gpItemDescObject->usAttachItem[ cnt ] ] );
-			  SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
-			}
-			else
-			{
-				 SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), Message[ STR_ATTACHMENTS ] );
-				 SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
-			}
+			//for the attachments that don't exist
+			 SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), Message[ STR_ATTACHMENTS ] );
+			 SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
+		}
+		for (cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
+		{
+			//now for all attachment slots regardless
 			if (fHatchOutAttachments)
 			{
 				//UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;
@@ -4153,9 +4139,7 @@ void HandleItemDescriptionBox( BOOLEAN *pfDirty )
 void DeleteItemDescriptionBox( )
 {
 	PERFORMANCE_MARKER
-	INT32 cnt, cnt2;
-	BOOLEAN	fFound, fAllFound;
-	UINT8 ubAPCost;
+	INT32 cnt;
 
 	if( gfInItemDescBox == FALSE )
 	{
@@ -4175,66 +4159,43 @@ void DeleteItemDescriptionBox( )
 	{
 		if (gpAttachSoldier)
 		{
-			// check for change in attachments, starting with removed attachments
-			fAllFound = TRUE;
-			for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-			{
-				if ( gusOriginalAttachItem[ cnt ] != NOTHING )
-				{
-					fFound = FALSE;
-					for ( cnt2 = 0; cnt2 < MAX_ATTACHMENTS; cnt2++ )
-					{
-						if ( (gusOriginalAttachItem[ cnt ] == gpItemDescObject->usAttachItem[ cnt2 ]) && (gpItemDescObject->bAttachStatus[ cnt2 ] == gbOriginalAttachStatus[ cnt ]) )
-						{
-							fFound = TRUE;
-						}
-					}	
-					if (!fFound)
-					{
-						// charge APs
-						ubAPCost = AttachmentAPCost(gusOriginalAttachItem[ cnt ],gpItemDescObject->usItem);
-						fAllFound = FALSE;
+			UINT8 ubAPCost = 0;
+
+			// check for change in attachments
+			unsigned int originalSize = gOriginalAttachments.size();
+			unsigned int newSize = gpItemDescObject->attachments.size();
+
+			if (newSize != originalSize) {
+				OBJECTTYPE::attachmentList::iterator originalIter;
+				OBJECTTYPE::attachmentList::iterator newIter;
+				for (originalIter = gOriginalAttachments.begin(), newIter = gpItemDescObject->attachments.begin();
+					originalIter != gOriginalAttachments.end() && newIter != gpItemDescObject->attachments.end();
+					++originalIter, ++newIter) {
+					if (*originalIter == *newIter) {
+					}
+					else {
 						break;
 					}
 				}
-			}
-
-			if (fAllFound)
-			{
-				// nothing was removed; search for attachment added
-				for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-				{
-					if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
+				if (newSize < originalSize) {
+					//an attachment was removed, charge APs
+					ubAPCost = AttachmentAPCost(originalIter->usItem,gpItemDescObject->usItem);
+				}
+				else {
+					//an attachment was added charge APs
+					//lalien: changed to charge AP's for reloading a GL/RL 
+					if ( Item[ gpItemDescObject->usItem ].usItemClass == IC_LAUNCHER || Item[gpItemDescObject->usItem].cannon )
 					{
-						fFound = FALSE;
-						for ( cnt2 = 0; cnt2 < MAX_ATTACHMENTS; cnt2++ )
-						{
-							if ( (gpItemDescObject->usAttachItem[ cnt ] == gusOriginalAttachItem[ cnt2 ]) && (gbOriginalAttachStatus[ cnt2 ] == gpItemDescObject->bAttachStatus[ cnt ]) )
-							{
-								fFound = TRUE;
-							}
-						}	
-						if (!fFound)
-						{
-							// charge APs
-							//lalien: changed to charge AP's for reloading a GL/RL 
-							if ( Item[ gpItemDescObject->usItem ].usItemClass == IC_LAUNCHER || Item[gpItemDescObject->usItem].cannon )
-							{
-								ubAPCost = GetAPsToReload( gpItemDescObject );
-							}
-							else
-							{
-								ubAPCost = AttachmentAPCost(gpItemDescObject->usAttachItem[ cnt ],gpItemDescObject->usItem);
-							}
-							
-							fAllFound = FALSE;
-							break;
-						}
+						ubAPCost = GetAPsToReload( gpItemDescObject );
+					}
+					else
+					{
+						ubAPCost = AttachmentAPCost(newIter->usItem,gpItemDescObject->usItem);
 					}
 				}
 			}
 
-			if (!fAllFound)
+			if (ubAPCost)
 			{
 				DeductPoints( gpAttachSoldier, ubAPCost, 0 );
 			}
@@ -5591,6 +5552,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	HVOBJECT		hVObject;
 	INT32				cnt;
 	UINT16			usPopupWidth, usPopupHeight;
+	UINT8				ubSlotSimilarToKeySlot = 10;
 	INT16				sKeyRingItemWidth = 0;
 	INT16				sOffSetY = 0, sOffSetX = 0;
 
@@ -5720,7 +5682,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 
 	OBJECTTYPE						pObject;
 	pObject.usItem = KEY_1;
-	pObject.status.bStatus[ 0 ] = 100;
+	pObject.objectStatus = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -6575,7 +6537,7 @@ void SetupPickupPage( INT8 bPage )
 			pObject = (gfStealing)? &gpOpponent->inv[pTempItemPool->iItemIndex]
 				:&(gWorldItems[ pTempItemPool->iItemIndex ].o );
 
-		  sValue = pObject->status.bStatus[ 0 ];
+		  sValue = pObject->objectStatus;
 
 	    // Adjust for ammo, other thingys..
 	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
@@ -7046,6 +7008,7 @@ void ItemPickupAll( GUI_BUTTON *btn, INT32 reason )
 void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 {
 	PERFORMANCE_MARKER
+	INT32 cnt = 0;
 	UINT16 usLastItem;
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -7084,6 +7047,8 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason )
 {
 	PERFORMANCE_MARKER
+	INT32 cnt = 0;
+
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -7527,7 +7492,7 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 	{
 		// Retrieve the status of the items
 		// Find the minimum status value - not just the first one
-		INT16 sValue = pObject->status.bStatus[ 0 ];
+		INT16 sValue = pObject->objectStatus;
 
 		for(INT16 i = 1; i < pObject->ubNumberOfObjects; i++)
 		{
@@ -7818,23 +7783,19 @@ void GetHelpTextForItem( STR16 pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier
 
 
 		// Add attachment string....
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
-		{
-			if ( pObject->usAttachItem[ cnt ] != NOTHING )
-			{	
-				iNumAttachments++;
+		for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+			iNumAttachments++;
 
-				if ( iNumAttachments == 1 )
-				{
-					wcscat( pStr, L"\n[" );
-				}
-				else
-				{
-					wcscat( pStr, L", " );
-				}
-
-				wcscat( pStr, ItemNames[ pObject->usAttachItem[ cnt ] ] );
+			if ( iNumAttachments == 1 )
+			{
+				wcscat( pStr, L"\n[" );
 			}
+			else
+			{
+				wcscat( pStr, L", " );
+			}
+
+			wcscat( pStr, ItemNames[ iter->usItem ] );
 		}
 
 		if ( iNumAttachments > 0 )
@@ -7915,6 +7876,8 @@ void CancelItemPointer( )
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
+	UINT32	uiLoadSize=0;
+	UINT32	uiNumBytesRead=0;
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Load structure
@@ -7957,6 +7920,9 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
+	UINT32	uiSaveSize=0;
+	UINT32	uiNumBytesWritten=0;
+
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Setup structure;

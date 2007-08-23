@@ -1,5 +1,6 @@
 #ifndef _FMOD_ERRORS_H
 #define _FMOD_ERRORS_H
+
 static STR8 FMOD_ErrorString(int errcode)
 {
 	switch (errcode)
@@ -27,4 +28,5 @@ static STR8 FMOD_ErrorString(int errcode)
 		default :						return "Unknown error";
 	};
 }
+
 #endif

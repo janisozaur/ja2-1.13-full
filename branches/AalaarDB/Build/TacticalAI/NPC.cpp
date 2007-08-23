@@ -793,7 +793,8 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
-	UINT8									ubTalkDesire, ubLoop;
+	UINT8									ubTalkDesire, ubLoop, ubHighestOpinionRequired = 0;
+	BOOLEAN								fQuoteFound = FALSE;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
 	UINT16								usItemToConsider;
 
@@ -858,7 +859,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 			break;
 	}
 
-	if (pObj->status.bStatus[0] < 50)
+	if (pObj->objectStatus < 50)
 	{
 		SetFactTrue( FACT_ITEM_POOR_CONDITION );
 	}
@@ -2195,7 +2196,7 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
 	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
 	SOLDIERTYPE *		pMerc;
-	SOLDIERTYPE *		pDesiredMerc = NULL;
+	SOLDIERTYPE *		pDesiredMerc;
 	NPCQuoteInfo *	pNPCQuoteInfoArray;
 
 	CHECKF( pubDesiredMerc );
@@ -2242,17 +2243,16 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 				{
 					ubHighestTalkDesire = ubTalkDesire;
 					ubDesiredMerc = ubMerc;
-					pDesiredMerc = MercSlots[ubMerc];
+					pDesiredMerc = MercPtrs[ubMerc];
 					sDesiredMercDist = PythSpacesAway( sMyGridNo, pDesiredMerc->sGridNo );
 				}
 				else if (ubTalkDesire == ubHighestTalkDesire)
 				{
-					sDist = PythSpacesAway( sMyGridNo, MercSlots[ubMerc]->sGridNo );
+					sDist = PythSpacesAway( sMyGridNo, MercPtrs[ubMerc]->sGridNo );
 					if (sDist < sDesiredMercDist)
 					{
 						// we can say the same thing to this merc, and they're closer!
 						ubDesiredMerc = ubMerc;
-						pDesiredMerc = MercSlots[ubMerc];
 						sDesiredMercDist = sDist;
 					}
 				}
@@ -2595,6 +2595,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -2751,6 +2752,7 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubTriggerNPC ) == FALSE)
@@ -3200,6 +3202,7 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
+	BOOLEAN				fDisplayDialogue = TRUE;
 
 	if ( EnsureQuoteFileLoaded( ubNPC ) == FALSE )
 	{

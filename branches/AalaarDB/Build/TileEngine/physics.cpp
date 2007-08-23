@@ -498,6 +498,11 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 
 	if ( !pObject->fAlive )
 	{
+		if ( !pObject->fTestObject )
+		{
+			int i = 0;
+		}
+
 		// ATE: OK, adjust gridno based on where we ended and if we hit any walls....
 		{
 			// Check for SW wall...
@@ -801,9 +806,9 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 	INT32					iCollisionCode = COLLISION_NONE;
 	BOOLEAN				fDoCollision = FALSE;
 	FLOAT					dElasity = 1;
-	UINT16				usStructureID = -1;
-	FLOAT					dNormalX = 0.0, dNormalY = 0.0, dNormalZ = 1.0;
-	INT16					sGridNo = NOWHERE;
+	UINT16				usStructureID;
+	FLOAT					dNormalX, dNormalY, dNormalZ;
+	INT16					sGridNo;
 
 	// Checkf for collisions
 	dX = pObject->Position.x;
@@ -2749,7 +2754,7 @@ UINT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRad
 {
 	PERFORMANCE_MARKER
 	INT16		sX, sY;
-	INT16		sGridNo = NOWHERE;
+	INT16		sGridNo;
 	INT32					leftmost;
 	BOOLEAN	fFound = FALSE;
 	UINT32		cnt = 0;

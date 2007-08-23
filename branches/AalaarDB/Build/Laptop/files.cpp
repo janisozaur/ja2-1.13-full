@@ -327,6 +327,7 @@ void RenderFilesBackGround( void )
 	PERFORMANCE_MARKER
 	// render generic background for file system
 	HVOBJECT hHandle;
+	INT32 iCounter=0;
 	
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE);
@@ -572,6 +573,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 	PERFORMANCE_MARKER
 	// this procedure will open and write out data from the finance list
 	HWFILE hFileHandle;
+	INT32 iBytesWritten=0;
 	FilesUnitPtr pFilesList=pFilesListHead;
 	CHAR8 pFirstFilePath[128];
 	CHAR8 pSecondFilePath[128];
@@ -660,7 +662,8 @@ void DrawFilesListBackGround( void )
 {
 	PERFORMANCE_MARKER
 	// proceudre will draw the background for the list of files
-	 // HVOBJECT hHandle;
+	INT32 iCounter=7;
+ // HVOBJECT hHandle;
 
 	// now the columns
 
@@ -829,6 +832,7 @@ BOOLEAN DisplayFormattedText( void )
 	UINT16 usFirstHeight = 0;
 	UINT16 usSecondWidth;
 	UINT16 usSecondHeight;
+	INT16 sTextWidth = 0;
 	INT32 iCounter=0;
 	INT32 iLength=0;
 	INT32 iHeight=0;
@@ -1035,6 +1039,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
+	INT32 iTotalYPosition = 0;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
@@ -1675,6 +1680,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 	CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
+	INT32 iTotalYPosition = 0;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;

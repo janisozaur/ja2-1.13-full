@@ -186,7 +186,7 @@ void HourlyLarryUpdate( void )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *			pSoldier;
-	INT8							bSlot = NO_SLOT, bBoozeSlot;
+	INT8							bSlot, bBoozeSlot;
 	INT8							bLarryItemLoop;
 	UINT16						usTemptation = 0;
 	UINT16						usCashAmount;

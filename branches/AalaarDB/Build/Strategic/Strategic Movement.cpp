@@ -1025,6 +1025,7 @@ BOOLEAN CheckConditionsForBattle( GROUP *pGroup )
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fBattlePending = FALSE;
+	BOOLEAN fPossibleQueuedBattle = FALSE;
 	BOOLEAN fAliveMerc = FALSE;
 	BOOLEAN fMilitiaPresent = FALSE;
 	BOOLEAN fCombatAbleMerc = FALSE;
@@ -1351,9 +1352,12 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversals )
 {
 	PERFORMANCE_MARKER
-	//SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
+	GROUP *curr = NULL;
+	SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
+	PLAYERGROUP *pPlayer = NULL;
+	BOOLEAN fSuccess = FALSE;
 	#ifdef JA2BETAVERSION
-		//INT32 counter = 0;	
+		INT32 counter = 0;	
 	#endif
 	return FALSE;
 #if 0
@@ -1633,6 +1637,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 	BOOLEAN fExceptionQueue = FALSE;
 	BOOLEAN fFirstTimeInSector = FALSE;
 	BOOLEAN fGroupDestroyed = FALSE;
+	BOOLEAN fVehicleStranded = FALSE;
 
 	// reset
 	gfWaitingForInput = FALSE;
@@ -2635,6 +2640,12 @@ void RemoveGroup( UINT8 ubGroupID )
 	PERFORMANCE_MARKER
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
+
+	if ( ubGroupID == 51 )
+	{
+		int i = 0;
+	}
+
 	Assert( pGroup );
 	RemovePGroup( pGroup );
 }
@@ -2834,6 +2845,9 @@ INT32 CalculateTravelTimeOfGroup( GROUP *pGroup )
 	UINT32 uiEtaTime = 0;
 	WAYPOINT *pNode = NULL;
 	WAYPOINT pCurrent, pDest;
+	INT8 ubCurrentSector = 0;
+
+
 	// check if valid group
 	if( pGroup == NULL )
 	{
@@ -3325,6 +3339,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	INT16 sBattleSector = -1;
 	BOOLEAN fMayRetreatFromBattle = FALSE;
 	BOOLEAN fRetreatingFromBattle = FALSE;
+	BOOLEAN fHandleRetreats = FALSE;
 	BOOLEAN fHelicopterGroup = FALSE;
 	UINT8 ubMercsInGroup = 0;
 
@@ -3816,6 +3831,7 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 {
 	PERFORMANCE_MARKER
+	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
 	PLAYERGROUP		*pHead=NULL;
 	UINT32	uiNumberOfNodes=0;
@@ -4611,14 +4627,14 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 	if( pItem->status.bStatus )
 	{ //Fill 'er up.
 		sFuelNeeded = 10000 - pVehicle->sBreathRed;
-		sFuelAvailable = pItem->status.bStatus[0] * 50;
+		sFuelAvailable = pItem->objectStatus * 50;
 		sFuelAdded = min( sFuelNeeded, sFuelAvailable );
 		//Add to vehicle
 		pVehicle->sBreathRed += sFuelAdded;
 		pVehicle->bBreath = (INT8)(pVehicle->sBreathRed / 100);
 		//Subtract from item
-		pItem->status.bStatus[0] = (INT8)(pItem->status.bStatus[0] - sFuelAdded / 50);
-		if( !pItem->status.bStatus[0] )
+		pItem->objectStatus = (INT8)(pItem->objectStatus - sFuelAdded / 50);
+		if( !pItem->objectStatus )
 		{ //Gas can is empty, so toast the item.
 			DeleteObj( pItem );
 		}

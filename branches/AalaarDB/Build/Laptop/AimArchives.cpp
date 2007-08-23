@@ -495,6 +495,8 @@ void DisplayAlumniOldMercPopUp()
 	HVOBJECT	hDoneHandle;
 	HVOBJECT	hFacePaneHandle;
 	HVOBJECT	hFaceHandle;
+//	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
+	UINT16	usHeight = GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 	CHAR16	sName[AIM_ALUMNI_NAME_SIZE];
 	CHAR16	sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	UINT32		uiStartLoc;

@@ -604,6 +604,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
+ INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
  INT16 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
@@ -901,7 +902,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent;
+ INT16		sClosestOpponent,sBestCover = NOWHERE;
  INT16		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
@@ -909,7 +910,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
  INT8			bCanAttack;
  INT8			bSpitIn, bWeaponIn;
  UINT32		uiChance;
- ATTACKTYPE BestShot = {}, BestStab = {}, BestAttack = {}, CurrStab = {};
+ ATTACKTYPE BestShot, BestStab, BestAttack, CurrStab;
  BOOLEAN	fRunAway = FALSE;
  BOOLEAN	fChangeLevel;
 

@@ -1197,6 +1197,7 @@ void ContractListRegionBoxGlow( UINT16 usCount )
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
  INT16 usY = 0;
+ INT16 sYAdd = 0;
  INT16 sYStart = 0;
  INT16 usVehicleCount = 0;
 
@@ -1269,6 +1270,7 @@ void GlowFace( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
+ INT16 usY = 0;
 
 
 	// not glowing right now, leave
@@ -1328,6 +1330,7 @@ void GlowItem( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
+ INT16 usY = 0;
 
 
 	// not glowing right now, leave
@@ -1390,6 +1393,7 @@ void GlowTrashCan( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
+ INT16 usY = 0;
 
 
 	if( fShowInventoryFlag == FALSE )
@@ -2001,6 +2005,7 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	INT16 usX, usY;
 	INT16 usMercProfileID;
 	INT32 iTimeRemaining=0;
+	INT8 bMorale =0;
 	INT32 iDailyCost = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiArrivalTime;
@@ -3094,10 +3099,15 @@ UINT32 MapScreenHandle(void)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNewScreen;
+	INT32 found=FALSE;
+	UINT32 uiMins=0;
+	UINT32 uiHours=0;
+	UINT32 uiDays=0;
 	VSURFACE_DESC	vs_desc;
 	VOBJECT_DESC VObjectDesc; 
 //	static BOOLEAN fSecondFrame = FALSE;
 	INT32 iCounter = 0;
+	SOLDIERTYPE *pSoldier = NULL;
 
 
 
@@ -4615,7 +4625,11 @@ UINT32 HandleMapUI( )
 	PERFORMANCE_MARKER
 	UINT32 uiNewEvent = MAP_EVENT_NONE;
 	INT16 sMapX = 0, sMapY = 0;
+	INT8 bMapZ = 0;
 	INT16 sX, sY;
+	UINT8 ubCount=0;
+	PathStPtr pNode=NULL;
+	BOOLEAN fVehicle=FALSE;
 	POINT MousePos;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
@@ -5261,7 +5275,7 @@ void GetMapKeyboardInput( UINT32 *puiNewEvent )
 								SOLDIERTYPE *pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
 								if ( pSoldier->inv[ HANDPOS ].usItem != 0 )
 								{
-									pSoldier->inv[ HANDPOS ].status.bStatus[ 0 ] = 2;
+									pSoldier->inv[ HANDPOS ].objectStatus = 2;
 								}
 							}
 						}
@@ -6801,6 +6815,7 @@ void BltCharInvPanel()
 	SOLDIERTYPE	*pSoldier;
 	CHAR16 sString[ 32 ];
 	INT16 usX, usY;
+	INT32 iCounter = 0;
 
 
 	// make sure we're here legally
@@ -7590,6 +7605,8 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 void BlitBackgroundToSaveBuffer( void )
 {
 	PERFORMANCE_MARKER
+	INT8 bTempDestChar = -1;
+
 	// render map
 	RenderMapRegionBackground( );
 	
@@ -11113,6 +11130,7 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 	INT32 iCounter = 0, iCounterA = 0;
 	INT16 sEndSectorA, sEndSectorB;
 	INT32 iExpiryTime, iExpiryTimeA;
+	BOOLEAN fEntrySelected = FALSE;
 	SOLDIERTYPE *pSelectedSoldier[ MAX_CHARACTER_COUNT ];
 	SOLDIERTYPE *pCurrentSoldier = NULL;
 	SOLDIERTYPE *pPreviousSelectedInfoChar = NULL;
