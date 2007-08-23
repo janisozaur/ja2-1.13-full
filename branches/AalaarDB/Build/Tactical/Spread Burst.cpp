@@ -28,12 +28,14 @@ extern BOOLEAN gfBeginBurstSpreadTracking;
 
 void ResetBurstLocations( )
 {
+	PERFORMANCE_MARKER
 	gbNumBurstLocations = 0;
 }
 
 
 void InternalAccumulateBurstLocation( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 	if ( gbNumBurstLocations < MAX_BURST_LOCATIONS )
 	{
@@ -59,6 +61,7 @@ void InternalAccumulateBurstLocation( INT16 sGridNo )
 //it will automatically latch onto enemies within iSearchRange tiles of the mouse drag.
 void AccumulateBurstLocation( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE* pTarget;
 	int iSearchRange = 2; // number of tiles beside the mouse drag to look at
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset, sAdjacentGridNo;
@@ -183,6 +186,7 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 
 void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pTargets[5] )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubShotsPerBurst;
 	FLOAT		dAccululator = 0;
 	FLOAT		dStep = 0;
@@ -229,6 +233,7 @@ extern HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile );
 
 void RenderAccumulatedBurstLocations( )
 {
+	PERFORMANCE_MARKER
 	INT32			cnt;
 	INT16			sGridNo;
 	HVOBJECT	hVObject;

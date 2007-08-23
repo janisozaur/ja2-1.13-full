@@ -215,8 +215,7 @@ void BuildShadeTable(void)
 {
 	PERFORMANCE_MARKER
 	UINT16 red, green, blue;
-	UINT16 index = 0;
-
+	UINT16 index;
 
 	for(red=0; red < 256; red+=4)
 		for(green=0; green < 256; green+=4)
@@ -247,7 +246,6 @@ void BuildIntensityTable(void)
 	UINT16 red, green, blue;
 	UINT16 index;
 	FLOAT	dShadedPercent = (FLOAT)0.80;
-
 
 
 #if 0

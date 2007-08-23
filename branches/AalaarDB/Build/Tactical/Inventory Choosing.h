@@ -88,7 +88,6 @@ void ResetMortarsOnTeamCount( void );
 
 extern ARMY_GUN_CHOICE_TYPE gExtendedArmyGunChoices[ARMY_GUN_LEVELS];
 
-// Headrock: Added LBE enumeration
 enum
 {
 	HELMET = 0,
@@ -111,7 +110,6 @@ enum
 	ATTACHMENTS,
 	KNIVES,
 	ENEMYAMMOTYPES,
-	LBE,
 	MAX_ITEM_TYPES
 };
 

@@ -24,6 +24,7 @@ void SetQueue( UINT8 ubQueueID, HLIST hQueue );
 
 BOOLEAN InitializeEventManager( )
 {
+	PERFORMANCE_MARKER
 	// Create Queue
 	hEventQueue = CreateList( QUEUE_RESIZE, sizeof( PTR ) );
 
@@ -54,6 +55,7 @@ BOOLEAN InitializeEventManager( )
 
 BOOLEAN ShutdownEventManager( )
 {
+	PERFORMANCE_MARKER
 	if ( hEventQueue != NULL )
 	{
 			DeleteList( hEventQueue );
@@ -76,6 +78,7 @@ BOOLEAN ShutdownEventManager( )
 
 BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID )
 {
+	PERFORMANCE_MARKER
 	EVENT *pEvent;
 	UINT32 uiEventSize = sizeof( EVENT );
 	HLIST	hQueue;
@@ -109,6 +112,7 @@ BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataS
 
 BOOLEAN RemoveEvent( EVENT **ppEvent, UINT32 uiIndex, UINT8 ubQueueID )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiQueueSize;
 	HLIST hQueue;
 
@@ -137,6 +141,7 @@ BOOLEAN RemoveEvent( EVENT **ppEvent, UINT32 uiIndex, UINT8 ubQueueID )
 
 BOOLEAN PeekEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiQueueSize;
 	HLIST hQueue;
 
@@ -166,6 +171,7 @@ BOOLEAN PeekEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID )
 
 BOOLEAN FreeEvent( EVENT *pEvent )
 {
+	PERFORMANCE_MARKER
 	CHECKF( pEvent != NULL );
 
 	// Delete event
@@ -177,6 +183,7 @@ BOOLEAN FreeEvent( EVENT *pEvent )
 
 UINT32 EventQueueSize( UINT8 ubQueueID )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiQueueSize;
 	HLIST hQueue;
 
@@ -194,6 +201,7 @@ UINT32 EventQueueSize( UINT8 ubQueueID )
 
 HLIST GetQueue( UINT8 ubQueueID )
 {
+	PERFORMANCE_MARKER
 	switch( ubQueueID )
 	{
 		case PRIMARY_EVENT_QUEUE:
@@ -218,6 +226,7 @@ HLIST GetQueue( UINT8 ubQueueID )
 
 void SetQueue( UINT8 ubQueueID, HQUEUE hQueue )
 {
+	PERFORMANCE_MARKER
 	switch( ubQueueID )
 	{
 		case PRIMARY_EVENT_QUEUE:

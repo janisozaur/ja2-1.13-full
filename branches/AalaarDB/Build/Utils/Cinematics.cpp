@@ -87,6 +87,7 @@ void SmkShutdownVideo(void);
 
 BOOLEAN SmkPollFlics(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 BOOLEAN fFlicStatus=FALSE;
 DDSURFACEDESC SurfaceDescription;
@@ -136,6 +137,7 @@ DDSURFACEDESC SurfaceDescription;
 // Lesh changed this function only -----------------------------
 void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 {
+	PERFORMANCE_MARKER
 	void *pSoundDriver = NULL;
 
 	// Wipe the flic list clean
@@ -159,6 +161,7 @@ void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 
 void SmkShutdown(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	// Close and deallocate any open flics
@@ -171,6 +174,7 @@ UINT32 uiCount;
 
 SMKFLIC *SmkPlayFlic(CHAR8 *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
 {
+	PERFORMANCE_MARKER
 SMKFLIC *pSmack;
 
 	// Open the flic
@@ -190,6 +194,7 @@ SMKFLIC *pSmack;
 
 SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 {
+	PERFORMANCE_MARKER
 	SMKFLIC *pSmack;
 	HANDLE	hFile;
 
@@ -243,12 +248,14 @@ SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
 
 void SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop)
 {
+	PERFORMANCE_MARKER
 	pSmack->uiLeft=uiLeft;
 	pSmack->uiTop=uiTop;
 }
 	
 void SmkCloseFlic(SMKFLIC *pSmack)
 {
+	PERFORMANCE_MARKER
 	// Attempt opening the filename
 	FileClose(pSmack->hFileHandle);
 
@@ -264,6 +271,7 @@ void SmkCloseFlic(SMKFLIC *pSmack)
 
 SMKFLIC *SmkGetFreeFlic(void)
 {
+	PERFORMANCE_MARKER
 UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
@@ -275,6 +283,7 @@ UINT32 uiCount;
 
 void SmkSetupVideo(void)
 {
+	PERFORMANCE_MARKER
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT ReturnCode;
 	UINT16 usRed, usGreen, usBlue;
@@ -308,6 +317,7 @@ void SmkSetupVideo(void)
 
 void SmkShutdownVideo(void)
 {
+	PERFORMANCE_MARKER
 //DEF:
 //	CinematicModeOff();
 }

@@ -151,6 +151,7 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue );
 
 void EnterIMPAttributeSelection( void )
 {
+	PERFORMANCE_MARKER
 	
 
 	// set attributes and skills
@@ -196,10 +197,12 @@ void EnterIMPAttributeSelection( void )
 
 void RenderIMPAlteredAttribute( void )
 {
+	PERFORMANCE_MARKER
 
 }
 void RenderIMPAttributeSelection( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -231,6 +234,7 @@ void RenderIMPAttributeSelection( void )
 
 void ExitIMPAttributeSelection( void )
 {
+	PERFORMANCE_MARKER
 	// get rid of slider buttons
 	DestroyAttributeSliderButtons( );
 
@@ -249,6 +253,7 @@ void ExitIMPAttributeSelection( void )
 
 void HandleIMPAttributeSelection( void )
 {
+	PERFORMANCE_MARKER
 
 	// review mode, do not allow changes
 	if( fReviewStats )
@@ -370,6 +375,7 @@ void HandleIMPAttributeSelection( void )
 
 void ProcessAttributes( void )
 {
+	PERFORMANCE_MARKER
 
 	//Kaiden: Ignore the values in the below comment, this is now controlled by
 	// Values externalized in the Ja2_Options.ini file.
@@ -496,6 +502,7 @@ void ProcessAttributes( void )
 
 UINT8 IncrementStat( INT32 iStatToIncrement )
 {
+	PERFORMANCE_MARKER
 	// this function is responsable for incrementing a stat
 
 	
@@ -728,6 +735,7 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 
 UINT8 DecrementStat( INT32 iStatToDecrement	)
 {
+	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxZeroBonus = gGameExternalOptions.iMaxZeroBonus;
@@ -894,6 +902,7 @@ UINT8 DecrementStat( INT32 iStatToDecrement	)
 
 BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
 {
+	PERFORMANCE_MARKER
 
 	// returns if player has at least this many bonus points
 	if( iCurrentBonusPoints >= iBonusPoints )
@@ -912,6 +921,7 @@ BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
 
 void CreateIMPAttributeSelectionButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	// the finished button
 	giIMPAttributeSelectionButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
@@ -934,6 +944,7 @@ void CreateIMPAttributeSelectionButtons( void )
 
 void DestroyIMPAttributeSelectionButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP attrib enter page
 	
 	// the begin	button
@@ -947,6 +958,7 @@ void DestroyIMPAttributeSelectionButtons( void )
 
 void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -980,6 +992,7 @@ void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
 
 void RenderAttributeBoxes( void )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
@@ -1170,6 +1183,7 @@ void RenderAttributeBoxes( void )
 
 void CreateAttributeSliderButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create the buttons for the attribute slider
 	// the finished button
 	INT32 iCounter =0;
@@ -1203,6 +1217,7 @@ void CreateAttributeSliderButtons( void )
 
 void DestroyAttributeSliderButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons used for attribute manipulation
 	INT32 iCounter =0;
 
@@ -1223,6 +1238,7 @@ void DestroyAttributeSliderButtons( void )
 
 void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 	// btn callback for IMP personality quiz answer button
@@ -1261,6 +1277,7 @@ void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	INT32 iValue = -1;
 
 	// btn callback for IMP personality quiz answer button
@@ -1300,6 +1317,7 @@ void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
 
 void CreateSlideRegionMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create that mouse regions on the sliding area, that, if the player clicks on, the bar will automatically jump to
 	INT32 iCounter = 0;
 	
@@ -1320,6 +1338,7 @@ void CreateSlideRegionMouseRegions( void )
 
 void CreateSliderBarMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 
@@ -1348,6 +1367,7 @@ void CreateSliderBarMouseRegions( void )
 
 void DestroySlideRegionMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the regions user for the slider ' jumping' 
 	INT32 iCounter=0;
 	
@@ -1363,6 +1383,7 @@ void DestroySlideRegionMouseRegions( void )
 
 void DestroySlideBarMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the regions user for the slider ' jumping' 
 	INT32 iCounter=0;
 	
@@ -1378,6 +1399,7 @@ void DestroySlideBarMouseRegions( void )
 
 void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
  	
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
@@ -1487,8 +1509,8 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 		// get mouse XY
 		
-		sX = pRegion -> MouseXPos;
-		sY = pRegion -> MouseYPos;
+		sX = pRegion->MouseXPos;
+		sY = pRegion->MouseYPos;
 
 	// which region are we in?
 	
@@ -1550,8 +1572,8 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 
 		// get mouse positions
-		sX = pRegion -> MouseXPos;
-		sY = pRegion -> MouseYPos;
+		sX = pRegion->MouseXPos;
+		sY = pRegion->MouseYPos;
 
 		// get attribute
 		iAttribute = MSYS_GetRegionUserData(pRegion, 0);
@@ -1585,7 +1607,8 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	
 
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1602,6 +1625,7 @@ void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 INT32 GetCurrentAttributeValue( INT32 iAttribute )
 {
+	PERFORMANCE_MARKER
 	// this function will get the value of the attribute that was passed to this fucntion via iAttribute
 	INT32 iValue =0;
 
@@ -1647,6 +1671,7 @@ INT32 GetCurrentAttributeValue( INT32 iAttribute )
 
 void SetAttributes( void )
 {
+	PERFORMANCE_MARKER
 	INT8	bExtraPoints;
 /*
 	// set attributes and skills based on what is in charprofile.c
@@ -1705,6 +1730,7 @@ void SetAttributes( void )
 
 void DrawBonusPointsRemaining( void )
 {
+	PERFORMANCE_MARKER
 	// draws the amount of points remaining player has
 	CHAR16 sString[64];
 
@@ -1730,6 +1756,7 @@ void DrawBonusPointsRemaining( void )
 
 void SetGeneratedCharacterAttributes( void )
 {
+	PERFORMANCE_MARKER
 	// copies over the attributes of the player generated character
 	iStrength = iCurrentStrength	;
 		iDexterity = iCurrentDexterity;
@@ -1751,6 +1778,7 @@ void SetGeneratedCharacterAttributes( void )
 
 void StatAtZeroBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -1768,6 +1796,7 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue )
 
 INT32 DetermineNewValue( INT32 iNewX )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;
@@ -1796,6 +1825,7 @@ INT32 DetermineNewValue( INT32 iNewX )
 
 INT32 DetermineNewPosition( INT32 iAttribute )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iMinAttribute = gGameExternalOptions.iMinAttribute;
 	INT32 iMaxAttribute = gGameExternalOptions.iMaxAttribute;

@@ -21,6 +21,7 @@
 	#include "opplist.h"
 	#include "Interface.h"
 	#include "Tactical Save.h"
+	#include "DecideAction.h"
 #endif
 
 #define AI_LIST_SIZE TOTAL_SOLDIERS
@@ -32,6 +33,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 
 void ClearAIList( void )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
@@ -45,6 +47,7 @@ void ClearAIList( void )
 
 void DeleteAIListEntry( AILIST *	pEntry )
 {
+	PERFORMANCE_MARKER
 	pEntry->ubID = NOBODY;
 	pEntry->bPriority = 0;
 	pEntry->pNext = NULL;
@@ -52,6 +55,7 @@ void DeleteAIListEntry( AILIST *	pEntry )
 
 UINT8	FindEmptyAIListEntry( void )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
@@ -67,6 +71,7 @@ UINT8	FindEmptyAIListEntry( void )
 
 AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
 {
+	PERFORMANCE_MARKER
 	gAIList[ ubNewEntry ].ubID = ubID;
 	gAIList[ ubNewEntry ].bPriority = bPriority;
 	gAIList[ ubNewEntry ].pNext = NULL;
@@ -75,6 +80,7 @@ AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
 
 UINT8 RemoveFirstAIListEntry( void )
 {
+	PERFORMANCE_MARKER
 	AILIST *	pOldFirstEntry;
 	UINT8			ubID;
 
@@ -100,6 +106,7 @@ UINT8 RemoveFirstAIListEntry( void )
 
 void RemoveAIListEntryForID( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	AILIST *	pEntry;
 	AILIST *	pPrevEntry;
 
@@ -129,6 +136,7 @@ void RemoveAIListEntryForID( UINT8 ubID )
 
 BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 {
+	PERFORMANCE_MARKER
 	UINT8			ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
 
@@ -184,7 +192,7 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 
 BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks ) 
 {
-	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
+	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->flags.uiStatusFlags & SOLDIER_BOXER) )
 	{
 		return( FALSE );
 	}
@@ -195,12 +203,12 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		return( FALSE );
 	}
 
-	if ( ! ( pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH ) )
+	if ( ! ( pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH ) )
 	{
 		return( FALSE );
 	}
 
-	if ( pSoldier->bMoved )
+	if ( pSoldier->aiData.bMoved )
 	{
 		if ( pSoldier->bActionPoints <= 1 && pubDoneCount )
 		{
@@ -223,9 +231,9 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		}
 
 		// if someone in a civ group is neutral but the civ group is non-neutral, should be handled all the time
-		if ( pSoldier->bNeutral && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL ) )
+		if ( pSoldier->aiData.bNeutral && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL ) )
 		{
-			if ( pSoldier->bAlertStatus < STATUS_RED )
+			if ( pSoldier->aiData.bAlertStatus < STATUS_RED )
 			{
 				// unalerted, barely handle
 				if ( fDoRandomChecks && PreRandom( 10 ) && !(pSoldier->ubQuoteRecord) )
@@ -236,7 +244,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 			else
 			{
 				// heard gunshots
-				if ( pSoldier->uiStatusFlags & SOLDIER_COWERING ) 
+				if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
 				{
 					if ( pSoldier->bVisible )
 					{
@@ -270,9 +278,9 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 		// non-neutral civs should be handled all the time, right?
 		// reset last action if cowering
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_COWERING ) 
+		if ( pSoldier->flags.uiStatusFlags & SOLDIER_COWERING ) 
 		{
-			pSoldier->bLastAction = AI_ACTION_NONE;
+			pSoldier->aiData.bLastAction = AI_ACTION_NONE;
 		}
 
 	}
@@ -282,6 +290,7 @@ BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount,
 
 BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
 	INT8			bPriority;
@@ -315,6 +324,7 @@ BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 
 BOOLEAN BuildAIListForTeam( INT8 bTeam )
 {
+	PERFORMANCE_MARKER
 	// loop through all non-player-team guys and add to list
 	UINT32					uiLoop;
 	BOOLEAN					fInsertRet;
@@ -342,7 +352,7 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 				continue;
 			}
 
-			bPriority = pSoldier->bAlertStatus;
+			bPriority = pSoldier->aiData.bAlertStatus;
 			if ( pSoldier->bVisible == TRUE )
 			{
 				bPriority += 3;

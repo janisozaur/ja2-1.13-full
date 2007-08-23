@@ -100,6 +100,7 @@ extern UINT16 gzFontName[32];
 
 BOOLEAN	InitializeFonts( )
 {
+	PERFORMANCE_MARKER
 	//INT16	zWinFontName[128]; // unused (jonathanl)
 	//COLORVAL Color;			// usused (jonathanl)
 
@@ -243,6 +244,7 @@ BOOLEAN	InitializeFonts( )
 
 void ShutdownFonts( )
 {
+	PERFORMANCE_MARKER
 	UnloadFont( gpLargeFontType1 );
 	UnloadFont( gpSmallFontType1 );
 	UnloadFont( gpTinyFontType1 );
@@ -272,6 +274,7 @@ void ShutdownFonts( )
 // Set shades for fonts
 BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT pFont;
 
 	CHECKF( bColorID > 0 );
@@ -286,6 +289,7 @@ BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 
 UINT16 CreateFontPaletteTables(HVOBJECT pObj )
 {
+	PERFORMANCE_MARKER
 	UINT32 count;
 	SGPPaletteEntry Pal[256];
 
@@ -342,6 +346,7 @@ UINT16 CreateFontPaletteTables(HVOBJECT pObj )
 
 UINT16	WFGetFontHeight( INT32 FontNum )
 {
+	PERFORMANCE_MARKER
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used
@@ -357,6 +362,7 @@ UINT16	WFGetFontHeight( INT32 FontNum )
 
 INT16 WFStringPixLength( STR16 string,INT32 UseFont )
 {
+	PERFORMANCE_MARKER
   if ( USE_WINFONTS( ) )
   {
 		// return how many Y pixels we used

@@ -108,6 +108,7 @@ extern void SetAttributes( void );
 
 void GameInitCharProfile()
 {
+	PERFORMANCE_MARKER
 	LaptopSaveInfo.iIMPIndex = 0;
 	iCurrentPortrait = 0;
 //	iCurrentVoice = 0;
@@ -118,6 +119,7 @@ void GameInitCharProfile()
 
 void EnterCharProfile()
 {
+	PERFORMANCE_MARKER
 	// reset previous page
 	iPreviousImpPage = -1;
 
@@ -127,6 +129,7 @@ void EnterCharProfile()
 
 void ExitCharProfile()
 {
+	PERFORMANCE_MARKER
 	// get rid of graphics
 	RemoveImpGraphics( );
 
@@ -135,7 +138,8 @@ void ExitCharProfile()
 }
 
 void HandleCharProfile()
-{ 
+{
+	PERFORMANCE_MARKER 
 	if( fReDrawCharProfile )
 	{
 		// re draw
@@ -257,6 +261,7 @@ void HandleCharProfile()
 
 void RenderCharProfile()
 {
+	PERFORMANCE_MARKER
 	// button is waiting to go up?...do nothing, 
 
 	if( fButtonPendingFlag )
@@ -330,6 +335,7 @@ void RenderCharProfile()
 
 void ExitOldIMPMode( void )
 {
+	PERFORMANCE_MARKER
 	// exit old mode
 	
 	if( iPreviousImpPage == -1 )
@@ -403,6 +409,7 @@ void ExitOldIMPMode( void )
 
 void EnterNewIMPMode( void )
 {
+	PERFORMANCE_MARKER
 	// enter new mode
 	
 	switch( iCurrentImpPage )
@@ -470,6 +477,7 @@ void EnterNewIMPMode( void )
 
 void ResetCharacterStats( void )
 {
+	PERFORMANCE_MARKER
 	// attributes
 	iStrength = 55;
 	iDexterity = 55;
@@ -505,6 +513,7 @@ void ResetCharacterStats( void )
 
 void LoadImpGraphics( void )
 {
+	PERFORMANCE_MARKER
 	// load all graphics needed for IMP
 	
 	LoadProfileBackGround( );
@@ -556,6 +565,7 @@ void LoadImpGraphics( void )
 
 void RemoveImpGraphics( void )
 {
+	PERFORMANCE_MARKER
 	// remove all graphics needed for IMP
 
 	RemoveProfileBackGround( );
@@ -604,6 +614,7 @@ void RemoveImpGraphics( void )
 
 void CreateIMPButtons( void )
 {
+	PERFORMANCE_MARKER
 	// create all the buttons global to the IMP system
 
 	giIMPButtonImage[ 0 ] = LoadButtonImage( "LAPTOP\\button_3.sti" ,-1,0,-1,1,-1 );
@@ -627,6 +638,7 @@ void CreateIMPButtons( void )
 
 void DestroyIMPButtons( void )
 {
+	PERFORMANCE_MARKER
 	// destroy the buttons we created
 	RemoveButton(giIMPButton[0] );
 	UnloadButtonImage(giIMPButtonImage[0] );
@@ -636,6 +648,7 @@ void DestroyIMPButtons( void )
 
 void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	// btn callback for IMP cancel button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -702,6 +715,7 @@ void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
 
 void InitIMPSubPageList( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for(iCounter = 0; iCounter < IMP_CONFIRM; iCounter++ )
@@ -714,6 +728,7 @@ void InitIMPSubPageList( void )
 
 BOOLEAN HasTheCurrentIMPPageBeenVisited( void )
 {
+	PERFORMANCE_MARKER
 	// returns if we have vsisted the current IMP PageAlready
 
 	//make sure we are not hosing memory

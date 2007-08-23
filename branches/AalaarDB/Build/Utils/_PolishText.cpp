@@ -1486,7 +1486,7 @@ STR16 pHelicopterEtaStrings[] =
 	L" Niebezp.:", 			// distance to return from destination to airport
 	L"Ca³kowity koszt: ", 		// total cost of trip by helicopter
 	L"PCP:	", 			// ETA is an acronym for "estimated time of arrival" 
-	L"Helikopter ma ma³o paliwa i musi wyl¹dowaæ na terenie wroga.",	// warning that the sector the helicopter is going to use for refueling is under enemy control -> 
+	L"Helikopter ma ma³o paliwa i musi wyl¹dowaæ na terenie wroga.",	// warning that the sector the helicopter is going to use for refueling is under enemy control->
 	L"Pasa¿erowie: ",
 	L"Wybór Skyridera lub pasa¿erów?",
 	L"Skyrider",
@@ -2842,7 +2842,6 @@ STR16			BobbyRFilter[] =
 	L"Med. Kits",
 	L"Kits",
 	L"Face Items",
-	L"LBE Gear",
 	L"Misc.",
 };
 

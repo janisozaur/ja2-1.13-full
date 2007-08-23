@@ -69,9 +69,6 @@ BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 #define		SET_PROFILE_GAINS2			500, 500, 500, 500, 500, 500, 500, 500, 500
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
-MERCPROFILEGEAR gMercProfileGear[ NUM_PROFILES ];
-
-extern UINT8 gubItemDroppableFlag[NUM_INV_SLOTS];
 
 INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 {
@@ -220,6 +217,7 @@ extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 
 BOOLEAN LoadMercProfiles(void)
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"LoadMercProfiles");
 //	FILE *fptr;
 	HWFILE fptr;
@@ -235,7 +233,7 @@ BOOLEAN LoadMercProfiles(void)
 	STR8 pFileName3_Tons = "BINARYDATA\\Prof_Expert_TonsOfGuns.dat";
 	STR8 pFileName4_Tons = "BINARYDATA\\Prof_Insane_TonsOfGuns.dat";
 
-	UINT32 uiLoop, uiLoop2, uiLoop3;
+	UINT32 uiLoop, uiLoop2;//, uiLoop3;
 	UINT16 usItem;//, usNewGun, usAmmo, usNewAmmo;
 	UINT32	uiNumBytesRead;
 
@@ -286,38 +284,6 @@ BOOLEAN LoadMercProfiles(void)
 		}
 		gMercProfiles[ uiLoop ].CopyOldInventoryToNew();
 
-		// CHRISL: Overwrite inventory data pulled from prof.dat with data stored in gMercProfileGear
-		// Start by resetting all profile inventory values to 0
-		gMercProfiles[uiLoop].clearInventory();
-		gMercProfiles[uiLoop].ubInvUndroppable = 0;
-		// Next, go through and assign everything but lbe gear
-		for(uiLoop2=0; uiLoop2<OldInventory::NUM_INV_SLOTS; uiLoop2++)
-		{
-			gMercProfiles[uiLoop].inv[uiLoop2] = gMercProfileGear[uiLoop].inv[uiLoop2];
-			gMercProfiles[uiLoop].bInvStatus[uiLoop2] = gMercProfileGear[uiLoop].iStatus[uiLoop2];
-			if(gMercProfiles[uiLoop].inv[uiLoop2] != NONE)
-			{
-				if(uiLoop2 > 5)
-					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = gMercProfileGear[uiLoop].iNumber[uiLoop2];
-				else
-					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = 1;
-				if(!gMercProfileGear[uiLoop].iDrop[uiLoop2] && uiLoop > 56)
-					gMercProfiles[uiLoop].ubInvUndroppable |= gubItemDroppableFlag[uiLoop2];
-			}
-		}
-		// Last, go through and assign LBE items.  Only needed for new inventory system
-		if(gGameOptions.ubInventorySystem)
-		{
-			for(uiLoop2=0; uiLoop2<5; uiLoop2++)
-			{
-				uiLoop3 = uiLoop2 + OldInventory::NUM_INV_SLOTS; 
-				gMercProfiles[uiLoop].inv[uiLoop3] = gMercProfileGear[uiLoop].lbe[uiLoop2];
-				gMercProfiles[uiLoop].bInvStatus[uiLoop3] = gMercProfileGear[uiLoop].lStatus[uiLoop2];
-				if(gMercProfiles[uiLoop].inv[uiLoop3] != NONE)
-					gMercProfiles[uiLoop].bInvNumber[uiLoop3] = 1;
-			}
-		}
-
 		//if the Dialogue exists for the merc, allow the merc to be hired
 		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
 		{
@@ -343,7 +309,7 @@ BOOLEAN LoadMercProfiles(void)
 		{
 
 			// CJC: replace guns in profile if they aren't available
-			for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+			for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
 			{
 				usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
 
@@ -355,7 +321,7 @@ BOOLEAN LoadMercProfiles(void)
 						gMercProfiles[uiLoop].inv[ uiLoop2 ] = usNewGun;
 
 						// must search through inventory and replace ammo accordingly
-						for ( uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; uiLoop3++ )
+						for ( uiLoop3 = 0; uiLoop3 < gMercProfiles[ uiLoop ].inv.size(); uiLoop3++ )
 						{
 							usAmmo = gMercProfiles[ uiLoop ].inv[ uiLoop3 ];
 							if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
@@ -380,7 +346,7 @@ BOOLEAN LoadMercProfiles(void)
 		gMercProfiles[uiLoop].bMainGunAttractiveness		= -1;
 		gMercProfiles[uiLoop].bArmourAttractiveness			= -1;
 
-		for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+		for ( uiLoop2 = 0; uiLoop2 < gMercProfiles[uiLoop].inv.size(); uiLoop2++ )
 		{
 			usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
 
@@ -405,7 +371,7 @@ BOOLEAN LoadMercProfiles(void)
 
 		//add up the items the merc has for the usOptionalGearCost
 		gMercProfiles[ uiLoop ].usOptionalGearCost = 0;
-		for ( uiLoop2 = 0; uiLoop2< NUM_INV_SLOTS; uiLoop2++ )
+		for ( uiLoop2 = 0; uiLoop2< gMercProfiles[ uiLoop ].inv.size(); uiLoop2++ )
 		{
 			if ( gMercProfiles[ uiLoop ].inv[ uiLoop2 ] != NOTHING )
 			{
@@ -460,6 +426,7 @@ BOOLEAN LoadMercProfiles(void)
 
 void DecideActiveTerrorists( void )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubLoop, ubLoop2;
 	UINT8		ubTerrorist;
 	UINT8		ubNumAdditionalTerrorists, ubNumTerroristsAdded = 0;
@@ -569,6 +536,7 @@ void DecideActiveTerrorists( void )
 
 void MakeRemainingTerroristsTougher( void )
 {
+	PERFORMANCE_MARKER
 	UINT8					ubRemainingTerrorists = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
 	UINT8					ubRemainingDifficulty;
@@ -670,6 +638,7 @@ void MakeRemainingTerroristsTougher( void )
 
 void DecideOnAssassin( void )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubAssassinPossibility[NUM_ASSASSINS] = { NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE };
 	UINT8		ubAssassinsPossible = 0;
 	UINT8		ubLoop, ubLoop2;
@@ -710,6 +679,7 @@ void DecideOnAssassin( void )
 
 void MakeRemainingAssassinsTougher( void )
 {
+	PERFORMANCE_MARKER
 	UINT8					ubRemainingAssassins = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
 	UINT8					ubRemainingDifficulty;
@@ -794,6 +764,7 @@ void MakeRemainingAssassinsTougher( void )
 
 void StartSomeMercsOnAssignment(void)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiChance;
@@ -830,6 +801,7 @@ void StartSomeMercsOnAssignment(void)
 
 void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
 {
+	PERFORMANCE_MARKER
 	gMercProfiles[ ubCharNum ].ubFaceIndex = ubFaceIndex;
 	gMercProfiles[ ubCharNum ].usEyesX			= usEyesX;
 	gMercProfiles[ ubCharNum ].usEyesY			= usEyesY;
@@ -839,6 +811,7 @@ void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UIN
 
 UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiStats, uiSkills, uiActionPoints, uiSpecialSkills;
 	UINT16 usCompetence;
 
@@ -871,6 +844,7 @@ UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 
 INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
 {
+	PERFORMANCE_MARKER
 	UINT16 usDeposit;
 
 	// this rounds off to the nearest hundred
@@ -881,6 +855,7 @@ INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
 
 SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubLoop, ubLoopLimit;
 	SOLDIERTYPE * pSoldier;
 
@@ -907,6 +882,7 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
+	PERFORMANCE_MARKER
 	UINT8										ubID;
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -937,9 +913,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	// Remove him from the game!
 	InternalTacticalRemoveSoldier( ubID, FALSE );
 
-	// WDS - Clean up inventory handling
 	// Create a new one!
-	MercCreateStruct.initialize();
 	MercCreateStruct.bTeam							= ubTeam;
 	MercCreateStruct.ubProfile					= pSoldier->ubProfile;
 	MercCreateStruct.bBodyType					= pSoldier->ubBodyType;
@@ -949,7 +923,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	MercCreateStruct.sInsertionGridNo		= pSoldier->sGridNo;
 	MercCreateStruct.bDirection					= pSoldier->bDirection;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if ( pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		MercCreateStruct.ubProfile					= NO_PROFILE;
 		MercCreateStruct.fUseGivenVehicle		= TRUE;
@@ -966,19 +940,19 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		pNewSoldier = MercPtrs[ ubID ];
 
 		// Copy vital stats back!
-		pNewSoldier->bLife													= pSoldier->bLife;
-		pNewSoldier->bLifeMax												= pSoldier->bLifeMax;
-		pNewSoldier->bAgility												= pSoldier->bAgility;
-		pNewSoldier->bLeadership										= pSoldier->bLeadership;
-		pNewSoldier->bDexterity											= pSoldier->bDexterity;
-		pNewSoldier->bStrength											= pSoldier->bStrength;
-		pNewSoldier->bWisdom												= pSoldier->bWisdom;
-		pNewSoldier->bExpLevel											= pSoldier->bExpLevel;
-		pNewSoldier->bMarksmanship									= pSoldier->bMarksmanship;
-		pNewSoldier->bMedical												= pSoldier->bMedical;
-		pNewSoldier->bMechanical										= pSoldier->bMechanical;
-		pNewSoldier->bExplosive											= pSoldier->bExplosive;
-		pNewSoldier->bScientific										= pSoldier->bScientific;
+		pNewSoldier->stats.bLife													= pSoldier->stats.bLife;
+		pNewSoldier->stats.bLifeMax												= pSoldier->stats.bLifeMax;
+		pNewSoldier->stats.bAgility												= pSoldier->stats.bAgility;
+		pNewSoldier->stats.bLeadership										= pSoldier->stats.bLeadership;
+		pNewSoldier->stats.bDexterity											= pSoldier->stats.bDexterity;
+		pNewSoldier->stats.bStrength											= pSoldier->stats.bStrength;
+		pNewSoldier->stats.bWisdom												= pSoldier->stats.bWisdom;
+		pNewSoldier->stats.bExpLevel											= pSoldier->stats.bExpLevel;
+		pNewSoldier->stats.bMarksmanship									= pSoldier->stats.bMarksmanship;
+		pNewSoldier->stats.bMedical												= pSoldier->stats.bMedical;
+		pNewSoldier->stats.bMechanical										= pSoldier->stats.bMechanical;
+		pNewSoldier->stats.bExplosive											= pSoldier->stats.bExplosive;
+		pNewSoldier->stats.bScientific										= pSoldier->stats.bScientific;
 		pNewSoldier->bLastRenderVisibleValue				= pSoldier->bLastRenderVisibleValue;
 		pNewSoldier->bVisible												= pSoldier->bVisible;
 
@@ -988,7 +962,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		}
 
 		// Copy over any items....
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for ( cnt = 0; cnt < pNewSoldier->inv.size(); cnt++ )
 		{
 			pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
 		}
@@ -1056,6 +1030,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1144,6 +1119,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1178,7 +1154,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 
 	// If we are a robot, look to update controller....
-	if ( pNewSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if ( pNewSoldier->flags.uiStatusFlags & SOLDIER_ROBOT )
 	{
 		pNewSoldier->UpdateRobotControllerGivenRobot(	);
 	}
@@ -1194,6 +1170,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier, *pNewSoldier;
 
 	// Get soldier pointer
@@ -1258,6 +1235,7 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
@@ -1275,6 +1253,7 @@ INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
@@ -1293,6 +1272,7 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 
 BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
 {
+	PERFORMANCE_MARKER
 	if ( ubProfile == 83 || ubProfile == 111 ||
 			ubProfile == 64 || ubProfile == 112 ||
 			ubProfile == 82 || ubProfile == 110 )
@@ -1307,6 +1287,7 @@ BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
 
 BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
 {
+	PERFORMANCE_MARKER
 	if ( ubProfile == 106 || ubProfile == 148 ||
 			ubProfile == 156 || ubProfile == 157 ||
 			ubProfile == 158 )
@@ -1322,6 +1303,7 @@ BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
 
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 	SOLDIERTYPE *pSoldier = NULL;
 	MERCPROFILESTRUCT * pProfile;
@@ -1359,19 +1341,19 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 					pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
 
 					// Copy....
-					pProfile->bLife 										= pSoldier->bLife;
-					pProfile->bLifeMax									= pSoldier->bLifeMax;
-					pProfile->bAgility									= pSoldier->bAgility;
-					pProfile->bLeadership								= pSoldier->bLeadership;
-					pProfile->bDexterity								= pSoldier->bDexterity;
-					pProfile->bStrength									= pSoldier->bStrength;
-					pProfile->bWisdom										= pSoldier->bWisdom;
-					pProfile->bExpLevel									= pSoldier->bExpLevel;
-					pProfile->bMarksmanship							= pSoldier->bMarksmanship;
-					pProfile->bMedical									= pSoldier->bMedical;
-					pProfile->bMechanical								= pSoldier->bMechanical;
-					pProfile->bExplosive								= pSoldier->bExplosive;
-					pProfile->bScientific								= pSoldier->bScientific;
+					pProfile->bLife 										= pSoldier->stats.bLife;
+					pProfile->bLifeMax									= pSoldier->stats.bLifeMax;
+					pProfile->bAgility									= pSoldier->stats.bAgility;
+					pProfile->bLeadership								= pSoldier->stats.bLeadership;
+					pProfile->bDexterity								= pSoldier->stats.bDexterity;
+					pProfile->bStrength									= pSoldier->stats.bStrength;
+					pProfile->bWisdom										= pSoldier->stats.bWisdom;
+					pProfile->bExpLevel									= pSoldier->stats.bExpLevel;
+					pProfile->bMarksmanship							= pSoldier->stats.bMarksmanship;
+					pProfile->bMedical									= pSoldier->stats.bMedical;
+					pProfile->bMechanical								= pSoldier->stats.bMechanical;
+					pProfile->bExplosive								= pSoldier->stats.bExplosive;
+					pProfile->bScientific								= pSoldier->stats.bScientific;
 				}
 			}
 		}
@@ -1382,6 +1364,7 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 
 BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubCnt;
 	INT8	bBuddyID;
 
@@ -1409,6 +1392,7 @@ BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
 
 BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == HEAT_INTOLERANT )
 	{
 		if ( SectorTemperature( GetWorldMinutesInDay(), pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
@@ -1421,6 +1405,7 @@ BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
 
 SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubSrcProfile;
 	UINT8	ubDestProfile;
 	MERCPROFILESTRUCT * pNewProfile;
@@ -1497,7 +1482,6 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	pNewProfile->bExplosivesDelta = gMercProfiles[ ubSrcProfile ].bExplosivesDelta;
 	*/
 
-	// WDS - Clean up inventory handling
 	pNewProfile->bInvStatus = gMercProfiles[ ubSrcProfile ].bInvStatus;
 	pNewProfile->bInvNumber = gMercProfiles[ ubSrcProfile ].bInvNumber;
 	pNewProfile->inv = gMercProfiles[ ubSrcProfile ].inv;
@@ -1514,17 +1498,17 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	// replace profile in group
 	ReplaceSoldierProfileInPlayerGroup( pSoldier->ubGroupID, ubSrcProfile, ubDestProfile );
 
-	pSoldier->bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
-	pSoldier->bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
-	pSoldier->bAgility =			pNewProfile->bAgility + pNewProfile->bAgilityDelta;
-	pSoldier->bWisdom =				pNewProfile->bWisdom + pNewProfile->bWisdomDelta;
-	pSoldier->bExpLevel =			pNewProfile->bExpLevel + pNewProfile->bExpLevelDelta;
-	pSoldier->bLeadership =		pNewProfile->bLeadership + pNewProfile->bLeadershipDelta;
+	pSoldier->stats.bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
+	pSoldier->stats.bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
+	pSoldier->stats.bAgility =			pNewProfile->bAgility + pNewProfile->bAgilityDelta;
+	pSoldier->stats.bWisdom =				pNewProfile->bWisdom + pNewProfile->bWisdomDelta;
+	pSoldier->stats.bExpLevel =			pNewProfile->bExpLevel + pNewProfile->bExpLevelDelta;
+	pSoldier->stats.bLeadership =		pNewProfile->bLeadership + pNewProfile->bLeadershipDelta;
 
-	pSoldier->bMarksmanship =	pNewProfile->bMarksmanship + pNewProfile->bMarksmanshipDelta;
-	pSoldier->bMechanical =		pNewProfile->bMechanical + pNewProfile->bMechanicDelta;
-	pSoldier->bMedical =			pNewProfile->bMedical + pNewProfile->bMedicalDelta;
-	pSoldier->bExplosive =		pNewProfile->bExplosive + pNewProfile->bExplosivesDelta;
+	pSoldier->stats.bMarksmanship =	pNewProfile->bMarksmanship + pNewProfile->bMarksmanshipDelta;
+	pSoldier->stats.bMechanical =		pNewProfile->bMechanical + pNewProfile->bMechanicDelta;
+	pSoldier->stats.bMedical =			pNewProfile->bMedical + pNewProfile->bMedicalDelta;
+	pSoldier->stats.bExplosive =		pNewProfile->bExplosive + pNewProfile->bExplosivesDelta;
 
 	if ( pSoldier->ubProfile == LARRY_DRUNK )
 	{
@@ -1543,6 +1527,7 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubRoomInfo;
 
 	// Get room info
@@ -1577,6 +1562,7 @@ BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 BOOLEAN IsProfileIdAnAimOrMERCMerc( UINT8 ubProfileID )
 {
+	PERFORMANCE_MARKER
 
 	if( ubProfileID < BIFF ||
 			( ubProfileID >= BIFF && ubProfileID <= BUBBA ) ||

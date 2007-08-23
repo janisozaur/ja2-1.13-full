@@ -123,7 +123,7 @@ end:
 // Return Value :
 // Modification history :
 //
-//		20nov96:HJH		-> creation
+//		20nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -143,7 +143,7 @@ BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8
 // Return Value :
 // Modification history :
 //
-//		20nov96:HJH		-> creation
+//		20nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -327,7 +327,7 @@ freeEnd:
 // Return Value :
 // Modification history :
 //
-//		20nov96:HJH		-> creation
+//		20nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -347,7 +347,7 @@ BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 ui
 // Return Value :
 // Modification history :
 //
-//		20nov96:HJH		-> creation
+//		20nov96:HJH		->creation
 //
 //**************************************************************************
 

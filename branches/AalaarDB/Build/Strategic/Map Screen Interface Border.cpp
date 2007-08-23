@@ -122,6 +122,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 
 void DrawTextOnMapBorder( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 64 ];
 
@@ -147,6 +148,7 @@ void DrawTextOnMapBorder( void )
 
 BOOLEAN LoadMapBorderGraphics( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will load the graphics needed for the map border 
 	VOBJECT_DESC	VObjectDesc; 
 
@@ -184,6 +186,7 @@ BOOLEAN LoadMapBorderGraphics( void )
 
 void DeleteMapBorderGraphics( void )
 {
+	PERFORMANCE_MARKER
 	// procedure will delete graphics loaded for map border 
 
 	DeleteVideoObjectFromIndex( guiMapBorder );
@@ -196,6 +199,7 @@ void DeleteMapBorderGraphics( void )
 
 void RenderMapBorder( void )
 {
+	PERFORMANCE_MARKER
 	// renders the actual border to the guiSAVEBUFFER
 	HVOBJECT hHandle;
 
@@ -235,6 +239,7 @@ void RenderMapBorder( void )
 /*
 void RenderMapBorderCorner( void )
 {
+	PERFORMANCE_MARKER
 	// renders map border corner to the FRAME_BUFFER
 	HVOBJECT hHandle;
 		
@@ -262,6 +267,7 @@ void RenderMapBorderCorner( void )
 
 void RenderMapBorderEtaPopUp( void )
 {
+	PERFORMANCE_MARKER
 	// renders map border corner to the FRAME_BUFFER
 	HVOBJECT hHandle;
 
@@ -299,6 +305,7 @@ void RenderMapBorderEtaPopUp( void )
 
 BOOLEAN CreateButtonsForMapBorder( void )
 {
+	PERFORMANCE_MARKER
 	// will create the buttons needed for the map screen border region
 
 /*
@@ -416,6 +423,7 @@ BOOLEAN CreateButtonsForMapBorder( void )
 
 void DeleteMapBorderButtons( void )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubCnt;
 
 /*
@@ -468,6 +476,7 @@ void DeleteMapBorderButtons( void )
 /*
 void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -497,6 +506,7 @@ void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		// are help messages being displayed?..redraw
@@ -525,6 +535,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -539,6 +550,7 @@ void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -553,6 +565,7 @@ void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnTownCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -567,6 +580,7 @@ void BtnTownCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -581,6 +595,7 @@ void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )	
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -596,6 +611,7 @@ void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnItemCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )	
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -612,6 +628,7 @@ void BtnItemCallback(GUI_BUTTON *btn,INT32 reason)
 /*
 void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	UINT16 sTempXOff=0;
 	UINT16 sTempYOff=0;
 
@@ -661,6 +678,7 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ToggleShowTownsMode( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowTownFlag == TRUE )
 	{
 		fShowTownFlag = FALSE;
@@ -696,6 +714,7 @@ void ToggleShowTownsMode( void )
 
 void ToggleShowMinesMode( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowMineFlag == TRUE )
 	{
 		fShowMineFlag = FALSE;
@@ -731,6 +750,7 @@ void ToggleShowMinesMode( void )
 
 void ToggleShowMilitiaMode( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowMilitia == TRUE )
 	{
 		fShowMilitia = FALSE;
@@ -794,6 +814,7 @@ void ToggleShowMilitiaMode( void )
 
 void ToggleShowTeamsMode( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowTeamFlag == TRUE )
 	{
 		// turn show teams OFF
@@ -814,6 +835,7 @@ void ToggleShowTeamsMode( void )
 
 void ToggleAirspaceMode( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowAircraftFlag == TRUE )
 	{
 		// turn airspace OFF
@@ -839,6 +861,7 @@ void ToggleAirspaceMode( void )
 
 void ToggleItemsFilter( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowItemsFlag == TRUE )
 	{
 		// turn items OFF
@@ -861,6 +884,7 @@ void ToggleItemsFilter( void )
 /*
 void ShowDestinationOfPlottedPath( STR16 pLoc )
 {
+	PERFORMANCE_MARKER
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
@@ -880,6 +904,7 @@ void ShowDestinationOfPlottedPath( STR16 pLoc )
 /*
 void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		
@@ -915,6 +940,7 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
+	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -952,6 +978,7 @@ void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
+	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -988,6 +1015,7 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
+	PERFORMANCE_MARKER
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1026,25 +1054,26 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 void MapScrollButtonMvtCheck( void	)
 {
+	PERFORMANCE_MARKER
 	// run through each button's mouse region, if mouse cursor there...don't show map white sector highlight
 	fCursorIsOnMapScrollButtons = FALSE;
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 0 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 0 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 1 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 1 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 2 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 2 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 3 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if( ButtonList[ guiMapBorderScrollButtons[ 3 ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
@@ -1055,6 +1084,7 @@ void MapScrollButtonMvtCheck( void	)
 /*
 void HandleMapScrollButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	// will enable/disable map scroll buttons based on zoom mode
 
 	if( fDisabledMapBorder || fShowMapInventoryPool )
@@ -1111,6 +1141,7 @@ void HandleMapScrollButtonStates( void )
 // generic button mvt callback for mapscreen map border
 void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	//If the button isn't the anchored button, then we don't want to modify the button state.
 	
 	if( btn != gpAnchoredButton )
@@ -1143,6 +1174,7 @@ void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason)
 /*
 BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 {
+	PERFORMANCE_MARKER
 	// return if any help messages are being displayed for the scroll buttons
 
 	if( ( ButtonList[ guiMapBorderScrollButtons[ 0 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT )||
@@ -1160,6 +1192,7 @@ BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 
 void DisplayCurrentLevelMarker( void )
 {
+	PERFORMANCE_MARKER
 	// display the current level marker on the map border
 	HVOBJECT hHandle;
 	
@@ -1183,6 +1216,7 @@ void DisplayCurrentLevelMarker( void )
 
 void CreateMouseRegionsForLevelMarkers( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sCounter = 0;
 	CHAR16 sString[ 64 ];
 	
@@ -1203,6 +1237,7 @@ void CreateMouseRegionsForLevelMarkers( void )
 
 void DeleteMouseRegionsForLevelMarkers( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sCounter = 0;
 
 
@@ -1214,6 +1249,7 @@ void DeleteMouseRegionsForLevelMarkers( void )
 
 void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	
@@ -1229,6 +1265,7 @@ void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 /*
 void DisableMapBorderRegion( void )
 {
+	PERFORMANCE_MARKER
 	// will shutdown map border region
 
 	if( fDisabledMapBorder )
@@ -1246,6 +1283,7 @@ void DisableMapBorderRegion( void )
 
 void EnableMapBorderRegion( void )
 {
+	PERFORMANCE_MARKER
 	// will re-enable mapborder region
 
 	if( fDisabledMapBorder == FALSE )
@@ -1265,6 +1303,7 @@ void EnableMapBorderRegion( void )
 
 void TurnOnShowTeamsMode( void )
 {
+	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowTeamFlag == FALSE )
@@ -1303,6 +1342,7 @@ void TurnOnShowTeamsMode( void )
 
 void TurnOnAirSpaceMode( void )
 {
+	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowAircraftFlag == FALSE )
@@ -1369,6 +1409,7 @@ void TurnOnAirSpaceMode( void )
 
 void TurnOnItemFilterMode( void )
 {
+	PERFORMANCE_MARKER
 	// if mode already on, leave, else set and redraw
 
 	if( fShowItemsFlag == FALSE )
@@ -1424,6 +1465,7 @@ void TurnOnItemFilterMode( void )
 /*
 void UpdateLevelButtonStates( void )
 {
+	PERFORMANCE_MARKER
 
 	if( iCurrentMapSectorZ == 0 )
 	{
@@ -1451,6 +1493,7 @@ void UpdateLevelButtonStates( void )
 /*
 void UpdateScrollButtonStatesWhileScrolling( void )
 {
+	PERFORMANCE_MARKER
 	// too far west, disable
 	if ( iZoomY == NORTH_ZOOM_BOUND )
 	{
@@ -1481,6 +1524,7 @@ void UpdateScrollButtonStatesWhileScrolling( void )
 
 void InitializeMapBorderButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	if( fShowItemsFlag )
 	{
 		MapBorderButtonOn( MAP_BORDER_ITEM_BTN );
@@ -1540,6 +1584,7 @@ void InitializeMapBorderButtonStates( void )
 
 BOOLEAN DoesPlayerHaveAnyMilitia( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sX, sY;
 
 	// run through list of towns that might have militia..if any return TRUE..else return FALSE
@@ -1564,6 +1609,7 @@ BOOLEAN DoesPlayerHaveAnyMilitia( void )
 
 void CommonBtnCallbackBtnDownChecks( void )
 {
+	PERFORMANCE_MARKER
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -1581,6 +1627,7 @@ void CommonBtnCallbackBtnDownChecks( void )
 
 void InitMapScreenFlags( void )
 {
+	PERFORMANCE_MARKER
 	fShowTownFlag = TRUE;
 	fShowMineFlag = FALSE;
 
@@ -1595,6 +1642,7 @@ void InitMapScreenFlags( void )
 
 void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
 {
+	PERFORMANCE_MARKER
 	Assert( ubBorderButtonIndex < 6 );
 
 	if( fShowMapInventoryPool )
@@ -1616,6 +1664,7 @@ void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
 
 void MapBorderButtonOn( UINT8 ubBorderButtonIndex )
 {
+	PERFORMANCE_MARKER
 	Assert( ubBorderButtonIndex < 6 );
 
 	if( fShowMapInventoryPool )

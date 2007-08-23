@@ -62,10 +62,15 @@
 	#include "editscreen.h"
 #endif
 
+#include "Sector Summary.h"
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
+
+#ifdef JA2EDITOR
+#define BUILD_AS_EDITOR_ONLY
+#endif
 
 #ifdef JA2BETAVERSION
 extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
@@ -93,6 +98,7 @@ extern OBJECTTYPE GLOCK_17_ForUseWithLOS;
 
 BOOLEAN LoadExternalGameplayData(STR directoryName)
 {
+	PERFORMANCE_MARKER
 	char fileName[MAX_PATH];
 
 	// WANNE: Enemy drops - begin
@@ -267,30 +273,6 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 	if(!ReadInArmourStats(fileName))
 		return FALSE;
 
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, LOADBEARINGEQUIPMENTFILENAME);
-	if(!ReadInlbeStats(fileName))
-		return FALSE;
-//	if(!WritelbeEquipmentStats())
-//		return FALSE;
-
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, LBEPOCKETFILENAME);
-	if(!ReadInLBEPocketStats(fileName))
-		return FALSE;
-//	if(!WriteLBEPocketEquipmentStats())
-//		return FALSE;
-
-	// CHRISL:
-	strcpy(fileName, directoryName);
-	strcat(fileName, MERCSTARTINGGEARFILENAME);
-	if(!ReadInMercStartingGearStats(fileName))
-		return FALSE;
-//	if(!WriteMercStartingGearStats())
-//		return FALSE;
-
 	strcpy(fileName, directoryName);
 	strcat(fileName, WEAPONSFILENAME);
 	if(!ReadInWeaponStats(fileName))
@@ -448,7 +430,8 @@ BOOLEAN LoadExternalGameplayData(STR directoryName)
 
 
 UINT32 InitializeJA2(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 
 #ifdef LASERLOCK_ENABLED
 	HandleLaserLockResult( PrepareLaserLockSystem() );
@@ -615,6 +598,23 @@ UINT32 InitializeJA2(void)
 			gGameOptions.fAirStrikes = FALSE;
 			return( GAME_SCREEN );
 		}
+
+		#ifdef BUILD_AS_EDITOR_ONLY
+			//ADB We are building with JA2EDITOR, why force a commandline arguement???
+			//build once, rename, change the define and build again
+			//no pesky shortcuts
+			OutputDebugString( "Beginning JA2EDITOR without using a commandline argument...\n" );
+			//For editor purposes, need to know the default map file.
+			sprintf( gubFilename, "none");
+			//also set the sector
+			gWorldSectorX = 0;
+			gWorldSectorY = 0;
+			gfAutoLoadA9 = TRUE;
+			gfIntendOnEnteringEditor = TRUE;
+			gGameOptions.fGunNut = TRUE;
+			gGameOptions.fAirStrikes = FALSE;
+			return( GAME_SCREEN );
+		#endif
 	#endif
 #endif
 
@@ -623,7 +623,8 @@ UINT32 InitializeJA2(void)
 
 
 void ShutdownJA2(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	UINT32 uiIndex;
 
 	// Clear screen....
@@ -686,6 +687,7 @@ void ShutdownJA2(void)
 
 BOOLEAN PrepareLaserLockSystem()
 {
+	PERFORMANCE_MARKER
 	INT32	iInitRetVal=0;
 	INT32	iRunRetVal=0;
 	INT32	iCheckRetVal=0;
@@ -736,14 +738,15 @@ FAILED_LASERLOK:
 
 void HandleLaserLockResult( BOOLEAN fSuccess )
 {
+	PERFORMANCE_MARKER
 	if( !fSuccess )
 	{
 		CHAR8	zString[512];
 
 		sprintf( zString, "%S", gzLateLocalizedString[56] );
 
-//    ShowCursor(TRUE);
-//    ShowCursor(TRUE);
+//		ShowCursor(TRUE);
+//		ShowCursor(TRUE);
 		ShutdownWithErrorBox( zString );
 	}
 }

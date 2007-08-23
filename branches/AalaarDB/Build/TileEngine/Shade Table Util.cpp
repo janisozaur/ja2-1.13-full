@@ -28,6 +28,7 @@ BOOLEAN gfForceBuildShadeTables = FALSE;
 
 void DetermineRGBDistributionSettings()
 {
+	PERFORMANCE_MARKER
 	STRING512			DataDir;
 	STRING512			ExecDir;
 	STRING512			ShadeTableDir;
@@ -131,6 +132,7 @@ void DetermineRGBDistributionSettings()
 
 BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
+	PERFORMANCE_MARKER
 	HWFILE hfile;
 	INT32 i;
 	UINT32 uiNumBytesRead;
@@ -175,6 +177,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
+	PERFORMANCE_MARKER
 	HWFILE hfile;
 	INT32 i;
 	UINT32 uiNumBytesWritten;
@@ -215,6 +218,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 
 BOOLEAN DeleteShadeTableDir( )
-{	
+{
+	PERFORMANCE_MARKER	
 	return( RemoveFileManDirectory( SHADE_TABLE_DIR, TRUE ) );
 }

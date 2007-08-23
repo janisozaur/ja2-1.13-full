@@ -81,6 +81,7 @@ UINT32 CountDoubleByteStringsInFile( STR8 filename );
 //the above define, searches for the files, and processes them automatically.
 BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 {
+	PERFORMANCE_MARKER
 	STRING512			ExecDir;
 	STRING512			CurrDir;
 	STRING512			Dir;
@@ -143,6 +144,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( STR8 str )
 
 UINT32 CountDoubleByteStringsInFile( STR8 filename )
 {
+	PERFORMANCE_MARKER
 	FILE *fp = NULL;
 	UINT32 uiNumStrings = 0;
 

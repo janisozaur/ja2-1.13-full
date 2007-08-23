@@ -31,7 +31,8 @@ TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
 
 
 BOOLEAN InitTileCache(	)
-{	
+{
+	PERFORMANCE_MARKER	
 	UINT32				cnt;
 	GETFILESTRUCT FileInfo;
 	INT16					sFiles = 0;
@@ -103,6 +104,7 @@ BOOLEAN InitTileCache(	)
 
 void DeleteTileCache( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 
 	// Allocate entries
@@ -129,6 +131,7 @@ void DeleteTileCache( )
 
 INT16 FindCacheStructDataIndex( STR8 cFilename )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	
 	for ( cnt = 0; cnt < guiNumTileCacheStructs; cnt++ )
@@ -144,6 +147,7 @@ INT16 FindCacheStructDataIndex( STR8 cFilename )
 
 INT32 GetCachedTile( const STR8 cFilename )
 {
+	PERFORMANCE_MARKER
 	UINT32			cnt;
 	UINT32			ubLowestIndex = 0;
 	INT16		sMostHits = (INT16)15000;
@@ -238,6 +242,7 @@ INT32 GetCachedTile( const STR8 cFilename )
 
 BOOLEAN RemoveCachedTile( INT32 iCachedTile )
 {
+	PERFORMANCE_MARKER
 	UINT32			cnt;
 
 	// Find tile
@@ -268,6 +273,7 @@ BOOLEAN RemoveCachedTile( INT32 iCachedTile )
 
 HVOBJECT GetCachedTileVideoObject( INT32 iIndex )
 {
+	PERFORMANCE_MARKER
 	if ( iIndex == -1 )
 	{
 		return( NULL );
@@ -284,6 +290,7 @@ HVOBJECT GetCachedTileVideoObject( INT32 iIndex )
 
 STRUCTURE_FILE_REF *GetCachedTileStructureRef( INT32 iIndex )
 {
+	PERFORMANCE_MARKER
 	if ( iIndex == -1 )
 	{
 		return( NULL );
@@ -300,6 +307,7 @@ STRUCTURE_FILE_REF *GetCachedTileStructureRef( INT32 iIndex )
 
 STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( const STR8 cFilename )
 {
+	PERFORMANCE_MARKER
 	INT16 sStructDataIndex;
 
 	// Given filename, look for index
@@ -315,7 +323,8 @@ STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( const STR8 cFilename 
 
 
 void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 usIndex, UINT16 usSubIndex )
-{ 
+{
+	PERFORMANCE_MARKER 
 	STRUCTURE_FILE_REF *pStructureFileRef;
 
 	pStructureFileRef = GetCachedTileStructureRef( usIndex );
@@ -338,7 +347,8 @@ void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 
 }
 
 void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
-{ 
+{
+	PERFORMANCE_MARKER 
 	STRUCTURE_FILE_REF *pStructureFileRef;
 
 	if ( usIndex >= TILE_CACHE_START_INDEX )
@@ -354,6 +364,7 @@ void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 
 void GetRootName( STR8 pDestStr, const STR8 pSrcStr )
 {
+	PERFORMANCE_MARKER
 	// Remove path and extension
 	CHAR8		cTempFilename[ 120 ];
 	STR			cEndOfName;

@@ -37,6 +37,7 @@ ANITILE					*pAniTileHead = NULL;
 
 ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 {
+	PERFORMANCE_MARKER
 	ANITILE		*pAniNode;
 	ANITILE		*pNewAniNode;
 	LEVELNODE	*pNode;
@@ -306,6 +307,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 // Loop throug all ani tiles and remove...
 void DeleteAniTiles( )
 {
+	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 
@@ -326,6 +328,7 @@ void DeleteAniTiles( )
 
 void DeleteAniTile( ANITILE *pAniTile )
 {
+	PERFORMANCE_MARKER
 	ANITILE				*pAniNode				= NULL;
 	ANITILE				*pOldAniNode		= NULL;
 	TILE_ELEMENT	*TileElem;
@@ -479,6 +482,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 
 void UpdateAniTiles( )
 {
+	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 	UINT32	uiClock				= GetJA2Clock( );
@@ -781,6 +785,7 @@ void UpdateAniTiles( )
 
 void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubTempDir;
 	INT16	sStartFrame = 0;
 
@@ -805,6 +810,7 @@ void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
 
 ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode = NULL;
 
 	switch( ubLevelID )
@@ -864,6 +870,7 @@ ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags 
 
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 {
+	PERFORMANCE_MARKER
 	if ( fHide )
 	{
 		pAniTile->pLevelNode->uiFlags |= LEVELNODE_HIDDEN;
@@ -876,6 +883,7 @@ void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 
 void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
 {
+	PERFORMANCE_MARKER
 	if ( fPause )
 	{
 		pAniTile->uiFlags |= ANITILE_PAUSED;
@@ -889,6 +897,7 @@ void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
 
 void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause )
 {
+	PERFORMANCE_MARKER
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 

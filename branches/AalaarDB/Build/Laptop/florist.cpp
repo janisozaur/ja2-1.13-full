@@ -80,11 +80,13 @@ void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 
 void GameInitFlorist()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFlorist()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	SetBookMark( FLORIST_BOOKMARK );
@@ -127,6 +129,7 @@ BOOLEAN EnterFlorist()
 
 void ExitFlorist()
 {
+	PERFORMANCE_MARKER
 	
 	DeleteVideoObjectFromIndex(guiHandBullet);
 
@@ -139,10 +142,12 @@ void ExitFlorist()
 
 void HandleFlorist()
 {
+	PERFORMANCE_MARKER
 }
 
 void RenderFlorist()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16 i, usPosY;
 	UINT8 ubTextCounter;
@@ -181,6 +186,7 @@ void RenderFlorist()
 
 BOOLEAN InitFloristDefaults()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Florist background graphic and add it
@@ -215,6 +221,7 @@ BOOLEAN InitFloristDefaults()
 
 void DisplayFloristDefaults()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	WebPageTileBackground(4, 4, FLORIST_BACKGROUND_WIDTH, FLORIST_BACKGROUND_HEIGHT, guiFloristBackground);
@@ -236,6 +243,7 @@ void DisplayFloristDefaults()
 
 void RemoveFloristDefaults()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex( guiFloristBackground );
 
 	//if its the first page
@@ -257,6 +265,7 @@ void RemoveFloristDefaults()
 
 void BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -281,7 +290,8 @@ void BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
 } 
 
 void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}

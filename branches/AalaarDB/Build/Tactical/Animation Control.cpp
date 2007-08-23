@@ -1070,6 +1070,7 @@ ANIMSUBTYPE gDoubleHandledSub =
 
 void	InitAnimationSurfacesPerBodytype( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt1, cnt2;
 
 	// Should be set to a non-init values
@@ -3031,6 +3032,7 @@ void	InitAnimationSurfacesPerBodytype( )
 
 BOOLEAN LoadAnimationStateInstructions( )
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 
@@ -3059,6 +3061,7 @@ BOOLEAN LoadAnimationStateInstructions( )
 
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 {
+	PERFORMANCE_MARKER
 	UINT16		usAnimSurface;
 
 	// From animation control, get surface
@@ -3076,6 +3079,7 @@ BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 
 BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, UINT16 *pusSubState )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSubFound = FALSE;
 
 	*pusSubState = usTestState;
@@ -3221,6 +3225,7 @@ BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, 
 
 INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename )
 {
+	PERFORMANCE_MARKER
 	switch( ubBodyType )
 	{
 	case REGMALE:
@@ -3312,6 +3317,7 @@ INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
+	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	// Delete any structure info!
@@ -3325,7 +3331,7 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	usAnimSurface = LoadSoldierAnimationSurface( pSoldier, usAnimState );
 
 	// Add structure info!
-	if ( pSoldier->pLevelNode != NULL && !( pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
+	if ( pSoldier->pLevelNode != NULL && !( pSoldier->flags.uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
 	{
 		AddMercStructureInfoFromAnimSurface( pSoldier->sGridNo, pSoldier, usAnimSurface, usAnimState );
 	}
@@ -3344,6 +3350,7 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
+	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
@@ -3377,6 +3384,7 @@ UINT16	gusQueenMonsterSpitAnimPerDir[] =
 
 UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
+	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 	UINT16 usAltAnimSurface;
 	UINT8 ubBodyType;
@@ -3480,7 +3488,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 	// ADJUST ANIMATION SURFACE BASED ON TERRAIN
 
 	// CHECK FOR WATER
-	if ( MercInWater( pSoldier ) )
+	if ( pSoldier->MercInWater( ) )
 	{
 
 		// ADJUST BASED ON ITEM IN HAND....
@@ -3575,7 +3583,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		if ( fAdjustedForItem )
 		{
 			// If life below thresthold for being injured 
-			if ( pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
+			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
 				for ( cnt = 0; cnt < NUM_INJURED_SUBS; cnt++ )
@@ -3590,7 +3598,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 		else
 		{
 			// If life below thresthold for being injured 
-			if ( pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
+			if ( pSoldier->stats.bLife < INJURED_CHANGE_THREASHOLD )
 			{
 				// ADJUST FOR INJURED....
 				for ( cnt = 0; cnt < NUM_INJURED_SUBS; cnt++ )
@@ -3613,6 +3621,7 @@ UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimSta
 
 UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
+	PERFORMANCE_MARKER
 	UINT16 usAnimSurface;
 
 	usAnimSurface = pSoldier->usAnimSurface;

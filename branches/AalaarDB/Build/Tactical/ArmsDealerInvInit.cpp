@@ -20,7 +20,6 @@
 extern INT8	gbSelectedArmsDealerID;
 
 
-// CHRISL: Updated this to include IC_LBEGEAR class
 // This table controls the order items appear in inventory at BR's and dealers, and which kinds of items are sold used
 ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
 {
@@ -37,7 +36,6 @@ ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
 	{ IC_BLADE,						NOGUNCLASS,		FALSE	},
 	{ IC_THROWING_KNIFE,	NOGUNCLASS,		FALSE	},
 	{ IC_PUNCH,						NOGUNCLASS,		FALSE	},
-	{ IC_LBEGEAR,					NOGUNCLASS,		TRUE	},
 	{ IC_ARMOUR,					NOGUNCLASS,		TRUE	},
 	{ IC_FACE,						NOGUNCLASS,		TRUE	},
 	{ IC_MEDKIT,					NOGUNCLASS,		FALSE	},
@@ -686,6 +684,7 @@ INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	switch( ubDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -774,6 +773,7 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 
 INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16	usCnt=0;
 
 	//loop through the array until a the LAST_DEALER_ITEM is hit
@@ -793,6 +793,7 @@ INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 
 DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
 {
+	PERFORMANCE_MARKER
 	switch( ubArmsDealerID )
 	{
 		case ARMS_DEALER_TONY:
@@ -880,6 +881,7 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 //Madd: added boolean fUsed
 UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
 
@@ -1008,6 +1010,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 
 UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
 	BOOLEAN fBobbyRay = FALSE;
@@ -1105,6 +1108,7 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubChance;
 	INT16 sInventorySlot;
 
@@ -1149,6 +1153,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 
 UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
 
@@ -1169,6 +1174,7 @@ UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ub
 
 UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumSold;
 	UINT8 ubCnt;
 
@@ -1190,6 +1196,7 @@ UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumIn
 
 UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumReordered;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("HowManyItemsToReorder: wanted = %d, still have = %d",ubWanted, ubStillHave));
 
@@ -1216,16 +1223,17 @@ UINT8 HowManyItemsToReorder(UINT8 ubWanted, UINT8 ubStillHave)
 
 int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 {
+	PERFORMANCE_MARKER
 	UINT16	usItem1Index;
 	UINT16	usItem2Index;
 	UINT8		ubItem1Quality;
 	UINT8		ubItem2Quality;
 
-	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 ) -> usItemIndex;
-	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 ) -> usItemIndex;
+	usItem1Index = ( ( STORE_INVENTORY * ) pArg1 )->usItemIndex;
+	usItem2Index = ( ( STORE_INVENTORY * ) pArg2 )->usItemIndex;
 
-	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 ) -> ubItemQuality;
-	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 ) -> ubItemQuality;
+	ubItem1Quality = ( ( STORE_INVENTORY * ) pArg1 )->ubItemQuality;
+	ubItem2Quality = ( ( STORE_INVENTORY * ) pArg2 )->ubItemQuality;
 
 	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
 }
@@ -1233,6 +1241,7 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 
 int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubItem1Category;
 	UINT8		ubItem2Category;
 	//UINT16	usItem1Price;
@@ -1359,6 +1368,7 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 
 UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiItemClass;
 	UINT8		ubWeaponClass;
 	UINT8		ubCategory = 0;
@@ -1415,6 +1425,7 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 //	if ( !( Item[ usItemIndex ][0]->data.fFlags & ITEM_DAMAGEABLE ) )
 	if ( !( Item[ usItemIndex ].damageable  ) )
 		return(FALSE);

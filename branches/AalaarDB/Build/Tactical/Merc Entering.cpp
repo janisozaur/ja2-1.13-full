@@ -379,11 +379,13 @@ void HandleFirstHeliDropOfGame( );
 
 void ResetHeliSeats( )
 {
+	PERFORMANCE_MARKER
 	gbNumHeliSeatsOccupied = 0;
 }
 
 void AddMercToHeli( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	if ( gbNumHeliSeatsOccupied < MAX_MERC_IN_HELI )
@@ -405,6 +407,7 @@ void AddMercToHeli( UINT8 ubID )
 
 void StartHelicopterRun( INT16 sGridNoSweetSpot )
 {
+	PERFORMANCE_MARKER
 	INT16 sX, sY;
 
 	gsGridNoSweetSpot = sGridNoSweetSpot;
@@ -447,6 +450,7 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 
 void HandleHeliDrop( )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubScriptCode;
 	UINT32	uiClock;
 	//INT16 sWorldX, sWorldY;
@@ -600,7 +604,7 @@ void HandleHeliDrop( )
 					{
 						//sWorldX = CenterX( gsGridNoSweetSpot );
 						//sWorldY = CenterY( gsGridNoSweetSpot );
-						EVENT_InitNewSoldierAnim( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], HELIDROP, 0 , FALSE );
+						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->EVENT_InitNewSoldierAnim( HELIDROP, 0 , FALSE );
 
 						// Change insertion code
 						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
@@ -782,6 +786,7 @@ void HandleHeliDrop( )
 
 void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	ResetHeliSeats( );
 
 	AddMercToHeli( pSoldier->ubID );
@@ -796,6 +801,7 @@ void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void HandleFirstHeliDropOfGame( )
 {
+	PERFORMANCE_MARKER
 	// Are we in the first heli drop?
 	if ( gfFirstHeliRun )
 	{

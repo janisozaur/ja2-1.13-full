@@ -115,6 +115,7 @@ extern HVSURFACE ghFrameBuffer;
 
 void DisplayFrameRate( )
 {
+	PERFORMANCE_MARKER
 	static UINT32		uiFPS = 0;
 	static UINT32		uiFrameCount = 0;	
 	INT16 sMapPos;
@@ -231,27 +232,33 @@ void DisplayFrameRate( )
 //USELESS!!!!!!!!!!!!!!!!!!
 UINT32 SavingScreenInitialize(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 UINT32 SavingScreenHandle( void )
 {
+	PERFORMANCE_MARKER
 	return SAVING_SCREEN;
 }
 UINT32 SavingScreenShutdown( void )
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadingScreenInitialize(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 UINT32 LoadingScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	return LOADING_SCREEN;
 }
 UINT32 LoadingScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -259,11 +266,13 @@ UINT32 LoadingScreenShutdown(void)
 
 UINT32 ErrorScreenInitialize(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 } 
 
 UINT32 ErrorScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	InputAtom	InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 #ifdef JA2BETAVERSION
@@ -327,6 +336,7 @@ UINT32 ErrorScreenHandle(void)
 
 UINT32 ErrorScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -334,11 +344,13 @@ UINT32 ErrorScreenShutdown(void)
 
 UINT32 InitScreenInitialize(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 } 
 
 UINT32 InitScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	VSURFACE_DESC					vs_desc;
 	static HVSURFACE			hVSurface;
 	static UINT8					ubCurrentScreen = 255;
@@ -463,6 +475,7 @@ UINT32 InitScreenHandle(void)
 
 UINT32 InitScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -471,11 +484,13 @@ UINT32 InitScreenShutdown(void)
 
 UINT32 PalEditScreenInit(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 UINT32 PalEditScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN FirstTime = TRUE;
 
 	if ( gfExitPalEditScreen )
@@ -511,6 +526,7 @@ UINT32 PalEditScreenHandle(void)
 
 UINT32 PalEditScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -518,6 +534,7 @@ UINT32 PalEditScreenShutdown(void)
 
 void PalEditRenderHook(	)
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE		*pSoldier;
 
 	if ( gusSelectedSoldier != NOBODY )
@@ -535,6 +552,7 @@ void PalEditRenderHook(	)
 
 BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 {
+	PERFORMANCE_MARKER
 	UINT8					ubType;
 	SOLDIERTYPE		*pSoldier;
 	UINT8					ubPaletteRep;
@@ -578,7 +596,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->HeadPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
 	}
@@ -609,7 +627,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->VestPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
 	}
@@ -639,7 +657,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->PantsPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
 	}
@@ -669,7 +687,7 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 			}
 			SET_PALETTEREP_ID ( pSoldier->SkinPal,	gpPalRep[ ubPaletteRep ].ID );
 
-			CreateSoldierPalettes( pSoldier );
+			pSoldier->CreateSoldierPalettes( );
 
 			return( TRUE );
 	}
@@ -679,12 +697,14 @@ BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
 
 UINT32 DebugScreenInit(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 
 BOOLEAN CheckForAndExitTacticalDebug( )
 {
+	PERFORMANCE_MARKER
 	if ( gfExitDebugScreen )
 	{
 		FirstTime = TRUE;
@@ -702,6 +722,7 @@ BOOLEAN CheckForAndExitTacticalDebug( )
 
 void ExitDebugScreen( )
 {
+	PERFORMANCE_MARKER
 	if ( guiCurrentScreen == DEBUG_SCREEN )
 	{
 		gfExitDebugScreen = TRUE;
@@ -713,6 +734,7 @@ void ExitDebugScreen( )
 
 UINT32 DebugScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	if ( CheckForAndExitTacticalDebug() )
 	{
 		return( GAME_SCREEN );
@@ -746,6 +768,7 @@ UINT32 DebugScreenHandle(void)
 
 UINT32 DebugScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 
 	return( TRUE );
 }
@@ -753,11 +776,13 @@ UINT32 DebugScreenShutdown(void)
 
 void DebugRenderHook(	)
 {
+	PERFORMANCE_MARKER
 	gDebugRenderOverride[ gCurDebugPage ]( );
 }
 
 BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 {
+	PERFORMANCE_MARKER
 	if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
 	{ 
 		gfExitDebugScreen = TRUE;
@@ -800,29 +825,34 @@ BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
 
 void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 {
+	PERFORMANCE_MARKER
 	gDebugRenderOverride[ ubPage ] = pDebugRenderOverride;
 }
 
 void DefaultDebugPage1( )
 {
+	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE ONE" );
 }
 
 void DefaultDebugPage2( )
 {
+	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE TWO" );
 }
 
 void DefaultDebugPage3( )
 {
+	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE THREE" );
 }
 
 void DefaultDebugPage4( )
 {
+	PERFORMANCE_MARKER
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE FOUR" );
 }
@@ -830,6 +860,7 @@ void DefaultDebugPage4( )
 
 UINT32 SexScreenInit(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 } 
 
@@ -838,6 +869,7 @@ UINT32 SexScreenInit(void)
 
 UINT32 SexScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	static UINT8					ubCurrentScreen = 0;
 	VOBJECT_DESC					VObjectDesc;
 	static UINT32					guiSMILY;
@@ -937,6 +969,7 @@ UINT32 SexScreenHandle(void)
 
 UINT32 SexScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -944,12 +977,14 @@ UINT32 SexScreenShutdown(void)
 
 UINT32 DemoExitScreenInit(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 } 
 
 
 void DoneFadeOutForDemoExitScreen( void )
 {
+	PERFORMANCE_MARKER
 	gfProgramIsRunning = FALSE;	
 }
 
@@ -958,6 +993,7 @@ extern INT8 gbFadeSpeed;
 #ifdef GERMAN
 void DisplayTopwareGermanyAddress()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC		vo_desc;
 	UINT32					uiTempID;
 	UINT8 *pDestBuf;
@@ -994,6 +1030,7 @@ void DisplayTopwareGermanyAddress()
 
 UINT32 DemoExitScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	gfProgramIsRunning = FALSE;
 	return( DEMO_EXIT_SCREEN );
 }
@@ -1001,6 +1038,7 @@ UINT32 DemoExitScreenHandle(void)
 
 UINT32 DemoExitScreenShutdown(void)
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
@@ -1008,31 +1046,37 @@ UINT32 DemoExitScreenShutdown(void)
 
 UINT32 LoadSaveScreenInit()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadSaveScreenHandle()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 LoadSaveScreenShutdown()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenInit()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenHandle()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 
 UINT32 EditScreenShutdown()
 {
+	PERFORMANCE_MARKER
 	return TRUE;
 }
 

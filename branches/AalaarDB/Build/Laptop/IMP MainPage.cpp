@@ -113,6 +113,7 @@ INT32 CountIMPSlots()
 
 INT32 GetFirstSlot(INT8 iSex)
 {
+	PERFORMANCE_MARKER
 	if (iSex == MALE)
 		return GetFirstMaleSlot();
 	else if (iSex == FEMALE)
@@ -124,6 +125,7 @@ INT32 GetFirstSlot(INT8 iSex)
 
 INT32 GetLastSlot(INT8 iSex)
 {
+	PERFORMANCE_MARKER
 	if (iSex == MALE)
 		return GetLastMaleSlot();
 	else if (iSex == FEMALE)
@@ -254,6 +256,7 @@ INT32 GetVoiceCountFromVoiceSlot(INT32 iSlot) {
 
 BOOLEAN IsIMPSlotFree(INT32 iIMPId)
 {
+	PERFORMANCE_MARKER
 	if ((iIMPId >= 0) && (iIMPId < NUM_PROFILES) &&
 		((wcscmp(gMercProfiles[iIMPId].zName, L"") == 0) ||
 		(gMercProfiles[iIMPId].bMercStatus == MERC_IS_DEAD)))
@@ -269,6 +272,7 @@ BOOLEAN IsIMPSlotFree(INT32 iIMPId)
 
 void EnterIMPMainPage( void )
 {
+	PERFORMANCE_MARKER
 	
 	// turn off review mode
 	fReviewStats = FALSE;
@@ -295,6 +299,7 @@ void EnterIMPMainPage( void )
 
 void ExitIMPMainPage( void )
 {
+	PERFORMANCE_MARKER
 	// exit from IMP About us page
 	
 	// delete Buttons
@@ -307,6 +312,7 @@ void ExitIMPMainPage( void )
 
 void RenderIMPMainPage( void )
 {
+	PERFORMANCE_MARKER
 	// rneders the IMP about us page
 	
 	// the background
@@ -323,6 +329,7 @@ void RenderIMPMainPage( void )
 
 void HandleIMPMainPage( void )
 {
+	PERFORMANCE_MARKER
 	// handles the IMP about main page
 
 	if ( CheckIfFinishedCharacterGeneration( ) )
@@ -339,6 +346,7 @@ void HandleIMPMainPage( void )
 //
 void CreateIMPMainPageButtons( void )
 {
+	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	
@@ -512,6 +520,7 @@ void CreateIMPMainPageButtons( void )
 
 void DeleteIMPMainPageButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function destroys the buttons needed for the IMP about Us Page
 
 	// the back	button
@@ -544,6 +553,7 @@ void DeleteIMPMainPageButtons( void )
 
 void BtnIMPMainPageBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -569,6 +579,7 @@ void BtnIMPMainPageBackCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -621,6 +632,7 @@ void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -653,6 +665,7 @@ void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -684,6 +697,7 @@ void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -716,6 +730,7 @@ void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -748,6 +763,7 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 
 void NextProfilingMode( void )
 {
+	PERFORMANCE_MARKER
 	// this function will change to mode the player is in for profiling
 	
 	// if less than done
@@ -759,6 +775,7 @@ void NextProfilingMode( void )
 
 BOOLEAN CheckIfFinishedCharacterGeneration( void )
 {
+	PERFORMANCE_MARKER
 	// this function checks to see if character is done character generation
 	
 	// are we done character generation
@@ -776,6 +793,7 @@ BOOLEAN CheckIfFinishedCharacterGeneration( void )
  
 void ShadeUnSelectableButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iCounter =0;
 	// this function looks at the status ofiCurrentProfileMode and decides which buttons 
@@ -794,6 +812,7 @@ void ShadeUnSelectableButtons( void )
 
 void UpDateIMPMainPageButtons( void )
 {
+	PERFORMANCE_MARKER
 	// update mainpage button states
 	INT32 iCount = 0;
 
@@ -892,6 +911,7 @@ void UpDateIMPMainPageButtons( void )
 
 void BeginMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -909,6 +929,7 @@ void BeginMessageBoxCallBack( UINT8 bExitValue )
 
 void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will create masks for the char generation main page
 
 	
@@ -945,6 +966,7 @@ void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 
 void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 {
+	PERFORMANCE_MARKER
 	// will destroy button masks for the char gen pages
 
 
@@ -962,7 +984,8 @@ void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 }
 
 void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
  
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -981,6 +1004,7 @@ void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 // WDS: Allow flexible numbers of IMPs of each sex
 INT32 CountFilledIMPSlots( INT8 iSex )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iCount = 0;
 	INT32 iStart;
@@ -1006,6 +1030,7 @@ INT32 CountFilledIMPSlots( INT8 iSex )
 
 INT32 CountEmptyIMPSlots( INT8 iSex )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iCount = 0;
 	INT32 iStart;
@@ -1030,6 +1055,7 @@ INT32 CountEmptyIMPSlots( INT8 iSex )
 
 INT32 GetSexOfIMP(INT32 iIMPId)
 {
+	PERFORMANCE_MARKER
 	INT32 ui;
 	for (ui = 0; ui < CountIMPSlots(); ++ui)
 	{
@@ -1048,6 +1074,7 @@ INT32 GetSexOfIMP(INT32 iIMPId)
 
 INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 {
+	PERFORMANCE_MARKER
 	INT32 iStart;
 	INT32 iEnd;
 	INT32 i;
@@ -1101,6 +1128,7 @@ INT32 GetFreeIMPSlot(INT32 iIMPId, INT32 iDefaultIMPId)
 
 BOOLEAN LoadCharacterPortraitForMainPage( void )
 {
+	PERFORMANCE_MARKER
 	// this function will load the character's portrait, to be used on portrait button
 	VOBJECT_DESC	VObjectDesc;
 
@@ -1124,6 +1152,7 @@ BOOLEAN LoadCharacterPortraitForMainPage( void )
 
 BOOLEAN IMP_CanWeDisplayPortrait( )
 {
+	PERFORMANCE_MARKER
 	if( iCurrentProfileMode == IMP__VOICE || 
 			iCurrentProfileMode == IMP__ATTRIBUTES || 
 			iCurrentProfileMode == IMP__PERSONALITY || 
@@ -1139,6 +1168,7 @@ BOOLEAN IMP_CanWeDisplayPortrait( )
 
 BOOLEAN IMP_CanWeDisplayAttributeGraph( )
 {
+	PERFORMANCE_MARKER
 	if(	iCurrentProfileMode == IMP__FINISH )
 	{
 		return( TRUE );
@@ -1153,6 +1183,7 @@ BOOLEAN IMP_CanWeDisplayAttributeGraph( )
 
 BOOLEAN IMP_CanWeDisplaySpecialtiesGraph( )
 {
+	PERFORMANCE_MARKER
 	if( iCurrentProfileMode == IMP__ATTRIBUTES || 
 			iCurrentProfileMode == IMP__FINISH )
 	{
@@ -1167,6 +1198,7 @@ BOOLEAN IMP_CanWeDisplaySpecialtiesGraph( )
 
 BOOLEAN IMP_CanWeDisplayVoiceGraph( )
 {
+	PERFORMANCE_MARKER
 	if( iCurrentProfileMode == IMP__ATTRIBUTES || 
 //			iCurrentProfileMode == IMP__VOICE || 
 			iCurrentProfileMode == IMP__PERSONALITY || 

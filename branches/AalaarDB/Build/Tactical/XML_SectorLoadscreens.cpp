@@ -63,6 +63,7 @@ typedef sectorLoadscreensParseData;
 static void XMLCALL 
 sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -108,6 +109,7 @@ sectorLoadscreensStartElementHandle(void *userData, const XML_Char *name, const 
 static void XMLCALL
 sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -120,7 +122,8 @@ sectorLoadscreensCharacterDataHandle(void *userData, const XML_Char *str, int le
 
 static void XMLCALL
 sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
-{	
+{
+	PERFORMANCE_MARKER	
 	char temp;
 	sectorLoadscreensParseData * pData = (sectorLoadscreensParseData *)userData;
 
@@ -275,6 +278,7 @@ sectorLoadscreensEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -338,6 +342,7 @@ BOOLEAN ReadInSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR
 
 BOOLEAN WriteSectorLoadscreensStats(SECTOR_LOADSCREENS *pSectorLoadscreens, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

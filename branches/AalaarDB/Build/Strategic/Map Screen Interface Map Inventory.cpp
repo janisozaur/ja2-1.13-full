@@ -36,8 +36,8 @@
 
 #include "ShopKeeper Interface.h"
 #include "ArmsDealerInvInit.h"
+#include <algorithm>
 
-extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
 
 extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData );
 #define MAP_INV_X_OFFSET							(((SCREEN_WIDTH - 261) - 380) / 2)
@@ -111,14 +111,11 @@ BOOLEAN fShowMapInventoryPool = FALSE;
 UINT32 guiMapInventoryPoolBackground;
 
 // inventory pool list
-WORLDITEM *pInventoryPoolList = NULL;
+std::vector<WORLDITEM> pInventoryPoolList;
 
 // current page of inventory
 INT32 iCurrentInventoryPoolPage = 0;
 INT32 iLastInventoryPoolPage = 0;
-
-// total number of slots allocated
-INT32 iTotalNumberOfSlots = 0;
 
 INT16 sObjectSourceGridNo = 0;
 
@@ -152,7 +149,6 @@ UINT32 guiMapInvenButton[ 3 ];
 BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 
 
-extern UINT32	guiNumWorldItems;
 extern BOOLEAN fShowInventoryFlag;
 extern BOOLEAN fMapScreenBottomDirty;
 
@@ -208,7 +204,7 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem );
 BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem );
 void CheckGridNoOfItemsInMapScreenMapInventory();
 INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2);
-void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray );
+void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArray );
 BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier );
 
 extern void MAPEndItemPointer( );
@@ -221,6 +217,7 @@ INT32 SellItem( OBJECTTYPE& object );
 // load the background panel graphics for inventory
 BOOLEAN LoadInventoryPoolGraphic( void )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC    VObjectDesc; 
 
 	// load the file
@@ -262,6 +259,7 @@ BOOLEAN LoadInventoryPoolGraphic( void )
 // remove background panel graphics for inventory
 void RemoveInventoryPoolGraphic( void )
 {
+	PERFORMANCE_MARKER
 	// remove from v-object index
 	if( guiMapInventoryPoolBackground )
 	{
@@ -275,6 +273,7 @@ void RemoveInventoryPoolGraphic( void )
 // blit the background panel for the inventory
 void BlitInventoryPoolGraphic( void )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// blit inventory pool graphic to the screen
@@ -316,6 +315,7 @@ void BlitInventoryPoolGraphic( void )
 
 void RenderItemsForCurrentPageOfInventoryPool( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// go through list of items on this page and place graphics to screen
@@ -330,6 +330,7 @@ void RenderItemsForCurrentPageOfInventoryPool( void )
 
 BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 {
+	PERFORMANCE_MARKER
 	// render item in this slot of the list
 	INT16 sCenX, sCenY, usWidth, usHeight, sX, sY;
 	HVOBJECT hHandle;
@@ -457,6 +458,7 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 
 void UpdateHelpTextForInvnentoryStashSlots( void )
 {
+	PERFORMANCE_MARKER
 	CHAR16 pStr[ 512 ];
 	INT32 iCounter = 0;
 	INT32 iFirstSlotOnPage = ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT );
@@ -498,6 +500,7 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 // create and remove buttons for inventory
 void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 
 /* player can leave items underground, no?
@@ -582,6 +585,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 
 void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen )
 {
+	PERFORMANCE_MARKER
 	if ( fShowMapInventoryPool )
 	{
 		// get rid of sector inventory mode & buttons
@@ -594,6 +598,7 @@ void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen )
 
 void ClearUpTempUnSeenList( void )
 {
+	PERFORMANCE_MARKER
 	// save these items and all the others
 	if( pUnSeenItems == NULL )
 	{
@@ -609,8 +614,9 @@ void ClearUpTempUnSeenList( void )
 
 void SaveSeenAndUnseenItems( void )
 {
+	PERFORMANCE_MARKER
 	WORLDITEM *pSeenItemsList = NULL;
-	INT32 iCounter = 0;
+	UINT32 iCounter = 0;
 	INT32 iItemCount = 0;
 	INT32 iTotalNumberItems = 0;
 
@@ -620,15 +626,15 @@ void SaveSeenAndUnseenItems( void )
 	// if there are seen items, build a temp world items list of them and save them
 	if( iTotalNumberItems > 0 )
 	{
-		pSeenItemsList = (WORLDITEM *) MemAlloc( ( sizeof( WORLDITEM ) * ( iTotalNumberItems ) )  );
+		pSeenItemsList = new WORLDITEM[ iTotalNumberItems ];
 
 		// copy
-		for( iCounter = 0; iCounter < iTotalNumberOfSlots; iCounter++ )
+		for( iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 		{
 			if( pInventoryPoolList[ iCounter ].object.ubNumberOfObjects > 0 )
 			{
 				// copy object stuff
-				memcpy( &( pSeenItemsList[ iItemCount ] ), &( pInventoryPoolList[ iCounter ] ), sizeof( WORLDITEM ) );
+				pSeenItemsList[ iItemCount ] = pInventoryPoolList[ iCounter ];
 
 				// check if item actually lives at a gridno
 				// if not, check predicessor, iItemCount is not 0
@@ -687,14 +693,14 @@ void SaveSeenAndUnseenItems( void )
 	// now clear out seen list
 	if( pSeenItemsList != NULL )
 	{
-		MemFree( pSeenItemsList );
+		delete[]( pSeenItemsList );
 		pSeenItemsList = NULL;
 	}
 
 	// clear out unseen list
 	if( pSaveList != NULL )
 	{
-		MemFree( pSaveList );
+		delete[]( pSaveList );
 		pSaveList = NULL;
 	}
 
@@ -707,6 +713,7 @@ void SaveSeenAndUnseenItems( void )
 // the screen mask bttn callaback...to disable the inventory and lock out the map itself
 void MapInvenPoolScreenMaskCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 
 	if( ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
 	{
@@ -719,6 +726,7 @@ void MapInvenPoolScreenMaskCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void CreateMapInventoryPoolSlots( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	INT16 sX = 0, sY = 0;
 	INT16 sXA = 0, sYA = 0;
@@ -758,6 +766,7 @@ void CreateMapInventoryPoolSlots( void )
 
 void DestroyMapInventoryPoolSlots( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
@@ -772,6 +781,7 @@ void DestroyMapInventoryPoolSlots( void )
 
 void MapInvenPoolSlotsMove( MOUSE_REGION * pRegion, INT32 iReason  )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 
@@ -797,6 +807,7 @@ void MapInvenPoolSlotsMove( MOUSE_REGION * pRegion, INT32 iReason  )
 
 void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	UINT16 usOldItemIndex, usNewItemIndex;
@@ -857,7 +868,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 			if( ( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorX != sSelMapX ) ||
 					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorY != sSelMapY ) ||
 					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ != iCurrentMapSectorZ ) ||
-					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].fBetweenSectors ) )
+					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].flags.fBetweenSectors ) )
 			{
 				if ( gpItemPointer == NULL )
 				{
@@ -898,7 +909,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 				// notify
 				pSoldier = &( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] );
 
-				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier -> sGridNo);
+				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier->sGridNo);
 
 			/*	if( sDistanceFromObject > MAX_DISTANCE_TO_PICKUP_ITEM )
 				{
@@ -987,6 +998,7 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 
 void CreateMapInventoryButtons( void )
 {
+	PERFORMANCE_MARKER
 	guiMapInvenButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" , 10, 1, -1, 3, -1 );
   guiMapInvenButton[ 0 ] = QuickCreateButton( guiMapInvenButtonImage[ 0 ], (MAP_INV_X_OFFSET + 559), (SCREEN_HEIGHT - 144),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
@@ -1008,6 +1020,7 @@ void CreateMapInventoryButtons( void )
 
 void DestroyMapInventoryButtons( void )
 {
+	PERFORMANCE_MARKER
 
 
 	RemoveButton( guiMapInvenButton[ 0 ] );
@@ -1021,6 +1034,7 @@ void DestroyMapInventoryButtons( void )
 
 void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 {
+	PERFORMANCE_MARKER
 	INT32 iSize = 0;
 	UINT32 uiItemCount = 0;
 	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
@@ -1038,15 +1052,11 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 	// round off .. we want at least 1 free page of space...
 	iSize = ( iSize - ( iSize % MAP_INVENTORY_POOL_SLOT_COUNT ) ) + MAP_INVENTORY_POOL_SLOT_COUNT;
 
-	iTotalNumberOfSlots = iSize;
-
 	// allocate space for list
 	pInventoryPoolList.clear();
 	pInventoryPoolList.resize( iSize );
 
-	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iSize ); 
-
-	iLastInventoryPoolPage = ( ( iTotalNumberOfSlots - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
+	iLastInventoryPoolPage = ( ( iSize - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
 
 
 	uiNumberOfUnSeenItems = 0;
@@ -1069,7 +1079,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
+				pInventoryPoolList[ uiItemCount ] = gWorldItems[ iCounter ];
 				uiItemCount++;
 			}
 		}
@@ -1081,7 +1091,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			// now allocate space for all the unseen items
 		if( guiNumWorldItems > uiItemCount )
 		{
-			pUnSeenItems = (WORLDITEM *) MemAlloc( ( guiNumWorldItems - uiItemCount ) * sizeof( WORLDITEM ) );
+			pUnSeenItems = new WORLDITEM[ guiNumWorldItems - uiItemCount ];
 
 			uiItemCount = 0;
 
@@ -1094,7 +1104,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
+					pUnSeenItems[ uiItemCount ] = gWorldItems[ iCounter ];
 
 					uiItemCount++;
 				}
@@ -1117,7 +1127,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		if( uiTotalNumberOfRealItems > 0 )
 		{
 			// allocate space for the list
-			pTotalSectorList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+			pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
 		
 			
 			// now load into mem
@@ -1148,7 +1158,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
+				pInventoryPoolList[ uiItemCount ] = pTotalSectorList[ iCounter ];
 
 				uiItemCount++;
 			}
@@ -1159,7 +1169,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		// now allocate space for all the unseen items
 		if( uiTotalNumberOfRealItems > uiItemCount )
 		{
-			pUnSeenItems = (WORLDITEM *) MemAlloc( ( uiTotalNumberOfRealItems - uiItemCount ) * sizeof( WORLDITEM ) );
+			pUnSeenItems = new WORLDITEM[ uiTotalNumberOfRealItems - uiItemCount ];
 
 			uiItemCount = 0;
 
@@ -1174,7 +1184,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
+					pUnSeenItems[ uiItemCount ] = pTotalSectorList[ iCounter ];
 
 					uiItemCount++;
 				}
@@ -1187,7 +1197,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		// if anything was alloced, then get rid of it
 		if( uiTotalNumberOfRealItems > 0 )
 		{
-				MemFree( pTotalSectorList );
+				delete[]( pTotalSectorList );
 		}
 	}
 
@@ -1200,6 +1210,7 @@ void BuildStashForSelectedSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 
 void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumberUnSeenItems, WORLDITEM *pSeenItemsList, WORLDITEM *pUnSeenItemsList )
 {
+	PERFORMANCE_MARKER
 	INT32 iTotalNumberOfItems = 0;
 	INT32 iCurrentItem = 0;
 	INT32 iCounter = 0;
@@ -1222,25 +1233,19 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 	}
 
 	// allocate space for items
-	pTotalList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * iTotalNumberOfItems );
-	
-	for( iCounter = 0; iCounter < iTotalNumberOfItems; iCounter++ )
-	{
-		// clear out the structure
-		memset( &( pTotalList[ iCounter ] ), 0, sizeof( WORLDITEM ) );
-	}
+	pTotalList = new WORLDITEM[ iTotalNumberOfItems ];
 
 	// place seen items in the world
 	for( iCounter = 0; iCounter < iNumberSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[ iCurrentItem ] = pSeenItemsList[ iCounter ];
 		iCurrentItem++;
 	}
 
 	// now store the unseen item list
 	for( iCounter = 0; iCounter < iNumberUnSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pUnSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[ iCurrentItem ] = pUnSeenItemsList[ iCounter ];
 		iCurrentItem++;
 	}
 
@@ -1256,7 +1261,7 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ , uiTotalNumberOfVisibleItems );
 
 	// clear out allocated space for total list
-	MemFree( pTotalList );
+	delete[]( pTotalList );
 
 	// reset total list
 	pTotalList = NULL;
@@ -1266,41 +1271,22 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 
 void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
 {
-	INT32 iSizeOfList = iTotalNumberOfSlots;
-	WORLDITEM * pOldList;
-
+	PERFORMANCE_MARKER
 	// no items added, leave
 	if( iNumberOfItems == 0 )
 	{
 		return;
 	}
 
-	iTotalNumberOfSlots+= iNumberOfItems;
-
-	pOldList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * iSizeOfList );
-	memset( pOldList, 0, sizeof( WORLDITEM ) * iSizeOfList );
-
-	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );
-
-	// rebuild stash 
-	pInventoryPoolList = (WORLDITEM *) MemRealloc( pInventoryPoolList, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
-	
-	// set new mem to 0
-	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
-
-	// copy old info over
-	memcpy( pInventoryPoolList, pOldList, sizeof( WORLDITEM ) * iSizeOfList );
-	
-	// free memeory
-	MemFree( pOldList );
-
+	pInventoryPoolList.resize(pInventoryPoolList.size() + iNumberOfItems);
 	return;
 }
 
 void DestroyStash( void )
 {
+	PERFORMANCE_MARKER
 	// clear out stash
-	MemFree( pInventoryPoolList );
+	pInventoryPoolList.clear();
 
 }
 
@@ -1308,6 +1294,7 @@ void DestroyStash( void )
 
 INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne )
 {
+	PERFORMANCE_MARKER
 	// get # of items in sector that are visible to the player
 	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
 	WORLDITEM * pTotalSectorList = NULL;
@@ -1350,7 +1337,7 @@ INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCo
 		if( uiTotalNumberOfItems > 0 )
 		{
 			// allocate space for the list
-			pTotalSectorList = (WORLDITEM *) MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+			pTotalSectorList = new WORLDITEM[ uiTotalNumberOfItems ];
 
 				// now load into mem
 			LoadWorldItemsFromTempItemFile(  sMapX,  sMapY, ( INT8 ) ( sMapZ ), pTotalSectorList );
@@ -1378,7 +1365,7 @@ INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCo
 		// if anything was alloced, then get rid of it
 		if( pTotalSectorList != NULL )
 		{
-			MemFree( pTotalSectorList );
+			delete[]( pTotalSectorList );
 			pTotalSectorList = NULL;
 
 			#ifdef JA2BETAVERSION	
@@ -1398,9 +1385,9 @@ INT32 GetSizeOfStashInSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCo
 
 void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fOk = FALSE;
 	BOOLEAN fSELLALL = gGameExternalOptions.fSellAll;
-
 
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -1438,7 +1425,6 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 			{
 				DeleteItemsOfType( usDesiredItemType );
 			}
-
 			if ( fShowMapInventoryPool )
 				HandleButtonStatesWhileMapInventoryActive();
 		}
@@ -1470,7 +1456,6 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 
 			if ( fShowMapInventoryPool )
 				HandleButtonStatesWhileMapInventoryActive();		
-
 		}
 		else
 		{
@@ -1496,10 +1481,11 @@ void BeginInventoryPoolPtr( OBJECTTYPE *pInventorySlot )
 // get this item out of the stash slot
 BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
+	PERFORMANCE_MARKER
 	// if there are only one item in slot, just copy
 	if (pInventorySlot->ubNumberOfObjects == 1)
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		*pItemPtr = *pInventorySlot;
 	}
 	else
 	{
@@ -1513,16 +1499,17 @@ BOOLEAN GetObjFromInventoryStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pI
 
 BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
+	PERFORMANCE_MARKER
 
 	CHECKF( pInventorySlot );
 
-	if (pInventorySlot -> ubNumberOfObjects == 0)
+	if (pInventorySlot->ubNumberOfObjects == 0)
 	{
 		return( FALSE );
 	}
 	else
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		*pItemPtr = *pInventorySlot;
 		DeleteObj( pInventorySlot );
 		return( TRUE );
 	}
@@ -1530,11 +1517,12 @@ BOOLEAN RemoveObjectFromStashSlot( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItem
 
 BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pItemPtr )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
 
-	ubSlotLimit = Item[pItemPtr -> usItem].ubPerPocket;
+	ubSlotLimit = Item[pItemPtr->usItem].ubPerPocket;
 
 	if (pInventorySlot->ubNumberOfObjects == 0)
 	{
@@ -1549,7 +1537,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		memcpy( pInventorySlot, pItemPtr, sizeof( OBJECTTYPE ) );
+		*pInventorySlot = *pItemPtr;
 
 		if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
 		{
@@ -1590,9 +1578,9 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 			else
 			{
 				// stacking
-				if( ubNumberToDrop > ubSlotLimit - pInventorySlot -> ubNumberOfObjects )
+				if( ubNumberToDrop > ubSlotLimit - pInventorySlot->ubNumberOfObjects )
 				{
-					ubNumberToDrop = ubSlotLimit - pInventorySlot -> ubNumberOfObjects;
+					ubNumberToDrop = ubSlotLimit - pInventorySlot->ubNumberOfObjects;
 				}
 				pInventorySlot->AddObjectsToStack(*pItemPtr, ubNumberToDrop);
 			}
@@ -1608,6 +1596,7 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 
 BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
 	OBJECTTYPE *pInventorySlot;
 
@@ -1628,7 +1617,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	memcpy( pInventorySlot, pItemPtr, sizeof( OBJECTTYPE ) );
+	*pInventorySlot = *pItemPtr;
 
 	if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
 	{
@@ -1648,6 +1637,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 void MapInventoryPoolNextBtn( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 		if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	  btn->uiFlags|=(BUTTON_CLICKED_ON);   
@@ -1670,6 +1660,7 @@ void MapInventoryPoolNextBtn( GUI_BUTTON *btn, INT32 reason )
 
 void MapInventoryPoolPrevBtn( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 		if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	  btn->uiFlags|=(BUTTON_CLICKED_ON);   
@@ -1693,6 +1684,7 @@ void MapInventoryPoolPrevBtn( GUI_BUTTON *btn, INT32 reason )
 
 void MapInventoryPoolDoneBtn( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	  btn->uiFlags|=(BUTTON_CLICKED_ON);   
@@ -1713,6 +1705,7 @@ void MapInventoryPoolDoneBtn( GUI_BUTTON *btn, INT32 reason )
 
 void DisplayPagesForMapInventoryPool( void )
 {
+	PERFORMANCE_MARKER
 	// get the current and last pages and display them
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
@@ -1739,10 +1732,11 @@ void DisplayPagesForMapInventoryPool( void )
 
 INT32 GetTotalNumberOfItemsInSectorStash( void )
 {
-	INT32 iCounter, iCount = 0;
+	PERFORMANCE_MARKER
+	INT32 iCount = 0;
 
 	// run through list of items and find out how many are there
-	for( iCounter = 0; iCounter < iTotalNumberOfSlots; iCounter++ )
+	for( UINT32 iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 	{
 		if( pInventoryPoolList[ iCounter].object.ubNumberOfObjects > 0 )
 		{
@@ -1756,10 +1750,11 @@ INT32 GetTotalNumberOfItemsInSectorStash( void )
 
 INT32 GetTotalNumberOfItems( void )
 {
-	INT32 iCounter, iCount = 0;
+	PERFORMANCE_MARKER
+	INT32 iCount = 0;
 
 	// run through list of items and find out how many are there
-	for( iCounter = 0; iCounter < iTotalNumberOfSlots; iCounter++ )
+	for(UINT32 iCounter = 0; iCounter < pInventoryPoolList.size(); iCounter++ )
 	{
 		if( pInventoryPoolList[ iCounter].object.ubNumberOfObjects > 0 )
 		{
@@ -1773,6 +1768,7 @@ INT32 GetTotalNumberOfItems( void )
 
 void DrawNumberOfIventoryPoolItems( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iNumberOfItems = 0;
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
@@ -1817,6 +1813,7 @@ void CreateMapInventoryPoolDoneButton( void )
 
 void DestroyInventoryPoolDoneButton( void )
 {
+	PERFORMANCE_MARKER
 	// destroy ddone button
 
 	RemoveButton( guiMapInvenButton[ 2 ] ); 
@@ -1829,6 +1826,7 @@ void DestroyInventoryPoolDoneButton( void )
 
 void DisplayCurrentSector( void )
 {
+	PERFORMANCE_MARKER
 	// grab current sector being displayed
 	CHAR16 sString[ 32 ]; 
 	INT16 sX, sY;
@@ -1855,26 +1853,28 @@ void DisplayCurrentSector( void )
 
 void CheckAndUnDateSlotAllocation( void )
 {
+	PERFORMANCE_MARKER
 	// will check number of available slots, if less than half a page, allocate a new page
 	INT32 iNumberOfTakenSlots = 0;
 
 	// get number of taken slots
 	iNumberOfTakenSlots = GetTotalNumberOfItems( );
 
-	if( ( iTotalNumberOfSlots - iNumberOfTakenSlots ) < 2 )
+	if( ( pInventoryPoolList.size() - iNumberOfTakenSlots ) < 2 )
 	{
 		// not enough space
 		// need to make more space
 		ReSizeStashListByThisAmount( MAP_INVENTORY_POOL_SLOT_COUNT );
 	}
 
-	iLastInventoryPoolPage = ( ( iTotalNumberOfSlots  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
+	iLastInventoryPoolPage = ( ( pInventoryPoolList.size()  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
 	
 	return;
 }
 
 void DrawTextOnMapInventoryBackground( void )
 {
+	PERFORMANCE_MARKER
 //	CHAR16 sString[ 64 ];
 	UINT16 usStringHeight;
 
@@ -1911,6 +1911,7 @@ void DrawTextOnMapInventoryBackground( void )
 
 void HandleButtonStatesWhileMapInventoryActive( void )
 {
+	PERFORMANCE_MARKER
 
 	// are we even showing the amp inventory pool graphic?
 	if( fShowMapInventoryPool == FALSE )
@@ -1952,6 +1953,7 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 
 void DrawTextOnSectorInventory( void )
 {
+	PERFORMANCE_MARKER
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 64 ];
 
@@ -1977,6 +1979,7 @@ void DrawTextOnSectorInventory( void )
 
 void HandleFlashForHighLightedItem( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCurrentTime = 0;
 	INT32 iDifference = 0;
 
@@ -2016,6 +2019,7 @@ void HandleFlashForHighLightedItem( void )
 
 void HandleMouseInCompatableItemForMapSectorInventory( INT32 iCurrentSlot )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier = NULL;
 	static BOOLEAN fItemWasHighLighted = FALSE;
 
@@ -2110,6 +2114,7 @@ void HandleMouseInCompatableItemForMapSectorInventory( INT32 iCurrentSlot )
 
 void ResetMapSectorInventoryPoolHighLights( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	// now reset the highlight list for the map sector inventory
@@ -2125,6 +2130,7 @@ void ResetMapSectorInventoryPoolHighLights( void )
 }
 void HandleMapSectorInventory( void )
 {
+	PERFORMANCE_MARKER
 	// handle mouse in compatable item map sectors inventory
 	HandleMouseInCompatableItemForMapSectorInventory( iCurrentlyHighLightedItem );
 
@@ -2135,6 +2141,7 @@ void HandleMapSectorInventory( void )
 //CJC look here to add/remove checks for the sector inventory
 BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
 {
+	PERFORMANCE_MARKER
 	if( pWorldItem->bVisible == 1 && 
 			pWorldItem->fExists && 
 			pWorldItem->object.usItem != SWITCH && 
@@ -2150,6 +2157,7 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
 //CJC look here to add/remove checks for the sector inventory
 BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem )
 {
+	PERFORMANCE_MARKER
 	if( pWorldItem->fExists &&
 			!IsMapScreenWorldItemVisibleInMapInventory( pWorldItem ) )
 	{
@@ -2162,6 +2170,7 @@ BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory( WORLDITEM *pWorldItem )
 //Check to see if any of the items in the list have a gridno of NOWHERE and the entry point flag NOT set
 void CheckGridNoOfItemsInMapScreenMapInventory()
 {
+	PERFORMANCE_MARKER
 	INT32 iCnt;
 	UINT32 uiNumFlagsNotSet = 0;
 	INT32	 iTotalNumberItems = GetTotalNumberOfItems( );
@@ -2202,7 +2211,7 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 }
 
 
-void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray )
+void SortSectorInventory( std::vector<WORLDITEM>& pInventory, UINT32 uiSizeOfArray )
 {
 	PERFORMANCE_MARKER
 #if 0
@@ -2251,6 +2260,7 @@ void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray )
 
 INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 {
+	PERFORMANCE_MARKER
 	WORLDITEM *pFirst = (WORLDITEM *)pNum1;
 	WORLDITEM *pSecond = (WORLDITEM *)pNum2;
 	UINT16	usItem1Index;
@@ -2269,6 +2279,7 @@ INT32 MapScreenSectorInventoryCompare( const void *pNum1, const void *pNum2)
 
 BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier )
 {
+	PERFORMANCE_MARKER
 	INT16	sSectorX, sSectorY, sSectorZ;
 	BOOLEAN fInCombat;
 
@@ -2294,9 +2305,8 @@ BOOLEAN CanPlayerUseSectorInventory( SOLDIERTYPE *pSelectedSoldier )
 
 void DeleteAllItemsInInventoryPool()
 {
-	INT32 iNumber;
-
-	for( iNumber = 0 ; iNumber <  iTotalNumberOfSlots ; ++iNumber)
+	PERFORMANCE_MARKER
+	for( UINT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
 	{
 		DeleteObj( &pInventoryPoolList [ iNumber ].object );
 	}
@@ -2305,10 +2315,6 @@ void DeleteAllItemsInInventoryPool()
 
 	ClearUpTempUnSeenList( );
 	SaveSeenAndUnseenItems();
-
-	iCurrentInventoryPoolPage = 0;
-	iLastInventoryPoolPage = 0;
-
 	DestroyStash();
 	BuildStashForSelectedSector( sSelMapX, sSelMapY, iCurrentMapSectorZ);
 }
@@ -2316,9 +2322,8 @@ void DeleteAllItemsInInventoryPool()
 
 void DeleteItemsOfType( UINT16 usItemType )
 {
-	INT32 iNumber;
-
-	for( iNumber = 0 ; iNumber <  iTotalNumberOfSlots ; ++iNumber)
+	PERFORMANCE_MARKER
+	for( UINT32 iNumber = 0 ; iNumber <  pInventoryPoolList.size() ; ++iNumber)
 	{
 		if ( pInventoryPoolList [ iNumber ].object.usItem == usItemType )
 		{

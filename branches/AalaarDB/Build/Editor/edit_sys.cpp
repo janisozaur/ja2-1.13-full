@@ -58,6 +58,7 @@ UINT32			gDoCliffs = NO_CLIFFS;
 //
 void QuickEraseMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	if ( iMapIndex >= 0x8000 )
 		return;
 	AddToUndoList( iMapIndex );
@@ -73,6 +74,7 @@ void QuickEraseMapTile( UINT32 iMapIndex )
 //
 void DeleteStuffFromMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	//UINT16		usUseIndex;
 	//UINT16		usType;
 	//UINT32		uiCheckType;
@@ -101,6 +103,7 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 //
 void EraseMapTile( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	INT32			iEraseMode;
 	UINT32		uiCheckType;
 	if ( iMapIndex >= 0x8000 )
@@ -223,6 +226,7 @@ void EraseMapTile( UINT32 iMapIndex )
 //
 void PasteDebris( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	INT32					iRandSelIndex;
@@ -257,6 +261,7 @@ void PasteDebris( UINT32 iMapIndex )
 
 void PasteSingleWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleWall;
 	pNumSelList = &iNumWallsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -264,6 +269,7 @@ void PasteSingleWall( UINT32 iMapIndex )
 
 void PasteSingleDoor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDoor;
 	pNumSelList = &iNumDoorsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -271,6 +277,7 @@ void PasteSingleDoor( UINT32 iMapIndex )
 
 void PasteSingleWindow( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleWindow;
 	pNumSelList = &iNumWindowsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -278,6 +285,7 @@ void PasteSingleWindow( UINT32 iMapIndex )
 
 void PasteSingleRoof( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleRoof;
 	pNumSelList = &iNumRoofsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -285,6 +293,7 @@ void PasteSingleRoof( UINT32 iMapIndex )
 
 void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 {
+	PERFORMANCE_MARKER
 	if( gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
 	{
 		AddToUndoList( iMapIndex );
@@ -294,6 +303,7 @@ void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 
 void PasteSingleBrokenWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16 usIndex, usObjIndex, usTileIndex, usWallOrientation;
 
 	pSelList = SelSingleBrokenWall;
@@ -313,6 +323,7 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 
 void PasteSingleDecoration( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDecor;
 	pNumSelList = &iNumDecorSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -320,6 +331,7 @@ void PasteSingleDecoration( UINT32 iMapIndex )
 
 void PasteSingleDecal( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleDecal;
 	pNumSelList = &iNumDecalsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -327,6 +339,7 @@ void PasteSingleDecal( UINT32 iMapIndex )
 
 void PasteSingleFloor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleFloor;
 	pNumSelList = &iNumFloorsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -334,6 +347,7 @@ void PasteSingleFloor( UINT32 iMapIndex )
 
 void PasteSingleToilet( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelSingleToilet;
 	pNumSelList = &iNumToiletsSelected;
 	PasteSingleWallCommon( iMapIndex );
@@ -347,6 +361,7 @@ void PasteSingleToilet( UINT32 iMapIndex )
 //
 void PasteSingleWallCommon( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	UINT16				usTempIndex;
@@ -452,6 +467,7 @@ void PasteSingleWallCommon( UINT32 iMapIndex )
 //	from that list. If no such objects are in the list, we return 0xffff (-1).
 UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 {
+	PERFORMANCE_MARKER
 	UINT16	usPickList[50];
 	UINT16	usNumInPickList;
 	UINT16	usWhich;
@@ -472,6 +488,7 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 
 UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 {
+	PERFORMANCE_MARKER
 	UINT16	usPickList[50];
 	UINT16	usNumInPickList;
 	UINT16	i;
@@ -500,6 +517,7 @@ UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 //
 void PasteStructure( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs;
 	pNumSelList = &iNumOStructsSelected;
 
@@ -513,6 +531,7 @@ void PasteStructure( UINT32 iMapIndex )
 //
 void PasteStructure1( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs1;
 	pNumSelList = &iNumOStructs1Selected;
 
@@ -526,6 +545,7 @@ void PasteStructure1( UINT32 iMapIndex )
 //
 void PasteStructure2( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	pSelList = SelOStructs2;
 	pNumSelList = &iNumOStructs2Selected;
 
@@ -602,6 +622,7 @@ void PasteStructureCommon( UINT32 iMapIndex )
 //
 void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 {
+	PERFORMANCE_MARKER
 	BOOLEAN				fDoPaste = FALSE;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -660,6 +681,7 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 
 void PasteRoads( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16				usUseIndex;
 		
 	pSelList = SelRoads;
@@ -678,6 +700,7 @@ void PasteRoads( UINT32 iMapIndex )
 //
 void PasteTexture( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	ChooseWeightedTerrainTile(); //Kris
 	PasteTextureCommon( iMapIndex );
 }
@@ -691,6 +714,7 @@ void PasteTexture( UINT32 iMapIndex )
 //
 void PasteTextureCommon( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT8					ubLastHighLevel;
 	UINT16					usTileIndex;
 	//UINT16					Dummy;
@@ -753,6 +777,7 @@ void PasteTextureCommon( UINT32 iMapIndex )
 //
 void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 {
+	PERFORMANCE_MARKER
 	UINT16					NewTile;
 	UINT8					ubLastHighLevel;
 	UINT32					*puiDeletedTypes = NULL;
@@ -816,6 +841,7 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 //
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius )
 {
+	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -865,6 +891,7 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 //
 BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiNewType;
 	UINT16					usNewIndex;
 	//UINT16					Dummy;
@@ -912,6 +939,7 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 //
 BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius )
 {
+	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -957,6 +985,7 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 //
 BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
 {
+	PERFORMANCE_MARKER
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
 	INT16					sLeft, sRight;
@@ -1061,6 +1090,7 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 // ATE FIXES
 void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 {
+	PERFORMANCE_MARKER
 	UINT16 usIndex;
 	UINT8	ubTypeLevel;
 	UINT16 NewTile;
@@ -1091,6 +1121,7 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 
 void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 {
+	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -1136,6 +1167,7 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 #define LAND_DROP_5 FIRSTCLIFF8
 void RaiseWorldLand( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	UINT32				sTempGridNo;
 	LEVELNODE			*pStruct;
@@ -1174,7 +1206,6 @@ void RaiseWorldLand( )
 				pStruct = pStruct->pNext;
 				continue;
 			}
-
 			pTileElement = &(gTileDatabase[ pStruct->usIndex ]);
 			if (pTileElement->fType==FIRSTCLIFF)
 			{	
@@ -1399,6 +1430,7 @@ void RaiseWorldLand( )
 
 void EliminateObjectLayerRedundancy()
 {
+	PERFORMANCE_MARKER
 	INT32 i, numRoads, numAnothers;
 	UINT32 uiType;
 	LEVELNODE *pObject, *pValidRoad, *pValidAnother;

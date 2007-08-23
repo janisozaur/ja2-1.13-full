@@ -65,6 +65,7 @@ extern void HandleEndDemoInCreatureLevel( );
 
 BOOLEAN NoEnemiesInSight( )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE			 *pSoldier;
 	INT32										cnt;
 
@@ -75,9 +76,9 @@ BOOLEAN NoEnemiesInSight( )
 	// look for all mercs on the same team, 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
 	{		
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE )
+		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE )
 		{
-			if ( pSoldier->bOppCnt != 0 )
+			if ( pSoldier->aiData.bOppCnt != 0 )
 			{
 				return( FALSE );	
 			}
@@ -99,6 +100,7 @@ void MusicStopCallback( void *pData );
 //********************************************************************************
 BOOLEAN MusicPlay(UINT32 uiNum)
 {
+	PERFORMANCE_MARKER
 	if( 1==iScreenMode ) /* on Windowed mode, skip the music? was coded for WINDOWED_MODE that way...*/
 	return FALSE;
 
@@ -142,6 +144,7 @@ BOOLEAN MusicPlay(UINT32 uiNum)
 //********************************************************************************
 BOOLEAN MusicSetVolume(UINT32 uiVolume)
 {
+	PERFORMANCE_MARKER
 	INT32 uiOldMusicVolume = uiMusicVolume;
 
 	if( 1==iScreenMode ) /* on Windowed mode, skip the music? was coded for WINDOWED_MODE that way...*/
@@ -185,6 +188,7 @@ BOOLEAN MusicSetVolume(UINT32 uiVolume)
 //********************************************************************************
 UINT32 MusicGetVolume(void)
 {
+	PERFORMANCE_MARKER
 		return(uiMusicVolume);
 }
 
@@ -198,6 +202,7 @@ UINT32 MusicGetVolume(void)
 //********************************************************************************
 BOOLEAN MusicStop(void)
 {
+	PERFORMANCE_MARKER
 	if( 1==iScreenMode ) /* on Windowed mode, skip the music? was coded for WINDOWED_MODE that way...*/
 		return(FALSE);
 
@@ -226,6 +231,7 @@ BOOLEAN MusicStop(void)
 //********************************************************************************
 BOOLEAN MusicFadeOut(void)
 {
+	PERFORMANCE_MARKER
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
 		fMusicFadingOut=TRUE;
@@ -244,6 +250,7 @@ BOOLEAN MusicFadeOut(void)
 //********************************************************************************
 BOOLEAN MusicFadeIn(void)
 {
+	PERFORMANCE_MARKER
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
 		fMusicFadingIn=TRUE;
@@ -263,6 +270,7 @@ BOOLEAN MusicFadeIn(void)
 //********************************************************************************
 BOOLEAN MusicPoll( BOOLEAN fForce )
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"MusicPoll");
 
 	if( 1==iScreenMode ) /* on Windowed mode, skip the music? was coded for WINDOWED_MODE that way...*/
@@ -360,6 +368,7 @@ BOOLEAN MusicPoll( BOOLEAN fForce )
 
 BOOLEAN SetMusicMode( UINT8 ubMusicMode )
 {
+	PERFORMANCE_MARKER
 	static INT8 bPreviousMode = 0;
 
 
@@ -410,6 +419,7 @@ BOOLEAN SetMusicMode( UINT8 ubMusicMode )
 
 BOOLEAN StartMusicBasedOnMode( )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fFirstTime = TRUE;
 
 	if ( fFirstTime )
@@ -515,6 +525,7 @@ BOOLEAN StartMusicBasedOnMode( )
 
 void MusicStopCallback( void *pData )
 {
+	PERFORMANCE_MARKER
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music EndCallback %d %d", uiMusicHandle, gubMusicMode	) );
 
 	gfMusicEnded	= TRUE;
@@ -526,11 +537,13 @@ void MusicStopCallback( void *pData )
 
 void SetMusicFadeSpeed( INT8 bFadeSpeed )
 {
+	PERFORMANCE_MARKER
 	gbFadeSpeed = bFadeSpeed;
 }
 
 void FadeMusicForXSeconds( UINT32 uiDelay )
 {
+	PERFORMANCE_MARKER
 	INT16 sNumTimeSteps, sNumVolumeSteps;
 
 	// get # time steps in delay....
@@ -546,6 +559,7 @@ void FadeMusicForXSeconds( UINT32 uiDelay )
 
 void	DoneFadeOutDueToEndMusic( void )
 {
+	PERFORMANCE_MARKER
 	// Quit game....
 	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
 	//SetPendingNewScreen( MAINMENU_SCREEN );

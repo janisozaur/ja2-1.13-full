@@ -126,6 +126,7 @@ void	DisplaySirtechSplashScreen();
 
 UINT32	IntroScreenInit( void )
 {
+	PERFORMANCE_MARKER
 	//Set so next time we come in, we can set up
 	gfIntroScreenEntry = TRUE;
 
@@ -135,12 +136,14 @@ UINT32	IntroScreenInit( void )
 
 UINT32	IntroScreenShutdown( void )
 {
+	PERFORMANCE_MARKER
 	return( 1 );
 }
 
 
 UINT32	IntroScreenHandle( void )
 {
+	PERFORMANCE_MARKER
 	if( gfIntroScreenEntry )
 	{
 		EnterIntroScreen();
@@ -174,6 +177,7 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
+	PERFORMANCE_MARKER
 	INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
@@ -225,10 +229,12 @@ BOOLEAN EnterIntroScreen()
 
 void RenderIntroScreen()
 {
+	PERFORMANCE_MARKER
 }
 
 void ExitIntroScreen()
 {
+	PERFORMANCE_MARKER
 
 	//shutdown smaker
 	SmkShutdown();
@@ -236,6 +242,7 @@ void ExitIntroScreen()
 
 void HandleIntroScreen()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
 	//if we are exiting this screen, this frame, dont update the screen
@@ -271,12 +278,13 @@ void HandleIntroScreen()
 
 void		GetIntroScreenUserInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom Event;
 	POINT	MousePos;
 
 
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( DequeueEvent( &Event ) )
 	{
@@ -340,6 +348,7 @@ void		GetIntroScreenUserInput()
 
 void PrepareToExitIntroScreen()
 {
+	PERFORMANCE_MARKER
 	//if its the intro at the begining of the game
 	if( gbIntroScreenMode == INTRO_BEGINING )
 	{
@@ -369,6 +378,7 @@ void PrepareToExitIntroScreen()
 
 INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 {
+	PERFORMANCE_MARKER
 	INT32 iStringToUse = -1;
 
 	//switch on whether it is the beginging or the end game video
@@ -449,6 +459,7 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
+	PERFORMANCE_MARKER
 
 	if( iIndexOfFlicToPlay != -1 )
 	{
@@ -475,6 +486,7 @@ void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 
 void SetIntroType( INT8 bIntroType )
 {
+	PERFORMANCE_MARKER
 	if( bIntroType == INTRO_BEGINING )
 	{
 		gbIntroScreenMode = INTRO_BEGINING;
@@ -492,6 +504,7 @@ void SetIntroType( INT8 bIntroType )
 
 void DisplaySirtechSplashScreen()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	VOBJECT_DESC	VObjectDesc;
 	UINT32 uiLogoID;

@@ -19,6 +19,7 @@
 #include "types.h"
 #include "TopicOps.h"
 #include "TopicIDs.h"
+#include "profiler.h"
 
 /*
 #ifdef __cplusplus

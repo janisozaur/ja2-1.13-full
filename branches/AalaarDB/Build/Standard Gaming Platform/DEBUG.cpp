@@ -158,7 +158,7 @@ STRING512 gpcDebugLogFileName;
 // Return Value :
 // Modification history :
 //
-//		xxjun98:CJC		-> creation
+//		xxjun98:CJC		->creation
 //
 //**************************************************************************
 BOOLEAN DbgGetLogFileName( STRING512 pcName )
@@ -194,7 +194,7 @@ BOOLEAN DbgGetLogFileName( STRING512 pcName )
 // Return Value :
 // Modification history :
 //
-//		xxnov96:HJH		-> creation
+//		xxnov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -235,7 +235,7 @@ BOOLEAN DbgInitialize(void)
 // Return Value :
 // Modification history :
 //
-//		xxnov96:HJH		-> creation
+//		xxnov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -254,7 +254,7 @@ void DbgShutdown(void)
 // Return Value :
 // Modification history :
 //
-//		June 97: BR		-> creation
+//		June 97: BR		->creation
 //
 //**************************************************************************
 
@@ -324,7 +324,7 @@ void RemoveDebugText( void )
 // Return Value :
 // Modification history :
 //
-//		June 97: BR		-> creation
+//		June 97: BR		->creation
 //
 //**************************************************************************
 
@@ -354,7 +354,7 @@ void DbgClearAllTopics( void )
 // Return Value :
 // Modification history :
 //
-//		xxnov96:HJH		-> creation
+//		xxnov96:HJH		->creation
 //
 //**************************************************************************
 void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 strMessage)
@@ -392,7 +392,7 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, STR8 
 // Return Value :
 // Modification history :
 //
-//		11nov96:HJH		-> creation
+//		11nov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -411,7 +411,7 @@ BOOLEAN DbgSetDebugLevel(UINT16 uiTopicId, UINT8 uiDebugLevel)
 // Return Value :
 // Modification history :
 //
-//		xxnov96:HJH		-> creation
+//		xxnov96:HJH		->creation
 //
 //**************************************************************************
 
@@ -493,7 +493,6 @@ void		DbgShutdown(void) {};
 #endif
 
 
-
 #if defined ( _DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
 
@@ -507,7 +506,8 @@ extern HVOBJECT FontObjs[25];
 
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
-{ 
+{
+	PERFORMANCE_MARKER 
 	CHAR8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 	MSG Message;
@@ -538,6 +538,7 @@ void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 #endif
 	// 0verhaul:  Replacement for the above.  More consistent.
 	DbgMessage( TOPIC_GAME, DBG_LEVEL_1, ubOutputString);
+
 
 #if 0
 	if( !FontObjs[0] )

@@ -37,6 +37,7 @@ STR8 Replace(STR8 string, STR8 oldpiece, STR8 newpiece);
 template<class Integer>
 inline Integer idiv(Integer a, Integer b)
 {
+	PERFORMANCE_MARKER
 	return a > 0 ? b > 0 ? (a + b/2) / b : (a - b/2) / b :
 				b > 0 ? (a - b/2) / b : (a + b/2) / b ;
 }

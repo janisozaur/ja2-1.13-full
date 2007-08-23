@@ -33,6 +33,7 @@ void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPAttributeEntrance( void )
 {
+	PERFORMANCE_MARKER
 
 	CreateIMPAttributeEntranceButtons( );
 
@@ -41,6 +42,7 @@ void EnterIMPAttributeEntrance( void )
 
 void RenderIMPAttributeEntrance( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -52,6 +54,7 @@ void RenderIMPAttributeEntrance( void )
 
 void ExitIMPAttributeEntrance( void )
 {
+	PERFORMANCE_MARKER
 	// destroy the finish buttons
 	DestroyIMPAttributeEntranceButtons( );
 
@@ -61,6 +64,7 @@ void ExitIMPAttributeEntrance( void )
 
 void HandleIMPAttributeEntrance( void )
 {
+	PERFORMANCE_MARKER
 	
 	
 
@@ -70,6 +74,7 @@ void HandleIMPAttributeEntrance( void )
 
 void CreateIMPAttributeEntranceButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	// the begin button
 	giIMPAttributeEntranceButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
@@ -92,6 +97,7 @@ void CreateIMPAttributeEntranceButtons( void )
 
 void DestroyIMPAttributeEntranceButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP attrib enter page
 	
 	// the begin	button
@@ -106,6 +112,7 @@ void DestroyIMPAttributeEntranceButtons( void )
 
 void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

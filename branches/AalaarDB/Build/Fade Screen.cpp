@@ -61,12 +61,14 @@ BOOLEAN			gfFadeInDone				= FALSE;
 
 void FadeInNextFrame( )
 {
+	PERFORMANCE_MARKER
 	gfFadeIn = TRUE;
 	gfFadeInDone = FALSE;
 }
 
 void FadeOutNextFrame( )
 {
+	PERFORMANCE_MARKER
 	gfFadeOut			= TRUE;
 	gfFadeOutDone	= FALSE;
 }
@@ -74,6 +76,7 @@ void FadeOutNextFrame( )
 
 BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit )
 {
+	PERFORMANCE_MARKER
 	if ( gfFadeIn )
 	{
 		BeginFade( uiScreenExit, 35, FADE_IN_REALFADE, 5 );
@@ -90,6 +93,7 @@ BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit )
 
 BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit )
 {
+	PERFORMANCE_MARKER
 	if ( gfFadeOut )
 	{
 		BeginFade( uiScreenExit, 35, FADE_OUT_REALFADE, 5 );
@@ -107,6 +111,7 @@ BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit )
 
 BOOLEAN HandleFadeOutCallback( )
 {
+	PERFORMANCE_MARKER
 	if ( gfFadeOutDone )
 	{
 		gfFadeOutDone = FALSE;
@@ -127,6 +132,7 @@ BOOLEAN HandleFadeOutCallback( )
 
 BOOLEAN HandleFadeInCallback( )
 {
+	PERFORMANCE_MARKER
 	if ( gfFadeInDone )
 	{
 		gfFadeInDone = FALSE;
@@ -147,6 +153,7 @@ BOOLEAN HandleFadeInCallback( )
 
 void BeginFade( UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay )
 {
+	PERFORMANCE_MARKER
 	//Init some paramters
 	guiExitScreen	= uiExitScreen;
 	gbFadeValue		= bFadeValue;
@@ -254,12 +261,14 @@ void BeginFade( UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay
 
 UINT32	FadeScreenInit( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 
 UINT32	FadeScreenHandle( )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTime;
 
 	if ( !gfFadeInitialized )
@@ -326,6 +335,7 @@ UINT32	FadeScreenHandle( )
 
 UINT32	FadeScreenShutdown(	)
 {
+	PERFORMANCE_MARKER
 
 	return( FALSE );
 }
@@ -333,6 +343,7 @@ UINT32	FadeScreenShutdown(	)
 
 void FadeFrameBufferVersionOne( )
 {
+	PERFORMANCE_MARKER
 	INT32		cX, cY;
 	UINT32	uiDestPitchBYTES;
 	UINT16	*pBuf;
@@ -381,6 +392,7 @@ void FadeFrameBufferVersionOne( )
 
 void FadeInBackBufferVersionOne( )
 {
+	PERFORMANCE_MARKER
 	INT32		cX, cY;
 	UINT32	uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT16	*pSrcBuf, *pDestBuf;
@@ -432,6 +444,7 @@ void FadeInBackBufferVersionOne( )
 
 void FadeFrameBufferVersionFaster( INT8 bFadeValue )
 {
+	PERFORMANCE_MARKER
 	INT32		cX, cY, iStartX, iStartY;
 	UINT32	uiDestPitchBYTES;
 	UINT16	*pBuf;
@@ -493,6 +506,7 @@ void FadeFrameBufferVersionFaster( INT8 bFadeValue )
 
 void FadeFrameBufferSide(	)
 {
+	PERFORMANCE_MARKER
 	INT32 iX1, iX2;
 	INT16	sFadeMove;
 
@@ -512,6 +526,7 @@ void FadeFrameBufferSide(	)
 
 void FadeFrameBufferSquare(	)
 {
+	PERFORMANCE_MARKER
 	INT32 iX1, iX2, iY1, iY2;
 	INT16	sFadeXMove, sFadeYMove;
 
@@ -545,6 +560,7 @@ void FadeFrameBufferSquare(	)
 
 void FadeInBackBufferSquare(	)
 {
+	PERFORMANCE_MARKER
 	INT32 iX1, iX2, iY1, iY2;
 	INT16	sFadeXMove, sFadeYMove;
 	blt_vs_fx BltFx;
@@ -635,6 +651,7 @@ void FadeInBackBufferSquare(	)
 
 void FadeFrameBufferRealFade( )
 {
+	PERFORMANCE_MARKER
 	if ( gsFadeRealCount != gsFadeCount )
 	{
 		ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );		
@@ -647,6 +664,7 @@ void FadeFrameBufferRealFade( )
 
 void FadeInFrameBufferRealFade( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	if ( gsFadeRealCount != gsFadeCount )
@@ -671,6 +689,7 @@ void FadeInFrameBufferRealFade( )
 
 BOOLEAN UpdateSaveBufferWithBackbuffer(void)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	*pDestBuf, *pSrcBuf;
 	UINT16 usWidth, usHeight;

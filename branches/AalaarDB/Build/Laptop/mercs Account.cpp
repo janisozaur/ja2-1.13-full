@@ -106,6 +106,7 @@ void MercAuthorizePaymentMessageBoxCallBack( UINT8 bExitValue );
 
 void BtnAccountPrevPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -143,6 +144,7 @@ void BtnAccountPrevPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnAccountNextPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -180,6 +182,7 @@ void BtnAccountNextPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 INT32 GetNumberOfHiredMercs()
 {
+	PERFORMANCE_MARKER
 	UINT8 usMercID;
 	UINT8 i = 0;
 	UINT8 count = 0;
@@ -210,6 +213,7 @@ INT32 GetNumberOfHiredMercs()
 
 void GameInitMercsAccount()
 {
+	PERFORMANCE_MARKER
 
 }
 
@@ -321,6 +325,7 @@ BOOLEAN EnterMercsAccount()
 
 void ExitMercsAccount()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiMercOrderGrid);
 	DeleteVideoObjectFromIndex(guiAccountNumberGrid);
 
@@ -338,6 +343,7 @@ void ExitMercsAccount()
 
 void HandleMercsAccount()
 {
+	PERFORMANCE_MARKER
 	//if true, will display a msgbox telling user that they dont have enough funds
 	if( gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning )
 	{
@@ -349,6 +355,7 @@ void HandleMercsAccount()
 
 void RenderMercsAccount()
 {
+	PERFORMANCE_MARKER
 	CHAR16		sText[100];
 	HVOBJECT hPixHandle;
 
@@ -403,6 +410,7 @@ void RenderMercsAccount()
 
 void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -440,6 +448,7 @@ void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMercBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -466,6 +475,7 @@ void BtnMercBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayHiredMercs()
 {
+	PERFORMANCE_MARKER
 	UINT16	usPosY;
 	UINT32	uiContractCharge;	
 	CHAR16	sTemp[20];
@@ -558,6 +568,7 @@ void DisplayHiredMercs()
 
 void SettleMercAccounts()
 {
+	PERFORMANCE_MARKER
 //	SOLDIERTYPE *pSoldier;
 	INT16	i;
 	UINT8 ubMercID;
@@ -724,6 +735,7 @@ void SettleMercAccounts()
 
 void MercAuthorizePaymentMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, clear the form
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -736,6 +748,7 @@ void MercAuthorizePaymentMessageBoxCallBack( UINT8 bExitValue )
 
 UINT32	CalculateHowMuchPlayerOwesSpeck()
 {
+	PERFORMANCE_MARKER
 	UINT8				i=0;
 	UINT32			uiContractCharge=0;
 	UINT16			usMercID;

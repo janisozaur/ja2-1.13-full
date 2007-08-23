@@ -61,6 +61,7 @@ typedef launchableParseData;
 static void XMLCALL 
 launchableStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -101,6 +102,7 @@ launchableStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 launchableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -114,6 +116,7 @@ launchableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 launchableEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	launchableParseData * pData = (launchableParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -155,6 +158,7 @@ launchableEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInLaunchableStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -216,6 +220,7 @@ BOOLEAN ReadInLaunchableStats(STR fileName)
 }
 BOOLEAN WriteLaunchableStats()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

@@ -37,6 +37,7 @@
 #include <objidl.h>
 #include "FileStream.h"
 
+#include "profiler.h"
 //#ifdef _DEBUG
 //#define new DEBUG_NEW
 #undef THIS_FILE
@@ -57,6 +58,7 @@ HRESULT CreateFileStream(
 	IStream** ppStream							// pointer to IStream interface
 )
 {
+	PERFORMANCE_MARKER
 
 	HANDLE hFile = ::CreateFile(
 						lpFileName,
@@ -97,10 +99,12 @@ FileStream::FileStream(HANDLE hFile)
 	: m_lRefCount(0)
 	, m_hFile(hFile)
 {
+	PERFORMANCE_MARKER
 }
 
 FileStream::~FileStream()
 {
+	PERFORMANCE_MARKER
 	if (m_hFile) ::CloseHandle(m_hFile);
 }
 
@@ -116,6 +120,7 @@ FileStream::~FileStream()
 
 STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 {
+	PERFORMANCE_MARKER
 	if (!::ReadFile(m_hFile, pv, cb, pcbRead, NULL)) return S_FALSE;
 
 	return S_OK;
@@ -130,6 +135,7 @@ STDMETHODIMP FileStream::Read(void *pv, ULONG cb, ULONG *pcbRead)
 
 STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 {
+	PERFORMANCE_MARKER
 	if (!::WriteFile(m_hFile, pv, cb, pcbWritten, NULL)) return S_FALSE;
 
 	return S_OK;
@@ -144,6 +150,7 @@ STDMETHODIMP FileStream::Write(void const *pv, ULONG cb, ULONG *pcbWritten)
 
 STDMETHODIMP FileStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
 {
+	PERFORMANCE_MARKER
 	DWORD dwFileOrigin;
 
 	DWORD dwMoveLow = dlibMove.LowPart;
@@ -174,6 +181,7 @@ STDMETHODIMP FileStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INT
 
 STDMETHODIMP FileStream::SetSize(ULARGE_INTEGER libNewSize)
 {
+	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -186,6 +194,7 @@ STDMETHODIMP FileStream::SetSize(ULARGE_INTEGER libNewSize)
 
 STDMETHODIMP FileStream::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten)
 {
+	PERFORMANCE_MARKER
 	// later...
 	return E_NOTIMPL;
 }
@@ -198,6 +207,7 @@ STDMETHODIMP FileStream::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER
 
 STDMETHODIMP FileStream::Commit(DWORD grfCommitFlags)
 {
+	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -209,6 +219,7 @@ STDMETHODIMP FileStream::Commit(DWORD grfCommitFlags)
 
 STDMETHODIMP FileStream::Revert(void)
 {
+	PERFORMANCE_MARKER
 	return S_OK;
 }
 
@@ -220,6 +231,7 @@ STDMETHODIMP FileStream::Revert(void)
 
 STDMETHODIMP FileStream::LockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType)
 {
+	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -231,6 +243,7 @@ STDMETHODIMP FileStream::LockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb,
 
 STDMETHODIMP FileStream::UnlockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType)
 {
+	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -242,6 +255,7 @@ STDMETHODIMP FileStream::UnlockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER c
 
 STDMETHODIMP FileStream::Stat(STATSTG *pstatstg, DWORD grfStatFlag)
 {
+	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 
@@ -253,6 +267,7 @@ STDMETHODIMP FileStream::Stat(STATSTG *pstatstg, DWORD grfStatFlag)
 
 STDMETHODIMP FileStream::Clone(IStream **ppstm)
 {
+	PERFORMANCE_MARKER
 	return E_NOTIMPL;
 }
 

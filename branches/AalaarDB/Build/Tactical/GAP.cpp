@@ -16,6 +16,7 @@
 #if 0
 static void AILCALLBACK timer_func( UINT32 user )
 {
+	PERFORMANCE_MARKER
 	AudioGapList	*pGapList;
 
 	pGapList = (AudioGapList*)user;
@@ -46,6 +47,7 @@ static void AILCALLBACK timer_func( UINT32 user )
 
 void AudioGapListInit( CHAR8 *zSoundFile, AudioGapList	*pGapList )
 {
+	PERFORMANCE_MARKER
 	// This procedure will load in the appropriate .gap file, corresponding
 	// to the .wav file in szSoundEffects indexed by uiSampleNum
 	// The procedure will then allocate and load in the AUDIO_GAP information,
@@ -143,6 +145,7 @@ void AudioGapListInit( CHAR8 *zSoundFile, AudioGapList	*pGapList )
 
 void AudioGapListDone( AudioGapList	*pGapList )
 {
+	PERFORMANCE_MARKER
  // This procedure will go through the	AudioGapList and free space/nullify pointers 
  // for any allocated elements
 
@@ -175,6 +178,7 @@ void AudioGapListDone( AudioGapList	*pGapList )
 
 void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
 {
+	PERFORMANCE_MARKER
  // This procedure will access the AudioGapList pertaining to the .wav about
  // to be played and sets the audio_gap_active flag. This is done by
  // going to the current AUDIO_GAP element in the AudioGapList, comparing to see if
@@ -204,10 +208,10 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
  }
  
  // set current ot head of gap list for this sound
- pCurrent = pGapList -> pHead;
+ pCurrent = pGapList->pHead;
 
  // check to see if we have fallen behind
- if( ( time > pCurrent-> uiEnd ) )
+ if( ( time > pCurrent->uiEnd ) )
  {
 	// fallen behind
 	// catchup
@@ -226,7 +230,7 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
 
 
  // check to see if time is within the next AUDIO_GAPs start time
- if ( ( time > pCurrent ->uiStart ) && ( time < pCurrent->uiEnd ) )
+ if ( ( time > pCurrent->uiStart ) && ( time < pCurrent->uiEnd ) )
 			{
 		
 		if ((time >pCurrent->uiStart)&&(time < pCurrent->uiEnd))
@@ -253,6 +257,7 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
 
 UINT32 PlayJA2GapSample( CHAR8 *zSoundFile, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData )
 {
+	PERFORMANCE_MARKER
 	SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));

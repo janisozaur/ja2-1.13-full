@@ -36,8 +36,6 @@
 #define ANI_TOPMOST_LEVEL				7
 
 
-// WDS Change
-struct LEVELNODE;
 typedef struct TAG_anitile
 {
 	struct TAG_anitile				*pNext;

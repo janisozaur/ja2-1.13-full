@@ -38,10 +38,6 @@ typedef PARSE_STAGE;
 #define	ENEMYGUNCHOICESFILENAME					"EnemyGunChoices.xml"
 #define	ENEMYITEMCHOICESFILENAME				"EnemyItemChoices.xml"
 #define	IMPITEMCHOICESFILENAME					"IMPItemChoices.xml"
-// CHRISL:
-#define LOADBEARINGEQUIPMENTFILENAME			"LoadBearingEquipment.xml"
-#define LBEPOCKETFILENAME						"Pockets.xml"
-#define MERCSTARTINGGEARFILENAME				"MercStartingGear.xml"
 
 #define TONYINVENTORYFILENAME					"NPCInventory\\TonyInventory.xml"
 #define DEVININVENTORYFILENAME					"NPCInventory\\DevinInventory.xml"
@@ -122,16 +118,6 @@ extern BOOLEAN WriteAttachmentComboMergeStats();
 
 extern BOOLEAN ReadInArmourStats(STR fileName);
 extern BOOLEAN WriteArmourStats();
-
-// CHRISL:
-extern BOOLEAN ReadInlbeStats(STR fileName);
-extern BOOLEAN WritelbeEquipmentStats();
-
-extern BOOLEAN ReadInLBEPocketStats(STR fileName);
-extern BOOLEAN WriteLBEPocketEquipmentStats();
-
-extern BOOLEAN ReadInMercStartingGearStats(STR fileName);
-extern BOOLEAN WriteMercStartingGearStats();
 
 extern BOOLEAN ReadInExplosiveStats(STR fileName);
 extern BOOLEAN WriteExplosiveStats();

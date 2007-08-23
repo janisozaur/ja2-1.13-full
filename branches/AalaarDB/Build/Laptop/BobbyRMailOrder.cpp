@@ -341,6 +341,7 @@ void ShutDownBobbyRNewMailOrders();
 
 void GameInitBobbyRMailOrder()
 {
+	PERFORMANCE_MARKER
 	gubSelectedLight = 0;
 
 	gpNewBobbyrShipments = NULL;
@@ -349,6 +350,7 @@ void GameInitBobbyRMailOrder()
 
 BOOLEAN EnterBobbyRMailOrder()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					i;
 	
@@ -519,6 +521,7 @@ BOOLEAN EnterBobbyRMailOrder()
 
 void ExitBobbyRMailOrder()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	//if we are to remove the items from stock
@@ -575,6 +578,7 @@ void ExitBobbyRMailOrder()
 
 void HandleBobbyRMailOrder()
 {
+	PERFORMANCE_MARKER
 	if( gfReDrawBobbyOrder )
 	{
 //		RenderBobbyRMailOrder();
@@ -618,6 +622,7 @@ void HandleBobbyRMailOrder()
 
 void RenderBobbyRMailOrder()
 {
+	PERFORMANCE_MARKER
 	UINT16 usPosY;
 	HVOBJECT hPixHandle;
 	UINT16 usHeight;//usWidth, 
@@ -724,6 +729,7 @@ void RenderBobbyRMailOrder()
 
 void BtnBobbyRClearOrderCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -757,6 +763,7 @@ void BtnBobbyRClearOrderCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnBobbyRAcceptOrderCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -902,6 +909,7 @@ void BtnBobbyRAcceptOrderCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum )
 {
+	PERFORMANCE_MARKER
 	UINT16	i,j;
 	CHAR16	sText[400];
 	CHAR16	sBack[400];
@@ -1057,6 +1065,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 
 void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16 usGridX, UINT16 usGridY, INT32 iOrderNum )
 {
+	PERFORMANCE_MARKER
 	CHAR16	sTemp[20];
 	HVOBJECT hPixHandle;
 	INT32	iShippingCost = 0;
@@ -1144,6 +1153,7 @@ void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16
 
 void BtnBobbyRBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1165,6 +1175,7 @@ void BtnBobbyRBackCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnBobbyRHomeCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1184,7 +1195,8 @@ void BtnBobbyRHomeCallback(GUI_BUTTON *btn,INT32 reason)
 } 
 
 void SelectShippingSpeedRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1198,6 +1210,7 @@ void SelectShippingSpeedRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DrawShippingSpeedLights(UINT8 ubSelected)
 {
+	PERFORMANCE_MARKER
 
 	if(ubSelected == 0)
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[0], gShippingSpeedAreas[1], gShippingSpeedAreas[0]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
@@ -1220,7 +1233,8 @@ BOOLEAN DrawShippingSpeedLights(UINT8 ubSelected)
 
 
 void SelectConfirmOrderRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1256,6 +1270,7 @@ void SelectConfirmOrderRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 {
+	PERFORMANCE_MARKER
 	static UINT16 usHeight;
 	static BOOLEAN fMouseRegionsCreated=FALSE;
 
@@ -1488,7 +1503,8 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 
 
 void SelectDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1504,7 +1520,8 @@ void SelectDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1517,6 +1534,7 @@ void SelectActivateCityDroDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReas
 
 void SelectDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -1538,6 +1556,7 @@ void SelectDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 void DrawSelectedCity( UINT8 ubCityNumber )
 {
+	PERFORMANCE_MARKER
 	UINT16 usPosY;
 	UINT16 usFontHeight = GetFontHeight( BOBBYR_DROPDOWN_FONT );
 	UINT8 i;
@@ -1584,6 +1603,7 @@ void DrawSelectedCity( UINT8 ubCityNumber )
 
 void DisplayShippingLocationCity()
 {
+	PERFORMANCE_MARKER
 	CHAR16	sTemp[40];
 	UINT16 usPosY;
 
@@ -1639,7 +1659,8 @@ void DisplayShippingLocationCity()
 }
 
 void SelectCloseDroDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1652,6 +1673,7 @@ void SelectCloseDroDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void RemovePurchasedItemsFromBobbyRayInventory()
 {
+	PERFORMANCE_MARKER
 	INT16 i;
 
 	for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
@@ -1686,6 +1708,7 @@ void RemovePurchasedItemsFromBobbyRayInventory()
 
 BOOLEAN IsAnythingPurchasedFromBobbyRayPage()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 	BOOLEAN	fReturnType = FALSE;
 
@@ -1701,7 +1724,8 @@ BOOLEAN IsAnythingPurchasedFromBobbyRayPage()
 }
 
 void SelectTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1713,7 +1737,8 @@ void SelectTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1766,6 +1791,7 @@ void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -1802,7 +1828,8 @@ void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION * pRegion, INT32 reas
 
 
 void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1841,6 +1868,7 @@ void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 i
 
 void DrawGoldRectangle( INT8 bCityNum )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiDestPitchBYTES;
 	UINT8	*pDestBuf;
 	UINT16 usWidth, usTempHeight, usTempPosY, usHeight;
@@ -1887,6 +1915,7 @@ void DrawGoldRectangle( INT8 bCityNum )
 
 UINT32	CalcCostFromWeightOfPackage( UINT8	ubTypeOfService )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiTotalWeight = 0;
 	UINT16	usStandardCost=0;
 	UINT32	uiTotalCost=0;
@@ -1945,6 +1974,7 @@ UINT32	CalcCostFromWeightOfPackage( UINT8	ubTypeOfService )
 
 void BobbyRayMailOrderEndGameShutDown()
 {
+	PERFORMANCE_MARKER
 	ShutDownBobbyRNewMailOrders();
 /*
 	if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray )
@@ -1958,6 +1988,7 @@ void BobbyRayMailOrderEndGameShutDown()
 
 void ShutDownBobbyRNewMailOrders()
 {
+	PERFORMANCE_MARKER
 	if( gpNewBobbyrShipments != NULL )
 	{
 		MemFree( gpNewBobbyrShipments );
@@ -1968,6 +1999,7 @@ void ShutDownBobbyRNewMailOrders()
 
 INT8 CalculateOrderDelay( UINT8 ubSelectedService )
 {
+	PERFORMANCE_MARKER
 	INT8 bDaysAhead;
 
 	//get the length of time to receive the shipment			
@@ -2000,6 +2032,7 @@ INT8 CalculateOrderDelay( UINT8 ubSelectedService )
 
 void PurchaseBobbyOrder()
 {
+	PERFORMANCE_MARKER
 	//if the shipment is going to Drassen, add the inventory
 	if( gbSelectedCity == BR_DRASSEN || gbSelectedCity == BR_MEDUNA )
 	{
@@ -2085,6 +2118,7 @@ void PurchaseBobbyOrder()
 
 void AddJohnsGunShipment()
 {
+	PERFORMANCE_MARKER
 	BobbyRayPurchaseStruct Temp[ MAX_PURCHASE_AMOUNT ];
 //	UINT8	cnt;
 	INT8		bDaysAhead;
@@ -2148,6 +2182,7 @@ void AddJohnsGunShipment()
 
 void ConfirmBobbyRPurchaseMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, load the game
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -2157,6 +2192,7 @@ void ConfirmBobbyRPurchaseMessageBoxCallBack( UINT8 bExitValue )
 
 void EnterInitBobbyRayOrder()
 {
+	PERFORMANCE_MARKER
 	memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
 	gubSelectedLight = 0;
 	gfReDrawBobbyOrder = TRUE;
@@ -2173,6 +2209,7 @@ void EnterInitBobbyRayOrder()
 
 UINT32	CalcPackageTotalWeight()
 {
+	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT32	uiTotalWeight=0;
 
@@ -2193,6 +2230,7 @@ UINT32	CalcPackageTotalWeight()
 
 void DisplayPackageWeight( )
 {
+	PERFORMANCE_MARKER
 	CHAR16		zTemp[32];
 	UINT32	uiTotalWeight = CalcPackageTotalWeight();
 //	FLOAT			fWeight = (FLOAT)(uiTotalWeight / 10.0);
@@ -2210,6 +2248,7 @@ void DisplayPackageWeight( )
 
 void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2231,6 +2270,7 @@ void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CreateBobbyRayOrderTitle()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 		// load BobbyRayTitle graphic and add it
@@ -2248,12 +2288,14 @@ BOOLEAN CreateBobbyRayOrderTitle()
 
 void DestroyBobbyROrderTitle()
 {
+	PERFORMANCE_MARKER
 	MSYS_RemoveRegion( &gSelectedTitleLinkRegion);
 	DeleteVideoObjectFromIndex(guiBobbyRayTitle);
 }
 
 void DrawBobbyROrderTitle()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	// Bobbyray title
@@ -2264,6 +2306,7 @@ void DrawBobbyROrderTitle()
 
 BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight )
 {
+	PERFORMANCE_MARKER
 	INT32	iCnt;
 	INT32	iFoundSpot = -1;
 	UINT8	ubItemCount=0;
@@ -2352,6 +2395,7 @@ BOOLEAN AddNewBobbyRShipment( BobbyRayPurchaseStruct *pPurchaseStruct, UINT8 ubD
 
 UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()
 {
+	PERFORMANCE_MARKER
 	UINT16	usItemCount=0;
 	INT32		iCnt;
 
@@ -2370,6 +2414,7 @@ UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()
 
 BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	INT32		iCnt;
 	UINT32	uiNumBytesWritten;
 
@@ -2400,6 +2445,7 @@ BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 
 BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	INT32		iCnt;
 	UINT32	uiNumBytesRead;
 
@@ -2423,13 +2469,12 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	{
 		//Allocate memory for the list
 		gpNewBobbyrShipments = (NewBobbyRayOrderStruct *) MemAlloc( sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment );
-		memset(gpNewBobbyrShipments, 0, (sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment) );
-
 		if( gpNewBobbyrShipments == NULL )
 		{
 			Assert(0);
 			return(FALSE );
 		}
+		memset(gpNewBobbyrShipments, 0, (sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment) );
 
 		//loop through and load all the mail order slots
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )

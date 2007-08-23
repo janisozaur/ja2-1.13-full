@@ -61,6 +61,7 @@ typedef mergeParseData;
 static void XMLCALL 
 mergeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	mergeParseData * pData = (mergeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -105,6 +106,7 @@ mergeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **a
 static void XMLCALL
 mergeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	mergeParseData * pData = (mergeParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -118,6 +120,7 @@ mergeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 mergeEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	mergeParseData * pData = (mergeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -183,6 +186,7 @@ mergeEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInMergeStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -244,6 +248,7 @@ BOOLEAN ReadInMergeStats(STR fileName)
 }
 BOOLEAN WriteMergeStats()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

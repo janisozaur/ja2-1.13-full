@@ -46,6 +46,7 @@ void RecountLightEffects( void );
 
 INT32 GetFreeLightEffect( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCount;
 
 	for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
@@ -62,6 +63,7 @@ INT32 GetFreeLightEffect( void )
 
 void RecountLightEffects( void )
 {
+	PERFORMANCE_MARKER
 	INT32 uiCount;
 
 	for(uiCount=guiNumLightEffects-1; (uiCount >=0) ; uiCount--)
@@ -77,6 +79,7 @@ void RecountLightEffects( void )
 
 void UpdateLightingSprite( LIGHTEFFECT *pLight )
 {
+	PERFORMANCE_MARKER
 	CHAR8 LightName[20];
 	// Build light....
 
@@ -103,7 +106,8 @@ void UpdateLightingSprite( LIGHTEFFECT *pLight )
 
 
 INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
-{		
+{
+	PERFORMANCE_MARKER		
 	LIGHTEFFECT *pLight;
 	INT32				iLightIndex;
 
@@ -139,6 +143,7 @@ INT32 NewLightEffect( INT16 sGridNo, UINT8 ubDuration, UINT8 ubStartRadius )
 
 void RemoveLightEffectFromTile( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;
 
@@ -167,6 +172,7 @@ void RemoveLightEffectFromTile( INT16 sGridNo )
 
 BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;
 
@@ -189,6 +195,7 @@ BOOLEAN IsLightEffectAtTile( INT16 sGridNo )
 
 void DecayLightEffects( UINT32 uiTime )
 {
+	PERFORMANCE_MARKER
 	LIGHTEFFECT *pLight;
 	UINT32 cnt, cnt2;
 	BOOLEAN	fDelete = FALSE;
@@ -266,6 +273,7 @@ void DecayLightEffects( UINT32 uiTime )
 
 BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	/*
 	UINT32	uiNumBytesWritten;
 	UINT32	uiNumberOfLights=0;
@@ -312,6 +320,7 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 
@@ -358,6 +367,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumLightEffects=0;
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -436,6 +446,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
@@ -492,6 +503,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 void ResetLightEffects()
 {
+	PERFORMANCE_MARKER
 	//Clear out the old list
 	memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) * NUM_LIGHT_EFFECT_SLOTS );
 	guiNumLightEffects = 0;

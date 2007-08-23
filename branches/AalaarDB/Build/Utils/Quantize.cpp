@@ -5,11 +5,12 @@
 #include "types.h"
 #include <windows.h>
 #include "Quantize.h"
-#include "types.h"
 #include "himage.h"
+#include "profiler.h"
 
 CQuantizer::CQuantizer (UINT nMaxColors, UINT nColorBits)
 {
+	PERFORMANCE_MARKER
 	m_pTree = NULL;
 	m_nLeafCount = 0;
 	for (int i=0; i<=(int) nColorBits; i++)
@@ -20,12 +21,14 @@ CQuantizer::CQuantizer (UINT nMaxColors, UINT nColorBits)
 
 CQuantizer::~CQuantizer ()
 {
+	PERFORMANCE_MARKER
 	if (m_pTree != NULL)
 		DeleteTree (&m_pTree);
 }
 
 BOOL CQuantizer::ProcessImage (BYTE *pData, int iWidth, int iHeight )
 {
+	PERFORMANCE_MARKER
 	BYTE* pbBits;
 	BYTE r, g, b;
 	int i, j;
@@ -50,6 +53,7 @@ BOOL CQuantizer::ProcessImage (BYTE *pData, int iWidth, int iHeight )
 
 int CQuantizer::GetLeftShiftCount (DWORD dwVal)
 {
+	PERFORMANCE_MARKER
 	int nCount = 0;
 	for (int i=0; i<sizeof (DWORD) * 8; i++) {
 		if (dwVal & 1)
@@ -61,6 +65,7 @@ int CQuantizer::GetLeftShiftCount (DWORD dwVal)
 
 int CQuantizer::GetRightShiftCount (DWORD dwVal)
 {
+	PERFORMANCE_MARKER
 	for (int i=0; i<sizeof (DWORD) * 8; i++) {
 		if (dwVal & 1)
 			return i;
@@ -72,6 +77,7 @@ int CQuantizer::GetRightShiftCount (DWORD dwVal)
 void CQuantizer::AddColor (NODE** ppNode, BYTE r, BYTE g, BYTE b,
 	UINT nColorBits, UINT nLevel, UINT* pLeafCount, NODE** pReducibleNodes)
 {
+	PERFORMANCE_MARKER
 	static BYTE mask[8] = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
 	//
@@ -107,6 +113,7 @@ void CQuantizer::AddColor (NODE** ppNode, BYTE r, BYTE g, BYTE b,
 NODE* CQuantizer::CreateNode (UINT nLevel, UINT nColorBits, UINT* pLeafCount,
 	NODE** pReducibleNodes)
 {
+	PERFORMANCE_MARKER
 	NODE* pNode;
 
 	if ((pNode = (NODE*) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
@@ -126,6 +133,7 @@ NODE* CQuantizer::CreateNode (UINT nLevel, UINT nColorBits, UINT* pLeafCount,
 void CQuantizer::ReduceTree (UINT nColorBits, UINT* pLeafCount,
 	NODE** pReducibleNodes)
 {
+	PERFORMANCE_MARKER
 	//
 	// Find the deepest level containing at least one reducible node.
 	//
@@ -166,6 +174,7 @@ void CQuantizer::ReduceTree (UINT nColorBits, UINT* pLeafCount,
 
 void CQuantizer::DeleteTree (NODE** ppNode)
 {
+	PERFORMANCE_MARKER
 	for (int i=0; i<8; i++) {
 		if ((*ppNode)->pChild[i] != NULL)
 			DeleteTree (&((*ppNode)->pChild[i]));
@@ -176,6 +185,7 @@ void CQuantizer::DeleteTree (NODE** ppNode)
 
 void CQuantizer::GetPaletteColors (NODE* pTree, RGBQUAD* prgb, UINT* pIndex)
 {
+	PERFORMANCE_MARKER
 	if (pTree->bIsLeaf) {
 		prgb[*pIndex].rgbRed =
 			(BYTE) ((pTree->nRedSum) / (pTree->nPixelCount));
@@ -196,11 +206,13 @@ void CQuantizer::GetPaletteColors (NODE* pTree, RGBQUAD* prgb, UINT* pIndex)
 
 UINT CQuantizer::GetColorCount ()
 {
+	PERFORMANCE_MARKER
 	return m_nLeafCount;
 }
 
 void CQuantizer::GetColorTable (RGBQUAD* prgb)
 {
+	PERFORMANCE_MARKER
 	UINT nIndex = 0;
 	GetPaletteColors (m_pTree, prgb, &nIndex);
 }

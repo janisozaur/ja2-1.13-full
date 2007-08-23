@@ -97,6 +97,7 @@ void RestoreButtonBackGrounds();
 
 UINT32	MainMenuScreenInit( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %S", zVersionLabel ));
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:	 %s", czVersionNumber ));
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:	%S", zTrackingNumber ));
@@ -108,6 +109,7 @@ UINT32	MainMenuScreenInit( )
 
 UINT32	MainMenuScreenHandle( )
 {
+	PERFORMANCE_MARKER
 	UINT32 cnt;
 	UINT32 uiTime;
 
@@ -199,6 +201,7 @@ UINT32	MainMenuScreenHandle( )
 
 UINT32	MainMenuScreenShutdown(	)
 {
+	PERFORMANCE_MARKER
 	return( FALSE );
 }
 
@@ -207,6 +210,7 @@ UINT32	MainMenuScreenShutdown(	)
 
 void HandleMainMenuScreen()
 {
+	PERFORMANCE_MARKER
 	if ( gbHandledMainMenu != 0 )
 	{
 		// Exit according to handled value!
@@ -255,6 +259,7 @@ void HandleMainMenuScreen()
 
 BOOLEAN InitMainMenu( )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 //	gfDoHelpScreen = 0;
@@ -326,6 +331,7 @@ BOOLEAN InitMainMenu( )
 
 void ExitMainMenu( )
 {
+	PERFORMANCE_MARKER
 //	UINT32										uiDestPitchBYTES;
 //	UINT8											*pDestBuf;
 
@@ -353,6 +359,7 @@ void ExitMainMenu( )
 
 void MenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	INT8	bID;
 
 	bID = (UINT8)btn->UserData[0];
@@ -387,6 +394,7 @@ void MenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 //		btn->uiFlags &= (~BUTTON_CLICKED_ON );
@@ -405,6 +413,7 @@ void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleMainMenuInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom	InputEvent;
 
 	// Check for esc 
@@ -457,6 +466,7 @@ void HandleMainMenuInput()
 
 void HandleHelpScreenInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom									InputEvent;
 
 	// Check for key
@@ -474,6 +484,7 @@ void HandleHelpScreenInput()
 
 void ClearMainMenu()
 {
+	PERFORMANCE_MARKER
 	UINT32										uiDestPitchBYTES;
 	UINT8											*pDestBuf;
 
@@ -487,6 +498,7 @@ void ClearMainMenu()
 
 void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -512,6 +524,7 @@ void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 
 void SetMainMenuExitScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiMainMenuExitScreen = uiNewScreen;
 
 	//REmove the background region
@@ -523,6 +536,7 @@ void SetMainMenuExitScreen( UINT32 uiNewScreen )
 
 void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fRegionCreated = FALSE;
 
 	if( fCreate )
@@ -551,6 +565,7 @@ void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 
 BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fButtonsCreated = FALSE;
 	INT32 cnt;
 	SGPFILENAME filename;
@@ -619,7 +634,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 					if( pSoldier->bActive != TRUE )
 					{
 						//something is very wrong
-						pSoldier->bActive = pSoldier->bLife;
+						pSoldier->bActive = pSoldier->stats.bLife;
 					}
 				}
 			#endif
@@ -649,6 +664,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 
 void RenderMainMenu()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	//Get and display the background image
@@ -691,6 +707,7 @@ void RenderMainMenu()
 
 void RestoreButtonBackGrounds()
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 //	RestoreExternBackgroundRect( (UINT16)(320 - gusMainMenuButtonWidths[TITLE]/2), MAINMENU_TITLE_Y, gusMainMenuButtonWidths[TITLE], 23 );

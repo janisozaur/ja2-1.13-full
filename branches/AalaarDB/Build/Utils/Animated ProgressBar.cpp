@@ -30,10 +30,11 @@ extern BOOLEAN bShowSmallImage;
 
 void CreateLoadingScreenProgressBar()
 {
+	PERFORMANCE_MARKER
 	gusLeftmostShaded = 162;
 	gfUseLoadScreenProgressBar = TRUE;
 
-	// Special case -> show small image centered
+	// Special case->show small image centered
 	if (bShowSmallImage == TRUE)
 	{
 		if (iResolution > 0)
@@ -60,6 +61,7 @@ void CreateLoadingScreenProgressBar()
 
 void RemoveLoadingScreenProgressBar()
 {
+	PERFORMANCE_MARKER
 	gfUseLoadScreenProgressBar = FALSE;
 	RemoveProgressBar( 0 );
 	SetFontShadow(DEFAULT_SHADOW);
@@ -69,6 +71,7 @@ void RemoveLoadingScreenProgressBar()
 //A panel is automatically created if you specify a title using SetProgressBarTitle
 BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pNew;
 	//Allocate new progress bar
 	pNew = (PROGRESSBAR*)MemAlloc( sizeof( PROGRESSBAR ) );
@@ -109,6 +112,7 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 														UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -132,6 +136,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
 void SetProgressBarTitle( UINT32 ubID, STR16 pString, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -156,6 +161,7 @@ void SetProgressBarTitle( UINT32 ubID, STR16 pString, UINT32 usFont, UINT8 ubFor
 //default to FONT12POINT1 in a black color.
 void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
@@ -170,6 +176,7 @@ void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor,
 //When finished, the progress bar needs to be removed.
 void RemoveProgressBar( UINT8 ubID )
 {
+	PERFORMANCE_MARKER
 	Assert( ubID < MAX_PROGRESSBARS );
 	if( pBar[ubID] )
 	{
@@ -190,6 +197,7 @@ void RemoveProgressBar( UINT8 ubID )
 //relative start and end percentage from 30 to whatever, until your done.
 void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, STR16 str)
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr;
 	UINT16 usStartX, usStartY;
 
@@ -254,6 +262,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 //percentages.	
 void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 {
+	PERFORMANCE_MARKER
 	static UINT32 uiLastTime = 0;
 	UINT32 uiCurTime = GetJA2Clock();
 	double rActual;
@@ -322,6 +331,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 
 void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGreen, UINT8 ubColorFillBlue )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr=NULL;
 
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -338,6 +348,7 @@ void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGre
 
 void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fUseSaveBuffer, BOOLEAN fSaveScreenToFrameBuffer )
 {
+	PERFORMANCE_MARKER
 	PROGRESSBAR *pCurr=NULL;
 
 

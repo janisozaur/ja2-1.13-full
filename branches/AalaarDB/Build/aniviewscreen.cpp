@@ -55,6 +55,7 @@ static INT8   ubCurLoadedState = 0;
 
 void CycleAnimations( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// FInd the next animation with start height the same...
@@ -63,18 +64,19 @@ void CycleAnimations( )
 		if ( gAnimControl[ cnt ].ubHeight == ubStartHeight )
 		{
 			usStartAnim = ( UINT8) cnt;
-			EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+			pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 			return;
 		}
 	}
 
 	usStartAnim = 0;
-	EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+	pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 }
 
 
 UINT32 AniEditScreenInit(void)
-{  
+{
+	PERFORMANCE_MARKER  
 
   return TRUE;
 }
@@ -83,7 +85,8 @@ UINT32 AniEditScreenInit(void)
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 UINT32 AniEditScreenShutdown(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 
 	return TRUE;
 }
@@ -92,6 +95,7 @@ UINT32 AniEditScreenShutdown(void)
 
 UINT32  AniEditScreenHandle(void)
 {
+	PERFORMANCE_MARKER
   InputAtom					InputEvent;
 	static BOOLEAN		fFirstTime = TRUE;
 	static UINT16			usOldState;
@@ -117,7 +121,7 @@ UINT32  AniEditScreenHandle(void)
 
 		gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 	
-		EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+		pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 
 		BuildListFile( );
 
@@ -237,11 +241,11 @@ UINT32  AniEditScreenHandle(void)
 						break;
 				}
 				
-				EVENT_InitNewSoldierAnim( pSoldier, usAnim, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usAnim, 0 , TRUE );
 			}
 			else
 			{
-				EVENT_InitNewSoldierAnim( pSoldier, usOldState, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usOldState, 0 , TRUE );
 			}
 
 			fToggle = !fToggle;
@@ -253,11 +257,11 @@ UINT32  AniEditScreenHandle(void)
 			{
 				usOldState = usStartAnim;
 
-				EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 			}
 			else
 			{
-				EVENT_InitNewSoldierAnim( pSoldier, usOldState, 0 , TRUE );
+				pSoldier->EVENT_InitNewSoldierAnim( usOldState, 0 , TRUE );
 			}
 
 			fToggle2 = !fToggle2;
@@ -275,7 +279,7 @@ UINT32  AniEditScreenHandle(void)
 						ubCurLoadedState = 0;
 					}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 
 			 }
 		}
@@ -292,7 +296,7 @@ UINT32  AniEditScreenHandle(void)
 						ubCurLoadedState = ubNumStates;
 					}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( pusStates[ ubCurLoadedState ], 0 , TRUE );
 			 }
 		}
 
@@ -300,7 +304,7 @@ UINT32  AniEditScreenHandle(void)
 		{
 			// CLEAR!
 			usStartAnim = 0;
-			EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
+			pSoldier->EVENT_InitNewSoldierAnim( usStartAnim, 0 , TRUE );
 		}
 
 		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == ENTER ))
@@ -329,6 +333,7 @@ UINT32  AniEditScreenHandle(void)
 
 UINT16 GetAnimStateFromName( STR8 zName )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	// FInd the next animation with start height the same...
@@ -346,6 +351,7 @@ UINT16 GetAnimStateFromName( STR8 zName )
 
 void BuildListFile( )
 {
+	PERFORMANCE_MARKER
 	FILE *infoFile;
 	CHAR8 currFilename[128];
 	int numEntries = 0;

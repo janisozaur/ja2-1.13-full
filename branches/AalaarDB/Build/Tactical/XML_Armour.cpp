@@ -62,6 +62,7 @@ typedef armourParseData;
 static void XMLCALL 
 armourStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	armourParseData * pData = (armourParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -104,6 +105,7 @@ armourStartElementHandle(void *userData, const XML_Char *name, const XML_Char **
 static void XMLCALL
 armourCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	armourParseData * pData = (armourParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -117,6 +119,7 @@ armourCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 armourEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	armourParseData * pData = (armourParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -174,6 +177,7 @@ armourEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInArmourStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -236,6 +240,7 @@ BOOLEAN ReadInArmourStats(STR fileName)
 }
 BOOLEAN WriteArmourStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writearmourstats");
 	HWFILE		hFile;
 

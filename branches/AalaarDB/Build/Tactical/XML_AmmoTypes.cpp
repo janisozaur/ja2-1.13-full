@@ -62,6 +62,7 @@ typedef ammotypeParseData;
 static void XMLCALL 
 ammotypeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -128,6 +129,7 @@ ammotypeStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 ammotypeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -141,6 +143,7 @@ ammotypeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 ammotypeEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	ammotypeParseData * pData = (ammotypeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -315,6 +318,7 @@ ammotypeEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAmmoTypeStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -377,6 +381,7 @@ BOOLEAN ReadInAmmoTypeStats(STR fileName)
 }
 BOOLEAN WriteAmmoTypeStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeammotypestats");
 	HWFILE		hFile;
 

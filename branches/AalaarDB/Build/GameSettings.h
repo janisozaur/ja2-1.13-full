@@ -95,13 +95,6 @@ typedef struct
 
 
 
-// CHRISL: New Enums to track inventory system
-enum
-{
-	INVENTORY_OLD = 0,
-	INVENTORY_NEW = 1
-};
-
 //Enums for the difficulty levels
 enum
 {
@@ -138,8 +131,7 @@ typedef struct
 	BOOLEAN	fTurnTimeLimit;
 	BOOLEAN	fIronManMode;
 	UINT8	ubBobbyRay;
-	UINT8	ubInventorySystem;
-	UINT8	ubFiller[6];
+	UINT8	ubFiller[7];
 
 } GAME_OPTIONS;
 
@@ -419,9 +411,6 @@ typedef struct
 	BOOLEAN fEnableSoldierTooltipBigSlot2;
 	BOOLEAN fEnableSoldierTooltipBigSlot3;
 	BOOLEAN fEnableSoldierTooltipBigSlot4;
-	BOOLEAN fEnableSoldierTooltipBigSlot5;
-	BOOLEAN fEnableSoldierTooltipBigSlot6;
-	BOOLEAN fEnableSoldierTooltipBigSlot7;
 	// ShadoWarrior: Tooltip changes (end)
 
 	//Kaiden MERC Deaths Externalized:

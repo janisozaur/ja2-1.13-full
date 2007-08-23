@@ -18,6 +18,7 @@ lua_State *L;
 
 void CreateLuaType( lua_State *L, STR8 TypeName, luaL_Reg *LuaAccessors )
 {
+	PERFORMANCE_MARKER
 	luaL_Reg *idx;
 
 	luaL_newmetatable( L, TypeName);
@@ -35,6 +36,7 @@ void CreateLuaType( lua_State *L, STR8 TypeName, luaL_Reg *LuaAccessors )
 
 static LuaAttrib* LuaCommonGetSet( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	const CHAR8 *AttrToFind;
 	LuaAttrib *Attributes;
 
@@ -68,6 +70,7 @@ static LuaAttrib* LuaCommonGetSet( lua_State *L )
 
 static int LuaGetObject( lua_State *L)
 {
+	PERFORMANCE_MARKER
 	LuaAttrib *Attributes;
 
 	Attributes = LuaCommonGetSet( L);
@@ -95,6 +98,7 @@ static int LuaGetObject( lua_State *L)
 
 static int LuaSetObject( lua_State *L)
 {
+	PERFORMANCE_MARKER
 	LuaAttrib *Attributes;
 
 	Attributes = LuaCommonGetSet( L);
@@ -122,6 +126,7 @@ luaL_Reg ClassList[] = {
 
 void CreateLuaClass( lua_State *L, STR8 ClassName, LuaAttrib *Attribs )
 {
+	PERFORMANCE_MARKER
 	luaL_Reg *i;
 
 	luaL_newmetatable( L, ClassName );
@@ -142,6 +147,7 @@ void CreateLuaClass( lua_State *L, STR8 ClassName, LuaAttrib *Attribs )
 
 void CreateLuaObject( lua_State *L, void *Ptr )
 {
+	PERFORMANCE_MARKER
 	void **ud;
 
 	// Create the object and initialize its pointer
@@ -158,6 +164,7 @@ void CreateLuaObject( lua_State *L, void *Ptr )
 
 void NewLuaObject( lua_State *L, STR8 ClsName, void *Ptr )
 {
+	PERFORMANCE_MARKER
 	luaL_getmetatable( L, ClsName );
 	if (lua_istable( L, -1 ) )
 	{
@@ -172,6 +179,7 @@ void NewLuaObject( lua_State *L, STR8 ClsName, void *Ptr )
 
 static int LuaGetMercPtr( lua_State *L)
 {
+	PERFORMANCE_MARKER
 	int v = lua_tointeger( L, 2 );
 	luaL_argcheck( L, (v >= 0 && v < TOTAL_SOLDIERS), 2, "The soldier index is out of range");
 	if (MercPtrs[ v ] )
@@ -196,6 +204,7 @@ static luaL_Reg SoldierList[] = {
 
 int LuaGetSoldierName( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	if (!pSoldier)
@@ -211,6 +220,7 @@ int LuaGetSoldierName( lua_State *L )
 
 int LuaGetSoldierFullName( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	if (!pSoldier)
@@ -233,6 +243,7 @@ int LuaGetSoldierFullName( lua_State *L )
 
 int LuaGetSoldierGrid( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	if (!pSoldier)
@@ -248,6 +259,7 @@ int LuaGetSoldierGrid( lua_State *L )
 
 int LuaSetSoldierGrid( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) lua_touserdata( L, 1 );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	int newgrid = luaL_checkinteger( L, 3);
@@ -258,27 +270,29 @@ int LuaSetSoldierGrid( lua_State *L )
 
 int LuaSoldierWalkTo( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	int newgrid = luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
-	pSoldier->bAction = AI_ACTION_WALK;
-	pSoldier->usActionData = newgrid;
-	pSoldier->bPathStored = FALSE;
-	pSoldier->bActionInProgress = ExecuteAction( pSoldier);
+	pSoldier->aiData.bAction = AI_ACTION_WALK;
+	pSoldier->aiData.usActionData = newgrid;
+	pSoldier->pathing.bPathStored = FALSE;
+	pSoldier->aiData.bActionInProgress = ExecuteAction( pSoldier);
 	return 0;
 }
 
 int LuaSoldierRunTo( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE **ppSoldier = (SOLDIERTYPE**) luaL_checkudata( L, 1, SOLDIER_CLASS );
 	SOLDIERTYPE *pSoldier = *ppSoldier;
 	int newgrid = luaL_checkinteger( L, 2);
 	luaL_argcheck( L, newgrid > 0 && newgrid <= NOWHERE, 2, "The grid number must be on screen!" );
-	pSoldier->bAction = AI_ACTION_RUN;
-	pSoldier->usActionData = newgrid;
-	pSoldier->bPathStored = FALSE;
-	pSoldier->bActionInProgress = ExecuteAction( pSoldier);
+	pSoldier->aiData.bAction = AI_ACTION_RUN;
+	pSoldier->aiData.usActionData = newgrid;
+	pSoldier->pathing.bPathStored = FALSE;
+	pSoldier->aiData.bActionInProgress = ExecuteAction( pSoldier);
 	return 0;
 }
 
@@ -297,6 +311,7 @@ extern luaL_Reg WStringMethods[];
 
 void InitializeLua( )
 {
+	PERFORMANCE_MARKER
 	L = lua_open();
 	luaL_openlibs(L);
 	

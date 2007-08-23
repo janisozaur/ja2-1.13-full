@@ -17,6 +17,7 @@
 	#include "strategicmap.h"
 	#include "environment.h"
 	#include "worldman.h"
+	#include "FindLocations.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge
@@ -70,6 +71,7 @@ extern UINT8 gubTacticalDirection;
 
 void TrashMapEdgepoints()
 {
+	PERFORMANCE_MARKER
 	//Primary edgepoints
 	if( gps1stNorthEdgepointArray )
 		MemFree( gps1stNorthEdgepointArray );
@@ -119,13 +121,10 @@ void TrashMapEdgepoints()
 //of the map.
 void ValidateEdgepoints()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usValidEdgepoints;
 	SOLDIERTYPE Soldier;
-
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 
 	//north
@@ -288,6 +287,7 @@ void ValidateEdgepoints()
 
 void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pusArraySize )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usArraySize, usValidIndex = 0;
 
@@ -320,6 +320,7 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 																	INT16 **psArray1, UINT16 *pusMiddleIndex1, UINT16 *pusArraySize1,
 																	INT16 **psArray2, UINT16 *pusMiddleIndex2, UINT16 *pusArraySize2 )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 us1stBenchmarkID, us2ndBenchmarkID;
 	us1stBenchmarkID = us2ndBenchmarkID = 0xffff;
@@ -434,12 +435,10 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 
 void ClassifyEdgepoints()
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE Soldier;
 	INT16 sGridNo = -1;
 
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 
 	//north
@@ -490,6 +489,7 @@ void ClassifyEdgepoints()
 
 void GenerateMapEdgepoints()
 {
+	PERFORMANCE_MARKER
 	INT32 i=-1;
 	INT16 sGridNo=-1;
 	INT16 sVGridNo[400];
@@ -885,6 +885,7 @@ void GenerateMapEdgepoints()
 
 void SaveMapEdgepoints( HWFILE fp )
 {
+	PERFORMANCE_MARKER
 	//1st priority edgepoints -- for common entry -- tactical placement gui uses only these points.
 	FileWrite( fp, &gus1stNorthEdgepointArraySize, 2, NULL );
 	FileWrite( fp, &gus1stNorthEdgepointMiddleIndex, 2, NULL );
@@ -923,6 +924,7 @@ void SaveMapEdgepoints( HWFILE fp )
 
 void OldLoadMapEdgepoints( INT8 **hBuffer )
 {
+	PERFORMANCE_MARKER
 	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stNorthEdgepointArraySize )
@@ -959,6 +961,7 @@ void OldLoadMapEdgepoints( INT8 **hBuffer )
 
 BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 {
+	PERFORMANCE_MARKER
 	TrashMapEdgepoints();
 	if( gMapInformation.ubMapVersion < 17 )
 	{	//To prevent invalidation of older maps, which only used one layer of edgepoints, and a UINT8 for 
@@ -1044,6 +1047,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 {
+	PERFORMANCE_MARKER
 	INT16 *psArray=NULL;
 	UINT16 usArraySize=0;
 	static INT32 randomVal=0;
@@ -1081,6 +1085,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints )
 {
+	PERFORMANCE_MARKER
 	INT16 *psArray=NULL;
 	UINT16 usArraySize=0;
 	INT32 i=-1;
@@ -1219,6 +1224,7 @@ INT16 gsReservedIndex	= 0;
 
 void BeginMapEdgepointSearch()
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo;
 
 	//Create the reserved list
@@ -1245,6 +1251,7 @@ void BeginMapEdgepointSearch()
 
 void EndMapEdgepointSearch()
 {
+	PERFORMANCE_MARKER
 	AssertMsg( gpReservedGridNos, "Attempting to EndMapEdgepointSearch that has already been removed." );
 	MemFree( gpReservedGridNos );
 	gpReservedGridNos = NULL;
@@ -1255,6 +1262,7 @@ void EndMapEdgepointSearch()
 //THIS CODE ISN'T RECOMMENDED FOR TIME CRITICAL AREAS.
 INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
 {
+	PERFORMANCE_MARKER
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
 	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
@@ -1382,6 +1390,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 
 INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode )
 {
+	PERFORMANCE_MARKER
 	INT32 i, iDirectionLoop;
 	INT16 *psArray=NULL;
 	INT16 sRadius, sDistance, sDirection, sOriginalGridNo;
@@ -1510,6 +1519,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 #define EDGE_OF_MAP_SEARCH 5
 BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 {
+	PERFORMANCE_MARKER
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16		sGridNo;
@@ -1546,7 +1556,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 		}
 	}
 
-	FindBestPath( pSoldier, NOWHERE, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
+	FindBestPath( pSoldier, NOWHERE, pSoldier->pathing.bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE );
 
 	// Turn off the "reachable" flag for the current location
 	// so we don't consider it
@@ -1579,6 +1589,7 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 
 BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 )
 {
+	PERFORMANCE_MARKER
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16		sGridNo;
@@ -1621,7 +1632,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 		}
 	}
 
-	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
+	if( FindBestPath( pSoldier, sEdgepoint2, pSoldier->pathing.bLevel, WALKING, COPYREACHABLE, PATH_THROUGH_PEOPLE ) )
 	{
 		return TRUE;
 	}
@@ -1630,6 +1641,7 @@ BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepo
 
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE Soldier;
 	INT32			iLoop;
 	INT16			*psEdgepointArray1, *psEdgepointArray2;
@@ -1638,9 +1650,6 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 	INT16			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
 	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
 
-	// WDS - Clean up inventory handling
-//	memset( &Soldier, 0, SIZEOF_SOLDIERTYPE );
-	Soldier.initialize();
 	Soldier.bTeam = 1;
 	Soldier.sGridNo = sGridNo;
 
@@ -1733,6 +1742,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 #include "message.h"
 void ShowMapEdgepoints()
 {
+	PERFORMANCE_MARKER
 	INT32 i, usIllegal1 = 0, usIllegal2 = 0;
 	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )
 	{
@@ -1840,6 +1850,7 @@ void ShowMapEdgepoints()
 
 void HideMapEdgepoints()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	ScreenMsg( 0, MSG_TESTVERSION, L"Removing display of map edgepoints" );
 	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )

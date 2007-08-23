@@ -181,6 +181,7 @@ INT32 GetYesterdaysDebits( void );
 
 UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount)
 {
+	PERFORMANCE_MARKER
 	// adds transaction to player's book(Financial List), returns unique id number of it
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
 	
@@ -246,6 +247,7 @@ UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiD
 
 FinanceUnitPtr GetFinance(UINT32 uiId)
 {
+	PERFORMANCE_MARKER
  FinanceUnitPtr pFinance=pFinanceListHead;
  
  // get a finance object and return a pointer to it, the obtaining of the 
@@ -271,6 +273,7 @@ FinanceUnitPtr GetFinance(UINT32 uiId)
 
 UINT32 GetTotalDebits()
 {
+	PERFORMANCE_MARKER
 	// returns the total of the debits
 	UINT32 uiDebits=0;
 	FinanceUnitPtr pFinance=pFinanceListHead;
@@ -291,6 +294,7 @@ UINT32 GetTotalDebits()
 
 UINT32 GetTotalCredits()
 {
+	PERFORMANCE_MARKER
  	// returns the total of the credits
 	UINT32 uiCredits = 0;
 	FinanceUnitPtr pFinance=pFinanceListHead;
@@ -311,6 +315,7 @@ UINT32 GetTotalCredits()
 
 UINT32 GetDayCredits(UINT32 usDayNumber)
 {
+	PERFORMANCE_MARKER
 	// returns the total of the credits for day( note resolution of usDayNumber is days)
 	UINT32 uiCredits = 0;
 	FinanceUnitPtr pFinance = pFinanceListHead;
@@ -330,6 +335,7 @@ UINT32 GetDayCredits(UINT32 usDayNumber)
 
 UINT32 GetDayDebits(UINT32 usDayNumber)
 {
+	PERFORMANCE_MARKER
 	// returns the total of the debits
 	UINT32 uiDebits=0;
 	FinanceUnitPtr pFinance=pFinanceListHead;
@@ -348,6 +354,7 @@ UINT32 GetDayDebits(UINT32 usDayNumber)
 
 INT32 GetTotalToDay( INT32 sTimeInMins )
 {
+	PERFORMANCE_MARKER
 	// gets the total amount to this day
 	UINT32 uiTotal = 0;
 	FinanceUnitPtr pFinance = pFinanceListHead;
@@ -365,12 +372,14 @@ INT32 GetTotalToDay( INT32 sTimeInMins )
 }
 INT32 GetYesterdaysIncome( void )
 {
+	PERFORMANCE_MARKER
 	// get income for yesterday
 	return ( GetDayDebits(( ( GetWorldTotalMin() - (24*60) ) / (24*60) )) + GetDayCredits(( (UINT32) ( GetWorldTotalMin() -(24*60) )/ (24*60) )));
 }
 
 INT32 GetCurrentBalance( void )
 {
+	PERFORMANCE_MARKER
 	// get balance to this minute
 	return ( LaptopSaveInfo.iCurrentBalance );
 
@@ -379,6 +388,7 @@ INT32 GetCurrentBalance( void )
 
 INT32 GetTodaysIncome( void )
 {
+	PERFORMANCE_MARKER
  // get income 
  return ( GetCurrentBalance() - GetTotalToDay( GetWorldTotalMin() - ( 24*60 ) ));
 }
@@ -386,6 +396,7 @@ INT32 GetTodaysIncome( void )
 
 INT32 GetProjectedTotalDailyIncome( void )
 {
+	PERFORMANCE_MARKER
 	// return total	projected income, including what is earned today already
 
 	// CJC: I DON'T THINK SO!
@@ -407,18 +418,21 @@ INT32 GetProjectedTotalDailyIncome( void )
 
 INT32 GetProjectedBalance( void )
 {
+	PERFORMANCE_MARKER
 	// return the projected balance for tommorow - total for today plus the total income, projected.
 	return( GetProjectedTotalDailyIncome( ) + GetCurrentBalance( ) );
 }
 
 INT32 GetConfidenceValue()
 {
+	PERFORMANCE_MARKER
 	// return confidence that the projected income is infact correct
 	return(( ( GetWorldMinutesInDay()*100 ) / (60*24) ));
 }
 
 void GameInitFinances()
 {
+	PERFORMANCE_MARKER
 	// initialize finances on game start up
 	// unlink Finances data file
 	if( (FileExists( FINANCES_DATA_FILE ) ) )
@@ -431,6 +445,7 @@ void GameInitFinances()
 
 void EnterFinances()
 {
+	PERFORMANCE_MARKER
  //entry into finanacial system, load graphics, set variables..draw screen once
  // set the fact we are in the financial display system
  
@@ -479,6 +494,7 @@ void EnterFinances()
 
 void ExitFinances( void )
 {
+	PERFORMANCE_MARKER
 	LaptopSaveInfo.iCurrentFinancesPage = iCurrentPage;
 
 	
@@ -500,11 +516,13 @@ void ExitFinances( void )
 
 void HandleFinances( void )
 {
+	PERFORMANCE_MARKER
 	
 }
 
 void RenderFinances( void )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// draw background
@@ -540,6 +558,7 @@ void RenderFinances( void )
 
 BOOLEAN LoadFinances( void )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load Finance video objects into memory
 
@@ -573,6 +592,7 @@ BOOLEAN LoadFinances( void )
 
 void RemoveFinances( void )
 {
+	PERFORMANCE_MARKER
 
 	// delete Finance video objects from memory
 	DeleteVideoObjectFromIndex(guiLONGLINE);
@@ -587,6 +607,7 @@ void RemoveFinances( void )
 
 void RenderBackGround( void )
 {
+	PERFORMANCE_MARKER
 	// render generic background for Finance system
 	HVOBJECT hHandle;
 	
@@ -606,6 +627,7 @@ void RenderBackGround( void )
 
 void DrawSummary( void )
 {
+	PERFORMANCE_MARKER
 	// draw day's summary to screen
 	DrawSummaryLines( ); 
 	DrawSummaryText( );
@@ -615,6 +637,7 @@ void DrawSummary( void )
 
 void DrawSummaryLines( void )
 {
+	PERFORMANCE_MARKER
 	// draw divider lines on screen
 	HVOBJECT hHandle;
 	
@@ -635,6 +658,7 @@ void DrawSummaryLines( void )
 
 void DrawAPageOfRecords( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will draw a series of financial records to the screen
 	pCurrentFinance=pFinanceListHead;
 
@@ -654,6 +678,7 @@ void DrawAPageOfRecords( void )
 
 void DrawRecordsBackGround( void )
 {
+	PERFORMANCE_MARKER
 	// proceudre will draw the background for the list of financial records
 	INT32 iCounter=6;
 	HVOBJECT hHandle;
@@ -688,6 +713,7 @@ void DrawRecordsBackGround( void )
 
 void DrawRecordsColumnHeadersText( void )
 {
+	PERFORMANCE_MARKER
 	// write the headers text for each column
 	INT16 usX, usY;
  
@@ -723,6 +749,7 @@ void DrawRecordsColumnHeadersText( void )
 
 void DrawRecordsText( void )
 {
+	PERFORMANCE_MARKER
 	// draws the text of the records
 	FinanceUnitPtr pCurFinance=pCurrentFinance;
 	FinanceUnitPtr pTempFinance=pFinanceListHead;
@@ -857,6 +884,7 @@ void DrawRecordsText( void )
 }
 void DrawFinanceTitleText( void )
 {
+	PERFORMANCE_MARKER
 	// setup the font stuff
 	SetFont(FINANCE_HEADER_FONT);
 	SetFontForeground(FONT_WHITE);
@@ -873,6 +901,7 @@ void DrawFinanceTitleText( void )
 
 void InvalidateLapTopScreen( void )
 {
+	PERFORMANCE_MARKER
 	// invalidates blit region to force refresh of screen
 	
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y);
@@ -882,6 +911,7 @@ void InvalidateLapTopScreen( void )
 
 void DrawSummaryText( void )
 {
+	PERFORMANCE_MARKER
 	INT16 usX, usY;
 	CHAR16 pString[100];
 	INT32 iBalance = 0;
@@ -1098,6 +1128,7 @@ void DrawSummaryText( void )
 
 void OpenAndReadFinancesFile( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will open and read in data to the finance list
 	HWFILE hFileHandle;
 	UINT8 ubCode, ubSecondCode;
@@ -1169,6 +1200,7 @@ void OpenAndReadFinancesFile( void )
 
 void ClearFinanceList( void )
 {
+	PERFORMANCE_MARKER
 	// remove each element from list of transactions
 	FinanceUnitPtr pFinanceList=pFinanceListHead;
 	FinanceUnitPtr pFinanceNode=pFinanceList;
@@ -1193,6 +1225,7 @@ void ClearFinanceList( void )
 
 UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiId = 0;
 	FinanceUnitPtr pFinance=pFinanceListHead;
 
@@ -1244,6 +1277,7 @@ UINT32 ProcessAndEnterAFinacialRecord( UINT8 ubCode, UINT32 uiDate, INT32 iAmoun
 
 void CreateFinanceButtons( void )
 {
+	PERFORMANCE_MARKER
 	giFinanceButtonImage[PREV_PAGE_BUTTON] =	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1	);
 	giFinanceButton[PREV_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
@@ -1284,6 +1318,7 @@ void CreateFinanceButtons( void )
 
 void DestroyFinanceButtons( void )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 
 	for( uiCnt=0; uiCnt<4; uiCnt++ )
@@ -1294,6 +1329,7 @@ void DestroyFinanceButtons( void )
 }
 void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1313,6 +1349,7 @@ void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 	 btn->uiFlags&=~(BUTTON_CLICKED_ON);
@@ -1331,6 +1368,7 @@ void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT32	uiButton = MSYS_GetBtnUserData( btn, 0 );
@@ -1364,6 +1402,7 @@ void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 void IncrementCurrentPageFinancialDisplay( void )
 {
+	PERFORMANCE_MARKER
 	// run through list, from pCurrentFinance, to NUM_RECORDS_PER_PAGE +1 FinancialUnits
 	FinanceUnitPtr pTempFinance=pCurrentFinance;
 	BOOLEAN fOkToIncrementPage=FALSE;
@@ -1413,6 +1452,7 @@ void IncrementCurrentPageFinancialDisplay( void )
 
 void ProcessTransactionString(STR16 pString, FinanceUnitPtr pFinance)
 {
+	PERFORMANCE_MARKER
 
 	switch( pFinance->ubCode)
 	{
@@ -1542,6 +1582,7 @@ void ProcessTransactionString(STR16 pString, FinanceUnitPtr pFinance)
 
 void DisplayFinancePageNumberAndDateRange( void )
 {
+	PERFORMANCE_MARKER
 	// this function will go through the list of 'histories' starting at current until end or 
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iCounter=0;
@@ -1587,6 +1628,7 @@ void DisplayFinancePageNumberAndDateRange( void )
 
 BOOLEAN WriteBalanceToDisk( void )
 {
+	PERFORMANCE_MARKER
 	// will write the current balance to disk
 	HWFILE hFileHandle;
 	
@@ -1606,6 +1648,7 @@ BOOLEAN WriteBalanceToDisk( void )
 
 void GetBalanceFromDisk( void )
 {
+	PERFORMANCE_MARKER
 	// will grab the current blanace from disk
 	// assuming file already openned
 	// this procedure will open and read in data to the finance list
@@ -1641,6 +1684,7 @@ void GetBalanceFromDisk( void )
 
 BOOLEAN AppendFinanceToEndOfFile( FinanceUnitPtr pFinance )
 {
+	PERFORMANCE_MARKER
 		// will write the current finance to disk
 	HWFILE hFileHandle;
 	FinanceUnitPtr pFinanceList=pFinanceListHead;
@@ -1683,6 +1727,7 @@ BOOLEAN AppendFinanceToEndOfFile( FinanceUnitPtr pFinance )
 
 UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber( void )
 {
+	PERFORMANCE_MARKER
 	// this function will read in the last unit in the finance list, to grab it's id number
 
 	
@@ -1725,6 +1770,7 @@ UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber( void )
 
 void SetLastPageInRecords( void )
 {
+	PERFORMANCE_MARKER
 	// grabs the size of the file and interprets number of pages it will take up
 	HWFILE hFileHandle;
 
@@ -1763,6 +1809,7 @@ void SetLastPageInRecords( void )
 
 BOOLEAN LoadPreviousPage( void )
 {
+	PERFORMANCE_MARKER
 	
 	// clear out old list of records, and load in previous page worth of records
 	ClearFinanceList( );
@@ -1789,6 +1836,7 @@ BOOLEAN LoadPreviousPage( void )
 
 BOOLEAN LoadNextPage( void )
 {
+	PERFORMANCE_MARKER
 	
 	// clear out old list of records, and load in previous page worth of records
 	ClearFinanceList( );
@@ -1811,6 +1859,7 @@ BOOLEAN LoadNextPage( void )
 
 BOOLEAN LoadInRecords( UINT32 uiPage )
 {
+	PERFORMANCE_MARKER
 	// loads in records belogning, to page uiPage
 	// no file, return
 	BOOLEAN fOkToContinue=TRUE;
@@ -1910,6 +1959,7 @@ BOOLEAN LoadInRecords( UINT32 uiPage )
 
 void InsertCommasForDollarFigure( STR16 pString )
 {
+	PERFORMANCE_MARKER
 	INT16 sCounter =0;
 	INT16 sZeroCount =0;
 	INT16 sTempCounter = 0;
@@ -1976,6 +2026,7 @@ void InsertCommasForDollarFigure( STR16 pString )
 
 void InsertDollarSignInToString( STR16 pString )
 {
+	PERFORMANCE_MARKER
 	// run to end of string, copy everything in string 2 places right, insert a space at pString[ 1 ] and a L'$' at pString[ 0 ]
 	
 	INT32 iCounter =0;
@@ -2000,6 +2051,7 @@ void InsertDollarSignInToString( STR16 pString )
 
 INT32 GetPreviousBalanceToDate( void )
 {
+	PERFORMANCE_MARKER
 
 	// will grab balance to date of previous record
 	// grabs the size of the file and interprets number of pages it will take up
@@ -2042,6 +2094,7 @@ INT32 GetPreviousBalanceToDate( void )
 
 INT32 GetPreviousDaysBalance( void )
 {
+	PERFORMANCE_MARKER
 	// find out what today is, then go back 2 days, get balance for that day
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
@@ -2133,6 +2186,7 @@ INT32 GetPreviousDaysBalance( void )
 
 INT32 GetTodaysBalance( void )
 {
+	PERFORMANCE_MARKER
 	// find out what today is, then go back 2 days, get balance for that day
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
@@ -2213,6 +2267,7 @@ INT32 GetTodaysBalance( void )
 
 INT32 GetPreviousDaysIncome( void )
 {
+	PERFORMANCE_MARKER
 	// will return the income from the previous day
 	// which is todays starting balance - yesterdays starting balance
 	HWFILE hFileHandle;
@@ -2313,6 +2368,7 @@ INT32 GetPreviousDaysIncome( void )
 
 INT32 GetTodaysDaysIncome( void )
 {
+	PERFORMANCE_MARKER
 	// will return the income from the previous day
 	// which is todays starting balance - yesterdays starting balance
 	HWFILE hFileHandle;
@@ -2408,6 +2464,7 @@ INT32 GetTodaysDaysIncome( void )
 
 void SetFinanceButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	// this function will look at what page we are viewing, enable and disable buttons as needed
 	
 	if( iCurrentPage == 0 )
@@ -2444,6 +2501,7 @@ void SetFinanceButtonStates( void )
 
 INT32 GetTodaysOtherDeposits( void )
 {
+	PERFORMANCE_MARKER
 	// grab todays other deposits
 
 	HWFILE hFileHandle;
@@ -2542,6 +2600,7 @@ INT32 GetTodaysOtherDeposits( void )
 
 INT32 GetYesterdaysOtherDeposits( void )
 {
+	PERFORMANCE_MARKER
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;
 	UINT32 iDateInMinutes = 0; 
@@ -2635,6 +2694,7 @@ INT32 GetYesterdaysOtherDeposits( void )
 
 INT32 GetTodaysDebits( void )
 {
+	PERFORMANCE_MARKER
 	// return the expenses for today
 
 	// currentbalance - todays balance - Todays income - other deposits
@@ -2644,6 +2704,7 @@ INT32 GetTodaysDebits( void )
 
 INT32 GetYesterdaysDebits( void )
 {
+	PERFORMANCE_MARKER
 	// return the expenses for yesterday
 	
 	return( GetTodaysBalance( ) - GetPreviousDaysBalance( ) - GetPreviousDaysIncome( ) - GetYesterdaysOtherDeposits( ) );
@@ -2652,6 +2713,7 @@ INT32 GetYesterdaysDebits( void )
 
 void LoadCurrentBalance( void )
 {
+	PERFORMANCE_MARKER
 	// will load the current balance from finances.dat file
 	HWFILE hFileHandle;
 	INT32 iBytesRead=0;

@@ -218,6 +218,7 @@ enum
 
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData )
 {
+	PERFORMANCE_MARKER
 	// ATE: OK, let's check the status of the Q
 	// If it has something in it....delay this until after....
 	if ( DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
@@ -254,6 +255,7 @@ BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldie
 
 void HandlePendingInitConv( )
 {
+	PERFORMANCE_MARKER
 	if ( gfConversationPending )
 	{
 		// OK, if pending, remove and now call........
@@ -264,6 +266,7 @@ void HandlePendingInitConv( )
 
 BOOLEAN InternalInitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData )
 {
+	PERFORMANCE_MARKER
 	// OK, init talking menu
 	BOOLEAN	fFromPending;
 
@@ -343,6 +346,7 @@ BOOLEAN InternalInitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pS
 
 BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	INT16							sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16							sX, sY;
 
@@ -366,6 +370,7 @@ BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT16 sGridNo )
 
 BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 {
+	PERFORMANCE_MARKER
 	INT32	iFaceIndex, cnt;
 	VSURFACE_DESC			vs_desc;
 	FACETYPE				*pFace;
@@ -546,6 +551,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 void DoneTalkingButtonClickCallback(GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -564,6 +570,7 @@ void DoneTalkingButtonClickCallback(GUI_BUTTON *btn, INT32 reason )
 
 void DeleteTalkingMenu( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 
 	if ( !gfInTalkPanel )
@@ -622,7 +629,7 @@ void DeleteTalkingMenu( )
 	gfIgnoreScrolling = FALSE;
 
 	// Set this guy up as NOT engaged in conversation
-	gpDestSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION);
+	gpDestSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION);
 
 	//NOT Engaged on conv...
 	if ( !giNPCReferenceCount )
@@ -685,6 +692,7 @@ void DeleteTalkingMenu( )
 
 void RenderTalkingMenu( )
 {
+	PERFORMANCE_MARKER
 	INT32	cnt;
 	FACETYPE			*pFace;
 	INT16					sFontX, sFontY, sX, sY;
@@ -919,6 +927,7 @@ void RenderTalkingMenu( )
 
 void TalkPanelMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiItemPos;
 
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -939,6 +948,7 @@ void TalkPanelMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TalkPanelClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiItemPos;
 	BOOLEAN					fDoConverse = TRUE;
 	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -990,12 +1000,12 @@ void TalkPanelClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					gubNewPanelParam = (UINT8)gpSrcSoldier->ubID;
 
 					// Wait!
-					gpDestSoldier->bNextAction = AI_ACTION_WAIT;
-					gpDestSoldier->usNextActionData = 10000;
+					gpDestSoldier->aiData.bNextAction = AI_ACTION_WAIT;
+					gpDestSoldier->aiData.usNextActionData = 10000;
 
 					// UNless he's has a pending action, delete what he was doing!
 					// Cancel anything he was doing
-					if ( gpDestSoldier->bAction != AI_ACTION_PENDING_ACTION )
+					if ( gpDestSoldier->aiData.bAction != AI_ACTION_PENDING_ACTION )
 					{
 						CancelAIAction( gpDestSoldier, TRUE );
 					}
@@ -1019,6 +1029,7 @@ void TalkPanelClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TalkPanelBaseRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 		static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1045,6 +1056,7 @@ void TalkPanelBaseRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TalkPanelNameRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1064,6 +1076,7 @@ void TalkPanelNameRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void TalkPanelNameRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	// Donot do this if we are talking already
 	if ( gFacesData[ gTalkPanel.iFaceIndex ].fTalking )
 	{
@@ -1085,12 +1098,14 @@ void TalkPanelNameRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 // Dirty menu
 void SetTalkingMenuDirty( BOOLEAN fDirtyLevel )
 {
+	PERFORMANCE_MARKER
 	gTalkPanel.fDirtyLevel = fDirtyLevel;
 }
 
 
 BOOLEAN HandleTalkingMenu( )
 {
+	PERFORMANCE_MARKER
 	if ( !gfInTalkPanel )
 	{
 		return( FALSE );
@@ -1107,6 +1122,7 @@ BOOLEAN HandleTalkingMenu( )
 
 BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 {
+	PERFORMANCE_MARKER
 	// Set back current select....
 	gTalkPanel.bCurSelect	= -1;
 	gTalkPanel.fOnName		= FALSE;
@@ -1118,6 +1134,7 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 
 BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile )
 {
+	PERFORMANCE_MARKER
 	if ( gfInTalkPanel )
 	{
 		if ( gpDestSoldier != NULL )
@@ -1135,6 +1152,7 @@ BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile )
 
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 {
+	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 	BOOLEAN					fTalking = FALSE;
 
@@ -1195,6 +1213,7 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 
 void HandleTalkingMenuBackspace( void )
 {
+	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
 
 	if ( !gfInTalkPanel )
@@ -1230,6 +1249,7 @@ void HandleTalkingMenuBackspace( void )
 
 void CalculatePopupTextOrientation( INT16 sWidth, INT16 sHeight )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN			fOKLeft = FALSE, fOKTop = FALSE, fOKBottom = FALSE, fOK = FALSE;
 	INT16				sX, sY;
 
@@ -1306,6 +1326,7 @@ void CalculatePopupTextOrientation( INT16 sWidth, INT16 sHeight )
 
 void CalculatePopupTextPosition( INT16 sWidth, INT16 sHeight )
 {
+	PERFORMANCE_MARKER
 	switch( gTalkPanel.ubPopupOrientation )
 	{
 		case TALK_PANEL_POPUP_LEFT:
@@ -1342,6 +1363,7 @@ void CalculatePopupTextPosition( INT16 sWidth, INT16 sHeight )
 
 BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 {
+	PERFORMANCE_MARKER
 	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, (UINT32) ubNPC, (UINT32)pObject, (UINT32) bInvPos, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
@@ -1349,6 +1371,7 @@ BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 
 BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu )
 {
+	PERFORMANCE_MARKER
 	//CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
 	CHECKF( SpecialCharacterDialogueEventWithExtraParam( DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
 
@@ -1358,6 +1381,7 @@ BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetAp
 
 BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubRecordNum )
 {
+	PERFORMANCE_MARKER
 	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, sGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
@@ -1366,6 +1390,7 @@ BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubRecordNum )
 
 BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
+	PERFORMANCE_MARKER
 	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
@@ -1373,6 +1398,7 @@ BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 
 BOOLEAN	NPCClosePanel( )
 {
+	PERFORMANCE_MARKER
 	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
@@ -1380,6 +1406,7 @@ BOOLEAN	NPCClosePanel( )
 
 BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 {
+	PERFORMANCE_MARKER
 	INT16		sAdjGridNo;
 
 	if ( !gpSrcSoldier )
@@ -1390,7 +1417,7 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 	{
 		return( FALSE );
 	}
-	if ( gpSrcSoldier->bLife < OKLIFE || ( gpSrcSoldier->bBreath < OKBREATH && gpSrcSoldier->bCollapsed ) )
+	if ( gpSrcSoldier->stats.bLife < OKLIFE || ( gpSrcSoldier->bBreath < OKBREATH && gpSrcSoldier->bCollapsed ) )
 	{
 		return( FALSE );
 	}
@@ -1418,6 +1445,7 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
  
 void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 {
+	PERFORMANCE_MARKER
 
 	// Give it to the NPC soldier
 //	AutoPlaceObject( gpDestSoldier, pObject, FALSE );
@@ -1451,6 +1479,7 @@ void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 
 void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 
 	pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
@@ -1471,8 +1500,8 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 	{
 		// make sure they are in the right alert status to receive orders (it's a bug that
 		// this could be set for the player...)
-		pSoldier->bAlertStatus = STATUS_GREEN;
-		pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+		pSoldier->aiData.bAlertStatus = STATUS_GREEN;
+		pSoldier->flags.uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
 	}
 
 	// OH BOY, CHECK IF THIS IS THE SAME PERSON WHO IS ON THE MENU
@@ -1526,6 +1555,7 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 
 void HandleNPCTrigger( )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16				sPlayerGridNo;
 	UINT8				ubPlayerID;
@@ -1593,6 +1623,7 @@ void HandleNPCTrigger( )
 
 void HandleWaitTimerForNPCTrigger( )
 {
+	PERFORMANCE_MARKER
 	if ( gfWaitingForTriggerTimer )
 	{
 		if ( ( GetJA2Clock( ) - guiWaitingForTriggerTime ) > 500 )
@@ -1614,6 +1645,7 @@ void HandleWaitTimerForNPCTrigger( )
 
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubQuoteNum )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE			 *pSoldier;
 	// OK, Move to gridNo!
 
@@ -1628,28 +1660,28 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubQuoteNum )
 	}
 
 	// zap any delay in this soldier
-	ZEROTIMECOUNTER( pSoldier->AICounter );
-	if (pSoldier->bNextAction == AI_ACTION_WAIT)
+	ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+	if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 	{
-		pSoldier->bNextAction = AI_ACTION_NONE;
-		pSoldier->usNextActionData = 0;
+		pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+		pSoldier->aiData.usNextActionData = 0;
 	}
 
 	// if player controlled, set under AI control flag
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
-		pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+		pSoldier->flags.uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
 	}
 
 	// OK, set in motion!
-	pSoldier->bNextAction = AI_ACTION_WALK;
+	pSoldier->aiData.bNextAction = AI_ACTION_WALK;
 
 	// Set dest!
 	pSoldier->aiData.usNextActionData = sGridNo;
 
 	// UNless he's has a pending action, delete what he was doing!
 	// Cancel anything he was doing
-	if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
+	if ( pSoldier->aiData.bAction != AI_ACTION_PENDING_ACTION )
 	{
 		CancelAIAction( pSoldier, TRUE );
 	}
@@ -1663,17 +1695,19 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubQuoteNum )
 	pSoldier->sAbsoluteFinalDestination = sGridNo;
 
 	// handle this guy's AI right away so that we can get him moving
-	pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+	pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 }
 
 void HandleNPCClosePanel(	)
 {
+	PERFORMANCE_MARKER
 	// Remove dialogue!
 	DeleteTalkingMenu( );
 }
 
 void HandleStuffForNPCEscorted( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 
 	switch( ubNPC )
@@ -1724,6 +1758,7 @@ void HandleStuffForNPCEscorted( UINT8 ubNPC )
 
 void HandleFactForNPCUnescorted( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	// obsolete!
 	/*
 	switch( ubNPC )
@@ -1750,6 +1785,7 @@ void HandleFactForNPCUnescorted( UINT8 ubNPC )
 
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
+	PERFORMANCE_MARKER
 	INT32										cnt;
 	SOLDIERTYPE			 *pSoldier, *pSoldier2;
 	INT8										bNumDone = 0;
@@ -1776,7 +1812,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			// if not already facing in that direction,
 			if (pSoldier->bDirection != ubDesiredMercDir)
 			{
-				EVENT_SetSoldierDesiredDirection( pSoldier, ubDesiredMercDir );
+				pSoldier->EVENT_SetSoldierDesiredDirection( ubDesiredMercDir );
 			}
 		}
 	}
@@ -1813,7 +1849,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 				{		
 					// Are we in this sector, On the current squad?
-					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+					if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 					{
 						gfTacticalTraversal = TRUE;
 						SetGroupSectorValue( 10, 1, 1, pSoldier->ubGroupID );
@@ -1897,7 +1933,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier->ubQuoteActionID = QUOTE_ACTION_ID_TURNTOWARDSPLAYER; 
 
 				// handle AI for this person every frame until a player merc is near
-				pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+				pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 				break;
 
 			case NPC_ACTION_OPEN_CLOSEST_DOOR:
@@ -1933,7 +1969,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					
 					usGun = pSoldier->inv[HANDPOS].usItem;
 
-					ReLoadSoldierAnimationDueToHandItemChange( pSoldier, pSoldier->inv[HANDPOS].usItem, NOTHING );
+					pSoldier->ReLoadSoldierAnimationDueToHandItemChange( pSoldier->inv[HANDPOS].usItem, NOTHING );
 					AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE );
 					
 					bNewSlot = FindObj( pSoldier, usGun );
@@ -1961,7 +1997,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
 					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
-					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
+					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
 				}
 				break;
 
@@ -1969,7 +2005,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier)
 				{
-					pSoldier->fUIMovementFast = TRUE;
+					pSoldier->flags.fUIMovementFast = TRUE;
 				}
 				break;
 
@@ -1977,7 +2013,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier)
 				{
-					pSoldier->fUIMovementFast = FALSE;
+					pSoldier->flags.fUIMovementFast = FALSE;
 				}
 				break;
 
@@ -1992,7 +2028,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier)
 				{
-					ReceivingSoldierCancelServices( pSoldier );
+					pSoldier->ReceivingSoldierCancelServices( );
 				}
 				break;
 
@@ -2059,7 +2095,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					//MakeCivHostile( pSoldier, 2 );
 				}
-				if (pSoldier->ubProfile != NO_PROFILE && pSoldier->bLife >= OKLIFE)
+				if (pSoldier->ubProfile != NO_PROFILE && pSoldier->stats.bLife >= OKLIFE)
 				{
 					// trigger quote!
 					//TriggerNPCWithIHateYouQuote( pSoldier->ubProfile );
@@ -2094,7 +2130,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 				{		
 					// Are we in this sector, On the current squad?
-					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
+					if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector )
 					{
 						gfTacticalTraversal = TRUE;
 						SetGroupSectorValue( 10, 1, 0, pSoldier->ubGroupID );
@@ -2199,7 +2235,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					return;
 				}
-				if ( !pSoldier->bNeutral )
+				if ( !pSoldier->aiData.bNeutral )
 				{
 					DeleteTalkingMenu();
 					SetSoldierNeutral( pSoldier );
@@ -2226,7 +2262,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
 					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
-					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE ); 
+					pSoldier->SoldierReadyWeapon( (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE ); 
 				}
 				// fall through so that the person faces the nearest merc!
 			case NPC_ACTION_TURN_TO_FACE_NEAREST_MERC:
@@ -2241,7 +2277,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// if not already facing in that direction,
 						if (pSoldier->bDirection != ubDesiredMercDir)
 						{
-							EVENT_SetSoldierDesiredDirection( pSoldier, ubDesiredMercDir );
+							pSoldier->EVENT_SetSoldierDesiredDirection( ubDesiredMercDir );
 						}
 					}
 				}
@@ -2376,7 +2412,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// is clear... and set pending action so the guy won't move
 						// until the pickup is completed
 						CancelAIAction(pSoldier,FORCE);
-						pSoldier->bAction = AI_ACTION_PENDING_ACTION;
+						pSoldier->aiData.bAction = AI_ACTION_PENDING_ACTION;
 						pSoldier->ubQuoteRecord = NPC_ACTION_KYLE_GETS_MONEY;
 
 						SoldierPickupItem( pSoldier, iWorldItem, sGridNo, ITEM_IGNORE_Z_LEVEL );
@@ -2393,7 +2429,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier)
 				{	
 					DeleteTalkingMenu();
-					EVENT_SoldierGotHit( pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
+					pSoldier->EVENT_SoldierGotHit( 1, 100, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, 0, NOWHERE );
 				}
 				break;
 
@@ -2933,8 +2969,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 					else if (!PTR_STANDING)
 					{
-						pSoldier->bNextAction = AI_ACTION_CHANGE_STANCE;
-						pSoldier->usNextActionData = ANIM_STAND;
+						pSoldier->aiData.bNextAction = AI_ACTION_CHANGE_STANCE;
+						pSoldier->aiData.usNextActionData = ANIM_STAND;
 					}
 				}
 				break;
@@ -3168,11 +3204,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					// is clear... and set pending action so the guy won't move
 					// until the pickup is completed
 					CancelAIAction(pSoldier,FORCE);
-					pSoldier->bAction = AI_ACTION_PENDING_ACTION;
+					pSoldier->aiData.bAction = AI_ACTION_PENDING_ACTION;
 	
 					// make sure the pickup starts dammit!
-					pSoldier->fInNonintAnim = FALSE;
-					pSoldier->fRTInNonintAnim = FALSE;
+					pSoldier->flags.fInNonintAnim = FALSE;
+					pSoldier->flags.fRTInNonintAnim = FALSE;
 
 					if ( pSoldier->ubProfile == ARMAND )
 					{
@@ -3201,7 +3237,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( QUEEN, FALSE );
 				if (pSoldier)
 				{
-					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_SLAP, 0 , FALSE );							
+					pSoldier->EVENT_InitNewSoldierAnim( QUEEN_SLAP, 0 , FALSE );							
 				}
 				break;
 
@@ -3247,37 +3283,37 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					// Use a different approach....
 					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
 					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_0;
+						pSoldier->aiData.uiPendingActionData4 = APPROACH_DONE_PUNCH_0;
 					}
 					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_1 )
 					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
+						pSoldier->aiData.uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
 					}
 					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_2 )
 					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_2;
+						pSoldier->aiData.uiPendingActionData4 = APPROACH_DONE_PUNCH_2;
 					}
 
-					if ( pTarget && pTarget->bActive && pTarget->bInSector && pTarget->bLife != 0 )
+					if ( pTarget && pTarget->bActive && pTarget->bInSector && pTarget->stats.bLife != 0 )
 					{
-						pSoldier->bNextAction = AI_ACTION_KNIFE_MOVE;
-						pSoldier->usNextActionData = pTarget->sGridNo;
-						pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+						pSoldier->aiData.bNextAction = AI_ACTION_KNIFE_MOVE;
+						pSoldier->aiData.usNextActionData = pTarget->sGridNo;
+						pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 
 						// UNless he's has a pending action, delete what he was doing!
 						// Cancel anything he was doing
-						if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
+						if ( pSoldier->aiData.bAction != AI_ACTION_PENDING_ACTION )
 						{
 							CancelAIAction( pSoldier, TRUE );
 						}
 
 						//HandleItem( pSoldier, pTarget->sGridNo, 0, NOTHING, FALSE );
 
-						pSoldier->uiStatusFlags |= SOLDIER_NPC_DOING_PUNCH;
+						pSoldier->flags.uiStatusFlags |= SOLDIER_NPC_DOING_PUNCH;
 					}
 					else
 					{
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
+						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->aiData.uiPendingActionData4, FALSE );
 					}
 				}
 				break;
@@ -3297,8 +3333,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if ( pTarget )
 					{
 						// Set special flag....
-						pTarget->uiStatusFlags |= SOLDIER_NPC_SHOOTING;
-						pSoldier->uiStatusFlags |= SOLDIER_NPC_SHOOTING;
+						pTarget->flags.uiStatusFlags |= SOLDIER_NPC_SHOOTING;
+						pSoldier->flags.uiStatusFlags |= SOLDIER_NPC_SHOOTING;
 
 						pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
 
@@ -3306,13 +3342,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						CreateItem( (UINT16) (DESERTEAGLE), 100, &( pSoldier->inv[ HANDPOS ] ) );
 
 						// Make shoot
-						pSoldier->bNextAction = AI_ACTION_FIRE_GUN;
-						pSoldier->usNextActionData = pTarget->sGridNo;
-						pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+						pSoldier->aiData.bNextAction = AI_ACTION_FIRE_GUN;
+						pSoldier->aiData.usNextActionData = pTarget->sGridNo;
+						pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 
 						// UNless he's has a pending action, delete what he was doing!
 						// Cancel anything he was doing
-						if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
+						if ( pSoldier->aiData.bAction != AI_ACTION_PENDING_ACTION )
 						{
 							CancelAIAction( pSoldier, TRUE );
 						}
@@ -3325,7 +3361,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				//Emmons: is this line of code part of something missing
 				//or no longer necessary?	CJC
-				//if ( pSoldier->uiStatusFlags & SOLDIER_NPC_SHOOTING )
+				//if ( pSoldier->flags.uiStatusFlags & SOLDIER_NPC_SHOOTING )
 
 			case NPC_ACTION_PUNCH_FIRST_LIVING_PC:
 
@@ -3351,19 +3387,19 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 							pTarget = MercPtrs[ ubTargetID ];
 						}
 
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
+						pSoldier->aiData.uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
 
 						// If we are elliot, we can't do unconocious guys....
 						if ( pSoldier->ubProfile == ELLIOT )
 						{
-							if ( pTarget->bActive && pTarget->bInSector && pTarget->bLife >= OKLIFE )
+							if ( pTarget->bActive && pTarget->bInSector && pTarget->stats.bLife >= OKLIFE )
 							{
 								fGoodTarget = TRUE;
 							}
 						}
 						else
 						{
-							if ( pTarget->bActive && pTarget->bInSector && pTarget->bLife != 0 )
+							if ( pTarget->bActive && pTarget->bInSector && pTarget->stats.bLife != 0 )
 							{
 								fGoodTarget = TRUE;
 							}
@@ -3372,18 +3408,18 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 						if ( fGoodTarget )
 						{
-							pSoldier->bNextAction = AI_ACTION_KNIFE_MOVE;
-							pSoldier->usNextActionData = pTarget->sGridNo;
-							pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
+							pSoldier->aiData.bNextAction = AI_ACTION_KNIFE_MOVE;
+							pSoldier->aiData.usNextActionData = pTarget->sGridNo;
+							pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
 
 							// UNless he's has a pending action, delete what he was doing!
 							// Cancel anything he was doing
-							if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
+							if ( pSoldier->aiData.bAction != AI_ACTION_PENDING_ACTION )
 							{
 								CancelAIAction( pSoldier, TRUE );
 							}
 
-							pSoldier->uiStatusFlags |= SOLDIER_NPC_DOING_PUNCH;
+							pSoldier->flags.uiStatusFlags |= SOLDIER_NPC_DOING_PUNCH;
 							break;
 						}
 					}
@@ -3391,7 +3427,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if ( cnt == 3 )
 					{
 						// If here, nobody was found...
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
+						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->aiData.uiPendingActionData4, FALSE );
 					}
 				}
 				break;
@@ -3402,7 +3438,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if (pSoldier)
 				{
-					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_FRUSTRATED_SLAP, 0 , FALSE );							
+					pSoldier->EVENT_InitNewSoldierAnim( QUEEN_FRUSTRATED_SLAP, 0 , FALSE );							
 				}
 				break;
 			case NPC_ACTION_START_TIMER_ON_KEITH_GOING_OUT_OF_BUSINESS:
@@ -3578,7 +3614,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 					{		
 						// Are we in this sector, On the current squad?
-						if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->bLife < pSoldier->bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < HOSPITAL_PATIENT_DISTANCE )
+						if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife > 0 && pSoldier->stats.bLife < pSoldier->stats.bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < HOSPITAL_PATIENT_DISTANCE )
 						{
 							SetSoldierAssignment( pSoldier, ASSIGNMENT_HOSPITAL, 0, 0, 0 );	
 							TriggerNPCRecord( pSoldier->ubProfile, 2 );
@@ -3687,7 +3723,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( STEVE, FALSE ); // Steve Willis, 80
 				if (pSoldier)
 				{
-					if ( !pSoldier->bActive || !pSoldier->bInSector || !(pSoldier->bTeam == CIV_TEAM) || !(pSoldier->bNeutral) || (pSoldier->bLife < OKLIFE) )
+					if ( !pSoldier->bActive || !pSoldier->bInSector || !(pSoldier->bTeam == CIV_TEAM) || !(pSoldier->aiData.bNeutral) || (pSoldier->stats.bLife < OKLIFE) )
 					{
 						pSoldier = NULL;
 					}
@@ -3696,7 +3732,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier2 = FindSoldierByProfileID( VINCE, FALSE ); // Vince, 69
 				if (pSoldier2)
 				{
-					if ( !pSoldier2->bActive || !pSoldier2->bInSector || !(pSoldier2->bTeam == CIV_TEAM) || !(pSoldier2->bNeutral) || (pSoldier2->bLife < OKLIFE) )
+					if ( !pSoldier2->bActive || !pSoldier2->bInSector || !(pSoldier2->bTeam == CIV_TEAM) || !(pSoldier2->aiData.bNeutral) || (pSoldier2->stats.bLife < OKLIFE) )
 					{
 						pSoldier2 = NULL;
 					}
@@ -3842,7 +3878,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9:
 				pSoldier = FindSoldierByProfileID ( MARY, FALSE );
-				if ( pSoldier && pSoldier->bLife >= OKLIFE )
+				if ( pSoldier && pSoldier->stats.bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 9 );
 				}
@@ -3853,7 +3889,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10:
 				pSoldier = FindSoldierByProfileID ( MARY, FALSE );
-				if ( pSoldier && pSoldier->bLife >= OKLIFE )
+				if ( pSoldier && pSoldier->stats.bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 10 );
 				}
@@ -3868,7 +3904,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
-					EVENT_InitNewSoldierAnim( pSoldier, CRIPPLE_KICKOUT, 0, TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( CRIPPLE_KICKOUT, 0, TRUE );
 				}
 				break;
 
@@ -3877,7 +3913,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
-					EVENT_InitNewSoldierAnim( pSoldier, CRIPPLE_KICKOUT, 0, TRUE );
+					pSoldier->EVENT_InitNewSoldierAnim( CRIPPLE_KICKOUT, 0, TRUE );
 				}
 				TriggerFriendWithHostileQuote( ubTargetNPC );
 				break;
@@ -3896,7 +3932,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID ( ubTargetNPC, FALSE );
 				if ( pSoldier ) 
 				{
-					pSoldier->bOrders = ONGUARD;
+					pSoldier->aiData.bOrders = ONGUARD;
 				}
 				break;
 
@@ -3934,7 +3970,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				pSoldier = FindSoldierByProfileID( MANNY, FALSE );
 				if ( pSoldier ) 
 				{
-					pSoldier->bOrders = STATIONARY;
+					pSoldier->aiData.bOrders = STATIONARY;
 				}
 				// close his panel too
 				DeleteTalkingMenu();
@@ -3948,7 +3984,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					gMercProfiles[ BRENDA ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 					gMercProfiles[ BRENDA ].usStrategicInsertionData = pSoldier->sGridNo;
 					gMercProfiles[ BRENDA ].fUseProfileInsertionInfo = TRUE;
-					pSoldier->bOrders = STATIONARY;
+					pSoldier->aiData.bOrders = STATIONARY;
 				}
 				break;
 
@@ -3960,7 +3996,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					gMercProfiles[ MIGUEL ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 					gMercProfiles[ MIGUEL ].usStrategicInsertionData = pSoldier->sGridNo;
 					gMercProfiles[ MIGUEL ].fUseProfileInsertionInfo = TRUE;
-					pSoldier->bOrders = STATIONARY;
+					pSoldier->aiData.bOrders = STATIONARY;
 				}
 				break;
 
@@ -4265,6 +4301,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCost;
 
 	if ( !pSoldier )
@@ -4277,12 +4314,12 @@ UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier )
 		return( 0 );
 	}
 		
-	uiCost = 10 * ( pSoldier->bLifeMax - pSoldier->bLife );
+	uiCost = 10 * ( pSoldier->stats.bLifeMax - pSoldier->stats.bLife );
 
-	if ( pSoldier->bLife < OKLIFE )
+	if ( pSoldier->stats.bLife < OKLIFE )
 	{
 		// charge additional $25 for every point below OKLIFE he is
-		uiCost += ( 25 * ( OKLIFE - pSoldier->bLife ) );
+		uiCost += ( 25 * ( OKLIFE - pSoldier->stats.bLife ) );
 	}
 
 	// also charge $2 for each point of bleeding that must be stopped
@@ -4319,6 +4356,7 @@ UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier )
 
 UINT32 CalcMedicalCost( UINT8 ubId )
 {
+	PERFORMANCE_MARKER
 	INT32		cnt;
 	UINT32	uiCostSoFar;
 	INT16		sGridNo = 0;
@@ -4338,9 +4376,9 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++)
 	{
 		pSoldier = MercPtrs[ cnt ];
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
+		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife > 0 && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
 		{
-			if ( pSoldier->bLife < pSoldier->bLifeMax )
+			if ( pSoldier->stats.bLife < pSoldier->stats.bLifeMax )
 			{
 				if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= HOSPITAL_PATIENT_DISTANCE)
 				{
@@ -4362,6 +4400,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 
 BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 {
+	PERFORMANCE_MARKER
 	UINT32					cnt, uiCount = 0;
 	SOLDIERTYPE		*pSoldier;
 
@@ -4387,6 +4426,7 @@ BOOLEAN PlayerTeamHasTwoSpotsLeft( )
 
 void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 {
+	PERFORMANCE_MARKER
 	INT32			iTemp;
 	CHAR16		zTemp[256], zTemp2[256];
 
@@ -4468,6 +4508,7 @@ void StartDialogueMessageBox( UINT8 ubProfileID, UINT16 usMessageBoxType )
 
 void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 {
+	PERFORMANCE_MARKER
 	UINT8						ubProfile;
 	SOLDIERTYPE			*pSoldier;
 
@@ -4512,7 +4553,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ ubProfile ].zNickname, ( pSoldier->bAssignment + 1 ) );
 
 					// Change Squads....
-					SetCurrentSquad( pSoldier ->bAssignment, FALSE );
+					SetCurrentSquad( pSoldier->bAssignment, FALSE );
 
 					HandleStuffForNPCEscorted( ubProfile );
 				}
@@ -4590,7 +4631,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
 				{		
-					if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
+					if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
 					{
 						if (!pLier || (EffectiveWisdom( pSoldier ) + EffectiveLeadership( pSoldier ) > EffectiveWisdom( pLier ) + EffectiveLeadership( pSoldier ) ) )
 						{
@@ -4740,6 +4781,7 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 
 void	DoneFadeOutActionBasement( )
 {
+	PERFORMANCE_MARKER
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector( 10, 1, 1 );
 
@@ -4765,12 +4807,14 @@ void	DoneFadeOutActionBasement( )
 
 void	DoneFadeOutActionSex( )
 {
+	PERFORMANCE_MARKER
 	SetPendingNewScreen( SEX_SCREEN );
 }
 
 
 void	DoneFadeInActionBasement( )
 {
+	PERFORMANCE_MARKER
 	// Start conversation, etc
 	SOLDIERTYPE *pSoldier, *pNPCSoldier;
 	INT32										cnt;
@@ -4781,7 +4825,7 @@ void	DoneFadeInActionBasement( )
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
 	{		
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+		if ( pSoldier->bActive && pSoldier->stats.bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
 		{
 			break;
 		}
@@ -4807,6 +4851,7 @@ void	DoneFadeInActionBasement( )
 
 void	DoneFadeOutActionLeaveBasement( )
 {
+	PERFORMANCE_MARKER
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector( 10, 1, 0 );
 
@@ -4822,6 +4867,7 @@ void	DoneFadeOutActionLeaveBasement( )
 
 void	DoneFadeInActionLeaveBasement( )
 {
+	PERFORMANCE_MARKER
 	// Start conversation, etc
 }
 
@@ -4829,6 +4875,7 @@ void	DoneFadeInActionLeaveBasement( )
 
 BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE					*pStructure;
 	INT16							sStructGridNo;
 	INT16							sActionGridNo;
@@ -4909,7 +4956,7 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 		SendGetNewSoldierPathEvent( pSoldier, sGridNo, pSoldier->usUIMovementMode );
 	}
 
-	pSoldier->bAction = AI_ACTION_PENDING_ACTION;
+	pSoldier->aiData.bAction = AI_ACTION_PENDING_ACTION;
 
 	return( TRUE );
 
@@ -4917,6 +4964,7 @@ BOOLEAN NPCOpenThing( SOLDIERTYPE *pSoldier, BOOLEAN fDoor )
 
 void TextRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fLButtonDown = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -4937,6 +4985,7 @@ void TextRegionClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void CarmenLeavesSectorCallback( void )
 {
+	PERFORMANCE_MARKER
 	if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 	{
 		TriggerNPCRecord( 78, 34 );

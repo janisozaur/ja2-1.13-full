@@ -60,7 +60,6 @@
 	#include "Air Raid.h"
 	#include "Interface.h"
 	#include "cheats.h"
-	#include "Interface Panels.h"
 #endif
 
 // Temp function
@@ -78,6 +77,7 @@ UINT8			gubScreenCount=0;
 
 void InitNPCs( void )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT * pProfile;
 
 	// add the pilot at a random location!
@@ -226,6 +226,7 @@ void InitNPCs( void )
 
 void InitBloodCatSectors()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	//Hard coded table of bloodcat populations.	We don't have
 	//access to the real population (if different) until we physically 
@@ -295,6 +296,7 @@ void InitBloodCatSectors()
 
 void InitStrategicLayer( void )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitStrategicLayer");
 
 	// Clear starategic layer!
@@ -348,6 +350,7 @@ void InitStrategicLayer( void )
 
 void ShutdownStrategicLayer()
 {
+	PERFORMANCE_MARKER
 	DeleteAllStrategicEvents();
 	RemoveAllGroups();
 	TrashUndergroundSectorInfo();
@@ -357,6 +360,7 @@ void ShutdownStrategicLayer()
 
 BOOLEAN InitNewGame( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	INT32		iStartingCash;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame");
@@ -373,24 +377,6 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 	// Reset the selected soldier
 	gusSelectedSoldier = NOBODY;
-
-	// CHRISL: Init inventory
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
-	if( gubScreenCount == 0 )
-	{
-		if(gGameOptions.ubInventorySystem)
-		{
-			InitNewInventorySystem();
-			InitializeSMPanelCoordsNew();
-			InitializeInvPanelCoordsNew();
-		}
-		else
-		{
-			InitOldInventorySystem();
-			InitializeSMPanelCoordsOld();
-			InitializeInvPanelCoordsOld();
-		}
-	}
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: loading merc profiles");
 	if( gubScreenCount == 0 )
@@ -569,6 +555,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 BOOLEAN AnyMercsHired( )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt;
 	SOLDIERTYPE		*pTeamSoldier;
 	INT16				bLastTeamID;
@@ -593,6 +580,7 @@ BOOLEAN AnyMercsHired( )
 
 void QuickStartGame( )
 {
+	PERFORMANCE_MARKER
 	INT32		cnt;
 	UINT16	usVal;
 	UINT8 ub1 = 0, ub2 = 0;
@@ -636,6 +624,7 @@ void QuickStartGame( )
 // TEMP FUNCTION!
 void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 {
+	PERFORMANCE_MARKER
 	// Quickly give some guys we hire some items
  
 	if ( uiCount == 0 )
@@ -754,6 +743,7 @@ void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 
 BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
 {
+	PERFORMANCE_MARKER
 	MERC_HIRE_STRUCT HireMercStruct;
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
@@ -799,6 +789,7 @@ BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
 //This function is called when the game is REstarted.	Things that need to be reinited are placed in here
 void ReStartingGame()
 {
+	PERFORMANCE_MARKER
 	UINT16	cnt;
 
 	//Pause the game

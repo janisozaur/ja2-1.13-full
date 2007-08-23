@@ -46,8 +46,7 @@
 typedef void ( *ITEM_POOL_LOCATOR_HOOK )( void );	
 
 
-// WDS - Clean up inventory handling
-struct WORLDITEM;
+class WORLDITEM;
 struct LEVELNODE;
 
 typedef struct TAG_ITEM_POOL
@@ -80,7 +79,6 @@ typedef struct
 
 } ITEM_POOL_LOCATOR;
 
-// WDS - Clean up inventory handling
 class SOLDIERTYPE;
 INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );

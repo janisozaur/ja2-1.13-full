@@ -323,6 +323,7 @@ UINT32		CalcMercDaysServed();
 
 void GameInitMercs()
 {
+	PERFORMANCE_MARKER
 //	for(i=0; i<NUMBER_OF_MERCS; i++)
 //		gubMercArray[ i ] = i+BIFF;
 
@@ -373,6 +374,7 @@ void GameInitMercs()
 
 BOOLEAN EnterMercs()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	VSURFACE_DESC		vs_desc;
 
@@ -491,6 +493,7 @@ BOOLEAN EnterMercs()
 
 void ExitMercs()
 {
+	PERFORMANCE_MARKER
 	StopSpeckFromTalking( );
 
 	if( gfMercVideoIsBeingDisplayed )
@@ -544,6 +547,7 @@ void ExitMercs()
 
 void HandleMercs()
 {
+	PERFORMANCE_MARKER
 	if( gfRedrawMercSite ) 
 	{
 		RenderMercs();
@@ -597,6 +601,7 @@ void HandleMercs()
 
 void RenderMercs()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -652,6 +657,7 @@ void RenderMercs()
 
 BOOLEAN InitMercBackGround()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Merc background graphic and add it
@@ -665,6 +671,7 @@ BOOLEAN InitMercBackGround()
 
 BOOLEAN DrawMecBackGround()
 {
+	PERFORMANCE_MARKER
 	WebPageTileBackground(4, 4, MERC_BACKGROUND_WIDTH, MERC_BACKGROUND_HEIGHT, guiMercBackGround);
 	return(TRUE);
 }
@@ -672,6 +679,7 @@ BOOLEAN DrawMecBackGround()
 
 BOOLEAN RemoveMercBackGround()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiMercBackGround);
 
 	return(TRUE);
@@ -682,6 +690,7 @@ BOOLEAN RemoveMercBackGround()
 
 void BtnAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -717,6 +726,7 @@ void BtnAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFileBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -743,6 +753,7 @@ void BtnFileBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DailyUpdateOfMercSite( UINT16 usDate)
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	INT16		sSoldierID, i;
 	UINT8		ubMercID;
@@ -966,6 +977,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 //Gets the actual merc id from the array
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 {
+	PERFORMANCE_MARKER
 	//if it is one of the regular MERCS
 	if( ubMercID <= 6 )
 	{
@@ -1003,6 +1015,7 @@ UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 /*
 BOOLEAN InitDeleteMercVideoConferenceMode()
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN	fVideoConfModeCreated = FALSE;
 
 	if( !fVideoConfModeCreated && gubCurrentMercVideoMode == MERC_VIDEO_INIT_VIDEO_MODE )
@@ -1028,6 +1041,7 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 
 void InitMercVideoFace()
 {
+	PERFORMANCE_MARKER
 	//Alocates space, and loads the sti for SPECK
 //	giVideoSpeckFaceIndex = InternalInitFace( NO_PROFILE, NOBODY, 0, MERC_VIDEO_MERC_ID_FOR_SPECKS, 3000, 2000 );
 		giVideoSpeckFaceIndex = InitFace( MERC_VIDEO_MERC_ID_FOR_SPECKS, NOBODY, 0 );
@@ -1048,6 +1062,7 @@ void InitMercVideoFace()
 
 BOOLEAN	StartSpeckTalking(UINT16 usQuoteNum)
 {
+	PERFORMANCE_MARKER
 	if( usQuoteNum == MERC_VIDEO_SPECK_SPEECH_NOT_TALKING || usQuoteNum == MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET )
 		return( FALSE );
 
@@ -1069,6 +1084,7 @@ BOOLEAN	StartSpeckTalking(UINT16 usQuoteNum)
 // Performs the frame by frame update 
 BOOLEAN HandleSpeckTalking( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
 	SGPRect		SrcRect;
@@ -1133,6 +1149,7 @@ BOOLEAN HandleSpeckTalking( BOOLEAN fReset )
 
 void HandleCurrentMercDistortion()
 {
+	PERFORMANCE_MARKER
 	static UINT8 ubCurrentMercDistortionMode = MERC_DISTORTION_NO_DISTORTION;
 	BOOLEAN fReturnStatus;
 
@@ -1186,6 +1203,7 @@ void HandleCurrentMercDistortion()
 
 BOOLEAN PixelateVideoMercImage( BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight)
 {
+	PERFORMANCE_MARKER
 	static UINT32	uiLastTime;
 	UINT32	uiCurTime = GetJA2Clock();
 	UINT16 *pBuffer=NULL, DestColor;
@@ -1277,6 +1295,7 @@ BOOLEAN PixelateVideoMercImage( BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT1
 
 BOOLEAN DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiPitch;
 	UINT16 i, j;
 	UINT16 *pBuffer=NULL, DestColor;
@@ -1341,6 +1360,7 @@ BOOLEAN DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 BOOLEAN InitDestroyXToCloseVideoWindow( BOOLEAN fCreate )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fButtonCreated=FALSE;
 
 	//if we are asked to create the buttons and the button isnt already created
@@ -1370,6 +1390,7 @@ BOOLEAN InitDestroyXToCloseVideoWindow( BOOLEAN fCreate )
 
 void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1406,6 +1427,7 @@ void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN DisplayMercVideoIntro( UINT16 usTimeTillFinish )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCurTime = GetJA2Clock();
 	static UINT32	uiLastTime=0;
 
@@ -1429,6 +1451,7 @@ BOOLEAN DisplayMercVideoIntro( UINT16 usTimeTillFinish )
 
 void HandleTalkingSpeck()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fIsSpeckTalking = TRUE;
 
 	switch( gubCurrentMercVideoMode )
@@ -1540,6 +1563,7 @@ void HandleTalkingSpeck()
 
 void DisplayTextForSpeckVideoPopUp(STR16 pString)
 {
+	PERFORMANCE_MARKER
 	UINT16	usActualHeight;
 	INT32		iOldMercPopUpBoxId = iMercPopUpBox;
 
@@ -1594,6 +1618,7 @@ void DisplayTextForSpeckVideoPopUp(STR16 pString)
 
 void CheatToGetAll5Merc()
 {
+	PERFORMANCE_MARKER
 	LaptopSaveInfo.guiNumberOfMercPaymentsInDays += 20;
 
 /*
@@ -1608,6 +1633,7 @@ void CheatToGetAll5Merc()
 
 BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 {
+	PERFORMANCE_MARKER
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 	UINT8	ubCnt;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
@@ -1891,6 +1917,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 
 BOOLEAN IsAnyMercMercsHired( )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubMercID;
 	UINT8	i;
 
@@ -1909,6 +1936,7 @@ BOOLEAN IsAnyMercMercsHired( )
 
 BOOLEAN IsAnyMercMercsDead()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT8 ubMercID;
 
@@ -1926,6 +1954,7 @@ BOOLEAN IsAnyMercMercsDead()
 
 UINT8 NumberOfMercMercsDead()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT8	ubNumDead = 0;
 	UINT8	ubMercID;
@@ -1945,6 +1974,7 @@ UINT8 NumberOfMercMercsDead()
 
 UINT8	CountNumberOfMercMercsHired()
 {
+	PERFORMANCE_MARKER
 	UINT8	ubMercID;
 	UINT8	i;
 	UINT8	ubCount=0;
@@ -1965,6 +1995,7 @@ UINT8	CountNumberOfMercMercsHired()
 
 UINT8	CountNumberOfMercMercsWhoAreDead()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT8	ubCount=0;
 	UINT8	ubMercID;
@@ -1989,6 +2020,7 @@ UINT8	CountNumberOfMercMercsWhoAreDead()
 //Mouse Call back for the pop up text box
 void MercSiteSubTitleRegionCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -2001,6 +2033,7 @@ void MercSiteSubTitleRegionCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 void RemoveSpeckPopupTextBox()
 {
+	PERFORMANCE_MARKER
 	if( iMercPopUpBox == -1 )
 		return;
 
@@ -2020,6 +2053,7 @@ void RemoveSpeckPopupTextBox()
 
 void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
 {
+	PERFORMANCE_MARKER
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
 	//if the players is in good finacial standing
@@ -2094,6 +2128,7 @@ void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
 
 BOOLEAN IsMercMercAvailable( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	//loop through the array of mercs
@@ -2114,6 +2149,7 @@ BOOLEAN IsMercMercAvailable( UINT8 ubMercID )
 
 BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage()
 {
+	PERFORMANCE_MARKER
 	//if the merc came from the hire screen
 	if( gfJustHiredAMercMerc )
 	{
@@ -2141,6 +2177,7 @@ BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage()
 
 BOOLEAN ShouldSpeckSayAQuote()
 {
+	PERFORMANCE_MARKER
 	//if we are entering from anywhere except a sub page, and we should say the opening quote
 	if( gfJustEnteredMercSite && gubArrivedFromMercSubSite == MERC_CAME_FROM_OTHER_PAGE )
 	{
@@ -2189,6 +2226,7 @@ BOOLEAN ShouldSpeckSayAQuote()
 
 void HandleSpeckIdleConversation( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	static UINT32	uiLastTime=0;
 	UINT32	uiCurTime = GetJA2Clock();
 	INT16		sLeastSaidQuote;
@@ -2230,6 +2268,7 @@ void HandleSpeckIdleConversation( BOOLEAN fReset )
 
 INT16	GetRandomQuoteThatHasBeenSaidTheLeast( )
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 	INT16	sSmallestNumber=255;
 
@@ -2254,6 +2293,7 @@ INT16	GetRandomQuoteThatHasBeenSaidTheLeast( )
 
 void IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue )
 {
+	PERFORMANCE_MARKER
 	UINT8	cnt;
 
 	for( cnt=0; cnt<MERC_NUMBER_OF_RANDOM_QUOTES; cnt++)
@@ -2272,6 +2312,7 @@ void IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue )
 
 void StopSpeckFromTalking( )
 {
+	PERFORMANCE_MARKER
 	if( giVideoSpeckFaceIndex == -1 )
 		return;
 
@@ -2285,6 +2326,7 @@ void StopSpeckFromTalking( )
 
 BOOLEAN	HasLarryRelapsed()
 {
+	PERFORMANCE_MARKER
 	return( CheckFact( FACT_LARRY_CHANGED, 0 ) );
 }
 
@@ -2292,6 +2334,7 @@ BOOLEAN	HasLarryRelapsed()
 //Gets Called on each enter into laptop.
 void EnterInitMercSite()
 {
+	PERFORMANCE_MARKER
 	gfFirstTimeIntoMERCSiteSinceEnteringLaptop = TRUE;
 	gubCurMercIndex = 0;
 }
@@ -2300,6 +2343,7 @@ void EnterInitMercSite()
 
 BOOLEAN ShouldTheMercSiteServerGoDown()
 {
+	PERFORMANCE_MARKER
 	UINT32	uiDay = GetWorldDay();
 
 	// If the merc site has never gone down, the first new merc has shown ( which shows the player is using the site ), 
@@ -2323,6 +2367,7 @@ BOOLEAN ShouldTheMercSiteServerGoDown()
 
 void GetMercSiteBackOnline()
 {
+	PERFORMANCE_MARKER
 	//Add an email telling the user the site is back up
 	AddEmail( MERC_NEW_SITE_ADDRESS, MERC_NEW_SITE_ADDRESS_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin(), -1 );
 
@@ -2332,6 +2377,7 @@ void GetMercSiteBackOnline()
 
 void DrawMercVideoBackGround()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiMercVideoPopupBackground);
@@ -2344,6 +2390,7 @@ void DrawMercVideoBackGround()
 
 void DisableMercSiteButton()
 {
+	PERFORMANCE_MARKER
 	if( iMercPopUpBox != -1 )
 	{
 		ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
@@ -2352,6 +2399,7 @@ void DisableMercSiteButton()
 
 BOOLEAN CanMercQuoteBeSaid( UINT32 uiQuoteID )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fRetVal = TRUE;
 
 	//switch onb the quote being said, if hes plugging a merc that has already been hired, dont say it
@@ -2424,6 +2472,7 @@ BOOLEAN CanMercQuoteBeSaid( UINT32 uiQuoteID )
 
 void InitializeNumDaysMercArrive()
 {
+	PERFORMANCE_MARKER
 /*
 	LaptopSaveInfo.gbNumDaysTillFirstMercArrives = MERC_NUM_DAYS_TILL_FIRST_MERC_AVAILABLE;
 	LaptopSaveInfo.gbNumDaysTillSecondMercArrives = MERC_NUM_DAYS_TILL_SECOND_MERC_AVAILABLE;
@@ -2435,12 +2484,14 @@ void InitializeNumDaysMercArrive()
 
 void MakeBiffAwayForCoupleOfDays()
 {
+	PERFORMANCE_MARKER
 	gMercProfiles[ BIFF ].uiDayBecomesAvailable = Random( 2 ) + 2;
 }
 
 
 BOOLEAN AreAnyOfTheNewMercsAvailable()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT8	ubMercID;
 
@@ -2461,6 +2512,7 @@ BOOLEAN AreAnyOfTheNewMercsAvailable()
 
 void ShouldAnyNewMercMercBecomeAvailable()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fNewMercAreAvailable = FALSE;
 
 	//Kaiden: Added this if test to make sure that the "New Mercs Available"
@@ -2536,6 +2588,7 @@ void ShouldAnyNewMercMercBecomeAvailable()
 
 BOOLEAN CanMercBeAvailableYet( UINT8 ubMercToCheck )
 {
+	PERFORMANCE_MARKER
 	//if the merc is already available
 	if( gConditionsForMercAvailability[ ubMercToCheck ].ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex )
 		return( FALSE );
@@ -2556,6 +2609,7 @@ BOOLEAN CanMercBeAvailableYet( UINT8 ubMercToCheck )
 
 void NewMercsAvailableAtMercSiteCallBack( )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSendEmail=FALSE;
 //	if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == BUBBA )
 	{
@@ -2639,6 +2693,7 @@ void NewMercsAvailableAtMercSiteCallBack( )
 //used for older saves
 void CalcAproximateAmountPaidToSpeck()
 {
+	PERFORMANCE_MARKER
 	UINT8	i, ubMercID;
 
 	//loop through all the mercs and tally up the amount speck should have been paid
@@ -2655,6 +2710,7 @@ void CalcAproximateAmountPaidToSpeck()
 // CJC Dec 1 2002: calculate whether any MERC characters have been used at all
 UINT32 CalcMercDaysServed()
 {
+	PERFORMANCE_MARKER
 	UINT8	i, ubMercID;
 	UINT32 uiDaysServed = 0;
 

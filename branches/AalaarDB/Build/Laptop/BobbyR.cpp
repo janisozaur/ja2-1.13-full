@@ -189,11 +189,13 @@ void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed);
 
 void GameInitBobbyR()
 {
+	PERFORMANCE_MARKER
 }
 
 
 BOOLEAN EnterBobbyR()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8 i;
 
@@ -266,6 +268,7 @@ BOOLEAN EnterBobbyR()
 
 void ExitBobbyR()
 {
+	PERFORMANCE_MARKER
 
 	DeleteVideoObjectFromIndex(guiBobbyName);
 	DeleteVideoObjectFromIndex(guiPlaque);
@@ -289,11 +292,13 @@ void ExitBobbyR()
 
 void HandleBobbyR()
 {
+	PERFORMANCE_MARKER
 	HandleBobbyRUnderConstructionAni( FALSE );
 }
 
 void RenderBobbyR()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	HVOBJECT hStorePlaqueHandle;
 	
@@ -385,6 +390,7 @@ void RenderBobbyR()
 
 BOOLEAN InitBobbyRWoodBackground()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	// load the Wood bacground graphic and add it
@@ -397,6 +403,7 @@ BOOLEAN InitBobbyRWoodBackground()
 
 BOOLEAN DeleteBobbyRWoodBackground()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiWoodBackground);
 	return(TRUE);
 }
@@ -404,6 +411,7 @@ BOOLEAN DeleteBobbyRWoodBackground()
 
 BOOLEAN DrawBobbyRWoodBackground()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hWoodBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -428,6 +436,7 @@ BOOLEAN DrawBobbyRWoodBackground()
 
 BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArray, MOUSE_REGION *MouseRegion)
 {
+	PERFORMANCE_MARKER
 	UINT8 i,ubCount=0;
 
 	for(i=0; i<ubNumerRegions; i++)
@@ -448,6 +457,7 @@ BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArr
 
 BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Region)
 {
+	PERFORMANCE_MARKER
 	UINT8 i;
 
 	for(i=0; i<ubNumberRegions; i++)
@@ -460,7 +470,8 @@ BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Regi
 
 
 void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -481,6 +492,7 @@ void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 /*
 BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackground)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -505,6 +517,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 
 void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	static UINT32	uiLastTime=1;
 	static UINT16	usCount=0;
@@ -548,6 +561,7 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 
 void InitBobbyRayInventory()
 {
+	PERFORMANCE_MARKER
 	//Initializes which NEW items can be bought at Bobby Rays
 	InitBobbyRayNewInventory();
 
@@ -564,6 +578,7 @@ void InitBobbyRayInventory()
 
 BOOLEAN InitBobbyRayNewInventory()
 {
+	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
@@ -597,6 +612,7 @@ BOOLEAN InitBobbyRayNewInventory()
 
 BOOLEAN InitBobbyRayUsedInventory()
 {
+	PERFORMANCE_MARKER
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
 
@@ -634,6 +650,7 @@ BOOLEAN InitBobbyRayUsedInventory()
 
 void DailyUpdateOfBobbyRaysNewInventory()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usItemIndex;
 	BOOLEAN fPrevElig;
@@ -701,6 +718,7 @@ void DailyUpdateOfBobbyRaysNewInventory()
 
 void DailyUpdateOfBobbyRaysUsedInventory()
 {
+	PERFORMANCE_MARKER
 	INT16 i;
 	UINT16 usItemIndex;
 	BOOLEAN fPrevElig;
@@ -756,6 +774,7 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 //returns the number of items to order
 UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubItemsOrdered = 0;
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("HowManyBRItemsToOrder: item = %d",usItemIndex));
@@ -792,6 +811,7 @@ UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 u
 
 void OrderBobbyRItem(UINT16 usItemIndex)
 {
+	PERFORMANCE_MARKER
 	UINT32 uiArrivalTime;
 
 	//add the new item to the queue.	The new item will arrive in 'uiArrivalTime' minutes.
@@ -803,6 +823,7 @@ void OrderBobbyRItem(UINT16 usItemIndex)
 
 void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 {
+	PERFORMANCE_MARKER
 	INT16 sInventorySlot;
 	STORE_INVENTORY *pInventoryArray;
 	BOOLEAN fUsed;
@@ -851,6 +872,7 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 
 INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	INT16 i;
 
 	for(i = 0; i < LaptopSaveInfo.usInventoryListLength[fUsed]; i++)
@@ -869,6 +891,7 @@ INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemInd
 
 void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed)
 {
+	PERFORMANCE_MARKER
 	INT16 i;
 	UINT8 ubItemsSold;
 
@@ -895,6 +918,7 @@ void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed)
 
 void CancelAllPendingBRPurchaseOrders(void)
 {
+	PERFORMANCE_MARKER
 	INT16 i;
 
 	// remove all the BR-Order events off the event queue

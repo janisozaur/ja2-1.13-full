@@ -27,6 +27,7 @@ UINT8								gbSameAsDefaultSurfaceUsed[ NUMBEROFTILETYPES ];
 
 TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 {
+	PERFORMANCE_MARKER
 	// Add tile surface
 	PTILE_IMAGERY	pTileSurf = NULL;	
 	VOBJECT_DESC	VObjectDesc;
@@ -140,6 +141,7 @@ TILE_IMAGERY *LoadTileSurface(	STR8	cFilename )
 
 void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 {
+	PERFORMANCE_MARKER
 	if ( pTileSurf->pStructureFileRef != NULL )
 	{
 		FreeStructureFile( pTileSurf->pStructureFileRef );
@@ -165,6 +167,7 @@ extern void GetRootName( STR8 pDestStr, const STR8 pSrcStr );
 
 void SetRaisedObjectFlag( STR8 cFilename, TILE_IMAGERY *pTileSurf )
 {
+	PERFORMANCE_MARKER
 	INT32 cnt = 0;
 	CHAR8	cRootFile[ 128 ];
 	CHAR8 ubRaisedObjectFiles[][80] =

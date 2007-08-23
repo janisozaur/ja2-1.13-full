@@ -61,11 +61,13 @@ void SelectLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 void GameInitAimLinks()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterAimLinks()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosY;
 	INT16						i;
@@ -105,6 +107,7 @@ BOOLEAN EnterAimLinks()
 
 void ExitAimLinks()
 {
+	PERFORMANCE_MARKER
 	INT16						i;
 
 	RemoveAimDefaults();
@@ -122,11 +125,13 @@ void ExitAimLinks()
 
 void HandleAimLinks()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderAimLinks()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawAimDefaults();
@@ -152,7 +157,8 @@ void RenderAimLinks()
 }
 
 void SelectLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}

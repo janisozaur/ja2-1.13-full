@@ -50,6 +50,7 @@ typedef struct
 static void XMLCALL
 RoamingStartElementHandle(void *userData, const XML_Char *name, const char **atts)
 {
+	PERFORMANCE_MARKER
 	RoamingParseData * pData = (RoamingParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -78,6 +79,7 @@ RoamingStartElementHandle(void *userData, const XML_Char *name, const char **att
 static void XMLCALL
 RoamingCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	RoamingParseData * pData = (RoamingParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -88,6 +90,7 @@ RoamingCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 RoamingEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	RoamingParseData * pData = (RoamingParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -126,6 +129,7 @@ RoamingEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInRoamingInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;

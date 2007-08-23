@@ -123,6 +123,7 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished();
 
 void EnterIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 //	UINT32 uiCnt;
 	VOBJECT_DESC	VObjectDesc;
 
@@ -169,6 +170,7 @@ void EnterIMPSkillTrait( void )
 
 void RenderIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	//render the metal background graphic
 	RenderProfileBackGround();
 
@@ -178,6 +180,7 @@ void RenderIMPSkillTrait( void )
 
 void ExitIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCnt;
 
 	DeleteVideoObjectFromIndex( guiIST_GreyGoldBox );
@@ -200,6 +203,7 @@ void ExitIMPSkillTrait( void )
 
 void HandleIMPSkillTrait( void )
 {
+	PERFORMANCE_MARKER
 	if( gfIST_Redraw )
 	{
 		RenderIMPSkillTrait( );
@@ -211,6 +215,7 @@ void HandleIMPSkillTrait( void )
 
 void AddImpSkillTraitButtons()
 {
+	PERFORMANCE_MARKER
 	INT32 iCnt = 0;
 	UINT16 usPosX, usPosY;
 
@@ -281,6 +286,7 @@ void AddImpSkillTraitButtons()
 
 void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -297,6 +303,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 
 	//if we are DONE and are just reviewing
@@ -388,6 +395,7 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 
 INT8	CountNumSkillStraitsSelected( BOOLEAN fIncludeNoneSkill )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 	INT8	iNumberSkills=0;
 	UINT32	uiUpperLimit;
@@ -416,6 +424,7 @@ INT8	CountNumSkillStraitsSelected( BOOLEAN fIncludeNoneSkill )
 
 void HandleSkillTraitButtonStates( )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 
 	for( uiCnt=0; uiCnt<IMP_SKILL_TRAITS__NUMBER_SKILLS; uiCnt++ )
@@ -440,6 +449,7 @@ void HandleSkillTraitButtonStates( )
 
 void IMPSkillTraitDisplaySkills()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT16 usPosX, usPosY;
 	UINT16 usBoxPosX, usBoxPosY;
@@ -510,6 +520,7 @@ void IMPSkillTraitDisplaySkills()
 
 void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -543,6 +554,7 @@ void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 {
+	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__ATTRIBUTES )
 	{
@@ -560,6 +572,7 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 
 INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 {
+	PERFORMANCE_MARKER
 	INT8		bExtraPoints=10;
 	INT8		bNumSkills=0;
 
@@ -601,6 +614,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 
 BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 {
+	PERFORMANCE_MARKER
 	if( uiTrait == IMP_SKILL_TRAITS__MARTIAL_ARTS && !fCharacterIsMale )
 		return( TRUE );
 	else
@@ -610,6 +624,7 @@ BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 
 void AddSelectedSkillsToSkillsList()
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCnt;
 
 	//loop through all the buttons and reset them
@@ -684,6 +699,7 @@ void AddSelectedSkillsToSkillsList()
 
 void HandleLastSelectedTraits( INT8 bNewTrait )
 {
+	PERFORMANCE_MARKER
 	//if there are none selected
 	if( gbLastSelectedTraits[ 0 ] == -1 )
 	{

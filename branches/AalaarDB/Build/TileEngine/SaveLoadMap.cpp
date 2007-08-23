@@ -48,12 +48,14 @@ BOOLEAN ModifyWindowStatus( UINT32 uiMapIndex );
 
 void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
 {
+	PERFORMANCE_MARKER
 	gfApplyChangesToTempFile = fAddToMap;
 }
 
 
 BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
+	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten;
@@ -97,6 +99,7 @@ BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, IN
 
 BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 {
+	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
@@ -319,6 +322,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 
 void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -348,12 +352,14 @@ void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 void AddStructFromMapTempFileToMap( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	AddStructToTailCommon( uiMapIndex, usIndex, TRUE );
 }
 
 
 void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -382,11 +388,13 @@ void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 void AddObjectFromMapTempFileToMap( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	AddObjectToHead( uiMapIndex, usIndex );
 }
 
 void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -415,6 +423,7 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -444,6 +453,7 @@ void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 
 void RemoveSavedStructFromMap( UINT32 uiMapIndex, UINT16 usIndex )
 {
+	PERFORMANCE_MARKER
 	RemoveStruct( uiMapIndex, usIndex );
 }
 
@@ -452,6 +462,7 @@ void RemoveSavedStructFromMap( UINT32 uiMapIndex, UINT16 usIndex )
 
 void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT16	cnt;
 	STRUCTURE * pStructure;
@@ -554,6 +565,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 // The BloodInfo is saved in the bottom byte and the smell info in the upper byte
 void AddBloodOrSmellFromMapTempFileToMap( MODIFY_MAP *pMap )
 {
+	PERFORMANCE_MARKER
 	gpWorldLevelData[ pMap->sGridNo ].ubBloodInfo = (UINT8)pMap->usImageType;
 
 	//if the blood and gore option IS set, add blood
@@ -573,6 +585,7 @@ void AddBloodOrSmellFromMapTempFileToMap( MODIFY_MAP *pMap )
 
 BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
+	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten;
@@ -621,6 +634,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 {
+	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
@@ -682,6 +696,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 
 void SetSectorsRevealedBit( UINT16	usMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16	usByteNumber;
 	UINT8		ubBitNumber;
 
@@ -695,6 +710,7 @@ void SetSectorsRevealedBit( UINT16	usMapIndex )
 
 void SetMapRevealedStatus()
 {
+	PERFORMANCE_MARKER
 	UINT16	usByteCnt;
 	UINT8		ubBitCnt;
 	UINT16	usMapIndex;
@@ -734,6 +750,7 @@ void SetMapRevealedStatus()
 
 void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *pCurrent=NULL;
 	INT8			bLevel;
 	UINT8			ubWallOrientation;
@@ -770,6 +787,7 @@ void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -795,6 +813,7 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -820,6 +839,7 @@ void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -845,6 +865,7 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 
 void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ	)
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -870,6 +891,7 @@ void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, IN
 
 void AddExitGridToMapTempFile( INT16 sGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 
 	if( !gfApplyChangesToTempFile )
@@ -897,6 +919,7 @@ void AddExitGridToMapTempFile( INT16 sGridNo, EXITGRID *pExitGrid, INT16 sSector
 
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
 {
+	PERFORMANCE_MARKER
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
@@ -990,6 +1013,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 void AddOpenableStructStatusToMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -1004,6 +1028,7 @@ void AddOpenableStructStatusToMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened )
 
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 {
+	PERFORMANCE_MARKER
 	MODIFY_MAP Map;
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -1016,6 +1041,7 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 
 BOOLEAN ModifyWindowStatus( UINT32 uiMapIndex )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *		pStructure;
 
 	pStructure = FindStructure( (INT16) uiMapIndex, STRUCTURE_WALLNWINDOW );
@@ -1030,6 +1056,7 @@ BOOLEAN ModifyWindowStatus( UINT32 uiMapIndex )
 
 void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 	STRUCTURE * pBase;
 	BOOLEAN			fStatusOnTheMap;
@@ -1066,7 +1093,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 		// Adjust visiblity of any item pools here....
 	// ATE: Nasty bug here - use base gridno for structure for items!
 	// since items always drop to base gridno in AddItemToPool
-		if ( GetItemPool( sBaseGridNo, &pItemPool, 0 ) )
+		if ( GetItemPoolFromGround( sBaseGridNo, &pItemPool ) )
 		{
 			if ( fOpened )
 			{
@@ -1089,6 +1116,7 @@ void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened 
 
 BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, INT16 sGridNo, BOOLEAN fChangeToOpen )
 {
+	PERFORMANCE_MARKER
 //	STRUCTURE * pStructure;
 //	MODIFY_MAP Map;
 	CHAR8		zMapName[ 128 ];

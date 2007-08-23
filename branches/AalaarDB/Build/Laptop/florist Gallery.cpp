@@ -89,17 +89,20 @@ void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber );
 
 void GameInitFloristGallery()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void EnterInitFloristGallery()
 {
+	PERFORMANCE_MARKER
 	memset( &FloristGallerySubPagesVisitedFlag, 0, 4);
 }
 
 
 BOOLEAN EnterFloristGallery()
 {
+	PERFORMANCE_MARKER
 	InitFloristDefaults();
 
 	//the next previous buttons
@@ -130,6 +133,7 @@ BOOLEAN EnterFloristGallery()
 
 void ExitFloristGallery()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	RemoveFloristDefaults();
@@ -145,6 +149,7 @@ void ExitFloristGallery()
 
 void HandleFloristGallery()
 {
+	PERFORMANCE_MARKER
 	if( gfRedrawFloristGallery )
 	{
 		gfRedrawFloristGallery=FALSE;
@@ -160,6 +165,7 @@ void HandleFloristGallery()
 
 void RenderFloristGallery()
 {
+	PERFORMANCE_MARKER
 	DisplayFloristDefaults();
 
 	DrawTextToScreen(sFloristGalleryText[FLORIST_GALLERY_CLICK_TO_ORDER], FLOR_GALLERY_TITLE_TEXT_X, FLOR_GALLERY_TITLE_TEXT_Y, FLOR_GALLERY_TITLE_TEXT_WIDTH, FLOR_GALLERY_TITLE_FONT, FLOR_GALLERY_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -175,6 +181,7 @@ void RenderFloristGallery()
 
 void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -207,6 +214,7 @@ void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -249,6 +257,7 @@ void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -278,6 +287,7 @@ void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN InitFlowerButtons()
 {
+	PERFORMANCE_MARKER
 	UINT16 i,j, count;
 	UINT16 usPosY;
 	char		sTemp[40];
@@ -340,6 +350,7 @@ BOOLEAN InitFlowerButtons()
 
 void DeleteFlowerButtons()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	for(i=0; i<gubPrevNumberOfFlowers; i++)
@@ -359,6 +370,7 @@ void DeleteFlowerButtons()
 
 BOOLEAN DisplayFloralDescriptions()
 {
+	PERFORMANCE_MARKER
 	CHAR16		sTemp[ 640 ];
 	UINT32	uiStartLoc=0, i;
 	UINT16	usPosY, usPrice;
@@ -397,6 +409,7 @@ BOOLEAN DisplayFloralDescriptions()
 
 void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber )
 {
+	PERFORMANCE_MARKER
 	fLoadPendingFlag = TRUE;
 
 	//there are 3 flowers per page

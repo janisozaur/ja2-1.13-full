@@ -71,6 +71,7 @@ void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 
 BOOLEAN LoadGameSettings()
 {
+	PERFORMANCE_MARKER
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
 	char gameSettingsFilePath[MAX_PATH];
@@ -174,6 +175,7 @@ BOOLEAN LoadGameSettings()
 
 BOOLEAN	SaveGameSettings()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32	uiNumBytesWritten;
 	char gameSettingsFilePath[MAX_PATH];
@@ -216,6 +218,7 @@ BOOLEAN	SaveGameSettings()
 
 void InitGameSettings()
 {
+	PERFORMANCE_MARKER
 	memset( &gGameSettings, 0, sizeof( GAME_SETTINGS ) );
 
 	//Init the Game Settings
@@ -288,6 +291,7 @@ void InitGameSettings()
 
 void InitGameOptions()
 {
+	PERFORMANCE_MARKER
 	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
 
 	//Init the game options
@@ -296,7 +300,6 @@ void InitGameOptions()
 	gGameOptions.fAirStrikes		= FALSE;
 	gGameOptions.ubGameStyle		= STYLE_SCIFI;
 	gGameOptions.ubDifficultyLevel	= DIF_LEVEL_MEDIUM;
-	gGameOptions.ubInventorySystem	= INVENTORY_OLD;
 	//gGameOptions.fTurnTimeLimit	= FALSE;
 	
 	gGameOptions.fIronManMode		= FALSE;
@@ -322,6 +325,7 @@ extern INT32 CountEmptyIMPSlots( INT8 iSex );
 // Snap: Read options from an INI file in the default of custom Data directory
 void LoadGameExternalOptions()
 {
+	PERFORMANCE_MARKER
 	//Kaiden: Setting Ja2_Options.ini file to be read
 	CIniReader iniReader(GAME_EXTERNAL_OPTIONS_FILE);
 
@@ -515,6 +519,7 @@ void LoadGameExternalOptions()
 
 	//Lalien: Game starting time
 	gGameExternalOptions.iGameStartingTime			= iniReader.ReadInteger("JA2 Gameplay Settings", "GAME_STARTING_TIME", NUM_SEC_IN_HOUR);
+
 	
 	// WANNE: Check for invalid starting time
 	if (gGameExternalOptions.iGameStartingTime < 0 || gGameExternalOptions.iGameStartingTime >= NUM_SEC_IN_DAY)
@@ -527,7 +532,7 @@ void LoadGameExternalOptions()
 	}
 
 	gGameExternalOptions.iFirstArrivalDelay			= iniReader.ReadInteger("JA2 Gameplay Settings", "FIRST_ARRIVAL_DELAY", 6 * NUM_SEC_IN_HOUR);
-	
+		
 	//################# Settings valid on game start only end ##################
 
 
@@ -711,6 +716,7 @@ void LoadGameExternalOptions()
 
 BOOLEAN GetCDLocation( )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
 	UINT32	uiRetVal=0;
@@ -774,6 +780,7 @@ BOOLEAN GetCDLocation( )
 
 BOOLEAN GetCDromDriveLetter( STR8	pString )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiSize=0;
 	UINT8		ubCnt=0;
 	CHAR8		zDriveLetters[512];
@@ -875,6 +882,7 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 
 BOOLEAN CheckIfGameCdromIsInCDromDrive()
 {
+	PERFORMANCE_MARKER
 	CHAR8		zVolumeNameBuffer[512];
 	UINT32	uiVolumeSerialNumber=0;
 	UINT32	uiMaxComponentLength=0;
@@ -936,6 +944,7 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
 
 BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -957,6 +966,7 @@ BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 
 void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		guiPreviousOptionScreen = GAME_SCREEN;
@@ -975,6 +985,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiDriveType;
 	CHAR8		zRootName[512];
 
@@ -999,6 +1010,7 @@ BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 
 void DisplayGameSettings( )
 {
+	PERFORMANCE_MARKER
 	//Display the version number
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s: %s (%S)", pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 
@@ -1047,6 +1059,7 @@ void DisplayGameSettings( )
 
 BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1068,6 +1081,7 @@ BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiCheckFlag;
 
 	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
@@ -1082,6 +1096,7 @@ BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
 
 BOOLEAN	CanGameBeSaved()
 {
+	PERFORMANCE_MARKER
 	//if the iron man mode is on
 	if( gGameOptions.fIronManMode )
 	{

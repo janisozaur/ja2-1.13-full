@@ -380,6 +380,7 @@ INT16 gsRoadMacroStartIndex[ NUM_ROAD_MACROS ];
 //the particular macro ID.
 void InitializeRoadMacros()
 {
+	PERFORMANCE_MARKER
 	INT16 i, end;
 	INT16 sMacro = 0;
 	end = sizeof( gRoadMacros ) / 4;
@@ -403,6 +404,7 @@ void InitializeRoadMacros()
 //gridnos).
 void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT16 usTileIndex;
 	i = gsRoadMacroStartIndex[ iMacroID ];
@@ -423,6 +425,7 @@ void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID )
 //equivalent macro.
 void ReplaceObsoleteRoads()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 iMacro;
 	LEVELNODE *pObject;

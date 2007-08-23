@@ -30,6 +30,7 @@ void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPPersonalityEntrance( void )
 {
+	PERFORMANCE_MARKER
 	// create buttons needed
 	CreateIMPPersonalityEntranceButtons( );
 
@@ -39,6 +40,7 @@ void EnterIMPPersonalityEntrance( void )
 
 void RenderIMPPersonalityEntrance( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -52,6 +54,7 @@ void RenderIMPPersonalityEntrance( void )
 
 void ExitIMPPersonalityEntrance( void )
 {
+	PERFORMANCE_MARKER
 	// destroy buttons needed
 	DestroyIMPPersonalityEntranceButtons( );
 
@@ -63,6 +66,7 @@ void ExitIMPPersonalityEntrance( void )
 
 void HandleIMPPersonalityEntrance( void )
 {
+	PERFORMANCE_MARKER
 
 	
 
@@ -72,6 +76,7 @@ void HandleIMPPersonalityEntrance( void )
 
 void CreateIMPPersonalityEntranceButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create the buttons needed for the IMP personality Page
 
 	// ths begin button
@@ -95,6 +100,7 @@ void CreateIMPPersonalityEntranceButtons( void )
 
 void DestroyIMPPersonalityEntranceButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP personality page
 	
 	// the begin button
@@ -107,6 +113,7 @@ void DestroyIMPPersonalityEntranceButtons( void )
 
 void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP Begin Screen done button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

@@ -188,6 +188,7 @@ FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, 
 
 UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile )
 {
+	PERFORMANCE_MARKER
 	// adds Files item to player's log(Files List), returns unique id number of it
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
 	UINT32 uiId=0;
@@ -211,6 +212,7 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 }
 void GameInitFiles( )
 {
+	PERFORMANCE_MARKER
 
 	if (	(FileExists( FILES_DAT_FILE ) == TRUE ) )
 	{
@@ -227,6 +229,7 @@ void GameInitFiles( )
 
 void EnterFiles()
 {
+	PERFORMANCE_MARKER
 	
 	// load grpahics for files system
 	LoadFiles( );
@@ -264,6 +267,7 @@ void EnterFiles()
 
 void ExitFiles()
 {
+	PERFORMANCE_MARKER
 
 	// write files list out to disk
 	OpenAndWriteFilesFile( );
@@ -282,11 +286,13 @@ void ExitFiles()
 
 void HandleFiles()
 {
+	PERFORMANCE_MARKER
 	CheckForUnreadFiles( );
 }
 
 void RenderFiles()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 
@@ -318,6 +324,7 @@ void RenderFiles()
 
 void RenderFilesBackGround( void )
 {
+	PERFORMANCE_MARKER
 	// render generic background for file system
 	HVOBJECT hHandle;
 	
@@ -338,6 +345,7 @@ void RenderFilesBackGround( void )
 
 void DrawFilesTitleText( void )
 {
+	PERFORMANCE_MARKER
 	// setup the font stuff
 	SetFont(FILES_TITLE_FONT);
 	SetFontForeground(FONT_WHITE);
@@ -355,6 +363,7 @@ void DrawFilesTitleText( void )
 
 BOOLEAN LoadFiles( void )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load files video objects into memory
 
@@ -384,6 +393,7 @@ BOOLEAN LoadFiles( void )
 
 void RemoveFiles( void )
 {
+	PERFORMANCE_MARKER
 
 	// delete files video objects from memory
  
@@ -399,6 +409,7 @@ void RemoveFiles( void )
 
 UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat ,STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiId=0;
 	FilesUnitPtr pFiles=pFilesListHead;
 	
@@ -453,7 +464,7 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 	pFiles->uiIdNumber = uiId;
 	pFilesListHead = pFiles;
 		pFiles->ubFormat=ubFormat;
-		pFiles -> fRead = fRead;
+		pFiles->fRead = fRead;
 	}
 
 	// null out ptr's to picture file names
@@ -491,6 +502,7 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 
 void OpenAndReadFilesFile( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will open and read in data to the finance list
 	HWFILE hFileHandle;
 	UINT8 ubCode;
@@ -557,6 +569,7 @@ void OpenAndReadFilesFile( void )
 
 BOOLEAN OpenAndWriteFilesFile( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will open and write out data from the finance list
 	HWFILE hFileHandle;
 	FilesUnitPtr pFilesList=pFilesListHead;
@@ -612,6 +625,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 
 void ClearFilesList( void )
 {
+	PERFORMANCE_MARKER
 	// remove each element from list of transactions
 	FilesUnitPtr pFilesList=pFilesListHead;
 	FilesUnitPtr pFilesNode=pFilesList;
@@ -644,6 +658,7 @@ void ClearFilesList( void )
 
 void DrawFilesListBackGround( void )
 {
+	PERFORMANCE_MARKER
 	// proceudre will draw the background for the list of files
 	 // HVOBJECT hHandle;
 
@@ -658,6 +673,7 @@ void DrawFilesListBackGround( void )
 
 void DisplayFilesList( void )
 {
+	PERFORMANCE_MARKER
 	// this function will run through the list of files of files and display the 'sender' 
 	FilesUnitPtr pFilesList=pFilesListHead; 
 	INT32 iCounter=0;
@@ -697,6 +713,7 @@ void DisplayFilesList( void )
 
 void DisplayFileMessage( void )
 {
+	PERFORMANCE_MARKER
 	
 	
 	
@@ -722,6 +739,7 @@ void DisplayFileMessage( void )
 
 void InitializeFilesMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	// init mouseregions
 	for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
@@ -738,6 +756,7 @@ void InitializeFilesMouseRegions( void )
 
 void RemoveFilesMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
 	{
@@ -746,7 +765,8 @@ void RemoveFilesMouseRegions( void )
 }
 
 void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	INT32 iFileId = -1;
 	INT32 iCounter = 0;
 	FilesUnitPtr pFilesList=pFilesListHead; 
@@ -802,6 +822,7 @@ void FilesBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DisplayFormattedText( void )
 {
+	PERFORMANCE_MARKER
 	FilesUnitPtr pFilesList=pFilesListHead; 
 	
 	UINT16 usFirstWidth = 0;
@@ -1009,6 +1030,7 @@ BOOLEAN DisplayFormattedText( void )
 
 BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	CHAR16 sString[2048];
 	FileStringPtr pTempString = NULL ;
@@ -1156,7 +1178,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 				fGoingOffCurrentPage = TRUE;
 				}
 
-				pTempString = pTempString ->Next;
+				pTempString = pTempString->Next;
 							
 				if( pTempString == NULL )
 				{
@@ -1238,6 +1260,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 void AddStringToFilesList( STR16 pString )
 {
+	PERFORMANCE_MARKER
 
 	FileStringPtr pFileString;
 	FileStringPtr pTempString = pFileStringList;
@@ -1247,22 +1270,22 @@ void AddStringToFilesList( STR16 pString )
 	
 	
 	// alloc string and copy
-	pFileString-> pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
+	pFileString->pString = (STR16) MemAlloc( ( wcslen( pString ) * sizeof(CHAR16) ) + 2 );
 	wcscpy( pFileString->pString, pString );
 	pFileString->pString[ wcslen( pString ) ] = 0;
 
 	// set Next to NULL
 
-	pFileString -> Next = NULL;
+	pFileString->Next = NULL;
 	if( pFileStringList == NULL )
 	{
 		pFileStringList = pFileString;
 	}
 	else
 	{
-		while( pTempString -> Next )
+		while( pTempString->Next )
 		{
-			pTempString = pTempString -> Next;
+			pTempString = pTempString->Next;
 		}
 		pTempString->Next = pFileString;
 	}
@@ -1274,6 +1297,7 @@ void AddStringToFilesList( STR16 pString )
 
 void ClearFileStringList( void )
 {
+	PERFORMANCE_MARKER
 	FileStringPtr pFileString;
 	FileStringPtr pDeleteFileString;
 
@@ -1283,10 +1307,10 @@ void ClearFileStringList( void )
 	{
 		return;
 	}
-	while( pFileString -> Next)
+	while( pFileString->Next)
 	{
 		pDeleteFileString = pFileString;
-		pFileString = pFileString -> Next;
+		pFileString = pFileString->Next;
 		MemFree( pDeleteFileString );
 	}
 
@@ -1301,6 +1325,7 @@ void ClearFileStringList( void )
 
 void CreateButtonsForFilesPage( void )
 {
+	PERFORMANCE_MARKER
 	// will create buttons for the files page
 	giFilesPageButtonsImage[0]=	LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
 	giFilesPageButtons[0] = QuickCreateButton( giFilesPageButtonsImage[0], PREVIOUS_FILE_PAGE_BUTTON_X,	PREVIOUS_FILE_PAGE_BUTTON_Y,
@@ -1322,6 +1347,7 @@ void CreateButtonsForFilesPage( void )
 
 void DeleteButtonsForFilesPage( void )
 {
+	PERFORMANCE_MARKER
 
 	// destroy buttons for the files page
 
@@ -1338,6 +1364,7 @@ void DeleteButtonsForFilesPage( void )
 // callbacks
 void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1384,6 +1411,7 @@ void BtnPreviousFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1427,6 +1455,7 @@ void BtnNextFilePageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void HandleFileViewerButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	// handle state of email viewer buttons
 
 	if( iHighLightFileLine == -1 )
@@ -1472,23 +1501,25 @@ void HandleFileViewerButtonStates( void )
 
 FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
 {
+	PERFORMANCE_MARKER
 	FileRecordWidthPtr pTempRecord = NULL;
 
 	// allocs and inits a width info record for the multipage file viewer...this will tell the procedure that does inital computation on which record is the start of the current page
 	// how wide special records are ( ones that share space with pictures )
 	pTempRecord = (FileRecordWidthPtr) MemAlloc( sizeof( FileRecordWidth ) );
 
-	pTempRecord -> Next = NULL;
-	pTempRecord -> iRecordNumber = iRecordNumber;
-	pTempRecord -> iRecordWidth = iRecordWidth;
-	pTempRecord -> iRecordHeightAdjustment = iRecordHeightAdjustment;
-	pTempRecord -> ubFlags = ubFlags;
+	pTempRecord->Next = NULL;
+	pTempRecord->iRecordNumber = iRecordNumber;
+	pTempRecord->iRecordWidth = iRecordWidth;
+	pTempRecord->iRecordHeightAdjustment = iRecordHeightAdjustment;
+	pTempRecord->ubFlags = ubFlags;
 
 	return ( pTempRecord );
 }
 
 FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 {
+	PERFORMANCE_MARKER
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pRecordListHead = NULL;
@@ -1502,13 +1533,13 @@ FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 	pRecordListHead = pTempRecord;
 	
 	// next record
-//	pTempRecord -> Next = CreateRecordWidth( 43, 200,0, 0 );
-	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
+//	pTempRecord->Next = CreateRecordWidth( 43, 200,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	// and the next..
-//	pTempRecord -> Next = CreateRecordWidth( 45, 200,0, 0 );
-	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_3_WIDTH, 200,0, 0 );
+//	pTempRecord->Next = CreateRecordWidth( 45, 200,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( FILES_COUNTER_3_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	return( pRecordListHead );
@@ -1517,6 +1548,7 @@ FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 
 FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 {
+	PERFORMANCE_MARKER
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pRecordListHead = NULL;
@@ -1529,10 +1561,10 @@ FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 	pRecordListHead = pTempRecord;
 	
 	// next record
-	pTempRecord -> Next = CreateRecordWidth( 5, 170,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( 5, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
-	pTempRecord -> Next = CreateRecordWidth( 6, 170,0, 0 );
+	pTempRecord->Next = CreateRecordWidth( 6, 170,0, 0 );
 	pTempRecord = pTempRecord->Next;
 	
 	
@@ -1543,6 +1575,7 @@ FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 
 void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 {
+	PERFORMANCE_MARKER
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pDeleteRecord = NULL;
 
@@ -1555,13 +1588,13 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 		return;
 	}
 
-	while( pTempRecord -> Next )
+	while( pTempRecord->Next )
 	{
 		// set up delete record
 		pDeleteRecord = pTempRecord;
 
 		// move to next record
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
 
 		MemFree( pDeleteRecord );
 	}
@@ -1579,6 +1612,7 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 
 void OpenFirstUnreadFile( void )
 {
+	PERFORMANCE_MARKER
 	// open the first unread file in the list
 	INT32 iCounter = 0;
 	FilesUnitPtr pFilesList=pFilesListHead; 
@@ -1606,6 +1640,7 @@ void OpenFirstUnreadFile( void )
 
 void CheckForUnreadFiles( void )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	fStatusOfNewFileFlag = fNewFilesInFileViewer;
 
 	// willc heck for any unread files and set flag if any
@@ -1617,7 +1652,7 @@ void CheckForUnreadFiles( void )
 	while( pFilesList )
 	{
 		// unread?...if so, set flag
-		if( pFilesList -> fRead == FALSE )
+		if( pFilesList->fRead == FALSE )
 		{
 			fNewFilesInFileViewer = TRUE;
 		}
@@ -1634,6 +1669,7 @@ void CheckForUnreadFiles( void )
 
 BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 	CHAR16 sString[2048];
@@ -1678,7 +1714,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 		while( pLocatorString != pTempString )
 		{
 			iCounter++;
-			pLocatorString = pLocatorString -> Next;
+			pLocatorString = pLocatorString->Next;
 		}
 
 
@@ -1687,7 +1723,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 		{
 			uiFlags = IAN_WRAP_NO_SHADOW;
 					// copy over string 
-			wcscpy( sString, pTempString -> pString );
+			wcscpy( sString, pTempString->pString );
 			
 			if( sString[ 0 ] == 0 )
 			{
@@ -1737,7 +1773,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 				fGoingOffCurrentPage = TRUE;
 			}
 
-			pTempString = pTempString ->Next;
+			pTempString = pTempString->Next;
 						
 			if( ( pTempString == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
 			{
@@ -1807,6 +1843,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 // add a file about this terrorist
 BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 
 	for( iCounter = 1; iCounter < 7; iCounter++ )

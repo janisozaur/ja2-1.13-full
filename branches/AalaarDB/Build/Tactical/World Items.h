@@ -15,14 +15,14 @@
 //Kaiden: This constant is to flag items that an enemy drops when they die.
 #define	WORLD_ITEM_DROPPED_FROM_ENEMY								0x0800
 
-//typedef struct
-struct WORLDITEM
+class OLD_WORLDITEM_101
 {
-	BOOLEAN				fExists;
+public:
+	BOOLEAN					fExists;
 	INT16					sGridNo;
 	UINT8					ubLevel;
-	OBJECTTYPE		o;
-	UINT16				usFlags;
+	OLD_OBJECTTYPE_101		oldObject;
+	UINT16					usFlags;
 	INT8					bRenderZHeightAboveLevel;
 	INT8					bVisible;
 	UINT8					ubNonExistChance;	
@@ -73,7 +73,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
-void LoadWorldItemsFromMap( INT8 **hBuffer );
+void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorMapVersion );
 void SaveWorldItemsToMap( HWFILE fp );
 
 void TrashWorldItems();

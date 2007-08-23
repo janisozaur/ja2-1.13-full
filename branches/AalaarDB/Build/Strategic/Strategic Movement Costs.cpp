@@ -47,6 +47,7 @@ typedef struct
 static void XMLCALL
 smctableStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 	//FILE *outfile = fopen("smc.log", "at");
 
@@ -126,6 +127,7 @@ smctableStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 smctableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -137,6 +139,7 @@ smctableCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 smctableEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	smctableParseData * pData = (smctableParseData *) userData;
 
 	//FILE *outfile = fopen("C:/JA2/debug.log", "a");
@@ -345,6 +348,7 @@ smctableEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInStrategicMovementCosts(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -401,6 +405,7 @@ BOOLEAN ReadInStrategicMovementCosts(STR fileName)
 
 BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 {
+	PERFORMANCE_MARKER
 	// Lets output the current Strategic map format using the XML structure I've devised.
 	FILE *outfile = fopen(fileName, "wt");
 
@@ -626,6 +631,7 @@ BOOLEAN WriteInStrategicMovementCosts(STR fileName)
 //
 UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubDirection = 0;
 	INT16 sDifference = 0;
 
@@ -656,6 +662,7 @@ UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 
 BOOLEAN SectorIsImpassable( INT16 sSector )
 {
+	PERFORMANCE_MARKER
 	// returns true if the sector is impassable in all directions
 	return( SectorInfo[ sSector ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == GROUNDBARRIER ||
 		SectorInfo[ sSector ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == EDGEOFWORLD );
@@ -1237,6 +1244,7 @@ UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_AR
 /*
 void InitStrategicRowA()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_A1 ];
@@ -1370,6 +1378,7 @@ void InitStrategicRowA()
 
 void InitStrategicRowB()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_B1 ];
@@ -1503,6 +1512,7 @@ void InitStrategicRowB()
 
 void InitStrategicRowC()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_C1 ];
@@ -1636,6 +1646,7 @@ void InitStrategicRowC()
 
 void InitStrategicRowD()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_D1 ];
@@ -1769,6 +1780,7 @@ void InitStrategicRowD()
 
 void InitStrategicRowE()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_E1 ];
@@ -1902,6 +1914,7 @@ void InitStrategicRowE()
 
 void InitStrategicRowF()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_F1 ];
@@ -2035,6 +2048,7 @@ void InitStrategicRowF()
 
 void InitStrategicRowG()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_G1 ];
@@ -2168,6 +2182,7 @@ void InitStrategicRowG()
 
 void InitStrategicRowH()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_H1 ];
@@ -2301,6 +2316,7 @@ void InitStrategicRowH()
 
 void InitStrategicRowI()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_I1 ];
@@ -2434,6 +2450,7 @@ void InitStrategicRowI()
 
 void InitStrategicRowJ()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_J1 ];
@@ -2567,6 +2584,7 @@ void InitStrategicRowJ()
 
 void InitStrategicRowK()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_K1 ];
@@ -2700,6 +2718,7 @@ void InitStrategicRowK()
 
 void InitStrategicRowL()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_L1 ];
@@ -2833,6 +2852,7 @@ void InitStrategicRowL()
 
 void InitStrategicRowM()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_M1 ];
@@ -2966,6 +2986,7 @@ void InitStrategicRowM()
 
 void InitStrategicRowN()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_N1 ];
@@ -3099,6 +3120,7 @@ void InitStrategicRowN()
 
 void InitStrategicRowO()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_O1 ];
@@ -3232,6 +3254,7 @@ void InitStrategicRowO()
 
 void InitStrategicRowP()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 
 	pSector = &SectorInfo[ SEC_P1 ];
@@ -3366,6 +3389,7 @@ void InitStrategicRowP()
 */
 BOOLEAN InitStrategicMovementCosts()
 {
+	PERFORMANCE_MARKER
 	char fileName[MAX_PATH];
 
 	// need to be here

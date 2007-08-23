@@ -79,6 +79,7 @@ extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPFinish( void )
 {
+	PERFORMANCE_MARKER
 
 
 	// load graphic for portrait
@@ -100,6 +101,7 @@ void EnterIMPFinish( void )
 
 void RenderIMPFinish( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 	
@@ -114,6 +116,7 @@ void RenderIMPFinish( void )
 
 void ExitIMPFinish( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove buttons for IMP finish screen
 	DeleteIMPFinishButtons( );
@@ -127,6 +130,7 @@ void ExitIMPFinish( void )
 
 void HandleIMPFinish( void )
 {
+	PERFORMANCE_MARKER
 	
 	
 	return;
@@ -136,6 +140,7 @@ void HandleIMPFinish( void )
 
 void CreateIMPFinishButtons( void )
 {
+	PERFORMANCE_MARKER
 	CHAR16 sString[ 128 ];
 
 	// this function will create the buttons needed for th IMP about us page
@@ -251,6 +256,7 @@ void CreateIMPFinishButtons( void )
 
 void DeleteIMPFinishButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function destroys the buttons needed for the IMP about Us Page
 
 	// the back	button
@@ -284,6 +290,7 @@ void DeleteIMPFinishButtons( void )
 
 void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -306,6 +313,7 @@ void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -334,6 +342,7 @@ void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 	static BOOLEAN fAnimateFlag = FALSE;
@@ -394,6 +403,7 @@ void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -425,6 +435,7 @@ void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -459,6 +470,7 @@ void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for Main Page Begin Profiling
 
@@ -497,6 +509,7 @@ void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
 WDS - Unused?
 BOOLEAN RenderCharProfileFinishFace( void )
 {
+	PERFORMANCE_MARKER
 	// render the portrait of the current picture
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hHandle;
@@ -632,6 +645,7 @@ BOOLEAN RenderCharProfileFinishFace( void )
 */
 void RenderCharFullName( void )
 {
+	PERFORMANCE_MARKER
 
 	CHAR16 sString[ 64 ];
 	INT16 sX, sY;
@@ -652,6 +666,7 @@ void RenderCharFullName( void )
 
 BOOLEAN LoadCharacterPortrait( void )
 {
+	PERFORMANCE_MARKER
 	// this function will load the character's portrait, to be used on portrait button
 	VOBJECT_DESC	VObjectDesc;
 
@@ -666,6 +681,7 @@ BOOLEAN LoadCharacterPortrait( void )
 
 void DestroyCharacterPortrait( void )
 {
+	PERFORMANCE_MARKER
 	// remove the portrait that was loaded by loadcharacterportrait
 	DeleteVideoObjectFromIndex( guiCHARACTERPORTRAIT );
 
@@ -676,6 +692,7 @@ void DestroyCharacterPortrait( void )
 
 void FinishMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{

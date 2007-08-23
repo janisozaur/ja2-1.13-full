@@ -17,7 +17,7 @@ typedef struct Screens
 } Screens;
 
 // These defines are used as flags for each screen state. The only legal transition of states is
-// SCR_INACTIVE -> SCR_INITIALIZING -> SCR_ACTIVE -> SCR_SHUTTING_DOWN -> SCR_INACTIVE ... Anything else
+// SCR_INACTIVE->SCR_INITIALIZING->SCR_ACTIVE->SCR_SHUTTING_DOWN->SCR_INACTIVE ... Anything else
 // will cause the system to yak.
 
 #define SCR_INACTIVE		 0x00

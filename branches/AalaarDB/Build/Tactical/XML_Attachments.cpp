@@ -61,6 +61,7 @@ typedef attachmentParseData;
 static void XMLCALL 
 attachmentStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	attachmentParseData * pData = (attachmentParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -102,6 +103,7 @@ attachmentStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 attachmentCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	attachmentParseData * pData = (attachmentParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -115,6 +117,7 @@ attachmentCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 attachmentEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	attachmentParseData * pData = (attachmentParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -162,6 +165,7 @@ attachmentEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAttachmentStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -223,6 +227,7 @@ BOOLEAN ReadInAttachmentStats(STR fileName)
 }
 BOOLEAN WriteAttachmentStats()
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

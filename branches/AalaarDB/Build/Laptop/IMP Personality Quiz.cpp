@@ -109,6 +109,7 @@ void NextQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason );
 
 void EnterIMPPersonalityQuiz( void )
 {
+	PERFORMANCE_MARKER
 
 	// void answers out the quiz
 	memset( &iQuizAnswerList, -1, sizeof( INT32 ) * MAX_NUMBER_OF_IMP_QUESTIONS );
@@ -138,6 +139,7 @@ void EnterIMPPersonalityQuiz( void )
 
 void RenderIMPPersonalityQuiz( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 	
@@ -157,6 +159,7 @@ void RenderIMPPersonalityQuiz( void )
 
 void ExitIMPPersonalityQuiz( void )
 {
+	PERFORMANCE_MARKER
 
 
 	// set previous to current, we want it's buttons gone!
@@ -180,6 +183,7 @@ void ExitIMPPersonalityQuiz( void )
 
 void HandleIMPPersonalityQuiz( void )
 {
+	PERFORMANCE_MARKER
 	
 	// create/destroy buttons for	questions, if needed
 	CreateIMPPersonalityQuizAnswerButtons( );
@@ -198,6 +202,7 @@ void HandleIMPPersonalityQuiz( void )
 
 void CreateIMPPersonalityQuizButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create the buttons needed for the IMP personality quiz Page
 	
 	
@@ -266,6 +271,7 @@ void CreateIMPPersonalityQuizButtons( void )
 
 void DestroyIMPersonalityQuizButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP personality quiz page
 	
 	// the done button
@@ -290,6 +296,7 @@ void DestroyIMPersonalityQuizButtons( void )
 
 void CreateIMPPersonalityQuizAnswerButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create the buttons for the personality quiz answer selections
 	
 	if( IMP_PERSONALITY_QUIZ != iCurrentImpPage )
@@ -363,6 +370,7 @@ void CreateIMPPersonalityQuizAnswerButtons( void )
 
 void DestroyPersonalityQuizButtons( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this function will destroy the buttons used in the previous personality question 
 	// destroy old buttons
@@ -402,6 +410,7 @@ void DestroyPersonalityQuizButtons( void )
 
 void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 {
+	PERFORMANCE_MARKER
 	// will add iNumberofbuttons to the answer button list
 	INT32 iCounter = 0;
 	CHAR16 sString[ 32 ];
@@ -498,6 +507,7 @@ void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 
 void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	for(iCounter = 0; iCounter < iNumberOfButtons; iCounter++)
 	{
@@ -513,6 +523,7 @@ void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
 
 void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -550,6 +561,7 @@ void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -585,6 +597,7 @@ void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -621,6 +634,7 @@ void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -658,6 +672,7 @@ void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -694,6 +709,7 @@ void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -731,6 +747,7 @@ void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -767,6 +784,7 @@ void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -802,6 +820,7 @@ void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -837,6 +856,7 @@ void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -876,6 +896,7 @@ void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -930,6 +951,7 @@ void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -959,6 +981,7 @@ void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ResetQuizAnswerButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	INT32 iCounter = 0;
 	INT32 iCnt = 0;
@@ -1008,6 +1031,7 @@ void ResetQuizAnswerButtons( void )
 
 void CompileQuestionsInStatsAndWhatNot( void )
 {
+	PERFORMANCE_MARKER
 	// one BIG case/switch statement to determine what values are added where
 	INT32 iCurrentQuestion = 0;
 	
@@ -1389,6 +1413,7 @@ void CompileQuestionsInStatsAndWhatNot( void )
 
 void BltAnswerIndents( INT32 iNumberOfIndents )
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter = 0;
 	
 	
@@ -1571,6 +1596,7 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 
 void PrintQuizQuestionNumber( void )
 {
+	PERFORMANCE_MARKER
 	// this function will print the number of the current question and the numebr of questions
 
 	CHAR16 sString[ 10 ];
@@ -1596,6 +1622,7 @@ void PrintQuizQuestionNumber( void )
 
 void CheckStateOfTheConfirmButton( void )
 {
+	PERFORMANCE_MARKER
 	// will check the state of the confirm button, should it be enabled or disabled?
 	if( iCurrentAnswer == -1 )
 	{
@@ -1608,12 +1635,13 @@ void CheckStateOfTheConfirmButton( void )
 
 void HandleIMPQuizKeyBoard( void )
 {
+	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 	BOOLEAN fSkipFrame = FALSE;
 
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while( ( DequeueEvent(&InputEvent) == TRUE )	)
 	{
@@ -1725,6 +1753,7 @@ void HandleIMPQuizKeyBoard( void )
 
 void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	if( giCurrentPersonalityQuizQuestion >= giMaxPersonalityQuizQuestion )
 	{
 		DisableButton( giNextQuestionButton );
@@ -1747,6 +1776,7 @@ void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void )
 
 void MoveAheadAQuestion( void )
 {
+	PERFORMANCE_MARKER
 
 	// move ahead a question in the personality question list
 	if( giCurrentPersonalityQuizQuestion < giMaxPersonalityQuizQuestion )
@@ -1779,6 +1809,7 @@ void MoveAheadAQuestion( void )
 
 void MoveBackAQuestion( void )
 {
+	PERFORMANCE_MARKER
 	if( giCurrentPersonalityQuizQuestion > 0 )
 	{
 		giCurrentPersonalityQuizQuestion--;
@@ -1807,6 +1838,7 @@ void MoveBackAQuestion( void )
 
 void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
 {
+	PERFORMANCE_MARKER
 	if( ( giCurrentPersonalityQuizQuestion <= giMaxPersonalityQuizQuestion ) && ( iAnswerNumber != -1 ) )
 	{
 		// reset buttons
@@ -1823,6 +1855,7 @@ void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
 
 void PreviousQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 	return;
 
@@ -1844,6 +1877,7 @@ void PreviousQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason )
 
 void NextQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 	return;
 

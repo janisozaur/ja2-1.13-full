@@ -158,6 +158,7 @@ index 25, indestructable metal
 // Function operating on a structure tile
 UINT8 FilledTilePositions( DB_STRUCTURE_TILE * pTile )
 {
+	PERFORMANCE_MARKER
 	UINT8				ubFilled = 0, ubShapeValue;
 	INT8				bLoopX, bLoopY, bLoopZ;
 
@@ -185,7 +186,8 @@ UINT8 FilledTilePositions( DB_STRUCTURE_TILE * pTile )
 //
 
 void FreeStructureFileRef( STRUCTURE_FILE_REF * pFileRef )
-{ // Frees all of the memory associated with a file reference, including
+{
+	PERFORMANCE_MARKER // Frees all of the memory associated with a file reference, including
 	// the file reference structure itself
 
 	UINT16										usLoop;
@@ -218,7 +220,8 @@ void FreeStructureFileRef( STRUCTURE_FILE_REF * pFileRef )
 }
 
 void FreeAllStructureFiles( void )
-{ // Frees all of the structure database!
+{
+	PERFORMANCE_MARKER // Frees all of the structure database!
 	STRUCTURE_FILE_REF *	pFileRef;
 	STRUCTURE_FILE_REF *	pNextRef;
 
@@ -233,6 +236,7 @@ void FreeAllStructureFiles( void )
 
 BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
 {
+	PERFORMANCE_MARKER
 	CHECKF( pStructureFile );
 
 	// unlink the file ref
@@ -261,7 +265,8 @@ BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
 
 BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32 * puiStructureDataSize )
 //UINT8 **ppubStructureData, UINT32 * puiDataSize, STRUCTURE_FILE_HEADER * pHeader )
-{ // Loads a structure file's data as a honking chunk o' memory 
+{
+	PERFORMANCE_MARKER // Loads a structure file's data as a honking chunk o' memory 
 	HWFILE										hInput;
 	STRUCTURE_FILE_HEADER			Header;				
 	UINT32										uiBytesRead;
@@ -359,7 +364,8 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 }
 
 BOOLEAN CreateFileStructureArrays( STRUCTURE_FILE_REF * pFileRef, UINT32 uiDataSize )
-{ // Based on a file chunk, creates all the dynamic arrays for the 
+{
+	PERFORMANCE_MARKER // Based on a file chunk, creates all the dynamic arrays for the 
 	// structure definitions contained within
 
 	UINT8 *										pCurrent;
@@ -429,7 +435,8 @@ BOOLEAN CreateFileStructureArrays( STRUCTURE_FILE_REF * pFileRef, UINT32 uiDataS
 }
 
 STRUCTURE_FILE_REF * LoadStructureFile( STR szFileName )
-{ // NB should be passed in expected number of structures so we can check equality
+{
+	PERFORMANCE_MARKER // NB should be passed in expected number of structures so we can check equality
 	UINT32								uiDataSize = 0;
 	BOOLEAN								fOk;
 	STRUCTURE_FILE_REF *	pFileRef;
@@ -472,7 +479,8 @@ STRUCTURE_FILE_REF * LoadStructureFile( STR szFileName )
 
 
 STRUCTURE * CreateStructureFromDB( DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubTileNum )
-{ // Creates a STRUCTURE struct for one tile of a structure
+{
+	PERFORMANCE_MARKER // Creates a STRUCTURE struct for one tile of a structure
 	STRUCTURE	*						pStructure;
 	DB_STRUCTURE *				pDBStructure;
 	DB_STRUCTURE_TILE	*		pTile;
@@ -522,7 +530,8 @@ STRUCTURE * CreateStructureFromDB( DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubT
 }
 
 BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUCTURE_REF * pDBStructureRef, UINT8 ubTileIndex, INT16 sExclusionID, BOOLEAN fIgnorePeople )
-{ // Verifies whether a structure is blocked from being added to the map at a particular point
+{
+	PERFORMANCE_MARKER // Verifies whether a structure is blocked from being added to the map at a particular point
 	DB_STRUCTURE *	pDBStructure;
 	DB_STRUCTURE_TILE	**	ppTile;
 	STRUCTURE *			pExistingStructure;
@@ -756,6 +765,7 @@ BOOLEAN OkayToAddStructureToTile( INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUC
 
 BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople )
 {
+	PERFORMANCE_MARKER
 	UINT8									ubLoop;
 	INT16									sCubeOffset;
 
@@ -799,11 +809,13 @@ BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_ST
 
 BOOLEAN OkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID )
 {
+	PERFORMANCE_MARKER
 	return( InternalOkayToAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, sExclusionID, (BOOLEAN)(sExclusionID == IGNORE_PEOPLE_STRUCTURE_ID) ) );
 }
 
 BOOLEAN AddStructureToTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure, UINT16 usStructureID )
-{ // adds a STRUCTURE to a MAP_ELEMENT (adds part of a structure to a location on the map)
+{
+	PERFORMANCE_MARKER // adds a STRUCTURE to a MAP_ELEMENT (adds part of a structure to a location on the map)
 	STRUCTURE *		pStructureTail;
 
 	CHECKF( pMapElement );
@@ -829,7 +841,8 @@ BOOLEAN AddStructureToTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure, U
 
 
 STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, LEVELNODE * pLevelNode )
-{ // Adds a complete structure to the world at a location plus all other locations covered by the structure
+{
+	PERFORMANCE_MARKER // Adds a complete structure to the world at a location plus all other locations covered by the structure
 	INT16									sGridNo;
 	STRUCTURE **					ppStructure;
 	STRUCTURE *						pBaseStructure;
@@ -995,6 +1008,7 @@ STRUCTURE * InternalAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRU
 
 BOOLEAN AddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
 	pStructure = InternalAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, (LEVELNODE *) pLevelN );
@@ -1010,7 +1024,8 @@ BOOLEAN AddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * 
 //
 
 void DeleteStructureFromTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure )
-{ // removes a STRUCTURE element at a particular location from the world
+{
+	PERFORMANCE_MARKER // removes a STRUCTURE element at a particular location from the world
 	// put location pointer in tile
 	if (pMapElement->pStructureHead == pStructure)
 	{
@@ -1050,7 +1065,8 @@ void DeleteStructureFromTile( MAP_ELEMENT * pMapElement, STRUCTURE * pStructure 
 }
 
 BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
-{ // removes all of the STRUCTURE elements for a structure from the world
+{
+	PERFORMANCE_MARKER // removes all of the STRUCTURE elements for a structure from the world
 	MAP_ELEMENT *					pBaseMapElement;
 	STRUCTURE *						pBaseStructure;
 	DB_STRUCTURE_TILE	**	ppTile;
@@ -1121,7 +1137,8 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 }
 
 STRUCTURE * InternalSwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fFlipSwitches, BOOLEAN fStoreInMap )
-{ // switch structure 
+{
+	PERFORMANCE_MARKER // switch structure 
 	LEVELNODE *				pLevelNode;
 	LEVELNODE *				pShadowNode;
 	STRUCTURE *				pBaseStructure;
@@ -1207,22 +1224,26 @@ STRUCTURE * InternalSwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructu
 }
 
 STRUCTURE * SwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure )
-{	
+{
+	PERFORMANCE_MARKER	
 	return( InternalSwapStructureForPartner( sGridNo, pStructure, TRUE, FALSE ) );
 }
 
 STRUCTURE * SwapStructureForPartnerWithoutTriggeringSwitches( INT16 sGridNo, STRUCTURE * pStructure )
 {
+	PERFORMANCE_MARKER
 	return( InternalSwapStructureForPartner( sGridNo, pStructure, FALSE, FALSE ) );
 }
 
 STRUCTURE * SwapStructureForPartnerAndStoreChangeInMap( INT16 sGridNo, STRUCTURE * pStructure )
 {
+	PERFORMANCE_MARKER
 	return( InternalSwapStructureForPartner( sGridNo, pStructure, TRUE, TRUE ) );
 }
 
 STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags )
-{ // finds a structure that matches any of the given flags
+{
+	PERFORMANCE_MARKER // finds a structure that matches any of the given flags
 	STRUCTURE * pCurrent;
 
 	if( sGridNo > WORLD_MAX-1 ) //bug fix for win98 crash when traveling between sectors
@@ -1242,6 +1263,7 @@ STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags )
 
 STRUCTURE * FindNextStructure( STRUCTURE * pStructure, UINT32 fFlags )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE * pCurrent;
 
 	CHECKF( pStructure );
@@ -1258,7 +1280,8 @@ STRUCTURE * FindNextStructure( STRUCTURE * pStructure, UINT32 fFlags )
 }
 
 STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID )
-{ // finds a structure that matches any of the given flags
+{
+	PERFORMANCE_MARKER // finds a structure that matches any of the given flags
 	STRUCTURE * pCurrent;
 
 	pCurrent =	gpWorldLevelData[sGridNo].pStructureHead;
@@ -1274,7 +1297,8 @@ STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID )
 }
 
 STRUCTURE * FindBaseStructure( STRUCTURE * pStructure )
-{ // finds the base structure for any structure
+{
+	PERFORMANCE_MARKER // finds the base structure for any structure
 	CHECKF( pStructure );
 	if (pStructure->fFlags & STRUCTURE_BASE_TILE)
 	{
@@ -1284,7 +1308,8 @@ STRUCTURE * FindBaseStructure( STRUCTURE * pStructure )
 }
 
 STRUCTURE * FindNonBaseStructure( INT16 sGridNo, STRUCTURE * pStructure )
-{ // finds a non-base structure in a location
+{
+	PERFORMANCE_MARKER // finds a non-base structure in a location
 	CHECKF( pStructure );
 	if (!(pStructure->fFlags & STRUCTURE_BASE_TILE))
 	{	// error!
@@ -1296,6 +1321,7 @@ STRUCTURE * FindNonBaseStructure( INT16 sGridNo, STRUCTURE * pStructure )
 
 INT16 GetBaseTile( STRUCTURE * pStructure )
 {
+	PERFORMANCE_MARKER
 	if (pStructure == NULL)
 	{
 		return( -1 );
@@ -1311,7 +1337,8 @@ INT16 GetBaseTile( STRUCTURE * pStructure )
 }
 
 INT8 StructureHeight( STRUCTURE * pStructure )
-{ // return the height of an object from 1-4
+{
+	PERFORMANCE_MARKER // return the height of an object from 1-4
 	UINT8				ubLoopX, ubLoopY;
 	PROFILE *		pShape;
 	UINT8				ubShapeValue;
@@ -1361,6 +1388,7 @@ INT8 StructureHeight( STRUCTURE * pStructure )
 
 INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *		pCurrent;
 	INT8					iHeight;
 	INT8					iTallest = 0;
@@ -1393,6 +1421,7 @@ INT8 GetTallestStructureHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 
 INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *		pCurrent;
 	INT8					iHeight;
 	INT8					iTallest = 0;
@@ -1443,7 +1472,8 @@ INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof )
 
 
 INT8 StructureBottomLevel( STRUCTURE * pStructure )
-{ // return the bottom level of an object, from 1-4
+{
+	PERFORMANCE_MARKER // return the bottom level of an object, from 1-4
 	UINT8				ubLoopX, ubLoopY;
 	PROFILE *		pShape;
 	UINT8				ubShapeValue;
@@ -1484,6 +1514,7 @@ INT8 StructureBottomLevel( STRUCTURE * pStructure )
 
 BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pubLevel1, UINT8 * pubLevel2, UINT8 * pubLevel3 )
 {
+	PERFORMANCE_MARKER
 	UINT8				ubLoopX, ubLoopY;
 	UINT8				ubShapeValue;
 	PROFILE *		pShape;
@@ -1533,7 +1564,8 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 }
 
 BOOLEAN DamageStructure( STRUCTURE * pStructure, UINT8 ubDamage, UINT8 ubReason, INT16 sGridNo, INT16 sX, INT16 sY, UINT8 ubOwner )
-{	// do damage to a structure; returns TRUE if the structure should be removed
+{
+	PERFORMANCE_MARKER	// do damage to a structure; returns TRUE if the structure should be removed
 
 	STRUCTURE			*pBase;
 	UINT8					ubArmour;
@@ -1651,6 +1683,7 @@ BOOLEAN DamageStructure( STRUCTURE * pStructure, UINT8 ubDamage, UINT8 ubReason,
 #define LINE_HEIGHT 20
 void DebugStructurePage1( void )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *		pStructure;
 	STRUCTURE *		pBase;
 	//LEVELNODE *		pLand;
@@ -1834,6 +1867,7 @@ void DebugStructurePage1( void )
 
 BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructureFileRef, BOOLEAN fFromAnimation, INT16 sSTIStartIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32					uiLoop;
 	UINT8						ubLoop2;
 	UINT8						ubNumIncreasing = 0;
@@ -2149,12 +2183,14 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 
 BOOLEAN InitStructureDB( void )
 {
+	PERFORMANCE_MARKER
 	gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 	return( TRUE );
 }
 
 BOOLEAN FiniStructureDB( void )
 {
+	PERFORMANCE_MARKER
 	gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 	return( TRUE );
 }
@@ -2326,6 +2362,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 
 UINT8 StructureFlagToType( UINT32 uiFlag )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubLoop;
 	UINT32		uiBit = STRUCTURE_GENERIC;
 
@@ -2342,6 +2379,7 @@ UINT8 StructureFlagToType( UINT32 uiFlag )
 
 UINT32 StructureTypeToFlag( UINT8 ubType )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiFlag = 0x1;
 	
 	uiFlag = uiFlag << ubType;
@@ -2350,6 +2388,7 @@ UINT32 StructureTypeToFlag( UINT8 ubType )
 
 STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE *	pCurrent;
 	UINT32		uiTypeFlag;
 
@@ -2371,6 +2410,7 @@ STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallO
 
 UINT32 GetStructureOpenSound( STRUCTURE * pStructure, BOOLEAN fClose )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiSoundID;
 
 	switch( pStructure->pDBStructureRef->pDBStructure->ubArmour )

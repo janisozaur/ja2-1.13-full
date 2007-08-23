@@ -122,6 +122,7 @@ extern void PayOffSkyriderDebtIfAny( );
 
 NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
 	NPCQuoteInfo	* pFileData;
@@ -192,12 +193,14 @@ void RevertToOriginalQuoteFile( UINT8 ubNPC )
 
 void BackupOriginalQuoteFile( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	gpBackupNPCQuoteInfoArray[ ubNPC ] = gpNPCQuoteInfoArray[ ubNPC ];
 	gpNPCQuoteInfoArray[ubNPC] = NULL;
 }
 
 BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN			fLoadFile = FALSE;
 
 	if ( ubNPC == ROBOT )
@@ -246,7 +249,7 @@ BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 			if ( ubNPC != NO_PROFILE )
 			{
 				SOLDIERTYPE * pNull = NULL;
-				pNull->bLife = 0; // crash!
+				pNull->stats.bLife = 0; // crash!
 			}
 #else
 
@@ -270,7 +273,7 @@ BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 		{
 			// crash!
 			SOLDIERTYPE * pNull = NULL;
-			pNull->bLife = 0;
+			pNull->stats.bLife = 0;
 		}
 	}
 
@@ -283,6 +286,7 @@ BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
 
 BOOLEAN ReloadQuoteFile( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	if (gpNPCQuoteInfoArray[ubNPC] != NULL)
 	{
 		MemFree( gpNPCQuoteInfoArray[ubNPC] );
@@ -299,6 +303,7 @@ BOOLEAN ReloadQuoteFile( UINT8 ubNPC )
 
 BOOLEAN ReloadQuoteFileIfLoaded( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	if (gpNPCQuoteInfoArray[ubNPC] != NULL)
 	{
 		MemFree( gpNPCQuoteInfoArray[ubNPC] );
@@ -313,6 +318,7 @@ BOOLEAN ReloadQuoteFileIfLoaded( UINT8 ubNPC )
 
 BOOLEAN RefreshNPCScriptRecord( UINT8 ubNPC, UINT8 ubRecord )
 {
+	PERFORMANCE_MARKER
 	UINT8							ubLoop;
 	NPCQuoteInfo *		pNewArray;
 
@@ -362,6 +368,7 @@ BOOLEAN RefreshNPCScriptRecord( UINT8 ubNPC, UINT8 ubRecord )
 
 NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 {
+	PERFORMANCE_MARKER
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
 	NPCQuoteInfo	* pFileData;
@@ -401,6 +408,7 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 
 BOOLEAN EnsureCivQuoteFileLoaded( UINT8 ubIndex )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN			fLoadFile = FALSE;
 
 	if (gpCivQuoteInfoArray[ubIndex] == NULL)
@@ -422,6 +430,7 @@ BOOLEAN EnsureCivQuoteFileLoaded( UINT8 ubIndex )
 
 BOOLEAN ReloadCivQuoteFile( UINT8 ubIndex )
 {
+	PERFORMANCE_MARKER
 	if (gpCivQuoteInfoArray[ubIndex] != NULL)
 	{
 		MemFree( gpCivQuoteInfoArray[ubIndex] );
@@ -432,6 +441,7 @@ BOOLEAN ReloadCivQuoteFile( UINT8 ubIndex )
 
 BOOLEAN ReloadCivQuoteFileIfLoaded( UINT8 ubIndex )
 {
+	PERFORMANCE_MARKER
 	if (gpCivQuoteInfoArray[ubIndex] != NULL)
 	{
 		MemFree( gpCivQuoteInfoArray[ubIndex] );
@@ -446,6 +456,7 @@ BOOLEAN ReloadCivQuoteFileIfLoaded( UINT8 ubIndex )
 
 void ShutdownNPCQuotes( void )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubLoop;
 
 	for ( ubLoop = 0; ubLoop < NUM_PROFILES; ubLoop++ )
@@ -481,6 +492,7 @@ void ShutdownNPCQuotes( void )
 
 BOOLEAN ReloadAllQuoteFiles( void )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubProfile, ubLoop;
 
 	for ( ubProfile = FIRST_RPC; ubProfile < GASTON; ubProfile++ )
@@ -510,6 +522,7 @@ BOOLEAN ReloadAllQuoteFiles( void )
 
 void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord )
 {
+	PERFORMANCE_MARKER
 	if ( EnsureQuoteFileLoaded( ubNPC ) )
 	{
 		gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ].fFlags |= QUOTE_FLAG_SAID;
@@ -518,6 +531,7 @@ void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord )
 
 INT32 CalcThreateningEffectiveness( UINT8 ubMerc )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE * pSoldier;
 	INT32					iStrength, iDeadliness;
 
@@ -552,6 +566,7 @@ INT32 CalcThreateningEffectiveness( UINT8 ubMerc )
 
 UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 {
+	PERFORMANCE_MARKER
 	INT32 iWillingness;
 	INT32	iPersonalVal, iTownVal, iApproachVal;
 	INT32 iEffectiveLeadership;
@@ -604,6 +619,7 @@ UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 
 void ApproachedForFirstTime( MERCPROFILESTRUCT * pNPCProfile, INT8 bApproach )
 {
+	PERFORMANCE_MARKER
 	UINT8		ubLoop; 
 	UINT32	uiTemp;
 
@@ -621,6 +637,7 @@ void ApproachedForFirstTime( MERCPROFILESTRUCT * pNPCProfile, INT8 bApproach )
 
 UINT8 NPCConsiderTalking( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRecord, NPCQuoteInfo * pNPCQuoteInfoArray, NPCQuoteInfo ** ppResultQuoteInfo, UINT8 *pubQuoteNum )
 {
+	PERFORMANCE_MARKER
 	// This function returns the opinion level required of the "most difficult" quote 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile=NULL;
@@ -771,6 +788,7 @@ UINT8 NPCConsiderTalking( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRec
 
 UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj, NPCQuoteInfo * pNPCQuoteInfoArray, NPCQuoteInfo ** ppResultQuoteInfo, UINT8 *pubQuoteNum )
 {
+	PERFORMANCE_MARKER
 	// This function returns the opinion level required of the "most difficult" quote 
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
 	MERCPROFILESTRUCT *		pNPCProfile;
@@ -1149,6 +1167,7 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 
 BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8 *pQuoteValue )
 {
+	PERFORMANCE_MARKER
 	switch( ubNPC )
 	{
 		// handle for STEVE and VINCE
@@ -1250,6 +1269,7 @@ BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UIN
 
 UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo * pNPCQuoteInfoArray )
 {
+	PERFORMANCE_MARKER
 	//This function looks at a quote and determines if conditions for it have been met.
 	// Returns 0 if none , 1 if one is found
 	MERCPROFILESTRUCT *		pNPCProfile;
@@ -1446,6 +1466,7 @@ UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuo
 
 void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGridNo, INT16 sNewGridNo )
 {
+	PERFORMANCE_MARKER
 	UINT8							ubFirstQuoteRecord, ubLastQuoteRecord, ubLoop;
 	NPCQuoteInfo *		pNPCQuoteInfo;
 
@@ -1467,6 +1488,7 @@ void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGrid
 
 void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16 sNewGridNo )
 {
+	PERFORMANCE_MARKER
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -1484,6 +1506,7 @@ void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16
 
 void ResetOncePerConvoRecords( NPCQuoteInfo * pNPCQuoteInfoArray )
 {
+	PERFORMANCE_MARKER
 	UINT8									ubLoop;
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
@@ -1497,6 +1520,7 @@ void ResetOncePerConvoRecords( NPCQuoteInfo * pNPCQuoteInfoArray )
 
 void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
 	{
 		// error!!!
@@ -1507,6 +1531,7 @@ void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC )
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubLoop;
 
 	if ( gWorldSectorX == 0 || gWorldSectorY == 0 )
@@ -1529,6 +1554,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 
 void ReturnItemToPlayerIfNecessary( UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo * pQuotePtr )
 {
+	PERFORMANCE_MARKER
 	OBJECTTYPE  *		pObj;
 	SOLDIERTYPE *		pSoldier;
 
@@ -1552,6 +1578,7 @@ void ReturnItemToPlayerIfNecessary( UINT8 ubMerc, INT8 bApproach, UINT32 uiAppro
 
 void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData )
 {
+	PERFORMANCE_MARKER
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
 	NPCQuoteInfo *				pNPCQuoteInfoArray=NULL;
@@ -1587,7 +1614,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 		}
 
 		// make sure civ is awake now
-		pNPC->fAIFlags &= (~AI_ASLEEP);
+		pNPC->aiData.fAIFlags &= (~AI_ASLEEP);
 	}
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -1874,11 +1901,11 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				if ( pQuotePtr->sActionData <= -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
@@ -2041,22 +2068,22 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				if ( pQuotePtr->sActionData < 0 && pQuotePtr->sActionData > -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) -(pQuotePtr->sActionData), ubRecordNum );					
 				}
 				else if ( pQuotePtr->sGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
 					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
-					ZEROTIMECOUNTER( pSoldier->AICounter );
-					if (pSoldier->bNextAction == AI_ACTION_WAIT)
+					ZEROTIMECOUNTER( pSoldier->timeCounters.AICounter );
+					if (pSoldier->aiData.bNextAction == AI_ACTION_WAIT)
 					{
-						pSoldier->bNextAction = AI_ACTION_NONE;
-						pSoldier->usNextActionData = 0;
+						pSoldier->aiData.bNextAction = AI_ACTION_NONE;
+						pSoldier->aiData.usNextActionData = 0;
 					}
 					NPCDoAction( ubNPC, (UINT16) (pQuotePtr->sActionData), ubRecordNum );					
 				}
@@ -2081,10 +2108,10 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					else
 					{
 						// turn off cowering
-						if ( pNPC->uiStatusFlags & SOLDIER_COWERING)
+						if ( pNPC->flags.uiStatusFlags & SOLDIER_COWERING)
 						{
-							//pNPC->uiStatusFlags &= ~SOLDIER_COWERING;
-							EVENT_InitNewSoldierAnim( pNPC, STANDING, 0 , FALSE );
+							//pNPC->flags.uiStatusFlags &= ~SOLDIER_COWERING;
+							pNPC->EVENT_InitNewSoldierAnim( STANDING, 0 , FALSE );
 						}
 
 						pSoldier->ubQuoteRecord = ubRecordNum + 1; // add 1 so that the value is guaranteed nonzero
@@ -2163,6 +2190,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 
 INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 {
+	PERFORMANCE_MARKER
 	INT16						sMyGridNo, sDist, sDesiredMercDist = 100;
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
 	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
@@ -2200,7 +2228,7 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 			}
 
 			// if they're not visible, don't think about it
-			if (pNPC->bOppList[ubMerc] != SEEN_CURRENTLY)
+			if (pNPC->aiData.bOppList[ubMerc] != SEEN_CURRENTLY)
 			{
 				continue;
 			} 
@@ -2244,15 +2272,16 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 }
 
 UINT8 NPCTryToInitiateConv( SOLDIERTYPE * pNPC )
-{ // assumes current action is ACTION_APPROACH_MERC
-	if (pNPC->bAction != AI_ACTION_APPROACH_MERC)
+{
+	PERFORMANCE_MARKER // assumes current action is ACTION_APPROACH_MERC
+	if (pNPC->aiData.bAction != AI_ACTION_APPROACH_MERC)
 	{
 		return( AI_ACTION_NONE );
 	}
-	if (PythSpacesAway( pNPC->sGridNo, MercPtrs[pNPC->usActionData]->sGridNo ) < CONVO_DIST)
+	if (PythSpacesAway( pNPC->sGridNo, MercPtrs[pNPC->aiData.usActionData]->sGridNo ) < CONVO_DIST)
 	{
 		// initiate conversation!
-		Converse( pNPC->ubProfile, MercPtrs[pNPC->usActionData]->ubProfile, NPC_INITIATING_CONV, 0 );
+		Converse( pNPC->ubProfile, MercPtrs[pNPC->aiData.usActionData]->ubProfile, NPC_INITIATING_CONV, 0 );
 		// after talking, wait a while before moving anywhere else
 		return( AI_ACTION_WAIT );
 	}
@@ -2267,6 +2296,7 @@ UINT8 NPCTryToInitiateConv( SOLDIERTYPE * pNPC )
 /*
 BOOLEAN NPCOkToGiveItem( UINT8 ubNPC, UINT8 ubMerc, UINT16 usItem )
 {
+	PERFORMANCE_MARKER
 	// This function seems to be unused...
 
 	NPCQuoteInfo					QuoteInfo;
@@ -2296,6 +2326,7 @@ BOOLEAN NPCOkToGiveItem( UINT8 ubNPC, UINT8 ubMerc, UINT16 usItem )
 */
 void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 {
+	PERFORMANCE_MARKER
 	// perform action or whatever after reaching our destination
 	UINT8		ubNPC;
 	NPCQuoteInfo *				pQuotePtr;
@@ -2317,9 +2348,9 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 	if (pNPC->bTeam == gbPlayerNum)
 	{
 		// the "under ai control" flag was set temporarily; better turn it off now
-		pNPC->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
+		pNPC->flags.uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
 		// make damn sure the AI_HANDLE_EVERY_FRAME flag is turned off
-		pNPC->fAIFlags &= (AI_HANDLE_EVERY_FRAME);
+		pNPC->aiData.fAIFlags &= (AI_HANDLE_EVERY_FRAME);
 	}
 
 	ubNPC = pNPC->ubProfile;
@@ -2368,6 +2399,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 
 void TriggerNPCRecord( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *pQuotePtr;
 	BOOLEAN      fDisplayDialogue = TRUE;
@@ -2396,6 +2428,7 @@ void TriggerNPCRecord( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec )
 
 void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *pQuotePtr;
 	BOOLEAN      fDisplayDialogue = TRUE;
@@ -2427,6 +2460,7 @@ void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec )
 
 void PCsNearNPC( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	UINT8									ubLoop;
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	SOLDIERTYPE *pSoldier;
@@ -2468,6 +2502,7 @@ void PCsNearNPC( UINT8 ubNPC )
 
 BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	UINT8									ubLoop;
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	SOLDIERTYPE *pSoldier;
@@ -2506,6 +2541,7 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 
 void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr )
 {
+	PERFORMANCE_MARKER
 	// Loop through all mercs, gather closest mercs who can see and trigger one!
 	UINT8	ubMercsInSector[ 40 ] = { 0 };
 	UINT8	ubNumMercs = 0;
@@ -2525,7 +2561,7 @@ void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
+		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->aiData.bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
 		{
 			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 			ubNumMercs++;
@@ -2555,6 +2591,7 @@ void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr )
 
 BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
@@ -2587,6 +2624,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 
 BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote that could be used
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
@@ -2613,6 +2651,7 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
 
 BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach )
 {
+	PERFORMANCE_MARKER
 	// this is just like the standard check BUT we must skip any
 	// records using fact 289 and print debug msg for any records which can't be marked as used
 	// Check if we have a quote that could be used
@@ -2652,6 +2691,7 @@ BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach )
 
 BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote that could be used, that applies to this item
 	NPCQuoteInfo *		pNPCQuoteInfoArray;
 	NPCQuoteInfo *		pQuotePtr;
@@ -2678,6 +2718,7 @@ BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj )
 
 BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pusFactToSetTrue )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote that could be used
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
@@ -2706,6 +2747,7 @@ BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pus
 
 BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLEAN fShowPanel )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
@@ -2747,6 +2789,7 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 
 BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNumBytesWritten=0;
 	UINT32		cnt;
 	UINT8			ubOne = 1;
@@ -2820,6 +2863,7 @@ BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNumBytesRead=0;
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -2990,6 +3034,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 
 BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNumBytesWritten=0;
 	UINT32		cnt;
 	UINT8			ubOne = 1;
@@ -3032,6 +3077,7 @@ BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNumBytesRead=0;
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -3088,6 +3134,7 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 
 void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 {
+	PERFORMANCE_MARKER
 	UINT8						ubMercsAvailable[ 40 ] = { 0 };
 	UINT8						ubNumMercsAvailable = 0, ubChosenMerc;
 	SOLDIERTYPE *		pTeamSoldier;
@@ -3112,7 +3159,7 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( pTeamSoldier->bActive && pSoldier->bInSector && pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bBreath >= OKBREATH && pTeamSoldier->bOppCnt > 0 && pTeamSoldier->ubProfile != NO_PROFILE )
+		if ( pTeamSoldier->bActive && pSoldier->bInSector && pTeamSoldier->stats.bLife >= OKLIFE && pTeamSoldier->bBreath >= OKBREATH && pTeamSoldier->aiData.bOppCnt > 0 && pTeamSoldier->ubProfile != NO_PROFILE )
 		{
 			if ( bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && pTeamSoldier->ubCivilianGroup != pSoldier->ubCivilianGroup )
 			{
@@ -3149,6 +3196,7 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 
 UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 {
+	PERFORMANCE_MARKER
 	// Check if we have a quote to trigger...
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
 	NPCQuoteInfo	*pQuotePtr;
@@ -3185,7 +3233,8 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 
 void HandleNPCChangesForTacticalTraversal( SOLDIERTYPE * pSoldier )
 {
-	if ( !pSoldier || pSoldier->ubProfile == NO_PROFILE || (pSoldier->fAIFlags & AI_CHECK_SCHEDULE) )
+	PERFORMANCE_MARKER
+	if ( !pSoldier || pSoldier->ubProfile == NO_PROFILE || (pSoldier->aiData.fAIFlags & AI_CHECK_SCHEDULE) )
 	{
 		return;
 	}
@@ -3236,6 +3285,7 @@ void HandleNPCChangesForTacticalTraversal( SOLDIERTYPE * pSoldier )
 
 void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
+	PERFORMANCE_MARKER
 	// handle special cases of victory in certain sector
 	INT16 sSector = 0;
 
@@ -3272,6 +3322,7 @@ void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )
 {
+	PERFORMANCE_MARKER
 	// check if shopkeep has been shutdown, if so handle
 	switch( ubCharNum )
 	{
@@ -3300,6 +3351,7 @@ BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )
 #ifdef JA2BETAVERSION
 void ToggleNPCRecordDisplay( void )
 {
+	PERFORMANCE_MARKER
 	if ( gfDisplayScreenMsgOnRecordUsage )
 	{
 		gfDisplayScreenMsgOnRecordUsage = FALSE;
@@ -3315,6 +3367,7 @@ void ToggleNPCRecordDisplay( void )
 
 void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	// change destination in Darrel record 10 to go to a gridno adjacent to the 
 	// soldier's gridno, and destination in record 11
 	INT16 sAdjustedGridNo;
@@ -3348,6 +3401,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 
 BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord )
 {
+	PERFORMANCE_MARKER
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
 	{
 		// error!!!
@@ -3366,6 +3420,7 @@ BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord )
 
 INT8 FindCivQuoteFileIndex( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
+	PERFORMANCE_MARKER
 	UINT8			ubLoop;
 
   if ( sSectorZ > 0 )
@@ -3387,6 +3442,7 @@ INT8 FindCivQuoteFileIndex( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 INT8 ConsiderCivilianQuotes( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, BOOLEAN fSetAsUsed )
 {
+	PERFORMANCE_MARKER
 	INT8							bLoop, bCivQuoteSectorIndex;
 	NPCQuoteInfo *		pCivQuoteInfoArray;
 

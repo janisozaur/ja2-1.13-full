@@ -115,11 +115,13 @@ void DisplayFuneralRipTombStone();
 
 void GameInitFuneral()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFuneral()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX, i;
 
@@ -186,6 +188,7 @@ BOOLEAN EnterFuneral()
 
 void ExitFuneral()
 {
+	PERFORMANCE_MARKER
 	UINT8 i;
 
 	DeleteVideoObjectFromIndex(guiClosedSign);
@@ -206,11 +209,13 @@ void ExitFuneral()
 
 void HandleFuneral()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderFuneral()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 	UINT16 i, usPosX, usStringHeight;
 
@@ -281,6 +286,7 @@ void RenderFuneral()
 
 void DisplayFuneralRipTombStone()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	// rip tombstone
@@ -307,7 +313,8 @@ void DisplayFuneralRipTombStone()
 
 
 void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -333,7 +340,8 @@ void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectRipSignRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}

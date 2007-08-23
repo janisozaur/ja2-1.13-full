@@ -61,6 +61,7 @@ typedef attachmentinfoParseData;
 static void XMLCALL 
 attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -103,6 +104,7 @@ attachmentinfoStartElementHandle(void *userData, const XML_Char *name, const XML
 static void XMLCALL
 attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -116,6 +118,7 @@ attachmentinfoCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	attachmentinfoParseData * pData = (attachmentinfoParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -170,6 +173,7 @@ attachmentinfoEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -232,6 +236,7 @@ BOOLEAN ReadInAttachmentInfoStats(STR fileName)
 }
 BOOLEAN WriteAttachmentInfoStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeattachmentinfostats");
 	HWFILE		hFile;
 

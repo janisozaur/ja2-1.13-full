@@ -111,12 +111,14 @@ INT32	CountNumberValidShipmentForTheShipmentsPage();
 
 void GameInitBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 
 }
 
 
 BOOLEAN EnterBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitBobbyRWoodBackground();
@@ -170,6 +172,7 @@ BOOLEAN EnterBobbyRShipments()
 
 void ExitBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 	DeleteBobbyRWoodBackground();
 	DestroyBobbyROrderTitle();
 
@@ -185,6 +188,7 @@ void ExitBobbyRShipments()
 
 void HandleBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 	if( gfBobbyRShipmentsDirty )
 	{
 		gfBobbyRShipmentsDirty = FALSE;
@@ -195,6 +199,7 @@ void HandleBobbyRShipments()
 
 void RenderBobbyRShipments()
 {
+	PERFORMANCE_MARKER
 //	HVOBJECT hPixHandle;
 
 	DrawBobbyRWoodBackground();
@@ -229,6 +234,7 @@ void RenderBobbyRShipments()
 
 void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -252,6 +258,7 @@ void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -275,6 +282,7 @@ void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayShipmentGrid()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiBobbyRShipmentGrid);
@@ -290,6 +298,7 @@ void DisplayShipmentGrid()
 
 void DisplayShipmentTitles()
 {
+	PERFORMANCE_MARKER
 	//output the order #
 	DrawTextToScreen( gzBobbyRShipmentText[BOBBYR_SHIPMENT__ORDERED_ON], BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_X, BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_Y, BOBBYR_SHIPMENT_ORDER_NUM_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, BOBBYR_SHIPMENT_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
@@ -299,6 +308,7 @@ void DisplayShipmentTitles()
 
 void DisplayPreviousShipments()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	CHAR16	zText[512];
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
@@ -346,6 +356,7 @@ void DisplayPreviousShipments()
 
 void CreatePreviousShipmentsMouseRegions()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
 	UINT16	usWidth = BOBBYR_SHIPMENT_DELIVERY_GRID_WIDTH;
@@ -365,6 +376,7 @@ void CreatePreviousShipmentsMouseRegions()
 
 void RemovePreviousShipmentsMouseRegions()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT32	uiNumItems = CountNumberOfBobbyPurchasesThatAreInTransit();
 
@@ -377,6 +389,7 @@ void RemovePreviousShipmentsMouseRegions()
 
 void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -413,6 +426,7 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 
 INT32	CountNumberValidShipmentForTheShipmentsPage()
 {
+	PERFORMANCE_MARKER
 	if( giNumberOfNewBobbyRShipment > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS )
 		return( BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS );
 	else

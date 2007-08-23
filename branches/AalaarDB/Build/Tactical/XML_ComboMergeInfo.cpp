@@ -62,6 +62,7 @@ typedef attachmentcombomergeParseData;
 static void XMLCALL 
 attachmentcombomergeStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	attachmentcombomergeParseData * pData = (attachmentcombomergeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -104,6 +105,7 @@ attachmentcombomergeStartElementHandle(void *userData, const XML_Char *name, con
 static void XMLCALL
 attachmentcombomergeCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	attachmentcombomergeParseData * pData = (attachmentcombomergeParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -117,6 +119,7 @@ attachmentcombomergeCharacterDataHandle(void *userData, const XML_Char *str, int
 static void XMLCALL
 attachmentcombomergeEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	attachmentcombomergeParseData * pData = (attachmentcombomergeParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -171,6 +174,7 @@ attachmentcombomergeEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInAttachmentComboMergeStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -235,6 +239,7 @@ BOOLEAN ReadInAttachmentComboMergeStats(STR fileName)
 }
 BOOLEAN WriteAttachmentComboMergeStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeattachmentcombomergestats");
 	HWFILE		hFile;
 

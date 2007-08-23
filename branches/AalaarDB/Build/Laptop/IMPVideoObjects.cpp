@@ -67,6 +67,7 @@ extern void DrawBonusPointsRemaining( void );
 
 BOOLEAN LoadProfileBackGround( void )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	
 	// this procedure will load in the graphics for the generic background
@@ -92,6 +93,7 @@ void RemoveProfileBackGround( void )
 
 void RenderProfileBackGround( void )
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 	INT32 iCounter = 0;
@@ -123,6 +125,7 @@ void RenderProfileBackGround( void )
 
 BOOLEAN LoadIMPSymbol( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the IMP main symbol into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -137,6 +140,7 @@ BOOLEAN LoadIMPSymbol( void )
 
 void DeleteIMPSymbol( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove IMP symbol
 	DeleteVideoObjectFromIndex( guiIMPSYMBOL );
@@ -146,6 +150,7 @@ void DeleteIMPSymbol( void )
 
 void RenderIMPSymbol(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get the video object
@@ -163,6 +168,7 @@ void RenderIMPSymbol(INT16 sX, INT16 sY)
 
 BOOLEAN LoadBeginIndent( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the indent main symbol into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -177,6 +183,7 @@ BOOLEAN LoadBeginIndent( void )
 
 void DeleteBeginIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove indent symbol
 
@@ -187,6 +194,7 @@ void DeleteBeginIndent( void )
 
 void RenderBeginIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get the video object
@@ -207,6 +215,7 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadActivationIndent( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -221,6 +230,7 @@ BOOLEAN LoadActivationIndent( void )
 
 void DeleteActivationIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiACTIVATIONINDENT );
@@ -230,6 +240,7 @@ void DeleteActivationIndent( void )
 
 void RenderActivationIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get the video object
@@ -246,6 +257,7 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadFrontPageIndent( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -260,6 +272,7 @@ BOOLEAN LoadFrontPageIndent( void )
 
 void DeleteFrontPageIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFRONTPAGEINDENT );
@@ -269,6 +282,7 @@ void DeleteFrontPageIndent( void )
 
 void RenderFrontPageIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get the video object
@@ -287,6 +301,7 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAnalyse( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -301,6 +316,7 @@ BOOLEAN LoadAnalyse( void )
 
 void DeleteAnalyse( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiANALYSE );
@@ -310,6 +326,7 @@ void DeleteAnalyse( void )
 
 void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -329,6 +346,7 @@ void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 
 BOOLEAN LoadAttributeGraph( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -343,6 +361,7 @@ BOOLEAN LoadAttributeGraph( void )
 
 void DeleteAttributeGraph( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
@@ -352,6 +371,7 @@ void DeleteAttributeGraph( void )
 
 void RenderAttributeGraph(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 
 	HVOBJECT hHandle;
@@ -371,6 +391,7 @@ void RenderAttributeGraph(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAttributeGraphBar( void )
 {
+	PERFORMANCE_MARKER
 	
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -385,6 +406,7 @@ BOOLEAN LoadAttributeGraphBar( void )
 
 void DeleteAttributeBarGraph( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPHBAR );
@@ -394,6 +416,7 @@ void DeleteAttributeBarGraph( void )
 
 void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get the video object
@@ -413,6 +436,7 @@ void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 
 BOOLEAN LoadFullNameIndent( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -427,6 +451,7 @@ BOOLEAN LoadFullNameIndent( void )
 
 void DeleteFullNameIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFULLNAMEINDENT );
@@ -436,6 +461,7 @@ void DeleteFullNameIndent( void )
 
 void RenderFullNameIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 
 	HVOBJECT hHandle;
@@ -453,6 +479,7 @@ void RenderFullNameIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadNickNameIndent( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -467,6 +494,7 @@ BOOLEAN LoadNickNameIndent( void )
 
 void DeleteNickNameIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNICKNAMEINDENT );
@@ -476,6 +504,7 @@ void DeleteNickNameIndent( void )
 
 void RenderNickNameIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 
 	HVOBJECT hHandle;
@@ -492,6 +521,7 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadNameIndent( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -506,6 +536,7 @@ BOOLEAN LoadNameIndent( void )
 
 void DeleteNameIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNAMEINDENT );
@@ -515,6 +546,7 @@ void DeleteNameIndent( void )
 
 void RenderNameIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 
 	HVOBJECT hHandle;
@@ -534,6 +566,7 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadGenderIndent( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -548,6 +581,7 @@ BOOLEAN LoadGenderIndent( void )
 
 void DeleteGenderIndent( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiGENDERINDENT );
@@ -557,6 +591,7 @@ void DeleteGenderIndent( void )
 
 void RenderGenderIndent(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 
@@ -574,6 +609,7 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 
 BOOLEAN LoadSmallFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -588,6 +624,7 @@ BOOLEAN LoadSmallFrame( void )
 
 void DeleteSmallFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLFRAME );
@@ -597,6 +634,7 @@ void DeleteSmallFrame( void )
 
 void RenderSmallFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -614,6 +652,7 @@ void RenderSmallFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadSmallSilhouette( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -628,6 +667,7 @@ BOOLEAN LoadSmallSilhouette( void )
 
 void DeleteSmallSilhouette( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
@@ -637,6 +677,7 @@ void DeleteSmallSilhouette( void )
 
 void RenderSmallSilhouette(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -653,6 +694,7 @@ void RenderSmallSilhouette(INT16 sX, INT16 sY)
 
 BOOLEAN LoadLargeSilhouette( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -667,6 +709,7 @@ BOOLEAN LoadLargeSilhouette( void )
 
 void DeleteLargeSilhouette( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLARGESILHOUETTE );
@@ -676,6 +719,7 @@ void DeleteLargeSilhouette( void )
 
 void RenderLargeSilhouette(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -691,6 +735,7 @@ void RenderLargeSilhouette(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAttributeFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -705,6 +750,7 @@ BOOLEAN LoadAttributeFrame( void )
 
 void DeleteAttributeFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEFRAME );
@@ -714,6 +760,7 @@ void DeleteAttributeFrame( void )
 
 void RenderAttributeFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 	INT32 iCounter = 0;
@@ -744,6 +791,7 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 
 void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 {
+	PERFORMANCE_MARKER
 	INT16 sCurrentY = 0;
 	HVOBJECT hHandle;
 
@@ -778,6 +826,7 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 
 BOOLEAN LoadSliderBar( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -792,6 +841,7 @@ BOOLEAN LoadSliderBar( void )
 
 void DeleteSliderBar( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSLIDERBAR );
@@ -801,6 +851,7 @@ void DeleteSliderBar( void )
 
 void RenderSliderBar(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -818,6 +869,7 @@ void RenderSliderBar(INT16 sX, INT16 sY)
 
 BOOLEAN LoadButton2Image( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -832,6 +884,7 @@ BOOLEAN LoadButton2Image( void )
 
 void DeleteButton2Image( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON2IMAGE );
@@ -841,6 +894,7 @@ void DeleteButton2Image( void )
 
 void RenderButton2Image(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -855,6 +909,7 @@ void RenderButton2Image(INT16 sX, INT16 sY)
 
 BOOLEAN LoadButton4Image( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -869,6 +924,7 @@ BOOLEAN LoadButton4Image( void )
 
 void DeleteButton4Image( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON4IMAGE );
@@ -878,6 +934,7 @@ void DeleteButton4Image( void )
 
 void RenderButton4Image(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -893,6 +950,7 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 
 BOOLEAN LoadButton1Image( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -907,6 +965,7 @@ BOOLEAN LoadButton1Image( void )
 
 void DeleteButton1Image( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON1IMAGE );
@@ -916,6 +975,7 @@ void DeleteButton1Image( void )
 
 void RenderButton1Image(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -931,6 +991,7 @@ void RenderButton1Image(INT16 sX, INT16 sY)
 
 BOOLEAN LoadPortraitFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -945,6 +1006,7 @@ BOOLEAN LoadPortraitFrame( void )
 
 void DeletePortraitFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiPORTRAITFRAME );
@@ -954,6 +1016,7 @@ void DeletePortraitFrame( void )
 
 void RenderPortraitFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -970,6 +1033,7 @@ void RenderPortraitFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadMainIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -984,6 +1048,7 @@ BOOLEAN LoadMainIndentFrame( void )
 
 void DeleteMainIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiMAININDENT );
@@ -993,6 +1058,7 @@ void DeleteMainIndentFrame( void )
 
 void RenderMainIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1008,6 +1074,7 @@ void RenderMainIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnLongIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1022,6 +1089,7 @@ BOOLEAN LoadQtnLongIndentFrame( void )
 
 void DeleteQtnLongIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGINDENT );
@@ -1031,6 +1099,7 @@ void DeleteQtnLongIndentFrame( void )
 
 void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1045,6 +1114,7 @@ void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnShortIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1059,6 +1129,7 @@ BOOLEAN LoadQtnShortIndentFrame( void )
 
 void DeleteQtnShortIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTINDENT );
@@ -1068,6 +1139,7 @@ void DeleteQtnShortIndentFrame( void )
 
 void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1082,6 +1154,7 @@ void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnLongIndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1096,6 +1169,7 @@ BOOLEAN LoadQtnLongIndentHighFrame( void )
 
 void DeleteQtnLongIndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGHINDENT );
@@ -1105,6 +1179,7 @@ void DeleteQtnLongIndentHighFrame( void )
 
 void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1119,6 +1194,7 @@ void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnShortIndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1133,6 +1209,7 @@ BOOLEAN LoadQtnShortIndentHighFrame( void )
 
 void DeleteQtnShortIndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTHINDENT );
@@ -1142,6 +1219,7 @@ void DeleteQtnShortIndentHighFrame( void )
 
 void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1157,6 +1235,7 @@ void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1171,6 +1250,7 @@ BOOLEAN LoadQtnIndentFrame( void )
 
 void DeleteQtnIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiQINDENT );
@@ -1180,6 +1260,7 @@ void DeleteQtnIndentFrame( void )
 
 void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1195,6 +1276,7 @@ void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAttrib1IndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1209,6 +1291,7 @@ BOOLEAN LoadAttrib1IndentFrame( void )
 
 void DeleteAttrib1IndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA1INDENT );
@@ -1218,6 +1301,7 @@ void DeleteAttrib1IndentFrame( void )
 
 void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1232,6 +1316,7 @@ void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAttrib2IndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1246,6 +1331,7 @@ BOOLEAN LoadAttrib2IndentFrame( void )
 
 void DeleteAttrib2IndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA2INDENT );
@@ -1255,6 +1341,7 @@ void DeleteAttrib2IndentFrame( void )
 
 void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1269,6 +1356,7 @@ void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAvgMercIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1283,6 +1371,7 @@ BOOLEAN LoadAvgMercIndentFrame( void )
 
 void DeleteAvgMercIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiAVGMERCINDENT );
@@ -1292,6 +1381,7 @@ void DeleteAvgMercIndentFrame( void )
 
 void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1308,6 +1398,7 @@ void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadAboutUsIndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1322,6 +1413,7 @@ BOOLEAN LoadAboutUsIndentFrame( void )
 
 void DeleteAboutUsIndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiABOUTUSINDENT );
@@ -1331,6 +1423,7 @@ void DeleteAboutUsIndentFrame( void )
 
 void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1346,6 +1439,7 @@ void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnShort2IndentFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1360,6 +1454,7 @@ BOOLEAN LoadQtnShort2IndentFrame( void )
 
 void DeleteQtnShort2IndentFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2INDENT );
@@ -1369,6 +1464,7 @@ void DeleteQtnShort2IndentFrame( void )
 
 void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 
@@ -1383,6 +1479,7 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 
 BOOLEAN LoadQtnShort2IndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
  
 	// this procedure will load the activation indent into memory
 	VOBJECT_DESC	VObjectDesc;
@@ -1397,6 +1494,7 @@ BOOLEAN LoadQtnShort2IndentHighFrame( void )
 
 void DeleteQtnShort2IndentHighFrame( void )
 {
+	PERFORMANCE_MARKER
 
 	// remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2HINDENT );
@@ -1406,6 +1504,7 @@ void DeleteQtnShort2IndentHighFrame( void )
 
 void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
 {
+	PERFORMANCE_MARKER
 
 	HVOBJECT hHandle;
 

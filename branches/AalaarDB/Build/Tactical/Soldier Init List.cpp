@@ -64,6 +64,7 @@ SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 
 UINT32 CountNumberOfNodesWithSoldiers()
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	UINT32 num = 0;
 	curr = gSoldierInitHead;
@@ -82,6 +83,7 @@ void SortSoldierInitList();
 
 void InitSoldierInitList()
 {
+	PERFORMANCE_MARKER
 	if( gSoldierInitHead )
 	KillSoldierInitList();
 	gSoldierInitHead = NULL;
@@ -90,6 +92,7 @@ void InitSoldierInitList()
 
 void KillSoldierInitList()
 {
+	PERFORMANCE_MARKER
 	while( gSoldierInitHead )
 		RemoveSoldierNodeFromInitList( gSoldierInitTail );
 	if( gfOriginalList )
@@ -100,6 +103,7 @@ void KillSoldierInitList()
 
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	//Allocate memory for node
 	curr = (SOLDIERINITNODE*)MemAlloc( sizeof (SOLDIERINITNODE ) );
@@ -150,6 +154,7 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT 
 
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 {
+	PERFORMANCE_MARKER
 	if( !pNode )
 		return;
 	if( gfOriginalList )
@@ -161,7 +166,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 	}
 	if( pNode->pDetailedPlacement )
 	{
-		MemFree( pNode->pDetailedPlacement );
+		delete( pNode->pDetailedPlacement );
 		pNode->pDetailedPlacement = NULL;
 	}
 	if( pNode->pSoldier )
@@ -204,6 +209,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 //the beginning of the file.	This is just a part of the whole map serialization.
 BOOLEAN SaveSoldiersToMap( HWFILE fp )
 {
+	PERFORMANCE_MARKER
 	UINT32 i;
 	UINT32 uiBytesWritten;
 	SOLDIERINITNODE *curr;
@@ -238,9 +244,10 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		{
 			if( !curr->pDetailedPlacement )
 				return FALSE;
-                        // WDS - Clean up inventory handling
-			curr->pDetailedPlacement->CopyNewInventoryToOld();
-			FileWrite( fp, curr->pDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT_POD /*SIZEOF_SOLDIERCREATE_STRUCT*/, &uiBytesWritten );
+			if ( !curr->pDetailedPlacement->Save(fp, TRUE) )
+			{
+				return FALSE;
+			}
 		}
 		curr = curr->next;
 	}
@@ -249,12 +256,12 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 
 
 
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
+BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
 {
+	PERFORMANCE_MARKER
 	UINT32 i;
 	UINT8 ubNumIndividuals;
 	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;
 	BOOLEAN fCowInSector = FALSE;
 
@@ -284,6 +291,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	//it gets built again.
 	gMapInformation.ubNumIndividuals = 0;		//MUST BE CLEARED HERE!!!
 
+	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	for( i=0; i < ubNumIndividuals; i++ )
 	{
 		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
@@ -296,21 +304,19 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		}
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
-            // WDS - Clean up inventory handling
-			tempDetailedPlacement.initialize();
 			//read static detailed placement from file
-			LOADDATA( &tempDetailedPlacement, *hBuffer, SIZEOF_SOLDIERCREATE_STRUCT_POD );
-			tempDetailedPlacement.CopyOldInventoryToNew();
+			if ( !tempDetailedPlacement.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion) )
+			{
+				return FALSE;
+			}
 			//allocate memory for new static detailed placement
-			pNode->pDetailedPlacement = new (MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT )) SOLDIERCREATE_STRUCT;//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
+			//copy the file information from temp var to node in list.
+			pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT(tempDetailedPlacement);//(SOLDIERCREATE_STRUCT*)MemAlloc( SIZEOF_SOLDIERCREATE_STRUCT );
 			if( !pNode->pDetailedPlacement )
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
 				return FALSE;
 			}
-			//copy the file information from temp var to node in list.
-			//memcpy( pNode->pDetailedPlacement, &tempDetailedPlacement, SIZEOF_SOLDIERCREATE_STRUCT );
-			*pNode->pDetailedPlacement = tempDetailedPlacement;
 
 			if( tempDetailedPlacement.ubProfile != NO_PROFILE )
 			{
@@ -347,6 +353,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 //			be called.
 void SortSoldierInitList()
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *temp, *curr;
 
 	BOOLEAN	fFredoAtStart = FALSE;
@@ -527,6 +534,7 @@ void SortSoldierInitList()
 
 BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubProfile;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERTYPE *pSoldier;
@@ -534,29 +542,25 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld"));
 	// First check if this guy has a profile and if so check his location such that it matches!
-	// WDS - Clean up inventory handling
 	// Get profile from placement info
-	//memset( &tempDetailedPlacement, 0, SIZEOF_SOLDIERCREATE_STRUCT );
 	tempDetailedPlacement.initialize();
 
 	if (curr->pBasicPlacement->bBodyType == TANK_NW ||
 		curr->pBasicPlacement->bBodyType == TANK_NE)
 	{
-		ROTTING_CORPSE *pCorpse;
-		//while (1)
-		do
+		while (1)
 		{
-			pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
+			ROTTING_CORPSE *pCorpse = GetCorpseAtGridNo( curr->pBasicPlacement->usStartingGridNo, 0); // I assume we don't find tanks on the roof
 			if (pCorpse)
 			{
 				// Assume this is a dead tank and have the replacement tank haul it away
 				RemoveCorpse( pCorpse->iID);
 			}
-			//else
-			//{
-				//break;
-			//}
-		} while (pCorpse);
+			else
+			{
+				break;
+			}
+		}
 	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorld: decide on placement"));
@@ -754,6 +758,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 
 void AddPlacementToWorldByProfileID( UINT8 ubProfile )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE * curr;
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddPlacementToWorldByProfileID"));
 
@@ -772,6 +777,7 @@ void AddPlacementToWorldByProfileID( UINT8 ubProfile )
 
 UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubNumAdded = 0;
 	SOLDIERINITNODE *mark;
 	UINT8 ubSlotsToFill;
@@ -880,6 +886,7 @@ UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *mark;
 	SOLDIERINITNODE *curr;
 	INT32 iRandom;
@@ -1293,6 +1300,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 //placement information.
 void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumElites )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *mark;
 	SOLDIERINITNODE *curr;
 	INT32 iRandom;
@@ -1526,6 +1534,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, 
 																	UINT8 ubNumAdultFemales )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	INT32 iRandom;
 	UINT8 ubFreeSlots;
@@ -1682,6 +1691,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 SOLDIERINITNODE* FindSoldierInitNodeWithProfileID( UINT16 usProfile );
 SOLDIERINITNODE* FindSoldierInitNodeWithProfileID( UINT16 usProfile )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	curr = gSoldierInitHead;
 	while( curr )
@@ -1696,6 +1706,7 @@ SOLDIERINITNODE* FindSoldierInitNodeWithProfileID( UINT16 usProfile )
 
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	curr = gSoldierInitHead;
 	while( curr )
@@ -1709,6 +1720,7 @@ SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 
 void UseEditorOriginalList()
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	gfOriginalList = TRUE;
 	gSoldierInitHead = gOriginalSoldierInitListHead;
@@ -1724,6 +1736,7 @@ void UseEditorOriginalList()
 
 void UseEditorAlternateList()
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	gfOriginalList = FALSE;
 	gSoldierInitHead = gAlternateSoldierInitListHead;
@@ -1742,6 +1755,7 @@ void UseEditorAlternateList()
 //if the map was loaded again!
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	UINT8 ubNodeID;
 	curr = gSoldierInitHead;
@@ -1771,6 +1785,7 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 
 void RemoveDetailedPlacementInfo( UINT8 ubNodeID )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	curr = gSoldierInitHead;
 	while( curr )
@@ -1793,6 +1808,7 @@ void RemoveDetailedPlacementInfo( UINT8 ubNodeID )
 //soldier pointer whenever we load the game.
 BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	UINT32 uiNumBytesWritten;
 	UINT8 ubSlots = 0;
@@ -1835,6 +1851,7 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
@@ -1882,6 +1899,7 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 
 void AddSoldierInitListBloodcats()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSectorID;
@@ -2028,6 +2046,7 @@ void AddSoldierInitListBloodcats()
 
 SOLDIERINITNODE * FindSoldierInitListNodeByProfile( UINT8 ubProfile )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE * curr;
 
 	curr = gSoldierInitHead;
@@ -2047,6 +2066,7 @@ SOLDIERINITNODE * FindSoldierInitListNodeByProfile( UINT8 ubProfile )
 //information, and not editor placements.	The key flag involved for doing it this way is the gMercProfiles[i].fUseProfileInsertionInfo.
 void AddProfilesUsingProfileInsertionData()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	SOLDIERTYPE *pSoldier;
 	SOLDIERINITNODE * curr;
@@ -2074,7 +2094,7 @@ void AddProfilesUsingProfileInsertionData()
 			UINT8									ubID;
 
 			//Set up the create struct so that we can properly create the profile soldier.
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+			MercCreateStruct.initialize();
 			MercCreateStruct.bTeam						= CIV_TEAM;
 			MercCreateStruct.ubProfile				= (UINT8)i;
 			MercCreateStruct.sSectorX					= gWorldSectorX;
@@ -2127,6 +2147,7 @@ void AddProfilesUsingProfileInsertionData()
 
 void AddProfilesNotUsingProfileInsertionData()
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("AddProfilesNotUsingProfileInsertionData"));
 	SOLDIERINITNODE *curr;
 	//Count the current number of soldiers of the specified team
@@ -2151,6 +2172,7 @@ extern void ErrorDetectedInSaveCallback( UINT8 bValue );
 
 BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 {
+	PERFORMANCE_MARKER
 	SOLDIERINITNODE *curr;
 	UINT32 uiNumInvalids = 0;
 	CHAR16 str[512];
@@ -2205,6 +2227,7 @@ BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
@@ -2251,6 +2274,7 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
@@ -2297,6 +2321,7 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 
 BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
@@ -2342,6 +2367,7 @@ BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 {
+	PERFORMANCE_MARKER
 	SECTORINFO *pSector;
 	SOLDIERINITNODE *curr;
 	
@@ -2390,6 +2416,7 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 
 void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNumGreen, UINT8 ubNumReg, UINT8 ubNumElites )
 {
+	PERFORMANCE_MARKER
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;
 	UINT8 ubCurrSlot;
@@ -2398,7 +2425,7 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 
 	ubTotalSoldiers = ubNumGreen + ubNumReg + ubNumElites;
 
-	// WANNE: If we have no militia soldiers -> exit!
+	// WANNE: If we have no militia soldiers->exit!
 	if (ubTotalSoldiers == 0)
 		return;
 
@@ -2435,15 +2462,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//		they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 			
 			//Setup the position
@@ -2475,15 +2502,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//		they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 
 			//Setup the position
@@ -2515,15 +2542,15 @@ void AddSoldierInitListMilitiaOnEdge( UINT8 ubStrategicInsertionCode, UINT8 ubNu
 			//		they are often stop at a half way. trying to fix this
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				pSoldier->bOrders = SEEKENEMY;
-				pSoldier->bAlertStatus = STATUS_RED;
+				pSoldier->aiData.bOrders = SEEKENEMY;
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
 			}
 			else
 			{
-				pSoldier->bOrders = ONGUARD;
-				pSoldier->bAlertStatus = STATUS_YELLOW;
-				pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+				pSoldier->aiData.bOrders = ONGUARD;
+				pSoldier->aiData.bAlertStatus = STATUS_YELLOW;
+				pSoldier->aiData.sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
+				pSoldier->aiData.ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 			}
 
 //			if ( GetTimeOfDayAmbientLightLevel() < NORMAL_LIGHTLEVEL_DAY + 2 )

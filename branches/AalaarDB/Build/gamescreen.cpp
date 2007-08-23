@@ -208,7 +208,8 @@ UINT32 MainGameScreenInit(void)
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 UINT32 MainGameScreenShutdown(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	ShutdownZBuffer(gpZBuffer);
 	ShutdownBackgroundRects();
 
@@ -222,6 +223,7 @@ UINT32 MainGameScreenShutdown(void)
 
 void FadeInGameScreen( )
 {
+	PERFORMANCE_MARKER
 	fFirstTimeInGameScreen = TRUE;
 
 	FadeInNextFrame( );
@@ -229,11 +231,13 @@ void FadeInGameScreen( )
 
 void FadeOutGameScreen( )
 {
+	PERFORMANCE_MARKER
 	FadeOutNextFrame( );
 }
 
 void EnterTacticalScreen( )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen"));
 	guiTacticalLeaveScreen = FALSE;
 
@@ -264,7 +268,7 @@ void EnterTacticalScreen( )
 		}
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: who is selected? %d", gusSelectedSoldier));
 		// ATE: If the current guy is sleeping, change....
-		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->fMercAsleep )
+		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->flags.fMercAsleep )
 		{
 			DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("EnterTacticalScreen: SelectNextAvailSoldier, merc asleep"));
 			SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );			
@@ -348,6 +352,7 @@ void EnterTacticalScreen( )
 
 void LeaveTacticalScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiTacticalLeaveScreenID = uiNewScreen;
 	guiTacticalLeaveScreen = TRUE;
 }
@@ -355,6 +360,7 @@ void LeaveTacticalScreen( UINT32 uiNewScreen )
 
 void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	gpCustomizableTimerCallback = NULL;
 
 	// unload the sector they teleported out of
@@ -425,6 +431,7 @@ extern INT32 iInterfaceDialogueBox;
 
 UINT32	MainGameScreenHandle(void)
 {
+	PERFORMANCE_MARKER
 	UINT32		uiNewScreen = GAME_SCREEN;
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
@@ -559,9 +566,9 @@ UINT32	MainGameScreenHandle(void)
 			{
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{
-					AdjustNoAPToFinishMove( MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ], FALSE );
+					MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->AdjustNoAPToFinishMove( FALSE );
 				}
-				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->fPauseAllAnimation = FALSE;
+				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->flags.fPauseAllAnimation = FALSE;
 
 				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
 			}
@@ -868,7 +875,7 @@ UINT32	MainGameScreenHandle(void)
 			if ( gusSelectedSoldier != NOBODY )
 			{
 				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-					DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+					MercPtrs[ gusSelectedSoldier ]->DoMercBattleSound( BATTLE_SOUND_ATTN1 );
 			}
 		}
 
@@ -936,12 +943,14 @@ UINT32	MainGameScreenHandle(void)
 
 void SetRenderHook( RENDER_HOOK pRenderOverride )
 {
+	PERFORMANCE_MARKER
 	gRenderOverride = pRenderOverride;
 }
 
 
 void DisableFPSOverlay( BOOLEAN fEnable )
 {
+	PERFORMANCE_MARKER
 
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -959,6 +968,7 @@ void DisableFPSOverlay( BOOLEAN fEnable )
 
 void TacticalScreenLocateToSoldier( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -995,6 +1005,7 @@ void TacticalScreenLocateToSoldier( )
  
 void EnterMapScreen( )
 {
+	PERFORMANCE_MARKER
 	// ATE: These flags well get set later on in mapscreen....
 	//SetTacticalInterfaceFlags( INTERFACE_MAPSCREEN );
 	//fInterfacePanelDirty = DIRTYLEVEL2;
@@ -1004,6 +1015,7 @@ void EnterMapScreen( )
 
 void UpdateTeamPanelAssignments( )
 {
+	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -1025,6 +1037,7 @@ void UpdateTeamPanelAssignments( )
 
 void EnterModalTactical( INT8 bMode )
 {
+	PERFORMANCE_MARKER
 	gbTacticalDisableMode = bMode;
 	gfTacticalIsModal			= TRUE;
 
@@ -1047,6 +1060,7 @@ void EnterModalTactical( INT8 bMode )
 
 void EndModalTactical( )
 {
+	PERFORMANCE_MARKER
 	if ( gfTacticalDisableRegionActive )
 	{	
 		MSYS_RemoveRegion( &gTacticalDisableRegion );
@@ -1070,6 +1084,7 @@ void EndModalTactical( )
 
 void HandleModalTactical( )
 {
+	PERFORMANCE_MARKER
 	StartFrameBufferRender( );
 
 	RestoreBackgroundRects();
@@ -1105,6 +1120,7 @@ void HandleModalTactical( )
 
 void InitHelicopterEntranceByMercs( void )
 {
+	PERFORMANCE_MARKER
 	if( DidGameJustStart() )
 	{
 		AIR_RAID_DEFINITION	AirRaidDef;

@@ -60,6 +60,7 @@ void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason );
 
 void EnterIMPVoices( void )
 {
+	PERFORMANCE_MARKER
 	fVoiceAVisited = FALSE;
 	fVoiceBVisited = FALSE;
 	fVoiceCVisited = FALSE;
@@ -92,6 +93,7 @@ void EnterIMPVoices( void )
 
 void RenderIMPVoices( void )
 {
+	PERFORMANCE_MARKER
 	
 
 	// render background
@@ -118,6 +120,7 @@ void RenderIMPVoices( void )
 
 void ExitIMPVoices( void )
 {
+	PERFORMANCE_MARKER
 	// destroy buttons for IMP Voices page
 	DestroyIMPVoicesButtons( ); 
 
@@ -130,6 +133,7 @@ void ExitIMPVoices( void )
 
 void HandleIMPVoices( void )
 {
+	PERFORMANCE_MARKER
 
 	// do we need to re write screen
 	if ( fReDrawVoicesScreenFlag == TRUE ) 
@@ -167,6 +171,7 @@ void FixVoiceRange()
 
 void IncrementVoice( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iIMPIndex = -1;
 	INT32 i;
 
@@ -191,6 +196,7 @@ void IncrementVoice( void )
 
 void DecrementVoice( void )
 {
+	PERFORMANCE_MARKER
 		INT32 iIMPIndex = -1;
 	INT32 i;
 
@@ -215,6 +221,7 @@ void DecrementVoice( void )
 
 void CreateIMPVoicesButtons( void )
 {
+	PERFORMANCE_MARKER
 	// will create buttons need for the IMP Voices screen
 
 	// next button
@@ -270,6 +277,7 @@ void CreateIMPVoicesButtons( void )
 
 void DestroyIMPVoicesButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	// will destroy buttons created for IMP Voices screen
 	
@@ -291,6 +299,7 @@ void DestroyIMPVoicesButtons( void )
 
 void BtnIMPVoicesNextCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -327,6 +336,7 @@ void BtnIMPVoicesNextCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -362,6 +372,7 @@ void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP attrbite begin button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -423,6 +434,7 @@ void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CameBackToVoicePageButNotFinished()
 {
+	PERFORMANCE_MARKER
 	//if we are in a page that comes after this one
 	if( iCurrentProfileMode == IMP__PERSONALITY ||
 			iCurrentProfileMode == IMP__ATTRIBUTES )
@@ -438,6 +450,7 @@ BOOLEAN CameBackToVoicePageButNotFinished()
 
 UINT32 PlayVoice( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iSlot = gGameExternalOptions.iaIMPSlots[iCurrentVoice];
 	char caVoiceSample[] = "Speech\\%03d_001.wav";
 
@@ -450,6 +463,7 @@ UINT32 PlayVoice( void )
 
 void CreateIMPVoiceMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	// will create mouse regions needed for the IMP voices page
 	MSYS_DefineRegion( &gVoicePortraitRegion, LAPTOP_SCREEN_UL_X + 200, LAPTOP_SCREEN_WEB_UL_Y + 176 ,LAPTOP_SCREEN_UL_X + 200 + 100, LAPTOP_SCREEN_WEB_UL_Y + 176 + 100,MSYS_PRIORITY_HIGH,
 							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback ); 
@@ -462,6 +476,7 @@ void CreateIMPVoiceMouseRegions( void )
 
 void DestroyIMPVoiceMouseRegions( void )
 {
+	PERFORMANCE_MARKER
 	// will destroy already created mouse reiogns for IMP voices page
 	MSYS_RemoveRegion( &gVoicePortraitRegion );
 
@@ -470,7 +485,8 @@ void DestroyIMPVoiceMouseRegions( void )
 
 
 void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
 	// callback handler for imp portrait region button events
 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
@@ -492,6 +508,7 @@ void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason )
 
 void RenderVoiceIndex( void )
 {
+	PERFORMANCE_MARKER
 
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;

@@ -62,6 +62,7 @@ typedef IMPitemchoicesParseData;
 static void XMLCALL 
 IMPitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -152,6 +153,7 @@ IMPitemchoicesStartElementHandle(void *userData, const XML_Char *name, const XML
 static void XMLCALL
 IMPitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -165,6 +167,7 @@ IMPitemchoicesCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 IMPitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	IMPitemchoicesParseData * pData = (IMPitemchoicesParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -459,6 +462,7 @@ IMPitemchoicesEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -521,6 +525,7 @@ BOOLEAN ReadInIMPItemChoicesStats(STR fileName)
 }
 BOOLEAN WriteIMPItemChoicesStats()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"writeIMPitemchoicesstats");
 	HWFILE		hFile;
 

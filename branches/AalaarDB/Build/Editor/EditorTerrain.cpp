@@ -44,6 +44,7 @@ INT32 TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 
 void EntryInitEditorTerrainInfo()
 {
+	PERFORMANCE_MARKER
 	//ResetTerrainTileWeights();
 	if( !fUseTerrainWeights )
 	{
@@ -53,6 +54,7 @@ void EntryInitEditorTerrainInfo()
 
 void ResetTerrainTileWeights()
 {
+	PERFORMANCE_MARKER
 	INT8 x;
 	for( x=0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
 	{
@@ -65,6 +67,7 @@ void ResetTerrainTileWeights()
 
 void HideTerrainTileButtons()
 {
+	PERFORMANCE_MARKER
 	INT8 x;
 	if( gfShowTerrainTileButtons )
 	{
@@ -78,6 +81,7 @@ void HideTerrainTileButtons()
 
 void ShowTerrainTileButtons()
 {
+	PERFORMANCE_MARKER
 	INT8 x;
 	if( !gfShowTerrainTileButtons )
 	{
@@ -91,6 +95,7 @@ void ShowTerrainTileButtons()
 
 void RenderTerrainTileButtons()
 {
+	PERFORMANCE_MARKER
 	// If needed, display the ground tile images
 	if(gfShowTerrainTileButtons)
 	{
@@ -139,6 +144,7 @@ void RenderTerrainTileButtons()
 //contains the terrain button's index value.
 void TerrainTileButtonRegionCallback(MOUSE_REGION *reg,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gfRenderTaskbar = TRUE;
@@ -192,6 +198,7 @@ void TerrainTileButtonRegionCallback(MOUSE_REGION *reg,INT32 reason)
 
 void ChooseWeightedTerrainTile()
 {
+	PERFORMANCE_MARKER
 	UINT16 x, usWeight;
 	INT16 sRandomNum;
 	if(!usTotalWeight)
@@ -220,6 +227,7 @@ UINT32 maxCount=0, calls=0;
 
 void Fill( INT32 x, INT32 y )
 {
+	PERFORMANCE_MARKER
 	INT32 iMapIndex;
 	UINT32 uiCheckType;
 
@@ -258,6 +266,7 @@ void Fill( INT32 x, INT32 y )
 
 void TerrainFill( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	INT16 sX, sY;
 	//determine what we should be looking for to replace...
 	GetTileType( gpWorldLevelData[ iMapIndex ].pLandHead->usIndex, &guiSearchType );

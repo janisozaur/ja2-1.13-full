@@ -31,6 +31,7 @@ extern INT16 DirYIncrementer[8];
 
 int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSkipTilesWithMercs;
  
 	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
@@ -63,20 +64,20 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
  // AND the gridno hasn't been black-listed for us
 
  // Nov 28 98: skip people in destination tile if in turnbased
- if ( ( NewOKDestination(pSoldier, sGridno, fSkipTilesWithMercs, pSoldier->bLevel ) ) &&
+ if ( ( NewOKDestination(pSoldier, sGridno, fSkipTilesWithMercs, pSoldier->pathing.bLevel ) ) &&
 				( !InGas( pSoldier, sGridno ) ) &&
 				( sGridno != pSoldier->sGridNo ) &&
-				( sGridno != pSoldier->sBlackList ) )
+				( sGridno != pSoldier->pathing.sBlackList ) )
  /*
- if ( ( NewOKDestination(pSoldier, sGridno, FALSE, pSoldier->bLevel ) ) &&
+ if ( ( NewOKDestination(pSoldier, sGridno, FALSE, pSoldier->pathing.bLevel ) ) &&
 				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) ) &&
 				( sGridno != pSoldier->sGridNo ) &&
-				( sGridno != pSoldier->sBlackList ) )*/
+				( sGridno != pSoldier->pathing.sBlackList ) )*/
  /*
- if ( ( NewOKDestination(pSoldier,sGridno,ALLPEOPLE, pSoldier->bLevel ) ) &&
+ if ( ( NewOKDestination(pSoldier,sGridno,ALLPEOPLE, pSoldier->pathing.bLevel ) ) &&
 				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) ) &&
 				( sGridno != pSoldier->sGridNo ) &&
-				( sGridno != pSoldier->sBlackList ) )
+				( sGridno != pSoldier->pathing.sBlackList ) )
 				*/
 	{
 	
@@ -85,12 +86,12 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 		return(FALSE);
 
 		//Madd: added to prevent people from running into gas and fire
-		if ( (gpWorldLevelData[sGridno].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
+		if ( (gpWorldLevelData[sGridno].ubExtFlags[pSoldier->pathing.bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
 					FindGasMask(pSoldier) == NO_SLOT	)
 		{
 			return( FALSE );
 		}
-		if ( gpWorldLevelData[sGridno].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_BURNABLEGAS )
+		if ( gpWorldLevelData[sGridno].ubExtFlags[pSoldier->pathing.bLevel] & MAPELEMENT_EXT_BURNABLEGAS )
 		{
 			return( FALSE );
 		}
@@ -131,6 +132,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 {
+	PERFORMANCE_MARKER
 	UINT8 ubGottaCancel = FALSE;
 	UINT8 ubSuccess = FALSE;
 
@@ -140,27 +142,27 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
 	{
 #ifdef DEBUGDECISIONS
-		STR tempstr;
-		sprintf(tempstr, "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
+		std::string tempstr;
+		tempstr = String( "%d CONTINUES MOVEMENT to gridno %d...\n", pSoldier->ubID,sGridno );
 		DebugAI( tempstr );
 #endif
 
-		pSoldier->bPathStored = TRUE;	// optimization - Ian
+		pSoldier->pathing.bPathStored = TRUE;	// optimization - Ian
 
 		// make him go to it (needed to continue movement across multiple turns)
 		NewDest(pSoldier,sGridno);
 
 		ubSuccess = TRUE;
 	
-		// make sure that it worked (check that pSoldier->sDestination == pSoldier->sGridNo)
-		if (pSoldier->sDestination == sGridno)
+		// make sure that it worked (check that pSoldier->pathing.sDestination == pSoldier->sGridNo)
+		if (pSoldier->pathing.sDestination == sGridno)
 		{
 			ubSuccess = TRUE;
 		}
 		else
 		{
 #ifdef BETAVERSION
-			sprintf(tempstr,"TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
+			tempstr = String("TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
 
 #ifdef RECORDNET
 			fprintf(NetDebugFile,"\n\t%s\n",tempstr);
@@ -181,20 +183,20 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		// legally if another soldier gets in the way between turns
 
 #ifdef BETAVERSION
-		sprintf(tempstr,"TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
+		tempstr = String("TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
 
 #ifdef RECORDNET
 		fprintf(NetDebugFile,"\n\t%s\n",tempstr);
 #endif
 
 #ifdef DEBUGDECISIONS
-		AIPopMessage(tempstr);
+		DebugAI(tempstr);
 #endif
 
 #endif
 
 
-		if (!pSoldier->bUnderEscort)
+		if (!pSoldier->aiData.bUnderEscort)
 		{
 			CancelAIAction(pSoldier,DONTFORCE);	// no need to force this
 		}
@@ -202,17 +204,17 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		{
 			// this is an escorted NPC, don't want to just completely stop
 			// moving, try to find a nearby "next best" destination if possible
-			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sGridno,pSoldier->bAction);
+			pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sGridno,pSoldier->aiData.bAction);
 
 			// if it's not possible to get any closer
-			if (pSoldier->usActionData == NOWHERE)
+			if (pSoldier->aiData.usActionData == NOWHERE)
 			{
 				ubGottaCancel = TRUE;
 			}
 			else
 			{
 				// change his desired destination to this new one
-				sGridno = pSoldier->usActionData;
+				sGridno = pSoldier->aiData.usActionData;
 
 				// GoAsFar... sets pathStored TRUE only if he could go all the way
 
@@ -220,8 +222,8 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 				NewDest(pSoldier,sGridno);
 
 
-				// make sure that it worked (check that pSoldier->sDestination == pSoldier->sGridNo)
-				if (pSoldier->sDestination == sGridno)
+				// make sure that it worked (check that pSoldier->pathing.sDestination == pSoldier->sGridNo)
+				if (pSoldier->pathing.sDestination == sGridno)
 					ubSuccess = TRUE;
 				else
 					ubGottaCancel = TRUE;
@@ -245,8 +247,9 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 {
+	PERFORMANCE_MARKER
  // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
- if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
+ if ((pSoldier->aiData.bPatrolCnt < 1) || (pSoldier->aiData.bPatrolCnt >= MAXPATROLGRIDS))
 	{
 #ifdef BETAVERSION
 	sprintf(tempstr,"NextPatrolPoint: ERROR: Invalid patrol count = %d for %s",pSoldier->aiData.bPatrolCnt,pSoldier->name);
@@ -257,30 +260,31 @@ INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
 	}
 
  
- pSoldier->bNextPatrolPnt++;
+ pSoldier->aiData.bNextPatrolPnt++;
 
  
  // if there are no more patrol points, return back to the first one
  if (pSoldier->aiData.bNextPatrolPnt > pSoldier->aiData.bPatrolCnt)
 	pSoldier->aiData.bNextPatrolPnt = 1;	// ZERO is not used!
 
- return(pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt]);
+ return(pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt]);
 }
 
 
 
 INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 {
+	PERFORMANCE_MARKER
  INT16 sPatrolPoint;
  INT8	bOldOrders;
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 
- sPatrolPoint = pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt];
+ sPatrolPoint = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
 
  // if we're already there, advance next patrol point
- if (pSoldier->sGridNo == sPatrolPoint || pSoldier->bNextPatrolPnt == 0)
+ if (pSoldier->sGridNo == sPatrolPoint || pSoldier->aiData.bNextPatrolPnt == 0)
 	{
 	// find next valid patrol point
 	do
@@ -339,8 +343,8 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
  // passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
- sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
- AIPopMessage(tempstr);
+ tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+ DebugAI(tempstr);
 #endif
 
  return(TRUE);
@@ -348,17 +352,18 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
 
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 {
+	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 	INT16 sPatrolPoint;
 	INT8	bOldOrders, bPatrolIndex;
 	INT8	bCnt;
 
-	sPatrolPoint = pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt];
+	sPatrolPoint = pSoldier->aiData.usPatrolGrid[pSoldier->aiData.bNextPatrolPnt];
 
 	// if we're already there, advance next patrol point
-	if (pSoldier->sGridNo == sPatrolPoint || pSoldier->bNextPatrolPnt == 0)
+	if (pSoldier->sGridNo == sPatrolPoint || pSoldier->aiData.bNextPatrolPnt == 0)
 	{
 		// find next valid patrol point
 		// we keep a count of the # of times we are in here to make sure we don't get into an endless
@@ -367,21 +372,21 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 		do
 		{
 			// usPatrolGrid[0] gets used for centre of close etc patrols, so we have to add 1 to the Random #
-			bPatrolIndex = (INT8) PreRandom( pSoldier->bPatrolCnt ) + 1;
-			sPatrolPoint = pSoldier->usPatrolGrid[ bPatrolIndex];
+			bPatrolIndex = (INT8) PreRandom( pSoldier->aiData.bPatrolCnt ) + 1;
+			sPatrolPoint = pSoldier->aiData.usPatrolGrid[ bPatrolIndex];
 			bCnt++;
 		}
-		while ( (sPatrolPoint == pSoldier->sGridNo) || ( (sPatrolPoint != NOWHERE) && (bCnt < pSoldier->bPatrolCnt) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->bLevel ) < 1)) ); 
+		while ( (sPatrolPoint == pSoldier->sGridNo) || ( (sPatrolPoint != NOWHERE) && (bCnt < pSoldier->aiData.bPatrolCnt) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel ) < 1)) ); 
 
-		if (bCnt == pSoldier->bPatrolCnt)
+		if (bCnt == pSoldier->aiData.bPatrolCnt)
 		{
 			// ok, we tried doing this randomly, didn't work well, so now do a linear search
-			pSoldier->bNextPatrolPnt = 0;
+			pSoldier->aiData.bNextPatrolPnt = 0;
 			do
 			{
 				sPatrolPoint = NextPatrolPoint(pSoldier);
 			}
-			while ((sPatrolPoint != NOWHERE) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->bLevel) < 1));
+			while ((sPatrolPoint != NOWHERE) && (NewOKDestination(pSoldier,sPatrolPoint,IGNOREPEOPLE, pSoldier->pathing.bLevel) < 1));
 		}
 		
 		// do nothing this time around
@@ -399,7 +404,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 #endif
 
 		// over-ride orders to something safer
-		pSoldier->bOrders = FARPATROL;
+		pSoldier->aiData.bOrders = FARPATROL;
 		return(FALSE);
 	}
 
@@ -414,23 +419,23 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 	{
 		// temporarily extend roaming range to infinity by changing orders, else
 		// this won't work if the next patrol point is > 10 tiles away!
-		bOldOrders					= pSoldier->bOrders;
-		pSoldier->bOrders	= SEEKENEMY;
+		bOldOrders					= pSoldier->aiData.bOrders;
+		pSoldier->aiData.bOrders	= SEEKENEMY;
 
-		pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sPatrolPoint,pSoldier->bAction);
+		pSoldier->aiData.usActionData = GoAsFarAsPossibleTowards(pSoldier,sPatrolPoint,pSoldier->aiData.bAction);
 
-		pSoldier->bOrders = bOldOrders;
+		pSoldier->aiData.bOrders = bOldOrders;
 
 		// if it's not possible to get any closer, that's OK, but fail this call
-		if (pSoldier->usActionData == NOWHERE)
+		if (pSoldier->aiData.usActionData == NOWHERE)
 			return(FALSE);
 	}
 
 
 	// passed all tests - start moving towards next patrol point
 #ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
-	AIPopMessage(tempstr);
+	tempstr = String("%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->aiData.usActionData);
+	DebugAI(tempstr);
 #endif
 
 	return(TRUE);
@@ -440,8 +445,9 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bReserveAPs, INT8 bAction, INT8 fFlags )
 {
+	PERFORMANCE_MARKER
 #ifdef DEBUGDECISIONS
- STR16 tempstr;
+ std::string tempstr;
 #endif
 	INT16 sLoop,sAPCost;
 	INT16 sTempDest,sGoToGrid;
@@ -453,7 +459,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 	// 0verhaul:	Make sure to clear the stored path since this always calculates a new one.
 	// This is needed if the path cannot be found.
-	pSoldier->bPathStored = FALSE;
+	pSoldier->pathing.bPathStored = FALSE;
 
 	if ( bReserveAPs == -1 )
 	{
@@ -473,9 +479,9 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// obtain maximum roaming distance from soldier's sOrigin
 	usMaxDist = RoamingRange(pSoldier,&sOrigin);
 
-	if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
+	if ( pSoldier->aiData.bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 	{
-		if ( InARoom( pSoldier->usPatrolGrid[0], &ubRoomRequired ) )
+		if ( InARoom( pSoldier->aiData.usPatrolGrid[0], &ubRoomRequired ) )
 		{
 			// make sure this doesn't interfere with pathing for scripts
 			if ( pSoldier->sAbsoluteFinalDestination != NOWHERE )
@@ -492,8 +498,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	}
 
 #ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
-	AIPopMessage(tempstr);
+	tempstr = String("%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
+	DebugAI(tempstr);
 #endif
 
 	// if soldier is ALREADY at the desired destination, quit right away
@@ -543,7 +549,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 		{
 			// we tried to get close, failed; abort!
-			pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
+			pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize = 0;
 			return( NOWHERE );
 		}
 		else
@@ -598,7 +604,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 				AINumMessage("Couldn't find OK destination around grid #",sDesGrid);
 #endif
 
-				pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
+				pSoldier->pathing.usPathIndex = pSoldier->pathing.usPathDataSize = 0;
 				return(NOWHERE);
 			}
 
@@ -612,7 +618,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 #ifdef DEBUGDECISIONS
  AINumMessage("Chosen legal destination is gridno ",sDesGrid);
- AINumMessage("Tracing along path, pathRouteToGo = ",pSoldier->usPathIndex);
+ AINumMessage("Tracing along path, pathRouteToGo = ",pSoldier->pathing.usPathIndex);
 #endif
 
  sGoToGrid = pSoldier->sGridNo;		// start back where soldier is standing now
@@ -621,7 +627,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  // we'll only go as far along the plotted route as is within our
  // permitted roaming range, and we'll stop as soon as we're down to <= 5 APs
 
- for (sLoop = 0; sLoop < (pSoldier->usPathDataSize - pSoldier->usPathIndex); sLoop++)
+ for (sLoop = 0; sLoop < (pSoldier->pathing.usPathDataSize - pSoldier->pathing.usPathIndex); sLoop++)
 	{
 	// what is the next gridno in the path?
 
@@ -775,31 +781,33 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 										
 INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bAction)
 {
+	PERFORMANCE_MARKER
 	return( InternalGoAsFarAsPossibleTowards( pSoldier, sDesGrid, -1, bAction, 0 ) );
 }
 	
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 {
+	PERFORMANCE_MARKER
 	INT16 usNewGridNo,bAPCost;
 
 
 	// turn off the flag now that we're going to do something about it...
 	// ATE: USed to be redundent, now if called befroe NewDest can cause some side efects...
-	// AdjustNoAPToFinishMove( pSoldier, FALSE );
+	// pSoldier->AdjustNoAPToFinishMove( FALSE );
 
-	if (pSoldier->bNewSituation == IS_NEW_SITUATION)
+	if (pSoldier->aiData.bNewSituation == IS_NEW_SITUATION)
 	{
 		CancelAIAction(pSoldier,DONTFORCE);
 		return;
 	}
 
-	if (pSoldier->usActionData >= NOWHERE)
+	if (pSoldier->aiData.usActionData >= NOWHERE)
 	{
 		CancelAIAction(pSoldier,DONTFORCE);	
 		return;
 	}
 
-	if (!NewOKDestination( pSoldier,pSoldier->usActionData, TRUE, pSoldier->bLevel ))
+	if (!NewOKDestination( pSoldier,pSoldier->aiData.usActionData, TRUE, pSoldier->pathing.bLevel ))
 	{
 		CancelAIAction(pSoldier,DONTFORCE);
 		return;
@@ -807,14 +815,14 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 
 	if (IsActionAffordable(pSoldier))
 	{
-		if (pSoldier->bActionInProgress == FALSE)
+		if (pSoldier->aiData.bActionInProgress == FALSE)
 		{
 			// start a move that didn't even get started before...
 			// hope this works...
 			NPCDoesAct(pSoldier);
 
 			// perform the chosen action
-			pSoldier->bActionInProgress = ExecuteAction(pSoldier); // if started, mark us as busy
+			pSoldier->aiData.bActionInProgress = ExecuteAction(pSoldier); // if started, mark us as busy
 		}
 		else
 		{
@@ -830,17 +838,17 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 #endif
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->pathing.usPathingData[ pSoldier->pathing.usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->pathing.usPathIndex, (INT8) pSoldier->pathing.usPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{
 		// seems to have enough points...
 		NewDest(pSoldier,usNewGridNo);
 		// maybe we didn't actually start the action last turn...
-		pSoldier->bActionInProgress = TRUE;
+		pSoldier->aiData.bActionInProgress = TRUE;
 #ifdef TESTAI
 		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3, 
 						String("Soldier (%d) continues along path",pSoldier->ubID) );
@@ -858,6 +866,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 												
 void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 {
+	PERFORMANCE_MARKER
 	// If a special move, ignore this!
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 	{
@@ -865,13 +874,13 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 	}
 
 	// record that this merc can no longer animate and why...
-	AdjustNoAPToFinishMove( pSoldier, TRUE );
+	pSoldier->AdjustNoAPToFinishMove( TRUE );
 
 	// We'll keep his action intact though...
 	DebugAI( String("NO AP TO FINISH MOVE for %d (%d APs left)",pSoldier->ubID, pSoldier->bActionPoints) );
 
 	// if this dude is under AI right now, then pass the baton to someone else
-	if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
+	if (pSoldier->flags.uiStatusFlags & SOLDIER_UNDERAICONTROL)
 	{
 		#ifdef TESTAICONTROL
 			DebugAI( String("Ending turn for %d because out of APs for movement", pSoldier->ubID ) );
@@ -883,6 +892,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 
 void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 {
+	PERFORMANCE_MARKER
  SOLDIERTYPE *pSoldier;
 
 
@@ -934,6 +944,7 @@ void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 
 INT16 TrackScent( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	// This function returns the best gridno to go to based on the scent being followed,
 	// and the soldier (creature/animal)'s current direction (which is used to resolve
 	// ties.
@@ -985,7 +996,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 					// wrapped across map!
 					continue;
 				}
-				if (LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK,0))
+				if (LegalNPCDestination(pSoldier,pSoldier->aiData.usActionData,ENSURE_PATH,WATEROK,0))
 				{
 					// check this location out
 					pMapElement = &(gpWorldLevelData[iGridNo]);
@@ -1045,7 +1056,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 	}
 	if (iBestGridNo != NOWHERE )
 	{
-		pSoldier->usActionData = (INT16) iBestGridNo;
+		pSoldier->aiData.usActionData = (INT16) iBestGridNo;
 		return( (INT16) iBestGridNo );
 	}
 	return( 0 );
@@ -1054,6 +1065,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 /*
 UINT16 RunAway( SOLDIERTYPE * pSoldier )
 {
+	PERFORMANCE_MARKER
 	// "Run away! Run away!!!"
 	// This code should figure out which directions are safe for the enemy
 	// to run in.	They shouldn't try to run off in directions which will
@@ -1077,13 +1089,13 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 	for (ubLoop = 0,pOpponent = Menptr; ubLoop < MAXMERCS; ubLoop++,pOpponent++)
 	{
 		// if this merc is inactive, at base, on assignment, or dead
-		if (!pOpponent->bActive || !pOpponent->bInSector || !pOpponent->bLife)
+		if (!pOpponent->bActive || !pOpponent->bInSector || !pOpponent->stats.bLife)
 		{
 			continue;			// next merc
 		}
 
 		// if this man is neutral / on the same side, he's not an opponent
-		if (pOpponent->bNeutral || (pSoldier->bSide == pOpponent->bSide))
+		if (pOpponent->aiData.bNeutral || (pSoldier->bSide == pOpponent->bSide))
 		{
 			continue;			// next merc
 		}

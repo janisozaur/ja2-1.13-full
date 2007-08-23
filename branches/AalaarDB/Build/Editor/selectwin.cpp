@@ -177,6 +177,7 @@ UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
 //
 void CreateJA2SelectionWindow( INT16 sWhat )
 {
+	PERFORMANCE_MARKER
 	DisplaySpec *pDSpec;
 	UINT16 usNSpecs;
 
@@ -346,10 +347,6 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 			pSelList = SelRoom;
 			pNumSelList = &iNumRoomsSelected;
 			break;
-		default:
-			// If none of these, don't create anything!
-			AssertMsg( 0, "Unknown window creation type");
-			return;
 	}
 
 	BuildDisplayWindow( pDSpec, usNSpecs, &pDispList, &SelWinStartPoint, &SelWinEndPoint, 
@@ -363,6 +360,7 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 //every single time you go into a selection window which was redundant and CPU consuming.
 void InitJA2SelectionWindow( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iCount;
 	INT32 iCount2;
 	INT32 iCount3;
@@ -777,6 +775,7 @@ void InitJA2SelectionWindow( void )
 //
 void ShutdownJA2SelectionWindow( void )
 {
+	PERFORMANCE_MARKER
 	INT16 x;
 
 	for (x = 0; x < 4; x++)
@@ -797,6 +796,7 @@ void ShutdownJA2SelectionWindow( void )
 //
 void RemoveJA2SelectionWindow( void )
 {
+	PERFORMANCE_MARKER
 	RemoveButton(iSelectWin);
 	RemoveButton(iCancelWin);
 	RemoveButton(iScrollUp);
@@ -823,6 +823,7 @@ void RemoveJA2SelectionWindow( void )
 //
 DisplayList *TrashList( DisplayList *pNode )
 {
+	PERFORMANCE_MARKER
 	if (pNode == NULL)
 		return(NULL);
 
@@ -843,6 +844,7 @@ DisplayList *TrashList( DisplayList *pNode )
 //
 void RenderSelectionWindow( void )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *button;
 	INT32 iSX,iSY,iEX,iEY;
 	UINT16 usFillColor;
@@ -924,6 +926,7 @@ void RenderSelectionWindow( void )
 //
 void SelWinClkCallback( GUI_BUTTON *button, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	DisplayList *pNode;
 	BOOLEAN fDone;
 	INT16 iClickX,iClickY, iYInc, iXInc;
@@ -1034,6 +1037,7 @@ void SelWinClkCallback( GUI_BUTTON *button, INT32 reason )
 //at the top of the screen.
 void DisplaySelectionWindowGraphicalInformation()
 {
+	PERFORMANCE_MARKER
 	DisplayList *pNode;
 	BOOLEAN fDone;
 	//UINT16 usObjIndex, usIndex;
@@ -1090,19 +1094,22 @@ void DisplaySelectionWindowGraphicalInformation()
 //
 void AddToSelectionList( DisplayList *pNode )
 {
-	INT32 iIndex, iUseIndex = -1;
+	PERFORMANCE_MARKER
+	INT32 iIndex, iUseIndex;
+	BOOLEAN fDone;
 
-	for (iIndex = 0; iIndex < (*pNumSelList); iIndex++ )
+	fDone = FALSE;
+	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
 				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
+			fDone = TRUE;
 			iUseIndex = iIndex;
-			break;
 		}
 	}	
-
-	if ( iUseIndex >= 0 )
+	
+	if ( fDone )
 	{
 		// Was already in the list, so bump up the count
 		pSelList[ iUseIndex ].sCount++;
@@ -1130,6 +1137,7 @@ void AddToSelectionList( DisplayList *pNode )
 //
 BOOLEAN ClearSelectionList( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
 	DisplayList *pNode;
 
@@ -1160,25 +1168,27 @@ BOOLEAN ClearSelectionList( void )
 //
 BOOLEAN RemoveFromSelectionList( DisplayList *pNode )
 {
-	INT32 iIndex, iUseIndex = -1;
-	BOOLEAN fRemoved;
+	PERFORMANCE_MARKER
+	INT32 iIndex, iUseIndex;
+	BOOLEAN fDone, fRemoved;
 
 	// Abort if no entries in list (pretend we removed a node)
 	if ( (*pNumSelList) <= 0 )
 		return( TRUE );
 
 	fRemoved = FALSE;
-	for (iIndex = 0; iIndex < (*pNumSelList); iIndex++ )
+	fDone = FALSE;
+	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
 				pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
+			fDone = TRUE;
 			iUseIndex = iIndex;
-			break;
 		}
 	}	
 	
-	if ( iUseIndex >= 0 )
+	if ( fDone )
 	{
 		// Was already in the list, so bump up the count
 		pSelList[ iUseIndex ].sCount--;
@@ -1206,6 +1216,7 @@ BOOLEAN RemoveFromSelectionList( DisplayList *pNode )
 //
 INT32 GetRandomSelection( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iRandNum, iTotalCounts;
 	INT32 iIndex, iSelectedIndex, iNextCount;
 
@@ -1241,6 +1252,7 @@ INT32 GetRandomSelection( void )
 //
 BOOLEAN IsInSelectionList( DisplayList *pNode )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
 	BOOLEAN fFound;
 
@@ -1267,6 +1279,7 @@ BOOLEAN IsInSelectionList( DisplayList *pNode )
 //
 INT32 FindInSelectionList( DisplayList *pNode )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex,iUseIndex;
 	BOOLEAN fFound;
 
@@ -1294,6 +1307,7 @@ INT32 FindInSelectionList( DisplayList *pNode )
 //
 void SaveSelectionList( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
 
 	for (iIndex = 0; iIndex < MAX_SELECTIONS; iIndex++ )
@@ -1310,6 +1324,7 @@ void SaveSelectionList( void )
 //
 void RestoreSelectionList( void )
 {
+	PERFORMANCE_MARKER
 	INT32 iIndex;
 
 	for (iIndex = 0; iIndex < MAX_SELECTIONS; iIndex++ )
@@ -1325,6 +1340,7 @@ void RestoreSelectionList( void )
 //	Button callback function for the selection window's OK button
 void OkClkCallback( GUI_BUTTON *button, INT32 reason )
 {
+	PERFORMANCE_MARKER
 
 		
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1345,7 +1361,8 @@ void OkClkCallback( GUI_BUTTON *button, INT32 reason )
 //	Button callback function for the selection window's CANCEL button
 //
 void CnclClkCallback( GUI_BUTTON *button, INT32 reason )
-{	
+{
+	PERFORMANCE_MARKER	
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		button->uiFlags |= BUTTON_CLICKED_ON;
@@ -1366,6 +1383,7 @@ void CnclClkCallback( GUI_BUTTON *button, INT32 reason )
 //
 void UpClkCallback( GUI_BUTTON *button, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		button->uiFlags |= BUTTON_CLICKED_ON;
@@ -1385,6 +1403,7 @@ void UpClkCallback( GUI_BUTTON *button, INT32 reason )
 //
 void ScrollSelWinUp(void)
 {
+	PERFORMANCE_MARKER
 	DisplayList *pNode;
 	INT16 iCutOff,iBotCutOff;
 	BOOLEAN fDone;
@@ -1420,6 +1439,7 @@ void ScrollSelWinUp(void)
 //
 void ScrollSelWinDown(void)
 {
+	PERFORMANCE_MARKER
 	DisplayList *pNode;
 	INT16 iCutOff,iBotCutOff;
 	BOOLEAN fDone;
@@ -1451,6 +1471,7 @@ void ScrollSelWinDown(void)
 //
 void DwnClkCallback( GUI_BUTTON *button, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		button->uiFlags |= BUTTON_CLICKED_ON;
@@ -1471,6 +1492,7 @@ void DwnClkCallback( GUI_BUTTON *button, INT32 reason )
 //
 void DrawSelections( void )
 {
+	PERFORMANCE_MARKER
 	SGPRect					ClipRect, NewRect;
 
 	NewRect.iLeft = SelWinStartPoint.iX;
@@ -1504,6 +1526,7 @@ BOOLEAN BuildDisplayWindow( DisplaySpec *pDisplaySpecs, UINT16 usNumSpecs, Displ
 														SGPPoint * pUpperLeft, SGPPoint * pBottomRight, 
 														SGPPoint * pSpacing, UINT16 fFlags )
 {
+	PERFORMANCE_MARKER
 	INT32						iCurrX = pUpperLeft->iX;
 	INT32						iCurrY = pUpperLeft->iY;
 	UINT16					usGreatestHeightInRow = 0;
@@ -1597,6 +1620,7 @@ BOOLEAN BuildDisplayWindow( DisplaySpec *pDisplaySpecs, UINT16 usNumSpecs, Displ
 //
 BOOLEAN DisplayWindowFunc( DisplayList *pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint *pUpperLeft, UINT16 fFlags)
 {
+	PERFORMANCE_MARKER
 	INT16						iCurrY;
 	INT16						sTempOffsetX;
 	INT16						sTempOffsetY;
@@ -1614,7 +1638,7 @@ BOOLEAN DisplayWindowFunc( DisplayList *pNode, INT16 iTopCutOff, INT16 iBottomCu
 	fReturnVal = FALSE;
 	if (DisplayWindowFunc(pNode->pNext, iTopCutOff, iBottomCutOff, pUpperLeft, fFlags))
 	{
-		iCurrY = (INT16) pUpperLeft->iY + pNode->iY - iTopCutOff;
+		iCurrY = pUpperLeft->iY + pNode->iY - iTopCutOff;
 
 		if ( iCurrY > iBottomCutOff )
 			return(TRUE);

@@ -63,6 +63,7 @@ typedef armourDropParseData;
 static void XMLCALL 
 armourDropStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -104,6 +105,7 @@ armourDropStartElementHandle(void *userData, const XML_Char *name, const XML_Cha
 static void XMLCALL
 armourDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
 	if( (pData->currentDepth <= pData->maxReadDepth) && 
@@ -116,7 +118,8 @@ armourDropCharacterDataHandle(void *userData, const XML_Char *str, int len)
 
 static void XMLCALL
 armourDropEndElementHandle(void *userData, const XML_Char *name)
-{	
+{
+	PERFORMANCE_MARKER	
 	armourDropParseData * pData = (armourDropParseData *)userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -166,6 +169,7 @@ armourDropEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -229,6 +233,7 @@ BOOLEAN ReadInEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileNam
 
 BOOLEAN WriteEnemyArmourDropsStats(ARMOUR_DROPS *pEnemyArmourDrops, STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 
 	//Debug code; make sure that what we got from the file is the same as what's there

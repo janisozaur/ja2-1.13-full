@@ -129,7 +129,7 @@ LUA_API void	(lua_xmove) (lua_State *from, lua_State *to, int n);
 
 
 /*
-** access functions (stack -> C)
+** access functions (stack->C)
 */
 
 LUA_API int			 (lua_isnumber) (lua_State *L, int idx);
@@ -155,7 +155,7 @@ LUA_API const void	 *(lua_topointer) (lua_State *L, int idx);
 
 
 /*
-** push functions (C -> stack)
+** push functions (C->stack)
 */
 LUA_API void	(lua_pushnil) (lua_State *L);
 LUA_API void	(lua_pushnumber) (lua_State *L, lua_Number n);
@@ -172,7 +172,7 @@ LUA_API int	(lua_pushthread) (lua_State *L);
 
 
 /*
-** get functions (Lua -> stack)
+** get functions (Lua->stack)
 */
 LUA_API void	(lua_gettable) (lua_State *L, int idx);
 LUA_API void	(lua_getfield) (lua_State *L, int idx, const char *k);
@@ -185,7 +185,7 @@ LUA_API void	(lua_getfenv) (lua_State *L, int idx);
 
 
 /*
-** set functions (stack -> Lua)
+** set functions (stack->Lua)
 */
 LUA_API void	(lua_settable) (lua_State *L, int idx);
 LUA_API void	(lua_setfield) (lua_State *L, int idx, const char *k);

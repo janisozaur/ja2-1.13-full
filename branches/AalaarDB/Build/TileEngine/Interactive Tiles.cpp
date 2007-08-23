@@ -90,20 +90,24 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode );
 
 BOOLEAN InitInteractiveTileManagement( )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 void ShutdownInteractiveTileManagement( )
 {
+	PERFORMANCE_MARKER
 }
 
 BOOLEAN AddInteractiveTile( INT16 sGridNo, LEVELNODE *pLevelNode, UINT32 uiFlags, UINT16 usType )
 {
+	PERFORMANCE_MARKER
 	return( TRUE );
 }
 
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
 	// ATE: Patch fix: Don't allow if alreay in animation
@@ -146,6 +150,7 @@ BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE
 
 BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *psAPCost, INT16 *psBPCost )
 {
+	PERFORMANCE_MARKER
 	if (pStructure == NULL)
 	{
 		return( FALSE );
@@ -177,6 +182,7 @@ BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *
 
 BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN	fDoor = FALSE;
 
 	if (pStructure == NULL)
@@ -197,13 +203,14 @@ BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStruct
 
 BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure;
 	UINT16				usStructureID;
 	INT16					sGridNo;
 		
 
-	sGridNo					= pSoldier->sPendingActionData2;
-	usStructureID		= (UINT16)pSoldier->uiPendingActionData1;
+	sGridNo					= pSoldier->aiData.sPendingActionData2;
+	usStructureID		= (UINT16)pSoldier->aiData.uiPendingActionData1;
 
 	// HANDLE SOLDIER ACTIONS
 	pStructure = FindStructureByID( sGridNo, usStructureID );
@@ -218,6 +225,7 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	STRUCTURE			*pStructure, *pNewStructure;
 	ITEM_POOL			*pItemPool;
 	BOOLEAN		fDidMissingQuote = FALSE;
@@ -267,7 +275,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 
 		// LOOK for item pool here...
-		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->bLevel ) )
+		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->pathing.bLevel ) )
 		{
 			// Update visiblity....
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
@@ -351,7 +359,8 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 
 UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
-{ 
+{
+	PERFORMANCE_MARKER 
 	LEVELNODE	*pIntNode;
 	STRUCTURE	*pStructure;
 	INT16			sGridNo;
@@ -400,7 +409,8 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 }
  
 void SetActionModeDoorCursorText( )
-{ 
+{
+	PERFORMANCE_MARKER 
 	LEVELNODE	*pIntNode;
 	STRUCTURE	*pStructure;
 	INT16			sGridNo;
@@ -426,6 +436,7 @@ void SetActionModeDoorCursorText( )
 
 void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
 		INT16 sTempX_S, sTempY_S;
@@ -507,12 +518,14 @@ void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT1
 
 void CompileInteractiveTiles( )
 {
+	PERFORMANCE_MARKER
 
 }
 
 
 void LogMouseOverInteractiveTile( INT16 sGridNo )
 {
+	PERFORMANCE_MARKER
 	SGPRect				aRect;
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
 	LEVELNODE			*pNode;
@@ -524,7 +537,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 	}
 
 	// Also, don't allow for mercs who are on upper level...
-	if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->bLevel == 1 )
+	if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->pathing.bLevel == 1 )
 	{
 		return;
 	}
@@ -591,6 +604,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 
 LEVELNODE *InternalGetCurInteractiveTile( BOOLEAN fRejectItemsOnTop )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode = NULL;
 	STRUCTURE	*pStructure = NULL;
 
@@ -645,12 +659,14 @@ LEVELNODE *InternalGetCurInteractiveTile( BOOLEAN fRejectItemsOnTop )
 
 LEVELNODE *GetCurInteractiveTile( )
 {
+	PERFORMANCE_MARKER
 	return( InternalGetCurInteractiveTile( TRUE ) );
 }
 
 
 LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	
 	pNode = GetCurInteractiveTile( );
@@ -671,6 +687,7 @@ LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 
 LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pNode;
 	STRUCTURE	*pStructure;
 
@@ -710,12 +727,14 @@ LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, 
 
 LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure )
 {
+	PERFORMANCE_MARKER
 	return( ConditionalGetCurInteractiveTileGridNoAndStructure( psGridNo, ppStructure, TRUE ) );
 }
 
 
 void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
 {
+	PERFORMANCE_MARKER
 	gfOverIntTile = FALSE;
 
 	// OK, release our stack, stuff could be different!
@@ -733,6 +752,7 @@ void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
 
 void EndCurInteractiveTileCheck( )
 {
+	PERFORMANCE_MARKER
 	CUR_INTERACTIVE_TILE		*pCurIntTile;
 
 	if ( gCurIntTile.fFound )
@@ -779,6 +799,7 @@ void EndCurInteractiveTileCheck( )
 
 BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 {
+	PERFORMANCE_MARKER
 	TILE_ELEMENT *TileElem;
 	STRUCTURE		*pStructure;
 				
@@ -902,6 +923,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 
 BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode )
 {
+	PERFORMANCE_MARKER
 	TILE_ELEMENT *TileElem;
 
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
@@ -939,6 +961,7 @@ BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY,
 // will return true if data found, else false
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	*SrcPtr;
@@ -1083,6 +1106,7 @@ BlitDone:
 
 BOOLEAN ShouldCheckForMouseDetections( )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fOK = FALSE;
 
 	if ( gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
@@ -1104,6 +1128,7 @@ BOOLEAN ShouldCheckForMouseDetections( )
 
 void CycleIntTileFindStack( INT16 sMapPos )
 {
+	PERFORMANCE_MARKER
 	gfCycleIntTile = TRUE;
 
 	// Cycle around!

@@ -68,6 +68,7 @@ void CrippledVersionEndGameCheck();
 
 BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 {
+	PERFORMANCE_MARKER
 	STRATEGICEVENT *pNewEvent;
 	if( gTacticalStatus.fEnemyInSector )
 	{
@@ -81,6 +82,7 @@ BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 {
+	PERFORMANCE_MARKER
 
 	BOOLEAN bMercDayOne = FALSE;
 	// Kaiden: Opening the INI File
@@ -445,6 +447,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 #ifdef CRIPPLED_VERSION
 void CrippledVersionEndGameCheck()
 {
+	PERFORMANCE_MARKER
 	CHAR16	zString[512];
 
 	//Dont want this to appear before we arrive
@@ -465,6 +468,7 @@ void CrippledVersionEndGameCheck()
 
 void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	//if we should restart the game
 	if( guiDay >= 8 )
 	{

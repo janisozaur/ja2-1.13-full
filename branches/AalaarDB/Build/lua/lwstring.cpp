@@ -4,9 +4,11 @@
 #include "MemMan.h"
 
 #include "lwstring.h"
+#include "profiler.h"
 
 void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
 {
+	PERFORMANCE_MARKER
 	TWString *ts;
 
 	// Create and initialize this data
@@ -24,6 +26,7 @@ void luaWS_newlstr (lua_State *L, const CHAR16 *str, size_t l)
 // Called from LUA code
 int LuaWStringFromUTF8( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	const CHAR8 *utf8 = luaL_checkstring( L, 1 );
 	STR16 str = NULL;
 	int len;
@@ -43,6 +46,7 @@ int LuaWStringFromUTF8( lua_State *L )
 
 int LuaWStringByte( lua_State* L )
 {
+	PERFORMANCE_MARKER
 	int start;
 	int stop;
 	int idx;
@@ -76,6 +80,7 @@ int LuaWStringByte( lua_State* L )
 
 static int LuaWStringChar( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	int len = lua_gettop( L) + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
 	int idx;
@@ -83,7 +88,7 @@ static int LuaWStringChar( lua_State *L )
 	len--;
 	for( idx=0; idx<len; idx++)
 	{
-		str[ idx ] = (CHAR16) luaL_checkint( L, idx + 1 );
+		str[ idx ] = luaL_checkint( L, idx + 1 );
 	}
 	str[ idx ] = 0;
 
@@ -95,26 +100,31 @@ static int LuaWStringChar( lua_State *L )
 
 static int LuaWStringFind( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringFormat( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringGMatch( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringGSub( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringLen( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	lua_pushinteger( L, tw->len );
 	return 1;
@@ -122,6 +132,7 @@ static int LuaWStringLen( lua_State *L )
 
 static int LuaWStringLower( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
@@ -141,11 +152,13 @@ static int LuaWStringLower( lua_State *L )
 
 static int LuaWStringMatch( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringRep( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int num = (luaL_checkint( L, 2) >= 0) ? lua_tointeger( L, 2) : 0;
 	int len = tw->len * num + 1;
@@ -169,6 +182,7 @@ static int LuaWStringRep( lua_State *L )
 
 static int LuaWStringReverse( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
@@ -188,11 +202,13 @@ static int LuaWStringReverse( lua_State *L )
 
 static int LuaWStringSub( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	return 0;
 }
 
 static int LuaWStringUpper( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int len = tw->len + 1;
 	STR16 str = (STR16) MemAlloc( len * sizeof( CHAR16) );
@@ -212,6 +228,7 @@ static int LuaWStringUpper( lua_State *L )
 
 static int LuaWStringToString( lua_State *L )
 {
+	PERFORMANCE_MARKER
 	TWString *tw = (TWString*) luaL_checkudata( L, 1, "wstring" );
 	int newlen;
 	STR8 newstr = NULL;

@@ -32,6 +32,7 @@ BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
 INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 {
+	PERFORMANCE_MARKER
 	INT32 iExitGridInfo;
 	iExitGridInfo	= (pExitGrid->ubGotoSectorX-1)<< 28;
 	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
@@ -42,6 +43,7 @@ INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 
 void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 {
+	PERFORMANCE_MARKER
 	//convert the int into 4 unsigned bytes.
 	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
 	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
@@ -51,6 +53,7 @@ void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
 
 BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -72,6 +75,7 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 
 BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -88,6 +92,7 @@ BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 
 BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ usMapIndex ].pShadowHead;
 	//Search through object layer for an exitgrid
@@ -106,6 +111,7 @@ BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode )
 
 void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pShadow, *tail;
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
@@ -140,6 +146,7 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 
 void RemoveExitGridFromWorld( INT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16 usDummy;
 	if( TypeExistsInShadowLayer( iMapIndex, MOCKFLOOR, &usDummy ) )
 	{
@@ -149,6 +156,7 @@ void RemoveExitGridFromWorld( INT32 iMapIndex )
 
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {
+	PERFORMANCE_MARKER
 	EXITGRID exitGrid;
 	UINT16 usNumSaved = 0;
 	UINT16 x;
@@ -169,6 +177,7 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 
 void LoadExitGrids( INT8 **hBuffer )
 {
+	PERFORMANCE_MARKER
 	EXITGRID exitGrid;
 	UINT16 x;
 	UINT16 usNumSaved;
@@ -189,6 +198,7 @@ void LoadExitGrids( INT8 **hBuffer )
 
 void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubLookForLevel=0;
 	UINT16 i;
 	if( bRelativeZLevel != 1 && bRelativeZLevel != -1 )
@@ -232,6 +242,7 @@ void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 
 UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
+	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;
@@ -256,12 +267,9 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 	gubNPCAPBudget = 0;
 	gubNPCDistLimit = ubRadius;
 
-	// WDS - Clean up inventory handling
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-//	memset( &soldier, 0, SIZEOF_SOLDIERTYPE );
-	soldier.initialize();
-	soldier.bLevel = 0;
+	soldier.pathing.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = pSoldier->sGridNo;
 
@@ -315,7 +323,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 				// Go on sweet stop
 				// ATE: Added this check because for all intensive purposes, cavewalls will be not an OKDEST
 				// but we want thenm too...
-				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
+				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->pathing.bLevel ) )
 				{
 					if ( GetExitGrid( sGridNo, &ExitGrid ) )
 					{
@@ -356,6 +364,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSwe
 
 UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadius )
 {
+	PERFORMANCE_MARKER
 	INT16	sTop, sBottom;
 	INT16	sLeft, sRight;
 	INT16	cnt1, cnt2;

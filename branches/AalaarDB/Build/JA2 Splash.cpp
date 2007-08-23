@@ -17,6 +17,7 @@ extern HVSURFACE ghFrameBuffer;
 //Simply create videosurface, load image, and draw it to the screen.
 void InitJA2SplashScreen()
 {
+	PERFORMANCE_MARKER
 #ifdef ENGLISH
 	ClearMainMenu();
 

@@ -68,11 +68,13 @@ BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT
 
 void GameInitAimFacialIndex()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterAimFacialIndex()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
@@ -128,6 +130,7 @@ BOOLEAN EnterAimFacialIndex()
 
 void ExitAimFacialIndex()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 
 	RemoveAimDefaults();
@@ -147,6 +150,7 @@ void ExitAimFacialIndex()
 
 void HandleAimFacialIndex()
 {
+	PERFORMANCE_MARKER
 //	if( fShowBookmarkInfo )
 //		fPausedReDrawScreenFlag = TRUE;
 
@@ -154,6 +158,7 @@ void HandleAimFacialIndex()
 
 BOOLEAN RenderAimFacialIndex()
 {
+	PERFORMANCE_MARKER
 	UINT16		usPosX, usPosY, x,y;
 	CHAR16		sString[150];
 	UINT8			i;
@@ -206,7 +211,8 @@ BOOLEAN RenderAimFacialIndex()
 }
 
 void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -223,7 +229,8 @@ void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -236,6 +243,7 @@ void SelectScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubMercNum;
 	UINT16 usPosX, usPosY;
 	UINT16 ty1, ty2, tx1, tx2;
@@ -272,6 +280,7 @@ void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hMugShotBorderHandle;
 	HVOBJECT	hFaceHandle;
 	SOLDIERTYPE	*pSoldier=NULL;

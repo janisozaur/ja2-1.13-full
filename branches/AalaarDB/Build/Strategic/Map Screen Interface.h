@@ -245,8 +245,8 @@ public:
 	BOOLEAN Load( HWFILE hFile);
 	void initialize() {object.initialize(); pNext = NULL;};
 	OBJECTTYPE object;
-	struct MERC_LEAVE_ITEM *pNext;
-}MERC_LEAVE_ITEM;
+	class MERC_LEAVE_ITEM *pNext;
+};
 
 extern BOOLEAN fShowAssignmentMenu;
 extern BOOLEAN fShowTrainingMenu ;

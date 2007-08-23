@@ -84,7 +84,6 @@ extern UINT32		guiGUNSM;
 extern UINT32		guiP1ITEMS;
 extern UINT32		guiP2ITEMS;
 extern UINT32		guiP3ITEMS;
-extern UINT32		guiSILHOUETTE;
 extern UINT32		guiCOMPANEL;
 extern UINT32		guiCOMPANELB;
 extern UINT32		guiRADIO;

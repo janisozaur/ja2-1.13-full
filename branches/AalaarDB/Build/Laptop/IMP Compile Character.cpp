@@ -125,6 +125,7 @@ BOOLEAN ShouldThisMercHaveABigBody( void );
 
 void CreateACharacterFromPlayerEnteredStats( void )
 {
+	PERFORMANCE_MARKER
 
 		// Kaiden: Seems like as good a place as any to stash this function call to
 		// ensure that these lists don't get overwritten or Nulled due to the amount
@@ -192,6 +193,7 @@ void CreateACharacterFromPlayerEnteredStats( void )
 
 BOOLEAN DoesCharacterHaveAnAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 	// simply checks if caracter has an attitude other than normal
 	switch( iAttitude )
@@ -211,6 +213,7 @@ BOOLEAN DoesCharacterHaveAnAttitude( void )
 
 BOOLEAN DoesCharacterHaveAPersoanlity( void )
 {
+	PERFORMANCE_MARKER
 
 
 	if( iPersonality != NO_PERSONALITYTRAIT )
@@ -250,6 +253,7 @@ BOOLEAN DoesCharacterHaveAPersoanlity( void )
 
 void CreatePlayerAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 	if(gGameSettings.fOptions[TOPTION_USE_RANDOM_PERSONALITY] == TRUE)
 		{
@@ -333,6 +337,7 @@ void CreatePlayerAttitude( void )
 
 void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 {
+	PERFORMANCE_MARKER
 	// adds an attitude to attitude list
 
 	if( iLastElementInAttitudeList < ATTITUDE_LIST_SIZE)
@@ -350,6 +355,7 @@ void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 
 void AddSkillToSkillList( INT8 bSkill )
 {
+	PERFORMANCE_MARKER
 	// adds a skill to skills list
 
 	if( iLastElementInSkillsList < ATTITUDE_LIST_SIZE)
@@ -368,6 +374,7 @@ void AddSkillToSkillList( INT8 bSkill )
 // Or for each visit there after.
 void ClearAllSkillsList( void )
 {
+	PERFORMANCE_MARKER
 	INT32		iLoop;
 
 	for ( iLoop = 0; iLoop < iLastElementInSkillsList; iLoop++ )
@@ -381,7 +388,8 @@ void ClearAllSkillsList( void )
 
 
 void RemoveSkillFromSkillsList( INT32 iIndex )
-{	
+{
+	PERFORMANCE_MARKER	
 	INT32		iLoop;
 
 	// remove a skill from the index given and shorten the list
@@ -409,6 +417,7 @@ void RemoveSkillFromSkillsList( INT32 iIndex )
 
 INT32	FindSkillInSkillsList( INT32 iSkill )
 {
+	PERFORMANCE_MARKER
 	INT32		iLoop;
 
 	for ( iLoop = 0; iLoop < iLastElementInSkillsList; iLoop++ )
@@ -424,6 +433,7 @@ INT32	FindSkillInSkillsList( INT32 iSkill )
 
 void ValidateSkillsList( void )
 {
+	PERFORMANCE_MARKER
 	INT32	iIndex;//, iValue;
 	MERCPROFILESTRUCT * pProfile;
 
@@ -482,6 +492,7 @@ void ValidateSkillsList( void )
 
 void CreatePlayerSkills( void )
 {
+	PERFORMANCE_MARKER
 
 	// this function will 'roll a die' and decide if any attitude does exists
 	INT32 iDiceValue = 0;
@@ -564,6 +575,7 @@ void CreatePlayerSkills( void )
 
 void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 {
+	PERFORMANCE_MARKER
 	// CJC, Oct 26 98: prevent personality list from being generated
 	// because no dialogue was written to support PC personality quotes
 	
@@ -592,6 +604,7 @@ void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 
 void CreatePlayerPersonality( void )
 {
+	PERFORMANCE_MARKER
 
 	// Kaiden: Added for optional Mercenary personalities and attitudes
 
@@ -659,6 +672,7 @@ void CreatePlayerPersonality( void )
 
 void CreatePlayersPersonalitySkillsAndAttitude( void )
 {
+	PERFORMANCE_MARKER
 
 
 
@@ -680,6 +694,7 @@ void CreatePlayersPersonalitySkillsAndAttitude( void )
 
 void ResetSkillsAttributesAndPersonality( void )
 {
+	PERFORMANCE_MARKER
 
 	// reset count of skills attributes and personality
 	
@@ -694,6 +709,7 @@ void ResetSkillsAttributesAndPersonality( void )
 
 void ResetIncrementCharacterAttributes( void )
 {
+	PERFORMANCE_MARKER
 	// this resets any increments due to character generation
 	
 	// attributes
@@ -714,6 +730,7 @@ void ResetIncrementCharacterAttributes( void )
 
 void SelectMercFace( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will select the approriate face for the merc and save offsets
 
 	// grab face filename
@@ -737,6 +754,7 @@ void SelectMercFace( void )
 
 void SetMercSkinAndHairColors( void )
 {
+	PERFORMANCE_MARKER
 	enum{ PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
 	enum{ BROWNHEAD, BLACKHEAD, //black skin (only this line )
 		 WHITEHEAD,						//dark skin (this line plus all above)
@@ -928,6 +946,7 @@ void SetMercSkinAndHairColors( void )
 
 void HandleMercStatsForChangesInFace( )
 {
+	PERFORMANCE_MARKER
 	if ( fLoadingCharacterForPreviousImpProfile )
 	{
 		return;
@@ -987,6 +1006,7 @@ void HandleMercStatsForChangesInFace( )
 
 BOOLEAN ShouldThisMercHaveABigBody( void )
 {
+	PERFORMANCE_MARKER
 	// should this merc be a big body type
 	// Madd - don't limit it by portrait
 	//if ( ( iPortraitNumber == 0 ) || ( iPortraitNumber == 6 ) || ( iPortraitNumber == 7 ) )

@@ -69,6 +69,7 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen );
 BOOLEAN gubReportMapscreenLock = 0;
 void ReportMapscreenErrorLock()
 {
+	PERFORMANCE_MARKER
 	switch( gubReportMapscreenLock )
 	{
 		case 1:
@@ -88,7 +89,8 @@ void ReportMapscreenErrorLock()
 #endif
 
 BOOLEAN InitializeGame(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	UINT32				uiIndex;
 
 	giStartingMemValue = MemGetFree( );
@@ -151,7 +153,8 @@ BOOLEAN InitializeGame(void)
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
 
 void ShutdownGame(void)
-{ 
+{
+	PERFORMANCE_MARKER 
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
@@ -181,6 +184,7 @@ static BOOLEAN gfSkipFrame = FALSE;
 
 void GameLoop(void)
 {
+	PERFORMANCE_MARKER
 	//	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop");
 
 	InputAtom	InputEvent;
@@ -190,8 +194,8 @@ void GameLoop(void)
 
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse position");
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
-
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
+	
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"GameLoop: get mouse hook");
 	MouseSystemHook(MOUSE_POS, (UINT16)MousePos.x ,(UINT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
@@ -376,6 +380,7 @@ void GameLoop(void)
 
 void SetCurrentScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiCurrentScreen = uiNewScreen;
  (*(GameScreens[guiCurrentScreen].HandleScreen))(); 
 
@@ -383,6 +388,7 @@ void SetCurrentScreen( UINT32 uiNewScreen )
 
 void SetPendingNewScreen( UINT32 uiNewScreen )
 {
+	PERFORMANCE_MARKER
 	guiPendingScreen = uiNewScreen;
 }
 
@@ -392,7 +398,8 @@ extern UINT32 guiRainLoop;
 
 // Gets called when the screen changes, place any needed in code in here
 void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
-{	
+{
+	PERFORMANCE_MARKER	
 	//if we are not going into the message box screen, and we didnt just come from it
 	if( ( uiNewScreen != MSG_BOX_SCREEN && uiOldScreen != MSG_BOX_SCREEN ) )
 	{
@@ -414,6 +421,7 @@ void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
 
 void HandleShortCutExitState( void )
 {
+	PERFORMANCE_MARKER
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
@@ -475,6 +483,7 @@ void HandleShortCutExitState( void )
 
 void EndGameMessageBoxCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -494,5 +503,6 @@ void EndGameMessageBoxCallBack( UINT8 bExitValue )
 
 void NextLoopCheckForEnoughFreeHardDriveSpace()
 {
+	PERFORMANCE_MARKER
 	gubCheckForFreeSpaceOnHardDriveCount = 0;
 }

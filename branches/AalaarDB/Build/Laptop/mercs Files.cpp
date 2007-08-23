@@ -152,11 +152,13 @@ void EnableDisableMercFilesNextPreviousButton( );
 
 void GameInitMercsFiles()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterMercsFiles()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	InitMercBackGround();
@@ -231,6 +233,7 @@ BOOLEAN EnterMercsFiles()
 
 void ExitMercsFiles()
 {
+	PERFORMANCE_MARKER
 	DeleteVideoObjectFromIndex(guiPortraitBox);
 	DeleteVideoObjectFromIndex(guiStatsBox);
 	DeleteVideoObjectFromIndex(guiBioBox);
@@ -246,11 +249,13 @@ void ExitMercsFiles()
 
 void HandleMercsFiles()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderMercsFiles()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
@@ -309,6 +314,7 @@ void RenderMercsFiles()
 
 void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -345,6 +351,7 @@ void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -382,6 +389,7 @@ void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -431,6 +439,7 @@ void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hFaceHandle;
 	HVOBJECT hPortraitHandle;
 	STR							sFaceLoc = "FACES\\BIGFACES\\";
@@ -511,6 +520,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 
 void LoadAndDisplayMercBio( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	CHAR16	sText[400];
 	UINT32	uiStartLoc = 0;
 
@@ -532,6 +542,7 @@ void LoadAndDisplayMercBio( UINT8 ubMercID )
 
 void DisplayMercsStats( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	UINT16 usPosY, usPosX;
 	CHAR16 sString[128];
 
@@ -605,6 +616,7 @@ void DisplayMercsStats( UINT8 ubMercID )
 
 BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 {
+	PERFORMANCE_MARKER
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8	bReturnCode;
 
@@ -676,6 +688,7 @@ BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 
 void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -702,6 +715,7 @@ void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void EnableDisableMercFilesNextPreviousButton( )
 {
+	PERFORMANCE_MARKER
 	if( gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex-1 )
 		EnableButton( guiNextButton );		
 	else

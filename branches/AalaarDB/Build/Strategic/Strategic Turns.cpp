@@ -33,6 +33,7 @@ UINT32		guiLastTacticalRealTime = 0;
 
 void StrategicTurnsNewGame( )
 {
+	PERFORMANCE_MARKER
 	// Sync game start time
 	SyncStrategicTurnTimes( );
 }
@@ -40,12 +41,14 @@ void StrategicTurnsNewGame( )
 
 void SyncStrategicTurnTimes( )
 {
+	PERFORMANCE_MARKER
 	guiLastStrategicTime =	GetWorldTotalSeconds( );
 	guiLastTacticalRealTime =	GetJA2Clock( );
 }
 
 void HandleStrategicTurn( )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiTime;
 	UINT32	uiCheckTime;
 
@@ -108,6 +111,7 @@ void HandleStrategicTurn( )
 
 void HandleStrategicTurnImplicationsOfExitingCombatMode( void )
 {
+	PERFORMANCE_MARKER
 	SyncStrategicTurnTimes();
 	HandleTacticalEndTurn( /*GetWorldTotalSeconds()*/ ); // doesn't take parameters
 }

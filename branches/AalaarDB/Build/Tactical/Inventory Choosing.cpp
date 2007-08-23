@@ -88,8 +88,6 @@ void EquipTank( SOLDIERCREATE_STRUCT *pp );
 void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass );
 void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass );
 void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass );
-// Headrock: Added function definition for LBE chooser
-void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass );
 UINT16 PickARandomItem(UINT8 typeIndex);
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness);
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCoolness);
@@ -98,6 +96,7 @@ UINT16 PickARandomAttachment(UINT8 typeIndex, UINT16 usBaseItem, UINT8 maxCoolne
 
 void InitArmyGunTypes(void)
 {
+	PERFORMANCE_MARKER
 	ARMY_GUN_CHOICE_TYPE *pGunChoiceTable;
 	UINT32 uiGunLevel;
 	UINT32 uiChoice;
@@ -150,6 +149,7 @@ void InitArmyGunTypes(void)
 
 INT8 GetWeaponClass( UINT16 usGun )
 {
+	PERFORMANCE_MARKER
 	UINT32		uiGunLevel, uiLoop;
 
 	// always use the extended list since it contains all guns...
@@ -173,6 +173,7 @@ INT8 GetWeaponClass( UINT16 usGun )
 
 void MarkAllWeaponsOfSameGunClassAsDropped( UINT16 usWeapon )
 {
+	PERFORMANCE_MARKER
 	INT8 bGunClass;
 	UINT32 uiLoop;
 
@@ -205,6 +206,7 @@ void MarkAllWeaponsOfSameGunClassAsDropped( UINT16 usWeapon )
 // there are variations, so a guy at a certain level may get a better gun and worse armour or vice versa.
 void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8 bEquipmentRating )
 {
+	PERFORMANCE_MARKER
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("GenerateRandomEquipment"));
 	OBJECTTYPE *pItem;
 	//general rating information
@@ -224,14 +226,12 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	INT8 bKitClass = 0;
 	INT8 bMiscClass = 0;
 	INT8 bBombClass = 0;
-	// Headrock: Added Zeroed LBE integer
-	INT8 bLBEClass = 0;
 	//special weapons
 	BOOLEAN fMortar = FALSE;
 	BOOLEAN fGrenadeLauncher = FALSE;
 	BOOLEAN fLAW = FALSE;
 	BOOLEAN fRPG = FALSE;
-	INT32 i;
+	UINT32 i;
 	INT8 bEquipmentModifier;
 	UINT8 ubMaxSpecialWeaponRoll;
 
@@ -293,8 +293,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
-			//Headrocktest, remove for release
-			bLBEClass = bRating;
 
 			//Note:  in some cases the class of armour and/or helmet won't be high enough to make 
 			//			 the lowest level.
@@ -313,8 +311,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 				bKitClass = bRating;
 				bMiscClass = bRating;
-				// Headrock: Low Level LBEs possible on Administrators:
-				bLBEClass = bRating;
 			}
 
 			if( bRating >= GREAT_ADMINISTRATOR_EQUIPMENT_RATING )
@@ -345,8 +341,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bVestClass = bRating;
 			bHelmetClass = bRating;
 			bGrenadeClass = bRating;
-			// Headrock: Added LBE set to Coolness Rating
-			bLBEClass = bRating;
 
 			if( ( bRating >= GOOD_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
 			{
@@ -382,10 +376,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( Random( 2 ) )
 				bKnifeClass = bRating;
-
-			// Headrock: Chance for soldier to carry better LBE
-			if( Chance( 50 ) )
-				bLBEClass++;
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
@@ -467,8 +457,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bGrenadeClass = bRating;
 			bKitClass = bRating;
 			bMiscClass = bRating;
-			// Headrock: Elite LBEs
-			bLBEClass = bRating;
 
 			if ( Chance( 25 ) )
 			{
@@ -489,17 +477,15 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
-				UINT32 uiRange = (!gGameOptions.ubInventorySystem) ? Random(11) : Random(12);
-				switch( uiRange )
+				switch( Random( 11 ) )
 				{
 					case 4:		bWeaponClass++, bVestClass--;		break;
 					case 5:		bWeaponClass--, bVestClass--;		break;
 					case 6:		bVestClass++, bHelmetClass--;		break;
-					case 7:		bGrenades += 2;						break;
-					case 8:		bHelmetClass++;						break;
-					case 9:		bVestClass++;						break;
-					case 10:	bWeaponClass++;						break;
-					case 11:	bLBEClass++;						break;
+					case 7:		bGrenades += 2;									break;
+					case 8:		bHelmetClass++;									break;
+					case 9:		bVestClass++;										break;
+					case 10:	bWeaponClass++;									break;
 				}
 			}
 
@@ -546,11 +532,11 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			break;
 	}
 
-	for ( i = 0; i < NUM_INV_SLOTS; i++ )
+	for ( i = 0; i < pp->Inv.size(); i++ )
 	{ //clear items, but only if they have write status.
 		if( !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 		{
-			memset( &(pp->Inv[ i ]), 0, sizeof( OBJECTTYPE ) );
+			pp->Inv[ i ].initialize();
 			pp->Inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 		else
@@ -611,9 +597,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					bMiscClass = 0;
 				case IC_BOMB:
 					bBombClass = 0;
-				// Headrock: Added failsafe for LBEs
-				case IC_LBEGEAR:
-					bLBEClass = 0;
 					break;
 			}
 		}
@@ -630,8 +613,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 	//Now actually choose the equipment!
 	ChooseWeaponForSoldierCreateStruct( pp, bWeaponClass, bAmmoClips, bAttachClass, fAttachment );
-	// Headrock: This is where the program calls LBE choosing
-	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseSpecialWeaponsForSoldierCreateStruct( pp, bKnifeClass, fGrenadeLauncher, fLAW, fMortar, fRPG );
 	ChooseGrenadesForSoldierCreateStruct( pp, bGrenades, bGrenadeClass, fGrenadeLauncher );
 	ChooseArmourForSoldierCreateStruct( pp, bHelmetClass, bVestClass, bLeggingClass );
@@ -639,8 +620,6 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	ChooseKitsForSoldierCreateStruct( pp, bKitClass );
 	ChooseMiscGearForSoldierCreateStruct( pp, bMiscClass );
 	ChooseBombsForSoldierCreateStruct( pp, bBombClass );
-	// Headrock: This is where the program calls LBE choosing
-	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseLocationSpecificGearForSoldierCreateStruct( pp );
 	RandomlyChooseWhichItemsAreDroppable( pp, bSoldierClass );
 
@@ -655,6 +634,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponClass, 
 																				 INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment )
 {
+	PERFORMANCE_MARKER
 	//INVTYPE *pItem;
 	UINT16 i;
 	//UINT16 usRandom;
@@ -676,7 +656,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	if( bWeaponClass < 0 && bAmmoClips )
 	{ //Linda has added a specific gun to the merc's inventory, but no ammo.  So, we 
 		//will choose ammunition that works with the gun.
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 		{
 			if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_GUN )
 			{
@@ -976,7 +956,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 
 void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher )
 {
-	OBJECTTYPE Object;
+	PERFORMANCE_MARKER
 	INT16 sNumPoints;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseGrenadesForSoldierCreateStruct");
@@ -993,15 +973,6 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	UINT8 ubQualityVariation;
 	//numbers of each type the player will get!
 	UINT8 count = 0;
-
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseGrenadesForSoldierCreateStruct");
-
-	//determine how many *points* the enemy will get to spend on grenades...
-	sNumPoints = bGrenades * bGrenadeClass;
-
-	//no points, no grenades!
-	if( !sNumPoints )
-		return;
 
 	// special mortar shell handling
 	if (bGrenadeClass == MORTAR_GRENADE_CLASS && itemMortar > 0 )
@@ -1283,6 +1254,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 
 void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseArmourForSoldierCreateStruct");
 	//UINT16 i;
 	//INVTYPE *pItem;
@@ -1531,6 +1503,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 
 void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKnifeClass, BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar, BOOLEAN fRPG )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseSpecialWeaponsForSoldierCreateStruct");
 	//UINT16 i;
 	//INVTYPE *pItem;
@@ -1663,6 +1636,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 
 void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseFaceGearForSoldierCreateStruct");
 	INT32 i;
 	INT8 bDifficultyRating = CalcDifficultyModifier( pp->ubSoldierClass );
@@ -1675,8 +1649,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 
 	//Look for any face item in the big pocket positions (the only place they can be added in the editor)
 	//If any are found, then don't assign any
-	// CHRISL: Change static inventory pocket definition to dynamic
-	for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
+	for( i = BIGPOCK1POS; i < BIGPOCK4POS; i++ )
 	{
 		if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE ) 
 		{
@@ -1778,6 +1751,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 
 void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseKitsForSoldierCreateStruct");
 	//UINT16 i;
 	//INVTYPE *pItem;
@@ -1849,12 +1823,11 @@ void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass 
 
 void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseMiscGearForSoldierCreateStruct");
 	//UINT16 i;
 	//INVTYPE *pItem;
 	UINT16 usRandom;
-	UINT16 usItem = 0;
-	OBJECTTYPE Object;
 
 	//Madd: let's do this a couple times, so we can have > 1 misc item per soldier
 	usRandom = Random(3);
@@ -1951,6 +1924,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 
 void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseBombsForSoldierCreateStruct");
 	//UINT16 i;
 	//INVTYPE *pItem;
@@ -2007,30 +1981,9 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 
 
 
-// Headrock: Added a function to randomly create LBEs
-void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass )
-{
-	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseLBEsForSoldierCreateStruct");
-	//UINT16 i;
-	//INVTYPE *pItem;
-	//UINT16 usRandom;
-	UINT16 usItem = 0;
-	OBJECTTYPE Object;
-
-	// CHRISL: If we're using the old inventory system, just return
-	if(!gGameOptions.ubInventorySystem)
-		return;
-
-	usItem = PickARandomItem( LBE , bLBEClass, FALSE );
-	if ( usItem > 0 )
-	{
-		CreateItem( usItem, (INT8)(80 + Random( 21 )), &Object );
-		Object.fFlags |= OBJECT_UNDROPPABLE;
-		PlaceObjectInSoldierCreateStruct( pp, &Object );
-	}
-}
 void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseLocationSpecificGearForSoldierCreateStruct");
 	UINT16 usItem = 0;
 	// If this is Tixa and the player doesn't control Tixa then give all enemies gas masks,
@@ -2050,16 +2003,16 @@ void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp 
 
 BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *pObject )
 {
+	PERFORMANCE_MARKER
 	INT8 i;
 	if( !Item[ pObject->usItem ].ubPerPocket )
 	{ //ubPerPocket == 0 will only fit in large pockets.
 		pObject->ubNumberOfObjects = 1;
-		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
+		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
@@ -2069,21 +2022,19 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	{
 		pObject->ubNumberOfObjects = (UINT8)min( Item[ pObject->usItem ].ubPerPocket, pObject->ubNumberOfObjects );
 		//try to get it into a small pocket first
-		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCKFINAL; i < NUM_INV_SLOTS; i++ )
+		for( i = SMALLPOCK1POS; i <= SMALLPOCK8POS; i++ )
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
-		// CHRISL: Change static inventory pocket definition to dynamic
-		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
+		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
 		{ //no space free in small pockets, so put it into a large pocket.
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[ i ] = *pObject;
 				return TRUE;
 			}
 		}
@@ -2093,7 +2044,8 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 
 void RandomlyChooseWhichItemsAreDroppable( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 {
-	INT32 i;
+	PERFORMANCE_MARKER
+	UINT32 i;
 	INT32 j;
 //	UINT16 usRandomNum;
 	UINT32 uiItemClass;
@@ -2115,6 +2067,7 @@ void RandomlyChooseWhichItemsAreDroppable( SOLDIERCREATE_STRUCT *pp, INT8 bSoldi
 	//Madd
 if ( gGameSettings.fOptions[TOPTION_DROP_ALL] )
 {
+	PERFORMANCE_MARKER
 	ENEMYAMMODROPRATE = 100;      
 	ENEMYGRENADEDROPRATE = 100;   
 	ENEMYEQUIPDROPRATE = 50;      
@@ -2221,7 +2174,7 @@ else
 	if ( SOLDIER_CLASS_ENEMY( bSoldierClass ) && !IsAutoResolveActive() )
 	{
 		// SPECIAL handling for weapons: we'll always drop a weapon type that has never been dropped before
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 		{
 			usItem = pp->Inv[ i ].usItem;
 //TODO: someday maybe 			pp->Inv[i][0]->data.fFlags &= ~ITEM_REPAIRABLE;
@@ -2307,7 +2260,7 @@ else
 		if( fAmmo )
 		{
 			// now drops ALL ammo found, not just the first slot
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_AMMO )
@@ -2325,7 +2278,7 @@ else
 		if( fWeapon )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
@@ -2338,7 +2291,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
@@ -2358,7 +2311,7 @@ else
 		if( fArmour )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_ARMOUR )
@@ -2371,7 +2324,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_ARMOUR )
@@ -2390,7 +2343,7 @@ else
 
 		if( fKnife)
 		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				// drops FIRST knife found
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
@@ -2411,7 +2364,7 @@ else
 		if( fGrenades )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_GRENADE )
@@ -2424,7 +2377,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_GRENADE )
@@ -2444,7 +2397,7 @@ else
 		if( fKit )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
@@ -2457,7 +2410,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
@@ -2477,7 +2430,7 @@ else
 		if( fFace )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_FACE )
@@ -2490,7 +2443,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_FACE )
@@ -2510,7 +2463,7 @@ else
 		if( fMisc )
 		{
 			ubNumMatches = 0;
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
+			for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 				if( uiItemClass == IC_MISC )
@@ -2523,7 +2476,7 @@ else
 			}
 			if ( ubNumMatches > 0 )
 			{
-				for( i = 0; i < NUM_INV_SLOTS; i++ )
+				for( i = 0; i < pp->Inv.size(); i++ )
 				{
 					uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 					if( uiItemClass == IC_MISC )
@@ -2544,7 +2497,7 @@ else
 	else if (gGameExternalOptions.ubEnemiesItemDrop == 1)
 	{
 		// Loop through the enemy inter
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
+		for( i = 0; i < pp->Inv.size(); i++ )
 			{
 				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
 
@@ -2558,7 +2511,7 @@ else
 						// Find matching weaponType in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more weapon items -> exit from loop
+							// We have no more weapon items->exit from loop
 							if (j > 0 && gEnemyWeaponDrops[j].uiIndex == 0)
 								break;
 
@@ -2599,7 +2552,7 @@ else
 						// Find matching ammo in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more ammo items -> exit from loop
+							// We have no more ammo items->exit from loop
 							if (j > 0 && gEnemyAmmoDrops[j].uiIndex == 0)
 								break;
 
@@ -2639,7 +2592,7 @@ else
 						// Find matching explosive in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more explosive items -> exit from loop
+							// We have no more explosive items->exit from loop
 							if (j > 0 && gEnemyExplosiveDrops[j].uiIndex == 0)
 								break;
 
@@ -2681,7 +2634,7 @@ else
 						// Find matching armour in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more armour items -> exit from loop
+							// We have no more armour items->exit from loop
 							if (j > 0 && gEnemyArmourDrops[j].uiIndex == 0)
 								break;
 
@@ -2726,7 +2679,7 @@ else
 						// Find matching armour in the XML
 						for (j = 0; j < MAX_DROP_ITEMS; j++)
 						{
-							// We have no more armour items -> exit from loop
+							// We have no more armour items->exit from loop
 							if (j > 0 && gEnemyMiscDrops[j].uiIndex == 0)
 								break;
 
@@ -2769,6 +2722,7 @@ else
 
 void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiChanceToDrop = 0;
 	BOOLEAN fMaleCreature = FALSE;
 	BOOLEAN fBloodcat = FALSE;
@@ -2866,11 +2820,12 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 
 void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 {
+	PERFORMANCE_MARKER
 	UINT32				uiLoop, uiLoop2;
 	INT8					bWeaponClass;
 	UINT16				usItem, usNewGun, usAmmo, usNewAmmo;
 
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < pp->Inv.size(); uiLoop++ )
 	{
 		usItem = pp->Inv[ uiLoop ].usItem;
 
@@ -2906,7 +2861,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 
 
 				// must search through inventory and replace ammo accordingly
-				for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+				for ( uiLoop2 = 0; uiLoop2 < pp->Inv.size(); uiLoop2++ )
 				{
 					usAmmo = pp->Inv[ uiLoop2 ].usItem;
 					if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
@@ -2928,6 +2883,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 
 UINT16 SelectStandardArmyGun( UINT8 uiGunLevel )
 {
+	PERFORMANCE_MARKER
 	ARMY_GUN_CHOICE_TYPE *pGunChoiceTable;
 	int uiChoice;
 	int usGunIndex;
@@ -3009,6 +2965,7 @@ UINT16 SelectStandardArmyGun( UINT8 uiGunLevel )
 
 void EquipTank( SOLDIERCREATE_STRUCT *pp )
 {
+	PERFORMANCE_MARKER
 	// tanks get special equipment, and they drop nothing (MGs are hard-mounted & non-removable)
 
 	// main cannon
@@ -3039,19 +2996,23 @@ void EquipTank( SOLDIERCREATE_STRUCT *pp )
 
 void ResetMortarsOnTeamCount( void )
 {
+	PERFORMANCE_MARKER
 	guiMortarsRolledByTeam = 0;
 }
 
 UINT16 PickARandomItem(UINT8 typeIndex)
 {
+	PERFORMANCE_MARKER
 	return PickARandomItem(typeIndex,100,FALSE);
 }
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness)
 {
+	PERFORMANCE_MARKER
 	return PickARandomItem(typeIndex,maxCoolness,TRUE);
 }
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCoolness)
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("PickARandomItem: typeIndex = %d, maxCoolness = %d, getMatchingCoolness = %d",typeIndex,maxCoolness,getMatchingCoolness));
 
 	UINT16 usItem = 0;
@@ -3128,6 +3089,7 @@ UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCo
 }
 UINT16 PickARandomAttachment(UINT8 typeIndex, UINT16 usBaseItem, UINT8 maxCoolness, BOOLEAN getMatchingCoolness)
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("PickARandomAttachment: baseItem = %d, typeIndex = %d, maxCoolness = %d, getMatchingCoolness = %d",usBaseItem, typeIndex,maxCoolness,getMatchingCoolness));
 
 	UINT16 usItem = 0;

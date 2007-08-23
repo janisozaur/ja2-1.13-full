@@ -328,6 +328,7 @@ BOOLEAN ReplaceMercNameAndAmountWithProperData( CHAR16 *pFinishedString, EmailPt
 
 void InitializeMouseRegions()
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	
 	// init mouseregions
@@ -346,6 +347,7 @@ void InitializeMouseRegions()
 
 void DeleteEmailMouseRegions()
 {
+	PERFORMANCE_MARKER
 
 	// this function will remove the mouse regions added
 	INT32 iCounter=0;
@@ -361,6 +363,7 @@ void DeleteEmailMouseRegions()
 }
 void GameInitEmail()
 {
+	PERFORMANCE_MARKER
 	pEmailList=NULL;
 	pPageList=NULL;
 
@@ -378,6 +381,7 @@ void GameInitEmail()
 
 BOOLEAN EnterEmail()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	// load graphics
 
@@ -440,6 +444,7 @@ BOOLEAN EnterEmail()
 
 void ExitEmail()
 {
+	PERFORMANCE_MARKER
 	LaptopSaveInfo.iCurrentEmailPage = iCurrentPage;
 
 	// clear out message record list
@@ -487,6 +492,7 @@ void ExitEmail()
 
 void HandleEmail( void )
 {
+	PERFORMANCE_MARKER
  
 	INT32 iViewerY = 0;
 	static BOOLEAN fEmailListBeenDrawAlready = FALSE;
@@ -574,6 +580,7 @@ void HandleEmail( void )
 
 void DisplayEmailHeaders( void )
 {
+	PERFORMANCE_MARKER
 	// draw the text at the top of the screen
 	
 	// font stuff
@@ -603,6 +610,7 @@ void DisplayEmailHeaders( void )
 
 void RenderEmail( void )
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 
 	// get and blt the email list background
@@ -657,6 +665,7 @@ void RenderEmail( void )
 
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
 {
+	PERFORMANCE_MARKER
 	CHAR16 pSubject[320];
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
@@ -690,6 +699,7 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iCurrentIMPPosition)
 {
+	PERFORMANCE_MARKER
 	CHAR16 pSubject[320];
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
@@ -715,6 +725,7 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
+	PERFORMANCE_MARKER
 	CHAR16 pSubject[320];
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
@@ -740,6 +751,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData, INT32 iCurrentIMPPosition )
 {
+	PERFORMANCE_MARKER
 	// will add a message to the list of messages
 	EmailPtr pEmail=pEmailList;
 	EmailPtr pTempEmail=NULL;
@@ -842,6 +854,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, 
 
 void RemoveEmailMessage(INT32 iId)
 {
+	PERFORMANCE_MARKER
 	// run through list and remove message, update everyone afterwards
 	EmailPtr pEmail=pEmailList;
 	EmailPtr pTempEmail=NULL;
@@ -853,7 +866,7 @@ void RemoveEmailMessage(INT32 iId)
 
 	// look for message
 	pEmail = GetEmailMessage( iId );
-	//while((pEmail->iId !=iId)&&(pEmail -> Next))
+	//while((pEmail->iId !=iId)&&(pEmail->Next))
 	//	pEmail=pEmail->Next;
 
 	// end of list, no mail found, leave
@@ -924,6 +937,7 @@ void RemoveEmailMessage(INT32 iId)
 
 EmailPtr GetEmailMessage(INT32 iId)
 {
+	PERFORMANCE_MARKER
 	EmailPtr pEmail=pEmailList;
 	// return pointer to message with iId
 	
@@ -941,7 +955,7 @@ EmailPtr GetEmailMessage(INT32 iId)
 	while( (pEmail->iId !=iId)&&(pEmail->Next) )
 		pEmail=pEmail->Next;
 	
-	if( ( pEmail ->iId != iId ) && ( pEmail->Next == NULL ) )
+	if( ( pEmail->iId != iId ) && ( pEmail->Next == NULL ) )
 	{
 		pEmail = NULL;
 	}
@@ -956,6 +970,7 @@ EmailPtr GetEmailMessage(INT32 iId)
 
 void AddEmailPage()
 {
+	PERFORMANCE_MARKER
 	// simple adds a page to the list
 	PagePtr pPage=pPageList;
 	if(pPage)
@@ -996,6 +1011,7 @@ void AddEmailPage()
 
 void RemoveEmailPage(INT32 iPageId)
 {
+	PERFORMANCE_MARKER
 	PagePtr pPage=pPageList;
 	PagePtr pTempPage=NULL;
 	
@@ -1047,6 +1063,7 @@ void RemoveEmailPage(INT32 iPageId)
 
 void AddMessageToPages(INT32 iMessageId)
 {
+	PERFORMANCE_MARKER
 	// go to end of page list
 	PagePtr pPage=pPageList;
 	INT32 iCounter=0;
@@ -1077,6 +1094,7 @@ void AddMessageToPages(INT32 iMessageId)
 
 void SortMessages(INT32 iCriteria)
 {
+	PERFORMANCE_MARKER
 	EmailPtr pA=pEmailList;
 	EmailPtr pB=pEmailList;
 	CHAR16 pSubjectA[256];
@@ -1100,7 +1118,7 @@ void SortMessages(INT32 iCriteria)
 			{	
 
 				// set B to next in A
-				pB=pA -> Next;
+				pB=pA->Next;
 				while(pB)
 				{
 
@@ -1155,7 +1173,7 @@ void SortMessages(INT32 iCriteria)
 			while(pA)
 			{	
 
-				pB = pA ->Next;
+				pB = pA->Next;
 				while(pB)
 				{
 					// clear out control codes
@@ -1185,11 +1203,11 @@ void SortMessages(INT32 iCriteria)
 			while(pA)
 			{	
 
-				pB = pA ->Next;
+				pB = pA->Next;
 				while(pB)
 				{
 					// one read and another not?...need sorting	
-					if( ( pA->fRead ) && ( ! ( pB -> fRead ) ) )	
+					if( ( pA->fRead ) && ( ! ( pB->fRead ) ) )	
 						SwapMessages(pA->iId, pB->iId);
 			
 					// next in B's list
@@ -1211,6 +1229,7 @@ void SortMessages(INT32 iCriteria)
 
 void SwapMessages(INT32 iIdA, INT32 iIdB)
 {
+	PERFORMANCE_MARKER
  // swaps locations of messages in the linked list
  EmailPtr pA=pEmailList;
  EmailPtr pB=pEmailList;
@@ -1261,13 +1280,14 @@ void SwapMessages(INT32 iIdA, INT32 iIdB)
  wcscpy(pB->pSubject, pTemp->pSubject);
 
  // free up memory
- MemFree(pTemp -> pSubject);
+ MemFree(pTemp->pSubject);
  MemFree( pTemp );
  return;
 }
 
 void ClearPages()
 {
+	PERFORMANCE_MARKER
 	// run through list of message pages and set to -1
 	PagePtr pPage=pPageList;
 	
@@ -1292,6 +1312,7 @@ void ClearPages()
 
 void PlaceMessagesinPages()
 {
+	PERFORMANCE_MARKER
 	EmailPtr pEmail=pEmailList;
 	// run through the list of messages and add to pages
 	ClearPages();
@@ -1308,6 +1329,7 @@ void PlaceMessagesinPages()
 
 void DisplayMessageList(INT32 iPageNum)
 {
+	PERFORMANCE_MARKER
 	// will display page with idNumber iPageNum
 	PagePtr pPage=pPageList;
 	while(pPage->iPageId!=iPageNum)
@@ -1322,6 +1344,7 @@ void DisplayMessageList(INT32 iPageNum)
 
 void DrawLetterIcon(INT32 iCounter, BOOLEAN fRead)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 	// will draw the icon for letter in mail list depending if the mail has been read or not
 	
@@ -1338,6 +1361,7 @@ void DrawLetterIcon(INT32 iCounter, BOOLEAN fRead)
 
 void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 {
+	PERFORMANCE_MARKER
 	CHAR16 pTempSubject[320];
 
 
@@ -1384,6 +1408,7 @@ void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 
 void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
 {
+	PERFORMANCE_MARKER
 
 	// draw name of sender in mail viewer
 	SetFontShadow(NO_SHADOW);
@@ -1409,7 +1434,8 @@ void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
 }
 
 void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
-{ 
+{
+	PERFORMANCE_MARKER 
 	CHAR16 sString[20];
 
 	SetFontShadow(NO_SHADOW);
@@ -1435,6 +1461,7 @@ void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 
 void DisplayEmailList()
 {
+	PERFORMANCE_MARKER
 	INT32 iCounter=0;
 	// look at current page, and display
 	PagePtr pPage=pPageList;
@@ -1511,6 +1538,7 @@ void DisplayEmailList()
 
 void LookForUnread()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fStatusOfNewEmailFlag = fUnReadMailFlag;
 
 	// simply runrs through list of messages, if any unread, set unread flag
@@ -1539,7 +1567,8 @@ void LookForUnread()
 }
 
 void EmailBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
  INT32 iCount;
  PagePtr pPage=pPageList;
  INT32 iId=0;
@@ -1621,6 +1650,7 @@ void EmailBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 void EmailMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
@@ -1643,6 +1673,7 @@ void EmailMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void BtnMessageXCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1683,6 +1714,7 @@ void BtnMessageXCallback(GUI_BUTTON *btn,INT32 reason)
 void
 SetUnNewMessages()
 {
+	PERFORMANCE_MARKER
 	// on exit from the mailer, set all new messages as 'un'new
 		EmailPtr pEmail=pEmailList;
 	// run through the list of messages and add to pages
@@ -1697,6 +1729,7 @@ SetUnNewMessages()
 
 INT32 DisplayEmailMessage(EmailPtr pMail)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hHandle;
 	INT32 iHeight=0;
 	INT32 iCounter=1;
@@ -1819,14 +1852,14 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 		
 
 			// copy over string 
-			wcscpy( pString, pTempRecord -> pRecord );
+			wcscpy( pString, pTempRecord->pRecord );
 
 			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 			iHeight += IanDisplayWrappedString(VIEWER_X + 9, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE, IAN_WRAP_NO_SHADOW);	
 
 			
 			// increment email record ptr
-			pTempRecord = pTempRecord -> Next;
+			pTempRecord = pTempRecord->Next;
 
 			
 
@@ -1892,7 +1925,7 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 			}
 
 
-			pTempRecord = pTempRecord ->Next;
+			pTempRecord = pTempRecord->Next;
 
 			
 			if( ( pTempRecord == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
@@ -1934,6 +1967,7 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 
 void BtnNewOkback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1957,6 +1991,7 @@ void BtnNewOkback(GUI_BUTTON *btn,INT32 reason)
 
 void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 {
+	PERFORMANCE_MARKER
 	// will create/destroy mouse region for message display
 	
 	if((fDisplayMessageFlag)&&(!fOldDisplayMessageFlag))
@@ -2034,6 +2069,7 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 void CreateDestroyNewMailButton()
 {
+	PERFORMANCE_MARKER
  static BOOLEAN fOldNewMailFlag=FALSE; 
 
  // check if we are video conferencing, if so, do nothing
@@ -2092,6 +2128,7 @@ void CreateDestroyNewMailButton()
 
 BOOLEAN DisplayNewMailBox( void )
 {
+	PERFORMANCE_MARKER
 
 	
 	
@@ -2172,6 +2209,7 @@ BOOLEAN DisplayNewMailBox( void )
 
 void ReDrawNewMailBox( void )
 {
+	PERFORMANCE_MARKER
 
 	// this function will check to see if the new mail region needs to be redrawn
 	if( fReDrawNewMailFlag == TRUE )
@@ -2207,6 +2245,7 @@ void ReDrawNewMailBox( void )
 
 void SwitchEmailPages( void )
 {
+	PERFORMANCE_MARKER
 	// this function will switch current page
 	
 	// gone too far, reset page to start
@@ -2223,6 +2262,7 @@ void SwitchEmailPages( void )
 
 void DetermineNextPrevPageDisplay( void )
 {
+	PERFORMANCE_MARKER
 	// will determine which of previous and next page graphics to display
 
 	
@@ -2256,7 +2296,8 @@ void DetermineNextPrevPageDisplay( void )
 }
 
 void NextRegionButtonCallback(GUI_BUTTON *btn,INT32 reason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
@@ -2293,6 +2334,7 @@ void NextRegionButtonCallback(GUI_BUTTON *btn,INT32 reason )
 
 void BtnPreviousEmailPageCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2328,6 +2370,7 @@ void BtnPreviousEmailPageCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnNextEmailPageCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2365,7 +2408,8 @@ void BtnNextEmailPageCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 void PreviousRegionButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2401,6 +2445,7 @@ void PreviousRegionButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnDeleteNoback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2425,6 +2470,7 @@ void BtnDeleteNoback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnDeleteYesback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -2450,6 +2496,7 @@ void BtnDeleteYesback(GUI_BUTTON *btn,INT32 reason)
 
 void CreateDestroyNextPreviousRegions()
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fCreated=FALSE;
 	if(fCreated)
 	{
@@ -2488,6 +2535,7 @@ void CreateDestroyNextPreviousRegions()
 
 void ReDraw()
 {
+	PERFORMANCE_MARKER
 	// forces update of entire laptop screen
 	if(fReDraw)
 	{
@@ -2503,6 +2551,7 @@ void ReDraw()
 
 void CreateDestroyDeleteNoticeMailButton()
 {
+	PERFORMANCE_MARKER
  static BOOLEAN fOldDeleteMailFlag=FALSE; 
  if((fDeleteMailFlag)&&(!fOldDeleteMailFlag))
  {
@@ -2555,6 +2604,7 @@ void CreateDestroyDeleteNoticeMailButton()
 }
 BOOLEAN DisplayDeleteNotice(EmailPtr pMail)
 {
+	PERFORMANCE_MARKER
 	
 
 	HVOBJECT hHandle;
@@ -2622,7 +2672,8 @@ BOOLEAN DisplayDeleteNotice(EmailPtr pMail)
 }
 
 void DeleteEmail()
-{ 
+{
+	PERFORMANCE_MARKER 
 	
 	// error check, invalid mail, or not time to delete mail
 	if( fDeleteInternal != TRUE )
@@ -2662,7 +2713,8 @@ void DeleteEmail()
 
 
 void FromCallback(GUI_BUTTON *btn, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -2691,7 +2743,8 @@ void FromCallback(GUI_BUTTON *btn, INT32 iReason )
 }
 
 void SubjectCallback(GUI_BUTTON *btn, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -2718,7 +2771,8 @@ void SubjectCallback(GUI_BUTTON *btn, INT32 iReason )
 
 
 void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -2739,7 +2793,8 @@ void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason )
 }
 
 void DateCallback(GUI_BUTTON *btn, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -2764,7 +2819,8 @@ void DateCallback(GUI_BUTTON *btn, INT32 iReason )
 
 
 void ReadCallback(GUI_BUTTON *btn, INT32 iReason )
-{ 	
+{
+	PERFORMANCE_MARKER 	
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -2789,6 +2845,7 @@ void ReadCallback(GUI_BUTTON *btn, INT32 iReason )
 
 void SetUpSortRegions()
 {
+	PERFORMANCE_MARKER
 
 	// have been replaced by buttons
 	return;
@@ -2819,6 +2876,7 @@ void SetUpSortRegions()
 
 void DeleteSortRegions()
 {
+	PERFORMANCE_MARKER
 
 	// have been replaced by buttons
  return;
@@ -2833,6 +2891,7 @@ void DeleteSortRegions()
 
 void DisplayTextOnTitleBar( void )
 {
+	PERFORMANCE_MARKER
 	// draw email screen title text
 
 	// font stuff
@@ -2849,6 +2908,7 @@ void DisplayTextOnTitleBar( void )
 
 void DestroyMailScreenButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destory the buttons used in the email screen
 
 	// the sort email buttons
@@ -2866,6 +2926,7 @@ void DestroyMailScreenButtons( void )
 
 void CreateMailScreenButtons( void )
 {
+	PERFORMANCE_MARKER
 	
 	// create sort buttons, right now - not finished
 
@@ -2917,6 +2978,7 @@ void CreateMailScreenButtons( void )
 
 void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 {
+	PERFORMANCE_MARKER
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
 	INT16 usX, usY;
@@ -2967,6 +3029,7 @@ void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 
 void DrawEmailMessageDisplayTitleText( INT32 iViewerY )
 {
+	PERFORMANCE_MARKER
 	// this procedure will display the title of the email message display box
 
 	// font stuff
@@ -2982,6 +3045,7 @@ void DrawEmailMessageDisplayTitleText( INT32 iViewerY )
  
 void DrawLineDividers( void )
 {
+	PERFORMANCE_MARKER
 	// this function draws divider lines between lines of text
 	INT32 iCounter=0;
 	HVOBJECT hHandle;
@@ -2999,6 +3063,7 @@ void DrawLineDividers( void )
 
 void ClearOutEmailMessageRecordsList( void )
 {
+	PERFORMANCE_MARKER
 	RecordPtr pTempRecord;
 	INT32 iCounter = 0;
 
@@ -3009,7 +3074,7 @@ void ClearOutEmailMessageRecordsList( void )
 	pTempRecord = pMessageRecordList;
 	
 		// next element
-		pMessageRecordList = pMessageRecordList -> Next;
+		pMessageRecordList = pMessageRecordList->Next;
 
 		MemFree( pTempRecord );
 	}
@@ -3029,6 +3094,7 @@ void ClearOutEmailMessageRecordsList( void )
 
 void AddEmailRecordToList( STR16 pString )
 {
+	PERFORMANCE_MARKER
 	RecordPtr pTempRecord;
 	
 	// set to head of list
@@ -3050,14 +3116,14 @@ void AddEmailRecordToList( STR16 pString )
 		}
 
 		// found, alloc
-		pTempRecord -> Next = (messagerecord *) MemAlloc( sizeof(Record) );
+		pTempRecord->Next = (messagerecord *) MemAlloc( sizeof(Record) );
 	
 		// move to node
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
 	}
 
 	// set next to null
-	pTempRecord -> Next = NULL;
+	pTempRecord->Next = NULL;
 
 	// copy in string
 	wcscpy( pTempRecord->pRecord, pString );
@@ -3071,6 +3137,7 @@ void AddEmailRecordToList( STR16 pString )
 
 void UpDateMessageRecordList( void )
 {
+	PERFORMANCE_MARKER
 
 	// simply checks to see if old and new message ids are the same, if so, do nothing
 	// otherwise clear list
@@ -3088,6 +3155,7 @@ void UpDateMessageRecordList( void )
 
 void HandleAnySpecialEmailMessageEvents(INT32 iMessageId )
 {
+	PERFORMANCE_MARKER
 
 	// handles any special message events
 
@@ -3105,6 +3173,7 @@ void HandleAnySpecialEmailMessageEvents(INT32 iMessageId )
 
 void ReDisplayBoxes( void )
 {
+	PERFORMANCE_MARKER
 	
  
 
@@ -3132,6 +3201,7 @@ void ReDisplayBoxes( void )
 
 BOOLEAN HandleMailSpecialMessages( UINT16 usMessageId, INT32 *iResults, EmailPtr pMail )
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSpecialCase = FALSE;
 
 	// this procedure will handle special cases of email messages that are not stored in email.edt, or need special processing
@@ -3309,6 +3379,7 @@ BOOLEAN HandleMailSpecialMessages( UINT16 usMessageId, INT32 *iResults, EmailPtr
 
 void HandleIMPCharProfileResultsMessage( void)
 {
+	PERFORMANCE_MARKER
 	// special case, IMP profile return
 	INT32 iHeight=0;
 	INT32 iCounter=0;
@@ -4448,6 +4519,7 @@ void HandleIMPCharProfileResultsMessage( void)
 
 void HandleEmailViewerButtonStates( void )
 {
+	PERFORMANCE_MARKER
 	// handle state of email viewer buttons
 
 	if( fDisplayMessageFlag == FALSE )
@@ -4491,6 +4563,7 @@ void HandleEmailViewerButtonStates( void )
 
 void SetUpIconForButton( )
 {
+	PERFORMANCE_MARKER
 	// if we just got in, return, don't set any
 
 	if( fJustStartedEmail == TRUE )
@@ -4507,6 +4580,7 @@ void SetUpIconForButton( )
 
 void DeleteCurrentMessage( void )
 {
+	PERFORMANCE_MARKER
 	// will delete the currently displayed message
 
 	// set current message to be deleted
@@ -4540,6 +4614,7 @@ void DeleteCurrentMessage( void )
 
 void CreateNextPreviousEmailPageButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	// this function will create the buttons to advance and go back email pages
 
@@ -4569,6 +4644,7 @@ void CreateNextPreviousEmailPageButtons( void )
 
 void UpdateStatusOfNextPreviousButtons( void )
 {
+	PERFORMANCE_MARKER
 
 	// set the states of the page advance buttons
 
@@ -4589,6 +4665,7 @@ void UpdateStatusOfNextPreviousButtons( void )
 
 void DisplayWhichPageOfEmailProgramIsDisplayed( void )
 {
+	PERFORMANCE_MARKER
 	// will draw the number of the email program we are viewing right now
 	CHAR16 sString[ 10 ];
 
@@ -4615,6 +4692,7 @@ void DisplayWhichPageOfEmailProgramIsDisplayed( void )
 
 void OpenMostRecentUnreadEmail( void )
 {
+	PERFORMANCE_MARKER
 	// will open the most recent email the player has recieved and not read
 	INT32 iMostRecentMailId = -1;
 	EmailPtr pB=pEmailList;
@@ -4625,8 +4703,8 @@ void OpenMostRecentUnreadEmail( void )
 		// if date is lesser and unread , swap
 		if( ( pB->iDate < iLowestDate )&&( pB->fRead == FALSE ) )
 		{
-			iMostRecentMailId = pB -> iId;
-			iLowestDate = pB -> iDate;
+			iMostRecentMailId = pB->iId;
+			iLowestDate = pB->iDate;
 		}
 
 		// next in B's list
@@ -4648,6 +4726,7 @@ void OpenMostRecentUnreadEmail( void )
 
 BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 {
+	PERFORMANCE_MARKER
 	// display the indent for the display of pages to this email..along with the current page/number of pages
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 32 ];
@@ -4689,6 +4768,7 @@ BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 
 INT32 GetNumberOfPagesToEmail( )
 {
+	PERFORMANCE_MARKER
 	RecordPtr pTempRecord;
 	INT32 iNumberOfPagesToEmail = 0;
 
@@ -4710,6 +4790,7 @@ INT32 GetNumberOfPagesToEmail( )
 
 void ShutDownEmailList()
 {
+	PERFORMANCE_MARKER
 	EmailPtr pEmail = pEmailList;
 	EmailPtr pTempEmail = NULL;
 
@@ -4733,6 +4814,7 @@ void ShutDownEmailList()
 
 void PreProcessEmail( EmailPtr pMail )
 {
+	PERFORMANCE_MARKER
 	RecordPtr pTempRecord, pCurrentRecord, pLastRecord , pTempList;
 	CHAR16 pString[ 512 ];
 	INT32 iCounter = 0, iHeight = 0, iOffSet = 0;
@@ -4785,13 +4867,13 @@ void PreProcessEmail( EmailPtr pMail )
 	{ 
 	
 		// copy over string
-		wcscpy(pString, pTempRecord -> pRecord);
+		wcscpy(pString, pTempRecord->pRecord);
 
 	// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 		iHeight += IanWrappedStringHeight(VIEWER_X + 9, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + GetFontHeight(MESSAGE_FONT)), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE,0);
 	
 		// next message record string
-		pTempRecord = pTempRecord -> Next;
+		pTempRecord = pTempRecord->Next;
 		
 	}
 	
@@ -4904,7 +4986,7 @@ void PreProcessEmail( EmailPtr pMail )
 			while( pTempRecord )
 			{
 				// copy over string 
-				wcscpy( pString, pTempRecord -> pRecord );
+				wcscpy( pString, pTempRecord->pRecord );
 				
 				if( pString[ 0 ] == 0 )
 				{
@@ -4930,7 +5012,7 @@ void PreProcessEmail( EmailPtr pMail )
 				
 
 				pCurrentRecord = pTempRecord;
-				pTempRecord = pTempRecord ->Next;
+				pTempRecord = pTempRecord->Next;
 
 				if( fGoingOffCurrentPage == FALSE )
 				{
@@ -4965,6 +5047,7 @@ void PreProcessEmail( EmailPtr pMail )
 
 void ModifyInsuranceEmails( UINT16 usMessageId, INT32 *iResults, EmailPtr pMail, UINT8 ubNumberOfRecords )
 {
+	PERFORMANCE_MARKER
 	INT32 iHeight=0;
 	RecordPtr pTempRecord;
 //	CHAR16 pString[MAIL_STRING_SIZE/2 + 1];
@@ -5002,6 +5085,7 @@ void ModifyInsuranceEmails( UINT16 usMessageId, INT32 *iResults, EmailPtr pMail,
 
 BOOLEAN ReplaceMercNameAndAmountWithProperData( CHAR16 *pFinishedString, EmailPtr pMail )
 {
+	PERFORMANCE_MARKER
 //	CHAR16		pTempString[MAIL_STRING_SIZE/2 + 1];
 	CHAR16		pTempString[MAIL_STRING_SIZE];
 	INT32			iLength=0;
@@ -5111,6 +5195,7 @@ BOOLEAN ReplaceMercNameAndAmountWithProperData( CHAR16 *pFinishedString, EmailPt
 #ifdef JA2BETAVERSION
 void AddAllEmails()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiCnt;
 	UINT32 uiOffset;
 

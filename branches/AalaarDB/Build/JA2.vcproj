@@ -23,7 +23,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Res;&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\lua;.\"
+				AdditionalIncludeDirectories="&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\lua;.\"
 				PreprocessorDefinitions="CALLBACKTIMER;PRECOMPILEDHEADERS;_DEBUG;WIN32;_WINDOWS;JA2;_VTUNE_PROFILING;XML_STATIC;CINTERFACE"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -46,7 +46,7 @@
 				OutputFile="C:\Games\Jagged Alliance 2\ja2_debug_1020_en.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				IgnoreDefaultLibraryNames="libcmt;LIBCD"
+				IgnoreDefaultLibraryNames="libcmt"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/ja2_cvs.pdb"
 				GenerateMapFile="TRUE"
@@ -523,7 +523,7 @@
 				FavorSizeOrSpeed="1"
 				OptimizeForProcessor="3"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories=".\Res;&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\Lua;.\Console;.\"
+				AdditionalIncludeDirectories="&quot;.\Standard Gaming Platform&quot;;.\TileEngine;.\Tactical;.\Utils;.\TacticalAI;.\Editor;.\Strategic;.\laptop;.\Lua;.\"
 				PreprocessorDefinitions="CALLBACKTIMER;PRECOMPILEDHEADERS;NDEBUG;WIN32;_WINDOWS;JA2;XML_STATIC;CINTERFACE"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
@@ -545,7 +545,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libexpatMT.lib winmm.lib smackw32.lib mss32.lib fmodvc.lib lua51.lib"
-				OutputFile="C:\games\Jagged Alliance 2\JA2_vs2003_release.exe"
+				OutputFile="D:\games\Jagged Alliance 2 v1.13\JA2 v1.13.1020_EN.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				IgnoreDefaultLibraryNames=""
@@ -1565,6 +1565,65 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="Res\ja2.rc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Demo|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Demo Bounds Checker|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Demo Release with Debug Info|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with Debug Info|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Bounds Checker|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Demo|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories="Res;.\Res"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="jascreens.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -2310,89 +2369,9 @@
 				RelativePath="VtuneApi.h">
 			</File>
 		</Filter>
-		<Filter
-			Name="Resource Files">
-			<File
-				RelativePath=".\Console\Console.rc">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Res\ja2.rc">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Demo|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Demo Bounds Checker|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Demo Release with Debug Info|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release with Debug Info|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Bounds Checker|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Demo|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="Res;.\Res"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Res\jagged3.ico">
-			</File>
-			<File
-				RelativePath="Res\resource.h">
-			</File>
-		</Filter>
+		<File
+			RelativePath="Res\jagged3.ico">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

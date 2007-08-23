@@ -21,24 +21,28 @@ UINT8 gubBrokenWallUIValue = 0;
 
 void CalcSmartWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 {
+	PERFORMANCE_MARKER
 	*pusUseIndex = 0;
 	*pusObjIndex = gubWallUIValue;
 }
 
 void CalcSmartDoorDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 {
+	PERFORMANCE_MARKER
 	*pusUseIndex = 4 * ( gubDoorUIValue % 2 ); //open or closed -- odd or even
 	*pusObjIndex = FIRSTDOOR + gubDoorUIValue / 2;	
 }
 
 void CalcSmartWindowDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 {
+	PERFORMANCE_MARKER
 	*pusUseIndex = 44 + gubWindowUIValue; //first exterior top right oriented window
 	*pusObjIndex = FIRSTWALL;
 }
 
 void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 {
+	PERFORMANCE_MARKER
 	switch( gubBrokenWallUIValue )
 	{
 		case 0:case 1: *pusUseIndex = 49 + gubBrokenWallUIValue;	break;
@@ -50,11 +54,13 @@ void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 
 UINT16 CalcSmartWindowIndex( UINT16 usWallOrientation )
 {
+	PERFORMANCE_MARKER
 	return (UINT16)(33 + usWallOrientation*3 + gubWindowUIValue);
 }
 
 UINT16 CalcSmartDoorIndex( UINT16 usWallOrientation )
 {
+	PERFORMANCE_MARKER
 	//convert the orientation values as the graphics are in reverse order
 	//orientation values:	INSIDE_TOP_LEFT=1,	INSIDE_TOP_RIGHT=2,	OUTSIDE_TOP_LEFT=3, OUTSIDE_TOP_RIGHT=4
 	//door graphics order:	INSIDE_TOP_LEFT=15, INSIDE_TOP_RIGHT=10, OUTSIDE_TOP_LEFT=5, OUTSIDE_TOP_RIGHT=0
@@ -65,11 +71,13 @@ UINT16 CalcSmartDoorIndex( UINT16 usWallOrientation )
 
 UINT16 CalcSmartDoorType()
 {
+	PERFORMANCE_MARKER
 	return (UINT16)( FIRSTDOOR + gubDoorUIValue / 2 );
 }
 
 UINT16 CalcSmartBrokenWallIndex( UINT16 usWallOrientation )
 {
+	PERFORMANCE_MARKER
 	if( gubBrokenWallUIValue == 2 ) //the hole in the wall
 		return 0xffff;
 	if( gubBrokenWallUIValue < 2 ) //broken walls
@@ -95,51 +103,61 @@ UINT16 CalcSmartBrokenWallIndex( UINT16 usWallOrientation )
 
 void IncSmartWallUIValue()
 {
+	PERFORMANCE_MARKER
 	gubWallUIValue += gubWallUIValue < LASTWALL ? 1 : -3;
 }
 
 void DecSmartWallUIValue()
 {
+	PERFORMANCE_MARKER
 	gubWallUIValue -= gubWallUIValue > FIRSTWALL ? 1 : -3;
 }
 
 void IncSmartDoorUIValue()
 {
+	PERFORMANCE_MARKER
 	gubDoorUIValue += gubDoorUIValue < 7 ? 1 : -7;
 }
 
 void DecSmartDoorUIValue()
 {
+	PERFORMANCE_MARKER
 	gubDoorUIValue -= gubDoorUIValue > 0 ? 1 : -7;
 }
 
 void IncSmartWindowUIValue()
 {
+	PERFORMANCE_MARKER
 	gubWindowUIValue += gubWindowUIValue < 2 ? 1 : -2;
 }
 
 void DecSmartWindowUIValue()
 {
+	PERFORMANCE_MARKER
 	gubWindowUIValue -= gubWindowUIValue > 0 ? 1 : -2;
 }
 
 void IncSmartBrokenWallUIValue()
 {
+	PERFORMANCE_MARKER
 	gubBrokenWallUIValue += gubBrokenWallUIValue < 4 ? 1 : -4;
 }
 
 void DecSmartBrokenWallUIValue()
 {
+	PERFORMANCE_MARKER
 	gubBrokenWallUIValue -= gubBrokenWallUIValue > 0 ? 1 : -4;
 }
 
 BOOLEAN CalcWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
+	PERFORMANCE_MARKER
 	return FALSE;
 }
 
 BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UINT16 *pusIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall = NULL;
 	UINT16 usWallOrientation;
 	pWall = GetVerticalWall( iMapIndex );
@@ -163,6 +181,7 @@ BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UIN
 
 BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -202,6 +221,7 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 
 BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -269,6 +289,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 //		gridno with the respective position.
 void PasteSmartWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fWallAlone = FALSE;
 	static UINT32 iAloneMapIndex = 0x8000;
 	UINT16 usWallType;
@@ -483,6 +504,7 @@ void PasteSmartWall( UINT32 iMapIndex )
 
 void PasteSmartDoor( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall = NULL;
 	UINT16 usTileIndex;
 	UINT16 usDoorType;
@@ -511,6 +533,7 @@ void PasteSmartDoor( UINT32 iMapIndex )
 
 void PasteSmartWindow( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16 usNewWallIndex;
 
 	LEVELNODE *pWall = NULL;
@@ -560,6 +583,7 @@ void PasteSmartWindow( UINT32 iMapIndex )
 
 void PasteSmartBrokenWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT16 usNewWallIndex;
 
 	LEVELNODE *pWall;

@@ -80,6 +80,7 @@ BOOLEAN fNewCharInActivationString = FALSE;
 
 void EnterImpHomePage( void )
 {
+	PERFORMANCE_MARKER
 	// upon entry to Imp home page
 	memset(pPlayerActivationString, 0, sizeof(pPlayerActivationString));
 	
@@ -102,6 +103,7 @@ void EnterImpHomePage( void )
 
 void RenderImpHomePage( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 	
@@ -130,6 +132,7 @@ void RenderImpHomePage( void )
 
 void ExitImpHomePage( void )
 {
+	PERFORMANCE_MARKER
 	
 	// remove buttons
 	RemoveIMPHomePageButtons( );
@@ -140,6 +143,7 @@ void ExitImpHomePage( void )
 
 void HandleImpHomePage( void )
 {
+	PERFORMANCE_MARKER
 
 	// handle keyboard input for this screen
 	GetPlayerKeyBoardInputForIMPHomePage( );
@@ -159,6 +163,7 @@ void HandleImpHomePage( void )
 
 void DisplayPlayerActivationString( void )
 {
+	PERFORMANCE_MARKER
 
 	// this function will grab the string that the player will enter for activation
 
@@ -190,6 +195,7 @@ void DisplayPlayerActivationString( void )
 
 void DisplayActivationStringCursor( void )
 {
+	PERFORMANCE_MARKER
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
@@ -254,11 +260,12 @@ void DisplayActivationStringCursor( void )
 
 void GetPlayerKeyBoardInputForIMPHomePage( void )
 {
+	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 	POINT	MousePos;
 
 	GetCursorPos(&MousePos);
-    ScreenToClient(ghWindow, &MousePos); // In window coords!
+	ScreenToClient(ghWindow, &MousePos); // In window coords!
 
 	while (DequeueEvent(&InputEvent) == TRUE)
 	{
@@ -312,6 +319,7 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 
 void HandleTextEvent( UINT32 uiKey )
 {
+	PERFORMANCE_MARKER
 	// this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	// or delete it
 	switch( uiKey )
@@ -389,6 +397,7 @@ void HandleTextEvent( UINT32 uiKey )
 
 void ProcessPlayerInputActivationString( void )
 {
+	PERFORMANCE_MARKER
 	// prcess string to see if it matches activation string
 	char charPlayerActivationString[32];
 	wcstombs(charPlayerActivationString,pPlayerActivationString,32);
@@ -492,6 +501,7 @@ void ProcessPlayerInputActivationString( void )
 
 void ResetActivationStringTextBox(void)
 {
+	PERFORMANCE_MARKER
 	// Reset activation text box
 	for (int i = 0; i < iStringPos; i++)
 	{
@@ -507,6 +517,7 @@ void ResetActivationStringTextBox(void)
 
 void CreateIMPHomePageButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will create the buttons needed for the IMP homepage
 
 	// ths about us button
@@ -534,6 +545,7 @@ void CreateIMPHomePageButtons( void )
 
 void RemoveIMPHomePageButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this procedure will destroy the already created buttosn for the IMP homepage
 
 	// the about us button
@@ -547,6 +559,7 @@ void RemoveIMPHomePageButtons( void )
 
 void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP Homepage About US button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

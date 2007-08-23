@@ -249,6 +249,7 @@ INT32 iSummaryButton[ NUM_SUMMARY_BUTTONS ];
 
 void CreateSummaryWindow()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	
 	if( !gfGlobalSummaryLoaded )
@@ -420,6 +421,7 @@ void CreateSummaryWindow()
 
 void AutoLoadMap()
 {
+	PERFORMANCE_MARKER
 	SummaryLoadMapCallback( ButtonList[ iSummaryButton[ SUMMARY_LOAD ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 	if( gfWorldLoaded )
 		DestroySummaryWindow();
@@ -429,6 +431,7 @@ void AutoLoadMap()
 
 void ReleaseSummaryWindow()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	UINT32 uiCurrTimer;
 	if( !gfSummaryWindowActive || gfPersistantSummary )
@@ -456,6 +459,7 @@ void ReleaseSummaryWindow()
 
 void DestroySummaryWindow()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	if( !gfSummaryWindowActive )
 		return;
@@ -475,19 +479,19 @@ void DestroySummaryWindow()
 
 	if( gpWorldItemsSummaryArray )
 	{
-		MemFree( gpWorldItemsSummaryArray );
+		delete[]( gpWorldItemsSummaryArray );
 		gpWorldItemsSummaryArray = NULL;
 		gusWorldItemsSummaryArraySize = 0;
 	}
 	if( gpPEnemyItemsSummaryArray )
 	{
-		MemFree( gpPEnemyItemsSummaryArray );
+		delete[]( gpPEnemyItemsSummaryArray );
 		gpPEnemyItemsSummaryArray = NULL;
 		gusPEnemyItemsSummaryArraySize = 0;
 	}
 	if( gpNEnemyItemsSummaryArray )
 	{
-		MemFree( gpNEnemyItemsSummaryArray );
+		delete[]( gpNEnemyItemsSummaryArray );
 		gpNEnemyItemsSummaryArray = NULL;
 		gusNEnemyItemsSummaryArraySize = 0;
 	}
@@ -499,6 +503,7 @@ void DestroySummaryWindow()
 
 void RenderSectorInformation()
 {
+	PERFORMANCE_MARKER
 	//CHAR16 str[ 100 ];
 	MAPCREATE_STRUCT *m;
 	SUMMARYFILE *s;
@@ -674,6 +679,7 @@ void RenderSectorInformation()
 //2)	CODE TRIGGER/ACTION NAMES
 void RenderItemDetails()
 {
+	PERFORMANCE_MARKER
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
 	INT32 index, i;
@@ -979,6 +985,7 @@ void RenderItemDetails()
 
 void RenderSummaryWindow()
 {
+	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
@@ -1527,6 +1534,7 @@ void RenderSummaryWindow()
 
 void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 {
+	PERFORMANCE_MARKER
 	CHAR16 str[50];
 	CHAR8 szCoord[40];
 	STR16 ptr;
@@ -1652,6 +1660,7 @@ void UpdateSectorSummary( STR16 gszFilename, BOOLEAN fUpdate )
 
 void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		DestroySummaryWindow();
@@ -1660,6 +1669,7 @@ void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderGrid = (BOOLEAN)(btn->uiFlags & BUTTON_CLICKED_ON);
@@ -1669,6 +1679,7 @@ void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
@@ -1687,6 +1698,7 @@ void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
@@ -1701,6 +1713,7 @@ void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -1715,6 +1728,7 @@ void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -1729,6 +1743,7 @@ void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderProgress = (BOOLEAN)(btn->uiFlags & BUTTON_CLICKED_ON);
@@ -1762,6 +1777,7 @@ void PerformTest()
 
 BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 {
+	PERFORMANCE_MARKER
 	if( !gfSummaryWindowActive )
 		return FALSE;
 	gfCtrlPressed = pEvent->usKeyState & CTRL_DOWN;
@@ -1882,6 +1898,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 void CreateGlobalSummary()
 {
+	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			Dir;
 	STRING512			ExecDir;
@@ -1922,6 +1939,7 @@ void CreateGlobalSummary()
 
 void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	static INT16 gsPrevX = 0, gsPrevY = 0;
 	//calc current sector highlighted.
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -1943,6 +1961,7 @@ void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 
 void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	static INT16 sLastX = -1, sLastY = -1;
 	static INT32 iLastClickTime = 0;
 	//calc current sector selected.
@@ -2014,7 +2033,7 @@ void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 			}
 			if( gpWorldItemsSummaryArray )
 			{
-				MemFree( gpWorldItemsSummaryArray );
+				delete[]( gpWorldItemsSummaryArray );
 				gpWorldItemsSummaryArray = NULL;
 				gusWorldItemsSummaryArraySize = 0;
 			}
@@ -2044,6 +2063,7 @@ void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	INT8 i;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2085,6 +2105,7 @@ void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		STR16 ptr;
@@ -2137,6 +2158,7 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderSummary = TRUE;
@@ -2164,6 +2186,7 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfOverride ^= TRUE;
@@ -2177,6 +2200,7 @@ void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
 
 void CalculateOverrideStatus()
 {
+	PERFORMANCE_MARKER
 	GETFILESTRUCT FileInfo;
 	CHAR8 szFilename[40];
 	gfOverrideDirty = FALSE;
@@ -2223,6 +2247,7 @@ void CalculateOverrideStatus()
 
 void LoadGlobalSummary()
 {
+	PERFORMANCE_MARKER
 	HWFILE	hfile;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2427,6 +2452,7 @@ void LoadGlobalSummary()
 
 void GenerateSummaryList()
 {
+	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2463,6 +2489,7 @@ void GenerateSummaryList()
 
 void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
 {
+	PERFORMANCE_MARKER
 	FILE *fp;
 	STRING512			DataDir;
 	STRING512			ExecDir;
@@ -2514,6 +2541,7 @@ void WriteSectorSummaryUpdate( STR8 puiFilename, UINT8 ubLevel, SUMMARYFILE *pSu
 
 void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfPendingBasement = FALSE;
@@ -2531,6 +2559,7 @@ void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 
@@ -2539,6 +2568,7 @@ void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 
@@ -2547,6 +2577,7 @@ void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
 
 void LoadSummary( STR8 pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 {
+	PERFORMANCE_MARKER
 	CHAR8 filename[40];
 	SUMMARYFILE temp;
 	INT32 x, y;
@@ -2604,6 +2635,7 @@ double MasterStart, MasterEnd;
 
 void UpdateMasterProgress()
 {
+	PERFORMANCE_MARKER
 	if( gfUpdatingNow && gusTotal )
 	{
 		MasterStart = (gusCurrent / (double)gusTotal) * 100.0;
@@ -2621,6 +2653,7 @@ void UpdateMasterProgress()
 
 void ReportError( STR8 pSector, UINT8 ubLevel )
 {
+	PERFORMANCE_MARKER
 	static INT32 yp = iScreenHeightOffset + 180;
 	CHAR16 str[40];
 	CHAR16 temp[10];
@@ -2640,6 +2673,7 @@ void ReportError( STR8 pSector, UINT8 ubLevel )
 
 void RegenerateSummaryInfoForAllOutdatedMaps()
 {
+	PERFORMANCE_MARKER
 	INT32 x, y;
 	CHAR8 str[40];
 	SUMMARYFILE *pSF;
@@ -2723,6 +2757,7 @@ void RegenerateSummaryInfoForAllOutdatedMaps()
 
 void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 {
+	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CHAR8 str[40];
@@ -2750,6 +2785,7 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ExtractTempFilename()
 {
+	PERFORMANCE_MARKER
 	CHAR16 str[40];
 	Get16BitStringFromField( 1, str );
 	if( wcscmp( gszTempFilename, str ) )
@@ -2764,8 +2800,10 @@ void ExtractTempFilename()
 
 void ApologizeOverrideAndForceUpdateEverything()
 {
+	PERFORMANCE_MARKER
 	INT32 x, y;
-	CHAR16 str[ 50 ];
+	//CHAR16 str[ 50 ];//char overflow if set to 50
+	CHAR16 str[ 512 ];//char overflow if set to 50
 	CHAR8 name[50];
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
@@ -2897,6 +2935,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 {
+	PERFORMANCE_MARKER
 	HWFILE hfile;
 	UINT32 uiNumBytesRead;
 	UINT32 uiNumItems;
@@ -2911,19 +2950,19 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	//Clear memory for all the item summaries loaded
 	if( gpWorldItemsSummaryArray )
 	{
-		MemFree( gpWorldItemsSummaryArray );
+		delete[]( gpWorldItemsSummaryArray );
 		gpWorldItemsSummaryArray = NULL;
 		gusWorldItemsSummaryArraySize = 0;
 	}
 	if( gpPEnemyItemsSummaryArray )
 	{
-		MemFree( gpPEnemyItemsSummaryArray );
+		delete[]( gpPEnemyItemsSummaryArray );
 		gpPEnemyItemsSummaryArray = NULL;
 		gusPEnemyItemsSummaryArraySize = 0;
 	}
 	if( gpNEnemyItemsSummaryArray )
 	{
-		MemFree( gpNEnemyItemsSummaryArray );
+		delete[]( gpNEnemyItemsSummaryArray );
 		gpNEnemyItemsSummaryArray = NULL;
 		gusNEnemyItemsSummaryArraySize = 0;
 	}
@@ -2971,7 +3010,10 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	ShowButton( iSummaryButton[ SUMMARY_ENEMY ] );
 	gpWorldItemsSummaryArray = new WORLDITEM[	uiNumItems ];
 	gusWorldItemsSummaryArraySize = gpCurrentSectorSummary->usNumItems;
-	FileRead( hfile, gpWorldItemsSummaryArray, sizeof( WORLDITEM ) * uiNumItems, &uiNumBytesRead );
+	for (unsigned int x = 0; x < uiNumItems; ++x)
+	{
+		gpWorldItemsSummaryArray[x].Load(hfile);
+	}
 
 	//NOW, do the enemy's items!
 	//We need to do two passes.	The first pass simply processes all the enemies and counts all the droppable items
@@ -2996,9 +3038,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-                        // WDS - Clean up inventory handling
-			FileRead( hfile, &priority, SIZEOF_SOLDIERCREATE_STRUCT, &uiNumBytesRead );
-			if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT )
+			if ( !priority.Load(hfile) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3034,13 +3074,11 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	//Pass 1 completed, so now allocate enough space to hold all the items
 	if( gusPEnemyItemsSummaryArraySize )
 	{
-		gpPEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
-		memset( gpPEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
+		gpPEnemyItemsSummaryArray = new OBJECTTYPE[ gusPEnemyItemsSummaryArraySize ];
 	}
 	if( gusNEnemyItemsSummaryArraySize )
 	{
-		gpNEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
-		memset( gpNEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
+		gpNEnemyItemsSummaryArray = new OBJECTTYPE[ gusNEnemyItemsSummaryArraySize ];
 	}
 
 	//PASS #2
@@ -3061,9 +3099,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement 
-                        // WDS - Clean up inventory handling
-			FileRead( hfile, &priority, SIZEOF_SOLDIERCREATE_STRUCT, &uiNumBytesRead );
-			if( uiNumBytesRead != SIZEOF_SOLDIERCREATE_STRUCT )
+			if ( !priority.Load(hfile) )
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3084,12 +3120,12 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 				{
 					if( basic.fPriorityExistance )
 					{
-						memcpy( &(gpPEnemyItemsSummaryArray[ usPEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpPEnemyItemsSummaryArray[ usPEnemyIndex ] = *pItem;
 						usPEnemyIndex++;
 					}
 					else
 					{
-						memcpy( &(gpNEnemyItemsSummaryArray[ usNEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpNEnemyItemsSummaryArray[ usNEnemyIndex ] = *pItem;
 						usNEnemyIndex++;
 					}
 				}
@@ -3101,6 +3137,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 
 UINT8 GetCurrentSummaryVersion()
 {
+	PERFORMANCE_MARKER
 	if( gpCurrentSectorSummary )
 	{
 		return gpCurrentSectorSummary->MapInfo.ubMapVersion;

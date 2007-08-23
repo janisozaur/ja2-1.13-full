@@ -111,6 +111,7 @@ extern			UINT32		guiEnvDay;
 
 void InitNewGameClock( )
 {
+	PERFORMANCE_MARKER
 	guiGameClock = gGameExternalOptions.iGameStartingTime;
 	guiPreviousGameClock = gGameExternalOptions.iGameStartingTime;
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
@@ -125,54 +126,64 @@ void InitNewGameClock( )
 
 UINT32 GetWorldTotalMin( )
 {
+	PERFORMANCE_MARKER
 	return( guiGameClock / NUM_SEC_IN_MIN );
 }
 
 UINT32 GetWorldTotalSeconds( )
 {
+	PERFORMANCE_MARKER
 	return( guiGameClock );
 }
 
 
 UINT32 GetWorldHour( )
 {
+	PERFORMANCE_MARKER
 	return( guiHour );
 }
 
 UINT32 GetWorldMinutesInDay( )
 {
+	PERFORMANCE_MARKER
 	return( ( guiHour * 60 ) + guiMin );
 }
 
 UINT32 GetWorldDay( )
 {
+	PERFORMANCE_MARKER
 	return( guiDay);
 }
 
 UINT32 GetWorldDayInSeconds( )
 {
+	PERFORMANCE_MARKER
 	return( guiDay * NUM_SEC_IN_DAY ); 
 }
 
 UINT32 GetWorldDayInMinutes( )
 {
+	PERFORMANCE_MARKER
 	return( ( guiDay * NUM_SEC_IN_DAY ) / NUM_SEC_IN_MIN ); 
 }
 
 UINT32 GetFutureDayInMinutes( UINT32 uiDay )
 {
+	PERFORMANCE_MARKER
 	return( ( uiDay * NUM_SEC_IN_DAY ) / NUM_SEC_IN_MIN ); 
 }
 
 //this function returns the amount of minutes there has been from start of game to midnight of the uiDay.	
 UINT32 GetMidnightOfFutureDayInMinutes( UINT32 uiDay )
 {
+	PERFORMANCE_MARKER
 	return( GetWorldTotalMin() + ( uiDay * 1440 ) - GetWorldMinutesInDay( ) ); 
 }
 
 // Not to be used too often by things other than internally
 void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"WarpGameTime");
 
 	UINT32 uiSaveTimeRate;
@@ -187,6 +198,7 @@ void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode )
 
 void AdvanceClock( UINT8 ubWarpCode )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiGameSecondsPerRealSecond = guiGameSecondsPerRealSecond;
 
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"AdvanceClock");
@@ -265,6 +277,7 @@ void AdvanceClock( UINT8 ubWarpCode )
 
 void AdvanceToNextDay()
 {
+	PERFORMANCE_MARKER
 	INT32	uiDiff;
 	UINT32 uiTomorrowTimeInSec;
 	
@@ -280,6 +293,7 @@ void AdvanceToNextDay()
 // set the flag that time compress has occured
 void SetFactTimeCompressHasOccured( void )
 {
+	PERFORMANCE_MARKER
 	fTimeCompressHasOccured = TRUE;
 	return;
 }
@@ -287,6 +301,7 @@ void SetFactTimeCompressHasOccured( void )
 //reset fact the time compress has occured
 void ResetTimeCompressHasOccured( void )
 {
+	PERFORMANCE_MARKER
 	fTimeCompressHasOccured = FALSE;
 	return;
 }
@@ -294,6 +309,7 @@ void ResetTimeCompressHasOccured( void )
 // has time compress occured?
 BOOLEAN HasTimeCompressOccured( void )
 {
+	PERFORMANCE_MARKER
 	return( fTimeCompressHasOccured	);
 }
 
@@ -301,6 +317,7 @@ BOOLEAN HasTimeCompressOccured( void )
 
 void RenderClock( INT16 sX, INT16 sY )
 {
+	PERFORMANCE_MARKER
 	SetFont( CLOCK_FONT );
 	SetFontBackground( FONT_MCOLOR_BLACK );
 
@@ -343,6 +360,7 @@ void RenderClock( INT16 sX, INT16 sY )
 
 void ToggleSuperCompression()
 {
+	PERFORMANCE_MARKER
 	static UINT32 uiOldTimeCompressMode = 0;
 
 	// Display message
@@ -374,6 +392,7 @@ void ToggleSuperCompression()
 
 BOOLEAN DidGameJustStart()
 {
+	PERFORMANCE_MARKER
 	if( gTacticalStatus.fDidGameJustStart )
 		return(TRUE);
 	else
@@ -383,6 +402,7 @@ BOOLEAN DidGameJustStart()
 
 void StopTimeCompression( void )
 {
+	PERFORMANCE_MARKER
 	if ( gfTimeCompressionOn )
 	{
 		// change the clock resolution to no time passage, but don't actually change the compress mode (remember it)
@@ -393,6 +413,7 @@ void StopTimeCompression( void )
 
 void StartTimeCompression( void )
 {
+	PERFORMANCE_MARKER
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"StartTimeCompression");
 
 	if ( !gfTimeCompressionOn )
@@ -443,6 +464,7 @@ void StartTimeCompression( void )
 // returns FALSE if time isn't currently being compressed for ANY reason (various pauses, etc.)
 BOOLEAN IsTimeBeingCompressed( void )
 {
+	PERFORMANCE_MARKER
 	if( !gfTimeCompressionOn || ( giTimeCompressMode == TIME_COMPRESS_X0 ) || gfGamePaused )
 		return( FALSE );
 	else
@@ -453,12 +475,14 @@ BOOLEAN IsTimeBeingCompressed( void )
 // returns TRUE if the player currently doesn't want time to be compressing
 BOOLEAN IsTimeCompressionOn( void )
 {
+	PERFORMANCE_MARKER
 	return( gfTimeCompressionOn );
 }
 
 
 void IncreaseGameTimeCompressionRate( )
 {
+	PERFORMANCE_MARKER
 	// if not already at maximum time compression rate
 	if( giTimeCompressMode < TIME_COMPRESS_60MINS )
 	{
@@ -486,6 +510,7 @@ void IncreaseGameTimeCompressionRate( )
 
 void DecreaseGameTimeCompressionRate()
 {
+	PERFORMANCE_MARKER
 	// if not already at minimum time compression rate
 	if( giTimeCompressMode > TIME_COMPRESS_X0 )
 	{
@@ -512,6 +537,7 @@ void DecreaseGameTimeCompressionRate()
 
 void SetGameTimeCompressionLevel( UINT32 uiCompressionRate )
 {
+	PERFORMANCE_MARKER
 	Assert( uiCompressionRate < NUM_TIME_COMPRESS_SPEEDS );
 
 	if( guiCurrentScreen == GAME_SCREEN )
@@ -549,6 +575,7 @@ void SetGameTimeCompressionLevel( UINT32 uiCompressionRate )
 
 void SetClockResolutionToCompressMode( INT32 iCompressMode )
 {
+	PERFORMANCE_MARKER
 	guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ iCompressMode ] * SECONDS_PER_COMPRESSION;
 
 	// ok this is a bit confusing, but for time compression (e.g. 30x60) we want updates
@@ -582,6 +609,7 @@ void SetClockResolutionToCompressMode( INT32 iCompressMode )
 
 void SetGameHoursPerSecond( UINT32 uiGameHoursPerSecond )
 {
+	PERFORMANCE_MARKER
 	giTimeCompressMode = NOT_USING_TIME_COMPRESSION;
 	guiGameSecondsPerRealSecond = uiGameHoursPerSecond * 3600;
 	if( uiGameHoursPerSecond == 1 )
@@ -596,6 +624,7 @@ void SetGameHoursPerSecond( UINT32 uiGameHoursPerSecond )
 
 void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond )
 {
+	PERFORMANCE_MARKER
 	giTimeCompressMode = NOT_USING_TIME_COMPRESSION;
 	guiGameSecondsPerRealSecond = uiGameMinutesPerSecond * 60;
 	SetClockResolutionPerSecond( (UINT8)uiGameMinutesPerSecond );
@@ -603,6 +632,7 @@ void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond )
 
 void SetGameSecondsPerSecond( UINT32 uiGameSecondsPerSecond )
 {
+	PERFORMANCE_MARKER
 	giTimeCompressMode = NOT_USING_TIME_COMPRESSION;
 	guiGameSecondsPerRealSecond = uiGameSecondsPerSecond;
 //	SetClockResolutionPerSecond( (UINT8)(guiGameSecondsPerRealSecond / 60) );
@@ -622,6 +652,7 @@ void SetGameSecondsPerSecond( UINT32 uiGameSecondsPerSecond )
 
 void LockPauseState( UINT32 uiUniqueReasonId )
 {
+	PERFORMANCE_MARKER
 	gfLockPauseState = TRUE;
 
 	// if adding a new call, please choose a new uiUniqueReasonId, this helps track down the cause when it's left locked
@@ -633,18 +664,21 @@ void LockPauseState( UINT32 uiUniqueReasonId )
 // call this to allow player to change the time compression state via the interface once again
 void UnLockPauseState()
 {
+	PERFORMANCE_MARKER
 	gfLockPauseState = FALSE;
 }
 
 // tells you whether the player is currently locked out from messing with the time compression state
 BOOLEAN PauseStateLocked()
 {
+	PERFORMANCE_MARKER
 	return gfLockPauseState;
 }
 
 
 void PauseGame()
 {
+	PERFORMANCE_MARKER
 	// always allow pausing, even if "locked".	Locking applies only to trying to compress time, not to pausing it
 	if( !gfGamePaused )
 	{
@@ -655,6 +689,7 @@ void PauseGame()
 
 void UnPauseGame()
 {
+	PERFORMANCE_MARKER
 	// if we're paused
 	if( gfGamePaused )
 	{
@@ -673,6 +708,7 @@ void UnPauseGame()
 
 void TogglePause()
 {
+	PERFORMANCE_MARKER
 	if ( gfGamePaused )
 	{
 		UnPauseGame();
@@ -686,6 +722,7 @@ void TogglePause()
 
 BOOLEAN GamePaused()
 {
+	PERFORMANCE_MARKER
 	return gfGamePaused;
 }
 
@@ -693,27 +730,31 @@ BOOLEAN GamePaused()
 //ONLY APPLICABLE INSIDE EVENT CALLBACKS!
 void InterruptTime()
 {
+	PERFORMANCE_MARKER
 	gfTimeInterrupt = TRUE;
 }
 
 void PauseTimeForInterupt()
 {
+	PERFORMANCE_MARKER
 	gfTimeInterruptPause = TRUE;
 }
 
 //USING CLOCK RESOLUTION
-//Note, that changing the clock resolution doesn't affect the amount of game time that passes per
+//Note, that changing the clock resolution doesn't effect the amount of game time that passes per
 //real second, but how many times per second the clock is updated.	This rate will break up the actual
 //time slices per second into smaller chunks.	This is useful for animating strategic movement under
 //fast time compression, so objects don't warp around.
 void SetClockResolutionToDefault()
 {
+	PERFORMANCE_MARKER
 	gubClockResolution = 1;
 }
 
 //Valid range is 0 - 60 times per second.
 void SetClockResolutionPerSecond( UINT8 ubNumTimesPerSecond )
 {
+	PERFORMANCE_MARKER
 	ubNumTimesPerSecond = (UINT8)(max( 0, min( 60, ubNumTimesPerSecond ) ));
 	gubClockResolution = ubNumTimesPerSecond;
 }
@@ -721,6 +762,7 @@ void SetClockResolutionPerSecond( UINT8 ubNumTimesPerSecond )
 //Function for accessing the current rate
 UINT8 ClockResolution()
 {
+	PERFORMANCE_MARKER
 	return gubClockResolution;
 }
 
@@ -733,6 +775,7 @@ UINT8 ClockResolution()
 //				a more accurate representation of faster time flows.
 void UpdateClock()
 {
+	PERFORMANCE_MARKER
 	//DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"UpdateClock");
 
 	UINT32 uiNewTime;
@@ -855,6 +898,7 @@ void UpdateClock()
 
 BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseState )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesWritten=0;
 
 	FileWrite( hFile, &giTimeCompressMode, sizeof( INT32 ), &uiNumBytesWritten );
@@ -939,6 +983,7 @@ BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseStat
 
 BOOLEAN LoadGameClock( HWFILE hFile )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiNumBytesRead;
 
 	FileRead( hFile, &giTimeCompressMode, sizeof( INT32 ), &uiNumBytesRead );
@@ -1035,6 +1080,7 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 
 void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY )
 {
+	PERFORMANCE_MARKER
 	if( fClockMouseRegionCreated == FALSE )
 	{
 		// create a mouse region for pausing of game clock
@@ -1057,6 +1103,7 @@ void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY )
 
 void RemoveMouseRegionForPauseOfClock( void )
 {
+	PERFORMANCE_MARKER
 	// remove pause region
 	if( fClockMouseRegionCreated == TRUE )
 	{
@@ -1069,6 +1116,7 @@ void RemoveMouseRegionForPauseOfClock( void )
 
 void PauseOfClockBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		HandlePlayerPauseUnPauseOfGame(	);
@@ -1078,6 +1126,7 @@ void PauseOfClockBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 void HandlePlayerPauseUnPauseOfGame( void )
 {
+	PERFORMANCE_MARKER
 	if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
 	{
 		return;
@@ -1118,6 +1167,7 @@ void HandlePlayerPauseUnPauseOfGame( void )
 
 void CreateDestroyScreenMaskForPauseGame( void )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fCreated = FALSE;
 	INT16 sX = 0, sY = 0;
 
@@ -1143,8 +1193,8 @@ void CreateDestroyScreenMaskForPauseGame( void )
 		fCreated = TRUE;
 
 		// get region x and y values
-		sX = ( &gClockMouseRegion ) -> RegionTopLeftX;
-		sY = ( &gClockMouseRegion ) -> RegionTopLeftY;
+		sX = ( &gClockMouseRegion )->RegionTopLeftX;
+		sY = ( &gClockMouseRegion )->RegionTopLeftY;
 	
 		//re create region on top of this
 		RemoveMouseRegionForPauseOfClock( );
@@ -1164,6 +1214,7 @@ void CreateDestroyScreenMaskForPauseGame( void )
 
 void ScreenMaskForGamePauseBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 {
+	PERFORMANCE_MARKER
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// unpause the game
@@ -1173,6 +1224,7 @@ void ScreenMaskForGamePauseBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 void RenderPausedGameBox( void )
 {
+	PERFORMANCE_MARKER
 	if( ( gfPauseDueToPlayerGamePause == TRUE ) && ( gfGamePaused == TRUE ) && ( iPausedPopUpBox != -1 ) )
 	{
 		RenderMercPopUpBoxFromIndex( iPausedPopUpBox, ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2 ), FRAME_BUFFER );
@@ -1184,7 +1236,8 @@ void RenderPausedGameBox( void )
 }
 
 BOOLEAN DayTime()
-{ //between 7AM and 9PM
+{
+	PERFORMANCE_MARKER //between 7AM and 9PM
 	return ( guiHour >= 7 && guiHour < 21 );
 }
 
@@ -1198,6 +1251,7 @@ BOOLEAN NightTime()
 
 void ClearTacticalStuffDueToTimeCompression( void )
 {
+	PERFORMANCE_MARKER
 	// is this test the right thing?	ARM
 	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 	{

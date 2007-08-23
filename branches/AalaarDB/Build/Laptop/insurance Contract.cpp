@@ -184,12 +184,14 @@ BOOLEAN		AreAnyAimMercsOnTeam( );
 
 void GameInitInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	gsCurrentInsuranceMercIndex = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 }
 
 
 void EnterLaptopInitInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	CHAR16		zTextField[14];
 
 	swprintf( zTextField, L"%d", 0 );
@@ -203,6 +205,7 @@ void EnterLaptopInitInsuranceContract()
 
 BOOLEAN EnterInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT16					usPosX,i;
 
@@ -272,6 +275,7 @@ BOOLEAN EnterInsuranceContract()
 
 void ExitInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	UINT8 i;
 
 	RemoveInsuranceDefaults();
@@ -298,6 +302,7 @@ void ExitInsuranceContract()
 
 void HandleInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	if( gfChangeInsuranceFormButtons )
 	{
 		//remove the old buttons from the page
@@ -328,6 +333,7 @@ void HandleInsuranceContract()
 
 void RenderInsuranceContract()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hPixHandle;
 	CHAR16		sText[800];
 	UINT8			ubCount=0;
@@ -433,6 +439,7 @@ void RenderInsuranceContract()
 
 void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -464,6 +471,7 @@ void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -495,6 +503,7 @@ void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT hPixHandle;
 	UINT16	usPosX, usPosY;
@@ -737,6 +746,7 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 
 void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -781,6 +791,7 @@ void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -826,6 +837,7 @@ void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -870,6 +882,7 @@ void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 INT8 GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID )
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 	UINT8	ubCount=0;
 
@@ -888,6 +901,7 @@ INT8 GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID )
 /*
 INT32 CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance )
 {
+	PERFORMANCE_MARKER
 	INT32			iAmount=0;
 	UINT32		uiInsuranceContractLength = 0;
 
@@ -918,7 +932,8 @@ INT32 CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance )
 */
 
 void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -938,6 +953,7 @@ void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 
 INT8 CountInsurableMercs()
 {
+	PERFORMANCE_MARKER
 	INT16					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -960,6 +976,7 @@ INT8 CountInsurableMercs()
 
 void DisableInsuranceContractNextPreviousbuttons()
 {
+	PERFORMANCE_MARKER
 	//disable the next button if there is no more mercs to display
 	if( ( gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids ) < CountInsurableMercs() )
 	{
@@ -980,6 +997,7 @@ void DisableInsuranceContractNextPreviousbuttons()
 
 void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN	fButtonsCreated = FALSE;
 
 	if( fCreate && !fButtonsCreated )
@@ -1068,6 +1086,7 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 
 void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
 {
+	PERFORMANCE_MARKER
 	//passed in either 1,2,3 should be 0,1,2
 	ubFormID--;
 
@@ -1087,6 +1106,7 @@ void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
 // determines if a merc will run out of their insurance contract
 void DailyUpdateOfInsuredMercs()
 {
+	PERFORMANCE_MARKER
 	INT16		cnt;
 	INT16		bLastTeamID;
 	SOLDIERTYPE		*pSoldier;
@@ -1129,6 +1149,7 @@ void DailyUpdateOfInsuredMercs()
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	MERCPROFILESTRUCT * pProfile;
 	INT16	sTotalSkill=0;
 	FLOAT flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
@@ -1204,6 +1225,7 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 // values passed in must be such that exceeding the normal value REDUCES insurance premiums
 FLOAT DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue )
 {
+	PERFORMANCE_MARKER
 	FLOAT flRatio;
 
 	if (sThisValue > 0)
@@ -1233,6 +1255,7 @@ FLOAT DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue )
 
 void InsContractNoMercsPopupCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	// yes, so start over, else stay here and do nothing for now
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
@@ -1244,6 +1267,7 @@ void InsContractNoMercsPopupCallBack( UINT8 bExitValue )
 
 void BuildInsuranceArray()
 {
+	PERFORMANCE_MARKER
 	INT16					cnt;
 	SOLDIERTYPE		*pSoldier;
 	INT16					bLastTeamID;
@@ -1266,6 +1290,7 @@ void BuildInsuranceArray()
 
 BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubPayoutID;
 	UINT32 uiTimeInMinutes;
 	MERCPROFILESTRUCT *pProfile;
@@ -1353,6 +1378,7 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 
 void StartInsuranceInvestigation( UINT8	ubPayoutID )
 {
+	PERFORMANCE_MARKER
 	UINT8 ubDays;
 
 	// send an email telling player an investigation is taking place
@@ -1388,6 +1414,7 @@ void StartInsuranceInvestigation( UINT8	ubPayoutID )
 
 void EndInsuranceInvestigation( UINT8	ubPayoutID )
 {
+	PERFORMANCE_MARKER
 	// send an email telling player the investigation is over
 	if ( gMercProfiles[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID ].ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH )
 	{
@@ -1407,6 +1434,7 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 //void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct )
 void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 {
+	PERFORMANCE_MARKER
 	//if the mercs id number is the same what is in the soldier array
 	if( LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID == Menptr[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID ].ubID )
 	{
@@ -1437,6 +1465,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 //Gets called at the very end of the game
 void InsuranceContractEndGameShutDown()
 {
+	PERFORMANCE_MARKER
 	//Free up the memory allocated to the insurance payouts
 	if( LaptopSaveInfo.pLifeInsurancePayouts )
 	{
@@ -1448,6 +1477,7 @@ void InsuranceContractEndGameShutDown()
 
 BOOLEAN MercIsInsurable( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	// only A.I.M. mercs currently on player's team
 	if( ( pSoldier->bActive ) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
 	{
@@ -1471,6 +1501,7 @@ BOOLEAN MercIsInsurable( SOLDIERTYPE *pSoldier )
 
 void EnableDisableInsuranceContractAcceptButtons()
 {
+	PERFORMANCE_MARKER
 	//If it is the first grid
 	if( gubNumberofDisplayedInsuranceGrids >= 1 )
 	{
@@ -1493,6 +1524,7 @@ void EnableDisableInsuranceContractAcceptButtons()
 
 void EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm, UINT32 *puiAcceptButton )
 {
+	PERFORMANCE_MARKER
 	INT16	sSoldierID = 0;
 
 	sSoldierID = GetSoldierIDFromMercID( ubMercIDForMercInForm );
@@ -1516,6 +1548,7 @@ void EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm
 /*
 UINT32	GetContractLengthForFormNumber( UINT8 ubFormID )
 {
+	PERFORMANCE_MARKER
 	UINT8	ubMercID;
 	SOLDIERTYPE	*pSoldier;
 
@@ -1544,6 +1577,7 @@ UINT32	GetContractLengthForFormNumber( UINT8 ubFormID )
 
 UINT32	GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	//if the soldier has life insurance
 	if( pSoldier->usLifeInsurance )
 	{
@@ -1559,6 +1593,7 @@ UINT32	GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier )
 
 UINT32	GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	INT32 iDayMercLeaves = ( pSoldier->iEndofContractTime / 1440 ) - 1;
 
 	//Since the merc is leaving in the afternoon, we must adjust since the time left would be different if we did the calc
@@ -1579,6 +1614,7 @@ UINT32	GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier )
 
 void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsuranceLength )
 {
+	PERFORMANCE_MARKER
 	INT32	iAmountOfMoneyTransfer = -1;
 
 	if( pSoldier == NULL )
@@ -1651,6 +1687,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 
 BOOLEAN	CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	if( CalculateSoldiersInsuranceContractLength( pSoldier ) != 0 )
 		return( TRUE );
 	else
@@ -1660,6 +1697,7 @@ BOOLEAN	CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier )
 
 INT32 CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	INT32 iInsuranceContractLength=0;
 	UINT32 uiTimeRemainingOnSoldiersContract = GetTimeRemainingOnSoldiersContract( pSoldier );
 
@@ -1706,6 +1744,7 @@ INT32 CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier )
 
 INT32	CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier )
 {
+	PERFORMANCE_MARKER
 	UINT32	uiDayToStartInsurance=0;
 
 	//if the soldier was just hired ( in transit ), and the game didnt just start
@@ -1724,6 +1763,7 @@ INT32	CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier )
 
 BOOLEAN AreAnyAimMercsOnTeam( )
 {
+	PERFORMANCE_MARKER
 	INT16	sNextMercID = 0;
 	BOOLEAN fIsThereAnyAimMercs = FALSE;
 	SOLDIERTYPE *pSoldier = NULL;

@@ -69,6 +69,7 @@ MOUSE_REGION EditorRegion;
 
 void EnableEditorRegion( INT8 bRegionID )
 {
+	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -86,6 +87,7 @@ void EnableEditorRegion( INT8 bRegionID )
 
 void DisableEditorRegion( INT8	bRegionID )
 {
+	PERFORMANCE_MARKER
 	switch( bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
@@ -103,6 +105,7 @@ void DisableEditorRegion( INT8	bRegionID )
 
 void RemoveEditorRegions()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	MSYS_RemoveRegion( &EditorRegion );
 	for(x = BASE_TERRAIN_TILE_REGION_ID; x < NUM_TERRAIN_TILE_REGIONS; x++ )
@@ -115,6 +118,7 @@ void RemoveEditorRegions()
 
 void InitEditorRegions()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
@@ -145,6 +149,7 @@ void InitEditorRegions()
 
 void LoadEditorImages()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 
 	//Set up the merc inventory panel
@@ -173,6 +178,7 @@ void LoadEditorImages()
 
 void DeleteEditorImages()
 {
+	PERFORMANCE_MARKER
 	//The merc inventory panel
 	DeleteVideoObjectFromIndex( guiMercInventoryPanel );
 	DeleteVideoObjectFromIndex( guiOmertaMap );
@@ -186,6 +192,7 @@ void DeleteEditorImages()
 
 void CreateEditorBuffers()
 {
+	PERFORMANCE_MARKER
 
 	INT32						i;
 	VSURFACE_DESC		vs_desc;
@@ -215,6 +222,7 @@ void CreateEditorBuffers()
 
 void DeleteEditorBuffers()
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	DeleteVideoSurfaceFromIndex( guiMercTempBuffer );
 	for( i = 0; i < 9; i++ )
@@ -225,6 +233,7 @@ void DeleteEditorBuffers()
 
 void ShowEditorToolbar( INT32 iNewTaskMode )
 {
+	PERFORMANCE_MARKER
 	switch( iNewTaskMode )
 	{
 		case TASK_TERRAIN:		ShowEditorButtons( FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON );								break;
@@ -239,6 +248,7 @@ void ShowEditorToolbar( INT32 iNewTaskMode )
 
 void HideEditorToolbar( INT32 iOldTaskMode )
 {
+	PERFORMANCE_MARKER
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
 	{
@@ -259,6 +269,7 @@ void HideEditorToolbar( INT32 iOldTaskMode )
 
 void CreateEditorTaskbar()
 {
+	PERFORMANCE_MARKER
 	InitEditorRegions();
 	LoadEditorImages();
 	CreateEditorBuffers();
@@ -268,6 +279,7 @@ void CreateEditorTaskbar()
 
 void DeleteEditorTaskbar()
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 
 	iOldTaskMode = iCurrentTaskbar;
@@ -283,6 +295,7 @@ void DeleteEditorTaskbar()
 
 void DoTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	if(!iTaskMode || iTaskMode == iCurrentTaskbar )
 	{
 		return;
@@ -401,6 +414,7 @@ void DoTaskbar(void)
 //Disables the task bar, but leaves it on screen. Used when a selection window is up.
 void DisableEditorTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
 		DisableButton( iEditorButton[ x ] );
@@ -409,6 +423,7 @@ void DisableEditorTaskbar(void)
 
 void EnableEditorTaskbar(void)
 {
+	PERFORMANCE_MARKER
 	INT32 x;
 	
 	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
@@ -429,6 +444,7 @@ void EnableEditorTaskbar(void)
 //in the editor taskbar.
 void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 {
+	PERFORMANCE_MARKER
 	va_list argptr;
 	CHAR16	string[512];
 	UINT16 uiStringLength, uiStringHeight;
@@ -448,6 +464,7 @@ void mprintfEditor(INT16 x, INT16 y, STR16 pFontString, ...)
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
+	PERFORMANCE_MARKER
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
 
 	if( !sLeft )
@@ -475,6 +492,7 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //look.
 void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h )
 {
+	PERFORMANCE_MARKER
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
 	UINT16 usStrWidth;
@@ -509,6 +527,7 @@ void DrawEditorInfoBox( STR16 str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, 
 
 void ClickEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -522,6 +541,7 @@ void ClickEditorButton( INT32 iEditorButtonID )
 
 void UnclickEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
@@ -535,26 +555,31 @@ void UnclickEditorButton( INT32 iEditorButtonID )
 
 void HideEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	HideButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ShowEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	ShowButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void DisableEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	DisableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void EnableEditorButton( INT32 iEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	EnableButton( iEditorButton[ iEditorButtonID ] );
 }
 
 void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -568,6 +593,7 @@ void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
@@ -581,6 +607,7 @@ void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		HideButton( iEditorButton[ i ] );
@@ -588,6 +615,7 @@ void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		ShowButton( iEditorButton[ i ] );
@@ -595,6 +623,7 @@ void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 
 void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		DisableButton( iEditorButton[ i ] );
@@ -602,6 +631,7 @@ void DisableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID
 
 void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
+	PERFORMANCE_MARKER
 	INT32 i;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 		EnableButton( iEditorButton[ i ] );
@@ -609,6 +639,7 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 
 void RenderMapEntryPointsAndLights()
 {
+	PERFORMANCE_MARKER
 	INT16 sGridNo;
 	INT16 sScreenX, sScreenY;
 	INT32 i;
@@ -702,6 +733,7 @@ void RenderMapEntryPointsAndLights()
 
 void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 {
+	PERFORMANCE_MARKER
 	if( pItem->usItem == SWITCH )
 	{
 		if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY )
@@ -730,6 +762,7 @@ void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 
 void RenderDoorLockInfo()
 {
+	PERFORMANCE_MARKER
 	INT16 i, xp, yp;
 	INT16 sScreenX, sScreenY;
 	CHAR16 str[ 50 ];
@@ -781,6 +814,7 @@ void RenderDoorLockInfo()
 
 void RenderSelectedItemBlownUp()
 {
+	PERFORMANCE_MARKER
 	UINT32 uiVideoObjectIndex;
 	HVOBJECT hVObject;
 	INT16 sScreenX, sScreenY, xp, yp;
@@ -842,7 +876,7 @@ void RenderSelectedItemBlownUp()
 
 	//Count the number of items in the current pool, and display that.
 	i = 0;
-	GetItemPool( gsItemGridNo, &pItemPool, 0 );
+	GetItemPoolFromGround( gsItemGridNo, &pItemPool );
 	Assert( pItemPool );
 	while( pItemPool )
 	{
@@ -869,6 +903,7 @@ void RenderSelectedItemBlownUp()
 
 void RenderEditorInfo( )
 {
+	PERFORMANCE_MARKER
 	CHAR16					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
 	UINT16						uiMapIndex;
@@ -938,6 +973,7 @@ extern BOOLEAN gfGotoGridNoUI;
 
 void ProcessEditorRendering()
 {
+	PERFORMANCE_MARKER
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{

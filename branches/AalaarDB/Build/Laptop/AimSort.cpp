@@ -163,6 +163,7 @@ UINT32		guiSelectLight;
 
 void GameInitAimSort()
 {
+	PERFORMANCE_MARKER
 	gubCurrentSortMode=0;
 	gubOldSortMode=0;
 	gubCurrentListMode=AIM_DESCEND;
@@ -171,6 +172,7 @@ void GameInitAimSort()
 
 BOOLEAN EnterAimSort()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	UINT8						ubCurNumber=0;
 	UINT16						ubWidth;
@@ -317,6 +319,7 @@ BOOLEAN EnterAimSort()
 
 void ExitAimSort()
 {
+	PERFORMANCE_MARKER
 	// Sort the merc array
 	SortMercArray();
 	RemoveAimDefaults();
@@ -345,11 +348,13 @@ void ExitAimSort()
 
 void HandleAimSort()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderAimSort()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hSortByHandle;
 	HVOBJECT	hToAlumniHandle;
 	HVOBJECT	hToMugShotHandle;
@@ -415,7 +420,8 @@ void RenderAimSort()
 
 
 void SelectToMugShotRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -431,7 +437,8 @@ void SelectToMugShotRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectToStatsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -448,7 +455,8 @@ void SelectToStatsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectToArchiveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -465,7 +473,8 @@ void SelectToArchiveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectPriceBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -488,7 +497,8 @@ void SelectPriceBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectExpBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -510,7 +520,8 @@ void SelectExpBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectMarkBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -533,7 +544,8 @@ void SelectMarkBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectMedicalBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -556,7 +568,8 @@ void SelectMedicalBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectExplosiveBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -579,7 +592,8 @@ void SelectExplosiveBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectMechanicalBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -602,7 +616,8 @@ void SelectMechanicalBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectAscendBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -625,7 +640,8 @@ void SelectAscendBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 
 void SelectDescendBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 
@@ -649,6 +665,7 @@ void SelectDescendBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hSelectLightHandle;
 
 	ubMode *= 2;
@@ -667,6 +684,7 @@ void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 
 BOOLEAN SortMercArray(void)
 {
+	PERFORMANCE_MARKER
 	qsort( (LPVOID)AimMercArray, (size_t) MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
 
 	return(TRUE);
@@ -677,6 +695,7 @@ BOOLEAN SortMercArray(void)
 
 INT32 QsortCompare( const void *pNum1, const void *pNum2)
 {
+	PERFORMANCE_MARKER
 	UINT8 Num1 = *(UINT8*)pNum1;
 	UINT8 Num2 = *(UINT8*)pNum2;
 
@@ -719,6 +738,7 @@ INT32 QsortCompare( const void *pNum1, const void *pNum2)
 
 INT32 CompareValue(const INT32 Num1, const INT32 Num2)
 {
+	PERFORMANCE_MARKER
 	// Ascending
 	if( gubCurrentListMode == AIM_ASCEND)
 	{

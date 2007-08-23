@@ -26,6 +26,7 @@ extern UINT16 PickAWallPiece( UINT16 usWallPieceType );
 //calculate the roof type by searching for the nearest roof tile.
 UINT16 SearchForWallType( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTileType;
 	LEVELNODE *pWall;
 	INT16 sOffset;
@@ -77,6 +78,7 @@ UINT16 SearchForWallType( UINT32 iMapIndex )
 //calculate the roof type by searching for the nearest roof tile.
 UINT16 SearchForRoofType( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	UINT32 uiTileType;
 	LEVELNODE *pRoof;
 	INT16 x, y, sRadius = 0;
@@ -111,6 +113,7 @@ UINT16 SearchForRoofType( UINT32 iMapIndex )
 	
 BOOLEAN RoofAtGridNo( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE	*pRoof;
 	UINT32 uiTileType;
 	pRoof = gpWorldLevelData[ iMapIndex ].pRoofHead;
@@ -130,6 +133,7 @@ BOOLEAN RoofAtGridNo( UINT32 iMapIndex )
 
 BOOLEAN BuildingAtGridNo( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	if( RoofAtGridNo( iMapIndex ) )
 		return TRUE;
 	if( FloorAtGridNo( iMapIndex ) )
@@ -139,6 +143,7 @@ BOOLEAN BuildingAtGridNo( UINT32 iMapIndex )
 
 BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	if( GetVerticalWall( iMapIndex ) || GetHorizontalWall( iMapIndex ) 
 			|| GetVerticalFence( iMapIndex ) || GetHorizontalFence( iMapIndex ) )
 		return TRUE;
@@ -147,6 +152,7 @@ BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
 
 LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -173,6 +179,7 @@ LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
 
 LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -199,6 +206,7 @@ LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 
 UINT16 GetVerticalWallType( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
 	pWall = GetVerticalWall( iMapIndex );
@@ -214,6 +222,7 @@ UINT16 GetVerticalWallType( UINT32 iMapIndex )
 
 UINT16 GetHorizontalWallType( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
 	pWall = GetHorizontalWall( iMapIndex );
@@ -229,6 +238,7 @@ UINT16 GetHorizontalWallType( UINT32 iMapIndex )
 
 LEVELNODE* GetVerticalFence( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -254,6 +264,7 @@ LEVELNODE* GetVerticalFence( UINT32 iMapIndex )
 
 LEVELNODE* GetHorizontalFence( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
 	UINT16 usWallOrientation;
@@ -279,6 +290,7 @@ LEVELNODE* GetHorizontalFence( UINT32 iMapIndex )
 
 void EraseHorizontalWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
@@ -291,6 +303,7 @@ void EraseHorizontalWall( UINT32 iMapIndex )
 
 void EraseVerticalWall( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
@@ -303,6 +316,7 @@ void EraseVerticalWall( UINT32 iMapIndex )
 
 void ChangeHorizontalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
 	UINT16 usTileIndex;
@@ -323,6 +337,7 @@ void ChangeHorizontalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 
 void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
 	UINT16 usTileIndex;
@@ -343,6 +358,7 @@ void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 
 void RestoreWalls( UINT32 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallType;
@@ -431,6 +447,7 @@ void RestoreWalls( UINT32 iMapIndex )
 
 UINT16 GetWallClass( LEVELNODE *pWall )
 {
+	PERFORMANCE_MARKER
 	UINT16 row, col, rowVariants;
 	UINT16 usWallIndex;
 	if( !pWall )
@@ -452,6 +469,7 @@ UINT16 GetWallClass( LEVELNODE *pWall )
 
 UINT16 GetVerticalWallClass( UINT16 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )
 		return GetWallClass( pWall );
@@ -460,6 +478,7 @@ UINT16 GetVerticalWallClass( UINT16 iMapIndex )
 
 UINT16 GetHorizontalWallClass( UINT16 iMapIndex )
 {
+	PERFORMANCE_MARKER
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )
 		return GetWallClass( pWall );

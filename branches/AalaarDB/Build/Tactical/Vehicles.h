@@ -49,7 +49,6 @@ enum{
 
 extern INT16 sVehicleOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE];
 
-// WDS - Clean up inventory handling
 #define MAXPASSENGERS 10
 // struct for vehicles
 typedef struct

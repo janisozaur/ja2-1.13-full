@@ -57,11 +57,13 @@ UINT32	guiFlowerCardsBackButton;
 
 void GameInitFloristCards()
 {
+	PERFORMANCE_MARKER
 
 }
 
 BOOLEAN EnterFloristCards()
 {
+	PERFORMANCE_MARKER
 	UINT16 i, j, usPosX, usPosY;
 	VOBJECT_DESC	VObjectDesc;
 	UINT8						ubCount;
@@ -111,6 +113,7 @@ BOOLEAN EnterFloristCards()
 
 void ExitFloristCards()
 {
+	PERFORMANCE_MARKER
 	UINT8	i;
 
 	RemoveFloristDefaults();
@@ -126,11 +129,13 @@ void ExitFloristCards()
 
 void HandleFloristCards()
 {
+	PERFORMANCE_MARKER
 
 }
 
 void RenderFloristCards()
 {
+	PERFORMANCE_MARKER
 	UINT8	i,j, ubCount;
 	UINT16	usPosX, usPosY;
 	CHAR16		sTemp[ 640 ];
@@ -183,7 +188,8 @@ void RenderFloristCards()
 
 
 void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -202,6 +208,7 @@ void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;

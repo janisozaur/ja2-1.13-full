@@ -53,6 +53,7 @@ typedef struct
 static void XMLCALL
 garrisonStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	garrisonParseData * pData = (garrisonParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -90,6 +91,7 @@ garrisonStartElementHandle(void *userData, const XML_Char *name, const XML_Char 
 static void XMLCALL
 garrisonCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	garrisonParseData * pData = (garrisonParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -100,6 +102,7 @@ garrisonCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 garrisonEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	garrisonParseData * pData = (garrisonParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -150,6 +153,7 @@ garrisonEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInGarrisonInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -208,6 +212,7 @@ BOOLEAN ReadInGarrisonInfo(STR fileName)
 
 BOOLEAN WriteInGarrisonInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
@@ -278,6 +283,7 @@ typedef struct
 static void XMLCALL
 patrolStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	patrolParseData * pData = (patrolParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -340,6 +346,7 @@ patrolStartElementHandle(void *userData, const XML_Char *name, const XML_Char **
 static void XMLCALL
 patrolCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	patrolParseData * pData = (patrolParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -350,6 +357,7 @@ patrolCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 patrolEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	patrolParseData * pData = (patrolParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -494,6 +502,7 @@ patrolEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInPatrolInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -552,6 +561,7 @@ BOOLEAN ReadInPatrolInfo(STR fileName)
 
 BOOLEAN WriteInPatrolInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
@@ -643,6 +653,7 @@ typedef struct
 static void XMLCALL
 compositionStartElementHandle(void *userData, const XML_Char *name, const XML_Char **atts)
 {
+	PERFORMANCE_MARKER
 	compositionParseData * pData = (compositionParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //are we reading this element?
@@ -705,6 +716,7 @@ compositionStartElementHandle(void *userData, const XML_Char *name, const XML_Ch
 static void XMLCALL
 compositionCharacterDataHandle(void *userData, const XML_Char *str, int len)
 {
+	PERFORMANCE_MARKER
 	compositionParseData * pData = (compositionParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth && strlen(pData->szCharData) < MAX_CHAR_DATA_LENGTH)
@@ -715,6 +727,7 @@ compositionCharacterDataHandle(void *userData, const XML_Char *str, int len)
 static void XMLCALL
 compositionEndElementHandle(void *userData, const XML_Char *name)
 {
+	PERFORMANCE_MARKER
 	compositionParseData * pData = (compositionParseData *) userData;
 
 	if(pData->currentDepth <= pData->maxReadDepth) //we're at the end of an element that we've been reading
@@ -809,6 +822,7 @@ compositionEndElementHandle(void *userData, const XML_Char *name)
 
 BOOLEAN ReadInArmyCompositionInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT32		uiFSize;
@@ -866,6 +880,7 @@ BOOLEAN ReadInArmyCompositionInfo(STR fileName)
 
 BOOLEAN WriteInArmyCompositionInfo(STR fileName)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	
 	hFile = FileOpen( fileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );

@@ -60,6 +60,7 @@ void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn,INT32 reason);
 
 void EnterIMPPersonalityFinish( void )
 {
+	PERFORMANCE_MARKER
 
 	// reset states
 	fCreateFinishOkButton = FALSE;
@@ -74,6 +75,7 @@ void EnterIMPPersonalityFinish( void )
 
 void RenderIMPPersonalityFinish( void )
 {
+	PERFORMANCE_MARKER
 	// the background
 	RenderProfileBackGround( );
 
@@ -100,6 +102,7 @@ void RenderIMPPersonalityFinish( void )
 
 void ExitIMPPersonalityFinish( void )
 {
+	PERFORMANCE_MARKER
 	
 	// exit at IMP Ok button
 	if( fExitIMPPerFinAtOk )
@@ -126,6 +129,7 @@ void ExitIMPPersonalityFinish( void )
 
 void HandleIMPPersonalityFinish( void )
 {
+	PERFORMANCE_MARKER
 	
 	// check if confirm and delay
 	CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( );
@@ -137,6 +141,7 @@ void HandleIMPPersonalityFinish( void )
 
 void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 {
+	PERFORMANCE_MARKER
 	// this function will check to see if player has in fact confirmed selection and delay to
 	// read text has occurred
 	
@@ -179,6 +184,7 @@ void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 
 void CreateIMPPersonalityFinishButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will create the buttons needed for the IMP personality Finish Page
 
 	// ths Yes button
@@ -217,6 +223,7 @@ void CreateIMPPersonalityFinishButtons( void )
 
 void DestroyIMPersonalityFinishButtons( void )
 {
+	PERFORMANCE_MARKER
 	// this function will destroy the buttons needed for the IMP personality Finish page
 	
 	// the yes button
@@ -233,6 +240,7 @@ void DestroyIMPersonalityFinishButtons( void )
 
 void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -278,6 +286,7 @@ void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))
@@ -322,6 +331,7 @@ void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
 
 void CreatePersonalityFinishOkButton( void )
 {
+	PERFORMANCE_MARKER
 
 	// create personality button finish button
 	giIMPPersonalityFinishButtonImage[0]=	LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
@@ -341,6 +351,7 @@ void CreatePersonalityFinishOkButton( void )
 
 void DestroyPersonalityFinishOkButton( void )
 {
+	PERFORMANCE_MARKER
 		// the ok button
 	RemoveButton(giIMPPersonalityFinishButton[ 0 ] );
 	UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 0 ] );
@@ -350,6 +361,7 @@ void DestroyPersonalityFinishOkButton( void )
 
 void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 
 	// btn callback for IMP personality quiz answer button
 	if (!(btn->uiFlags & BUTTON_ENABLED))

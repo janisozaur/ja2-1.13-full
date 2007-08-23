@@ -557,10 +557,12 @@ void WaitForMercToFinishTalkingOrUserToClick();
 
 void GameInitAIMMembers()
 {
+	PERFORMANCE_MARKER
 }
 
 void EnterInitAimMembers()
 {
+	PERFORMANCE_MARKER
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	gfVideoFaceActive = FALSE;
@@ -582,6 +584,7 @@ void EnterInitAimMembers()
 
 BOOLEAN EnterAIMMembers()
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	VSURFACE_DESC		vs_desc;
 
@@ -734,6 +737,7 @@ BOOLEAN EnterAIMMembers()
 
 void ExitAIMMembers()
 {
+	PERFORMANCE_MARKER
 	RemoveAimDefaults();
 
 	//if we are exiting and the transfer of funds popup is enable, make sure we dont come back to it
@@ -781,6 +785,7 @@ void ExitAIMMembers()
 
 void HandleAIMMembers()
 {
+	PERFORMANCE_MARKER
 	//determine if the merc has a quote that is waiting to be said
 	DelayMercSpeech( 0, 0, 0, FALSE, FALSE );
 
@@ -874,6 +879,7 @@ void HandleAIMMembers()
 
 BOOLEAN RenderAIMMembersTopLevel()
 {
+	PERFORMANCE_MARKER
 	InitCreateDeleteAimPopUpBox( AIM_POPUP_DISPLAY, NULL, NULL, 0, 0, 0);
 
 	return(TRUE);
@@ -881,6 +887,7 @@ BOOLEAN RenderAIMMembersTopLevel()
 
 BOOLEAN RenderAIMMembers()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hStatsHandle;
 	HVOBJECT	hPriceHandle;
 	HVOBJECT	hWeaponBoxHandle;
@@ -983,6 +990,7 @@ BOOLEAN RenderAIMMembers()
 
 BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor)
 {
+	PERFORMANCE_MARKER
 	CHAR16		sStr[10];
 
 	swprintf(sStr, L"%d", iNumber); 
@@ -994,6 +1002,7 @@ BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 u
 
 BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor)
 {
+	PERFORMANCE_MARKER
 	CHAR16		sStr[10];
 
 	swprintf(sStr, L"%d",iNumber);
@@ -1008,7 +1017,8 @@ BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLo
 
 
 void SelectFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 	}
@@ -1028,7 +1038,8 @@ void SelectFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 void SelectFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		gfAimMemberDisplayFaceHelpText = FALSE;
@@ -1048,6 +1059,7 @@ void SelectFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN	UpdateMercInfo(void)
 {
+	PERFORMANCE_MARKER
 	//UINT16					PosY = 300;
 	CHAR16					MercInfoString[ SIZE_MERC_BIO_INFO ];
 	CHAR16					AdditionalInfoString[ SIZE_MERC_BIO_INFO ];
@@ -1097,6 +1109,7 @@ BOOLEAN	UpdateMercInfo(void)
 
 BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 {
+	PERFORMANCE_MARKER
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT16		i;
@@ -1207,6 +1220,7 @@ BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 
 BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 {
+	PERFORMANCE_MARKER
 	UINT8				i;
 	INT16				PosX, PosY, sCenX, sCenY;
 	UINT16			usItem;
@@ -1225,7 +1239,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 
 	PosY = WEAPONBOX_Y;
 	PosX = WEAPONBOX_X+3;		// + 3 ( 1 to take care of the shadow, +2 to get past the weapon box border )
-	for(i=0; i<NUM_INV_SLOTS; i++)
+	for(i=0; i<gMercProfiles[ubMercID].inv.size(); i++)
 	{
 		usItem = gMercProfiles[ubMercID].inv[ i ];
 
@@ -1285,6 +1299,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 
 void BtnPreviousButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1320,6 +1335,7 @@ void BtnPreviousButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1354,6 +1370,7 @@ void BtnContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -1390,6 +1407,7 @@ void BtnNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN DisplayMercsFace()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT hFaceHandle;
 	HVOBJECT hPortraitHandle;
 	STR							sFaceLoc = "FACES\\BIGFACES\\";
@@ -1463,6 +1481,7 @@ BOOLEAN DisplayMercsFace()
 
 void DisplayMercStats()
 {
+	PERFORMANCE_MARKER
 	UINT8	ubColor;
 
 	//
@@ -1553,6 +1572,7 @@ void DisplayMercStats()
 
 UINT8	GetStatColor( INT8 bStat )
 {
+	PERFORMANCE_MARKER
 	if( bStat >= 80 )
 		return( HIGH_STAT_COLOR );
 	else if( bStat >= 50 )
@@ -1564,6 +1584,7 @@ UINT8	GetStatColor( INT8 bStat )
 //displays the dots between the stats and the stat name
 void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, STR16 pString)
 {
+	PERFORMANCE_MARKER
 	INT16 sNumberOfDots;
 	UINT16 usStringLength = StringPixLength(pString, AIM_M_FONT_STATIC_TEXT);
 	INT16	i;
@@ -1581,6 +1602,7 @@ void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, STR16 pString)
 
 void BtnContractLengthButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1617,6 +1639,7 @@ void BtnContractLengthButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1650,6 +1673,7 @@ void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn,INT32 reason)
 //Transfer funds button callback
 void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -1720,6 +1744,7 @@ void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 INT8 AimMemberHireMerc()
 {
+	PERFORMANCE_MARKER
 	MERC_HIRE_STRUCT HireMercStruct;
 	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
 	INT8		bReturnCode;
@@ -1822,6 +1847,7 @@ INT8 AimMemberHireMerc()
 
 BOOLEAN DisplayVideoConferencingDisplay()
 {
+	PERFORMANCE_MARKER
 	CHAR16		sMercName[128];
 
 	if( ( gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE ) || ( gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE ) )
@@ -1883,6 +1909,7 @@ BOOLEAN DisplayVideoConferencingDisplay()
 
 BOOLEAN DisplayMercsVideoFace()
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hTerminalHandle;
 	//STR				sFaceLoc = "FACES\\";
 
@@ -1901,6 +1928,7 @@ BOOLEAN DisplayMercsVideoFace()
 
 void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown)
 {
+	PERFORMANCE_MARKER
 	UINT16 i, usPosY, usPosX;
 
 	//First draw the select light for the contract length buttons
@@ -1959,6 +1987,7 @@ void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown)
 
 UINT32 DisplayMercChargeAmount()
 {
+	PERFORMANCE_MARKER
 	CHAR16		wTemp[50];
 	CHAR16		wDollarTemp[50];
 	HVOBJECT hImageHandle;
@@ -2022,6 +2051,7 @@ UINT32 DisplayMercChargeAmount()
 
 BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, STR16 sString1, STR16 sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
 {
+	PERFORMANCE_MARKER
 	VOBJECT_DESC	VObjectDesc;
 	HVOBJECT			hPopupBoxHandle;
 	static UINT16				usPopUpBoxPosX, usPopUpBoxPosY;
@@ -2153,6 +2183,7 @@ BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, STR16 sString1, STR16 sString2
 
 void BtnPopUpOkButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fInCallback=TRUE;
 
 	if( fInCallback )
@@ -2198,6 +2229,7 @@ void BtnPopUpOkButtonCallback(GUI_BUTTON *btn,INT32 reason)
 // we first contact merc.	We either go to hire him or cancel the call
 void BtnFirstContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2241,6 +2273,7 @@ void BtnFirstContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2287,6 +2320,7 @@ void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 void BtnHangUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -2314,6 +2348,7 @@ void BtnHangUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
 // InitVideoFace() is called once to initialize things
 BOOLEAN	InitVideoFace(UINT8 ubMercID)
 {
+	PERFORMANCE_MARKER
 	//Create the facial index
 	giMercFaceIndex = InitFace( ubMercID, NOBODY, 0 );
 
@@ -2334,6 +2369,7 @@ BOOLEAN	InitVideoFace(UINT8 ubMercID)
 // InitVideoFaceTalking() is called to start a merc speaking a particular message
 BOOLEAN	InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 {
+	PERFORMANCE_MARKER
 
 	//Starts the merc talking
 	if(!CharacterDialogue( ubMercID, usQuoteNum, giMercFaceIndex, DIALOGUE_CONTACTPAGE_UI, FALSE , FALSE) )
@@ -2353,6 +2389,7 @@ BOOLEAN	InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 
 BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex)
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
 	SGPRect		SrcRect;
@@ -2438,6 +2475,7 @@ BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex)
 
 void DisplayTextForMercFaceVideoPopUp(STR16 pString)
 {
+	PERFORMANCE_MARKER
 
 #ifdef TAIWANESE
 	swprintf( gsTalkingMercText, L"%s", pString );
@@ -2458,7 +2496,8 @@ void DisplayTextForMercFaceVideoPopUp(STR16 pString)
 
 
 void SelectShutUpMercRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{ 
+{
+	PERFORMANCE_MARKER 
 	BOOLEAN fInCallBack=TRUE;
 
 	if(fInCallBack)
@@ -2483,6 +2522,7 @@ void SelectShutUpMercRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 UINT8 WillMercAcceptCall()
 {
+	PERFORMANCE_MARKER
 	//if merc has hung up on the player twice within a period of time (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES )the merc cant ber hired
 	if( gMercProfiles[ gbCurrentSoldier ].bMercStatus == MERC_ANNOYED_WONT_CONTACT )
 	{
@@ -2508,6 +2548,7 @@ UINT8 WillMercAcceptCall()
 
 BOOLEAN CanMercBeHired()
 {
+	PERFORMANCE_MARKER
 	UINT8	i,j;
 	INT8	bMercID;
 	BOOLEAN fRetVal = FALSE;
@@ -2646,6 +2687,7 @@ BOOLEAN CanMercBeHired()
 
 BOOLEAN DisplaySnowBackground()
 {
+	PERFORMANCE_MARKER
 	UINT32		uiCurrentTime = 0;
 	HVOBJECT	hSnowHandle;
 	UINT8	ubCount;
@@ -2690,6 +2732,7 @@ BOOLEAN DisplaySnowBackground()
 
 BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 {
+	PERFORMANCE_MARKER
 	UINT32		uiCurrentTime = 0;
 	UINT8			ubCount;
 
@@ -2723,6 +2766,7 @@ BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 
 void HandleVideoDistortion()
 {
+	PERFORMANCE_MARKER
 	static UINT32	uiStaticNoiseSound = NO_SAMPLE;
 	UINT8		ubOldMode = gubCurrentStaticMode;
 	
@@ -2852,6 +2896,7 @@ void HandleVideoDistortion()
 //returns true when done. else false
 UINT8 DisplayTransparentSnow(UINT8 ubMode, UINT32 uiImageIdentifier, UINT8 ubMaxImages, BOOLEAN bForward)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hFuzzLineHandle;
 	static INT8	bCount= 0;
 	UINT32		uiCurrentTime = 0;
@@ -2912,6 +2957,7 @@ UINT8 DisplayTransparentSnow(UINT8 ubMode, UINT32 uiImageIdentifier, UINT8 ubMax
 //returns true when done. else false
 UINT8 DisplayDistortionLine(UINT8 ubMode, UINT32 uiImageIdentifier, UINT8 ubMaxImages)
 {
+	PERFORMANCE_MARKER
 	HVOBJECT	hFuzzLineHandle;
 	static UINT8	ubCount=255;
 	UINT32		uiCurrentTime = 0;
@@ -2949,6 +2995,7 @@ UINT8 DisplayDistortionLine(UINT8 ubMode, UINT32 uiImageIdentifier, UINT8 ubMaxI
 
 UINT8 DisplayPixelatedImage(UINT8 ubMaxImages)
 {
+	PERFORMANCE_MARKER
 	static UINT8	ubCount=255;
 	UINT32		uiCurrentTime = 0;
 	static UINT32	uiLastTime=0;
@@ -2978,6 +3025,7 @@ UINT8 DisplayPixelatedImage(UINT8 ubMaxImages)
 
 void HandleMercAttitude()
 {
+	PERFORMANCE_MARKER
 	UINT32		uiCurrentTime = 0;
 
 	uiCurrentTime = GetJA2Clock();
@@ -3041,6 +3089,7 @@ void HandleMercAttitude()
 
 void StopMercTalking()
 {
+	PERFORMANCE_MARKER
 	if( gfIsShutUpMouseRegionActive )
 	{
 	MSYS_DisableRegion(&gSelectedShutUpMercRegion); 
@@ -3057,6 +3106,7 @@ void StopMercTalking()
 
 void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn,INT32 reason)
 {
+	PERFORMANCE_MARKER
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -3077,6 +3127,7 @@ void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN InitDeleteVideoConferencePopUp( )
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN	fXRegionActive = FALSE;
 	static BOOLEAN	fVideoConferenceCreated = FALSE;
 	UINT8	i;
@@ -3462,6 +3513,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 
 BOOLEAN DeleteVideoConfPopUp()
 {
+	PERFORMANCE_MARKER
 	UINT16 i;
 
 	//reset ( in case merc was going to say something
@@ -3589,6 +3641,7 @@ BOOLEAN DeleteVideoConfPopUp()
 
 BOOLEAN HandleCurrentVideoConfMode()
 {
+	PERFORMANCE_MARKER
 	switch(	gubVideoConferencingMode )
 	{
 		// The video conference is not displayed
@@ -3714,6 +3767,7 @@ BOOLEAN HandleCurrentVideoConfMode()
 
 BOOLEAN EnableDisableCurrentVideoConferenceButtons( BOOLEAN fEnable)
 {
+	PERFORMANCE_MARKER
 	INT8	i;
 	static BOOLEAN fCreated = FALSE;
 	if(!fEnable)
@@ -3758,6 +3812,7 @@ BOOLEAN EnableDisableCurrentVideoConferenceButtons( BOOLEAN fEnable)
 /*
 BOOLEAN HandleAnsweringMachineMessage()
 {
+	PERFORMANCE_MARKER
 	static BOOLEAN fDone;
 
 	if( gfJustSwitchedVideoConferenceMode )
@@ -3777,6 +3832,7 @@ BOOLEAN HandleAnsweringMachineMessage()
 /*
 BOOLEAN DisplayAnimatedAnsweringMachineMsg( BOOLEAN fInit, UINT8 ubNumSubImages)
 {
+	PERFORMANCE_MARKER
 //	HVOBJECT	hImageHandle;
 	static UINT8	ubSubImage=0;
 	static UINT32 uiLastTime=0;
@@ -3841,6 +3897,7 @@ BOOLEAN DisplayAnimatedAnsweringMachineMsg( BOOLEAN fInit, UINT8 ubNumSubImages)
 
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
 {
+	PERFORMANCE_MARKER
 	//if merc is still annoyed, reset back to 0
 
 	if ( ubMercID == LARRY_NORMAL	)
@@ -3863,6 +3920,7 @@ void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
 
 BOOLEAN DisableNewMailMessage()
 {
+	PERFORMANCE_MARKER
 	if( fNewMailFlag && gubVideoConferencingMode )
 	{
 		gfIsNewMailFlagSet = TRUE;
@@ -3877,6 +3935,7 @@ BOOLEAN DisableNewMailMessage()
 
 BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit )
 {
+	PERFORMANCE_MARKER
 	static 	UINT8			ubCount;
 	UINT16		usPosX, usPosY, usPosRightX, usPosBottomY, usWidth, usHeight;
 	SGPRect		SrcRect;
@@ -3996,6 +4055,7 @@ BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit )
 //TEMP:	
 void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	INT16	i;
 	UINT8	MercID[]={11,16,29,36,2,10,17,6,7,12,0,1,3,4,5,8,9,13,14,15,18,19 };
 	MERC_HIRE_STRUCT HireMercStruct;
@@ -4074,6 +4134,7 @@ void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset )
 
 void DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset )
 {
+	PERFORMANCE_MARKER
 	static UINT32		uiLastTime=0;
 	UINT32					uiCurTime;
 	static UINT16		usCurQuoteNum;
@@ -4132,6 +4193,7 @@ void DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN
 //TEMP!!!	
 BOOLEAN QuickHireMerc()
 {
+	PERFORMANCE_MARKER
 	INT8	bReturnCode;
 	MERC_HIRE_STRUCT HireMercStruct;
 	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
@@ -4204,6 +4266,7 @@ BOOLEAN QuickHireMerc()
 
 void TempHandleAimMemberKeyBoardInput()
 {
+	PERFORMANCE_MARKER
 	InputAtom					InputEvent;
 
 	while (DequeueEvent(&InputEvent) == TRUE)
@@ -4238,6 +4301,7 @@ void TempHandleAimMemberKeyBoardInput()
 
 void WaitForMercToFinishTalkingOrUserToClick()
 {
+	PERFORMANCE_MARKER
 	//if the region is not active
 	if( !gfIsShutUpMouseRegionActive )
 	{
@@ -4262,6 +4326,7 @@ void WaitForMercToFinishTalkingOrUserToClick()
 /*
 BOOLEAN DisplayShadedStretchedMercFace( UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY )
 {
+	PERFORMANCE_MARKER
 	SGPRect		SrcRect;
 	SGPRect		DestRect;
 
@@ -4292,6 +4357,7 @@ BOOLEAN DisplayShadedStretchedMercFace( UINT8 ubMercID, UINT16 usPosX, UINT16 us
 
 void DemoHiringOfMercs( )
 {
+	PERFORMANCE_MARKER
 	INT16	i;
 	#ifdef GERMAN
 		UINT8	MercID[]={ 7, 10, 4, 14, 50 };
@@ -4355,6 +4421,7 @@ void DemoHiringOfMercs( )
 
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 {
+	PERFORMANCE_MARKER
 	CHAR16	szLocAndTime[512];
 	SOLDIERTYPE *pSoldier = NULL;
 	CHAR16		zTimeString[128];
@@ -4416,6 +4483,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack( UINT8 bExitValue )
 {
+	PERFORMANCE_MARKER
 	//unset the flag so the msgbox WONT dislay its save buffer
 	gfDontOverRideSaveBuffer = FALSE;
 
@@ -4429,6 +4497,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack( UINT8 bExitVal
 
 void DisplayAimMemberClickOnFaceHelpText()
 {
+	PERFORMANCE_MARKER
 	//display the 'left and right click' onscreen help msg
 	DrawTextToScreen( AimMemberText[0], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_TITLE_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
 	DrawTextToScreen( AimMemberText[1], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y+AIM_FI_CLICK_DESC_TEXT_Y_OFFSET, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);			
