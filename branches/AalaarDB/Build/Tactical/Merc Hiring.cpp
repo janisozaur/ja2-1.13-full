@@ -84,7 +84,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	PERFORMANCE_MARKER
 	SOLDIERTYPE	*pSoldier;
 	UINT8		iNewIndex;
-	UINT8		ubCount=0;
 	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
 	MERCPROFILESTRUCT				*pMerc;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -133,14 +132,12 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		if ( iNewIndex == 0 )
 		{
 			// OK, give this item to our merc!
-			OBJECTTYPE Object;
-		
 			// make an objecttype
-			Object.usItem						= LETTER;
-			Object.ubNumberOfObjects = 1;
-			Object.objectStatus				= 100;
+			gTempObject.usItem						= LETTER;
+			gTempObject.ubNumberOfObjects = 1;
+			gTempObject[0]->data.objectStatus				= 100;
 			// Give it 
-			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &Object, FALSE );
+			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &gTempObject, FALSE );
 			Assert( fReturn );
 		}
 

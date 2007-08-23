@@ -896,7 +896,7 @@ UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEA
 	}
 
 	// items normally not sold at shops are unsuitable
-//	if ( Item[ usItemIndex ].fFlags & ITEM_NOT_BUYABLE )
+//	if ( Item[ usItemIndex ][0]->data.fFlags & ITEM_NOT_BUYABLE )
 	if ( Item[ usItemIndex ].notbuyable  )
 	{
 		return(ITEM_SUITABILITY_NONE);
@@ -1239,65 +1239,6 @@ int BobbyRayItemQsortCompare(const void *pArg1, const void *pArg2)
 }
 
 
-
-int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
-{
-	PERFORMANCE_MARKER
-	UINT16	usItem1Index;
-	UINT16	usItem2Index;
-	UINT8		ubItem1Quality;
-	UINT8		ubItem2Quality;
-
-	usItem1Index = ( ( INVENTORY_IN_SLOT * ) pArg1 )->sItemIndex;
-	usItem2Index = ( ( INVENTORY_IN_SLOT * ) pArg2 )->sItemIndex;
-
-	ubItem1Quality = ( ( INVENTORY_IN_SLOT * ) pArg1 )->ItemObject.objectStatus;
-	ubItem2Quality = ( ( INVENTORY_IN_SLOT * ) pArg2 )->ItemObject.objectStatus;
-
-	return( CompareItemsForSorting( usItem1Index, usItem2Index, ubItem1Quality, ubItem2Quality ) );
-}
-
-
-
-int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
-{
-	/*
-	PERFORMANCE_MARKER
-	OBJECTTYPE* pRepairItem1;
-	OBJECTTYPE* pRepairItem2;
-	UINT32	uiRepairTime1;
-	UINT32	uiRepairTime2;
-
-
-	pRepairItem1 = ( OBJECTTYPE * ) pArg1;
-	pRepairItem2 = ( OBJECTTYPE * ) pArg2;
-
-	Assert( pInvSlot1->sSpecialItemElement != -1);
-	Assert( pInvSlot2->sSpecialItemElement != -1);
-
-	uiRepairTime1 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pRepairItem1->sItemIndex ].uiRepairDoneTime;
-	uiRepairTime2 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pRepairItem2->sItemIndex ].uiRepairDoneTime;
-
-
-	// lower reapir time first
-  if ( uiRepairTime1 < uiRepairTime2 )
-  {
-    return( -1 );
-  }
-  else
-  if ( uiRepairTime1 > uiRepairTime2 )
-  {
-    return( 1 );
-  }
-  else
-  {
-    return( 0 );
-	}
-  */
-}
-
-
-
 int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
 {
 	PERFORMANCE_MARKER
@@ -1312,124 +1253,115 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 	ubItem2Category = GetDealerItemCategoryNumber( usItem2Index );
 
 	// lower category first
-  if ( ubItem1Category < ubItem2Category )
-  {
-    return( -1 );
-  }
-  else
-  if ( ubItem1Category > ubItem2Category )
-  {
-    return( 1 );
-  }
-  else
-  {
-		// the same category 
-		//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
-		//{
-			//UINT8		ubItem1Calibre;
-			//UINT8		ubItem2Calibre;
-			//UINT8		ubItem1MagSize;
-			//UINT8		ubItem2MagSize;
+	if ( ubItem1Category < ubItem2Category )
+	{
+		return( -1 );
+	}
+	else if ( ubItem1Category > ubItem2Category )
+	{
+		return( 1 );
+	}
 
-			// AMMO is sorted by caliber first
-			//ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
-			//ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
-			//if ( ubItem1Calibre > ubItem2Calibre )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Calibre < ubItem2Calibre )
-			//{
-			//	return( 1 );
-			//}
-			//// the same caliber - compare size of magazine, then fall out of if statement
-			//ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
-			//ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
-			//if ( ubItem1MagSize > ubItem2MagSize )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1MagSize < ubItem2MagSize )
-			//{
-			//	return( 1 );
-			//}
-		//}
-		//else
-		//{
-			// items other than ammo are compared on coolness first
-			//ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
-			//ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
+	// the same category 
+	//if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
+	//{
+		//UINT8		ubItem1Calibre;
+		//UINT8		ubItem2Calibre;
+		//UINT8		ubItem1MagSize;
+		//UINT8		ubItem2MagSize;
 
-			//// higher coolness first
-			//if ( ubItem1Coolness > ubItem2Coolness )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( ubItem1Coolness < ubItem2Coolness )
-			//{
-			//	return( 1 );
-			//}
-		//}
-
-		// the same coolness/caliber - compare base prices then
-		//usItem1Price = Item[ usItem1Index ].usPrice;
-		//usItem2Price = Item[ usItem2Index ].usPrice;
-
-		//// higher price first
-		//if ( usItem1Price > usItem2Price )
+		// AMMO is sorted by caliber first
+		//ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
+		//ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
+		//if ( ubItem1Calibre > ubItem2Calibre )
 		//{
 		//	return( -1 );
 		//}
 		//else
-		//if ( usItem1Price < usItem2Price )
+		//if ( ubItem1Calibre < ubItem2Calibre )
 		//{
 		//	return( 1 );
 		//}
-		//else
+		//// the same caliber - compare size of magazine, then fall out of if statement
+		//ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
+		//ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
+		//if ( ubItem1MagSize > ubItem2MagSize )
 		//{
-			// the same price - compare item #s, then
-
-			//// lower index first
-			//if ( usItem1Index < usItem2Index )
-			//{
-			//	return( -1 );
-			//}
-			//else
-			//if ( usItem1Index > usItem2Index )
-			//{
-			//	return( 1 );
-			//}
-
-			//Madd: sort by name (for now at least):
-			if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) < 0 )
-				return -1;
-			else if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) > 0 )
-				return 1;
-			else
-			{
-				// same item type = compare item quality, then
-
-				// higher quality first
-				if ( ubItem1Quality > ubItem2Quality )
-				{
-					return( -1 );
-				}
-				else
-				if ( ubItem1Quality < ubItem2Quality )
-				{
-					return( 1 );
-				}
-				else
-				{
-					// identical items!
-					return( 0 );
-				}
-			}
+		//	return( -1 );
 		//}
-  }
+		//else
+		//if ( ubItem1MagSize < ubItem2MagSize )
+		//{
+		//	return( 1 );
+		//}
+	//}
+	//else
+	//{
+		// items other than ammo are compared on coolness first
+		//ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
+		//ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
+
+		//// higher coolness first
+		//if ( ubItem1Coolness > ubItem2Coolness )
+		//{
+		//	return( -1 );
+		//}
+		//else
+		//if ( ubItem1Coolness < ubItem2Coolness )
+		//{
+		//	return( 1 );
+		//}
+	//}
+
+	// the same coolness/caliber - compare base prices then
+	//usItem1Price = Item[ usItem1Index ].usPrice;
+	//usItem2Price = Item[ usItem2Index ].usPrice;
+
+	//// higher price first
+	//if ( usItem1Price > usItem2Price )
+	//{
+	//	return( -1 );
+	//}
+	//else
+	//if ( usItem1Price < usItem2Price )
+	//{
+	//	return( 1 );
+	//}
+	//else
+	//{
+		// the same price - compare item #s, then
+
+		//// lower index first
+		//if ( usItem1Index < usItem2Index )
+		//{
+		//	return( -1 );
+		//}
+		//else
+		//if ( usItem1Index > usItem2Index )
+		//{
+		//	return( 1 );
+		//}
+
+		//Madd: sort by name (for now at least):
+		if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) < 0 )
+			return -1;
+		else if (_stricmp(Item[usItem1Index].szBRName,Item[usItem2Index].szBRName) > 0 )
+			return 1;
+
+
+		// same item type = compare item quality, then
+		// higher quality first
+		if ( ubItem1Quality > ubItem2Quality )
+		{
+			return( -1 );
+		}
+		else if ( ubItem1Quality < ubItem2Quality )
+		{
+			return( 1 );
+		}
+	//}
+	// identical items!
+	return( 0 );
 }
 
 
@@ -1494,7 +1426,7 @@ UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
 	PERFORMANCE_MARKER
-//	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
+//	if ( !( Item[ usItemIndex ][0]->data.fFlags & ITEM_DAMAGEABLE ) )
 	if ( !( Item[ usItemIndex ].damageable  ) )
 		return(FALSE);
 

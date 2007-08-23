@@ -251,12 +251,6 @@ INT32	iTempX, iTempY;
 	sBottom = sBottom - (INT16)uiBottomSkip;
 
 
-if ( sLeft == 192 || sLeft == 188 )
-{
-	PERFORMANCE_MARKER
-	int i = 0;
-}
-
 	if((iBackIndex=GetFreeBackgroundBuffer())==(-1))
 		return(-1);
 

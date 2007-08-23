@@ -346,14 +346,14 @@ BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 // I did that (or actually uncasted a bunch of stuff and re-typed others to correct them), so 
 // no worries
 // (jonathanl) to save me having to cast all the previous code
-BOOLEAN GetMouseMapPos( UINT16	*psMapPos )
+BOOLEAN GetMouseMapPos( INT16	*psMapPos )
 {
 	PERFORMANCE_MARKER
 	return	GetMouseMapPos( (INT16 *)psMapPos );
 }
 #endif
 
-BOOLEAN GetMouseMapPos( UINT16	*pusMapPos )
+BOOLEAN GetMouseMapPos( INT16	*pusMapPos )
 {
 	PERFORMANCE_MARKER
 	INT16				sWorldX, sWorldY;
@@ -393,15 +393,15 @@ BOOLEAN GetMouseMapPos( UINT16	*pusMapPos )
 
 
 
-BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos )
+BOOLEAN ConvertMapPosToWorldTileCenter( INT16 sMapPos, INT16 *psXPos, INT16 *psYPos )
 {
 	PERFORMANCE_MARKER
 	INT16 sWorldX, sWorldY;
 	INT16 sCellX, sCellY;
 
 	// Get X, Y world GRID Coordinates
-	sWorldY = ( usMapPos / WORLD_COLS );
-	sWorldX = usMapPos - ( sWorldY * WORLD_COLS );
+	sWorldY = ( sMapPos / WORLD_COLS );
+	sWorldX = sMapPos - ( sWorldY * WORLD_COLS );
 
 	// Convert into cell coords
 	sCellY = sWorldY * CELL_Y_SIZE;

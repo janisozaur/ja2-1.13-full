@@ -584,11 +584,6 @@ UINT8		ubTravelCost;
 	//bDirection = atan8( iX, iY, iSrcX, iSrcY );
 	bDirection = atan8( iSrcX, iSrcY, iX, iY );
 
-	if ( usTileNo == 20415 && bDirection == 3 )
-	{
-	int i = 0;
-	}
-
 
 	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
 
@@ -1451,10 +1446,9 @@ UINT16 LightGetLastNode(INT32 iLight)
 BOOLEAN LightAddNode(INT32 iLight, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, INT16 iY, UINT8 ubIntensity, UINT16 uiFlags)
 {
 	PERFORMANCE_MARKER
-BOOLEAN fDuplicate=FALSE;
-DOUBLE dDistance;
-UINT8 ubShade;
-INT32 iLightDecay;
+	DOUBLE dDistance;
+	UINT8 ubShade;
+	INT32 iLightDecay;
 
 	dDistance=LinearDistanceDouble(iX, iY, iHotSpotX, iHotSpotY);
 	dDistance/=DISTANCE_SCALE;
@@ -3104,9 +3098,8 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 INT32 LightLoad(STR pFilename)
 {
 	PERFORMANCE_MARKER
-HWFILE hFile;
-LIGHT_NODE *pNewLight=NULL, *pLastLight=NULL;
-INT32 iLight;
+	HWFILE hFile;
+	INT32 iLight;
 
 	if((iLight=LightGetFree())==(-1))
 		return(-1);
@@ -3423,8 +3416,7 @@ BOOLEAN LightSpriteRender(void)
 BOOLEAN LightSpriteRenderAll(void)
 {
 	PERFORMANCE_MARKER
-INT32 iCount;
-BOOLEAN fRenderLights=FALSE;
+	INT32 iCount;
 
 	LightResetAllTiles();
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)

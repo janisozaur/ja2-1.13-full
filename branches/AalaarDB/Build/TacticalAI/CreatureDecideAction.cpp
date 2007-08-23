@@ -604,7 +604,6 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
- INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0;
  INT16 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
@@ -845,10 +844,10 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// determine direction from this soldier to the closest opponent
 			ubOpponentDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
 
-			// if soldier is not already facing in that direction,
-			// and the opponent is close enough that he could possibly be seen
-			// note, have to change this to use the level returned from ClosestKnownOpponent
-			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0, pSoldier );
+			 // if soldier is not already facing in that direction,
+			 // and the opponent is close enough that he could possibly be seen
+			 // note, have to change this to use the level returned from ClosestKnownOpponent
+			 sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0 );
 
 			if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 				{
@@ -902,7 +901,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 	// monster AI - hostile mammals in sense range
- INT16		sClosestOpponent,sBestCover = NOWHERE;
+ INT16		sClosestOpponent;
  INT16		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
  INT8			bDirection;
@@ -910,7 +909,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
  INT8			bCanAttack;
  INT8			bSpitIn, bWeaponIn;
  UINT32		uiChance;
- ATTACKTYPE BestShot, BestStab, BestAttack, CurrStab;
+ ATTACKTYPE BestShot = {}, BestStab = {}, BestAttack = {}, CurrStab = {};
  BOOLEAN	fRunAway = FALSE;
  BOOLEAN	fChangeLevel;
 
@@ -1059,7 +1058,7 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 		{
 			if ( bCanAttack == NOSHOOT_NOAMMO )
 			{
-				pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
+				pSoldier->inv[HANDPOS][0]->data.fFlags |= OBJECT_AI_UNUSABLE;
 
 				// try to find a bladed weapon
 				if (pSoldier->ubBodyType == QUEENMONSTER)
@@ -1114,9 +1113,9 @@ INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
 
 	if (bWeaponIn != NO_SLOT)
 	{
-		if (Item[pSoldier->inv[bWeaponIn].usItem].usItemClass == IC_GUN && pSoldier->inv[bWeaponIn].gun.bGunStatus >= USABLE)
+		if (Item[pSoldier->inv[bWeaponIn].usItem].usItemClass == IC_GUN && pSoldier->inv[bWeaponIn][0]->data.gun.bGunStatus >= USABLE)
 		{
-			if (pSoldier->inv[bWeaponIn].gun.ubGunShotsLeft > 0)
+			if (pSoldier->inv[bWeaponIn][0]->data.gun.ubGunShotsLeft > 0)
 			{
 				bSpitIn = bWeaponIn;
 				// if it's in another pocket, swap it into his hand temporarily

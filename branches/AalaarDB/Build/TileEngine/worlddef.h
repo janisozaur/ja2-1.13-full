@@ -294,7 +294,7 @@ void TrashMapTile(INT16 MapTile);
 BOOLEAN NewWorld( void );
 
 BOOLEAN SaveWorld( const STR8 puiFilename );
-BOOLEAN LoadWorld( const STR8 puiFilename, float* pMajorMapVersion, UINT8* pMinorMapVersion );
+BOOLEAN LoadWorld( const STR8 puiFilename, float* pMajorMapVersion = NULL, UINT8* pMinorMapVersion = NULL );
 
 void CompileWorldMovementCosts( );
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
@@ -311,7 +311,7 @@ void RemoveWorldWireFrameTiles( );
 void RemoveWireFrameTiles( INT16 sGridNo );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
+LEVELNODE *GetAnimProfileFlags( INT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 void ReloadTileset( UINT8 ubID );
 

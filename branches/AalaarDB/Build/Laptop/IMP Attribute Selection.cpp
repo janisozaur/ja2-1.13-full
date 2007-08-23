@@ -1001,8 +1001,6 @@ void RenderAttributeBoxes( void )
 	INT32 iCnt=STRENGTH_ATTRIBUTE;
 	INT16 sX = 0;
 	INT16 sY = 0; 
-	INT16 sTempY = 0;
-	INT16 sTempX = 0;
 	CHAR16 sString[3];
 
 	// set last char to null
@@ -1416,7 +1414,6 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	static INT16 sOldY = -1;
 	static INT32 iAttribute = -1;
 	INT32 iNewValue = 0;
-	INT32 iCurrentValue = 0;
 	INT16 sNewX = -1;
 	
 
@@ -1835,7 +1832,6 @@ INT32 DetermineNewPosition( INT32 iAttribute )
 
 	INT32 iNewLoc=0;
 	INT32	iStartLoc = SKILL_SLIDE_START_X;
-	FLOAT fPercentOfBar=0.0f;
 	FLOAT	fBasePixelScaleWidth = ( ( BAR_WIDTH - SLIDER_BAR_WIDTH ) / (FLOAT)( iMaxAttribute - iMinAttribute ) );
 		
 	iNewLoc = (INT32)(iAttribute * fBasePixelScaleWidth);

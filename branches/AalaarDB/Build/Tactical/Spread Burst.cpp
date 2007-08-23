@@ -125,7 +125,7 @@ void AccumulateBurstLocation( INT16 sGridNo )
 void PickBurstLocations( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	UINT8		ubShotsPerBurst;
+	UINT8		ubShotsPerBurst = 0;
 	FLOAT		dAccululator = 0;
 	FLOAT		dStep = 0;
 	INT32		cnt;
@@ -148,7 +148,7 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 				pSoldier->bDoAutofire++;
 				sAPCosts = CalcTotalAPsToAttack( pSoldier, gsBurstLocations[0].sGridNo, TRUE, 0);
 			}
-			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
+			while(EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) && pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire && gbNumBurstLocations >= pSoldier->bDoAutofire);
 			pSoldier->bDoAutofire--;
 
 			ubShotsPerBurst = __min(pSoldier->bDoAutofire,MAX_BURST_SPREAD_TARGETS);

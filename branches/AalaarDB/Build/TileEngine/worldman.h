@@ -27,8 +27,8 @@ void AdjustAllRoofShadeLevels( UINT32 iMapIndex, INT8 bShadeDiff );
 void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags	);
 void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags	);
 BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex );
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
-void RemoveWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
+void SetWallLevelnodeFlags( INT16 sGridNo, UINT32 uiFlags );
+void RemoveWallLevelnodeFlags( INT16 sGridNo, UINT32 uiFlags );
 BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex );
 
 

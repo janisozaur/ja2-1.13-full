@@ -513,7 +513,6 @@ void _FailMessage( STR8 pString, UINT32 uiLineNum, STR8 pSourceFile )
 	MSG Message;
 //	FILE *DebugFile;
 #endif
-	BOOLEAN fDone = FALSE;
 	//Build the output strings
 	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in \n%c %s]\n", GetTickCount(), uiLineNum, '\n', pSourceFile );
 	if( pString )

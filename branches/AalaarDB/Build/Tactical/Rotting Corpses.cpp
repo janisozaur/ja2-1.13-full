@@ -801,8 +801,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	OBJECTTYPE									*pObj;
 	UINT8						ubNumGoo;
 	INT16						sNewGridNo;
-	OBJECTTYPE					ItemObject;
-
  // ATE: Change to fix crash when item in hand
 	if ( gpItemPointer != NULL && gpItemPointerSoldier == pSoldier )
 	{
@@ -916,9 +914,9 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 	for ( cnt = 0; cnt < ubNumGoo; cnt++ )
 	{
-			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &ItemObject );
+			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &gTempObject );
 
-		AddItemToPool( sNewGridNo, &ItemObject, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
+		AddItemToPool( sNewGridNo, &gTempObject, bVisible , pSoldier->pathing.bLevel, usItemFlags, -1 );
 	}
 	}
 	else
@@ -931,10 +929,10 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 		if ( pObj->usItem != NOTHING )
 		{
 			// Check if it's supposed to be dropped
-			if ( !( pObj->fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			if ( !( (*pObj)[0]->data.fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
 			{
 				// and make sure that it really is a droppable item type
-//				if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
+//				if ( !(Item[ pObj->usItem ][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE) )
 				if ( !(Item[ pObj->usItem ].defaultundroppable ) )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, cnt );
@@ -947,8 +945,8 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 							if ( Item[pObj->usItem].damageable && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE ) // Madd: drop crappier items from enemies on higher difficulty levels - note the quick fix for throwing knives
 							{
-								pObj->objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
-								pObj->objectStatus = min(max(pObj->objectStatus,1),100); // never below 1% or above 100%
+								(*pObj)[0]->data.objectStatus -= (gGameOptions.ubDifficultyLevel - 1) * Random(20);
+								(*pObj)[0]->data.objectStatus = min(max((*pObj)[0]->data.objectStatus,1),100); // never below 1% or above 100%
 							}
 						}
 
@@ -1265,7 +1263,6 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	PERFORMANCE_MARKER
 	INT32					cnt;
 	SOLDIERTYPE							*pSoldier;
-	INT16										sDistVisible;	
 	INT16										sGridNo;
 
 	// If this cump is already visible, return
@@ -1287,23 +1284,17 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 	// look for all mercs on the same team, 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pSoldier++ )
 	{ 
-			// ATE: Ok, lets check for some basic things here!
-			if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		// ATE: Ok, lets check for some basic things here!
+		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		{
+			// and we can trace a line of sight to his x,y coordinates?
+			// (taking into account we are definitely aware of this guy now)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, TRUE ) )
 			{
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel, pSoldier );
-				
-				if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-				{
-					// and we can trace a line of sight to his x,y coordinates?
-					// (taking into account we are definitely aware of this guy now)
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-					{
-						MakeCorpseVisible( pSoldier, pCorpse );
-						return;
-					}
-				}
+				 MakeCorpseVisible( pSoldier, pCorpse );
+				 return;
 			}
+		}
 	}
 }
 
@@ -1311,73 +1302,65 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 void MercLooksForCorpses( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
-	INT32					cnt;
-	INT16										sDistVisible;	
-	INT16										sGridNo;
-	ROTTING_CORPSE					*pCorpse;
-
 	// Should we say disgust quote?
 	if ( ( pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ROTTINGCORPSE ) )
 	{
-	 return;
+		return;
 	}
 
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
-	return;
+		return;
 	}
 
 	if ( AM_AN_EPC( pSoldier ) )
 	{
-	return;
+		return;
 	}
 
 	if ( QuoteExp_HeadShotOnly[ pSoldier->ubProfile ] == 1 )
 	{
-	return;
+		return;
 	}
 
 	// Every so often... do a corpse quote...
 	if ( Random( 400 ) <= 2 )
 	{
-	// Loop through all corpses....
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
-	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
+		INT32					cnt;
+		INT16										sGridNo;
+		ROTTING_CORPSE					*pCorpse;
 
-		if ( !pCorpse->fActivated )
+		// Loop through all corpses....
+		for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
 		{
-			continue;
+			pCorpse = &(gRottingCorpse[ cnt ] );
+
+			if ( !pCorpse->fActivated )
+			{
+			  continue;
+			}
+
+			// Has this corpse rotted enough?
+			if ( pCorpse->def.ubType == ROTTING_STAGE2 )
+			{
+				sGridNo = pCorpse->def.sGridNo;
+				// and we can trace a line of sight to his x,y coordinates?
+				// (taking into account we are definitely aware of this guy now)
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, TRUE ) )
+				{
+					TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );			
+
+					pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_ROTTINGCORPSE;
+
+					BeginMultiPurposeLocator( sGridNo, pCorpse->def.bLevel, FALSE );
+
+					// Slide to...
+					SlideToLocation( 0, sGridNo );
+
+					return;
+				}
+			}
 		}
-
-		// Has this corpse rotted enough?
-	 if ( pCorpse->def.ubType == ROTTING_STAGE2 )
-	 {
-		 sGridNo = pCorpse->def.sGridNo;
-
-		 // is he close enough to see that gridno if he turns his head?
-		 sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel, pSoldier );
-		 
-		 if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-		 {
-			 // and we can trace a line of sight to his x,y coordinates?
-			 // (taking into account we are definitely aware of this guy now)
-			 if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-			 {
-				 TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );			
-
-				 pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_ROTTINGCORPSE;
-
-			BeginMultiPurposeLocator( sGridNo, pCorpse->def.bLevel, FALSE );
-
-			// Slide to...
-			SlideToLocation( 0, sGridNo );
-
-			return;
-			 }
-		}
-		}
-	}
 	}
 }
 
@@ -1775,7 +1758,6 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,	INT8 bLevel )
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
 	ROTTING_CORPSE_DEFINITION CorpseDef;
 	UINT16 usHeadIndex = HEAD_1;
@@ -1838,8 +1820,8 @@ void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,	INT8 bLevel )
 
 		}
 
-		CreateItem( usHeadIndex, 100, &Object );
-		AddItemToPool( sGridNo, &Object, INVISIBLE, 0, 0, 0 );
+		CreateItem( usHeadIndex, 100, &gTempObject );
+		AddItemToPool( sGridNo, &gTempObject, INVISIBLE, 0, 0, 0 );
 
 		// All teams lok for this...
 		NotifySoldiersToLookforItems( );
@@ -1853,8 +1835,6 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	ROTTING_CORPSE *pCorpse;
 	INT8						bObjSlot;
-	OBJECTTYPE			Object;
-
 	// OK, get corpse
 	pCorpse = &( gRottingCorpse[ pSoldier->aiData.uiPendingActionData4 ] );
 
@@ -1867,23 +1847,23 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 		case INFANTMONSTER_DEAD:
 
 			// Can get creature blood....
-			CreateItem( JAR_CREATURE_BLOOD, 100, &Object );
+			CreateItem( JAR_CREATURE_BLOOD, 100, &gTempObject );
 			break;
 
 	case QUEEN_MONSTER_DEAD:
-			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &Object );
+			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &gTempObject );
 			break;
 
 		default:
 
-			CreateItem( JAR_HUMAN_BLOOD, 100, &Object );
+			CreateItem( JAR_HUMAN_BLOOD, 100, &gTempObject );
 			break;
 
 	}
 
 	if ( bObjSlot != NO_SLOT )
 	{
-		SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &Object );
+		SwapObjs( &(pSoldier->inv[ bObjSlot ] ), &gTempObject );
 	}
 }
 

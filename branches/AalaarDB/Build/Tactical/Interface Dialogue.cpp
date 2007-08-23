@@ -394,7 +394,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.fHandled		=		FALSE;
 	gTalkPanel.fOnName		=		FALSE;
 
-	// Load Video Object!
+	// Load Video gTempObject!
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	sprintf( VObjectDesc.ImageFile, "INTERFACE\\talkbox1.sti" );
 	// Load
@@ -1215,7 +1215,6 @@ void HandleTalkingMenuBackspace( void )
 {
 	PERFORMANCE_MARKER
 	FACETYPE				*pFace;
-	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
 	{
@@ -1380,10 +1379,10 @@ BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetAp
 }
 
 
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum )
+BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubRecordNum )
 {
 	PERFORMANCE_MARKER
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
+	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, sGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );	
 
 	return( TRUE );
 }
@@ -1429,9 +1428,9 @@ BOOLEAN SourceSoldierPointerIsValidAndReachableForGive( SOLDIERTYPE * pGiver )
 	}
 
 	// pointer should always be valid anyhow
-	if ( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > MaxDistanceVisible() )
+	if( PythSpacesAway( pGiver->sGridNo, gpSrcSoldier->sGridNo ) > gpSrcSoldier->GetMaxDistanceVisible(pGiver->sGridNo, gpSrcSoldier->pathing.bLevel) )
 	{
-		return( FALSE );
+		return FALSE;
 	}
 
 	sAdjGridNo = FindAdjacentGridEx( pGiver, gpSrcSoldier->sGridNo, NULL, NULL, FALSE, FALSE );
@@ -1644,7 +1643,7 @@ void HandleWaitTimerForNPCTrigger( )
 
 
 
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
+void HandleNPCGotoGridNo( UINT8 ubTargetNPC, INT16 sGridNo, UINT8 ubQuoteNum )
 {
 	PERFORMANCE_MARKER
 	SOLDIERTYPE			 *pSoldier;
@@ -1678,7 +1677,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	pSoldier->aiData.bNextAction = AI_ACTION_WALK;
 
 	// Set dest!
-	pSoldier->aiData.usNextActionData = usGridNo;
+	pSoldier->aiData.usNextActionData = sGridNo;
 
 	// UNless he's has a pending action, delete what he was doing!
 	// Cancel anything he was doing
@@ -1693,7 +1692,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	pSoldier->ubQuoteActionID = ActionIDForMovementRecord( ubTargetNPC, ubQuoteNum );
 	
 	// Set absolute dest
-	pSoldier->sAbsoluteFinalDestination = usGridNo;
+	pSoldier->sAbsoluteFinalDestination = sGridNo;
 
 	// handle this guy's AI right away so that we can get him moving
 	pSoldier->aiData.fAIFlags |= AI_HANDLE_EVERY_FRAME;
@@ -1834,7 +1833,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ExitGrid.ubGotoSectorX = 10;
 				ExitGrid.ubGotoSectorY = 1;
 				ExitGrid.ubGotoSectorZ = 1;
-				ExitGrid.usGridNo = 12722;
+				ExitGrid.sGridNo = 12722;
 	
 				ApplyMapChangesToMapTempFile( TRUE );
 				AddExitGridToWorld( 7887, &ExitGrid );
@@ -2399,16 +2398,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
-					OBJECTTYPE	Object;
 					INT16				sGridNo = 14952;
 					INT32				iWorldItem;
 
 					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if (pSoldier)
 					{
-						CreateItem( MONEY, 1, &Object );
-						Object.money.uiMoneyAmount = 10000;
-						AddItemToPoolAndGetIndex( sGridNo, &Object, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
+						CreateItem( MONEY, 1, &gTempObject );
+						gTempObject[0]->data.money.uiMoneyAmount = 10000;
+						AddItemToPoolAndGetIndex( sGridNo, &gTempObject, -1, pSoldier->pathing.bLevel, 0, 0, &iWorldItem );
 						
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move
@@ -3146,7 +3144,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						if (bMoneySlot != NO_SLOT && bEmptySlot != NO_SLOT)
 						{
 							CreateMoney( gMercProfiles[ ubTargetNPC ].iBalance * 2, &(pSoldier->inv[ bEmptySlot ] ) );
-							pSoldier->inv[ bMoneySlot ].money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
+							pSoldier->inv[ bMoneySlot ][0]->data.money.uiMoneyAmount -= gMercProfiles[ ubTargetNPC ].iBalance * 2;
 							if (bMoneySlot < bEmptySlot)
 							{
 								// move main stash to later in inventory!
@@ -3633,7 +3631,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_START_DOCTORING:
 				{
 					
-					// reset fact he is expecting money fromt he player
+					// reset fact he is expecting money fromt the player
 					SetFactFalse( FACT_VINCE_EXPECTING_MONEY );
 
 					// check fact
@@ -4765,10 +4763,8 @@ void DialogueMessageBoxCallBack( UINT8 ubExitValue )
 				pSoldier = FindSoldierByProfileID( DARYL, FALSE );
 				if ( pSoldier )
 				{
-					OBJECTTYPE Key;
-
-					CreateKeyObject( &Key, 1, 38 );
-					AutoPlaceObject( pSoldier, &Key, FALSE );
+					CreateKeyObject( &gTempObject, 1, 38 );
+					AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 				}
 				TriggerNPCRecord( DARYL, 11 );
 			}

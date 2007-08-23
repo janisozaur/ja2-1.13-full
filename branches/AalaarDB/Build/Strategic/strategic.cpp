@@ -71,7 +71,7 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 		// ste merc as dead
 		// pSoldier->flags.fUIdeadMerc = TRUE;
 	
-		// attempt o remove character from squad
+		// attempt to remove character from squad
 		RemoveCharacterFromSquads( pSoldier );
 		
 		// handle any passign comments by grunts

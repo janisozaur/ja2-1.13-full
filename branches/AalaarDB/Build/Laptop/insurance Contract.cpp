@@ -340,7 +340,6 @@ void RenderInsuranceContract()
 	INT16			sMercID;
 	INT16			sNextMercID;
 	UINT16		usPosX;
-	BOOLEAN		fIsThereAnyAimMercs = FALSE;
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -1088,8 +1087,6 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
 {
 	PERFORMANCE_MARKER
-	INT32	iAmountOfMoneyTransfer = -1;
-
 	//passed in either 1,2,3 should be 0,1,2
 	ubFormID--;
 

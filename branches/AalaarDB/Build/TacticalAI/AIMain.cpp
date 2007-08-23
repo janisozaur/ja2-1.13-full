@@ -981,7 +981,7 @@ UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
 	UINT32				uiLoop;
 	INT32					iThreatVal,iMinThreat = 30000;
 	SOLDIERTYPE		*pTargetSoldier;
-	UINT8					ubTargetSoldier = NO_SOLDIER;
+	UINT8					ubTargetSoldier = NOBODY;
 
 	// Loop through all mercs 
 
@@ -2858,7 +2858,6 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 	PERFORMANCE_MARKER
 	UINT32 uiLoop;
 	SOLDIERTYPE *pFriend;
-	INT16 sDistVisible;
 
 	// THIS ROUTINE SHOULD ONLY BE CALLED FOR SOLDIERS ON STATUS GREEN or YELLOW
 
@@ -2880,44 +2879,39 @@ void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
 		if (pFriend->ubID == pSoldier->ubID)
 			continue;  // next merc
 
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pFriend->sGridNo, pFriend->pathing.bLevel, pFriend );
 		// if we can see far enough to see this friend
-		if (PythSpacesAway(pSoldier->sGridNo,pFriend->sGridNo) <= sDistVisible)
+		// and can trace a line of sight to his x,y coordinates
+		if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, TRUE))
 		{
-			// and can trace a line of sight to his x,y coordinates
-			//if (1) //*** SoldierToSoldierLineOfSightTest(pSoldier,pFriend,STRAIGHT,TRUE))
-			if (SoldierToSoldierLineOfSightTest(pSoldier, pFriend, (UINT8)sDistVisible, TRUE))
+			// if my friend is in battle or something is clearly happening there
+			if ((pFriend->aiData.bAlertStatus >= STATUS_RED) || pFriend->aiData.bUnderFire || (pFriend->stats.bLife < OKLIFE))
 			{
-				// if my friend is in battle or something is clearly happening there
-				if ((pFriend->aiData.bAlertStatus >= STATUS_RED) || pFriend->aiData.bUnderFire || (pFriend->stats.bLife < OKLIFE))
-				{
 #ifdef DEBUGDECISIONS
 					std::string tempstr = String ("%s sees %s on alert, goes to RED ALERT!",pSoldier->name,pFriend->name );
 					DebugAI(tempstr);
 #endif
 
-					pSoldier->aiData.bAlertStatus = STATUS_RED;
-					CheckForChangingOrders(pSoldier);
-					SetNewSituation( pSoldier );
-					break;         // don't bother checking on any other friends
-				}
-				else
+				pSoldier->aiData.bAlertStatus = STATUS_RED;
+				CheckForChangingOrders(pSoldier);
+				SetNewSituation( pSoldier );
+				break;         // don't bother checking on any other friends
+			}
+			else
+			{
+				// if he seems suspicious or acts like he thought he heard something
+				// and I'm still on status GREEN
+				if ((pFriend->aiData.bAlertStatus == STATUS_YELLOW) &&
+					(pSoldier->aiData.bAlertStatus < STATUS_YELLOW))
 				{
-					// if he seems suspicious or acts like he thought he heard something
-					// and I'm still on status GREEN
-					if ((pFriend->aiData.bAlertStatus == STATUS_YELLOW) &&
-						(pSoldier->aiData.bAlertStatus < STATUS_YELLOW))
-					{
 #ifdef TESTVERSION
 						tempstr = String("TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
 						PopMessage(tempstr);
 #endif
-						pSoldier->aiData.bAlertStatus = STATUS_YELLOW;    // also get suspicious
-						SetNewSituation( pSoldier );
-						pSoldier->aiData.sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
-						pSoldier->aiData.ubNoiseVolume = 3;                // remember this for 3 turns
-						// keep check other friends, too, in case any are already on RED
-					}
+					pSoldier->aiData.bAlertStatus = STATUS_YELLOW;    // also get suspicious
+					SetNewSituation( pSoldier );
+					pSoldier->aiData.sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
+					pSoldier->aiData.ubNoiseVolume = 3;                // remember this for 3 turns
+					// keep check other friends, too, in case any are already on RED
 				}
 			}
 		}

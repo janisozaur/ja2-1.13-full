@@ -146,7 +146,7 @@ BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 void HandleModalTactical( );
 extern void CheckForDisabledRegionRemove( );
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
+extern void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce );
 
 
 
@@ -433,9 +433,6 @@ UINT32	MainGameScreenHandle(void)
 {
 	PERFORMANCE_MARKER
 	UINT32		uiNewScreen = GAME_SCREEN;
-	BOOLEAN		fEnterDemoMode = FALSE;
-
-
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
 //	if( ( !gfTacticalDoHeliRun && !gfFirstHeliRun ) && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, FALSE ) )

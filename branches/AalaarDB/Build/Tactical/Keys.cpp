@@ -203,7 +203,7 @@ BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 	{
 		if (Item[pSoldier->inv[ubLoop].usItem].usItemClass == IC_KEY)
 		{
-			if ( (pSoldier->inv[ubLoop].key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
+			if ( (pSoldier->inv[ubLoop][0]->data.key.ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
 			{
 				// there's the key we want!
 				return( TRUE );
@@ -1329,7 +1329,6 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 	INT32					cnt, cnt2;
 	INT8										bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 	SOLDIERTYPE							*pSoldier;
-	INT16										sDistVisible;	
 	DOOR_STATUS							*pDoorStatus;
 	INT16											usNewGridNo;
 
@@ -1350,14 +1349,25 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 		// ATE: Ok, lets check for some basic things here!
 		if ( pSoldier->stats.bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
 		{
-			// is he close enough to see that gridno if he turns his head?
-			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0, pSoldier );
-			
-			if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
+			// and we can trace a line of sight to his x,y coordinates?
+			// (taking into account we are definitely aware of this guy now)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE ) )
 			{
+				// Update status...
+				if ( fUpdateValue )
+				{
+					InternalUpdateDoorsPerceivedValue( pDoorStatus );
+				}
+				return( TRUE );
+			}
+
+			// Now try other adjacent gridnos...
+			for ( cnt2 = 0; cnt2 < 8; cnt2++ )
+			{
+				usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 				// and we can trace a line of sight to his x,y coordinates?
 				// (taking into account we are definitely aware of this guy now)
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE ) )
 				{
 					// Update status...
 					if ( fUpdateValue )
@@ -1366,28 +1376,6 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 					}
 					return( TRUE );
 				}
-			}
-
-			// Now try other adjacent gridnos...
-			for ( cnt2 = 0; cnt2 < 8; cnt2++ )
-			{
-					usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, usNewGridNo, 0, pSoldier );
-				
-					if (PythSpacesAway( pSoldier->sGridNo, usNewGridNo ) <= sDistVisible )
-					{
-						// and we can trace a line of sight to his x,y coordinates?
-						// (taking into account we are definitely aware of this guy now)
-						if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
-						{
-							// Update status...
-							if ( fUpdateValue )
-							{
-								InternalUpdateDoorsPerceivedValue( pDoorStatus );
-							}
-							return( TRUE );
-						}
-					}
 			}
 		}
 	}
@@ -1400,7 +1388,6 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 {
 	PERFORMANCE_MARKER
 	INT32					cnt, cnt2;
-	INT16										sDistVisible;	
 	INT16										sGridNo;
 	DOOR_STATUS							*pDoorStatus;
 	INT8										bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
@@ -1419,53 +1406,41 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 		}
 
 		sGridNo = pDoorStatus->sGridNo;
-
-		// is he close enough to see that gridno if he turns his head?
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0, pSoldier );
-		
-		if ( PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
+		// and we can trace a line of sight to his x,y coordinates?
+		// (taking into account we are definitely aware of this guy now)
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE ) )
 		{
-			// and we can trace a line of sight to his x,y coordinates?
-			// (taking into account we are definitely aware of this guy now)
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
+			// OK, here... update perceived value....
+			if ( fUpdateValue )
 			{
-				// OK, here... update perceived value....
-				if ( fUpdateValue )
-				{
-					InternalUpdateDoorsPerceivedValue( pDoorStatus );
+				InternalUpdateDoorsPerceivedValue( pDoorStatus );
 
-					// Update graphic....
-					InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
-				}
-				return( TRUE );
+				// Update graphic....
+				InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
 			}
+			return( TRUE );
 		}
 
 		// Now try other adjacent gridnos...
 		for ( cnt2 = 0; cnt2 < 8; cnt2++ )
 		{
 			usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
-			
-				if (PythSpacesAway( pSoldier->sGridNo, usNewGridNo ) <= sDistVisible )
+			// and we can trace a line of sight to his x,y coordinates?
+			// (taking into account we are definitely aware of this guy now)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE ) )
+			{
+				// Update status...
+				if ( fUpdateValue )
 				{
-					// and we can trace a line of sight to his x,y coordinates?
-					// (taking into account we are definitely aware of this guy now)
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
-					{
-						// Update status...
-						if ( fUpdateValue )
-						{
-							InternalUpdateDoorsPerceivedValue( pDoorStatus );
+					InternalUpdateDoorsPerceivedValue( pDoorStatus );
 
-							// Update graphic....
-							InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
+					// Update graphic....
+					InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
 
-						}
-						return( TRUE );
-					}
 				}
+				return( TRUE );
+			}
 		}
-
 	}
 
 	return( FALSE );
@@ -1626,7 +1601,7 @@ void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUse
 
 	// OK, we either have an opened graphic, in which case we want to switch to the closed, or a closed
 	// in which case we want to switch to opened...
-	// adjust o' graphic
+	// adjust object' graphic
 
 
 	// OK, we now need to test these things against the true structure data
@@ -2187,15 +2162,13 @@ void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 
 	}
 	UINT8		ubLoop;
 	UINT8		ubItem;
-	OBJECTTYPE	Object;
-
 	for (ubLoop = 0; ubLoop < NUM_KEYS; ubLoop++)
 	{
 			ubItem = pSoldier->pKeyRing[ ubLoop ].ubKeyID;
 
 		if ( pSoldier->pKeyRing[ubLoop].ubNumber > 0 )
 		{
-				CreateKeyObject( &Object, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
+				CreateKeyObject( &gTempObject, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
 
 			// Zero out entry
 			pSoldier->pKeyRing[ ubLoop ].ubNumber = 0;
@@ -2203,19 +2176,19 @@ void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 
 
 			if ( fAddToDropList )
 			{
-				AddItemToLeaveIndex( &Object, iDropListSlot );
+				AddItemToLeaveIndex( &gTempObject, iDropListSlot );
 			}
 			else
 			{
 				if( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || fUseUnLoaded )
 				{
 					// Set flag for item...
-					AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &Object , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
+					AddItemsToUnLoadedSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &gTempObject , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible, FALSE );
 				}
 				else
 				{
 					// Add to pool
-					AddItemToPool( sGridNo, &Object, bVisible, bLevel, 0, 0 );
+					AddItemToPool( sGridNo, &gTempObject, bVisible, bLevel, 0, 0 );
 				}
 			}
 		}

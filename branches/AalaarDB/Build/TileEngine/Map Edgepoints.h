@@ -8,7 +8,7 @@ typedef struct MAPEDGEPOINTINFO
 {
 	UINT8 ubNumPoints;
 	UINT8 ubStrategicInsertionCode;
-	UINT16 sGridNo[ 32 ];
+	INT16 sGridNo[ 32 ];
 }MAPEDGEPOINTINFO;
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );

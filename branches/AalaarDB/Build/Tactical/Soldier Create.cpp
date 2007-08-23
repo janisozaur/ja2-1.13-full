@@ -1486,7 +1486,7 @@ void InitSoldierStruct( SOLDIERTYPE *pSoldier )
 	pSoldier->ubDesiredHeight				= NO_DESIRED_HEIGHT;
 	pSoldier->bViewRange						= NORMAL_VIEW_RANGE;
 	pSoldier->bInSector							= FALSE;
-	pSoldier->sGridNo								= NO_MAP_POS;
+	pSoldier->sGridNo								= NOWHERE;
 	pSoldier->iMuzFlash							= -1;
 	pSoldier->usPendingAnimation		= NO_PENDING_ANIMATION;
 	pSoldier->usPendingAnimation2		= NO_PENDING_ANIMATION;
@@ -2084,7 +2084,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	{
 		spp->Inv[ i ].initialize();
 		spp->Inv[ i ].usItem = NOTHING;
-		spp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
+		spp->Inv[ i ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	}
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateStaticDetailedPlacementGivenBasicPlacementInfo done"));
@@ -2164,7 +2164,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	for( i = 0; i < spp->Inv.size(); i++ )
 	{
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
-		if( spp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
+		if( spp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE )
 		{
 			pp->Inv[ i ] = spp->Inv[ i ];
 			//return;
@@ -2556,7 +2556,10 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	UINT8 ubID;
 	SOLDIERTYPE * pSoldier;
 
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
+	if (gpBattleGroup->ubSectorZ == gbWorldSectorZ &&
+		gpBattleGroup->ubSectorX == gWorldSectorX &&
+		gpBattleGroup->ubSectorY == gWorldSectorY &&
+		guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
 		pSoldier = ReserveTacticalMilitiaSoldierForAutoresolve( ubMilitiaClass );
 		if( pSoldier ) return pSoldier;		
@@ -2710,11 +2713,11 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
 	UINT8									ubID;
-	UINT16 usMapPos;
+	INT16 sMapPos;
 
 	if ( GetMouseXY( &sGridX, &sGridY ) )
 	{
-		usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
+		sMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
 		// Get Grid Coordinates of mouse
 		if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) )
 		{		
@@ -2727,7 +2730,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 			MercCreateStruct.sSectorX			= sSectorX;
 			MercCreateStruct.sSectorY			= sSectorY;
 			MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-			MercCreateStruct.sInsertionGridNo		= usMapPos;
+			MercCreateStruct.sInsertionGridNo		= sMapPos;
 
 			RandomizeNewSoldierStats( &MercCreateStruct );
 
@@ -2747,7 +2750,6 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	PERFORMANCE_MARKER
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
-	OBJECTTYPE 						Obj;
 	UINT32								uiMoneyLeft, uiMoneyLimitInSlot;
 	INT8									bSlot;
 
@@ -2764,27 +2766,27 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			{
 				if ( pProfile->inv[ cnt ] != NOTHING )
 				{
-					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &Obj );
-					if (Item[Obj.usItem].attachment )
+					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &gTempObject );
+					if (Item[gTempObject.usItem].attachment )
 					{
 						// try to find the appropriate item to attach to!
 						for ( cnt2 = 0; cnt2 < pSoldier->inv.size(); cnt2++ )
 						{
-							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( Obj.usItem, pSoldier->inv[ cnt2 ].usItem ) )
+							if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( gTempObject.usItem, pSoldier->inv[ cnt2 ].usItem ) )
 							{
-								AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &Obj );
+								AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &gTempObject );
 								break;
 							}
 						}
 						if (cnt2 == pSoldier->inv.size())
 						{
 							// oh well, couldn't find anything to attach to!
-							AutoPlaceObject( pSoldier, &Obj, FALSE );
+							AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 						}
 					}
 					else
 					{
-						AutoPlaceObject( pSoldier, &Obj, FALSE );
+						AutoPlaceObject( pSoldier, &gTempObject, FALSE );
 					}
 
 				}
@@ -2845,13 +2847,13 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					}
 					if ( Item[pProfile->inv[ cnt ]].fingerprintid )
 					{
-						pSoldier->inv[ cnt ].ubImprintID = pSoldier->ubProfile;
+						pSoldier->inv[ cnt ][0]->data.ubImprintID = pSoldier->ubProfile;
 					}
 					if (gubItemDroppableFlag[cnt])
 					{
 						if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
 						{
-							pSoldier->inv[cnt].fFlags |= OBJECT_UNDROPPABLE;
+							pSoldier->inv[cnt][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 						}
 					}
 				}
@@ -2878,12 +2880,12 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 					if ( uiMoneyLeft > uiMoneyLimitInSlot )
 					{
 						// fill pocket with money
-						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLimitInSlot;			
+						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLimitInSlot;			
 						uiMoneyLeft -= uiMoneyLimitInSlot;			
 					}
 					else
 					{
-						pSoldier->inv[ bSlot ].money.uiMoneyAmount = uiMoneyLeft;
+						pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount = uiMoneyLeft;
 						// done!
 						break;
 					}

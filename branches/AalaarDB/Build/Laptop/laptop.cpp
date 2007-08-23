@@ -845,7 +845,6 @@ INT32 EnterLaptop()
 	//Create, load, initialize data -- just entered the laptop.
 	
 	VOBJECT_DESC	VObjectDesc;
-	INT32 iCounter=0; 
 
 	static BOOLEAN fEnteredFromGameStartup = TRUE;
 	// we are re entering due to message box, leave NOW!
@@ -3092,7 +3091,6 @@ void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3112,7 +3110,6 @@ void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3138,7 +3135,6 @@ void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3157,7 +3153,6 @@ void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3179,7 +3174,6 @@ void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3198,7 +3192,6 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT32 iFrame=0;
-	INT32 iDifference=0;
 	HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3529,7 +3522,6 @@ void ScrollDisplayText(INT32 iY)
 	PERFORMANCE_MARKER
 	static INT32 iBaseTime=0;
 	static INT16 sCurX;
-	INT16 sY=(INT16)iY;
 
 	// if we are just enetering, set basetime to current clock value
 	if(iBaseTime==0)
@@ -3889,8 +3881,6 @@ BOOLEAN DisplayLoadPending( void )
 	HVOBJECT hLapTopIconHandle;
 	INT32 iLoadTime;
 	INT32 iUnitTime;
-	UINT32 uiTempLaptopMode = 0;
-	UINT32 uiTempWWWMode = 0;
 	INT16 sXPosition = 0, sYPosition = 0;
 
 	// if merc webpage, make it longer

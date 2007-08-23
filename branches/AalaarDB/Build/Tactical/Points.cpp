@@ -31,7 +31,8 @@
 	#include "GameSettings.h"
 	#include "worldman.h"
 	#include "math.h"
-	#include "Interface Items.h"
+#include "Map Information.h"
+#include "Interface Items.h"
 #endif
 
 //rain
@@ -490,7 +491,7 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost, BOOLE
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT32 iBPCost,BOOLEAN fProactive )
 {
 	PERFORMANCE_MARKER
-	INT16 sNewAP = 0, sNewBP = 0;
+	INT16 sNewAP = 0;
 	INT8	bNewBreath;
 
 
@@ -670,8 +671,6 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 {
 	PERFORMANCE_MARKER
 	INT16 sUnusedAPs, sBreathPerAP = 0, sBreathChange, sRTBreathMod;
-	BOOLEAN	fAnimTypeFound = FALSE;
-
 	// Note to Andrew (or whomever else it may concern):
 
 
@@ -894,9 +893,13 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	//rain
 	// Reduce breath gain on 25%/rain intensity
-	if( sBreathPerAP < 0 && ( pSoldier->pathing.bLevel	||!FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )	)	&& pSoldier->bBreath > 1)
+	// Lalien: only for soldiers that are in loaded sector, 
+	if ( gfWorldLoaded &&  pSoldier->bInSector)
 	{
-		sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity	/ 100 );	
+		if( sBreathPerAP < 0 && ( pSoldier->pathing.bLevel  || !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
+		{
+			sBreathPerAP -= (INT16)( sBreathPerAP * gbCurrentRainIntensity * gGameExternalOptions.ubBreathGainReductionPerRainIntensity  / 100 );	
+		}
 	}
 	//end rain
 
@@ -956,19 +959,19 @@ UINT8 CalcAPsToAutofire( INT8 bBaseActionPoints, OBJECTTYPE * pObj, UINT8 bDoAut
 		//DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: base aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//check for spring and bolt
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SPRING_AND_BOLT_UPGRADE );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
 		//{	
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found rod and spring, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_SCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end()attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end()objectStack[0]->attachments.end() )
 		//{
 		//	aps = (aps * 100) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex scope, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
 		//}
 		//bAttachPos = FindAttachment( &(pSoldier->inv[HANDPOS]), REFLEX_UNSCOPED );
-		//if ( bAttachPos != pSoldier->inv[HANDPOS].attachments.end() )
+		//if ( bAttachPos != pSoldier->inv[HANDPOS].objectStack[0]->attachments.end() )
 		//{
 		//	aps = ( aps * 100 ) / (100 + pSoldier->inv[HANDPOS].bAttachStatus[ bAttachPos ] / 5);
 		//	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CalcAPsToAutofire: found reflex sight, aps = %d, # shots = %d",aps,pSoldier->bDoAutofire ));
@@ -1217,7 +1220,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 	// Their info is an array of item status, not weapon info, and they don't repeat
 	// fire anyway.
 	rof = Weapon[ pObj->usItem ].ubShotsPer4Turns;
-	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
 	{
 		rof += GetRateOfFireBonus(pObj);
 	}
@@ -1231,7 +1234,7 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 
 	// Snap: Refactored the formula to reduce the number of integer divisions
 	Top = 8 * bAPs;
-	if (Item[ pObj->usItem ].ubPerPocket == 0)
+	if (Item[ pObj->usItem ].ubPerPocket <= 1)
 	{
 		Top *= ( 100 - GetPercentAPReduction(pObj) );
 	}
@@ -1645,7 +1648,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 			}
 			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
 			{
-				if ( pSoldier->inv[ bInvPos ].gun.ubGunShotsLeft == 0 )
+				if ( pSoldier->inv[ bInvPos ][0]->data.gun.ubGunShotsLeft == 0 )
 				{
 					if ( fDisplay )
 					{
@@ -1657,7 +1660,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
 				//<SB> manual recharge
 				if( pSoldier->bTeam == OUR_TEAM )
 				{
-					if ( !(	pSoldier->inv[ bInvPos ].gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
+					if ( !(	pSoldier->inv[ bInvPos ][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER ) )
 					{
 						return( FALSE );
 					}
@@ -1697,11 +1700,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
 				// OK, let's see, don't overrun...
-				if ( pObj->gun.ubGunShotsLeft != 0 )
+				if ( (*pObj)[0]->data.gun.ubGunShotsLeft != 0 )
 				{
-					pObj->gun.ubGunShotsLeft--;
+					(*pObj)[0]->data.gun.ubGunShotsLeft--;
 					//Pulmu: Update weight after firing gun to account for bullets fired
-					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && pObj->gun.ubGunShotsLeft > 0)
+					if( gGameExternalOptions.fAmmoDynamicWeight == TRUE && (*pObj)[0]->data.gun.ubGunShotsLeft > 0)
 					{
 						pSoldier->inv[HANDPOS].ubWeight = CalculateObjectWeight( &(pSoldier->inv[HANDPOS]));
 					}
@@ -1726,20 +1729,20 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 				if ( Item[ pObj->usItem ].usItemClass == IC_LAUNCHER && GetMagSize(pObj) > 1 )
 				{
 					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor"));
-					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
+					(*pAttachment)[0]->data.objectStatus -= (INT8) ceil((double)( 100 / GetMagSize(pObj) )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for milkor: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / GetMagSize(pObj) ) ))
 					{
 						RemoveAttachment( pObj, pAttachment);
 					}
 				}
 				else if ( (pSoldier->bWeaponMode == WM_ATTACHED_GL || pSoldier->bWeaponMode == WM_ATTACHED_GL_BURST || pSoldier->bWeaponMode == WM_ATTACHED_GL_AUTO ) && Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize > 1 )
 				{
-					pAttachment->objectStatus -= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
+					(*pAttachment)[0]->data.objectStatus -= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize )) ;
 
-					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",pAttachment->objectStatus,(pAttachment->objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
-					if ( pAttachment->objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
+					DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("DeductAmmo: deducting for OICW GL: resulting status: %d, remove? = %d",(*pAttachment)[0]->data.objectStatus,((*pAttachment)[0]->data.objectStatus <= (INT8) ( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ))));
+					if ( (*pAttachment)[0]->data.objectStatus <= (INT8) ceil((double)( 100 / Weapon[GetAttachedGrenadeLauncher(pObj)].ubMagSize ) ))
 					{
 						RemoveAttachment( pObj, pAttachment);
 					}
@@ -1759,7 +1762,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 }
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	ITEM_POOL					*pItemPool;
@@ -1767,10 +1770,10 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	INT16							sActionGridNo;
 
 	// Check if we are over an item pool
-	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->pathing.bLevel ) )
+	if ( GetItemPool( sMapPos, &pItemPool, pSoldier->pathing.bLevel ) )
 	{
 		// If we are in the same tile, just return pickup cost
-		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, usMapPos );
+		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sMapPos );
 
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
@@ -1793,15 +1796,15 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 }
 
 
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
-	if ( sAPCost != 0 || pSoldier->sGridNo == usMapPos )
+	if ( sAPCost != 0 || pSoldier->sGridNo == sMapPos )
 	{
 		// ADD APS TO PICKUP
 		sAPCost += AP_GIVE_ITEM;
@@ -1845,7 +1848,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	pObj = &(pSoldier->inv[HANDPOS]);
 
 //<SB> manual recharge
-	if (pObj->gun.ubGunShotsLeft && !(pObj->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0]->data.gun.ubGunShotsLeft && !((*pObj)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
 		return Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually;
 	}
@@ -2345,14 +2348,14 @@ UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	if (usMapPos != -1)
+	if (sMapPos != -1)
 	{
-		sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+		sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 	}
 
 	// ADD APS TO PICKUP
@@ -2375,12 +2378,12 @@ INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier )
 }
 
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )
@@ -2393,12 +2396,12 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16						sAPCost = 0;
 
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	sAPCost = PlotPath( pSoldier, sMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )

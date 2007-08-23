@@ -54,6 +54,7 @@
 #endif
 
 #include "BuildDefines.h"
+#include <algorithm>
 
 // temp
 struct skirgbcolor
@@ -331,12 +332,13 @@ SELECTED_ARMS_DEALERS_STATS		gSelectArmsDealerInfo;
 
 
 //This pointer is used to store the inventory the arms dealer has for sale
-INVENTORY_IN_SLOT *gpTempDealersInventory=NULL;
+std::vector<INVENTORY_IN_SLOT> gpTempDealersInventory;
 
 INVENTORY_IN_SLOT	ArmsDealerOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 INVENTORY_IN_SLOT	PlayersOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
 
-OBJECTTYPE	gSubObject[ MAX_SUBOBJECTS_PER_OBJECT ];
+std::vector<OBJECTTYPE> subObjects;
+//OBJECTTYPE	gSubObject[ MAX_SUBOBJECTS_PER_OBJECT ];
 
 BOOLEAN		gfHavePurchasedItemsFromTony = FALSE;
 
@@ -548,8 +550,7 @@ void			InitializeShopKeeper( BOOLEAN fResetPage );
 void			CalculateFirstItemIndexOnPage( );
 void			DisplayArmsDealerCurrentInventoryPage( );
 BOOLEAN		DetermineArmsDealersSellingInventory( );
-void			StoreObjectsInNextFreeDealerInvSlot( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
-void			AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner );
+void			StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM* pSpecial, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner );
 BOOLEAN		RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial);
 
 UINT32		DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE	*ItemObject, BOOLEAN fHatchedOut, UINT8	ubItemArea );
@@ -631,7 +632,7 @@ void			IfMercOwnedRemoveItemFromMercInv( INVENTORY_IN_SLOT *pInv );
 void			IfMercOwnedRemoveItemFromMercInv2( UINT8 ubOwnerProfileId, INT8 bOwnerSlotId );
 
 void			SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject );
-void			CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubTotalSubObjects, UINT8 *pubRepairableSubObjects, UINT8 *pubNonRepairableSubObjects );
+void			CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubRepairableSubObjects, UINT8 *pubNonRepairableSubObjects );
 BOOLEAN		AddObjectForEvaluation(OBJECTTYPE *pObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId, BOOLEAN fFirstOne );
 BOOLEAN		OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId );
 
@@ -659,7 +660,7 @@ UINT32		EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot );
 
 void			BuildItemHelpTextString( CHAR16 sString[], INVENTORY_IN_SLOT *pInv, UINT8 ubScreenArea );
 void			BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem );
-void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial );
+void			BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN_SLOT* pObject );
 
 void DisableAllDealersInventorySlots( void );
 void EnableAllDealersInventorySlots( void );
@@ -689,7 +690,7 @@ void INVENTORY_IN_SLOT::initialize()
 	bSlotIdInOtherLocation = 0;
 	ubIdOfMercWhoOwnsTheItem = 0;
 	uiItemPrice = 0;
-	sSpecialItemElement = 0;
+	uiRepairDoneTime = 0;
 }
 
 INVENTORY_IN_SLOT& INVENTORY_IN_SLOT::operator=(OLD_INVENTORY_IN_SLOT_101& src)
@@ -703,7 +704,7 @@ INVENTORY_IN_SLOT& INVENTORY_IN_SLOT::operator=(OLD_INVENTORY_IN_SLOT_101& src)
 	this->bSlotIdInOtherLocation = src.bSlotIdInOtherLocation;
 	this->ubIdOfMercWhoOwnsTheItem = src.ubIdOfMercWhoOwnsTheItem;
 	this->uiItemPrice = src.uiItemPrice;
-	this->sSpecialItemElement = src.sSpecialItemElement;
+	this->uiRepairDoneTime = 0;
 	return *this;
 }
 
@@ -885,7 +886,7 @@ BOOLEAN EnterShopKeeperInterface()
 	}
 
 	//Check to make sure the inventory is null ( should always be null if we are just coming in to the SKI )
-	Assert( gpTempDealersInventory == NULL );
+	Assert( gpTempDealersInventory.empty() == true );
 
 	//Reinitialize the team panel to be the SM panel
 	SetCurrentInterfacePanel( SM_PANEL );
@@ -1280,11 +1281,7 @@ BOOLEAN ExitShopKeeperInterface()
 	DestroySkiInventorySlotMouseRegions( );
 
 	//if there is a temp inventory array, destroy it
-	if( gpTempDealersInventory )
-	{
-		MemFree( gpTempDealersInventory );
-		gpTempDealersInventory = NULL;
-	}
+	gpTempDealersInventory.clear();
 
 	//Set the flag indicating that we are NOT in the shop keeper interface
 	guiTacticalInterfaceFlags &= ~INTERFACE_SHOPKEEP_INTERFACE;
@@ -1935,7 +1932,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 		UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		INT8	ubLocation;
 
-		if( gpTempDealersInventory == NULL )
+		if( gpTempDealersInventory.empty() == true )
 			return;
 
 		ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
@@ -1972,11 +1969,11 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 						//if the shift key is being pressed, remove them all
 						if( gfKeyState[ SHIFT ] )
 						{
-							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects = 0;
+							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.initialize();
 						}
 						else
 						{
-							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects --;
+							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.RemoveObjectsFromStack(1);
 						}
 
 						gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
@@ -1997,11 +1994,9 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 					ubNumToMove = 1;
 				}
 
-				//Reduce the number in dealer's inventory
-				gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects -= ubNumToMove;
-				//Increase the number in dealer's offer area
-				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.ubNumberOfObjects += ubNumToMove;
-
+				//Reduce the number in dealer's inventory and Increase the number in dealer's offer area
+				ArmsDealerOfferArea[ gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation ].ItemObject.AddObjectsToStack(
+					gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject, 1);
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
@@ -2011,7 +2006,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 	{
 		UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-		if( gpTempDealersInventory == NULL )
+		if( gpTempDealersInventory.empty() == true )
 			return;
 
 		ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
@@ -2032,8 +2027,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 		}
 
 
-
-/*
+#if 0
 		//if the item has been seleceted
 		if( gpTempDealersInventory[ ubSelectedInvSlot ].uiFlags & ARMS_INV_ITEM_SELECTED )
 		{
@@ -2056,7 +2050,7 @@ void SelectDealersInventoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason 
 				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 			}
 		}
-*/
+#endif
 	} 
 }
 
@@ -2068,7 +2062,7 @@ void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 	ubSelectedInvSlot += gSelectArmsDealerInfo.ubFirstItemIndexOnPage;
 
-	if( gpTempDealersInventory == NULL )
+	if( gpTempDealersInventory.empty() == true )
 		return;
 
 	if( ubSelectedInvSlot >= gSelectArmsDealerInfo.uiNumDistinctInventoryItems )
@@ -2344,7 +2338,7 @@ void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 				{
 					//Since money is always evaluated
 					PlayersOfferArea[ ubSelectedInvSlot ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-					PlayersOfferArea[ ubSelectedInvSlot ].uiItemPrice = PlayersOfferArea[ ubSelectedInvSlot ].ItemObject.money.bMoneyStatus;
+					PlayersOfferArea[ ubSelectedInvSlot ].uiItemPrice = PlayersOfferArea[ ubSelectedInvSlot ].ItemObject[0]->data.money.bMoneyStatus;
 				}			
 			}
 			else	// slot is empty
@@ -2528,7 +2522,7 @@ void DisplayArmsDealerCurrentInventoryPage( )
 	usPosY = SKI_ARMS_DEALERS_INV_START_Y;
 
 	//if there is any inventory
-	if( gpTempDealersInventory != NULL )
+	if( gpTempDealersInventory.empty() == false )
 	{
 		if( gubSkiDirtyLevel != SKI_DIRTY_LEVEL0 )
 		{
@@ -2660,7 +2654,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
 	INT16				sCenX, sCenY;
-	UINT8				sItemCount=0;
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
@@ -2741,17 +2734,11 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		}
 		else // UNDER REPAIR
 		{
-			UINT8		ubElement;
-			UINT32	uiTimeInMinutesToFixItem=0;
-
 			//display the length of time needed to repair the item
 			uiItemCost = 0;
 
 			//Get the length of time needed to fix the item
-			Assert( gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement != -1);
-			ubElement = (UINT8) gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement;
-
-			BuildDoneWhenTimeString( zTemp, gbSelectedArmsDealerID, usItemIndex, ubElement );
+			BuildDoneWhenTimeString( zTemp, gbSelectedArmsDealerID, &(gpTempDealersInventory[ ubSlotNum ]) );
 			DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 			//if the item belongs to a merc
@@ -2822,7 +2809,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// Display 'JAMMED' if it's jammed
-	if ( pItemObject->gun.bGunAmmoStatus < 0 )
+	if ( (*pItemObject)[0]->data.gun.bGunAmmoStatus < 0 )
 	{
 		swprintf( zTemp, TacticalStr[ JAMMED_ITEM_STR ] );
 		VarFindFontCenterCoordinates( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, TINYFONT1, &sCenX, &sCenY, zTemp );
@@ -2850,29 +2837,10 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 BOOLEAN DetermineArmsDealersSellingInventory( )
 {
 	PERFORMANCE_MARKER
-	UINT16	usItemIndex;
-	UINT8		ubElement;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
-
-
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealer") );
-
-	//if there is an old inventory, delete it
-	if( gpTempDealersInventory )
-	{
-		delete[]( gpTempDealersInventory );
-		gpTempDealersInventory = NULL;
-	}
+	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("DEF: DetermineArmsDealersSellingInventory") );
 
 	//allocate memory to hold the inventory in memory
-	gpTempDealersInventory = new INVENTORY_IN_SLOT[ gSelectArmsDealerInfo.uiNumDistinctInventoryItems ];
-	if( gpTempDealersInventory == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
-
-
+	gpTempDealersInventory.clear();
 	guiNextFreeInvSlot = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
@@ -2881,15 +2849,15 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 
 		//if the object has attachments, or is damaged, or otherwise special, then it is not stacked
 		if (ItemIsSpecial(*iter) == false) {
-			StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
+			StoreObjectsInNextFreeDealerInvSlot( &(*iter), gpTempDealersInventory, gbSelectedArmsDealerID );
 		}
 		// add all active special items
 		else if ( iter->fActive)
 		{
 			bool fAddSpecialItem = true;
+			bool repaired = false;
 
-			//if the item is in for repairs
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				//if the repairs are done
 				if( iter->uiRepairDoneTime <= GetWorldTotalMin() )
@@ -2901,19 +2869,18 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 					}
 					else
 					{
-						gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
+						repaired = true;
 					}
 				}
 				else
 				{
-					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
+					repaired = false;
 				}
 			}
 
 			if ( fAddSpecialItem == true )
 			{
 				UINT8 ubOwner;
-
 				if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
 				{
 					// no merc is the owner
@@ -2925,48 +2892,68 @@ BOOLEAN DetermineArmsDealersSellingInventory( )
 					ubOwner = iter->ubOwnerProfileId;
 				}
 
-				StoreObjectsInNextFreeDealerInvSlot( &(*iter), ubOwner );
+				StoreObjectsInNextFreeDealerInvSlot( &(*iter), gpTempDealersInventory, ubOwner );
+				if (repaired) {
+					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_REPAIRED;
+				}
+				else {
+					gpTempDealersInventory.back().uiFlags |= ARMS_INV_ITEM_NOT_REPAIRED_YET;
+				}
 			}
 		}
 	}
 
-	// if more than one item is in inventory
-	if ( guiNextFreeInvSlot > 1 )
+	// repairmen sort differently from merchants
+	// sort this list by object category, and by ascending price within each category
+	if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
-		// repairmen sort differently from merchants
-		if ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		{
-			TODO
-			// sort this list by object category, and by ascending price within each category
-			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), RepairmanItemQsortCompare );
-		}
-		else
-		{
-			TODO
-			// sort this list by object category, and by ascending price within each category
-			qsort( (void*)gpTempDealersInventory, (size_t)guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), ArmsDealerItemQsortCompare );
-		}
+		std::sort(gpTempDealersInventory.begin(), gpTempDealersInventory.end(), RepairmanItemQsortCompare);//RepairmanItemQsortCompare
 	}
-
+	else
+	{
+		std::sort(gpTempDealersInventory.begin(), gpTempDealersInventory.end(), ArmsDealerItemQsortCompare);//ArmsDealerItemQsortCompare
+	}
 	return( TRUE );
 }
 
 
-void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, UINT8 ubOwner )
+bool ArmsDealerItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2)
 {
 	PERFORMANCE_MARKER
-	INVENTORY_IN_SLOT *pDealerInvSlot;
+	int retVal = ( CompareItemsForSorting( pInvSlot1.sItemIndex, pInvSlot2.sItemIndex,
+		pInvSlot1.ItemObject[0]->data.objectStatus, pInvSlot2.ItemObject[0]->data.objectStatus ) );
+	if (retVal == -1) {
+		return true;
+	}
+	return false;
+}
 
 
-	// make sure we have the room (memory allocated for it)
-	Assert( guiNextFreeInvSlot < gSelectArmsDealerInfo.uiNumDistinctInventoryItems );
 
-	pDealerInvSlot = &(gpTempDealersInventory[ guiNextFreeInvSlot ]);
-	guiNextFreeInvSlot++;
+bool RepairmanItemQsortCompare(INVENTORY_IN_SLOT& pInvSlot1, INVENTORY_IN_SLOT& pInvSlot2)
+{
+	PERFORMANCE_MARKER
+	// lower repair time first
+	if ( pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime )
+	{
+		return true;
+	}
+	if (pInvSlot1.uiRepairDoneTime < pInvSlot2.uiRepairDoneTime) {
+		DebugBreak();
+	}
+	return false;
+}
 
+
+
+void StoreObjectsInNextFreeDealerInvSlot( DEALER_SPECIAL_ITEM *pSpclItemInfo, std::vector<INVENTORY_IN_SLOT>& pInventory, UINT8 ubOwner )
+{
+	PERFORMANCE_MARKER
+	pInventory.push_back(INVENTORY_IN_SLOT());
+	INVENTORY_IN_SLOT* pDealerInvSlot = &(pInventory.back());
 	pDealerInvSlot->fActive = TRUE;
 	pDealerInvSlot->sItemIndex = pSpclItemInfo->object.usItem;
-	pDealerInvSlot->sSpecialItemElement = -1;//no longer used
+	pDealerInvSlot->uiRepairDoneTime = pSpclItemInfo->uiRepairDoneTime;
 	pDealerInvSlot->ubIdOfMercWhoOwnsTheItem = ubOwner;
 	pDealerInvSlot->bSlotIdInOtherLocation = -1;
 
@@ -3009,15 +2996,15 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 	if ( CanDealerRepairItem( gbSelectedArmsDealerID, RepairItem.ItemObject.usItem ) )
 	{
 		// make its condition 100%
-		RepairItem.ItemObject.objectStatus = 100;
+		RepairItem.ItemObject[0]->data.objectStatus = 100;
 	}
 
 	// max condition of all permanent attachments on it
-	for (OBJECTTYPE::attachmentList::iterator iter = RepairItem.ItemObject.attachments.begin(); iter != RepairItem.ItemObject.attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = RepairItem.ItemObject[0]->attachments.begin(); iter != RepairItem.ItemObject[0]->attachments.end(); ++iter) {
 		if ( CanDealerRepairItem( gbSelectedArmsDealerID, iter->usItem ) )
 		{
 			// fix it up
-			iter->objectStatus = 100;
+			(*iter)[0]->data.objectStatus = 100;
 		}
 	}
 
@@ -3025,7 +3012,7 @@ BOOLEAN RepairIsDone(DEALER_SPECIAL_ITEM* pSpecial)
 	if ( ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
 	{
 		// then reset the imprinting!
-		RepairItem.ItemObject.ubImprintID = NO_PROFILE;
+		RepairItem.ItemObject[0]->data.ubImprintID = NO_PROFILE;
 	}
 
 	//try to add the item to the players offer area
@@ -3096,25 +3083,25 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 		case IC_GUN:
 			// add value of the gun
 			uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, usItemID, fDealerSelling ) *
-										 ItemConditionModifier(usItemID, pItemObject->gun.bGunStatus) *
+										 ItemConditionModifier(usItemID, (*pItemObject)[0]->data.gun.bGunStatus) *
 										 dModifier );
 
 			// if any ammo is loaded
-			if( pItemObject->gun.usGunAmmoItem != NONE)
+			if( (*pItemObject)[0]->data.gun.usGunAmmoItem != NONE)
 			{
 				// if it's regular ammo
-				if( Item[ pItemObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+				if( Item[ (*pItemObject)[0]->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 				{
 					// add value of its remaining ammo
-					uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, pItemObject->gun.usGunAmmoItem, fDealerSelling ) *
-																		 ItemConditionModifier(pItemObject->gun.usGunAmmoItem, pItemObject->gun.ubGunShotsLeft) *
+					uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, (*pItemObject)[0]->data.gun.usGunAmmoItem, fDealerSelling ) *
+																		 ItemConditionModifier((*pItemObject)[0]->data.gun.usGunAmmoItem, (*pItemObject)[0]->data.gun.ubGunShotsLeft) *
 																		 dModifier );
 				}
 				else	// assume it's attached ammo (mortar shells, grenades)
 				{
 					// add its value (uses normal status 0-100)
-					uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, pItemObject->gun.usGunAmmoItem, fDealerSelling ) *
-																		 ItemConditionModifier(pItemObject->gun.usGunAmmoItem, pItemObject->gun.bGunAmmoStatus) *
+					uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, (*pItemObject)[0]->data.gun.usGunAmmoItem, fDealerSelling ) *
+																		 ItemConditionModifier((*pItemObject)[0]->data.gun.usGunAmmoItem, (*pItemObject)[0]->data.gun.bGunAmmoStatus) *
 																		 dModifier );
 				}
 			}
@@ -3145,7 +3132,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 			{
 				// for bullets, ItemConditionModifier will convert the #ShotsLeft into a percentage
 				uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, usItemID, fDealerSelling ) *
-																	 ItemConditionModifier(usItemID, pItemObject->shots.ubShotsLeft[ubCnt]) *
+																	 ItemConditionModifier(usItemID, (*pItemObject)[ubCnt]->data.ubShotsLeft) *
 																	 dModifier );
 
 				if ( fUnitPriceOnly )
@@ -3176,7 +3163,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 			{
 				// for bullets, ItemConditionModifier will convert the #ShotsLeft into a percentage
 				uiUnitPrice += (UINT32)( CalcValueOfItemToDealer( gbSelectedArmsDealerID, usItemID, fDealerSelling ) *
-																	 ItemConditionModifier(usItemID, pItemObject->status.bStatus[ ubCnt ]) *
+																	 ItemConditionModifier(usItemID, (*pItemObject)[ ubCnt ]->data.objectStatus) *
 																	 dModifier );
 
 				if ( fUnitPriceOnly )
@@ -3190,7 +3177,7 @@ UINT32 CalcShopKeeperItemPrice( BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, 
 
 
 	// loop through any attachments and add in their price
-	for (OBJECTTYPE::attachmentList::iterator iter = pItemObject->attachments.begin(); iter != pItemObject->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pItemObject)[0]->attachments.begin(); iter != (*pItemObject)[0]->attachments.end(); ++iter) {
 		// add value of this particular attachment
 		uiUnitPrice += CalcShopKeeperItemPrice( fDealerSelling, fUnitPriceOnly, iter->usItem, dModifier, &(*iter)) ;
 	}
@@ -3273,7 +3260,7 @@ FLOAT ItemConditionModifier(UINT16 usItemIndex, INT16 bStatus)
 
 		// an item at 100% is worth full price...
 
-//		if ( Item[ usItemIndex ].fFlags & ITEM_REPAIRABLE )
+//		if ( Item[ usItemIndex ][0]->data.fFlags & ITEM_REPAIRABLE )
 		if ( Item[ usItemIndex ].repairable  )
 		{
 			// a REPAIRABLE item at 0% is still worth 50% of its full price, not 0%
@@ -3385,14 +3372,16 @@ INT8 AddItemToArmsDealerOfferArea( INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOt
 		if( ArmsDealerOfferArea[bCnt].fActive == FALSE )
 		{
 			//Copy the inventory items
-			ArmsDealerOfferArea[bCnt] = *pInvSlot;
 
 			//if the shift key is being pressed, add them all
-			if( gfKeyState[ SHIFT ] )
-				ArmsDealerOfferArea[bCnt].ItemObject.ubNumberOfObjects = pInvSlot->ItemObject.ubNumberOfObjects;
+			if( gfKeyState[ SHIFT ] ) {
+				ArmsDealerOfferArea[bCnt] = *pInvSlot;
+			}
 			//If there was more then 1 item, reduce it to only 1 item moved
-			else if( pInvSlot->ItemObject.ubNumberOfObjects > 1 )
-				ArmsDealerOfferArea[bCnt].ItemObject.ubNumberOfObjects = 1;
+			else if( pInvSlot->ItemObject.ubNumberOfObjects > 1 ) {
+				//ADB should the one item be removed?
+				ArmsDealerOfferArea[bCnt].ItemObject.DuplicateObjectsInStack(pInvSlot->ItemObject, 1);
+			}
 
 			//Remember where the item came from
 			ArmsDealerOfferArea[bCnt].bSlotIdInOtherLocation = bSlotIdInOtherLocation;
@@ -3527,7 +3516,7 @@ INT8 AddItemToPlayersOfferArea( UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, 
 			{
 				//Since money is always evaluated
 				PlayersOfferArea[ bCnt ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-				PlayersOfferArea[ bCnt ].uiItemPrice = PlayersOfferArea[ bCnt ].ItemObject.money.uiMoneyAmount;
+				PlayersOfferArea[ bCnt ].uiItemPrice = PlayersOfferArea[ bCnt ].ItemObject[0]->data.money.uiMoneyAmount;
 			}
 			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 
@@ -3600,8 +3589,8 @@ void DisplayPlayersOfferArea()
 					sSoldierID = GetSoldierIDFromMercID( PlayersOfferArea[ sCnt ].ubIdOfMercWhoOwnsTheItem );
 					Assert(sSoldierID != -1);
 
-					PlayersOfferArea[ sCnt ].ItemObject.money.uiMoneyAmount = Menptr[ sSoldierID ].inv[ PlayersOfferArea[ sCnt ].bSlotIdInOtherLocation ].money.uiMoneyAmount;
-					PlayersOfferArea[ sCnt ].uiItemPrice = PlayersOfferArea[ sCnt ].ItemObject.money.uiMoneyAmount;
+					PlayersOfferArea[ sCnt ].ItemObject[0]->data.money.uiMoneyAmount = Menptr[ sSoldierID ].inv[ PlayersOfferArea[ sCnt ].bSlotIdInOtherLocation ][0]->data.money.uiMoneyAmount;
+					PlayersOfferArea[ sCnt ].uiItemPrice = PlayersOfferArea[ sCnt ].ItemObject[0]->data.money.uiMoneyAmount;
 				}
 			}
 			else	// not money
@@ -3742,7 +3731,7 @@ UINT32 CalculateTotalPlayersValue()
 		{
 			//Calculate a price for the item
 			if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass == IC_MONEY )
-				uiTotal += PlayersOfferArea[ ubCnt ].ItemObject.money.uiMoneyAmount;
+				uiTotal += PlayersOfferArea[ ubCnt ].ItemObject[0]->data.money.uiMoneyAmount;
 			else
 				uiTotal += PlayersOfferArea[ ubCnt ].uiItemPrice;
 		}
@@ -3985,7 +3974,6 @@ void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea( )
 	PERFORMANCE_MARKER
 	//for all items in the dealers items offer area
 	UINT32	uiCnt;
-	UINT32	uiTotal=0;
 	INT8		bSlotID=0;
 
 	//loop through all the slots in the shopkeeper's offer area
@@ -4042,7 +4030,7 @@ BOOLEAN RemoveItemFromDealersInventory( INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlo
 
 	//Remove all of this item out of the specified inventory slot
 	sItemID = gpTempDealersInventory[ sInvSlot ].sItemIndex;
-	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, &SpclItemInfo, pInvSlot->ItemObject.ubNumberOfObjects );
+	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, pInvSlot->ItemObject.ubNumberOfObjects );
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );
@@ -4069,7 +4057,7 @@ void MovePlayerOfferedItemsOfValueToArmsDealersInventory()
 				if( Item[ PlayersOfferArea[ uiCnt ].sItemIndex ].usItemClass == IC_MONEY )
 				{
 					//add the money to the dealers 'cash'
-					gArmsDealerStatus[ gbSelectedArmsDealerID ].uiArmsDealersCash += PlayersOfferArea[ uiCnt ].ItemObject.money.uiMoneyAmount;
+					gArmsDealerStatus[ gbSelectedArmsDealerID ].uiArmsDealersCash += PlayersOfferArea[ uiCnt ].ItemObject[0]->data.money.uiMoneyAmount;
 				}
 				else
 				{
@@ -4078,6 +4066,7 @@ void MovePlayerOfferedItemsOfValueToArmsDealersInventory()
 					{
 						// item cease to be merc-owned during this operation
 						AddObjectToArmsDealerInventory( gbSelectedArmsDealerID, &( PlayersOfferArea[ uiCnt ].ItemObject ) );
+						PlayersOfferArea[ uiCnt ].ItemObject.initialize();
 					}
 				}
 
@@ -4096,7 +4085,6 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 {
 	PERFORMANCE_MARKER
 	SGPRect			Rect;
-	OBJECTTYPE	TempObject;
 
 /*
 	// If we are already moving an item
@@ -4219,7 +4207,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			{
 				// store the current contents of the cursor in a temporary object structure.
 				// We have to do this before memsetting gMoveingItem, 'cause during swaps, gpItemPointer == &gMoveingItem.ItemObject!
-				CopyObj( gpItemPointer, &TempObject );
+				CopyObj( gpItemPointer, &gTempObject );
 
 				//ARM: The memset was previously commented out, in order to preserve the owning merc's inv slot # during a swap of
 				// items in an inventory slot.  However, that leads to other bugs: if you picked the thing you're swapping in from
@@ -4228,10 +4216,10 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				gMoveingItem.initialize();
 
 				//Get the item from the pointer
-				gMoveingItem.ItemObject = TempObject;
+				gMoveingItem.ItemObject = gTempObject;
 
 				gMoveingItem.fActive = TRUE;
-				gMoveingItem.sItemIndex = TempObject.usItem;
+				gMoveingItem.sItemIndex = gTempObject.usItem;
 				gMoveingItem.ubLocationOfObject = ubSource;
 
 				// By necessity, these items don't belong to a slot (so you can't return them via a right click),
@@ -4472,7 +4460,7 @@ INT8 AddInventoryToSkiLocation( INVENTORY_IN_SLOT *pInv, UINT8 ubSpotLocation, U
 				{
 					//Since money is always evaluated
 					PlayersOfferArea[ ubSpotLocation ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-					PlayersOfferArea[ ubSpotLocation ].uiItemPrice = PlayersOfferArea[ ubSpotLocation ].ItemObject.money.uiMoneyAmount;
+					PlayersOfferArea[ ubSpotLocation ].uiItemPrice = PlayersOfferArea[ ubSpotLocation ].ItemObject[0]->data.money.uiMoneyAmount;
 				}
 
 				SetSkiRegionHelpText( &PlayersOfferArea[ ubSpotLocation ], &gPlayersOfferSlotsMouseRegions[ ubSpotLocation ], PLAYERS_OFFER_AREA );
@@ -4748,7 +4736,7 @@ BOOLEAN IsGunOrAmmoOfSameTypeSelected( OBJECTTYPE	*pItemObject )
 
 
 	//if the highlighted object is an attachment
-//	if( Item[ pItemObject->usItem ].fFlags & ITEM_ATTACHMENT )
+//	if( Item[ pItemObject->usItem ][0]->data.fFlags & ITEM_ATTACHMENT )
 	if( Item[ pItemObject->usItem ].attachment  )
 	{
 		if( ValidAttachment( pItemObject->usItem, gpHighLightedItemObject->usItem ) )
@@ -5808,7 +5796,7 @@ UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea( )
 		{
 			if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass == IC_MONEY )
 			{
-				uiTotalMoneyValue += PlayersOfferArea[ ubCnt ].ItemObject.money.uiMoneyAmount;
+				uiTotalMoneyValue += PlayersOfferArea[ ubCnt ].ItemObject[0]->data.money.uiMoneyAmount;
 			}
 		}
 	}
@@ -5838,7 +5826,6 @@ void MovePlayersItemsToBeRepairedToArmsDealersInventory()
 
 			// add it to the arms dealer's inventory
 			GiveObjectToArmsDealerForRepair( gbSelectedArmsDealerID, &( ArmsDealerOfferArea[ uiCnt ].ItemObject ), ArmsDealerOfferArea[ uiCnt ].ubIdOfMercWhoOwnsTheItem );
-			ArmsDealerOfferArea[ uiCnt ].sSpecialItemElement = gubLastSpecialItemAddedAtElement;
 
 			//Remove the item from the owner merc's inventory
 			IfMercOwnedRemoveItemFromMercInv( &( ArmsDealerOfferArea[ uiCnt ]) );
@@ -5884,7 +5871,7 @@ INT8	GetInvSlotOfUnfullMoneyInMercInventory( SOLDIERTYPE *pSoldier )
 	for( ubCnt=0; ubCnt < pSoldier->inv.size(); ubCnt++)
 	{
 		// Look for MONEY only, not Gold or Silver!!!  And look for a slot not already full
-		if( ( pSoldier->inv[ ubCnt ].usItem == MONEY ) && ( pSoldier->inv[ ubCnt ].money.uiMoneyAmount < MoneySlotLimit( ubCnt ) ) )
+		if( ( pSoldier->inv[ ubCnt ].usItem == MONEY ) && ( pSoldier->inv[ ubCnt ][0]->data.money.uiMoneyAmount < MoneySlotLimit( ubCnt ) ) )
 		{
 			return( ubCnt );
 		}
@@ -5989,7 +5976,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 
 
 			//if the item is damaged, or is a rocket rifle (which always "need repairing" even at 100%, to reset imprinting)
-			if( ( PlayersOfferArea[ bSlotID ].ItemObject.objectStatus < 100 ) || fRocketRifleWasEvaluated )
+			if( ( PlayersOfferArea[ bSlotID ].ItemObject[0]->data.objectStatus < 100 ) || fRocketRifleWasEvaluated )
 			{
 				INT8	bSlotAddedTo;
 
@@ -6015,7 +6002,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 					// check if the item is really badly damaged
 					if( Item[ ArmsDealerOfferArea[ bSlotAddedTo ].sItemIndex ].usItemClass != IC_AMMO )
 					{
-						if( ArmsDealerOfferArea[ bSlotAddedTo ].ItemObject.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
+						if( ArmsDealerOfferArea[ bSlotAddedTo ].ItemObject[0]->data.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
 						{
 							uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
 						}
@@ -6055,7 +6042,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
 			// only otherwise repairable items count as actual rejections
-//			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].fFlags & ITEM_REPAIRABLE )
+//			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ][0]->data.fFlags & ITEM_REPAIRABLE )
 			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].repairable  )
 			{
 				uiEvalResult = EVAL_RESULT_DONT_HANDLE;
@@ -6373,7 +6360,7 @@ void HandleCheckIfEnoughOnTheTable( void )
 {
 	PERFORMANCE_MARKER
 	static INT32 iLastTime = 0;
-	INT32 iTime = 0, iDifference = 0, iRand = 0;
+	INT32 iDifference = 0, iRand = 0;
 	UINT32	uiPlayersOfferAreaValue = CalculateTotalPlayersValue();
 	UINT32	uiArmsDealersItemsCost = CalculateTotalArmsDealerCost();
 
@@ -6603,7 +6590,6 @@ void DeleteShopKeeperItemDescBox()
 BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId )
 {
 	PERFORMANCE_MARKER
-	UINT8		ubTotalSubObjects;
 	UINT8		ubRepairableSubObjects;
 	UINT8		ubNonRepairableSubObjects;
 	UINT8		ubDealerOfferAreaSlotsNeeded;
@@ -6630,7 +6616,7 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 		SplitComplexObjectIntoSubObjects( pComplexObject );
 
 		// determine how many subobjects of each category this complex object will have to be broken up into
-		CountSubObjectsInObject( pComplexObject, &ubTotalSubObjects, &ubRepairableSubObjects, &ubNonRepairableSubObjects );
+		CountSubObjectsInObject( pComplexObject, &ubRepairableSubObjects, &ubNonRepairableSubObjects );
 
 		// in the simplest situation, the # subobjects of each type gives us how many slots of each type are needed
 		ubDealerOfferAreaSlotsNeeded = ubRepairableSubObjects;
@@ -6638,8 +6624,8 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 
 		// consider that if dealer is at or will reach his max # of items repaired limit, not everything repairable will move
 		ubHowManyMoreItemsCanDealerTake = SKI_MAX_AMOUNT_OF_ITEMS_DEALER_CAN_REPAIR_AT_A_TIME -
-																			CountTotalItemsRepairDealerHasInForRepairs( gbSelectedArmsDealerID ) -
-																			CountNumberOfItemsInTheArmsDealersOfferArea();
+										CountTotalItemsRepairDealerHasInForRepairs( gbSelectedArmsDealerID ) -
+										CountNumberOfItemsInTheArmsDealersOfferArea();
 
 		// if he can't repair everything repairable that we're about to submit, the space we'll need changes
 		if ( ubDealerOfferAreaSlotsNeeded > ubHowManyMoreItemsCanDealerTake )
@@ -6656,6 +6642,7 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 			ubPlayerOfferAreaSlotsNeeded++;
 		}
 
+		//this is a silly assert, was it meant to be something else?
 		Assert( SKI_MAX_AMOUNT_OF_ITEMS_DEALER_CAN_REPAIR_AT_A_TIME < SKI_NUM_TRADING_INV_SLOTS );
 /*
 		This code is commented out because a repair dealer will never be allowed to repair over more then
@@ -6677,29 +6664,25 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 		}
 
 		// we have room, so move them all to the appropriate slots
-		for ( ubSubObject = 0; ubSubObject < MAX_SUBOBJECTS_PER_OBJECT; ubSubObject++ )
+		for ( ubSubObject = 0; ubSubObject < subObjects.size(); ubSubObject++ )
 		{
-			// if there is something stored there
-			if ( gSubObject[ ubSubObject ].usItem != NONE )
+			// if it's the main item itself (always in the very first subobject), and it has no other subobjects
+			if ( ( ubSubObject == 0 ) && ( subObjects.size() == 1) )
 			{
-				// if it's the main item itself (always in the very first subobject), and it has no other subobjects
-				if ( ( ubSubObject == 0 ) && ( ubTotalSubObjects == 1) )
-				{
-					// store its owner merc as the owner, and store the correct slot
-					fSuccess = AddObjectForEvaluation( &gSubObject[ ubSubObject ], ubOwnerProfileId, bOwnerSlotId, fFirstOne );
-				}
-				else	// attachments, bullets/payload
-				{
-					// store it with a valid owner, but an invalid slot, so it still shows who owns it, but can't return to its slot
-// ARM: New code will be needed here if we add parent/child item support & interface
-					fSuccess = AddObjectForEvaluation( &gSubObject[ ubSubObject ], ubOwnerProfileId, -1, fFirstOne );
-				}
-
-				// it has to succeed, or we have a bug in our earlier check for sufficient room
-				Assert( fSuccess );
-
-				fFirstOne = FALSE;
+				// store its owner merc as the owner, and store the correct slot
+				fSuccess = AddObjectForEvaluation( &subObjects[ ubSubObject ], ubOwnerProfileId, bOwnerSlotId, fFirstOne );
 			}
+			else	// attachments, bullets/payload
+			{
+				// store it with a valid owner, but an invalid slot, so it still shows who owns it, but can't return to its slot
+// ARM: New code will be needed here if we add parent/child item support & interface
+				fSuccess = AddObjectForEvaluation( &subObjects[ ubSubObject ], ubOwnerProfileId, -1, fFirstOne );
+			}
+
+			// it has to succeed, or we have a bug in our earlier check for sufficient room
+			Assert( fSuccess );
+
+			fFirstOne = FALSE;
 		}
 
 		gfAlreadySaidTooMuchToRepair = FALSE;
@@ -6719,174 +6702,94 @@ BOOLEAN OfferObjectToDealer( OBJECTTYPE *pComplexObject, UINT8 ubOwnerProfileId,
 void SplitComplexObjectIntoSubObjects( OBJECTTYPE *pComplexObject )
 {
 	PERFORMANCE_MARKER
-	OBJECTTYPE *pNextObj = &gSubObject[ 0 ];
-	UINT8 ubNextFreeSlot = 0;
-	UINT8 ubCnt;
-
-
 	Assert( pComplexObject );
 	Assert( pComplexObject->ubNumberOfObjects > 0 );
 	Assert( pComplexObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT );
 
+	subObjects.clear();
+	for (int x = 0; x < pComplexObject->ubNumberOfObjects; ++x) {
+		//we need not worry about attachments!!!!
 
-	// clear subobject array
-	for (int x = 0; x < MAX_SUBOBJECTS_PER_OBJECT; ++x)
-	{
-		gSubObject[x].initialize();
-	}
-
-
-	// if it isn't stacked
-	if ( pComplexObject->ubNumberOfObjects == 1 )
-	{
 		// make the main item into the very first subobject
-		CopyObj( pComplexObject, pNextObj );
+		if (pComplexObject->RemoveObjectsFromStack(1, &gTempObject) == 0) {
+			subObjects.push_back(gTempObject);
+		}
+		else {
+			subObjects.push_back(*pComplexObject);
+		}
 
+		StackedObjectData* pData = subObjects.back()[0];
 		// strip off any loaded ammo/payload
 		if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
 		{
 			// Exception: don't do this with rocket launchers, their "shots left" are fake and this screws 'em up!
 			if ( !Item[pComplexObject->usItem].singleshotrocketlauncher ) // Madd rpg - still do this
 			{
-				pNextObj->gun.ubGunShotsLeft = 0;
-				pNextObj->gun.usGunAmmoItem = NONE;
+				pData->data.gun.ubGunShotsLeft = 0;
+				pData->data.gun.usGunAmmoItem = NONE;
 			}
 
-/* gunAmmoStatus is currently not being used that way, it's strictly used as a jammed/unjammed, and so should never be 0
-			// if jammed, must remember that, so leave it
-			if ( pNextObj->gun.bGunAmmoStatus > 0 )
-			{
-				pNextObj->gun.bGunAmmoStatus = 0;
-			}
-*/
 		}
-
-/* ARM: Can now repair with removeable attachments still attached...
-		// strip off any seperable attachments
-		for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-		{
-			if ( pComplexObject->usAttachItem[ ubCnt ] != NONE )
-			{
-				// If the attachment is detachable
-				if (! (Item[ pComplexObject->usAttachItem[ ubCnt ] ].fFlags & ITEM_INSEPARABLE ) )
-				{
-					pNextObj->usAttachItem[ ubCnt ] = NONE;
-					pNextObj->bAttachStatus[ ubCnt ] = 0;
-				}
-			}
-		}
-*/
-
-		// advance to next available subobject
-		pNextObj = &gSubObject[ ++ubNextFreeSlot ];
-
 
 		// if it's a gun
 		if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
 		{
 			// and it has ammo/payload
-			if ( pComplexObject->gun.usGunAmmoItem != NONE )
+			if ( pData->data.gun.usGunAmmoItem != NONE )
 			{
 				// if it's bullets
-				if ( Item[ pComplexObject->gun.usGunAmmoItem ].usItemClass == IC_AMMO )
+				if ( Item[ pData->data.gun.usGunAmmoItem ].usItemClass == IC_AMMO )
 				{
 					// and there are some left
-					if ( pComplexObject->gun.ubGunShotsLeft > 0 )
+					if ( pData->data.gun.ubGunShotsLeft > 0 )
 					{
 						// make the bullets into another subobject
-						CreateItem( pComplexObject->gun.usGunAmmoItem, 100, pNextObj );
+						CreateItem( pData->data.gun.usGunAmmoItem, 100, &gTempObject );
 						// set how many are left
-						pNextObj->objectStatus = pComplexObject->gun.ubGunShotsLeft;
-
-						pNextObj = &gSubObject[ ++ubNextFreeSlot ];
+						gTempObject[0]->data.objectStatus = pData->data.gun.ubGunShotsLeft;
+						subObjects.push_back(gTempObject);
 					}
 					// ignore this if it's out of bullets
 				}
 				else	// non-ammo payload
 				{
 					// make the payload into another subobject
-					CreateItem( pComplexObject->gun.usGunAmmoItem, pComplexObject->gun.bGunAmmoStatus, pNextObj );
+					CreateItem( pData->data.gun.usGunAmmoItem, pData->data.gun.bGunAmmoStatus, &gTempObject );
 
 					// if the gun was jammed, fix up the payload's status
-					if ( pNextObj->objectStatus < 0 )
+					if ( gTempObject[0]->data.objectStatus < 0 )
 					{
-						pNextObj->objectStatus *= -1;
+						gTempObject[0]->data.objectStatus *= -1;
 					}
-
-					pNextObj = &gSubObject[ ++ubNextFreeSlot ];
+					subObjects.push_back(gTempObject);
 				}
 			}
 		}
-
-
-/* ARM: Can now repair with removeable attachments still attached...
-		// make each detachable attachment into a separate subobject
-		for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-		{
-			if ( pComplexObject->usAttachItem[ ubCnt ] != NONE )
-			{
-				// If the attachment is detachable
-				if (! (Item[ pComplexObject->usAttachItem[ ubCnt ] ].fFlags & ITEM_INSEPARABLE ) )
-				{
-					CreateItem( pComplexObject->usAttachItem[ ubCnt ], pComplexObject->bAttachStatus[ ubCnt ], pNextObj );
-
-					pNextObj = &gSubObject[ ++ubNextFreeSlot ];
-				}
-			}
-		}
-*/
 	}
-	else	// stacked
-	{
-		// these can't be guns, can't have any attachments, can't be imprinted, etc.
-		Assert ( Item [ pComplexObject->usItem ].usItemClass != IC_GUN );
-
-		Assert( pComplexObject->attachments.empty() == true );
-
-		// make each item in the stack into a separate subobject
-		for( ubCnt = 0; ubCnt < pComplexObject->ubNumberOfObjects; ubCnt++ )
-		{
-			CreateItem( pComplexObject->usItem, pComplexObject->status.bStatus[ ubCnt ], pNextObj );
-
-			// advance to next available subobject
-			pNextObj = &gSubObject[ ++ubNextFreeSlot ];
-		}
-	}
-
-	// make sure we didn't screw up and honk something!
-	Assert( ubNextFreeSlot <= MAX_SUBOBJECTS_PER_OBJECT );
 }
 
 
-void CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubTotalSubObjects, UINT8 *pubRepairableSubObjects, UINT8 *pubNonRepairableSubObjects )
+void CountSubObjectsInObject( OBJECTTYPE *pComplexObject, UINT8 *pubRepairableSubObjects, UINT8 *pubNonRepairableSubObjects )
 {
 	PERFORMANCE_MARKER
 	UINT8 ubSubObject;
 
-	*pubTotalSubObjects					= 0;
 	*pubRepairableSubObjects		= 0;
 	*pubNonRepairableSubObjects = 0;
 
 	// check every subobject and count it as either repairable or non-
-	for ( ubSubObject = 0; ubSubObject < MAX_SUBOBJECTS_PER_OBJECT; ubSubObject++ )
+	for ( ubSubObject = 0; ubSubObject < subObjects.size(); ubSubObject++ )
 	{
-		// if there is something stored there
-		if ( gSubObject[ ubSubObject ].usItem != NONE )
+		// is it in need of fixing, and also repairable by this dealer?
+		// A jammed gun with a 100% status is NOT repairable - shouldn't ever happen
+		if ( ( subObjects[ ubSubObject ][0]->data.objectStatus != 100 ) &&
+			CanDealerRepairItem( gbSelectedArmsDealerID, subObjects[ ubSubObject ].usItem ) )
 		{
-			( *pubTotalSubObjects )++;
-
-			// is it in need of fixing, and also repairable by this dealer?
-			// A jammed gun with a 100% status is NOT repairable - shouldn't ever happen
-			if ( ( gSubObject[ ubSubObject ].objectStatus != 100 ) &&
-					 CanDealerRepairItem( gbSelectedArmsDealerID, gSubObject[ ubSubObject ].usItem ) )
-
-			{
-				( *pubRepairableSubObjects )++;
-			}
-			else
-			{
-				( *pubNonRepairableSubObjects )++;
-			}
+			( *pubRepairableSubObjects )++;
+		}
+		else
+		{
+			( *pubNonRepairableSubObjects )++;
 		}
 	}
 }
@@ -7113,7 +7016,7 @@ BOOLEAN SKITryToAddInvToMercsInventory( INVENTORY_IN_SLOT *pInv, SOLDIERTYPE *pS
 			PlaceObject( pSoldier, bMoneyInvPos, &( pInv->ItemObject ) );
 
 			// if the money is all gone
-			if ( pInv->ItemObject.money.uiMoneyAmount == 0 )
+			if ( pInv->ItemObject[0]->data.money.uiMoneyAmount == 0 )
 			{
 				// we've been succesful!
 				return(TRUE);
@@ -7144,7 +7047,6 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 	SOLDIERTYPE *pShopkeeper;
 	INT16			sDestGridNo;
 	INT8			bDestLevel;
-	INT16			sDistVisible;
 	UINT32		uiRange;
 
 
@@ -7166,12 +7068,8 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 	{
 		sDestGridNo = pShopkeeper->sGridNo;
 		bDestLevel	= pShopkeeper->pathing.bLevel;
-
-		// is he close enough to see that gridno if he turns his head?
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel, pSoldier );
-
 		// If he has LOS...
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sDestGridNo, bDestLevel, 3, (UINT8) sDistVisible, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sDestGridNo, bDestLevel, 3, TRUE ) )
 		{
 			// Get range to shopkeeper
 			uiRange = GetRangeFromGridNoDiff( pSoldier->sGridNo, sDestGridNo );
@@ -7301,7 +7199,6 @@ void ResetAllQuoteSaidFlags()
 void DealWithItemsStillOnTheTable()
 {
 	PERFORMANCE_MARKER
-	BOOLEAN fAddedCorrectly = FALSE;
 	UINT8	ubCnt;
 	SOLDIERTYPE *pDropSoldier;
 
@@ -7493,8 +7390,7 @@ BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow( UINT32 *puiHoursSinceOldestI
 		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
 		if ( iter->fActive )
 		{
-			//if the items status is below 0, the item is being repaired
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				//if the repairs are done
 				if( iter->uiRepairDoneTime <= currentTime )
@@ -7527,10 +7423,6 @@ BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow( UINT32 *puiHoursSinceOldestI
 void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 {
 	PERFORMANCE_MARKER
-	UINT16 usItemIndex;
-	UINT8  ubElement;
-	OLD_DEALER_ITEM_HEADER_101 *pDealerItem;
-	DEALER_SPECIAL_ITEM *pSpecialItem;
 	UINT32 uiMinutesShopClosedBeforeItsDone;
 
 
@@ -7543,8 +7435,7 @@ void DelayRepairsInProgressBy( UINT32 uiMinutesDelayed )
 		iter != gArmsDealersInventory[gbSelectedArmsDealerID].end(); ++iter) {
 		if ( iter->fActive )
 		{
-			//if the items status is below 0, the item is being repaired
-			if( iter->bItemCondition < 0 )
+			if( iter->IsUnderRepair() == true )
 			{
 				uiMinutesShopClosedBeforeItsDone = CalculateOvernightRepairDelay( gbSelectedArmsDealerID, iter->uiRepairDoneTime, uiMinutesDelayed );
 				// add this many minutes to the repair time estimate
@@ -7687,7 +7578,7 @@ UINT32 EvaluateInvSlot( INVENTORY_IN_SLOT *pInvSlot )
 		// check if the item is really badly damaged
 		if( Item[ pInvSlot->sItemIndex ].usItemClass != IC_AMMO )
 		{
-			if( pInvSlot->ItemObject.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
+			if( pInvSlot->ItemObject[0]->data.objectStatus < REALLY_BADLY_DAMAGED_THRESHOLD )
 			{
 				uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
 			}
@@ -7760,7 +7651,7 @@ void BuildRepairTimeString( CHAR16 sString[], UINT32 uiTimeInMinutesToFixItem )
 
 
 
-void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECIAL_ITEM* pSpecial )
+void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, INVENTORY_IN_SLOT* pObject )
 {
 	PERFORMANCE_MARKER
 	UINT32 uiDoneTime;
@@ -7769,10 +7660,23 @@ void BuildDoneWhenTimeString( CHAR16 sString[], UINT8 ubArmsDealer, DEALER_SPECI
 
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
+
+	DEALER_SPECIAL_ITEM* pSpecial = 0;
+	for (DealerItemList::iterator iter = gArmsDealersInventory[ubArmsDealer].begin();
+		iter != gArmsDealersInventory[ubArmsDealer].end(); ++iter) {
+		if (iter->fActive && iter->IsUnderRepair()) {
+			if (pObject->ItemObject == iter->object) {
+				pSpecial = &(*iter);
+				break;
+			}
+		}
+	}
+
+	Assert(pSpecial);
 	// that item must be active
 	Assert( pSpecial->fActive );
 	// that item must be in repair
-	Assert( pSpecial->bItemCondition < 0 );
+	Assert( pSpecial->IsUnderRepair() == true );
 
 	//if the item has already been repaired
 	uiDoneTime = pSpecial->uiRepairDoneTime;

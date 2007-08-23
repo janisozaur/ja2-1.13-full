@@ -11,6 +11,8 @@
 #pragma warning (disable : 4245)//disables conversion from type to type, signed/unsigned mismatch
 #pragma warning (disable : 4127)//disables conditional expression is constant
 #pragma warning (disable : 4996)//disables unsafe functions (sprintf etc)
+#pragma warning (disable : 4505)//disables unreferenced local function has been removed
+#pragma warning (disable : 4702)//disables unreachable code
 //#pragma warning (disable : 4189)//disables local variable is initialized but not referenced
 
 // Remove comment to build Beta version (with lot of debug infos) including the Editor
@@ -19,13 +21,13 @@
 // Normal test version
 #define JA2TESTVERSION
 
-#define JA2EDITOR
+//#define JA2EDITOR
 
 #define SGP_DEBUG
 
 //#define DEBUG_ATTACKBUSY
 
-//#define DEBUGDECISIONS
+#define DEBUGDECISIONS
 
 //#define ROBOT_ALWAYS_READY
 

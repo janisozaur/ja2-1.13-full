@@ -35,7 +35,7 @@ public:
 	WORLDITEM() {initialize();};
 	WORLDITEM&	operator=(OLD_WORLDITEM_101& src);
 	WORLDITEM&	operator=(const WORLDITEM& src);
-	bool		operator<(const WORLDITEM& compare);
+	bool		operator<(WORLDITEM& compare);
 	BOOLEAN		Save( HWFILE hFile, bool fSavingMap );
 	BOOLEAN		Load( HWFILE hFile );
 	BOOLEAN		Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
@@ -55,9 +55,16 @@ public:
 	UINT8					ubNonExistChance;	
 
 	char					endOfPod;
-	OBJECTTYPE				o;
+	OBJECTTYPE				object;
 }; // WORLDITEM;
-#define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
+//#define SIZEOF_WORLDITEM_POD (offsetof(WORLDITEM, endOfPod))
+#define SIZEOF_WORLDITEM_POD	sizeof(fExists) + \
+								sizeof(sGridNo) + \
+								sizeof(ubLevel) + \
+								sizeof(usFlags) + \
+								sizeof(bRenderZHeightAboveLevel) + \
+								sizeof(bVisible) + \
+								sizeof(ubNonExistChance)
 
 extern WORLDITEM		*gWorldItems;
 extern UINT32				guiNumWorldItems;

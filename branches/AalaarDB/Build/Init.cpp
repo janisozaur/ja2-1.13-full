@@ -542,7 +542,7 @@ UINT32 InitializeJA2(void)
 	}
 	#endif
 #endif
-	
+
 #ifdef JA2BETAVERSION
 	if( ProcessIfMultilingualCmdLineArgDetected( gzCommandLine ) )
 	{ //If the multilingual text code generator has activated, quit now.

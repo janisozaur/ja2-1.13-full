@@ -358,7 +358,7 @@ void EndTacticalBattleForEnemy()
 {
 	PERFORMANCE_MARKER
 	GROUP *pGroup;
-	INT32 i, iNumMilitia = 0, iNumEnemies = 0;
+	INT32 i;
 
 	//Clear enemies in battle for all stationary groups in the sector.
 	if( gbWorldSectorZ > 0 )
@@ -1356,7 +1356,9 @@ void AddPossiblePendingEnemiesToBattle()
 			else if( pGroup->ubSectorY > pGroup->ubPrevY )
 				ubInsertionCode = INSERTION_CODE_NORTH;
 			else
+			{
 				Assert(0);
+			}
 		}
 		else if( pGroup->ubNextX && pGroup->ubNextY )
 		{
@@ -1369,11 +1371,15 @@ void AddPossiblePendingEnemiesToBattle()
 			else if( pGroup->ubSectorY > pGroup->ubNextY )
 				ubInsertionCode = INSERTION_CODE_NORTH;
 			else
+			{
 				Assert(0);
+			}
 		}
 		else
+		{
 			// The group has no movement orders.  Where did it come from?
 			Assert(0);
+		}
 
 		if( pGroup->pEnemyGroup->ubElitesInBattle < pGroup->pEnemyGroup->ubNumElites )
 		{ //Add an elite troop
@@ -1882,7 +1888,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				WorldItem.o = pSoldier->inv[i];
+				WorldItem.object = pSoldier->inv[i];
 
 				AddWorldItemsToUnLoadedSector( 13, 9, 0, sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );
@@ -1916,7 +1922,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 				WorldItem.bVisible = FALSE;
 				WorldItem.bRenderZHeightAboveLevel = 0;
 
-				WorldItem.o = pSoldier->inv[i];
+				WorldItem.object = pSoldier->inv[i];
 
 				AddWorldItemsToUnLoadedSector( 7, 14, 0, sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ], 1, &WorldItem, FALSE );
 				DeleteObj( &( pSoldier->inv[ i ] ) );

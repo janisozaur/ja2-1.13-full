@@ -272,7 +272,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 				// this should never happen, but might as well check...
 				iSkill = 0;
 			}
-			iSkill = iSkill * pSoldier->inv[bSlot].objectStatus / 100;
+			iSkill = iSkill * pSoldier->inv[bSlot][0]->data.objectStatus / 100;
 			break;
 		case ATTACHING_DETONATOR_CHECK:
 		case ATTACHING_REMOTE_DETONATOR_CHECK:

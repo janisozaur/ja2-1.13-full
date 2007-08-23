@@ -274,6 +274,8 @@ public:
 	BOOLEAN Load(HWFILE hFile);
 	void	initialize();
 
+	bool	IsUnderRepair() {return bItemCondition < 0;};
+	bool	IsBeingOrdered() {return ubQtyOnOrder > 0;};
 
 	//data from SPECIAL_ITEM_INFO
 	UINT8		ubImprintID;				// imprint ID for imprinted items (during repair!)
@@ -289,14 +291,13 @@ public:
 
 
 	//data from OLD_DEALER_ITEM_HEADER_101
-	UINT32	uiOrderArrivalTime;				// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
+	UINT32		uiOrderArrivalTime;			// Day the items ordered will arrive on.	It's UINT32 in case we change this to minutes.
 	UINT8		ubQtyOnOrder;				// The number of items currently on order
 
-
-	char endOfPOD;
-
-	OBJECTTYPE object;
+	char		endOfPod;
+	OBJECTTYPE	object;
 };
+#define SIZEOF_DEALER_SPECIAL_ITEM_POD offsetof(DEALER_SPECIAL_ITEM, endOfPod)
 
 typedef std::list<DEALER_SPECIAL_ITEM> DealerItemList;
 extern DealerItemList	gArmsDealersInventory[ NUM_ARMS_DEALERS ];
@@ -326,7 +327,7 @@ UINT8		CountSpecificItemsRepairDealerHasInForRepairs( UINT8 ubArmsDealer, UINT16
 
 void		AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject );
 
-void		RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, UINT8 ubHowMany );
+void		RemoveItemFromArmsDealerInventory( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
 
 BOOLEAN IsMercADealer( UINT8 ubMercID );
 INT8		GetArmsDealerIDFromMercID( UINT8 ubMercID );

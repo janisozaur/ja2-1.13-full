@@ -89,6 +89,8 @@ void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
 void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem);
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj);
 
+void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8 bMaxPoints);
+
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
 
 // create a keyobject
@@ -292,8 +294,8 @@ INT16 GetGearAPBonus( SOLDIERTYPE * pSoldier );
 
 UINT16 GetFirstExplosiveOfType(UINT16 expType);
 
-INT8 FindSunGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat );
-INT8 FindNightGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat );
+OBJECTTYPE* FindSunGogglesInInv( SOLDIERTYPE * pSoldier );
+OBJECTTYPE* FindNightGogglesInInv( SOLDIERTYPE * pSoldier );
 
 INT16 GetMinRangeForAimBonus( OBJECTTYPE * pObj );
 UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier);

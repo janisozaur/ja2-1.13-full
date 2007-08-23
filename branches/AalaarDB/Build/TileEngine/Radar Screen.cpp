@@ -475,7 +475,7 @@ void RenderRadarScreen( )
 
 			iItemNumber = iCounter + iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
 			// stolen item
-			if( ( pInventoryPoolList[ iItemNumber ].o.ubNumberOfObjects == 0 )||( pInventoryPoolList[ iItemNumber ].sGridNo == 0 ) )
+			if( ( pInventoryPoolList[ iItemNumber ].object.ubNumberOfObjects == 0 )||( pInventoryPoolList[ iItemNumber ].sGridNo == 0 ) )
 			{
 				// yep, continue on
 				continue;

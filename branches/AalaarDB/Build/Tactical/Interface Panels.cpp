@@ -539,7 +539,6 @@ void CheckForDisabledForGiveItem( )
 {
 	PERFORMANCE_MARKER
 	INT16			sDist;
-	INT16			sDistVisible;
 	INT16			sDestGridNo;
 	INT8			bDestLevel;
 	INT32			cnt;
@@ -568,10 +567,8 @@ void CheckForDisabledForGiveItem( )
 			{
 				sDist = PythSpacesAway( gpSMCurrentMerc->sGridNo, pSoldier->sGridNo );
 
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->pathing.bLevel, gpSMCurrentMerc );
-
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,	gpSMCurrentMerc->pathing.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->pathing.bLevel, 3, TRUE ) )
 				{
 					if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
 					{
@@ -602,11 +599,8 @@ void CheckForDisabledForGiveItem( )
 				// Get distance....
 				sDist = PythSpacesAway( MercPtrs[ ubSrcSoldier ]->sGridNo, sDestGridNo );
 
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( MercPtrs[ ubSrcSoldier ], DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel, MercPtrs[ ubSrcSoldier ] );
-
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,	bDestLevel, 3, (UINT8) sDistVisible, TRUE )	)
+				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, TRUE )  )
 				{
 					// UNCONSCIOUS GUYS ONLY 1 tile AWAY
 					if ( MercPtrs[ gusSMCurrentMerc ]->stats.bLife < CONSCIOUSNESS )
@@ -1841,7 +1835,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 	INT16 sFontX, sFontY;
 	INT16	usX, usY;
 	CHAR16 sString[9];
-	UINT32	cnt;
+	UINT32	cnt = 0xff000000; // Give a value that ought to crash it if this is really undefined for the robot
 	static CHAR16 pStr[ 200 ], pMoraleStr[ 20 ];
 
 	if ( gubSelectSMPanelToMerc != NOBODY )
@@ -5413,7 +5407,7 @@ UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife
 	}
 
 
-	if ( ( gusSelectedSoldier != NO_SOLDIER ) && ( gGameSettings.fOptions[ TOPTION_SPACE_SELECTS_NEXT_SQUAD ] ) )
+	if ( ( gusSelectedSoldier != NOBODY ) && ( gGameSettings.fOptions[ TOPTION_SPACE_SELECTS_NEXT_SQUAD ] ) )
 	{ 
 		// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
 		if ( ( ( gsCurInterfacePanel != TEAM_PANEL ) || ( ButtonList[ iTEAMPanelButtons[ CHANGE_SQUAD_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
@@ -5637,7 +5631,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				// Fill out the inv slot for the item
 				//InvSlot.sItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 //			InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
-//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].gun.bGunStatus;
+//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ][0]->data.gun.bGunStatus;
 				//InvSlot.ItemObject = gpSMCurrentMerc->inv[ uiHandPos ];
 				//InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 
@@ -5745,7 +5739,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//usOldItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 				//usNewItemIndex = gpItemPointer->usItem;
 
-				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->key.ubKeyID)
+				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == (*gpItemPointer)[0]->data.key.ubKeyID)
 				{
 					// Try to place here
 					if ( ( iNumberOfKeysTaken = AddKeysToSlot( gpItemPopupSoldier, ( INT8 )uiKeyRing, gpItemPointer ) ) )
@@ -5992,7 +5986,7 @@ void SMInvMoneyButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		 guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		 HandleTacticalUI( );
 
-				swprintf( zMoney, L"%d", gpItemPointer->money.uiMoneyAmount );
+				swprintf( zMoney, L"%d", (*gpItemPointer)[0]->data.money.uiMoneyAmount );
 
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
@@ -6038,7 +6032,7 @@ void ConfirmationToDepositMoneyToPlayersAccount( UINT8 ubExitValue )
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//add the money to the players account
-		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->money.uiMoneyAmount );
+		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), (*gpItemPointer)[0]->data.money.uiMoneyAmount );
 
 		// dirty shopkeeper
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;

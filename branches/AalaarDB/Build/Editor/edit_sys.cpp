@@ -562,7 +562,6 @@ void PasteStructure2( UINT32 iMapIndex )
 void PasteStructureCommon( UINT32 iMapIndex )
 {
 	PERFORMANCE_MARKER
-	BOOLEAN				fDoPaste = FALSE;
 	UINT32				fHeadType;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -1178,8 +1177,6 @@ void RaiseWorldLand( )
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
 	UINT16 usIndex;
-	BOOLEAN fStopRaise = FALSE;
-	INT32 iCounterA = 0, iCounterB = 0;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;
@@ -1213,13 +1210,13 @@ void RaiseWorldLand( )
 			if (pTileElement->fType==FIRSTCLIFF)
 			{	
 				fSomethingRaised = TRUE;
-				// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff found at count=%d",cnt)); 							
+				usIndex=pStruct->usIndex;
+				// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff found at count=%d",cnt)); 						     
 				if( pTileElement->ubNumberOfTiles > 1 )
 				{
 					// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff has %d children", pTileElement->ubNumberOfTiles));
 					for (ubLoop = 0; ubLoop < pTileElement->ubNumberOfTiles; ubLoop++)
 					{
-						usIndex=pStruct->usIndex;
 						// need means to turn land raising on and off based on the tile ID and the offset in the
 						// tile database when reading into the mapsystem
 						// turning off of land raising can only be done

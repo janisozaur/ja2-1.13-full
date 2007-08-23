@@ -177,7 +177,8 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		}
 		else
 		{
-			INT8 bug = 0;
+			//bug
+			DebugBreak();
 		}
 	}
 	if( pNode == gSoldierInitHead )
@@ -531,7 +532,7 @@ void SortSoldierInitList()
 
 }
 
-BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
+BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr, GROUP *pGroup = NULL )
 {
 	PERFORMANCE_MARKER
 	UINT8 ubProfile;
@@ -729,6 +730,12 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 	{
 		curr->pSoldier = pSoldier;
 		curr->ubSoldierID = ubID;
+		if (pGroup)
+		{
+			pSoldier->ubGroupID = pGroup->ubGroupID;
+			pSoldier->pGroup = pGroup;
+		}
+
 		AddSoldierToSectorNoCalculateDirection( ubID );
 
 		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bTeam == ENEMY_TEAM && !pSoldier->inv[ HANDPOS ].usItem )
@@ -884,7 +891,6 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	SOLDIERINITNODE *curr;
 	INT32 iRandom;
 	UINT8 ubMaxNum;
-	INT8 bTeam = ENEMY_TEAM;
  	UINT8 ubElitePDSlots = 0, ubEliteDSlots = 0, ubElitePSlots = 0, ubEliteBSlots = 0;
 	UINT8 ubTroopPDSlots = 0, ubTroopDSlots = 0, ubTroopPSlots = 0, ubTroopBSlots = 0;
 	UINT8 ubAdminPDSlots = 0, ubAdminDSlots = 0, ubAdminPSlots = 0, ubAdminBSlots = 0;
@@ -1300,7 +1306,6 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	INT32 iRandom;
 	UINT8 ubMaxNum;
 	BOOLEAN fDoPlacement;
-	INT8 bTeam = ENEMY_TEAM;
  	UINT8 ubEliteSlots = 0;
 	UINT8 ubRegSlots = 0;
 	UINT8 ubGreenSlots = 0;

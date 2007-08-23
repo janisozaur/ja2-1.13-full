@@ -80,7 +80,7 @@ typedef struct
 } ITEM_POOL_LOCATOR;
 
 class SOLDIERTYPE;
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
+INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleFlashingItems( );
@@ -104,8 +104,8 @@ OBJECTTYPE* AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 b
 OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex );
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
-BOOLEAN	GetItemPoolFromGround( UINT16 usMapPos, ITEM_POOL **ppItemPool );
+BOOLEAN	GetItemPool( INT16 sMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
+BOOLEAN	GetItemPoolFromGround( INT16 sMapPos, ITEM_POOL **ppItemPool );
 BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos );
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
 BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );

@@ -17,7 +17,6 @@ void RemoveFogFromGridNo( UINT32 uiGridNo )
 	PERFORMANCE_MARKER
 	INT32 i;
 	INT32 x, y;
-	UINT32 uiAdjacentGridNo = 0;
 	x = uiGridNo % WORLD_COLS;
 	y = uiGridNo / WORLD_COLS;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )

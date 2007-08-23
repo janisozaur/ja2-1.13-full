@@ -58,7 +58,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		MOUSETT		*pRegion = &mouseTT;
 		CHAR16		pStrInfo[ sizeof( pRegion->FastHelpText ) ];
 		int			iNVG = 0;
-		UINT16		usSoldierGridNo;
+		INT16		sSoldierGridNo;
 		BOOLEAN		fDisplayBigSlotItem	= FALSE;
 		BOOLEAN		fMercIsUsingScope	= FALSE;
 		UINT16		iCarriedRL = 0;
@@ -69,12 +69,12 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		fDrawTooltip = TRUE;
 
 		// get the gridno the cursor is at
-		GetMouseMapPos( &usSoldierGridNo );
+		GetMouseMapPos( &sSoldierGridNo );
 
 		// get the distance to enemy's tile from the selected merc
 		if ( gusSelectedSoldier != NOBODY )
 		{		
-			iRangeToTarget = GetRangeInCellCoordsFromGridNoDiff( MercPtrs[ gusSelectedSoldier ]->sGridNo, usSoldierGridNo ) / 10;
+			iRangeToTarget = GetRangeInCellCoordsFromGridNoDiff( MercPtrs[ gusSelectedSoldier ]->sGridNo, sSoldierGridNo ) / 10;
 		}
 		// WANNE: If we want to show the tooltip of milita and no merc is present in the sector
 		else
@@ -85,7 +85,7 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		if ( gGameExternalOptions.fEnableDynamicSoldierTooltips )
 		{
 			OBJECTTYPE* pObject = &(MercPtrs[gusSelectedSoldier]->inv[HANDPOS]);
-			for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+			for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
 				if ( Item[iter->usItem].visionrangebonus > 0 )
 				{
 					fMercIsUsingScope = TRUE;
@@ -152,9 +152,9 @@ void SoldierTooltip( SOLDIERTYPE* pSoldier )
 		{
 			// display "debug" info
 			if ( gGameExternalOptions.fEnableSoldierTooltipLocation )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_LOCATION], pStrInfo, usSoldierGridNo );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_LOCATION], pStrInfo, sSoldierGridNo );
 			if ( gGameExternalOptions.fEnableSoldierTooltipBrightness )
-				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], pStrInfo, SHADE_MIN - LightTrueLevel( usSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
+				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_BRIGHTNESS], pStrInfo, SHADE_MIN - LightTrueLevel( sSoldierGridNo, gsInterfaceLevel ), SHADE_MIN );
 			if ( gGameExternalOptions.fEnableSoldierTooltipRangeToTarget )
 				swprintf( pStrInfo, gzTooltipStrings[STR_TT_CAT_RANGE_TO_TARGET], pStrInfo, iRangeToTarget );
 			if ( gGameExternalOptions.fEnableSoldierTooltipID )
@@ -395,7 +395,7 @@ void DisplayWeaponInfo( SOLDIERTYPE* pSoldier, CHAR16* pStrInfo, UINT8 ubSlot, U
 	if ( gGameExternalOptions.ubSoldierTooltipDetailLevel >= DL_Basic )
 	{
 		// display weapon attachments
-		for (OBJECTTYPE::attachmentList::iterator iter = pSoldier->inv[ubSlot].attachments.begin(); iter != pSoldier->inv[ubSlot].attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = pSoldier->inv[ubSlot][0]->attachments.begin(); iter != pSoldier->inv[ubSlot][0]->attachments.end(); ++iter) {
 			if ( ubTooltipDetailLevel == DL_Basic )
 			{
 				// display only externally-visible weapon attachments
@@ -433,9 +433,6 @@ void DrawMouseTooltip()
 	PERFORMANCE_MARKER
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
-	UINT16 usFillColor =	Get16BPPColor(FROMRGB(250, 240, 188));
-	UINT16 usRectColor1 =	Get16BPPColor( FROMRGB( 65, 57, 15 ) );
-	UINT16 usRectColor2 =	Get16BPPColor( FROMRGB( 227, 198, 88 ) );
 	static INT32 iX, iY, iW, iH;
 	
 	extern INT16 GetWidthOfString(const STR16);

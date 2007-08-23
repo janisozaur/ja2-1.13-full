@@ -48,8 +48,8 @@ static CHAR16 gzLevelString[9][15] =
 void SetIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 void RemoveIndexLevelNodeFlags( LEVELNODE *pStartNode, UINT32 uiFlags, UINT16 usIndex );
 
-void SetWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex );
-void RemoveWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex );
+void SetWorldFlagsFromNewNode( INT16 sGridNo, UINT16 usIndex );
+void RemoveWorldFlagsFromNewNode( INT16 sGridNo, UINT16 usIndex );
 
 BOOLEAN RemoveLandEx( UINT32 iMapIndex, UINT16 usIndex );
 
@@ -2672,7 +2672,6 @@ BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE	*pRoof		= NULL;
-	LEVELNODE	*pOldRoof	= NULL;
 
 	pRoof = gpWorldLevelData[ sGridNo ].pRoofHead;
 
@@ -3795,20 +3794,20 @@ UINT32 cnt;
 
 
 
-void SetWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex )
+void SetWorldFlagsFromNewNode( INT16 sGridNo, UINT16 usIndex )
 {
 	PERFORMANCE_MARKER
 
 }
 
-void RemoveWorldFlagsFromNewNode( UINT16 sGridNo, UINT16 usIndex )
+void RemoveWorldFlagsFromNewNode( INT16 sGridNo, UINT16 usIndex )
 {
 	PERFORMANCE_MARKER
 
 }
 
 
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
+void SetWallLevelnodeFlags( INT16 sGridNo, UINT32 uiFlags )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE	*pStruct		= NULL;
@@ -3834,7 +3833,7 @@ void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
 	}
 }
 
-void RemoveWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
+void RemoveWallLevelnodeFlags( INT16 sGridNo, UINT32 uiFlags )
 {
 	PERFORMANCE_MARKER
 	LEVELNODE	*pStruct		= NULL;

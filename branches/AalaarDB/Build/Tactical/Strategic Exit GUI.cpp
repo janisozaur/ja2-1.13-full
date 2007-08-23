@@ -123,7 +123,7 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 	INT32 i;
 	SGPRect	aRect;
 	UINT16	usTextBoxWidth, usTextBoxHeight;
-	UINT16	usMapPos = 0;
+	INT16	sMapPos = 0;
 	INT8		bExitCode = -1;
 	BOOLEAN	OkExitCode;
 
@@ -148,11 +148,11 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 			break;
 		case DIRECTION_EXITGRID:
 			bExitCode = -1;
-			usMapPos = sAdditionalData;
+			sMapPos = sAdditionalData;
 			break;
 	}
 
-	OkExitCode = OKForSectorExit( bExitCode, usMapPos, &uiTraverseTimeInMinutes );
+	OkExitCode = OKForSectorExit( bExitCode, sMapPos, &uiTraverseTimeInMinutes );
 
 	if( uiTraverseTimeInMinutes <= 5 )
 	{ //if the traverse time is short, then traversal is percieved to be instantaneous.

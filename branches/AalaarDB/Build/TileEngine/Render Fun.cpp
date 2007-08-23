@@ -64,7 +64,7 @@ void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
 
 }
 
-BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InARoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
 	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
@@ -80,7 +80,7 @@ BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 }
 
 
-BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo )
+BOOLEAN InAHiddenRoom( INT16 sGridNo, UINT8 *pubRoomNo )
 {
 	PERFORMANCE_MARKER
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
@@ -116,7 +116,7 @@ void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
 }
 
 
-void SetGridNoRevealedFlag( UINT16 sGridNo )
+void SetGridNoRevealedFlag( INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 //	UINT32 cnt;
@@ -266,13 +266,12 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 }
 
 
-void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
+void RemoveRoomRoof( INT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	UINT32 cnt;
 	ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
-	LEVELNODE					*pNode = NULL;
 	BOOLEAN						fSaidItemSeenQuote = FALSE;
 
 //	STRUCTURE					*pStructure;//, *pBase;

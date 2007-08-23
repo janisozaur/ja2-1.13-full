@@ -1687,7 +1687,7 @@ void DebugStructurePage1( void )
 	STRUCTURE *		pStructure;
 	STRUCTURE *		pBase;
 	//LEVELNODE *		pLand;
-	UINT16					usGridNo;
+	INT16					sGridNo;
 	INT16					sDesiredLevel;
 	INT8					bHeight, bDens0, bDens1, bDens2, bDens3;
 	INT8					bStructures;
@@ -1703,7 +1703,7 @@ void DebugStructurePage1( void )
 
 	SetFont( LARGEFONT1 );
 	gprintf( 0, 0, L"DEBUG STRUCTURES PAGE 1 OF 1" );
-	if (GetMouseMapPos( &usGridNo ) == FALSE)
+	if (GetMouseMapPos( &sGridNo ) == FALSE)
 	{
 		return;
 		//gprintf( 0, LINE_HEIGHT * 1, L"No structure selected" );
@@ -1718,14 +1718,14 @@ void DebugStructurePage1( void )
 		sDesiredLevel = STRUCTURE_ON_ROOF;
 	}
 
-	gprintf( 320, 0, L"Building %d", gubBuildingInfo[ usGridNo ] );
+	gprintf( 320, 0, L"Building %d", gubBuildingInfo[ sGridNo ] );
 	/*
-	pLand = gpWorldLevelData[usGridNo].pLandHead;
+	pLand = gpWorldLevelData[sGridNo].pLandHead;
 	gprintf( 320, 0, L"Fake light %d", pLand->ubFakeShadeLevel );
-	gprintf( 320, LINE_HEIGHT, L"Real light: ground %d roof %d", LightTrueLevel( usGridNo, 0 ), LightTrueLevel( usGridNo, 1 ) );
+	gprintf( 320, LINE_HEIGHT, L"Real light: ground %d roof %d", LightTrueLevel( sGridNo, 0 ), LightTrueLevel( sGridNo, 1 ) );
 	*/
 
-	pStructure = gpWorldLevelData[usGridNo].pStructureHead;
+	pStructure = gpWorldLevelData[sGridNo].pStructureHead;
 	while (pStructure != NULL)
 	{
 		if (pStructure->sCubeOffset == sDesiredLevel)
@@ -1800,7 +1800,7 @@ void DebugStructurePage1( void )
 		gprintf( 0, LINE_HEIGHT * 4, L"Structure ID %d", pStructure->usStructureID );
 		#endif
 
-		pStructure = gpWorldLevelData[usGridNo].pStructureHead;
+		pStructure = gpWorldLevelData[sGridNo].pStructureHead;
 		for ( bStructures = 0; pStructure != NULL; pStructure = pStructure->pNext)
 		{
 			bStructures++;
@@ -1835,18 +1835,18 @@ void DebugStructurePage1( void )
 		}
 	#endif
 	gprintf( 0, LINE_HEIGHT * 13, L"N %d NE %d E %d SE %d",
-		gubWorldMovementCosts[ usGridNo ][ NORTH ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ NORTHEAST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ EAST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ SOUTHEAST ][ gsInterfaceLevel ] );
+		gubWorldMovementCosts[ sGridNo ][ NORTH ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ NORTHEAST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ EAST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ SOUTHEAST ][ gsInterfaceLevel ] );
 	gprintf( 0, LINE_HEIGHT * 14, L"S %d SW %d W %d NW %d",
-		gubWorldMovementCosts[ usGridNo ][ SOUTH ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ SOUTHWEST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ WEST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ usGridNo ][ NORTHWEST ][ gsInterfaceLevel ] );
+		gubWorldMovementCosts[ sGridNo ][ SOUTH ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ SOUTHWEST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ WEST ][ gsInterfaceLevel ],
+		gubWorldMovementCosts[ sGridNo ][ NORTHWEST ][ gsInterfaceLevel ] );
 	gprintf( 0, LINE_HEIGHT * 15, L"Ground smell %d strength %d",
-		SMELL_TYPE( gpWorldLevelData[ usGridNo ].ubSmellInfo ),
-		SMELL_STRENGTH( gpWorldLevelData[ usGridNo ].ubSmellInfo ) );
+		SMELL_TYPE( gpWorldLevelData[ sGridNo ].ubSmellInfo ),
+		SMELL_STRENGTH( gpWorldLevelData[ sGridNo ].ubSmellInfo ) );
 
 	#ifdef COUNT_PATHS
 	if (guiTotalPathChecks > 0)
@@ -1861,7 +1861,7 @@ void DebugStructurePage1( void )
 	}
 	#else
 	gprintf( 0, LINE_HEIGHT * 16, 
-		L"Adj soldiers %d", gpWorldLevelData[usGridNo].ubAdjacentSoldierCnt );
+		L"Adj soldiers %d", gpWorldLevelData[sGridNo].ubAdjacentSoldierCnt );
 	#endif
 }
 
@@ -2028,7 +2028,6 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 						usHeight = hVObject->pETRLEObject[uiLoop].usHeight;
 						if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE) )
 						{	
-							UINT32 i = 0;
 							// adjust for the difference between the animation and structure base tile				
 	
 							//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )
@@ -2200,7 +2199,7 @@ BOOLEAN FiniStructureDB( void )
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
 {
 	PERFORMANCE_MARKER
-	STRUCTURE * pCurrent, *pStructure;
+	STRUCTURE * pCurrent, *pStructure = 0;
 	INT16				sDesiredLevel;
 	BOOLEAN			fOKStructOnLevel = FALSE;
 	BOOLEAN			fMinimumBlockingFound = FALSE;
@@ -2230,10 +2229,10 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
 			fOKStructOnLevel = TRUE;
-		pStructure		= pCurrent;
+			pStructure		= pCurrent;
 
 			// Turn off if we are on upper level!
-		if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
+			if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
 			{
 				fOKStructOnLevel = FALSE;
 			}
@@ -2339,20 +2338,20 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	{
 		if ( fMinimumBlockingFound )
 		{
-		(*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_REDUCE_RANGE );
 		}
 		else
 		{
-		(*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_NEXT_TILE );
 		}
 	}
 	else
 	{
-	(*pStructHeight) = 0;
+		(*pStructHeight) = 0;
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}

@@ -34,7 +34,6 @@
 	#include "Dialogue Control.h"
 #endif
 
-extern BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance );
 extern BOOLEAN gfHiddenInterrupt;
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -809,21 +808,20 @@ INT8 GreenAlert_TryToDoBoxing(SOLDIERTYPE* pSoldier, GreenAlertFlags& flags)
 		}
 	}
 	//else if ( (gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) && ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() ) )
-	else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() )
+	else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxNormalDistanceVisible() )
 	{
-		UINT8 ubRingDir;
-		// face ring!
-
-		ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
 		if ( gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 		{
+			UINT8 ubRingDir;
+			// face ring!
+
+			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
 			if ( pSoldier->bDirection != ubRingDir )
 			{
 				pSoldier->aiData.usActionData = ubRingDir;
 				return( AI_ACTION_CHANGE_FACING );
 			}
 		}
-		return( AI_ACTION_NONE );
 	}
 	return AI_ACTION_NOT_AN_ACTION;
 }
@@ -1441,7 +1439,7 @@ INT8 YellowAlert_TryToLookAround(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 	// and the noise source is close enough that it could possibly be seen
 	if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 	{
-		if ((pSoldier->bDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,flags.sNoiseGridNo) <= MaxDistanceVisible() )
+		if ((pSoldier->bDirection != ubNoiseDir) && PythSpacesAway(pSoldier->sGridNo,flags.sNoiseGridNo) <= pSoldier->GetMaxDistanceVisible(flags.sNoiseGridNo) )
 		{
 			INT32 iChance;
 			// set base chance according to orders
@@ -1760,15 +1758,15 @@ INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 		// set base chance according to orders
 		switch (pSoldier->aiData.bOrders)
 		{
-		case STATIONARY:     iChance += -20;  break;
-		case ONGUARD:        iChance += -15;  break;
-		case ONCALL:         iChance +=  20;  break;
-		case CLOSEPATROL:    iChance += -10;  break;
-		case RNDPTPATROL:
-		case POINTPATROL:    iChance += -10;  break;
-		case FARPATROL:                       break;
-		case SEEKENEMY:      iChance +=  10;  break;
-		case SNIPER:		  iChance += -10; break;
+			case STATIONARY:     iChance += -20;  break;
+			case ONGUARD:        iChance += -15;  break;
+			case ONCALL:         iChance +=  20;  break;
+			case CLOSEPATROL:    iChance += -10;  break;
+			case RNDPTPATROL:
+			case POINTPATROL:    iChance += -10;  break;
+			case FARPATROL:                       break;
+			case SEEKENEMY:      iChance +=  10;  break;
+			case SNIPER:		  iChance += -10; break;
 		}
 
 		// modify chance of patrol (and whether it's a sneaky one) by attitude
@@ -1996,7 +1994,7 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
 		if ( flags.fReachable && !flags.fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, flags.sNoiseGridNo ) < 5 )
 		{
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, flags.sNoiseGridNo, pSoldier->pathing.bLevel, 0, 6, TRUE )	)
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, flags.sNoiseGridNo, pSoldier->pathing.bLevel, 0, TRUE, 6 )	)
 			{
 				// set reachable to false so we don't investigate
 				flags.fReachable = FALSE;
@@ -2222,7 +2220,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		// spotters haven't already been called for, then DO SO!
 
 		if ( (BestThrow.bWeaponIn != NO_SLOT) &&
-			(CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
+			(CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxNormalDistanceVisible() ) &&
 			(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 			(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 		{
@@ -2272,8 +2270,8 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 		if (BestShot.bWeaponIn != NO_SLOT) {
 			OBJECTTYPE * gun = &pSoldier->inv[BestShot.bWeaponIn];
 			DebugMsg (TOPIC_JA2,DBG_LEVEL_3,String("decideactionred: men in sector %d, ubspotters called by %d, nobody %d",gTacticalStatus.Team[pSoldier->bTeam].bMenInSector,gTacticalStatus.ubSpottersCalledForBy,NOBODY ));
-
-			if ( ( ( IsScoped(gun) && GunRange(gun) > MaxDistanceVisible() ) || pSoldier->aiData.bOrders == SNIPER ) &&
+			//if ( ( ( IsScoped(gun) && GunRange(gun) > pSoldier->GetMaxDistanceVisible(BestShot.sTarget, BestShot.bTargetLevel) ) || pSoldier->bOrders == SNIPER ) &&
+			if ( ( ( IsScoped(gun) && GunRange(gun) > MaxNormalDistanceVisible() ) || pSoldier->aiData.bOrders == SNIPER ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 
@@ -2316,7 +2314,7 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 			ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[BestShot.bWeaponIn]), pSoldier->bDoAutofire );
 		}
 		while(	pSoldier->bActionPoints >= BestShot.ubAPCost + ubBurstAPs &&
-			pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
+			pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 			GetAutoPenalty(&pSoldier->inv[ pSoldier->ubAttackingHand ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80 );
 
 
@@ -2530,11 +2528,11 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 		{
 			pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,tempGridNo,AP_PRONE,AI_ACTION_SEEK_OPPONENT,0);
 
-			if ( LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, tempGridNo, pSoldier->pathing.bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+			if ( LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, tempGridNo, pSoldier->pathing.bLevel, TRUE ) )
 			{
-				// reserve APs for a possible crouch plus a shot
-				pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, tempGridNo, (INT8) (MinAPsToAttack( pSoldier, tempGridNo, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
-				if ( pSoldier->aiData.usActionData != NOWHERE )
+				pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,tempGridNo,AP_PRONE,AI_ACTION_SEEK_OPPONENT,0);
+
+				if ( LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, tempGridNo, pSoldier->pathing.bLevel, TRUE) )
 				{
 					pSoldier->aiData.fAIFlags |= AI_CAUTIOUS;
 					pSoldier->aiData.bNextAction = AI_ACTION_END_TURN;
@@ -2747,11 +2745,11 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 							{
 								pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,sClosestDisturbance,AP_CROUCH, AI_ACTION_SEEK_OPPONENT,0);
 								//pSoldier->numFlanks = 0;
-								if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+								if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, TRUE ) )
 								{
-									// reserve APs for a possible crouch plus a shot
-									pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
-									if ( pSoldier->aiData.usActionData != NOWHERE )
+									pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier,sClosestDisturbance,AP_CROUCH, AI_ACTION_SEEK_OPPONENT,0);
+									//pSoldier->numFlanks = 0;
+									if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, TRUE ) )
 									{
 										pSoldier->aiData.fAIFlags |= AI_CAUTIOUS;
 										pSoldier->aiData.bNextAction = AI_ACTION_END_TURN;
@@ -2784,11 +2782,10 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 						else
 						{
 							// let's be a bit cautious about going right up to a location without enough APs to shoot
-							if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, (UINT8) MaxDistanceVisible(), TRUE ) )
+							if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, TRUE ) )
 							{
-								// reserve APs for a possible crouch plus a shot
-								pSoldier->aiData.usActionData = InternalGoAsFarAsPossibleTowards(pSoldier, sClosestDisturbance, (INT8) (MinAPsToAttack( pSoldier, sClosestDisturbance, ADDTURNCOST) + AP_CROUCH), AI_ACTION_SEEK_OPPONENT, FLAG_CAUTIOUS );
-								if ( pSoldier->aiData.usActionData != NOWHERE )
+								// let's be a bit cautious about going right up to a location without enough APs to shoot
+								if ( PythSpacesAway( pSoldier->aiData.usActionData, sClosestDisturbance ) < 5 || LocationToLocationLineOfSightTest( pSoldier->aiData.usActionData, pSoldier->pathing.bLevel, sClosestDisturbance, pSoldier->pathing.bLevel, TRUE ) )
 								{
 									pSoldier->aiData.fAIFlags |= AI_CAUTIOUS;
 									pSoldier->aiData.bNextAction = AI_ACTION_END_TURN;
@@ -2826,7 +2823,7 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 
 					// if soldier is not already facing in that direction,
 					// and the opponent is close enough that he could possibly be seen
-					if ( pSoldier->bDirection != ubOpponentDir && pSoldier->InternalSoldierReadyWeapon( ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
+					if ( pSoldier->bDirection != ubOpponentDir && pSoldier->InternalIsValidStance( ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 					{
 						// turn
 						pSoldier->aiData.usActionData = ubOpponentDir;
@@ -3077,7 +3074,7 @@ INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 		// if soldier is not already facing in that direction,
 		// and the opponent is close enough that he could possibly be seen
 		// note, have to change this to use the level returned from ClosestKnownOpponent
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0, pSoldier );
+		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0 );
 
 		if ((pSoldier->bDirection != ubOpponentDir) && (PythSpacesAway(pSoldier->sGridNo,sClosestOpponent) <= sDistVisible))
 		{
@@ -3087,8 +3084,10 @@ INT8 RedAlert_TryToLookAround(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 			else           // all other orders
 				iChance = 25;
 
-			if (pSoldier->aiData.bAttitude == DEFENSIVE)
-				iChance += 25;
+			// if soldier is not already facing in that direction,
+			// and the opponent is close enough that he could possibly be seen
+			// note, have to change this to use the level returned from ClosestKnownOpponent
+			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sClosestOpponent, 0 );
 
 			if ( TANK( pSoldier ) )
 			{
@@ -3535,7 +3534,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	{
 		sClosestOpponent = ClosestKnownOpponent(pSoldier, NULL, NULL);
 
-		if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (MaxDistanceVisible() * 3) / 2 ) || PreRandom( 4 ) == 0 )
+		//if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (MaxNormalDistanceVisible() * 3) / 2 ) || PreRandom( 4 ) == 0 )
+		if ( (sClosestOpponent != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sClosestOpponent ) < (pSoldier->GetMaxDistanceVisible(sClosestOpponent) * 3) / 2 ) || PreRandom( 4 ) == 0 )
 		{
 			if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
 			{
@@ -3832,7 +3832,7 @@ INT8 BlackAlert_EvaluateCanAttack(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 						// the current weapon appears is useless right now!
 						// (since we got a return code of noammo, we know the hand usItem
 						// is our gun)
-						pSoldier->inv[HANDPOS].fFlags |= OBJECT_AI_UNUSABLE;
+						pSoldier->inv[HANDPOS][0]->data.fFlags |= OBJECT_AI_UNUSABLE;
 						// move the gun into another pocket...
 						if (!AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE ) )
 						{
@@ -3892,7 +3892,7 @@ INT8 BlackAlert_EvaluateFiringAGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags
 		AssureItemIsInHandPos(pSoldier, bWeaponIn, TEMPORARILY);
 
 		// now it better be a gun, or the guy can't shoot (but has other attack(s))
-		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].gun.bGunStatus >= USABLE)
+		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS][0]->data.gun.bGunStatus >= USABLE)
 		{
 			// get the minimum cost to attack the same target with this gun
 			UINT8 ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,ADDTURNCOST);
@@ -4329,7 +4329,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 	if (IsGunBurstCapable( pSoldier, flags.BestAttack.bWeaponIn, FALSE ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-		pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
+		pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 1 &&
 		(pSoldier->bTeam != gbPlayerNum || pSoldier->aiData.bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO");
@@ -4357,7 +4357,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 				case ATTACKSLAYONLY:iChance += 30; break;
 				}
 
-				if ( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
+				if ( pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 50 )
 					iChance += 20;
 
 				// increase chance based on proximity and difficulty of enemy
@@ -4392,7 +4392,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 
 	if (IsGunAutofireCapable( pSoldier, flags.BestAttack.bWeaponIn ) &&
 		!(Menptr[flags.BestShot.ubOpponent].stats.bLife < OKLIFE) && // don't burst at downed targets
-		(( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 1 &&
+		(( pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 1 &&
 		flags.BestAttack.ubAimTime != BURSTING ) || Weapon[pSoldier->inv[flags.BestAttack.bWeaponIn].usItem].NoSemiAuto) )
 	{
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO AUTOFIRE, RANDOM CHANCE OF DOING SO");
@@ -4403,7 +4403,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 			ubBurstAPs = CalcAPsToAutofire( pSoldier->CalcActionPoints( ), &(pSoldier->inv[flags.BestAttack.bWeaponIn]), pSoldier->bDoAutofire );
 		}
 		while(	pSoldier->bActionPoints >= flags.BestAttack.ubAPCost + ubBurstAPs &&
-			pSoldier->inv[ pSoldier->ubAttackingHand ].gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
+			pSoldier->inv[ pSoldier->ubAttackingHand ][0]->data.gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
 			GetAutoPenalty(&pSoldier->inv[ flags.BestAttack.bWeaponIn ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80);
 
 
@@ -4435,7 +4435,7 @@ INT8 BlackAlert_TryToFireGun(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 					}
 
 
-					if ( pSoldier->inv[flags.BestAttack.bWeaponIn].gun.ubGunShotsLeft > 50 )
+					if ( pSoldier->inv[flags.BestAttack.bWeaponIn][0]->data.gun.ubGunShotsLeft > 50 )
 						iChance += 30;
 
 					if ( flags.bInGas )
@@ -4797,7 +4797,7 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 
 	BlackAlertFlags flags;
 
-	INT32	iCoverPercentBetter, iChance;
+	INT32	iCoverPercentBetter = 0, iChance;
 	INT16	sClosestOpponent,sBestCover = NOWHERE;
 	INT8	bActionReturned;
 	flags.fTryPunching = FALSE;

@@ -108,7 +108,7 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 				return(NOSHOOT_NOLOAD);
 			}
 		}
-		else if (pSoldier->inv[HANDPOS].gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS].gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
+		else if (pSoldier->inv[HANDPOS][0]->data.gun.ubGunShotsLeft == 0 /*SB*/ || !(pSoldier->inv[HANDPOS][0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER))		
 		{
 			return(NOSHOOT_NOAMMO);
 		}
@@ -373,11 +373,11 @@ UINT16 DetermineMovementMode( SOLDIERTYPE * pSoldier, INT8 bAction )
 	}
 }
 
-void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
+void NewDest(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 {
 	PERFORMANCE_MARKER
 	// ATE: Setting sDestination? Tis does not make sense...
-	//pSoldier->pathing.sDestination = usGridNo;
+	//pSoldier->pathing.sDestination = sGridNo;
 	BOOLEAN fSet = FALSE;
 	
 	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->aiData.bAction == AI_ACTION_TAKE_COVER && (pSoldier->aiData.bOrders == DEFENSIVE || pSoldier->aiData.bOrders == CUNNINGSOLO || pSoldier->aiData.bOrders == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
@@ -451,7 +451,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	// ATE: Using this more versitile version
 	// Last paramater says whether to re-start the soldier's animation
 	// This should be done if buddy was paused for fNoApstofinishMove...
-	pSoldier->EVENT_InternalGetNewSoldierPath( usGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
+	pSoldier->EVENT_InternalGetNewSoldierPath( sGridNo, pSoldier->usUIMovementMode , FALSE, pSoldier->flags.fNoAPToFinishMove );
 
 }
 
@@ -885,14 +885,12 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT16		sGridNo=-1;
-	INT8		bLevel, bClosestLevel;
+	INT8		bLevel, bClosestLevel = -1;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
 	UINT32	uiLoop;
-	UINT16	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
 	INT32		iShortestPath = 1000;
-	INT32		iShortestPathConscious = 1000,iShortestPathUnconscious = 1000;
 	UINT8		*pubNoiseVolume;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;
@@ -1050,7 +1048,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 		bLevel = *pbNoiseLevel;
 
 		// if we are not NEAR the noise gridno...
-		if ( pSoldier->pathing.bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, (UINT8) MaxDistanceVisible(), FALSE ) == 0 )
+		if ( pSoldier->pathing.bLevel != bLevel || PythSpacesAway( pSoldier->sGridNo, sGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, bLevel, 0, FALSE ) == 0 )
 		// if we are NOT there (at the noise gridno)
 		//	if (sGridNo != pSoldier->sGridNo)
 		{

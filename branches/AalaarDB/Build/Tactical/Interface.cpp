@@ -124,7 +124,7 @@ MOUSE_REGION	gMenuOverlayRegion;
 
 MOUSE_REGION	gBottomPanalRegion;
 
-UINT16				gusOldSelectedSoldier		= NO_SOLDIER;
+UINT16				gusOldSelectedSoldier		= NOBODY;
 
 // OVerlay ID
 INT32					giPopupSlideMessageOverlay = -1;
@@ -1307,7 +1307,7 @@ void GetArrowsBackground( )
 		return;
 	}
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		// Get selected soldier
 		GetSoldier( &pSoldier, gusSelectedSoldier );
@@ -1409,10 +1409,9 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 {
 	PERFORMANCE_MARKER
 	INT16 sMercScreenX, sMercScreenY;
-	INT16 sOffsetX, sOffsetY, sAddXOffset = 0;
+	INT16 sOffsetX, sOffsetY;
 	UINT8	ubAnimUseHeight;
 	INT16		sStanceOffset = 0;
-	INT16		sBarBodyTypeYOffset = 55;
 	INT16		sTextBodyTypeYOffset = 62;
 
 	// Find XY, dims, offsets
@@ -2645,7 +2644,7 @@ void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 			else
 			{
-				// OK, set cancle code!
+				// OK, set cancel code!
 				gOpenDoorMenu.fMenuHandled = 2;
 			}
 		}

@@ -54,8 +54,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	PERFORMANCE_MARKER
 	UINT8	i,j;
 	UINT16	usItem;
-	OBJECTTYPE		Object;
-	UINT16 usMapPos, usStandardMapPos;
+	INT16 sMapPos, sStandardMapPos;
 	UINT16 usNumberOfItems;
 	BOOLEAN	fSectorLoaded = FALSE;
 	UINT16	usTotalNumberOfItemTypes;
@@ -71,7 +70,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	UINT8		ubTempNumItems;
 	UINT8		ubItemsPurchased;
 
-	usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+	sStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
 
 	// if the delivery is for meduna, drop the items off there instead
 	if( gpNewBobbyrShipments[ ubOrderID ].fActive && gpNewBobbyrShipments[ ubOrderID ].ubDeliveryLoc == BR_MEDUNA )
@@ -97,7 +96,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		// shipment went to wrong airport... reroute all items to a temporary
 		// gridno to represent the other airport (and damage them)
 		SetFactTrue( FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT );	
-		usStandardMapPos = LOST_SHIPMENT_GRIDNO;
+		sStandardMapPos = LOST_SHIPMENT_GRIDNO;
 		SetFactFalse( FACT_NEXT_PACKAGE_CAN_BE_DELAYED );
 	}
 	else if ( (gTownLoyalty[ DRASSEN ].ubRating < 20) || StrategicMap[ CALCULATE_STRATEGIC_INDEX( 13, MAP_ROW_B ) ].fEnemyControlled )
@@ -180,14 +179,14 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		usItem = gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].usItemIndex;
 
 		//Create the item
-		CreateItem( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, &Object );
+		CreateItem( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, &gTempObject );
 
 		// if it's a gun
 		if (Item [ usItem ].usItemClass == IC_GUN )
 		{
 			// Empty out the bullets put in by CreateItem().	We now sell all guns empty of bullets.	This is done for BobbyR
 			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
-			Object.gun.ubGunShotsLeft = 0;
+			gTempObject[0]->data.gun.ubGunShotsLeft = 0;
 		}
 
 		ubItemsDelivered = 0;
@@ -206,25 +205,25 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				if ( !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + ubItemsPurchased) )
 				{
 					uiStolenCount++;
-					usMapPos = PABLOS_STOLEN_DEST_GRIDNO; // off screen!
+					sMapPos = PABLOS_STOLEN_DEST_GRIDNO; // off screen!
 					fPablosStoleSomething = TRUE;
 					fPablosStoleLastItem = TRUE;
 				}
 				else
 				{
-					usMapPos = usStandardMapPos;
+					sMapPos = sStandardMapPos;
 					fPablosStoleLastItem = FALSE;
 
-					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
+					if (sStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.objectStatus ) / 100 );
+						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.objectStatus == 0)
+						if (gTempObject[0]->data.objectStatus == 0)
 						{
-							Object.objectStatus = 1;
+							gTempObject[0]->data.objectStatus = 1;
 						}
-						AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
+						AddItemToPool( sMapPos, &gTempObject, -1, 0, 0, 0 );
 					}
 					else
 					{
@@ -237,7 +236,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			{
 				if ( j > 1 && !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + j) )
 				{
-					pStolenObject[ uiStolenCount ] = Object;
+					pStolenObject[ uiStolenCount ] = gTempObject;
 					uiStolenCount++;
 					fPablosStoleSomething = TRUE;
 					fPablosStoleLastItem = TRUE;
@@ -249,16 +248,16 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 					//else we are not currently in the sector, so we build an array of items to add in one lump
 					//add the item to the item array
 
-					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
+					if (sStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.objectStatus ) / 100 );
+						gTempObject[0]->data.objectStatus = (INT8) ( ( (70 + Random( 11 )) * (INT32) gTempObject[0]->data.objectStatus ) / 100 );
 						// make damn sure it can't hit 0
-						if (Object.objectStatus == 0)
+						if (gTempObject[0]->data.objectStatus == 0)
 						{
-							Object.objectStatus = 1;
+							gTempObject[0]->data.objectStatus = 1;
 						}
-						pObject[ uiCount ] = Object;
+						pObject[ uiCount ] = gTempObject;
 						uiCount++;
 					}
 					else
@@ -271,14 +270,14 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 
 		if ( gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].ubNumberPurchased == 1 && ubItemsDelivered == 1 )
 		{
-			// the item in Object will be the item to deliver
+			// the item in gTempObject will be the item to deliver
 			if( fSectorLoaded )
 			{
-				AddItemToPool( usStandardMapPos, &Object, -1, 0, 0, 0 );
+				AddItemToPool( sStandardMapPos, &gTempObject, -1, 0, 0, 0 );
 			}
 			else
 			{
-				pObject[ uiCount ] = Object;
+				pObject[ uiCount ] = gTempObject;
 				uiCount++;
 			}
 		}
@@ -288,16 +287,16 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			{
 				// treat 0s as 1s :-)
 				ubTempNumItems = __min( ubItemsDelivered, __max( 1, Item[ usItem ].ubPerPocket ) );
-				CreateItems( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
+				CreateItems( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &gTempObject );
 
 				// stack as many as possible
 				if( fSectorLoaded )
 				{
-					AddItemToPool( usStandardMapPos, &Object, -1, 0, 0, 0 );
+					AddItemToPool( sStandardMapPos, &gTempObject, -1, 0, 0, 0 );
 				}
 				else
 				{
-					pObject[ uiCount ] = Object;
+					pObject[ uiCount ] = gTempObject;
 					uiCount++;
 				}
 
@@ -310,9 +309,9 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//add all the items from the array that was built above
-		usMapPos = PABLOS_STOLEN_DEST_GRIDNO;
+		sMapPos = PABLOS_STOLEN_DEST_GRIDNO;
 		//The item are to be added to the Top part of Drassen, grid loc's	10112, 9950
-		if( !AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
+		if( !AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, sStandardMapPos, uiCount, pObject, 0, 0, 0, -1, FALSE ) )
 		{
 			//Error adding the items
 			//return;
@@ -406,10 +405,8 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 	INT16			sStartGridNo;
 	UINT32		uiNumWorldItems, uiLoop;
 	BOOLEAN		fOk;
-	WORLDITEM * pTemp;
+	WORLDITEM * pTemp = 0;
 	UINT8			ubLoop;
-	OBJECTTYPE Object;
-	
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
 	{
 		if ( gMercProfiles[ PABLO ].bMercStatus == MERC_IS_DEAD )
@@ -430,34 +427,34 @@ void HandleDelayedItemsArrival( UINT32 uiReason )
 			{
 				case 0:
 					// 1 in 10 chance of a badly damaged gas mask
-					CreateItem( GASMASK, (INT8) (20 + Random( 10 )), &Object );
+					CreateItem( GASMASK, (INT8) (20 + Random( 10 )), &gTempObject );
 					break;
 				case 1:
 				case 2:
 					// 2 in 10 chance of a battered Desert Eagle
-					CreateItem( DESERTEAGLE, (INT8) (40 + Random( 10 )), &Object );
+					CreateItem( DESERTEAGLE, (INT8) (40 + Random( 10 )), &gTempObject );
 					break;
 				case 3:
 				case 4:
 				case 5:
 					// 3 in 10 chance of a stun grenade
-					CreateItem( STUN_GRENADE, (INT8) (70 + Random( 10 )), &Object );
+					CreateItem( STUN_GRENADE, (INT8) (70 + Random( 10 )), &gTempObject );
 					break;
 				case 6:
 				case 7:
 				case 8:
 				case 9:
 					// 4 in 10 chance of two 38s!
-					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &Object );
+					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &gTempObject );
 					break;
 			}
 			if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
 			{
-				AddItemToPool( BOBBYR_SHIPPING_DEST_GRIDNO, &Object, -1, 0, 0, 0 );
+				AddItemToPool( BOBBYR_SHIPPING_DEST_GRIDNO, &gTempObject, -1, 0, 0, 0 );
 			}
 			else
 			{
-				AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, 1, &Object, 0, 0, 0, -1, FALSE );
+				AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, 1, &gTempObject, 0, 0, 0, -1, FALSE );
 			}
 		}
 	}
@@ -563,9 +560,9 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
+		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == MONEY )
 		{
-			uiTotalCash += gWorldItems[uiLoop].o.money.uiMoneyAmount;
+			uiTotalCash += gWorldItems[uiLoop].object[0]->data.money.uiMoneyAmount;
 		}
 	}
 
@@ -616,7 +613,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 		{
 			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
+			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == MONEY )
 			{
 				// remove!
 				gWorldItems[ uiLoop ].fExists = FALSE;
@@ -1054,14 +1051,14 @@ void CheckForMissingHospitalSupplies( void )
 	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
+		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].object.usItem == OWNERSHIP && gWorldItems[ uiLoop ].object[0]->data.owner.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
 			GetItemPoolFromGround( gWorldItems[ uiLoop ].sGridNo, &pItemPool ) ;
 			while( pItemPool ) 
 			{
-				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
+				pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
 
-				if ( pObj->objectStatus > 60 )
+				if ( (*pObj)[0]->data.objectStatus > 60 )
 				{
 					if ( Item[pObj->usItem].firstaidkit || Item[pObj->usItem].medicalkit || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 					{
@@ -1108,7 +1105,6 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 {
 	PERFORMANCE_MARKER
 	BOOLEAN	fSectorLoaded = FALSE;
-	OBJECTTYPE		Object;
 	UINT32	uiCount = 0;
 	OBJECTTYPE	*pObject=NULL;
 	UINT16	usNumberOfItems=0, usItem;
@@ -1168,16 +1164,16 @@ void DropOffItemsInMeduna( UINT8 ubOrderNum )
 		{
 			// treat 0s as 1s :-)
 			ubTempNumItems = __min( ubItemsDelivered, __max( 1, Item[ usItem ].ubPerPocket ) );
-			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
+			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &gTempObject );
 
 			// stack as many as possible
 			if( fSectorLoaded )
 			{
-				AddItemToPool( MEDUNA_ITEM_DROP_OFF_GRIDNO, &Object, -1, 0, 0, 0 );
+				AddItemToPool( MEDUNA_ITEM_DROP_OFF_GRIDNO, &gTempObject, -1, 0, 0, 0 );
 			}
 			else
 			{
-				pObject[ uiCount ] = Object;
+				pObject[ uiCount ] = gTempObject;
 				uiCount++;
 			}
 

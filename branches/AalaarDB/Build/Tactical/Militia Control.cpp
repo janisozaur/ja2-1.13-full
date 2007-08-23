@@ -121,7 +121,6 @@ extern BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesired
 
 void ResetMilitia()
 {
-	BOOLEAN fBattleInProgress = FALSE;
 	UINT8 ubNumGreen = 0;
 	UINT8 ubNumReg = 0;
 	UINT8 ubNumVet = 0;
@@ -391,8 +390,6 @@ void MilitiaControlMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 void DetermineWhichMilitiaControlMenusCanBeShown( void )
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
-
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		if( fShowMapScreenMovementList == TRUE )
@@ -566,7 +563,6 @@ void CreateDestroyMouseRegionsForMilitiaControlMenu( void )
 	INT32 iFontHeight = 0;
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	SGPPoint pPosition;
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;
@@ -996,7 +992,6 @@ void PositionCursorForMilitiaControlBox( void )
 void HandleShadingOfLinesForMilitiaControlMenu( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT16 sDistVisible;
 
 	// check if valid
 	if( ( fShowMilitiaControlMenu == FALSE ) || ( ghMilitiaControlBox == - 1 ) )
@@ -1006,10 +1001,8 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 	{
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pTMilitiaSoldier->sGridNo, pTMilitiaSoldier->pathing.bLevel, pSoldier );
-
 		// Check LOS!
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->pathing.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->pathing.bLevel, 3, TRUE ) )
 		{
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ATTACK );
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_HOLD );
@@ -1059,7 +1052,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 BOOLEAN CheckIfRadioIsEquipped( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT8 bSlot;
+	INT8 bSlot = NO_SLOT;
 
 	// do we have a radio ?
 	//pSoldier = GetSelectedAssignSoldier( FALSE ); //do not use
@@ -1764,7 +1757,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 						//for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 						//{
-						//	if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+						//	if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 						//	{
 						//		pTeamSoldier->usActionData = FindBestNearbyCover(pTeamSoldier,pTeamSoldier->bAIMorale,&iDummy);
 						//								
@@ -1838,7 +1831,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 					//	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 					//	{
-					//		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+					//		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 					//		{
 
 					//			//CREATURE_IMMOBILE = 2
@@ -2244,7 +2237,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 //
 //				for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
 //				{
-//					if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+//					if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->stats.bLife > 0 )
 //					{
 //
 //						if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )

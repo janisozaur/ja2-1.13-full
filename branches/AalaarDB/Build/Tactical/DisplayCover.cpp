@@ -105,10 +105,10 @@ BOOLEAN IsTheRoofVisible( INT16 sGridNo );
 void DisplayCoverOfSelectedGridNo( )
 {
 	PERFORMANCE_MARKER
-	UINT16 usGridNo;
+	INT16 sGridNo;
 	INT8	bStance;
 
-	GetMouseMapPos( &usGridNo );
+	GetMouseMapPos( &sGridNo );
 
 	//Only allowed in if there is someone selected
 	if( gusSelectedSoldier == NOBODY )
@@ -117,12 +117,12 @@ void DisplayCoverOfSelectedGridNo( )
 	}
 
 	//if the cursor is in a the tactical map
-	if( usGridNo != NOWHERE && usGridNo != 0 )
+	if( sGridNo != NOWHERE && sGridNo != 0 )
 	{
 		bStance = GetCurrentMercForDisplayCoverStance();
 
 		//if the gridno is different then the last one that was displayed
-		if( usGridNo != gsLastCoverGridNo || 
+		if( sGridNo != gsLastCoverGridNo || 
 				gbLastStance != bStance || 
 				MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
 		{
@@ -152,11 +152,11 @@ void DisplayCoverOfSelectedGridNo( )
 			}
 
 			gbLastStance = bStance;
-			gsLastCoverGridNo = usGridNo;
+			gsLastCoverGridNo = sGridNo;
 			gsLastSoldierGridNo = MercPtrs[ gusSelectedSoldier ]->sGridNo;
 
 			//Fill the array of gridno and cover values
-			CalculateCoverInRadiusAroundGridno( usGridNo, gGameSettings.ubSizeOfDisplayCover );
+			CalculateCoverInRadiusAroundGridno( sGridNo, gGameSettings.ubSizeOfDisplayCover );
 
 			//Add the graphics to each gridno
 			AddCoverTileToEachGridNo();
@@ -432,7 +432,6 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 	INT32		iCover=0;
 	UINT16	usMaxRange;
 	UINT16	usRange;
-	UINT16	usSightLimit;
 
 	//loop through all the enemies and determine the cover 
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
@@ -463,18 +462,8 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			continue;			// next merc
 		}
 
-		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
-		// Lesh: changed 2-nd parameter in DistanceVisible function call
-		usSightLimit = DistanceVisible( pOpponent, (SoldierHasLimitedVision(pOpponent) ? pOpponent->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->pathing.bLevel, pSoldier );
-
-
-		if( usRange > ( usSightLimit * CELL_X_SIZE ) )
-		{
-			continue;
-		}
-
 		// if actual LOS check fails, then chance to hit is 0, ignore this guy
-		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->pathing.bLevel, bStance, (UINT8)usSightLimit, TRUE ) == 0 )
+		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->pathing.bLevel, bStance, TRUE ) == 0 )
 		{
 			continue;
 		}
@@ -491,6 +480,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 			usMaxRange = Weapon[ GLOCK_18 ].usRange;
 		}
 
+		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
 		iBulletGetThrough = __min( __max( (INT32)( ( ( ( ( usMaxRange - usRange ) / (FLOAT)( usMaxRange ) ) + .3 ) * 100 ) ), 0 ), 100 );
 
 		if( iBulletGetThrough > 5 && iGetThrough > 0 )
@@ -677,10 +667,10 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 void DisplayGridNoVisibleToSoldierGrid( )
 {
 	PERFORMANCE_MARKER
-	UINT16 usGridNo;
+	INT16 sGridNo;
 //	INT8	bStance;
 
-	GetMouseMapPos( &usGridNo );
+	GetMouseMapPos( &sGridNo );
 
 	//Only allowed in if there is someone selected
 	if( gusSelectedSoldier == NOBODY )
@@ -689,10 +679,10 @@ void DisplayGridNoVisibleToSoldierGrid( )
 	}
 
 	//if the cursor is in a the tactical map
-	if( usGridNo != NOWHERE && usGridNo != 0 )
+	if( sGridNo != NOWHERE && sGridNo != 0 )
 	{
 		//if the gridno is different then the last one that was displayed
-		if( usGridNo != gsLastVisibleToSoldierGridNo || MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
+		if( sGridNo != gsLastVisibleToSoldierGridNo || MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
 		{
 			//if the cover is currently being displayed
 			if( gsLastVisibleToSoldierGridNo != NOWHERE || gsLastSoldierGridNo != NOWHERE )
@@ -716,12 +706,12 @@ void DisplayGridNoVisibleToSoldierGrid( )
 				//gJa25SaveStruct.uiDisplayLosCounter++;
 			}
 
-			gsLastVisibleToSoldierGridNo = usGridNo;
+			gsLastVisibleToSoldierGridNo = sGridNo;
 			gsLastSoldierGridNo = MercPtrs[ gusSelectedSoldier ]->sGridNo;
 
 
 			//Fill the array of gridno and cover values
-			CalculateVisibleToSoldierAroundGridno( usGridNo, gGameSettings.ubSizeOfLOS );
+			CalculateVisibleToSoldierAroundGridno( sGridNo, gGameSettings.ubSizeOfLOS );
 
 			//Add the graphics to each gridno
 			AddVisibleToSoldierToEachGridNo();
@@ -978,14 +968,14 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 		}
 	}
 
-	// Lesh: changed 2-nd parameter in DistanceVisible function call
-	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, pSoldier );
+    // Lesh: changed 2-nd parameter in DistanceVisible function call
+	usSightLimit = DistanceVisible( pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->pathing.bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sTargetGridNo, fRoof );
 
 
 	//
 	// Prone
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_PRONE, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_PRONE, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;
@@ -994,7 +984,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	//
 	// Crouch
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_CROUCH, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_CROUCH, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;
@@ -1003,7 +993,7 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	//
 	// Standing
 	//
-	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_STAND, (UINT8)usSightLimit, bAware );
+	iLosForGridNo = SoldierToVirtualSoldierLineOfSightTest( pSoldier, sTargetGridNo, fRoof, ANIM_STAND, bAware, usSightLimit );
 	if( iLosForGridNo != 0 )
 	{
 		bRetVal++;

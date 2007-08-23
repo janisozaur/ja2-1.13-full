@@ -404,8 +404,7 @@ class Inventory {
 public:
 	// Constructors
 	// Create an inventory with a fixed maximum number of slots
-	Inventory();					// Uses NUM_INV_SLOTS for slotCount
-	Inventory(int slotCount);
+	Inventory(int slotCount = NUM_INV_SLOTS);
 
 	// Copy Constructor
 	Inventory(const Inventory&);
@@ -721,6 +720,8 @@ public:
 	UINT8												ubID;
 	UINT8												bReserved1;
 	CHAR16											name[ 10 ];
+
+	INT16	GetMaxDistanceVisible(INT16 sGridNo = -1, INT8 bLevel = -1);
 
 	// DESCRIPTION / STATS, ETC
 	UINT8												ubBodyType;

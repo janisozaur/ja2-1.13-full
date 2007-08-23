@@ -549,7 +549,14 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 	else {
 		//the format has changed and needs to be updated
 		OLD_ARMS_DEALER_STATUS_101 gOldArmsDealerStatus[NUM_ARMS_DEALERS];
-		OLD_DEALER_ITEM_HEADER_101 gOldArmsDealersInventory[NUM_ARMS_DEALERS][MAXITEMS];
+		//OLD_DEALER_ITEM_HEADER_101 gOldArmsDealersInventory[NUM_ARMS_DEALERS][MAXITEMS];
+
+		//pointer to an array of OLD_DEALER_ITEM_HEADER_101 that is sized [NUM_ARMS_DEALERS][MAXITEMS]
+		typedef OLD_DEALER_ITEM_HEADER_101(*pointerToArmsDealersInventoryArray)[NUM_ARMS_DEALERS][MAXITEMS];
+
+		pointerToArmsDealersInventoryArray pOldArmsDealersInventory
+			= (pointerToArmsDealersInventoryArray) new OLD_DEALER_ITEM_HEADER_101[NUM_ARMS_DEALERS][MAXITEMS];
+
 
 		// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
 		// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
@@ -572,7 +579,7 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 		{
 			return( FALSE );
 		}
-		if (!FileRead( hFile, gOldArmsDealersInventory, uiDealersSaved * sizeof( OLD_DEALER_ITEM_HEADER_101 ) * MAXITEMS, &uiNumBytesRead ))
+		if (!FileRead( hFile, (*pOldArmsDealersInventory), uiDealersSaved * sizeof( OLD_DEALER_ITEM_HEADER_101 ) * MAXITEMS, &uiNumBytesRead ))
 		{
 			return( FALSE );
 		}
@@ -596,17 +603,18 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 				if ( Item[usItemIndex].usItemClass	== 0 )
 					break;
 				//if there are any elements allocated for this item, load them
-				for ( int x = 0; x < gOldArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
+				for ( int x = 0; x < (*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex].ubElementsAlloced; ++x) {
 					if (!FileRead( hFile, &oldSpecial, sizeof( OLD_DEALER_SPECIAL_ITEM_101 ), &uiNumBytesRead ))
 					{
 						return( FALSE );
 					}
 					gArmsDealersInventory[ubArmsDealer].resize(gArmsDealersInventory[ubArmsDealer].size() + 1);
 					DEALER_SPECIAL_ITEM* pSpecial = &(gArmsDealersInventory[ubArmsDealer].back());
-					pSpecial->ConvertFrom101(gOldArmsDealersInventory[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
+					pSpecial->ConvertFrom101((*pOldArmsDealersInventory)[ubArmsDealer][usItemIndex], oldSpecial, usItemIndex);
 				}
 			}
 		}
+		delete [] pOldArmsDealersInventory;
 	}
 
 	return( TRUE );
@@ -617,7 +625,16 @@ BOOLEAN DEALER_SPECIAL_ITEM::Save(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
-	TODO
+	if ( !FileWrite( hFile, this, SIZEOF_DEALER_SPECIAL_ITEM_POD, &uiNumBytesWritten ) )
+	{
+		return FALSE;
+	}
+	if (this->IsBeingOrdered() == false) {
+		if ( !this->object.Save(hFile, FALSE) )
+		{
+			return FALSE;
+		}
+	}
 	return TRUE;
 }
 
@@ -628,7 +645,19 @@ BOOLEAN DEALER_SPECIAL_ITEM::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		TODO
+		if ( !FileRead( hFile, this, SIZEOF_DEALER_SPECIAL_ITEM_POD, &uiNumBytesRead ) )
+		{
+			return FALSE;
+		}
+		if (this->IsBeingOrdered() == false) {
+			if ( !this->object.Load(hFile) )
+			{
+				return FALSE;
+			}
+		}
+		else {
+			this->object.initialize();
+		}
 	}
 	else
 	{
@@ -733,7 +762,7 @@ BOOLEAN INVENTORY_IN_SLOT::Load(HWFILE hFile)
 BOOLEAN MERC_LEAVE_ITEM::Save(HWFILE hFile)
 {
 	PERFORMANCE_MARKER
-	if ( !this->o.Save(hFile, FALSE) )
+	if ( !this->object.Save(hFile, FALSE) )
 	{
 		return FALSE;
 	}
@@ -747,7 +776,7 @@ BOOLEAN MERC_LEAVE_ITEM::Load(HWFILE hFile)
 	//if we are at the most current version, then fine
 	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
 	{
-		if ( !this->o.Load(hFile) )
+		if ( !this->object.Load(hFile) )
 		{
 			return FALSE;
 		}
@@ -761,7 +790,7 @@ BOOLEAN MERC_LEAVE_ITEM::Load(HWFILE hFile)
 			{
 				return FALSE;
 			}
-			this->o = oldItem.oldObject;
+			this->object = oldItem.oldObject;
 		}
 	}
 	return TRUE;
@@ -1166,7 +1195,7 @@ BOOLEAN WORLDITEM::Save(HWFILE hFile, bool fSavingMap)
 	}
 
 	//save the OO OBJECTTYPE
-	if ( !this->o.Save(hFile, fSavingMap) )
+	if ( !this->object.Save(hFile, fSavingMap) )
 	{
 		return FALSE;
 	}
@@ -1183,7 +1212,7 @@ BOOLEAN WORLDITEM::Load(INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMap
 		LOADDATA( this, *hBuffer, SIZEOF_WORLDITEM_POD );
 
 		//now load the OO OBJECTTYPE
-		this->o.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		this->object.Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
 	}
 	//if we need to load an older save
 	else {
@@ -1209,7 +1238,7 @@ BOOLEAN WORLDITEM::Load(HWFILE hFile)
 		}
 
 		//now load the OO OBJECTTYPE
-		if ( !this->o.Load(hFile) )
+		if ( !this->object.Load(hFile) )
 		{
 			return FALSE;
 		}
@@ -1236,17 +1265,99 @@ BOOLEAN WORLDITEM::Load(HWFILE hFile)
 	return TRUE;
 }
 
+BOOLEAN StackedObjectData::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
+{
+	//when this function is called, the file has been loaded into a buffer using FileRead
+	PERFORMANCE_MARKER
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		int size;
+		LOADDATA(&(this->data), *hBuffer, sizeof(ObjectData) );
+		LOADDATA(&size, *hBuffer, sizeof(int) );
+		attachments.resize(size);
+		for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+			if (! iter->Load( hBuffer, dMajorMapVersion, ubMinorMapVersion ) ) {
+				return FALSE;
+			}
+		}
+	}
+	else {
+		//we shouldn't be loading this
+		Assert(false);
+	}
+	return TRUE;
+}
+
+BOOLEAN StackedObjectData::Load( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !NewJA2EncryptedFileRead( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		int size;
+		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		attachments.resize(size);
+		for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+			if (! iter->Load(hFile) ) {
+				return FALSE;
+			}
+		}
+	}
+	else {
+		//we shouldn't be loading this
+		Assert(false);
+	}
+	return TRUE;
+}
+BOOLEAN StackedObjectData::Save( HWFILE hFile, bool fSavingMap )
+{
+	//if we are saving this to a map file it will be loaded with FileRead
+	PERFORMANCE_MARKER
+	UINT32 uiNumBytesWritten;
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+	functionPtr pSavingFunction;
+	if ( fSavingMap == false ) {
+		pSavingFunction = &NewJA2EncryptedFileWrite;
+	}
+	else {
+		pSavingFunction = &FileWrite;
+	}
+
+	int size = attachments.size();
+	if ( !(*pSavingFunction)( hFile, &(this->data), sizeof(ObjectData), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for (attachmentList::iterator iter = attachments.begin(); iter != attachments.end(); ++iter) {
+		if (! iter->Save(hFile, fSavingMap)) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 	functionPtr pLoadingFunction;
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
+	if ( guiCurrentSaveGameVersion < 87 ) {
 		pLoadingFunction = &JA2EncryptedFileRead;
 	}
-	else
-	{
+	else {
 		pLoadingFunction = &NewJA2EncryptedFileRead;
 	}
 
@@ -1258,9 +1369,17 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 		{
 			return(FALSE);
 		}
-		if ( !(*pLoadingFunction)( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesRead ) )
+		int size;
+		if ( !(*pLoadingFunction)( hFile, &size, sizeof(int), &uiNumBytesRead ) )
 		{
 			return(FALSE);
+		}
+
+		objectStack.resize(size);
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+			if (! iter->Load(hFile)) {
+				return FALSE;
+			}
 		}
 	}
 	else
@@ -1299,12 +1418,18 @@ BOOLEAN OBJECTTYPE::Load( HWFILE hFile )
 
 BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion )
 {
+	//when this function is called, the file has been loaded into a buffer using FileRead
 	PERFORMANCE_MARKER
 	//if we are at the most current MAP version, 6.27, then fine
 	if (dMajorMapVersion >= 6.0 && ubMinorMapVersion > 26 )
 	{
+		int size;
 		LOADDATA(this, *hBuffer, SIZEOF_OBJECTTYPE_POD );
-		LOADDATA(&(this->gun), *hBuffer, SIZEOF_OBJECTTYPE_UNION );
+		LOADDATA(&size, *hBuffer, sizeof(int) );
+		objectStack.resize(size);
+		for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+			iter->Load(hBuffer, dMajorMapVersion, ubMinorMapVersion);
+		}
 	}
 	else
 	{
@@ -1317,26 +1442,30 @@ BOOLEAN OBJECTTYPE::Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorM
 
 BOOLEAN OBJECTTYPE::Save( HWFILE hFile, bool fSavingMap )
 {
+	//if we are saving this to a map file it will be loaded with FileRead
 	PERFORMANCE_MARKER
 	UINT32 uiNumBytesWritten;
-	if (fSavingMap == false) {
-		if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-		if ( !NewJA2EncryptedFileWrite( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
+	int size = objectStack.size();
+	typedef BOOLEAN (*functionPtr) ( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
+	functionPtr pSavingFunction;
+	if ( fSavingMap == false ) {
+		pSavingFunction = &NewJA2EncryptedFileWrite;
 	}
 	else {
-		if ( !FileWrite( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
-		}
-		if ( !FileWrite( hFile, &(this->gun), SIZEOF_OBJECTTYPE_UNION, &uiNumBytesWritten ) )
-		{
-			return(FALSE);
+		pSavingFunction = &FileWrite;
+	}
+
+	if ( !(*pSavingFunction)( hFile, this, SIZEOF_OBJECTTYPE_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !(*pSavingFunction)( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for (StackedObjects::iterator iter = objectStack.begin(); iter != objectStack.end(); ++iter) {
+		if (! iter->Save(hFile, fSavingMap)) {
+			return FALSE;
 		}
 	}
 	return TRUE;
@@ -1541,7 +1670,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 	//UINT8		saveDir[100];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
@@ -2493,8 +2621,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	INT16 sLoadSectorY;
 	INT8 bLoadSectorZ;
 	CHAR8		zSaveGameName[ MAX_PATH ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
-
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
 
@@ -4025,8 +4151,6 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
-
 	//Loop through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4045,8 +4169,6 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 {
 	PERFORMANCE_MARKER
 	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
-
 	//Loop through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
@@ -4168,7 +4290,6 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 	PERFORMANCE_MARKER
 	UINT16	cnt;
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize = SIZEOF_SOLDIERTYPE_POD; //SIZEOF_SOLDIERTYPE;
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
@@ -4633,7 +4754,6 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	UINT32	uiNumOfEmails=0;
 	UINT32		uiSizeOfEmails=0;
 	EmailPtr	pEmail = pEmailList;
-	EmailPtr pTempEmail = NULL;
 	UINT32	cnt;
 	UINT32	uiStringLength=0;
 	UINT32	uiNumBytesWritten=0;
@@ -6167,7 +6287,6 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 		INT16					sSoldierCnt;
 		SOLDIERTYPE		*pSoldier;
 		INT16					bLastTeamID;
-		INT8					bCount=0;
 		BOOLEAN				fFoundAMerc=FALSE;
 
 		// Set locator to first merc

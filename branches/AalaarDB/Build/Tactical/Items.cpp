@@ -1216,7 +1216,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 BOOLEAN ExtendedGunListGun( UINT16 usGun )
 {
 	PERFORMANCE_MARKER
-//	return( (Item[ usGun ].fFlags & ITEM_BIGGUNLIST) != 0 );
+//	return( (Item[ usGun ][0]->data.fFlags & ITEM_BIGGUNLIST) != 0 );
 	return( (Item[ usGun ].biggunlist ) != 0 );
 } 
 
@@ -1279,25 +1279,25 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 	{
 		if (Item[pSoldier->inv[HANDPOS].usItem].fingerprintid )
 		{
-			if (pSoldier->inv[HANDPOS].ubImprintID != NO_PROFILE)
+			if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != NO_PROFILE)
 			{
 				if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != MADLAB )
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != pSoldier->ubProfile)
+					if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != pSoldier->ubProfile)
 					{
 						return( FALSE );
 					}
 				}
 				else
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != (NO_PROFILE + 1) )
+					if (pSoldier->inv[HANDPOS][0]->data.ubImprintID != (NO_PROFILE + 1) )
 					{
 						return( FALSE );
 					}
 				}
 			}
 		}
-		if (pSoldier->inv[HANDPOS].gun.bGunStatus >= USABLE)
+		if (pSoldier->inv[HANDPOS][0]->data.gun.bGunStatus >= USABLE)
 		{
 			return( TRUE );
 		}
@@ -1458,7 +1458,7 @@ INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
 
 	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
-		if ( pSoldier->inv[bLoop].usItem == usItem && pSoldier->inv[bLoop].objectStatus >= USABLE )
+		if ( pSoldier->inv[bLoop].usItem == usItem && pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE )
 		{
 			return( bLoop );
 		}
@@ -1589,7 +1589,7 @@ INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 
 	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop].objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1611,7 +1611,7 @@ INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, IN
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
-		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop].fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop].objectStatus >= USABLE ) )
+		if ( (Item[pSoldier->inv[bLoop].usItem].usItemClass & usItemClass) && !(pSoldier->inv[bLoop][0]->data.fFlags & OBJECT_AI_UNUSABLE) && (pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE ) )
 		{
 			if ( usItemClass == IC_GUN && EXPLOSIVE_GUN( pSoldier->inv[bLoop].usItem ) )
 			{
@@ -1632,7 +1632,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 	{
 		if (pSoldier->inv[bLoop].usItem == 0)
 		{
-//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+//			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				continue;
@@ -1722,7 +1722,7 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (iter->usItem == usItem)
 		{
 			return &(*iter);
@@ -1734,7 +1734,7 @@ OBJECTTYPE* FindAttachment( OBJECTTYPE * pObj, UINT16 usItem )
 OBJECTTYPE* FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass )
 {
 	PERFORMANCE_MARKER
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].usItemClass == uiItemClass)
 		{
 			return &(*iter);
@@ -1782,7 +1782,7 @@ INT8 FindNonSmokeLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 OBJECTTYPE* FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon )
 {
 	PERFORMANCE_MARKER
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (ValidLaunchable( iter->usItem, usWeapon))
 		{
 			return &(*iter);
@@ -1796,7 +1796,7 @@ OBJECTTYPE* FindNonSmokeLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon
 {
 	PERFORMANCE_MARKER
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (ValidLaunchable( iter->usItem, usWeapon) && Explosive[Item[iter->usItem].ubClassIndex].ubType != EXPLOSV_SMOKE)
 		{
 			return &(*iter);
@@ -1811,7 +1811,7 @@ OBJECTTYPE* FindNonSmokeLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon
 BOOLEAN ItemHasAttachments( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	return (pObj->attachments.empty() == false);
+	return ((*pObj)[0]->attachments.empty() == false);
 }
 
 // Determine if it is possible to add this attachment to the CLASS of this item
@@ -2157,7 +2157,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 BOOLEAN TwoHandedItem( UINT16 usItem )
 {
 	PERFORMANCE_MARKER
-//	if (Item[usItem].fFlags & ITEM_TWO_HANDED)
+//	if (Item[usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 	if (Item[usItem].twohanded )
 	{
 		return( TRUE );
@@ -2224,8 +2224,6 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
 	PERFORMANCE_MARKER
 	INT32 iLoop = 0;
-	UINT16 usItem = NOTHING;
-
 	// look for the section of the array pertaining to this launchable item...
 	while( 1 )
 	{
@@ -2302,6 +2300,39 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &usIgnoreResult2, &ubIgnoreType, &ubIgnoreAPCost ) );
 }
 
+UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
+{
+	if( 0 == usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
+		return 0;
+	}
+
+	//Temporary calculation for minWeight. 0.2*ubWeight rounded correctly 
+	UINT32 uiMinWeight = (UINT32)((Item[usGunAmmoItem].ubWeight / 5.0) + 0.5);
+	if( uiMinWeight < 1 || uiMinWeight > Item[usGunAmmoItem].ubWeight)
+	{
+		uiMinWeight = 1;
+	}
+
+	double weight = 0.0;
+
+	if(ubShotsLeft > 0)
+	{
+		if( uiMinWeight == Item[usGunAmmoItem].ubWeight )
+		{
+			weight += (double)uiMinWeight;
+		}
+		else
+		{
+			weight += (double)uiMinWeight + (( (double)ubShotsLeft / (double)Magazine[ Item[usGunAmmoItem].ubClassIndex ].ubMagSize) * ( (double)Item[usGunAmmoItem].ubWeight - (double)uiMinWeight ));
+		}
+	}
+	weight += 0.5; //Pulmu:To round correctly
+	return (UINT16)weight;
+	//Pulmu end
+}
+
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
@@ -2313,78 +2344,41 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 
 	// Start with base weight
 	usWeight = pItem->ubWeight;
+	//multiply by the number of objects, can be 0
+	usWeight *= pObject->ubNumberOfObjects;
 
-	if ( pItem->ubPerPocket < 2 && pItem->usItemClass != IC_AMMO )
+	if ( pItem->usItemClass != IC_AMMO )
 	{
-
-		// account for any attachments
-		for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
-			usWeight += CalculateObjectWeight(&(*iter));
-		}
-
-		// add in weight of ammo
-		if (Item[ pObject->usItem ].usItemClass == IC_GUN && pObject->gun.ubGunShotsLeft > 0)
+		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
-			if( 0==pObject->gun.usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
-			}
-			else if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
-			{
-				//Pulmu:
-				//Temporary calculation for minWeight
-				UINT32 uiMinWeight = (UINT32)((Item[ pObject->gun.usGunAmmoItem].ubWeight / 5.0) + 0.5);
-				if( uiMinWeight < 1 || uiMinWeight > Item[ pObject->gun.usGunAmmoItem].ubWeight)
-				{
-					uiMinWeight = 1;
-				}
 
-				if( uiMinWeight == Item[ pObject->gun.usGunAmmoItem].ubWeight )
+			// account for any attachments
+			for (attachmentList::iterator iter = (*pObject)[cnt]->attachments.begin(); iter != (*pObject)[cnt]->attachments.end(); ++iter) {
+				usWeight += CalculateObjectWeight(&(*iter));
+			}
+
+			// add in weight of ammo
+			if (Item[ pObject->usItem ].usItemClass == IC_GUN && (*pObject)[cnt]->data.gun.ubGunShotsLeft > 0)
+			{
+				if( gGameExternalOptions.fAmmoDynamicWeight == TRUE )
 				{
-					usWeight += uiMinWeight;
+					usWeight += CalculateAmmoWeight((*pObject)[cnt]->data.gun.usGunAmmoItem, (*pObject)[cnt]->data.gun.ubGunShotsLeft);
 				}
 				else
 				{
-					// WANNE: Added Pulmu's weight fix
-					double weight = (double)uiMinWeight + (( (double)pObject->gun.ubGunShotsLeft / Magazine[Item[pObject->gun.usGunAmmoItem].ubClassIndex].ubMagSize ) * ( (double)Item[ pObject->gun.usGunAmmoItem].ubWeight - (double)uiMinWeight )) + 0.5; //Pulmu: Account for number of rounds left.
-					usWeight += (UINT16)weight;
+					usWeight += Item[ (*pObject)[cnt]->data.gun.usGunAmmoItem ].ubWeight;
 				}
-			}
-			else
-			{
-				usWeight += Item[ pObject->gun.usGunAmmoItem ].ubWeight;
 			}
 		}
 	}
 	else if ( pItem->usItemClass == IC_AMMO && gGameExternalOptions.fAmmoDynamicWeight == TRUE )//Pulmu: added weight allowance for ammo not being full
 	{
-		usWeight = 0;
-		//Temporary calculation for minWeight. 0.2*ubWeight rounded correctly 
-		UINT32 uiMinWeight = (UINT32)((Item[pObject->usItem].ubWeight / 5.0) + 0.5);
-		if( uiMinWeight < 1 || uiMinWeight > Item[pObject->usItem].ubWeight)
-		{
-			uiMinWeight = 1;
-		}
-
-		double weight = 0.0;
-		
+		int ammoLeft = 0;
 		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
-			if(pObject->shots.ubShotsLeft[cnt] > 0)
-			{
-				if( uiMinWeight == Item[pObject->usItem].ubWeight )
-				{
-					weight += (double)uiMinWeight;
-				}
-				else
-				{
-					weight += (double)uiMinWeight + (( (double)pObject->shots.ubShotsLeft[cnt] / (double)Magazine[ Item[ pObject->usItem].ubClassIndex ].ubMagSize) * ( (double)Item[pObject->usItem].ubWeight - (double)uiMinWeight ));
-				}
-			}
+			ammoLeft += (*pObject)[cnt]->data.ubShotsLeft;
 		}
-		weight += 0.5; //Pulmu:To round correctly
-		usWeight = (UINT16)weight;
-		//Pulmu end
+		usWeight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
 	}
 
 /*
@@ -2471,8 +2465,6 @@ void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 {
 	PERFORMANCE_MARKER
 	// remove 1 object from an OBJECTTYPE, starting at index bRemoveIndex
-	UINT8 ubLoop;
-
 	if (pObj->ubNumberOfObjects < ubRemoveIndex)
 	{
 		// invalid index!
@@ -2485,15 +2477,14 @@ void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 	} 
 	else
 	{
-		// shift down all the values that should be down
-		for (ubLoop = ubRemoveIndex + 1; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
-		{
-			pObj->status.bStatus[ubLoop - 1] = pObj->status.bStatus[ubLoop];
+		StackedObjects::iterator iter = pObj->objectStack.begin();
+		for (int x = 0; x < ubRemoveIndex; ++x) {
+			++iter;
 		}
-		// and set the upper value to 0
-		pObj->status.bStatus[pObj->ubNumberOfObjects - 1] = 0;
+		pObj->objectStack.erase(iter);
 		// make the number of objects recorded match the array
 		pObj->ubNumberOfObjects--;
+		pObj->ubWeight = CalculateObjectWeight( pObj );
 	}
 }
 
@@ -2518,7 +2509,6 @@ void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove )
 		{
 			RemoveObjFrom( pObj, 0 );
 		}
-		pObj->ubWeight = CalculateObjectWeight( pObj );
 	}
 }
 
@@ -2537,7 +2527,7 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	else
 	{
 		pDest->usItem = pObj->usItem;
-		pDest->objectStatus = pObj->status.bStatus[ubGetIndex];
+		(*pDest)[0]->data.objectStatus = (*pObj)[ubGetIndex]->data.objectStatus;
 		pDest->ubNumberOfObjects = 1;
 		pDest->ubWeight = CalculateObjectWeight( pDest );
 		RemoveObjFrom( pObj, ubGetIndex );
@@ -2548,59 +2538,42 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 )
 {
 	PERFORMANCE_MARKER
-	INT8 bTemp;
-
-	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex1)
+	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex2)
 	{
 		return;
 	}
-	
-	bTemp = pObj->status.bStatus[ubIndex1];
-	pObj->status.bStatus[ubIndex1] = pObj->status.bStatus[ubIndex2];
-	pObj->status.bStatus[ubIndex2] = bTemp;
+
+	if (ubIndex1 == ubIndex2) {
+		return;
+	}
+
+	StackedObjects::iterator left = pObj->objectStack.begin(), right = pObj->objectStack.begin();
+	for (int x = 0; x < ubIndex1; ++x) {
+		++left;
+	}
+	for (int x = 0; x < ubIndex2; ++x) {
+		++right;
+	}
+	std::swap(left, right);
 }
 
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 {
 	PERFORMANCE_MARKER
-	if (bAmount >= pObj->objectStatus)
+	if (bAmount >= (*pObj)[0]->data.objectStatus)
 	{
-		pObj->objectStatus = 1;
+		(*pObj)[0]->data.objectStatus = 1;
 	}
 	else
 	{
-		pObj->objectStatus -= bAmount;
+		(*pObj)[0]->data.objectStatus -= bAmount;
 	}
-}
-
-void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy )
-{
-	PERFORMANCE_MARKER
-	UINT8		ubLoop;
-
-	// copy over N status values
-	for (ubLoop = 0; ubLoop < ubNumberToCopy; ubLoop++)
-	{
-		pTargetObj->status.bStatus[ubLoop + pTargetObj->ubNumberOfObjects] = pSourceObj->status.bStatus[ubLoop ];
-	}
-
-	// now in the source object, move the rest down N places
-	for (ubLoop = ubNumberToCopy; ubLoop < pSourceObj->ubNumberOfObjects; ubLoop++)
-	{
-		pSourceObj->status.bStatus[ubLoop - ubNumberToCopy] = pSourceObj->status.bStatus[ubLoop];
-	}
-
-	pTargetObj->ubNumberOfObjects += ubNumberToCopy;
-	RemoveObjs( pSourceObj, ubNumberToCopy );
-	pSourceObj->ubWeight = CalculateObjectWeight( pSourceObj );
-	pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
 }
 
 void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 {
 	PERFORMANCE_MARKER
-	INT8	bLoop, bLoop2;
-	INT8	bMaxPoints, bPointsToMove;
+	INT8	bMaxPoints;
 
 	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT  || Item[pObj->usItem].canteen ) )
 	{
@@ -2618,67 +2591,63 @@ void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
 
 	if ( pCursorObj && pCursorObj->usItem == pObj->usItem )
 	{
-		for ( bLoop = (INT8) pCursorObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
-		{
-			if ( pCursorObj->status.bStatus[ bLoop ] > 0 )
-			{
-				// take the points here and distribute over the lower #d items
-				for ( bLoop2 = pObj->ubNumberOfObjects - 1; bLoop2 >= 0; bLoop2-- )
-				{
-					if ( pObj->status.bStatus[ bLoop2 ] < bMaxPoints )
-					{
-						bPointsToMove = bMaxPoints - pObj->status.bStatus[ bLoop2 ];
-						bPointsToMove = __min( bPointsToMove, pCursorObj->status.bStatus[ bLoop ] );
-
-						pObj->status.bStatus[ bLoop2 ] += bPointsToMove;
-
-						pCursorObj->status.bStatus[ bLoop ] -= bPointsToMove;
-						if ( pCursorObj->status.bStatus[ bLoop ] == 0 )
-						{
-							// done!
-							pCursorObj->ubNumberOfObjects--;
-							break;
-						}
-					}
-				}
-			}
-		}
+		DistributeStatus(pCursorObj, pObj, bMaxPoints);
 	}
+	DistributeStatus(pObj, pObj, bMaxPoints);
+}
 
-	for ( bLoop = (INT8) pObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
+void DistributeStatus(OBJECTTYPE* pSourceObject, OBJECTTYPE* pTargetObject, INT8 bMaxPoints)
+{
+	INT8 bPointsToMove;
+	for ( int bLoop = pSourceObject->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
 	{
-		if ( pObj->status.bStatus[ bLoop ] > 0 )
+		StackedObjectData* pSource = (*pSourceObject)[ bLoop ];
+		if ( pSource->data.objectStatus > 0 )
 		{
 			// take the points here and distribute over the lower #d items
-			for ( bLoop2 = bLoop - 1; bLoop2 >= 0; bLoop2-- )
+			int bLoop2;
+			if (pSourceObject == pTargetObject) {
+				//we are averaging out the same object
+				bLoop2 = bLoop - 1;
+			}
+			else {
+				//we are moving from the cursor object to this one
+				bLoop2 = pTargetObject->ubNumberOfObjects - 1;
+			}
+
+			for (; bLoop2 >= 0; bLoop2-- )
 			{
-				if ( pObj->status.bStatus[ bLoop2 ] < bMaxPoints )
+				StackedObjectData* pDest = (*pTargetObject)[ bLoop ];
+				if ( pDest->data.objectStatus < bMaxPoints )
 				{
-					bPointsToMove = bMaxPoints - pObj->status.bStatus[ bLoop2 ];
-					bPointsToMove = __min( bPointsToMove, pObj->status.bStatus[ bLoop ] );
+					bPointsToMove = bMaxPoints - pDest->data.objectStatus;
+					bPointsToMove = __min( bPointsToMove, pSource->data.objectStatus );
 
-					pObj->status.bStatus[ bLoop2 ] += bPointsToMove;
+					pDest->data.objectStatus += bPointsToMove;
+					pSource->data.objectStatus -= bPointsToMove;
 
-					pObj->status.bStatus[ bLoop ] -= bPointsToMove;
-					if ( pObj->status.bStatus[ bLoop ] == 0 )
+					if ( pSource->data.objectStatus == 0 )
 					{
+						StackedObjects::iterator iter = pSourceObject->objectStack.begin();
+						for (int x = 0; x < bLoop; ++x) {
+							++iter;
+						}
+						pSourceObject->objectStack.erase(iter);
+						pSourceObject->ubNumberOfObjects--;
+						pSourceObject->ubWeight = CalculateObjectWeight(pSourceObject);
 						// done!
-						pObj->ubNumberOfObjects--;
 						break;
 					}
 				}
 			}
 		}
 	}
-
 }
 
 
 BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex )
 {
 	PERFORMANCE_MARKER
-	INT8 bTemp;
-
 	if (pSourceObj->usItem != pTargetObj->usItem)
 	{
 		return( TRUE );
@@ -2686,15 +2655,19 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	if (ubIndex < pTargetObj->ubNumberOfObjects)
 	{
 		// swap
-		bTemp = pSourceObj->objectStatus;
-		pSourceObj->objectStatus = pTargetObj->status.bStatus[ubIndex];
-		pTargetObj->status.bStatus[ubIndex] = bTemp;
+		gTempObject.DuplicateObjectsInStack(*pSourceObj, 1);
+
+		*((*pSourceObj)[0]) = *((*pTargetObj)[ubIndex]);
+		pSourceObj->ubWeight = CalculateObjectWeight(pSourceObj);
+
+		*((*pTargetObj)[ubIndex]) = *(gTempObject[0]);
+		pTargetObj->ubWeight = CalculateObjectWeight(pTargetObj);
 		return( TRUE );
 	}
 	else
 	{
 		// add to end
-		StackObjs( pSourceObj, pTargetObj, 1 );
+		pTargetObj->AddObjectsToStack( *pSourceObj, 1 );
 		return( FALSE );
 	}
 }
@@ -2733,19 +2706,19 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if ( Item[ pGun->usItem ].usItemClass == IC_LAUNCHER || Item[pGun->usItem].cannon )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ReloadGun: Loading launcher - new ammo type = %d, weight = %d", pAmmo->usItem,pAmmo->ubWeight  ) );
-		pGun->gun.usGunAmmoItem = pAmmo->usItem;
+		(*pGun)[0]->data.gun.usGunAmmoItem = pAmmo->usItem;
 		if ( AttachObject( pSoldier, pGun, pAmmo ) == FALSE )
 		{
-			pGun->gun.usGunAmmoItem = NONE;
+			(*pGun)[0]->data.gun.usGunAmmoItem = NONE;
 			// abort
 			return( FALSE );
 		}
 	}
 	else
 	{
-		fEmptyGun = (pGun->gun.ubGunShotsLeft == 0);
+		fEmptyGun = ((*pGun)[0]->data.gun.ubGunShotsLeft == 0);
 		fReloadingWithStack = (pAmmo->ubNumberOfObjects > 1);
-		fSameAmmoType = ( pGun->gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
+		fSameAmmoType = ( (*pGun)[0]->data.gun.ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
 		fSameMagazineSize = ( Magazine[ Item[ pAmmo->usItem ].ubClassIndex ].ubMagSize == GetMagSize( pGun));
 
 		if (fEmptyGun)
@@ -2755,9 +2728,9 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		else
 		{
 			// record old ammo
-			OldAmmo.usItem = pGun->gun.usGunAmmoItem;
+			OldAmmo.usItem = (*pGun)[0]->data.gun.usGunAmmoItem;
 			OldAmmo.ubNumberOfObjects = 1;
-			OldAmmo.shots.ubShotsLeft[0] = pGun->gun.ubGunShotsLeft;
+			OldAmmo[0]->data.ubShotsLeft = (*pGun)[0]->data.gun.ubGunShotsLeft;
 	
 			if (fSameMagazineSize)
 			{
@@ -2804,11 +2777,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->shots.ubShotsLeft[0], GetMagSize(pGun) - pGun->gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = pAmmo->shots.ubShotsLeft[0];
+				ubBulletsToMove = (*pAmmo)[0]->data.ubShotsLeft;
 			}
 
 		}
@@ -2819,11 +2792,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->shots.ubShotsLeft[0], GetMagSize(pGun) - pGun->gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->shots.ubShotsLeft[0], GetMagSize(pGun) );
+				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) );
 			}
 		}
 		else // mag is smaller than weapon mag
@@ -2833,11 +2806,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = FindReplacementMagazine(Weapon[pGun->usItem].ubCalibre ,GetMagSize(pGun),Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType);
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->shots.ubShotsLeft[0], GetMagSize(pGun) - pGun->gun.ubGunShotsLeft );
+				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun) - (*pGun)[0]->data.gun.ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->shots.ubShotsLeft[0], GetMagSize(pGun));
+				ubBulletsToMove = __min( (*pAmmo)[0]->data.ubShotsLeft, GetMagSize(pGun));
 			}
 		}
 
@@ -2846,19 +2819,19 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		{
 
 			case RELOAD_PLACE:
-				pGun->gun.ubGunShotsLeft = ubBulletsToMove;
-				pGun->gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				pGun->gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
 				break;
 
 			case RELOAD_SWAP:
-				pGun->gun.ubGunShotsLeft = ubBulletsToMove;
-				pGun->gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				pGun->gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
 				if (fReloadingWithStack)
 				{
 					// add to end of stack
-					StackObjs( &OldAmmo, pAmmo, 1 );
+					pAmmo->AddObjectsToStack( OldAmmo, 1 );
 				}
 				else
 				{
@@ -2890,15 +2863,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					return( FALSE );
 				}
 				// place first ammo in gun
-				pGun->gun.ubGunShotsLeft = ubBulletsToMove;
-				pGun->gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
-				pGun->gun.usGunAmmoItem = usNewAmmoItem;
+				(*pGun)[0]->data.gun.ubGunShotsLeft = ubBulletsToMove;
+				(*pGun)[0]->data.gun.ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				(*pGun)[0]->data.gun.usGunAmmoItem = usNewAmmoItem;
 
 				break;
 
 			case RELOAD_TOPOFF:
 				// ADD that many bullets to gun
-				pGun->gun.ubGunShotsLeft += ubBulletsToMove;
+				(*pGun)[0]->data.gun.ubGunShotsLeft += ubBulletsToMove;
 				break;
 
 		}
@@ -2907,8 +2880,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		{
 			// remove # of bullets, delete 1 object if necessary
 
-			pAmmo->shots.ubShotsLeft[0] -= ubBulletsToMove;
-			if (pAmmo->shots.ubShotsLeft[0] == 0)
+			(*pAmmo)[0]->data.ubShotsLeft -= ubBulletsToMove;
+			if ((*pAmmo)[0]->data.ubShotsLeft == 0)
 			{
 				RemoveObjs( pAmmo, 1 );					
 			}
@@ -2938,13 +2911,13 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	DeductPoints( pSoldier, bAPs, 0 );
 	pGun->ubWeight = CalculateObjectWeight( pGun );
 
-	if ( pGun->gun.bGunAmmoStatus >= 0 )
+	if ( (*pGun)[0]->data.gun.bGunAmmoStatus >= 0 )
 	{
 		// make sure gun ammo status is 100, if gun isn't jammed
-		pGun->gun.bGunAmmoStatus = 100;
+		(*pGun)[0]->data.gun.bGunAmmoStatus = 100;
 	}
 
-	pGun->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
+	(*pGun)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
 
 	return( TRUE );
 }
@@ -2956,19 +2929,19 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 	CHECKF( pAmmo != NULL );
 
-	if ( pWeapon->gun.ubGunShotsLeft > 0 )
+	if ( (*pWeapon)[0]->data.gun.ubGunShotsLeft > 0 )
 	{
 		// start by erasing ammo item, just in case...
 		DeleteObj( pAmmo );
 
-		pAmmo->gun.ubGunAmmoType = pWeapon->gun.ubGunAmmoType ;
-		pAmmo->shots.ubShotsLeft[0]			= pWeapon->gun.ubGunShotsLeft;
-		pAmmo->usItem							= pWeapon->gun.usGunAmmoItem;
+		(*pAmmo)[0]->data.gun.ubGunAmmoType = (*pWeapon)[0]->data.gun.ubGunAmmoType ;
+		(*pAmmo)[0]->data.ubShotsLeft			= (*pWeapon)[0]->data.gun.ubGunShotsLeft;
+		pAmmo->usItem							= (*pWeapon)[0]->data.gun.usGunAmmoItem;
 		pAmmo->ubNumberOfObjects	= 1;
 
-		pWeapon->gun.ubGunShotsLeft		= 0;
-		pWeapon->gun.ubGunAmmoType	  = 0;
-		//pWeapon->gun.usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
+		(*pWeapon)[0]->data.gun.ubGunShotsLeft		= 0;
+		(*pWeapon)[0]->data.gun.ubGunAmmoType	  = 0;
+		//(*pWeapon)[0]->data.gun.usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
 
 		// Play some effects!
 		usReloadSound	= Weapon[ pWeapon->usItem ].sReloadSound;
@@ -3075,14 +3048,14 @@ INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot
 	pObj = &(pSoldier->inv[bWeaponIn]);
 
 //<SB> manual recharge
-	if (pObj->gun.ubGunShotsLeft && !(pObj->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0]->data.gun.ubGunShotsLeft && !((*pObj)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 		return bWeaponIn;
 //</SB>
 
 	if ( Item[pObj->usItem].usItemClass == IC_GUN && !Item[pObj->usItem].cannon )
 	{
 		// look for same ammo as before
-		bSlot = FindObjExcludingSlot( pSoldier, pObj->gun.usGunAmmoItem, bExcludeSlot );
+		bSlot = FindObjExcludingSlot( pSoldier, (*pObj)[0]->data.gun.usGunAmmoItem, bExcludeSlot );
 		if (bSlot != NO_SLOT)
 		{
 			// reload using this ammo!
@@ -3145,9 +3118,9 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	pObj = &(pSoldier->inv[HANDPOS]);
 
 //<SB> manual recharge
-	if (pObj->gun.ubGunShotsLeft && !(pObj->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+	if ((*pObj)[0]->data.gun.ubGunShotsLeft && !((*pObj)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 	{
-		pObj->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+		(*pObj)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 
 		DeductPoints(pSoldier, Weapon[Item[(pObj)->usItem].ubClassIndex].APsToReloadManually, 0);
 
@@ -3157,9 +3130,9 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
-			if (pObj2->gun.ubGunShotsLeft && !(pObj2->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+			if ((*pObj2)[0]->data.gun.ubGunShotsLeft && !((*pObj2)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 			{				
-				pObj2->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+				(*pObj2)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 				PlayJA2Sample( Weapon[ Item[pObj2->usItem].ubClassIndex ].ManualReloadSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
 			}
 		}
@@ -3172,9 +3145,9 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 		{
 			pObj2 = &(pSoldier->inv[SECONDHANDPOS]);
 
-			if (pObj2->gun.ubGunShotsLeft && !(pObj2->gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
+			if ((*pObj2)[0]->data.gun.ubGunShotsLeft && !((*pObj2)[0]->data.gun.ubGunState & GS_CARTRIDGE_IN_CHAMBER) )
 			{
-				pObj2->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
+				(*pObj2)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER;
 
 				DeductPoints(pSoldier, Weapon[Item[(pObj2)->usItem].ubClassIndex].APsToReloadManually, 0);
 
@@ -3228,7 +3201,7 @@ INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	INT8		bIndex = 0;
-	INT8		bAttachLoop, bAttachPos = -1;
+	INT8		bAttachLoop;
 
 	/* check the whole Array of possible Attachements, while there are still entries ... */
 	while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
@@ -3302,41 +3275,37 @@ void PerformAttachmentComboMerge( OBJECTTYPE * pObj, INT8 bAttachmentComboMerge 
 		OBJECTTYPE* pAttachment = FindAttachment( pObj, AttachmentComboMerge[ bAttachmentComboMerge ].usAttachment[ bAttachLoop ] );
 		AssertMsg( pAttachment != 0, String( "Attachment combo merge couldn't find a necessary attachment" ) );
 		
-		uiStatusTotal += pAttachment->objectStatus;
+		uiStatusTotal += (*pAttachment)[0]->data.objectStatus;
 		bNumStatusContributors++;
 
 		RemoveAttachment(pObj, pAttachment);
 	}
 
-	uiStatusTotal += pObj->objectStatus;
+	uiStatusTotal += (*pObj)[0]->data.objectStatus;
 	bNumStatusContributors++;
 
 	pObj->usItem = AttachmentComboMerge[ bAttachmentComboMerge ].usResult;
-	pObj->objectStatus = (INT8) (uiStatusTotal / bNumStatusContributors );
+	(*pObj)[0]->data.objectStatus = (INT8) (uiStatusTotal / bNumStatusContributors );
 }
 
 BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment, BOOLEAN playSound )
 {
 	PERFORMANCE_MARKER
+	if ( pTargetObj->ubNumberOfObjects > 1 )
+	{
+		return( FALSE );
+	}
 	UINT16		usResult, usResult2;
 	INT8		bLoop;
 	UINT8		ubType, ubLimit, ubAPCost;
 	INT32		iCheckResult;
 	INT8		bAttachInfoIndex = -1, bAttachComboMerge;
 	BOOLEAN		fValidLaunchable = FALSE;
-	BOOLEAN		IsAGLorRL = FALSE;
-
-
-	if ( pTargetObj->ubNumberOfObjects > 1 )
-	{
-		return( FALSE );
-	}
 
 	fValidLaunchable = ValidLaunchable( pAttachment->usItem, pTargetObj->usItem );
 
 	if ( fValidLaunchable || ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) )
 	{
-		OBJECTTYPE	TempObj;
 		OBJECTTYPE* pAttachmentPosition = 0;
 
 		// find an attachment position... 
@@ -3381,7 +3350,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				//}
 				if ( fValidLaunchable )
 				{
-					pTargetObj->gun.usGunAmmoItem = pAttachment->usItem;
+					(*pTargetObj)[0]->data.gun.usGunAmmoItem = pAttachment->usItem;
 				}
 			}
 		}
@@ -3429,18 +3398,18 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				*pAttachmentPosition = *pAttachment;
 			}
 			else {
-				pTargetObj->attachments.push_back(*pAttachment);
+				(*pTargetObj)[0]->attachments.push_back(*pAttachment);
 			}
 
 //now this is as simple as replacing the old if applicable or adding an attachment!!!
 #if 0
 			if (pAttachmentPosition) {
 			{
-				CreateItem( pTargetObj->usAttachItem[bAttachPos], pTargetObj->bAttachStatus[bAttachPos], &TempObj );
+				CreateItem( pTargetObj->usAttachItem[bAttachPos], pTargetObj->bAttachStatus[bAttachPos], &gTempObject );
 			}
 
 			pTargetObj->usAttachItem[bAttachPos] = pAttachment->usItem;
-			pTargetObj->bAttachStatus[bAttachPos] = pAttachment->objectStatus;
+			pTargetObj->bAttachStatus[bAttachPos] = (*pAttachment)[0]->data.objectStatus;
 
 			if (Item[pAttachment->usItem].grenadelauncher )
 			{
@@ -3465,10 +3434,10 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				}
 			}
 
-			if ( TempObj.usItem != NOTHING )
+			if ( gTempObject.usItem != NOTHING )
 			{
 				// overwrite/swap!
-				CopyObj( &TempObj, pAttachment );
+				CopyObj( &gTempObject, pAttachment );
 			}
 			else
 			{
@@ -3544,9 +3513,9 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					//Madd: note that use_item cannot produce two different items!!! so it doesn't use usResult2
 
 					//Madd: unload guns after merge if ammo caliber or mag size don't match
-					if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && pTargetObj->gun.usGunAmmoItem != NONE && pTargetObj->gun.ubGunShotsLeft > 0 )
+					if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && (*pTargetObj)[0]->data.gun.usGunAmmoItem != NONE && (*pTargetObj)[0]->data.gun.ubGunShotsLeft > 0 )
 					{
-						if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || pTargetObj->gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
+						if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || (*pTargetObj)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
 						{ // item types/calibers/magazines don't match, spit out old ammo
 							EjectAmmoAndPlace(pSoldier, pTargetObj);
 						}
@@ -3580,10 +3549,10 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				// count down through # of attaching items and add to status of item in position 0
 				for (bLoop = pAttachment->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
 				{
-					if (pTargetObj->objectStatus + pAttachment->status.bStatus[bLoop] <= ubLimit)
+					if ((*pTargetObj)[0]->data.objectStatus + (*pAttachment)[bLoop]->data.objectStatus <= ubLimit)
 					{
 						// consume this one totally and continue
-						pTargetObj->objectStatus += pAttachment->status.bStatus[bLoop];
+						(*pTargetObj)[0]->data.objectStatus += (*pAttachment)[bLoop]->data.objectStatus;
 						RemoveObjFrom( pAttachment, bLoop );
 						// reset loop limit
 						bLoop = pAttachment->ubNumberOfObjects; // add 1 to counteract the -1 from the loop
@@ -3591,8 +3560,8 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					else
 					{
 						// add part of this one and then we're done
-						pAttachment->status.bStatus[bLoop] -= (ubLimit - pTargetObj->objectStatus);
-						pTargetObj->objectStatus = ubLimit;
+						(*pAttachment)[bLoop]->data.objectStatus -= (ubLimit - (*pTargetObj)[0]->data.objectStatus);
+						(*pTargetObj)[0]->data.objectStatus = ubLimit;
 						break;
 					}
 				}
@@ -3646,9 +3615,9 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				//Madd: usResult2 only works for standard merges->item1 + item2 = item3 + item4
 
 				//Madd: unload guns after merge if ammo caliber or mag size don't match
-				if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && pTargetObj->gun.usGunAmmoItem != NONE && pTargetObj->gun.ubGunShotsLeft > 0 )
+				if ( Item[pTargetObj->usItem].usItemClass == IC_GUN && (*pTargetObj)[0]->data.gun.usGunAmmoItem != NONE && (*pTargetObj)[0]->data.gun.ubGunShotsLeft > 0 )
 				{
-					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || pTargetObj->gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
+					if ( Item[usResult].usItemClass != IC_GUN || Weapon[Item[usResult].ubClassIndex].ubCalibre != Weapon[Item[pTargetObj->usItem].ubClassIndex].ubCalibre || (*pTargetObj)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult].ubClassIndex].ubMagSize )
 					{ // item types/calibers/magazines don't match, spit out old ammo
 						EjectAmmoAndPlace(pSoldier, pTargetObj);
 					}
@@ -3659,7 +3628,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				pTargetObj->usItem = usResult;
 				if ( ubType != TREAT_ARMOUR )
 				{
-					pTargetObj->objectStatus = (pTargetObj->objectStatus + pAttachment->objectStatus) / 2;
+					(*pTargetObj)[0]->data.objectStatus = ((*pTargetObj)[0]->data.objectStatus + (*pAttachment)[0]->data.objectStatus) / 2;
 				}
 
 				pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
@@ -3669,9 +3638,9 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					//Madd: usResult2 is what the original attachment/source item turns into
 
 					//Madd: unload guns after merge if ammo caliber or mag size don't match
-					if ( Item[pAttachment->usItem].usItemClass == IC_GUN && pAttachment->gun.usGunAmmoItem != NONE && pAttachment->gun.ubGunShotsLeft > 0 )
+					if ( Item[pAttachment->usItem].usItemClass == IC_GUN && (*pAttachment)[0]->data.gun.usGunAmmoItem != NONE && (*pAttachment)[0]->data.gun.ubGunShotsLeft > 0 )
 					{
-						if ( Item[usResult2].usItemClass != IC_GUN || Weapon[Item[usResult2].ubClassIndex].ubCalibre != Weapon[Item[pAttachment->usItem].ubClassIndex].ubCalibre || pAttachment->gun.ubGunShotsLeft > Weapon[Item[usResult2].ubClassIndex].ubMagSize )
+						if ( Item[usResult2].usItemClass != IC_GUN || Weapon[Item[usResult2].ubClassIndex].ubCalibre != Weapon[Item[pAttachment->usItem].ubClassIndex].ubCalibre || (*pAttachment)[0]->data.gun.ubGunShotsLeft > Weapon[Item[usResult2].ubClassIndex].ubMagSize )
 						{ // item types/calibers/magazines don't match, spit out old ammo
 							EjectAmmoAndPlace(pSoldier, pAttachment);
 						}
@@ -3682,7 +3651,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					pAttachment->usItem = usResult2;
 					if ( ubType != TREAT_ARMOUR )
 					{
-						pAttachment->objectStatus = (pAttachment->objectStatus + pTargetObj->objectStatus) / 2;
+						(*pAttachment)[0]->data.objectStatus = ((*pAttachment)[0]->data.objectStatus + (*pTargetObj)[0]->data.objectStatus) / 2;
 					}
 					pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
 				}
@@ -3705,7 +3674,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16 usItem)
 {
 	//Madd: remove any prohibited attachments
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (!ValidAttachment(iter->usItem, usItem) && !ValidLaunchable(iter->usItem, usItem) )
 		{
 			if ( !Item[iter->usItem].inseparable )
@@ -3725,16 +3694,15 @@ void RemoveProhibitedAttachments(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, UINT16
 
 void EjectAmmoAndPlace(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj)
 {
-	OBJECTTYPE newObj;
-	CreateItem(pObj->gun.usGunAmmoItem, 100, &newObj);
-	newObj.shots.ubShotsLeft[0] = pObj->gun.ubGunShotsLeft;
-	pObj->gun.ubGunShotsLeft = 0;
-	pObj->gun.usGunAmmoItem = NONE;
+	CreateItem((*pObj)[0]->data.gun.usGunAmmoItem, 100, &gTempObject);
+	gTempObject[0]->data.ubShotsLeft = (*pObj)[0]->data.gun.ubGunShotsLeft;
+	(*pObj)[0]->data.gun.ubGunShotsLeft = 0;
+	(*pObj)[0]->data.gun.usGunAmmoItem = NONE;
 	if ( pSoldier )
 	{
-		if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
+		if ( !AutoPlaceObject( pSoldier, &gTempObject, FALSE ) )
 		{   // put it on the ground
-			AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->pathing.bLevel, 0 , -1 );
+			AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0 , -1 );
 		}
 	}
 	return;
@@ -3750,14 +3718,14 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
-//			if (Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+//			if (Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 			{
 				return( FALSE );
 			}
 			break;
 		case HANDPOS:
-//			if (Item[ pObj->usItem ].fFlags & ITEM_TWO_HANDED)
+//			if (Item[ pObj->usItem ][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (Item[ pObj->usItem ].twohanded )
 			{
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING && pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
@@ -3862,7 +3830,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// returns object to have in hand after placement... same as original in the
 	// case of error
 
-	UINT8					ubSlotLimit, ubNumberToDrop, ubLoop;
+	UINT8					ubSlotLimit, ubNumberToDrop;
 	OBJECTTYPE *	pInSlot;
 	BOOLEAN				fObjectWasRobotRemote = FALSE;
 
@@ -3903,10 +3871,10 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	if ( Item[ pObj->usItem ].usItemClass == IC_KEY && pSoldier->flags.uiStatusFlags & SOLDIER_PC )
 	{
-		if ( KeyTable[ pObj->key.ubKeyID ].usDateFound == 0 )
+		if ( KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usDateFound == 0 )
 		{
-			KeyTable[ pObj->key.ubKeyID ].usDateFound = (UINT16) GetWorldDay();
-			KeyTable[ pObj->key.ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
+			KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usDateFound = (UINT16) GetWorldDay();
+			KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
 		}
 	}
 
@@ -3959,9 +3927,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if (ubNumberToDrop != pObj->ubNumberOfObjects)
 		{
 			// in the InSlot copy, zero out all the objects we didn't drop
-			for (ubLoop = ubNumberToDrop; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
-			{
-				pInSlot->status.bStatus[ubLoop] = 0;
+			for (int x = ubNumberToDrop; x < pObj->ubNumberOfObjects; ++x) {
+				pObj->objectStack.pop_back();
 			}
 		}
 		pInSlot->ubNumberOfObjects = ubNumberToDrop;
@@ -3971,7 +3938,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		if (pObj->ubNumberOfObjects == 0)
 		{
 			// dropped everything
-//			if (bPos == HANDPOS && Item[pInSlot->usItem].fFlags & ITEM_TWO_HANDED)
+//			if (bPos == HANDPOS && Item[pInSlot->usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 			if (bPos == HANDPOS && Item[pInSlot->usItem].twohanded )
 			{
 				// We just performed a successful drop of a two-handed object into the
@@ -3989,7 +3956,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		// replacement/reloading/merging/stacking	
 		// keys have an additional check for key ID being the same
-		if ( (pObj->usItem == pInSlot->usItem) && ( Item[ pObj->usItem ].usItemClass != IC_KEY || pObj->key.ubKeyID == pInSlot->key.ubKeyID ) )
+		if ( (pObj->usItem == pInSlot->usItem) && ( Item[ pObj->usItem ].usItemClass != IC_KEY || (*pObj)[0]->data.key.ubKeyID == (*pInSlot)[0]->data.key.ubKeyID ) )
 		{
 			if (Item[ pObj->usItem ].usItemClass == IC_MONEY)
 			{
@@ -3999,16 +3966,16 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				// always allow money to be combined!
 				// IGNORE STATUS!
 
-				if (pInSlot->money.uiMoneyAmount + pObj->money.uiMoneyAmount > uiMoneyMax)
+				if ((*pInSlot)[0]->data.money.uiMoneyAmount + (*pObj)[0]->data.money.uiMoneyAmount > uiMoneyMax)
 				{
 					// remove X dollars
-					pObj->money.uiMoneyAmount -= (uiMoneyMax - pInSlot->money.uiMoneyAmount);
+					(*pObj)[0]->data.money.uiMoneyAmount -= (uiMoneyMax - (*pInSlot)[0]->data.money.uiMoneyAmount);
 					// set in slot to maximum
-					pInSlot->money.uiMoneyAmount = uiMoneyMax;
+					(*pInSlot)[0]->data.money.uiMoneyAmount = uiMoneyMax;
 				}
 				else
 				{
-					pInSlot->money.uiMoneyAmount += pObj->money.uiMoneyAmount;
+					(*pInSlot)[0]->data.money.uiMoneyAmount += (*pObj)[0]->data.money.uiMoneyAmount;
 					DeleteObj( pObj );
 /*
 					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -4043,7 +4010,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				{
 					ubNumberToDrop = pObj->ubNumberOfObjects;
 				}
-				StackObjs( pObj, pInSlot, ubNumberToDrop );
+				pInSlot->AddObjectsToStack( *pObj, ubNumberToDrop );
 			}
 		}
 		else
@@ -4078,7 +4045,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				break;
 			}
 
-//			if ( (Item[pObj->usItem].fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
+//			if ( (Item[pObj->usItem][0]->data.fFlags & ITEM_TWO_HANDED) && (bPos == HANDPOS) )
 			if ( (Item[pObj->usItem].twohanded ) && (bPos == HANDPOS) )
 			{
 				if (pSoldier->inv[SECONDHANDPOS].usItem != 0)
@@ -4140,7 +4107,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 		case IC_LAUNCHER:
 		case IC_BOMB:
 		case IC_GRENADE:
-//			if (!(pItem->fFlags & ITEM_TWO_HANDED))
+//			if (!((*pItem)[0]->data.fFlags & ITEM_TWO_HANDED))
 			if (!(pItem->twohanded))
 			{
 				if (pSoldier->inv[HANDPOS].usItem == NONE)
@@ -4153,7 +4120,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 						return( TRUE );
 					}
 				}
-//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
+//				else if ( !(Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				else if ( !(Item[pSoldier->inv[HANDPOS].usItem].twohanded ) && pSoldier->inv[SECONDHANDPOS].usItem == NONE)
 				{
 					// put the one-handed weapon in the guy's 2nd hand...
@@ -4287,7 +4254,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 				}
 				if ( bSlot != bExcludeSlot )
 				{
-					if ( ( (Item[ pObj->usItem ].usItemClass == IC_MONEY) && pSoldier->inv[ bSlot ].money.uiMoneyAmount < MoneySlotLimit( bSlot ) ) || (Item[ pObj->usItem ].usItemClass != IC_MONEY && pSoldier->inv[bSlot].ubNumberOfObjects < ItemSlotLimit( pObj->usItem, bSlot ) ) )
+					if ( ( (Item[ pObj->usItem ].usItemClass == IC_MONEY) && pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount < MoneySlotLimit( bSlot ) ) || (Item[ pObj->usItem ].usItemClass != IC_MONEY && pSoldier->inv[bSlot].ubNumberOfObjects < ItemSlotLimit( pObj->usItem, bSlot ) ) )
 					{
 						// NEW: If in SKI, don't auto-place anything into a stackable slot that's currently hatched out!  Such slots
 						// will disappear in their entirety if sold/moved, causing anything added through here to vanish also!
@@ -4447,10 +4414,10 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 
 	if ( pSoldier->flags.uiStatusFlags & SOLDIER_PC ) // redundant but what the hey
 	{
-		if ( KeyTable[ pObj->key.ubKeyID ].usDateFound == 0 )
+		if ( KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usDateFound == 0 )
 		{
-			KeyTable[ pObj->key.ubKeyID ].usDateFound = (UINT16) GetWorldDay();
-			KeyTable[ pObj->key.ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
+			KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usDateFound = (UINT16) GetWorldDay();
+			KeyTable[ (*pObj)[0]->data.key.ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
 		}
 	}
 
@@ -4465,7 +4432,7 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 		
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
 		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->key.ubKeyID;
+			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = (*pObj)[0]->data.key.ubKeyID;
 		}
 
 		// return number used
@@ -4476,7 +4443,7 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 		// check 
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
 		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->key.ubKeyID;
+			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = (*pObj)[0]->data.key.ubKeyID;
 		}
 
 		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber += pObj->ubNumberOfObjects;
@@ -4489,17 +4456,14 @@ UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE 
 {
 	PERFORMANCE_MARKER
 	// swap keys in keyring slot and keys in pocket
-	UINT8 ubNumberNotAdded = 0;
-	OBJECTTYPE	TempObj;
-
 	// create temp object to hold keys currently in key ring slot
-	CreateKeyObject( &TempObj, pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber, pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID );
+	CreateKeyObject( &gTempObject, pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber, pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID );
 
 	pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = pObj->ubNumberOfObjects;
-	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->key.ubKeyID;
+	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = (*pObj)[0]->data.key.ubKeyID;
 	
 	// swap params?
-	CopyObj( &TempObj, pObj );
+	CopyObj( &gTempObject, pObj );
 
 	return( 1 );
 }
@@ -4514,7 +4478,7 @@ BOOLEAN CreateKeyObject( OBJECTTYPE * pObj , UINT8 ubNumberOfKeys, UINT8 ubKeyID
 	fRet = CreateItems( (UINT16) (FIRST_KEY + LockTable[ ubKeyID ].usKeyItem), 100, ubNumberOfKeys, pObj );
 	if (fRet)
 	{
-		pObj->key.ubKeyID = ubKeyID;
+		(*pObj)[0]->data.key.ubKeyID = ubKeyID;
 	}
 	//fRet = CreateItems( (UINT16)(ubKeyIdValue + FIRST_KEY) , 100, ubNumberOfKeys, pObj )
 	//return(  );
@@ -4554,7 +4518,7 @@ UINT16 TotalPoints( OBJECTTYPE * pObj )
 
 	for (ubLoop = 0; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
 	{
-		usPoints += pObj->status.bStatus[ubLoop];
+		usPoints += (*pObj)[ubLoop]->data.objectStatus;
 	}
 	return( usPoints );
 }
@@ -4569,21 +4533,21 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 
 	for (bLoop = pObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
 	{
-		if (Item[pObj->usItem].percentstatusdrainreduction  > 0 && ((usPoints * (100 - Item[pObj->usItem].percentstatusdrainreduction))/100) < pObj->status.bStatus[bLoop] )
+		if (Item[pObj->usItem].percentstatusdrainreduction  > 0 && ((usPoints * (100 - Item[pObj->usItem].percentstatusdrainreduction))/100) < (*pObj)[bLoop]->data.objectStatus )
 		{
-			pObj->status.bStatus[bLoop] -= (INT8) ((usPoints * (100 - Item[pObj->usItem].percentstatusdrainreduction ) )/100);
+			(*pObj)[bLoop]->data.objectStatus -= (INT8) ((usPoints * (100 - Item[pObj->usItem].percentstatusdrainreduction ) )/100);
 			return( usOriginalPoints );
 		}
-		else if (usPoints < (UINT16) pObj->status.bStatus[bLoop])
+		else if (usPoints < (UINT16) (*pObj)[bLoop]->data.objectStatus)
 		{
-			pObj->status.bStatus[bLoop] -= (INT8) usPoints;
+			(*pObj)[bLoop]->data.objectStatus -= (INT8) usPoints;
 			return( usOriginalPoints );
 		}
 		else
 		{
 			// consume this kit totally
-			usPoints -= pObj->status.bStatus[bLoop];
-			pObj->status.bStatus[bLoop] = 0;
+			usPoints -= (*pObj)[bLoop]->data.objectStatus;
+			(*pObj)[bLoop]->data.objectStatus = 0;
 
 			pObj->ubNumberOfObjects--;
 		}
@@ -4606,18 +4570,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 
 	extern BOOLEAN gfDrawPathPoints;
 
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-	//	GenerateMapEdgepoints();
-
-			//gfDrawPathPoints = !gfDrawPathPoints;
-
-		//gfDrawPathPoints = TRUE;
-		//GlobalReachableTest( pSoldier->sGridNo );
-		//gfDrawPathPoints = FALSE;
-
-	}
-
 #else
 
 	#ifdef AI_TIMING_TESTS
@@ -4627,138 +4579,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 	extern UINT32 guiRedSeekCounter, guiRedHelpCounter; guiRedHideCounter;
 	#endif
 
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-		/*
-		UINT32 uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == ENEMY_TEAM )
-			{
-				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait1 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 1", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->stats.ubSkillTrait2 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 2", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem ] ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem ] ) );
-				}
-
-			}
-		}
-		*/
-	
-				UINT32	uiLoop;
-
-
-		for ( uiLoop = 0; uiLoop <= HISTORY_MERC_KILLED_CHARACTER; uiLoop++ )
-		{
-			switch( uiLoop ) 
-			{
-				case HISTORY_FOUND_MONEY:
-				case HISTORY_ASSASSIN:
-				case HISTORY_DISCOVERED_TIXA:
-				case HISTORY_DISCOVERED_ORTA:
-				case HISTORY_GOT_ROCKET_RIFLES:
-				case HISTORY_DEIDRANNA_DEAD_BODIES:
-				case HISTORY_BOXING_MATCHES:
-				case HISTORY_SOMETHING_IN_MINES:
-				case HISTORY_DEVIN:
-				case HISTORY_MIKE:
-				case HISTORY_TONY:
-				case HISTORY_KROTT:
-				case HISTORY_KYLE:
-				case HISTORY_MADLAB:
-				case HISTORY_GABBY:
-				case HISTORY_KEITH_OUT_OF_BUSINESS:
-				case HISTORY_HOWARD_CYANIDE:
-				case HISTORY_KEITH:
-				case HISTORY_HOWARD:
-				case HISTORY_PERKO:
-				case HISTORY_SAM:
-				case HISTORY_FRANZ:
-				case HISTORY_ARNOLD:
-				case HISTORY_FREDO:
-				case HISTORY_RICHGUY_BALIME:
-				case HISTORY_JAKE:
-				case HISTORY_BUM_KEYCARD:
-				case HISTORY_WALTER:
-				case HISTORY_DAVE:
-				case HISTORY_PABLO:
-				case HISTORY_KINGPIN_MONEY:
-				//VARIOUS BATTLE CONDITIONS
-				case HISTORY_LOSTTOWNSECTOR:
-				case HISTORY_DEFENDEDTOWNSECTOR:
-				case HISTORY_LOSTBATTLE:
-				case HISTORY_WONBATTLE:
-				case HISTORY_FATALAMBUSH:
-				case HISTORY_WIPEDOUTENEMYAMBUSH:
-				case HISTORY_UNSUCCESSFULATTACK:
-				case HISTORY_SUCCESSFULATTACK:
-				case HISTORY_CREATURESATTACKED:
-				case HISTORY_KILLEDBYBLOODCATS:
-				case HISTORY_SLAUGHTEREDBLOODCATS:
-				case HISTORY_GAVE_CARMEN_HEAD:
-				case HISTORY_SLAY_MYSTERIOUSLY_LEFT:
-					AddHistoryToPlayersLog( (UINT8) uiLoop, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-					break;
-				default:
-					break;
-			}
-			
-		}
-		
-
-		/*
-		UINT32		uiEntryTime, uiExitTime;
-		UINT32		uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == CIV_TEAM )
-			{
-				pSoldier = MercSlots[ uiLoop ];
-				if ( ExtractScheduleEntryAndExitInfo( pSoldier, &uiEntryTime, &uiExitTime ) )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Civ %d enters at %ld, exits at %ld", pSoldier->ubID, uiEntryTime, uiExitTime );	
-				}
-			}
-		}
-		*/
-/*
-		UINT32	 uiLoop;
-
-		for ( uiLoop = 0; uiLoop <= 4; uiLoop++ )
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Team %d has %d people", uiLoop, gTacticalStatus.Team[ uiLoop ].bMenInSector );
-		}
-		*/
-	/*
-		UINT32	uiLoop;
-		INT16		sGridNo;
-		UINT32	uiStartTime, uiEndTime;
-
-		if (GetMouseMapPos( &sGridNo ))
-		{
-			uiStartTime = GetJA2Clock();
-			for (uiLoop = 0; uiLoop < 50000; uiLoop++)
-			{
-				FindBestPath( pSoldier, sGridNo, pSoldier->pathing.bLevel, WALKING, COPYROUTE );
-			}
-			uiEndTime = GetJA2Clock();
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "50000 path calls from %d to %d took %ld ms", pSoldier->sGridNo, sGridNo, uiEndTime - uiStartTime ) );
-		}
-		*/
-	}
 #endif
 
 
@@ -5056,29 +4876,28 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	pObj->initialize();
 	pObj->usItem = usItem;
-	pObj->ubNumberOfObjects = 1;
-	pObj->gun.bGunStatus = bStatus;
-	pObj->ubImprintID = NO_PROFILE;
+	(*pObj)[0]->data.gun.bGunStatus = bStatus;
+	(*pObj)[0]->data.ubImprintID = NO_PROFILE;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 
 	if (Weapon[ usItem ].ubWeaponClass == MONSTERCLASS)
 	{
-		pObj->gun.ubGunShotsLeft = GetMagSize(pObj);
-		pObj->gun.ubGunAmmoType = AMMO_MONSTER;
+		(*pObj)[0]->data.gun.ubGunShotsLeft = GetMagSize(pObj);
+		(*pObj)[0]->data.gun.ubGunAmmoType = AMMO_MONSTER;
 	}
 	else if ( EXPLOSIVE_GUN( usItem ) )
 	{
 		if ( Item[usItem].singleshotrocketlauncher ) 
 		{
-			pObj->gun.ubGunShotsLeft = 1;
+			(*pObj)[0]->data.gun.ubGunShotsLeft = 1;
 		}
 		else
 		{
 			// cannon
-			pObj->gun.ubGunShotsLeft = 0;
+			(*pObj)[0]->data.gun.ubGunShotsLeft = 0;
 		}
-		pObj->gun.bGunAmmoStatus = 100;
-		pObj->gun.ubGunAmmoType = 0;
+		(*pObj)[0]->data.gun.bGunAmmoStatus = 100;
+		(*pObj)[0]->data.gun.ubGunAmmoType = 0;
 	}
 	else
 	{
@@ -5091,18 +4910,11 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		}
 		else
 		{
-			pObj->gun.usGunAmmoItem = usAmmo;
-			pObj->gun.ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
-			pObj->gun.bGunAmmoStatus = 100;
-			pObj->gun.ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
-			pObj->gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: new guns should have cartridge in chamber
-			/*
-			if (usItem == CAWS)
-			{
-				pObj->usAttachItem[0] = DUCKBILL;
-				pObj->bAttachStatus[0] = 100;
-			}
-			*/
+			(*pObj)[0]->data.gun.usGunAmmoItem = usAmmo;
+			(*pObj)[0]->data.gun.ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
+			(*pObj)[0]->data.gun.bGunAmmoStatus = 100;
+			(*pObj)[0]->data.gun.ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
+			(*pObj)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: new guns should have cartridge in chamber
 		}
 	}
 
@@ -5121,7 +4933,7 @@ BOOLEAN CreateMagazine( UINT16 usItem, OBJECTTYPE * pObj )
 	pObj->initialize();
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	pObj->shots.ubShotsLeft[0] = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
+	(*pObj)[0]->data.ubShotsLeft = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("CreateMagazine: done"));
 
@@ -5136,7 +4948,8 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 
 	if (usItem >= MAXITEMS)
 	{
-		pObj->initialize();//should this really be done? I moved this here to preserve
+		DebugBreak();
+		pObj->initialize();//ADB should this really be done? I moved this here to preserve
 		//the original intent of the code while avoiding CreateGun initialize x2
 		return( FALSE );
 	}
@@ -5157,28 +4970,27 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 		{
 			// special case... always set status to 100 when creating
 			// and use status value to determine amount!
-			pObj->objectStatus = 100;
-			pObj->money.uiMoneyAmount = bStatus * 50;
+			(*pObj)[0]->data.objectStatus = 100;
+			(*pObj)[0]->data.money.uiMoneyAmount = bStatus * 50;
 		}
 		else
 		{
-			pObj->objectStatus = bStatus;
+			(*pObj)[0]->data.objectStatus = bStatus;
 		}
 		pObj->ubWeight = CalculateObjectWeight( pObj );
 		fRet = TRUE;
 	}
 	if (fRet)
 	{
-//		if (Item[ usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE)
+//		if (Item[ usItem ][0]->data.fFlags & ITEM_DEFAULT_UNDROPPABLE)
 		if (Item[ usItem ].defaultundroppable )
 		{
-			pObj->fFlags |= OBJECT_UNDROPPABLE;
+			(*pObj)[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 		}
 		if (Item [ usItem ].defaultattachment > 0 )
 		{
-			OBJECTTYPE Temp;
-			CreateItem(Item [ usItem ].defaultattachment,100,&Temp);
-			AttachObject(NULL,pObj,&Temp);
+			CreateItem(Item [ usItem ].defaultattachment,100,&gTempObject);
+			AttachObject(NULL,pObj,&gTempObject);
 		}
 	}
 
@@ -5191,23 +5003,18 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fOk;
-	UINT8		ubLoop;
-
 	// ARM: to avoid whacking memory once Assertions are removed...  Items will be lost in this situation!
 	if ( ubNumber > MAX_OBJECTS_PER_SLOT )
 	{
+		DebugBreak();
 		ubNumber = MAX_OBJECTS_PER_SLOT;
 	}
 
 	fOk = CreateItem( usItem, bStatus, pObj );
 	if (fOk)
 	{
-		for (ubLoop = 1; ubLoop < ubNumber; ubLoop++)	
-		{
-			// we reference status[0] here because the status value might actually be a
-			// # of rounds of ammo, in which case the value won't be the bStatus value 
-			// passed in.
-			pObj->status.bStatus[ubLoop] = pObj->objectStatus;
+		for (int x = 1; x < ubNumber; ++x) {
+			pObj->objectStack.push_back(pObj->objectStack.front());
 		}
 		pObj->ubNumberOfObjects = ubNumber;
 		pObj->ubWeight *= ubNumber;
@@ -5224,7 +5031,7 @@ BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj )
 	fOk = CreateItem( MONEY, 100, pObj );
 	if (fOk)
 	{
-		pObj->money.uiMoneyAmount = uiMoney;
+		(*pObj)[0]->data.money.uiMoneyAmount = uiMoney;
 	}
 	return( fOk );
 }
@@ -5239,7 +5046,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 	if (pObj->usItem == ACTION_ITEM)
 	{
-		switch( pObj->bombs.bActionValue )
+		switch( (*pObj)[0]->data.bombs.bActionValue )
 		{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
@@ -5285,38 +5092,38 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 	if (fRemote)
 	{
-		pObj->bombs.bDetonatorType = BOMB_REMOTE;
-		pObj->bombs.bFrequency = bSetting;
+		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_REMOTE;
+		(*pObj)[0]->data.bombs.bFrequency = bSetting;
 	}
 	else if (fPressure)
 	{
-		pObj->bombs.bDetonatorType = BOMB_PRESSURE;
-		pObj->bombs.bFrequency = 0;
+		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_PRESSURE;
+		(*pObj)[0]->data.bombs.bFrequency = 0;
 	}
 	else if (fTimed)
 	{
-		pObj->bombs.bDetonatorType = BOMB_TIMED;
+		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_TIMED;
 		// In realtime the player could choose to put down a bomb right before a turn expires, SO
 		// add 1 to the setting in RT
-		pObj->bombs.bDelay = bSetting;
+		(*pObj)[0]->data.bombs.bDelay = bSetting;
 		if ( !(gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			pObj->bombs.bDelay++;
+			(*pObj)[0]->data.bombs.bDelay++;
 		}
 
 	}
 	else if (fSwitch)
 	{
-		pObj->bombs.bDetonatorType = BOMB_SWITCH;
-		pObj->bombs.bFrequency = bSetting;
+		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_SWITCH;
+		(*pObj)[0]->data.bombs.bFrequency = bSetting;
 	}
 	else
 	{
 		return( FALSE );
 	}
 
-	pObj->fFlags |= OBJECT_ARMED_BOMB;
-	pObj->bombs.usBombItem = pObj->usItem;
+	(*pObj)[0]->data.fFlags |= OBJECT_ARMED_BOMB;
+	(*pObj)[0]->data.bombs.usBombItem = pObj->usItem;
 	return( TRUE );
 }
 
@@ -5330,7 +5137,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 		return( FALSE );
 	}
 
-//	if ( Item[ pObj->usAttachItem[bAttachPos] ].fFlags & ITEM_INSEPARABLE )
+//	if ( Item[ pObj->usAttachItem[bAttachPos] ][0]->data.fFlags & ITEM_INSEPARABLE )
 	if ( Item[ pAttachment->usItem ].inseparable  )
 	{
 		return( FALSE );
@@ -5342,7 +5149,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 		pNewObj = pAttachment;
 	}
 
-	pObj->attachments.remove(*pAttachment);
+	(*pObj)[0]->attachments.remove(*pAttachment);
 
 	if (pNewObj && Item[pNewObj->usItem].grenadelauncher )//UNDER_GLAUNCHER)
 	{
@@ -5351,7 +5158,7 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 		OBJECTTYPE* pGrenade = FindAttachmentByClass( pObj, IC_GRENADE );
 		if (pGrenade)
 		{
-			pNewObj->attachments.push_back(*pGrenade);
+			(*pNewObj)[0]->attachments.push_back(*pGrenade);
 			pNewObj->ubWeight = CalculateObjectWeight( pNewObj );
 			RemoveAttachment(pObj, pGrenade);
 		}
@@ -5383,12 +5190,12 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	BOOLEAN			fReturnVal = FALSE;
 
 	usItem	= pObject->usItem;
-	bStatus = pObject->objectStatus;
+	bStatus = (*pObject)[0]->data.objectStatus;
 	pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
 
 	if ( Item[ usItem ].usItemClass == IC_MONEY && gMercProfiles[ ubProfile ].uiMoney > 0 )
 	{
-		gMercProfiles[ ubProfile ].uiMoney += pObject->money.uiMoneyAmount;
+		gMercProfiles[ ubProfile ].uiMoney += (*pObject)[0]->data.money.uiMoneyAmount;
 		SetMoneyInSoldierProfile( ubProfile, gMercProfiles[ ubProfile ].uiMoney );
 		return( TRUE );
 	}
@@ -5401,7 +5208,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 			// CJC: Deal with money by putting money into # stored in profile
 			if ( Item[ usItem ].usItemClass == IC_MONEY )
 			{
-				gMercProfiles[ ubProfile ].uiMoney += pObject->money.uiMoneyAmount;
+				gMercProfiles[ ubProfile ].uiMoney += (*pObject)[0]->data.money.uiMoneyAmount;
 				// change any gold/silver to money
 				usItem = MONEY;
 			}
@@ -5436,7 +5243,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 				if ( pSoldier->ubProfile == MADLAB )
 				{
 					// remove attachments and drop them
-					for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
+					for (attachmentList::iterator iter = (*pObject)[0]->attachments.begin(); iter != (*pObject)[0]->attachments.end(); ++iter) {
 						// drop it in Madlab's tile
 						AddItemToPool( pSoldier->sGridNo, &(*iter), 1, 0, 0, 0 );
 						RemoveAttachment( pObject, &(*iter));
@@ -5493,9 +5300,6 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 {
 	PERFORMANCE_MARKER
-	//INT8						bSlot;
-	OBJECTTYPE			Object;
-	//SOLDIERTYPE *		pSoldier;
 	BOOLEAN					fRet;
 
 	// remove all money from soldier	
@@ -5510,8 +5314,8 @@ void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 	if (uiMoney > 0)
 	{
 		// now add the amount specified
-		CreateMoney( uiMoney, &Object );
-		PlaceObjectInSoldierProfile( ubProfile, &Object );
+		CreateMoney( uiMoney, &gTempObject );
+		PlaceObjectInSoldierProfile( ubProfile, &gTempObject );
 	}
 }
 
@@ -5573,7 +5377,7 @@ INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
 		iMaxDamage -= (iMaxDamage * Armour[Item[usItem].ubClassIndex].ubProtection) / 100;
 	}
 	// metal items are tough and will be damaged less
-//	if (Item[usItem].fFlags & ITEM_METAL)
+//	if (Item[usItem][0]->data.fFlags & ITEM_METAL)
 	if (Item[usItem].metal )
 	{
 		iMaxDamage /= 2;
@@ -5622,15 +5426,16 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 	INT8		bLoop;
 	INT8		bDamage;
 
-//	if ( (Item[pObject->usItem].fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
+//	if ( (Item[pObject->usItem][0]->data.fFlags & ITEM_DAMAGEABLE || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	if ( (Item[pObject->usItem].damageable  || Item[ pObject->usItem ].usItemClass == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	{
 
 		for (bLoop = 0; bLoop < pObject->ubNumberOfObjects; bLoop++)
 		{
+			bool removed = false;
 			// if the status of the item is negative then it's trapped/jammed;
 			// leave it alone
-			if (pObject->usItem != NOTHING && pObject->status.bStatus[bLoop] > 0)
+			if (pObject->usItem != NOTHING && (*pObject)[bLoop]->data.objectStatus > 0)
 			{
 				bDamage = CheckItemForDamage( pObject->usItem, iDamage );
 				switch( pObject->usItem )
@@ -5642,7 +5447,7 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 						if ( PreRandom( bDamage ) > 5 )
 						{
 							// smash!
-							bDamage = pObject->status.bStatus[ bLoop ];
+							bDamage = (*pObject)[bLoop]->data.objectStatus;
 						}
 						break;
 					default:
@@ -5653,46 +5458,49 @@ BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
 					if ( PreRandom( 100 ) < (UINT32) bDamage )
 					{
 						// destroy clip completely
-						pObject->status.bStatus[ bLoop ] = 1;
+						(*pObject)[bLoop]->data.objectStatus = 1;
 					}
 				}
 				else
 				{
-					pObject->status.bStatus[bLoop] -= bDamage;
-					if (pObject->status.bStatus[bLoop] < 1)
+					(*pObject)[bLoop]->data.objectStatus -= bDamage;
+					if ((*pObject)[bLoop]->data.objectStatus < 1)
 					{
-						pObject->status.bStatus[bLoop] = 1;
+						(*pObject)[bLoop]->data.objectStatus = 1;
 					}
 				}
 				// I don't think we increase viewrange based on items any more
 				// FUN STUFF!  Check for explosives going off as a result!
 				if (Item[pObject->usItem].usItemClass & IC_EXPLOSV)
 				{
-					if (CheckForChainReaction( pObject->usItem, pObject->status.bStatus[bLoop], bDamage, fOnGround ))
+					if (CheckForChainReaction( pObject->usItem, (*pObject)[bLoop]->data.objectStatus, bDamage, fOnGround ))
 					{
 						return( TRUE );
 					}
 				}
 
 				// remove item from index AFTER checking explosions because need item data for explosion!
-				if ( pObject->status.bStatus[bLoop] == 1 )
+				if ( (*pObject)[bLoop]->data.objectStatus == 1 )
 				{
 					if ( pObject->ubNumberOfObjects > 1 )
 					{
+						removed = true;
 						RemoveObjFrom( pObject, bLoop );
 						// since an item was just removed, the items above the current were all shifted down one;
 						// to process them properly, we have to back up 1 in the counter
-						bLoop = bLoop - 1;
+						--bLoop;
 					}
 				}
 			}
-		}
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObject->attachments.begin(); iter != pObject->attachments.end(); ++iter) {
-			iter->objectStatus -= CheckItemForDamage( iter->usItem, iDamage );
-			if (iter->objectStatus < 1)
-			{
-				iter->objectStatus = 1;
+			if (removed == false) {
+				for (attachmentList::iterator iter = (*pObject)[bLoop]->attachments.begin(); iter != (*pObject)[bLoop]->attachments.end();) {
+					DamageItem(&(*iter), iDamage, fOnGround);
+					//could have removed the object at iter
+					if (iter != (*pObject)[bLoop]->attachments.end()) {
+						++iter;
+					}
+				}
 			}
 		}
 	}
@@ -5787,7 +5595,7 @@ BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, IN
 		// Remove item!
 		return( TRUE );
 	}
-	else if ( (pObject->ubNumberOfObjects < 2) && (pObject->objectStatus < USABLE) )
+	else if ( (pObject->ubNumberOfObjects < 2) && ((*pObject)[0]->data.objectStatus < USABLE) )
 	{
 		return( TRUE );
 	}
@@ -5887,7 +5695,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		for ( bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++ )
 		{
 			// if there's an item here that can get water damaged...
-//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].fFlags & ITEM_WATER_DAMAGES)
+//			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem][0]->data.fFlags & ITEM_WATER_DAMAGES)
 			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].waterdamages )
 			{
 				// roll the 'ol 100-sided dice
@@ -5900,10 +5708,10 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 					bDamage = (INT8) (10 - uiRoll);
 
 					// but don't let anything drop lower than 1%
-					pSoldier->inv[bLoop].objectStatus -= bDamage;
-					if (pSoldier->inv[bLoop].objectStatus < 1)
+					pSoldier->inv[bLoop][0]->data.objectStatus -= bDamage;
+					if (pSoldier->inv[bLoop][0]->data.objectStatus < 1)
 					{
-						pSoldier->inv[bLoop].objectStatus = 1;
+						pSoldier->inv[bLoop][0]->data.objectStatus = 1;
 					}
 				}
 			}
@@ -6023,7 +5831,7 @@ BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAP
 	}
 
 	//get total camo bonus for kit -- note that camo kits now require the camobonus tag to be set
-	int itemCamo = Item[pObj->usItem].camobonus + Item[pObj->usItem].urbanCamobonus + Item[pObj->usItem].desertCamobonus + Item[pObj->usItem].snowCamobonus;
+	//int itemCamo = Item[pObj->usItem].camobonus + Item[pObj->usItem].urbanCamobonus + Item[pObj->usItem].desertCamobonus + Item[pObj->usItem].snowCamobonus;
 
 	int totalCamo = pSoldier->bCamo + pSoldier->wornCamo + pSoldier->urbanCamo+pSoldier->wornUrbanCamo+pSoldier->desertCamo+pSoldier->wornDesertCamo+pSoldier->snowCamo+pSoldier->wornSnowCamo;
 	if ((totalCamo) >= 100)
@@ -6164,7 +5972,7 @@ UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue( UINT32 uiMoneyAmount )
 BOOLEAN ItemIsCool( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	if (pObj->objectStatus < 60)
+	if ((*pObj)[0]->data.objectStatus < 60)
 	{
 		return( FALSE );
 	}
@@ -6204,10 +6012,10 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 
 		// use up 8-12 percent of batteries
 		if ( Item[pBatteries->usItem].percentstatusdrainreduction > 0 )
-			pBatteries->objectStatus -= (INT8)( (8 + Random( 5 )) * (100 - Item[pBatteries->objectStatus].percentstatusdrainreduction)/100 );
+			(*pBatteries)[0]->data.objectStatus -= (INT8)( (8 + Random( 5 )) * (100 - Item[(*pBatteries)[0]->data.objectStatus].percentstatusdrainreduction)/100 );
 		else
-			pBatteries->objectStatus -= (INT8)( (8 + Random( 5 )) );
-		if ( pBatteries->objectStatus <= 0 )
+			(*pBatteries)[0]->data.objectStatus -= (INT8)( (8 + Random( 5 )) );
+		if ( (*pBatteries)[0]->data.objectStatus <= 0 )
 		{
 			// destroy batteries
 			RemoveAttachment(&(pSoldier->inv[HANDPOS]), pBatteries);
@@ -6348,10 +6156,10 @@ INT16 BonusOnOff( INT16 bonus, INT8 status )
 BOOLEAN IsScoped( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	if ( Item[pObj->usItem].aimbonus > 0 || Item[pObj->gun.usGunAmmoItem].aimbonus > 0 )
+	if ( Item[pObj->usItem].aimbonus > 0 || Item[(*pObj)[0]->data.gun.usGunAmmoItem].aimbonus > 0 )
 		return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if ( Item[iter->usItem].aimbonus > 0 )
 			return TRUE;
 	}
@@ -6378,11 +6186,11 @@ INT16 GetAimBonus( OBJECTTYPE * pObj, INT32 iRange, UINT8 ubAimTime )
 	PERFORMANCE_MARKER
 	INT16 bonus;
 
-	bonus = BonusReduceMore( GetItemAimBonus( &Item[pObj->usItem], iRange, ubAimTime ), pObj->objectStatus );
-	bonus += GetItemAimBonus( &Item[pObj->gun.usGunAmmoItem], iRange, ubAimTime );
+	bonus = BonusReduceMore( GetItemAimBonus( &Item[pObj->usItem], iRange, ubAimTime ), (*pObj)[0]->data.objectStatus );
+	bonus += GetItemAimBonus( &Item[(*pObj)[0]->data.gun.usGunAmmoItem], iRange, ubAimTime );
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( GetItemAimBonus( &Item[iter->usItem], iRange, ubAimTime ), iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( GetItemAimBonus( &Item[iter->usItem], iRange, ubAimTime ), (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6398,7 +6206,7 @@ INT16 GetGearAimBonus( SOLDIERTYPE * pSoldier, INT32 iRange, UINT8 ubAimTime  )
 	{
 		bonus += GetItemAimBonus( &Item[pSoldier->inv[j].usItem], iRange, ubAimTime );
 		OBJECTTYPE* pObj = &pSoldier->inv[j];
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += GetItemAimBonus(&Item[iter->usItem],iRange,ubAimTime);
 		}
 	}
@@ -6416,7 +6224,7 @@ INT16 GetGearToHitBonus( SOLDIERTYPE * pSoldier )
 	{
 		bonus += Item[pSoldier->inv[j].usItem].tohitbonus;
 		OBJECTTYPE* pObj = &pSoldier->inv[j];
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += Item[iter->usItem].tohitbonus;
 		}
 	}
@@ -6434,7 +6242,7 @@ INT16 GetGearAPBonus( SOLDIERTYPE * pSoldier )
 	{
 		bonus += Item[pSoldier->inv[j].usItem].APBonus;
 		OBJECTTYPE* pObj = &pSoldier->inv[j];
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += Item[iter->usItem].APBonus;
 		}
 	}
@@ -6445,7 +6253,7 @@ INT16 GetGearAPBonus( SOLDIERTYPE * pSoldier )
 UINT32 FindRangeBonusAttachment( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].rangebonus > 0 )
 		{
 			return( Item[iter->usItem].uiIndex );
@@ -6457,14 +6265,14 @@ UINT32 FindRangeBonusAttachment( OBJECTTYPE * pObj )
 INT16 GetRangeBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduce( Item[pObj->usItem].rangebonus, pObj->objectStatus );
+	INT16 bonus = BonusReduce( Item[pObj->usItem].rangebonus, (*pObj)[0]->data.objectStatus );
 
-	if ( pObj->gun.ubGunShotsLeft > 0 )
-		bonus += Item[pObj->gun.usGunAmmoItem].rangebonus;
+	if ( (*pObj)[0]->data.gun.ubGunShotsLeft > 0 )
+		bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].rangebonus;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		if ( !Item[iter->usItem].duckbill || ( Item[iter->usItem].duckbill && pObj->gun.ubGunAmmoType == AMMO_BUCKSHOT ))
-			bonus += BonusReduce( Item[iter->usItem].rangebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		if ( !Item[iter->usItem].duckbill || ( Item[iter->usItem].duckbill && (*pObj)[0]->data.gun.ubGunAmmoType == AMMO_BUCKSHOT ))
+			bonus += BonusReduce( Item[iter->usItem].rangebonus, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6506,14 +6314,14 @@ INT16 GetToHitBonus( OBJECTTYPE * pObj, INT32 iRange, UINT8 bLightLevel, BOOLEAN
 	if ( fProneStance )
 		bonus += Item[pObj->usItem].bipod;
 		
-	bonus += BonusReduceMore( LaserBonus( &Item[pObj->usItem], iRange, bLightLevel), pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].tohitbonus;
+	bonus += BonusReduceMore( LaserBonus( &Item[pObj->usItem], iRange, bLightLevel), (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].tohitbonus;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if ( fProneStance )
 			bonus += Item[iter->usItem].bipod;
 
-		bonus += BonusReduceMore( LaserBonus( &Item[iter->usItem], iRange, bLightLevel), iter->objectStatus );
+		bonus += BonusReduceMore( LaserBonus( &Item[iter->usItem], iRange, bLightLevel), (*iter)[0]->data.objectStatus );
 	}
 
 	// Snap (TODO): add special treatment of laser scopes
@@ -6530,14 +6338,14 @@ INT16 GetBurstToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance )
 	if ( fProneStance )
 		bonus += Item[pObj->usItem].bipod;
 
-	bonus += BonusReduceMore( Item[pObj->usItem].bursttohitbonus, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].bursttohitbonus ;
+	bonus += BonusReduceMore( Item[pObj->usItem].bursttohitbonus, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].bursttohitbonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if ( fProneStance )
 			bonus += Item[iter->usItem].bipod;
 
-		bonus += BonusReduceMore( Item[iter->usItem].bursttohitbonus, iter->objectStatus );
+		bonus += BonusReduceMore( Item[iter->usItem].bursttohitbonus, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6547,13 +6355,13 @@ INT16 GetBurstToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance )
 INT16 GetDamageBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduce( Item[pObj->usItem].damagebonus, pObj->objectStatus );
+	INT16 bonus = BonusReduce( Item[pObj->usItem].damagebonus, (*pObj)[0]->data.objectStatus );
 
-	if ( pObj->gun.ubGunShotsLeft > 0 )
-		bonus += Item[pObj->gun.usGunAmmoItem].damagebonus ;
+	if ( (*pObj)[0]->data.gun.ubGunShotsLeft > 0 )
+		bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].damagebonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduce( Item[iter->usItem].damagebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduce( Item[iter->usItem].damagebonus, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6563,11 +6371,11 @@ INT16 GetDamageBonus( OBJECTTYPE * pObj )
 INT16 GetMeleeDamageBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduce( Item[pObj->usItem].meleedamagebonus, pObj->objectStatus);
-	bonus += Item[pObj->gun.usGunAmmoItem].meleedamagebonus ;
+	INT16 bonus = BonusReduce( Item[pObj->usItem].meleedamagebonus, (*pObj)[0]->data.objectStatus);
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].meleedamagebonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduce( Item[iter->usItem].meleedamagebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduce( Item[iter->usItem].meleedamagebonus, (*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -6576,12 +6384,12 @@ INT16 GetMeleeDamageBonus( OBJECTTYPE * pObj )
 INT16 GetPercentAPReduction( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentapreduction, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].percentapreduction;
+	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentapreduction, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentapreduction;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		bonus += BonusReduceMore( Item[iter->usItem].percentapreduction,
-			iter->objectStatus );
+			(*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6590,11 +6398,11 @@ INT16 GetPercentAPReduction( OBJECTTYPE * pObj )
 INT16 GetMagSizeBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusOnOff( Item[pObj->usItem].magsizebonus, pObj->objectStatus );
-//	bonus = bonus + Item[pObj->gun.usGunAmmoItem].magsizebonus ;
+	INT16 bonus = BonusOnOff( Item[pObj->usItem].magsizebonus, (*pObj)[0]->data.objectStatus );
+//	bonus = bonus + Item[(*pObj)[0]->data.gun.usGunAmmoItem].magsizebonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusOnOff( Item[iter->usItem].magsizebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusOnOff( Item[iter->usItem].magsizebonus, (*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -6602,11 +6410,11 @@ INT16 GetMagSizeBonus( OBJECTTYPE * pObj )
 INT16 GetBurstSizeBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusOnOff( Item[pObj->usItem].burstsizebonus, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].burstsizebonus ;
+	INT16 bonus = BonusOnOff( Item[pObj->usItem].burstsizebonus, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].burstsizebonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusOnOff( Item[iter->usItem].burstsizebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusOnOff( Item[iter->usItem].burstsizebonus, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6617,19 +6425,19 @@ INT16 GetRateOfFireBonus( OBJECTTYPE * pObj )
 	PERFORMANCE_MARKER
 	INT16 bonus=0;
 
-  if( (MAXITEMS <= pObj->usItem) || (MAXITEMS <= pObj->gun.usGunAmmoItem) )
+  if( (MAXITEMS <= pObj->usItem) || (MAXITEMS <= (*pObj)[0]->data.gun.usGunAmmoItem) )
     {
-   	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->gun.usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->gun.usGunAmmoItem, MAXITEMS ));
-  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"GetRateOfFireBonus would crash: pObj->usItem=%d or pObj->gun.usGunAmmoItem=%d ist higher than max %d", pObj->usItem, pObj->gun.usGunAmmoItem, MAXITEMS );
+   	DebugMsg(TOPIC_JA2, DBG_LEVEL_1, String("GetRateOfFireBonus would crash: pObj->usItem=%d or (*pObj)[0]->data.gun.usGunAmmoItem=%d ist higher than max %d", pObj->usItem, (*pObj)[0]->data.gun.usGunAmmoItem, MAXITEMS ));
+  	ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"GetRateOfFireBonus would crash: pObj->usItem=%d or (*pObj)[0]->data.gun.usGunAmmoItem=%d ist higher than max %d", pObj->usItem, (*pObj)[0]->data.gun.usGunAmmoItem, MAXITEMS );
     AssertMsg( 0, "GetRateOfFireBonus would crash" );
     return 0; /* cannot calculate Bonus, this only happens sometimes in FULLSCREEN */
     }
 
-	bonus = BonusReduceMore( Item[pObj->usItem].rateoffirebonus, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].rateoffirebonus ;
+	bonus = BonusReduceMore( Item[pObj->usItem].rateoffirebonus, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].rateoffirebonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( Item[iter->usItem].rateoffirebonus, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( Item[iter->usItem].rateoffirebonus, (*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -6645,15 +6453,15 @@ INT16 GetAutoToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance )
 		bonus += Item[pObj->usItem].bipod;
 
 
-	bonus += BonusReduceMore( Item[pObj->usItem].autofiretohitbonus, pObj->objectStatus );
+	bonus += BonusReduceMore( Item[pObj->usItem].autofiretohitbonus, (*pObj)[0]->data.objectStatus );
 
-	bonus += Item[pObj->gun.usGunAmmoItem].autofiretohitbonus ;
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].autofiretohitbonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if ( fProneStance )
 			bonus += Item[iter->usItem].bipod;
 
-		bonus += BonusReduceMore( Item[iter->usItem].autofiretohitbonus, iter->objectStatus );
+		bonus += BonusReduceMore( Item[iter->usItem].autofiretohitbonus, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6662,11 +6470,11 @@ INT16 GetAutoToHitBonus( OBJECTTYPE * pObj, BOOLEAN fProneStance )
 INT16 GetPercentReadyTimeAPReduction( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentreadytimeapreduction, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].percentreadytimeapreduction;
+	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentreadytimeapreduction, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentreadytimeapreduction;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( Item[iter->usItem].percentreadytimeapreduction, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( Item[iter->usItem].percentreadytimeapreduction, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6675,11 +6483,11 @@ INT16 GetPercentReadyTimeAPReduction( OBJECTTYPE * pObj )
 INT16 GetPercentAutofireAPReduction( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentautofireapreduction, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].percentautofireapreduction;
+	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentautofireapreduction, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentautofireapreduction;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( Item[iter->usItem].percentautofireapreduction, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( Item[iter->usItem].percentautofireapreduction, (*iter)[0]->data.objectStatus );
 	}
 
 	return( bonus );
@@ -6688,11 +6496,11 @@ INT16 GetPercentAutofireAPReduction( OBJECTTYPE * pObj )
 INT16 GetPercentReloadTimeAPReduction( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentreloadtimeapreduction, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].percentreloadtimeapreduction;
+	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentreloadtimeapreduction, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentreloadtimeapreduction;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( Item[iter->usItem].percentreloadtimeapreduction, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( Item[iter->usItem].percentreloadtimeapreduction, (*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -6700,11 +6508,11 @@ INT16 GetPercentReloadTimeAPReduction( OBJECTTYPE * pObj )
 INT16 GetPercentBurstFireAPReduction( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentburstfireapreduction, pObj->objectStatus );
-	bonus += Item[pObj->gun.usGunAmmoItem].percentburstfireapreduction;
+	INT16 bonus = BonusReduceMore( Item[pObj->usItem].percentburstfireapreduction, (*pObj)[0]->data.objectStatus );
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentburstfireapreduction;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += BonusReduceMore( Item[iter->usItem].percentburstfireapreduction, iter->objectStatus );
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += BonusReduceMore( Item[iter->usItem].percentburstfireapreduction, (*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -6733,7 +6541,7 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 
 		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
 		{
-			bonus += BonusReduceMore( pItem->visionrangebonus,	pObj->objectStatus );
+			bonus += BonusReduceMore( pItem->visionrangebonus,	(*pObj)[0]->data.objectStatus );
 		}
 	}
 
@@ -6743,8 +6551,8 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-			bonus += BonusReduceMore( Item[iter->usItem].visionrangebonus, iter->objectStatus );
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+			bonus += BonusReduceMore( Item[iter->usItem].visionrangebonus, (*iter)[0]->data.objectStatus );
 		}
 	}
 
@@ -6791,7 +6599,7 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 		{
 			bonus += BonusReduceMore(
 				NightBonusScale( pItem->nightvisionrangebonus, bLightLevel ),
-				pObj->objectStatus );
+				(*pObj)[0]->data.objectStatus );
 		}
 	}
 
@@ -6800,10 +6608,10 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += BonusReduceMore(
 				NightBonusScale( Item[iter->usItem].nightvisionrangebonus, bLightLevel ),
-				iter->objectStatus );
+				(*iter)[0]->data.objectStatus );
 		}
 	}
 
@@ -6836,7 +6644,7 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 		{
 			bonus += BonusReduceMore(
 				NightBonusScale( pItem->cavevisionrangebonus, bLightLevel ),
-				pObj->objectStatus );
+				(*pObj)[0]->data.objectStatus );
 		}
 	}
 
@@ -6845,10 +6653,10 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += BonusReduceMore(
 				NightBonusScale( Item[iter->usItem].cavevisionrangebonus, bLightLevel ),
-				iter->objectStatus );
+				(*iter)[0]->data.objectStatus );
 		}
 	}
 
@@ -6883,7 +6691,7 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 		{
 			bonus += BonusReduceMore( idiv( pItem->dayvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_NIGHT - bLightLevel), NORMAL_LIGHTLEVEL_NIGHT ),
-				pObj->objectStatus );
+				(*pObj)[0]->data.objectStatus );
 		}
 	}
 
@@ -6892,10 +6700,10 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += BonusReduceMore( idiv( Item[iter->usItem].dayvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_NIGHT - bLightLevel), NORMAL_LIGHTLEVEL_NIGHT ),
-				iter->objectStatus );
+				(*iter)[0]->data.objectStatus );
 		}
 	}
 
@@ -6930,7 +6738,7 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 		{
 			bonus += BonusReduceMore( idiv( pItem->brightlightvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_DAY - bLightLevel), NORMAL_LIGHTLEVEL_DAY ),
-				pObj->objectStatus );
+				(*pObj)[0]->data.objectStatus );
 		}
 	}
 
@@ -6939,10 +6747,10 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += BonusReduceMore( idiv( Item[iter->usItem].brightlightvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_DAY - bLightLevel), NORMAL_LIGHTLEVEL_DAY ),
-				iter->objectStatus );
+				(*iter)[0]->data.objectStatus );
 		}
 	}
 
@@ -7013,7 +6821,7 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 		if ( IsWeapon(usItem) ) //if not a weapon, then it was added already above
 			bonus += Item[usItem].percenttunnelvision;
 
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			bonus += Item[iter->usItem].percenttunnelvision;
 		}
 	}
@@ -7048,7 +6856,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 	if ( WeaponReady(pSoldier) )
 	{
 		OBJECTTYPE* pObj = &pSoldier->inv[HANDPOS];
-		for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 			if ( Item[iter->usItem].thermaloptics )
 				return TRUE;
 		}
@@ -7090,7 +6898,7 @@ INT16 GetHearingRangeBonus( SOLDIERTYPE * pSoldier )
 			continue;
 		}
 
-		bonus += BonusReduceMore( Item[pSoldier->inv[i].usItem].hearingrangebonus, pSoldier->inv[i].objectStatus );
+		bonus += BonusReduceMore( Item[pSoldier->inv[i].usItem].hearingrangebonus, pSoldier->inv[i][0]->data.objectStatus );
 		/*for (UINT8 i=0;i<MAX_ATTACHMENTS;i++)
 		{
 			if ( pSoldier->inv[bLoop].usAttachItem[i] != NONE && Item[pSoldier->inv[bLoop].usAttachItem[i]].hearingrangebonus  > 0 )
@@ -7104,10 +6912,10 @@ INT16 GetHearingRangeBonus( SOLDIERTYPE * pSoldier )
 BOOLEAN IsDuckbill( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	if (Item[pObj->usItem].duckbill || Item[pObj->gun.usGunAmmoItem].duckbill )
+	if (Item[pObj->usItem].duckbill || Item[(*pObj)[0]->data.gun.usGunAmmoItem].duckbill )
 		return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].duckbill  )
 		{
 			return( TRUE );
@@ -7120,11 +6928,11 @@ BOOLEAN IsDuckbill( OBJECTTYPE * pObj )
 UINT16 GetPercentNoiseVolume( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	UINT16 mod = 100 - BonusReduce( Item[pObj->usItem].percentnoisereduction, pObj->objectStatus );
-	mod = mod * ( 100 - Item[pObj->gun.usGunAmmoItem].percentnoisereduction ) / 100;
+	UINT16 mod = 100 - BonusReduce( Item[pObj->usItem].percentnoisereduction, (*pObj)[0]->data.objectStatus );
+	mod = mod * ( 100 - Item[(*pObj)[0]->data.gun.usGunAmmoItem].percentnoisereduction ) / 100;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		mod = mod * ( 100 - BonusReduce( Item[iter->usItem].percentnoisereduction, iter->objectStatus ) ) / 100;
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		mod = mod * ( 100 - BonusReduce( Item[iter->usItem].percentnoisereduction, (*iter)[0]->data.objectStatus ) ) / 100;
 	}
 
 	return (mod > 0) ? mod : 0;
@@ -7153,7 +6961,7 @@ BOOLEAN IsDetonatorAttached( OBJECTTYPE * pObj )
 	//if (Item[pObj->usItem].detonator)
 	//	return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].detonator  )
 		{
 			return( TRUE );
@@ -7168,7 +6976,7 @@ BOOLEAN IsRemoteDetonatorAttached( OBJECTTYPE * pObj )
 	//if (Item[pObj->usItem].remotedetonator)
 	//	return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].remotedetonator  )
 		{
 			return( TRUE );
@@ -7181,16 +6989,16 @@ BOOLEAN IsFlashSuppressor( OBJECTTYPE * pObj, SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 	//Madd: tracers automatically negate any muzzle flash suppression due to inherent lighting effects
-	if (Item[pObj->usItem].usItemClass == IC_GUN && AmmoTypes[pObj->gun.ubGunAmmoType].tracerEffect && pSoldier->bDoBurst )
+	if (Item[pObj->usItem].usItemClass == IC_GUN && AmmoTypes[(*pObj)[0]->data.gun.ubGunAmmoType].tracerEffect && pSoldier->bDoBurst )
 		return FALSE;
 
 	if (Item[pObj->usItem].hidemuzzleflash )
 		return TRUE;
 
-	if ( Item[pObj->gun.usGunAmmoItem].hidemuzzleflash )
+	if ( Item[(*pObj)[0]->data.gun.usGunAmmoItem].hidemuzzleflash )
 		return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].hidemuzzleflash  )
 		{
 			return( TRUE );
@@ -7204,12 +7012,12 @@ INT16 GetFlashSuppressorStatus( OBJECTTYPE * pObj )
 	PERFORMANCE_MARKER
 	INT16 p=100;
 	if (Item[pObj->usItem].hidemuzzleflash )
-		p=pObj->objectStatus;
+		p=(*pObj)[0]->data.objectStatus;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].hidemuzzleflash  )
 		{
-			p =p+ iter->objectStatus;
+			p =p+ (*iter)[0]->data.objectStatus;
 		}
 	}
 	p = min(p,100);
@@ -7222,7 +7030,7 @@ BOOLEAN IsGrenadeLauncherAttached( OBJECTTYPE * pObj )
 	if (Item[pObj->usItem].grenadelauncher )
 		return TRUE;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].grenadelauncher )
 		{
 			return TRUE;
@@ -7237,7 +7045,7 @@ OBJECTTYPE* FindAttachment_GrenadeLauncher( OBJECTTYPE * pObj )
 	if (Item[pObj->usItem].grenadelauncher )
 		return pObj;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].grenadelauncher )
 		{
 			return( &(*iter) );
@@ -7249,12 +7057,12 @@ INT8 GetGrenadeLauncherStatus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	if (Item[pObj->usItem].grenadelauncher  )
-		return pObj->objectStatus;
+		return (*pObj)[0]->data.objectStatus;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].grenadelauncher )
 		{
-			return( iter->objectStatus );
+			return( (*iter)[0]->data.objectStatus );
 		}
 	}
 	return( ITEM_NOT_FOUND );
@@ -7265,7 +7073,7 @@ UINT16 GetAttachedGrenadeLauncher( OBJECTTYPE * pObj )
 	if (Item[pObj->usItem].grenadelauncher  )
 		return pObj->usItem;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].grenadelauncher )
 		{
 			return( (UINT16) Item[iter->usItem].uiIndex );
@@ -7280,9 +7088,9 @@ INT16 GetAttachedArmourBonus( OBJECTTYPE * pObj )
 	PERFORMANCE_MARKER
 	INT16 bonus=0;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		bonus += BonusReduce( Armour[Item[iter->usItem].ubClassIndex].ubProtection,
-			iter->objectStatus );
+			(*iter)[0]->data.objectStatus );
 	}
 	return( bonus );
 }
@@ -7292,9 +7100,9 @@ INT16 GetBulletSpeedBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	INT16 bonus = Item[pObj->usItem].bulletspeedbonus ;
-	bonus += Item[pObj->gun.usGunAmmoItem].bulletspeedbonus ;
+	bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].bulletspeedbonus ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		bonus = bonus +Item[iter->usItem].bulletspeedbonus  ;
 	}
 	return( bonus );
@@ -7363,7 +7171,7 @@ INT8 FindUsableCrowbar( SOLDIERTYPE * pSoldier )
 
 	for (bLoop = 0; bLoop < (INT8) pSoldier->inv.size(); bLoop++)
 	{
-		if ( Item[pSoldier->inv[bLoop].usItem].crowbar && pSoldier->inv[bLoop].objectStatus >= USABLE )
+		if ( Item[pSoldier->inv[bLoop].usItem].crowbar && pSoldier->inv[bLoop][0]->data.objectStatus >= USABLE )
 		{
 			return( bLoop );
 		}
@@ -7374,7 +7182,7 @@ INT8 FindUsableCrowbar( SOLDIERTYPE * pSoldier )
 OBJECTTYPE* FindAttachedBatteries( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (Item[iter->usItem].batteries )
 		{
 			return( &(*iter) );
@@ -7517,7 +7325,6 @@ UINT16 LowestLaunchableCoolness(UINT16 launcherIndex)
 UINT16 PickARandomLaunchable(UINT16 itemIndex)
 {
 	PERFORMANCE_MARKER
-	INT32 iLoop = 0;
 	UINT16 usNumMatches = 0;
 	UINT16 usRandom = 0;
 	UINT16 i = 0;
@@ -7560,44 +7367,44 @@ UINT16 PickARandomLaunchable(UINT16 itemIndex)
 INT16 GetCamoBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = (INT16) (Item[pObj->usItem].camobonus);// * (WEAPON_STATUS_MOD(pObj->objectStatus) / 100)) ;
+	INT16 bonus = (INT16) (Item[pObj->usItem].camobonus);// * (WEAPON_STATUS_MOD((*pObj)[0]->data.objectStatus) / 100)) ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (!Item[iter->usItem].camouflagekit)
-			bonus += (INT16) (Item[iter->usItem].camobonus);// * (WEAPON_STATUS_MOD(iter->objectStatus) / 100));
+			bonus += (INT16) (Item[iter->usItem].camobonus);// * (WEAPON_STATUS_MOD((*iter)[0]->data.objectStatus) / 100));
 	}
 	return( bonus );
 }
 INT16 GetUrbanCamoBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = (INT16) (Item[pObj->usItem].urbanCamobonus);// * (WEAPON_STATUS_MOD(pObj->objectStatus) / 100)) ;
+	INT16 bonus = (INT16) (Item[pObj->usItem].urbanCamobonus);// * (WEAPON_STATUS_MOD((*pObj)[0]->data.objectStatus) / 100)) ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (!Item[iter->usItem].camouflagekit)
-			bonus += (INT16) (Item[iter->usItem].urbanCamobonus);// * (WEAPON_STATUS_MOD(iter->objectStatus) / 100));
+			bonus += (INT16) (Item[iter->usItem].urbanCamobonus);// * (WEAPON_STATUS_MOD((*iter)[0]->data.objectStatus) / 100));
 	}
 	return( bonus );
 }
 INT16 GetDesertCamoBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = (INT16) (Item[pObj->usItem].desertCamobonus);// * (WEAPON_STATUS_MOD(pObj->objectStatus) / 100)) ;
+	INT16 bonus = (INT16) (Item[pObj->usItem].desertCamobonus);// * (WEAPON_STATUS_MOD((*pObj)[0]->data.objectStatus) / 100)) ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (!Item[iter->usItem].camouflagekit)
-			bonus += (INT16) (Item[iter->usItem].desertCamobonus);// * (WEAPON_STATUS_MOD(iter->objectStatus) / 100));
+			bonus += (INT16) (Item[iter->usItem].desertCamobonus);// * (WEAPON_STATUS_MOD((*iter)[0]->data.objectStatus) / 100));
 	}
 	return( bonus );
 }
 INT16 GetSnowCamoBonus( OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
-	INT16 bonus = (INT16) (Item[pObj->usItem].snowCamobonus);// * (WEAPON_STATUS_MOD(pObj->objectStatus) / 100)) ;
+	INT16 bonus = (INT16) (Item[pObj->usItem].snowCamobonus);// * (WEAPON_STATUS_MOD((*pObj)[0]->data.objectStatus) / 100)) ;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		if (!Item[iter->usItem].camouflagekit)
-			bonus += (INT16) (Item[iter->usItem].snowCamobonus);// * (WEAPON_STATUS_MOD(iter->objectStatus) / 100));
+			bonus += (INT16) (Item[iter->usItem].snowCamobonus);// * (WEAPON_STATUS_MOD((*iter)[0]->data.objectStatus) / 100));
 	}
 	return( bonus );
 }
@@ -7718,34 +7525,38 @@ UINT16 GetFirstExplosiveOfType(UINT16 expType)
 	return 0;
 }
 
-INT8 FindSunGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat )
+OBJECTTYPE* FindSunGogglesInInv( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 	INT8	bLoop;
-
+	INT16	bonusToBeat = 0;
+	OBJECTTYPE*	pGoggles = 0;
 	for (bLoop = HANDPOS; bLoop <= SMALLPOCK8POS; bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].brightlightvisionrangebonus > bonusToBeat && Item[pSoldier->inv[bLoop].usItem].usItemClass == IC_FACE )			
 		{
-			return( bLoop );
+			pGoggles = &(pSoldier->inv[bLoop]);
+			bonusToBeat = Item[pSoldier->inv[bLoop].usItem].brightlightvisionrangebonus;
 		}
 	}
-	return( ITEM_NOT_FOUND );
+	return( pGoggles );
 }
 
-INT8 FindNightGoggles( SOLDIERTYPE * pSoldier, INT16 bonusToBeat  )
+OBJECTTYPE* FindNightGogglesInInv( SOLDIERTYPE * pSoldier  )
 {
 	PERFORMANCE_MARKER
 	INT8	bLoop;
-
+	INT16	bonusToBeat = 0;
+	OBJECTTYPE*	pGoggles = 0;
 	for (bLoop = HANDPOS; bLoop <= SMALLPOCK8POS; bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].nightvisionrangebonus > bonusToBeat && Item[pSoldier->inv[bLoop].usItem].usItemClass == IC_FACE )			
 		{
-			return( bLoop );
+			pGoggles = &(pSoldier->inv[bLoop]);
+			bonusToBeat = Item[pSoldier->inv[bLoop].usItem].nightvisionrangebonus;
 		}
 	}
-	return( ITEM_NOT_FOUND );
+	return( pGoggles );
 }
 
 INT16 GetMinRangeForAimBonus( OBJECTTYPE * pObj )
@@ -7754,9 +7565,9 @@ INT16 GetMinRangeForAimBonus( OBJECTTYPE * pObj )
 	INT16 bonus;
 
 	bonus = Item[pObj->usItem].minrangeforaimbonus;
-	//bonus += Item[pObj->gun.usGunAmmoItem].minrangeforaimbonus;
+	//bonus += Item[(*pObj)[0]->data.gun.usGunAmmoItem].minrangeforaimbonus;
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
 		bonus += Item[iter->usItem].minrangeforaimbonus;
 	}
 
@@ -7768,15 +7579,15 @@ UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier)
 	PERFORMANCE_MARKER
 	UINT8 aimLevels = 4;
 	float iScopeBonus = 0;
-	OBJECTTYPE obj ( pSoldier->inv[pSoldier->ubAttackingHand] ); 
+	gTempObject = pSoldier->inv[pSoldier->ubAttackingHand]; 
 	BOOLEAN allowed = TRUE;
 	
-	if ( gGameSettings.fOptions[TOPTION_AIM_LEVEL_RESTRICTION] && Weapon[obj.usItem].ubWeaponType != GUN_RIFLE && Weapon[obj.usItem].ubWeaponType != GUN_SN_RIFLE )
+	if ( gGameSettings.fOptions[TOPTION_AIM_LEVEL_RESTRICTION] && Weapon[gTempObject.usItem].ubWeaponType != GUN_RIFLE && Weapon[gTempObject.usItem].ubWeaponType != GUN_SN_RIFLE )
 			allowed = FALSE;
 
-	if ( allowed && IsScoped( &obj ) )
+	if ( allowed && IsScoped( &gTempObject ) )
 	{
-		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&obj) / 100 );
+		iScopeBonus = ( (float)gGameExternalOptions.ubStraightSightRange * GetMinRangeForAimBonus(&gTempObject) / 100 );
 
 		if ( iScopeBonus >= ( (float)gGameExternalOptions.ubStraightSightRange * 0.3) ) // >= 30% of sight range (~4 tiles by default)
 		{
@@ -7794,10 +7605,10 @@ UINT8 AllowedAimingLevels(SOLDIERTYPE * pSoldier)
 //Madd: added
 INT16 GetStealthBonus( OBJECTTYPE * pObj ) 
 {
-	INT16 bonus  = (INT16) BonusReduce(Item[pObj->usItem].stealthbonus,pObj->objectStatus);
+	INT16 bonus  = (INT16) BonusReduce(Item[pObj->usItem].stealthbonus,(*pObj)[0]->data.objectStatus);
 
-	for (OBJECTTYPE::attachmentList::iterator iter = pObj->attachments.begin(); iter != pObj->attachments.end(); ++iter) {
-		bonus += (INT16) BonusReduce(Item[iter->usItem].stealthbonus,iter->objectStatus);
+	for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {
+		bonus += (INT16) BonusReduce(Item[iter->usItem].stealthbonus,(*iter)[0]->data.objectStatus);
 	}
 	return( bonus );
 }

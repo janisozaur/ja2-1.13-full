@@ -539,7 +539,6 @@ void MakeRemainingTerroristsTougher( void )
 	PERFORMANCE_MARKER
 	UINT8					ubRemainingTerrorists = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
-	OBJECTTYPE		Object;
 	UINT8					ubRemainingDifficulty;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
@@ -611,9 +610,9 @@ void MakeRemainingTerroristsTougher( void )
 		usNewItem = HAND_GRENADE;
 	}
 
-	DeleteObj( &Object );
-	Object.usItem = usNewItem;
-	Object.objectStatus = 100;
+	DeleteObj( &gTempObject );
+	gTempObject.usItem = usNewItem;
+	gTempObject[0]->data.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -632,7 +631,7 @@ void MakeRemainingTerroristsTougher( void )
 			{
 				RemoveObjectFromSoldierProfile( gubTerrorists[ ubLoop ], usOldItem );
 			}
-			PlaceObjectInSoldierProfile( gubTerrorists[ ubLoop ], &Object );
+			PlaceObjectInSoldierProfile( gubTerrorists[ ubLoop ], &gTempObject );
 		}
 	}
 }
@@ -683,7 +682,6 @@ void MakeRemainingAssassinsTougher( void )
 	PERFORMANCE_MARKER
 	UINT8					ubRemainingAssassins = 0, ubLoop;
 	UINT16				usNewItem, usOldItem;
-	OBJECTTYPE		Object;
 	UINT8					ubRemainingDifficulty;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
@@ -747,9 +745,9 @@ void MakeRemainingAssassinsTougher( void )
 		usNewItem = HAND_GRENADE;
 	}
 
-	DeleteObj( &Object );
-	Object.usItem = usNewItem;
-	Object.objectStatus = 100;
+	DeleteObj( &gTempObject );
+	gTempObject.usItem = usNewItem;
+	gTempObject[0]->data.objectStatus = 100;
 
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{
@@ -759,7 +757,7 @@ void MakeRemainingAssassinsTougher( void )
 			{
 				RemoveObjectFromSoldierProfile( gubAssassins[ ubLoop ], usOldItem );
 			}
-			PlaceObjectInSoldierProfile( gubAssassins[ ubLoop ], &Object );
+			PlaceObjectInSoldierProfile( gubAssassins[ ubLoop ], &gTempObject );
 		}
 	}
 }
@@ -1082,7 +1080,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 		bSlot = FindObjClass( pNewSoldier, IC_WEAPON );
 		if ( bSlot != NO_SLOT )
 		{
-//			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].fFlags & ITEM_TWO_HANDED )
+//			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ][0]->data.fFlags & ITEM_TWO_HANDED )
 			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].twohanded )
 			{
 				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].usItem != NOTHING )

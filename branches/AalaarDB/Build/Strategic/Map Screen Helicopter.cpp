@@ -1001,9 +1001,9 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 	INT8 bNewSquad;
 	BOOLEAN fAnyoneAboard = FALSE;
 	BOOLEAN fSuccess;
-	UINT8	ubInsertionCode;
+	UINT8	ubInsertionCode = 0;
 	BOOLEAN fInsertionCodeSet = FALSE;
-	UINT16	usInsertionData;
+	UINT16	usInsertionData = 0;
 
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
@@ -1032,20 +1032,21 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 
 			AddCharacterToSquad( pSoldier, bNewSquad );
 
-		// ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
-		// called when buddy is added to a squad. However, the insertion code onlt sets set for
-		// the first merc, so the rest are going to use whatever they had previously....
-		if ( !fInsertionCodeSet )
-		{
-		ubInsertionCode = pSoldier->ubStrategicInsertionCode;
-		usInsertionData = pSoldier->usStrategicInsertionData;
-		fInsertionCodeSet = TRUE;
-		}
-		else
-		{
-		pSoldier->ubStrategicInsertionCode = ubInsertionCode;
-		pSoldier->usStrategicInsertionData = usInsertionData;
-		}
+			// ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
+			// called when buddy is added to a squad. However, the insertion code onlt sets set for
+			// the first merc, so the rest are going to use whatever they had previously....
+			if ( !fInsertionCodeSet )
+			{
+				ubInsertionCode = pSoldier->ubStrategicInsertionCode;
+				usInsertionData = pSoldier->usStrategicInsertionData;
+				fInsertionCodeSet = TRUE;
+			}
+			else
+			{
+				Assert(ubInsertionCode && usInsertionData);//potentially uninitialized local variables
+				pSoldier->ubStrategicInsertionCode = ubInsertionCode;
+				pSoldier->usStrategicInsertionData = usInsertionData;
+			}
 		}
 	}
 
@@ -1976,7 +1977,6 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 	PERFORMANCE_MARKER
  	INT16 sGridNo = sRefuelStartGridNo[ ubSite ];
 	INT16 sOStruct = 0;
-	INT16	usGridNo;
 	INT16	sGridX, sGridY;
 	INT16	sCentreGridX, sCentreGridY;
 
@@ -2013,9 +2013,9 @@ void AddHelicopterToMaps( BOOLEAN fAdd, UINT8 ubSite )
 	{
 		for( sGridX = sCentreGridX - 5; sGridX < sCentreGridX + 5; sGridX++ )
 		{
-			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
+			sGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 
-		 BumpAnyExistingMerc( usGridNo );
+		 BumpAnyExistingMerc( sGridNo );
 		}
 	}
 	}

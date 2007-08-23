@@ -397,7 +397,7 @@ void LoadSchedules( INT8 **hBuffer )
 			pSchedule = gpScheduleList;
 		}
 		pSchedule->ubScheduleID = gubScheduleID;
-		pSchedule->ubSoldierID = NO_SOLDIER;
+		pSchedule->ubSoldierID = NOBODY;
 		pSchedule->next = NULL;
 		gubScheduleID++;
 		ubNum--;
@@ -458,7 +458,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 		// should be unnecessary here, then we can toast reconnect schedule
 		/*
 		pSchedule->ubScheduleID = gubScheduleID;
-		pSchedule->ubSoldierID = NO_SOLDIER;
+		pSchedule->ubSoldierID = NOBODY;
 		*/
 
 		pSchedule->next = NULL;
@@ -713,7 +713,7 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 		case SCHEDULE_ACTION_UNLOCKDOOR:
 		case SCHEDULE_ACTION_OPENDOOR:
 		case SCHEDULE_ACTION_CLOSEDOOR:
-			PerformActionOnDoorAdjacentToGridNo( pSchedule->ubAction[ index ], pSchedule->usData1[ index ] );
+			PerformActionOnDoorAdjacentToGridNo( pSchedule->ubAction[ index ], (INT16)pSchedule->usData1[ index ] );
 			BumpAnyExistingMerc( pSchedule->usData2[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData2[ index ], &sCellX, &sCellY );
 
@@ -1061,13 +1061,13 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridNo )
+void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	INT16			sDoorGridNo;
 	DOOR *		pDoor;
 
-	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) usGridNo );
+	sDoorGridNo = FindDoorAtGridNoOrAdjacent( (INT16) sGridNo );
 	if (sDoorGridNo != NOWHERE)
 	{
 		switch( ubScheduleAction )
@@ -1236,8 +1236,6 @@ BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTi
 {
 	PERFORMANCE_MARKER
 	INT32			iLoop;
-	BOOLEAN		fFoundTime = FALSE;
-
 	*puiTime = 100000;
 
 	for ( iLoop = 0; iLoop < MAX_SCHEDULE_ACTIONS; iLoop++ )

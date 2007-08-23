@@ -82,9 +82,9 @@ const STR16 GetActionItemName( OBJECTTYPE *pItem )
 	PERFORMANCE_MARKER
 	if( !pItem || pItem->usItem != ACTION_ITEM )
 		return NULL;
-	if( pItem->bombs.bActionValue != ACTION_ITEM_BLOW_UP )
+	if( (*pItem)[0]->data.bombs.bActionValue != ACTION_ITEM_BLOW_UP )
 	{
-		switch( pItem->bombs.bActionValue )
+		switch( (*pItem)[0]->data.bombs.bActionValue )
 		{
 			case ACTION_ITEM_OPEN_DOOR:								return gszActionItemDesc[ ACTIONITEM_OPEN ];
 			case ACTION_ITEM_CLOSE_DOOR:							return gszActionItemDesc[ ACTIONITEM_CLOSE ];
@@ -112,7 +112,7 @@ const STR16 GetActionItemName( OBJECTTYPE *pItem )
 			default:																	return NULL;
 		}
 	}
-	else switch( pItem->bombs.usBombItem )
+	else switch( (*pItem)[0]->data.bombs.usBombItem )
 	{
 		case STUN_GRENADE:			return gszActionItemDesc[ ACTIONITEM_STUN ];
 		case SMOKE_GRENADE:			return gszActionItemDesc[ ACTIONITEM_SMOKE ];
@@ -452,7 +452,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 			// else fall through and act as nothing
 		case IC_NONE:
 			gbEditingMode = EDITING_NOTHING;
-			if( !(gpItem->fFlags & OBJECT_UNDROPPABLE) )
+			if( !((*gpItem)[0]->data.fFlags & OBJECT_UNDROPPABLE) )
 				gbEditingMode = EDITING_DROPPABLE;
 			break;
 		default:
@@ -544,7 +544,7 @@ void UpdateItemStatsPanel()
 		case EDITING_TRIGGERS:
 			mprintf( iScreenWidthOffset + 512, 2 * iScreenHeightOffset + 369, L"Trap Level");
 			mprintf( iScreenWidthOffset + 512, 2 * iScreenHeightOffset + 389, L"Tolerance" );
-			if( gpEditingItemPool && gpItem->bombs.bFrequency >= PANIC_FREQUENCY_3 && gpItem->bombs.bFrequency <= PANIC_FREQUENCY )
+			if( gpEditingItemPool && (*gpItem)[0]->data.bombs.bFrequency >= PANIC_FREQUENCY_3 && (*gpItem)[0]->data.bombs.bFrequency <= PANIC_FREQUENCY )
 				mprintf( iScreenWidthOffset + 500, 2 * iScreenHeightOffset + 407, L"Alarm Trigger" );
 			break;
 	}
@@ -659,11 +659,11 @@ void SetupGunGUI()
 	CHAR16 str[20];
 	INT16 yp;
 	memset( gfAttachment, 0, NUM_ATTACHMENT_BUTTONS );
-	swprintf( str, L"%d", gpItem->gun.bGunStatus );
+	swprintf( str, L"%d", (*gpItem)[0]->data.gun.bGunStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->gun.ubGunShotsLeft );
+	swprintf( str, L"%d", (*gpItem)[0]->data.gun.ubGunShotsLeft );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -778,7 +778,7 @@ void ExtractAndUpdateGunGUI()
 		i = 20 + Random( 81 );
 	else
 		i = min( i, 100 );
-	gpItem->gun.bGunStatus = (INT8)i;
+	(*gpItem)[0]->data.gun.bGunStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the ammo
 	i = GetNumericStrictValueFromField( 2 );
@@ -786,12 +786,12 @@ void ExtractAndUpdateGunGUI()
 		i = Random( 1 + Weapon[ gpItem->usItem ].ubMagSize );
 	else
 		i = min( i, Weapon[ gpItem->usItem ].ubMagSize );
-	gpItem->gun.ubGunShotsLeft = (UINT8)i;
+	(*gpItem)[0]->data.gun.ubGunShotsLeft = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
 	{
@@ -808,7 +808,7 @@ void SetupAmmoGUI()
 	CHAR16 str[20];
 	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -839,7 +839,7 @@ void ExtractAndUpdateAmmoGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -854,9 +854,9 @@ void SetupArmourGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[20];
-	swprintf( str, L"%d", gpItem->status.bStatus[0] );
+	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -898,12 +898,12 @@ void ExtractAndUpdateArmourGUI()
 		i = 20 + Random( 81 );
 	else
 		i = min( i, 100 );
-	gpItem->status.bStatus[0] = (INT8)i;
+	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -918,9 +918,9 @@ void SetupEquipGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[20];
-	swprintf( str, L"%d", gpItem->status.bStatus[0] );
+	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -945,12 +945,12 @@ void ExtractAndUpdateEquipGUI()
 		i = 20 + Random( 81 );
 	else
 		i = min( i, 100 );
-	gpItem->status.bStatus[0] = (INT8)i;
+	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
 	{
@@ -966,7 +966,7 @@ void SetupExplosivesGUI()
 	PERFORMANCE_MARKER
 	CHAR16 str[20];
 	INT16 yp;
-	swprintf( str, L"%d", gpItem->status.bStatus[0] );
+	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
@@ -974,7 +974,7 @@ void SetupExplosivesGUI()
 	{
 		DisableTextField( 2 );
 	}
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -1018,7 +1018,7 @@ void ExtractAndUpdateExplosivesGUI()
 		i = 20 + Random( 81 );
 	else
 		i = min( i, 100 );
-	gpItem->status.bStatus[0] = (INT8)i;
+	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the quantity
 	if( Item[ gpItem->usItem ].ubPerPocket > 1 )
@@ -1030,12 +1030,12 @@ void ExtractAndUpdateExplosivesGUI()
 			i = max( 1, min( i, Item[ gpItem->usItem ].ubPerPocket ) );
 		gpItem->ubNumberOfObjects = (UINT8)i;
 		SetInputFieldStringWithNumericStrictValue( 2, i );
-		CreateItems( gpItem->usItem, gpItem->status.bStatus[0], gpItem->ubNumberOfObjects, gpItem );
+		CreateItems( gpItem->usItem, (*gpItem)[0]->data.objectStatus, gpItem->ubNumberOfObjects, gpItem );
 	}
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );	
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
 	{
@@ -1050,7 +1050,7 @@ void SetupMoneyGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[20];
-	swprintf( str, L"%d", gpItem->money.uiMoneyAmount );
+	swprintf( str, L"%d", (*gpItem)[0]->data.money.uiMoneyAmount );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -1069,8 +1069,8 @@ void ExtractAndUpdateMoneyGUI()
 		i = Random( 20000 );
 	else
 		i = max( 1, min( i, 20000 ) );
-	gpItem->money.uiMoneyAmount = i;
-	gpItem->status.bStatus[0] = 100;
+	(*gpItem)[0]->data.money.uiMoneyAmount = i;
+	(*gpItem)[0]->data.objectStatus = 100;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	if( gpEditingItemPool )
 	{
@@ -1091,10 +1091,10 @@ void SetupOwnershipGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[20];
-	swprintf( str, L"%d", gpItem->owner.ubOwnerProfile );
+	swprintf( str, L"%d", (*gpItem)[0]->data.owner.ubOwnerProfile );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	giOwnershipGroupButton = 
-		CreateTextButton( gszCivGroupNames[ gpItem->owner.ubOwnerCivGroup ], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
+		CreateTextButton( gszCivGroupNames[ (*gpItem)[0]->data.owner.ubOwnerCivGroup ], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
 		iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 415, 80, 25, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, OwnershipGroupButtonCallback );
 }
 
@@ -1110,7 +1110,7 @@ void OwnershipGroupButtonCallback( GUI_BUTTON *btn, INT32 reason )
 void SetOwnershipGroup( UINT8 ubNewGroup )
 {
 	PERFORMANCE_MARKER
-	gpItem->owner.ubOwnerCivGroup = ubNewGroup;
+	(*gpItem)[0]->data.owner.ubOwnerCivGroup = ubNewGroup;
 	SpecifyButtonText( giOwnershipGroupButton, gszCivGroupNames[ ubNewGroup ] );
 }
 
@@ -1124,7 +1124,7 @@ void ExtractAndUpdateOwnershipGUI()
 		i = Random( 0 );
 	else
 		i = max( 0, min( i, 255 ) );
-	gpItem->owner.ubOwnerProfile = (UINT8)i;
+	(*gpItem)[0]->data.owner.ubOwnerProfile = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 }
 
@@ -1172,9 +1172,9 @@ void SetupActionItemsGUI()
 	PERFORMANCE_MARKER
 	CHAR16 str[4];
 	STR16 pStr;
-	swprintf( str, L"%d", gpItem->status.bStatus[0] );
+	swprintf( str, L"%d", (*gpItem)[0]->data.objectStatus );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
@@ -1197,14 +1197,14 @@ void ExtractAndUpdateActionItemsGUI()
 		i = 20 + Random( 81 );
 	else
 		i = min( i, 100 );
-	gpItem->status.bStatus[0] = (INT8)i;
+	(*gpItem)[0]->data.objectStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	if( i != gpItem->bTrap )
+	if( i != (*gpItem)[0]->data.bTrap )
 		gbDefaultBombTrapLevel = (INT8)i;
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 
 	if( gpEditingItemPool )
@@ -1232,9 +1232,9 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
-			gpItem->fFlags |= OBJECT_ALARM_TRIGGER;
+			(*gpItem)[0]->data.fFlags |= OBJECT_ALARM_TRIGGER;
 		else
-			gpItem->fFlags &= ~OBJECT_ALARM_TRIGGER;
+			(*gpItem)[0]->data.fFlags &= ~OBJECT_ALARM_TRIGGER;
 	}
 }
 
@@ -1242,20 +1242,20 @@ void SetupTriggersGUI()
 {
 	PERFORMANCE_MARKER
 	CHAR16 str[4];
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bTrap );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bombs.ubTolerance );
+	swprintf( str, L"%d", (*gpItem)[0]->data.bombs.ubTolerance );
 	AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
 		AddTextInputField( iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-		if( gpItem->bombs.bFrequency <= PANIC_FREQUENCY && gpItem->bombs.bFrequency >= PANIC_FREQUENCY_3 )
+		if( (*gpItem)[0]->data.bombs.bFrequency <= PANIC_FREQUENCY && (*gpItem)[0]->data.bombs.bFrequency >= PANIC_FREQUENCY_3 )
 		{
 			giAlarmTriggerButton = 
 				CreateCheckBoxButton(	iScreenWidthOffset + 485, 2 * iScreenHeightOffset + 405, "EDITOR//smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
-			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
+			if( (*gpItem)[0]->data.fFlags & OBJECT_ALARM_TRIGGER )
 				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;
 		}
 	}
@@ -1268,12 +1268,12 @@ void ExtractAndUpdateTriggersGUI()
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 1 );
 	i = ( i == -1 ) ? 0 : min( i, 20 );
-	gpItem->bTrap = (INT8)i;
+	(*gpItem)[0]->data.bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 
 	i = GetNumericStrictValueFromField( 2 );
 	i = ( i == -1 ) ? 0 : max( 0, min( i, 99 ) );
-	gpItem->bombs.ubTolerance = (UINT8)i;
+	(*gpItem)[0]->data.bombs.ubTolerance = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 
 	if( gpEditingItemPool )
@@ -1288,7 +1288,7 @@ void ExtractAndUpdateTriggersGUI()
 void RemoveTriggersGUI()
 {
 	PERFORMANCE_MARKER
-	if( gpEditingItemPool && gpItem->bombs.bFrequency <= PANIC_FREQUENCY && gpItem->bombs.bFrequency >= PANIC_FREQUENCY_3 )
+	if( gpEditingItemPool && (*gpItem)[0]->data.bombs.bFrequency <= PANIC_FREQUENCY && (*gpItem)[0]->data.bombs.bFrequency >= PANIC_FREQUENCY_3 )
 	{
 		if( giAlarmTriggerButton != -1 )
 		{
@@ -1304,8 +1304,7 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 i;
-		UINT16 usAttachment;
-		OBJECTTYPE temp;
+		UINT16 usAttachment = 0;
 		for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 		{	//Loop through and find the button that was just modified
 			switch( i )
@@ -1316,6 +1315,7 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
+				default: Assert(0); continue;
 			}
 			if( guiAttachmentButton[ i ] != -1 && btn == ButtonList[ guiAttachmentButton[ i ] ] )
 			{	//Found it, now check the state of the button.
@@ -1323,8 +1323,8 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 				{
 					gfAttachment[ i ] = TRUE;
 					btn->uiFlags |= BUTTON_CLICKED_ON;
-					CreateItem( usAttachment, gpItem->gun.bGunStatus, &temp );
-					AttachObject( NULL, gpItem, &temp );
+					CreateItem( usAttachment, (*gpItem)[0]->data.gun.bGunStatus, &gTempObject );
+					AttachObject( NULL, gpItem, &gTempObject );
 				}
 				else
 				{ //Button is out, so remove the attachment
@@ -1345,13 +1345,12 @@ void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		OBJECTTYPE temp;
 		gfCeramicPlates ^= TRUE;
 		if( gfCeramicPlates )
 		{
 			btn->uiFlags |= BUTTON_CLICKED_ON;
-			CreateItem( CERAMIC_PLATES, gpItem->status.bStatus[0], &temp );
-			AttachObject( NULL, gpItem, &temp );
+			CreateItem( CERAMIC_PLATES, (*gpItem)[0]->data.objectStatus, &gTempObject );
+			AttachObject( NULL, gpItem, &gTempObject );
 		}
 		else
 		{
@@ -1368,13 +1367,12 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 	PERFORMANCE_MARKER
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		OBJECTTYPE temp;
 		if( !gfDetonator )
 		{
 			gfDetonator = TRUE;
 			btn->uiFlags |= BUTTON_CLICKED_ON;
-			CreateItem( DETONATOR, gpItem->status.bStatus[0], &temp );
-			AttachObject( NULL, gpItem, &temp );
+			CreateItem( DETONATOR, (*gpItem)[0]->data.objectStatus, &gTempObject );
+			AttachObject( NULL, gpItem, &gTempObject );
 		}
 		else
 		{ //Button is out, so remove the attachment
@@ -1400,133 +1398,133 @@ void ChangeActionItem( OBJECTTYPE *pItem, INT8 bActionItemIndex )
 {
 	PERFORMANCE_MARKER
 	pItem->usItem = ACTION_ITEM;
-	pItem->bombs.bActionValue = ACTION_ITEM_BLOW_UP;
+	(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_BLOW_UP;
 	switch( bActionItemIndex )
 	{
 		case ACTIONITEM_TRIP_KLAXON:
-			pItem->bombs.usBombItem = TRIP_KLAXON;
+			(*pItem)[0]->data.bombs.usBombItem = TRIP_KLAXON;
 			break;
 		case ACTIONITEM_FLARE:
-			pItem->bombs.usBombItem = TRIP_FLARE;
+			(*pItem)[0]->data.bombs.usBombItem = TRIP_FLARE;
 			break;
 		case ACTIONITEM_TEARGAS:
-			pItem->bombs.usBombItem = TEARGAS_GRENADE;
+			(*pItem)[0]->data.bombs.usBombItem = TEARGAS_GRENADE;
 			break;
 		case ACTIONITEM_STUN:
-			pItem->bombs.usBombItem = STUN_GRENADE;
+			(*pItem)[0]->data.bombs.usBombItem = STUN_GRENADE;
 			break;
 		case ACTIONITEM_SMOKE:		
-			pItem->bombs.usBombItem = SMOKE_GRENADE;
+			(*pItem)[0]->data.bombs.usBombItem = SMOKE_GRENADE;
 			break;
 		case ACTIONITEM_MUSTARD:
-			pItem->bombs.usBombItem = MUSTARD_GRENADE;
+			(*pItem)[0]->data.bombs.usBombItem = MUSTARD_GRENADE;
 			break;
 		case ACTIONITEM_MINE:
-			pItem->bombs.usBombItem = MINE;
+			(*pItem)[0]->data.bombs.usBombItem = MINE;
 			break;
 		case ACTIONITEM_OPEN:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_OPEN_DOOR;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_OPEN_DOOR;
 			break;
 		case ACTIONITEM_CLOSE:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_CLOSE_DOOR;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_CLOSE_DOOR;
 			break;
 		case ACTIONITEM_UNLOCK_DOOR:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_UNLOCK_DOOR;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_UNLOCK_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_LOCK:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_LOCK;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_LOCK;
 			break;
 		case ACTIONITEM_UNTRAP_DOOR:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_UNTRAP_DOOR;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_UNTRAP_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_PRESSURE_ITEMS:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_PRESSURE_ITEMS;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_PRESSURE_ITEMS;
 			break;
 		case ACTIONITEM_SMPIT:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_SMALL_PIT;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_SMALL_PIT;
 			break;
 		case ACTIONITEM_LGPIT:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_LARGE_PIT;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_LARGE_PIT;
 			break;
 		case ACTIONITEM_TOGGLE_DOOR:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_DOOR;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_DOOR;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION1:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION1;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION1;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION2:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION2;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION2;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION3:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION3;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION3;
 			break;
 		case ACTIONITEM_TOGGLE_ACTION4:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION4;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_TOGGLE_ACTION4;
 			break;
 		case ACTIONITEM_ENTER_BROTHEL:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_ENTER_BROTHEL;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_ENTER_BROTHEL;
 			break;
 		case ACTIONITEM_EXIT_BROTHEL:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_EXIT_BROTHEL;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_EXIT_BROTHEL;
 			break;
 		case ACTIONITEM_KINGPIN_ALARM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_KINGPIN_ALARM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_KINGPIN_ALARM;
 			break;
 		case ACTIONITEM_SEX:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_SEX;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_SEX;
 			break;
 		case ACTIONITEM_REVEAL_ROOM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_REVEAL_ROOM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_REVEAL_ROOM;
 			break;
 		case ACTIONITEM_LOCAL_ALARM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_LOCAL_ALARM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_LOCAL_ALARM;
 			break;
 		case ACTIONITEM_GLOBAL_ALARM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_GLOBAL_ALARM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_GLOBAL_ALARM;
 			break;
 		case ACTIONITEM_KLAXON:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_KLAXON;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_KLAXON;
 			break;
 		case ACTIONITEM_SMALL:
-			pItem->bombs.usBombItem = HAND_GRENADE;
+			(*pItem)[0]->data.bombs.usBombItem = HAND_GRENADE;
 			break;
 		case ACTIONITEM_MEDIUM:
-			pItem->bombs.usBombItem = TNT;
+			(*pItem)[0]->data.bombs.usBombItem = TNT;
 			break;
 		case ACTIONITEM_LARGE:
-			pItem->bombs.usBombItem = C4;
+			(*pItem)[0]->data.bombs.usBombItem = C4;
 			break;
 		case ACTIONITEM_MUSEUM_ALARM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_MUSEUM_ALARM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_MUSEUM_ALARM;
 			break;
 		case ACTIONITEM_BLOODCAT_ALARM:
-			pItem->bombs.usBombItem = NOTHING;
-			pItem->bombs.bActionValue = ACTION_ITEM_BLOODCAT_ALARM;
+			(*pItem)[0]->data.bombs.usBombItem = NOTHING;
+			(*pItem)[0]->data.bombs.bActionValue = ACTION_ITEM_BLOODCAT_ALARM;
 			break;
 		case ACTIONITEM_BIG_TEAR_GAS:
-			pItem->bombs.usBombItem = BIG_TEAR_GAS;
+			(*pItem)[0]->data.bombs.usBombItem = BIG_TEAR_GAS;
 			break;
 
 	}
@@ -1543,9 +1541,9 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	//If the previous item was a pit, remove it before changing it
 	if( gpItem->usItem == ACTION_ITEM )
 	{
-		if( gpItem->bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+		if( (*gpItem)[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 			Remove3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-		else if( gpItem->bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+		else if( (*gpItem)[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 			Remove5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 	}
 
@@ -1555,9 +1553,9 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	//If the new item is a pit, add it so we can see how it looks.
 	if( gpItem->usItem == ACTION_ITEM )
 	{
-		if( gpItem->bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+		if( (*gpItem)[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 			Add3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-		else if( gpItem->bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+		else if( (*gpItem)[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 			Add5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 	}
 }
@@ -1566,7 +1564,7 @@ void ReEvaluateAttachmentStatii()
 {
 	PERFORMANCE_MARKER
 	INT32 i;
-	UINT16 usAttachment;
+	UINT16 usAttachment = 0;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
 		if( guiAttachmentButton[ i ] != -1 && !( ButtonList[ guiAttachmentButton[ i ] ]->uiFlags & BUTTON_CLICKED_ON ) )
@@ -1579,6 +1577,7 @@ void ReEvaluateAttachmentStatii()
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
+				default: Assert(0); continue;
 			}
 			if( ValidItemAttachment( gpItem, usAttachment, TRUE ) )
 				EnableButton( guiAttachmentButton[ i ] );

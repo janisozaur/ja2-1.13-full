@@ -7,28 +7,110 @@ OBJECTTYPE gTempObject;
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
+	PERFORMANCE_MARKER
 	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, howMany);
-	for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
+	if (numToAdd) {
+		CreateItem(usItem, objectStatus, &gTempObject);
+		for (int x = ubNumberOfObjects; x < ubNumberOfObjects + numToAdd; ++x) {
+			objectStack.push_front(gTempObject.objectStack.front());
+		}
+
+		ubNumberOfObjects += numToAdd;
+		ubWeight = CalculateObjectWeight(this);
 	}
 
+	//returns how many were NOT added
 	return howMany - numToAdd;
 }
 
-int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& object)
+int OBJECTTYPE::AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany)
 {
-	Assert(object.usItem == usItem);
-	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, object.ubNumberOfObjects);
-
-	for (int x = 0; x < numToAdd; ++x) {
-		
+	PERFORMANCE_MARKER
+	Assert(sourceObject.usItem == usItem);
+	//can't add too much, can't take too many
+	int numToAdd = max (ItemSlotLimit( usItem, BIGPOCK1POS ) - ubNumberOfObjects, sourceObject.ubNumberOfObjects);
+	if (howMany > 0) {
+		numToAdd = max(numToAdd, howMany);
 	}
-	return ItemSlotLimit( usItem, BIGPOCK1POS ) - numToAdd;
+
+	StackedObjects::iterator stopIter = sourceObject.objectStack.begin();
+	for (int x = 0; x < numToAdd; ++x) {
+		++stopIter;
+	}
+	objectStack.splice(objectStack.begin(), sourceObject.objectStack, sourceObject.objectStack.begin(), stopIter);
+
+	sourceObject.ubNumberOfObjects -= numToAdd;
+	ubNumberOfObjects += numToAdd;
+	sourceObject.ubWeight = CalculateObjectWeight(&sourceObject);
+	ubWeight = CalculateObjectWeight(this);
+
+	//returns how many were NOT added
+	if (howMany > 0) {
+		return howMany - numToAdd;
+	}
+	else {
+		//-1 means move all, if all were moved the new size should be 0
+		return sourceObject.ubNumberOfObjects;
+	}
 }
 
-int OBJECTTYPE::RemoveObjectsFromStack(int howMany)
+void OBJECTTYPE::DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany)
 {
-	int numToRemove = min(howMany, ubNumberOfObjects);
-	attachments.resize(attachments.size() - numToRemove);
+	int numToDupe;
+	if (howMany == -1) {
+		numToDupe = sourceObject.ubNumberOfObjects;
+	}
+	else {
+		numToDupe = min(howMany, sourceObject.ubNumberOfObjects);
+	}
+
+	initialize();
+	for (int x = 0; x < numToDupe; ++x) {
+		objectStack.push_back(sourceObject.objectStack.front());		
+	}
+	ubNumberOfObjects = numToDupe;
+	ubWeight = CalculateObjectWeight(this);
+	return;
+}
+
+int OBJECTTYPE::RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject)
+{
+	PERFORMANCE_MARKER
+	if (ubNumberOfObjects == 1) {
+		return howMany;
+	}
+
+	int numToRemove = min(ubNumberOfObjects - 1, howMany);
+	if (destObject) {
+		StackedObjects::iterator stopIter = objectStack.begin();
+		for (int x = 0; x < numToRemove; ++x) {
+			++stopIter;
+		}
+		destObject->objectStack.splice(destObject->objectStack.begin(), objectStack, objectStack.begin(), stopIter);
+		destObject->ubNumberOfObjects += numToRemove;
+		destObject->ubWeight = CalculateObjectWeight(destObject);
+	}
+	else {
+		for (int x = 0; x < numToRemove; ++x) {
+			objectStack.pop_front();
+		}
+	}
+	ubNumberOfObjects -= numToRemove;
+	ubWeight = CalculateObjectWeight(this);
+
+	//returns how many were NOT removed
+	return howMany - numToRemove;
+}
+
+StackedObjectData* OBJECTTYPE::operator [](const unsigned int index)
+{
+	PERFORMANCE_MARKER
+	Assert(index < objectStack.size());
+	StackedObjects::iterator iter = objectStack.begin();
+	for (unsigned int x = 0; x < index; ++x) {
+		++iter;
+	}
+	return &(*iter);
 }
 
 
@@ -50,6 +132,7 @@ void OBJECTTYPE::CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource)
 	}
 	else {
 		//ADB leaving this in for a while, not sure if the code ever even reaches here and this will tell me
+		DebugBreak();
 		DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Found mem leak, but it was corrected."));
 		**ppTarget = *pSource;
 	}
@@ -67,9 +150,10 @@ void OBJECTTYPE::DeleteMe(OBJECTTYPE** ppObject)
 	return;
 }
 
-OBJECTTYPE* OBJECTTYPE::GetAttachmentAtIndex(UINT8 index)
+OBJECTTYPE* StackedObjectData::GetAttachmentAtIndex(UINT8 index)
 {
-	OBJECTTYPE::attachmentList::iterator iter = attachments.begin();
+	PERFORMANCE_MARKER
+	attachmentList::iterator iter = attachments.begin();
 	for (int x = 0; x <= index && iter != attachments.end(); ++x) {
 		++iter;
 	}
@@ -77,7 +161,30 @@ OBJECTTYPE* OBJECTTYPE::GetAttachmentAtIndex(UINT8 index)
 	if (iter != attachments.end()) {
 		return &(*iter);
 	}
+	Assert(false);
 	return 0;
+}
+
+bool StackedObjectData::operator==(StackedObjectData& compare)
+{
+	return (this->data == compare.data
+		&& this->attachments == compare.attachments);
+}
+
+bool StackedObjectData::operator==(const StackedObjectData& compare)const
+{
+	return (this->data == compare.data
+		&& this->attachments == compare.attachments);
+}
+
+bool ObjectData::operator==(ObjectData& compare)
+{
+	return (memcmp(this, &compare, sizeof(ObjectData)) == 0);
+}
+
+bool ObjectData::operator==(const ObjectData& compare)const
+{
+	return (memcmp(this, &compare, sizeof(ObjectData)) == 0);
 }
 
 // Constructor
@@ -90,31 +197,28 @@ void OBJECTTYPE::initialize()
 {
 	PERFORMANCE_MARKER
 	memset(this, 0, SIZEOF_OBJECTTYPE_POD);
-	memset(&(this->pUnion), 0, SIZEOF_OBJECTTYPE_UNION);
-	attachments.clear();
+	ubNumberOfObjects = 1;
+	objectStack.clear();
+	objectStack.resize(1);
 }
 
-bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)
+bool OBJECTTYPE::operator==(const OBJECTTYPE& compare)const
 {
-	return (*this) == const_cast<OBJECTTYPE&>(compare);
+	PERFORMANCE_MARKER
+	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
+		if (this->objectStack == compare.objectStack) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool OBJECTTYPE::operator==(OBJECTTYPE& compare)
 {
 	PERFORMANCE_MARKER
 	if ( memcmp(this, &compare, SIZEOF_OBJECTTYPE_POD) == 0) {
-		if ( memcmp(&(this->pUnion), &(compare.pUnion), SIZEOF_OBJECTTYPE_UNION) == 0) {
-			if (attachments.size() == compare.attachments.size()) {
-				attachmentList::iterator iter = attachments.begin();
-				attachmentList::iterator compareIter = compare.attachments.begin();
-				while (iter != attachments.end() && *iter == *compareIter) {
-					++iter;
-					++compareIter;
-				}
-				if (iter == attachments.end()) {
-					return true;
-				}
-			}
+		if (this->objectStack == compare.objectStack) {
+			return true;
 		}
 	}
 	return false;
@@ -127,14 +231,8 @@ OBJECTTYPE::OBJECTTYPE(const OBJECTTYPE& src)
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
-		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
-		this->fUsed = src.fUsed;				// flags for whether the item is used or not
-		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->attachments = src.attachments;
+		this->objectStack = src.objectStack;
 	}
 }
 
@@ -145,14 +243,8 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OBJECTTYPE& src)
 	if ((void*)this != (void*)&src) {
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
-		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
-		this->fUsed = src.fUsed;				// flags for whether the item is used or not
-		memcpy(&this->pUnion, &src.pUnion, SIZEOF_OBJECTTYPE_UNION);
-		this->attachments = src.attachments;
+		this->objectStack = src.objectStack;
 	}
 	return *this;
 }
@@ -163,31 +255,55 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 {
 	PERFORMANCE_MARKER
 	if ((void*)this != (void*)&src) {
-		//makes changes to size easier as we don't have to fill new arrays by hand
+		//makes changes to size easier as we don't have to init new arrays with 0 by hand
 		this->initialize();
 
 		this->usItem = src.usItem;
 		this->ubNumberOfObjects = src.ubNumberOfObjects;
-		this->fFlags = src.fFlags;
-		this->ubMission = src.ubMission;
-		this->bTrap = src.bTrap;		// 1-10 exp_lvl to detect
-		this->ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
 		this->ubWeight = src.ubWeight;
-		this->fUsed = src.fUsed;				// flags for whether the item is used or not
+
+
 		//and now the big change, the union
 		//copy the old data, making sure not to write over, since the old size is actually 9 bytes
-		memcpy(&(this->pUnion), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,SIZEOF_OBJECTTYPE_UNION));
+		if (ubNumberOfObjects == 1) {
+			memcpy(&((*this)[0]->data), &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
 
-		OBJECTTYPE temp;
-		//it's unlikely max will get less over the versions, but still, check the min
-		for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
-		{
-			if (src.usAttachItem[x] != NOTHING) {
-				CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &temp);
-				attachments.push_back(temp);
+			(*this)[0]->data.fFlags = src.fFlags;
+			(*this)[0]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
+			(*this)[0]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
+			(*this)[0]->data.fUsed = src.fUsed;				// flags for whether the item is used or not
+
+			//it's unlikely max will get less over the versions, but still, check the min
+			for (int x = 0; x < OLD_MAX_ATTACHMENTS_101; ++x)
+			{
+				if (src.usAttachItem[x] != NOTHING) {
+					CreateItem(src.usAttachItem[x], src.bAttachStatus[x], &gTempObject);
+					(*this)[0]->attachments.push_back(gTempObject);
+				}
+			}
+		}
+		else {
+			//we are loading a stack of objects, the union must either be
+			//bStatus[OLD_MAX_OBJECTS_PER_SLOT_101] or
+			//ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101]
+			//and we know it has no attachments
+
+			Version101::OLD_OBJECTTYPE_101_UNION ugYucky;
+			memcpy(&ugYucky, &src.ugYucky, __min(SIZEOF_OLD_OBJECTTYPE_101_UNION,sizeof(ObjectData)));
+
+			//even if the ubNumberOfObjects is 0 we still need to have the data!!!
+			objectStack.resize(max(ubNumberOfObjects,1));
+			for (int x = 0; x < max(ubNumberOfObjects,1); ++x) {
+				(*this)[x]->data.objectStatus = ugYucky.bStatus[x];
+				(*this)[x]->data.fFlags = src.fFlags;
+				(*this)[x]->data.bTrap = src.bTrap;		// 1-10 exp_lvl to detect
+				(*this)[x]->data.ubImprintID = src.ubImprintID;	// ID of merc that item is imprinted on
+				(*this)[x]->data.fUsed = src.fUsed;				// flags for whether the item is used or not
 			}
 		}
 
+		//just a precaution
+		this->ubWeight = CalculateObjectWeight(this);
 	}
 	return *this;
 }
@@ -195,5 +311,5 @@ OBJECTTYPE& OBJECTTYPE::operator=(const OLD_OBJECTTYPE_101& src)
 
 OBJECTTYPE::~OBJECTTYPE()
 {
-	attachments.clear();
+	objectStack.clear();
 }

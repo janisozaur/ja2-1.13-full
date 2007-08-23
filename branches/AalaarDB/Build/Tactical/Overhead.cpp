@@ -227,7 +227,7 @@ UINT32					guiNumAwaySlots = 0;
 UINT8							gbPlayerNum = 0;
 
 // Global for current selected soldier
-UINT16																	gusSelectedSoldier = NO_SOLDIER;
+UINT16                                                                  gusSelectedSoldier = NOBODY;
 INT8																			gbShowEnemies = FALSE;
 
 BOOLEAN																 gfMovingAnimation = FALSE;
@@ -1074,7 +1074,7 @@ BOOLEAN ExecuteOverhead( )
 						}
 						else
 						{
-							int i = 0;
+							//int breakpoint = 0;
 						}
 						pSoldier->flags.fBeginFade	= TRUE;
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
@@ -2127,11 +2127,11 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 				INT8				bPosOfMask;
 
 				bPosOfMask = FindGasMask (pSoldier);
-				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].objectStatus >= GASMASK_MIN_STATUS )
+				//if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD1POS;
 				//}
-				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].objectStatus >= GASMASK_MIN_STATUS )
+				//else if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ][0]->data.objectStatus >= GASMASK_MIN_STATUS )
 				//{
 				//	bPosOfMask = HEAD2POS;
 				//}
@@ -2806,7 +2806,7 @@ void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-		gusSelectedSoldier = NO_SOLDIER;
+		gusSelectedSoldier = NOBODY;
 		// Change UI mode to reflact that we are selected
 		guiPendingOverrideEvent = I_ON_TERRAIN;
 	}
@@ -2878,7 +2878,7 @@ void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fF
 	}
 
 	// Unselect old selected guy
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 		// Get guy
 		pOldSoldier = MercPtrs[ gusSelectedSoldier ];
@@ -3037,7 +3037,7 @@ void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator)
 }
 
 
-void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
+void InternalLocateGridNo( INT16 sGridNo, BOOLEAN fForce )
 {
 	PERFORMANCE_MARKER
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
@@ -3053,7 +3053,7 @@ void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce )
 	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
 }
 
-void LocateGridNo( UINT16 sGridNo )
+void LocateGridNo( INT16 sGridNo )
 {
 	PERFORMANCE_MARKER
 	InternalLocateGridNo( sGridNo, FALSE );
@@ -3147,7 +3147,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 {
 	PERFORMANCE_MARKER
 	INT32					cnt;
-	INT32					iNewSelectedSoldier;
+	INT32					iNewSelectedSoldier = 0;
 	SOLDIERTYPE			 *pTeamSoldier;
 	BOOLEAN				 fMissionFailed = TRUE;
 	INT8										bBuddyIndex;
@@ -3245,11 +3245,12 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 	{
 		if ( !fMissionFailed )
 		{
+			Assert(iNewSelectedSoldier);
 			SelectSoldier( (INT16)iNewSelectedSoldier, FALSE, FALSE );
 		}
 		else
 		{
-			gusSelectedSoldier = NO_SOLDIER;
+			gusSelectedSoldier = NOBODY;
 			// Change UI mode to reflact that we are selected
 			guiPendingOverrideEvent = I_ON_TERRAIN;
 		}
@@ -3371,7 +3372,7 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 		case JOEY:
 			// check to see if Martha can see this
 			pOther = FindSoldierByProfileID( MARTHA, FALSE );
-			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, (UINT8) MaxDistanceVisible(), TRUE ) != 0 ) ) 
+			if ( pOther && (PythSpacesAway( pOther->sGridNo, pSoldierOld->sGridNo ) < 10 || SoldierToSoldierLineOfSightTest( pOther, pSoldierOld, TRUE ) != 0 ) ) 
 			{
 				// Martha has a heart attack and croaks
 				TriggerNPCRecord( MARTHA, 17 );
@@ -3770,8 +3771,8 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity( SOLDIERTYPE * pAttacked )
 			{
 				// if in LOS of this guy's attacker
 				if ( (pAttacked->ubAttackerID != NOBODY && pSoldier->aiData.bOppList[pAttacked->ubAttackerID] == SEEN_CURRENTLY)
-					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < MaxDistanceVisible() ) 
-					|| ( pAttacked->ubAttackerID != NOBODY && PythSpacesAway( pSoldier->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->sGridNo ) < MaxDistanceVisible() ) )
+					|| ( PythSpacesAway( pSoldier->sGridNo, pAttacked->sGridNo ) < pAttacked->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->pathing.bLevel) ) 
+					|| ( pAttacked->ubAttackerID != NOBODY && PythSpacesAway( pSoldier->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->sGridNo ) < pAttacked->GetMaxDistanceVisible(MercPtrs[ pAttacked->ubAttackerID ]->sGridNo, MercPtrs[ pAttacked->ubAttackerID ]->pathing.bLevel) ) )
 				{
 					MakeCivHostile( pSoldier, 2 );
 					if ( pSoldier->aiData.bOppCnt > 0 )
@@ -3872,7 +3873,6 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 	// change civ group side due to external event (wall blowing up)
 	INT32										cnt;
 	SOLDIERTYPE	*						pSoldier;
-	UINT8										ubFirstProfile = NO_PROFILE;
 
 	gTacticalStatus.fCivGroupHostile[ ubCivilianGroup ] = CIV_GROUP_HOSTILE;
 
@@ -3919,9 +3919,8 @@ void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
 	{
 		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife && pSoldier->aiData.bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP )
 		{
-			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, (UINT8) MaxDistanceVisible(), TRUE ) )
+			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, TRUE ) )
 			{
-
 				CivilianGroupMemberChangesSides( pSoldier );
 				break;
 			}
@@ -4297,7 +4296,7 @@ INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeop
 		return( TRUE );
 	}
 
-	if (fPeopleToo && ( bPerson = WhoIsThere2( sGridNo, bLevel ) ) != NO_SOLDIER )
+	if (fPeopleToo && ( bPerson = WhoIsThere2( sGridNo, bLevel ) ) != NOBODY )
 	{
 		// we could be multitiled... if the person there is us, and the gridno is not
 		// our base gridno, skip past these checks
@@ -4422,7 +4421,7 @@ INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, I
 	INT16		 sDesiredLevel;
 	BOOLEAN				fOKCheckStruct;
 
-	if (fPeopleToo && ( bPerson = WhoIsThere2( sGridNo, bLevel ) ) != NO_SOLDIER )
+	if (fPeopleToo && ( bPerson = WhoIsThere2( sGridNo, bLevel ) ) != NOBODY )
 	{
 		// we could be multitiled... if the person there is us, and the gridno is not
 		// our base gridno, skip past these checks
@@ -4571,7 +4570,7 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 	PERFORMANCE_MARKER
 	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
-	if( WhoIsThere2( (INT16)iMapIndex, 0 ) != NO_SOLDIER )
+	if( WhoIsThere2( (INT16)iMapIndex, 0 ) != NOBODY )
 		return FALSE;
 	//Locations on roofs without a roof is not possible, so
 	//we convert the onroof intention to ground.
@@ -5230,13 +5229,13 @@ INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 }
 
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	BOOLEAN fVisible;
 
 	// Check if a hidden tile exists but is not revealed
-	if ( DoesGridnoContainHiddenStruct( usMapPos, &fVisible ) )
+	if ( DoesGridnoContainHiddenStruct( sMapPos, &fVisible ) )
 	{
 		if ( !fVisible )
 		{
@@ -5246,7 +5245,7 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	}
 
 
-	if ( !NewOKDestination( pSoldier, usMapPos, FALSE, (INT8) gsInterfaceLevel ) )
+	if ( !NewOKDestination( pSoldier, sMapPos, FALSE, (INT8) gsInterfaceLevel ) )
 	{
 		return( FALSE );
 	}
@@ -5262,7 +5261,7 @@ BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 	}
 
 	// ATE: Experiment.. take out
-	//else if ( IsRoofVisible( usMapPos ) && gsInterfaceLevel == 0 )
+	//else if ( IsRoofVisible( sMapPos ) && gsInterfaceLevel == 0 )
 	//{
 	//	return( FALSE );
 	//}
@@ -6775,7 +6774,6 @@ BOOLEAN CheckForLosingEndOfBattle( )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	INT8				bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
 	BOOLEAN			fMadeCorpse;
 	BOOLEAN			fDoCapture = FALSE;
@@ -6944,7 +6942,6 @@ BOOLEAN KillIncompacitatedEnemyInSector( )
 	PERFORMANCE_MARKER
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	BOOLEAN			fReturnVal = FALSE;
 
 	// Check if the battle is won!

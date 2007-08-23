@@ -238,7 +238,7 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 BOOLEAN DrawUICursor( )
 {
 	PERFORMANCE_MARKER
-	UINT16						usMapPos;
+	INT16						sMapPos;
 	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;
@@ -265,9 +265,9 @@ BOOLEAN DrawUICursor( )
 		return( TRUE );
 	}
 
-	if (GetMouseMapPos( &usMapPos) )
+	if (GetMouseMapPos( &sMapPos) )
 	{
-		gusCurMousePos = usMapPos;
+		gusCurMousePos = sMapPos;
 
 		if ( guiCurUICursor == NO_UICURSOR )
 		{
@@ -513,7 +513,7 @@ void DrawSnappingCursor( )
 	SOLDIERTYPE								*pSoldier;
 	static BOOLEAN		fShowAP = TRUE;
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if ( gusSelectedSoldier != NOBODY )
 	{
 			GetSoldier( &pSoldier, gusSelectedSoldier );
 

@@ -291,7 +291,7 @@ BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, INT16 sMapPos );
 UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
@@ -300,7 +300,7 @@ UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 
 UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier );
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
+UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, INT16 sMapPos );
 
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
 
@@ -323,11 +323,11 @@ UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier );
 UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 sMapPos );
 INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos );
+INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 sMapPos );
+INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 sMapPos );
 INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier );

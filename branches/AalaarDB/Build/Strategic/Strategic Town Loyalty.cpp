@@ -438,7 +438,6 @@ void UpdateTownLoyaltyRating( INT8 bTownId )
 void HandleTownLoyalty( void )
 {
 	PERFORMANCE_MARKER
-	INT8 bTownId = 0;
 
 /* ARM: removed to experiment with keeping loyalty from drifing without any direct causes from the player
 	for( bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++ )
@@ -685,8 +684,6 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 	UINT32 uiChanceFalseAccusal = 0;
 	INT8 bKillerTeam = 0;
 	BOOLEAN fIncrement = FALSE;
-	UINT32 uiLoyaltyEffectDelay = 0;
-	UINT32 uiValue = 0;
 
 
 	// ubAttacker CAN be NOBODY...	Don't treat is as murder if NOBODY killed us...
@@ -786,13 +783,13 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 		}
 
 		// killer seen by civ?
-		if ( SoldierToSoldierLineOfSightTest( pCivSoldier, MercPtrs[ pSoldier->ubAttackerID ], gGameExternalOptions.ubStraightSightRange, TRUE ) != 0 )
+		if ( SoldierToSoldierLineOfSightTest( pCivSoldier, MercPtrs[ pSoldier->ubAttackerID ], TRUE, gGameExternalOptions.ubStraightSightRange ) != 0 )
 		{
 			bSeenState |= 1;
 		}
 
 		// victim seen by civ?
-		if( SoldierToSoldierLineOfSightTest( pCivSoldier, pSoldier, gGameExternalOptions.ubStraightSightRange, TRUE ) != 0 )
+		if( SoldierToSoldierLineOfSightTest( pCivSoldier, pSoldier, TRUE, gGameExternalOptions.ubStraightSightRange ) != 0 )
 		{
 			bSeenState |= 2;
 		}
@@ -965,7 +962,6 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 	PERFORMANCE_MARKER
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyValue = 0;
-	INT32 iRating = 0;
 
 	// get town id civilian
 	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
@@ -1121,7 +1117,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 					pItemList[ iCounter ].fExists = FALSE;
 
 					// debug message
-					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ pItemList[ iCounter ].o.usItem ], wSectorName );
+					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ pItemList[ iCounter ].object.usItem ], wSectorName );
 				}
 			}
 		}
@@ -1146,7 +1142,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 				{
 					RemoveItemFromPool( gWorldItems[ iCounter ].sGridNo , iCounter, gWorldItems[ iCounter ].ubLevel );
 					// debug message
-					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ gWorldItems[ iCounter ].o.usItem ], wSectorName );
+					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ gWorldItems[ iCounter ].object.usItem ], wSectorName );
 				}
 			}
 		}
@@ -1561,8 +1557,6 @@ INT32 GetNumberOfWholeTownsUnderControlButExcludeCity( INT8 bCityToExclude )
 INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 {
 	PERFORMANCE_MARKER
-	INT32 iNumber = 0;
-	
 	if( GetTownSectorSize( bTownId ) == GetTownSectorsUnderControl( bTownId ) )
 	{
 		return( TRUE );
@@ -1575,8 +1569,6 @@ INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 INT32 IsTownUnderCompleteControlByEnemy( INT8 bTownId )
 {
 	PERFORMANCE_MARKER
-	INT32 iNumber = 0;
-	
 	if ( GetTownSectorsUnderControl( bTownId ) == 0 )
 	{
 		return( TRUE );

@@ -230,8 +230,8 @@ INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
 {
 	PERFORMANCE_MARKER
 	UINT8						cnt, cnt2;
-	INT16						bBestPriority = 0, sBestAdjGridNo;
-	INT16						sPatientGridNo, sBestPatientGridNo;
+	INT16						bBestPriority = 0, sBestAdjGridNo = NOWHERE;
+	INT16						sPatientGridNo = NOWHERE, sBestPatientGridNo = NOWHERE;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
 	SOLDIERTYPE *		pPatient;
 	SOLDIERTYPE *		pBestPatient = NULL;

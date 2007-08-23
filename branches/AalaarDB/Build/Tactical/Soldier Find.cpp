@@ -97,13 +97,13 @@ extern								UINT32	guiUITargetSoldierId;
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
 	PERFORMANCE_MARKER
-	UINT16							usMapPos;
+	INT16							sMapPos;
 	
 	*pMercFlags = 0;
 
-	if ( GetMouseMapPos( &usMapPos ) )
+	if ( GetMouseMapPos( &sMapPos ) )
 	{
-			if ( FindSoldier( usMapPos, pusSoldierIndex, pMercFlags ,FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
+			if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags ,FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
 			{					
 				return( TRUE );
 			}
@@ -115,13 +115,13 @@ BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
 	PERFORMANCE_MARKER
-	UINT16							usMapPos;
+	INT16							sMapPos;
 	
 	*pMercFlags = 0;
 
-	if ( GetMouseMapPos( &usMapPos ) )
+	if ( GetMouseMapPos( &sMapPos ) )
 	{
-			if ( FindSoldier( usMapPos, pusSoldierIndex, pMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
+			if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
 			{					
 				return( TRUE );
 			}
@@ -473,7 +473,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 	return( FALSE );
 }
 
-BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
+BOOLEAN CycleSoldierFindStack( INT16 sMapPos )
 {
 	PERFORMANCE_MARKER
 	UINT16	usSoldierIndex;
@@ -482,7 +482,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 	// Have we initalized for this yet?
 	if ( !gfHandleStack )
 	{
-		if ( FindSoldier( usMapPos, &usSoldierIndex, &uiMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) | FIND_SOLDIER_BEGINSTACK ) )
+		if ( FindSoldier( sMapPos, &usSoldierIndex, &uiMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) | FIND_SOLDIER_BEGINSTACK ) )
 		{
 			gfHandleStack = TRUE;
 		}
@@ -505,7 +505,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 			{
 				gSoldierStack.fUseGridNo = TRUE;
 				gUIActionModeChangeDueToMouseOver = FALSE;
-			gSoldierStack.sUseGridNoGridNo = usMapPos;
+			gSoldierStack.sUseGridNoGridNo = sMapPos;
 			}
 			else
 			{
@@ -665,11 +665,6 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 	// OK, noodle here on what we should do... If we take each frame, it will be different slightly
 	// depending on the frame and the value returned here will vary thusly. However, for the
 	// uses of this function, we should be able to use just the first frame...
-
-	if ( pSoldier->usAniFrame >= gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->usNumberOfObjects )
-	{
-		int i = 0;
-	}
 
 	*psHeight					= (INT16)pSoldier->sBoundingBoxHeight;
 	*psWidth					= (INT16)pSoldier->sBoundingBoxWidth;

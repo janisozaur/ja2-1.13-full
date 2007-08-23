@@ -19,7 +19,6 @@ void MakeClosestEnemyChosenOne()
 	PERFORMANCE_MARKER
 	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
-	INT8					bOldKeys = -1;
 	UINT8					ubClosestEnemy = NOBODY;
 	SOLDIERTYPE *	pSoldier;
 	INT8					bPanicTrigger;
@@ -158,7 +157,7 @@ void MakeClosestEnemyChosenOne()
 	}
 
 	// if we found have an eligible enemy, make him our "chosen one"
-	if (ubClosestEnemy < NOBODY)
+	if (ubClosestEnemy < TOTAL_SOLDIERS)
 	{
 		gTacticalStatus.ubTheChosenOne = ubClosestEnemy;		// flag him as the chosen one
 

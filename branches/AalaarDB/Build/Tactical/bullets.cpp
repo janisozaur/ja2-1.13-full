@@ -146,7 +146,7 @@ void HandleBulletSpecialFlags( INT32 iBulletIndex )
 			else if ( pBullet->usFlags & ( BULLET_FLAG_KNIFE ) )
 			{
 				strcpy( AniParams.zCachedFile, "TILECACHE\\KNIFING.STI" );
-				pBullet->ubItemStatus = pBullet->pFirer->inv[ HANDPOS ].objectStatus;
+				pBullet->ubItemStatus = pBullet->pFirer->inv[ HANDPOS ][0]->data.objectStatus;
 			}
 
 			// Get direction to use for this guy....
@@ -462,6 +462,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 		ConvertGridNoToCenterCellXY( pBullet->sGridNo, &sXPos, &sYPos );
 		LightSpritePosition( pBullet->pAniTile->lightSprite, (INT16)(sXPos/CELL_X_SIZE), (INT16)(sYPos/CELL_Y_SIZE));
 
+#if 0
 		if ( pBullet->pFirer->pathing.bLevel > 0 ) // if firer on roof then
 		{
 			if ( FindBuilding(AniParams.sGridNo) != NULL ) // if this spot is still within the building's grid area
@@ -469,6 +470,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 				LightSpritePower( pBullet->pAniTile->lightSprite, FALSE);
 			}
 		}
+#endif
 
 		return;
 	}

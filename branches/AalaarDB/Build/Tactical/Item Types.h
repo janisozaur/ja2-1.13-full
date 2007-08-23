@@ -173,26 +173,16 @@ public:
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
-class OBJECTTYPE
-{
-public:
+namespace ObjectDataStructs {
 	//these structs are members of the anonymous union, and need only be available within the class space
 	struct OBJECT_GUN
 	{
-		INT8		bGunStatus;			// status % of gun
+		INT8		bGunStatus;		// status % of gun
 		UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
 		UINT8		ubGunShotsLeft;	// duh, amount of ammo left
 		UINT16		usGunAmmoItem;	// the item # for the item table
 		INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
-		UINT8		ubGunState; // SB manual recharge
-	};
-	struct OBJECT_SHOTS
-	{
-		UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
-	};
-	struct OBJECT_STATUS
-	{
-		INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+		UINT8		ubGunState;		// SB manual recharge
 	};
 	struct OBJECT_MONEY
 	{
@@ -201,20 +191,20 @@ public:
 	};
 	struct OBJECT_BOMBS_AND_OTHER
 	{ // this is used by placed bombs, switches, and the action item
-		INT8		bBombStatus;			// % status
+		INT8		bBombStatus;		// % status
 		INT8		bDetonatorType;		// timed, remote, or pressure-activated
-		UINT16		usBombItem;				// the usItem of the bomb.
+		UINT16		usBombItem;			// the usItem of the bomb.
 		union
 		{
-			INT8		bDelay;				// >=0 values used only
+			INT8		bDelay;			// >=0 values used only
 			INT8		bFrequency;		// >=0 values used only
 		};
-		UINT8	ubBombOwner; // side which placed the bomb
-		UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
+		UINT8	ubBombOwner;			// side which placed the bomb
+		UINT8	bActionValue;			// this is used by the ACTION_ITEM fake item
 		union
 		{
-			UINT8 ubTolerance; // tolerance value for panic triggers
-			UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
+			UINT8 ubTolerance;			// tolerance value for panic triggers
+			UINT8 ubLocationID;			// location value for remote non-bomb (special!) triggers
 		};	
 	};
 	struct OBJECT_KEY
@@ -227,7 +217,60 @@ public:
 		UINT8 ubOwnerProfile;
 		UINT8 ubOwnerCivGroup;
 	};
+};
 
+class ObjectData
+{
+public:
+	//needs a default ctor that inits stuff so that an objectStack can be init with 1 empty ObjectData
+	ObjectData() {initialize();};
+	void	initialize() {memset(this, 0, sizeof(ObjectData));};
+	bool operator==(ObjectData& compare);
+	bool operator==(const ObjectData& compare)const;
+
+	//BOOLEAN	Load( HWFILE hFile );
+	//BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	//BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
+
+
+	union {
+		INT8										objectStatus;//holds the same value as bStatus[0]
+		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
+		ObjectDataStructs::OBJECT_GUN				gun;
+		ObjectDataStructs::OBJECT_MONEY				money;
+		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
+		ObjectDataStructs::OBJECT_KEY				key;
+		ObjectDataStructs::OBJECT_OWNER				owner;
+	};
+	INT8		bTrap;			// 1-10 exp_lvl to detect
+	UINT8		fUsed;			// flags for whether the item is used or not
+	UINT8		ubImprintID;	// ID of merc that item is imprinted on
+	INT8		fFlags;
+};
+
+
+//forward declaration
+class OBJECTTYPE;
+typedef	std::list<OBJECTTYPE>	attachmentList;
+class StackedObjectData  {
+public:
+	void	initialize() {attachments.clear(); data.initialize();};
+	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
+	bool operator==(StackedObjectData& compare);
+	bool operator==(const StackedObjectData& compare)const;
+
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
+	BOOLEAN	Save( HWFILE hFile, bool fSavingMap );
+
+	attachmentList	attachments;
+	ObjectData		data;
+};
+typedef std::list<StackedObjectData>	StackedObjects;
+
+class OBJECTTYPE
+{
+public:
 	// Constructor
 	OBJECTTYPE();
 	// Conversion operator
@@ -239,23 +282,24 @@ public:
 	// Destructor
 	~OBJECTTYPE();
 
+	StackedObjectData* operator[](const unsigned int index);
+
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.
 	//  Note that the constructor does this automatically.
 	void initialize();
 
 	bool operator==(OBJECTTYPE& compare);
-	bool operator==(const OBJECTTYPE& compare);
+	bool operator==(const OBJECTTYPE& compare)const;
 
-	int		AddObjectsToStack(int howMany, int objectStatus);
-	int		AddObjectsToStack(OBJECTTYPE& object);
-	int		RemoveObjectsFromStack(int howMany);
+	int		AddObjectsToStack(int howMany, int objectStatus = 100);
+	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);
+	int		RemoveObjectsFromStack(int howMany, OBJECTTYPE* destObject = NULL);
+	void	DuplicateObjectsInStack(OBJECTTYPE& sourceObject, int howMany = -1);
 
 	//see comments in .cpp
 	static	void DeleteMe(OBJECTTYPE** ppObject);
 	static	void CopyToOrCreateAt(OBJECTTYPE** ppTarget, OBJECTTYPE* pSource);
-
-	OBJECTTYPE* GetAttachmentAtIndex(UINT8 index);
 
 	BOOLEAN	Load( HWFILE hFile );
 	BOOLEAN	Load( INT8** hBuffer, float dMajorMapVersion, UINT8 ubMinorMapVersion );
@@ -264,52 +308,17 @@ public:
 	//POD
 	UINT16		usItem;
 	UINT8		ubNumberOfObjects;
-	INT8		fFlags;
-	UINT8		ubMission;
-	INT8		bTrap;        // 1-10 exp_lvl to detect
-	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT16		ubWeight;//used to be UINT8
-	UINT8		fUsed;				// flags for whether the item is used or not
+	UINT8		ubMission;		//EDIT THIS OUT WHEN THERE ARE NO ASSERTS!
+	UINT16		ubWeight;		//used to be UINT8
 
-	typedef	std::list<OBJECTTYPE>	attachmentList;
-	attachmentList					attachments;
-
-//char		endOfPod;//offset to determine where pod stops and where OO data starts
-//#define SIZEOF_OBJECTTYPE_POD offsetof( OBJECTTYPE, endOfPod )
 #define SIZEOF_OBJECTTYPE_POD	sizeof(usItem) + \
 								sizeof(ubNumberOfObjects) + \
-								sizeof(fFlags) + \
 								sizeof(ubMission) + \
-								sizeof(bTrap) + \
-								sizeof(ubImprintID) + \
-								sizeof(ubWeight) + \
-								sizeof(fUsed)
+								sizeof(ubWeight)
 
-	union
-	{
-		int				pUnion;
-		INT8			objectStatus;
-		OBJECT_GUN		gun;
-		OBJECT_SHOTS	shots;
-		OBJECT_STATUS	status;
-		OBJECT_MONEY	money;
-		OBJECT_BOMBS_AND_OTHER	bombs;
-		OBJECT_KEY		key;
-		OBJECT_OWNER	owner;
-	};
-	//the union doesn't have a name to reduce typing(wasn't my idea), so find it's size the hard way
-	
-#define SIZEOF_OBJECTTYPE_UNION ( \
-	__max(sizeof(OBJECT_GUN), \
-	__max(sizeof(OBJECT_SHOTS), \
-	__max(sizeof(OBJECT_STATUS), \
-	__max(sizeof(OBJECT_MONEY), \
-	__max(sizeof(OBJECT_BOMBS_AND_OTHER), \
-	__max(sizeof(OBJECT_KEY), \
-	sizeof(OBJECT_OWNER) ))))))) \
-	
-//#define SIZEOF_OBJECTTYPE_UNION offsetof(OBJECTTYPE, gun);
 
+
+	StackedObjects		objectStack;
 };
 
 extern OBJECTTYPE gTempObject;

@@ -44,7 +44,7 @@ void Add3X3Pit( INT32 iMapIndex )
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
 		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
 		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
-		ExitGrid.usGridNo = (UINT16)iMapIndex;
+		ExitGrid.sGridNo = (UINT16)iMapIndex;
 		AddExitGridToWorld( iMapIndex + 159, &ExitGrid );
 		AddExitGridToWorld( iMapIndex -	1, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 161, &ExitGrid );
@@ -98,7 +98,7 @@ void Add5X5Pit( INT32 iMapIndex )
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
 		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
 		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
-		ExitGrid.usGridNo = (UINT16)iMapIndex;
+		ExitGrid.sGridNo = (UINT16)iMapIndex;
 		AddExitGridToWorld( iMapIndex + 318, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 158, &ExitGrid );
 		AddExitGridToWorld( iMapIndex -	2, &ExitGrid );
@@ -183,11 +183,11 @@ void AddAllPits()
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
-		if( gWorldItems[ i ].o.usItem == ACTION_ITEM )
+		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
-			if( gWorldItems[ i ].o.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+			if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 				Add3X3Pit( gWorldItems[ i ].sGridNo );		
-			else if( gWorldItems[ i ].o.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+			else if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Add5X5Pit( gWorldItems[ i ].sGridNo );
 		}	
 	}
@@ -199,11 +199,11 @@ void RemoveAllPits()
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
-		if( gWorldItems[ i ].o.usItem == ACTION_ITEM )
+		if( gWorldItems[ i ].object.usItem == ACTION_ITEM )
 		{
-			if( gWorldItems[ i ].o.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+			if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
 				Remove3X3Pit( gWorldItems[ i ].sGridNo );		
-			else if( gWorldItems[ i ].o.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+			else if( gWorldItems[ i ].object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Remove5X5Pit( gWorldItems[ i ].sGridNo );
 		}	
 	}
@@ -257,7 +257,7 @@ void HandleFallIntoPitFromAnimation( UINT8 ubID )
 
 	// Given exit grid, make buddy move to next sector....
 	pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-	pSoldier->usStrategicInsertionData = ExitGrid.usGridNo;
+	pSoldier->usStrategicInsertionData = ExitGrid.sGridNo;
 
 	pSoldier->sSectorX = ExitGrid.ubGotoSectorX;
 	pSoldier->sSectorY = ExitGrid.ubGotoSectorY;

@@ -99,7 +99,7 @@ void SetupTextInputForMapInfo()
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 363, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_EXCLUSIVE_COORDINATE );
 	swprintf( str, L"%d", gExitGrid.ubGotoSectorZ );
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 383, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gExitGrid.usGridNo );
+	swprintf( str, L"%d", gExitGrid.sGridNo );
 	AddTextInputField( iScreenWidthOffset + 338, 2 * iScreenHeightOffset + 403, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 }
 
@@ -242,7 +242,7 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSectorY = (UINT8)max( min( gExitGrid.ubGotoSectorY, 16 ), 1 );
 	}
 	gExitGrid.ubGotoSectorZ	= (UINT8)max( min( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.usGridNo					= (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.sGridNo					= (UINT16)max( min( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
 }
@@ -258,7 +258,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	SetInputFieldStringWith16BitString( 7, str );
 	swprintf( str, L"%d", gExitGrid.ubGotoSectorZ );
 	SetInputFieldStringWith16BitString( 8, str );
-	swprintf( str, L"%d", gExitGrid.usGridNo );
+	swprintf( str, L"%d", gExitGrid.sGridNo );
 	SetInputFieldStringWith16BitString( 9, str );
 	SetActiveField( 0 );
 	return TRUE;

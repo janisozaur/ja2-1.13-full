@@ -68,7 +68,7 @@ typedef struct
 	UINT8		ubFiller;				//										20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	usGoToGridno;
+	INT16	sGoToGridno;
 	INT16		sActionData;		// special action value	
 
 #if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
