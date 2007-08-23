@@ -67,20 +67,20 @@
 	#include "meanwhile.h"
 #endif
 
-#define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
+#define  SET_MOVEMENTCOST( a, b, c, d )			( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
-#define  SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b ) 
+#define  SET_CURRMOVEMENTCOST( a, b )			SET_MOVEMENTCOST( usGridNo, a, 0, b ) 
 
 #define	 TEMP_FILE_FOR_TILESET_CHANGE				"jatileS34.dat"
 
 #define	 MAP_FULLSOLDIER_SAVED				0x00000001
-#define	 MAP_WORLDONLY_SAVED					0x00000002
+#define	 MAP_WORLDONLY_SAVED				0x00000002
 #define	 MAP_WORLDLIGHTS_SAVED				0x00000004
-#define	 MAP_WORLDITEMS_SAVED					0x00000008
-#define  MAP_EXITGRIDS_SAVED					0x00000010
-#define  MAP_DOORTABLE_SAVED					0x00000020
-#define  MAP_EDGEPOINTS_SAVED					0x00000040
-#define  MAP_AMBIENTLIGHTLEVEL_SAVED	0x00000080
+#define	 MAP_WORLDITEMS_SAVED				0x00000008
+#define  MAP_EXITGRIDS_SAVED				0x00000010
+#define  MAP_DOORTABLE_SAVED				0x00000020
+#define  MAP_EDGEPOINTS_SAVED				0x00000040
+#define  MAP_AMBIENTLIGHTLEVEL_SAVED		0x00000080
 #define	 MAP_NPCSCHEDULES_SAVED				0x00000100
 
 #ifdef JA2EDITOR
@@ -92,6 +92,7 @@
 INT32 guiWorldCols = 160;
 INT32 guiWorldRows = 160;
 // размеры должны быть произведением 8
+// size must be multiple of 8
 //</SB>
 
 CHAR8 gubFilename[200];
@@ -163,7 +164,7 @@ INT16		gsRecompileAreaBottom = 0;
 	extern UINT32 uiNumImagesReloaded;
 #endif
 
-BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
+BOOLEAN DoorAtGridNo( INT32 iMapIndex )
 {
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
@@ -176,7 +177,7 @@ BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
+BOOLEAN OpenableAtGridNo( INT32 iMapIndex )
 {
 	STRUCTURE *pStruct;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
@@ -189,7 +190,7 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
+BOOLEAN FloorAtGridNo( INT32 iMapIndex )
 {
 	LEVELNODE	*pLand;
 	UINT32 uiTileType;
@@ -210,7 +211,7 @@ BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 	return FALSE;
 }
 
-BOOLEAN GridNoIndoors( UINT32 iMapIndex )
+BOOLEAN GridNoIndoors( INT32 iMapIndex )
 {
 	if( gfBasement || gfCaves )
 		return TRUE;
@@ -1678,7 +1679,8 @@ BOOLEAN SaveWorld( const STR8 puiFilename )
 
 	bCounts = (UINT8**)MemAlloc(WORLD_MAX*sizeof(UINT8*));
 	for(i = 0; i<WORLD_MAX; i++)
-		bCounts[i] = MemAlloc(8);
+		bCounts[i] = (UINT8*)MemAlloc(8);
+	
 
 	sprintf( aFilename, "MAPS\\%s", puiFilename );
 
@@ -4248,6 +4250,8 @@ extern INT32 gsOutOfRangeGridNo;
 extern INT32 gsLastCoverGridNo;
 extern INT32 gsLastSoldierGridNo;
 extern INT32 gsLastVisibleToSoldierGridNo;
+
+
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
 	int i, j;
@@ -4292,8 +4296,8 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
 #endif
 
-	//WORLD_ROWS = nWorldRows;
-	//WORLD_COLS = nWorldCols;
+	WORLD_ROWS = nWorldRows;
+	WORLD_COLS = nWorldCols;
 
 	dirDelta[0]= -WORLD_COLS;
 	dirDelta[1]= 1-WORLD_COLS;

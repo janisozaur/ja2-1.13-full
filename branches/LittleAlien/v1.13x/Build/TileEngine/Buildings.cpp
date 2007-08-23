@@ -41,8 +41,8 @@ BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 BUILDING * GenerateBuilding( INT32 sDesiredSpot )
 {
 
-	UINT32	uiLoop;
-	UINT32	uiLoop2;
+	INT32	uiLoop;
+	INT32	uiLoop2;
 	INT32		sTempGridNo, sNextTempGridNo, sVeryTemporaryGridNo;
 	INT32		sStartGridNo, sCurrGridNo, sPrevGridNo = NOWHERE, sRightGridNo;
 	INT8		bDirection, bTempDirection;

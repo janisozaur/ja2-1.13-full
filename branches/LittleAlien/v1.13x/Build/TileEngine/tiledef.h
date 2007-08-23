@@ -162,14 +162,14 @@ BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType );
 
 BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN fDelete );
 
-BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel );
-UINT8		GetLandLevelDepth( UINT32 iMapIndex );
+BOOLEAN GetTypeLandLevel( INT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel );
+UINT8		GetLandLevelDepth( INT32 iMapIndex );
 
 BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace );
 
 BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  );
 
-BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex );
+BOOLEAN MoveLandIndexToTop( INT32 iMapIndex, UINT16 usIndex );
 
 
 // Database access functions
@@ -181,8 +181,8 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType );
 BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags );
 
 BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight );
-BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
-BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
+BOOLEAN AnyHeigherLand( INT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
+BOOLEAN AnyLowerLand( INT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
 BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation );
 BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8 *pubLevel );
 UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex );

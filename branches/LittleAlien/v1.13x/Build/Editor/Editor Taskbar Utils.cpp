@@ -869,17 +869,17 @@ void RenderSelectedItemBlownUp()
 
 void RenderEditorInfo( )
 {
-	CHAR16					FPSText[ 50 ];
+	CHAR16				FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	INT32						iMapIndex;
+	INT32				iMapIndexD;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
 
 	//Display the mapindex position
-	if( GetMouseMapPos( &uiMapIndex ) )
-		swprintf( FPSText, L"   (%d)   ", uiMapIndex );
+	if( GetMouseMapPos( &iMapIndexD ) )
+		swprintf( FPSText, L"   (%d)   ", iMapIndexD );
 	else
 		swprintf( FPSText, L"          " );
 	mprintfEditor( (UINT16)(iScreenWidthOffset + 50-StringPixLength( FPSText, FONT12POINT1 )/2), 2 * iScreenHeightOffset + 463, FPSText );

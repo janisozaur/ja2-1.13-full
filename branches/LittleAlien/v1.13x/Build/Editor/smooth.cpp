@@ -459,7 +459,7 @@ void SmoothAllTerrainWorld( void )
 	}
 }
 
-void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth )
+void SmoothTerrainRadius( INT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -501,7 +501,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 	}
 }
 
-void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth )
+void SmoothAllTerrainTypeRadius( INT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForceSmooth )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

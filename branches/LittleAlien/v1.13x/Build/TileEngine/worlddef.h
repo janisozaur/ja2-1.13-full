@@ -26,8 +26,8 @@ extern INT32 guiWorldRows;
 #define OLD_WORLD_COORD_ROWS			1600
 #define OLD_WORLD_MAX					25600
 
-#define WORLD_COLS			160 //guiWorldCols
-#define WORLD_ROWS			160 //guiWorldRows
+#define WORLD_COLS			guiWorldCols
+#define WORLD_ROWS			guiWorldRows
 #define WORLD_COORD_COLS			(WORLD_COLS*CELL_X_SIZE)
 #define WORLD_COORD_ROWS			(WORLD_ROWS*CELL_Y_SIZE)
 #define WORLD_MAX					(WORLD_COLS*WORLD_ROWS)
@@ -306,12 +306,12 @@ LEVELNODE *GetAnimProfileFlags( INT32 sGridNo, UINT16 *usFlags, SOLDIERTYPE **pp
 
 void ReloadTileset( UINT8 ubID );
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex );
-BOOLEAN DoorAtGridNo( UINT32 iMapIndex );
-BOOLEAN GridNoIndoors( UINT32 iMapIndex );
+BOOLEAN FloorAtGridNo( INT32 iMapIndex );
+BOOLEAN DoorAtGridNo( INT32 iMapIndex );
+BOOLEAN GridNoIndoors( INT32 iMapIndex );
 
 
-BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
+BOOLEAN OpenableAtGridNo( INT32 iMapIndex );
 
 void RecompileLocalMovementCostsInAreaWithFlags( void );
 void AddTileToRecompileArea( INT32 sGridNo );

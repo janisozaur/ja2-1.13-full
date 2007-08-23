@@ -82,11 +82,11 @@ void SetMercEditingMode( UINT8 ubNewMode );
 void ResetAllMercPositions();
 
 void EraseMercWaypoint();
-void AddMercWaypoint( UINT32 iMapIndex );
+void AddMercWaypoint( INT32 iMapIndex );
 
 void SetEnemyColorCode( UINT8 ubColorCode );
 
-void SpecifyEntryPoint( UINT32 iMapIndex );
+void SpecifyEntryPoint( INT32 iMapIndex );
 
 //Modify stats of current soldiers
 void SetMercOrders( INT8 bOrders );

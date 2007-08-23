@@ -31,6 +31,7 @@
 	#include "GameSettings.h"
 	#include "worldman.h"
 	#include "math.h"
+#include "Map Information.h"
 	#include "Interface Items.h"
 #endif
 
@@ -884,8 +885,8 @@ INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 	//rain
 	// Reduce breath gain on 25%/rain intensity
-	// Lalien: not in strategic map
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	// Lalien: only for soldiers that are in loaded sector, 
+	if ( gfWorldLoaded &&  pSoldier->bInSector)
 	{
 		if( sBreathPerAP < 0 && ( pSoldier->bLevel  || !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF )  )  && pSoldier->bBreath > 1)
 		{

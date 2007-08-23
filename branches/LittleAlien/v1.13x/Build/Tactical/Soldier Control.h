@@ -697,9 +697,9 @@ public:
 	INT8												bOppList[MAX_NUM_SOLDIERS]; // AI knowledge database
 	INT8												bLastAction;
 	INT8												bAction;	
-	UINT32											usActionData;
+	INT32											usActionData;
 	INT8												bNextAction;
-	UINT32											usNextActionData;
+	INT32											usNextActionData;
 	INT8												bActionInProgress;
 	INT8												bAlertStatus;
 	INT8												bOppCnt;

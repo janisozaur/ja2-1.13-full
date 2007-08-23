@@ -21,7 +21,7 @@ void InitEditorBuildingsToolbar();
 //Selection method callbacks
 //Building utility functions
 void UpdateBuildingsInfo();
-void KillBuilding( UINT32 iMapIndex );
+void KillBuilding( INT32 iMapIndex );
 
 
 typedef struct BUILDINGLAYOUTNODE

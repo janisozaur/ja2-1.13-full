@@ -657,7 +657,7 @@ void ResetAllMercPositions()
 	gsSelectedMercID = -1;
 }
 
-void AddMercWaypoint( UINT32 iMapIndex )
+void AddMercWaypoint( INT32 iMapIndex )
 {
 	INT32 iNum;
 	// index 0 isn't used
@@ -2121,7 +2121,7 @@ void SetMercEditability( BOOLEAN fEditable )
 //points together.  If one of the points is isolated, then the map will be rejected.  It
 //isn't necessary to specify all four points.  You wouldn't want to specify a north point if
 //there isn't going to be any traversing to adjacent maps from that side.
-void SpecifyEntryPoint( UINT32 iMapIndex )
+void SpecifyEntryPoint( INT32 iMapIndex )
 {
 	INT32 *psEntryGridNo;
 	BOOLEAN fErasing = FALSE;
