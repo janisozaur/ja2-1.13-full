@@ -210,10 +210,15 @@
 #define BAD_REPAIR_EASE							-2	
 #define BAD_ACCURACY							-1	
 
-#define KEYRING_X 487
-#define KEYRING_Y (105 + INV_INTERFACE_START_Y)
-#define MAP_KEYRING_X 217
-#define MAP_KEYRING_Y 271
+// CHRISL: Adjust coords for layout changes needed for new inventory system
+extern int KEYRING_X;
+extern int KEYRING_Y;
+extern int MAP_KEYRING_X;
+extern int MAP_KEYRING_Y;
+//#define KEYRING_X 487
+//#define KEYRING_Y (105 + INV_INTERFACE_START_Y)
+//#define MAP_KEYRING_X 217
+//#define MAP_KEYRING_Y 271
 #define KEYRING_WIDTH 30
 #define KEYRING_HEIGHT 24
 #define TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X 215
@@ -526,28 +531,9 @@ INV_HELPTEXT gItemDescHelpText =
 BOOLEAN gfItemDescHelpTextOffset = FALSE;
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS (sX,sY get set via InitInvSlotInterface() )
-INV_REGIONS gSMInvData[] = 
-{
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,		0,	0,			// HELMETPOS
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,		0,	0,			// VESTPOS
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		LEGS_INV_SLOT_WIDTH,	LEGS_INV_SLOT_HEIGHT,		0,	0,			// LEGPOS,
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// HEAD1POS
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// HEAD2POS
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// HANDPOS,
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// SECONDHANDPOS
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// BIGPOCK1
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// BIGPOCK2
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// BIGPOCK3
-	TRUE,		INV_BAR_DX,		INV_BAR_DY,		BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,		0,	0,			// BIGPOCK4
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK1
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK2
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK3
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK4
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK5
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK6
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0,			// SMALLPOCK7
-	FALSE,		INV_BAR_DX,		INV_BAR_DY,		SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,			0,	0				// SMALLPOCK8
-};
+/* CHRISL: Add new region definitions for the new inventory slots needed for the new inventory
+system to work properly. */
+INV_REGIONS gSMInvData[NUM_INV_SLOTS];
 
 
 typedef struct
@@ -851,21 +837,150 @@ void GenerateConsString( STR16 zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimi
 	}
 }
 
+// CHRISL: New function to setup GSMInvData based on game options
+void InitInvData(INT8 num, BOOLEAN fBigPocket, INT16 sBarDx, INT16 sBarDy, INT16 sWidth, INT16 sHeight, INT16 sX, INT16 sY)
+{
+	gSMInvData[num].fBigPocket = fBigPocket;
+	gSMInvData[num].sBarDx = sBarDx;
+	gSMInvData[num].sBarDy = sBarDy;
+	gSMInvData[num].sHeight = sHeight;
+	gSMInvData[num].sWidth = sWidth;
+	gSMInvData[num].sX = sX;
+	gSMInvData[num].sY = sY;
+}
+void InitInventoryOld()
+{
+	InitInvData(HELMETPOS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
+	InitInvData(VESTPOS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// VESTPOS
+	InitInvData(LEGPOS,			FALSE,	INV_BAR_DX,	INV_BAR_DY,	LEGS_INV_SLOT_WIDTH,	LEGS_INV_SLOT_HEIGHT,	0, 0);	// LEGPOS
+	InitInvData(HEAD1POS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// HEAD1POS
+	InitInvData(HEAD2POS,		FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// HEAD2POS
+	InitInvData(HANDPOS,		TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// HANDPOS
+	InitInvData(SECONDHANDPOS,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// SECONDHANDPOS
+	InitInvData(BIGPOCK1POS,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK1
+	InitInvData(BIGPOCK2POS,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK2
+	InitInvData(BIGPOCK3POS,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK3
+	InitInvData(BIGPOCK4POS,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK4
+	InitInvData(SMALLPOCK1POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK1
+	InitInvData(SMALLPOCK2POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK2
+	InitInvData(SMALLPOCK3POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK3
+	InitInvData(SMALLPOCK4POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK4
+	InitInvData(SMALLPOCK5POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK5
+	InitInvData(SMALLPOCK6POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK6
+	InitInvData(SMALLPOCK7POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK7
+	InitInvData(SMALLPOCK8POS,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK8
+}
+void InitInventoryNew()
+{
+	InitInvData(0,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,	0, 0);	// HELMETPOS
+	InitInvData(1,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// VESTPOS
+	InitInvData(2,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	LEGS_INV_SLOT_WIDTH,	LEGS_INV_SLOT_HEIGHT,	0, 0);	// LEGPOS
+	InitInvData(3,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// HEAD1POS
+	InitInvData(4,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// HEAD2POS
+	InitInvData(5,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// HANDPOS
+	InitInvData(6,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// SECONDHANDPOS
+	InitInvData(7,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// VESTPOCKPOS
+	InitInvData(8,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// LTHIGHPOCKPOS
+	InitInvData(9,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// RTHIGHPOCKPOS
+	InitInvData(10,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// CPACKPOCKPOS
+	InitInvData(11,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// BPACKPOCKPOS
+	InitInvData(12,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// GUNSLINGPOCKPOS
+	InitInvData(13,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// KNIFEPOCKPOS
+	InitInvData(14,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK1
+	InitInvData(15,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK2
+	InitInvData(16,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK3
+	InitInvData(17,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK4
+	InitInvData(18,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK5
+	InitInvData(19,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK6
+	InitInvData(20,	TRUE,	INV_BAR_DX,	INV_BAR_DY,	BIG_INV_SLOT_WIDTH,		BIG_INV_SLOT_HEIGHT,	0, 0);	// BIGPOCK7
+	InitInvData(21,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// MEDPOCK1
+	InitInvData(22,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// MEDPOCK2
+	InitInvData(23,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// MEDPOCK3
+	InitInvData(24,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,	0, 0);	// MEDPOCK4
+	InitInvData(25,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK1
+	InitInvData(26,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK2
+	InitInvData(27,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK3
+	InitInvData(28,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK4
+	InitInvData(29,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK5
+	InitInvData(30,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK6
+	InitInvData(31,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK7
+	InitInvData(32,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK8
+	InitInvData(33,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK9
+	InitInvData(34,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK10
+	InitInvData(35,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK11
+	InitInvData(36,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK12
+	InitInvData(37,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK13
+	InitInvData(38,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK14
+	InitInvData(39,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK15
+	InitInvData(40,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK16
+	InitInvData(41,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK17
+	InitInvData(42,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK18
+	InitInvData(43,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK19
+	InitInvData(44,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK20
+	InitInvData(45,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK21
+	InitInvData(46,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK22
+	InitInvData(47,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK23
+	InitInvData(48,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK24
+	InitInvData(49,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK25
+	InitInvData(50,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK26
+	InitInvData(51,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK27
+	InitInvData(52,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK28
+	InitInvData(53,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK29
+	InitInvData(54,	FALSE,	INV_BAR_DX,	INV_BAR_DY,	SM_INV_SLOT_WIDTH,		SM_INV_SLOT_HEIGHT,		0, 0);	// SMALLPOCK30
+}
+void InitInventoryVehicle(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
+{
+	int cnt;
+
+	for(cnt=0; cnt<NUM_INV_SLOTS; cnt++)
+	{
+		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
+		if(vehicleInv[cnt])
+			InitInvData(cnt, TRUE, INV_BAR_DX, INV_BAR_DY, BIG_INV_SLOT_WIDTH, BIG_INV_SLOT_HEIGHT, pRegionDesc[cnt].sX, pRegionDesc[cnt].sY);
+		else
+			InitInvData(cnt, TRUE, INV_BAR_DX, INV_BAR_DY, BIG_INV_SLOT_WIDTH, BIG_INV_SLOT_HEIGHT, 0, 0);
+		MSYS_DefineRegion( &gSMInvRegion[ cnt ], gSMInvData[ cnt ].sX, gSMInvData[ cnt ].sY, (INT16)(gSMInvData[ cnt ].sX + gSMInvData[ cnt ].sWidth), (INT16)(gSMInvData[ cnt ].sY + gSMInvData[ cnt ].sHeight), ( INT8 )( fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH ),
+							 MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback ); 
+		// Add region
+		MSYS_AddRegion( &gSMInvRegion[ cnt ] );
+		MSYS_SetRegionUserData( &gSMInvRegion[ cnt ], 0, cnt );
+	}
+}
+// CHRISL: Function to recreate inventory mouse regions
+void ResetMapInvRegions(INV_REGION_DESC *pRegionDesc, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, BOOLEAN fSetHighestPrioity)
+{
+	for(int cnt=0; cnt<NUM_INV_SLOTS; cnt++)
+	{
+		MSYS_RemoveRegion( &gSMInvRegion[ cnt ]);
+		MSYS_DefineRegion( &gSMInvRegion[ cnt ], gSMInvData[ cnt ].sX, gSMInvData[ cnt ].sY, (INT16)(gSMInvData[ cnt ].sX + gSMInvData[ cnt ].sWidth), (INT16)(gSMInvData[ cnt ].sY + gSMInvData[ cnt ].sHeight), ( INT8 )( fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH ),
+							 MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback ); 
+		// Add region
+		MSYS_AddRegion( &gSMInvRegion[ cnt ] );
+		MSYS_SetRegionUserData( &gSMInvRegion[ cnt ], 0, cnt );
+	}
+}
+
 BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity )
 {
-	PERFORMANCE_MARKER
 	INT32 cnt;
-  VOBJECT_DESC    VObjectDesc;
+	VOBJECT_DESC    VObjectDesc;
 	
-/*
- *  Ok i think that here the money button and window is initialized 
- *  so we also will initialize here coord of button
- *  this function is called in tactical screen when SMPanel is initialized 
- *  and also in StrategicScreen i think i didnt check it. 
- *  any questions? joker
- */
+	/*
+	*  Ok i think that here the money button and window is initialized 
+	*  so we also will initialize here coord of button
+	*  this function is called in tactical screen when SMPanel is initialized 
+	*  and also in StrategicScreen i think i didnt check it. 
+	*  any questions? joker
+	*/
 
-	gMoneyButtonLoc.x = (343 + INTERFACE_START_X);
+	// CHRISL: Initialize gSMInvData based on inventory system
+	if(gGameOptions.ubInventorySystem)
+		InitInventoryNew();
+	else
+		InitInventoryOld();
+	
+	// CHRISL: Adjusted location of the Money button on the tactical inventory screen
+	gMoneyButtonLoc.x = (!gGameOptions.ubInventorySystem) ? (343 + INTERFACE_START_X) : (244 + INTERFACE_START_X);
 	gMoneyButtonLoc.y = ( 11 + INV_INTERFACE_START_Y );
 	// Load all four body type images
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -1008,6 +1123,7 @@ void DisableInvRegions( BOOLEAN fDisable )
 
 		MSYS_DisableRegion( &gSM_SELMERCMoneyRegion );			
 		EnableKeyRing( FALSE );
+		RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 	else
 	{
@@ -1015,6 +1131,7 @@ void DisableInvRegions( BOOLEAN fDisable )
 
 		MSYS_EnableRegion( &gSM_SELMERCMoneyRegion );			
 		EnableKeyRing( TRUE );
+		RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 	
 }
@@ -1108,24 +1225,66 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 		if ( KeyExistsInKeyRing( pSoldier, ANYKEY, NULL ) )
 		{
 			// blit gold key here?
+			// CHRISL: adjust settings to use variables for coords
 			if ( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, 496, KEYRING_Y + 1, VO_BLT_SRCTRANSPARENCY, NULL );
-				RestoreExternBackgroundRect( 496, KEYRING_Y + 1, 29, 23 );
+				sX=(!gGameOptions.ubInventorySystem)?496:221;
+				sY=(!gGameOptions.ubInventorySystem)?INV_INTERFACE_START_Y+106:INV_INTERFACE_START_Y+5;
 			}
 			else
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, 217, 271, VO_BLT_SRCTRANSPARENCY, NULL );
-				RestoreExternBackgroundRect( 217, 271, 29, 23 );
+				sX=(!gGameOptions.ubInventorySystem)?217:188;
+				sY=(!gGameOptions.ubInventorySystem)?271:126;
 			}
+			BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
+			RestoreExternBackgroundRect( sX, sY, 29, 23 );
 		}
 	}	
 }
 
+// CHRISL: New function to determine whether to activate Combat and Backpack slots
+BOOLEAN CheckActivationStatus(SOLDIERTYPE *pSoldier, INT16 cSlot, INT16 bSlot, INT16 sPocket)
+{
+	INT8	cLevel, bLevel;
+
+	cLevel = LoadBearingEquipment[Item[pSoldier->inv[cSlot].usItem].ubClassIndex].lbeCombo;
+	bLevel = LoadBearingEquipment[Item[pSoldier->inv[bSlot].usItem].ubClassIndex].lbeCombo;
+	
+	if(sPocket==cSlot)
+	{
+		if(pSoldier->inv[bSlot].usItem != NOTHING)
+		{
+			if(bLevel == NOTHING)
+			{
+				return(TRUE);
+			}
+		}
+	}
+	if(sPocket==bSlot)
+	{
+		if(pSoldier->inv[cSlot].usItem != NOTHING)
+		{
+			if(cLevel == NOTHING)
+			{
+				return(TRUE);
+			}
+		}
+	}
+	return(FALSE);
+}
+
+/* CHRISL: This function needed to be reworked so that inactive pockets would be properly "hatched" and so
+that active, empty pockets will display the appropriate background silhouette. */
+extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
 
 void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLevel )
 {
 	PERFORMANCE_MARKER
+	// CHRISL: Only run if we're looking at a legitimate pocket
+	if(!gGameOptions.ubInventorySystem && !oldInv[sPocket])
+		return;
+	if((pSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
+		return;
 	INT16 sX, sY;
 	INT16	sBarX, sBarY;
 	OBJECTTYPE  *pObject;
@@ -1188,16 +1347,20 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 //		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem][0]->data.fFlags & ITEM_TWO_HANDED)
 		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].twohanded )
 		{
-//			if( guiCurrentScreen != MAP_SCREEN )
+			// CHRISL: Change coords for STI that covers 2nd hand location when carrying a 2handed weapon
 			if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiSecItemHiddenVO, 0, 217, sY, VO_BLT_SRCTRANSPARENCY, NULL );
-				RestoreExternBackgroundRect( 217, sY, 72, 28 );
+				newX = (!gGameOptions.ubInventorySystem) ? 217 : 114;
+				newY = (!gGameOptions.ubInventorySystem) ? sY : (sY - 1);
+				BltVideoObjectFromIndex( guiSAVEBUFFER, guiSecItemHiddenVO, gGameOptions.ubInventorySystem, newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
+				RestoreExternBackgroundRect( newX, newY, 72, 28 );
 			}
 			else
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218, VO_BLT_SRCTRANSPARENCY, NULL );
-				RestoreExternBackgroundRect( 14, 218, 102, 24 );
+				newX = (!gGameOptions.ubInventorySystem) ? 14 : 6;
+				newY = (!gGameOptions.ubInventorySystem) ? 218 : 217;
+				BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapInvSecondHandBlockout, gGameOptions.ubInventorySystem, newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
+				RestoreExternBackgroundRect( newX, newY, 102, 24 );
 			}
 		}		
 	}
@@ -1217,6 +1380,32 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	//INVRenderItem( guiSAVEBUFFER, pObject, (INT16)(sX + gSMInvData[ sPocket ].sSubX), (INT16)(sY + gSMInvData[ sPocket ].sSubY), gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight, fDirtyLevel, &(gfSM_HandInvDispText[ sPocket ] ) );
 	INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight, fRenderDirtyLevel, NULL, 0, fOutline, sOutlineColor );
 
+	// CHRISL: Display pocket capacity if we're holding something in the cursor
+	if (!gfSMDisableForItems && gGameOptions.ubInventorySystem && gpItemPointer != NULL)
+	{
+		RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, sPocket, pSoldier), sPocket, pSoldier);
+		if(ItemSlotLimit(gpItemPointer, sPocket, pSoldier)==0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
+			fHatchItOut = TRUE;
+	}
+
+	// CHRISL: Change whether we hatch a pocket to be dependant on the current item
+	if(gpItemPointer != NULL)
+	{
+		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
+			fHatchItOut = TRUE;
+	}
+	else if(pObject->usItem != NOTHING)
+	{
+		if(!gfSMDisableForItems && !CanItemFitInPosition(pSoldier, pObject, (INT8)sPocket, FALSE))
+			fHatchItOut = TRUE;
+	}
+	// CHRISL: Don't hatch second hand position if we're holding a two handed item
+	if(sPocket == SECONDHANDPOS)
+	{
+		if(Item[pSoldier->inv[HANDPOS].usItem].twohanded)
+			fHatchItOut = FALSE;
+	}
+#if 0
 	if ( gbInvalidPlacementSlot[ sPocket ] )
 	{
 		if ( sPocket != SECONDHANDPOS )
@@ -1228,6 +1417,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 			}
 		}
 	}
+#endif
 
 	//if we are in the shop keeper interface
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -2027,6 +2217,86 @@ void InitItemInterface( )
 
 }
 
+// CHRISL: Function to display pocket inventory quantity based on object in cursor
+void RenderPocketItemCapacity( INT8 pCapacity, INT16 bPos, SOLDIERTYPE *pSoldier )
+{
+	INT16				sX, sY;
+	static CHAR16		pStr[ 100 ];
+
+	// Can pocket hold the item in the cursor?
+	if(!CanItemFitInPosition( pSoldier, gpItemPointer, (INT8)bPos, FALSE ) || (pCapacity == 0 && !CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos])) || InItemDescriptionBox( ))
+		return;
+
+	// Setup display parameters
+	SetFont( ITEM_FONT );
+	SetFontBackground( FONT_MCOLOR_BLACK );
+	SetFontForeground( FONT_RED );
+	if(CompatibleAmmoForGun(gpItemPointer, &pSoldier->inv[bPos]))
+		swprintf( pStr, L"L" );
+	else if(pCapacity != 0 && CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)bPos, FALSE))
+	{
+		// Adjust capacity to account for current items
+		if(gpItemPointer->usItem == pSoldier->inv[bPos].usItem)
+		{
+			pCapacity = pCapacity - pSoldier->inv[bPos].ubNumberOfObjects;
+			if(pCapacity > 0)
+				swprintf( pStr, L"+%d", pCapacity );
+			else
+				swprintf( pStr, L"-" );
+		}
+		else
+			swprintf( pStr, L"%d", pCapacity );
+	}
+	sX = gSMInvData[ bPos ].sX + 1;
+	sY = gSMInvData[ bPos ].sY;
+	UINT32 uiWhichBuffer = ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) ? guiSAVEBUFFER : guiRENDERBUFFER;
+
+	// Display pocket capacity
+	if ( uiWhichBuffer == guiSAVEBUFFER )
+	{
+		RestoreExternBackgroundRect( sX, sY, 15, 15 );
+	}
+	mprintf( sX, sY, pStr );
+	gprintfinvalidate( sX, sY, pStr );
+	return;
+}
+// CHRISL: New function to render silhouettes
+void INVRenderSilhouette( UINT32 uiBuffer, INT16 PocketIndex, INT16 SilIndex, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight)
+{
+	ETRLEObject						*pTrav;
+	HVOBJECT						hVObject;
+	UINT32							usHeight, usWidth;
+	INT16							sCenX, sCenY;
+	
+	if(gfSMDisableForItems)
+		return;
+	SetFont( ITEM_FONT );
+	GetVideoObject( &hVObject, guiSILHOUETTE );
+	if ( PocketIndex != ITEM_NOT_FOUND )
+		SilIndex = LBEPocketType[PocketIndex].pSilhouette;
+
+	pTrav = &(hVObject->pETRLEObject[ SilIndex ] );
+
+	usHeight				= (UINT32)pTrav->usHeight;
+	usWidth					= (UINT32)pTrav->usWidth;
+
+	// CENTER IN SLOT!
+	// CANCEL OFFSETS!
+	sCenX =  sX + (INT16)( abs( sWidth - (double)usWidth ) / 2 ) - pTrav->sOffsetX;
+	sCenY =  sY + (INT16)( abs( sHeight - (double)usHeight ) / 2 ) - pTrav->sOffsetY;
+
+	BltVideoObjectOutlineFromIndex( uiBuffer, guiSILHOUETTE, SilIndex, sCenX, sCenY, 0 /*sOutlineColor*/, FALSE );
+
+	if ( uiBuffer == FRAME_BUFFER )
+	{
+		InvalidateRegion( sX, sY, (INT16)(sX + sWidth), (INT16)(sY + sHeight ) );
+	}
+	else
+	{
+		RestoreExternBackgroundRect( sX, sY, sWidth, sHeight );
+	}
+}
+
 
 void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor )
 {
@@ -2216,6 +2486,31 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				mprintf( sNewX, sNewY, pStr );
 				gprintfinvalidate( sNewX, sNewY, pStr );
 
+			}
+
+			if(gGameOptions.ubInventorySystem)
+			{
+				// CHRISL: Display astrisk when LBENODE active
+				if ( pObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND )
+				{
+					SetFontForeground( FONT_BLUE );
+
+					sNewY = sY;
+					swprintf( pStr, L"*" );
+
+					// Get length of string
+					uiStringLength=StringPixLength(pStr, ITEM_FONT );
+
+					sNewX = sX + sWidth - uiStringLength - 4;
+
+					if ( uiBuffer == guiSAVEBUFFER )
+					{
+						RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
+					}
+					mprintf( sNewX, sNewY, pStr );
+					gprintfinvalidate( sNewX, sNewY, pStr );
+
+				}
 			}
 
 			if ( pSoldier && pObject == &(pSoldier->inv[HANDPOS] ) && pSoldier->bWeaponMode != WM_NORMAL )
@@ -2418,6 +2713,16 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	INT16	usX, usY;
 	INT16		sForeColour;
 	INT16 sProsConsIndent;
+
+	// CHRISL: Set some initial coords
+	ITEMDESC_START_X	= (!gGameOptions.ubInventorySystem) ? 214 : 115;
+	ITEMDESC_START_Y	= (!gGameOptions.ubInventorySystem) ? (1 + INV_INTERFACE_START_Y) : (1 + INV_INTERFACE_START_Y);
+	ITEMDESC_HEIGHT		= (!gGameOptions.ubInventorySystem) ? 133 : 195;
+	ITEMDESC_WIDTH		= (!gGameOptions.ubInventorySystem) ? 320 : 678;
+	MAP_ITEMDESC_HEIGHT	= (!gGameOptions.ubInventorySystem) ? 268 : 490;
+	MAP_ITEMDESC_WIDTH	= (!gGameOptions.ubInventorySystem) ? 272 : 272;
+	//MAP_KEYRING_X		= (!gGameOptions.ubInventorySystem) ? 217 : 180;
+	//MAP_KEYRING_Y		= (!gGameOptions.ubInventorySystem) ? 271 : 127;
 
 	//Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -3129,7 +3434,15 @@ void RenderItemDescriptionBox( )
 		sCenX = MAP_ITEMDESC_ITEM_X + (INT16)( abs( ITEMDESC_ITEM_WIDTH - (double)usWidth ) / 2 ) - pTrav->sOffsetX;
 		sCenY = MAP_ITEMDESC_ITEM_Y + (INT16)( abs( ITEMDESC_ITEM_HEIGHT - (double)usHeight ) / 2 )- pTrav->sOffsetY;
 
-		BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapItemDescBox, 0, gsInvDescX, gsInvDescY, VO_BLT_SRCTRANSPARENCY, NULL );
+		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				showBox = LBEptr[gpItemDescObject->ItemData.Trigger.usBombItem].lbeClass;
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
+		}
+		BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapItemDescBox, showBox, gsInvDescX, gsInvDescY, VO_BLT_SRCTRANSPARENCY, NULL );
 
 		//Display the money 'seperating' border
 		if ( gpItemDescObject->usItem == MONEY )
@@ -3147,6 +3460,16 @@ void RenderItemDescriptionBox( )
 
 		// Display ststus
 		DrawItemUIBarEx( gpItemDescObject, gubItemDescStatusIndex, (INT16)MAP_ITEMDESC_ITEM_STATUS_X, (INT16)MAP_ITEMDESC_ITEM_STATUS_Y, ITEMDESC_ITEM_STATUS_WIDTH, ITEMDESC_ITEM_STATUS_HEIGHT_MAP, 	Get16BPPColor( DESC_STATUS_BAR ), Get16BPPColor( DESC_STATUS_BAR_SHADOW ), TRUE, guiSAVEBUFFER );
+
+		// CHRISL:  This block will display hatching for inactive LBE pockets
+		// Display LBENODE attached items
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+		}
 
 		if (gpItemPointer)
 		{
@@ -3214,6 +3537,16 @@ void RenderItemDescriptionBox( )
 		}
 
 		RestoreExternBackgroundRect( gsInvDescX, gsInvDescY, MAP_ITEMDESC_WIDTH, MAP_ITEMDESC_HEIGHT );
+
+		// CHRISL: This block will display misc information for items stored in LBE Pockets
+		// Display LBENODE attached items
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
+		}
 
 		// Render font desc
 		SetFont( ITEMDESC_FONT );
@@ -3629,7 +3962,22 @@ void RenderItemDescriptionBox( )
 		sCenX = ITEMDESC_ITEM_X + (INT16)( abs( ITEMDESC_ITEM_WIDTH - (double)usWidth ) / 2 ) - pTrav->sOffsetX;
 		sCenY = ITEMDESC_ITEM_Y + (INT16)( abs( ITEMDESC_ITEM_HEIGHT - (double)usHeight ) / 2 ) - pTrav->sOffsetY;
 
-		BltVideoObjectFromIndex( guiSAVEBUFFER, guiItemDescBox, 0, gsInvDescX, gsInvDescY, VO_BLT_SRCTRANSPARENCY, NULL );
+		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
+		RenderBackpackButtons(1);
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				showBox = LBEptr[gpItemDescObject->ItemData.Trigger.usBombItem].lbeClass;
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
+		}
+		// CHRISL: Setup default coords if we haven't initialized them yet
+		if(gsInvDescX == NONE && gsInvDescY == NONE)
+		{
+			gsInvDescX = 115;
+			gsInvDescY = (INT16)(INV_INTERFACE_START_Y + 1 );
+		}
+		BltVideoObjectFromIndex( guiSAVEBUFFER, guiItemDescBox, showBox, gsInvDescX, gsInvDescY, VO_BLT_SRCTRANSPARENCY, NULL );
 
 		if ( gpItemDescObject->usItem == MONEY )
 		{
@@ -3645,6 +3993,16 @@ void RenderItemDescriptionBox( )
 		// Display status
 		DrawItemUIBarEx( gpItemDescObject, gubItemDescStatusIndex, (INT16)ITEMDESC_ITEM_STATUS_X, (INT16)ITEMDESC_ITEM_STATUS_Y, ITEMDESC_ITEM_STATUS_WIDTH, ITEMDESC_ITEM_STATUS_HEIGHT, 	Get16BPPColor( DESC_STATUS_BAR ), Get16BPPColor( DESC_STATUS_BAR_SHADOW ), TRUE, guiSAVEBUFFER );
 	
+		// CHRISL:  This block will display hatching for inactive LBE pockets
+		// Display LBENODE attached items
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+		}
+
 		if (gpItemPointer)
 		{
 //			if ( ( Item[ gpItemPointer->usItem ][0]->data.fFlags & ITEM_HIDDEN_ADDON ) ||
@@ -3714,6 +4072,16 @@ void RenderItemDescriptionBox( )
 		}
 
 		RestoreExternBackgroundRect( gsInvDescX, gsInvDescY, ITEMDESC_WIDTH, ITEMDESC_HEIGHT );
+
+		// CHRISL: This block will display misc information for items stored in LBE Pockets
+		// Display LBENODE attached items
+		if(gGameOptions.ubInventorySystem)
+		{
+			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
+			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
+				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
+		}
 
 		// Render font desc
 		SetFont( ITEMDESC_FONT );
@@ -4115,6 +4483,190 @@ void RenderItemDescriptionBox( )
 
 }
 
+// CHRISL: New function to display items stored in an LBENODE
+void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScreen )
+{
+	extern INV_REGION_DESC gSMInvPocketXY[NUM_INV_SLOTS];
+	extern INV_REGION_DESC gMapScreenInvPocketXY[NUM_INV_SLOTS];
+	SOLDIERTYPE	*pSoldier;
+	OBJECTTYPE	*pObject;
+	int			offSetX;
+	int			offSetY;
+	int			pocketKey[12];
+	int			Num_Pockets;
+	INT16		sX, sY;
+	INT16		sBarX, sBarY;
+	INT16		lbePocket = ITEM_NOT_FOUND;
+	BOOLEAN		fHatchItOut = FALSE;
+	UINT32		lClass;
+	UINT16		lIndex;
+
+	// Set selected merc
+	if(guiCurrentItemDescriptionScreen == MAP_SCREEN)
+		GetSoldier( &pSoldier, gCharactersList[bSelectedInfoChar].usSolID );
+	else
+		pSoldier = gpSMCurrentMerc;
+	
+	// Start by verifying that this item is an LBENODE
+//	if(pObj->bDetonatorType != -1)
+	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
+		return;
+
+	if(pObj->ItemData.Trigger.bDetonatorType == -1)
+	{
+		lIndex = pObj->ItemData.Trigger.usBombItem;
+		lClass = LBEptr[lIndex].lbeClass;
+	}
+	else
+		lClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
+	if(lClass == 1 && pObj->ItemData.Trigger.bDetonatorType != -1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
+		lClass = 5;
+	// Setup pocket coords
+	switch (lClass)
+	{
+		case THIGH_PACK:
+			pocketKey[0] = SMALLPOCK11POS;
+			pocketKey[1] = SMALLPOCK12POS;
+			pocketKey[2] = SMALLPOCK13POS;
+			pocketKey[3] = SMALLPOCK14POS;
+			pocketKey[4] = MEDPOCK3POS;
+			if(stratScreen){
+				offSetX = 83;
+				offSetY = -1;
+			}
+			else{
+				offSetX = 203;
+				offSetY = -79;
+			}
+			Num_Pockets = 5;
+			break;
+		case VEST_PACK:
+			pocketKey[0] = SMALLPOCK1POS;
+			pocketKey[1] = SMALLPOCK2POS;
+			pocketKey[2] = SMALLPOCK3POS;
+			pocketKey[3] = SMALLPOCK4POS;
+			pocketKey[4] = SMALLPOCK5POS;
+			pocketKey[5] = SMALLPOCK6POS;
+			pocketKey[6] = SMALLPOCK7POS;
+			pocketKey[7] = SMALLPOCK8POS;
+			pocketKey[8] = SMALLPOCK9POS;
+			pocketKey[9] = SMALLPOCK10POS;
+			pocketKey[10] = MEDPOCK1POS;
+			pocketKey[11] = MEDPOCK2POS;
+			if(stratScreen){
+				offSetX = 0;
+				offSetY = 111;
+			}
+			else{
+				offSetX = 94;
+				offSetY = 30;
+			}
+			Num_Pockets = 12;
+			break;
+		case COMBAT_PACK:
+			pocketKey[0] = SMALLPOCK19POS;
+			pocketKey[1] = SMALLPOCK20POS;
+			pocketKey[2] = SMALLPOCK21POS;
+			pocketKey[3] = SMALLPOCK22POS;
+			pocketKey[4] = BIGPOCK1POS;
+			pocketKey[5] = BIGPOCK2POS;
+			pocketKey[6] = BIGPOCK3POS;
+			if(stratScreen){
+				offSetX = -82;
+				offSetY = -1;
+			}
+			else{
+				offSetX = -8;
+				offSetY = -87;
+			}
+			Num_Pockets = 7;
+			break;
+		case BACKPACK:
+			pocketKey[0] = SMALLPOCK23POS;
+			pocketKey[1] = SMALLPOCK24POS;
+			pocketKey[2] = SMALLPOCK25POS;
+			pocketKey[3] = SMALLPOCK26POS;
+			pocketKey[4] = SMALLPOCK27POS;
+			pocketKey[5] = SMALLPOCK28POS;
+			pocketKey[6] = SMALLPOCK29POS;
+			pocketKey[7] = SMALLPOCK30POS;
+			pocketKey[8] = BIGPOCK4POS;
+			pocketKey[9] = BIGPOCK5POS;
+			pocketKey[10] = BIGPOCK6POS;
+			pocketKey[11] = BIGPOCK7POS;
+			if(stratScreen){
+				offSetX = 42;
+				offSetY = -104;
+			}
+			else{
+				offSetX = -170;
+				offSetY = 12;
+			}
+			Num_Pockets = 12;
+			break;
+		case 5:
+			pocketKey[0] = SMALLPOCK15POS;
+			pocketKey[1] = SMALLPOCK16POS;
+			pocketKey[2] = SMALLPOCK17POS;
+			pocketKey[3] = SMALLPOCK18POS;
+			pocketKey[4] = MEDPOCK4POS;
+			if(stratScreen){
+				offSetX = 1;
+				offSetY = -1;
+			}
+			else{
+				offSetX = 117;
+				offSetY = -79;
+			}
+			Num_Pockets = 5;
+			break;
+		default:
+			Num_Pockets = 0;
+			break;
+	}
+	// Display contents of LBENODE
+	for(int cnt=0; cnt<Num_Pockets; cnt++)
+	{
+		if(stratScreen){
+			sX = gMapScreenInvPocketXY[pocketKey[cnt]].sX + offSetX;
+			sY = gMapScreenInvPocketXY[pocketKey[cnt]].sY + offSetY;
+		}
+		else{
+			sX = gSMInvPocketXY[pocketKey[cnt]].sX + offSetX;
+			sY = gSMInvPocketXY[pocketKey[cnt]].sY + offSetY;
+		}
+		lbePocket = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[icPocket[pocketKey[cnt]]];
+		if(activeNode)
+			pObject = &(LBEptr[lIndex].inv[cnt]);
+		else
+		{
+			if(pObj == &pSoldier->inv[VESTPOCKPOS] || pObj == &pSoldier->inv[LTHIGHPOCKPOS] || pObj == &pSoldier->inv[RTHIGHPOCKPOS] || pObj == &pSoldier->inv[CPACKPOCKPOS] || pObj == &pSoldier->inv[BPACKPOCKPOS])
+				pObject = &(pSoldier->inv[pocketKey[cnt]]);
+			else
+				pObject = NULL;
+		}
+		fHatchItOut = FALSE;
+		if (lbePocket == 0)	// Deactivate Pocket
+			fHatchItOut = TRUE;
+		else if ( pObject == NULL || pObject->usItem == NOTHING )	// Nothing in sPocket.  Display silouhette.
+			INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight);
+		if(pObject != NULL)
+			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ pocketKey[cnt] ].sWidth, gSMInvData[ pocketKey[cnt] ].sHeight, 2, NULL, 0, 0, 0 );
+		if (gpItemPointer != NULL)
+			RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, pocketKey[cnt], pSoldier), pocketKey[cnt], pSoldier);
+		if ( fHatchItOut )
+			DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, (UINT16)(gSMInvData[ pocketKey[cnt] ].sWidth-1), (UINT16)(gSMInvData[ pocketKey[cnt] ].sHeight-1) );
+		// if there's an item in there
+		if ( pObject != NULL && pObject->usItem != NOTHING )
+		{
+			// Add item status bar
+			sBarX = sX - gSMInvData[ pocketKey[cnt] ].sBarDx;
+			sBarY = sY + gSMInvData[ pocketKey[cnt] ].sBarDy;
+			DrawItemUIBarEx( pObject, 0, sBarX, sBarY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT,	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER);
+		}
+	}
+}
+
 void HandleItemDescriptionBox( BOOLEAN *pfDirty )
 {
 	PERFORMANCE_MARKER
@@ -4197,6 +4749,7 @@ void DeleteItemDescriptionBox( )
 	//Remove
 	DeleteVideoObjectFromIndex( guiItemDescBox );
 	DeleteVideoObjectFromIndex( guiMapItemDescBox );
+	RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 	DeleteVideoObjectFromIndex( guiBullet );
 	// Delete item graphic
 	DeleteVideoObjectFromIndex( guiItemGraphic );
@@ -5300,10 +5853,22 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
   ETRLEObject						*pTrav;
 	HVOBJECT							hVObject;
 	INT32						cnt;
-	UINT16				 usPopupWidth;
+	UINT16				 usPopupWidth, usPopupHeight;
 	INT16					sItemSlotWidth, sItemSlotHeight;
+	INT16 sItemWidth = 0, sOffSetY = 0;
 
 	
+	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
+	if( guiCurrentScreen == MAP_SCREEN )
+	{
+		sItemWidth						= MAP_INV_ITEM_ROW_WIDTH;
+		sOffSetY						= 170;
+	}
+	else
+	{
+		sItemWidth						= INV_ITEM_ROW_WIDTH;
+	}
+
 	// Set some globals
 	gsItemPopupInvX					= sInvX;
 	gsItemPopupInvY					= sInvY;
@@ -5316,13 +5881,24 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	// Determine # of items
 	gpItemPopupObject = &(pSoldier->inv[ ubPosition ] );
-	ubLimit = ItemSlotLimit( gpItemPopupObject->usItem, ubPosition );
+	// CHRISL:
+	ubLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( gpItemPopupObject->usItem, ubPosition ) : ItemSlotLimit( gpItemPopupObject, ubPosition, pSoldier );
 
 	// Return false if #objects not >1
 	if ( ubLimit <1 )
 	{
 		return( FALSE );
 	}
+
+	//CHRISL: No longer needed now that we're displaying multiple rows of inventory items.
+//	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+//	{
+//    if ( ubLimit > 6 )
+//    {
+//      ubLimit = 6;
+//    }
+//  }
+
 
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
@@ -5351,9 +5927,12 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	gsItemPopupHeight = pTrav->usHeight;
 	gubNumItemPopups = ubLimit;
 
+	// CHRISL: Don't center.  Instead, put interface in upper left corner or mouse area
 	// Calculate X,Y, first center
-	sCenX = sX - ( ( gsItemPopupWidth / 2 ) + ( sItemSlotWidth / 2 ) );
-	sCenY	= sY;
+	//sCenX = sX - ( ( gsItemPopupWidth / 2 ) + ( sItemSlotWidth / 2 ) );
+	//sCenY	= sY;
+	sCenX	= gsItemPopupInvX;
+	sCenY	= gsItemPopupInvY;
 
 	// Limit it to window for item desc
 	if ( sCenX < gsItemPopupInvX )
@@ -5371,6 +5950,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
     sCenX = 0;
   }
 	
+	
 	// Set
 	gsItemPopupX	= sCenX;
 	gsItemPopupY	= sCenY;
@@ -5378,8 +5958,16 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
 		// Build a mouse region here that is over any others.....
-		MSYS_DefineRegion( &gItemPopupRegions[cnt], (INT16)(sCenX + ( cnt * usPopupWidth ) ), sCenY , (INT16)(sCenX + ( (cnt+1) * usPopupWidth ) ),(INT16)( sCenY + gsItemPopupHeight ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback ); 
+		// CHRISL: New region definition to handle multiple rows of items
+//		MSYS_DefineRegion( &gItemPopupRegions[cnt], (INT16)(sCenX + ( cnt * usPopupWidth ) ), sCenY , (INT16)(sCenX + ( (cnt+1) * usPopupWidth ) ),(INT16)( sCenY + gsItemPopupHeight ), MSYS_PRIORITY_HIGHEST,
+//							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback ); 
+		MSYS_DefineRegion( &gItemPopupRegions[cnt], 
+				(INT16)( gsItemPopupX + ( cnt % sItemWidth * usPopupWidth ) ), // top left
+				(INT16)( gsItemPopupY + sOffSetY + ( cnt / sItemWidth * usPopupHeight ) ), // top right
+				(INT16)( gsItemPopupX + ( ( cnt % sItemWidth ) + 1 ) * usPopupWidth ), // bottom left
+				(INT16)( gsItemPopupY + ( (cnt / sItemWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
+				MSYS_PRIORITY_HIGHEST,
+				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback ); 
 		// Add region
 		MSYS_AddRegion( &gItemPopupRegions[cnt]);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
@@ -5443,6 +6031,18 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	HVOBJECT							hVObject;
 	UINT32								cnt;
 	INT16									sX, sY, sNewX, sNewY;
+	INT16 sItemWidth = 0, sOffSetY = 0;
+
+	// CHRISL: Setup witdh and offset to layer inventory boxes if necessary
+	if( guiCurrentScreen == MAP_SCREEN )
+	{
+		sItemWidth						= MAP_INV_ITEM_ROW_WIDTH;
+		sOffSetY						= 170;
+	}
+	else
+	{
+		sItemWidth						= INV_ITEM_ROW_WIDTH;
+	}
 
 	if ( gfInItemStackPopup )
 	{
@@ -5466,19 +6066,25 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + ( cnt * usWidth ), gsItemPopupY, VO_BLT_SRCTRANSPARENCY, NULL );
+		// CHRISL: Layer item boxes if we have too many to display in a single row
+		//BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + ( cnt * usWidth ), gsItemPopupY, VO_BLT_SRCTRANSPARENCY, NULL );
+		sX = (INT16)(gsItemPopupX + ( cnt % sItemWidth * usWidth ));
+		sY = (INT16)(gsItemPopupY + sOffSetY + ( cnt / sItemWidth * usHeight ));
+		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, (INT16)sX, ( INT16 )sY, VO_BLT_SRCTRANSPARENCY, NULL );
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
-			sX = (INT16)(gsItemPopupX + ( cnt * usWidth ) + 11);
-			sY = (INT16)( gsItemPopupY + 3 );
+			// CHRISL: Coord updates to work with mutliple rows
+			//sX = (INT16)(gsItemPopupX + ( cnt * usWidth ) + 11);
+			//sY = (INT16)( gsItemPopupY + 3 );
 
-			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0 );
+			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX+11, sY+3, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0 );
 
+			// CHRISL: Coord updates to work with mutliple rows
 			// Do status bar here...
 			sNewX = (INT16)( gsItemPopupX + ( cnt * usWidth ) + 7 );
 			sNewY = gsItemPopupY + INV_BAR_DY + 3;
-			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sNewX, sNewY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER );
+			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sX+7, sY+INV_BAR_DY+3, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER );
 
 		}
 	}
@@ -6764,7 +7370,28 @@ void RenderItemPickupMenu( )
 				  //gprintfinvalidate( sNewX, sNewY, pStr );
 			  }
 
-				if ( gItemPickupMenu.bCurSelect == ( cnt + gItemPickupMenu.ubScrollAnchor ) )
+			  if(gGameOptions.ubInventorySystem)
+			  {
+				  // CHRISL: Show astrisk for active LBENODE
+				  if ( pObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
+				  {
+					  SetFontForeground( FONT_BLUE );
+						SetFontShadow( DEFAULT_SHADOW );
+
+					  sNewY = sCenY + 2;
+					  swprintf( pStr, L"*" );
+
+					  // Get length of string
+					  uiStringLength=StringPixLength( pStr, ITEM_FONT );
+
+					  sNewX = sCenX + 43 - uiStringLength - 4;
+
+  					mprintf_buffer( pDestBuf, uiDestPitchBYTES, ITEMDESC_FONT, sNewX, sNewY, pStr );
+					  //gprintfinvalidate( sNewX, sNewY, pStr );
+				  }
+			  }
+
+			  if ( gItemPickupMenu.bCurSelect == ( cnt + gItemPickupMenu.ubScrollAnchor ) )
 				{
 					//SetFontForeground( ITEMDESC_FONTSHADOW2 );
 					//if ( gItemPickupMenu.pfSelectedArray[  cnt + gItemPickupMenu.ubScrollAnchor ] )

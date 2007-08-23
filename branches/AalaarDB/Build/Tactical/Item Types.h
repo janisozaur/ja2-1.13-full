@@ -562,6 +562,50 @@ typedef struct
 	UINT16 defaultattachment;
 } INVTYPE;
 
+// CHRISL: Added new structures to handle LBE gear and the two new XML files that will be needed to deal
+// with the IC pockets and the new inventory system.
+class LBETYPE{
+public:
+	LBETYPE();
+	LBETYPE(const LBETYPE&);
+	LBETYPE& operator=(const LBETYPE&);
+	~LBETYPE();
+	UINT16			lbeIndex;
+	UINT32			lbeClass;
+	UINT8			lbeCombo;
+	char			POD;
+	vector<UINT8>	lbePocketIndex;
+};
+#define SIZEOF_LBETYPE offsetof( LBETYPE, POD )
+extern vector<LBETYPE> LoadBearingEquipment;
+
+class POCKETTYPE{
+public:
+	POCKETTYPE();
+	POCKETTYPE(const POCKETTYPE&);
+	POCKETTYPE& operator=(const POCKETTYPE&);
+	~POCKETTYPE();
+	UINT16			pIndex;
+	CHAR8			pName[80];
+	UINT8			pSilhouette;
+	UINT16			pType;
+	UINT32			pRestriction;
+	char			POD;
+	vector<UINT8>	ItemCapacityPerSize;
+};
+#define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
+extern vector<POCKETTYPE> LBEPocketType;
+
+enum	// Designation of lbeClass
+{
+	THIGH_PACK=1,
+	VEST_PACK,
+	COMBAT_PACK,
+	BACKPACK,
+	LBE_POCKET,
+	OTHER_POCKET
+};
+
 #define FIRST_WEAPON 1
 #define FIRST_AMMO 71
 #define FIRST_EXPLOSIVE 131

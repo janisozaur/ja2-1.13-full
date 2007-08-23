@@ -3991,6 +3991,8 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 	INT16 sRadarBRX, sRadarBRY;
 	INT16 sRadarCX, sRadarCY;
 	INT16 sHeight, sWidth, sX, sY;
+	// CHRISL:
+	INT16			gsRadarX;
 	INT16			gsRadarY;
 	BOOLEAN			fAllowScrollingHorizontal = FALSE;
 	BOOLEAN			fAllowScrollingVertical = FALSE;

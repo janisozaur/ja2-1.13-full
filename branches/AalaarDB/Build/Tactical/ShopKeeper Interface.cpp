@@ -1365,7 +1365,8 @@ void HandleShopKeeperInterface()
 	}
 
 	RenderClock( CLOCK_X, CLOCK_Y );
-	RenderTownIDString( );
+	// CHRISL: Added X,Y parameters to allow control of TownID string placement.
+	RenderTownIDString( CLOCK_X, (CLOCK_Y - 29) );
 
 //ATM:
 //	RenderSkiAtmPanel();
@@ -1512,7 +1513,8 @@ BOOLEAN RenderShopKeeperInterface()
 
 	//Render the clock and the town name
 	RenderClock( CLOCK_X, CLOCK_Y );
-	RenderTownIDString( );
+	// CHRISL: Added X,Y parameters to allow control of TownID string placement.
+	RenderTownIDString( CLOCK_X, (CLOCK_Y - 29) );
 
 //	RenderTacticalInterface( );
 //	RenderSMPanel( &fDirty );
@@ -2808,6 +2810,14 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
 	}
 
+	// CHRISL: if item is LBENODE
+	if( gGameOptions.ubInventorySystem && pItemObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
+	{
+		//Display the '*' in the bottom right corner of the square
+		swprintf( zTemp, L"*" );
+		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_BLUE, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );	
+	}
+
 	// Display 'JAMMED' if it's jammed
 	if ( (*pItemObject)[0]->data.gun.bGunAmmoStatus < 0 )
 	{
@@ -3054,8 +3064,9 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 		1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1
 	};
-	ClipRect.iLeft = usPosX;
-	ClipRect.iRight = usPosX + usWidth;
+	// CHRISL:
+	ClipRect.iLeft = usPosX-1;
+	ClipRect.iRight = usPosX + usWidth-1;
 	ClipRect.iTop = usPosY;
 	ClipRect.iBottom = usPosY + usHeight;
 

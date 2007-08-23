@@ -267,7 +267,9 @@ struct path
 
 typedef struct path PathSt;
 typedef PathSt *PathStPtr;
-enum {
+/* CHRISL: Added listings for each of the new inventory pockets.  Also split the enum so we could include
+endpoint markers for each type (big, med, sml) of pocket. */
+enum INVENTORY{
 	HELMETPOS = 0,
 	VESTPOS,
 	LEGPOS,
@@ -275,21 +277,66 @@ enum {
 	HEAD2POS,
 	HANDPOS,
 	SECONDHANDPOS,
-	BIGPOCK1POS,
+	VESTPOCKPOS,
+	LTHIGHPOCKPOS,
+	RTHIGHPOCKPOS,
+	CPACKPOCKPOS,
+	BPACKPOCKPOS,
+	GUNSLINGPOCKPOS,
+	KNIFEPOCKPOS,
+	BODYPOSFINAL,
+	BIGPOCK1POS = BODYPOSFINAL,
 	BIGPOCK2POS,
 	BIGPOCK3POS,
 	BIGPOCK4POS,
-	SMALLPOCK1POS,
+	BIGPOCK5POS,
+	BIGPOCK6POS,
+	BIGPOCK7POS,
+	BIGPOCKFINAL,
+	MEDPOCK1POS = BIGPOCKFINAL,
+	MEDPOCK2POS,
+	MEDPOCK3POS,
+	MEDPOCK4POS,
+	MEDPOCKFINAL,
+	SMALLPOCK1POS = MEDPOCKFINAL,
 	SMALLPOCK2POS,
 	SMALLPOCK3POS,
 	SMALLPOCK4POS,
 	SMALLPOCK5POS,
 	SMALLPOCK6POS,
 	SMALLPOCK7POS,
-	SMALLPOCK8POS, // = 18, so 19 pockets needed
-
-	NUM_INV_SLOTS,
+	SMALLPOCK8POS,
+	SMALLPOCK9POS,
+	SMALLPOCK10POS,
+	SMALLPOCK11POS,
+	SMALLPOCK12POS,
+	SMALLPOCK13POS,
+	SMALLPOCK14POS,
+	SMALLPOCK15POS,
+	SMALLPOCK16POS,
+	SMALLPOCK17POS,
+	SMALLPOCK18POS,
+	SMALLPOCK19POS,
+	SMALLPOCK20POS,
+	SMALLPOCK21POS,
+	SMALLPOCK22POS,
+	SMALLPOCK23POS,
+	SMALLPOCK24POS,
+	SMALLPOCK25POS,
+	SMALLPOCK26POS,
+	SMALLPOCK27POS,
+	SMALLPOCK28POS,
+	SMALLPOCK29POS,
+	SMALLPOCK30POS,
+	NUM_INV_SLOTS
 };
+// CHRISL: Arrays to track ic group information
+//							{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54}
+const INT8	icLBE[55] =		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,10,10,11,11,11,11, 7, 7, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,10,10,10,10,11,11,11,11,11,11,11,11};
+const INT8	icClass[55] =	{-1,-1,-1,-1,-1,-1,-1, 5, 5, 5, 5, 5, 6, 6, 3, 3, 3, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+const INT8	icPocket[55] =	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 4, 5, 6, 8, 9,10,11,10,11, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7};
+const INT8	oldInv[55] =	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const INT8	vehicleInv[55]=	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0};
 
 //if the number of slots are ever changed, the loading / saving checksum should use this value to make conversion easier
 #define NUM_ORIGINAL_INV_SLOTS 19

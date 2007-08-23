@@ -1649,7 +1649,8 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 
 	//Look for any face item in the big pocket positions (the only place they can be added in the editor)
 	//If any are found, then don't assign any
-	for( i = BIGPOCK1POS; i < BIGPOCK4POS; i++ )
+	// CHRISL: Change static inventory pocket definition to dynamic
+	for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
 	{
 		if( Item[ pp->Inv[ i ].usItem ].usItemClass == IC_FACE ) 
 		{
@@ -1979,6 +1980,28 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 	//}
 }
 
+// Headrock: Added a function to randomly create LBEs
+void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass )
+{
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"ChooseLBEsForSoldierCreateStruct");
+	//UINT16 i;
+	//INVTYPE *pItem;
+	//UINT16 usRandom;
+	UINT16 usItem = 0;
+	OBJECTTYPE Object;
+
+	// CHRISL: If we're using the old inventory system, just return
+	if(!gGameOptions.ubInventorySystem)
+		return;
+
+	usItem = PickARandomItem( LBE , bLBEClass, FALSE );
+	if ( usItem > 0 )
+	{
+		CreateItem( usItem, (INT8)(80 + Random( 21 )), &Object );
+		Object.fFlags |= OBJECT_UNDROPPABLE;
+		PlaceObjectInSoldierCreateStruct( pp, &Object );
+	}
+}
 
 
 void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
@@ -2008,7 +2031,8 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	if( !Item[ pObject->usItem ].ubPerPocket )
 	{ //ubPerPocket == 0 will only fit in large pockets.
 		pObject->ubNumberOfObjects = 1;
-		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
+		// CHRISL: Change static inventory pocket definition to dynamic
+		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
@@ -2022,7 +2046,8 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	{
 		pObject->ubNumberOfObjects = (UINT8)min( Item[ pObject->usItem ].ubPerPocket, pObject->ubNumberOfObjects );
 		//try to get it into a small pocket first
-		for( i = SMALLPOCK1POS; i <= SMALLPOCK8POS; i++ )
+		// CHRISL: Change static inventory pocket definition to dynamic
+		for( i = BIGPOCKFINAL; i < NUM_INV_SLOTS; i++ )
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{
@@ -2030,7 +2055,8 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 				return TRUE;
 			}
 		}
-		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
+		// CHRISL: Change static inventory pocket definition to dynamic
+		for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
 		{ //no space free in small pockets, so put it into a large pocket.
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ][0]->data.fFlags & OBJECT_NO_OVERWRITE) )
 			{

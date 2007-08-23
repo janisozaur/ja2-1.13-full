@@ -702,7 +702,8 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		{
 			INT32 i;
 			BOOLEAN fSecondFaceItem = FALSE;
-			for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
+			// CHRISL:
+			for( i = BIGPOCK1POS; i < BIGPOCKFINAL; i++ )
 			{
 				if( Item[ Soldier.inv[ i ].usItem ].usItemClass & IC_FACE )
 				{
@@ -2745,6 +2746,9 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	}
 }
 
+// CHRISL: External function call to resort profile inventory
+extern void DistributeInitialGear(MERCPROFILESTRUCT *pProfile);
+
 void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
 {
 	PERFORMANCE_MARKER
@@ -2760,6 +2764,10 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 	{
 		if (pCreateStruct->fPlayerMerc)
 		{
+			// CHRISL: Resort profile items to use LBE pockets properly
+			if(gGameOptions.ubInventorySystem)
+				DistributeInitialGear(pProfile);
+
 			// do some special coding to put stuff in the profile in better-looking
 			// spots
 			for ( cnt = 0; cnt < pProfile->inv.size(); cnt++ )
@@ -2781,12 +2789,20 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						if (cnt2 == pSoldier->inv.size())
 						{
 							// oh well, couldn't find anything to attach to!
-							AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+							//CHRISL: Place items by slots chosen in profile if using new inventory system
+							if(!gGameOptions.ubInventorySystem)
+								AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+							else
+								PlaceObject( pSoldier, cnt, &gTempObject );
 						}
 					}
 					else
 					{
-						AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+						//CHRISL: Place items by slots chosen in profile if using new inventory system
+						if(!gGameOptions.ubInventorySystem)
+							AutoPlaceObject( pSoldier, &gTempObject, FALSE );
+						else
+							PlaceObject( pSoldier, cnt, &gTempObject );
 					}
 
 				}
@@ -2865,13 +2881,15 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 			if (pProfile->uiMoney > 0)
 			{
 				uiMoneyLeft = pProfile->uiMoney;
-				bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
+				// CHRISL:
+				bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
 
 				// add in increments of 
 				while ( bSlot != NO_SLOT )
 				{
 					uiMoneyLimitInSlot = MAX_MONEY_PER_SLOT;
-					if ( bSlot >= SMALLPOCK1POS )
+					// CHRISL:
+					if ( bSlot >= BIGPOCKFINAL )
 					{
 						uiMoneyLimitInSlot /= 2;
 					}
@@ -2890,7 +2908,8 @@ void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruc
 						break;
 					}
 
-					bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
+					// CHRISL:
+					bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
 				}			
 			}
 		}

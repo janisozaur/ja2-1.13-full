@@ -48,6 +48,9 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, OBJECTTYPE* pAttachment, OBJECTTYPE
 
 UINT16	CalculateObjectWeight( OBJECTTYPE *pObject );
 extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
+// CHRISL:
+extern UINT16 CalculateItemSize( OBJECTTYPE *pObject );
+
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
@@ -62,6 +65,8 @@ UINT16 RandomMagazine( OBJECTTYPE * pGun, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
 
 UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot );
+// CHRISL: Add new inventory version of ItemSlotLimit function
+extern UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier );
 
 // Function to put an item in a soldier profile
 // It's very primitive, just finds an empty place!

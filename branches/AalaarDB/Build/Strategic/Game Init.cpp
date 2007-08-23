@@ -378,6 +378,24 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	// Reset the selected soldier
 	gusSelectedSoldier = NOBODY;
 
+	// CHRISL: Init inventory
+	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
+	if( gubScreenCount == 0 )
+	{
+		if(gGameOptions.ubInventorySystem)
+		{
+			InitNewInventorySystem();
+			InitializeSMPanelCoordsNew();
+			InitializeInvPanelCoordsNew();
+		}
+		else
+		{
+			InitOldInventorySystem();
+			InitializeSMPanelCoordsOld();
+			InitializeInvPanelCoordsOld();
+		}
+	}
+
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: loading merc profiles");
 	if( gubScreenCount == 0 )
 	{

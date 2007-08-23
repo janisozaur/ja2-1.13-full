@@ -63,6 +63,16 @@ BOOLEAN		fImageLoaded = FALSE;
 BOOLEAN	fRenderRadarScreen = TRUE;
 INT16			sSelectedSquadLine = -1;
 
+// CHRISL: Moved radar coords from header file
+INT16	RADAR_WINDOW_TM_X;
+INT16	RADAR_WINDOW_SM_X;
+INT16	RADAR_WINDOW_TM_Y;
+INT16	RADAR_WINDOW_SM_Y;
+INT16	RADAR_WINDOW_WIDTH;
+INT16	RADAR_WINDOW_HEIGHT;
+INT16	RADAR_WINDOW_STRAT_X;
+INT16	RADAR_WINDOW_STRAT_Y;
+
 BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 
 // WANNE: Are we allowed to scroll in radar map? 
@@ -76,6 +86,8 @@ MOUSE_REGION gRadarRegionSquadList[ NUMBER_OF_SQUADS ];
 BOOLEAN InitRadarScreen( )
 {
 	PERFORMANCE_MARKER
+		// CHRISL: Move screen coord setup to it's own function
+		InitRadarScreenCoords();
 		// Add region for radar
 		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, 
 											RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
@@ -177,27 +189,33 @@ void MoveRadarScreen()
 
 	// Add new one
 
-		// Move based on inventory panel
+	// CHRISL: Reset coords
+	InitRadarScreenCoords();
+	// Move based on inventory panel
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
+		gsRadarX = RADAR_WINDOW_STRAT_X;
 		gsRadarY = RADAR_WINDOW_STRAT_Y;
 	}
 	else if ( gsCurInterfacePanel == SM_PANEL )
 	{
-		gsRadarY = RADAR_WINDOW_TM_Y;
+		gsRadarX = RADAR_WINDOW_SM_X;
+		gsRadarY = RADAR_WINDOW_SM_Y;
 	}
 	else
 	{
+		gsRadarX = RADAR_WINDOW_TM_X;
 		gsRadarY = RADAR_WINDOW_TM_Y;
 	}
 
 	// Add region for radar
-	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, (UINT16)(gsRadarY), 
-										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-										(UINT16)(gsRadarY + RADAR_WINDOW_HEIGHT),
-										MSYS_PRIORITY_HIGHEST, 0, 
-										RadarRegionMoveCallback,
-										RadarRegionButtonCallback );
+	// CHRISL:
+	MSYS_DefineRegion( &gRadarRegion, (UINT16) (gsRadarX), (UINT16)(gsRadarY), 
+										 (UINT16) (gsRadarX + RADAR_WINDOW_WIDTH),
+										 (UINT16)(gsRadarY + RADAR_WINDOW_HEIGHT),
+										 MSYS_PRIORITY_HIGHEST, 0, 
+										 RadarRegionMoveCallback,
+										 RadarRegionButtonCallback );
 
 	// Add region
 	MSYS_AddRegion( &gRadarRegion );
@@ -357,11 +375,13 @@ void RenderRadarScreen( )
 			}
 		}
 
-		BltVideoObjectFromIndex(	guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY, VO_BLT_SRCTRANSPARENCY, NULL );
+		// CHRISL:
+		BltVideoObjectFromIndex(  guiSAVEBUFFER, gusRadarImage, 0, gsRadarX, gsRadarY, VO_BLT_SRCTRANSPARENCY, NULL );
 	}
 
 	// FIRST DELETE WHAT'S THERE
-	RestoreExternBackgroundRect( RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH + 1 , RADAR_WINDOW_HEIGHT + 1 );
+	// CHRISL:
+	RestoreExternBackgroundRect( gsRadarX, gsRadarY, RADAR_WINDOW_WIDTH + 1 , RADAR_WINDOW_HEIGHT + 1 );
 
 	// Determine scale factors
 
@@ -426,7 +446,8 @@ void RenderRadarScreen( )
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, RADAR_WINDOW_X, gsRadarY, ( RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1 ), ( gsRadarY + RADAR_WINDOW_HEIGHT - 1 ) );
+	// CHRISL:
+	SetClippingRegionAndImageWidth( uiDestPitchBYTES, gsRadarX, gsRadarY, ( gsRadarX + RADAR_WINDOW_WIDTH - 1 ), ( gsRadarY + RADAR_WINDOW_HEIGHT - 1 ) );
 
 	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
@@ -623,8 +644,9 @@ void RenderRadarScreen( )
 
 	if( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( fShowMapInventoryPool == TRUE ) )
 	{
-		InvalidateRegion( RADAR_WINDOW_X, gsRadarY,
-										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
+		// CHRISL:
+		InvalidateRegion( gsRadarX, gsRadarY,
+										gsRadarX + RADAR_WINDOW_WIDTH,
 										gsRadarY + RADAR_WINDOW_HEIGHT );
 	}
 
@@ -728,14 +750,16 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 			{
 
 				// left half of list
-				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_X , ( INT16 )( SQUAD_WINDOW_TM_Y + ( sCounter * (	( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ), RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter + 1 ) * ( ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ) ,MSYS_PRIORITY_HIGHEST,
+				// CHRISL:
+				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_TM_X , ( INT16 )( SQUAD_WINDOW_TM_Y + ( sCounter * (  ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ), RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter + 1 ) * ( ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ) ,MSYS_PRIORITY_HIGHEST,
 							0, TacticalSquadListMvtCallback, TacticalSquadListBtnCallBack );
 			}
 			else
 			{
 
 				// right half of list
-				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter - ( NUMBER_OF_SQUADS / 2) ) * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_X + RADAR_WINDOW_WIDTH	- 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( ( sCounter + 1 ) - ( NUMBER_OF_SQUADS / 2) )* ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), MSYS_PRIORITY_HIGHEST,
+				// CHRISL:
+				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH / 2, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter - ( NUMBER_OF_SQUADS / 2) ) * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH  - 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( ( sCounter + 1 ) - ( NUMBER_OF_SQUADS / 2) )* ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), MSYS_PRIORITY_HIGHEST,
 						0, TacticalSquadListMvtCallback, TacticalSquadListBtnCallBack );
 			}
 
@@ -795,10 +819,12 @@ void RenderSquadList( void )
 	INT16 sX, sY;
 
 	// clear region
-	RestoreExternBackgroundRect( RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH , SQUAD_REGION_HEIGHT );
+	// CHRISL:
+	RestoreExternBackgroundRect( gsRadarX, gsRadarY, RADAR_WINDOW_WIDTH , SQUAD_REGION_HEIGHT );
 
 	// fill area
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + SQUAD_REGION_HEIGHT , Get16BPPColor( FROMRGB(0,0,0) ) );
+	// CHRISL:
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, RADAR_WINDOW_TM_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + SQUAD_REGION_HEIGHT , Get16BPPColor( FROMRGB(0,0,0) ) );
 
 	// set font
 	SetFont( SQUAD_FONT );
@@ -808,11 +834,13 @@ void RenderSquadList( void )
 		// run through list of squads and place appropriatly
 			if( sCounter < NUMBER_OF_SQUADS / 2 )
 			{
-				FindFontCenterCoordinates( RADAR_WINDOW_X , ( INT16 )( SQUAD_WINDOW_TM_Y + ( sCounter * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )( (	( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ) ,pSquadMenuStrings[ sCounter ] , SQUAD_FONT, &sX, &sY);
+				// CHRISL:
+				FindFontCenterCoordinates( RADAR_WINDOW_TM_X , ( INT16 )( SQUAD_WINDOW_TM_Y + ( sCounter * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )( (  ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ) ,pSquadMenuStrings[ sCounter ] , SQUAD_FONT, &sX, &sY);
 			}
 			else
 			{
-				FindFontCenterCoordinates(RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter - ( NUMBER_OF_SQUADS / 2) ) * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )(	( ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), pSquadMenuStrings[ sCounter ] , SQUAD_FONT, &sX, &sY);
+				// CHRISL:
+				FindFontCenterCoordinates(RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH / 2, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter - ( NUMBER_OF_SQUADS / 2) ) * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )(   ( ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), pSquadMenuStrings[ sCounter ] , SQUAD_FONT, &sX, &sY);
 			}
 
 			// highlight line?

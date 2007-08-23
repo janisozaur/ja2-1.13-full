@@ -2415,15 +2415,18 @@ BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
 	if (Item[pSoldier->inv[bSlot].usItem].ubPerPocket == 0)
 	{
 		// then we're looking for a big pocket
-		bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCK4POS );
+		// CHRISL: Adjust final parameter to use dynamic inventory endpoint
+		bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
 	}
 	else
 	{
 		// try a small pocket first
-		bSlot = FindEmptySlotWithin( pSoldier, SMALLPOCK1POS, SMALLPOCK8POS );
+		// CHRISL: Adjust final parameter to use dynamic inventory endpoint
+		bSlot = FindEmptySlotWithin( pSoldier, SMALLPOCK1POS, (NUM_INV_SLOTS-1) );
 		if (bSlot == NO_SLOT)
 		{
-			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCK4POS );
+			// CHRISL: Adjust final parameter to use dynamic inventory endpoint
+			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
 		}
 	}
 	if (bSlot == NO_SLOT)

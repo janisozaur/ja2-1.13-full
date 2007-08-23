@@ -82,6 +82,12 @@
 #define SWATCOST					0
 #define CRAWLCOST					1
 
+// CHRISL: AP Cost Movement modifiers when wearing a backpack
+#define RUNDIVISORBPACK				1.5
+#define WALKCOSTBPACK					0
+#define SWATCOSTBPACK					1
+#define CRAWLCOSTBPACK					2
+
 // defines
 // ######################################################
 #define MAX_PATH_LIST_SIZE		30

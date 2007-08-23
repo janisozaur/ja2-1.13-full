@@ -277,20 +277,17 @@ BOOLEAN InitializeTacticalInterface(	)
 	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC	VObjectDesc;
 
-	INTERFACE_WIDTH			= 640;
-	INTERFACE_HEIGHT		= 120;
-	INV_INTERFACE_HEIGHT	= 140;
-
-	// centering panel disabled becouse keyring squad change and radar 
-	// are not finished (no time) sorry 
-	/* 
-	if ( SCREEN_WIDTH > INTERFACE_WIDTH)
-		INTERFACE_START_X		= (SCREEN_WIDTH - INTERFACE_WIDTH) / 2;
+	// CHRISL: Setup default interface coords based on inventory system in use
+	if(gGameOptions.ubInventorySystem)
+	{
+		InitNewInventorySystem();
+		InitializeSMPanelCoordsNew();
+	}
 	else
-	*/
-		INTERFACE_START_X		= 0;
-	INTERFACE_START_Y		= ( SCREEN_HEIGHT - INTERFACE_HEIGHT );
-	INV_INTERFACE_START_Y	= ( SCREEN_HEIGHT - INV_INTERFACE_HEIGHT );
+	{
+		InitOldInventorySystem();
+		InitializeSMPanelCoordsOld();
+	}
 
 /*	OK i need to initialize coords here
  *	Isnt it cool
@@ -387,6 +384,13 @@ BOOLEAN InitializeTacticalInterface(	)
 	FilenameForBPP("INTERFACE\\mdp3items.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiP3ITEMS ) )
 		AssertMsg(0, "Missing INTERFACE\\mdp3items.sti" );
+
+	// CHRISL:
+	// LOAD INTERFACE POCKET SILHOUETTES
+	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
+	FilenameForBPP("INTERFACE\\Silhouettes.sti", VObjectDesc.ImageFile);
+	if( !AddVideoObject( &VObjectDesc, &guiSILHOUETTE ) )
+		AssertMsg(0, "Missing INTERFACE\\Silhouettes.sti" );
 
 	// LOAD INTERFACE BUTTON BORDER
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;

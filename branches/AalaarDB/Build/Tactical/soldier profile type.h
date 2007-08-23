@@ -161,6 +161,54 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
+//CHRISL:
+typedef struct
+{
+	UINT32				lbeClass;
+	UINT16				lbeIndex;
+	UINT8				ubID;
+	BOOLEAN				ZipperFlag;
+	UINT32				uiNodeChecksum;
+	OBJECTTYPE			inv[12];
+} LBENODE;
+
+//extern LBENODE			*LBEptr;
+extern vector<LBENODE>	LBEptr;
+extern UINT16			LBEptrNum;
+
+// CHRISL: Class to handle profile equipment from XML_MercStartingGear
+class MERCPROFILEGEAR {
+public:
+	// Constructor
+	MERCPROFILEGEAR();
+	// Copy Constructor
+	MERCPROFILEGEAR(const MERCPROFILEGEAR&);
+	// Assignment operator
+	MERCPROFILEGEAR& operator=(const MERCPROFILEGEAR&);
+	// Destructor
+	~MERCPROFILEGEAR();
+
+	// Initialize the mercenary profile gear
+	void initialize();
+
+	//  Note that the constructor does this automatically.
+	void clearInventory();
+public:
+	UINT16		mIndex;
+	CHAR8		mName[80];
+	char		endOfPOD;	// marker for end of POD (plain old data)
+	vector<int>	inv;
+	vector<int>	iStatus;
+	vector<int>	iDrop;
+	vector<int>	iNumber;
+	vector<int>	lbe;
+	vector<int>	lStatus;
+private:
+	int			invCnt;
+	int			lbeCnt;
+};
+#define SIZEOF_MERCPROFILEGEAR_POD offsetof( MERCPROFILEGEAR, endOfPOD )
+
 class MERCPROFILESTRUCT {
 public:
 	// Constructor

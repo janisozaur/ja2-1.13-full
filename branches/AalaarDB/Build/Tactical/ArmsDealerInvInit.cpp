@@ -20,6 +20,7 @@
 extern INT8	gbSelectedArmsDealerID;
 
 
+// CHRISL: Updated this to include IC_LBEGEAR class
 // This table controls the order items appear in inventory at BR's and dealers, and which kinds of items are sold used
 ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
 {
@@ -36,6 +37,7 @@ ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
 	{ IC_BLADE,						NOGUNCLASS,		FALSE	},
 	{ IC_THROWING_KNIFE,	NOGUNCLASS,		FALSE	},
 	{ IC_PUNCH,						NOGUNCLASS,		FALSE	},
+	{ IC_LBEGEAR,					NOGUNCLASS,		TRUE	},
 	{ IC_ARMOUR,					NOGUNCLASS,		TRUE	},
 	{ IC_FACE,						NOGUNCLASS,		TRUE	},
 	{ IC_MEDKIT,					NOGUNCLASS,		FALSE	},

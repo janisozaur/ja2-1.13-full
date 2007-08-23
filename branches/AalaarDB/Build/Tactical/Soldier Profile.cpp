@@ -284,6 +284,38 @@ BOOLEAN LoadMercProfiles(void)
 		}
 		gMercProfiles[ uiLoop ].CopyOldInventoryToNew();
 
+		// CHRISL: Overwrite inventory data pulled from prof.dat with data stored in gMercProfileGear
+		// Start by resetting all profile inventory values to 0
+		gMercProfiles[uiLoop].clearInventory();
+		gMercProfiles[uiLoop].ubInvUndroppable = 0;
+		// Next, go through and assign everything but lbe gear
+		for(uiLoop2=0; uiLoop2<OldInventory::NUM_INV_SLOTS; uiLoop2++)
+		{
+			gMercProfiles[uiLoop].inv[uiLoop2] = gMercProfileGear[uiLoop].inv[uiLoop2];
+			gMercProfiles[uiLoop].bInvStatus[uiLoop2] = gMercProfileGear[uiLoop].iStatus[uiLoop2];
+			if(gMercProfiles[uiLoop].inv[uiLoop2] != NONE)
+			{
+				if(uiLoop2 > 5)
+					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = gMercProfileGear[uiLoop].iNumber[uiLoop2];
+				else
+					gMercProfiles[uiLoop].bInvNumber[uiLoop2] = 1;
+				if(!gMercProfileGear[uiLoop].iDrop[uiLoop2] && uiLoop > 56)
+					gMercProfiles[uiLoop].ubInvUndroppable |= gubItemDroppableFlag[uiLoop2];
+			}
+		}
+		// Last, go through and assign LBE items.  Only needed for new inventory system
+		if(gGameOptions.ubInventorySystem)
+		{
+			for(uiLoop2=0; uiLoop2<5; uiLoop2++)
+			{
+				uiLoop3 = uiLoop2 + OldInventory::NUM_INV_SLOTS; 
+				gMercProfiles[uiLoop].inv[uiLoop3] = gMercProfileGear[uiLoop].lbe[uiLoop2];
+				gMercProfiles[uiLoop].bInvStatus[uiLoop3] = gMercProfileGear[uiLoop].lStatus[uiLoop2];
+				if(gMercProfiles[uiLoop].inv[uiLoop3] != NONE)
+					gMercProfiles[uiLoop].bInvNumber[uiLoop3] = 1;
+			}
+		}
+
 		//if the Dialogue exists for the merc, allow the merc to be hired
 		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
 		{

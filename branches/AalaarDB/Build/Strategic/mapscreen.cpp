@@ -147,193 +147,198 @@
 
 #define	MINS_TO_FLASH_CONTRACT_TIME	(4 * 60)
 
-// Coordinate defines
+// CHRISL: Reclassify all coordinates as int variables and declare their values in an initialization function.
+int TOWN_INFO_X;
+int TOWN_INFO_Y;
 
-#define	 TOWN_INFO_X			0
-#define	 TOWN_INFO_Y			1
-
-#define	 PLAYER_INFO_X		 0
-#define	 PLAYER_INFO_Y		 107
+int PLAYER_INFO_X;
+int PLAYER_INFO_Y;
 
 // item description
-#define			MAP_ITEMDESC_START_X		0
-#define			MAP_ITEMDESC_START_Y			PLAYER_INFO_Y
+int MAP_ITEMDESC_START_X;
+int MAP_ITEMDESC_START_Y;
 
-#define	 INV_REGION_X PLAYER_INFO_X
-#define	 INV_REGION_Y PLAYER_INFO_Y
-#define	 INV_REGION_WIDTH 261
-#define	 INV_REGION_HEIGHT 359-94
-#define	 INV_BTN_X PLAYER_INFO_X + 217
-#define	 INV_BTN_Y PLAYER_INFO_Y + 210
+int INV_REGION_X;
+int INV_REGION_Y;
+int INV_REGION_WIDTH;
+int INV_REGION_HEIGHT;
+int INV_BTN_X;
+int INV_BTN_Y;
+int INV_BDROP_X;
+int INV_BDROP_Y;
 
-#define			MAP_ARMOR_LABEL_X 208
-#define			MAP_ARMOR_LABEL_Y 180
-#define			MAP_ARMOR_X									209
-#define			MAP_ARMOR_Y									189
-#define			MAP_ARMOR_PERCENT_X 229
-#define			MAP_ARMOR_PERCENT_Y 190
+int MAP_ARMOR_LABEL_X;
+int MAP_ARMOR_LABEL_Y;
+int MAP_ARMOR_X;
+int MAP_ARMOR_Y;
+int MAP_ARMOR_PERCENT_X;
+int MAP_ARMOR_PERCENT_Y;
 
-#define			MAP_WEIGHT_LABEL_X 173
-#define			MAP_WEIGHT_LABEL_Y 256
-#define			MAP_WEIGHT_X								176
-#define			MAP_WEIGHT_Y								266
-#define			MAP_WEIGHT_PERCENT_X 196
-#define			MAP_WEIGHT_PERCENT_Y 266
+int MAP_WEIGHT_LABEL_X;
+int MAP_WEIGHT_LABEL_Y;
+int MAP_WEIGHT_X;
+int MAP_WEIGHT_Y;
+int MAP_WEIGHT_PERCENT_X;
+int MAP_WEIGHT_PERCENT_Y;
 
-#define			MAP_CAMMO_LABEL_X					178
-#define			MAP_CAMMO_LABEL_Y					283
-#define			MAP_CAMMO_X							176
-#define			MAP_CAMMO_Y							292
-#define			MAP_CAMMO_PERCENT_X					196
-#define			MAP_CAMMO_PERCENT_Y					293
+int MAP_CAMMO_LABEL_X;
+int MAP_CAMMO_LABEL_Y;
+int MAP_CAMMO_X;
+int MAP_CAMMO_Y;
+int MAP_CAMMO_PERCENT_X;
+int MAP_CAMMO_PERCENT_Y;
 
-#define			MAP_PERCENT_WIDTH					20
-#define			MAP_PERCENT_HEIGHT					10
+int MAP_PERCENT_WIDTH;
+int MAP_PERCENT_HEIGHT;
 
-#define			MAP_INV_STATS_TITLE_FONT_COLOR		6
-#define			MAP_INV_STATS_TEXT_FONT_COLOR		5
+int MAP_INV_STATS_TITLE_FONT_COLOR;
+int MAP_INV_STATS_TEXT_FONT_COLOR;
 
-#define	 PLAYER_INFO_FACE_START_X	9
-#define	 PLAYER_INFO_FACE_START_Y	17
-#define	 PLAYER_INFO_FACE_END_X		60
-#define	 PLAYER_INFO_FACE_END_Y		76
+int PLAYER_INFO_FACE_START_X;
+int PLAYER_INFO_FACE_START_Y;
+int PLAYER_INFO_FACE_END_X;
+int PLAYER_INFO_FACE_END_Y;
 
-#define	 INV_BODY_X 71
-#define	 INV_BODY_Y 116
+int INV_BODY_X;
+int INV_BODY_Y;
 
-#define	 NAME_X						4	
-#define	 NAME_WIDTH					55 - NAME_X
+int NAME_X;
+int NAME_WIDTH;
 
-#define	 ASSIGN_X					60
-#define	 ASSIGN_WIDTH				111 - ASSIGN_X
-#define		SLEEP_X						116
-#define		SLEEP_WIDTH					135 - SLEEP_X
-#define	 LOC_X						140
-#define	 LOC_WIDTH					172 - LOC_X
-#define	 DEST_ETA_X					177
-#define	 DEST_ETA_WIDTH				210 - DEST_ETA_X
-#define	 TIME_REMAINING_X			215
-#define	 TIME_REMAINING_WIDTH		243 - TIME_REMAINING_X
+int ASSIGN_X;
+int ASSIGN_WIDTH;
+int SLEEP_X;
+int SLEEP_WIDTH;
+int LOC_X;
+int LOC_WIDTH;
+int DEST_ETA_X;
+int DEST_ETA_WIDTH;
+int TIME_REMAINING_X;
+int TIME_REMAINING_WIDTH;
 
-#define	 CLOCK_Y_START			(MAP_BORDER_Y_OFFSET + 298) // 298
+int CLOCK_Y_START;
 
-#define	 DEST_PLOT_X				(MAP_BORDER_X_OFFSET + 463)		//463
-#define	 DEST_PLOT_Y				(MAP_BORDER_Y_OFFSET + 345)		//345
+int DEST_PLOT_X;
+int DEST_PLOT_Y;
 
-#define	 CLOCK_ETA_X				(MAP_BORDER_X_OFFSET + 484)		//463 - 15 + 6 + 30
-#define	 CLOCK_HOUR_X_START		(MAP_BORDER_X_OFFSET + 518)		//463 + 25 + 30
-#define	 CLOCK_MIN_X_START		(MAP_BORDER_X_OFFSET + 538)		//463 + 45 + 30
+int CLOCK_ETA_X;
+int CLOCK_HOUR_X_START;
+int CLOCK_MIN_X_START;
 
 // contract
-#define CONTRACT_X		185
-#define CONTRACT_Y		50
+int CONTRACT_X;
+int CONTRACT_Y;
 
 // trash can
-#define TRASH_CAN_X 176
-#define TRASH_CAN_Y 211 + PLAYER_INFO_Y
-#define TRASH_CAN_WIDTH 193 - 165
-#define TRASH_CAN_HEIGHT 239 - 217
+int TRASH_CAN_X;
+int TRASH_CAN_Y;
+int TRASH_CAN_WIDTH;
+int TRASH_CAN_HEIGHT;
+
+// keyring
+int MAP_KEYRING_X;
+int MAP_KEYRING_Y;
 
 //Text offsets
-#define Y_OFFSET 2
+int Y_OFFSET;
 
 // The boxes defines
-#define TRAIN_Y_OFFSET	 53
-#define TRAIN_X_OFF		65
-#define TRAIN_WID			80
-#define TRAIN_HEIG		 47 
-#define STRING_X_OFFSET	10
-#define STRING_Y_OFFSET	 5
-#define POP_UP_BOX_X		120
-#define POP_UP_BOX_Y		0
-#define POP_UP_BOX_WIDTH	60
-#define POP_UP_BOX_HEIGHT	100
-#define MOUSE_PTR_Y_OFFSET	3
-#define POP_UP_Y_OFFSET	 3
-#define TRAIN_TEXT_Y_OFFSET 4
+int TRAIN_Y_OFFSET;
+int TRAIN_X_OFF;
+int TRAIN_WID;
+int TRAIN_HEIG;
+int STRING_X_OFFSET;
+int STRING_Y_OFFSET;
+int POP_UP_BOX_X;
+int POP_UP_BOX_Y;
+int POP_UP_BOX_WIDTH;
+int POP_UP_BOX_HEIGHT;
+int MOUSE_PTR_Y_OFFSET;
+int POP_UP_Y_OFFSET;
+int TRAIN_TEXT_Y_OFFSET;
 
 
 // char stat positions
-#define STR_X ( 112 )
-#define STR_Y 42
-#define DEX_X STR_X
-#define DEX_Y 32
-#define AGL_X STR_X 
-#define AGL_Y 22
-#define LDR_X STR_X
-#define LDR_Y 52
-#define WIS_X STR_X
-#define WIS_Y 62
-#define LVL_X ( 159 )
-#define LVL_Y AGL_Y
-#define MRK_X LVL_X
-#define MRK_Y DEX_Y
-#define EXP_X LVL_X
-#define EXP_Y STR_Y
-#define MEC_X LVL_X
-#define MEC_Y LDR_Y
-#define MED_X LVL_X
-#define MED_Y WIS_Y
+int STR_X;
+int STR_Y;
+int DEX_X;
+int DEX_Y;
+int AGL_X;
+int AGL_Y;
+int LDR_X;
+int LDR_Y;
+int WIS_X;
+int WIS_Y;
+int LVL_X;
+int LVL_Y;
+int MRK_X;
+int MRK_Y;
+int EXP_X;
+int EXP_Y;
+int MEC_X;
+int MEC_Y;
+int MED_X;
+int MED_Y;
 
-#define STAT_WID 15
-#define STAT_HEI GetFontHeight(CHAR_FONT)
+int STAT_WID;
+int STAT_HEI;
 
-#define PIC_NAME_X 8
-#define PIC_NAME_Y (66 + 3)
-#define PIC_NAME_WID 60 - PIC_NAME_X
-#define PIC_NAME_HEI 75 - PIC_NAME_Y
-#define CHAR_NAME_X 14
-#define CHAR_NAME_Y (2 + 3)
-#define CHAR_NAME_WID 164 - CHAR_NAME_X
-#define CHAR_NAME_HEI 11 - CHAR_NAME_Y
-#define CHAR_LOC_X	76
-#define CHAR_LOC_Y	84 
-#define CHAR_LOC_WID	16
-#define CHAR_LOC_HEI	9
-#define CHAR_TIME_REMAINING_X		207
-#define CHAR_TIME_REMAINING_Y		65
-#define CHAR_TIME_REMAINING_WID 258 - CHAR_TIME_REMAINING_X
-#define CHAR_TIME_REMAINING_HEI GetFontHeight(CHAR_FONT)
-#define CHAR_SALARY_X						CHAR_TIME_REMAINING_X
-#define CHAR_SALARY_Y						79
-#define CHAR_SALARY_WID					CHAR_TIME_REMAINING_WID - 8		// for right justify
-#define CHAR_SALARY_HEI					CHAR_TIME_REMAINING_HEI
-#define CHAR_MEDICAL_X					CHAR_TIME_REMAINING_X
-#define CHAR_MEDICAL_Y					93
-#define CHAR_MEDICAL_WID				CHAR_TIME_REMAINING_WID - 8		// for right justify
-#define CHAR_MEDICAL_HEI				CHAR_TIME_REMAINING_HEI
-#define CHAR_ASSIGN_X 182
-#define CHAR_ASSIGN1_Y 18
-#define CHAR_ASSIGN2_Y 31
-#define CHAR_ASSIGN_WID 257 - 178
-#define CHAR_ASSIGN_HEI 39 - 29
-#define CHAR_HP_X 133
-#define CHAR_HP_Y 77 + 3
-#define CHAR_HP_WID 175 - CHAR_HP_X
-#define CHAR_HP_HEI	90 - CHAR_HP_Y
-#define CHAR_MORALE_X 133
-#define CHAR_MORALE_Y 91 + 3
-#define CHAR_MORALE_WID 175 - CHAR_MORALE_X
-#define CHAR_MORALE_HEI 101 - CHAR_MORALE_Y
+int PIC_NAME_X;
+int PIC_NAME_Y;
+int PIC_NAME_WID;
+int PIC_NAME_HEI;
+int CHAR_NAME_X;
+int CHAR_NAME_Y;
+int CHAR_NAME_WID;
+int CHAR_NAME_HEI;
+int CHAR_LOC_X;
+int CHAR_LOC_Y;
+int CHAR_LOC_WID;
+int CHAR_LOC_HEI;
+int CHAR_TIME_REMAINING_X;
+int CHAR_TIME_REMAINING_Y;
+int CHAR_TIME_REMAINING_WID;
+int CHAR_TIME_REMAINING_HEI;
+int CHAR_SALARY_X;
+int CHAR_SALARY_Y;
+int CHAR_SALARY_WID;
+int CHAR_SALARY_HEI;
+int CHAR_MEDICAL_X;
+int CHAR_MEDICAL_Y;
+int CHAR_MEDICAL_WID;
+int CHAR_MEDICAL_HEI;
+int CHAR_ASSIGN_X;
+int CHAR_ASSIGN1_Y;
+int CHAR_ASSIGN2_Y;
+int CHAR_ASSIGN_WID;
+int CHAR_ASSIGN_HEI;
+int CHAR_HP_X;
+int CHAR_HP_Y;
+int CHAR_HP_WID;
+int CHAR_HP_HEI;
+int CHAR_MORALE_X;
+int CHAR_MORALE_Y;
+int CHAR_MORALE_WID;
+int CHAR_MORALE_HEI;
 
-#define CROSS_X 195
-#define CROSS_Y 83
-#define CROSS_HEIGHT 20
-#define CROSS_WIDTH	20
-#define CHAR_PAY_X 150
-#define CHAR_PAY_Y 80+4
-#define CHAR_PAY_HEI GetFontHeight(CHAR_FONT)
-#define CHAR_PAY_WID CROSS_X-CHAR_PAY_X
-#define SOLDIER_PIC_X 9
-#define SOLDIER_PIC_Y 20
-#define SOLDIER_HAND_X 6
-#define SOLDIER_HAND_Y 81
-//#define	TM_INV_WIDTH								58
-//#define	TM_INV_HEIGHT								23
+int CROSS_X;
+int CROSS_Y;
+int CROSS_HEIGHT;
+int CROSS_WIDTH;
+int CHAR_PAY_X;
+int CHAR_PAY_Y;
+int CHAR_PAY_HEI;
+int CHAR_PAY_WID;
+int SOLDIER_PIC_X;
+int SOLDIER_PIC_Y;
+int SOLDIER_HAND_X;
+int SOLDIER_HAND_Y;
+//int	TM_INV_WIDTH;
+//int	TM_INV_HEIGHT;
 
 // WANNE: The position of the clock in the strategy screen
-//#define CLOCK_X		(SCREEN_WIDTH - 86)					//554
-//#define CLOCK_Y		(SCREEN_HEIGHT - 21)				//459
+//int CLOCK_X;
+//int CLOCK_Y;
 
 
 #define RGB_WHITE				( FROMRGB( 255, 255, 255 ) )
@@ -1074,6 +1079,534 @@ void DumpSectorDifficultyInfo( void );
 void DumpItemsList( void );
 #endif
 
+
+// CHRISL: New functions to handle initialization of inventory coordinates
+BOOLEAN InitializeInvPanelCoordsOld()
+{
+	TOWN_INFO_X						= 0;
+	TOWN_INFO_Y						= 1;
+
+	PLAYER_INFO_X					= 0;
+	PLAYER_INFO_Y					= 107;
+
+	// Inventory slots
+	gMapScreenInvPocketXY[HELMETPOS].sX = PLAYER_INFO_X + 204;		gMapScreenInvPocketXY[HELMETPOS].sY = PLAYER_INFO_Y + 9;	// HELMETPOS
+	gMapScreenInvPocketXY[VESTPOS].sX = PLAYER_INFO_X + 204;		gMapScreenInvPocketXY[VESTPOS].sY = PLAYER_INFO_Y + 38;	// VESTPOS
+	gMapScreenInvPocketXY[LEGPOS].sX = PLAYER_INFO_X + 204;			gMapScreenInvPocketXY[LEGPOS].sY = PLAYER_INFO_Y + 96;	// LEGPOS,
+	gMapScreenInvPocketXY[HEAD1POS].sX = PLAYER_INFO_X + 21;		gMapScreenInvPocketXY[HEAD1POS].sY = PLAYER_INFO_Y + 9;	// HEAD1POS
+	gMapScreenInvPocketXY[HEAD2POS].sX = PLAYER_INFO_X + 21;		gMapScreenInvPocketXY[HEAD2POS].sY = PLAYER_INFO_Y + 33;	// HEAD2POS
+	gMapScreenInvPocketXY[HANDPOS].sX = PLAYER_INFO_X + 21;			gMapScreenInvPocketXY[HANDPOS].sY = PLAYER_INFO_Y + 87;	// HANDPOS,
+	gMapScreenInvPocketXY[SECONDHANDPOS].sX = PLAYER_INFO_X + 21;	gMapScreenInvPocketXY[SECONDHANDPOS].sY = PLAYER_INFO_Y + 111;	// SECONDHANDPOS
+	gMapScreenInvPocketXY[BIGPOCK1POS].sX = PLAYER_INFO_X + 98;		gMapScreenInvPocketXY[BIGPOCK1POS].sY = PLAYER_INFO_Y + 144;	// BIGPOCK1
+	gMapScreenInvPocketXY[BIGPOCK2POS].sX = PLAYER_INFO_X + 98;		gMapScreenInvPocketXY[BIGPOCK2POS].sY = PLAYER_INFO_Y + 168;	// BIGPOCK2
+	gMapScreenInvPocketXY[BIGPOCK3POS].sX = PLAYER_INFO_X + 98;		gMapScreenInvPocketXY[BIGPOCK3POS].sY = PLAYER_INFO_Y + 192;	// BIGPOCK3
+	gMapScreenInvPocketXY[BIGPOCK4POS].sX = PLAYER_INFO_X + 98;		gMapScreenInvPocketXY[BIGPOCK4POS].sY = PLAYER_INFO_Y + 216;	// BIGPOCK4
+	gMapScreenInvPocketXY[SMALLPOCK1POS].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[SMALLPOCK1POS].sY = PLAYER_INFO_Y + 144;	// SMALLPOCK1
+	gMapScreenInvPocketXY[SMALLPOCK2POS].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[SMALLPOCK2POS].sY = PLAYER_INFO_Y + 168;	// SMALLPOCK2
+	gMapScreenInvPocketXY[SMALLPOCK3POS].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[SMALLPOCK3POS].sY = PLAYER_INFO_Y + 192;	// SMALLPOCK3
+	gMapScreenInvPocketXY[SMALLPOCK4POS].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[SMALLPOCK4POS].sY = PLAYER_INFO_Y + 216;	// SMALLPOCK4
+	gMapScreenInvPocketXY[SMALLPOCK5POS].sX = PLAYER_INFO_X + 60;	gMapScreenInvPocketXY[SMALLPOCK5POS].sY = PLAYER_INFO_Y + 144;	// SMALLPOCK5
+	gMapScreenInvPocketXY[SMALLPOCK6POS].sX = PLAYER_INFO_X + 60;	gMapScreenInvPocketXY[SMALLPOCK6POS].sY = PLAYER_INFO_Y + 168;	// SMALLPOCK6
+	gMapScreenInvPocketXY[SMALLPOCK7POS].sX = PLAYER_INFO_X + 60;	gMapScreenInvPocketXY[SMALLPOCK7POS].sY = PLAYER_INFO_Y + 192;	// SMALLPOCK7
+	gMapScreenInvPocketXY[SMALLPOCK8POS].sX = PLAYER_INFO_X + 60;	gMapScreenInvPocketXY[SMALLPOCK8POS].sY = PLAYER_INFO_Y + 216;	// SMALLPOCK8
+
+	// item description
+	MAP_ITEMDESC_START_X			= 0;
+	MAP_ITEMDESC_START_Y			= PLAYER_INFO_Y;
+
+	INV_REGION_X					= PLAYER_INFO_X;
+	INV_REGION_Y					= PLAYER_INFO_Y;
+	INV_REGION_WIDTH				= 261;
+	INV_REGION_HEIGHT				= 359-94;
+	INV_BTN_X						= PLAYER_INFO_X + 217;
+	INV_BTN_Y						= PLAYER_INFO_Y + 210;
+	INV_BDROP_X						= 0;	// Not used in old inventory
+	INV_BDROP_Y						= 0;	// Not used in old inventory
+
+	MAP_ARMOR_LABEL_X				= 208;
+	MAP_ARMOR_LABEL_Y				= 180;
+	MAP_ARMOR_X						= 209;
+	MAP_ARMOR_Y						= 189;
+	MAP_ARMOR_PERCENT_X				= 229;
+	MAP_ARMOR_PERCENT_Y				= 190;
+
+	MAP_WEIGHT_LABEL_X				= 173;
+	MAP_WEIGHT_LABEL_Y				= 256;
+	MAP_WEIGHT_X					= 176;
+	MAP_WEIGHT_Y					= 266;
+	MAP_WEIGHT_PERCENT_X			= 196;
+	MAP_WEIGHT_PERCENT_Y			= 266;
+
+	MAP_CAMMO_LABEL_X				= 178;
+	MAP_CAMMO_LABEL_Y				= 283;
+	MAP_CAMMO_X						= 176;
+	MAP_CAMMO_Y						= 292;
+	MAP_CAMMO_PERCENT_X				= 196;
+	MAP_CAMMO_PERCENT_Y				= 293;
+
+	MAP_PERCENT_WIDTH				= 20;
+	MAP_PERCENT_HEIGHT				= 10;
+
+	MAP_INV_STATS_TITLE_FONT_COLOR	= 6;
+	MAP_INV_STATS_TEXT_FONT_COLOR	= 5;
+
+	PLAYER_INFO_FACE_START_X		= 9;
+	PLAYER_INFO_FACE_START_Y		= 17;
+	PLAYER_INFO_FACE_END_X			= 60;
+	PLAYER_INFO_FACE_END_Y			= 76;
+
+	INV_BODY_X						= 71;
+	INV_BODY_Y						= 116;
+
+	// WANNE 2 <change 2>
+	NAME_X							= 4;
+	NAME_WIDTH						= 55 - NAME_X;
+
+	ASSIGN_X						= 60;
+	ASSIGN_WIDTH					= 111 - ASSIGN_X;
+	SLEEP_X							= 116;
+	SLEEP_WIDTH						= 135 - SLEEP_X;
+	LOC_X							= 140;
+	LOC_WIDTH						= 172 - LOC_X;
+	DEST_ETA_X						= 177;
+	DEST_ETA_WIDTH					= 210 - DEST_ETA_X;
+	TIME_REMAINING_X				= 215;
+	TIME_REMAINING_WIDTH			= 243 - TIME_REMAINING_X;
+
+	// WANNE 2
+	CLOCK_Y_START					= (MAP_BORDER_Y_OFFSET + 298);
+
+	DEST_PLOT_X						= (MAP_BORDER_X_OFFSET + 463);
+	DEST_PLOT_Y						= (MAP_BORDER_Y_OFFSET + 345);
+
+	// WANNE 2
+	CLOCK_ETA_X						= (MAP_BORDER_X_OFFSET + 484);
+	CLOCK_HOUR_X_START				= (MAP_BORDER_X_OFFSET + 518);
+	CLOCK_MIN_X_START				= (MAP_BORDER_X_OFFSET + 538);
+
+	// contract
+	CONTRACT_X						= 185;
+	CONTRACT_Y						= 50;
+
+	// trash can
+	TRASH_CAN_X						= 176;
+	TRASH_CAN_Y						= 211 + PLAYER_INFO_Y;
+	TRASH_CAN_WIDTH					= 193 - 165;
+	TRASH_CAN_HEIGHT				= 239 - 217;
+
+	// keyring
+	MAP_KEYRING_X					= 217;
+	MAP_KEYRING_Y					= 271;
+
+	//Text offsets
+	Y_OFFSET						= 2;
+
+	// The boxes defines
+	TRAIN_Y_OFFSET					= 53;
+	TRAIN_X_OFF						= 65;
+	TRAIN_WID						= 80;
+	TRAIN_HEIG						= 47;
+	STRING_X_OFFSET					= 10;
+	STRING_Y_OFFSET					= 5;
+	POP_UP_BOX_X					= 120;
+	POP_UP_BOX_Y					= 0;
+	POP_UP_BOX_WIDTH				= 60;
+	POP_UP_BOX_HEIGHT				= 100;
+	MOUSE_PTR_Y_OFFSET				= 3;
+	POP_UP_Y_OFFSET					= 3;
+	TRAIN_TEXT_Y_OFFSET				= 4;
+
+	// char stat positions
+	STR_X							= 112;
+	STR_Y							= 42;
+	DEX_X							= STR_X;
+	DEX_Y							= 32;
+	AGL_X							= STR_X;
+	AGL_Y							= 22;
+	LDR_X							= STR_X;
+	LDR_Y							= 52;
+	WIS_X							= STR_X;
+	WIS_Y							= 62;
+	LVL_X							= 159;
+	LVL_Y							= AGL_Y;
+	MRK_X							= LVL_X;
+	MRK_Y							= DEX_Y;
+	EXP_X							= LVL_X;
+	EXP_Y							= STR_Y;
+	MEC_X							= LVL_X;
+	MEC_Y							= LDR_Y;
+	MED_X							= LVL_X;
+	MED_Y							= WIS_Y;
+
+	STAT_WID						= 15;
+	STAT_HEI						= GetFontHeight(CHAR_FONT);
+
+	PIC_NAME_X						= 8;
+	PIC_NAME_Y						= (66 + 3);
+	PIC_NAME_WID					= 60 - PIC_NAME_X;
+	PIC_NAME_HEI					= 75 - PIC_NAME_Y;
+	CHAR_NAME_X						= 14;
+	CHAR_NAME_Y						= (2 + 3);
+	CHAR_NAME_WID					= 164 - CHAR_NAME_X;
+	CHAR_NAME_HEI					= 11 - CHAR_NAME_Y;
+	CHAR_LOC_X						= 76;
+	CHAR_LOC_Y						= 84;
+	CHAR_LOC_WID					= 16;
+	CHAR_LOC_HEI					= 9;
+	CHAR_TIME_REMAINING_X			= 207;
+	CHAR_TIME_REMAINING_Y			= 65;
+	CHAR_TIME_REMAINING_WID			= 258 - CHAR_TIME_REMAINING_X;
+	CHAR_TIME_REMAINING_HEI			= GetFontHeight(CHAR_FONT);
+	CHAR_SALARY_X					= CHAR_TIME_REMAINING_X;
+	CHAR_SALARY_Y					= 79;
+	CHAR_SALARY_WID					= CHAR_TIME_REMAINING_WID - 8;
+	CHAR_SALARY_HEI					= CHAR_TIME_REMAINING_HEI;
+	CHAR_MEDICAL_X					= CHAR_TIME_REMAINING_X;
+	CHAR_MEDICAL_Y					= 93;
+	CHAR_MEDICAL_WID				= CHAR_TIME_REMAINING_WID - 8;
+	CHAR_MEDICAL_HEI				= CHAR_TIME_REMAINING_HEI;
+	CHAR_ASSIGN_X					= 182;
+	CHAR_ASSIGN1_Y					= 18;
+	CHAR_ASSIGN2_Y					= 31;
+	CHAR_ASSIGN_WID					= 257 - 178;
+	CHAR_ASSIGN_HEI					= 39 - 29;
+	CHAR_HP_X						= 133;
+	CHAR_HP_Y						= 77 + 3;
+	CHAR_HP_WID						= 175 - CHAR_HP_X;
+	CHAR_HP_HEI						= 90 - CHAR_HP_Y;
+	CHAR_MORALE_X					= 133;
+	CHAR_MORALE_Y					= 91 + 3;
+	CHAR_MORALE_WID					= 175 - CHAR_MORALE_X;
+	CHAR_MORALE_HEI					= 101 - CHAR_MORALE_Y;
+
+	CROSS_X							= 195;
+	CROSS_Y							= 83;
+	CROSS_HEIGHT					= 20;
+	CROSS_WIDTH						= 20;
+	CHAR_PAY_X						= 150;
+	CHAR_PAY_Y						= 80+4;
+	CHAR_PAY_HEI					= GetFontHeight(CHAR_FONT);
+	CHAR_PAY_WID					= CROSS_X-CHAR_PAY_X;
+	SOLDIER_PIC_X					= 9;
+	SOLDIER_PIC_Y					= 20;
+	SOLDIER_HAND_X					= 6;
+	SOLDIER_HAND_Y					= 81;
+	//TM_INV_WIDTH					= 58;
+	//TM_INV_HEIGHT					= 23;
+
+	// WANNE 2 (the position of the clock in the strategy screen)
+	//CLOCK_X						= (SCREEN_WIDTH - 86);
+	//CLOCK_Y						= (SCREEN_HEIGHT - 21);
+
+	gSCamoXY.sX = INV_BODY_X;	gSCamoXY.sY = INV_BODY_Y;	// X, Y Location of Map screen's Camouflage region
+
+	return ( TRUE );
+}
+BOOLEAN InitializeInvPanelCoordsNew()
+{
+	TOWN_INFO_X						= 0;
+	TOWN_INFO_Y						= 1;
+
+	PLAYER_INFO_X					= 0;
+	PLAYER_INFO_Y					= 107;
+
+	// Inventory slots
+	gMapScreenInvPocketXY[0].sX = PLAYER_INFO_X + 131;	gMapScreenInvPocketXY[0].sY = PLAYER_INFO_Y + 9;		// HELMETPOS
+	gMapScreenInvPocketXY[1].sX = PLAYER_INFO_X + 131;	gMapScreenInvPocketXY[1].sY = PLAYER_INFO_Y + 38;		// VESTPOS
+	gMapScreenInvPocketXY[2].sX = PLAYER_INFO_X + 131;	gMapScreenInvPocketXY[2].sY = PLAYER_INFO_Y + 97;		// LEGPOS
+	gMapScreenInvPocketXY[3].sX = PLAYER_INFO_X + 14;	gMapScreenInvPocketXY[3].sY = PLAYER_INFO_Y + 9;		// HEAD1POS
+	gMapScreenInvPocketXY[4].sX = PLAYER_INFO_X + 14;	gMapScreenInvPocketXY[4].sY = PLAYER_INFO_Y + 33;		// HEAD2POS
+	gMapScreenInvPocketXY[5].sX = PLAYER_INFO_X + 14;	gMapScreenInvPocketXY[5].sY = PLAYER_INFO_Y + 86;		// HANDPOS
+	gMapScreenInvPocketXY[6].sX = PLAYER_INFO_X + 14;	gMapScreenInvPocketXY[6].sY = PLAYER_INFO_Y + 110;		// SECONDHANDPOS
+	gMapScreenInvPocketXY[7].sX = PLAYER_INFO_X + 186;	gMapScreenInvPocketXY[7].sY = PLAYER_INFO_Y + 156;		// VESTPOCK
+	gMapScreenInvPocketXY[8].sX = PLAYER_INFO_X + 29;	gMapScreenInvPocketXY[8].sY = PLAYER_INFO_Y + 256;		// LTHIGHPOCK
+	gMapScreenInvPocketXY[9].sX = PLAYER_INFO_X + 112;	gMapScreenInvPocketXY[9].sY = PLAYER_INFO_Y + 256;		// RTHIGHPOCK
+	gMapScreenInvPocketXY[10].sX = PLAYER_INFO_X + 194;	gMapScreenInvPocketXY[10].sY = PLAYER_INFO_Y + 256;		// CPACKPOCK
+	gMapScreenInvPocketXY[11].sX = PLAYER_INFO_X + 173;	gMapScreenInvPocketXY[11].sY = PLAYER_INFO_Y + 439;		// BPACKPOCK
+	gMapScreenInvPocketXY[12].sX = PLAYER_INFO_X + 95;	gMapScreenInvPocketXY[12].sY = PLAYER_INFO_Y + 156;		// GUNSLINGPOCKPOS
+	gMapScreenInvPocketXY[13].sX = PLAYER_INFO_X + 36;	gMapScreenInvPocketXY[13].sY = PLAYER_INFO_Y + 156;		// KNIFEPOCKPOS
+	gMapScreenInvPocketXY[14].sX = PLAYER_INFO_X + 186;	gMapScreenInvPocketXY[14].sY = PLAYER_INFO_Y + 336;		// BIGPOCK1
+	gMapScreenInvPocketXY[15].sX = PLAYER_INFO_X + 186;	gMapScreenInvPocketXY[15].sY = PLAYER_INFO_Y + 360;		// BIGPOCK2
+	gMapScreenInvPocketXY[16].sX = PLAYER_INFO_X + 186;	gMapScreenInvPocketXY[16].sY = PLAYER_INFO_Y + 384;		// BIGPOCK3
+	gMapScreenInvPocketXY[17].sX = PLAYER_INFO_X + 98;	gMapScreenInvPocketXY[17].sY = PLAYER_INFO_Y + 379;		// BIGPOCK4
+	gMapScreenInvPocketXY[18].sX = PLAYER_INFO_X + 98;	gMapScreenInvPocketXY[18].sY = PLAYER_INFO_Y + 403;		// BIGPOCK5
+	gMapScreenInvPocketXY[19].sX = PLAYER_INFO_X + 98;	gMapScreenInvPocketXY[19].sY = PLAYER_INFO_Y + 427;		// BIGPOCK6
+	gMapScreenInvPocketXY[20].sX = PLAYER_INFO_X + 98;	gMapScreenInvPocketXY[20].sY = PLAYER_INFO_Y + 451;		// BIGPOCK7
+	gMapScreenInvPocketXY[21].sX = PLAYER_INFO_X + 202;	gMapScreenInvPocketXY[21].sY = PLAYER_INFO_Y + 188;		// MEDPOCK1
+	gMapScreenInvPocketXY[22].sX = PLAYER_INFO_X + 202;	gMapScreenInvPocketXY[22].sY = PLAYER_INFO_Y + 212;		// MEDPOCK2
+	gMapScreenInvPocketXY[23].sX = PLAYER_INFO_X + 29;	gMapScreenInvPocketXY[23].sY = PLAYER_INFO_Y + 336;		// MEDPOCK3
+	gMapScreenInvPocketXY[24].sX = PLAYER_INFO_X + 112;	gMapScreenInvPocketXY[24].sY = PLAYER_INFO_Y + 336;		// MEDPOCK4
+	gMapScreenInvPocketXY[25].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[25].sY = PLAYER_INFO_Y + 188;		// SMALLPOCK1
+	gMapScreenInvPocketXY[26].sX = PLAYER_INFO_X + 58;	gMapScreenInvPocketXY[26].sY = PLAYER_INFO_Y + 188;		// SMALLPOCK2
+	gMapScreenInvPocketXY[27].sX = PLAYER_INFO_X + 94;	gMapScreenInvPocketXY[27].sY = PLAYER_INFO_Y + 188;		// SMALLPOCK3
+	gMapScreenInvPocketXY[28].sX = PLAYER_INFO_X + 130;	gMapScreenInvPocketXY[28].sY = PLAYER_INFO_Y + 188;		// SMALLPOCK4
+	gMapScreenInvPocketXY[29].sX = PLAYER_INFO_X + 166;	gMapScreenInvPocketXY[29].sY = PLAYER_INFO_Y + 188;		// SMALLPOCK5
+	gMapScreenInvPocketXY[30].sX = PLAYER_INFO_X + 22;	gMapScreenInvPocketXY[30].sY = PLAYER_INFO_Y + 212;		// SMALLPOCK6
+	gMapScreenInvPocketXY[31].sX = PLAYER_INFO_X + 58;	gMapScreenInvPocketXY[31].sY = PLAYER_INFO_Y + 212;		// SMALLPOCK7
+	gMapScreenInvPocketXY[32].sX = PLAYER_INFO_X + 94;	gMapScreenInvPocketXY[32].sY = PLAYER_INFO_Y + 212;		// SMALLPOCK8	
+	gMapScreenInvPocketXY[33].sX = PLAYER_INFO_X + 130;	gMapScreenInvPocketXY[33].sY = PLAYER_INFO_Y + 212;		// SMALLPOCK9
+	gMapScreenInvPocketXY[34].sX = PLAYER_INFO_X + 166;	gMapScreenInvPocketXY[34].sY = PLAYER_INFO_Y + 212;		// SMALLPOCK10
+	gMapScreenInvPocketXY[35].sX = PLAYER_INFO_X + 18;	gMapScreenInvPocketXY[35].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK11
+	gMapScreenInvPocketXY[36].sX = PLAYER_INFO_X + 54;	gMapScreenInvPocketXY[36].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK12
+	gMapScreenInvPocketXY[37].sX = PLAYER_INFO_X + 18;	gMapScreenInvPocketXY[37].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK13
+	gMapScreenInvPocketXY[38].sX = PLAYER_INFO_X + 54;	gMapScreenInvPocketXY[38].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK14
+	gMapScreenInvPocketXY[39].sX = PLAYER_INFO_X + 100;	gMapScreenInvPocketXY[39].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK15
+	gMapScreenInvPocketXY[40].sX = PLAYER_INFO_X + 136;	gMapScreenInvPocketXY[40].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK16
+	gMapScreenInvPocketXY[41].sX = PLAYER_INFO_X + 100;	gMapScreenInvPocketXY[41].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK17
+	gMapScreenInvPocketXY[42].sX = PLAYER_INFO_X + 136;	gMapScreenInvPocketXY[42].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK18
+	gMapScreenInvPocketXY[43].sX = PLAYER_INFO_X + 183;	gMapScreenInvPocketXY[43].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK19
+	gMapScreenInvPocketXY[44].sX = PLAYER_INFO_X + 219;	gMapScreenInvPocketXY[44].sY = PLAYER_INFO_Y + 288;		// SMALLPOCK20
+	gMapScreenInvPocketXY[45].sX = PLAYER_INFO_X + 183;	gMapScreenInvPocketXY[45].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK21
+	gMapScreenInvPocketXY[46].sX = PLAYER_INFO_X + 219;	gMapScreenInvPocketXY[46].sY = PLAYER_INFO_Y + 312;		// SMALLPOCK22
+	gMapScreenInvPocketXY[47].sX = PLAYER_INFO_X + 26;	gMapScreenInvPocketXY[47].sY = PLAYER_INFO_Y + 379;		// SMALLPOCK23
+	gMapScreenInvPocketXY[48].sX = PLAYER_INFO_X + 26;	gMapScreenInvPocketXY[48].sY = PLAYER_INFO_Y + 403;		// SMALLPOCK24
+	gMapScreenInvPocketXY[49].sX = PLAYER_INFO_X + 26;	gMapScreenInvPocketXY[49].sY = PLAYER_INFO_Y + 427;		// SMALLPOCK25
+	gMapScreenInvPocketXY[50].sX = PLAYER_INFO_X + 26;	gMapScreenInvPocketXY[50].sY = PLAYER_INFO_Y + 451;		// SMALLPOCK26
+	gMapScreenInvPocketXY[51].sX = PLAYER_INFO_X + 62;	gMapScreenInvPocketXY[51].sY = PLAYER_INFO_Y + 379;		// SMALLPOCK27
+	gMapScreenInvPocketXY[52].sX = PLAYER_INFO_X + 62;	gMapScreenInvPocketXY[52].sY = PLAYER_INFO_Y + 403;		// SMALLPOCK28
+	gMapScreenInvPocketXY[53].sX = PLAYER_INFO_X + 62;	gMapScreenInvPocketXY[53].sY = PLAYER_INFO_Y + 427;		// SMALLPOCK29
+	gMapScreenInvPocketXY[54].sX = PLAYER_INFO_X + 62;	gMapScreenInvPocketXY[54].sY = PLAYER_INFO_Y + 451;		// SMALLPOCK30
+
+	// item description
+	MAP_ITEMDESC_START_X			= 0;
+	MAP_ITEMDESC_START_Y			= PLAYER_INFO_Y;
+
+	INV_REGION_X					= PLAYER_INFO_X;
+	INV_REGION_Y					= PLAYER_INFO_Y;
+	INV_REGION_WIDTH				= 261;
+	INV_REGION_HEIGHT				= 359-94;
+	INV_BTN_X						= PLAYER_INFO_X + 226;
+	INV_BTN_Y						= PLAYER_INFO_Y + 19;
+	INV_BDROP_X						= PLAYER_INFO_X + 220;
+	INV_BDROP_Y						= PLAYER_INFO_Y + 441;
+
+	MAP_ARMOR_LABEL_X				= 136;
+	MAP_ARMOR_LABEL_Y				= 177;
+	MAP_ARMOR_X						= 138;
+	MAP_ARMOR_Y						= 187;
+	MAP_ARMOR_PERCENT_X				= 158;
+	MAP_ARMOR_PERCENT_Y				= 188;
+
+	MAP_WEIGHT_LABEL_X				= 185;
+	MAP_WEIGHT_LABEL_Y				= 209;
+	MAP_WEIGHT_X					= 188;
+	MAP_WEIGHT_Y					= 219;
+	MAP_WEIGHT_PERCENT_X			= 208;
+	MAP_WEIGHT_PERCENT_Y			= 219;
+
+	MAP_CAMMO_LABEL_X				= 226;
+	MAP_CAMMO_LABEL_Y				= 209;
+	MAP_CAMMO_X						= 224;
+	MAP_CAMMO_Y						= 219;
+	MAP_CAMMO_PERCENT_X				= 244;
+	MAP_CAMMO_PERCENT_Y				= 219;
+
+	MAP_PERCENT_WIDTH				= 20;
+	MAP_PERCENT_HEIGHT				= 10;
+
+	MAP_INV_STATS_TITLE_FONT_COLOR	= 6;
+	MAP_INV_STATS_TEXT_FONT_COLOR	= 5;
+
+	PLAYER_INFO_FACE_START_X		= 9;
+	PLAYER_INFO_FACE_START_Y		= 17;
+	PLAYER_INFO_FACE_END_X			= 60;
+	PLAYER_INFO_FACE_END_Y			= 76;
+
+	INV_BODY_X						= 31;
+	INV_BODY_Y						= 8 + PLAYER_INFO_Y;
+
+	// WANNE 2 <change 2>
+	NAME_X							= 4;
+	NAME_WIDTH						= 55 - NAME_X;
+
+	ASSIGN_X						= 60;
+	ASSIGN_WIDTH					= 111 - ASSIGN_X;
+	SLEEP_X							= 116;
+	SLEEP_WIDTH						= 135 - SLEEP_X;
+	LOC_X							= 140;
+	LOC_WIDTH						= 172 - LOC_X;
+	DEST_ETA_X						= 177;
+	DEST_ETA_WIDTH					= 210 - DEST_ETA_X;
+	TIME_REMAINING_X				= 215;
+	TIME_REMAINING_WIDTH			= 243 - TIME_REMAINING_X;
+
+	// WANNE 2
+	CLOCK_Y_START					= (MAP_BORDER_Y_OFFSET + 298);
+
+	DEST_PLOT_X						= (MAP_BORDER_X_OFFSET + 463);
+	DEST_PLOT_Y						= (MAP_BORDER_Y_OFFSET + 345);
+
+	// WANNE 2
+	CLOCK_ETA_X						= (MAP_BORDER_X_OFFSET + 484);
+	CLOCK_HOUR_X_START				= (MAP_BORDER_X_OFFSET + 518);
+	CLOCK_MIN_X_START				= (MAP_BORDER_X_OFFSET + 538);
+
+	// contract
+	CONTRACT_X						= 185;
+	CONTRACT_Y						= 50;
+
+	// trash can
+	TRASH_CAN_X						= 209;
+	TRASH_CAN_Y						= 59 + PLAYER_INFO_Y;
+	TRASH_CAN_WIDTH					= 193 - 165;
+	TRASH_CAN_HEIGHT				= 239 - 217;
+
+	// keyring
+	MAP_KEYRING_X					= 180;
+	MAP_KEYRING_Y					= 127;
+
+	//Text offsets
+	Y_OFFSET						= 2;
+
+	// The boxes defines
+	TRAIN_Y_OFFSET					= 53;
+	TRAIN_X_OFF						= 65;
+	TRAIN_WID						= 80;
+	TRAIN_HEIG						= 47;
+	STRING_X_OFFSET					= 10;
+	STRING_Y_OFFSET					= 5;
+	POP_UP_BOX_X					= 120;
+	POP_UP_BOX_Y					= 0;
+	POP_UP_BOX_WIDTH				= 60;
+	POP_UP_BOX_HEIGHT				= 100;
+	MOUSE_PTR_Y_OFFSET				= 3;
+	POP_UP_Y_OFFSET					= 3;
+	TRAIN_TEXT_Y_OFFSET				= 4;
+
+	// char stat positions
+	STR_X							= 112;
+	STR_Y							= 42;
+	DEX_X							= STR_X;
+	DEX_Y							= 32;
+	AGL_X							= STR_X;
+	AGL_Y							= 22;
+	LDR_X							= STR_X;
+	LDR_Y							= 52;
+	WIS_X							= STR_X;
+	WIS_Y							= 62;
+	LVL_X							= 159;
+	LVL_Y							= AGL_Y;
+	MRK_X							= LVL_X;
+	MRK_Y							= DEX_Y;
+	EXP_X							= LVL_X;
+	EXP_Y							= STR_Y;
+	MEC_X							= LVL_X;
+	MEC_Y							= LDR_Y;
+	MED_X							= LVL_X;
+	MED_Y							= WIS_Y;
+
+	STAT_WID						= 15;
+	STAT_HEI						= GetFontHeight(CHAR_FONT);
+
+	PIC_NAME_X						= 8;
+	PIC_NAME_Y						= (66 + 3);
+	PIC_NAME_WID					= 60 - PIC_NAME_X;
+	PIC_NAME_HEI					= 75 - PIC_NAME_Y;
+	CHAR_NAME_X						= 14;
+	CHAR_NAME_Y						= (2 + 3);
+	CHAR_NAME_WID					= 164 - CHAR_NAME_X;
+	CHAR_NAME_HEI					= 11 - CHAR_NAME_Y;
+	CHAR_LOC_X						= 76;
+	CHAR_LOC_Y						= 84;
+	CHAR_LOC_WID					= 16;
+	CHAR_LOC_HEI					= 9;
+	CHAR_TIME_REMAINING_X			= 207;
+	CHAR_TIME_REMAINING_Y			= 65;
+	CHAR_TIME_REMAINING_WID			= 258 - CHAR_TIME_REMAINING_X;
+	CHAR_TIME_REMAINING_HEI			= GetFontHeight(CHAR_FONT);
+	CHAR_SALARY_X					= CHAR_TIME_REMAINING_X;
+	CHAR_SALARY_Y					= 79;
+	CHAR_SALARY_WID					= CHAR_TIME_REMAINING_WID - 8;
+	CHAR_SALARY_HEI					= CHAR_TIME_REMAINING_HEI;
+	CHAR_MEDICAL_X					= CHAR_TIME_REMAINING_X;
+	CHAR_MEDICAL_Y					= 93;
+	CHAR_MEDICAL_WID				= CHAR_TIME_REMAINING_WID - 8;
+	CHAR_MEDICAL_HEI				= CHAR_TIME_REMAINING_HEI;
+	CHAR_ASSIGN_X					= 182;
+	CHAR_ASSIGN1_Y					= 18;
+	CHAR_ASSIGN2_Y					= 31;
+	CHAR_ASSIGN_WID					= 257 - 178;
+	CHAR_ASSIGN_HEI					= 39 - 29;
+	CHAR_HP_X						= 133;
+	CHAR_HP_Y						= 77 + 3;
+	CHAR_HP_WID						= 175 - CHAR_HP_X;
+	CHAR_HP_HEI						= 90 - CHAR_HP_Y;
+	CHAR_MORALE_X					= 133;
+	CHAR_MORALE_Y					= 91 + 3;
+	CHAR_MORALE_WID					= 175 - CHAR_MORALE_X;
+	CHAR_MORALE_HEI					= 101 - CHAR_MORALE_Y;
+
+	CROSS_X							= 195;
+	CROSS_Y							= 83;
+	CROSS_HEIGHT					= 20;
+	CROSS_WIDTH						= 20;
+	CHAR_PAY_X						= 150;
+	CHAR_PAY_Y						= 80+4;
+	CHAR_PAY_HEI					= GetFontHeight(CHAR_FONT);
+	CHAR_PAY_WID					= CROSS_X-CHAR_PAY_X;
+	SOLDIER_PIC_X					= 9;
+	SOLDIER_PIC_Y					= 20;
+	SOLDIER_HAND_X					= 6;
+	SOLDIER_HAND_Y					= 81;
+	//TM_INV_WIDTH					= 58;
+	//TM_INV_HEIGHT					= 23;
+
+	// WANNE 2 (the position of the clock in the strategy screen)
+	//CLOCK_X						= (SCREEN_WIDTH - 86);
+	//CLOCK_Y						= (SCREEN_HEIGHT - 21);
+
+	gSCamoXY.sX = INV_BODY_X;	gSCamoXY.sY = INV_BODY_Y;	// X, Y Location of Map screen's Camouflage region
+
+	return ( TRUE );
+}
+BOOLEAN InitializeInvPanelCoordsVehicle( )
+{
+	InitializeInvPanelCoordsNew();
+	// Inventory slots
+	gMapScreenInvPocketXY[14].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[14].sY = PLAYER_INFO_Y + 156;
+	gMapScreenInvPocketXY[15].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[15].sY = PLAYER_INFO_Y + 156;
+	gMapScreenInvPocketXY[16].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[16].sY = PLAYER_INFO_Y + 156;
+	gMapScreenInvPocketXY[17].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[17].sY = PLAYER_INFO_Y + 180;
+	gMapScreenInvPocketXY[18].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[18].sY = PLAYER_INFO_Y + 180;
+	gMapScreenInvPocketXY[19].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[19].sY = PLAYER_INFO_Y + 180;
+	gMapScreenInvPocketXY[20].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[20].sY = PLAYER_INFO_Y + 204;
+	gMapScreenInvPocketXY[21].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[21].sY = PLAYER_INFO_Y + 204;
+	gMapScreenInvPocketXY[22].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[22].sY = PLAYER_INFO_Y + 204;
+	gMapScreenInvPocketXY[23].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[23].sY = PLAYER_INFO_Y + 228;
+	gMapScreenInvPocketXY[24].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[24].sY = PLAYER_INFO_Y + 228;
+	gMapScreenInvPocketXY[25].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[25].sY = PLAYER_INFO_Y + 228;
+	gMapScreenInvPocketXY[26].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[26].sY = PLAYER_INFO_Y + 252;
+	gMapScreenInvPocketXY[27].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[27].sY = PLAYER_INFO_Y + 252;
+	gMapScreenInvPocketXY[28].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[28].sY = PLAYER_INFO_Y + 252;
+	gMapScreenInvPocketXY[29].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[29].sY = PLAYER_INFO_Y + 276;
+	gMapScreenInvPocketXY[30].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[30].sY = PLAYER_INFO_Y + 276;
+	gMapScreenInvPocketXY[31].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[31].sY = PLAYER_INFO_Y + 276;
+	gMapScreenInvPocketXY[32].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[32].sY = PLAYER_INFO_Y + 300;
+	gMapScreenInvPocketXY[33].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[33].sY = PLAYER_INFO_Y + 300;
+	gMapScreenInvPocketXY[34].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[34].sY = PLAYER_INFO_Y + 300;
+	gMapScreenInvPocketXY[35].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[35].sY = PLAYER_INFO_Y + 324;
+	gMapScreenInvPocketXY[36].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[36].sY = PLAYER_INFO_Y + 324;
+	gMapScreenInvPocketXY[37].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[37].sY = PLAYER_INFO_Y + 324;
+	gMapScreenInvPocketXY[38].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[38].sY = PLAYER_INFO_Y + 348;
+	gMapScreenInvPocketXY[39].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[39].sY = PLAYER_INFO_Y + 348;
+	gMapScreenInvPocketXY[40].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[40].sY = PLAYER_INFO_Y + 348;
+	gMapScreenInvPocketXY[41].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[41].sY = PLAYER_INFO_Y + 372;
+	gMapScreenInvPocketXY[42].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[42].sY = PLAYER_INFO_Y + 372;
+	gMapScreenInvPocketXY[43].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[43].sY = PLAYER_INFO_Y + 372;
+	gMapScreenInvPocketXY[44].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[44].sY = PLAYER_INFO_Y + 396;
+	gMapScreenInvPocketXY[45].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[45].sY = PLAYER_INFO_Y + 396;
+	gMapScreenInvPocketXY[46].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[46].sY = PLAYER_INFO_Y + 396;
+	gMapScreenInvPocketXY[47].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[47].sY = PLAYER_INFO_Y + 420;
+	gMapScreenInvPocketXY[48].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[48].sY = PLAYER_INFO_Y + 420;
+	gMapScreenInvPocketXY[49].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[49].sY = PLAYER_INFO_Y + 420;
+	gMapScreenInvPocketXY[50].sX = PLAYER_INFO_X + 37;	gMapScreenInvPocketXY[50].sY = PLAYER_INFO_Y + 444;
+	gMapScreenInvPocketXY[51].sX = PLAYER_INFO_X + 104;	gMapScreenInvPocketXY[51].sY = PLAYER_INFO_Y + 444;
+	gMapScreenInvPocketXY[52].sX = PLAYER_INFO_X + 171;	gMapScreenInvPocketXY[52].sY = PLAYER_INFO_Y + 444;
+
+	InitInventoryVehicle(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
+
+	return ( TRUE );
+}
 
 // the tries to select a mapscreen character by his soldier ID
 BOOLEAN SetInfoChar( UINT8 ubID )
@@ -3963,6 +4496,8 @@ UINT32 MapScreenHandle(void)
 		else
 		{
 			fShowInventoryFlag = FALSE;
+			// CHRISL: Added call to re-render the bottom panel
+			RenderMapScreenInterfaceBottom ( TRUE );
 			// set help text for item glow region
 			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
 		}
@@ -6760,6 +7295,12 @@ void CreateDestroyMapInvButton()
 	// disable allmouse regions in this space
 	fTeamPanelDirty=TRUE;
 
+  // CHRISL: Setup default coords
+  if(gGameOptions.ubInventorySystem)
+	  InitializeInvPanelCoordsNew();
+  else
+	  InitializeInvPanelCoordsNew();
+
 	InitInvSlotInterface( gMapScreenInvPocketXY, &gSCamoXY, MAPInvMoveCallback, MAPInvClickCallback, MAPInvMoveCamoCallback, MAPInvClickCamoCallback, FALSE );
 	MSYS_EnableRegion(&gMPanelRegion);
 
@@ -6811,7 +7352,27 @@ void BltCharInvPanel()
 	
 	pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 	GetVideoObject(&hCharListHandle, guiMAPINV);
-	Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
+	// CHRISL: Changed last parameter so we can display graphic based on inventory system used
+	if(gGameOptions.ubInventorySystem && gGameExternalOptions.fVehicleInventory && (pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	{
+		InitializeInvPanelCoordsVehicle();
+		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 2);
+	}
+	else if(gGameOptions.ubInventorySystem)
+	{
+		InitializeInvPanelCoordsNew();
+		fShowInventoryFlag = FALSE;
+		CreateDestroyMapInvButton();
+		fShowInventoryFlag = TRUE;
+		CreateDestroyMapInvButton();
+//		ResetMapInvRegions(gMapScreenInvPocketXY, MAPInvMoveCallback, MAPInvClickCallback, FALSE);
+		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 1);
+	}
+	else
+	{
+		InitializeInvPanelCoordsOld();
+		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
+	}
 	UnLockVideoSurface( guiSAVEBUFFER ); 
 	
 	Assert( pSoldier );
@@ -6853,30 +7414,35 @@ void BltCharInvPanel()
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
 
-	// print armor/weight/camo labels
-	mprintf( MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[ 0 ] );
-	mprintf( MAP_ARMOR_PERCENT_X, MAP_ARMOR_PERCENT_Y, L"%%" );
+	// CHRISL: Only display next three values if we're a merc
+//	if(!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	if(!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	{
+		// print armor/weight/camo labels
+		mprintf( MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[ 0 ] );
+		mprintf( MAP_ARMOR_PERCENT_X, MAP_ARMOR_PERCENT_Y, L"%%" );
 
-	mprintf( MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ]	);
-	mprintf( MAP_WEIGHT_PERCENT_X, MAP_WEIGHT_PERCENT_Y, L"%%" );
- 
-	mprintf( MAP_CAMMO_LABEL_X, MAP_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ]	);
-	mprintf( MAP_CAMMO_PERCENT_X, MAP_CAMMO_PERCENT_Y, L"%%" );
+		mprintf( MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ]  );
+		mprintf( MAP_WEIGHT_PERCENT_X, MAP_WEIGHT_PERCENT_Y, L"%%" );
 
-	// display armor value
-	swprintf( sString, L"%3d", ArmourPercent( pSoldier ) );
-	FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+		mprintf( MAP_CAMMO_LABEL_X, MAP_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ]  );
+		mprintf( MAP_CAMMO_PERCENT_X, MAP_CAMMO_PERCENT_Y, L"%%" );
 
-	// Display weight value
-	swprintf( sString, L"%3d", CalculateCarriedWeight( pSoldier ) );
-	FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+		// display armor value
+		swprintf( sString, L"%3d", ArmourPercent( pSoldier ) );
+		FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
+		mprintf( usX, usY, sString ); 
 
-	// Display camo value
-	swprintf( sString, L"%3d", max(0, min ((pSoldier->bCamo + pSoldier->wornCamo + pSoldier->urbanCamo+pSoldier->wornUrbanCamo+pSoldier->desertCamo+pSoldier->wornDesertCamo+pSoldier->snowCamo+pSoldier->wornSnowCamo ),100 )) );
-	FindFontRightCoordinates(MAP_CAMMO_X, MAP_CAMMO_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString ); 
+		// Display weight value
+		swprintf( sString, L"%3d", CalculateCarriedWeight( pSoldier ) );
+		FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
+		mprintf( usX, usY, sString ); 
+
+		// Display camo value
+		swprintf( sString, L"%3d", max(0, min ((pSoldier->bCamo + pSoldier->wornCamo + pSoldier->urbanCamo+pSoldier->wornUrbanCamo+pSoldier->desertCamo+pSoldier->wornDesertCamo+pSoldier->snowCamo+pSoldier->wornSnowCamo ),100 )) );
+		FindFontRightCoordinates(MAP_CAMMO_X, MAP_CAMMO_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
+		mprintf( usX, usY, sString ); 
+	}
 
 	if( InKeyRingPopup( ) )
 	{
@@ -6994,6 +7560,12 @@ BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIn
 	return( fRet );
 }
 
+//CHRISL: functons for LBENODE system
+extern BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+extern BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj );
+extern BOOLEAN ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus);
+extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
+
 // this is Map Screen's version of SMInvClickCallback()
 void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 {
@@ -7036,6 +7608,32 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			if ( _KeyDown(CTRL) )
 			{
 				CleanUpStack( &( pSoldier->inv[ uiHandPos ] ), NULL );
+			}
+
+			/* CHRISL: For New Inventory system.  Are we removing an existing LBE item?  If so, we need to pull
+			all items in the relevant IC Group pockets out of the soldiers inventory and put them into the LBE items
+			inventory. But first, find out if we already have a LBE item inventory for this item and this merc.  If we 
+			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
+			if(gGameOptions.ubInventorySystem && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+			{
+				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
+				{
+					/*if we pick up a backpack without reactivating the drop pack button, and we have a
+					dropkey, reactivate the button*/
+					if(uiHandPos == BPACKPOCKPOS)
+					{
+						// Deal with the zipper before we do anything
+						if(pSoldier->ZipperFlag)
+							if(!ChangeZipperStatus(pSoldier, FALSE))
+								return;
+						// Do we still have a linked backpack?  If so, reset droppackflag
+						if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
+						{
+							pSoldier->DropPackFlag = TRUE;
+						}
+					}
+					MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
+				}
 			}
 
 			// remember what it was
@@ -7114,6 +7712,34 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 				// else handle normally
 			}
 
+			/* CHRISL: For New Inventory system.  Are we swapping LBE Items?  We'll need to move any
+			items in the associated IC group pockets into a new LBENODE.  We'll have to check
+			whether we already have an LBENODE for this type of LBE item and, if so, remove
+			the items from it, place them in the LBE Items current sector, and delete the existing
+			LBENODE.  Then we need to know if the LBE Item in the cursor is an LBENODE
+			or just a normal OBJECTTYPE.  If it's an LBENODE, we need to move it's items into
+			the appropriate pockets for the soldier and then delete the LBENODE.*/
+			if(gGameOptions.ubInventorySystem && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+			{
+				if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(pSoldier, gpItemPointer, uiHandPos, FALSE))
+				{
+					//If we put a new pack in the backpack pocket, turn off the droppack button
+					if(uiHandPos == BPACKPOCKPOS)
+					{
+						// First, deal with the zipper
+						if(pSoldier->ZipperFlag)
+							if(!ChangeZipperStatus(pSoldier, FALSE))
+								return;
+						if(pSoldier->DropPackFlag)
+							pSoldier->DropPackFlag = FALSE;
+					}
+					// Are we swaping LBE items?
+					if(pSoldier->inv[uiHandPos].usItem != NONE)	// Item already exists in this pocket
+						MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
+					MoveItemFromLBEItem( pSoldier, uiHandPos, gpItemPointer );
+				}
+			}
+
 			// Else, try to place here
 			if ( PlaceObject( pSoldier, (UINT8)uiHandPos, gpItemPointer ) )
 			{
@@ -7184,11 +7810,14 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 		// Some global stuff here - for esc, etc
 		// Check for # of slots in item
-		if ( ( pSoldier->inv[ uiHandPos ].ubNumberOfObjects > 1 ) && ( ItemSlotLimit( pSoldier->inv[ uiHandPos ].usItem, (UINT8)uiHandPos ) > 0 ) )
+		// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
+		UINT8 isLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit(pSoldier->inv[ uiHandPos ].usItem, (UINT16)uiHandPos) : ItemSlotLimit(&pSoldier->inv[uiHandPos], (UINT16)uiHandPos, pSoldier);
+		if ( ( pSoldier->inv[ uiHandPos ].ubNumberOfObjects > 1 ) && ( isLimit > 0 ) )
 		{
 			if ( !InItemStackPopup( ) )
 			{
-				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, 0, INV_REGION_Y, 261, 248 );
+				// CHRISL: Changed final parameter so that we fill the inventory screen
+				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, 0, INV_REGION_Y, 261, ( SCREEN_HEIGHT - PLAYER_INFO_Y ) );
 			fTeamPanelDirty=TRUE;
 			fInterfacePanelDirty = DIRTYLEVEL2;
 			}

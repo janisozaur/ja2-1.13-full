@@ -4112,7 +4112,8 @@ void BlackAlert_DecideBestAction(SOLDIERTYPE* pSoldier, BlackAlertFlags& flags)
 	if ( ( flags.ubBestAttackAction == AI_ACTION_NONE ) && flags.fTryPunching )
 	{
 		// nothing (else) to attack with so let's try hand-to-hand
-		INT8 bWeaponIn = FindObjWithin( pSoldier, NOTHING, HANDPOS, SMALLPOCK8POS );
+		// CHRISL: Change final parameter to use dynamic setting
+		INT8 bWeaponIn = FindObjWithin( pSoldier, NOTHING, HANDPOS, (NUM_INV_SLOTS-1) );
 
 		if (bWeaponIn != NO_SLOT)
 		{
