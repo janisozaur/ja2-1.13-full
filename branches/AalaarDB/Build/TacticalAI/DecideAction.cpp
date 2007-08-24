@@ -948,6 +948,18 @@ INT8 GreenAlert_TryToClimbABuilding(SOLDIERTYPE* pSoldier, GreenAlertFlags& flag
 				{
 					return( AI_ACTION_MOVE_TO_CLIMB  );
 				}
+				else
+				{
+					pSoldier->usActionData = FindClosestClimbPoint(pSoldier, fUp );
+					// Added the check here because sniper militia who are locked inside of a building without keys
+					// will still have a >100% chance to want to climb, which means an infinite loop.  In fact, any
+					// time a move is desired, there probably also will be a need to check for a path.
+					if ( pSoldier->usActionData != NOWHERE &&
+						LegalNPCDestination(pSoldier,pSoldier->usActionData,ENSURE_PATH,WATEROK, 0 ))
+					{
+						return( AI_ACTION_MOVE_TO_CLIMB  );
+					}
+				}
 			}
 		}
 	}
@@ -1748,12 +1760,24 @@ INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 	PERFORMANCE_MARKER
 	INT16 sClosestFriend = ClosestReachableFriendInTrouble(pSoldier, &flags.fClimb);
 
-	// if there is a friend alive & reachable who last radioed in
-	if (sClosestFriend != NOWHERE)
+	// Hmmm, I don't think this check is doing what is intended.  But then I see no comment about what is intended.
+	// However, civilians with no profile (and likely no weapons) do not need to be seeking out noises.  Most don't
+	// even have the body type for it (can't climb or jump).
+	//if ( !( pSoldier->bTeam == CIV_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
+	if ( pSoldier->bTeam != CIV_TEAM || ( pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile != ELDIN ) )
 	{
-		// there a chance enemy soldier choose to go "help" his friend
-		INT32 iChance = 50 - SpacesAway(pSoldier->sGridNo,sClosestFriend);
-		INT32 iSneaky = 10;
+		// IF WE ARE MILITIA/CIV IN REALTIME, CLOSE TO NOISE, AND CAN SEE THE SPOT WHERE THE NOISE CAME FROM, FORGET IT
+		if ( fReachable && !fClimb && !gfTurnBasedAI && (pSoldier->bTeam == MILITIA_TEAM || pSoldier->bTeam == CIV_TEAM )&& PythSpacesAway( pSoldier->sGridNo, sNoiseGridNo ) < 5 )
+		{
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sNoiseGridNo, pSoldier->bLevel, 0, TRUE, 6 )	)
+			{
+				// set reachable to false so we don't investigate
+				fReachable = FALSE;
+				// forget about noise
+				pSoldier->sNoiseGridno = NOWHERE;
+				pSoldier->ubNoiseVolume = 0;
+			}
+		}
 
 		// set base chance according to orders
 		switch (pSoldier->aiData.bOrders)
@@ -1818,7 +1842,11 @@ INT8 YellowAlert_TryToSeekFriend(SOLDIERTYPE* pSoldier, YellowAlertFlags& flags)
 						pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestFriend , fUp );
 						if ( pSoldier->aiData.usActionData != NOWHERE )
 						{
-							return( AI_ACTION_MOVE_TO_CLIMB  );
+							pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sNoiseGridNo , fUp );
+							if ( pSoldier->usActionData != NOWHERE )
+							{
+								return( AI_ACTION_MOVE_TO_CLIMB  );
+							}
 						}
 					}
 				}
@@ -1949,6 +1977,22 @@ INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
 	}
 
 
+						if ( CanClimbFromHere ( pSoldier, fUp ) )
+						{
+							if (IsActionAffordable(pSoldier) )
+							{
+								return( AI_ACTION_CLIMB_ROOF );
+							}
+						}
+						else
+						{
+							pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
+							if ( pSoldier->usActionData != NOWHERE )
+							{
+								return( AI_ACTION_MOVE_TO_CLIMB  );
+							}
+						}
+					}
 
 	////////////////////////////////////////////////////////////////////////////
 	// LOOK AROUND TOWARD NOISE: determine %chance for man to turn towards noise
@@ -2228,6 +2272,16 @@ INT8 RedAlert_TryLongRangeWeapons(SOLDIERTYPE *pSoldier, RedAlertFlags& flags)
 			// that may be), but from now on, BLACK AI NPC may radio sightings!
 			gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
 			pSoldier->bActionPoints = 0;
+
+     if ( (BestThrow.bWeaponIn != NO_SLOT) &&
+		  (CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxNormalDistanceVisible() ) &&
+				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
+				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
+			{
+				// then call for spotters!  Uses up the rest of his turn (whatever
+				// that may be), but from now on, BLACK AI NPC may radio sightings!
+				gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
+				pSoldier->bActionPoints = 0;
 
 #ifdef DEBUGDECISIONS
 			AINameMessage(pSoldier,"calls for spotters!",1000);
@@ -2700,7 +2754,11 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 								pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestDisturbance , fUp );
 								if ( pSoldier->aiData.usActionData != NOWHERE )
 								{
-									return( AI_ACTION_MOVE_TO_CLIMB  );
+									pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestDisturbance , fUp );
+									if ( pSoldier->usActionData != NOWHERE )
+									{
+										return( AI_ACTION_MOVE_TO_CLIMB  );
+									}
 								}
 							}
 						}
@@ -2913,7 +2971,11 @@ INT8 RedAlert_TryMainAI(SOLDIERTYPE* pSoldier, RedAlertFlags& flags)
 								pSoldier->aiData.usActionData = FindClosestClimbPoint(pSoldier->sGridNo , sClosestFriend , fUp );
 								if ( pSoldier->aiData.usActionData != NOWHERE )
 								{
-									return( AI_ACTION_MOVE_TO_CLIMB  );
+									pSoldier->usActionData = FindClosestClimbPoint(pSoldier, pSoldier->sGridNo , sClosestFriend , fUp );
+									if ( pSoldier->usActionData != NOWHERE )
+									{
+										return( AI_ACTION_MOVE_TO_CLIMB  );
+									}
 								}
 							}
 						}
@@ -4824,6 +4886,12 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 	bActionReturned = BlackAlert_HandleSpecialCases(pSoldier, flags);
 	if (bActionReturned != AI_ACTION_NOT_AN_ACTION)
 		return(bActionReturned);
+			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
+				!(Menptr[BestShot.ubOpponent].bLife < OKLIFE) && // don't burst at downed targets
+				pSoldier->inv[BestAttack.bWeaponIn].ItemData.Gun.ubGunShotsLeft > 1 &&
+				(pSoldier->bTeam != gbPlayerNum || pSoldier->bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
+			{
+				DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"DecideActionBlack: ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO");
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -4859,9 +4927,9 @@ INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
 					gTacticalStatus.fEnemyFlags |= ENEMY_OFFERED_SURRENDER;
 					return( AI_ACTION_OFFER_SURRENDER );
 				}
-			}
-		}
-	}
+				while(	pSoldier->bActionPoints >= BestAttack.ubAPCost + ubBurstAPs &&
+					pSoldier->inv[ pSoldier->ubAttackingHand ].ItemData.Gun.ubGunShotsLeft >= pSoldier->bDoAutofire &&
+					GetAutoPenalty(&pSoldier->inv[ BestAttack.bWeaponIn ], gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE)*pSoldier->bDoAutofire <= 80);
 
 
 	bActionReturned = BlackAlert_EvaluateCanAttack(pSoldier, flags);

@@ -3301,6 +3301,20 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	return( TRUE );
 }
 
+BOOLEAN UnloadGun( SOLDIERTYPE *pSoldier, OBJECTTYPE *pGun)
+{
+	OBJECTTYPE newObj;
+	CreateItem(pGun->ItemData.Gun.usGunAmmoItem, 100, &newObj);
+	newObj.ItemData.Ammo.ubShotsLeft[0] = pGun->ItemData.Gun.ubGunShotsLeft;
+	pGun->ItemData.Gun.ubGunShotsLeft = 0;
+	pGun->ItemData.Gun.usGunAmmoItem = NONE;
+	if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
+	{   // put it on the ground
+		AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
+	}
+	return TRUE;
+}
+
 BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 {
 	PERFORMANCE_MARKER
@@ -8312,6 +8326,7 @@ OBJECTTYPE* FindSunGogglesInInv( SOLDIERTYPE * pSoldier )
 	INT16	bonusToBeat = 0;
 	OBJECTTYPE*	pGoggles = 0;
 	// CHRISL:
+	// CHRISL:
 	for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
 		if (Item[pSoldier->inv[bLoop].usItem].brightlightvisionrangebonus > bonusToBeat && Item[pSoldier->inv[bLoop].usItem].usItemClass == IC_FACE )			
@@ -8329,6 +8344,7 @@ OBJECTTYPE* FindNightGogglesInInv( SOLDIERTYPE * pSoldier  )
 	INT8	bLoop;
 	INT16	bonusToBeat = 0;
 	OBJECTTYPE*	pGoggles = 0;
+	// CHRISL:
 	// CHRISL:
 	for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
 	{

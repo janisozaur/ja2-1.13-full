@@ -2656,7 +2656,7 @@ INT16 FindClosestClimbPoint (SOLDIERTYPE *pSoldier, BOOLEAN fClimbUp )
 			if ( FindBuilding ( sGridNo ) != NULL )
 			{
 //				DebugMsg( TOPIC_JA2AI , DBG_LEVEL_3 , String("Building found at %d", sGridNo ));
-				sClimbGridNo = FindClosestClimbPoint( pSoldier->sGridNo, sGridNo, fClimbUp);
+				sClimbGridNo = FindClosestClimbPoint( pSoldier, pSoldier->sGridNo, sGridNo, fClimbUp);
 //				DebugMsg( TOPIC_JA2AI , DBG_LEVEL_3 , String("Closest climb point is %d" , sClimbGridNo ));
 
 				if ( sClimbGridNo != NOWHERE )

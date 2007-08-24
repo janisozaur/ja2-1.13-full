@@ -1372,7 +1372,7 @@ INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGr
 	// since climbing necessary involves going an extra tile, we compare against 1 less than the roam range... 
 	// or add 1 to the distance to the climb point
 
-	sGridNo = FindClosestClimbPoint( sStartGridNo, sDesiredGridNo, fClimbUp );
+	sGridNo = FindClosestClimbPoint( pSoldier, sStartGridNo, sDesiredGridNo, fClimbUp );
 
 
 	if ( PythSpacesAway( sRoamingOrigin, sGridNo ) + 1 > sRoamingRange )

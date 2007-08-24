@@ -214,13 +214,16 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT16 usHa
 
 		if ( fFromUI )
 		{
+			INT16 sInteractiveGridNo;
+
 			// ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
-			pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
+			pIntNode = GetCurInteractiveTileGridNoAndStructure( &sInteractiveGridNo, &pStructure );
 
 			if ( pIntNode != NULL && pTargetSoldier == pSoldier )
 			{ 
-				// Truncate target sioldier
+				// Truncate target soldier and update grid
 				pTargetSoldier = NULL;
+				sGridNo = sInteractiveGridNo;
 			}
 		}
 	}

@@ -336,6 +336,8 @@ int KEYRING_X;
 int KEYRING_Y;
 extern UINT32 guiCurrentItemDescriptionScreen;
 
+extern UINT32 guiCurrentItemDescriptionScreen;
+
 
 typedef enum
 {

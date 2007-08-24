@@ -541,7 +541,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			}
 		}
 
-		// Copy the items over for thew soldier, only if we have a valid profile id!
+		// Copy the items over for the soldier, only if we have a valid profile id!
 		if ( pCreateStruct->ubProfile != NO_PROFILE )
 			CopyProfileItems( &Soldier, pCreateStruct );
 

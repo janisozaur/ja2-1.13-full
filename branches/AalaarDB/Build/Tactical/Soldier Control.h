@@ -481,7 +481,7 @@ public:
 private:
 	std::vector<OBJECTTYPE>	inv;
 };
-
+	// Added for new inventory system to work
 class STRUCT_AIData//last edited at version 102
 {
 public:

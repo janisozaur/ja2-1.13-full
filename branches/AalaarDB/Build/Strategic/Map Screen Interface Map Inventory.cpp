@@ -2315,6 +2315,10 @@ void DeleteAllItemsInInventoryPool()
 
 	ClearUpTempUnSeenList( );
 	SaveSeenAndUnseenItems();
+
+	iCurrentInventoryPoolPage = 0;
+	iLastInventoryPoolPage = 0;
+
 	DestroyStash();
 	BuildStashForSelectedSector( sSelMapX, sSelMapY, iCurrentMapSectorZ);
 }

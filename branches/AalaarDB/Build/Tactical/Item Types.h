@@ -92,21 +92,21 @@ namespace Version101
 			UINT8		ubGunState; // SB manual recharge
 	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
 			UINT8		ubGunUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 6];
-		};
+		} Gun;
 		struct
 		{
 			UINT8		ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101];
-		};
+		} Ammo;
 		struct
 		{
 			INT8		bStatus[OLD_MAX_OBJECTS_PER_SLOT_101];
-		};		
+		} Generic;		
 		struct
 		{
 			INT8		bMoneyStatus;
 			UINT32		uiMoneyAmount;
 			UINT8		ubMoneyUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 5];
-		};
+		} Money;
 		struct
 		{ // this is used by placed bombs, switches, and the action item
 			INT8		bBombStatus;			// % status
@@ -114,42 +114,42 @@ namespace Version101
 			UINT16		usBombItem;				// the usItem of the bomb.
 			union
 			{
-				struct
-				{
+				//struct
+				//{
 					INT8		bDelay;				// >=0 values used only
-				};
-				struct
-				{
+				//};
+				//struct
+				//{
 					INT8		bFrequency;		// >=0 values used only
-				};
-			};
+				//};
+			} BombTrigger;
 			UINT8	ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
 			union
 			{
-				struct
-				{
+				//struct
+				//{
 					UINT8 ubTolerance; // tolerance value for panic triggers
-				};
-				struct 
-				{
+				//};
+				//struct 
+				//{
 					UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-				};
-			};		
-		};
+				//};
+			} Area;
+		} Trigger;
 		struct
 		{
 			INT8 bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
 			UINT8 ubKeyUnused[1];
-		};
+		} Key;
 		struct
 		{
 			UINT8 ubOwnerProfile;
 			UINT8 ubOwnerCivGroup;
 			UINT8 ubOwnershipUnused[6];
-		};
-	};
+		} Owner;
+	} ItemData;
 };
 #define SIZEOF_OLD_OBJECTTYPE_101_UNION (sizeof(Version101::OLD_OBJECTTYPE_101_UNION))
 
@@ -169,7 +169,7 @@ public:
 	UINT8		ubMission;
 	INT8		bTrap;        // 1-10 exp_lvl to detect
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT8		ubWeight;
+	UINT16		ubWeight;	// CHRISL:
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
 
