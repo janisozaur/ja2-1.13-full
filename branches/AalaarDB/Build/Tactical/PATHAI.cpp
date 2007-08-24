@@ -2964,7 +2964,11 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMo
 					//case TRAVELCOST_DOOR		:	ubAPCost = AP_MOVEMENT_FLAT;
 					//													break;
 
-					case TRAVELCOST_FENCE		: ubAPCost = AP_JUMPFENCE;
+					case TRAVELCOST_FENCE		: 
+						if(gGameOptions.ubInventorySystem && s->inv[BPACKPOCKPOS].usItem!=NOTHING)
+							ubAPCost = AP_JUMPFENCEBPACK;
+						else
+							ubAPCost = AP_JUMPFENCE;
 			
 /*
 			if ( sSwitchValue == TRAVELCOST_FENCE )

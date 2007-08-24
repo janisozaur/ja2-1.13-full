@@ -1421,7 +1421,7 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
 
 				pSoldier->inv[ HANDPOS ][0]->data.bTrap = __min( 10, ( EffectiveExplosive( pSoldier ) / 20) + (EffectiveExpLevel( pSoldier ) / 3) );
-				pSoldier->inv[ HANDPOS ][0]->data.bombs.ubBombOwner = pSoldier->ubID + 2;
+				pSoldier->inv[ HANDPOS ][0]->data.misc.ubBombOwner = pSoldier->ubID + 2;
 
 				// we now know there is something nasty here			
 				gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
@@ -1749,7 +1749,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						if (gTempObject.usItem == SWITCH)
 						{
 							// ask about activating the switch!
-							bTempFrequency = gTempObject[0]->data.bombs.bFrequency;
+							bTempFrequency = gTempObject[0]->data.misc.bFrequency;
 							gpTempSoldier = pSoldier;
 							DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ] , GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 							pItemPool = pItemPool->pNext;
@@ -1842,7 +1842,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				if (gTempObject.usItem == SWITCH)
 				{
 					// handle switch
-					bTempFrequency = gTempObject[0]->data.bombs.bFrequency;
+					bTempFrequency = gTempObject[0]->data.misc.bFrequency;
 					gpTempSoldier = pSoldier;
 					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
 				}
@@ -2276,22 +2276,22 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 			// and they are pressure-triggered unless there is a switch structure there
 			if (FindStructure( *psGridNo, STRUCTURE_SWITCH ) != NULL)
 			{
-				(*pObject)[0]->data.bombs.bDetonatorType = BOMB_SWITCH;
+				(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
 			}
 			else
 			{
-				(*pObject)[0]->data.bombs.bDetonatorType = BOMB_PRESSURE;
+				(*pObject)[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
 			}
 		}
 		else
 		{
 			// else they are manually controlled
-			(*pObject)[0]->data.bombs.bDetonatorType = BOMB_SWITCH;
+			(*pObject)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
 		}
 	}
 	else if ( pObject->usItem == ACTION_ITEM )
 	{
-		switch( (*pObject)[0]->data.bombs.bActionValue )
+		switch( (*pObject)[0]->data.misc.bActionValue )
 		{
 		case ACTION_ITEM_SMALL_PIT:
 		case ACTION_ITEM_LARGE_PIT:
@@ -2804,11 +2804,11 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem == ACTION_ITEM )
 			{
 			pObj = &(gWorldItems[ pItemPoolTemp->iItemIndex ].object);
-			switch( (*pObj)[0]->data.bombs.bActionValue )
+			switch( (*pObj)[0]->data.misc.bActionValue )
 			{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
-			if ((*pObj)[0]->data.bombs.bDetonatorType == 0)
+			if ((*pObj)[0]->data.misc.bDetonatorType == 0)
 			{
 			// randomly set to active or destroy the item!
 			if (Random( 100 ) < 65)
@@ -4252,7 +4252,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 		{
 		// check to make sure the appropriate sector is loaded
 		}
-		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS][0]->data.bombs.bFrequency );
+		SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS][0]->data.misc.bFrequency );
 		*/
 
 		// PLay sound....
@@ -4351,7 +4351,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
-				gpTempSoldier->inv[HANDPOS][0]->data.bombs.ubBombOwner = gpTempSoldier->ubID + 2;
+				gpTempSoldier->inv[HANDPOS][0]->data.misc.ubBombOwner = gpTempSoldier->ubID + 2;
 				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
 				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
 			}
@@ -4586,9 +4586,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in 
 		// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
 		// owner - 2 gives the ID of the character who planted it
-		if ( gTempObject[0]->data.bombs.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.bombs.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.bombs.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+		if ( gTempObject[0]->data.misc.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.misc.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.misc.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 		{
-			if ( gTempObject[0]->data.bombs.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+			if ( gTempObject[0]->data.misc.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 			{
 				// my own boobytrap!
 				iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 40 );
@@ -4607,9 +4607,9 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 		if (iCheckResult >= 0)
 		{
 
-			if ( gTempObject[0]->data.bombs.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.bombs.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.bombs.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
+			if ( gTempObject[0]->data.misc.ubBombOwner > 1 && ( (INT32)gTempObject[0]->data.misc.ubBombOwner - 2 >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && gTempObject[0]->data.misc.ubBombOwner - 2 <= gTacticalStatus.Team[ OUR_TEAM ].bLastID ) )
 			{
-				if ( gTempObject[0]->data.bombs.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
+				if ( gTempObject[0]->data.misc.ubBombOwner - 2 == gpBoobyTrapSoldier->ubID )
 				{
 					// disarmed my own boobytrap!
 					StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (2 * gbTrapDifficulty), FALSE );
@@ -4636,7 +4636,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 					// give the player a remote trigger instead
 					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
-				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.bombs.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.misc.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
 					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &gTempObject );
@@ -4644,7 +4644,7 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( gTempObject[0]->data.bombs.usBombItem, gTempObject[0]->data.bombs.bBombStatus, &gTempObject );
+					CreateItem( gTempObject[0]->data.misc.usBombItem, gTempObject[0]->data.misc.bBombStatus, &gTempObject );
 				}
 
 				// remove any blue flag graphic
@@ -4739,7 +4739,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 					// give the player a remote trigger instead
 					CreateItem( REMOTEBOMBTRIGGER, (INT8) (1 + Random( 9 )), &gTempObject );
 				}
-				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.bombs.bActionValue != ACTION_ITEM_BLOW_UP )
+				else if (gTempObject.usItem == ACTION_ITEM && gTempObject[0]->data.misc.bActionValue != ACTION_ITEM_BLOW_UP )
 				{
 					// give the player a detonator instead
 					CreateItem( DETONATOR, (INT8) (1 + Random( 9 )), &gTempObject );
@@ -4747,7 +4747,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 				else
 				{
 					// switch action item to the real item type
-					CreateItem( gTempObject[0]->data.bombs.usBombItem, gTempObject[0]->data.bombs.bBombStatus, &gTempObject );
+					CreateItem( gTempObject[0]->data.misc.usBombItem, gTempObject[0]->data.misc.bBombStatus, &gTempObject );
 				}
 			}
 			else
@@ -4903,7 +4903,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 			if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sNextGridNo)
 			{
 				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-				if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE && !((*pObj)[0]->data.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)) )
+				if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE && !((*pObj)[0]->data.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)) )
 				{
 					if ( fMining && (*pObj)[0]->data.bTrap <= 10 )
 					{
@@ -4944,7 +4944,7 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		pObj = &( gWorldItems[ pItemPool->iItemIndex ].object );
 		if ( pObj->usItem == ACTION_ITEM && pObj->)
 		{
-		switch( (*pObj)[0]->data.bombs.bActionValue )
+		switch( (*pObj)[0]->data.misc.bActionValue )
 		{
 		case ACTION_ITEM_BLOW_UP:
 		case ACTION_ITEM_LOCAL_ALARM:

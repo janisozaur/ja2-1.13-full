@@ -7353,7 +7353,7 @@ void BltCharInvPanel()
 	pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 	GetVideoObject(&hCharListHandle, guiMAPINV);
 	// CHRISL: Changed last parameter so we can display graphic based on inventory system used
-	if(gGameOptions.ubInventorySystem && gGameExternalOptions.fVehicleInventory && (pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	if(gGameOptions.ubInventorySystem && gGameExternalOptions.fVehicleInventory && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		InitializeInvPanelCoordsVehicle();
 		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 2);
@@ -7415,8 +7415,8 @@ void BltCharInvPanel()
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
 
 	// CHRISL: Only display next three values if we're a merc
-//	if(!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
-	if(!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+//	if(!(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if(!(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		// print armor/weight/camo labels
 		mprintf( MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[ 0 ] );
@@ -7614,7 +7614,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			all items in the relevant IC Group pockets out of the soldiers inventory and put them into the LBE items
 			inventory. But first, find out if we already have a LBE item inventory for this item and this merc.  If we 
 			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
-			if(gGameOptions.ubInventorySystem && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+			if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
 				{
@@ -7623,13 +7623,13 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 					if(uiHandPos == BPACKPOCKPOS)
 					{
 						// Deal with the zipper before we do anything
-						if(pSoldier->ZipperFlag)
+						if(pSoldier->flags.ZipperFlag)
 							if(!ChangeZipperStatus(pSoldier, FALSE))
 								return;
 						// Do we still have a linked backpack?  If so, reset droppackflag
 						if(pSoldier->DropPackKey != ITEM_NOT_FOUND)
 						{
-							pSoldier->DropPackFlag = TRUE;
+							pSoldier->flags.DropPackFlag = TRUE;
 						}
 					}
 					MoveItemToLBEItem( pSoldier, uiHandPos, gpItemPointer );
@@ -7680,8 +7680,11 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			// !!! ATTACHING/MERGING ITEMS IN MAP SCREEN IS NOT SUPPORTED !!!
 			if ( uiHandPos == HANDPOS || uiHandPos == SECONDHANDPOS || uiHandPos == HELMETPOS || uiHandPos == VESTPOS || uiHandPos == LEGPOS )
 			{
+				if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+				{
+				}
 				//if ( ValidAttachmentClass( usNewItemIndex, usOldItemIndex ) )
-				if ( ValidAttachment( usNewItemIndex, usOldItemIndex ) )
+				else if ( ValidAttachment( usNewItemIndex, usOldItemIndex ) )
 				{
 					// it's an attempt to attach; bring up the inventory panel
 					if ( !InItemDescriptionBox( ) )
@@ -7719,7 +7722,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			LBENODE.  Then we need to know if the LBE Item in the cursor is an LBENODE
 			or just a normal OBJECTTYPE.  If it's an LBENODE, we need to move it's items into
 			the appropriate pockets for the soldier and then delete the LBENODE.*/
-			if(gGameOptions.ubInventorySystem && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+			if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(pSoldier, gpItemPointer, uiHandPos, FALSE))
 				{
@@ -7727,11 +7730,11 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 					if(uiHandPos == BPACKPOCKPOS)
 					{
 						// First, deal with the zipper
-						if(pSoldier->ZipperFlag)
+						if(pSoldier->flags.ZipperFlag)
 							if(!ChangeZipperStatus(pSoldier, FALSE))
 								return;
-						if(pSoldier->DropPackFlag)
-							pSoldier->DropPackFlag = FALSE;
+						if(pSoldier->flags.DropPackFlag)
+							pSoldier->flags.DropPackFlag = FALSE;
 					}
 					// Are we swaping LBE items?
 					if(pSoldier->inv[uiHandPos].usItem != NONE)	// Item already exists in this pocket
@@ -8219,16 +8222,23 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 void BlitBackgroundToSaveBuffer( void )
 {
 	PERFORMANCE_MARKER
+	INT8 bTempDestChar = -1;
+
 	// render map
-	RenderMapRegionBackground( );
+  RenderMapRegionBackground( );
 	
+	// Headrock: Moved the following line here from the marker below, so that the Inventory Bottom panel
+	// renders underneath the character info panel (and so doesn't truncate the large open inventory). We may
+	// need to put TRUE here if there's any problem, but I doubt it.
+	RenderMapScreenInterfaceBottom( FALSE );
+ 
 	if( fDisableDueToBattleRoster == FALSE )
 	{
-	// render team
-	RenderTeamRegionBackground( );
+	  // render team
+	  RenderTeamRegionBackground( );
 
-	// render character info
-	RenderCharacterInfoBackground( );
+	  // render character info
+	  RenderCharacterInfoBackground( );
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
@@ -8242,7 +8252,8 @@ void BlitBackgroundToSaveBuffer( void )
 	}
 
 	// now render lower panel
-	RenderMapScreenInterfaceBottom( );
+	// HEADROCK - Moved the following line upwards, so it renders BEFORE the character info panel.
+	// RenderMapScreenInterfaceBottom( );
 }
 
 void CreateMouseRegionsForTeamList( void )
@@ -9441,7 +9452,27 @@ void RenderTeamRegionBackground( void )
 	
 	// restore background for area
 	
-	RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 106 - 121 );
+	// HEADROCK: Character Panel rerender size depends on whether the inventory is open or closed. I shrink it
+	// when it's closed so that it doesn't distort the message log, and grow it when it's open so that it shows
+	// at full length. Very tricky business.
+	// Please rewrite this though, because I added a hotfix to deal with higher resolutions. In 1024x768, if 
+	// the height is set at SCREEN_HEIGHT - 107 , the program fails to draw the message log. This is intentional
+	// in 800x600, but because we're using the same inventory for higher resolutions, it simply isn't long enough 
+	// to cover the fact that the message log is not rendering, so the rectangle must be shortened to exclude the
+	// height of the inventory bottom (121 pixels). Also will require a change for 640x480, but I can't run the 
+	// game at that resolution with our new slots enabled, so I can't test it. Note that it may be wise to replace
+	// SCREEN_HEIGHT here with a proper constant that dictates the vertical inventory height. Or maybe not. Works
+	// fine this way as well.
+
+	if (fShowInventoryFlag == TRUE && SCREEN_HEIGHT == 600)
+	{
+		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 107 );
+	}
+
+	if (fShowInventoryFlag == FALSE || SCREEN_HEIGHT > 600)
+	{
+		RestoreExternBackgroundRect( 0, 107, 261, SCREEN_HEIGHT - 107 - 121 );
+	}
 
 	MapscreenMarkButtonsDirty();
 
@@ -13890,6 +13921,8 @@ void RequestToggleMercInventoryPanel( void )
 		}
 		else
 		{
+			// Headrock. New line forces InvBottom rerender when the inventory is opened and closed.
+			RenderMapScreenInterfaceBottom ( TRUE ); 
 			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
 		}
 	}

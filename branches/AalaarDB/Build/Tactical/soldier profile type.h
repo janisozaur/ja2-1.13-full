@@ -173,7 +173,7 @@ typedef struct
 } LBENODE;
 
 //extern LBENODE			*LBEptr;
-extern vector<LBENODE>	LBEptr;
+extern std::vector<LBENODE>	LBEptr;
 extern UINT16			LBEptrNum;
 
 // CHRISL: Class to handle profile equipment from XML_MercStartingGear
@@ -197,12 +197,12 @@ public:
 	UINT16		mIndex;
 	CHAR8		mName[80];
 	char		endOfPOD;	// marker for end of POD (plain old data)
-	vector<int>	inv;
-	vector<int>	iStatus;
-	vector<int>	iDrop;
-	vector<int>	iNumber;
-	vector<int>	lbe;
-	vector<int>	lStatus;
+	std::vector<int>	inv;
+	std::vector<int>	iStatus;
+	std::vector<int>	iDrop;
+	std::vector<int>	iNumber;
+	std::vector<int>	lbe;
+	std::vector<int>	lStatus;
 private:
 	int			invCnt;
 	int			lbeCnt;
@@ -450,9 +450,9 @@ public:
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 
-	vector<int>	inv;
-	vector<int>	bInvStatus;
-	vector<int>	bInvNumber;
+	std::vector<int>	inv;
+	std::vector<int>	bInvStatus;
+	std::vector<int>	bInvNumber;
 }; // MERCPROFILESTRUCT;
 
 #define SIZEOF_MERCPROFILESTRUCT_POD offsetof( MERCPROFILESTRUCT, endOfPOD )

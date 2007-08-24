@@ -1283,13 +1283,13 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	// CHRISL: Only run if we're looking at a legitimate pocket
 	if(!gGameOptions.ubInventorySystem && !oldInv[sPocket])
 		return;
-	if((pSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
+	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
 		return;
 	INT16 sX, sY;
 	INT16	sBarX, sBarY;
 	OBJECTTYPE  *pObject;
 	BOOLEAN	fOutline = FALSE;
-	INT16		sOutlineColor = 0;
+	INT16		sOutlineColor = 0, lbePocket = ITEM_NOT_FOUND;
 	UINT8		fRenderDirtyLevel;
 	BOOLEAN fHatchItOut = FALSE;
 
@@ -1301,6 +1301,78 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 
 	sX = gSMInvData[ sPocket ].sX;
 	sY = gSMInvData[ sPocket ].sY;
+
+	if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	{
+		// If sPocket is not an equiped pocket, gather pocket information
+		if(icClass[sPocket] != ITEM_NOT_FOUND)
+		{
+			switch (icClass[sPocket])
+			{
+				case THIGH_PACK:
+				case VEST_PACK:
+				case COMBAT_PACK:
+				case BACKPACK:
+					lbePocket = (pSoldier->inv[icLBE[sPocket]].usItem == NOTHING) ? LoadBearingEquipment[icClass[sPocket]].lbePocketIndex[icPocket[sPocket]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[sPocket]].usItem].ubClassIndex].lbePocketIndex[icPocket[sPocket]];
+					iClass = Item[pSoldier->inv[sPocket].usItem].usItemClass;
+					if(icLBE[sPocket] == BPACKPOCKPOS && !(pSoldier->flags.ZipperFlag) && (gTacticalStatus.uiFlags & INCOMBAT))
+						lbePocket = 0;
+					if (lbePocket == 0)	// Deactivate Pocket
+					{
+						fHatchItOut = TRUE;
+					}
+					else if ( pObject->usItem == NOTHING )	// Nothing in sPocket.  Display silouhette.
+					{
+						INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
+					}
+					break;
+				case LBE_POCKET:
+					if ( pObject->usItem == NOTHING )
+					{
+						if ( sPocket == VESTPOCKPOS )
+							lbePocket = 0;
+						else if ( sPocket == LTHIGHPOCKPOS )
+							lbePocket = 1;
+						else if ( sPocket == RTHIGHPOCKPOS )
+							lbePocket = 2;
+						else if ( sPocket == CPACKPOCKPOS )
+							lbePocket = 3;
+						else if ( sPocket == BPACKPOCKPOS )
+							lbePocket = 4;
+						if ( lbePocket != ITEM_NOT_FOUND )
+							INVRenderSilhouette( guiSAVEBUFFER, ITEM_NOT_FOUND, lbePocket, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
+					}
+					// Removed backpack/gunsling restrictions
+					if ( CheckActivationStatus(pSoldier, CPACKPOCKPOS, BPACKPOCKPOS, sPocket)/* ||
+						(sPocket == BPACKPOCKPOS && pSoldier->inv[GUNSLINGPOCKPOS].usItem != NOTHING)*/)
+					{
+						fHatchItOut = TRUE;
+					}
+					break;
+				case OTHER_POCKET:
+					if ( pObject->usItem == NOTHING )
+					{
+						if ( sPocket == GUNSLINGPOCKPOS ) // Gun Sling
+							lbePocket = 1;
+						else
+							lbePocket = 2;
+						INVRenderSilhouette( guiSAVEBUFFER, lbePocket, 0, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight);
+					}
+					// Removed backpack/gunsling restrictions
+					//if(sPocket == GUNSLINGPOCKPOS && pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING)
+					//{
+					//	fHatchItOut = TRUE;
+					//}
+					break;
+				default:
+					if ( pObject->usItem == NOTHING )
+					{
+						// Display appropriate silouhette
+					}
+					break;
+			}
+		}
+	}
 
 	if ( fDirtyLevel == DIRTYLEVEL2 )
 	{
@@ -2491,7 +2563,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			if(gGameOptions.ubInventorySystem)
 			{
 				// CHRISL: Display astrisk when LBENODE active
-				if ( pObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND )
+				if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND )
 				{
 					SetFontForeground( FONT_BLUE );
 
@@ -3437,8 +3509,8 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
-				showBox = LBEptr[gpItemDescObject->ItemData.Trigger.usBombItem].lbeClass;
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3465,7 +3537,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3542,7 +3614,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3966,8 +4038,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
-				showBox = LBEptr[gpItemDescObject->ItemData.Trigger.usBombItem].lbeClass;
+			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
+				showBox = LBEptr[gpItemDescObject[0]->data.misc.usBombItem].lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3997,7 +4069,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4077,7 +4149,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject->ItemData.Trigger.bDetonatorType == -1)
+			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4512,14 +4584,14 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
 		return;
 
-	if(pObj->ItemData.Trigger.bDetonatorType == -1)
+	if((*pObj)[0]->data.misc.bDetonatorType == -1)
 	{
-		lIndex = pObj->ItemData.Trigger.usBombItem;
+		lIndex = (*pObj)[0]->data.misc.usBombItem;
 		lClass = LBEptr[lIndex].lbeClass;
 	}
 	else
 		lClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-	if(lClass == 1 && pObj->ItemData.Trigger.bDetonatorType != -1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
+	if(lClass == 1 && (*pObj)[0]->data.misc.bDetonatorType != -1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
 		lClass = 5;
 	// Setup pocket coords
 	switch (lClass)
@@ -7373,7 +7445,7 @@ void RenderItemPickupMenu( )
 			  if(gGameOptions.ubInventorySystem)
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
-				  if ( pObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
+				  if ( pObject[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
 				  {
 					  SetFontForeground( FONT_BLUE );
 						SetFontShadow( DEFAULT_SHADOW );

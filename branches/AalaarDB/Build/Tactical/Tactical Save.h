@@ -102,6 +102,11 @@ BOOLEAN LoadTempNpcQuoteArrayToSaveGameFile( HWFILE hFile );
 //Loads the NPC temp Quote file from the saved game file
 BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile );
 
+//LBE node stuff
+UINT32 MercChecksum( SOLDIERTYPE * pSoldier );
+UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );
+UINT32 LBENODEChecksum( LBENODE * pNode );
+
 BOOLEAN JA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
 BOOLEAN JA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
 

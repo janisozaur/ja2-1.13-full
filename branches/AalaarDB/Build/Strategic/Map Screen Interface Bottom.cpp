@@ -283,9 +283,11 @@ void DeleteMapScreenInterfaceBottom( void )
 }
 
 
-void RenderMapScreenInterfaceBottom( void )
+// Headrock: this function used to accept no arguments. It now accepts a Boolean so it can be forced to run
+// the whole process when we call it from other files. See also .h file!!!
+extern void BltCharInvPanel();
+void RenderMapScreenInterfaceBottom( BOOLEAN fForceMapscreenFullRender )
 {
-	PERFORMANCE_MARKER
 	// will render the map screen bottom interface
 	HVOBJECT hHandle;
 	CHAR8 bFilename[ 32 ];
@@ -293,11 +295,12 @@ void RenderMapScreenInterfaceBottom( void )
 	fDisplayOverheadMap = FALSE;
 
 	// render whole panel
-	if( fMapScreenBottomDirty == TRUE )
+	// HEADROCK Changed this line to accept outside influence through the new boolean:
+	if ( fForceMapscreenFullRender == TRUE || fMapScreenBottomDirty == TRUE )
 	{
 		// get and blt panel
-	GetVideoObject(&hHandle, guiMAPBOTTOMPANEL ); 
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y, VO_BLT_SRCTRANSPARENCY,NULL );
+	  GetVideoObject(&hHandle, guiMAPBOTTOMPANEL ); 
+	  BltVideoObject( guiSAVEBUFFER , hHandle, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y, VO_BLT_SRCTRANSPARENCY,NULL );
 
 		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
 		{
@@ -318,7 +321,7 @@ void RenderMapScreenInterfaceBottom( void )
 		MarkButtonsDirty( );
 
 		// invalidate region
-		RestoreExternBackgroundRect( MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH, SCREEN_HEIGHT - MAP_BOTTOM_Y );
+		RestoreExternBackgroundRect( MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH - MAP_BOTTOM_X, SCREEN_HEIGHT - MAP_BOTTOM_Y );
 
 		// re render radar map
 		RenderRadarScreen( );
@@ -326,6 +329,9 @@ void RenderMapScreenInterfaceBottom( void )
 		// reset dirty flag
 		fMapScreenBottomDirty = FALSE;
 		fMapBottomDirtied = TRUE;
+
+		// Headrock: Moved this next line from the above marker ^
+		fMapScreenBottomDirty = FALSE;
 	}
 
 	DisplayCompressMode( );

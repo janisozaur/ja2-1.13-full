@@ -2597,8 +2597,8 @@ void HandleArmedObjectImpact( REAL_OBJECT *pObject )
 				// Start timed bomb...
 				usFlags |= WORLD_ITEM_ARMED_BOMB;
 
-				(*pObj)[0]->data.bombs.bDetonatorType = BOMB_TIMED;
-				(*pObj)[0]->data.bombs.bDelay = (INT8)( 1 + PreRandom( 2 ) );
+				(*pObj)[0]->data.misc.bDetonatorType = BOMB_TIMED;
+				(*pObj)[0]->data.misc.bDelay = (INT8)( 1 + PreRandom( 2 ) );
 			}
 
 			// ATE: If we have collided with roof last...

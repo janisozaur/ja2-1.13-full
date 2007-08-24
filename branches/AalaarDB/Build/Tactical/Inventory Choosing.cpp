@@ -88,6 +88,9 @@ void EquipTank( SOLDIERCREATE_STRUCT *pp );
 void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass );
 void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass );
 void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass );
+// Headrock: Added function definition for LBE chooser
+void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass );
+
 UINT16 PickARandomItem(UINT8 typeIndex);
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness);
 UINT16 PickARandomItem(UINT8 typeIndex, UINT8 maxCoolness, BOOLEAN getMatchingCoolness);
@@ -226,6 +229,8 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	INT8 bKitClass = 0;
 	INT8 bMiscClass = 0;
 	INT8 bBombClass = 0;
+	// Headrock: Added Zeroed LBE integer
+	INT8 bLBEClass = 0;
 	//special weapons
 	BOOLEAN fMortar = FALSE;
 	BOOLEAN fGrenadeLauncher = FALSE;
@@ -293,6 +298,8 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
+			//Headrocktest, remove for release
+			bLBEClass = bRating;
 
 			//Note:  in some cases the class of armour and/or helmet won't be high enough to make 
 			//			 the lowest level.
@@ -311,6 +318,8 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 				bKitClass = bRating;
 				bMiscClass = bRating;
+				// Headrock: Low Level LBEs possible on Administrators:
+				bLBEClass = bRating;
 			}
 
 			if( bRating >= GREAT_ADMINISTRATOR_EQUIPMENT_RATING )
@@ -341,6 +350,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bVestClass = bRating;
 			bHelmetClass = bRating;
 			bGrenadeClass = bRating;
+			// Headrock: Added LBE set to Coolness Rating
+			bLBEClass = bRating;
+
 
 			if( ( bRating >= GOOD_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
 			{
@@ -376,6 +388,10 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( Random( 2 ) )
 				bKnifeClass = bRating;
+
+			// Headrock: Chance for soldier to carry better LBE
+			if( Chance( 50 ) )
+				bLBEClass++;
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
@@ -458,6 +474,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			bKitClass = bRating;
 			bMiscClass = bRating;
 
+			// Headrock: Elite LBEs
+			bLBEClass = bRating;
+
 			if ( Chance( 25 ) )
 			{
 				bBombClass = bRating;
@@ -477,15 +496,17 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
-				switch( Random( 11 ) )
+				UINT32 uiRange = (!gGameOptions.ubInventorySystem) ? Random(11) : Random(12);
+				switch( uiRange )
 				{
 					case 4:		bWeaponClass++, bVestClass--;		break;
 					case 5:		bWeaponClass--, bVestClass--;		break;
 					case 6:		bVestClass++, bHelmetClass--;		break;
-					case 7:		bGrenades += 2;									break;
-					case 8:		bHelmetClass++;									break;
-					case 9:		bVestClass++;										break;
-					case 10:	bWeaponClass++;									break;
+					case 7:		bGrenades += 2;						break;
+					case 8:		bHelmetClass++;						break;
+					case 9:		bVestClass++;						break;
+					case 10:	bWeaponClass++;						break;
+					case 11:	bLBEClass++;						break;
 				}
 			}
 
@@ -598,6 +619,10 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 				case IC_BOMB:
 					bBombClass = 0;
 					break;
+				// Headrock: Added failsafe for LBEs
+				case IC_LBEGEAR:
+					bLBEClass = 0;
+					break;
 			}
 		}
 	}
@@ -613,6 +638,8 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 	//Now actually choose the equipment!
 	ChooseWeaponForSoldierCreateStruct( pp, bWeaponClass, bAmmoClips, bAttachClass, fAttachment );
+	// Headrock: This is where the program calls LBE choosing
+	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseSpecialWeaponsForSoldierCreateStruct( pp, bKnifeClass, fGrenadeLauncher, fLAW, fMortar, fRPG );
 	ChooseGrenadesForSoldierCreateStruct( pp, bGrenades, bGrenadeClass, fGrenadeLauncher );
 	ChooseArmourForSoldierCreateStruct( pp, bHelmetClass, bVestClass, bLeggingClass );
@@ -620,6 +647,9 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 	ChooseKitsForSoldierCreateStruct( pp, bKitClass );
 	ChooseMiscGearForSoldierCreateStruct( pp, bMiscClass );
 	ChooseBombsForSoldierCreateStruct( pp, bBombClass );
+	//ADB why is this here twice?
+	// Headrock: This is where the program calls LBE choosing
+	ChooseLBEsForSoldierCreateStruct( pp, bLBEClass );
 	ChooseLocationSpecificGearForSoldierCreateStruct( pp );
 	RandomlyChooseWhichItemsAreDroppable( pp, bSoldierClass );
 
@@ -1988,7 +2018,6 @@ void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass 
 	//INVTYPE *pItem;
 	//UINT16 usRandom;
 	UINT16 usItem = 0;
-	OBJECTTYPE Object;
 
 	// CHRISL: If we're using the old inventory system, just return
 	if(!gGameOptions.ubInventorySystem)
@@ -1997,9 +2026,9 @@ void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass 
 	usItem = PickARandomItem( LBE , bLBEClass, FALSE );
 	if ( usItem > 0 )
 	{
-		CreateItem( usItem, (INT8)(80 + Random( 21 )), &Object );
-		Object.fFlags |= OBJECT_UNDROPPABLE;
-		PlaceObjectInSoldierCreateStruct( pp, &Object );
+		CreateItem( usItem, (INT8)(80 + Random( 21 )), &gTempObject );
+		gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
+		PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	}
 }
 

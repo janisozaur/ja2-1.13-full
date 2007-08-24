@@ -191,6 +191,7 @@ void EntryInitEditorItemsInfo()
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
+				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( eInfo.sNumEquipment1 < 30 )
@@ -444,6 +445,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				case IC_MEDKIT:
 				case IC_KIT:
 				case IC_FACE:
+				case IC_LBEGEAR:
 				case IC_MISC:
 				case IC_MONEY:
 					if( usCounter == ACTION_ITEM || usCounter == SWITCH )
@@ -868,38 +870,38 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 			}
 			bVisibility = BURIED;
 			gTempObject[0]->data.objectStatus = 100;
-			gTempObject[0]->data.bombs.ubBombOwner = 1;
+			gTempObject[0]->data.misc.ubBombOwner = 1;
 			if( eInfo.sSelItemIndex < 2 )
-				gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY;
+				gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY;
 			else if( eInfo.sSelItemIndex < 4 )
-				gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY_2;
+				gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY_2;
 			else if( eInfo.sSelItemIndex < 6 )
-				gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY_3;
+				gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY_3;
 			else
-				gTempObject[0]->data.bombs.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+				gTempObject[0]->data.misc.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
 			usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
 		case ACTION_ITEM:
 			bVisibility = BURIED;
 			gTempObject[0]->data.objectStatus = 100;
-			gTempObject[0]->data.bombs.ubBombOwner = 1;
+			gTempObject[0]->data.misc.ubBombOwner = 1;
 			gTempObject[0]->data.bTrap = gbDefaultBombTrapLevel;
 			if( eInfo.sSelItemIndex < PRESSURE_ACTION_ID )
 			{
-				gTempObject[0]->data.bombs.bDetonatorType = BOMB_REMOTE;
+				gTempObject[0]->data.misc.bDetonatorType = BOMB_REMOTE;
 				if( eInfo.sSelItemIndex < 2 )
-					gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY;
+					gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY;
 				else if( eInfo.sSelItemIndex < 4 )
-					gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY_2;
+					gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY_2;
 				else if( eInfo.sSelItemIndex < 6 )
-					gTempObject[0]->data.bombs.bFrequency = PANIC_FREQUENCY_3;
+					gTempObject[0]->data.misc.bFrequency = PANIC_FREQUENCY_3;
 				else
-					gTempObject[0]->data.bombs.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+					gTempObject[0]->data.misc.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
 			}
 			else
 			{
-				gTempObject[0]->data.bombs.bDetonatorType = BOMB_PRESSURE;
-				gTempObject[0]->data.bombs.bDelay = 0;
+				gTempObject[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
+				gTempObject[0]->data.misc.bDelay = 0;
 			}
 			ChangeActionItem( &gTempObject, gbActionItemIndex );
 			gTempObject[0]->data.fFlags |= OBJECT_ARMED_BOMB;
@@ -1066,9 +1068,9 @@ void DeleteSelectedItem()
 		//remove the item
 		if( gWorldItems[ gpItemPool->iItemIndex ].object.usItem == ACTION_ITEM )
 		{
-			if( gWorldItems[ gpItemPool->iItemIndex ].object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT )
+			if( gWorldItems[ gpItemPool->iItemIndex ].object[0]->data.misc.bActionValue == ACTION_ITEM_SMALL_PIT )
 				Remove3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-			else if( gWorldItems[ gpItemPool->iItemIndex ].object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+			else if( gWorldItems[ gpItemPool->iItemIndex ].object[0]->data.misc.bActionValue == ACTION_ITEM_LARGE_PIT )
 				Remove5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 		}
 		if( gpEditingItemPool == gpItemPool )
@@ -1380,7 +1382,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 				while( gpItemPool )
 				{
 					pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-					if( pObject->usItem == usItem && (*pObject)[0]->data.bombs.bFrequency == bFrequency )
+					if( pObject->usItem == usItem && (*pObject)[0]->data.misc.bFrequency == bFrequency )
 					{
 						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 						CenterScreenAtMapIndex( gsItemGridNo );
@@ -1399,7 +1401,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-				if( pObject->usItem == usItem && (*pObject)[0]->data.bombs.bFrequency == bFrequency )
+				if( pObject->usItem == usItem && (*pObject)[0]->data.misc.bFrequency == bFrequency )
 				{
 					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 					CenterScreenAtMapIndex( gsItemGridNo );
@@ -1417,7 +1419,7 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-			if( pObject->usItem == usItem && (*pObject)[0]->data.bombs.bFrequency == bFrequency )
+			if( pObject->usItem == usItem && (*pObject)[0]->data.misc.bFrequency == bFrequency )
 			{
 				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 				CenterScreenAtMapIndex( gsItemGridNo );
@@ -1445,7 +1447,7 @@ void SelectNextPressureAction()
 				while( gpItemPool )
 				{
 					pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-					if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+					if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 					{
 						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 						CenterScreenAtMapIndex( gsItemGridNo );
@@ -1464,7 +1466,7 @@ void SelectNextPressureAction()
 			while( gpItemPool )
 			{
 				pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-				if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+				if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 				{
 					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 					CenterScreenAtMapIndex( gsItemGridNo );
@@ -1482,7 +1484,7 @@ void SelectNextPressureAction()
 		while( gpItemPool )
 		{
 			pObject = &gWorldItems[ gpItemPool->iItemIndex ].object;
-			if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+			if( pObject->usItem == ACTION_ITEM && (*pObject)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 			{
 				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
 				CenterScreenAtMapIndex( gsItemGridNo );
@@ -1532,7 +1534,7 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].object.usItem == usItem &&
-				gWorldItems[ pItemPool->iItemIndex ].object[0]->data.bombs.bFrequency == bFrequency )
+				gWorldItems[ pItemPool->iItemIndex ].object[0]->data.misc.bFrequency == bFrequency )
 			{
 				num++;
 			}
@@ -1556,7 +1558,7 @@ UINT16 CountNumberOfPressureActionsInWorld()
 		while( pItemPool )
 		{
 			if( gWorldItems[ pItemPool->iItemIndex ].object.usItem == ACTION_ITEM &&
-				gWorldItems[ pItemPool->iItemIndex ].object[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+				gWorldItems[ pItemPool->iItemIndex ].object[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 			{
 				num++;
 			}

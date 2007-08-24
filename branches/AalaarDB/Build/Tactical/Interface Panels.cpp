@@ -324,6 +324,18 @@ int	INTERFACE_CLOCK_Y;
 int	LOCATION_NAME_X;
 int	LOCATION_NAME_Y;
 
+/* CHRISL: Added new "TM" variables to allow team and inventory screens to place the clock and location name
+independantly of each other */
+int	INTERFACE_CLOCK_TM_X;
+int	INTERFACE_CLOCK_TM_Y;
+int	LOCATION_NAME_TM_X;
+int	LOCATION_NAME_TM_Y;
+
+// CHRISL: Keyring coords moved from Interface Items.cpp
+int KEYRING_X;
+int KEYRING_Y;
+extern UINT32 guiCurrentItemDescriptionScreen;
+
 
 typedef enum
 {
@@ -456,7 +468,7 @@ INT8				gbSMCurStanceObj;
 UINT16				gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 // CHRISL:
-vector<LBENODE>	LBEptr;
+std::vector<LBENODE>	LBEptr;
 UINT16		LBEptrNum=0;
 extern	INT8		gbCompatibleApplyItem; 
 extern	SOLDIERTYPE *gpItemPopupSoldier;
@@ -1043,6 +1055,7 @@ void UpdateSMPanel( )
 		{
 				DisableButton( giSMStealthButton );
 		}
+		RenderBackpackButtons(3);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 	else
 	{
@@ -1063,6 +1076,7 @@ void UpdateSMPanel( )
 		{
 				EnableButton( giSMStealthButton );
 		}
+		RenderBackpackButtons(2);	/* CHRISL: Needed for new inventory backpack buttons */
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
@@ -1149,8 +1163,8 @@ void RenderBackpackButtons(int bpAction)
 				RemoveButton( giSMDropPackButton );
 			if(giSMDropPackImages != -1)
 				UnloadButtonImage( giSMDropPackImages );
-			giSMZipperImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbZipperButPos[ gpSMCurrentMerc->ZipperFlag ][0] ,gbZipperButPos[ gpSMCurrentMerc->ZipperFlag ][0],-1,gbZipperButPos[ gpSMCurrentMerc->ZipperFlag ][1],-1 );
-			giSMDropPackImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbDropPackButPos[ gpSMCurrentMerc->DropPackFlag ][0] ,gbDropPackButPos[ gpSMCurrentMerc->DropPackFlag ][0],-1,gbDropPackButPos[ gpSMCurrentMerc->DropPackFlag ][1],-1 );
+			giSMZipperImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][0] ,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][0],-1,gbZipperButPos[ gpSMCurrentMerc->flags.ZipperFlag ][1],-1 );
+			giSMDropPackImages	= UseLoadedButtonImage( iSMPanelImages[ BACKPACK_IMAGES  ] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0] ,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][0],-1,gbDropPackButPos[ gpSMCurrentMerc->flags.DropPackFlag ][1],-1 );
 
 			giSMZipperButton	= QuickCreateButton( giSMZipperImages, SM_ZIPPER_X, SM_ZIPPER_Y,
 													BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -2989,7 +3003,7 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	//else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLeftDown )
 	// CHRISL: Are we in combat, wearing a backpack with the zipper closed?  Don't allow access to backpack items
 	if(gGameOptions.ubInventorySystem)
-		if(icLBE[uiHandPos] == BPACKPOCKPOS && (!(gpSMCurrentMerc->ZipperFlag) || (gpSMCurrentMerc->ZipperFlag && gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT) && (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ))
+		if(icLBE[uiHandPos] == BPACKPOCKPOS && (!(gpSMCurrentMerc->flags.ZipperFlag) || (gpSMCurrentMerc->flags.ZipperFlag && gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT) && (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ))
 			iReason = MSYS_CALLBACK_REASON_NONE;
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -3033,13 +3047,13 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					if(uiHandPos == BPACKPOCKPOS)
 					{
 						// Deal with the zipper before we do anything
-						if(gpSMCurrentMerc->ZipperFlag)
+						if(gpSMCurrentMerc->flags.ZipperFlag)
 							if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
 								return;
 						// Do we still have a linked backpack?  If so, reset droppackflag
 						if(gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 						{
-							gpSMCurrentMerc->DropPackFlag = TRUE;
+							gpSMCurrentMerc->flags.DropPackFlag = TRUE;
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 					}
@@ -3178,11 +3192,11 @@ void SMInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if(uiHandPos == BPACKPOCKPOS)
 						{
 							// First, deal with the zipper
-							if(gpSMCurrentMerc->ZipperFlag)
+							if(gpSMCurrentMerc->flags.ZipperFlag)
 								if(!ChangeZipperStatus(gpSMCurrentMerc, FALSE))
 									return;
-							if(gpSMCurrentMerc->DropPackFlag)
-								gpSMCurrentMerc->DropPackFlag = FALSE;
+							if(gpSMCurrentMerc->flags.DropPackFlag)
+								gpSMCurrentMerc->flags.DropPackFlag = FALSE;
 							RenderBackpackButtons(0);	/* CHRISL: Needed for new inventory backpack buttons */
 						}
 						// Are we swaping LBE items?
@@ -3360,13 +3374,13 @@ BOOLEAN  ChangeZipperStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 			bNewStance = ANIM_CROUCH;
 			UIHandleSoldierStanceChange( pSoldier->ubID, bNewStance );
 		}
-		pSoldier->ZipperFlag = newStatus;
+		pSoldier->flags.ZipperFlag = newStatus;
 		gfUIStanceDifferent = TRUE;
 	}
 	// Closing a pack?
 	else
 	{
-		pSoldier->ZipperFlag = newStatus;
+		pSoldier->flags.ZipperFlag = newStatus;
 		gfUIStanceDifferent = TRUE;
 	}
 
@@ -3381,7 +3395,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	INT32	worldKey=1;
 
 	// Are we dropping a pack that has the zipper open?
-	if(newStatus && pSoldier->ZipperFlag)
+	if(newStatus && pSoldier->flags.ZipperFlag)
 	{
 		sAPCost = 0;
 		if(!ChangeZipperStatus(pSoldier, FALSE))
@@ -3393,8 +3407,8 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus)
-			if(gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.bDetonatorType == -1)
-				if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.usBombItem].lbeIndex != NONE)
+			if(gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.bDetonatorType == -1)
+				if(LBEptr[gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.usBombItem].lbeIndex != NONE)
 					if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
 					{
 						sAPCost = 0;
@@ -3425,7 +3439,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 			gpSMCurrentMerc->DropPackKey = worldKey;
 			NotifySoldiersToLookforItems( );
 			RemoveObjectFromSlot( pSoldier, BPACKPOCKPOS, &(pSoldier->inv[BPACKPOCKPOS]) );
-			gpSMCurrentMerc->DropPackFlag = newStatus;
+			gpSMCurrentMerc->flags.DropPackFlag = newStatus;
 			gfUIStanceDifferent = TRUE;
 		}
 	}
@@ -3433,17 +3447,17 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	else
 	{
 		// Is the item we dropped in this sector and does it have an active LBENODE flag?
-		if(gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.bDetonatorType == -1)
+		if(gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.bDetonatorType == -1)
 		{
 			// Is the LBENODE we're trying to pick up actually in use?
-			if(LBEptr[gWorldItems[pSoldier->DropPackKey].o.ItemData.Trigger.usBombItem].lbeIndex != NONE)
+			if(LBEptr[gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.usBombItem].lbeIndex != NONE)
 			{
 				// Try to pickup the LBENODE
 				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].o ), TRUE ))
 				{
 					RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
 					gpSMCurrentMerc->DropPackKey = -1;
-					gpSMCurrentMerc->DropPackFlag = newStatus;
+					gpSMCurrentMerc->flags.DropPackFlag = newStatus;
 					gfUIStanceDifferent = TRUE;
 				}
 				else
@@ -3723,13 +3737,13 @@ void BtnDropPackCallback(GUI_BUTTON *btn,INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
 		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->DropPackFlag)
+		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.DropPackFlag)
 		{
 			ChangeDropPackStatus(gpSMCurrentMerc, TRUE);
 		}
 		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 		{
 			ChangeDropPackStatus(gpSMCurrentMerc, FALSE);
 		}
@@ -3753,12 +3767,12 @@ void BtnZipperCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		//Are we in combat, do we have a backpack on and is the pack closed? Open it
-		if((gTacticalStatus.uiFlags & INCOMBAT) && gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->ZipperFlag)
+		if((gTacticalStatus.uiFlags & INCOMBAT) && gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.ZipperFlag)
 		{
 			ChangeZipperStatus(gpSMCurrentMerc, TRUE);
 		}
 		//Is the pack open?
-		else if(gpSMCurrentMerc->ZipperFlag)
+		else if(gpSMCurrentMerc->flags.ZipperFlag)
 		{
 			ChangeZipperStatus(gpSMCurrentMerc, FALSE);
 		}
@@ -3790,13 +3804,13 @@ void BtnMapDropPackCallback( GUI_BUTTON *btn, INT32 reason )
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		/* Is DropPackFlag currently false and is there something in the backpack pocket?  If so, we haven't
 		dropped a pack yet and apparently want to*/
-		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->DropPackFlag)
+		if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem != NONE && !gpSMCurrentMerc->flags.DropPackFlag)
 		{
 			// Drop the pack into sector inventory
 		}
 		/* Is DropPackFlag currently true, is nothing in the backpack pocket and have we dropped a pack?  If so, we
 		must want to retreive a backpack we previously dropped.*/
-		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
+		else if(gpSMCurrentMerc->inv[BPACKPOCKPOS].usItem == NONE && gpSMCurrentMerc->flags.DropPackFlag && gpSMCurrentMerc->DropPackKey != ITEM_NOT_FOUND)
 		{
 			// Pickup pack from sector inventory
 		}
@@ -6878,8 +6892,8 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	UINT16	dSize;
 	BOOLEAN	flag=FALSE;
 
-	if(pObj->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
-		lbeIndex = pObj->ItemData.Trigger.usBombItem;
+	if((*pObj)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
+		lbeIndex = (*pObj)[0]->data.misc.usBombItem;
 	else
 		lbeIndex = GetFreeLBEPackIndex();
 
@@ -6911,8 +6925,8 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 				LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
 			LBEptr[lbeIndex].inv[j] = pSoldier->inv[LBESlots[i]];
 			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
-			pObj->ItemData.Trigger.bDetonatorType = -1;
-			pObj->ItemData.Trigger.usBombItem = lbeIndex;
+			(*pObj)[0]->data.misc.bDetonatorType = -1;
+			(*pObj)[0]->data.misc.usBombItem = lbeIndex;
 			break;
 		}
 	}
@@ -7054,13 +7068,13 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 		LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex].lbeClass;
 		LBEptr[lbeIndex].ZipperFlag = FALSE;
 		// usBombItem can be used to track the index for LBE Items if we don't want to alter the OBJECTTYPE structure
-		pSoldier->inv[uiHandPos].ItemData.Trigger.usBombItem = lbeIndex;
-		pSoldier->inv[uiHandPos].ItemData.Trigger.bDetonatorType = -1;
+		pSoldier->inv[uiHandPos][0]->data.misc.usBombItem = lbeIndex;
+		pSoldier->inv[uiHandPos][0]->data.misc.bDetonatorType = -1;
 	}
 	else
 	{
-		pSoldier->inv[uiHandPos].ItemData.Trigger.usBombItem = 0;
-		pSoldier->inv[uiHandPos].ItemData.Trigger.bDetonatorType = 0;
+		pSoldier->inv[uiHandPos][0]->data.misc.usBombItem = 0;
+		pSoldier->inv[uiHandPos][0]->data.misc.bDetonatorType = 0;
 		return(FALSE);
 	}
 
@@ -7134,8 +7148,8 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].usItem == NOTHING)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if(pObj->ItemData.Trigger.bDetonatorType == -1)
-		lbeIndex = pObj->ItemData.Trigger.usBombItem;
+	if((*pObj)[0]->data.misc.bDetonatorType == -1)
+		lbeIndex = (*pObj)[0]->data.misc.usBombItem;
 	if(lbeIndex == ITEM_NOT_FOUND)
 		return (FALSE);
 
@@ -7160,8 +7174,8 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 		for (int idx=0; idx < 12; ++idx) {
 			memset(&(LBEptr[lbeIndex].inv[idx]), 0, sizeof(OBJECTTYPE));
 		}
-		pObj->ItemData.Trigger.usBombItem = 0;
-		pObj->ItemData.Trigger.bDetonatorType = 0;
+		(*pObj)[0]->data.misc.usBombItem = 0;
+		(*pObj)[0]->data.misc.bDetonatorType = 0;
 	}
 
 	return (TRUE);

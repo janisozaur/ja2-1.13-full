@@ -736,27 +736,27 @@ void BuildTriggerName( OBJECTTYPE *pItem, STR16 szItemName )
 	PERFORMANCE_MARKER
 	if( pItem->usItem == SWITCH )
 	{
-		if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY )
+		if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Trigger1" );
-		else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_2 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Trigger2" );
-		else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_3 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Trigger3" );
 		else
-			swprintf( szItemName, L"Trigger%d", (*pItem)[0]->data.bombs.bFrequency - 50 );
+			swprintf( szItemName, L"Trigger%d", (*pItem)[0]->data.misc.bFrequency - 50 );
 	}
 	else
 	{ //action item
-		if( (*pItem)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+		if( (*pItem)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 			swprintf( szItemName, L"Pressure Action" );
-		else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY )
 			swprintf( szItemName, L"Panic Action1" );
-		else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_2 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_2 )
 			swprintf( szItemName, L"Panic Action2" );
-		else if( (*pItem)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_3 )
+		else if( (*pItem)[0]->data.misc.bFrequency == PANIC_FREQUENCY_3 )
 			swprintf( szItemName, L"Panic Action3" );
 		else
-			swprintf( szItemName, L"Action%d", (*pItem)[0]->data.bombs.bFrequency - 50 );
+			swprintf( szItemName, L"Action%d", (*pItem)[0]->data.misc.bFrequency - 50 );
 	}
 }
 

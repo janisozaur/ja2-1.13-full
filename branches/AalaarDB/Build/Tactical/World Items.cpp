@@ -273,12 +273,12 @@ void FindPanicBombsAndTriggers( void )
 		if (gWorldBombs[ uiBombIndex ].fExists)
 		{
 			pObj = &(gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].object);
-			if ((*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY || (*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_2 || (*pObj)[0]->data.bombs.bFrequency == PANIC_FREQUENCY_3 )
+			if ((*pObj)[0]->data.misc.bFrequency == PANIC_FREQUENCY || (*pObj)[0]->data.misc.bFrequency == PANIC_FREQUENCY_2 || (*pObj)[0]->data.misc.bFrequency == PANIC_FREQUENCY_3 )
 			{
 				if (pObj->usItem == SWITCH)
 				{
 					sGridNo = gWorldItems[ gWorldBombs[ uiBombIndex ].iItemIndex ].sGridNo;
-					switch( (*pObj)[0]->data.bombs.bFrequency )
+					switch( (*pObj)[0]->data.misc.bFrequency )
 					{
 						case PANIC_FREQUENCY:
 							bPanicIndex = 0;
@@ -316,7 +316,7 @@ void FindPanicBombsAndTriggers( void )
 					}
 
 					gTacticalStatus.sPanicTriggerGridNo[ bPanicIndex ] = sGridNo;
-					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0]->data.bombs.ubTolerance;
+					gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = (*pObj)[0]->data.misc.ubTolerance;
 					if ((*pObj)[0]->data.fFlags & OBJECT_ALARM_TRIGGER)
 					{
 						gTacticalStatus.bPanicTriggerIsAlarm[ bPanicIndex ] = TRUE;
@@ -591,11 +591,11 @@ void LoadWorldItemsFromMap( INT8 **hBuffer, float dMajorMapVersion, int ubMinorM
 			}
 			if( dummyItem.object.usItem == ACTION_ITEM && gfLoadPitsWithoutArming )
 			{ //if we are loading a pit, they are typically loaded without being armed.
-				if( dummyItem.object[0]->data.bombs.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.object[0]->data.bombs.bActionValue == ACTION_ITEM_LARGE_PIT )
+				if( dummyItem.object[0]->data.misc.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.object[0]->data.misc.bActionValue == ACTION_ITEM_LARGE_PIT )
 				{
 					dummyItem.usFlags &= ~WORLD_ITEM_ARMED_BOMB;
 					dummyItem.bVisible = BURIED;
-					dummyItem.object[0]->data.bombs.bDetonatorType = 0;
+					dummyItem.object[0]->data.misc.bDetonatorType = 0;
 				}
 			}
 			

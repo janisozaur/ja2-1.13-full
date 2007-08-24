@@ -3235,7 +3235,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( !pSoldier->fDontChargeAPsForStanceChange )
 			{
 				// CHRISL
-				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->ZipperFlag)
+				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->flags.ZipperFlag)
 				{
 					if(usNewState == KNEEL_UP)
 					{
@@ -3273,7 +3273,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				if ( pSoldier->sGridNo == pSoldier->sFinalDestination || pSoldier->usPathIndex == 0 )
 				{
 					// CHRISL
-					if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->ZipperFlag)
+					if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->flags.ZipperFlag)
 					{
 						if(usNewState == PRONE_UP)
 						{

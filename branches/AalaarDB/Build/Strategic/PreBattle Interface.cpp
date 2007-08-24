@@ -398,7 +398,8 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 	fMapScreenBottomDirty = TRUE;
 	ChangeSelectedMapSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
-	RenderMapScreenInterfaceBottom();
+	// Headrock: Added FALSE argument, We might need TRUE but not sure. Will need to initiate battle :)
+	RenderMapScreenInterfaceBottom( FALSE );
 
 	//If we are currently in tactical, then set the flag to automatically bring up the mapscreen.
 	if( guiCurrentScreen == GAME_SCREEN )

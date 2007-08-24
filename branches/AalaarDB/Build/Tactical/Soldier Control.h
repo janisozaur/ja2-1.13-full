@@ -476,10 +476,10 @@ public:
 	unsigned int size() const;
 
 	//temporarily? public
-	vector<int>			bNewItemCount;
-	vector<int>			bNewItemCycleCount;
+	std::vector<int>			bNewItemCount;
+	std::vector<int>			bNewItemCycleCount;
 private:
-	vector<OBJECTTYPE>	inv;
+	std::vector<OBJECTTYPE>	inv;
 };
 
 class STRUCT_AIData//last edited at version 102
@@ -642,6 +642,11 @@ public:
 	BOOLEAN					autofireLastStep;
 	BOOLEAN lastFlankLeft;
 	UINT32											uiStatusFlags;
+
+	//TODO
+	//LBE node stuff
+	BOOLEAN			ZipperFlag;
+	BOOLEAN			DropPackFlag;
 
 };
 
@@ -1164,6 +1169,9 @@ public:
 
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
+
+	//TODO
+	INT16	DropPackKey;
 
 	char endOfPOD;	// marker for end of POD (plain old data)
 
@@ -2126,8 +2134,8 @@ public:
 
 	Inventory inv;
 
-	vector<int>	bNewItemCount;
-	vector<int> bNewItemCycleCount;
+	std::vector<int>	bNewItemCount;
+	std::vector<int> bNewItemCycleCount;
 }; // OLDSOLDIERTYPE_101;	
 
 #endif

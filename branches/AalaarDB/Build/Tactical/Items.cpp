@@ -1184,7 +1184,7 @@ UINT16 ReplacementAmmo[][2] =
 };
 
 // CHRISL: Structure Definitions for new inventory system items.
-vector<LBETYPE> LoadBearingEquipment;
+std::vector<LBETYPE> LoadBearingEquipment;
 //LBETYPE LoadBearingEquipment[MAXITEMS+1];
 //LBETYPE LoadBearingEquipment[] =
 //{
@@ -1198,7 +1198,7 @@ vector<LBETYPE> LoadBearingEquipment;
 //	{	6,		/*6P Combat Pack*/		2,	{1,	1,	1,	1,	2,	2,	0,	0,	0,	0,	0,	0} }
 //};
 
-vector<POCKETTYPE> LBEPocketType;
+std::vector<POCKETTYPE> LBEPocketType;
 //POCKETTYPE LBEPocketType[MAXITEMS+1]; //= 
 //{
 //	{	/* Blank Entry */			0,	0,	0,	{0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0} },
@@ -1409,7 +1409,7 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	UINT32	iClass, pRestrict;
 
 	usItem = pObject->usItem;
-	if(gGameOptions.ubInventorySystem && (pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	if(gGameOptions.ubInventorySystem && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		ubSlotLimit = Item[usItem].ubPerPocket;
 		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
@@ -1756,7 +1756,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 		// CHRISL: Only look at valid pockets
 		if(!gGameOptions.ubInventorySystem && !oldInv[bLoop])
 			continue;
-		if((pSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[bLoop])
+		if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[bLoop])
 			continue;
 		if (pSoldier->inv[bLoop].usItem == 0)
 		{
@@ -2472,16 +2472,16 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		}
 	}
 	// Check if we're looking at a LBENODE or not
-	if(pObject->ItemData.Trigger.bDetonatorType == -1)
+	if((*pObject)[0]->data.misc.bDetonatorType == -1)
 	{
-		if(LBEptr[pObject->ItemData.Trigger.usBombItem].lbeIndex != NULL)
+		if(LBEptr[(*pObject)[0]->data.misc.usBombItem].lbeIndex != NULL)
 		{
 			newSize = 0;
 			for(cnt=0; cnt<12; cnt++)
 			{
-				if(LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt].usItem != NOTHING)
+				if(LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
 				{
-					testSize = CalculateItemSize(&LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt]);
+					testSize = CalculateItemSize(&LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt]);
 					newSize = (testSize > newSize) ? testSize : newSize;
 				}
 			}
@@ -2629,15 +2629,15 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	usWeight = pItem->ubWeight;
 
 	// Are we looking at an LBENODE item?  New inventory only.
-	if(pItem->usItemClass == IC_LBEGEAR && pObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND && gGameOptions.ubInventorySystem)
+	if(pItem->usItemClass == IC_LBEGEAR && (*pObject([0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && gGameOptions.ubInventorySystem)
 	{
 		for ( cnt = 0; cnt < 12; cnt++)
 		{
-			if (LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt].usItem != NOTHING)
+			if (LBEptr[(*pObject([0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
 			{
-				tWeight = CalculateObjectWeight(&(LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt]));
-				if(Item[LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt].usItem].usItemClass != IC_AMMO)
-					tWeight *= LBEptr[pObject->ItemData.Trigger.usBombItem].inv[cnt].ubNumberOfObjects;
+				tWeight = CalculateObjectWeight(&(LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt]));
+				if(Item[LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem].usItemClass != IC_AMMO)
+					tWeight *= LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].ubNumberOfObjects;
 				usWeight += tWeight;
 			}
 		}
@@ -2654,9 +2654,9 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 			}
 		}
 		// add in weight of ammo
-		if (Item[ pObject->usItem ].usItemClass == IC_GUN && pObject->ItemData.Gun.ubGunShotsLeft > 0)
+		if (Item[ pObject->usItem ].usItemClass == IC_GUN && (*pObject)[0]->data.gun.ubGunShotsLeft > 0)
 		{
-			if( 0==pObject->ItemData.Gun.usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
+			if( 0==(*pObject)[0]->data.gun.usGunAmmoItem ) /* Sergeant_Kolja: 2007-06-11, Fix for Creature Spit. This has no Ammo, so the old code calculated accidentally -1.6 resulting in 0xFFFF */
 			{
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "'no ammo weight' FIX for Creatures\r\n" );
 			}
@@ -2664,26 +2664,26 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 			{
 				//Pulmu:
 				//Temporary calculation for minWeight
-				UINT32 uiMinWeight = (UINT32)((Item[ pObject->ItemData.Gun.usGunAmmoItem].ubWeight / 5.0) + 0.5);
-				if( uiMinWeight < 1 || uiMinWeight > Item[ pObject->ItemData.Gun.usGunAmmoItem].ubWeight)
+				UINT32 uiMinWeight = (UINT32)((Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight / 5.0) + 0.5);
+				if( uiMinWeight < 1 || uiMinWeight > Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight)
 				{
 					uiMinWeight = 1;
 				}
 
-				if( uiMinWeight == Item[ pObject->ItemData.Gun.usGunAmmoItem].ubWeight )
+				if( uiMinWeight == Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight )
 				{
 					usWeight += uiMinWeight;
 				}
 				else
 				{
 					// WANNE: Added Pulmu's weight fix
-					double weight = (double)uiMinWeight + (( (double)pObject->ItemData.Gun.ubGunShotsLeft / Magazine[Item[pObject->ItemData.Gun.usGunAmmoItem].ubClassIndex].ubMagSize ) * ( (double)Item[ pObject->ItemData.Gun.usGunAmmoItem].ubWeight - (double)uiMinWeight )) + 0.5; //Pulmu: Account for number of rounds left.
+					double weight = (double)uiMinWeight + (( (double)(*pObject)[0]->data.gun.ubGunShotsLeft / Magazine[Item[(*pObject)[0]->data.gun.usGunAmmoItem].ubClassIndex].ubMagSize ) * ( (double)Item[ (*pObject)[0]->data.gun.usGunAmmoItem].ubWeight - (double)uiMinWeight )) + 0.5; //Pulmu: Account for number of rounds left.
 					usWeight += (UINT16)weight;
 				}
 			}
 			else
 			{
-				usWeight += Item[ pObject->ItemData.Gun.usGunAmmoItem ].ubWeight;
+				usWeight += Item[ (*pObject)[0]->data.gun.usGunAmmoItem ].ubWeight;
 			}
 		}
 	}
@@ -2701,7 +2701,7 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 		
 		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
-			if(pObject->ItemData.Ammo.ubShotsLeft[cnt] > 0)
+			if((*pObject)[cnt]->data.ubShotsLeft > 0)
 			{
 				if( uiMinWeight == Item[pObject->usItem].ubWeight )
 				{
@@ -2709,7 +2709,7 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 				}
 				else
 				{
-					weight += (double)uiMinWeight + (( (double)pObject->ItemData.Ammo.ubShotsLeft[cnt] / (double)Magazine[ Item[ pObject->usItem].ubClassIndex ].ubMagSize) * ( (double)Item[pObject->usItem].ubWeight - (double)uiMinWeight ));
+					weight += (double)uiMinWeight + (( (double)(*pObject)[cnt]->data.ubShotsLeft / (double)Magazine[ Item[ pObject->usItem].ubClassIndex ].ubMagSize) * ( (double)Item[pObject->usItem].ubWeight - (double)uiMinWeight ));
 				}
 			}
 		}
@@ -4098,7 +4098,7 @@ BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos,
 	INT8					bNewPos=ITEM_NOT_FOUND;
 	UINT32					pRestrict=0;
 
-	if(!gGameOptions.ubInventorySystem || !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	if(!gGameOptions.ubInventorySystem || !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 		return(FALSE);
 	if(!vehicleInv[bPos])
 		return(FALSE);
@@ -4218,7 +4218,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	// CHRISL: Only check valid pockets
 	if(!gGameOptions.ubInventorySystem && !oldInv[bPos])
 		return(FALSE);
-	if((pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 		return(CanItemFitInVehicle(pSoldier, pObj, bPos, fDoingPlacement));
 
 	ubSlotLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
@@ -4405,7 +4405,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 		case SMALLPOCK30POS:
 			if(gGameOptions.ubInventorySystem)
 			{
-				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->ZipperFlag) || (pSoldier->ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
+				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
 					return( FALSE );
 				lbePocket = (pSoldier->inv[icLBE[bPos]].usItem == NOTHING) ? LoadBearingEquipment[icClass[bPos]].lbePocketIndex[icPocket[bPos]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[bPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[bPos]];
 				pRestrict = LBEPocketType[lbePocket].pRestriction;
@@ -4813,9 +4813,11 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 					// CHRISL:
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
+						TODO/*
 						pObj->usAttachItem[0] = pSoldier->inv[LEGPOS].usItem;
 						pObj->bAttachStatus[0] = pSoldier->inv[LEGPOS].ItemData.Generic.bStatus[0];
 						pSoldier->inv[LEGPOS].usItem = NONE;
+						*/
 					}
 					if (pSoldier->inv[LEGPOS].usItem == NONE)
 					{
@@ -4917,8 +4919,8 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 							MoveItemFromLBEItem( pSoldier, BPACKPOCKPOS, pObj);
 							PlaceObject( pSoldier, BPACKPOCKPOS, pObj );
 							SetNewItem( pSoldier, BPACKPOCKPOS, fNewItem );
-							pSoldier->DropPackFlag = FALSE;
-							pSoldier->ZipperFlag = FALSE;
+							pSoldier->flags.DropPackFlag = FALSE;
+							pSoldier->flags.ZipperFlag = FALSE;
 							RenderBackpackButtons(0);
 							if(pObj->ubNumberOfObjects == 0)
 								return( TRUE );
@@ -5779,7 +5781,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 	if (pObj->usItem == ACTION_ITEM)
 	{
-		switch( (*pObj)[0]->data.bombs.bActionValue )
+		switch( (*pObj)[0]->data.misc.bActionValue )
 		{
 			case ACTION_ITEM_SMALL_PIT:
 			case ACTION_ITEM_LARGE_PIT:
@@ -5825,30 +5827,30 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 
 	if (fRemote)
 	{
-		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_REMOTE;
-		(*pObj)[0]->data.bombs.bFrequency = bSetting;
+		(*pObj)[0]->data.misc.bDetonatorType = BOMB_REMOTE;
+		(*pObj)[0]->data.misc.bFrequency = bSetting;
 	}
 	else if (fPressure)
 	{
-		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_PRESSURE;
-		(*pObj)[0]->data.bombs.bFrequency = 0;
+		(*pObj)[0]->data.misc.bDetonatorType = BOMB_PRESSURE;
+		(*pObj)[0]->data.misc.bFrequency = 0;
 	}
 	else if (fTimed)
 	{
-		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_TIMED;
+		(*pObj)[0]->data.misc.bDetonatorType = BOMB_TIMED;
 		// In realtime the player could choose to put down a bomb right before a turn expires, SO
 		// add 1 to the setting in RT
-		(*pObj)[0]->data.bombs.bDelay = bSetting;
+		(*pObj)[0]->data.misc.bDelay = bSetting;
 		if ( !(gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			(*pObj)[0]->data.bombs.bDelay++;
+			(*pObj)[0]->data.misc.bDelay++;
 		}
 
 	}
 	else if (fSwitch)
 	{
-		(*pObj)[0]->data.bombs.bDetonatorType = BOMB_SWITCH;
-		(*pObj)[0]->data.bombs.bFrequency = bSetting;
+		(*pObj)[0]->data.misc.bDetonatorType = BOMB_SWITCH;
+		(*pObj)[0]->data.misc.bFrequency = bSetting;
 	}
 	else
 	{
@@ -5856,7 +5858,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	}
 
 	(*pObj)[0]->data.fFlags |= OBJECT_ARMED_BOMB;
-	(*pObj)[0]->data.bombs.usBombItem = pObj->usItem;
+	(*pObj)[0]->data.misc.usBombItem = pObj->usItem;
 	return( TRUE );
 }
 

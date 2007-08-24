@@ -439,7 +439,7 @@ void DistributeInitialGear(MERCPROFILESTRUCT *pProfile)
 	INVNODE			tInv[NUM_INV_SLOTS];
 	int				i, j, number;
 	UINT8			count = 0, length;
-	vector<int>		iOrder;
+	std::vector<int>		iOrder;
 	INT32			iSlot;
 	BOOLEAN			iSet = FALSE;
 

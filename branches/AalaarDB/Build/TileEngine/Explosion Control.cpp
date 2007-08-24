@@ -2488,10 +2488,10 @@ void ToggleActionItemsByFrequency( INT8 bFrequency )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_REMOTE )
+			if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_REMOTE )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if ((*pObj)[0]->data.bombs.bFrequency == bFrequency)
+				if ((*pObj)[0]->data.misc.bFrequency == bFrequency)
 				{
 					// toggle its active flag
 					if ((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB)
@@ -2520,7 +2520,7 @@ void TogglePressureActionItemsInGridNo( INT16 sGridNo )
 		if ( gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE )
+			if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE )
 			{
 				// Found a pressure item
 				// toggle its active flag
@@ -2585,7 +2585,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 	PERFORMANCE_MARKER
 	STRUCTURE * pStructure;
 
-	switch( (*pObj)[0]->data.bombs.bActionValue )
+	switch( (*pObj)[0]->data.misc.bActionValue )
 	{
 	case ACTION_ITEM_OPEN_DOOR:
 		pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
@@ -2915,7 +2915,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 						if ( sDoorSpot != NOWHERE && sTeleportSpot != NOWHERE )
 						{
 							// close the door... 
-							DoorCloser[0]->data.bombs.bActionValue = ACTION_ITEM_CLOSE_DOOR;
+							DoorCloser[0]->data.misc.bActionValue = ACTION_ITEM_CLOSE_DOOR;
 							PerformItemAction( sDoorSpot, &DoorCloser );
 
 							// have sex
@@ -3026,17 +3026,17 @@ void HandleExplosionQueue( void )
 			sGridNo = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].sGridNo;
 			ubLevel = gWorldItems[ gWorldBombs[ uiWorldBombIndex ].iItemIndex ].ubLevel;
 
-			if (pObj->usItem == ACTION_ITEM && (*pObj)[0]->data.bombs.bActionValue != ACTION_ITEM_BLOW_UP)
+			if (pObj->usItem == ACTION_ITEM && (*pObj)[0]->data.misc.bActionValue != ACTION_ITEM_BLOW_UP)
 			{
 				PerformItemAction( sGridNo, pObj );
 			}
-			else if ( (*pObj)[0]->data.bombs.usBombItem == TRIP_KLAXON )
+			else if ( (*pObj)[0]->data.misc.usBombItem == TRIP_KLAXON )
 			{
 				PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
 				CallAvailableEnemiesTo( sGridNo );
 				//RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, 0 );
 			}
-			else if ( (*pObj)[0]->data.bombs.usBombItem == TRIP_FLARE )
+			else if ( (*pObj)[0]->data.misc.usBombItem == TRIP_FLARE )
 			{
 				NewLightEffect( sGridNo, (UINT8)Explosive[pObj->usItem].ubDuration, (UINT8)Explosive[pObj->usItem].ubStartRadius );
 				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
@@ -3059,14 +3059,14 @@ void HandleExplosionQueue( void )
 				// BOOM!
 
 				// bomb objects only store the SIDE who placed the bomb! :-(
-				if ( (*pObj)[0]->data.bombs.ubBombOwner > 1 )
+				if ( (*pObj)[0]->data.misc.ubBombOwner > 1 )
 				{
-					IgniteExplosion( (UINT8) ((*pObj)[0]->data.bombs.ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0]->data.bombs.usBombItem, ubLevel );
+					IgniteExplosion( (UINT8) ((*pObj)[0]->data.misc.ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0]->data.misc.usBombItem, ubLevel );
 				}
 				else
 				{
 					// pre-placed
-					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0]->data.bombs.usBombItem, ubLevel );
+					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, (*pObj)[0]->data.misc.usBombItem, ubLevel );
 				}
 			}
 
@@ -3145,25 +3145,25 @@ void DecayBombTimers( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a timed bomb, so decay its delay value and see if it goes off
-				(*pObj)[0]->data.bombs.bDelay--;
-				if ((*pObj)[0]->data.bombs.bDelay == 0)
+				(*pObj)[0]->data.misc.bDelay--;
+				if ((*pObj)[0]->data.misc.bDelay == 0)
 				{
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
 					// ATE: CC black magic....
-					if ( (*pObj)[0]->data.bombs.ubBombOwner > 1 )
+					if ( (*pObj)[0]->data.misc.ubBombOwner > 1 )
 					{
-						gubPersonToSetOffExplosions = (UINT8) ((*pObj)[0]->data.bombs.ubBombOwner - 2);
+						gubPersonToSetOffExplosions = (UINT8) ((*pObj)[0]->data.misc.ubBombOwner - 2);
 					}
 					else
 					{
 						gubPersonToSetOffExplosions = NOBODY;
 					}
 
-					if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.misc.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3188,17 +3188,17 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_REMOTE && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_REMOTE && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
-				if ((*pObj)[0]->data.bombs.bFrequency == bFrequency)
+				if ((*pObj)[0]->data.misc.bFrequency == bFrequency)
 				{
 
 					gubPersonToSetOffExplosions = ubID;
 
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-					if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+					if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.misc.bActionValue == ACTION_ITEM_BLOW_UP)
 					{
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
@@ -3265,7 +3265,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
 			if (!((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB))
 			{
-				if (fAllBombs || (*pObj)[0]->data.bombs.bDetonatorType == BOMB_PRESSURE)
+				if (fAllBombs || (*pObj)[0]->data.misc.bDetonatorType == BOMB_PRESSURE)
 				{
 					// Snap: if we do set off our own trap (e.g. by trying to disarm it), we pay!
 					/*if (!fAllBombs && MercPtrs[ ubID ]->bTeam != gbPlayerNum )
@@ -3279,7 +3279,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					}
 
 					// player and militia ignore bombs set by player
-					if ( (*pObj)[0]->data.bombs.ubBombOwner > 1 && (MercPtrs[ ubID ]->bTeam == gbPlayerNum || MercPtrs[ ubID ]->bTeam == MILITIA_TEAM) )
+					if ( (*pObj)[0]->data.misc.ubBombOwner > 1 && (MercPtrs[ ubID ]->bTeam == gbPlayerNum || MercPtrs[ ubID ]->bTeam == MILITIA_TEAM) )
 					{
 					continue;
 
@@ -3289,7 +3289,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					{
 						// send out a signal to detonate other bombs, rather than this which
 						// isn't a bomb but a trigger
-						SetOffBombsByFrequency( ubID, (*pObj)[0]->data.bombs.bFrequency );
+						SetOffBombsByFrequency( ubID, (*pObj)[0]->data.misc.bFrequency );
 					}
 					else
 					{
@@ -3297,12 +3297,12 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 
 						// put this bomb on the queue
 						AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
-						if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.bombs.bActionValue == ACTION_ITEM_BLOW_UP)
+						if (pObj->usItem != ACTION_ITEM || (*pObj)[0]->data.misc.bActionValue == ACTION_ITEM_BLOW_UP)
 						{
 							uiTimeStamp += BOMB_QUEUE_DELAY;
 						}
 
-						if ( (*pObj)[0]->data.bombs.usBombItem != NOTHING && Item[ (*pObj)[0]->data.bombs.usBombItem ].usItemClass & IC_EXPLOSV )
+						if ( (*pObj)[0]->data.misc.usBombItem != NOTHING && Item[ (*pObj)[0]->data.misc.usBombItem ].usItemClass & IC_EXPLOSV )
 						{
 							fFoundMine = TRUE;
 						}
@@ -3328,7 +3328,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
 
-			if ( pObj->usItem == SWITCH && ( !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) ) && (*pObj)[0]->data.bombs.bDetonatorType == BOMB_SWITCH)
+			if ( pObj->usItem == SWITCH && ( !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) ) && (*pObj)[0]->data.misc.bDetonatorType == BOMB_SWITCH)
 			{
 				// send out a signal to detonate other bombs, rather than this which
 				// isn't a bomb but a trigger
@@ -3337,7 +3337,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 				// No, not a good idea.
 				// gTacticalStatus.ubAttackBusyCount = 0;
 
-				SetOffBombsByFrequency( ubID, (*pObj)[0]->data.bombs.bFrequency );
+				SetOffBombsByFrequency( ubID, (*pObj)[0]->data.misc.bFrequency );
 			}
 		}
 	}
@@ -3669,7 +3669,7 @@ INT32 FindActiveTimedBomb( void )
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
 			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].object );
-			if ( (*pObj)[0]->data.bombs.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
+			if ( (*pObj)[0]->data.misc.bDetonatorType == BOMB_TIMED && !((*pObj)[0]->data.fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				return( gWorldBombs[uiWorldBombIndex].iItemIndex );	
 			}

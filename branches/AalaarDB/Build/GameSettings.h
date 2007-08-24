@@ -93,6 +93,12 @@ typedef struct
 
 }	GAME_SETTINGS;
 
+// CHRISL: New Enums to track inventory system
+enum
+{
+	INVENTORY_OLD = 0,
+	INVENTORY_NEW = 1
+};
 
 
 //Enums for the difficulty levels
@@ -131,7 +137,8 @@ typedef struct
 	BOOLEAN	fTurnTimeLimit;
 	BOOLEAN	fIronManMode;
 	UINT8	ubBobbyRay;
-	UINT8	ubFiller[7];
+	UINT8	ubInventorySystem;
+	UINT8	ubFiller[6];
 
 } GAME_OPTIONS;
 

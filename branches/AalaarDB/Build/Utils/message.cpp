@@ -376,7 +376,8 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = SCREEN_HEIGHT - 150;
+	INT32 iMsgYStart = (!gGameOptions.ubInventorySystem) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
+
 
 	// UPDATE TIMER
 	suiTimer=GetJA2Clock();

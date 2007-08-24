@@ -2811,7 +2811,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// CHRISL: if item is LBENODE
-	if( gGameOptions.ubInventorySystem && pItemObject->ItemData.Trigger.bDetonatorType == ITEM_NOT_FOUND)
+	if( gGameOptions.ubInventorySystem && pItemObject[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
 	{
 		//Display the '*' in the bottom right corner of the square
 		swprintf( zTemp, L"*" );

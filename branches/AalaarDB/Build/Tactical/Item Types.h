@@ -238,7 +238,8 @@ public:
 		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
 		ObjectDataStructs::OBJECT_GUN				gun;
 		ObjectDataStructs::OBJECT_MONEY				money;
-		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	bombs;
+		//TODO
+		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
 		ObjectDataStructs::OBJECT_KEY				key;
 		ObjectDataStructs::OBJECT_OWNER				owner;
 	};
@@ -372,6 +373,7 @@ typedef struct
 #define IC_FACE           0x00008000
 
 #define IC_KEY						0x00010000
+#define IC_LBEGEAR					0x00020000	// Added for LBE items as part of the new inventory system
 
 #define IC_MISC						0x10000000
 #define IC_MONEY					0x20000000
@@ -381,7 +383,7 @@ typedef struct
 #define IC_EXPLOSV				( IC_GRENADE | IC_BOMB )
 
 #define IC_BOBBY_GUN			( IC_GUN | IC_LAUNCHER )
-#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE )
+#define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE | IC_LBEGEAR )
 
 
 // replaces candamage
@@ -574,10 +576,10 @@ public:
 	UINT32			lbeClass;
 	UINT8			lbeCombo;
 	char			POD;
-	vector<UINT8>	lbePocketIndex;
+	std::vector<UINT8>	lbePocketIndex;
 };
 #define SIZEOF_LBETYPE offsetof( LBETYPE, POD )
-extern vector<LBETYPE> LoadBearingEquipment;
+extern std::vector<LBETYPE> LoadBearingEquipment;
 
 class POCKETTYPE{
 public:
@@ -591,10 +593,10 @@ public:
 	UINT16			pType;
 	UINT32			pRestriction;
 	char			POD;
-	vector<UINT8>	ItemCapacityPerSize;
+	std::vector<UINT8>	ItemCapacityPerSize;
 };
 #define SIZEOF_POCKETTYPE offsetof( POCKETTYPE, POD )
-extern vector<POCKETTYPE> LBEPocketType;
+extern std::vector<POCKETTYPE> LBEPocketType;
 
 enum	// Designation of lbeClass
 {

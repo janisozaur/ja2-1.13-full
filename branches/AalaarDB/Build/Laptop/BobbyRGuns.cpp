@@ -213,6 +213,7 @@ INT8			ubFilterMiscButtonValues[] = {
 							BOBBYR_FILTER_MISC_MEDKIT,
 							BOBBYR_FILTER_MISC_KIT,
 							BOBBYR_FILTER_MISC_FACE,
+							BOBBYR_FILTER_MISC_LBEGEAR,
 							BOBBYR_FILTER_MISC_MISC};
 
 
@@ -1257,6 +1258,9 @@ void BtnBobbyRFilterMiscCallback(GUI_BUTTON *btn,INT32 reason)
 			case BOBBYR_FILTER_MISC_FACE:
 				guiCurrentMiscFilterMode = IC_FACE;
 				break;
+			case BOBBYR_FILTER_MISC_LBEGEAR:
+				guiCurrentMiscFilterMode = IC_LBEGEAR;
+				break;
 			case BOBBYR_FILTER_MISC_MISC:
 				guiCurrentMiscFilterMode = IC_MISC;
 				break;
@@ -1586,6 +1590,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 			case IC_MEDKIT:
 			case IC_KIT:
 			case IC_FACE:
+			case IC_LBEGEAR:
 				// USED
 				if (uiItemClass == BOBBYR_USED_ITEMS)
 				{
@@ -1596,6 +1601,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass, INT32 iFilter)
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
+							Item[usItemIndex].usItemClass == IC_LBEGEAR ||
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bAddItem = TRUE;
@@ -1998,7 +2004,7 @@ UINT16 DisplayLBEInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	int					lnCnt=0, count, size;
 	UINT16				lbeIndex;
 	UINT8				pIndex=0;
-	vector<int>			pocketNum;
+	std::vector<int>			pocketNum;
 
 	size = LBEPocketType.size();
 	pocketNum.reserve(size);
@@ -3068,6 +3074,9 @@ void UpdateMiscFilterButtons()
 		case IC_FACE:
 			DisableButton(guiBobbyRFilterMisc[7]);
 			break;
+		case IC_LBEGEAR:
+			DisableButton(guiBobbyRFilterMisc[8]);
+			break;
 		case IC_MISC:
 			DisableButton(guiBobbyRFilterMisc[8]);
 			break;
@@ -3214,6 +3223,7 @@ void CalcFirstIndexForPage( STORE_INVENTORY *pInv, UINT32	uiItemClass )
 							Item[usItemIndex].usItemClass == IC_MISC ||
 							Item[usItemIndex].usItemClass == IC_MEDKIT ||
 							Item[usItemIndex].usItemClass == IC_KIT ||
+							Item[usItemIndex].usItemClass == IC_LBEGEAR ||
 							Item[usItemIndex].usItemClass == IC_FACE)
 						{
 							bCntItem = TRUE;
