@@ -200,7 +200,7 @@ BOOLEAN fSelectionWindow = FALSE;
 BOOLEAN gfRealGunNut = TRUE;
 
 INT16 sGridX, sGridY;
-UINT32 iMapIndex;
+INT32 iMapIndex;
 BOOLEAN fNewMap = FALSE;
 
 INT32 iPrevDrawMode = DRAW_MODE_NOTHING;
@@ -2288,8 +2288,12 @@ void CreateNewMap()
 		LoadMapTileset( 0 );
 
 	LightReset();
-//	NewWorld( );
-	NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
+	
+	//NewWorld( );
+	//NewWorld( OLD_WORLD_ROWS, OLD_WORLD_COLS);
+
+	NewWorld( 320, 320);
+	
 	if( gfPendingBasement )
 	{
 		INT32 i;

@@ -4859,7 +4859,8 @@ INT32 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 *pubDirect
 
 		//Lalien: commented out due to NOWHERE definition change 
 		//if ( sCloseGridNo == NOWHERE )
-		if ( ( sCloseGridNo < 0 ) || ( sCloseGridNo >= MAX_MAP_POS) )
+		//if ( ( sCloseGridNo < 0 ) || ( sCloseGridNo >= MAX_MAP_POS) )
+		if ( TileIsOutOfBounds( sCloseGridNo ) )
 		{
 			return( -1 );
 		}

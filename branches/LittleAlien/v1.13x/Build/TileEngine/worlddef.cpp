@@ -4256,25 +4256,32 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
 	int i, j;
 
+	INT32 o_WORLD_MAX = WORLD_MAX;
+
+	WORLD_ROWS = nWorldRows;
+	WORLD_COLS = nWorldCols;
+
+
 	if(gubGridNoMarkers)
 		MemFree(gubGridNoMarkers);
-	gubGridNoMarkers = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubGridNoMarkers = (UINT8*)MemAlloc(WORLD_MAX);
 
 	if(gsCoverValue)
 		MemFree(gsCoverValue);
-	gsCoverValue = (INT16*)MemAlloc(nWorldRows*nWorldCols*sizeof(INT16));
+	gsCoverValue = (INT16*)MemAlloc(WORLD_MAX*sizeof(INT16));
 
 	if(gubBuildingInfo)
 		MemFree(gubBuildingInfo);
-	gubBuildingInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubBuildingInfo = (UINT8*)MemAlloc(WORLD_MAX);
 	
 	if(gubWorldRoomInfo)
 		MemFree(gubWorldRoomInfo);
-	gubWorldRoomInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubWorldRoomInfo = (UINT8*)MemAlloc(WORLD_MAX);
+
 
 	if(gubWorldMovementCosts)
 	{
-		for(i=0; i<WORLD_MAX; i++)
+		for(i=0; i<o_WORLD_MAX; i++)
 		{
 			for(j=0; j<MAXDIR; j++)
 				MemFree(gubWorldMovementCosts[i][j]);
@@ -4282,22 +4289,40 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 		}
 		MemFree(gubWorldMovementCosts);
 	}
+
 	gubWorldMovementCosts = (UINT8***)MemAlloc(WORLD_MAX*sizeof(UINT8**));
+
 	for(i=0; i<WORLD_MAX; i++)
 	{
 		gubWorldMovementCosts[i] = (UINT8**)MemAlloc(MAXDIR*sizeof(UINT8*));
+		
 		for(j=0; j<MAXDIR; j++)
+		{
 			gubWorldMovementCosts[i][j] = (UINT8*)MemAlloc(2*sizeof(UINT8));
+		}
 	}
+
+
+	if ( gpWorldLevelData != NULL )
+	{
+		MemFree( gpWorldLevelData );
+	}
+
+	// Initialize world data
+	gpWorldLevelData = (MAP_ELEMENT *)MemAlloc( WORLD_MAX * sizeof( MAP_ELEMENT ) );
+	//CHECKF( gpWorldLevelData );
+
+	// Zero world
+	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
+
+
 
 #ifdef _DEBUG
 	if(gubFOVDebugInfoInfo)
 			MemFree(gubFOVDebugInfoInfo);
-	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(nWorldRows*nWorldCols);
+	gubFOVDebugInfoInfo = (UINT8*)MemAlloc(WORLD_MAX);
 #endif
 
-	WORLD_ROWS = nWorldRows;
-	WORLD_COLS = nWorldCols;
 
 	dirDelta[0]= -WORLD_COLS;
 	dirDelta[1]= 1-WORLD_COLS;
@@ -4322,5 +4347,4 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	gsLastCoverGridNo=NOWHERE;
 	gsLastSoldierGridNo=NOWHERE;
 	gsLastVisibleToSoldierGridNo=NOWHERE;
-
 }
