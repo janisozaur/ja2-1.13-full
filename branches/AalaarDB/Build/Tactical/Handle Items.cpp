@@ -1429,8 +1429,9 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				// we now know there is something nasty here			
 				gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
-				AddItemToPool( sGridNo, &(pSoldier->inv[ HANDPOS ] ), BURIED, pSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
-				DeleteObj( &(pSoldier->inv[ HANDPOS ]) );
+				if (pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+					AddItemToPool( sGridNo, &gTempObject, BURIED, pSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				}
 			}
 			else
 			{
@@ -1442,10 +1443,9 @@ void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				{
 					// OOPS! ... BOOM!
 					IgniteExplosion( NOBODY, pSoldier->sX, pSoldier->sY, (INT16) (gpWorldLevelData[pSoldier->sGridNo].sHeight), pSoldier->sGridNo, pSoldier->inv[ HANDPOS ].usItem, pSoldier->pathing.bLevel );
-					DeleteObj( &(pSoldier->inv[ HANDPOS ]) );
+					pSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1, &gTempObject);
 				}
 			}
-
 		}
 	}
 }
@@ -4067,9 +4067,10 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 					// MUST send in NO_SLOT, as the SKI wille expect it to exist in inv if not....
 					AddItemToPlayersOfferAreaAfterShopKeeperOpen( &gTempObject, NO_SLOT );
 
+					//ADB TODO clean up this code???
 					/*
 					Changed because if the player gave 1 item from a pile, the rest of the items in the piule would disappear
-					// OK, r	emove the item, as the SKI will give it back once done
+					// OK, remove the item, as the SKI will give it back once done
 					DeleteObj( &( pSoldier->inv[ bInvPos ] ) );
 					*/
 
@@ -4110,6 +4111,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			// We are a merc, add!
 			if ( !AutoPlaceObject( pTSoldier, &gTempObject, TRUE ) )
 			{
+				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4129,6 +4131,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 			}
 			else
 			{
+				//ADB TODO clean up code!
 				// Erase!
 				if ( bInvPos != NO_SLOT )
 				{
@@ -4354,9 +4357,10 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
-				gpTempSoldier->inv[HANDPOS][0]->data.misc.ubBombOwner = gpTempSoldier->ubID + 2;
-				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
-				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
+				if (gpTempSoldier->inv[HANDPOS].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+					gTempObject[0]->data.misc.ubBombOwner = gpTempSoldier->ubID + 2;
+					AddItemToPool( gsTempGridno, &gTempObject, 1, gpTempSoldier->pathing.bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				}
 			}
 		}
 	}

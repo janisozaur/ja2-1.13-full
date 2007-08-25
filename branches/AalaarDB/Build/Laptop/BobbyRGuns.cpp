@@ -683,7 +683,7 @@ BOOLEAN InitBobbyRMiscFilterBar()
 	for(i=0; i<NUMBER_MISC_FILTER_BUTTONS; i++)
 	{
 		//CHRISL: Don't display the LBEGEAR button if we're using the old inventory system
-		if(!gGameOptions.ubInventorySystem && ubFilterMiscButtonValues[bCurMode] == BOBBYR_FILTER_MISC_LBEGEAR)
+		if((UsingInventorySystem() == false) && ubFilterMiscButtonValues[bCurMode] == BOBBYR_FILTER_MISC_LBEGEAR)
 			continue;
 
 		// Next row
@@ -1821,7 +1821,7 @@ BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
 	//CHRISL: Display extra information for LBE Items when using new inventory system
-	if(gGameOptions.ubInventorySystem && Item[usIndex].usItemClass == IC_LBEGEAR)
+	if((UsingInventorySystem() == true) && Item[usIndex].usItemClass == IC_LBEGEAR)
 	{
 		usHeight = DisplayLBEInfo(usTextPosY, usIndex, usFontHeight);
 	}

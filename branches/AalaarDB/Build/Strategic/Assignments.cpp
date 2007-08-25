@@ -105,7 +105,7 @@ enum {
 	NUM_REPAIR_PASS_TYPES,
 };
 
-#define FINAL_REPAIR_PASS			REPAIR_POCKETS
+#define FINAL_REPAIR_PASS			REPAIR_SML_POCKETS
 
 
 /* CHRISL: bSlot[xx] array declaration needs to reflect largest number of inventory locations.  New inventory
@@ -3027,7 +3027,7 @@ OBJECTTYPE* FindRepairableItemOnOtherSoldier( SOLDIERTYPE * pSoldier, UINT8 ubPa
 	pPassList = &( gRepairPassSlotList[ ubPassType ] );
 
 	// CHRISL:
-	for ( bLoop = 0; bLoop < pPassList->ubChoices[gGameOptions.ubInventorySystem]; bLoop++ )
+	for ( bLoop = 0; bLoop < pPassList->ubChoices[UsingInventorySystem()]; bLoop++ )
 	{
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );

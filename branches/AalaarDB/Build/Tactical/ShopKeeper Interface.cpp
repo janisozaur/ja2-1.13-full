@@ -1142,7 +1142,7 @@ ATM:
 		else
 		{
 			//add the item back to the current PC into the slot it came from
-			CopyObj( &gItemToAdd.ItemObject, &Menptr[ gpSMCurrentMerc->ubID ].inv[ gItemToAdd.bPreviousInvPos ] );
+			Menptr[ gpSMCurrentMerc->ubID ].inv[ gItemToAdd.bPreviousInvPos ] = gItemToAdd.ItemObject;
 		}
 
 		//Clear the contents of the structure
@@ -2811,7 +2811,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// CHRISL: if item is LBENODE
-	if( gGameOptions.ubInventorySystem && (*pItemObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
+	if( (UsingInventorySystem() == true) && (*pItemObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
 	{
 		//Display the '*' in the bottom right corner of the square
 		swprintf( zTemp, L"*" );
@@ -4218,7 +4218,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			{
 				// store the current contents of the cursor in a temporary object structure.
 				// We have to do this before memsetting gMoveingItem, 'cause during swaps, gpItemPointer == &gMoveingItem.ItemObject!
-				CopyObj( gpItemPointer, &gTempObject );
+				gTempObject = *gpItemPointer;
 
 				//ARM: The memset was previously commented out, in order to preserve the owning merc's inv slot # during a swap of
 				// items in an inventory slot.  However, that leads to other bugs: if you picked the thing you're swapping in from
@@ -6921,7 +6921,7 @@ void IfMercOwnedCopyItemToMercInv( INVENTORY_IN_SLOT *pInv )
 
 
 		//Copy the object back into that merc's original inventory slot
-		CopyObj( &( pInv->ItemObject ), &( Menptr[ sSoldierID ].inv[ pInv->bSlotIdInOtherLocation ] ) );
+		Menptr[ sSoldierID ].inv[ pInv->bSlotIdInOtherLocation ] = pInv->ItemObject;
 	}
 }
 

@@ -1444,7 +1444,7 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 						if ( pData->data.gun.ubGunShotsLeft > 0 )
 						{
 							// add the bullets of its remaining ammo
-							total += pData->data.gun.ubGunShotsLeft;
+							AddAmmoToArmsDealerInventory( ubArmsDealer, pData->data.gun.usGunAmmoItem, pData->data.gun.ubGunShotsLeft );
 						}
 					}
 					else	// assume it's attached ammo (mortar shells, grenades)
@@ -1495,7 +1495,6 @@ void AddObjectToArmsDealerInventory( UINT8 ubArmsDealer, OBJECTTYPE *pObject )
 	switch ( Item [ pObject->usItem ].usItemClass )
 	{
 		case IC_GUN:
-			AddAmmoToArmsDealerInventory( ubArmsDealer, (*pObject)[0]->data.gun.usGunAmmoItem, total );
 			break;
 		case IC_AMMO:
 			AddAmmoToArmsDealerInventory( ubArmsDealer, pObject->usItem, total );
@@ -1760,6 +1759,10 @@ void MakeObjectOutOfDealerItems( DEALER_SPECIAL_ITEM *pSpclItemInfo, OBJECTTYPE 
 		bItemCondition *= -1;
 	}
 
+	if (pObject->ubNumberOfObjects > 1) {
+		//if it gets here, handle multiples
+		DebugBreak();
+	}
 	(*pObject)[0]->data.objectStatus = bItemCondition;
 
 	// set the ImprintID

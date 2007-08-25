@@ -906,15 +906,15 @@ void RenderEditorInfo( )
 	PERFORMANCE_MARKER
 	CHAR16					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;
-	UINT16						uiMapIndex;
+	INT16						iMapIndex;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
 
 	//Display the mapindex position
-	if( GetMouseMapPos( &uiMapIndex ) )
-		swprintf( FPSText, L"	(%d)	", uiMapIndex );
+	if( GetMouseMapPos( &iMapIndex ) )
+		swprintf( FPSText, L"	(%d)	", iMapIndex );
 	else
 		swprintf( FPSText, L"			" );
 	mprintfEditor( (UINT16)(iScreenWidthOffset + 50-StringPixLength( FPSText, FONT12POINT1 )/2), 2 * iScreenHeightOffset + 463, FPSText );

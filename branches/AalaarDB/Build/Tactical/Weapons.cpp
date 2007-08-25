@@ -2284,14 +2284,15 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					if ( sNumStolenItems == 1)
 					{
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[ubIndexRet].usItem ] );
-						
-						// Try to place the item in the merc inventory
-						if (!AutoPlaceObject( pSoldier, &(pTargetSoldier->inv[ubIndexRet]), TRUE ))
-						{
-							// Place the item on the ground
-							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
+						if (pTargetSoldier->inv[ubIndexRet].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+
+							// Try to place the item in the merc inventory
+							if (!AutoPlaceObject( pSoldier, &gTempObject, TRUE ))
+							{
+								// Place the item on the ground
+								AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
+							}
 						}
-						DeleteObj( &(pTargetSoldier->inv[ubIndexRet]) );
 
 						// The item that the enemy holds in his hand before the stealing
 						usNewItem = pTargetSoldier->inv[HANDPOS].usItem;
@@ -2318,18 +2319,19 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					}
 
 					// Item dropped somewhere... roll based on the same chance to determine where!
-					iDiceRoll = (INT32) PreRandom( 100 );
-					if (iDiceRoll < iHitChance)
-					{
-						// Drop item in the our tile
-						AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
+					if (pTargetSoldier->inv[HANDPOS].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+						iDiceRoll = (INT32) PreRandom( 100 );
+						if (iDiceRoll < iHitChance)
+						{
+							// Drop item in the our tile
+							AddItemToPool( pSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
+						}
+						else
+						{
+							// Drop item in the target's tile
+							AddItemToPool( pTargetSoldier->sGridNo, &gTempObject, 1, pSoldier->pathing.bLevel, 0, -1 );
+						}
 					}
-					else
-					{
-						// Drop item in the target's tile
-						AddItemToPool( pTargetSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->pathing.bLevel, 0, -1 );
-					}
-					DeleteObj( &(pTargetSoldier->inv[HANDPOS]) );
 					// Reload buddy's animation...
 					pTargetSoldier->ReLoadSoldierAnimationDueToHandItemChange( usOldItem, NOTHING );
 				}

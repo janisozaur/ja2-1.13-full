@@ -1272,7 +1272,7 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 	}
 
 	// CHRISL: Restrict system specific items
-	if( gGameOptions.ubInventorySystem )
+	if( (UsingInventorySystem() == true) )
 	{
 		if(Item[usItemIndex].ItemSize == 99)
 			return FALSE;
@@ -1381,7 +1381,7 @@ BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
 }
 
 // CHRISL:
-UINT8 ItemSlotLimit( UINT16 usItem, INT16 bSlot )
+UINT8 ItemSlotLimit( UINT16 usItem, INT8 bSlot )
 {
 	UINT8 ubSlotLimit;
 
@@ -1409,7 +1409,7 @@ UINT8 ItemSlotLimit( OBJECTTYPE * pObject, INT16 bSlot, SOLDIERTYPE *pSoldier )
 	UINT32	iClass, pRestrict;
 
 	usItem = pObject->usItem;
-	if(gGameOptions.ubInventorySystem && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if((UsingInventorySystem() == true) && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		ubSlotLimit = Item[usItem].ubPerPocket;
 		if ( ubSlotLimit > MAX_OBJECTS_PER_SLOT )
@@ -1754,7 +1754,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
 		// CHRISL: Only look at valid pockets
-		if(!gGameOptions.ubInventorySystem && !oldInv[bLoop])
+		if((UsingInventorySystem() == false) && !oldInv[bLoop])
 			continue;
 		if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[bLoop])
 			continue;
@@ -2428,6 +2428,8 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &usIgnoreResult2, &ubIgnoreType, &ubIgnoreAPCost ) );
 }
 
+//ADB TODO: Chris, check these out and see if they are ok with you
+
 // CHRISL: New function to dynamically modify ItemSize based on attachments
 UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 {
@@ -2445,80 +2447,70 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	};
 	int			cnt, cnt1, cnt2;
 	int			nCnt1, nCnt2;
-#if 0
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
 	if(iSize>34)
 		iSize = 34;
-	for(cnt1=0; cnt1<6; cnt1++)
-	{
-		for(cnt2=0; cnt2<4; cnt2++)
-		{
-			if(iSize == cisPocketSize[cnt1][cnt2])
-			{
-				psFound = TRUE;
-				break;
-			}
+
+
+	//for each object in the stack
+	for (int numStacked = 0; numStacked = pObject->ubNumberOfObjects; ++numStacked) {
+
+		//for each attachment to this object
+		for (attachmentList::iterator iter = (*pObject)[numStacked]->attachments.begin();
+			iter != (*pObject)[numStacked]->attachments.end(); ++iter) {
+			iSize += CalculateItemSize(&(*iter));;
 		}
-		if(psFound)
-			break;
-	}
-	for (cnt=0; cnt<MAX_ATTACHMENTS; cnt++)
-	{
-		if(pObject->usAttachItem[cnt] != NOTHING)
+
+		// Check if we're looking at a LBENODE or not
+		if(pObject->IsLBE())
 		{
-			iSize += Item[pObject->usAttachItem[cnt]].itemsizebonus;
-		}
-	}
-	// Check if we're looking at a LBENODE or not
-	if((*pObject)[0]->data.misc.bDetonatorType == -1)
-	{
-		if(LBEptr[(*pObject)[0]->data.misc.usBombItem].lbeIndex != NULL)
-		{
-			newSize = 0;
-			for(cnt=0; cnt<12; cnt++)
+			if(LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].lbeIndex != NULL)
 			{
-				if(LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
+				newSize = 0;
+				for(cnt=0; cnt<12; cnt++)
 				{
-					testSize = CalculateItemSize(&LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt]);
-					newSize = (testSize > newSize) ? testSize : newSize;
-				}
-			}
-		}
-		// Resize based on contents
-		if(newSize > 0)
-		{
-			psFound = FALSE;
-			for(nCnt1=0; nCnt1<6; nCnt1++)
-			{
-				for(nCnt2=0; nCnt2<4; nCnt2++)
-				{
-					if(newSize == cisPocketSize[nCnt1][nCnt2])
+					if(LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
 					{
-						psFound = TRUE;
-						break;
+						testSize = CalculateItemSize(&LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].inv[cnt]);
+						newSize = (testSize > newSize) ? testSize : newSize;
 					}
 				}
-				if(psFound)
-					break;
 			}
-			if((cnt1-2)>=nCnt1)	// Stored item is much smaller then an empty LBE item.  Don't change size
-				iSize = iSize;
-			else if((cnt1-1)==nCnt1)	// Stored item is large enough to increase LBE item size.
+			// Resize based on contents
+			if(newSize > 0)
 			{
-				if(nCnt2 > cnt2)
-					cnt2 = nCnt2;
-				iSize = cisPocketSize[cnt1][cnt2];
-			}
-			else	// Stored item is very large compared to the LBE item.
-			{
-				cnt2 = 3;
-				iSize = cisPocketSize[cnt1][cnt2];
+				psFound = FALSE;
+				for(nCnt1=0; nCnt1<6; nCnt1++)
+				{
+					for(nCnt2=0; nCnt2<4; nCnt2++)
+					{
+						if(newSize == cisPocketSize[nCnt1][nCnt2])
+						{
+							psFound = TRUE;
+							break;
+						}
+					}
+					if(psFound)
+						break;
+				}
+				if((cnt1-2)>=nCnt1)	// Stored item is much smaller then an empty LBE item.  Don't change size
+					iSize = iSize;
+				else if((cnt1-1)==nCnt1)	// Stored item is large enough to increase LBE item size.
+				{
+					if(nCnt2 > cnt2)
+						cnt2 = nCnt2;
+					iSize = cisPocketSize[cnt1][cnt2];
+				}
+				else	// Stored item is very large compared to the LBE item.
+				{
+					cnt2 = 3;
+					iSize = cisPocketSize[cnt1][cnt2];
+				}
 			}
 		}
 	}
-#endif
 	return(iSize);
 }
 
@@ -2555,10 +2547,8 @@ UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
 	//Pulmu end
 }
 
-//ADB TODO
 /*CHRISL: Change to a 16bit integer for a max weight of 6553.5kg.  Also changed to account for
 new inventory system. */
-
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
@@ -2577,6 +2567,20 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	{
 		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
+			// Are we looking at an LBENODE item?  New inventory only.
+			if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[cnt]->data.misc.bDetonatorType == ITEM_NOT_FOUND && (UsingInventorySystem() == true))
+			{
+				for ( int subObjects = 0; subObjects < 12; subObjects++)
+				{
+					if (LBEptr[(*pObject)[cnt]->data.misc.usBombItem].inv[subObjects].usItem != NOTHING)
+					{
+						usWeight += CalculateObjectWeight(&(LBEptr[(*pObject)[cnt]->data.misc.usBombItem].inv[subObjects]));
+					}
+				}
+				//do not search for attachments to an LBE
+				continue;
+			}
+
 
 			// account for any attachments
 			for (attachmentList::iterator iter = (*pObject)[cnt]->attachments.begin(); iter != (*pObject)[cnt]->attachments.end(); ++iter) {
@@ -2607,15 +2611,9 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 		usWeight = CalculateAmmoWeight(pObject->usItem, ammoLeft);
 	}
 
-/*
-	// make sure it really fits into that UINT8, in case we ever add anything real heavy with attachments/ammo
-	Assert(usWeight <= 255);
-
-	if ( usWeight > 255 )
-		usWeight = 255; //Madd: limit to 255 to prevent negative weights, at least until we can change the OBJECTTYPE structure
-*/
 	return( usWeight );
 }
+
 #if 0
 
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
@@ -2630,7 +2628,7 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	usWeight = pItem->ubWeight;
 
 	// Are we looking at an LBENODE item?  New inventory only.
-	if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && gGameOptions.ubInventorySystem)
+	if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && (UsingInventorySystem() == true))
 	{
 		for ( cnt = 0; cnt < 12; cnt++)
 		{
@@ -2745,14 +2743,8 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 	//Pulmu: Changes for dynamic ammo weight
 	for( ubLoop = 0; ubLoop < pSoldier->inv.size(); ubLoop++)
 	{
-		usWeight = pSoldier->inv[ubLoop].ubWeight;
-		if (Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1 && (Item[ pSoldier->inv[ubLoop].usItem].usItemClass != IC_AMMO || gGameExternalOptions.fAmmoDynamicWeight == FALSE))
-		{
-			// account for # of items
-			usWeight *= pSoldier->inv[ubLoop].ubNumberOfObjects;
-		}
-		uiTotalWeight += usWeight;
-
+		//ADB the weight of the object is already counting stacked objects, attachments, et al
+		uiTotalWeight += pSoldier->inv[ubLoop].ubWeight;
 	}
 	// for now, assume soldiers can carry 1/2 their strength in KGs without penalty.
 	// instead of multiplying by 100 for percent, and then dividing by 10 to account 
@@ -2783,7 +2775,7 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 		usWeight = pSoldier->inv[ubLoop].ubWeight;
 		if(Item[ pSoldier->inv[ubLoop].usItem].usItemClass != IC_AMMO || gGameExternalOptions.fAmmoDynamicWeight == FALSE)
 		{
-			if(gGameOptions.ubInventorySystem || Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1)
+			if((UsingInventorySystem() == true) || Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1)
 			{
 				// account for # of items
 				usWeight *= pSoldier->inv[ubLoop].ubNumberOfObjects;
@@ -2805,18 +2797,11 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 
 }
 #endif
-//END TODO
 
 void DeleteObj(OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
 	pObj->initialize();
-}
-
-void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj )
-{
-	PERFORMANCE_MARKER
-	*pTargetObj = *pSourceObj;
 }
 
 void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
@@ -2908,6 +2893,7 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	}
 	else
 	{
+		//ADB TODO clean up code or change all calls getobjfrom to something that is already written
 		pDest->usItem = pObj->usItem;
 		(*pDest)[0]->data.objectStatus = (*pObj)[ubGetIndex]->data.objectStatus;
 		pDest->ubNumberOfObjects = 1;
@@ -3220,8 +3206,10 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					// Copying the old ammo to the cursor in turnbased could screw up for the player
 					// (suppose his inventory is full!)
 
-					if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE ) )
-					{
+					//ADB copying the old ammo to the cursor at any time will screw it up if the cursor ammo is a stack!
+
+					//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE ) )
+					//{
 						// try autoplace
 						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
 						{
@@ -3229,13 +3217,15 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 							AddItemToPool( pSoldier->sGridNo, &OldAmmo, 1, pSoldier->pathing.bLevel, 0 , -1 );
 						}
 						// delete the object now in the cursor
-						DeleteObj( pAmmo );
+						pAmmo->RemoveObjectsFromStack(1);
+						/*
 					}
 					else
 					{
 						// copy the old ammo to the cursor
 						*pAmmo = OldAmmo;
 					}
+					*/
 				}
 				break;
 			case RELOAD_AUTOPLACE_OLD:
@@ -3313,13 +3303,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 	if ( (*pWeapon)[0]->data.gun.ubGunShotsLeft > 0 )
 	{
-		// start by erasing ammo item, just in case...
-		DeleteObj( pAmmo );
-
-		(*pAmmo)[0]->data.gun.ubGunAmmoType = (*pWeapon)[0]->data.gun.ubGunAmmoType ;
-		(*pAmmo)[0]->data.ubShotsLeft			= (*pWeapon)[0]->data.gun.ubGunShotsLeft;
-		pAmmo->usItem							= (*pWeapon)[0]->data.gun.usGunAmmoItem;
-		pAmmo->ubNumberOfObjects	= 1;
+		CreateItem((*pWeapon)[0]->data.gun.ubGunAmmoType, (*pWeapon)[0]->data.gun.ubGunShotsLeft, pAmmo);
 
 		(*pWeapon)[0]->data.gun.ubGunShotsLeft		= 0;
 		(*pWeapon)[0]->data.gun.ubGunAmmoType	  = 0;
@@ -3819,7 +3803,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 			if ( gTempObject.usItem != NOTHING )
 			{
 				// overwrite/swap!
-				CopyObj( &gTempObject, pAttachment );
+				*pAttachment = gTempObject;
 			}
 			else
 			{
@@ -3950,8 +3934,8 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 				break;
 			case DESTRUCTION:
 				// the merge destroyed both items!
-				DeleteObj( pTargetObj );
-				DeleteObj( pAttachment );
+				pTargetObj->RemoveObjectsFromStack(1);
+				pAttachment->RemoveObjectsFromStack(1);
 				if ( pSoldier )
 				{
 					pSoldier->DoMercBattleSound( BATTLE_SOUND_CURSE1 );
@@ -4038,7 +4022,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					pAttachment->ubWeight = CalculateObjectWeight( pAttachment );
 				}
 				else	
-					DeleteObj( pAttachment );
+					pAttachment->RemoveObjectsFromStack(1);
 
 				if (pSoldier && pSoldier->bTeam == gbPlayerNum)
 				{
@@ -4101,7 +4085,7 @@ BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos,
 	INT8					bNewPos=ITEM_NOT_FOUND;
 	UINT32					pRestrict=0;
 
-	if(!gGameOptions.ubInventorySystem || !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if((UsingInventorySystem() == false) || !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 		return(FALSE);
 	if(!vehicleInv[bPos])
 		return(FALSE);
@@ -4155,7 +4139,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 					if ( fDoingPlacement )
 					{
 						// otherwise move it.
-						CopyObj( &(pSoldier->inv[SECONDHANDPOS]), &(pSoldier->inv[bNewPos]) );
+						pSoldier->inv[bNewPos] = pSoldier->inv[SECONDHANDPOS];
 						DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
 					}
 				}
@@ -4219,12 +4203,12 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 	UINT32					pRestrict=0;
 
 	// CHRISL: Only check valid pockets
-	if(!gGameOptions.ubInventorySystem && !oldInv[bPos])
+	if((UsingInventorySystem() == false) && !oldInv[bPos])
 		return(FALSE);
 	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 		return(CanItemFitInVehicle(pSoldier, pObj, bPos, fDoingPlacement));
 
-	ubSlotLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
+	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
 
 	switch( bPos )
 	{
@@ -4260,7 +4244,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 					if ( fDoingPlacement )
 					{
 						// otherwise move it.
-						CopyObj( &(pSoldier->inv[SECONDHANDPOS]), &(pSoldier->inv[bNewPos]) );
+						pSoldier->inv[bNewPos] = pSoldier->inv[SECONDHANDPOS];
 						DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
 					}
 				}
@@ -4406,7 +4390,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 		case SMALLPOCK28POS:
 		case SMALLPOCK29POS:
 		case SMALLPOCK30POS:
-			if(gGameOptions.ubInventorySystem)
+			if((UsingInventorySystem() == true))
 			{
 				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
 					return( FALSE );
@@ -4421,7 +4405,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			break;
 	}
 
-	if(!gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == false))
 	{
 		if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
 		{
@@ -4538,7 +4522,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
     // Lesh: end
 
 	// CHRISL:
-	ubSlotLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
+	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
 
 	pInSlot = &(pSoldier->inv[bPos]);
 
@@ -4749,7 +4733,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 	{
 		case IC_GUN:
 			// CHRISL: 
-			if(gGameOptions.ubInventorySystem && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].usItem == NONE)	// Long Gun use Gun Sling
+			if((UsingInventorySystem() == true) && (pItem->twohanded) && pSoldier->inv[GUNSLINGPOCKPOS].usItem == NONE)	// Long Gun use Gun Sling
 			{
 				PlaceObject( pSoldier, GUNSLINGPOCKPOS, pObj );
 				SetNewItem( pSoldier, GUNSLINGPOCKPOS, fNewItem );
@@ -4758,7 +4742,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 			}
 		case IC_BLADE:
 			// CHRISL:
-			if(gGameOptions.ubInventorySystem && pSoldier->inv[KNIFEPOCKPOS].usItem == NONE)	// Knife
+			if((UsingInventorySystem() == true) && pSoldier->inv[KNIFEPOCKPOS].usItem == NONE)	// Knife
 			{
 				PlaceObject( pSoldier, KNIFEPOCKPOS, pObj );
 				SetNewItem( pSoldier, KNIFEPOCKPOS, fNewItem );
@@ -4873,7 +4857,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 			break;
 		// CHRISL:
 		case IC_LBEGEAR:
-			if(gGameOptions.ubInventorySystem)
+			if((UsingInventorySystem() == true))
 			{
 				if(pSoldier->inv[LTHIGHPOCKPOS].usItem == NOTHING && LoadBearingEquipment[pItem->ubClassIndex].lbeClass == THIGH_PACK)	// Thigh pack
 				{
@@ -4990,7 +4974,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 				if ( bSlot != bExcludeSlot )
 				{
 					// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
-					UINT8 isLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( pObj->usItem, bSlot ) : ItemSlotLimit( pObj, bSlot, pSoldier );
+					UINT8 isLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bSlot ) : ItemSlotLimit( pObj, bSlot, pSoldier );
 					if ( ( (Item[ pObj->usItem ].usItemClass == IC_MONEY) && pSoldier->inv[ bSlot ][0]->data.money.uiMoneyAmount < MoneySlotLimit( bSlot ) ) || (Item[ pObj->usItem ].usItemClass != IC_MONEY && pSoldier->inv[bSlot].ubNumberOfObjects < isLimit ) )
 					{
 						// NEW: If in SKI, don't auto-place anything into a stackable slot that's currently hatched out!  Such slots
@@ -5202,7 +5186,7 @@ UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE 
 	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = (*pObj)[0]->data.key.ubKeyID;
 	
 	// swap params?
-	CopyObj( &gTempObject, pObj );
+	*pObj = gTempObject;
 
 	return( 1 );
 }
@@ -6276,6 +6260,7 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 				IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->pathing.bLevel );
 			}
 
+			//ADB when something in a stack blows up the whole stack goes, so no need to worry about number of items
 			// Remove item!
 			DeleteObj( &(pSoldier->inv[ bSlot ]) );
 
@@ -8167,7 +8152,7 @@ INT16 GetWornCamo( SOLDIERTYPE * pSoldier )
 	}
 
 	// CHRISL: Add additional loop for LBE items while using new inventory system
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 	{
 		for (bLoop = VESTPOCKPOS; bLoop <= BPACKPOCKPOS; bLoop++)
 		{
@@ -8191,7 +8176,7 @@ INT16 GetWornUrbanCamo( SOLDIERTYPE * pSoldier )
 	}
 
 	// CHRISL: Add additional loop for LBE items while using new inventory system
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 	{
 		for (bLoop = VESTPOCKPOS; bLoop <= BPACKPOCKPOS; bLoop++)
 		{
@@ -8215,7 +8200,7 @@ INT16 GetWornDesertCamo( SOLDIERTYPE * pSoldier )
 	}
 
 	// CHRISL: Add additional loop for LBE items while using new inventory system
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 	{
 		for (bLoop = VESTPOCKPOS; bLoop <= BPACKPOCKPOS; bLoop++)
 		{
@@ -8238,7 +8223,7 @@ INT16 GetWornSnowCamo( SOLDIERTYPE * pSoldier )
 	}
 
 	// CHRISL: Add additional loop for LBE items while using new inventory system
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 	{
 		for (bLoop = VESTPOCKPOS; bLoop <= BPACKPOCKPOS; bLoop++)
 		{

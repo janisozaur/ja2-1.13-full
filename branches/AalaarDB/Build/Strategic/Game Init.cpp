@@ -60,6 +60,7 @@
 	#include "Air Raid.h"
 	#include "Interface.h"
 	#include "cheats.h"
+	#include "Interface Panels.h"
 #endif
 
 // Temp function
@@ -382,7 +383,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	DebugMsg (TOPIC_JA2,DBG_LEVEL_3,"InitNewGame: set initial inventory coords");
 	if( gubScreenCount == 0 )
 	{
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			InitNewInventorySystem();
 			InitializeSMPanelCoordsNew();

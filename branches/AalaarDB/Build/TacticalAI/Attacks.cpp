@@ -102,25 +102,14 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("LoadWeaponIfNeeded: remove payload from its pocket, and add it as the hand weapon's first attachment"));
 	// remove payload from its pocket, and add it as the hand weapon's first attachment
 
-	CreateItem(pSoldier->inv[bPayloadPocket].usItem,pSoldier->inv[bPayloadPocket][0]->data.objectStatus,&gTempObject);
-	AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&gTempObject,FALSE);
-
-	//pSoldier->inv[HANDPOS].usAttachItem[0] = pSoldier->inv[bPayloadPocket].usItem;
-	//pSoldier->inv[HANDPOS].bAttachStatus[0] = pSoldier->inv[bPayloadPocket][0]->data.objectStatus;
-
 	if ( TANK( pSoldier ) )
 	{
 		// don't remove ammo
-		return;
+		gTempObject.DuplicateObjectsInStack(pSoldier->inv[bPayloadPocket], 1);
+		AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&gTempObject,FALSE);
 	}
-	// if there's only one in payload pocket (only/last grenade, or any shell)
-	if ((Item[ pSoldier->inv[bPayloadPocket].usItem ].ubPerPocket == 1) || (pSoldier->inv[bPayloadPocket].ubNumberOfObjects == 1))
-	{
-		DeleteObj(&(pSoldier->inv[bPayloadPocket]));
-	}
-	else	// multiple grenades, remove one of them
-	{
-		pSoldier->inv[bPayloadPocket].ubNumberOfObjects--;
+	else if (pSoldier->inv[bPayloadPocket].RemoveObjectsFromStack(1, &gTempObject) == 0) {
+		AttachObject ( pSoldier, &pSoldier->inv[HANDPOS],&gTempObject,FALSE);
 	}
 }
 

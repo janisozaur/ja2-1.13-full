@@ -33,6 +33,8 @@
 	#include "strategic.h"
 	#include "weapons.h"
 	#include "Random.h"
+	#include "GameSettings.h"
+	//#include "GameVersion.h"
 #endif
 
 #define IMP_FILENAME_SUFFIX ".dat"
@@ -730,9 +732,9 @@ void GiveItemsToPC( UINT8 ubProfileId )
 void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
 	PERFORMANCE_MARKER
-	INT32 iSlot;
+	INT32 iSlot = -1;
 
-	if(!gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == false))
 		iSlot = FirstFreeBigEnoughPocket(pProfile, usItem, ubHowMany);
 	else
 	{
@@ -903,7 +905,7 @@ INT32 SpecificFreePocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubHow
 					return HANDPOS;
 				if ( pProfile->inv[SECONDHANDPOS] == NONE && !(Item[pProfile->inv[HANDPOS]].twohanded))
 					return SECONDHANDPOS;
-				if(gGameOptions.ubInventorySystem)
+				if((UsingInventorySystem() == true))
 					if ( pProfile->inv[GUNSLINGPOCKPOS] == NONE && pProfile->inv[BPACKPOCKPOS] == NONE && LBEPocketType[1].ItemCapacityPerSize[Item[usItem].ItemSize]!=0)
 						return GUNSLINGPOCKPOS;
 				for(int i=BODYPOSFINAL; i<NUM_INV_SLOTS; i++)

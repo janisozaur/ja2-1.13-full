@@ -32,6 +32,7 @@
 	#include "meanwhile.h"
 	#include "strategicmap.h"
 	#include "Animation Data.h"
+	#include "GameSettings.h"
 #endif
 
 extern INT32 iCurrentMapSectorZ;
@@ -88,7 +89,7 @@ void InitRadarScreenCoords( )
 		RADAR_WINDOW_TM_X = (SCREEN_WIDTH - 97);
 		RADAR_WINDOW_SM_X = (SCREEN_WIDTH - 97);
 		RADAR_WINDOW_TM_Y = (INTERFACE_START_Y + 13);
-		RADAR_WINDOW_SM_Y = (!gGameOptions.ubInventorySystem) ? (INV_INTERFACE_START_Y + 33) : (INV_INTERFACE_START_Y + 116);
+		RADAR_WINDOW_SM_Y = ((UsingInventorySystem() == false)) ? (INV_INTERFACE_START_Y + 33) : (INV_INTERFACE_START_Y + 116);
 		RADAR_WINDOW_WIDTH = 88;
 		RADAR_WINDOW_HEIGHT = 44;
 		RADAR_WINDOW_STRAT_X = (SCREEN_WIDTH - 97);

@@ -279,7 +279,7 @@ BOOLEAN InitializeTacticalInterface(	)
 	VOBJECT_DESC	VObjectDesc;
 
 	// CHRISL: Setup default interface coords based on inventory system in use
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 	{
 		InitNewInventorySystem();
 		InitializeSMPanelCoordsNew();
@@ -296,7 +296,6 @@ BOOLEAN InitializeTacticalInterface(	)
  */
 	InitializeViewPort( );
 	InitializeTEAMPanelCoords( );
-	InitializeSMPanelCoords( );
 	
 	// Load button Interfaces
 	iIconImages[ WALK_IMAGES	]			= LoadButtonImage("INTERFACE\\newicons3.sti", -1,3,4,5,-1 );

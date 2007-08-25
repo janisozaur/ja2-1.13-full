@@ -4620,7 +4620,7 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 		(*pItem)[0]->data.objectStatus = (INT8)((*pItem)[0]->data.objectStatus - sFuelAdded / 50);
 		if( !(*pItem)[0]->data.objectStatus )
 		{ //Gas can is empty, so toast the item.
-			DeleteObj( pItem );
+			pItem->RemoveObjectsFromStack(1);
 		}
 	}
 }

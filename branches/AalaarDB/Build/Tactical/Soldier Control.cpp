@@ -3205,7 +3205,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( thisSoldier->usAnimState != RUNNING )
 			{
 				// CHRISL
-				if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
 				{
 					sAPCost = AP_START_RUN_COST + 2;
 					sBPCost += 2;
@@ -3235,7 +3235,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 			if ( !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// CHRISL
-				if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
+				if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
 				{
 					if(usNewState == KNEEL_UP)
 					{
@@ -3273,7 +3273,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
 				{
 					// CHRISL
-					if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
+					if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
 					{
 						if(usNewState == PRONE_UP)
 						{
@@ -3359,7 +3359,7 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case HOPFENCE:
 
 			// CHRISL
-			if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+			if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
 				DeductPoints( thisSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
 			else
 				DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
@@ -7836,7 +7836,7 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 	PERFORMANCE_MARKER
 
 	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+	if((UsingInventorySystem() == true) && thisSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 		return;
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;
@@ -12343,7 +12343,7 @@ void SOLDIERTYPE::EVENT_SoldierBeginAttachCan( INT16 sGridNo, UINT8 ubDirection 
 	thisSoldier->EVENT_InitNewSoldierAnim( ATTACH_CAN_TO_STRING, 0 , FALSE );
 
 	// Remove item...
-	DeleteObj( &(thisSoldier->inv[ HANDPOS ] ) );
+	thisSoldier->inv[ HANDPOS ].RemoveObjectsFromStack(1);
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 }

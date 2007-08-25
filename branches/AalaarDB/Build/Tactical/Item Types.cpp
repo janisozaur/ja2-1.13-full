@@ -5,6 +5,17 @@
 
 OBJECTTYPE gTempObject;
 
+//ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.misc.bDetonatorType == -1.
+//Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
+bool OBJECTTYPE::IsLBE()
+{
+	if (ubNumberOfObjects > 0) {
+		//stacks cannot have mixed types, so who cares if there are more than 1
+		return ((*this)[0]->data.misc.bDetonatorType == -1);
+	}
+	return false;
+}
+
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)
 {
 	PERFORMANCE_MARKER

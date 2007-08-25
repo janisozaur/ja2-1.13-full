@@ -1902,7 +1902,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		// Do we have APs?
 		// CHRISL: Added penalty for jumping a fence while wearing a backpack
 		// Do we have APs?
-		if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+		if((UsingInventorySystem() == true) && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
 		{
 			sAPCost = AP_JUMPFENCEBPACK;
 			sBPCost = BP_JUMPFENCEBPACK;

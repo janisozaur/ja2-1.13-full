@@ -140,7 +140,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		else
 		{
 			// Remove the object....
-			DeleteObj( pObject );
+			pObject->RemoveObjectsFromStack(1);
 
 			// ATE: Make guy collapse from heart attack if too much stuff taken....
 			if ( pSoldier->drugs.bDrugSideEffectRate[ ubDrugType ] > ( ubDrugSideEffect[ ubDrugType ] * 3 ) )
@@ -201,7 +201,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		}
 
 		// remove object
-		DeleteObj( pObject );
+		pObject->RemoveObjectsFromStack(1);
 	}
 
 	if ( ubDrugType == DRUG_TYPE_ALCOHOL )

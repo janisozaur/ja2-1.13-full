@@ -69,6 +69,7 @@ BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 #define		SET_PROFILE_GAINS2			500, 500, 500, 500, 500, 500, 500, 500, 500
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
+MERCPROFILEGEAR gMercProfileGear[ NUM_PROFILES ];
 
 extern UINT8 gubItemDroppableFlag[NUM_INV_SLOTS];
 
@@ -306,11 +307,11 @@ BOOLEAN LoadMercProfiles(void)
 			}
 		}
 		// Last, go through and assign LBE items.  Only needed for new inventory system
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			for(uiLoop2=0; uiLoop2<5; uiLoop2++)
 			{
-				uiLoop3 = uiLoop2 + OldInventory::NUM_INV_SLOTS; 
+				UINT32 uiLoop3 = uiLoop2 + OldInventory::NUM_INV_SLOTS; 
 				gMercProfiles[uiLoop].inv[uiLoop3] = gMercProfileGear[uiLoop].lbe[uiLoop2];
 				gMercProfiles[uiLoop].bInvStatus[uiLoop3] = gMercProfileGear[uiLoop].lStatus[uiLoop2];
 				if(gMercProfiles[uiLoop].inv[uiLoop3] != NONE)
@@ -644,9 +645,7 @@ void MakeRemainingTerroristsTougher( void )
 		usNewItem = HAND_GRENADE;
 	}
 
-	DeleteObj( &gTempObject );
-	gTempObject.usItem = usNewItem;
-	gTempObject[0]->data.objectStatus = 100;
+	CreateItem(usNewItem, 100, &gTempObject);
 
 	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
 	{
@@ -779,10 +778,7 @@ void MakeRemainingAssassinsTougher( void )
 		usNewItem = HAND_GRENADE;
 	}
 
-	DeleteObj( &gTempObject );
-	gTempObject.usItem = usNewItem;
-	gTempObject[0]->data.objectStatus = 100;
-
+	CreateItem(usNewItem, 100, &gTempObject);
 	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
 	{
 		if ( gMercProfiles[ gubAssassins[ ubLoop ] ].bMercStatus != MERC_IS_DEAD )

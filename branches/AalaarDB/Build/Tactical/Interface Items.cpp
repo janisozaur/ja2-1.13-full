@@ -985,13 +985,13 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
 	*/
 
 	// CHRISL: Initialize gSMInvData based on inventory system
-	if(gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == true))
 		InitInventoryNew();
 	else
 		InitInventoryOld();
 	
 	// CHRISL: Adjusted location of the Money button on the tactical inventory screen
-	gMoneyButtonLoc.x = (!gGameOptions.ubInventorySystem) ? (343 + INTERFACE_START_X) : (244 + INTERFACE_START_X);
+	gMoneyButtonLoc.x = ((UsingInventorySystem() == false)) ? (343 + INTERFACE_START_X) : (244 + INTERFACE_START_X);
 	gMoneyButtonLoc.y = ( 11 + INV_INTERFACE_START_Y );
 	// Load all four body type images
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
@@ -1204,7 +1204,7 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 {
 	PERFORMANCE_MARKER
-	INT32			cnt, sX, sY;
+	INT32	sX, sY;
 	static CHAR16					pStr[ 512 ]; 
 	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
 	{
@@ -1240,13 +1240,13 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 			// CHRISL: adjust settings to use variables for coords
 			if ( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
-				sX=(!gGameOptions.ubInventorySystem)?496:221;
-				sY=(!gGameOptions.ubInventorySystem)?INV_INTERFACE_START_Y+106:INV_INTERFACE_START_Y+5;
+				sX=((UsingInventorySystem() == false))?496:221;
+				sY=((UsingInventorySystem() == false))?INV_INTERFACE_START_Y+106:INV_INTERFACE_START_Y+5;
 			}
 			else
 			{
-				sX=(!gGameOptions.ubInventorySystem)?217:188;
-				sY=(!gGameOptions.ubInventorySystem)?271:126;
+				sX=((UsingInventorySystem() == false))?217:188;
+				sY=((UsingInventorySystem() == false))?271:126;
 			}
 			BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
 			RestoreExternBackgroundRect( sX, sY, 29, 23 );
@@ -1293,7 +1293,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 {
 	PERFORMANCE_MARKER
 	// CHRISL: Only run if we're looking at a legitimate pocket
-	if(!gGameOptions.ubInventorySystem && !oldInv[sPocket])
+	if((UsingInventorySystem() == false) && !oldInv[sPocket])
 		return;
 	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
 		return;
@@ -1315,7 +1315,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	sX = gSMInvData[ sPocket ].sX;
 	sY = gSMInvData[ sPocket ].sY;
 
-	if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if((UsingInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		// If sPocket is not an equiped pocket, gather pocket information
 		if(icClass[sPocket] != ITEM_NOT_FOUND)
@@ -1435,16 +1435,16 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 			// CHRISL: Change coords for STI that covers 2nd hand location when carrying a 2handed weapon
 			if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
-				newX = (!gGameOptions.ubInventorySystem) ? 217 : 114;
-				newY = (!gGameOptions.ubInventorySystem) ? sY : (sY - 1);
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiSecItemHiddenVO, gGameOptions.ubInventorySystem, newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
+				newX = ((UsingInventorySystem() == false)) ? 217 : 114;
+				newY = ((UsingInventorySystem() == false)) ? sY : (sY - 1);
+				BltVideoObjectFromIndex( guiSAVEBUFFER, guiSecItemHiddenVO, UsingInventorySystem(), newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
 				RestoreExternBackgroundRect( newX, newY, 72, 28 );
 			}
 			else
 			{
-				newX = (!gGameOptions.ubInventorySystem) ? 14 : 6;
-				newY = (!gGameOptions.ubInventorySystem) ? 218 : 217;
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapInvSecondHandBlockout, gGameOptions.ubInventorySystem, newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
+				newX = ((UsingInventorySystem() == false)) ? 14 : 6;
+				newY = ((UsingInventorySystem() == false)) ? 218 : 217;
+				BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapInvSecondHandBlockout, UsingInventorySystem(), newX, newY, VO_BLT_SRCTRANSPARENCY, NULL );
 				RestoreExternBackgroundRect( newX, newY, 102, 24 );
 			}
 		}		
@@ -1466,7 +1466,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 	INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight, fRenderDirtyLevel, NULL, 0, fOutline, sOutlineColor );
 
 	// CHRISL: Display pocket capacity if we're holding something in the cursor
-	if (!gfSMDisableForItems && gGameOptions.ubInventorySystem && gpItemPointer != NULL)
+	if (!gfSMDisableForItems && (UsingInventorySystem() == true) && gpItemPointer != NULL)
 	{
 		RenderPocketItemCapacity( ItemSlotLimit(gpItemPointer, sPocket, pSoldier), sPocket, pSoldier);
 		if(ItemSlotLimit(gpItemPointer, sPocket, pSoldier)==0 || !CanItemFitInPosition(pSoldier, gpItemPointer, (INT8)sPocket, FALSE))
@@ -2573,7 +2573,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 
 			}
 
-			if(gGameOptions.ubInventorySystem)
+			if((UsingInventorySystem() == true))
 			{
 				// CHRISL: Display astrisk when LBENODE active
 				if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND )
@@ -2800,14 +2800,14 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	INT16 sProsConsIndent;
 
 	// CHRISL: Set some initial coords
-	ITEMDESC_START_X	= (!gGameOptions.ubInventorySystem) ? 214 : 115;
-	ITEMDESC_START_Y	= (!gGameOptions.ubInventorySystem) ? (1 + INV_INTERFACE_START_Y) : (1 + INV_INTERFACE_START_Y);
-	ITEMDESC_HEIGHT		= (!gGameOptions.ubInventorySystem) ? 133 : 195;
-	ITEMDESC_WIDTH		= (!gGameOptions.ubInventorySystem) ? 320 : 678;
-	MAP_ITEMDESC_HEIGHT	= (!gGameOptions.ubInventorySystem) ? 268 : 490;
-	MAP_ITEMDESC_WIDTH	= (!gGameOptions.ubInventorySystem) ? 272 : 272;
-	//MAP_KEYRING_X		= (!gGameOptions.ubInventorySystem) ? 217 : 180;
-	//MAP_KEYRING_Y		= (!gGameOptions.ubInventorySystem) ? 271 : 127;
+	ITEMDESC_START_X	= ((UsingInventorySystem() == false)) ? 214 : 115;
+	ITEMDESC_START_Y	= ((UsingInventorySystem() == false)) ? (1 + INV_INTERFACE_START_Y) : (1 + INV_INTERFACE_START_Y);
+	ITEMDESC_HEIGHT		= ((UsingInventorySystem() == false)) ? 133 : 195;
+	ITEMDESC_WIDTH		= ((UsingInventorySystem() == false)) ? 320 : 678;
+	MAP_ITEMDESC_HEIGHT	= ((UsingInventorySystem() == false)) ? 268 : 490;
+	MAP_ITEMDESC_WIDTH	= ((UsingInventorySystem() == false)) ? 272 : 272;
+	//MAP_KEYRING_X		= ((UsingInventorySystem() == false)) ? 217 : 180;
+	//MAP_KEYRING_Y		= ((UsingInventorySystem() == false)) ? 271 : 127;
 
 	//Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -3521,7 +3521,7 @@ void RenderItemDescriptionBox( )
 		sCenY = MAP_ITEMDESC_ITEM_Y + (INT16)( abs( ITEMDESC_ITEM_HEIGHT - (double)usHeight ) / 2 )- pTrav->sOffsetY;
 
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
@@ -3549,7 +3549,7 @@ void RenderItemDescriptionBox( )
 
 		// CHRISL:  This block will display hatching for inactive LBE pockets
 		// Display LBENODE attached items
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
@@ -3626,7 +3626,7 @@ void RenderItemDescriptionBox( )
 
 		// CHRISL: This block will display misc information for items stored in LBE Pockets
 		// Display LBENODE attached items
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
@@ -4050,7 +4050,7 @@ void RenderItemDescriptionBox( )
 
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		RenderBackpackButtons(1);
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
@@ -4081,7 +4081,7 @@ void RenderItemDescriptionBox( )
 	
 		// CHRISL:  This block will display hatching for inactive LBE pockets
 		// Display LBENODE attached items
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
@@ -4161,7 +4161,7 @@ void RenderItemDescriptionBox( )
 
 		// CHRISL: This block will display misc information for items stored in LBE Pockets
 		// Display LBENODE attached items
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 		{
 			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
@@ -5968,7 +5968,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	// Determine # of items
 	gpItemPopupObject = &(pSoldier->inv[ ubPosition ] );
 	// CHRISL:
-	ubLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit( gpItemPopupObject->usItem, ubPosition ) : ItemSlotLimit( gpItemPopupObject, ubPosition, pSoldier );
+	ubLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( gpItemPopupObject->usItem, ubPosition ) : ItemSlotLimit( gpItemPopupObject, ubPosition, pSoldier );
 
 	// Return false if #objects not >1
 	if ( ubLimit <1 )
@@ -6003,6 +6003,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usPopupWidth = pTrav->usWidth;
+	usPopupHeight = pTrav->usHeight;
 
 	// Determine position, height and width of mouse region, area
 	GetSlotInvXY( ubPosition, &sX, &sY );
@@ -7456,7 +7457,7 @@ void RenderItemPickupMenu( )
 				  //gprintfinvalidate( sNewX, sNewY, pStr );
 			  }
 
-			  if(gGameOptions.ubInventorySystem)
+			  if((UsingInventorySystem() == true))
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
 				  if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)

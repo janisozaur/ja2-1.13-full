@@ -7295,8 +7295,9 @@ void CreateDestroyMapInvButton()
 	// disable allmouse regions in this space
 	fTeamPanelDirty=TRUE;
 
+	//ADB TODO both are new?
   // CHRISL: Setup default coords
-  if(gGameOptions.ubInventorySystem)
+  if((UsingInventorySystem() == true))
 	  InitializeInvPanelCoordsNew();
   else
 	  InitializeInvPanelCoordsNew();
@@ -7353,12 +7354,12 @@ void BltCharInvPanel()
 	pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 	GetVideoObject(&hCharListHandle, guiMAPINV);
 	// CHRISL: Changed last parameter so we can display graphic based on inventory system used
-	if(gGameOptions.ubInventorySystem && gGameExternalOptions.fVehicleInventory && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+	if((UsingInventorySystem() == true) && gGameExternalOptions.fVehicleInventory && (pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 	{
 		InitializeInvPanelCoordsVehicle();
 		Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 2);
 	}
-	else if(gGameOptions.ubInventorySystem)
+	else if((UsingInventorySystem() == true))
 	{
 		InitializeInvPanelCoordsNew();
 		fShowInventoryFlag = FALSE;
@@ -7614,7 +7615,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			all items in the relevant IC Group pockets out of the soldiers inventory and put them into the LBE items
 			inventory. But first, find out if we already have a LBE item inventory for this item and this merc.  If we 
 			do, remove the items from it and place them into the sector the LBE inventory is located in.*/
-			if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+			if((UsingInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if(uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS)
 				{
@@ -7680,7 +7681,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			// !!! ATTACHING/MERGING ITEMS IN MAP SCREEN IS NOT SUPPORTED !!!
 			if ( uiHandPos == HANDPOS || uiHandPos == SECONDHANDPOS || uiHandPos == HELMETPOS || uiHandPos == VESTPOS || uiHandPos == LEGPOS )
 			{
-				if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+				if((UsingInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 				{
 				}
 				//if ( ValidAttachmentClass( usNewItemIndex, usOldItemIndex ) )
@@ -7722,7 +7723,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 			LBENODE.  Then we need to know if the LBE Item in the cursor is an LBENODE
 			or just a normal OBJECTTYPE.  If it's an LBENODE, we need to move it's items into
 			the appropriate pockets for the soldier and then delete the LBENODE.*/
-			if(gGameOptions.ubInventorySystem && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+			if((UsingInventorySystem() == true) && !(pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if((uiHandPos == VESTPOCKPOS || uiHandPos == LTHIGHPOCKPOS || uiHandPos == RTHIGHPOCKPOS || uiHandPos == CPACKPOCKPOS || uiHandPos == BPACKPOCKPOS) && CanItemFitInPosition(pSoldier, gpItemPointer, uiHandPos, FALSE))
 				{
@@ -7814,7 +7815,7 @@ void MAPInvClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		// Some global stuff here - for esc, etc
 		// Check for # of slots in item
 		// CHRISL: Use new ItemSlotLimit function if we're using the new inventory system
-		UINT8 isLimit = (!gGameOptions.ubInventorySystem) ? ItemSlotLimit(pSoldier->inv[ uiHandPos ].usItem, (UINT16)uiHandPos) : ItemSlotLimit(&pSoldier->inv[uiHandPos], (UINT16)uiHandPos, pSoldier);
+		UINT8 isLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit(pSoldier->inv[ uiHandPos ].usItem, (UINT16)uiHandPos) : ItemSlotLimit(&pSoldier->inv[uiHandPos], (UINT16)uiHandPos, pSoldier);
 		if ( ( pSoldier->inv[ uiHandPos ].ubNumberOfObjects > 1 ) && ( isLimit > 0 ) )
 		{
 			if ( !InItemStackPopup( ) )
@@ -8222,8 +8223,6 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(	)
 void BlitBackgroundToSaveBuffer( void )
 {
 	PERFORMANCE_MARKER
-	INT8 bTempDestChar = -1;
-
 	// render map
   RenderMapRegionBackground( );
 	

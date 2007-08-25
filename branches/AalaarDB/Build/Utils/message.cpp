@@ -23,6 +23,7 @@
 	#include "Dialogue Control.h"
 	#include <stdio.h>
 	#include "Game Clock.h"
+	#include "GameSettings.h"
 #endif
 
 typedef struct 
@@ -376,7 +377,7 @@ void ScrollString( )
 	INT32 iMaxAge = 0;
 	BOOLEAN fDitchLastMessage = FALSE;
 
-	INT32 iMsgYStart = (!gGameOptions.ubInventorySystem) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
+	INT32 iMsgYStart = ((UsingInventorySystem() == false)) ? SCREEN_HEIGHT - 150 : SCREEN_HEIGHT - 210;
 
 
 	// UPDATE TIMER

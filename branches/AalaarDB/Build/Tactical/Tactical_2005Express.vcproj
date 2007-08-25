@@ -837,7 +837,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\XML_LBEPocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_LoadBearingEquipment.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\XML_Magazine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XML_MercStartingGear.cpp"
 				>
 			</File>
 			<File

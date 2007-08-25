@@ -496,7 +496,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 
 			if( ( bRating > MIN_EQUIPMENT_CLASS ) && bRating < MAX_EQUIPMENT_CLASS )
 			{
-				UINT32 uiRange = (!gGameOptions.ubInventorySystem) ? Random(11) : Random(12);
+				UINT32 uiRange = ((UsingInventorySystem() == false)) ? Random(11) : Random(12);
 				switch( uiRange )
 				{
 					case 4:		bWeaponClass++, bVestClass--;		break;
@@ -2020,7 +2020,7 @@ void ChooseLBEsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bLBEClass 
 	UINT16 usItem = 0;
 
 	// CHRISL: If we're using the old inventory system, just return
-	if(!gGameOptions.ubInventorySystem)
+	if((UsingInventorySystem() == false))
 		return;
 
 	usItem = PickARandomItem( LBE , bLBEClass, FALSE );

@@ -288,10 +288,11 @@ public:
 	// Initialize the soldier.  
 	//  Use this instead of the old method of calling memset.
 	//  Note that the constructor does this automatically.
-	void initialize();
+	void	initialize();
 
-	bool operator==(OBJECTTYPE& compare);
-	bool operator==(const OBJECTTYPE& compare)const;
+	bool	operator==(OBJECTTYPE& compare);
+	bool	operator==(const OBJECTTYPE& compare)const;
+	bool	IsLBE();
 
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);

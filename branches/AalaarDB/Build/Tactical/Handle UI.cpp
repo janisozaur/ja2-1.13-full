@@ -1935,7 +1935,7 @@ UINT32 UIHandleCMoveMerc( UI_EVENT *pUIEvent )
 			if ( GetSoldier( &pSoldier, gusSelectedSoldier )	)
 			{
 				// CHRISL: This block should only run if we're running in the new inventory system
-				if(gGameOptions.ubInventorySystem)
+				if((UsingInventorySystem() == true))
 				{
 					// CHRISL: If we're in combat and zipper is active, don't allow movement
 					if((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->flags.ZipperFlag)
@@ -4423,42 +4423,42 @@ BOOLEAN SoldierCanAffordNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance 
 	switch( bCurrentHeight )
 	{
 	case ANIM_STAND - ANIM_CROUCH:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 1;
 		bAP += AP_CROUCH;
 		bBP += BP_CROUCH;
 		break;
 	case ANIM_CROUCH - ANIM_STAND:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_CROUCH;
 		bBP += BP_CROUCH;
 		break;
 	case ANIM_STAND - ANIM_PRONE:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_CROUCH + AP_PRONE;
 		bBP += BP_CROUCH + BP_PRONE;
 		break;
 	case ANIM_PRONE - ANIM_STAND:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 4;
 		bAP += AP_CROUCH + AP_PRONE;
 		bBP += BP_CROUCH + BP_PRONE;
 		break;
 	case ANIM_CROUCH - ANIM_PRONE:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 1;
 		bAP += AP_PRONE;
 		bBP += BP_PRONE;
 		break;
 	case ANIM_PRONE - ANIM_CROUCH:
-		if(gGameOptions.ubInventorySystem)
+		if((UsingInventorySystem() == true))
 			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING && !pSoldier->flags.ZipperFlag)
 				bAP = bBP = 2;
 		bAP += AP_PRONE;
