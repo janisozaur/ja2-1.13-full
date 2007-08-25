@@ -512,16 +512,16 @@ LEVELNODE *AddLandToTail( INT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddLandToHead( INT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
-	LEVELNODE	*pNextLand		 = NULL;
-  TILE_ELEMENT							 TileElem;
+	LEVELNODE	*pNextLand	 = NULL;
+	TILE_ELEMENT TileElem;
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
 	// Allocate head
 	CHECKF( CreateLevelNode( &pNextLand ) != FALSE );
 
-	pNextLand->pNext			= pLand;
-	pNextLand->pPrevNode  = NULL;
+	pNextLand->pNext		= pLand;
+	pNextLand->pPrevNode	= NULL;
 	pNextLand->usIndex		= usIndex;
 	pNextLand->ubShadeLevel = LightGetAmbient();
 

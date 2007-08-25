@@ -455,7 +455,7 @@ void RemoveSavedStructFromMap( INT32 uiMapIndex, UINT16 usIndex )
 void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 {
 	MODIFY_MAP Map;
-	UINT16	cnt;
+	INT32	cnt;
 	STRUCTURE * pStructure;
 
 

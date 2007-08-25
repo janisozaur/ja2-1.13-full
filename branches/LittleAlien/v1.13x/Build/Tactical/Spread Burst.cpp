@@ -61,7 +61,7 @@ void AccumulateBurstLocation( INT32 sGridNo )
 {
 	SOLDIERTYPE* pTarget;
 	int iSearchRange = 2; // number of tiles beside the mouse drag to look at
-	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset, sAdjacentGridNo;
+	INT32	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset, sAdjacentGridNo;
 	BOOLEAN foundTarget = FALSE;
 
 		//first see if we can find a guy standing right on the spot

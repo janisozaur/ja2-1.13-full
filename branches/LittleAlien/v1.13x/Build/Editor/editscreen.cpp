@@ -565,7 +565,7 @@ BOOLEAN EditModeShutdown( void )
 //
 void SetBackgroundTexture( )
 {
-	int						cnt;
+	INT32				cnt;
 	UINT16				usIndex, Dummy;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )

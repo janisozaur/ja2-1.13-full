@@ -171,10 +171,10 @@ void RemoveExitGridFromWorld( INT32 iMapIndex )
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {
 	EXITGRID exitGrid;
-	UINT16 usNumSaved = 0;
-	UINT16 x;
-	UINT32	uiBytesWritten;
-
+	UINT32 usNumSaved = 0;
+	INT32 x;
+	UINT32 uiBytesWritten;
+	
 	FileWrite( fp, &usNumExitGrids, 2, &uiBytesWritten );
 	
 	for( x = 0; x < WORLD_MAX; x++ )
@@ -235,7 +235,8 @@ void LoadExitGrids( INT8 **hBuffer, FLOAT dMajorMapVersion )
 void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
 {
 	UINT8 ubLookForLevel=0;
-	UINT16 i;
+	INT32 i;
+
 	if( bRelativeZLevel != 1 && bRelativeZLevel != -1 )
 		return;
 	//Check if on ground level -- if so, can't go up!

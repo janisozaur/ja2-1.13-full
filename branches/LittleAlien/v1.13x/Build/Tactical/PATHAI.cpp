@@ -1078,14 +1078,14 @@ INT32 FindBestPath(SOLDIERTYPE *s , INT32 sDestination, INT8 ubLevel, INT16 usMo
 			{
 				if ( gfNPCCircularDistLimit )
 				{
-					if (PythSpacesAway( (INT16) iOrigination, (INT16) newLoc) > gubNPCDistLimit)
+					if (PythSpacesAway( iOrigination, newLoc) > gubNPCDistLimit)
 					{
 						goto NEXTDIR;
 					}
 				}
 				else
 				{
-					if (SpacesAway( (INT16) iOrigination, (INT16) newLoc) > gubNPCDistLimit)
+					if (SpacesAway( iOrigination, newLoc) > gubNPCDistLimit)
 					{
 						goto NEXTDIR;
 					}				

@@ -252,11 +252,14 @@ void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 
 void ShowExitGrids()
 {
-	UINT16 i;
+	INT32 i;
 	LEVELNODE *pLevelNode;
+	
 	if( gfShowExitGrids )
 		return;
+	
 	gfShowExitGrids = TRUE;
+	
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		if( GetExitGridLevelNode( i, &pLevelNode ) )
@@ -268,11 +271,14 @@ void ShowExitGrids()
 
 void HideExitGrids()
 {
-	UINT16 i;
+	INT32 i;
 	LEVELNODE *pLevelNode;
+	
 	if( !gfShowExitGrids )
 		return;
+	
 	gfShowExitGrids = FALSE;
+	
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		if( GetExitGridLevelNode( i, &pLevelNode ) )

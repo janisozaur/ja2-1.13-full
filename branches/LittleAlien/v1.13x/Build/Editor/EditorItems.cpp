@@ -81,8 +81,9 @@ void BuildItemPoolList()
 {
 	ITEM_POOL *temp;
 	IPListNode *tail = NULL;
-	UINT16 i;
+	INT32 i;
 	KillItemPoolList();
+	
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
 		if( GetItemPool( i, &temp , 0) )

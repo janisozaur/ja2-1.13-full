@@ -804,7 +804,7 @@ void LoadDoorTableFromMap( INT8 **hBuffer, FLOAT dMajorMapVersion )
 		MemFree(OldDoorTable);
 	}
 	else
-	LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
+		LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
 
 	// OK, reset perceived values to nothing...
 	for ( cnt = 0; cnt < gubNumDoors; cnt++ )

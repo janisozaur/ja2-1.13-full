@@ -53,17 +53,17 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 //destination was sittable (though it was possible that that location would be trapped.
 INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -81,7 +81,7 @@ INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 u
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
  
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -157,17 +157,17 @@ INT32 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 u
 
 INT32 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -259,18 +259,18 @@ INT32 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT32 sSweetG
 //destination was sittable (though it was possible that that location would be trapped.
 INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -279,7 +279,7 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 	gubNPCAPBudget = 0;
 	gubNPCDistLimit = ubRadius;
 
-        // WDS - Clean up inventory handling
+    // WDS - Clean up inventory handling
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
 	//memset( &soldier, 0, SIZEOF_SOLDIERTYPE );
@@ -288,7 +288,7 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -382,12 +382,12 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 					{
 						if ( fClosestToMerc )
 						{
-      				uiRange = FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 );
+							uiRange = FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 );
 
-              if (uiRange == 0 )
-              {
-                uiRange = 999;
-              }
+							if (uiRange == 0 )
+							{
+								uiRange = 999;
+							}
 						}
 						else
 						{
@@ -424,18 +424,18 @@ INT32 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAni
 
 INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, INT8 bGivenDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -453,7 +453,7 @@ INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -533,38 +533,38 @@ INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 						Assert( 0 );
 					}
 
-          // OK, check the perfered given direction first
+					// OK, check the perfered given direction first
 					if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ bGivenDirection ]]), usOKToAddStructID ) )
 					{
 						fDirectionFound = TRUE;
-            cnt3 = bGivenDirection;
+						cnt3 = bGivenDirection;
 					}
-          else
-          {
-					  // Check each struct in each direction
-					  for( cnt3 = 0; cnt3 < 8; cnt3++ )
-					  {
-              if ( cnt3 != bGivenDirection )
-              {
-						    if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
-						    {
-							    fDirectionFound = TRUE;
-							    break;
-						    }
-              }
-					  }
-          }
+					else
+					{
+						// Check each struct in each direction
+						for( cnt3 = 0; cnt3 < 8; cnt3++ )
+						{
+							if ( cnt3 != bGivenDirection )
+							{
+								if (OkayToAddStructureToWorld( sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), usOKToAddStructID ) )
+								{
+									fDirectionFound = TRUE;
+									break;
+								}
+							}
+						}
+					}
 
 					if ( fDirectionFound )
 					{
 						if ( fClosestToMerc )
 						{
-      				uiRange = FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 );
+							uiRange = FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 );
 
-              if (uiRange == 0 )
-              {
-                uiRange = 999;
-              }
+							if (uiRange == 0 )
+							{
+								uiRange = 999;
+							}
 						}
 						else
 						{
@@ -601,18 +601,18 @@ INT32 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( SOLDIERTYPE
 
 INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, SOLDIERTYPE *pSrcSoldier )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2, cnt3;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
-	INT32 sSweetGridNo;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
+	INT32		sSweetGridNo = NOWHERE;
 	SOLDIERTYPE soldier;
 	
 	sSweetGridNo = pSrcSoldier->sGridNo;
@@ -634,7 +634,7 @@ INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -677,7 +677,7 @@ INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 					BOOLEAN fDirectionFound = FALSE;
 					UINT16	usOKToAddStructID;
 					STRUCTURE_FILE_REF * pStructureFileRef;
-					UINT16							 usAnimSurface;
+					UINT16				usAnimSurface;
 
 					if ( fClosestToMerc != 3 )
 					{
@@ -759,17 +759,17 @@ INT32 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, U
 
 INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -808,7 +808,6 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sS
 					}
 			}
 		}
-
 	}
 
 	if ( fFound )
@@ -827,17 +826,17 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sS
 
 INT32 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, INT8 ubQuardentDir )
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32 sGridNo;
+	INT16		sTop, sBottom;
+	INT16		sLeft, sRight;
+	INT16		cnt1, cnt2;
+	INT32		sGridNo = NOWHERE;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT32		sLowestGridNo=-1;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sLowestGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -902,8 +901,8 @@ INT32 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier
 BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGridNo, INT16 sMaxTiles, INT8 bLevel )
 {
 	INT32 iNumTiles;
-	INT32 sActionGridNo;
-	UINT8	ubDirection;
+	INT32 sActionGridNo = NOWHERE;
+	UINT8 ubDirection;
 
 	if ( pSoldier->bLevel != bLevel )
 	{
@@ -938,18 +937,18 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT32 sGri
 INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
 	INT16		sX, sY;
-	INT32 sGridNo;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
+	INT32		sGridNo = NOWHERE;
+	INT32		leftmost;
+	BOOLEAN		fFound = FALSE;
 	UINT32		cnt = 0;
 	SOLDIERTYPE soldier;
-	UINT8 ubSaveNPCAPBudget;
-	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	UINT8	 ubRoomNum;
+	UINT8		ubSaveNPCAPBudget;
+	UINT8		ubSaveNPCDistLimit;
+	UINT8		ubBestDirection=0;
+	INT32		sTop, sBottom;
+	INT32		sLeft, sRight;
+	INT32		cnt1, cnt2;
+	UINT8		ubRoomNum;
 
 	//Save AI pathing vars.  changing the distlimit restricts how 
 	//far away the pathing will consider.
@@ -967,7 +966,7 @@ INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, 
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -1043,11 +1042,11 @@ INT32 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, 
 
 INT32 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT32 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
 {
-	INT16		sX, sY;
-	INT32 sGridNo;
-	INT32					leftmost;
+	INT16	sX, sY;
+	INT32	sGridNo = NOWHERE;
+	INT32	leftmost;
 	BOOLEAN	fFound = FALSE;
-	UINT32		cnt = 0;
+	UINT32	cnt = 0;
 
 	do
 	{
@@ -1092,10 +1091,10 @@ INT32 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, IN
 
 BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	UINT8					ubDirection, ubCalculatedDirection;
+	UINT8			ubDirection, ubCalculatedDirection;
 	SOLDIERTYPE		*pSoldier;
-	INT32 sGridNo;
-	INT32					sExitGridNo;
+	INT32			sGridNo = NOWHERE;
+	INT32			sExitGridNo = NOWHERE;
 
 	DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("InternalAddSoldierToSector"));
 
@@ -1155,14 +1154,17 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 		else
 		{
 			if( pSoldier->sInsertionGridNo == NOWHERE )
-			{ //Add the soldier to the respective entrypoint.  This is an error condition.
+			{ 
+				//Add the soldier to the respective entrypoint.  This is an error condition.
 				// So treat it like an error already then!
 				Assert(0);
 			}
 			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
 				sGridNo = FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( pSoldier, STANDING, pSoldier->sInsertionGridNo, 12, &ubCalculatedDirection, FALSE, pSoldier->ubInsertionDirection );
-        // ATE: Override insertion direction
+				
+				// ATE: Override insertion direction
+				//Lalien: replace with range check?
 				if (sGridNo == NOWHERE)
 				{
 					// Well, we gotta place this soldier/vehicle somewhere.  Just use the first position for now
@@ -1177,11 +1179,11 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 			{
 				sGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sInsertionGridNo, 7, &ubCalculatedDirection );
 
-        // ATE: Error condition - if nowhere use insertion gridno!
-        if ( sGridNo == NOWHERE )
-        {
-          sGridNo = pSoldier->sInsertionGridNo;
-        }
+				// ATE: Error condition - if nowhere use insertion gridno!
+				if ( sGridNo == NOWHERE )
+				{
+					sGridNo = pSoldier->sInsertionGridNo;
+				}
 			}
 
 			// Override calculated direction if we were told to....
@@ -1255,7 +1257,7 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	INT32	sGoodGridNo = NOWHERE;
 	UINT16	usAnim = SLEEPING;
 
 	if ( !pSoldier->bInSector )
@@ -1301,8 +1303,8 @@ void InternalSoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo, BOOLEAN
 void SoldierInSectorIncompaciated( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1337,8 +1339,8 @@ void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1372,8 +1374,8 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1407,8 +1409,8 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT32 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
-	UINT8	ubNewDirection;
-	INT32 sGoodGridNo;
+	UINT8 ubNewDirection;
+	INT32 sGoodGridNo = NOWHERE;
 
 	if ( !pSoldier->bInSector )
 	{
@@ -1442,8 +1444,8 @@ extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOL
 
 void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT32 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
 {
-	INT16 sWorldX, sWorldY;
-	INT32 sNewGridNo;
+	INT16	sWorldX, sWorldY;
+	INT32	sNewGridNo = NOWHERE;
 	UINT8	ubNewDirection;
 	UINT8	ubInsertionCode;
 	BOOLEAN fUpdateFinalPosition = TRUE;
