@@ -2445,7 +2445,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	};
 	int			cnt, cnt1, cnt2;
 	int			nCnt1, nCnt2;
-
+#if 0
 	// Determine default ItemSize based on item and attachments
 	cisIndex = pObject->usItem;
 	iSize = Item[cisIndex].ItemSize;
@@ -2518,7 +2518,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 			}
 		}
 	}
-
+#endif
 	return(iSize);
 }
 
@@ -2555,9 +2555,10 @@ UINT16 CalculateAmmoWeight( UINT16 usGunAmmoItem, UINT8 ubShotsLeft )
 	//Pulmu end
 }
 
-TODO
+//ADB TODO
 /*CHRISL: Change to a 16bit integer for a max weight of 6553.5kg.  Also changed to account for
 new inventory system. */
+
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
 	PERFORMANCE_MARKER
@@ -2615,7 +2616,7 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 */
 	return( usWeight );
 }
-
+#if 0
 
 UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 {
@@ -2629,11 +2630,11 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	usWeight = pItem->ubWeight;
 
 	// Are we looking at an LBENODE item?  New inventory only.
-	if(pItem->usItemClass == IC_LBEGEAR && (*pObject([0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && gGameOptions.ubInventorySystem)
+	if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && gGameOptions.ubInventorySystem)
 	{
 		for ( cnt = 0; cnt < 12; cnt++)
 		{
-			if (LBEptr[(*pObject([0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
+			if (LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
 			{
 				tWeight = CalculateObjectWeight(&(LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt]));
 				if(Item[LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem].usItemClass != IC_AMMO)
@@ -2730,6 +2731,7 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	// CHRISL: Return a 16bit value
 	return (usWeight);
 }
+#endif
 
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 {
@@ -2765,6 +2767,7 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 
 }
 
+#if 0
 // CHRISL: Calculate weight of item stacks for large items in new inventory system
 UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 {
@@ -2801,8 +2804,8 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 	return( uiPercent );
 
 }
-
-END TODO
+#endif
+//END TODO
 
 void DeleteObj(OBJECTTYPE * pObj )
 {
@@ -3299,20 +3302,6 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	(*pGun)[0]->data.gun.ubGunState |= GS_CARTRIDGE_IN_CHAMBER; // Madd: reloading should automatically put cartridge in chamber
 
 	return( TRUE );
-}
-
-BOOLEAN UnloadGun( SOLDIERTYPE *pSoldier, OBJECTTYPE *pGun)
-{
-	OBJECTTYPE newObj;
-	CreateItem(pGun->ItemData.Gun.usGunAmmoItem, 100, &newObj);
-	newObj.ItemData.Ammo.ubShotsLeft[0] = pGun->ItemData.Gun.ubGunShotsLeft;
-	pGun->ItemData.Gun.ubGunShotsLeft = 0;
-	pGun->ItemData.Gun.usGunAmmoItem = NONE;
-	if ( !AutoPlaceObject( pSoldier, &newObj, FALSE ) )
-	{   // put it on the ground
-		AddItemToPool( pSoldier->sGridNo, &newObj, 1, pSoldier->bLevel, 0 , -1 );
-	}
-	return TRUE;
 }
 
 BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
@@ -4126,7 +4115,7 @@ BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos,
 }
 
 
-TODO
+//ADB TODO
 BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
 {
 	PERFORMANCE_MARKER
@@ -4222,7 +4211,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 	return( TRUE );
 }
-
+/*
 BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
 {
 	UINT8					ubSlotLimit, lbePocket=1;
@@ -4456,7 +4445,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 
 
 END TODO
-
+*/
 BOOLEAN DropObjIfThereIsRoom( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
 	PERFORMANCE_MARKER
@@ -4745,7 +4734,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 	PERFORMANCE_MARKER
 	INT8			bSlot;
 	INVTYPE	* pItem;
-	UINT8			ubPerSlot;
+	UINT8			ubPerSlot, packCombo, backCombo;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
 	Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
@@ -4827,7 +4816,8 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 					// CHRISL:
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						TODO/*
+						//ADB TODO
+						/*
 						pObj->usAttachItem[0] = pSoldier->inv[LEGPOS].usItem;
 						pObj->bAttachStatus[0] = pSoldier->inv[LEGPOS].ItemData.Generic.bStatus[0];
 						pSoldier->inv[LEGPOS].usItem = NONE;

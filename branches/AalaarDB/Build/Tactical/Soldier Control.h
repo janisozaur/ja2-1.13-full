@@ -643,7 +643,7 @@ public:
 	BOOLEAN lastFlankLeft;
 	UINT32											uiStatusFlags;
 
-	//TODO
+	//ADB TODO, handle coversion
 	//LBE node stuff
 	BOOLEAN			ZipperFlag;
 	BOOLEAN			DropPackFlag;
@@ -1170,7 +1170,7 @@ public:
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
 
-	//TODO
+	//ADB TODO, handle init etc
 	INT16	DropPackKey;
 
 	char endOfPOD;	// marker for end of POD (plain old data)

@@ -92,21 +92,21 @@ namespace Version101
 			UINT8		ubGunState; // SB manual recharge
 	//warning, this unused space is the wrong size, 7 bytes above, 2 in the array, but it's been saved like that
 			UINT8		ubGunUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 6];
-		} Gun;
+		};
 		struct
 		{
 			UINT8		ubShotsLeft[OLD_MAX_OBJECTS_PER_SLOT_101];
-		} Ammo;
+		};
 		struct
 		{
 			INT8		bStatus[OLD_MAX_OBJECTS_PER_SLOT_101];
-		} Generic;		
+		};		
 		struct
 		{
 			INT8		bMoneyStatus;
 			UINT32		uiMoneyAmount;
 			UINT8		ubMoneyUnused[OLD_MAX_OBJECTS_PER_SLOT_101 - 5];
-		} Money;
+		};
 		struct
 		{ // this is used by placed bombs, switches, and the action item
 			INT8		bBombStatus;			// % status
@@ -114,42 +114,42 @@ namespace Version101
 			UINT16		usBombItem;				// the usItem of the bomb.
 			union
 			{
-				//struct
-				//{
+				struct
+				{
 					INT8		bDelay;				// >=0 values used only
-				//};
-				//struct
-				//{
+				};
+				struct
+				{
 					INT8		bFrequency;		// >=0 values used only
-				//};
-			} BombTrigger;
+				};
+			};
 			UINT8	ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
 			union
 			{
-				//struct
-				//{
+				struct
+				{
 					UINT8 ubTolerance; // tolerance value for panic triggers
-				//};
-				//struct 
-				//{
+				};
+				struct 
+				{
 					UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-				//};
-			} Area;
-		} Trigger;
+				};
+			};		
+		};
 		struct
 		{
 			INT8 bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
 			UINT8 ubKeyUnused[1];
-		} Key;
+		};
 		struct
 		{
 			UINT8 ubOwnerProfile;
 			UINT8 ubOwnerCivGroup;
 			UINT8 ubOwnershipUnused[6];
-		} Owner;
-	} ItemData;
+		};
+	};
 };
 #define SIZEOF_OLD_OBJECTTYPE_101_UNION (sizeof(Version101::OLD_OBJECTTYPE_101_UNION))
 
@@ -238,7 +238,7 @@ public:
 		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
 		ObjectDataStructs::OBJECT_GUN				gun;
 		ObjectDataStructs::OBJECT_MONEY				money;
-		//TODO
+		//ADB TODO
 		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
 		ObjectDataStructs::OBJECT_KEY				key;
 		ObjectDataStructs::OBJECT_OWNER				owner;
@@ -440,6 +440,7 @@ typedef struct
 	UINT16			ubGraphicNum;
 	UINT8			ubWeight; //2 units per kilogram; roughly 1 unit per pound
 	UINT8			ubPerPocket;
+	UINT8			ItemSize;
 	UINT16		usPrice;
 	UINT8			ubCoolness;
 	INT8			bReliability;
@@ -511,6 +512,7 @@ typedef struct
 	INT16	dayvisionrangebonus;
 	INT16	cavevisionrangebonus;
 	INT16	brightlightvisionrangebonus;
+	INT16	itemsizebonus;
 	BOOLEAN leatherjacket;
 	BOOLEAN batteries;
 	BOOLEAN needsbatteries;

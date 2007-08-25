@@ -2657,7 +2657,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	ShutdownNPCQuotes();
 
-	//TODO
+	//very small TODO
 	//Bugfix = Stop the chopter sound
 
 
@@ -2745,7 +2745,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	guiBrokenSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
 
 	// CHRISL: We need to know what inventory system we're using early on
-	if(SaveGameHeader.uiSavedGameVersion < SAVE_GAMES_HAVE_NEW_INVENTORY_VECTORS)
+	if(SaveGameHeader.uiSavedGameVersion < FIRST_SAVEGAME_DATATYPE_CHANGE)
 		SaveGameHeader.ubInventorySystem = 0;
 	gGameOptions.ubInventorySystem = SaveGameHeader.ubInventorySystem;
 	if(gGameOptions.ubInventorySystem)
@@ -3882,12 +3882,12 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//CHRISL: Load LBENODE information
-	if( SaveGameHeader.uiSavedGameVersion >= FIRST_SAVEGAME_CHANGE )
+	if( SaveGameHeader.uiSavedGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE )
 	{
 		if ( !LoadLBENODEToSaveGameFile( hFile ) )
 		{
 			FileClose( hFile );
-			guiSaveGameVersion=0;
+			guiCurrentSaveGameVersion=0;
 			return( FALSE );
 		}
 		#ifdef JA2BETAVERSION
@@ -4234,7 +4234,7 @@ BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile )
 	UINT32	uiNumBytesRead=0;
 	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
 
-	if ( guiSaveGameVersion < 87 )
+	if ( guiCurrentSaveGameVersion < 87 )
 	{
 		JA2EncryptedFileRead( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesRead );
 	}
@@ -4250,7 +4250,7 @@ BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile )
 
 	for(cnt=0; cnt<LBEptrNum; cnt++)
 	{
-		if ( guiSaveGameVersion < 87 )
+		if ( guiCurrentSaveGameVersion < 87 )
 		{
 			LBEptr.push_back(LBENODE());
 			JA2EncryptedFileRead( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesRead );
@@ -4274,7 +4274,7 @@ BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
 	UINT32	uiNumBytesWritten=0;
 	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
 
-	if ( guiSavedGameVersion < 87 )
+	if ( guiCurrentSaveGameVersion < 87 )
 	{
 		JA2EncryptedFileWrite( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesWritten );
 	}
@@ -4290,7 +4290,7 @@ BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
 	for(cnt=0; cnt<LBEptr.size(); cnt++)
 	{
 		LBEptr[ cnt ].uiNodeChecksum = LBENODEChecksum( &(LBEptr[ cnt ]) );
-		if ( guiSavedGameVersion < 87 )
+		if ( guiCurrentSaveGameVersion < 87 )
 		{
 			JA2EncryptedFileWrite( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesWritten );
 		}

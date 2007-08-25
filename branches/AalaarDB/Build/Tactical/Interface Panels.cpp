@@ -356,6 +356,7 @@ typedef enum
 	STANCE_IMAGES,
 	DONE_IMAGES,
 	MAPSCREEN_IMAGES,
+	BACKPACK_IMAGES,
 	NUM_SM_BUTTON_IMAGES
 };
 
@@ -3434,7 +3435,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		if(!MoveItemToLBEItem( pSoldier, BPACKPOCKPOS, NULL ))
 			newStatus = FALSE;
-		InternalAddItemToPool(&pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->bExpLevel, 0 , -1, &worldKey );
+		InternalAddItemToPool(&pSoldier->sGridNo, &pSoldier->inv[BPACKPOCKPOS], 1, pSoldier->stats.bExpLevel, 0 , -1, &worldKey );
 		// Item successfully added to world
 		if(worldKey != ITEM_NOT_FOUND)
 		{
@@ -3455,7 +3456,7 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 			if(LBEptr[gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.usBombItem].lbeIndex != NONE)
 			{
 				// Try to pickup the LBENODE
-				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].o ), TRUE ))
+				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
 				{
 					RemoveItemFromPool(gWorldItems[pSoldier->DropPackKey].sGridNo, pSoldier->DropPackKey, gWorldItems[pSoldier->DropPackKey].ubLevel);
 					gpSMCurrentMerc->DropPackKey = -1;
@@ -6972,7 +6973,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 		//AddItemToWorld(pSoldier->sGridNo,&pSoldier->inv[LBESlots[i]],pSoldier->bExpLevel,0,0,TRUE);
 		//RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
 
-		AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->bExpLevel, 0 , -1 );
+		AddItemToPool( pSoldier->sGridNo, &pSoldier->inv[LBESlots[i]], 1, pSoldier->stats.bExpLevel, 0 , -1 );
 		NotifySoldiersToLookforItems( );
 
 		//MemFree( &pSoldier->inv[LBESlots[i]] );

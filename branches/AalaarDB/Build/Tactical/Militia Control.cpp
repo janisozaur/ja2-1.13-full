@@ -221,6 +221,11 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 	if ( gWorldSectorX ==0 && gWorldSectorY == 0 )
 		return;
 
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
+
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	ubGreen = pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
 	ubRegs = pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
@@ -247,8 +252,8 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 					ubElites -= gpAttackDirs[ x ][2];
 				}
 			}
-			else
-			{
+			//else
+			//{
 #endif
 			AddSoldierInitListMilitiaOnEdge( gpAttackDirs[ x ][ 3 ], gpAttackDirs[ x ][0], gpAttackDirs[ x ][1], gpAttackDirs[ x ][2] );
 		}
@@ -268,6 +273,11 @@ void PrepareMilitiaForTactical( BOOLEAN fPrepareAll)
 ////			MercPtrs[ i ]->bAttitude = AGGRESSIVE;
 //		}
 //	}
+
+	for (int i=0; i<TOTAL_SOLDIERS; i++)
+	{
+		Assert( !MercPtrs[i]->bActive || !MercPtrs[i]->bInSector || MercPtrs[i]->sGridNo != NOWHERE);
+	}
 }
 
 void HandleMilitiaPromotions( void )
@@ -1196,12 +1206,12 @@ BOOLEAN CheckIfRadioIsEquipped( void )
 
 //// stand up!
 //pSoldier->bAction = AI_ACTION_CHANGE_STANCE;
-//pSoldier->usActionData = ANIM_STAND;
+//pSoldier->aiData.usActionData = ANIM_STAND;
 //
 //
 
 //pSoldier->bAction = pSoldier->bNextAction;
-//pSoldier->usActionData = pSoldier->usNextActionData;
+//pSoldier->aiData.usActionData = pSoldier->usNextActionData;
 //pSoldier->bTargetLevel = pSoldier->bNextTargetLevel;
 //pSoldier->bNextAction = AI_ACTION_NONE;
 //pSoldier->usNextActionData = 0;
@@ -2253,7 +2263,7 @@ void MilitiaControlMenuBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 //								//pTMilitiaSoldier->ubPendingAction = MERC_STEAL;
 //								pTeamSoldier->sPendingActionData2  = pSoldier->sGridNo;
 //								pTeamSoldier->bPendingActionData3  = ubDirection;
-//								pTeamSoldier->ubPendingActionAnimCount = 0;
+//								pTeamSoldier->aiData.ubPendingActionAnimCount = 0;
 //
 //								// CHECK IF WE ARE AT THIS GRIDNO NOW
 //								if ( pTeamSoldier->sGridNo != sActionGridNo )

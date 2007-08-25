@@ -56,7 +56,10 @@ void EnableSMPanelButtons( BOOLEAN fEnable, BOOLEAN fFromItemPickup );
  * and when we will read all values we return TRUE if not we will retunf FALSE
  * any questions? joker
  */
-BOOLEAN InitializeSMPanelCoords( ); 
+//BOOLEAN InitializeSMPanelCoords( ); 
+BOOLEAN InitializeSMPanelCoordsNew();
+BOOLEAN InitializeSMPanelCoordsOld(); 
+
 
 BOOLEAN CreateTEAMPanelButtons( );
 void	RemoveTEAMPanelButtons( );

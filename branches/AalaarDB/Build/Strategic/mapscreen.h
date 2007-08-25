@@ -89,6 +89,4 @@ BOOLEAN InitializeInvPanelCoordsOld( );
 BOOLEAN InitializeInvPanelCoordsNew( );
 BOOLEAN InitializeInvPanelCoordsVehicle( );
 
-
-
 #endif

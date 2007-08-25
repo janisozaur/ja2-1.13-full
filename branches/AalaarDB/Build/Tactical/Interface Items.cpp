@@ -108,12 +108,21 @@
 #define		ITEM_STATS_WIDTH					26
 #define		ITEM_STATS_HEIGHT					8
 
-#define		ITEMDESC_START_X					214
-#define		ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
-#define		ITEMDESC_HEIGHT					133
-#define		ITEMDESC_WIDTH					320
-#define   MAP_ITEMDESC_HEIGHT     268
-#define   MAP_ITEMDESC_WIDTH      272
+//LBE node stuff
+// Changed some coord defines to INT16s so we can adjust their value based on game options
+INT16	ITEMDESC_START_X;
+INT16	ITEMDESC_START_Y;
+INT16	ITEMDESC_HEIGHT;
+INT16	ITEMDESC_WIDTH;
+INT16   MAP_ITEMDESC_HEIGHT;
+INT16	MAP_ITEMDESC_WIDTH;
+
+//#define		ITEMDESC_START_X					214
+//#define		ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
+//#define		ITEMDESC_HEIGHT					133
+//#define		ITEMDESC_WIDTH					320
+//#define   MAP_ITEMDESC_HEIGHT     268
+//#define   MAP_ITEMDESC_WIDTH      272
 #define		ITEMDESC_NAME_X					(16 + gsInvDescX)
 #define		ITEMDESC_NAME_Y					(67 + gsInvDescY)
 #define		ITEMDESC_CALIBER_X			(162 + gsInvDescX)
@@ -328,6 +337,8 @@ void DeletePool(ITEM_POOL *pItemPool);
 #define			NUMBER_KEYS_ON_KEYRING 28
 #define			KEY_RING_ROW_WIDTH 7
 #define			MAP_KEY_RING_ROW_WIDTH 4
+#define			INV_ITEM_ROW_WIDTH 7
+#define			MAP_INV_ITEM_ROW_WIDTH 6
 
 // ITEM STACK POPUP STUFF
 BOOLEAN			gfInItemStackPopup = FALSE;
@@ -1193,6 +1204,7 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 {
 	PERFORMANCE_MARKER
+	INT32			cnt, sX, sY;
 	static CHAR16					pStr[ 512 ]; 
 	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
 	{
@@ -1285,13 +1297,14 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 		return;
 	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE) && !vehicleInv[sPocket])
 		return;
-	INT16 sX, sY;
+	INT16 sX, sY, newX, newY;
 	INT16	sBarX, sBarY;
 	OBJECTTYPE  *pObject;
 	BOOLEAN	fOutline = FALSE;
 	INT16		sOutlineColor = 0, lbePocket = ITEM_NOT_FOUND;
 	UINT8		fRenderDirtyLevel;
 	BOOLEAN fHatchItOut = FALSE;
+	UINT32		iClass;
 
 
 	//Assign the screen
@@ -3492,6 +3505,7 @@ void RenderItemDescriptionBox( )
 	UINT8									ubAttackAPs;
 	BOOLEAN								fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
 	INT16									sProsConsIndent;
+	INT8							showBox=0;
 
   if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
 	{
@@ -3537,7 +3551,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3614,7 +3628,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -4038,8 +4052,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
-				showBox = LBEptr[gpItemDescObject[0]->data.misc.usBombItem].lbeClass;
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -4069,7 +4083,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4149,7 +4163,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if(gGameOptions.ubInventorySystem)
 		{
-			if(gpItemDescObject[0]->data.misc.bDetonatorType == -1)
+			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -7445,7 +7459,7 @@ void RenderItemPickupMenu( )
 			  if(gGameOptions.ubInventorySystem)
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
-				  if ( pObject[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
+				  if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
 				  {
 					  SetFontForeground( FONT_BLUE );
 						SetFontShadow( DEFAULT_SHADOW );

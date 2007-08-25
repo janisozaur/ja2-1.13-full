@@ -418,6 +418,9 @@ typedef struct
 	BOOLEAN fEnableSoldierTooltipBigSlot2;
 	BOOLEAN fEnableSoldierTooltipBigSlot3;
 	BOOLEAN fEnableSoldierTooltipBigSlot4;
+	BOOLEAN fEnableSoldierTooltipBigSlot5;
+	BOOLEAN fEnableSoldierTooltipBigSlot6;
+	BOOLEAN fEnableSoldierTooltipBigSlot7;
 	// ShadoWarrior: Tooltip changes (end)
 
 	//Kaiden MERC Deaths Externalized:

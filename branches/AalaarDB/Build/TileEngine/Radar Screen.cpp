@@ -101,8 +101,8 @@ BOOLEAN InitRadarScreen( )
 		// CHRISL: Move screen coord setup to it's own function
 		InitRadarScreenCoords();
 		// Add region for radar
-		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, 
-											RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
+		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_TM_X, RADAR_WINDOW_TM_Y, 
+											RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH,
 											RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT,
 											MSYS_PRIORITY_HIGHEST, 0, 
 											RadarRegionMoveCallback,
@@ -114,7 +114,7 @@ BOOLEAN InitRadarScreen( )
 		//disable the radar map
 		MSYS_DisableRegion(&gRadarRegion);
 
-		gsRadarX = RADAR_WINDOW_X;
+		gsRadarX = RADAR_WINDOW_TM_X;
 		gsRadarY = RADAR_WINDOW_TM_Y;
 
 		return( TRUE );
@@ -433,7 +433,7 @@ void RenderRadarScreen( )
 
 	sWidth		= ( RADAR_WINDOW_WIDTH );
 	sHeight		= ( RADAR_WINDOW_HEIGHT );
-	sX				= RADAR_WINDOW_X;
+	sX				= RADAR_WINDOW_TM_X;
 	sY				= gsRadarY;
 
 
@@ -468,8 +468,8 @@ void RenderRadarScreen( )
 			// WANNE: Correct radar rectangle size if it is too large to fit in radar screen [2007-05-14]
 			if (fAllowRadarMovementHor == FALSE)
 			{
-				sRadarTLX = RADAR_WINDOW_X;
-				sRadarBRX = RADAR_WINDOW_X + RADAR_WINDOW_WIDTH;
+				sRadarTLX = RADAR_WINDOW_TM_X;
+				sRadarBRX = RADAR_WINDOW_TM_X + RADAR_WINDOW_WIDTH;
 			}
 
 			if (fAllowRadarMovementVer == FALSE)
@@ -523,7 +523,7 @@ void RenderRadarScreen( )
 
 
 			// Add starting relative to interface
-			sXSoldRadar += RADAR_WINDOW_X;
+			sXSoldRadar += RADAR_WINDOW_TM_X;
 			sYSoldRadar += gsRadarY;
 
 			// if we are in 16 bit mode....kind of redundant
@@ -589,7 +589,7 @@ void RenderRadarScreen( )
 				}
 
 				// Add starting relative to interface
-				sXSoldRadar += RADAR_WINDOW_X;
+				sXSoldRadar += RADAR_WINDOW_TM_X;
 				sYSoldRadar += gsRadarY;
 
 
@@ -883,11 +883,11 @@ void RenderSquadList( void )
 
 			if( sCounter < NUMBER_OF_SQUADS / 2 )
 			{
-				sX = RADAR_WINDOW_X + 2; 
+				sX = RADAR_WINDOW_TM_X + 2; 
 			}
 			else
 			{
-				sX = RADAR_WINDOW_X + ( RADAR_WINDOW_WIDTH / 2 ) - 2;
+				sX = RADAR_WINDOW_TM_X + ( RADAR_WINDOW_WIDTH / 2 ) - 2;
 			}
 			mprintf( sX, sY , pSquadMenuStrings[ sCounter ]);
 	}

@@ -3145,19 +3145,19 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case STANDING:
 
 			// Update desired height
-			pSoldier->ubDesiredHeight		 = ANIM_STAND;
+			thisSoldier->ubDesiredHeight		 = ANIM_STAND;
 			break;
 
 		case CROUCHING:
 
 			// Update desired height
-			pSoldier->ubDesiredHeight		 = ANIM_CROUCH;
+			thisSoldier->ubDesiredHeight		 = ANIM_CROUCH;
 			break;
 
 		case PRONE:
 
 			// Update desired height
-			pSoldier->ubDesiredHeight		 = ANIM_PRONE;
+			thisSoldier->ubDesiredHeight		 = ANIM_PRONE;
 			break;
 
 		case READY_RIFLE_STAND:
@@ -3168,63 +3168,63 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case READY_DUAL_PRONE:
 
 			// OK, get points to ready weapon....
-			if ( !pSoldier->fDontChargeReadyAPs )
+			if ( !thisSoldier->flags.fDontChargeReadyAPs )
 			{
-				sAPCost = GetAPsToReadyWeapon( pSoldier, usNewState );
-				DeductPoints( pSoldier, sAPCost, sBPCost );
+				sAPCost = GetAPsToReadyWeapon( thisSoldier, usNewState );
+				DeductPoints( thisSoldier, sAPCost, sBPCost );
 			}
 			else
 			{
-				pSoldier->fDontChargeReadyAPs = FALSE;
+				thisSoldier->flags.fDontChargeReadyAPs = FALSE;
 			}
 			break;
 
 		case WALKING:
 
-			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-			pSoldier->ubPendingActionAnimCount = 0;
+			thisSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
 			break;
 
 		case SWATTING:
 
-			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-			pSoldier->ubPendingActionAnimCount = 0;
+			thisSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
 			break;
 
 		case CRAWLING:
 
 			// Turn off flag...
-			pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
-			pSoldier->ubPendingActionAnimCount = 0;
-			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			thisSoldier->flags.fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
+			thisSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 			break;
 
 		case RUNNING:
 
 			// Only if our previous is not running
-			if ( pSoldier->usAnimState != RUNNING )
+			if ( thisSoldier->usAnimState != RUNNING )
 			{
 				// CHRISL
-				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
 				{
 					sAPCost = AP_START_RUN_COST + 2;
 					sBPCost += 2;
 				}
 				else
 					sAPCost = AP_START_RUN_COST;
-				DeductPoints( pSoldier, sAPCost, sBPCost );
+				DeductPoints( thisSoldier, sAPCost, sBPCost );
 			}
 			// Set pending action count to 0
-			pSoldier->ubPendingActionAnimCount = 0;
-			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
+			thisSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 			break;
 
 		case ADULTMONSTER_WALKING:
-			pSoldier->ubPendingActionAnimCount = 0;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
 			break;
 
 		case ROBOT_WALK:
-			pSoldier->ubPendingActionAnimCount = 0;
+			thisSoldier->aiData.ubPendingActionAnimCount = 0;
 			break;
 
 		case KNEEL_UP:
@@ -3232,10 +3232,10 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 		case BIGMERC_CROUCH_TRANS_INTO:
 		case BIGMERC_CROUCH_TRANS_OUTOF:
 
-			if ( !pSoldier->fDontChargeAPsForStanceChange )
+			if ( !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// CHRISL
-				if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->flags.ZipperFlag)
+				if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
 				{
 					if(usNewState == KNEEL_UP)
 					{
@@ -3258,22 +3258,22 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					sAPCost=AP_CROUCH;
 					sBPCost=BP_CROUCH;
 				}
-				DeductPoints( pSoldier, sAPCost, sBPCost );
+				DeductPoints( thisSoldier, sAPCost, sBPCost );
 			}
-			pSoldier->fDontChargeAPsForStanceChange = FALSE;
+			thisSoldier->flags.fDontChargeAPsForStanceChange = FALSE;
 			break;
 
 		case PRONE_UP:
 		case PRONE_DOWN:
 
 			// ATE: If we are NOT waiting for prone down...
-			if ( pSoldier->fTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !pSoldier->fDontChargeAPsForStanceChange )
+			if ( thisSoldier->flags.fTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !thisSoldier->flags.fDontChargeAPsForStanceChange )
 			{
 				// ATE: Don't do this if we are still 'moving'....
-				if ( pSoldier->sGridNo == pSoldier->sFinalDestination || pSoldier->usPathIndex == 0 )
+				if ( thisSoldier->sGridNo == thisSoldier->pathing.sFinalDestination || thisSoldier->pathing.usPathIndex == 0 )
 				{
 					// CHRISL
-					if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !pSoldier->flags.ZipperFlag)
+					if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING && !thisSoldier->flags.ZipperFlag)
 					{
 						if(usNewState == PRONE_UP)
 						{
@@ -3291,78 +3291,78 @@ BOOLEAN SOLDIERTYPE::EVENT_InitNewSoldierAnim( UINT16 usNewState, UINT16 usStart
 					sAPCost=AP_PRONE;
 					sBPCost=BP_PRONE;
 					}
-					DeductPoints( pSoldier, sAPCost, sBPCost );
+					DeductPoints( thisSoldier, sAPCost, sBPCost );
 				}
 			}
-			pSoldier->fDontChargeAPsForStanceChange = FALSE;
+			thisSoldier->flags.fDontChargeAPsForStanceChange = FALSE;
 			break;
 
 			//Deduct points for stance change
-			//sAPCost = GetAPsToChangeStance( pSoldier, gAnimControl[ usNewState ].ubEndHeight );
-			//DeductPoints( pSoldier, sAPCost, 0 );
+			//sAPCost = GetAPsToChangeStance( thisSoldier, gAnimControl[ usNewState ].ubEndHeight );
+			//DeductPoints( thisSoldier, sAPCost, 0 );
 			//break;
 
 		case START_AID:
 
-			DeductPoints( pSoldier, AP_START_FIRST_AID, BP_START_FIRST_AID );
+			DeductPoints( thisSoldier, AP_START_FIRST_AID, BP_START_FIRST_AID );
 			break;
 
 		case CUTTING_FENCE:
-			DeductPoints( pSoldier, AP_USEWIRECUTTERS, BP_USEWIRECUTTERS );
+			DeductPoints( thisSoldier, AP_USEWIRECUTTERS, BP_USEWIRECUTTERS );
 			break;
 
 		case PLANT_BOMB:
 
-			DeductPoints( pSoldier, AP_DROP_BOMB, 0 );
+			DeductPoints( thisSoldier, AP_DROP_BOMB, 0 );
 			break;
 
 		case STEAL_ITEM:
 
-			DeductPoints( pSoldier, AP_STEAL_ITEM, 0 );
+			DeductPoints( thisSoldier, AP_STEAL_ITEM, 0 );
 			break;
 
 		case CROW_DIE:
 
 			// Delete shadow of crow....
-			if ( pSoldier->pAniTile != NULL )
+			if ( thisSoldier->pAniTile != NULL )
 			{
-				DeleteAniTile( pSoldier->pAniTile );
-				pSoldier->pAniTile = NULL;
+				DeleteAniTile( thisSoldier->pAniTile );
+				thisSoldier->pAniTile = NULL;
 			}
 			break;
 
 		case CROW_FLY:
 
 			// Ate: startup a shadow ( if gridno is set )
-			HandleCrowShadowNewGridNo( pSoldier );
+			HandleCrowShadowNewGridNo( thisSoldier );
 			break;
 
 		case CROW_EAT:
 
 			// ATE: Make sure height level is 0....
-			SetSoldierHeight( pSoldier, (FLOAT)(0) );
-			HandleCrowShadowRemoveGridNo( pSoldier );
+			thisSoldier->SetSoldierHeight( (FLOAT)(0) );
+			HandleCrowShadowRemoveGridNo( thisSoldier );
 			break;
 
 		case USE_REMOTE:
 
-			DeductPoints( pSoldier, AP_USE_REMOTE, 0 );
+			DeductPoints( thisSoldier, AP_USE_REMOTE, 0 );
 			break;
 
 			//case PUNCH:
 
 			//Deduct points for punching
-			//sAPCost = MinAPsToAttack( pSoldier, pSoldier->sGridNo, FALSE );
-			//DeductPoints( pSoldier, sAPCost, 0 );
+			//sAPCost = MinAPsToAttack( thisSoldier, thisSoldier->sGridNo, FALSE );
+			//DeductPoints( thisSoldier, sAPCost, 0 );
 			//break;
 
 		case HOPFENCE:
 
 			// CHRISL
-			if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
-				DeductPoints( pSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
+			if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NOTHING)
+				DeductPoints( thisSoldier, AP_JUMPFENCEBPACK, BP_JUMPFENCEBPACK );
 			else
-				DeductPoints( pSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
+				DeductPoints( thisSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
 			break;
 
 			// Deduct aps for falling down....
@@ -7836,7 +7836,7 @@ void SOLDIERTYPE::BeginSoldierClimbUpRoof( void )
 	PERFORMANCE_MARKER
 
 	//CHRISL: Disable climbing up to a roof while wearing a backpack
-	if(gGameOptions.ubInventorySystem && pSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
+	if(gGameOptions.ubInventorySystem && thisSoldier->inv[BPACKPOCKPOS].usItem!=NONE)
 		return;
 	INT8							bNewDirection;
 	UINT8							ubWhoIsThere;

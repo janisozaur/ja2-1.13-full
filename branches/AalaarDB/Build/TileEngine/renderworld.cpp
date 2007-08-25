@@ -4062,7 +4062,7 @@ BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOL
 
 	sWidth		= ( RADAR_WINDOW_WIDTH );
 	sHeight		= ( RADAR_WINDOW_HEIGHT );
-	sX				= RADAR_WINDOW_X;
+	sX				= RADAR_WINDOW_TM_X;
 	sY				= gsRadarY;
 
 

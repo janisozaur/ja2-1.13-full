@@ -70,6 +70,8 @@ BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 
+extern UINT8 gubItemDroppableFlag[NUM_INV_SLOTS];
+
 INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 {
 	0,	//NO_SKILLTRAIT
