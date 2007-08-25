@@ -13,6 +13,8 @@
 	#include "imp_tga.h"
 	#include "timer_control.h"
 	#include "file_man.h"
+	#include "command_line.h"
+	
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,6 +224,7 @@ BOOLEAN InitializeVideoManager(void)
 
 	// Apply SDL video flags
 	uiVideoFlags = SDL_SWSURFACE;
+	gfFullScreen |= gCmdLineParams.fFullScreen;
 
 	if ( pVideoInfo->hw_available )
 		uiVideoFlags |= SDL_HWSURFACE | SDL_DOUBLEBUF;

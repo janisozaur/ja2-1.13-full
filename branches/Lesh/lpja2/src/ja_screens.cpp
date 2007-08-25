@@ -355,11 +355,6 @@ UINT32 InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 0 )
 	{
-		if ( strcmp( gzCommandLine, "-NODD" ) == 0 )
-		{
-			gfDontUseDDBlits = TRUE;
-		}
-
 		// Load version number....
 		//HandleLimitedNumExecutions( );
 

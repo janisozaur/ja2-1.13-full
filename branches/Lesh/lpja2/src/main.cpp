@@ -2,6 +2,7 @@
 #include "sgp.h"
 #include "platform.h"
 #include "game.h"
+#include "command_line.h"
 
 
 static BOOLEAN fRestore = FALSE;
@@ -10,10 +11,13 @@ int main(int argc, char *argv[])
 {
 	printf("JA2 1.13 startup\n");
 
-	// Copy commandline!
-	giCLArgumentsCount = argc;
-	gpCLArgument       = argv;
-	ProcessJa2CommandLineBeforeInitialization();
+	ProcessCommandLine( argc, argv );
+
+	if ( gCmdLineParams.fHelp )
+	{
+		PrintCommandLineHelp();
+		return(255);
+	}
 
 	giStartMem = MemGetFree(  ) / 1024;
 

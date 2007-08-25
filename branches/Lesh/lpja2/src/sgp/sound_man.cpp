@@ -19,10 +19,9 @@
     #include "fmod.h"
     #include "fmod_errors.h"
 	#include "SDL.h"
+	#include "command_line.h"
+	
 #endif
-
-// Uncomment this to disable the startup of sound hardware
-//#define SOUND_DISABLE
 
 // global settings
 #define		SOUND_MAX_CACHED		128						// number of cache slots
@@ -244,13 +243,19 @@ BOOLEAN InitializeSoundManager(void)
 		memset(&pSoundList[uiCount], 0, sizeof(SOUNDTAG));
     }
 
-    // Setup callbacks
-    FSOUND_File_SetCallbacks(SoundFileOpen, SoundFileClose, SoundFileRead, SoundFileSeek, SoundFileTell);
+	// check command line for disable sound
+	gfEnableStartup = !gCmdLineParams.fNoSound;
 
-#ifndef SOUND_DISABLE
-	if(gfEnableStartup && SoundInitHardware())
-		fSoundSystemInit=TRUE;
-#endif
+	if ( gfEnableStartup )
+	{
+	    // Setup callbacks
+	    FSOUND_File_SetCallbacks(SoundFileOpen, SoundFileClose, SoundFileRead, SoundFileSeek, SoundFileTell);
+
+		if( SoundInitHardware() )
+			fSoundSystemInit=TRUE;
+	}
+	else
+        SoundLog("Sound manager disabled");
 
 	SoundInitCache();
 

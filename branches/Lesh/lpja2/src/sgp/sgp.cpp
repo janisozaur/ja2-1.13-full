@@ -80,10 +80,6 @@ BOOLEAN gfGameInitialized = FALSE;
 BOOLEAN	gfDontUseDDBlits	= FALSE;
 BOOLEAN fSGPClosed = FALSE;
 
-// There were TWO of them??!?! -- DB
-CHAR8		gzCommandLine[100];		// Command line given
-INT32		giCLArgumentsCount = 0;	// Count of command line arguments
-CHAR8		**gpCLArgument = NULL;	// Array of pointers to command line arguments
 
 CHAR8		gzErrorMsg[2048]="";
 BOOLEAN	gfIgnoreMessages=FALSE;
@@ -418,25 +414,6 @@ void ShutdownWithErrorBox(CHAR8 *pcMessage)
 	gfIgnoreMessages=TRUE;
 
 	exit(0);
-}
-
-void ProcessJa2CommandLineBeforeInitialization(void)
-{
-	INT32	cnt = 1;
-
-	while( cnt < giCLArgumentsCount )													
-	{
-		//if its the NO SOUND option
-		if(!_strnicmp(gpCLArgument[cnt], "/NOSOUND", 8))
-		{
-			//disable the sound
-			SoundEnableSound(FALSE);
-		} else if(!_strnicmp(gpCLArgument[cnt], "/FULLSCREEN", 11))
-		{
-			gfFullScreen = TRUE;
-		}
-		cnt++;
-	}
 }
 
 void TestIO( void )

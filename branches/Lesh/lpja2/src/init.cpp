@@ -55,6 +55,7 @@
 	#include "vehicles.h"
 	#include "weapons.h"
 	#include "multilingual_text_code_generator.h"
+	#include "command_line.h"
 	
 #endif
 
@@ -507,16 +508,8 @@ UINT32 InitializeJA2(void)
 #endif
 	
 #ifdef JA2BETAVERSION
-	if( ProcessIfMultilingualCmdLineArgDetected( (UINT8 *)gzCommandLine ) )
-	{ //If the multilingual text code generator has activated, quit now.
-		gfProgramIsRunning = FALSE;
-		return( INIT_SCREEN );
-	}
-#endif
-
-#ifdef JA2BETAVERSION
 	// CHECK COMMANDLINE FOR SPECIAL UTILITY
-	if ( strcmp( gzCommandLine, "-DOMAPS" ) == 0 )
+	if ( gCmdLineParams.fDoMaps )
 	{
 		return( MAPUTILITY_SCREEN );
 	}
@@ -524,7 +517,7 @@ UINT32 InitializeJA2(void)
 
 #ifdef JA2BETAVERSION
 	//This allows the QuickSave Slots to be autoincremented, ie everytime the user saves, there will be a new quick save file
-	if ( _stricmp( gzCommandLine, "-quicksave" ) == 0 )
+	if ( gCmdLineParams.fQuickSave )
 	{
 		gfUseConsecutiveQuickSaveSlots = TRUE;
 	}
@@ -533,7 +526,7 @@ UINT32 InitializeJA2(void)
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR
 		// CHECK COMMANDLINE FOR SPECIAL UTILITY
-		if( !strcmp( gzCommandLine, "-EDITORAUTO" ) )
+		if( gCmdLineParams.fEditorAuto )
 		{
 //			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
@@ -547,7 +540,7 @@ UINT32 InitializeJA2(void)
 			gGameOptions.fAirStrikes = FALSE;
 			return( GAME_SCREEN );
 		}
-		if ( strcmp( gzCommandLine, "-EDITOR" ) == 0 )
+		if ( gCmdLineParams.fEditor )
 		{
 //			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
