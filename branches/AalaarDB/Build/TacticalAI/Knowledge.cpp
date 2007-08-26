@@ -234,7 +234,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	// if any "misc. noise" was also heard recently
 	if (pSoldier->aiData.sNoiseGridno != NOWHERE)
 	{
-		if ( pSoldier->bNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->aiData.sNoiseGridno, pSoldier->bNoiseLevel, 0, FALSE, 255 ) == 0 )
+		if ( pSoldier->bNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, pSoldier->aiData.sNoiseGridno ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, pSoldier->aiData.sNoiseGridno, pSoldier->bNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
 		{
 			// calculate how far this noise was, and its relative "importance"
 			iDistAway = SpacesAway(pSoldier->sGridNo,pSoldier->aiData.sNoiseGridno);
@@ -263,7 +263,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		if (*psNoiseGridNo != NOWHERE)
 		{
 			// if we are NOT there (at the noise gridno)
-			if ( *pbNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, FALSE, 255 ) == 0 )
+			if ( *pbNoiseLevel != pSoldier->pathing.bLevel || PythSpacesAway( pSoldier->sGridNo, *psNoiseGridNo ) >= 6 || SoldierTo3DLocationLineOfSightTest( pSoldier, *psNoiseGridNo, *pbNoiseLevel, 0, FALSE, NO_DISTANCE_LIMIT ) == 0 )
 			{
 				// calculate how far this noise was, and its relative "importance"
 				iDistAway = SpacesAway(pSoldier->sGridNo,*psNoiseGridNo);

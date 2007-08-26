@@ -364,7 +364,7 @@ UINT8 GetBurstPenalty( OBJECTTYPE *pObj, BOOLEAN fProneStance = FALSE );
 UINT8 GetAutoPenalty( OBJECTTYPE *pObj, BOOLEAN fProneStance = FALSE );
 UINT8 GetShotsPerBurst( OBJECTTYPE *pObj );
 UINT8 GetMagSize( OBJECTTYPE *pObj );
-BOOLEAN WeaponReady(SOLDIERTYPE * pSoldier);
+bool WeaponReady(SOLDIERTYPE * pSoldier);
 INT8 GetAPsToReload( OBJECTTYPE *pObj );
 
 

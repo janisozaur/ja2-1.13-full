@@ -1012,7 +1012,7 @@ void HandleShadingOfLinesForMilitiaControlMenu( void )
 	if ( GetSoldier( &pSoldier, gusSelectedSoldier )  )
 	{
 		// Check LOS!
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->pathing.bLevel, 3, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, pTMilitiaSoldier->sGridNo,  pTMilitiaSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_ATTACK );
 			UnShadeStringInBox( ghMilitiaControlBox, MILCON_MENU_HOLD );

@@ -455,6 +455,9 @@ void STRUCT_TimeChanges::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 void STRUCT_Flags::ConvertFrom_101_To_102(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
+	this->ZipperFlag = FALSE;
+	this->DropPackFlag = FALSE;
+
 	this->bHasKeys = src.bHasKeys;			// allows AI controlled dudes to open locked doors
 	this->fHitByGasFlags = src.fHitByGasFlags;						// flags 
 	this->fIsSoldierMoving = src.fIsSoldierMoving;							// ie.  Record time is on
@@ -646,6 +649,8 @@ SOLDIERTYPE& SOLDIERTYPE::operator=(const OLDSOLDIERTYPE_101& src)
 {
 	PERFORMANCE_MARKER
     if ((void*)this != (void*)&src) {
+		this->DropPackKey = 0;
+
 		//member classes
 		aiData.ConvertFrom_101_To_102(src);
 		flags.ConvertFrom_101_To_102(src);
@@ -4101,7 +4106,7 @@ void SOLDIERTYPE::SetSoldierGridNo( INT16 sNewGridNo, BOOLEAN fForceRemove )
 							// if we SEE this particular oppponent, and he DOESN'T see us... and he COULD see us...
 							if ( (thisSoldier->aiData.bOppList[ cnt ] == SEEN_CURRENTLY) &&
 								pEnemy->aiData.bOppList[ thisSoldier->ubID ] != SEEN_CURRENTLY && 
-								PythSpacesAway( thisSoldier->sGridNo, pEnemy->sGridNo ) < DistanceVisible( pEnemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, thisSoldier->sGridNo, thisSoldier->pathing.bLevel ) )
+								PythSpacesAway( thisSoldier->sGridNo, pEnemy->sGridNo ) < pEnemy->GetMaxDistanceVisible(thisSoldier->sGridNo, thisSoldier->pathing.bLevel ) )
 							{
 								// AGILITY (5):  Soldier snuck 1 square past unaware enemy
 								StatChange( thisSoldier, AGILAMT, 5, FALSE );

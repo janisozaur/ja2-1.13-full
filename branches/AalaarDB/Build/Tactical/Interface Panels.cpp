@@ -471,8 +471,6 @@ INT8				gbSMCurStanceObj;
 UINT16				gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 // CHRISL:
-std::vector<LBENODE>	LBEptr;
-UINT16		LBEptrNum=0;
 extern	INT8		gbCompatibleApplyItem; 
 extern	SOLDIERTYPE *gpItemPopupSoldier;
 
@@ -630,7 +628,7 @@ void CheckForDisabledForGiveItem( )
 				sDist = PythSpacesAway( gpSMCurrentMerc->sGridNo, pSoldier->sGridNo );
 
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->pathing.bLevel, 3, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 				{
 					if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
 					{
@@ -662,7 +660,7 @@ void CheckForDisabledForGiveItem( )
 				sDist = PythSpacesAway( MercPtrs[ ubSrcSoldier ]->sGridNo, sDestGridNo );
 
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, TRUE )  )
+				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, TRUE, CALC_FROM_ALL_DIRS )  )
 				{
 					// UNCONSCIOUS GUYS ONLY 1 tile AWAY
 					if ( MercPtrs[ gusSMCurrentMerc ]->stats.bLife < CONSCIOUSNESS )
@@ -3410,8 +3408,8 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	{
 		// If we're standing over the backpack that we're trying to pick up, reset the ap cost to 0
 		if(!newStatus)
-			if(gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.bDetonatorType == -1)
-				if(LBEptr[gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.usBombItem].lbeIndex != NONE)
+			if(gWorldItems[pSoldier->DropPackKey].object.IsLBE())
+				if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
 					if(gWorldItems[pSoldier->DropPackKey].sGridNo == pSoldier->sGridNo)
 					{
 						sAPCost = 0;
@@ -3450,10 +3448,10 @@ BOOLEAN ChangeDropPackStatus(SOLDIERTYPE *pSoldier, BOOLEAN newStatus)
 	else
 	{
 		// Is the item we dropped in this sector and does it have an active LBENODE flag?
-		if(gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.bDetonatorType == -1)
+		if(gWorldItems[pSoldier->DropPackKey].object.IsLBE())
 		{
 			// Is the LBENODE we're trying to pick up actually in use?
-			if(LBEptr[gWorldItems[pSoldier->DropPackKey].object[0]->data.misc.usBombItem].lbeIndex != NONE)
+			if(gWorldItems[pSoldier->DropPackKey].object.GetLBEPointer()->lbeIndex != NONE)
 			{
 				// Try to pickup the LBENODE
 				if(AutoPlaceObject(pSoldier, &(gWorldItems[ pSoldier->DropPackKey ].object ), TRUE ))
@@ -6895,12 +6893,12 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 	UINT16	dSize;
 	BOOLEAN	flag=FALSE;
 
-	if((*pObj)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
-		lbeIndex = (*pObj)[0]->data.misc.usBombItem;
+	if(pObj->IsLBE())
+		lbeIndex = pObj->GetLBEIndex();
 	else
 		lbeIndex = GetFreeLBEPackIndex();
 
-	for(int i=0; i<12; i++)	// Go through default pockets one by one
+	for(int i=0; i<ITEMS_IN_LBE; i++)	// Go through default pockets one by one
 	{
 		if(LBESlots[i] == ITEM_NOT_FOUND)	// Pocket not valid for this class of LBE
 			continue;
@@ -6909,9 +6907,9 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 		// Found an item in a default pocket so get it's ItemSize
 		//dSize=Item[pSoldier->inv[LBESlots[i]].usItem].ItemSize;
 		dSize = CalculateItemSize(&pSoldier->inv[LBESlots[i]]);
-		for(int j=0; j<12; j++)	// Search through LBE and see if item fits anywhere
+		for(int j=0; j<ITEMS_IN_LBE; j++)	// Search through LBE and see if item fits anywhere
 		{
-			if(LBEptr[lbeIndex].inv[j].usItem != NOTHING)	// Item already stored in LBENODE pocket
+			if(LBEArray[lbeIndex].inv[j].usItem != NOTHING)	// Item already stored in LBENODE pocket
 				continue;
 			// No item in this LBENODE pocket, is pocket active?
 			if(LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j] == NONE)	// Pocket is inactive
@@ -6920,13 +6918,13 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 			if(LBEPocketType[LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[j]].ItemCapacityPerSize[dSize] == NONE)	// Pocket can't hold this item size
 				continue;
 			// Default item will fit in this pocket.  Setup the LBENODE if necessary
-			if(LBEptr[lbeIndex].ubID != pSoldier->ubID)
-				LBEptr[lbeIndex].ubID = pSoldier->ubID;
-			if(LBEptr[lbeIndex].lbeIndex != Item[pObj->usItem].ubClassIndex)
-				LBEptr[lbeIndex].lbeIndex = Item[pObj->usItem].ubClassIndex;
-			if(LBEptr[lbeIndex].lbeClass != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass)
-				LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-			LBEptr[lbeIndex].inv[j] = pSoldier->inv[LBESlots[i]];
+			if(LBEArray[lbeIndex].ubID != pSoldier->ubID)
+				LBEArray[lbeIndex].ubID = pSoldier->ubID;
+			if(LBEArray[lbeIndex].lbeIndex != Item[pObj->usItem].ubClassIndex)
+				LBEArray[lbeIndex].lbeIndex = Item[pObj->usItem].ubClassIndex;
+			if(LBEArray[lbeIndex].lbeClass != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass)
+				LBEArray[lbeIndex].lbeClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
+			LBEArray[lbeIndex].inv[j] = pSoldier->inv[LBESlots[i]];
 			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
 			(*pObj)[0]->data.misc.bDetonatorType = -1;
 			(*pObj)[0]->data.misc.usBombItem = lbeIndex;
@@ -6934,7 +6932,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 		}
 	}
 	// We've put everything into the LBENODE that we could, now search other pockets for openings
-	for(int x=0; x<12; x++)
+	for(int x=0; x<ITEMS_IN_LBE; x++)
 	{
 		if(LBESlots[x] == ITEM_NOT_FOUND)
 			continue;
@@ -6944,7 +6942,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 		{
 			if(pSoldier->inv[i].usItem != NOTHING)	// Item already in that location
 				continue;
-			for(int j=0; j<12; j++)
+			for(int j=0; j<ITEMS_IN_LBE; j++)
 			{
 				flag = FALSE;
 				if(i==LBESlots[j])
@@ -6964,7 +6962,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 		}
 	}
 	// now drop everything that wouldn't fit anywhere else
-	for(int i=0; i<12 ;i++)
+	for(int i=0; i<ITEMS_IN_LBE ;i++)
 	{
 		if(LBESlots[i] == ITEM_NOT_FOUND)	// Pocket not valid for this class of LBE
 			continue;
@@ -6988,7 +6986,7 @@ BOOLEAN MoveItemsToActivePockets( SOLDIERTYPE *pSoldier, INT8 LBESlots[], UINT32
 BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
 	BOOLEAN newLBEitem = FALSE;
-	INT8	LBESlots[12]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	INT8	LBESlots[ITEMS_IN_LBE]={-1};
 	INT16	lbeIndex=ITEM_NOT_FOUND;
 
 	// Determine which LBE item we're removing so we can associate the correct pockets with it.
@@ -7050,13 +7048,13 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 	}
 
 	lbeIndex = GetFreeLBEPackIndex();
-	for(int i=0; i<12; i++)
+	for(int i=0; i<ITEMS_IN_LBE; i++)
 	{
 		// If we hit a -1, we're done
 		if(LBESlots[i] == ITEM_NOT_FOUND)
 			break;
 		// Is there an item in this pocket?
-		LBEptr[lbeIndex].inv[i] = pSoldier->inv[LBESlots[i]];
+		LBEArray[lbeIndex].inv[i] = pSoldier->inv[LBESlots[i]];
 		if(pSoldier->inv[LBESlots[i]].usItem != NOTHING)
 		{
 			RemoveObjectFromSlot( pSoldier, LBESlots[i], &(pSoldier->inv[LBESlots[i]]) );
@@ -7066,10 +7064,10 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 
 	if(newLBEitem)
 	{
-		LBEptr[lbeIndex].ubID = pSoldier->ubID;
-		LBEptr[lbeIndex].lbeIndex = Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex;
-		LBEptr[lbeIndex].lbeClass = LoadBearingEquipment[Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex].lbeClass;
-		LBEptr[lbeIndex].ZipperFlag = FALSE;
+		LBEArray[lbeIndex].ubID = pSoldier->ubID;
+		LBEArray[lbeIndex].lbeIndex = Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex;
+		LBEArray[lbeIndex].lbeClass = LoadBearingEquipment[Item[pSoldier->inv[uiHandPos].usItem].ubClassIndex].lbeClass;
+		LBEArray[lbeIndex].ZipperFlag = FALSE;
 		// usBombItem can be used to track the index for LBE Items if we don't want to alter the OBJECTTYPE structure
 		pSoldier->inv[uiHandPos][0]->data.misc.usBombItem = lbeIndex;
 		pSoldier->inv[uiHandPos][0]->data.misc.bDetonatorType = -1;
@@ -7088,7 +7086,7 @@ BOOLEAN MoveItemToLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *
 BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE *pObj )
 {
 	BOOLEAN newLBEitem = FALSE;
-	INT8	LBESlots[12]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	INT8	LBESlots[ITEMS_IN_LBE]={-1};
 	INT16	lbeIndex=ITEM_NOT_FOUND;
 
 	// Determine which LBE item we're adding so we can associate the correct pockets with it.
@@ -7151,31 +7149,31 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 
 	if(pSoldier->inv[uiHandPos].usItem == NOTHING)
 		MoveItemsToActivePockets(pSoldier, LBESlots, uiHandPos, pObj);
-	if((*pObj)[0]->data.misc.bDetonatorType == -1)
-		lbeIndex = (*pObj)[0]->data.misc.usBombItem;
+	if(pObj->IsLBE())
+		lbeIndex = pObj->GetLBEIndex();
 	if(lbeIndex == ITEM_NOT_FOUND)
 		return (FALSE);
 
-	for(int i=0; i<12; i++)
+	for(int i=0; i<ITEMS_IN_LBE; i++)
 	{
 		// If we hit a -1, we're done
 		if(LBESlots[i] == ITEM_NOT_FOUND)
 			break;
 		// Is there an item in this LBE pocket?
-		if(LBEptr[lbeIndex].inv[i].usItem != NOTHING)
+		if(LBEArray[lbeIndex].inv[i].usItem != NOTHING)
 		{
-			pSoldier->inv[LBESlots[i]] = LBEptr[lbeIndex].inv[i];
+			pSoldier->inv[LBESlots[i]] = LBEArray[lbeIndex].inv[i];
 			newLBEitem = TRUE;
 		}
 	}
 	if(newLBEitem)
 	{
-		LBEptr[lbeIndex].ubID = 0;
-		LBEptr[lbeIndex].lbeIndex = 0;
-		LBEptr[lbeIndex].lbeClass = 0;
-		LBEptr[lbeIndex].ZipperFlag = FALSE;
-		for (int idx=0; idx < 12; ++idx) {
-			memset(&(LBEptr[lbeIndex].inv[idx]), 0, sizeof(OBJECTTYPE));
+		LBEArray[lbeIndex].ubID = 0;
+		LBEArray[lbeIndex].lbeIndex = 0;
+		LBEArray[lbeIndex].lbeClass = 0;
+		LBEArray[lbeIndex].ZipperFlag = FALSE;
+		for (int idx=0; idx < ITEMS_IN_LBE; ++idx) {
+			LBEArray[lbeIndex].inv[idx].initialize();
 		}
 		(*pObj)[0]->data.misc.usBombItem = 0;
 		(*pObj)[0]->data.misc.bDetonatorType = 0;
@@ -7188,23 +7186,20 @@ BOOLEAN MoveItemFromLBEItem( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, OBJECTTYPE
 INT16 GetFreeLBEPackIndex( void )
 {
 	UINT16 uiCount;
-//	LBENODE *newLBEptr;
-	UINT16	uiOldLBEptrNum;
-
-	for(uiCount=0; uiCount < LBEptrNum; uiCount++)
+	for(uiCount=0; uiCount < LBEArray.size(); uiCount++)
 	{
-		if ( LBEptr[ uiCount ].lbeIndex == 0)
+		if ( LBEArray[ uiCount ].lbeIndex == 0)
 			return( (INT16)uiCount );
 	}
 
-	uiOldLBEptrNum = LBEptrNum;
-	LBEptrNum ++;
-	LBENODE *filler = new LBENODE;
-	LBEptr.push_back(*filler);
-	LBEptr[uiCount].ubID = 0;
-	LBEptr[uiCount].lbeClass = 0;
-	LBEptr[uiCount].lbeIndex = 0;
-	for(int i=0; i<12; i++)
-		LBEptr[uiCount].inv[i].usItem = 0;
+	//ADB this is a mem leak!!!!!!!
+	//LBENODE *filler = new LBENODE;
+	//LBEArray.push_back(*filler);
+	LBEArray.push_back(LBENODE());
+	LBEArray[uiCount].ubID = 0;
+	LBEArray[uiCount].lbeClass = 0;
+	LBEArray[uiCount].lbeIndex = 0;
+	for(int i=0; i<ITEMS_IN_LBE; i++)
+		LBEArray[uiCount].inv[i].usItem = 0;
 	return(uiCount);
 }

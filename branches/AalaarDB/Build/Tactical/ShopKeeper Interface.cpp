@@ -2811,7 +2811,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	}
 
 	// CHRISL: if item is LBENODE
-	if( (UsingInventorySystem() == true) && (*pItemObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
+	if( (UsingInventorySystem() == true) && pItemObject->IsLBE())
 	{
 		//Display the '*' in the bottom right corner of the square
 		swprintf( zTemp, L"*" );
@@ -7080,7 +7080,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier )
 		sDestGridNo = pShopkeeper->sGridNo;
 		bDestLevel	= pShopkeeper->pathing.bLevel;
 		// If he has LOS...
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sDestGridNo, bDestLevel, 3, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sDestGridNo, bDestLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			// Get range to shopkeeper
 			uiRange = GetRangeFromGridNoDiff( pSoldier->sGridNo, sDestGridNo );

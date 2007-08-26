@@ -2916,7 +2916,7 @@ UINT32 LBENODEChecksum( LBENODE * pNode )
 	uiChecksum *= (pNode->lbeIndex +1);
 	uiChecksum += (pNode->ubID +1);
 
-	for ( uiLoop = 0; uiLoop < 12; uiLoop++ )
+	for ( uiLoop = 0; uiLoop < ITEMS_IN_LBE; uiLoop++ )
 	{
 		uiChecksum += pNode->inv[ uiLoop ].usItem;
 	}

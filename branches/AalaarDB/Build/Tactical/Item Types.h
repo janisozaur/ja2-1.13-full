@@ -71,7 +71,34 @@ typedef enum
 
 #define GS_CARTRIDGE_IN_CHAMBER				0x01
 
+//forward declaration
+class OBJECTTYPE;
 
+//TODO if LBENODE::inv is made variable sized, replace all ITEMS_IN_LBE with inv.size()
+//also TODO find and replace all 12 with ITEMS_IN_LBE
+#define ITEMS_IN_LBE 12
+
+//CHRISL:
+class LBENODE
+{
+public:
+	//TODO make this a variable sized vector???
+	LBENODE() { initialize();};
+	void	initialize() {inv.clear(); inv.resize(ITEMS_IN_LBE);};
+	BOOLEAN	Load( HWFILE hFile );
+	BOOLEAN	Save( HWFILE hFile );
+
+	UINT32				lbeClass;
+	UINT16				lbeIndex;
+	UINT8				ubID;
+	BOOLEAN				ZipperFlag;
+	UINT32				uiNodeChecksum;
+	//OBJECTTYPE			inv[ITEMS_IN_LBE];  //compiler complains about too big an array since OBJECTTYPE's size is unknown at this time
+	std::vector<OBJECTTYPE> inv;
+};
+#define SIZEOF_LBENODE_POD 0
+
+extern	std::vector<LBENODE>	LBEArray;
 
 //do not alter or saves will break, create new defines if the size changes
 #define OLD_MAX_ATTACHMENTS_101 4
@@ -238,7 +265,6 @@ public:
 		UINT8										ubShotsLeft;//holds the same value as ubShotsLeft[0]
 		ObjectDataStructs::OBJECT_GUN				gun;
 		ObjectDataStructs::OBJECT_MONEY				money;
-		//ADB TODO
 		ObjectDataStructs::OBJECT_BOMBS_AND_OTHER	misc;
 		ObjectDataStructs::OBJECT_KEY				key;
 		ObjectDataStructs::OBJECT_OWNER				owner;
@@ -250,8 +276,6 @@ public:
 };
 
 
-//forward declaration
-class OBJECTTYPE;
 typedef	std::list<OBJECTTYPE>	attachmentList;
 class StackedObjectData  {
 public:
@@ -293,6 +317,8 @@ public:
 	bool	operator==(OBJECTTYPE& compare);
 	bool	operator==(const OBJECTTYPE& compare)const;
 	bool	IsLBE();
+	LBENODE*	GetLBEPointer(int subObject = 0);
+	int		GetLBEIndex(int subObject = 0);
 
 	int		AddObjectsToStack(int howMany, int objectStatus = 100);
 	int		AddObjectsToStack(OBJECTTYPE& sourceObject, int howMany = -1);

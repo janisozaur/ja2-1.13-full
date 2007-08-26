@@ -7295,7 +7295,7 @@ void CreateDestroyMapInvButton()
 	// disable allmouse regions in this space
 	fTeamPanelDirty=TRUE;
 
-	//ADB TODO both are new?
+	//ADB TODO both are new?  Fix this if incorrect
   // CHRISL: Setup default coords
   if((UsingInventorySystem() == true))
 	  InitializeInvPanelCoordsNew();

@@ -1779,11 +1779,11 @@ INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE 
 		ubTreeReduction = gubTreeSightReduction[ gAnimControl[pEndSoldier->usAnimState].ubEndHeight ];
 	}
 
-	if (iTileSightLimit == -1) {
-		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( pEndSoldier->sGridNo, pEndSoldier->pathing.bLevel );
+	if (iTileSightLimit == CALC_FROM_ALL_DIRS || iTileSightLimit == CALC_FROM_WANTED_DIR) {
+		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( pEndSoldier->sGridNo, pEndSoldier->pathing.bLevel, iTileSightLimit );
 	}
-	else if (iTileSightLimit == 255) {
-		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( pEndSoldier->sGridNo, pEndSoldier->pathing.bLevel );
+	else if (iTileSightLimit == NO_DISTANCE_LIMIT) {
+		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( pEndSoldier->sGridNo, pEndSoldier->pathing.bLevel, CALC_FROM_ALL_DIRS );
 	}
 
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos, iTileSightLimit, ubTreeReduction, bAware, bEffectiveCamo + bEffectiveStealth, fSmell, NULL ) );
@@ -1810,9 +1810,10 @@ INT16 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT16 sEndGridNo
 	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
 	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
-	// We don't want to consider distance limits here so pass in tile sight limit of 255
+	//ADB changed from 255 to 511 to handle new LOS test
+	// We don't want to consider distance limits here so pass in tile sight limit of 255( + 256)
 	// and consider trees as little as possible
-	iRet = LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo );	
+	iRet = LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, 511, 0, TRUE, 0, FALSE, &sWindowGridNo );	
 
 	return( sWindowGridNo );
 }
@@ -1854,11 +1855,11 @@ INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGr
 	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
 	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
-	if (iTileSightLimit == -1) {
-		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
+	if (iTileSightLimit == CALC_FROM_ALL_DIRS || iTileSightLimit == CALC_FROM_WANTED_DIR) {
+		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel, iTileSightLimit );
 	}
-	else if (iTileSightLimit == 255) {
-		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
+	else if (iTileSightLimit == NO_DISTANCE_LIMIT) {
+		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel, CALC_FROM_ALL_DIRS );
 	}
 
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, iTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, HasThermalOptics( pStartSoldier), NULL ) );
@@ -1902,11 +1903,11 @@ INT32 SoldierToVirtualSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16
 	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
 	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
-	if (iTileSightLimit == -1) {
-		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
+	if (iTileSightLimit == CALC_FROM_ALL_DIRS || iTileSightLimit == CALC_FROM_WANTED_DIR) {
+		iTileSightLimit = pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel, iTileSightLimit );
 	}
-	else if (iTileSightLimit == 255) {
-		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
+	else if (iTileSightLimit == NO_DISTANCE_LIMIT) {
+		iTileSightLimit = 255 + pStartSoldier->GetMaxDistanceVisible( sGridNo, bLevel, CALC_FROM_ALL_DIRS );
 	}
 
 	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, iTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, HasThermalOptics( pStartSoldier), NULL ) );
@@ -1942,10 +1943,10 @@ INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, I
 	sEndXPos = sEndXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
 	sEndYPos = sEndYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
-	if (iTileSightLimit == -1) {
+	if (iTileSightLimit == CALC_FROM_ALL_DIRS || iTileSightLimit == CALC_FROM_WANTED_DIR) {
 		iTileSightLimit = MaxNormalDistanceVisible();
 	}
-	else if (iTileSightLimit == 255) {
+	else if (iTileSightLimit == NO_DISTANCE_LIMIT) {
 		iTileSightLimit = 255 + MaxNormalDistanceVisible();
 	}
 	return( LineOfSightTest( (FLOAT)sStartXPos, (FLOAT)sStartYPos, dStartZPos, (FLOAT) sEndXPos, (FLOAT) sEndYPos, dEndZPos, iTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );

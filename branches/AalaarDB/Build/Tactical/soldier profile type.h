@@ -161,21 +161,6 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
-//CHRISL:
-typedef struct
-{
-	UINT32				lbeClass;
-	UINT16				lbeIndex;
-	UINT8				ubID;
-	BOOLEAN				ZipperFlag;
-	UINT32				uiNodeChecksum;
-	OBJECTTYPE			inv[12];
-} LBENODE;
-
-//extern LBENODE			*LBEptr;
-extern std::vector<LBENODE>	LBEptr;
-extern UINT16			LBEptrNum;
-
 // CHRISL: Class to handle profile equipment from XML_MercStartingGear
 class MERCPROFILEGEAR {
 public:

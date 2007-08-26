@@ -4,6 +4,45 @@
 #include "Items.h"
 
 OBJECTTYPE gTempObject;
+std::vector<LBENODE>	LBEArray;
+LBETYPE::LBETYPE(){
+	memset(this, 0, SIZEOF_LBETYPE);
+	lbePocketIndex.resize(ITEMS_IN_LBE);
+}
+LBETYPE::LBETYPE(const LBETYPE& src) {
+	memcpy(this, &src, SIZEOF_LBETYPE);
+	lbePocketIndex.resize(ITEMS_IN_LBE);
+	lbePocketIndex = src.lbePocketIndex;
+}
+LBETYPE& LBETYPE::operator=(const LBETYPE& src){
+    if (this != &src) {
+		memcpy(this, &src, SIZEOF_LBETYPE);
+		lbePocketIndex = src.lbePocketIndex;
+    }
+    return *this;
+}
+LBETYPE::~LBETYPE(){
+}
+POCKETTYPE::POCKETTYPE(){
+	memset(this, 0, SIZEOF_POCKETTYPE);
+	ItemCapacityPerSize.resize(35);
+}
+POCKETTYPE::POCKETTYPE(const POCKETTYPE& src){
+	memcpy(this, &src, SIZEOF_POCKETTYPE);
+	ItemCapacityPerSize.resize(35);
+	ItemCapacityPerSize = src.ItemCapacityPerSize;
+}
+POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
+    if (this != &src) {
+		memcpy(this, &src, SIZEOF_POCKETTYPE);
+		ItemCapacityPerSize = src.ItemCapacityPerSize;
+    }
+    return *this;
+}
+POCKETTYPE::~POCKETTYPE(){
+}
+
+
 
 //ADB TODO: ChrisL, rewrite this to your liking, then insert it everywhere you have (*pObject)[0]->data.misc.bDetonatorType == -1.
 //Go ahead and add a new variable to OBJECTTYPE if you want, but then add it to all the functions.
@@ -14,6 +53,18 @@ bool OBJECTTYPE::IsLBE()
 		return ((*this)[0]->data.misc.bDetonatorType == -1);
 	}
 	return false;
+}
+
+//here we DO care about which subObject in the stack it is
+LBENODE* OBJECTTYPE::GetLBEPointer(int subObject)
+{
+	return &(LBEArray[GetLBEIndex(subObject)]);
+}
+
+//here we DO care about which subObject in the stack it is
+int OBJECTTYPE::GetLBEIndex(int subObject)
+{
+	return (*this)[subObject]->data.misc.usBombItem;
 }
 
 int OBJECTTYPE::AddObjectsToStack(int howMany, int objectStatus)

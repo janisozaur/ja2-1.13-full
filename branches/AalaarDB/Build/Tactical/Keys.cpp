@@ -1351,7 +1351,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 		{
 			// and we can trace a line of sight to his x,y coordinates?
 			// (taking into account we are definitely aware of this guy now)
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE ) )
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 			{
 				// Update status...
 				if ( fUpdateValue )
@@ -1367,7 +1367,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 				usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 				// and we can trace a line of sight to his x,y coordinates?
 				// (taking into account we are definitely aware of this guy now)
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE ) )
+				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 				{
 					// Update status...
 					if ( fUpdateValue )
@@ -1408,7 +1408,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 		sGridNo = pDoorStatus->sGridNo;
 		// and we can trace a line of sight to his x,y coordinates?
 		// (taking into account we are definitely aware of this guy now)
-		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE ) )
+		if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			// OK, here... update perceived value....
 			if ( fUpdateValue )
@@ -1427,7 +1427,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 			usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 			// and we can trace a line of sight to his x,y coordinates?
 			// (taking into account we are definitely aware of this guy now)
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE ) )
+			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, TRUE, CALC_FROM_ALL_DIRS ) )
 			{
 				// Update status...
 				if ( fUpdateValue )

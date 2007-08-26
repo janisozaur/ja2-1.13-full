@@ -1209,43 +1209,6 @@ std::vector<POCKETTYPE> LBEPocketType;
 //	{	/* Knife Pocket */			5,	0,	1,	{0,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0} }
 //};
 
-LBETYPE::LBETYPE(){
-	memset(this, 0, SIZEOF_LBETYPE);
-	lbePocketIndex.resize(12);
-}
-LBETYPE::LBETYPE(const LBETYPE& src) {
-	memcpy(this, &src, SIZEOF_LBETYPE);
-	lbePocketIndex.resize(12);
-	lbePocketIndex = src.lbePocketIndex;
-}
-LBETYPE& LBETYPE::operator=(const LBETYPE& src){
-    if (this != &src) {
-		memcpy(this, &src, SIZEOF_LBETYPE);
-		lbePocketIndex = src.lbePocketIndex;
-    }
-    return *this;
-}
-LBETYPE::~LBETYPE(){
-}
-POCKETTYPE::POCKETTYPE(){
-	memset(this, 0, SIZEOF_POCKETTYPE);
-	ItemCapacityPerSize.resize(35);
-}
-POCKETTYPE::POCKETTYPE(const POCKETTYPE& src){
-	memcpy(this, &src, SIZEOF_POCKETTYPE);
-	ItemCapacityPerSize.resize(35);
-	ItemCapacityPerSize = src.ItemCapacityPerSize;
-}
-POCKETTYPE& POCKETTYPE::operator=(const POCKETTYPE& src){
-    if (this != &src) {
-		memcpy(this, &src, SIZEOF_POCKETTYPE);
-		ItemCapacityPerSize = src.ItemCapacityPerSize;
-    }
-    return *this;
-}
-POCKETTYPE::~POCKETTYPE(){
-}
-
 BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 {
 	PERFORMANCE_MARKER
@@ -2453,6 +2416,7 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 	if(iSize>34)
 		iSize = 34;
 
+//TODO INIT CNT1, init newsize and ncnt2!!!!!!
 
 	//for each object in the stack
 	for (int numStacked = 0; numStacked = pObject->ubNumberOfObjects; ++numStacked) {
@@ -2466,14 +2430,14 @@ UINT16 CalculateItemSize( OBJECTTYPE *pObject )
 		// Check if we're looking at a LBENODE or not
 		if(pObject->IsLBE())
 		{
-			if(LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].lbeIndex != NULL)
+			if(pObject->GetLBEIndex(numStacked) != NULL)
 			{
 				newSize = 0;
-				for(cnt=0; cnt<12; cnt++)
+				for(cnt=0; cnt<ITEMS_IN_LBE; cnt++)
 				{
-					if(LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
+					if(pObject->GetLBEPointer(numStacked)->inv[cnt].usItem != NOTHING)
 					{
-						testSize = CalculateItemSize(&LBEptr[(*pObject)[numStacked]->data.misc.usBombItem].inv[cnt]);
+						testSize = CalculateItemSize(&(pObject->GetLBEPointer(numStacked)->inv[cnt]));
 						newSize = (testSize > newSize) ? testSize : newSize;
 					}
 				}
@@ -2568,13 +2532,13 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 		for( cnt = 0; cnt < pObject->ubNumberOfObjects; cnt++ )
 		{
 			// Are we looking at an LBENODE item?  New inventory only.
-			if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[cnt]->data.misc.bDetonatorType == ITEM_NOT_FOUND && (UsingInventorySystem() == true))
+			if(pItem->usItemClass == IC_LBEGEAR && pObject->IsLBE() && (UsingInventorySystem() == true))
 			{
 				for ( int subObjects = 0; subObjects < 12; subObjects++)
 				{
-					if (LBEptr[(*pObject)[cnt]->data.misc.usBombItem].inv[subObjects].usItem != NOTHING)
+					if (pObject->GetLBEPointer(cnt)->inv[subObjects].usItem != NOTHING)
 					{
-						usWeight += CalculateObjectWeight(&(LBEptr[(*pObject)[cnt]->data.misc.usBombItem].inv[subObjects]));
+						usWeight += CalculateObjectWeight(&(pObject->GetLBEPointer(cnt)->inv[subObjects]));
 					}
 				}
 				//do not search for attachments to an LBE
@@ -2628,15 +2592,15 @@ UINT16 CalculateObjectWeight( OBJECTTYPE *pObject )
 	usWeight = pItem->ubWeight;
 
 	// Are we looking at an LBENODE item?  New inventory only.
-	if(pItem->usItemClass == IC_LBEGEAR && (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND && (UsingInventorySystem() == true))
+	if(pItem->usItemClass == IC_LBEGEAR && pObject->IsLBE() && (UsingInventorySystem() == true))
 	{
-		for ( cnt = 0; cnt < 12; cnt++)
+		for ( cnt = 0; cnt < ITEMS_IN_LBE; cnt++)
 		{
-			if (LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem != NOTHING)
+			if (pObject->GetLBEPointer->inv[cnt].usItem != NOTHING)
 			{
-				tWeight = CalculateObjectWeight(&(LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt]));
-				if(Item[LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].usItem].usItemClass != IC_AMMO)
-					tWeight *= LBEptr[(*pObject)[0]->data.misc.usBombItem].inv[cnt].ubNumberOfObjects;
+				tWeight = CalculateObjectWeight(&(pObject->GetLBEPointer->inv[cnt]));
+				if(Item[pObject->GetLBEPointer->inv[cnt].usItem].usItemClass != IC_AMMO)
+					tWeight *= pObject->GetLBEPointer->inv[cnt].ubNumberOfObjects;
 				usWeight += tWeight;
 			}
 		}
@@ -2737,7 +2701,6 @@ UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
 	UINT32	uiTotalWeight = 0;
 	UINT32	uiPercent;
 	UINT8		ubLoop;
-	UINT16  usWeight;
 	UINT8		ubStrengthForCarrying;
 
 	//Pulmu: Changes for dynamic ammo weight
@@ -4103,8 +4066,17 @@ BOOLEAN CanItemFitInVehicle( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos,
 BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
 {
 	PERFORMANCE_MARKER
-	UINT8					ubSlotLimit;
-	INT8					bNewPos;
+	UINT8					ubSlotLimit, lbePocket=1;
+	INT8					bNewPos=ITEM_NOT_FOUND;
+	UINT32					pRestrict=0;
+
+	// CHRISL: Only check valid pockets
+	if((UsingInventorySystem() == false) && !oldInv[bPos])
+		return(FALSE);
+	if((pSoldier->flags.uiStatusFlags & SOLDIER_VEHICLE))
+		return(CanItemFitInVehicle(pSoldier, pObj, bPos, fDoingPlacement));
+
+	ubSlotLimit = ((UsingInventorySystem() == false)) ? ItemSlotLimit( pObj->usItem, bPos ) : ItemSlotLimit( pObj, bPos, pSoldier );
 
 	switch( bPos )
 	{
@@ -4122,14 +4094,16 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING && pSoldier->inv[SECONDHANDPOS].usItem != NOTHING)
 				{
 					// two items in hands; try moving the second one so we can swap 
+					// CHRISL: Adjust parameters to include the new inventory system
 					if (Item[pSoldier->inv[SECONDHANDPOS].usItem].ubPerPocket == 0)
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCK4POS );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (BIGPOCKFINAL-1) );
 					}
 					else
 					{
-						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
+						bNewPos = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, (NUM_INV_SLOTS-1) );
 					}
+
 					if (bNewPos == NO_SLOT)
 					{
 						// nowhere to put second item
@@ -4182,15 +4156,140 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 			{
 				return( FALSE );
 			}
+		case VESTPOCKPOS:
+			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != VEST_PACK)
+			{
+				return( FALSE );
+			}
+			break;
+		case LTHIGHPOCKPOS:
+			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
+			{
+				return( FALSE );
+			}
+			break;
+		case RTHIGHPOCKPOS:
+			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != THIGH_PACK)
+			{
+				return( FALSE );
+			}
+			break;
+		case CPACKPOCKPOS:
+			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != COMBAT_PACK)
+			{
+				return( FALSE );
+			}
+			if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING)
+			{
+				if(LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo ||
+				LoadBearingEquipment[Item[pSoldier->inv[BPACKPOCKPOS].usItem].ubClassIndex].lbeCombo == 0)
+				{
+					return( FALSE );
+				}
+			}
+			break;
+		case BPACKPOCKPOS:
+			if (Item[pObj->usItem].usItemClass != IC_LBEGEAR || LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass != BACKPACK)
+			{
+				return( FALSE );
+			}
+			// Removed backpack/gunsling restrictions
+			//if(pSoldier->inv[GUNSLINGPOCKPOS].usItem != NOTHING)
+			//	return( FALSE );
+			if(pSoldier->inv[CPACKPOCKPOS].usItem != NOTHING)
+			{
+				if(LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo != LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeCombo ||
+				LoadBearingEquipment[Item[pSoldier->inv[CPACKPOCKPOS].usItem].ubClassIndex].lbeCombo == 0)
+				{
+					return( FALSE );
+				}
+			}
+			break;
+		case GUNSLINGPOCKPOS:	// Gun Sling
+			//if (Item[pObj->usItem].usItemClass != IC_GUN && Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_LAUNCHER)
+			if(Item[pObj->usItem].usItemClass == IC_AMMO || Item[pObj->usItem].usItemClass == IC_GRENADE)
+				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
+			// Removed backpack/gunsling restrictions
+			//if(pSoldier->inv[BPACKPOCKPOS].usItem != NOTHING)
+			//	return(CompatibleAmmoForGun(pObj, &pSoldier->inv[GUNSLINGPOCKPOS]));
+			break;
+		case KNIFEPOCKPOS:	// Knife sheath
+			if (Item[pObj->usItem].usItemClass != IC_BLADE && Item[pObj->usItem].usItemClass != IC_THROWING_KNIFE )
+				return(CompatibleAmmoForGun(pObj, &pSoldier->inv[KNIFEPOCKPOS]));
+			break;
+		// IC Pockets
+		case BIGPOCK1POS:
+		case BIGPOCK2POS:
+		case BIGPOCK3POS:
+		case BIGPOCK4POS:
+		case BIGPOCK5POS:
+		case BIGPOCK6POS:
+		case BIGPOCK7POS:
+		case MEDPOCK1POS:
+		case MEDPOCK2POS:
+		case MEDPOCK3POS:
+		case MEDPOCK4POS:
+		case SMALLPOCK2POS:
+		case SMALLPOCK3POS:
+		case SMALLPOCK4POS:
+		case SMALLPOCK5POS:
+		case SMALLPOCK6POS:
+		case SMALLPOCK7POS:
+		case SMALLPOCK8POS:
+		case SMALLPOCK9POS:
+		case SMALLPOCK10POS:
+		case SMALLPOCK11POS:
+		case SMALLPOCK12POS:
+		case SMALLPOCK13POS:
+		case SMALLPOCK14POS:
+		case SMALLPOCK15POS:
+		case SMALLPOCK16POS:
+		case SMALLPOCK17POS:
+		case SMALLPOCK18POS:
+		case SMALLPOCK19POS:
+		case SMALLPOCK20POS:
+		case SMALLPOCK21POS:
+		case SMALLPOCK22POS:
+		case SMALLPOCK23POS:
+		case SMALLPOCK24POS:
+		case SMALLPOCK25POS:
+		case SMALLPOCK26POS:
+		case SMALLPOCK27POS:
+		case SMALLPOCK28POS:
+		case SMALLPOCK29POS:
+		case SMALLPOCK30POS:
+			if((UsingInventorySystem() == true))
+			{
+				if(icLBE[bPos] == BPACKPOCKPOS && (!(pSoldier->flags.ZipperFlag) || (pSoldier->flags.ZipperFlag && gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND)) && (gTacticalStatus.uiFlags & INCOMBAT))
+					return( FALSE );
+				lbePocket = (pSoldier->inv[icLBE[bPos]].usItem == NOTHING) ? LoadBearingEquipment[icClass[bPos]].lbePocketIndex[icPocket[bPos]] : LoadBearingEquipment[Item[pSoldier->inv[icLBE[bPos]].usItem].ubClassIndex].lbePocketIndex[icPocket[bPos]];
+				pRestrict = LBEPocketType[lbePocket].pRestriction;
+				if(pRestrict != 0)
+					if(pRestrict != Item[pObj->usItem].usItemClass)
+						lbePocket = 0;
+			}
+			break;
 		default:
 			break;
 	}
 
-	ubSlotLimit = ItemSlotLimit( pObj->usItem, bPos );
-	if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
+	if((UsingInventorySystem() == false))
 	{
-		// doesn't fit!
-		return( FALSE );
+		if (ubSlotLimit == 0 && bPos >= SMALLPOCK1POS )
+		{
+			// doesn't fit!
+			return( FALSE );
+		}
+	}
+	else
+	{
+		// CHRISL: lbePocket==0 means pocket disabled.  ubSlotLimit==0 means pocket can't hold item
+		if ( lbePocket == 0 || ubSlotLimit == 0 )
+			return ( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
+
+		// CHRISL: Adjust parameters to include the new inventory system
+		if (ubSlotLimit == 0 && bPos >= BIGPOCKFINAL )
+			return( CompatibleAmmoForGun(pObj, &pSoldier->inv[bPos]) );
 	}
 
 	return( TRUE );
@@ -4800,7 +4899,7 @@ BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOL
 					// CHRISL:
 					if(Item[pSoldier->inv[LEGPOS].usItem].attachment)
 					{
-						//ADB TODO
+						//ADB TODO, figure out what this code does, and fix it
 						/*
 						pObj->usAttachItem[0] = pSoldier->inv[LEGPOS].usItem;
 						pObj->bAttachStatus[0] = pSoldier->inv[LEGPOS].ItemData.Generic.bStatus[0];
@@ -7251,6 +7350,8 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 	UINT16 usItem;
 	INVTYPE *pItem;
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = HELMETPOS; i < BODYPOSFINAL; i++)
 	{
@@ -7265,7 +7366,7 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 			continue;
 		}
 
-		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && usingGunScope == true) )
 		{
 			bonus += BonusReduceMore( pItem->visionrangebonus,	(*pObj)[0]->data.objectStatus );
 		}
@@ -7273,7 +7374,7 @@ INT16 GetVisionRangeBonus( SOLDIERTYPE * pSoldier )
 
 	// Snap: check only attachments on a raised weapon!
 	//AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
-	if ( WeaponReady(pSoldier) || gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIRE )
+	if ( usingGunScope == true )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
@@ -7308,6 +7409,8 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	UINT16 usItem;
 	INVTYPE *pItem;
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = HELMETPOS; i < BODYPOSFINAL; i++)
 	{
@@ -7322,7 +7425,7 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 			continue;
 		}
 
-		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && usingGunScope == true ) )
 		{
 			bonus += BonusReduceMore(
 				NightBonusScale( pItem->nightvisionrangebonus, bLightLevel ),
@@ -7331,7 +7434,7 @@ INT16 GetNightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	}
 
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
@@ -7353,6 +7456,8 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	UINT16 usItem;
 	INVTYPE *pItem;
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = 0; i < BODYPOSFINAL; i++)
 	{
@@ -7368,7 +7473,7 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 			continue;
 		}
 
-		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && usingGunScope == true ) )
 		{
 			bonus += BonusReduceMore(
 				NightBonusScale( pItem->cavevisionrangebonus, bLightLevel ),
@@ -7377,7 +7482,7 @@ INT16 GetCaveVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	}
 
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
@@ -7401,6 +7506,8 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 
 	// Snap: Scale the bonus with the light level
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = 0; i < BODYPOSFINAL; i++)
 	{
@@ -7416,7 +7523,7 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 			continue;
 		}
 
-		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && usingGunScope == true ) )
 		{
 			bonus += BonusReduceMore( idiv( pItem->dayvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_NIGHT - bLightLevel), NORMAL_LIGHTLEVEL_NIGHT ),
@@ -7425,7 +7532,7 @@ INT16 GetDayVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel )
 	}
 
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
@@ -7449,6 +7556,8 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 
 	// Snap: Scale the bonus with the light level
 
+	//ADB and AXP 28.03.2007: CtH bug fix: We also want to check on a firing weapon, "raised" alone is not enough ;)
+	bool usingGunScope = WeaponReady(pSoldier);
 	// CHRISL:
 	for (int i = 0; i < BODYPOSFINAL; i++)
 	{
@@ -7464,7 +7573,7 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 			continue;
 		}
 
-		if (!IsWeapon(usItem) || (IsWeapon(usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(usItem) || (IsWeapon(usItem) && usingGunScope == true ) )
 		{
 			bonus += BonusReduceMore( idiv( pItem->brightlightvisionrangebonus
 				* (NORMAL_LIGHTLEVEL_DAY - bLightLevel), NORMAL_LIGHTLEVEL_DAY ),
@@ -7473,7 +7582,7 @@ INT16 GetBrightLightVisionRangeBonus( SOLDIERTYPE * pSoldier, UINT8 bLightLevel 
 	}
 
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		pObj = &( pSoldier->inv[HANDPOS]);
 
@@ -7542,8 +7651,9 @@ UINT8 GetPercentTunnelVision( SOLDIERTYPE * pSoldier )
 		}
 	}
 
+	bool usingGunScope = WeaponReady(pSoldier);
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		OBJECTTYPE *pObj = &(pSoldier->inv[HANDPOS]);
 		usItem = pObj->usItem;
@@ -7568,6 +7678,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 {
 	PERFORMANCE_MARKER
 
+	bool usingGunScope = WeaponReady(pSoldier);
 	for (int i = 0; i < BIGPOCK1POS; i++)
 	{
 		if ( (i == HANDPOS || i == SECONDHANDPOS) && 
@@ -7576,7 +7687,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 			continue;
 		}
 
-		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && WeaponReady(pSoldier) ) )
+		if (!IsWeapon(pSoldier->inv[i].usItem) || (IsWeapon(pSoldier->inv[i].usItem) && usingGunScope == true) )
 		{
 			if (Item[pSoldier->inv[i].usItem].thermaloptics)
 				return TRUE;
@@ -7584,7 +7695,7 @@ BOOLEAN HasThermalOptics( SOLDIERTYPE * pSoldier )
 	}
 
 	// Snap: check only attachments on a raised weapon!
-	if ( WeaponReady(pSoldier) )
+	if ( usingGunScope == true )
 	{
 		OBJECTTYPE* pObj = &pSoldier->inv[HANDPOS];
 		for (attachmentList::iterator iter = (*pObj)[0]->attachments.begin(); iter != (*pObj)[0]->attachments.end(); ++iter) {

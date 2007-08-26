@@ -2803,6 +2803,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 				fAtLeastModified = TRUE;
 			}
 
+#ifdef obsoleteCode
 			/*			
 			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].object.usItem == ACTION_ITEM )
 			{
@@ -2836,6 +2837,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			}
 			}
 			*/
+#endif //obsoleteCode
 
 			if (fDeleted)
 			{
@@ -5119,7 +5121,7 @@ void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 	PERFORMANCE_MARKER
 	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->stats.bLife >= OKLIFE )
 	{
-		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, TRUE ) )
+		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, TRUE, CALC_FROM_ALL_DIRS ) )
 		{
 			MakeNPCGrumpyForMinorOffense( pSoldier, gpTempSoldier );
 		}

@@ -2576,7 +2576,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 			if((UsingInventorySystem() == true))
 			{
 				// CHRISL: Display astrisk when LBENODE active
-				if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND )
+				if ( pObject->IsLBE() )
 				{
 					SetFontForeground( FONT_BLUE );
 
@@ -3523,8 +3523,8 @@ void RenderItemDescriptionBox( )
 		// CHRISL: Determine if we're looking at an LBENODE and display alternate box graphic
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
-				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
+			if(gpItemDescObject->IsLBE())
+				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -3551,7 +3551,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+			if(gpItemDescObject->IsLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -3628,7 +3628,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+			if(gpItemDescObject->IsLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, TRUE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, TRUE );
@@ -4052,8 +4052,8 @@ void RenderItemDescriptionBox( )
 		RenderBackpackButtons(1);
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
-				showBox = LBEptr[(*gpItemDescObject)[0]->data.misc.usBombItem].lbeClass;
+			if(gpItemDescObject->IsLBE())
+				showBox = gpItemDescObject->GetLBEPointer()->lbeClass;
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				showBox = LoadBearingEquipment[Item[gpItemDescObject->usItem].ubClassIndex].lbeClass;
 		}
@@ -4083,7 +4083,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+			if(gpItemDescObject->IsLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4163,7 +4163,7 @@ void RenderItemDescriptionBox( )
 		// Display LBENODE attached items
 		if((UsingInventorySystem() == true))
 		{
-			if((*gpItemDescObject)[0]->data.misc.bDetonatorType == -1)
+			if(gpItemDescObject->IsLBE())
 				RenderLBENODEItems( gpItemDescObject, TRUE, FALSE );
 			else if(Item[gpItemDescObject->usItem].usItemClass == IC_LBEGEAR)
 				RenderLBENODEItems( gpItemDescObject, FALSE, FALSE );
@@ -4598,14 +4598,14 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 	if(Item[pObj->usItem].usItemClass != IC_LBEGEAR)
 		return;
 
-	if((*pObj)[0]->data.misc.bDetonatorType == -1)
+	if(pObj->IsLBE())
 	{
-		lIndex = (*pObj)[0]->data.misc.usBombItem;
-		lClass = LBEptr[lIndex].lbeClass;
+		lIndex = pObj->GetLBEIndex();
+		lClass = pObj->GetLBEPointer()->lbeClass;
 	}
 	else
 		lClass = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbeClass;
-	if(lClass == 1 && (*pObj)[0]->data.misc.bDetonatorType != -1 && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
+	if(lClass == 1 && pObj->IsLBE() && pObj == &pSoldier->inv[RTHIGHPOCKPOS])
 		lClass = 5;
 	// Setup pocket coords
 	switch (lClass)
@@ -4690,6 +4690,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 			}
 			Num_Pockets = 12;
 			break;
+			//ADB TODO, what case is this?
 		case 5:
 			pocketKey[0] = SMALLPOCK15POS;
 			pocketKey[1] = SMALLPOCK16POS;
@@ -4723,7 +4724,7 @@ void RenderLBENODEItems( OBJECTTYPE *pObj, BOOLEAN activeNode, BOOLEAN stratScre
 		}
 		lbePocket = LoadBearingEquipment[Item[pObj->usItem].ubClassIndex].lbePocketIndex[icPocket[pocketKey[cnt]]];
 		if(activeNode)
-			pObject = &(LBEptr[lIndex].inv[cnt]);
+			pObject = &(LBEArray[lIndex].inv[cnt]);
 		else
 		{
 			if(pObj == &pSoldier->inv[VESTPOCKPOS] || pObj == &pSoldier->inv[LTHIGHPOCKPOS] || pObj == &pSoldier->inv[RTHIGHPOCKPOS] || pObj == &pSoldier->inv[CPACKPOCKPOS] || pObj == &pSoldier->inv[BPACKPOCKPOS])
@@ -5729,7 +5730,7 @@ BOOLEAN HandleItemPointerClick( INT16 sMapPos )
 					}
 
 					// Check LOS....
-					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->pathing.bLevel, 3, TRUE ) )
+					if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, gpItemPointerSoldier->sGridNo,  gpItemPointerSoldier->pathing.bLevel, 3, TRUE, CALC_FROM_ALL_DIRS ) )
 					{
 						return( FALSE );
 					}
@@ -7460,7 +7461,7 @@ void RenderItemPickupMenu( )
 			  if((UsingInventorySystem() == true))
 			  {
 				  // CHRISL: Show astrisk for active LBENODE
-				  if ( (*pObject)[0]->data.misc.bDetonatorType == ITEM_NOT_FOUND)
+				  if ( pObject->IsLBE())
 				  {
 					  SetFontForeground( FONT_BLUE );
 						SetFontShadow( DEFAULT_SHADOW );

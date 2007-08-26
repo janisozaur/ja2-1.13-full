@@ -825,6 +825,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 			}
 		}
 
+#ifdef obsoleteCode
 		//usNumMatches = 0;
 		//while( bAttachClass && !usNumMatches )
 		//{ //Count the number of valid attachments.
@@ -865,6 +866,7 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 		//		}
 		//	}				
 		//}
+#endif //obsoleteCode
 	}
 	//Now, we have chosen all of the correct items.  Now, we will assign them into the slots.
 	//Because we are dealing with enemies, automatically give them full ammo in their weapon.
@@ -1084,7 +1086,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	}
 	return;
 
-
+#ifdef obsoleteCode
 	////now, purchase the grenades.
 	//while( sNumPoints > 0 )
 	//{
@@ -1279,7 +1281,7 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 	//	gTempObject[0]->data.fFlags |= OBJECT_UNDROPPABLE;
 	//	PlaceObjectInSoldierCreateStruct( pp, &gTempObject );
 	//}
-
+#endif //obsoleteCode
 }
 
 void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass )
@@ -1318,6 +1320,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 
 		}
 
+#ifdef obsoleteCode
 		//usNumMatches = 0;
 		//while( bHelmetClass && !usNumMatches )
 		//{ //First step is to count the number of helmets in the helmet class range.  If we
@@ -1364,6 +1367,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//		}
 		//	}
 		//}
+#endif //obsoleteCode
 	}
 
 	//Choose vest
@@ -1389,6 +1393,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 
 		}
 
+#ifdef obsoleteCode
 		//usNumMatches = 0;
 		//while( bVestClass && !usNumMatches )
 		//{ //First step is to count the number of armours in the armour class range.  If we
@@ -1457,6 +1462,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//		}
 		//	}
 		//}
+#endif //obsoleteCode
 	}
 	//Choose Leggings
 	if( bLeggingsClass )
@@ -1482,6 +1488,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		}
 
 
+#ifdef obsoleteCode
 		//usNumMatches = 0;
 		//while( bLeggingsClass && !usNumMatches )
 		//{ //First step is to count the number of Armours in the Armour class range.  If we
@@ -1528,6 +1535,7 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 		//		}
 		//	}
 		//}
+#endif //obsoleteCode
 	}
 }
 
@@ -1545,6 +1553,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 	itemRPG = 0;
 	itemMortar=0;
 
+#ifdef obsoleteCode
 	//Choose knife
 	//while( bKnifeClass && !usNumMatches )
 	//{ //First step is to count the number of weapons in the weapon class range.  If we
@@ -1582,6 +1591,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 	//		}
 	//	}
 	//}
+#endif //obsoleteCode
 
 	if ( bKnifeClass )
 	{
@@ -1758,7 +1768,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 					if ( usItem > 0 )
 					{
 						CreateItem( usItem, (INT8)(70+Random(31)), &(pp->Inv[ HEAD1POS ]) );
-						pp->Inv[ HEAD2POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
+						pp->Inv[ HEAD1POS ][0]->data.fFlags |= OBJECT_UNDROPPABLE;
 					}
 				}
 			}
@@ -1792,6 +1802,7 @@ void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass 
 
 	//Madd: specify kit items in xml instead
 
+#ifdef obsoleteCode
 	// we want these mostly to be first aid and medical kits, and for those kit class doesn't matter, they're always useful
 	//if ( Chance( 50 ) )
 	//{
@@ -1840,6 +1851,7 @@ void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass 
 	//		}
 	//	}
 	//}
+#endif //obsoleteCode
 
 	// if we still want more medical and first aid kits, we can just add extras of those item #s to the array
 	usKitItem = PickARandomItem( KIT , bKitClass, FALSE ); 
@@ -1883,6 +1895,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 	}
 		
 	// Madd: code above is externalized
+#ifdef obsoleteCode
 	//// not all of these are IC_MISC, some are IC_PUNCH (not covered anywhere else)
 	//INT32 iMiscItemsList[] =
 	//{
@@ -1950,6 +1963,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 	//		i++;
 	//	}
 	//}
+#endif //obsoleteCode
 }
 
 
@@ -1971,6 +1985,7 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 	}
 
 	// Madd: externalized again
+#ifdef obsoleteCode
 	//// count how many are eligible
 	//for( i = 0; i < MAXITEMS; i++ )
 	//{
@@ -2008,6 +2023,7 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 	//		}
 	//	}
 	//}
+#endif //obsoleteCode
 }
 
 // Headrock: Added a function to randomly create LBEs
@@ -2125,10 +2141,10 @@ if ( gGameSettings.fOptions[TOPTION_DROP_ALL] )
 	PERFORMANCE_MARKER
 	ENEMYAMMODROPRATE = 100;      
 	ENEMYGRENADEDROPRATE = 100;   
-	ENEMYEQUIPDROPRATE = 50;      
+	ENEMYEQUIPDROPRATE = 100;	// WANNE: Changed from 50 to 100, because DROP ALL should mean DROP ALL!   
 	MILITIAAMMODROPRATE = 100;      
 	MILITIAGRENADEDROPRATE = 100;	
-	MILITIAEQUIPDROPRATE = 50;     
+	MILITIAEQUIPDROPRATE = 100;   // WANNE: Changed from 50 to 100, because DROP ALL should mean DROP ALL!  
 }
 else
 {
@@ -2155,6 +2171,7 @@ else
 	}
 }
 
+#ifdef obsoleteCode
 /*
 	//40% of soldiers will have droppable items.
 	usRandomNum = (UINT16)Random( 1000 );
@@ -2207,6 +2224,7 @@ else
 
 	fKnife = (Random(3)) ? FALSE : TRUE;
 */
+#endif //obsoleteCode
 
 
 	if ( SOLDIER_CLASS_MILITIA( bSoldierClass ) )

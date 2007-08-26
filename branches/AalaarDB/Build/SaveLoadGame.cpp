@@ -421,7 +421,7 @@ BOOLEAN		LoadSoldierStructure( HWFILE hFile );
 
 // CHRISL: New functions to save and load LBENODE data
 BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile );
+BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile );
 
 //BOOLEAN		SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
 //BOOLEAN		LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
@@ -508,6 +508,109 @@ void TruncateStrategicGroupSizes();
 //LoadWorld, if it is, you've got to rebuild the maps
 
 //if all that sounds compilcated, it is
+
+
+BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32 uiNumBytesWritten;
+
+	int size = LBEArray.size();
+	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for (std::vector<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+		if (! iter->Save(hFile)) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
+BOOLEAN LoadLBENODEFromSaveGameFile( HWFILE hFile )
+{
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		int size;
+		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+
+		LBEArray.resize(size);
+		for (std::vector<LBENODE>::iterator iter = LBEArray.begin(); iter != LBEArray.end(); ++iter) {
+			if (! iter->Load(hFile)) {
+				return FALSE;
+			}
+		}
+	}
+	else
+	{
+		//we shouldn't be loading from anything before the first change
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
+	}
+	return TRUE;
+}
+
+// CHRISL: New function to save/load LBENODE data
+BOOLEAN LBENODE::Load( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32	uiNumBytesRead;
+	//if we are at the most current version, then fine
+	if ( guiCurrentSaveGameVersion >= CURRENT_SAVEGAME_DATATYPE_VERSION )
+	{
+		if ( !NewJA2EncryptedFileRead( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+		int size;
+		if ( !NewJA2EncryptedFileRead( hFile, &size, sizeof(int), &uiNumBytesRead ) )
+		{
+			return(FALSE);
+		}
+
+		inv.resize(size);
+		for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
+			if (! iter->Load(hFile)) {
+				return FALSE;
+			}
+		}
+	}
+	else
+	{
+		//we shouldn't be loading from anything before the first change
+		Assert(guiCurrentSaveGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE );
+	}
+	return TRUE;
+}
+
+BOOLEAN LBENODE::Save( HWFILE hFile )
+{
+	PERFORMANCE_MARKER
+	UINT32 uiNumBytesWritten;
+	int size = inv.size();
+
+	if ( !NewJA2EncryptedFileWrite( hFile, this, SIZEOF_LBENODE_POD, &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	if ( !NewJA2EncryptedFileWrite( hFile, &size, sizeof(int), &uiNumBytesWritten ) )
+	{
+		return(FALSE);
+	}
+	for (std::vector<OBJECTTYPE>::iterator iter = inv.begin(); iter != inv.end(); ++iter) {
+		//we are not saving to a map, at least not yet
+		if (! iter->Save(hFile, false)) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile )
 {
@@ -3884,7 +3987,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//CHRISL: Load LBENODE information
 	if( SaveGameHeader.uiSavedGameVersion >= FIRST_SAVEGAME_DATATYPE_CHANGE )
 	{
-		if ( !LoadLBENODEToSaveGameFile( hFile ) )
+		if ( !LoadLBENODEFromSaveGameFile( hFile ) )
 		{
 			FileClose( hFile );
 			guiCurrentSaveGameVersion=0;
@@ -4225,88 +4328,6 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 
 	return( TRUE );
 }
-
-
-// CHRISL: New function to save/load LBENODE data
-BOOLEAN LoadLBENODEToSaveGameFile( HWFILE hFile )
-{
-	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
-
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		JA2EncryptedFileRead( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesRead );
-	}
-	else
-	{
-		NewJA2EncryptedFileRead( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesRead );
-	}
-	if( uiNumBytesRead != sizeof(UINT16) )
-	{
-		//return(FALSE);
-		LBEptrNum = 0;
-	}
-
-	for(cnt=0; cnt<LBEptrNum; cnt++)
-	{
-		if ( guiCurrentSaveGameVersion < 87 )
-		{
-			LBEptr.push_back(LBENODE());
-			JA2EncryptedFileRead( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesRead );
-		}
-		else
-		{
-			LBEptr.push_back(LBENODE());
-			NewJA2EncryptedFileRead( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesRead );
-		}
-		if( uiNumBytesRead != uiSaveSize )
-		{
-			return(FALSE);
-		}
-	}
-
-	return( TRUE );
-}
-BOOLEAN SaveLBENODEToSaveGameFile( HWFILE hFile )
-{
-	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
-	UINT32	uiSaveSize = sizeof( LBENODE ); //SIZEOF_SOLDIERTYPE;
-
-	if ( guiCurrentSaveGameVersion < 87 )
-	{
-		JA2EncryptedFileWrite( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesWritten );
-	}
-	else
-	{
-		NewJA2EncryptedFileWrite( hFile, &LBEptrNum, sizeof(UINT16), &uiNumBytesWritten );
-	}
-	if( uiNumBytesWritten != sizeof(UINT16) )
-	{
-		return(FALSE);
-	}
-
-	for(cnt=0; cnt<LBEptr.size(); cnt++)
-	{
-		LBEptr[ cnt ].uiNodeChecksum = LBENODEChecksum( &(LBEptr[ cnt ]) );
-		if ( guiCurrentSaveGameVersion < 87 )
-		{
-			JA2EncryptedFileWrite( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesWritten );
-		}
-		else
-		{
-			NewJA2EncryptedFileWrite( hFile, &LBEptr[cnt], uiSaveSize, &uiNumBytesWritten );
-		}
-		if( uiNumBytesWritten != uiSaveSize )
-		{
-			return(FALSE);
-		}
-	}
-
-	return( TRUE );
-}
-
 
 
 

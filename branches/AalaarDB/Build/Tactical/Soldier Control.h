@@ -643,7 +643,6 @@ public:
 	BOOLEAN lastFlankLeft;
 	UINT32											uiStatusFlags;
 
-	//ADB TODO, handle coversion
 	//LBE node stuff
 	BOOLEAN			ZipperFlag;
 	BOOLEAN			DropPackFlag;
@@ -773,7 +772,7 @@ public:
 	UINT8												bReserved1;
 	CHAR16											name[ 10 ];
 
-	INT16	GetMaxDistanceVisible(INT16 sGridNo = -1, INT8 bLevel = -1);
+	INT16	GetMaxDistanceVisible(INT16 sGridNo = -1, INT8 bLevel = -1, int calcAsType = -1);
 
 	// DESCRIPTION / STATS, ETC
 	UINT8												ubBodyType;
@@ -1170,7 +1169,6 @@ public:
 	INT8	snowCamo;	
 	INT8	wornSnowCamo;
 
-	//ADB TODO, handle init etc
 	INT16	DropPackKey;
 
 	char endOfPOD;	// marker for end of POD (plain old data)

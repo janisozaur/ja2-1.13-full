@@ -1383,6 +1383,7 @@ BOOLEAN WriteItemStats()
 			FilePrintf(hFile,"\t\t<bReliability>%d</bReliability>\r\n",								Item[cnt].bReliability);
 			FilePrintf(hFile,"\t\t<bRepairEase>%d</bRepairEase>\r\n",									Item[cnt].bRepairEase);
 
+#ifdef obsoleteCode
 			//FilePrintf(hFile,"\t\t<damageable>%d</damageable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_DAMAGEABLE ? TRUE : FALSE);
 			//FilePrintf(hFile,"\t\t<repairable>%d</repairable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_REPAIRABLE ? TRUE : FALSE );
 			//FilePrintf(hFile,"\t\t<waterdamages>%d</waterdamages>\r\n",						Item[cnt][0]->data.fFlags & ITEM_WATER_DAMAGES ? TRUE : FALSE );
@@ -1399,6 +1400,7 @@ BOOLEAN WriteItemStats()
 			//FilePrintf(hFile,"\t\t<unaerodynamic>%d</unaerodynamic>\r\n",						Item[cnt][0]->data.fFlags & ITEM_UNAERODYNAMIC ? TRUE : FALSE );
 			//FilePrintf(hFile,"\t\t<electronic>%d</electronic>\r\n",						Item[cnt][0]->data.fFlags & ITEM_ELECTRONIC ? TRUE : FALSE );
 			//FilePrintf(hFile,"\t\t<inseparable>%d</inseparable>\r\n",						Item[cnt][0]->data.fFlags & ITEM_INSEPARABLE ? TRUE : FALSE );
+#endif //obsoleteCode
 
 			FilePrintf(hFile,"\t\t<Damageable>%d</Damageable>\r\n",						Item[cnt].damageable );
 			FilePrintf(hFile,"\t\t<Repairable>%d</Repairable>\r\n",						Item[cnt].repairable );
