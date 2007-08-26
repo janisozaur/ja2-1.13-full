@@ -337,11 +337,11 @@ BUILDING * GenerateBuilding( INT32 sDesiredSpot )
 	{
 		UINT8 x = 0;
 		UINT8 y = 0;
-		while((sDesiredSpot - ((y + 1) * 160)) >= 0)
+		while((sDesiredSpot - ((y + 1) * WORLD_COLS)) >= 0)
 		{
 			y++;
 		}
-		x = sDesiredSpot - (y * 160);
+		x = sDesiredSpot - (y * WORLD_COLS);
 		DebugMsg (TOPIC_JA2,DBG_LEVEL_2,String( "113/UC Warning! Building Walk Algorithm has covered the entire map! Building %d located at [%d,%d] must be bogus.", ubBuildingID, x, y ));
 	}
 
@@ -366,7 +366,8 @@ BUILDING * FindBuilding( INT32 sGridNo )
 	UINT8					ubBuildingID;
 	//UINT8					ubRoomNo;
 
-	if (sGridNo <= 0 || sGridNo > WORLD_MAX)
+	//if (sGridNo <= 0 || sGridNo > WORLD_MAX)
+	if ( TileIsOutOfBounds( sGridNo ) )
 	{
 		return( NULL );
 	}

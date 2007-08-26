@@ -905,7 +905,7 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 INT32 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT32 sGridNo)
 {
 	INT32 cnt;
-	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
+	INT16 mods[4] = {-1,-WORLD_COLS,1,WORLD_COLS};
 	INT32 sTempGridNo = NOWHERE, sCheapestDest = MAX_MAP_POS;
 	INT16 sCheapestCost=500, sMovementCost;
 

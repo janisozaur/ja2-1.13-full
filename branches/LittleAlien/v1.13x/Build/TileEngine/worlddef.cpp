@@ -4253,6 +4253,11 @@ extern INT32 gsLastSoldierGridNo;
 extern INT32 gsLastVisibleToSoldierGridNo;
 
 
+extern TRAILCELLTYPE * trailCost;
+extern UINT8 * trailCostUsed;
+
+
+
 void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 {
 	INT32 i, j;
@@ -4271,7 +4276,7 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	if(gsCoverValue)
 		MemFree(gsCoverValue);
 	gsCoverValue = (INT16*)MemAlloc(WORLD_MAX*sizeof(INT16));
-	//memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
+	memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
 
 	if(gubBuildingInfo)
 		MemFree(gubBuildingInfo);
@@ -4322,7 +4327,23 @@ void SetWorldSize(INT32 nWorldRows, INT32 nWorldCols)
 	// Zero world
 	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
 
+	
+	//if(trailCost)
+	//{
+	//	MemFree( trailCost );
+	//}
+	//trailCost = (UINT16 *) MemAlloc( WORLD_MAX * sizeof( UINT32 ) );
+	//memset( trailCost, 0, WORLD_MAX * sizeof( UINT32 ) );
 
+	//if(trailCostUsed)
+	//{
+	//	MemFree( trailCostUsed );
+	//}
+	//trailCostUsed = (UINT8 *) MemAlloc( WORLD_MAX );
+	//memset( trailCostUsed, 0, WORLD_MAX );
+
+	ShutDownPathAI( );
+	InitPathAI();
 
 #ifdef _DEBUG
 	if(gubFOVDebugInfoInfo)

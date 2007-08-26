@@ -10,15 +10,15 @@
 #define RIGHTMOSTGRID   (MAXCOL - 1)
 #define LASTROWSTART    (GRIDSIZE - MAXCOL)
 //SB: NOWHERE must be constant
-//#define NOWHERE         (GRIDSIZE + 1)
+//#define NOWHERE         (GRIDSIZE + 1) //Lalien: old definition, replaced with -1
 //#define NOWHERE         MAXLONG
 #define NOWHERE         -1
-//#define	NO_MAP_POS			NOWHERE
+//#define	NO_MAP_POS			NOWHERE //Lalien: replaced with NOWHERE
 #define	MAX_MAP_POS			(GRIDSIZE)  //MAX_MAP_POS will be used only to track the changes made for the big map project, should be replaced with GRIDSIZE later
 
-#define MAPWIDTH			(WORLD_COLS)
-#define MAPHEIGHT			(WORLD_ROWS)
-#define MAPLENGTH			(MAPHEIGHT*MAPWIDTH)
+//#define MAPWIDTH			(WORLD_COLS)	//Lalien: replaced with WORLD_COLS
+//#define MAPHEIGHT			(WORLD_ROWS)	//Lalien: replaced with WORLD_ROWS
+//#define MAPLENGTH			(MAPHEIGHT*MAPWIDTH) //Lalien: replaced with WORLD_MAX
 
 
 #define	ADJUST_Y_FOR_HEIGHT( pos, y )				( y -= gpWorldLevelData[ pos ].sHeight )					

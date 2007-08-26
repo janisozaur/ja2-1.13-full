@@ -27,32 +27,35 @@ BOOLEAN gfLoadPitsWithoutArming = FALSE;
 void Add3X3Pit( INT32 iMapIndex )
 {
 	EXITGRID ExitGrid;
+
 	if( !gfEditMode )
 		ApplyMapChangesToMapTempFile( TRUE );
-	AddObjectToTail( iMapIndex + 159, REGWATERTEXTURE1 );
-	AddObjectToTail( iMapIndex -   1,	REGWATERTEXTURE2 );
-	AddObjectToTail( iMapIndex - 161, REGWATERTEXTURE3 );
-	AddObjectToTail( iMapIndex + 160, REGWATERTEXTURE4 );
-	AddObjectToTail( iMapIndex,				REGWATERTEXTURE5 );
-	AddObjectToTail( iMapIndex - 160, REGWATERTEXTURE6 );
-	AddObjectToTail( iMapIndex + 161, REGWATERTEXTURE7 );
-	AddObjectToTail( iMapIndex +   1, REGWATERTEXTURE8 );
-	AddObjectToTail( iMapIndex - 159, REGWATERTEXTURE9 );
+	
+	AddObjectToTail( iMapIndex + WORLD_COLS-1,	REGWATERTEXTURE1 );
+	AddObjectToTail( iMapIndex - 1,				REGWATERTEXTURE2 );
+	AddObjectToTail( iMapIndex - WORLD_COLS+1,	REGWATERTEXTURE3 );
+	AddObjectToTail( iMapIndex + WORLD_COLS,	REGWATERTEXTURE4 );
+	AddObjectToTail( iMapIndex,					REGWATERTEXTURE5 );
+	AddObjectToTail( iMapIndex - WORLD_COLS,	REGWATERTEXTURE6 );
+	AddObjectToTail( iMapIndex + WORLD_COLS+1,	REGWATERTEXTURE7 );
+	AddObjectToTail( iMapIndex + 1,				REGWATERTEXTURE8 );
+	AddObjectToTail( iMapIndex - WORLD_COLS-1,	REGWATERTEXTURE9 );
+	
 	if( !gfEditMode )
 	{ //Add the exitgrids associated with the pit.
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
 		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
 		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
 		ExitGrid.usGridNo = iMapIndex;
-		AddExitGridToWorld( iMapIndex + 159, &ExitGrid );
-		AddExitGridToWorld( iMapIndex -   1, &ExitGrid );
-		AddExitGridToWorld( iMapIndex - 161, &ExitGrid );
-		AddExitGridToWorld( iMapIndex + 160, &ExitGrid );
-		AddExitGridToWorld( iMapIndex,			 &ExitGrid );
-		AddExitGridToWorld( iMapIndex - 160, &ExitGrid );
-		AddExitGridToWorld( iMapIndex + 161, &ExitGrid );
-		AddExitGridToWorld( iMapIndex +   1, &ExitGrid );
-		AddExitGridToWorld( iMapIndex - 159, &ExitGrid );
+		AddExitGridToWorld( iMapIndex + WORLD_COLS-1,	&ExitGrid );
+		AddExitGridToWorld( iMapIndex - 1,				&ExitGrid );
+		AddExitGridToWorld( iMapIndex - WORLD_COLS+1,	&ExitGrid );
+		AddExitGridToWorld( iMapIndex + WORLD_COLS,		&ExitGrid );
+		AddExitGridToWorld( iMapIndex,					&ExitGrid );
+		AddExitGridToWorld( iMapIndex - WORLD_COLS,		&ExitGrid );
+		AddExitGridToWorld( iMapIndex + WORLD_COLS+1,	&ExitGrid );
+		AddExitGridToWorld( iMapIndex + 1,				&ExitGrid );
+		AddExitGridToWorld( iMapIndex - WORLD_COLS-1,	&ExitGrid );
 		RecompileLocalMovementCostsFromRadius( iMapIndex, 2 );
 	}
 
@@ -78,7 +81,7 @@ void Add5X5Pit( INT32 iMapIndex )
 	AddObjectToTail( iMapIndex - 321, REGWATERTEXTURE19 );
 	AddObjectToTail( iMapIndex + 320, REGWATERTEXTURE20 );
 	AddObjectToTail( iMapIndex + 160, REGWATERTEXTURE21 );
-	AddObjectToTail( iMapIndex,				REGWATERTEXTURE22 );
+	AddObjectToTail( iMapIndex,		REGWATERTEXTURE22 );
 	AddObjectToTail( iMapIndex - 160, REGWATERTEXTURE23 );
 	AddObjectToTail( iMapIndex - 320, REGWATERTEXTURE24 );
 	AddObjectToTail( iMapIndex + 321, REGWATERTEXTURE25 );
@@ -91,6 +94,7 @@ void Add5X5Pit( INT32 iMapIndex )
 	AddObjectToTail( iMapIndex +   2, REGWATERTEXTURE32 );
 	AddObjectToTail( iMapIndex - 158, REGWATERTEXTURE33 );
 	AddObjectToTail( iMapIndex - 318, REGWATERTEXTURE34 );
+	
 	if( !gfEditMode )
 	{ //Add the exitgrids associated with the pit.
 		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
@@ -131,15 +135,15 @@ void Add5X5Pit( INT32 iMapIndex )
 
 void Remove3X3Pit( INT32 iMapIndex )
 {
-	RemoveAllObjectsOfTypeRange( iMapIndex + 159, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex -   1,	REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex - 161, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex + 160, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex,				REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex - 160, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex + 161, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex +   1, REGWATERTEXTURE, REGWATERTEXTURE );
-	RemoveAllObjectsOfTypeRange( iMapIndex - 159, REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex + WORLD_COLS-1,	REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex - 1,				REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex - WORLD_COLS+1,	REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex + WORLD_COLS,	REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex,					REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex - WORLD_COLS,	REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex + WORLD_COLS+1,	REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex + 1,				REGWATERTEXTURE, REGWATERTEXTURE );
+	RemoveAllObjectsOfTypeRange( iMapIndex - WORLD_COLS-1,	REGWATERTEXTURE, REGWATERTEXTURE );
 	MarkWorldDirty();
 }
 

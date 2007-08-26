@@ -36,18 +36,32 @@ UINT32 guiForceRefreshMousePositionCalculation = 0;
 //
 // };
 
+//INT16 DirIncrementer[8] =
+//{
+//	-OLD_WORLD_COLS,        //N
+//		1-OLD_WORLD_COLS,       //NE
+//		1,                //E
+//		1+OLD_WORLD_COLS,       //SE
+//		OLD_WORLD_COLS,         //S
+//		OLD_WORLD_COLS-1,       //SW
+//		-1,               //W
+//		-OLD_WORLD_COLS-1       //NW
+//
+//};
+
+
 INT16 DirIncrementer[8] =
 {
-	-OLD_WORLD_COLS,        //N
-		1-OLD_WORLD_COLS,       //NE
+		-WORLD_COLS,        //N
+		1-WORLD_COLS,       //NE
 		1,                //E
-		1+OLD_WORLD_COLS,       //SE
-		OLD_WORLD_COLS,         //S
-		OLD_WORLD_COLS-1,       //SW
+		1+WORLD_COLS,       //SE
+		WORLD_COLS,         //S
+		WORLD_COLS-1,       //SW
 		-1,               //W
-		-OLD_WORLD_COLS-1       //NW
-
+		-WORLD_COLS-1       //NW
 };
+
 
 
 // Opposite directions

@@ -783,7 +783,7 @@ INT16 gsTerrainTypeSpeedModifiers[] =
 	20,						// TRAIN TRACKS
 	20,						// LOW WATER
 	25,						// MID WATER
-	30							// DEEP WATER
+	30						// DEEP WATER
 };
 
 //Kris:
@@ -793,10 +793,15 @@ INT16 gsTerrainTypeSpeedModifiers[] =
 BOOLEAN gfCalcTranslucency = FALSE;
 
 
-INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
-{
-	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
+//INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
+//{
+//	-1, -OLD_WORLD_COLS - 1, -OLD_WORLD_COLS
+//};
 
+
+INT16 gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
+{
+	-1, -WORLD_COLS - 1, -WORLD_COLS
 };
 
 PaletteReplacementType	*gpPalRep;

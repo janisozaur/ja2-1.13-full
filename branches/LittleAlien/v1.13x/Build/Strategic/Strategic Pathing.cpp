@@ -83,13 +83,14 @@ typedef struct trail_s trail_t;
 //#define NOPASS (TRAVELCOST_OBSTACLE)
 //#define VEINCOST TRAVELCOST_FLAT     //actual cost for bridges and doors and such
 //#define ISVEIN(v) ((v==TRAVELCOST_VEINMID) || (v==TRAVELCOST_VEINEND))
-#define TRAILCELLTYPE UINT32
+//#define TRAILCELLTYPE UINT32 //Lalien: commented out, was defined twice with different data types
 
 static path_t pathQB[MAXpathQ];
 static UINT16 totAPCostB[MAXpathQ];
 static UINT16	gusPathShown,gusAPtsToMove;
 static UINT16	gusMapMovementCostsB[MAP_LENGTH][MAXDIR];
-static TRAILCELLTYPE trailCostB[MAP_LENGTH];
+//static TRAILCELLTYPE trailCostB[MAP_LENGTH];
+static UINT32 trailCostB[MAP_LENGTH]; //Lalien: replaced
 static trail_t trailStratTreeB[MAXTRAILTREE];
 short trailStratTreedxB=0;
 
@@ -202,9 +203,10 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
 	INT16 sSectorX, sSectorY;
 	UINT16	newLoc,curLoc;
-	TRAILCELLTYPE curCost,newTotCost,nextCost;
+	//TRAILCELLTYPE curCost,newTotCost,nextCost;
+	UINT32 curCost,newTotCost,nextCost; //Lalien: replaced
 	INT16 sOrigination;
-  INT16 iCounter=0;
+	INT16 iCounter=0;
 	BOOLEAN fPlotDirectPath = FALSE;
 	static BOOLEAN fPreviousPlotDirectPath = FALSE;		// don't save
 	GROUP *pGroup;

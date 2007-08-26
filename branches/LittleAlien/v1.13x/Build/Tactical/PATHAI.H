@@ -31,6 +31,8 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode );
 // Lesh: setup max length of path
 #define MAX_PATH_DATA_LENGTH 512
 
+#define TRAILCELLTYPE UINT16 //Lalien: moved form pathai.cpp
+
 // Exporting these global variables
 extern UINT32 guiPathingData[MAX_PATH_DATA_LENGTH];
 extern UINT8 gubNPCAPBudget;
