@@ -10,7 +10,7 @@ void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] )
 
 	// first - write default values to cmd line params
 	gCmdLineParams.fHelp		= FALSE;
-	gCmdLineParams.fFullScreen	= FALSE;
+	gCmdLineParams.eScreenMode	= SCR_NOT_SPECIFIED;
 	gCmdLineParams.fNoSound	= FALSE;
 	gCmdLineParams.fDoMaps		= FALSE;
 	gCmdLineParams.fQuickSave	= FALSE;
@@ -24,7 +24,10 @@ void	ProcessCommandLine( INT32 argc, CHAR8 *argv[] )
 			gCmdLineParams.fHelp		= TRUE;
 
 		if ( !strcmp( argv[cnt], "--fullscreen"  ) )
-			gCmdLineParams.fFullScreen	= TRUE;
+			gCmdLineParams.eScreenMode	= SCR_FULLSCREEN;
+
+		if ( !strcmp( argv[cnt], "--windowed"  ) )
+			gCmdLineParams.eScreenMode	= SCR_WINDOWED;
 
 		if ( !strcmp( argv[cnt], "--nosound"     ) )
 			gCmdLineParams.fNoSound	= TRUE;
@@ -51,5 +54,6 @@ void	PrintCommandLineHelp( void )
 	printf("\nCommand line switches:\n");
 	printf("\t--help\t\thelp info (you are looking at it)\n");
 	printf("\t--fullscreen\trun game at fullscreen\n");
+	printf("\t--windowed\trun game in window\n");
 	printf("\t--nosound\trun game without sound\n\n");
 }

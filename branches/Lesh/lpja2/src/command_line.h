@@ -3,10 +3,17 @@
 
 #include "types.h"
 
+enum ScreenMode
+{
+	SCR_NOT_SPECIFIED = 0,
+	SCR_FULLSCREEN,
+	SCR_WINDOWED
+};
+
 typedef struct
 {
 	BOOLEAN		fHelp;
-	BOOLEAN		fFullScreen;
+	ScreenMode	eScreenMode;
 	BOOLEAN		fNoSound;
 	BOOLEAN		fDoMaps;
 	BOOLEAN		fQuickSave;

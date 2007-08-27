@@ -224,7 +224,21 @@ BOOLEAN InitializeVideoManager(void)
 
 	// Apply SDL video flags
 	uiVideoFlags = SDL_SWSURFACE;
-	gfFullScreen |= gCmdLineParams.fFullScreen;
+
+	// command line parameters can override video mode
+	switch( gCmdLineParams.eScreenMode )
+	{
+		case SCR_FULLSCREEN:
+			gfFullScreen = TRUE;
+			break;
+
+		case SCR_WINDOWED:
+			gfFullScreen = FALSE;
+			break;
+
+		default:
+			break;		
+	}
 
 	if ( pVideoInfo->hw_available )
 		uiVideoFlags |= SDL_HWSURFACE | SDL_DOUBLEBUF;
