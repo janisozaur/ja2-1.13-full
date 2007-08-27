@@ -1082,7 +1082,7 @@ INT16 MaxNormalDistanceVisible( void )
 	return( STRAIGHT * 2 );
 }
 
-INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT32 sGridNo, INT8 bLevel)
+INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT32 sGridNo, INT8 bLevel, int calcAsType)
 {
 	if (sGridNo == -1) {
 		return MaxNormalDistanceVisible();
@@ -1091,7 +1091,12 @@ INT16 SOLDIERTYPE::GetMaxDistanceVisible(INT32 sGridNo, INT8 bLevel)
 		bLevel = this->bLevel;
 	}
 
-	return DistanceVisible( this, (SoldierHasLimitedVision(this) ? this->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sGridNo, bLevel );
+	if (calcAsType == CALC_FROM_ALL_DIRS) {
+		return DistanceVisible( this, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
+	}
+	else {
+		return DistanceVisible( this, (SoldierHasLimitedVision(this) ? this->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, sGridNo, bLevel );
+	}
 }
 
 INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT32 sSubjectGridNo, INT8 bLevel )
@@ -1228,8 +1233,6 @@ INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir,
 		sDistVisible += sDistVisible * GetTotalVisionRangeBonus(pSoldier, bLightLevel) / 100;
 	}
 
-
-
 	
 	// give one step better vision for people with nightops
 	if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
@@ -1306,7 +1309,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 			{
 				if ( pOtherSoldier->sGridNo != NOWHERE )
 				{	
-					if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > DistanceVisible( pOtherSoldier, (SoldierHasLimitedVision(pSoldier) ? pOtherSoldier->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->bLevel ) )					
+					if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > pOtherSoldier->GetMaxDistanceVisible(pSoldier->sGridNo, pSoldier->bLevel, CALC_FROM_WANTED_DIR ) )					
 					{
 						// if this guy can no longer see us, change to seen this turn
 						HandleManNoLongerSeen( pOtherSoldier, pSoldier, &(pOtherSoldier->bOppList[ pSoldier->ubID ]), &(gbPublicOpplist[ pOtherSoldier->bTeam ][ pSoldier->ubID ] ) );
@@ -1845,7 +1848,12 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
    bAware = TRUE;
 
    // then we look for him full viewing distance in EVERY direction
-   sDistVisible = pSoldier->GetMaxDistanceVisible( pOpponent->sGridNo, pOpponent->bLevel );
+
+   //ADB the comment above says EVERY direction but the code used to be:
+   //sDistVisible = DistanceVisible(pSoldier, (SoldierHasLimitedVision(pSoldier) ? pSoldier->bDesiredDirection : DIRECTION_IRRELEVANT), 0, pOpponent->sGridNo, pOpponent->bLevel, pOpponent );
+   //if the code below says CALC_FROM_ALL_DIRS, then the opponent will NOT be greyed out if a merc sees him and a second merc turns away from him
+   //calcing from the wanted dir will make the opponent be greyed out, which I think is the intended effect
+   sDistVisible = pSoldier->GetMaxDistanceVisible( pOpponent->sGridNo, pOpponent->bLevel, CALC_FROM_WANTED_DIR );
 	 //if (pSoldier->ubID == 0)
 		//sprintf(gDebugStr,"ALREADY KNOW: ME %d him %d val %d",pSoldier->ubID,pOpponent->ubID,pSoldier->bOppList[pOpponent->ubID]);
   }
@@ -1873,7 +1881,7 @@ INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCall
   {
    // and we can trace a line of sight to his x,y coordinates
    // must use the REAL opplist value here since we may or may not know of him
-   if (SoldierToSoldierLineOfSightTest(pSoldier,pOpponent,bAware,(UINT8)sDistVisible))
+   if (SoldierToSoldierLineOfSightTest(pSoldier,pOpponent,bAware,sDistVisible))
     {
 			ManSeesMan(pSoldier,pOpponent,pOpponent->sGridNo,pOpponent->bLevel,MANLOOKSFORMAN,ubCaller);
 			bSuccess = TRUE;
@@ -5652,7 +5660,6 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bL
 	INT16		sNoiseX, sNoiseY;
 	INT8		bHadToTurn = FALSE, bSourceSeen = FALSE;
 	INT8		bOldOpplist;
-	INT16		sDistVisible;
 	INT8		bDirection;
 	BOOLEAN fMuzzleFlash = FALSE;
 
@@ -5690,7 +5697,7 @@ void HearNoise(SOLDIERTYPE *pSoldier, UINT8 ubNoiseMaker, INT32 sGridNo, INT8 bL
 		}
 	}
 
-    sDistVisible = pSoldier->GetMaxDistanceVisible( sGridNo, bLevel );
+    int sDistVisible = pSoldier->GetMaxDistanceVisible(sGridNo, bLevel, CALC_FROM_WANTED_DIR );
 
 	if ( fMuzzleFlash )
 	{
@@ -6537,7 +6544,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		}
 	}
 
-	if (SoldierToSoldierLineOfSightTest( pDefender, pAttacker, TRUE ) != 0)
+	if (SoldierToSoldierLineOfSightTest( pDefender, pAttacker, TRUE, CALC_FROM_WANTED_DIR ) != 0)
 	{
 		fSeesAttacker = TRUE;
 	}
@@ -6789,15 +6796,13 @@ INT8 GetHighestVisibleWatchedLoc( UINT8 ubID )
 	INT8	bLoop;
 	INT8	bHighestLoc = -1;
 	INT8	bHighestPoints = 0;
-	INT16	sDistVisible;
 
 	for ( bLoop = 0; bLoop < NUM_WATCHED_LOCS; bLoop++ )
 	{
 		if ( gsWatchedLoc[ ubID ][ bLoop ] != NOWHERE && gubWatchedLocPoints[ ubID ][ bLoop ] > bHighestPoints )
 		{
-            sDistVisible =  DistanceVisible( MercPtrs[ ubID ], (SoldierHasLimitedVision(MercPtrs[ ubID ]) ? MercPtrs[ ubID ]->bDesiredDirection : DIRECTION_IRRELEVANT), DIRECTION_IRRELEVANT, gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ] );
 			// look at standing height
-			if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubID ], gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], 3, TRUE, sDistVisible ) )
+			if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubID ], gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], 3, TRUE, CALC_FROM_WANTED_DIR ) )
 			{
 				bHighestLoc = bLoop;
 				bHighestPoints = gubWatchedLocPoints[ ubID ][ bLoop ];
